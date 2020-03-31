@@ -19,18 +19,15 @@ contract BP_Storage {
      * @param idx = record index , regster = struct value to store
      */
     function storeRegistrar(uint256 idx, uint256 regstr) public {
-        database[idx].registrar = regstr;  //how to reference only a part of the struct?
-        // could take form 'database[idx] = rec.status' or similar for modifying only part of the record ?
+        database[idx].registrar = regstr;
     }
     
     function storeRegistrant(uint256 idx, uint256 regtrnt) public {
-        database[idx].registrant = regtrnt;  //how to reference only a part of the struct?
-        // could take form 'database[idx] = rec.status' or similar for modifying only part of the record ?
+        database[idx].registrant = regtrnt;
     }
     
     function storeStatus(uint256 idx, uint256 stat) public {
-        database[idx].status = stat;  //how to reference only a part of the struct?
-        // could take form 'database[idx] = rec.status' or similar for modifying only part of the record ?
+        database[idx].status = stat;
     }
 
     /**
