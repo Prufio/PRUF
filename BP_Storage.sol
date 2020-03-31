@@ -9,7 +9,7 @@ contract BP_Storage {
     struct Record {
         uint256 registrar; // tokenID (or address) of registrant 
         uint256 registrant;  // KEK256 Registered  owner
-        uint256 status; // Status - Tranferrable, locked, in transfer, stolen, lost, etc.
+        uint256 status; // Status - Transferrable, locked, in transfer, stolen, lost, etc.
     }
     
     mapping(uint256 => Record) public database;
