@@ -16,7 +16,7 @@ contract BP_Storage {
 
     /**
      * @dev Store values in database
-     * @param idx = record index , rec = struct value to store
+     * @param idx = record index , regster = struct value to store
      */
     function storeRegistrar(uint256 idx, uint256 regstr) public {
         database[idx].registrar = regstr;  //how to reference only a part of the struct?
