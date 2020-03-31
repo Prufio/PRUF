@@ -5,9 +5,6 @@ pragma solidity >=0.4.22 <0.7.0;
  * @dev Store & retreive a record
  */
 contract BP_Storage {
-
-    uint256 private content;
-    uint256 private index;
     
     struct Record {
         uint256 registrar; // tokenID (or address) of registrant 
