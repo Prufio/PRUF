@@ -13,7 +13,7 @@ import "./Ownable.sol";
  * 
  */
 
-contract BP_Storage is Ownable {
+contract BP_Authorize is Ownable {
     
     struct Record {
         uint256 registrar; // tokenID (or address) of registrant 
