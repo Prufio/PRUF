@@ -16,13 +16,13 @@ import "./Ownable.sol";
 contract BP_Storage is Ownable {
     
     struct Record {
-        uint256 registrar; // tokenID (or address) of registrant 
-        uint256 registrant;  // KEK256 Registered  owner
-        uint256 status; // Status - Transferrable, locked, in transfer, stolen, lost, etc.
+        uint registrar; // tokenID (or address) of registrant 
+        uint registrant;  // KEK256 Registered  owner
+        uint status; // Status - Transferrable, locked, in transfer, stolen, lost, etc.
     }
     
-    mapping(uint256 => Record) public database; //registry
-    mapping(address => uint256) private registeredUsers; //authorized registrar database
+    mapping(uint => Record) public database; //registry
+    mapping(address => uint) private registeredUsers; //authorized registrar database
     
     function authorize(address authAddr) public onlyOwner {
         registeredUsers[authAddr] = 1;
@@ -33,7 +33,7 @@ contract BP_Storage is Ownable {
     }
 
      
-    function storeRegistrar(uint256 idx, uint256 regstr) public {
+    function storeRegistrar(uint idx, uint regstr) public {
         require(
             registeredUsers[msg.sender] == 1 ,
             "Not authorized"
@@ -41,7 +41,7 @@ contract BP_Storage is Ownable {
         database[idx].registrar = regstr;
     }
     
-    function storeRegistrant(uint256 idx, uint256 regtrnt) public {
+    function storeRegistrant(uint idx, uint regtrnt) public {
         require(
             registeredUsers[msg.sender] == 1 ,
             "Not authorized"
@@ -49,7 +49,7 @@ contract BP_Storage is Ownable {
         database[idx].registrant = regtrnt;
     }
     
-    function storeStatus(uint256 idx, uint256 stat) public {
+    function storeStatus(uint idx, uint stat) public {
         require(
             registeredUsers[msg.sender] == 1 ,
             "Not authorized"
@@ -61,15 +61,15 @@ contract BP_Storage is Ownable {
      * @dev Return value from dtatbase 
      * @return struct of 'database record idx'
      */
-    function checkRegistrant(uint256 idx) public view returns (uint256){
+    function checkRegistrant(uint idx) public view returns (uint){
         return database[idx].registrant;
     }
     
-    function checkRegistrar(uint256 idx) public view returns (uint256){
+    function checkRegistrar(uint idx) public view returns (uint){
         return database[idx].registrar;
     }
     
-    function checkStatus(uint256 idx) public view returns (uint256){
+    function checkStatus(uint idx) public view returns (uint){
         return database[idx].status;
     }
     
