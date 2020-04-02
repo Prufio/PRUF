@@ -8,7 +8,7 @@ import "./Ownable.sol";
  * 
  * Authorization for registry changes from adress -> uint mapping?
  * 
- * Record ststus field key
+ * Record status field key
  * 0 = no status, transferrable
  * 1 = transferrable
  * 2 = nontransferrable
@@ -95,50 +95,89 @@ contract BP_Authorize is Ownable {
     //    registeredUsers[keccak256(abi.encodePacked(msg.sender))] = 0 ;
     //}
 
+    /**
+     * @dev Administrative Modify registrar field of aa database entry 
+     * ----------------Security risk....probably should not be in production code
+     */
 
+    function ForceOverwriteRegistrar(uint idx, bytes32 regstrar) public onlyOwner {
+        database[idx].registrar = regstrar;
+        database[idx].registrar = keccak256(abi.encodePacked(msg.sender));
+    }
+    
     /**
      * @dev Administrative Modify registrant field of aa database entry 
      * ----------------Security risk....probably should not be in production code
      */
 
-    function overwriteRegistrant(uint idx, bytes32 regtrnt) public onlyOwner {
-        require(
-            registeredUsers[keccak256(abi.encodePacked(msg.sender))] == 1 ,
-            "Not authorized"
-        );
+    function forceOverwriteRegistrant(uint idx, bytes32 regtrnt) public onlyOwner {
         database[idx].registrant = regtrnt;
+        database[idx].registrar = keccak256(abi.encodePacked(msg.sender));
     }
     
     /**
      * @dev Administrative modify status field of a database entry
+     * ----------------Security risk....probably should not be in production code
      */
 
-    function overwriteStatus(uint idx, uint8 stat) public onlyOwner{
-        require(
-            registeredUsers[keccak256(abi.encodePacked(msg.sender))] == 1 ,
-            "Not authorized"
-        );
+    function forceOverwriteStatus(uint idx, uint8 stat) public onlyOwner{
         database[idx].status = stat;
+        database[idx].registrar = keccak256(abi.encodePacked(msg.sender));
+    }
+    
+     /**
+     * @dev Administrative lock a database entry at index idx
+     */
+
+    function adminLock(uint idx) public onlyOwner{
+        
+        require(
+            database[idx].status != 255 ,
+            "Record already locked"
+        );
+        
+        database[idx].status = 255;
+        database[idx].registrar = keccak256(abi.encodePacked(msg.sender));
+    }
+    
+    /**
+     * @dev Administrative unlock a database entry at index idx
+     */
+
+    function adminUnLock(uint idx) public onlyOwner{
+        
+        require(
+            database[idx].status == 255 ,
+            "Record not locked"
+        );
+        
+        database[idx].status = 2;            // set to notransferrable on unlock????????????????????!!!!!!!!!!!!!!!!!
+        database[idx].registrar = keccak256(abi.encodePacked(msg.sender));
     }
     
 
     /**
      * @dev Store a complete record at index idx
      */
-    function newRecord(uint idx, bytes32 regtrnt, uint8 stat) public {
+    function newRecord(uint idx, bytes32 regstrnt, uint8 stat) public {
         require(
             registeredUsers[keccak256(abi.encodePacked(msg.sender))] == 1 ,
             "Not authorized"
         );
-         require(
+        require(
             database[idx].registrant == 0 ,
             "Record already exists"
         );
+        require(
+            regstrnt != 0 ,
+            "Registrant cannot be empty"
+        );
         
         database[idx].registrar = keccak256(abi.encodePacked(msg.sender));
-        database[idx].registrant = regtrnt;
+        database[idx].registrant = regstrnt;
         database[idx].status = stat;
     }
+
     
     
     /**
@@ -164,11 +203,11 @@ contract BP_Authorize is Ownable {
     }
     
     
-     /**
+        /**
      * @dev modify record field 'registrant' at index idx
      */
     
-    function modifyRegistrant(uint idx, bytes32 regtrnt) public {
+    function modifyRegistrant(uint idx, bytes32 regstrnt) public {
         require(
             registeredUsers[keccak256(abi.encodePacked(msg.sender))] == 1 ,
             "Not authorized"
@@ -191,11 +230,15 @@ contract BP_Authorize is Ownable {
         );
         require(
         (database[idx].status == 0) || (database[idx].status == 1) ,
-            "Asset reported in nonspecified status"
+            "Tranfer prohibited"
+        );
+        require(
+            regstrnt != 0 ,
+            "Registrant cannot be empty"
         );
         
         database[idx].registrar = keccak256(abi.encodePacked(msg.sender));
-        database[idx].registrant = regtrnt;
+        database[idx].registrant = regstrnt;
     }
     
     
