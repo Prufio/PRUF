@@ -8,7 +8,12 @@ import "./Ownable.sol";
  * 
  * Authorization for registry changes from adress -> uint mapping?
  * 
- * 
+ * Record status field key
+ * 0 = no status, transferrable
+ * 1 = transferrable
+ * 2 = nontransferrable
+ * 3 = stolen
+ * 255 = record locked (contract will not modify record without this first being unlocked by origin)
  * 
  * 
  */
@@ -16,9 +21,9 @@ import "./Ownable.sol";
 contract BP_Authorize is Ownable {
     
     struct Record {
-        uint registrar; // tokenID (or address) of registrant 
-        uint registrant;  // KEK256 Registered  owner
-        uint status; // Status - Transferrable, locked, in transfer, stolen, lost, etc.
+        bytes32 registrar; // tokenID (or address) of registrant 
+        bytes32 registrant;  // KEK256 Registered  owner
+        uint8 status; // Status - Transferrable, locked, in transfer, stolen, lost, etc.
     }
     
     mapping(uint => Record) public database; //registry
@@ -77,79 +82,173 @@ contract BP_Authorize is Ownable {
      *}
      * 
      */
-    
-
-    /** This doesnt really work to prevent research to cross reference registrars and serial numbers
-    function newAuthorize(address newAuthAddr) public {
-        require(
-            registeredUsers[keccak256(abi.encodePacked(msg.sender))] == 1 ,
-            "Not authorized"
-        );
-        
-        bytes32 hash;
-        hash = keccak256(abi.encodePacked(newAuthAddr));
-        registeredUsers[hash] = 1;
-        
-        registeredUsers[keccak256(abi.encodePacked(msg.sender))] = 0 ;
-    }
-     */
+    //-----------------------------------------------------This function and the activity it is designed to support (address hopping) will not meaningfully enhance security
+    //function newAuthorize(address newAuthAddr) public {
+    //    require(
+    //        registeredUsers[keccak256(abi.encodePacked(msg.sender))] == 1 ,
+    //        "Not authorized"
+    //    );
+    //    
+    //    bytes32 hash;
+    //    hash = keccak256(abi.encodePacked(newAuthAddr));
+    //    registeredUsers[hash] = 1;
+    //    registeredUsers[keccak256(abi.encodePacked(msg.sender))] = 0 ;
+    //}
 
     /**
-     * @dev ----------------- OBSOLETE ----------------- OBSOLETE (REGISTRANT MUST BE AUTOMATICALLY PROVIDED)
+     * @dev Administrative Modify registrar field of aa database entry 
+     * ----------------Security risk....probably should not be in production code
      */
-    function storeRegistrar(uint idx, uint regstr) public {
-        require(
-            registeredUsers[keccak256(abi.encodePacked(msg.sender))] == 1 ,
-            "Not authorized"
-        );
-        database[idx].registrar = regstr;
+
+    function ForceOverwriteRegistrar(uint idx, bytes32 regstrar) public onlyOwner {
+        database[idx].registrar = regstrar;
+        database[idx].registrar = keccak256(abi.encodePacked(msg.sender));
     }
     
     /**
-     * @dev Modify registrant field of aa database entry 
+     * @dev Administrative Modify registrant field of aa database entry 
+     * ----------------Security risk....probably should not be in production code
      */
 
-    function storeRegistrant(uint idx, uint regtrnt) public {
-        require(
-            registeredUsers[keccak256(abi.encodePacked(msg.sender))] == 1 ,
-            "Not authorized"
-        );
+    function forceOverwriteRegistrant(uint idx, bytes32 regtrnt) public onlyOwner {
         database[idx].registrant = regtrnt;
+        database[idx].registrar = keccak256(abi.encodePacked(msg.sender));
     }
     
     /**
-     * @dev modify status field of a database entry
+     * @dev Administrative modify status field of a database entry
+     * ----------------Security risk....probably should not be in production code
      */
 
-    function storeStatus(uint idx, uint stat) public {
+    function forceOverwriteStatus(uint idx, uint8 stat) public onlyOwner{
+        database[idx].status = stat;
+        database[idx].registrar = keccak256(abi.encodePacked(msg.sender));
+    }
+    
+     /**
+     * @dev Administrative lock a database entry at index idx
+     */
+
+    function adminLock(uint idx) public onlyOwner{
+        
+        require(
+            database[idx].status != 255 ,
+            "Record already locked"
+        );
+        
+        database[idx].status = 255;
+        database[idx].registrar = keccak256(abi.encodePacked(msg.sender));
+    }
+    
+    /**
+     * @dev Administrative unlock a database entry at index idx
+     */
+
+    function adminUnLock(uint idx) public onlyOwner{
+        
+        require(
+            database[idx].status == 255 ,
+            "Record not locked"
+        );
+        
+        database[idx].status = 2;            // set to notransferrable on unlock????????????????????!!!!!!!!!!!!!!!!!
+        database[idx].registrar = keccak256(abi.encodePacked(msg.sender));
+    }
+    
+
+    /**
+     * @dev Store a complete record at index idx
+     */
+    function newRecord(uint idx, bytes32 regstrnt, uint8 stat) public {
         require(
             registeredUsers[keccak256(abi.encodePacked(msg.sender))] == 1 ,
             "Not authorized"
         );
+        require(
+            database[idx].registrant == 0 ,
+            "Record already exists"
+        );
+        require(
+            regstrnt != 0 ,
+            "Registrant cannot be empty"
+        );
+        
+        database[idx].registrar = keccak256(abi.encodePacked(msg.sender));
+        database[idx].registrant = regstrnt;
+        database[idx].status = stat;
+    }
+
+    
+    
+    /**
+     * @dev modify record field 'status' at index idx
+     */
+    
+    function modifyStatus(uint idx, uint8 stat) public {
+        require(
+            registeredUsers[keccak256(abi.encodePacked(msg.sender))] == 1 ,
+            "Not authorized"
+        );
+        require(
+            database[idx].registrant != 0 ,
+            "No Record exists to modify"
+        );
+        require(
+            database[idx].status != 255 ,
+            "Record locked"
+        );
+        
+        database[idx].registrar = keccak256(abi.encodePacked(msg.sender));
         database[idx].status = stat;
     }
     
-
-    /**
-     * @dev ----------------- OBSOLETE (REGISTRANT MUST BE AUTOMATICALLY PROVIDED)
+    
+        /**
+     * @dev modify record field 'registrant' at index idx
      */
-    function storeRecord(uint idx, uint regstr, uint regtrnt, uint stat) public {
+    
+    function modifyRegistrant(uint idx, bytes32 regstrnt) public {
         require(
             registeredUsers[keccak256(abi.encodePacked(msg.sender))] == 1 ,
             "Not authorized"
         );
-        database[idx].registrar = regstr;
-        database[idx].registrant = regtrnt;
-        database[idx].status = stat;
+        require(
+            database[idx].registrant != 0 ,
+            "No Record exists to modify"
+        );
+        require(
+            database[idx].status != 255 ,
+            "Record locked"
+        );
+        require(
+        database[idx].status != 2 ,
+            "Asset marked nontransferrable"
+        );
+        require(
+        database[idx].status != 3 ,
+            "Asset reported stolen"
+        );
+        require(
+        (database[idx].status == 0) || (database[idx].status == 1) ,
+            "Tranfer prohibited"
+        );
+        require(
+            regstrnt != 0 ,
+            "Registrant cannot be empty"
+        );
+        
+        database[idx].registrar = keccak256(abi.encodePacked(msg.sender));
+        database[idx].registrant = regstrnt;
     }
+    
+    
 
     /**
-     * @dev Return value from dtatbase at index idx
+     * @dev Return complete record from datatbase at index idx
      */
 
-    function retrieveRecord (uint idx) public view returns (uint,uint,uint){
+    function retrieveRecord (uint idx) public view returns (bytes32,bytes32,uint8){
         return (database[idx].registrar,database[idx].registrant,database[idx].status);
     }
     
- 
 }
