@@ -5,6 +5,7 @@ import "./Ownable.sol";
 /**
  * @title BP_Storage
  * @dev Store & retreive a record
+ * Need to explore the implications of registering with serial only and reregistering with serial+secret
  * 
  * Authorization for registry changes from adress -> uint mapping?
  * 
