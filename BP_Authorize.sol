@@ -61,11 +61,38 @@ contract BP_Authorize is Ownable {
     
     /**
      * @dev update an address from an existing address to make record modifications
+     * 
+     * ----------------INSECURE -- keccak256 of address must be generated clientside in release.
+     * something like:
+     * 
+     *function newAuthorize(bytes32 newAuthAddrHash) public {
+     *    require(
+     *        registeredUsers[keccak256(abi.encodePacked(msg.sender))] == 1 ,
+     *        "Not authorized"
+     *    );
+     *    
+     *    registeredUsers[newAuthAddrHash] = 1;
+     *    
+     *   registeredUsers[keccak256(abi.encodePacked(msg.sender))] = 0 ;
+     *}
+     * 
      */
     
-    //function newAuthorize(address authAddr) public onlyOwner {
-    //    registeredUsers[authAddr] = 0;
-    //}
+
+    
+    function newAuthorize(address newAuthAddr) public {
+        require(
+            registeredUsers[keccak256(abi.encodePacked(msg.sender))] == 1 ,
+            "Not authorized"
+        );
+        
+        bytes32 hash;
+        hash = keccak256(abi.encodePacked(newAuthAddr));
+        registeredUsers[hash] = 1;
+        
+        registeredUsers[keccak256(abi.encodePacked(msg.sender))] = 0 ;
+        
+    }
 
 
     /**
