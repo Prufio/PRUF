@@ -24,15 +24,27 @@ contract BP_Authorize is Ownable {
     mapping(uint => Record) public database; //registry
     mapping(address => uint) private registeredUsers; //authorized registrar database
     
+
+
+    /**
+     * @dev Authorize an address to make record modifications
+     */
     function authorize(address authAddr) public onlyOwner {
         registeredUsers[authAddr] = 1;
     }
+
+    /**
+     * @dev De-authorize an address to make record modifications
+     */
     
     function deauthorize(address authAddr) public onlyOwner {
         registeredUsers[authAddr] = 0;
     }
 
-     
+
+    /**
+     * @dev ----------------- OBSOLETE ----------------- OBSOLETE (REGISTRANT MUST BE AUTOMATICALLY PROVIDED)
+     */
     function storeRegistrar(uint idx, uint regstr) public {
         require(
             registeredUsers[msg.sender] == 1 ,
@@ -41,6 +53,10 @@ contract BP_Authorize is Ownable {
         database[idx].registrar = regstr;
     }
     
+    /**
+     * @dev Modify registrant field of aa database entry 
+     */
+
     function storeRegistrant(uint idx, uint regtrnt) public {
         require(
             registeredUsers[msg.sender] == 1 ,
@@ -49,6 +65,10 @@ contract BP_Authorize is Ownable {
         database[idx].registrant = regtrnt;
     }
     
+    /**
+     * @dev modify status field of a database entry
+     */
+
     function storeStatus(uint idx, uint stat) public {
         require(
             registeredUsers[msg.sender] == 1 ,
@@ -57,6 +77,10 @@ contract BP_Authorize is Ownable {
         database[idx].status = stat;
     }
     
+
+    /**
+     * @dev ----------------- OBSOLETE (REGISTRANT MUST BE AUTOMATICALLY PROVIDED)
+     */
     function storeRecord(uint idx, uint regstr, uint regtrnt, uint stat) public {
         require(
             registeredUsers[msg.sender] == 1 ,
@@ -68,17 +92,12 @@ contract BP_Authorize is Ownable {
     }
 
     /**
-     * @dev Return value from dtatbase 
-     * @return struct of 'database record idx'
+     * @dev Return value from dtatbase at index idx
      */
 
     function retrieveRecord (uint idx) public view returns (uint,uint,uint){
         return (database[idx].registrar,database[idx].registrant,database[idx].status);
     }
     
-   // function checkRecord(uint256 idx) public view returns (Record){   // I want the whole struct...but how?
-   //     Record memory entry;
-   //     entry = database[idx];
-   //     return entry;
-   //}
+ 
 }
