@@ -32,7 +32,7 @@ contract BulletProof is Ownable {
         uint8 status; // Status - Transferrable, locked, in transfer, stolen, lost, etc.
     }
     
-    mapping(uint => Record) public database; //registry
+    mapping(uint => Record) private database; //registry
     mapping(bytes32 => uint8) private registeredUsers; //authorized registrar database
 
     /**
@@ -167,7 +167,7 @@ contract BulletProof is Ownable {
     /**
      * @dev Store a complete record at index idx
      */
-    function newRecord(uint idx, bytes32 regstrnt, uint8 stat) public {
+    function newRecord(uint idx, bytes32 regstrnt, uint8 stat) private { //public
         require(
             registeredUsers[keccak256(abi.encodePacked(msg.sender))] == 1 ,
             "Not authorized"
@@ -214,7 +214,7 @@ contract BulletProof is Ownable {
      * @dev modify record field 'registrant' at index idx
      */
     
-    function modifyRegistrant(uint idx, bytes32 regstrnt) public {
+    function modifyRegistrant(uint idx, bytes32 regstrnt) private { //public
         require(
             registeredUsers[keccak256(abi.encodePacked(msg.sender))] == 1 ,
             "Not authorized"
