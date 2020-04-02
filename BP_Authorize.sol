@@ -79,7 +79,7 @@ contract BP_Authorize is Ownable {
      */
     
 
-    
+    /** This doesnt really work to prevent research to cross reference registrars and serial numbers
     function newAuthorize(address newAuthAddr) public {
         require(
             registeredUsers[keccak256(abi.encodePacked(msg.sender))] == 1 ,
@@ -91,9 +91,8 @@ contract BP_Authorize is Ownable {
         registeredUsers[hash] = 1;
         
         registeredUsers[keccak256(abi.encodePacked(msg.sender))] = 0 ;
-        
     }
-
+     */
 
     /**
      * @dev ----------------- OBSOLETE ----------------- OBSOLETE (REGISTRANT MUST BE AUTOMATICALLY PROVIDED)
