@@ -104,10 +104,10 @@ contract BulletProof is Ownable {
      * ----------------Security risk....probably should not be in production code
      */
 
-    function ForceOverwriteRegistrar(uint idx, bytes32 regstrar) public onlyOwner {
-        database[idx].registrar = regstrar;
-        database[idx].registrar = keccak256(abi.encodePacked(msg.sender));
-    }
+    //function ForceOverwriteRegistrar(uint idx, bytes32 regstrar) public onlyOwner {
+    //    database[idx].registrar = regstrar;
+    //    database[idx].registrar = keccak256(abi.encodePacked(msg.sender));
+    //}
     
     
     /**
@@ -115,10 +115,10 @@ contract BulletProof is Ownable {
      * ----------------Security risk....probably should not be in production code
      */
 
-    function forceOverwriteRegistrant(uint idx, bytes32 regtrnt) public onlyOwner {
-        database[idx].registrant = regtrnt;
-        database[idx].registrar = keccak256(abi.encodePacked(msg.sender));
-    }
+    //function forceOverwriteRegistrant(uint idx, bytes32 regtrnt) public onlyOwner {
+    //    database[idx].registrant = regtrnt;
+    //    database[idx].registrar = keccak256(abi.encodePacked(msg.sender));
+    //}
     
     
     /**
@@ -126,10 +126,10 @@ contract BulletProof is Ownable {
      * ----------------Security risk....probably should not be in production code
      */
 
-    function forceOverwriteStatus(uint idx, uint8 stat) public onlyOwner{
-        database[idx].status = stat;
-        database[idx].registrar = keccak256(abi.encodePacked(msg.sender));
-    }
+    //function forceOverwriteStatus(uint idx, uint8 stat) public onlyOwner{
+    //    database[idx].status = stat;
+    //    database[idx].registrar = keccak256(abi.encodePacked(msg.sender));
+    //}
     
     
      /**
