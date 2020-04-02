@@ -270,5 +270,24 @@ contract BulletProof is Ownable {
      * registrant compare / verify registrant hash
      * 
      */
+     
+     function NEW_RECORD (uint256 idx, string memory reg, uint8 stat) public {
+         newRecord(idx, keccak256(abi.encodePacked(reg)), stat);
+     }
+     
+     function MOD_REGISTRANT (uint256 idx, string memory reg) public {
+         modifyRegistrant(idx, keccak256(abi.encodePacked(reg)));
+     }
+     
+     function COMPARE_REGISTRANT (uint256 idx, string memory reg) public view returns(string memory){
+         
+         if (keccak256(abi.encodePacked(reg)) == database[idx].registrant){
+            return "Registrant match confirmed";
+         } else {
+            return "Registrant does not match";
+         }
+     }
+     
+     
     
 }
