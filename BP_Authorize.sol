@@ -6,7 +6,7 @@ import "./Ownable.sol";
  * @title BP_Storage
  * @dev Store & retreive a record
  * 
- * Authorization for registry changes from ERC721? or from adress -> uint mapping?
+ * Authorization for registry changes from adress -> uint mapping?
  * 
  * 
  * 
@@ -22,24 +22,50 @@ contract BP_Authorize is Ownable {
     }
     
     mapping(uint => Record) public database; //registry
-    mapping(address => uint) private registeredUsers; //authorized registrar database
+    mapping(bytes32 => uint8) private registeredUsers; //authorized registrar database
     
 
 
     /**
      * @dev Authorize an address to make record modifications
+     * ----------------INSECURE -- keccak256 of address must be generated clientside in release.
+     * something like:
+     * 
+     * function authorize(bytes32 authAddrHash) public onlyOwner {
+     *   registeredUsers[authAddrHash] = 1;
+     * }
      */
     function authorize(address authAddr) public onlyOwner {
-        registeredUsers[authAddr] = 1;
+        bytes32 hash;
+        hash = keccak256(abi.encodePacked(authAddr));
+        registeredUsers[hash] = 1;
     }
 
     /**
      * @dev De-authorize an address to make record modifications
+     * * ----------------INSECURE -- keccak256 of address must be generated clientside in release.
+     * something like:
+     * 
+     * function deauthorize(bytes32 authAddrHash) public onlyOwner {
+     *   registeredUsers[authAddrHash] = 0;
+     * }
+     * 
      */
     
     function deauthorize(address authAddr) public onlyOwner {
-        registeredUsers[authAddr] = 0;
+        bytes32 hash;
+        hash = keccak256(abi.encodePacked(authAddr));
+        registeredUsers[hash] = 0;
     }
+    
+    
+    /**
+     * @dev update an address from an existing address to make record modifications
+     */
+    
+    //function newAuthorize(address authAddr) public onlyOwner {
+    //    registeredUsers[authAddr] = 0;
+    //}
 
 
     /**
@@ -47,7 +73,7 @@ contract BP_Authorize is Ownable {
      */
     function storeRegistrar(uint idx, uint regstr) public {
         require(
-            registeredUsers[msg.sender] == 1 ,
+            registeredUsers[keccak256(abi.encodePacked(msg.sender))] == 1 ,
             "Not authorized"
         );
         database[idx].registrar = regstr;
@@ -59,7 +85,7 @@ contract BP_Authorize is Ownable {
 
     function storeRegistrant(uint idx, uint regtrnt) public {
         require(
-            registeredUsers[msg.sender] == 1 ,
+            registeredUsers[keccak256(abi.encodePacked(msg.sender))] == 1 ,
             "Not authorized"
         );
         database[idx].registrant = regtrnt;
@@ -71,7 +97,7 @@ contract BP_Authorize is Ownable {
 
     function storeStatus(uint idx, uint stat) public {
         require(
-            registeredUsers[msg.sender] == 1 ,
+            registeredUsers[keccak256(abi.encodePacked(msg.sender))] == 1 ,
             "Not authorized"
         );
         database[idx].status = stat;
@@ -83,7 +109,7 @@ contract BP_Authorize is Ownable {
      */
     function storeRecord(uint idx, uint regstr, uint regtrnt, uint stat) public {
         require(
-            registeredUsers[msg.sender] == 1 ,
+            registeredUsers[keccak256(abi.encodePacked(msg.sender))] == 1 ,
             "Not authorized"
         );
         database[idx].registrar = regstr;
