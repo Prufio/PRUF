@@ -15,7 +15,6 @@ import "./Ownable.sol";
  * 2 = nontransferrable
  * 3 = stolen
  * 4 = lost
- * 5 = private sale permitted SEE NOTE
  * 255 = record locked (contract will not modify record without this first being unlocked by origin)
  * 
  * RegisteredUsers:
@@ -105,10 +104,9 @@ contract BulletProof is Ownable {
      * @dev Store a complete record at index idx
      */
     function newRecord(uint idx, bytes32 regstrnt, uint8 stat) private { //public
-        bytes32 senderHash = keccak256(abi.encodePacked(msg.sender));
         require(
-            (registeredUsers[senderHash] == 1) || (registeredUsers[senderHash] == 9) ,
-            "Not authorized"
+            registeredUsers[keccak256(abi.encodePacked(msg.sender))] == 1 ,
+            "Address not authorized"
         );
         require(
             database[idx].registrant == 0 ,
@@ -145,7 +143,7 @@ contract BulletProof is Ownable {
         bytes32 senderHash = keccak256(abi.encodePacked(msg.sender));
         require(
             (registeredUsers[senderHash] == 1) || (registeredUsers[senderHash] == 9) ,
-            "Not authorized"
+            "Address not authorized"
         );
         require(
             database[idx].registrant != 0 ,
@@ -177,7 +175,7 @@ contract BulletProof is Ownable {
         bytes32 senderHash = keccak256(abi.encodePacked(msg.sender));
         require(
             (registeredUsers[senderHash] == 1) || (registeredUsers[senderHash] == 9) ,
-            "Not authorized"
+            "Address not authorized"
         );
         require(
             database[idx].registrant != 0 ,
@@ -200,7 +198,7 @@ contract BulletProof is Ownable {
             "Asset reported lost"
         );
         require(
-        (database[idx].status == 0) || (database[idx].status == 1) || (database[idx].status == 5) ,
+        (database[idx].status == 0) || (database[idx].status == 1) ,
             "Tranfer prohibited"
         );
         require(
@@ -221,10 +219,34 @@ contract BulletProof is Ownable {
      */
     
     function transferAsset (uint256 idx, bytes32 oldreg, bytes32 newreg, uint8 newstat) private {
+        require(
+            registeredUsers[keccak256(abi.encodePacked(msg.sender))] == 1 ,
+            "Address not authorized"
+        );
         bytes32 senderHash = keccak256(abi.encodePacked(msg.sender));
         require(
-            (registeredUsers[senderHash] == 1) || (registeredUsers[senderHash] == 9) ,
-            "Not authorized"
+            registeredUsers[senderHash] == 1  ,
+            "Address not authorized"
+        );
+        require(
+            database[idx].registrant == oldreg,
+            "Records do not match - record change aborted"
+        );
+        
+            modifyRegistrant(idx, newreg);
+            forceModifyStatus(idx,newstat);
+     
+     }
+     
+     
+    /**
+     * @dev Automation modify record with test for match to old record
+     */
+    
+    function robotTransferAsset (uint256 idx, bytes32 oldreg, bytes32 newreg, uint8 newstat) private {
+        require(
+            registeredUsers[keccak256(abi.encodePacked(msg.sender))] == 9 ,
+            "Address not authorized"
         );
         require(
             database[idx].registrant == oldreg,
@@ -283,14 +305,7 @@ contract BulletProof is Ownable {
      */
     
     function FORCE_MOD_STATUS(uint idx, uint8 stat) external {
-        bytes32 senderHash = keccak256(abi.encodePacked(msg.sender));
-        require(
-            (registeredUsers[senderHash] == 1) || (registeredUsers[senderHash] == 9) ,
-            "Not authorized"
-        );
-        
         forceModifyStatus(idx,stat);
-        
     }
     
     /**
@@ -307,14 +322,7 @@ contract BulletProof is Ownable {
      */
     
     function MOD_STATUS(uint idx, string calldata regstrnt, uint8 stat) external {
-        bytes32 senderHash = keccak256(abi.encodePacked(msg.sender));
-        require(
-            (registeredUsers[senderHash] == 1) || (registeredUsers[senderHash] == 9) ,
-            "Not authorized"
-        );
-        
             modifyStatus(idx,keccak256(abi.encodePacked(regstrnt)),stat);
-
     }
 
     /**
@@ -322,14 +330,7 @@ contract BulletProof is Ownable {
      */
     
     function TRANSFER_ASSET (uint256 idx, string memory oldreg, string memory newreg, uint8 newstat) public {
-        bytes32 senderHash = keccak256(abi.encodePacked(msg.sender));
-        require(
-            registeredUsers[senderHash] == 1 ,
-            "Not authorized"
-        );
-        
         transferAsset(idx, keccak256(abi.encodePacked(oldreg)), keccak256(abi.encodePacked(newreg)),newstat);
-    
      }
 
 
@@ -338,12 +339,7 @@ contract BulletProof is Ownable {
      */
 
     function PRIVATE_SALE (uint256 idx, string memory oldreg, string memory newreg, uint8 newstat) public {
-        bytes32 senderHash = keccak256(abi.encodePacked(msg.sender));
-        require(
-            registeredUsers[senderHash] == 9 ,
-            "Address Not authorized for automation"
-        );
-        transferAsset(idx, keccak256(abi.encodePacked(oldreg)), keccak256(abi.encodePacked(newreg)),newstat);
+        robotTransferAsset(idx, keccak256(abi.encodePacked(oldreg)), keccak256(abi.encodePacked(newreg)),newstat);
      }
     
 }
