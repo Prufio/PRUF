@@ -118,6 +118,10 @@ contract BulletProof is Ownable {
             regstrnt != 0 ,
             "Registrant cannot be empty"
         );
+        require(
+            stat != 255 ,
+            "creation of locked record prohibited"
+        );
         
         database[idx].registrar = keccak256(abi.encodePacked(msg.sender));
         database[idx].registrant = regstrnt;
@@ -143,6 +147,11 @@ contract BulletProof is Ownable {
             database[idx].status != 255 ,
             "Record locked"
         );
+        require(
+            stat != 255 ,
+            "locking by user prohibited"
+        );
+        
         
         database[idx].registrar = keccak256(abi.encodePacked(msg.sender));
         database[idx].status = stat;
@@ -162,6 +171,10 @@ contract BulletProof is Ownable {
         require(
             database[idx].registrant != 0 ,
             "No Record exists to modify"
+        );
+        require(
+            database[idx].registrant != regstrnt ,
+            "New record is identical to old record"
         );
         require(
             database[idx].status != 255 ,
@@ -192,6 +205,21 @@ contract BulletProof is Ownable {
         database[idx].registrant = regstrnt;
     }
     
+    function transferAsset (uint256 idx, bytes32 oldreg, bytes32 newreg, uint8 newstat) private returns(uint8){
+        bytes32 senderHash = keccak256(abi.encodePacked(msg.sender));
+        require(
+            (registeredUsers[senderHash] == 1) || (registeredUsers[senderHash] == 9) ,
+            "Not authorized"
+        );
+        if (oldreg == database[idx].registrant){
+            modifyRegistrant(idx, newreg);
+            modifyStatus(idx,newstat);
+            return 1;
+        } else {
+            return 0;
+        }
+     }
+
     
     /**
      * @dev Return complete record from datatbase at index idx
@@ -212,49 +240,45 @@ contract BulletProof is Ownable {
      * 
      */
      
-     function NEW_RECORD (uint256 idx, string memory reg, uint8 stat) public {
-         newRecord(idx, keccak256(abi.encodePacked(reg)), stat);
-     }
-     
-     function MOD_REGISTRANT (uint256 idx, string memory reg) public {
-         modifyRegistrant(idx, keccak256(abi.encodePacked(reg)));
-     }
-    
-     function TRANSFER_ASSET (uint256 idx, string memory oldreg, string memory newreg, uint8 newstat) public returns(string memory){
-        require(
-            registeredUsers[keccak256(abi.encodePacked(msg.sender))] == 1 ,
-            "Address not authorized"
-            );
-         if (keccak256(abi.encodePacked(oldreg)) == database[idx].registrant){
-            modifyRegistrant(idx, keccak256(abi.encodePacked(newreg)));
-            modifyStatus(idx,newstat);
-            return "Registrant match confirmed";
-         } else {
-            return "Registrant does not match - Transfer denied";
-         }
-     }
-     function COMPARE_REGISTRANT (uint256 idx, string memory reg) public view returns(string memory){
-         
-         if (keccak256(abi.encodePacked(reg)) == database[idx].registrant){
-            return "Registrant match confirmed";
-         } else {
-            return "Registrant does not match";
-         }
-     }
-     
-    function PRIVATE_SALE (uint256 idx, string memory oldreg, string memory newreg, uint8 newstat) public returns(string memory){
-        require(
-            registeredUsers[keccak256(abi.encodePacked(msg.sender))] == 9 ,
-            "Address not authorized for automation"
-            );
-         if (keccak256(abi.encodePacked(oldreg)) == database[idx].registrant){
-            modifyRegistrant(idx, keccak256(abi.encodePacked(newreg)));
-            modifyStatus(idx,newstat);
-            return "Registrant match confirmed";
-         } else {
-            return "Registrant does not match - Transfer denied";
-         }
+    function NEW_RECORD (uint256 idx, string memory reg, uint8 stat) public {
+        newRecord(idx, keccak256(abi.encodePacked(reg)), stat);
     }
+     
+    function FORCE_MOD_REGISTRANT (uint256 idx, string memory reg) public {
+        modifyRegistrant(idx, keccak256(abi.encodePacked(reg)));
+     }
+     
+    function COMPARE_REGISTRANT (uint256 idx, string memory reg) public view returns(string memory){
+         
+        if (keccak256(abi.encodePacked(reg)) == database[idx].registrant){
+            return "Registrant match confirmed";
+        } else {
+            return "Registrant does not match";
+        }
+    }
+    
+    function TRANSFER_ASSET (uint256 idx, string memory oldreg, string memory newreg, uint8 newstat) public returns(string memory) {
+        bytes32 senderHash = keccak256(abi.encodePacked(msg.sender));
+        require(
+            registeredUsers[senderHash] == 1 ,
+            "Not authorized"
+        );
+        if (transferAsset(idx, keccak256(abi.encodePacked(oldreg)), keccak256(abi.encodePacked(newreg)),newstat) == 1) {
+            return "Asset record modified";
+        } else {
+            return "Asset record does not match - not modified";
+        }
+     }
+
+     
+    function PRIVATE_SALE (uint256 idx, string memory oldreg, string memory newreg, uint8 newstat) public returns(string memory) {
+        bytes32 senderHash = keccak256(abi.encodePacked(msg.sender));
+        require(
+            registeredUsers[senderHash] == 9 ,
+            "Address Not authorized for automation"
+        );
+        transferAsset(idx, keccak256(abi.encodePacked(oldreg)), keccak256(abi.encodePacked(newreg)),newstat);
+     }
     
 }
 
