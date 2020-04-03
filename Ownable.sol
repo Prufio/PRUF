@@ -51,14 +51,14 @@ contract Ownable is Context {
      */
     //function renounceOwnership() public virtual onlyOwner {
     //    emit OwnershipTransferred(_owner, address(0));
-    //   _owner = address(0);
+    //    _owner = address(0);
     //}
 
     /**
      * @dev Transfers ownership of the contract to a new account (`newOwner`).
      * Can only be called by the current owner.
      */
-    function transferOwnership(address newOwner) public virtual onlyOwner {
+    function transferContractOwnership(address newOwner) public virtual onlyOwner {
         _transferOwnership(newOwner);
     }
 
