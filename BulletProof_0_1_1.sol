@@ -281,7 +281,7 @@ contract BulletProof is Ownable {
      * @dev Wrapper for force changing record status
      */
     
-    function FORCE_MOD_STATUS(uint idx, uint8 stat) private returns(string memory){
+    function FORCE_MOD_STATUS(uint idx, uint8 stat) public returns(string memory){
         bytes32 senderHash = keccak256(abi.encodePacked(msg.sender));
         require(
             (registeredUsers[senderHash] == 1) || (registeredUsers[senderHash] == 9) ,
@@ -332,6 +332,3 @@ contract BulletProof is Ownable {
      }
     
 }
-
- 
-    
