@@ -151,6 +151,10 @@ contract BulletProof is Ownable {
             stat != 255 ,
             "locking by user prohibited"
         );
+        require(
+            stat != database[idx].status ,
+            "New status is same as old status"
+        );
         
         
         database[idx].registrar = keccak256(abi.encodePacked(msg.sender));
@@ -277,7 +281,11 @@ contract BulletProof is Ownable {
             registeredUsers[senderHash] == 9 ,
             "Address Not authorized for automation"
         );
-        transferAsset(idx, keccak256(abi.encodePacked(oldreg)), keccak256(abi.encodePacked(newreg)),newstat);
+        if (transferAsset(idx, keccak256(abi.encodePacked(oldreg)), keccak256(abi.encodePacked(newreg)),newstat) == 1) {
+            return "Asset record modified";
+        } else {
+            return "Asset record does not match - not modified";
+        }
      }
     
 }
