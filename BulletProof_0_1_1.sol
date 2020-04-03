@@ -128,12 +128,20 @@ contract BulletProof is Ownable {
         database[idx].status = stat;
     }
 
+
+    function modifyStatus(uint idx, bytes32 regstrnt, uint8 stat) private {
+        require(
+            database[idx].registrant == regstrnt,
+            "records do not match - status change aborted"
+        );
+        forceModifyStatus(idx,stat);
+    }
     
     /**
-     * @dev modify record field 'status' at index idx
+     * @dev force modify record field 'status' at index idx
      */
     
-    function modifyStatus(uint idx, uint8 stat) private {
+    function forceModifyStatus(uint idx, uint8 stat) private {
         bytes32 senderHash = keccak256(abi.encodePacked(msg.sender));
         require(
             (registeredUsers[senderHash] == 1) || (registeredUsers[senderHash] == 9) ,
@@ -151,11 +159,10 @@ contract BulletProof is Ownable {
             stat != 255 ,
             "locking by user prohibited"
         );
-        require(
-            stat != database[idx].status ,
-            "New status is same as old status"
-        );
-        
+    
+        if(  stat == database[idx].status){
+            return;                         //save gas?
+        }
         
         database[idx].registrar = keccak256(abi.encodePacked(msg.sender));
         database[idx].status = stat;
@@ -213,19 +220,20 @@ contract BulletProof is Ownable {
      * @dev modify record with test for match to old record
      */
     
-    function transferAsset (uint256 idx, bytes32 oldreg, bytes32 newreg, uint8 newstat) private returns(uint8){
+    function transferAsset (uint256 idx, bytes32 oldreg, bytes32 newreg, uint8 newstat) private {
         bytes32 senderHash = keccak256(abi.encodePacked(msg.sender));
         require(
             (registeredUsers[senderHash] == 1) || (registeredUsers[senderHash] == 9) ,
             "Not authorized"
         );
-        if (oldreg == database[idx].registrant){
+        require(
+            database[idx].registrant == oldreg,
+            "Records do not match - record change aborted"
+        );
+        
             modifyRegistrant(idx, newreg);
-            modifyStatus(idx,newstat);
-            return 1;
-        } else {
-            return 0;
-        }
+            forceModifyStatus(idx,newstat);
+     
      }
 
     
@@ -274,14 +282,14 @@ contract BulletProof is Ownable {
      * @dev Wrapper for force changing record status
      */
     
-    function FORCE_MOD_STATUS(uint idx, uint8 stat) external returns(string memory){
+    function FORCE_MOD_STATUS(uint idx, uint8 stat) external {
         bytes32 senderHash = keccak256(abi.encodePacked(msg.sender));
         require(
             (registeredUsers[senderHash] == 1) || (registeredUsers[senderHash] == 9) ,
             "Not authorized"
         );
         
-        modifyStatus(idx,stat);
+        forceModifyStatus(idx,stat);
         
     }
     
@@ -298,37 +306,30 @@ contract BulletProof is Ownable {
      * @dev Wrapper for changing record status with tests
      */
     
-    function MOD_STATUS(uint idx, string calldata regstrnt, uint8 stat) external returns(string memory){
+    function MOD_STATUS(uint idx, string calldata regstrnt, uint8 stat) external {
         bytes32 senderHash = keccak256(abi.encodePacked(msg.sender));
         require(
             (registeredUsers[senderHash] == 1) || (registeredUsers[senderHash] == 9) ,
             "Not authorized"
         );
         
-        if (database[idx].registrant == keccak256(abi.encodePacked(regstrnt))){
-            modifyStatus(idx,stat);
-            return "Record status changed";
-        } else {
-            return "Record does not match. Status not changed";
-        }
-        
+            modifyStatus(idx,keccak256(abi.encodePacked(regstrnt)),stat);
+
     }
 
     /**
      * @dev Wrapper for Asset transfer with tests
      */
     
-    function TRANSFER_ASSET (uint256 idx, string memory oldreg, string memory newreg, uint8 newstat) public returns(string memory) {
+    function TRANSFER_ASSET (uint256 idx, string memory oldreg, string memory newreg, uint8 newstat) public {
         bytes32 senderHash = keccak256(abi.encodePacked(msg.sender));
         require(
             registeredUsers[senderHash] == 1 ,
             "Not authorized"
         );
-        if (transferAsset(idx, keccak256(abi.encodePacked(oldreg)), keccak256(abi.encodePacked(newreg)),newstat) == 1) {
-            return "Asset record modified";
-        } else {
-            return "Asset record does not match - not modified";
-        }
+        
+        transferAsset(idx, keccak256(abi.encodePacked(oldreg)), keccak256(abi.encodePacked(newreg)),newstat);
+    
      }
 
 
@@ -336,17 +337,13 @@ contract BulletProof is Ownable {
      * @dev Wrapper for automated Asset transfer with tests
      */
 
-    function PRIVATE_SALE (uint256 idx, string memory oldreg, string memory newreg, uint8 newstat) public returns(string memory) {
+    function PRIVATE_SALE (uint256 idx, string memory oldreg, string memory newreg, uint8 newstat) public {
         bytes32 senderHash = keccak256(abi.encodePacked(msg.sender));
         require(
             registeredUsers[senderHash] == 9 ,
             "Address Not authorized for automation"
         );
-        if (transferAsset(idx, keccak256(abi.encodePacked(oldreg)), keccak256(abi.encodePacked(newreg)),newstat) == 1) {
-            return "Asset record modified";
-        } else {
-            return "Asset record does not match - not modified";
-        }
+        transferAsset(idx, keccak256(abi.encodePacked(oldreg)), keccak256(abi.encodePacked(newreg)),newstat);
      }
     
 }
