@@ -133,7 +133,7 @@ contract BulletProof is Ownable {
      * @dev modify record field 'status' at index idx
      */
     
-    function modifyStatus(uint idx, uint8 stat) private returns(uint8){
+    function modifyStatus(uint idx, uint8 stat) private {
         bytes32 senderHash = keccak256(abi.encodePacked(msg.sender));
         require(
             (registeredUsers[senderHash] == 1) || (registeredUsers[senderHash] == 9) ,
@@ -252,23 +252,16 @@ contract BulletProof is Ownable {
      * @dev Wrapper for create new record
      */
      
-    function NEW_RECORD (uint256 idx, string memory reg, uint8 stat) public {
+    function NEW_RECORD (uint256 idx, string calldata reg, uint8 stat) external {
         newRecord(idx, keccak256(abi.encodePacked(reg)), stat);
     }
 
-    /**
-     * @dev Wrapper for force changing the record without tests
-     */
-     
-    function FORCE_MOD_REGISTRANT (uint256 idx, string memory reg) public {
-        modifyRegistrant(idx, keccak256(abi.encodePacked(reg)));
-    }
 
     /**
      * @dev Wrapper for comparing records
      */
      
-    function COMPARE_REGISTRANT (uint256 idx, string memory reg) public view returns(string memory){
+    function COMPARE_REGISTRANT (uint256 idx, string calldata reg) external view returns(string memory){
          
         if (keccak256(abi.encodePacked(reg)) == database[idx].registrant){
             return "Registrant match confirmed";
@@ -281,17 +274,42 @@ contract BulletProof is Ownable {
      * @dev Wrapper for force changing record status
      */
     
-    function FORCE_MOD_STATUS(uint idx, uint8 stat) public returns(string memory){
+    function FORCE_MOD_STATUS(uint idx, uint8 stat) external returns(string memory){
         bytes32 senderHash = keccak256(abi.encodePacked(msg.sender));
         require(
             (registeredUsers[senderHash] == 1) || (registeredUsers[senderHash] == 9) ,
             "Not authorized"
         );
         
-        if (modifyStatus(idx,stat) == 1){
-            return "Status Modified";
+        modifyStatus(idx,stat);
+        
+    }
+    
+    /**
+     * @dev Wrapper for force changing the record without tests
+     */
+     
+    function FORCE_MOD_REGISTRANT (uint256 idx, string calldata reg) external {
+        modifyRegistrant(idx, keccak256(abi.encodePacked(reg)));
+    }
+    
+    
+    /**
+     * @dev Wrapper for changing record status with tests
+     */
+    
+    function MOD_STATUS(uint idx, string calldata regstrnt, uint8 stat) external returns(string memory){
+        bytes32 senderHash = keccak256(abi.encodePacked(msg.sender));
+        require(
+            (registeredUsers[senderHash] == 1) || (registeredUsers[senderHash] == 9) ,
+            "Not authorized"
+        );
+        
+        if (database[idx].registrant == keccak256(abi.encodePacked(regstrnt))){
+            modifyStatus(idx,stat);
+            return "Record status changed";
         } else {
-            return "Modify Failed";
+            return "Record does not match. Status not changed";
         }
         
     }
@@ -332,3 +350,6 @@ contract BulletProof is Ownable {
      }
     
 }
+
+ 
+    
