@@ -208,6 +208,10 @@ contract BulletProof is Ownable {
         database[idx].registrar = keccak256(abi.encodePacked(msg.sender));
         database[idx].registrant = regstrnt;
     }
+
+     /**
+     * @dev modify record with test for match to old record
+     */
     
     function transferAsset (uint256 idx, bytes32 oldreg, bytes32 newreg, uint8 newstat) private returns(uint8){
         bytes32 senderHash = keccak256(abi.encodePacked(msg.sender));
@@ -243,14 +247,26 @@ contract BulletProof is Ownable {
      * registrant compare / verify registrant hash
      * 
      */
+
+    /**
+     * @dev Wrapper for create new record
+     */
      
     function NEW_RECORD (uint256 idx, string memory reg, uint8 stat) public {
         newRecord(idx, keccak256(abi.encodePacked(reg)), stat);
     }
+
+    /**
+     * @dev Wrapper for force changing the record without tests
+     */
      
     function FORCE_MOD_REGISTRANT (uint256 idx, string memory reg) public {
         modifyRegistrant(idx, keccak256(abi.encodePacked(reg)));
-     }
+    }
+
+    /**
+     * @dev Wrapper for comparing records
+     */
      
     function COMPARE_REGISTRANT (uint256 idx, string memory reg) public view returns(string memory){
          
@@ -260,6 +276,10 @@ contract BulletProof is Ownable {
             return "Registrant does not match";
         }
     }
+
+    /**
+     * @dev Wrapper for force changing record status
+     */
     
     function FORCE_MOD_STATUS(uint idx, uint8 stat) private returns(string memory){
         bytes32 senderHash = keccak256(abi.encodePacked(msg.sender));
@@ -275,6 +295,10 @@ contract BulletProof is Ownable {
         }
         
     }
+
+    /**
+     * @dev Wrapper for Asset transfer with tests
+     */
     
     function TRANSFER_ASSET (uint256 idx, string memory oldreg, string memory newreg, uint8 newstat) public returns(string memory) {
         bytes32 senderHash = keccak256(abi.encodePacked(msg.sender));
@@ -289,7 +313,11 @@ contract BulletProof is Ownable {
         }
      }
 
-     
+
+     /**
+     * @dev Wrapper for automated Asset transfer with tests
+     */
+
     function PRIVATE_SALE (uint256 idx, string memory oldreg, string memory newreg, uint8 newstat) public returns(string memory) {
         bytes32 senderHash = keccak256(abi.encodePacked(msg.sender));
         require(
@@ -305,66 +333,5 @@ contract BulletProof is Ownable {
     
 }
 
-   /**
-     * @dev update an address from an existing address to make record modifications
-     * 
-     * ----------------INSECURE -- keccak256 of address must be generated clientside in release.
-     * something like:
-     * 
-     *function newAuthorize(bytes32 newAuthAddrHash) public {
-     *    require(
-     *        registeredUsers[keccak256(abi.encodePacked(msg.sender))] == 1 ,
-     *        "Not authorized"
-     *    );
-     *    
-     *    registeredUsers[newAuthAddrHash] = 1;
-     *    
-     *   registeredUsers[keccak256(abi.encodePacked(msg.sender))] = 0 ;
-     *}
-     * 
-     */
-    //-----------------------------------------------------This function and the activity it is designed to support (address hopping) will not meaningfully enhance security
-    //function newAuthorize(address newAuthAddr) public {
-    //    require(
-    //        registeredUsers[keccak256(abi.encodePacked(msg.sender))] == 1 ,
-    //        "Not authorized"
-    //    );
-    //    
-    //    bytes32 hash;
-    //    hash = keccak256(abi.encodePacked(newAuthAddr));
-    //    registeredUsers[hash] = 1;
-    //    registeredUsers[keccak256(abi.encodePacked(msg.sender))] = 0 ;
-    //}
-
-    /**
-     * @dev Administrative Modify registrar field of aa database entry 
-     * ----------------Security risk....probably should not be in production code
-     */
-
-    //function ForceOverwriteRegistrar(uint idx, bytes32 regstrar) public onlyOwner {
-    //    database[idx].registrar = regstrar;
-    //    database[idx].registrar = keccak256(abi.encodePacked(msg.sender));
-    //}
-    
-    
-    /**
-     * @dev Administrative Modify registrant field of aa database entry 
-     * ----------------Security risk....probably should not be in production code
-     */
-
-    //function forceOverwriteRegistrant(uint idx, bytes32 regtrnt) public onlyOwner {
-    //    database[idx].registrant = regtrnt;
-    //    database[idx].registrar = keccak256(abi.encodePacked(msg.sender));
-    //}
-    
-    
-    /**
-     * @dev Administrative modify status field of a database entry
-     * ----------------Security risk....probably should not be in production code
-     */
-
-    //function forceOverwriteStatus(uint idx, uint8 stat) public onlyOwner{
-    //    database[idx].status = stat;
-    //    database[idx].registrar = keccak256(abi.encodePacked(msg.sender));
-    //}
+ 
     
