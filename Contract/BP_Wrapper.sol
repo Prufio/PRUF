@@ -1,6 +1,6 @@
 pragma solidity ^0.6.0;
  
- import "./BulletProof_0_1_2.sol";
+ import "./BulletProof_0_1_3.sol";
  
  contract Wrapper is BulletProof {
     /**
