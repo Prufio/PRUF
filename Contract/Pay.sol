@@ -20,5 +20,3 @@ function pay() external payable {
     regFee = _fee;
     }
 }
-
-//test
