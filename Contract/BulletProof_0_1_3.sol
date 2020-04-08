@@ -1,7 +1,7 @@
 pragma solidity ^0.6.0;
 
 /**
- * @title BP_Storage
+ * @title BulletProof
  * @dev Store & retreive a record
  * Need to explore the implications of registering with serial only and reregistering with serial+secret
  * 
@@ -95,9 +95,9 @@ contract BulletProof is Storage {
     /**
      * @dev Store a complete record at index idx
      */
-    function newRecord(uint idx, bytes32 regstrnt, uint8 stat) internal { //public
+    function newRecord(address sender, uint idx, bytes32 regstrnt, uint8 stat) internal { //public
         require(
-            registeredUsers[keccak256(abi.encodePacked(msg.sender))] == 1 ,
+            registeredUsers[keccak256(abi.encodePacked(sender))] == 1 ,
             "Address not authorized"
         );
         require(
@@ -113,26 +113,26 @@ contract BulletProof is Storage {
             "creation of locked record prohibited"
         );
         
-        database[idx].registrar = keccak256(abi.encodePacked(msg.sender));
+        database[idx].registrar = keccak256(abi.encodePacked(sender));
         database[idx].registrant = regstrnt;
         database[idx].status = stat;
     }
 
 
-    function modifyStatus(uint idx, bytes32 regstrnt, uint8 stat) internal {
+    function modifyStatus(address sender, uint idx, bytes32 regstrnt, uint8 stat) internal {
         require(
             database[idx].registrant == regstrnt,
             "records do not match - status change aborted"
         );
-        forceModifyStatus(idx,stat);
+        forceModifyStatus(sender,idx,stat);
     }
     
     /**
      * @dev force modify record field 'status' at index idx
      */
     
-    function forceModifyStatus(uint idx, uint8 stat) internal {
-        bytes32 senderHash = keccak256(abi.encodePacked(msg.sender));
+    function forceModifyStatus(address sender, uint idx, uint8 stat) internal {
+        bytes32 senderHash = keccak256(abi.encodePacked(sender));
         require(
             (registeredUsers[senderHash] == 1) || (registeredUsers[senderHash] == 9) ,
             "Address not authorized"
@@ -154,7 +154,7 @@ contract BulletProof is Storage {
             return;                         //save gas?
         }
         
-        database[idx].registrar = keccak256(abi.encodePacked(msg.sender));
+        database[idx].registrar = keccak256(abi.encodePacked(sender));
         database[idx].status = stat;
     }
     
@@ -163,8 +163,8 @@ contract BulletProof is Storage {
      * @dev modify record field 'registrant' at index idx
      */
     
-    function modifyRegistrant(uint idx, bytes32 regstrnt) internal { //public
-        bytes32 senderHash = keccak256(abi.encodePacked(msg.sender));
+    function modifyRegistrant(address sender, uint idx, bytes32 regstrnt) internal { //public
+        bytes32 senderHash = keccak256(abi.encodePacked(sender));
         require(
             (registeredUsers[senderHash] == 1) || (registeredUsers[senderHash] == 9) ,
             "Address not authorized"
@@ -202,7 +202,7 @@ contract BulletProof is Storage {
             "New record is identical to old record"
         );
         
-        database[idx].registrar = keccak256(abi.encodePacked(msg.sender));
+        database[idx].registrar = keccak256(abi.encodePacked(sender));
         database[idx].registrant = regstrnt;
     }
 
@@ -210,9 +210,9 @@ contract BulletProof is Storage {
      * @dev modify record with test for match to old record
      */
     
-    function transferAsset (uint256 idx, bytes32 oldreg, bytes32 newreg, uint8 newstat) internal {
+    function transferAsset (address sender, uint256 idx, bytes32 oldreg, bytes32 newreg, uint8 newstat) internal {
         require(
-            registeredUsers[keccak256(abi.encodePacked(msg.sender))] == 1  ,
+            registeredUsers[keccak256(abi.encodePacked(sender))] == 1  ,
             "Address not authorized"
         );
         require(
@@ -220,8 +220,8 @@ contract BulletProof is Storage {
             "Records do not match - record change aborted"
         );
         
-        modifyRegistrant(idx, newreg);
-        forceModifyStatus(idx,newstat);
+        modifyRegistrant(sender, idx, newreg);
+        forceModifyStatus(sender, idx, newstat);
      
      }
      
@@ -230,9 +230,9 @@ contract BulletProof is Storage {
      * @dev Automation modify record with test for match to old record
      */
     
-    function robotTransferAsset (uint256 idx, bytes32 oldreg, bytes32 newreg, uint8 newstat) internal {
+    function robotTransferAsset (address sender, uint256 idx, bytes32 oldreg, bytes32 newreg, uint8 newstat) internal {
         require(
-            registeredUsers[keccak256(abi.encodePacked(msg.sender))] == 9 ,
+            registeredUsers[keccak256(abi.encodePacked(sender))] == 9 ,
             "Address not authorized"
         );
         require(
@@ -240,8 +240,8 @@ contract BulletProof is Storage {
             "Records do not match - record change aborted"
         );
         
-        modifyRegistrant(idx, newreg);
-        forceModifyStatus(idx,newstat);
+        modifyRegistrant(sender, idx, newreg);
+        forceModifyStatus(sender, idx, newstat);
      
      }
 
