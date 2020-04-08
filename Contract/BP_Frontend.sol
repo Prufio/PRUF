@@ -1,6 +1,6 @@
 pragma solidity ^0.6.0;
  
- import "./BulletProof_0_1_3.sol";
+ import "./BulletProof_0_2_0.sol";
  import "./PullPayment.sol";
  import "./SafeMath.sol";
  

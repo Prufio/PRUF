@@ -1,9 +1,7 @@
-pragma solidity >=0.4.22 <0.7.0;
-
-import "./Ownable.sol";
+pragma solidity ^0.6.0;
 
 /**
- * @title BP_Storage
+ * @title BulletProof
  * @dev Store & retreive a record
  * Need to explore the implications of registering with serial only and reregistering with serial+secret
  * 
@@ -15,7 +13,6 @@ import "./Ownable.sol";
  * 2 = nontransferrable
  * 3 = stolen
  * 4 = lost
- * 5 = private sale permitted SEE NOTE
  * 255 = record locked (contract will not modify record without this first being unlocked by origin)
  * 
  * RegisteredUsers:
@@ -30,16 +27,10 @@ import "./Ownable.sol";
  * 
  */
 
-contract BulletProof is Ownable {
+import "./BP_Storage.sol";
+
+contract BulletProof is Storage {
     
-    struct Record {
-        bytes32 registrar; // tokenID (or address) of registrant 
-        bytes32 registrant;  // KEK256 Registered  owner
-        uint8 status; // Status - Transferrable, locked, in transfer, stolen, lost, etc.
-    }
-    
-    mapping(uint => Record) private database; //registry
-    mapping(bytes32 => uint8) private registeredUsers; //authorized registrar database
 
     /**
      * @dev Authorize / Deauthorize / Authorize automation for an address be permitted to make record modifications
@@ -73,7 +64,7 @@ contract BulletProof is Ownable {
      * @dev Administrative lock a database entry at index idx
      */
 
-    function adminLock(uint idx) public onlyOwner{
+    function adminLock(uint idx) public onlyOwner {
         
         require(
             database[idx].status != 255 ,
@@ -89,7 +80,7 @@ contract BulletProof is Ownable {
      * @dev Administrative unlock a database entry at index idx
      */
 
-    function adminUnLock(uint idx) public onlyOwner{
+    function adminUnLock(uint idx) public onlyOwner {
         
         require(
             database[idx].status == 255 ,
@@ -104,11 +95,10 @@ contract BulletProof is Ownable {
     /**
      * @dev Store a complete record at index idx
      */
-    function newRecord(uint idx, bytes32 regstrnt, uint8 stat) private { //public
-        bytes32 senderHash = keccak256(abi.encodePacked(msg.sender));
+    function newRecord(address sender, uint idx, bytes32 regstrnt, uint8 stat) internal { //public
         require(
-            (registeredUsers[senderHash] == 1) || (registeredUsers[senderHash] == 9) ,
-            "Not authorized"
+            registeredUsers[keccak256(abi.encodePacked(sender))] == 1 ,
+            "Address not authorized"
         );
         require(
             database[idx].registrant == 0 ,
@@ -123,21 +113,29 @@ contract BulletProof is Ownable {
             "creation of locked record prohibited"
         );
         
-        database[idx].registrar = keccak256(abi.encodePacked(msg.sender));
+        database[idx].registrar = keccak256(abi.encodePacked(sender));
         database[idx].registrant = regstrnt;
         database[idx].status = stat;
     }
 
+
+    function modifyStatus(address sender, uint idx, bytes32 regstrnt, uint8 stat) internal {
+        require(
+            database[idx].registrant == regstrnt,
+            "records do not match - status change aborted"
+        );
+        forceModifyStatus(sender,idx,stat);
+    }
     
     /**
-     * @dev modify record field 'status' at index idx
+     * @dev force modify record field 'status' at index idx
      */
     
-    function modifyStatus(uint idx, uint8 stat) public {
-        bytes32 senderHash = keccak256(abi.encodePacked(msg.sender));
+    function forceModifyStatus(address sender, uint idx, uint8 stat) internal {
+        bytes32 senderHash = keccak256(abi.encodePacked(sender));
         require(
             (registeredUsers[senderHash] == 1) || (registeredUsers[senderHash] == 9) ,
-            "Not authorized"
+            "Address not authorized"
         );
         require(
             database[idx].registrant != 0 ,
@@ -151,13 +149,12 @@ contract BulletProof is Ownable {
             stat != 255 ,
             "locking by user prohibited"
         );
-        require(
-            stat != database[idx].status ,
-            "New status is same as old status"
-        );
+    
+        if(  stat == database[idx].status) {
+            return;                         //save gas?
+        }
         
-        
-        database[idx].registrar = keccak256(abi.encodePacked(msg.sender));
+        database[idx].registrar = keccak256(abi.encodePacked(sender));
         database[idx].status = stat;
     }
     
@@ -166,62 +163,86 @@ contract BulletProof is Ownable {
      * @dev modify record field 'registrant' at index idx
      */
     
-    function modifyRegistrant(uint idx, bytes32 regstrnt) private { //public
-        bytes32 senderHash = keccak256(abi.encodePacked(msg.sender));
+    function modifyRegistrant(address sender, uint idx, bytes32 regstrnt) internal { //public
+        bytes32 senderHash = keccak256(abi.encodePacked(sender));
         require(
             (registeredUsers[senderHash] == 1) || (registeredUsers[senderHash] == 9) ,
-            "Not authorized"
+            "Address not authorized"
         );
         require(
             database[idx].registrant != 0 ,
             "No Record exists to modify"
         );
         require(
-            database[idx].registrant != regstrnt ,
-            "New record is identical to old record"
-        );
-        require(
             database[idx].status != 255 ,
             "Record locked"
         );
         require(
-        database[idx].status != 2 ,
+            database[idx].status != 2 ,
             "Asset marked nontransferrable"
         );
         require(
-        database[idx].status != 3 ,
+            database[idx].status != 3 ,
             "Asset reported stolen"
         );
         require(
-        database[idx].status != 4 ,
+            database[idx].status != 4 ,
             "Asset reported lost"
         );
         require(
-        (database[idx].status == 0) || (database[idx].status == 1) || (database[idx].status == 5) ,
+            (database[idx].status == 0) || (database[idx].status == 1) ,
             "Tranfer prohibited"
         );
         require(
             regstrnt != 0 ,
             "Registrant cannot be empty"
         );
+        require(
+            database[idx].registrant != regstrnt ,
+            "New record is identical to old record"
+        );
         
-        database[idx].registrar = keccak256(abi.encodePacked(msg.sender));
+        database[idx].registrar = keccak256(abi.encodePacked(sender));
         database[idx].registrant = regstrnt;
     }
+
+     /**
+     * @dev modify record with test for match to old record
+     */
     
-    function transferAsset (uint256 idx, bytes32 oldreg, bytes32 newreg, uint8 newstat) private returns(uint8){
-        bytes32 senderHash = keccak256(abi.encodePacked(msg.sender));
+    function transferAsset (address sender, uint256 idx, bytes32 oldreg, bytes32 newreg, uint8 newstat) internal {
         require(
-            (registeredUsers[senderHash] == 1) || (registeredUsers[senderHash] == 9) ,
-            "Not authorized"
+            registeredUsers[keccak256(abi.encodePacked(sender))] == 1  ,
+            "Address not authorized"
         );
-        if (oldreg == database[idx].registrant){
-            modifyRegistrant(idx, newreg);
-            modifyStatus(idx,newstat);
-            return 1;
-        } else {
-            return 0;
-        }
+        require(
+            database[idx].registrant == oldreg,
+            "Records do not match - record change aborted"
+        );
+        
+        modifyRegistrant(sender, idx, newreg);
+        forceModifyStatus(sender, idx, newstat);
+     
+     }
+     
+     
+    /**
+     * @dev Automation modify record with test for match to old record
+     */
+    
+    function robotTransferAsset (address sender, uint256 idx, bytes32 oldreg, bytes32 newreg, uint8 newstat) internal {
+        require(
+            registeredUsers[keccak256(abi.encodePacked(sender))] == 9 ,
+            "Address not authorized"
+        );
+        require(
+            database[idx].registrant == oldreg,
+            "Records do not match - record change aborted"
+        );
+        
+        modifyRegistrant(sender, idx, newreg);
+        forceModifyStatus(sender, idx, newstat);
+     
      }
 
     
@@ -229,7 +250,7 @@ contract BulletProof is Ownable {
      * @dev Return complete record from datatbase at index idx
      */
 
-    function retrieveRecord (uint idx) public view returns (bytes32,bytes32,uint8){
+    function retrieveRecord (uint idx) public view returns (bytes32,bytes32,uint8) {
         return (database[idx].registrar,database[idx].registrant,database[idx].status);
     }
     
@@ -243,113 +264,5 @@ contract BulletProof is Ownable {
      * registrant compare / verify registrant hash
      * 
      */
-     
-    function NEW_RECORD (uint256 idx, string memory reg, uint8 stat) public {
-        newRecord(idx, keccak256(abi.encodePacked(reg)), stat);
-    }
-     
-    function FORCE_MOD_REGISTRANT (uint256 idx, string memory reg) public {
-        modifyRegistrant(idx, keccak256(abi.encodePacked(reg)));
-     }
-     
-    function COMPARE_REGISTRANT (uint256 idx, string memory reg) public view returns(string memory){
-         
-        if (keccak256(abi.encodePacked(reg)) == database[idx].registrant){
-            return "Registrant match confirmed";
-        } else {
-            return "Registrant does not match";
-        }
-    }
-    
-    function TRANSFER_ASSET (uint256 idx, string memory oldreg, string memory newreg, uint8 newstat) public returns(string memory) {
-        bytes32 senderHash = keccak256(abi.encodePacked(msg.sender));
-        require(
-            registeredUsers[senderHash] == 1 ,
-            "Not authorized"
-        );
-        if (transferAsset(idx, keccak256(abi.encodePacked(oldreg)), keccak256(abi.encodePacked(newreg)),newstat) == 1) {
-            return "Asset record modified";
-        } else {
-            return "Asset record does not match - not modified";
-        }
-     }
-
-     
-    function PRIVATE_SALE (uint256 idx, string memory oldreg, string memory newreg, uint8 newstat) public returns(string memory) {
-        bytes32 senderHash = keccak256(abi.encodePacked(msg.sender));
-        require(
-            registeredUsers[senderHash] == 9 ,
-            "Address Not authorized for automation"
-        );
-        if (transferAsset(idx, keccak256(abi.encodePacked(oldreg)), keccak256(abi.encodePacked(newreg)),newstat) == 1) {
-            return "Asset record modified";
-        } else {
-            return "Asset record does not match - not modified";
-        }
-     }
     
 }
-
-   /**
-     * @dev update an address from an existing address to make record modifications
-     * 
-     * ----------------INSECURE -- keccak256 of address must be generated clientside in release.
-     * something like:
-     * 
-     *function newAuthorize(bytes32 newAuthAddrHash) public {
-     *    require(
-     *        registeredUsers[keccak256(abi.encodePacked(msg.sender))] == 1 ,
-     *        "Not authorized"
-     *    );
-     *    
-     *    registeredUsers[newAuthAddrHash] = 1;
-     *    
-     *   registeredUsers[keccak256(abi.encodePacked(msg.sender))] = 0 ;
-     *}
-     * 
-     */
-    //-----------------------------------------------------This function and the activity it is designed to support (address hopping) will not meaningfully enhance security
-    //function newAuthorize(address newAuthAddr) public {
-    //    require(
-    //        registeredUsers[keccak256(abi.encodePacked(msg.sender))] == 1 ,
-    //        "Not authorized"
-    //    );
-    //    
-    //    bytes32 hash;
-    //    hash = keccak256(abi.encodePacked(newAuthAddr));
-    //    registeredUsers[hash] = 1;
-    //    registeredUsers[keccak256(abi.encodePacked(msg.sender))] = 0 ;
-    //}
-
-    /**
-     * @dev Administrative Modify registrar field of aa database entry 
-     * ----------------Security risk....probably should not be in production code
-     */
-
-    //function ForceOverwriteRegistrar(uint idx, bytes32 regstrar) public onlyOwner {
-    //    database[idx].registrar = regstrar;
-    //    database[idx].registrar = keccak256(abi.encodePacked(msg.sender));
-    //}
-    
-    
-    /**
-     * @dev Administrative Modify registrant field of aa database entry 
-     * ----------------Security risk....probably should not be in production code
-     */
-
-    //function forceOverwriteRegistrant(uint idx, bytes32 regtrnt) public onlyOwner {
-    //    database[idx].registrant = regtrnt;
-    //    database[idx].registrar = keccak256(abi.encodePacked(msg.sender));
-    //}
-    
-    
-    /**
-     * @dev Administrative modify status field of a database entry
-     * ----------------Security risk....probably should not be in production code
-     */
-
-    //function forceOverwriteStatus(uint idx, uint8 stat) public onlyOwner{
-    //    database[idx].status = stat;
-    //    database[idx].registrar = keccak256(abi.encodePacked(msg.sender));
-    //}
-    
