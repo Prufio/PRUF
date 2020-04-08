@@ -305,7 +305,7 @@ contract BulletProof is Storage {
             "Records do not match - record change aborted"
         );
         
-        modifyRegistrant(sender, idx, newreg);
+        robotModifyRegistrant(sender, idx, newreg);
         robotModifyStatus(sender, idx, newstat);
      
      }
