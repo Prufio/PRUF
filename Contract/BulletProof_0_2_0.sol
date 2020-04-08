@@ -31,7 +31,6 @@ import "./BP_Storage.sol";
 
 contract BulletProof is Storage {
     
-
     /**
      * @dev Authorize / Deauthorize / Authorize automation for an address be permitted to make record modifications
      * ----------------INSECURE -- keccak256 of address must be generated clientside in release.
@@ -59,7 +58,6 @@ contract BulletProof is Storage {
         registeredUsers[hash] = 0;
     }
     
-    
      /**
      * @dev Administrative lock a database entry at index idx
      */
@@ -75,7 +73,6 @@ contract BulletProof is Storage {
         database[idx].registrar = keccak256(abi.encodePacked(msg.sender));
     }
     
-    
     /**
      * @dev Administrative unlock a database entry at index idx
      */
@@ -90,7 +87,6 @@ contract BulletProof is Storage {
         database[idx].status = 2;            // set to notransferrable on unlock????????????????????!!!!!!!!!!!!!!!!!
         database[idx].registrar = keccak256(abi.encodePacked(msg.sender));
     }
-    
 
     /**
      * @dev Store a complete record at index idx
@@ -117,7 +113,6 @@ contract BulletProof is Storage {
         database[idx].registrant = regstrnt;
         database[idx].status = stat;
     }
-
 
     function modifyStatus(address sender, uint idx, bytes32 regstrnt, uint8 stat) internal {
         require(
@@ -157,7 +152,6 @@ contract BulletProof is Storage {
         database[idx].registrar = keccak256(abi.encodePacked(sender));
         database[idx].status = stat;
     }
-    
     
     /**
      * @dev modify record field 'registrant' at index idx
@@ -225,7 +219,6 @@ contract BulletProof is Storage {
      
      }
      
-     
     /**
      * @dev Automation modify record with test for match to old record
      */
@@ -245,7 +238,6 @@ contract BulletProof is Storage {
      
      }
 
-    
     /**
      * @dev Return complete record from datatbase at index idx
      */
@@ -253,7 +245,6 @@ contract BulletProof is Storage {
     function retrieveRecord (uint idx) public view returns (bytes32,bytes32,uint8) {
         return (database[idx].registrar,database[idx].registrant,database[idx].status);
     }
-    
 
     /** Funtions for plaintext contract interaction
      * ------------------------------------------------------------------------------------------------------------------------------------------------
