@@ -1,2 +1,2 @@
 # Bulletproof
-Bulletproof registry system
+Blockchain powered decentralized asset registry

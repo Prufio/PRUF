@@ -72,7 +72,7 @@ contract BulletProof is Ownable {
      * @dev Administrative lock a database entry at index idx
      */
 
-    function adminLock(uint idx) public onlyOwner{
+    function adminLock(uint idx) public onlyOwner {
         
         require(
             database[idx].status != 255 ,
@@ -88,7 +88,7 @@ contract BulletProof is Ownable {
      * @dev Administrative unlock a database entry at index idx
      */
 
-    function adminUnLock(uint idx) public onlyOwner{
+    function adminUnLock(uint idx) public onlyOwner {
         
         require(
             database[idx].status == 255 ,
@@ -158,7 +158,7 @@ contract BulletProof is Ownable {
             "locking by user prohibited"
         );
     
-        if(  stat == database[idx].status){
+        if(  stat == database[idx].status) {
             return;                         //save gas?
         }
         
@@ -186,19 +186,19 @@ contract BulletProof is Ownable {
             "Record locked"
         );
         require(
-        database[idx].status != 2 ,
+            database[idx].status != 2 ,
             "Asset marked nontransferrable"
         );
         require(
-        database[idx].status != 3 ,
+            database[idx].status != 3 ,
             "Asset reported stolen"
         );
         require(
-        database[idx].status != 4 ,
+            database[idx].status != 4 ,
             "Asset reported lost"
         );
         require(
-        (database[idx].status == 0) || (database[idx].status == 1) ,
+            (database[idx].status == 0) || (database[idx].status == 1) ,
             "Tranfer prohibited"
         );
         require(
@@ -220,12 +220,7 @@ contract BulletProof is Ownable {
     
     function transferAsset (uint256 idx, bytes32 oldreg, bytes32 newreg, uint8 newstat) private {
         require(
-            registeredUsers[keccak256(abi.encodePacked(msg.sender))] == 1 ,
-            "Address not authorized"
-        );
-        bytes32 senderHash = keccak256(abi.encodePacked(msg.sender));
-        require(
-            registeredUsers[senderHash] == 1  ,
+            registeredUsers[keccak256(abi.encodePacked(msg.sender))] == 1  ,
             "Address not authorized"
         );
         require(
@@ -233,8 +228,8 @@ contract BulletProof is Ownable {
             "Records do not match - record change aborted"
         );
         
-            modifyRegistrant(idx, newreg);
-            forceModifyStatus(idx,newstat);
+        modifyRegistrant(idx, newreg);
+        forceModifyStatus(idx,newstat);
      
      }
      
@@ -253,8 +248,8 @@ contract BulletProof is Ownable {
             "Records do not match - record change aborted"
         );
         
-            modifyRegistrant(idx, newreg);
-            forceModifyStatus(idx,newstat);
+        modifyRegistrant(idx, newreg);
+        forceModifyStatus(idx,newstat);
      
      }
 
@@ -263,7 +258,7 @@ contract BulletProof is Ownable {
      * @dev Return complete record from datatbase at index idx
      */
 
-    function retrieveRecord (uint idx) public view returns (bytes32,bytes32,uint8){
+    function retrieveRecord (uint idx) public view returns (bytes32,bytes32,uint8) {
         return (database[idx].registrar,database[idx].registrant,database[idx].status);
     }
     
@@ -291,7 +286,7 @@ contract BulletProof is Ownable {
      * @dev Wrapper for comparing records
      */
      
-    function COMPARE_REGISTRANT (uint256 idx, string calldata reg) external view returns(string memory){
+    function COMPARE_REGISTRANT (uint256 idx, string calldata reg) external view returns(string memory) {
          
         if (keccak256(abi.encodePacked(reg)) == database[idx].registrant){
             return "Registrant match confirmed";
@@ -322,7 +317,7 @@ contract BulletProof is Ownable {
      */
     
     function MOD_STATUS(uint idx, string calldata regstrnt, uint8 stat) external {
-            modifyStatus(idx,keccak256(abi.encodePacked(regstrnt)),stat);
+        modifyStatus(idx,keccak256(abi.encodePacked(regstrnt)),stat);
     }
 
     /**
