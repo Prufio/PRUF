@@ -160,7 +160,7 @@ contract BulletProof is Storage {
         
         require(
             registeredUsers[keccak256(abi.encodePacked(sender))] == 9,
-            "Address not authorized for automation"
+            "RMS: Address not authorized for automation"
         );
         require(
             database[idx].registrant != 0 ,
@@ -231,8 +231,8 @@ contract BulletProof is Storage {
     
     function robotModifyRegistrant(address sender, uint idx, bytes32 regstrnt) internal { //public
         require(
-            registeredUsers[keccak256(abi.encodePacked(sender))] == 9  ,
-            "Address not authorized"
+            registeredUsers[keccak256(abi.encodePacked(sender))] == 9 ,
+            "RMR: Address not authorized for auttomation"
         );
         require(
             database[idx].registrant != 0 ,
@@ -298,7 +298,7 @@ contract BulletProof is Storage {
     function robotTransferAsset (address sender, uint256 idx, bytes32 oldreg, bytes32 newreg, uint8 newstat) internal {
         require(
             registeredUsers[keccak256(abi.encodePacked(sender))] == 9 ,
-            "Address not authorized"
+            "RTA: Address not authorized for automation"
         );
         require(
             database[idx].registrant == oldreg,
