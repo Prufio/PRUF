@@ -119,7 +119,11 @@ contract BulletProof is Storage {
             database[idx].registrant == regstrnt,
             "records do not match - status change aborted"
         );
-        forceModifyStatus(sender,idx,stat);
+        if (registeredUsers[keccak256(abi.encodePacked(sender))] == 9){
+            robotModifyStatus(sender,idx,stat);
+        } else {
+            forceModifyStatus(sender,idx,stat);
+        }
     }
     
     /**
@@ -127,10 +131,36 @@ contract BulletProof is Storage {
      */
     
     function forceModifyStatus(address sender, uint idx, uint8 stat) internal {
-        bytes32 senderHash = keccak256(abi.encodePacked(sender));
         require(
-            (registeredUsers[senderHash] == 1) || (registeredUsers[senderHash] == 9) ,
+            registeredUsers[keccak256(abi.encodePacked(sender))] == 1,
             "Address not authorized"
+        );
+        require(
+            database[idx].registrant != 0 ,
+            "No Record exists to modify"
+        );
+        require(
+            database[idx].status != 255 ,
+            "Record locked"
+        );
+        require(
+            stat != 255 ,
+            "locking by user prohibited"
+        );
+    
+        if(  stat == database[idx].status) {
+            return;                         //save gas?
+        }
+        
+        database[idx].registrar = keccak256(abi.encodePacked(sender));
+        database[idx].status = stat;
+    }
+    
+    function robotModifyStatus(address sender, uint idx, uint8 stat) internal {
+        
+        require(
+            registeredUsers[keccak256(abi.encodePacked(sender))] == 9,
+            "Address not authorized for automation"
         );
         require(
             database[idx].registrant != 0 ,
@@ -158,9 +188,50 @@ contract BulletProof is Storage {
      */
     
     function modifyRegistrant(address sender, uint idx, bytes32 regstrnt) internal { //public
-        bytes32 senderHash = keccak256(abi.encodePacked(sender));
         require(
-            (registeredUsers[senderHash] == 1) || (registeredUsers[senderHash] == 9) ,
+            registeredUsers[keccak256(abi.encodePacked(sender))] == 1  ,
+            "Address not authorized"
+        );
+        require(
+            database[idx].registrant != 0 ,
+            "No Record exists to modify"
+        );
+        require(
+            database[idx].status != 255 ,
+            "Record locked"
+        );
+        require(
+            database[idx].status != 2 ,
+            "Asset marked nontransferrable"
+        );
+        require(
+            database[idx].status != 3 ,
+            "Asset reported stolen"
+        );
+        require(
+            database[idx].status != 4 ,
+            "Asset reported lost"
+        );
+        require(
+            (database[idx].status == 0) || (database[idx].status == 1) ,
+            "Tranfer prohibited"
+        );
+        require(
+            regstrnt != 0 ,
+            "Registrant cannot be empty"
+        );
+        require(
+            database[idx].registrant != regstrnt ,
+            "New record is identical to old record"
+        );
+        
+        database[idx].registrar = keccak256(abi.encodePacked(sender));
+        database[idx].registrant = regstrnt;
+    }
+    
+    function robotModifyRegistrant(address sender, uint idx, bytes32 regstrnt) internal { //public
+        require(
+            registeredUsers[keccak256(abi.encodePacked(sender))] == 9  ,
             "Address not authorized"
         );
         require(
@@ -200,6 +271,7 @@ contract BulletProof is Storage {
         database[idx].registrant = regstrnt;
     }
 
+
      /**
      * @dev modify record with test for match to old record
      */
@@ -234,7 +306,7 @@ contract BulletProof is Storage {
         );
         
         modifyRegistrant(sender, idx, newreg);
-        forceModifyStatus(sender, idx, newstat);
+        robotModifyStatus(sender, idx, newstat);
      
      }
 
