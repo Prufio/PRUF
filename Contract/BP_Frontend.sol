@@ -6,11 +6,11 @@ pragma solidity ^0.6.0;
  contract BP_Frontend is BulletProof, PullPayment {
     
    uint private costUnit = 0.1 ether;
-   address mainWallet = 0x14723A09ACff6D2A60DcdF7aA4AFf308FDDC160C;
+   address mainWallet = 0xCA35b7d915458EF540aDe6068dFe2F44E8fa733c;
     /**
      * @dev Wrapper for create new record
      */
-     
+    
     function NEW_RECORD (uint256 idx, string memory reg, uint8 stat) public payable {
        address _address = msg.sender;
        uint messageValue = msg.value;
@@ -24,13 +24,13 @@ pragma solidity ^0.6.0;
         _asyncTransfer(mainWallet, cost);
         _asyncTransfer(_address, change);
         
-        newRecord(idx, keccak256(abi.encodePacked(reg)), stat);
+        newRecord(msg.sender, idx, keccak256(abi.encodePacked(reg)), stat);
     }
 
     /**
      * @dev Wrapper for comparing records
      */
-     
+    
     function COMPARE_REGISTRANT (uint256 idx, string calldata reg) external view returns(string memory) {
          
         if (keccak256(abi.encodePacked(reg)) == database[idx].registrant){
@@ -39,7 +39,7 @@ pragma solidity ^0.6.0;
             return "Registrant does not match";
         }
     }
-
+    
     /**
      * @dev Wrapper for force changing record status
      */
@@ -64,12 +64,12 @@ pragma solidity ^0.6.0;
     /**
      * @dev Wrapper for force changing the record without tests
      */
-     
+    
     function FORCE_MOD_REGISTRANT (uint256 idx, string memory reg) public payable {
          
        address _address = msg.sender;
        uint messageValue = msg.value;
-       uint cost = 1;
+       uint cost = 4;
        uint change;
        cost = cost * costUnit;
        change = messageValue - cost;
@@ -126,10 +126,10 @@ pragma solidity ^0.6.0;
      }
 
 
-     /**
+    /**
      * @dev Wrapper for automated Asset transfer with tests
      */
-
+    
     function PRIVATE_SALE (uint256 idx, string memory oldreg, string memory newreg, uint8 newstat) public payable {
          
        address _address = msg.sender;
@@ -146,4 +146,8 @@ pragma solidity ^0.6.0;
         
         robotTransferAsset(idx, keccak256(abi.encodePacked(oldreg)), keccak256(abi.encodePacked(newreg)),newstat);
      }
+    
+    //function deductPayment (uint256 amount) public payable {
+        
+    //}
 }
