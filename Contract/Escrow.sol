@@ -18,16 +18,16 @@ import "./Address.sol";
   * to the escrow's deposit and withdraw.
   */
 contract Escrow is Ownable {
-    using SafeMath for uint256;
+    using SafeMath for uint;
     using Address for address payable;
 
-    event Deposited(address indexed payee, uint256 weiAmount);
-    event Withdrawn(address indexed payee, uint256 weiAmount);
-    event Transferred(address indexed payer, address indexed payee, uint256 weiAmount);
+    event Deposited(address indexed payee, uint weiAmount);
+    event Withdrawn(address indexed payee, uint weiAmount);
+    event Transferred(address indexed payer, address indexed payee, uint weiAmount);
 
-    mapping(address => uint256) private _deposits;
+    mapping(address => uint) private _deposits;
 
-    function depositsOf(address payee) public view returns (uint256) {
+    function depositsOf(address payee) public view returns (uint) {
         return _deposits[payee];
     }
 
@@ -36,7 +36,7 @@ contract Escrow is Ownable {
      * @param payee The destination address of the funds.
      */
     function deposit(address payee) public virtual payable onlyOwner {
-        uint256 amount = msg.value;
+        uint amount = msg.value;
         _deposits[payee] = _deposits[payee].add(amount);
 
         emit Deposited(payee, amount);
@@ -53,7 +53,7 @@ contract Escrow is Ownable {
      * @param payee The address whose funds will be withdrawn and transferred to.
      */
     function withdraw(address payable payee) public virtual onlyOwner {
-        uint256 payment = _deposits[payee];
+        uint payment = _deposits[payee];
 
         _deposits[payee] = 0;
 
