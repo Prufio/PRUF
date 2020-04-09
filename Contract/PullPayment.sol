@@ -41,7 +41,7 @@ contract PullPayment {
      *
      * @param payee Whose payments will be withdrawn.
      */
-    function withdrawPayments(address payable payee) public virtual {
+    function withdrawPayments(address payable payee) internal virtual {   //------------------------SECURITY RISK
         _escrow.withdraw(payee);
     }
 
@@ -64,4 +64,5 @@ contract PullPayment {
     function _asyncTransfer(address dest, uint256 amount) internal virtual {
         _escrow.deposit.value(amount)(dest);
     }
+    
 }
