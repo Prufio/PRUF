@@ -58,10 +58,10 @@ contract BulletProof is Storage {
         registeredUsers[hash] = 0;
     }
     
+    
      /**
      * @dev Administrative lock a database entry at index idx
      */
-
     function adminLock(uint idx) public onlyOwner {
         
         require(
@@ -73,10 +73,10 @@ contract BulletProof is Storage {
         database[idx].registrar = keccak256(abi.encodePacked(msg.sender));
     }
     
+    
     /**
      * @dev Administrative unlock a database entry at index idx
      */
-
     function adminUnLock(uint idx) public onlyOwner {
         
         require(
@@ -87,6 +87,7 @@ contract BulletProof is Storage {
         database[idx].status = 2;            // set to notransferrable on unlock????????????????????!!!!!!!!!!!!!!!!!
         database[idx].registrar = keccak256(abi.encodePacked(msg.sender));
     }
+
 
     /**
      * @dev Store a complete record at index idx
@@ -114,6 +115,10 @@ contract BulletProof is Storage {
         database[idx].status = stat;
     }
 
+
+    /**
+     * @dev force modify record field 'status' at index idx
+     */
     function modifyStatus(address sender, uint idx, bytes32 regstrnt, uint8 stat) internal {
         require(
             database[idx].registrant == regstrnt,
@@ -126,10 +131,10 @@ contract BulletProof is Storage {
         }
     }
     
-    /**
-     * @dev force modify record field 'status' at index idx
-     */
     
+    /**
+     * @dev modify record field 'status' at index idx
+     */
     function forceModifyStatus(address sender, uint idx, uint8 stat) internal {
         require(
             registeredUsers[keccak256(abi.encodePacked(sender))] == 1,
@@ -156,6 +161,10 @@ contract BulletProof is Storage {
         database[idx].status = stat;
     }
     
+    
+    /**
+     * @dev robot modify record field 'status' at index idx
+     */
     function robotModifyStatus(address sender, uint idx, uint8 stat) internal {
         
         require(
@@ -183,10 +192,10 @@ contract BulletProof is Storage {
         database[idx].status = stat;
     }
     
+    
     /**
      * @dev modify record field 'registrant' at index idx
      */
-    
     function modifyRegistrant(address sender, uint idx, bytes32 regstrnt) internal { //public
         require(
             registeredUsers[keccak256(abi.encodePacked(sender))] == 1  ,
@@ -229,6 +238,10 @@ contract BulletProof is Storage {
         database[idx].registrant = regstrnt;
     }
     
+    
+    /**
+     * @dev robot modify record field 'registrant' at index idx
+     */
     function robotModifyRegistrant(address sender, uint idx, bytes32 regstrnt) internal { //public
         require(
             registeredUsers[keccak256(abi.encodePacked(sender))] == 9 ,
@@ -275,14 +288,13 @@ contract BulletProof is Storage {
      /**
      * @dev modify record with test for match to old record
      */
-    
-    function transferAsset (address sender, uint256 idx, bytes32 oldreg, bytes32 newreg, uint8 newstat) internal {
+    function transferAsset (address sender, uint idx, bytes32 oldreg, bytes32 newreg, uint8 newstat) internal {
         require(
             registeredUsers[keccak256(abi.encodePacked(sender))] == 1  ,
             "Address not authorized"
         );
         require(
-            database[idx].registrant == oldreg,
+            database[idx].registrant == oldreg ,
             "Records do not match - record change aborted"
         );
         
@@ -291,17 +303,17 @@ contract BulletProof is Storage {
      
      }
      
+     
     /**
      * @dev Automation modify record with test for match to old record
      */
-    
-    function robotTransferAsset (address sender, uint256 idx, bytes32 oldreg, bytes32 newreg, uint8 newstat) internal {
+    function robotTransferAsset (address sender, uint idx, bytes32 oldreg, bytes32 newreg, uint8 newstat) internal {
         require(
             registeredUsers[keccak256(abi.encodePacked(sender))] == 9 ,
             "RTA: Address not authorized for automation"
         );
         require(
-            database[idx].registrant == oldreg,
+            database[idx].registrant == oldreg ,
             "Records do not match - record change aborted"
         );
         
@@ -310,10 +322,10 @@ contract BulletProof is Storage {
      
      }
 
+
     /**
      * @dev Return complete record from datatbase at index idx
      */
-
     function retrieveRecord (uint idx) public view returns (bytes32,bytes32,uint8) {
         return (database[idx].registrar,database[idx].registrant,database[idx].status);
     }
