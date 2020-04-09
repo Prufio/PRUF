@@ -135,7 +135,7 @@ pragma solidity ^0.6.0;
         
         //require (messageValue > 0, "Failed to Accept Payment: no txfr Balance"); 
         require (messageValue >= costUnit.add(minEscrowAmount) ,
-            "Insufficient Eth"
+            "DP: Insufficient Eth"
         );
         
         change = messageValue.sub(cost);

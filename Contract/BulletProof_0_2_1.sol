@@ -66,7 +66,7 @@ contract BulletProof is Storage {
         
         require(
             database[idx].status != 255 ,
-            "Record already locked"
+            "AL: Record already locked"
         );
         
         database[idx].status = 255;
@@ -81,7 +81,7 @@ contract BulletProof is Storage {
         
         require(
             database[idx].status == 255 ,
-            "Record not locked"
+            "AU: Record not locked"
         );
         
         database[idx].status = 2;            // set to notransferrable on unlock????????????????????!!!!!!!!!!!!!!!!!
@@ -95,19 +95,19 @@ contract BulletProof is Storage {
     function newRecord(address sender, bytes32 idx, bytes32 regstrnt, uint8 stat) internal { //public
         require(
             registeredUsers[keccak256(abi.encodePacked(sender))] == 1 ,
-            "Address not authorized"
+            "NR: Address not authorized"
         );
         require(
             database[idx].registrant == 0 ,
-            "Record already exists"
+            "NR: Record already exists"
         );
         require(
             regstrnt != 0 ,
-            "Registrant cannot be empty"
+            "NR: Registrant cannot be empty"
         );
         require(
             stat != 255 ,
-            "creation of locked record prohibited"
+            "NR: creation of locked record prohibited"
         );
         
         database[idx].registrar = keccak256(abi.encodePacked(sender));
@@ -122,7 +122,7 @@ contract BulletProof is Storage {
     function modifyStatus(address sender, bytes32 idx, bytes32 regstrnt, uint8 stat) internal {
         require(
             database[idx].registrant == regstrnt,
-            "records do not match - status change aborted"
+            "MS: records do not match - status change aborted"
         );
         if (registeredUsers[keccak256(abi.encodePacked(sender))] == 9){
             robotModifyStatus(sender,idx,stat);
@@ -138,19 +138,19 @@ contract BulletProof is Storage {
     function forceModifyStatus(address sender, bytes32 idx, uint8 stat) internal {
         require(
             registeredUsers[keccak256(abi.encodePacked(sender))] == 1,
-            "Address not authorized"
+            "FMS: Address not authorized"
         );
         require(
             database[idx].registrant != 0 ,
-            "No Record exists to modify"
+            "FMS: No Record exists to modify"
         );
         require(
             database[idx].status != 255 ,
-            "Record locked"
+            "FMS: Record locked"
         );
         require(
             stat != 255 ,
-            "locking by user prohibited"
+            "FMS: locking by user prohibited"
         );
     
         if(  stat == database[idx].status) {
@@ -173,15 +173,15 @@ contract BulletProof is Storage {
         );
         require(
             database[idx].registrant != 0 ,
-            "No Record exists to modify"
+            "RMS: No Record exists to modify"
         );
         require(
             database[idx].status != 255 ,
-            "Record locked"
+            "RMS: Record locked"
         );
         require(
             stat != 255 ,
-            "locking by user prohibited"
+            "RMS: locking by user prohibited"
         );
     
         if(  stat == database[idx].status) {
@@ -199,39 +199,39 @@ contract BulletProof is Storage {
     function modifyRegistrant(address sender, bytes32 idx, bytes32 regstrnt) internal { //public
         require(
             registeredUsers[keccak256(abi.encodePacked(sender))] == 1  ,
-            "Address not authorized"
+            "MR: Address not authorized"
         );
         require(
             database[idx].registrant != 0 ,
-            "No Record exists to modify"
+            "MR: No Record exists to modify"
         );
         require(
             database[idx].status != 255 ,
-            "Record locked"
+            "MR: Record locked"
         );
         require(
             database[idx].status != 2 ,
-            "Asset marked nontransferrable"
+            "MR: Asset marked nontransferrable"
         );
         require(
             database[idx].status != 3 ,
-            "Asset reported stolen"
+            "MR: Asset reported stolen"
         );
         require(
             database[idx].status != 4 ,
-            "Asset reported lost"
+            "MR: Asset reported lost"
         );
         require(
             (database[idx].status == 0) || (database[idx].status == 1) ,
-            "Tranfer prohibited"
+            "MR: Tranfer prohibited"
         );
         require(
             regstrnt != 0 ,
-            "Registrant cannot be empty"
+            "MR: Registrant cannot be empty"
         );
         require(
             database[idx].registrant != regstrnt ,
-            "New record is identical to old record"
+            "MR: New record is identical to old record"
         );
         
         database[idx].registrar = keccak256(abi.encodePacked(sender));
@@ -249,35 +249,35 @@ contract BulletProof is Storage {
         );
         require(
             database[idx].registrant != 0 ,
-            "No Record exists to modify"
+            "RMR: No Record exists to modify"
         );
         require(
             database[idx].status != 255 ,
-            "Record locked"
+            "RMR: Record locked"
         );
         require(
             database[idx].status != 2 ,
-            "Asset marked nontransferrable"
+            "RMR: Asset marked nontransferrable"
         );
         require(
             database[idx].status != 3 ,
-            "Asset reported stolen"
+            "RMR: Asset reported stolen"
         );
         require(
             database[idx].status != 4 ,
-            "Asset reported lost"
+            "RMR: Asset reported lost"
         );
         require(
             (database[idx].status == 0) || (database[idx].status == 1) ,
-            "Tranfer prohibited"
+            "RMR: Tranfer prohibited"
         );
         require(
             regstrnt != 0 ,
-            "Registrant cannot be empty"
+            "RMR: Registrant cannot be empty"
         );
         require(
             database[idx].registrant != regstrnt ,
-            "New record is identical to old record"
+            "RMR: New record is identical to old record"
         );
         
         database[idx].registrar = keccak256(abi.encodePacked(sender));
@@ -285,17 +285,17 @@ contract BulletProof is Storage {
     }
 
 
-     /**
+    /**
      * @dev modify record with test for match to old record
      */
     function transferAsset (address sender, bytes32 idx, bytes32 oldreg, bytes32 newreg, uint8 newstat) internal {
         require(
             registeredUsers[keccak256(abi.encodePacked(sender))] == 1  ,
-            "Address not authorized"
+            "TS: Address not authorized"
         );
         require(
             database[idx].registrant == oldreg ,
-            "Records do not match - record change aborted"
+            "TS: Records do not match - record change aborted"
         );
         
         modifyRegistrant(sender, idx, newreg);
@@ -314,7 +314,7 @@ contract BulletProof is Storage {
         );
         require(
             database[idx].registrant == oldreg ,
-            "Records do not match - record change aborted"
+            "RTA: Records do not match - record change aborted"
         );
         
         robotModifyRegistrant(sender, idx, newreg);
