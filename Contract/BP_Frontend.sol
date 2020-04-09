@@ -4,7 +4,7 @@ pragma solidity ^0.6.0;
  import "./PullPayment.sol";
  import "./SafeMath.sol";
  
- contract BP_Frontend is BulletProof, PullPayment {
+ contract Frontend is BulletProof, PullPayment {
     using SafeMath for uint256;
     
     uint internal costUnit = 0.01 ether;
