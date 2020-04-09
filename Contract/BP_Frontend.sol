@@ -1,6 +1,6 @@
 pragma solidity ^0.6.0;
  
- import "./BulletProof_0_2_0.sol";
+ import "./BulletProof_0_2_1.sol";
  import "./PullPayment.sol";
  import "./SafeMath.sol";
  
@@ -26,13 +26,27 @@ pragma solidity ^0.6.0;
         minEscrowAmount = _escrow;
     }
    
-       
+    /**
+     * @dev Wrapper for admin lock record
+     */
+    function ADMIN_LOCK (uint idx) public {
+        adminLock(keccak256(abi.encodePacked(idx)));
+    }
+    
+      /**
+     * @dev Wrapper for admin unlock record
+     */
+    function ADMIN_UNLOCK (uint idx) public {
+        adminUnlock(keccak256(abi.encodePacked(idx)));
+    }
+    
+    
     /**
      * @dev Wrapper for create new record
      */
     function NEW_RECORD (uint idx, string memory reg, uint8 stat) public payable {
         deductPayment(1);
-        newRecord(msg.sender, idx, keccak256(abi.encodePacked(reg)), stat);
+        newRecord(msg.sender, keccak256(abi.encodePacked(idx)), keccak256(abi.encodePacked(reg)), stat);
     }
 
     
@@ -41,7 +55,7 @@ pragma solidity ^0.6.0;
      */
     function MOD_STATUS(uint idx, string memory regstrnt, uint8 stat) public payable {
         deductPayment(1);
-        modifyStatus(msg.sender, idx,keccak256(abi.encodePacked(regstrnt)),stat);
+        modifyStatus(msg.sender, keccak256(abi.encodePacked(idx)),keccak256(abi.encodePacked(regstrnt)),stat);
     }
 
 
@@ -50,7 +64,7 @@ pragma solidity ^0.6.0;
      */
     function TRANSFER_ASSET (uint idx, string memory oldreg, string memory newreg, uint8 newstat) public payable {
         deductPayment(1);
-        transferAsset(msg.sender, idx, keccak256(abi.encodePacked(oldreg)), keccak256(abi.encodePacked(newreg)),newstat);
+        transferAsset(msg.sender, keccak256(abi.encodePacked(idx)), keccak256(abi.encodePacked(oldreg)), keccak256(abi.encodePacked(newreg)),newstat);
      }
 
 
@@ -59,7 +73,7 @@ pragma solidity ^0.6.0;
      */
     function PRIVATE_SALE (uint idx, string memory oldreg, string memory newreg, uint8 newstat) public payable {
         deductPayment(1);
-        robotTransferAsset(msg.sender, idx, keccak256(abi.encodePacked(oldreg)), keccak256(abi.encodePacked(newreg)),newstat);
+        robotTransferAsset(msg.sender, keccak256(abi.encodePacked(idx)), keccak256(abi.encodePacked(oldreg)), keccak256(abi.encodePacked(newreg)),newstat);
     }
     
     
@@ -68,7 +82,7 @@ pragma solidity ^0.6.0;
      */
     function FORCE_MOD_STATUS(uint idx, uint8 stat) public payable {
         deductPayment(5);
-        forceModifyStatus(msg.sender, idx,stat);
+        forceModifyStatus(msg.sender, keccak256(abi.encodePacked(idx)),stat);
     }
 
     
@@ -77,7 +91,7 @@ pragma solidity ^0.6.0;
      */
     function FORCE_MOD_REGISTRANT (uint idx, string memory reg) public payable {
         deductPayment(5);
-        modifyRegistrant(msg.sender, idx, keccak256(abi.encodePacked(reg)));
+        modifyRegistrant(msg.sender, keccak256(abi.encodePacked(idx)), keccak256(abi.encodePacked(reg)));
     }
     
     
@@ -86,18 +100,34 @@ pragma solidity ^0.6.0;
      */
     function COMPARE_REGISTRANT (uint idx, string calldata reg) external view returns(string memory) {
          
-        if (keccak256(abi.encodePacked(reg)) == database[idx].registrant) {
+        if (keccak256(abi.encodePacked(reg)) == database[keccak256(abi.encodePacked(idx))].registrant) {
             return "Registrant match confirmed";
         } else {
             return "Registrant does not match";
         }
+    }
+    
+    /**
+     * @dev Return complete record from datatbase at index idx
+     */
+    function RETRIEVE_RECORD (uint idx) external view returns (bytes32,bytes32,uint8) {
+        bytes32 idxHash = keccak256(abi.encodePacked(idx));
+        return (database[idxHash].registrar,database[idxHash].registrant,database[idxHash].status);
+    }
+
+    
+     /**
+     * @dev Deduct payment and transfer cost, call to PullPayment with msg.sender  *****MAKE pullPayment internal!!!! SECURITY
+     */ 
+    function WITHDRAW() public virtual payable {
+        withdrawPayments(msg.sender);
     }
  
  
     /**
      * @dev Deduct payment and transfer cost, change to PullPayment
      */   
-    function deductPayment (uint amount) public payable {
+    function deductPayment (uint amount) private {
         address _address = msg.sender;
         uint messageValue = msg.value;
         uint cost = amount.mul(costUnit);
