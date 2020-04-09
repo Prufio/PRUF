@@ -9,6 +9,6 @@ contract Storage is Ownable {
         uint8 status; // Status - Transferrable, locked, in transfer, stolen, lost, etc.
     }
     
-    mapping(uint => Record) internal database; //registry
+    mapping(bytes32 => Record) internal database; //registry
     mapping(bytes32 => uint8) internal registeredUsers; //authorized registrar database
 }
