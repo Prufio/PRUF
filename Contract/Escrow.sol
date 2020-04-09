@@ -23,6 +23,7 @@ contract Escrow is Ownable {
 
     event Deposited(address indexed payee, uint256 weiAmount);
     event Withdrawn(address indexed payee, uint256 weiAmount);
+    event Transferred(address indexed payer, address indexed payee, uint256 weiAmount);
 
     mapping(address => uint256) private _deposits;
 
@@ -60,4 +61,25 @@ contract Escrow is Ownable {
 
         emit Withdrawn(payee, payment);
     }
+    
+     /**
+     * @dev transfer balances within the escrow._deposits mapping  (NOT IMPLEMENTED)
+     *
+     * this would potentially be used to pay for registration modifications from the "escrow" account. We dont know if this is safe.
+    
+    function internalPayment(address payer, address payee, uint payment) private onlyOwner { //make payee olny owner?)
+        require(
+            _deposits[payer] >= payment,
+            "IP: Insuffficient Balance"
+        );
+        
+        _deposits[payer].sub(payment);
+        _deposits[payee].add(payment);
+        
+        emit Transferred(payer, payee, payment);
+    }
+    */
+    
+    
+    
 }
