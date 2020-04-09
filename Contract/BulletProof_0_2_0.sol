@@ -62,7 +62,7 @@ contract BulletProof is Storage {
      /**
      * @dev Administrative lock a database entry at index idx
      */
-    function adminLock(bytes32 idx) internal onlyOwner {
+    function adminLock(uint idx) public onlyOwner {
         
         require(
             database[idx].status != 255 ,
@@ -77,7 +77,7 @@ contract BulletProof is Storage {
     /**
      * @dev Administrative unlock a database entry at index idx
      */
-    function adminUnlock(bytes32 idx) internal onlyOwner {
+    function adminUnLock(uint idx) public onlyOwner {
         
         require(
             database[idx].status == 255 ,
@@ -92,7 +92,7 @@ contract BulletProof is Storage {
     /**
      * @dev Store a complete record at index idx
      */
-    function newRecord(address sender, bytes32 idx, bytes32 regstrnt, uint8 stat) internal { //public
+    function newRecord(address sender, uint idx, bytes32 regstrnt, uint8 stat) internal { //public
         require(
             registeredUsers[keccak256(abi.encodePacked(sender))] == 1 ,
             "Address not authorized"
@@ -119,7 +119,7 @@ contract BulletProof is Storage {
     /**
      * @dev force modify record field 'status' at index idx
      */
-    function modifyStatus(address sender, bytes32 idx, bytes32 regstrnt, uint8 stat) internal {
+    function modifyStatus(address sender, uint idx, bytes32 regstrnt, uint8 stat) internal {
         require(
             database[idx].registrant == regstrnt,
             "records do not match - status change aborted"
@@ -135,7 +135,7 @@ contract BulletProof is Storage {
     /**
      * @dev modify record field 'status' at index idx
      */
-    function forceModifyStatus(address sender, bytes32 idx, uint8 stat) internal {
+    function forceModifyStatus(address sender, uint idx, uint8 stat) internal {
         require(
             registeredUsers[keccak256(abi.encodePacked(sender))] == 1,
             "Address not authorized"
@@ -165,7 +165,7 @@ contract BulletProof is Storage {
     /**
      * @dev robot modify record field 'status' at index idx
      */
-    function robotModifyStatus(address sender, bytes32 idx, uint8 stat) internal {
+    function robotModifyStatus(address sender, uint idx, uint8 stat) internal {
         
         require(
             registeredUsers[keccak256(abi.encodePacked(sender))] == 9,
@@ -196,7 +196,7 @@ contract BulletProof is Storage {
     /**
      * @dev modify record field 'registrant' at index idx
      */
-    function modifyRegistrant(address sender, bytes32 idx, bytes32 regstrnt) internal { //public
+    function modifyRegistrant(address sender, uint idx, bytes32 regstrnt) internal { //public
         require(
             registeredUsers[keccak256(abi.encodePacked(sender))] == 1  ,
             "Address not authorized"
@@ -242,7 +242,7 @@ contract BulletProof is Storage {
     /**
      * @dev robot modify record field 'registrant' at index idx
      */
-    function robotModifyRegistrant(address sender, bytes32 idx, bytes32 regstrnt) internal { //public
+    function robotModifyRegistrant(address sender, uint idx, bytes32 regstrnt) internal { //public
         require(
             registeredUsers[keccak256(abi.encodePacked(sender))] == 9 ,
             "RMR: Address not authorized for auttomation"
@@ -288,7 +288,7 @@ contract BulletProof is Storage {
      /**
      * @dev modify record with test for match to old record
      */
-    function transferAsset (address sender, bytes32 idx, bytes32 oldreg, bytes32 newreg, uint8 newstat) internal {
+    function transferAsset (address sender, uint idx, bytes32 oldreg, bytes32 newreg, uint8 newstat) internal {
         require(
             registeredUsers[keccak256(abi.encodePacked(sender))] == 1  ,
             "Address not authorized"
@@ -307,7 +307,7 @@ contract BulletProof is Storage {
     /**
      * @dev Automation modify record with test for match to old record
      */
-    function robotTransferAsset (address sender, bytes32 idx, bytes32 oldreg, bytes32 newreg, uint8 newstat) internal {
+    function robotTransferAsset (address sender, uint idx, bytes32 oldreg, bytes32 newreg, uint8 newstat) internal {
         require(
             registeredUsers[keccak256(abi.encodePacked(sender))] == 9 ,
             "RTA: Address not authorized for automation"
@@ -321,5 +321,23 @@ contract BulletProof is Storage {
         robotModifyStatus(sender, idx, newstat);
      
      }
+
+
+    /**
+     * @dev Return complete record from datatbase at index idx
+     */
+    function retrieveRecord (uint idx) public view returns (bytes32,bytes32,uint8) {
+        return (database[idx].registrar,database[idx].registrant,database[idx].status);
+    }
+
+    /** Funtions for plaintext contract interaction
+     * ------------------------------------------------------------------------------------------------------------------------------------------------
+     * newRecord
+     * modifyRegistrant
+     * 
+     * Additional wrappers:
+     * registrant compare / verify registrant hash
+     * 
+     */
     
 }
