@@ -44,7 +44,7 @@ pragma solidity ^0.6.0;
     /**
      * @dev Wrapper for create new record
      */
-    function NEW_RECORD (uint idx, string memory reg, uint8 stat) public payable {
+    function NEW_RECORD (string memory idx, string memory reg, uint8 stat) public payable {
         deductPayment(1);
         newRecord(msg.sender, keccak256(abi.encodePacked(idx)), keccak256(abi.encodePacked(reg)), stat);
     }
