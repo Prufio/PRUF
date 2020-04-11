@@ -85,22 +85,20 @@ pragma solidity ^0.6.0;
         transferAsset(msg.sender, keccak256(abi.encodePacked(_idx)), keccak256(abi.encodePacked(_oldreg)), keccak256(abi.encodePacked(_newreg)),_newstat);
      }
 
-
     /**
-     * @dev Wrapper for automated Asset transfer with tests
-     
-    function PRIVATE_SALE (string memory _idx, string memory _oldreg, string memory _newreg, uint8 _newstat) public payable {
-        deductPayment(1);
-        robotTransferAsset(msg.sender, keccak256(abi.encodePacked(_idx)), keccak256(abi.encodePacked(_oldreg)), keccak256(abi.encodePacked(_newreg)),_newstat);
-    }
-    */
+     * @dev Wrapper for force changing the record without tests
+     */
+   function changeDescription (string memory _idx, string memory _reg, string memory _desc) public payable {
+       deductPayment(1);
+       changeDescription (msg.sender, keccak256(abi.encodePacked(_idx)),keccak256(abi.encodePacked(_reg)),_desc);
+   }
     
     /**
      * @dev Wrapper for force changing the record without tests
      */
-    function FORCE_MOD_RECORD  (string memory _idx, string memory _reg, uint8 _stat, string memory _description) public payable {
+    function FORCE_MOD_RECORD  (string memory _idx, string memory _reg) public payable {
         deductPayment(5);
-        forceModifyRecord(msg.sender, keccak256(abi.encodePacked(_idx)), keccak256(abi.encodePacked(_reg)), _stat, _description);
+        forceModifyRecord(msg.sender, keccak256(abi.encodePacked(_idx)), keccak256(abi.encodePacked(_reg)));
     }
     
     

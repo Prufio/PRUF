@@ -130,7 +130,7 @@ contract BulletProof is Storage {
     /**
      * @dev force modify record at index idx
      */
-    function forceModifyRecord(address _sender, bytes32 _idx, bytes32 _regstrnt, uint8 _stat, string memory _desc) internal {
+    function forceModifyRecord(address _sender, bytes32 _idx, bytes32 _regstrnt) internal {
         require(
             registeredUsers[keccak256(abi.encodePacked(_sender))] == 1  ,
             "FMR: Address not authorized"
@@ -147,10 +147,7 @@ contract BulletProof is Storage {
             _regstrnt != 0 ,
             "FMR: Registrant cannot be empty"
         );
-        require(
-            _stat != 255 ,
-            "FMR: locking by user prohibited"
-        );
+        
         bytes32 senderHash = keccak256(abi.encodePacked(_sender));
         
         uint8 count = database[_idx].forceModCount;
@@ -166,10 +163,7 @@ contract BulletProof is Storage {
         
         database[_idx].registrar = keccak256(abi.encodePacked(_sender));
         database[_idx].registrant = _regstrnt;
-        database[_idx].status = _stat;
-        //database[_idx].extra = _extra;
         database[_idx].forceModCount = count;
-        database[_idx].description = _desc;
     }
     
     
@@ -370,14 +364,14 @@ contract BulletProof is Storage {
     /**
      * @dev user modify record DESCRIPTION with test for match to old record
      */
-    function changeDescription (address _sender, bytes32 _idx, bytes32 _oldreg, string memory _desc) internal {
+    function changeDescription (address _sender, bytes32 _idx, bytes32 _reg, string memory _desc) internal {
         uint8 senderType = registeredUsers[keccak256(abi.encodePacked(_sender))];
         require(
             (senderType == 1) || (senderType == 9) ,
             "CD: Address not authorized"
         );
         require(
-            database[_idx].registrant == _oldreg ,
+            database[_idx].registrant == _reg ,
             "CD: Records do not match - record change aborted"
         );
         require(
