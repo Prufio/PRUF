@@ -4,8 +4,9 @@ import "./Ownable.sol";
 
 contract Storage is Ownable {
     struct Record {
-        bytes32 registrar; // Address hash of registrant 
+        bytes32 registrar; // Address hash of registrar 
         bytes32 registrant;  // KEK256 Registered  owner
+        bytes32 lastRegistrar; //// Address hash of last non-automation registrar
         uint8 status; // Status - Transferrable, locked, in transfer, stolen, lost, etc.
         uint8 extra; // extra status for future expansion
         uint8 forceModCount; // Number of times asset has been forceModded.

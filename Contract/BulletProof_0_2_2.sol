@@ -40,23 +40,16 @@ contract BulletProof is Storage {
      *   registeredUsers[authAddrHash] = 1;
      * }
      */
-    function authorize(address _authAddr) public onlyOwner {
+    function authorize(address _authAddr, uint8 userType) internal onlyOwner {
+        require((userType == 0)||(userType == 1)||(userType == 9) ,
+        "AUTH: Usertype must be 1(human) 9(robot) or 0(unauthorized)"
+        );
+        
         bytes32 hash;
         hash = keccak256(abi.encodePacked(_authAddr));
-        registeredUsers[hash] = 1;
+        registeredUsers[hash] = userType;
     }
     
-    function authorizeRobot(address _authAddr) public onlyOwner {
-        bytes32 hash;
-        hash = keccak256(abi.encodePacked(_authAddr));
-        registeredUsers[hash] = 9;
-    }
-    
-    function deauthorize(address _authAddr) public onlyOwner {
-        bytes32 hash;
-        hash = keccak256(abi.encodePacked(_authAddr));
-        registeredUsers[hash] = 0;
-    }
     
     
      /**
@@ -125,6 +118,7 @@ contract BulletProof is Storage {
         
         database[_idx].registrar = keccak256(abi.encodePacked(_sender));
         database[_idx].registrant = _regstrnt;
+        database[_idx].lastRegistrar = database[_idx].registrar;
         database[_idx].status = _stat;
         //database[_idx].extra = _extra;
         database[_idx].forceModCount = 0;
@@ -157,24 +151,37 @@ contract BulletProof is Storage {
             _stat != 255 ,
             "FMR: locking by user prohibited"
         );
+        bytes32 senderHash = keccak256(abi.encodePacked(_sender));
+        
+        uint8 count = database[_idx].forceModCount;
+        
+        if (count < 255){
+            count ++;
+        }
+        
+        if ((registeredUsers[database[_idx].registrar] == 1) && (senderHash != database[_idx].registrar)){     // Rotate last registrar
+                                                                                                                //into lastRegistrar field if uniuqe and not a robot
+            database[_idx].lastRegistrar = database[_idx].registrar;
+        }
         
         database[_idx].registrar = keccak256(abi.encodePacked(_sender));
         database[_idx].registrant = _regstrnt;
         database[_idx].status = _stat;
         //database[_idx].extra = _extra;
-        database[_idx].forceModCount = 0;
+        database[_idx].forceModCount = count;
         database[_idx].description = _desc;
     }
     
     
 
     /**
-     * @dev user modify record REGISTRANT and STATUS with test for match to old record
+     * @dev Modify record REGISTRANT and STATUS with test for match to old record
      */
 
     function transferAsset (address _sender, bytes32 _idx, bytes32 _oldreg, bytes32 _newreg, uint8 _newstat) internal {
+        uint8 senderType = registeredUsers[keccak256(abi.encodePacked(_sender))];
         require(
-            registeredUsers[keccak256(abi.encodePacked(_sender))] == 1 ,
+            (senderType == 1) || (senderType == 9) ,
             "TA: Address not authorized"
         );
         require(
@@ -218,6 +225,14 @@ contract BulletProof is Storage {
             "TA: locking by user prohibited"
         );
         
+        bytes32 senderHash = keccak256(abi.encodePacked(_sender));
+        
+        if ((registeredUsers[database[_idx].registrar] == 1) && (senderHash != database[_idx].registrar)){     // Rotate last registrar
+                                                                                                                //into lastRegistrar field if uniuqe and not a robot
+            database[_idx].lastRegistrar = database[_idx].registrar;
+        }
+        
+        
         database[_idx].registrar = keccak256(abi.encodePacked(_sender));
         database[_idx].registrant = _newreg;
         database[_idx].status = _newstat;
@@ -227,7 +242,7 @@ contract BulletProof is Storage {
      
     /**
      * @dev Automation modify record REGISTRANT and STATUS with test for match to old record
-     */
+     
     function robotTransferAsset (address _sender, bytes32 _idx, bytes32 _oldreg, bytes32 _newreg, uint8 _newstat) internal {
         require(
             registeredUsers[keccak256(abi.encodePacked(_sender))] == 9 ,
@@ -279,13 +294,16 @@ contract BulletProof is Storage {
         database[_idx].status = _newstat;
      
      }
+    */
+     
      
      /**
-     * @dev user modify record STATUS with test for match to old record
+     * @dev Modify record STATUS with test for match to old record
      */
     function changeStatus (address _sender, bytes32 _idx, bytes32 _oldreg, uint8 _newstat) internal {
+        uint8 senderType = registeredUsers[keccak256(abi.encodePacked(_sender))];
         require(
-            registeredUsers[keccak256(abi.encodePacked(_sender))] == 1 ,
+            (senderType == 1) || (senderType == 9) ,
             "CS: Address not authorized"
         );
         require(
@@ -305,6 +323,13 @@ contract BulletProof is Storage {
             "CS: locking by user prohibited"
         );
         
+        bytes32 senderHash = keccak256(abi.encodePacked(_sender));
+        
+        if ((registeredUsers[database[_idx].registrar] == 1) && (senderHash != database[_idx].registrar)){     // Rotate last registrar
+                                                                                                                //into lastRegistrar field if uniuqe and not a robot
+            database[_idx].lastRegistrar = database[_idx].registrar;
+        }
+        
         database[_idx].registrar = keccak256(abi.encodePacked(_sender));
         database[_idx].status = _newstat;
      
@@ -312,7 +337,7 @@ contract BulletProof is Storage {
      
      /**
      * @dev robot modify record STATUS with test for match to old record
-     */ 
+      
     function robotChangeStatus (address _sender, bytes32 _idx, bytes32 _oldreg, uint8 _newstat) internal {
         require(
             registeredUsers[keccak256(abi.encodePacked(_sender))] == 9 ,
@@ -339,13 +364,16 @@ contract BulletProof is Storage {
         database[_idx].status = _newstat;
      
      }
+     */
+     
      
     /**
      * @dev user modify record DESCRIPTION with test for match to old record
      */
     function changeDescription (address _sender, bytes32 _idx, bytes32 _oldreg, string memory _desc) internal {
+        uint8 senderType = registeredUsers[keccak256(abi.encodePacked(_sender))];
         require(
-            registeredUsers[keccak256(abi.encodePacked(_sender))] == 1 ,
+            (senderType == 1) || (senderType == 9) ,
             "CD: Address not authorized"
         );
         require(
@@ -361,6 +389,13 @@ contract BulletProof is Storage {
             "CD: Record locked"
         );
         
+        bytes32 senderHash = keccak256(abi.encodePacked(_sender));
+        
+        if ((registeredUsers[database[_idx].registrar] == 1) && (senderHash != database[_idx].registrar)){     // Rotate last registrar
+                                                                                                                //into lastRegistrar field if uniuqe and not a robot
+            database[_idx].lastRegistrar = database[_idx].registrar;
+        }
+        
         database[_idx].registrar = keccak256(abi.encodePacked(_sender));
         database[_idx].description = _desc;
      
@@ -368,7 +403,7 @@ contract BulletProof is Storage {
      
      /**
      * @dev robot modify record DESCRIPTION with test for match to old record
-     */
+     
     function robotChangeDescription (address _sender, bytes32 _idx, bytes32 _oldreg, string memory _desc) internal {
         require(
             registeredUsers[keccak256(abi.encodePacked(_sender))] == 9 ,
@@ -391,59 +426,11 @@ contract BulletProof is Storage {
         database[_idx].description = _desc;
      
      }
+     
+    */
     
 }
 
 
   
-    /**
-     * @dev modify record at index idx
-    function forceModifyRecord(address _sender, bytes32 _idx, bytes32 _regstrnt, uint8 _stat, uint8 _extra, string memory _desc) internal {
-        require(
-            registeredUsers[keccak256(abi.encodePacked(_sender))] == 1  ,
-            "MR: Address not authorized"
-        );
-        require(
-            database[_idx].registrant != 0 ,
-            "MR: No Record exists to modify"
-        );
-        require(
-            database[_idx].status != 255 ,
-            "MR: Record locked"
-        );
-        require(
-            database[_idx].status != 2 ,
-            "MR: Asset marked nontransferrable"
-        );
-        require(
-            database[_idx].status != 3 ,
-            "MR: Asset reported stolen"
-        );
-        require(
-            database[_idx].status != 4 ,
-            "MR: Asset reported lost"
-        );
-        require(
-            (database[_idx].status == 0) || (database[_idx].status == 1) ,
-            "MR: Tranfer prohibited"
-        );
-        require(
-            _regstrnt != 0 ,
-            "MR: Registrant cannot be empty"
-        );
-        
-        require(
-            _stat != 255 ,
-            "MR: locking by user prohibited"
-        );
-        
-        database[_idx].registrar = keccak256(abi.encodePacked(_sender));
-        database[_idx].registrant = _regstrnt;
-        database[_idx].status = _stat;
-        database[_idx].extra = _extra;
-        database[_idx].forceModCount = 0;
-        database[_idx].description = _desc;
-    }
-    
-      */
-    
+ 

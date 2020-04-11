@@ -14,29 +14,33 @@ pragma solidity ^0.6.0;
     /******
      * @dev Set contract parameters
      */
-    function setWallet (address _addr) public onlyOwner {
+    function SET_wallet (address _addr) public onlyOwner {
         mainWallet = _addr;
     }
    
-    function setCost (uint _cost) public onlyOwner {
+    function SET_cost (uint _cost) public onlyOwner {
         costUnit = _cost;
     }
    
-    function setEscrow (uint _escrow) public onlyOwner {
+    function SET_escrow (uint _escrow) public onlyOwner {
         minEscrowAmount = _escrow;
+    }
+    
+    function SET_USERS(address _authAddr, uint8 userType) public onlyOwner{
+        authorize(_authAddr, userType);
     }
    
     /**
      * @dev Wrapper for admin lock record
      */
-    function ADMIN_LOCK (string memory _idx) public {
+    function ADMIN_LOCK (string memory _idx) public onlyOwner{
         adminLock(keccak256(abi.encodePacked(_idx)));
     }
     
       /**
      * @dev Wrapper for admin unlock record
      */
-    function ADMIN_UNLOCK (string memory _idx) public {
+    function ADMIN_UNLOCK (string memory _idx) public onlyOwner{
         adminUnlock(keccak256(abi.encodePacked(_idx)));
     }
     
@@ -55,12 +59,22 @@ pragma solidity ^0.6.0;
     
     
     /**
-     * @dev Wrapper for changing record status with tests
+     * @dev Wrapper for changing record STATUS with tests
      */
     function MOD_STATUS(string memory _idx, string memory _reg, uint8 _stat) public payable {
         deductPayment(1);
         changeStatus(msg.sender, keccak256(abi.encodePacked(_idx)),keccak256(abi.encodePacked(_reg)),_stat);
     }
+    
+    
+     /**
+     * @dev Wrapper for changing record STATUS with tests
+     
+    function ROBOT_MOD_STATUS(string memory _idx, string memory _reg, uint8 _stat) public payable {
+        deductPayment(1);
+        robotChangeStatus(msg.sender, keccak256(abi.encodePacked(_idx)),keccak256(abi.encodePacked(_reg)),_stat);
+    }
+    */
 
 
     /**
@@ -74,12 +88,12 @@ pragma solidity ^0.6.0;
 
     /**
      * @dev Wrapper for automated Asset transfer with tests
-     */
+     
     function PRIVATE_SALE (string memory _idx, string memory _oldreg, string memory _newreg, uint8 _newstat) public payable {
         deductPayment(1);
         robotTransferAsset(msg.sender, keccak256(abi.encodePacked(_idx)), keccak256(abi.encodePacked(_oldreg)), keccak256(abi.encodePacked(_newreg)),_newstat);
     }
-    
+    */
     
     /**
      * @dev Wrapper for force changing the record without tests
@@ -105,9 +119,9 @@ pragma solidity ^0.6.0;
     /**
      * @dev Return complete record from datatbase at index idx
      */
-    function RETRIEVE_RECORD (string calldata _idx) external view returns (bytes32,bytes32,uint8,string memory) {
+    function RETRIEVE_RECORD (string calldata _idx) external view returns (bytes32, bytes32, bytes32, uint8, uint8, string memory, string memory) {
         bytes32 idxHash = keccak256(abi.encodePacked(_idx));
-        return (database[idxHash].registrar,database[idxHash].registrant,database[idxHash].status,database[idxHash].description);
+        return (database[idxHash].registrar, database[idxHash].registrant, database[idxHash].lastRegistrar, database[idxHash].status, database[idxHash].forceModCount, database[idxHash].description, database[idxHash].note);
     }
 
     
