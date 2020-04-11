@@ -1,6 +1,6 @@
 pragma solidity ^0.6.0;
 
-/**
+/******
  * @title BulletProof
  * @dev Store & retreive a record
  * Need to explore the implications of registering with serial only and reregistering with serial+secret
@@ -40,21 +40,21 @@ contract BulletProof is Storage {
      *   registeredUsers[authAddrHash] = 1;
      * }
      */
-    function authorize(address authAddr) public onlyOwner {
+    function authorize(address _authAddr) public onlyOwner {
         bytes32 hash;
-        hash = keccak256(abi.encodePacked(authAddr));
+        hash = keccak256(abi.encodePacked(_authAddr));
         registeredUsers[hash] = 1;
     }
     
-    function authorizeRobot(address authAddr) public onlyOwner {
+    function authorizeRobot(address _authAddr) public onlyOwner {
         bytes32 hash;
-        hash = keccak256(abi.encodePacked(authAddr));
+        hash = keccak256(abi.encodePacked(_authAddr));
         registeredUsers[hash] = 9;
     }
     
-    function deauthorize(address authAddr) public onlyOwner {
+    function deauthorize(address _authAddr) public onlyOwner {
         bytes32 hash;
-        hash = keccak256(abi.encodePacked(authAddr));
+        hash = keccak256(abi.encodePacked(_authAddr));
         registeredUsers[hash] = 0;
     }
     
@@ -62,270 +62,388 @@ contract BulletProof is Storage {
      /**
      * @dev Administrative lock a database entry at index idx
      */
-    function adminLock(bytes32 idx) internal onlyOwner {
+    function adminLock(bytes32 _idx) internal onlyOwner {
         
         require(
-            database[idx].status != 255 ,
+            database[_idx].status != 255 ,
             "AL: Record already locked"
         );
         
-        database[idx].status = 255;
-        database[idx].registrar = keccak256(abi.encodePacked(msg.sender));
+        database[_idx].status = 255;
+        database[_idx].registrar = keccak256(abi.encodePacked(msg.sender));
     }
     
     
     /**
      * @dev Administrative unlock a database entry at index idx
      */
-    function adminUnlock(bytes32 idx) internal onlyOwner {
+    function adminUnlock(bytes32 _idx) internal onlyOwner {
         
         require(
-            database[idx].status == 255 ,
+            database[_idx].status == 255 ,
             "AU: Record not locked"
         );
         
-        database[idx].status = 2;            // set to notransferrable on unlock????????????????????!!!!!!!!!!!!!!!!!
-        database[idx].registrar = keccak256(abi.encodePacked(msg.sender));
+        database[_idx].status = 2;            // set to notransferrable on unlock????????????????????!!!!!!!!!!!!!!!!!
+        database[_idx].registrar = keccak256(abi.encodePacked(msg.sender));
+    }
+    
+    /**
+     * @dev Administrative reset of forceModCount to zero
+     */
+    function resetForceModCount(bytes32 _idx) internal onlyOwner{
+        require(
+            database[_idx].forceModCount != 0 ,
+            "RFMC: fmc is already 0"
+        );
+        //relies on onlyOwner from frontend
+        database[_idx].forceModCount = 0;
+
     }
 
 
     /**
      * @dev Store a complete record at index idx
      */
-    function newRecord(address sender, bytes32 idx, bytes32 regstrnt, uint8 stat, uint8 _extra, string memory desc) internal { //public
+    function newRecord(address _sender, bytes32 _idx, bytes32 _regstrnt, uint8 _stat, string memory _desc, string memory _note) internal {
         require(
-            registeredUsers[keccak256(abi.encodePacked(sender))] == 1 ,
+            registeredUsers[keccak256(abi.encodePacked(_sender))] == 1 ,
             "NR: Address not authorized"
         );
         require(
-            database[idx].registrant == 0 ,
+            database[_idx].registrant == 0 ,
             "NR: Record already exists"
         );
         require(
-            regstrnt != 0 ,
+            _regstrnt != 0 ,
             "NR: Registrant cannot be empty"
         );
         require(
-            stat != 255 ,
+            _stat != 255 ,
             "NR: creation of locked record prohibited"
         );
         
-        database[idx].registrar = keccak256(abi.encodePacked(sender));
-        database[idx].registrant = regstrnt;
-        database[idx].status = stat;
-        database[idx].extra = _extra;
-        database[idx].forceModCount = 0;
-        database[idx].description = desc;
-    }
-
-
-    /**
-     * @dev force modify record field 'status' at index idx
-     */
-    function modifyStatus(address sender, bytes32 idx, bytes32 regstrnt, uint8 stat) internal {
-        require(
-            database[idx].registrant == regstrnt,
-            "MS: records do not match - status change aborted"
-        );
-        if (registeredUsers[keccak256(abi.encodePacked(sender))] == 9){
-            robotModifyStatus(sender,idx,stat);
-        } else {
-            forceModifyStatus(sender,idx,stat);
-        }
+        database[_idx].registrar = keccak256(abi.encodePacked(_sender));
+        database[_idx].registrant = _regstrnt;
+        database[_idx].status = _stat;
+        //database[_idx].extra = _extra;
+        database[_idx].forceModCount = 0;
+        database[_idx].description = _desc;
+        database[_idx].note = _note;
     }
     
     
     /**
-     * @dev modify record field 'status' at index idx
+     * @dev force modify record at index idx
      */
-    function forceModifyStatus(address sender, bytes32 idx, uint8 stat) internal {
+    function forceModifyRecord(address _sender, bytes32 _idx, bytes32 _regstrnt, uint8 _stat, string memory _desc) internal {
         require(
-            registeredUsers[keccak256(abi.encodePacked(sender))] == 1,
-            "FMS: Address not authorized"
+            registeredUsers[keccak256(abi.encodePacked(_sender))] == 1  ,
+            "FMR: Address not authorized"
         );
         require(
-            database[idx].registrant != 0 ,
-            "FMS: No Record exists to modify"
+            database[_idx].registrant != 0 ,
+            "FMR: No Record exists to modify"
         );
         require(
-            database[idx].status != 255 ,
-            "FMS: Record locked"
+            database[_idx].status != 255 ,
+            "FMR: Record locked"
         );
         require(
-            stat != 255 ,
-            "FMS: locking by user prohibited"
+            _regstrnt != 0 ,
+            "FMR: Registrant cannot be empty"
         );
-    
-        if(  stat == database[idx].status) {
-            return;                         //save gas?
-        }
+        require(
+            _stat != 255 ,
+            "FMR: locking by user prohibited"
+        );
         
-        database[idx].registrar = keccak256(abi.encodePacked(sender));
-        database[idx].status = stat;
-        database[idx].forceModCount ++;
-    }
-    
-    function resetForceModCount(bytes32 idx) internal {
-        database[idx].forceModCount = 0;
-    }
-    /**
-     * @dev robot modify record field 'status' at index idx
-     */
-    function robotModifyStatus(address sender, bytes32 idx, uint8 stat) internal {
-        
-        require(
-            registeredUsers[keccak256(abi.encodePacked(sender))] == 9,
-            "RMS: Address not authorized for automation"
-        );
-        require(
-            database[idx].registrant != 0 ,
-            "RMS: No Record exists to modify"
-        );
-        require(
-            database[idx].status != 255 ,
-            "RMS: Record locked"
-        );
-        require(
-            stat != 255 ,
-            "RMS: locking by user prohibited"
-        );
-    
-        if(  stat == database[idx].status) {
-            return;                         //save gas?
-        }
-        
-        database[idx].registrar = keccak256(abi.encodePacked(sender));
-        database[idx].status = stat;
+        database[_idx].registrar = keccak256(abi.encodePacked(_sender));
+        database[_idx].registrant = _regstrnt;
+        database[_idx].status = _stat;
+        //database[_idx].extra = _extra;
+        database[_idx].forceModCount = 0;
+        database[_idx].description = _desc;
     }
     
     
-    /**
-     * @dev modify record field 'registrant' at index idx
-     */
-    function modifyRegistrant(address sender, bytes32 idx, bytes32 regstrnt) internal { //public
-        require(
-            registeredUsers[keccak256(abi.encodePacked(sender))] == 1  ,
-            "MR: Address not authorized"
-        );
-        require(
-            database[idx].registrant != 0 ,
-            "MR: No Record exists to modify"
-        );
-        require(
-            database[idx].status != 255 ,
-            "MR: Record locked"
-        );
-        require(
-            database[idx].status != 2 ,
-            "MR: Asset marked nontransferrable"
-        );
-        require(
-            database[idx].status != 3 ,
-            "MR: Asset reported stolen"
-        );
-        require(
-            database[idx].status != 4 ,
-            "MR: Asset reported lost"
-        );
-        require(
-            (database[idx].status == 0) || (database[idx].status == 1) ,
-            "MR: Tranfer prohibited"
-        );
-        require(
-            regstrnt != 0 ,
-            "MR: Registrant cannot be empty"
-        );
-        require(
-            database[idx].registrant != regstrnt ,
-            "MR: New record is identical to old record"
-        );
-        
-        database[idx].registrar = keccak256(abi.encodePacked(sender));
-        database[idx].registrant = regstrnt;
-    }
-    
-    
-    /**
-     * @dev robot modify record field 'registrant' at index idx
-     */
-    function robotModifyRegistrant(address sender, bytes32 idx, bytes32 regstrnt) internal { //public
-        require(
-            registeredUsers[keccak256(abi.encodePacked(sender))] == 9 ,
-            "RMR: Address not authorized for auttomation"
-        );
-        require(
-            database[idx].registrant != 0 ,
-            "RMR: No Record exists to modify"
-        );
-        require(
-            database[idx].status != 255 ,
-            "RMR: Record locked"
-        );
-        require(
-            database[idx].status != 2 ,
-            "RMR: Asset marked nontransferrable"
-        );
-        require(
-            database[idx].status != 3 ,
-            "RMR: Asset reported stolen"
-        );
-        require(
-            database[idx].status != 4 ,
-            "RMR: Asset reported lost"
-        );
-        require(
-            (database[idx].status == 0) || (database[idx].status == 1) ,
-            "RMR: Tranfer prohibited"
-        );
-        require(
-            regstrnt != 0 ,
-            "RMR: Registrant cannot be empty"
-        );
-        require(
-            database[idx].registrant != regstrnt ,
-            "RMR: New record is identical to old record"
-        );
-        
-        database[idx].registrar = keccak256(abi.encodePacked(sender));
-        database[idx].registrant = regstrnt;
-    }
-
 
     /**
-     * @dev modify record with test for match to old record
+     * @dev user modify record REGISTRANT and STATUS with test for match to old record
      */
-    function transferAsset (address sender, bytes32 idx, bytes32 oldreg, bytes32 newreg, uint8 newstat) internal {
+
+    function transferAsset (address _sender, bytes32 _idx, bytes32 _oldreg, bytes32 _newreg, uint8 _newstat) internal {
         require(
-            registeredUsers[keccak256(abi.encodePacked(sender))] == 1  ,
-            "TS: Address not authorized"
+            registeredUsers[keccak256(abi.encodePacked(_sender))] == 1 ,
+            "TA: Address not authorized"
         );
         require(
-            database[idx].registrant == oldreg ,
-            "TS: Records do not match - record change aborted"
+            database[_idx].registrant == _oldreg ,
+            "TA: Records do not match - record change aborted"
+        );
+        require(
+            database[_idx].registrant != 0 ,
+            "TA: No Record exists to modify"
+        );
+        require(
+            database[_idx].status != 255 ,
+            "TA: Record locked"
+        );
+        require(
+            database[_idx].status != 2 ,
+            "TA: Asset marked nontransferrable"
+        );
+        require(
+            database[_idx].status != 3 ,
+            "TA: Asset reported stolen"
+        );
+        require(
+            database[_idx].status != 4 ,
+            "TA: Asset reported lost"
+        );
+        require(
+            (database[_idx].status == 0) || (database[_idx].status == 1) ,
+            "TA: Tranfer prohibited"
+        );
+        require(
+            _newreg != 0 ,
+            "TA: Registrant cannot be empty"
+        );
+        require(
+            database[_idx].registrant != _newreg ,
+            "TA: New record is identical to old record"
+        );
+        require(
+            _newstat != 255 ,
+            "TA: locking by user prohibited"
         );
         
-        modifyRegistrant(sender, idx, newreg);
-        forceModifyStatus(sender, idx, newstat);
+        database[_idx].registrar = keccak256(abi.encodePacked(_sender));
+        database[_idx].registrant = _newreg;
+        database[_idx].status = _newstat;
      
      }
      
      
     /**
-     * @dev Automation modify record with test for match to old record
+     * @dev Automation modify record REGISTRANT and STATUS with test for match to old record
      */
-    function robotTransferAsset (address sender, bytes32 idx, bytes32 oldreg, bytes32 newreg, uint8 newstat) internal {
+    function robotTransferAsset (address _sender, bytes32 _idx, bytes32 _oldreg, bytes32 _newreg, uint8 _newstat) internal {
         require(
-            registeredUsers[keccak256(abi.encodePacked(sender))] == 9 ,
+            registeredUsers[keccak256(abi.encodePacked(_sender))] == 9 ,
             "RTA: Address not authorized for automation"
         );
         require(
-            database[idx].registrant == oldreg ,
+            database[_idx].registrant == _oldreg ,
             "RTA: Records do not match - record change aborted"
         );
+        require(
+            database[_idx].registrant != 0 ,
+            "RTA: No Record exists to modify"
+        );
+        require(
+            database[_idx].status != 255 ,
+            "RTA: Record locked"
+        );
+        require(
+            database[_idx].status != 2 ,
+            "RTA: Asset marked nontransferrable"
+        );
+        require(
+            database[_idx].status != 3 ,
+            "RTA: Asset reported stolen"
+        );
+        require(
+            database[_idx].status != 4 ,
+            "RTA: Asset reported lost"
+        );
+        require(
+            (database[_idx].status == 0) || (database[_idx].status == 1) ,
+            "RTA: Tranfer prohibited"
+        );
+        require(
+            _newreg != 0 ,
+            "RTA: Registrant cannot be empty"
+        );
+        require(
+            database[_idx].registrant != _newreg ,
+            "RTA: New record is identical to old record"
+        );
+        require(
+            _newstat != 255 ,
+            "RTA: locking by automation prohibited"
+        );
         
-        robotModifyRegistrant(sender, idx, newreg);
-        robotModifyStatus(sender, idx, newstat);
+        database[_idx].registrar = keccak256(abi.encodePacked(_sender));
+        database[_idx].registrant = _newreg;
+        database[_idx].status = _newstat;
+     
+     }
+     
+     /**
+     * @dev user modify record STATUS with test for match to old record
+     */
+    function changeStatus (address _sender, bytes32 _idx, bytes32 _oldreg, uint8 _newstat) internal {
+        require(
+            registeredUsers[keccak256(abi.encodePacked(_sender))] == 1 ,
+            "CS: Address not authorized"
+        );
+        require(
+            database[_idx].registrant == _oldreg ,
+            "CS: Records do not match - record change aborted"
+        );
+        require(
+            database[_idx].registrant != 0 ,
+            "CS: No Record exists to modify"
+        );
+        require(
+            database[_idx].status != 255 ,
+            "CS: Record locked"
+        );
+        require(
+            _newstat != 255 ,
+            "CS: locking by user prohibited"
+        );
+        
+        database[_idx].registrar = keccak256(abi.encodePacked(_sender));
+        database[_idx].status = _newstat;
+     
+     }
+     
+     /**
+     * @dev robot modify record STATUS with test for match to old record
+     */ 
+    function robotChangeStatus (address _sender, bytes32 _idx, bytes32 _oldreg, uint8 _newstat) internal {
+        require(
+            registeredUsers[keccak256(abi.encodePacked(_sender))] == 9 ,
+            "RCS: Address not authorized for automation"
+        );
+        require(
+            database[_idx].registrant == _oldreg ,
+            "RCS: Records do not match - record change aborted"
+        );
+        require(
+            database[_idx].registrant != 0 ,
+            "RCS: No Record exists to modify"
+        );
+        require(
+            database[_idx].status != 255 ,
+            "RCS: Record locked"
+        );
+        require(
+            _newstat != 255 ,
+            "RCS: locking by automation prohibited"
+        );
+        
+        database[_idx].registrar = keccak256(abi.encodePacked(_sender));
+        database[_idx].status = _newstat;
+     
+     }
+     
+    /**
+     * @dev user modify record DESCRIPTION with test for match to old record
+     */
+    function changeDescription (address _sender, bytes32 _idx, bytes32 _oldreg, string memory _desc) internal {
+        require(
+            registeredUsers[keccak256(abi.encodePacked(_sender))] == 1 ,
+            "CD: Address not authorized"
+        );
+        require(
+            database[_idx].registrant == _oldreg ,
+            "CD: Records do not match - record change aborted"
+        );
+        require(
+            database[_idx].registrant != 0 ,
+            "CD: No Record exists to modify"
+        );
+        require(
+            database[_idx].status != 255 ,
+            "CD: Record locked"
+        );
+        
+        database[_idx].registrar = keccak256(abi.encodePacked(_sender));
+        database[_idx].description = _desc;
+     
+     }
+     
+     /**
+     * @dev robot modify record DESCRIPTION with test for match to old record
+     */
+    function robotChangeDescription (address _sender, bytes32 _idx, bytes32 _oldreg, string memory _desc) internal {
+        require(
+            registeredUsers[keccak256(abi.encodePacked(_sender))] == 9 ,
+            "RCD: Address not authorized for automation"
+        );
+        require(
+            database[_idx].registrant == _oldreg ,
+            "RCD: Records do not match - record change aborted"
+        );
+        require(
+            database[_idx].registrant != 0 ,
+            "RCD: No Record exists to modify"
+        );
+        require(
+            database[_idx].status != 255 ,
+            "RCD: Record locked"
+        );
+        
+        database[_idx].registrar = keccak256(abi.encodePacked(_sender));
+        database[_idx].description = _desc;
      
      }
     
 }
+
+
+  
+    /**
+     * @dev modify record at index idx
+    function forceModifyRecord(address _sender, bytes32 _idx, bytes32 _regstrnt, uint8 _stat, uint8 _extra, string memory _desc) internal {
+        require(
+            registeredUsers[keccak256(abi.encodePacked(_sender))] == 1  ,
+            "MR: Address not authorized"
+        );
+        require(
+            database[_idx].registrant != 0 ,
+            "MR: No Record exists to modify"
+        );
+        require(
+            database[_idx].status != 255 ,
+            "MR: Record locked"
+        );
+        require(
+            database[_idx].status != 2 ,
+            "MR: Asset marked nontransferrable"
+        );
+        require(
+            database[_idx].status != 3 ,
+            "MR: Asset reported stolen"
+        );
+        require(
+            database[_idx].status != 4 ,
+            "MR: Asset reported lost"
+        );
+        require(
+            (database[_idx].status == 0) || (database[_idx].status == 1) ,
+            "MR: Tranfer prohibited"
+        );
+        require(
+            _regstrnt != 0 ,
+            "MR: Registrant cannot be empty"
+        );
+        
+        require(
+            _stat != 255 ,
+            "MR: locking by user prohibited"
+        );
+        
+        database[_idx].registrar = keccak256(abi.encodePacked(_sender));
+        database[_idx].registrant = _regstrnt;
+        database[_idx].status = _stat;
+        database[_idx].extra = _extra;
+        database[_idx].forceModCount = 0;
+        database[_idx].description = _desc;
+    }
+    
+      */
+    

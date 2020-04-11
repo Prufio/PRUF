@@ -10,6 +10,7 @@ contract Storage is Ownable {
         uint8 extra; // extra status for future expansion
         uint8 forceModCount; // Number of times asset has been forceModded.
         string description; // publically viewable asset description
+        string note; // publically viewable immutable notes
     }
     
     
