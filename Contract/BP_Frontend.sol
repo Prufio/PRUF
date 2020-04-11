@@ -1,6 +1,6 @@
 pragma solidity ^0.6.0;
  
- import "./BulletProof_0_2_1.sol";
+ import "./BulletProof_0_2_2.sol";
  import "./PullPayment.sol";
  import "./SafeMath.sol";
  
@@ -29,31 +29,35 @@ pragma solidity ^0.6.0;
     /**
      * @dev Wrapper for admin lock record
      */
-    function ADMIN_LOCK (uint idx) public {
+    function ADMIN_LOCK (string memory idx) public {
         adminLock(keccak256(abi.encodePacked(idx)));
     }
     
       /**
      * @dev Wrapper for admin unlock record
      */
-    function ADMIN_UNLOCK (uint idx) public {
+    function ADMIN_UNLOCK (string memory idx) public {
         adminUnlock(keccak256(abi.encodePacked(idx)));
+    }
+    
+    function RESET_FORCEMOD_COUNT (string memory idx) public onlyOwner{
+        resetForceModCount(keccak256(abi.encodePacked(idx)));
     }
     
     
     /**
      * @dev Wrapper for create new record
      */
-    function NEW_RECORD (string memory idx, string memory reg, uint8 stat) public payable {
+    function NEW_RECORD (uint8 assetClass, string memory indexRef, string memory reg, uint8 stat, string memory description) public payable {
         deductPayment(1);
-        newRecord(msg.sender, keccak256(abi.encodePacked(idx)), keccak256(abi.encodePacked(reg)), stat);
+        newRecord(msg.sender, keccak256(abi.encodePacked(indexRef)), keccak256(abi.encodePacked(reg)), stat, assetClass, description);
     }
-
+    
     
     /**
      * @dev Wrapper for changing record status with tests
      */
-    function MOD_STATUS(uint idx, string memory regstrnt, uint8 stat) public payable {
+    function MOD_STATUS(string memory idx, string memory regstrnt, uint8 stat) public payable {
         deductPayment(1);
         modifyStatus(msg.sender, keccak256(abi.encodePacked(idx)),keccak256(abi.encodePacked(regstrnt)),stat);
     }
@@ -62,7 +66,7 @@ pragma solidity ^0.6.0;
     /**
      * @dev Wrapper for Asset transfer with tests
      */
-    function TRANSFER_ASSET (uint idx, string memory oldreg, string memory newreg, uint8 newstat) public payable {
+    function TRANSFER_ASSET (string memory idx, string memory oldreg, string memory newreg, uint8 newstat) public payable {
         deductPayment(1);
         transferAsset(msg.sender, keccak256(abi.encodePacked(idx)), keccak256(abi.encodePacked(oldreg)), keccak256(abi.encodePacked(newreg)),newstat);
      }
@@ -71,7 +75,7 @@ pragma solidity ^0.6.0;
     /**
      * @dev Wrapper for automated Asset transfer with tests
      */
-    function PRIVATE_SALE (uint idx, string memory oldreg, string memory newreg, uint8 newstat) public payable {
+    function PRIVATE_SALE (string memory idx, string memory oldreg, string memory newreg, uint8 newstat) public payable {
         deductPayment(1);
         robotTransferAsset(msg.sender, keccak256(abi.encodePacked(idx)), keccak256(abi.encodePacked(oldreg)), keccak256(abi.encodePacked(newreg)),newstat);
     }
@@ -80,7 +84,7 @@ pragma solidity ^0.6.0;
     /**
      * @dev Wrapper for force changing record status
      */
-    function FORCE_MOD_STATUS(uint idx, uint8 stat) public payable {
+    function FORCE_MOD_STATUS(string memory idx, uint8 stat) public payable {
         deductPayment(5);
         forceModifyStatus(msg.sender, keccak256(abi.encodePacked(idx)),stat);
     }
@@ -89,7 +93,7 @@ pragma solidity ^0.6.0;
     /**
      * @dev Wrapper for force changing the record without tests
      */
-    function FORCE_MOD_REGISTRANT (uint idx, string memory reg) public payable {
+    function FORCE_MOD_REGISTRANT (string memory idx, string memory reg) public payable {
         deductPayment(5);
         modifyRegistrant(msg.sender, keccak256(abi.encodePacked(idx)), keccak256(abi.encodePacked(reg)));
     }
@@ -98,7 +102,7 @@ pragma solidity ^0.6.0;
     /**
      * @dev Wrapper for comparing records
      */
-    function COMPARE_REGISTRANT (uint idx, string calldata reg) external view returns(string memory) {
+    function COMPARE_REGISTRANT (string calldata idx, string calldata reg) external view returns(string memory) {
          
         if (keccak256(abi.encodePacked(reg)) == database[keccak256(abi.encodePacked(idx))].registrant) {
             return "Registrant match confirmed";
@@ -110,9 +114,9 @@ pragma solidity ^0.6.0;
     /**
      * @dev Return complete record from datatbase at index idx
      */
-    function RETRIEVE_RECORD (uint idx) external view returns (bytes32,bytes32,uint8) {
+    function RETRIEVE_RECORD (string calldata idx) external view returns (bytes32,bytes32,uint8,string memory) {
         bytes32 idxHash = keccak256(abi.encodePacked(idx));
-        return (database[idxHash].registrar,database[idxHash].registrant,database[idxHash].status);
+        return (database[idxHash].registrar,database[idxHash].registrant,database[idxHash].status,database[idxHash].description);
     }
 
     
