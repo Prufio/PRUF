@@ -98,7 +98,7 @@ contract BulletProof is Storage {
     /*
      * @dev Store a complete record at index idx
      */
-    function newRecord(address _sender, bytes32 _idx, bytes32 _regstrnt, string memory _desc) internal {
+    function newRecord(address _sender, bytes32 _idx, bytes32 _reg, string memory _desc) internal {
         require(
             registeredUsers[keccak256(abi.encodePacked(_sender))] == 1 ,
             "NR: Address not authorized"
@@ -108,13 +108,13 @@ contract BulletProof is Storage {
             "NR: Record already exists"
         );
         require(
-            _regstrnt != 0 ,
+            _reg != 0 ,
             "NR: Registrant cannot be empty"
         );
         
         
         database[_idx].registrar = keccak256(abi.encodePacked(_sender));
-        database[_idx].registrant = _regstrnt;
+        database[_idx].registrant = _reg;
         database[_idx].lastRegistrar = database[_idx].registrar;
         database[_idx].forceModCount = 0;
         database[_idx].description = _desc;
@@ -162,7 +162,7 @@ contract BulletProof is Storage {
     /*
      * @dev force modify registrant at index idx
      */
-    function forceModifyRecord(address _sender, bytes32 _idx, bytes32 _regstrnt) internal {
+    function forceModifyRecord(address _sender, bytes32 _idx, bytes32 _reg) internal {
         require(
             registeredUsers[keccak256(abi.encodePacked(_sender))] == 1  ,
             "FMR: Address not authorized"
@@ -176,9 +176,14 @@ contract BulletProof is Storage {
             "FMR: Record locked"
         );
         require(
-            _regstrnt != 0 ,
+            _reg != 0 ,
             "FMR: Registrant cannot be empty"
         );
+        require(
+            database[_idx].registrant != _reg ,
+            "FMR: New record is identical to old record"
+        );
+        
         
         bytes32 senderHash = keccak256(abi.encodePacked(_sender));
         
@@ -194,7 +199,7 @@ contract BulletProof is Storage {
         }
         
         database[_idx].registrar = keccak256(abi.encodePacked(_sender));
-        database[_idx].registrant = _regstrnt;
+        database[_idx].registrant = _reg;
         database[_idx].forceModCount = count;
     }
     
