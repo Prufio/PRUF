@@ -60,7 +60,7 @@ pragma solidity ^0.6.0;
      * @dev Wrapper for create new record
      */
     function NEW_RECORD (string memory _idx, string memory _reg, string memory _desc) public payable {
-        deductPayment(1);
+        deductPayment(5);
         newRecord(msg.sender, keccak256(abi.encodePacked(_idx)), keccak256(abi.encodePacked(_reg)), _desc);
     }
     
@@ -79,7 +79,7 @@ pragma solidity ^0.6.0;
      * @dev Wrapper for Asset transfer with tests
      */
     function TRANSFER_ASSET (string memory _idx, string memory _oldreg, string memory _newreg, uint8 _newstat) public payable {
-        deductPayment(10);
+        deductPayment(5);
         transferAsset(msg.sender, keccak256(abi.encodePacked(_idx)), keccak256(abi.encodePacked(_oldreg)), keccak256(abi.encodePacked(_newreg)), _newstat);
      }
 

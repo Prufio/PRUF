@@ -86,9 +86,14 @@ contract BulletProof is Storage {
      */
     function resetForceModCount(bytes32 _idx) internal onlyOwner {
         require(
+            database[_idx].status != 255 ,
+            "RFMC: Record locked"
+        );
+        require(
             database[_idx].forceModCount != 0 ,
             "RFMC: fmc is already 0"
         );
+        
         //relies on onlyOwner from frontend
         database[_idx].forceModCount = 0;
 
@@ -148,12 +153,7 @@ contract BulletProof is Storage {
             "AN: Record note already exists"
         );
         
-        bytes32 senderHash = keccak256(abi.encodePacked(_sender));
-        
-        if ((registeredUsers[database[_idx].registrar] == 1) && (senderHash != database[_idx].registrar)) {     // Rotate last registrar
-                                                                                                                //into lastRegistrar field if uniuqe and not a robot
-            database[_idx].lastRegistrar = database[_idx].registrar;
-        }
+        lastRegistrar(_sender, _idx);
 
         database[_idx].note = _note;
     }
@@ -184,19 +184,13 @@ contract BulletProof is Storage {
             "FMR: New record is identical to old record"
         );
         
-        
-        bytes32 senderHash = keccak256(abi.encodePacked(_sender));
-        
         uint8 count = database[_idx].forceModCount;
         
         if (count < 255) {
             count ++;
         }
         
-        if ((registeredUsers[database[_idx].registrar] == 1) && (senderHash != database[_idx].registrar)) {     // Rotate last registrar
-                                                                                                                //into lastRegistrar field if uniuqe and not a robot
-            database[_idx].lastRegistrar = database[_idx].registrar;
-        }
+        lastRegistrar(_sender, _idx);
         
         database[_idx].registrar = keccak256(abi.encodePacked(_sender));
         database[_idx].registrant = _reg;
@@ -256,12 +250,7 @@ contract BulletProof is Storage {
             "TA: locking by user prohibited"
         );
         
-        bytes32 senderHash = keccak256(abi.encodePacked(_sender));
-        
-        if ((registeredUsers[database[_idx].registrar] == 1) && (senderHash != database[_idx].registrar)) {     // Rotate last registrar
-                                                                                                                //into lastRegistrar field if uniuqe and not a robot
-            database[_idx].lastRegistrar = database[_idx].registrar;
-        }
+        lastRegistrar(_sender, _idx);
     
         database[_idx].registrar = keccak256(abi.encodePacked(_sender));
         database[_idx].registrant = _newreg;
@@ -296,12 +285,7 @@ contract BulletProof is Storage {
             "CS: locking by user prohibited"
         );
         
-        bytes32 senderHash = keccak256(abi.encodePacked(_sender));
-        
-        if ((registeredUsers[database[_idx].registrar] == 1) && (senderHash != database[_idx].registrar)) {     // Rotate last registrar
-                                                                                                                //into lastRegistrar field if uniuqe and not a robot
-            database[_idx].lastRegistrar = database[_idx].registrar;
-        }
+        lastRegistrar(_sender, _idx);
         
         database[_idx].registrar = keccak256(abi.encodePacked(_sender));
         database[_idx].status = _newstat;
@@ -331,17 +315,21 @@ contract BulletProof is Storage {
             "CD: Record locked"
         );
         
+        lastRegistrar(_sender, _idx);
+        
+        database[_idx].registrar = keccak256(abi.encodePacked(_sender));
+        database[_idx].description = _desc;
+     
+     }
+     
+    function lastRegistrar(address _sender, bytes32 _idx) internal {
         bytes32 senderHash = keccak256(abi.encodePacked(_sender));
         
         if ((registeredUsers[database[_idx].registrar] == 1) && (senderHash != database[_idx].registrar)) {     // Rotate last registrar
                                                                                                                 //into lastRegistrar field if uniuqe and not a robot
             database[_idx].lastRegistrar = database[_idx].registrar;
         }
-        
-        database[_idx].registrar = keccak256(abi.encodePacked(_sender));
-        database[_idx].description = _desc;
-     
-     }
+    }
 
     
 }
