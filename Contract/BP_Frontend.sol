@@ -1,6 +1,6 @@
 pragma solidity ^0.6.0;
  
- import "./BulletProof_0_2_2.sol";
+ import "./BulletProof_0_2_3.sol";
  import "./PullPayment.sol";
  import "./SafeMath.sol";
  
@@ -42,12 +42,8 @@ pragma solidity ^0.6.0;
         adminLock(keccak256(abi.encodePacked(_idx)));
     }
     
-<<<<<<< HEAD
-    /**
-=======
 
-      /**
->>>>>>> BulletProof_0_2
+     /**
      * @dev Wrapper for admin unlock record
      */
     function ADMIN_UNLOCK (string memory _idx) public onlyOwner{
@@ -63,9 +59,9 @@ pragma solidity ^0.6.0;
     /**
      * @dev Wrapper for create new record
      */
-    function NEW_RECORD (string memory _idx, string memory _reg, string memory _desc, string memory _note) public payable {
+    function NEW_RECORD (string memory _idx, string memory _reg, string memory _desc) public payable {
         deductPayment(1);
-        newRecord(msg.sender, keccak256(abi.encodePacked(_idx)), keccak256(abi.encodePacked(_reg)), _desc, _note);
+        newRecord(msg.sender, keccak256(abi.encodePacked(_idx)), keccak256(abi.encodePacked(_reg)), _desc);
     }
     
     
@@ -75,20 +71,8 @@ pragma solidity ^0.6.0;
     function MOD_STATUS(string memory _idx, string memory _reg, uint8 _stat) public {
         changeStatus(msg.sender, keccak256(abi.encodePacked(_idx)), keccak256(abi.encodePacked(_reg)), _stat);
     }
-<<<<<<< HEAD
     
     
-    /**
-     * @dev Wrapper for changing record STATUS with tests
-     
-    function ROBOT_MOD_STATUS(string memory _idx, string memory _reg, uint8 _stat) public payable {
-        deductPayment(1);
-        robotChangeStatus(msg.sender, keccak256(abi.encodePacked(_idx)),keccak256(abi.encodePacked(_reg)),_stat);
-    }
-     */
-=======
->>>>>>> BulletProof_0_2
-
 
     /**
      * @dev Wrapper for Asset transfer with tests
@@ -112,17 +96,14 @@ pragma solidity ^0.6.0;
     function FORCE_MOD_RECORD  (string memory _idx, string memory _reg) public payable {
         deductPayment(10);
         forceModifyRecord(msg.sender, keccak256(abi.encodePacked(_idx)), keccak256(abi.encodePacked(_reg)));
-<<<<<<< Updated upstream
-    }   
-=======
     }
+
     
-    function ADD_NOTE (string memory _idx, string memory _reg, string memory _note){
+    function ADD_NOTE (string memory _idx, string memory _reg, string memory _note) public payable{
         deductPayment(2); 
         addNote(msg.sender, keccak256(abi.encodePacked(_idx)), keccak256(abi.encodePacked(_reg)), _note);
     }
->>>>>>> Stashed changes
-    
+
 
     /**
      * @dev Wrapper for comparing records
@@ -144,12 +125,9 @@ pragma solidity ^0.6.0;
         return (database[idxHash].registrar, database[idxHash].registrant, database[idxHash].lastRegistrar, database[idxHash].status, database[idxHash].forceModCount, database[idxHash].description, database[idxHash].note);
     }
     
-<<<<<<< HEAD
-    /**
-=======
 
-     /**
->>>>>>> BulletProof_0_2
+    /**
+
      * @dev Deduct payment and transfer cost, call to PullPayment with msg.sender  *****MAKE pullPayment internal!!!! SECURITY
      */ 
     function WITHDRAW() public virtual payable {

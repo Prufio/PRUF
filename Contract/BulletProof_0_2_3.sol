@@ -118,11 +118,9 @@ contract BulletProof is Storage {
         database[_idx].lastRegistrar = database[_idx].registrar;
         database[_idx].forceModCount = 0;
         database[_idx].description = _desc;
-<<<<<<< HEAD
-=======
-        //database[_idx].note = _note;
->>>>>>> BulletProof_0_2
     }
+
+
     
     
     /**
@@ -265,70 +263,9 @@ contract BulletProof is Storage {
         database[_idx].status = _newstat;
      
      }
-     
-     
-<<<<<<< HEAD
-    /**
-     * @dev Automation modify record REGISTRANT and STATUS with test for match to old record
-     
-    function robotTransferAsset (address _sender, bytes32 _idx, bytes32 _oldreg, bytes32 _newreg, uint8 _newstat) internal {
-        require(
-            registeredUsers[keccak256(abi.encodePacked(_sender))] == 9 ,
-            "RTA: Address not authorized for automation"
-        );
-        require(
-            database[_idx].registrant == _oldreg ,
-            "RTA: Records do not match - record change aborted"
-        );
-        require(
-            database[_idx].registrant != 0 ,
-            "RTA: No Record exists to modify"
-        );
-        require(
-            database[_idx].status != 255 ,
-            "RTA: Record locked"
-        );
-        require(
-            database[_idx].status != 2 ,
-            "RTA: Asset marked nontransferrable"
-        );
-        require(
-            database[_idx].status != 3 ,
-            "RTA: Asset reported stolen"
-        );
-        require(
-            database[_idx].status != 4 ,
-            "RTA: Asset reported lost"
-        );
-        require(
-            (database[_idx].status == 0) || (database[_idx].status == 1) ,
-            "RTA: Tranfer prohibited"
-        );
-        require(
-            _newreg != 0 ,
-            "RTA: Registrant cannot be empty"
-        );
-        require(
-            database[_idx].registrant != _newreg ,
-            "RTA: New record is identical to old record"
-        );
-        require(
-            _newstat != 255 ,
-            "RTA: locking by automation prohibited"
-        );
-        
-        database[_idx].registrar = keccak256(abi.encodePacked(_sender));
-        database[_idx].registrant = _newreg;
-        database[_idx].status = _newstat;
-     
-     }
-     */
-     
+
      
     /**
-=======
-     /**
->>>>>>> BulletProof_0_2
      * @dev Modify record STATUS with test for match to old record
      */
     function changeStatus (address _sender, bytes32 _idx, bytes32 _oldreg, uint8 _newstat) internal {
@@ -366,42 +303,7 @@ contract BulletProof is Storage {
      
      }
      
-<<<<<<< HEAD
-     /**
-      * @dev robot modify record STATUS with test for match to old record
-      
-    function robotChangeStatus (address _sender, bytes32 _idx, bytes32 _oldreg, uint8 _newstat) internal {
-        require(
-            registeredUsers[keccak256(abi.encodePacked(_sender))] == 9 ,
-            "RCS: Address not authorized for automation"
-        );
-        require(
-            database[_idx].registrant == _oldreg ,
-            "RCS: Records do not match - record change aborted"
-        );
-        require(
-            database[_idx].registrant != 0 ,
-            "RCS: No Record exists to modify"
-        );
-        require(
-            database[_idx].status != 255 ,
-            "RCS: Record locked"
-        );
-        require(
-            _newstat != 255 ,
-            "RCS: locking by automation prohibited"
-        );
-        
-        database[_idx].registrar = keccak256(abi.encodePacked(_sender));
-        database[_idx].status = _newstat;
-     
-     }
-     */
-     
-     
-=======
 
->>>>>>> BulletProof_0_2
     /**
      * @dev user modify record DESCRIPTION with test for match to old record
      */
@@ -435,37 +337,7 @@ contract BulletProof is Storage {
         database[_idx].description = _desc;
      
      }
-<<<<<<< HEAD
-     
-    /**
-     * @dev robot modify record DESCRIPTION with test for match to old record
-     
-    function robotChangeDescription (address _sender, bytes32 _idx, bytes32 _oldreg, string memory _desc) internal {
-        require(
-            registeredUsers[keccak256(abi.encodePacked(_sender))] == 9 ,
-            "RCD: Address not authorized for automation"
-        );
-        require(
-            database[_idx].registrant == _oldreg ,
-            "RCD: Records do not match - record change aborted"
-        );
-        require(
-            database[_idx].registrant != 0 ,
-            "RCD: No Record exists to modify"
-        );
-        require(
-            database[_idx].status != 255 ,
-            "RCD: Record locked"
-        );
-        
-        database[_idx].registrar = keccak256(abi.encodePacked(_sender));
-        database[_idx].description = _desc;
-     
-     }
-     
-     */
-=======
->>>>>>> BulletProof_0_2
+
     
 }
 
