@@ -37,7 +37,7 @@ pragma solidity ^0.6.0;
         adminLock(keccak256(abi.encodePacked(_idx)));
     }
     
-      /**
+    /**
      * @dev Wrapper for admin unlock record
      */
     function ADMIN_UNLOCK (string memory _idx) public onlyOwner{
@@ -66,14 +66,14 @@ pragma solidity ^0.6.0;
     }
     
     
-     /**
+    /**
      * @dev Wrapper for changing record STATUS with tests
      
     function ROBOT_MOD_STATUS(string memory _idx, string memory _reg, uint8 _stat) public payable {
         deductPayment(1);
         robotChangeStatus(msg.sender, keccak256(abi.encodePacked(_idx)),keccak256(abi.encodePacked(_reg)),_stat);
     }
-    */
+     */
 
 
     /**
@@ -121,7 +121,7 @@ pragma solidity ^0.6.0;
     }
 
     
-     /**
+    /**
      * @dev Deduct payment and transfer cost, call to PullPayment with msg.sender  *****MAKE pullPayment internal!!!! SECURITY
      */ 
     function WITHDRAW() public virtual payable {

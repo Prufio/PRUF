@@ -52,7 +52,7 @@ contract BulletProof is Storage {
     
     
     
-     /**
+    /**
      * @dev Administrative lock a database entry at index idx
      */
     function adminLock(bytes32 _idx) internal onlyOwner {
@@ -98,7 +98,7 @@ contract BulletProof is Storage {
     /**
      * @dev Store a complete record at index idx
      */
-    function newRecord(address _sender, bytes32 _idx, bytes32 _regstrnt, string memory _desc, string memory _note) internal {
+    function newRecord(address _sender, bytes32 _idx, bytes32 _regstrnt, string memory _desc) internal {
         require(
             registeredUsers[keccak256(abi.encodePacked(_sender))] == 1 ,
             "NR: Address not authorized"
@@ -118,7 +118,6 @@ contract BulletProof is Storage {
         database[_idx].lastRegistrar = database[_idx].registrar;
         database[_idx].forceModCount = 0;
         database[_idx].description = _desc;
-        database[_idx].note = _note;
     }
     
     
@@ -283,10 +282,10 @@ contract BulletProof is Storage {
         database[_idx].status = _newstat;
      
      }
-    */
+     */
      
      
-     /**
+    /**
      * @dev Modify record STATUS with test for match to old record
      */
     function changeStatus (address _sender, bytes32 _idx, bytes32 _oldreg, uint8 _newstat) internal {
@@ -325,7 +324,7 @@ contract BulletProof is Storage {
      }
      
      /**
-     * @dev robot modify record STATUS with test for match to old record
+      * @dev robot modify record STATUS with test for match to old record
       
     function robotChangeStatus (address _sender, bytes32 _idx, bytes32 _oldreg, uint8 _newstat) internal {
         require(
@@ -390,7 +389,7 @@ contract BulletProof is Storage {
      
      }
      
-     /**
+    /**
      * @dev robot modify record DESCRIPTION with test for match to old record
      
     function robotChangeDescription (address _sender, bytes32 _idx, bytes32 _oldreg, string memory _desc) internal {
@@ -416,7 +415,7 @@ contract BulletProof is Storage {
      
      }
      
-    */
+     */
     
 }
 
