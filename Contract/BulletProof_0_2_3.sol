@@ -203,7 +203,7 @@ contract BulletProof is Storage {
      * @dev Modify TRANSFER record REGISTRANT and STATUS with test for match to old record
      */
 
-    function transferAsset (address _sender, bytes32 _idx, bytes32 _oldreg, bytes32 _newreg, uint8 _newstat) internal {
+    function transferAsset (address _sender, bytes32 _idx, bytes32 _oldreg, bytes32 _newreg) internal {
         uint8 senderType = registeredUsers[keccak256(abi.encodePacked(_sender))];
         require(
             (senderType == 1) || (senderType == 9) ,
@@ -245,16 +245,12 @@ contract BulletProof is Storage {
             database[_idx].registrant != _newreg ,
             "TA: New record is identical to old record"
         );
-        require(
-            _newstat != 255 ,
-            "TA: locking by user prohibited"
-        );
         
         lastRegistrar(_sender, _idx);
     
         database[_idx].registrar = keccak256(abi.encodePacked(_sender));
         database[_idx].registrant = _newreg;
-        database[_idx].status = _newstat;
+        
      
      }
 
