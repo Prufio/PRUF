@@ -73,7 +73,7 @@ pragma solidity ^0.6.0;
      * @dev Wrapper for changing record STATUS with tests
      */
     function MOD_STATUS(string memory _idx, string memory _reg, uint8 _stat) public {
-        changeStatus(msg.sender, keccak256(abi.encodePacked(_idx)),keccak256(abi.encodePacked(_reg)),_stat);
+        changeStatus(msg.sender, keccak256(abi.encodePacked(_idx)), keccak256(abi.encodePacked(_reg)), _stat);
     }
 <<<<<<< HEAD
     
@@ -95,14 +95,14 @@ pragma solidity ^0.6.0;
      */
     function TRANSFER_ASSET (string memory _idx, string memory _oldreg, string memory _newreg, uint8 _newstat) public payable {
         deductPayment(1);
-        transferAsset(msg.sender, keccak256(abi.encodePacked(_idx)), keccak256(abi.encodePacked(_oldreg)), keccak256(abi.encodePacked(_newreg)),_newstat);
+        transferAsset(msg.sender, keccak256(abi.encodePacked(_idx)), keccak256(abi.encodePacked(_oldreg)), keccak256(abi.encodePacked(_newreg)), _newstat);
      }
 
     /**
      * @dev Wrapper for force changing the record without tests
      */
    function CHANGE_DESCRIPTION (string memory _idx, string memory _reg, string memory _desc) public {
-       changeDescription (msg.sender, keccak256(abi.encodePacked(_idx)),keccak256(abi.encodePacked(_reg)),_desc);
+       changeDescription (msg.sender, keccak256(abi.encodePacked(_idx)), keccak256(abi.encodePacked(_reg)), _desc);
    }
     
 
@@ -112,7 +112,16 @@ pragma solidity ^0.6.0;
     function FORCE_MOD_RECORD  (string memory _idx, string memory _reg) public payable {
         deductPayment(10);
         forceModifyRecord(msg.sender, keccak256(abi.encodePacked(_idx)), keccak256(abi.encodePacked(_reg)));
+<<<<<<< Updated upstream
     }   
+=======
+    }
+    
+    function ADD_NOTE (string memory _idx, string memory _reg, string memory _note){
+        deductPayment(2); 
+        addNote(msg.sender, keccak256(abi.encodePacked(_idx)), keccak256(abi.encodePacked(_reg)), _note);
+    }
+>>>>>>> Stashed changes
     
 
     /**
