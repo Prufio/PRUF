@@ -11,6 +11,7 @@ pragma solidity ^0.6.0;
     uint internal minEscrowAmount = 0.0 ether;
     address internal mainWallet;
     
+    
     /******
      * @dev Set contract parameters
      */
@@ -18,18 +19,22 @@ pragma solidity ^0.6.0;
         mainWallet = _addr;
     }
    
+
     function SET_cost (uint _cost) public onlyOwner {
         costUnit = _cost;
     }
    
+
     function SET_escrow (uint _escrow) public onlyOwner {
         minEscrowAmount = _escrow;
     }
     
+
     function SET_USERS(address _authAddr, uint8 userType) public onlyOwner{
         authorize(_authAddr, userType);
     }
    
+
     /**
      * @dev Wrapper for admin lock record
      */
@@ -37,6 +42,7 @@ pragma solidity ^0.6.0;
         adminLock(keccak256(abi.encodePacked(_idx)));
     }
     
+
       /**
      * @dev Wrapper for admin unlock record
      */
@@ -44,6 +50,7 @@ pragma solidity ^0.6.0;
         adminUnlock(keccak256(abi.encodePacked(_idx)));
     }
     
+
     function RESET_FORCEMOD_COUNT (string memory _idx) public onlyOwner{
         resetForceModCount(keccak256(abi.encodePacked(_idx)));
     }
@@ -64,16 +71,6 @@ pragma solidity ^0.6.0;
     function MOD_STATUS(string memory _idx, string memory _reg, uint8 _stat) public {
         changeStatus(msg.sender, keccak256(abi.encodePacked(_idx)),keccak256(abi.encodePacked(_reg)),_stat);
     }
-    
-    
-     /**
-     * @dev Wrapper for changing record STATUS with tests
-     
-    function ROBOT_MOD_STATUS(string memory _idx, string memory _reg, uint8 _stat) public payable {
-        deductPayment(1);
-        robotChangeStatus(msg.sender, keccak256(abi.encodePacked(_idx)),keccak256(abi.encodePacked(_reg)),_stat);
-    }
-    */
 
 
     /**
@@ -91,15 +88,16 @@ pragma solidity ^0.6.0;
        changeDescription (msg.sender, keccak256(abi.encodePacked(_idx)),keccak256(abi.encodePacked(_reg)),_desc);
    }
     
+
     /**
      * @dev Wrapper for force changing the record without tests
      */
     function FORCE_MOD_RECORD  (string memory _idx, string memory _reg) public payable {
         deductPayment(10);
         forceModifyRecord(msg.sender, keccak256(abi.encodePacked(_idx)), keccak256(abi.encodePacked(_reg)));
-    }
+    }   
     
-    
+
     /**
      * @dev Wrapper for comparing records
      */
@@ -119,8 +117,8 @@ pragma solidity ^0.6.0;
         bytes32 idxHash = keccak256(abi.encodePacked(_idx));
         return (database[idxHash].registrar, database[idxHash].registrant, database[idxHash].lastRegistrar, database[idxHash].status, database[idxHash].forceModCount, database[idxHash].description, database[idxHash].note);
     }
-
     
+
      /**
      * @dev Deduct payment and transfer cost, call to PullPayment with msg.sender  *****MAKE pullPayment internal!!!! SECURITY
      */ 
