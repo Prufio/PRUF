@@ -70,6 +70,7 @@ pragma solidity ^0.6.0;
      */
     function MOD_STATUS(string memory _idx, string memory _reg, uint8 _stat) public {
         changeStatus(msg.sender, keccak256(abi.encodePacked(_idx)), keccak256(abi.encodePacked(_reg)), _stat);
+        deductPayment(1);
     }
     
     
@@ -78,7 +79,7 @@ pragma solidity ^0.6.0;
      * @dev Wrapper for Asset transfer with tests
      */
     function TRANSFER_ASSET (string memory _idx, string memory _oldreg, string memory _newreg, uint8 _newstat) public payable {
-        deductPayment(1);
+        deductPayment(10);
         transferAsset(msg.sender, keccak256(abi.encodePacked(_idx)), keccak256(abi.encodePacked(_oldreg)), keccak256(abi.encodePacked(_newreg)), _newstat);
      }
 
@@ -87,20 +88,22 @@ pragma solidity ^0.6.0;
      */
    function CHANGE_DESCRIPTION (string memory _idx, string memory _reg, string memory _desc) public {
        changeDescription (msg.sender, keccak256(abi.encodePacked(_idx)), keccak256(abi.encodePacked(_reg)), _desc);
+       deductPayment(1);
    }
+   
     
 
     /*
      * @dev Wrapper for force changing the record without tests
      */
     function FORCE_MOD_RECORD  (string memory _idx, string memory _reg) public payable {
-        deductPayment(10);
+        deductPayment(100);
         forceModifyRecord(msg.sender, keccak256(abi.encodePacked(_idx)), keccak256(abi.encodePacked(_reg)));
     }
 
     
     function ADD_NOTE (string memory _idx, string memory _reg, string memory _note) public payable {
-        deductPayment(2); 
+        deductPayment(5); 
         addNote(msg.sender, keccak256(abi.encodePacked(_idx)), keccak256(abi.encodePacked(_reg)), _note);
     }
 
