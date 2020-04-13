@@ -118,11 +118,40 @@ contract BulletProof is Storage {
         database[_idx].lastRegistrar = database[_idx].registrar;
         database[_idx].forceModCount = 0;
         database[_idx].description = _desc;
+<<<<<<< HEAD
+=======
+        //database[_idx].note = _note;
+>>>>>>> BulletProof_0_2
     }
     
-    
     /**
-     * @dev force modify record at index idx
+     * @dev Store a permenant note at index idx
+     */
+        function addNote(address _sender, bytes32 _idx, bytes32 _regstrnt, string memory _desc, string memory _note) internal {
+        require(
+            registeredUsers[keccak256(abi.encodePacked(_sender))] == 1 ,
+            "NR: Address not authorized"
+        );
+        require(
+            database[_idx].registrant == 0 ,
+            "NR: Record already exists"
+        );
+        require(
+            _regstrnt != 0 ,
+            "NR: Registrant cannot be empty"
+        );
+        
+        if ((registeredUsers[database[_idx].registrar] == 1) && (senderHash != database[_idx].registrar)){     // Rotate last registrar
+                                                                                                                //into lastRegistrar field if uniuqe and not a robot
+            database[_idx].lastRegistrar = database[_idx].registrar;
+        }
+
+        database[_idx].note = _note;
+    }
+    
+
+    /**
+     * @dev force modify registrant at index idx
      */
     function forceModifyRecord(address _sender, bytes32 _idx, bytes32 _regstrnt) internal {
         require(
@@ -163,7 +192,7 @@ contract BulletProof is Storage {
     
 
     /**
-     * @dev Modify record REGISTRANT and STATUS with test for match to old record
+     * @dev Modify TRANSFER record REGISTRANT and STATUS with test for match to old record
      */
 
     function transferAsset (address _sender, bytes32 _idx, bytes32 _oldreg, bytes32 _newreg, uint8 _newstat) internal {
@@ -228,6 +257,7 @@ contract BulletProof is Storage {
      }
      
      
+<<<<<<< HEAD
     /**
      * @dev Automation modify record REGISTRANT and STATUS with test for match to old record
      
@@ -286,6 +316,9 @@ contract BulletProof is Storage {
      
      
     /**
+=======
+     /**
+>>>>>>> BulletProof_0_2
      * @dev Modify record STATUS with test for match to old record
      */
     function changeStatus (address _sender, bytes32 _idx, bytes32 _oldreg, uint8 _newstat) internal {
@@ -323,6 +356,7 @@ contract BulletProof is Storage {
      
      }
      
+<<<<<<< HEAD
      /**
       * @dev robot modify record STATUS with test for match to old record
       
@@ -355,6 +389,9 @@ contract BulletProof is Storage {
      */
      
      
+=======
+
+>>>>>>> BulletProof_0_2
     /**
      * @dev user modify record DESCRIPTION with test for match to old record
      */
@@ -388,6 +425,7 @@ contract BulletProof is Storage {
         database[_idx].description = _desc;
      
      }
+<<<<<<< HEAD
      
     /**
      * @dev robot modify record DESCRIPTION with test for match to old record
@@ -416,6 +454,8 @@ contract BulletProof is Storage {
      }
      
      */
+=======
+>>>>>>> BulletProof_0_2
     
 }
 
