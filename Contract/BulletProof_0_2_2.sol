@@ -121,22 +121,33 @@ contract BulletProof is Storage {
         //database[_idx].note = _note;
     }
     
+    
     /**
-     * @dev Store a permenant note at index idx
+     * @dev Store a permanant note at index idx
      */
-        function addNote(address _sender, bytes32 _idx, bytes32 _regstrnt, string memory _desc, string memory _note) internal {
+        function addNote(address _sender, bytes32 _idx, bytes32 _reg, string memory _note) internal {
         require(
             registeredUsers[keccak256(abi.encodePacked(_sender))] == 1 ,
-            "NR: Address not authorized"
+            "AN: Address not authorized"
         );
         require(
-            database[_idx].registrant == 0 ,
-            "NR: Record already exists"
+            database[_idx].registrant == _reg ,
+            "AN: Records do not match - record change aborted"
         );
         require(
-            _regstrnt != 0 ,
-            "NR: Registrant cannot be empty"
+            database[_idx].registrant != 0 ,
+            "AN: No Record exists to modify"
         );
+        require(
+            database[_idx].status != 255 ,
+            "AN: Record locked"
+        );
+        require(
+            keccak256(abi.encodePacked(database[_idx].note)) == keccak256(abi.encodePacked("")),
+            "AN: Record note already exists"
+        );
+        
+        bytes32 senderHash = keccak256(abi.encodePacked(_sender));
         
         if ((registeredUsers[database[_idx].registrar] == 1) && (senderHash != database[_idx].registrar)){     // Rotate last registrar
                                                                                                                 //into lastRegistrar field if uniuqe and not a robot
@@ -245,8 +256,7 @@ contract BulletProof is Storage {
                                                                                                                 //into lastRegistrar field if uniuqe and not a robot
             database[_idx].lastRegistrar = database[_idx].registrar;
         }
-        
-        
+    
         database[_idx].registrar = keccak256(abi.encodePacked(_sender));
         database[_idx].registrant = _newreg;
         database[_idx].status = _newstat;
