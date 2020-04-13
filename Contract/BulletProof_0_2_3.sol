@@ -1,6 +1,6 @@
 pragma solidity ^0.6.0;
 
-/******
+/*****
  * @title BulletProof
  * @dev Store & retreive a record
  * Need to explore the implications of registering with serial only and reregistering with serial+secret
@@ -31,7 +31,7 @@ import "./BP_Storage.sol";
 
 contract BulletProof is Storage {
     
-    /**
+    /*
      * @dev Authorize / Deauthorize / Authorize automation for an address be permitted to make record modifications
      * ----------------INSECURE -- keccak256 of address must be generated clientside in release.
      * something like:
@@ -52,7 +52,7 @@ contract BulletProof is Storage {
     
     
     
-    /**
+    /*
      * @dev Administrative lock a database entry at index idx
      */
     function adminLock(bytes32 _idx) internal onlyOwner {
@@ -67,7 +67,7 @@ contract BulletProof is Storage {
     }
     
     
-    /**
+    /*
      * @dev Administrative unlock a database entry at index idx
      */
     function adminUnlock(bytes32 _idx) internal onlyOwner {
@@ -81,7 +81,7 @@ contract BulletProof is Storage {
         database[_idx].registrar = keccak256(abi.encodePacked(msg.sender));
     }
     
-    /**
+    /*
      * @dev Administrative reset of forceModCount to zero
      */
     function resetForceModCount(bytes32 _idx) internal onlyOwner {
@@ -95,7 +95,7 @@ contract BulletProof is Storage {
     }
 
 
-    /**
+    /*
      * @dev Store a complete record at index idx
      */
     function newRecord(address _sender, bytes32 _idx, bytes32 _regstrnt, string memory _desc) internal {
@@ -123,7 +123,7 @@ contract BulletProof is Storage {
 
     
     
-    /**
+    /*
      * @dev Store a permanant note at index idx
      */
         function addNote(address _sender, bytes32 _idx, bytes32 _reg, string memory _note) internal {
@@ -159,7 +159,7 @@ contract BulletProof is Storage {
     }
     
 
-    /**
+    /*
      * @dev force modify registrant at index idx
      */
     function forceModifyRecord(address _sender, bytes32 _idx, bytes32 _regstrnt) internal {
@@ -200,7 +200,7 @@ contract BulletProof is Storage {
     
     
 
-    /**
+    /*
      * @dev Modify TRANSFER record REGISTRANT and STATUS with test for match to old record
      */
 
@@ -265,7 +265,7 @@ contract BulletProof is Storage {
      }
 
      
-    /**
+    /*
      * @dev Modify record STATUS with test for match to old record
      */
     function changeStatus (address _sender, bytes32 _idx, bytes32 _oldreg, uint8 _newstat) internal {
@@ -304,7 +304,7 @@ contract BulletProof is Storage {
      }
      
 
-    /**
+    /*
      * @dev user modify record DESCRIPTION with test for match to old record
      */
     function changeDescription (address _sender, bytes32 _idx, bytes32 _reg, string memory _desc) internal {

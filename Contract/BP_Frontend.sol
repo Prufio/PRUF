@@ -12,7 +12,7 @@ pragma solidity ^0.6.0;
     address internal mainWallet;
     
     
-    /******
+    /*
      * @dev Set contract parameters
      */
     function SET_wallet (address _addr) public onlyOwner {
@@ -35,7 +35,7 @@ pragma solidity ^0.6.0;
     }
    
 
-    /**
+    /*     
      * @dev Wrapper for admin lock record
      */
     function ADMIN_LOCK (string memory _idx) public onlyOwner {
@@ -43,7 +43,7 @@ pragma solidity ^0.6.0;
     }
     
 
-     /**
+     /*
      * @dev Wrapper for admin unlock record
      */
     function ADMIN_UNLOCK (string memory _idx) public onlyOwner {
@@ -56,7 +56,7 @@ pragma solidity ^0.6.0;
     }
     
     
-    /**
+    /*
      * @dev Wrapper for create new record
      */
     function NEW_RECORD (string memory _idx, string memory _reg, string memory _desc) public payable {
@@ -65,7 +65,7 @@ pragma solidity ^0.6.0;
     }
     
     
-    /**
+    /*
      * @dev Wrapper for changing record STATUS with tests
      */
     function MOD_STATUS(string memory _idx, string memory _reg, uint8 _stat) public {
@@ -74,7 +74,7 @@ pragma solidity ^0.6.0;
     
     
 
-    /**
+    /*
      * @dev Wrapper for Asset transfer with tests
      */
     function TRANSFER_ASSET (string memory _idx, string memory _oldreg, string memory _newreg, uint8 _newstat) public payable {
@@ -82,7 +82,7 @@ pragma solidity ^0.6.0;
         transferAsset(msg.sender, keccak256(abi.encodePacked(_idx)), keccak256(abi.encodePacked(_oldreg)), keccak256(abi.encodePacked(_newreg)), _newstat);
      }
 
-    /**
+    /*
      * @dev Wrapper for force changing the record without tests
      */
    function CHANGE_DESCRIPTION (string memory _idx, string memory _reg, string memory _desc) public {
@@ -90,7 +90,7 @@ pragma solidity ^0.6.0;
    }
     
 
-    /**
+    /*
      * @dev Wrapper for force changing the record without tests
      */
     function FORCE_MOD_RECORD  (string memory _idx, string memory _reg) public payable {
@@ -105,7 +105,7 @@ pragma solidity ^0.6.0;
     }
 
 
-    /**
+    /*
      * @dev Wrapper for comparing records
      */
     function COMPARE_REGISTRANT (string calldata _idx, string calldata _reg) external view returns(string memory) {
@@ -117,7 +117,7 @@ pragma solidity ^0.6.0;
         }
     }
     
-    /**
+    /*
      * @dev Return complete record from datatbase at index idx
      */
     function RETRIEVE_RECORD (string calldata _idx) external view returns (bytes32, bytes32, bytes32, uint8, uint8, string memory, string memory) {
@@ -126,8 +126,7 @@ pragma solidity ^0.6.0;
     }
     
 
-    /**
-
+    /*
      * @dev Deduct payment and transfer cost, call to PullPayment with msg.sender  *****MAKE pullPayment internal!!!! SECURITY
      */ 
     function WITHDRAW() public virtual payable {
@@ -135,7 +134,7 @@ pragma solidity ^0.6.0;
     }
  
  
-    /**
+    /*
      * @dev Deduct payment and transfer cost, change to PullPayment
      */   
     function deductPayment (uint _amount) private {
