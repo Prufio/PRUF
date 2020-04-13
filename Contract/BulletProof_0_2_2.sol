@@ -98,7 +98,7 @@ contract BulletProof is Storage {
     /**
      * @dev Store a complete record at index idx
      */
-    function newRecord(address _sender, bytes32 _idx, bytes32 _regstrnt, string memory _desc, string memory _note) internal {
+    function newRecord(address _sender, bytes32 _idx, bytes32 _regstrnt, string memory _desc) internal {
         require(
             registeredUsers[keccak256(abi.encodePacked(_sender))] == 1 ,
             "NR: Address not authorized"
@@ -118,10 +118,35 @@ contract BulletProof is Storage {
         database[_idx].lastRegistrar = database[_idx].registrar;
         database[_idx].forceModCount = 0;
         database[_idx].description = _desc;
+        //database[_idx].note = _note;
+    }
+    
+    /**
+     * @dev Store a permenant note at index idx
+     */
+        function addNote(address _sender, bytes32 _idx, bytes32 _regstrnt, string memory _desc, string memory _note) internal {
+        require(
+            registeredUsers[keccak256(abi.encodePacked(_sender))] == 1 ,
+            "NR: Address not authorized"
+        );
+        require(
+            database[_idx].registrant == 0 ,
+            "NR: Record already exists"
+        );
+        require(
+            _regstrnt != 0 ,
+            "NR: Registrant cannot be empty"
+        );
+        
+        if ((registeredUsers[database[_idx].registrar] == 1) && (senderHash != database[_idx].registrar)){     // Rotate last registrar
+                                                                                                                //into lastRegistrar field if uniuqe and not a robot
+            database[_idx].lastRegistrar = database[_idx].registrar;
+        }
+
         database[_idx].note = _note;
     }
     
-    
+
     /**
      * @dev force modify registrant at index idx
      */
