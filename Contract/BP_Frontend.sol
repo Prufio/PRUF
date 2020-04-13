@@ -68,7 +68,7 @@ pragma solidity ^0.6.0;
     /*
      * @dev Wrapper for changing record STATUS with tests
      */
-    function MOD_STATUS(string memory _idx, string memory _reg, uint8 _stat) public {
+    function MOD_STATUS(string memory _idx, string memory _reg, uint8 _stat) public payable {
         changeStatus(msg.sender, keccak256(abi.encodePacked(_idx)), keccak256(abi.encodePacked(_reg)), _stat);
         deductPayment(1);
     }
@@ -86,7 +86,7 @@ pragma solidity ^0.6.0;
     /*
      * @dev Wrapper for force changing the record without tests
      */
-   function CHANGE_DESCRIPTION (string memory _idx, string memory _reg, string memory _desc) public {
+   function CHANGE_DESCRIPTION (string memory _idx, string memory _reg, string memory _desc) public payable {
        changeDescription (msg.sender, keccak256(abi.encodePacked(_idx)), keccak256(abi.encodePacked(_reg)), _desc);
        deductPayment(1);
    }
