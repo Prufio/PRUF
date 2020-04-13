@@ -7,8 +7,8 @@ pragma solidity ^0.6.0;
  contract Frontend is BulletProof, PullPayment {
     using SafeMath for uint;
     
-    uint internal costUnit = 0 ether;
-    uint internal minEscrowAmount = 0 ether;
+    uint public costUnit = 0 ether;
+    uint public minEscrowAmount = 0 ether;
     address internal mainWallet;
     
     
