@@ -30,7 +30,7 @@ pragma solidity ^0.6.0;
     }
     
 
-    function SET_USERS(address _authAddr, uint8 userType) public onlyOwner{
+    function SET_USERS(address _authAddr, uint8 userType) public onlyOwner {
         authorize(_authAddr, userType);
     }
    
@@ -38,7 +38,7 @@ pragma solidity ^0.6.0;
     /**
      * @dev Wrapper for admin lock record
      */
-    function ADMIN_LOCK (string memory _idx) public onlyOwner{
+    function ADMIN_LOCK (string memory _idx) public onlyOwner {
         adminLock(keccak256(abi.encodePacked(_idx)));
     }
     
@@ -46,12 +46,12 @@ pragma solidity ^0.6.0;
      /**
      * @dev Wrapper for admin unlock record
      */
-    function ADMIN_UNLOCK (string memory _idx) public onlyOwner{
+    function ADMIN_UNLOCK (string memory _idx) public onlyOwner {
         adminUnlock(keccak256(abi.encodePacked(_idx)));
     }
     
 
-    function RESET_FORCEMOD_COUNT (string memory _idx) public onlyOwner{
+    function RESET_FORCEMOD_COUNT (string memory _idx) public onlyOwner {
         resetForceModCount(keccak256(abi.encodePacked(_idx)));
     }
     
@@ -99,7 +99,7 @@ pragma solidity ^0.6.0;
     }
 
     
-    function ADD_NOTE (string memory _idx, string memory _reg, string memory _note) public payable{
+    function ADD_NOTE (string memory _idx, string memory _reg, string memory _note) public payable {
         deductPayment(2); 
         addNote(msg.sender, keccak256(abi.encodePacked(_idx)), keccak256(abi.encodePacked(_reg)), _note);
     }

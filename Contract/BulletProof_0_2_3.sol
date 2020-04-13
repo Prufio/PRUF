@@ -84,7 +84,7 @@ contract BulletProof is Storage {
     /**
      * @dev Administrative reset of forceModCount to zero
      */
-    function resetForceModCount(bytes32 _idx) internal onlyOwner{
+    function resetForceModCount(bytes32 _idx) internal onlyOwner {
         require(
             database[_idx].forceModCount != 0 ,
             "RFMC: fmc is already 0"
