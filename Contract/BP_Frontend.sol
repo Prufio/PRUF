@@ -7,8 +7,8 @@ pragma solidity ^0.6.0;
  contract Frontend is BulletProof, PullPayment {
     using SafeMath for uint;
     
-    uint internal costUnit = 0.00 ether;
-    uint internal minEscrowAmount = 0.0 ether;
+    uint internal costUnit = 0 ether;
+    uint internal minEscrowAmount = 0 ether;
     address internal mainWallet;
     
     
@@ -146,8 +146,9 @@ pragma solidity ^0.6.0;
         uint cost = _amount.mul(costUnit);
         uint change;
         
+        
         //require (messageValue > 0, "Failed to Accept Payment: no txfr Balance"); 
-        require (messageValue >= costUnit.add(minEscrowAmount) ,
+        require (messageValue  >= cost.add(minEscrowAmount),
             "DP: Insufficient Eth"
         );
         
