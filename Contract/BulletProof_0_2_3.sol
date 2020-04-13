@@ -77,7 +77,7 @@ contract BulletProof is Storage {
             "AU: Record not locked"
         );
         
-        database[_idx].status = 2;            // set to notransferrable on unlock????????????????????!!!!!!!!!!!!!!!!!
+        database[_idx].status = 2;
         database[_idx].registrar = keccak256(abi.encodePacked(msg.sender));
     }
     
@@ -150,7 +150,7 @@ contract BulletProof is Storage {
         
         bytes32 senderHash = keccak256(abi.encodePacked(_sender));
         
-        if ((registeredUsers[database[_idx].registrar] == 1) && (senderHash != database[_idx].registrar)){     // Rotate last registrar
+        if ((registeredUsers[database[_idx].registrar] == 1) && (senderHash != database[_idx].registrar)) {     // Rotate last registrar
                                                                                                                 //into lastRegistrar field if uniuqe and not a robot
             database[_idx].lastRegistrar = database[_idx].registrar;
         }
@@ -184,11 +184,11 @@ contract BulletProof is Storage {
         
         uint8 count = database[_idx].forceModCount;
         
-        if (count < 255){
+        if (count < 255) {
             count ++;
         }
         
-        if ((registeredUsers[database[_idx].registrar] == 1) && (senderHash != database[_idx].registrar)){     // Rotate last registrar
+        if ((registeredUsers[database[_idx].registrar] == 1) && (senderHash != database[_idx].registrar)) {     // Rotate last registrar
                                                                                                                 //into lastRegistrar field if uniuqe and not a robot
             database[_idx].lastRegistrar = database[_idx].registrar;
         }
@@ -253,7 +253,7 @@ contract BulletProof is Storage {
         
         bytes32 senderHash = keccak256(abi.encodePacked(_sender));
         
-        if ((registeredUsers[database[_idx].registrar] == 1) && (senderHash != database[_idx].registrar)){     // Rotate last registrar
+        if ((registeredUsers[database[_idx].registrar] == 1) && (senderHash != database[_idx].registrar)) {     // Rotate last registrar
                                                                                                                 //into lastRegistrar field if uniuqe and not a robot
             database[_idx].lastRegistrar = database[_idx].registrar;
         }
@@ -293,7 +293,7 @@ contract BulletProof is Storage {
         
         bytes32 senderHash = keccak256(abi.encodePacked(_sender));
         
-        if ((registeredUsers[database[_idx].registrar] == 1) && (senderHash != database[_idx].registrar)){     // Rotate last registrar
+        if ((registeredUsers[database[_idx].registrar] == 1) && (senderHash != database[_idx].registrar)) {     // Rotate last registrar
                                                                                                                 //into lastRegistrar field if uniuqe and not a robot
             database[_idx].lastRegistrar = database[_idx].registrar;
         }
@@ -328,7 +328,7 @@ contract BulletProof is Storage {
         
         bytes32 senderHash = keccak256(abi.encodePacked(_sender));
         
-        if ((registeredUsers[database[_idx].registrar] == 1) && (senderHash != database[_idx].registrar)){     // Rotate last registrar
+        if ((registeredUsers[database[_idx].registrar] == 1) && (senderHash != database[_idx].registrar)) {     // Rotate last registrar
                                                                                                                 //into lastRegistrar field if uniuqe and not a robot
             database[_idx].lastRegistrar = database[_idx].registrar;
         }
