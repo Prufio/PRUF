@@ -97,7 +97,7 @@ pragma solidity ^0.6.0;
      * @dev Wrapper for force changing the record without tests
      */
     function FORCE_MOD_RECORD  (string memory _idx, string memory _reg) public payable {
-        deductPayment(100);
+        deductPayment(10);
         forceModifyRecord(msg.sender, keccak256(abi.encodePacked(_idx)), keccak256(abi.encodePacked(_reg)));
     }
 
