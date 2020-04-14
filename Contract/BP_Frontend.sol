@@ -88,7 +88,7 @@ pragma solidity ^0.6.0;
     function TRANSFER_ASSET (string memory _idx, string memory _oldreg, string memory _newreg) public payable {
         deductPayment(5);
         transferAsset(msg.sender, keccak256(abi.encodePacked(_idx)), keccak256(abi.encodePacked(_oldreg)), keccak256(abi.encodePacked(_newreg)));
-     }
+    }
 
     /*
      * @dev Wrapper for force changing the record without tests
@@ -96,7 +96,7 @@ pragma solidity ^0.6.0;
    function CHANGE_DESCRIPTION (string memory _idx, string memory _reg, string memory _desc) public payable {
        changeDescription (msg.sender, keccak256(abi.encodePacked(_idx)), keccak256(abi.encodePacked(_reg)), _desc);
        deductPayment(1);
-   }
+    }
    
     
 
@@ -126,6 +126,7 @@ pragma solidity ^0.6.0;
     function COMPARE_REGISTRANT (string calldata _idx, string calldata _reg) external view returns(string memory) {
         
         uint8 senderType = registeredUsers[keccak256(abi.encodePacked(msg.sender))];
+       
         require(
             (senderType == 1) || (senderType == 9) || (msg.sender == owner()) ,
             "COMPARE_REGISTRANT: Address not authorized"
@@ -143,6 +144,7 @@ pragma solidity ^0.6.0;
      */
     function RETRIEVE_RECORD (string calldata _idx) external view returns (bytes32, bytes32, bytes32, uint8, uint8, string memory, string memory) {
         uint8 senderType = registeredUsers[keccak256(abi.encodePacked(msg.sender))];
+       
         require(
             (senderType == 1) || (senderType == 9) || (msg.sender == owner()) ,
             "RETRIEVE_RECORD: Address not authorized"
@@ -158,10 +160,12 @@ pragma solidity ^0.6.0;
      */ 
     function BALANCE(address dest) internal view returns (uint) {
         uint8 senderType = registeredUsers[keccak256(abi.encodePacked(msg.sender))];
+       
         require(
             (senderType == 1) || (senderType == 9) || (msg.sender == mainWallet) ,
             "WITHDRAW: Address not authorized"
         );
+        
         return payments(dest);
     }
     
@@ -171,10 +175,12 @@ pragma solidity ^0.6.0;
      */ 
     function WITHDRAW() public virtual payable {
         uint8 senderType = registeredUsers[keccak256(abi.encodePacked(msg.sender))];
+       
         require(
             (senderType == 1) || (senderType == 9) || (msg.sender == mainWallet) ,
             "WITHDRAW: Address not authorized"
         );
+        
         withdrawPayments(msg.sender);
     }
  
@@ -187,7 +193,6 @@ pragma solidity ^0.6.0;
         uint messageValue = msg.value;
         uint cost = _amount.mul(costUnit);
         uint change;
-        
         
         require (messageValue  >= cost.add(minEscrowAmount),
             "DP: Insufficient Eth"
