@@ -3,6 +3,7 @@ pragma solidity ^0.6.0;
 import "./Ownable.sol";
 
 contract Storage is Ownable {
+   
     struct Record {
         bytes32 registrar; // Address hash of registrar 
         bytes32 registrant;  // KEK256 Registered  owner
