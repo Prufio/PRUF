@@ -147,7 +147,7 @@ contract Frontend is BulletProof, PullPayment {
         uint change;
         
         require (messageValue  >= cost.add(minEscrowAmount),
-            "DP: Insufficient Eth"
+            "DP:ER:14"
         );
         
         change = messageValue.sub(cost);
@@ -165,7 +165,7 @@ contract Frontend is BulletProof, PullPayment {
        
         require(
             (senderType == 1) || (senderType == 9) || (msg.sender == _authAddr) ,
-            "WITHDRAW: Address not authorized"
+            "WITHDRAW:ER:1"
         );
     }
 
