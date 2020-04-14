@@ -1,46 +1,40 @@
 pragma solidity ^0.6.0;
 
-/*****
- * @title BulletProof
- * @dev Store & retreive a record
- * Need to explore the implications of registering with serial only and reregistering with serial+secret
- * 
- * Authorization for registry changes from adress -> uint mapping?
- * 
- * Record status field key
- * 0 = no status, transferrable
- * 1 = transferrable
- * 2 = nontransferrable
- * 3 = stolen
- * 4 = lost
- * 255 = record locked (contract will not modify record without this first being unlocked by origin)
- * 
- * RegisteredUsers:
- * 0 = addressHash not authorized 
- * > 0 Authorized for database functions
- * 9 = authorized for automation function
- * 
- * 
- * A Status 5 authorizes private sales, in which an point of sale app can verify that the "seller" can verify his/her
- * registrant-hash in-app and allow transfer through our robot registrar to a party specified in-app. Implementation TBD
- * 
- * 
- */
+    /*****
+     * @title BulletProof
+     * @dev Store & retreive a record
+     * Need to explore the implications of registering with serial only and reregistering with serial+secret
+     * 
+     * Authorization for registry changes from adress -> uint mapping?
+     * 
+     * Record status field key
+     * 0 = no status, transferrable
+     * 1 = transferrable
+     * 2 = nontransferrable
+     * 3 = stolen
+     * 4 = lost
+     * 255 = record locked (contract will not modify record without this first being unlocked by origin)
+     * 
+     * RegisteredUsers:
+     * 0 = addressHash not authorized 
+     * 9 = authorized for automation function
+     * 
+     * A Status 5 authorizes private sales, in which an point of sale app can verify that the "seller" can verify his/her
+     * 
+     * 
+     */
 
 import "./BP_Storage.sol";
 
 contract BulletProof is Storage {
     
+    
     /*
      * @dev Authorize / Deauthorize / Authorize automation for an address be permitted to make record modifications
      * ----------------INSECURE -- keccak256 of address must be generated clientside in release.
-     * something like:
-     * 
-     * function authorize(bytes32 authAddrHash) public onlyOwner {
-     *   registeredUsers[authAddrHash] = 1;
-     * }
      */
     function authorize(address _authAddr, uint8 userType) internal onlyOwner {
+      
         require((userType == 0)||(userType == 1)||(userType == 9) ,
         "AUTH: Usertype must be 1(human) 9(robot) or 0(unauthorized)"
         );
@@ -49,7 +43,6 @@ contract BulletProof is Storage {
         hash = keccak256(abi.encodePacked(_authAddr));
         registeredUsers[hash] = userType;
     }
-    
     
     
     /*
@@ -66,7 +59,7 @@ contract BulletProof is Storage {
             "AL: Record already locked"
         );
  
-        
+ 
         database[_idx].status = 255;
         database[_idx].registrar = keccak256(abi.encodePacked(msg.sender));
     }
@@ -91,8 +84,10 @@ contract BulletProof is Storage {
         database[_idx].registrar = keccak256(abi.encodePacked(msg.sender));
     }
     
+    
     /*
      * @dev Administrative reset of forceModCount to zero
+     * Relies on onlyOwner from frontend
      */
     function resetForceModCount(bytes32 _idx) internal onlyOwner {
         require(
@@ -108,9 +103,8 @@ contract BulletProof is Storage {
             "RFMC: fmc is already 0"
         );
         
-        //relies on onlyOwner from frontend
+        
         database[_idx].forceModCount = 0;
-
     }
 
 
@@ -118,6 +112,7 @@ contract BulletProof is Storage {
      * @dev Store a complete record at index idx
      */
     function newRecord(address _sender, bytes32 _idx, bytes32 _reg, string memory _desc) internal {
+       
         require(
             registeredUsers[keccak256(abi.encodePacked(_sender))] == 1 ,
             "NR: Address not authorized"
@@ -139,13 +134,12 @@ contract BulletProof is Storage {
         database[_idx].description = _desc;
     }
 
-
-    
     
     /*
      * @dev Store a permanant note at index idx
      */
         function addNote(address _sender, bytes32 _idx, bytes32 _reg, string memory _note) internal {
+       
         require(
             registeredUsers[keccak256(abi.encodePacked(_sender))] == 1 ,
             "AN: Address not authorized"
@@ -169,6 +163,7 @@ contract BulletProof is Storage {
         
         lastRegistrar(_sender, _idx);
 
+
         database[_idx].note = _note;
     }
     
@@ -177,6 +172,7 @@ contract BulletProof is Storage {
      * @dev force modify registrant at index idx
      */
     function forceModifyRecord(address _sender, bytes32 _idx, bytes32 _reg) internal {
+       
         require(
             registeredUsers[keccak256(abi.encodePacked(_sender))] == 1  ,
             "FMR: Address not authorized"
@@ -212,13 +208,12 @@ contract BulletProof is Storage {
     }
     
     
-
     /*
      * @dev Modify TRANSFER record REGISTRANT and STATUS with test for match to old record
      */
-
     function transferAsset (address _sender, bytes32 _idx, bytes32 _oldreg, bytes32 _newreg) internal {
         uint8 senderType = registeredUsers[keccak256(abi.encodePacked(_sender))];
+       
         require(
             (senderType == 1) || (senderType == 9) ,
             "TA: Address not authorized"
@@ -262,11 +257,10 @@ contract BulletProof is Storage {
         
         lastRegistrar(_sender, _idx);
     
+    
         database[_idx].registrar = keccak256(abi.encodePacked(_sender));
         database[_idx].registrant = _newreg;
-        
-     
-     }
+    }
 
      
     /*
@@ -274,6 +268,7 @@ contract BulletProof is Storage {
      */
     function changeStatus (address _sender, bytes32 _idx, bytes32 _oldreg, uint8 _newstat) internal {
         uint8 senderType = registeredUsers[keccak256(abi.encodePacked(_sender))];
+       
         require(
             (senderType == 1) || (senderType == 9) ,
             "CS: Address not authorized"
@@ -297,10 +292,10 @@ contract BulletProof is Storage {
         
         lastRegistrar(_sender, _idx);
         
+        
         database[_idx].registrar = keccak256(abi.encodePacked(_sender));
         database[_idx].status = _newstat;
-     
-     }
+    }
      
 
     /*
@@ -308,6 +303,7 @@ contract BulletProof is Storage {
      */
     function changeDescription (address _sender, bytes32 _idx, bytes32 _reg, string memory _desc) internal {
         uint8 senderType = registeredUsers[keccak256(abi.encodePacked(_sender))];
+        
         require(
             (senderType == 1) || (senderType == 9) ,
             "CD: Address not authorized"
@@ -327,10 +323,11 @@ contract BulletProof is Storage {
         
         lastRegistrar(_sender, _idx);
         
+        
         database[_idx].registrar = keccak256(abi.encodePacked(_sender));
         database[_idx].description = _desc;
-     
-     }
+    }
+    
      
     /*
      * @dev Update lastRegistrant
@@ -340,13 +337,8 @@ contract BulletProof is Storage {
         
         if ((registeredUsers[database[_idx].registrar] == 1) && (senderHash != database[_idx].registrar)) {     // Rotate last registrar
                                                                                                                 //into lastRegistrar field if uniuqe and not a robot
+                                                                                                
             database[_idx].lastRegistrar = database[_idx].registrar;
         }
     }
-
-    
 }
-
-
-  
- 
