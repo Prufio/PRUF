@@ -122,6 +122,10 @@ contract BulletProof is Storage {
             "NR: Address not authorized"
         );
         require(
+            _assetClass == registeredUsers[keccak256(abi.encodePacked(_sender))].authorizedAssetClass ,
+            "NR: User not authorized for declared asset class"
+        );
+        require(
             database[_idx].registrant == 0 ,
             "NR: Record already exists"
         );
