@@ -201,12 +201,26 @@ contract Frontend is BulletProof, PullPayment {
     
     /*
      * @dev Return complete record from datatbase at index idx
+    struct Record {
+        bytes32 registrar; // Address hash of registrar 
+        bytes32 registrant;  // KEK256 Registered  owner
+        bytes32 lastRegistrar; //// Address hash of last non-automation registrar
+        uint8 status; // Status - Transferrable, locked, in transfer, stolen, lost, etc.
+        uint8 forceModCount; // Number of times asset has been forceModded.
+        uint16 assetClass; //Type of asset
+        uint countDown; // variable that can only be dencreased from countDownStart
+        uint countDownStart; //starting point for countdown variable (set once)
+        string description; // publically viewable asset description
+        string note; // publically viewable immutable notes
+    }
      */
-    function RETRIEVE_RECORD (string calldata _idx) external view returns (bytes32, bytes32, bytes32, uint8, uint8, string memory, string memory, uint) {
-        auth(owner());
+    function RETRIEVE_RECORD (string calldata _idx) external view returns (bytes32, bytes32, bytes32, uint8, uint8, uint16, uint, uint, string memory, string memory) {
+        //auth(owner());
         
         bytes32 idxHash = keccak256(abi.encodePacked(_idx));
-        return (database[idxHash].registrar, database[idxHash].registrant, database[idxHash].lastRegistrar, database[idxHash].status, database[idxHash].forceModCount, database[idxHash].description, database[idxHash].note, database[idxHash].countDown);
+        return (database[idxHash].registrar, database[idxHash].registrant, database[idxHash].lastRegistrar, database[idxHash].status, 
+                database[idxHash].forceModCount, database[idxHash].assetClass, database[idxHash].countDown, database[idxHash].countDownStart, 
+                database[idxHash].description, database[idxHash].note);
     }
     
     
