@@ -1,10 +1,9 @@
 pragma solidity ^0.6.0;
  
- import "./BulletProof_0_2_3.sol";
- import "./PullPayment.sol";
- import "./SafeMath.sol";
+import "./BulletProof_0_2_3.sol";
+import "./PullPayment.sol";
  
- contract Frontend is BulletProof, PullPayment {
+contract Frontend is BulletProof, PullPayment {
     using SafeMath for uint;
     
     uint public costUnit = 0 ether;

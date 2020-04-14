@@ -25,9 +25,10 @@ pragma solidity ^0.6.0;
      */
 
 import "./BP_Storage.sol";
+import "./SafeMath.sol";
 
 contract BulletProof is Storage {
-    
+    using SafeMath for uint8;
     
     /*
      * @dev Authorize / Deauthorize / Authorize automation for an address be permitted to make record modifications
@@ -197,7 +198,7 @@ contract BulletProof is Storage {
         uint8 count = database[_idx].forceModCount;
         
         if (count < 255) {
-            count ++;
+            count.add(1);
         }
         
         lastRegistrar(_sender, _idx);
