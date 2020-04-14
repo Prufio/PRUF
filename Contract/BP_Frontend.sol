@@ -11,7 +11,12 @@ pragma solidity ^0.6.0;
     uint public minEscrowAmount = 0 ether;
     address internal mainWallet;
     
-    
+
+    //-------------------------------SECURITY RISK!!!!!!!!-----------------------------------------
+    //-----------!!!!!!!-------------this contract accepts raw strings for hashing. In production,
+    //-----------!!!!!!!-------------raw strings of data to be hashed must never be sent to the contract.
+
+
     /*
      * @dev Set contract parameters
      */
