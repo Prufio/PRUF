@@ -58,9 +58,14 @@ contract BulletProof is Storage {
     function adminLock(bytes32 _idx) internal onlyOwner {
         
         require(
+            database[_idx].registrant != 0 ,
+            "AL: No Record exists to modify"
+        );
+        require(
             database[_idx].status != 255 ,
             "AL: Record already locked"
         );
+ 
         
         database[_idx].status = 255;
         database[_idx].registrar = keccak256(abi.encodePacked(msg.sender));
@@ -73,9 +78,14 @@ contract BulletProof is Storage {
     function adminUnlock(bytes32 _idx) internal onlyOwner {
         
         require(
+            database[_idx].registrant != 0 ,
+            "AU: No Record exists to modify"
+        );
+        require(
             database[_idx].status == 255 ,
             "AU: Record not locked"
         );
+        
         
         database[_idx].status = 2;
         database[_idx].registrar = keccak256(abi.encodePacked(msg.sender));
@@ -85,6 +95,10 @@ contract BulletProof is Storage {
      * @dev Administrative reset of forceModCount to zero
      */
     function resetForceModCount(bytes32 _idx) internal onlyOwner {
+        require(
+            database[_idx].registrant != 0 ,
+            "RFMC: No Record exists to modify"
+        );
         require(
             database[_idx].status != 255 ,
             "RFMC: Record locked"
@@ -137,12 +151,12 @@ contract BulletProof is Storage {
             "AN: Address not authorized"
         );
         require(
-            database[_idx].registrant == _reg ,
-            "AN: Records do not match - record change aborted"
-        );
-        require(
             database[_idx].registrant != 0 ,
             "AN: No Record exists to modify"
+        );
+        require(
+            database[_idx].registrant == _reg ,
+            "AN: Records do not match - record change aborted"
         );
         require(
             database[_idx].status != 255 ,
@@ -210,12 +224,12 @@ contract BulletProof is Storage {
             "TA: Address not authorized"
         );
         require(
-            database[_idx].registrant == _oldreg ,
-            "TA: Records do not match - record change aborted"
-        );
-        require(
             database[_idx].registrant != 0 ,
             "TA: No Record exists to modify"
+        );
+        require(
+            database[_idx].registrant == _oldreg ,
+            "TA: Records do not match - record change aborted"
         );
         require(
             database[_idx].status != 255 ,
@@ -265,12 +279,12 @@ contract BulletProof is Storage {
             "CS: Address not authorized"
         );
         require(
-            database[_idx].registrant == _oldreg ,
-            "CS: Records do not match - record change aborted"
-        );
-        require(
             database[_idx].registrant != 0 ,
             "CS: No Record exists to modify"
+        );
+        require(
+            database[_idx].registrant == _oldreg ,
+            "CS: Records do not match - record change aborted"
         );
         require(
             database[_idx].status != 255 ,
@@ -299,12 +313,12 @@ contract BulletProof is Storage {
             "CD: Address not authorized"
         );
         require(
-            database[_idx].registrant == _reg ,
-            "CD: Records do not match - record change aborted"
-        );
-        require(
             database[_idx].registrant != 0 ,
             "CD: No Record exists to modify"
+        );
+        require(
+            database[_idx].registrant == _reg ,
+            "CD: Records do not match - record change aborted"
         );
         require(
             database[_idx].status != 255 ,
