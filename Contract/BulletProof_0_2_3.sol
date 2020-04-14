@@ -31,6 +31,7 @@ contract BulletProof is Storage {
     using SafeMath for uint8;
     using SafeMath for uint;
     
+    
     /*
      * @dev Authorize / Deauthorize / Authorize automation for an address be permitted to make record modifications
      * ----------------INSECURE -- keccak256 of address must be generated clientside in release.
@@ -138,24 +139,17 @@ contract BulletProof is Storage {
         database[_idx].forceModCount = 0;
         database[_idx].description = _desc;
     }
-
+    
     
     /*
      * @dev Store a permanant note at index idx
      */
         function addNote(address _sender, bytes32 _idx, bytes32 _reg, string memory _note) internal {
        
-        require(
-            registeredUsers[keccak256(abi.encodePacked(_sender))].userType == 1 ,
-            "AN: Address not authorized"
-        );
+        authorize(_sender, _idx);
         require(
             database[_idx].registrant != 0 ,
             "AN: No Record exists to modify"
-        );
-        require(
-            database[_idx].assetClass == registeredUsers[keccak256(abi.encodePacked(_sender))].authorizedAssetClass ,
-            "AN: User not authorized for asset class"
         );
         require(
             database[_idx].registrant == _reg ,
@@ -176,23 +170,16 @@ contract BulletProof is Storage {
         database[_idx].note = _note;
     }
     
-
+    
     /*
      * @dev force modify registrant at index idx
      */
     function forceModifyRecord(address _sender, bytes32 _idx, bytes32 _reg) internal {
        
-        require(
-            registeredUsers[keccak256(abi.encodePacked(_sender))].userType == 1  ,
-            "FMR: Address not authorized"
-        );
+        authorize(_sender, _idx);
         require(
             database[_idx].registrant != 0 ,
             "FMR: No Record exists to modify"
-        );
-        require(
-            database[_idx].assetClass == registeredUsers[keccak256(abi.encodePacked(_sender))].authorizedAssetClass ,
-            "FMR: User not authorized for asset class"
         );
         require(
             database[_idx].status != 255 ,
@@ -225,19 +212,12 @@ contract BulletProof is Storage {
      * @dev Modify TRANSFER record REGISTRANT and STATUS with test for match to old record
      */
     function transferAsset (address _sender, bytes32 _idx, bytes32 _oldreg, bytes32 _newreg) internal {
-        uint8 senderType = registeredUsers[keccak256(abi.encodePacked(_sender))].userType;
-       
-        require(
-            (senderType == 1) || (senderType == 9) ,
-            "TA: Address not authorized"
-        );
+        
+        authorize(_sender, _idx);
+        
         require(
             database[_idx].registrant != 0 ,
             "TA: No Record exists to modify"
-        );
-        require(
-            database[_idx].assetClass == registeredUsers[keccak256(abi.encodePacked(_sender))].authorizedAssetClass ,
-            "TA: User not authorized for asset class"
         );
         require(
             database[_idx].registrant == _oldreg ,
@@ -285,19 +265,15 @@ contract BulletProof is Storage {
      */
     function decrementCountdown (address _sender, bytes32 _idx, bytes32 _reg, uint _decrementAmount) internal {
         
-        uint8 senderType = registeredUsers[keccak256(abi.encodePacked(_sender))].userType;
+        authorize(_sender, _idx);
         
-        require(
-            database[_idx].status != 255 ,
-            "TA: Record locked"
-        );
-        require(
-            (senderType == 1) || (senderType == 9) ,
-            "TA: Address not authorized"
-        );
         require(
             database[_idx].registrant != 0 ,
             "TA: No Record exists to modify"
+        );
+        require(
+            database[_idx].status != 255 ,
+            "TA: Record locked"
         );
         require(
             database[_idx].registrant == _reg ,
@@ -307,26 +283,19 @@ contract BulletProof is Storage {
         database[_idx].registrar = keccak256(abi.encodePacked(_sender));
         database[_idx].countDown.sub(_decrementAmount);
     }
-
+     
      
     /*
      * @dev Modify record STATUS with test for match to old record
      */
     function changeStatus (address _sender, bytes32 _idx, bytes32 _oldreg, uint8 _newstat) internal {
-        uint8 senderType = registeredUsers[keccak256(abi.encodePacked(_sender))].userType;
        
-        require(
-            (senderType == 1) || (senderType == 9) ,
-            "CS: Address not authorized"
-        );
+        authorize(_sender, _idx);
         require(
             database[_idx].registrant != 0 ,
             "CS: No Record exists to modify"
         );
-        require(
-            database[_idx].assetClass == registeredUsers[keccak256(abi.encodePacked(_sender))].authorizedAssetClass ,
-            "CS: User not authorized for asset class"
-        );
+
         require(
             database[_idx].registrant == _oldreg ,
             "CS: Records do not match - record change aborted"
@@ -346,24 +315,17 @@ contract BulletProof is Storage {
         database[_idx].status = _newstat;
     }
      
-
+     
     /*
      * @dev user modify record DESCRIPTION with test for match to old record
      */
     function changeDescription (address _sender, bytes32 _idx, bytes32 _reg, string memory _desc) internal {
-        uint8 senderType = registeredUsers[keccak256(abi.encodePacked(_sender))].userType;
         
-        require(
-            (senderType == 1) || (senderType == 9) ,
-            "CD: Address not authorized"
-        );
+        authorize(_sender, _idx);
+        
         require(
             database[_idx].registrant != 0 ,
             "CD: No Record exists to modify"
-        );
-        require(
-            database[_idx].assetClass == registeredUsers[keccak256(abi.encodePacked(_sender))].authorizedAssetClass ,
-            "CD: User not authorized for asset class"
         );
         require(
             database[_idx].registrant == _reg ,
@@ -381,6 +343,18 @@ contract BulletProof is Storage {
         database[_idx].description = _desc;
     }
     
+    function authorize (address _sender, bytes32 _idx) internal view {
+        uint8 senderType = registeredUsers[keccak256(abi.encodePacked(_sender))].userType;
+        
+        require(
+            (senderType == 1) || (senderType == 9) ,
+            "Address not authorized"
+        );
+        require(
+            database[_idx].assetClass == registeredUsers[keccak256(abi.encodePacked(_sender))].authorizedAssetClass ,
+            "User not authorized for asset class"
+        );
+    }
     
     /*
      * @dev Update lastRegistrant
