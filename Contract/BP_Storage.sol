@@ -22,9 +22,20 @@ contract Storage is Ownable {
         uint16 authorizedAssetClass; // extra status for future expansion
     }
     
+    struct Costs{
+        uint newRecord;
+        uint modStatus;
+        uint transferAsset;
+        uint changeDescription;
+        uint decrementCountdown;
+        uint forceMod;
+        uint addNote;
+    }
+    
     
     
 
     mapping(bytes32 => Record) internal database; //registry
     mapping(bytes32 => User) internal registeredUsers; //authorized registrar database
+    mapping(uint16 => Costs) internal cost; //cost per function by asset class
 }

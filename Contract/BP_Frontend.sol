@@ -6,7 +6,6 @@ import "./PullPayment.sol";
 contract Frontend is BulletProof, PullPayment {
     using SafeMath for uint;
     
-    uint public costUnit = 0 ether;
     uint public minEscrowAmount = 0 ether;
     address internal mainWallet;
     
@@ -17,18 +16,31 @@ contract Frontend is BulletProof, PullPayment {
 
 
     /*
-     * @dev Set contract parameters
+     * @dev Set main payment wallet
      */
     function SET_wallet (address _addr) public onlyOwner {
         mainWallet = _addr;
     }
    
-
-    function SET_cost (uint _cost) public onlyOwner {
-        costUnit = _cost;
+    /*
+     * @dev Set function costs per asset class, in Wei
+     */
+    function SET_costs (uint16 _assetClass, uint _newRecord, uint _modStatus, uint _transferAsset, 
+                        uint _changeDescription, uint _decrementCountdown, uint _forceMod, uint _addNote) public onlyOwner {
+                            
+        cost[_assetClass].newRecord = _newRecord;
+        cost[_assetClass].modStatus = _modStatus;
+        cost[_assetClass].transferAsset = _transferAsset;
+        cost[_assetClass].changeDescription = _changeDescription;
+        cost[_assetClass].decrementCountdown = _decrementCountdown;
+        cost[_assetClass].forceMod = _forceMod;
+        cost[_assetClass].addNote = _addNote;
     }
+    
    
-
+    /*
+     * @dev Set escrow cost, in Wei
+     */
     function SET_escrow (uint _escrow) public onlyOwner {
         minEscrowAmount = _escrow;
     }
@@ -61,24 +73,13 @@ contract Frontend is BulletProof, PullPayment {
         resetForceModCount(keccak256(abi.encodePacked(_idx)));
     }
     
-    /*
-     * @dev Wrapper for decrementCountdown 
-     */
-    function DECREMENT_COUNTDOWN (string memory _idx, string memory _reg, uint _decrementAmount) public payable {
-        
-        if (_decrementAmount == 0) {
-            _decrementAmount = 1;
-        }
-        
-        decrementCountdown(msg.sender,keccak256(abi.encodePacked(_idx)), keccak256(abi.encodePacked(_reg)), _decrementAmount);
-        
-    }
+    
     /*
      * @dev Wrapper for create new record
      */
     function NEW_RECORD (string memory _idx, string memory _reg, string memory _desc, uint16 _assetClass, uint _countDownStart) public payable {
-        deductPayment(5);
         newRecord(msg.sender, keccak256(abi.encodePacked(_idx)), keccak256(abi.encodePacked(_reg)), _desc, _assetClass, _countDownStart);
+        deductPayment(cost[_assetClass].newRecord);
     }
     
     
@@ -86,8 +87,9 @@ contract Frontend is BulletProof, PullPayment {
      * @dev Wrapper for changing record STATUS with tests
      */
     function MOD_STATUS(string memory _idx, string memory _reg, uint8 _stat) public payable {
-        changeStatus(msg.sender, keccak256(abi.encodePacked(_idx)), keccak256(abi.encodePacked(_reg)), _stat);
-        deductPayment(1);
+        bytes32 idxHash = keccak256(abi.encodePacked(_idx));
+        changeStatus(msg.sender, idxHash, keccak256(abi.encodePacked(_reg)), _stat);
+        deductPayment(cost[ database[idxHash].assetClass].modStatus);
     }
     
     
@@ -96,26 +98,38 @@ contract Frontend is BulletProof, PullPayment {
      * @dev Wrapper for Asset transfer with tests
      */
     function TRANSFER_ASSET (string memory _idx, string memory _oldreg, string memory _newreg) public payable {
-        deductPayment(5);
-        transferAsset(msg.sender, keccak256(abi.encodePacked(_idx)), keccak256(abi.encodePacked(_oldreg)), keccak256(abi.encodePacked(_newreg)));
+        bytes32 idxHash = keccak256(abi.encodePacked(_idx));
+        transferAsset(msg.sender, idxHash, keccak256(abi.encodePacked(_oldreg)), keccak256(abi.encodePacked(_newreg)));
+        deductPayment(cost[ database[idxHash].assetClass].transferAsset);
     }
 
     /*
      * @dev Wrapper for force changing the record without tests
      */
    function CHANGE_DESCRIPTION (string memory _idx, string memory _reg, string memory _desc) public payable {
-       changeDescription (msg.sender, keccak256(abi.encodePacked(_idx)), keccak256(abi.encodePacked(_reg)), _desc);
-       deductPayment(1);
+       bytes32 idxHash = keccak256(abi.encodePacked(_idx));
+       changeDescription (msg.sender, idxHash, keccak256(abi.encodePacked(_reg)), _desc);
+       deductPayment(cost[ database[idxHash].assetClass].changeDescription);
     }
-   
+    
+    
+    /*
+     * @dev Wrapper for decrementCountdown with tests
+     */
+    function DECREMENT_COUNTDOWN (string memory _idx, string memory _reg, uint _decrementAmount) public payable {
+        bytes32 idxHash = keccak256(abi.encodePacked(_idx));
+        decrementCountdown(msg.sender,idxHash, keccak256(abi.encodePacked(_reg)), _decrementAmount);
+        deductPayment(cost[ database[idxHash].assetClass].decrementCountdown);
+    }
     
 
     /*
      * @dev Wrapper for force changing the record without tests
      */
     function FORCE_MOD_RECORD  (string memory _idx, string memory _reg) public payable {
-        deductPayment(10);
-        forceModifyRecord(msg.sender, keccak256(abi.encodePacked(_idx)), keccak256(abi.encodePacked(_reg)));
+        bytes32 idxHash = keccak256(abi.encodePacked(_idx));
+        forceModifyRecord(msg.sender, idxHash, keccak256(abi.encodePacked(_reg)));
+        deductPayment(cost[ database[idxHash].assetClass].forceMod);
     }
 
 
@@ -123,8 +137,9 @@ contract Frontend is BulletProof, PullPayment {
      * @dev wraper for addNote  (with tests)
      */ 
     function ADD_NOTE (string memory _idx, string memory _reg, string memory _note) public payable {
-        deductPayment(5); 
-        addNote(msg.sender, keccak256(abi.encodePacked(_idx)), keccak256(abi.encodePacked(_reg)), _note);
+        bytes32 idxHash = keccak256(abi.encodePacked(_idx));
+        addNote(msg.sender, idxHash, keccak256(abi.encodePacked(_reg)), _note);
+        deductPayment(cost[ database[idxHash].assetClass].addNote);
     }
 
 /*
@@ -141,19 +156,17 @@ contract Frontend is BulletProof, PullPayment {
      * @dev Deduct payment and transfer cost, change to PullPayment
      */   
     function deductPayment (uint _amount) private {
-        address addr = msg.sender;
         uint messageValue = msg.value;
-        uint cost = _amount.mul(costUnit);
         uint change;
         
-        require (messageValue  >= cost.add(minEscrowAmount),
+        require (messageValue  >= _amount.add(minEscrowAmount),
             "DP:ER:14"
         );
         
-        change = messageValue.sub(cost);
+        change = messageValue.sub(_amount);
         
-        _asyncTransfer(mainWallet, cost);
-        _asyncTransfer(addr, change);
+        _asyncTransfer(mainWallet, _amount);
+        _asyncTransfer(msg.sender, change);
         
     }
     

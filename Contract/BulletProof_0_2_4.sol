@@ -57,7 +57,8 @@ contract BulletProof is Storage {
         checkRecord(_idx);
  
         database[_idx].status = 255;
-        database[_idx].registrar = keccak256(abi.encodePacked(msg.sender));
+        
+        lastRegistrar(msg.sender, _idx);
     }
     
     
@@ -75,9 +76,9 @@ contract BulletProof is Storage {
             "AU:ER:3"
         );
         
-        
         database[_idx].status = 2;
-        database[_idx].registrar = keccak256(abi.encodePacked(msg.sender));
+        
+        lastRegistrar(msg.sender, _idx);
     }
     
     
@@ -94,8 +95,9 @@ contract BulletProof is Storage {
             "FMC:ER:12"
         );
         
-        
         database[_idx].forceModCount = 0;
+        
+        lastRegistrar(msg.sender, _idx);
     }
 
 
@@ -148,10 +150,9 @@ contract BulletProof is Storage {
             "AN:ER:11"
         );
         
-        lastRegistrar(_sender, _idx);
-
-
         database[_idx].note = _note;
+        
+        lastRegistrar(_sender, _idx);
     }
     
     
@@ -178,11 +179,10 @@ contract BulletProof is Storage {
             count.add(1);
         }
         
-        lastRegistrar(_sender, _idx);
-        
-        database[_idx].registrar = keccak256(abi.encodePacked(_sender));
         database[_idx].registrant = _reg;
         database[_idx].forceModCount = count;
+        
+        lastRegistrar(_sender, _idx);
     }
     
     
@@ -211,11 +211,10 @@ contract BulletProof is Storage {
             "TA:ER:8"
         );
         
-        lastRegistrar(_sender, _idx);
-    
-    
-        database[_idx].registrar = keccak256(abi.encodePacked(_sender));
         database[_idx].registrant = _newreg;
+                
+        lastRegistrar(_sender, _idx);
+
     }
     
     
@@ -232,8 +231,10 @@ contract BulletProof is Storage {
             "DC:ER:5"
         );
         
-        database[_idx].registrar = keccak256(abi.encodePacked(_sender));
         database[_idx].countDown.sub(_decrementAmount);
+        
+        lastRegistrar(_sender, _idx);
+        
     }
      
      
@@ -254,10 +255,10 @@ contract BulletProof is Storage {
             "CS:ER:6"
         );
         
-        
-        
-        database[_idx].registrar = keccak256(abi.encodePacked(_sender));
         database[_idx].status = _newstat;
+        
+        lastRegistrar(_sender, _idx);
+        
     }
      
      
@@ -273,15 +274,17 @@ contract BulletProof is Storage {
             database[_idx].registrant == _reg ,
             "ER:5"
         );
-        
-        lastRegistrar(_sender, _idx);
-        
-        
-        database[_idx].registrar = keccak256(abi.encodePacked(_sender));
+
         database[_idx].description = _desc;
+                
+        lastRegistrar(_sender, _idx);
+  
     }
     
     
+    /*
+     * @dev Verify user credentials
+     */     
     function authorizeUser (address _sender, bytes32 _idx) internal view {
         uint8 senderType = registeredUsers[keccak256(abi.encodePacked(_sender))].userType;
         
@@ -296,6 +299,9 @@ contract BulletProof is Storage {
     }
     
     
+    /*
+     * @dev check record exists and is not locked
+     */     
     function checkRecord(bytes32 _idx) internal view {
         require(
             database[_idx].registrant != 0 ,
@@ -308,16 +314,16 @@ contract BulletProof is Storage {
         
     }
     
+    
     /*
      * @dev Update lastRegistrant
      */ 
     function lastRegistrar(address _sender, bytes32 _idx) internal {
         bytes32 senderHash = keccak256(abi.encodePacked(_sender));
         
-        if ((registeredUsers[database[_idx].registrar].userType == 1) && (senderHash != database[_idx].registrar)) {     // Rotate last registrar
-                                                                                                                //into lastRegistrar field if uniuqe and not a robot
-                                                                                                
+        if (((registeredUsers[database[_idx].registrar].userType == 1)||(_sender == owner())) && (senderHash != database[_idx].registrar)) {     // Rotate last registrar into lastRegistrar field if uniuqe and not a robot
             database[_idx].lastRegistrar = database[_idx].registrar;
         }
+        database[_idx].registrar = keccak256(abi.encodePacked(_sender));
     }
 }
