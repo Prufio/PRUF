@@ -8,9 +8,6 @@ contract Storage is Ownable {
         bytes32 registrar; // Address hash of registrar 
         bytes32 registrant;  // KEK256 Registered  owner
         bytes32 lastRegistrar; //// Address hash of last non-automation registrar
-        
-        uint16 assetClass;
-        
         uint8 status; // Status - Transferrable, locked, in transfer, stolen, lost, etc.
         uint8 forceModCount; // Number of times asset has been forceModded.
         uint16 assetClass; //Type of asset
