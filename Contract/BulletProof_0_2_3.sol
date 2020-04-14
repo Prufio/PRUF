@@ -29,6 +29,7 @@ import "./SafeMath.sol";
 
 contract BulletProof is Storage {
     using SafeMath for uint8;
+    using SafeMath for uint;
     
     /*
      * @dev Authorize / Deauthorize / Authorize automation for an address be permitted to make record modifications
@@ -112,7 +113,7 @@ contract BulletProof is Storage {
     /*
      * @dev Store a complete record at index idx
      */
-    function newRecord(address _sender, bytes32 _idx, bytes32 _reg, string memory _desc) internal {
+    function newRecord(address _sender, bytes32 _idx, bytes32 _reg, string memory _desc, uint _countDownStart) internal {
        
         require(
             registeredUsers[keccak256(abi.encodePacked(_sender))].userType == 1 ,
@@ -127,7 +128,8 @@ contract BulletProof is Storage {
             "NR: Registrant cannot be empty"
         );
         
-        
+        database[_idx].countDownStart = _countDownStart;
+        database[_idx].countDown = _countDownStart;
         database[_idx].registrar = keccak256(abi.encodePacked(_sender));
         database[_idx].registrant = _reg;
         database[_idx].lastRegistrar = database[_idx].registrar;
@@ -261,6 +263,35 @@ contract BulletProof is Storage {
     
         database[_idx].registrar = keccak256(abi.encodePacked(_sender));
         database[_idx].registrant = _newreg;
+    }
+    
+    
+    /*
+     * @dev decrements from current value of countDown in database. Starting value of countDown set on record creation
+     */
+    function decrementCountdown (address _sender, bytes32 _idx, bytes32 _reg, uint _decrementAmount) internal {
+        
+        uint8 senderType = registeredUsers[keccak256(abi.encodePacked(_sender))].userType;
+        
+        require(
+            database[_idx].status != 255 ,
+            "TA: Record locked"
+        );
+        require(
+            (senderType == 1) || (senderType == 9) ,
+            "TA: Address not authorized"
+        );
+        require(
+            database[_idx].registrant != 0 ,
+            "TA: No Record exists to modify"
+        );
+        require(
+            database[_idx].registrant == _reg ,
+            "TA: Records do not match - record change aborted"
+        );
+        
+        database[_idx].registrar = keccak256(abi.encodePacked(_sender));
+        database[_idx].countDown.sub(_decrementAmount);
     }
 
      

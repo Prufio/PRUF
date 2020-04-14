@@ -61,13 +61,24 @@ contract Frontend is BulletProof, PullPayment {
         resetForceModCount(keccak256(abi.encodePacked(_idx)));
     }
     
-    
+    /*
+     * @dev Wrapper for decrementCountdown 
+     */
+    function DECREMENT_COUNTDOWN (string memory _idx, string memory _reg, uint _decrementAmount) public payable {
+        
+        if (_decrementAmount == 0) {
+            _decrementAmount = 1;
+        }
+        
+        decrementCountdown(msg.sender,keccak256(abi.encodePacked(_idx)), keccak256(abi.encodePacked(_reg)), _decrementAmount);
+        
+    }
     /*
      * @dev Wrapper for create new record
      */
-    function NEW_RECORD (string memory _idx, string memory _reg, string memory _desc) public payable {
+    function NEW_RECORD (string memory _idx, string memory _reg, string memory _desc, uint _countDownStart) public payable {
         deductPayment(5);
-        newRecord(msg.sender, keccak256(abi.encodePacked(_idx)), keccak256(abi.encodePacked(_reg)), _desc);
+        newRecord(msg.sender, keccak256(abi.encodePacked(_idx)), keccak256(abi.encodePacked(_reg)), _desc, _countDownStart);
     }
     
     
