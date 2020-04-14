@@ -41,7 +41,7 @@ contract BulletProof is Storage {
         
         bytes32 hash;
         hash = keccak256(abi.encodePacked(_authAddr));
-        registeredUsers[hash] = userType;
+        registeredUsers[hash].userType = userType;
     }
     
     
@@ -114,7 +114,7 @@ contract BulletProof is Storage {
     function newRecord(address _sender, bytes32 _idx, bytes32 _reg, string memory _desc) internal {
        
         require(
-            registeredUsers[keccak256(abi.encodePacked(_sender))] == 1 ,
+            registeredUsers[keccak256(abi.encodePacked(_sender))].userType == 1 ,
             "NR: Address not authorized"
         );
         require(
@@ -141,7 +141,7 @@ contract BulletProof is Storage {
         function addNote(address _sender, bytes32 _idx, bytes32 _reg, string memory _note) internal {
        
         require(
-            registeredUsers[keccak256(abi.encodePacked(_sender))] == 1 ,
+            registeredUsers[keccak256(abi.encodePacked(_sender))].userType == 1 ,
             "AN: Address not authorized"
         );
         require(
@@ -174,7 +174,7 @@ contract BulletProof is Storage {
     function forceModifyRecord(address _sender, bytes32 _idx, bytes32 _reg) internal {
        
         require(
-            registeredUsers[keccak256(abi.encodePacked(_sender))] == 1  ,
+            registeredUsers[keccak256(abi.encodePacked(_sender))].userType == 1  ,
             "FMR: Address not authorized"
         );
         require(
@@ -212,7 +212,7 @@ contract BulletProof is Storage {
      * @dev Modify TRANSFER record REGISTRANT and STATUS with test for match to old record
      */
     function transferAsset (address _sender, bytes32 _idx, bytes32 _oldreg, bytes32 _newreg) internal {
-        uint8 senderType = registeredUsers[keccak256(abi.encodePacked(_sender))];
+        uint8 senderType = registeredUsers[keccak256(abi.encodePacked(_sender))].userType;
        
         require(
             (senderType == 1) || (senderType == 9) ,
@@ -267,7 +267,7 @@ contract BulletProof is Storage {
      * @dev Modify record STATUS with test for match to old record
      */
     function changeStatus (address _sender, bytes32 _idx, bytes32 _oldreg, uint8 _newstat) internal {
-        uint8 senderType = registeredUsers[keccak256(abi.encodePacked(_sender))];
+        uint8 senderType = registeredUsers[keccak256(abi.encodePacked(_sender))].userType;
        
         require(
             (senderType == 1) || (senderType == 9) ,
@@ -302,7 +302,7 @@ contract BulletProof is Storage {
      * @dev user modify record DESCRIPTION with test for match to old record
      */
     function changeDescription (address _sender, bytes32 _idx, bytes32 _reg, string memory _desc) internal {
-        uint8 senderType = registeredUsers[keccak256(abi.encodePacked(_sender))];
+        uint8 senderType = registeredUsers[keccak256(abi.encodePacked(_sender))].userType;
         
         require(
             (senderType == 1) || (senderType == 9) ,
@@ -335,7 +335,7 @@ contract BulletProof is Storage {
     function lastRegistrar(address _sender, bytes32 _idx) internal {
         bytes32 senderHash = keccak256(abi.encodePacked(_sender));
         
-        if ((registeredUsers[database[_idx].registrar] == 1) && (senderHash != database[_idx].registrar)) {     // Rotate last registrar
+        if ((registeredUsers[database[_idx].registrar].userType == 1) && (senderHash != database[_idx].registrar)) {     // Rotate last registrar
                                                                                                                 //into lastRegistrar field if uniuqe and not a robot
                                                                                                 
             database[_idx].lastRegistrar = database[_idx].registrar;
