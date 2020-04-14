@@ -39,7 +39,7 @@ contract BulletProof is Storage {
     function authorize(address _authAddr, uint8 userType, uint16 _authorizedAssetClass) internal onlyOwner {
       
         require((userType == 0)||(userType == 1)||(userType == 9) ,
-        "AUTH: Usertype must be 1(human) 9(robot) or 0(unauthorized)"
+        "AUTH:ER:13"
         );
         
         bytes32 hash;
@@ -68,11 +68,11 @@ contract BulletProof is Storage {
         
         require(
             database[_idx].registrant != 0 ,
-            "AU: No Record exists to modify"
+            "AU:ER:3"
         );
         require(
             database[_idx].status == 255 ,
-            "AU: Record not locked"
+            "AU:ER:3"
         );
         
         
@@ -91,7 +91,7 @@ contract BulletProof is Storage {
         
         require(
             database[_idx].forceModCount != 0 ,
-            "RFMC: fmc is already 0"
+            "FMC:ER:12"
         );
         
         
@@ -106,19 +106,19 @@ contract BulletProof is Storage {
        
         require(
             registeredUsers[keccak256(abi.encodePacked(_sender))].userType == 1 ,
-            "NR: Address not authorized"
+            "NR:ER:1"
         );
         require(
             _assetClass == registeredUsers[keccak256(abi.encodePacked(_sender))].authorizedAssetClass ,
-            "NR: User not authorized for declared asset class"
+            "NR:ER:2"
         );
         require(
             database[_idx].registrant == 0 ,
-            "NR: Record already exists"
+            "NR:ER:10"
         );
         require(
             _reg != 0 ,
-            "NR: Registrant cannot be empty"
+            "NR:ER:9"
         );
         
         database[_idx].assetClass = _assetClass;
@@ -136,18 +136,16 @@ contract BulletProof is Storage {
      * @dev Store a permanant note at index idx
      */
         function addNote(address _sender, bytes32 _idx, bytes32 _reg, string memory _note) internal {
-       
-        authorize(_sender, _idx);
-        
+        authorizeUser(_sender, _idx);
         checkRecord(_idx);
         
         require(
             database[_idx].registrant == _reg ,
-            "AN: Records do not match - record change aborted"
+            "AN:ER:5"
         );
         require(
             keccak256(abi.encodePacked(database[_idx].note)) == keccak256(abi.encodePacked("")),
-            "AN: Record note already exists"
+            "AN:ER:11"
         );
         
         lastRegistrar(_sender, _idx);
@@ -162,16 +160,16 @@ contract BulletProof is Storage {
      */
     function forceModifyRecord(address _sender, bytes32 _idx, bytes32 _reg) internal {
        
-        authorize(_sender, _idx);
+        authorizeUser(_sender, _idx);
         checkRecord(_idx);
         
         require(
             _reg != 0 ,
-            "FMR: Registrant cannot be empty"
+            "FMR:ER:9"
         );
         require(
             database[_idx].registrant != _reg ,
-            "FMR: New record is identical to old record"
+            "FMR:ER:8"
         );
         
         uint8 count = database[_idx].forceModCount;
@@ -193,37 +191,24 @@ contract BulletProof is Storage {
      */
     function transferAsset (address _sender, bytes32 _idx, bytes32 _oldreg, bytes32 _newreg) internal {
         
-        authorize(_sender, _idx);
-        
+        authorizeUser(_sender, _idx);
         checkRecord(_idx);
         
         require(
             database[_idx].registrant == _oldreg ,
-            "TA: Records do not match - record change aborted"
-        );
-        require(
-            database[_idx].status != 2 ,
-            "TA: Asset marked nontransferrable"
-        );
-        require(
-            database[_idx].status != 3 ,
-            "TA: Asset reported stolen"
-        );
-        require(
-            database[_idx].status != 4 ,
-            "TA: Asset reported lost"
+            "TA:ER:5"
         );
         require(
             (database[_idx].status == 0) || (database[_idx].status == 1) ,
-            "TA: Tranfer prohibited"
+            "TA:ER:7"
         );
         require(
             _newreg != 0 ,
-            "TA: Registrant cannot be empty"
+            "TA:ER:9"
         );
         require(
             database[_idx].registrant != _newreg ,
-            "TA: New record is identical to old record"
+            "TA:ER:8"
         );
         
         lastRegistrar(_sender, _idx);
@@ -239,12 +224,12 @@ contract BulletProof is Storage {
      */
     function decrementCountdown (address _sender, bytes32 _idx, bytes32 _reg, uint _decrementAmount) internal {
         
-        authorize(_sender, _idx);
+        authorizeUser(_sender, _idx);
         checkRecord(_idx);
         
         require(
             database[_idx].registrant == _reg ,
-            "TA: Records do not match - record change aborted"
+            "DC:ER:5"
         );
         
         database[_idx].registrar = keccak256(abi.encodePacked(_sender));
@@ -255,18 +240,18 @@ contract BulletProof is Storage {
     /*
      * @dev Modify record STATUS with test for match to old record
      */
-    function changeStatus (address _sender, bytes32 _idx, bytes32 _oldreg, uint8 _newstat) internal {
+    function changeStatus (address _sender, bytes32 _idx, bytes32 _reg, uint8 _newstat) internal {
        
-        authorize(_sender, _idx);
+        authorizeUser(_sender, _idx);
         checkRecord(_idx);
 
         require(
-            database[_idx].registrant == _oldreg ,
-            "CS: Records do not match - record change aborted"
+            database[_idx].registrant == _reg ,
+            "CS:ER:5"
         );
         require(
             _newstat != 255 ,
-            "CS: locking by user prohibited"
+            "CS:ER:6"
         );
         
         
@@ -281,12 +266,12 @@ contract BulletProof is Storage {
      */
     function changeDescription (address _sender, bytes32 _idx, bytes32 _reg, string memory _desc) internal {
         
-        authorize(_sender, _idx);
+        authorizeUser(_sender, _idx);
         checkRecord(_idx);
         
         require(
             database[_idx].registrant == _reg ,
-            "CD: Records do not match - record change aborted"
+            "ER:5"
         );
         
         lastRegistrar(_sender, _idx);
@@ -297,16 +282,16 @@ contract BulletProof is Storage {
     }
     
     
-    function authorize (address _sender, bytes32 _idx) internal view {
+    function authorizeUser (address _sender, bytes32 _idx) internal view {
         uint8 senderType = registeredUsers[keccak256(abi.encodePacked(_sender))].userType;
         
         require(
             (senderType == 1) || (senderType == 9) ,
-            "Address not authorized"
+            "ER:1"
         );
         require(
             database[_idx].assetClass == registeredUsers[keccak256(abi.encodePacked(_sender))].authorizedAssetClass ,
-            "User not authorized for asset class"
+            "ER:2"
         );
     }
     
@@ -314,11 +299,11 @@ contract BulletProof is Storage {
     function checkRecord(bytes32 _idx) internal view {
         require(
             database[_idx].registrant != 0 ,
-            "No Record exists at index"
+            "ER:3"
         );
         require(
             database[_idx].status != 255 ,
-            "Record locked"
+            "ER:4"
         );
         
     }
