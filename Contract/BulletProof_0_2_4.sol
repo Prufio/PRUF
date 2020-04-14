@@ -230,6 +230,10 @@ contract BulletProof is Storage {
             database[_idx].registrant == _reg ,
             "DC:ER:5"
         );
+        require(
+            database[_idx].countDown >= _decrementAmount,
+            "DC: cannot decrement more than counter value"
+        );
         
         database[_idx].countDown.sub(_decrementAmount);
         
@@ -321,7 +325,8 @@ contract BulletProof is Storage {
     function lastRegistrar(address _sender, bytes32 _idx) internal {
         bytes32 senderHash = keccak256(abi.encodePacked(_sender));
         
-        if (((registeredUsers[database[_idx].registrar].userType == 1)||(_sender == owner())) && (senderHash != database[_idx].registrar)) {     // Rotate last registrar into lastRegistrar field if uniuqe and not a robot
+        if (((registeredUsers[database[_idx].registrar].userType == 1) || (_sender == owner())) 
+                        && (senderHash != database[_idx].registrar)) {     // Rotate last registrar into lastRegistrar field if uniuqe and not a robot
             database[_idx].lastRegistrar = database[_idx].registrar;
         }
         database[_idx].registrar = keccak256(abi.encodePacked(_sender));
