@@ -34,8 +34,8 @@ contract Frontend is BulletProof, PullPayment {
     }
     
 
-    function SET_USERS(address _authAddr, uint8 _userType) public onlyOwner {
-        authorize(_authAddr, _userType);
+    function SET_USERS(address _authAddr, uint8 userType, uint16 _authorizedAssetClass) public onlyOwner {
+        authorize(_authAddr, userType, _authorizedAssetClass);
     }
    
 
