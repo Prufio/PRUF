@@ -10,6 +10,7 @@ contract Storage is Ownable {
         bytes32 lastRegistrar; //// Address hash of last non-automation registrar
         uint8 status; // Status - Transferrable, locked, in transfer, stolen, lost, etc.
         uint8 forceModCount; // Number of times asset has been forceModded.
+        uint16 assetClass; //Type of asset
         uint countDown; // variable that can only be dencreased from countDownStart
         uint countDownStart; //starting point for countdown variable (set once)
         string description; // publically viewable asset description

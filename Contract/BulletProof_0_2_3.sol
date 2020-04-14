@@ -35,7 +35,7 @@ contract BulletProof is Storage {
      * @dev Authorize / Deauthorize / Authorize automation for an address be permitted to make record modifications
      * ----------------INSECURE -- keccak256 of address must be generated clientside in release.
      */
-    function authorize(address _authAddr, uint8 userType) internal onlyOwner {
+    function authorize(address _authAddr, uint8 userType, uint16 _authorizedAssetClass) internal onlyOwner {
       
         require((userType == 0)||(userType == 1)||(userType == 9) ,
         "AUTH: Usertype must be 1(human) 9(robot) or 0(unauthorized)"
@@ -44,6 +44,7 @@ contract BulletProof is Storage {
         bytes32 hash;
         hash = keccak256(abi.encodePacked(_authAddr));
         registeredUsers[hash].userType = userType;
+        registeredUsers[hash].authorizedAssetClass = _authorizedAssetClass;
     }
     
     
@@ -152,6 +153,10 @@ contract BulletProof is Storage {
             "AN: No Record exists to modify"
         );
         require(
+            database[_idx].assetClass == registeredUsers[keccak256(abi.encodePacked(_sender))].authorizedAssetClass ,
+            "AN: User not authorized for asset class"
+        );
+        require(
             database[_idx].registrant == _reg ,
             "AN: Records do not match - record change aborted"
         );
@@ -183,6 +188,10 @@ contract BulletProof is Storage {
         require(
             database[_idx].registrant != 0 ,
             "FMR: No Record exists to modify"
+        );
+        require(
+            database[_idx].assetClass == registeredUsers[keccak256(abi.encodePacked(_sender))].authorizedAssetClass ,
+            "FMR: User not authorized for asset class"
         );
         require(
             database[_idx].status != 255 ,
@@ -224,6 +233,10 @@ contract BulletProof is Storage {
         require(
             database[_idx].registrant != 0 ,
             "TA: No Record exists to modify"
+        );
+        require(
+            database[_idx].assetClass == registeredUsers[keccak256(abi.encodePacked(_sender))].authorizedAssetClass ,
+            "TA: User not authorized for asset class"
         );
         require(
             database[_idx].registrant == _oldreg ,
@@ -310,6 +323,10 @@ contract BulletProof is Storage {
             "CS: No Record exists to modify"
         );
         require(
+            database[_idx].assetClass == registeredUsers[keccak256(abi.encodePacked(_sender))].authorizedAssetClass ,
+            "CS: User not authorized for asset class"
+        );
+        require(
             database[_idx].registrant == _oldreg ,
             "CS: Records do not match - record change aborted"
         );
@@ -322,7 +339,6 @@ contract BulletProof is Storage {
             "CS: locking by user prohibited"
         );
         
-        lastRegistrar(_sender, _idx);
         
         
         database[_idx].registrar = keccak256(abi.encodePacked(_sender));
@@ -345,6 +361,10 @@ contract BulletProof is Storage {
             "CD: No Record exists to modify"
         );
         require(
+            database[_idx].assetClass == registeredUsers[keccak256(abi.encodePacked(_sender))].authorizedAssetClass ,
+            "CD: User not authorized for asset class"
+        );
+        require(
             database[_idx].registrant == _reg ,
             "CD: Records do not match - record change aborted"
         );
@@ -360,7 +380,7 @@ contract BulletProof is Storage {
         database[_idx].description = _desc;
     }
     
-     
+    
     /*
      * @dev Update lastRegistrant
      */ 
