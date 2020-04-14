@@ -50,7 +50,9 @@ pragma solidity ^0.6.0;
         adminUnlock(keccak256(abi.encodePacked(_idx)));
     }
     
-
+    /*
+     * @dev Wrapper for resetForceModCount
+     */
     function RESET_FORCEMOD_COUNT (string memory _idx) public onlyOwner {
         resetForceModCount(keccak256(abi.encodePacked(_idx)));
     }
@@ -101,7 +103,10 @@ pragma solidity ^0.6.0;
         forceModifyRecord(msg.sender, keccak256(abi.encodePacked(_idx)), keccak256(abi.encodePacked(_reg)));
     }
 
-    
+
+    /*
+     * @dev wraper for addNote (with tests)
+     */ 
     function ADD_NOTE (string memory _idx, string memory _reg, string memory _note) public payable {
         deductPayment(5); 
         addNote(msg.sender, keccak256(abi.encodePacked(_idx)), keccak256(abi.encodePacked(_reg)), _note);
@@ -143,6 +148,9 @@ pragma solidity ^0.6.0;
     }
     
     
+    /*
+     * @dev check balance at _dest
+     */ 
     function BALANCE(address dest) internal view returns (uint) {
         uint8 senderType = registeredUsers[keccak256(abi.encodePacked(msg.sender))];
         require(
