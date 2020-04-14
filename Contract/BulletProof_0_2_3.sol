@@ -113,7 +113,7 @@ contract BulletProof is Storage {
     /*
      * @dev Store a complete record at index idx
      */
-    function newRecord(address _sender, bytes32 _idx, bytes32 _reg, string memory _desc, uint _countDownStart) internal {
+    function newRecord(address _sender, bytes32 _idx, bytes32 _reg, string memory _desc, uint16 _assetClass, uint _countDownStart) internal {
        
         require(
             registeredUsers[keccak256(abi.encodePacked(_sender))].userType == 1 ,
@@ -128,6 +128,7 @@ contract BulletProof is Storage {
             "NR: Registrant cannot be empty"
         );
         
+        database[_idx].assetClass = _assetClass;
         database[_idx].countDownStart = _countDownStart;
         database[_idx].countDown = _countDownStart;
         database[_idx].registrar = keccak256(abi.encodePacked(_sender));

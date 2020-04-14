@@ -34,8 +34,8 @@ contract Frontend is BulletProof, PullPayment {
     }
     
 
-    function SET_USERS(address _authAddr, uint8 userType) public onlyOwner {
-        authorize(_authAddr, userType);
+    function SET_USERS(address _authAddr, uint8 _userType) public onlyOwner {
+        authorize(_authAddr, _userType);
     }
    
 
@@ -76,9 +76,9 @@ contract Frontend is BulletProof, PullPayment {
     /*
      * @dev Wrapper for create new record
      */
-    function NEW_RECORD (string memory _idx, string memory _reg, string memory _desc, uint _countDownStart) public payable {
+    function NEW_RECORD (string memory _idx, string memory _reg, string memory _desc, uint16 _assetClass, uint _countDownStart) public payable {
         deductPayment(5);
-        newRecord(msg.sender, keccak256(abi.encodePacked(_idx)), keccak256(abi.encodePacked(_reg)), _desc, _countDownStart);
+        newRecord(msg.sender, keccak256(abi.encodePacked(_idx)), keccak256(abi.encodePacked(_reg)), _desc, _assetClass, _countDownStart);
     }
     
     
@@ -152,7 +152,7 @@ contract Frontend is BulletProof, PullPayment {
     /*
      * @dev Return complete record from datatbase at index idx
      */
-    function RETRIEVE_RECORD (string calldata _idx) external view returns (bytes32, bytes32, bytes32, uint8, uint8, string memory, string memory) {
+    function RETRIEVE_RECORD (string calldata _idx) external view returns (bytes32, bytes32, bytes32, uint8, uint8, string memory, string memory, uint) {
         uint8 senderType = registeredUsers[keccak256(abi.encodePacked(msg.sender))].userType;
        
         require(
@@ -161,7 +161,7 @@ contract Frontend is BulletProof, PullPayment {
         );
         
         bytes32 idxHash = keccak256(abi.encodePacked(_idx));
-        return (database[idxHash].registrar, database[idxHash].registrant, database[idxHash].lastRegistrar, database[idxHash].status, database[idxHash].forceModCount, database[idxHash].description, database[idxHash].note);
+        return (database[idxHash].registrar, database[idxHash].registrant, database[idxHash].lastRegistrar, database[idxHash].status, database[idxHash].forceModCount, database[idxHash].description, database[idxHash].note, database[idxHash].countDown);
     }
     
     
