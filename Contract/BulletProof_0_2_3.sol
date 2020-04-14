@@ -332,6 +332,9 @@ contract BulletProof is Storage {
      
      }
      
+    /*
+     * @dev Update lastRegistrant
+     */ 
     function lastRegistrar(address _sender, bytes32 _idx) internal {
         bytes32 senderHash = keccak256(abi.encodePacked(_sender));
         
