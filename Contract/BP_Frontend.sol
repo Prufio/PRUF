@@ -125,7 +125,7 @@ pragma solidity ^0.6.0;
      */
     function COMPARE_REGISTRANT (string calldata _idx, string calldata _reg) external view returns(string memory) {
         
-        uint8 senderType = registeredUsers[keccak256(abi.encodePacked(msg.sender))];
+        uint8 senderType = registeredUsers[keccak256(abi.encodePacked(msg.sender))].userType;
        
         require(
             (senderType == 1) || (senderType == 9) || (msg.sender == owner()) ,
@@ -143,7 +143,7 @@ pragma solidity ^0.6.0;
      * @dev Return complete record from datatbase at index idx
      */
     function RETRIEVE_RECORD (string calldata _idx) external view returns (bytes32, bytes32, bytes32, uint8, uint8, string memory, string memory) {
-        uint8 senderType = registeredUsers[keccak256(abi.encodePacked(msg.sender))];
+        uint8 senderType = registeredUsers[keccak256(abi.encodePacked(msg.sender))].userType;
        
         require(
             (senderType == 1) || (senderType == 9) || (msg.sender == owner()) ,
@@ -159,7 +159,7 @@ pragma solidity ^0.6.0;
      * @dev check balance at _dest
      */ 
     function BALANCE(address dest) internal view returns (uint) {
-        uint8 senderType = registeredUsers[keccak256(abi.encodePacked(msg.sender))];
+        uint8 senderType = registeredUsers[keccak256(abi.encodePacked(msg.sender))].userType;
        
         require(
             (senderType == 1) || (senderType == 9) || (msg.sender == mainWallet) ,
@@ -174,7 +174,7 @@ pragma solidity ^0.6.0;
      * @dev Deduct payment and transfer cost, call to PullPayment with msg.sender  *****MAKE pullPayment internal!!!! SECURITY
      */ 
     function WITHDRAW() public virtual payable {
-        uint8 senderType = registeredUsers[keccak256(abi.encodePacked(msg.sender))];
+        uint8 senderType = registeredUsers[keccak256(abi.encodePacked(msg.sender))].userType;
        
         require(
             (senderType == 1) || (senderType == 9) || (msg.sender == mainWallet) ,
