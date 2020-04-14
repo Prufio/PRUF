@@ -127,69 +127,11 @@ contract Frontend is BulletProof, PullPayment {
         addNote(msg.sender, keccak256(abi.encodePacked(_idx)), keccak256(abi.encodePacked(_reg)), _note);
     }
 
-
-//-----------------READ ONLY FUNCTIONS ----------------SECURITY CHECKS ARE HERE IN FRONTEND
-
-    /*
-     * @dev Wrapper for comparing records
-     */
-    function COMPARE_REGISTRANT (string calldata _idx, string calldata _reg) external view returns(string memory) {
-        
-        uint8 senderType = registeredUsers[keccak256(abi.encodePacked(msg.sender))].userType;
-       
-        require(
-            (senderType == 1) || (senderType == 9) || (msg.sender == owner()) ,
-            "COMPARE_REGISTRANT: Address not authorized"
-        );
-         
-        if (keccak256(abi.encodePacked(_reg)) == database[keccak256(abi.encodePacked(_idx))].registrant) {
-            return "Registrant match confirmed";
-        } else {
-            return "Registrant does not match";
-        }
-    }
-    
-    /*
-     * @dev Return complete record from datatbase at index idx
-     */
-    function RETRIEVE_RECORD (string calldata _idx) external view returns (bytes32, bytes32, bytes32, uint8, uint8, string memory, string memory, uint) {
-        uint8 senderType = registeredUsers[keccak256(abi.encodePacked(msg.sender))].userType;
-       
-        require(
-            (senderType == 1) || (senderType == 9) || (msg.sender == owner()) ,
-            "RETRIEVE_RECORD: Address not authorized"
-        );
-        
-        bytes32 idxHash = keccak256(abi.encodePacked(_idx));
-        return (database[idxHash].registrar, database[idxHash].registrant, database[idxHash].lastRegistrar, database[idxHash].status, database[idxHash].forceModCount, database[idxHash].description, database[idxHash].note, database[idxHash].countDown);
-    }
-    
-    
-    /*
-     * @dev check balance at _dest
-     */ 
-    function BALANCE(address dest) internal view returns (uint) {
-        uint8 senderType = registeredUsers[keccak256(abi.encodePacked(msg.sender))].userType;
-       
-        require(
-            (senderType == 1) || (senderType == 9) || (msg.sender == mainWallet) ,
-            "WITHDRAW: Address not authorized"
-        );
-        
-        return payments(dest);
-    }
-    
-
-    /*
+/*
      * @dev Deduct payment and transfer cost, call to PullPayment with msg.sender  *****MAKE pullPayment internal!!!! SECURITY
      */ 
     function WITHDRAW() public virtual payable {
-        uint8 senderType = registeredUsers[keccak256(abi.encodePacked(msg.sender))].userType;
-       
-        require(
-            (senderType == 1) || (senderType == 9) || (msg.sender == mainWallet) ,
-            "WITHDRAW: Address not authorized"
-        );
+        auth(mainWallet);
         
         withdrawPayments(msg.sender);
     }
@@ -214,4 +156,55 @@ contract Frontend is BulletProof, PullPayment {
         _asyncTransfer(addr, change);
         
     }
+    
+    /*
+     * @dev require authorizations
+     */ 
+    function auth(address _authAddr) private view {
+        uint8 senderType = registeredUsers[keccak256(abi.encodePacked(msg.sender))].userType;
+       
+        require(
+            (senderType == 1) || (senderType == 9) || (msg.sender == _authAddr) ,
+            "WITHDRAW: Address not authorized"
+        );
+    }
+
+
+//-----------------READ ONLY FUNCTIONS ----------------SECURITY CHECKS ARE HERE IN FRONTEND
+
+    /*
+     * @dev Wrapper for comparing records
+     */
+    function COMPARE_REGISTRANT (string calldata _idx, string calldata _reg) external view returns(string memory) {
+        auth(owner());
+         
+        if (keccak256(abi.encodePacked(_reg)) == database[keccak256(abi.encodePacked(_idx))].registrant) {
+            return "Registrant match confirmed";
+        } else {
+            return "Registrant does not match";
+        }
+    }
+    
+    
+    /*
+     * @dev Return complete record from datatbase at index idx
+     */
+    function RETRIEVE_RECORD (string calldata _idx) external view returns (bytes32, bytes32, bytes32, uint8, uint8, string memory, string memory, uint) {
+        auth(owner());
+        
+        bytes32 idxHash = keccak256(abi.encodePacked(_idx));
+        return (database[idxHash].registrar, database[idxHash].registrant, database[idxHash].lastRegistrar, database[idxHash].status, database[idxHash].forceModCount, database[idxHash].description, database[idxHash].note, database[idxHash].countDown);
+    }
+    
+    
+    /*
+     * @dev check balance at _dest
+     */ 
+    function BALANCE(address dest) internal view returns (uint) {
+        auth(mainWallet);
+        
+        return payments(dest);
+    }
+    
 }
+    
