@@ -105,7 +105,7 @@ pragma solidity ^0.6.0;
 
 
     /*
-     * @dev wraper for addNote (with tests)
+     * @dev wraper for addNote  (with tests)
      */ 
     function ADD_NOTE (string memory _idx, string memory _reg, string memory _note) public payable {
         deductPayment(5); 
