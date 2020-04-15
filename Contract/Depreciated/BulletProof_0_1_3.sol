@@ -95,9 +95,9 @@ contract BulletProof is Storage {
     /**
      * @dev Store a complete record at index idx
      */
-    function newRecord(uint idx, bytes32 regstrnt, uint8 stat) internal { //public
+    function newRecord(address sender, uint idx, bytes32 regstrnt, uint8 stat) internal { //public
         require(
-            registeredUsers[keccak256(abi.encodePacked(msg.sender))] == 1 ,
+            registeredUsers[keccak256(abi.encodePacked(sender))] == 1 ,
             "Address not authorized"
         );
         require(
@@ -113,7 +113,7 @@ contract BulletProof is Storage {
             "creation of locked record prohibited"
         );
         
-        database[idx].registrar = keccak256(abi.encodePacked(msg.sender));
+        database[idx].registrar = keccak256(abi.encodePacked(sender));
         database[idx].registrant = regstrnt;
         database[idx].status = stat;
     }

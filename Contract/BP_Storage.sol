@@ -1,14 +1,41 @@
-pragma solidity ^0.6.0;
+pragma solidity 0.6.0;
 
 import "./Ownable.sol";
 
 contract Storage is Ownable {
+   
     struct Record {
-        bytes32 registrar; // tokenID (or address) of registrant 
+        bytes32 registrar; // Address hash of registrar 
         bytes32 registrant;  // KEK256 Registered  owner
+        bytes32 lastRegistrar; //// Address hash of last non-automation registrar
         uint8 status; // Status - Transferrable, locked, in transfer, stolen, lost, etc.
+        uint8 forceModCount; // Number of times asset has been forceModded.
+        uint16 assetClass; //Type of asset
+        uint countDown; // variable that can only be dencreased from countDownStart
+        uint countDownStart; //starting point for countdown variable (set once)
+        string description; // publically viewable asset description
+        string note; // publically viewable immutable notes
     }
     
-    mapping(uint => Record) internal database; //registry
-    mapping(bytes32 => uint8) internal registeredUsers; //authorized registrar database
+    struct User {
+        uint8 userType; // Status - Transferrable, locked, in transfer, stolen, lost, etc.
+        uint16 authorizedAssetClass; // extra status for future expansion
+    }
+    
+    struct Costs{
+        uint newRecord;
+        uint modStatus;
+        uint transferAsset;
+        uint changeDescription;
+        uint decrementCountdown;
+        uint forceMod;
+        uint addNote;
+    }
+    
+    
+    
+
+    mapping(bytes32 => Record) internal database; //registry
+    mapping(bytes32 => User) internal registeredUsers; //authorized registrar database
+    mapping(uint16 => Costs) internal cost; //cost per function by asset class
 }

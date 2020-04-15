@@ -1,13 +1,13 @@
 pragma solidity ^0.6.0;
  
- import "./BulletProof_0_1_3.sol";
+ import "./BulletProof_0_2_0.sol";
  
  contract Wrapper is BulletProof {
     /**
      * @dev Wrapper for create new record
      */
      
-    function NEW_RECORD (uint256 idx, string calldata reg, uint8 stat) external {
+    function NEW_RECORD (uint256 idx, string calldata reg, uint8 stat) external payable{
         newRecord(idx, keccak256(abi.encodePacked(reg)), stat);
     }
 
@@ -28,7 +28,7 @@ pragma solidity ^0.6.0;
      * @dev Wrapper for force changing record status
      */
     
-    function FORCE_MOD_STATUS(uint idx, uint8 stat) external {
+    function FORCE_MOD_STATUS(uint idx, uint8 stat) external payable{
         forceModifyStatus(idx,stat);
     }
     
@@ -36,7 +36,7 @@ pragma solidity ^0.6.0;
      * @dev Wrapper for force changing the record without tests
      */
      
-    function FORCE_MOD_REGISTRANT (uint256 idx, string calldata reg) external {
+    function FORCE_MOD_REGISTRANT (uint256 idx, string calldata reg) external payable {
         modifyRegistrant(idx, keccak256(abi.encodePacked(reg)));
     }
     
@@ -45,7 +45,7 @@ pragma solidity ^0.6.0;
      * @dev Wrapper for changing record status with tests
      */
     
-    function MOD_STATUS(uint idx, string calldata regstrnt, uint8 stat) external {
+    function MOD_STATUS(uint idx, string calldata regstrnt, uint8 stat) external payable{
         modifyStatus(idx,keccak256(abi.encodePacked(regstrnt)),stat);
     }
 
@@ -53,7 +53,7 @@ pragma solidity ^0.6.0;
      * @dev Wrapper for Asset transfer with tests
      */
     
-    function TRANSFER_ASSET (uint256 idx, string memory oldreg, string memory newreg, uint8 newstat) public {
+    function TRANSFER_ASSET (uint256 idx, string memory oldreg, string memory newreg, uint8 newstat) public payable {
         transferAsset(idx, keccak256(abi.encodePacked(oldreg)), keccak256(abi.encodePacked(newreg)),newstat);
      }
 
@@ -62,7 +62,7 @@ pragma solidity ^0.6.0;
      * @dev Wrapper for automated Asset transfer with tests
      */
 
-    function PRIVATE_SALE (uint256 idx, string memory oldreg, string memory newreg, uint8 newstat) public {
+    function PRIVATE_SALE (uint256 idx, string memory oldreg, string memory newreg, uint8 newstat) public payable {
         robotTransferAsset(idx, keccak256(abi.encodePacked(oldreg)), keccak256(abi.encodePacked(newreg)),newstat);
      }
 }
