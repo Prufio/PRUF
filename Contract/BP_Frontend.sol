@@ -18,14 +18,14 @@ contract Frontend is BulletProof, PullPayment {
     /*
      * @dev Set main payment wallet
      */
-    function SET_wallet (address _addr) public onlyOwner {
+    function _SET_wallet (address _addr) public onlyOwner {
         mainWallet = _addr;
     }
    
     /*
      * @dev Set function costs per asset class, in Wei
      */
-    function SET_costs (uint16 _assetClass, uint _newRecord, uint _modStatus, uint _transferAsset, 
+    function _SET_costs (uint16 _assetClass, uint _newRecord, uint _modStatus, uint _transferAsset, 
                         uint _changeDescription, uint _decrementCountdown, uint _forceMod, uint _addNote) public onlyOwner {
                             
         cost[_assetClass].newRecord = _newRecord;
@@ -41,12 +41,12 @@ contract Frontend is BulletProof, PullPayment {
     /*
      * @dev Set escrow cost, in Wei
      */
-    function SET_escrow (uint _escrow) public onlyOwner {
+    function _SET_escrow (uint _escrow) public onlyOwner {
         minEscrowAmount = _escrow;
     }
     
 
-    function SET_USERS(address _authAddr, uint8 userType, uint16 _authorizedAssetClass) public onlyOwner {
+    function _SET_USERS(address _authAddr, uint8 userType, uint16 _authorizedAssetClass) public onlyOwner {
         authorize(_authAddr, userType, _authorizedAssetClass);
     }
    
@@ -54,7 +54,7 @@ contract Frontend is BulletProof, PullPayment {
     /*     
      * @dev Wrapper for admin lock record
      */
-    function ADMIN_LOCK (string memory _idx) public onlyOwner {
+    function _ADMIN_LOCK (string memory _idx) public onlyOwner {
         adminLock(keccak256(abi.encodePacked(_idx)));
     }
     
@@ -62,14 +62,14 @@ contract Frontend is BulletProof, PullPayment {
      /*
      * @dev Wrapper for admin unlock record
      */
-    function ADMIN_UNLOCK (string memory _idx) public onlyOwner {
+    function _ADMIN_UNLOCK (string memory _idx) public onlyOwner {
         adminUnlock(keccak256(abi.encodePacked(_idx)));
     }
     
     /*
      * @dev Wrapper for resetForceModCount
      */
-    function RESET_FORCEMOD_COUNT (string memory _idx) public onlyOwner {
+    function _RESET_FORCEMOD_COUNT (string memory _idx) public onlyOwner {
         resetForceModCount(keccak256(abi.encodePacked(_idx)));
     }
     
@@ -145,7 +145,7 @@ contract Frontend is BulletProof, PullPayment {
 /*
      * @dev Deduct payment and transfer cost, call to PullPayment with msg.sender  *****MAKE pullPayment internal!!!! SECURITY
      */ 
-    function WITHDRAW() public virtual payable {
+    function _WITHDRAW() public virtual payable {
         auth(mainWallet);
         
         withdrawPayments(msg.sender);
@@ -188,7 +188,7 @@ contract Frontend is BulletProof, PullPayment {
     /*
      * @dev Wrapper for comparing records
      */
-    function COMPARE_REGISTRANT (string calldata _idx, string calldata _reg) external view returns(string memory) {
+    function XCOMPARE_REGISTRANT (string calldata _idx, string calldata _reg) external view returns(string memory) {
         auth(owner());
          
         if (keccak256(abi.encodePacked(_reg)) == database[keccak256(abi.encodePacked(_idx))].registrant) {
@@ -214,7 +214,7 @@ contract Frontend is BulletProof, PullPayment {
         string note; // publically viewable immutable notes
     }
      */
-    function RETRIEVE_RECORD (string calldata _idx) external view returns (bytes32, bytes32, bytes32, uint8, uint8, uint16, uint, uint, string memory, string memory) {
+    function XRETRIEVE_RECORD (string calldata _idx) external view returns (bytes32, bytes32, bytes32, uint8, uint8, uint16, uint, uint, string memory, string memory) {
         //auth(owner());
         
         bytes32 idxHash = keccak256(abi.encodePacked(_idx));
@@ -223,11 +223,30 @@ contract Frontend is BulletProof, PullPayment {
                 database[idxHash].description, database[idxHash].note);
     }
     
+    /*
+     * @dev Return function costs for asset type 
+    struct Costs{
+        uint newRecord;
+        uint modStatus;
+        uint transferAsset;
+        uint changeDescription;
+        uint decrementCountdown;
+        uint forceMod;
+        uint addNote;
+    }
+     */
+    function XRETRIEVE_COSTS (uint16 _assetClass) external view returns (uint, uint, uint, uint, uint, uint, uint) {
+        auth(owner());
+
+        return (cost[_assetClass].newRecord, cost[_assetClass].modStatus, cost[_assetClass].transferAsset, cost[_assetClass].changeDescription, 
+                cost[_assetClass].decrementCountdown, cost[_assetClass].forceMod, cost[_assetClass].addNote );
+    }
+    
     
     /*
      * @dev check balance at _dest
      */ 
-    function BALANCE(address dest) internal view returns (uint) {
+    function XBALANCE(address dest) public view returns (uint) {
         auth(mainWallet);
         
         return payments(dest);
