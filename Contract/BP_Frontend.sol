@@ -178,7 +178,7 @@ contract Frontend is BulletProof, PullPayment {
        
         require(
             (senderType == 1) || (senderType == 9) || (msg.sender == _authAddr) ,
-            "WITHDRAW:ER:1"
+            "AUTH:ER:1"
         );
     }
 

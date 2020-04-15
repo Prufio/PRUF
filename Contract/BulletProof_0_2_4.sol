@@ -139,7 +139,6 @@ contract BulletProof is Storage {
      */
         function addNote(address _sender, bytes32 _idx, bytes32 _reg, string memory _note) internal {
         authorizeUser(_sender, _idx);
-        checkRecord(_idx);
         
         require(
             database[_idx].registrant == _reg ,
@@ -162,7 +161,6 @@ contract BulletProof is Storage {
     function forceModifyRecord(address _sender, bytes32 _idx, bytes32 _reg) internal {
        
         authorizeUser(_sender, _idx);
-        checkRecord(_idx);
         
         require(
             _reg != 0 ,
@@ -192,7 +190,6 @@ contract BulletProof is Storage {
     function transferAsset (address _sender, bytes32 _idx, bytes32 _oldreg, bytes32 _newreg) internal {
         
         authorizeUser(_sender, _idx);
-        checkRecord(_idx);
         
         require(
             database[_idx].registrant == _oldreg ,
@@ -221,21 +218,30 @@ contract BulletProof is Storage {
     /*
      * @dev decrements from current value of countDown in database. Starting value of countDown set on record creation
      */
-    function decrementCountdown (address _sender, bytes32 _idx, bytes32 _reg, uint _decrementAmount) internal {
+    function decrementCountdown (address _sender, bytes32 _idx, bytes32 _reg, uint _decAmount) internal {  //internal
         
         authorizeUser(_sender, _idx);
-        checkRecord(_idx);
+        
+        uint count = database[_idx].countDown;
         
         require(
             database[_idx].registrant == _reg ,
             "DC:ER:5"
         );
+        
         require(
-            database[_idx].countDown >= _decrementAmount,
-            "DC: cannot decrement more than counter value"
+            database[_idx].countDown > 0,
+            "DC:ER:15"
         );
         
-        database[_idx].countDown.sub(_decrementAmount);
+        if(database[_idx].countDown <= _decAmount){
+            database[_idx].countDown = 0;
+        } else {
+            database[_idx].countDown = count.sub(_decAmount);
+        }
+
+        //database[_idx].countDown = database[_idx].countDown - _decAmount ;  //test code
+        //database[_idx].countDown.sub(_decrementAmount);
         
         lastRegistrar(_sender, _idx);
         
@@ -248,7 +254,6 @@ contract BulletProof is Storage {
     function changeStatus (address _sender, bytes32 _idx, bytes32 _reg, uint8 _newstat) internal {
        
         authorizeUser(_sender, _idx);
-        checkRecord(_idx);
 
         require(
             database[_idx].registrant == _reg ,
@@ -272,7 +277,6 @@ contract BulletProof is Storage {
     function changeDescription (address _sender, bytes32 _idx, bytes32 _reg, string memory _desc) internal {
         
         authorizeUser(_sender, _idx);
-        checkRecord(_idx);
         
         require(
             database[_idx].registrant == _reg ,
@@ -291,6 +295,8 @@ contract BulletProof is Storage {
      */     
     function authorizeUser (address _sender, bytes32 _idx) internal view {
         uint8 senderType = registeredUsers[keccak256(abi.encodePacked(_sender))].userType;
+        
+        checkRecord(_idx);
         
         require(
             (senderType == 1) || (senderType == 9) ,
