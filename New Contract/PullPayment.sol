@@ -1,4 +1,4 @@
-pragma solidity ^0.6.0;
+pragma solidity 0.6.0;
 
 import "./Escrow.sol";
 
@@ -49,7 +49,7 @@ contract PullPayment {
      * @dev Returns the payments owed to an address.
      * @param dest The creditor's address.
      */
-    function payments(address dest) public view returns (uint) {
+    function payments(address dest) internal view returns (uint) {
         return _escrow.depositsOf(dest);
     }
 

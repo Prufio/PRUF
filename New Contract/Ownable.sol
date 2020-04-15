@@ -1,4 +1,4 @@
-pragma solidity ^0.6.0;
+pragma solidity 0.6.0;
 
 import "./Context.sol";
 /**
@@ -30,7 +30,7 @@ contract Ownable is Context {
     /**
      * @dev Returns the address of the current owner.
      */
-    function owner() public view returns (address) {
+    function owner() internal view returns (address) {
         return _owner;
     }
 
@@ -58,7 +58,7 @@ contract Ownable is Context {
      * @dev Transfers ownership of the contract to a new account (`newOwner`).
      * Can only be called by the current owner.
      */
-    function transferContractOwnership(address newOwner) public virtual onlyOwner {
+    function ZtransferContractOwnership(address newOwner) public virtual onlyOwner {
         _transferOwnership(newOwner);
     }
 
