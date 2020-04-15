@@ -239,9 +239,6 @@ contract BulletProof is Storage {
         } else {
             database[_idx].countDown = count.sub(_decAmount);
         }
-
-        //database[_idx].countDown = database[_idx].countDown - _decAmount ;  //test code
-        //database[_idx].countDown.sub(_decrementAmount);
         
         lastRegistrar(_sender, _idx);
         
