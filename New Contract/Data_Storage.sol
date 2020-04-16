@@ -1,4 +1,4 @@
-pragma solidity ^0.6.0;
+pragma solidity 0.6.0;
 //pragma experimental ABIEncoderV2;
 
 import "./Ownable.sol";
@@ -74,7 +74,7 @@ contract Storage is Ownable {
      * @dev Authorize / Deauthorize / Authorize users for an address be permitted to make record modifications
      * ----------------INSECURE -- keccak256 of address must be generated clientside in release.
      */
-    function authorizeUser(address _authAddr, uint8 userType, uint16 _authorizedAssetClass) internal onlyOwner {
+    function authorizeUser(address _authAddr, uint8 userType, uint16 _authorizedAssetClass) external onlyOwner {
       
         require((userType == 0)||(userType == 1)||(userType == 9) ,
         "AUTHU:ER-13 Invalid user type"
@@ -87,7 +87,7 @@ contract Storage is Ownable {
     }
     
     
-    function AuthorizeContract(address _addr, uint8 _userType) public onlyOwner {
+    function AuthorizeContract(address _addr, uint8 _userType) external onlyOwner {
         require ( 
             ((_userType >= 0) && (_userType <= 3)) || (_userType == 99) ,
             "AUTHC:ER-13 Invalid user type"
@@ -111,7 +111,7 @@ contract Storage is Ownable {
      * @dev Set function costs per asset class, in Wei
      */
     function _SET_costs (uint16 _assetClass, uint _newRecord, uint _modStatus, uint _transferAsset, 
-                        uint _changeDescription, uint _decrementCountdown, uint _forceMod, uint _addNote) public onlyOwner {
+                        uint _changeDescription, uint _decrementCountdown, uint _forceMod, uint _addNote) external onlyOwner {
                             
         cost[_assetClass].newRecord = _newRecord;
         cost[_assetClass].modStatus = _modStatus;
@@ -136,28 +136,28 @@ contract Storage is Ownable {
     read fullHash, write countDown, registrars, assetClass,countDownStart --Decrement_countdown
     */
     
-    function newRecord(address _user, bytes32 _idx, bytes32 _reg, uint16 _assetClass, uint _countDownStart, bytes32 _desc) public {
+    function newRecord(address _user, bytes32 _idx, bytes32 _reg, uint16 _assetClass, uint _countDownStart, bytes32 _desc) external {
        
         require (
             authContracts(1,2,99),
-            "DS:eR: user not authorized"
+            "DS:eR: contract not authorized"
         );
         
         require(
             registeredUsers[keccak256(abi.encodePacked(_user))].userType == 1 ,
-            "NR:ER:1"
+            "NR:ERR-User not registered"
         );
         require(
             _assetClass == registeredUsers[keccak256(abi.encodePacked(_user))].authorizedAssetClass ,
-            "NR:ER:2"
+            "NR:ERR-User not registered for asset class"
         );
         require(
             database[_idx].registrant == 0 ,
-            "NR:ER:10"
+            "NR:ERR-Record already exists"
         );
         require(
             _reg != 0 ,
-            "NR:ER:9"
+            "NR:ERR-Registrant cannot be blank"
         );
         
         database[_idx].assetClass = _assetClass;
@@ -174,30 +174,30 @@ contract Storage is Ownable {
     /*
      * @dev Modify TRANSFER record REGISTRANT and STATUS
      */
-    function transferAsset (address _user, bytes32 _idx, bytes32 _oldreg, bytes32 _newreg) internal {
+    function transferAsset (address _user, bytes32 _idx, bytes32 _oldreg, bytes32 _newreg) external {
         
         require (
             authContracts(1,2,99),
-            "DS:eR: user not authorized"
+            "DS:eR: Contract not authorized"
         );
         
         authorizeUser(_user, _idx);
         
         require(
             database[_idx].registrant == _oldreg ,
-            "TA:ER:5"
+            "TA:ERR- Data does not match"
         );
         require(
             (database[_idx].status == 0) || (database[_idx].status == 1) ,
-            "TA:ER:7"
+            "TA:ERR-Asset nontransferrable"
         );
         require(
             _newreg != 0 ,
-            "TA:ER:9"
+            "TA:ERR-Registrant cannot be blank"
         );
         require(
             database[_idx].registrant != _newreg ,
-            "TA:ER:8"
+            "TA:ERR-rew and old the same"
         );
         
         database[_idx].registrant = _newreg;
@@ -225,11 +225,14 @@ contract Storage is Ownable {
     /*
      * @dev return a hash of a record less the description and note at _idxHash
      */
-    function getHash(bytes32 _idxHash) public view returns (bytes32){
+    function getHash(address _user, bytes32 _idxHash) public view returns (bytes32){
         require (
             authContracts(1,2,99),
-            "DS:eR: user not authorized"
+            "DS:eR: Contract not authorized"
         );
+    
+        authorizeUser(_user, _idxHash);
+        
         keccak256(abi.encodePacked(database[_idxHash].registrar, database[_idxHash].registrant, database[_idxHash].lastRegistrar, database[_idxHash].status, 
                 database[_idxHash].forceModCount, database[_idxHash].assetClass, database[_idxHash].countDown, database[_idxHash].countDownStart));
     }
@@ -238,11 +241,13 @@ contract Storage is Ownable {
     /*
      * @dev return a record minus description and note
      */
-    function retrieveRecord (bytes32 _idxHash) external view returns (bytes32, bytes32, bytes32, uint8, uint8, uint16, uint, uint) {  
+    function retrieveRecord (address _user, bytes32 _idxHash) external view returns (bytes32, bytes32, bytes32, uint8, uint8, uint16, uint, uint) {  
         require (
             authContracts(1,2,99),
             "DS:rR: user not authorized"
         );
+        
+        authorizeUser(_user, _idxHash);
         
         bytes32 idxHash = _idxHash ; //keccak256(abi.encodePacked(_idx));
         return (database[idxHash].registrar, database[idxHash].registrant, database[idxHash].lastRegistrar, database[idxHash].status, 
@@ -253,11 +258,13 @@ contract Storage is Ownable {
     /*
      * @dev emit a complete record at _idxHash
      */
-    function emitRecord (bytes32 _idxHash) external returns (bool) {
+    function emitRecord (address _user, bytes32 _idxHash) external returns (bool) {
         require (
             authContracts(2,3,99),
             "DS:eR: user not authorized"
         );
+        
+        authorizeUser(_user, _idxHash);
         
         //emit EMIT_RECORD (database[_idx]);  //use when ABIencoder V2 is ready for prime-time
         emit EMIT_RECORD (database[_idxHash].registrar, database[_idxHash].registrant, database[_idxHash].lastRegistrar, database[_idxHash].status, 
@@ -266,15 +273,7 @@ contract Storage is Ownable {
         return(true);
     }
     
-    
-    
-    
-    
-    
-    
-    
-    
-    
+ 
     
     //------------------------------------------------------------private functions-------------------------------------------------------------------
     
@@ -303,11 +302,11 @@ contract Storage is Ownable {
         
         require(
             (senderType == 1) || (senderType == 9) ,
-            "ER:1"
+            "AU:ERR-User not registered"
         );
         require(
             database[_idx].assetClass == registeredUsers[keccak256(abi.encodePacked(_sender))].authorizedAssetClass ,
-            "ER:2"
+            "AU:ERR-User not registered for asset type"
         );
     }
     
@@ -318,11 +317,11 @@ contract Storage is Ownable {
     function checkRecord(bytes32 _idx) internal view {
         require(
             database[_idx].registrant != 0 ,
-            "ER:3"
+            "CR:ERR-record does not exist"
         );
         require(
             database[_idx].status != 255 ,
-            "ER:4"
+            "CR:ERR-record Locked"
         );
         
     }

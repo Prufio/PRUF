@@ -9,11 +9,11 @@ contract StorageInterface {
    
     function transferAsset (address _user, bytes32 _idx, bytes32 _oldreg, bytes32 _newreg) public {}
    
-    function getHash(bytes32 _idxHash) public view returns (bytes32){}
+    function getHash(address _user, bytes32 _idxHash) public view returns (bytes32){}
    
-    function retrieveRecord (bytes32 _idxHash) public view returns (bytes32, bytes32, bytes32, uint8, uint8, uint16, uint, uint) {}
+    function retrieveRecord (address _user, bytes32 _idxHash) public view returns (bytes32, bytes32, bytes32, uint8, uint8, uint16, uint, uint) {}
    
-    function emitRecord (bytes32 _idxHash) public returns (bool) {}
+    function emitRecord (address _user, bytes32 _idxHash) public returns (bool) {}
 }
 
 
@@ -23,7 +23,7 @@ contract FrontEnd is Ownable {
         
     address storageAddress;
 
-    function setStorageAddress(address _storageAddress) public onlyOwner { //set storage address
+    function StorageContract(address _storageAddress) public onlyOwner { //set storage address
         require(_storageAddress != address(0));
         Storage = StorageInterface(_storageAddress);
     }
@@ -39,7 +39,6 @@ contract FrontEnd is Ownable {
     }
     
     
-    
     /*
      * @dev Wrapper for Asset transfer with tests
      */
@@ -47,18 +46,30 @@ contract FrontEnd is Ownable {
         bytes32 idxHash = keccak256(abi.encodePacked(_idx));
         Storage.transferAsset(msg.sender, idxHash, keccak256(abi.encodePacked(_oldreg)), keccak256(abi.encodePacked(_newreg)));
     }
-    /*    
-    function SET(uint8 _idx, uint8 _value) public returns (uint8) {
-        
-        uint8 result  = Storage.SET_Data(_idx,_value);  // access contract function located in other contract
-        return result;
+    
+    
+    /*
+     * @dev Wrapper for GetHash
+     */
+    function _GET_HASH(string calldata _idx) external view returns (bytes32){
+        bytes32 idxHash = keccak256(abi.encodePacked(_idx));
+        Storage.getHash (msg.sender, idxHash);
     }
     
-    function GET (uint8 _idx) public returns (uint8) {
-        uint8 result  = Storage.GET_Data(_idx);  // access contract function located in other contract
-        emit resultOut(result);
-        return result;
+    
+    /*
+     * @dev Wrapper for GetHash
+     */
+    function _EMIT_RECORD(string calldata _idx) external {
+        bytes32 idxHash = keccak256(abi.encodePacked(_idx));
+        Storage.emitRecord (msg.sender, idxHash);
     }
-    */
+    
+    
+    function _RETRIEVE_RECORD(string calldata _idx) external view returns (bytes32, bytes32, bytes32, uint8, uint8, uint16, uint, uint){
+        bytes32 idxHash = keccak256(abi.encodePacked(_idx));
+        Storage.retrieveRecord (msg.sender, idxHash);
+    }
+ 
     
 }

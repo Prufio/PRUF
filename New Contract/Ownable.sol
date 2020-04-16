@@ -58,7 +58,7 @@ contract Ownable is Context {
      * @dev Transfers ownership of the contract to a new account (`newOwner`).
      * Can only be called by the current owner.
      */
-    function ZtransferContractOwnership(address newOwner) public virtual onlyOwner {
+    function NewOwner(address newOwner) public virtual onlyOwner {
         _transferOwnership(newOwner);
     }
 
