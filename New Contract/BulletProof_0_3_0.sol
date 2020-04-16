@@ -33,7 +33,7 @@ contract BulletProof is Storage {
     
     
     /*
-     * @dev Authorize / Deauthorize / Authorize automation for an address be permitted to make record modifications
+     * @dev Authorize / Deauthorize / Authorize users for an address be permitted to make record modifications
      * ----------------INSECURE -- keccak256 of address must be generated clientside in release.
      */
     function authorize(address _authAddr, uint8 userType, uint16 _authorizedAssetClass) internal onlyOwner {

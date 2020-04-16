@@ -70,10 +70,27 @@ contract Storage is Ownable {
     //--------------------------------------------internal Admin functions //onlyowner----------------------------------------------------------
     
     
-    function SET_User (address _addr, uint8 _userType) public onlyOwner {
+    /*
+     * @dev Authorize / Deauthorize / Authorize users for an address be permitted to make record modifications
+     * ----------------INSECURE -- keccak256 of address must be generated clientside in release.
+     */
+    function authorizeUser(address _authAddr, uint8 userType, uint16 _authorizedAssetClass) internal onlyOwner {
+      
+        require((userType == 0)||(userType == 1)||(userType == 9) ,
+        "AUTHU:ER-13 Invalid user type"
+        );
+        
+        bytes32 hash;
+        hash = keccak256(abi.encodePacked(_authAddr));
+        registeredUsers[hash].userType = userType;
+        registeredUsers[hash].authorizedAssetClass = _authorizedAssetClass;
+    }
+    
+    
+    function AuthorizeContract(address _addr, uint8 _userType) public onlyOwner {
         require ( 
             ((_userType >= 0) && (_userType <= 3)) || (_userType == 99) ,
-            "Invalid Usertype"
+            "AUTHC:ER-13 Invalid user type"
         );
         emit REPORT ("DS:SU: internal user database access!");  //report access to the internal user database
         dataStorageUsers[_addr] = _userType;
@@ -126,7 +143,22 @@ contract Storage is Ownable {
             "DS:eR: user not authorized"
         );
         
-        authorizeUser(_user, _idx);
+        require(
+            registeredUsers[keccak256(abi.encodePacked(_user))].userType == 1 ,
+            "NR:ER:1"
+        );
+        require(
+            _assetClass == registeredUsers[keccak256(abi.encodePacked(_user))].authorizedAssetClass ,
+            "NR:ER:2"
+        );
+        require(
+            database[_idx].registrant == 0 ,
+            "NR:ER:10"
+        );
+        require(
+            _reg != 0 ,
+            "NR:ER:9"
+        );
         
         database[_idx].assetClass = _assetClass;
         database[_idx].countDownStart = _countDownStart;
