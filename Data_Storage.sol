@@ -51,22 +51,8 @@ contract Storage is Ownable {
     
     
     
-    /*
-    * implement:
-    read fullHash, write note, registrars --add_note
-    read fullHash, write comment, registrars --change_comment
-    read fullHash, write status, registrars --change_status
-    read fullHash, write registrant, registrars --transfer_asset
-    read fullHash, write registrant, registrars, FMC++ --force_mod
-    read fullHash, write registrant, registrars, assetClass,countDownStart --new_record
-    read fullHash, write countDown, registrars, assetClass,countDownStart --Decrement_countdown
-    
-    
-    
-    
-    */
-    
-    /*
+    //--------------------------------------------------------------------------Events----------------------------------------------------------
+        /*
      * @dev emit a string
      */
     event REPORT (string _msg);
@@ -78,6 +64,12 @@ contract Storage is Ownable {
     //event EMIT_RECORD (Record record);  //use when ABIencoder V2 is ready for prime-time
     event EMIT_RECORD (bytes32, bytes32, bytes32, uint8, uint8, uint16, uint, uint, bytes32, bytes32);
     
+
+    
+    
+    //--------------------------------------------internal Admin functions //onlyowner----------------------------------------------------------
+    
+    
     function SET_User (address _addr, uint8 _userType) public onlyOwner {
         require ( 
             ((_userType >= 0) && (_userType <= 3)) || (_userType == 99) ,
@@ -88,13 +80,52 @@ contract Storage is Ownable {
     }
     
     
+    function XRETRIEVE_COSTS (uint16 _assetClass) external view returns (uint, uint, uint, uint, uint, uint, uint) {
+        require (
+            authContracts(1,2,99),
+            "DS:rR: user not authorized"
+        );
+
+        return (cost[_assetClass].newRecord, cost[_assetClass].modStatus, cost[_assetClass].transferAsset, cost[_assetClass].changeDescription, 
+                cost[_assetClass].decrementCountdown, cost[_assetClass].forceMod, cost[_assetClass].addNote );
+    }
+   
+    /*
+     * @dev Set function costs per asset class, in Wei
+     */
+    function _SET_costs (uint16 _assetClass, uint _newRecord, uint _modStatus, uint _transferAsset, 
+                        uint _changeDescription, uint _decrementCountdown, uint _forceMod, uint _addNote) public onlyOwner {
+                            
+        cost[_assetClass].newRecord = _newRecord;
+        cost[_assetClass].modStatus = _modStatus;
+        cost[_assetClass].transferAsset = _transferAsset;
+        cost[_assetClass].changeDescription = _changeDescription;
+        cost[_assetClass].decrementCountdown = _decrementCountdown;
+        cost[_assetClass].forceMod = _forceMod;
+        cost[_assetClass].addNote = _addNote;
+    }
     
+    
+    //----------------------------------------external contract functions  //authuser----------------------------------------------------------
+    
+    /*
+    * implement:
+    read fullHash, write note, registrars --add_note
+    read fullHash, write comment, registrars --change_comment
+    read fullHash, write status, registrars --change_status
+    read fullHash, write registrant, registrars --transfer_asset
+    read fullHash, write registrant, registrars, FMC++ --force_mod
+    read fullHash, write registrant, registrars, assetClass,countDownStart --new_record
+    read fullHash, write countDown, registrars, assetClass,countDownStart --Decrement_countdown
+    
+
+
     /*
      * @dev emit a complete record at _idxHash
      */
-    function emitRecord (bytes32 _idxHash) public returns (bool) {
+    function emitRecord (bytes32 _idxHash) external returns (bool) {
         require (
-            authUser(2,3,99),
+            authContracts(2,3,99),
             "DS:eR: user not authorized"
         );
         
@@ -112,7 +143,7 @@ contract Storage is Ownable {
      */
     function retrieveRecord (bytes32 _idxHash) external view returns (bytes32, bytes32, bytes32, uint8, uint8, uint16, uint, uint) {  
         require (
-            authUser(1,2,99),
+            authContracts(1,2,99),
             "DS:rR: user not authorized"
         );
         
@@ -122,11 +153,12 @@ contract Storage is Ownable {
     }
     
     
+    //------------------------------------------------------------private functions-------------------------------------------------------------------
     
     /*
-     * @dev check msg.sender agains authorized adresses
+     * @dev check msg.sender against authorized adresses
      */
-    function authUser (uint8 _userTypeA, uint8 _userTypeB, uint8 _userTypeC) private view returns (bool) {
+    function authContracts (uint8 _userTypeA, uint8 _userTypeB, uint8 _userTypeC) private view returns (bool) {
         if (
             (dataStorageUsers[msg.sender] == _userTypeA) ||
             (dataStorageUsers[msg.sender] == _userTypeB) || 
@@ -136,5 +168,4 @@ contract Storage is Ownable {
             return(false);
         }
     }
-    
 }
