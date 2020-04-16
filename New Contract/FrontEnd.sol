@@ -23,7 +23,7 @@ contract FrontEnd is Ownable {
         
     address storageAddress;
 
-    function StorageContract(address _storageAddress) public onlyOwner { //set storage address
+    function setStorageContract(address _storageAddress) public onlyOwner { //set storage address
         require(_storageAddress != address(0));
         Storage = StorageInterface(_storageAddress);
     }

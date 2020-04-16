@@ -33,15 +33,8 @@ contract Storage is Ownable {
         uint addNote;
     }
     
-    /*
-    * User types:
-    * 1 read only
-    * 2 Read & Emit Only 
-    * 3 Emit Only
-    * 99 read / write / Emit
-    * Owner (onlyOwner)
-    */
-    mapping(address => uint8) internal dataStorageUsers;
+
+    mapping(address => uint8) internal authorizedAdresses;
     
     mapping(bytes32 => Record) internal database; //registry
     
@@ -49,18 +42,27 @@ contract Storage is Ownable {
     
     mapping(uint16 => Costs) internal cost; //cost per function by asset class
     
+    /*
+    * Authorized external Contract / address types:   authorizedAdresses[]
+    * 1 read only
+    * 2 Read & Emit Only 
+    * 3 Emit Only
+    * 99 read / write / Emit
+    * Owner (onlyOwner)
+    * other = unauth
+    *
+    * Authorized User Types   registeredUsers[]
+    * 1 = standard User
+    * 9 = Robot
+    * other = unauth
+    *
+    */
     
     
     //--------------------------------------------------------------------------Events----------------------------------------------------------
-        /*
-     * @dev emit a string
-     */
+
     event REPORT (string _msg);
     
-    
-    /*
-     * @dev emit a record
-     */
     //event EMIT_RECORD (Record record);  //use when ABIencoder V2 is ready for prime-time
     event EMIT_RECORD (bytes32, bytes32, bytes32, uint8, uint8, uint16, uint, uint, bytes32, bytes32);
     
@@ -86,26 +88,33 @@ contract Storage is Ownable {
         registeredUsers[hash].authorizedAssetClass = _authorizedAssetClass;
     }
     
-    
-    function AuthorizeContract(address _addr, uint8 _userType) external onlyOwner {
+        /*
+     * @dev Authorize / Deauthorize / Authorize ADRESSES permitted to make record modifications
+     * ----------------INSECURE -- keccak256 of address must be generated clientside in release.
+     */
+    function AuthorizeContracts(address _addr, uint8 _userType) external onlyOwner {
         require ( 
             ((_userType >= 0) && (_userType <= 3)) || (_userType == 99) ,
             "AUTHC:ER-13 Invalid user type"
         );
         emit REPORT ("DS:SU: internal user database access!");  //report access to the internal user database
-        dataStorageUsers[_addr] = _userType;
+        authorizedAdresses[_addr] = _userType;
     }
     
     
+    /*
+     * @dev retrieve function costs per asset class, in Wei
+     */    
     function XRETRIEVE_COSTS (uint16 _assetClass) external view returns (uint, uint, uint, uint, uint, uint, uint) {
         require (
-            dataStorageUsers[msg.sender] == 99,
+            authorizedAdresses[msg.sender] == 99,
             "DS:rR: user not authorized"
         );
 
         return (cost[_assetClass].newRecord, cost[_assetClass].modStatus, cost[_assetClass].transferAsset, cost[_assetClass].changeDescription, 
                 cost[_assetClass].decrementCountdown, cost[_assetClass].forceMod, cost[_assetClass].addNote );
     }
+   
    
     /*
      * @dev Set function costs per asset class, in Wei
@@ -131,11 +140,15 @@ contract Storage is Ownable {
     read fullHash, write comment, registrars --change_comment
     read fullHash, write status, registrars --change_status
     read fullHash, write registrant, registrars --transfer_asset
-    read fullHash, write registrant, registrars, FMC++ --force_mod
-    read fullHash, write registrant, registrars, assetClass,countDownStart --new_record
+    *read fullHash, write registrant, registrars, FMC++ --force_mod
+    *read fullHash, write registrant, registrars, assetClass,countDownStart --new_record
     read fullHash, write countDown, registrars, assetClass,countDownStart --Decrement_countdown
     */
     
+    
+    /*
+     * @dev Make a new record in the database  *read fullHash, write registrant, registrars, assetClass,countDownStart --new_record
+     */ 
     function newRecord(address _user, bytes32 _idx, bytes32 _reg, uint16 _assetClass, uint _countDownStart, bytes32 _desc) external {
        
         require (
@@ -172,7 +185,7 @@ contract Storage is Ownable {
     
     
     /*
-     * @dev Modify TRANSFER record REGISTRANT and STATUS
+     * @dev Modify TRANSFER record REGISTRANT and STATUS  *read fullHash, write registrant, registrars --transfer_asset
      */
     function transferAsset (address _user, bytes32 _idx, bytes32 _oldreg, bytes32 _newreg) external {
         
@@ -209,14 +222,6 @@ contract Storage is Ownable {
     
     
     
-    
-    
- 
- 
-    
- 
- 
- 
  
  
 //----------------------------------------external READ ONLY contract functions  //authuser---------------------------------------------------------- 
@@ -282,9 +287,9 @@ contract Storage is Ownable {
      */
     function authContracts (uint8 _userTypeA, uint8 _userTypeB, uint8 _userTypeC) private view returns (bool) {
         if (
-            (dataStorageUsers[msg.sender] == _userTypeA) ||
-            (dataStorageUsers[msg.sender] == _userTypeB) || 
-            (dataStorageUsers[msg.sender] == _userTypeC)){
+            (authorizedAdresses[msg.sender] == _userTypeA) ||
+            (authorizedAdresses[msg.sender] == _userTypeB) || 
+            (authorizedAdresses[msg.sender] == _userTypeC)){
             return (true);    
         } else {
             return(false);
@@ -292,7 +297,7 @@ contract Storage is Ownable {
     }
     
     
-        /*
+    /*
      * @dev Verify user credentials
      */     
     function authorizeUser (address _sender, bytes32 _idx) internal view {
