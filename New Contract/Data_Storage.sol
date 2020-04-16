@@ -82,7 +82,7 @@ contract Storage is Ownable {
     
     function XRETRIEVE_COSTS (uint16 _assetClass) external view returns (uint, uint, uint, uint, uint, uint, uint) {
         require (
-            authContracts(1,2,99),
+            dataStorageUsers[msg.sender] == 99,
             "DS:rR: user not authorized"
         );
 
@@ -117,9 +117,107 @@ contract Storage is Ownable {
     read fullHash, write registrant, registrars, FMC++ --force_mod
     read fullHash, write registrant, registrars, assetClass,countDownStart --new_record
     read fullHash, write countDown, registrars, assetClass,countDownStart --Decrement_countdown
+    */
     
+    function newRecord(address _user, bytes32 _idx, bytes32 _reg, uint16 _assetClass, uint _countDownStart, bytes32 _desc) public {
+       
+        require (
+            authContracts(1,2,99),
+            "DS:eR: user not authorized"
+        );
+        
+        authorizeUser(_user, _idx);
+        
+        database[_idx].assetClass = _assetClass;
+        database[_idx].countDownStart = _countDownStart;
+        database[_idx].countDown = _countDownStart;
+        database[_idx].registrar = keccak256(abi.encodePacked(_user));
+        database[_idx].registrant = _reg;
+        database[_idx].lastRegistrar = database[_idx].registrar;
+        database[_idx].forceModCount = 0;
+        database[_idx].description = _desc;
+    }
+    
+    
+    /*
+     * @dev Modify TRANSFER record REGISTRANT and STATUS
+     */
+    function transferAsset (address _user, bytes32 _idx, bytes32 _oldreg, bytes32 _newreg) internal {
+        
+        require (
+            authContracts(1,2,99),
+            "DS:eR: user not authorized"
+        );
+        
+        authorizeUser(_user, _idx);
+        
+        require(
+            database[_idx].registrant == _oldreg ,
+            "TA:ER:5"
+        );
+        require(
+            (database[_idx].status == 0) || (database[_idx].status == 1) ,
+            "TA:ER:7"
+        );
+        require(
+            _newreg != 0 ,
+            "TA:ER:9"
+        );
+        require(
+            database[_idx].registrant != _newreg ,
+            "TA:ER:8"
+        );
+        
+        database[_idx].registrant = _newreg;
+                
+        lastRegistrar(_user, _idx);
 
-
+    }
+    
+    
+    
+    
+    
+    
+ 
+ 
+    
+ 
+ 
+ 
+ 
+ 
+//----------------------------------------external READ ONLY contract functions  //authuser---------------------------------------------------------- 
+ 
+ 
+    /*
+     * @dev return a hash of a record less the description and note at _idxHash
+     */
+    function getHash(bytes32 _idxHash) public view returns (bytes32){
+        require (
+            authContracts(1,2,99),
+            "DS:eR: user not authorized"
+        );
+        keccak256(abi.encodePacked(database[_idxHash].registrar, database[_idxHash].registrant, database[_idxHash].lastRegistrar, database[_idxHash].status, 
+                database[_idxHash].forceModCount, database[_idxHash].assetClass, database[_idxHash].countDown, database[_idxHash].countDownStart));
+    }
+    
+    
+    /*
+     * @dev return a record minus description and note
+     */
+    function retrieveRecord (bytes32 _idxHash) external view returns (bytes32, bytes32, bytes32, uint8, uint8, uint16, uint, uint) {  
+        require (
+            authContracts(1,2,99),
+            "DS:rR: user not authorized"
+        );
+        
+        bytes32 idxHash = _idxHash ; //keccak256(abi.encodePacked(_idx));
+        return (database[idxHash].registrar, database[idxHash].registrant, database[idxHash].lastRegistrar, database[idxHash].status, 
+                database[idxHash].forceModCount, database[idxHash].assetClass, database[idxHash].countDown, database[idxHash].countDownStart);
+    }
+    
+    
     /*
      * @dev emit a complete record at _idxHash
      */
@@ -138,19 +236,12 @@ contract Storage is Ownable {
     
     
     
-    /*
-     * @dev return a record minus description and note
-     */
-    function retrieveRecord (bytes32 _idxHash) external view returns (bytes32, bytes32, bytes32, uint8, uint8, uint16, uint, uint) {  
-        require (
-            authContracts(1,2,99),
-            "DS:rR: user not authorized"
-        );
-        
-        bytes32 idxHash = _idxHash ; //keccak256(abi.encodePacked(_idx));
-        return (database[idxHash].registrar, database[idxHash].registrant, database[idxHash].lastRegistrar, database[idxHash].status, 
-                database[idxHash].forceModCount, database[idxHash].assetClass, database[idxHash].countDown, database[idxHash].countDownStart);
-    }
+    
+    
+    
+    
+    
+    
     
     
     //------------------------------------------------------------private functions-------------------------------------------------------------------
@@ -168,4 +259,54 @@ contract Storage is Ownable {
             return(false);
         }
     }
+    
+    
+        /*
+     * @dev Verify user credentials
+     */     
+    function authorizeUser (address _sender, bytes32 _idx) internal view {
+        uint8 senderType = registeredUsers[keccak256(abi.encodePacked(_sender))].userType;
+        
+        checkRecord(_idx);
+        
+        require(
+            (senderType == 1) || (senderType == 9) ,
+            "ER:1"
+        );
+        require(
+            database[_idx].assetClass == registeredUsers[keccak256(abi.encodePacked(_sender))].authorizedAssetClass ,
+            "ER:2"
+        );
+    }
+    
+    
+    /*
+     * @dev check record exists and is not locked
+     */     
+    function checkRecord(bytes32 _idx) internal view {
+        require(
+            database[_idx].registrant != 0 ,
+            "ER:3"
+        );
+        require(
+            database[_idx].status != 255 ,
+            "ER:4"
+        );
+        
+    }
+    
+    
+    /*
+     * @dev Update lastRegistrar
+     */ 
+    function lastRegistrar(address _sender, bytes32 _idx) internal {
+        bytes32 senderHash = keccak256(abi.encodePacked(_sender));
+        
+        if (((registeredUsers[database[_idx].registrar].userType == 1) || (_sender == owner())) 
+                        && (senderHash != database[_idx].registrar)) {     // Rotate last registrar into lastRegistrar field if uniuqe and not a robot
+            database[_idx].lastRegistrar = database[_idx].registrar;
+        }
+        database[_idx].registrar = keccak256(abi.encodePacked(_sender));
+    }
+
 }
