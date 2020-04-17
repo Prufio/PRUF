@@ -83,15 +83,15 @@ contract Storage is Ownable {
     /*
      * @dev Verify user credentials
      */     
-    modifier userAuth (bytes32 _sender, bytes32 _idx) {
-        uint8 senderType = registeredUsers[keccak256(abi.encodePacked(_sender))].userType;
+    modifier userAuth (bytes32 _senderHash, bytes32 _idxHash) {
+        uint8 senderType = registeredUsers[_senderHash].userType;
         
         require(
-            (senderType == 1) || (senderType == 9) ,
+            (senderType == 1) || (senderType == 9) || (database[_idxHash].assetClass > 8192),
             "AU:ERR-User not registered"
         );
         require(
-            database[_idx].assetClass == registeredUsers[keccak256(abi.encodePacked(_sender))].authorizedAssetClass ,
+            (database[_idxHash].assetClass == registeredUsers[_senderHash].authorizedAssetClass) || (database[_idxHash].assetClass > 8192),
             "AU:ERR-User not registered for asset type"
         );
         _;
@@ -200,11 +200,11 @@ contract Storage is Ownable {
        
         
         require(
-            registeredUsers[_userHash].userType == 1 ,
+            registeredUsers[_userHash].userType == 1 || (_assetClass > 8192),
             "NR:ERR-User not registered"
         );
         require(
-            _assetClass == registeredUsers[_userHash].authorizedAssetClass ,
+            (_assetClass == registeredUsers[_userHash].authorizedAssetClass) || (_assetClass > 8192) ,
             "NR:ERR-User not registered for asset class"
         );
         require(
