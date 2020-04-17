@@ -34,20 +34,23 @@ contract Storage is Ownable {
     }
     
 
-    mapping(address => uint8) internal authorizedAdresses;
+    mapping(bytes32 => uint8) private authorizedAdresses;
     
-    mapping(bytes32 => Record) internal database; //registry
+    mapping(bytes32 => Record) private database; //registry
     
-    mapping(bytes32 => User) internal registeredUsers; //authorized registrar database
+    mapping(bytes32 => User) private registeredUsers; //authorized registrar database
     
-    mapping(uint16 => Costs) internal cost; //cost per function by asset class
+    mapping(uint16 => Costs) private cost; //cost per function by asset class
     
     /*
     * Authorized external Contract / address types:   authorizedAdresses[]
-    * 1 read only
-    * 2 Read & Emit Only 
-    * 3 Emit Only
-    * 99 read / write / Emit
+    *
+    * 0   --NONE
+    * 1   --E
+    * 2   --RE
+    * 3   --RWE
+    * 4  --Administrator
+    * >4 NONE
     * Owner (onlyOwner)
     * other = unauth
     *
@@ -58,6 +61,60 @@ contract Storage is Ownable {
     *
     */
     
+    
+    
+    
+    
+    
+    
+     //--------------------------------------------------------------------------Modifiers----------------------------------------------------------   
+     /*
+     * @dev check msg.sender against authorized adresses
+     */
+    modifier addrAuth (uint8 _userType){
+        require ( 
+            (authorizedAdresses[keccak256(abi.encodePacked(msg.sender))] >= _userType) && (authorizedAdresses[keccak256(abi.encodePacked(msg.sender))] <= 4),
+            "Contract not authorized or improperly permissioned"
+            );
+            _;
+    }
+    
+ 
+    /*
+     * @dev Verify user credentials
+     */     
+    modifier userAuth (bytes32 _sender, bytes32 _idx) {
+        uint8 senderType = registeredUsers[keccak256(abi.encodePacked(_sender))].userType;
+        
+        require(
+            (senderType == 1) || (senderType == 9) ,
+            "AU:ERR-User not registered"
+        );
+        require(
+            database[_idx].assetClass == registeredUsers[keccak256(abi.encodePacked(_sender))].authorizedAssetClass ,
+            "AU:ERR-User not registered for asset type"
+        );
+        _;
+    }
+    
+    
+    /*
+     * @dev check record exists and is not locked
+     */     
+    modifier exists(bytes32 _idxHash) {
+        require(
+            database[_idxHash].registrant != 0 ,
+            "CR:ERR-record does not exist"
+        );
+        require(
+            database[_idxHash].status != 255 ,
+            "CR:ERR-record Locked"
+        );
+        _;
+        
+    }
+    
+
     
     //--------------------------------------------------------------------------Events----------------------------------------------------------
 
@@ -76,12 +133,12 @@ contract Storage is Ownable {
      * @dev Authorize / Deauthorize / Authorize users for an address be permitted to make record modifications
      * ----------------INSECURE -- keccak256 of address must be generated clientside in release.
      */
-    function authorizeUser(address _authAddr, uint8 userType, uint16 _authorizedAssetClass) external onlyOwner {
+    function addUser(address _authAddr, uint8 userType, uint16 _authorizedAssetClass) external onlyOwner {
       
         require((userType == 0)||(userType == 1)||(userType == 9) ,
         "AUTHU:ER-13 Invalid user type"
         );
-        
+
         bytes32 hash;
         hash = keccak256(abi.encodePacked(_authAddr));
         registeredUsers[hash].userType = userType;
@@ -92,13 +149,13 @@ contract Storage is Ownable {
      * @dev Authorize / Deauthorize / Authorize ADRESSES permitted to make record modifications
      * ----------------INSECURE -- keccak256 of address must be generated clientside in release.
      */
-    function AuthorizeContracts(address _addr, uint8 _userType) external onlyOwner {
+    function AddContract(address _addr, uint8 _userType) external onlyOwner {
         require ( 
-            ((_userType >= 0) && (_userType <= 3)) || (_userType == 99) ,
+            _userType <= 3,
             "AUTHC:ER-13 Invalid user type"
         );
         emit REPORT ("DS:SU: internal user database access!");  //report access to the internal user database
-        authorizedAdresses[_addr] = _userType;
+        authorizedAdresses[keccak256(abi.encodePacked(_addr))] = _userType;
     }
     
     
@@ -107,7 +164,7 @@ contract Storage is Ownable {
      */    
     function XRETRIEVE_COSTS (uint16 _assetClass) external view returns (uint, uint, uint, uint, uint, uint, uint) {
         require (
-            authorizedAdresses[msg.sender] == 99,
+            authorizedAdresses[keccak256(abi.encodePacked(msg.sender))] >= 3,
             "DS:rR: user not authorized"
         );
 
@@ -134,38 +191,24 @@ contract Storage is Ownable {
     
     //----------------------------------------external contract functions  //authuser----------------------------------------------------------
     
-    /*
-    * implement:
-    read fullHash, write note, registrars --add_note
-    read fullHash, write comment, registrars --change_comment
-    read fullHash, write status, registrars --change_status
-    read fullHash, write registrant, registrars --transfer_asset
-    *read fullHash, write registrant, registrars, FMC++ --force_mod
-    *read fullHash, write registrant, registrars, assetClass,countDownStart --new_record
-    read fullHash, write countDown, registrars, assetClass,countDownStart --Decrement_countdown
-    */
-    
+
     
     /*
      * @dev Make a new record in the database  *read fullHash, write registrant, registrars, assetClass,countDownStart --new_record
      */ 
-    function newRecord(address _user, bytes32 _idx, bytes32 _reg, uint16 _assetClass, uint _countDownStart, bytes32 _desc) external {
+    function newRecord(bytes32 _userHash, bytes32 _idxHash, bytes32 _reg, uint16 _assetClass, uint _countDownStart, bytes32 _desc) external addrAuth(3){
        
-        require (
-            authContracts(1,2,99),
-            "DS:eR: contract not authorized"
-        );
         
         require(
-            registeredUsers[keccak256(abi.encodePacked(_user))].userType == 1 ,
+            registeredUsers[_userHash].userType == 1 ,
             "NR:ERR-User not registered"
         );
         require(
-            _assetClass == registeredUsers[keccak256(abi.encodePacked(_user))].authorizedAssetClass ,
+            _assetClass == registeredUsers[_userHash].authorizedAssetClass ,
             "NR:ERR-User not registered for asset class"
         );
         require(
-            database[_idx].registrant == 0 ,
+            database[_idxHash].registrant == 0 ,
             "NR:ERR-Record already exists"
         );
         require(
@@ -173,56 +216,62 @@ contract Storage is Ownable {
             "NR:ERR-Registrant cannot be blank"
         );
         
-        database[_idx].assetClass = _assetClass;
-        database[_idx].countDownStart = _countDownStart;
-        database[_idx].countDown = _countDownStart;
-        database[_idx].registrar = keccak256(abi.encodePacked(_user));
-        database[_idx].registrant = _reg;
-        database[_idx].lastRegistrar = database[_idx].registrar;
-        database[_idx].forceModCount = 0;
-        database[_idx].description = _desc;
+        database[_idxHash].assetClass = _assetClass;
+        database[_idxHash].countDownStart = _countDownStart;
+        database[_idxHash].countDown = _countDownStart;
+        database[_idxHash].registrar = _userHash;
+        database[_idxHash].registrant = _reg;
+        database[_idxHash].lastRegistrar = database[_idxHash].registrar;
+        database[_idxHash].forceModCount = 0;
+        database[_idxHash].description = _desc;
     }
-    
     
     /*
-     * @dev Modify TRANSFER record REGISTRANT and STATUS  *read fullHash, write registrant, registrars --transfer_asset
-     */
-    function transferAsset (address _user, bytes32 _idx, bytes32 _oldreg, bytes32 _newreg) external {
-        
-        require (
-            authContracts(1,2,99),
-            "DS:eR: Contract not authorized"
-        );
-        
-        authorizeUser(_user, _idx);
-        
+    * @dev Modify a record in the database  *read fullHash, write registrant, update registrars, assetClass,countDown update registrars,
+    *
+    *Modifies
+        bytes32 registrar; // Address hash of registrar > internal
+        bytes32 registrant;  // KEK256 Registered  owner < external
+        bytes32 lastRegistrar; //// Address hash of last non-automation registrar > internal
+        uint8 status; // Status - Transferrable, locked, in transfer, stolen, lost, etc. < external
+        uint8 forceModCount; // Number of times asset has been forceModded. < external increment only
+        uint countDown; // variable that can only be dencreased from countDownStart < external reduction only
+    *
+    */ 
+    function ModifyRecord(bytes32 _userHash, bytes32 _idxHash, bytes32 _reg, uint8 _status, uint _countDown, uint8 _forceCount, bytes32 _writeHash) 
+                            external addrAuth(3) userAuth (_userHash, _idxHash) exists (_idxHash){
+                                
         require(
-            database[_idx].registrant == _oldreg ,
-            "TA:ERR- Data does not match"
-        );
-        require(
-            (database[_idx].status == 0) || (database[_idx].status == 1) ,
-            "TA:ERR-Asset nontransferrable"
-        );
-        require(
-            _newreg != 0 ,
-            "TA:ERR-Registrant cannot be blank"
+            _writeHash == keccak256(abi.encodePacked(getHash(_idxHash), _userHash, _idxHash, _reg, _status, _countDown, _forceCount )) ,
+            // requires that _writeHash is an identical hash of the oldhash and the new data
+            "MR:ERR-record has been changed or sent data invalid"
         );
         require(
-            database[_idx].registrant != _newreg ,
-            "TA:ERR-rew and old the same"
+            database[_idxHash].registrant != 0 ,
+            "MR:ERR-record does not exist"
+        );
+        require(
+            _reg != 0 ,
+            "MR:ERR-Registrant cannot be blank"
+        );
+        require(
+            _countDown <= database[_idxHash].countDown,
+            "MR:ERR-new countDown exceeds original countDown"
+        );
+        require(
+            _forceCount >= database[_idxHash].forceModCount,
+            "MR:ERR-new forceModCount less than original forceModCount"
         );
         
-        database[_idx].registrant = _newreg;
-                
-        lastRegistrar(_user, _idx);
-
+        database[_idxHash].registrant = _reg;
+        database[_idxHash].status = _status;
+        database[_idxHash].countDown = _countDown;
+        database[_idxHash].forceModCount = _forceCount;
+        lastRegistrar(_userHash, _idxHash);
     }
     
     
     
-    
- 
  
 //----------------------------------------external READ ONLY contract functions  //authuser---------------------------------------------------------- 
  
@@ -230,119 +279,65 @@ contract Storage is Ownable {
     /*
      * @dev return a hash of a record less the description and note at _idxHash
      */
-    function getHash(address _user, bytes32 _idxHash) public view returns (bytes32){
-        require (
-            authContracts(1,2,99),
-            "DS:eR: Contract not authorized"
-        );
-    
-        authorizeUser(_user, _idxHash);
-        
-        keccak256(abi.encodePacked(database[_idxHash].registrar, database[_idxHash].registrant, database[_idxHash].lastRegistrar, database[_idxHash].status, 
-                database[_idxHash].forceModCount, database[_idxHash].assetClass, database[_idxHash].countDown, database[_idxHash].countDownStart));
+    function getHash(bytes32 _idxHash) public view addrAuth(2) returns (bytes32) {
+       
+        return (keccak256(abi.encodePacked(database[_idxHash].registrar, database[_idxHash].registrant, database[_idxHash].lastRegistrar, database[_idxHash].status, 
+                database[_idxHash].forceModCount, database[_idxHash].assetClass, database[_idxHash].countDown, database[_idxHash].countDownStart,
+                database[_idxHash].description, database[_idxHash].note)));
     }
     
     
     /*
-     * @dev return a record minus description and note
+     * @dev return abbreviated record
      */
-    function retrieveRecord (address _user, bytes32 _idxHash) external view returns (bytes32, bytes32, bytes32, uint8, uint8, uint16, uint, uint) {  
-        require (
-            authContracts(1,2,99),
-            "DS:rR: user not authorized"
-        );
-        
-        authorizeUser(_user, _idxHash);
-        
-        bytes32 idxHash = _idxHash ; //keccak256(abi.encodePacked(_idx));
-        return (database[idxHash].registrar, database[idxHash].registrant, database[idxHash].lastRegistrar, database[idxHash].status, 
-                database[idxHash].forceModCount, database[idxHash].assetClass, database[idxHash].countDown, database[idxHash].countDownStart);
+    function retrieveRecord (bytes32 _idxHash) external view addrAuth(2) returns (bytes32, uint8, uint8, uint16, uint, uint, bytes32) {  
+
+        bytes32 idxHash = _idxHash ;
+        bytes32 recordHash = getHash(idxHash);
+
+        return (database[idxHash].registrant, database[idxHash].status, database[idxHash].forceModCount, 
+        database[idxHash].assetClass, database[idxHash].countDown, database[idxHash].countDownStart, recordHash);
+    }
+    
+     /*
+     * @dev return abbreviated record
+     */
+    function retrieveIPFSdata (bytes32 _idxHash) external view addrAuth(2) returns (bytes32, uint8, uint16, bytes32, bytes32, bytes32) {  
+
+        bytes32 idxHash = _idxHash ;
+        bytes32 recordHash = getHash(idxHash);
+
+        return (database[idxHash].registrant, database[idxHash].status,
+        database[idxHash].assetClass, database[_idxHash].description, database[_idxHash].note, recordHash);
     }
     
     
     /*
      * @dev emit a complete record at _idxHash
      */
-    function emitRecord (address _user, bytes32 _idxHash) external returns (bool) {
-        require (
-            authContracts(2,3,99),
-            "DS:eR: user not authorized"
-        );
-        
-        authorizeUser(_user, _idxHash);
+    function emitRecord (bytes32 _idxHash) external addrAuth(1) { 
         
         //emit EMIT_RECORD (database[_idx]);  //use when ABIencoder V2 is ready for prime-time
         emit EMIT_RECORD (database[_idxHash].registrar, database[_idxHash].registrant, database[_idxHash].lastRegistrar, database[_idxHash].status, 
                 database[_idxHash].forceModCount, database[_idxHash].assetClass, database[_idxHash].countDown, database[_idxHash].countDownStart, 
                 database[_idxHash].description, database[_idxHash].note);
-        return(true);
     }
     
- 
     
     //------------------------------------------------------------private functions-------------------------------------------------------------------
     
-    /*
-     * @dev check msg.sender against authorized adresses
-     */
-    function authContracts (uint8 _userTypeA, uint8 _userTypeB, uint8 _userTypeC) private view returns (bool) {
-        if (
-            (authorizedAdresses[msg.sender] == _userTypeA) ||
-            (authorizedAdresses[msg.sender] == _userTypeB) || 
-            (authorizedAdresses[msg.sender] == _userTypeC)){
-            return (true);    
-        } else {
-            return(false);
-        }
-    }
-    
-    
-    /*
-     * @dev Verify user credentials
-     */     
-    function authorizeUser (address _sender, bytes32 _idx) internal view {
-        uint8 senderType = registeredUsers[keccak256(abi.encodePacked(_sender))].userType;
-        
-        checkRecord(_idx);
-        
-        require(
-            (senderType == 1) || (senderType == 9) ,
-            "AU:ERR-User not registered"
-        );
-        require(
-            database[_idx].assetClass == registeredUsers[keccak256(abi.encodePacked(_sender))].authorizedAssetClass ,
-            "AU:ERR-User not registered for asset type"
-        );
-    }
-    
-    
-    /*
-     * @dev check record exists and is not locked
-     */     
-    function checkRecord(bytes32 _idx) internal view {
-        require(
-            database[_idx].registrant != 0 ,
-            "CR:ERR-record does not exist"
-        );
-        require(
-            database[_idx].status != 255 ,
-            "CR:ERR-record Locked"
-        );
-        
-    }
-    
-    
-    /*
+     /*
      * @dev Update lastRegistrar
      */ 
-    function lastRegistrar(address _sender, bytes32 _idx) internal {
-        bytes32 senderHash = keccak256(abi.encodePacked(_sender));
+    function lastRegistrar(bytes32 _senderHash, bytes32 _idxHash) private {
         
-        if (((registeredUsers[database[_idx].registrar].userType == 1) || (_sender == owner())) 
-                        && (senderHash != database[_idx].registrar)) {     // Rotate last registrar into lastRegistrar field if uniuqe and not a robot
-            database[_idx].lastRegistrar = database[_idx].registrar;
+        
+        if ( (registeredUsers[database[_idxHash].registrar].userType == 1) || (_senderHash == keccak256(abi.encodePacked(owner()))) 
+                        && (_senderHash != database[_idxHash].registrar) ) {     // Rotate last registrar into lastRegistrar field if uniuqe and not a robot
+            database[_idxHash].lastRegistrar = database[_idxHash].registrar;
         }
-        database[_idx].registrar = keccak256(abi.encodePacked(_sender));
+        database[_idxHash].registrar = keccak256(abi.encodePacked(_senderHash));
     }
-
+    
+   
 }
