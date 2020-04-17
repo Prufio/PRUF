@@ -24,13 +24,12 @@ contract Storage is Ownable {
     }
     
     struct Costs{
-        uint newRecord;
-        uint modStatus;
-        uint transferAsset;
-        uint changeDescription;
-        uint decrementCountdown;
-        uint forceMod;
-        uint addNote;
+        uint cost1;
+        uint cost2;
+        uint cost3;
+        uint cost4;
+        uint cost5;
+        uint cost6;
     }
     
 
@@ -162,30 +161,30 @@ contract Storage is Ownable {
     /*
      * @dev retrieve function costs per asset class, in Wei
      */    
-    function XRETRIEVE_COSTS (uint16 _assetClass) external view returns (uint, uint, uint, uint, uint, uint, uint) {
+    function XRETRIEVE_COSTS (uint16 _assetClass) external view returns (uint, uint, uint, uint, uint, uint) {
         require (
             authorizedAdresses[keccak256(abi.encodePacked(msg.sender))] >= 3,
             "DS:rR: user not authorized"
         );
 
-        return (cost[_assetClass].newRecord, cost[_assetClass].modStatus, cost[_assetClass].transferAsset, cost[_assetClass].changeDescription, 
-                cost[_assetClass].decrementCountdown, cost[_assetClass].forceMod, cost[_assetClass].addNote );
+        return (cost[_assetClass].cost1, cost[_assetClass].cost2, cost[_assetClass].cost3, cost[_assetClass].cost4, 
+                cost[_assetClass].cost5, cost[_assetClass].cost6);
     }
    
    
     /*
      * @dev Set function costs per asset class, in Wei
      */
-    function _SET_costs (uint16 _assetClass, uint _newRecord, uint _modStatus, uint _transferAsset, 
-                        uint _changeDescription, uint _decrementCountdown, uint _forceMod, uint _addNote) external onlyOwner {
+    function _SET_costs (uint16 _assetClass, uint _cost1, uint _cost2, uint _cost3, uint _cost4, 
+                        uint _cost5, uint _cost6) external onlyOwner {
                             
-        cost[_assetClass].newRecord = _newRecord;
-        cost[_assetClass].modStatus = _modStatus;
-        cost[_assetClass].transferAsset = _transferAsset;
-        cost[_assetClass].changeDescription = _changeDescription;
-        cost[_assetClass].decrementCountdown = _decrementCountdown;
-        cost[_assetClass].forceMod = _forceMod;
-        cost[_assetClass].addNote = _addNote;
+        cost[_assetClass].cost1 = _cost1;
+        cost[_assetClass].cost2 = _cost2;
+        cost[_assetClass].cost3 = _cost3;
+        cost[_assetClass].cost4 = _cost4;
+        cost[_assetClass].cost5 = _cost5;
+        cost[_assetClass].cost6 = _cost6;
+
     }
     
     
