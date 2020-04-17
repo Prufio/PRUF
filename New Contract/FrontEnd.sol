@@ -4,16 +4,14 @@ pragma solidity 0.6.0;
 import "./Ownable.sol";
 
 contract StorageInterface {
-
-    function newRecord(address _user, bytes32 _idx, bytes32 _reg, uint16 _assetClass, uint _countDownStart, bytes32 _desc) public {}
-   
-    function transferAsset (address _user, bytes32 _idx, bytes32 _oldreg, bytes32 _newreg) public {}
-   
-    function getHash(address _user, bytes32 _idxHash) public view returns (bytes32){}
-   
-    function retrieveRecord (address _user, bytes32 _idxHash) public view returns (bytes32, bytes32, bytes32, uint8, uint8, uint16, uint, uint) {}
-   
-    function emitRecord (address _user, bytes32 _idxHash) public returns (bool) {}
+    function emitRecord (bytes32 _idxHash) private {}
+    function retrieveIPFSdata (bytes32 _idxHash) private returns (bytes32, uint8, uint16, bytes32, bytes32, bytes32) {}
+    function retrieveRecord (bytes32 _idxHash) private returns (bytes32, uint8, uint8, uint16, uint, uint, bytes32) {}
+    function getHash(bytes32 _idxHash) private returns (bytes32) {}
+    function modifyIPFS1 (bytes32 _userHash, bytes32 _idxHash, bytes32 _IPFS1, bytes32 _writeHash) public {}
+    function modifyIPFS2 (bytes32 _userHash, bytes32 _idxHash, bytes32 _IPFS2, bytes32 _writeHash) public {}
+    function ModifyRecord(bytes32 _userHash, bytes32 _idxHash, bytes32 _reg, uint8 _status, uint _countDown, uint8 _forceCount, bytes32 _writeHash) public {}
+    function newRecord(bytes32 _userHash, bytes32 _idxHash, bytes32 _reg, uint16 _assetClass, uint _countDownStart, bytes32 _IPFS1) public {}
 }
 
 

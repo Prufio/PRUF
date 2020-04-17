@@ -14,8 +14,8 @@ contract Storage is Ownable {
         uint16 assetClass; //Type of asset
         uint countDown; // variable that can only be dencreased from countDownStart
         uint countDownStart; //starting point for countdown variable (set once)
-        bytes32 description; // publically viewable asset description
-        bytes32 note; // publically viewable immutable notes
+        bytes32 IPFS1; // publically viewable asset description
+        bytes32 IPFS2; // publically viewable immutable notes
     }
     
     struct User {
@@ -61,11 +61,6 @@ contract Storage is Ownable {
     */
     
     
-    
-    
-    
-    
-    
      //--------------------------------------------------------------------------Modifiers----------------------------------------------------------   
      /*
      * @dev check msg.sender against authorized adresses
@@ -73,6 +68,7 @@ contract Storage is Ownable {
     modifier addrAuth (uint8 _userType){
         require ( 
             (authorizedAdresses[keccak256(abi.encodePacked(msg.sender))] >= _userType) && (authorizedAdresses[keccak256(abi.encodePacked(msg.sender))] <= 4),
+            //|| (authorizedAdresses[keccak256(abi.encodePacked(msg.sender))] == authorizedAdresses[keccak256(abi.encodePacked(owner()))]),
             "Contract not authorized or improperly permissioned"
             );
             _;
@@ -161,11 +157,7 @@ contract Storage is Ownable {
     /*
      * @dev retrieve function costs per asset class, in Wei
      */    
-    function XRETRIEVE_COSTS (uint16 _assetClass) external view returns (uint, uint, uint, uint, uint, uint) {
-        require (
-            authorizedAdresses[keccak256(abi.encodePacked(msg.sender))] >= 3,
-            "DS:rR: user not authorized"
-        );
+    function XRETRIEVE_COSTS (uint16 _assetClass) external view addrAuth(3) returns (uint, uint, uint, uint, uint, uint) {
 
         return (cost[_assetClass].cost1, cost[_assetClass].cost2, cost[_assetClass].cost3, cost[_assetClass].cost4, 
                 cost[_assetClass].cost5, cost[_assetClass].cost6);
@@ -175,8 +167,7 @@ contract Storage is Ownable {
     /*
      * @dev Set function costs per asset class, in Wei
      */
-    function _SET_costs (uint16 _assetClass, uint _cost1, uint _cost2, uint _cost3, uint _cost4, 
-                        uint _cost5, uint _cost6) external onlyOwner {
+    function _SET_costs (uint16 _assetClass, uint _cost1, uint _cost2, uint _cost3, uint _cost4, uint _cost5, uint _cost6) external onlyOwner {
                             
         cost[_assetClass].cost1 = _cost1;
         cost[_assetClass].cost2 = _cost2;
@@ -188,14 +179,14 @@ contract Storage is Ownable {
     }
     
     
-    //----------------------------------------external contract functions  //authuser----------------------------------------------------------
+    //----------------------------------------external contract write functions  //authuser----------------------------------------------------------
     
 
     
     /*
      * @dev Make a new record in the database  *read fullHash, write registrant, registrars, assetClass,countDownStart --new_record
      */ 
-    function newRecord(bytes32 _userHash, bytes32 _idxHash, bytes32 _reg, uint16 _assetClass, uint _countDownStart, bytes32 _desc) external addrAuth(3){
+    function newRecord(bytes32 _userHash, bytes32 _idxHash, bytes32 _reg, uint16 _assetClass, uint _countDownStart, bytes32 _IPFS1) external addrAuth(3){
        
         
         require(
@@ -222,7 +213,7 @@ contract Storage is Ownable {
         database[_idxHash].registrant = _reg;
         database[_idxHash].lastRegistrar = database[_idxHash].registrar;
         database[_idxHash].forceModCount = 0;
-        database[_idxHash].description = _desc;
+        database[_idxHash].IPFS1= _IPFS1;
     }
     
     /*
@@ -246,10 +237,6 @@ contract Storage is Ownable {
             "MR:ERR-record has been changed or sent data invalid"
         );
         require(
-            database[_idxHash].registrant != 0 ,
-            "MR:ERR-record does not exist"
-        );
-        require(
             _reg != 0 ,
             "MR:ERR-Registrant cannot be blank"
         );
@@ -270,6 +257,50 @@ contract Storage is Ownable {
     }
     
     
+    /*
+     * @dev modify record IPFS1 data
+     */
+    function modifyIPFS1 (bytes32 _userHash, bytes32 _idxHash, bytes32 _IPFS1, bytes32 _writeHash) external addrAuth(3) userAuth (_userHash, _idxHash) exists (_idxHash){
+        require(
+            _writeHash == keccak256(abi.encodePacked(getHash(_idxHash), _userHash, _idxHash, _IPFS1)) ,
+            // requires that _writeHash is an identical hash of the oldhash and the new data
+            "MR:ERR-record has been changed or sent data invalid"
+        );
+        require(
+            database[_idxHash].IPFS1 != _IPFS1,
+            "MIPFS2:ERR-- New IPFS Data identical to old"
+        );
+        
+        
+        if (database[_idxHash].IPFS1 != _IPFS1) {
+            database[_idxHash].IPFS1 = _IPFS1;
+        }
+        
+        lastRegistrar(_userHash, _idxHash);
+    }
+    
+    
+    /*
+     * @dev modify record IPFS2 data
+     */
+    function modifyIPFS2 (bytes32 _userHash, bytes32 _idxHash, bytes32 _IPFS2, bytes32 _writeHash) external addrAuth(3) userAuth (_userHash, _idxHash) exists (_idxHash){
+        require(
+            _writeHash == keccak256(abi.encodePacked(getHash(_idxHash), _userHash, _idxHash, _IPFS2)) ,
+            // requires that _writeHash is an identical hash of the oldhash and the new data
+            "MR:ERR-record has been changed or sent data invalid"
+        );
+        require(
+            database[_idxHash].IPFS2 == 0,
+            "MIPFS2:ERR-IPFS2 Data already exists and cannot be overwritten"
+        );
+        
+        if (database[_idxHash].IPFS2 == 0) {
+            database[_idxHash].IPFS2 = _IPFS2;
+        }
+        
+        lastRegistrar(_userHash, _idxHash);
+    }
+    
     
  
 //----------------------------------------external READ ONLY contract functions  //authuser---------------------------------------------------------- 
@@ -282,14 +313,14 @@ contract Storage is Ownable {
        
         return (keccak256(abi.encodePacked(database[_idxHash].registrar, database[_idxHash].registrant, database[_idxHash].lastRegistrar, database[_idxHash].status, 
                 database[_idxHash].forceModCount, database[_idxHash].assetClass, database[_idxHash].countDown, database[_idxHash].countDownStart,
-                database[_idxHash].description, database[_idxHash].note)));
+                database[_idxHash].IPFS1, database[_idxHash].IPFS2)));
     }
     
     
     /*
      * @dev return abbreviated record
      */
-    function retrieveRecord (bytes32 _idxHash) external view addrAuth(2) returns (bytes32, uint8, uint8, uint16, uint, uint, bytes32) {  
+   function retrieveRecord (bytes32 _idxHash) external view addrAuth(2) returns (bytes32, uint8, uint8, uint16, uint, uint, bytes32) {   
 
         bytes32 idxHash = _idxHash ;
         bytes32 recordHash = getHash(idxHash);
@@ -303,11 +334,10 @@ contract Storage is Ownable {
      */
     function retrieveIPFSdata (bytes32 _idxHash) external view addrAuth(2) returns (bytes32, uint8, uint16, bytes32, bytes32, bytes32) {  
 
-        bytes32 idxHash = _idxHash ;
-        bytes32 recordHash = getHash(idxHash);
+        bytes32 recordHash = getHash(_idxHash);
 
-        return (database[idxHash].registrant, database[idxHash].status,
-        database[idxHash].assetClass, database[_idxHash].description, database[_idxHash].note, recordHash);
+        return (database[_idxHash].registrant, database[_idxHash].status,
+        database[_idxHash].assetClass, database[_idxHash].IPFS1, database[_idxHash].IPFS2, recordHash);
     }
     
     
@@ -319,7 +349,7 @@ contract Storage is Ownable {
         //emit EMIT_RECORD (database[_idx]);  //use when ABIencoder V2 is ready for prime-time
         emit EMIT_RECORD (database[_idxHash].registrar, database[_idxHash].registrant, database[_idxHash].lastRegistrar, database[_idxHash].status, 
                 database[_idxHash].forceModCount, database[_idxHash].assetClass, database[_idxHash].countDown, database[_idxHash].countDownStart, 
-                database[_idxHash].description, database[_idxHash].note);
+                database[_idxHash].IPFS1, database[_idxHash].IPFS2);
     }
     
     
