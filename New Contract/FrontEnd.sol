@@ -62,7 +62,7 @@ contract FrontEnd is Ownable {
     
     /*
      * @dev string to B32
-     */
+     
     function stringToBytes32(string memory source) private pure returns (bytes32 result) {
         bytes memory tempEmptyStringTest = bytes(source);
         
@@ -74,16 +74,19 @@ contract FrontEnd is Ownable {
             result := mload(add(source, 32))
         }
     }
+    */
+    
     
 //-----------------------------------------------------------External functions-----------------------------------------------------------
 //SECURITY NOTE: MANY of these functions take strings. in production, all strings would be converted to hashes before being sent to the contract
 //so these funtions would be accepting pre-hashed bytes32 instead of strings.
     
+   
     /*
-     * @dev Wrapper for emitRecord
+     * @dev Wrapper for retrieveRecord
      */
-    function _EMIT_RECORD (string calldata _idx) external {
-        Storage.emitRecord (keccak256(abi.encodePacked(_idx)));
+    function _RETRIEVE_RECORD (string calldata _idx) external returns (bytes32, uint8, uint8, uint16, uint, uint, bytes32) {
+        return Storage.retrieveRecord (keccak256(abi.encodePacked(_idx)));
     }
     
     
@@ -91,15 +94,7 @@ contract FrontEnd is Ownable {
      * @dev Wrapper for retrieveIPFSdata
      */
     function _GET_IPFS (string calldata _idx) external returns (bytes32, uint8, uint16, bytes32, bytes32, bytes32) {
-        Storage.retrieveIPFSdata (keccak256(abi.encodePacked(_idx)));
-    }
-    
-    
-    /*
-     * @dev Wrapper for retrieveRecord
-     */
-    function _RETRIEVE_RECORD (string calldata _idx) external returns (bytes32, uint8, uint8, uint16, uint, uint, bytes32) {
-        Storage.retrieveRecord (keccak256(abi.encodePacked(_idx)));
+        return Storage.retrieveIPFSdata (keccak256(abi.encodePacked(_idx)));
     }
     
     
@@ -107,7 +102,15 @@ contract FrontEnd is Ownable {
      * @dev Wrapper for GetHash
      */
     function _GET_HASH (string calldata _idx) external returns (bytes32){
-        Storage.getHash (keccak256(abi.encodePacked(_idx)));
+        return Storage.getHash (keccak256(abi.encodePacked(_idx)));
+    }
+    
+    
+     /*
+     * @dev Wrapper for emitRecord
+     */
+    function _EMIT_RECORD (string calldata _idx) external {
+        Storage.emitRecord (keccak256(abi.encodePacked(_idx)));
     }
     
     

@@ -184,7 +184,7 @@ contract Storage is Ownable {
     }
     
     
-    //----------------------------------------external contract write functions  //authuser----------------------------------------------------------
+    //----------------------------------------external contract functions  //authuser----------------------------------------------------------
     
 
     
@@ -315,15 +315,7 @@ contract Storage is Ownable {
 //----------------------------------------external READ ONLY contract functions  //authuser---------------------------------------------------------- 
  
  
-    /*
-     * @dev return a hash of a record less the description and note at _idxHash
-     */
-    function getHash(bytes32 _idxHash) public view addrAuth(2) exists (_idxHash) returns (bytes32) {
-       
-        return (keccak256(abi.encodePacked(database[_idxHash].registrar, database[_idxHash].registrant, database[_idxHash].lastRegistrar, database[_idxHash].status, 
-                database[_idxHash].forceModCount, database[_idxHash].assetClass, database[_idxHash].countDown, database[_idxHash].countDownStart,
-                database[_idxHash].IPFS1, database[_idxHash].IPFS2)));
-    }
+
     
     
     /*
@@ -331,11 +323,10 @@ contract Storage is Ownable {
      */
    function retrieveRecord (bytes32 _idxHash) external view addrAuth(2) exists (_idxHash) returns (bytes32, uint8, uint8, uint16, uint, uint, bytes32) {   
 
-        bytes32 idxHash = _idxHash ;
-        bytes32 recordHash = getHash(idxHash);
+        bytes32 idxHash = _idxHash ;  //somehow magically saves the stack.
 
         return (database[idxHash].registrant, database[idxHash].status, database[idxHash].forceModCount, 
-        database[idxHash].assetClass, database[idxHash].countDown, database[idxHash].countDownStart, recordHash);
+        database[idxHash].assetClass, database[idxHash].countDown, database[idxHash].countDownStart, getHash(idxHash));
     }
     
      /*
@@ -343,10 +334,8 @@ contract Storage is Ownable {
      */
     function retrieveIPFSdata (bytes32 _idxHash) external view addrAuth(2) exists (_idxHash) returns (bytes32, uint8, uint16, bytes32, bytes32, bytes32) {  
 
-        bytes32 recordHash = getHash(_idxHash);
-
         return (database[_idxHash].registrant, database[_idxHash].status,
-        database[_idxHash].assetClass, database[_idxHash].IPFS1, database[_idxHash].IPFS2, recordHash);
+        database[_idxHash].assetClass, database[_idxHash].IPFS1, database[_idxHash].IPFS2, getHash(_idxHash));
     }
     
     
@@ -362,6 +351,19 @@ contract Storage is Ownable {
     }
     
     
+    /*
+     * @dev return a hash of a record
+     */
+    function getHash(bytes32 _idxHash) public view addrAuth(2) exists (_idxHash) returns (bytes32) {
+    
+        return (keccak256(abi.encodePacked(database[_idxHash].registrar, database[_idxHash].registrant, database[_idxHash].lastRegistrar, database[_idxHash].status, 
+                database[_idxHash].forceModCount, database[_idxHash].assetClass, database[_idxHash].countDown, database[_idxHash].countDownStart,
+                database[_idxHash].IPFS1, database[_idxHash].IPFS2)));
+    }
+    
+    
+    
+    
     //------------------------------------------------------------private functions-------------------------------------------------------------------
     
      /*
@@ -375,6 +377,19 @@ contract Storage is Ownable {
             database[_idxHash].lastRegistrar = database[_idxHash].registrar;
         }
         database[_idxHash].registrar = keccak256(abi.encodePacked(_senderHash));
+    }
+    
+    
+     /*
+     * @dev Wrapper for comparing records // ------------------------testing
+     */
+    function XCOMPARE_REG (string calldata _idx, string calldata _reg) external view addrAuth(1) returns(string memory) {
+         
+        if (keccak256(abi.encodePacked(_reg)) == database[keccak256(abi.encodePacked(_idx))].registrant) {
+            return "Registrant match confirmed";
+        } else {
+            return "Registrant does not match";
+        }
     }
     
 }
