@@ -129,7 +129,7 @@ contract FrontEnd is Ownable {
         bytes32 _idxHash = keccak256(abi.encodePacked(_idx));//temp
         bytes32 _regHash = keccak256(abi.encodePacked(_reg));//temp
         bytes32 _recordHash = Storage.getHash(_idxHash);//temp until is in function arguments-------------------------------------TESTING
-        bytes32 writeHash = keccak256(abi.encodePacked(_recordHash, userHash, _idxHash, _reg, _status, _countDown, _forceCount));
+        bytes32 writeHash = keccak256(abi.encodePacked(_recordHash, userHash, _idxHash, _regHash, _status, _countDown, _forceCount));
         
         Storage.modifyRecord(userHash, _idxHash, _regHash, _status, _countDown, _forceCount, writeHash);
     }

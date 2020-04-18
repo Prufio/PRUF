@@ -96,14 +96,19 @@ contract Storage is Ownable {
     /*
      * @dev check record exists and is not locked
      */     
+    modifier unlocked(bytes32 _idxHash) {
+        require(
+            database[_idxHash].status != 255 ,
+            "CR:ERR-record Locked"
+        );
+        _;
+        
+    }
+    
     modifier exists(bytes32 _idxHash) {
         require(
             database[_idxHash].registrant != 0 ,
             "CR:ERR-record does not exist"
-        );
-        require(
-            database[_idxHash].status != 255 ,
-            "CR:ERR-record Locked"
         );
         _;
         
@@ -227,17 +232,21 @@ contract Storage is Ownable {
         uint8 forceModCount; // Number of times asset has been forceModded. < external increment only
         uint countDown; // variable that can only be dencreased from countDownStart < external reduction only
     *
+    
+    bytes32 writeHash = keccak256(abi.encodePacked(_recordHash, userHash, _idxHash, _reg, _status, _countDown, _forceCount));
+        
+    Storage.modifyRecord(userHash, _idxHash, _regHash, _status, _countDown, _forceCount, writeHash);
     */ 
-    function modifyRecord(bytes32 _userHash, bytes32 _idxHash, bytes32 _reg, uint8 _status, uint _countDown, uint8 _forceCount, bytes32 _writeHash) 
-                            external addrAuth(3) userAuth (_userHash, _idxHash) exists (_idxHash){
+    function modifyRecord(bytes32 _userHash, bytes32 _idxHash, bytes32 _regHash, uint8 _status, uint _countDown, uint8 _forceCount, bytes32 _writeHash) 
+                            external addrAuth(3) userAuth (_userHash, _idxHash) exists (_idxHash) unlocked (_idxHash){
                                 
         require(
-            _writeHash == keccak256(abi.encodePacked(getHash(_idxHash), _userHash, _idxHash, _reg, _status, _countDown, _forceCount )) ,
+            _writeHash == keccak256(abi.encodePacked(getHash(_idxHash), _userHash, _idxHash, _regHash, _status, _countDown, _forceCount )) ,
             // requires that _writeHash is an identical hash of the oldhash and the new data
             "MR:ERR-record has been changed or sent data invalid"
         );
         require(
-            _reg != 0 ,
+            _regHash != 0 ,
             "MR:ERR-Registrant cannot be blank"
         );
         require(
@@ -249,7 +258,7 @@ contract Storage is Ownable {
             "MR:ERR-new forceModCount less than original forceModCount"
         );
         
-        database[_idxHash].registrant = _reg;
+        database[_idxHash].registrant = _regHash;
         database[_idxHash].status = _status;
         database[_idxHash].countDown = _countDown;
         database[_idxHash].forceModCount = _forceCount;
@@ -260,7 +269,7 @@ contract Storage is Ownable {
     /*
      * @dev modify record IPFS1 data
      */
-    function modifyIPFS1 (bytes32 _userHash, bytes32 _idxHash, bytes32 _IPFS1, bytes32 _writeHash) external addrAuth(3) userAuth (_userHash, _idxHash) exists (_idxHash){
+    function modifyIPFS1 (bytes32 _userHash, bytes32 _idxHash, bytes32 _IPFS1, bytes32 _writeHash) external addrAuth(3) userAuth (_userHash, _idxHash) exists (_idxHash) unlocked (_idxHash) {
         require(
             _writeHash == keccak256(abi.encodePacked(getHash(_idxHash), _userHash, _idxHash, _IPFS1)) ,
             // requires that _writeHash is an identical hash of the oldhash and the new data
@@ -283,7 +292,7 @@ contract Storage is Ownable {
     /*
      * @dev modify record IPFS2 data
      */
-    function modifyIPFS2 (bytes32 _userHash, bytes32 _idxHash, bytes32 _IPFS2, bytes32 _writeHash) external addrAuth(3) userAuth (_userHash, _idxHash) exists (_idxHash){
+    function modifyIPFS2 (bytes32 _userHash, bytes32 _idxHash, bytes32 _IPFS2, bytes32 _writeHash) external addrAuth(3) userAuth (_userHash, _idxHash) exists (_idxHash) unlocked (_idxHash) {
         require(
             _writeHash == keccak256(abi.encodePacked(getHash(_idxHash), _userHash, _idxHash, _IPFS2)) ,
             // requires that _writeHash is an identical hash of the oldhash and the new data
@@ -309,7 +318,7 @@ contract Storage is Ownable {
     /*
      * @dev return a hash of a record less the description and note at _idxHash
      */
-    function getHash(bytes32 _idxHash) public view addrAuth(2) returns (bytes32) {
+    function getHash(bytes32 _idxHash) public view addrAuth(2) exists (_idxHash) returns (bytes32) {
        
         return (keccak256(abi.encodePacked(database[_idxHash].registrar, database[_idxHash].registrant, database[_idxHash].lastRegistrar, database[_idxHash].status, 
                 database[_idxHash].forceModCount, database[_idxHash].assetClass, database[_idxHash].countDown, database[_idxHash].countDownStart,
@@ -320,7 +329,7 @@ contract Storage is Ownable {
     /*
      * @dev return abbreviated record
      */
-   function retrieveRecord (bytes32 _idxHash) external view addrAuth(2) returns (bytes32, uint8, uint8, uint16, uint, uint, bytes32) {   
+   function retrieveRecord (bytes32 _idxHash) external view addrAuth(2) exists (_idxHash) returns (bytes32, uint8, uint8, uint16, uint, uint, bytes32) {   
 
         bytes32 idxHash = _idxHash ;
         bytes32 recordHash = getHash(idxHash);
@@ -332,7 +341,7 @@ contract Storage is Ownable {
      /*
      * @dev return abbreviated record
      */
-    function retrieveIPFSdata (bytes32 _idxHash) external view addrAuth(2) returns (bytes32, uint8, uint16, bytes32, bytes32, bytes32) {  
+    function retrieveIPFSdata (bytes32 _idxHash) external view addrAuth(2) exists (_idxHash) returns (bytes32, uint8, uint16, bytes32, bytes32, bytes32) {  
 
         bytes32 recordHash = getHash(_idxHash);
 
@@ -344,7 +353,7 @@ contract Storage is Ownable {
     /*
      * @dev emit a complete record at _idxHash
      */
-    function emitRecord (bytes32 _idxHash) external addrAuth(1) { 
+    function emitRecord (bytes32 _idxHash) external addrAuth(1) exists (_idxHash) { 
         
         //emit EMIT_RECORD (database[_idx]);  //use when ABIencoder V2 is ready for prime-time
         emit EMIT_RECORD (database[_idxHash].registrar, database[_idxHash].registrant, database[_idxHash].lastRegistrar, database[_idxHash].status, 
@@ -358,7 +367,7 @@ contract Storage is Ownable {
      /*
      * @dev Update lastRegistrar
      */ 
-    function lastRegistrar(bytes32 _senderHash, bytes32 _idxHash) private {
+    function lastRegistrar(bytes32 _senderHash, bytes32 _idxHash) private exists (_idxHash) {
         
         
         if ( (registeredUsers[database[_idxHash].registrar].userType == 1) || (_senderHash == keccak256(abi.encodePacked(owner()))) 
@@ -368,5 +377,4 @@ contract Storage is Ownable {
         database[_idxHash].registrar = keccak256(abi.encodePacked(_senderHash));
     }
     
-   
 }
