@@ -228,7 +228,7 @@ contract Storage is Ownable {
         uint countDown; // variable that can only be dencreased from countDownStart < external reduction only
     *
     */ 
-    function ModifyRecord(bytes32 _userHash, bytes32 _idxHash, bytes32 _reg, uint8 _status, uint _countDown, uint8 _forceCount, bytes32 _writeHash) 
+    function modifyRecord(bytes32 _userHash, bytes32 _idxHash, bytes32 _reg, uint8 _status, uint _countDown, uint8 _forceCount, bytes32 _writeHash) 
                             external addrAuth(3) userAuth (_userHash, _idxHash) exists (_idxHash){
                                 
         require(
