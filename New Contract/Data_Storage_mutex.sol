@@ -18,8 +18,8 @@ contract Storage is Ownable {
         uint countDownStart; //starting point for countdown variable (set once)
         bytes32 IPFS1; // publically viewable asset description
         bytes32 IPFS2; // publically viewable immutable notes
-        // uint timeLock; // time sensitive mutex
-        //uint checkOut; // checkout number
+        uint timeLock; // time sensitive mutex
+        uint checkOut; // checkout number
     }
     
     struct User {
@@ -118,14 +118,14 @@ contract Storage is Ownable {
         
     }
     
-    //modifier notTimeLocked(bytes32 _idxHash) { //this modifier makes the bold assumption the block number will "never" be reset. hopefully, this is true...
-    //    require(
-    //        database[_idxHash].timeLock < block.number,
-    //        "CR:ERR-record Locked"
-    //    );
-    //    _;
+    modifier notTimeLocked(bytes32 _idxHash) { //this modifier makes the bold assumption the block number will "never" be reset. hopefully, this is true...
+        require(
+            database[_idxHash].timeLock < block.number,
+            "CR:ERR-record Locked"
+        );
+        _;
         
-    //}
+    }
     
 
     
@@ -208,11 +208,11 @@ contract Storage is Ownable {
         database[_idxHash].status = 0; //set to unspecified status
     }
     
-    //function ADMIN_SET_TIMELOCK (string calldata _idx, uint _blockNumber) external onlyOwner { //---------------------------------------INSECURE USE HASH!!!! 
-    //                                                    //for testing only should be (b32 _idxHash) exists(_idxHash) onlyOwner
-    //    bytes32 _idxHash = keccak256(abi.encodePacked(_idx));  // TESTING ONLY
-    //    database[_idxHash].timeLock = _blockNumber; //set lock to expiration blocknumber
-    //}
+    function ADMIN_SET_TIMELOCK (string calldata _idx, uint _blockNumber) external onlyOwner { //---------------------------------------INSECURE USE HASH!!!! 
+                                                        //for testing only should be (b32 _idxHash) exists(_idxHash) onlyOwner
+        bytes32 _idxHash = keccak256(abi.encodePacked(_idx));  // TESTING ONLY
+        database[_idxHash].timeLock = _blockNumber; //set lock to expiration blocknumber
+    }
     
     
     //----------------------------------------external contract functions  //authuser----------------------------------------------------------
@@ -290,11 +290,13 @@ contract Storage is Ownable {
             "MR:ERR-new forceModCount less than original forceModCount"
         );
         
+        database[_idxHash].checkOut ++;
         database[_idxHash].registrant = _regHash;
         database[_idxHash].status = _status;
         database[_idxHash].countDown = _countDown;
         database[_idxHash].forceModCount = _forceCount;
         lastRegistrar(_userHash, _idxHash);
+        database[_idxHash].timeLock = 0;
         
     }
     
@@ -365,6 +367,22 @@ contract Storage is Ownable {
     }
 
     
+    
+    
+    function checkOutRecord (bytes32 _idxHash) external addrAuth(3) exists (_idxHash) returns (bytes32) {  
+        require ( 
+            database[_idxHash].timeLock < block.number,
+            "record already checked out"
+        );
+        database[_idxHash].timeLock = block.number;
+        database[_idxHash].checkOut ++;
+        
+        return (keccak256(abi.encodePacked(database[_idxHash].registrar, database[_idxHash].registrant, database[_idxHash].lastRegistrar, database[_idxHash].status, 
+                database[_idxHash].forceModCount, database[_idxHash].assetClass, database[_idxHash].countDown, database[_idxHash].countDownStart,
+                database[_idxHash].IPFS1, database[_idxHash].IPFS2,database[_idxHash].checkOut)));
+    }
+    
+    
      /*
      * @dev return abbreviated record
      */
@@ -394,7 +412,7 @@ contract Storage is Ownable {
     
         return (keccak256(abi.encodePacked(database[_idxHash].registrar, database[_idxHash].registrant, database[_idxHash].lastRegistrar, database[_idxHash].status, 
                 database[_idxHash].forceModCount, database[_idxHash].assetClass, database[_idxHash].countDown, database[_idxHash].countDownStart,
-                database[_idxHash].IPFS1, database[_idxHash].IPFS2))); //,database[_idxHash].checkOut)));
+                database[_idxHash].IPFS1, database[_idxHash].IPFS2,database[_idxHash].checkOut)));
     }
     
     

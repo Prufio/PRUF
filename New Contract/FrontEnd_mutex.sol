@@ -8,7 +8,9 @@ contract StorageInterface {
     function retrieveIPFSdata (bytes32 _idxHash) external returns (bytes32, uint8, uint16, bytes32, bytes32, bytes32) {}
     function retrieveRecord (bytes32 _idxHash) external returns (bytes32, uint8, uint8, uint16, uint, uint, bytes32) {}
     function getHash(bytes32 _idxHash) external returns (bytes32) {}
-
+    
+    function checkOutRecord (bytes32 _idxHash) external returns (bytes32) {}
+    
     function newRecord(bytes32 _userHash, bytes32 _idxHash, bytes32 _reg, uint16 _assetClass, uint _countDownStart, bytes32 _IPFS1) external {}
     
     function modifyRecord(bytes32 _userHash, bytes32 _idxHash, bytes32 _reg, uint8 _status, uint _countDown, uint8 _forceCount, bytes32 _writeHash) external {}
@@ -132,7 +134,7 @@ contract FrontEnd is Ownable {
         bytes32 userHash = keccak256(abi.encodePacked(msg.sender));
         bytes32 _idxHash = keccak256(abi.encodePacked(_idx));//temp
         bytes32 _regHash = keccak256(abi.encodePacked(_reg));//temp
-        bytes32 _recordHash = Storage.getHash(_idxHash);//temp until is in function arguments-------------------------------------
+        bytes32 _recordHash = Storage.checkOutRecord(_idxHash);//temp until is in function arguments-------------------------------------TESTING  //checkOutRecord
         bytes32 writeHash = keccak256(abi.encodePacked(_recordHash, userHash, _idxHash, _regHash, _status, _countDown, _forceCount));
         
         Storage.modifyRecord(userHash, _idxHash, _regHash, _status, _countDown, _forceCount, writeHash);
