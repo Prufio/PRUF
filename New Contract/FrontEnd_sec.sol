@@ -6,10 +6,10 @@ import "./Ownable.sol";
 contract StorageInterface {
     function emitRecord (bytes32 _idxHash) external {}
     function retrieveIPFSdata (bytes32 _idxHash) external returns (bytes32, uint8, uint16, bytes32, bytes32, bytes32) {}
-    function retrieveRecord (bytes32 _idxHash) external returns (bytes32, uint8, uint8, uint16, uint, uint, bytes32) {}
+    function retrieveRecord (bytes32 _idxHash) external returns (bytes32, uint8, uint8, uint16, uint, uint) {}
     function getHash(bytes32 _idxHash) external returns (bytes32) {}
     
-    function checkOutRecord (bytes32 _idxHash) external returns (bytes32) {}
+    function checkOutRecord (bytes32 _idxHash, bytes32 _) external returns (bytes32) {}
     
     function newRecord(bytes32 _userHash, bytes32 _idxHash, bytes32 _reg, uint16 _assetClass, uint _countDownStart, bytes32 _IPFS1) external {}
     
@@ -21,7 +21,7 @@ contract StorageInterface {
 
 contract FrontEnd is Ownable {
     
-    struct Record {
+       struct Record {
         bytes32 registrar; // Address hash of registrar 
         bytes32 registrant;  // KEK256 Registered  owner
         bytes32 lastRegistrar; //// Address hash of last non-automation registrar
@@ -32,6 +32,8 @@ contract FrontEnd is Ownable {
         uint countDownStart; //starting point for countdown variable (set once)
         bytes32 IPFS1; // publically viewable asset description
         bytes32 IPFS2; // publically viewable immutable notes
+        uint timeLock; // time sensitive mutex
+        bytes32 checkOut; // checkout number
     }
     
     struct User {
@@ -47,6 +49,8 @@ contract FrontEnd is Ownable {
         uint cost5;
         uint cost6;
     }
+    
+
     
     
     StorageInterface private Storage; //set up external contract interface
@@ -87,7 +91,7 @@ contract FrontEnd is Ownable {
     /*
      * @dev Wrapper for retrieveRecord
      */
-    function _RETRIEVE_RECORD (string calldata _idx) external returns (bytes32, uint8, uint8, uint16, uint, uint, bytes32) {
+    function _RETRIEVE_RECORD (string calldata _idx) external returns (bytes32, uint8, uint8, uint16, uint, uint) {
         return Storage.retrieveRecord (keccak256(abi.encodePacked(_idx)));
     }
     
@@ -131,10 +135,12 @@ contract FrontEnd is Ownable {
     //function _MOD_RECORD (bytes32 _idxHash, bytes32 _regHash, uint8 _status, uint _countDown, uint8 _forceCount, bytes32 _recordHash) public payable {
     function _MOD_RECORD (string memory _idx, string memory _reg, uint8 _status, uint _countDown, uint8 _forceCount) public payable { 
         
+        bytes32 checkoutKey = keccak256(abi.encodePacked(msg.sender,_idx,_reg,_status,_countDown,_forceCount));
         bytes32 userHash = keccak256(abi.encodePacked(msg.sender));
         bytes32 _idxHash = keccak256(abi.encodePacked(_idx));//temp
         bytes32 _regHash = keccak256(abi.encodePacked(_reg));//temp
-        bytes32 _recordHash = Storage.checkOutRecord(_idxHash);//temp until is in function arguments-------------------------------------TESTING  //checkOutRecord
+        
+        bytes32 _recordHash = Storage.checkOutRecord(_idxHash, checkoutKey);//temp until is in function arguments-------------------------------------TESTING  //checkOutRecord
         bytes32 writeHash = keccak256(abi.encodePacked(_recordHash, userHash, _idxHash, _regHash, _status, _countDown, _forceCount));
         
         Storage.modifyRecord(userHash, _idxHash, _regHash, _status, _countDown, _forceCount, writeHash);
