@@ -6,7 +6,7 @@ import "./Ownable.sol";
 contract StorageInterface {
     function emitRecord (bytes32 _idxHash) external {}
     function retrieveIPFSdata (bytes32 _idxHash) external returns (bytes32, uint8, uint16, bytes32, bytes32, bytes32) {}
-    function retrieveRecord (bytes32 _idxHash) external returns (bytes32, uint8, uint8, uint16, uint, uint) {}
+    function retrieveRecord (bytes32 _idxHash) external returns (bytes32, uint8, uint8, uint16, uint, uint, bytes32) {}
     function getHash(bytes32 _idxHash) external returns (bytes32) {}
     
     function checkOutRecord (bytes32 _idxHash, bytes32 _) external returns (bytes32) {}
@@ -67,6 +67,14 @@ contract FrontEnd is Ownable {
     
     
     /*
+     * @dev Wrapper for GetHash
+     */
+    function GetIDX_hash (string calldata _idx) external pure returns (bytes32){
+        return keccak256(abi.encodePacked(_idx));
+    }
+    
+    
+    /*
      * @dev string to B32
      
     function stringToBytes32(string memory source) private pure returns (bytes32 result) {
@@ -91,7 +99,7 @@ contract FrontEnd is Ownable {
     /*
      * @dev Wrapper for retrieveRecord
      */
-    function _RETRIEVE_RECORD (string calldata _idx) external returns (bytes32, uint8, uint8, uint16, uint, uint) {
+    function _RETRIEVE_RECORD (string calldata _idx) external returns (bytes32, uint8, uint8, uint16, uint, uint, bytes32) {
         return Storage.retrieveRecord (keccak256(abi.encodePacked(_idx)));
     }
     

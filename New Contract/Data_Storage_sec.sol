@@ -359,12 +359,14 @@ contract Storage is Ownable {
     /*
      * @dev return abbreviated record
      */
-   function retrieveRecord (bytes32 _idxHash) external view addrAuth(2) exists (_idxHash) returns (bytes32, uint8, uint8, uint16, uint, uint) {   
+   function retrieveRecord (bytes32 _idxHash) external view addrAuth(2) exists (_idxHash) returns (bytes32, uint8, uint8, uint16, uint, uint, bytes32) {   
 
         bytes32 idxHash = _idxHash ;  //somehow magically saves the stack.
+        bytes32 datahash = keccak256(abi.encodePacked(database[idxHash].registrant, database[idxHash].status, database[idxHash].forceModCount, 
+        database[idxHash].assetClass, database[idxHash].countDown, database[idxHash].countDownStart));
 
         return (database[idxHash].registrant, database[idxHash].status, database[idxHash].forceModCount, 
-        database[idxHash].assetClass, database[idxHash].countDown, database[idxHash].countDownStart);
+        database[idxHash].assetClass, database[idxHash].countDown, database[idxHash].countDownStart, datahash);
     }
     
     
@@ -372,9 +374,12 @@ contract Storage is Ownable {
      * @dev return abbreviated record
      */
     function retrieveIPFSdata (bytes32 _idxHash) external view addrAuth(2) exists (_idxHash) returns (bytes32, uint8, uint16, bytes32, bytes32, bytes32) {  
+        
+        bytes32 datahash = keccak256(abi.encodePacked(database[_idxHash].registrant, database[_idxHash].status, 
+                database[_idxHash].assetClass, database[_idxHash].IPFS1, database[_idxHash].IPFS2));
 
         return (database[_idxHash].registrant, database[_idxHash].status,
-        database[_idxHash].assetClass, database[_idxHash].IPFS1, database[_idxHash].IPFS2, getHash(_idxHash));
+        database[_idxHash].assetClass, database[_idxHash].IPFS1, database[_idxHash].IPFS2, datahash);
     }
     
     
