@@ -8,11 +8,8 @@ contract StorageInterface {
     function retrieveIPFSdata (bytes32 _idxHash) external returns (bytes32, uint8, uint16, bytes32, bytes32, bytes32) {}
     function retrieveRecord (bytes32 _idxHash) external returns (bytes32, uint8, uint8, uint16, uint, uint, bytes32) {}
     function getHash(bytes32 _idxHash) external returns (bytes32) {}
-    
     function checkOutRecord (bytes32 _idxHash, bytes32 _) external returns (bytes32) {}
-    
     function newRecord(bytes32 _userHash, bytes32 _idxHash, bytes32 _reg, uint16 _assetClass, uint _countDownStart, bytes32 _IPFS1) external {}
-    
     function modifyRecord(bytes32 _userHash, bytes32 _idxHash, bytes32 _reg, uint8 _status, uint _countDown, uint8 _forceCount, bytes32 _writeHash) external {}
     function modifyIPFS1 (bytes32 _userHash, bytes32 _idxHash, bytes32 _IPFS1, bytes32 _writeHash) external {}
     function modifyIPFS2 (bytes32 _userHash, bytes32 _idxHash, bytes32 _IPFS2, bytes32 _writeHash) external {}
@@ -50,8 +47,6 @@ contract FrontEnd is Ownable {
         uint cost6;
     }
     
-
-    
     
     StorageInterface private Storage; //set up external contract interface
     address storageAddress;
@@ -73,24 +68,7 @@ contract FrontEnd is Ownable {
         return keccak256(abi.encodePacked(_idx));
     }
     
-    
-    /*
-     * @dev string to B32
-     
-    function stringToBytes32(string memory source) private pure returns (bytes32 result) {
-        bytes memory tempEmptyStringTest = bytes(source);
-        
-        if (tempEmptyStringTest.length == 0) {
-            return 0x0;
-        }
-
-        assembly {
-            result := mload(add(source, 32))
-        }
-    }
-    */
-    
-    
+  
 //-----------------------------------------------------------External functions-----------------------------------------------------------
 //SECURITY NOTE: MANY of these functions take strings. in production, all strings would be converted to hashes before being sent to the contract
 //so these funtions would be accepting pre-hashed bytes32 instead of strings.

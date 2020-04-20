@@ -38,11 +38,8 @@ contract Storage is Ownable {
     
 
     mapping(bytes32 => uint8) private authorizedAdresses; //authorized contract address 
-    
     mapping(bytes32 => Record) private database; //registry
-    
     mapping(bytes32 => User) private registeredUsers; //authorized registrar database
-    
     mapping(uint16 => Costs) private cost; //cost per function by asset class
     
     /*
@@ -242,42 +239,31 @@ contract Storage is Ownable {
             "NR:ERR-Registrant cannot be blank"
         );
         
-        database[_idxHash].assetClass = _assetClass;
-        database[_idxHash].countDownStart = _countDownStart;
-        database[_idxHash].countDown = _countDownStart;
-        database[_idxHash].registrar = _userHash;
-        database[_idxHash].registrant = _reg;
-        database[_idxHash].lastRegistrar = database[_idxHash].registrar;
-        database[_idxHash].forceModCount = 0;
-        database[_idxHash].IPFS1= _IPFS1;
+        Record memory _record;
+        _record = database[_idxHash];
+        _record.assetClass = _assetClass;
+        _record.countDownStart = _countDownStart;
+        _record.countDown = _countDownStart;
+        _record.registrar = _userHash;
+        _record.registrant = _reg;
+        _record.lastRegistrar = database[_idxHash].registrar;
+        _record.forceModCount = 0;
+        _record.IPFS1= _IPFS1;
+        database[_idxHash] = _record;
+
     }
     
     /*
-    * @dev Modify a record in the database  *read fullHash, write registrant, update registrars, assetClass,countDown update registrars,
-    *
-    *Modifies
-        bytes32 registrar; // Address hash of registrar > internal
-        bytes32 registrant;  // KEK256 Registered  owner < external
-        bytes32 lastRegistrar; //// Address hash of last non-automation registrar > internal
-        uint8 status; // Status - Transferrable, locked, in transfer, stolen, lost, etc. < external
-        uint8 forceModCount; // Number of times asset has been forceModded. < external increment only
-        uint countDown; // variable that can only be dencreased from countDownStart < external reduction only
-    *
-    
-    bytes32 writeHash = keccak256(abi.encodePacked(_recordHash, userHash, _idxHash, _reg, _status, _countDown, _forceCount));
-        
-    Storage.modifyRecord(userHash, _idxHash, _regHash, _status, _countDown, _forceCount, writeHash);
+    * @dev Modify a record in the database  *read fullHash, write registrant, update registrars, assetClass,countDown update registrars....
     */ 
     function modifyRecord(bytes32 _userHash, bytes32 _idxHash, bytes32 _regHash, uint8 _status, uint _countDown, uint8 _forceCount, bytes32 _writeHash) 
                             external addrAuth(3) userAuth (_userHash, _idxHash) exists (_idxHash) unlocked (_idxHash){
                                 
         require(  //this require calls another function that returns a hash of the record without any stateful effects. 
                   //While this is technically a violation of the CEI pattern, I think its OK in this case
-                  
-            _writeHash == keccak256(abi.encodePacked(recHash(_idxHash), _userHash, _idxHash, _regHash, _status, _countDown, _forceCount )) ,
-            
+            _writeHash == keccak256(abi.encodePacked(recHash(_idxHash), _userHash, _idxHash, _regHash, _status, _countDown, _forceCount)) , //uint8(1) 
             // requires that _writeHash is an identical hash of the oldhash and the new data
-            "MR:ERR-record has been changed or sent data invalid"
+            "MR:ERR-record has been changed or sent invalid data"
         );
         require(
             _regHash != 0 ,
@@ -292,12 +278,15 @@ contract Storage is Ownable {
             "MR:ERR-new forceModCount less than original forceModCount"
         );
         
-        database[_idxHash].registrant = _regHash;
-        database[_idxHash].status = _status;
-        database[_idxHash].countDown = _countDown;
-        database[_idxHash].forceModCount = _forceCount;
-        lastRegistrar(_userHash, _idxHash);
-        database[_idxHash].timeLock = 0;
+        Record memory _record;
+        _record = database[_idxHash];
+        _record.registrant = _regHash;
+        _record.countDown = _countDown;
+        _record.status = _status;
+        _record.forceModCount = _forceCount;
+        _record.timeLock = 0;
+        (_record.registrar , _record.lastRegistrar) = lastReg(_userHash, _idxHash);
+        database[_idxHash] = _record;
         
     }
     
@@ -310,19 +299,22 @@ contract Storage is Ownable {
                   //While this is technically a violation of the CEI pattern, I think its OK in this case
             _writeHash == keccak256(abi.encodePacked(recHash(_idxHash), _userHash, _idxHash, _IPFS1)) ,
             // requires that _writeHash is an identical hash of the oldhash and the new data
-            "MI1:ERR-record has been changed or sent data invalid"
+            "MIPFS1:ERR--record has been changed or sent invalid data"
         );
         require(
             database[_idxHash].IPFS1 != _IPFS1,
-            "MIPFS2:ERR-- New IPFS Data identical to old"
+            "MIPFS1:ERR-- New IPFS Data identical to old"
         );
         
-        
+        Record memory _record;
+        _record = database[_idxHash];
         if (database[_idxHash].IPFS1 != _IPFS1) {
-            database[_idxHash].IPFS1 = _IPFS1;
+            _record.IPFS1 = _IPFS1;
         }
+        _record.timeLock = 0;
+        (_record.registrar , _record.lastRegistrar) = lastReg(_userHash, _idxHash);
+        database[_idxHash] = _record;
         
-        lastRegistrar(_userHash, _idxHash);
     }
     
     
@@ -334,28 +326,27 @@ contract Storage is Ownable {
                  //While this is technically a violation of the CEI pattern, I think its OK in this case
             _writeHash == keccak256(abi.encodePacked(recHash(_idxHash), _userHash, _idxHash, _IPFS2)) ,
             // requires that _writeHash is an identical hash of the oldhash and the new data
-            "MI2:ERR-record has been changed or sent data invalid"
+            "MIPFS2:ERR--record has been changed or sent invalid data"
         );
         require(
             database[_idxHash].IPFS2 == 0,
             "MIPFS2:ERR-IPFS2 Data already exists and cannot be overwritten"
         );
         
-        if (database[_idxHash].IPFS2 == 0) {
-            database[_idxHash].IPFS2 = _IPFS2;
+        Record memory _record;
+        _record = database[_idxHash];
+        if (database[_idxHash].IPFS2 != _IPFS2) {
+            _record.IPFS2 = _IPFS2;
         }
-        
-        lastRegistrar(_userHash, _idxHash);
+        _record.timeLock = 0;
+        (_record.registrar , _record.lastRegistrar) = lastReg(_userHash, _idxHash);
+        database[_idxHash] = _record;
     }
-    
     
  
 //----------------------------------------external READ ONLY contract functions  //authuser---------------------------------------------------------- 
  
  
-
-    
-    
     /*
      * @dev return abbreviated record
      */
@@ -431,20 +422,25 @@ contract Storage is Ownable {
     
     
     
-    
     //------------------------------------------------------------private functions-------------------------------------------------------------------
     
      /*
      * @dev Update lastRegistrar
      */ 
-    function lastRegistrar(bytes32 _senderHash, bytes32 _idxHash) private exists (_idxHash) {
+    function lastReg(bytes32 _senderHash, bytes32 _idxHash) private view exists (_idxHash) returns(bytes32, bytes32){
         
+        bytes32 reg; 
+        bytes32 lastreg;
         
         if ( (registeredUsers[database[_idxHash].registrar].userType == 1) || (_senderHash == keccak256(abi.encodePacked(owner()))) 
                         && (_senderHash != database[_idxHash].registrar) ) {     // Rotate last registrar into lastRegistrar field if uniuqe and not a robot
-            database[_idxHash].lastRegistrar = database[_idxHash].registrar;
+            lastreg = database[_idxHash].registrar;
+        } else { 
+            lastreg = database[_idxHash].lastRegistrar;
         }
-        database[_idxHash].registrar = keccak256(abi.encodePacked(_senderHash));
+        reg = keccak256(abi.encodePacked(_senderHash));
+        return(reg,lastreg);
+        
     }
     
     
