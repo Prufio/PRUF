@@ -250,6 +250,8 @@ contract Storage is Ownable {
         database[_idxHash].lastRegistrar = database[_idxHash].registrar;
         database[_idxHash].forceModCount = 0;
         database[_idxHash].IPFS1= _IPFS1;
+        
+        //put an assert here verifying a clean write----------------------------------------------------------------------!!!!!!!!!!!!!!!!!!!!!!!!!!!!
     }
     
     /*
@@ -295,6 +297,8 @@ contract Storage is Ownable {
         database[_idxHash].countDown = _countDown;
         database[_idxHash].forceModCount = _forceCount;
         lastRegistrar(_userHash, _idxHash);
+        //put an assert here verifying a clean write----------------------------------------------------------------------!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+
         
     }
     
@@ -318,7 +322,7 @@ contract Storage is Ownable {
         if (database[_idxHash].IPFS1 != _IPFS1) {
             database[_idxHash].IPFS1 = _IPFS1;
         }
-        
+        //put an assert here verifying a clean write----------------------------------------------------------------------!!!!!!!!!!!!!!!!!!!!!!!!!!!!
         lastRegistrar(_userHash, _idxHash);
     }
     
@@ -341,7 +345,7 @@ contract Storage is Ownable {
         if (database[_idxHash].IPFS2 == 0) {
             database[_idxHash].IPFS2 = _IPFS2;
         }
-        
+        //put an assert here verifying a clean write----------------------------------------------------------------------!!!!!!!!!!!!!!!!!!!!!!!!!!!!
         lastRegistrar(_userHash, _idxHash);
     }
     

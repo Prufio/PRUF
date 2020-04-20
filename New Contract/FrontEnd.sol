@@ -85,7 +85,7 @@ contract FrontEnd is Ownable {
     /*
      * @dev Wrapper for retrieveRecord
      */
-    function _RETRIEVE_RECORD (string calldata _idx) external returns (bytes32, uint8, uint8, uint16, uint, uint, bytes32) {
+    function _RETRIEVE_RECORD (string calldata _idx) external returns (bytes32, uint8, uint8, uint16, uint, uint) {
         return Storage.retrieveRecord (keccak256(abi.encodePacked(_idx)));
     }
     
