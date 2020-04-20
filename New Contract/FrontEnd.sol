@@ -6,7 +6,7 @@ import "./Ownable.sol";
 contract StorageInterface {
     function emitRecord (bytes32 _idxHash) external {}
     function retrieveIPFSdata (bytes32 _idxHash) external returns (bytes32, uint8, uint16, bytes32, bytes32, bytes32) {}
-    function retrieveRecord (bytes32 _idxHash) external returns (bytes32, uint8, uint8, uint16, uint, uint, bytes32) {}
+    function retrieveRecord (bytes32 _idxHash) external returns (bytes32, uint8, uint8, uint16, uint, uint) {}
     function getHash(bytes32 _idxHash) external returns (bytes32) {}
 
     function newRecord(bytes32 _userHash, bytes32 _idxHash, bytes32 _reg, uint16 _assetClass, uint _countDownStart, bytes32 _IPFS1) external {}
