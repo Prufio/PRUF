@@ -409,7 +409,7 @@ contract Storage is Ownable {
     function checkOutRecord (bytes32 _idxHash, bytes32 _checkOut) external addrAuth(3) exists (_idxHash) returns (bytes32) {  
         require ( 
             database[_idxHash].timeLock < block.number,
-            "record already checked out"
+            "COR:ERR-- record already checked out"
         );
         bytes32 idxHash = _idxHash;
         database[_idxHash].timeLock = block.number;
