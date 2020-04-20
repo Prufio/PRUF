@@ -308,7 +308,7 @@ contract Storage is Ownable {
     function modifyIPFS1 (bytes32 _userHash, bytes32 _idxHash, bytes32 _IPFS1, bytes32 _writeHash) external addrAuth(3) userAuth (_userHash, _idxHash) exists (_idxHash) unlocked (_idxHash) {
         require(//this require calls another function that returns a hash of the record without any stateful effects. 
                   //While this is technically a violation of the CEI pattern, I think its OK in this case
-            _writeHash == keccak256(abi.encodePacked(getHash(_idxHash), _userHash, _idxHash, _IPFS1)) ,
+            _writeHash == keccak256(abi.encodePacked(recHash(_idxHash), _userHash, _idxHash, _IPFS1)) ,
             // requires that _writeHash is an identical hash of the oldhash and the new data
             "MI1:ERR-record has been changed or sent data invalid"
         );
@@ -332,7 +332,7 @@ contract Storage is Ownable {
     function modifyIPFS2 (bytes32 _userHash, bytes32 _idxHash, bytes32 _IPFS2, bytes32 _writeHash) external addrAuth(3) userAuth (_userHash, _idxHash) exists (_idxHash) unlocked (_idxHash) {
         require(//this require calls another function that returns a hash of the record without any stateful effects. 
                  //While this is technically a violation of the CEI pattern, I think its OK in this case
-            _writeHash == keccak256(abi.encodePacked(getHash(_idxHash), _userHash, _idxHash, _IPFS2)) ,
+            _writeHash == keccak256(abi.encodePacked(recHash(_idxHash), _userHash, _idxHash, _IPFS2)) ,
             // requires that _writeHash is an identical hash of the oldhash and the new data
             "MI2:ERR-record has been changed or sent data invalid"
         );

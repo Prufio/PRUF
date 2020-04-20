@@ -154,10 +154,13 @@ contract FrontEnd is Ownable {
     //function _MOD_IPFS1 (bytes32 _idxHash, bytes32 _IPFShash, bytes32 _recordHash) public payable {
     function _MOD_IPFS1 (string memory _idx, string memory _IPFS) public payable {
         
+        bytes32 checkoutKey = keccak256(abi.encodePacked(msg.sender,_idx,_IPFS));
         bytes32 userHash = keccak256(abi.encodePacked(msg.sender));
         bytes32 _idxHash = keccak256(abi.encodePacked(_idx));//temp
         bytes32 _IPFShash = keccak256(abi.encodePacked(_IPFS)); //temp until is in function arguments-------------------------------------TESTING
-        bytes32 _recordHash = Storage.getHash(_idxHash);//temp until is in function arguments-------------------------------------TESTING
+        
+        bytes32 _recordHash = Storage.checkOutRecord(_idxHash, checkoutKey);//temp until is in function arguments-------------------------------------TESTING  //checkOutRecord
+        //bytes32 _recordHash = Storage.getHash(_idxHash);//temp until is in function arguments-------------------------------------TESTING
         bytes32 writeHash = keccak256(abi.encodePacked(_recordHash, userHash, _idxHash, _IPFShash)); 
         
         Storage.modifyIPFS1 (userHash, _idxHash, _IPFShash, writeHash);
@@ -170,10 +173,13 @@ contract FrontEnd is Ownable {
     //function _MOD_IPFS2 (bytes32 _idxHash, bytes32 _IPFShash, bytes32 _recordHash) public payable {
     function _MOD_IPFS2 (string memory _idx, string memory _IPFS) public payable {
         
+         bytes32 checkoutKey = keccak256(abi.encodePacked(msg.sender,_idx,_IPFS));
         bytes32 userHash = keccak256(abi.encodePacked(msg.sender));
         bytes32 _idxHash = keccak256(abi.encodePacked(_idx));//temp
         bytes32 _IPFShash = keccak256(abi.encodePacked(_IPFS)); //temp until is in function arguments-------------------------------------TESTING
-        bytes32 _recordHash = Storage.getHash(_idxHash);//temp until is in function arguments-------------------------------------TESTING
+        
+        bytes32 _recordHash = Storage.checkOutRecord(_idxHash, checkoutKey);//temp until is in function arguments-------------------------------------TESTING  //checkOutRecord
+        //bytes32 _recordHash = Storage.getHash(_idxHash);//temp until is in function arguments-------------------------------------TESTING
         bytes32 writeHash = keccak256(abi.encodePacked(_recordHash, userHash, _idxHash, _IPFShash)); 
         
         Storage.modifyIPFS2 (userHash, _idxHash, _IPFShash, writeHash);
