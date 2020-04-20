@@ -71,9 +71,9 @@ contract Storage is Ownable {
      */
     modifier addrAuth (uint8 _userType){
         require ( 
-            (authorizedAdresses[keccak256(abi.encodePacked(msg.sender))] >= _userType) && (authorizedAdresses[keccak256(abi.encodePacked(msg.sender))] <= 4)
-            || (authorizedAdresses[keccak256(abi.encodePacked(msg.sender))] == authorizedAdresses[keccak256(abi.encodePacked(owner()))]),
-            "Contract not authorized or improperly permissioned"
+            ((authorizedAdresses[keccak256(abi.encodePacked(msg.sender))] >= _userType) && (authorizedAdresses[keccak256(abi.encodePacked(msg.sender))] <= 4))
+            //|| (authorizedAdresses[keccak256(abi.encodePacked(msg.sender))] == authorizedAdresses[keccak256(abi.encodePacked(owner()))])
+            ,"Contract not authorized or improperly permissioned"
             );
             _;
     }
@@ -405,7 +405,7 @@ contract Storage is Ownable {
                 database[_idxHash].IPFS1, database[_idxHash].IPFS2)));
     }
     
-    function recHash(bytes32 _idxHash) private view addrAuth(2) exists (_idxHash) returns (bytes32) {
+    function recHash(bytes32 _idxHash) private view addrAuth(3) exists (_idxHash) returns (bytes32) {
     
         return (keccak256(abi.encodePacked(database[_idxHash].registrar, database[_idxHash].registrant, database[_idxHash].lastRegistrar, database[_idxHash].status, 
                 database[_idxHash].forceModCount, database[_idxHash].assetClass, database[_idxHash].countDown, database[_idxHash].countDownStart,

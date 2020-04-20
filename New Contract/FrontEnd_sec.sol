@@ -69,7 +69,7 @@ contract FrontEnd is Ownable {
     /*
      * @dev Wrapper for GetHash
      */
-    function GetIDX_hash (string calldata _idx) external pure returns (bytes32){
+    function Get_any_hash (string calldata _idx) external pure returns (bytes32){
         return keccak256(abi.encodePacked(_idx));
     }
     
