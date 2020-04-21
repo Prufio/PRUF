@@ -47,6 +47,11 @@ contract FrontEnd is Ownable {
         uint cost6;
     }
     
+        bytes32 _user_;
+        bytes32 _idx_;
+        bytes32 _ipfs_;
+        bytes32 _write_;
+    
     
     StorageInterface private Storage; //set up external contract interface
     address storageAddress;
@@ -61,12 +66,46 @@ contract FrontEnd is Ownable {
     }
     
     
+    
+    
     /*
-     * @dev Wrapper for GetHash
+     * @dev TESTING FUNCTIONS ----------------------------------
      */
     function Get_any_hash (string calldata _idx) external pure returns (bytes32){
         return keccak256(abi.encodePacked(_idx));
     }
+    
+    function Get_block () external view returns (bytes32){
+        return keccak256(abi.encodePacked(block.number));
+    }
+    
+    
+    function _MOD_IPFS1_TEST (string memory _idx, string memory _IPFS) public payable {
+        
+        bytes32 checkoutKey = keccak256(abi.encodePacked(msg.sender,_idx,_IPFS));
+        bytes32 userHash = keccak256(abi.encodePacked(msg.sender));
+        bytes32 _idxHash = keccak256(abi.encodePacked(_idx));//temp
+        bytes32 _IPFShash = keccak256(abi.encodePacked(_IPFS)); //temp until is in function arguments-------------------------------------TESTING
+        
+        bytes32 _recordHash = Storage.checkOutRecord(_idxHash, checkoutKey);//temp until is in function arguments-------------------------------------TESTING  //checkOutRecord
+        //bytes32 _recordHash = Storage.getHash(_idxHash);//temp until is in function arguments-------------------------------------TESTING
+        bytes32 writeHash = keccak256(abi.encodePacked(_recordHash, userHash, _idxHash, _IPFShash)); 
+        
+        _user_ = userHash;
+        _idx_ = _idxHash;
+        _ipfs_ = _IPFShash;
+        _write_ = writeHash;
+        
+    }
+    
+    
+    function complete_test() public payable{
+        Storage.modifyIPFS1 (_user_, _idx_, _ipfs_, _write_);
+    }
+    
+
+    
+    
     
   
 //-----------------------------------------------------------External functions-----------------------------------------------------------
@@ -130,6 +169,7 @@ contract FrontEnd is Ownable {
         bytes32 writeHash = keccak256(abi.encodePacked(_recordHash, userHash, _idxHash, _regHash, _status, _countDown, _forceCount));
         
         Storage.modifyRecord(userHash, _idxHash, _regHash, _status, _countDown, _forceCount, writeHash);
+        
     }
     
     
@@ -159,7 +199,7 @@ contract FrontEnd is Ownable {
     //function _MOD_IPFS2 (bytes32 _idxHash, bytes32 _IPFShash, bytes32 _recordHash) public payable {
     function _MOD_IPFS2 (string memory _idx, string memory _IPFS) public payable {
         
-         bytes32 checkoutKey = keccak256(abi.encodePacked(msg.sender,_idx,_IPFS));
+        bytes32 checkoutKey = keccak256(abi.encodePacked(msg.sender,_idx,_IPFS));
         bytes32 userHash = keccak256(abi.encodePacked(msg.sender));
         bytes32 _idxHash = keccak256(abi.encodePacked(_idx));//temp
         bytes32 _IPFShash = keccak256(abi.encodePacked(_IPFS)); //temp until is in function arguments-------------------------------------TESTING

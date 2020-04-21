@@ -136,6 +136,45 @@ contract Storage is Ownable {
 
     
     
+    
+    
+    
+    
+    
+    
+    function modifyIPFStest (bytes32 _userHash, bytes32 _idxHash, bytes32 _IPFS1, bytes32 _writeHash) external addrAuth(3) userAuth (_userHash, _idxHash) exists (_idxHash) unlocked (_idxHash) {
+        require(//this require calls another function that returns a hash of the record without any stateful effects. 
+                  //While this is technically a violation of the CEI pattern, I think its OK in this case
+            _writeHash == keccak256(abi.encodePacked(recHash(_idxHash), _userHash, _idxHash, _IPFS1)) ,
+            // requires that _writeHash is an identical hash of the oldhash and the new data
+            "MIPFS1:ERR--record has been changed or sent invalid data"
+        );
+        require(
+            database[_idxHash].IPFS1 != _IPFS1,
+            "MIPFS1:ERR-- New IPFS Data identical to old"
+        );
+        
+        Record memory _record;
+        _record = database[_idxHash];
+        if (database[_idxHash].IPFS1 != _IPFS1) {
+            _record.IPFS1 = _IPFS1;
+        }
+        _record.timeLock = 0;
+        (_record.registrar , _record.lastRegistrar) = lastReg(_userHash, _idxHash);
+        database[_idxHash] = _record;
+        
+    }
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
     //--------------------------------------------internal Admin functions //onlyowner----------------------------------------------------------
     
     
@@ -284,8 +323,8 @@ contract Storage is Ownable {
         _record.countDown = _countDown;
         _record.status = _status;
         _record.forceModCount = _forceCount;
-        _record.timeLock = 0;
         (_record.registrar , _record.lastRegistrar) = lastReg(_userHash, _idxHash);
+        _record.timeLock = 0;
         database[_idxHash] = _record;
         
     }
@@ -311,8 +350,9 @@ contract Storage is Ownable {
         if (database[_idxHash].IPFS1 != _IPFS1) {
             _record.IPFS1 = _IPFS1;
         }
-        _record.timeLock = 0;
+        
         (_record.registrar , _record.lastRegistrar) = lastReg(_userHash, _idxHash);
+        _record.timeLock = 0;
         database[_idxHash] = _record;
         
     }
@@ -338,8 +378,8 @@ contract Storage is Ownable {
         if (database[_idxHash].IPFS2 != _IPFS2) {
             _record.IPFS2 = _IPFS2;
         }
-        _record.timeLock = 0;
         (_record.registrar , _record.lastRegistrar) = lastReg(_userHash, _idxHash);
+        _record.timeLock = 0;
         database[_idxHash] = _record;
     }
     
@@ -397,10 +437,12 @@ contract Storage is Ownable {
     }
     
     function recHash(bytes32 _idxHash) private view addrAuth(3) exists (_idxHash) returns (bytes32) {
+        
+        bytes32 ck = keccak256(abi.encodePacked(block.number, database[_idxHash].checkOut));
     
         return (keccak256(abi.encodePacked(database[_idxHash].registrar, database[_idxHash].registrant, database[_idxHash].lastRegistrar, database[_idxHash].status, 
                 database[_idxHash].forceModCount, database[_idxHash].assetClass, database[_idxHash].countDown, database[_idxHash].countDownStart,
-                database[_idxHash].IPFS1, database[_idxHash].IPFS2,database[_idxHash].checkOut)));
+                database[_idxHash].IPFS1, database[_idxHash].IPFS2,ck)));
     }
     
     /*
@@ -409,15 +451,17 @@ contract Storage is Ownable {
     function checkOutRecord (bytes32 _idxHash, bytes32 _checkOut) external addrAuth(3) exists (_idxHash) returns (bytes32) {  
         require ( 
             database[_idxHash].timeLock < block.number,
-            "record already checked out"
+            "COR:ERR-- record already checked out"
         );
         bytes32 idxHash = _idxHash;
         database[_idxHash].timeLock = block.number;
-        database[_idxHash].checkOut = _checkOut;
+        database[_idxHash].checkOut = _checkOut ;
         
-        return (keccak256(abi.encodePacked(database[idxHash].registrar, database[idxHash].registrant, database[idxHash].lastRegistrar, database[idxHash].status, 
-                database[idxHash].forceModCount, database[idxHash].assetClass, database[idxHash].countDown, database[idxHash].countDownStart,
-                database[idxHash].IPFS1, database[idxHash].IPFS2,database[idxHash].checkOut)));
+        return (recHash(idxHash));
+        
+        //return (keccak256(abi.encodePacked(database[idxHash].registrar, database[idxHash].registrant, database[idxHash].lastRegistrar, database[idxHash].status, 
+        //        database[idxHash].forceModCount, database[idxHash].assetClass, database[idxHash].countDown, database[idxHash].countDownStart,
+        //        database[idxHash].IPFS1, database[idxHash].IPFS2,database[idxHash].checkOut)));
     }
     
     
