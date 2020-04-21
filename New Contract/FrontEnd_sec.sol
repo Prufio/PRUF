@@ -79,34 +79,6 @@ contract FrontEnd is Ownable {
         return keccak256(abi.encodePacked(block.number));
     }
     
-    
-    function _MOD_IPFS1_TEST (string memory _idx, string memory _IPFS) public payable {
-        
-        bytes32 checkoutKey = keccak256(abi.encodePacked(msg.sender,_idx,_IPFS));
-        bytes32 userHash = keccak256(abi.encodePacked(msg.sender));
-        bytes32 _idxHash = keccak256(abi.encodePacked(_idx));//temp
-        bytes32 _IPFShash = keccak256(abi.encodePacked(_IPFS)); //temp until is in function arguments-------------------------------------TESTING
-        
-        bytes32 _recordHash = Storage.checkOutRecord(_idxHash, checkoutKey);//temp until is in function arguments-------------------------------------TESTING  //checkOutRecord
-        //bytes32 _recordHash = Storage.getHash(_idxHash);//temp until is in function arguments-------------------------------------TESTING
-        bytes32 writeHash = keccak256(abi.encodePacked(_recordHash, userHash, _idxHash, _IPFShash)); 
-        
-        _user_ = userHash;
-        _idx_ = _idxHash;
-        _ipfs_ = _IPFShash;
-        _write_ = writeHash;
-        
-    }
-    
-    
-    function complete_test() public payable{
-        Storage.modifyIPFS1 (_user_, _idx_, _ipfs_, _write_);
-    }
-    
-
-    
-    
-    
   
 //-----------------------------------------------------------External functions-----------------------------------------------------------
 //SECURITY NOTE: MANY of these functions take strings. in production, all strings would be converted to hashes before being sent to the contract
