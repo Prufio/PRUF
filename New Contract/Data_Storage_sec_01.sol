@@ -281,7 +281,7 @@ contract Storage is Ownable {
         _record.countDown = _countDown;
         _record.status = _status;
         _record.forceModCount = _forceCount;
-         (_record.recorder , _record.lastrecorder) = updateRecorder(_userHash, _record.recorder, _record.lastrecorder);
+         (_record.recorder , _record.lastrecorder) = newRecorder(_userHash, _record.recorder, _record.lastrecorder);
         _record.timeLock = 0;
         database[_idxHash] = _record;
         
@@ -309,7 +309,7 @@ contract Storage is Ownable {
             _record.IPFS1 = _IPFS1;
         }
         
-         (_record.recorder , _record.lastrecorder) = updateRecorder(_userHash, _record.recorder, _record.lastrecorder);
+         (_record.recorder , _record.lastrecorder) = newRecorder(_userHash, _record.recorder, _record.lastrecorder);
         _record.timeLock = 0;
         database[_idxHash] = _record;
         
@@ -336,7 +336,7 @@ contract Storage is Ownable {
         if (database[_idxHash].IPFS2 != _IPFS2) {
             _record.IPFS2 = _IPFS2;
         }
-        (_record.recorder , _record.lastrecorder) = updateRecorder(_userHash, _record.recorder, _record.lastrecorder);
+        (_record.recorder , _record.lastrecorder) = newRecorder(_userHash, _record.recorder, _record.lastrecorder);
         _record.timeLock = 0;
         database[_idxHash] = _record;
     }
@@ -346,7 +346,7 @@ contract Storage is Ownable {
  
  
     /*
-     * @dev return abbreviated record
+     * @dev return abbreviated record (typical user data only)
      */
    function retrieveRecord (bytes32 _idxHash) external view addrAuth(2) exists (_idxHash) returns (bytes32, uint8, uint8, uint16, uint, uint, bytes32) {   
 
@@ -358,20 +358,9 @@ contract Storage is Ownable {
         database[idxHash].assetClass, database[idxHash].countDown, database[idxHash].countDownStart, datahash);
     }
     
-    function retrieveRecord_noCount (bytes32 _idxHash) external view addrAuth(2) exists (_idxHash) returns (bytes32, uint8, uint8, uint16, bytes32) {   
-
-        bytes32 idxHash = _idxHash ;  //somehow magically saves the stack.
-        bytes32 datahash = keccak256(abi.encodePacked(database[idxHash].rightsHolder, database[idxHash].status, database[idxHash].forceModCount, 
-        database[idxHash].assetClass));
-
-        return (database[idxHash].rightsHolder, database[idxHash].status, database[idxHash].forceModCount, 
-        database[idxHash].assetClass, datahash);
-    }
-    
-    
     
      /*
-     * @dev return abbreviated record
+     * @dev return abbreviated record (IPFS data only)
      */
     function retrieveIPFSdata (bytes32 _idxHash) external view addrAuth(2) exists (_idxHash) returns (bytes32, uint8, uint16, bytes32, bytes32, bytes32) {  
         
@@ -384,7 +373,7 @@ contract Storage is Ownable {
     
     
     /*
-     * @dev emit a complete record at _idxHash
+     * @dev emit a complete record record minus checkout and mutex data 
      */
     function emitRecord (bytes32 _idxHash) external addrAuth(1) exists (_idxHash) { 
         
@@ -395,15 +384,8 @@ contract Storage is Ownable {
     }
     
     
-    /*
-     * @dev return a hash of a record
-     */
-    function getHash(bytes32 _idxHash) public view addrAuth(2) exists (_idxHash) returns (bytes32) {
     
-        return (keccak256(abi.encodePacked(database[_idxHash].recorder, database[_idxHash].rightsHolder, database[_idxHash].lastrecorder, database[_idxHash].status, 
-                database[_idxHash].forceModCount, database[_idxHash].assetClass, database[_idxHash].countDown, database[_idxHash].countDownStart,
-                database[_idxHash].IPFS1, database[_idxHash].IPFS2)));
-    }
+    
     
 
     /*
@@ -424,11 +406,19 @@ contract Storage is Ownable {
     
     function recHash(bytes32 _idxHash) private view addrAuth(3) exists (_idxHash) returns (bytes32) {
         
-        bytes32 ckey = keccak256(abi.encodePacked(block.number, database[_idxHash].checkOut));
+        bytes32 key = keccak256(abi.encodePacked(block.number, database[_idxHash].checkOut));
+    
+        return (keccak256(abi.encodePacked(getHash(_idxHash),key))); //hash of existing record with blocknumber and checkout key
+    }
+    
+    /*
+     * @dev return a hash of a complete record minus checkout and mutex data
+     */ 
+    function getHash(bytes32 _idxHash) public view addrAuth(2) exists (_idxHash) returns (bytes32) {
     
         return (keccak256(abi.encodePacked(database[_idxHash].recorder, database[_idxHash].rightsHolder, database[_idxHash].lastrecorder, database[_idxHash].status, 
                 database[_idxHash].forceModCount, database[_idxHash].assetClass, database[_idxHash].countDown, database[_idxHash].countDownStart,
-                database[_idxHash].IPFS1, database[_idxHash].IPFS2,ckey))); //hash of existing record with blocknumber and checkout key
+                database[_idxHash].IPFS1, database[_idxHash].IPFS2))); //hash of existing record
     }
     
     
@@ -437,7 +427,7 @@ contract Storage is Ownable {
      /*
      * @dev Update lastrecorder
      */ 
-    function updateRecorder(bytes32 _senderHash, bytes32 _recorder, bytes32 _lastrecorder) private view returns(bytes32, bytes32){
+    function newRecorder(bytes32 _senderHash, bytes32 _recorder, bytes32 _lastrecorder) private view returns(bytes32, bytes32){
          
         bytes32 lastrec;
         
