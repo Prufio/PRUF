@@ -242,7 +242,7 @@ contract Storage is Ownable {
         _record.countDown = _countDownStart;
         _record.recorder = _userHash;
         _record.rightsHolder = _rgt;
-        _record.lastrecorder = database[_idxHash].recorder;
+        _record.lastrecorder = _rgt;
         _record.forceModCount = 0;
         _record.IPFS1= _IPFS1;
         database[_idxHash] = _record;

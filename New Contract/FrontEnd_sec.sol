@@ -148,7 +148,6 @@ contract FrontEnd is Ownable {
         bytes32 _rgtHash = keccak256(abi.encodePacked(_rgt));//temp
         
         bytes32 userHash = keccak256(abi.encodePacked(msg.sender)); //get a userhash for authentication and recorder logging
-        
         bytes32 checkoutKey = keccak256(abi.encodePacked(msg.sender,_idxHash,_rgtHash,_status,_countDown,_forceCount)); //make a unuiqe ID from the data being sent
         
 
@@ -167,16 +166,20 @@ contract FrontEnd is Ownable {
     //function _MOD_IPFS1 (bytes32 _idxHash, bytes32 _IPFShash, bytes32 _recordHash) public payable {
     function _MOD_IPFS1 (string memory _idx, string memory _IPFS) public payable {
         
-        bytes32 checkoutKey = keccak256(abi.encodePacked(msg.sender,_idx,_IPFS));
-        bytes32 userHash = keccak256(abi.encodePacked(msg.sender));
         bytes32 _idxHash = keccak256(abi.encodePacked(_idx));//temp
         bytes32 _IPFShash = keccak256(abi.encodePacked(_IPFS)); //temp until is in function arguments-------------------------------------TESTING
         
-        bytes32 _recordHash = Storage.checkOutRecord(_idxHash, checkoutKey);//temp until is in function arguments-------------------------------------TESTING  //checkOutRecord
-        //bytes32 _recordHash = Storage.getHash(_idxHash);//temp until is in function arguments-------------------------------------TESTING
-        bytes32 writeHash = keccak256(abi.encodePacked(_recordHash, userHash, _idxHash, _IPFShash)); 
+        bytes32 userHash = keccak256(abi.encodePacked(msg.sender)); //get a userhash for authentication and recorder logging
+        bytes32 checkoutKey = keccak256(abi.encodePacked(msg.sender,_idxHash,_IPFShash)); //make a unuiqe ID from the data being sent
         
-        Storage.modifyIPFS1 (userHash, _idxHash, _IPFShash, writeHash);
+       
+        bytes32 _recordHash = Storage.checkOutRecord(_idxHash, checkoutKey);
+        //checks out record with keytemp until is in function arguments-------------------------------------TESTING  //checkOutRecord
+        
+        bytes32 writeHash = keccak256(abi.encodePacked(_recordHash, userHash, _idxHash, _IPFShash)); 
+        //prepare a writehash with existing data , blocknumber, checkout key, and new data for authentication
+        
+        Storage.modifyIPFS1 (userHash, _idxHash, _IPFShash, writeHash); //send data and writehash to storage
     }
     
     
@@ -186,14 +189,18 @@ contract FrontEnd is Ownable {
     //function _MOD_IPFS2 (bytes32 _idxHash, bytes32 _IPFShash, bytes32 _recordHash) public payable {
     function _MOD_IPFS2 (string memory _idx, string memory _IPFS) public payable {
         
-        bytes32 checkoutKey = keccak256(abi.encodePacked(msg.sender,_idx,_IPFS));
-        bytes32 userHash = keccak256(abi.encodePacked(msg.sender));
         bytes32 _idxHash = keccak256(abi.encodePacked(_idx));//temp
         bytes32 _IPFShash = keccak256(abi.encodePacked(_IPFS)); //temp until is in function arguments-------------------------------------TESTING
         
-        bytes32 _recordHash = Storage.checkOutRecord(_idxHash, checkoutKey);//temp until is in function arguments-------------------------------------TESTING  //checkOutRecord
-        //bytes32 _recordHash = Storage.getHash(_idxHash);//temp until is in function arguments-------------------------------------TESTING
+        bytes32 userHash = keccak256(abi.encodePacked(msg.sender)); //get a userhash for authentication and recorder logging
+        bytes32 checkoutKey = keccak256(abi.encodePacked(msg.sender,_idxHash,_IPFShash)); //make a unuiqe ID from the data being sent
+        
+       
+        bytes32 _recordHash = Storage.checkOutRecord(_idxHash, checkoutKey);
+        //checks out record with keytemp until is in function arguments-------------------------------------TESTING  //checkOutRecord
+        
         bytes32 writeHash = keccak256(abi.encodePacked(_recordHash, userHash, _idxHash, _IPFShash)); 
+        //prepare a writehash with existing data , blocknumber, checkout key, and new data for authentication
         
         Storage.modifyIPFS2 (userHash, _idxHash, _IPFShash, writeHash);
     }
