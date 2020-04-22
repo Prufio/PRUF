@@ -451,9 +451,9 @@ contract Storage is Ownable {
     function XCOMPARE_REG (string calldata _idx, string calldata _rgt) external view addrAuth(1) returns(string memory) {
          
         if (keccak256(abi.encodePacked(_rgt)) == database[keccak256(abi.encodePacked(_idx))].rightsHolder) {
-            return "Rightsholder match confirmed";
+            return "Rights holder match confirmed";
         } else {
-            return "Rightsholder does not match";
+            return "Rights holder does not match";
         }
     }
     
