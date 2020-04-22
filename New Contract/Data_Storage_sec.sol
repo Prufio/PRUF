@@ -215,7 +215,7 @@ contract Storage is Ownable {
     /*
      * @dev Make a new record in the database  *read fullHash, write rightsHolder, registrars, assetClass,countDownStart --new_record
      */ 
-    function newRecord(bytes32 _userHash, bytes32 _idxHash, bytes32 _reg, uint16 _assetClass, uint _countDownStart, bytes32 _IPFS1) external addrAuth(3){
+    function newRecord(bytes32 _userHash, bytes32 _idxHash, bytes32 _rgt, uint16 _assetClass, uint _countDownStart, bytes32 _IPFS1) external addrAuth(3){
        
         
         require(
@@ -231,7 +231,7 @@ contract Storage is Ownable {
             "NR:ERR-Record already exists"
         );
         require(
-            _reg != 0 ,
+            _rgt != 0 ,
             "NR:ERR-Rightsholder cannot be blank"
         );
         
@@ -241,7 +241,7 @@ contract Storage is Ownable {
         _record.countDownStart = _countDownStart;
         _record.countDown = _countDownStart;
         _record.recorder = _userHash;
-        _record.rightsHolder = _reg;
+        _record.rightsHolder = _rgt;
         _record.lastrecorder = database[_idxHash].recorder;
         _record.forceModCount = 0;
         _record.IPFS1= _IPFS1;
@@ -448,9 +448,9 @@ contract Storage is Ownable {
      /*
      * @dev Wrapper for comparing records // ------------------------testing
      */
-    function XCOMPARE_REG (string calldata _idx, string calldata _reg) external view addrAuth(1) returns(string memory) {
+    function XCOMPARE_REG (string calldata _idx, string calldata _rgt) external view addrAuth(1) returns(string memory) {
          
-        if (keccak256(abi.encodePacked(_reg)) == database[keccak256(abi.encodePacked(_idx))].rightsHolder) {
+        if (keccak256(abi.encodePacked(_rgt)) == database[keccak256(abi.encodePacked(_idx))].rightsHolder) {
             return "Rightsholder match confirmed";
         } else {
             return "Rightsholder does not match";
