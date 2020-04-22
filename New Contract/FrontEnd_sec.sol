@@ -20,10 +20,11 @@ contract FrontEnd is Ownable {
     
     /*
     *External write functions
-    *ForceMod - reg
-    *
-    *
-    *
+    *ForceMod rightsholder
+    *Change status
+    *Update countDown
+    *transfer rightsHolder
+    *modify 
     *
     *
     */

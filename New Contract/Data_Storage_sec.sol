@@ -429,8 +429,8 @@ contract Storage is Ownable {
          
         bytes32 lastrec;
         
-        if ( (registeredUsers[_senderHash].userType == 1) || (_senderHash == keccak256(abi.encodePacked(owner()))) //human user or storage contract owner
-                        && (_senderHash != _recorder) ) {     // uniuqe (new) recorder
+        if ( ((registeredUsers[_senderHash].userType == 1) || (_senderHash == keccak256(abi.encodePacked(owner())))) //human user or storage contract owner
+                        && (_senderHash != _recorder) && (registeredUsers[_recorder].userType != 9) ) {     // uniuqe (new) recorder
             lastrec = _recorder; // Rotate preexisting recorder into lastrecorder field if uniuqe (not same as new recorder) and new recorder is not a robot
         } else { 
             lastrec = _lastrecorder; //keep lastRecorder the same as before, only update the current recorder.
