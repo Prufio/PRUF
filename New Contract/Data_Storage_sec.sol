@@ -236,15 +236,16 @@ contract Storage is Ownable {
         );
         
         Record memory _record;
-        _record = database[_idxHash];
+        
         _record.assetClass = _assetClass;
         _record.countDownStart = _countDownStart;
         _record.countDown = _countDownStart;
         _record.recorder = _userHash;
         _record.rightsHolder = _rgt;
-        _record.lastrecorder = _rgt;
+        _record.lastrecorder = _userHash;
         _record.forceModCount = 0;
         _record.IPFS1= _IPFS1;
+        
         database[_idxHash] = _record;
 
     }
@@ -429,8 +430,10 @@ contract Storage is Ownable {
          
         bytes32 lastrec;
         
-        if ( ((registeredUsers[_senderHash].userType == 1) || (_senderHash == keccak256(abi.encodePacked(owner())))) //human user or storage contract owner
-                        && (_senderHash != _recorder) && (registeredUsers[_recorder].userType != 9) ) {     // uniuqe (new) recorder
+        if ( ((registeredUsers[_recorder].userType == 1) || (_recorder == keccak256(abi.encodePacked(owner())))) //human user or storage contract owner
+                        && (_senderHash != _recorder) ) {     // uniuqe (new) recorder
+                        //existing is a human and new is unuiqe
+                        
             lastrec = _recorder; // Rotate preexisting recorder into lastrecorder field if uniuqe (not same as new recorder) and new recorder is not a robot
         } else { 
             lastrec = _lastrecorder; //keep lastRecorder the same as before, only update the current recorder.

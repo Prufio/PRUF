@@ -23,10 +23,7 @@ contract FrontEnd is Ownable {
     *ForceMod rightsholder
     *Change status
     *Update countDown
-    *transfer rightsHolder
-    *modify 
-    *
-    *
+    *Transfer rightsHolder
     */
  
     
@@ -140,6 +137,26 @@ contract FrontEnd is Ownable {
     
     
     /*
+
+    //function _MOD_RECORD (bytes32 _idxHash, bytes32 _regHash, uint8 _status, uint _countDown, uint8 _forceCount, bytes32 _recordHash) public payable {
+    function _MOD_RECORD (string memory _idx, string memory _rgt, uint8 _status, uint _countDown, uint8 _forceCount) public payable { 
+        
+        bytes32 _idxHash = keccak256(abi.encodePacked(_idx));//temp
+        bytes32 _rgtHash = keccak256(abi.encodePacked(_rgt));//temp
+        
+        bytes32 userHash = keccak256(abi.encodePacked(msg.sender)); //get a userhash for authentication and recorder logging
+        bytes32 checkoutKey = keccak256(abi.encodePacked(msg.sender,_idxHash,_rgtHash,_status,_countDown,_forceCount)); //make a unuiqe ID from the data being sent
+        
+
+        bytes32 _recordHash = Storage.checkOutRecord(_idxHash, checkoutKey);// checks out record with key - temp until is in function arguments-------------------------------------TESTING  //checkOutRecord
+        
+        bytes32 writeHash = keccak256(abi.encodePacked(_recordHash, userHash, _idxHash, _rgtHash, _status, _countDown, _forceCount)); //prepare a writehash with existing data , blocknumber, checkout key, and new data for authentication
+        Storage.modifyRecord(userHash, _idxHash, _rgtHash, _status, _countDown, _forceCount, writeHash);  //send data and writehash to storage
+        
+    }
+    */
+    
+    /*
      * @dev Wrapper for ModifyRecord
      */
     //function _MOD_RECORD (bytes32 _idxHash, bytes32 _regHash, uint8 _status, uint _countDown, uint8 _forceCount, bytes32 _recordHash) public payable {
@@ -159,7 +176,24 @@ contract FrontEnd is Ownable {
         
     }
     
-    
+     /*
+     * @dev Modify record status
+     */
+    //function _MOD_STATUS (bytes32 _idxHash, uint8 _stat) public payable {
+    function _MOD_STATUS (string memory _idx, uint8 _stat) public payable {
+        
+        bytes32 _idxHash = keccak256(abi.encodePacked(_idx));//temp
+        
+        bytes32 userHash = keccak256(abi.encodePacked(msg.sender)); //get a userhash for authentication and recorder logging
+        bytes32 checkoutKey = keccak256(abi.encodePacked(msg.sender,_idxHash,_stat)); //make a unuiqe ID from the data being sent
+        
+        bytes32 _recordHash = Storage.checkOutRecord(_idxHash, checkoutKey); //checks out record with key
+        
+        bytes32 writeHash = keccak256(abi.encodePacked(_recordHash, userHash, _idxHash,_stat)); 
+        //prepare a writehash with existing data , blocknumber, checkout key, and new data for authentication
+        
+        Storage.modifyRecord (userHash, _idxHash, _stat, writeHash); //send data and writehash to storage
+    }
     
     /*
      * @dev Wrapper for modifyIPFS1
