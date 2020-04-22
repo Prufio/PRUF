@@ -358,6 +358,17 @@ contract Storage is Ownable {
         database[idxHash].assetClass, database[idxHash].countDown, database[idxHash].countDownStart, datahash);
     }
     
+    function retrieveRecord_noCount (bytes32 _idxHash) external view addrAuth(2) exists (_idxHash) returns (bytes32, uint8, uint8, uint16, bytes32) {   
+
+        bytes32 idxHash = _idxHash ;  //somehow magically saves the stack.
+        bytes32 datahash = keccak256(abi.encodePacked(database[idxHash].rightsHolder, database[idxHash].status, database[idxHash].forceModCount, 
+        database[idxHash].assetClass));
+
+        return (database[idxHash].rightsHolder, database[idxHash].status, database[idxHash].forceModCount, 
+        database[idxHash].assetClass, datahash);
+    }
+    
+    
     
      /*
      * @dev return abbreviated record
