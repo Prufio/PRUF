@@ -18,10 +18,21 @@ contract StorageInterface {
 
 contract FrontEnd is Ownable {
     
+    /*
+    *External write functions
+    *ForceMod - reg
+    *
+    *
+    *
+    *
+    *
+    */
+ 
+    
        struct Record {
-        bytes32 registrar; // Address hash of registrar 
-        bytes32 registrant;  // KEK256 Registered  owner
-        bytes32 lastRegistrar; //// Address hash of last non-automation registrar
+        bytes32 recorder; // Address hash of recorder 
+        bytes32 rightsHolder;  // KEK256 Registered  owner
+        bytes32 lastrecorder; //// Address hash of last non-automation recorder
         uint8 status; // Status - Transferrable, locked, in transfer, stolen, lost, etc.
         uint8 forceModCount; // Number of times asset has been forceModded.
         uint16 assetClass; //Type of asset

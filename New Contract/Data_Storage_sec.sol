@@ -8,9 +8,9 @@ contract Storage is Ownable {
     uint nonce;
    
     struct Record {
-        bytes32 registrar; // Address hash of registrar 
-        bytes32 registrant;  // KEK256 Registered  owner
-        bytes32 lastRegistrar; //// Address hash of last non-automation registrar
+        bytes32 recorder; // Address hash of recorder 
+        bytes32 rightsHolder;  // KEK256 Registered  owner
+        bytes32 lastrecorder; //// Address hash of last non-automation recorder
         uint8 status; // Status - Transferrable, locked, in transfer, stolen, lost, etc.
         uint8 forceModCount; // Number of times asset has been forceModded.
         uint16 assetClass; //Type of asset
@@ -39,7 +39,7 @@ contract Storage is Ownable {
 
     mapping(bytes32 => uint8) private authorizedAdresses; //authorized contract address 
     mapping(bytes32 => Record) private database; //registry
-    mapping(bytes32 => User) private registeredUsers; //authorized registrar database
+    mapping(bytes32 => User) private registeredUsers; //authorized recorder database
     mapping(uint16 => Costs) private cost; //cost per function by asset class
     
     /*
@@ -108,11 +108,10 @@ contract Storage is Ownable {
     
     modifier exists (bytes32 _idxHash) {
         require(
-            database[_idxHash].registrant != 0 ,
+            database[_idxHash].rightsHolder != 0 ,
             "CR:ERR-record does not exist"
         );
-        _;
-        
+        _;  
     }
     
     modifier notTimeLocked(bytes32 _idxHash) { //this modifier makes the bold assumption the block number will "never" be reset. hopefully, this is true...
@@ -121,7 +120,6 @@ contract Storage is Ownable {
             "CR:ERR-record Locked"
         );
         _;
-        
     }
     
 
@@ -132,47 +130,6 @@ contract Storage is Ownable {
     
     //event EMIT_RECORD (Record record);  //use when ABIencoder V2 is ready for prime-time
     event EMIT_RECORD (bytes32, bytes32, bytes32, uint8, uint8, uint16, uint, uint, bytes32, bytes32);
-    
-
-    
-    
-    
-    
-    
-    
-    
-    
-    function modifyIPFStest (bytes32 _userHash, bytes32 _idxHash, bytes32 _IPFS1, bytes32 _writeHash) external addrAuth(3) userAuth (_userHash, _idxHash) exists (_idxHash) unlocked (_idxHash) {
-        require(//this require calls another function that returns a hash of the record without any stateful effects. 
-                  //While this is technically a violation of the CEI pattern, I think its OK in this case
-            _writeHash == keccak256(abi.encodePacked(recHash(_idxHash), _userHash, _idxHash, _IPFS1)) ,
-            // requires that _writeHash is an identical hash of the oldhash and the new data
-            "MIPFS1:ERR--record has been changed or sent invalid data"
-        );
-        require(
-            database[_idxHash].IPFS1 != _IPFS1,
-            "MIPFS1:ERR-- New IPFS Data identical to old"
-        );
-        
-        Record memory _record;
-        _record = database[_idxHash];
-        if (database[_idxHash].IPFS1 != _IPFS1) {
-            _record.IPFS1 = _IPFS1;
-        }
-        _record.timeLock = 0;
-        (_record.registrar , _record.lastRegistrar) = lastReg(_userHash, _idxHash);
-        database[_idxHash] = _record;
-        
-    }
-    
-    
-    
-    
-    
-    
-    
-    
-    
     
     
     //--------------------------------------------internal Admin functions //onlyowner----------------------------------------------------------
@@ -256,7 +213,7 @@ contract Storage is Ownable {
 
     
     /*
-     * @dev Make a new record in the database  *read fullHash, write registrant, registrars, assetClass,countDownStart --new_record
+     * @dev Make a new record in the database  *read fullHash, write rightsHolder, registrars, assetClass,countDownStart --new_record
      */ 
     function newRecord(bytes32 _userHash, bytes32 _idxHash, bytes32 _reg, uint16 _assetClass, uint _countDownStart, bytes32 _IPFS1) external addrAuth(3){
        
@@ -270,12 +227,12 @@ contract Storage is Ownable {
             "NR:ERR-User not registered for asset class"
         );
         require(
-            database[_idxHash].registrant == 0 ,
+            database[_idxHash].rightsHolder == 0 ,
             "NR:ERR-Record already exists"
         );
         require(
             _reg != 0 ,
-            "NR:ERR-Registrant cannot be blank"
+            "NR:ERR-Rightsholder cannot be blank"
         );
         
         Record memory _record;
@@ -283,9 +240,9 @@ contract Storage is Ownable {
         _record.assetClass = _assetClass;
         _record.countDownStart = _countDownStart;
         _record.countDown = _countDownStart;
-        _record.registrar = _userHash;
-        _record.registrant = _reg;
-        _record.lastRegistrar = database[_idxHash].registrar;
+        _record.recorder = _userHash;
+        _record.rightsHolder = _reg;
+        _record.lastrecorder = database[_idxHash].recorder;
         _record.forceModCount = 0;
         _record.IPFS1= _IPFS1;
         database[_idxHash] = _record;
@@ -293,7 +250,7 @@ contract Storage is Ownable {
     }
     
     /*
-    * @dev Modify a record in the database  *read fullHash, write registrant, update registrars, assetClass,countDown update registrars....
+    * @dev Modify a record in the database  *read fullHash, write rightsHolder, update registrars, assetClass,countDown update registrars....
     */ 
     function modifyRecord(bytes32 _userHash, bytes32 _idxHash, bytes32 _regHash, uint8 _status, uint _countDown, uint8 _forceCount, bytes32 _writeHash) 
                             external addrAuth(3) userAuth (_userHash, _idxHash) exists (_idxHash) unlocked (_idxHash){
@@ -306,7 +263,7 @@ contract Storage is Ownable {
         );
         require(
             _regHash != 0 ,
-            "MR:ERR-Registrant cannot be blank"
+            "MR:ERR-Rightsholder cannot be blank"
         );
         require(
             _countDown <= database[_idxHash].countDown,
@@ -319,11 +276,11 @@ contract Storage is Ownable {
         
         Record memory _record;
         _record = database[_idxHash];
-        _record.registrant = _regHash;
+        _record.rightsHolder = _regHash;
         _record.countDown = _countDown;
         _record.status = _status;
         _record.forceModCount = _forceCount;
-        (_record.registrar , _record.lastRegistrar) = lastReg(_userHash, _idxHash);
+        (_record.recorder , _record.lastrecorder) = updateRegistrar(_userHash, _idxHash);
         _record.timeLock = 0;
         database[_idxHash] = _record;
         
@@ -351,7 +308,7 @@ contract Storage is Ownable {
             _record.IPFS1 = _IPFS1;
         }
         
-        (_record.registrar , _record.lastRegistrar) = lastReg(_userHash, _idxHash);
+        (_record.recorder , _record.lastrecorder) = updateRegistrar(_userHash, _idxHash);
         _record.timeLock = 0;
         database[_idxHash] = _record;
         
@@ -378,7 +335,7 @@ contract Storage is Ownable {
         if (database[_idxHash].IPFS2 != _IPFS2) {
             _record.IPFS2 = _IPFS2;
         }
-        (_record.registrar , _record.lastRegistrar) = lastReg(_userHash, _idxHash);
+        (_record.recorder , _record.lastrecorder) = updateRegistrar(_userHash, _idxHash);
         _record.timeLock = 0;
         database[_idxHash] = _record;
     }
@@ -393,10 +350,10 @@ contract Storage is Ownable {
    function retrieveRecord (bytes32 _idxHash) external view addrAuth(2) exists (_idxHash) returns (bytes32, uint8, uint8, uint16, uint, uint, bytes32) {   
 
         bytes32 idxHash = _idxHash ;  //somehow magically saves the stack.
-        bytes32 datahash = keccak256(abi.encodePacked(database[idxHash].registrant, database[idxHash].status, database[idxHash].forceModCount, 
+        bytes32 datahash = keccak256(abi.encodePacked(database[idxHash].rightsHolder, database[idxHash].status, database[idxHash].forceModCount, 
         database[idxHash].assetClass, database[idxHash].countDown, database[idxHash].countDownStart));
 
-        return (database[idxHash].registrant, database[idxHash].status, database[idxHash].forceModCount, 
+        return (database[idxHash].rightsHolder, database[idxHash].status, database[idxHash].forceModCount, 
         database[idxHash].assetClass, database[idxHash].countDown, database[idxHash].countDownStart, datahash);
     }
     
@@ -406,10 +363,10 @@ contract Storage is Ownable {
      */
     function retrieveIPFSdata (bytes32 _idxHash) external view addrAuth(2) exists (_idxHash) returns (bytes32, uint8, uint16, bytes32, bytes32, bytes32) {  
         
-        bytes32 datahash = keccak256(abi.encodePacked(database[_idxHash].registrant, database[_idxHash].status, 
+        bytes32 datahash = keccak256(abi.encodePacked(database[_idxHash].rightsHolder, database[_idxHash].status, 
                 database[_idxHash].assetClass, database[_idxHash].IPFS1, database[_idxHash].IPFS2));
 
-        return (database[_idxHash].registrant, database[_idxHash].status,
+        return (database[_idxHash].rightsHolder, database[_idxHash].status,
         database[_idxHash].assetClass, database[_idxHash].IPFS1, database[_idxHash].IPFS2, datahash);
     }
     
@@ -420,7 +377,7 @@ contract Storage is Ownable {
     function emitRecord (bytes32 _idxHash) external addrAuth(1) exists (_idxHash) { 
         
         //emit EMIT_RECORD (database[_idx]);  //use when ABIencoder V2 is ready for prime-time
-        emit EMIT_RECORD (database[_idxHash].registrar, database[_idxHash].registrant, database[_idxHash].lastRegistrar, database[_idxHash].status, 
+        emit EMIT_RECORD (database[_idxHash].recorder, database[_idxHash].rightsHolder, database[_idxHash].lastrecorder, database[_idxHash].status, 
                 database[_idxHash].forceModCount, database[_idxHash].assetClass, database[_idxHash].countDown, database[_idxHash].countDownStart, 
                 database[_idxHash].IPFS1, database[_idxHash].IPFS2);
     }
@@ -431,7 +388,7 @@ contract Storage is Ownable {
      */
     function getHash(bytes32 _idxHash) public view addrAuth(2) exists (_idxHash) returns (bytes32) {
     
-        return (keccak256(abi.encodePacked(database[_idxHash].registrar, database[_idxHash].registrant, database[_idxHash].lastRegistrar, database[_idxHash].status, 
+        return (keccak256(abi.encodePacked(database[_idxHash].recorder, database[_idxHash].rightsHolder, database[_idxHash].lastrecorder, database[_idxHash].status, 
                 database[_idxHash].forceModCount, database[_idxHash].assetClass, database[_idxHash].countDown, database[_idxHash].countDownStart,
                 database[_idxHash].IPFS1, database[_idxHash].IPFS2)));
     }
@@ -440,7 +397,7 @@ contract Storage is Ownable {
         
         bytes32 ck = keccak256(abi.encodePacked(block.number, database[_idxHash].checkOut));
     
-        return (keccak256(abi.encodePacked(database[_idxHash].registrar, database[_idxHash].registrant, database[_idxHash].lastRegistrar, database[_idxHash].status, 
+        return (keccak256(abi.encodePacked(database[_idxHash].recorder, database[_idxHash].rightsHolder, database[_idxHash].lastrecorder, database[_idxHash].status, 
                 database[_idxHash].forceModCount, database[_idxHash].assetClass, database[_idxHash].countDown, database[_idxHash].countDownStart,
                 database[_idxHash].IPFS1, database[_idxHash].IPFS2,ck)));
     }
@@ -459,7 +416,7 @@ contract Storage is Ownable {
         
         return (recHash(idxHash));
         
-        //return (keccak256(abi.encodePacked(database[idxHash].registrar, database[idxHash].registrant, database[idxHash].lastRegistrar, database[idxHash].status, 
+        //return (keccak256(abi.encodePacked(database[idxHash].recorder, database[idxHash].rightsHolder, database[idxHash].lastrecorder, database[idxHash].status, 
         //        database[idxHash].forceModCount, database[idxHash].assetClass, database[idxHash].countDown, database[idxHash].countDownStart,
         //        database[idxHash].IPFS1, database[idxHash].IPFS2,database[idxHash].checkOut)));
     }
@@ -469,21 +426,21 @@ contract Storage is Ownable {
     //------------------------------------------------------------private functions-------------------------------------------------------------------
     
      /*
-     * @dev Update lastRegistrar
+     * @dev Update lastrecorder
      */ 
-    function lastReg(bytes32 _senderHash, bytes32 _idxHash) private view exists (_idxHash) returns(bytes32, bytes32){
+    function updateRegistrar(bytes32 _senderHash, bytes32 _idxHash) private view exists (_idxHash) returns(bytes32, bytes32){
         
-        bytes32 reg; 
-        bytes32 lastreg;
+        bytes32 rec; 
+        bytes32 lastrec;
         
-        if ( (registeredUsers[database[_idxHash].registrar].userType == 1) || (_senderHash == keccak256(abi.encodePacked(owner()))) 
-                        && (_senderHash != database[_idxHash].registrar) ) {     // Rotate last registrar into lastRegistrar field if uniuqe and not a robot
-            lastreg = database[_idxHash].registrar;
+        if ( (registeredUsers[database[_idxHash].recorder].userType == 1) || (_senderHash == keccak256(abi.encodePacked(owner()))) 
+                        && (_senderHash != database[_idxHash].recorder) ) {     // Rotate last recorder into lastrecorder field if uniuqe and not a robot
+            lastrec = database[_idxHash].recorder;
         } else { 
-            lastreg = database[_idxHash].lastRegistrar;
+            lastrec = database[_idxHash].lastrecorder;
         }
-        reg = keccak256(abi.encodePacked(_senderHash));
-        return(reg,lastreg);
+        rec = keccak256(abi.encodePacked(_senderHash));
+        return(rec,lastrec);
         
     }
     
@@ -493,10 +450,10 @@ contract Storage is Ownable {
      */
     function XCOMPARE_REG (string calldata _idx, string calldata _reg) external view addrAuth(1) returns(string memory) {
          
-        if (keccak256(abi.encodePacked(_reg)) == database[keccak256(abi.encodePacked(_idx))].registrant) {
-            return "Registrant match confirmed";
+        if (keccak256(abi.encodePacked(_reg)) == database[keccak256(abi.encodePacked(_idx))].rightsHolder) {
+            return "Rightsholder match confirmed";
         } else {
-            return "Registrant does not match";
+            return "Rightsholder does not match";
         }
     }
     
