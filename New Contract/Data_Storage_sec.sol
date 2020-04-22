@@ -213,7 +213,7 @@ contract Storage is Ownable {
 
     
     /*
-     * @dev Make a new record in the database  *read fullHash, write rightsHolder, registrars, assetClass,countDownStart --new_record
+     * @dev Make a new record in the database  *read fullHash, write rightsHolder, recorders, assetClass,countDownStart --new_record
      */ 
     function newRecord(bytes32 _userHash, bytes32 _idxHash, bytes32 _rgt, uint16 _assetClass, uint _countDownStart, bytes32 _IPFS1) external addrAuth(3){
        
@@ -250,7 +250,7 @@ contract Storage is Ownable {
     }
     
     /*
-    * @dev Modify a record in the database  *read fullHash, write rightsHolder, update registrars, assetClass,countDown update registrars....
+    * @dev Modify a record in the database  *read fullHash, write rightsHolder, update recorder, assetClass,countDown update recorder....
     */ 
     function modifyRecord(bytes32 _userHash, bytes32 _idxHash, bytes32 _regHash, uint8 _status, uint _countDown, uint8 _forceCount, bytes32 _writeHash) 
                             external addrAuth(3) userAuth (_userHash, _idxHash) exists (_idxHash) unlocked (_idxHash){
@@ -280,7 +280,7 @@ contract Storage is Ownable {
         _record.countDown = _countDown;
         _record.status = _status;
         _record.forceModCount = _forceCount;
-        (_record.recorder , _record.lastrecorder) = updateRegistrar(_userHash, _idxHash);
+        (_record.recorder , _record.lastrecorder) = updateRecorder(_userHash, _idxHash);
         _record.timeLock = 0;
         database[_idxHash] = _record;
         
@@ -308,7 +308,7 @@ contract Storage is Ownable {
             _record.IPFS1 = _IPFS1;
         }
         
-        (_record.recorder , _record.lastrecorder) = updateRegistrar(_userHash, _idxHash);
+        (_record.recorder , _record.lastrecorder) = updateRecorder(_userHash, _idxHash);
         _record.timeLock = 0;
         database[_idxHash] = _record;
         
@@ -335,7 +335,7 @@ contract Storage is Ownable {
         if (database[_idxHash].IPFS2 != _IPFS2) {
             _record.IPFS2 = _IPFS2;
         }
-        (_record.recorder , _record.lastrecorder) = updateRegistrar(_userHash, _idxHash);
+        (_record.recorder , _record.lastrecorder) = updateRecorder(_userHash, _idxHash);
         _record.timeLock = 0;
         database[_idxHash] = _record;
     }
@@ -428,7 +428,7 @@ contract Storage is Ownable {
      /*
      * @dev Update lastrecorder
      */ 
-    function updateRegistrar(bytes32 _senderHash, bytes32 _idxHash) private view exists (_idxHash) returns(bytes32, bytes32){
+    function updateRecorder(bytes32 _senderHash, bytes32 _idxHash) private view exists (_idxHash) returns(bytes32, bytes32){
         
         bytes32 rec; 
         bytes32 lastrec;
