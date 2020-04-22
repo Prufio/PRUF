@@ -9,10 +9,8 @@ contract StorageInterface {
     function retrieveRecord (bytes32 _idxHash) external returns (bytes32, uint8, uint8, uint16, uint, uint, bytes32) {}
     function getHash(bytes32 _idxHash) external returns (bytes32) {}
     function checkOutRecord (bytes32 _idxHash, bytes32 _) external returns (bytes32) {}
-    function newRecord(bytes32 _userHash, bytes32 _idxHash, bytes32 _rgt
-    , uint16 _assetClass, uint _countDownStart, bytes32 _IPFS1) external {}
-    function modifyRecord(bytes32 _userHash, bytes32 _idxHash, bytes32 _rgt
-    , uint8 _status, uint _countDown, uint8 _forceCount, bytes32 _writeHash) external {}
+    function newRecord(bytes32 _userHash, bytes32 _idxHash, bytes32 _rgt, uint16 _assetClass, uint _countDownStart, bytes32 _IPFS1) external {}
+    function modifyRecord(bytes32 _userHash, bytes32 _idxHash, bytes32 _rgt, uint8 _status, uint _countDown, uint8 _forceCount, bytes32 _writeHash) external {}
     function modifyIPFS1 (bytes32 _userHash, bytes32 _idxHash, bytes32 _IPFS1, bytes32 _writeHash) external {}
     function modifyIPFS2 (bytes32 _userHash, bytes32 _idxHash, bytes32 _IPFS2, bytes32 _writeHash) external {}
 }    
