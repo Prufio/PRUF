@@ -280,7 +280,7 @@ contract Storage is Ownable {
         _record.countDown = _countDown;
         _record.status = _status;
         _record.forceModCount = _forceCount;
-        (_record.recorder , _record.lastrecorder) = updateRecorder(_userHash, _idxHash);
+         (_record.recorder , _record.lastrecorder) = updateRecorder(_userHash, _record.recorder, _record.lastrecorder);
         _record.timeLock = 0;
         database[_idxHash] = _record;
         
@@ -308,7 +308,7 @@ contract Storage is Ownable {
             _record.IPFS1 = _IPFS1;
         }
         
-        (_record.recorder , _record.lastrecorder) = updateRecorder(_userHash, _idxHash);
+         (_record.recorder , _record.lastrecorder) = updateRecorder(_userHash, _record.recorder, _record.lastrecorder);
         _record.timeLock = 0;
         database[_idxHash] = _record;
         
@@ -335,7 +335,7 @@ contract Storage is Ownable {
         if (database[_idxHash].IPFS2 != _IPFS2) {
             _record.IPFS2 = _IPFS2;
         }
-        (_record.recorder , _record.lastrecorder) = updateRecorder(_userHash, _idxHash);
+        (_record.recorder , _record.lastrecorder) = updateRecorder(_userHash, _record.recorder, _record.lastrecorder);
         _record.timeLock = 0;
         database[_idxHash] = _record;
     }
@@ -393,15 +393,7 @@ contract Storage is Ownable {
                 database[_idxHash].IPFS1, database[_idxHash].IPFS2)));
     }
     
-    function recHash(bytes32 _idxHash) private view addrAuth(3) exists (_idxHash) returns (bytes32) {
-        
-        bytes32 ck = keccak256(abi.encodePacked(block.number, database[_idxHash].checkOut));
-    
-        return (keccak256(abi.encodePacked(database[_idxHash].recorder, database[_idxHash].rightsHolder, database[_idxHash].lastrecorder, database[_idxHash].status, 
-                database[_idxHash].forceModCount, database[_idxHash].assetClass, database[_idxHash].countDown, database[_idxHash].countDownStart,
-                database[_idxHash].IPFS1, database[_idxHash].IPFS2,ck)));
-    }
-    
+
     /*
      * @dev check for lock, lock record, return a hash of a record with the supplied checkout code
      */
@@ -410,17 +402,22 @@ contract Storage is Ownable {
             database[_idxHash].timeLock < block.number,
             "COR:ERR-- record already checked out"
         );
-        bytes32 idxHash = _idxHash;
+        
         database[_idxHash].timeLock = block.number;
         database[_idxHash].checkOut = _checkOut ;
         
-        return (recHash(idxHash));
-        
-        //return (keccak256(abi.encodePacked(database[idxHash].recorder, database[idxHash].rightsHolder, database[idxHash].lastrecorder, database[idxHash].status, 
-        //        database[idxHash].forceModCount, database[idxHash].assetClass, database[idxHash].countDown, database[idxHash].countDownStart,
-        //        database[idxHash].IPFS1, database[idxHash].IPFS2,database[idxHash].checkOut)));
+        return (recHash(_idxHash));
+    
     }
     
+    function recHash(bytes32 _idxHash) private view addrAuth(3) exists (_idxHash) returns (bytes32) {
+        
+        bytes32 ckey = keccak256(abi.encodePacked(block.number, database[_idxHash].checkOut));
+    
+        return (keccak256(abi.encodePacked(database[_idxHash].recorder, database[_idxHash].rightsHolder, database[_idxHash].lastrecorder, database[_idxHash].status, 
+                database[_idxHash].forceModCount, database[_idxHash].assetClass, database[_idxHash].countDown, database[_idxHash].countDownStart,
+                database[_idxHash].IPFS1, database[_idxHash].IPFS2,ckey))); //hash of existing record with blocknumber and checkout key
+    }
     
     
     //------------------------------------------------------------private functions-------------------------------------------------------------------
@@ -428,19 +425,17 @@ contract Storage is Ownable {
      /*
      * @dev Update lastrecorder
      */ 
-    function updateRecorder(bytes32 _senderHash, bytes32 _idxHash) private view exists (_idxHash) returns(bytes32, bytes32){
-        
-        bytes32 rec; 
+    function updateRecorder(bytes32 _senderHash, bytes32 _recorder, bytes32 _lastrecorder) private view returns(bytes32, bytes32){
+         
         bytes32 lastrec;
         
-        if ( (registeredUsers[database[_idxHash].recorder].userType == 1) || (_senderHash == keccak256(abi.encodePacked(owner()))) 
-                        && (_senderHash != database[_idxHash].recorder) ) {     // Rotate last recorder into lastrecorder field if uniuqe and not a robot
-            lastrec = database[_idxHash].recorder;
+        if ( (registeredUsers[_senderHash].userType == 1) || (_senderHash == keccak256(abi.encodePacked(owner()))) //human user or storage contract owner
+                        && (_senderHash != _recorder) ) {     // uniuqe (new) recorder
+            lastrec = _recorder; // Rotate preexisting recorder into lastrecorder field if uniuqe (not same as new recorder) and new recorder is not a robot
         } else { 
-            lastrec = database[_idxHash].lastrecorder;
+            lastrec = _lastrecorder; //keep lastRecorder the same as before, only update the current recorder.
         }
-        rec = keccak256(abi.encodePacked(_senderHash));
-        return(rec,lastrec);
+        return(_senderHash,lastrec);
         
     }
     

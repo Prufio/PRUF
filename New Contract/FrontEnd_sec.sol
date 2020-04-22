@@ -133,8 +133,7 @@ contract FrontEnd is Ownable {
      */
     function _NEW_RECORD (string memory _idx, string memory _rgt
     , uint16 _assetClass, uint _countDownStart, string memory _IPFS) public payable {
-        Storage.newRecord(keccak256(abi.encodePacked(msg.sender)), keccak256(abi.encodePacked(_idx)), keccak256(abi.encodePacked(_rgt
-        )),
+        Storage.newRecord(keccak256(abi.encodePacked(msg.sender)), keccak256(abi.encodePacked(_idx)), keccak256(abi.encodePacked(_rgt)),
         _assetClass, _countDownStart, keccak256(abi.encodePacked(_IPFS)));
     }
     
@@ -143,20 +142,20 @@ contract FrontEnd is Ownable {
      * @dev Wrapper for ModifyRecord
      */
     //function _MOD_RECORD (bytes32 _idxHash, bytes32 _regHash, uint8 _status, uint _countDown, uint8 _forceCount, bytes32 _recordHash) public payable {
-    function _MOD_RECORD (string memory _idx, string memory _rgt
-    , uint8 _status, uint _countDown, uint8 _forceCount) public payable { 
+    function _MOD_RECORD (string memory _idx, string memory _rgt, uint8 _status, uint _countDown, uint8 _forceCount) public payable { 
         
-        bytes32 checkoutKey = keccak256(abi.encodePacked(msg.sender,_idx,_rgt
-        ,_status,_countDown,_forceCount));
-        bytes32 userHash = keccak256(abi.encodePacked(msg.sender));
         bytes32 _idxHash = keccak256(abi.encodePacked(_idx));//temp
-        bytes32 _regHash = keccak256(abi.encodePacked(_rgt
-        ));//temp
+        bytes32 _rgtHash = keccak256(abi.encodePacked(_rgt));//temp
         
-        bytes32 _recordHash = Storage.checkOutRecord(_idxHash, checkoutKey);//temp until is in function arguments-------------------------------------TESTING  //checkOutRecord
-        bytes32 writeHash = keccak256(abi.encodePacked(_recordHash, userHash, _idxHash, _regHash, _status, _countDown, _forceCount));
+        bytes32 userHash = keccak256(abi.encodePacked(msg.sender)); //get a userhash for authentication and recorder logging
         
-        Storage.modifyRecord(userHash, _idxHash, _regHash, _status, _countDown, _forceCount, writeHash);
+        bytes32 checkoutKey = keccak256(abi.encodePacked(msg.sender,_idxHash,_rgtHash,_status,_countDown,_forceCount)); //make a unuiqe ID from the data being sent
+        
+
+        bytes32 _recordHash = Storage.checkOutRecord(_idxHash, checkoutKey);// checks out record with key - temp until is in function arguments-------------------------------------TESTING  //checkOutRecord
+        
+        bytes32 writeHash = keccak256(abi.encodePacked(_recordHash, userHash, _idxHash, _rgtHash, _status, _countDown, _forceCount)); //prepare a writehash with existing data , blocknumber, checkout key, and new data for authentication
+        Storage.modifyRecord(userHash, _idxHash, _rgtHash, _status, _countDown, _forceCount, writeHash);  //send data and writehash to storage
         
     }
     
