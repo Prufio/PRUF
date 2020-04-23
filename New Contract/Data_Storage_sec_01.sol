@@ -275,8 +275,9 @@ contract Storage is Ownable {
         _record.status = _status;
         _record.forceModCount = _forceCount;
          (_record.recorder , _record.lastrecorder) = newRecorder(_userHash, _record.recorder, _record.lastrecorder);
-        _record.timeLock = 0;
+        
         database[_idxHash] = _record;
+        database[_idxHash].timeLock = 0;
         
     }
     
@@ -292,81 +293,24 @@ contract Storage is Ownable {
             "MIPFS:ERR--record has been changed or sent invalid data"
         );
         
-        Record memory _record;
-        _record = database[_idxHash];
-        
-        require(
-            _record.IPFS1 != _IPFS1,
-            "MIPFS:ERR-- New IPFS Data identical to old"
-        );
+        Record memory _record = database[_idxHash];
         
         
         if (_record.IPFS1 != _IPFS1) {
             _record.IPFS1 = _IPFS1;
         }
+        
        if (_record.IPFS2 == 0) {
             _record.IPFS2 = _IPFS2;
         }
         
          (_record.recorder , _record.lastrecorder) = newRecorder(_userHash, _record.recorder, _record.lastrecorder);
-        _record.timeLock = 0;
+         
         database[_idxHash] = _record;
+        database[_idxHash].timeLock = 0;
         
     }
     
-    /*
-     * @dev modify record IPFS1 data
-     
-    function modifyIPFS1 (bytes32 _userHash, bytes32 _idxHash, bytes32 _IPFS1, bytes32 _writeHash) external addrAuth(3) userAuth (_userHash, _idxHash) exists (_idxHash) unlocked (_idxHash) {
-        require(//this require calls another function that returns a hash of the record without any stateful effects. 
-                  //While this is technically a violation of the CEI pattern, I think its OK in this case
-            _writeHash == keccak256(abi.encodePacked(recHash(_idxHash), _userHash, _idxHash, _IPFS1)) ,
-            // requires that _writeHash is an identical hash of the oldhash and the new data
-            "MIPFS1:ERR--record has been changed or sent invalid data"
-        );
-        require(
-            database[_idxHash].IPFS1 != _IPFS1,
-            "MIPFS1:ERR-- New IPFS Data identical to old"
-        );
-        
-        Record memory _record;
-        _record = database[_idxHash];
-        if (database[_idxHash].IPFS1 != _IPFS1) {
-            _record.IPFS1 = _IPFS1;
-        }
-        
-         (_record.recorder , _record.lastrecorder) = newRecorder(_userHash, _record.recorder, _record.lastrecorder);
-        _record.timeLock = 0;
-        database[_idxHash] = _record;
-        
-    }
-    */
-    
-    /*
-     * @dev modify record IPFS2 data
-     
-    function modifyIPFS2 (bytes32 _userHash, bytes32 _idxHash, bytes32 _IPFS2, bytes32 _writeHash) external addrAuth(3) userAuth (_userHash, _idxHash) exists (_idxHash) unlocked (_idxHash) {
-        require(//this require calls another function that returns a hash of the record without any stateful effects. 
-                 //While this is technically a violation of the CEI pattern, I think its OK in this case
-            _writeHash == keccak256(abi.encodePacked(recHash(_idxHash), _userHash, _idxHash, _IPFS2)) ,
-            // requires that _writeHash is an identical hash of the oldhash and the new data
-            "MIPFS2:ERR--record has been changed or sent invalid data"
-        );
-        require(
-            database[_idxHash].IPFS2 == 0,
-            "MIPFS2:ERR-IPFS2 Data already exists and cannot be overwritten"
-        );
-        
-        Record memory _record;
-        _record = database[_idxHash];
-        if (database[_idxHash].IPFS2 != _IPFS2) {
-            _record.IPFS2 = _IPFS2;
-        }
-        (_record.recorder , _record.lastrecorder) = newRecorder(_userHash, _record.recorder, _record.lastrecorder);
-        _record.timeLock = 0;
-        database[_idxHash] = _record;
-    }
-    */
  
 //----------------------------------------external READ ONLY contract functions  //authuser---------------------------------------------------------- 
     /*
@@ -386,14 +330,14 @@ contract Storage is Ownable {
 
         bytes32 idxHash = _idxHash ;  //somehow magically saves the stack.
         bytes32 datahash = keccak256(abi.encodePacked(database[idxHash].rightsHolder, database[idxHash].status, database[idxHash].forceModCount, 
-        database[idxHash].assetClass, database[idxHash].countDown, database[idxHash].countDownStart));
+                database[idxHash].assetClass, database[idxHash].countDown, database[idxHash].countDownStart));
 
         return (database[idxHash].rightsHolder, database[idxHash].status, database[idxHash].forceModCount, 
-        database[idxHash].assetClass, database[idxHash].countDown, database[idxHash].countDownStart, datahash);
+                database[idxHash].assetClass, database[idxHash].countDown, database[idxHash].countDownStart, datahash);
     }
     
     
-     /*
+    /*
      * @dev return abbreviated record (IPFS data only)
      */
     function retrieveIPFSdata (bytes32 _idxHash) external view addrAuth(2) exists (_idxHash) returns (bytes32, uint8, uint16, bytes32, bytes32, bytes32) {  
@@ -402,9 +346,19 @@ contract Storage is Ownable {
                 database[_idxHash].assetClass, database[_idxHash].IPFS1, database[_idxHash].IPFS2));
 
         return (database[_idxHash].rightsHolder, database[_idxHash].status,
-        database[_idxHash].assetClass, database[_idxHash].IPFS1, database[_idxHash].IPFS2, datahash);
+                database[_idxHash].assetClass, database[_idxHash].IPFS1, database[_idxHash].IPFS2, datahash);
     }
     
+    
+    /*
+     * @dev return abbreviated record (Recorder data only)
+     */
+    function retrieveRecorder (bytes32 _idxHash) external view addrAuth(2) exists (_idxHash) returns (bytes32, bytes32, bytes32) {  
+        
+        bytes32 datahash = keccak256(abi.encodePacked(database[_idxHash].lastrecorder, database[_idxHash].recorder));
+
+        return (database[_idxHash].lastrecorder, database[_idxHash].recorder, datahash);
+    }
     
     /*
      * @dev emit a complete record record minus checkout and mutex data 

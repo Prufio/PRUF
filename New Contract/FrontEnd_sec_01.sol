@@ -14,8 +14,7 @@ contract StorageInterface {
     function newRecord(bytes32 _userHash, bytes32 _idxHash, bytes32 _rgt, uint16 _assetClass, uint _countDownStart, bytes32 _IPFS1) external {}
     function modifyRecord(bytes32 _userHash, bytes32 _idxHash, bytes32 _rgt, uint8 _status, uint _countDown, uint8 _forceCount, bytes32 _writeHash) external {}
     function modifyIPFS (bytes32 _userHash, bytes32 _idxHash, bytes32 _IPFS1, bytes32 _IPFS2, bytes32 _writeHash) external {}
-    //function modifyIPFS1 (bytes32 _userHash, bytes32 _idxHash, bytes32 _IPFS1, bytes32 _writeHash) external {}
-    //function modifyIPFS2 (bytes32 _userHash, bytes32 _idxHash, bytes32 _IPFS2, bytes32 _writeHash) external {}
+    function retrieveRecorder (bytes32 _idxHash) external returns (bytes32, bytes32, bytes32) {}
 }    
     
 
@@ -25,7 +24,7 @@ contract FrontEnd is Ownable {
     using SafeMath for uint;
  
     
-       struct Record {
+    struct Record {
         bytes32 recorder; // Address hash of recorder 
         bytes32 rightsHolder;  // KEK256 Registered  owner
         bytes32 lastrecorder; //// Address hash of last non-automation recorder
@@ -406,24 +405,49 @@ contract FrontEnd is Ownable {
         Storage.modifyIPFS(userHash, _idxHash, _rec.IPFS1, _rec.IPFS2, writeHash);  //send data and writehash to storage
     }
     
-
     
-     /*
-     * @dev Wrapper for retrieveRecord  //does this need to exist in production?????!!!!!!!!!!!!
-     */
-    function _RETRIEVE_RECORD (string calldata _idx) external returns (bytes32, uint8, uint8, uint16, uint, uint, bytes32) {
-        return Storage.retrieveRecord (keccak256(abi.encodePacked(_idx)));
+    function getRecorders (bytes32 _idxHash) private returns (Record memory) { 
+        Record memory rec;
+        bytes32 datahash;
+        
+        (rec.lastrecorder, rec.recorder, datahash) 
+            = Storage.retrieveRecorder (_idxHash);//get record from storage contract
+        
+        require (
+            keccak256(abi.encodePacked(rec.lastrecorder, rec.recorder)) == datahash,
+            "GR:ERR--Hash does not match passed data"
+        );
+        return (rec);  //returns Record struct rec and checkout supplied key
     }
-    
+
     
     
     /*
-     * @dev Wrapper for retrieveIPFSdata //does this need to exist in production?????!!!!!!!!!!!!
+     * @dev Wrapper for getRecord  //does this need to exist in production?????!!!!!!!!!!!!
      */
-    function _GET_IPFS (string calldata _idx) external returns (bytes32, uint8, uint16, bytes32, bytes32, bytes32) {
-        return Storage.retrieveIPFSdata (keccak256(abi.encodePacked(_idx)));
+    function _GET_RECORD (string calldata _idx) external returns (bytes32, uint8, uint8, uint16, uint, uint){
+         Record memory rec = getRecord(keccak256(abi.encodePacked(_idx)));
+         return (rec.rightsHolder, rec.status, rec.forceModCount, rec.assetClass, rec.countDown, rec.countDownStart);
+    }
+     
+    
+    /*
+     * @dev Wrapper for getRecordIPFS  //does this need to exist in production?????!!!!!!!!!!!!
+     */ 
+    function _GET_RECORD_IPFS (string calldata _idx) external returns (bytes32, uint8, uint16, bytes32, bytes32){
+         Record memory rec = getRecordIPFS(keccak256(abi.encodePacked(_idx)));
+         return (rec.rightsHolder, rec.status, rec.assetClass, rec.IPFS1, rec.IPFS2);
     }
     
+    
+    /*
+     * @dev Wrapper for getRecorders  //does this need to exist in production?????!!!!!!!!!!!!
+     */ 
+    function _GET_RECORDERS (string calldata _idx) external returns (bytes32, bytes32){
+         Record memory rec = getRecorders(keccak256(abi.encodePacked(_idx)));
+         return (rec.lastrecorder, rec.recorder);
+    }
+     
     
     /*
      * @dev Wrapper for GetHash
