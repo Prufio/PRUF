@@ -147,14 +147,14 @@ contract FrontEnd is Ownable {
     
    //----------write a data thing:
    //have data
-   //get a record #hash from Storage
-   //get a Record struct
+   //get a record #hash from Storage using Storage.getHash(idxHash)
+   //get a Record struct using getRecord(idxHash)
    //check out the record with the new / old data --
    //make a unuiqe ID from the data being sent
-   //newRecordHash = Storage.checkOutRecord(_idxHash, _checkoutID);
+   //check out the record using newRecordHash = Storage.checkOutRecord(_idxHash, _checkoutID);
    //bytes32 key = keccak256(abi.encodePacked(block.number, checkoutID));
    //verify that the earlier record #hash hashed with the key matches newRecordHash 
-   //write the modified Record struct with the recordHash
+   //write the modified Record struct (_rec) with the recordHash using writeRecord (idxHash, _rec, recordHash)
    
     function getRecord (bytes32 _idxHash) private returns (Record memory) { 
         Record memory rec;
