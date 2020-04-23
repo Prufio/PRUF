@@ -256,11 +256,9 @@ contract Storage is Ownable {
     function modifyRecord(bytes32 _userHash, bytes32 _idxHash, bytes32 _regHash, uint8 _status, uint _countDown, uint8 _forceCount, bytes32 _writeHash) 
                             external addrAuth(3) userAuth (_userHash, _idxHash) exists (_idxHash) unlocked (_idxHash){
                                 
-        require(  //this require calls another function that returns a hash of the record without any stateful effects. 
-                  //While this is technically a violation of the CEI pattern, I think its OK in this case
-            _writeHash == keccak256(abi.encodePacked(recHash(_idxHash), _userHash, _idxHash, _regHash, _status, _countDown, _forceCount)) , //uint8(1) 
-            // requires that _writeHash is an identical hash of the oldhash and the new data
-            "MR:ERR-record has been changed or sent invalid data"
+        require(  //this require calls another function that returns a hash of the record without any stateful effects. While this is technically a violation of the CEI pattern, I think its OK in this case
+            _writeHash == keccak256(abi.encodePacked(recHash(_idxHash), _userHash, _idxHash, _regHash, _status, _countDown, _forceCount)) , // requires that _writeHash is an identical hash of the oldhash and the new data
+            "MR:ERR-record has been changed or sent invalid data"  //validate data and block number 
         );
         require(
             _regHash != 0 ,

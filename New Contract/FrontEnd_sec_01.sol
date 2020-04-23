@@ -22,10 +22,11 @@ contract StorageInterface {
 contract FrontEnd is Ownable {
     
     //using SafeMath for uint8;
-    //using SafeMath for uint;
+    using SafeMath for uint;
+    
+    
     /*
-    *External write functions
-    *ForceMod rightsholder
+    *---------------External write functions
     *Change status
     *Update countDown
     *Transfer rightsHolder
@@ -113,7 +114,6 @@ contract FrontEnd is Ownable {
         rec.countDown = _countDown;
        
         writeRecord (_idxHash, rec, _recordHash);
-        
     }
     
     function FORCE_MOD_RECORD (string memory _idx, string memory _rgt) public payable { 
@@ -121,14 +121,15 @@ contract FrontEnd is Ownable {
         
         bytes32 _idxHash = keccak256(abi.encodePacked(_idx));//temp
         bytes32 _rgtHash = keccak256(abi.encodePacked(_rgt));//temp
-        bytes32 recHash = Storage.getHash(_idxHash);
+        
+        bytes32 cleanHash = Storage.getHash(_idxHash);
         rec = getRecord (_idxHash);
         require( 
             rec.status != 255,
             "FMR:ERR-Record locked"
         );
         if (rec.forceModCount < 255) {
-            rec.forceModCount ++ ;
+            rec.forceModCount ++;
         }
         rec.rightsHolder = _rgtHash;
         
@@ -136,12 +137,74 @@ contract FrontEnd is Ownable {
         bytes32 _recordHash = Storage.checkOutRecord(_idxHash, checkoutID);// checks out record with ID 
         bytes32 key = keccak256(abi.encodePacked(block.number, checkoutID));
         require ( 
-            _recordHash == keccak256(abi.encodePacked(recHash,key)),
+            _recordHash == keccak256(abi.encodePacked(cleanHash,key)),
             "FMR:ERR--record does not match"
         );
         
         writeRecord (_idxHash, rec, _recordHash);
+    }
+    
+    
+    function MOD_STATUS (string memory _idx, string memory _rgt, uint8 _status) public payable { 
+        Record memory rec;
+        bytes32 _rgtHash = keccak256(abi.encodePacked(_rgt));//temp
+        bytes32 _idxHash = keccak256(abi.encodePacked(_idx));//temp
+      
+        bytes32 cleanHash = Storage.getHash(_idxHash);
+        rec = getRecord (_idxHash);
+        require( 
+            rec.status != 255,
+            "MS:ERR-Record locked"
+        );
+        require( 
+            rec.rightsHolder == _rgtHash,
+            "MS:ERR-Rightsholder does not match supplied data"
+        );
         
+        rec.status = _status;
+        
+        bytes32 checkoutID = keccak256(abi.encodePacked(msg.sender,_idxHash, rec.rightsHolder, rec.status, rec.countDown, rec.forceModCount)); //make a unuiqe ID from the data being sent
+        bytes32 _recordHash = Storage.checkOutRecord(_idxHash, checkoutID);// checks out record with ID 
+        bytes32 key = keccak256(abi.encodePacked(block.number, checkoutID));
+        require ( 
+            _recordHash == keccak256(abi.encodePacked(cleanHash,key)),
+            "MS:ERR--record does not match"
+        );
+        
+        writeRecord (_idxHash, rec, _recordHash);
+    }
+    
+    function DEC_COUNTER (string memory _idx, string memory _rgt, uint _decAmount) public payable { 
+        Record memory rec;
+        bytes32 _rgtHash = keccak256(abi.encodePacked(_rgt));//temp
+        bytes32 _idxHash = keccak256(abi.encodePacked(_idx));//temp
+      
+        bytes32 cleanHash = Storage.getHash(_idxHash);
+        rec = getRecord (_idxHash);
+        require( 
+            rec.status != 255,
+            "DC:ERR-Record locked"
+        );
+        require( 
+            rec.rightsHolder == _rgtHash,
+            "DC:ERR-Rightsholder does not match supplied data"
+        );
+        
+        if  (rec.countDown > _decAmount){
+            rec.countDown = rec.countDown.sub(_decAmount);
+        } else {
+            rec.countDown = 0;
+        }
+            
+        bytes32 checkoutID = keccak256(abi.encodePacked(msg.sender,_idxHash, rec.rightsHolder, rec.status, rec.countDown, rec.forceModCount)); //make a unuiqe ID from the data being sent
+        bytes32 _recordHash = Storage.checkOutRecord(_idxHash, checkoutID);// checks out record with ID 
+        bytes32 key = keccak256(abi.encodePacked(block.number, checkoutID));
+        require ( 
+            _recordHash == keccak256(abi.encodePacked(cleanHash,key)),
+            "DC:ERR--record does not match"
+        );
+        
+        writeRecord (_idxHash, rec, _recordHash);
     }
     
     
