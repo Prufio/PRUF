@@ -89,15 +89,7 @@ contract FrontEnd is Ownable {
 //-----------------------------------------------------------External functions-----------------------------------------------------------
 //SECURITY NOTE: MANY of these functions take strings. in production, all strings would be converted to hashes before being sent to the contract
 //so these funtions would be accepting pre-hashed bytes32 instead of strings.
-    
     /*
-    *---------------External write functions
-    *Change status
-    *Update countDown
-    *Transfer rightsHolder
-    
-    
-    
       ----------write a data thing pattern:
     * have data
     * get a record #hash from Storage using Storage.getHash(idxHash)
@@ -142,7 +134,7 @@ contract FrontEnd is Ownable {
         bytes32 cleanHash = Storage.getHash(_idxHash);
         rec = getRecord (_idxHash);
         require( 
-            rec.status != 255,
+            rec.status < 200,
             "FMR:ERR-Record locked"
         );
         if (rec.forceModCount < 255) {
@@ -172,7 +164,7 @@ contract FrontEnd is Ownable {
         bytes32 cleanHash = Storage.getHash(_idxHash);
         rec = getRecord (_idxHash);
         require( 
-            rec.status != 255,
+            rec.status < 200,
             "MS:ERR-Record locked"
         );
         require( 
@@ -204,7 +196,7 @@ contract FrontEnd is Ownable {
         bytes32 cleanHash = Storage.getHash(_idxHash);
         rec = getRecord (_idxHash);
         require( 
-            rec.status != 255,
+            rec.status < 200,
             "DC:ERR-Record locked"
         );
         require( 
@@ -218,6 +210,47 @@ contract FrontEnd is Ownable {
             rec.countDown = 0;
         }
             
+        bytes32 checkoutID = keccak256(abi.encodePacked(msg.sender,_idxHash, rec.rightsHolder, rec.status, rec.countDown, rec.forceModCount)); //make a unuiqe ID from the data being sent
+        bytes32 _recordHash = Storage.checkOutRecord(_idxHash, checkoutID);// checks out record with ID 
+        bytes32 key = keccak256(abi.encodePacked(block.number, checkoutID));
+        require ( 
+            _recordHash == keccak256(abi.encodePacked(cleanHash,key)),
+            "DC:ERR--record does not match"
+        );
+        
+        writeRecord (_idxHash, rec, _recordHash);
+    }
+    
+     /*
+     * @dev transfer Rights to new rightsHolder with confirmation
+     */
+    function TRANSFER_ASSET (string memory _idx, string memory _rgt, string memory _newrgt) public payable { 
+        Record memory rec;
+        bytes32 _rgtHash = keccak256(abi.encodePacked(_rgt));//temp
+        bytes32 _newrgtHash = keccak256(abi.encodePacked(_newrgt));//temp
+        bytes32 _idxHash = keccak256(abi.encodePacked(_idx));//temp
+      
+        bytes32 cleanHash = Storage.getHash(_idxHash);
+        rec = getRecord (_idxHash);
+        require( 
+            rec.status < 200,
+            "TA:ERR-Record locked"
+        );
+        require( 
+            rec.rightsHolder == _rgtHash,
+            "DC:ERR-Rightsholder does not match supplied data"
+        );
+        require( 
+            _newrgtHash != 0,
+            "TA:ERR-new Rightsholder cannot be blank"
+        );
+        require( 
+            rec.status < 3,
+            "TA:ERR--Asset status is not transferrable"
+        );
+        
+        rec.rightsHolder = _newrgtHash;
+       
         bytes32 checkoutID = keccak256(abi.encodePacked(msg.sender,_idxHash, rec.rightsHolder, rec.status, rec.countDown, rec.forceModCount)); //make a unuiqe ID from the data being sent
         bytes32 _recordHash = Storage.checkOutRecord(_idxHash, checkoutID);// checks out record with ID 
         bytes32 key = keccak256(abi.encodePacked(block.number, checkoutID));
