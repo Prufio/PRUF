@@ -9,7 +9,7 @@ contract Storage is Ownable {
     struct Record {
         bytes32 recorder; // Address hash of recorder 
         bytes32 rightsHolder;  // KEK256 Registered  owner
-        bytes32 lastrecorder; //// Address hash of last non-automation recorder
+        bytes32 lastRecorder; //// Address hash of last non-automation recorder
         uint8 status; // Status - Transferrable, locked, in transfer, stolen, lost, etc.
         uint8 forceModCount; // Number of times asset has been forceModded.
         uint16 assetClass; //Type of asset
@@ -233,7 +233,7 @@ contract Storage is Ownable {
         _record.countDown = _countDownStart;
         _record.recorder = _userHash;
         _record.rightsHolder = _rgt;
-        _record.lastrecorder = _userHash;
+        _record.lastRecorder = _userHash;
         _record.forceModCount = 0;
         _record.IPFS1= _IPFS1;
         
@@ -274,7 +274,7 @@ contract Storage is Ownable {
         _record.countDown = _countDown;
         _record.status = _status;
         _record.forceModCount = _forceCount;
-         (_record.recorder , _record.lastrecorder) = newRecorder(_userHash, _record.recorder, _record.lastrecorder);
+         (_record.recorder , _record.lastRecorder) = newRecorder(_userHash, _record.recorder, _record.lastRecorder);
         
         database[_idxHash] = _record;
         database[_idxHash].timeLock = 0;
@@ -304,7 +304,7 @@ contract Storage is Ownable {
             _record.IPFS2 = _IPFS2;
         }
         
-         (_record.recorder , _record.lastrecorder) = newRecorder(_userHash, _record.recorder, _record.lastrecorder);
+         (_record.recorder , _record.lastRecorder) = newRecorder(_userHash, _record.recorder, _record.lastRecorder);
          
         database[_idxHash] = _record;
         database[_idxHash].timeLock = 0;
@@ -355,9 +355,9 @@ contract Storage is Ownable {
      */
     function retrieveRecorder (bytes32 _idxHash) external view addrAuth(2) exists (_idxHash) returns (bytes32, bytes32, bytes32) {  
         
-        bytes32 datahash = keccak256(abi.encodePacked(database[_idxHash].lastrecorder, database[_idxHash].recorder));
+        bytes32 datahash = keccak256(abi.encodePacked(database[_idxHash].lastRecorder, database[_idxHash].recorder));
 
-        return (database[_idxHash].lastrecorder, database[_idxHash].recorder, datahash);
+        return (database[_idxHash].lastRecorder, database[_idxHash].recorder, datahash);
     }
     
     /*
@@ -366,7 +366,7 @@ contract Storage is Ownable {
     function emitRecord (bytes32 _idxHash) external addrAuth(1) exists (_idxHash) { 
         
         //emit EMIT_RECORD (database[_idx]);  //use when ABIencoder V2 is ready for prime-time
-        emit EMIT_RECORD (database[_idxHash].recorder, database[_idxHash].rightsHolder, database[_idxHash].lastrecorder, database[_idxHash].status, 
+        emit EMIT_RECORD (database[_idxHash].recorder, database[_idxHash].rightsHolder, database[_idxHash].lastRecorder, database[_idxHash].status, 
                 database[_idxHash].forceModCount, database[_idxHash].assetClass, database[_idxHash].countDown, database[_idxHash].countDownStart, 
                 database[_idxHash].IPFS1, database[_idxHash].IPFS2);
     }
@@ -406,7 +406,7 @@ contract Storage is Ownable {
      */ 
     function getHash(bytes32 _idxHash) public view addrAuth(2) exists (_idxHash) returns (bytes32) {
     
-        return (keccak256(abi.encodePacked(database[_idxHash].recorder, database[_idxHash].rightsHolder, database[_idxHash].lastrecorder, database[_idxHash].status, 
+        return (keccak256(abi.encodePacked(database[_idxHash].recorder, database[_idxHash].rightsHolder, database[_idxHash].lastRecorder, database[_idxHash].status, 
                 database[_idxHash].forceModCount, database[_idxHash].assetClass, database[_idxHash].countDown, database[_idxHash].countDownStart,
                 database[_idxHash].IPFS1, database[_idxHash].IPFS2))); //hash of existing record
     }
@@ -425,9 +425,9 @@ contract Storage is Ownable {
     
     
      /*
-     * @dev Update lastrecorder
+     * @dev Update lastRecorder
      */ 
-    function newRecorder(bytes32 _senderHash, bytes32 _recorder, bytes32 _lastrecorder) private view returns(bytes32, bytes32){
+    function newRecorder(bytes32 _senderHash, bytes32 _recorder, bytes32 _lastRecorder) private view returns(bytes32, bytes32){
          
         bytes32 lastrec;
         
@@ -435,9 +435,9 @@ contract Storage is Ownable {
                         && (_senderHash != _recorder) ) {     // uniuqe (new) recorder
                         //existing is a human and new is unuiqe
                         
-            lastrec = _recorder; // Rotate preexisting recorder into lastrecorder field if uniuqe (not same as new recorder) and new recorder is not a robot
+            lastrec = _recorder; // Rotate preexisting recorder into lastRecorder field if uniuqe (not same as new recorder) and new recorder is not a robot
         } else { 
-            lastrec = _lastrecorder; //keep lastRecorder the same as before, only update the current recorder.
+            lastrec = _lastRecorder; //keep lastRecorder the same as before, only update the current recorder.
         }
         return(_senderHash,lastrec);
     }
