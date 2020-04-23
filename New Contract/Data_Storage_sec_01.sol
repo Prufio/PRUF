@@ -5,7 +5,6 @@ import "./Ownable.sol";
 
 contract Storage is Ownable {
     
-    uint nonce;
    
     struct Record {
         bytes32 recorder; // Address hash of recorder 
@@ -76,6 +75,7 @@ contract Storage is Ownable {
     }
     
  
+ 
     /*
      * @dev Verify user credentials
      */     
@@ -99,11 +99,10 @@ contract Storage is Ownable {
      */     
     modifier unlocked (bytes32 _idxHash) {
         require(
-            database[_idxHash].status != 255 ,
+            database[_idxHash].status < 200 ,
             "CR:ERR-record Locked"
         );
         _;
-        
     }
     
     modifier exists (bytes32 _idxHash) {
@@ -123,9 +122,7 @@ contract Storage is Ownable {
     }
     
 
-    
     //--------------------------------------------------------------------------Events----------------------------------------------------------
-
     event REPORT (string _msg);
     
     //event EMIT_RECORD (Record record);  //use when ABIencoder V2 is ready for prime-time
@@ -133,8 +130,6 @@ contract Storage is Ownable {
     
     
     //--------------------------------------------internal Admin functions //onlyowner----------------------------------------------------------
-    
-    
     /*
      * @dev Authorize / Deauthorize / Authorize users for an address be permitted to make record modifications
      * ----------------INSECURE -- keccak256 of address must be generated clientside in release.
@@ -164,16 +159,6 @@ contract Storage is Ownable {
         authorizedAdresses[keccak256(abi.encodePacked(_addr))] = _userType;
     }
     
-    
-    /*
-     * @dev retrieve function costs per asset class, in Wei
-     */    
-    function RETRIEVE_COSTS (uint16 _assetClass) external view addrAuth(3) returns (uint, uint, uint, uint, uint, uint) {
-
-        return (cost[_assetClass].cost1, cost[_assetClass].cost2, cost[_assetClass].cost3, cost[_assetClass].cost4, 
-                cost[_assetClass].cost5, cost[_assetClass].cost6);
-    }
-   
    
     /*
      * @dev Set function costs per asset class, in Wei
@@ -186,13 +171,15 @@ contract Storage is Ownable {
         cost[_assetClass].cost4 = _cost4;
         cost[_assetClass].cost5 = _cost5;
         cost[_assetClass].cost6 = _cost6;
-
     }
     
-    function ADMIN_LOCK (string calldata _idx) external onlyOwner { //---------------------------------------INSECURE USE HASH!!!! 
-                                                        //for testing only should be (b32 _idxHash) exists(_idxHash) onlyOwner
+    function ADMIN_LOCK_STATUS (string calldata _idx, uint8 _stat) external onlyOwner { //---------------------------------------INSECURE USE HASH!!!! 
+        require ( 
+            _stat > 199,
+            "AL:ERR--locking requires status > 199"
+        );
         bytes32 _idxHash = keccak256(abi.encodePacked(_idx));  // TESTING ONLY
-        database[_idxHash].status = 255;
+        database[_idxHash].status = _stat;
     }
     
     function ADMIN_UNLOCK (string calldata _idx) external onlyOwner { //---------------------------------------INSECURE USE HASH!!!! 
@@ -207,17 +194,21 @@ contract Storage is Ownable {
         database[_idxHash].timeLock = _blockNumber; //set lock to expiration blocknumber
     }
     
+    function ADMIN_RESET_FMC (string calldata _idx) external onlyOwner { //---------------------------------------INSECURE USE HASH!!!! 
+                                                        //for testing only should be (b32 _idxHash) exists(_idxHash) onlyOwner
+        bytes32 _idxHash = keccak256(abi.encodePacked(_idx));  // TESTING ONLY
+        database[_idxHash].forceModCount = 0; //set to unspecified status
+    }
+  
     
     //----------------------------------------external contract functions  //authuser----------------------------------------------------------
     
-
     
     /*
      * @dev Make a new record in the database  *read fullHash, write rightsHolder, recorders, assetClass,countDownStart --new_record
      */ 
-    function newRecord(bytes32 _userHash, bytes32 _idxHash, bytes32 _rgt, uint16 _assetClass, uint _countDownStart, bytes32 _IPFS1) external addrAuth(3){
+    function newRecord(bytes32 _userHash, bytes32 _idxHash, bytes32 _rgt, uint16 _assetClass, uint _countDownStart, bytes32 _IPFS1) external addrAuth(3) {
        
-        
         require(
             registeredUsers[_userHash].userType == 1 || (_assetClass > 8192),
             "NR:ERR-User not registered"
@@ -247,8 +238,8 @@ contract Storage is Ownable {
         _record.IPFS1= _IPFS1;
         
         database[_idxHash] = _record;
-
     }
+    
     
     /*
     * @dev Modify a record in the database  *read fullHash, write rightsHolder, update recorder, assetClass,countDown update recorder....
@@ -271,6 +262,10 @@ contract Storage is Ownable {
         require(
             _forceCount >= database[_idxHash].forceModCount,
             "MR:ERR-new forceModCount less than original forceModCount"
+        );
+        require(
+            _status < 200,
+            "MR:ERR-status over 199 cannot be set by user"
         );
         
         Record memory _record;
@@ -341,6 +336,14 @@ contract Storage is Ownable {
     
  
 //----------------------------------------external READ ONLY contract functions  //authuser---------------------------------------------------------- 
+    /*
+     * @dev retrieve function costs per asset class, in Wei
+     */    
+    function RETRIEVE_COSTS (uint16 _assetClass) external view addrAuth(3) returns (uint, uint, uint, uint, uint, uint) {
+
+        return (cost[_assetClass].cost1, cost[_assetClass].cost2, cost[_assetClass].cost3, cost[_assetClass].cost4, 
+                cost[_assetClass].cost5, cost[_assetClass].cost6);
+    }
  
  
     /*
@@ -382,10 +385,19 @@ contract Storage is Ownable {
     }
     
     
+    /*
+     * @dev compare record.rightsholder with a hashed string // ------------------------testing
+     */
+    function XCOMPARE_REG (string calldata _idx, string calldata _rgt) external view addrAuth(1) returns(string memory) {
+         
+        if (keccak256(abi.encodePacked(_rgt)) == database[keccak256(abi.encodePacked(_idx))].rightsHolder) {
+            return "Rights holder match confirmed";
+        } else {
+            return "Rights holder does not match";
+        }
+    }
     
     
-    
-
     /*
      * @dev check for lock, lock record, return a hash of a record with the supplied checkout code
      */
@@ -399,15 +411,8 @@ contract Storage is Ownable {
         database[_idxHash].checkOut = _checkOut ;
         
         return (recHash(_idxHash));
-    
     }
     
-    function recHash(bytes32 _idxHash) private view addrAuth(3) exists (_idxHash) returns (bytes32) {
-        
-        bytes32 key = keccak256(abi.encodePacked(block.number, database[_idxHash].checkOut));
-    
-        return (keccak256(abi.encodePacked(getHash(_idxHash),key))); //hash of existing record with blocknumber and checkout key
-    }
     
     /*
      * @dev return a hash of a complete record minus checkout and mutex data
@@ -421,6 +426,16 @@ contract Storage is Ownable {
     
     
     //------------------------------------------------------------private functions-------------------------------------------------------------------
+    /*
+     * @dev return a hash of a complete record with checkout and mutex data
+     */ 
+    function recHash(bytes32 _idxHash) private view addrAuth(3) exists (_idxHash) returns (bytes32) {
+        
+        bytes32 key = keccak256(abi.encodePacked(block.number, database[_idxHash].checkOut));
+    
+        return (keccak256(abi.encodePacked(getHash(_idxHash),key))); //hash of existing record with blocknumber and checkout key
+    }
+    
     
      /*
      * @dev Update lastrecorder
@@ -438,20 +453,7 @@ contract Storage is Ownable {
             lastrec = _lastrecorder; //keep lastRecorder the same as before, only update the current recorder.
         }
         return(_senderHash,lastrec);
-        
     }
     
-    
-     /*
-     * @dev Wrapper for comparing records // ------------------------testing
-     */
-    function XCOMPARE_REG (string calldata _idx, string calldata _rgt) external view addrAuth(1) returns(string memory) {
-         
-        if (keccak256(abi.encodePacked(_rgt)) == database[keccak256(abi.encodePacked(_idx))].rightsHolder) {
-            return "Rights holder match confirmed";
-        } else {
-            return "Rights holder does not match";
-        }
-    }
     
 }

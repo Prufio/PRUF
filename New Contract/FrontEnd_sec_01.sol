@@ -9,7 +9,6 @@ contract StorageInterface {
     function emitRecord (bytes32 _idxHash) external {}
     function retrieveIPFSdata (bytes32 _idxHash) external returns (bytes32, uint8, uint16, bytes32, bytes32, bytes32) {}
     function retrieveRecord (bytes32 _idxHash) external returns (bytes32, uint8, uint8, uint16, uint, uint, bytes32) {}
-    //function retrieveRecord_noCount (bytes32 _idxHash) external returns (bytes32, uint8, uint8, uint16, bytes32) {}
     function getHash(bytes32 _idxHash) external returns (bytes32) {}
     function checkOutRecord (bytes32 _idxHash, bytes32 _checkout) external returns (bytes32) {}
     function newRecord(bytes32 _userHash, bytes32 _idxHash, bytes32 _rgt, uint16 _assetClass, uint _countDownStart, bytes32 _IPFS1) external {}
@@ -23,14 +22,6 @@ contract FrontEnd is Ownable {
     
     //using SafeMath for uint8;
     using SafeMath for uint;
-    
-    
-    /*
-    *---------------External write functions
-    *Change status
-    *Update countDown
-    *Transfer rightsHolder
-    */
  
     
        struct Record {
@@ -99,8 +90,31 @@ contract FrontEnd is Ownable {
 //SECURITY NOTE: MANY of these functions take strings. in production, all strings would be converted to hashes before being sent to the contract
 //so these funtions would be accepting pre-hashed bytes32 instead of strings.
     
+    /*
+    *---------------External write functions
+    *Change status
+    *Update countDown
+    *Transfer rightsHolder
     
-    function _MOD_RECORD (string memory _idx, string memory _rgt, uint8 _status, uint _countDown, uint8 _forceCount) public payable { 
+    
+    
+      ----------write a data thing pattern:
+    * have data
+    * get a record #hash from Storage using Storage.getHash(idxHash)
+    * get a Record struct using getRecord(idxHash)
+    * check out the record with the new / old data --
+    * make a unuiqe ID from the data being sent
+    * check out the record using newRecordHash = Storage.checkOutRecord(_idxHash, _checkoutID);
+    * bytes32 key = keccak256(abi.encodePacked(block.number, checkoutID));
+    * verify that the earlier record #hash hashed with the key matches newRecordHash 
+    * write the modified Record struct (_rec) with the recordHash using writeRecord (idxHash, _rec, recordHash)
+    */
+    
+    
+    /*
+     * @dev modify **Record**.rightsHolder,status,countdown,and forcecount without confirmation required 
+     */
+    function _MOD_RECORD (string memory _idx, string memory _rgt, uint8 _status, uint _countDown, uint8 _forceCount) onlyOwner public payable { 
         Record memory rec;
         bytes32 _idxHash = keccak256(abi.encodePacked(_idx));//temp
         bytes32 _rgtHash = keccak256(abi.encodePacked(_rgt));//temp
@@ -116,6 +130,9 @@ contract FrontEnd is Ownable {
         writeRecord (_idxHash, rec, _recordHash);
     }
     
+     /*
+     * @dev modify **Record**.rightsHolder without confirmation required
+     */
     function FORCE_MOD_RECORD (string memory _idx, string memory _rgt) public payable { 
         Record memory rec;
         
@@ -144,7 +161,9 @@ contract FrontEnd is Ownable {
         writeRecord (_idxHash, rec, _recordHash);
     }
     
-    
+     /*
+     * @dev modify **Record**.status with confirmation required
+     */
     function MOD_STATUS (string memory _idx, string memory _rgt, uint8 _status) public payable { 
         Record memory rec;
         bytes32 _rgtHash = keccak256(abi.encodePacked(_rgt));//temp
@@ -174,6 +193,9 @@ contract FrontEnd is Ownable {
         writeRecord (_idxHash, rec, _recordHash);
     }
     
+     /*
+     * @dev Decrement **Record**.countdown with confirmation required
+     */
     function DEC_COUNTER (string memory _idx, string memory _rgt, uint _decAmount) public payable { 
         Record memory rec;
         bytes32 _rgtHash = keccak256(abi.encodePacked(_rgt));//temp
@@ -207,18 +229,10 @@ contract FrontEnd is Ownable {
         writeRecord (_idxHash, rec, _recordHash);
     }
     
-    
-   //----------write a data thing:
-   //have data
-   //get a record #hash from Storage using Storage.getHash(idxHash)
-   //get a Record struct using getRecord(idxHash)
-   //check out the record with the new / old data --
-   //make a unuiqe ID from the data being sent
-   //check out the record using newRecordHash = Storage.checkOutRecord(_idxHash, _checkoutID);
-   //bytes32 key = keccak256(abi.encodePacked(block.number, checkoutID));
-   //verify that the earlier record #hash hashed with the key matches newRecordHash 
-   //write the modified Record struct (_rec) with the recordHash using writeRecord (idxHash, _rec, recordHash)
    
+     /*
+     * @dev Get a Record from Storage @ idxHash
+     */
     function getRecord (bytes32 _idxHash) private returns (Record memory) { 
         Record memory rec;
         bytes32 datahash;
@@ -234,7 +248,9 @@ contract FrontEnd is Ownable {
     }
     
     
-    
+     /*
+     * @dev Write a Record to Storage @ idxHash
+     */
     function writeRecord (bytes32 _idxHash, Record memory _rec, bytes32 _recordHash) private {
         bytes32 userHash = keccak256(abi.encodePacked(msg.sender)); //get a userhash for authentication and recorder logging
         bytes32 writeHash = keccak256(abi.encodePacked(_recordHash, userHash, _idxHash, _rec.rightsHolder, _rec.status, _rec.countDown, _rec.forceModCount)); //prepare a writehash with existing data , blocknumber, checkout key, and new data for authentication
