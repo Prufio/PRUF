@@ -27,7 +27,7 @@ contract FrontEnd is Ownable {
     struct Record {
         bytes32 recorder; // Address hash of recorder 
         bytes32 rightsHolder;  // KEK256 Registered  owner
-        bytes32 lastrecorder; //// Address hash of last non-automation recorder
+        bytes32 lastRecorder; //// Address hash of last non-automation recorder
         uint8 status; // Status - Transferrable, locked, in transfer, stolen, lost, etc.
         uint8 forceModCount; // Number of times asset has been forceModded.
         uint16 assetClass; //Type of asset
@@ -410,11 +410,11 @@ contract FrontEnd is Ownable {
         Record memory rec;
         bytes32 datahash;
         
-        (rec.lastrecorder, rec.recorder, datahash) 
+        (rec.lastRecorder, rec.recorder, datahash) 
             = Storage.retrieveRecorder (_idxHash);//get record from storage contract
         
         require (
-            keccak256(abi.encodePacked(rec.lastrecorder, rec.recorder)) == datahash,
+            keccak256(abi.encodePacked(rec.lastRecorder, rec.recorder)) == datahash,
             "GR:ERR--Hash does not match passed data"
         );
         return (rec);  //returns Record struct rec and checkout supplied key
@@ -445,7 +445,7 @@ contract FrontEnd is Ownable {
      */ 
     function _GET_RECORDERS (string calldata _idx) external returns (bytes32, bytes32){
          Record memory rec = getRecorders(keccak256(abi.encodePacked(_idx)));
-         return (rec.lastrecorder, rec.recorder);
+         return (rec.lastRecorder, rec.recorder);
     }
      
     
