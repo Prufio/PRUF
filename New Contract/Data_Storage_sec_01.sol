@@ -282,8 +282,41 @@ contract Storage is Ownable {
     
     
     /*
-     * @dev modify record IPFS1 data
+     * @dev modify record IPFS data
      */
+    function modifyIPFS (bytes32 _userHash, bytes32 _idxHash, bytes32 _IPFS1, bytes32 _IPFS2, bytes32 _writeHash) external addrAuth(3) userAuth (_userHash, _idxHash) exists (_idxHash) unlocked (_idxHash) {
+        require(//this require calls another function that returns a hash of the record without any stateful effects. 
+                  //While this is technically a violation of the CEI pattern, I think its OK in this case
+            _writeHash == keccak256(abi.encodePacked(recHash(_idxHash), _userHash, _idxHash, _IPFS1, _IPFS2)) ,
+            // requires that _writeHash is an identical hash of the oldhash and the new data
+            "MIPFS:ERR--record has been changed or sent invalid data"
+        );
+        
+        Record memory _record;
+        _record = database[_idxHash];
+        
+        require(
+            _record.IPFS1 != _IPFS1,
+            "MIPFS:ERR-- New IPFS Data identical to old"
+        );
+        
+        
+        if (_record.IPFS1 != _IPFS1) {
+            _record.IPFS1 = _IPFS1;
+        }
+       if (_record.IPFS2 == 0) {
+            _record.IPFS2 = _IPFS2;
+        }
+        
+         (_record.recorder , _record.lastrecorder) = newRecorder(_userHash, _record.recorder, _record.lastrecorder);
+        _record.timeLock = 0;
+        database[_idxHash] = _record;
+        
+    }
+    
+    /*
+     * @dev modify record IPFS1 data
+     
     function modifyIPFS1 (bytes32 _userHash, bytes32 _idxHash, bytes32 _IPFS1, bytes32 _writeHash) external addrAuth(3) userAuth (_userHash, _idxHash) exists (_idxHash) unlocked (_idxHash) {
         require(//this require calls another function that returns a hash of the record without any stateful effects. 
                   //While this is technically a violation of the CEI pattern, I think its OK in this case
@@ -307,11 +340,11 @@ contract Storage is Ownable {
         database[_idxHash] = _record;
         
     }
-    
+    */
     
     /*
      * @dev modify record IPFS2 data
-     */
+     
     function modifyIPFS2 (bytes32 _userHash, bytes32 _idxHash, bytes32 _IPFS2, bytes32 _writeHash) external addrAuth(3) userAuth (_userHash, _idxHash) exists (_idxHash) unlocked (_idxHash) {
         require(//this require calls another function that returns a hash of the record without any stateful effects. 
                  //While this is technically a violation of the CEI pattern, I think its OK in this case
@@ -333,7 +366,7 @@ contract Storage is Ownable {
         _record.timeLock = 0;
         database[_idxHash] = _record;
     }
-    
+    */
  
 //----------------------------------------external READ ONLY contract functions  //authuser---------------------------------------------------------- 
     /*

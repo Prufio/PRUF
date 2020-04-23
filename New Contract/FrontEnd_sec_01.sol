@@ -13,8 +13,9 @@ contract StorageInterface {
     function checkOutRecord (bytes32 _idxHash, bytes32 _checkout) external returns (bytes32) {}
     function newRecord(bytes32 _userHash, bytes32 _idxHash, bytes32 _rgt, uint16 _assetClass, uint _countDownStart, bytes32 _IPFS1) external {}
     function modifyRecord(bytes32 _userHash, bytes32 _idxHash, bytes32 _rgt, uint8 _status, uint _countDown, uint8 _forceCount, bytes32 _writeHash) external {}
-    function modifyIPFS1 (bytes32 _userHash, bytes32 _idxHash, bytes32 _IPFS1, bytes32 _writeHash) external {}
-    function modifyIPFS2 (bytes32 _userHash, bytes32 _idxHash, bytes32 _IPFS2, bytes32 _writeHash) external {}
+    function modifyIPFS (bytes32 _userHash, bytes32 _idxHash, bytes32 _IPFS1, bytes32 _IPFS2, bytes32 _writeHash) external {}
+    //function modifyIPFS1 (bytes32 _userHash, bytes32 _idxHash, bytes32 _IPFS1, bytes32 _writeHash) external {}
+    //function modifyIPFS2 (bytes32 _userHash, bytes32 _idxHash, bytes32 _IPFS2, bytes32 _writeHash) external {}
 }    
     
 
@@ -89,6 +90,18 @@ contract FrontEnd is Ownable {
 //-----------------------------------------------------------External functions-----------------------------------------------------------
 //SECURITY NOTE: MANY of these functions take strings. in production, all strings would be converted to hashes before being sent to the contract
 //so these funtions would be accepting pre-hashed bytes32 instead of strings.
+    
+    
+    /*
+     * @dev Wrapper for newRecord
+     */
+    function _NEW_RECORD (string memory _idx, string memory _rgt, uint16 _assetClass, uint _countDownStart, string memory _IPFS) public payable {
+        
+        Storage.newRecord(keccak256(abi.encodePacked(msg.sender)), keccak256(abi.encodePacked(_idx)), keccak256(abi.encodePacked(_rgt)),
+                            _assetClass, _countDownStart, keccak256(abi.encodePacked(_IPFS)));
+    }
+
+    
     /*
       ----------write a data thing pattern:
     * have data
@@ -201,7 +214,7 @@ contract FrontEnd is Ownable {
         );
         require( 
             rec.rightsHolder == _rgtHash,
-            "DC:ERR-Rightsholder does not match supplied data"
+            "DC:ERR--Rightsholder does not match supplied data"
         );
         
         if  (rec.countDown > _decAmount){
@@ -262,6 +275,82 @@ contract FrontEnd is Ownable {
         writeRecord (_idxHash, rec, _recordHash);
     }
     
+    /*
+     * @dev modify **Record**.IPFS1 with confirmation
+     */
+    function MOD_IPFS1 (string memory _idx, string memory _rgt, string memory _IPFS ) public payable { 
+        Record memory rec;
+        
+        bytes32 _IPFSHash = keccak256(abi.encodePacked(_IPFS));//temp
+        bytes32 _idxHash = keccak256(abi.encodePacked(_idx));//temp
+        bytes32 _rgtHash = keccak256(abi.encodePacked(_rgt));//temp
+        
+        bytes32 cleanHash = Storage.getHash(_idxHash); //get an initial hash from the data
+        rec = getRecordIPFS (_idxHash);
+        require ( 
+            rec.status < 200,
+            "MI1:ERR-Record locked"
+        );
+        require ( 
+            rec.rightsHolder ==  _rgtHash,
+            "MI1:ERR--Rightsholder does not match supplied data"
+        );
+        require ( 
+            rec.IPFS1 !=  _IPFSHash,
+            "MI1:ERR--New data same as old"
+        );
+        
+        rec.IPFS1 = _IPFSHash;
+ 
+        bytes32 checkoutID = keccak256(abi.encodePacked(msg.sender,_idxHash,_IPFSHash)); //make a unuiqe ID from the data being sent
+        bytes32 _recordHash = Storage.checkOutRecord(_idxHash, checkoutID);// checks out record with ID 
+        bytes32 key = keccak256(abi.encodePacked(block.number, checkoutID)); //make a key to check the returned data with
+        require ( 
+            _recordHash == keccak256(abi.encodePacked(cleanHash,key)), //verify returned data matches initial data (cleanHash)
+            "MI1:ERR--record does not match"
+        );
+        
+        writeRecordIPFS (_idxHash, rec, _recordHash);
+    }
+    
+    /*
+     * @dev modify **Record**.IPFS2 with confirmation
+     */
+    function MOD_IPFS2 (string memory _idx, string memory _rgt, string memory _IPFS ) public payable { 
+        Record memory rec;
+        
+        bytes32 _IPFSHash = keccak256(abi.encodePacked(_IPFS));//temp
+        bytes32 _idxHash = keccak256(abi.encodePacked(_idx));//temp
+        bytes32 _rgtHash = keccak256(abi.encodePacked(_rgt));//temp
+        
+        bytes32 cleanHash = Storage.getHash(_idxHash); //get an initial hash from the data
+        rec = getRecordIPFS (_idxHash);
+        require ( 
+            rec.status < 200,
+            "MI1:ERR-Record locked"
+        );
+        require ( 
+            rec.rightsHolder ==  _rgtHash,
+            "MI1:ERR--Rightsholder does not match supplied data"
+        );
+        require ( 
+            rec.IPFS2 == 0,
+            "MI1:ERR--IPFS2 has data already. Overwrite not permitted"
+        );
+        
+        rec.IPFS2 = _IPFSHash;
+ 
+        bytes32 checkoutID = keccak256(abi.encodePacked(msg.sender,_idxHash,_IPFSHash)); //make a unuiqe ID from the data being sent
+        bytes32 _recordHash = Storage.checkOutRecord(_idxHash, checkoutID);// checks out record with ID 
+        bytes32 key = keccak256(abi.encodePacked(block.number, checkoutID)); //make a key to check the returned data with
+        require ( 
+            _recordHash == keccak256(abi.encodePacked(cleanHash,key)), //verify returned data matches initial data (cleanHash)
+            "MI1:ERR--record does not match"
+        );
+        
+        writeRecordIPFS (_idxHash, rec, _recordHash);
+    }
+    
    
      /*
      * @dev Get a Record from Storage @ idxHash
@@ -288,6 +377,33 @@ contract FrontEnd is Ownable {
         bytes32 userHash = keccak256(abi.encodePacked(msg.sender)); //get a userhash for authentication and recorder logging
         bytes32 writeHash = keccak256(abi.encodePacked(_recordHash, userHash, _idxHash, _rec.rightsHolder, _rec.status, _rec.countDown, _rec.forceModCount)); //prepare a writehash with existing data , blocknumber, checkout key, and new data for authentication
         Storage.modifyRecord(userHash, _idxHash, _rec.rightsHolder, _rec.status, _rec.countDown, _rec.forceModCount, writeHash);  //send data and writehash to storage
+    }
+    
+     /*
+     * @dev Get an IPFS Record from Storage @ idxHash
+     */
+    function getRecordIPFS (bytes32 _idxHash) private returns (Record memory) { 
+        Record memory rec;
+        bytes32 datahash;
+        
+        (rec.rightsHolder, rec.status, rec.assetClass, rec.IPFS1, rec.IPFS2, datahash) 
+            = Storage.retrieveIPFSdata (_idxHash);//get record from storage contract
+        
+        require (
+            keccak256(abi.encodePacked(rec.rightsHolder, rec.status, rec.assetClass, rec.IPFS1, rec.IPFS2)) == datahash,
+            "GR:ERR--Hash does not match passed data"
+        );
+        return (rec);  //returns Record struct rec and checkout supplied key
+    }
+    
+    
+     /*
+     * @dev Write an IPFS Record to Storage @ idxHash
+     */
+    function writeRecordIPFS (bytes32 _idxHash, Record memory _rec, bytes32 _recordHash) private {
+        bytes32 userHash = keccak256(abi.encodePacked(msg.sender)); //get a userhash for authentication and recorder logging
+        bytes32 writeHash = keccak256(abi.encodePacked(_recordHash, userHash, _idxHash, _rec.IPFS1, _rec.IPFS2)); //prepare a writehash with existing data , blocknumber, checkout key, and new data for authentication
+        Storage.modifyIPFS(userHash, _idxHash, _rec.IPFS1, _rec.IPFS2, writeHash);  //send data and writehash to storage
     }
     
 
@@ -322,62 +438,6 @@ contract FrontEnd is Ownable {
      */
     function _EMIT_RECORD (string calldata _idx) external {
         Storage.emitRecord (keccak256(abi.encodePacked(_idx)));
-    }
-    
-    
-    /*
-     * @dev Wrapper for newRecord
-     */
-    function _NEW_RECORD (string memory _idx, string memory _rgt
-    , uint16 _assetClass, uint _countDownStart, string memory _IPFS) public payable {
-        Storage.newRecord(keccak256(abi.encodePacked(msg.sender)), keccak256(abi.encodePacked(_idx)), keccak256(abi.encodePacked(_rgt)),
-        _assetClass, _countDownStart, keccak256(abi.encodePacked(_IPFS)));
-    }
-    
-   
-    /*
-     * @dev Wrapper for modifyIPFS1
-     */
-    //function _MOD_IPFS1 (bytes32 _idxHash, bytes32 _IPFShash, bytes32 _recordHash) public payable {
-    function _MOD_IPFS1 (string memory _idx, string memory _IPFS) public payable {
-        
-        bytes32 _idxHash = keccak256(abi.encodePacked(_idx));//temp
-        bytes32 _IPFShash = keccak256(abi.encodePacked(_IPFS)); //temp until is in function arguments-------------------------------------TESTING
-        
-        bytes32 userHash = keccak256(abi.encodePacked(msg.sender)); //get a userhash for authentication and recorder logging
-        bytes32 checkoutKey = keccak256(abi.encodePacked(msg.sender,_idxHash,_IPFShash)); //make a unuiqe ID from the data being sent
-        
-       
-        bytes32 _recordHash = Storage.checkOutRecord(_idxHash, checkoutKey);
-        //checks out record with keytemp until is in function arguments-------------------------------------TESTING  //checkOutRecord
-        
-        bytes32 writeHash = keccak256(abi.encodePacked(_recordHash, userHash, _idxHash, _IPFShash)); 
-        //prepare a writehash with existing data , blocknumber, checkout key, and new data for authentication
-        
-        Storage.modifyIPFS1 (userHash, _idxHash, _IPFShash, writeHash); //send data and writehash to storage
-    }
-    
-    
-    /*
-     * @dev Wrapper for modifyIPFS2
-     */
-    //function _MOD_IPFS2 (bytes32 _idxHash, bytes32 _IPFShash, bytes32 _recordHash) public payable {
-    function _MOD_IPFS2 (string memory _idx, string memory _IPFS) public payable {
-        
-        bytes32 _idxHash = keccak256(abi.encodePacked(_idx));//temp
-        bytes32 _IPFShash = keccak256(abi.encodePacked(_IPFS)); //temp until is in function arguments-------------------------------------TESTING
-        
-        bytes32 userHash = keccak256(abi.encodePacked(msg.sender)); //get a userhash for authentication and recorder logging
-        bytes32 checkoutKey = keccak256(abi.encodePacked(msg.sender,_idxHash,_IPFShash)); //make a unuiqe ID from the data being sent
-        
-       
-        bytes32 _recordHash = Storage.checkOutRecord(_idxHash, checkoutKey);
-        //checks out record with keytemp until is in function arguments-------------------------------------TESTING  //checkOutRecord
-        
-        bytes32 writeHash = keccak256(abi.encodePacked(_recordHash, userHash, _idxHash, _IPFShash)); 
-        //prepare a writehash with existing data , blocknumber, checkout key, and new data for authentication
-        
-        Storage.modifyIPFS2 (userHash, _idxHash, _IPFShash, writeHash);
     }
 
 }
