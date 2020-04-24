@@ -150,13 +150,13 @@ contract Storage is Ownable {
      * @dev Authorize / Deauthorize / Authorize ADRESSES permitted to make record modifications
      * ----------------INSECURE -- keccak256 of address must be generated clientside in release.
      */
-    function ADMIN_AddContract(address _addr, uint8 _userType) external onlyOwner {
+    function ADMIN_AddContract(address _addr, uint8 _contractAuthLevel) external onlyOwner {
         require ( 
-            _userType <= 3,
+            _contractAuthLevel <= 3,
             "AUTHC:ER-13 Invalid user type"
         );
         emit REPORT ("DS:SU: internal user database access!");  //report access to the internal user database
-        authorizedAdresses[keccak256(abi.encodePacked(_addr))] = _userType;
+        authorizedAdresses[keccak256(abi.encodePacked(_addr))] = _contractAuthLevel;
     }
     
    
