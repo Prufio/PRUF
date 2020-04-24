@@ -11,7 +11,7 @@ contract StorageInterface {
     function retrieveRecord (bytes32 _idxHash) external returns (bytes32, uint8, uint8, uint16, uint, uint, bytes32) {}
     function getHash(bytes32 _idxHash) external returns (bytes32) {}
     function checkOutRecord (bytes32 _idxHash, bytes32 _checkout) external returns (bytes32) {}
-    function newRecord(bytes32 _userHash, bytes32 _idxHash, bytes32 _rgt, uint16 _assetClass, uint _countDownStart, bytes32 _IPFS1) external {}
+    function newRecord(bytes32 _userHash, bytes32 _idxHash, bytes32 _rgt, uint16 _assetClass, uint _countDownStart, bytes32 _IPFS1, bytes32 _hash) external {}
     function modifyRecord(bytes32 _userHash, bytes32 _idxHash, bytes32 _rgt, uint8 _status, uint _countDown, uint8 _forceCount, bytes32 _writeHash) external {}
     function modifyIPFS (bytes32 _userHash, bytes32 _idxHash, bytes32 _IPFS1, bytes32 _IPFS2, bytes32 _writeHash) external {}
     function retrieveRecorder (bytes32 _idxHash) external returns (bytes32, bytes32, bytes32) {}
@@ -94,10 +94,30 @@ contract FrontEnd is Ownable {
     /*
      * @dev Wrapper for newRecord
      */
-    function _NEW_RECORD (string memory _idx, string memory _rgt, uint16 _assetClass, uint _countDownStart, string memory _IPFS) public payable {
+    function _NEW_RECORD (string memory _idx, string memory _rgt, uint16 _assetClass, uint _countDownStart, string memory _IPFSs) public payable {
         
-        Storage.newRecord(keccak256(abi.encodePacked(msg.sender)), keccak256(abi.encodePacked(_idx)), keccak256(abi.encodePacked(_rgt)),
-                            _assetClass, _countDownStart, keccak256(abi.encodePacked(_IPFS)));
+        bytes32 senderHash = keccak256(abi.encodePacked(msg.sender));
+        bytes32 _idxHash = keccak256(abi.encodePacked(_idx));
+        bytes32 _rgtHash = keccak256(abi.encodePacked(_rgt));
+        bytes32 _IPFS = keccak256(abi.encodePacked(_IPFSs));
+        
+        
+        bytes32 hash = keccak256(abi.encodePacked(senderHash, 
+                                                    _idxHash,
+                                                    _rgtHash,
+                                                    _assetClass, 
+                                                    _countDownStart, 
+                                                    _IPFS,
+                                                    block.number));
+        
+        Storage.newRecord(senderHash, 
+                            _idxHash,
+                            _rgtHash,
+                            _assetClass, 
+                            _countDownStart, 
+                            _IPFS,
+                            hash );
+        
     }
 
     
@@ -123,7 +143,12 @@ contract FrontEnd is Ownable {
         bytes32 _idxHash = keccak256(abi.encodePacked(_idx));//temp
         bytes32 _rgtHash = keccak256(abi.encodePacked(_rgt));//temp
         
-        bytes32 checkoutID = keccak256(abi.encodePacked(msg.sender,_idxHash,_rgtHash,_status,_countDown,_forceCount)); //make a unuiqe ID from the data being sent
+        bytes32 checkoutID = keccak256(abi.encodePacked(msg.sender,_idxHash,
+                                                        _rgtHash,
+                                                        _status,
+                                                        _countDown,
+                                                        _forceCount)); //make a unuiqe ID from the data being sent
+                                        
         bytes32 _recordHash = Storage.checkOutRecord(_idxHash, checkoutID);// checks out record with ID 
         
         rec.rightsHolder = _rgtHash;
@@ -133,6 +158,7 @@ contract FrontEnd is Ownable {
        
         writeRecord (_idxHash, rec, _recordHash);
     }
+    
     
      /*
      * @dev modify **Record**.rightsHolder without confirmation required
@@ -154,7 +180,12 @@ contract FrontEnd is Ownable {
         }
         rec.rightsHolder = _rgtHash;
         
-        bytes32 checkoutID = keccak256(abi.encodePacked(msg.sender,_idxHash, rec.rightsHolder, rec.status, rec.countDown, rec.forceModCount)); //make a unuiqe ID from the data being sent
+        bytes32 checkoutID = keccak256(abi.encodePacked(msg.sender,_idxHash,
+                                                        rec.rightsHolder, 
+                                                        rec.status, 
+                                                        rec.countDown, 
+                                                        rec.forceModCount)); //make a unuiqe ID from the data being sent
+                                        
         bytes32 _recordHash = Storage.checkOutRecord(_idxHash, checkoutID);// checks out record with ID 
         bytes32 key = keccak256(abi.encodePacked(block.number, checkoutID));
         require ( 
@@ -164,6 +195,7 @@ contract FrontEnd is Ownable {
         
         writeRecord (_idxHash, rec, _recordHash);
     }
+    
     
      /*
      * @dev modify **Record**.status with confirmation required
@@ -186,7 +218,12 @@ contract FrontEnd is Ownable {
         
         rec.status = _status;
         
-        bytes32 checkoutID = keccak256(abi.encodePacked(msg.sender,_idxHash, rec.rightsHolder, rec.status, rec.countDown, rec.forceModCount)); //make a unuiqe ID from the data being sent
+        bytes32 checkoutID = keccak256(abi.encodePacked(msg.sender,_idxHash, 
+                                                        rec.rightsHolder, 
+                                                        rec.status, 
+                                                        rec.countDown, 
+                                                        rec.forceModCount)); //make a unuiqe ID from the data being sent
+                            
         bytes32 _recordHash = Storage.checkOutRecord(_idxHash, checkoutID);// checks out record with ID 
         bytes32 key = keccak256(abi.encodePacked(block.number, checkoutID));
         require ( 
@@ -196,6 +233,7 @@ contract FrontEnd is Ownable {
         
         writeRecord (_idxHash, rec, _recordHash);
     }
+    
     
      /*
      * @dev Decrement **Record**.countdown with confirmation required
@@ -233,6 +271,7 @@ contract FrontEnd is Ownable {
         writeRecord (_idxHash, rec, _recordHash);
     }
     
+    
      /*
      * @dev transfer Rights to new rightsHolder with confirmation
      */
@@ -263,7 +302,13 @@ contract FrontEnd is Ownable {
         
         rec.rightsHolder = _newrgtHash;
        
-        bytes32 checkoutID = keccak256(abi.encodePacked(msg.sender,_idxHash, rec.rightsHolder, rec.status, rec.countDown, rec.forceModCount)); //make a unuiqe ID from the data being sent
+        bytes32 checkoutID = keccak256(abi.encodePacked(msg.sender,
+                                                        _idxHash, 
+                                                        rec.rightsHolder, 
+                                                        rec.status, 
+                                                        rec.countDown, 
+                                                        rec.forceModCount)); //make a unuiqe ID from the data being sent
+                                                        
         bytes32 _recordHash = Storage.checkOutRecord(_idxHash, checkoutID);// checks out record with ID 
         bytes32 key = keccak256(abi.encodePacked(block.number, checkoutID));
         require ( 
@@ -273,6 +318,7 @@ contract FrontEnd is Ownable {
         
         writeRecord (_idxHash, rec, _recordHash);
     }
+    
     
     /*
      * @dev modify **Record**.IPFS1 with confirmation
@@ -312,6 +358,7 @@ contract FrontEnd is Ownable {
         writeRecordIPFS (_idxHash, rec, _recordHash);
     }
     
+    
     /*
      * @dev modify **Record**.IPFS2 with confirmation
      */
@@ -350,7 +397,7 @@ contract FrontEnd is Ownable {
         writeRecordIPFS (_idxHash, rec, _recordHash);
     }
     
-   
+    
      /*
      * @dev Get a Record from Storage @ idxHash
      */
@@ -370,15 +417,6 @@ contract FrontEnd is Ownable {
     
     
      /*
-     * @dev Write a Record to Storage @ idxHash
-     */
-    function writeRecord (bytes32 _idxHash, Record memory _rec, bytes32 _recordHash) private {
-        bytes32 userHash = keccak256(abi.encodePacked(msg.sender)); //get a userhash for authentication and recorder logging
-        bytes32 writeHash = keccak256(abi.encodePacked(_recordHash, userHash, _idxHash, _rec.rightsHolder, _rec.status, _rec.countDown, _rec.forceModCount)); //prepare a writehash with existing data , blocknumber, checkout key, and new data for authentication
-        Storage.modifyRecord(userHash, _idxHash, _rec.rightsHolder, _rec.status, _rec.countDown, _rec.forceModCount, writeHash);  //send data and writehash to storage
-    }
-    
-     /*
      * @dev Get an IPFS Record from Storage @ idxHash
      */
     function getRecordIPFS (bytes32 _idxHash) private returns (Record memory) { 
@@ -396,16 +434,6 @@ contract FrontEnd is Ownable {
     }
     
     
-     /*
-     * @dev Write an IPFS Record to Storage @ idxHash
-     */
-    function writeRecordIPFS (bytes32 _idxHash, Record memory _rec, bytes32 _recordHash) private {
-        bytes32 userHash = keccak256(abi.encodePacked(msg.sender)); //get a userhash for authentication and recorder logging
-        bytes32 writeHash = keccak256(abi.encodePacked(_recordHash, userHash, _idxHash, _rec.IPFS1, _rec.IPFS2)); //prepare a writehash with existing data , blocknumber, checkout key, and new data for authentication
-        Storage.modifyIPFS(userHash, _idxHash, _rec.IPFS1, _rec.IPFS2, writeHash);  //send data and writehash to storage
-    }
-    
-    
     function getRecorders (bytes32 _idxHash) private returns (Record memory) { 
         Record memory rec;
         bytes32 datahash;
@@ -419,7 +447,26 @@ contract FrontEnd is Ownable {
         );
         return (rec);  //returns Record struct rec and checkout supplied key
     }
-
+    
+    
+     /*
+     * @dev Write an IPFS Record to Storage @ idxHash
+     */
+    function writeRecordIPFS (bytes32 _idxHash, Record memory _rec, bytes32 _recordHash) private {
+        bytes32 userHash = keccak256(abi.encodePacked(msg.sender)); //get a userhash for authentication and recorder logging
+        bytes32 writeHash = keccak256(abi.encodePacked(_recordHash, userHash, _idxHash, _rec.IPFS1, _rec.IPFS2)); //prepare a writehash with existing data , blocknumber, checkout key, and new data for authentication
+        Storage.modifyIPFS(userHash, _idxHash, _rec.IPFS1, _rec.IPFS2, writeHash);  //send data and writehash to storage
+    }
+    
+    
+     /*
+     * @dev Write a Record to Storage @ idxHash
+     */
+    function writeRecord (bytes32 _idxHash, Record memory _rec, bytes32 _recordHash) private {
+        bytes32 userHash = keccak256(abi.encodePacked(msg.sender)); //get a userhash for authentication and recorder logging
+        bytes32 writeHash = keccak256(abi.encodePacked(_recordHash, userHash, _idxHash, _rec.rightsHolder, _rec.status, _rec.countDown, _rec.forceModCount)); //prepare a writehash with existing data , blocknumber, checkout key, and new data for authentication
+        Storage.modifyRecord(userHash, _idxHash, _rec.rightsHolder, _rec.status, _rec.countDown, _rec.forceModCount, writeHash);  //send data and writehash to storage
+    }
     
     
     /*
@@ -430,7 +477,6 @@ contract FrontEnd is Ownable {
          return (rec.rightsHolder, rec.status, rec.forceModCount, rec.assetClass, rec.countDown, rec.countDownStart);
     }
      
-    
     /*
      * @dev Wrapper for getRecordIPFS  //does this need to exist in production?????!!!!!!!!!!!!
      */ 
@@ -439,7 +485,6 @@ contract FrontEnd is Ownable {
          return (rec.rightsHolder, rec.status, rec.assetClass, rec.IPFS1, rec.IPFS2);
     }
     
-    
     /*
      * @dev Wrapper for getRecorders  //does this need to exist in production?????!!!!!!!!!!!!
      */ 
@@ -447,7 +492,6 @@ contract FrontEnd is Ownable {
          Record memory rec = getRecorders(keccak256(abi.encodePacked(_idx)));
          return (rec.lastRecorder, rec.recorder);
     }
-     
     
     /*
      * @dev Wrapper for GetHash
@@ -455,7 +499,6 @@ contract FrontEnd is Ownable {
     function _GET_HASH (string calldata _idx) external returns (bytes32){
         return Storage.getHash (keccak256(abi.encodePacked(_idx)));
     }
-    
     
      /*
      * @dev Wrapper for emitRecord

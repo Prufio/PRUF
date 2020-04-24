@@ -207,7 +207,7 @@ contract Storage is Ownable {
     /*
      * @dev Make a new record in the database  *read fullHash, write rightsHolder, recorders, assetClass,countDownStart --new_record
      */ 
-    function newRecord(bytes32 _userHash, bytes32 _idxHash, bytes32 _rgt, uint16 _assetClass, uint _countDownStart, bytes32 _IPFS1) external addrAuth(3) {
+    function newRecord(bytes32 _userHash, bytes32 _idxHash, bytes32 _rgt, uint16 _assetClass, uint _countDownStart, bytes32 _IPFS1, bytes32 _hash) external addrAuth(3) {
        
         require(
             registeredUsers[_userHash].userType == 1 || (_assetClass > 8192),
@@ -224,6 +224,10 @@ contract Storage is Ownable {
         require(
             _rgt != 0 ,
             "NR:ERR-Rightsholder cannot be blank"
+        );
+        require(
+            _hash == keccak256(abi.encodePacked(_userHash, _idxHash,_rgt,_assetClass, _countDownStart, _IPFS1, block.number)),
+            "NR:ERR--Hash of data does not match sent data"
         );
         
         Record memory _record;
