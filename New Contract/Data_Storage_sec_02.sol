@@ -370,9 +370,16 @@ contract Storage is Ownable {
     function emitRecord (bytes32 _idxHash) external addrAuth(1) exists (_idxHash) { 
         
         //emit EMIT_RECORD (database[_idx]);  //use when ABIencoder V2 is ready for prime-time
-        emit EMIT_RECORD (database[_idxHash].recorder, database[_idxHash].rightsHolder, database[_idxHash].lastRecorder, database[_idxHash].status, 
-                database[_idxHash].forceModCount, database[_idxHash].assetClass, database[_idxHash].countDown, database[_idxHash].countDownStart, 
-                database[_idxHash].IPFS1, database[_idxHash].IPFS2);
+        emit EMIT_RECORD (database[_idxHash].recorder,
+                        database[_idxHash].rightsHolder,
+                        database[_idxHash].lastRecorder,
+                        database[_idxHash].status, 
+                        database[_idxHash].forceModCount, 
+                        database[_idxHash].assetClass, 
+                        database[_idxHash].countDown, 
+                        database[_idxHash].countDownStart,
+                        database[_idxHash].IPFS1, 
+                        database[_idxHash].IPFS2);
     }
     
     
