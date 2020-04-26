@@ -67,8 +67,8 @@ contract Storage is Ownable {
      */
     modifier addrAuth (uint8 _userType){
         require ( 
-            ((authorizedAdresses[keccak256(abi.encodePacked(msg.sender))] >= _userType) && (authorizedAdresses[keccak256(abi.encodePacked(msg.sender))] <= 4))
-            //|| (authorizedAdresses[keccak256(abi.encodePacked(msg.sender))] == authorizedAdresses[keccak256(abi.encodePacked(owner()))])
+                ((authorizedAdresses[keccak256(abi.encodePacked(msg.sender))] >= _userType) &&
+                (authorizedAdresses[keccak256(abi.encodePacked(msg.sender))] <= 4))
             ,"Contract not authorized or improperly permissioned"
             );
             _;
@@ -87,7 +87,8 @@ contract Storage is Ownable {
             "AU:ERR-User not registered"
         );
         require(
-            (database[_idxHash].assetClass == registeredUsers[_senderHash].authorizedAssetClass) || (database[_idxHash].assetClass > 8192),
+            (database[_idxHash].assetClass == registeredUsers[_senderHash].authorizedAssetClass) ||
+            (database[_idxHash].assetClass > 8192),
             "AU:ERR-User not registered for asset type"
         );
         _;
@@ -226,7 +227,13 @@ contract Storage is Ownable {
             "NR:ERR-Rightsholder cannot be blank"
         );
         require(
-            _hash == keccak256(abi.encodePacked(_userHash, _idxHash,_rgt,_assetClass, _countDownStart, _IPFS1, block.number)),
+            _hash == keccak256(abi.encodePacked(_userHash,
+                                                _idxHash,
+                                                _rgt,
+                                                _assetClass,
+                                                _countDownStart,
+                                                _IPFS1,
+                                                block.number)),
             "NR:ERR--Hash of data does not match sent data"
         );
         
@@ -248,8 +255,8 @@ contract Storage is Ownable {
     /*
     * @dev Modify a record in the database  *read fullHash, write rightsHolder, update recorder, assetClass,countDown update recorder....
     */ 
-    function modifyRecord(bytes32 _userHash, bytes32 _idxHash, bytes32 _regHash, uint8 _status, uint _countDown, uint8 _forceCount, bytes32 _writeHash) 
-                            external addrAuth(3) userAuth (_userHash, _idxHash) exists (_idxHash) unlocked (_idxHash){
+    function modifyRecord(bytes32 _userHash, bytes32 _idxHash, bytes32 _regHash, uint8 _status, uint _countDown, uint8 _forceCount, bytes32 _writeHash) external
+                            addrAuth(3) userAuth (_userHash, _idxHash) exists (_idxHash) unlocked (_idxHash){
                                 
         require(  //this require calls another function that returns a hash of the record without any stateful effects. While this is technically a violation of the CEI pattern, I think its OK in this case
             _writeHash == keccak256(abi.encodePacked(recHash(_idxHash), _userHash, _idxHash, _regHash, _status, _countDown, _forceCount)) , // requires that _writeHash is an identical hash of the oldhash and the new data
@@ -288,12 +295,12 @@ contract Storage is Ownable {
     
     /*
      * @dev modify record IPFS data
+     * the require calls another function that returns a hash of the record without any stateful effects. 
+     * While this is technically a violation of the CEI pattern, I think its OK in this case
      */
     function modifyIPFS (bytes32 _userHash, bytes32 _idxHash, bytes32 _IPFS1, bytes32 _IPFS2, bytes32 _writeHash) external addrAuth(3) userAuth (_userHash, _idxHash) exists (_idxHash) unlocked (_idxHash) {
-        require(//this require calls another function that returns a hash of the record without any stateful effects. 
-                  //While this is technically a violation of the CEI pattern, I think its OK in this case
-            _writeHash == keccak256(abi.encodePacked(recHash(_idxHash), _userHash, _idxHash, _IPFS1, _IPFS2)) ,
-            // requires that _writeHash is an identical hash of the oldhash and the new data
+        require(
+            _writeHash == keccak256(abi.encodePacked(recHash(_idxHash), _userHash, _idxHash, _IPFS1, _IPFS2)) , // requires that _writeHash is an identical hash of the oldhash and the new data
             "MIPFS:ERR--record has been changed or sent invalid data"
         );
         
@@ -322,8 +329,12 @@ contract Storage is Ownable {
      */    
     function RETRIEVE_COSTS (uint16 _assetClass) external view addrAuth(3) returns (uint, uint, uint, uint, uint, uint) {
 
-        return (cost[_assetClass].cost1, cost[_assetClass].cost2, cost[_assetClass].cost3, cost[_assetClass].cost4, 
-                cost[_assetClass].cost5, cost[_assetClass].cost6);
+        return (cost[_assetClass].cost1,
+                cost[_assetClass].cost2,
+                cost[_assetClass].cost3,
+                cost[_assetClass].cost4,
+                cost[_assetClass].cost5,
+                cost[_assetClass].cost6);
     }
  
  
