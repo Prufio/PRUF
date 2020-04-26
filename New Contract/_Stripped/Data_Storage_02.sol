@@ -18,7 +18,6 @@ contract Storage is Ownable {
         bytes32 IPFS1; // publically viewable asset description
         bytes32 IPFS2; // publically viewable immutable notes
         uint timeLock; // time sensitive mutex
-        bytes32 checkOut; // checkout number
     }
     
     struct User {
@@ -84,12 +83,12 @@ contract Storage is Ownable {
         
         require(
             (senderType == 1) || (senderType == 9) || (database[_idxHash].assetClass > 8192),
-            "AU:ERR-User not registered"
+            "MOD-UA-User not registered"
         );
         require(
             (database[_idxHash].assetClass == registeredUsers[_senderHash].authorizedAssetClass) ||
             (database[_idxHash].assetClass > 8192),
-            "AU:ERR-User not registered for asset type"
+            "MOD-UA-User not registered for asset type"
         );
         _;
     }
@@ -101,15 +100,17 @@ contract Storage is Ownable {
     modifier unlocked (bytes32 _idxHash) {
         require(
             database[_idxHash].status < 200 ,
-            "CR:ERR-record Locked"
+            "MOD-U-record Locked"
         );
+        
+        
         _;
     }
     
     modifier exists (bytes32 _idxHash) {
         require(
             database[_idxHash].rightsHolder != 0 ,
-            "CR:ERR-record does not exist"
+            "MOD-E-record does not exist"
         );
         _;  
     }
@@ -117,7 +118,7 @@ contract Storage is Ownable {
     modifier notTimeLocked(bytes32 _idxHash) { //this modifier makes the bold assumption the block number will "never" be reset. hopefully, this is true...
         require(
             database[_idxHash].timeLock < block.number,
-            "CR:ERR-record Locked"
+            "MOD-NTL-record time locked"
         );
         _;
     }
@@ -208,7 +209,7 @@ contract Storage is Ownable {
     /*
      * @dev Make a new record in the database  *read fullHash, write rightsHolder, recorders, assetClass,countDownStart --new_record
      */ 
-    function newRecord(bytes32 _userHash, bytes32 _idxHash, bytes32 _rgt, uint16 _assetClass, uint _countDownStart, bytes32 _IPFS1, bytes32 _hash) external addrAuth(3) {
+    function newRecord(bytes32 _userHash, bytes32 _idxHash, bytes32 _rgt, uint16 _assetClass, uint _countDownStart, bytes32 _IPFS1) external addrAuth(3) {
        
         require(
             registeredUsers[_userHash].userType == 1 || (_assetClass > 8192),
@@ -225,16 +226,6 @@ contract Storage is Ownable {
         require(
             _rgt != 0 ,
             "NR:ERR-Rightsholder cannot be blank"
-        );
-        require(
-            _hash == keccak256(abi.encodePacked(_userHash,
-                                                _idxHash,
-                                                _rgt,
-                                                _assetClass,
-                                                _countDownStart,
-                                                _IPFS1,
-                                                block.number)),
-            "NR:ERR--Hash of data does not match sent data"
         );
         
         Record memory _record;
@@ -255,13 +246,9 @@ contract Storage is Ownable {
     /*
     * @dev Modify a record in the database  *read fullHash, write rightsHolder, update recorder, assetClass,countDown update recorder....
     */ 
-    function modifyRecord(bytes32 _userHash, bytes32 _idxHash, bytes32 _regHash, uint8 _status, uint _countDown, uint8 _forceCount, bytes32 _writeHash) external
+    function modifyRecord(bytes32 _userHash, bytes32 _idxHash, bytes32 _regHash, uint8 _status, uint _countDown, uint8 _forceCount) external
                             addrAuth(3) userAuth (_userHash, _idxHash) exists (_idxHash) unlocked (_idxHash){
                                 
-        require(  //this require calls another function that returns a hash of the record without any stateful effects. While this is technically a violation of the CEI pattern, I think its OK in this case
-            _writeHash == keccak256(abi.encodePacked(recHash(_idxHash), _userHash, _idxHash, _regHash, _status, _countDown, _forceCount)) , // requires that _writeHash is an identical hash of the oldhash and the new data
-            "MR:ERR-record has been changed or sent invalid data"  //validate data and block number 
-        );
         require(
             _regHash != 0 ,
             "MR:ERR-Rightsholder cannot be blank"
@@ -278,7 +265,6 @@ contract Storage is Ownable {
             _status < 200,
             "MR:ERR-status over 199 cannot be set by user"
         );
-        
         Record memory _record;
         _record = database[_idxHash];
         _record.rightsHolder = _regHash;
@@ -295,14 +281,10 @@ contract Storage is Ownable {
     
     /*
      * @dev modify record IPFS data
-     * the require calls another function that returns a hash of the record without any stateful effects. 
-     * While this is technically a violation of the CEI pattern, I think its OK in this case
      */
-    function modifyIPFS (bytes32 _userHash, bytes32 _idxHash, bytes32 _IPFS1, bytes32 _IPFS2, bytes32 _writeHash) external addrAuth(3) userAuth (_userHash, _idxHash) exists (_idxHash) unlocked (_idxHash) {
-        require(
-            _writeHash == keccak256(abi.encodePacked(recHash(_idxHash), _userHash, _idxHash, _IPFS1, _IPFS2)) , // requires that _writeHash is an identical hash of the oldhash and the new data
-            "MIPFS:ERR--record has been changed or sent invalid data"
-        );
+    function modifyIPFS (bytes32 _userHash, bytes32 _idxHash, bytes32 _IPFS1, bytes32 _IPFS2) external 
+                        addrAuth(3) userAuth (_userHash, _idxHash) exists (_idxHash) unlocked (_idxHash) {
+        
         
         Record memory _record = database[_idxHash];
         
@@ -410,40 +392,29 @@ contract Storage is Ownable {
     /*
      * @dev check for lock, lock record, return a hash of a record with the supplied checkout code
      */
-    function checkOutRecord (bytes32 _idxHash, bytes32 _checkOut) external addrAuth(3) exists (_idxHash) returns (bytes32) {  
+    function checkOutRecord (bytes32 _idxHash) public addrAuth(3) exists (_idxHash) {  
         require ( 
             database[_idxHash].timeLock < block.number,
             "COR:ERR-- record already checked out"
         );
         
         database[_idxHash].timeLock = block.number;
-        database[_idxHash].checkOut = _checkOut ;
-        
-        return (recHash(_idxHash));
     }
     
     
     /*
      * @dev return a hash of a complete record minus checkout and mutex data
-     */ 
+    
     function getHash(bytes32 _idxHash) public view addrAuth(2) exists (_idxHash) returns (bytes32) {
     
         return (keccak256(abi.encodePacked(database[_idxHash].recorder, database[_idxHash].rightsHolder, database[_idxHash].lastRecorder, database[_idxHash].status, 
                 database[_idxHash].forceModCount, database[_idxHash].assetClass, database[_idxHash].countDown, database[_idxHash].countDownStart,
                 database[_idxHash].IPFS1, database[_idxHash].IPFS2))); //hash of existing record
     }
-    
+    */
     
     //------------------------------------------------------------private functions-------------------------------------------------------------------
-    /*
-     * @dev return a hash of a complete record with checkout and mutex data
-     */ 
-    function recHash(bytes32 _idxHash) private view addrAuth(3) exists (_idxHash) returns (bytes32) {
-        
-        bytes32 key = keccak256(abi.encodePacked(block.number, database[_idxHash].checkOut));
-    
-        return (keccak256(abi.encodePacked(getHash(_idxHash),key))); //hash of existing record with blocknumber and checkout key
-    }
+   
     
     
      /*
