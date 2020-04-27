@@ -44,12 +44,12 @@ contract FrontEnd is PullPayment, Ownable {
     }
     
     struct Costs {
-        uint NRcost; // Cost to create a new record
-        uint TAcost; // Cost to transfer a record from known rights holder to a new one
-        uint NOTEcost; // Cost to add a static note to an asset
+        uint newRecordCost; // Cost to create a new record
+        uint transferAssetCost; // Cost to transfer a record from known rights holder to a new one
+        uint createNoteCost; // Cost to add a static note to an asset
         uint cost4; // Extra
         uint cost5; // Extra
-        uint FMcost; // Cost to brute-force a record transfer
+        uint forceModifyCost; // Cost to brute-force a record transfer
     }
     
     address internal mainWallet;
@@ -100,7 +100,7 @@ contract FrontEnd is PullPayment, Ownable {
         
         Costs memory cost = getCost(_assetClass);
         
-        require (msg.value >= cost.NRcost, 
+        require (msg.value >= cost.newRecordCost, 
         "NR: tx value too low. Send more eth.");
         
         bytes32 senderHash = keccak256(abi.encodePacked(msg.sender));
@@ -115,7 +115,7 @@ contract FrontEnd is PullPayment, Ownable {
                             _countDownStart, 
                             _IPFS);
                             
-        deductPayment(cost.NRcost);
+        deductPayment(cost.newRecordCost);
         
     }
 
@@ -142,7 +142,7 @@ contract FrontEnd is PullPayment, Ownable {
         
         Costs memory cost = getCost(costrec.assetClass);
         
-        require (msg.value >= cost.FMcost, 
+        require (msg.value >= cost.forceModifyCost, 
         "FMR: tx value too low. Send more eth.");
         
         Record memory rec;
@@ -162,7 +162,7 @@ contract FrontEnd is PullPayment, Ownable {
  
         writeRecord (_idxHash, rec);
         
-        deductPayment(cost.FMcost);
+        deductPayment(cost.forceModifyCost);
     }
     
     
@@ -225,7 +225,7 @@ contract FrontEnd is PullPayment, Ownable {
         
         Costs memory cost = getCost(costrec.assetClass);
         
-        require (msg.value >= cost.TAcost, 
+        require (msg.value >= cost.transferAssetCost, 
         "TA: tx value too low. Send more eth.");
         
         Record memory rec;
@@ -256,7 +256,7 @@ contract FrontEnd is PullPayment, Ownable {
         
         writeRecord (_idxHash, rec);
         
-        deductPayment(cost.TAcost);
+        deductPayment(cost.transferAssetCost);
     }
     
     
@@ -298,7 +298,7 @@ contract FrontEnd is PullPayment, Ownable {
         
         Costs memory cost = getCost(costrec.assetClass);
         
-        require (msg.value >= cost.NOTEcost, 
+        require (msg.value >= cost.createNoteCost, 
         "tx value too low. Send more eth.");
         Record memory rec;
         
@@ -324,7 +324,7 @@ contract FrontEnd is PullPayment, Ownable {
         
         writeRecordIPFS (_idxHash, rec);
         
-        deductPayment(cost.NOTEcost);
+        deductPayment(cost.createNoteCost);
     }
     
     
@@ -462,12 +462,12 @@ contract FrontEnd is PullPayment, Ownable {
     function getCost (uint16 _class) private returns(Costs memory) {
         Costs memory cost;
         
-        (cost.NRcost,
-        cost.TAcost, 
-        cost.NOTEcost, 
+        (cost.newRecordCost,
+        cost.transferAssetCost, 
+        cost.createNoteCost, 
         cost.cost4, 
         cost.cost5, 
-        cost.FMcost) = Storage.retrieveCosts(_class);
+        cost.forceModifyCost) = Storage.retrieveCosts(_class);
         
         return (cost);
     }
