@@ -5,24 +5,24 @@ import "./Ownable.sol";
 
 contract Storage is Ownable {
     
-   
+    
     struct Record {
         bytes32 recorder; // Address hash of recorder 
         bytes32 rightsHolder; // KEK256 Registered  owner
         bytes32 lastRecorder; // Address hash of last non-automation recorder
         uint8 status; // Status - Transferrable, locked, in transfer, stolen, lost, etc.
         uint8 forceModCount; // Number of times asset has been forceModded.
-        uint16 assetClass; //Type of asset
-        uint countDown; // variable that can only be dencreased from countDownStart
-        uint countDownStart; //starting point for countdown variable (set once)
-        bytes32 IPFS1; // publically viewable asset description
-        bytes32 IPFS2; // publically viewable immutable notes
-        uint timeLock; // time sensitive mutex
+        uint16 assetClass; // Type of asset
+        uint countDown; // Variable that can only be dencreased from countDownStart
+        uint countDownStart; // Starting point for countdown variable (set once)
+        bytes32 IPFS1; // Publically viewable asset description
+        bytes32 IPFS2; // Publically viewable immutable notes
+        uint timeLock; // Time sensitive mutex
     }
     
     struct User {
-        uint8 userType; // Status - Transferrable, locked, in transfer, stolen, lost, etc.
-        uint16 authorizedAssetClass; // extra status for future expansion
+        uint8 userType; // Human / Automated / Unauthorized
+        uint16 authorizedAssetClass; // User authorized for specific asset class
     }
     
     struct Costs{
@@ -35,10 +35,10 @@ contract Storage is Ownable {
     }
     
 
-    mapping(bytes32 => uint8) private authorizedAdresses; //authorized contract address 
-    mapping(bytes32 => Record) private database; //registry
-    mapping(bytes32 => User) private registeredUsers; //authorized recorder database
-    mapping(uint16 => Costs) private cost; //cost per function by asset class
+    mapping(bytes32 => uint8) private authorizedAdresses; // Authorized contract address 
+    mapping(bytes32 => Record) private database; // Registry
+    mapping(bytes32 => User) private registeredUsers; // Authorized recorder database
+    mapping(uint16 => Costs) private cost; // Cost per function by asset class
     
     /*
     * Authorized external Contract / address types:   authorizedAdresses[]
@@ -330,7 +330,7 @@ contract Storage is Ownable {
     /*
      * @dev retrieve function costs per asset class, in Wei
      */    
-    function RETRIEVE_COSTS (uint16 _assetClass) external view addrAuth(3) returns (uint, uint, uint, uint, uint, uint) {
+    function retrieveCosts (uint16 _assetClass) external view addrAuth(3) returns (uint, uint, uint, uint, uint, uint) {
 
         return (cost[_assetClass].cost1,
                 cost[_assetClass].cost2,
@@ -367,7 +367,7 @@ contract Storage is Ownable {
     /*
      * @dev return abbreviated record (IPFS data only)
      */
-    function retrieveIPFSdata (bytes32 _idxHash) external view addrAuth(2) exists (_idxHash) returns (bytes32, uint8, uint16, bytes32, bytes32, bytes32) {  
+    function retrieveIPFSData (bytes32 _idxHash) external view addrAuth(2) exists (_idxHash) returns (bytes32, uint8, uint16, bytes32, bytes32, bytes32) {  
         
         bytes32 datahash = keccak256(abi.encodePacked(database[_idxHash].rightsHolder,
                                                       database[_idxHash].status, 
