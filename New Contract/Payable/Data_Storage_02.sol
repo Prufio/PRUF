@@ -268,7 +268,7 @@ contract Storage is Ownable {
      * @dev Modify a record in the database  *read fullHash, write rightsHolder, update recorder, assetClass,countDown update recorder....
      */ 
     function modifyRecord(bytes32 _userHash, bytes32 _idxHash, bytes32 _regHash, uint8 _status, uint _countDown, uint8 _forceCount) external
-                            addrAuth(3) userAuth (_userHash, _idxHash) exists (_idxHash) unlocked (_idxHash){
+                            addrAuth(3) userAuth (_userHash, _idxHash) exists (_idxHash) unlocked (_idxHash) notTimeLocked(_idxHash){
                                 
         require(
             _regHash != 0 ,
@@ -286,6 +286,7 @@ contract Storage is Ownable {
             _status < 200,
             "MR:ERR-status over 199 cannot be set by user"
         );
+        database[_idxHash].timeLock = block.number;
         Record memory _record;
         _record = database[_idxHash];
         _record.rightsHolder = _regHash;
@@ -304,9 +305,9 @@ contract Storage is Ownable {
      * @dev modify record IPFS data
      */
     function modifyIPFS (bytes32 _userHash, bytes32 _idxHash, bytes32 _IPFS1, bytes32 _IPFS2) external 
-                        addrAuth(3) userAuth (_userHash, _idxHash) exists (_idxHash) unlocked (_idxHash) {
+                        addrAuth(3) userAuth (_userHash, _idxHash) exists (_idxHash) unlocked (_idxHash) notTimeLocked(_idxHash) {
         
-        
+        database[_idxHash].timeLock = block.number;
         Record memory _record = database[_idxHash];
         
         
