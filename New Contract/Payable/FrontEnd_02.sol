@@ -96,7 +96,7 @@ contract FrontEnd is PullPayment, Ownable {
     /*
      * @dev Wrapper for newRecord
      */
-    function *newRecord (string memory _idx, string memory _rgt, uint16 _assetClass, uint _countDownStart, string memory _IPFSs) public payable {
+    function $newRecord (string memory _idx, string memory _rgt, uint16 _assetClass, uint _countDownStart, string memory _IPFSs) public payable {
         
         Costs memory cost = getCost(_assetClass);
         
@@ -137,7 +137,7 @@ contract FrontEnd is PullPayment, Ownable {
     /*
      * @dev Modify **Record**.rightsHolder without confirmation required
      */
-    function *forceModRecord (string memory _idx, string memory _rgt) public payable {
+    function $forceModRecord (string memory _idx, string memory _rgt) public payable {
         Record memory costrec = getRecord(keccak256(abi.encodePacked(_idx)));
         
         Costs memory cost = getCost(costrec.assetClass);
@@ -220,7 +220,7 @@ contract FrontEnd is PullPayment, Ownable {
     /*
      * @dev Transfer Rights to new rightsHolder with confirmation
      */
-    function *transferAsset (string memory _idx, string memory _rgt, string memory _newrgt) public payable { 
+    function $transferAsset (string memory _idx, string memory _rgt, string memory _newrgt) public payable { 
         Record memory costrec = getRecord(keccak256(abi.encodePacked(_idx)));
         
         Costs memory cost = getCost(costrec.assetClass);
@@ -293,7 +293,7 @@ contract FrontEnd is PullPayment, Ownable {
     /*
      * @dev Modify **Record**.IPFS2 with confirmation
      */
-    function *createIPFS2 (string memory _idx, string memory _rgt, string memory _IPFS ) public payable { 
+    function $createIPFS2 (string memory _idx, string memory _rgt, string memory _IPFS ) public payable { 
         Record memory costrec = getRecord(keccak256(abi.encodePacked(_idx)));
         
         Costs memory cost = getCost(costrec.assetClass);
@@ -346,7 +346,7 @@ contract FrontEnd is PullPayment, Ownable {
     /*
      * @dev Withdraws user's Escrow amount
      */
-    function *withdraw() public virtual payable {
+    function $withdraw() public virtual payable {
         withdrawPayments(msg.sender);
     }
     
@@ -370,7 +370,7 @@ contract FrontEnd is PullPayment, Ownable {
     function getRecordIPFS (bytes32 _idxHash) private returns (Record memory) { 
         Record memory rec;
         
-        (rec.rightsHolder, rec.status, rec.assetClass, rec.IPFS1, rec.IPFS2) = Storage.retrieveretrieveIPFSdata (_idxHash);//get record from storage contract
+        (rec.rightsHolder, rec.status, rec.assetClass, rec.IPFS1, rec.IPFS2) = Storage.retrieveIPFSData (_idxHash);//get record from storage contract
         
         return (rec); // Returns record struct rec and checkout supplied key
     }
