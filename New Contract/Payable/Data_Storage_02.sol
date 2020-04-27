@@ -388,18 +388,25 @@ contract Storage is Ownable {
         }
     }
     
+     /*
+     * @dev return the usertype and auth asset class for a user
+     */
+    //function getUserInfo (bytes32 _senderhash)internal view addrAuth(2) returns (uint8, uint16) {
+    //    return (registeredUsers[_senderhash].userType, registeredUsers[_senderhash].authorizedAssetClass);
+    //}
+    
     
     /*
      * @dev check for lock, lock record, return a hash of a record with the supplied checkout code
      */
-    function checkOutRecord (bytes32 _idxHash) public addrAuth(3) exists (_idxHash) {  
-        require ( 
-            database[_idxHash].timeLock < block.number,
-            "COR:ERR-- record already checked out"
-        );
+    //function checkOutRecord (bytes32 _idxHash) public addrAuth(3) exists (_idxHash) {  
+    //    require ( 
+    //        database[_idxHash].timeLock < block.number,
+    //        "COR:ERR-- record already checked out"
+    //    );
         
-        database[_idxHash].timeLock = block.number;
-    }
+    //    database[_idxHash].timeLock = block.number;
+    //}
     
     
     /*

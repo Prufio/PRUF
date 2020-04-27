@@ -13,7 +13,10 @@ contract StorageInterface {
     function modifyRecord(bytes32 _userHash, bytes32 _idxHash, bytes32 _rgt, uint8 _status, uint _countDown, uint8 _forceCount) external {}
     function modifyIPFS (bytes32 _userHash, bytes32 _idxHash, bytes32 _IPFS1, bytes32 _IPFS2) external {}
     function retrieveRecorder (bytes32 _idxHash) external returns (bytes32, bytes32) {}
+    //function getUserInfo (bytes32 _senderhash)external returns (uint8, uint16) {}
 }    
+
+
     
 
 contract FrontEnd is Ownable {
@@ -121,19 +124,19 @@ contract FrontEnd is Ownable {
     /*
      * @dev modify **Record**.rightsHolder,status,countdown,and forcecount without confirmation required 
      */
-    function _MOD_RECORD (string memory _idx, string memory _rgt, uint8 _status, uint _countDown, uint8 _forceCount) onlyOwner public payable { 
-        Record memory rec;
-        bytes32 _idxHash = keccak256(abi.encodePacked(_idx));//temp
-        bytes32 _rgtHash = keccak256(abi.encodePacked(_rgt));//temp
+    //function _MOD_RECORD (string memory _idx, string memory _rgt, uint8 _status, uint _countDown, uint8 _forceCount) onlyOwner public payable { 
+    //    Record memory rec;
+    //    bytes32 _idxHash = keccak256(abi.encodePacked(_idx));//temp
+    //    bytes32 _rgtHash = keccak256(abi.encodePacked(_rgt));//temp
         
         
-        rec.rightsHolder = _rgtHash;
-        rec.status = _status;
-        rec.forceModCount = _forceCount;
-        rec.countDown = _countDown;
+    //    rec.rightsHolder = _rgtHash;
+    //    rec.status = _status;
+    //    rec.forceModCount = _forceCount;
+    //    rec.countDown = _countDown;
        
-        writeRecord (_idxHash, rec);
-    }
+    //    writeRecord (_idxHash, rec);
+    //}
     
     
      /*
