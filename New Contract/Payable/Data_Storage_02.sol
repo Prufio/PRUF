@@ -181,7 +181,7 @@ contract Storage is Ownable {
         cost[_class].cost3 = _cost3;
         cost[_class].cost4 = _cost4;
         cost[_class].cost5 = _cost5;
-        cost[_class].cost6 = _cost6;
+        cost[_class].cost6 = _forceModcost;
         
     }
    

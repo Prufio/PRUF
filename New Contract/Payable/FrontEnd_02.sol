@@ -98,7 +98,7 @@ contract FrontEnd is PullPayment, Ownable {
      */
     function _NEW_RECORD (string memory _idx, string memory _rgt, uint16 _assetClass, uint _countDownStart, string memory _IPFSs) public payable {
         
-        Costs memory cost = getCost(1);
+        Costs memory cost = getCost(_assetClass);
         
         require (msg.value >= cost.NRcost, 
         "NR: tx value too low. Send more eth.");
@@ -156,7 +156,9 @@ contract FrontEnd is PullPayment, Ownable {
      * @dev modify **Record**.rightsHolder without confirmation required
      */
     function FORCE_MOD_RECORD (string memory _idx, string memory _rgt) public payable {
-        Costs memory cost = getCost(1);
+        Record memory costrec = getRecord(keccak256(abi.encodePacked(_idx)));
+        
+        Costs memory cost = getCost(costrec.assetClass);
         
         require (msg.value >= cost.FMcost, 
         "FMR: tx value too low. Send more eth.");
@@ -237,7 +239,9 @@ contract FrontEnd is PullPayment, Ownable {
      * @dev transfer Rights to new rightsHolder with confirmation
      */
     function TRANSFER_ASSET (string memory _idx, string memory _rgt, string memory _newrgt) public payable { 
-        Costs memory cost = getCost(1);
+        Record memory costrec = getRecord(keccak256(abi.encodePacked(_idx)));
+        
+        Costs memory cost = getCost(costrec.assetClass);
         
         require (msg.value >= cost.TAcost, 
         "TA: tx value too low. Send more eth.");
@@ -308,7 +312,9 @@ contract FrontEnd is PullPayment, Ownable {
      * @dev modify **Record**.IPFS2 with confirmation
      */
     function CREATE_IPFS2 (string memory _idx, string memory _rgt, string memory _IPFS ) public payable { 
-        Costs memory cost = getCost(1);
+        Record memory costrec = getRecord(keccak256(abi.encodePacked(_idx)));
+        
+        Costs memory cost = getCost(costrec.assetClass);
         
         require (msg.value >= cost.NOTEcost, 
         "tx value too low. Send more eth.");
