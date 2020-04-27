@@ -175,13 +175,13 @@ contract Storage is Ownable {
     /*
      * @dev Set function costs per asset class, in Wei
      */
-     function ADMIN_setCosts (uint16 _class, uint _cost1, uint _cost2, uint _cost3, uint _cost4, uint _cost5, uint _cost6) onlyOwner external {
-        cost[_class].cost1 = _cost1;
-        cost[_class].cost2 = _cost2;
-        cost[_class].cost3 = _cost3;
+     function ADMIN_setCosts (uint16 _class, uint _newRecordCost, uint _transferRecordCost, uint _createNoteCost, uint _cost4, uint _cost5, uint _forceModCost) onlyOwner external {
+        cost[_class].cost1 = _newRecordCost;
+        cost[_class].cost2 = _transferRecordCost;
+        cost[_class].cost3 = _createNoteCost;
         cost[_class].cost4 = _cost4;
         cost[_class].cost5 = _cost5;
-        cost[_class].cost6 = _forceModcost;
+        cost[_class].cost6 = _forceModCost;
         
     }
    
