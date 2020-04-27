@@ -1,8 +1,7 @@
 pragma solidity 0.6.0;
 //pragma experimental ABIEncoderV2;
 
-import "./Ownable.sol";
-import "./SafeMath.sol";
+import "./PullPayment.sol";
 
 
 contract StorageInterface {
@@ -13,13 +12,13 @@ contract StorageInterface {
     function modifyRecord(bytes32 _userHash, bytes32 _idxHash, bytes32 _rgt, uint8 _status, uint _countDown, uint8 _forceCount) external {}
     function modifyIPFS (bytes32 _userHash, bytes32 _idxHash, bytes32 _IPFS1, bytes32 _IPFS2) external {}
     function retrieveRecorder (bytes32 _idxHash) external returns (bytes32, bytes32) {}
-    //function getUserInfo (bytes32 _senderhash)external returns (uint8, uint16) {}
+    function RETRIEVE_COSTS (uint16 _assetClass) external returns (uint, uint, uint, uint, uint, uint) {}
 }    
 
 
     
 
-contract FrontEnd is Ownable {
+contract FrontEnd is PullPayment, Ownable {
     
     //using SafeMath for uint8;
     using SafeMath for uint;
@@ -40,26 +39,26 @@ contract FrontEnd is Ownable {
     }
     
     struct User {
-        uint8 userType; // Status - Transferrable, locked, in transfer, stolen, lost, etc.
-        uint16 authorizedAssetClass; // extra status for future expansion
+        uint8 userType; // User type: 1 = human, 9 = automated
+        uint16 authorizedAssetClass; // asset class in which user is permitted to transact
     }
     
     struct Costs{
-        uint cost1;
-        uint cost2;
-        uint cost3;
-        uint cost4;
-        uint cost5;
-        uint cost6;
+        uint NRcost; // Cost to create a new record
+        uint TAcost; // Cost to transfer a record from known rights holder to a new one
+        uint NOTEcost; // Cost to add a static note to an asset
+        uint cost4; // Extra
+        uint cost5; // Extra
+        uint FMcost; // Cost to brute-force a record transfer
     }
     
-    
+    address internal mainWallet;
     
     StorageInterface private Storage; //set up external contract interface
     address storageAddress;
     
      event REPORT (string _msg);
-
+    
 
     /*
      * @dev Set storage contract to interface with
@@ -67,6 +66,13 @@ contract FrontEnd is Ownable {
     function setStorageContract (address _storageAddress) public onlyOwner { //set storage address
         require(_storageAddress != address(0));
         Storage = StorageInterface(_storageAddress);
+    }
+    
+    /*
+     * @dev Set wallet for contract to direct payments to
+     */
+    function _setMainWallet (address _addr) public onlyOwner {
+        mainWallet = _addr;
     }
     
     
@@ -92,6 +98,11 @@ contract FrontEnd is Ownable {
      */
     function _NEW_RECORD (string memory _idx, string memory _rgt, uint16 _assetClass, uint _countDownStart, string memory _IPFSs) public payable {
         
+        Costs memory cost = getCost(1);
+        
+        require (msg.value >= cost.NRcost, 
+        "NR: tx value too low. Send more eth.");
+        
         bytes32 senderHash = keccak256(abi.encodePacked(msg.sender));
         bytes32 _idxHash = keccak256(abi.encodePacked(_idx));
         bytes32 _rgtHash = keccak256(abi.encodePacked(_rgt));
@@ -103,6 +114,8 @@ contract FrontEnd is Ownable {
                             _assetClass, 
                             _countDownStart, 
                             _IPFS);
+                            
+        deductPayment(cost.NRcost);
         
     }
 
@@ -142,7 +155,12 @@ contract FrontEnd is Ownable {
      /*
      * @dev modify **Record**.rightsHolder without confirmation required
      */
-    function FORCE_MOD_RECORD (string memory _idx, string memory _rgt) public payable { 
+    function FORCE_MOD_RECORD (string memory _idx, string memory _rgt) public payable {
+        Costs memory cost = getCost(1);
+        
+        require (msg.value >= cost.FMcost, 
+        "FMR: tx value too low. Send more eth.");
+        
         Record memory rec;
         
         bytes32 _idxHash = keccak256(abi.encodePacked(_idx));//temp
@@ -159,13 +177,15 @@ contract FrontEnd is Ownable {
         
  
         writeRecord (_idxHash, rec);
+        
+        deductPayment(cost.FMcost);
     }
     
     
      /*
      * @dev modify **Record**.status with confirmation required
      */
-    function MOD_STATUS (string memory _idx, string memory _rgt, uint8 _status) public payable { 
+    function MOD_STATUS (string memory _idx, string memory _rgt, uint8 _status) public { 
         Record memory rec;
         bytes32 _rgtHash = keccak256(abi.encodePacked(_rgt));//temp
         bytes32 _idxHash = keccak256(abi.encodePacked(_idx));//temp
@@ -188,7 +208,7 @@ contract FrontEnd is Ownable {
      /*
      * @dev Decrement **Record**.countdown with confirmation required
      */
-    function DEC_COUNTER (string memory _idx, string memory _rgt, uint _decAmount) public payable { 
+    function DEC_COUNTER (string memory _idx, string memory _rgt, uint _decAmount) public { 
         Record memory rec;
         bytes32 _rgtHash = keccak256(abi.encodePacked(_rgt));//temp
         bytes32 _idxHash = keccak256(abi.encodePacked(_idx));//temp
@@ -217,6 +237,11 @@ contract FrontEnd is Ownable {
      * @dev transfer Rights to new rightsHolder with confirmation
      */
     function TRANSFER_ASSET (string memory _idx, string memory _rgt, string memory _newrgt) public payable { 
+        Costs memory cost = getCost(1);
+        
+        require (msg.value >= cost.TAcost, 
+        "TA: tx value too low. Send more eth.");
+        
         Record memory rec;
         bytes32 _rgtHash = keccak256(abi.encodePacked(_rgt));//temp
         bytes32 _newrgtHash = keccak256(abi.encodePacked(_newrgt));//temp
@@ -244,13 +269,15 @@ contract FrontEnd is Ownable {
        
         
         writeRecord (_idxHash, rec);
+        
+        deductPayment(cost.TAcost);
     }
     
     
     /*
      * @dev modify **Record**.IPFS1 with confirmation
      */
-    function MOD_IPFS1 (string memory _idx, string memory _rgt, string memory _IPFS ) public payable { 
+    function MOD_IPFS1 (string memory _idx, string memory _rgt, string memory _IPFS ) public { 
         Record memory rec;
         
         bytes32 _IPFSHash = keccak256(abi.encodePacked(_IPFS));//temp
@@ -280,7 +307,11 @@ contract FrontEnd is Ownable {
     /*
      * @dev modify **Record**.IPFS2 with confirmation
      */
-    function MOD_IPFS2 (string memory _idx, string memory _rgt, string memory _IPFS ) public payable { 
+    function CREATE_IPFS2 (string memory _idx, string memory _rgt, string memory _IPFS ) public payable { 
+        Costs memory cost = getCost(1);
+        
+        require (msg.value >= cost.NOTEcost, 
+        "tx value too low. Send more eth.");
         Record memory rec;
         
         bytes32 _IPFSHash = keccak256(abi.encodePacked(_IPFS));//temp
@@ -304,8 +335,24 @@ contract FrontEnd is Ownable {
         rec.IPFS2 = _IPFSHash;
         
         writeRecordIPFS (_idxHash, rec);
+        
+        deductPayment(cost.NOTEcost);
     }
     
+    function deductPayment (uint _amount) private {
+        uint messageValue = msg.value;
+        uint change;
+
+        change = messageValue.sub(_amount);
+        
+        _asyncTransfer(mainWallet, _amount);
+        _asyncTransfer(msg.sender, change);
+        
+    }
+    
+    function _WITHDRAW() public virtual payable {
+        withdrawPayments(msg.sender);
+    }
     
      /*
      * @dev Get a Record from Storage @ idxHash
@@ -408,5 +455,14 @@ contract FrontEnd is Ownable {
     function _EMIT_RECORD (string calldata _idx) external {
         Storage.emitRecord (keccak256(abi.encodePacked(_idx)));
     }
+    
+    function getCost (uint16 _class) private returns(Costs memory) {
+        Costs memory cost;
+        (cost.NRcost, cost.TAcost, cost.NOTEcost, cost.cost4, cost.cost5, cost.FMcost) = 
+        Storage.RETRIEVE_COSTS(_class);
+        return (cost);
+    }
+    
+    
 
 }

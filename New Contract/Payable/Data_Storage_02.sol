@@ -73,6 +73,7 @@ contract Storage is Ownable {
             _;
     }
     
+    
  
  
     /*
@@ -165,14 +166,15 @@ contract Storage is Ownable {
     /*
      * @dev Set function costs per asset class, in Wei
      */
-    function ADMIN_SetCosts (uint16 _assetClass, uint _cost1, uint _cost2, uint _cost3, uint _cost4, uint _cost5, uint _cost6) external onlyOwner {
-                            
-        cost[_assetClass].cost1 = _cost1;
-        cost[_assetClass].cost2 = _cost2;
-        cost[_assetClass].cost3 = _cost3;
-        cost[_assetClass].cost4 = _cost4;
-        cost[_assetClass].cost5 = _cost5;
-        cost[_assetClass].cost6 = _cost6;
+     
+     function _SET_COSTS (uint16 _class, uint _cost1, uint _cost2, uint _cost3, uint _cost4, uint _cost5, uint _cost6) onlyOwner external {
+        cost[_class].cost1 = _cost1;
+        cost[_class].cost2 = _cost2;
+        cost[_class].cost3 = _cost3;
+        cost[_class].cost4 = _cost4;
+        cost[_class].cost5 = _cost5;
+        cost[_class].cost6 = _cost6;
+        
     }
     
     function ADMIN_LOCK_STATUS (string calldata _idx, uint8 _stat) external onlyOwner { //---------------------------------------INSECURE USE HASH!!!! 
@@ -441,4 +443,5 @@ contract Storage is Ownable {
         }
         return(_senderHash,lastrec);
     }
+    
 }
