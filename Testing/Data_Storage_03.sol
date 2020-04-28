@@ -5,25 +5,24 @@ import "./Ownable.sol";
 
 contract Storage is Ownable {
     
-   
+    
     struct Record {
         bytes32 recorder; // Address hash of recorder 
-        bytes32 rightsHolder;  // KEK256 Registered  owner
-        bytes32 lastRecorder; //// Address hash of last non-automation recorder
+        bytes32 rightsHolder; // KEK256 Registered  owner
+        bytes32 lastRecorder; // Address hash of last non-automation recorder
         uint8 status; // Status - Transferrable, locked, in transfer, stolen, lost, etc.
         uint8 forceModCount; // Number of times asset has been forceModded.
-        uint16 assetClass; //Type of asset
-        uint countDown; // variable that can only be dencreased from countDownStart
-        uint countDownStart; //starting point for countdown variable (set once)
-        bytes32 IPFS1; // publically viewable asset description
-        bytes32 IPFS2; // publically viewable immutable notes
-        uint timeLock; // time sensitive mutex
-        bytes32 checkOut; // checkout number
+        uint16 assetClass; // Type of asset
+        uint countDown; // Variable that can only be dencreased from countDownStart
+        uint countDownStart; // Starting point for countdown variable (set once)
+        bytes32 IPFS1; // Publically viewable asset description
+        bytes32 IPFS2; // Publically viewable immutable notes
+        uint timeLock; // Time sensitive mutex
     }
     
     struct User {
-        uint8 userType; // Status - Transferrable, locked, in transfer, stolen, lost, etc.
-        uint16 authorizedAssetClass; // extra status for future expansion
+        uint8 userType; // Human / Automated / Unauthorized
+        uint16 authorizedAssetClass; // User authorized for specific asset class
     }
     
     struct Costs{
@@ -36,10 +35,10 @@ contract Storage is Ownable {
     }
     
 
-    mapping(bytes32 => uint8) private authorizedAdresses; //authorized contract address 
-    mapping(bytes32 => Record) private database; //registry
-    mapping(bytes32 => User) private registeredUsers; //authorized recorder database
-    mapping(uint16 => Costs) private cost; //cost per function by asset class
+    mapping(bytes32 => uint8) private authorizedAdresses; // Authorized contract address 
+    mapping(bytes32 => Record) private database; // Registry
+    mapping(bytes32 => User) private registeredUsers; // Authorized recorder database
+    mapping(uint16 => Costs) private cost; // Cost per function by asset class
     
     /*
     * Authorized external Contract / address types:   authorizedAdresses[]
@@ -61,20 +60,20 @@ contract Storage is Ownable {
     */
     
     
-     //--------------------------------------------------------------------------Modifiers----------------------------------------------------------   
-     /*
+//----------------------------------------------Modifiers----------------------------------------------//  
+
+    /*
      * @dev check msg.sender against authorized adresses
      */
-    modifier addrAuth (uint8 _userType){
-        require ( 
-                ((authorizedAdresses[keccak256(abi.encodePacked(msg.sender))] >= _userType) &&
-                (authorizedAdresses[keccak256(abi.encodePacked(msg.sender))] <= 4))
-            ,"Contract not authorized or improperly permissioned"
-            );
-            _;
+    modifier addrAuth (uint8 _userType) {
+        require( 
+            ((authorizedAdresses[keccak256(abi.encodePacked(msg.sender))] >= _userType) &&
+            (authorizedAdresses[keccak256(abi.encodePacked(msg.sender))] <= 4)),
+            "Contract not authorized or improperly permissioned"
+        );
+        _;
     }
     
- 
  
     /*
      * @dev Verify user credentials
@@ -84,12 +83,12 @@ contract Storage is Ownable {
         
         require(
             (senderType == 1) || (senderType == 9) || (database[_idxHash].assetClass > 8192),
-            "AU:ERR-User not registered"
+            "MOD-UA-User not registered"
         );
         require(
             (database[_idxHash].assetClass == registeredUsers[_senderHash].authorizedAssetClass) ||
             (database[_idxHash].assetClass > 8192),
-            "AU:ERR-User not registered for asset type"
+            "MOD-UA-User not registered for asset type"
         );
         _;
     }
@@ -101,57 +100,68 @@ contract Storage is Ownable {
     modifier unlocked (bytes32 _idxHash) {
         require(
             database[_idxHash].status < 200 ,
-            "CR:ERR-record Locked"
+            "MOD-U-record Locked"
         );
         _;
     }
-    
+  
+  
+    /*
+     * @dev check record exists
+     */ 
     modifier exists (bytes32 _idxHash) {
         require(
             database[_idxHash].rightsHolder != 0 ,
-            "CR:ERR-record does not exist"
+            "MOD-E-record does not exist"
         );
         _;  
     }
     
+    
+    /*
+     * @dev check record isn't time locked
+     */ 
     modifier notTimeLocked(bytes32 _idxHash) { //this modifier makes the bold assumption the block number will "never" be reset. hopefully, this is true...
         require(
             database[_idxHash].timeLock < block.number,
-            "CR:ERR-record Locked"
+            "MOD-NTL-record time locked"
         );
         _;
     }
     
 
-    //--------------------------------------------------------------------------Events----------------------------------------------------------
+//-----------------------------------------------Events------------------------------------------------//
+
     event REPORT (string _msg);
     
     //event EMIT_RECORD (Record record);  //use when ABIencoder V2 is ready for prime-time
     event EMIT_RECORD (bytes32, bytes32, bytes32, uint8, uint8, uint16, uint, uint, bytes32, bytes32);
     
+
+//--------------------------------Internal Admin functions / onlyowner---------------------------------//
     
-    //--------------------------------------------internal Admin functions //onlyowner----------------------------------------------------------
     /*
      * @dev Authorize / Deauthorize / Authorize users for an address be permitted to make record modifications
      * ----------------INSECURE -- keccak256 of address must be generated clientside in release.
      */
-    function ADMIN_addUser(address _authAddr, uint8 userType, uint16 _authorizedAssetClass) external onlyOwner {
+    function ADMIN_addUser(address _authAddr, uint8 _userType, uint16 _authorizedAssetClass) external onlyOwner {
       
-        require((userType == 0)||(userType == 1)||(userType == 9) ,
+        require((_userType == 0)||(_userType == 1)||(_userType == 9) ,
         "AUTHU:ER-13 Invalid user type"
         );
 
         bytes32 hash;
         hash = keccak256(abi.encodePacked(_authAddr));
-        registeredUsers[hash].userType = userType;
+        registeredUsers[hash].userType = _userType;
         registeredUsers[hash].authorizedAssetClass = _authorizedAssetClass;
     }
     
-        /*
+    
+    /*
      * @dev Authorize / Deauthorize / Authorize ADRESSES permitted to make record modifications
      * ----------------INSECURE -- keccak256 of address must be generated clientside in release.
      */
-    function ADMIN_AddContract(address _addr, uint8 _contractAuthLevel) external onlyOwner {
+    function ADMIN_addContract(address _addr, uint8 _contractAuthLevel) external onlyOwner {
         require ( 
             _contractAuthLevel <= 3,
             "AUTHC:ER-13 Invalid user type"
@@ -164,17 +174,21 @@ contract Storage is Ownable {
     /*
      * @dev Set function costs per asset class, in Wei
      */
-    function ADMIN_SetCosts (uint16 _assetClass, uint _cost1, uint _cost2, uint _cost3, uint _cost4, uint _cost5, uint _cost6) external onlyOwner {
-                            
-        cost[_assetClass].cost1 = _cost1;
-        cost[_assetClass].cost2 = _cost2;
-        cost[_assetClass].cost3 = _cost3;
-        cost[_assetClass].cost4 = _cost4;
-        cost[_assetClass].cost5 = _cost5;
-        cost[_assetClass].cost6 = _cost6;
+     function ADMIN_setCosts (uint16 _class, uint _newRecordCost, uint _transferRecordCost, uint _createNoteCost, uint _cost4, uint _cost5, uint _forceModCost) onlyOwner external {
+        cost[_class].cost1 = _newRecordCost;
+        cost[_class].cost2 = _transferRecordCost;
+        cost[_class].cost3 = _createNoteCost;
+        cost[_class].cost4 = _cost4;
+        cost[_class].cost5 = _cost5;
+        cost[_class].cost6 = _forceModCost;
+        
     }
-    
-    function ADMIN_LOCK_STATUS (string calldata _idx, uint8 _stat) external onlyOwner { //---------------------------------------INSECURE USE HASH!!!! 
+   
+   
+    /*
+     * @dev Allows Admin to set lock on asset
+     */
+    function ADMIN_lockStatus (string calldata _idx, uint8 _stat) external onlyOwner { //---------------------------------------INSECURE USE HASH!!!! 
         require ( 
             _stat > 199,
             "AL:ERR--locking requires status > 199"
@@ -182,33 +196,44 @@ contract Storage is Ownable {
         bytes32 _idxHash = keccak256(abi.encodePacked(_idx));  // TESTING ONLY
         database[_idxHash].status = _stat;
     }
-    
-    function ADMIN_UNLOCK (string calldata _idx) external onlyOwner { //---------------------------------------INSECURE USE HASH!!!! 
+   
+   
+    /*
+     * @dev Allows Admin to unlock asset
+     */
+    function ADMIN_unlock (string calldata _idx) external onlyOwner { //---------------------------------------INSECURE USE HASH!!!! 
                                                         //for testing only should be (b32 _idxHash) exists(_idxHash) onlyOwner
         bytes32 _idxHash = keccak256(abi.encodePacked(_idx));  // TESTING ONLY
         database[_idxHash].status = 0; //set to unspecified status
     }
     
-    function ADMIN_SET_TIMELOCK (string calldata _idx, uint _blockNumber) external onlyOwner { //---------------------------------------INSECURE USE HASH!!!! 
+    
+    /*
+     * @dev Allows Admin to set time lock
+     */
+    function ADMIN_setTimelock (string calldata _idx, uint _blockNumber) external onlyOwner { //---------------------------------------INSECURE USE HASH!!!! 
                                                         //for testing only should be (b32 _idxHash) exists(_idxHash) onlyOwner
         bytes32 _idxHash = keccak256(abi.encodePacked(_idx));  // TESTING ONLY
         database[_idxHash].timeLock = _blockNumber; //set lock to expiration blocknumber
     }
-    
-    function ADMIN_RESET_FMC (string calldata _idx) external onlyOwner { //---------------------------------------INSECURE USE HASH!!!! 
+   
+   
+    /*
+     * @dev Allows Admin to reset force mod count
+     */
+    function ADMIN_resetFMC (string calldata _idx) external onlyOwner { //---------------------------------------INSECURE USE HASH!!!! 
                                                         //for testing only should be (b32 _idxHash) exists(_idxHash) onlyOwner
         bytes32 _idxHash = keccak256(abi.encodePacked(_idx));  // TESTING ONLY
         database[_idxHash].forceModCount = 0; //set to unspecified status
     }
   
-    
-    //----------------------------------------external contract functions  //authuser----------------------------------------------------------
-    
+
+//--------------------------------External contract functions / authuser---------------------------------//
     
     /*
      * @dev Make a new record in the database  *read fullHash, write rightsHolder, recorders, assetClass,countDownStart --new_record
      */ 
-    function newRecord(bytes32 _userHash, bytes32 _idxHash, bytes32 _rgt, uint16 _assetClass, uint _countDownStart, bytes32 _IPFS1, bytes32 _hash) external addrAuth(3) {
+    function newRecord(bytes32 _userHash, bytes32 _idxHash, bytes32 _rgt, uint16 _assetClass, uint _countDownStart, bytes32 _IPFS1) external addrAuth(3) {
        
         require(
             registeredUsers[_userHash].userType == 1 || (_assetClass > 8192),
@@ -225,16 +250,6 @@ contract Storage is Ownable {
         require(
             _rgt != 0 ,
             "NR:ERR-Rightsholder cannot be blank"
-        );
-        require(
-            _hash == keccak256(abi.encodePacked(_userHash,
-                                                _idxHash,
-                                                _rgt,
-                                                _assetClass,
-                                                _countDownStart,
-                                                _IPFS1,
-                                                block.number)),
-            "NR:ERR--Hash of data does not match sent data"
         );
         
         Record memory _record;
@@ -253,15 +268,11 @@ contract Storage is Ownable {
     
     
     /*
-    * @dev Modify a record in the database  *read fullHash, write rightsHolder, update recorder, assetClass,countDown update recorder....
-    */ 
-    function modifyRecord(bytes32 _userHash, bytes32 _idxHash, bytes32 _regHash, uint8 _status, uint _countDown, uint8 _forceCount, bytes32 _writeHash) external
-                            addrAuth(3) userAuth (_userHash, _idxHash) exists (_idxHash) unlocked (_idxHash){
+     * @dev Modify a record in the database  *read fullHash, write rightsHolder, update recorder, assetClass,countDown update recorder....
+     */ 
+    function modifyRecord(bytes32 _userHash, bytes32 _idxHash, bytes32 _regHash, uint8 _status, uint _countDown, uint8 _forceCount) external
+                            addrAuth(3) userAuth (_userHash, _idxHash) exists (_idxHash) unlocked (_idxHash) notTimeLocked(_idxHash){
                                 
-        require(  //this require calls another function that returns a hash of the record without any stateful effects. While this is technically a violation of the CEI pattern, I think its OK in this case
-            _writeHash == keccak256(abi.encodePacked(recHash(_idxHash), _userHash, _idxHash, _regHash, _status, _countDown, _forceCount)) , // requires that _writeHash is an identical hash of the oldhash and the new data
-            "MR:ERR-record has been changed or sent invalid data"  //validate data and block number 
-        );
         require(
             _regHash != 0 ,
             "MR:ERR-Rightsholder cannot be blank"
@@ -278,7 +289,7 @@ contract Storage is Ownable {
             _status < 200,
             "MR:ERR-status over 199 cannot be set by user"
         );
-        
+        database[_idxHash].timeLock = block.number;
         Record memory _record;
         _record = database[_idxHash];
         _record.rightsHolder = _regHash;
@@ -295,15 +306,11 @@ contract Storage is Ownable {
     
     /*
      * @dev modify record IPFS data
-     * the require calls another function that returns a hash of the record without any stateful effects. 
-     * While this is technically a violation of the CEI pattern, I think its OK in this case
      */
-    function modifyIPFS (bytes32 _userHash, bytes32 _idxHash, bytes32 _IPFS1, bytes32 _IPFS2, bytes32 _writeHash) external addrAuth(3) userAuth (_userHash, _idxHash) exists (_idxHash) unlocked (_idxHash) {
-        require(
-            _writeHash == keccak256(abi.encodePacked(recHash(_idxHash), _userHash, _idxHash, _IPFS1, _IPFS2)) , // requires that _writeHash is an identical hash of the oldhash and the new data
-            "MIPFS:ERR--record has been changed or sent invalid data"
-        );
+    function modifyIPFS (bytes32 _userHash, bytes32 _idxHash, bytes32 _IPFS1, bytes32 _IPFS2) external 
+                        addrAuth(3) userAuth (_userHash, _idxHash) exists (_idxHash) unlocked (_idxHash) notTimeLocked(_idxHash) {
         
+        database[_idxHash].timeLock = block.number;
         Record memory _record = database[_idxHash];
         
         
@@ -322,12 +329,13 @@ contract Storage is Ownable {
         
     }
     
- 
-//----------------------------------------external READ ONLY contract functions  //authuser---------------------------------------------------------- 
+    
+//--------------------------------External READ ONLY contract functions / authuser---------------------------------//
+   
     /*
      * @dev retrieve function costs per asset class, in Wei
      */    
-    function RETRIEVE_COSTS (uint16 _assetClass) external view addrAuth(3) returns (uint, uint, uint, uint, uint, uint) {
+    function retrieveCosts (uint16 _assetClass) external view addrAuth(3) returns (uint, uint, uint, uint, uint, uint) {
 
         return (cost[_assetClass].cost1,
                 cost[_assetClass].cost2,
@@ -344,24 +352,40 @@ contract Storage is Ownable {
    function retrieveRecord (bytes32 _idxHash) external view addrAuth(2) exists (_idxHash) returns (bytes32, uint8, uint8, uint16, uint, uint, bytes32) {   
 
         bytes32 idxHash = _idxHash ;  //somehow magically saves the stack.
-        bytes32 datahash = keccak256(abi.encodePacked(database[idxHash].rightsHolder, database[idxHash].status, database[idxHash].forceModCount, 
-                database[idxHash].assetClass, database[idxHash].countDown, database[idxHash].countDownStart));
+        bytes32 datahash = keccak256(abi.encodePacked(database[idxHash].rightsHolder, 
+                                                      database[idxHash].status, 
+                                                      database[idxHash].forceModCount, 
+                                                      database[idxHash].assetClass, 
+                                                      database[idxHash].countDown,
+                                                      database[idxHash].countDownStart));
 
-        return (database[idxHash].rightsHolder, database[idxHash].status, database[idxHash].forceModCount, 
-                database[idxHash].assetClass, database[idxHash].countDown, database[idxHash].countDownStart, datahash);
+        return (database[idxHash].rightsHolder, 
+                database[idxHash].status, 
+                database[idxHash].forceModCount, 
+                database[idxHash].assetClass,
+                database[idxHash].countDown,
+                database[idxHash].countDownStart,
+                datahash);
     }
     
     
     /*
      * @dev return abbreviated record (IPFS data only)
      */
-    function retrieveIPFSdata (bytes32 _idxHash) external view addrAuth(2) exists (_idxHash) returns (bytes32, uint8, uint16, bytes32, bytes32, bytes32) {  
+    function retrieveIPFSData (bytes32 _idxHash) external view addrAuth(2) exists (_idxHash) returns (bytes32, uint8, uint16, bytes32, bytes32, bytes32) {  
         
-        bytes32 datahash = keccak256(abi.encodePacked(database[_idxHash].rightsHolder, database[_idxHash].status, 
-                database[_idxHash].assetClass, database[_idxHash].IPFS1, database[_idxHash].IPFS2));
+        bytes32 datahash = keccak256(abi.encodePacked(database[_idxHash].rightsHolder,
+                                                      database[_idxHash].status, 
+                                                      database[_idxHash].assetClass,
+                                                      database[_idxHash].IPFS1,
+                                                      database[_idxHash].IPFS2));
 
-        return (database[_idxHash].rightsHolder, database[_idxHash].status,
-                database[_idxHash].assetClass, database[_idxHash].IPFS1, database[_idxHash].IPFS2, datahash);
+        return (database[_idxHash].rightsHolder,
+                database[_idxHash].status,
+                database[_idxHash].assetClass,
+                database[_idxHash].IPFS1, 
+                database[_idxHash].IPFS2,
+                datahash);
     }
     
     
@@ -374,6 +398,7 @@ contract Storage is Ownable {
 
         return (database[_idxHash].lastRecorder, database[_idxHash].recorder, datahash);
     }
+    
     
     /*
      * @dev emit a complete record record minus checkout and mutex data 
@@ -397,7 +422,7 @@ contract Storage is Ownable {
     /*
      * @dev compare record.rightsholder with a hashed string // ------------------------testing
      */
-    function XCOMPARE_REG (string calldata _idx, string calldata _rgt) external view addrAuth(1) returns(string memory) {
+    function XcompareRightsHolder (string calldata _idx, string calldata _rgt) external view addrAuth(1) returns(string memory) {
          
         if (keccak256(abi.encodePacked(_rgt)) == database[keccak256(abi.encodePacked(_idx))].rightsHolder) {
             return "Rights holder match confirmed";
@@ -405,51 +430,14 @@ contract Storage is Ownable {
             return "Rights holder does not match";
         }
     }
-    
-    
+
+
+//-----------------------------------------------Private functions------------------------------------------------//
+   
     /*
-     * @dev check for lock, lock record, return a hash of a record with the supplied checkout code
-     */
-    function checkOutRecord (bytes32 _idxHash, bytes32 _checkOut) external addrAuth(3) exists (_idxHash) returns (bytes32) {  
-        require ( 
-            database[_idxHash].timeLock < block.number,
-            "COR:ERR-- record already checked out"
-        );
-        
-        database[_idxHash].timeLock = block.number;
-        database[_idxHash].checkOut = _checkOut ;
-        
-        return (recHash(_idxHash));
-    }
-    
-    
-    /*
-     * @dev return a hash of a complete record minus checkout and mutex data
-     */ 
-    function getHash(bytes32 _idxHash) public view addrAuth(2) exists (_idxHash) returns (bytes32) {
-    
-        return (keccak256(abi.encodePacked(database[_idxHash].recorder, database[_idxHash].rightsHolder, database[_idxHash].lastRecorder, database[_idxHash].status, 
-                database[_idxHash].forceModCount, database[_idxHash].assetClass, database[_idxHash].countDown, database[_idxHash].countDownStart,
-                database[_idxHash].IPFS1, database[_idxHash].IPFS2))); //hash of existing record
-    }
-    
-    
-    //------------------------------------------------------------private functions-------------------------------------------------------------------
-    /*
-     * @dev return a hash of a complete record with checkout and mutex data
-     */ 
-    function recHash(bytes32 _idxHash) private view addrAuth(3) exists (_idxHash) returns (bytes32) {
-        
-        bytes32 key = keccak256(abi.encodePacked(block.number, database[_idxHash].checkOut));
-    
-        return (keccak256(abi.encodePacked(getHash(_idxHash),key))); //hash of existing record with blocknumber and checkout key
-    }
-    
-    
-     /*
      * @dev Update lastRecorder
      */ 
-    function newRecorder(bytes32 _senderHash, bytes32 _recorder, bytes32 _lastRecorder) private view returns(bytes32, bytes32){
+    function newRecorder(bytes32 _senderHash, bytes32 _recorder, bytes32 _lastRecorder) private view returns(bytes32, bytes32) {
          
         bytes32 lastrec;
         
@@ -463,6 +451,5 @@ contract Storage is Ownable {
         }
         return(_senderHash,lastrec);
     }
-    
     
 }
