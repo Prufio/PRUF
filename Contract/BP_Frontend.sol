@@ -1,6 +1,6 @@
 pragma solidity 0.6.0;
  
-import "./BulletProof_0_2_4.sol";
+import "./BulletProof_0_3_0.sol";
 import "./PullPayment.sol";
  
 contract Frontend is BulletProof, PullPayment {
