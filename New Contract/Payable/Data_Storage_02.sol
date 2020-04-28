@@ -74,8 +74,6 @@ contract Storage is Ownable {
         _;
     }
     
-    
- 
  
     /*
      * @dev Verify user credentials
@@ -104,10 +102,9 @@ contract Storage is Ownable {
             database[_idxHash].status < 200 ,
             "MOD-U-record Locked"
         );
-        
-        
         _;
     }
+  
   
     /*
      * @dev check record exists
@@ -119,6 +116,7 @@ contract Storage is Ownable {
         );
         _;  
     }
+    
     
     /*
      * @dev check record isn't time locked
