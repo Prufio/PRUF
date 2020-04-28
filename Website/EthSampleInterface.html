@@ -2,64 +2,45 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8">
-    <title>CryptoZombies front-end</title>
+    <title>BulletProof Frontend</title>
     <script language="javascript" type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
     <script language="javascript" type="text/javascript" src="web3.min.js"></script>
-    <script language="javascript" type="text/javascript" src="cryptozombies_abi.js"></script>
+    <script language="javascript" type="text/javascript" src="BULLETPROOF ABI HERE"></script>
   </head>
   <body>
     <div id="txStatus"></div>
-    <div id="zombies"></div>
+    <div id="database"></div>
 
     <script>
-      var cryptoZombies;
+      var bulletproof;
       var userAccount;
 
       function startApp() {
-        var cryptoZombiesAddress = "YOUR_CONTRACT_ADDRESS";
-        cryptoZombies = new web3js.eth.Contract(cryptoZombiesABI, cryptoZombiesAddress);
+        var bulletproof_frontend = "FRONTEND_CONTRACT_ADDRESS";
+        bulletproof = new web3js.eth.Contract(bulletproofABI, bulletproof_frontend);
 
         var accountInterval = setInterval(function() {
           // Check if account has changed
           if (web3.eth.accounts[0] !== userAccount) {
             userAccount = web3.eth.accounts[0];
             // Call a function to update the UI with the new account
-            getZombiesByOwner(userAccount)
-            .then(displayZombies);
+            getDashBoardInfo(userAccount)
+            .then(displayDashboard);
           }
         }, 100);
 
-        // Start here
       }
 
-      function displayZombies(ids) {
-        $("#zombies").empty();
-        for (id of ids) {
-          // Look up zombie details from our contract. Returns a `zombie` object
-          getZombieDetails(id)
-          .then(function(zombie) {
-            // Using ES6's "template literals" to inject variables into the HTML.
-            // Append each one to our #zombies div
-            $("#zombies").append(`<div class="zombie">
-              <ul>
-                <li>Name: ${zombie.name}</li>
-                <li>DNA: ${zombie.dna}</li>
-                <li>Level: ${zombie.level}</li>
-                <li>Wins: ${zombie.winCount}</li>
-                <li>Losses: ${zombie.lossCount}</li>
-                <li>Ready Time: ${zombie.readyTime}</li>
-              </ul>
-            </div>`);
-          });
-        }
+      function displayDashboard(userAccount) {
+        $("#dashboard").empty();
       }
 
-      function createRandomZombie(name) {
+      function createNewRecord() {
         // This is going to take a while, so update the UI to let the user know
         // the transaction has been sent
-        $("#txStatus").text("Creating new zombie on the blockchain. This may take a while...");
+        $("#txStatus").text("Creating new asset record on the blockchain. Please wait for confirmation...");
         // Send the tx to our contract:
-        return cryptoZombies.methods.createRandomZombie(name)
+        return frontEnd.methods.createRandomZombie(name)
         .send({ from: userAccount })
         .on("receipt", function(receipt) {
           $("#txStatus").text("Successfully created " + name + "!");
