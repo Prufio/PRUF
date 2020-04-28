@@ -65,13 +65,13 @@ contract Storage is Ownable {
     /*
      * @dev check msg.sender against authorized adresses
      */
-    modifier addrAuth (uint8 _userType){
-        require ( 
-                ((authorizedAdresses[keccak256(abi.encodePacked(msg.sender))] >= _userType) &&
-                (authorizedAdresses[keccak256(abi.encodePacked(msg.sender))] <= 4))
-            ,"Contract not authorized or improperly permissioned"
-            );
-            _;
+    modifier addrAuth (uint8 _userType) {
+        require( 
+            ((authorizedAdresses[keccak256(abi.encodePacked(msg.sender))] >= _userType) &&
+            (authorizedAdresses[keccak256(abi.encodePacked(msg.sender))] <= 4)),
+            "Contract not authorized or improperly permissioned"
+        );
+        _;
     }
     
     
