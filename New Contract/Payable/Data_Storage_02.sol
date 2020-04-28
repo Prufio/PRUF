@@ -144,15 +144,15 @@ contract Storage is Ownable {
      * @dev Authorize / Deauthorize / Authorize users for an address be permitted to make record modifications
      * ----------------INSECURE -- keccak256 of address must be generated clientside in release.
      */
-    function ADMIN_addUser(address _authAddr, uint8 userType, uint16 _authorizedAssetClass) external onlyOwner {
+    function ADMIN_addUser(address _authAddr, uint8 _userType, uint16 _authorizedAssetClass) external onlyOwner {
       
-        require((userType == 0)||(userType == 1)||(userType == 9) ,
+        require((_userType == 0)||(_userType == 1)||(_userType == 9) ,
         "AUTHU:ER-13 Invalid user type"
         );
 
         bytes32 hash;
         hash = keccak256(abi.encodePacked(_authAddr));
-        registeredUsers[hash].userType = userType;
+        registeredUsers[hash].userType = _userType;
         registeredUsers[hash].authorizedAssetClass = _authorizedAssetClass;
     }
     

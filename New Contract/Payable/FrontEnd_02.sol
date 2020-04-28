@@ -293,7 +293,7 @@ contract FrontEnd is PullPayment, Ownable {
     /*
      * @dev Modify **Record**.IPFS2 with confirmation
      */
-    function $createIPFS2 (string memory _idx, string memory _rgt, string memory _IPFS ) public payable { 
+    function $addIPFS2Note (string memory _idx, string memory _rgt, string memory _IPFS ) public payable { 
         Record memory costrec = getRecord(keccak256(abi.encodePacked(_idx)));
         
         Costs memory cost = getCost(costrec.assetClass);
