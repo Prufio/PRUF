@@ -156,6 +156,7 @@ contract Storage is Ownable {
         registeredUsers[hash].authorizedAssetClass = _authorizedAssetClass;
     }
     
+    
     /*
      * @dev Authorize / Deauthorize / Authorize ADRESSES permitted to make record modifications
      * ----------------INSECURE -- keccak256 of address must be generated clientside in release.
@@ -183,6 +184,7 @@ contract Storage is Ownable {
         
     }
    
+   
     /*
      * @dev Allows Admin to set lock on asset
      */
@@ -195,6 +197,7 @@ contract Storage is Ownable {
         database[_idxHash].status = _stat;
     }
    
+   
     /*
      * @dev Allows Admin to unlock asset
      */
@@ -204,6 +207,7 @@ contract Storage is Ownable {
         database[_idxHash].status = 0; //set to unspecified status
     }
     
+    
     /*
      * @dev Allows Admin to set time lock
      */
@@ -212,6 +216,7 @@ contract Storage is Ownable {
         bytes32 _idxHash = keccak256(abi.encodePacked(_idx));  // TESTING ONLY
         database[_idxHash].timeLock = _blockNumber; //set lock to expiration blocknumber
     }
+   
    
     /*
      * @dev Allows Admin to reset force mod count
@@ -324,6 +329,7 @@ contract Storage is Ownable {
         
     }
     
+    
 //--------------------------------External READ ONLY contract functions / authuser---------------------------------//
    
     /*
@@ -392,6 +398,7 @@ contract Storage is Ownable {
 
         return (database[_idxHash].lastRecorder, database[_idxHash].recorder, datahash);
     }
+    
     
     /*
      * @dev emit a complete record record minus checkout and mutex data 
