@@ -7,61 +7,80 @@
 </head>
 <body>
   <div>
+    <form id="newRecordForm" onsubmit="return false;">
+        <input style="position:absolute; top:13%; left:17%; width:25%;" type="text" id="indexForm" maxlength= "32" />
+        <input style="position:absolute; top:17%; left:17%; width:25%;" type="text" id="RHForm" maxlength= "4" />
+        <input style="position:absolute; top:22%; left:17%; width:25%;" type="text" id="ACForm" maxlength= "32" />
+        <input style="position:absolute; top:26%; left:17%; width:25%;" type="text" id="CDSForm" maxlength= "32" />
+        <input style="position:absolute; top:30%; left:17%; width:25%;" type="text" id="IPFSForm" maxlength= "32" />
+
+        <label style="position:absolute; top:13%; left:3%; width:25%;" id='indexLabel' for='indexForm'>Asset Index Entry: </label>
+        <label style="position:absolute; top:17%; left:3%; width:25%;" id='RHLabel' for='RHForm'>Rights Holder Information: </label>
+        <label style="position:absolute; top:22%; left:3%; width:25%;" id='ACLabel' for='ACForm'>Asset Class: </label>
+        <label style="position:absolute; top:26%; left:3%; width:25%;" id='CDSLabel' for='CDSForm'>Count Down Starting Value: </label>
+        <label style="position:absolute; top:30%; left:3%; width:25%;" id='IPFSLabel' for='IPFSForm'>Asset Notes: </label>
+
+        <input style="position:absolute; top:37%; left:17%; width:25%;" type="button" value="Create New Record" onclick="newRecordSubmit();"/>
+    </form>
     <button class="pay-button">Pay</button>
-    <button class="NewRecord">Create New Record</button>
     <div id="status"></div>
     <div id="txStatus"></div>
     <div id="database"></div>
   </div>
   <script type="text/javascript">
 
+    var bulletproof_frontend_addr = "0x9fcf6f91356Ce63B7ADB64Ab6C8E4084FB69b18B";
+    bulletproof = new web3js.eth.Contract(bulletproofABI, bulletproof_frontend_addr);
+
     window.addEventListener('load', async () => {
+      console.log("in metamask launcher");
       if (window.ethereum) {
         window.web3 = new Web3(ethereum);
+        console.log("in window.eth");
         try {
           await ethereum.enable();
-         testTX()
         } catch (err) {
           $('#status').html('User denied account access', err)
         }
       } else if (window.web3) {
         window.web3 = new Web3(web3.currentProvider)
-     testTX()
+        console.log("in window.web3");
       } else {
+          console.log("no metamask detected");
         $('#status').html('No Metamask (or other Web3 Provider) installed')
       }
     })
 
-<form id="form" onsubmit="return false;">
-    <input style="position:absolute; top:80%; left:5%; width:40%;" type="text" id="userInput" />
-    <input style="position:absolute; top:50%; left:5%; width:40%;" type="submit" onclick="othername();" />
-</form>
-
-function othername() {
-    var input = document.getElementById("userInput").value;
-    alert(input);
+function newRecordSubmit() {
+    var _index = document.getElementById("indexForm").value;
+    console.log("stuffed index with:", _index);
+    var _rightsHolder = document.getElementById("RHForm").value;
+    console.log("stuffed rightsHolder with:", _rightsHolder);
+    var _assetClass = document.getElementById("ACForm").value;
+    console.log("stuffed assetClass with:", _assetClass);
+    var _countDownStart = document.getElementById("CDSForm").value;
+    console.log("stuffed countDownStart with:", _countDownStart);
+    var _ipfsNote = document.getElementById("IPFSForm").value;
+    console.log("stuffed ipfsNote with:", _ipfsNote);
+    createNewRecord(_index, _rightsHolder, _assetClass, _countDownStart, _ipfsNote);
+    //alert(input);
 }
 
-    function createNewRecord() {
-
-        $('.pay-button').click(() => {
-        // This is going to take a while, so update the UI to let the user know
-        // the transaction has been sent
-        $("#txStatus").text("Creating new asset record on the blockchain. Please wait for confirmation...");
-        // Send the tx to our contract:
-        return frontEnd.methods.$newRecord(index, rightsHolder, assetClass, countDownStart, ifpsNote)
-       .send({ from: userAccount, value: web3.utils.toWei("0.05", "ether") })
-        .on("receipt", function(receipt) {
-          $("#txStatus").text("Successfully created asset record. Submitted records can be checked with the 'view record' tool ");
-          // Transaction was accepted into the blockchain, let's redraw the UI
-          getDashboardInfo(userAccount).then(displayDashboard);
-        })
-        .on("error", function(error) {
-          // Do something to alert the user their transaction has failed
-          $("#txStatus").text(error);
-        });
-      }
-
+function createNewRecord (_index, _rightsHolder, _assetClass, _countDownStart, _ipfsNote) {
+     // This is going to take a while, so update the UI to let the user know
+     // the transaction has been sent
+     console.log("Creating new asset record on the blockchain. Please wait for confirmation...");
+     // Send the tx to our contract:
+    return frontEnd.methods.$newRecord(_index, _rightsHolder, _assetClass, _countDownStart, _ipfsNote)
+    .send({ from: userAccount, value: web3.utils.toWei("0.04", "ether") })
+     .on("receipt", function(receipt) {
+     $("#txStatus").text("Successfully created asset record. Submitted records can be checked with the 'view record' tool ");
+    })
+    .on("error", function(error) {
+    // Do something to alert the user their transaction has failed
+    $("#txStatus").text(error);
+    }); 
+}
     const testTX = () => {
       $('.pay-button').click(() => {
         // paymentAddress is where funds will be send to
