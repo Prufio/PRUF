@@ -2,31 +2,67 @@
 <html>
 <head>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+  <script language="javascript" type="text/javascript" src="https://github.com/vdmprojects/Bulletproof/blob/HTML/WebApp/BulletproofABI.JSON"></script>
+
 </head>
 <body>
   <div>
     <button class="pay-button">Pay</button>
+    <button class="NewRecord">Create New Record</button>
     <div id="status"></div>
+    <div id="txStatus"></div>
+    <div id="database"></div>
   </div>
   <script type="text/javascript">
+
     window.addEventListener('load', async () => {
       if (window.ethereum) {
         window.web3 = new Web3(ethereum);
         try {
           await ethereum.enable();
-          initPayButton()
+         testTX()
         } catch (err) {
           $('#status').html('User denied account access', err)
         }
       } else if (window.web3) {
         window.web3 = new Web3(web3.currentProvider)
-        initPayButton()
+     testTX()
       } else {
         $('#status').html('No Metamask (or other Web3 Provider) installed')
       }
     })
 
-    const initPayButton = () => {
+<form id="form" onsubmit="return false;">
+    <input style="position:absolute; top:80%; left:5%; width:40%;" type="text" id="userInput" />
+    <input style="position:absolute; top:50%; left:5%; width:40%;" type="submit" onclick="othername();" />
+</form>
+
+function othername() {
+    var input = document.getElementById("userInput").value;
+    alert(input);
+}
+
+    function createNewRecord() {
+
+        $('.pay-button').click(() => {
+        // This is going to take a while, so update the UI to let the user know
+        // the transaction has been sent
+        $("#txStatus").text("Creating new asset record on the blockchain. Please wait for confirmation...");
+        // Send the tx to our contract:
+        return frontEnd.methods.$newRecord(index, rightsHolder, assetClass, countDownStart, ifpsNote)
+       .send({ from: userAccount, value: web3.utils.toWei("0.05", "ether") })
+        .on("receipt", function(receipt) {
+          $("#txStatus").text("Successfully created asset record. Submitted records can be checked with the 'view record' tool ");
+          // Transaction was accepted into the blockchain, let's redraw the UI
+          getDashboardInfo(userAccount).then(displayDashboard);
+        })
+        .on("error", function(error) {
+          // Do something to alert the user their transaction has failed
+          $("#txStatus").text(error);
+        });
+      }
+
+    const testTX = () => {
       $('.pay-button').click(() => {
         // paymentAddress is where funds will be send to
         const paymentAddress = '0x9fcf6f91356Ce63B7ADB64Ab6C8E4084FB69b18B'
