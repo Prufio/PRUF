@@ -55,6 +55,7 @@ contract FrontEnd is PullPayment, Ownable {
     address internal mainWallet;
     
     StorageInterface private Storage; // Set up external contract interface
+    
     address storageAddress;
     
      event REPORT (string _msg);
@@ -64,14 +65,20 @@ contract FrontEnd is PullPayment, Ownable {
      * @dev Set storage contract to interface with
      */
     function setStorageContract (address _storageAddress) public onlyOwner {
-        require(_storageAddress != address(0));
+        
+        require(
+            _storageAddress != address(0)
+        );
+       
         Storage = StorageInterface(_storageAddress);
     }
+    
     
     /*
      * @dev Set wallet for contract to direct payments to
      */
     function _setMainWallet (address _addr) public onlyOwner {
+        
         mainWallet = _addr;
     }
     
@@ -80,18 +87,20 @@ contract FrontEnd is PullPayment, Ownable {
      * @dev TESTING FUNCTIONS ----------------------------------
      */
     function getAnyHash (string calldata _idx) external pure returns (bytes32) {
+        
         return keccak256(abi.encodePacked(_idx));
     }
     
     function getBlock () external view returns (bytes32) {
+        
         return keccak256(abi.encodePacked(block.number));
     }
     
   
 //--------------------------------------External functions--------------------------------------------//
-/* SECURITY NOTE: MANY of these functions take strings. in production, all strings would be converted to hashes before being sent to the contract
- * So these funtions would be accepting pre-hashed bytes32 instead of strings.
- */
+// SECURITY NOTE: MANY of these functions take strings. in production, all strings would be converted to hashes before being sent to the contract
+// So these funtions would be accepting pre-hashed bytes32 instead of strings.
+//
     
     /*
      * @dev Wrapper for newRecord
@@ -100,8 +109,10 @@ contract FrontEnd is PullPayment, Ownable {
         
         Costs memory cost = getCost(_assetClass);
         
-        require (msg.value >= cost.newRecordCost, 
-        "NR: tx value too low. Send more eth.");
+        require(
+            msg.value >= cost.newRecordCost , 
+            "NR: tx value too low. Send more eth."
+        );
         
         bytes32 senderHash = keccak256(abi.encodePacked(msg.sender));
         bytes32 _idxHash = keccak256(abi.encodePacked(_idx));
@@ -109,19 +120,17 @@ contract FrontEnd is PullPayment, Ownable {
         bytes32 _IPFS = keccak256(abi.encodePacked(_IPFSs));
         
         Storage.newRecord(senderHash, 
-                            _idxHash,
-                            _rgtHash,
-                            _assetClass, 
-                            _countDownStart, 
-                            _IPFS);
+                          _idxHash,
+                          _rgtHash,
+                          _assetClass, 
+                          _countDownStart, 
+                          _IPFS);
                             
         deductPayment(cost.newRecordCost);
-        
     }
 
-    
+    //Write a data thing pattern:
     /*
-      ----------Write a data thing pattern:
      * Have data
      * Get a record #hash from Storage using Storage.getHash(idxHash)
      * Get a Record struct using getRecord(idxHash)
@@ -138,12 +147,15 @@ contract FrontEnd is PullPayment, Ownable {
      * @dev Modify **Record**.rightsHolder without confirmation required
      */
     function $forceModRecord (string memory _idx, string memory _rgt) public payable {
+        
         Record memory costrec = getRecord(keccak256(abi.encodePacked(_idx)));
         
         Costs memory cost = getCost(costrec.assetClass);
         
-        require (msg.value >= cost.forceModifyCost, 
-        "FMR: tx value too low. Send more eth.");
+        require(
+            msg.value >= cost.forceModifyCost , 
+            "FMR: tx value too low. Send more eth."
+        );
         
         Record memory rec;
         
@@ -151,14 +163,15 @@ contract FrontEnd is PullPayment, Ownable {
         bytes32 _rgtHash = keccak256(abi.encodePacked(_rgt)); // Temp
         
         require( 
-            rec.status < 200,
+            rec.status < 200 ,
             "FMR:ERR-Record locked"
         );
+        
         if (rec.forceModCount < 255) {
             rec.forceModCount ++;
         }
-        rec.rightsHolder = _rgtHash;
         
+        rec.rightsHolder = _rgtHash;
  
         writeRecord (_idxHash, rec);
         
@@ -170,16 +183,21 @@ contract FrontEnd is PullPayment, Ownable {
      * @dev Modify **Record**.status with confirmation required
      */
     function _modStatus (string memory _idx, string memory _rgt, uint8 _status) public { 
+       
         Record memory rec;
+       
         bytes32 _rgtHash = keccak256(abi.encodePacked(_rgt)); // Temp
         bytes32 _idxHash = keccak256(abi.encodePacked(_idx)); // Temp
+       
         rec = getRecord (_idxHash);
+        
         require( 
-            rec.status < 200,
+            rec.status < 200 ,
             "MS:ERR-Record locked"
         );
+        
         require( 
-            rec.rightsHolder == _rgtHash,
+            rec.rightsHolder == _rgtHash ,
             "MS:ERR-Rightsholder does not match supplied data"
         );
         
@@ -193,21 +211,25 @@ contract FrontEnd is PullPayment, Ownable {
      * @dev Decrement **Record**.countdown with confirmation required
      */
     function _decCounter (string memory _idx, string memory _rgt, uint _decAmount) public { 
+        
         Record memory rec;
+       
         bytes32 _rgtHash = keccak256(abi.encodePacked(_rgt)); // Temp
         bytes32 _idxHash = keccak256(abi.encodePacked(_idx)); // Temp
       
         rec = getRecord (_idxHash);
+        
         require( 
-            rec.status < 200,
+            rec.status < 200 ,
             "DC:ERR-Record locked"
         );
+        
         require( 
-            rec.rightsHolder == _rgtHash,
+            rec.rightsHolder == _rgtHash ,
             "DC:ERR--Rightsholder does not match supplied data"
         );
         
-        if  (rec.countDown > _decAmount){
+        if  (rec.countDown > _decAmount) {
             rec.countDown = rec.countDown.sub(_decAmount);
         } else {
             rec.countDown = 0;
@@ -221,38 +243,45 @@ contract FrontEnd is PullPayment, Ownable {
      * @dev Transfer Rights to new rightsHolder with confirmation
      */
     function $transferAsset (string memory _idx, string memory _rgt, string memory _newrgt) public payable { 
+        
         Record memory costrec = getRecord(keccak256(abi.encodePacked(_idx)));
         
         Costs memory cost = getCost(costrec.assetClass);
         
-        require (msg.value >= cost.transferAssetCost, 
-        "TA: tx value too low. Send more eth.");
+        require(
+            msg.value >= cost.transferAssetCost, 
+            "TA: tx value too low. Send more eth."
+        );
         
         Record memory rec;
+        
         bytes32 _rgtHash = keccak256(abi.encodePacked(_rgt)); // Temp
         bytes32 _newrgtHash = keccak256(abi.encodePacked(_newrgt)); // Temp
         bytes32 _idxHash = keccak256(abi.encodePacked(_idx)); // Temp
       
         rec = getRecord (_idxHash);
+        
         require( 
-            rec.status < 200,
+            rec.status < 200 ,
             "TA:ERR-Record locked"
         );
+        
         require( 
-            rec.rightsHolder == _rgtHash,
+            rec.rightsHolder == _rgtHash ,
             "DC:ERR-Rightsholder does not match supplied data"
         );
+        
         require( 
-            _newrgtHash != 0,
+            _newrgtHash != 0 ,
             "TA:ERR-new Rightsholder cannot be blank"
         );
+        
         require( 
-            rec.status < 3,
+            rec.status < 3 ,
             "TA:ERR--Asset status is not transferrable"
         );
         
         rec.rightsHolder = _newrgtHash;
-       
         
         writeRecord (_idxHash, rec);
         
@@ -264,6 +293,7 @@ contract FrontEnd is PullPayment, Ownable {
      * @dev Modify **Record**.IPFS1 with confirmation
      */
     function _modIPFS1 (string memory _idx, string memory _rgt, string memory _IPFS ) public { 
+       
         Record memory rec;
         
         bytes32 _IPFSHash = keccak256(abi.encodePacked(_IPFS)); // Temp
@@ -271,16 +301,19 @@ contract FrontEnd is PullPayment, Ownable {
         bytes32 _rgtHash = keccak256(abi.encodePacked(_rgt)); // Temp
         
         rec = getRecordIPFS (_idxHash);
-        require ( 
-            rec.status < 200,
+        
+        require( 
+            rec.status < 200 ,
             "MI1:ERR-Record locked"
         );
-        require ( 
-            rec.rightsHolder ==  _rgtHash,
+        
+        require( 
+            rec.rightsHolder ==  _rgtHash ,
             "MI1:ERR--Rightsholder does not match supplied data"
         );
-        require ( 
-            rec.IPFS1 !=  _IPFSHash,
+        
+        require( 
+            rec.IPFS1 !=  _IPFSHash ,
             "MI1:ERR--New data same as old"
         );
         
@@ -294,12 +327,16 @@ contract FrontEnd is PullPayment, Ownable {
      * @dev Modify **Record**.IPFS2 with confirmation
      */
     function $addIPFS2Note (string memory _idx, string memory _rgt, string memory _IPFS ) public payable { 
+       
         Record memory costrec = getRecord(keccak256(abi.encodePacked(_idx)));
         
         Costs memory cost = getCost(costrec.assetClass);
         
-        require (msg.value >= cost.createNoteCost, 
-        "tx value too low. Send more eth.");
+        require(
+            msg.value >= cost.createNoteCost , 
+            "tx value too low. Send more eth."
+        );
+        
         Record memory rec;
         
         bytes32 _IPFSHash = keccak256(abi.encodePacked(_IPFS)); // Temp
@@ -307,16 +344,19 @@ contract FrontEnd is PullPayment, Ownable {
         bytes32 _rgtHash = keccak256(abi.encodePacked(_rgt)); // Temp
 
         rec = getRecordIPFS (_idxHash);
-        require ( 
-            rec.status < 200,
+        
+        require( 
+            rec.status < 200 ,
             "MI1:ERR-Record locked"
         );
-        require ( 
-            rec.rightsHolder ==  _rgtHash,
+        
+        require( 
+            rec.rightsHolder ==  _rgtHash ,
             "MI1:ERR--Rightsholder does not match supplied data"
         );
-        require ( 
-            rec.IPFS2 == 0,
+        
+        require( 
+            rec.IPFS2 == 0 ,
             "MI1:ERR--IPFS2 has data already. Overwrite not permitted"
         );
         
@@ -332,6 +372,7 @@ contract FrontEnd is PullPayment, Ownable {
      * @dev Deducts payment from transaction 
      */
     function deductPayment (uint _amount) private {
+       
         uint messageValue = msg.value;
         uint change;
 
@@ -339,7 +380,6 @@ contract FrontEnd is PullPayment, Ownable {
         
         _asyncTransfer(mainWallet, _amount);
         _asyncTransfer(msg.sender, change);
-        
     }
     
     
@@ -347,6 +387,7 @@ contract FrontEnd is PullPayment, Ownable {
      * @dev Withdraws user's Escrow amount
      */
     function $withdraw() public virtual payable {
+        
         withdrawPayments(msg.sender);
     }
     
@@ -355,10 +396,15 @@ contract FrontEnd is PullPayment, Ownable {
      * @dev Get a Record from Storage @ idxHash
      */
     function getRecord (bytes32 _idxHash) private returns (Record memory) { 
+        
         Record memory rec;
         
-        (rec.rightsHolder, rec.status, rec.forceModCount, rec.assetClass, rec.countDown, rec.countDownStart) 
-            = Storage.retrieveRecord (_idxHash); // Get record from storage contract
+        (rec.rightsHolder, 
+         rec.status, 
+         rec.forceModCount, 
+         rec.assetClass, 
+         rec.countDown, 
+         rec.countDownStart) = Storage.retrieveRecord (_idxHash); // Get record from storage contract
             
         return (rec); // Returns Record struct rec and checkout supplied key
     }
@@ -368,18 +414,23 @@ contract FrontEnd is PullPayment, Ownable {
      * @dev Get an IPFS Record from Storage @ idxHash
      */
     function getRecordIPFS (bytes32 _idxHash) private returns (Record memory) { 
+       
         Record memory rec;
         
-        (rec.rightsHolder, rec.status, rec.assetClass, rec.IPFS1, rec.IPFS2) = Storage.retrieveIPFSData (_idxHash);//get record from storage contract
+        (rec.rightsHolder, 
+         rec.status, 
+         rec.assetClass, 
+         rec.IPFS1, 
+         rec.IPFS2) = Storage.retrieveIPFSData (_idxHash);//get record from storage contract
         
         return (rec); // Returns record struct rec and checkout supplied key
     }
     
     
     function getRecorders (bytes32 _idxHash) private returns (Record memory) { 
+        
         Record memory rec;
 
-        
         (rec.lastRecorder, rec.recorder) = Storage.retrieveRecorder (_idxHash); // Get record from storage contract
 
         return (rec); // Returns record struct rec and checkout supplied key
@@ -390,11 +441,13 @@ contract FrontEnd is PullPayment, Ownable {
      * @dev Write an IPFS Record to Storage @ idxHash
      */
     function writeRecordIPFS (bytes32 _idxHash, Record memory _rec) private {
+        
         bytes32 userHash = keccak256(abi.encodePacked(msg.sender)); // Get a userhash for authentication and recorder logging
-              Storage.modifyIPFS(userHash,
-                            _idxHash,
-                            _rec.IPFS1,
-                            _rec.IPFS2); // Send data to storage
+              
+        Storage.modifyIPFS(userHash,
+                           _idxHash,
+                           _rec.IPFS1,
+                           _rec.IPFS2); // Send data to storage
     }
     
     
@@ -402,13 +455,15 @@ contract FrontEnd is PullPayment, Ownable {
      * @dev Write a Record to Storage @ idxHash
      */
     function writeRecord (bytes32 _idxHash, Record memory _rec) private {
+        
         bytes32 userHash = keccak256(abi.encodePacked(msg.sender)); // Get a userhash for authentication and recorder logging
-               Storage.modifyRecord(userHash,
-                            _idxHash,
-                            _rec.rightsHolder,
-                            _rec.status,
-                            _rec.countDown,
-                            _rec.forceModCount); // Send data and writehash to storage
+               
+        Storage.modifyRecord(userHash,
+                             _idxHash,
+                             _rec.rightsHolder,
+                             _rec.status,
+                             _rec.countDown,
+                             _rec.forceModCount); // Send data and writehash to storage
     }
     
     
@@ -416,13 +471,15 @@ contract FrontEnd is PullPayment, Ownable {
      * @dev Wrapper for getRecord  //does this need to exist in production?????!!!!!!!!!!!!
      */
     function _getRecord (string calldata _idx) external returns (bytes32, uint8, uint8, uint16, uint, uint) {
-         Record memory rec = getRecord(keccak256(abi.encodePacked(_idx)));
-         return (rec.rightsHolder,
-                 rec.status,
-                 rec.forceModCount,
-                 rec.assetClass,
-                 rec.countDown,
-                 rec.countDownStart);
+         
+        Record memory rec = getRecord(keccak256(abi.encodePacked(_idx)));
+         
+        return (rec.rightsHolder,
+                rec.status,
+                rec.forceModCount,
+                rec.assetClass,
+                rec.countDown,
+                rec.countDownStart);
     }
      
 
@@ -430,12 +487,14 @@ contract FrontEnd is PullPayment, Ownable {
      * @dev Wrapper for getRecordIPFS  //does this need to exist in production?????!!!!!!!!!!!!
      */ 
     function _getRecordIPFS (string calldata _idx) external returns (bytes32, uint8, uint16, bytes32, bytes32) {
-         Record memory rec = getRecordIPFS(keccak256(abi.encodePacked(_idx)));
-         return (rec.rightsHolder,
-                 rec.status,
-                 rec.assetClass,
-                 rec.IPFS1,
-                 rec.IPFS2);
+         
+        Record memory rec = getRecordIPFS(keccak256(abi.encodePacked(_idx)));
+         
+        return (rec.rightsHolder,
+                rec.status,
+                rec.assetClass,
+                rec.IPFS1,
+                rec.IPFS2);
     }
     
 
@@ -443,8 +502,10 @@ contract FrontEnd is PullPayment, Ownable {
      * @dev Wrapper for getRecorders  //does this need to exist in production?????!!!!!!!!!!!!
      */ 
     function _getRecorders (string calldata _idx) external returns (bytes32, bytes32) {
-         Record memory rec = getRecorders(keccak256(abi.encodePacked(_idx)));
-         return (rec.lastRecorder, rec.recorder);
+         
+        Record memory rec = getRecorders(keccak256(abi.encodePacked(_idx)));
+         
+        return (rec.lastRecorder, rec.recorder);
     }
     
     
@@ -452,6 +513,7 @@ contract FrontEnd is PullPayment, Ownable {
      * @dev Wrapper for emitRecord
      */
     function _emitRecord (string calldata _idx) external {
+        
         Storage.emitRecord (keccak256(abi.encodePacked(_idx)));
     }
    
@@ -460,17 +522,16 @@ contract FrontEnd is PullPayment, Ownable {
      * @dev Returns cost from database and returns Costs struct
      */
     function getCost (uint16 _class) private returns(Costs memory) {
-        Costs memory cost;
         
+        Costs memory cost;
         (cost.newRecordCost,
-        cost.transferAssetCost, 
-        cost.createNoteCost, 
-        cost.cost4, 
-        cost.cost5, 
-        cost.forceModifyCost) = Storage.retrieveCosts(_class);
+         cost.transferAssetCost, 
+         cost.createNoteCost, 
+         cost.cost4, 
+         cost.cost5, 
+         cost.forceModifyCost) = Storage.retrieveCosts(_class);
         
         return (cost);
     }
     
-
 }
