@@ -64,7 +64,7 @@ contract FrontEnd is PullPayment, Ownable {
     /*
      * @dev Set storage contract to interface with
      */
-    function setStorageContract (address _storageAddress) public onlyOwner {
+    function _setStorageContract (address _storageAddress) public onlyOwner {
         
         require(
             _storageAddress != address(0)
