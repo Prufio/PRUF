@@ -4,6 +4,7 @@
 <head>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
   <script language="javascript" type="text/javascript" src="web3.min.js"></script>   
+  <script language ="javascript" type = "text/javascript" src=".\js-sha3-master\js-sha3-master\src\sha3.js"></script>
 
 </head>
 <body>
@@ -14,14 +15,18 @@
         <input style="position:absolute; top:22%; left:17%; width:25%;" type="text" id="ACForm" maxlength= "4" />
         <input style="position:absolute; top:26%; left:17%; width:25%;" type="text" id="CDSForm" maxlength= "32" />
         <input style="position:absolute; top:30%; left:17%; width:25%;" type="text" id="IPFSForm" maxlength= "32" />
+		<input style="position:absolute; top:50%; left:17%; width:25%;" type="text" id="readIndexForm" maxlength= "32" />
 
         <label style="position:absolute; top:13%; left:3%; width:25%;" id='indexLabel' for='indexForm'>Asset Index Entry: </label>
         <label style="position:absolute; top:17%; left:3%; width:25%;" id='RHLabel' for='RHForm'>Rights Holder Information: </label>
         <label style="position:absolute; top:22%; left:3%; width:25%;" id='ACLabel' for='ACForm'>Asset Class: </label>
         <label style="position:absolute; top:26%; left:3%; width:25%;" id='CDSLabel' for='CDSForm'>Count Down Starting Value: </label>
         <label style="position:absolute; top:30%; left:3%; width:25%;" id='IPFSLabel' for='IPFSForm'>Asset Notes: </label>
+		<label style="position:absolute; top:50%; left:3%; width:25%;" id='RIFLabel' for='readIndexForm'>Read @Index: </label>
 
         <input style="position:absolute; top:37%; left:17%; width:25%;" type="button" value="Create New Record" onclick="newRecordSubmit();"/>
+		<input style="position:absolute; top:43%; left:22%; width:8%;" type="button" value="Read" onclick="compareRH()"/>
+    </form>
     </form>
     <div id="status"></div>
     <div id="txStatus"></div>
@@ -59,206 +64,36 @@ var web3 = new Web3(web3.currentProvider);
     })
 const abi = [
 	{
+		"anonymous": false,
 		"inputs": [
 			{
-				"internalType": "string",
-				"name": "_idx",
-				"type": "string"
-			},
-			{
-				"internalType": "string",
-				"name": "_rgt",
-				"type": "string"
-			},
-			{
-				"internalType": "uint256",
-				"name": "_decAmount",
-				"type": "uint256"
-			}
-		],
-		"name": "_decCounter",
-		"outputs": [],
-		"stateMutability": "nonpayable",
-		"type": "function"
-	},
-	{
-		"inputs": [
-			{
-				"internalType": "string",
-				"name": "_idx",
-				"type": "string"
-			}
-		],
-		"name": "_emitRecord",
-		"outputs": [],
-		"stateMutability": "nonpayable",
-		"type": "function"
-	},
-	{
-		"inputs": [
-			{
-				"internalType": "string",
-				"name": "_idx",
-				"type": "string"
-			}
-		],
-		"name": "_getRecord",
-		"outputs": [
-			{
-				"internalType": "bytes32",
-				"name": "",
-				"type": "bytes32"
-			},
-			{
-				"internalType": "uint8",
-				"name": "",
-				"type": "uint8"
-			},
-			{
-				"internalType": "uint8",
-				"name": "",
-				"type": "uint8"
-			},
-			{
-				"internalType": "uint16",
-				"name": "",
-				"type": "uint16"
-			},
-			{
-				"internalType": "uint256",
-				"name": "",
-				"type": "uint256"
-			},
-			{
-				"internalType": "uint256",
-				"name": "",
-				"type": "uint256"
-			}
-		],
-		"stateMutability": "nonpayable",
-		"type": "function"
-	},
-	{
-		"inputs": [
-			{
-				"internalType": "string",
-				"name": "_idx",
-				"type": "string"
-			}
-		],
-		"name": "_getRecorders",
-		"outputs": [
-			{
-				"internalType": "bytes32",
-				"name": "",
-				"type": "bytes32"
-			},
-			{
-				"internalType": "bytes32",
-				"name": "",
-				"type": "bytes32"
-			}
-		],
-		"stateMutability": "nonpayable",
-		"type": "function"
-	},
-	{
-		"inputs": [
-			{
-				"internalType": "string",
-				"name": "_idx",
-				"type": "string"
-			}
-		],
-		"name": "_getRecordIPFS",
-		"outputs": [
-			{
-				"internalType": "bytes32",
-				"name": "",
-				"type": "bytes32"
-			},
-			{
-				"internalType": "uint8",
-				"name": "",
-				"type": "uint8"
-			},
-			{
-				"internalType": "uint16",
-				"name": "",
-				"type": "uint16"
-			},
-			{
-				"internalType": "bytes32",
-				"name": "",
-				"type": "bytes32"
-			},
-			{
-				"internalType": "bytes32",
-				"name": "",
-				"type": "bytes32"
-			}
-		],
-		"stateMutability": "nonpayable",
-		"type": "function"
-	},
-	{
-		"inputs": [
-			{
-				"internalType": "string",
-				"name": "_idx",
-				"type": "string"
-			},
-			{
-				"internalType": "string",
-				"name": "_rgt",
-				"type": "string"
-			},
-			{
-				"internalType": "string",
-				"name": "_IPFS",
-				"type": "string"
-			}
-		],
-		"name": "_modIPFS1",
-		"outputs": [],
-		"stateMutability": "nonpayable",
-		"type": "function"
-	},
-	{
-		"inputs": [
-			{
-				"internalType": "string",
-				"name": "_idx",
-				"type": "string"
-			},
-			{
-				"internalType": "string",
-				"name": "_rgt",
-				"type": "string"
-			},
-			{
-				"internalType": "uint8",
-				"name": "_status",
-				"type": "uint8"
-			}
-		],
-		"name": "_modStatus",
-		"outputs": [],
-		"stateMutability": "nonpayable",
-		"type": "function"
-	},
-	{
-		"inputs": [
-			{
+				"indexed": true,
 				"internalType": "address",
-				"name": "_addr",
+				"name": "previousOwner",
+				"type": "address"
+			},
+			{
+				"indexed": true,
+				"internalType": "address",
+				"name": "newOwner",
 				"type": "address"
 			}
 		],
-		"name": "_setMainWallet",
-		"outputs": [],
-		"stateMutability": "nonpayable",
-		"type": "function"
+		"name": "OwnershipTransferred",
+		"type": "event"
+	},
+	{
+		"anonymous": false,
+		"inputs": [
+			{
+				"indexed": false,
+				"internalType": "string",
+				"name": "_msg",
+				"type": "string"
+			}
+		],
+		"name": "REPORT",
+		"type": "event"
 	},
 	{
 		"inputs": [
@@ -365,43 +200,219 @@ const abi = [
 		"type": "function"
 	},
 	{
-		"anonymous": false,
 		"inputs": [
 			{
-				"indexed": true,
-				"internalType": "address",
-				"name": "previousOwner",
-				"type": "address"
-			},
-			{
-				"indexed": true,
-				"internalType": "address",
-				"name": "newOwner",
-				"type": "address"
+				"internalType": "bytes32",
+				"name": "_idx",
+				"type": "bytes32"
 			}
 		],
-		"name": "OwnershipTransferred",
-		"type": "event"
-	},
-	{
-		"inputs": [],
-		"name": "renounceOwnership",
+		"name": "XemitRightsholder",
 		"outputs": [],
 		"stateMutability": "nonpayable",
 		"type": "function"
 	},
 	{
-		"anonymous": false,
 		"inputs": [
 			{
-				"indexed": false,
 				"internalType": "string",
-				"name": "_msg",
+				"name": "_idx",
+				"type": "string"
+			},
+			{
+				"internalType": "string",
+				"name": "_rgt",
+				"type": "string"
+			},
+			{
+				"internalType": "uint256",
+				"name": "_decAmount",
+				"type": "uint256"
+			}
+		],
+		"name": "_decCounter",
+		"outputs": [],
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "string",
+				"name": "_idx",
 				"type": "string"
 			}
 		],
-		"name": "REPORT",
-		"type": "event"
+		"name": "_emitRecord",
+		"outputs": [],
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "string",
+				"name": "_idx",
+				"type": "string"
+			}
+		],
+		"name": "_getRecord",
+		"outputs": [
+			{
+				"internalType": "bytes32",
+				"name": "",
+				"type": "bytes32"
+			},
+			{
+				"internalType": "uint8",
+				"name": "",
+				"type": "uint8"
+			},
+			{
+				"internalType": "uint8",
+				"name": "",
+				"type": "uint8"
+			},
+			{
+				"internalType": "uint16",
+				"name": "",
+				"type": "uint16"
+			},
+			{
+				"internalType": "uint256",
+				"name": "",
+				"type": "uint256"
+			},
+			{
+				"internalType": "uint256",
+				"name": "",
+				"type": "uint256"
+			}
+		],
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "string",
+				"name": "_idx",
+				"type": "string"
+			}
+		],
+		"name": "_getRecordIPFS",
+		"outputs": [
+			{
+				"internalType": "bytes32",
+				"name": "",
+				"type": "bytes32"
+			},
+			{
+				"internalType": "uint8",
+				"name": "",
+				"type": "uint8"
+			},
+			{
+				"internalType": "uint16",
+				"name": "",
+				"type": "uint16"
+			},
+			{
+				"internalType": "bytes32",
+				"name": "",
+				"type": "bytes32"
+			},
+			{
+				"internalType": "bytes32",
+				"name": "",
+				"type": "bytes32"
+			}
+		],
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "string",
+				"name": "_idx",
+				"type": "string"
+			}
+		],
+		"name": "_getRecorders",
+		"outputs": [
+			{
+				"internalType": "bytes32",
+				"name": "",
+				"type": "bytes32"
+			},
+			{
+				"internalType": "bytes32",
+				"name": "",
+				"type": "bytes32"
+			}
+		],
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "string",
+				"name": "_idx",
+				"type": "string"
+			},
+			{
+				"internalType": "string",
+				"name": "_rgt",
+				"type": "string"
+			},
+			{
+				"internalType": "string",
+				"name": "_IPFS",
+				"type": "string"
+			}
+		],
+		"name": "_modIPFS1",
+		"outputs": [],
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "string",
+				"name": "_idx",
+				"type": "string"
+			},
+			{
+				"internalType": "string",
+				"name": "_rgt",
+				"type": "string"
+			},
+			{
+				"internalType": "uint8",
+				"name": "_status",
+				"type": "uint8"
+			}
+		],
+		"name": "_modStatus",
+		"outputs": [],
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "address",
+				"name": "_addr",
+				"type": "address"
+			}
+		],
+		"name": "_setMainWallet",
+		"outputs": [],
+		"stateMutability": "nonpayable",
+		"type": "function"
 	},
 	{
 		"inputs": [
@@ -411,20 +422,7 @@ const abi = [
 				"type": "address"
 			}
 		],
-		"name": "setStorageContract",
-		"outputs": [],
-		"stateMutability": "nonpayable",
-		"type": "function"
-	},
-	{
-		"inputs": [
-			{
-				"internalType": "address",
-				"name": "newOwner",
-				"type": "address"
-			}
-		],
-		"name": "transferOwnership",
+		"name": "_setStorageContract",
 		"outputs": [],
 		"stateMutability": "nonpayable",
 		"type": "function"
@@ -473,13 +471,75 @@ const abi = [
 		],
 		"stateMutability": "view",
 		"type": "function"
+	},
+	{
+		"inputs": [],
+		"name": "renounceOwnership",
+		"outputs": [],
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "address",
+				"name": "newOwner",
+				"type": "address"
+			}
+		],
+		"name": "transferOwnership",
+		"outputs": [],
+		"stateMutability": "nonpayable",
+		"type": "function"
 	}
 ];  
+String.prototype.hexEncode = function(){
+    var hex, i;
+
+    var result = "";
+    for (i=0; i<this.length; i++) {
+        hex = this.charCodeAt(i).toString(16);
+        result += ("000"+hex).slice(-4);
+    }
+
+    return result
+}
+
+String.prototype.hexDecode = function(){
+    var j;
+    var hexes = this.match(/.{1,4}/g) || [];
+    var back = "";
+    for(j = 0; j<hexes.length; j++) {
+        back += String.fromCharCode(parseInt(hexes[j], 16));
+    }
+
+    return back;
+}
+
+Number.prototype.intToHex = function (rgb) { 
+  var hex = Number(rgb).toString(16);
+  if (hex.length < 2) {
+       hex = "0" + hex;
+  }
+  return hex;
+};
+
     var userAccount;
 
-	web3.eth.getAccounts().then(e => setUserAcct(e[0]));
+	 web3.eth.getAccounts().then(e => setUserAcct(e[0]));
+
+	 window.addEventListener('load', async () => {
+		 if (web3.eth.getAccounts().then(e => e == userAccount)){
+			 console.log("Serving address: ", userAccount);
+
+		 }
+		 else{
+			 await web3.eth.getAccounts().then(e => setUserAcct(e[0]));
+		 }
+		 
+	 })
 	
-    var bulletproof_frontend_addr = "0x9fcf6f91356Ce63B7ADB64Ab6C8E4084FB69b18B";
+    var bulletproof_frontend_addr = "0xD097ce9cC3f8402a7311c576c60f7CeE44baf711";
     var bulletproof = new web3.eth.Contract(abi, bulletproof_frontend_addr);
 	//var myAbi = web3.eth.contract(abi);
 	//var functions = myAbi.at(bulletproof_contract_addr);
@@ -504,35 +564,24 @@ function newRecordSubmit() {
 }
 
 function createNewRecord (_index, _rightsHolder, _assetClass, _countDownStart, _ipfsNote) {
-	
     console.log("userAccount using promise: ", userAccount);
     console.log("Current account at [0]: ", userAccount);
      // This is going to take a while, so update the UI to let the user know
      // the transaction has been sent
      console.log("Creating new asset record on the blockchain. Please wait for confirmation...");
      // Send the tx to our contract:
-
-	/*bulletproof.methods.$newRecord.sendTransaction(_index, _rightsHolder, _assetClass, _countDownStart, _ipfsNote, { from: web3.eth.accounts[0], gas: 4000000 },
-	
-	function (error, result) {
-		if (!error) {
-			console.log(result);
-		} 
-		else {
-			console.log(error);
-			}
-		}) */
-
     return bulletproof.methods.$newRecord(_index, _rightsHolder, _assetClass, _countDownStart, _ipfsNote)
     .send({from: userAccount, gas: "3000000", value: web3.utils.toWei("0.04", "ether")})
-/*
-     .on("receipt", function(receipt) {
-     $("#txStatus").text("Successfully created asset record. Submitted records can be checked with the 'view record' tool ");
-    })
-    .on("error", function(error) {
-    // Do something to alert the user their transaction has failed
-    $("#txStatus").text(error);
-    }); */
+}
+
+function compareRH () {
+	var _index = document.getElementById("readIndexForm").value;
+    console.log("Reading from index", _index);
+	_index = "0x" + keccak256(_index);
+	console.log("_index hash: ", _index)
+	var fullRec = bulletproof.methods.XemitRightsholder(_index).call({from: userAccount}).then(console.log(fullRec));
+	return fullRec;
+
 }
   </script>
 </body>
