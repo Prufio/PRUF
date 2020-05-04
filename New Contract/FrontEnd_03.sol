@@ -538,7 +538,7 @@ contract FrontEnd is PullPayment, Ownable {
     /*
      *
      */
-    function XemitRightsholder (bytes32 _idx) external {
+    function XemitRightsHolder (bytes32 _idx) external {
         
         Storage.emitRightsHolder (_idx);
     }
