@@ -140,7 +140,7 @@ contract Storage is Ownable {
     event REPORT (string _msg);
     //event EMIT_RECORD (Record record);  //use when ABIencoder V2 is ready for prime-time
     event EMIT_RECORD (bytes32, bytes32, bytes32, uint8, uint8, uint16, uint, uint, bytes32, bytes32);
-    
+    event EMIT_RIGHTS_HOLDER (bytes32);
 
 //--------------------------------Internal Admin functions / onlyowner---------------------------------//
     
@@ -470,6 +470,15 @@ contract Storage is Ownable {
         }
         
         return(_senderHash,lastrec);
+    }
+    
+    
+    /*
+     * @dev Emit RightsHolder
+     */ 
+    function emitRightsHolder (bytes32 _idxHash) external addrAuth(1) exists (_idxHash) {
+        
+        emit EMIT_RIGHTS_HOLDER (database[_idxHash].rightsHolder);
     }
     
 }

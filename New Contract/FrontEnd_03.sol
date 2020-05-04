@@ -13,6 +13,7 @@ contract StorageInterface {
     function modifyIPFS (bytes32 _userHash, bytes32 _idxHash, bytes32 _IPFS1, bytes32 _IPFS2) external {}
     function retrieveRecorder (bytes32 _idxHash) external returns (bytes32, bytes32) {}
     function retrieveCosts (uint16 _assetClass) external returns (uint, uint, uint, uint, uint, uint) {}
+    function emitRightsHolder (bytes32 _idxHash) external {}
 }    
 
 
@@ -532,6 +533,14 @@ contract FrontEnd is PullPayment, Ownable {
          cost.forceModifyCost) = Storage.retrieveCosts(_class);
         
         return (cost);
+    }
+    
+    /*
+     *
+     */
+    function XemitRightsholder (bytes32 _idx) external {
+        
+        Storage.emitRightsHolder (_idx);
     }
     
 }
