@@ -1,20 +1,6 @@
-<!DOCTYPE html>
 
-<html>
-<head>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
-  <script language="javascript" type="text/javascript" src="web3.min.js"></script>   
-
-</head>
-<body>
-  <div>
-      <input style="position:absolute; top:37%; left:17%; width:15%;" type="button" value="Check Metamask Accounts" onclick="checkForAccounts();"/>
-      <input style="position:absolute; top:33%; left:17%; width:10%;" type="button" value="Reset Attempts" onclick="resetCounter();"/>
-  </div>
- 
-<script type="text/javascript">
+web3Client = require("./web3.min.js");
 var accountChecks = 0;
-var userAccount;
 
 var web3 = new Web3(web3.currentProvider);
 
@@ -45,9 +31,7 @@ var web3 = new Web3(web3.currentProvider);
 	
     })
 
-function setUserAcct(acct) {
-    userAccount = acct;
-}
+
 
 function resetCounter(){
     accountChecks = 0;
@@ -57,10 +41,6 @@ function checkForAccounts () {
     accountChecks ++;
     console.log("Getting accounts, attempt#", accountChecks);
 
-    web3.eth.getAccounts().then(e => setUserAcct(e[0]));
-    console.log("userAccount using promise: ", userAccount);
-   // web3.eth.getAccounts().then(e => let firstAcc=e[0]; console.log("using promise, accounts[0]: ", firstAcc));
-    
     var account1;
     var account2;
 
@@ -72,6 +52,3 @@ function checkForAccounts () {
     console.log();
    
 }
-  </script>
-</body>
-</html>

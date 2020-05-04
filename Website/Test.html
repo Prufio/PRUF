@@ -10,8 +10,8 @@
   <div>
     <form id="newRecordForm" onsubmit="return false;">
         <input style="position:absolute; top:13%; left:17%; width:25%;" type="text" id="indexForm" maxlength= "32" />
-        <input style="position:absolute; top:17%; left:17%; width:25%;" type="text" id="RHForm" maxlength= "4" />
-        <input style="position:absolute; top:22%; left:17%; width:25%;" type="text" id="ACForm" maxlength= "32" />
+        <input style="position:absolute; top:17%; left:17%; width:25%;" type="text" id="RHForm" maxlength= "32" />
+        <input style="position:absolute; top:22%; left:17%; width:25%;" type="text" id="ACForm" maxlength= "4" />
         <input style="position:absolute; top:26%; left:17%; width:25%;" type="text" id="CDSForm" maxlength= "32" />
         <input style="position:absolute; top:30%; left:17%; width:25%;" type="text" id="IPFSForm" maxlength= "32" />
 
@@ -39,8 +39,8 @@ var web3 = new Web3(web3.currentProvider);
         try {
           await ethereum.enable();
           console.log("ethereum acct access enabled");
-		  console.log(web3.eth.getAccounts());
-          console.log("acct 0:", web3.eth.accounts[0]);
+		 // console.log(web3.eth.getAccounts());
+          //console.log("acct 0:", web3.eth.accounts[0]);
 		}
 		  catch{
           $('#status').html('User denied account access', err)
@@ -476,10 +476,17 @@ const abi = [
 	}
 ];  
     var userAccount;
+
+	web3.eth.getAccounts().then(e => setUserAcct(e[0]));
+	
     var bulletproof_frontend_addr = "0x9fcf6f91356Ce63B7ADB64Ab6C8E4084FB69b18B";
     var bulletproof = new web3.eth.Contract(abi, bulletproof_frontend_addr);
 	//var myAbi = web3.eth.contract(abi);
 	//var functions = myAbi.at(bulletproof_contract_addr);
+
+function setUserAcct(addr){ 
+	userAccount = addr;
+}
 
 function newRecordSubmit() {
     var _index = document.getElementById("indexForm").value;
@@ -497,10 +504,8 @@ function newRecordSubmit() {
 }
 
 function createNewRecord (_index, _rightsHolder, _assetClass, _countDownStart, _ipfsNote) {
-    var account0;
-    web3.eth.getAccounts().then(function(result){account0 = result[0];})
-    console.log("acoount 0: ", account0);
-    userAccount = "0x621ba581b6d6d1808987ab43d2dba6b973c63109";
+	
+    console.log("userAccount using promise: ", userAccount);
     console.log("Current account at [0]: ", userAccount);
      // This is going to take a while, so update the UI to let the user know
      // the transaction has been sent
@@ -519,7 +524,7 @@ function createNewRecord (_index, _rightsHolder, _assetClass, _countDownStart, _
 		}) */
 
     return bulletproof.methods.$newRecord(_index, _rightsHolder, _assetClass, _countDownStart, _ipfsNote)
-    .send({from: userAccount, gas: "4000000", value: web3.utils.toWei("0.04", "ether")})
+    .send({from: userAccount, gas: "3000000", value: web3.utils.toWei("0.04", "ether")})
 /*
      .on("receipt", function(receipt) {
      $("#txStatus").text("Successfully created asset record. Submitted records can be checked with the 'view record' tool ");
