@@ -1,0 +1,27 @@
+extends layout
+
+block content
+
+	h1 New Record
+
+	// label(for='name') Name:
+	// input#name.form-control(type='text', placeholder='first and last' name='name')
+
+	form(method='POST' action='/new')
+
+		div.form-group
+			input(type='text', placeholder='Serial number' name='assetId')
+
+		div.form-group
+			input(type='text', placeholder='Name, ID, and secret' name='rightsHolder')
+
+		div.form-group
+			input(type='text', placeholder='Asset class' name='assetClass')
+
+		div.form-group
+			input(type='text', placeholder='Countdown start' name='countdownStart')
+
+		div.form-group
+			input(type='text', placeholder='Description' name='description')
+
+		button(type="submit") Create

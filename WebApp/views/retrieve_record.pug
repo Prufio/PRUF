@@ -1,0 +1,15 @@
+extends layout
+
+block content
+
+	h1 Retrieve Record
+
+	// label(for='name') Name:
+	// input#name.form-control(type='text', placeholder='first and last' name='name')
+
+	form(method='POST' action='/retrieve')
+
+		div.form-group
+			input(type='text', placeholder='Serial number' name='assetId')
+
+		button(type="submit") Retrieve

@@ -1,0 +1,22 @@
+{
+  "name": "myapp",
+  "version": "0.0.0",
+  "private": true,
+  "scripts": {
+    "start": "if [[ $NODE_ENV == 'production' ]]; then node ./bin/www; else nodemon ./bin/www; fi"
+  },
+  "dependencies": {
+    "cookie-parser": "~1.4.4",
+    "debug": "~2.6.9",
+    "express": "~4.16.1",
+    "http-errors": "~1.6.3",
+    "morgan": "~1.9.1",
+    "pg": "^8.0.3",
+    "pug": "2.0.0-beta11",
+    "sequelize": "^5.21.7",
+    "web3": "^1.2.7"
+  },
+  "devDependencies": {
+    "nodemon": "^2.0.3"
+  }
+}
