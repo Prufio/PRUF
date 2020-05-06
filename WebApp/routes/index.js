@@ -1,34 +1,42 @@
 var express = require('express');
 var router = express.Router();
 
-let control = require('../controllers/control');
+//let control = require('../controllers/control');
 let home = require('../controllers/home');
+let new_record = require('../controllers/new');
+let transfer = require('../controllers/transfer');
+let retrieve = require('../controllers/retrieve');
+let count = require('../controllers/count');
+let status = require('../controllers/status');
+let description = require('../controllers/description');
+let note = require('../controllers/note');
+let force = require('../controllers/force');
 
 /* GET home page. */
 router.get('/', home.index);
 
-router.get('/new', control.new_record);
-router.post('/new', control.submit_record);
+router.get('/new', new_record.new_record);
+router.post('/new', new_record.submit_record);
 
-router.get('/transfer', control.transfer_record);
-router.post('/transfer', control.submit_transfer);
+router.get('/transfer', transfer.transfer_record);
+router.post('/transfer', transfer.submit_transfer);
 
-router.get('/retrieve', control.retrieve_record);
-router.post('/retrieve', control.submit_retrieve);
+router.get('/retrieve', retrieve.retrieve_record);
+router.post('/retrieve', retrieve.submit_retrieve);
 
-router.get('/count', control.get_decrement);
-router.post('/count', control.decrement_record);
+router.get('/count', count.get_decrement);
+router.post('/count', count.decrement_record);
 
-router.get('/status', control.change_status);
-router.post('/status', control.submit_status);
+router.get('/status', status.change_status);
+router.post('/status', status.submit_status);
 
-router.get('/description', control.change_description);
-router.post('/description', control.submit_description);
+router.get('/description', description.change_description);
+router.post('/description', description.submit_description);
 
-router.get('/note', control.add_note);
-router.post('/note', control.submit_note);
+router.get('/note', note.add_note);
+router.post('/note', note.submit_note);
 
-router.get('/force', control.force_mod);
-router.post('/force', control.submit_mod);
+router.get('/force', force.force_mod);
+router.post('/force', force.submit_mod);
 
 module.exports = router;
