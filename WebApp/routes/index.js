@@ -1,5 +1,6 @@
 var express = require('express');
 var router = express.Router();
+const web3 = require('web3');
 
 //let control = require('../controllers/control');
 let home = require('../controllers/home');
@@ -40,3 +41,9 @@ router.get('/force', force.force_mod);
 router.post('/force', force.submit_mod);
 
 module.exports = router;
+
+connector.start().then(() => {
+  // Now go to http://localhost:3333 in your MetaMask enabled web browser.
+  const web3 = new Web3(connector.getProvider());
+  // Use web3 as you would normally do. Sign transactions in the browser.
+});
