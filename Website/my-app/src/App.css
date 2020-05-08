@@ -27,8 +27,14 @@
 
 .increment{
   height: 130px;
-  width: 150px;
-  border: black 2px;
+  border: black 5px;
+  background: Pink;
+}
+
+.increment_plus{
+  height: 130px;
+  border-color: black 5px;
+  background-color: blue;
 }
 
 .red{
