@@ -29,7 +29,6 @@ function Main(props) {
         return (
             <div className='increment_plus'>
                 <h4 className={isRed ? 'red' : ''}>Change My Color</h4>
-                <button onClick={increment}>Increment</button>
                 <h2>{count}</h2>
                 <button onClick={sendMessage}>Request Secret Message</button>
             </div>
