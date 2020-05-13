@@ -69,10 +69,10 @@ function App() {
           <h3>Provenance Verification Form</h3>
           <label>
             Index Reference:
-          <input type="text" name="IndexField" onChange={e => setIndex(e.target.value)}/>
+          <input type="text" name="IndexField" onChange={e => setIndex(keccak256(e.target.value))}/>
           <br></br>
             Rights Holder:
-          <input type="text" name="RHField" onChange={e => setRH(e.target.value)}/>
+          <input type="text" name="RHField" onChange={e => setRH(keccak256(e.target.value))}/>
           <br></br>
           </label>
           <button onClick={callForRecord}>Compare</button>
@@ -81,13 +81,13 @@ function App() {
           <h3>Provenance Update Form</h3>
           <label>
             Index Reference:
-          <input type="text" name="txIndexField" onChange={e => setTxIndex(e.target.value)}/>
+          <input type="text" name="txIndexField" onChange={e => setTxIndex('0x' + keccak256(e.target.value))}/>
           <br></br>
             Current Rights Holder:
-          <input type="text" name="CRHField" onChange={e => setCRH(e.target.value)}/>
+          <input type="text" name="CRHField" onChange={e => setCRH('0x' + keccak256(e.target.value))}/>
           <br></br>
             New Rights Holder:
-          <input type="text" name="NRHField" onChange={e => setNRH(e.target.value)}/>
+          <input type="text" name="NRHField" onChange={e => setNRH('0x' + keccak256(e.target.value))}/>
           <br></br>
           </label>
           <button onClick={txProvenance}>Update Provenance</button>
