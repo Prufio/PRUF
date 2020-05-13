@@ -106,7 +106,7 @@ contract FrontEnd is PullPayment, Ownable {
     /*
      * @dev Wrapper for newRecord
      */
-    function $newRecord (string memory _idx, string memory _rgt, uint16 _assetClass, uint _countDownStart, string memory _IPFSs) public payable {
+    function $newRecord (bytes32 _idxHash, bytes32 _rgtHash, uint16 _assetClass, uint _countDownStart, bytes32 _IPFS) public payable {
         
         Costs memory cost = getCost(_assetClass);
         
@@ -116,9 +116,9 @@ contract FrontEnd is PullPayment, Ownable {
         );
         
         bytes32 senderHash = keccak256(abi.encodePacked(msg.sender));
-        bytes32 _idxHash = keccak256(abi.encodePacked(_idx));
-        bytes32 _rgtHash = keccak256(abi.encodePacked(_rgt));
-        bytes32 _IPFS = keccak256(abi.encodePacked(_IPFSs));
+        //bytes32 _idxHash = keccak256(abi.encodePacked(_idx));
+        //bytes32 _rgtHash = keccak256(abi.encodePacked(_rgt));
+        //bytes32 _IPFS = keccak256(abi.encodePacked(_IPFSs));
         
         Storage.newRecord(senderHash, 
                           _idxHash,
@@ -183,12 +183,12 @@ contract FrontEnd is PullPayment, Ownable {
     /*
      * @dev Modify **Record**.status with confirmation required
      */
-    function _modStatus (string memory _idx, string memory _rgt, uint8 _status) public { 
+    function _modStatus (bytes32 _idxHash, bytes32 _rgtHash, uint8 _status) public { 
        
         Record memory rec;
        
-        bytes32 _rgtHash = keccak256(abi.encodePacked(_rgt)); // Temp
-        bytes32 _idxHash = keccak256(abi.encodePacked(_idx)); // Temp
+        //bytes32 _rgtHash = keccak256(abi.encodePacked(_rgt)); // Temp
+        //bytes32 _idxHash = keccak256(abi.encodePacked(_idx)); // Temp
        
         rec = getRecord (_idxHash);
         
@@ -211,12 +211,12 @@ contract FrontEnd is PullPayment, Ownable {
     /*
      * @dev Decrement **Record**.countdown with confirmation required
      */
-    function _decCounter (string memory _idx, string memory _rgt, uint _decAmount) public { 
+    function _decCounter (bytes32 _idxHash, bytes32 _rgtHash, uint _decAmount) public { 
         
         Record memory rec;
        
-        bytes32 _rgtHash = keccak256(abi.encodePacked(_rgt)); // Temp
-        bytes32 _idxHash = keccak256(abi.encodePacked(_idx)); // Temp
+        //bytes32 _rgtHash = keccak256(abi.encodePacked(_rgt)); // Temp
+        //bytes32 _idxHash = keccak256(abi.encodePacked(_idx)); // Temp
       
         rec = getRecord (_idxHash);
         
@@ -243,9 +243,10 @@ contract FrontEnd is PullPayment, Ownable {
     /*
      * @dev Transfer Rights to new rightsHolder with confirmation
      */
-    function $transferAsset (string memory _idx, string memory _rgt, string memory _newrgt) public payable { 
+    function $transferAsset (bytes32 _idxHash, bytes32 _rgtHash, bytes32 _newrgtHash) public payable { 
         
-        Record memory costrec = getRecord(keccak256(abi.encodePacked(_idx)));
+        //Record memory costrec = getRecord(keccak256(abi.encodePacked(_idx)));
+        Record memory costrec = getRecord(_idxHash);
         
         Costs memory cost = getCost(costrec.assetClass);
         
@@ -256,9 +257,9 @@ contract FrontEnd is PullPayment, Ownable {
         
         Record memory rec;
         
-        bytes32 _rgtHash = keccak256(abi.encodePacked(_rgt)); // Temp
-        bytes32 _newrgtHash = keccak256(abi.encodePacked(_newrgt)); // Temp
-        bytes32 _idxHash = keccak256(abi.encodePacked(_idx)); // Temp
+        //bytes32 _rgtHash = keccak256(abi.encodePacked(_rgt)); // Temp
+        //bytes32 _newrgtHash = keccak256(abi.encodePacked(_newrgt)); // Temp
+        //bytes32 _idxHash = keccak256(abi.encodePacked(_idx)); // Temp
       
         rec = getRecord (_idxHash);
         
@@ -293,13 +294,13 @@ contract FrontEnd is PullPayment, Ownable {
     /*
      * @dev Modify **Record**.IPFS1 with confirmation
      */
-    function _modIPFS1 (string memory _idx, string memory _rgt, string memory _IPFS ) public { 
+    function _modIPFS1 (bytes32 _idxHash, bytes32 _rgtHash, bytes32 _IPFSHash ) public { 
        
         Record memory rec;
         
-        bytes32 _IPFSHash = keccak256(abi.encodePacked(_IPFS)); // Temp
-        bytes32 _idxHash = keccak256(abi.encodePacked(_idx)); // Temp
-        bytes32 _rgtHash = keccak256(abi.encodePacked(_rgt)); // Temp
+        //bytes32 _IPFSHash = keccak256(abi.encodePacked(_IPFS)); // Temp
+        //bytes32 _idxHash = keccak256(abi.encodePacked(_idx)); // Temp
+        //bytes32 _rgtHash = keccak256(abi.encodePacked(_rgt)); // Temp
         
         rec = getRecordIPFS (_idxHash);
         
@@ -327,9 +328,10 @@ contract FrontEnd is PullPayment, Ownable {
     /*
      * @dev Modify **Record**.IPFS2 with confirmation
      */
-    function $addIPFS2Note (string memory _idx, string memory _rgt, string memory _IPFS ) public payable { 
+    function $addIPFS2Note (bytes32 _idxHash, bytes32 _rgtHash, bytes32 _IPFSHash ) public payable { 
        
-        Record memory costrec = getRecord(keccak256(abi.encodePacked(_idx)));
+        //Record memory costrec = getRecord(keccak256(abi.encodePacked(_idx)));
+        Record memory costrec = getRecord(_idxHash);
         
         Costs memory cost = getCost(costrec.assetClass);
         
@@ -340,9 +342,9 @@ contract FrontEnd is PullPayment, Ownable {
         
         Record memory rec;
         
-        bytes32 _IPFSHash = keccak256(abi.encodePacked(_IPFS)); // Temp
-        bytes32 _idxHash = keccak256(abi.encodePacked(_idx)); // Temp
-        bytes32 _rgtHash = keccak256(abi.encodePacked(_rgt)); // Temp
+        //bytes32 _IPFSHash = keccak256(abi.encodePacked(_IPFS)); // Temp
+        //bytes32 _idxHash = keccak256(abi.encodePacked(_idx)); // Temp
+        //bytes32 _rgtHash = keccak256(abi.encodePacked(_rgt)); // Temp
 
         rec = getRecordIPFS (_idxHash);
         
