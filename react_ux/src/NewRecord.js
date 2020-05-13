@@ -39,31 +39,31 @@ class NewRecord extends React.Component {
       return (
         <form onSubmit={this.mySubmitHandler}>
          <h1>Create record {this.state.asset_id}</h1>
-        Asset ID:
+        <p>Asset ID:</p>
         <input
           type='text'
           name='asset_id'
           onChange={this.myChangeHandler}
         />
-        Rights Holder:
+        <p>Rights Holder:</p>
         <input
           type='text'
           name='rights_holder'
           onChange={this.myChangeHandler}
         />
-        Asset Class:
+        <p>Asset Class:</p>
         <input
           type='text'
           name='asset_class'
           onChange={this.myChangeHandler}
         />
-        Countdown:
+        <p>Countdown:</p>
         <input
           type='text'
           name='countdown_start'
           onChange={this.myChangeHandler}
         />
-        IPFS1 (Description):
+        <p>IPFS1 (Description):</p>
         <input
           type='text'
           name='asset_IPFS1'
