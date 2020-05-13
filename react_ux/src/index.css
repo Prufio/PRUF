@@ -22,7 +22,7 @@ body {
     padding: 20px;
     display: inline-block;
   }
-  .content {
+  /* .content {
     background-color: rgb(32, 202, 214);
     padding: 20px;
   }
@@ -32,7 +32,20 @@ body {
   }
   .content li {
     margin-bottom: 10px;
-  }
+  } */
   .active {
     background-color: #0099FF;
+  }
+
+  form {
+    height: 500px;
+    width: 500px;
+    background-color:  rgb(32, 202, 214);
+    border-radius: 20px;
+    display:flex;
+    flex-direction: column;
+    justify-content: space-around;
+    align-items: center;
+    max-width: 500px;
+    margin: 0 auto; 
   }

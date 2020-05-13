@@ -40,7 +40,7 @@ class NewRecord extends React.Component {
         <form onSubmit={this.mySubmitHandler}>
          <h1>Create record {this.state.asset_id}</h1>
         <p>Asset ID:</p>
-        <input
+        <input Assset ID
           type='text'
           name='asset_id'
           onChange={this.myChangeHandler}

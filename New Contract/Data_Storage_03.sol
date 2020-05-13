@@ -442,7 +442,16 @@ contract Storage is Ownable {
     /*
      * @dev Compare record.rightsholder with a hashed string // ------------------------testing
      */
-    function XcompareRightsHolder (string calldata _idx, string calldata _rgt) external view addrAuth(1) returns(string memory) {
+    function XcompareRightsHolder (bytes32 _idxHash, bytes32 _rgtHash) external view addrAuth(1) returns(string memory) {
+         
+        if (_rgtHash == database[_idxHash].rightsHolder) {
+            return "Rights holder match confirmed";
+        } else {
+            return "Rights holder does not match";
+        }
+    }
+    
+     function compareRightsHolder (string calldata _idx, string calldata _rgt) external view addrAuth(1) returns(string memory) {
          
         if (keccak256(abi.encodePacked(_rgt)) == database[keccak256(abi.encodePacked(_idx))].rightsHolder) {
             return "Rights holder match confirmed";
