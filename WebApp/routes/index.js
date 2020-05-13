@@ -1,5 +1,12 @@
 var express = require('express');
 var router = express.Router();
+//const web3 = require('web3');
+
+/*const MetaMaskConnector = require('node-metamask');
+const connector = new MetaMaskConnector({
+  port: 3000, // this is the default port
+  onConnect() { console.log('MetaMask client connected') }, // Function to run when MetaMask is connected (optional)
+}); */
 
 //let control = require('../controllers/control');
 let home = require('../controllers/home');
@@ -13,6 +20,7 @@ let note = require('../controllers/note');
 let force = require('../controllers/force');
 
 /* GET home page. */
+
 router.get('/', home.index);
 
 router.get('/new', new_record.new_record);
@@ -40,3 +48,9 @@ router.get('/force', force.force_mod);
 router.post('/force', force.submit_mod);
 
 module.exports = router;
+
+/*
+connector.start().then(() => {
+  const web3 = new Web3(connector.getProvider());
+});*/
+

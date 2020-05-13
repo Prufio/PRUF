@@ -1,3 +1,5 @@
+const userWeb3 = require('web3');
+
 var createError = require('http-errors');
 var express = require('express');
 var path = require('path');
@@ -9,7 +11,17 @@ var usersRouter = require('./routes/users');
 
 var app = express();
 
+const MetaMaskConnector = require('node-metamask');
+
+const connector = new MetaMaskConnector({
+  port: 3000, // this is the default port
+  onConnect() { console.log('MetaMask client connected') }, // Function to run when MetaMask is connected (optional)
+});
+
 // view engine setup
+connector.start().then(() => {
+  const web3 = new userWeb3(connector.getProvider());
+});
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'pug');
 

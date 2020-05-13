@@ -10,3 +10,15 @@ exports.submit_record = function(req, res, next) {
   console.log("Description", req.body.description);
   res.redirect('/');
 }
+
+
+
+
+
+
+
+
+
+
+
+    

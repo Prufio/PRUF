@@ -1,0 +1,42 @@
+.tweet{
+  height: 300px;
+  width: 300px;
+  background: rgb(231, 247, 244);
+  border-radius: 30px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-around;
+  align-items: center;
+
+}
+
+.app{
+  min-height: 100vh;
+  background: rgb(91, 174, 230);
+  justify-content: space-around;
+  align-items: center;
+  display: flex;
+
+}
+
+.header{
+  height: 100px;
+  border: 20px;
+  background: rgb(91,174,230);
+}
+
+.increment{
+  height: 130px;
+  border: black 5px;
+  background: Pink;
+}
+
+.increment_plus{
+  height: 100px;
+  border-color: black 5px;
+  background-color: blue;
+}
+
+.red{
+  color: red;
+}
