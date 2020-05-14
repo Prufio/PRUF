@@ -35,7 +35,7 @@ class ModifyDescription extends React.Component {
     return (
       <form className="MDform" onSubmit={this.mySubmitHandler}>
         <h2>Description{this.state.asset_id}</h2>
-        <p>Asset ID:</p>
+        Asset ID:
         <input
           placeholder="Enter Asset ID"
           type="text"
@@ -43,7 +43,7 @@ class ModifyDescription extends React.Component {
           onChange={this.myChangeHandler}
           required
         />
-        <p>Rights Holder:</p>
+        Rights Holder:
         <input
           placeholder="Rights Holder"
           type="text"
@@ -51,7 +51,7 @@ class ModifyDescription extends React.Component {
           onChange={this.myChangeHandler}
           required
         />
-        <p>IPFS1 (Description):</p>
+        IPFS1 (Description):
         <input
           placeholder="IPFS Resource (Desc)"
           type="text"

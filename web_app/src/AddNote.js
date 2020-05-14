@@ -33,7 +33,7 @@ class AddNote extends React.Component {
     return (
       <form className="ANform" onSubmit={this.mySubmitHandler}>
         <h2>Add Note{this.state.asset_id}</h2>
-        <p>Asset ID:</p>
+        Asset ID:
         <input
           placeholder="Enter Asset ID"
           type="text"
@@ -41,7 +41,7 @@ class AddNote extends React.Component {
           onChange={this.myChangeHandler}
           required
         />
-        <p>Rights Holder:</p>
+        Rights Holder:
         <input
           placeholder="Rights Holder"
           type="text"
@@ -49,7 +49,7 @@ class AddNote extends React.Component {
           onChange={this.myChangeHandler}
           required
         />
-        <p>IPFS2 (Note):</p>
+        IPFS2 (Note):
         <input
           placeholder="IPFS Resource (NOTE)"
           type="text"

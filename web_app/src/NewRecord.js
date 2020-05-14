@@ -39,7 +39,7 @@ class NewRecord extends React.Component {
     return (
       <form className="NRform" onSubmit={this.mySubmitHandler}>
         <h2>New Asset{this.state.asset_id}</h2>
-        <p>Asset ID:</p>
+        Asset ID:
         <input
           placeholder="Enter Asset ID"
           type="text"
@@ -47,7 +47,7 @@ class NewRecord extends React.Component {
           onChange={this.myChangeHandler}
           required
         />
-        <p>Rights Holder:</p>
+        Rights Holder:
         <input
           placeholder="Rights Holder"
           type="text"
@@ -55,7 +55,7 @@ class NewRecord extends React.Component {
           onChange={this.myChangeHandler}
           required
         />
-        <p>Asset Class:</p>
+        Asset Class:
         <input
           placeholder="Asset Class"
           type="text"
@@ -68,9 +68,9 @@ class NewRecord extends React.Component {
             <option asset_class="1">Firearms</option>
             <option asset_class="2">NFA/AOW</option>
             <option asset_class="3">Special</option>
-          </select> */}
+        </select> */}
 
-        <p>Countdown:</p>
+        Countdown:
         <input
           placeholder="Countdown Start"
           type="text"
@@ -79,7 +79,7 @@ class NewRecord extends React.Component {
           required
         />
 
-        <p>IPFS1 (Description):</p>
+        IPFS1 (Description):
         <input
           placeholder="IPFS Resource"
           type="text"

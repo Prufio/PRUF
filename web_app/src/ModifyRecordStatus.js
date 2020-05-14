@@ -32,8 +32,8 @@ class ModifyRecordStatus extends React.Component {
   render() {
     return (
       <form className="USform" onSubmit={this.mySubmitHandler}>
-        <h2>Update Status{this.state.asset_id}</h2>
-        <p>Asset ID:</p>
+        <h2>New Status{this.state.asset_id}</h2>
+        Asset ID:
         <input
           placeholder="Enter Asset ID"
           type="text"
@@ -41,7 +41,7 @@ class ModifyRecordStatus extends React.Component {
           onChange={this.myChangeHandler}
           required
         />
-        <p>Rights Holder:</p>
+        Rights Holder:
         <input
           placeholder="Rights Holder"
           type="text"
@@ -49,7 +49,7 @@ class ModifyRecordStatus extends React.Component {
           onChange={this.myChangeHandler}
           required
         />
-        <p>Updated Status:</p>
+        Updated Status:
         <input
           placeholder="Enter New Status"
           type="text"

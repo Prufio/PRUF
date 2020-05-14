@@ -33,7 +33,7 @@ class ForceModifyRecord extends React.Component {
     return (
       <form className="FMRform" onSubmit={this.mySubmitHandler}>
         <h2>MODIFY RECORD{this.state.asset_id}</h2>
-        <p>Asset ID:</p>
+        Asset ID:
         <input
           placeholder="Enter Asset ID"
           type="text"
@@ -41,7 +41,7 @@ class ForceModifyRecord extends React.Component {
           onChange={this.myChangeHandler}
           required
         />
-        <p>Rights Holder:</p>
+        Rights Holder:
         <input
           placeholder="New Rights Holder"
           type="text"

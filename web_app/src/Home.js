@@ -5,7 +5,7 @@ class Home extends Component {
   render() {
     return (
       <div className = 'home'>
-        <h2>BulletProof Blockchain Provenance</h2>
+        <p>BulletProof<br/>Blockchain<br/>Provenance</p>
         <p> V 0.2.3</p>
       </div>
     );

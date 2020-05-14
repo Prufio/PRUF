@@ -35,7 +35,7 @@ class DecrementCounter extends React.Component {
     return (
       <form className="DCform" onSubmit={this.mySubmitHandler}>
         <h2>Countdown{this.state.asset_id}</h2>
-        <p>Asset ID:</p>
+        Asset ID:
         <input
           placeholder="Enter Asset ID"
           type="text"
@@ -43,7 +43,7 @@ class DecrementCounter extends React.Component {
           onChange={this.myChangeHandler}
           required
         />
-        <p>Rights Holder:</p>
+        Rights Holder:
         <input
           placeholder="Rights Holder"
           type="text"
@@ -51,7 +51,7 @@ class DecrementCounter extends React.Component {
           onChange={this.myChangeHandler}
           required
         />
-        <p>Countdown:</p>
+        Countdown:
         <input
           placeholder="Decrement by..."
           type="text"
