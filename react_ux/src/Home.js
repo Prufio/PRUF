@@ -1,13 +1,12 @@
 import React, { Component } from "react";
+import "./index.css";
  
 class Home extends Component {
   render() {
     return (
-      <div>
-        <h2>Hello</h2>
-        <p>Blockchain powered decentralized asset registry now 0.2.3</p>
- 
-        <p>Register your assets through this unique decentralized DApp!</p>
+      <div className = 'home'>
+        <h2>BulletProof Blockchain Provenance</h2>
+        <p> V 0.2.3</p>
       </div>
     );
   }

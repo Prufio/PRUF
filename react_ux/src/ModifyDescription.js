@@ -2,27 +2,29 @@
 import React from "react";
 import "./index.css";
 
-class TransferAsset extends React.Component {
+class ModifyDescription extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
       asset_id: "",
       rights_holder: "",
-      new_rights_holder: "",
+      asset_class: "",
+      count_down: "",
+      asset_IPFS1: "",
     };
   }
   mySubmitHandler = (event) => {
     event.preventDefault();
     let asset_id = this.state.asset_id;
     let rights_holder = this.state.rights_holder;
-    let new_rights_holder = this.state.new_rights_holder;
-    if (new_rights_holder === rights_holder) {
-      alert("new rights holder cannot be the same as old rights holder");
+    let asset_IPFS1 = this.state.asset_IPFS1;
+    if (asset_id === "1") {
+      alert("Asset id is equal to one.");
     }
     console.log("Form data:");
     console.log("Asset:", asset_id);
     console.log("Rights Holder:", rights_holder);
-    console.log("New Rights Holder:", new_rights_holder);
+    console.log("Asset IPFS Tag:", asset_IPFS1);
   };
   myChangeHandler = (event) => {
     let nam = event.target.name;
@@ -31,8 +33,8 @@ class TransferAsset extends React.Component {
   };
   render() {
     return (
-      <form className="TAform" onSubmit={this.mySubmitHandler}>
-        <h2>Transfer Asset{this.state.asset_id}</h2>
+      <form className="MDform" onSubmit={this.mySubmitHandler}>
+        <h2>Description{this.state.asset_id}</h2>
         <p>Asset ID:</p>
         <input
           placeholder="Enter Asset ID"
@@ -49,19 +51,20 @@ class TransferAsset extends React.Component {
           onChange={this.myChangeHandler}
           required
         />
-        <p>Rights Holder:</p>
+        <p>IPFS1 (Description):</p>
         <input
-          placeholder="New Rights Holder"
+          placeholder="IPFS Resource (Desc)"
           type="text"
-          name="new_rights_holder"
+          name="asset_IPFS1"
           onChange={this.myChangeHandler}
           required
         />
 
         <br />
-        <input type="submit" value="Transfer Asset" />
+        <input type="submit" value="Update Description" />
       </form>
     );
   }
 }
-export default TransferAsset;
+
+export default ModifyDescription;
