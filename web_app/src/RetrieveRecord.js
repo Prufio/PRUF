@@ -44,7 +44,7 @@ class RetrieveRecord extends React.Component {
     return (
       <form className="RRform" onSubmit={this.mySubmitHandler}>
         <h2>Look-up Asset{this.state.asset_id}</h2>
-        <p>Asset ID:</p>
+        Asset ID:
         <input
           placeholder="Enter Asset ID"
           type="text"
