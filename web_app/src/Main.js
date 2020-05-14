@@ -28,13 +28,13 @@ class Main extends Component {
               <NavLink to="/new-record">New Asset</NavLink>
             </li>
             <li>
-              <NavLink to="/retrieve-record">Look-up Asset</NavLink>
+              <NavLink to="/retrieve-record">Look-up</NavLink>
             </li>
             <li>
-              <NavLink to="/transfer-asset">Transfer Asset</NavLink>
+              <NavLink to="/transfer-asset">Transfer</NavLink>
             </li>
             <li>
-              <NavLink to="/modify-record-status">Asset Status</NavLink>
+              <NavLink to="/modify-record-status">Status</NavLink>
             </li>
             <li>
               <NavLink to="/decrement-counter">Countdown</NavLink>
@@ -46,7 +46,7 @@ class Main extends Component {
               <NavLink to="/add-note">Note</NavLink>
             </li>
             <li>
-              <NavLink to="/force-modify-record">Force Modify Asset</NavLink>
+              <NavLink to="/force-modify-record">Force Modify</NavLink>
             </li>
           </ul>
           <div className="content">
