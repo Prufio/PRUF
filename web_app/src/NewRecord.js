@@ -68,7 +68,7 @@ class NewRecord extends React.Component {
             <option asset_class="1">Firearms</option>
             <option asset_class="2">NFA/AOW</option>
             <option asset_class="3">Special</option>
-          </select> */}
+        </select> */}
 
         <p>Countdown:</p>
         <input
