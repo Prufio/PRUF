@@ -27,30 +27,39 @@
     font-size: 6.0rem;
   }
 
+  .page {
+    padding: 0.0rem;
+    display:flex;
+    flex-direction: row;
+    justify-content: left center;
+    align-items: center;
+  }
 
 
-  ul.header li {
+
+  .header li {
     display: inline;
     list-style-type: none;
-    margin: 0;
-
+    margin: 0rem;
   }
-  ul.header {
+
+  .header {
     max-width: 15rem;
     background-color: rgb(0, 0, 0);
-    padding: 0;
+    padding: 0rem;
+    border-radius: 1.0rem;
   }
 
-  ul.header li a { 
+  .header li a { 
     color: rgb(255, 255, 255);
     font-weight: bold;
     text-decoration: none;
-    font-size: 1.6rem;
-    padding: 2.0rem;
-    display:flex;
+    font-size: 2.0rem;
+    padding: 2.5rem;
+    display: flex;
     flex-direction: column;
     justify-content: space-between;
-    align-items: flex-end;
+    align-items: normal;
   }
 
   .content {
@@ -73,7 +82,7 @@
   .home {
     height: 7.0rem;
     background-color:   #0099FF;
-    border-radius: 6.0rem;
+    border-radius: 1.0rem;
     font-weight: bold;
     text-decoration: none;
     font-size: 3.0rem;
@@ -87,11 +96,11 @@
   }
 
   .NRform {
-    height: 65.0rem;
-    width: 30.0rem;
+    height: 70.0rem;
+    width: 20.0rem;
     background-color:  rgb(5, 164, 161);
-    border-radius: 6.0rem;
-    font-weight: bold;
+    border-radius: 1.0rem;
+    font-weight: default;
     text-decoration: none;
     font-size: 3.0rem;
     padding: 3.0rem;
@@ -105,9 +114,9 @@
 
   .RRform {
     height: 20.0rem;
-    width: 30.0rem;
+    width: 20.0rem;
     background-color:  rgb(5, 164, 161);
-    border-radius: 6.0rem;
+    border-radius: 1.0rem;
     font-weight: bold;
     text-decoration: none;
     font-size: 3.0rem;
@@ -122,9 +131,9 @@
 
   .TAform {
     height: 37.0rem;
-    width: 30.0rem;
+    width: 20.0rem;
     background-color:  rgb(5, 164, 161);
-    border-radius: 6.0rem;
+    border-radius: 1.0rem;
     font-weight: bold;
     text-decoration: none;
     font-size: 3.0rem;
@@ -139,9 +148,9 @@
 
   .USform {
     height: 37.0rem;
-    width: 30.0rem;
+    width: 20.0rem;
     background-color:  rgb(5, 164, 161);
-    border-radius: 6.0rem;
+    border-radius: 1.0rem;
     font-weight: bold;
     text-decoration: none;
     font-size: 3.0rem;
@@ -156,9 +165,9 @@
 
   .DCform {
     height: 37.0rem;
-    width: 30.0rem;
+    width: 20.0rem;
     background-color:  rgb(5, 164, 161);
-    border-radius: 6.0rem;
+    border-radius: 1.0rem;
     font-weight: bold;
     text-decoration: none;
     font-size: 3.0rem;
@@ -173,9 +182,9 @@
 
   .MDform {
     height: 37.0rem;
-    width: 30.0rem;
+    width: 20.0rem;
     background-color:  rgb(5, 164, 161);
-    border-radius: 6.0rem;
+    border-radius: 1.0rem;
     font-weight: bold;
     text-decoration: none;
     font-size: 3.0rem;
@@ -190,9 +199,9 @@
 
   .ANform {
     height: 45.0rem;
-    width: 30.0rem;
+    width: 20.0rem;
     background-color:  rgb(254, 245, 1);
-    border-radius: 6.0rem;
+    border-radius: 1.0rem;
     font-weight: bold;
     text-decoration: none;
     font-size: 3.0rem;
@@ -207,9 +216,9 @@
 
   .FMRform {
     height: 40.0rem;
-    width: 30.0rem;
+    width: 20.0rem;
     background-color:  rgb(221, 7, 7);
-    border-radius: 6.0rem;
+    border-radius: 1.0rem;
     font-weight: bold;
     text-decoration: none;
     font-size: 3.0rem;
