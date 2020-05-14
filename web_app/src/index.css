@@ -8,20 +8,31 @@
     padding: 2.0rem;
     margin: 0;
   }
-  h1, h2, h3, h4, p, ul, li {
+  h1, h2, h3, h4, ul, li {
     font-family: sans-serif;
   }
+
+  p {
+    text-align: center;
+  }
+
+
+
   h1 {
     font-size: 4.0rem;
+    text-align: center;
   }
   h2 {
     font-size: 3.5rem;
+    text-align: center;
   }
   h3 {
     font-size: 2.0rem;
+    text-align: center;
   }
   h4 {
     font-size: 1.0rem;
+    text-align: center;
   }
 
   .formtext {
@@ -33,10 +44,8 @@
     display:flex;
     flex-direction: row;
     justify-content: left center;
-    align-items: center;
+    align-items: flex-start;
   }
-
-
 
   .header li {
     display: inline;
@@ -81,23 +90,23 @@
   }
 
   .home {
-    height: 7.0rem;
+    height: 15.0rem;
+    width: 20.0rem;
     background-color:   #0099FF;
     border-radius: 1.0rem;
     font-weight: bold;
     text-decoration: none;
     font-size: 3.0rem;
-    padding: 3.0rem;
+    padding: 1.0rem;
     display:flex;
     flex-direction: column;
     justify-content: space-between;
     align-items: center;
-    max-width: 90.0rem;
     margin: 0 auto; 
   }
 
   .NRform {
-    height: 65.0rem;
+    height: 60.0rem;
     width: 20.0rem;
     background-color:  rgb(5, 164, 161);
     border-radius: 1.0rem;
@@ -109,92 +118,86 @@
     flex-direction: column;
     justify-content: space-between;
     align-items: center;
-    max-width: 50.0rem;
     margin: 0 auto; 
   }
 
   .RRform {
-    height: 65.0rem;
+    height: 15.0rem;
     width: 20.0rem;
     background-color:  rgb(5, 164, 161);
     border-radius: 1.0rem;
-    font-weight: bold;
+    font-weight: default;
     text-decoration: none;
-    font-size: 3.0rem;
-    padding: 3.0rem;
+    font-size: 2.0rem;
+    padding: 1.0rem;
     display:flex;
     flex-direction: column;
     justify-content: space-between;
     align-items: center;
-    max-width: 50.0rem;
     margin: 0 auto; 
   }
 
   .TAform {
-    height: 37.0rem;
+    height: 35.0rem;
     width: 20.0rem;
     background-color:  rgb(5, 164, 161);
     border-radius: 1.0rem;
-    font-weight: bold;
+    font-weight: default;
     text-decoration: none;
-    font-size: 3.0rem;
-    padding: 3.0rem;
+    font-size: 2.0rem;
+    padding: 1.0rem;
     display:flex;
     flex-direction: column;
     justify-content: space-between;
     align-items: center;
-    max-width: 50.0rem;
     margin: 0 auto; 
   }
 
   .USform {
-    height: 37.0rem;
+    height: 35.0rem;
     width: 20.0rem;
     background-color:  rgb(5, 164, 161);
     border-radius: 1.0rem;
-    font-weight: bold;
+    font-weight: default;
     text-decoration: none;
-    font-size: 3.0rem;
-    padding: 3.0rem;
+    font-size: 2.0rem;
+    padding: 1.0rem;
     display:flex;
     flex-direction: column;
     justify-content: space-between;
     align-items: center;
-    max-width: 50.0rem;
     margin: 0 auto; 
   }
 
   .DCform {
-    height: 37.0rem;
+    height: 35.0rem;
     width: 20.0rem;
     background-color:  rgb(5, 164, 161);
     border-radius: 1.0rem;
-    font-weight: bold;
+    font-weight: default;
     text-decoration: none;
-    font-size: 3.0rem;
-    padding: 3.0rem;
+    font-size: 2.0rem;
+    padding: 1.0rem;
     display:flex;
     flex-direction: column;
     justify-content: space-between;
     align-items: center;
-    max-width: 50.0rem;
     margin: 0 auto; 
   }
 
   .MDform {
-    height: 37.0rem;
+    height: 35.0rem;
     width: 20.0rem;
     background-color:  rgb(5, 164, 161);
     border-radius: 1.0rem;
-    font-weight: bold;
+    font-weight: default;
     text-decoration: none;
-    font-size: 3.0rem;
-    padding: 3.0rem;
+    font-size: 2.0rem;
+    padding: 1.0rem;
     display:flex;
     flex-direction: column;
     justify-content: space-between;
     align-items: center;
-    max-width: 50.0rem;
     margin: 0 auto; 
   }
 
@@ -203,15 +206,14 @@
     width: 20.0rem;
     background-color:  rgb(254, 245, 1);
     border-radius: 1.0rem;
-    font-weight: bold;
+    font-weight: default;
     text-decoration: none;
-    font-size: 3.0rem;
-    padding: 3.0rem;
+    font-size: 2.0rem;
+    padding: 1.0rem;
     display:flex;
     flex-direction: column;
     justify-content: space-between;
     align-items: center;
-    max-width: 50.0rem;
     margin: 0 auto; 
   }
 
@@ -220,14 +222,14 @@
     width: 20.0rem;
     background-color:  rgb(221, 7, 7);
     border-radius: 1.0rem;
-    font-weight: bold;
+    border-radius: 1.0rem;
+    font-weight: default;
     text-decoration: none;
-    font-size: 3.0rem;
-    padding: 3.0rem;
+    font-size: 2.0rem;
+    padding: 1.0rem;
     display:flex;
     flex-direction: column;
     justify-content: space-between;
     align-items: center;
-    max-width: 50.0rem;
     margin: 0 auto; 
   }

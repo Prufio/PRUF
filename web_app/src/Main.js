@@ -15,9 +15,7 @@ class Main extends Component {
     return (
       <HashRouter>
         <div>
-          <h1>
             <img src={require("./BP Logo.png")} alt="Bulletproof Logo" />
-          </h1>
           <div className="page">
             <ul className="header">
               <li>
@@ -29,7 +27,7 @@ class Main extends Component {
                 <NavLink to="/new-record">New</NavLink>
               </li>
               <li>
-                <NavLink to="/retrieve-record">Look-up</NavLink>
+                <NavLink to="/retrieve-record">Search</NavLink>
               </li>
               <li>
                 <NavLink to="/transfer-asset">Transfer</NavLink>
@@ -44,7 +42,7 @@ class Main extends Component {
                 <NavLink to="/modify-description">Description</NavLink>
               </li>
               <li>
-                <NavLink to="/add-note">Note</NavLink>
+                <NavLink to="/add-note">Add Note</NavLink>
               </li>
               <li>
                 <NavLink to="/force-modify-record">Modify</NavLink>
