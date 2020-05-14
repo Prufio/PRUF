@@ -27,7 +27,6 @@
     font-size: 6.0rem;
   }
 
-<<<<<<< Updated upstream
 
 
   ul.header li {
@@ -36,17 +35,10 @@
     margin: 0;
 
   }
-=======
->>>>>>> Stashed changes
   ul.header {
-    max-width: 20rem;
+    max-width: 15rem;
     background-color: rgb(0, 0, 0);
-<<<<<<< Updated upstream
     padding: 0;
-    
-=======
-    max-width: 20.0rem;
->>>>>>> Stashed changes
   }
 
   ul.header li a { 
@@ -55,14 +47,10 @@
     text-decoration: none;
     font-size: 1.6rem;
     padding: 2.0rem;
-<<<<<<< Updated upstream
     display:flex;
     flex-direction: column;
     justify-content: space-between;
     align-items: flex-end;
-=======
-    display: list-item;
->>>>>>> Stashed changes
   }
 
   .content {
