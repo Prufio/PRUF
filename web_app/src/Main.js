@@ -1,5 +1,7 @@
-import React, { Component } from "react";
+import React, { useState } from "react";
 import { Route, NavLink, HashRouter } from "react-router-dom";
+import Web3 from 'web3';
+
 import Home from "./Home";
 import AddNote from "./AddNote";
 import DecrementCounter from "./DecrementCounter";
@@ -10,8 +12,38 @@ import NewRecord from "./NewRecord";
 import RetrieveRecord from "./RetrieveRecord";
 import TransferAsset from "./TransferAsset";
 
-class Main extends Component {
-  render() {
+
+function testLog(toLog){
+  console.log(toLog);
+}
+
+var senderAddress;
+
+// class Main extends Component {
+//   render() {
+  function Main(){
+
+    let web3 = require('web3');
+      const ethereum = window.ethereum;
+      web3 = new Web3(web3.givenProvider);
+      var [addr, setAddr] = useState('');
+
+    window.addEventListener('load', async () => {
+      await ethereum.enable();
+      web3.eth.getAccounts().then(e => setAddr(e[0]));
+    
+      if (web3.eth.getAccounts().then(e => e === addr)) {
+        console.log("Serving current metamask address at accounts[0]");
+        senderAddress = addr;
+      }
+    
+      ethereum.on('accountsChanged', function (accounts) {
+        console.log('trying to change active address');
+        web3.eth.getAccounts().then(e => setAddr(e[0]));
+      })
+    })
+
+    testLog ("hello");
     return (
       <HashRouter>
         <div>
@@ -70,6 +102,7 @@ class Main extends Component {
       </HashRouter>
     );
   }
-}
-
+//}
+export {senderAddress};
+export {testLog};
 export default Main;
