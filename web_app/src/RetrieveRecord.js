@@ -1,5 +1,6 @@
 //import React, { useState } from "react";
 import React from "react";
+import Main, {testLog} from "./Main";
 import "./index.css";
 
 class RetrieveRecord extends React.Component {
@@ -26,7 +27,7 @@ class RetrieveRecord extends React.Component {
       //do stuff
       alert("Asset id is equal to one.");
     }
-
+    testLog('hello Again');
     console.log("Asset data:");
     console.log("Asset:", asset_id);
     console.log("Rights Holder:", rights_holder);
