@@ -1,9 +1,17 @@
+<<<<<<< HEAD
 import React, { useState } from "react";
 import "./index.css";
 import Web3 from "web3";
 import returnAbi from "./abi";
 import returnSAbi from "./sAbi";
 
+=======
+//import React, { useState } from "react";
+import React from "react";
+import {keccak256} from "js-sha3";
+import Main, {senderAddress, newRecordPack} from "./Main";
+import "./index.css";
+>>>>>>> DEV0.4
 
 class NewRecord extends React.Component {
   constructor(props) {
@@ -17,6 +25,7 @@ class NewRecord extends React.Component {
     };
   }
   mySubmitHandler = (event) => {
+    
     event.preventDefault();
     let asset_id = this.state.asset_id;
     let rights_holder = this.state.rights_holder;
@@ -24,8 +33,13 @@ class NewRecord extends React.Component {
     let count_down = this.state.count_down;
     let asset_IPFS1 = this.state.asset_IPFS1;
 
+<<<<<<< HEAD
     if (asset_id !== "0") {
       console.log('index is one');
+=======
+    if(asset_id != 0){
+    newRecordPack(asset_id, rights_holder, asset_class, count_down, asset_IPFS1, "0.04");
+>>>>>>> DEV0.4
     }
 
     console.log("Form data:");
@@ -36,14 +50,20 @@ class NewRecord extends React.Component {
     console.log("Asset IPFS Tag:", asset_IPFS1);
   };
   myChangeHandler = (event) => {
-    let nam = event.target.name;
-    let val = event.target.value;
-    this.setState({ [nam]: val });
+    let _name = event.target.name;
+    let _value = event.target.value;
+    this.setState({ [_name]: "0x" + keccak256(_value) });
   };
+
+  myNoHashHandler = (event) => {
+    let _name = event.target.name;
+    let _value = event.target.value;
+    this.setState({ [_name]: _value });
+  }
   render() {
     return (
       <form className="NRform" onSubmit={this.mySubmitHandler}>
-        <h2>New Asset{this.state.asset_id}</h2>
+        <h2>New Asset{}</h2>
         Asset ID:
         <input
           placeholder="Enter Asset ID"
@@ -65,7 +85,7 @@ class NewRecord extends React.Component {
           placeholder="Asset Class"
           type="text"
           name="asset_class"
-          onChange={this.myChangeHandler}
+          onChange={this.myNoHashHandler}
           required
         />
         {/* <label form="asset_class">Asset Class:</label>
@@ -79,7 +99,7 @@ class NewRecord extends React.Component {
           placeholder="Countdown Start"
           type="text"
           name="count_down"
-          onChange={this.myChangeHandler}
+          onChange={this.myNoHashHandler}
           required
         />
         IPFS1 (Description):
