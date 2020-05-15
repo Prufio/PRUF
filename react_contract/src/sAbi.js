@@ -262,6 +262,30 @@ function returnSAbi(){
             {
                 "inputs": [
                     {
+                        "internalType": "bytes32",
+                        "name": "_idxHash",
+                        "type": "bytes32"
+                    },
+                    {
+                        "internalType": "bytes32",
+                        "name": "_rgtHash",
+                        "type": "bytes32"
+                    }
+                ],
+                "name": "XcompareRightsHolder",
+                "outputs": [
+                    {
+                        "internalType": "string",
+                        "name": "",
+                        "type": "string"
+                    }
+                ],
+                "stateMutability": "view",
+                "type": "function"
+            },
+            {
+                "inputs": [
+                    {
                         "internalType": "string",
                         "name": "_idx",
                         "type": "string"
@@ -272,7 +296,7 @@ function returnSAbi(){
                         "type": "string"
                     }
                 ],
-                "name": "XcompareRightsHolder",
+                "name": "compareRightsHolder",
                 "outputs": [
                     {
                         "internalType": "string",
