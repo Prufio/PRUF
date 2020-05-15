@@ -11,6 +11,9 @@ import ModifyRecordStatus from "./ModifyRecordStatus";
 import NewRecord from "./NewRecord";
 import RetrieveRecord from "./RetrieveRecord";
 import TransferAsset from "./TransferAsset";
+import returnAbi from './abi';
+import returnSAbi from './sAbi';
+import Web3 from 'web3';
 
 
 function testLog(toLog){
@@ -106,3 +109,4 @@ var senderAddress;
 export {senderAddress};
 export {testLog};
 export default Main;
+export default App;

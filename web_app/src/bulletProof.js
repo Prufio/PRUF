@@ -1,0 +1,39 @@
+import React, { useState } from "react";
+import returnAbi from './abi';
+import returnSAbi from './sAbi';
+import Web3 from 'web3';
+
+function App () {
+    let web3 = require('web3');
+    const keccak256 = require('js-sha3').keccak256;
+    const bulletproof_frontend_addr = "0xCc2CBfd27fbf7AEF15FFfe119B91c3006B5DE0b0";
+    const bulletproof_storage_addr = "0xec7C54c5A4F454fA951077A6D200A73910eB1ae0";
+    const ethereum = window.ethereum;
+    web3 = new Web3(web3.givenProvider);
+    const myAbi = returnAbi();
+    const sAbi = returnSAbi();
+    const bulletproof = new web3.eth.Contract(myAbi, bulletproof_frontend_addr);
+    const storage = new web3.eth.Contract(sAbi, bulletproof_storage_addr);
+  
+    var [addr, setAddr] = useState('');
+  
+    window.addEventListener('load', async () => {
+  
+      await ethereum.enable();
+      web3.eth.getAccounts().then(e => setAddr(e[0]));
+      
+      if (web3.eth.getAccounts().then(e => e === addr)) {
+        console.log("Serving current metamask address at accounts[0]");
+  
+      }
+  
+      ethereum.on('accountsChanged', function (accounts) {
+        console.log('trying to change active address');
+        web3.eth.getAccounts().then(e => setAddr(e[0]));
+      })
+  
+    })
+  
+  }
+
+  export default App;
