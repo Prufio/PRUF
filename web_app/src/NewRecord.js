@@ -1,44 +1,8 @@
 //import React, { useState } from "react";
 import React from "react";
-import {senderAddress} from "./Main";
+import {keccak256} from "js-sha3";
+import Main, {senderAddress, newRecordPack} from "./Main";
 import "./index.css";
-import Web3 from "web3";
-import returnAbi from "./abi";
-import returnSAbi from "./sAbi";
-
-function sendNewRecord(
-  tx_val,
-  asset_id,
-  rights_holder,
-  asset_class,
-  count_down,
-  asset_IPFS1
-) {
-  let web3 = require("web3");
-  const keccak256 = require("js-sha3").keccak256;
-  const bulletproof_frontend_addr =
-    "0xD097ce9cC3f8402a7311c576c60f7CeE44baf711";
-
-  const bulletproof_storage_addr = 
-    "0x124B7F075b9b18aCd8Fb1C7C4c14A5EA959dDB82";
-
-  web3 = new Web3(web3.givenProvider);
-  //var [txHash, setTxHash] = useState('');
-  var txHash;
-
-
-  const myAbi = returnAbi();
-  const sAbi = returnSAbi();
-  const bulletproof = new web3.eth.Contract(myAbi, bulletproof_frontend_addr);
-  const storage = new web3.eth.Contract(sAbi, bulletproof_storage_addr);
-
-  console.log("Adding new asset...");
-  console.log("Using data: ", asset_id, rights_holder, asset_class, count_down, asset_IPFS1);
-  bulletproof.methods
-    .$newRecord(asset_id, rights_holder, asset_class, count_down, asset_IPFS1)
-    .send({ from: senderAddress, value: web3.utils.toWei(tx_val) })
-    .then((_txHash) => txHash);
-}
 
 class NewRecord extends React.Component {
   constructor(props) {
@@ -52,6 +16,7 @@ class NewRecord extends React.Component {
     };
   }
   mySubmitHandler = (event) => {
+    
     event.preventDefault();
     let asset_id = this.state.asset_id;
     let rights_holder = this.state.rights_holder;
@@ -59,17 +24,8 @@ class NewRecord extends React.Component {
     let count_down = this.state.count_down;
     let asset_IPFS1 = this.state.asset_IPFS1;
 
-    if (asset_id !== "0") {
-      var addr = ''; //MUST GET ADDRESS FROM Main.js
-      sendNewRecord(
-        addr, 
-        '0.04',
-        asset_id,
-        rights_holder,
-        asset_class,
-        count_down,
-        asset_IPFS1
-      )
+    if(asset_id != 0){
+    newRecordPack(asset_id, rights_holder, asset_class, count_down, asset_IPFS1, "0.04");
     }
 
     console.log("Form data:");
@@ -80,14 +36,20 @@ class NewRecord extends React.Component {
     console.log("Asset IPFS Tag:", asset_IPFS1);
   };
   myChangeHandler = (event) => {
-    let nam = event.target.name;
-    let val = event.target.value;
-    this.setState({ [nam]: val });
+    let _name = event.target.name;
+    let _value = event.target.value;
+    this.setState({ [_name]: "0x" + keccak256(_value) });
   };
+
+  myNoHashHandler = (event) => {
+    let _name = event.target.name;
+    let _value = event.target.value;
+    this.setState({ [_name]: _value });
+  }
   render() {
     return (
       <form className="NRform" onSubmit={this.mySubmitHandler}>
-        <h2>New Asset{this.state.asset_id}</h2>
+        <h2>New Asset{}</h2>
         Asset ID:
         <input
           placeholder="Enter Asset ID"
@@ -109,7 +71,7 @@ class NewRecord extends React.Component {
           placeholder="Asset Class"
           type="text"
           name="asset_class"
-          onChange={this.myChangeHandler}
+          onChange={this.myNoHashHandler}
           required
         />
         {/* <label form="asset_class">Asset Class:</label>
@@ -123,7 +85,7 @@ class NewRecord extends React.Component {
           placeholder="Countdown Start"
           type="text"
           name="count_down"
-          onChange={this.myChangeHandler}
+          onChange={this.myNoHashHandler}
           required
         />
         IPFS1 (Description):
