@@ -37,14 +37,9 @@ function App() {
     await ethereum.enable();
     web3.eth.getAccounts().then(e => setAddr(e[0]));
     
-
     if (web3.eth.getAccounts().then(e => e === addr)) {
       console.log("Serving current metamask address at accounts[0]");
 
-    }
-
-    if (web3.currentProvider.isMetaMask === false) {
-      await ethereum.enable();
     }
 
     ethereum.on('accountsChanged', function (accounts) {
@@ -52,16 +47,13 @@ function App() {
       web3.eth.getAccounts().then(e => setAddr(e[0]));
     })
 
-
   })
 
   const callForRecord = () => {
-    if (ethereum) {
     console.log('Scouring the blockchain for information!');
     storage.methods.XcompareRightsHolder(index, RH)
     .call({from: addr})
     .then(result => setResult(result));
-    }
   }
 
   const txProvenance = () => {
