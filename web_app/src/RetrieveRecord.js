@@ -1,63 +1,74 @@
 import React, { useState } from "react";
-import Main, {testLog} from "./Main";
-import "./index.css";
+import { keccak256 } from "js-sha3";
+import Web3Listener from "./Web3Listener";
 
-class RetrieveRecord extends React.Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      asset_id: "",
-      rights_holder: "",
-      status: "",
-      count_down: "",
-      asset_IPFS1: "",
-      asset_IPFS2: "",
-    };
-  }
-  mySubmitHandler = (event) => {
-    event.preventDefault();
-    let asset_id = this.state.asset_id;
-    let rights_holder = this.state.rights_holder;
-    let status = this.state.status;
-    let count_down = this.state.count_down;
-    let asset_IPFS1 = this.state.asset_IPFS1;
-    let asset_IPFS2 = this.state.asset_IPFS2;
-    if (asset_id === "1") {
-      //do stuff
-      alert("Asset id is equal to one.");
-    }
-    testLog('hello Again');
-    console.log("Asset data:");
-    console.log("Asset:", asset_id);
-    console.log("Rights Holder:", rights_holder);
-    console.log("status:", status);
-    console.log("Count:", count_down);
-    console.log("Asset IPFS description:", asset_IPFS1);
-    console.log("Asset IPFS note:", asset_IPFS2);
+function RetrieveRecord() {
+  let web3 = Web3Listener("web3");
+  let addr = Web3Listener("addr");
+  let bulletproof = Web3Listener("bulletproof");
+
+  var [idxHash, setidxHash] = useState("");
+  var [RH, setRH] = useState("");
+  var [AC, setAC] = useState("");
+  var [LS, setLS] = useState("");
+  var [IPFS1, setIPFS1] = useState("");
+  var [txHash, setTxHash] = useState("");
+
+  const _newRecord = () => {
+    console.log("Checking with main...");
+    console.log("Shipping data: ", idxHash, RH, AC, LS, IPFS1);
+    bulletproof.methods
+      .$newRecord(idxHash, RH, AC, LS, IPFS1)
+      .send({ from: addr, value: web3.utils.toWei("0.04") })
+      .on("receipt", (receipt) => {
+        setTxHash(receipt.transactionHash);
+      });
+    console.log(txHash);
   };
-  myChangeHandler = (event) => {
-    let nam = event.target.name;
-    let val = event.target.value;
-    this.setState({ [nam]: val });
-  };
-  render() {
-    return (
-      <form className="RRform" onSubmit={this.mySubmitHandler}>
-        <h2>Search{this.state.asset_id}</h2>
+
+  return (
+    <form className="NRform" onSubmit={_newRecord}>
+      <h2>New Asset</h2>
         Asset ID:
         <input
-          placeholder="Enter Asset ID"
           type="text"
-          name="asset_id"
-          onChange={this.myChangeHandler}
+          name="idxHashField"
+          placeholder='Asset ID'
           required
+          onChange={(e) => setidxHash("0x" + keccak256(e.target.value))}
         />
-
+        <br></br>
+        Rights Holder:
+        <input
+          type="text"
+          name="RHField"
+          onChange={(e) => setRH("0x" + keccak256(e.target.value))}
+        />
+        <br></br>
+        Asset Class:
+        <input
+          type="text"
+          name="ACField"
+          onChange={(e) => setAC(e.target.value)}
+        />
+        <br></br>
+        Log Start Value:
+        <input
+          type="text"
+          name="LSField"
+          onChange={(e) => setLS(e.target.value)}
+        />
+        <br></br>
+        Description:
+        <input
+          type="text"
+          name="IPFS1Field"
+          onChange={(e) => setIPFS1("0x" + keccak256(e.target.value))}
+        />
         <br />
-        <input type="submit" value="Retrieve Record" />
+        <input type="submit" value="New Record" />
       </form>
-    );
-  }
+  );
 }
 
 export default RetrieveRecord;
