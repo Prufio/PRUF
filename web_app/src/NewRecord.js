@@ -15,8 +15,7 @@ function NewRecord() {
   var [txHash, setTxHash] = useState("");
 
   const _newRecord = () => {
-    console.log("Checking with main...");
-    console.log(
+    console.log(   //------------------------------------------remove ------security
       "Sending data: ",
       idxHash,
       rgtHash,

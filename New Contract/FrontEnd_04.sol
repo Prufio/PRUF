@@ -1,23 +1,23 @@
-pragma solidity 0.6.0;
+pragma solidity ^0.6.0;
 //pragma experimental ABIEncoderV2;
 
 import "./PullPayment.sol";
 
 
 contract StorageInterface {
-    function emitRecord (bytes32 _idxHash) external {}
-    function retrieveIPFSData (bytes32 _idxHash) external returns (bytes32, uint8, uint16, bytes32, bytes32) {}
-    function retrieveRecord (bytes32 _idxHash) external returns (bytes32, uint8, uint8, uint16, uint, uint) {}
     function newRecord(bytes32 _userHash, bytes32 _idxHash, bytes32 _rgt, uint16 _assetClass, uint _countDownStart, bytes32 _IPFS1) external {}
     function modifyRecord(bytes32 _userHash, bytes32 _idxHash, bytes32 _rgt, uint8 _status, uint _countDown, uint8 _forceCount) external {}
     function modifyIPFS (bytes32 _userHash, bytes32 _idxHash, bytes32 _IPFS1, bytes32 _IPFS2) external {}
-    function retrieveRecorder (bytes32 _idxHash) external returns (bytes32, bytes32) {}
+    
+    function retrieveRecorder (bytes32 _idxHash) external returns (bytes32, bytes32, bytes32) {}
     function retrieveCosts (uint16 _assetClass) external returns (uint, uint, uint, uint, uint, uint) {}
-    function emitRightsHolder (bytes32 _idxHash) external {}
+    
+    function retrieveRecord (bytes32 _idxHash) external returns (bytes32, uint8, uint8, uint16, uint, uint, bytes32) {}
+    function retrieveExtendedData (bytes32 _idxHash) external returns (bytes32, uint8, uint16, bytes32, bytes32, bytes32) {}
+    
+    function BlockchainVerifyRightsHolder (bytes32 _idxHash, bytes32 _rgtHash) external returns(uint) {}
 }    
 
-
-    
 
 contract FrontEnd is PullPayment, Ownable {
     
@@ -84,18 +84,18 @@ contract FrontEnd is PullPayment, Ownable {
     }
     
     
-    /*
+    /*--------------------------------------------------------------------------------------CHECK FOR REMOVAL
      * @dev TESTING FUNCTIONS ----------------------------------
      */
-    function getAnyHash (string calldata _idx) external pure returns (bytes32) {
+    // function getAnyHash (string calldata _idx) external pure returns (bytes32) {
         
-        return keccak256(abi.encodePacked(_idx));
-    }
+    //     return keccak256(abi.encodePacked(_idx));
+    // }
     
-    function getBlock () external view returns (bytes32) {
+    // function getBlock () external view returns (bytes32) {
         
-        return keccak256(abi.encodePacked(block.number));
-    }
+    //     return keccak256(abi.encodePacked(block.number));
+    // }
     
   
 //--------------------------------------External functions--------------------------------------------//
@@ -116,9 +116,6 @@ contract FrontEnd is PullPayment, Ownable {
         );
         
         bytes32 senderHash = keccak256(abi.encodePacked(msg.sender));
-        //bytes32 _idxHash = keccak256(abi.encodePacked(_idx));
-        //bytes32 _rgtHash = keccak256(abi.encodePacked(_rgt));
-        //bytes32 _IPFS = keccak256(abi.encodePacked(_IPFSs));
         
         Storage.newRecord(senderHash, 
                           _idxHash,
@@ -147,9 +144,9 @@ contract FrontEnd is PullPayment, Ownable {
     /*
      * @dev Modify **Record**.rightsHolder without confirmation required
      */
-    function $forceModRecord (string memory _idx, string memory _rgt) public payable {
+    function $forceModRecord (bytes32 _idxHash, bytes32 _rgtHash) public payable returns (uint8) {
         
-        Record memory costrec = getRecord(keccak256(abi.encodePacked(_idx)));
+        Record memory costrec = getRecord(keccak256(abi.encodePacked(_idxHash)));
         
         Costs memory cost = getCost(costrec.assetClass);
         
@@ -159,9 +156,6 @@ contract FrontEnd is PullPayment, Ownable {
         );
         
         Record memory rec;
-        
-        bytes32 _idxHash = keccak256(abi.encodePacked(_idx)); // Temp
-        bytes32 _rgtHash = keccak256(abi.encodePacked(_rgt)); // Temp
         
         require( 
             rec.status < 200 ,
@@ -177,18 +171,17 @@ contract FrontEnd is PullPayment, Ownable {
         writeRecord (_idxHash, rec);
         
         deductPayment(cost.forceModifyCost);
+        
+        return rec.forceModCount;
     }
     
     
     /*
      * @dev Modify **Record**.status with confirmation required
      */
-    function _modStatus (bytes32 _idxHash, bytes32 _rgtHash, uint8 _status) public { 
+    function _modStatus (bytes32 _idxHash, bytes32 _rgtHash, uint8 _status) public returns (uint8) { 
        
         Record memory rec;
-       
-        //bytes32 _rgtHash = keccak256(abi.encodePacked(_rgt)); // Temp
-        //bytes32 _idxHash = keccak256(abi.encodePacked(_idx)); // Temp
        
         rec = getRecord (_idxHash);
         
@@ -205,18 +198,17 @@ contract FrontEnd is PullPayment, Ownable {
         rec.status = _status;
         
         writeRecord (_idxHash, rec);
+        
+        return rec.status;
     }
     
     
     /*
      * @dev Decrement **Record**.countdown with confirmation required
      */
-    function _decCounter (bytes32 _idxHash, bytes32 _rgtHash, uint _decAmount) public { 
+    function _decCounter (bytes32 _idxHash, bytes32 _rgtHash, uint _decAmount) public returns (uint){ 
         
         Record memory rec;
-       
-        //bytes32 _rgtHash = keccak256(abi.encodePacked(_rgt)); // Temp
-        //bytes32 _idxHash = keccak256(abi.encodePacked(_idx)); // Temp
       
         rec = getRecord (_idxHash);
         
@@ -237,15 +229,15 @@ contract FrontEnd is PullPayment, Ownable {
         }
             
         writeRecord (_idxHash, rec);
+        return(rec.countDown);
     }
     
     
     /*
      * @dev Transfer Rights to new rightsHolder with confirmation
      */
-    function $transferAsset (bytes32 _idxHash, bytes32 _rgtHash, bytes32 _newrgtHash) public payable { 
+    function $transferAsset (bytes32 _idxHash, bytes32 _rgtHash, bytes32 _newrgtHash) public payable returns (uint8) { 
         
-        //Record memory costrec = getRecord(keccak256(abi.encodePacked(_idx)));
         Record memory costrec = getRecord(_idxHash);
         
         Costs memory cost = getCost(costrec.assetClass);
@@ -257,9 +249,6 @@ contract FrontEnd is PullPayment, Ownable {
         
         Record memory rec;
         
-        //bytes32 _rgtHash = keccak256(abi.encodePacked(_rgt)); // Temp
-        //bytes32 _newrgtHash = keccak256(abi.encodePacked(_newrgt)); // Temp
-        //bytes32 _idxHash = keccak256(abi.encodePacked(_idx)); // Temp
       
         rec = getRecord (_idxHash);
         
@@ -288,21 +277,19 @@ contract FrontEnd is PullPayment, Ownable {
         writeRecord (_idxHash, rec);
         
         deductPayment(cost.transferAssetCost);
+        
+        return (170);
     }
     
     
     /*
      * @dev Modify **Record**.IPFS1 with confirmation
      */
-    function _modIPFS1 (bytes32 _idxHash, bytes32 _rgtHash, bytes32 _IPFSHash ) public { 
+    function _modIPFS1 (bytes32 _idxHash, bytes32 _rgtHash, bytes32 _IPFSHash ) public returns (bytes32) { 
        
         Record memory rec;
         
-        //bytes32 _IPFSHash = keccak256(abi.encodePacked(_IPFS)); // Temp
-        //bytes32 _idxHash = keccak256(abi.encodePacked(_idx)); // Temp
-        //bytes32 _rgtHash = keccak256(abi.encodePacked(_rgt)); // Temp
-        
-        rec = getRecordIPFS (_idxHash);
+        rec = getExtendedData (_idxHash);
         
         require( 
             rec.status < 200 ,
@@ -322,13 +309,15 @@ contract FrontEnd is PullPayment, Ownable {
         rec.IPFS1 = _IPFSHash;
         
         writeRecordIPFS (_idxHash, rec);
+        
+        return rec.IPFS1;
     }
     
     
     /*
      * @dev Modify **Record**.IPFS2 with confirmation
      */
-    function $addIPFS2Note (bytes32 _idxHash, bytes32 _rgtHash, bytes32 _IPFSHash ) public payable { 
+    function $addIPFS2Note (bytes32 _idxHash, bytes32 _rgtHash, bytes32 _IPFSHash ) public payable returns (bytes32) { 
        
         //Record memory costrec = getRecord(keccak256(abi.encodePacked(_idx)));
         Record memory costrec = getRecord(_idxHash);
@@ -341,12 +330,8 @@ contract FrontEnd is PullPayment, Ownable {
         );
         
         Record memory rec;
-        
-        //bytes32 _IPFSHash = keccak256(abi.encodePacked(_IPFS)); // Temp
-        //bytes32 _idxHash = keccak256(abi.encodePacked(_idx)); // Temp
-        //bytes32 _rgtHash = keccak256(abi.encodePacked(_rgt)); // Temp
 
-        rec = getRecordIPFS (_idxHash);
+        rec = getExtendedData (_idxHash);
         
         require( 
             rec.status < 200 ,
@@ -368,38 +353,16 @@ contract FrontEnd is PullPayment, Ownable {
         writeRecordIPFS (_idxHash, rec);
         
         deductPayment(cost.createNoteCost);
-    }
-    
-    
-    /*
-     * @dev Deducts payment from transaction 
-     */
-    function deductPayment (uint _amount) private {
-       
-        uint messageValue = msg.value;
-        uint change;
-
-        change = messageValue.sub(_amount);
         
-        _asyncTransfer(mainWallet, _amount);
-        _asyncTransfer(msg.sender, change);
+        return rec.IPFS2;
     }
     
     
-    /*
-     * @dev Withdraws user's Escrow amount
-     */
-    function $withdraw() public virtual payable {
-        
-        withdrawPayments(msg.sender);
-    }
-    
-
     /*
      * @dev Get a Record from Storage @ idxHash
      */
     function getRecord (bytes32 _idxHash) private returns (Record memory) { 
-        
+        bytes32 datahash;
         Record memory rec;
         
         (rec.rightsHolder, 
@@ -407,7 +370,8 @@ contract FrontEnd is PullPayment, Ownable {
          rec.forceModCount, 
          rec.assetClass, 
          rec.countDown, 
-         rec.countDownStart) = Storage.retrieveRecord (_idxHash); // Get record from storage contract
+         rec.countDownStart,
+         datahash) = Storage.retrieveRecord (_idxHash); // Get record from storage contract
             
         return (rec); // Returns Record struct rec and checkout supplied key
     }
@@ -416,25 +380,27 @@ contract FrontEnd is PullPayment, Ownable {
     /*
      * @dev Get an IPFS Record from Storage @ idxHash
      */
-    function getRecordIPFS (bytes32 _idxHash) private returns (Record memory) { 
-       
+    function getExtendedData (bytes32 _idxHash) private returns (Record memory) { 
+        
+        bytes32 datahash;
         Record memory rec;
         
         (rec.rightsHolder, 
          rec.status, 
          rec.assetClass, 
          rec.IPFS1, 
-         rec.IPFS2) = Storage.retrieveIPFSData (_idxHash);//get record from storage contract
+         rec.IPFS2,
+         datahash) = Storage.retrieveExtendedData (_idxHash);//get record from storage contract
         
         return (rec); // Returns record struct rec and checkout supplied key
     }
     
     
     function getRecorders (bytes32 _idxHash) private returns (Record memory) { 
-        
+        bytes32 datahash;
         Record memory rec;
 
-        (rec.lastRecorder, rec.recorder) = Storage.retrieveRecorder (_idxHash); // Get record from storage contract
+        (rec.lastRecorder, rec.recorder, datahash) = Storage.retrieveRecorder (_idxHash); // Get record from storage contract
 
         return (rec); // Returns record struct rec and checkout supplied key
     }
@@ -470,58 +436,90 @@ contract FrontEnd is PullPayment, Ownable {
     }
     
     
-    /*
-     * @dev Wrapper for getRecord  //does this need to exist in production?????!!!!!!!!!!!!
-     */
-    function _getRecord (string calldata _idx) external returns (bytes32, uint8, uint8, uint16, uint, uint) {
+    /*--------------------------------------------------------------------------------------CHECK FOR REMOVAL
+    //  * @dev Wrapper for getRecord  //does this need to exist in production?????!!!!!!!!!!!!
+    //  */
+    // function _getRecord (string calldata _idx) external returns (bytes32, uint8, uint8, uint16, uint, uint) {
          
-        Record memory rec = getRecord(keccak256(abi.encodePacked(_idx)));
+    //     Record memory rec = getRecord(keccak256(abi.encodePacked(_idx)));
          
-        return (rec.rightsHolder,
-                rec.status,
-                rec.forceModCount,
-                rec.assetClass,
-                rec.countDown,
-                rec.countDownStart);
-    }
+    //     return (rec.rightsHolder,
+    //             rec.status,
+    //             rec.forceModCount,
+    //             rec.assetClass,
+    //             rec.countDown,
+    //             rec.countDownStart);
+    // }
      
 
-    /*
-     * @dev Wrapper for getRecordIPFS  //does this need to exist in production?????!!!!!!!!!!!!
-     */ 
-    function _getRecordIPFS (string calldata _idx) external returns (bytes32, uint8, uint16, bytes32, bytes32) {
+    /*--------------------------------------------------------------------------------------CHECK FOR REMOVAL
+    //  * @dev Wrapper for getRecordIPFS  //does this need to exist in production?????!!!!!!!!!!!!
+    //  */ 
+    // function _getRecordIPFS (string calldata _idx) external returns (bytes32, uint8, uint16, bytes32, bytes32) {
          
-        Record memory rec = getRecordIPFS(keccak256(abi.encodePacked(_idx)));
+    //     Record memory rec = getRecordIPFS(keccak256(abi.encodePacked(_idx)));
          
-        return (rec.rightsHolder,
-                rec.status,
-                rec.assetClass,
-                rec.IPFS1,
-                rec.IPFS2);
-    }
+    //     return (rec.rightsHolder,
+    //             rec.status,
+    //             rec.assetClass,
+    //             rec.IPFS1,
+    //             rec.IPFS2);
+    // }
     
 
-    /*
-     * @dev Wrapper for getRecorders  //does this need to exist in production?????!!!!!!!!!!!!
-     */ 
-    function _getRecorders (string calldata _idx) external returns (bytes32, bytes32) {
+    /*--------------------------------------------------------------------------------------CHECK FOR REMOVAL
+    //  * @dev Wrapper for getRecorders  //does this need to exist in production?????!!!!!!!!!!!!
+    //  */ 
+    // function _getRecorders (string calldata _idx) external returns (bytes32, bytes32) {
          
-        Record memory rec = getRecorders(keccak256(abi.encodePacked(_idx)));
+    //     Record memory rec = getRecorders(keccak256(abi.encodePacked(_idx)));
          
-        return (rec.lastRecorder, rec.recorder);
-    }
+    //     return (rec.lastRecorder, rec.recorder);
+    // }
     
     
-    /*
-     * @dev Wrapper for emitRecord
-     */
-    function _emitRecord (string calldata _idx) external {
+    /*--------------------------------------------------------------------------------------CHECK FOR REMOVAL
+    //  * @dev Wrapper for emitRecord
+    //  */
+    // function _emitRecord (string calldata _idx) external {
         
-        Storage.emitRecord (keccak256(abi.encodePacked(_idx)));
+    //     Storage.emitRecord (keccak256(abi.encodePacked(_idx)));
+    // }
+   
+   
+
+    /*--------------------------------------------------------------------------------------CHECK FOR REMOVAL
+    function XemitRightsHolder (bytes32 _idx) external {
+        
+        Storage.emitRightsHolder (_idx);
+    }*/
+    
+    
+    
+    /*--------------------------------------------------------------------------------------PAYMENT FUNCTIONS
+     * @dev Deducts payment from transaction 
+     */
+    function deductPayment (uint _amount) private {
+       
+        uint messageValue = msg.value;
+        uint change;
+
+        change = messageValue.sub(_amount);
+        
+        _asyncTransfer(mainWallet, _amount);
+        _asyncTransfer(msg.sender, change);
     }
-   
-   
+    
+    
     /*
+     * @dev Withdraws user's Escrow amount
+     */
+    function $withdraw() public virtual payable {
+        
+        withdrawPayments(msg.sender);
+    }
+    
+        /*
      * @dev Returns cost from database and returns Costs struct
      */
     function getCost (uint16 _class) private returns(Costs memory) {
@@ -537,12 +535,5 @@ contract FrontEnd is PullPayment, Ownable {
         return (cost);
     }
     
-    /*
-     *
-     */
-    function XemitRightsHolder (bytes32 _idx) external {
-        
-        Storage.emitRightsHolder (_idx);
-    }
     
 }

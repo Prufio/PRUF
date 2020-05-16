@@ -139,8 +139,8 @@ contract Storage is Ownable {
 
     event REPORT (string _msg);
     //event EMIT_RECORD (Record record);  //use when ABIencoder V2 is ready for prime-time
-    event EMIT_RECORD (bytes32, bytes32, bytes32, uint8, uint8, uint16, uint, uint, bytes32, bytes32);
-    event EMIT_RIGHTS_HOLDER (bytes32);
+    //event EMIT_RECORD (bytes32, bytes32, bytes32, uint8, uint8, uint16, uint, uint, bytes32, bytes32);
+    //event EMIT_RIGHTS_HOLDER (bytes32);
 
 //--------------------------------Internal Admin functions / onlyowner---------------------------------//
     
@@ -393,7 +393,7 @@ contract Storage is Ownable {
     /*
      * @dev Return abbreviated record (IPFS data only)
      */
-    function retrieveIPFSData (bytes32 _idxHash) external view addrAuth(2) exists (_idxHash) returns (bytes32, uint8, uint16, bytes32, bytes32, bytes32) {  
+    function retrieveExtendedData (bytes32 _idxHash) external view addrAuth(2) exists (_idxHash) returns (bytes32, uint8, uint16, bytes32, bytes32, bytes32) {  
         
         bytes32 datahash = keccak256(abi.encodePacked(database[_idxHash].rightsHolder,
                                                       database[_idxHash].status, 
@@ -421,37 +421,50 @@ contract Storage is Ownable {
     }
     
     
-    /*
-     * @dev Emit a complete record record minus checkout and mutex data 
-     */
-    function emitRecord (bytes32 _idxHash) external addrAuth(1) exists (_idxHash) { 
+    // /*
+    //  * @dev Emit a complete record record minus checkout and mutex data 
+    //  */
+    // function emitRecord (bytes32 _idxHash) external addrAuth(1) exists (_idxHash) { 
         
-        emit EMIT_RECORD (database[_idxHash].recorder, //emit EMIT_RECORD (database[_idx]);  //use when ABIencoder V2 is ready for prime-time
-                        database[_idxHash].rightsHolder,
-                        database[_idxHash].lastRecorder,
-                        database[_idxHash].status, 
-                        database[_idxHash].forceModCount, 
-                        database[_idxHash].assetClass, 
-                        database[_idxHash].countDown, 
-                        database[_idxHash].countDownStart,
-                        database[_idxHash].IPFS1, 
-                        database[_idxHash].IPFS2);
-    }
+    //     emit EMIT_RECORD (database[_idxHash].recorder, //emit EMIT_RECORD (database[_idx]);  //use when ABIencoder V2 is ready for prime-time
+    //                     database[_idxHash].rightsHolder,
+    //                     database[_idxHash].lastRecorder,
+    //                     database[_idxHash].status, 
+    //                     database[_idxHash].forceModCount, 
+    //                     database[_idxHash].assetClass, 
+    //                     database[_idxHash].countDown, 
+    //                     database[_idxHash].countDownStart,
+    //                     database[_idxHash].IPFS1, 
+    //                     database[_idxHash].IPFS2);
+    // }
     
     
     /*
      * @dev Compare record.rightsholder with a hashed string // ------------------------testing
      */
-    function XcompareRightsHolder (bytes32 _idxHash, bytes32 _rgtHash) external view addrAuth(1) returns(string memory) {
+    function CompareRightsHolder (bytes32 _idxHash, bytes32 _rgtHash) public view addrAuth(1) returns(uint) {
          
         if (_rgtHash == database[_idxHash].rightsHolder) {
-            return "Rights holder match confirmed";
+            return 1;
         } else {
-            return "Rights holder does not match";
+            return 0;
         }
+        
     }
     
-     function compareRightsHolder (string calldata _idx, string calldata _rgt) external view addrAuth(1) returns(string memory) {
+    function BlockchainVerifyRightsHolder (bytes32 _idxHash, bytes32 _rgtHash) internal addrAuth(1) returns(uint) {
+         
+        if (_rgtHash == database[_idxHash].rightsHolder) {
+            emit REPORT("Rights holder match confirmed");
+            return 1;
+        } else {
+            emit REPORT("Rights holder does not match");
+            return 0;
+        }
+        
+    }
+    
+     function Admin_compare_rgt (string calldata _idx, string calldata _rgt) external view onlyOwner returns(string memory) {
          
         if (keccak256(abi.encodePacked(_rgt)) == database[keccak256(abi.encodePacked(_idx))].rightsHolder) {
             return "Rights holder match confirmed";
@@ -479,15 +492,6 @@ contract Storage is Ownable {
         }
         
         return(_senderHash,lastrec);
-    }
-    
-    
-    /*
-     * @dev Emit RightsHolder
-     */ 
-    function emitRightsHolder (bytes32 _idxHash) external addrAuth(1) exists (_idxHash) {
-        
-        emit EMIT_RIGHTS_HOLDER (database[_idxHash].rightsHolder);
     }
     
 }

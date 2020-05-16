@@ -1,5 +1,4 @@
-
-function returnAbi(){
+function returnFrontEndAbi(){
     return(
       [
         {
@@ -435,4 +434,4 @@ function returnAbi(){
     );
 }
 
-export default returnAbi;
+export default returnFrontEndAbi;

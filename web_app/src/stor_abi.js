@@ -1,4 +1,4 @@
-function returnSAbi(){
+function returnStorageAbi(){
     return(
         [
             {
@@ -641,4 +641,4 @@ function returnSAbi(){
     );
 }
 
-export default returnSAbi;
+export default returnStorageAbi;

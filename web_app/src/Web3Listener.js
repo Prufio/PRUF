@@ -1,7 +1,7 @@
-import  { useState } from 'react';
+import { useState } from 'react';
 import Web3 from 'web3';
-import returnAbi from './abi';
-import returnSAbi from './sAbi';
+import returnStorageAbi from './stor_abi';
+import returnFrontEndAbi from './front_abi';
 
 
 function Web3Listener(request) {
@@ -11,10 +11,10 @@ function Web3Listener(request) {
     var [addr, setAddr] = useState('');
     const bulletproof_frontend_addr = "0xCc2CBfd27fbf7AEF15FFfe119B91c3006B5DE0b0";
     const bulletproof_storage_addr = "0xec7C54c5A4F454fA951077A6D200A73910eB1ae0";
-    const myAbi = returnAbi();
-    const sAbi = returnSAbi();
-    const bulletproof = new web3.eth.Contract(myAbi, bulletproof_frontend_addr);
-    const storage = new web3.eth.Contract(sAbi, bulletproof_storage_addr);
+    const frontEnd_abi = returnFrontEndAbi();
+    const storage_abi = returnStorageAbi();
+    const bulletproof = new web3.eth.Contract(frontEnd_abi, bulletproof_frontend_addr);
+    const storage = new web3.eth.Contract(storage_abi, bulletproof_storage_addr);
 
     window.addEventListener('load', async () => {
 
