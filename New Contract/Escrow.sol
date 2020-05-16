@@ -1,33 +1,38 @@
-pragma solidity 0.6.0;
+pragma solidity ^0.6.0;
 
 import "./SafeMath.sol";
 import "./Ownable.sol";
 import "./Address.sol";
 
- /**
-  * @title Escrow
-  * @dev Base escrow contract, holds funds designated for a payee until they
-  * withdraw them.
-  *
-  * Intended usage: This contract (and derived escrow contracts) should be a
-  * standalone contract, that only interacts with the contract that instantiated
-  * it. That way, it is guaranteed that all Ether will be handled according to
-  * the `Escrow` rules, and there is no need to check for payable functions or
-  * transfers in the inheritance tree. The contract that uses the escrow as its
-  * payment method should be its owner, and provide public methods redirecting
-  * to the escrow's deposit and withdraw.
-  */
+
+/**
+ * @title Escrow
+ * @dev Base escrow contract, holds funds designated for a payee until they
+ * withdraw them.
+ *
+ * Intended usage: This contract (and derived escrow contracts) should be a
+ * standalone contract, that only interacts with the contract that instantiated
+ * it. That way, it is guaranteed that all Ether will be handled according to
+ * the `Escrow` rules, and there is no need to check for payable functions or
+ * transfers in the inheritance tree. The contract that uses the escrow as its
+ * payment method should be its owner, and provide public methods redirecting
+ * to the escrow's deposit and withdraw.
+ */
 contract Escrow is Ownable {
-    using SafeMath for uint;
+    using SafeMath for uint256;
     using Address for address payable;
 
-    event Deposited(address indexed payee, uint weiAmount);
-    event Withdrawn(address indexed payee, uint weiAmount);
-    event Transferred(address indexed payer, address indexed payee, uint weiAmount);
+    event Deposited(address indexed payee, uint256 weiAmount);
+    event Withdrawn(address indexed payee, uint256 weiAmount);
+    event Transferred(
+        address indexed payer,
+        address indexed payee,
+        uint256 weiAmount
+    );
 
-    mapping(address => uint) private _deposits;
+    mapping(address => uint256) private _deposits;
 
-    function depositsOf(address payee) public view returns (uint) {
+    function depositsOf(address payee) public view returns (uint256) {
         return _deposits[payee];
     }
 
@@ -36,7 +41,7 @@ contract Escrow is Ownable {
      * @param payee The destination address of the funds.
      */
     function deposit(address payee) public virtual payable onlyOwner {
-        uint amount = msg.value;
+        uint256 amount = msg.value;
         _deposits[payee] = _deposits[payee].add(amount);
 
         emit Deposited(payee, amount);
@@ -53,7 +58,7 @@ contract Escrow is Ownable {
      * @param payee The address whose funds will be withdrawn and transferred to.
      */
     function withdraw(address payable payee) public virtual onlyOwner {
-        uint payment = _deposits[payee];
+        uint256 payment = _deposits[payee];
 
         _deposits[payee] = 0;
 
@@ -61,8 +66,8 @@ contract Escrow is Ownable {
 
         emit Withdrawn(payee, payment);
     }
-    
-     /**
+
+    /**
      * @dev transfer balances within the escrow._deposits mapping  (NOT IMPLEMENTED)
      *
      * this would potentially be used to pay for registration modifications from the "escrow" account. We dont know if this is safe.
@@ -79,7 +84,4 @@ contract Escrow is Ownable {
         emit Transferred(payer, payee, payment);
     }
     */
-    
-    
-    
 }
