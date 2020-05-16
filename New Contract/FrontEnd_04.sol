@@ -100,7 +100,11 @@ contract FrontEnd is PullPayment, Ownable {
      * @dev Set storage contract to interface with
      */
     function _setStorageContract(address _storageAddress) public onlyOwner {
-        require(_storageAddress != address(0));
+        require(
+            _storageAddress != address(0),
+            "storage address cannot be zero"
+        );
+
         Storage = StorageInterface(_storageAddress);
     }
 
@@ -109,6 +113,15 @@ contract FrontEnd is PullPayment, Ownable {
      */
     function _setMainWallet(address _addr) public onlyOwner {
         mainWallet = _addr;
+    }
+
+    // --------------------------------------TESTING FUNCTIONS--------------------------------------------//
+    function getAnyHash(string calldata _idx) external pure returns (bytes32) {
+        return keccak256(abi.encodePacked(_idx));
+    }
+
+    function getBlock() external view returns (bytes32) {
+        return keccak256(abi.encodePacked(block.number));
     }
 
     //--------------------------------------External functions--------------------------------------------//
