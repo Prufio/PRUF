@@ -1,5 +1,5 @@
-pragma solidity ^0.6.0;
-//pragma experimental ABIEncoderV2;
+// SPDX-License-Identifier: UNLICENSED
+pragma solidity ^0.6.2;
 
 import "./PullPayment.sol";
 
@@ -30,10 +30,10 @@ contract StorageInterface {
         bytes32 _IPFS2
     ) external {}
 
-    function retrieveRecorder(bytes32 _idxHash)
-        external
-        returns (bytes32, bytes32, bytes32)
-    {}
+    // function retrieveRecorder(bytes32 _idxHash)
+    //     external
+    //     returns (bytes32, bytes32, bytes32)
+    // {}
 
     function retrieveCosts(uint16 _assetClass)
         external
@@ -42,13 +42,24 @@ contract StorageInterface {
 
     function retrieveRecord(bytes32 _idxHash)
         external
-        returns (bytes32, uint8, uint8, uint16, uint256, uint256, bytes32)
+        returns (
+            bytes32,
+            bytes32,
+            bytes32,
+            uint8,
+            uint8,
+            uint16,
+            uint256,
+            uint256,
+            bytes32,
+            bytes32
+        )
     {}
 
-    function retrieveExtendedData(bytes32 _idxHash)
-        external
-        returns (bytes32, uint8, uint16, bytes32, bytes32, bytes32)
-    {}
+    // function retrieveExtendedData(bytes32 _idxHash)
+    //     external
+    //     returns (bytes32, uint8, uint16, bytes32, bytes32, bytes32)
+    // {}
 
     function BlockchainVerifyRightsHolder(bytes32 _idxHash, bytes32 _rgtHash)
         external
@@ -309,7 +320,7 @@ contract FrontEnd is PullPayment, Ownable {
     {
         Record memory rec;
 
-        rec = getExtendedData(_idxHash);
+        rec = getRecord(_idxHash);
 
         require(rec.status < 200, "MI1:ERR-Record locked");
 
@@ -346,7 +357,7 @@ contract FrontEnd is PullPayment, Ownable {
 
         Record memory rec;
 
-        rec = getExtendedData(_idxHash);
+        rec = getRecord(_idxHash);
 
         require(rec.status < 200, "MI1:ERR-Record locked");
 
@@ -373,53 +384,36 @@ contract FrontEnd is PullPayment, Ownable {
      * @dev Get a Record from Storage @ idxHash
      */
     function getRecord(bytes32 _idxHash) private returns (Record memory) {
-        bytes32 datahash;
         Record memory rec;
 
-        (
-            rec.rightsHolder,
-            rec.status,
-            rec.forceModCount,
-            rec.assetClass,
-            rec.countDown,
-            rec.countDownStart,
-            datahash
-        ) = Storage.retrieveRecord(_idxHash); // Get record from storage contract
+        {
+            (
+                //Start of scope limit for stack depth
+                bytes32 _recorder,
+                bytes32 _rightsHolder,
+                bytes32 _lastRecorder,
+                uint8 _status,
+                uint8 _forceModCount,
+                uint16 _assetClass,
+                uint256 _countDown,
+                uint256 _countDownStart,
+                bytes32 _IPFS1,
+                bytes32 _IPFS2
+            ) = Storage.retrieveRecord(_idxHash); // Get record from storage contract
 
-        return (rec); // Returns Record struct rec and checkout supplied key
-    }
+            rec.recorder = _recorder;
+            rec.rightsHolder = _rightsHolder;
+            rec.lastRecorder = _lastRecorder;
+            rec.status = _status;
+            rec.forceModCount = _forceModCount;
+            rec.assetClass = _assetClass;
+            rec.countDown = _countDown;
+            rec.countDownStart = _countDownStart;
+            rec.IPFS1 = _IPFS1;
+            rec.IPFS2 = _IPFS2;
+        } //end of scope limit for stack depth
 
-    /*
-     * @dev Get an IPFS Record from Storage @ idxHash
-     */
-    function getExtendedData(bytes32 _idxHash) private returns (Record memory) {
-        bytes32 datahash;
-        Record memory rec;
-
-        (
-            rec.rightsHolder,
-            rec.status,
-            rec.assetClass,
-            rec.IPFS1,
-            rec.IPFS2,
-            datahash
-        ) = Storage.retrieveExtendedData(_idxHash); //get record from storage contract
-
-        return (rec); // Returns record struct rec and checkout supplied key
-    }
-
-    /*
-     * @dev Get recorder data Record from Storage @ idxHash
-     */
-    function getRecorders(bytes32 _idxHash) private returns (Record memory) {
-        bytes32 datahash;
-        Record memory rec;
-
-        (rec.lastRecorder, rec.recorder, datahash) = Storage.retrieveRecorder(
-            _idxHash
-        ); // Get record from storage contract
-
-        return (rec); // Returns record struct rec and checkout supplied key
+        return (rec); // Returns Record struct rec
     }
 
     /*
@@ -432,13 +426,12 @@ contract FrontEnd is PullPayment, Ownable {
         uint8 response;
 
         response = Storage.BlockchainVerifyRightsHolder(_idxHash, _rgtHash); // Compare rights holder in storage contract
-    
-        if (response == 170){
-                return "Rights holder match confirmed";
-            }else {
-                return "Rights holder does not match";
+
+        if (response == 170) {
+            return "Rights holder match confirmed";
+        } else {
+            return "Rights holder does not match";
         }
-       
     }
 
     /*

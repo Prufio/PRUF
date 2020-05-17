@@ -1,5 +1,5 @@
-pragma solidity ^0.6.0;
-//pragma experimental ABIEncoderV2;
+// SPDX-License-Identifier: UNLICENSED
+pragma solidity ^0.6.2;
 
 import "./Ownable.sol";
 
@@ -33,8 +33,9 @@ contract Storage is Ownable {
         uint256 cost6;
     }
 
-    mapping(bytes32 => uint8) private authorizedAdresses; // Authorized contract address
-    mapping(bytes32 => Record) private database; // Registry
+    mapping(bytes32 => uint8) private authorizedAdresses; // Authorized contract addresses, indexed by address, with auth level 0-255
+    mapping(string => address) private contractNames; // Authorized contract addresses, indexed by name
+    mapping(bytes32 => Record) private database; // Main Data Storage
     mapping(bytes32 => User) private registeredUsers; // Authorized recorder database
     mapping(uint16 => Costs) private cost; // Cost per function by asset class
 
@@ -135,10 +136,6 @@ contract Storage is Ownable {
 
     event REPORT(string _msg);
 
-    //event EMIT_RECORD (Record record);  //use when ABIencoder V2 is ready for prime-time
-    //event EMIT_RECORD (bytes32, bytes32, bytes32, uint8, uint8, uint16, uint, uint, bytes32, bytes32);
-    //event EMIT_RIGHTS_HOLDER (bytes32);
-
     //--------------------------------Internal Admin functions / onlyowner---------------------------------//
 
     /*
@@ -158,6 +155,7 @@ contract Storage is Ownable {
         bytes32 hash;
         hash = keccak256(abi.encodePacked(_authAddr));
 
+        emit REPORT("internal user database access!"); //report access to the internal user database
         registeredUsers[hash].userType = _userType;
         registeredUsers[hash].authorizedAssetClass = _authorizedAssetClass;
     }
@@ -166,17 +164,18 @@ contract Storage is Ownable {
      * @dev Authorize / Deauthorize / Authorize ADRESSES permitted to make record modifications
      * ----------------INSECURE -- keccak256 of address must be generated clientside in release.
      */
-    function ADMIN_addContract(address _addr, uint8 _contractAuthLevel)
-        external
-        onlyOwner
-    {
+    function ADMIN_addContract(
+        string calldata _name,
+        address _addr,
+        uint8 _contractAuthLevel
+    ) external onlyOwner {
         require(_contractAuthLevel <= 3, "AUTHC:ER-13 Invalid user type");
-
-        emit REPORT("DS:SU: internal user database access!"); //report access to the internal user database
+        emit REPORT("internal user database access!"); //report access to the internal user database
 
         authorizedAdresses[keccak256(
             abi.encodePacked(_addr)
         )] = _contractAuthLevel;
+        contractNames[_name] = _addr;
     }
 
     /*
@@ -405,121 +404,37 @@ contract Storage is Ownable {
         );
     }
 
-    /*
-     * @dev Return abbreviated record (typical user data only)
-     */
-    // function retrieveRecord(bytes32 _idxHash)
-    //     external
-    //     view
-    //     addrAuth(2)
-    //     exists(_idxHash)
-    //     returns (bytes32, uint8, uint8, uint16, uint256, uint256, bytes32)
-    // {
-    //     bytes32 idxHash = _idxHash; // Somehow magically saves the stack.
-    //     bytes32 datahash = keccak256(
-    //         abi.encodePacked(
-    //             database[idxHash].rightsHolder,
-    //             database[idxHash].status,
-    //             database[idxHash].forceModCount,
-    //             database[idxHash].assetClass,
-    //             database[idxHash].countDown,
-    //             database[idxHash].countDownStart
-    //         )
-    //     );
-
-    //     return (
-    //         database[idxHash].rightsHolder,
-    //         database[idxHash].status,
-    //         database[idxHash].forceModCount,
-    //         database[idxHash].assetClass,
-    //         database[idxHash].countDown,
-    //         database[idxHash].countDownStart,
-    //         datahash
-    //     );
-    // }
-    
     function retrieveRecord(bytes32 _idxHash)
         external
         view
         addrAuth(2)
         exists(_idxHash)
-        returns (bytes32, uint8, uint8, uint16, uint256, uint256, bytes32)
-        
+        returns (
+            bytes32,
+            bytes32,
+            bytes32,
+            uint8,
+            uint8,
+            uint16,
+            uint256,
+            uint256,
+            bytes32,
+            bytes32
+        )
     {
-        bytes32 idxHash = _idxHash; // Somehow magically saves the stack.
-        bytes32 datahash = keccak256(
-            abi.encodePacked(
-                database[idxHash].rightsHolder,
-                database[idxHash].status,
-                database[idxHash].forceModCount,
-                database[idxHash].assetClass,
-                database[idxHash].countDown,
-                database[idxHash].countDownStart
-            )
-        );
+        Record memory rec = database[_idxHash];
 
         return (
-            database[idxHash].rightsHolder,
-            database[idxHash].status,
-            database[idxHash].forceModCount,
-            database[idxHash].assetClass,
-            database[idxHash].countDown,
-            database[idxHash].countDownStart,
-            datahash
-        );
-    }
-
-    /*
-     * @dev Return abbreviated record (IPFS data only)
-     */
-    function retrieveExtendedData(bytes32 _idxHash)
-        external
-        view
-        addrAuth(2)
-        exists(_idxHash)
-        returns (bytes32, uint8, uint16, bytes32, bytes32, bytes32)
-    {
-        bytes32 datahash = keccak256(
-            abi.encodePacked(
-                database[_idxHash].rightsHolder,
-                database[_idxHash].status,
-                database[_idxHash].assetClass,
-                database[_idxHash].IPFS1,
-                database[_idxHash].IPFS2
-            )
-        );
-
-        return (
-            database[_idxHash].rightsHolder,
-            database[_idxHash].status,
-            database[_idxHash].assetClass,
-            database[_idxHash].IPFS1,
-            database[_idxHash].IPFS2,
-            datahash
-        );
-    }
-
-    /*
-     * @dev Return abbreviated record (Recorder data only)
-     */
-    function retrieveRecorder(bytes32 _idxHash)
-        external
-        view
-        addrAuth(2)
-        exists(_idxHash)
-        returns (bytes32, bytes32, bytes32)
-    {
-        bytes32 datahash = keccak256(
-            abi.encodePacked(
-                database[_idxHash].lastRecorder,
-                database[_idxHash].recorder
-            )
-        );
-
-        return (
-            database[_idxHash].lastRecorder,
-            database[_idxHash].recorder,
-            datahash
+            rec.recorder,
+            rec.rightsHolder,
+            rec.lastRecorder,
+            rec.status,
+            rec.forceModCount,
+            rec.assetClass,
+            rec.countDown,
+            rec.countDownStart,
+            rec.IPFS1,
+            rec.IPFS2
         );
     }
 
@@ -574,6 +489,27 @@ contract Storage is Ownable {
         } else {
             return "Rights holder does not match";
         }
+    }
+
+    /*
+     * @dev //returns the address of a contract with name _name. This is for web3 implementations to find the right contract to interact with
+     * example :  Frontend = ****** so web 3 first asks storage where to find frontend, then calls for frontend functions.
+     */
+    function ResolveContractAddress(string calldata _name)
+        external
+        view
+        returns (address)
+    {
+        uint8 senderType = registeredUsers[keccak256(
+            abi.encodePacked(msg.sender)
+        )]
+            .userType;
+
+        require(
+            (senderType == 1) || (senderType == 9),
+            "MOD-UA-User not registered - contract resolution denied"
+        );
+        return contractNames[_name];
     }
 
     //-----------------------------------------------Private functions------------------------------------------------//

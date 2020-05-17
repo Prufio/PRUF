@@ -1,7 +1,8 @@
-pragma solidity ^0.6.0;
+// SPDX-License-Identifier: MIT
+
+pragma solidity ^0.6.2;
 
 import "./Escrow.sol";
-
 
 /**
  * @dev Simple implementation of a
@@ -24,7 +25,7 @@ import "./Escrow.sol";
 contract PullPayment {
     Escrow private _escrow;
 
-    constructor() internal {
+    constructor () internal {
         _escrow = new Escrow();
     }
 
@@ -42,8 +43,7 @@ contract PullPayment {
      *
      * @param payee Whose payments will be withdrawn.
      */
-    function withdrawPayments(address payable payee) internal virtual {
-        //------------------------SECURITY RISK
+    function withdrawPayments(address payable payee) public virtual {
         _escrow.withdraw(payee);
     }
 
@@ -51,7 +51,7 @@ contract PullPayment {
      * @dev Returns the payments owed to an address.
      * @param dest The creditor's address.
      */
-    function payments(address dest) internal view returns (uint256) {
+    function payments(address dest) public view returns (uint256) {
         return _escrow.depositsOf(dest);
     }
 
@@ -64,6 +64,6 @@ contract PullPayment {
      * @param amount The amount to transfer.
      */
     function _asyncTransfer(address dest, uint256 amount) internal virtual {
-        _escrow.deposit.value(amount)(dest);
+        _escrow.deposit{ value: amount }(dest);
     }
 }
