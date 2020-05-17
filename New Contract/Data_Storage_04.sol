@@ -439,8 +439,64 @@ contract Storage is Ownable {
     }
 
     /*
+     * @dev Return abbreviated record (IPFS data only)
+     */
+    function retrieveExtendedData(bytes32 _idxHash)
+        external
+        view
+        addrAuth(2)
+        exists(_idxHash)
+        returns (bytes32, uint8, uint16, bytes32, bytes32, bytes32)
+    {
+        bytes32 datahash = keccak256(
+            abi.encodePacked(
+                database[_idxHash].rightsHolder,
+                database[_idxHash].status,
+                database[_idxHash].assetClass,
+                database[_idxHash].IPFS1,
+                database[_idxHash].IPFS2
+            )
+        );
+
+        return (
+            database[_idxHash].rightsHolder,
+            database[_idxHash].status,
+            database[_idxHash].assetClass,
+            database[_idxHash].IPFS1,
+            database[_idxHash].IPFS2,
+            datahash
+        );
+    }
+
+    /*
+     * @dev Return abbreviated record (Recorder data only)
+     */
+     
+    function retrieveRecorder(bytes32 _idxHash)
+        external
+        view
+        addrAuth(2)
+        exists(_idxHash)
+        returns (bytes32, bytes32, bytes32)
+    {
+        bytes32 datahash = keccak256(
+            abi.encodePacked(
+                database[_idxHash].lastRecorder,
+                database[_idxHash].recorder
+            )
+        );
+
+        return (
+            database[_idxHash].lastRecorder,
+            database[_idxHash].recorder,
+            datahash
+        );
+    }
+
+    /*
      * @dev Compare record.rightsholder with supplied bytes32 rightsholder
      */
+     
     function CompareRightsHolder(bytes32 _idxHash, bytes32 _rgtHash)
         public
         view
@@ -475,6 +531,7 @@ contract Storage is Ownable {
     /*
      * @dev Compare record.rightsholder with a hashed string
      */
+     
     function Admin_compare_rgt(string calldata _idx, string calldata _rgt)
         external
         view
