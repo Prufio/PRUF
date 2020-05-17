@@ -408,12 +408,43 @@ contract Storage is Ownable {
     /*
      * @dev Return abbreviated record (typical user data only)
      */
+    // function retrieveRecord(bytes32 _idxHash)
+    //     external
+    //     view
+    //     addrAuth(2)
+    //     exists(_idxHash)
+    //     returns (bytes32, uint8, uint8, uint16, uint256, uint256, bytes32)
+    // {
+    //     bytes32 idxHash = _idxHash; // Somehow magically saves the stack.
+    //     bytes32 datahash = keccak256(
+    //         abi.encodePacked(
+    //             database[idxHash].rightsHolder,
+    //             database[idxHash].status,
+    //             database[idxHash].forceModCount,
+    //             database[idxHash].assetClass,
+    //             database[idxHash].countDown,
+    //             database[idxHash].countDownStart
+    //         )
+    //     );
+
+    //     return (
+    //         database[idxHash].rightsHolder,
+    //         database[idxHash].status,
+    //         database[idxHash].forceModCount,
+    //         database[idxHash].assetClass,
+    //         database[idxHash].countDown,
+    //         database[idxHash].countDownStart,
+    //         datahash
+    //     );
+    // }
+    
     function retrieveRecord(bytes32 _idxHash)
         external
         view
         addrAuth(2)
         exists(_idxHash)
         returns (bytes32, uint8, uint8, uint16, uint256, uint256, bytes32)
+        
     {
         bytes32 idxHash = _idxHash; // Somehow magically saves the stack.
         bytes32 datahash = keccak256(
@@ -502,7 +533,7 @@ contract Storage is Ownable {
         returns (uint256)
     {
         if (_rgtHash == database[_idxHash].rightsHolder) {
-            return 1;
+            return 170;
         } else {
             return 0;
         }
@@ -513,16 +544,16 @@ contract Storage is Ownable {
      */
 
     function BlockchainVerifyRightsHolder(bytes32 _idxHash, bytes32 _rgtHash)
-        internal
+        external
         addrAuth(1)
-        returns (string memory)
+        returns (uint8)
     {
         if (_rgtHash == database[_idxHash].rightsHolder) {
             emit REPORT("Rights holder match confirmed");
-            return "Rights holder match confirmed";
+            return 170;
         } else {
             emit REPORT("Rights holder does not match");
-            return "Rights holder does not match";
+            return 0;
         }
     }
 

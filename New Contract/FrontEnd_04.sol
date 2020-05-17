@@ -52,7 +52,7 @@ contract StorageInterface {
 
     function BlockchainVerifyRightsHolder(bytes32 _idxHash, bytes32 _rgtHash)
         external
-        returns (string memory)
+        returns (uint8)
     {}
 }
 
@@ -429,11 +429,16 @@ contract FrontEnd is PullPayment, Ownable {
         public
         returns (string memory)
     {
-        string memory response;
+        uint8 response;
 
         response = Storage.BlockchainVerifyRightsHolder(_idxHash, _rgtHash); // Compare rights holder in storage contract
-
-        return (response); // Returns record struct rec and checkout supplied key
+    
+        if (response == 170){
+                return "Rights holder match confirmed";
+            }else {
+                return "Rights holder does not match";
+        }
+       
     }
 
     /*
