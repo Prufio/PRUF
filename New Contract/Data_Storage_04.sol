@@ -407,7 +407,7 @@ contract Storage is Ownable {
     function retrieveRecord(bytes32 _idxHash)
         external
         view
-        addrAuth(2)
+        addrAuth(2) // should we add user auth? (no?)
         exists(_idxHash)
         returns (
             bytes32,
@@ -441,32 +441,32 @@ contract Storage is Ownable {
     /*
      * @dev Return abbreviated record (IPFS data only)
      */
-    function retrieveExtendedData(bytes32 _idxHash)
-        external
-        view
-        addrAuth(2)
-        exists(_idxHash)
-        returns (bytes32, uint8, uint16, bytes32, bytes32, bytes32)
-    {
-        bytes32 datahash = keccak256(
-            abi.encodePacked(
-                database[_idxHash].rightsHolder,
-                database[_idxHash].status,
-                database[_idxHash].assetClass,
-                database[_idxHash].IPFS1,
-                database[_idxHash].IPFS2
-            )
-        );
+    // function retrieveExtendedData(bytes32 _idxHash)
+    //     external
+    //     view
+    //     addrAuth(2)
+    //     exists(_idxHash)
+    //     returns (bytes32, uint8, uint16, bytes32, bytes32, bytes32)
+    // {
+    //     bytes32 datahash = keccak256(
+    //         abi.encodePacked(
+    //             database[_idxHash].rightsHolder,
+    //             database[_idxHash].status,
+    //             database[_idxHash].assetClass,
+    //             database[_idxHash].IPFS1,
+    //             database[_idxHash].IPFS2
+    //         )
+    //     );
 
-        return (
-            database[_idxHash].rightsHolder,
-            database[_idxHash].status,
-            database[_idxHash].assetClass,
-            database[_idxHash].IPFS1,
-            database[_idxHash].IPFS2,
-            datahash
-        );
-    }
+    //     return (
+    //         database[_idxHash].rightsHolder,
+    //         database[_idxHash].status,
+    //         database[_idxHash].assetClass,
+    //         database[_idxHash].IPFS1,
+    //         database[_idxHash].IPFS2,
+    //         datahash
+    //     );
+    // }
 
     /*
      * @dev Return abbreviated record (Recorder data only)

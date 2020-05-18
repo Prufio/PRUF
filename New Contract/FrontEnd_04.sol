@@ -371,9 +371,8 @@ contract FrontEnd is PullPayment, Ownable {
     function getRecord(bytes32 _idxHash) private returns (Record memory) {
         Record memory rec;
 
-        {
+        { //Start of scope limit for stack depth
             (
-                //Start of scope limit for stack depth
                 bytes32 _recorder,
                 bytes32 _rightsHolder,
                 bytes32 _lastRecorder,
