@@ -131,8 +131,8 @@ contract FrontEnd is PullPayment, Ownable {
         return keccak256(abi.encodePacked(_idx));
     }
 
-    function getBlock() external view returns (bytes32) {
-        return keccak256(abi.encodePacked(block.number));
+    function getBlock() external view returns (uint256) {
+        return (block.number);
     }
 
     //--------------------------------------External functions--------------------------------------------//
