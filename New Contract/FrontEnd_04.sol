@@ -154,10 +154,10 @@ contract FrontEnd is PullPayment, Ownable {
             "NR: tx value too low. Send more eth."
         );
 
-        bytes32 senderHash = keccak256(abi.encodePacked(msg.sender));
+        bytes32 userHash = keccak256(abi.encodePacked(msg.sender));
 
         Storage.newRecord(
-            senderHash,
+            userHash,
             _idxHash,
             _rgtHash,
             _assetClass,
@@ -189,18 +189,14 @@ contract FrontEnd is PullPayment, Ownable {
         payable
         returns (uint8)
     {
-        Record memory costrec = getRecord(
-            keccak256(abi.encodePacked(_idxHash))
-        );
+        Record memory rec = getRecord(_idxHash);
 
-        Costs memory cost = getCost(costrec.assetClass);
+        Costs memory cost = getCost(rec.assetClass);
 
         require(
             msg.value >= cost.forceModifyCost,
             "FMR: tx value too low. Send more eth."
         );
-
-        Record memory rec;
 
         require(rec.status < 200, "FMR:ERR-Record locked");
 
@@ -224,9 +220,7 @@ contract FrontEnd is PullPayment, Ownable {
         public
         returns (uint8)
     {
-        Record memory rec;
-
-        rec = getRecord(_idxHash);
+        Record memory rec = getRecord(_idxHash);
 
         require(rec.status < 200, "MS:ERR-Record locked");
 
@@ -249,9 +243,7 @@ contract FrontEnd is PullPayment, Ownable {
         public
         returns (uint256)
     {
-        Record memory rec;
-
-        rec = getRecord(_idxHash);
+        Record memory rec = getRecord(_idxHash);
 
         require(rec.status < 200, "DC:ERR-Record locked");
 
@@ -278,18 +270,14 @@ contract FrontEnd is PullPayment, Ownable {
         bytes32 _rgtHash,
         bytes32 _newrgtHash
     ) public payable returns (uint8) {
-        Record memory costrec = getRecord(_idxHash);
+        Record memory rec = getRecord(_idxHash);
 
-        Costs memory cost = getCost(costrec.assetClass);
+        Costs memory cost = getCost(rec.assetClass);
 
         require(
             msg.value >= cost.transferAssetCost,
             "TA: tx value too low. Send more eth."
         );
-
-        Record memory rec;
-
-        rec = getRecord(_idxHash);
 
         require(rec.status < 200, "TA:ERR-Record locked");
 
@@ -318,9 +306,7 @@ contract FrontEnd is PullPayment, Ownable {
         public
         returns (bytes32)
     {
-        Record memory rec;
-
-        rec = getRecord(_idxHash);
+        Record memory rec = getRecord(_idxHash);
 
         require(rec.status < 200, "MI1:ERR-Record locked");
 
@@ -347,7 +333,6 @@ contract FrontEnd is PullPayment, Ownable {
         bytes32 _IPFSHash
     ) public payable returns (bytes32) {
         Record memory costrec = getRecord(_idxHash);
-
         Costs memory cost = getCost(costrec.assetClass);
 
         require(
