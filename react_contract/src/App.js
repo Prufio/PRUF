@@ -4,6 +4,7 @@ import NewRecord from './NewRecord';
 import Web3Listener from './Web3Listener';
 import Transfer from './Transfer';
 import Compare from './Compare';
+import DeepCompare from './DeepCompare'
 
 function App() {
 
@@ -16,6 +17,7 @@ function App() {
         <Compare />
         <NewRecord />
         <Transfer />
+        <DeepCompare/>
       </header>
     </div>
   );

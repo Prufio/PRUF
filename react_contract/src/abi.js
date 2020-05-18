@@ -53,25 +53,37 @@ function returnAbi(){
             }
           ],
           "name": "$addIPFS2Note",
-          "outputs": [],
+          "outputs": [
+            {
+              "internalType": "bytes32",
+              "name": "",
+              "type": "bytes32"
+            }
+          ],
           "stateMutability": "payable",
           "type": "function"
         },
         {
           "inputs": [
             {
-              "internalType": "string",
-              "name": "_idx",
-              "type": "string"
+              "internalType": "bytes32",
+              "name": "_idxHash",
+              "type": "bytes32"
             },
             {
-              "internalType": "string",
-              "name": "_rgt",
-              "type": "string"
+              "internalType": "bytes32",
+              "name": "_rgtHash",
+              "type": "bytes32"
             }
           ],
           "name": "$forceModRecord",
-          "outputs": [],
+          "outputs": [
+            {
+              "internalType": "uint8",
+              "name": "",
+              "type": "uint8"
+            }
+          ],
           "stateMutability": "payable",
           "type": "function"
         },
@@ -127,7 +139,13 @@ function returnAbi(){
             }
           ],
           "name": "$transferAsset",
-          "outputs": [],
+          "outputs": [
+            {
+              "internalType": "uint8",
+              "name": "",
+              "type": "uint8"
+            }
+          ],
           "stateMutability": "payable",
           "type": "function"
         },
@@ -136,19 +154,6 @@ function returnAbi(){
           "name": "$withdraw",
           "outputs": [],
           "stateMutability": "payable",
-          "type": "function"
-        },
-        {
-          "inputs": [
-            {
-              "internalType": "bytes32",
-              "name": "_idx",
-              "type": "bytes32"
-            }
-          ],
-          "name": "XemitRightsHolder",
-          "outputs": [],
-          "stateMutability": "nonpayable",
           "type": "function"
         },
         {
@@ -170,125 +175,11 @@ function returnAbi(){
             }
           ],
           "name": "_decCounter",
-          "outputs": [],
-          "stateMutability": "nonpayable",
-          "type": "function"
-        },
-        {
-          "inputs": [
-            {
-              "internalType": "string",
-              "name": "_idx",
-              "type": "string"
-            }
-          ],
-          "name": "_emitRecord",
-          "outputs": [],
-          "stateMutability": "nonpayable",
-          "type": "function"
-        },
-        {
-          "inputs": [
-            {
-              "internalType": "string",
-              "name": "_idx",
-              "type": "string"
-            }
-          ],
-          "name": "_getRecord",
           "outputs": [
-            {
-              "internalType": "bytes32",
-              "name": "",
-              "type": "bytes32"
-            },
-            {
-              "internalType": "uint8",
-              "name": "",
-              "type": "uint8"
-            },
-            {
-              "internalType": "uint8",
-              "name": "",
-              "type": "uint8"
-            },
-            {
-              "internalType": "uint16",
-              "name": "",
-              "type": "uint16"
-            },
             {
               "internalType": "uint256",
               "name": "",
               "type": "uint256"
-            },
-            {
-              "internalType": "uint256",
-              "name": "",
-              "type": "uint256"
-            }
-          ],
-          "stateMutability": "nonpayable",
-          "type": "function"
-        },
-        {
-          "inputs": [
-            {
-              "internalType": "string",
-              "name": "_idx",
-              "type": "string"
-            }
-          ],
-          "name": "_getRecordIPFS",
-          "outputs": [
-            {
-              "internalType": "bytes32",
-              "name": "",
-              "type": "bytes32"
-            },
-            {
-              "internalType": "uint8",
-              "name": "",
-              "type": "uint8"
-            },
-            {
-              "internalType": "uint16",
-              "name": "",
-              "type": "uint16"
-            },
-            {
-              "internalType": "bytes32",
-              "name": "",
-              "type": "bytes32"
-            },
-            {
-              "internalType": "bytes32",
-              "name": "",
-              "type": "bytes32"
-            }
-          ],
-          "stateMutability": "nonpayable",
-          "type": "function"
-        },
-        {
-          "inputs": [
-            {
-              "internalType": "string",
-              "name": "_idx",
-              "type": "string"
-            }
-          ],
-          "name": "_getRecorders",
-          "outputs": [
-            {
-              "internalType": "bytes32",
-              "name": "",
-              "type": "bytes32"
-            },
-            {
-              "internalType": "bytes32",
-              "name": "",
-              "type": "bytes32"
             }
           ],
           "stateMutability": "nonpayable",
@@ -313,7 +204,13 @@ function returnAbi(){
             }
           ],
           "name": "_modIPFS1",
-          "outputs": [],
+          "outputs": [
+            {
+              "internalType": "bytes32",
+              "name": "",
+              "type": "bytes32"
+            }
+          ],
           "stateMutability": "nonpayable",
           "type": "function"
         },
@@ -336,7 +233,13 @@ function returnAbi(){
             }
           ],
           "name": "_modStatus",
-          "outputs": [],
+          "outputs": [
+            {
+              "internalType": "uint8",
+              "name": "",
+              "type": "uint8"
+            }
+          ],
           "stateMutability": "nonpayable",
           "type": "function"
         },
@@ -412,9 +315,52 @@ function returnAbi(){
           "type": "function"
         },
         {
+          "inputs": [
+            {
+              "internalType": "address",
+              "name": "dest",
+              "type": "address"
+            }
+          ],
+          "name": "payments",
+          "outputs": [
+            {
+              "internalType": "uint256",
+              "name": "",
+              "type": "uint256"
+            }
+          ],
+          "stateMutability": "view",
+          "type": "function"
+        },
+        {
           "inputs": [],
           "name": "renounceOwnership",
           "outputs": [],
+          "stateMutability": "nonpayable",
+          "type": "function"
+        },
+        {
+          "inputs": [
+            {
+              "internalType": "bytes32",
+              "name": "_idxHash",
+              "type": "bytes32"
+            },
+            {
+              "internalType": "bytes32",
+              "name": "_rgtHash",
+              "type": "bytes32"
+            }
+          ],
+          "name": "rightsholderBlockchainVerify",
+          "outputs": [
+            {
+              "internalType": "string",
+              "name": "",
+              "type": "string"
+            }
+          ],
           "stateMutability": "nonpayable",
           "type": "function"
         },
@@ -427,6 +373,19 @@ function returnAbi(){
             }
           ],
           "name": "transferOwnership",
+          "outputs": [],
+          "stateMutability": "nonpayable",
+          "type": "function"
+        },
+        {
+          "inputs": [
+            {
+              "internalType": "address payable",
+              "name": "payee",
+              "type": "address"
+            }
+          ],
+          "name": "withdrawPayments",
           "outputs": [],
           "stateMutability": "nonpayable",
           "type": "function"

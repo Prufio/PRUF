@@ -1,4 +1,4 @@
-import  { useState } from 'react';
+import  React, { useState } from 'react';
 import Web3 from 'web3';
 import returnAbi from './abi';
 import returnSAbi from './sAbi';
@@ -9,8 +9,8 @@ function Web3Listener(request) {
     const ethereum = window.ethereum;
     web3 = new Web3(web3.givenProvider);
     var [addr, setAddr] = useState('');
-    const bulletproof_frontend_addr = "0xCc2CBfd27fbf7AEF15FFfe119B91c3006B5DE0b0";
-    const bulletproof_storage_addr = "0xec7C54c5A4F454fA951077A6D200A73910eB1ae0";
+    const bulletproof_frontend_addr = "0xe9d8A17cD975Fc36734E09D68Fe3535c61E64CB6";
+    const bulletproof_storage_addr = "0xe9B2AdeFe20f38Bb9B1Ce951baDafbf011eB4544";
     const myAbi = returnAbi();
     const sAbi = returnSAbi();
     const bulletproof = new web3.eth.Contract(myAbi, bulletproof_frontend_addr);
@@ -33,6 +33,20 @@ function Web3Listener(request) {
 
     })
 
+    const checkReport =() => {
+        storage.events.REPORT({fromBlock: 'latest', toBlock: 'latest'}.then((error, event) => {
+        
+        if(error){
+            console.log(error);
+        }
+    
+        else{
+            return (JSON.stringify(event));
+        }
+    }));
+
+    }
+
     if (request === 'addr') {
         return (addr);
     }
@@ -48,6 +62,10 @@ function Web3Listener(request) {
     else if (request === 'storage') {
         return (storage);
     }
+
+     else if (request === 'REPORT') {
+        return (checkReport);
+     }
 
 
 
