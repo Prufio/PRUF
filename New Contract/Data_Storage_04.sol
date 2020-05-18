@@ -527,6 +527,26 @@ contract Storage is Ownable {
             return 0;
         }
     }
+    
+    // function BlockchainVerifyRightsHolder(bytes32 _idxHash, bytes32 _rgtHash)
+    //     external view
+    //     addrAuth(1)
+    //     returns (uint8)
+    // {
+    //     if (_rgtHash == database[_idxHash].rightsHolder) {
+    //         //emit REPORT("Rights holder match confirmed");
+    //         return 170;
+    //     } else {
+    //         //emit REPORT("Rights holder does not match");
+    //         return 0;
+    //     }
+    // }
+    
+    
+    
+    
+    
+    
 
     /*
      * @dev Compare record.rightsholder with a hashed string
