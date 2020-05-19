@@ -23,6 +23,7 @@ function Transfer() {
 
   return (
     <div>
+      txHash: {txHash}
       <h3>Provenance Update Form</h3>
       <label>
         Index Reference:

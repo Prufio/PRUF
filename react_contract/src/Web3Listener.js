@@ -1,4 +1,4 @@
-import  React, { useState } from 'react';
+import  { useState } from 'react';
 import Web3 from 'web3';
 import returnAbi from './abi';
 import returnSAbi from './sAbi';
@@ -17,13 +17,10 @@ function Web3Listener(request) {
     const storage = new web3.eth.Contract(sAbi, bulletproof_storage_addr);
 
     window.addEventListener('load', async () => {
-
-        await ethereum.enable();
         web3.eth.getAccounts().then(e => setAddr(e[0]));
 
         if (web3.eth.getAccounts().then(e => e === addr)) {
             console.log("Serving current metamask address at accounts[0]");
-
         }
 
         ethereum.on('accountsChanged', function (accounts) {
@@ -34,15 +31,8 @@ function Web3Listener(request) {
     })
 
     const checkReport =() => {
-        storage.events.REPORT({fromBlock: 'latest', toBlock: 'latest'}.then((error, event) => {
-        
-        if(error){
-            console.log(error);
-        }
-    
-        else{
-            return (JSON.stringify(event));
-        }
+        storage.events.REPORT({fromBlock: '0x0', toBlock: 'latest'}.then((error, event) => {
+            return (event[1]);
     }));
 
     }
@@ -65,6 +55,16 @@ function Web3Listener(request) {
 
      else if (request === 'REPORT') {
         return (checkReport);
+     }
+
+     else if (request === 'ethereum'){
+         if(ethereum){
+            return (ethereum);
+         }
+
+         else{
+             return (false);
+         }
      }
 
 
