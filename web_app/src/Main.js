@@ -17,9 +17,10 @@ function Main () {
       <HashRouter>
         <div>
             <img src={require("./BP Logo.png")} alt="Bulletproof Logo"/>
+            <div className="h2">
             Currently serving: {Web3Listener('addr')}
-                {/* {ethereum && <p>currently serving: {addr} </p>}
-                {!ethereum && <p>Metamask not currently installed</p>} */}
+            {Web3Listener('connection')===false && <p>Please log into metamask</p>}
+            </div>
           <div className="page">
             <ul className="header">
               <li>
