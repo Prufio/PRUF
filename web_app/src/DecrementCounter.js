@@ -3,7 +3,6 @@ import { keccak256 } from "js-sha3";
 import Web3Listener from "./Web3Listener";
 
 function DecrementCounter() {
-  let web3 = Web3Listener("web3");
   let addr = Web3Listener("addr");
   let bulletproof = Web3Listener("bulletproof");
 
@@ -21,7 +20,7 @@ function DecrementCounter() {
 
     bulletproof.methods
       ._decCounter(idxHash, rgtHash, countdownAmount)
-      .send({ from: addr, value: web3.utils.toWei("0.01") })
+      .send({ from: addr})
       .on("receipt", (receipt) => {
         setTxHash(receipt.transactionHash);
       });
@@ -55,7 +54,7 @@ function DecrementCounter() {
         name="CountdownAmountForm"
         placeholder="Countdown Amount"
         required
-        onChange={(e) => setCountdownAmount("0x" + keccak256(e.target.value))}
+        onChange={(e) => setCountdownAmount(e.target.value)}
       />
       <input type="submit" value="Countdown" />
     </form>
