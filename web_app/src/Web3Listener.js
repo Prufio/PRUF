@@ -18,7 +18,7 @@ function Web3Listener(request) {
 
     window.addEventListener('load', async () => {
 
-        await ethereum.enable();
+        //await ethereum.enable();
         web3.eth.getAccounts().then(e => setAddr(e[0]));
 
         if (web3.eth.getAccounts().then(e => e === addr)) {
