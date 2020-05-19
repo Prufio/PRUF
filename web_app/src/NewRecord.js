@@ -26,7 +26,7 @@ function NewRecord() {
 
     bulletproof.methods
       .$newRecord(idxHash, rgtHash, AssetClass, CountDownStart, IPFS1)
-      .send({ from: addr, value: web3.utils.toWei("0.04") })
+      .send({ from: addr, value: web3.utils.toWei("0.01") })
       .on("receipt", (receipt) => {
         setTxHash(receipt.transactionHash);
       });
