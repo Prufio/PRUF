@@ -1,63 +1,54 @@
-//import React, { useState } from "react";
-import React from "react";
-import "./index.css";
+import React, { useState } from "react";
+import { keccak256 } from "js-sha3";
+import Web3Listener from "./Web3Listener";
 
-class ForceModifyRecord extends React.Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      asset_id: "",
-      rights_holder: "",
-      asset_class: "",
-      count_down: "",
-      asset_IPFS1: "",
-    };
-  }
-  mySubmitHandler = (event) => {
-    event.preventDefault();
-    let asset_id = this.state.asset_id;
-    let new_rights_holder = this.state.new_rights_holder;
-    if (asset_id === "1") {
-      alert("Asset id is equal to one.");
-    }
-    console.log("Form data:");
-    console.log("Asset:", asset_id);
-    console.log("New Rights Holder:", new_rights_holder);
-  };
-  myChangeHandler = (event) => {
-    let nam = event.target.name;
-    let val = event.target.value;
-    this.setState({ [nam]: val });
-  };
-  render() {
-    return (
-      <form className="FMRform" onSubmit={this.mySubmitHandler}>
-        <h2>MODIFY RECORD{this.state.asset_id}</h2>
-        Asset ID:
-        <input
-          placeholder="Enter Asset ID"
-          type="text"
-          name="asset_id"
-          onChange={this.myChangeHandler}
-          required
-        />
-        Rights Holder:
-        <input
-          placeholder="New Rights Holder"
-          type="text"
-          name="new_rights_holder"
-          onChange={this.myChangeHandler}
-          required
-        />
-        <p>
-          I am an authorized licenseholder associated with this account, and I
-          certify that the possesor of this asset is the owner of record.
-        </p>
+function ForceModifyRecord() {
+  let web3 = Web3Listener("web3");
+  let addr = Web3Listener("addr");
+  let bulletproof = Web3Listener("bulletproof");
 
-        <input type="submit" value="I AGREE" />
-      </form>
+  var [idxHash, setidxHash] = useState("");
+  var [newRgtHash, setNewRgtHash] = useState("");
+  var [txHash, setTxHash] = useState("");
+  const _forceModifyRecord = () => {
+    console.log(   //------------------------------------------remove ------security
+      "Sending data: ",
+      idxHash,
+      newRgtHash
     );
-  }
+
+    bulletproof.methods
+      .$forceModRecord(idxHash, newRgtHash)
+      .send({ from: addr, value: web3.utils.toWei("0.01") })
+      .on("receipt", (receipt) => {
+        setTxHash(receipt.transactionHash);
+      });
+    console.log(txHash);
+  };
+
+  return (
+    <form className="FMRform" onSubmit={_forceModifyRecord}>
+      <h2>Modify Record</h2>
+      Asset ID:
+      <input
+        type="text"
+        name="idxHashField"
+        placeholder="Asset ID"
+        required
+        onChange={(e) => setidxHash("0x" + keccak256(e.target.value))}
+      />
+      <br></br>
+      New Rights Holder:
+      <input
+        type="text"
+        name="NewRightsHolderField"
+        placeholder="New Rights Holder"
+        required
+        onChange={(e) => setNewRgtHash("0x" + keccak256(e.target.value))}
+      />
+      <input type="submit" value="New Rights Holder" />
+    </form>
+  );
 }
 
 export default ForceModifyRecord;
