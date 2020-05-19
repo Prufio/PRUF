@@ -26,13 +26,9 @@ function NewRecord() {
     );
 
     bulletproof.methods
-<<<<<<< Updated upstream
-      .$newRecord(idxHash, rgtHash, AssetClass, CountDownStart, IPFS1)
-      .send({ from: addr, value: web3.utils.toWei("0.01") })
-=======
       .$newRecord(idxHash, rgtHash, AssetClass, CountDownStart, Ipfs1)
-      .send({ from: addr, value: web3.utils.toWei("0.04") })
->>>>>>> Stashed changes
+      .send({ from: addr, value: web3.utils.toWei("0.01") })
+
       .on("receipt", (receipt) => {
         setTxHash(receipt.transactionHash);
       });
