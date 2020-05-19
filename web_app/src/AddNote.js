@@ -1,71 +1,65 @@
-//import React, { useState } from "react";
-import React from "react";
-import "./index.css";
+import React, { useState } from "react";
+import { keccak256 } from "js-sha3";
+import Web3Listener from "./Web3Listener";
 
-class AddNote extends React.Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      asset_id: "",
-      rights_holder: "",
-      asset_IPFS2: "",
-    };
-  }
-  mySubmitHandler = (event) => {
-    event.preventDefault();
-    let asset_id = this.state.asset_id;
-    let rights_holder = this.state.rights_holder;
-    let asset_IPFS2 = this.state.asset_IPFS2;
-    if (asset_id === "1") {
-      alert("Asset id is equal to one.");
-    }
-    console.log("Form data:");
-    console.log("Asset:", asset_id);
-    console.log("Rights Holder:", rights_holder);
-    console.log("Asset IPFS Tag:", asset_IPFS2);
-  };
-  myChangeHandler = (event) => {
-    let nam = event.target.name;
-    let val = event.target.value;
-    this.setState({ [nam]: val });
-  };
-  render() {
-    return (
-      <form className="ANform" onSubmit={this.mySubmitHandler}>
-        <h2>Add Note{this.state.asset_id}</h2>
-        Asset ID:
-        <input
-          placeholder="Enter Asset ID"
-          type="text"
-          name="asset_id"
-          onChange={this.myChangeHandler}
-          required
-        />
-        Rights Holder:
-        <input
-          placeholder="Rights Holder"
-          type="text"
-          name="rights_holder"
-          onChange={this.myChangeHandler}
-          required
-        />
-        IPFS2 (Note):
-        <input
-          placeholder="IPFS Resource (NOTE)"
-          type="text"
-          name="asset_IPFS2"
-          onChange={this.myChangeHandler}
-          required
-        />
-        <p>
-          This will add a permanant note to this record. Once it has been
-          submitted, it cannot be changed
-        </p>
+function AddNote() {
+  let web3 = Web3Listener("web3");
+  let addr = Web3Listener("addr");
+  let bulletproof = Web3Listener("bulletproof");
 
-        <input type="submit" value="Add Note Permanantly" />
-      </form>
+  var [idxHash, setidxHash] = useState("");
+  var [rgtHash, setrgtHash] = useState("");
+  var [newIpfs2, setNewIpfs2] = useState("");
+  var [txHash, setTxHash] = useState("");
+  const _addNote = () => {
+    console.log(   //------------------------------------------remove ------security
+      "Sending data: ",
+      idxHash,
+      rgtHash,
+      newIpfs2
     );
-  }
+
+    bulletproof.methods
+      .$addIpfs2Note(idxHash, rgtHash, newIpfs2)
+      .send({ from: addr, value: web3.utils.toWei("0.01") })
+      .on("receipt", (receipt) => {
+        setTxHash(receipt.transactionHash);
+      });
+    console.log(txHash);
+  };
+
+  return (
+    <form className="ANform" onSubmit={_addNote}>
+      <h2>Add Note</h2>
+      Asset ID:
+      <input
+        type="text"
+        name="idxHashField"
+        placeholder="Asset ID"
+        required
+        onChange={(e) => setidxHash("0x" + keccak256(e.target.value))}
+      />
+      <br></br>
+      Rights Holder:
+      <input
+        type="text"
+        name="rgtHashField"
+        placeholder="Rights Holder"
+        required
+        onChange={(e) => setrgtHash("0x" + keccak256(e.target.value))}
+      />
+      <br></br>
+      IPFS2 (Note)
+      <input
+        type="text"
+        name="NewNoteField"
+        placeholder="New IPFS2 Note"
+        required
+        onChange={(e) => setNewIpfs2("0x" + keccak256(e.target.value))}
+      />
+      <input type="submit" value="Add Note" />
+    </form>
+  );
 }
 
 export default AddNote;

@@ -1,70 +1,64 @@
-//import React, { useState } from "react";
-import React from "react";
-import "./index.css";
+import React, { useState } from "react";
+import { keccak256 } from "js-sha3";
+import Web3Listener from "./Web3Listener";
 
-class ModifyDescription extends React.Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      asset_id: "",
-      rights_holder: "",
-      asset_class: "",
-      count_down: "",
-      asset_IPFS1: "",
-    };
-  }
-  mySubmitHandler = (event) => {
-    event.preventDefault();
-    let asset_id = this.state.asset_id;
-    let rights_holder = this.state.rights_holder;
-    let asset_IPFS1 = this.state.asset_IPFS1;
-    if (asset_id === "1") {
-      alert("Asset id is equal to one.");
-    }
-    console.log("Form data:");
-    console.log("Asset:", asset_id);
-    console.log("Rights Holder:", rights_holder);
-    console.log("Asset IPFS Tag:", asset_IPFS1);
-  };
-  myChangeHandler = (event) => {
-    let nam = event.target.name;
-    let val = event.target.value;
-    this.setState({ [nam]: val });
-  };
-  render() {
-    return (
-      <form className="MDform" onSubmit={this.mySubmitHandler}>
-        <h2>Description{this.state.asset_id}</h2>
-        Asset ID:
-        <input
-          placeholder="Enter Asset ID"
-          type="text"
-          name="asset_id"
-          onChange={this.myChangeHandler}
-          required
-        />
-        Rights Holder:
-        <input
-          placeholder="Rights Holder"
-          type="text"
-          name="rights_holder"
-          onChange={this.myChangeHandler}
-          required
-        />
-        IPFS1 (Description):
-        <input
-          placeholder="IPFS Resource (Desc)"
-          type="text"
-          name="asset_IPFS1"
-          onChange={this.myChangeHandler}
-          required
-        />
+function ModifyDescription() {
+  let addr = Web3Listener("addr");
+  let bulletproof = Web3Listener("bulletproof");
 
-        <br />
-        <input type="submit" value="Update Description" />
-      </form>
+  var [idxHash, setidxHash] = useState("");
+  var [rgtHash, setrgtHash] = useState("");
+  var [newIpfs1, setNewIpfs1] = useState("");
+  var [txHash, setTxHash] = useState("");
+  const _modifyDescription = () => {
+    console.log(   //------------------------------------------remove ------security
+      "Sending data: ",
+      idxHash,
+      rgtHash,
+      newIpfs1
     );
-  }
+
+    bulletproof.methods
+      ._modIpfs1(idxHash, rgtHash, newIpfs1)
+      .send({ from: addr})
+      .on("receipt", (receipt) => {
+        setTxHash(receipt.transactionHash);
+      });
+    console.log(txHash);
+  };
+
+  return (
+    <form className="MDform" onSubmit={_modifyDescription}>
+      <h2>Modify Description</h2>
+      Asset ID:
+      <input
+        type="text"
+        name="idxHashField"
+        placeholder="Asset ID"
+        required
+        onChange={(e) => setidxHash("0x" + keccak256(e.target.value))}
+      />
+      <br></br>
+      Rights Holder:
+      <input
+        type="text"
+        name="rgtHashField"
+        placeholder="Rights Holder"
+        required
+        onChange={(e) => setrgtHash("0x" + keccak256(e.target.value))}
+      />
+      <br></br>
+      New Description:
+      <input
+        type="text"
+        name="NewIpfs1Field"
+        placeholder="New Description"
+        required
+        onChange={(e) => setNewIpfs1("0x" + keccak256(e.target.value))}
+      />
+      <input type="submit" value="New Description" />
+    </form>
+  );
 }
 
 export default ModifyDescription;
