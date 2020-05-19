@@ -46,7 +46,7 @@ function ForceModifyRecord() {
         required
         onChange={(e) => setNewRgtHash("0x" + keccak256(e.target.value))}
       />
-      <input type="submit" value="New Rights Holder" />
+      <input type="submit" value="Modify Record" />
     </form>
   );
 }
