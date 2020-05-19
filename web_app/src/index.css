@@ -121,6 +121,22 @@
     margin: 0 auto; 
   }
 
+  .VRform {
+    height: 30.0rem;
+    width: 20.0rem;
+    background-color:  rgb(5, 164, 161);
+    border-radius: 1.0rem;
+    font-weight: default;
+    text-decoration: none;
+    font-size: 2.0rem;
+    padding: 1.0rem;
+    display:flex;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: center;
+    margin: 0 auto; 
+  }
+
   .RRform {
     height: 15.0rem;
     width: 20.0rem;

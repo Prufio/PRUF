@@ -9,7 +9,7 @@ contract Storage is Ownable {
         bytes32 recorder; // Address hash of recorder
         bytes32 rightsHolder; // KEK256 Registered owner
         bytes32 lastRecorder; // Address hash of last non-automation recorder
-        uint8 status; // Status - Transferrable, locked, in transfer, stolen, lost, etc.
+        uint8 assetStatus; // Status - Transferrable, locked, in transfer, stolen, lost, etc.
         uint8 forceModCount; // Number of times asset has been forceModded.
         uint16 assetClass; // Type of asset
         uint256 countDown; // Variable that can only be dencreased from countDownStart
@@ -39,7 +39,7 @@ contract Storage is Ownable {
     mapping(bytes32 => User) private registeredUsers; // Authorized recorder database
     mapping(uint16 => Costs) private cost; // Cost per function by asset class
 
-    /*
+    /*  NOTES:---------------------------------------------------------------------------------------//
      * Authorized external Contract / address types:   authorizedAdresses[]
      *
      * 0   --NONE
@@ -56,6 +56,7 @@ contract Storage is Ownable {
      * 9 = Robot
      * Other = unauth
      *
+     * rgtHash = K256(abiPacked(idxHash,rgtHash))
      */
 
     //----------------------------------------------Modifiers----------------------------------------------//
@@ -102,7 +103,7 @@ contract Storage is Ownable {
      */
 
     modifier unlocked(bytes32 _idxHash) {
-        require(database[_idxHash].status < 200, "MOD-U-record Locked");
+        require(database[_idxHash].assetStatus < 200, "MOD-U-record Locked");
         _;
     }
 
@@ -207,10 +208,10 @@ contract Storage is Ownable {
     {
         //---------------------------------------INSECURE USE HASH!!!!
 
-        require(_stat > 199, "AL:ERR--locking requires status > 199");
+        require(_stat > 199, "AL:ERR--locking requires assetStatus > 199");
 
         bytes32 _idxHash = keccak256(abi.encodePacked(_idx)); // TESTING ONLY
-        database[_idxHash].status = _stat;
+        database[_idxHash].assetStatus = _stat;
     }
 
     /*
@@ -220,7 +221,7 @@ contract Storage is Ownable {
         //---------------------------------------INSECURE USE HASH!!!!
         //for testing only should be (b32 _idxHash) exists(_idxHash) onlyOwner
         bytes32 _idxHash = keccak256(abi.encodePacked(_idx)); // TESTING ONLY
-        database[_idxHash].status = 0; //set to unspecified status
+        database[_idxHash].assetStatus = 0; //set to unspecified assetStatus
     }
 
     /*
@@ -243,7 +244,7 @@ contract Storage is Ownable {
         //---------------------------------------INSECURE USE HASH!!!!
         //for testing only should be (b32 _idxHash) exists(_idxHash) onlyOwner
         bytes32 _idxHash = keccak256(abi.encodePacked(_idx)); // TESTING ONLY
-        database[_idxHash].forceModCount = 0; //set to unspecified status
+        database[_idxHash].forceModCount = 0; //set to unspecified assetStatus
     }
 
     //--------------------------------External contract functions / authuser---------------------------------//
@@ -300,7 +301,7 @@ contract Storage is Ownable {
         bytes32 _userHash,
         bytes32 _idxHash,
         bytes32 _regHash,
-        uint8 _status,
+        uint8 _assetStatus,
         uint256 _countDown,
         uint8 _forceCount
     )
@@ -323,7 +324,7 @@ contract Storage is Ownable {
             "MR:ERR-new forceModCount less than original forceModCount"
         );
 
-        require(_status < 200, "MR:ERR-status over 199 cannot be set by user");
+        require(_assetStatus < 200, "MR:ERR-assetStatus over 199 cannot be set by user");
 
         database[_idxHash].timeLock = block.number;
 
@@ -331,7 +332,7 @@ contract Storage is Ownable {
         _record = database[_idxHash];
         _record.rightsHolder = _regHash;
         _record.countDown = _countDown;
-        _record.status = _status;
+        _record.assetStatus = _assetStatus;
         _record.forceModCount = _forceCount;
 
         (_record.recorder, _record.lastRecorder) = newRecorder(
@@ -428,7 +429,7 @@ contract Storage is Ownable {
             rec.recorder,
             rec.rightsHolder,
             rec.lastRecorder,
-            rec.status,
+            rec.assetStatus,
             rec.forceModCount,
             rec.assetClass,
             rec.countDown,
@@ -483,9 +484,12 @@ contract Storage is Ownable {
         onlyOwner
         returns (string memory)
     {
+        bytes32 idxHash = keccak256(abi.encodePacked(_idx));
+        bytes32 rgtHash = keccak256(abi.encodePacked(_rgt));
+        rgtHash = keccak256(abi.encodePacked(idxHash, rgtHash));
+
         if (
-            keccak256(abi.encodePacked(_rgt)) ==
-            database[keccak256(abi.encodePacked(_idx))].rightsHolder
+            rgtHash == database[keccak256(abi.encodePacked(_idx))].rightsHolder
         ) {
             return "Rights holder match confirmed";
         } else {

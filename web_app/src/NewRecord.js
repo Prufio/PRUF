@@ -11,22 +11,24 @@ function NewRecord() {
   var [rgtHash, setrgtHash] = useState("");
   var [AssetClass, setAssetClass] = useState("");
   var [CountDownStart, setCountDownStart] = useState("");
-  var [IPFS1, setIPFS1] = useState("");
+  var [Ipfs1, setIPFS1] = useState("");
   var [txHash, setTxHash] = useState("");
 
   const _newRecord = () => {
-    console.log(   //------------------------------------------remove ------security
+    console.log(
+      //------------------------------------------remove ------security
       "Sending data: ",
       idxHash,
       rgtHash,
       AssetClass,
       CountDownStart,
-      IPFS1
+      Ipfs1
     );
 
     bulletproof.methods
-      .$newRecord(idxHash, rgtHash, AssetClass, CountDownStart, IPFS1)
+      .$newRecord(idxHash, rgtHash, AssetClass, CountDownStart, Ipfs1)
       .send({ from: addr, value: web3.utils.toWei("0.01") })
+
       .on("receipt", (receipt) => {
         setTxHash(receipt.transactionHash);
       });

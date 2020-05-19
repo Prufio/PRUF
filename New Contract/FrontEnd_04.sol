@@ -18,7 +18,7 @@ contract StorageInterface {
         bytes32 _userHash,
         bytes32 _idxHash,
         bytes32 _rgt,
-        uint8 _status,
+        uint8 _assetStatus,
         uint256 _countDown,
         uint8 _forceCount
     ) external {}
@@ -65,7 +65,7 @@ contract FrontEnd is PullPayment, Ownable {
         bytes32 recorder; // Address hash of recorder
         bytes32 rightsHolder; // KEK256 Registered  owner
         bytes32 lastRecorder; // Address hash of last non-automation recorder
-        uint8 status; // Status - Transferrable, locked, in transfer, stolen, lost, etc.
+        uint8 assetStatus; // Status - Transferrable, locked, in transfer, stolen, lost, etc.
         uint8 forceModCount; // Number of times asset has been forceModded.
         uint16 assetClass; // Type of asset
         uint256 countDown; // Variable that can only be dencreased from countDownStart
@@ -112,17 +112,30 @@ contract FrontEnd is PullPayment, Ownable {
     /*
      * @dev Set wallet for contract to direct payments to
      */
+
     function _setMainWallet(address _addr) public onlyOwner {
         mainWallet = _addr;
     }
 
     // --------------------------------------TESTING FUNCTIONS--------------------------------------------//
+
+    function getBlock() external view returns (uint256) {
+        return (block.number);
+    }
+
     function getAnyHash(string calldata _idx) external pure returns (bytes32) {
         return keccak256(abi.encodePacked(_idx));
     }
 
-    function getBlock() external view returns (uint256) {
-        return (block.number);
+    function getRgtHash(string calldata _idx, string calldata _rgt)
+        external
+        pure
+        returns (bytes32)
+    {
+        bytes32 idxHash = keccak256(abi.encodePacked(_idx));
+        bytes32 rgtHash = keccak256(abi.encodePacked(_rgt));
+        rgtHash = keccak256(abi.encodePacked(idxHash, rgtHash));
+        return (rgtHash);
     }
 
     //--------------------------------------External functions--------------------------------------------//
@@ -158,19 +171,6 @@ contract FrontEnd is PullPayment, Ownable {
         deductPayment(cost.newRecordCost);
     }
 
-    //Write a data thing pattern:
-    /*
-     * Have data
-     * Get a record #hash from Storage using Storage.getHash(idxHash)
-     * Get a Record struct using getRecord(idxHash)
-     * Check out the record with the new / old data --
-     * Make a unuiqe ID from the data being sent
-     * Check out the record using newRecordHash = Storage.checkOutRecord(_idxHash, _checkoutID);
-     * bytes32 key = keccak256(abi.encodePacked(block.number, checkoutID));
-     * Verify that the earlier record #hash hashed with the key matches newRecordHash
-     * Write the modified Record struct (_rec) with the recordHash using writeRecord (idxHash, _rec, recordHash)
-     */
-
     /*
      * @dev Modify **Record**.rightsHolder without confirmation required
      */
@@ -188,7 +188,7 @@ contract FrontEnd is PullPayment, Ownable {
             "FMR: tx value too low. Send more eth."
         );
 
-        require(rec.status < 200, "FMR:ERR-Record locked");
+        require(rec.assetStatus < 200, "FMR:ERR-Record locked");
 
         if (rec.forceModCount < 255) {
             rec.forceModCount++;
@@ -204,26 +204,26 @@ contract FrontEnd is PullPayment, Ownable {
     }
 
     /*
-     * @dev Modify **Record**.status with confirmation required
+     * @dev Modify **Record**.assetStatus with confirmation required
      */
-    function _modStatus(bytes32 _idxHash, bytes32 _rgtHash, uint8 _status)
+    function _modStatus(bytes32 _idxHash, bytes32 _rgtHash, uint8 _assetStatus)
         public
         returns (uint8)
     {
         Record memory rec = getRecord(_idxHash);
 
-        require(rec.status < 200, "MS:ERR-Record locked");
+        require(rec.assetStatus < 200, "MS:ERR-Record locked");
 
         require(
             rec.rightsHolder == _rgtHash,
             "MS:ERR-Rightsholder does not match supplied data"
         );
 
-        rec.status = _status;
+        rec.assetStatus = _assetStatus;
 
         writeRecord(_idxHash, rec);
 
-        return rec.status;
+        return rec.assetStatus;
     }
 
     /*
@@ -235,7 +235,7 @@ contract FrontEnd is PullPayment, Ownable {
     {
         Record memory rec = getRecord(_idxHash);
 
-        require(rec.status < 200, "DC:ERR-Record locked");
+        require(rec.assetStatus < 200, "DC:ERR-Record locked");
 
         require(
             rec.rightsHolder == _rgtHash,
@@ -269,7 +269,7 @@ contract FrontEnd is PullPayment, Ownable {
             "TA: tx value too low. Send more eth."
         );
 
-        require(rec.status < 200, "TA:ERR-Record locked");
+        require(rec.assetStatus < 200, "TA:ERR-Record locked");
 
         require(
             rec.rightsHolder == _rgtHash,
@@ -278,7 +278,7 @@ contract FrontEnd is PullPayment, Ownable {
 
         require(_newrgtHash != 0, "TA:ERR-new Rightsholder cannot be blank");
 
-        require(rec.status < 3, "TA:ERR--Asset status is not transferrable");
+        require(rec.assetStatus < 3, "TA:ERR--Asset assetStatus is not transferrable");
 
         rec.rightsHolder = _newrgtHash;
 
@@ -298,7 +298,7 @@ contract FrontEnd is PullPayment, Ownable {
     {
         Record memory rec = getRecord(_idxHash);
 
-        require(rec.status < 200, "MI1:ERR-Record locked");
+        require(rec.assetStatus < 200, "MI1:ERR-Record locked");
 
         require(
             rec.rightsHolder == _rgtHash,
@@ -334,7 +334,7 @@ contract FrontEnd is PullPayment, Ownable {
 
         rec = getRecord(_idxHash);
 
-        require(rec.status < 200, "MI2:ERR-Record locked");
+        require(rec.assetStatus < 200, "MI2:ERR-Record locked");
 
         require(
             rec.rightsHolder == _rgtHash,
@@ -367,7 +367,7 @@ contract FrontEnd is PullPayment, Ownable {
                 bytes32 _recorder,
                 bytes32 _rightsHolder,
                 bytes32 _lastRecorder,
-                uint8 _status,
+                uint8 _assetStatus,
                 uint8 _forceModCount,
                 uint16 _assetClass,
                 uint256 _countDown,
@@ -379,7 +379,7 @@ contract FrontEnd is PullPayment, Ownable {
             rec.recorder = _recorder;
             rec.rightsHolder = _rightsHolder;
             rec.lastRecorder = _lastRecorder;
-            rec.status = _status;
+            rec.assetStatus = _assetStatus;
             rec.forceModCount = _forceModCount;
             rec.assetClass = _assetClass;
             rec.countDown = _countDown;
@@ -410,7 +410,7 @@ contract FrontEnd is PullPayment, Ownable {
             userHash,
             _idxHash,
             _rec.rightsHolder,
-            _rec.status,
+            _rec.assetStatus,
             _rec.countDown,
             _rec.forceModCount
         ); // Send data and writehash to storage
