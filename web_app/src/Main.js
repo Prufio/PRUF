@@ -10,6 +10,7 @@ import ModifyRecordStatus from "./ModifyRecordStatus";
 import NewRecord from "./NewRecord";
 import RetrieveRecord from "./RetrieveRecord";
 import TransferAsset from "./TransferAsset";
+import VerifyRightsholder from "./VerifyRightsholder";
 
 function Main () {
     return (
@@ -28,6 +29,9 @@ function Main () {
               </li>
               <li>
                 <NavLink to="/new-record">New</NavLink>
+              </li>
+              <li>
+                <NavLink to="/verify-rights-holder">Verify</NavLink>
               </li>
               <li>
                 <NavLink to="/retrieve-record">Search</NavLink>
@@ -67,6 +71,7 @@ function Main () {
               <Route path="/decrement-counter" component={DecrementCounter} />
               <Route path="/modify-description" component={ModifyDescription} />
               <Route path="/add-note" component={AddNote} />
+              <Route path="/verify-rights-holder" component={VerifyRightsholder} />
             </div>
           </div>
         </div>
