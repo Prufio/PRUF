@@ -14,8 +14,8 @@ contract Storage is Ownable {
         uint16 assetClass; // Type of asset
         uint256 countDown; // Variable that can only be dencreased from countDownStart
         uint256 countDownStart; // Starting point for countdown variable (set once)
-        bytes32 IPFS1; // Publically viewable asset description
-        bytes32 IPFS2; // Publically viewable immutable notes
+        bytes32 Ipfs1; // Publically viewable asset description
+        bytes32 Ipfs2; // Publically viewable immutable notes
         uint256 timeLock; // Time sensitive mutex
     }
 
@@ -258,7 +258,7 @@ contract Storage is Ownable {
         bytes32 _rgt,
         uint16 _assetClass,
         uint256 _countDownStart,
-        bytes32 _IPFS1
+        bytes32 _Ipfs1
     ) external addrAuth(3) {
         require(
             registeredUsers[_userHash].userType == 1 || (_assetClass > 8192),
@@ -287,7 +287,7 @@ contract Storage is Ownable {
         _record.rightsHolder = _rgt;
         _record.lastRecorder = _userHash;
         _record.forceModCount = 0;
-        _record.IPFS1 = _IPFS1;
+        _record.Ipfs1 = _Ipfs1;
 
         database[_idxHash] = _record;
     }
@@ -345,13 +345,13 @@ contract Storage is Ownable {
     }
 
     /*
-     * @dev Modify record IPFS data
+     * @dev Modify record Ipfs data
      */
-    function modifyIPFS(
+    function modifyIpfs(
         bytes32 _userHash,
         bytes32 _idxHash,
-        bytes32 _IPFS1,
-        bytes32 _IPFS2
+        bytes32 _Ipfs1,
+        bytes32 _Ipfs2
     )
         external
         addrAuth(3)
@@ -364,12 +364,12 @@ contract Storage is Ownable {
 
         Record memory _record = database[_idxHash];
 
-        if (_record.IPFS1 != _IPFS1) {
-            _record.IPFS1 = _IPFS1;
+        if (_record.Ipfs1 != _Ipfs1) {
+            _record.Ipfs1 = _Ipfs1;
         }
 
-        if (_record.IPFS2 == 0) {
-            _record.IPFS2 = _IPFS2;
+        if (_record.Ipfs2 == 0) {
+            _record.Ipfs2 = _Ipfs2;
         }
 
         (_record.recorder, _record.lastRecorder) = newRecorder(
@@ -433,71 +433,16 @@ contract Storage is Ownable {
             rec.assetClass,
             rec.countDown,
             rec.countDownStart,
-            rec.IPFS1,
-            rec.IPFS2
-        );
-    }
-
-    /*
-     * @dev Return abbreviated record (IPFS data only)
-     */
-    // function retrieveExtendedData(bytes32 _idxHash)
-    //     external
-    //     view
-    //     addrAuth(2)
-    //     exists(_idxHash)
-    //     returns (bytes32, uint8, uint16, bytes32, bytes32, bytes32)
-    // {
-    //     bytes32 datahash = keccak256(
-    //         abi.encodePacked(
-    //             database[_idxHash].rightsHolder,
-    //             database[_idxHash].status,
-    //             database[_idxHash].assetClass,
-    //             database[_idxHash].IPFS1,
-    //             database[_idxHash].IPFS2
-    //         )
-    //     );
-
-    //     return (
-    //         database[_idxHash].rightsHolder,
-    //         database[_idxHash].status,
-    //         database[_idxHash].assetClass,
-    //         database[_idxHash].IPFS1,
-    //         database[_idxHash].IPFS2,
-    //         datahash
-    //     );
-    // }
-
-    /*
-     * @dev Return abbreviated record (Recorder data only)
-     */
-     
-    function retrieveRecorder(bytes32 _idxHash)
-        external
-        view
-        addrAuth(2)
-        exists(_idxHash)
-        returns (bytes32, bytes32, bytes32)
-    {
-        bytes32 datahash = keccak256(
-            abi.encodePacked(
-                database[_idxHash].lastRecorder,
-                database[_idxHash].recorder
-            )
-        );
-
-        return (
-            database[_idxHash].lastRecorder,
-            database[_idxHash].recorder,
-            datahash
+            rec.Ipfs1,
+            rec.Ipfs2
         );
     }
 
     /*
      * @dev Compare record.rightsholder with supplied bytes32 rightsholder
      */
-     
-    function CompareRightsHolder(bytes32 _idxHash, bytes32 _rgtHash)
+
+    function _verifyRightsHolder(bytes32 _idxHash, bytes32 _rgtHash)
         public
         view
         addrAuth(1)
@@ -514,7 +459,7 @@ contract Storage is Ownable {
      * @dev Compare record.rightsholder with supplied bytes32 rightsholder (writes in blockchain)
      */
 
-    function BlockchainVerifyRightsHolder(bytes32 _idxHash, bytes32 _rgtHash)
+    function blockchainVerifyRightsHolder(bytes32 _idxHash, bytes32 _rgtHash)
         external
         addrAuth(1)
         returns (uint8)
@@ -523,36 +468,16 @@ contract Storage is Ownable {
             emit REPORT("Rights holder match confirmed");
             return 170;
         } else {
-            emit REPORT("Rights holder does not match");
+            emit REPORT("Rights holder does not match supplied data");
             return 0;
         }
     }
-    
-    // function BlockchainVerifyRightsHolder(bytes32 _idxHash, bytes32 _rgtHash)
-    //     external view
-    //     addrAuth(1)
-    //     returns (uint8)
-    // {
-    //     if (_rgtHash == database[_idxHash].rightsHolder) {
-    //         //emit REPORT("Rights holder match confirmed");
-    //         return 170;
-    //     } else {
-    //         //emit REPORT("Rights holder does not match");
-    //         return 0;
-    //     }
-    // }
-    
-    
-    
-    
-    
-    
 
     /*
-     * @dev Compare record.rightsholder with a hashed string
+     * @dev Compare record.rightsholder with a hashed string  ///////////////TESTING ONLY REMOVE!
      */
-     
-    function Admin_compare_rgt(string calldata _idx, string calldata _rgt)
+
+    function ADMIN_compare_rgt(string calldata _idx, string calldata _rgt)
         external
         view
         onlyOwner
@@ -564,7 +489,7 @@ contract Storage is Ownable {
         ) {
             return "Rights holder match confirmed";
         } else {
-            return "Rights holder does not match";
+            return "Rights holder does not match supplied data";
         }
     }
 
@@ -572,19 +497,19 @@ contract Storage is Ownable {
      * @dev //returns the address of a contract with name _name. This is for web3 implementations to find the right contract to interact with
      * example :  Frontend = ****** so web 3 first asks storage where to find frontend, then calls for frontend functions.
      */
-    function ResolveContractAddress(string calldata _name)
+    function resolveContractAddress(string calldata _name)
         external
         view
         returns (address)
     {
-        uint8 senderType = registeredUsers[keccak256(
+        uint8 senderType = registeredUsers[keccak256( //check for authorized user or automation agent  -- but no idx
             abi.encodePacked(msg.sender)
         )]
             .userType;
 
         require(
             (senderType == 1) || (senderType == 9),
-            "MOD-UA-User not registered - contract resolution denied"
+            "Resolver:ERR - User not registered - contract resolution denied"
         );
         return contractNames[_name];
     }

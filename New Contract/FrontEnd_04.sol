@@ -11,7 +11,7 @@ contract StorageInterface {
         bytes32 _rgt,
         uint16 _assetClass,
         uint256 _countDownStart,
-        bytes32 _IPFS1
+        bytes32 _Ipfs1
     ) external {}
 
     function modifyRecord(
@@ -23,11 +23,11 @@ contract StorageInterface {
         uint8 _forceCount
     ) external {}
 
-    function modifyIPFS(
+    function modifyIpfs(
         bytes32 _userHash,
         bytes32 _idxHash,
-        bytes32 _IPFS1,
-        bytes32 _IPFS2
+        bytes32 _Ipfs1,
+        bytes32 _Ipfs2
     ) external {}
 
     // function retrieveRecorder(bytes32 _idxHash)
@@ -55,16 +55,6 @@ contract StorageInterface {
             bytes32
         )
     {}
-
-    // function retrieveExtendedData(bytes32 _idxHash)
-    //     external
-    //     returns (bytes32, uint8, uint16, bytes32, bytes32, bytes32)
-    // {}
-
-    function BlockchainVerifyRightsHolder(bytes32 _idxHash, bytes32 _rgtHash)
-        external
-        returns (uint8)
-    {}
 }
 
 
@@ -80,8 +70,8 @@ contract FrontEnd is PullPayment, Ownable {
         uint16 assetClass; // Type of asset
         uint256 countDown; // Variable that can only be dencreased from countDownStart
         uint256 countDownStart; // Starting point for countdown variable (set once)
-        bytes32 IPFS1; // Publically viewable asset description
-        bytes32 IPFS2; // Publically viewable immutable notes
+        bytes32 Ipfs1; // Publically viewable asset description
+        bytes32 Ipfs2; // Publically viewable immutable notes
         uint256 timeLock; // Time sensitive mutex
     }
 
@@ -113,7 +103,7 @@ contract FrontEnd is PullPayment, Ownable {
     function _setStorageContract(address _storageAddress) public onlyOwner {
         require(
             _storageAddress != address(0),
-            "storage address cannot be zero"
+            "ADMIN: storage address cannot be zero"
         );
 
         Storage = StorageInterface(_storageAddress);
@@ -145,7 +135,7 @@ contract FrontEnd is PullPayment, Ownable {
         bytes32 _rgtHash,
         uint16 _assetClass,
         uint256 _countDownStart,
-        bytes32 _IPFS
+        bytes32 _Ipfs
     ) public payable {
         Costs memory cost = getCost(_assetClass);
 
@@ -162,7 +152,7 @@ contract FrontEnd is PullPayment, Ownable {
             _rgtHash,
             _assetClass,
             _countDownStart,
-            _IPFS
+            _Ipfs
         );
 
         deductPayment(cost.newRecordCost);
@@ -283,7 +273,7 @@ contract FrontEnd is PullPayment, Ownable {
 
         require(
             rec.rightsHolder == _rgtHash,
-            "DC:ERR-Rightsholder does not match supplied data"
+            "TA:ERR-Rightsholder does not match supplied data"
         );
 
         require(_newrgtHash != 0, "TA:ERR-new Rightsholder cannot be blank");
@@ -300,9 +290,9 @@ contract FrontEnd is PullPayment, Ownable {
     }
 
     /*
-     * @dev Modify **Record**.IPFS1 with confirmation
+     * @dev Modify **Record**.Ipfs1 with confirmation
      */
-    function _modIPFS1(bytes32 _idxHash, bytes32 _rgtHash, bytes32 _IPFSHash)
+    function _modIpfs1(bytes32 _idxHash, bytes32 _rgtHash, bytes32 _IpfsHash)
         public
         returns (bytes32)
     {
@@ -315,22 +305,22 @@ contract FrontEnd is PullPayment, Ownable {
             "MI1:ERR--Rightsholder does not match supplied data"
         );
 
-        require(rec.IPFS1 != _IPFSHash, "MI1:ERR--New data same as old");
+        require(rec.Ipfs1 != _IpfsHash, "MI1:ERR--New data same as old");
 
-        rec.IPFS1 = _IPFSHash;
+        rec.Ipfs1 = _IpfsHash;
 
-        writeRecordIPFS(_idxHash, rec);
+        writeRecordIpfs(_idxHash, rec);
 
-        return rec.IPFS1;
+        return rec.Ipfs1;
     }
 
     /*
-     * @dev Modify **Record**.IPFS2 with confirmation
+     * @dev Modify **Record**.Ipfs2 with confirmation
      */
-    function $addIPFS2Note(
+    function $addIpfs2Note(
         bytes32 _idxHash,
         bytes32 _rgtHash,
-        bytes32 _IPFSHash
+        bytes32 _IpfsHash
     ) public payable returns (bytes32) {
         Record memory costrec = getRecord(_idxHash);
         Costs memory cost = getCost(costrec.assetClass);
@@ -344,25 +334,25 @@ contract FrontEnd is PullPayment, Ownable {
 
         rec = getRecord(_idxHash);
 
-        require(rec.status < 200, "MI1:ERR-Record locked");
+        require(rec.status < 200, "MI2:ERR-Record locked");
 
         require(
             rec.rightsHolder == _rgtHash,
-            "MI1:ERR--Rightsholder does not match supplied data"
+            "MI2:ERR--Rightsholder does not match supplied data"
         );
 
         require(
-            rec.IPFS2 == 0,
-            "MI1:ERR--IPFS2 has data already. Overwrite not permitted"
+            rec.Ipfs2 == 0,
+            "MI2:ERR--Ipfs2 has data already. Overwrite not permitted"
         );
 
-        rec.IPFS2 = _IPFSHash;
+        rec.Ipfs2 = _IpfsHash;
 
-        writeRecordIPFS(_idxHash, rec);
+        writeRecordIpfs(_idxHash, rec);
 
         deductPayment(cost.createNoteCost);
 
-        return rec.IPFS2;
+        return rec.Ipfs2;
     }
 
     /*
@@ -371,7 +361,8 @@ contract FrontEnd is PullPayment, Ownable {
     function getRecord(bytes32 _idxHash) private returns (Record memory) {
         Record memory rec;
 
-        { //Start of scope limit for stack depth
+        {
+            //Start of scope limit for stack depth
             (
                 bytes32 _recorder,
                 bytes32 _rightsHolder,
@@ -381,8 +372,8 @@ contract FrontEnd is PullPayment, Ownable {
                 uint16 _assetClass,
                 uint256 _countDown,
                 uint256 _countDownStart,
-                bytes32 _IPFS1,
-                bytes32 _IPFS2
+                bytes32 _Ipfs1,
+                bytes32 _Ipfs2
             ) = Storage.retrieveRecord(_idxHash); // Get record from storage contract
 
             rec.recorder = _recorder;
@@ -393,38 +384,20 @@ contract FrontEnd is PullPayment, Ownable {
             rec.assetClass = _assetClass;
             rec.countDown = _countDown;
             rec.countDownStart = _countDownStart;
-            rec.IPFS1 = _IPFS1;
-            rec.IPFS2 = _IPFS2;
+            rec.Ipfs1 = _Ipfs1;
+            rec.Ipfs2 = _Ipfs2;
         } //end of scope limit for stack depth
 
         return (rec); // Returns Record struct rec
     }
 
     /*
-     * @dev Compare record.rightsholder from storage with supplied bytes32 rightsholder (writes in blockchain)
+     * @dev Write an Ipfs Record to Storage @ idxHash
      */
-    function rightsholderBlockchainVerify(bytes32 _idxHash, bytes32 _rgtHash)
-        public
-        returns (string memory)
-    {
-        uint8 response;
-
-        response = Storage.BlockchainVerifyRightsHolder(_idxHash, _rgtHash); // Compare rights holder in storage contract
-
-        if (response == 170) {
-            return "Rights holder match confirmed";
-        } else {
-            return "Rights holder does not match";
-        }
-    }
-
-    /*
-     * @dev Write an IPFS Record to Storage @ idxHash
-     */
-    function writeRecordIPFS(bytes32 _idxHash, Record memory _rec) private {
+    function writeRecordIpfs(bytes32 _idxHash, Record memory _rec) private {
         bytes32 userHash = keccak256(abi.encodePacked(msg.sender)); // Get a userhash for authentication and recorder logging
 
-        Storage.modifyIPFS(userHash, _idxHash, _rec.IPFS1, _rec.IPFS2); // Send data to storage
+        Storage.modifyIpfs(userHash, _idxHash, _rec.Ipfs1, _rec.Ipfs2); // Send data to storage
     }
 
     /*
