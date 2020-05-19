@@ -1,74 +1,67 @@
-//import React, { useState } from "react";
-import React from "react";
-import "./index.css";
+import React, { useState } from "react";
+import { keccak256 } from "js-sha3";
+import Web3Listener from "./Web3Listener";
 
-class ModifyRecordStatus extends React.Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      asset_id: "",
-      rights_holder: "",
-      status: "",
-    };
-  }
-  mySubmitHandler = (event) => {
-    event.preventDefault();
-    let asset_id = this.state.asset_id;
-    let rights_holder = this.state.rights_holder;
-    let status = this.state.status;
-    if (asset_id === "1") {
-      alert("Asset id is equal to one.");
-    }
-    console.log("Form data:");
-    console.log("Asset:", asset_id);
-    console.log("Rights Holder:", rights_holder);
-    console.log("New Status:", status);
-  };
-  myChangeHandler = (event) => {
-    let nam = event.target.name;
-    let val = event.target.value;
-    this.setState({ [nam]: val });
-  };
-  render() {
-    return (
-      <form className="USform" onSubmit={this.mySubmitHandler}>
-        <h2>New Status{this.state.asset_id}</h2>
-        Asset ID:
-        <input
-          placeholder="Enter Asset ID"
-          type="text"
-          name="asset_id"
-          onChange={this.myChangeHandler}
-          required
-        />
-        Rights Holder:
-        <input
-          placeholder="Rights Holder"
-          type="text"
-          name="rights_holder"
-          onChange={this.myChangeHandler}
-          required
-        />
-        Updated Status:
-        <input
-          placeholder="Enter New Status"
-          type="text"
-          name="status"
-          onChange={this.myChangeHandler}
-          required
-        />
-        {/* <label form="asset_class">Asset Class:</label>
-          <select id="asset_class" name="asset_class">
-            <option asset_class="1">Firearms</option>
-            <option asset_class="2">NFA/AOW</option>
-            <option asset_class="3">Special</option>
-          </select> */}
+function ModifyRecordStatus() {
+  let addr = Web3Listener("addr");
+  let bulletproof = Web3Listener("bulletproof");
 
-        <br />
-        <input type="submit" value="Update Status" />
-      </form>
+  var [idxHash, setidxHash] = useState("");
+  var [rgtHash, setrgtHash] = useState("");
+  var [_status, setNewStatus] = useState("");
+  var [txHash, setTxHash] = useState("");
+  const _modifyRecordStatus = () => {
+    console.log(   //------------------------------------------remove ------security
+      "Sending data: ",
+      idxHash,
+      rgtHash,
+      _status
     );
-  }
+
+    bulletproof.methods
+      ._modStatus(idxHash, rgtHash, _status)
+      .send({ from: addr})
+      .on("receipt", (receipt) => {
+        setTxHash(receipt.transactionHash);
+      });
+    console.log(txHash);
+  };
+
+  return (
+    <form className="MRform" onSubmit={_modifyRecordStatus}>
+      <h2>Update Status</h2>
+      Asset ID:
+      <input
+        type="text"
+        name="idxHashField"
+        placeholder="Asset ID"
+        required
+        onChange={(e) => setidxHash("0x" + keccak256(e.target.value))}
+      />
+      <br></br>
+      Rights Holder:
+      <input
+        type="text"
+        name="rgtHashField"
+        placeholder="Rights Holder"
+        required
+        onChange={(e) => setrgtHash("0x" + keccak256(e.target.value))}
+      />
+      <br></br>
+      New Status:
+      <input
+        type="text"
+        name="NewStatusField"
+        placeholder="New Status"
+        required
+        onChange={(e) => setNewStatus(e.target.value)}
+      />
+      <input type="submit" value="Modify Record Status" />
+    </form>
+  );
 }
 
 export default ModifyRecordStatus;
+
+//BROKEN
+

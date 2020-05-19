@@ -9,18 +9,18 @@ function TransferAsset() {
 
   var [idxHash, setidxHash] = useState("");
   var [rgtHash, setrgtHash] = useState("");
-  var [newrgtHash, setNewRgtHash] = useState("");
+  var [newRgtHash, setNewRgtHash] = useState("");
   var [txHash, setTxHash] = useState("");
   const _transferAsset = () => {
     console.log(   //------------------------------------------remove ------security
       "Sending data: ",
       idxHash,
       rgtHash,
-      newrgtHash
+      newRgtHash
     );
 
     bulletproof.methods
-      .$transferAsset(idxHash, rgtHash, newrgtHash)
+      .$transferAsset(idxHash, rgtHash, newRgtHash)
       .send({ from: addr, value: web3.utils.toWei("0.01") })
       .on("receipt", (receipt) => {
         setTxHash(receipt.transactionHash);
