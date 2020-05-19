@@ -1,68 +1,64 @@
-//import React, { useState } from "react";
-import React from "react";
-import "./index.css";
+import React, { useState } from "react";
+import { keccak256 } from "js-sha3";
+import Web3Listener from "./Web3Listener";
 
-class DecrementCounter extends React.Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      asset_id: "",
-      rights_holder: "",
-      asset_class: "",
-      count_down: "",
-      asset_IPFS1: "",
-    };
-  }
-  mySubmitHandler = (event) => {
-    event.preventDefault();
-    let asset_id = this.state.asset_id;
-    let rights_holder = this.state.rights_holder;
-    let count_down = this.state.count_down;
-    if (asset_id === "1") {
-      alert("Asset id is equal to one.");
-    }
-    console.log("Form data:");
-    console.log("Asset:", asset_id);
-    console.log("Rights Holder:", rights_holder);
-    console.log("Decrement Amount:", count_down);
-  };
-  myChangeHandler = (event) => {
-    let nam = event.target.name;
-    let val = event.target.value;
-    this.setState({ [nam]: val });
-  };
-  render() {
-    return (
-      <form className="DCform" onSubmit={this.mySubmitHandler}>
-        <h2>Countdown{this.state.asset_id}</h2>
-        Asset ID:
-        <input
-          placeholder="Enter Asset ID"
-          type="text"
-          name="asset_id"
-          onChange={this.myChangeHandler}
-          required
-        />
-        Rights Holder:
-        <input
-          placeholder="Rights Holder"
-          type="text"
-          name="rights_holder"
-          onChange={this.myChangeHandler}
-          required
-        />
-        Countdown:
-        <input
-          placeholder="Decrement by..."
-          type="text"
-          name="count_down"
-          onChange={this.myChangeHandler}
-          required
-        />
-        <br />
-        <input type="submit" value="Decrement Countdown" />
-      </form>
+function DecrementCounter() {
+  let addr = Web3Listener("addr");
+  let bulletproof = Web3Listener("bulletproof");
+
+  var [idxHash, setidxHash] = useState("");
+  var [rgtHash, setrgtHash] = useState("");
+  var [countdownAmount, setCountdownAmount] = useState("");
+  var [txHash, setTxHash] = useState("");
+  const _decrementCounter = () => {
+    console.log(   //------------------------------------------remove ------security
+      "Sending data: ",
+      idxHash,
+      rgtHash,
+      countdownAmount
     );
-  }
+
+    bulletproof.methods
+      ._decCounter(idxHash, rgtHash, countdownAmount)
+      .send({ from: addr})
+      .on("receipt", (receipt) => {
+        setTxHash(receipt.transactionHash);
+      });
+    console.log(txHash);
+  };
+
+  return (
+    <form className="DCform" onSubmit={_decrementCounter}>
+      <h2>Countdown</h2>
+      Asset ID:
+      <input
+        type="text"
+        name="idxHashField"
+        placeholder="Asset ID"
+        required
+        onChange={(e) => setidxHash("0x" + keccak256(e.target.value))}
+      />
+      <br></br>
+      Rights Holder:
+      <input
+        type="text"
+        name="rgtHashField"
+        placeholder="Rights Holder"
+        required
+        onChange={(e) => setrgtHash("0x" + keccak256(e.target.value))}
+      />
+      <br></br>
+      Countdown Amount
+      <input
+        type="text"
+        name="CountdownAmountForm"
+        placeholder="Countdown Amount"
+        required
+        onChange={(e) => setCountdownAmount(e.target.value)}
+      />
+      <input type="submit" value="Countdown" />
+    </form>
+  );
 }
+
 export default DecrementCounter;
