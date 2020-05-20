@@ -82,11 +82,7 @@ function NewRecord() {
         name="type"
         placeholder="Type"
         required
-<<<<<<< Updated upstream
-        onChange={(e) => setidxHash(web3.utils.keccak256(e.target.value))}
-=======
         onChange={(e) => indexDoctor(e)}
->>>>>>> Stashed changes
       />
       <br></br>
       Manufacturer:
@@ -95,9 +91,6 @@ function NewRecord() {
         name="manufacturer"
         placeholder="Manufacturer"
         required
-<<<<<<< Updated upstream
-        onChange={(e) => setrgtHash(web3.utils.keccak256(e.target.value))}
-=======
         onChange={(e) => indexDoctor(e)}
       />
       <br></br>
@@ -162,7 +155,6 @@ function NewRecord() {
         placeholder="Password"
         required
         onChange={(e) => rightsDoctor(e)}
->>>>>>> Stashed changes
       />
       <br></br>
       Asset Class:

@@ -72,11 +72,6 @@ const [_index, _setIndex] = useState({
         name="serial"
         placeholder="Serial Number"
         required
-<<<<<<< Updated upstream
-        onChange={(e) => setidxHash(web3.utils.keccak256(e.target.value))}
-=======
-        onChange={(e) => indexDoctor(e)}
->>>>>>> Stashed changes
       />
       <br></br>
       <input type="button" value="Retrieve Record"  onClick={_retrieveRecord}/>
