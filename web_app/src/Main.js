@@ -22,7 +22,8 @@ function Main() {
         <br></br>
         <div className="addr">
           <p style={{ color: "white" }}>
-            Currently serving: {Web3Listener("addr")}
+            Currently serving: {Web3Listener('addr')}
+            {Web3Listener('connection')===false && <p>Please log into metamask</p>}
           </p>
         </div>
         <br></br>

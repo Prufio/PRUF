@@ -1,11 +1,27 @@
 import React, { useState } from "react";
 import Web3Listener from "./Web3Listener";
-
 function RetrieveRecord() {
+  let web3 = Web3Listener("web3");
   let addr = Web3Listener("addr");
   let storage = Web3Listener("storage");
-  var [idxHash, setidxHash] = useState("");
   var [result, setResult] = useState([]);
+  var [idxHash, setIdxHash] = useState("");
+
+  const indexDoctor = (e) => {
+    _setIndex({
+      ..._index,
+      [e.target.name]: e.target.value
+    });
+    console.log(_index.type, _index.manufacturer, _index.model, _index.serial);
+    setIdxHash(web3.utils.soliditySha3(_index.type, _index.manufacturer, _index.model, _index.serial))
+}
+const [_index, _setIndex] = useState({
+  type:'',
+  manufacturer:'',
+  model:'',
+  serial:''
+})
+
   const _retrieveRecord = () => {
     console.log(   //------------------------------------------remove ------security
       "Sending data: ",
@@ -20,17 +36,44 @@ function RetrieveRecord() {
 
   return (
     <div>
-    <form className="RRform" onSubmit={_retrieveRecord}>
+    <form className="RRform">
       <h2>Search for Record</h2>
-      Asset ID:
+      Type:
       <input
         type="text"
-        name="idxHashField"
-        placeholder="Asset ID"
+        name="type"
+        placeholder="Type"
         required
-        onChange={(e) => setidxHash(web3.utils.keccak256(e.target.value))}
+        onChange={(e) => indexDoctor(e)}
       />
-      <input type="submit" value="Retrieve Record" />
+      <br></br>
+      Manufacturer:
+      <input
+        type="text"
+        name="manufacturer"
+        placeholder="Manufacturer"
+        required
+        onChange={(e) => indexDoctor(e)}
+      />
+      <br></br>
+      Model:
+      <input
+        type="text"
+        name="model"
+        placeholder="Model"
+        required
+        onChange={(e) => indexDoctor(e)}
+      />
+      <br></br>
+      Serial:
+      <input
+        type="text"
+        name="serial"
+        placeholder="Serial Number"
+        required
+      />
+      <br></br>
+      <input type="button" value="Retrieve Record"  onClick={_retrieveRecord}/>
     </form>
     <br></br>
     Status: {result[3]}
