@@ -1,6 +1,5 @@
 import React, { useState } from "react";
 import Web3Listener from "./Web3Listener";
-
 function RetrieveRecord() {
   let web3 = Web3Listener("web3");
   let addr = Web3Listener("addr");
