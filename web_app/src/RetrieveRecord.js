@@ -67,18 +67,32 @@ function RetrieveRecord() {
       <br></br>
       <input type="button" value="Retrieve Record"  onClick={_retrieveRecord}/>
     </form>
-    <br></br>
-    Status: {result[3]}
-    <br></br>
-    Force Mod Count: {result[4]}
-    <br></br>
-    Asset Class: {result[5]}
-    <br></br>
-    Count Down Status: {result[6]}
-    <br></br>
-    Description Hash: {result[8]}
-    <br></br>
-    Note Hash: {result[9]}
+
+    {(result[5] > 0) &&     //conditional rendering
+      <div className = "RRresults">
+        Status: 
+        {result[3]}
+        <br></br>
+        Mod Count: 
+        {result[4]}
+        <br></br>
+        Asset Class : 
+        {result[5]}
+        <br></br>
+        Count : 
+        {result[6]} of {result[7]}
+        <br></br>
+        <br></br>
+        Description Hash : 
+        <br></br>
+        {result[8]}
+        <br></br>
+        <br></br>
+        Note Hash : 
+        <br></br>
+        {result[9]}
+      </div>
+    }
     </div>
   );
 }

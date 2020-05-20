@@ -220,7 +220,7 @@
   .ANform {
     height: 45.0rem;
     width: 20.0rem;
-    background-color:  rgb(254, 245, 1);
+    background-color:  rgb(255, 255, 25);
     border-radius: 1.0rem;
     font-weight: default;
     text-decoration: none;
@@ -246,6 +246,25 @@
     flex-direction: column;
     justify-content: space-between;
     align-items: center;
+    margin: 0 auto; 
+  }
+
+  .RRresults {
+    height: 27.0rem;
+    width: 20.0rem;
+    background-color:rgb(5, 164, 161);
+    border-radius: 1.0rem;
+    font-weight: default;
+    text-decoration: none;
+    font-size: 1.4rem;
+    padding: 1.0rem;
+    display:flex;
+    word-wrap: break-word;
+    /* overflow: hidden; */
+    text-overflow: ellipsis;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: normal;
     margin: 0 auto; 
   }
 
