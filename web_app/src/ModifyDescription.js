@@ -1,10 +1,9 @@
 import React, { useState } from "react";
-import { keccak256 } from "js-sha3";
 import Web3Listener from "./Web3Listener";
 
 function ModifyDescription() {
   let addr = Web3Listener("addr");
-  let bulletproof = Web3Listener("bulletproof");
+  let frontend = Web3Listener("frontend");
   let web3 = Web3Listener("web3");
 
   var [idxHash, setidxHash] = useState("");
@@ -23,7 +22,7 @@ function ModifyDescription() {
     console.log('NewHash', _rgtHash);
     console.log('idxHash', idxHash);
 
-    bulletproof.methods
+    frontend.methods
       ._modIpfs1(idxHash, _rgtHash, newIpfs1)
       .send({ from: addr})
       .on("receipt", (receipt) => {
@@ -41,7 +40,7 @@ function ModifyDescription() {
         name="idxHashField"
         placeholder="Asset ID"
         required
-        onChange={(e) => setidxHash("0x" + keccak256(e.target.value))}
+        onChange={(e) => setidxHash(web3.utils.keccak256(e.target.value))}
       />
       <br></br>
       Rights Holder:
@@ -50,7 +49,7 @@ function ModifyDescription() {
         name="rgtHashField"
         placeholder="Rights Holder"
         required
-        onChange={(e) => setrgtHash("0x" + keccak256(e.target.value))}
+        onChange={(e) => setrgtHash(web3.utils.keccak256(e.target.value))}
       />
       <br></br>
       New Description:
@@ -59,7 +58,7 @@ function ModifyDescription() {
         name="NewIpfs1Field"
         placeholder="New Description"
         required
-        onChange={(e) => setNewIpfs1("0x" + keccak256(e.target.value))}
+        onChange={(e) => setNewIpfs1(web3.utils.keccak256(e.target.value))}
       />
       <input type="submit" value="New Description" />
     </form>

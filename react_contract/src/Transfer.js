@@ -1,5 +1,4 @@
 import React, { useState } from 'react';
-import { keccak256 } from 'js-sha3';
 import Web3Listener from './Web3Listener';
 
 
@@ -26,13 +25,13 @@ function Transfer() {
       <h3>Provenance Update Form</h3>
       <label>
         Index Reference:
-          <input type="text" name="txIndexField" onChange={e => setTxIndex('0x' + keccak256(e.target.value))} />
+          <input type="text" name="txIndexField" onChange={e => setTxIndex('0x' + web3.utils.soliditySha3(e.target.value))} />
         <br></br>
             Current Rights Holder:
-          <input type="text" name="CRHField" onChange={e => setCRH('0x' + keccak256(e.target.value))} />
+          <input type="text" name="CRHField" onChange={e => setCRH('0x' + web3.utils.soliditySha3(e.target.value))} />
         <br></br>
             New Rights Holder:
-          <input type="text" name="NRHField" onChange={e => setNRH('0x' + keccak256(e.target.value))} />
+          <input type="text" name="NRHField" onChange={e => setNRH('0x' + web3.utils.soliditySha3(e.target.value))} />
         <br></br>
       </label>
       <button onClick={txProvenance}>Transfer Asset</button>
