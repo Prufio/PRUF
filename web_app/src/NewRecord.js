@@ -33,8 +33,10 @@ function NewRecord() {
         ..._index,
         [e.target.name]: e.target.value
       });
-      console.log(_index.type, _index.manufacturer, _index.model, _index.serial);
-      setIdxHash(web3.utils.soliditySha3(_index.type, _index.manufacturer, _index.model, _index.serial))
+      //console.log(_index.type, _index.manufacturer, _index.model, _index.serial);
+      let _str = _index.type + _index.manufacturer + _index.model + _index.serial;
+      setIdxHash(web3.utils.soliditySha3(_str))
+      console.log(_str);
   }
 
   const rightsDoctor = (e) => {
@@ -116,7 +118,7 @@ function NewRecord() {
       <input
         type="text"
         name="first"
-        placeholder="first name"
+        placeholder="First name"
         required
         onChange={(e) => rightsDoctor(e)}
       />
@@ -125,7 +127,7 @@ function NewRecord() {
       <input
         type="text"
         name="middle"
-        placeholder="middle name"
+        placeholder="Middle name"
         required
         onChange={(e) => rightsDoctor(e)}
       />
@@ -134,7 +136,7 @@ function NewRecord() {
       <input
         type="text"
         name="surname"
-        placeholder="surname"
+        placeholder="Surname"
         required
         onChange={(e) => rightsDoctor(e)}
       />
@@ -143,7 +145,7 @@ function NewRecord() {
       <input
         type="text"
         name="id"
-        placeholder="id"
+        placeholder="ID"
         required
         onChange={(e) => rightsDoctor(e)}
       />

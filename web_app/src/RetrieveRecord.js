@@ -7,20 +7,24 @@ function RetrieveRecord() {
   var [result, setResult] = useState([]);
   var [idxHash, setIdxHash] = useState("");
 
+  const [_index, _setIndex] = useState({
+    type:'',
+    manufacturer:'',
+    model:'',
+    serial:''
+  })
+  
   const indexDoctor = (e) => {
     _setIndex({
       ..._index,
       [e.target.name]: e.target.value
     });
-    console.log(_index.type, _index.manufacturer, _index.model, _index.serial);
-    setIdxHash(web3.utils.soliditySha3(_index.type, _index.manufacturer, _index.model, _index.serial))
+    //console.log(_index.type, _index.manufacturer, _index.model, _index.serial);
+    let idx_str = _index.type + _index.manufacturer + _index.model + _index.serial;
+    setIdxHash(web3.utils.soliditySha3(idx_str))
+    console.log(idx_str);
 }
-const [_index, _setIndex] = useState({
-  type:'',
-  manufacturer:'',
-  model:'',
-  serial:''
-})
+
 
   const _retrieveRecord = () => {
     console.log(   //------------------------------------------remove ------security
@@ -31,7 +35,6 @@ const [_index, _setIndex] = useState({
     storage.methods
       .retrieveRecord(idxHash)
       .call({ from: addr}).then(_result => {setResult(_result);});
-    console.log(result[0]);
   };
 
   return (
@@ -71,6 +74,7 @@ const [_index, _setIndex] = useState({
         name="serial"
         placeholder="Serial Number"
         required
+        onChange={(e) => indexDoctor(e)}
       />
       <br></br>
       <input type="button" value="Retrieve Record"  onClick={_retrieveRecord}/>
