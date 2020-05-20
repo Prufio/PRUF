@@ -61,7 +61,7 @@ function Web3Listener(request) {
     }
 
     else if (request === 'frontend') {
-        return (bulletproof);
+        return (frontend);
     }
 
     else if (request === 'storage') {
