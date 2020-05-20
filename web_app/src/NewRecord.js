@@ -24,7 +24,8 @@ function NewRecord() {
       CountDownStart,
       Ipfs1
     );
-    let _rgtHash = (web3.utils.soliditySha3(idxHash, rgtHash));
+    
+  let _rgtHash = (web3.utils.soliditySha3(idxHash, rgtHash));
     console.log('NewHash', _rgtHash);
     console.log('idxHash', idxHash);
 

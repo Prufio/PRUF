@@ -19,8 +19,12 @@ function TransferAsset() {
       newRgtHash
     );
 
+  let _rgtHash = (web3.utils.soliditySha3(idxHash, rgtHash));
+    console.log('NewHash', _rgtHash);
+    console.log('idxHash', idxHash);
+
     bulletproof.methods
-      .$transferAsset(idxHash, rgtHash, newRgtHash)
+      .$transferAsset(idxHash, _rgtHash, newRgtHash)
       .send({ from: addr, value: web3.utils.toWei("0.01") })
       .on("receipt", (receipt) => {
         setTxHash(receipt.transactionHash);

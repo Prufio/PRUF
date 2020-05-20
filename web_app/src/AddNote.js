@@ -12,15 +12,20 @@ function AddNote() {
   var [newIpfs2, setNewIpfs2] = useState("");
   var [txHash, setTxHash] = useState("");
   const _addNote = () => {
-    console.log(   //------------------------------------------remove ------security
+    console.log(
+      //------------------------------------------remove ------security
       "Sending data: ",
       idxHash,
       rgtHash,
       newIpfs2
     );
+    
+  let _rgtHash = web3.utils.soliditySha3(idxHash, rgtHash);
+    console.log("NewHash", _rgtHash);
+    console.log("idxHash", idxHash);
 
     bulletproof.methods
-      .$addIpfs2Note(idxHash, rgtHash, newIpfs2)
+      .$addIpfs2Note(idxHash, _rgtHash, newIpfs2)
       .send({ from: addr, value: web3.utils.toWei("0.01") })
       .on("receipt", (receipt) => {
         setTxHash(receipt.transactionHash);
