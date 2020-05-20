@@ -134,8 +134,8 @@ contract FrontEnd is PullPayment, Ownable {
     {
         bytes32 idxHash = keccak256(abi.encodePacked(_idx));
         bytes32 rgtHash = keccak256(abi.encodePacked(_rgt));
-        rgtHash = keccak256(abi.encodePacked(idxHash, rgtHash));
-        return (rgtHash);
+        bytes32 NewRgtHash = keccak256(abi.encodePacked(idxHash, rgtHash));
+        return (NewRgtHash); 
     }
 
     //--------------------------------------External functions--------------------------------------------//
