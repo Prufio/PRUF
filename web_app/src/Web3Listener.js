@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import Web3 from 'web3';
 import returnStorageAbi from './stor_abi';
 import returnFrontEndAbi from './front_abi';

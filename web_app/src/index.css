@@ -106,7 +106,7 @@
   }
 
   .NRform {
-    height: 60.0rem;
+    height: 90.0rem;
     width: 20.0rem;
     background-color:  rgb(5, 164, 161);
     border-radius: 1.0rem;
@@ -138,7 +138,7 @@
   }
 
   .RRform {
-    height: 15.0rem;
+    height: 40.0rem;
     width: 20.0rem;
     background-color:  rgb(5, 164, 161);
     border-radius: 1.0rem;
@@ -258,6 +258,6 @@
     padding: 1.0rem;
     display:flex;
     flex-direction: row;
-    justify-content: start;
+    justify-content: flex-start;
     margin-right: auto;
   }
