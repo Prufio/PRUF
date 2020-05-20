@@ -34,9 +34,9 @@ function NewRecord() {
         [e.target.name]: e.target.value
       });
       //console.log(_index.type, _index.manufacturer, _index.model, _index.serial);
-      let _str = _index.type + _index.manufacturer + _index.model + _index.serial;
-      setIdxHash(web3.utils.soliditySha3(_str))
-      console.log(_str);
+      //let idx_str = _index.type + _index.manufacturer + _index.model + _index.serial;
+      setIdxHash(web3.utils.soliditySha3(_index.type, _index.manufacturer, _index.model, _index.serial));
+      //console.log(idx_str);
   }
 
   const rightsDoctor = (e) => {
