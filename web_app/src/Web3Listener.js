@@ -9,8 +9,8 @@ function Web3Listener(request) {
     const ethereum = window.ethereum;
     web3 = new Web3(web3.givenProvider);
     var [addr, setAddr] = useState('');
-    const bulletproof_frontend_addr = "0xd351e6172d3F1E6013c0a05bCC7DA057d0151C86";
-    const bulletproof_storage_addr = "0xA2A47E0733Ed153e0c263334Ec92a34AB4A15B70";
+    const bulletproof_frontend_addr = "0x755414B4137F418810bd399E22da19ec9ddfdEaE";
+    const bulletproof_storage_addr = "0xC600741749E4c90Ad553E31DF5f2EA9fe51aB4e0";
     const frontEnd_abi = returnFrontEndAbi();
     const storage_abi = returnStorageAbi();
     const bulletproof = new web3.eth.Contract(frontEnd_abi, bulletproof_frontend_addr);
