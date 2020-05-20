@@ -6,14 +6,49 @@ function NewRecord() {
   let addr = Web3Listener("addr");
   let frontend = Web3Listener("frontend");
 
-  var [idxHash, setidxHash] = useState("");
-  var [rgtHash, setrgtHash] = useState("");
+  var [idxHash, setIdxHash] = useState("");
+  var [rgtHash, setRgtHash] = useState("");
   var [AssetClass, setAssetClass] = useState("");
   var [CountDownStart, setCountDownStart] = useState("");
   var [Ipfs1, setIPFS1] = useState("");
   var [txHash, setTxHash] = useState("");
 
+    const [_index, _setIndex] = useState({
+      type:'',
+      manufacturer:'',
+      model:'',
+      serial:''
+    })
+    
+    const [_rights, _setRights] = useState({
+      first:'',
+      middle:'',
+      surname:'',
+      id:'',
+      password:''
+    })
+
+  const indexDoctor = (e) => {
+      _setIndex({
+        ..._index,
+        [e.target.name]: e.target.value
+      });
+      console.log(_index.type, _index.manufacturer, _index.model, _index.serial);
+      setIdxHash(web3.utils.soliditySha3(_index.type, _index.manufacturer, _index.model, _index.serial))
+  }
+
+  const rightsDoctor = (e) => {
+      _setRights({
+        ..._rights,
+        [e.target.name]: e.target.value
+      });
+      console.log(_rights.first, _rights.middle, _rights.surname, _rights.id, _rights.password);
+      setRgtHash(web3.utils.soliditySha3(_rights.first, _rights.middle, _rights.surname, _rights.id, _rights.password));
+  }
+
   const _newRecord = () => {
+    setRgtHash(web3.utils.soliditySha3(idxHash, rgtHash));
+    console.log(_index.type, _index.manufacturer, _index.model, _index.serial);
     console.log(
       //------------------------------------------remove ------security
       "Sending data: ",
@@ -39,24 +74,95 @@ function NewRecord() {
   };
 
   return (
-    <form className="NRform" onSubmit={_newRecord}>
+    <form className="NRform">
       <h2>New Asset</h2>
-      Asset ID:
+      Type:
       <input
         type="text"
-        name="idxHashField"
-        placeholder="Asset ID"
+        name="type"
+        placeholder="Type"
         required
+<<<<<<< Updated upstream
         onChange={(e) => setidxHash(web3.utils.keccak256(e.target.value))}
+=======
+        onChange={(e) => indexDoctor(e)}
+>>>>>>> Stashed changes
       />
       <br></br>
-      Rights Holder:
+      Manufacturer:
       <input
         type="text"
-        name="rgtHashField"
-        placeholder="Rights Holder"
+        name="manufacturer"
+        placeholder="Manufacturer"
         required
+<<<<<<< Updated upstream
         onChange={(e) => setrgtHash(web3.utils.keccak256(e.target.value))}
+=======
+        onChange={(e) => indexDoctor(e)}
+      />
+      <br></br>
+      Model:
+      <input
+        type="text"
+        name="model"
+        placeholder="Model"
+        required
+        onChange={(e) => indexDoctor(e)}
+      />
+      <br></br>
+      Serial:
+      <input
+        type="text"
+        name="serial"
+        placeholder="Serial Number"
+        required
+        onChange={(e) => indexDoctor(e)}
+      />
+      <br></br>
+      First Name:
+      <input
+        type="text"
+        name="first"
+        placeholder="first name"
+        required
+        onChange={(e) => rightsDoctor(e)}
+      />
+      <br></br>
+      Middle Name:
+      <input
+        type="text"
+        name="middle"
+        placeholder="middle name"
+        required
+        onChange={(e) => rightsDoctor(e)}
+      />
+      <br></br>
+      Surname:
+      <input
+        type="text"
+        name="surname"
+        placeholder="surname"
+        required
+        onChange={(e) => rightsDoctor(e)}
+      />
+      <br></br>
+      ID:
+      <input
+        type="text"
+        name="id"
+        placeholder="id"
+        required
+        onChange={(e) => rightsDoctor(e)}
+      />
+      <br></br>
+      Password:
+      <input
+        type="text"
+        name="passkey"
+        placeholder="Password"
+        required
+        onChange={(e) => rightsDoctor(e)}
+>>>>>>> Stashed changes
       />
       <br></br>
       Asset Class:
@@ -86,9 +192,11 @@ function NewRecord() {
         onChange={(e) => setIPFS1(web3.utils.soliditySha3(e.target.value))}
       />
       <br />
-      <input type="submit" value="New Record" />
+      {idxHash}
+      <input type="button" value="New Record" onClick={_newRecord} />
     </form>
   );
 }
 
 export default NewRecord;
+
