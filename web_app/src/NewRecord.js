@@ -24,9 +24,12 @@ function NewRecord() {
       CountDownStart,
       Ipfs1
     );
+    let _rgtHash = (web3.utils.soliditySha3(idxHash, rgtHash));
+    console.log('NewHash', _rgtHash);
+    console.log('idxHash', idxHash);
 
     bulletproof.methods
-      .$newRecord(idxHash, rgtHash, AssetClass, CountDownStart, Ipfs1)
+      .$newRecord(idxHash, _rgtHash, AssetClass, CountDownStart, Ipfs1)
       .send({ from: addr, value: web3.utils.toWei("0.01") })
 
       .on("receipt", (receipt) => {
@@ -44,7 +47,7 @@ function NewRecord() {
         name="idxHashField"
         placeholder="Asset ID"
         required
-        onChange={(e) => setidxHash("0x" + keccak256(e.target.value))}
+        onChange={(e) => setidxHash('0x' + keccak256(e.target.value))}
       />
       <br></br>
       Rights Holder:
@@ -53,7 +56,7 @@ function NewRecord() {
         name="rgtHashField"
         placeholder="Rights Holder"
         required
-        onChange={(e) => setrgtHash("0x" + keccak256(e.target.value))}
+        onChange={(e) => setrgtHash('0x' + keccak256(e.target.value))}
       />
       <br></br>
       Asset Class:
