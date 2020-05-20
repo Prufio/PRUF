@@ -6,67 +6,35 @@ function NewRecord() {
   let addr = Web3Listener("addr");
   let frontend = Web3Listener("frontend");
 
-  var [idxHash, setIdxHash] = useState("");
-  var [rgtHash, setRgtHash] = useState("");
   var [AssetClass, setAssetClass] = useState("");
   var [CountDownStart, setCountDownStart] = useState("");
   var [Ipfs1, setIPFS1] = useState("");
   var [txHash, setTxHash] = useState("");
 
-    const [_index, _setIndex] = useState({
-      type:'',
-      manufacturer:'',
-      model:'',
-      serial:''
-    })
-    
-    const [_rights, _setRights] = useState({
-      first:'',
-      middle:'',
-      surname:'',
-      id:'',
-      password:''
-    })
+  var [type, setType] = useState("");
+  var [manufacturer, setManufacturer] = useState("");
+  var [model, setModel] = useState("");
+  var [serial, setSerial] = useState("");
 
-  const indexDoctor = (e) => {
-      _setIndex({
-        ..._index,
-        [e.target.name]: e.target.value
-      });
-      //console.log(_index.type, _index.manufacturer, _index.model, _index.serial);
-      //let idx_str = _index.type + _index.manufacturer + _index.model + _index.serial;
-      setIdxHash(web3.utils.soliditySha3(_index.type, _index.manufacturer, _index.model, _index.serial));
-      //console.log(idx_str);
-  }
+  var [first, setFirst] = useState("");
+  var [middle, setMiddle] = useState("");
+  var [surname, setSurname] = useState("");
+  var [id, setID] = useState("");
+  var [secret, setSecret] = useState("");
 
-  const rightsDoctor = (e) => {
-      _setRights({
-        ..._rights,
-        [e.target.name]: e.target.value
-      });
-      console.log(_rights.first, _rights.middle, _rights.surname, _rights.id, _rights.password);
-      setRgtHash(web3.utils.soliditySha3(_rights.first, _rights.middle, _rights.surname, _rights.id, _rights.password));
-  }
-
+  
   const _newRecord = () => {
-    setRgtHash(web3.utils.soliditySha3(idxHash, rgtHash));
-    console.log(_index.type, _index.manufacturer, _index.model, _index.serial);
-    console.log(
-      //------------------------------------------remove ------security
-      "Sending data: ",
-      idxHash,
-      rgtHash,
-      AssetClass,
-      CountDownStart,
-      Ipfs1
-    );
-    
-  let _rgtHash = (web3.utils.soliditySha3(idxHash, rgtHash));
-    console.log('NewHash', _rgtHash);
-    console.log('idxHash', idxHash);
+
+    var idxHash = (web3.utils.soliditySha3(type, manufacturer, model, serial));
+    var rgtRaw = (web3.utils.soliditySha3(first, middle, surname, id, secret));
+    var rgtHash = (web3.utils.soliditySha3(idxHash, rgtRaw));
+
+    console.log("idxHash", idxHash);
+    console.log("New rgtRaw", rgtRaw);
+    console.log("New rgtHash", rgtHash);
 
     frontend.methods
-      .$newRecord(idxHash, _rgtHash, AssetClass, CountDownStart, Ipfs1)
+      .$newRecord(idxHash, rgtHash, AssetClass, CountDownStart, Ipfs1)
       .send({ from: addr, value: web3.utils.toWei("0.01") })
 
       .on("receipt", (receipt) => {
@@ -78,13 +46,14 @@ function NewRecord() {
   return (
     <form className="NRform">
       <h2>New Asset</h2>
+      {addr}
       Type:
       <input
         type="text"
         name="type"
         placeholder="Type"
         required
-        onChange={(e) => indexDoctor(e)}
+        onChange={(e) => setType(e.target.value)} 
       />
       <br></br>
       Manufacturer:
@@ -93,7 +62,7 @@ function NewRecord() {
         name="manufacturer"
         placeholder="Manufacturer"
         required
-        onChange={(e) => indexDoctor(e)}
+        onChange={(e) => setManufacturer(e.target.value)} 
       />
       <br></br>
       Model:
@@ -102,7 +71,7 @@ function NewRecord() {
         name="model"
         placeholder="Model"
         required
-        onChange={(e) => indexDoctor(e)}
+        onChange={(e) => setModel(e.target.value)} 
       />
       <br></br>
       Serial:
@@ -111,7 +80,7 @@ function NewRecord() {
         name="serial"
         placeholder="Serial Number"
         required
-        onChange={(e) => indexDoctor(e)}
+        onChange={(e) => setSerial(e.target.value)}
       />
       <br></br>
       First Name:
@@ -120,7 +89,7 @@ function NewRecord() {
         name="first"
         placeholder="First name"
         required
-        onChange={(e) => rightsDoctor(e)}
+        onChange={(e) => setFirst(e.target.value)}
       />
       <br></br>
       Middle Name:
@@ -129,7 +98,7 @@ function NewRecord() {
         name="middle"
         placeholder="Middle name"
         required
-        onChange={(e) => rightsDoctor(e)}
+        onChange={(e) => setMiddle(e.target.value)}
       />
       <br></br>
       Surname:
@@ -138,7 +107,7 @@ function NewRecord() {
         name="surname"
         placeholder="Surname"
         required
-        onChange={(e) => rightsDoctor(e)}
+        onChange={(e) => setSurname(e.target.value)}
       />
       <br></br>
       ID:
@@ -147,16 +116,16 @@ function NewRecord() {
         name="id"
         placeholder="ID"
         required
-        onChange={(e) => rightsDoctor(e)}
+        onChange={(e) => setID(e.target.value)}
       />
       <br></br>
       Password:
       <input
         type="text"
-        name="passkey"
-        placeholder="Password"
+        name="secret"
+        placeholder="Secret"
         required
-        onChange={(e) => rightsDoctor(e)}
+        onChange={(e) => setSecret(e.target.value)}
       />
       <br></br>
       Asset Class:
@@ -186,11 +155,9 @@ function NewRecord() {
         onChange={(e) => setIPFS1(web3.utils.soliditySha3(e.target.value))}
       />
       <br />
-      {idxHash}
       <input type="button" value="New Record" onClick={_newRecord} />
     </form>
   );
 }
 
 export default NewRecord;
-

@@ -30,10 +30,6 @@ contract StorageInterface {
         bytes32 _Ipfs2
     ) external {}
 
-    // function retrieveRecorder(bytes32 _idxHash)
-    //     external
-    //     returns (bytes32, bytes32, bytes32)
-    // {}
 
     function retrieveCosts(uint16 _assetClass)
         external
@@ -127,15 +123,39 @@ contract FrontEnd is PullPayment, Ownable {
         return keccak256(abi.encodePacked(_idx));
     }
 
-    function getRgtHash(string calldata _idx, string calldata _rgt)
-        external
-        pure
-        returns (bytes32)
-    {
-        bytes32 idxHash = keccak256(abi.encodePacked(_idx));
-        bytes32 rgtHash = keccak256(abi.encodePacked(_rgt));
-        bytes32 NewRgtHash = keccak256(abi.encodePacked(idxHash, rgtHash));
-        return (NewRgtHash); 
+    function getIdxHash(
+        string memory _idx_type,
+        string memory _idx_mfg,
+        string memory _idx_mod,
+        string memory _idx_ser
+    ) public pure returns (bytes32) {
+        bytes32 idxHash;
+        idxHash = keccak256(
+            abi.encodePacked(_idx_type, _idx_mfg, _idx_mod, _idx_ser)
+        );
+        return (idxHash);
+    }
+
+    function getRgtHash(
+        bytes32 _idxHash,
+        string memory _rgt_first,
+        string memory _rgt_mid,
+        string memory _rgt_last,
+        string memory _rgt_ID,
+        string memory _rgt_secret
+    ) public pure returns (bytes32, bytes32) {
+        bytes32 rawRgtHash;
+
+        rawRgtHash = keccak256(
+            abi.encodePacked(
+                _rgt_first,
+                _rgt_mid,
+                _rgt_last,
+                _rgt_ID,
+                _rgt_secret
+            )
+        );
+        return (rawRgtHash, keccak256(abi.encodePacked(_idxHash, rawRgtHash)));
     }
 
     //--------------------------------------External functions--------------------------------------------//
@@ -278,7 +298,10 @@ contract FrontEnd is PullPayment, Ownable {
 
         require(_newrgtHash != 0, "TA:ERR-new Rightsholder cannot be blank");
 
-        require(rec.assetStatus < 3, "TA:ERR--Asset assetStatus is not transferrable");
+        require(
+            rec.assetStatus < 3,
+            "TA:ERR--Asset assetStatus is not transferrable"
+        );
 
         rec.rightsHolder = _newrgtHash;
 

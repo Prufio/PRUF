@@ -4,33 +4,21 @@ function RetrieveRecord() {
   let web3 = Web3Listener("web3");
   let addr = Web3Listener("addr");
   let storage = Web3Listener("storage");
+
+  var [type, setType] = useState("");
+  var [manufacturer, setManufacturer] = useState("");
+  var [model, setModel] = useState("");
+  var [serial, setSerial] = useState("");
+
+
   var [result, setResult] = useState([]);
-  var [idxHash, setIdxHash] = useState("");
 
-  const [_index, _setIndex] = useState({
-    type:'',
-    manufacturer:'',
-    model:'',
-    serial:''
-  })
-
-  const indexDoctor = (e) => {
-    _setIndex({
-      ..._index,
-      [e.target.name]: e.target.value
-    });
-    //console.log(_index.type, _index.manufacturer, _index.model, _index.serial);
-    //let idx_str = _index.type + _index.manufacturer + _index.model + _index.serial;
-    setIdxHash(web3.utils.soliditySha3(_index.type, _index.manufacturer, _index.model, _index.serial));
-    //console.log(idx_str);
-}
-
-
+  
   const _retrieveRecord = () => {
-    console.log(   //------------------------------------------remove ------security
-      "Sending data: ",
-      idxHash,
-    );
+
+    var idxHash = (web3.utils.soliditySha3(type, manufacturer, model, serial));
+
+    console.log("idxHash", idxHash);
 
     storage.methods
       .retrieveRecord(idxHash)
@@ -47,7 +35,7 @@ function RetrieveRecord() {
         name="type"
         placeholder="Type"
         required
-        onChange={(e) => indexDoctor(e)}
+        onChange={(e) => setType(e.target.value)}
       />
       <br></br>
       Manufacturer:
@@ -56,7 +44,7 @@ function RetrieveRecord() {
         name="manufacturer"
         placeholder="Manufacturer"
         required
-        onChange={(e) => indexDoctor(e)}
+        onChange={(e) => setManufacturer(e.target.value)}
       />
       <br></br>
       Model:
@@ -65,7 +53,7 @@ function RetrieveRecord() {
         name="model"
         placeholder="Model"
         required
-        onChange={(e) => indexDoctor(e)}
+        onChange={(e) => setModel(e.target.value)} 
       />
       <br></br>
       Serial:
@@ -74,7 +62,7 @@ function RetrieveRecord() {
         name="serial"
         placeholder="Serial Number"
         required
-        onChange={(e) => indexDoctor(e)}
+        onChange={(e) => setSerial(e.target.value)} 
       />
       <br></br>
       <input type="button" value="Retrieve Record"  onClick={_retrieveRecord}/>
@@ -88,9 +76,9 @@ function RetrieveRecord() {
     <br></br>
     Count Down Status: {result[6]}
     <br></br>
-    NotesHashKey: {result[8]}
+    Description Hash: {result[8]}
     <br></br>
-    InscriptionKey: {result[9]}
+    Note Hash: {result[9]}
     </div>
   );
 }
