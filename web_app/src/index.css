@@ -238,7 +238,6 @@
     width: 20.0rem;
     background-color:  rgb(221, 7, 7);
     border-radius: 1.0rem;
-    border-radius: 1.0rem;
     font-weight: default;
     text-decoration: none;
     font-size: 2.0rem;
@@ -248,4 +247,17 @@
     justify-content: space-between;
     align-items: center;
     margin: 0 auto; 
+  }
+
+  .addr {
+    height: 5.0rem;
+    width: 36.0rem;
+    background-color:   rgb(0, 0, 0);
+    border-radius: 1.0rem;
+    font-size: 1.6rem;
+    padding: 1.0rem;
+    display:flex;
+    flex-direction: row;
+    justify-content: start;
+    margin-right: auto;
   }

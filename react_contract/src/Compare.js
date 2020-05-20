@@ -2,7 +2,6 @@ import React, { useState } from 'react';
 import Web3Listener from './Web3Listener';
 
 function Compare() {
-  let web3 = Web3Listener('web3');
   let addr = Web3Listener('addr');
   let storage = Web3Listener('storage');
 

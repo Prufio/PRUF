@@ -5,86 +5,6 @@ function returnSAbi(){
                 "anonymous": false,
                 "inputs": [
                     {
-                        "indexed": false,
-                        "internalType": "bytes32",
-                        "name": "",
-                        "type": "bytes32"
-                    },
-                    {
-                        "indexed": false,
-                        "internalType": "bytes32",
-                        "name": "",
-                        "type": "bytes32"
-                    },
-                    {
-                        "indexed": false,
-                        "internalType": "bytes32",
-                        "name": "",
-                        "type": "bytes32"
-                    },
-                    {
-                        "indexed": false,
-                        "internalType": "uint8",
-                        "name": "",
-                        "type": "uint8"
-                    },
-                    {
-                        "indexed": false,
-                        "internalType": "uint8",
-                        "name": "",
-                        "type": "uint8"
-                    },
-                    {
-                        "indexed": false,
-                        "internalType": "uint16",
-                        "name": "",
-                        "type": "uint16"
-                    },
-                    {
-                        "indexed": false,
-                        "internalType": "uint256",
-                        "name": "",
-                        "type": "uint256"
-                    },
-                    {
-                        "indexed": false,
-                        "internalType": "uint256",
-                        "name": "",
-                        "type": "uint256"
-                    },
-                    {
-                        "indexed": false,
-                        "internalType": "bytes32",
-                        "name": "",
-                        "type": "bytes32"
-                    },
-                    {
-                        "indexed": false,
-                        "internalType": "bytes32",
-                        "name": "",
-                        "type": "bytes32"
-                    }
-                ],
-                "name": "EMIT_RECORD",
-                "type": "event"
-            },
-            {
-                "anonymous": false,
-                "inputs": [
-                    {
-                        "indexed": false,
-                        "internalType": "bytes32",
-                        "name": "",
-                        "type": "bytes32"
-                    }
-                ],
-                "name": "EMIT_RIGHTS_HOLDER",
-                "type": "event"
-            },
-            {
-                "anonymous": false,
-                "inputs": [
-                    {
                         "indexed": true,
                         "internalType": "address",
                         "name": "previousOwner",
@@ -115,6 +35,11 @@ function returnSAbi(){
             },
             {
                 "inputs": [
+                    {
+                        "internalType": "string",
+                        "name": "_name",
+                        "type": "string"
+                    },
                     {
                         "internalType": "address",
                         "name": "_addr",
@@ -262,30 +187,6 @@ function returnSAbi(){
             {
                 "inputs": [
                     {
-                        "internalType": "bytes32",
-                        "name": "_idxHash",
-                        "type": "bytes32"
-                    },
-                    {
-                        "internalType": "bytes32",
-                        "name": "_rgtHash",
-                        "type": "bytes32"
-                    }
-                ],
-                "name": "XcompareRightsHolder",
-                "outputs": [
-                    {
-                        "internalType": "string",
-                        "name": "",
-                        "type": "string"
-                    }
-                ],
-                "stateMutability": "view",
-                "type": "function"
-            },
-            {
-                "inputs": [
-                    {
                         "internalType": "string",
                         "name": "_idx",
                         "type": "string"
@@ -296,7 +197,7 @@ function returnSAbi(){
                         "type": "string"
                     }
                 ],
-                "name": "compareRightsHolder",
+                "name": "Admin_compare_rgt",
                 "outputs": [
                     {
                         "internalType": "string",
@@ -313,10 +214,21 @@ function returnSAbi(){
                         "internalType": "bytes32",
                         "name": "_idxHash",
                         "type": "bytes32"
+                    },
+                    {
+                        "internalType": "bytes32",
+                        "name": "_rgtHash",
+                        "type": "bytes32"
                     }
                 ],
-                "name": "emitRecord",
-                "outputs": [],
+                "name": "BlockchainVerifyRightsHolder",
+                "outputs": [
+                    {
+                        "internalType": "uint8",
+                        "name": "",
+                        "type": "uint8"
+                    }
+                ],
                 "stateMutability": "nonpayable",
                 "type": "function"
             },
@@ -326,11 +238,41 @@ function returnSAbi(){
                         "internalType": "bytes32",
                         "name": "_idxHash",
                         "type": "bytes32"
+                    },
+                    {
+                        "internalType": "bytes32",
+                        "name": "_rgtHash",
+                        "type": "bytes32"
                     }
                 ],
-                "name": "emitRightsHolder",
-                "outputs": [],
-                "stateMutability": "nonpayable",
+                "name": "CompareRightsHolder",
+                "outputs": [
+                    {
+                        "internalType": "uint256",
+                        "name": "",
+                        "type": "uint256"
+                    }
+                ],
+                "stateMutability": "view",
+                "type": "function"
+            },
+            {
+                "inputs": [
+                    {
+                        "internalType": "string",
+                        "name": "_name",
+                        "type": "string"
+                    }
+                ],
+                "name": "ResolveContractAddress",
+                "outputs": [
+                    {
+                        "internalType": "address",
+                        "name": "",
+                        "type": "address"
+                    }
+                ],
+                "stateMutability": "view",
                 "type": "function"
             },
             {
@@ -509,7 +451,7 @@ function returnSAbi(){
                         "type": "bytes32"
                     }
                 ],
-                "name": "retrieveIPFSData",
+                "name": "retrieveExtendedData",
                 "outputs": [
                     {
                         "internalType": "bytes32",
@@ -561,6 +503,16 @@ function returnSAbi(){
                         "type": "bytes32"
                     },
                     {
+                        "internalType": "bytes32",
+                        "name": "",
+                        "type": "bytes32"
+                    },
+                    {
+                        "internalType": "bytes32",
+                        "name": "",
+                        "type": "bytes32"
+                    },
+                    {
                         "internalType": "uint8",
                         "name": "",
                         "type": "uint8"
@@ -584,6 +536,11 @@ function returnSAbi(){
                         "internalType": "uint256",
                         "name": "",
                         "type": "uint256"
+                    },
+                    {
+                        "internalType": "bytes32",
+                        "name": "",
+                        "type": "bytes32"
                     },
                     {
                         "internalType": "bytes32",

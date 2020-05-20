@@ -9,21 +9,18 @@ function Web3Listener(request) {
     const ethereum = window.ethereum;
     web3 = new Web3(web3.givenProvider);
     var [addr, setAddr] = useState('');
-    const bulletproof_frontend_addr = "0xCc2CBfd27fbf7AEF15FFfe119B91c3006B5DE0b0";
-    const bulletproof_storage_addr = "0xec7C54c5A4F454fA951077A6D200A73910eB1ae0";
+    const bulletproof_frontend_addr = "0xe9d8A17cD975Fc36734E09D68Fe3535c61E64CB6";
+    const bulletproof_storage_addr = "0xe9B2AdeFe20f38Bb9B1Ce951baDafbf011eB4544";
     const myAbi = returnAbi();
     const sAbi = returnSAbi();
     const bulletproof = new web3.eth.Contract(myAbi, bulletproof_frontend_addr);
     const storage = new web3.eth.Contract(sAbi, bulletproof_storage_addr);
 
     window.addEventListener('load', async () => {
-
-        await ethereum.enable();
         web3.eth.getAccounts().then(e => setAddr(e[0]));
 
         if (web3.eth.getAccounts().then(e => e === addr)) {
             console.log("Serving current metamask address at accounts[0]");
-
         }
 
         ethereum.on('accountsChanged', function (accounts) {
@@ -32,6 +29,13 @@ function Web3Listener(request) {
         })
 
     })
+
+    const checkReport =() => {
+        storage.events.REPORT({fromBlock: '0x0', toBlock: 'latest'}.then((error, event) => {
+            return (event[1]);
+    }));
+
+    }
 
     if (request === 'addr') {
         return (addr);
@@ -48,6 +52,20 @@ function Web3Listener(request) {
     else if (request === 'storage') {
         return (storage);
     }
+
+     else if (request === 'REPORT') {
+        return (checkReport);
+     }
+
+     else if (request === 'ethereum'){
+         if(ethereum){
+            return (ethereum);
+         }
+
+         else{
+             return (false);
+         }
+     }
 
 
 

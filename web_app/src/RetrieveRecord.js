@@ -3,28 +3,25 @@ import Web3Listener from "./Web3Listener";
 
 function RetrieveRecord() {
   let addr = Web3Listener("addr");
-  let frontend = Web3Listener("frontend");
-  let web3 = Web3Listener("web3");
+  let storage = Web3Listener("storage");
   var [idxHash, setidxHash] = useState("");
-  var [txHash, setTxHash] = useState("");
+  var [result, setResult] = useState([]);
   const _retrieveRecord = () => {
     console.log(   //------------------------------------------remove ------security
       "Sending data: ",
       idxHash,
     );
 
-    frontend.methods
+    storage.methods
       .retrieveRecord(idxHash)
-      .send({ from: addr})
-      .on("receipt", (receipt) => {
-        setTxHash(receipt.transactionHash);
-      });
-    console.log(txHash);
+      .call({ from: addr}).then(_result => {setResult(_result);});
+    console.log(result[0]);
   };
 
   return (
+    <div>
     <form className="RRform" onSubmit={_retrieveRecord}>
-      <h2>Transfer Asset</h2>
+      <h2>Search for Record</h2>
       Asset ID:
       <input
         type="text"
@@ -35,6 +32,19 @@ function RetrieveRecord() {
       />
       <input type="submit" value="Retrieve Record" />
     </form>
+    <br></br>
+    Status: {result[3]}
+    <br></br>
+    Force Mod Count: {result[4]}
+    <br></br>
+    Asset Class: {result[5]}
+    <br></br>
+    Count Down Status: {result[6]}
+    <br></br>
+    NotesHashKey: {result[8]}
+    <br></br>
+    InscriptionKey: {result[9]}
+    </div>
   );
 }
 
