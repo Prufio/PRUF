@@ -1,26 +1,31 @@
 import React, { useState } from "react";
-import { keccak256 } from "js-sha3";
 import Web3Listener from "./Web3Listener";
 
 function DecrementCounter() {
   let addr = Web3Listener("addr");
-  let bulletproof = Web3Listener("bulletproof");
+  let frontend = Web3Listener("frontend");
+  let web3 = Web3Listener("web3");
 
   var [idxHash, setidxHash] = useState("");
   var [rgtHash, setrgtHash] = useState("");
   var [countdownAmount, setCountdownAmount] = useState("");
   var [txHash, setTxHash] = useState("");
   const _decrementCounter = () => {
-    console.log(   //------------------------------------------remove ------security
+    console.log(
+      //------------------------------------------remove ------security
       "Sending data: ",
       idxHash,
       rgtHash,
       countdownAmount
     );
 
-    bulletproof.methods
-      ._decCounter(idxHash, rgtHash, countdownAmount)
-      .send({ from: addr})
+    let _rgtHash = web3.utils.soliditySha3(idxHash, rgtHash);
+    console.log("NewHash", _rgtHash);
+    console.log("idxHash", idxHash);
+
+    frontend.methods
+      ._decCounter(idxHash, _rgtHash, countdownAmount)
+      .send({ from: addr })
       .on("receipt", (receipt) => {
         setTxHash(receipt.transactionHash);
       });
@@ -36,7 +41,9 @@ function DecrementCounter() {
         name="idxHashField"
         placeholder="Asset ID"
         required
-        onChange={(e) => setidxHash("0x" + keccak256(e.target.value))}
+        onChange={(e) =>
+          setidxHash("0x" + web3.utils.keccak256(e.target.value))
+        }
       />
       <br></br>
       Rights Holder:
@@ -45,7 +52,9 @@ function DecrementCounter() {
         name="rgtHashField"
         placeholder="Rights Holder"
         required
-        onChange={(e) => setrgtHash("0x" + keccak256(e.target.value))}
+        onChange={(e) =>
+          setrgtHash("0x" + web3.utils.keccak256(e.target.value))
+        }
       />
       <br></br>
       Countdown Amount

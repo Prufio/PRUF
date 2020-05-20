@@ -1,5 +1,4 @@
 import React, { useState } from "react";
-import { keccak256 } from "js-sha3";
 import Web3Listener from "./Web3Listener";
 
 function RetrieveRecord() {
@@ -29,7 +28,7 @@ function RetrieveRecord() {
         name="idxHashField"
         placeholder="Asset ID"
         required
-        onChange={(e) => setidxHash("0x" + keccak256(e.target.value))}
+        onChange={(e) => setidxHash(web3.utils.keccak256(e.target.value))}
       />
       <input type="submit" value="Retrieve Record" />
     </form>

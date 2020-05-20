@@ -1,11 +1,10 @@
 import React, { useState } from "react";
-import { keccak256 } from "js-sha3";
 import Web3Listener from "./Web3Listener";
 
 function NewRecord() {
   let web3 = Web3Listener("web3");
   let addr = Web3Listener("addr");
-  let bulletproof = Web3Listener("bulletproof");
+  let frontend = Web3Listener("frontend");
 
   var [idxHash, setidxHash] = useState("");
   var [rgtHash, setrgtHash] = useState("");
@@ -24,9 +23,13 @@ function NewRecord() {
       CountDownStart,
       Ipfs1
     );
+    
+  let _rgtHash = (web3.utils.soliditySha3(idxHash, rgtHash));
+    console.log('NewHash', _rgtHash);
+    console.log('idxHash', idxHash);
 
-    bulletproof.methods
-      .$newRecord(idxHash, rgtHash, AssetClass, CountDownStart, Ipfs1)
+    frontend.methods
+      .$newRecord(idxHash, _rgtHash, AssetClass, CountDownStart, Ipfs1)
       .send({ from: addr, value: web3.utils.toWei("0.01") })
 
       .on("receipt", (receipt) => {
@@ -44,7 +47,7 @@ function NewRecord() {
         name="idxHashField"
         placeholder="Asset ID"
         required
-        onChange={(e) => setidxHash("0x" + keccak256(e.target.value))}
+        onChange={(e) => setidxHash(web3.utils.keccak256(e.target.value))}
       />
       <br></br>
       Rights Holder:
@@ -53,7 +56,7 @@ function NewRecord() {
         name="rgtHashField"
         placeholder="Rights Holder"
         required
-        onChange={(e) => setrgtHash("0x" + keccak256(e.target.value))}
+        onChange={(e) => setrgtHash(web3.utils.keccak256(e.target.value))}
       />
       <br></br>
       Asset Class:
@@ -80,7 +83,7 @@ function NewRecord() {
         name="IPFS1Field"
         placeholder="Description IPFS hash"
         required
-        onChange={(e) => setIPFS1("0x" + keccak256(e.target.value))}
+        onChange={(e) => setIPFS1(web3.utils.soliditySha3(e.target.value))}
       />
       <br />
       <input type="submit" value="New Record" />

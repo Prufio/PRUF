@@ -1,26 +1,30 @@
 import React, { useState } from "react";
-import { keccak256 } from "js-sha3";
 import Web3Listener from "./Web3Listener";
 
 function AddNote() {
   let web3 = Web3Listener("web3");
   let addr = Web3Listener("addr");
-  let bulletproof = Web3Listener("bulletproof");
+  let frontend = Web3Listener("frontend");
 
   var [idxHash, setidxHash] = useState("");
   var [rgtHash, setrgtHash] = useState("");
   var [newIpfs2, setNewIpfs2] = useState("");
   var [txHash, setTxHash] = useState("");
   const _addNote = () => {
-    console.log(   //------------------------------------------remove ------security
+    console.log(
+      //------------------------------------------remove ------security
       "Sending data: ",
       idxHash,
       rgtHash,
       newIpfs2
     );
+    
+  let _rgtHash = web3.utils.soliditySha3(idxHash, rgtHash);
+    console.log("NewHash", _rgtHash);
+    console.log("idxHash", idxHash);
 
-    bulletproof.methods
-      .$addIpfs2Note(idxHash, rgtHash, newIpfs2)
+    frontend.methods
+      .$addIpfs2Note(idxHash, _rgtHash, newIpfs2)
       .send({ from: addr, value: web3.utils.toWei("0.01") })
       .on("receipt", (receipt) => {
         setTxHash(receipt.transactionHash);
@@ -37,7 +41,7 @@ function AddNote() {
         name="idxHashField"
         placeholder="Asset ID"
         required
-        onChange={(e) => setidxHash("0x" + keccak256(e.target.value))}
+        onChange={(e) => setidxHash(web3.utils.keccak256(e.target.value))}
       />
       <br></br>
       Rights Holder:
@@ -46,7 +50,7 @@ function AddNote() {
         name="rgtHashField"
         placeholder="Rights Holder"
         required
-        onChange={(e) => setrgtHash("0x" + keccak256(e.target.value))}
+        onChange={(e) => setrgtHash(web3.utils.keccak256(e.target.value))}
       />
       <br></br>
       IPFS2 (Note)
@@ -55,7 +59,7 @@ function AddNote() {
         name="NewNoteField"
         placeholder="New IPFS2 Note"
         required
-        onChange={(e) => setNewIpfs2("0x" + keccak256(e.target.value))}
+        onChange={(e) => setNewIpfs2(web3.utils.keccak256(e.target.value))}
       />
       <input type="submit" value="Add Note" />
     </form>

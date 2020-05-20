@@ -1,5 +1,4 @@
 import React, { useState } from 'react';
-import { keccak256 } from 'js-sha3';
 import Web3Listener from './Web3Listener';
 
 function NewRecord() {
@@ -29,10 +28,10 @@ function NewRecord() {
             <h3>New Asset Form</h3>
             <label>
                 Index Reference:
-          <input type="text" name="indexField" onChange={e => setIndex('0x' + keccak256(e.target.value))} />
+          <input type="text" name="indexField" onChange={e => setIndex('0x' + web3.utils.soliditySha3(e.target.value))} />
                 <br></br>
             Rights Holder:
-          <input type="text" name="RHField" onChange={e => setRH('0x' + keccak256(e.target.value))} />
+          <input type="text" name="RHField" onChange={e => setRH('0x' + web3.utils.soliditySha3(e.target.value))} />
                 <br></br>
             Asset Class:
           <input type="text" name="ACField" onChange={e => setAC(e.target.value)} />
@@ -41,7 +40,7 @@ function NewRecord() {
           <input type="text" name="LSField" onChange={e => setLS(e.target.value)} />
                 <br></br>
             Permanent Asset Notes:
-          <input type="text" name="IPFS1Field" onChange={e => setIPFS1('0x' + keccak256(e.target.value))} />
+          <input type="text" name="IPFS1Field" onChange={e => setIPFS1('0x' + web3.utils.soliditySha3(e.target.value))} />
                 <br></br>
             </label>
             <button onClick={_newRecord}>Create New Record</button>
