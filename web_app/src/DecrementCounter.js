@@ -5,22 +5,28 @@ import Web3Listener from "./Web3Listener";
 function DecrementCounter() {
   let addr = Web3Listener("addr");
   let bulletproof = Web3Listener("bulletproof");
+  let web3 = Web3Listener("web3");
 
   var [idxHash, setidxHash] = useState("");
   var [rgtHash, setrgtHash] = useState("");
   var [countdownAmount, setCountdownAmount] = useState("");
   var [txHash, setTxHash] = useState("");
   const _decrementCounter = () => {
-    console.log(   //------------------------------------------remove ------security
+    console.log(
+      //------------------------------------------remove ------security
       "Sending data: ",
       idxHash,
       rgtHash,
       countdownAmount
     );
+  
+  let _rgtHash = web3.utils.soliditySha3(idxHash, rgtHash);
+    console.log("NewHash", _rgtHash);
+    console.log("idxHash", idxHash);
 
     bulletproof.methods
-      ._decCounter(idxHash, rgtHash, countdownAmount)
-      .send({ from: addr})
+      ._decCounter(idxHash, _rgtHash, countdownAmount)
+      .send({ from: addr })
       .on("receipt", (receipt) => {
         setTxHash(receipt.transactionHash);
       });

@@ -227,7 +227,7 @@ function returnFrontEndAbi() {
 					},
 					{
 						"internalType": "uint8",
-						"name": "_status",
+						"name": "_assetStatus",
 						"type": "uint8"
 					}
 				],
@@ -298,6 +298,30 @@ function returnFrontEndAbi() {
 					}
 				],
 				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "string",
+						"name": "_idx",
+						"type": "string"
+					},
+					{
+						"internalType": "string",
+						"name": "_rgt",
+						"type": "string"
+					}
+				],
+				"name": "getRgtHash",
+				"outputs": [
+					{
+						"internalType": "bytes32",
+						"name": "",
+						"type": "bytes32"
+					}
+				],
+				"stateMutability": "pure",
 				"type": "function"
 			},
 			{

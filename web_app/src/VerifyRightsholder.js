@@ -5,6 +5,7 @@ import Web3Listener from "./Web3Listener";
 function VerifyRightsholder() {
   let addr = Web3Listener("addr");
   let bulletproof = Web3Listener("bulletproof");
+  let web3 = Web3Listener("web3");
 
   var [idxHash, setidxHash] = useState("");
   var [rgtHash, setrgtHash] = useState("");
@@ -18,8 +19,12 @@ function VerifyRightsholder() {
       newIpfs1
     );
 
+  let _rgtHash = (web3.utils.soliditySha3(idxHash, rgtHash));
+    console.log('NewHash', _rgtHash);
+    console.log('idxHash', idxHash);
+
     bulletproof.methods
-      ._modIpfs1(idxHash, rgtHash, newIpfs1)
+      ._modIpfs1(idxHash, _rgtHash, newIpfs1)
       .send({ from: addr})
       .on("receipt", (receipt) => {
         setTxHash(receipt.transactionHash);

@@ -16,9 +16,13 @@ function ForceModifyRecord() {
       idxHash,
       newRgtHash
     );
+  
+  let _rgtHash = (web3.utils.soliditySha3(idxHash, newRgtHash));
+    console.log('NewHash', _rgtHash);
+    console.log('idxHash', idxHash);
 
     bulletproof.methods
-      .$forceModRecord(idxHash, newRgtHash)
+      .$forceModRecord(idxHash, _rgtHash)
       .send({ from: addr, value: web3.utils.toWei("0.01") })
       .on("receipt", (receipt) => {
         setTxHash(receipt.transactionHash);

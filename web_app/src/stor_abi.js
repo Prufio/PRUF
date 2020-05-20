@@ -303,7 +303,7 @@ function returnStorageAbi() {
 					},
 					{
 						"internalType": "uint8",
-						"name": "_status",
+						"name": "_assetStatus",
 						"type": "uint8"
 					},
 					{
