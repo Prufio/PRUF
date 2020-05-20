@@ -1,11 +1,10 @@
 import React, { useState } from "react";
-import { keccak256 } from "js-sha3";
 import Web3Listener from "./Web3Listener";
 
 function RetrieveRecord() {
   let addr = Web3Listener("addr");
-  let bulletproof = Web3Listener("bulletproof");
-
+  let frontend = Web3Listener("frontend");
+  let web3 = Web3Listener("web3");
   var [idxHash, setidxHash] = useState("");
   var [txHash, setTxHash] = useState("");
   const _retrieveRecord = () => {
@@ -14,7 +13,7 @@ function RetrieveRecord() {
       idxHash,
     );
 
-    bulletproof.methods
+    frontend.methods
       .retrieveRecord(idxHash)
       .send({ from: addr})
       .on("receipt", (receipt) => {
@@ -32,7 +31,7 @@ function RetrieveRecord() {
         name="idxHashField"
         placeholder="Asset ID"
         required
-        onChange={(e) => setidxHash("0x" + keccak256(e.target.value))}
+        onChange={(e) => setidxHash(web3.utils.keccak256(e.target.value))}
       />
       <input type="submit" value="Retrieve Record" />
     </form>

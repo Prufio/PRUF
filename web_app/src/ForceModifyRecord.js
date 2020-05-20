@@ -1,11 +1,10 @@
 import React, { useState } from "react";
-import { keccak256 } from "js-sha3";
 import Web3Listener from "./Web3Listener";
 
 function ForceModifyRecord() {
   let web3 = Web3Listener("web3");
   let addr = Web3Listener("addr");
-  let bulletproof = Web3Listener("bulletproof");
+  let frontend = Web3Listener("frontend");
 
   var [idxHash, setidxHash] = useState("");
   var [newRgtHash, setNewRgtHash] = useState("");
@@ -21,7 +20,7 @@ function ForceModifyRecord() {
     console.log('NewHash', _rgtHash);
     console.log('idxHash', idxHash);
 
-    bulletproof.methods
+    frontend.methods
       .$forceModRecord(idxHash, _rgtHash)
       .send({ from: addr, value: web3.utils.toWei("0.01") })
       .on("receipt", (receipt) => {
@@ -39,7 +38,7 @@ function ForceModifyRecord() {
         name="idxHashField"
         placeholder="Asset ID"
         required
-        onChange={(e) => setidxHash("0x" + keccak256(e.target.value))}
+        onChange={(e) => setidxHash(web3.utils.keccak256(e.target.value))}
       />
       <br></br>
       New Rights Holder:
@@ -48,7 +47,7 @@ function ForceModifyRecord() {
         name="NewRightsHolderField"
         placeholder="New Rights Holder"
         required
-        onChange={(e) => setNewRgtHash("0x" + keccak256(e.target.value))}
+        onChange={(e) => setNewRgtHash(web3.utils.keccak256(e.target.value))}
       />
       <input type="submit" value="Modify Record" />
     </form>
