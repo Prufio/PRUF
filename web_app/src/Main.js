@@ -20,11 +20,9 @@ function Main() {
         {/* {ethereum && <p>currently serving: {addr} </p>}
                 {!ethereum && <p>Metamask not currently installed</p>} */}
         <br></br>
-        <div className="addr">
-          {/* <p style={{ color: "white" }}> */}
+        <div className="banner">
             Currently serving: {Web3Listener('addr')}
-            {Web3Listener('connection')===false && <p>Please log into metamask</p>}
-          {/* </p> */}
+            {Web3Listener('connection')===false && "Please log into metamask"}
         </div>
         <br></br>
         <div className="page">

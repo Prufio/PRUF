@@ -44,20 +44,22 @@
     display:flex;
     flex-direction: row;
     justify-content: left center;
-    align-items: center;
+    align-items: flex-start;
   }
 
   .header li {
     display: inline;
     list-style-type: none;
-    margin: 0rem;
+    margin: 0rem auto;
   }
 
   .header {
     width: 15rem;
+    /* height: 90rem; */
     background-color: rgb(0, 0, 0);
     padding: 0rem;
     border-radius: 1.0rem;
+    margin-top: 2rem;
   }
 
   .header li a { 
@@ -87,6 +89,21 @@
   }
   .active {
     background-color: #0099FF;
+
+  }
+
+  .banner {
+    height: 5.0rem;
+    width: 37.0rem;
+    background-color:   rgb(0, 0, 0);
+    color: rgb(5, 225, 221);
+    border-radius: 1.0rem;
+    font-size: 1.55rem;
+    padding: 1.0rem;
+    display:flex;
+    flex-direction: row;
+    justify-content: flex-start;
+    margin-top: 1rem;
   }
 
   .home {
@@ -286,16 +303,3 @@
     margin: 0 auto; 
   }
 
-  .addr {
-    height: 5.0rem;
-    width: 36.0rem;
-    background-color:   rgb(0, 0, 0);
-    color: rgb(5, 225, 221);
-    border-radius: 1.0rem;
-    font-size: 1.4rem;
-    padding: 1.0rem;
-    display:flex;
-    flex-direction: row;
-    justify-content: flex-start;
-    margin-right: auto;
-  }
