@@ -9,7 +9,7 @@ function Web3Listener(request) {
     const ethereum = window.ethereum;
     web3 = new Web3(web3.givenProvider);
     var [addr, setAddr] = useState('');
-    var [connection, setCon] = useState(false);
+    var [web3connection, setWeb3connection] = useState(false);
     const bulletproof_frontend_addr = "0x755414B4137F418810bd399E22da19ec9ddfdEaE";
     const bulletproof_storage_addr = "0xC600741749E4c90Ad553E31DF5f2EA9fe51aB4e0";
     const frontEnd_abi = returnFrontEndAbi();
@@ -19,20 +19,21 @@ function Web3Listener(request) {
     window.addEventListener('load', async () => {
 
         if (ethereum.isMetaMask === false){
-            setCon(false);
+            setWeb3connection(false);
         }
 
         ethereum.on('networkChanged', function () {
 
             if (!ethereum.isMetaMask){
-                setCon(false);
+                setWeb3connection(false);
             }
 
             else if (ethereum.isMetaMask){
-                setCon(true);
+                setWeb3connection(true);
             }
         })
     })
+    console.log("Web 3 connection", web3connection)
 
 
     window.addEventListener('load', async () => {

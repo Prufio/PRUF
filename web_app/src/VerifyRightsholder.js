@@ -7,7 +7,6 @@ function VerifyRightsholder() {
   let storage = Web3Listener("storage");
 
   var [txHash, setTxHash] = useState("");
-  var [txLink, setTxLink] = useState("");
 
   var [type, setType] = useState("");
   var [manufacturer, setManufacturer] = useState("");
