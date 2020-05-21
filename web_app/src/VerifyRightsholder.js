@@ -146,7 +146,7 @@ function VerifyRightsholder() {
           {result === "170"? ('Match Confirmed') : ('No match found')}
           <br></br>
           <br></br>
-          <a href={"https://kovan.etherscan.io/tx/"+txHash}>Etherscan:{txHash}</a>
+          <a href={"https://kovan.etherscan.io/tx/"+txHash} target="_blank">KOVAN Etherscan:{txHash}</a>
         </div>
       )}
     </div>
