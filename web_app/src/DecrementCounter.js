@@ -2,71 +2,155 @@ import React, { useState } from "react";
 import Web3Listener from "./Web3Listener";
 
 function DecrementCounter() {
+  let web3 = Web3Listener("web3");
   let addr = Web3Listener("addr");
   let frontend = Web3Listener("frontend");
-  let web3 = Web3Listener("web3");
 
-  var [idxHash, setidxHash] = useState("");
-  var [rgtHash, setrgtHash] = useState("");
-  var [countdownAmount, setCountdownAmount] = useState("");
+  var [CountDown, setCountDown] = useState("");
   var [txHash, setTxHash] = useState("");
-  const _decrementCounter = () => {
-    console.log(
-      //------------------------------------------remove ------security
-      "Sending data: ",
-      idxHash,
-      rgtHash,
-      countdownAmount
-    );
 
-    let _rgtHash = web3.utils.soliditySha3(idxHash, rgtHash);
-    console.log("NewHash", _rgtHash);
+  var [type, setType] = useState("");
+  var [manufacturer, setManufacturer] = useState("");
+  var [model, setModel] = useState("");
+  var [serial, setSerial] = useState("");
+
+  var [first, setFirst] = useState("");
+  var [middle, setMiddle] = useState("");
+  var [surname, setSurname] = useState("");
+  var [id, setID] = useState("");
+  var [secret, setSecret] = useState("");
+
+  const _decrementCounter = () => {
+    var idxHash = web3.utils.soliditySha3(type, manufacturer, model, serial);
+    var rgtRaw = web3.utils.soliditySha3(first, middle, surname, id, secret);
+    var rgtHash = web3.utils.soliditySha3(idxHash, rgtRaw);
+
     console.log("idxHash", idxHash);
+    console.log("New rgtRaw", rgtRaw);
+    console.log("New rgtHash", rgtHash);
 
     frontend.methods
-      ._decCounter(idxHash, _rgtHash, countdownAmount)
-      .send({ from: addr })
+      ._decCounter(idxHash, rgtHash, CountDown)
+      .send({ from: addr, value: web3.utils.toWei("0.00") })
       .on("receipt", (receipt) => {
         setTxHash(receipt.transactionHash);
+        //Stuff to do when tx confirms
       });
     console.log(txHash);
   };
 
   return (
-    <form className="DCform" onSubmit={_decrementCounter}>
-      <h2>Countdown</h2>
-      Asset ID:
-      <input
-        type="text"
-        name="idxHashField"
-        placeholder="Asset ID"
-        required
-        onChange={(e) =>
-          setidxHash("0x" + web3.utils.keccak256(e.target.value))
-        }
-      />
-      <br></br>
-      Rights Holder:
-      <input
-        type="text"
-        name="rgtHashField"
-        placeholder="Rights Holder"
-        required
-        onChange={(e) =>
-          setrgtHash("0x" + web3.utils.keccak256(e.target.value))
-        }
-      />
-      <br></br>
-      Countdown Amount
-      <input
-        type="text"
-        name="CountdownAmountForm"
-        placeholder="Countdown Amount"
-        required
-        onChange={(e) => setCountdownAmount(e.target.value)}
-      />
-      <input type="submit" value="Countdown" />
-    </form>
+    <div>
+      <form className="DCform">
+        <h2>Countdown</h2>
+        Type:
+        <input
+          type="text"
+          name="type"
+          placeholder="Type"
+          required
+          onChange={(e) => setType(e.target.value)}
+        />
+        <br></br>
+        Manufacturer:
+        <input
+          type="text"
+          name="manufacturer"
+          placeholder="Manufacturer"
+          required
+          onChange={(e) => setManufacturer(e.target.value)}
+        />
+        <br></br>
+        Model:
+        <input
+          type="text"
+          name="model"
+          placeholder="Model"
+          required
+          onChange={(e) => setModel(e.target.value)}
+        />
+        <br></br>
+        Serial:
+        <input
+          type="text"
+          name="serial"
+          placeholder="Serial Number"
+          required
+          onChange={(e) => setSerial(e.target.value)}
+        />
+        <br></br>
+        First Name:
+        <input
+          type="text"
+          name="first"
+          placeholder="First name"
+          required
+          onChange={(e) => setFirst(e.target.value)}
+        />
+        <br></br>
+        Middle Name:
+        <input
+          type="text"
+          name="middle"
+          placeholder="Middle name"
+          required
+          onChange={(e) => setMiddle(e.target.value)}
+        />
+        <br></br>
+        Surname:
+        <input
+          type="text"
+          name="surname"
+          placeholder="Surname"
+          required
+          onChange={(e) => setSurname(e.target.value)}
+        />
+        <br></br>
+        ID:
+        <input
+          type="text"
+          name="id"
+          placeholder="ID"
+          required
+          onChange={(e) => setID(e.target.value)}
+        />
+        <br></br>
+        Password:
+        <input
+          type="text"
+          name="secret"
+          placeholder="Secret"
+          required
+          onChange={(e) => setSecret(e.target.value)}
+        />
+        <br></br>
+       
+        Countdown Amount:
+        <input
+          type="text"
+          name="CountDownAmountField"
+          placeholder="Countdown by"
+          required
+          onChange={(e) => setCountDown(e.target.value)}
+        />
+        <br></br>
+        <input type="button" value="Countdown" onClick={_decrementCounter} />
+      </form>
+      {txHash > 0 && ( //conditional rendering
+        <div className="VRresults">
+          No Errors Reported
+          <br></br>
+          <br></br>
+          <a
+            href={"https://kovan.etherscan.io/tx/" + txHash}
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            KOVAN Etherscan:{txHash}
+          </a>
+        </div>
+      )}
+    </div>
   );
 }
 
