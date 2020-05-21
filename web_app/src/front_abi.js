@@ -304,17 +304,76 @@ function returnFrontEndAbi() {
 				"inputs": [
 					{
 						"internalType": "string",
-						"name": "_idx",
+						"name": "_idx_type",
 						"type": "string"
 					},
 					{
 						"internalType": "string",
-						"name": "_rgt",
+						"name": "_idx_mfg",
+						"type": "string"
+					},
+					{
+						"internalType": "string",
+						"name": "_idx_mod",
+						"type": "string"
+					},
+					{
+						"internalType": "string",
+						"name": "_idx_ser",
+						"type": "string"
+					}
+				],
+				"name": "getIdxHash",
+				"outputs": [
+					{
+						"internalType": "bytes32",
+						"name": "",
+						"type": "bytes32"
+					}
+				],
+				"stateMutability": "pure",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "bytes32",
+						"name": "_idxHash",
+						"type": "bytes32"
+					},
+					{
+						"internalType": "string",
+						"name": "_rgt_first",
+						"type": "string"
+					},
+					{
+						"internalType": "string",
+						"name": "_rgt_mid",
+						"type": "string"
+					},
+					{
+						"internalType": "string",
+						"name": "_rgt_last",
+						"type": "string"
+					},
+					{
+						"internalType": "string",
+						"name": "_rgt_ID",
+						"type": "string"
+					},
+					{
+						"internalType": "string",
+						"name": "_rgt_secret",
 						"type": "string"
 					}
 				],
 				"name": "getRgtHash",
 				"outputs": [
+					{
+						"internalType": "bytes32",
+						"name": "",
+						"type": "bytes32"
+					},
 					{
 						"internalType": "bytes32",
 						"name": "",
