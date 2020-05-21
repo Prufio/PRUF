@@ -35,7 +35,7 @@ function VerifyRightsholder() {
       .send({ from: addr, value: web3.utils.toWei("0.00") })
       .on("receipt", (receipt) => {
         setTxHash(receipt.transactionHash);
-       //Stuff to do here when tx confirmed?
+       //Stuff to do here when tx confirmed!
       });
 
     console.log(txHash);

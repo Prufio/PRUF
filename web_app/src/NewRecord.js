@@ -34,9 +34,9 @@ function NewRecord() {
     frontend.methods
       .$newRecord(idxHash, rgtHash, AssetClass, CountDownStart, Ipfs1)
       .send({ from: addr, value: web3.utils.toWei("0.01") })
-
       .on("receipt", (receipt) => {
         setTxHash(receipt.transactionHash);
+        //Stuff to do when tx confirms
       });
     console.log(txHash);
   };
@@ -160,7 +160,13 @@ function NewRecord() {
           No Errors Reported
           <br></br>
           <br></br>
-          <a href={"https://kovan.etherscan.io/tx/"+txHash} target="_blank" rel="noopener noreferrer">KOVAN Etherscan:{txHash}</a>
+          <a
+            href={"https://kovan.etherscan.io/tx/" + txHash}
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            KOVAN Etherscan:{txHash}
+          </a>
         </div>
       )}
     </div>
