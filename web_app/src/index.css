@@ -171,7 +171,7 @@
   }
 
   .TAform {
-    height: 35.0rem;
+    height: 102.0rem;
     width: 20.0rem;
     background-color:  rgb(5, 164, 161);
     border-radius: 1.0rem;
@@ -187,7 +187,7 @@
   }
 
   .MRform {
-    height: 35.0rem;
+    height: 90.0rem;
     width: 20.0rem;
     background-color:  rgb(5, 164, 161);
     border-radius: 1.0rem;
@@ -203,7 +203,7 @@
   }
 
   .DCform {
-    height: 35.0rem;
+    height: 90.0rem;
     width: 20.0rem;
     background-color:  rgb(5, 164, 161);
     border-radius: 1.0rem;
@@ -219,7 +219,7 @@
   }
 
   .MDform {
-    height: 35.0rem;
+    height: 90.0rem;
     width: 20.0rem;
     background-color:  rgb(5, 164, 161);
     border-radius: 1.0rem;
@@ -235,9 +235,9 @@
   }
 
   .ANform {
-    height: 45.0rem;
+    height: 90.0rem;
     width: 20.0rem;
-    background-color:  rgb(255, 255, 25);
+    background-color:  rgb(248, 215, 69);
     border-radius: 1.0rem;
     font-weight: default;
     text-decoration: none;
