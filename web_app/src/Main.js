@@ -21,10 +21,10 @@ function Main() {
                 {!ethereum && <p>Metamask not currently installed</p>} */}
         <br></br>
         <div className="addr">
-          <p style={{ color: "white" }}>
+          {/* <p style={{ color: "white" }}> */}
             Currently serving: {Web3Listener('addr')}
             {Web3Listener('connection')===false && <p>Please log into metamask</p>}
-          </p>
+          {/* </p> */}
         </div>
         <br></br>
         <div className="page">
