@@ -2,66 +2,154 @@ import React, { useState } from "react";
 import Web3Listener from "./Web3Listener";
 
 function ModifyDescription() {
+  let web3 = Web3Listener("web3");
   let addr = Web3Listener("addr");
   let frontend = Web3Listener("frontend");
-  let web3 = Web3Listener("web3");
 
-  var [idxHash, setidxHash] = useState("");
-  var [rgtHash, setrgtHash] = useState("");
-  var [newIpfs1, setNewIpfs1] = useState("");
+  var [Ipfs1, setIPFS1] = useState("");
   var [txHash, setTxHash] = useState("");
-  const _modifyDescription = () => {
-    console.log(   //------------------------------------------remove ------security
-      "Sending data: ",
-      idxHash,
-      rgtHash,
-      newIpfs1
-    );
-  
-  let _rgtHash = (web3.utils.soliditySha3(idxHash, rgtHash));
-    console.log('NewHash', _rgtHash);
-    console.log('idxHash', idxHash);
+
+  var [type, setType] = useState("");
+  var [manufacturer, setManufacturer] = useState("");
+  var [model, setModel] = useState("");
+  var [serial, setSerial] = useState("");
+
+  var [first, setFirst] = useState("");
+  var [middle, setMiddle] = useState("");
+  var [surname, setSurname] = useState("");
+  var [id, setID] = useState("");
+  var [secret, setSecret] = useState("");
+
+  const _updateDescription = () => {
+    var idxHash = web3.utils.soliditySha3(type, manufacturer, model, serial);
+    var rgtRaw = web3.utils.soliditySha3(first, middle, surname, id, secret);
+    var rgtHash = web3.utils.soliditySha3(idxHash, rgtRaw);
+
+    console.log("idxHash", idxHash);
+    console.log("New rgtRaw", rgtRaw);
+    console.log("New rgtHash", rgtHash);
 
     frontend.methods
-      ._modIpfs1(idxHash, _rgtHash, newIpfs1)
-      .send({ from: addr})
+      ._modIpfs1(idxHash, rgtHash, Ipfs1)
+      .send({ from: addr, value: web3.utils.toWei("0.00") })
       .on("receipt", (receipt) => {
         setTxHash(receipt.transactionHash);
+        //Stuff to do when tx confirms
       });
     console.log(txHash);
   };
 
   return (
-    <form className="MDform" onSubmit={_modifyDescription}>
-      <h2>Modify Description</h2>
-      Asset ID:
-      <input
-        type="text"
-        name="idxHashField"
-        placeholder="Asset ID"
-        required
-        onChange={(e) => setidxHash(web3.utils.keccak256(e.target.value))}
-      />
-      <br></br>
-      Rights Holder:
-      <input
-        type="text"
-        name="rgtHashField"
-        placeholder="Rights Holder"
-        required
-        onChange={(e) => setrgtHash(web3.utils.keccak256(e.target.value))}
-      />
-      <br></br>
-      New Description:
-      <input
-        type="text"
-        name="NewIpfs1Field"
-        placeholder="New Description"
-        required
-        onChange={(e) => setNewIpfs1(web3.utils.keccak256(e.target.value))}
-      />
-      <input type="submit" value="New Description" />
-    </form>
+    <div>
+      <form className="MDform">
+        <h2>Description</h2>
+        Type:
+        <input
+          type="text"
+          name="type"
+          placeholder="Type"
+          required
+          onChange={(e) => setType(e.target.value)}
+        />
+        <br></br>
+        Manufacturer:
+        <input
+          type="text"
+          name="manufacturer"
+          placeholder="Manufacturer"
+          required
+          onChange={(e) => setManufacturer(e.target.value)}
+        />
+        <br></br>
+        Model:
+        <input
+          type="text"
+          name="model"
+          placeholder="Model"
+          required
+          onChange={(e) => setModel(e.target.value)}
+        />
+        <br></br>
+        Serial:
+        <input
+          type="text"
+          name="serial"
+          placeholder="Serial Number"
+          required
+          onChange={(e) => setSerial(e.target.value)}
+        />
+        <br></br>
+        First Name:
+        <input
+          type="text"
+          name="first"
+          placeholder="First name"
+          required
+          onChange={(e) => setFirst(e.target.value)}
+        />
+        <br></br>
+        Middle Name:
+        <input
+          type="text"
+          name="middle"
+          placeholder="Middle name"
+          required
+          onChange={(e) => setMiddle(e.target.value)}
+        />
+        <br></br>
+        Surname:
+        <input
+          type="text"
+          name="surname"
+          placeholder="Surname"
+          required
+          onChange={(e) => setSurname(e.target.value)}
+        />
+        <br></br>
+        ID:
+        <input
+          type="text"
+          name="id"
+          placeholder="ID"
+          required
+          onChange={(e) => setID(e.target.value)}
+        />
+        <br></br>
+        Password:
+        <input
+          type="text"
+          name="secret"
+          placeholder="Secret"
+          required
+          onChange={(e) => setSecret(e.target.value)}
+        />
+        <br></br>
+        Description:
+        <input
+          type="text"
+          name="IPFS1Field"
+          placeholder="Description IPFS hash"
+          required
+          onChange={(e) => setIPFS1(web3.utils.soliditySha3(e.target.value))}
+        />
+        <br />
+        <input type="button" value="Update Description" onClick={_updateDescription} />
+      </form>
+      {txHash > 0 && ( //conditional rendering
+        <div className="VRresults">
+          No Errors Reported
+          <br></br>
+          <br></br>
+          <a
+            href={"https://kovan.etherscan.io/tx/" + txHash}
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            KOVAN Etherscan:{txHash}
+          </a>
+        </div>
+      )}
+    </div>
   );
 }
 
