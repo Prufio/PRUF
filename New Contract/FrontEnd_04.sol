@@ -30,10 +30,16 @@ contract StorageInterface {
         bytes32 _Ipfs2
     ) external {}
 
-
     function retrieveCosts(uint16 _assetClass)
         external
-        returns (uint256, uint256, uint256, uint256, uint256, uint256)
+        returns (
+            uint256,
+            uint256,
+            uint256,
+            uint256,
+            uint256,
+            uint256
+        )
     {}
 
     function retrieveRecord(bytes32 _idxHash)
@@ -226,10 +232,11 @@ contract FrontEnd is PullPayment, Ownable {
     /*
      * @dev Modify **Record**.assetStatus with confirmation required
      */
-    function _modStatus(bytes32 _idxHash, bytes32 _rgtHash, uint8 _assetStatus)
-        public
-        returns (uint8)
-    {
+    function _modStatus(
+        bytes32 _idxHash,
+        bytes32 _rgtHash,
+        uint8 _assetStatus
+    ) public returns (uint8) {
         Record memory rec = getRecord(_idxHash);
 
         require(rec.assetStatus < 200, "MS:ERR-Record locked");
@@ -249,10 +256,11 @@ contract FrontEnd is PullPayment, Ownable {
     /*
      * @dev Decrement **Record**.countdown with confirmation required
      */
-    function _decCounter(bytes32 _idxHash, bytes32 _rgtHash, uint256 _decAmount)
-        public
-        returns (uint256)
-    {
+    function _decCounter(
+        bytes32 _idxHash,
+        bytes32 _rgtHash,
+        uint256 _decAmount
+    ) public returns (uint256) {
         Record memory rec = getRecord(_idxHash);
 
         require(rec.assetStatus < 200, "DC:ERR-Record locked");
@@ -315,10 +323,11 @@ contract FrontEnd is PullPayment, Ownable {
     /*
      * @dev Modify **Record**.Ipfs1 with confirmation
      */
-    function _modIpfs1(bytes32 _idxHash, bytes32 _rgtHash, bytes32 _IpfsHash)
-        public
-        returns (bytes32)
-    {
+    function _modIpfs1(
+        bytes32 _idxHash,
+        bytes32 _rgtHash,
+        bytes32 _IpfsHash
+    ) public returns (bytes32) {
         Record memory rec = getRecord(_idxHash);
 
         require(rec.assetStatus < 200, "MI1:ERR-Record locked");

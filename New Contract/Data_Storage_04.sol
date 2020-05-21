@@ -78,7 +78,6 @@ contract Storage is Ownable {
     /*
      * @dev Verify user credentials
      */
-
     modifier userAuth(bytes32 _senderHash, bytes32 _idxHash) {
         uint8 senderType = registeredUsers[_senderHash].userType;
 
@@ -101,7 +100,6 @@ contract Storage is Ownable {
     /*
      * @dev Check record exists and is not locked
      */
-
     modifier unlocked(bytes32 _idxHash) {
         require(database[_idxHash].assetStatus < 200, "MOD-U-record Locked");
         _;
@@ -110,7 +108,6 @@ contract Storage is Ownable {
     /*
      * @dev Check record exists
      */
-
     modifier exists(bytes32 _idxHash) {
         require(
             database[_idxHash].rightsHolder != 0,
@@ -122,10 +119,8 @@ contract Storage is Ownable {
     /*
      * @dev Check record isn't time locked
      */
-
     modifier notTimeLocked(bytes32 _idxHash) {
         //this modifier makes the bold assumption the block number will "never" be reset. hopefully, this is true...
-
         require(
             database[_idxHash].timeLock < block.number,
             "MOD-NTL-record time locked"
@@ -252,7 +247,6 @@ contract Storage is Ownable {
     /*
      * @dev Make a new record in the database  *read fullHash, write rightsHolder, recorders, assetClass,countDownStart --new_record
      */
-
     function newRecord(
         bytes32 _userHash,
         bytes32 _idxHash,
@@ -296,7 +290,6 @@ contract Storage is Ownable {
     /*
      * @dev Modify a record in the database  *read fullHash, write rightsHolder, update recorder, assetClass,countDown update recorder....
      */
-
     function modifyRecord(
         bytes32 _userHash,
         bytes32 _idxHash,
@@ -324,7 +317,10 @@ contract Storage is Ownable {
             "MR:ERR-new forceModCount less than original forceModCount"
         );
 
-        require(_assetStatus < 200, "MR:ERR-assetStatus over 199 cannot be set by user");
+        require(
+            _assetStatus < 200,
+            "MR:ERR-assetStatus over 199 cannot be set by user"
+        );
 
         database[_idxHash].timeLock = block.number;
 
@@ -388,12 +384,18 @@ contract Storage is Ownable {
     /*
      * @dev Retrieve function costs per asset class, in Wei
      */
-
     function retrieveCosts(uint16 _assetClass)
         external
         view
         addrAuth(3)
-        returns (uint256, uint256, uint256, uint256, uint256, uint256)
+        returns (
+            uint256,
+            uint256,
+            uint256,
+            uint256,
+            uint256,
+            uint256
+        )
     {
         return (
             cost[_assetClass].cost1,
@@ -442,7 +444,6 @@ contract Storage is Ownable {
     /*
      * @dev Compare record.rightsholder with supplied bytes32 rightsholder
      */
-
     function _verifyRightsHolder(bytes32 _idxHash, bytes32 _rgtHash)
         public
         view
@@ -459,7 +460,6 @@ contract Storage is Ownable {
     /*
      * @dev Compare record.rightsholder with supplied bytes32 rightsholder (writes in blockchain)
      */
-
     function blockchainVerifyRightsHolder(bytes32 _idxHash, bytes32 _rgtHash)
         external
         addrAuth(1)
@@ -477,7 +477,6 @@ contract Storage is Ownable {
     /*
      * @dev Compare record.rightsholder with a hashed string  ///////////////TESTING ONLY REMOVE!
      */
-
     function ADMIN_compare_rgt(string calldata _idx, string calldata _rgt)
         external
         view
@@ -523,7 +522,6 @@ contract Storage is Ownable {
     /*
      * @dev Update lastRecorder
      */
-
     function newRecorder(
         bytes32 _senderHash,
         bytes32 _recorder,
