@@ -186,6 +186,9 @@ contract Storage is Ownable {
         uint256 _cost5,
         uint256 _forceModCost
     ) external onlyOwner {
+        
+        require(_class < 50000, "ASc:ERR--Costs prohibited above class 50,000");
+        
         cost[_class].cost1 = _newRecordCost;
         cost[_class].cost2 = _transferRecordCost;
         cost[_class].cost3 = _createNoteCost;
@@ -201,11 +204,12 @@ contract Storage is Ownable {
         external
         onlyOwner
     {
-        //---------------------------------------INSECURE USE HASH!!!!
-
-        require(_stat > 199, "AL:ERR--locking requires assetStatus > 199");
-
         bytes32 _idxHash = keccak256(abi.encodePacked(_idx)); // TESTING ONLY
+        //for testing only should be (b32 _idxHash) exists(_idxHash) onlyOwner
+        //---------------------------------------INSECURE USE HASH!!!!
+        require(database[_idxHash].assetClass < 50000, "AL:ERR--locking prohibited above class 50,000");
+        require(_stat > 199, "AL:ERR--locking requires setting assetStatus > 199");
+        
         database[_idxHash].assetStatus = _stat;
     }
 
@@ -216,6 +220,8 @@ contract Storage is Ownable {
         //---------------------------------------INSECURE USE HASH!!!!
         //for testing only should be (b32 _idxHash) exists(_idxHash) onlyOwner
         bytes32 _idxHash = keccak256(abi.encodePacked(_idx)); // TESTING ONLY
+        
+        require(database[_idxHash].assetClass < 50000, "AL:ERR--admin edits prohibited above class 50,000");
         database[_idxHash].assetStatus = 0; //set to unspecified assetStatus
     }
 
@@ -229,6 +235,8 @@ contract Storage is Ownable {
         //---------------------------------------INSECURE USE HASH!!!!
         //for testing only should be (b32 _idxHash) exists(_idxHash) onlyOwner
         bytes32 _idxHash = keccak256(abi.encodePacked(_idx)); // TESTING ONLY
+        
+        require(database[_idxHash].assetClass < 50000, "AL:ERR--admin edits prohibited above class 50,000");
         database[_idxHash].timeLock = _blockNumber; //set lock to expiration blocknumber
     }
 
@@ -239,6 +247,8 @@ contract Storage is Ownable {
         //---------------------------------------INSECURE USE HASH!!!!
         //for testing only should be (b32 _idxHash) exists(_idxHash) onlyOwner
         bytes32 _idxHash = keccak256(abi.encodePacked(_idx)); // TESTING ONLY
+        
+        require(database[_idxHash].assetClass < 50000, "AL:ERR--admin edits prohibited above class 50,000");
         database[_idxHash].forceModCount = 0; //set to unspecified assetStatus
     }
 
@@ -254,7 +264,7 @@ contract Storage is Ownable {
         uint16 _assetClass,
         uint256 _countDownStart,
         bytes32 _Ipfs1
-    ) external addrAuth(3) {
+    ) public addrAuth(3) {
         require(
             registeredUsers[_userHash].userType == 1 || (_assetClass > 8192),
             "NR:ERR-User not registered"
@@ -299,7 +309,7 @@ contract Storage is Ownable {
         uint256 _countDown,
         uint8 _forceCount
     )
-        external
+        public
         addrAuth(3)
         userAuth(_userHash, _idxHash)
         exists(_idxHash)
@@ -352,7 +362,7 @@ contract Storage is Ownable {
         bytes32 _Ipfs1,
         bytes32 _Ipfs2
     )
-        external
+        public
         addrAuth(3)
         userAuth(_userHash, _idxHash)
         exists(_idxHash)
