@@ -122,7 +122,7 @@
   }
 
   .VRform {
-    height: 30.0rem;
+    height: 75.0rem;
     width: 20.0rem;
     background-color:  rgb(5, 164, 161);
     border-radius: 1.0rem;
@@ -265,6 +265,24 @@
     flex-direction: column;
     justify-content: space-between;
     align-items: normal;
+    margin: 0 auto; 
+  }
+
+  .VRresults {
+    height: 10.0rem;
+    width: 20.0rem;
+    background-color:rgb(5, 164, 161);
+    border-radius: 1.0rem;
+    font-weight: default;
+    text-decoration: none;
+    font-size: 2.0rem;
+    padding: 1.0rem;
+    display:flex;
+    word-wrap: break-word;
+    /* overflow: hidden; */
+    text-overflow: ellipsis;
+    flex-direction: column;
+    justify-content: space-between;
     margin: 0 auto; 
   }
 
