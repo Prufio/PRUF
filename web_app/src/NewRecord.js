@@ -21,6 +21,9 @@ function NewRecord() {
   var [id, setID] = useState("");
   var [secret, setSecret] = useState("");
 
+  const resetWeb3 = () => {
+
+  }
   const _newRecord = () => {
     var idxHash = web3.utils.soliditySha3(type, manufacturer, model, serial);
     var rgtRaw = web3.utils.soliditySha3(first, middle, surname, id, secret);
@@ -29,6 +32,7 @@ function NewRecord() {
     console.log("idxHash", idxHash);
     console.log("New rgtRaw", rgtRaw);
     console.log("New rgtHash", rgtHash);
+    console.log("addr: ", addr);
 
     frontend.methods
       .$newRecord(idxHash, rgtHash, AssetClass, CountDownStart, Ipfs1)
@@ -47,7 +51,7 @@ function NewRecord() {
           <div className="VRresults">
             <h2>WARNING!</h2>
             Injected web3 not connected to form!
-{/*             <button type="submit" value="reset" onClick={resetWeb3}>resetConnection</button> */}
+            {/* <button value="reset" onClick={resetWeb3}>resetConnection</button> */}
           </div>
         </form>
         )}
