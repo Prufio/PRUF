@@ -22,7 +22,7 @@ function Main() {
         <br></br>
         <div className="banner">
             Currently serving: {Web3Listener('addr')}
-            {Web3Listener('connection')===false && "Please log into metamask"}
+            {Web3Listener('addr') <= 0 && "Please log into metamask"}
         </div>
         <br></br>
         <div className="page">

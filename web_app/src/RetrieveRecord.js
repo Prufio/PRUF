@@ -28,7 +28,14 @@ function RetrieveRecord() {
 
   return (
     <div>
-      <form className="RRform">
+      {addr <= 0 && (
+          <div className="VRresults">
+            <h2>WARNING!</h2>
+            Injected web3 not connected to form!
+          </div>
+        )}
+      {addr > 0 && (
+        <form className="RRform">
         <h2>Search for Record</h2>
         Type:
         <input
@@ -72,6 +79,7 @@ function RetrieveRecord() {
           onClick={_retrieveRecord}
         />
       </form>
+      )}
 
       {result[5] > 0 && ( //conditional rendering
         <div className="RRresults">
