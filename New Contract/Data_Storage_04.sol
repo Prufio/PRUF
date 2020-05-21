@@ -285,6 +285,7 @@ contract Storage is Ownable {
         _record.Ipfs1 = _Ipfs1;
 
         database[_idxHash] = _record;
+        emit REPORT("New record created" ); 
     }
 
     /*
@@ -339,6 +340,7 @@ contract Storage is Ownable {
 
         database[_idxHash] = _record;
         database[_idxHash].timeLock = 0;
+        emit REPORT("Record modified"); 
     }
 
     /*
@@ -377,6 +379,7 @@ contract Storage is Ownable {
 
         database[_idxHash] = _record;
         database[_idxHash].timeLock = 0;
+        emit REPORT("Record modified"); 
     }
 
     //--------------------------------External READ ONLY contract functions / authuser---------------------------------//
