@@ -21,15 +21,14 @@ function ForceModifyRecord() {
 
   const _forceModifyRecord = () => {
     var idxHash = web3.utils.soliditySha3(type, manufacturer, model, serial);
-    
-    var rgtHash = web3.utils.soliditySha3(idxHash, newRgtRaw);
    
     var newRgtRaw = web3.utils.soliditySha3(newFirst, newMiddle, newSurname, newId, newSecret);
-    var newRgtHash = web3.utils.soliditySha3(idxHash, newRgtHash);
+
+    var newRgtHash = web3.utils.soliditySha3(idxHash, newRgtRaw);
 
     console.log("idxHash", idxHash);
     console.log("New rgtRaw", newRgtRaw);
-    console.log("New rgtHash", rgtHash);
+    console.log("New rgtHash", newRgtHash);
 
     frontend.methods
       .$forceModRecord(idxHash, newRgtHash)
