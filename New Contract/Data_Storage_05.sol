@@ -3,6 +3,7 @@ pragma solidity ^0.6.2;
 
 import "./Ownable.sol";
 
+
 // interface erc20_tokenInterface {
 //     function transfer(address, uint256) external returns (bool);
 //     function balanceOf(address) external view returns (uint256);
@@ -11,6 +12,7 @@ import "./Ownable.sol";
 interface erc721_tokenInterface {
     function ownerOf(uint256) external view returns (address);
 }
+
 
 contract Storage is Ownable {
     struct Record {
@@ -451,7 +453,7 @@ contract Storage is Ownable {
         );
 
         database[_idxHash] = _record;
-        database[_idxHash].timeLock = 0;
+        //database[_idxHash].timeLock = 0;
         emit REPORT("Record modified");
     }
 
@@ -490,7 +492,7 @@ contract Storage is Ownable {
         );
 
         database[_idxHash] = _record;
-        database[_idxHash].timeLock = 0;
+        //database[_idxHash].timeLock = 0;
         emit REPORT("Record modified");
     }
 
