@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { Route, NavLink, HashRouter } from "react-router-dom";
 import Web3Listener from "./Web3Listener";
 import Home from "./Home";
@@ -14,16 +14,19 @@ import VerifyRightsholder from "./VerifyRightsholder";
 import NewRecordTest from "./NewRecordTest";
 
 function Main() {
+  var [addr, setAddr] = useState("");
+
+  let web3 = Web3Listener("web3");
+  web3.eth.getAccounts().then((e) => setAddr(e[0]));
+
   return (
     <HashRouter>
       <div>
         <img src={require("./BP Logo.png")} alt="Bulletproof Logo" />
-        {/* {ethereum && <p>currently serving: {addr} </p>}
-                {!ethereum && <p>Metamask not currently installed</p>} */}
         <br></br>
         <div className="banner">
-            Currently serving: {Web3Listener('addr')}
-            {Web3Listener('addr') <= 0 && "NOBODY! Log into web3 provider!"}
+            Currently serving: {addr}
+            {addr === undefined && "NOBODY! Log into web3 provider!"}
         </div>
         <br></br>
         <div className="page">
