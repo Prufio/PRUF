@@ -3,7 +3,6 @@ pragma solidity ^0.6.2;
 
 import "./Ownable.sol";
 
-
 // interface erc20_tokenInterface {
 //     function transfer(address, uint256) external returns (bool);
 //     function balanceOf(address) external view returns (uint256);
@@ -12,7 +11,6 @@ import "./Ownable.sol";
 interface erc721_tokenInterface {
     function ownerOf(uint256) external view returns (address);
 }
-
 
 contract Storage is Ownable {
     struct Record {
@@ -79,6 +77,11 @@ contract Storage is Ownable {
 
     /*
      * @dev Check msg.sender against authorized adresses
+     * msg.sender:
+     * If assetClass is 8192 or less;
+     *      Exists in registeredUsers as a usertype 1 or 9
+     *      Is authorized for asset class
+     *
      */
     modifier addrAuth(uint8 _userType, bytes32 _idxHash) {
         require(
@@ -93,9 +96,17 @@ contract Storage is Ownable {
 
     /*
      * @dev Verify user credentials
+     *
+     * Originating Address:  (call may pass through a contract before it arrives )
+     * If assetClass is 8192 or less;
+     *      Exists in registeredUsers as a usertype 1 or 9
+     *      Is authorized for asset class
+     *If assetClass is 32768 or greater , msg.sender hods a token whose hashed
+     *      tokenID is identical to the rightsHolder
      */
     modifier userAuth(bytes32 _senderHash, bytes32 _idxHash) {
         uint8 senderType = registeredUsers[_senderHash].userType;
+        uint256 tokenID = uint256(database[_idxHash].rightsHolder);
 
         require(
             (senderType == 1) ||
@@ -110,14 +121,23 @@ contract Storage is Ownable {
                 (database[_idxHash].assetClass > 8192),
             "MOD-UA-User not registered for asset type"
         );
+        require(
+            (database[_idxHash].assetClass < 32768) ||
+                (erc721_tokenContract.ownerOf(tokenID) == msg.sender),
+            "MOD:ERR-User address does not hold asset token"
+        );
         _;
     }
 
     /*
-     * @dev Check record exists and is not locked
+     * @dev Check record _idxHash exists and is not locked
      */
     modifier unlocked(bytes32 _idxHash) {
-        require(database[_idxHash].assetStatus < 200, "MOD-U-record Locked");
+        require(
+            (database[_idxHash].assetStatus < 200) &&
+                (database[_idxHash].assetClass < 32768),
+            "MOD-U-record Locked"
+        );
         _;
     }
 
@@ -147,6 +167,31 @@ contract Storage is Ownable {
     //-----------------------------------------------Events------------------------------------------------//
 
     event REPORT(string _msg);
+
+    //-----------------------------------------------Private functions------------------------------------------------//
+
+    /*
+     * @dev Update lastRecorder
+     */
+    function newRecorder(
+        bytes32 _senderHash,
+        bytes32 _recorder,
+        bytes32 _lastRecorder
+    ) private view returns (bytes32, bytes32) {
+        bytes32 lastrec;
+
+        if (
+            ((registeredUsers[_recorder].userType == 1) ||
+                (_recorder == keccak256(abi.encodePacked(owner())))) &&
+            (_senderHash != _recorder)
+        ) {
+            lastrec = _recorder;
+        } else {
+            lastrec = _lastRecorder;
+        }
+
+        return (_senderHash, lastrec);
+    }
 
     //--------------------------------Internal Admin functions / onlyowner---------------------------------//
 
@@ -312,14 +357,14 @@ contract Storage is Ownable {
         uint256 _countDownStart,
         bytes32 _Ipfs1
     ) public addrAuth(3, _idxHash) {
-        uint256 tokenID = uint256(_userHash);
+        uint256 tokenID = uint256(database[_idxHash].rightsHolder);
 
         require(
-            registeredUsers[_userHash].userType == 1 || (_assetClass > 8192),
+            registeredUsers[_userHash].userType == 1 || (_assetClass > 8192), //cannot use userAuth because record[idx] doesnt exist yet
             "NR:ERR-User not registered"
         );
         require(
-            (_assetClass == registeredUsers[_userHash].authorizedAssetClass) ||
+            (_assetClass == registeredUsers[_userHash].authorizedAssetClass) || //cannot use userAuth because record[idx] doesnt exist yet
                 (_assetClass > 8192),
             "NR:ERR-User not registered for asset class"
         );
@@ -362,13 +407,11 @@ contract Storage is Ownable {
         uint8 _forceCount
     )
         public
-        //addrAuth(2, _idxHash) // should we add user auth? (no?)
         userAuth(_userHash, _idxHash)
         exists(_idxHash)
         unlocked(_idxHash)
         notTimeLocked(_idxHash)
     {
-        uint256 tokenID = uint256(_userHash);
         require(_regHash != 0, "MR:ERR-Rightsholder cannot be blank");
         require(
             _countDown <= database[_idxHash].countDown,
@@ -383,17 +426,12 @@ contract Storage is Ownable {
             "MR:ERR-assetStatus over 199 cannot be set by user"
         );
 
-        require(
+        require( //Moved addressAuth functionality here for stack saving
             (((authorizedAdresses[keccak256(abi.encodePacked(msg.sender))] >=
                 3) &&
                 (authorizedAdresses[keccak256(abi.encodePacked(msg.sender))] <=
                     4)) || (database[_idxHash].assetClass >= 32768)),
             "Contract not authorized or improperly permissioned"
-        );
-        require(
-            (database[_idxHash].assetClass < 32768) ||
-                (erc721_tokenContract.ownerOf(tokenID) == msg.sender),
-            "NR:ERR-User address does not hold asset token"
         );
 
         database[_idxHash].timeLock = block.number;
@@ -433,13 +471,6 @@ contract Storage is Ownable {
         unlocked(_idxHash)
         notTimeLocked(_idxHash)
     {
-        uint256 tokenID = uint256(_userHash);
-        require(
-            (database[_idxHash].assetClass < 32768) ||
-                (erc721_tokenContract.ownerOf(tokenID) == msg.sender),
-            "NR:ERR-User address does not hold asset token"
-        );
-
         database[_idxHash].timeLock = block.number;
 
         Record memory _record = database[_idxHash];
@@ -480,7 +511,7 @@ contract Storage is Ownable {
             uint256
         )
     {
-        require(
+        require( //SUBSET of addressAuth functionality does not include exception for > 32768 assetClass
             (authorizedAdresses[keccak256(abi.encodePacked(msg.sender))] >=
                 3) &&
                 (authorizedAdresses[keccak256(abi.encodePacked(msg.sender))] <=
@@ -500,7 +531,6 @@ contract Storage is Ownable {
     function retrieveRecord(bytes32 _idxHash)
         external
         view
-        //addrAuth(2, _idxHash) // should we add user auth? (no?)
         exists(_idxHash)
         returns (
             bytes32,
@@ -552,10 +582,7 @@ contract Storage is Ownable {
     function _verifyRightsHolder(bytes32 _idxHash, bytes32 _rgtHash)
         public
         view
-        returns (
-            //addrAuth(1, _idxHash)
-            uint256
-        )
+        returns (uint256)
     {
         if (_rgtHash == database[_idxHash].rightsHolder) {
             return 170;
@@ -569,10 +596,7 @@ contract Storage is Ownable {
      */
     function blockchainVerifyRightsHolder(bytes32 _idxHash, bytes32 _rgtHash)
         external
-        returns (
-            //addrAuth(1, _idxHash)
-            uint8
-        )
+        returns (uint8)
     {
         if (_rgtHash == database[_idxHash].rightsHolder) {
             emit REPORT("Rights holder match confirmed");
@@ -624,30 +648,5 @@ contract Storage is Ownable {
             "Resolver:ERR - User not registered - contract resolution denied"
         );
         return contractNames[_name];
-    }
-
-    //-----------------------------------------------Private functions------------------------------------------------//
-
-    /*
-     * @dev Update lastRecorder
-     */
-    function newRecorder(
-        bytes32 _senderHash,
-        bytes32 _recorder,
-        bytes32 _lastRecorder
-    ) private view returns (bytes32, bytes32) {
-        bytes32 lastrec;
-
-        if (
-            ((registeredUsers[_recorder].userType == 1) ||
-                (_recorder == keccak256(abi.encodePacked(owner())))) &&
-            (_senderHash != _recorder)
-        ) {
-            lastrec = _recorder;
-        } else {
-            lastrec = _lastRecorder;
-        }
-
-        return (_senderHash, lastrec);
     }
 }
