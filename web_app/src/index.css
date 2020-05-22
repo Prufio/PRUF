@@ -98,7 +98,7 @@
     background-color:   rgb(0, 0, 0);
     color: rgb(5, 225, 221);
     border-radius: 1.0rem;
-    font-size: 1.55rem;
+    font-size: 1.4rem;
     padding: 1.0rem;
     display:flex;
     flex-direction: row;
@@ -286,13 +286,13 @@
   }
 
   .VRresults {
-    height: 10.0rem;
-    width: 20.0rem;
+    height: 7.0rem;
+    width: 15.0rem;
     background-color:rgb(5, 164, 161);
     border-radius: 1.0rem;
     font-weight: default;
     text-decoration: none;
-    font-size: 2.0rem;
+    font-size: 1.5rem;
     padding: 1.0rem;
     display:flex;
     word-wrap: break-word;
@@ -302,4 +302,45 @@
     justify-content: space-between;
     margin: 0 auto; 
   }
+
+  /* TEST */
+  .NRTform {
+    height: 25.0rem;
+    width: 80.0rem;
+    background-color:  rgb(5, 164, 161);
+    border-radius: 1.0rem;
+    font-weight: default;
+    text-decoration: none;
+    font-size: 6.0rem;
+    padding: 1.0rem;
+    display:flex;
+    justify-content: space-between;
+    margin: 0 auto; 
+  }
+
+  .btn {
+    font-size: 1.5rem;
+    height: 3rem;
+    width: 13rem;
+    align-items: center;
+    margin-top: 22rem;
+    border-radius: 1rem;
+  }
+  .VRresultstest {
+    max-height: 7.0rem;
+    max-width: 15.0rem;
+    background-color:rgb(5, 164, 161);
+    border-radius: 1.0rem;
+    font-weight: default;
+    text-decoration: none;
+    font-size: 1.5rem;
+    padding: 1.0rem;
+    display:flex;
+    word-wrap: break-word;
+    /* overflow: hidden; */
+    text-overflow: ellipsis;
+    flex-direction: column;
+    justify-content: space-between;
+  }
+  /* TEST */
 
