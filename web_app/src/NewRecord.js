@@ -7,6 +7,7 @@ function NewRecord() {
   var frontend = Web3Listener('frontend');
 
   var [addr, setAddr] = useState("");
+  var [error, setError] = useState(null);
   
   var [AssetClass, setAssetClass] = useState("");
   var [CountDownStart, setCountDownStart] = useState("");
@@ -39,7 +40,7 @@ function NewRecord() {
 
     frontend.methods
       .$newRecord(idxHash, rgtHash, AssetClass, CountDownStart, Ipfs1)
-      .send({ from: addr, value: web3.utils.toWei("0.01") })
+      .send({ from: addr, value: web3.utils.toWei("0.01") }).on("error", function(error){setError(error);setTxHash(error.transactionHash);})
       .on("receipt", (receipt) => {
         setTxHash(receipt.transactionHash);
         //Stuff to do when tx confirms
@@ -172,7 +173,12 @@ function NewRecord() {
       )}
       {txHash > 0 && ( //conditional rendering
         <div className="VRresults">
-          No Errors Reported
+          {error != null && (
+            <div>
+              ERROR! Please check etherscan
+            </div>
+            )}
+            {error === null && (<div> No Errors Reported </div>)}
           <br></br>
           <br></br>
           <a
