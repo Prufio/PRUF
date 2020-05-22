@@ -2,36 +2,117 @@ function returnFrontEndAbi() {
 	return (
 		[
 			{
-				"anonymous": false,
 				"inputs": [
 					{
-						"indexed": true,
-						"internalType": "address",
-						"name": "previousOwner",
-						"type": "address"
+						"internalType": "bytes32",
+						"name": "_idxHash",
+						"type": "bytes32"
 					},
 					{
-						"indexed": true,
+						"internalType": "bytes32",
+						"name": "_rgtHash",
+						"type": "bytes32"
+					},
+					{
+						"internalType": "uint256",
+						"name": "_decAmount",
+						"type": "uint256"
+					}
+				],
+				"name": "_decCounter",
+				"outputs": [
+					{
+						"internalType": "uint256",
+						"name": "",
+						"type": "uint256"
+					}
+				],
+				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "bytes32",
+						"name": "_idxHash",
+						"type": "bytes32"
+					},
+					{
+						"internalType": "bytes32",
+						"name": "_rgtHash",
+						"type": "bytes32"
+					},
+					{
+						"internalType": "bytes32",
+						"name": "_IpfsHash",
+						"type": "bytes32"
+					}
+				],
+				"name": "_modIpfs1",
+				"outputs": [
+					{
+						"internalType": "bytes32",
+						"name": "",
+						"type": "bytes32"
+					}
+				],
+				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "bytes32",
+						"name": "_idxHash",
+						"type": "bytes32"
+					},
+					{
+						"internalType": "bytes32",
+						"name": "_rgtHash",
+						"type": "bytes32"
+					},
+					{
+						"internalType": "uint8",
+						"name": "_assetStatus",
+						"type": "uint8"
+					}
+				],
+				"name": "_modStatus",
+				"outputs": [
+					{
+						"internalType": "uint8",
+						"name": "",
+						"type": "uint8"
+					}
+				],
+				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
 						"internalType": "address",
-						"name": "newOwner",
+						"name": "_addr",
 						"type": "address"
 					}
 				],
-				"name": "OwnershipTransferred",
-				"type": "event"
+				"name": "_setMainWallet",
+				"outputs": [],
+				"stateMutability": "nonpayable",
+				"type": "function"
 			},
 			{
-				"anonymous": false,
 				"inputs": [
 					{
-						"indexed": false,
-						"internalType": "string",
-						"name": "_msg",
-						"type": "string"
+						"internalType": "address",
+						"name": "_storageAddress",
+						"type": "address"
 					}
 				],
-				"name": "REPORT",
-				"type": "event"
+				"name": "_setStorageContract",
+				"outputs": [],
+				"stateMutability": "nonpayable",
+				"type": "function"
 			},
 			{
 				"inputs": [
@@ -156,101 +237,53 @@ function returnFrontEndAbi() {
 				"type": "function"
 			},
 			{
+				"anonymous": false,
 				"inputs": [
 					{
-						"internalType": "bytes32",
-						"name": "_idxHash",
-						"type": "bytes32"
+						"indexed": true,
+						"internalType": "address",
+						"name": "previousOwner",
+						"type": "address"
 					},
 					{
-						"internalType": "bytes32",
-						"name": "_rgtHash",
-						"type": "bytes32"
-					},
-					{
-						"internalType": "uint256",
-						"name": "_decAmount",
-						"type": "uint256"
+						"indexed": true,
+						"internalType": "address",
+						"name": "newOwner",
+						"type": "address"
 					}
 				],
-				"name": "_decCounter",
-				"outputs": [
-					{
-						"internalType": "uint256",
-						"name": "",
-						"type": "uint256"
-					}
-				],
+				"name": "OwnershipTransferred",
+				"type": "event"
+			},
+			{
+				"inputs": [],
+				"name": "renounceOwnership",
+				"outputs": [],
 				"stateMutability": "nonpayable",
 				"type": "function"
 			},
 			{
+				"anonymous": false,
 				"inputs": [
 					{
-						"internalType": "bytes32",
-						"name": "_idxHash",
-						"type": "bytes32"
-					},
-					{
-						"internalType": "bytes32",
-						"name": "_rgtHash",
-						"type": "bytes32"
-					},
-					{
-						"internalType": "bytes32",
-						"name": "_IpfsHash",
-						"type": "bytes32"
+						"indexed": false,
+						"internalType": "string",
+						"name": "_msg",
+						"type": "string"
 					}
 				],
-				"name": "_modIpfs1",
-				"outputs": [
-					{
-						"internalType": "bytes32",
-						"name": "",
-						"type": "bytes32"
-					}
-				],
-				"stateMutability": "nonpayable",
-				"type": "function"
-			},
-			{
-				"inputs": [
-					{
-						"internalType": "bytes32",
-						"name": "_idxHash",
-						"type": "bytes32"
-					},
-					{
-						"internalType": "bytes32",
-						"name": "_rgtHash",
-						"type": "bytes32"
-					},
-					{
-						"internalType": "uint8",
-						"name": "_assetStatus",
-						"type": "uint8"
-					}
-				],
-				"name": "_modStatus",
-				"outputs": [
-					{
-						"internalType": "uint8",
-						"name": "",
-						"type": "uint8"
-					}
-				],
-				"stateMutability": "nonpayable",
-				"type": "function"
+				"name": "REPORT",
+				"type": "event"
 			},
 			{
 				"inputs": [
 					{
 						"internalType": "address",
-						"name": "_addr",
+						"name": "newOwner",
 						"type": "address"
 					}
 				],
-				"name": "_setMainWallet",
+				"name": "transferOwnership",
 				"outputs": [],
 				"stateMutability": "nonpayable",
 				"type": "function"
@@ -258,12 +291,12 @@ function returnFrontEndAbi() {
 			{
 				"inputs": [
 					{
-						"internalType": "address",
-						"name": "_storageAddress",
+						"internalType": "address payable",
+						"name": "payee",
 						"type": "address"
 					}
 				],
-				"name": "_setStorageContract",
+				"name": "withdrawPayments",
 				"outputs": [],
 				"stateMutability": "nonpayable",
 				"type": "function"
@@ -435,26 +468,6 @@ function returnFrontEndAbi() {
 				"type": "function"
 			},
 			{
-				"inputs": [],
-				"name": "renounceOwnership",
-				"outputs": [],
-				"stateMutability": "nonpayable",
-				"type": "function"
-			},
-			{
-				"inputs": [
-					{
-						"internalType": "address",
-						"name": "newOwner",
-						"type": "address"
-					}
-				],
-				"name": "transferOwnership",
-				"outputs": [],
-				"stateMutability": "nonpayable",
-				"type": "function"
-			},
-			{
 				"inputs": [
 					{
 						"internalType": "uint256",
@@ -471,19 +484,6 @@ function returnFrontEndAbi() {
 					}
 				],
 				"stateMutability": "pure",
-				"type": "function"
-			},
-			{
-				"inputs": [
-					{
-						"internalType": "address payable",
-						"name": "payee",
-						"type": "address"
-					}
-				],
-				"name": "withdrawPayments",
-				"outputs": [],
-				"stateMutability": "nonpayable",
 				"type": "function"
 			}
 		]

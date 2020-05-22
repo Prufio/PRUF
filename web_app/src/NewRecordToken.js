@@ -88,7 +88,7 @@ function NewRecordToken() {
           required
           onChange={(e) => setSerial(e.target.value)}
         />
-        ID:
+        Token ID:
         <input
           type="text"
           name="id"
