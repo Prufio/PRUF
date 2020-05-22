@@ -3,10 +3,11 @@ import Web3Listener from "./Web3Listener";
 
 function VerifyRightsholder() {
   let web3 = Web3Listener("web3");
-  let addr = Web3Listener("addr");
+  web3.eth.getAccounts().then((e) => setAddr(e[0]));
   let storage = Web3Listener("storage");
 
   var [txHash, setTxHash] = useState("");
+  var [addr, setAddr] = useState("");
 
   var [type, setType] = useState("");
   var [manufacturer, setManufacturer] = useState("");
@@ -50,6 +51,7 @@ function VerifyRightsholder() {
 
   return (
     <div>
+      {addr > 0 && (
       <form className="VRform">
         <h2>Verify Provenance</h2>
         Type:
@@ -138,7 +140,7 @@ function VerifyRightsholder() {
           value="Verify"
           onClick={_verify}
         />
-      </form>
+      </form>)}
 
       {txHash > 0 && ( //conditional rendering
         <div className="VRresults">

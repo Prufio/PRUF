@@ -11,6 +11,7 @@ import NewRecord from "./NewRecord";
 import RetrieveRecord from "./RetrieveRecord";
 import TransferAsset from "./TransferAsset";
 import VerifyRightsholder from "./VerifyRightsholder";
+import NewRecordTest from "./NewRecordTest";
 
 function Main() {
   return (
@@ -22,7 +23,7 @@ function Main() {
         <br></br>
         <div className="banner">
             Currently serving: {Web3Listener('addr')}
-            {Web3Listener('connection')===false && "Please log into metamask"}
+            {Web3Listener('addr') <= 0 && "NOBODY! Log into web3 provider!"}
         </div>
         <br></br>
         <div className="page">
@@ -59,6 +60,9 @@ function Main() {
             <li>
               <NavLink to="/force-modify-record">Modify</NavLink>
             </li>
+            <li>
+              <NavLink to="/new-record-test">Modify</NavLink>
+            </li>
           </ul>
           <div className="content">
             <Route exact path="/" component={Home} />
@@ -71,6 +75,7 @@ function Main() {
               component={ModifyRecordStatus}
             />
             <Route path="/decrement-counter" component={DecrementCounter} />
+            <Route path="/new-record-test" component={NewRecordTest} />
             <Route path="/modify-description" component={ModifyDescription} />
             <Route path="/add-note" component={AddNote} />
             <Route

@@ -3,11 +3,12 @@ import Web3Listener from "./Web3Listener";
 
 function ModifyRecordStatus() {
   let web3 = Web3Listener("web3");
-  let addr = Web3Listener("addr");
+  web3.eth.getAccounts().then((e) => setAddr(e[0]));
   let frontend = Web3Listener("frontend");
 
   var [status, setStatus] = useState("");
   var [txHash, setTxHash] = useState("");
+  var [addr, setAddr] = useState("");
 
   var [type, setType] = useState("");
   var [manufacturer, setManufacturer] = useState("");
@@ -41,6 +42,7 @@ function ModifyRecordStatus() {
 
   return (
     <div>
+      {addr > 0 && (
       <form className="MRform">
         <h2>Update Record Status</h2>
         Type:
@@ -134,7 +136,7 @@ function ModifyRecordStatus() {
         />
         <br></br>
         <input type="button" value="Update Status" onClick={_modifyStatus} />
-      </form>
+      </form>)}
       {txHash > 0 && ( //conditional rendering
         <div className="VRresults">
           No Errors Reported

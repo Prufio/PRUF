@@ -5,39 +5,27 @@ import returnFrontEndAbi from "./front_abi";
 
 function Web3Listener(request) {
   const bulletproof_frontend_addr =
-    "0x755414B4137F418810bd399E22da19ec9ddfdEaE";
+    "0x6a55b81B1d903e619Abc4Af33AbaEfdc00B633a9";
   const bulletproof_storage_addr =
-   "0xC600741749E4c90Ad553E31DF5f2EA9fe51aB4e0";
+   "0xB6224D707a3Ca7c78D79cEC06002acb147608731";
 
   let web3 = require("web3");
   const ethereum = window.ethereum;
   web3 = new Web3(web3.givenProvider);
   var [addr, setAddr] = useState("");
-  var [web3connection, setWeb3connection] = useState(false);
+  var _addr;
   const frontEnd_abi = returnFrontEndAbi();
   const storage_abi = returnStorageAbi();
   const frontend = new web3.eth.Contract(
     frontEnd_abi,
     bulletproof_frontend_addr
   );
-  const storage = new web3.eth.Contract(storage_abi, bulletproof_storage_addr);
-  window.addEventListener("load", async () => {
-    if (ethereum.isMetaMask === false) {
-      setWeb3connection(false);
-    }
-
-    ethereum.on("networkChanged", function() {
-      if (!ethereum.isMetaMask) {
-        setWeb3connection(false);
-      } else if (ethereum.isMetaMask) {
-        setWeb3connection(true);
-      }
-    });
-  });
-  console.log("Web 3 connection", web3connection);
+  const storage = new web3.eth.Contract(
+    storage_abi, 
+    bulletproof_storage_addr
+  );
 
   window.addEventListener("load", async () => {
-    //await ethereum.enable();
     web3.eth.getAccounts().then((e) => setAddr(e[0]));
 
     if (web3.eth.getAccounts().then((e) => e === addr)) {
@@ -51,15 +39,22 @@ function Web3Listener(request) {
   });
 
   if (request === "addr") {
-    return addr;
+    if(addr > 0){
+      console.log("Value from addr request:", addr);
+      return (addr);
+    }
+
+    else{
+      console.log("Null value from addr request");
+      return (null);
+    }
+    
   } else if (request === "web3") {
     return web3;
   } else if (request === "frontend") {
     return frontend;
   } else if (request === "storage") {
     return storage;
-  } else if (request === "connection") {
-    return addr !== "";
   }
 }
 

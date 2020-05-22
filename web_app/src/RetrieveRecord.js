@@ -3,13 +3,14 @@ import Web3Listener from "./Web3Listener";
 
 function RetrieveRecord() {
   let web3 = Web3Listener("web3");
-  let addr = Web3Listener("addr");
+  web3.eth.getAccounts().then((e) => setAddr(e[0]));
   let storage = Web3Listener("storage");
 
   var [type, setType] = useState("");
   var [manufacturer, setManufacturer] = useState("");
   var [model, setModel] = useState("");
   var [serial, setSerial] = useState("");
+  var [addr, setAddr] = useState("");
 
   var [result, setResult] = useState([]);
 
@@ -28,7 +29,16 @@ function RetrieveRecord() {
 
   return (
     <div>
-      <form className="RRform">
+      
+      {/* {addr <= 0 && (
+          <div className="VRresults">
+            <h2>WARNING!</h2>
+            Injected web3 not connected to form!
+          </div>
+        )} */}
+
+      {addr > 0 && (
+        <form className="RRform">
         <h2>Search for Record</h2>
         Type:
         <input
@@ -72,6 +82,7 @@ function RetrieveRecord() {
           onClick={_retrieveRecord}
         />
       </form>
+      )}
 
       {result[5] > 0 && ( //conditional rendering
         <div className="RRresults">

@@ -3,7 +3,7 @@ import Web3Listener from "./Web3Listener";
 
 function TransferRecord() {
   let web3 = Web3Listener("web3");
-  let addr = Web3Listener("addr");
+  web3.eth.getAccounts().then((e) => setAddr(e[0]));
   let frontend = Web3Listener("frontend");
 
   var [txHash, setTxHash] = useState("");
@@ -12,6 +12,7 @@ function TransferRecord() {
   var [manufacturer, setManufacturer] = useState("");
   var [model, setModel] = useState("");
   var [serial, setSerial] = useState("");
+  var [addr, setAddr] = useState("");
 
   var [first, setFirst] = useState("");
   var [middle, setMiddle] = useState("");
@@ -50,6 +51,7 @@ function TransferRecord() {
 
   return (
     <div>
+      {addr > 0 && (
       <form className="TAform">
         <h2>Transfer Asset</h2>
         Type:
@@ -179,7 +181,7 @@ function TransferRecord() {
         />
         <br></br>
         <input type="button" value="Transfer Asset" onClick={_transferAsstet} />
-      </form>
+      </form>)}
       {txHash > 0 && ( //conditional rendering
         <div className="VRresults">
           No Errors Reported
