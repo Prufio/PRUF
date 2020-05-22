@@ -2,15 +2,14 @@ import React, { useState } from "react";
 import Web3Listener from "./Web3Listener";
 
 function NewRecord() {
-  let web3 = Web3Listener("web3");
-  let addr = Web3Listener("addr");
-  let frontend = Web3Listener("frontend");
-
+  var addr = Web3Listener('addr');
+  var web3 = Web3Listener('web3');
+  var frontend = Web3Listener('frontend');
+  
   var [AssetClass, setAssetClass] = useState("");
   var [CountDownStart, setCountDownStart] = useState("");
   var [Ipfs1, setIPFS1] = useState("");
   var [txHash, setTxHash] = useState("");
-
   var [type, setType] = useState("");
   var [manufacturer, setManufacturer] = useState("");
   var [model, setModel] = useState("");
@@ -30,6 +29,7 @@ function NewRecord() {
     console.log("idxHash", idxHash);
     console.log("New rgtRaw", rgtRaw);
     console.log("New rgtHash", rgtHash);
+    console.log("addr: ", addr);
 
     frontend.methods
       .$newRecord(idxHash, rgtHash, AssetClass, CountDownStart, Ipfs1)
@@ -43,7 +43,17 @@ function NewRecord() {
 
   return (
     <div>
-      <form className="NRform">
+      {addr <= 0 && (
+        <form>
+          <div className="VRresults">
+            <h2>WARNING!</h2>
+            Injected web3 not connected to form!
+            {/* <button value="reset" onClick={resetWeb3}>resetConnection</button> */}
+          </div>
+        </form>
+        )}
+      {addr > 0 && (
+        <form className="NRform">
         <h2>New Asset</h2>
         Type:
         <input
@@ -154,7 +164,9 @@ function NewRecord() {
         />
         <br />
         <input type="button" value="New Record" onClick={_newRecord} />
+        <br></br>
       </form>
+      )}
       {txHash > 0 && ( //conditional rendering
         <div className="VRresults">
           No Errors Reported
