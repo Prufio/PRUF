@@ -7,23 +7,19 @@ function ForceModifyRecord() {
   let frontend = Web3Listener("frontend");
 
   var [txHash, setTxHash] = useState("");
-<<<<<<< Updated upstream
 
   var [type, setType] = useState("");
   var [manufacturer, setManufacturer] = useState("");
   var [model, setModel] = useState("");
   var [serial, setSerial] = useState("");
+  var [addr, setAddr] = useState("");
 
   var [newFirst, setNewFirst] = useState("");
   var [newMiddle, setNewMiddle] = useState("");
   var [newSurname, setNewSurname] = useState("");
   var [newId, setNewID] = useState("");
   var [newSecret, setNewSecret] = useState("");
-
-=======
-  var [addr, setAddr] = useState("");
   
->>>>>>> Stashed changes
   const _forceModifyRecord = () => {
     var idxHash = web3.utils.soliditySha3(type, manufacturer, model, serial);
    
@@ -47,7 +43,7 @@ function ForceModifyRecord() {
 
   return (
     <div>
-<<<<<<< Updated upstream
+     {addr > 0 && (
       <form className="FMRform">
         <h2>Transfer Asset</h2>
         Type:
@@ -132,7 +128,8 @@ function ForceModifyRecord() {
         />
         <br></br>
         <input type="button" value="Modify Record" onClick={_forceModifyRecord} />
-      </form>
+      </form>)}
+
       {txHash > 0 && ( //conditional rendering
         <div className="VRresults">
           No Errors Reported
@@ -147,31 +144,7 @@ function ForceModifyRecord() {
           </a>
         </div>
       )}
-=======
-    {addr > 0 && (
-    <form className="FMRform" onSubmit={_forceModifyRecord}>
-      <h2>Modify Record</h2>
-      Asset ID:
-      <input
-        type="text"
-        name="idxHashField"
-        placeholder="Asset ID"
-        required
-        onChange={(e) => setidxHash(web3.utils.keccak256(e.target.value))}
-      />
-      <br></br>
-      New Rights Holder:
-      <input
-        type="text"
-        name="NewRightsHolderField"
-        placeholder="New Rights Holder"
-        required
-        onChange={(e) => setNewRgtHash(web3.utils.keccak256(e.target.value))}
-      />
-      <input type="submit" value="Modify Record" />
-    </form>)}
->>>>>>> Stashed changes
-    </div>
+      </div>
   );
 }
 
