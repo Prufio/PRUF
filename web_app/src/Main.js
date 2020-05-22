@@ -64,7 +64,7 @@ function Main() {
               <NavLink to="/force-modify-record">Modify</NavLink>
             </li>
             <li>
-              <NavLink to="/new-record-test">Modify</NavLink>
+              <NavLink to="/new-record-test">NewRecordTest</NavLink>
             </li>
           </ul>
           <div className="content">
