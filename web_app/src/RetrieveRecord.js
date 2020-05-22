@@ -112,6 +112,10 @@ function RetrieveRecord() {
           <br></br>
           Note Hash :<br></br>
           {result[9]}
+          <br></br>
+          <br></br>
+          Token ID :<br></br>
+          {result[1]}
         </div>
       )}
     </div>
