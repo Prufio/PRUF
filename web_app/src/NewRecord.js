@@ -49,15 +49,12 @@ function NewRecord() {
 
   return (
     <div>
-      {/* {addr <= 0 && (
-        <form>
+      {addr === undefined && (
           <div className="VRresults">
             <h2>WARNING!</h2>
             Injected web3 not connected to form!
-            <button value="reset" onClick={resetWeb3}>resetConnection</button>
           </div>
-        </form>
-        )} */}
+        )}
       {addr > 0 && (
         <form className="NRform">
         <h2>New Asset</h2>
