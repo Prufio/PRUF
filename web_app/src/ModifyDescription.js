@@ -3,11 +3,12 @@ import Web3Listener from "./Web3Listener";
 
 function ModifyDescription() {
   let web3 = Web3Listener("web3");
-  let addr = Web3Listener("addr");
+  web3.eth.getAccounts().then((e) => setAddr(e[0]));
   let frontend = Web3Listener("frontend");
 
   var [Ipfs1, setIPFS1] = useState("");
   var [txHash, setTxHash] = useState("");
+  var [addr, setAddr] = useState("");
 
   var [type, setType] = useState("");
   var [manufacturer, setManufacturer] = useState("");
@@ -41,6 +42,7 @@ function ModifyDescription() {
 
   return (
     <div>
+      {addr > 0 && (
       <form className="MDform">
         <h2>Description</h2>
         Type:
@@ -134,7 +136,7 @@ function ModifyDescription() {
         />
         <br />
         <input type="button" value="Update Description" onClick={_updateDescription} />
-      </form>
+      </form>)}
       {txHash > 0 && ( //conditional rendering
         <div className="VRresults">
           No Errors Reported

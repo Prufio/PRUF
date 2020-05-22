@@ -3,9 +3,10 @@ import Web3Listener from "./Web3Listener";
 
 function DecrementCounter() {
   let web3 = Web3Listener("web3");
-  let addr = Web3Listener("addr");
+  web3.eth.getAccounts().then((e) => setAddr(e[0]));
   let frontend = Web3Listener("frontend");
 
+  var [addr, setAddr] = useState("");
   var [CountDown, setCountDown] = useState("");
   var [txHash, setTxHash] = useState("");
 
@@ -41,6 +42,7 @@ function DecrementCounter() {
 
   return (
     <div>
+      {addr > 0 && (
       <form className="DCform">
         <h2>Countdown</h2>
         Type:
@@ -135,7 +137,7 @@ function DecrementCounter() {
         />
         <br></br>
         <input type="button" value="Countdown" onClick={_decrementCounter} />
-      </form>
+      </form>)}
       {txHash > 0 && ( //conditional rendering
         <div className="VRresults">
           No Errors Reported

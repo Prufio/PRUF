@@ -3,11 +3,12 @@ import Web3Listener from "./Web3Listener";
 
 function AddNote() {
   let web3 = Web3Listener("web3");
-  let addr = Web3Listener("addr");
+  web3.eth.getAccounts().then((e) => setAddr(e[0]));
   let frontend = Web3Listener("frontend");
 
   var [Ipfs2, setIPFS2] = useState("");
   var [txHash, setTxHash] = useState("");
+  var [addr, setAddr] = useState("");
 
   var [type, setType] = useState("");
   var [manufacturer, setManufacturer] = useState("");
@@ -41,6 +42,7 @@ function AddNote() {
 
   return (
     <div>
+      {addr > 0 && (
       <form className="ANform">
         <h2>Add Permanent Note</h2>
         Type:
@@ -134,7 +136,7 @@ function AddNote() {
         />
         <br />
         <input type="button" value="Add Note" onClick={_addNote} />
-      </form>
+      </form>)}
       {txHash > 0 && ( //conditional rendering
         <div className="VRresults">
           No Errors Reported

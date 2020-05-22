@@ -2,9 +2,11 @@ import React, { useState } from "react";
 import Web3Listener from "./Web3Listener";
 
 function NewRecord() {
-  var addr = Web3Listener('addr');
   var web3 = Web3Listener('web3');
+  web3.eth.getAccounts().then((e) => setAddr(e[0]));
   var frontend = Web3Listener('frontend');
+
+  var [addr, setAddr] = useState("");
   
   var [AssetClass, setAssetClass] = useState("");
   var [CountDownStart, setCountDownStart] = useState("");
@@ -20,6 +22,10 @@ function NewRecord() {
   var [surname, setSurname] = useState("");
   var [id, setID] = useState("");
   var [secret, setSecret] = useState("");
+
+  const resetWeb3 = () => {
+    web3.eth.getAccounts().then((e) => setAddr(e[0]));
+  }
 
   const _newRecord = () => {
     var idxHash = web3.utils.soliditySha3(type, manufacturer, model, serial);
@@ -43,15 +49,15 @@ function NewRecord() {
 
   return (
     <div>
-      {addr <= 0 && (
+      {/* {addr <= 0 && (
         <form>
           <div className="VRresults">
             <h2>WARNING!</h2>
             Injected web3 not connected to form!
-            {/* <button value="reset" onClick={resetWeb3}>resetConnection</button> */}
+            <button value="reset" onClick={resetWeb3}>resetConnection</button>
           </div>
         </form>
-        )}
+        )} */}
       {addr > 0 && (
         <form className="NRform">
         <h2>New Asset</h2>
