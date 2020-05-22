@@ -43,6 +43,12 @@ function ForceModifyRecord() {
 
   return (
     <div>
+      {addr === undefined && (
+          <div className="VRresults">
+            <h2>WARNING!</h2>
+            Injected web3 not connected to form!
+          </div>
+        )}
      {addr > 0 && (
       <form className="FMRform">
         <h2>Transfer Asset</h2>

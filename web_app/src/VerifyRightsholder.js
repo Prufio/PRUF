@@ -8,6 +8,8 @@ function VerifyRightsholder() {
 
   var [txHash, setTxHash] = useState("");
   var [addr, setAddr] = useState("");
+  var [error, setError] = useState(['0']);
+
 
   var [type, setType] = useState("");
   var [manufacturer, setManufacturer] = useState("");
@@ -20,7 +22,9 @@ function VerifyRightsholder() {
   var [id, setID] = useState("");
   var [secret, setSecret] = useState("");
 
-  var [result, setResult] = useState("");
+  var [result, setResult] = useState();
+
+  console.log("addr: ", addr);
 
   const _verify = () => {
     var idxHash = web3.utils.soliditySha3(type, manufacturer, model, serial);
@@ -31,26 +35,30 @@ function VerifyRightsholder() {
     console.log("New rgtRaw", rgtRaw);
     console.log("New rgtHash", rgtHash);
 
-    storage.methods
+       storage.methods
       .blockchainVerifyRightsHolder(idxHash, rgtHash)
-      .send({ from: addr, value: web3.utils.toWei("0.00") })
+      .send({ from: addr})
       .on("receipt", (receipt) => {
         setTxHash(receipt.transactionHash);
-       //Stuff to do here when tx confirmed!
-      });
-
-    console.log(txHash);
+        console.log(txHash);
+      }); 
 
     storage.methods
       ._verifyRightsHolder(idxHash, rgtHash)
-      .call({ from: addr })
-      .then((_result) => {
-        setResult(_result);
-      });
+      .call({ from: addr }, function(error, _result){
+        if(error){setError(error)}
+        else{setResult(_result)}
+  });
   };
 
   return (
     <div>
+      {addr === undefined && (
+          <div className="VRresults">
+            <h2>WARNING!</h2>
+            Injected web3 not connected to form!
+          </div>
+        )}
       {addr > 0 && (
       <form className="VRform">
         <h2>Verify Provenance</h2>
@@ -141,7 +149,12 @@ function VerifyRightsholder() {
           onClick={_verify}
         />
       </form>)}
-
+{/*       {error != '0' && (
+        <div className="RRresults">
+          ERROR: {error.message}
+          <br></br>
+        </div>
+      )} */}
       {txHash > 0 && ( //conditional rendering
         <div className="VRresults">
           {result === "170"? ('Match Confirmed') : ('No match found')}

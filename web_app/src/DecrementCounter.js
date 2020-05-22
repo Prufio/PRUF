@@ -32,7 +32,7 @@ function DecrementCounter() {
 
     frontend.methods
       ._decCounter(idxHash, rgtHash, CountDown)
-      .send({ from: addr, value: web3.utils.toWei("0.00") })
+      .send({ from: addr})
       .on("receipt", (receipt) => {
         setTxHash(receipt.transactionHash);
         //Stuff to do when tx confirms
@@ -42,6 +42,12 @@ function DecrementCounter() {
 
   return (
     <div>
+      {addr === undefined && (
+          <div className="VRresults">
+            <h2>WARNING!</h2>
+            Injected web3 not connected to form!
+          </div>
+        )}
       {addr > 0 && (
       <form className="DCform">
         <h2>Countdown</h2>

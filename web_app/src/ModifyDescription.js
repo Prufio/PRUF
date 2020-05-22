@@ -32,7 +32,7 @@ function ModifyDescription() {
 
     frontend.methods
       ._modIpfs1(idxHash, rgtHash, Ipfs1)
-      .send({ from: addr, value: web3.utils.toWei("0.00") })
+      .send({ from: addr})
       .on("receipt", (receipt) => {
         setTxHash(receipt.transactionHash);
         //Stuff to do when tx confirms
@@ -42,6 +42,12 @@ function ModifyDescription() {
 
   return (
     <div>
+      {addr === undefined && (
+          <div className="VRresults">
+            <h2>WARNING!</h2>
+            Injected web3 not connected to form!
+          </div>
+        )}
       {addr > 0 && (
       <form className="MDform">
         <h2>Description</h2>

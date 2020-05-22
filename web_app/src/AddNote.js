@@ -42,6 +42,12 @@ function AddNote() {
 
   return (
     <div>
+      {addr === undefined && (
+          <div className="VRresults">
+            <h2>WARNING!</h2>
+            Injected web3 not connected to form!
+          </div>
+        )}
       {addr > 0 && (
       <form className="ANform">
         <h2>Add Permanent Note</h2>

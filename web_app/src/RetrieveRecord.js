@@ -11,7 +11,7 @@ function RetrieveRecord() {
   var [model, setModel] = useState("");
   var [serial, setSerial] = useState("");
   var [addr, setAddr] = useState("");
-
+  var [error, setError] = useState(['0']);
   var [result, setResult] = useState([]);
 
   const _retrieveRecord = () => {
@@ -21,21 +21,20 @@ function RetrieveRecord() {
 
     storage.methods
       .retrieveRecord(idxHash)
-      .call({ from: addr })
-      .then((_result) => {
-        setResult(_result);
-      });
-  };
-
+      .call({ from: addr }, function(error, _result){
+        if(error){setError(error)}
+        else{setResult(_result)}
+  });
+  }
   return (
     <div>
       
-      {/* {addr <= 0 && (
+      {addr === undefined && (
           <div className="VRresults">
             <h2>WARNING!</h2>
             Injected web3 not connected to form!
           </div>
-        )} */}
+        )}
 
       {addr > 0 && (
         <form className="RRform">
@@ -83,7 +82,17 @@ function RetrieveRecord() {
         />
       </form>
       )}
-
+      {error != '0' && (
+        <div className="RRresults">
+          ERROR: {error.message}
+          <br></br>
+        </div>
+      )}
+      {result > 0 && (
+        <div className="RRresults">
+        {result}
+        </div>
+      )}
       {result[5] > 0 && ( //conditional rendering
         <div className="RRresults">
           Status:
