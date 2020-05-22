@@ -76,6 +76,15 @@ contract Storage is Ownable {
      * rgtHash = K256(abiPacked(idxHash,rgtHash))
      */
 
+
+
+
+
+
+
+
+
+
     //----------------------------------------------Modifiers----------------------------------------------//
 
     /*
@@ -86,16 +95,15 @@ contract Storage is Ownable {
      *      Is authorized for asset class
      *
      */
-    modifier addrAuth(uint8 _userType, bytes32 _idxHash) {
-        require(
-            (((authorizedAdresses[keccak256(abi.encodePacked(msg.sender))] >=
-                _userType) &&
-                (authorizedAdresses[keccak256(abi.encodePacked(msg.sender))] <=
-                    4)) || (database[_idxHash].assetClass >= 32768)),
-            "Contract not authorized or improperly permissioned"
-        );
-        _;
-    }
+    // modifier addrAuth(uint8 _userType, bytes32 _idxHash) {
+    //            require(
+    //         ((authorizedAdresses[keccak256(abi.encodePacked(msg.sender))] >= 3)  &&
+    //         (authorizedAdresses[keccak256(abi.encodePacked(msg.sender))] <= 4)) ||
+    //         (database[_idxHash].assetClass >= 32768),
+    //         "Contract not authorized or improperly permissioned"
+    //     );
+    //     _;
+    // }
 
     /*
      * @dev Verify user credentials
@@ -109,7 +117,8 @@ contract Storage is Ownable {
      */
     modifier userAuth(bytes32 _senderHash, bytes32 _idxHash) {
         uint8 senderType = registeredUsers[_senderHash].userType;
-        uint256 tokenID = uint256(database[_idxHash].rightsHolder);
+
+        uint256 tokenID = uint256(database[_idxHash].rightsHolder);  //tokenID set to the uint256 of the rightsHolder hash at _idx
 
         require(
             (senderType == 1) ||
@@ -167,9 +176,30 @@ contract Storage is Ownable {
         _;
     }
 
+
+
+
+
+
+
+
+
+
+
     //-----------------------------------------------Events------------------------------------------------//
 
     event REPORT(string _msg);
+
+
+
+
+
+
+
+
+
+
+
 
     //-----------------------------------------------Private functions------------------------------------------------//
 
@@ -195,6 +225,15 @@ contract Storage is Ownable {
 
         return (_senderHash, lastrec);
     }
+
+
+
+
+
+
+
+
+
 
     //--------------------------------Internal Admin functions / onlyowner---------------------------------//
 
@@ -344,6 +383,14 @@ contract Storage is Ownable {
         database[_idxHash].forceModCount = 0; //set to unspecified assetStatus
     }
 
+
+
+
+
+
+
+
+
     //--------------------------------External contract functions / authuser---------------------------------//
 
     /*
@@ -356,7 +403,7 @@ contract Storage is Ownable {
         uint16 _assetClass,
         uint256 _countDownStart,
         bytes32 _Ipfs1
-    ) public addrAuth(3, _idxHash) {
+    ) public {
         uint256 tokenID = uint256(database[_idxHash].rightsHolder);
 
         require(
@@ -367,6 +414,13 @@ contract Storage is Ownable {
             (_assetClass == registeredUsers[_userHash].authorizedAssetClass) || //cannot use userAuth because record[idx] doesnt exist yet
                 (_assetClass > 8192),
             "NR:ERR-User not registered for asset class"
+        );
+
+        require(
+            ((authorizedAdresses[keccak256(abi.encodePacked(msg.sender))] >= 3)  &&
+            (authorizedAdresses[keccak256(abi.encodePacked(msg.sender))] <= 4)) ||
+            (database[_idxHash].assetClass >= 32768),
+            "Contract not authorized or improperly permissioned"
         );
         require(
             database[_idxHash].rightsHolder == 0,
@@ -465,12 +519,19 @@ contract Storage is Ownable {
         bytes32 _Ipfs2
     )
         public
-        addrAuth(3, _idxHash)
         userAuth(_userHash, _idxHash)
         exists(_idxHash)
         unlocked(_idxHash)
         notTimeLocked(_idxHash)
     {
+
+        require(
+            ((authorizedAdresses[keccak256(abi.encodePacked(msg.sender))] >= 3)  &&
+            (authorizedAdresses[keccak256(abi.encodePacked(msg.sender))] <= 4)) ||
+            (database[_idxHash].assetClass >= 32768),
+            "Contract not authorized or improperly permissioned"
+        );
+
         database[_idxHash].timeLock = block.number;
 
         Record memory _record = database[_idxHash];
@@ -493,6 +554,15 @@ contract Storage is Ownable {
         //database[_idxHash].timeLock = 0;
         emit REPORT("Record modified");
     }
+
+
+
+
+
+
+
+
+
 
     //--------------------------------External READ ONLY contract functions / authuser---------------------------------//
 
