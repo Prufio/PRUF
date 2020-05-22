@@ -99,27 +99,9 @@ contract FrontEnd is PullPayment, Ownable {
 
     event REPORT(string _msg);
 
-    /*
-     * @dev Set storage contract to interface with
-     */
-    function _setStorageContract(address _storageAddress) public onlyOwner {
-        require(
-            _storageAddress != address(0),
-            "ADMIN: storage address cannot be zero"
-        );
 
-        Storage = StorageInterface(_storageAddress);
-    }
 
-    /*
-     * @dev Set wallet for contract to direct payments to
-     */
-
-    function _setMainWallet(address _addr) public onlyOwner {
-        mainWallet = _addr;
-    }
-
-    // --------------------------------------TESTING FUNCTIONS--------------------------------------------//
+    // --------------------------------------TESTING/HELPER FUNCTIONS--------------------------------------------//
 
     function getBlock() external view returns (uint256) {
         return (block.number);
@@ -127,6 +109,14 @@ contract FrontEnd is PullPayment, Ownable {
 
     function getAnyHash(string calldata _idx) external pure returns (bytes32) {
         return keccak256(abi.encodePacked(_idx));
+    }
+
+    function b32_Uint256(bytes32 b32) external pure returns (uint256) {
+        return (uint256(b32));
+    }
+
+    function uint256_b32(uint256 u256) external pure returns (bytes32) {
+        return(bytes32(u256));
     }
 
     function getIdxHash(
@@ -163,6 +153,43 @@ contract FrontEnd is PullPayment, Ownable {
         );
         return (rawRgtHash, keccak256(abi.encodePacked(_idxHash, rawRgtHash)));
     }
+
+
+
+
+
+
+
+
+
+    // --------------------------------------ADMIN FUNCTIONS--------------------------------------------//
+    /*
+     * @dev Set storage contract to interface with
+     */
+    function _setStorageContract(address _storageAddress) public onlyOwner {
+        require(
+            _storageAddress != address(0),
+            "ADMIN: storage address cannot be zero"
+        );
+
+        Storage = StorageInterface(_storageAddress);
+    }
+
+    /*
+     * @dev Set wallet for contract to direct payments to
+     */
+
+    function _setMainWallet(address _addr) public onlyOwner {
+        mainWallet = _addr;
+    }
+
+
+
+
+
+
+
+
 
     //--------------------------------------External functions--------------------------------------------//
 
@@ -447,6 +474,14 @@ contract FrontEnd is PullPayment, Ownable {
             _rec.forceModCount
         ); // Send data and writehash to storage
     }
+
+
+
+
+
+
+
+
 
     /*--------------------------------------------------------------------------------------PAYMENT FUNCTIONS
      * @dev Deducts payment from transaction
