@@ -101,7 +101,15 @@ contract FrontEnd is PullPayment, Ownable {
 
 
 
-    // --------------------------------------TESTING/HELPER FUNCTIONS--------------------------------------------//
+
+
+
+
+
+
+
+
+// --------------------------------------TESTING FUNCTIONS--------------------------------------------//
 
     function getBlock() external view returns (uint256) {
         return (block.number);
@@ -111,12 +119,12 @@ contract FrontEnd is PullPayment, Ownable {
         return keccak256(abi.encodePacked(_idx));
     }
 
-    function b32_Uint256(bytes32 b32) external pure returns (uint256) {
-        return (uint256(b32));
+    function b32_to_uint256(bytes32 b32) external pure returns (uint256) {
+        return uint256(b32);
     }
 
-    function uint256_b32(uint256 u256) external pure returns (bytes32) {
-        return(bytes32(u256));
+    function uint256_to_b32(uint256 u256) external pure returns (bytes32) {
+        return bytes32(u256);
     }
 
     function getIdxHash(
@@ -162,7 +170,9 @@ contract FrontEnd is PullPayment, Ownable {
 
 
 
-    // --------------------------------------ADMIN FUNCTIONS--------------------------------------------//
+
+
+// --------------------------------------ADMIN FUNCTIONS--------------------------------------------//
     /*
      * @dev Set storage contract to interface with
      */
@@ -182,6 +192,7 @@ contract FrontEnd is PullPayment, Ownable {
     function _setMainWallet(address _addr) public onlyOwner {
         mainWallet = _addr;
     }
+
 
 
 
@@ -474,6 +485,7 @@ contract FrontEnd is PullPayment, Ownable {
             _rec.forceModCount
         ); // Send data and writehash to storage
     }
+
 
 
 
