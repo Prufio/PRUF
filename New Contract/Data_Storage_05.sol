@@ -50,7 +50,8 @@ contract Storage is Ownable {
     mapping(uint16 => Costs) private cost; // Cost per function by asset class
 
     //address erc20_tokenAddress;
-    address erc721_tokenAddress;
+    address erc721ContractAddress;
+    erc721_tokenInterface erc721_tokenContract; //erc721_token prototype initialization
 
     /*  NOTES:---------------------------------------------------------------------------------------//
      * Authorized external Contract / address types:   authorizedAdresses[]
@@ -206,12 +207,9 @@ contract Storage is Ownable {
 
     function setErc721_tokenAddress(address contractAddress) public onlyOwner {
         require(contractAddress != address(0), "Invalid contract address");
-        erc721_tokenAddress = contractAddress;
+        erc721ContractAddress = contractAddress;
         erc721_tokenContract = erc721_tokenInterface(contractAddress);
     }
-
-    erc721_tokenInterface erc721_tokenContract; //erc721_token
-
     /*
      * @dev Authorize / Deauthorize / Authorize users for an address be permitted to make record modifications
      * ----------------INSECURE -- keccak256 of address must be generated clientside in release.

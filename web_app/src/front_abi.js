@@ -271,6 +271,25 @@ function returnFrontEndAbi() {
 			{
 				"inputs": [
 					{
+						"internalType": "bytes32",
+						"name": "b32",
+						"type": "bytes32"
+					}
+				],
+				"name": "b32_to_uint256",
+				"outputs": [
+					{
+						"internalType": "uint256",
+						"name": "",
+						"type": "uint256"
+					}
+				],
+				"stateMutability": "pure",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
 						"internalType": "string",
 						"name": "_idx",
 						"type": "string"
@@ -433,6 +452,25 @@ function returnFrontEndAbi() {
 				"name": "transferOwnership",
 				"outputs": [],
 				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "uint256",
+						"name": "u256",
+						"type": "uint256"
+					}
+				],
+				"name": "uint256_to_b32",
+				"outputs": [
+					{
+						"internalType": "bytes32",
+						"name": "",
+						"type": "bytes32"
+					}
+				],
+				"stateMutability": "pure",
 				"type": "function"
 			},
 			{
