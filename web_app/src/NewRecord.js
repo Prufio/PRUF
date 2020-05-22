@@ -2,9 +2,9 @@ import React, { useState } from "react";
 import Web3Listener from "./Web3Listener";
 
 function NewRecord() {
-  var addr = Web3Listener("addr");
-  var web3 = Web3Listener("web3");
-  var frontend = Web3Listener("frontend");
+  var addr = Web3Listener('addr');
+  var web3 = Web3Listener('web3');
+  var frontend = Web3Listener('frontend');
   
   var [AssetClass, setAssetClass] = useState("");
   var [CountDownStart, setCountDownStart] = useState("");
@@ -21,9 +21,6 @@ function NewRecord() {
   var [id, setID] = useState("");
   var [secret, setSecret] = useState("");
 
-  const resetWeb3 = () => {
-
-  }
   const _newRecord = () => {
     var idxHash = web3.utils.soliditySha3(type, manufacturer, model, serial);
     var rgtRaw = web3.utils.soliditySha3(first, middle, surname, id, secret);
