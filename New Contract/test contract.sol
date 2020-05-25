@@ -19,11 +19,16 @@ contract test is Ownable {
     }
 
 
-    function atWhatAddress (uint256 tokenID) external onlyOwner returns (address){
+    function atWhatAddress (uint256 tokenID) external view onlyOwner returns (address){
         return erc721_tokenContract.ownerOf(tokenID);
     }
 
-    function atMyAddress (uint256 tokenID) external returns (string){
+    function atMyAddress (uint256 tokenID) external view returns (string memory){
+        if (erc721_tokenContract.ownerOf(tokenID) == msg.sender){
+             return "token confirmed at sender address";
+        } else {
+            return "token not at sender address";
+        }
 
     }
 
