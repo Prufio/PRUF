@@ -290,7 +290,7 @@ contract Storage is Ownable {
      */
     function ADMIN_lockStatus(string calldata _idx, uint8 _stat)
         external
-        onlyOwner
+        isAdmin
     {
         bytes32 _idxHash = keccak256(abi.encodePacked(_idx)); // TESTING ONLY
         //for testing only should be (b32 _idxHash) exists(_idxHash) onlyOwner
@@ -309,7 +309,7 @@ contract Storage is Ownable {
     /*
      * @dev Allows Admin to unlock asset
      */
-    function ADMIN_unlock(string calldata _idx) external onlyOwner {
+    function ADMIN_unlock(string calldata _idx) external isAdmin {
         //---------------------------------------INSECURE USE HASH!!!!
         //for testing only should be (b32 _idxHash) exists(_idxHash) onlyOwner
         bytes32 _idxHash = keccak256(abi.encodePacked(_idx)); // TESTING ONLY
@@ -325,7 +325,7 @@ contract Storage is Ownable {
      */
     function ADMIN_setTimelock(string calldata _idx, uint256 _blockNumber)
         external
-        onlyOwner
+        isAdmin
     {
         //---------------------------------------INSECURE USE HASH!!!!
         //for testing only should be (b32 _idxHash) exists(_idxHash) onlyOwner
@@ -340,7 +340,7 @@ contract Storage is Ownable {
     /*
      * @dev Allows Admin to reset force mod count
      */
-    function ADMIN_resetFMC(string calldata _idx) external onlyOwner {
+    function ADMIN_resetFMC(string calldata _idx) external isAdmin {
         //---------------------------------------INSECURE USE HASH!!!!
         //for testing only should be (b32 _idxHash) exists(_idxHash) onlyOwner
         bytes32 _idxHash = keccak256(abi.encodePacked(_idx)); // TESTING ONLY
@@ -653,7 +653,7 @@ contract Storage is Ownable {
     function ADMIN_compare_rgt(string calldata _idx, string calldata _rgt)
         external
         view
-        onlyOwner
+        isAdmin
         returns (string memory)
     {
         bytes32 idxHash = keccak256(abi.encodePacked(_idx));
