@@ -230,11 +230,6 @@ contract Storage is Ownable {
 
 
 
-
-
-
-
-
     //--------------------------------Internal Admin functions / onlyowner---------------------------------//
 
     // function setErc20_tokenAddress (address contractAddress) public onlyOwner {
@@ -244,10 +239,10 @@ contract Storage is Ownable {
     // }
     //erc20_tokenInterface erc20_tokenContract; //erc20_token
 
-    function setErc721_tokenAddress(address contractAddress) public onlyOwner {
-        require(contractAddress != address(0), "Invalid contract address");
-        erc721ContractAddress = contractAddress;
-        erc721_tokenContract = erc721_tokenInterface(contractAddress);
+    function setErc721_tokenAddress(address _contractAddress) public onlyOwner {
+        require(_contractAddress != address(0), "Invalid contract address");
+        erc721ContractAddress = _contractAddress;
+        erc721_tokenContract = erc721_tokenInterface(_contractAddress);
     }
     /*
      * @dev Authorize / Deauthorize / Authorize users for an address be permitted to make record modifications
@@ -404,7 +399,7 @@ contract Storage is Ownable {
         uint256 _countDownStart,
         bytes32 _Ipfs1
     ) public {
-        uint256 tokenID = uint256(database[_idxHash].rightsHolder);
+        uint256 tokenID = uint256(database[_idxHash].rightsHolder);  //tokenID set to the uint256 of the rightsHolder hash at _idx
 
         require(
             registeredUsers[_userHash].userType == 1 || (_assetClass > 8192), //cannot use userAuth because record[idx] doesnt exist yet
@@ -615,7 +610,7 @@ contract Storage is Ownable {
             bytes32
         )
     {
-        uint256 tokenID = uint256(database[_idxHash].rightsHolder);
+        uint256 tokenID = uint256(database[_idxHash].rightsHolder);  //tokenID set to the uint256 of the rightsHolder hash at _idx
 
         require(
             (((authorizedAdresses[keccak256(abi.encodePacked(msg.sender))] >=
