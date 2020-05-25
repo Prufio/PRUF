@@ -172,7 +172,7 @@ contract Storage is Ownable {
 
     //-----------------------------------------------Events------------------------------------------------//
 
-    event REPORT(string _msg);
+    event REPORT(string _msg, uint256 _num);
 
     //-----------------------------------------------Private functions------------------------------------------------//
 
@@ -238,7 +238,7 @@ contract Storage is Ownable {
         bytes32 hash;
         hash = keccak256(abi.encodePacked(_authAddr));
 
-        emit REPORT("internal user database access!"); //report access to the internal user database
+        emit REPORT("internal user database access!",0); //report access to the internal user database
         registeredUsers[hash].userType = _userType;
         registeredUsers[hash].authorizedAssetClass = _authorizedAssetClass;
     }
@@ -253,7 +253,7 @@ contract Storage is Ownable {
         uint8 _contractAuthLevel
     ) external onlyOwner {
         require(_contractAuthLevel <= 3, "AC:ER-13 Invalid user type");
-        emit REPORT("internal user database access!"); //report access to the internal user database
+        emit REPORT("internal user database access!",0); //report access to the internal user database
 
         authorizedAdresses[keccak256(
             abi.encodePacked(_addr)
@@ -390,6 +390,7 @@ contract Storage is Ownable {
         bytes32 _Ipfs1
     ) public {
         uint256 tokenID = uint256(_rgt); //tokenID set to the uint256 of the supplied rgt
+        emit REPORT("Token ID", tokenID);
 
         require(
             registeredUsers[_userHash].userType == 1 || (_assetClass > 8192), //cannot use userAuth because record[idx] doesnt exist yet
@@ -429,7 +430,7 @@ contract Storage is Ownable {
 
         database[_idxHash] = _record;
 
-        emit REPORT("New record created");
+        emit REPORT("New record created",0);
     }
 
     /*
@@ -487,7 +488,7 @@ contract Storage is Ownable {
 
         database[_idxHash] = _record;
         //database[_idxHash].timeLock = 0;
-        emit REPORT("Record modified");
+        emit REPORT("Record modified",0);
     }
 
     /*
@@ -531,7 +532,7 @@ contract Storage is Ownable {
 
         database[_idxHash] = _record;
         //database[_idxHash].timeLock = 0;
-        emit REPORT("Record modified");
+        emit REPORT("Record modified",0);
     }
 
     //--------------------------------External READ ONLY contract functions / authuser---------------------------------//
@@ -639,10 +640,10 @@ contract Storage is Ownable {
         returns (uint8)
     {
         if (_rgtHash == database[_idxHash].rightsHolder) {
-            emit REPORT("Rights holder match confirmed");
+            emit REPORT("Rights holder match confirmed",0);
             return 170;
         } else {
-            emit REPORT("Rights holder does not match supplied data");
+            emit REPORT("Rights holder does not match supplied data",0);
             return 0;
         }
     }
