@@ -77,33 +77,23 @@ contract Storage is Ownable {
      */
 
 
-
-
-
-
-
-
-
-
     //----------------------------------------------Modifiers----------------------------------------------//
 
     /*
      * @dev Check msg.sender against authorized adresses
-     * msg.sender:
-     * If assetClass is 8192 or less;
-     *      Exists in registeredUsers as a usertype 1 or 9
+     * msg.sender
+     *      Exists in registeredUsers as a usertype 99
+     *      Exists in authorizedAddress as a contract type 4
      *      Is authorized for asset class
      *
      */
-    // modifier addrAuth(uint8 _userType, bytes32 _idxHash) {
-    //            require(
-    //         ((authorizedAdresses[keccak256(abi.encodePacked(msg.sender))] >= 3)  &&
-    //         (authorizedAdresses[keccak256(abi.encodePacked(msg.sender))] <= 4)) ||
-    //         (database[_idxHash].assetClass >= 32768),
-    //         "Contract not authorized or improperly permissioned"
-    //     );
-    //     _;
-    // }
+    modifier isAdmin() {
+                require(
+            ((authorizedAdresses[keccak256(abi.encodePacked(msg.sender))] == 4)  &&
+            (registeredUsers[keccak256(abi.encodePacked(msg.sender))].userType == 99)) 
+        );
+        _;
+    }
 
     /*
      * @dev Verify user credentials
@@ -254,7 +244,7 @@ contract Storage is Ownable {
         uint16 _authorizedAssetClass
     ) external onlyOwner {
         require(
-            (_userType == 0) || (_userType == 1) || (_userType == 9),
+            (_userType == 0) || (_userType == 1) || (_userType == 9) || (_userType == 99),
             "AU:ER-13 Invalid user type"
         );
         require(
@@ -379,11 +369,13 @@ contract Storage is Ownable {
     }
 
 
-
-
-
-
-
+    function tokentest ( bytes32 _rgt, bytes32 _idx) external view returns (string memory ,uint256, string memory, uint256, string memory, address) {
+         uint256 tokenID = uint256(_rgt);  //tokenID set to the uint256 of the supplied rgt
+         uint256 DBtokenID = uint256(database[_idx].rightsHolder);  //tokenID set to the uint256 of the rightsHolder hash at _idx
+         address tokenAdresss = erc721_tokenContract.ownerOf(tokenID);
+         return ("token ID :", tokenID, "  token ID from DB :", DBtokenID,"  holder of token :", tokenAdresss);
+        
+    }
 
 
     //--------------------------------External contract functions / authuser---------------------------------//
@@ -399,7 +391,7 @@ contract Storage is Ownable {
         uint256 _countDownStart,
         bytes32 _Ipfs1
     ) public {
-        uint256 tokenID = uint256(database[_idxHash].rightsHolder);  //tokenID set to the uint256 of the rightsHolder hash at _idx
+        uint256 tokenID = uint256(_rgt);  //tokenID set to the uint256 of the supplied rgt
 
         require(
             registeredUsers[_userHash].userType == 1 || (_assetClass > 8192), //cannot use userAuth because record[idx] doesnt exist yet
