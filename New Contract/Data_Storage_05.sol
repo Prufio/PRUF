@@ -76,7 +76,6 @@ contract Storage is Ownable {
      * rgtHash = K256(abiPacked(idxHash,rgtHash))
      */
 
-
     //----------------------------------------------Modifiers----------------------------------------------//
 
     /*
@@ -88,9 +87,10 @@ contract Storage is Ownable {
      *
      */
     modifier isAdmin() {
-                require(
-            ((authorizedAdresses[keccak256(abi.encodePacked(msg.sender))] == 4)  &&
-            (registeredUsers[keccak256(abi.encodePacked(msg.sender))].userType == 99)) 
+        require(
+            (authorizedAdresses[keccak256(abi.encodePacked(msg.sender))] == 4) &&
+            (registeredUsers[keccak256(abi.encodePacked(msg.sender))].userType == 99),
+                    "address does not belong to an Admin"
         );
         _;
     }
@@ -108,7 +108,7 @@ contract Storage is Ownable {
     modifier userAuth(bytes32 _senderHash, bytes32 _idxHash) {
         uint8 senderType = registeredUsers[_senderHash].userType;
 
-        uint256 tokenID = uint256(database[_idxHash].rightsHolder);  //tokenID set to the uint256 of the rightsHolder hash at _idx
+        uint256 tokenID = uint256(database[_idxHash].rightsHolder); //tokenID set to the uint256 of the rightsHolder hash at _idx
 
         require(
             (senderType == 1) ||
@@ -166,30 +166,9 @@ contract Storage is Ownable {
         _;
     }
 
-
-
-
-
-
-
-
-
-
-
     //-----------------------------------------------Events------------------------------------------------//
 
     event REPORT(string _msg);
-
-
-
-
-
-
-
-
-
-
-
 
     //-----------------------------------------------Private functions------------------------------------------------//
 
@@ -216,10 +195,6 @@ contract Storage is Ownable {
         return (_senderHash, lastrec);
     }
 
-
-
-
-
     //--------------------------------Internal Admin functions / onlyowner---------------------------------//
 
     // function setErc20_tokenAddress (address contractAddress) public onlyOwner {
@@ -234,6 +209,7 @@ contract Storage is Ownable {
         erc721ContractAddress = _contractAddress;
         erc721_tokenContract = erc721_tokenInterface(_contractAddress);
     }
+
     /*
      * @dev Authorize / Deauthorize / Authorize users for an address be permitted to make record modifications
      * ----------------INSECURE -- keccak256 of address must be generated clientside in release.
@@ -244,7 +220,10 @@ contract Storage is Ownable {
         uint16 _authorizedAssetClass
     ) external onlyOwner {
         require(
-            (_userType == 0) || (_userType == 1) || (_userType == 9) || (_userType == 99),
+            (_userType == 0) ||
+                (_userType == 1) ||
+                (_userType == 9) ||
+                (_userType == 99),
             "AU:ER-13 Invalid user type"
         );
         require(
@@ -368,15 +347,30 @@ contract Storage is Ownable {
         database[_idxHash].forceModCount = 0; //set to unspecified assetStatus
     }
 
-
-    function tokentest ( bytes32 _rgt, bytes32 _idx) external view returns (string memory ,uint256, string memory, uint256, string memory, address) {
-         uint256 tokenID = uint256(_rgt);  //tokenID set to the uint256 of the supplied rgt
-         uint256 DBtokenID = uint256(database[_idx].rightsHolder);  //tokenID set to the uint256 of the rightsHolder hash at _idx
-         address tokenAdresss = erc721_tokenContract.ownerOf(tokenID);
-         return ("token ID :", tokenID, "  token ID from DB :", DBtokenID,"  holder of token :", tokenAdresss);
-        
+    function tokentest(bytes32 _rgt, bytes32 _idx)
+        external
+        view
+        returns (
+            string memory,
+            uint256,
+            string memory,
+            uint256,
+            string memory,
+            address
+        )
+    {
+        uint256 tokenID = uint256(_rgt); //tokenID set to the uint256 of the supplied rgt
+        uint256 DBtokenID = uint256(database[_idx].rightsHolder); //tokenID set to the uint256 of the rightsHolder hash at _idx
+        address tokenAdresss = erc721_tokenContract.ownerOf(tokenID);
+        return (
+            "token ID :",
+            tokenID,
+            "  token ID from DB :",
+            DBtokenID,
+            "  holder of token :",
+            tokenAdresss
+        );
     }
-
 
     //--------------------------------External contract functions / authuser---------------------------------//
 
@@ -391,7 +385,7 @@ contract Storage is Ownable {
         uint256 _countDownStart,
         bytes32 _Ipfs1
     ) public {
-        uint256 tokenID = uint256(_rgt);  //tokenID set to the uint256 of the supplied rgt
+        uint256 tokenID = uint256(_rgt); //tokenID set to the uint256 of the supplied rgt
 
         require(
             registeredUsers[_userHash].userType == 1 || (_assetClass > 8192), //cannot use userAuth because record[idx] doesnt exist yet
@@ -402,11 +396,9 @@ contract Storage is Ownable {
                 (_assetClass > 8192),
             "NR:ERR-User not registered for asset class"
         );
-
         require(
-            ((authorizedAdresses[keccak256(abi.encodePacked(msg.sender))] >= 3)  &&
-            (authorizedAdresses[keccak256(abi.encodePacked(msg.sender))] <= 4)) ||
-            (database[_idxHash].assetClass >= 32768),
+            (authorizedAdresses[keccak256(abi.encodePacked(msg.sender))] ==
+                3) || (database[_idxHash].assetClass >= 32768),
             "Contract not authorized or improperly permissioned"
         );
         require(
@@ -467,11 +459,9 @@ contract Storage is Ownable {
             "MR:ERR-assetStatus over 199 cannot be set by user"
         );
 
-        require( //Moved addressAuth functionality here for stack saving
-            (((authorizedAdresses[keccak256(abi.encodePacked(msg.sender))] >=
-                3) &&
-                (authorizedAdresses[keccak256(abi.encodePacked(msg.sender))] <=
-                    4)) || (database[_idxHash].assetClass >= 32768)),
+        require(
+            (authorizedAdresses[keccak256(abi.encodePacked(msg.sender))] ==
+                3) || (database[_idxHash].assetClass >= 32768),
             "Contract not authorized or improperly permissioned"
         );
 
@@ -511,11 +501,9 @@ contract Storage is Ownable {
         unlocked(_idxHash)
         notTimeLocked(_idxHash)
     {
-
         require(
-            ((authorizedAdresses[keccak256(abi.encodePacked(msg.sender))] >= 3)  &&
-            (authorizedAdresses[keccak256(abi.encodePacked(msg.sender))] <= 4)) ||
-            (database[_idxHash].assetClass >= 32768),
+            (authorizedAdresses[keccak256(abi.encodePacked(msg.sender))] ==
+                3) || (database[_idxHash].assetClass >= 32768),
             "Contract not authorized or improperly permissioned"
         );
 
@@ -541,15 +529,6 @@ contract Storage is Ownable {
         //database[_idxHash].timeLock = 0;
         emit REPORT("Record modified");
     }
-
-
-
-
-
-
-
-
-
 
     //--------------------------------External READ ONLY contract functions / authuser---------------------------------//
 
@@ -602,7 +581,7 @@ contract Storage is Ownable {
             bytes32
         )
     {
-        uint256 tokenID = uint256(database[_idxHash].rightsHolder);  //tokenID set to the uint256 of the rightsHolder hash at _idx
+        uint256 tokenID = uint256(database[_idxHash].rightsHolder); //tokenID set to the uint256 of the rightsHolder hash at _idx
 
         require(
             (((authorizedAdresses[keccak256(abi.encodePacked(msg.sender))] >=

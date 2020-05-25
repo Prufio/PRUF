@@ -23,7 +23,7 @@ contract bp_helper is Ownable {
         return erc721_tokenContract.ownerOf(tokenID);
     }
     
-    function atWhatB32Address (bytes32 _tokenID) external view onlyOwner returns (address){
+    function atWhatAddressTokenB32 (bytes32 _tokenID) external view onlyOwner returns (address){
         uint256 tokenID = uint256(_tokenID);
         return erc721_tokenContract.ownerOf(tokenID);
     }
