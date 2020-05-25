@@ -314,6 +314,12 @@ function returnStorageAbi() {
 						"internalType": "string",
 						"name": "_msg",
 						"type": "string"
+					},
+					{
+						"indexed": false,
+						"internalType": "uint256",
+						"name": "_num",
+						"type": "uint256"
 					}
 				],
 				"name": "REPORT",
