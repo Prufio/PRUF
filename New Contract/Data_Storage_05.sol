@@ -81,16 +81,20 @@ contract Storage is Ownable {
     /*
      * @dev Check msg.sender against authorized adresses
      * msg.sender
-     *      Exists in registeredUsers as a usertype 99
-     *      Exists in authorizedAddress as a contract type 4
-     *      Is authorized for asset class
+     *      (Exists in registeredUsers as a usertype 99
+     *      and
+     *      Exists in authorizedAddress as a contract type 4)
+     *      or
+     *      Is owner from ownable
      *
      */
     modifier isAdmin() {
         require(
-            (authorizedAdresses[keccak256(abi.encodePacked(msg.sender))] == 4) &&
-            (registeredUsers[keccak256(abi.encodePacked(msg.sender))].userType == 99),
-                    "address does not belong to an Admin"
+            ((authorizedAdresses[keccak256(abi.encodePacked(msg.sender))] ==
+                4) &&
+                (registeredUsers[keccak256(abi.encodePacked(msg.sender))]
+                    .userType == 99)) || (owner() == msg.sender),
+            "address does not belong to an Admin"
         );
         _;
     }
@@ -398,7 +402,7 @@ contract Storage is Ownable {
         );
         require(
             (authorizedAdresses[keccak256(abi.encodePacked(msg.sender))] ==
-                3) || (database[_idxHash].assetClass >= 32768),
+                3) || (_assetClass >= 32768),
             "Contract not authorized or improperly permissioned"
         );
         require(
