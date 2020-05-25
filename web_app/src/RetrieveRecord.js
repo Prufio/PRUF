@@ -82,7 +82,7 @@ function RetrieveRecord() {
         />
       </form>
       )}
-      {error != '0' && (
+      {error !== '0' && (
         <div className="RRresults">
           ERROR: {error.message}
           <br></br>

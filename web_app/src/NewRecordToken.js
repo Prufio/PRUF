@@ -4,7 +4,7 @@ import Web3Listener from "./Web3Listener";
 function NewRecordToken() {
   var web3 = Web3Listener('web3');
   web3.eth.getAccounts().then((e) => setAddr(e[0]));
-  var storage = Web3Listener('frontend');
+  var storage = Web3Listener('storage');
 
   var [addr, setAddr] = useState("");
   var [error, setError] = useState(null);
