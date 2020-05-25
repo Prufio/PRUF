@@ -4,14 +4,14 @@ import Web3Listener from "./Web3Listener";
 function NewRecordToken() {
   var web3 = Web3Listener('web3');
   web3.eth.getAccounts().then((e) => setAddr(e[0]));
-  var frontend = Web3Listener('frontend');
+  var storage = Web3Listener('frontend');
 
   var [addr, setAddr] = useState("");
   var [error, setError] = useState(null);
-  
-  var [AssetClass, setAssetClass] = useState("");
-  var [CountDownStart, setCountDownStart] = useState("");
-  var [Ipfs1, setIPFS1] = useState("");
+
+  var [assetClass, setAssetClass] = useState("");
+  var [countDownStart, setCountDownStart] = useState("");
+  var [iPfs1, setIPFS1] = useState("");
   var [txHash, setTxHash] = useState("");
 
   var [type, setType] = useState("");
@@ -27,13 +27,15 @@ function NewRecordToken() {
 
   const _newRecord = () => {
     var idxHash = web3.utils.soliditySha3(type, manufacturer, model, serial);
-    
+    var userHash = web3.utils.soliditySha3(addr);
+
     console.log("idxHash", idxHash);
     console.log("Token ID", id);
     console.log("addr: ", addr);
+    console.log('userHash:', userHash);
 
-    frontend.methods
-      .$newRecord(idxHash, id, AssetClass, CountDownStart, Ipfs1)
+    storage.methods
+      .newRecord(userHash, idxHash, id, assetClass, countDownStart, iPfs1)
       .send({ from: addr, value: web3.utils.toWei("0.01") }).on("error", function(error){setError(error);setTxHash(error.transactionHash);})
       .on("receipt", (receipt) => {
         setTxHash(receipt.transactionHash);
