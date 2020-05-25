@@ -5,9 +5,9 @@ import returnFrontEndAbi from "./front_abi";
 
 function Web3Listener(request) {
   const bulletproof_frontend_addr =
-    "0xF4DA3eBb58C1268A744C679dD3650987e31058aC";
+    "0x9Ef2BBF052A5b61eBD1452d48B515BE7659a200B";
   const bulletproof_storage_addr =
-   "0x539E9F545518b8d4343Ab7074FE4a63402346CE2";
+   "0xeaF558624c90Ef87c80Aec718d2A8C90827D9554";
 
   let web3 = require("web3");
   const ethereum = window.ethereum;
