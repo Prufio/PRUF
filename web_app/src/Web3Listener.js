@@ -7,7 +7,7 @@ function Web3Listener(request) {
   const bulletproof_frontend_addr =
     "0x9Ef2BBF052A5b61eBD1452d48B515BE7659a200B";
   const bulletproof_storage_addr =
-   "0xa031B96b9d05B05034875612c0436a0e4d88f41e";
+   "0xd67Fe9c306f2b8B3759310C1c286F2DAE7Fe56B4";
 
   let web3 = require("web3");
   const ethereum = window.ethereum;
