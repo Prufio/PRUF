@@ -8,6 +8,7 @@ function Web3Listener(request) {
     "0x9Ef2BBF052A5b61eBD1452d48B515BE7659a200B";
   const bulletproof_storage_addr =
    "0xd67Fe9c306f2b8B3759310C1c286F2DAE7Fe56B4";
+  const test_NR = "";
 
   let web3 = require("web3");
   const ethereum = window.ethereum;
@@ -16,6 +17,7 @@ function Web3Listener(request) {
   var _addr;
   const frontEnd_abi = returnFrontEndAbi();
   const storage_abi = returnStorageAbi();
+  const testNR_abi = returnTestNRAbi();
   const frontend = new web3.eth.Contract(
     frontEnd_abi,
     bulletproof_frontend_addr
@@ -23,6 +25,10 @@ function Web3Listener(request) {
   const storage = new web3.eth.Contract(
     storage_abi, 
     bulletproof_storage_addr
+  );
+  const testNR = new web3.eth.Contract(
+    testNR_abi, 
+    test_NR
   );
 
   window.addEventListener("load", async () => {

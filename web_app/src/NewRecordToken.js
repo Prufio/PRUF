@@ -4,7 +4,7 @@ import Web3Listener from "./Web3Listener";
 function NewRecordToken() {
   var web3 = Web3Listener('web3');
   web3.eth.getAccounts().then((e) => setAddr(e[0]));
-  var storage = Web3Listener('storage');
+  var testNR = Web3Listener('testNR');
 
   var [addr, setAddr] = useState("");
   var [error, setError] = useState(null);
@@ -28,13 +28,12 @@ function NewRecordToken() {
   const _newRecord = () => {
     var idxHash = web3.utils.soliditySha3(type, manufacturer, model, serial);
     var userHash = web3.utils.soliditySha3(addr);
-
     console.log("idxHash", idxHash);
     console.log("Token ID", id);
     console.log("addr: ", addr);
     console.log('userHash:', userHash);
 
-    storage.methods
+    testNR.methods
       .newRecord(userHash, idxHash, id, assetClass, countDownStart, iPfs1)
       .send({ from: addr, value: web3.utils.toWei("0.01") }).on("error", function(error){setError(error);setTxHash(error.transactionHash);})
       .on("receipt", (receipt) => {
