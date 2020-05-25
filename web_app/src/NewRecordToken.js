@@ -4,7 +4,7 @@ import Web3Listener from "./Web3Listener";
 function NewRecordToken() {
   var web3 = Web3Listener('web3');
   web3.eth.getAccounts().then((e) => setAddr(e[0]));
-  var testNR = Web3Listener('testNR');
+  var storage = Web3Listener('storage');
 
   var [addr, setAddr] = useState("");
   var [error, setError] = useState(null);
@@ -33,9 +33,9 @@ function NewRecordToken() {
     console.log("addr: ", addr);
     console.log('userHash:', userHash);
 
-    testNR.methods
+    storage.methods
       .newRecord(userHash, idxHash, id, assetClass, countDownStart, iPfs1)
-      .send({ from: addr, value: web3.utils.toWei("0.01") }).on("error", function(error){setError(error);setTxHash(error.transactionHash);})
+      .send({ from: addr, value: web3.utils.toWei("0.00") }).on("error", function(error){setError(error);setTxHash(error.transactionHash);})
       .on("receipt", (receipt) => {
         setTxHash(receipt.transactionHash);
         //Stuff to do when tx confirms
