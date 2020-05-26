@@ -1,1 +1,0 @@
-Folder for website files and art
