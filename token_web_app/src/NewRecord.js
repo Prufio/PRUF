@@ -1,46 +1,40 @@
 import React, { useState } from "react";
 import Web3Listener from "./Web3Listener";
 
-function NewRecord() {
+function NewRecordToken() {
   var web3 = Web3Listener('web3');
   web3.eth.getAccounts().then((e) => setAddr(e[0]));
-  var frontend = Web3Listener('frontend');
+  var storage = Web3Listener('storage');
 
   var [addr, setAddr] = useState("");
   var [error, setError] = useState(null);
-  
-  var [AssetClass, setAssetClass] = useState("");
-  var [CountDownStart, setCountDownStart] = useState("");
-  var [Ipfs1, setIPFS1] = useState("");
+
+  var [assetClass, setAssetClass] = useState("");
+  var [countDownStart, setCountDownStart] = useState("");
+  var [iPfs1, setIPFS1] = useState("");
   var [txHash, setTxHash] = useState("");
-  var [type, setType] = useState("");
+
   var [manufacturer, setManufacturer] = useState("");
   var [model, setModel] = useState("");
   var [serial, setSerial] = useState("");
 
-  var [first, setFirst] = useState("");
-  var [middle, setMiddle] = useState("");
-  var [surname, setSurname] = useState("");
   var [id, setID] = useState("");
-  var [secret, setSecret] = useState("");
 
   const resetWeb3 = () => {
     web3.eth.getAccounts().then((e) => setAddr(e[0]));
   }
 
   const _newRecord = () => {
-    var idxHash = web3.utils.soliditySha3(type, manufacturer, model, serial);
-    var rgtRaw = web3.utils.soliditySha3(first, middle, surname, id, secret);
-    var rgtHash = web3.utils.soliditySha3(idxHash, rgtRaw);
-
+    var idxHash = web3.utils.soliditySha3(manufacturer, model, serial);
+    var userHash = web3.utils.soliditySha3(addr);
     console.log("idxHash", idxHash);
-    console.log("New rgtRaw", rgtRaw);
-    console.log("New rgtHash", rgtHash);
+    console.log("Token ID", id);
     console.log("addr: ", addr);
+    console.log('userHash:', userHash);
 
-    frontend.methods
-      .$newRecord(idxHash, rgtHash, AssetClass, CountDownStart, Ipfs1)
-      .send({ from: addr, value: web3.utils.toWei("0.01") }).on("error", function(error){setError(error);setTxHash(error.transactionHash);})
+    storage.methods
+      .newRecord(userHash, idxHash, id, assetClass, countDownStart, iPfs1)
+      .send({ from: addr, value: web3.utils.toWei("0.00") }).on("error", function(error){setError(error);setTxHash(error.transactionHash);})
       .on("receipt", (receipt) => {
         setTxHash(receipt.transactionHash);
         //Stuff to do when tx confirms
@@ -58,17 +52,8 @@ function NewRecord() {
         )}
       {addr > 0 && (
         <form className="NRform">
-        <h2>New Asset</h2>
-        Type:
-        <input
-          type="text"
-          name="type"
-          placeholder="Type"
-          required
-          onChange={(e) => setType(e.target.value)}
-        />
-        <br></br>
-        Manufacturer:
+        <h2>New Tokenized Asset</h2>
+        Asset Manufacturer:
         <input
           type="text"
           name="manufacturer"
@@ -77,16 +62,16 @@ function NewRecord() {
           onChange={(e) => setManufacturer(e.target.value)}
         />
         <br></br>
-        Model:
+        Asset Model:
         <input
           type="text"
           name="model"
-          placeholder="Model"
+          placeholder="Model Designation"
           required
           onChange={(e) => setModel(e.target.value)}
         />
         <br></br>
-        Serial:
+        Asset Serial:
         <input
           type="text"
           name="serial"
@@ -94,50 +79,13 @@ function NewRecord() {
           required
           onChange={(e) => setSerial(e.target.value)}
         />
-        <br></br>
-        First Name:
-        <input
-          type="text"
-          name="first"
-          placeholder="First name"
-          required
-          onChange={(e) => setFirst(e.target.value)}
-        />
-        <br></br>
-        Middle Name:
-        <input
-          type="text"
-          name="middle"
-          placeholder="Middle name"
-          required
-          onChange={(e) => setMiddle(e.target.value)}
-        />
-        <br></br>
-        Surname:
-        <input
-          type="text"
-          name="surname"
-          placeholder="Surname"
-          required
-          onChange={(e) => setSurname(e.target.value)}
-        />
-        <br></br>
-        ID:
+        Token ID:
         <input
           type="text"
           name="id"
-          placeholder="ID"
+          placeholder="Token ID"
           required
           onChange={(e) => setID(e.target.value)}
-        />
-        <br></br>
-        Password:
-        <input
-          type="text"
-          name="secret"
-          placeholder="Secret"
-          required
-          onChange={(e) => setSecret(e.target.value)}
         />
         <br></br>
         Asset Class:
@@ -167,7 +115,7 @@ function NewRecord() {
           onChange={(e) => setIPFS1(web3.utils.soliditySha3(e.target.value))}
         />
         <br />
-        <input type="button" value="New Record" onClick={_newRecord} />
+        <input type="button" value="New Token Record" onClick={_newRecord} />
         <br></br>
       </form>
       )}
@@ -194,4 +142,4 @@ function NewRecord() {
   );
 }
 
-export default NewRecord;
+export default NewRecordToken;
