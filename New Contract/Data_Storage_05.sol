@@ -406,7 +406,7 @@ contract Storage is Ownable {
 
     /*
      * @dev Modify a record in the database  *read fullHash, write rightsHolder, update recorder, assetClass,countDown update recorder....
-     *  prohibit changes to rightsholder / tokenID above assetClass 60000,
+     *  prohibit changes to rightsholder / tokenID above assetClass 49999,
      */
     function modifyRecord(
         bytes32 _userHash,
@@ -428,7 +428,7 @@ contract Storage is Ownable {
         uint256 tokenID = uint256(database[idxHash].rightsHolder); //tokenID set to the uint256 of the rightsHolder hash at _idx
 
         require(rgtHash != 0, "MR:ERR-Rightsholder cannot be blank");
-        require(//prohibit increasing the countdown value
+        require( //prohibit increasing the countdown value
             _countDown <= database[idxHash].countDown,
             "MR:ERR-new countDown exceeds original countDown"
         );
@@ -436,16 +436,16 @@ contract Storage is Ownable {
             _forceCount >= database[idxHash].forceModCount,
             "MR:ERR-new forceModCount less than original forceModCount"
         );
-        require(//prohibit changes to rightsholder / tokenID above assetClass 60000
-            (database[idxHash].assetStatus < 60000) ||
+        require( //prohibit changes to rightsholder / tokenID above assetClass 49999
+            (database[idxHash].assetStatus < 50000) ||
                 (rgtHash == database[idxHash].rightsHolder),
-            "MR:ERR-TokenID cannot be changed above assetClass 60000"
+            "MR:ERR-TokenID cannot be changed above assetClass 49999"
         );
         require(
             _assetStatus < 200,
             "MR:ERR-assetStatus over 199 cannot be set by user"
         );
-        require(//check that (contract) address is authorized to interact with storage or that assetClass is higher than 32767
+        require( //check that (contract) address is authorized to interact with storage or that assetClass is higher than 32767
             (authorizedAdresses[keccak256(abi.encodePacked(msg.sender))] ==
                 3) || (database[idxHash].assetClass >= 32768),
             "Contract not authorized or improperly permissioned"
@@ -461,7 +461,7 @@ contract Storage is Ownable {
         Record memory _record;
         _record = database[idxHash];
 
-        if (_record.assetClass < 60000) {
+        if (_record.assetClass < 50000) {
             _record.rightsHolder = rgtHash;
         }
         if (_record.countDown >= _countDown) {
