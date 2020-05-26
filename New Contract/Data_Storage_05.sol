@@ -63,7 +63,7 @@ contract Storage is Ownable {
      * 1   --E
      * 2   --RE
      * 3   --RWE
-     * 4  --Administrator
+     * 4  --ADMIN (isAdmin)
      * >4 NONE
      * Owner (onlyOwner)
      * other = unauth
@@ -71,6 +71,7 @@ contract Storage is Ownable {
      * Authorized User Types   registeredUsers[]
      * 1 = Standard User
      * 9 = Robot
+     * 99 = ADMIN (isAdmin)
      * Other = unauth
      *
      * rgtHash = K256(abiPacked(idxHash,rgtHash))
