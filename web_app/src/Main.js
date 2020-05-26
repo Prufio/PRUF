@@ -11,8 +11,6 @@ import NewRecord from "./NewRecord";
 import RetrieveRecord from "./RetrieveRecord";
 import TransferAsset from "./TransferAsset";
 import VerifyRightsholder from "./VerifyRightsholder";
-import NewRecordTest from "./NewRecordTest";
-import NewRecordToken from "./NewRecordToken";
 
 function Main() {
   var [addr, setAddr] = useState("");
@@ -64,17 +62,10 @@ function Main() {
             <li>
               <NavLink to="/force-modify-record">Modify</NavLink>
             </li>
-            <li>
-              <NavLink to="/new-record-test">NewRecordTest</NavLink>
-            </li>
-            <li>
-              <NavLink to="/new-record-token">NewRecordToken</NavLink>
-            </li>
           </ul>
           <div className="content">
             <Route exact path="/" component={Home} />
             <Route path="/new-record" component={NewRecord} />
-            <Route path="/new-record-token" component={NewRecordToken} />
             <Route path="/retrieve-record" component={RetrieveRecord} />
             <Route path="/force-modify-record" component={ForceModifyRecord} />
             <Route path="/transfer-asset" component={TransferAsset} />
@@ -83,7 +74,6 @@ function Main() {
               component={ModifyRecordStatus}
             />
             <Route path="/decrement-counter" component={DecrementCounter} />
-            <Route path="/new-record-test" component={NewRecordTest} />
             <Route path="/modify-description" component={ModifyDescription} />
             <Route path="/add-note" component={AddNote} />
             <Route
