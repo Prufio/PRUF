@@ -554,14 +554,6 @@ contract Storage is Ownable {
             bytes32
         )
     {
-        uint256 tokenID = uint256(database[_idxHash].rightsHolder); //tokenID set to the uint256 of the rightsHolder hash at _idx
-
-        require(
-            (database[_idxHash].assetClass < 32768) ||
-                (erc721_tokenContract.ownerOf(tokenID) == msg.sender),
-            "NR:ERR-User address does not hold asset token"
-        );
-
         Record memory rec = database[_idxHash];
 
         return (
