@@ -149,7 +149,7 @@ contract Storage is Ownable {
     }
 
     /*
-     * @dev Check record exists
+     * @dev Check record exists in database
      */
     modifier exists(bytes32 _idxHash) {
         require(
@@ -257,7 +257,7 @@ contract Storage is Ownable {
         address _addr,
         uint8 _contractAuthLevel
     ) external onlyOwner {
-        require(_contractAuthLevel <= 3, "AC:ER-13 Invalid user type");
+        require(_contractAuthLevel <= 4, "AC:ER-13 Invalid user type");
         emit REPORT("internal user database access!"); //report access to the internal user database
 
         authorizedAdresses[keccak256(
@@ -556,13 +556,6 @@ contract Storage is Ownable {
     {
         uint256 tokenID = uint256(database[_idxHash].rightsHolder); //tokenID set to the uint256 of the rightsHolder hash at _idx
 
-        require(
-            (((authorizedAdresses[keccak256(abi.encodePacked(msg.sender))] >=
-                2) &&
-                (authorizedAdresses[keccak256(abi.encodePacked(msg.sender))] <=
-                    4)) || (database[_idxHash].assetClass >= 32768)),
-            "Contract not authorized or improperly permissioned"
-        );
         require(
             (database[_idxHash].assetClass < 32768) ||
                 (erc721_tokenContract.ownerOf(tokenID) == msg.sender),
