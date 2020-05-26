@@ -135,6 +135,10 @@ contract FrontEnd is PullPayment, Ownable {
         Costs memory cost = getCost(_assetClass);
 
         require(
+            _assetClass < 32768,
+            "NR: Asset classes 32768 or above not writable through this contract"
+        );
+        require(
             msg.value >= cost.newRecordCost,
             "NR: tx value too low. Send more eth."
         );
@@ -162,14 +166,16 @@ contract FrontEnd is PullPayment, Ownable {
         returns (uint8)
     {
         Record memory rec = getRecord(_idxHash);
-
         Costs memory cost = getCost(rec.assetClass);
 
+        require(
+            rec.assetClass < 32768,
+            "FMR: Asset classes 32768 or above not writable through this contract"
+        );
         require(
             msg.value >= cost.forceModifyCost,
             "FMR: tx value too low. Send more eth."
         );
-
         require(rec.assetStatus < 200, "FMR:ERR-Record locked");
 
         if (rec.forceModCount < 255) {
@@ -195,8 +201,11 @@ contract FrontEnd is PullPayment, Ownable {
     ) public returns (uint8) {
         Record memory rec = getRecord(_idxHash);
 
+        require(
+            rec.assetClass < 32768,
+            "FMR: Asset classes 32768 or above not writable through this contract"
+        );
         require(rec.assetStatus < 200, "MS:ERR-Record locked");
-
         require(
             rec.rightsHolder == _rgtHash,
             "MS:ERR-Rightsholder does not match supplied data"
@@ -219,8 +228,11 @@ contract FrontEnd is PullPayment, Ownable {
     ) public returns (uint256) {
         Record memory rec = getRecord(_idxHash);
 
+        require(
+            rec.assetClass < 32768,
+            "FMR: Asset classes 32768 or above not writable through this contract"
+        );
         require(rec.assetStatus < 200, "DC:ERR-Record locked");
-
         require(
             rec.rightsHolder == _rgtHash,
             "DC:ERR--Rightsholder does not match supplied data"
@@ -245,23 +257,22 @@ contract FrontEnd is PullPayment, Ownable {
         bytes32 _newrgtHash
     ) public payable returns (uint8) {
         Record memory rec = getRecord(_idxHash);
-
         Costs memory cost = getCost(rec.assetClass);
 
+        require(
+            rec.assetClass < 32768,
+            "FMR: Asset classes 32768 or above not writable through this contract"
+        );
         require(
             msg.value >= cost.transferAssetCost,
             "TA: tx value too low. Send more eth."
         );
-
         require(rec.assetStatus < 200, "TA:ERR-Record locked");
-
         require(
             rec.rightsHolder == _rgtHash,
             "TA:ERR-Rightsholder does not match supplied data"
         );
-
         require(_newrgtHash != 0, "TA:ERR-new Rightsholder cannot be blank");
-
         require(
             rec.assetStatus < 3,
             "TA:ERR--Asset assetStatus is not transferrable"
@@ -286,13 +297,15 @@ contract FrontEnd is PullPayment, Ownable {
     ) public returns (bytes32) {
         Record memory rec = getRecord(_idxHash);
 
+        require(
+            rec.assetClass < 32768,
+            "FMR: Asset classes 32768 or above not writable through this contract"
+        );
         require(rec.assetStatus < 200, "MI1:ERR-Record locked");
-
         require(
             rec.rightsHolder == _rgtHash,
             "MI1:ERR--Rightsholder does not match supplied data"
         );
-
         require(rec.Ipfs1 != _IpfsHash, "MI1:ERR--New data same as old");
 
         rec.Ipfs1 = _IpfsHash;
@@ -310,25 +323,22 @@ contract FrontEnd is PullPayment, Ownable {
         bytes32 _rgtHash,
         bytes32 _IpfsHash
     ) public payable returns (bytes32) {
-        Record memory costrec = getRecord(_idxHash);
-        Costs memory cost = getCost(costrec.assetClass);
+        Record memory rec = getRecord(_idxHash);
+        Costs memory cost = getCost(rec.assetClass);
 
+        require(
+            rec.assetClass < 32768,
+            "FMR: Asset classes 32768 or above not writable through this contract"
+        );
         require(
             msg.value >= cost.createNoteCost,
             "tx value too low. Send more eth."
         );
-
-        Record memory rec;
-
-        rec = getRecord(_idxHash);
-
         require(rec.assetStatus < 200, "MI2:ERR-Record locked");
-
         require(
             rec.rightsHolder == _rgtHash,
             "MI2:ERR--Rightsholder does not match supplied data"
         );
-
         require(
             rec.Ipfs2 == 0,
             "MI2:ERR--Ipfs2 has data already. Overwrite not permitted"
