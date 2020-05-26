@@ -99,9 +99,7 @@ contract FrontEnd is PullPayment, Ownable {
 
     event REPORT(string _msg);
 
-
-
-// --------------------------------------ADMIN FUNCTIONS--------------------------------------------//
+    // --------------------------------------ADMIN FUNCTIONS--------------------------------------------//
     /*
      * @dev Set storage contract to interface with
      */
@@ -121,11 +119,6 @@ contract FrontEnd is PullPayment, Ownable {
     function _setMainWallet(address _addr) public onlyOwner {
         mainWallet = _addr;
     }
-
-
-
-
-
 
     //--------------------------------------External functions--------------------------------------------//
 
@@ -410,10 +403,6 @@ contract FrontEnd is PullPayment, Ownable {
             _rec.forceModCount
         ); // Send data and writehash to storage
     }
-
-
-
-
 
     /*--------------------------------------------------------------------------------------PAYMENT FUNCTIONS
      * @dev Deducts payment from transaction
