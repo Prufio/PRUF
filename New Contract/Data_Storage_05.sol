@@ -337,7 +337,11 @@ contract Storage is Ownable {
     /*
      * @dev Allows Admin to reset force mod count
      */
-    function ADMIN_resetFMC(bytes32 _idxHash) external isAdmin exists(_idxHash) {
+    function ADMIN_resetFMC(bytes32 _idxHash)
+        external
+        isAdmin
+        exists(_idxHash)
+    {
         require(
             database[_idxHash].assetClass < 32768,
             "AL:ERR--admin edits prohibited in class 32768 or higher"
@@ -402,11 +406,12 @@ contract Storage is Ownable {
 
     /*
      * @dev Modify a record in the database  *read fullHash, write rightsHolder, update recorder, assetClass,countDown update recorder....
+     *  prohibit changes to rightsholder / tokenID above assetClass 60000,
      */
     function modifyRecord(
         bytes32 _userHash,
         bytes32 _idxHash,
-        bytes32 _regHash,
+        bytes32 _rgtHash,
         uint8 _assetStatus,
         uint256 _countDown,
         uint8 _forceCount
@@ -419,11 +424,11 @@ contract Storage is Ownable {
     {
         bytes32 idxHash = _idxHash;
         bytes32 userHash = _userHash;
-        bytes32 regHash = _regHash;
+        bytes32 rgtHash = _rgtHash;
         uint256 tokenID = uint256(database[idxHash].rightsHolder); //tokenID set to the uint256 of the rightsHolder hash at _idx
 
-        require(regHash != 0, "MR:ERR-Rightsholder cannot be blank");
-        require(
+        require(rgtHash != 0, "MR:ERR-Rightsholder cannot be blank");
+        require(//prohibit increasing the countdown value
             _countDown <= database[idxHash].countDown,
             "MR:ERR-new countDown exceeds original countDown"
         );
@@ -431,16 +436,21 @@ contract Storage is Ownable {
             _forceCount >= database[idxHash].forceModCount,
             "MR:ERR-new forceModCount less than original forceModCount"
         );
+        require(//prohibit changes to rightsholder / tokenID above assetClass 60000
+            (database[idxHash].assetStatus < 60000) ||
+                (rgtHash == database[idxHash].rightsHolder),
+            "MR:ERR-TokenID cannot be changed above assetClass 60000"
+        );
         require(
             _assetStatus < 200,
             "MR:ERR-assetStatus over 199 cannot be set by user"
         );
-        require(
+        require(//check that (contract) address is authorized to interact with storage or that assetClass is higher than 32767
             (authorizedAdresses[keccak256(abi.encodePacked(msg.sender))] ==
                 3) || (database[idxHash].assetClass >= 32768),
             "Contract not authorized or improperly permissioned"
         );
-        require(
+        require( // for assetClass >= 32768 require that msg.sender holds a token with an ID matching the rightsholder
             (database[idxHash].assetClass < 32768) ||
                 (erc721_tokenContract.ownerOf(tokenID) == msg.sender),
             "NR:ERR-User address does not hold asset token"
@@ -451,11 +461,18 @@ contract Storage is Ownable {
         Record memory _record;
         _record = database[idxHash];
 
-        _record.rightsHolder = regHash;
-        _record.countDown = _countDown;
-        _record.assetStatus = _assetStatus;
-        _record.forceModCount = _forceCount;
-
+        if (_record.assetClass < 60000) {
+            _record.rightsHolder = rgtHash;
+        }
+        if (_record.countDown >= _countDown) {
+            _record.countDown = _countDown;
+        }
+        if (_assetStatus < 200) {
+            _record.assetStatus = _assetStatus;
+        }
+        if (_record.forceModCount <= _forceCount) {
+            _record.forceModCount = _forceCount;
+        }
         (_record.recorder, _record.lastRecorder) = newRecorder(
             userHash,
             _record.recorder,
