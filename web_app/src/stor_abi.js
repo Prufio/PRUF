@@ -2,49 +2,59 @@ function returnStorageAbi() {
 	return (
 		[
 			{
+				"anonymous": false,
 				"inputs": [
 					{
-						"internalType": "string",
-						"name": "_name",
-						"type": "string"
-					},
-					{
+						"indexed": true,
 						"internalType": "address",
-						"name": "_addr",
+						"name": "previousOwner",
 						"type": "address"
 					},
 					{
-						"internalType": "uint8",
-						"name": "_contractAuthLevel",
-						"type": "uint8"
+						"indexed": true,
+						"internalType": "address",
+						"name": "newOwner",
+						"type": "address"
 					}
 				],
-				"name": "ADMIN_addContract",
-				"outputs": [],
-				"stateMutability": "nonpayable",
-				"type": "function"
+				"name": "OwnershipTransferred",
+				"type": "event"
+			},
+			{
+				"anonymous": false,
+				"inputs": [
+					{
+						"indexed": false,
+						"internalType": "string",
+						"name": "_msg",
+						"type": "string"
+					}
+				],
+				"name": "REPORT",
+				"type": "event"
 			},
 			{
 				"inputs": [
 					{
-						"internalType": "address",
-						"name": "_authAddr",
-						"type": "address"
+						"internalType": "string",
+						"name": "_idx",
+						"type": "string"
 					},
 					{
-						"internalType": "uint8",
-						"name": "_userType",
-						"type": "uint8"
-					},
-					{
-						"internalType": "uint16",
-						"name": "_authorizedAssetClass",
-						"type": "uint16"
+						"internalType": "string",
+						"name": "_rgt",
+						"type": "string"
 					}
 				],
-				"name": "ADMIN_addUser",
-				"outputs": [],
-				"stateMutability": "nonpayable",
+				"name": "ADMIN_compare_rgt",
+				"outputs": [
+					{
+						"internalType": "string",
+						"name": "",
+						"type": "string"
+					}
+				],
+				"stateMutability": "view",
 				"type": "function"
 			},
 			{
@@ -74,6 +84,83 @@ function returnStorageAbi() {
 					}
 				],
 				"name": "ADMIN_resetFMC",
+				"outputs": [],
+				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "string",
+						"name": "_idx",
+						"type": "string"
+					},
+					{
+						"internalType": "uint256",
+						"name": "_blockNumber",
+						"type": "uint256"
+					}
+				],
+				"name": "ADMIN_setTimelock",
+				"outputs": [],
+				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "string",
+						"name": "_idx",
+						"type": "string"
+					}
+				],
+				"name": "ADMIN_unlock",
+				"outputs": [],
+				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "string",
+						"name": "_name",
+						"type": "string"
+					},
+					{
+						"internalType": "address",
+						"name": "_addr",
+						"type": "address"
+					},
+					{
+						"internalType": "uint8",
+						"name": "_contractAuthLevel",
+						"type": "uint8"
+					}
+				],
+				"name": "OO_addContract",
+				"outputs": [],
+				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "address",
+						"name": "_authAddr",
+						"type": "address"
+					},
+					{
+						"internalType": "uint8",
+						"name": "_userType",
+						"type": "uint8"
+					},
+					{
+						"internalType": "uint16",
+						"name": "_authorizedAssetClass",
+						"type": "uint16"
+					}
+				],
+				"name": "OO_addUser",
 				"outputs": [],
 				"stateMutability": "nonpayable",
 				"type": "function"
@@ -116,7 +203,7 @@ function returnStorageAbi() {
 						"type": "uint256"
 					}
 				],
-				"name": "ADMIN_setCosts",
+				"name": "OO_setCosts",
 				"outputs": [],
 				"stateMutability": "nonpayable",
 				"type": "function"
@@ -124,32 +211,38 @@ function returnStorageAbi() {
 			{
 				"inputs": [
 					{
-						"internalType": "string",
-						"name": "_idx",
-						"type": "string"
+						"internalType": "address",
+						"name": "_contractAddress",
+						"type": "address"
+					}
+				],
+				"name": "OO_setErc721_tokenAddress",
+				"outputs": [],
+				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "bytes32",
+						"name": "_idxHash",
+						"type": "bytes32"
 					},
 					{
+						"internalType": "bytes32",
+						"name": "_rgtHash",
+						"type": "bytes32"
+					}
+				],
+				"name": "_verifyRightsHolder",
+				"outputs": [
+					{
 						"internalType": "uint256",
-						"name": "_blockNumber",
+						"name": "",
 						"type": "uint256"
 					}
 				],
-				"name": "ADMIN_setTimelock",
-				"outputs": [],
-				"stateMutability": "nonpayable",
-				"type": "function"
-			},
-			{
-				"inputs": [
-					{
-						"internalType": "string",
-						"name": "_idx",
-						"type": "string"
-					}
-				],
-				"name": "ADMIN_unlock",
-				"outputs": [],
-				"stateMutability": "nonpayable",
+				"stateMutability": "view",
 				"type": "function"
 			},
 			{
@@ -281,125 +374,6 @@ function returnStorageAbi() {
 				"type": "function"
 			},
 			{
-				"anonymous": false,
-				"inputs": [
-					{
-						"indexed": true,
-						"internalType": "address",
-						"name": "previousOwner",
-						"type": "address"
-					},
-					{
-						"indexed": true,
-						"internalType": "address",
-						"name": "newOwner",
-						"type": "address"
-					}
-				],
-				"name": "OwnershipTransferred",
-				"type": "event"
-			},
-			{
-				"inputs": [],
-				"name": "renounceOwnership",
-				"outputs": [],
-				"stateMutability": "nonpayable",
-				"type": "function"
-			},
-			{
-				"anonymous": false,
-				"inputs": [
-					{
-						"indexed": false,
-						"internalType": "string",
-						"name": "_msg",
-						"type": "string"
-					},
-					{
-						"indexed": false,
-						"internalType": "uint256",
-						"name": "_num",
-						"type": "uint256"
-					}
-				],
-				"name": "REPORT",
-				"type": "event"
-			},
-			{
-				"inputs": [
-					{
-						"internalType": "address",
-						"name": "_contractAddress",
-						"type": "address"
-					}
-				],
-				"name": "setErc721_tokenAddress",
-				"outputs": [],
-				"stateMutability": "nonpayable",
-				"type": "function"
-			},
-			{
-				"inputs": [
-					{
-						"internalType": "address",
-						"name": "newOwner",
-						"type": "address"
-					}
-				],
-				"name": "transferOwnership",
-				"outputs": [],
-				"stateMutability": "nonpayable",
-				"type": "function"
-			},
-			{
-				"inputs": [
-					{
-						"internalType": "bytes32",
-						"name": "_idxHash",
-						"type": "bytes32"
-					},
-					{
-						"internalType": "bytes32",
-						"name": "_rgtHash",
-						"type": "bytes32"
-					}
-				],
-				"name": "_verifyRightsHolder",
-				"outputs": [
-					{
-						"internalType": "uint256",
-						"name": "",
-						"type": "uint256"
-					}
-				],
-				"stateMutability": "view",
-				"type": "function"
-			},
-			{
-				"inputs": [
-					{
-						"internalType": "string",
-						"name": "_idx",
-						"type": "string"
-					},
-					{
-						"internalType": "string",
-						"name": "_rgt",
-						"type": "string"
-					}
-				],
-				"name": "ADMIN_compare_rgt",
-				"outputs": [
-					{
-						"internalType": "string",
-						"name": "",
-						"type": "string"
-					}
-				],
-				"stateMutability": "view",
-				"type": "function"
-			},
-			{
 				"inputs": [],
 				"name": "owner",
 				"outputs": [
@@ -410,6 +384,13 @@ function returnStorageAbi() {
 					}
 				],
 				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [],
+				"name": "renounceOwnership",
+				"outputs": [],
+				"stateMutability": "nonpayable",
 				"type": "function"
 			},
 			{
@@ -542,50 +523,14 @@ function returnStorageAbi() {
 			{
 				"inputs": [
 					{
-						"internalType": "bytes32",
-						"name": "_rgt",
-						"type": "bytes32"
-					},
-					{
-						"internalType": "bytes32",
-						"name": "_idx",
-						"type": "bytes32"
-					}
-				],
-				"name": "tokentest",
-				"outputs": [
-					{
-						"internalType": "string",
-						"name": "",
-						"type": "string"
-					},
-					{
-						"internalType": "uint256",
-						"name": "",
-						"type": "uint256"
-					},
-					{
-						"internalType": "string",
-						"name": "",
-						"type": "string"
-					},
-					{
-						"internalType": "uint256",
-						"name": "",
-						"type": "uint256"
-					},
-					{
-						"internalType": "string",
-						"name": "",
-						"type": "string"
-					},
-					{
 						"internalType": "address",
-						"name": "",
+						"name": "newOwner",
 						"type": "address"
 					}
 				],
-				"stateMutability": "view",
+				"name": "transferOwnership",
+				"outputs": [],
+				"stateMutability": "nonpayable",
 				"type": "function"
 			}
 		]
