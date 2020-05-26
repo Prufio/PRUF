@@ -250,7 +250,6 @@ contract Storage is Ownable {
 
     /*
      * @dev Authorize / Deauthorize / Authorize ADRESSES permitted to make record modifications
-     * ----------------INSECURE -- keccak256 of address must be generated clientside in release.
      */
     function OO_addContract(
         string calldata _name,
@@ -293,13 +292,11 @@ contract Storage is Ownable {
     /*
      * @dev Allows Admin to set lock on asset
      */
-    function ADMIN_lockStatus(string calldata _idx, uint8 _stat)
+    function ADMIN_lockStatus(bytes32 _idxHash, uint8 _stat)
         external
         isAdmin
+        exists(_idxHash)
     {
-        bytes32 _idxHash = keccak256(abi.encodePacked(_idx)); // TESTING ONLY
-        //for testing only should be (b32 _idxHash) exists(_idxHash) onlyOwner
-        //---------------------------------------INSECURE USE HASH!!!!
         require(
             database[_idxHash].assetClass < 32768,
             "AL:ERR--locking prohibited in class 32768 or higher"
@@ -314,10 +311,7 @@ contract Storage is Ownable {
     /*
      * @dev Allows Admin to unlock asset
      */
-    function ADMIN_unlock(string calldata _idx) external isAdmin {
-        //---------------------------------------INSECURE USE HASH!!!!
-        //for testing only should be (b32 _idxHash) exists(_idxHash) onlyOwner
-        bytes32 _idxHash = keccak256(abi.encodePacked(_idx)); // TESTING ONLY
+    function ADMIN_unlock(bytes32 _idxHash) external isAdmin exists(_idxHash) {
         require(
             database[_idxHash].assetClass < 32768,
             "AL:ERR--admin edits prohibited in class 32768 or higher"
@@ -328,13 +322,11 @@ contract Storage is Ownable {
     /*
      * @dev Allows Admin to set time lock
      */
-    function ADMIN_setTimelock(string calldata _idx, uint256 _blockNumber)
+    function ADMIN_setTimelock(bytes32 _idxHash, uint256 _blockNumber)
         external
         isAdmin
+        exists(_idxHash)
     {
-        //---------------------------------------INSECURE USE HASH!!!!
-        //for testing only should be (b32 _idxHash) exists(_idxHash) onlyOwner
-        bytes32 _idxHash = keccak256(abi.encodePacked(_idx)); // TESTING ONLY
         require(
             database[_idxHash].assetClass < 32768,
             "AL:ERR--admin edits prohibited in class 32768 or higher"
@@ -345,10 +337,7 @@ contract Storage is Ownable {
     /*
      * @dev Allows Admin to reset force mod count
      */
-    function ADMIN_resetFMC(string calldata _idx) external isAdmin {
-        //---------------------------------------INSECURE USE HASH!!!!
-        //for testing only should be (b32 _idxHash) exists(_idxHash) onlyOwner
-        bytes32 _idxHash = keccak256(abi.encodePacked(_idx)); // TESTING ONLY
+    function ADMIN_resetFMC(bytes32 _idxHash) external isAdmin exists(_idxHash) {
         require(
             database[_idxHash].assetClass < 32768,
             "AL:ERR--admin edits prohibited in class 32768 or higher"
