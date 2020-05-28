@@ -103,7 +103,7 @@ contract FrontEnd is PullPayment, Ownable {
     /*
      * @dev Set storage contract to interface with
      */
-    function _setStorageContract(address _storageAddress) public onlyOwner {
+    function _setStorageContract(address _storageAddress) external onlyOwner {
         require(
             _storageAddress != address(0),
             "ADMIN: storage address cannot be zero"
@@ -116,7 +116,7 @@ contract FrontEnd is PullPayment, Ownable {
      * @dev Set wallet for contract to direct payments to
      */
 
-    function _setMainWallet(address _addr) public onlyOwner {
+    function _setMainWallet(address _addr) external onlyOwner {
         mainWallet = _addr;
     }
 
@@ -131,7 +131,7 @@ contract FrontEnd is PullPayment, Ownable {
         uint16 _assetClass,
         uint256 _countDownStart,
         bytes32 _Ipfs
-    ) public payable {
+    ) external payable {
         Costs memory cost = getCost(_assetClass);
 
         require(
@@ -161,7 +161,7 @@ contract FrontEnd is PullPayment, Ownable {
      * @dev Modify **Record**.rightsHolder without confirmation required
      */
     function $forceModRecord(bytes32 _idxHash, bytes32 _rgtHash)
-        public
+        external
         payable
         returns (uint8)
     {
@@ -198,7 +198,7 @@ contract FrontEnd is PullPayment, Ownable {
         bytes32 _idxHash,
         bytes32 _rgtHash,
         uint8 _assetStatus
-    ) public returns (uint8) {
+    ) external returns (uint8) {
         Record memory rec = getRecord(_idxHash);
 
         require(
@@ -225,7 +225,7 @@ contract FrontEnd is PullPayment, Ownable {
         bytes32 _idxHash,
         bytes32 _rgtHash,
         uint256 _decAmount
-    ) public returns (uint256) {
+    ) external returns (uint256) {
         Record memory rec = getRecord(_idxHash);
 
         require(
@@ -255,7 +255,7 @@ contract FrontEnd is PullPayment, Ownable {
         bytes32 _idxHash,
         bytes32 _rgtHash,
         bytes32 _newrgtHash
-    ) public payable returns (uint8) {
+    ) external payable returns (uint8) {
         Record memory rec = getRecord(_idxHash);
         Costs memory cost = getCost(rec.assetClass);
 
@@ -294,7 +294,7 @@ contract FrontEnd is PullPayment, Ownable {
         bytes32 _idxHash,
         bytes32 _rgtHash,
         bytes32 _IpfsHash
-    ) public returns (bytes32) {
+    ) external returns (bytes32) {
         Record memory rec = getRecord(_idxHash);
 
         require(
@@ -322,7 +322,7 @@ contract FrontEnd is PullPayment, Ownable {
         bytes32 _idxHash,
         bytes32 _rgtHash,
         bytes32 _IpfsHash
-    ) public payable returns (bytes32) {
+    ) external payable returns (bytes32) {
         Record memory rec = getRecord(_idxHash);
         Costs memory cost = getCost(rec.assetClass);
 
@@ -430,7 +430,7 @@ contract FrontEnd is PullPayment, Ownable {
     /*
      * @dev Withdraws user's Escrow amount
      */
-    function $withdraw() public virtual payable {
+    function $withdraw() external virtual payable {
         withdrawPayments(msg.sender);
     }
 

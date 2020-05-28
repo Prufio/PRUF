@@ -175,31 +175,6 @@ contract Storage is Ownable {
 
     event REPORT(string _msg);
 
-    //-----------------------------------------------Private functions------------------------------------------------//
-
-    /*
-     * @dev Update lastRecorder
-     */
-    function newRecorder(
-        bytes32 _senderHash,
-        bytes32 _recorder,
-        bytes32 _lastRecorder
-    ) private view returns (bytes32, bytes32) {
-        bytes32 lastrec;
-
-        if (
-            ((registeredUsers[_recorder].userType == 1) ||
-                (_recorder == keccak256(abi.encodePacked(owner())))) &&
-            (_senderHash != _recorder)
-        ) {
-            lastrec = _recorder;
-        } else {
-            lastrec = _lastRecorder;
-        }
-
-        return (_senderHash, lastrec);
-    }
-
     //--------------------------------Internal Admin functions / onlyowner or isAdmin---------------------------------//
 
     // function setErc20_tokenAddress (address contractAddress) public onlyOwner {
@@ -210,7 +185,7 @@ contract Storage is Ownable {
     //erc20_tokenInterface erc20_tokenContract; //erc20_token
 
     function OO_setErc721_tokenAddress(address _contractAddress)
-        public
+        external
         onlyOwner
     {
         require(_contractAddress != address(0), "Invalid contract address");
@@ -361,7 +336,7 @@ contract Storage is Ownable {
         uint16 _assetClass,
         uint256 _countDownStart,
         bytes32 _Ipfs1
-    ) public {
+    ) external {
         uint256 tokenID = uint256(_rgt); //tokenID set to the uint256 of the supplied _rgt vor token verification
         require(
             registeredUsers[_userHash].userType == 1 || (_assetClass > 8192), //cannot use userAuth because record[idx] doesnt exist yet
@@ -416,7 +391,7 @@ contract Storage is Ownable {
         uint256 _countDown,
         uint8 _forceCount
     )
-        public
+        external
         userAuth(_userHash, _idxHash)
         exists(_idxHash)
         unlocked(_idxHash)
@@ -493,7 +468,7 @@ contract Storage is Ownable {
         bytes32 _Ipfs1,
         bytes32 _Ipfs2
     )
-        public
+        external
         userAuth(_userHash, _idxHash)
         exists(_idxHash)
         unlocked(_idxHash)
@@ -580,7 +555,7 @@ contract Storage is Ownable {
      * @dev Compare record.rightsholder with supplied bytes32 rightsholder
      */
     function _verifyRightsHolder(bytes32 _idxHash, bytes32 _rgtHash)
-        public
+        external
         view
         returns (uint256)
     {
@@ -680,5 +655,30 @@ contract Storage is Ownable {
             cost[_assetClass].cost5,
             cost[_assetClass].cost6
         );
+    }
+
+    //-----------------------------------------------Private functions------------------------------------------------//
+
+    /*
+     * @dev Update lastRecorder
+     */
+    function newRecorder(
+        bytes32 _senderHash,
+        bytes32 _recorder,
+        bytes32 _lastRecorder
+    ) private view returns (bytes32, bytes32) {
+        bytes32 lastrec;
+
+        if (
+            ((registeredUsers[_recorder].userType == 1) ||
+                (_recorder == keccak256(abi.encodePacked(owner())))) &&
+            (_senderHash != _recorder)
+        ) {
+            lastrec = _recorder;
+        } else {
+            lastrec = _lastRecorder;
+        }
+
+        return (_senderHash, lastrec);
     }
 }
