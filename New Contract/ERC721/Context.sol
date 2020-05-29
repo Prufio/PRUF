@@ -1,8 +1,6 @@
 pragma solidity ^0.6.0;
 // SPDX-License-Identifier: MIT
 
-pragma solidity ^0.6.0;
-
 /*
  * @dev Provides information about the current execution context, including the
  * sender of the transaction and its data. While these are generally available
