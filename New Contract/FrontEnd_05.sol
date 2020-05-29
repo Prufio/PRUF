@@ -4,7 +4,7 @@ pragma solidity ^0.6.2;
 import "./PullPayment.sol";
 
 
-contract StorageInterface {
+interface StorageInterface {
     function newRecord(
         bytes32 _userHash,
         bytes32 _idxHash,
@@ -12,7 +12,7 @@ contract StorageInterface {
         uint16 _assetClass,
         uint256 _countDownStart,
         bytes32 _Ipfs1
-    ) external {}
+    ) external;
 
     function modifyRecord(
         bytes32 _userHash,
@@ -21,14 +21,14 @@ contract StorageInterface {
         uint8 _assetStatus,
         uint256 _countDown,
         uint8 _forceCount
-    ) external {}
+    ) external;
 
     function modifyIpfs(
         bytes32 _userHash,
         bytes32 _idxHash,
         bytes32 _Ipfs1,
         bytes32 _Ipfs2
-    ) external {}
+    ) external;
 
     function retrieveCosts(uint16 _assetClass)
         external
@@ -39,8 +39,7 @@ contract StorageInterface {
             uint256,
             uint256,
             uint256
-        )
-    {}
+        );
 
     function retrieveRecord(bytes32 _idxHash)
         external
@@ -55,8 +54,7 @@ contract StorageInterface {
             uint256,
             bytes32,
             bytes32
-        )
-    {}
+        );
 }
 
 
