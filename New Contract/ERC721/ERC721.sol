@@ -1,22 +1,22 @@
 pragma solidity ^0.6.0;
 
-import "../../GSN/Context.sol";
+import "./Context.sol";
 import "./IERC721.sol";
 import "./IERC721Metadata.sol";
 import "./IERC721Enumerable.sol";
 import "./IERC721Receiver.sol";
-import "../../introspection/ERC165.sol";
-import "../../math/SafeMath.sol";
-import "../../utils/Address.sol";
-import "../../utils/EnumerableSet.sol";
-import "../../utils/EnumerableMap.sol";
-import "../../utils/Strings.sol";
+import "./ERC165.sol";
+import "./SafeMath.sol";
+import "./utils/Address.sol";
+import "./EnumerableSet.sol";
+import "./EnumerableMap.sol";
+import "./Strings.sol";
 
 /**
  * @title ERC721 Non-Fungible Token Standard basic implementation
  * @dev see https://eips.ethereum.org/EIPS/eip-721
  */
-contract ERC721 is Context, ERC165, IERC721, IERC721Metadata, IERC721Enumerable {
+contract BulletProofAssetToken is Context, ERC165, IERC721, IERC721Metadata, IERC721Enumerable {
     using SafeMath for uint256;
     using Address for address;
     using EnumerableSet for EnumerableSet.UintSet;
