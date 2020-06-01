@@ -314,12 +314,12 @@ contract Storage is Ownable {
         uint256 assetClass256 = uint256(_assetClass);
 
         require( //check that user is registered type 1 for asset class or ac>10000
-            (_assetClass > 10000) ||
+            (_assetClass >= 10000) ||
             ((registeredUsers[userHash].userType == 1) &&
             (_assetClass == registeredUsers[userHash].authorizedAssetClass)),
             "NR:ERR-User not registered"
         );
-        require( //calling address holds asset token, or assetClass is < 30000
+        require( //calling address holds asset token if asset class is 30,000 or more
             (_assetClass < 30000) ||
             (assetTokenContract.ownerOf(assetTokenID) == message_origin),
             "NR:ERR-User address does not hold asset token"
@@ -379,7 +379,7 @@ contract Storage is Ownable {
         uint8 senderType = registeredUsers[userHash].userType;
 
         require( //check that user is registered type 1 or 9 for asset class or ac>10000
-            (assetClass256 > 10000) ||
+            (assetClass256 >= 10000) ||
             (((senderType == 1) || (senderType == 9)) &&
             (assetClass256 == registeredUsers[userHash].authorizedAssetClass)),
             "NR:ERR-User not registered"
@@ -455,7 +455,7 @@ contract Storage is Ownable {
         uint8 senderType = registeredUsers[userHash].userType;
 
         require( //check that user is registered type 1 or 9 for asset class or ac>10000
-            (assetClass256 > 10000) ||
+            (assetClass256 >= 10000) ||
             (((senderType == 1) || (senderType == 9)) &&
             (assetClass256 == registeredUsers[userHash].authorizedAssetClass)),
             "NR:ERR-User not registered"
