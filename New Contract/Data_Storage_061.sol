@@ -57,7 +57,7 @@ contract Storage is Ownable {
     mapping(bytes32 => User) private registeredUsers; // Authorized recorder database
     mapping(uint16 => Costs) private cost; // Cost per function by asset class
 
-    //address erc20_tokenAddress;
+    address minterContractAddress;
     address assetContractAddress;
     assetTokenInterface assetTokenContract; //erc721_token prototype initialization
     address ACcontractAddress;
@@ -81,7 +81,9 @@ contract Storage is Ownable {
      * Authorized User Types   registeredUsers[]
      * 1 = Standard User
      * 9 = Robot
+     * 255 = minter / create new record priveledge
      * 99 = ADMIN (isAdmin)
+     *
      * Other = unauth
      *
      * rgtHash = K256(abiPacked(idxHash,rgtHash))
@@ -174,6 +176,14 @@ contract Storage is Ownable {
         ACtokenContract = ACtokenInterface(_contractAddress);
     }
 
+    function OO_setMinterAddress(address _contractAddress)
+        external
+        onlyOwner
+    {
+        require(_contractAddress != address(0), "Invalid contract address");
+        minterContractAddress = _contractAddress;
+    }
+
     /*
      * @dev Authorize / Deauthorize / Authorize users for an address be permitted to make record modifications
      * ----------------INSECURE -- keccak256 of address must be generated clientside in release.
@@ -193,23 +203,6 @@ contract Storage is Ownable {
         registeredUsers[addrHash].authorizedAssetClass = _authorizedAssetClass;
         emit REPORT("internal user database access!"); //report access to the internal user database
     }
-
-    /*
-     * @dev Authorize / Deauthorize / Authorize ADRESSES permitted to make record modifications
-     */
-    // function OO_addContract(
-    //     string calldata _name,
-    //     address _addr,
-    //     uint8 _contractAuthLevel
-    // ) external onlyOwner {
-    //     require(_contractAuthLevel <= 4, "AC:ER-13 Invalid user type");
-    //     emit REPORT("internal user database access!"); //report access to the internal user database
-
-    //     authorizedAdresses[keccak256(
-    //         abi.encodePacked(_addr)
-    //     )] = _contractAuthLevel;
-    //     contractNames[_name] = _addr;
-    // }
 
     /*
      * @dev Set function costs per asset class, in Wei
@@ -319,15 +312,20 @@ contract Storage is Ownable {
             (_assetClass == registeredUsers[userHash].authorizedAssetClass)),
             "NR:ERR-User not registered"
         );
-        require( //calling address holds asset token if asset class is 30,000 or more
+        require( //origin address holds asset token if asset class is 30,000 or more
             (_assetClass < 30000) ||
             (assetTokenContract.ownerOf(assetTokenID) == message_origin),
             "NR:ERR-User address does not hold asset token"
         );
-        require( //calling address holds assetClass token, or assetClass is >60000
+        require( //origin address holds assetClass token, or assetClass is >60000
                 (_assetClass >= 60000) ||
-                (ACtokenContract.ownerOf(assetClass256) == msg.sender),
-            "NR:ERR-Contract not authorized"
+                (ACtokenContract.ownerOf(assetClass256) == message_origin),
+            "NR:ERR-Contract not authorized in asset class"
+        );
+        require( //require message sender is authorized as minter
+                (registeredUsers[keccak256(abi.encodePacked(msg.sender))]
+                    .userType == 255) || (owner() == msg.sender),
+            "address does not belong to Minter"
         );
         require(
             database[_idxHash].rightsHolder == 0,

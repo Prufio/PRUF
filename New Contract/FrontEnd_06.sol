@@ -2,7 +2,20 @@
 pragma solidity ^0.6.2;
 
 import "./PullPayment.sol";
+import "./ERC721/IERC721Receiver.sol";
 
+interface ACtokenInterface {
+    //function ownerOf(uint256) external view returns (address);
+    //function mint(uint256) external view returns (address);
+    //function transfer(uint256,address) external view returns (address);
+    function safeTransferFrom(address from, address to, uint256 tokenId) external;
+}
+
+interface assetTokenInterface {
+    //function ownerOf(uint256) external view returns (address);
+    //function mint(uint256) external view returns (address);
+    //function transfer(uint256,address) external view returns (address);
+}
 
 interface StorageInterface {
     function newRecord(
@@ -58,7 +71,7 @@ interface StorageInterface {
 }
 
 
-contract FrontEnd is PullPayment, Ownable {
+contract FrontEnd is PullPayment, Ownable, IERC721Receiver {
     using SafeMath for uint256;
 
     struct Record {
@@ -119,6 +132,10 @@ contract FrontEnd is PullPayment, Ownable {
     }
 
     //--------------------------------------External functions--------------------------------------------//
+
+    function onERC721Received(address, address, uint256, bytes calldata) external virtual override returns (bytes4) {
+        return this.onERC721Received.selector;
+    }
 
     /*
      * @dev Wrapper for newRecord
