@@ -1,3 +1,5 @@
+// SPDX-License-Identifier: MIT
+
 pragma solidity ^0.6.0;
 
 import "./Context.sol";
@@ -7,7 +9,7 @@ import "./IERC721Enumerable.sol";
 import "./IERC721Receiver.sol";
 import "./ERC165.sol";
 import "./SafeMath.sol";
-import "./utils/Address.sol";
+import "./Address.sol";
 import "./EnumerableSet.sol";
 import "./EnumerableMap.sol";
 import "./Strings.sol";
