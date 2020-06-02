@@ -1,13 +1,15 @@
 import React, { useState } from "react";
 import Web3Listener from "./Web3Listener";
+import Web3 from "web3";
 
 function NewRecord() {
-  var web3 = Web3Listener('web3');
+  var web3 = require("web3");
+  web3 = new Web3(web3.givenProvider);
   web3.eth.getAccounts().then((e) => setAddr(e[0]));
   var frontend = Web3Listener('frontend');
 
   var [addr, setAddr] = useState("");
-  var [error, setError] = useState(null);
+  var [error, setError] = useState(undefined);
   
   var [AssetClass, setAssetClass] = useState("");
   var [CountDownStart, setCountDownStart] = useState("");
@@ -23,10 +25,6 @@ function NewRecord() {
   var [surname, setSurname] = useState("");
   var [id, setID] = useState("");
   var [secret, setSecret] = useState("");
-
-  const resetWeb3 = () => {
-    web3.eth.getAccounts().then((e) => setAddr(e[0]));
-  }
 
   const _newRecord = () => {
     var idxHash = web3.utils.soliditySha3(type, manufacturer, model, serial);
@@ -173,12 +171,14 @@ function NewRecord() {
       )}
       {txHash > 0 && ( //conditional rendering
         <div className="VRresults">
-          {error != null && (
+          {error !== undefined && (
             <div>
               ERROR! Please check etherscan
+              <br></br>
+              {error.message}
             </div>
             )}
-            {error === null && (<div> No Errors Reported </div>)}
+            {error === undefined && (<div> No Errors Reported </div>)}
           <br></br>
           <br></br>
           <a

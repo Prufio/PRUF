@@ -1,10 +1,13 @@
 import React, { useState } from "react";
 import Web3Listener from "./Web3Listener";
+import Web3 from "web3";
 
 function TransferRecord() {
-  let web3 = Web3Listener("web3");
+  var web3 = require("web3");
+  web3 = new Web3(web3.givenProvider);
   web3.eth.getAccounts().then((e) => setAddr(e[0]));
   let frontend = Web3Listener("frontend");
+  let storage = Web3Listener("storage");
 
   var [txHash, setTxHash] = useState("");
 
@@ -25,20 +28,46 @@ function TransferRecord() {
   var [newSurname, setNewSurname] = useState("");
   var [newId, setNewID] = useState("");
   var [newSecret, setNewSecret] = useState("");
+  var [resultTemp, setResultTemp] = useState();
 
-  const _transferAsstet = () => {
+    const checkProvenance = () => {
     var idxHash = web3.utils.soliditySha3(type, manufacturer, model, serial);
-    
     var rgtRaw = web3.utils.soliditySha3(first, middle, surname, id, secret);
     var rgtHash = web3.utils.soliditySha3(idxHash, rgtRaw);
-   
+    var resultCheck;
+
+    console.log(idxHash);
+    console.log(rgtHash);
+
+    storage.methods
+    ._verifyRightsHolder(idxHash, rgtHash)
+    .call({ from: addr }, function(_error, _result){
+      setResultTemp(_result);
+      console.log("result:", _result);
+      })
+      console.log("set resultTemp to: ", resultTemp)
+
+  }
+
+  const changeHandle = (value) => {
+    checkProvenance()
+    return(value);
+  }
+
+  const _transferAsset = () => {
+    var idxHash = web3.utils.soliditySha3(type, manufacturer, model, serial);
+    var rgtRaw = web3.utils.soliditySha3(first, middle, surname, id, secret);
+    var rgtHash = web3.utils.soliditySha3(idxHash, rgtRaw);
+      
     var newRgtRaw = web3.utils.soliditySha3(newFirst, newMiddle, newSurname, newId, newSecret);
     var newRgtHash = web3.utils.soliditySha3(idxHash, newRgtRaw);
 
-    console.log("idxHash", idxHash);
-    console.log("New rgtRaw", rgtRaw);
-    console.log("New rgtHash", rgtHash);
+    console.log("resultTemp: ",resultTemp);
+    console.log("idxHash: ", idxHash);
+    console.log("New rgtRaw: ", rgtRaw);
+    console.log("New rgtHash: ", rgtHash);
 
+    if (resultTemp === '170'){
     frontend.methods
       .$transferAsset(idxHash, rgtHash, newRgtHash)
       .send({ from: addr, value: web3.utils.toWei("0.01") })
@@ -47,6 +76,12 @@ function TransferRecord() {
         //Stuff to do when tx confirms
       });
     console.log(txHash);
+    }
+
+    else{
+      alert("Failed to pair current rights holder with asset");
+      //return(console.log("Failed to pair current rights holder with asset"));
+    }
   };
 
   return (
@@ -66,7 +101,7 @@ function TransferRecord() {
           name="type"
           placeholder="Type"
           required
-          onChange={(e) => setType(e.target.value)}
+          onChange={(e) => setType(changeHandle(e.target.value))}
         />
         <br></br>
         Manufacturer:
@@ -75,7 +110,7 @@ function TransferRecord() {
           name="manufacturer"
           placeholder="Manufacturer"
           required
-          onChange={(e) => setManufacturer(e.target.value)}
+          onChange={(e) => setManufacturer(changeHandle(e.target.value))}
         />
         <br></br>
         Model:
@@ -84,7 +119,7 @@ function TransferRecord() {
           name="model"
           placeholder="Model"
           required
-          onChange={(e) => setModel(e.target.value)}
+          onChange={(e) => setModel(changeHandle(e.target.value))}
         />
         <br></br>
         Serial:
@@ -93,7 +128,7 @@ function TransferRecord() {
           name="serial"
           placeholder="Serial Number"
           required
-          onChange={(e) => setSerial(e.target.value)}
+          onChange={(e) => setSerial(changeHandle(e.target.value))}
         />
         <br></br>
         First Name:
@@ -102,7 +137,7 @@ function TransferRecord() {
           name="first"
           placeholder="First name"
           required
-          onChange={(e) => setFirst(e.target.value)}
+          onChange={(e) => setFirst(changeHandle(e.target.value))}
         />
         <br></br>
         Middle Name:
@@ -111,7 +146,7 @@ function TransferRecord() {
           name="middle"
           placeholder="Middle name"
           required
-          onChange={(e) => setMiddle(e.target.value)}
+          onChange={(e) => setMiddle(changeHandle(e.target.value))}
         />
         <br></br>
         Surname:
@@ -120,7 +155,7 @@ function TransferRecord() {
           name="surname"
           placeholder="Surname"
           required
-          onChange={(e) => setSurname(e.target.value)}
+          onChange={(e) => setSurname(changeHandle(e.target.value))}
         />
         <br></br>
         ID:
@@ -129,7 +164,7 @@ function TransferRecord() {
           name="id"
           placeholder="ID"
           required
-          onChange={(e) => setID(e.target.value)}
+          onChange={(e) => setID(changeHandle(e.target.value))}
         />
         <br></br>
         Password:
@@ -138,7 +173,7 @@ function TransferRecord() {
           name="secret"
           placeholder="Secret"
           required
-          onChange={(e) => setSecret(e.target.value)}
+          onChange={(e) => setSecret(changeHandle(e.target.value))}
         />
         <br></br>
         New First Name:
@@ -147,7 +182,7 @@ function TransferRecord() {
           name="first"
           placeholder="New First name"
           required
-          onChange={(e) => setNewFirst(e.target.value)}
+          onChange={(e) => setNewFirst(changeHandle(e.target.value))}
         />
         <br></br>
         New Middle Name:
@@ -156,7 +191,7 @@ function TransferRecord() {
           name="middle"
           placeholder="New Middle name"
           required
-          onChange={(e) => setNewMiddle(e.target.value)}
+          onChange={(e) => setNewMiddle(changeHandle(e.target.value))}
         />
         <br></br>
         New Surname:
@@ -165,7 +200,7 @@ function TransferRecord() {
           name="surname"
           placeholder="New Surname"
           required
-          onChange={(e) => setNewSurname(e.target.value)}
+          onChange={(e) => setNewSurname(changeHandle(e.target.value))}
         />
         <br></br>
         New ID:
@@ -174,7 +209,7 @@ function TransferRecord() {
           name="id"
           placeholder="New ID"
           required
-          onChange={(e) => setNewID(e.target.value)}
+          onChange={(e) => setNewID(changeHandle(e.target.value))}
         />
         <br></br>
         New Password:
@@ -183,10 +218,10 @@ function TransferRecord() {
           name="secret"
           placeholder="New Password"
           required
-          onChange={(e) => setNewSecret(e.target.value)}
+          onChange={(e) => setNewSecret(changeHandle(e.target.value))}
         />
         <br></br>
-        <input type="button" value="Transfer Asset" onClick={_transferAsstet} />
+        <input type="button" value="Transfer Asset" onClick={_transferAsset} />
       </form>)}
       {txHash > 0 && ( //conditional rendering
         <div className="VRresults">

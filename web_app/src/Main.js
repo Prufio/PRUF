@@ -14,8 +14,7 @@ import VerifyRightsholder from "./VerifyRightsholder";
 
 function Main() {
   var [addr, setAddr] = useState("");
-
-  let web3 = Web3Listener("web3");
+  var web3 = Web3Listener('web3');
   web3.eth.getAccounts().then((e) => setAddr(e[0]));
 
   return (
@@ -23,9 +22,9 @@ function Main() {
       <div>
         <img src={require("./BP Logo.png")} alt="Bulletproof Logo" />
         <br></br>
-        <div className="banner">
-            Currently serving: {addr}
-            {addr === undefined && "NOBODY! Log into web3 provider!"}
+        <div>
+            {addr > 0 && (<div className="banner">Currently serving: {addr}</div> )}
+            {addr === undefined && (<div className="banner">Currently serving: NOBODY! Log into web3 provider!</div>)}
         </div>
         <br></br>
         <div className="page">

@@ -1,8 +1,10 @@
 import React, { useState } from "react";
 import Web3Listener from "./Web3Listener";
+import Web3 from "web3";
 
 function ForceModifyRecord() {
-  let web3 = Web3Listener("web3");
+  var web3 = require("web3");
+  web3 = new Web3(web3.givenProvider);
   web3.eth.getAccounts().then((e) => setAddr(e[0]));
   let frontend = Web3Listener("frontend");
 

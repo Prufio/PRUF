@@ -1,14 +1,16 @@
 import React, { useState } from "react";
 import Web3Listener from "./Web3Listener";
+import Web3 from "web3";
 
 function VerifyRightsholder() {
-  let web3 = Web3Listener("web3");
+  var web3 = require("web3");
+  web3 = new Web3(web3.givenProvider);
   web3.eth.getAccounts().then((e) => setAddr(e[0]));
   let storage = Web3Listener("storage");
 
   var [txHash, setTxHash] = useState("");
   var [addr, setAddr] = useState("");
-  var [error, setError] = useState(['0']);
+  var [error, setError] = useState(undefined);
 
 
   var [type, setType] = useState("");
@@ -149,12 +151,12 @@ function VerifyRightsholder() {
           onClick={_verify}
         />
       </form>)}
-{/*       {error != '0' && (
+      {error !== undefined && (
         <div className="RRresults">
           ERROR: {error.message}
           <br></br>
         </div>
-      )} */}
+      )}
       {txHash > 0 && ( //conditional rendering
         <div className="VRresults">
           {result === "170"? ('Match Confirmed') : ('No match found')}

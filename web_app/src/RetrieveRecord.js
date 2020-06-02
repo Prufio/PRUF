@@ -1,8 +1,10 @@
 import React, { useState } from "react";
 import Web3Listener from "./Web3Listener";
+import Web3 from "web3";
 
 function RetrieveRecord() {
-  let web3 = Web3Listener("web3");
+  var web3 = require("web3");
+  web3 = new Web3(web3.givenProvider);
   web3.eth.getAccounts().then((e) => setAddr(e[0]));
   let storage = Web3Listener("storage");
 
@@ -11,18 +13,19 @@ function RetrieveRecord() {
   var [model, setModel] = useState("");
   var [serial, setSerial] = useState("");
   var [addr, setAddr] = useState("");
-  var [error, setError] = useState(['0']);
+  var [error, setError] = useState(undefined);
   var [result, setResult] = useState([]);
 
   const _retrieveRecord = () => {
+    setError(undefined);
     var idxHash = web3.utils.soliditySha3(type, manufacturer, model, serial);
 
     console.log("idxHash", idxHash);
 
     storage.methods
       .retrieveRecord(idxHash)
-      .call({ from: addr }, function(error, _result){
-        if(error){setError(error)}
+      .call({ from: addr }, function(_error, _result){
+        if(_error){setError(_error)}
         else{setResult(_result)}
   });
   }
@@ -82,7 +85,7 @@ function RetrieveRecord() {
         />
       </form>
       )}
-      {error !== '0' && (
+      {error !== undefined && (
         <div className="RRresults">
           ERROR: {error.message}
           <br></br>
