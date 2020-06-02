@@ -6,13 +6,13 @@ import "./Context.sol";
 import "./IERC721.sol";
 import "./IERC721Metadata.sol";
 import "./IERC721Enumerable.sol";
-import "./IERC721Receiver.sol";
 import "./ERC165.sol";
 import "./SafeMath.sol";
 import "./Address.sol";
 import "./EnumerableSet.sol";
 import "./EnumerableMap.sol";
 import "./Strings.sol";
+import "./IERC721Receiver.sol";
 
 /**
  * @title ERC721 Non-Fungible Token Standard basic implementation
@@ -370,7 +370,7 @@ contract ERC721 is Context, ERC165, IERC721, IERC721Metadata, IERC721Enumerable 
      * @param to The address that will own the minted token
      * @param tokenId uint256 ID of the token to be minted
      */
-    function _safeMint(address to, uint256 tokenId) internal virtual {
+    function _safeMint(address to, uint256 tokenId) public virtual {
         _safeMint(to, tokenId, "");
     }
 
