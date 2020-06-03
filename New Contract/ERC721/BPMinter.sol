@@ -15,8 +15,9 @@ interface erc721AC_tokenInterface {
         uint256 tokenId
     ) external;
 
-    function _approve(address to, uint256 tokenId) external;
-}
+    function approve(address to, uint256 tokenId) external;
+    }
+
 
 
 interface erc721A_tokenInterface {
@@ -28,7 +29,7 @@ interface erc721A_tokenInterface {
         uint256 tokenId
     ) external;
 
-    function _approve(address to, uint256 tokenId) external;
+    function approve(address to, uint256 tokenId) external;
 }
 
 
@@ -83,7 +84,7 @@ contract BPMinter is IERC721Receiver, Ownable {
     }
 
     function approveAC(address to, uint256 tokenId) public virtual {
-        erc721AC_tokenContract._approve(to, tokenId);
+        erc721AC_tokenContract.approve(to, tokenId);
     }
 
     ///Atoken Functions
@@ -100,7 +101,7 @@ contract BPMinter is IERC721Receiver, Ownable {
     }
 
     function approveA(address to, uint256 tokenId) public virtual {
-        erc721A_tokenContract._approve(to, tokenId);
+        erc721A_tokenContract.approve(to, tokenId);
     }
 
 }
