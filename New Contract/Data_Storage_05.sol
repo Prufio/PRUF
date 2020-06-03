@@ -189,7 +189,6 @@ contract Storage is Ownable {
         onlyOwner
     {
         require(_contractAddress != address(0), "Invalid contract address");
-        require(_contractAddress != address(0), "Invalid contract address");
         erc721ContractAddress = _contractAddress;
         erc721_tokenContract = erc721_tokenInterface(_contractAddress);
     }
