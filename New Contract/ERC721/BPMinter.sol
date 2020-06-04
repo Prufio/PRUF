@@ -7,34 +7,40 @@ import "./Ownable.sol";
 
 
 interface erc721AC_tokenInterface {
-    function _safeMint(address to, uint256 tokenId) external;
+    function mintNewtokenAC(
+        address reciepientAddress,
+        uint256 assetClass,
+        string calldata tokenURI
+    ) external;
 
-    function safeTransferFrom(
+    function burnTokenAC(uint256 tokenId) external;
+
+    function transferAssetAC(
         address from,
         address to,
         uint256 tokenId
     ) external;
-
-    function approve(address to, uint256 tokenId) external;
-    }
-
+}
 
 
 interface erc721A_tokenInterface {
-    function _safeMint(address to, uint256 tokenId) external;
+    function mintNewTokenA(
+        address reciepientAddress,
+        uint256 assetClass,
+        string calldata tokenURI
+    ) external;
 
-    function safeTransferFrom(
+    function burnTokenA(uint256 tokenId) external;
+
+    function transferAssetA(
         address from,
         address to,
         uint256 tokenId
     ) external;
-
-    function approve(address to, uint256 tokenId) external;
 }
 
 
 contract BPMinter is IERC721Receiver, Ownable {
-
     address erc721ACContractAddress;
     erc721AC_tokenInterface private erc721AC_tokenContract;
 
@@ -65,31 +71,39 @@ contract BPMinter is IERC721Receiver, Ownable {
         address,
         address,
         uint256,
-        bytes memory
-    ) public virtual override returns (bytes4) {
+        bytes calldata
+    ) external virtual override returns (bytes4) {
         return this.onERC721Received.selector;
     }
 
     ///ACtoken Functions
-    function mintAC(address to, uint256 tokenId) public virtual {
-        erc721AC_tokenContract._safeMint(to, tokenId);
+    function mintAC(
+        address to,
+        uint256 tokenId,
+        string calldata tokenURI
+    ) external virtual {
+        erc721AC_tokenContract.mintNewtokenAC(to, tokenId, tokenURI);
     }
 
     function transferAC(
         address from,
         address to,
         uint256 tokenId
-    ) public virtual {
-        erc721AC_tokenContract.safeTransferFrom(from, to, tokenId);
+    ) external virtual {
+        erc721AC_tokenContract.transferAssetAC(from, to, tokenId);
     }
 
-    function approveAC(address to, uint256 tokenId) public virtual {
-        erc721AC_tokenContract.approve(to, tokenId);
+    function burnAC(uint256 tokenId) external virtual {
+        erc721AC_tokenContract.burnTokenAC(tokenId);
     }
 
     ///Atoken Functions
-    function mintA(address to, uint256 tokenId) public virtual {
-        erc721A_tokenContract._safeMint(to, tokenId);
+    function mintA(
+        address to,
+        uint256 tokenId,
+        string calldata tokenURI
+    ) external virtual {
+        erc721A_tokenContract.mintNewTokenA(to, tokenId, tokenURI);
     }
 
     function transferA(
@@ -97,11 +111,10 @@ contract BPMinter is IERC721Receiver, Ownable {
         address to,
         uint256 tokenId
     ) external virtual {
-        erc721A_tokenContract.safeTransferFrom(from, to, tokenId);
+        erc721A_tokenContract.transferAssetA(from, to, tokenId);
     }
 
-    function approveA(address to, uint256 tokenId) public virtual {
-        erc721A_tokenContract.approve(to, tokenId);
+    function burnA(uint256 tokenId) external virtual {
+        erc721A_tokenContract.burnTokenA(tokenId);
     }
-
 }
