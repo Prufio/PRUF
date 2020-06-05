@@ -1,66 +1,146 @@
-import React, { useState } from "react";
-import Web3Listener from "./Web3Listener";
+import React, { Component } from "react";
+import returnStorageAbi from "./stor_abi";
+import returnFrontEndAbi from "./front_abi";
 import Web3 from "web3";
 
-function ForceModifyRecord() {
-  var web3 = require("web3");
-  web3 = new Web3(web3.givenProvider);
-  web3.eth.getAccounts().then((e) => setAddr(e[0]));
-  let frontend = Web3Listener("frontend");
+class ForceModifyRecord extends React.Component {
 
-  var [txHash, setTxHash] = useState("");
+  constructor(props){
+    super(props);
 
-  var [type, setType] = useState("");
-  var [manufacturer, setManufacturer] = useState("");
-  var [model, setModel] = useState("");
-  var [serial, setSerial] = useState("");
-  var [addr, setAddr] = useState("");
-
-  var [newFirst, setNewFirst] = useState("");
-  var [newMiddle, setNewMiddle] = useState("");
-  var [newSurname, setNewSurname] = useState("");
-  var [newId, setNewID] = useState("");
-  var [newSecret, setNewSecret] = useState("");
-  
-  const _forceModifyRecord = () => {
-    var idxHash = web3.utils.soliditySha3(type, manufacturer, model, serial);
-   
-    var newRgtRaw = web3.utils.soliditySha3(newFirst, newMiddle, newSurname, newId, newSecret);
-
-    var newRgtHash = web3.utils.soliditySha3(idxHash, newRgtRaw);
-
-    console.log("idxHash", idxHash);
-    console.log("New rgtRaw", newRgtRaw);
-    console.log("New rgtHash", newRgtHash);
-
-    frontend.methods
-      .$forceModRecord(idxHash, newRgtHash)
-      .send({ from: addr, value: web3.utils.toWei("0.01") })
-      .on("receipt", (receipt) => {
-        setTxHash(receipt.transactionHash);
-        //Stuff to do when tx confirms
+    this.acctChanger = async () => {
+      const ethereum = window.ethereum;
+      const self = this;
+      var _web3 = require("web3");
+      _web3 = new Web3(_web3.givenProvider);
+        ethereum.on("accountsChanged", function(accounts) {
+        _web3.eth.getAccounts().then((e) => self.setState({addr: e[0]}));
       });
-    console.log(txHash);
-  };
+      }
 
-  return (
+    //Component state declaration
+
+    this.mounted = false;
+    this.state = {
+      addr: "",
+      error: undefined,
+      NRerror: undefined,
+      result: "",
+      AssetClass: "",
+      CountDownStart: "",
+      ipfs1: "",
+      txHash: "",
+      type: "",
+      manufacturer: "",
+      model: "",
+      serial: "",
+      first: "",
+      middle: "",
+      surname: "",
+      id: "",
+      secret: "",
+      newFirst: "",
+      newMiddle: "",
+      newSurname: "",
+      newId: "",
+      newSecret: "",
+      web3: null,
+      frontend: "",
+      storage: ""
+    }
+
+  }
+
+  componentDidMount() {
+    console.log("component mounted")
+    var _web3 = require("web3");
+    _web3 = new Web3(_web3.givenProvider);
+    this.setState({web3: _web3});
+    _web3.eth.getAccounts().then((e) => this.setState({addr: e[0]}));
+    var _frontend_addr = "0x9Ef2BBF052A5b61eBD1452d48B515BE7659a200B";
+    
+    var _storage_addr = "0x926c75761f8e68133c4A7140Bd079ce65A935ad0";
+
+    const frontEnd_abi = returnFrontEndAbi();
+    const storage_abi = returnStorageAbi();
+
+    const _frontend = new _web3.eth.Contract(
+    frontEnd_abi,
+    _frontend_addr
+    );
+
+    const _storage = new _web3.eth.Contract(
+    storage_abi, 
+    _storage_addr
+    );
+    this.setState({frontend: _frontend})
+    this.setState({storage: _storage})
+
+    document.addEventListener("accountListener", this.acctChanger());
+  }
+
+  componentWillUnmount() { 
+    console.log("unmounting component")
+    document.removeEventListener("accountListener", this.acctChanger())
+}
+
+  render(){
+    const self = this;
+
+    async function checkExists(idxHash) { 
+      await self.state.storage.methods
+        .retrieveRecord(idxHash)
+        .call({ from: self.state.addr }, function(_error, _result){
+          if(_error){self.setState({error: _error});self.setState({result: 0});alert("WARNING: Record DOES NOT EXIST! Reject in metamask and review asset info fields.")}
+          else{self.setState({result: _result})}
+          console.log("check debug, _result, _error: ", _result, _error)
+    });
+
+    }
+
+    const _forceModifyRecord = () => {
+      var idxHash = this.state.web3.utils.soliditySha3(this.state.type, this.state.manufacturer, this.state.model, this.state.serial);
+      var rgtRaw = this.state.web3.utils.soliditySha3(this.state.first, this.state.middle, this.state.surname, this.state.id, this.state.secret);
+      var rgtHash = this.state.web3.utils.soliditySha3(idxHash, rgtRaw);
+      var newRgtRaw = this.state.web3.utils.soliditySha3(this.state.newFirst, this.state.newMiddle, this.state.newSurname, this.state.newId, this.state.newSecret);
+      var newRgtHash = this.state.web3.utils.soliditySha3(idxHash, newRgtRaw);
+  
+      console.log("idxHash", idxHash);
+      console.log("New rgtRaw", newRgtRaw);
+      console.log("New rgtHash", newRgtHash);
+      console.log("addr: ", this.state.addr);
+      
+      checkExists(idxHash);
+
+      this.state.frontend.methods
+        .$forceModRecord(idxHash, newRgtHash)
+        .send({ from: this.state.addr, value: this.state.web3.utils.toWei("0.01") }).on("error", function(_error){self.setState({error: _error});self.setState({result: _error.transactionHash});})
+        .on("receipt", (receipt) => {
+          this.setState({txHash: receipt.transactionHash});
+          //Stuff to do when tx confirms
+        });
+    
+      console.log(this.state.txHash);
+    };
+
+    return (
     <div>
-      {addr === undefined && (
+      {this.state.addr === undefined && (
           <div className="VRresults">
             <h2>WARNING!</h2>
             Injected web3 not connected to form!
           </div>
         )}
-     {addr > 0 && (
-      <form className="FMRform">
-        <h2>Transfer Asset</h2>
+      {this.state.addr > 0 && (
+        <form className="FMRform">
+        <h2>Force Modify Record</h2>
         Type:
         <input
           type="text"
           name="type"
           placeholder="Type"
           required
-          onChange={(e) => setType(e.target.value)}
+          onChange={(e) => this.setState({type: e.target.value})}
         />
         <br></br>
         Manufacturer:
@@ -69,7 +149,7 @@ function ForceModifyRecord() {
           name="manufacturer"
           placeholder="Manufacturer"
           required
-          onChange={(e) => setManufacturer(e.target.value)}
+          onChange={(e) => this.setState({manufacturer: e.target.value})}
         />
         <br></br>
         Model:
@@ -78,7 +158,7 @@ function ForceModifyRecord() {
           name="model"
           placeholder="Model"
           required
-          onChange={(e) => setModel(e.target.value)}
+          onChange={(e) => this.setState({model: e.target.value})}
         />
         <br></br>
         Serial:
@@ -87,7 +167,7 @@ function ForceModifyRecord() {
           name="serial"
           placeholder="Serial Number"
           required
-          onChange={(e) => setSerial(e.target.value)}
+          onChange={(e) => this.setState({serial: e.target.value})}
         />
         <br></br>
         New First Name:
@@ -96,7 +176,7 @@ function ForceModifyRecord() {
           name="first"
           placeholder="New First name"
           required
-          onChange={(e) => setNewFirst(e.target.value)}
+          onChange={(e) => this.setState({newFirst: e.target.value})}
         />
         <br></br>
         New Middle Name:
@@ -105,7 +185,7 @@ function ForceModifyRecord() {
           name="middle"
           placeholder="New Middle name"
           required
-          onChange={(e) => setNewMiddle(e.target.value)}
+          onChange={(e) => this.setState({newMiddle: e.target.value})}
         />
         <br></br>
         New Surname:
@@ -114,7 +194,7 @@ function ForceModifyRecord() {
           name="surname"
           placeholder="New Surname"
           required
-          onChange={(e) => setNewSurname(e.target.value)}
+          onChange={(e) => this.setState({newSurname: e.target.value})}
         />
         <br></br>
         New ID:
@@ -123,7 +203,7 @@ function ForceModifyRecord() {
           name="id"
           placeholder="New ID"
           required
-          onChange={(e) => setNewID(e.target.value)}
+          onChange={(e) => this.setState({newId: e.target.value})}
         />
         <br></br>
         New Password:
@@ -132,28 +212,35 @@ function ForceModifyRecord() {
           name="secret"
           placeholder="New Password"
           required
-          onChange={(e) => setNewSecret(e.target.value)}
+          onChange={(e) => this.setState({newSecret: e.target.value})}
         />
         <br></br>
-        <input type="button" value="Modify Record" onClick={_forceModifyRecord} />
-      </form>)}
-
-      {txHash > 0 && ( //conditional rendering
+        <input type="button" value="Force Modify" onClick={_forceModifyRecord} />
+      </form>
+      )}
+      {this.state.txHash > 0 && ( //conditional rendering
         <div className="VRresults">
-          No Errors Reported
+          {this.state.error !== undefined && (
+            <div>
+              ERROR! Please check etherscan
+              <br></br>
+              {this.state.error.message}
+            </div>
+            )}
+            {this.state.error === undefined && (<div> No Errors Reported </div>)}
           <br></br>
           <br></br>
           <a
-            href={"https://kovan.etherscan.io/tx/" + txHash}
+            href={"https://kovan.etherscan.io/tx/" + this.state.txHash}
             target="_blank"
             rel="noopener noreferrer"
           >
-            KOVAN Etherscan:{txHash}
+            KOVAN Etherscan:{this.state.txHash}
           </a>
         </div>
       )}
-      </div>
-  );
+    </div>
+  )}
 }
 
 export default ForceModifyRecord;
