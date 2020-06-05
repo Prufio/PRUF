@@ -6,7 +6,7 @@ import "./ERC721.sol";
 import "./Ownable.sol";
 
 
-contract AssetClasslicense is ERC721, Ownable {
+contract AssetClassToken is ERC721, Ownable {
     mapping(bytes32 => uint8) private registeredAdmins; // Authorized recorder database
 
     constructor() public ERC721("BulletProof Asset Class License", "BPXAC") {}

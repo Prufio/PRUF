@@ -6,7 +6,7 @@ import "./ERC721.sol";
 import "./Ownable.sol";
 
 
-contract AssetTokenlicense is ERC721, Ownable {
+contract AssetToken is ERC721, Ownable {
     mapping(bytes32 => uint8) private registeredAdmins; // Authorized recorder database
 
     constructor() public ERC721("BulletProof Asset Token", "BPXA") {}
@@ -23,39 +23,44 @@ contract AssetTokenlicense is ERC721, Ownable {
     }
 
     function mintAssetToken(
-        address reciepientAddress,
-        uint256 assetClass,
-        string calldata tokenURI
+        address _reciepientAddress,
+        bytes32 _idxHash,
+        string calldata _tokenURI
     ) external isAdmin returns (uint256) {
-        _safeMint(reciepientAddress, assetClass);
-        _setTokenURI(assetClass, tokenURI);
+        uint256 tokenId = uint256(_idxHash);
+        _safeMint(_reciepientAddress, tokenId);
+        _setTokenURI(tokenId, _tokenURI);
 
-        return assetClass;
-    }
-
-    function burnAssetToken(uint256 tokenId) external isAdmin {
-        _burn(tokenId);
+        return tokenId;
     }
 
     function transferAssetToken(
         address from,
         address to,
-        uint256 tokenId
-    ) external isAdmin {
+        bytes32 _idxHash
+    ) external onlyOwner {
+        uint256 tokenId = uint256(_idxHash);
         safeTransferFrom(from, to, tokenId);
-    } //sets rgtHash in storage to "0xFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF"
+    }
 
-    //then transfers token
+    function reMintAssetToken(
+        address _reciepientAddress,
+        bytes32 _idxHash,
+        string calldata _tokenURI
+    ) external isAdmin returns (uint256) {
+        uint256 tokenId = uint256(_idxHash);
+        require(_exists(tokenId), "Cannot Remint nonexistant token");
+        _burn(tokenId);
+        _safeMint(_reciepientAddress, tokenId);
+        _setTokenURI(tokenId, _tokenURI);
 
-    // only listens to minter contract to mint
-    // only listents to minter contract to burn
-    // _safeTransferFrom must be intenal not external,
-    ///OO Functions
+        return tokenId;
+    }
 
-    function OO_addAdmin(address _authAddr, uint8 _addAdmin)
-        external
-        onlyOwner
-    {
+    function OO_addAdmin(
+        address _authAddr,
+        uint8 _addAdmin // must make this indelible / permenant???????? SECURITY / trustless goals
+    ) external onlyOwner {
         bytes32 addrHash = keccak256(abi.encodePacked(_authAddr));
 
         require(_addAdmin == 1, "Admin not added");

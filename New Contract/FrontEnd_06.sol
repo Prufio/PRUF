@@ -4,18 +4,26 @@ pragma solidity ^0.6.2;
 import "./PullPayment.sol";
 import "./ERC721/IERC721Receiver.sol";
 
-interface ACtokenInterface {
-    //function ownerOf(uint256) external view returns (address);
-    //function mint(uint256) external view returns (address);
-    //function transfer(uint256,address) external view returns (address);
-    function safeTransferFrom(address from, address to, uint256 tokenId) external;
+
+interface AssetClassTokenInterface {
+    function ownerOf(uint256) external view returns (address);
+
+    function transferAssetClassToken(
+        address from,
+        address to,
+        bytes32 idxHash
+    ) external;
 }
 
-interface assetTokenInterface {
-    //function ownerOf(uint256) external view returns (address);
-    //function mint(uint256) external view returns (address);
-    //function transfer(uint256,address) external view returns (address);
+
+interface AssetTokenInterface {
+    function transferAssetToken(
+        address from,
+        address to,
+        bytes32 idxHash
+    ) external;
 }
+
 
 interface StorageInterface {
     function newRecord(
@@ -110,7 +118,52 @@ contract FrontEnd is PullPayment, Ownable, IERC721Receiver {
 
     event REPORT(string _msg);
 
+    address assetClassTokenContractAddress;
+    AssetClassTokenInterface private AssetClassTokenContract;
+
+    address assetTokenContractAddress;
+    AssetTokenInterface private AssetTokenContract;
+
     // --------------------------------------ADMIN FUNCTIONS--------------------------------------------//
+
+    function OO_setAssetClassTokenAddress(address _contractAddress)
+        external
+        onlyOwner
+    {
+        require(_contractAddress != address(0), "Invalid contract address");
+        assetClassTokenContractAddress = _contractAddress;
+        AssetClassTokenContract = AssetClassTokenInterface(_contractAddress);
+    }
+
+    function OO_setAssetTokenAddress(address _contractAddress)
+        external
+        onlyOwner
+    {
+        require(_contractAddress != address(0), "Invalid contract address");
+        assetTokenContractAddress = _contractAddress;
+        AssetTokenContract = AssetTokenInterface(_contractAddress);
+    }
+
+    function tranferAssetToken(address _to, bytes32 _idxHash)
+        external
+        virtual
+        onlyOwner
+    {
+        AssetTokenContract.transferAssetToken(address(this), _to, _idxHash);
+    }
+
+    function transferAssetClassToken(address _to, bytes32 _idxHash)
+        external
+        virtual
+        onlyOwner
+    {
+        AssetClassTokenContract.transferAssetClassToken(
+            address(this),
+            _to,
+            _idxHash
+        );
+    }
+
     /*
      * @dev Set storage contract to interface with
      */
@@ -133,7 +186,12 @@ contract FrontEnd is PullPayment, Ownable, IERC721Receiver {
 
     //--------------------------------------External functions--------------------------------------------//
 
-    function onERC721Received(address, address, uint256, bytes calldata) external virtual override returns (bytes4) {
+    function onERC721Received(
+        address,
+        address,
+        uint256,
+        bytes calldata
+    ) external virtual override returns (bytes4) {
         return this.onERC721Received.selector;
     }
 
