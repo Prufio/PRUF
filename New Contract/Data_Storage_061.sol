@@ -306,7 +306,7 @@ contract Storage is Ownable {
         uint256 assetTokenID = uint256(_idxHash); //tokenID set to the uint256 of the supplied IDX for token verification
         uint256 assetClass256 = uint256(_assetClass);
 
-        require( //check that user is registered type 1 for asset class or ac>10000
+        require( //check that user is registered type 1 for asset class or ac>10000 //change to 1000???????????????!!!!!!!!!!!!!!!!!!!!!!
             (_assetClass >= 10000) ||
             ((registeredUsers[userHash].userType == 1) &&
             (_assetClass == registeredUsers[userHash].authorizedAssetClass)),
@@ -322,10 +322,10 @@ contract Storage is Ownable {
                 (ACtokenContract.ownerOf(assetClass256) == message_origin),
             "NR:ERR-Contract not authorized in asset class"
         );
-        require( //require message sender is authorized as minter
+        require( //require message sender is authorized as MasterMinter ///////////////BROKEN FOR SELF MINTING FIX!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
                 (registeredUsers[keccak256(abi.encodePacked(msg.sender))]
                     .userType == 255) || (owner() == msg.sender),
-            "address does not belong to Minter"
+            "address does not belong to Special (BP) Minter"
         );
         require(
             database[_idxHash].rightsHolder == 0,
@@ -372,7 +372,7 @@ contract Storage is Ownable {
         uint8 forceCount = _forceCount;
         address message_origin = _message_origin;
         bytes32 userHash = keccak256(abi.encodePacked(message_origin));
-        uint256 assetTokenID = uint256(idxHash); //tokenID set to the uint256 of the rightsHolder addrHash at _idx
+        uint256 assetTokenID = uint256(idxHash); //tokenID set to the uint256 of the  _idx Hash
         uint256 assetClass256 = uint256(database[idxHash].assetClass);
         uint8 senderType = registeredUsers[userHash].userType;
 
@@ -448,7 +448,7 @@ contract Storage is Ownable {
     ) external exists(_idxHash) unlocked(_idxHash) notTimeLocked(_idxHash) {
         bytes32 idxHash = _idxHash;
         bytes32 userHash = keccak256(abi.encodePacked(_message_origin));
-        uint256 assetTokenID = uint256(idxHash); //tokenID set to the uint256 of the rightsHolder addrHash at _idx
+        uint256 assetTokenID = uint256(idxHash); //tokenID set to the uint256 of the  _idx Hash
         uint256 assetClass256 = uint256(database[idxHash].assetClass);
         uint8 senderType = registeredUsers[userHash].userType;
 
