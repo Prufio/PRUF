@@ -107,8 +107,8 @@ interface AssetTokenInterface {
     ) external;
 
     function transferAssetToken(
-        address _from,
-        address _to,
+        address from,
+        address to,
         bytes32 idxHash
     ) external;
 }
@@ -117,38 +117,38 @@ interface AssetTokenInterface {
 interface AssetClassTokenInterface {
     function mintAssetClassToken(
         address reciepientAddress,
-        bytes32 idxHash,
+        uint256 tokenId,
         string calldata _tokenURI
     ) external;
 
     function reMintAssetClassToken(
         address reciepientAddress,
-        bytes32 idxHash,
+        uint256 tokenId,
         string calldata _tokenURI
     ) external;
 
     function transferAssetClassToken(
-        address _from,
-        address _to,
-        bytes32 idxHash
+        address from,
+        address to,
+        uint256 tokenId
     ) external;
 }
 
 
 contract AssetMinter is IERC721Receiver, Ownable {
-    address internal mainWallet;
 
-    StorageInterface private Storage; // Set up external contract interface
+    address private mainWallet;
+    address private storageAddress;
+    address private assetClassTokenContractAddress;
+    address private assetTokenContractAddress;
 
-    address storageAddress;
-
-    address assetClassTokenContractAddress;
+    StorageInterface private Storage;
     AssetClassTokenInterface private AssetClassTokenContract;
-
-    address assetTokenContractAddress;
     AssetTokenInterface private AssetTokenContract;
 
-    ///Admin Functions
+    /*
+     * @dev Admin functions
+     */
     function OO_setAssetClassTokenAddress(address _contractAddress)
         external
         onlyOwner
@@ -182,14 +182,31 @@ contract AssetMinter is IERC721Receiver, Ownable {
     /*
      * @dev Set wallet for contract to direct payments to
      */
-
     function _setMainWallet(address _addr) external onlyOwner {
         mainWallet = _addr;
     }
 
     /*
      * @dev Token / storage interactions --------------------FINISH WITH STORAGE INTEGRATIONQ!!!!!!!!!!!!!!!
+     asset class < 30000 dont need asset tokens
+     asset classes 60000 + not permitted
+     asset class tokens are payable at 1 eth
+     create new record > 30k mints a coresponding asset class token
+
+     functionality in minter for recovering lost assets and re-minting lost tokens.
+     When an asset is generated and token is minted, a user can enter an optional passphrase.
+     the paassphrase generates a hash H (off-chain) which is stored in a map (onchain), mapped to the tokenID / asset IDXhash.
+     when re-minting is requested, the user must supply raw text that generates (in contract) an identical hash H.
+     If H=H, the existing record @idxhash is overwritten, and the token @TokenID is burned, and a new one @tokenID is sent to the requester address.
+
      */
+
+    function newRecord{}
+    function burnRecord{} ////////////????????
+    function reMintRecord{} //////////requires a secret in rgtHash, only for AC>30k, sets secret to 0XFF...
+    function setSecret{} //sets RightsHolder if you hold the token (AC>30k)  ??place in storage? mod to FMR?
+
+
     function mintAssetToken(
         address _to,
         bytes32 _idxHash,
@@ -208,18 +225,18 @@ contract AssetMinter is IERC721Receiver, Ownable {
 
     function mintAssetClassToken(
         address _to,
-        bytes32 _idxHash,
+        uint256 _tokenId,
         string memory _tokenURI
     ) private {
-        AssetClassTokenContract.mintAssetClassToken(_to, _idxHash, _tokenURI);
+        AssetClassTokenContract.mintAssetClassToken(_to, _tokenId, _tokenURI);
     }
 
     function reMintAssetClassToken(
         address _to,
-        bytes32 _idxHash,
+        uint256 _tokenId,
         string memory _tokenURI
     ) private {
-        AssetClassTokenContract.mintAssetClassToken(_to, _idxHash, _tokenURI);
+        AssetClassTokenContract.mintAssetClassToken(_to, _tokenId, _tokenURI);
     }
 
     function tranferAssetToken(address _to, bytes32 _idxHash)
@@ -230,7 +247,7 @@ contract AssetMinter is IERC721Receiver, Ownable {
         AssetTokenContract.transferAssetToken(address(this), _to, _idxHash);
     }
 
-    function transferAssetClassToken(address _to, bytes32 _idxHash)
+    function transferAssetClassToken(address _to, uint256 _tokenId)
         external
         virtual
         onlyOwner
@@ -238,7 +255,7 @@ contract AssetMinter is IERC721Receiver, Ownable {
         AssetClassTokenContract.transferAssetClassToken(
             address(this),
             _to,
-            _idxHash
+            _tokenId
         );
     }
 
