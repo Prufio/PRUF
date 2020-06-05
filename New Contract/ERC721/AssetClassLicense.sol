@@ -2,13 +2,14 @@
 
 pragma solidity ^0.6.0;
 
-import "./ERC721A.sol";
+import "./ERC721.sol";
 import "./Ownable.sol";
 
-contract AClicense is ERC721A, Ownable {
-    constructor() public ERC721A("BulletProof Asset Token", "BPXA") {}
 
-    function mintNewtokenA(
+contract AssetClasslicense is ERC721, Ownable {
+    constructor() public ERC721("BulletProof Asset Class License", "BPXAC") {}
+
+    function mintNewtokenAC(
         address reciepientAddress,
         uint256 assetClass,
         string calldata tokenURI
@@ -19,11 +20,11 @@ contract AClicense is ERC721A, Ownable {
         return assetClass;
     }
 
-    function burnTokenA(uint256 tokenId) external onlyOwner {
+    function burnTokenAC(uint256 tokenId) external onlyOwner {
         _burn(tokenId);
     }
 
-    function transferAssetA(
+    function transferAssetAC(
         address from,
         address to,
         uint256 tokenId
@@ -35,5 +36,4 @@ contract AClicense is ERC721A, Ownable {
     // only listens to minter contract to mint
     // only listents to minter contract to burn
     // _safeTransferFrom must be intenal not external,
-
 }
