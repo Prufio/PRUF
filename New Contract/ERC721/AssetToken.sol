@@ -7,9 +7,11 @@ import "./Ownable.sol";
 
 
 contract AssetTokenlicense is ERC721, Ownable {
+    mapping(bytes32 => uint8) private registeredAdmins; // Authorized recorder database
+
     constructor() public ERC721("BulletProof Asset Token", "BPXA") {}
 
-    mapping(bytes32 => uint8) private registeredAdmins; // Authorized recorder database
+    event REPORT(string _msg);
 
     modifier isAdmin() {
         require(
@@ -20,7 +22,7 @@ contract AssetTokenlicense is ERC721, Ownable {
         _;
     }
 
-    function mintNewtokenA(
+    function mintAssetToken(
         address reciepientAddress,
         uint256 assetClass,
         string calldata tokenURI
@@ -31,11 +33,11 @@ contract AssetTokenlicense is ERC721, Ownable {
         return assetClass;
     }
 
-    function burnTokenA(uint256 tokenId) external isAdmin {
+    function burnAssetToken(uint256 tokenId) external isAdmin {
         _burn(tokenId);
     }
 
-    function transferAssetA(
+    function transferAssetToken(
         address from,
         address to,
         uint256 tokenId
@@ -49,8 +51,6 @@ contract AssetTokenlicense is ERC721, Ownable {
     // only listents to minter contract to burn
     // _safeTransferFrom must be intenal not external,
     ///OO Functions
-
-    event REPORT(string _msg);
 
     function OO_addAdmin(address _authAddr, uint8 _addAdmin)
         external

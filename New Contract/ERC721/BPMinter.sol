@@ -7,15 +7,15 @@ import "./Ownable.sol";
 
 
 interface erc721AC_tokenInterface {
-    function mintNewtokenAC(
+    function mintAssetClassToken(
         address reciepientAddress,
         uint256 assetClass,
         string calldata tokenURI
     ) external;
 
-    function burnTokenAC(uint256 tokenId) external;
+    function burnAssetClassToken(uint256 tokenId) external;
 
-    function transferAssetAC(
+    function transferAssetClassToken(
         address from,
         address to,
         uint256 tokenId
@@ -24,15 +24,15 @@ interface erc721AC_tokenInterface {
 
 
 interface erc721A_tokenInterface {
-    function mintNewTokenA(
+    function mintAssetToken(
         address reciepientAddress,
         uint256 assetClass,
         string calldata tokenURI
     ) external;
 
-    function burnTokenA(uint256 tokenId) external;
+    function burnAssetToken(uint256 tokenId) external;
 
-    function transferAssetA(
+    function transferAssetToken(
         address from,
         address to,
         uint256 tokenId
@@ -82,7 +82,7 @@ contract BPMinter is IERC721Receiver, Ownable {
         uint256 tokenId,
         string calldata tokenURI
     ) external virtual {
-        erc721AC_tokenContract.mintNewtokenAC(to, tokenId, tokenURI);
+        erc721AC_tokenContract.mintAssetClassToken(to, tokenId, tokenURI);
     }
 
     function transferAC(
@@ -90,11 +90,11 @@ contract BPMinter is IERC721Receiver, Ownable {
         address to,
         uint256 tokenId
     ) external virtual {
-        erc721AC_tokenContract.transferAssetAC(from, to, tokenId);
+        erc721AC_tokenContract.transferAssetClassToken(from, to, tokenId);
     }
 
     function burnAC(uint256 tokenId) external virtual {
-        erc721AC_tokenContract.burnTokenAC(tokenId);
+        erc721AC_tokenContract.burnAssetClassToken(tokenId);
     }
 
     ///Atoken Functions
@@ -103,7 +103,7 @@ contract BPMinter is IERC721Receiver, Ownable {
         uint256 tokenId,
         string calldata tokenURI
     ) external virtual {
-        erc721A_tokenContract.mintNewTokenA(to, tokenId, tokenURI);
+        erc721A_tokenContract.mintAssetToken(to, tokenId, tokenURI);
     }
 
     function transferA(
@@ -111,10 +111,10 @@ contract BPMinter is IERC721Receiver, Ownable {
         address to,
         uint256 tokenId
     ) external virtual {
-        erc721A_tokenContract.transferAssetA(from, to, tokenId);
+        erc721A_tokenContract.transferAssetToken(from, to, tokenId);
     }
 
     function burnA(uint256 tokenId) external virtual {
-        erc721A_tokenContract.burnTokenA(tokenId);
+        erc721A_tokenContract.burnAssetToken(tokenId);
     }
 }
