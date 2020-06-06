@@ -3,7 +3,7 @@ import returnStorageAbi from "./stor_abi";
 import returnFrontEndAbi from "./front_abi";
 import Web3 from "web3";
 
-class AddNote extends React.Component {
+class AddNote extends Component {
 
   constructor(props){
     super(props);

@@ -78,7 +78,7 @@ class ModifyRecordStatus extends React.Component {
 
   componentWillUnmount() { 
     console.log("unmounting component")
-    window.removeEventListener("accountListener", this.acctChanger())
+    document.removeEventListener("accountListener", this.acctChanger())
 }
 
   render(){

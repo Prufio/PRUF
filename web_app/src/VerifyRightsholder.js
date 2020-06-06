@@ -1,172 +1,239 @@
-import React, { useState } from "react";
-import Web3Listener from "./Web3Listener";
+import React, { Component } from "react";
+import returnStorageAbi from "./stor_abi";
+import returnFrontEndAbi from "./front_abi";
 import Web3 from "web3";
 
-function VerifyRightsholder() {
-  var web3 = require("web3");
-  web3 = new Web3(web3.givenProvider);
-  web3.eth.getAccounts().then((e) => setAddr(e[0]));
-  let storage = Web3Listener("storage");
+class VerifyRightHolder extends Component {
 
-  var [txHash, setTxHash] = useState("");
-  var [addr, setAddr] = useState("");
-  var [error, setError] = useState(undefined);
+  constructor(props){
+    super(props);
 
+    this.acctChanger = async () => {
+    const ethereum = window.ethereum;
+    const self = this;
+    var _web3 = require("web3");
+    _web3 = new Web3(_web3.givenProvider);
+      ethereum.on("accountsChanged", function(accounts) {
+      _web3.eth.getAccounts().then((e) => self.setState({addr: e[0]}));
+    });
+    }
 
-  var [type, setType] = useState("");
-  var [manufacturer, setManufacturer] = useState("");
-  var [model, setModel] = useState("");
-  var [serial, setSerial] = useState("");
+    //Component state declaration
 
-  var [first, setFirst] = useState("");
-  var [middle, setMiddle] = useState("");
-  var [surname, setSurname] = useState("");
-  var [id, setID] = useState("");
-  var [secret, setSecret] = useState("");
+    this.state = {
+      addr: "",
+      error: undefined,
+      error1: undefined,
+      result: "",
+      result1: "",
+      AssetClass: "",
+      CountDownStart: "",
+      ipfs1: "",
+      txHash: "",
+      type: "",
+      manufacturer: "",
+      model: "",
+      serial: "",
+      first: "",
+      middle: "",
+      surname: "",
+      id: "",
+      secret: "",
+      web3: null,
+      frontend: "",
+      storage: ""
+    }
 
-  var [result, setResult] = useState();
+  }
 
-  console.log("addr: ", addr);
+  componentDidMount() {
+    console.log("component mounted")
+    var _web3 = require("web3");
+    _web3 = new Web3(_web3.givenProvider);
+    this.setState({web3: _web3});
+    _web3.eth.getAccounts().then((e) => this.setState({addr: e[0]}));
+    var _frontend_addr = "0x9Ef2BBF052A5b61eBD1452d48B515BE7659a200B";
+    
+    var _storage_addr = "0x926c75761f8e68133c4A7140Bd079ce65A935ad0";
 
-  const _verify = () => {
-    var idxHash = web3.utils.soliditySha3(type, manufacturer, model, serial);
-    var rgtRaw = web3.utils.soliditySha3(first, middle, surname, id, secret);
-    var rgtHash = web3.utils.soliditySha3(idxHash, rgtRaw);
+    const frontEnd_abi = returnFrontEndAbi();
+    const storage_abi = returnStorageAbi();
 
-    console.log("idxHash", idxHash);
-    console.log("New rgtRaw", rgtRaw);
-    console.log("New rgtHash", rgtHash);
+    const _frontend = new _web3.eth.Contract(
+    frontEnd_abi,
+    _frontend_addr
+    );
 
-       storage.methods
-      .blockchainVerifyRightsHolder(idxHash, rgtHash)
-      .send({ from: addr})
-      .on("receipt", (receipt) => {
-        setTxHash(receipt.transactionHash);
-        console.log(txHash);
-      }); 
+    const _storage = new _web3.eth.Contract(
+    storage_abi, 
+    _storage_addr
+    );
+    this.setState({frontend: _frontend})
+    this.setState({storage: _storage})
 
-    storage.methods
-      ._verifyRightsHolder(idxHash, rgtHash)
-      .call({ from: addr }, function(error, _result){
-        if(error){setError(error)}
-        else{setResult(_result)}
-  });
-  };
+    document.addEventListener("accountListener", this.acctChanger());
 
-  return (
-    <div>
-      {addr === undefined && (
-          <div className="VRresults">
-            <h2>WARNING!</h2>
-            Injected web3 not connected to form!
-          </div>
-        )}
-      {addr > 0 && (
-      <form className="VRform">
-        <h2>Verify Provenance</h2>
-        Type:
-      <input
-        type="text"
-        name="type"
-        placeholder="Type"
-        required
-        onChange={(e) => setType(e.target.value)} 
-      />
-      <br></br>
-      Manufacturer:
-      <input
-        type="text"
-        name="manufacturer"
-        placeholder="Manufacturer"
-        required
-        onChange={(e) => setManufacturer(e.target.value)} 
-      />
-      <br></br>
-      Model:
-      <input
-        type="text"
-        name="model"
-        placeholder="Model"
-        required
-        onChange={(e) => setModel(e.target.value)} 
-      />
-      <br></br>
-      Serial:
-      <input
-        type="text"
-        name="serial"
-        placeholder="Serial Number"
-        required
-        onChange={(e) => setSerial(e.target.value)}
-      />
-      <br></br>
-      First Name:
-      <input
-        type="text"
-        name="first"
-        placeholder="First name"
-        required
-        onChange={(e) => setFirst(e.target.value)}
-      />
-      <br></br>
-      Middle Name:
-      <input
-        type="text"
-        name="middle"
-        placeholder="Middle name"
-        required
-        onChange={(e) => setMiddle(e.target.value)}
-      />
-      <br></br>
-      Surname:
-      <input
-        type="text"
-        name="surname"
-        placeholder="Surname"
-        required
-        onChange={(e) => setSurname(e.target.value)}
-      />
-      <br></br>
-      ID:
-      <input
-        type="text"
-        name="id"
-        placeholder="ID"
-        required
-        onChange={(e) => setID(e.target.value)}
-      />
-      <br></br>
-      Password:
-      <input
-        type="text"
-        name="secret"
-        placeholder="Secret"
-        required
-        onChange={(e) => setSecret(e.target.value)}
-      />
-        <br></br>
-        <input
-          type="button"
-          value="Verify"
-          onClick={_verify}
-        />
-      </form>)}
-      {error !== undefined && (
-        <div className="RRresults">
-          ERROR: {error.message}
-          <br></br>
-        </div>
-      )}
-      {txHash > 0 && ( //conditional rendering
-        <div className="VRresults">
-          {result === "170"? ('Match Confirmed') : ('No match found')}
-          <br></br>
-          <br></br>
-          <a href={"https://kovan.etherscan.io/tx/"+txHash} target="_blank" rel="noopener noreferrer">KOVAN Etherscan:{txHash}</a>
-        </div>
-      )}
-    </div>
-  );
+  }
+
+  componentWillUnmount() { 
+    console.log("unmounting component")
+    document.removeEventListener("accountListener", this.acctChanger())
 }
 
-export default VerifyRightsholder;
+  render(){
+    const self = this;
+
+    async function checkExists(idxHash) { 
+      await self.state.storage.methods
+        .retrieveRecord(idxHash)
+        .call({ from: self.state.addr }, function(_error, _result){
+          if(_error){self.setState({error1: _error});self.setState({result1: 0});alert("WARNING: Record DOES NOT EXIST! Reject in metamask and review asset info fields.")}
+          else{self.setState({result1: _result})}
+          console.log("check debug, _result, _error: ", _result, _error)
+    });
+  }
+
+
+    const _verify = () => {
+      var idxHash = this.state.web3.utils.soliditySha3(this.state.type, this.state.manufacturer, this.state.model, this.state.serial);
+      var rgtRaw = this.state.web3.utils.soliditySha3(this.state.first, this.state.middle, this.state.surname, this.state.id, this.state.secret);
+      var rgtHash = this.state.web3.utils.soliditySha3(idxHash, rgtRaw);
+
+      console.log("idxHash", idxHash);
+      console.log("addr: ", this.state.addr);
+
+      checkExists(idxHash);
+
+      this.state.storage.methods
+      ._verifyRightsHolder(idxHash, rgtHash)
+      .call({ from: this.state.addr }, function(_error, _result){
+        if(_error){self.setState({error: _error});self.setState({result: 0})}
+        else{self.setState({result: _result});self.setState({error: undefined})}
+    });
+
+    this.state.storage.methods
+      .blockchainVerifyRightsHolder(idxHash, rgtHash)
+      .send({ from: this.state.addr})
+      .on("receipt", (receipt) => {
+        this.setState({txHash: receipt.transactionHash});
+        console.log(this.state.txHash);
+      }); 
+    
+      console.log(this.state.result);
+    }
+    return (
+      <div>
+        {this.state.addr === undefined && (
+            <div className="VRresults">
+              <h2>WARNING!</h2>
+              Injected web3 not connected to form!
+            </div>
+          )}
+        {this.state.addr > 0 && (
+        <form className="VRform">
+          <h2>Verify Provenance</h2>
+          Type:
+            <input
+              type="text"
+              name="type"
+              placeholder="Type"
+              required
+              onChange={(e) => this.setState({type: e.target.value})}
+            />
+            <br></br>
+            Manufacturer:
+            <input
+              type="text"
+              name="manufacturer"
+              placeholder="Manufacturer"
+              required
+              onChange={(e) => this.setState({manufacturer: e.target.value})}
+            />
+            <br></br>
+            Model:
+            <input
+              type="text"
+              name="model"
+              placeholder="Model"
+              required
+              onChange={(e) => this.setState({model: e.target.value})}
+            />
+            <br></br>
+            Serial:
+            <input
+              type="text"
+              name="serial"
+              placeholder="Serial Number"
+              required
+              onChange={(e) => this.setState({serial: e.target.value})}
+            />
+            <br></br>
+            First Name:
+            <input
+              type="text"
+              name="first"
+              placeholder="First name"
+              required
+              onChange={(e) => this.setState({first: e.target.value})}
+            />
+            <br></br>
+            Middle Name:
+            <input
+              type="text"
+              name="middle"
+              placeholder="Middle name"
+              required
+              onChange={(e) => this.setState({middle: e.target.value})}
+            />
+            <br></br>
+            Surname:
+            <input
+              type="text"
+              name="surname"
+              placeholder="Surname"
+              required
+              onChange={(e) => this.setState({surname: e.target.value})}
+            />
+            <br></br>
+            ID:
+            <input
+              type="text"
+              name="id"
+              placeholder="ID"
+              required
+              onChange={(e) => this.setState({id: e.target.value})}
+            />
+            <br></br>
+            Password:
+            <input
+              type="text"
+              name="secret"
+              placeholder="Secret"
+              required
+              onChange={(e) => this.setState({secret: e.target.value})}
+            />
+              <br></br>
+              <input
+                type="button"
+                value="Verify"
+                onClick={_verify}
+              />
+            </form>)}
+            {this.state.error !== undefined && (
+              <div className="RRresults">
+                ERROR: {this.state.error.message}
+                <br></br>
+              </div>
+            )}
+            {this.state.txHash > 0 && ( //conditional rendering
+              <div className="VRresults">
+                {this.state.result === "170"? ('Match Confirmed') : ('No match found')}
+                <br></br>
+                <br></br>
+                <a href={"https://kovan.etherscan.io/tx/"+this.state.txHash} target="_blank" rel="noopener noreferrer">KOVAN Etherscan:{this.state.txHash}</a>
+              </div>
+            )}
+          </div>
+    )}
+  }
+export default VerifyRightHolder;
