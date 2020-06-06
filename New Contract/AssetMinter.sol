@@ -205,6 +205,8 @@ contract AssetMinter is IERC721Receiver, Ownable {
     function burnRecord{} ////////////????????
     function reMintRecord{} //////////requires a secret in rgtHash, only for AC>30k, sets secret to 0XFF...
     function setSecret{} //sets RightsHolder if you hold the token (AC>30k)  ??place in storage? mod to FMR?
+    function safeTransferAssetToken// when an asset token is transferrred, it changes the rgt in storage to a "null"
+                                    // value so that the old owner cannot remeint the token after the txfr
 
 
     function mintAssetToken(
