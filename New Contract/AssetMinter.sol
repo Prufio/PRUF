@@ -192,24 +192,69 @@ contract AssetMinter is IERC721Receiver, Ownable {
      asset classes 60000 + not permitted
      asset class tokens are payable at 1 eth
      create new record > 30k mints a coresponding asset class token
-
-     functionality in minter for recovering lost assets and re-minting lost tokens.
-     When an asset is generated and token is minted, a user can enter an optional passphrase.
-     the paassphrase generates a hash H (off-chain) which is stored in a map (onchain), mapped to the tokenID / asset IDXhash.
-     when re-minting is requested, the user must supply raw text that generates (in contract) an identical hash H.
-     If H=H, the existing record @idxhash is overwritten, and the token @TokenID is burned, and a new one @tokenID is sent to the requester address.
-
      */
 
-    function newRecord{}
-    function burnRecord{} ////////////????????
-    function reMintRecord{} //////////requires a secret in rgtHash, only for AC>30k, sets secret to 0XFF...
-    function setSecret{} //sets RightsHolder if you hold the token (AC>30k)  ??place in storage? mod to FMR?
-    function safeTransferAssetToken// when an asset token is transferrred, it changes the rgt in storage to a "null"
-                                    // value so that the old owner cannot remeint the token after the txfr
+    //magic numbers
+    // 0x0 is not allowed, record with idxHash == 0x0 is considered nonexistant
+    // 0xFF.... is not usable, but is settable to a usable rgtHash by the token holder only
+    // 0x0000000...1 is locked and cannot be reminted, rgtholder cannot be changed.
+
+    function newRecord{}// creates new record, 
+                        // mints token if AC>30k . 
+                        // caller must hold ACtoken for specified assetclass or AC>60k
+                         IF NOT DIRECT INTERACTION WITH MINTER, CONTRACT CAN MITM HIS RGTHASH PASSWORD
+                        // record must not exist
+                        // When a tokenized asset >30k is generated a user can enter an optional passphrase as the rgtHash, 
+                        // or the rgtHash can be set to 0xFF.... (changable in the future)or the rgtHash can be set to 0x00...1,
+                        // which prevents rgthash change or reminting
+                        // The paassphrase generates a hash H (off-chain) which is stored in the rgtHash mapped to the asset IDXhash.
+
+    function forceModifyAsset{} // Changes rightsHolder //setSecret?
+    IF NOT DIRECT INTERACTION WITH MINTER, CONTRACT CAN MITM HIS RGTHASH PASSWORD
+                                // caller must be authorized as a user if AC < 10k 
+                                // caller must hold assetToken if AC > 30k
+                                // Cannot be modified if rgtHash = 0x000...1 (tokenized asset locked and not remintable)
+    //!!!!!!!!!!!!!!!!!!!!!!!!! // ??place in storage? is this a modification to to FMR?
+
+    function reMintRecord{} // Mint a new token and generate a new record on an existing idxHash
+                            // Must be tokenized asset (>30k)
+                            // Caller must supply plaintext that will generate the existing rghtHash (secret)
+                            // burns existing token
+                            // issues a new token at tokenId = idxHash to calling address
+                            // set rgtHash to 0xFF
+                            // direct to minter
+
+    //function burnRecord{} //  sets rghtholder to 0x0, burns token if token exists. Only can be executed by token holder
+
+    function safeTransferToken{}    // if rgtHash != 0x00..1 
+                                    //set rgtHash to 0xFFFF.. (prevents reMint by old owner)
+                                    //else leave rgtHash 0x00...1
+                                    // caller must hold token or be operator or approved
+                                    // transfer token to new adress using safeTransfer
+     
+
+    
+    function assetImport{}  // brings an existing asset into a new asset class. 
+                            // passed messageOrigin address must hold the assetToken
+                            // import request must include the plaintext secret that generates the rgtHash 
+                            IF NOT DIRECT INTERACTION WITH MINTER, CONTRACT CAN STEAL HIS RGTHASH PASSWORD
+                            // if new AC < 30k burns token (asset classes < 30k have no token)
+                            // Requires that asset status is set to exportable (status 100?) 
+                            // caller must hold ACtoken for new assetClass 
+                            // not available > 60k (no ACtokens over 60k anyway)
 
 
-    function mintAssetToken(
+    function assetExport{}  // set asset status to exportable (100?)
+                            // caller must hold ACtoken for assetClass
+                            // If no token exists : creates a token at tokenId = idxHash that must have a secret rgtHash (generated clientside)
+                            IF NOT DIRECT INTERACTION WITH MINTER, CONTRACT CAN MITM HIS RGTHASH PASSWORD
+                            // how do protect from serbian bobs malicious contract for assets with no token?
+                            // 
+                    
+                 
+
+
+    function mintAssetToken(  //allow minting for existing assets
         address _to,
         bytes32 _idxHash,
         string memory _tokenURI
