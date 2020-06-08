@@ -1,5 +1,4 @@
 import React, { Component } from "react";
-import Web3Listener from "./Web3Listener";
 import returnStorageAbi from "./stor_abi";
 import returnFrontEndAbi from "./front_abi";
 import Web3 from "web3";
@@ -8,6 +7,17 @@ class NewRecord extends React.Component {
 
   constructor(props){
     super(props);
+
+    this.acctChanger = async () => {
+    const ethereum = window.ethereum;
+    const self = this;
+    var _web3 = require("web3");
+    _web3 = new Web3(_web3.givenProvider);
+      ethereum.on("accountsChanged", function(accounts) {
+      _web3.eth.getAccounts().then((e) => self.setState({addr: e[0]}));
+    });
+    }
+
     //Component state declaration
 
     this.state = {
@@ -34,33 +44,9 @@ class NewRecord extends React.Component {
     }
 
   }
-  /* var web3 = require("web3");
-  web3 = new Web3(web3.givenProvider);
-  web3.eth.getAccounts().then((e) => setAddr(e[0]));
-  var frontend = Web3Listener('frontend'); */
-
-/*   var [addr, setAddr] = useState("");
-  var [error, setError] = useState(undefined);
-  
-  var [AssetClass, setAssetClass] = useState("");
-  var [CountDownStart, setCountDownStart] = useState("");
-  var [Ipfs1, setIPFS1] = useState("");
-  var [txHash, setTxHash] = useState("");
-  var [type, setType] = useState("");
-  var [manufacturer, setManufacturer] = useState("");
-  var [model, setModel] = useState("");
-  var [serial, setSerial] = useState("");
-
-  var [first, setFirst] = useState("");
-  var [middle, setMiddle] = useState("");
-  var [surname, setSurname] = useState("");
-  var [id, setID] = useState("");
-  var [secret, setSecret] = useState(""); */
 
   componentDidMount() {
-
-    const ethereum = window.ethereum;
-    const self = this;
+    console.log("component mounted")
     var _web3 = require("web3");
     _web3 = new Web3(_web3.givenProvider);
     this.setState({web3: _web3});
@@ -84,13 +70,14 @@ class NewRecord extends React.Component {
     this.setState({frontend: _frontend})
     this.setState({storage: _storage})
 
-    window.addEventListener("load", async () => {  
-      ethereum.on("accountsChanged", function(accounts) {
-        _web3.eth.getAccounts().then((e) => self.setState({addr: e[0]}));
-      });
-    });
+    document.addEventListener("accountListener", this.acctChanger());
 
   }
+
+  componentWillUnmount() { 
+    console.log("unmounting component")
+    document.removeEventListener("accountListener", this.acctChanger())
+}
 
   render(){
     const self = this;
@@ -100,7 +87,7 @@ class NewRecord extends React.Component {
         .retrieveRecord(idxHash)
         .call({ from: self.state.addr }, function(_error, _result){
           if(_error){self.setState({error: _error});self.setState({result: 0})}
-          else{self.setState({result: _result});alert("WARNING: Record already exists, transaction will fail!")}
+          else{self.setState({result: _result});alert("WARNING: Record already exists! Reject in metamask and change asset info.")}
           console.log("check debug, _result, _error: ", _result, _error)
     });
 
@@ -118,19 +105,6 @@ class NewRecord extends React.Component {
       
       checkExists(idxHash);
 
-      /* this.state.storage.methods
-        .retrieveRecord(idxHash)
-        .call({ from: this.state.addr }, function(_error, _result){
-          if(_error){self.setState({error: _error})}
-          else{self.setState({result: _result})}
-          console.log("check debug, _result, _error: ", _result, _error)
-    }); */
-    
-/*       if(this.state.result != 0){
-        return(alert("Record already exists at index"))
-      } */
-
-     
       this.state.frontend.methods
         .$newRecord(idxHash, rgtHash, this.state.AssetClass, this.state.CountDownStart, this.state.web3.utils.soliditySha3(this.state.ipfs1))
         .send({ from: this.state.addr, value: this.state.web3.utils.toWei("0.01") }).on("error", function(_error){self.setState({error: _error});self.setState({result: _error.transactionHash});})
