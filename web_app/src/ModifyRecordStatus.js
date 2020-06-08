@@ -122,7 +122,7 @@ class ModifyRecordStatus extends React.Component {
 
       this.state.frontend.methods
         ._modStatus(idxHash, rgtHash, this.state.status)
-        .send({ from: this.state.addr, value: this.state.web3.utils.toWei("0.01") }).on("error", function(_error){self.setState({error: _error});self.setState({result: _error.transactionHash});})
+        .send({ from: this.state.addr}).on("error", function(_error){self.setState({error: _error});self.setState({result: _error.transactionHash});})
         .on("receipt", (receipt) => {
           this.setState({txHash: receipt.transactionHash});
           //Stuff to do when tx confirms
@@ -223,7 +223,7 @@ class ModifyRecordStatus extends React.Component {
             onChange={(e) => this.setState({secret: e.target.value})}
           />
           <br></br>
-          Stauts:
+          New Status:
           <input
             type="text"
             name="StatusField"

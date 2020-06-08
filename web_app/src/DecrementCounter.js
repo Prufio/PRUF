@@ -111,13 +111,14 @@ class DecrementCounter extends Component {
       console.log("New rgtRaw", rgtRaw);
       console.log("New rgtHash", rgtHash);
       console.log("addr: ", this.state.addr);
+      console.log("Data: ", this.state.CountDown)
       
       checkExists(idxHash);
       checkMatch(idxHash, rgtHash);
 
       this.state.frontend.methods
         ._decCounter(idxHash, rgtHash, this.state.CountDown)
-        .send({ from: this.state.addr, value: this.state.web3.utils.toWei("0.01") }).on("error", function(_error){self.setState({error: _error});self.setState({result: _error.transactionHash});})
+        .send({ from: this.state.addr}).on("error", function(_error){self.setState({error: _error});self.setState({result: _error.transactionHash});})
         .on("receipt", (receipt) => {
           this.setState({txHash: receipt.transactionHash});
           //Stuff to do when tx confirms

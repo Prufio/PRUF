@@ -110,6 +110,7 @@ class ModifyDescription extends React.Component {
       var idxHash = this.state.web3.utils.soliditySha3(this.state.type, this.state.manufacturer, this.state.model, this.state.serial);
       var rgtRaw = this.state.web3.utils.soliditySha3(this.state.first, this.state.middle, this.state.surname, this.state.id, this.state.secret);
       var rgtHash = this.state.web3.utils.soliditySha3(idxHash, rgtRaw);
+      var _ipfs1 = this.state.web3.utils.soliditySha3(this.state.ipfs1)
   
       console.log("idxHash", idxHash);
       console.log("New rgtRaw", rgtRaw);
@@ -120,8 +121,8 @@ class ModifyDescription extends React.Component {
       checkMatch(idxHash, rgtHash);
 
       this.state.frontend.methods
-        ._modIpfs1(idxHash, rgtHash, this.state.web3.utils.soliditySha3(this.state.ipfs1))
-        .send({ from: this.state.addr, value: this.state.web3.utils.toWei("0.01") }).on("error", function(_error){self.setState({error: _error});self.setState({result: _error.transactionHash});})
+        ._modIpfs1(idxHash, rgtHash, _ipfs1)
+        .send({ from: this.state.addr}).on("error", function(_error){self.setState({error: _error});self.setState({result: _error.transactionHash});})
         .on("receipt", (receipt) => {
           this.setState({txHash: receipt.transactionHash});
           //Stuff to do when tx confirms
