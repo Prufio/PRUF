@@ -99,8 +99,6 @@ contract Storage is Ownable {
     modifier userAuth(bytes32 _senderHash, bytes32 _idxHash) {
         uint8 senderType = registeredUsers[_senderHash].userType;
 
-        // uint256 tokenID = uint256(database[_idxHash].rightsHolder); //tokenID set to the uint256 of the rightsHolder hash at _idx
-
         require(
             (senderType == 1) ||
                 (senderType == 9),
@@ -112,6 +110,7 @@ contract Storage is Ownable {
                 registeredUsers[_senderHash].authorizedAssetClass),
             "MOD-UA-User not registered for asset type"
         );
+        _;
     }
 
     /*
@@ -119,8 +118,7 @@ contract Storage is Ownable {
      */
     modifier unlocked(bytes32 _idxHash) {
         require(
-            (database[_idxHash].assetStatus < 200) &&
-                (database[_idxHash].assetClass < 32768),
+            (database[_idxHash].assetStatus < 200),
             "MOD-U-record Locked"
         );
         _;
@@ -235,10 +233,6 @@ contract Storage is Ownable {
         exists(_idxHash)
     {
         require(
-            database[_idxHash].assetClass < 32768,
-            "AL:ERR--locking prohibited in class 32768 or higher"
-        );
-        require(
             _stat > 199,
             "AL:ERR--locking requires setting assetStatus > 199"
         );
@@ -249,10 +243,6 @@ contract Storage is Ownable {
      * @dev Allows Admin to unlock asset
      */
     function ADMIN_unlock(bytes32 _idxHash) external isAdmin exists(_idxHash) {
-        require(
-            database[_idxHash].assetClass < 32768,
-            "AL:ERR--admin edits prohibited in class 32768 or higher"
-        );
         database[_idxHash].assetStatus = 0; //set to unspecified assetStatus
     }
 
@@ -264,10 +254,6 @@ contract Storage is Ownable {
         isAdmin
         exists(_idxHash)
     {
-        require(
-            database[_idxHash].assetClass < 32768,
-            "AL:ERR--admin edits prohibited in class 32768 or higher"
-        );
         database[_idxHash].timeLock = _blockNumber; //set lock to expiration blocknumber
     }
 
@@ -279,10 +265,6 @@ contract Storage is Ownable {
         isAdmin
         exists(_idxHash)
     {
-        require(
-            database[_idxHash].assetClass < 32768,
-            "AL:ERR--admin edits prohibited in class 32768 or higher"
-        );
         database[_idxHash].forceModCount = 0; //set to unspecified assetStatus
     }
 
