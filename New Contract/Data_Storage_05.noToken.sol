@@ -89,19 +89,15 @@ contract Storage is Ownable {
     /*
      * @dev Verify user credentials
      *
-     * Originating Address:  (call may pass through a contract before it arrives )
-     * If assetClass is 8192 or less;
+     * Originating Address:
      *      Exists in registeredUsers as a usertype 1 or 9
      *      Is authorized for asset class
-     *If assetClass is 32768 or greater , msg.sender hods a token whose hashed
-     *      tokenID is identical to the rightsHolder
      */
     modifier userAuth(bytes32 _senderHash, bytes32 _idxHash) {
         uint8 senderType = registeredUsers[_senderHash].userType;
 
         require(
-            (senderType == 1) ||
-                (senderType == 9),
+            (senderType == 1) || (senderType == 9),
             "MOD-UA-User not registered"
         );
 
@@ -114,13 +110,28 @@ contract Storage is Ownable {
     }
 
     /*
+     * @dev Verify user credentials
+     *
+     * Originating Address:
+     *      Exists in registeredUsers as a usertype 1 or 9
+     *      Is authorized for asset class
+     */
+    modifier onlyAuthAddr() {
+        require(
+            (authorizedAdresses[keccak256(abi.encodePacked(msg.sender))] >=
+                3) &&
+                (authorizedAdresses[keccak256(abi.encodePacked(msg.sender))] <=
+                    4),
+            "MOD-OAA-Contract not authorized or improperly permissioned"
+        );
+        _;
+    }
+
+    /*
      * @dev Check record _idxHash exists and is not locked
      */
     modifier unlocked(bytes32 _idxHash) {
-        require(
-            (database[_idxHash].assetStatus < 200),
-            "MOD-U-record Locked"
-        );
+        require((database[_idxHash].assetStatus < 200), "MOD-U-record Locked");
         _;
     }
 
@@ -152,7 +163,6 @@ contract Storage is Ownable {
     event REPORT(string _msg);
 
     //--------------------------------Internal Admin functions / onlyowner or isAdmin---------------------------------//
-
 
     /*
      * @dev Authorize / Deauthorize / Authorize users for an address be permitted to make record modifications
@@ -263,6 +273,7 @@ contract Storage is Ownable {
     function ADMIN_resetFMC(bytes32 _idxHash)
         external
         isAdmin
+        onlyAuthAddr
         exists(_idxHash)
     {
         database[_idxHash].forceModCount = 0; //set to unspecified assetStatus
@@ -286,15 +297,9 @@ contract Storage is Ownable {
             "NR:ERR-User not registered"
         );
         require(
-            (_assetClass == registeredUsers[_userHash].authorizedAssetClass),//cannot use userAuth because record[idx] doesnt exist yet,
+            (_assetClass == registeredUsers[_userHash].authorizedAssetClass), //cannot use userAuth because record[idx] doesnt exist yet,
             "NR:ERR-User not registered for asset class"
         );
-        require(
-            (authorizedAdresses[keccak256(abi.encodePacked(msg.sender))] ==
-                3),
-            "NR:ERR-Contract not authorized"
-        );
-
         require(
             database[_idxHash].rightsHolder == 0,
             "NR:ERR-Record already exists"
@@ -330,6 +335,7 @@ contract Storage is Ownable {
         uint8 _forceCount
     )
         external
+        onlyAuthAddr
         userAuth(_userHash, _idxHash)
         exists(_idxHash)
         unlocked(_idxHash)
@@ -339,10 +345,7 @@ contract Storage is Ownable {
         bytes32 userHash = _userHash;
         bytes32 rgtHash = _rgtHash;
 
-        require(
-            rgtHash != 0,
-            "MR:ERR-Rightsholder cannot be blank"
-        );
+        require(rgtHash != 0, "MR:ERR-Rightsholder cannot be blank");
         require( //prohibit increasing the countdown value
             _countDown <= database[idxHash].countDown,
             "MR:ERR-new countDown exceeds original countDown"
@@ -354,11 +357,6 @@ contract Storage is Ownable {
         require(
             _assetStatus < 200,
             "MR:ERR-assetStatus over 199 cannot be set by user"
-        );
-        require( //check that (contract) address is authorized to interact with storage
-            (authorizedAdresses[keccak256(abi.encodePacked(msg.sender))] ==
-                3),
-            "Contract not authorized or improperly permissioned"
         );
 
         database[idxHash].timeLock = block.number;
@@ -401,6 +399,7 @@ contract Storage is Ownable {
         bytes32 _Ipfs2
     )
         external
+        onlyAuthAddr
         userAuth(_userHash, _idxHash)
         exists(_idxHash)
         unlocked(_idxHash)
@@ -408,12 +407,6 @@ contract Storage is Ownable {
     {
         // uint256 tokenID = uint256(database[_idxHash].rightsHolder); //tokenID set to the uint256 of the rightsHolder hash at _idx
         string memory retMessage = "No modifications made";
-
-        require(
-            (authorizedAdresses[keccak256(abi.encodePacked(msg.sender))] ==
-                3),
-            "Contract not authorized or improperly permissioned"
-        );
 
         database[_idxHash].timeLock = block.number;
 
@@ -558,6 +551,7 @@ contract Storage is Ownable {
     function retrieveCosts(uint16 _assetClass)
         external
         view
+        onlyAuthAddr
         returns (
             uint256,
             uint256,
@@ -567,13 +561,6 @@ contract Storage is Ownable {
             uint256
         )
     {
-        require( //SUBSET of addressAuth functionality does not include exception for > 32768 assetClass
-            (authorizedAdresses[keccak256(abi.encodePacked(msg.sender))] >=
-                3) &&
-                (authorizedAdresses[keccak256(abi.encodePacked(msg.sender))] <=
-                    4),
-            "Contract not authorized or improperly permissioned"
-        );
         return (
             cost[_assetClass].cost1,
             cost[_assetClass].cost2,
