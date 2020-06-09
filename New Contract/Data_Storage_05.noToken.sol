@@ -4,16 +4,6 @@ pragma solidity ^0.6.2;
 import "./Ownable.sol";
 
 
-// interface erc20_tokenInterface {
-//     function transfer(address, uint256) external returns (bool);
-//     function balanceOf(address) external view returns (uint256);
-// }
-
-// interface erc721_tokenInterface {
-//     function ownerOf(uint256) external view returns (address);
-// }
-
-
 contract Storage is Ownable {
     struct Record {
         bytes32 recorder; // Address hash of recorder
@@ -48,10 +38,6 @@ contract Storage is Ownable {
     mapping(bytes32 => Record) private database; // Main Data Storage
     mapping(bytes32 => User) private registeredUsers; // Authorized recorder database
     mapping(uint16 => Costs) private cost; // Cost per function by asset class
-
-    //address erc20_tokenAddress;
-    // address erc721ContractAddress;
-    // erc721_tokenInterface erc721_tokenContract; //erc721_token prototype initialization
 
     /*  NOTES:---------------------------------------------------------------------------------------//
      * Authorized external Contract / address types:   authorizedAdresses[]
@@ -117,15 +103,17 @@ contract Storage is Ownable {
 
         require(
             (senderType == 1) ||
-                (senderType == 9) ||
-                (database[_idxHash].assetClass > 8192),
+                (senderType == 9),
+                //  ||
+                // (database[_idxHash].assetClass > 8192),
             "MOD-UA-User not registered"
         );
 
         require(
             (database[_idxHash].assetClass ==
-                registeredUsers[_senderHash].authorizedAssetClass) ||
-                (database[_idxHash].assetClass > 8192),
+                registeredUsers[_senderHash].authorizedAssetClass),
+                //  ||
+                // (database[_idxHash].assetClass > 8192),
             "MOD-UA-User not registered for asset type"
         );
         // require(
@@ -177,21 +165,6 @@ contract Storage is Ownable {
 
     //--------------------------------Internal Admin functions / onlyowner or isAdmin---------------------------------//
 
-    // function setErc20_tokenAddress (address contractAddress) public onlyOwner {
-    //     require(contractAddress != address(0), "Invalid contract address");
-    //     erc20_tokenAddress = contractAddress;
-    //     erc20_tokenContract = erc20_tokenInterface(contractAddress);
-    // }
-    //erc20_tokenInterface erc20_tokenContract; //erc20_token
-
-    // function OO_setErc721_tokenAddress(address _contractAddress)
-    //     external
-    //     onlyOwner
-    // {
-    //     require(_contractAddress != address(0), "Invalid contract address");
-    //     erc721ContractAddress = _contractAddress;
-    //     erc721_tokenContract = erc721_tokenInterface(_contractAddress);
-    // }
 
     /*
      * @dev Authorize / Deauthorize / Authorize users for an address be permitted to make record modifications
@@ -209,10 +182,10 @@ contract Storage is Ownable {
                 (_userType == 99),
             "AU:ER-13 Invalid user type"
         );
-        require(
-            _authorizedAssetClass < 32768,
-            "AU:ERR--Auth by user prohibited in class 32768 or higher"
-        );
+        // require(
+        //     _authorizedAssetClass < 32768,
+        //     "AU:ERR--Auth by user prohibited in class 32768 or higher"
+        // );
 
         bytes32 hash;
         hash = keccak256(abi.encodePacked(_authAddr));
@@ -336,26 +309,20 @@ contract Storage is Ownable {
         uint256 _countDownStart,
         bytes32 _Ipfs1
     ) external {
-        // uint256 tokenID = uint256(_rgt); //tokenID set to the uint256 of the supplied _rgt vor token verification
         require(
-            registeredUsers[_userHash].userType == 1 || (_assetClass > 8192), //cannot use userAuth because record[idx] doesnt exist yet
+            registeredUsers[_userHash].userType == 1, //cannot use userAuth because record[idx] doesnt exist yet
             "NR:ERR-User not registered"
         );
         require(
-            (_assetClass == registeredUsers[_userHash].authorizedAssetClass) || //cannot use userAuth because record[idx] doesnt exist yet
-                (_assetClass > 8192),
+            (_assetClass == registeredUsers[_userHash].authorizedAssetClass),//cannot use userAuth because record[idx] doesnt exist yet,
             "NR:ERR-User not registered for asset class"
         );
         require(
             (authorizedAdresses[keccak256(abi.encodePacked(msg.sender))] ==
-                3) || (_assetClass >= 32768),
-            "Contract not authorized for class < 32786"
+                3),
+            "NR:ERR-Contract not authorized"
         );
-        // require(
-        //     (_assetClass < 32768) ||
-        //         (erc721_tokenContract.ownerOf(tokenID) == msg.sender),
-        //     "NR:ERR-User address does not hold asset token"
-        // );
+
         require(
             database[_idxHash].rightsHolder == 0,
             "NR:ERR-Record already exists"
@@ -410,18 +377,19 @@ contract Storage is Ownable {
             _forceCount >= database[idxHash].forceModCount,
             "MR:ERR-new forceModCount less than original forceModCount"
         );
-        require( //prohibit changes to rightsholder / tokenID above assetClass 49999
-            (database[idxHash].assetStatus < 50000) ||
-                (rgtHash == database[idxHash].rightsHolder),
-            "MR:ERR-TokenID cannot be changed above assetClass 49999"
-        );
+        // require( //prohibit changes to rightsholder / tokenID above assetClass 49999
+        //     (database[idxHash].assetStatus < 50000) ||
+        //         (rgtHash == database[idxHash].rightsHolder),
+        //     "MR:ERR-TokenID cannot be changed above assetClass 49999"
+        // );
         require(
             _assetStatus < 200,
             "MR:ERR-assetStatus over 199 cannot be set by user"
         );
         require( //check that (contract) address is authorized to interact with storage or that assetClass is higher than 32767
             (authorizedAdresses[keccak256(abi.encodePacked(msg.sender))] ==
-                3) || (database[idxHash].assetClass >= 32768),
+                3),
+                //|| (database[idxHash].assetClass >= 32768),
             "Contract not authorized or improperly permissioned"
         );
         // require( // for assetClass >= 32768 require that msg.sender holds a token with an ID matching the rightsholder
