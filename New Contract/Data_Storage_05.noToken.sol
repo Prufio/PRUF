@@ -104,24 +104,14 @@ contract Storage is Ownable {
         require(
             (senderType == 1) ||
                 (senderType == 9),
-                //  ||
-                // (database[_idxHash].assetClass > 8192),
             "MOD-UA-User not registered"
         );
 
         require(
             (database[_idxHash].assetClass ==
                 registeredUsers[_senderHash].authorizedAssetClass),
-                //  ||
-                // (database[_idxHash].assetClass > 8192),
             "MOD-UA-User not registered for asset type"
         );
-        // require(
-        //     (database[_idxHash].assetClass < 32768) ||
-        //         (erc721_tokenContract.ownerOf(tokenID) == msg.sender),
-        //     "MOD:ERR-User address does not hold asset token"
-        // );
-        _;
     }
 
     /*
@@ -366,9 +356,11 @@ contract Storage is Ownable {
         bytes32 idxHash = _idxHash;
         bytes32 userHash = _userHash;
         bytes32 rgtHash = _rgtHash;
-        // uint256 tokenID = uint256(database[idxHash].rightsHolder); //tokenID set to the uint256 of the rightsHolder hash at _idx
 
-        require(rgtHash != 0, "MR:ERR-Rightsholder cannot be blank");
+        require(
+            rgtHash != 0,
+            "MR:ERR-Rightsholder cannot be blank"
+        );
         require( //prohibit increasing the countdown value
             _countDown <= database[idxHash].countDown,
             "MR:ERR-new countDown exceeds original countDown"
@@ -377,44 +369,35 @@ contract Storage is Ownable {
             _forceCount >= database[idxHash].forceModCount,
             "MR:ERR-new forceModCount less than original forceModCount"
         );
-        // require( //prohibit changes to rightsholder / tokenID above assetClass 49999
-        //     (database[idxHash].assetStatus < 50000) ||
-        //         (rgtHash == database[idxHash].rightsHolder),
-        //     "MR:ERR-TokenID cannot be changed above assetClass 49999"
-        // );
         require(
             _assetStatus < 200,
             "MR:ERR-assetStatus over 199 cannot be set by user"
         );
-        require( //check that (contract) address is authorized to interact with storage or that assetClass is higher than 32767
+        require( //check that (contract) address is authorized to interact with storage
             (authorizedAdresses[keccak256(abi.encodePacked(msg.sender))] ==
                 3),
-                //|| (database[idxHash].assetClass >= 32768),
             "Contract not authorized or improperly permissioned"
         );
-        // require( // for assetClass >= 32768 require that msg.sender holds a token with an ID matching the rightsholder
-        //     (database[idxHash].assetClass < 32768) ||
-        //         (erc721_tokenContract.ownerOf(tokenID) == msg.sender),
-        //     "NR:ERR-User address does not hold asset token"
-        // );
 
         database[idxHash].timeLock = block.number;
 
         Record memory _record;
         _record = database[idxHash];
 
-        if (_record.assetClass < 50000) {
-            _record.rightsHolder = rgtHash;
-        }
+        _record.rightsHolder = rgtHash;
+
         if (_record.countDown >= _countDown) {
             _record.countDown = _countDown;
         }
+
         if (_assetStatus < 200) {
             _record.assetStatus = _assetStatus;
         }
+
         if (_record.forceModCount <= _forceCount) {
             _record.forceModCount = _forceCount;
         }
+
         (_record.recorder, _record.lastRecorder) = newRecorder(
             userHash,
             _record.recorder,
@@ -446,14 +429,9 @@ contract Storage is Ownable {
 
         require(
             (authorizedAdresses[keccak256(abi.encodePacked(msg.sender))] ==
-                3) || (database[_idxHash].assetClass >= 32768),
+                3),
             "Contract not authorized or improperly permissioned"
         );
-        // require(
-        //     (database[_idxHash].assetClass < 32768) ||
-        //         (erc721_tokenContract.ownerOf(tokenID) == msg.sender),
-        //     "NR:ERR-User address does not hold asset token"
-        // );
 
         database[_idxHash].timeLock = block.number;
 
