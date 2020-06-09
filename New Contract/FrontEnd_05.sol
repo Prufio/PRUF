@@ -101,7 +101,7 @@ contract FrontEnd is PullPayment, Ownable {
     /*
      * @dev Set storage contract to interface with
      */
-    function _setStorageContract(address _storageAddress) external onlyOwner {
+    function OO_setStorageContract(address _storageAddress) external onlyOwner {
         require(
             _storageAddress != address(0),
             "ADMIN: storage address cannot be zero"
@@ -114,7 +114,7 @@ contract FrontEnd is PullPayment, Ownable {
      * @dev Set wallet for contract to direct payments to
      */
 
-    function _setMainWallet(address _addr) external onlyOwner {
+    function OO_setMainWallet(address _addr) external onlyOwner {
         mainWallet = _addr;
     }
 
