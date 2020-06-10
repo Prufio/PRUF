@@ -52,9 +52,9 @@ class ModifyDescription extends React.Component {
     _web3 = new Web3(_web3.givenProvider);
     this.setState({web3: _web3});
     _web3.eth.getAccounts().then((e) => this.setState({addr: e[0]}));
-    var _frontend_addr = "0x9Ef2BBF052A5b61eBD1452d48B515BE7659a200B";
+    var _frontend_addr = "0x2E70fB5908C6541d13Ac356D0C1AEc4C59fb6F75";
     
-    var _storage_addr = "0x926c75761f8e68133c4A7140Bd079ce65A935ad0";
+    var _storage_addr = "0x37259b5A5FbAC8D855d1283a7F5D542208Bd9412";
 
     const frontEnd_abi = returnFrontEndAbi();
     const storage_abi = returnStorageAbi();
