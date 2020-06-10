@@ -1,6 +1,7 @@
 import React, { Component } from "react";
 import returnStorageAbi from "./stor_abi";
 import returnFrontEndAbi from "./front_abi";
+import returnAddresses from "./Contracts";
 import Web3 from "web3";
 
 class VerifyRightHolder extends Component {
@@ -52,10 +53,9 @@ class VerifyRightHolder extends Component {
     _web3 = new Web3(_web3.givenProvider);
     this.setState({web3: _web3});
     _web3.eth.getAccounts().then((e) => this.setState({addr: e[0]}));
-    var _frontend_addr = "0x2E70fB5908C6541d13Ac356D0C1AEc4C59fb6F75";
-    
-    var _storage_addr = "0x37259b5A5FbAC8D855d1283a7F5D542208Bd9412";
-
+    var addrArray = returnAddresses(); 
+    var _frontend_addr = addrArray[1];
+    var _storage_addr = addrArray[0];
     const frontEnd_abi = returnFrontEndAbi();
     const storage_abi = returnStorageAbi();
 
