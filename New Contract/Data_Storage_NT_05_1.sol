@@ -44,7 +44,6 @@ contract Storage is Ownable {
      * no user authorization required above asset class 8192
      * no contract authorization required above asset class 32768 - authentication done by ERC721 token only
      *
-     *
      * 0   --NONE
      * 1   --E
      * 2   --RE
@@ -54,7 +53,19 @@ contract Storage is Ownable {
      * Owner (onlyOwner)
      * other = unauth
      *
+     *
+     * Record status field key
+     *
+     * 0 = no status, transferrable
+     * 1 = transferrable
+     * 2 = nontransferrable
+     * 3 = stolen
+     * 4 = lost
+     * 255 = record locked (contract will not modify record without this first being unlocked by origin)
+     *
+     *
      * Authorized User Types   registeredUsers[]
+     *
      * 1 = Standard User
      * 9 = Robot
      * 99 = ADMIN (isAdmin)
