@@ -60,9 +60,9 @@ function returnStorageAbi() {
 			{
 				"inputs": [
 					{
-						"internalType": "string",
-						"name": "_idx",
-						"type": "string"
+						"internalType": "bytes32",
+						"name": "_idxHash",
+						"type": "bytes32"
 					},
 					{
 						"internalType": "uint8",
@@ -78,9 +78,9 @@ function returnStorageAbi() {
 			{
 				"inputs": [
 					{
-						"internalType": "string",
-						"name": "_idx",
-						"type": "string"
+						"internalType": "bytes32",
+						"name": "_idxHash",
+						"type": "bytes32"
 					}
 				],
 				"name": "ADMIN_resetFMC",
@@ -91,9 +91,9 @@ function returnStorageAbi() {
 			{
 				"inputs": [
 					{
-						"internalType": "string",
-						"name": "_idx",
-						"type": "string"
+						"internalType": "bytes32",
+						"name": "_idxHash",
+						"type": "bytes32"
 					},
 					{
 						"internalType": "uint256",
@@ -109,9 +109,9 @@ function returnStorageAbi() {
 			{
 				"inputs": [
 					{
-						"internalType": "string",
-						"name": "_idx",
-						"type": "string"
+						"internalType": "bytes32",
+						"name": "_idxHash",
+						"type": "bytes32"
 					}
 				],
 				"name": "ADMIN_unlock",
@@ -211,19 +211,6 @@ function returnStorageAbi() {
 			{
 				"inputs": [
 					{
-						"internalType": "address",
-						"name": "_contractAddress",
-						"type": "address"
-					}
-				],
-				"name": "OO_setErc721_tokenAddress",
-				"outputs": [],
-				"stateMutability": "nonpayable",
-				"type": "function"
-			},
-			{
-				"inputs": [
-					{
 						"internalType": "bytes32",
 						"name": "_idxHash",
 						"type": "bytes32"
@@ -311,7 +298,7 @@ function returnStorageAbi() {
 					},
 					{
 						"internalType": "bytes32",
-						"name": "_regHash",
+						"name": "_rgtHash",
 						"type": "bytes32"
 					},
 					{
