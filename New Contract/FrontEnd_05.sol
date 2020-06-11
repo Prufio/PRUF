@@ -133,10 +133,6 @@ contract FrontEnd is PullPayment, Ownable {
         Costs memory cost = getCost(_assetClass);
 
         require(
-            _assetClass < 32768,
-            "NR: Asset classes 32768 or above not writable through this contract"
-        );
-        require(
             msg.value >= cost.newRecordCost,
             "NR: tx value too low. Send more eth."
         );
@@ -167,10 +163,6 @@ contract FrontEnd is PullPayment, Ownable {
         Costs memory cost = getCost(rec.assetClass);
 
         require(
-            rec.assetClass < 32768,
-            "FMR: Asset classes 32768 or above not writable through this contract"
-        );
-        require(
             msg.value >= cost.forceModifyCost,
             "FMR: tx value too low. Send more eth."
         );
@@ -199,10 +191,6 @@ contract FrontEnd is PullPayment, Ownable {
     ) external returns (uint8) {
         Record memory rec = getRecord(_idxHash);
 
-        require(
-            rec.assetClass < 32768,
-            "FMR: Asset classes 32768 or above not writable through this contract"
-        );
         require(rec.assetStatus < 200, "MS:ERR-Record locked");
         require(
             rec.rightsHolder == _rgtHash,
@@ -226,10 +214,6 @@ contract FrontEnd is PullPayment, Ownable {
     ) external returns (uint256) {
         Record memory rec = getRecord(_idxHash);
 
-        require(
-            rec.assetClass < 32768,
-            "FMR: Asset classes 32768 or above not writable through this contract"
-        );
         require(rec.assetStatus < 200, "DC:ERR-Record locked");
         require(
             rec.rightsHolder == _rgtHash,
@@ -257,10 +241,6 @@ contract FrontEnd is PullPayment, Ownable {
         Record memory rec = getRecord(_idxHash);
         Costs memory cost = getCost(rec.assetClass);
 
-        require(
-            rec.assetClass < 32768,
-            "FMR: Asset classes 32768 or above not writable through this contract"
-        );
         require(
             msg.value >= cost.transferAssetCost,
             "TA: tx value too low. Send more eth."
@@ -295,10 +275,6 @@ contract FrontEnd is PullPayment, Ownable {
     ) external returns (bytes32) {
         Record memory rec = getRecord(_idxHash);
 
-        require(
-            rec.assetClass < 32768,
-            "FMR: Asset classes 32768 or above not writable through this contract"
-        );
         require(rec.assetStatus < 200, "MI1:ERR-Record locked");
         require(
             rec.rightsHolder == _rgtHash,
@@ -324,10 +300,6 @@ contract FrontEnd is PullPayment, Ownable {
         Record memory rec = getRecord(_idxHash);
         Costs memory cost = getCost(rec.assetClass);
 
-        require(
-            rec.assetClass < 32768,
-            "FMR: Asset classes 32768 or above not writable through this contract"
-        );
         require(
             msg.value >= cost.createNoteCost,
             "tx value too low. Send more eth."
