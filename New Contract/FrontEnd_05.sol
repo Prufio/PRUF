@@ -217,7 +217,7 @@ contract FrontEnd is PullPayment, Ownable {
     }
 
     /*
-     * @dev Reimport **Record**.rightsHolder without confirmation required
+     * @dev Reimport **Record**.rightsHolder (no confirmation required, posessor is considered to be owner)
      */
     function $reimportRecord(bytes32 _idxHash, bytes32 _rgtHash)
         external
