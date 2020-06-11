@@ -345,7 +345,7 @@ contract FrontEnd is PullPayment, Ownable {
     /*
      * @dev Get a User Record from Storage @ msg.sender
      */
-    function getUser() private returns (Record memory) {
+    function getUser() private view returns (Record memory) {
         User memory user;
         (user.userType, user.authorizedAssetClass) = Storage.getUser(keccak256(abi.encodePacked(msg.sender)));
     }
