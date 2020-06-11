@@ -59,8 +59,6 @@ contract Storage is Ownable {
 
     /*  NOTES:---------------------------------------------------------------------------------------//
      * Authorized external Contract / address types:   authorizedAdresses[]
-     * no user authorization required above asset class 8192
-     * no contract authorization required above asset class 32768 - authentication done by ERC721 token only
      *
      * 0   --NONE
      * 1   --E
@@ -215,10 +213,6 @@ contract Storage is Ownable {
                 (_userType == 99),
             "AU:ER-13 Invalid user type"
         );
-        // require(
-        //     _authorizedAssetClass < 32768,
-        //     "AU:ERR--Auth by user prohibited in class 32768 or higher"
-        // );
 
         bytes32 hash;
         hash = keccak256(abi.encodePacked(_authAddr));
@@ -257,10 +251,6 @@ contract Storage is Ownable {
         uint256 _cost5,
         uint256 _forceModCost
     ) external onlyOwner {
-        require(
-            _class < 32768,
-            "ASc:ERR--Costs prohibited in class 32768 or higher"
-        );
         cost[_class].cost1 = _newRecordCost;
         cost[_class].cost2 = _transferRecordCost;
         cost[_class].cost3 = _createNoteCost;
