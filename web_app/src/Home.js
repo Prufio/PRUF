@@ -6,7 +6,7 @@ class Home extends Component {
     return (
       <div className = 'home'>
         <p>BulletProof<br/>Blockchain<br/>Provenance</p>
-        <p> V 0.2.3</p>
+        <p> V 0.5.0</p>
       </div>
     );
   }
