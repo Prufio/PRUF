@@ -149,7 +149,16 @@ contract FrontEnd is PullPayment, Ownable {
         bytes32 _Ipfs
     ) external payable {
         Costs memory cost = getCost(_assetClass);
+        User memory callingUser = getUser();
 
+        require(
+            callingUser.userType == 1,
+             "NR: User not authorized to create records"
+        );
+        require(
+            callingUser.authorizedAssetClass == _assetClass,
+             "NR: User not authorized to create records in specified asset class"
+        );
         require(
             msg.value >= cost.newRecordCost,
             "NR: tx value too low. Send more eth."
@@ -179,7 +188,16 @@ contract FrontEnd is PullPayment, Ownable {
     {
         Record memory rec = getRecord(_idxHash);
         Costs memory cost = getCost(rec.assetClass);
+        User memory callingUser = getUser();
 
+        require(
+            callingUser.userType == 1,
+             "FMR: User not authorized to force modify records"
+        );
+        require(
+            callingUser.authorizedAssetClass == rec.assetClass,
+             "FMR: User not authorized to modify records in specified asset class"
+        );
         require(
             msg.value >= cost.forceModifyCost,
             "FMR: tx value too low. Send more eth."
@@ -209,11 +227,20 @@ contract FrontEnd is PullPayment, Ownable {
         uint8 _assetStatus
     ) external returns (uint8) {
         Record memory rec = getRecord(_idxHash);
+        User memory callingUser = getUser();
+        // require(
+        //     callingUser.userType == 1,
+        //      "FMR: User not authorized to create records"
+        // );
+        require(
+            callingUser.authorizedAssetClass == rec.assetClass,
+             "MS: User not authorized to modify records in specified asset class"
+        );
 
         require(rec.assetStatus < 200, "MS:ERR-Record locked");
         require(
             rec.rightsHolder == _rgtHash,
-            "MS:ERR-Rightsholder does not match supplied data"
+            "MS: ERR-Rightsholder does not match supplied data"
         );
 
         rec.assetStatus = _assetStatus;
@@ -232,11 +259,19 @@ contract FrontEnd is PullPayment, Ownable {
         uint256 _decAmount
     ) external returns (uint256) {
         Record memory rec = getRecord(_idxHash);
-
+        User memory callingUser = getUser();
+        // require(
+        //     callingUser.userType == 1,
+        //      "FMR: User not authorized to create records"
+        // );
+        require(
+            callingUser.authorizedAssetClass == rec.assetClass,
+             "DC: User not authorized to modify records in specified asset class"
+        );
         require(rec.assetStatus < 200, "DC:ERR-Record locked");
         require(
             rec.rightsHolder == _rgtHash,
-            "DC:ERR--Rightsholder does not match supplied data"
+            "DC: Rightsholder does not match supplied data"
         );
 
         if (rec.countDown > _decAmount) {
@@ -259,7 +294,16 @@ contract FrontEnd is PullPayment, Ownable {
     ) external payable returns (uint8) {
         Record memory rec = getRecord(_idxHash);
         Costs memory cost = getCost(rec.assetClass);
+        User memory callingUser = getUser();
 
+        // require(
+        //     callingUser.userType == 1,
+        //      "FMR: User not authorized to create records"
+        // );
+        require(
+            callingUser.authorizedAssetClass == rec.assetClass,
+             "TA: User not authorized to modify records in specified asset class"
+        );
         require(
             msg.value >= cost.transferAssetCost,
             "TA: tx value too low. Send more eth."
@@ -293,6 +337,16 @@ contract FrontEnd is PullPayment, Ownable {
         bytes32 _IpfsHash
     ) external returns (bytes32) {
         Record memory rec = getRecord(_idxHash);
+        User memory callingUser = getUser();
+
+        // require(
+        //     callingUser.userType == 1,
+        //      "FMR: User not authorized to create records"
+        // );
+        require(
+            callingUser.authorizedAssetClass == rec.assetClass,
+             "MI1: User not authorized to modify records in specified asset class"
+        );
 
         require(rec.assetStatus < 200, "MI1:ERR-Record locked");
         require(
@@ -318,10 +372,19 @@ contract FrontEnd is PullPayment, Ownable {
     ) external payable returns (bytes32) {
         Record memory rec = getRecord(_idxHash);
         Costs memory cost = getCost(rec.assetClass);
+        User memory callingUser = getUser();
 
+        // require(
+        //     callingUser.userType == 1,
+        //      "FMR: User not authorized to create records"
+        // );
+        require(
+            callingUser.authorizedAssetClass == rec.assetClass,
+             "MI2:ERR--MI1: User not authorized to modify records in specified asset class"
+        );
         require(
             msg.value >= cost.createNoteCost,
-            "tx value too low. Send more eth."
+            "MI2:ERR--tx value too low. Send more eth."
         );
         require(rec.assetStatus < 200, "MI2:ERR-Record locked");
         require(
@@ -345,9 +408,10 @@ contract FrontEnd is PullPayment, Ownable {
     /*
      * @dev Get a User Record from Storage @ msg.sender
      */
-    function getUser() private view returns (Record memory) {
+    function getUser() private view returns (User memory) { //User memory callingUser = getUser();
         User memory user;
         (user.userType, user.authorizedAssetClass) = Storage.getUser(keccak256(abi.encodePacked(msg.sender)));
+        return user;
     }
 
     /*
