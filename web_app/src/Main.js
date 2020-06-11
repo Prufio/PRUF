@@ -32,7 +32,6 @@ class Main extends Component {
       _storage_addr);
 
         if(this.state.owner === ""){
-          console.log("in if state");
         _storage.methods.owner().call({ from: self.state.addr }, function(_error, _result){
         if(_error){console.log(_error)}
         else{self.setState({owner: _result})
@@ -89,7 +88,7 @@ class Main extends Component {
 
     render(){
 
-      console.log(
+      /* console.log(
         "isOwner: ",
         this.state.isOwner,
         "addr: ",
@@ -97,7 +96,7 @@ class Main extends Component {
         "ownerMenu: ",
         this.state.ownerMenu,
         "owner: ",
-        this.state.owner);
+        this.state.owner); */
       
       const toggleAdmin = () => {
         if (this.state.isOwner){
