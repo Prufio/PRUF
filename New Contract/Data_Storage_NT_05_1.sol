@@ -6,16 +6,18 @@ import "./Ownable.sol";
 /*--------To do
 *Status 5  - Asset transferred - implies that asset holder is the owner.
 *       must be re-imported by ACadmin through regular onboarding process
-*       no actions besides modify RGT to a new rightsholder can be performed on a statuss 5 asset (no status changes)
+*       no actions besides modify RGT to a new rightsholder can be performed on a statuss 5 asset (no status changes) (Frontend)
 
-*Status 0 Default asset creation status, default after FMR, and after status 5 (essentially a FMR) (IN STORAGE?)
+*=Status 0 Default asset creation status, 
+default after FMR, and after status 5 (essentially a FMR) (IN frontend) 
+// only type 1 can change a status 0 record
 *
-*Status 1-5 No actions can be performed by tyoe 9 users. (real ACAdmins only can set or unset these statuses) except:
+*Status 1-5 No actions can be performed by type 9 users. (real ACAdmins only can set or unset these statuses) except:
 *Automation can change a 1 or 2 status to any automated status
 *
 *status 6 transferrable, automation set/unset (secret confirmed)(ACAdmin can unset)
 *status 7 non-transferrable, automation set/unset (secret confirmed)(ACAdmin can unset)
-*status 8 stolen (automation set)(only ACAdmin can unset)
+*status 8 stolen (automation set)(ONLY ACAdmin can unset)
 *status 9 lost (automation set/unset)(ACAdmin can unset)
 *
 */
@@ -134,6 +136,11 @@ contract Storage is Ownable {
             (database[_idxHash].assetClass ==
                 registeredUsers[_senderHash].authorizedAssetClass),
             "MOD-UA-User not registered for asset type"
+        );
+
+        require(
+            (database[_idxHash].assetStatus != 0) || (registeredUsers[_senderHash].userType == 1),
+            "MOD-UA-Non type 1 user cannot make changes to status 0 asset"
         );
         _;
     }
@@ -597,6 +604,24 @@ contract Storage is Ownable {
             cost[_assetClass].cost4,
             cost[_assetClass].cost5,
             cost[_assetClass].cost6
+        );
+    }
+
+     /*
+     * @dev Retrieve function costs per asset class, in Wei
+     */
+    function getUser(bytes32 _userHash)
+        internal
+        view
+        onlyAuthAddr
+        returns (
+            uint8, // Human / Automated / Unauthorized
+            uint16 // User authorized for specific asset class
+        )
+    {
+        return (
+            registeredUsers[_userHash].userType,
+            registeredUsers[_userHash].userType
         );
     }
 
