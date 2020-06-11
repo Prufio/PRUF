@@ -3,6 +3,24 @@ pragma solidity ^0.6.2;
 
 import "./Ownable.sol";
 
+/*--------To do
+*Status 5  - Asset transferred - implies that asset holder is the owner.
+*       must be re-imported by ACadmin through regular onboarding process
+*       no actions besides modify RGT to a new rightsholder can be performed on a statuss 5 asset (no status changes)
+
+*Status 0 Default asset creation status, default after FMR, and after status 5 (essentially a FMR) (IN STORAGE?)
+*
+*Status 1-5 No actions can be performed by tyoe 9 users. (real ACAdmins only can set or unset these statuses) except:
+*Automation can change a 1 or 2 status to any automated status
+*
+*status 6 transferrable, automation set/unset (secret confirmed)(ACAdmin can unset)
+*status 7 non-transferrable, automation set/unset (secret confirmed)(ACAdmin can unset)
+*status 8 stolen (automation set)(only ACAdmin can unset)
+*status 9 lost (automation set/unset)(ACAdmin can unset)
+*
+*/
+
+
 
 contract Storage is Ownable {
     struct Record {

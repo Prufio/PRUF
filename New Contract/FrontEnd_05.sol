@@ -3,6 +3,10 @@ pragma solidity ^0.6.2;
 
 import "./PullPayment.sol";
 
+    /*
+     * @dev Set wallet for contract to direct payments to
+     */
+
 
 interface StorageInterface {
     function newRecord(
