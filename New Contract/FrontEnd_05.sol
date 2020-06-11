@@ -107,11 +107,9 @@ contract FrontEnd is PullPayment, Ownable {
         uint256 forceModifyCost; // Cost to brute-force a record transfer
     }
 
-    address internal mainWallet;
-
-    StorageInterface private Storage; // Set up external contract interface
-
     address storageAddress;
+    address internal mainWallet;
+    StorageInterface private Storage; // Set up external contract interface
 
     event REPORT(string _msg);
 
@@ -217,6 +215,47 @@ contract FrontEnd is PullPayment, Ownable {
 
         return rec.forceModCount;
     }
+
+    /*
+     * @dev Reimport **Record**.rightsHolder without confirmation required
+     */
+    function $reimportRecord(bytes32 _idxHash, bytes32 _rgtHash)
+        external
+        payable
+        returns (uint8)
+    {
+        Record memory rec = getRecord(_idxHash);
+        Costs memory cost = getCost(rec.assetClass);
+        User memory callingUser = getUser();
+
+        require(
+            callingUser.userType == 1,
+             "RR: User not authorized to force modify records"
+        );
+        require(
+            callingUser.authorizedAssetClass == rec.assetClass,
+             "RR: User not authorized to modify records in specified asset class"
+        );
+        require(
+            rec.assetStatus == 5,
+             "RR: Only status 5 assets can be reimported"
+        );
+        require(
+            msg.value >= cost.newRecordCost,
+            "RR: tx value too low. Send more eth."
+        );
+        require(rec.assetStatus < 200, "FMR:ERR-Record locked");
+
+        rec.assetStatus = 0;
+        rec.rightsHolder = _rgtHash;
+
+        writeRecord(_idxHash, rec);
+
+        deductPayment(cost.newRecordCost);
+
+        return rec.assetStatus;
+    }
+
 
     /*
      * @dev Modify **Record**.assetStatus with confirmation required
