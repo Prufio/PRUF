@@ -120,7 +120,7 @@ contract FrontEnd is PullPayment, Ownable {
     function OO_setStorageContract(address _storageAddress) external onlyOwner {
         require(
             _storageAddress != address(0),
-            "ADMIN: storage address cannot be zero"
+            "FE:OO-SSC-ERR: Storage address cannot be zero"
         );
 
         Storage = StorageInterface(_storageAddress);
@@ -151,15 +151,15 @@ contract FrontEnd is PullPayment, Ownable {
 
         require(
             callingUser.userType == 1,
-             "NR: User not authorized to create records"
+             "FE:NR-ERR: User not authorized to create records"
         );
         require(
             callingUser.authorizedAssetClass == _assetClass,
-             "NR: User not authorized to create records in specified asset class"
+             "FE:NR-ERR: User not authorized to create records in specified asset class"
         );
         require(
             msg.value >= cost.newRecordCost,
-            "NR: tx value too low. Send more eth."
+            "FE:NR-ERR: tx value too low. Send more eth."
         );
 
         bytes32 userHash = keccak256(abi.encodePacked(msg.sender));
@@ -190,17 +190,17 @@ contract FrontEnd is PullPayment, Ownable {
 
         require(
             callingUser.userType == 1,
-             "FMR: User not authorized to force modify records"
+             "FE:FMR-ERR: User not authorized to force modify records"
         );
         require(
             callingUser.authorizedAssetClass == rec.assetClass,
-             "FMR: User not authorized to modify records in specified asset class"
+             "FE:FMR-ERR: User not authorized to modify records in specified asset class"
         );
         require(
             msg.value >= cost.forceModifyCost,
-            "FMR: tx value too low. Send more eth."
+            "FE:FMR-ERR: Tx value too low. Send more eth."
         );
-        require(rec.assetStatus < 200, "FMR:ERR-Record locked");
+        require(rec.assetStatus < 200, "FE:FMR-ERR: Record locked");
 
         if (rec.forceModCount < 255) {
             rec.forceModCount++;
@@ -273,13 +273,13 @@ contract FrontEnd is PullPayment, Ownable {
         // );
         require(
             callingUser.authorizedAssetClass == rec.assetClass,
-             "MS: User not authorized to modify records in specified asset class"
+             "FE:MS-ERR: User not authorized to modify records in specified asset class"
         );
 
-        require(rec.assetStatus < 200, "MS:ERR-Record locked");
+        require(rec.assetStatus < 200, "FE:MS-ERR: Record locked");
         require(
             rec.rightsHolder == _rgtHash,
-            "MS: ERR-Rightsholder does not match supplied data"
+            "FE:MS-ERR: Rightsholder does not match supplied data"
         );
 
         rec.assetStatus = _assetStatus;
@@ -305,12 +305,12 @@ contract FrontEnd is PullPayment, Ownable {
         // );
         require(
             callingUser.authorizedAssetClass == rec.assetClass,
-             "DC: User not authorized to modify records in specified asset class"
+             "FE:DC-ERR: User not authorized to modify records in specified asset class"
         );
-        require(rec.assetStatus < 200, "DC:ERR-Record locked");
+        require(rec.assetStatus < 200, "FE:DC-ERR: Record locked");
         require(
             rec.rightsHolder == _rgtHash,
-            "DC: Rightsholder does not match supplied data"
+            "FE:DC-ERR: Rightsholder does not match supplied data"
         );
 
         if (rec.countDown > _decAmount) {
@@ -341,21 +341,21 @@ contract FrontEnd is PullPayment, Ownable {
         // );
         require(
             callingUser.authorizedAssetClass == rec.assetClass,
-             "TA: User not authorized to modify records in specified asset class"
+             "FE:TA-ERR: User not authorized to modify records in specified asset class"
         );
         require(
             msg.value >= cost.transferAssetCost,
-            "TA: tx value too low. Send more eth."
+            "FE:TA-ERR: Tx value too low. Send more eth."
         );
-        require(rec.assetStatus < 200, "TA:ERR-Record locked");
+        require(rec.assetStatus < 200, "FE:TA-ERR: Record locked");
         require(
             rec.rightsHolder == _rgtHash,
-            "TA:ERR-Rightsholder does not match supplied data"
+            "FE:TA-ERR: Rightsholder does not match supplied data"
         );
-        require(_newrgtHash != 0, "TA:ERR-new Rightsholder cannot be blank");
+        require(_newrgtHash != 0, "FE:TA-ERR: New Rightsholder cannot be blank");
         require(
             rec.assetStatus < 3,
-            "TA:ERR--Asset assetStatus is not transferrable"
+            "FE:TA-ERR: Asset assetStatus is not transferrable"
         );
 
         rec.rightsHolder = _newrgtHash;
@@ -384,15 +384,15 @@ contract FrontEnd is PullPayment, Ownable {
         // );
         require(
             callingUser.authorizedAssetClass == rec.assetClass,
-             "MI1: User not authorized to modify records in specified asset class"
+             "FE:MI1-ERR: User not authorized to modify records in specified asset class"
         );
 
-        require(rec.assetStatus < 200, "MI1:ERR-Record locked");
+        require(rec.assetStatus < 200, "FE:MI1-ERR: Record locked");
         require(
             rec.rightsHolder == _rgtHash,
-            "MI1:ERR--Rightsholder does not match supplied data"
+            "FE:MI1-ERR: Rightsholder does not match supplied data"
         );
-        require(rec.Ipfs1 != _IpfsHash, "MI1:ERR--New data same as old");
+        require(rec.Ipfs1 != _IpfsHash, "FE:MI1-ERR: New data same as old");
 
         rec.Ipfs1 = _IpfsHash;
 
@@ -419,20 +419,20 @@ contract FrontEnd is PullPayment, Ownable {
         // );
         require(
             callingUser.authorizedAssetClass == rec.assetClass,
-             "MI2:ERR--MI1: User not authorized to modify records in specified asset class"
+             "FE:MI2-ERR: User not authorized to modify records in specified asset class"
         );
         require(
             msg.value >= cost.createNoteCost,
-            "MI2:ERR--tx value too low. Send more eth."
+            "FE:MI2-ERR: Tx value too low. Send more eth."
         );
-        require(rec.assetStatus < 200, "MI2:ERR-Record locked");
+        require(rec.assetStatus < 200, "FE:MI2-ERR: Record locked");
         require(
             rec.rightsHolder == _rgtHash,
-            "MI2:ERR--Rightsholder does not match supplied data"
+            "FE:MI2-ERR: Rightsholder does not match supplied data"
         );
         require(
             rec.Ipfs2 == 0,
-            "MI2:ERR--Ipfs2 has data already. Overwrite not permitted"
+            "FE:MI2-ERR: Ipfs2 has data already. Overwrite not permitted"
         );
 
         rec.Ipfs2 = _IpfsHash;

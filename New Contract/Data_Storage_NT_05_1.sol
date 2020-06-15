@@ -108,7 +108,7 @@ contract Storage is Ownable {
                 4) &&
                 (registeredUsers[keccak256(abi.encodePacked(msg.sender))]
                     .userType == 99)) || (owner() == msg.sender),
-            "address does not belong to an Admin"
+            "ST:MOD-IA-ERR:Address does not belong to an Admin"
         );
         _;
     }
@@ -125,19 +125,19 @@ contract Storage is Ownable {
 
         require(
             (senderType == 1) || (senderType == 9),
-            "MOD-UA-User not registered"
+            "ST:MOD-UA-ERR:User not registered"
         );
 
         require(
             (database[_idxHash].assetClass ==
                 registeredUsers[_senderHash].authorizedAssetClass),
-            "MOD-UA-User not registered for asset type"
+            "ST:MOD-UA-ERR:User not registered for asset type"
         );
 
         require(
             (database[_idxHash].assetStatus != 0) ||
                 (registeredUsers[_senderHash].userType == 1),
-            "MOD-UA-Non type 1 user cannot make changes to status 0 asset"
+            "ST:MOD-UA-ERR:Non type 1 user cannot make changes to status 0 asset"
         );
         _;
     }
@@ -155,7 +155,7 @@ contract Storage is Ownable {
                 3) &&
                 (authorizedAdresses[keccak256(abi.encodePacked(msg.sender))] <=
                     4),
-            "MOD-OAA-Contract not authorized or improperly permissioned"
+            "ST:MOD-OAA-ERR:Contract not authorized or improperly permissioned"
         );
         _;
     }
@@ -164,7 +164,7 @@ contract Storage is Ownable {
      * @dev Check record _idxHash exists and is not locked
      */
     modifier unlocked(bytes32 _idxHash) {
-        require((database[_idxHash].assetStatus < 200), "MOD-U-record Locked");
+        require((database[_idxHash].assetStatus < 200), "ST:MOD-U-ERR:Record Locked");
         _;
     }
 
@@ -174,7 +174,7 @@ contract Storage is Ownable {
     modifier exists(bytes32 _idxHash) {
         require(
             database[_idxHash].rightsHolder != 0,
-            "MOD-E-record does not exist"
+            "ST:MOD-E-ERR:Record does not exist"
         );
         _;
     }
@@ -186,7 +186,7 @@ contract Storage is Ownable {
         //this modifier makes the bold assumption the block number will "never" be reset. hopefully, this is true...
         require(
             database[_idxHash].timeLock < block.number,
-            "MOD-NTL-record time locked"
+            "ST:MOD-NTL-ERR:Record time locked"
         );
         _;
     }
@@ -211,13 +211,13 @@ contract Storage is Ownable {
                 (_userType == 1) ||
                 (_userType == 9) ||
                 (_userType == 99),
-            "AU:ER-13 Invalid user type"
+            "ST:OO-AU-ERR:Invalid user type"
         );
 
         bytes32 hash;
         hash = keccak256(abi.encodePacked(_authAddr));
 
-        emit REPORT("internal user database access!"); //report access to the internal user database
+        emit REPORT("Internal user database access!"); //report access to the internal user database
         registeredUsers[hash].userType = _userType;
         registeredUsers[hash].authorizedAssetClass = _authorizedAssetClass;
     }
@@ -230,8 +230,8 @@ contract Storage is Ownable {
         address _addr,
         uint8 _contractAuthLevel
     ) external onlyOwner {
-        require(_contractAuthLevel <= 4, "AC:ER-13 Invalid user type");
-        emit REPORT("internal user database access!"); //report access to the internal user database
+        require(_contractAuthLevel <= 4, "ST:OO-AC-ERR:Invalid user type");
+        emit REPORT("Internal user database access!"); //report access to the internal user database
 
         authorizedAdresses[keccak256(
             abi.encodePacked(_addr)
@@ -269,7 +269,7 @@ contract Storage is Ownable {
     {
         require(
             _stat > 199,
-            "AL:ERR--locking requires setting assetStatus > 199"
+            "ST:ADMIN-LS-ERR:Locking requires setting assetStatus > 199"
         );
         database[_idxHash].assetStatus = _stat;
     }
@@ -319,17 +319,17 @@ contract Storage is Ownable {
     ) external {
         require(
             registeredUsers[_userHash].userType == 1, //cannot use userAuth because record[idx] doesnt exist yet
-            "NR:ERR-User not registered"
+            "ST:NR-ERR:User not registered"
         );
         require(
             (_assetClass == registeredUsers[_userHash].authorizedAssetClass), //cannot use userAuth because record[idx] doesnt exist yet,
-            "NR:ERR-User not registered for asset class"
+            "ST:NR-ERR:User not registered for asset class"
         );
         require(
             database[_idxHash].rightsHolder == 0,
-            "NR:ERR-Record already exists"
+            "ST:NR-ERR:Record already exists"
         );
-        require(_rgt != 0, "NR:ERR-Rightsholder cannot be blank");
+        require(_rgt != 0, "ST:NR-ERR:Rightsholder cannot be blank");
 
         Record memory _record;
 
@@ -370,18 +370,18 @@ contract Storage is Ownable {
         bytes32 userHash = _userHash;
         bytes32 rgtHash = _rgtHash;
 
-        require(rgtHash != 0, "MR:ERR-Rightsholder cannot be blank");
+        require(rgtHash != 0, "ST:MR-ERR:Rightsholder cannot be blank");
         require( //prohibit increasing the countdown value
             _countDown <= database[idxHash].countDown,
-            "MR:ERR-new countDown exceeds original countDown"
+            "ST:MR-ERR:New countDown exceeds original countDown"
         );
         require(
             _forceCount >= database[idxHash].forceModCount,
-            "MR:ERR-new forceModCount less than original forceModCount"
+            "ST:MR-ERR:New forceModCount less than original forceModCount"
         );
         require(
             _assetStatus < 200,
-            "MR:ERR-assetStatus over 199 cannot be set by user"
+            "ST:MR-ERR:AssetStatus over 199 cannot be set by user"
         );
 
         database[idxHash].timeLock = block.number;
@@ -565,7 +565,7 @@ contract Storage is Ownable {
 
         require(
             (senderType == 1) || (senderType == 9),
-            "Resolver:ERR - User not registered - contract resolution denied"
+            "ST:RCA-ERR:User not registered - contract resolution denied"
         );
         return contractNames[_name];
     }
