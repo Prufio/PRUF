@@ -164,8 +164,6 @@ contract Storage is Ownable {
     event REPORT(string _msg);
 
     //--------------------------------Internal Admin functions / onlyowner or isAdmin---------------------------------//
-
-   
     /*
      * @dev Authorize / Deauthorize / Authorize ADRESSES permitted to make record modifications
      */

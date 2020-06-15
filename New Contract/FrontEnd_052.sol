@@ -2,23 +2,6 @@
 pragma solidity ^0.6.2;
 import "./PullPayment.sol";
 
-/*--------To do
- * Status 0 Default asset creation,FMR,reimport status
- * Status 5 Asset transferred - implies that asset holder is the owner.
- *          must be re-imported by ACadmin through regular onboarding process
- *          no actions besides modify RGT to a new rightsholder can be performed
- *          on a statuss 5 asset (no status changes) (Frontend)
- * Status 0-5 No actions can be performed by type 9 users. (real ACAdmins only can set or unset these statuses) except:
- *
- * status 6 transferrable, automation set/unset (secret confirmed)(ACAdmin can unset)
- * status 7 non-transferrable, automation set/unset (secret confirmed)(ACAdmin can unset)
- * status 8 stolen (automation set)(ONLY ACAdmin can unset)
- * status 9 lost (automation set/unset)(ACAdmin can unset)
- *
- *
-
- */
-
 interface StorageInterface {
     function newRecord(
         bytes32 _userHash,
