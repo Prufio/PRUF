@@ -22,6 +22,12 @@ import "./Ownable.sol";
  *
  */
 
+interface ACtokenInterface {
+    function ownerOf(uint256) external view returns (address);
+    //function mint(uint256) external view returns (address);
+    //function transfer(uint256,address) external view returns (address);
+}
+
 contract Storage is Ownable {
     struct Record {
         bytes32 recorder; // Address hash of recorder
@@ -56,6 +62,9 @@ contract Storage is Ownable {
     mapping(bytes32 => Record) private database; // Main Data Storage
     mapping(bytes32 => User) private registeredUsers; // Authorized recorder database
     mapping(uint16 => Costs) private cost; // Cost per function by asset class
+    address ACcontractAddress;
+    ACtokenInterface ACtokenContract; //erc721_token prototype initialization
+
 
     /*  NOTES:---------------------------------------------------------------------------------------//
      * Authorized external Contract / address types:   authorizedAdresses[]
@@ -109,6 +118,18 @@ contract Storage is Ownable {
                 (registeredUsers[keccak256(abi.encodePacked(msg.sender))]
                     .userType == 99)) || (owner() == msg.sender),
             "ST:MOD-IA-ERR:Address does not belong to an Admin"
+        );
+        _;
+    }
+
+    /*
+     * @dev Check msg.sender against adresses of ACtoken Holder
+     */
+    modifier ACtokenHolder(bytes32 idxHash) {
+        uint256 assetClass256 = uint256(database[idxHash].assetClass);
+        require( //origin address holds assetClass token, or assetClass is >60000
+                (ACtokenContract.ownerOf(assetClass256) == msg.sender),
+            "Contract not authorized in asset class"
         );
         _;
     }
@@ -196,6 +217,20 @@ contract Storage is Ownable {
     event REPORT(string _msg);
 
     //--------------------------------Internal Admin functions / onlyowner or isAdmin---------------------------------//
+    /*
+     * @dev SET ACTOKEN ADDRESS
+     * ----------------INSECURE -- keccak256 of address must be generated clientside in release.
+     */
+
+    function OO_set_AC_token(address _contractAddress)
+        external
+        onlyOwner
+    {
+        require(_contractAddress != address(0), "Invalid contract address");
+        require(ACcontractAddress == address(0), "Contract address cannot be reset");
+        ACcontractAddress = _contractAddress;
+        ACtokenContract = ACtokenInterface(_contractAddress);
+    }
 
     /*
      * @dev Authorize / Deauthorize / Authorize users for an address be permitted to make record modifications
