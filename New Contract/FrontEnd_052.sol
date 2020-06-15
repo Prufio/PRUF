@@ -1,10 +1,15 @@
+/*  TO DO
+* implement user level security and user permissioning (write to the user database)
+* implement price entry and mangement (maybe move pricing to westworld?)
+*/
+
+
 // SPDX-License-Identifier: UNLICENSED
 pragma solidity ^0.6.2;
 import "./PullPayment.sol";
 
 interface StorageInterface {
     function newRecord(
-        bytes32 _userHash,
         bytes32 _idxHash,
         bytes32 _rgt,
         uint16 _assetClass,
@@ -13,7 +18,6 @@ interface StorageInterface {
     ) external;
 
     function modifyRecord(
-        bytes32 _userHash,
         bytes32 _idxHash,
         bytes32 _rgt,
         uint8 _assetStatus,
@@ -22,7 +26,6 @@ interface StorageInterface {
     ) external;
 
     function modifyIpfs(
-        bytes32 _userHash,
         bytes32 _idxHash,
         bytes32 _Ipfs1,
         bytes32 _Ipfs2
@@ -54,7 +57,6 @@ interface StorageInterface {
             bytes32
         );
 
-    function getUser(bytes32 _userHash) external view returns (uint8, uint16);
 }
 
 contract FrontEnd is PullPayment, Ownable {
@@ -87,6 +89,9 @@ contract FrontEnd is PullPayment, Ownable {
         uint256 cost5; // Extra
         uint256 forceModifyCost; // Cost to brute-force a record transfer
     }
+
+    mapping(bytes32 => User) private registeredUsers; // Authorized recorder database
+    mapping(uint16 => Costs) private cost; // Cost per function by asset class
 
     address storageAddress;
     address internal mainWallet;
@@ -127,7 +132,6 @@ contract FrontEnd is PullPayment, Ownable {
         uint256 _countDownStart,
         bytes32 _Ipfs
     ) external payable {
-        Costs memory cost = getCost(_assetClass);
         User memory callingUser = getUser();
 
         require(
@@ -139,14 +143,13 @@ contract FrontEnd is PullPayment, Ownable {
              "NR: User not authorized to create records in specified asset class"
         );
         require(
-            msg.value >= cost.newRecordCost,
+            msg.value >= cost[_assetClass].newRecordCost,
             "NR: tx value too low. Send more eth."
         );
 
-        bytes32 userHash = keccak256(abi.encodePacked(msg.sender));
+        //bytes32 userHash = keccak256(abi.encodePacked(msg.sender));
 
         Storage.newRecord(
-            userHash,
             _idxHash,
             _rgtHash,
             _assetClass,
@@ -154,7 +157,7 @@ contract FrontEnd is PullPayment, Ownable {
             _Ipfs
         );
 
-        deductPayment(cost.newRecordCost);
+        deductPayment(cost[_assetClass].newRecordCost);
     }
 
     /*
@@ -166,7 +169,6 @@ contract FrontEnd is PullPayment, Ownable {
         returns (uint8)
     {
         Record memory rec = getRecord(_idxHash);
-        Costs memory cost = getCost(rec.assetClass);
         User memory callingUser = getUser();
 
         require(
@@ -178,7 +180,7 @@ contract FrontEnd is PullPayment, Ownable {
              "FMR: User not authorized to modify records in specified asset class"
         );
         require(
-            msg.value >= cost.forceModifyCost,
+            msg.value >= cost[rec.assetClass].forceModifyCost,
             "FMR: tx value too low. Send more eth."
         );
         require(rec.assetStatus < 200, "FMR:ERR-Record locked");
@@ -192,7 +194,7 @@ contract FrontEnd is PullPayment, Ownable {
 
         writeRecord(_idxHash, rec);
 
-        deductPayment(cost.forceModifyCost);
+        deductPayment(cost[rec.assetClass].forceModifyCost);
 
         return rec.forceModCount;
     }
@@ -206,7 +208,6 @@ contract FrontEnd is PullPayment, Ownable {
         returns (uint8)
     {
         Record memory rec = getRecord(_idxHash);
-        Costs memory cost = getCost(rec.assetClass);
         User memory callingUser = getUser();
 
         require(
@@ -222,7 +223,7 @@ contract FrontEnd is PullPayment, Ownable {
              "RR: Only status 5 assets can be reimported"
         );
         require(
-            msg.value >= cost.newRecordCost,
+            msg.value >= cost[rec.assetClass].newRecordCost,
             "RR: tx value too low. Send more eth."
         );
         require(rec.assetStatus < 200, "FMR:ERR-Record locked");
@@ -232,7 +233,7 @@ contract FrontEnd is PullPayment, Ownable {
 
         writeRecord(_idxHash, rec);
 
-        deductPayment(cost.newRecordCost);
+        deductPayment(cost[rec.assetClass].newRecordCost);
 
         return rec.assetStatus;
     }
@@ -313,7 +314,6 @@ contract FrontEnd is PullPayment, Ownable {
         bytes32 _newrgtHash
     ) external payable returns (uint8) {
         Record memory rec = getRecord(_idxHash);
-        Costs memory cost = getCost(rec.assetClass);
         User memory callingUser = getUser();
 
         // require(
@@ -325,7 +325,7 @@ contract FrontEnd is PullPayment, Ownable {
              "TA: User not authorized to modify records in specified asset class"
         );
         require(
-            msg.value >= cost.transferAssetCost,
+            msg.value >= cost[rec.assetClass].transferAssetCost,
             "TA: tx value too low. Send more eth."
         );
         require(rec.assetStatus < 200, "TA:ERR-Record locked");
@@ -343,7 +343,7 @@ contract FrontEnd is PullPayment, Ownable {
 
         writeRecord(_idxHash, rec);
 
-        deductPayment(cost.transferAssetCost);
+        deductPayment(cost[rec.assetClass].transferAssetCost);
 
         return (170);
     }
@@ -391,7 +391,6 @@ contract FrontEnd is PullPayment, Ownable {
         bytes32 _IpfsHash
     ) external payable returns (bytes32) {
         Record memory rec = getRecord(_idxHash);
-        Costs memory cost = getCost(rec.assetClass);
         User memory callingUser = getUser();
 
         // require(
@@ -403,7 +402,7 @@ contract FrontEnd is PullPayment, Ownable {
              "MI2:ERR--MI1: User not authorized to modify records in specified asset class"
         );
         require(
-            msg.value >= cost.createNoteCost,
+            msg.value >= cost[rec.assetClass].createNoteCost,
             "MI2:ERR--tx value too low. Send more eth."
         );
         require(rec.assetStatus < 200, "MI2:ERR-Record locked");
@@ -420,7 +419,7 @@ contract FrontEnd is PullPayment, Ownable {
 
         writeRecordIpfs(_idxHash, rec);
 
-        deductPayment(cost.createNoteCost);
+        deductPayment(cost[rec.assetClass].createNoteCost);
 
         return rec.Ipfs2;
     }
@@ -430,7 +429,7 @@ contract FrontEnd is PullPayment, Ownable {
      */
     function getUser() private view returns (User memory) { //User memory callingUser = getUser();
         User memory user;
-        (user.userType, user.authorizedAssetClass) = Storage.getUser(keccak256(abi.encodePacked(msg.sender)));
+        user = registeredUsers[keccak256(abi.encodePacked(msg.sender))];
         return user;
     }
 
@@ -474,19 +473,18 @@ contract FrontEnd is PullPayment, Ownable {
      * @dev Write an Ipfs Record to Storage @ idxHash
      */
     function writeRecordIpfs(bytes32 _idxHash, Record memory _rec) private {
-        bytes32 userHash = keccak256(abi.encodePacked(msg.sender)); // Get a userhash for authentication and recorder logging
+        //bytes32 userHash = keccak256(abi.encodePacked(msg.sender)); // Get a userhash for authentication and recorder logging
 
-        Storage.modifyIpfs(userHash, _idxHash, _rec.Ipfs1, _rec.Ipfs2); // Send data to storage
+        Storage.modifyIpfs(_idxHash, _rec.Ipfs1, _rec.Ipfs2); // Send data to storage
     }
 
     /*
      * @dev Write a Record to Storage @ idxHash
      */
     function writeRecord(bytes32 _idxHash, Record memory _rec) private {
-        bytes32 userHash = keccak256(abi.encodePacked(msg.sender)); // Get a userhash for authentication and recorder logging
+        //bytes32 userHash = keccak256(abi.encodePacked(msg.sender)); // Get a userhash for authentication and recorder logging
 
         Storage.modifyRecord(
-            userHash,
             _idxHash,
             _rec.rightsHolder,
             _rec.assetStatus,
@@ -515,20 +513,11 @@ contract FrontEnd is PullPayment, Ownable {
         withdrawPayments(msg.sender);
     }
 
-    /*
-     * @dev Returns cost from database and returns Costs struct
-     */
-    function getCost(uint16 _class) private returns (Costs memory) {
-        Costs memory cost;
-        (
-            cost.newRecordCost,
-            cost.transferAssetCost,
-            cost.createNoteCost,
-            cost.cost4,
-            cost.cost5,
-            cost.forceModifyCost
-        ) = Storage.retrieveCosts(_class);
-
-        return (cost);
-    }
+    // /*
+    //  * @dev Returns cost from database and returns Costs struct
+    //  */
+    // function getCost(uint16 _class) private returns (Costs memory){
+    //     Costs memory cost = cost[_class];
+    //     return (cost);
+    // }
 }
