@@ -3,6 +3,7 @@
  * implement remint_asset
  * implement stolenOrLost
  * implement escrow
+ * implement erc721 safeTransfer and awareness
  */
 
 // SPDX-License-Identifier: UNLICENSED
