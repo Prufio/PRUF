@@ -1,8 +1,9 @@
 /*  TO DO
-* implement user level security and user permissioning (write to the user database)
-* implement price entry and mangement (maybe move pricing to westworld?)
-*/
-
+ * implement user level security and user permissioning /modifiers
+ * implement remint_asset
+ * implement stolenOrLost
+ * implement escrow
+ */
 
 // SPDX-License-Identifier: UNLICENSED
 pragma solidity ^0.6.2;
@@ -10,6 +11,7 @@ import "./PullPayment.sol";
 
 interface StorageInterface {
     function newRecord(
+        bytes32 _userHash,
         bytes32 _idxHash,
         bytes32 _rgt,
         uint16 _assetClass,
@@ -18,29 +20,26 @@ interface StorageInterface {
     ) external;
 
     function modifyRecord(
+        bytes32 _userHash,
         bytes32 _idxHash,
-        bytes32 _rgt,
+        bytes32 _rgtHash,
         uint8 _assetStatus,
         uint256 _countDown,
         uint8 _forceCount
     ) external;
 
+    function setStolenOrLost(
+        bytes32 _userHash,
+        bytes32 _idxHash,
+        uint8 _newAssetStatus
+    ) external;
+
     function modifyIpfs(
+        bytes32 _userHash,
         bytes32 _idxHash,
         bytes32 _Ipfs1,
         bytes32 _Ipfs2
     ) external;
-
-    function retrieveCosts(uint16 _assetClass)
-        external
-        returns (
-            uint256,
-            uint256,
-            uint256,
-            uint256,
-            uint256,
-            uint256
-        );
 
     function retrieveRecord(bytes32 _idxHash)
         external
@@ -57,6 +56,26 @@ interface StorageInterface {
             bytes32
         );
 
+    function _verifyRightsHolder(bytes32, bytes32) external returns (uint256);
+
+    function blockchainVerifyRightsHolder(bytes32, bytes32)
+        external
+        returns (uint8);
+
+    function retrieveCosts(uint16 _assetClass)
+        external
+        returns (
+            uint256,
+            uint256,
+            uint256,
+            uint256,
+            uint256,
+            uint256
+        );
+
+    function resolveContractAddress(string calldata _name)
+        external
+        returns (address);
 }
 
 contract FrontEnd is PullPayment, Ownable {
@@ -85,19 +104,37 @@ contract FrontEnd is PullPayment, Ownable {
         uint256 newRecordCost; // Cost to create a new record
         uint256 transferAssetCost; // Cost to transfer a record from known rights holder to a new one
         uint256 createNoteCost; // Cost to add a static note to an asset
-        uint256 cost4; // Extra
-        uint256 cost5; // Extra
+        uint256 reMintRecordCost; // Extra
+        uint256 changeStatusCost; // Extra
         uint256 forceModifyCost; // Cost to brute-force a record transfer
     }
 
     mapping(bytes32 => User) private registeredUsers; // Authorized recorder database
-    mapping(uint16 => Costs) private cost; // Cost per function by asset class
 
     address storageAddress;
     address internal mainWallet;
     StorageInterface private Storage; // Set up external contract interface
 
     event REPORT(string _msg);
+
+    /*
+     * @dev Verify user credentials
+     * Originating Address:
+     *      Exists in registeredUsers as a usertype 1 or 9
+     *      Is authorized for asset class
+     */
+    modifier userAuth() {
+        uint8 senderType = registeredUsers[keccak256(
+            abi.encodePacked(msg.sender)
+        )]
+            .userType;
+
+        require(
+            (senderType == 1) || (senderType == 9),
+            "ST:MOD-UA-ERR:User not registered"
+        );
+        _;
+    }
 
     // --------------------------------------ADMIN FUNCTIONS--------------------------------------------//
     /*
@@ -120,6 +157,31 @@ contract FrontEnd is PullPayment, Ownable {
         mainWallet = _addr;
     }
 
+    /*
+     * @dev Authorize / Deauthorize / Authorize users for an address be permitted to make record modifications
+     * ----------------INSECURE -- keccak256 of address must be generated clientside in release.
+     */
+    function OO_addUser(
+        address _authAddr,
+        uint8 _userType,
+        uint16 _authorizedAssetClass
+    ) external onlyOwner {
+        require(
+            (_userType == 0) ||
+                (_userType == 1) ||
+                (_userType == 9) ||
+                (_userType == 99),
+            "ST:OO-AU-ERR:Invalid user type"
+        );
+
+        bytes32 hash;
+        hash = keccak256(abi.encodePacked(_authAddr));
+
+        emit REPORT("Internal user database access!"); //report access to the internal user database
+        registeredUsers[hash].userType = _userType;
+        registeredUsers[hash].authorizedAssetClass = _authorizedAssetClass;
+    }
+
     //--------------------------------------External functions--------------------------------------------//
 
     /*
@@ -134,22 +196,25 @@ contract FrontEnd is PullPayment, Ownable {
     ) external payable {
         User memory callingUser = getUser();
 
+        Costs memory cost = getCost(_assetClass);
+
         require(
             callingUser.userType == 1,
-             "NR: User not authorized to create records"
+            "NR: User not authorized to create records"
         );
         require(
             callingUser.authorizedAssetClass == _assetClass,
-             "NR: User not authorized to create records in specified asset class"
+            "NR: User not authorized to create records in specified asset class"
         );
         require(
-            msg.value >= cost[_assetClass].newRecordCost,
+            msg.value >= cost.newRecordCost,
             "NR: tx value too low. Send more eth."
         );
 
-        //bytes32 userHash = keccak256(abi.encodePacked(msg.sender));
+        bytes32 userHash = keccak256(abi.encodePacked(msg.sender));
 
         Storage.newRecord(
+            userHash,
             _idxHash,
             _rgtHash,
             _assetClass,
@@ -157,7 +222,7 @@ contract FrontEnd is PullPayment, Ownable {
             _Ipfs
         );
 
-        deductPayment(cost[_assetClass].newRecordCost);
+        deductPayment(cost.newRecordCost);
     }
 
     /*
@@ -170,17 +235,18 @@ contract FrontEnd is PullPayment, Ownable {
     {
         Record memory rec = getRecord(_idxHash);
         User memory callingUser = getUser();
+        Costs memory cost = getCost(rec.assetClass);
 
         require(
             callingUser.userType == 1,
-             "FMR: User not authorized to force modify records"
+            "FMR: User not authorized to force modify records"
         );
         require(
             callingUser.authorizedAssetClass == rec.assetClass,
-             "FMR: User not authorized to modify records in specified asset class"
+            "FMR: User not authorized to modify records in specified asset class"
         );
         require(
-            msg.value >= cost[rec.assetClass].forceModifyCost,
+            msg.value >= cost.forceModifyCost,
             "FMR: tx value too low. Send more eth."
         );
         require(rec.assetStatus < 200, "FMR:ERR-Record locked");
@@ -194,7 +260,7 @@ contract FrontEnd is PullPayment, Ownable {
 
         writeRecord(_idxHash, rec);
 
-        deductPayment(cost[rec.assetClass].forceModifyCost);
+        deductPayment(cost.forceModifyCost);
 
         return rec.forceModCount;
     }
@@ -209,21 +275,22 @@ contract FrontEnd is PullPayment, Ownable {
     {
         Record memory rec = getRecord(_idxHash);
         User memory callingUser = getUser();
+        Costs memory cost = getCost(rec.assetClass);
 
         require(
             callingUser.userType == 1,
-             "RR: User not authorized to force modify records"
+            "RR: User not authorized to force modify records"
         );
         require(
             callingUser.authorizedAssetClass == rec.assetClass,
-             "RR: User not authorized to modify records in specified asset class"
+            "RR: User not authorized to modify records in specified asset class"
         );
         require(
             rec.assetStatus == 5,
-             "RR: Only status 5 assets can be reimported"
+            "RR: Only status 5 assets can be reimported"
         );
         require(
-            msg.value >= cost[rec.assetClass].newRecordCost,
+            msg.value >= cost.reMintRecordCost,
             "RR: tx value too low. Send more eth."
         );
         require(rec.assetStatus < 200, "FMR:ERR-Record locked");
@@ -233,11 +300,10 @@ contract FrontEnd is PullPayment, Ownable {
 
         writeRecord(_idxHash, rec);
 
-        deductPayment(cost[rec.assetClass].newRecordCost);
+        deductPayment(cost.reMintRecordCost);
 
         return rec.assetStatus;
     }
-
 
     /*
      * @dev Modify **Record**.assetStatus with confirmation required
@@ -255,7 +321,7 @@ contract FrontEnd is PullPayment, Ownable {
         // );
         require(
             callingUser.authorizedAssetClass == rec.assetClass,
-             "MS: User not authorized to modify records in specified asset class"
+            "MS: User not authorized to modify records in specified asset class"
         );
 
         require(rec.assetStatus < 200, "MS:ERR-Record locked");
@@ -287,7 +353,7 @@ contract FrontEnd is PullPayment, Ownable {
         // );
         require(
             callingUser.authorizedAssetClass == rec.assetClass,
-             "DC: User not authorized to modify records in specified asset class"
+            "DC: User not authorized to modify records in specified asset class"
         );
         require(rec.assetStatus < 200, "DC:ERR-Record locked");
         require(
@@ -315,17 +381,17 @@ contract FrontEnd is PullPayment, Ownable {
     ) external payable returns (uint8) {
         Record memory rec = getRecord(_idxHash);
         User memory callingUser = getUser();
-
-        // require(
-        //     callingUser.userType == 1,
-        //      "FMR: User not authorized to create records"
-        // );
+        Costs memory cost = getCost(rec.assetClass);
         require(
-            callingUser.authorizedAssetClass == rec.assetClass,
-             "TA: User not authorized to modify records in specified asset class"
+            callingUser.userType == 1,
+            "FMR: User not authorized to create records"
         );
         require(
-            msg.value >= cost[rec.assetClass].transferAssetCost,
+            callingUser.authorizedAssetClass == rec.assetClass,
+            "TA: User not authorized to modify records in specified asset class"
+        );
+        require(
+            msg.value >= cost.transferAssetCost,
             "TA: tx value too low. Send more eth."
         );
         require(rec.assetStatus < 200, "TA:ERR-Record locked");
@@ -343,7 +409,7 @@ contract FrontEnd is PullPayment, Ownable {
 
         writeRecord(_idxHash, rec);
 
-        deductPayment(cost[rec.assetClass].transferAssetCost);
+        deductPayment(cost.transferAssetCost);
 
         return (170);
     }
@@ -358,14 +424,11 @@ contract FrontEnd is PullPayment, Ownable {
     ) external returns (bytes32) {
         Record memory rec = getRecord(_idxHash);
         User memory callingUser = getUser();
+        //Costs memory cost = getCost(rec.assetClass);
 
-        // require(
-        //     callingUser.userType == 1,
-        //      "FMR: User not authorized to create records"
-        // );
         require(
             callingUser.authorizedAssetClass == rec.assetClass,
-             "MI1: User not authorized to modify records in specified asset class"
+            "MI1: User not authorized to modify records in specified asset class"
         );
 
         require(rec.assetStatus < 200, "MI1:ERR-Record locked");
@@ -392,17 +455,13 @@ contract FrontEnd is PullPayment, Ownable {
     ) external payable returns (bytes32) {
         Record memory rec = getRecord(_idxHash);
         User memory callingUser = getUser();
-
-        // require(
-        //     callingUser.userType == 1,
-        //      "FMR: User not authorized to create records"
-        // );
+        Costs memory cost = getCost(rec.assetClass);
         require(
             callingUser.authorizedAssetClass == rec.assetClass,
-             "MI2:ERR--MI1: User not authorized to modify records in specified asset class"
+            "MI2:ERR--MI1: User not authorized to modify records in specified asset class"
         );
         require(
-            msg.value >= cost[rec.assetClass].createNoteCost,
+            msg.value >= cost.createNoteCost,
             "MI2:ERR--tx value too low. Send more eth."
         );
         require(rec.assetStatus < 200, "MI2:ERR-Record locked");
@@ -419,7 +478,7 @@ contract FrontEnd is PullPayment, Ownable {
 
         writeRecordIpfs(_idxHash, rec);
 
-        deductPayment(cost[rec.assetClass].createNoteCost);
+        deductPayment(cost.createNoteCost);
 
         return rec.Ipfs2;
     }
@@ -427,7 +486,8 @@ contract FrontEnd is PullPayment, Ownable {
     /*
      * @dev Get a User Record from Storage @ msg.sender
      */
-    function getUser() private view returns (User memory) { //User memory callingUser = getUser();
+    function getUser() private view returns (User memory) {
+        //User memory callingUser = getUser();
         User memory user;
         user = registeredUsers[keccak256(abi.encodePacked(msg.sender))];
         return user;
@@ -473,18 +533,19 @@ contract FrontEnd is PullPayment, Ownable {
      * @dev Write an Ipfs Record to Storage @ idxHash
      */
     function writeRecordIpfs(bytes32 _idxHash, Record memory _rec) private {
-        //bytes32 userHash = keccak256(abi.encodePacked(msg.sender)); // Get a userhash for authentication and recorder logging
+        bytes32 userHash = keccak256(abi.encodePacked(msg.sender)); // Get a userhash for authentication and recorder logging
 
-        Storage.modifyIpfs(_idxHash, _rec.Ipfs1, _rec.Ipfs2); // Send data to storage
+        Storage.modifyIpfs(userHash, _idxHash, _rec.Ipfs1, _rec.Ipfs2); // Send data to storage
     }
 
     /*
      * @dev Write a Record to Storage @ idxHash
      */
     function writeRecord(bytes32 _idxHash, Record memory _rec) private {
-        //bytes32 userHash = keccak256(abi.encodePacked(msg.sender)); // Get a userhash for authentication and recorder logging
+        bytes32 userHash = keccak256(abi.encodePacked(msg.sender)); // Get a userhash for authentication and recorder logging
 
         Storage.modifyRecord(
+            userHash,
             _idxHash,
             _rec.rightsHolder,
             _rec.assetStatus,
@@ -513,11 +574,20 @@ contract FrontEnd is PullPayment, Ownable {
         withdrawPayments(msg.sender);
     }
 
-    // /*
-    //  * @dev Returns cost from database and returns Costs struct
-    //  */
-    // function getCost(uint16 _class) private returns (Costs memory){
-    //     Costs memory cost = cost[_class];
-    //     return (cost);
-    // }
+    /*
+     * @dev Returns cost from database and returns Costs struct
+     */
+    function getCost(uint16 _class) private returns (Costs memory) {
+        Costs memory cost;
+        (
+            cost.newRecordCost,
+            cost.transferAssetCost,
+            cost.createNoteCost,
+            cost.reMintRecordCost,
+            cost.changeStatusCost,
+            cost.forceModifyCost
+        ) = Storage.retrieveCosts(_class);
+
+        return (cost);
+    }
 }
