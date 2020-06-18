@@ -1,8 +1,4 @@
 /*  TO DO
- * integration of ACtoken requirements?
- * integration of assetToken Checks ? (userHash must hold token if asset token exists?)
- * implement stolenOrLost
- * implement escrow
 
 
         bytes32 userHash = keccak256(abi.encodePacked(msg.sender));
@@ -180,7 +176,7 @@ contract Storage is Ownable {
         require(
             ((database[_idxHash].assetStatus != 6) &&
                 (database[_idxHash].assetStatus != 12)) ||
-                database[_idxHash].timeLock < now, //Since time here is +/1 a day or so, now can be used as per the 15 second rule (consensys)
+                (database[_idxHash].timeLock < block.timestamp), //Since time here is +/1 a day or so, now can be used as per the 15 second rule (consensys)
             "MOD-U-record modification prohibited while locked in escrow"
         );
         _;
@@ -200,10 +196,12 @@ contract Storage is Ownable {
     /*
      * @dev Check record isn't time locked
      */
-    modifier notTimeLocked(bytes32 _idxHash) {
+    modifier notBlockLocked(bytes32 _idxHash) {
         //this modifier makes the bold assumption the block number will "never" be reset. hopefully, this is true...
         require(
-            database[_idxHash].timeLock < block.number,
+            ((database[_idxHash].assetStatus == 6) ||
+                (database[_idxHash].assetStatus == 12)) ||
+                database[_idxHash].timeLock < block.number,
             "MOD-NTL-record time locked"
         );
         _;
@@ -212,6 +210,7 @@ contract Storage is Ownable {
     //-----------------------------------------------Events------------------------------------------------//
 
     event REPORT(string _msg);
+    event REPORT_B32(string _msg, bytes32 b32);
 
     //--------------------------------Internal Admin functions / onlyowner or isAdmin---------------------------------//
     /*
@@ -302,13 +301,12 @@ contract Storage is Ownable {
         uint256 _countDownStart,
         bytes32 _Ipfs1
     ) external isAuthorized {
-        uint256 assetClass256 = uint256(_assetClass);
-        require( //origin address holds assetClass token, or assetClass is >=65000
-            (database[_idxHash].assetClass >= 65000) ||
-                (ACtokenContract.ownerOf(assetClass256) == msg.sender),
-            "NR:ERR-Contract not authorized in asset class"
-        );
-
+        // uint256 assetClass256 = uint256(_assetClass);
+        // require( //origin address holds assetClass token, or assetClass is >=65000
+        //     (database[_idxHash].assetClass >= 65000) ||
+        //         (ACtokenContract.ownerOf(assetClass256) == msg.sender),
+        //     "NR:ERR-Contract not authorized in asset class"
+        // );
         require(
             database[_idxHash].rightsHolder == 0,
             "NR:ERR-Record already exists"
@@ -347,8 +345,8 @@ contract Storage is Ownable {
         isAuthorized
         exists(_idxHash)
         notEscrow(_idxHash)
-        notTimeLocked(_idxHash)
-        isACtokenHolder(_idxHash)
+        notBlockLocked(_idxHash)
+        //isACtokenHolder(_idxHash)
     {
         bytes32 idxHash = _idxHash;
         bytes32 rgtHash = _rgtHash;
@@ -383,6 +381,9 @@ contract Storage is Ownable {
         emit REPORT("Record modified");
     }
 
+    /*
+     * @dev Set an asset tot stolen or lost. Allows narrow modification of status 6/12 assets, normally locked
+     */
     function setStolenOrLost(
         bytes32 _userHash,
         bytes32 _idxHash,
@@ -391,11 +392,9 @@ contract Storage is Ownable {
         external
         isAuthorized
         exists(_idxHash)
-        notTimeLocked(_idxHash)
-        isACtokenHolder(_idxHash)
+        notBlockLocked(_idxHash)
+        //isACtokenHolder(_idxHash)
     {
-        _idxHash;
-
         require(
             (_newAssetStatus == 3) ||
                 (_newAssetStatus == 4) ||
@@ -406,10 +405,6 @@ contract Storage is Ownable {
         require(
             (database[_idxHash].assetStatus != 5),
             "MR:ERR-Transferred status cannot be set to lost or stolen."
-        );
-        require(
-            _newAssetStatus < 200,
-            "MR:ERR-assetStatus over 199 cannot be set by user"
         );
 
         database[_idxHash].timeLock = block.number;
@@ -426,6 +421,86 @@ contract Storage is Ownable {
     }
 
     /*
+     * @dev Set an asset to escrow status (6/12). Sets timelock for unix timestamp of escrow end.
+     */
+    function setEscrow(
+        bytes32 _userHash,
+        bytes32 _idxHash,
+        uint8 _newAssetStatus,
+        uint256 _escrowTime
+    )
+        external
+        isAuthorized
+        exists(_idxHash)
+        notEscrow(_idxHash)
+        notBlockLocked(_idxHash)
+        //isACtokenHolder(_idxHash)
+    {
+        require(
+            (_newAssetStatus == 6) || (_newAssetStatus == 12),
+            "MR:ERR-Must set to an escrow status"
+        );
+        require(
+            (database[_idxHash].assetStatus != 3) &&
+                (database[_idxHash].assetStatus != 4) &&
+                (database[_idxHash].assetStatus != 5) &&
+                (database[_idxHash].assetStatus != 9) &&
+                (database[_idxHash].assetStatus != 10),
+            "MR:ERR-Transferred, lost, or stolen status cannot be set to escrow."
+        );
+
+        database[_idxHash].timeLock = block.number;
+        Record memory _record = database[_idxHash];
+
+        (_record.lastRecorder, _record.recorder) = storeRecorder(
+            _idxHash,
+            _userHash
+        );
+        _record.assetStatus = _newAssetStatus;
+        _record.timeLock = _escrowTime;
+
+        database[_idxHash] = _record;
+        emit REPORT("Record locked for escrow");
+    }
+
+    /*
+     * @dev remove an asset from escrow status.
+     */
+    function endEscrow(
+        bytes32 _userHash,
+        bytes32 _idxHash,
+        uint8 _newAssetStatus
+    ) external
+    isAuthorized
+    exists(_idxHash)
+    //isACtokenHolder(_idxHash)
+    {
+        require(
+            (database[_idxHash].recorder == _userHash) ||
+                (database[_idxHash].timeLock < block.timestamp),
+            "EE:ERR-Escrow can only be ended early by the originator of the escrow."
+        );
+
+        require(
+            (database[_idxHash].assetStatus == 6) ||
+                (database[_idxHash].assetStatus == 12),
+            "EE:ERR-Asset not in escrow"
+        );
+
+        database[_idxHash].timeLock = block.number;
+        Record memory _record = database[_idxHash];
+
+        (_record.lastRecorder, _record.recorder) = storeRecorder(
+            _idxHash,
+            _userHash
+        );
+        _record.assetStatus = _newAssetStatus;
+
+        database[_idxHash] = _record;
+        emit REPORT("Escrow ended");
+    }
+
+    /*
      * @dev Modify record Ipfs data
      */
     function modifyIpfs(
@@ -438,8 +513,8 @@ contract Storage is Ownable {
         isAuthorized
         exists(_idxHash)
         notEscrow(_idxHash)
-        notTimeLocked(_idxHash)
-        isACtokenHolder(_idxHash)
+        notBlockLocked(_idxHash)
+        //isACtokenHolder(_idxHash)
     {
         string memory retMessage = "No modifications made";
 
@@ -475,7 +550,7 @@ contract Storage is Ownable {
     function retrieveRecord(bytes32 _idxHash)
         external
         view
-        exists(_idxHash)
+        //exists(_idxHash)
         returns (
             bytes32,
             bytes32,
@@ -490,6 +565,15 @@ contract Storage is Ownable {
         )
     {
         Record memory rec = database[_idxHash];
+
+        // if (
+        //     (rec.assetStatus == 3) ||
+        //     (rec.assetStatus == 4) ||
+        //     (rec.assetStatus == 9) ||
+        //     (rec.assetStatus == 10)
+        // ) {
+        //     emit REPORT_B32("Lost or stolen record queried", _idxHash);
+        // }
 
         return (
             rec.recorder,

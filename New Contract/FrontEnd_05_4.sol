@@ -42,6 +42,19 @@ interface StorageInterface {
         bytes32 _Ipfs2
     ) external;
 
+    function setEscrow(
+        bytes32 _userHash,
+        bytes32 _idxHash,
+        uint8 _newAssetStatus,
+        uint256 _escrowTime
+    ) external;
+
+    function endEscrow(
+        bytes32 _userHash,
+        bytes32 _idxHash,
+        uint8 _newAssetStatus
+    ) external;
+
     function retrieveRecord(bytes32 _idxHash)
         external
         returns (
