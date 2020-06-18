@@ -143,7 +143,7 @@ class NewRecord extends Component {
     return (
       <Form className="NRform">
         {this.state.addr === undefined && (
-          <div className="VRresults">
+          <div className="errorResults">
             <h2>WARNING!</h2>
             <h3>Injected web3 not connected to form!</h3>
           </div>

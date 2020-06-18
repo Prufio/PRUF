@@ -5,7 +5,6 @@
   
   body {
     background-color: rgb(133, 133, 133);
-    padding: 0rem;
     margin: 0;
   }
   h1, h2, h3, h4, ul, li {
@@ -42,7 +41,6 @@
 
   .page {
     background-color: rgb(87, 87, 87);
-    padding: 0.0rem;
     height: 100rem;
     width: 100% ;
     display:flex;
@@ -98,7 +96,7 @@
     margin-bottom: 1.0rem;
   }
   .active {
-    background-color: #0099FF;
+    background-color: rgb(93, 162, );
 
   }
 
@@ -395,6 +393,22 @@
     padding: 1rem;
     margin-left: -0.5rem;
  
+  }
+  .errorResults {
+    height: 7.0rem;
+    width: 50.0rem;
+    background-color:black;
+    color: white;
+    border-radius: 1.0rem;
+    font-size: 1.4rem;
+    padding: 1.0rem;
+    display:flex;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: normal;
+    margin-left: 2.5rem;
+    margin-top: 20rem;
+
   }
 
   .VRHresults {

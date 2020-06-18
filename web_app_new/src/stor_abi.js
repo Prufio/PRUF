@@ -36,85 +36,12 @@ function returnStorageAbi() {
 			{
 				"inputs": [
 					{
-						"internalType": "string",
-						"name": "_idx",
-						"type": "string"
-					},
-					{
-						"internalType": "string",
-						"name": "_rgt",
-						"type": "string"
-					}
-				],
-				"name": "ADMIN_compare_rgt",
-				"outputs": [
-					{
-						"internalType": "string",
-						"name": "",
-						"type": "string"
-					}
-				],
-				"stateMutability": "view",
-				"type": "function"
-			},
-			{
-				"inputs": [
-					{
-						"internalType": "bytes32",
-						"name": "_idxHash",
-						"type": "bytes32"
-					},
-					{
-						"internalType": "uint8",
-						"name": "_stat",
-						"type": "uint8"
-					}
-				],
-				"name": "ADMIN_lockStatus",
-				"outputs": [],
-				"stateMutability": "nonpayable",
-				"type": "function"
-			},
-			{
-				"inputs": [
-					{
 						"internalType": "bytes32",
 						"name": "_idxHash",
 						"type": "bytes32"
 					}
 				],
 				"name": "ADMIN_resetFMC",
-				"outputs": [],
-				"stateMutability": "nonpayable",
-				"type": "function"
-			},
-			{
-				"inputs": [
-					{
-						"internalType": "bytes32",
-						"name": "_idxHash",
-						"type": "bytes32"
-					},
-					{
-						"internalType": "uint256",
-						"name": "_blockNumber",
-						"type": "uint256"
-					}
-				],
-				"name": "ADMIN_setTimelock",
-				"outputs": [],
-				"stateMutability": "nonpayable",
-				"type": "function"
-			},
-			{
-				"inputs": [
-					{
-						"internalType": "bytes32",
-						"name": "_idxHash",
-						"type": "bytes32"
-					}
-				],
-				"name": "ADMIN_unlock",
 				"outputs": [],
 				"stateMutability": "nonpayable",
 				"type": "function"
@@ -145,29 +72,6 @@ function returnStorageAbi() {
 			{
 				"inputs": [
 					{
-						"internalType": "address",
-						"name": "_authAddr",
-						"type": "address"
-					},
-					{
-						"internalType": "uint8",
-						"name": "_userType",
-						"type": "uint8"
-					},
-					{
-						"internalType": "uint16",
-						"name": "_authorizedAssetClass",
-						"type": "uint16"
-					}
-				],
-				"name": "OO_addUser",
-				"outputs": [],
-				"stateMutability": "nonpayable",
-				"type": "function"
-			},
-			{
-				"inputs": [
-					{
 						"internalType": "uint16",
 						"name": "_class",
 						"type": "uint16"
@@ -189,12 +93,12 @@ function returnStorageAbi() {
 					},
 					{
 						"internalType": "uint256",
-						"name": "_cost4",
+						"name": "_reMintRecordCost",
 						"type": "uint256"
 					},
 					{
 						"internalType": "uint256",
-						"name": "_cost5",
+						"name": "_modifyStatusCost",
 						"type": "uint256"
 					},
 					{
@@ -204,6 +108,19 @@ function returnStorageAbi() {
 					}
 				],
 				"name": "OO_setCosts",
+				"outputs": [],
+				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "address",
+						"name": "_contractAddress",
+						"type": "address"
+					}
+				],
+				"name": "OO_set_AC_token",
 				"outputs": [],
 				"stateMutability": "nonpayable",
 				"type": "function"
@@ -505,6 +422,29 @@ function returnStorageAbi() {
 					}
 				],
 				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "bytes32",
+						"name": "_userHash",
+						"type": "bytes32"
+					},
+					{
+						"internalType": "bytes32",
+						"name": "_idxHash",
+						"type": "bytes32"
+					},
+					{
+						"internalType": "uint8",
+						"name": "_newAssetStatus",
+						"type": "uint8"
+					}
+				],
+				"name": "setStolenOrLost",
+				"outputs": [],
+				"stateMutability": "nonpayable",
 				"type": "function"
 			},
 			{

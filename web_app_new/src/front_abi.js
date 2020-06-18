@@ -130,6 +130,30 @@ function returnFrontEndAbi() {
 						"internalType": "bytes32",
 						"name": "_rgtHash",
 						"type": "bytes32"
+					}
+				],
+				"name": "$reimportRecord",
+				"outputs": [
+					{
+						"internalType": "uint8",
+						"name": "",
+						"type": "uint8"
+					}
+				],
+				"stateMutability": "payable",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "bytes32",
+						"name": "_idxHash",
+						"type": "bytes32"
+					},
+					{
+						"internalType": "bytes32",
+						"name": "_rgtHash",
+						"type": "bytes32"
 					},
 					{
 						"internalType": "bytes32",
@@ -153,6 +177,29 @@ function returnFrontEndAbi() {
 				"name": "$withdraw",
 				"outputs": [],
 				"stateMutability": "payable",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "address",
+						"name": "_authAddr",
+						"type": "address"
+					},
+					{
+						"internalType": "uint8",
+						"name": "_userType",
+						"type": "uint8"
+					},
+					{
+						"internalType": "uint16",
+						"name": "_authorizedAssetClass",
+						"type": "uint16"
+					}
+				],
+				"name": "OO_addUser",
+				"outputs": [],
+				"stateMutability": "nonpayable",
 				"type": "function"
 			},
 			{

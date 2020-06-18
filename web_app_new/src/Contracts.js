@@ -1,7 +1,7 @@
 function returnAddresses() {
   var addrArray = [];
-  const storageAddress = "0x37259b5A5FbAC8D855d1283a7F5D542208Bd9412";
-  const frontEndAddress = "0x2E70fB5908C6541d13Ac356D0C1AEc4C59fb6F75";
+  const storageAddress = "0xE4B87e2F8d51b8cbd87Cb6898CF94Dc4a52B0e8e";
+  const frontEndAddress = "0x6584aA06eb1F0376ab888Fc972A1d9C9EDf8F48b";
   addrArray[0] = storageAddress;
   addrArray[1] = frontEndAddress;
   return addrArray;
