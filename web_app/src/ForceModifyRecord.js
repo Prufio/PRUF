@@ -100,8 +100,6 @@ class ForceModifyRecord extends Component {
 
     const _forceModifyRecord = () => {
       var idxHash = this.state.web3.utils.soliditySha3(this.state.type, this.state.manufacturer, this.state.model, this.state.serial);
-      var rgtRaw = this.state.web3.utils.soliditySha3(this.state.first, this.state.middle, this.state.surname, this.state.id, this.state.secret);
-      var rgtHash = this.state.web3.utils.soliditySha3(idxHash, rgtRaw);
       var newRgtRaw = this.state.web3.utils.soliditySha3(this.state.newFirst, this.state.newMiddle, this.state.newSurname, this.state.newId, this.state.newSecret);
       var newRgtHash = this.state.web3.utils.soliditySha3(idxHash, newRgtRaw);
   

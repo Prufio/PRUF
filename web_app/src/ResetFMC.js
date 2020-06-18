@@ -1,10 +1,9 @@
 import React, { Component } from "react";
 import returnStorageAbi from "./stor_abi";
-import returnFrontEndAbi from "./front_abi";
 import returnAddresses from "./Contracts";
 import Web3 from "web3";
 
-class AddUser extends Component {
+class ResetFMC extends Component {
 
   constructor(props){
     super(props);
@@ -22,12 +21,13 @@ class AddUser extends Component {
     //Component state declaration
 
     this.state = {
-      addr: "",
+      addr: undefined,
       error: undefined,
       result: "",
-      authAddr: "",
-      userType: "",
-      assetClass: "",
+      model: "",
+      manufacturer: "",
+      type: "",
+      serial: "",
       storage: ""
     }
 
@@ -39,20 +39,15 @@ class AddUser extends Component {
     this.setState({web3: _web3});
     _web3.eth.getAccounts().then((e) => this.setState({addr: e[0]}));
     var addrArray = returnAddresses(); 
-    var _frontend_addr = addrArray[1];
-      var _storage_addr = addrArray[0];
-      const storage_abi = returnStorageAbi();
-      const frontEnd_abi = returnFrontEndAbi();
-      const _storage = new _web3.eth.Contract(
-        storage_abi, 
-        _storage_addr);
-      const _frontend = new _web3.eth.Contract(
-        frontEnd_abi,
-        _frontend_addr
-        );
+    var _storage_addr = addrArray[0];
+    const storage_abi = returnStorageAbi();
+
+    const _storage = new _web3.eth.Contract(
+    storage_abi, 
+    _storage_addr
+    );
 
     this.setState({storage: _storage})
-    this.setState({frontend: _frontend})
 
     document.addEventListener("accountListener", this.acctChanger());
   }
@@ -60,14 +55,14 @@ class AddUser extends Component {
   componentWillUnmount() { 
     console.log("unmounting component")
     document.removeEventListener("accountListener", this.acctChanger())
-}
+  }
 
   render(){
     const self = this;
-
-    const addUser = () => {
-      this.state.frontend.methods
-        .OO_addUser(this.state.authAddr, this.state.userType, this.state.assetClass)
+    const resetCount = () => {
+      var idxHash = this.state.web3.utils.soliditySha3(this.state.type, this.state.manufacturer, this.state.model, this.state.serial);
+      this.state.storage.methods
+        .ADMIN_resetFMC(idxHash)
         .send({ from: this.state.addr}).on("error", function(_error){self.setState({error: _error});self.setState({result: _error.transactionHash});})
         .on("receipt", (receipt) => {
           console.log("user added succesfully under asset class", self.state.assetClass)
@@ -87,39 +82,47 @@ class AddUser extends Component {
           )}
         {this.state.addr > 0 && (
         <form className="ANform">
-          <h2>Add User</h2>
-          User Address:
+          <h2>Reset FMC</h2>
+        Type:
         <input
           type="text"
-          name="authAddr"
-          placeholder="address to authorize"
-          required
-          onChange={(e) => this.setState({authAddr: e.target.value})}
-        />
-        <br></br>
-        User Type:
-        <input
-          type="text"
-          name="userType"
+          name="type"
           placeholder="type"
           required
-          onChange={(e) => this.setState({userType: e.target.value})}
+          onChange={(e) => this.setState({name: e.target.value})}
         />
         <br></br>
-        Asset Class:
+        Manufacturer:
         <input
           type="text"
-          name="assetClass"
-          placeholder="authorized asset class"
+          name="manufacturer"
+          placeholder="manufacturer"
           required
-          onChange={(e) => this.setState({assetClass: e.target.value})}
+          onChange={(e) => this.setState({authAddress: e.target.value})}
         />
         <br></br>
-          <input type="button" value="Add User" onClick={addUser} />
+        Model:
+        <input
+          type="text"
+          name="model"
+          placeholder="model #"
+          required
+          onChange={(e) => this.setState({authLevel: e.target.value})}
+        />
+        <br></br>
+        Serial:
+        <input
+          type="text"
+          name="serial"
+          placeholder="serial #"
+          required
+          onChange={(e) => this.setState({authLevel: e.target.value})}
+        />
+        <br></br>
+          <input type="button" value="Reset FMC" onClick={resetCount} />
         </form>)}
       </div>
     );}
 }
 
-export default AddUser;
-
+export default ResetFMC;

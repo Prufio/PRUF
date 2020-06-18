@@ -4,7 +4,7 @@ import returnFrontEndAbi from "./front_abi";
 import returnAddresses from "./Contracts";
 import Web3 from "web3";
 
-class AddUser extends Component {
+class SetCosts extends Component {
 
   constructor(props){
     super(props);
@@ -28,7 +28,14 @@ class AddUser extends Component {
       authAddr: "",
       userType: "",
       assetClass: "",
-      storage: ""
+      storage: "",
+
+      newRecordCost: 0,
+      transferRecordCost: 0,
+      createNoteCost: 0,
+      cost4: 0,
+      cost5: 0,
+      forceModCost: 0
     }
 
   }
@@ -65,12 +72,21 @@ class AddUser extends Component {
   render(){
     const self = this;
 
-    const addUser = () => {
-      this.state.frontend.methods
-        .OO_addUser(this.state.authAddr, this.state.userType, this.state.assetClass)
+    const setCosts = () => {
+      this.state.storage.methods
+        .OO_setCosts(
+          
+          this.state.assetClass, 
+          this.state.newRecordCost, 
+          this.state.transferRecordCost, 
+          this.state.createNoteCost, 
+          this.state.cost4, 
+          this.state.cost5, 
+          this.state.forceModCost)
+
         .send({ from: this.state.addr}).on("error", function(_error){self.setState({error: _error});self.setState({result: _error.transactionHash});})
         .on("receipt", (receipt) => {
-          console.log("user added succesfully under asset class", self.state.assetClass)
+          console.log("costs succesfully updated under asset class", self.state.assetClass)
           console.log("tx receipt: ", receipt)
         });
     
@@ -87,39 +103,74 @@ class AddUser extends Component {
           )}
         {this.state.addr > 0 && (
         <form className="ANform">
-          <h2>Add User</h2>
-          User Address:
-        <input
-          type="text"
-          name="authAddr"
-          placeholder="address to authorize"
-          required
-          onChange={(e) => this.setState({authAddr: e.target.value})}
-        />
-        <br></br>
-        User Type:
-        <input
-          type="text"
-          name="userType"
-          placeholder="type"
-          required
-          onChange={(e) => this.setState({userType: e.target.value})}
-        />
-        <br></br>
-        Asset Class:
+          <h2>Set Costs</h2>
+          Asset Class:
         <input
           type="text"
           name="assetClass"
-          placeholder="authorized asset class"
+          placeholder="asset class"
           required
           onChange={(e) => this.setState({assetClass: e.target.value})}
         />
         <br></br>
-          <input type="button" value="Add User" onClick={addUser} />
+        New Record:
+        <input
+          type="text"
+          name="NRcost"
+          placeholder="cost"
+          required
+          onChange={(e) => this.setState({newRecordCost: e.target.value})}
+        />
+        <br></br>
+        Transfer Asset:
+        <input
+          type="text"
+          name="TAcost"
+          placeholder="cost"
+          required
+          onChange={(e) => this.setState({transferRecordCost: e.target.value})}
+        />
+        <br></br>
+        Etch note:
+        <input
+          type="text"
+          name="CNcost"
+          placeholder="cost"
+          required
+          onChange={(e) => this.setState({createNoteCost: e.target.value})}
+        />
+        <br></br>
+        Cost4:
+        <input
+          type="text"
+          name="cost4"
+          placeholder="cost"
+          required
+          onChange={(e) => this.setState({cost4: e.target.value})}
+        />
+        <br></br>
+        Cost5:
+        <input
+          type="text"
+          name="cost5"
+          placeholder="cost"
+          required
+          onChange={(e) => this.setState({cost5: e.target.value})}
+        />
+        <br></br>
+        Force Modify:
+        <input
+          type="text"
+          name="FMcost"
+          placeholder="cost"
+          required
+          onChange={(e) => this.setState({forceModCost: e.target.value})}
+        />
+        <br></br>
+          <input type="button" value="Set Costs" onClick={setCosts} />
         </form>)}
       </div>
     );}
 }
 
-export default AddUser;
-
+export default SetCosts;
