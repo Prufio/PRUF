@@ -1,10 +1,9 @@
 import React, { Component } from "react";
 import returnStorageAbi from "./stor_abi";
-import returnFrontEndAbi from "./front_abi";
 import returnAddresses from "./Contracts";
 import Web3 from "web3";
 
-class AddUser extends Component {
+class Ownership extends Component {
 
   constructor(props){
     super(props);
@@ -25,8 +24,8 @@ class AddUser extends Component {
       addr: "",
       error: undefined,
       result: "",
-      authAddr: "",
-      userType: "",
+      newOwner: "",
+      toggle: false,
       assetClass: "",
       storage: ""
     }
@@ -39,20 +38,15 @@ class AddUser extends Component {
     this.setState({web3: _web3});
     _web3.eth.getAccounts().then((e) => this.setState({addr: e[0]}));
     var addrArray = returnAddresses(); 
-    var _frontend_addr = addrArray[1];
-      var _storage_addr = addrArray[0];
-      const storage_abi = returnStorageAbi();
-      const frontEnd_abi = returnFrontEndAbi();
-      const _storage = new _web3.eth.Contract(
-        storage_abi, 
-        _storage_addr);
-      const _frontend = new _web3.eth.Contract(
-        frontEnd_abi,
-        _frontend_addr
-        );
+    var _storage_addr = addrArray[0];
+    const storage_abi = returnStorageAbi();
+
+    const _storage = new _web3.eth.Contract(
+    storage_abi, 
+    _storage_addr
+    );
 
     this.setState({storage: _storage})
-    this.setState({frontend: _frontend})
 
     document.addEventListener("accountListener", this.acctChanger());
   }
@@ -65,12 +59,29 @@ class AddUser extends Component {
   render(){
     const self = this;
 
-    const addUser = () => {
-      this.state.frontend.methods
-        .OO_addUser(this.state.authAddr, this.state.userType, this.state.assetClass)
+    const toggleRenounce = () => {
+        if(this.state.toggle === false){this.setState({toggle: true});alert("You are about to renounce the current storage contract. Proceed with caution.")}
+        else{this.setState({toggle: false})}
+    }
+
+    const renounce = () => {
+        this.state.storage.methods
+        .renounceOwnership()
         .send({ from: this.state.addr}).on("error", function(_error){self.setState({error: _error});self.setState({result: _error.transactionHash});})
         .on("receipt", (receipt) => {
-          console.log("user added succesfully under asset class", self.state.assetClass)
+          console.log("Ownership renounced")
+          console.log("tx receipt: ", receipt)
+        });
+    
+      console.log(this.state.txHash);
+    }
+
+    const transfer = () => {
+      this.state.storage.methods
+        .transferOwnership(this.state.newOwner)
+        .send({ from: this.state.addr}).on("error", function(_error){self.setState({error: _error});self.setState({result: _error.transactionHash});})
+        .on("receipt", (receipt) => {
+          console.log("Ownership Transferred to: ", self.state.newOwner)
           console.log("tx receipt: ", receipt)
         });
     
@@ -85,41 +96,35 @@ class AddUser extends Component {
               Injected web3 not connected to form!
             </div>
           )}
+
         {this.state.addr > 0 && (
+
+        this.state.toggle === false && (
         <form className="ANform">
-          <h2>Add User</h2>
-          User Address:
+        <h2>Handle Ownership</h2>
+          <p>New Owner:</p>
         <input
           type="text"
           name="authAddr"
-          placeholder="address to authorize"
+          placeholder="address"
           required
-          onChange={(e) => this.setState({authAddr: e.target.value})}
-        />
+          onChange={(e) => this.setState({newOwner: e.target.value})}/>
+        <input type="button" value="Transfer" onClick={transfer} /><input type="button" value="Renounce" onClick={toggleRenounce} />
         <br></br>
-        User Type:
-        <input
-          type="text"
-          name="userType"
-          placeholder="type"
-          required
-          onChange={(e) => this.setState({userType: e.target.value})}
-        />
+        </form>)
+        )}
+
+        {this.state.addr > 0 && (
+        this.state.toggle === true && (
+        <form className="ANform">
+        <h2>RENOUNCE</h2>
+        <p>Are you sure?</p>
+        <input type="button" value="Yes, I'm sure" onClick={renounce} /><input type="button" value="Go Back" onClick={toggleRenounce} />
         <br></br>
-        Asset Class:
-        <input
-          type="text"
-          name="assetClass"
-          placeholder="authorized asset class"
-          required
-          onChange={(e) => this.setState({assetClass: e.target.value})}
-        />
-        <br></br>
-          <input type="button" value="Add User" onClick={addUser} />
-        </form>)}
-      </div>
-    );}
+        </form>)
+        )}
+        </div>
+        );
+    }
 }
-
-export default AddUser;
-
+export default Ownership;

@@ -14,6 +14,10 @@ import RetrieveRecord from "./RetrieveRecord";
 import TransferAsset from "./TransferAsset";
 import VerifyRightsholder from "./VerifyRightsholder";
 import AddUser from "./AddUser";
+import SetCosts from "./SetCosts";
+import AddContract from "./AddContract";
+import Ownership from "./Ownership";
+import ResetFMC from "./ResetFMC";
 
 class Main extends Component {
 
@@ -28,8 +32,9 @@ class Main extends Component {
       var _storage_addr = addrArray[0];
       const storage_abi = returnStorageAbi();
       const _storage = new _web3.eth.Contract(
-      storage_abi, 
-      _storage_addr);
+        storage_abi, 
+        _storage_addr);
+    
 
         if(this.state.owner === ""){
         _storage.methods.owner().call({ from: self.state.addr }, function(_error, _result){
@@ -50,7 +55,7 @@ class Main extends Component {
         ethereum.on("accountsChanged", function(accounts) {
         _web3.eth.getAccounts().then((e) => self.setState({addr: e[0]}));
       });
-      if(self.state.addr != this.state.owner){self.setState({isOwner: false})}
+      if(self.state.addr !== this.state.owner){self.setState({isOwner: false})}
       }
   
       //Component state declaration
@@ -66,7 +71,6 @@ class Main extends Component {
     }
 
     componentDidMount() {
-      const self = this;
       const ethereum = window.ethereum;
       console.log("component mounted")
       var _web3 = require("web3");
@@ -161,7 +165,7 @@ class Main extends Component {
                 <li>
                 <NavLink to="/add-user">Add User</NavLink>
                 </li>
-                {/* <li>
+                 <li>
                 <NavLink to="/set-costs">Set Costs</NavLink>
                 </li>
                 <li>
@@ -171,11 +175,8 @@ class Main extends Component {
                 <NavLink to="/ownership">Ownership</NavLink>
                 </li>
                 <li>
-                <NavLink to="/status-lockup">Status Lockup</NavLink>
-                </li>
-                <li>
                 <NavLink to="/reset-fmc">Reset FMC</NavLink>
-                </li> */}
+                </li> 
                 </div>
                 )}
               </ul>
@@ -192,11 +193,10 @@ class Main extends Component {
                 <Route path="/verify-rights-holder" component={VerifyRightsholder} />
                 
                 <Route path="/add-user" component={AddUser}/>
-                {/* <Route path="/set-costs" component={SetCosts}/>
+                <Route path="/set-costs" component={SetCosts}/>
                 <Route path="/add-contract" component={AddContract}/>
                 <Route path="/ownership" component={Ownership}/>
-                <Route path="/status-lockup" component={StatusLockup}/>
-                <Route path="/reset-fmc" component={ResetFMC}/> */}
+                <Route path="/reset-fmc" component={ResetFMC}/>
               </div>
             </div>
           </div>
