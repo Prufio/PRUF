@@ -194,7 +194,7 @@ class DecrementCounter extends Component {
                 <Form.Control
                   placeholder="First Name"
                   required
-                  onChange={(e) => this.setState({ firstName: e.target.value })}
+                  onChange={(e) => this.setState({ first: e.target.value })}
                   size="lg"
                 />
               </Form.Group>
@@ -205,7 +205,7 @@ class DecrementCounter extends Component {
                   placeholder="Middle Name"
                   required
                   onChange={(e) =>
-                    this.setState({ middleName: e.target.value })
+                    this.setState({ middle: e.target.value })
                   }
                   size="lg"
                 />

@@ -210,7 +210,7 @@ componentDidUpdate() {
                 <Form.Control
                   placeholder="New First Name"
                   required
-                  onChange={(e) => this.setState({ firstName: e.target.value })}
+                  onChange={(e) => this.setState({ first: e.target.value })}
                   size="lg"
                 />
               </Form.Group>
@@ -221,7 +221,7 @@ componentDidUpdate() {
                   placeholder="New Middle Name"
                   required
                   onChange={(e) =>
-                    this.setState({ middleName: e.target.value })
+                    this.setState({ middle: e.target.value })
                   }
                   size="lg"
                 />
