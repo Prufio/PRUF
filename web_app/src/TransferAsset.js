@@ -16,7 +16,7 @@ class ModifyDescription extends Component {
       .retrieveCosts(3)
       .call({from: self.state.addr}, function(_error, _result){
         if(_error){}
-        else{console.log("_result: ", _result);if (_result !== undefined) {self.setState({costArray: Object.values(_result)});}}})
+        else{/* console.log("_result: ", _result); */if (_result !== undefined) {self.setState({costArray: Object.values(_result)});}}})
           }
         }
     }
@@ -84,23 +84,23 @@ class ModifyDescription extends Component {
       frontend: "",
       storage: ""
     }
-
   }
 
   componentDidMount() {
     this.setState({storage: this.returnsContract("storage")})
     this.setState({frontend: this.returnsContract("frontend")})
-    console.log("component mounted")
+    //console.log("component mounted")
 
      var _web3 = require("web3");
     _web3 = new Web3(_web3.givenProvider);
     this.setState({web3: _web3});
     _web3.eth.getAccounts().then((e) => this.setState({addr: e[0]}));
+
     document.addEventListener("accountListener", this.acctChanger()); 
   }
 
   componentWillUnmount() { 
-    console.log("unmounting component")
+    //console.log("unmounting component")
     document.removeEventListener("accountListener", this.acctChanger())
 }
 

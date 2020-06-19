@@ -16,7 +16,7 @@ class ForceModifyRecord extends Component {
       .retrieveCosts(3)
       .call({from: self.state.addr}, function(_error, _result){
         if(_error){}
-        else{console.log("_result: ", _result);if (_result !== undefined) {self.setState({costArray: Object.values(_result)});}}})
+        else{/* console.log("_result: ", _result); */if (_result !== undefined) {self.setState({costArray: Object.values(_result)});}}})
           }
         }
     }
@@ -91,7 +91,7 @@ class ForceModifyRecord extends Component {
   componentDidMount() {
     this.setState({storage: this.returnsContract("storage")})
     this.setState({frontend: this.returnsContract("frontend")})
-    console.log("component mounted")
+    //console.log("component mounted")
 
      var _web3 = require("web3");
     _web3 = new Web3(_web3.givenProvider);
@@ -101,7 +101,7 @@ class ForceModifyRecord extends Component {
   }
 
   componentWillUnmount() { 
-    console.log("unmounting component")
+    //console.log("unmounting component")
     document.removeEventListener("accountListener", this.acctChanger())
 }
 
@@ -128,7 +128,7 @@ componentDidUpdate() {
       var idxHash = this.state.web3.utils.soliditySha3(this.state.type, this.state.manufacturer, this.state.model, this.state.serial);
       var newRgtRaw = this.state.web3.utils.soliditySha3(this.state.newFirst, this.state.newMiddle, this.state.newSurname, this.state.newId, this.state.newSecret);
       var newRgtHash = this.state.web3.utils.soliditySha3(idxHash, newRgtRaw);
-  
+      
       console.log("idxHash", idxHash);
       console.log("New rgtRaw", newRgtRaw);
       console.log("New rgtHash", newRgtHash);
