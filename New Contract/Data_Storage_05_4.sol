@@ -23,11 +23,11 @@ pragma solidity ^0.6.2;
 
 import "./Ownable.sol";
 
-interface assetTokenInterface {
-    function ownerOf(uint256) external view returns (address);
-    //function mint(uint256) external view returns (address);
-    //function transfer(uint256,address) external view returns (address);
-}
+// interface assetTokenInterface {
+//     function ownerOf(uint256) external view returns (address);
+//     //function mint(uint256) external view returns (address);
+//     //function transfer(uint256,address) external view returns (address);
+// }
 
 interface ACtokenInterface {
     function ownerOf(uint256) external view returns (address);
@@ -346,7 +346,7 @@ contract Storage is Ownable {
         exists(_idxHash)
         notEscrow(_idxHash)
         notBlockLocked(_idxHash)
-        //isACtokenHolder(_idxHash)
+    //isACtokenHolder(_idxHash)
     {
         bytes32 idxHash = _idxHash;
         bytes32 rgtHash = _rgtHash;
@@ -393,18 +393,18 @@ contract Storage is Ownable {
         isAuthorized
         exists(_idxHash)
         notBlockLocked(_idxHash)
-        //isACtokenHolder(_idxHash)
+    //isACtokenHolder(_idxHash)
     {
         require(
             (_newAssetStatus == 3) ||
                 (_newAssetStatus == 4) ||
                 (_newAssetStatus == 9) ||
                 (_newAssetStatus == 10),
-            "MR:ERR-Must set to a lost or stolen status"
+            "SS:ERR-Must set to a lost or stolen status"
         );
         require(
             (database[_idxHash].assetStatus != 5),
-            "MR:ERR-Transferred status cannot be set to lost or stolen."
+            "SS:ERR-Transferred asset cannot be set to lost or stolen after transfer."
         );
 
         database[_idxHash].timeLock = block.number;
@@ -417,7 +417,7 @@ contract Storage is Ownable {
         _record.assetStatus = _newAssetStatus;
 
         database[_idxHash] = _record;
-        emit REPORT("Record modified");
+        emit REPORT("Asset Marked Stolen / lost");
     }
 
     /*
@@ -434,11 +434,11 @@ contract Storage is Ownable {
         exists(_idxHash)
         notEscrow(_idxHash)
         notBlockLocked(_idxHash)
-        //isACtokenHolder(_idxHash)
+    //isACtokenHolder(_idxHash)
     {
         require(
             (_newAssetStatus == 6) || (_newAssetStatus == 12),
-            "MR:ERR-Must set to an escrow status"
+            "SE:ERR-Must set to an escrow status"
         );
         require(
             (database[_idxHash].assetStatus != 3) &&
@@ -446,7 +446,7 @@ contract Storage is Ownable {
                 (database[_idxHash].assetStatus != 5) &&
                 (database[_idxHash].assetStatus != 9) &&
                 (database[_idxHash].assetStatus != 10),
-            "MR:ERR-Transferred, lost, or stolen status cannot be set to escrow."
+            "SE:ERR-Transferred, lost, or stolen status cannot be set to escrow."
         );
 
         database[_idxHash].timeLock = block.number;
@@ -470,10 +470,7 @@ contract Storage is Ownable {
         bytes32 _userHash,
         bytes32 _idxHash,
         uint8 _newAssetStatus
-    ) external
-    isAuthorized
-    exists(_idxHash)
-    //isACtokenHolder(_idxHash)
+    ) external isAuthorized exists(_idxHash) //isACtokenHolder(_idxHash)
     {
         require(
             (database[_idxHash].recorder == _userHash) ||
@@ -514,7 +511,7 @@ contract Storage is Ownable {
         exists(_idxHash)
         notEscrow(_idxHash)
         notBlockLocked(_idxHash)
-        //isACtokenHolder(_idxHash)
+    //isACtokenHolder(_idxHash)
     {
         string memory retMessage = "No modifications made";
 
@@ -550,8 +547,8 @@ contract Storage is Ownable {
     function retrieveRecord(bytes32 _idxHash)
         external
         view
-        //exists(_idxHash)
         returns (
+            //exists(_idxHash)
             bytes32,
             bytes32,
             bytes32,

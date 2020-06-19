@@ -151,7 +151,7 @@ class DecrementCounter extends Component {
     };
 
     return (
-      <Form className="MRform">
+      <Form className="DCform">
         {this.state.addr === undefined && (
           <div className="errorResults">
             <h2>WARNING!</h2>
