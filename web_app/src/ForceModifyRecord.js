@@ -9,6 +9,41 @@ class ForceModifyRecord extends Component {
   constructor(props){
     super(props);
 
+    this.getCosts = async () => {
+      const self = this;
+      if(self.state.costArray[5] > 0 || self.state.storage === ""){}else{for(var i = 0; i < 1; i++){
+      self.state.storage.methods
+      .retrieveCosts(3)
+      .call({from: self.state.addr}, function(_error, _result){
+        if(_error){}
+        else{console.log("_result: ", _result);if (_result !== undefined) {self.setState({costArray: Object.values(_result)});}}})
+          }
+        }
+    }
+
+    this.returnsContract = (contract) => {
+      var _web3 = require("web3");
+      _web3 = new Web3(_web3.givenProvider);
+      var addrArray = returnAddresses(); 
+      var _frontend_addr = addrArray[1];
+      var _storage_addr = addrArray[0];
+      const storage_abi = returnStorageAbi();
+      const frontEnd_abi = returnFrontEndAbi();
+      const _storage = new _web3.eth.Contract(
+        storage_abi, 
+        _storage_addr);
+      const _frontend = new _web3.eth.Contract(
+        frontEnd_abi,
+        _frontend_addr);
+
+        if (contract === 'frontend'){
+          return(_frontend);
+        }
+        else if (contract === 'storage'){
+          return(_storage);
+        }
+    }
+
     this.acctChanger = async () => {
       const ethereum = window.ethereum;
       const self = this;
@@ -24,6 +59,7 @@ class ForceModifyRecord extends Component {
     this.mounted = false;
     this.state = {
       addr: "",
+      costArray: [0],
       error: undefined,
       NRerror: undefined,
       result: "",
@@ -53,35 +89,25 @@ class ForceModifyRecord extends Component {
   }
 
   componentDidMount() {
+    this.setState({storage: this.returnsContract("storage")})
+    this.setState({frontend: this.returnsContract("frontend")})
     console.log("component mounted")
-    var _web3 = require("web3");
+
+     var _web3 = require("web3");
     _web3 = new Web3(_web3.givenProvider);
     this.setState({web3: _web3});
     _web3.eth.getAccounts().then((e) => this.setState({addr: e[0]}));
-    var addrArray = returnAddresses(); 
-    var _frontend_addr = addrArray[1];
-    var _storage_addr = addrArray[0];
-    const frontEnd_abi = returnFrontEndAbi();
-    const storage_abi = returnStorageAbi();
-
-    const _frontend = new _web3.eth.Contract(
-    frontEnd_abi,
-    _frontend_addr
-    );
-
-    const _storage = new _web3.eth.Contract(
-    storage_abi, 
-    _storage_addr
-    );
-    this.setState({frontend: _frontend})
-    this.setState({storage: _storage})
-
-    document.addEventListener("accountListener", this.acctChanger());
+    document.addEventListener("accountListener", this.acctChanger()); 
   }
 
   componentWillUnmount() { 
     console.log("unmounting component")
     document.removeEventListener("accountListener", this.acctChanger())
+}
+
+componentDidUpdate() {
+  if(this.state.addr > 0){
+  if (this.state.costArray[0] < 1){this.getCosts()}}
 }
 
   render(){
@@ -112,7 +138,7 @@ class ForceModifyRecord extends Component {
 
       this.state.frontend.methods
         .$forceModRecord(idxHash, newRgtHash)
-        .send({ from: this.state.addr, value: this.state.web3.utils.toWei("0.01") }).on("error", function(_error){self.setState({error: _error});self.setState({result: _error.transactionHash});})
+        .send({ from: this.state.addr, value: this.state.costArray[5] }).on("error", function(_error){self.setState({error: _error});self.setState({result: _error.transactionHash});})
         .on("receipt", (receipt) => {
           this.setState({txHash: receipt.transactionHash});
           //Stuff to do when tx confirms

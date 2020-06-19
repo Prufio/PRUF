@@ -9,32 +9,18 @@ class NewRecord extends Component {
   constructor(props){
     super(props);
 
-    this.getCosts = async (storage) => {
+    this.getCosts = async () => {
       const self = this;
-      /* var _web3 = require("web3");
-      _web3 = new Web3(_web3.givenProvider);
-      var addrArray = returnAddresses(); 
-      var _frontend_addr = addrArray[1];
-      var _storage_addr = addrArray[0];
-      const storage_abi = returnStorageAbi();
-      const frontEnd_abi = returnFrontEndAbi();
-      const _storage = new _web3.eth.Contract(
-        storage_abi, 
-        _storage_addr);
-      const _frontend = new _web3.eth.Contract(
-        frontEnd_abi,
-        _frontend_addr); */
-
       if(self.state.costArray[0] > 0 || self.state.storage === ""){}else{for(var i = 0; i < 1; i++){
       self.state.storage.methods
       .retrieveCosts(3)
       .call({from: self.state.addr}, function(_error, _result){
         if(_error){}
-        else{console.log("_result: ", _result);if (_result !== undefined) {self.setState({costArray: Object.values(_result)});}}
-       /*  console.log("In getCosts, _result, _error: ", _result, _error) */})
+        else{console.log("_result: ", _result);if (_result !== undefined) {self.setState({costArray: Object.values(_result)});}}})
           }
         }
     }
+    
     this.returnsContract = (contract) => {
       var _web3 = require("web3");
       _web3 = new Web3(_web3.givenProvider);
@@ -108,42 +94,12 @@ class NewRecord extends Component {
     _web3 = new Web3(_web3.givenProvider);
     this.setState({web3: _web3});
     _web3.eth.getAccounts().then((e) => this.setState({addr: e[0]}));
-    /*var addrArray = returnAddresses(); 
-    var _frontend_addr = addrArray[1];
-    var _storage_addr = addrArray[0];
-    const frontEnd_abi = returnFrontEndAbi();
-    const storage_abi = returnStorageAbi();
-
-    const _frontend = new _web3.eth.Contract(
-    frontEnd_abi,
-    _frontend_addr
-    );
-
-    const _storage = new _web3.eth.Contract(
-    storage_abi, 
-    _storage_addr
-    );
-    
-    this.setState({frontend: _frontend})
-    this.setState({storage: _storage}) */
-
     document.addEventListener("accountListener", this.acctChanger()); 
-    //this.getCosts();
-      
-     /*  this.state.storage.methods
-      .retrieveCosts(3)
-      .call({from: self.state.addr}, function(_error, _result){
-        if(_error){}
-        else{console.log("_result: ", _result); self.setState({costArray: Object.values(_result)});}
-        console.log("In getCosts, _result, _error: ", _result, _error) })
-        
-        console.log("Cost of TX in CDM: ", this.state.costArray[0]); */
   }
 
   componentWillUnmount() { 
     console.log("unmounting component")
     document.removeEventListener("accountListener", this.acctChanger())
-    document.removeEventListener("costListener", this.getCosts());
 }
 
 componentDidUpdate() {
@@ -166,7 +122,6 @@ componentDidUpdate() {
     }
 
     const _newRecord = () => {
-      //getCosts();
       let _cost = this.state.costArray[0];
       var idxHash = this.state.web3.utils.soliditySha3(this.state.type, this.state.manufacturer, this.state.model, this.state.serial);
       var rgtRaw = this.state.web3.utils.soliditySha3(this.state.first, this.state.middle, this.state.surname, this.state.id, this.state.secret);
