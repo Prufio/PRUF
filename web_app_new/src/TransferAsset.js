@@ -283,7 +283,7 @@ componentDidUpdate() {
                 <Form.Control
                   placeholder="New First Name"
                   required
-                  onChange={(e) => this.setState({ first: e.target.value })}
+                  onChange={(e) => this.setState({ newFirst: e.target.value })}
                   size="lg"
                 />
               </Form.Group>
@@ -294,7 +294,7 @@ componentDidUpdate() {
                   placeholder="New Middle Name"
                   required
                   onChange={(e) =>
-                    this.setState({ middle: e.target.value })
+                    this.setState({ newMiddle: e.target.value })
                   }
                   size="lg"
                 />
@@ -305,7 +305,7 @@ componentDidUpdate() {
                 <Form.Control
                   placeholder="New Last Name"
                   required
-                  onChange={(e) => this.setState({ surname: e.target.value })}
+                  onChange={(e) => this.setState({ newSurname: e.target.value })}
                   size="lg"
                 />
               </Form.Group>
@@ -317,7 +317,7 @@ componentDidUpdate() {
                 <Form.Control
                   placeholder="New ID Number"
                   required
-                  onChange={(e) => this.setState({ id: e.target.value })}
+                  onChange={(e) => this.setState({ newId: e.target.value })}
                   size="lg"
                 />
               </Form.Group>
@@ -328,7 +328,7 @@ componentDidUpdate() {
                   placeholder="New Password"
                   type="password"
                   required
-                  onChange={(e) => this.setState({ secret: e.target.value })}
+                  onChange={(e) => this.setState({ newSecret: e.target.value })}
                   size="lg"
                 />
               </Form.Group>

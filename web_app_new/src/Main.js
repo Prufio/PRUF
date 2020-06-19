@@ -52,8 +52,22 @@ class Main extends Component {
     return (
       <HashRouter>
         <div>
-          <div className="BannerForm">
+          <div className="imageForm">
             <img src={require("./BP Logo.png")} alt="Bulletproof Logo" />
+            <div className="userData">
+              {this.state.addr > 0 && (
+                <div className="banner">
+                  Currently serving :{this.state.addr}
+                </div>
+              )}
+              {this.state.addr === undefined && (
+                <div className="banner">
+                  Currently serving: NOBODY! Log into web3 provider!
+                </div>
+              )}
+            </div>
+          </div>
+          <div className="BannerForm">
             <div className="page">
               <ul className="header">
                 <li>
@@ -114,14 +128,6 @@ class Main extends Component {
                 />
               </div>
             </div>
-            {this.state.addr > 0 && (
-              <div className="banner">Currently serving :{this.state.addr}</div>
-            )}
-            {this.state.addr === undefined && (
-              <div className="banner">
-                Currently serving: NOBODY! Log into web3 provider!
-              </div>
-            )}
           </div>
           {/* <div className="page">
             <ul className="header">
