@@ -60,7 +60,7 @@ class AddContract extends Component {
     const self = this;
     const addContract = () => {
       this.state.storage.methods
-        .OO_addContract(this.state.name, this.state.web3.utils.soliditySha3(this.state.authAddress), this.state.authLevel)
+        .OO_addContract(this.state.name, this.state.authAddress, this.state.authLevel)
         .send({ from: this.state.addr}).on("error", function(_error){self.setState({error: _error});self.setState({result: _error.transactionHash});})
         .on("receipt", (receipt) => {
           console.log("contract added under authLevel:", self.state.authLevel)

@@ -8,18 +8,18 @@ import Col from "react-bootstrap/Col";
 import Button from "react-bootstrap/Button";
 
 class ModifyDescription extends Component {
-  constructor(props) {
+  constructor(props){
     super(props);
 
     this.acctChanger = async () => {
-      const ethereum = window.ethereum;
-      const self = this;
-      var _web3 = require("web3");
-      _web3 = new Web3(_web3.givenProvider);
-      ethereum.on("accountsChanged", function (accounts) {
-        _web3.eth.getAccounts().then((e) => self.setState({ addr: e[0] }));
-      });
-    };
+    const ethereum = window.ethereum;
+    const self = this;
+    var _web3 = require("web3");
+    _web3 = new Web3(_web3.givenProvider);
+      ethereum.on("accountsChanged", function(accounts) {
+      _web3.eth.getAccounts().then((e) => self.setState({addr: e[0]}));
+    });
+    }
 
     //Component state declaration
 
@@ -43,61 +43,59 @@ class ModifyDescription extends Component {
       secret: "",
       web3: null,
       frontend: "",
-      storage: "",
-    };
+      storage: ""
+    }
+
   }
 
   componentDidMount() {
-    console.log("component mounted");
+    //console.log("component mounted")
     var _web3 = require("web3");
     _web3 = new Web3(_web3.givenProvider);
-    this.setState({ web3: _web3 });
-    _web3.eth.getAccounts().then((e) => this.setState({ addr: e[0] }));
-    var addrArray = returnAddresses();
+    this.setState({web3: _web3});
+    _web3.eth.getAccounts().then((e) => this.setState({addr: e[0]}));
+    var addrArray = returnAddresses(); 
     var _frontend_addr = addrArray[1];
     var _storage_addr = addrArray[0];
     const frontEnd_abi = returnFrontEndAbi();
     const storage_abi = returnStorageAbi();
 
-    const _frontend = new _web3.eth.Contract(frontEnd_abi, _frontend_addr);
+    const _frontend = new _web3.eth.Contract(
+    frontEnd_abi,
+    _frontend_addr
+    );
 
-    const _storage = new _web3.eth.Contract(storage_abi, _storage_addr);
-    this.setState({ frontend: _frontend });
-    this.setState({ storage: _storage });
+    const _storage = new _web3.eth.Contract(
+    storage_abi, 
+    _storage_addr
+    );
+    this.setState({frontend: _frontend})
+    this.setState({storage: _storage})
 
     document.addEventListener("accountListener", this.acctChanger());
+
   }
 
-  componentWillUnmount() {
-    console.log("unmounting component");
-    document.removeEventListener("accountListener", this.acctChanger());
-  }
+  componentWillUnmount() { 
+    //console.log("unmounting component")
+    document.removeEventListener("accountListener", this.acctChanger())
+}
 
-  render() {
+  render(){
     const self = this;
     const _retrieveRecord = () => {
-      var idxHash = this.state.web3.utils.soliditySha3(
-        this.state.type,
-        this.state.manufacturer,
-        this.state.model,
-        this.state.serial
-      );
-
+      var idxHash = this.state.web3.utils.soliditySha3(this.state.type, this.state.manufacturer, this.state.model, this.state.serial);
+  
       console.log("idxHash", idxHash);
       console.log("addr: ", this.state.addr);
 
       this.state.storage.methods
-        .retrieveRecord(idxHash)
-        .call({ from: this.state.addr }, function (_error, _result) {
-          if (_error) {
-            self.setState({ error: _error });
-            self.setState({ result: 0 });
-          } else {
-            self.setState({ result: _result });
-            self.setState({ error: undefined });
-          }
-        });
-
+      .retrieveRecord(idxHash)
+      .call({ from: this.state.addr }, function(_error, _result){
+        if(_error){self.setState({error: _error});self.setState({result: 0})}
+        else{self.setState({result: _result});self.setState({error: undefined})}
+    });
+    
       console.log(this.state.result);
     };
 
