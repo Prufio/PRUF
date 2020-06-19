@@ -3,12 +3,30 @@
  * implement remint_asset
  * implement stolenOrLost
  * implement escrow
- * implement erc721 safeTransfer and awareness
  */
 
 // SPDX-License-Identifier: UNLICENSED
 pragma solidity ^0.6.2;
 import "./PullPayment.sol";
+import "./_ERC721/IERC721Receiver.sol";
+
+interface AssetClassTokenInterface {
+    function ownerOf(uint256) external view returns (address);
+
+    function transferAssetClassToken(
+        address from,
+        address to,
+        bytes32 idxHash
+    ) external;
+}
+
+interface AssetTokenInterface {
+    function transferAssetToken(
+        address from,
+        address to,
+        bytes32 idxHash
+    ) external;
+}
 
 interface StorageInterface {
     function newRecord(
@@ -92,7 +110,7 @@ interface StorageInterface {
         returns (address);
 }
 
-contract FrontEnd is PullPayment, Ownable {
+contract FrontEnd is PullPayment, Ownable, IERC721Receiver {
     using SafeMath for uint256;
 
     struct Record {
@@ -129,28 +147,82 @@ contract FrontEnd is PullPayment, Ownable {
     address internal mainWallet;
     StorageInterface private Storage; // Set up external contract interface
 
-    event REPORT(string _msg);
+    // address minterContractAddress;
+    address AssetTokenAddress;
+    AssetTokenInterface AssetTokenContract; //erc721_token prototype initialization
+    address AssetClassTokenAddress;
+    AssetClassTokenInterface AssetClassTokenContract; //erc721_token prototype initialization
+    // --------------------------------------Events--------------------------------------------//
 
+    event REPORT(string _msg);
+    // --------------------------------------Modifiers--------------------------------------------//
     /*
      * @dev Verify user credentials
      * Originating Address:
      *      Exists in registeredUsers as a usertype 1 or 9
      *      Is authorized for asset class
      */
-    modifier userAuth() {
-        uint8 senderType = registeredUsers[keccak256(
+    modifier isAuthorized() {
+        User memory user = registeredUsers[keccak256(
             abi.encodePacked(msg.sender)
-        )]
-            .userType;
+        )];
 
         require(
-            (senderType == 1) || (senderType == 9),
+            (user.userType == 1) || (user.userType == 9),
             "ST:MOD-UA-ERR:User not registered"
         );
         _;
     }
 
-    // --------------------------------------ADMIN FUNCTIONS--------------------------------------------//
+    //----------------------Internal Admin functions / onlyowner or isAdmin----------------------//
+    /*
+     * @dev Address Setters
+     */
+    function OO_setAssetClassTokenAddress(address _contractAddress)
+        external
+        onlyOwner
+    {
+        require(_contractAddress != address(0), "Invalid contract address");
+        AssetClassTokenAddress = _contractAddress;
+        AssetClassTokenContract = AssetClassTokenInterface(_contractAddress);
+    }
+
+    function OO_setAssetTokenAddress(address _contractAddress)
+        external
+        onlyOwner
+    {
+        require(_contractAddress != address(0), "Invalid contract address");
+        AssetTokenAddress = _contractAddress;
+        AssetTokenContract = AssetTokenInterface(_contractAddress);
+    }
+
+    function OO_TX_asset_Token(address _to, bytes32 _idxHash)
+        external
+        virtual
+        onlyOwner
+    {
+        AssetTokenContract.transferAssetToken(address(this), _to, _idxHash);
+    }
+
+    function OO_TX_AC_Token(address _to, bytes32 _idxHash)
+        external
+        virtual
+        onlyOwner
+    {
+        AssetClassTokenContract.transferAssetClassToken(
+            address(this),
+            _to,
+            _idxHash
+        );
+    }
+
+    // function OO_setMinterAddress(address _contractAddress)
+    //     external
+    //     onlyOwner
+    // {
+    //     require(_contractAddress != address(0), "Invalid contract address");
+    //     minterContractAddress = _contractAddress;
+    // }
     /*
      * @dev Set storage contract to interface with
      */
@@ -198,6 +270,15 @@ contract FrontEnd is PullPayment, Ownable {
 
     //--------------------------------------External functions--------------------------------------------//
 
+    function onERC721Received(
+        address,
+        address,
+        uint256,
+        bytes calldata
+    ) external virtual override returns (bytes4) {
+        return this.onERC721Received.selector;
+    }
+
     /*
      * @dev Wrapper for newRecord
      */
@@ -207,9 +288,8 @@ contract FrontEnd is PullPayment, Ownable {
         uint16 _assetClass,
         uint256 _countDownStart,
         bytes32 _Ipfs
-    ) external payable {
+    ) external payable isAuthorized {
         User memory callingUser = getUser();
-
         Costs memory cost = getCost(_assetClass);
 
         require(
@@ -245,6 +325,7 @@ contract FrontEnd is PullPayment, Ownable {
     function $forceModRecord(bytes32 _idxHash, bytes32 _rgtHash)
         external
         payable
+        isAuthorized
         returns (uint8)
     {
         Record memory rec = getRecord(_idxHash);
@@ -259,11 +340,16 @@ contract FrontEnd is PullPayment, Ownable {
             callingUser.authorizedAssetClass == rec.assetClass,
             "FMR: User not authorized to modify records in specified asset class"
         );
+        require((rec.rightsHolder != 0), "FMR: Record does not exist");
+        require(
+            (rec.assetStatus != 6) && (rec.assetStatus != 6),
+            "FMR: Cannot forceMod asset in Escrow"
+        );
+        require(rec.assetStatus < 200, "FMR: Record locked");
         require(
             msg.value >= cost.forceModifyCost,
             "FMR: tx value too low. Send more eth."
         );
-        require(rec.assetStatus < 200, "FMR:ERR-Record locked");
 
         if (rec.forceModCount < 255) {
             rec.forceModCount++;
@@ -285,6 +371,7 @@ contract FrontEnd is PullPayment, Ownable {
     function $reimportRecord(bytes32 _idxHash, bytes32 _rgtHash)
         external
         payable
+        isAuthorized
         returns (uint8)
     {
         Record memory rec = getRecord(_idxHash);
@@ -303,11 +390,12 @@ contract FrontEnd is PullPayment, Ownable {
             rec.assetStatus == 5,
             "RR: Only status 5 assets can be reimported"
         );
+        require((rec.rightsHolder != 0), "RR: Record does not exist");
+        require(rec.assetStatus < 200, "RR: Record locked");
         require(
             msg.value >= cost.reMintRecordCost,
             "RR: tx value too low. Send more eth."
         );
-        require(rec.assetStatus < 200, "FMR:ERR-Record locked");
 
         rec.assetStatus = 0;
         rec.rightsHolder = _rgtHash;
@@ -326,7 +414,7 @@ contract FrontEnd is PullPayment, Ownable {
         bytes32 _idxHash,
         bytes32 _rgtHash,
         uint8 _assetStatus
-    ) external returns (uint8) {
+    ) external isAuthorized returns (uint8) {
         Record memory rec = getRecord(_idxHash);
         User memory callingUser = getUser();
         // require(
@@ -337,8 +425,12 @@ contract FrontEnd is PullPayment, Ownable {
             callingUser.authorizedAssetClass == rec.assetClass,
             "MS: User not authorized to modify records in specified asset class"
         );
-
-        require(rec.assetStatus < 200, "MS:ERR-Record locked");
+        require(
+            (rec.assetStatus != 6) && (rec.assetStatus != 6),
+            "MS: Cannot change status of asset in Escrow"
+        );
+        require((rec.rightsHolder != 0), "MS: Record does not exist");
+        require(rec.assetStatus < 200, "RR: Record locked");
         require(
             rec.rightsHolder == _rgtHash,
             "MS: ERR-Rightsholder does not match supplied data"
@@ -358,7 +450,7 @@ contract FrontEnd is PullPayment, Ownable {
         bytes32 _idxHash,
         bytes32 _rgtHash,
         uint256 _decAmount
-    ) external returns (uint256) {
+    ) external isAuthorized returns (uint256) {
         Record memory rec = getRecord(_idxHash);
         User memory callingUser = getUser();
         // require(
@@ -369,7 +461,12 @@ contract FrontEnd is PullPayment, Ownable {
             callingUser.authorizedAssetClass == rec.assetClass,
             "DC: User not authorized to modify records in specified asset class"
         );
-        require(rec.assetStatus < 200, "DC:ERR-Record locked");
+        require( //------------------------------------------should the counter still work when an asset is in escrow?
+            (rec.assetStatus != 6) && (rec.assetStatus != 6), //If so, it must not erase the recorder, or escrow termination will be broken!
+            "DC: Cannot modify asset in Escrow"
+        );
+        require((rec.rightsHolder != 0), "DC: Record does not exist");
+        require(rec.assetStatus < 200, "RR: Record locked");
         require(
             rec.rightsHolder == _rgtHash,
             "DC: Rightsholder does not match supplied data"
@@ -392,23 +489,29 @@ contract FrontEnd is PullPayment, Ownable {
         bytes32 _idxHash,
         bytes32 _rgtHash,
         bytes32 _newrgtHash
-    ) external payable returns (uint8) {
+    ) external payable isAuthorized returns (uint8) {
         Record memory rec = getRecord(_idxHash);
         User memory callingUser = getUser();
         Costs memory cost = getCost(rec.assetClass);
+
         require(
             callingUser.userType == 1,
-            "FMR: User not authorized to create records"
+            "TA: User not authorized to transfer assets"
         );
         require(
             callingUser.authorizedAssetClass == rec.assetClass,
             "TA: User not authorized to modify records in specified asset class"
         );
+        require( //-------------------------------------Should an asset in escrow be transferrable?
+            ((rec.assetStatus != 6) && (rec.assetStatus != 6)), //Should it be contingent on the original recorder address?
+            "MS: Cannot transfer asset in Escrow" //If so, it must not erase the recorder, or escrow termination will be broken!
+        );
+        require((rec.rightsHolder != 0), "MS: Record does not exist");
+        require(rec.assetStatus < 200, "RR: Record locked");
         require(
             msg.value >= cost.transferAssetCost,
             "TA: tx value too low. Send more eth."
         );
-        require(rec.assetStatus < 200, "TA:ERR-Record locked");
         require(
             rec.rightsHolder == _rgtHash,
             "TA:ERR-Rightsholder does not match supplied data"
@@ -435,7 +538,7 @@ contract FrontEnd is PullPayment, Ownable {
         bytes32 _idxHash,
         bytes32 _rgtHash,
         bytes32 _IpfsHash
-    ) external returns (bytes32) {
+    ) external isAuthorized returns (bytes32) {
         Record memory rec = getRecord(_idxHash);
         User memory callingUser = getUser();
         //Costs memory cost = getCost(rec.assetClass);
@@ -444,8 +547,12 @@ contract FrontEnd is PullPayment, Ownable {
             callingUser.authorizedAssetClass == rec.assetClass,
             "MI1: User not authorized to modify records in specified asset class"
         );
-
-        require(rec.assetStatus < 200, "MI1:ERR-Record locked");
+        require( //-------------------------------------Should an asset in escrow be modifiable?
+            ((rec.assetStatus != 6) && (rec.assetStatus != 6)), //Should it be contingent on the original recorder address?
+            "MI1: Cannot modify asset in Escrow" //If so, it must not erase the recorder, or escrow termination will be broken!
+        );
+        require((rec.rightsHolder != 0), "MI1: Record does not exist");
+        require(rec.assetStatus < 200, "MI1: Record locked");
         require(
             rec.rightsHolder == _rgtHash,
             "MI1:ERR--Rightsholder does not match supplied data"
@@ -466,7 +573,7 @@ contract FrontEnd is PullPayment, Ownable {
         bytes32 _idxHash,
         bytes32 _rgtHash,
         bytes32 _IpfsHash
-    ) external payable returns (bytes32) {
+    ) external payable isAuthorized returns (bytes32) {
         Record memory rec = getRecord(_idxHash);
         User memory callingUser = getUser();
         Costs memory cost = getCost(rec.assetClass);
@@ -474,11 +581,12 @@ contract FrontEnd is PullPayment, Ownable {
             callingUser.authorizedAssetClass == rec.assetClass,
             "MI2:ERR--MI1: User not authorized to modify records in specified asset class"
         );
-        require(
-            msg.value >= cost.createNoteCost,
-            "MI2:ERR--tx value too low. Send more eth."
+        require( //-------------------------------------Should an asset in escrow be modifiable?
+            ((rec.assetStatus != 6) && (rec.assetStatus != 6)), //Should it be contingent on the original recorder address?
+            "MI1: Cannot modify asset in Escrow" //If so, it must not erase the recorder, or escrow termination will be broken!
         );
-        require(rec.assetStatus < 200, "MI2:ERR-Record locked");
+        require((rec.rightsHolder != 0), "MI1: Record does not exist");
+        require(rec.assetStatus < 200, "MI1: Record locked");
         require(
             rec.rightsHolder == _rgtHash,
             "MI2:ERR--Rightsholder does not match supplied data"
@@ -486,6 +594,10 @@ contract FrontEnd is PullPayment, Ownable {
         require(
             rec.Ipfs2 == 0,
             "MI2:ERR--Ipfs2 has data already. Overwrite not permitted"
+        );
+        require(
+            msg.value >= cost.createNoteCost,
+            "MI2:ERR--tx value too low. Send more eth."
         );
 
         rec.Ipfs2 = _IpfsHash;
@@ -497,6 +609,7 @@ contract FrontEnd is PullPayment, Ownable {
         return rec.Ipfs2;
     }
 
+    //--------------------------------------------------------------------------------------Private functions
     /*
      * @dev Get a User Record from Storage @ msg.sender
      */
@@ -507,6 +620,7 @@ contract FrontEnd is PullPayment, Ownable {
         return user;
     }
 
+    //--------------------------------------------------------------------------------------Storage Reading private functions
     /*
      * @dev Get a Record from Storage @ idxHash
      */
@@ -542,6 +656,25 @@ contract FrontEnd is PullPayment, Ownable {
 
         return (rec); // Returns Record struct rec
     }
+
+    /*
+     * @dev retrieves costs from Storage and returns Costs struct
+     */
+    function getCost(uint16 _class) private returns (Costs memory) {
+        Costs memory cost;
+        (
+            cost.newRecordCost,
+            cost.transferAssetCost,
+            cost.createNoteCost,
+            cost.reMintRecordCost,
+            cost.changeStatusCost,
+            cost.forceModifyCost
+        ) = Storage.retrieveCosts(_class);
+
+        return (cost);
+    }
+
+    //--------------------------------------------------------------------------------------Storage Writing private functions
 
     /*
      * @dev Write an Ipfs Record to Storage @ idxHash
@@ -586,22 +719,5 @@ contract FrontEnd is PullPayment, Ownable {
      */
     function $withdraw() external virtual payable {
         withdrawPayments(msg.sender);
-    }
-
-    /*
-     * @dev Returns cost from database and returns Costs struct
-     */
-    function getCost(uint16 _class) private returns (Costs memory) {
-        Costs memory cost;
-        (
-            cost.newRecordCost,
-            cost.transferAssetCost,
-            cost.createNoteCost,
-            cost.reMintRecordCost,
-            cost.changeStatusCost,
-            cost.forceModifyCost
-        ) = Storage.retrieveCosts(_class);
-
-        return (cost);
     }
 }
