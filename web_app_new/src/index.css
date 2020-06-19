@@ -259,28 +259,27 @@ h4 {
 }
 
 .RRresults {
-  height: 15rem;
+  height: 5rem;
   width: 59rem;
   color: white;
-  background-color: rgb(120, 120, 120);
-  border-radius: 1rem;
-  font-size: 1.3rem;
+  background-color: black;
+  border-radius: 0rem 0rem 1rem 1rem;
+  font-size: 2.2rem;
   display: flex;
   padding: 2rem;
-  margin-left: -1rem;
-  align-items: center;
+  margin-left: -2rem;
 }
 
 .VRresults {
   height: 5rem;
   width: 59rem;
   color: white;
-  background-color: rgb(120, 120, 120);
-  border-radius: 1rem;
+  background-color: black;
+  border-radius: 0rem 0rem 1rem 1rem;
   font-size: 2.2rem;
   display: flex;
   padding: 2rem;
-  margin-left: -0.5rem;
+  margin-left: -2rem;
 }
 .errorResults {
   height: 7rem;
@@ -302,12 +301,12 @@ h4 {
   height: 5rem;
   width: 59rem;
   color: white;
-  background-color: rgb(120, 120, 120);
-  border-radius: 1rem;
-  font-size: 1.5rem;
+  background-color: black;
+  border-radius: 0rem 0rem 1rem 1rem;
+  font-size: 2.2rem;
   display: flex;
   padding: 2rem;
-  margin-left: -1rem;
+  margin-left: -2rem;
 }
 
 .btn {
