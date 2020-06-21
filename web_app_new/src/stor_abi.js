@@ -34,6 +34,25 @@ function returnStorageAbi() {
 				"type": "event"
 			},
 			{
+				"anonymous": false,
+				"inputs": [
+					{
+						"indexed": false,
+						"internalType": "string",
+						"name": "_msg",
+						"type": "string"
+					},
+					{
+						"indexed": false,
+						"internalType": "bytes32",
+						"name": "b32",
+						"type": "bytes32"
+					}
+				],
+				"name": "REPORT_B32",
+				"type": "event"
+			},
+			{
 				"inputs": [
 					{
 						"internalType": "bytes32",
@@ -170,6 +189,29 @@ function returnStorageAbi() {
 						"type": "uint8"
 					}
 				],
+				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "bytes32",
+						"name": "_userHash",
+						"type": "bytes32"
+					},
+					{
+						"internalType": "bytes32",
+						"name": "_idxHash",
+						"type": "bytes32"
+					},
+					{
+						"internalType": "uint8",
+						"name": "_newAssetStatus",
+						"type": "uint8"
+					}
+				],
+				"name": "endEscrow",
+				"outputs": [],
 				"stateMutability": "nonpayable",
 				"type": "function"
 			},
@@ -422,6 +464,34 @@ function returnStorageAbi() {
 					}
 				],
 				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "bytes32",
+						"name": "_userHash",
+						"type": "bytes32"
+					},
+					{
+						"internalType": "bytes32",
+						"name": "_idxHash",
+						"type": "bytes32"
+					},
+					{
+						"internalType": "uint8",
+						"name": "_newAssetStatus",
+						"type": "uint8"
+					},
+					{
+						"internalType": "uint256",
+						"name": "_escrowTime",
+						"type": "uint256"
+					}
+				],
+				"name": "setEscrow",
+				"outputs": [],
+				"stateMutability": "nonpayable",
 				"type": "function"
 			},
 			{

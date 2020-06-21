@@ -8,18 +8,18 @@ import Col from "react-bootstrap/Col";
 import Button from "react-bootstrap/Button";
 
 class VerifyRightHolder extends Component {
-  constructor(props) {
+  constructor(props){
     super(props);
 
     this.acctChanger = async () => {
-      const ethereum = window.ethereum;
-      const self = this;
-      var _web3 = require("web3");
-      _web3 = new Web3(_web3.givenProvider);
-      ethereum.on("accountsChanged", function (accounts) {
-        _web3.eth.getAccounts().then((e) => self.setState({ addr: e[0] }));
-      });
-    };
+    const ethereum = window.ethereum;
+    const self = this;
+    var _web3 = require("web3");
+    _web3 = new Web3(_web3.givenProvider);
+      ethereum.on("accountsChanged", function(accounts) {
+      _web3.eth.getAccounts().then((e) => self.setState({addr: e[0]}));
+    });
+    }
 
     //Component state declaration
 
@@ -44,70 +44,61 @@ class VerifyRightHolder extends Component {
       secret: "",
       web3: null,
       frontend: "",
-      storage: "",
-    };
+      storage: ""
+    }
+
   }
 
   componentDidMount() {
-    console.log("component mounted");
+    //console.log("component mounted")
     var _web3 = require("web3");
     _web3 = new Web3(_web3.givenProvider);
-    this.setState({ web3: _web3 });
-    _web3.eth.getAccounts().then((e) => this.setState({ addr: e[0] }));
-    var addrArray = returnAddresses();
+    this.setState({web3: _web3});
+    _web3.eth.getAccounts().then((e) => this.setState({addr: e[0]}));
+    var addrArray = returnAddresses(); 
     var _frontend_addr = addrArray[1];
     var _storage_addr = addrArray[0];
     const frontEnd_abi = returnFrontEndAbi();
     const storage_abi = returnStorageAbi();
 
-    const _frontend = new _web3.eth.Contract(frontEnd_abi, _frontend_addr);
+    const _frontend = new _web3.eth.Contract(
+    frontEnd_abi,
+    _frontend_addr
+    );
 
-    const _storage = new _web3.eth.Contract(storage_abi, _storage_addr);
-    this.setState({ frontend: _frontend });
-    this.setState({ storage: _storage });
+    const _storage = new _web3.eth.Contract(
+    storage_abi, 
+    _storage_addr
+    );
+    this.setState({frontend: _frontend})
+    this.setState({storage: _storage})
 
     document.addEventListener("accountListener", this.acctChanger());
+
   }
 
-  componentWillUnmount() {
-    console.log("unmounting component");
-    document.removeEventListener("accountListener", this.acctChanger());
-  }
+  componentWillUnmount() { 
+    //console.log("unmounting component")
+    document.removeEventListener("accountListener", this.acctChanger())
+}
 
-  render() {
+  render(){
     const self = this;
 
-    async function checkExists(idxHash) {
+    async function checkExists(idxHash) { 
       await self.state.storage.methods
         .retrieveRecord(idxHash)
-        .call({ from: self.state.addr }, function (_error, _result) {
-          if (_error) {
-            self.setState({ error1: _error });
-            self.setState({ result1: 0 });
-            alert(
-              "WARNING: Record DOES NOT EXIST! Reject in metamask and review asset info fields."
-            );
-          } else {
-            self.setState({ result1: _result });
-          }
-          console.log("check debug, _result, _error: ", _result, _error);
-        });
-    }
+        .call({ from: self.state.addr }, function(_error, _result){
+          if(_error){self.setState({error1: _error});self.setState({result1: 0});alert("WARNING: Record DOES NOT EXIST! Reject in metamask and review asset info fields.")}
+          else{self.setState({result1: _result})}
+          console.log("check debug, _result, _error: ", _result, _error)
+    });
+  }
+
 
     const _verify = () => {
-      var idxHash = this.state.web3.utils.soliditySha3(
-        this.state.type,
-        this.state.manufacturer,
-        this.state.model,
-        this.state.serial
-      );
-      var rgtRaw = this.state.web3.utils.soliditySha3(
-        this.state.first,
-        this.state.middle,
-        this.state.surname,
-        this.state.id,
-        this.state.secret
-      );
+      var idxHash = this.state.web3.utils.soliditySha3(this.state.type, this.state.manufacturer, this.state.model, this.state.serial);
+      var rgtRaw = this.state.web3.utils.soliditySha3(this.state.first, this.state.middle, this.state.surname, this.state.id, this.state.secret);
       var rgtHash = this.state.web3.utils.soliditySha3(idxHash, rgtRaw);
 
       console.log("idxHash", idxHash);
@@ -116,25 +107,20 @@ class VerifyRightHolder extends Component {
       checkExists(idxHash);
 
       this.state.storage.methods
-        ._verifyRightsHolder(idxHash, rgtHash)
-        .call({ from: this.state.addr }, function (_error, _result) {
-          if (_error) {
-            self.setState({ error: _error });
-            self.setState({ result: 0 });
-          } else {
-            self.setState({ result: _result });
-            self.setState({ error: undefined });
-          }
-        });
+      ._verifyRightsHolder(idxHash, rgtHash)
+      .call({ from: this.state.addr }, function(_error, _result){
+        if(_error){self.setState({error: _error});self.setState({result: 0})}
+        else{self.setState({result: _result});self.setState({error: undefined})}
+    });
 
-      this.state.storage.methods
-        .blockchainVerifyRightsHolder(idxHash, rgtHash)
-        .send({ from: this.state.addr })
-        .on("receipt", (receipt) => {
-          this.setState({ txHash: receipt.transactionHash });
-          console.log(this.state.txHash);
-        });
-
+    this.state.storage.methods
+      .blockchainVerifyRightsHolder(idxHash, rgtHash)
+      .send({ from: this.state.addr})
+      .on("receipt", (receipt) => {
+        this.setState({txHash: receipt.transactionHash});
+        console.log(this.state.txHash);
+      }); 
+    
       console.log(this.state.result);
     };
     return (
@@ -201,7 +187,7 @@ class VerifyRightHolder extends Component {
                 <Form.Control
                   placeholder="First Name"
                   required
-                  onChange={(e) => this.setState({ firstName: e.target.value })}
+                  onChange={(e) => this.setState({ first: e.target.value })}
                   size="lg"
                 />
               </Form.Group>
@@ -212,7 +198,7 @@ class VerifyRightHolder extends Component {
                   placeholder="Middle Name"
                   required
                   onChange={(e) =>
-                    this.setState({ middleName: e.target.value })
+                    this.setState({ middle: e.target.value })
                   }
                   size="lg"
                 />

@@ -1,487 +1,359 @@
-   * {
-    font-family: Arial, Helvetica, sans-serif;
-    font-size: 62.5% ;
-  }
-  
-  body {
-    background-color: rgb(133, 133, 133);
-    margin: 0;
-  }
-  h1, h2, h3, h4, ul, li {
-    font-family: sans-serif;
-  }
+* {
+  font-family: Arial, Helvetica, sans-serif;
+  font-size: 62.5%;
+}
 
-  p {
-    text-align: center;
-  }
+body {
+  background-image: url(2.png);
+  -webkit-backgrount-size: cover;
+  background-size: cover;
+  background-position: center center fixed;
+  /* background-color: rgb(133, 133, 133);
+    margin: 0; */
+}
+h1,
+h2,
+h3,
+h4,
+ul,
+li {
+  font-family: sans-serif;
+}
 
+p {
+  text-align: center;
+}
 
+h1 {
+  font-size: 4rem;
+  text-align: center;
+}
+h2 {
+  font-size: 3.5rem;
+  text-align: center;
+  font-family: Helvetica;
+}
+h3 {
+  font-size: 2rem;
+  text-align: center;
+}
+h4 {
+  font-size: 1rem;
+  text-align: center;
+}
 
-  h1 {
-    font-size: 4.0rem;
-    text-align: center;
-  }
-  h2 {
-    font-size: 3.5rem;
-    text-align: center;
-    font-family: Helvetica;
-  }
-  h3 {
-    font-size: 2.0rem;
-    text-align: center;
-  }
-  h4 {
-    font-size: 1.0rem;
-    text-align: center;
-  }
+.formtext {
+  font-size: 6rem;
+}
 
-  .formtext {
-    font-size: 6.0rem;
-  }
+.page {
+  display: flex;
+  flex-direction: column;
+  justify-content: top;
+  align-items: center;
+}
 
-  .page {
-    background-color: rgb(87, 87, 87);
-    height: 100rem;
-    width: 100% ;
-    display:flex;
-    flex-direction: column;
-    justify-content: top;
-    align-items: center;
-  }
+.header li {
+  display: inline;
+  list-style-type: none;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  margin: auto;
+}
 
-  .header li {
-    display: inline;
-    list-style-type: none;
-    align-items: center;
-    justify-content: center; 
-    flex-direction: column;
-    margin: auto;
-  }
+.header {
+  max-width: none;
+  /* height: 90rem; */
+  background-color: rgb(0, 0, 0);
+  padding: 0rem;
+  margin-top: 0.2rem;
+  align-items: center;
+  justify-content: center;
+  flex-direction: row;
+  opacity: 1;
+}
 
-  .header {
-    width: 82.5rem;
-    /* height: 90rem; */
-    background-color: rgb(0, 0, 0);
-    padding: 0rem;
+.header li a {
+  color: rgb(255, 255, 255);
+  font-weight: bold;
+  text-decoration: none;
+  font-size: 1.6rem;
+  padding: 1.2rem;
+  display: inline-flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
 
-    margin-top: 0rem;
-    align-items: center;
-    justify-content: center; 
-    flex-direction: column;
-  }
+.content {
+  font-size: 4rem;
+  padding: 2rem;
+  margin-right: 1rem;
+}
+.content h2 {
+  padding: 0;
+  margin: 0;
+  margin-right: 1rem;
+}
+.content li {
+  margin-bottom: 1rem;
+}
+.active {
+  background-color: #5da2e9;
+}
 
-  .header li a { 
-    color: rgb(255, 255, 255);
-    font-weight: bold;
-    text-decoration: none;
-    font-size: 1.6rem;
-    padding: 1.2rem;
-    display: inline-flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-  }
+.banner {
+  height: 1rem;
+  color: rgb(255, 255, 255);
+  font-size: 2rem;
+  flex-direction: row;
+  justify-content: flex-start;
+}
 
-  .content {
-    font-size: 4.0rem;
-    padding: 2rem;
-    margin-right: 1.0rem;
-  }
-  .content h2 {
-    padding: 0;
-    margin: 0;
-    margin-right: 1.0rem;
-  }
-  .content li {
-    margin-bottom: 1.0rem;
-  }
-  .active {
-    background-color: rgb(93, 162, );
+.home {
+  height: 15rem;
+  width: 75rem;
+  color: white;
+  background-color: #206ab9;
+  border-radius: 1rem;
+  font-weight: bold;
+  text-decoration: none;
+  font-size: 3rem;
+  padding: 1rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: -2rem;
+  opacity: 0.96;
+}
 
-  }
+.NRform {
+  height: 52rem;
+  width: 59rem;
+  background-color: #206ab9;
+  border-radius: 0.5rem;
+  padding: 2rem;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  margin-top: -2rem;
+  opacity: 0.96;
+}
 
+.VRform {
+  height: 45rem;
+  width: 59rem;
+  background-color: #206ab9;
+  border-radius: 0.5rem;
+  padding: 2rem;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  margin-top: -2rem;
+  opacity: 0.96;
+}
 
-  .banner {
-    height: 5.0rem;
-    width: 50rem;
-    color: rgb(255, 255, 255);
-    border-radius: 0rem;
-    font-size: 1.4rem;
-    padding: 0rem;
-    display: inline-flex;
-    flex-direction: column;
-    justify-content: flex-start;
-    margin-left: auto;
-    margin-top: 4rem;
-  }
- 
+.RRform {
+  height: 30rem;
+  width: 59rem;
+  background-color: #206ab9;
+  border-radius: 0.5rem;
+  padding: 2rem;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  margin-top: -2rem;
+  opacity: 0.96;
+}
 
-  .home {
-    height: 15.0rem;
-    width: 75.0rem;
-    background-color:   #0099FF;
-    border-radius: 1.0rem;
-    font-weight: bold;
-    text-decoration: none;
-    font-size: 3.0rem;
-    padding: 1.0rem;
-    display:flex;
-    flex-direction: column;
-    justify-content: space-between;
-    align-items: center;
-    margin: 0 auto; 
-  }
+.TAform {
+  height: 60rem;
+  width: 59rem;
+  background-color: #206ab9;
+  border-radius: 0.5rem;
+  padding: 2rem;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  margin-top: -2rem;
+  opacity: 0.96;
+}
 
-  .NRform {
-    height: 52.0rem;
-    width: 57.0rem;
-    background-color:  rgb(110, 110, 110);
-    border-radius: 1.0rem;
-    padding: 1.0rem;
-    display:flex;
-    flex-direction: row;
-    justify-content: space-between;
-    margin: 0 auto; 
-  }
+.MRform {
+  height: 45rem;
+  width: 59rem;
+  background-color: #206ab9;
+  border-radius: 0.5rem;
+  padding: 2rem;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  margin-top: -2rem;
+  opacity: 0.96;
+}
 
-  .VRform {
-    height: 45.0rem;
-    width: 57.0rem;
-    background-color:  rgb(110, 110, 110);
-    border-radius: 1.0rem;
-    padding: 1.0rem;
-    display:flex;
-    flex-direction: row;
-    justify-content: space-between;
-    margin: 0 auto; 
-    /* height: 30.0rem;
-    width: 75.0rem;
-    background-color:  rgb(255, 255, 255);
-    border-radius: 1.0rem;
-    font-weight: default;
-    text-decoration: none;
-    font-size: 2.0rem;
-    padding: 1.0rem;
-    display:flex;
-    flex-direction: column;
-    justify-content: space-between;
-    align-items: center;
-    margin: 0 auto;  */
-  }
+.DCform {
+  height: 45rem;
+  width: 59rem;
+  background-color: #206ab9;
+  border-radius: 0.5rem;
+  padding: 2rem;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  margin-top: -2rem;
+  opacity: 0.96;
+}
 
-  .RRform {
-    height: 30.0rem;
-    width: 57.0rem;
-    background-color:  rgb(110, 110, 110);
-    border-radius: 1.0rem;
-    padding: 1.0rem;
-    display:flex;
-    flex-direction: row;
-    justify-content: space-between;
-    margin: 0 auto; 
-    /* height: 30.0rem;
-    width: 75.0rem;
-    background-color:  rgb(255, 255, 255);
-    border-radius: 1.0rem;
-    font-weight: default;
-    text-decoration: none;
-    font-size: 2.0rem;
-    padding: 1.0rem;
-    display:flex;
-    flex-direction: column;
-    justify-content: space-between;
-    align-items: center;
-    margin: 0 auto;  */
-  }
+.MDform {
+  height: 45rem;
+  width: 59rem;
+  background-color: #206ab9;
+  border-radius: 0.5rem;
+  padding: 2rem;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  margin-top: -2rem;
+  opacity: 0.96;
+}
 
-  .TAform {
-    height: 60.0rem;
-    width: 57.0rem;
-    background-color:  rgb(110, 110, 110);
-    border-radius: 1.0rem;
-    padding: 1.0rem;
-    display:flex;
-    flex-direction: row;
-    justify-content: space-between;
-    margin: 0 auto; 
-    /* height: 30.0rem;
-    width: 75.0rem;
-    background-color:  rgb(255, 255, 255);
-    border-radius: 1.0rem;
-    font-weight: default;
-    text-decoration: none;
-    font-size: 2.0rem;
-    padding: 1.0rem;
-    display:flex;
-    flex-direction: column;
-    justify-content: space-between;
-    align-items: center;
-    margin: 0 auto;  */
-  }
+.ANform {
+  height: 45rem;
+  width: 59rem;
+  background-color: #206ab9;
+  border-radius: 0.5rem;
+  padding: 2rem;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  margin-top: -2rem;
+  opacity: 0.96;
+}
 
-  .MRform {
-    height: 45.0rem;
-    width: 57.0rem;
-    background-color:  rgb(110, 110, 110);
-    border-radius: 1.0rem;
-    padding: 1.0rem;
-    display:flex;
-    flex-direction: row;
-    justify-content: space-between;
-    margin: 0 auto; 
-    /* height: 30.0rem;
-    width: 75.0rem;
-    background-color:  rgb(255, 255, 255);
-    border-radius: 1.0rem;
-    font-weight: default;
-    text-decoration: none;
-    font-size: 2.0rem;
-    padding: 1.0rem;
-    display:flex;
-    flex-direction: column;
-    justify-content: space-between;
-    align-items: center;
-    margin: 0 auto;  */
-  }
+.FMRform {
+  height: 45rem;
+  width: 59rem;
+  background-color: #206ab9;
+  border-radius: 0.5rem;
+  padding: 2rem;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  margin-top: -2rem;
+  opacity: 0.96;
+}
 
-  .DCform {
+.BannerForm {
+  height: 5rem;
+  max-width: none;
+  background-color: black;
+  justify-content: center;
+  display: flex;
+  opacity: 0.95;
+}
 
-    height: 45.0rem;
-    width: 57.0rem;
-    background-color:  rgb(110, 110, 110);
-    border-radius: 1.0rem;
-    padding: 1.0rem;
-    display:flex;
-    flex-direction: row;
-    justify-content: space-between;
-    margin: 0 auto; 
-    /* height: 30.0rem;
-    width: 75.0rem;
-    background-color:  rgb(255, 255, 255);
-    border-radius: 1.0rem;
-    font-weight: default;
-    text-decoration: none;
-    font-size: 2.0rem;
-    padding: 1.0rem;
-    display:flex;
-    flex-direction: column;
-    justify-content: space-between;
-    align-items: center;
-    margin: 0 auto;  */
-  }
+.RRresults {
+  height: 16rem;
+  width: 59rem;
+  color: white;
+  background-color: black;
+  border-radius: 0rem 0rem 1rem 1rem;
+  font-size: 1.3rem;
+  display: flex;
+  padding: 2rem;
+  margin-left: -2rem;
+}
 
-  .MDform {
-    height: 45.0rem;
-    width: 57.0rem;
-    background-color:  rgb(110, 110, 110);
-    border-radius: 1.0rem;
-    padding: 1.0rem;
-    display:flex;
-    flex-direction: row;
-    justify-content: space-between;
-    margin: 0 auto; 
-    /* height: 30.0rem;
-    width: 75.0rem;
-    background-color:  rgb(255, 255, 255);
-    border-radius: 1.0rem;
-    font-weight: default;
-    text-decoration: none;
-    font-size: 2.0rem;
-    padding: 1.0rem;
-    display:flex;
-    flex-direction: column;
-    justify-content: space-between;
-    align-items: center;
-    margin: 0 auto;  */
-  }
+.VRresults {
+  height: 5rem;
+  width: 59rem;
+  color: white;
+  background-color: black;
+  border-radius: 0rem 0rem 1rem 1rem;
+  font-size: 2.2rem;
+  display: flex;
+  padding: 2rem;
+  margin-left: -2rem;
+  justify-content: center;
+}
+.errorResults {
+  height: 7rem;
+  width: 50rem;
+  background-color: black;
+  color: white;
+  border-radius: 1rem;
+  font-size: 1.4rem;
+  padding: 1rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: normal;
+  margin-left: 2.5rem;
+  margin-top: 20rem;
+}
 
-  .ANform {
-    height: 45.0rem;
-    width: 57.0rem;
-    background-color: rgb(110, 110, 110);
-    border-radius: 1.0rem;
-    padding: 1.0rem;
-    display:flex;
-    flex-direction: row;
-    justify-content: space-between;
-    margin: 0 auto; 
-    /* height: 30.0rem;
-    width: 75.0rem;
-    background-color:  rgb(255, 255, 255);
-    border-radius: 1.0rem;
-    font-weight: default;
-    text-decoration: none;
-    font-size: 2.0rem;
-    padding: 1.0rem;
-    display:flex;
-    flex-direction: column;
-    justify-content: space-between;
-    align-items: center;
-    margin: 0 auto;  */
-  }
+.VRHresults {
+  height: 5rem;
+  width: 59rem;
+  color: white;
+  background-color: black;
+  border-radius: 0rem 0rem 1rem 1rem;
+  font-size: 1.5rem;
+  display: flex;
+  padding: 2rem;
+  margin-left: -2rem;
+  align-items: center;
+}
 
-  .FMRform {
-    height: 45.0rem;
-    width: 57.0rem;
-    background-color:  rgb(110, 110, 110);
-    border-radius: 1.0rem;
-    padding: 1.0rem;
-    display:flex;
-    flex-direction: row;
-    justify-content: space-between;
-    margin: 0 auto; 
-    /* height: 30.0rem;
-    width: 75.0rem;
-    background-color:  rgb(255, 255, 255);
-    border-radius: 1.0rem;
-    font-weight: default;
-    text-decoration: none;
-    font-size: 2.0rem;
-    padding: 1.0rem;
-    display:flex;
-    flex-direction: column;
-    justify-content: space-between;
-    align-items: center;
-    margin: 0 auto;  */ 
-  }
+.btn {
+  font-size: 1.5rem;
+  height: 3rem;
+  width: 13rem;
+  align-items: center;
+  margin-top: 22rem;
+  border-radius: 1rem;
+}
 
-  .BannerForm {
-    height: 10rem;
-    width: 100%;
-    background-color: black;
-    margin-right: auto;
-    display: flex;
-  }
+.formFont {
+  font-size: large;
+  color: rgb(255, 255, 255);
+  font-family: Tahoma, Geneva, sans-serif;
+}
+.buttonDisplay {
+  margin-left: 42rem;
+  margin-top: -20rem;
+}
 
-  .RRresults {
-    height: 15rem;
-    width: 57.0rem;
-    color: white;
-    background-color:rgb(110, 110, 110);
-    border-radius: 1.0rem;
-    font-size: 1.3rem;
-    display:flex;
-    padding: 1rem;
-    margin-left: -1rem;
-    align-items: center;
-    /* height: 30.0rem;
-    width: 20.0rem;
-    background-color:rgb(5, 164, 161);
-    border-radius: 1.0rem;
-    font-weight: default;
-    text-decoration: none;
-    font-size: 1.4rem;
-    padding: 1.0rem;
-    display:flex;
-    word-wrap: break-word;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    flex-direction: column;
-    justify-content: space-between;
-    align-items: normal;
-    margin: 0 auto;  */
-  }
+.NRheader {
+  font-weight: bold;
+  color: rgb(255, 255, 255);
+  font-size: x-large;
+  font-family: Tahoma, Geneva, sans-serif;
+}
 
-  .VRresults {
-    height: 5rem;
-    width: 57.0rem;
-    color: white;
-    background-color:rgb(110, 110, 110);
-    border-radius: 1.0rem;
-    font-size: 2.2rem;
-    display:flex;
-    padding: 1rem;
-    margin-left: -0.5rem;
- 
-  }
-  .errorResults {
-    height: 7.0rem;
-    width: 50.0rem;
-    background-color:black;
-    color: white;
-    border-radius: 1.0rem;
-    font-size: 1.4rem;
-    padding: 1.0rem;
-    display:flex;
-    flex-direction: column;
-    justify-content: space-between;
-    align-items: normal;
-    margin-left: 2.5rem;
-    margin-top: 20rem;
+.imageForm {
+  justify-content: start;
+  margin-right: auto;
+  display: flex;
+  padding-left: 2rem;
+}
+/* .imageFormBackground {
+  background-color: black;
+  margin-right: auto;
+  width: 23rem;
+  opacity: 0.65;
+} */
+.userData {
+  display: flex;
+  margin-left: auto;
+  background-color: black;
+  width: 70rem;
+  border-radius: 1rem 0rem 0rem 0rem;
+  height: 3rem;
+  margin-top: auto;
+  justify-content: center;
 
-  }
-
-  .VRHresults {
-    height: 5rem;
-    width: 57.0rem;
-    color: white;
-    background-color:rgb(110, 110, 110);
-    border-radius: 1.0rem;
-    font-size: 1.5rem;
-    display:flex;
-    padding: 1rem;
-    margin-left: -1rem;
- 
-  }
-
-  /* TEST */
-  .NRTform {
-    height: 25.0rem;
-    width: 80.0rem;
-    background-color:  rgb(5, 164, 161);
-    border-radius: 1.0rem;
-    font-weight: default;
-    text-decoration: none;
-    font-size: 6.0rem;
-    padding: 1.0rem;
-    display:flex;
-    justify-content: space-between;
-    margin: 0 auto; 
-  }
-
-  .btn {
-    font-size: 1.5rem;
-    height: 3rem;
-    width: 13rem;
-    align-items: center;
-    margin-top: 22rem;
-    border-radius: 1rem;
-  }
-  .VRresultstest {
-    max-height: 7.0rem;
-    max-width: 15.0rem;
-    background-color:rgb(5, 164, 161);
-    border-radius: 1.0rem;
-    font-weight: default;
-    text-decoration: none;
-    font-size: 1.5rem;
-    padding: 1.0rem;
-    display:flex;
-    word-wrap: break-word;
-    /* overflow: hidden; */
-    text-overflow: ellipsis;
-    flex-direction: column;
-    justify-content: space-between;
-  }
-
-  .formFont {
-    font-size: large;
-    color: rgb(255, 255, 255);
-    font-family: Tahoma, Geneva, sans-serif;
-  }
-  .buttonDisplay {
-    margin-left: 42rem;
-    margin-top: -20rem;
-  }
-
-  .NRheader {
-    font-weight: bold;
-    color: rgb(255, 255, 255);
-    font-size: x-large;
-    font-family: Tahoma, Geneva, sans-serif;
-
-  }
-  .FMRheader {
-    color: yellow;
-    font-size: small;
-  }
+}

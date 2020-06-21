@@ -48,7 +48,7 @@ class ModifyDescription extends Component {
   }
 
   componentDidMount() {
-    console.log("component mounted")
+    //console.log("component mounted")
     var _web3 = require("web3");
     _web3 = new Web3(_web3.givenProvider);
     this.setState({web3: _web3});
@@ -76,7 +76,7 @@ class ModifyDescription extends Component {
   }
 
   componentWillUnmount() { 
-    console.log("unmounting component")
+    //console.log("unmounting component")
     document.removeEventListener("accountListener", this.acctChanger())
 }
 

@@ -73,7 +73,7 @@ class DecrementCounter extends Component {
   }
 
   componentWillUnmount() { 
-    console.log("unmounting component")
+    //console.log("unmounting component")
     document.removeEventListener("accountListener", this.acctChanger())
 }
 
