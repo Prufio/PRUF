@@ -1,22 +1,15 @@
 /*  TO DO
-
-
-        bytes32 userHash = keccak256(abi.encodePacked(msg.sender));
-        //uint256 assetTokenID = uint256(_idxHash); //tokenID set to the uint256 of the supplied IDX for token verification
-        uint256 assetClass256 = uint256(_assetClass);
-        // require( //origin address holds asset token if asset class is 30,000 or more
-        //     (_assetClass < 30000) ||
-        //     (assetTokenContract.ownerOf(assetTokenID) == message_origin),
-        //     "NR:ERR-User address does not hold asset token"
-        // );
-        require( //origin address holds assetClass token, or assetClass is >60000
-                (_assetClass >= 65000) ||
-                (ACtokenContract.ownerOf(assetClass256) == message_origin),
-            "NR:ERR-Contract not authorized in asset class"
-        );
-
-
-*/
+ * verify security and user permissioning /modifiers
+ *
+ *
+ * IMPORTANT NOTE : DO NOT REMOVE FROM CODE:
+ *      Verification of rgtHash in curated, tokenless asset classes is not secure beyond the honorable intentions
+ * of authorized recorders. All blockchain info is readable, so a bad actor could trivially obtain a copy of the
+ * correct rgtHash on chain. This "stumbling block" measure is in place primarily to keep honest people honest, and
+ * to require an actual, malicious effort to bypass security rather than a little copy-paste. Actual decentralized
+ * security is provided with tokenized assets, which do not rely on the coercive trust relationship that creates the
+ * incentive for recorders not to engage in malicious practices.
+ */
 
 // SPDX-License-Identifier: UNLICENSED
 pragma solidity ^0.6.2;

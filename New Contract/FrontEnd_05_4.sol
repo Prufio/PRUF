@@ -1,8 +1,35 @@
 /*  TO DO
- * implement user level security and user permissioning /modifiers
- * implement remint_asset
- * implement stolenOrLost
+ * Recheck user level security and user permissioning /modifiers (after all is done)
  * implement escrow
+ *
+ *_______________________________________
+ * implement remint_asset ?????????     |
+ *-----------------------------------------------------------------------------------------------------------------
+ * Should all assets have a token, minted to reside within the contract for curated / "nontokenized" asset classes?
+ * If so, make a move-token function that can be enabled later (set to an address to control it)
+ * we gotta figure out this token thing.
+ *-----------------------------------------------------------------------------------------------------------------
+ *
+ * IMPORTANT NOTE : DO NOT REMOVE FROM CODE:
+ *      Verification of rgtHash in curated, tokenless asset classes is not secure beyond the honorable intentions
+ * of authorized recorders. All blockchain info is readable, so a bad actor could trivially obtain a copy of the
+ * correct rgtHash on chain. This "stumbling block" measure is in place primarily to keep honest people honest, and
+ * to require an actual, malicious effort to bypass security rather than a little copy-paste. Actual decentralized
+ * security is provided with tokenized assets, which do not rely on the coercive trust relationship that creates the
+ * incentive for recorders not to engage in malicious practices.
+ *
+ *
+ *
+ * Order of require statements:
+ * 1: (modifiers)
+ * 2: checking the idendity and credentials of the caller
+ * 3: checking the asset existance
+ * 4: checking the suitability of provided data for the proposed operation
+ * 5: checking the suitability of asset details for the proposed operation
+ * 6: verifying that provided verification data matches required data
+ * 7: verifying that message contains any required payment
+ *
+ *
  */
 
 // SPDX-License-Identifier: UNLICENSED
@@ -300,6 +327,7 @@ contract FrontEnd is PullPayment, Ownable, IERC721Receiver {
             callingUser.authorizedAssetClass == _assetClass,
             "NR: User not authorized to create records in specified asset class"
         );
+        require(_rgtHash != 0, "NR: rights holder cannot be zero");
         require(
             msg.value >= cost.newRecordCost,
             "NR: tx value too low. Send more eth."
@@ -341,9 +369,21 @@ contract FrontEnd is PullPayment, Ownable, IERC721Receiver {
             "FMR: User not authorized to modify records in specified asset class"
         );
         require((rec.rightsHolder != 0), "FMR: Record does not exist");
+        require(_rgtHash != 0, "FMR: rights holder cannot be zero");
         require(
-            (rec.assetStatus != 6) && (rec.assetStatus != 6),
-            "FMR: Cannot forceMod asset in Escrow"
+            (rec.assetStatus != 3) &&
+                (rec.assetStatus != 4) &&
+                (rec.assetStatus != 9) &&
+                (rec.assetStatus != 10),
+            "FMR: Cannot modify asset in lost or stolen status"
+        );
+        require(
+            (rec.assetStatus != 6) && (rec.assetStatus != 12),
+            "FMR: Cannot modify asset in Escrow"
+        );
+        require(
+            (rec.assetStatus != 5),
+            "FMR:ERR-Cannot change status of asset in transferred status."
         );
         require(rec.assetStatus < 200, "FMR: Record locked");
         require(
@@ -366,7 +406,8 @@ contract FrontEnd is PullPayment, Ownable, IERC721Receiver {
     }
 
     /*
-     * @dev Reimport **Record**.rightsHolder (no confirmation required, posessor is considered to be owner)
+     * @dev Reimport **Record**.rightsHolder (no confirmation required -
+     * posessor is considered to be owner). sets rec.assetStatus to 0.
      */
     function $reimportRecord(bytes32 _idxHash, bytes32 _rgtHash)
         external
@@ -380,17 +421,17 @@ contract FrontEnd is PullPayment, Ownable, IERC721Receiver {
 
         require(
             callingUser.userType == 1,
-            "RR: User not authorized to force modify records"
+            "RR: User not authorized to reimport assets"
         );
         require(
             callingUser.authorizedAssetClass == rec.assetClass,
             "RR: User not authorized to modify records in specified asset class"
         );
+        require((rec.rightsHolder != 0), "RR: Record does not exist");
         require(
             rec.assetStatus == 5,
             "RR: Only status 5 assets can be reimported"
         );
-        require((rec.rightsHolder != 0), "RR: Record does not exist");
         require(rec.assetStatus < 200, "RR: Record locked");
         require(
             msg.value >= cost.reMintRecordCost,
@@ -413,32 +454,73 @@ contract FrontEnd is PullPayment, Ownable, IERC721Receiver {
     function _modStatus(
         bytes32 _idxHash,
         bytes32 _rgtHash,
-        uint8 _assetStatus
+        uint8 _newAssetStatus
     ) external isAuthorized returns (uint8) {
         Record memory rec = getRecord(_idxHash);
         User memory callingUser = getUser();
-        // require(
-        //     callingUser.userType == 1,
-        //      "FMR: User not authorized to create records"
-        // );
         require(
             callingUser.authorizedAssetClass == rec.assetClass,
             "MS: User not authorized to modify records in specified asset class"
         );
+        require((rec.rightsHolder != 0), "MS: Record does not exist");
+        require(_newAssetStatus < 200, "MS: user cannot set status > 199");
         require(
             (rec.assetStatus != 6) && (rec.assetStatus != 6),
             "MS: Cannot change status of asset in Escrow"
         );
+        require(
+            (rec.assetStatus != 5),
+            "MS:ERR-Cannot change status of asset in transferred status."
+        );
+        require(rec.assetStatus < 200, "MS: Record locked");
+        require(
+            rec.rightsHolder == _rgtHash,
+            "MS: ERR-Rightsholder does not match supplied data"
+        );
+
+        rec.assetStatus = _newAssetStatus;
+
+        writeRecord(_idxHash, rec);
+
+        return rec.assetStatus;
+    }
+
+    /*
+     * @dev set **Record**.assetStatus to lost or stolen, with confirmation required.
+     */
+    function _setLostOrStolen(
+        bytes32 _idxHash,
+        bytes32 _rgtHash,
+        uint8 _newAssetStatus
+    ) external isAuthorized returns (uint8) {
+        Record memory rec = getRecord(_idxHash);
+        rec.assetStatus = _newAssetStatus;
+        User memory callingUser = getUser();
+        require(
+            callingUser.authorizedAssetClass == rec.assetClass,
+            "MS: User not authorized to modify records in specified asset class"
+        );
         require((rec.rightsHolder != 0), "MS: Record does not exist");
+        require(
+            (_newAssetStatus == 3) ||
+                (_newAssetStatus == 4) ||
+                (_newAssetStatus == 9) ||
+                (_newAssetStatus == 10),
+            "SS:ERR-Must set to a lost or stolen status"
+        );
+        require(
+            (rec.assetStatus != 5),
+            "SS:ERR-Transferred asset cannot be set to lost or stolen after transfer."
+        );
         require(rec.assetStatus < 200, "RR: Record locked");
         require(
             rec.rightsHolder == _rgtHash,
             "MS: ERR-Rightsholder does not match supplied data"
         );
 
-        rec.assetStatus = _assetStatus;
+        bytes32 userHash = keccak256(abi.encodePacked(msg.sender));
 
-        writeRecord(_idxHash, rec);
+        Storage.setStolenOrLost(userHash, _idxHash, rec.assetStatus);
 
         return rec.assetStatus;
     }
@@ -453,10 +535,6 @@ contract FrontEnd is PullPayment, Ownable, IERC721Receiver {
     ) external isAuthorized returns (uint256) {
         Record memory rec = getRecord(_idxHash);
         User memory callingUser = getUser();
-        // require(
-        //     callingUser.userType == 1,
-        //      "FMR: User not authorized to create records"
-        // );
         require(
             callingUser.authorizedAssetClass == rec.assetClass,
             "DC: User not authorized to modify records in specified asset class"
@@ -466,7 +544,8 @@ contract FrontEnd is PullPayment, Ownable, IERC721Receiver {
             "DC: Cannot modify asset in Escrow"
         );
         require((rec.rightsHolder != 0), "DC: Record does not exist");
-        require(rec.assetStatus < 200, "RR: Record locked");
+        require(_decAmount > 0, "DC: cannot decrement by negative number");
+        require(rec.assetStatus < 200, "DC: Record locked");
         require(
             rec.rightsHolder == _rgtHash,
             "DC: Rightsholder does not match supplied data"
@@ -493,33 +572,28 @@ contract FrontEnd is PullPayment, Ownable, IERC721Receiver {
         Record memory rec = getRecord(_idxHash);
         User memory callingUser = getUser();
         Costs memory cost = getCost(rec.assetClass);
-
-        require(
-            callingUser.userType == 1,
-            "TA: User not authorized to transfer assets"
-        );
         require(
             callingUser.authorizedAssetClass == rec.assetClass,
             "TA: User not authorized to modify records in specified asset class"
         );
+        require((rec.rightsHolder != 0), "MS: Record does not exist");
+        require(_newrgtHash != 0, "TA:ERR-new Rightsholder cannot be blank");
         require( //-------------------------------------Should an asset in escrow be transferrable?
             ((rec.assetStatus != 6) && (rec.assetStatus != 6)), //Should it be contingent on the original recorder address?
             "MS: Cannot transfer asset in Escrow" //If so, it must not erase the recorder, or escrow termination will be broken!
         );
-        require((rec.rightsHolder != 0), "MS: Record does not exist");
-        require(rec.assetStatus < 200, "RR: Record locked");
         require(
-            msg.value >= cost.transferAssetCost,
-            "TA: tx value too low. Send more eth."
+            (rec.assetStatus == 1) || (rec.assetStatus == 7),
+            "TA:ERR--Asset assetStatus is not transferrable"
         );
+        require(rec.assetStatus < 200, "RR: Record locked");
         require(
             rec.rightsHolder == _rgtHash,
             "TA:ERR-Rightsholder does not match supplied data"
         );
-        require(_newrgtHash != 0, "TA:ERR-new Rightsholder cannot be blank");
         require(
-            rec.assetStatus < 3,
-            "TA:ERR--Asset assetStatus is not transferrable"
+            msg.value >= cost.transferAssetCost,
+            "TA: tx value too low. Send more eth."
         );
 
         rec.rightsHolder = _newrgtHash;
@@ -547,17 +621,17 @@ contract FrontEnd is PullPayment, Ownable, IERC721Receiver {
             callingUser.authorizedAssetClass == rec.assetClass,
             "MI1: User not authorized to modify records in specified asset class"
         );
+        require((rec.rightsHolder != 0), "MI1: Record does not exist");
+        require(rec.Ipfs1 != _IpfsHash, "MI1:ERR--New data same as old");
         require( //-------------------------------------Should an asset in escrow be modifiable?
             ((rec.assetStatus != 6) && (rec.assetStatus != 6)), //Should it be contingent on the original recorder address?
             "MI1: Cannot modify asset in Escrow" //If so, it must not erase the recorder, or escrow termination will be broken!
         );
-        require((rec.rightsHolder != 0), "MI1: Record does not exist");
         require(rec.assetStatus < 200, "MI1: Record locked");
         require(
             rec.rightsHolder == _rgtHash,
             "MI1:ERR--Rightsholder does not match supplied data"
         );
-        require(rec.Ipfs1 != _IpfsHash, "MI1:ERR--New data same as old");
 
         rec.Ipfs1 = _IpfsHash;
 
@@ -581,19 +655,19 @@ contract FrontEnd is PullPayment, Ownable, IERC721Receiver {
             callingUser.authorizedAssetClass == rec.assetClass,
             "MI2:ERR--MI1: User not authorized to modify records in specified asset class"
         );
+        require((rec.rightsHolder != 0), "MI1: Record does not exist");
         require( //-------------------------------------Should an asset in escrow be modifiable?
             ((rec.assetStatus != 6) && (rec.assetStatus != 6)), //Should it be contingent on the original recorder address?
             "MI1: Cannot modify asset in Escrow" //If so, it must not erase the recorder, or escrow termination will be broken!
         );
-        require((rec.rightsHolder != 0), "MI1: Record does not exist");
         require(rec.assetStatus < 200, "MI1: Record locked");
-        require(
-            rec.rightsHolder == _rgtHash,
-            "MI2:ERR--Rightsholder does not match supplied data"
-        );
         require(
             rec.Ipfs2 == 0,
             "MI2:ERR--Ipfs2 has data already. Overwrite not permitted"
+        );
+        require(
+            rec.rightsHolder == _rgtHash,
+            "MI2:ERR--Rightsholder does not match supplied data"
         );
         require(
             msg.value >= cost.createNoteCost,
