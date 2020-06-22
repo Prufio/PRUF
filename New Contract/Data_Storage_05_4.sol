@@ -278,7 +278,8 @@ contract Storage is Ownable {
         uint256 _createNoteCost,
         uint256 _reMintRecordCost,
         uint256 _modifyStatusCost,
-        uint256 _forceModCost
+        uint256 _forceModCost,
+        address _paymentAddress
     ) external isACtokenHolderOfClass(_class) {
         cost[_class].cost1 = _newRecordCost.add(baseCost.cost1);
         cost[_class].cost2 = _transferRecordCost.add(baseCost.cost2);
@@ -286,6 +287,7 @@ contract Storage is Ownable {
         cost[_class].cost4 = _reMintRecordCost.add(baseCost.cost4);
         cost[_class].cost5 = _modifyStatusCost.add(baseCost.cost5);
         cost[_class].cost6 = _forceModCost.add(baseCost.cost6);
+        cost[_class].paymentAddress = _paymentAddress;
     }
 
     /*
@@ -725,6 +727,17 @@ contract Storage is Ownable {
         returns (address)
     {
         return contractNames[_name];
+    }
+
+    /*
+     * @dev returns the payment address from baseCosts.payment_address
+     */
+    function getMainWallet()
+        external
+        view
+        returns (address)
+    {
+        return baseCost.paymentAddress;
     }
 
     //-----------------------------------------------Private functions------------------------------------------------//
