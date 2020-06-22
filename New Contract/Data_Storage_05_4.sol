@@ -1,5 +1,6 @@
 /*  TO DO
  * verify security and user permissioning /modifiers
+ * Decide if rgthash will still be used in storage, and how ? asset tokenHolder verification?
  *
  *
  * IMPORTANT NOTE : DO NOT REMOVE FROM CODE:
@@ -169,7 +170,7 @@ contract Storage is Ownable {
         require(
             ((database[_idxHash].assetStatus != 6) &&
                 (database[_idxHash].assetStatus != 12)) ||
-                (database[_idxHash].timeLock < block.timestamp), //Since time here is +/1 a day or so, now can be used as per the 15 second rule (consensys)
+                (database[_idxHash].timeLock < now), //Since time here is +/1 a day or so, now can be used as per the 15 second rule (consensys)
             "MOD-U-record modification prohibited while locked in escrow"
         );
         _;
@@ -306,18 +307,18 @@ contract Storage is Ownable {
         );
         require(_rgt != 0, "NR:ERR-Rightsholder cannot be blank");
 
-        Record memory _record;
+        Record memory rec;
 
-        _record.assetClass = _assetClass;
-        _record.countDownStart = _countDownStart;
-        _record.countDown = _countDownStart;
-        _record.recorder = _userHash;
-        _record.rightsHolder = _rgt;
-        _record.lastRecorder = _userHash;
-        _record.forceModCount = 0;
-        _record.Ipfs1 = _Ipfs1;
+        rec.assetClass = _assetClass;
+        rec.countDownStart = _countDownStart;
+        rec.countDown = _countDownStart;
+        rec.recorder = _userHash;
+        rec.rightsHolder = _rgt;
+        rec.lastRecorder = _userHash;
+        rec.forceModCount = 0;
+        rec.Ipfs1 = _Ipfs1;
 
-        database[_idxHash] = _record;
+        database[_idxHash] = rec;
 
         emit REPORT("New record created");
     }
@@ -330,7 +331,7 @@ contract Storage is Ownable {
         bytes32 _userHash,
         bytes32 _idxHash,
         bytes32 _rgtHash,
-        uint8 _assetStatus,
+        uint8 _newAssetStatus,
         uint256 _countDown,
         uint8 _forceCount
     )
@@ -354,23 +355,27 @@ contract Storage is Ownable {
             "MR:ERR-new forceModCount less than original forceModCount"
         );
         require(
-            _assetStatus < 200,
+            _newAssetStatus < 200,
             "MR:ERR-assetStatus over 199 cannot be set by user"
+        );
+        require(
+            (_newAssetStatus != 3) &&
+                (_newAssetStatus != 4) &&
+                (_newAssetStatus != 9) &&
+                (_newAssetStatus != 10),
+            "SS:ERR-Must use stolenOrLost function to set lost or stolen status"
         );
 
         database[idxHash].timeLock = block.number;
-        Record memory _record = database[_idxHash];
+        Record memory rec = database[_idxHash];
 
-        (_record.lastRecorder, _record.recorder) = storeRecorder(
-            _idxHash,
-            _userHash
-        );
-        _record.rightsHolder = rgtHash;
-        _record.countDown = _countDown;
-        _record.assetStatus = _assetStatus;
-        _record.forceModCount = _forceCount;
+        (rec.lastRecorder, rec.recorder) = storeRecorder(_idxHash, _userHash);
+        rec.rightsHolder = rgtHash;
+        rec.countDown = _countDown;
+        rec.assetStatus = _newAssetStatus;
+        rec.forceModCount = _forceCount;
 
-        database[idxHash] = _record;
+        database[idxHash] = rec;
         emit REPORT("Record modified");
     }
 
@@ -401,15 +406,12 @@ contract Storage is Ownable {
         );
 
         database[_idxHash].timeLock = block.number;
-        Record memory _record = database[_idxHash];
+        Record memory rec = database[_idxHash];
 
-        (_record.lastRecorder, _record.recorder) = storeRecorder(
-            _idxHash,
-            _userHash
-        );
-        _record.assetStatus = _newAssetStatus;
+        (rec.lastRecorder, rec.recorder) = storeRecorder(_idxHash, _userHash);
+        rec.assetStatus = _newAssetStatus;
 
-        database[_idxHash] = _record;
+        database[_idxHash] = rec;
         emit REPORT("Asset Marked Stolen / lost");
     }
 
@@ -443,34 +445,33 @@ contract Storage is Ownable {
         );
 
         database[_idxHash].timeLock = block.number;
-        Record memory _record = database[_idxHash];
+        Record memory rec = database[_idxHash];
 
-        (_record.lastRecorder, _record.recorder) = storeRecorder(
-            _idxHash,
-            _userHash
-        );
-        _record.assetStatus = _newAssetStatus;
-        _record.timeLock = _escrowTime;
+        (rec.lastRecorder, rec.recorder) = storeRecorder(_idxHash, _userHash);
+        rec.assetStatus = _newAssetStatus;
+        rec.timeLock = _escrowTime;
 
-        database[_idxHash] = _record;
+        database[_idxHash] = rec;
         emit REPORT("Record locked for escrow");
     }
 
     /*
      * @dev remove an asset from escrow status.
      */
-    function endEscrow(
-        bytes32 _userHash,
-        bytes32 _idxHash,
-        uint8 _newAssetStatus
-    ) external isAuthorized exists(_idxHash) //isACtokenHolder(_idxHash)
+    function endEscrow(bytes32 _userHash, bytes32 _idxHash)
+        external
+        isAuthorized
+        notBlockLocked(_idxHash)
+        exists(_idxHash) //isACtokenHolder(_idxHash)
     {
         require(
-            (database[_idxHash].recorder == _userHash) ||
-                (database[_idxHash].timeLock < block.timestamp),
+            (database[_idxHash].recorder == _userHash),
             "EE:ERR-Escrow can only be ended early by the originator of the escrow."
         );
-
+        require(
+            (database[_idxHash].timeLock > now),
+            "EE:ERR-Escrow already expired"
+        );
         require(
             (database[_idxHash].assetStatus == 6) ||
                 (database[_idxHash].assetStatus == 12),
@@ -478,25 +479,47 @@ contract Storage is Ownable {
         );
 
         database[_idxHash].timeLock = block.number;
-        Record memory _record = database[_idxHash];
+        Record memory rec = database[_idxHash];
 
-        (_record.lastRecorder, _record.recorder) = storeRecorder(
-            _idxHash,
-            _userHash
-        );
-        _record.assetStatus = _newAssetStatus;
+        rec.timeLock = now;
+        (rec.lastRecorder, rec.recorder) = storeRecorder(_idxHash, _userHash);
 
-        database[_idxHash] = _record;
+        database[_idxHash] = rec;
         emit REPORT("Escrow ended");
     }
 
     /*
-     * @dev Modify record Ipfs data
+     * @dev Modify record Ipfs1 data
      */
-    function modifyIpfs(
+    function modifyIpfs1(
         bytes32 _userHash,
         bytes32 _idxHash,
-        bytes32 _Ipfs1,
+        bytes32 _Ipfs1
+    )
+        external
+        isAuthorized
+        exists(_idxHash)
+        notEscrow(_idxHash)
+        notBlockLocked(_idxHash)
+    //isACtokenHolder(_idxHash)
+    {
+        Record memory rec = database[_idxHash];
+
+        require((rec.Ipfs1 != _Ipfs1), "MI1: New value same as old");
+
+        database[_idxHash].timeLock = block.number;
+
+        rec.Ipfs1 = _Ipfs1;
+
+        (rec.lastRecorder, rec.recorder) = storeRecorder(_idxHash, _userHash);
+
+        database[_idxHash] = rec;
+        emit REPORT("IPFS1 Description Modified");
+    }
+
+    function modifyIpfs2(
+        bytes32 _userHash,
+        bytes32 _idxHash,
         bytes32 _Ipfs2
     )
         external
@@ -506,31 +529,18 @@ contract Storage is Ownable {
         notBlockLocked(_idxHash)
     //isACtokenHolder(_idxHash)
     {
-        string memory retMessage = "No modifications made";
+        Record memory rec = database[_idxHash];
+
+        require((rec.Ipfs2 == 0), "MI2: Cannot overwrite IPFS2");
 
         database[_idxHash].timeLock = block.number;
-        Record memory _record = database[_idxHash];
 
-        if (_record.Ipfs1 != _Ipfs1) {
-            _record.Ipfs1 = _Ipfs1;
-            (_record.lastRecorder, _record.recorder) = storeRecorder(
-                _idxHash,
-                _userHash
-            );
-            retMessage = "Description Updated";
-        }
+        rec.Ipfs2 = _Ipfs2;
 
-        if (_record.Ipfs2 == 0) {
-            _record.Ipfs2 = _Ipfs2;
-            (_record.lastRecorder, _record.recorder) = storeRecorder(
-                _idxHash,
-                _userHash
-            );
-            retMessage = "Note Added";
-        }
+        (rec.lastRecorder, rec.recorder) = storeRecorder(_idxHash, _userHash);
 
-        database[_idxHash] = _record;
-        emit REPORT(retMessage);
+        database[_idxHash] = rec;
+        emit REPORT("IPFS2 Note Added");
     }
 
     //--------------------------------External READ ONLY contract functions / authuser---------------------------------//

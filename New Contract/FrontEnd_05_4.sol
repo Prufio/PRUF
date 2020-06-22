@@ -2,8 +2,11 @@
  * Recheck user level security and user permissioning /modifiers (after all is done)
  * implement escrow
  *
+ * @verify that msg.sender has asset token
+ * @mint a token at asset creation
+ *
  *_______________________________________
- * implement remint_asset ?????????     |
+ * @implement remint_asset ?????????     |
  *-----------------------------------------------------------------------------------------------------------------
  * Should all assets have a token, minted to reside within the contract for curated / "nontokenized" asset classes?
  * If so, make a move-token function that can be enabled later (set to an address to control it)
@@ -11,7 +14,7 @@
  *-----------------------------------------------------------------------------------------------------------------
  *
  * IMPORTANT NOTE : DO NOT REMOVE FROM CODE:
- *      Verification of rgtHash in curated, tokenless asset classes is not secure beyond the honorable intentions
+ *      Verification of rgtHash in curated, tokenly non-custodial asset classes is not secure beyond the honorable intentions
  * of authorized recorders. All blockchain info is readable, so a bad actor could trivially obtain a copy of the
  * correct rgtHash on chain. This "stumbling block" measure is in place primarily to keep honest people honest, and
  * to require an actual, malicious effort to bypass security rather than a little copy-paste. Actual decentralized
