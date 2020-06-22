@@ -59,6 +59,7 @@ contract Storage is Ownable {
         uint256 cost4; // Cost to remint an asset
         uint256 cost5; // Cost to change asset status
         uint256 cost6; // Cost to brute-force a record transfer
+        address paymentAddress;
     }
 
     mapping(bytes32 => uint8) private contractAdresses; // Authorized contract addresses, indexed by address, with auth level 0-255
@@ -265,7 +266,7 @@ contract Storage is Ownable {
     }
 
     /*
-     * @dev Set function costs per asset class, in Wei
+     * @dev Set function costs and payment address per asset class, in Wei
      */
     function ACTH_setCosts(
         uint16 _class,
@@ -285,7 +286,7 @@ contract Storage is Ownable {
     }
 
     /*
-     * @dev Set function base costs per asset class, in Wei
+     * @dev Set function base costs and payment address, in Wei
      */
     function OO_setBaseCosts(
         uint256 _newRecordCost,
@@ -293,7 +294,8 @@ contract Storage is Ownable {
         uint256 _createNoteCost,
         uint256 _reMintRecordCost,
         uint256 _modifyStatusCost,
-        uint256 _forceModCost
+        uint256 _forceModCost,
+        address _paymentAddress
     ) external onlyOwner {
         baseCost.cost1 = _newRecordCost;
         baseCost.cost2 = _transferRecordCost;
@@ -301,6 +303,7 @@ contract Storage is Ownable {
         baseCost.cost4 = _reMintRecordCost;
         baseCost.cost5 = _modifyStatusCost;
         baseCost.cost6 = _forceModCost;
+        baseCost.paymentAddress = _paymentAddress;
     }
 
     /*
@@ -665,7 +668,8 @@ contract Storage is Ownable {
             uint256,
             uint256,
             uint256,
-            uint256
+            uint256,
+            address
         )
     {
         Costs memory _returnCosts = cost[_assetClass];
@@ -675,7 +679,8 @@ contract Storage is Ownable {
             _returnCosts.cost3,
             _returnCosts.cost4,
             _returnCosts.cost5,
-            _returnCosts.cost6
+            _returnCosts.cost6,
+            _returnCosts.paymentAddress
         );
     }
 
@@ -692,7 +697,8 @@ contract Storage is Ownable {
             uint256,
             uint256,
             uint256,
-            uint256
+            uint256,
+            address
         )
     {
         return (
@@ -701,7 +707,8 @@ contract Storage is Ownable {
             baseCost.cost3,
             baseCost.cost4,
             baseCost.cost5,
-            baseCost.cost6
+            baseCost.cost6,
+            baseCost.paymentAddress
         );
     }
 
