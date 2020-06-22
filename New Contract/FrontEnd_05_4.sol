@@ -83,10 +83,15 @@ interface StorageInterface {
         uint8 _newAssetStatus
     ) external;
 
-    function modifyIpfs(
+    function modifyIpfs1(
         bytes32 _userHash,
         bytes32 _idxHash,
-        bytes32 _Ipfs1,
+        bytes32 _Ipfs1
+    ) external;
+
+    function modifyIpfs2(
+        bytes32 _userHash,
+        bytes32 _idxHash,
         bytes32 _Ipfs2
     ) external;
 
@@ -100,7 +105,6 @@ interface StorageInterface {
     function endEscrow(
         bytes32 _userHash,
         bytes32 _idxHash,
-        uint8 _newAssetStatus
     ) external;
 
     function retrieveRecord(bytes32 _idxHash)
@@ -627,7 +631,7 @@ contract FrontEnd is PullPayment, Ownable, IERC721Receiver {
         require((rec.rightsHolder != 0), "MI1: Record does not exist");
         require(rec.Ipfs1 != _IpfsHash, "MI1:ERR--New data same as old");
         require( //-------------------------------------Should an asset in escrow be modifiable?
-            ((rec.assetStatus != 6) && (rec.assetStatus != 6)), //Should it be contingent on the original recorder address?
+            ((rec.assetStatus != 6) && (rec.assetStatus != 12)), //Should it be contingent on the original recorder address?
             "MI1: Cannot modify asset in Escrow" //If so, it must not erase the recorder, or escrow termination will be broken!
         );
         require(rec.assetStatus < 200, "MI1: Record locked");
@@ -638,7 +642,7 @@ contract FrontEnd is PullPayment, Ownable, IERC721Receiver {
 
         rec.Ipfs1 = _IpfsHash;
 
-        writeRecordIpfs(_idxHash, rec);
+        writeRecordIpfs1(_idxHash, rec);
 
         return rec.Ipfs1;
     }
@@ -646,6 +650,7 @@ contract FrontEnd is PullPayment, Ownable, IERC721Receiver {
     /*
      * @dev Modify **Record**.Ipfs2 with confirmation
      */
+
     function $addIpfs2Note(
         bytes32 _idxHash,
         bytes32 _rgtHash,
@@ -660,7 +665,7 @@ contract FrontEnd is PullPayment, Ownable, IERC721Receiver {
         );
         require((rec.rightsHolder != 0), "MI1: Record does not exist");
         require( //-------------------------------------Should an asset in escrow be modifiable?
-            ((rec.assetStatus != 6) && (rec.assetStatus != 6)), //Should it be contingent on the original recorder address?
+            ((rec.assetStatus != 6) && (rec.assetStatus != 12)), //Should it be contingent on the original recorder address?
             "MI1: Cannot modify asset in Escrow" //If so, it must not erase the recorder, or escrow termination will be broken!
         );
         require(rec.assetStatus < 200, "MI1: Record locked");
@@ -679,7 +684,7 @@ contract FrontEnd is PullPayment, Ownable, IERC721Receiver {
 
         rec.Ipfs2 = _IpfsHash;
 
-        writeRecordIpfs(_idxHash, rec);
+        writeRecordIpfs2(_idxHash, rec);
 
         deductPayment(cost.createNoteCost);
 
@@ -756,10 +761,16 @@ contract FrontEnd is PullPayment, Ownable, IERC721Receiver {
     /*
      * @dev Write an Ipfs Record to Storage @ idxHash
      */
-    function writeRecordIpfs(bytes32 _idxHash, Record memory _rec) private {
+    function writeRecordIpfs1(bytes32 _idxHash, Record memory _rec) private {
         bytes32 userHash = keccak256(abi.encodePacked(msg.sender)); // Get a userhash for authentication and recorder logging
 
-        Storage.modifyIpfs(userHash, _idxHash, _rec.Ipfs1, _rec.Ipfs2); // Send data to storage
+        Storage.modifyIpfs1(userHash, _idxHash, _rec.Ipfs1); // Send data to storage
+    }
+
+    function writeRecordIpfs2(bytes32 _idxHash, Record memory _rec) private {
+        bytes32 userHash = keccak256(abi.encodePacked(msg.sender)); // Get a userhash for authentication and recorder logging
+
+        Storage.modifyIpfs1(userHash, _idxHash, _rec.Ipfs2); // Send data to storage
     }
 
     /*
@@ -792,8 +803,9 @@ contract FrontEnd is PullPayment, Ownable, IERC721Receiver {
     }
 
     /*
-     * @dev Withdraws user's Escrow amount
+     * @dev Withdraws user's credit balance from contract 
      */
+
     function $withdraw() external virtual payable {
         withdrawPayments(msg.sender);
     }
