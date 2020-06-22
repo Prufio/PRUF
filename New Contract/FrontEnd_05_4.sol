@@ -102,6 +102,16 @@ interface StorageInterface {
         uint256 _escrowTime
     ) external;
 
+    function ACTH_setCosts(
+        uint16 _class,
+        uint256 _newRecordCost,
+        uint256 _transferRecordCost,
+        uint256 _createNoteCost,
+        uint256 _reMintRecordCost,
+        uint256 _modifyStatusCost,
+        uint256 _forceModCost
+    ) external;
+
     function endEscrow(bytes32 _userHash, bytes32 _idxHash) external;
 
     function retrieveRecord(bytes32 _idxHash)
@@ -183,13 +193,15 @@ contract FrontEnd is PullPayment, Ownable, IERC721Receiver {
         uint256 reMintRecordCost; // Extra
         uint256 changeStatusCost; // Extra
         uint256 forceModifyCost; // Cost to brute-force a record transfer
-        address paymentAddress
+        address paymentAddress; // 2nd-party fee beneficiary address
     }
 
     mapping(bytes32 => User) private registeredUsers; // Authorized recorder database
 
     address storageAddress;
-    address internal mainWallet;
+
+    Costs baseCosts;
+
     StorageInterface private Storage; // Set up external contract interface
 
     // address minterContractAddress;
@@ -207,6 +219,15 @@ contract FrontEnd is PullPayment, Ownable, IERC721Receiver {
      *      Exists in registeredUsers as a usertype 1 or 9
      *      Is authorized for asset class
      */
+    modifier isACtokenHolderOfClass(uint16 _assetClass) {
+        uint256 assetClass256 = uint256(_assetClass);
+        require(
+            (ACtokenContract.ownerOf(assetClass256) == msg.sender),
+            "MOD-ACTH-msg.sender not authorized in asset class"
+        );
+        _;
+    }
+
     modifier isAuthorized() {
         User memory user = registeredUsers[keccak256(
             abi.encodePacked(msg.sender)
@@ -279,15 +300,28 @@ contract FrontEnd is PullPayment, Ownable, IERC721Receiver {
 
         Storage = StorageInterface(_storageAddress);
     }
+    function OO_setBaseCosts(
+        uint256 _newRecordCost,
+        uint256 _transferAssetCost, 
+        uint256 _createNoteCost,
+        uint256 _reMintRecordCost,
+        uint256 _changeStatusCost,
+        uint256 _forceModifyCost,
+        address _paymentAddress) 
+        external 
+        onlyOwner {
+            Costs _baseCosts;
 
-    /*
-     * @dev Set wallet for contract to direct payments to
-     */
+            _baseCosts.newRecordCost = _newRecordCost;
+            _baseCosts.transferAssetCost = _transferAssetCost;
+            _baseCosts.createNoteCost = _createNoteCost;
+            _baseCosts.reMintRecordCost = _reMintRecordCost;
+            _baseCosts.changeStatusCost = _changeStatusCost;
+            _baseCosts.forceModifyCost = _forceModifyCost;
+            _baseCosts.paymentAddress = _paymentAddress;
 
-    function OO_setMainWallet(address _addr) external onlyOwner {
-        mainWallet = _addr;
+            baseCosts = _baseCosts;
     }
-
     /*
      * @dev Authorize / Deauthorize / Authorize users for an address be permitted to make record modifications
      * ----------------INSECURE -- keccak256 of address must be generated clientside in release.
@@ -314,6 +348,29 @@ contract FrontEnd is PullPayment, Ownable, IERC721Receiver {
     }
 
     //--------------------------------------External functions--------------------------------------------//
+
+    function ACTH_setCosts(
+        uint16 _class,
+        uint256 _newRecordCost,
+        uint256 _transferAssetCost,
+        uint256 _createNoteCost,
+        uint256 _reMintRecordCost,
+        uint256 _changeStatusCost,
+        uint256 _forceModifyCost,
+        address _paymentAddress
+    ) external isACtokenHolderOfClass(_class) {
+            
+            Storage.ACTH_setCosts(
+            _class,
+            _newRecordCost,
+            _transferAssetCost,
+            _createNoteCost,
+            _reMintRecordCost,
+            _changeStatusCost,
+            _forceModifyCost,
+            _paymentAddress);
+
+    }
 
     function onERC721Received(
         address,
