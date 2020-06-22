@@ -1,16 +1,14 @@
 /*  TO DO
  * Recheck user level security and user permissioning /modifiers (after all is done)
- * implement escrow
+ * implement escrow rules /conditions
  *
  * @verify that msg.sender has asset token
  * @mint a token at asset creation
  *
- *_______________________________________
- * @implement remint_asset ?????????     |
+ * @implement remint_asset ?
  *-----------------------------------------------------------------------------------------------------------------
  * Should all assets have a token, minted to reside within the contract for curated / "nontokenized" asset classes?
  * If so, make a move-token function that can be enabled later (set to an address to control it)
- * we gotta figure out this token thing.
  *-----------------------------------------------------------------------------------------------------------------
  *
  * IMPORTANT NOTE : DO NOT REMOVE FROM CODE:
@@ -102,6 +100,8 @@ interface StorageInterface {
         uint256 _escrowTime
     ) external;
 
+    function endEscrow(bytes32 _userHash, bytes32 _idxHash) external;
+
     function ACTH_setCosts(
         uint16 _class,
         uint256 _newRecordCost,
@@ -112,12 +112,6 @@ interface StorageInterface {
         uint256 _forceModCost,
         address _paymentAddress
     ) external;
-
-    // function getMainWallet()
-    //     external
-    //     returns (address);
-
-    function endEscrow(bytes32 _userHash, bytes32 _idxHash) external;
 
     function retrieveRecord(bytes32 _idxHash)
         external
@@ -347,7 +341,9 @@ contract FrontEnd is PullPayment, Ownable, IERC721Receiver {
     }
 
     //--------------------------------------External functions--------------------------------------------//
-
+    /*
+     * @dev Portal for AC TokenHolders to set costs
+     */
     function ACTH_setCosts(
         uint16 _class,
         uint256 _newRecordCost,
@@ -370,6 +366,9 @@ contract FrontEnd is PullPayment, Ownable, IERC721Receiver {
         );
     }
 
+    /*
+     * @dev Compliance for erc721
+     */
     function onERC721Received(
         address,
         address,
@@ -377,6 +376,24 @@ contract FrontEnd is PullPayment, Ownable, IERC721Receiver {
         bytes calldata
     ) external virtual override returns (bytes4) {
         return this.onERC721Received.selector;
+    }
+
+    function setEscrow(
+        bytes32 _idxHash,
+        uint8 _newAssetStatus,
+        uint256 _escrowTime
+    ) external isAuthorized {
+        Storage.setEscrow(
+        keccak256(abi.encodePacked(msg.sender)),
+        _idxHash,
+        _newAssetStatus,
+        _escrowTime
+    );
+
+    }
+
+    function endEscrow(bytes32 _idxHash) external isAuthorized {
+        Storage.endEscrow(keccak256(abi.encodePacked(msg.sender)), _idxHash);
     }
 
     /*
