@@ -148,7 +148,7 @@ class VerifyRightHolder extends Component {
           )}
           {this.state.addr > 0 && (
             <Form>
-              <h2 className="NRheader">Verify Rights Holder</h2>
+              <h2 className="Headertext">Verify Rights Holder</h2>
               <br></br>
               <Form.Row>
                 <Form.Group as={Col} controlId="formGridType">
@@ -266,12 +266,7 @@ class VerifyRightHolder extends Component {
             </Form>
           )}
         </Form>
-        {this.state.error !== undefined && (
-          <div className="RRresults">
-            ERROR: {this.state.error.message}
-            <br></br>
-          </div>
-        )}
+
         {this.state.txHash > 0 && ( //conditional rendering
           <div className="VRHresults">
             {this.state.result === "170"

@@ -158,179 +158,173 @@ class ModifyDescription extends Component {
 
     return (
       <div>
-      <Form className="MDform">
-        {this.state.addr === undefined && (
-          <div className="errorResults">
-            <h2>WARNING!</h2>
-            <h3>Injected web3 not connected to form!</h3>
-          </div>
-        )}
-        {this.state.addr > 0 && (
-          <Form>
-            <h2 className="NRheader">Modify Description</h2>
-            <br></br>
-            <Form.Row>
-              <Form.Group as={Col} controlId="formGridType">
-                <Form.Label className="formFont">Type:</Form.Label>
-                <Form.Control
-                  placeholder="Type"
-                  required
-                  onChange={(e) => this.setState({ type: e.target.value })}
-                  size="lg"
-                />
-              </Form.Group>
+        <Form className="MDform">
+          {this.state.addr === undefined && (
+            <div className="errorResults">
+              <h2>WARNING!</h2>
+              <h3>Injected web3 not connected to form!</h3>
+            </div>
+          )}
+          {this.state.addr > 0 && (
+            <Form>
+              <h2 className="Headertext">Modify Description</h2>
+              <br></br>
+              <Form.Row>
+                <Form.Group as={Col} controlId="formGridType">
+                  <Form.Label className="formFont">Type:</Form.Label>
+                  <Form.Control
+                    placeholder="Type"
+                    required
+                    onChange={(e) => this.setState({ type: e.target.value })}
+                    size="lg"
+                  />
+                </Form.Group>
 
-              <Form.Group as={Col} controlId="formGridManufacturer">
-                <Form.Label className="formFont">Manufacturer:</Form.Label>
-                <Form.Control
-                  placeholder="Manufacturer"
-                  required
-                  onChange={(e) =>
-                    this.setState({ manufacturer: e.target.value })
-                  }
-                  size="lg"
-                />
-              </Form.Group>
-            </Form.Row>
+                <Form.Group as={Col} controlId="formGridManufacturer">
+                  <Form.Label className="formFont">Manufacturer:</Form.Label>
+                  <Form.Control
+                    placeholder="Manufacturer"
+                    required
+                    onChange={(e) =>
+                      this.setState({ manufacturer: e.target.value })
+                    }
+                    size="lg"
+                  />
+                </Form.Group>
+              </Form.Row>
 
-            <Form.Row>
-              <Form.Group as={Col} controlId="formGridModel">
-                <Form.Label className="formFont">Model:</Form.Label>
-                <Form.Control
-                  placeholder="Model"
-                  required
-                  onChange={(e) => this.setState({ model: e.target.value })}
-                  size="lg"
-                />
-              </Form.Group>
+              <Form.Row>
+                <Form.Group as={Col} controlId="formGridModel">
+                  <Form.Label className="formFont">Model:</Form.Label>
+                  <Form.Control
+                    placeholder="Model"
+                    required
+                    onChange={(e) => this.setState({ model: e.target.value })}
+                    size="lg"
+                  />
+                </Form.Group>
 
-              <Form.Group as={Col} controlId="formGridSerial">
-                <Form.Label className="formFont">Serial:</Form.Label>
-                <Form.Control
-                  placeholder="Serial"
-                  required
-                  onChange={(e) => this.setState({ serial: e.target.value })}
-                  size="lg"
-                />
-              </Form.Group>
-            </Form.Row>
+                <Form.Group as={Col} controlId="formGridSerial">
+                  <Form.Label className="formFont">Serial:</Form.Label>
+                  <Form.Control
+                    placeholder="Serial"
+                    required
+                    onChange={(e) => this.setState({ serial: e.target.value })}
+                    size="lg"
+                  />
+                </Form.Group>
+              </Form.Row>
 
-            <Form.Row>
-              <Form.Group as={Col} controlId="formGridFirstName">
-                <Form.Label className="formFont">First Name:</Form.Label>
-                <Form.Control
-                  placeholder="First Name"
-                  required
-                  onChange={(e) => this.setState({ first: e.target.value })}
-                  size="lg"
-                />
-              </Form.Group>
+              <Form.Row>
+                <Form.Group as={Col} controlId="formGridFirstName">
+                  <Form.Label className="formFont">First Name:</Form.Label>
+                  <Form.Control
+                    placeholder="First Name"
+                    required
+                    onChange={(e) => this.setState({ first: e.target.value })}
+                    size="lg"
+                  />
+                </Form.Group>
 
-              <Form.Group as={Col} controlId="formGridMiddleName">
-                <Form.Label className="formFont">Middle Name:</Form.Label>
-                <Form.Control
-                  placeholder="Middle Name"
-                  required
-                  onChange={(e) => this.setState({ middle: e.target.value })}
-                  size="lg"
-                />
-              </Form.Group>
+                <Form.Group as={Col} controlId="formGridMiddleName">
+                  <Form.Label className="formFont">Middle Name:</Form.Label>
+                  <Form.Control
+                    placeholder="Middle Name"
+                    required
+                    onChange={(e) => this.setState({ middle: e.target.value })}
+                    size="lg"
+                  />
+                </Form.Group>
 
-              <Form.Group as={Col} controlId="formGridLastName">
-                <Form.Label className="formFont">Last Name:</Form.Label>
-                <Form.Control
-                  placeholder="Last Name"
-                  required
-                  onChange={(e) => this.setState({ surname: e.target.value })}
-                  size="lg"
-                />
-              </Form.Group>
-            </Form.Row>
+                <Form.Group as={Col} controlId="formGridLastName">
+                  <Form.Label className="formFont">Last Name:</Form.Label>
+                  <Form.Control
+                    placeholder="Last Name"
+                    required
+                    onChange={(e) => this.setState({ surname: e.target.value })}
+                    size="lg"
+                  />
+                </Form.Group>
+              </Form.Row>
 
-            <Form.Row>
-              <Form.Group as={Col} controlId="formGridIdNumber">
-                <Form.Label className="formFont">ID Number:</Form.Label>
-                <Form.Control
-                  placeholder="ID Number"
-                  required
-                  onChange={(e) => this.setState({ id: e.target.value })}
-                  size="lg"
-                />
-              </Form.Group>
+              <Form.Row>
+                <Form.Group as={Col} controlId="formGridIdNumber">
+                  <Form.Label className="formFont">ID Number:</Form.Label>
+                  <Form.Control
+                    placeholder="ID Number"
+                    required
+                    onChange={(e) => this.setState({ id: e.target.value })}
+                    size="lg"
+                  />
+                </Form.Group>
 
-              <Form.Group as={Col} controlId="formGridPassword">
-                <Form.Label className="formFont">Password:</Form.Label>
-                <Form.Control
-                  placeholder="Password"
-                  type="password"
-                  required
-                  onChange={(e) => this.setState({ secret: e.target.value })}
-                  size="lg"
-                />
-              </Form.Group>
+                <Form.Group as={Col} controlId="formGridPassword">
+                  <Form.Label className="formFont">Password:</Form.Label>
+                  <Form.Control
+                    placeholder="Password"
+                    type="password"
+                    required
+                    onChange={(e) => this.setState({ secret: e.target.value })}
+                    size="lg"
+                  />
+                </Form.Group>
 
-              <Form.Group as={Col} controlId="formGridIpfs1">
-                <Form.Label className="formFont">
-                  Modify Description:
-                </Form.Label>
-                <Form.Control
-                  placeholder="Description"
-                  required
-                  onChange={(e) => this.setState({ ipfs1: e.target.value })}
-                  size="lg"
-                />
-              </Form.Group>
-            </Form.Row>
-            <Form.Row>
-              <Form.Group className="buttonDisplay">
-                <Button
-                  variant="primary"
-                  type="button"
-                  size="lg"
-                  onClick={_updateDescription}
+                <Form.Group as={Col} controlId="formGridIpfs1">
+                  <Form.Label className="formFont">
+                    Modify Description:
+                  </Form.Label>
+                  <Form.Control
+                    placeholder="Description"
+                    required
+                    onChange={(e) => this.setState({ ipfs1: e.target.value })}
+                    size="lg"
+                  />
+                </Form.Group>
+              </Form.Row>
+              <Form.Row>
+                <Form.Group className="buttonDisplay">
+                  <Button
+                    variant="primary"
+                    type="button"
+                    size="lg"
+                    onClick={_updateDescription}
+                  >
+                    Submit
+                  </Button>
+                </Form.Group>
+              </Form.Row>
+            </Form>
+          )}
+        </Form>
+        {this.state.txHash > 0 && ( //conditional rendering
+          <div className="Results">
+            {this.state.txStatus === false && (
+              <div>
+                !ERROR! :
+                <a
+                  href={"https://kovan.etherscan.io/tx/" + this.state.txHash}
+                  target="_blank"
+                  rel="noopener noreferrer"
                 >
-                  Submit
-                </Button>
-              </Form.Group>
-            </Form.Row>
-
-            
-          </Form>
-        )}
-      </Form>
-      {this.state.txHash > 0 && ( //conditional rendering
-              <div className="VRresults">
-                {this.state.txStatus === false && (
-                  <div>
-                    !ERROR! :
-                    <a
-                      href={
-                        "https://kovan.etherscan.io/tx/" + this.state.txHash
-                      }
-                      target="_blank"
-                      rel="noopener noreferrer"
-                    >
-                      KOVAN Etherscan:{this.state.txHash}
-                    </a>
-                  </div>
-                )}
-                {this.state.txStatus === true && (
-                  <div>
-                    {" "}
-                    No Errors Reported :
-                    <a
-                      href={
-                        "https://kovan.etherscan.io/tx/" + this.state.txHash
-                      }
-                      target="_blank"
-                      rel="noopener noreferrer"
-                    >
-                      KOVAN Etherscan:{this.state.txHash}
-                    </a>
-                  </div>
-                )}
+                  KOVAN Etherscan:{this.state.txHash}
+                </a>
               </div>
             )}
+            {this.state.txStatus === true && (
+              <div>
+                {" "}
+                No Errors Reported :
+                <a
+                  href={"https://kovan.etherscan.io/tx/" + this.state.txHash}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  KOVAN Etherscan:{this.state.txHash}
+                </a>
+              </div>
+            )}
+          </div>
+        )}
       </div>
     );
   }
