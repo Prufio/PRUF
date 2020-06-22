@@ -335,7 +335,7 @@ h4 {
 }
 
 .imageForm {
-  justify-content: start;
+  justify-content: flex-start;
   margin-right: auto;
   display: flex;
   padding-left: 2rem;

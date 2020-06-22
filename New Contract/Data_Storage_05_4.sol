@@ -4,7 +4,7 @@
  *
  *
  * IMPORTANT NOTE : DO NOT REMOVE FROM CODE:
- *      Verification of rgtHash in curated, tokenless asset classes is not secure beyond the honorable intentions
+ *      Verification of rgtHash in curated, tokenless asset classes are not secure beyond the honorable intentions
  * of authorized recorders. All blockchain info is readable, so a bad actor could trivially obtain a copy of the
  * correct rgtHash on chain. This "stumbling block" measure is in place primarily to keep honest people honest, and
  * to require an actual, malicious effort to bypass security rather than a little copy-paste. Actual decentralized
