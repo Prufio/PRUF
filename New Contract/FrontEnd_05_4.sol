@@ -133,7 +133,8 @@ interface StorageInterface {
             uint256,
             uint256,
             uint256,
-            uint256
+            uint256,
+            address
         );
 
     function retrieveBaseCosts()
@@ -144,7 +145,8 @@ interface StorageInterface {
             uint256,
             uint256,
             uint256,
-            uint256
+            uint256,
+            address
         );
 
     function resolveContractAddress(string calldata _name)
@@ -181,6 +183,7 @@ contract FrontEnd is PullPayment, Ownable, IERC721Receiver {
         uint256 reMintRecordCost; // Extra
         uint256 changeStatusCost; // Extra
         uint256 forceModifyCost; // Cost to brute-force a record transfer
+        address paymentAddress
     }
 
     mapping(bytes32 => User) private registeredUsers; // Authorized recorder database
