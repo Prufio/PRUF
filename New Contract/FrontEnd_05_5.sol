@@ -245,7 +245,13 @@ contract FrontEnd is PullPayment, Ownable, IERC721Receiver {
         uint256 tokenID = uint256(_idxHash);
 
         //START OF SECTION----------------------------------------------------FAKE AS HELL
-        require((tokenID > 0), "what the atual fuck");
+        User memory user = registeredUsers[keccak256(
+            abi.encodePacked(msg.sender)
+        )];
+        require(
+            ((user.userType == 1) || (user.userType == 9)) && (tokenID > 0),
+            "ST:MOD-UA-ERR:User not registered "
+        );
 
         //rem this out for user database access
         //START OF SECTION----------------------------------------------------THE REAL SHIT
