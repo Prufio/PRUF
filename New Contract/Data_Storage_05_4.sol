@@ -1,5 +1,6 @@
 /*  TO DO
  * verify security and user permissioning /modifiers
+ * Decide if rgthash will still be used in storage, and how ? asset tokenHolder verification?
  *
  *
  * IMPORTANT NOTE : DO NOT REMOVE FROM CODE:
@@ -15,12 +16,7 @@
 pragma solidity ^0.6.2;
 
 import "./Ownable.sol";
-
-// interface assetTokenInterface {
-//     function ownerOf(uint256) external view returns (address);
-//     //function mint(uint256) external view returns (address);
-//     //function transfer(uint256,address) external view returns (address);
-// }
+import "./SafeMath.sol";
 
 interface ACtokenInterface {
     function ownerOf(uint256) external view returns (address);
@@ -29,6 +25,8 @@ interface ACtokenInterface {
 }
 
 contract Storage is Ownable {
+    using SafeMath for uint256;
+
     struct Record {
         bytes32 recorder; // Address hash of recorder
         bytes32 rightsHolder; // KEK256 Registered owner
@@ -55,16 +53,15 @@ contract Storage is Ownable {
         uint256 cost4; // Cost to remint an asset
         uint256 cost5; // Cost to change asset status
         uint256 cost6; // Cost to brute-force a record transfer
+        address paymentAddress;
     }
 
     mapping(bytes32 => uint8) private contractAdresses; // Authorized contract addresses, indexed by address, with auth level 0-255
     mapping(string => address) private contractNames; // Authorized contract addresses, indexed by name
     mapping(bytes32 => Record) private database; // Main Data Storage
     mapping(uint16 => Costs) private cost; // Cost per function by asset class
+    Costs private baseCost;
 
-    // address minterContractAddress;
-    // address assetContractAddress;
-    // assetTokenInterface assetTokenContract; //erc721_token prototype initialization
     address ACcontractAddress;
     ACtokenInterface ACtokenContract; //erc721_token prototype initialization
 
@@ -98,7 +95,7 @@ contract Storage is Ownable {
      *
      * 7 = transferrable, automation set/unset (secret confirmed)(ACAdmin can unset)
      * 8 = non-transferrable, automation set/unset (secret confirmed)(ACAdmin can unset)
-     ********status 9 stolen (automation set)(ONLY ACAdmin can unset)
+     ******** status 9 stolen (automation set)(ONLY ACAdmin can unset)
      * 10 = lost (automation set/unset)(ACAdmin can unset)
      * 11 = asset transferred automation set/unset (secret confirmed)(ACAdmin can unset)
      * 12 = escrow - automation set/unset (secret confirmed)(ACAdmin can unset)
@@ -137,12 +134,14 @@ contract Storage is Ownable {
         _;
     }
 
-    modifier isACtokenHolder(bytes32 _idxHash) {
-        uint256 assetClass256 = uint256(database[_idxHash].assetClass);
-        require( //origin address holds assetClass token, or assetClass is >=65000
-            (database[_idxHash].assetClass >= 65000) ||
-                (ACtokenContract.ownerOf(assetClass256) == msg.sender),
-            "MOD-ACTH-Contract not authorized in asset class"
+    /*
+     * @dev Verify caller hods ACtoken of passed assetlcass
+     */
+    modifier isACtokenHolderOfClass(uint16 _assetClass) {
+        uint256 assetClass256 = uint256(_assetClass);
+        require(
+            (ACtokenContract.ownerOf(assetClass256) == msg.sender),
+            "MOD-ACTH-msg.sender not authorized in asset class"
         );
         _;
     }
@@ -169,7 +168,7 @@ contract Storage is Ownable {
         require(
             ((database[_idxHash].assetStatus != 6) &&
                 (database[_idxHash].assetStatus != 12)) ||
-                (database[_idxHash].timeLock < block.timestamp), //Since time here is +/1 a day or so, now can be used as per the 15 second rule (consensys)
+                (database[_idxHash].timeLock < now), //Since time here is +/1 a day or so, now can be used as per the 15 second rule (consensys)
             "MOD-U-record modification prohibited while locked in escrow"
         );
         _;
@@ -209,28 +208,12 @@ contract Storage is Ownable {
     /*
      * @dev Address Setters
      */
-    // function OO_set_Asset_token(address _contractAddress)
-    //     external
-    //     onlyOwner
-    // {
-    //     require(_contractAddress != address(0), "Invalid contract address");
-    //     assetContractAddress = _contractAddress;
-    //     assetTokenContract = assetTokenInterface(_contractAddress);
-    // }
 
     function OO_set_AC_token(address _contractAddress) external onlyOwner {
         require(_contractAddress != address(0), "Invalid contract address");
         ACcontractAddress = _contractAddress;
         ACtokenContract = ACtokenInterface(_contractAddress);
     }
-
-    // function OO_setMinterAddress(address _contractAddress)
-    //     external
-    //     onlyOwner
-    // {
-    //     require(_contractAddress != address(0), "Invalid contract address");
-    //     minterContractAddress = _contractAddress;
-    // }
 
     /*
      * @dev Authorize / Deauthorize / Authorize ADRESSES permitted to make record modifications
@@ -251,23 +234,46 @@ contract Storage is Ownable {
     }
 
     /*
-     * @dev Set function costs per asset class, in Wei
+     * @dev Set function costs and payment address per asset class, in Wei
      */
-    function OO_setCosts(
+    function ACTH_setCosts(
         uint16 _class,
         uint256 _newRecordCost,
         uint256 _transferRecordCost,
         uint256 _createNoteCost,
         uint256 _reMintRecordCost,
         uint256 _modifyStatusCost,
-        uint256 _forceModCost
+        uint256 _forceModCost,
+        address _paymentAddress
+    ) external isACtokenHolderOfClass(_class) {
+        cost[_class].cost1 = _newRecordCost.add(baseCost.cost1);
+        cost[_class].cost2 = _transferRecordCost.add(baseCost.cost2);
+        cost[_class].cost3 = _createNoteCost.add(baseCost.cost3);
+        cost[_class].cost4 = _reMintRecordCost.add(baseCost.cost4);
+        cost[_class].cost5 = _modifyStatusCost.add(baseCost.cost5);
+        cost[_class].cost6 = _forceModCost.add(baseCost.cost6);
+        cost[_class].paymentAddress = _paymentAddress;
+    }
+
+    /*
+     * @dev Set function base costs and payment address, in Wei
+     */
+    function OO_setBaseCosts(
+        uint256 _newRecordCost,
+        uint256 _transferRecordCost,
+        uint256 _createNoteCost,
+        uint256 _reMintRecordCost,
+        uint256 _modifyStatusCost,
+        uint256 _forceModCost,
+        address _paymentAddress
     ) external onlyOwner {
-        cost[_class].cost1 = _newRecordCost;
-        cost[_class].cost2 = _transferRecordCost;
-        cost[_class].cost3 = _createNoteCost;
-        cost[_class].cost4 = _reMintRecordCost;
-        cost[_class].cost5 = _modifyStatusCost;
-        cost[_class].cost6 = _forceModCost;
+        baseCost.cost1 = _newRecordCost;
+        baseCost.cost2 = _transferRecordCost;
+        baseCost.cost3 = _createNoteCost;
+        baseCost.cost4 = _reMintRecordCost;
+        baseCost.cost5 = _modifyStatusCost;
+        baseCost.cost6 = _forceModCost;
+        baseCost.paymentAddress = _paymentAddress;
     }
 
     /*
@@ -306,18 +312,18 @@ contract Storage is Ownable {
         );
         require(_rgt != 0, "NR:ERR-Rightsholder cannot be blank");
 
-        Record memory _record;
+        Record memory rec;
 
-        _record.assetClass = _assetClass;
-        _record.countDownStart = _countDownStart;
-        _record.countDown = _countDownStart;
-        _record.recorder = _userHash;
-        _record.rightsHolder = _rgt;
-        _record.lastRecorder = _userHash;
-        _record.forceModCount = 0;
-        _record.Ipfs1 = _Ipfs1;
+        rec.assetClass = _assetClass;
+        rec.countDownStart = _countDownStart;
+        rec.countDown = _countDownStart;
+        rec.recorder = _userHash;
+        rec.rightsHolder = _rgt;
+        rec.lastRecorder = _userHash;
+        rec.forceModCount = 0;
+        rec.Ipfs1 = _Ipfs1;
 
-        database[_idxHash] = _record;
+        database[_idxHash] = rec;
 
         emit REPORT("New record created");
     }
@@ -330,7 +336,7 @@ contract Storage is Ownable {
         bytes32 _userHash,
         bytes32 _idxHash,
         bytes32 _rgtHash,
-        uint8 _assetStatus,
+        uint8 _newAssetStatus,
         uint256 _countDown,
         uint8 _forceCount
     )
@@ -354,23 +360,27 @@ contract Storage is Ownable {
             "MR:ERR-new forceModCount less than original forceModCount"
         );
         require(
-            _assetStatus < 200,
+            _newAssetStatus < 200,
             "MR:ERR-assetStatus over 199 cannot be set by user"
+        );
+        require(
+            (_newAssetStatus != 3) &&
+                (_newAssetStatus != 4) &&
+                (_newAssetStatus != 9) &&
+                (_newAssetStatus != 10),
+            "SS:ERR-Must use stolenOrLost function to set lost or stolen status"
         );
 
         database[idxHash].timeLock = block.number;
-        Record memory _record = database[_idxHash];
+        Record memory rec = database[_idxHash];
 
-        (_record.lastRecorder, _record.recorder) = storeRecorder(
-            _idxHash,
-            _userHash
-        );
-        _record.rightsHolder = rgtHash;
-        _record.countDown = _countDown;
-        _record.assetStatus = _assetStatus;
-        _record.forceModCount = _forceCount;
+        (rec.lastRecorder, rec.recorder) = storeRecorder(_idxHash, _userHash);
+        rec.rightsHolder = rgtHash;
+        rec.countDown = _countDown;
+        rec.assetStatus = _newAssetStatus;
+        rec.forceModCount = _forceCount;
 
-        database[idxHash] = _record;
+        database[idxHash] = rec;
         emit REPORT("Record modified");
     }
 
@@ -401,15 +411,12 @@ contract Storage is Ownable {
         );
 
         database[_idxHash].timeLock = block.number;
-        Record memory _record = database[_idxHash];
+        Record memory rec = database[_idxHash];
 
-        (_record.lastRecorder, _record.recorder) = storeRecorder(
-            _idxHash,
-            _userHash
-        );
-        _record.assetStatus = _newAssetStatus;
+        (rec.lastRecorder, rec.recorder) = storeRecorder(_idxHash, _userHash);
+        rec.assetStatus = _newAssetStatus;
 
-        database[_idxHash] = _record;
+        database[_idxHash] = rec;
         emit REPORT("Asset Marked Stolen / lost");
     }
 
@@ -443,34 +450,33 @@ contract Storage is Ownable {
         );
 
         database[_idxHash].timeLock = block.number;
-        Record memory _record = database[_idxHash];
+        Record memory rec = database[_idxHash];
 
-        (_record.lastRecorder, _record.recorder) = storeRecorder(
-            _idxHash,
-            _userHash
-        );
-        _record.assetStatus = _newAssetStatus;
-        _record.timeLock = _escrowTime;
+        (rec.lastRecorder, rec.recorder) = storeRecorder(_idxHash, _userHash);
+        rec.assetStatus = _newAssetStatus;
+        rec.timeLock = _escrowTime;
 
-        database[_idxHash] = _record;
+        database[_idxHash] = rec;
         emit REPORT("Record locked for escrow");
     }
 
     /*
      * @dev remove an asset from escrow status.
      */
-    function endEscrow(
-        bytes32 _userHash,
-        bytes32 _idxHash,
-        uint8 _newAssetStatus
-    ) external isAuthorized exists(_idxHash) //isACtokenHolder(_idxHash)
+    function endEscrow(bytes32 _userHash, bytes32 _idxHash)
+        external
+        isAuthorized
+        notBlockLocked(_idxHash)
+        exists(_idxHash) //isACtokenHolder(_idxHash)
     {
         require(
-            (database[_idxHash].recorder == _userHash) ||
-                (database[_idxHash].timeLock < block.timestamp),
+            (database[_idxHash].recorder == _userHash),
             "EE:ERR-Escrow can only be ended early by the originator of the escrow."
         );
-
+        require(
+            (database[_idxHash].timeLock > now),
+            "EE:ERR-Escrow already expired"
+        );
         require(
             (database[_idxHash].assetStatus == 6) ||
                 (database[_idxHash].assetStatus == 12),
@@ -478,25 +484,47 @@ contract Storage is Ownable {
         );
 
         database[_idxHash].timeLock = block.number;
-        Record memory _record = database[_idxHash];
+        Record memory rec = database[_idxHash];
 
-        (_record.lastRecorder, _record.recorder) = storeRecorder(
-            _idxHash,
-            _userHash
-        );
-        _record.assetStatus = _newAssetStatus;
+        rec.timeLock = now;
+        (rec.lastRecorder, rec.recorder) = storeRecorder(_idxHash, _userHash);
 
-        database[_idxHash] = _record;
+        database[_idxHash] = rec;
         emit REPORT("Escrow ended");
     }
 
     /*
-     * @dev Modify record Ipfs data
+     * @dev Modify record Ipfs1 data
      */
-    function modifyIpfs(
+    function modifyIpfs1(
         bytes32 _userHash,
         bytes32 _idxHash,
-        bytes32 _Ipfs1,
+        bytes32 _Ipfs1
+    )
+        external
+        isAuthorized
+        exists(_idxHash)
+        notEscrow(_idxHash)
+        notBlockLocked(_idxHash)
+    //isACtokenHolder(_idxHash)
+    {
+        Record memory rec = database[_idxHash];
+
+        require((rec.Ipfs1 != _Ipfs1), "MI1: New value same as old");
+
+        database[_idxHash].timeLock = block.number;
+
+        rec.Ipfs1 = _Ipfs1;
+
+        (rec.lastRecorder, rec.recorder) = storeRecorder(_idxHash, _userHash);
+
+        database[_idxHash] = rec;
+        emit REPORT("IPFS1 Description Modified");
+    }
+
+    function modifyIpfs2(
+        bytes32 _userHash,
+        bytes32 _idxHash,
         bytes32 _Ipfs2
     )
         external
@@ -506,31 +534,18 @@ contract Storage is Ownable {
         notBlockLocked(_idxHash)
     //isACtokenHolder(_idxHash)
     {
-        string memory retMessage = "No modifications made";
+        Record memory rec = database[_idxHash];
+
+        require((rec.Ipfs2 == 0), "MI2: Cannot overwrite IPFS2");
 
         database[_idxHash].timeLock = block.number;
-        Record memory _record = database[_idxHash];
 
-        if (_record.Ipfs1 != _Ipfs1) {
-            _record.Ipfs1 = _Ipfs1;
-            (_record.lastRecorder, _record.recorder) = storeRecorder(
-                _idxHash,
-                _userHash
-            );
-            retMessage = "Description Updated";
-        }
+        rec.Ipfs2 = _Ipfs2;
 
-        if (_record.Ipfs2 == 0) {
-            _record.Ipfs2 = _Ipfs2;
-            (_record.lastRecorder, _record.recorder) = storeRecorder(
-                _idxHash,
-                _userHash
-            );
-            retMessage = "Note Added";
-        }
+        (rec.lastRecorder, rec.recorder) = storeRecorder(_idxHash, _userHash);
 
-        database[_idxHash] = _record;
-        emit REPORT(retMessage);
+        database[_idxHash] = rec;
+        emit REPORT("IPFS2 Note Added");
     }
 
     //--------------------------------External READ ONLY contract functions / authuser---------------------------------//
@@ -623,7 +638,8 @@ contract Storage is Ownable {
             uint256,
             uint256,
             uint256,
-            uint256
+            uint256,
+            address
         )
     {
         Costs memory _returnCosts = cost[_assetClass];
@@ -633,7 +649,36 @@ contract Storage is Ownable {
             _returnCosts.cost3,
             _returnCosts.cost4,
             _returnCosts.cost5,
-            _returnCosts.cost6
+            _returnCosts.cost6,
+            _returnCosts.paymentAddress
+        );
+    }
+
+    /*
+     * @dev Retrieve function costs per asset class, in Wei
+     */
+    function retrieveBaseCosts()
+        external
+        view
+        isAuthorized
+        returns (
+            uint256,
+            uint256,
+            uint256,
+            uint256,
+            uint256,
+            uint256,
+            address
+        )
+    {
+        return (
+            baseCost.cost1,
+            baseCost.cost2,
+            baseCost.cost3,
+            baseCost.cost4,
+            baseCost.cost5,
+            baseCost.cost6,
+            baseCost.paymentAddress
         );
     }
 
@@ -648,6 +693,17 @@ contract Storage is Ownable {
     {
         return contractNames[_name];
     }
+
+    // /*
+    //  * @dev returns the payment address from baseCosts.payment_address
+    //  */
+    // function getMainWallet()
+    //     external
+    //     view
+    //     returns (address)
+    // {
+    //     return baseCost.paymentAddress;
+    // }
 
     //-----------------------------------------------Private functions------------------------------------------------//
 

@@ -1,17 +1,18 @@
 /*  TO DO
  * Recheck user level security and user permissioning /modifiers (after all is done)
- * implement escrow
+ * implement escrow rules /conditions
  *
- *_______________________________________
- * implement remint_asset ?????????     |
+ * @verify that msg.sender has asset token
+ * @mint a token at asset creation
+ *
+ * @implement remint_asset ?
  *-----------------------------------------------------------------------------------------------------------------
  * Should all assets have a token, minted to reside within the contract for curated / "nontokenized" asset classes?
  * If so, make a move-token function that can be enabled later (set to an address to control it)
- * we gotta figure out this token thing.
  *-----------------------------------------------------------------------------------------------------------------
  *
  * IMPORTANT NOTE : DO NOT REMOVE FROM CODE:
- *      Verification of rgtHash in curated, tokenless asset classes is not secure beyond the honorable intentions
+ *      Verification of rgtHash in curated, tokenly non-custodial asset classes is not secure beyond the honorable intentions
  * of authorized recorders. All blockchain info is readable, so a bad actor could trivially obtain a copy of the
  * correct rgtHash on chain. This "stumbling block" measure is in place primarily to keep honest people honest, and
  * to require an actual, malicious effort to bypass security rather than a little copy-paste. Actual decentralized
@@ -80,10 +81,15 @@ interface StorageInterface {
         uint8 _newAssetStatus
     ) external;
 
-    function modifyIpfs(
+    function modifyIpfs1(
         bytes32 _userHash,
         bytes32 _idxHash,
-        bytes32 _Ipfs1,
+        bytes32 _Ipfs1
+    ) external;
+
+    function modifyIpfs2(
+        bytes32 _userHash,
+        bytes32 _idxHash,
         bytes32 _Ipfs2
     ) external;
 
@@ -94,10 +100,17 @@ interface StorageInterface {
         uint256 _escrowTime
     ) external;
 
-    function endEscrow(
-        bytes32 _userHash,
-        bytes32 _idxHash,
-        uint8 _newAssetStatus
+    function endEscrow(bytes32 _userHash, bytes32 _idxHash) external;
+
+    function ACTH_setCosts(
+        uint16 _class,
+        uint256 _newRecordCost,
+        uint256 _transferRecordCost,
+        uint256 _createNoteCost,
+        uint256 _reMintRecordCost,
+        uint256 _modifyStatusCost,
+        uint256 _forceModCost,
+        address _paymentAddress
     ) external;
 
     function retrieveRecord(bytes32 _idxHash)
@@ -129,7 +142,20 @@ interface StorageInterface {
             uint256,
             uint256,
             uint256,
-            uint256
+            uint256,
+            address
+        );
+
+    function retrieveBaseCosts()
+        external
+        returns (
+            uint256,
+            uint256,
+            uint256,
+            uint256,
+            uint256,
+            uint256,
+            address
         );
 
     function resolveContractAddress(string calldata _name)
@@ -166,12 +192,15 @@ contract FrontEnd is PullPayment, Ownable, IERC721Receiver {
         uint256 reMintRecordCost; // Extra
         uint256 changeStatusCost; // Extra
         uint256 forceModifyCost; // Cost to brute-force a record transfer
+        address paymentAddress; // 2nd-party fee beneficiary address
     }
 
     mapping(bytes32 => User) private registeredUsers; // Authorized recorder database
 
     address storageAddress;
-    address internal mainWallet;
+
+    Costs baseCosts;
+
     StorageInterface private Storage; // Set up external contract interface
 
     // address minterContractAddress;
@@ -189,6 +218,15 @@ contract FrontEnd is PullPayment, Ownable, IERC721Receiver {
      *      Exists in registeredUsers as a usertype 1 or 9
      *      Is authorized for asset class
      */
+    modifier isACtokenHolderOfClass(uint16 _assetClass) {
+        uint256 assetClass256 = uint256(_assetClass);
+        require(
+            (AssetClassTokenContract.ownerOf(assetClass256) == msg.sender),
+            "MOD-ACTH-msg.sender not authorized in asset class"
+        );
+        _;
+    }
+
     modifier isAuthorized() {
         User memory user = registeredUsers[keccak256(
             abi.encodePacked(msg.sender)
@@ -243,13 +281,6 @@ contract FrontEnd is PullPayment, Ownable, IERC721Receiver {
         );
     }
 
-    // function OO_setMinterAddress(address _contractAddress)
-    //     external
-    //     onlyOwner
-    // {
-    //     require(_contractAddress != address(0), "Invalid contract address");
-    //     minterContractAddress = _contractAddress;
-    // }
     /*
      * @dev Set storage contract to interface with
      */
@@ -262,12 +293,26 @@ contract FrontEnd is PullPayment, Ownable, IERC721Receiver {
         Storage = StorageInterface(_storageAddress);
     }
 
-    /*
-     * @dev Set wallet for contract to direct payments to
-     */
+    function OO_setBaseCosts(
+        uint256 _newRecordCost,
+        uint256 _transferAssetCost,
+        uint256 _createNoteCost,
+        uint256 _reMintRecordCost,
+        uint256 _changeStatusCost,
+        uint256 _forceModifyCost,
+        address _paymentAddress
+    ) external onlyOwner {
+        Costs memory _baseCosts;
 
-    function OO_setMainWallet(address _addr) external onlyOwner {
-        mainWallet = _addr;
+        _baseCosts.newRecordCost = _newRecordCost;
+        _baseCosts.transferAssetCost = _transferAssetCost;
+        _baseCosts.createNoteCost = _createNoteCost;
+        _baseCosts.reMintRecordCost = _reMintRecordCost;
+        _baseCosts.changeStatusCost = _changeStatusCost;
+        _baseCosts.forceModifyCost = _forceModifyCost;
+        _baseCosts.paymentAddress = _paymentAddress;
+
+        baseCosts = _baseCosts;
     }
 
     /*
@@ -296,7 +341,34 @@ contract FrontEnd is PullPayment, Ownable, IERC721Receiver {
     }
 
     //--------------------------------------External functions--------------------------------------------//
+    /*
+     * @dev Portal for AC TokenHolders to set costs
+     */
+    function ACTH_setCosts(
+        uint16 _class,
+        uint256 _newRecordCost,
+        uint256 _transferAssetCost,
+        uint256 _createNoteCost,
+        uint256 _reMintRecordCost,
+        uint256 _changeStatusCost,
+        uint256 _forceModifyCost,
+        address _paymentAddress
+    ) external isACtokenHolderOfClass(_class) {
+        Storage.ACTH_setCosts(
+            _class,
+            _newRecordCost,
+            _transferAssetCost,
+            _createNoteCost,
+            _reMintRecordCost,
+            _changeStatusCost,
+            _forceModifyCost,
+            _paymentAddress
+        );
+    }
 
+    /*
+     * @dev Compliance for erc721
+     */
     function onERC721Received(
         address,
         address,
@@ -304,6 +376,24 @@ contract FrontEnd is PullPayment, Ownable, IERC721Receiver {
         bytes calldata
     ) external virtual override returns (bytes4) {
         return this.onERC721Received.selector;
+    }
+
+    function setEscrow(
+        bytes32 _idxHash,
+        uint8 _newAssetStatus,
+        uint256 _escrowTime
+    ) external isAuthorized {
+        Storage.setEscrow(
+        keccak256(abi.encodePacked(msg.sender)),
+        _idxHash,
+        _newAssetStatus,
+        _escrowTime
+    );
+
+    }
+
+    function endEscrow(bytes32 _idxHash) external isAuthorized {
+        Storage.endEscrow(keccak256(abi.encodePacked(msg.sender)), _idxHash);
     }
 
     /*
@@ -318,6 +408,7 @@ contract FrontEnd is PullPayment, Ownable, IERC721Receiver {
     ) external payable isAuthorized {
         User memory callingUser = getUser();
         Costs memory cost = getCost(_assetClass);
+        Costs memory baseCost = getBaseCost();
 
         require(
             callingUser.userType == 1,
@@ -343,8 +434,12 @@ contract FrontEnd is PullPayment, Ownable, IERC721Receiver {
             _countDownStart,
             _Ipfs
         );
-
-        deductPayment(cost.newRecordCost);
+        deductPayment(
+            baseCost.paymentAddress,
+            baseCost.newRecordCost,
+            cost.paymentAddress,
+            cost.newRecordCost
+        );
     }
 
     /*
@@ -359,6 +454,7 @@ contract FrontEnd is PullPayment, Ownable, IERC721Receiver {
         Record memory rec = getRecord(_idxHash);
         User memory callingUser = getUser();
         Costs memory cost = getCost(rec.assetClass);
+        Costs memory baseCost = getBaseCost();
 
         require(
             callingUser.userType == 1,
@@ -400,7 +496,12 @@ contract FrontEnd is PullPayment, Ownable, IERC721Receiver {
 
         writeRecord(_idxHash, rec);
 
-        deductPayment(cost.forceModifyCost);
+        deductPayment(
+            baseCost.paymentAddress,
+            baseCost.newRecordCost,
+            cost.paymentAddress,
+            cost.newRecordCost
+        );
 
         return rec.forceModCount;
     }
@@ -418,6 +519,7 @@ contract FrontEnd is PullPayment, Ownable, IERC721Receiver {
         Record memory rec = getRecord(_idxHash);
         User memory callingUser = getUser();
         Costs memory cost = getCost(rec.assetClass);
+        Costs memory baseCost = getBaseCost();
 
         require(
             callingUser.userType == 1,
@@ -443,7 +545,12 @@ contract FrontEnd is PullPayment, Ownable, IERC721Receiver {
 
         writeRecord(_idxHash, rec);
 
-        deductPayment(cost.reMintRecordCost);
+        deductPayment(
+            baseCost.paymentAddress,
+            baseCost.newRecordCost,
+            cost.paymentAddress,
+            cost.newRecordCost
+        );
 
         return rec.assetStatus;
     }
@@ -572,6 +679,8 @@ contract FrontEnd is PullPayment, Ownable, IERC721Receiver {
         Record memory rec = getRecord(_idxHash);
         User memory callingUser = getUser();
         Costs memory cost = getCost(rec.assetClass);
+        Costs memory baseCost = getBaseCost();
+
         require(
             callingUser.authorizedAssetClass == rec.assetClass,
             "TA: User not authorized to modify records in specified asset class"
@@ -600,7 +709,12 @@ contract FrontEnd is PullPayment, Ownable, IERC721Receiver {
 
         writeRecord(_idxHash, rec);
 
-        deductPayment(cost.transferAssetCost);
+        deductPayment(
+            baseCost.paymentAddress,
+            baseCost.newRecordCost,
+            cost.paymentAddress,
+            cost.newRecordCost
+        );
 
         return (170);
     }
@@ -624,7 +738,7 @@ contract FrontEnd is PullPayment, Ownable, IERC721Receiver {
         require((rec.rightsHolder != 0), "MI1: Record does not exist");
         require(rec.Ipfs1 != _IpfsHash, "MI1:ERR--New data same as old");
         require( //-------------------------------------Should an asset in escrow be modifiable?
-            ((rec.assetStatus != 6) && (rec.assetStatus != 6)), //Should it be contingent on the original recorder address?
+            ((rec.assetStatus != 6) && (rec.assetStatus != 12)), //Should it be contingent on the original recorder address?
             "MI1: Cannot modify asset in Escrow" //If so, it must not erase the recorder, or escrow termination will be broken!
         );
         require(rec.assetStatus < 200, "MI1: Record locked");
@@ -635,7 +749,7 @@ contract FrontEnd is PullPayment, Ownable, IERC721Receiver {
 
         rec.Ipfs1 = _IpfsHash;
 
-        writeRecordIpfs(_idxHash, rec);
+        writeRecordIpfs1(_idxHash, rec);
 
         return rec.Ipfs1;
     }
@@ -643,6 +757,7 @@ contract FrontEnd is PullPayment, Ownable, IERC721Receiver {
     /*
      * @dev Modify **Record**.Ipfs2 with confirmation
      */
+
     function $addIpfs2Note(
         bytes32 _idxHash,
         bytes32 _rgtHash,
@@ -651,13 +766,14 @@ contract FrontEnd is PullPayment, Ownable, IERC721Receiver {
         Record memory rec = getRecord(_idxHash);
         User memory callingUser = getUser();
         Costs memory cost = getCost(rec.assetClass);
+        Costs memory baseCost = getBaseCost();
         require(
             callingUser.authorizedAssetClass == rec.assetClass,
             "MI2:ERR--MI1: User not authorized to modify records in specified asset class"
         );
         require((rec.rightsHolder != 0), "MI1: Record does not exist");
         require( //-------------------------------------Should an asset in escrow be modifiable?
-            ((rec.assetStatus != 6) && (rec.assetStatus != 6)), //Should it be contingent on the original recorder address?
+            ((rec.assetStatus != 6) && (rec.assetStatus != 12)), //Should it be contingent on the original recorder address?
             "MI1: Cannot modify asset in Escrow" //If so, it must not erase the recorder, or escrow termination will be broken!
         );
         require(rec.assetStatus < 200, "MI1: Record locked");
@@ -676,9 +792,14 @@ contract FrontEnd is PullPayment, Ownable, IERC721Receiver {
 
         rec.Ipfs2 = _IpfsHash;
 
-        writeRecordIpfs(_idxHash, rec);
+        writeRecordIpfs2(_idxHash, rec);
 
-        deductPayment(cost.createNoteCost);
+        deductPayment(
+            baseCost.paymentAddress,
+            baseCost.newRecordCost,
+            cost.paymentAddress,
+            cost.newRecordCost
+        );
 
         return rec.Ipfs2;
     }
@@ -732,6 +853,24 @@ contract FrontEnd is PullPayment, Ownable, IERC721Receiver {
     }
 
     /*
+     * @dev retrieves Base Costs from Storage and returns Costs struct
+     */
+    function getBaseCost() private returns (Costs memory) {
+        Costs memory cost;
+        (
+            cost.newRecordCost,
+            cost.transferAssetCost,
+            cost.createNoteCost,
+            cost.reMintRecordCost,
+            cost.changeStatusCost,
+            cost.forceModifyCost,
+            cost.paymentAddress
+        ) = Storage.retrieveBaseCosts();
+
+        return (cost);
+    }
+
+    /*
      * @dev retrieves costs from Storage and returns Costs struct
      */
     function getCost(uint16 _class) private returns (Costs memory) {
@@ -742,7 +881,8 @@ contract FrontEnd is PullPayment, Ownable, IERC721Receiver {
             cost.createNoteCost,
             cost.reMintRecordCost,
             cost.changeStatusCost,
-            cost.forceModifyCost
+            cost.forceModifyCost,
+            cost.paymentAddress
         ) = Storage.retrieveCosts(_class);
 
         return (cost);
@@ -753,10 +893,16 @@ contract FrontEnd is PullPayment, Ownable, IERC721Receiver {
     /*
      * @dev Write an Ipfs Record to Storage @ idxHash
      */
-    function writeRecordIpfs(bytes32 _idxHash, Record memory _rec) private {
+    function writeRecordIpfs1(bytes32 _idxHash, Record memory _rec) private {
         bytes32 userHash = keccak256(abi.encodePacked(msg.sender)); // Get a userhash for authentication and recorder logging
 
-        Storage.modifyIpfs(userHash, _idxHash, _rec.Ipfs1, _rec.Ipfs2); // Send data to storage
+        Storage.modifyIpfs1(userHash, _idxHash, _rec.Ipfs1); // Send data to storage
+    }
+
+    function writeRecordIpfs2(bytes32 _idxHash, Record memory _rec) private {
+        bytes32 userHash = keccak256(abi.encodePacked(msg.sender)); // Get a userhash for authentication and recorder logging
+
+        Storage.modifyIpfs1(userHash, _idxHash, _rec.Ipfs2); // Send data to storage
     }
 
     /*
@@ -778,19 +924,26 @@ contract FrontEnd is PullPayment, Ownable, IERC721Receiver {
     /*--------------------------------------------------------------------------------------PAYMENT FUNCTIONS
      * @dev Deducts payment from transaction
      */
-    function deductPayment(uint256 _amount) private {
+    function deductPayment(
+        address _basePaymentAddress,
+        uint256 _baseAmount,
+        address _ACTHpaymentAddress,
+        uint256 _ACTHamount
+    ) private {
         uint256 messageValue = msg.value;
         uint256 change;
+        uint256 total = _baseAmount.add(_ACTHamount);
 
-        change = messageValue.sub(_amount);
-
-        _asyncTransfer(mainWallet, _amount);
+        change = messageValue.sub(total);
+        _asyncTransfer(_basePaymentAddress, _baseAmount);
+        _asyncTransfer(_ACTHpaymentAddress, _ACTHamount);
         _asyncTransfer(msg.sender, change);
     }
 
     /*
-     * @dev Withdraws user's Escrow amount
+     * @dev Withdraws user's credit balance from contract
      */
+
     function $withdraw() external virtual payable {
         withdrawPayments(msg.sender);
     }
