@@ -18,12 +18,6 @@ pragma solidity ^0.6.2;
 import "./Ownable.sol";
 import "./SafeMath.sol";
 
-// interface assetTokenInterface {
-//     function ownerOf(uint256) external view returns (address);
-//     //function mint(uint256) external view returns (address);
-//     //function transfer(uint256,address) external view returns (address);
-// }
-
 interface ACtokenInterface {
     function ownerOf(uint256) external view returns (address);
     //function mint(uint256) external view returns (address);
@@ -68,9 +62,6 @@ contract Storage is Ownable {
     mapping(uint16 => Costs) private cost; // Cost per function by asset class
     Costs private baseCost;
 
-    // address minterContractAddress;
-    // address assetContractAddress;
-    // assetTokenInterface assetTokenContract; //erc721_token prototype initialization
     address ACcontractAddress;
     ACtokenInterface ACtokenContract; //erc721_token prototype initialization
 
@@ -142,16 +133,6 @@ contract Storage is Ownable {
         );
         _;
     }
-
-    // modifier isACtokenHolderOfAsset(bytes32 _idxHash) {
-    //     uint256 assetClass256 = uint256(database[_idxHash].assetClass);
-    //     require( //origin address holds assetClass token, or assetClass is >=65000
-    //         (database[_idxHash].assetClass >= 65000) ||
-    //             (ACtokenContract.ownerOf(assetClass256) == msg.sender),
-    //         "MOD-ACTH-Contract not authorized in asset class"
-    //     );
-    //     _;
-    // }
 
     /*
      * @dev Verify caller hods ACtoken of passed assetlcass
@@ -227,28 +208,12 @@ contract Storage is Ownable {
     /*
      * @dev Address Setters
      */
-    // function OO_set_Asset_token(address _contractAddress)
-    //     external
-    //     onlyOwner
-    // {
-    //     require(_contractAddress != address(0), "Invalid contract address");
-    //     assetContractAddress = _contractAddress;
-    //     assetTokenContract = assetTokenInterface(_contractAddress);
-    // }
 
     function OO_set_AC_token(address _contractAddress) external onlyOwner {
         require(_contractAddress != address(0), "Invalid contract address");
         ACcontractAddress = _contractAddress;
         ACtokenContract = ACtokenInterface(_contractAddress);
     }
-
-    // function OO_setMinterAddress(address _contractAddress)
-    //     external
-    //     onlyOwner
-    // {
-    //     require(_contractAddress != address(0), "Invalid contract address");
-    //     minterContractAddress = _contractAddress;
-    // }
 
     /*
      * @dev Authorize / Deauthorize / Authorize ADRESSES permitted to make record modifications
@@ -729,16 +694,16 @@ contract Storage is Ownable {
         return contractNames[_name];
     }
 
-    /*
-     * @dev returns the payment address from baseCosts.payment_address
-     */
-    function getMainWallet()
-        external
-        view
-        returns (address)
-    {
-        return baseCost.paymentAddress;
-    }
+    // /*
+    //  * @dev returns the payment address from baseCosts.payment_address
+    //  */
+    // function getMainWallet()
+    //     external
+    //     view
+    //     returns (address)
+    // {
+    //     return baseCost.paymentAddress;
+    // }
 
     //-----------------------------------------------Private functions------------------------------------------------//
 
