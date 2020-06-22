@@ -141,11 +141,15 @@ class ModifyRecordStatus extends Component {
         ._modStatus(idxHash, rgtHash, this.state.status)
         .send({ from: this.state.addr })
         .on("error", function (_error) {
-          self.setState({ error: _error });
-          self.setState({ result: _error.transactionHash });
+          // self.setState({ NRerror: _error });
+          self.setState({ txHash: Object.values(_error)[0].transactionHash });
+          self.setState({ txStatus: false });
+          console.log(Object.values(_error)[0].transactionHash);
         })
         .on("receipt", (receipt) => {
           this.setState({ txHash: receipt.transactionHash });
+          this.setState({ txStatus: receipt.status });
+          console.log(receipt.status);
           //Stuff to do when tx confirms
         });
 
@@ -153,6 +157,7 @@ class ModifyRecordStatus extends Component {
     };
 
     return (
+      <div>
       <Form className="MRform">
         {this.state.addr === undefined && (
           <div className="errorResults">
@@ -276,38 +281,6 @@ class ModifyRecordStatus extends Component {
             </Form.Row>
 
             <Form.Row>
-              <Form.Group as={Col} controlId="formGridFirstName">
-                <Form.Label className="formFont">First Name:</Form.Label>
-                <Form.Control
-                  placeholder="First Name"
-                  required
-                  onChange={(e) => this.setState({ first: e.target.value })}
-                  size="lg"
-                />
-              </Form.Group>
-
-              <Form.Group as={Col} controlId="formGridMiddleName">
-                <Form.Label className="formFont">Middle Name:</Form.Label>
-                <Form.Control
-                  placeholder="Middle Name"
-                  required
-                  onChange={(e) => this.setState({ middle: e.target.value })}
-                  size="lg"
-                />
-              </Form.Group>
-
-              <Form.Group as={Col} controlId="formGridLastName">
-                <Form.Label className="formFont">Last Name:</Form.Label>
-                <Form.Control
-                  placeholder="Last Name"
-                  required
-                  onChange={(e) => this.setState({ surname: e.target.value })}
-                  size="lg"
-                />
-              </Form.Group>
-            </Form.Row>
-
-            <Form.Row>
               <Form.Group className="buttonDisplay">
                 <Button
                   variant="primary"
@@ -320,16 +293,27 @@ class ModifyRecordStatus extends Component {
               </Form.Group>
             </Form.Row>
 
-            {this.state.txHash > 0 && ( //conditional rendering
+            
+          </Form>
+        )}
+      </Form>
+      {this.state.txHash > 0 && ( //conditional rendering
               <div className="VRresults">
-                {this.state.NRerror !== undefined && (
+                {this.state.txStatus === false && (
                   <div>
-                    ERROR! Please check etherscan
-                    <br></br>
-                    {this.state.NRerror.message}
+                    !ERROR! :
+                    <a
+                      href={
+                        "https://kovan.etherscan.io/tx/" + this.state.txHash
+                      }
+                      target="_blank"
+                      rel="noopener noreferrer"
+                    >
+                      KOVAN Etherscan:{this.state.txHash}
+                    </a>
                   </div>
                 )}
-                {this.state.NRerror === undefined && (
+                {this.state.txStatus === true && (
                   <div>
                     {" "}
                     No Errors Reported :
@@ -346,9 +330,7 @@ class ModifyRecordStatus extends Component {
                 )}
               </div>
             )}
-          </Form>
-        )}
-      </Form>
+      </div>
     );
   }
 }

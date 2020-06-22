@@ -180,11 +180,15 @@ class AddNote extends Component {
         )
         .send({ from: this.state.addr, value: this.state.costArray[2] })
         .on("error", function (_error) {
-          self.setState({ error: _error });
-          self.setState({ result: _error.transactionHash });
+          // self.setState({ NRerror: _error });
+          self.setState({ txHash: Object.values(_error)[0].transactionHash });
+          self.setState({ txStatus: false });
+          console.log(Object.values(_error)[0].transactionHash);
         })
         .on("receipt", (receipt) => {
           this.setState({ txHash: receipt.transactionHash });
+          this.setState({ txStatus: receipt.status });
+          console.log(receipt.status);
           //Stuff to do when tx confirms
         });
 
@@ -192,6 +196,7 @@ class AddNote extends Component {
     };
 
     return (
+      <div>
       <Form className="ANform">
         {this.state.addr === undefined && (
           <div className="errorResults">
@@ -325,17 +330,26 @@ class AddNote extends Component {
                 </Button>
               </Form.Group>
             </Form.Row>
-
-            {this.state.txHash > 0 && ( //conditional rendering
+          </Form>
+        )}
+      </Form>
+      {this.state.txHash > 0 && ( //conditional rendering
               <div className="VRresults">
-                {this.state.NRerror !== undefined && (
+                {this.state.txStatus === false && (
                   <div>
-                    ERROR! Please check etherscan
-                    <br></br>
-                    {this.state.NRerror.message}
+                    !ERROR! :
+                    <a
+                      href={
+                        "https://kovan.etherscan.io/tx/" + this.state.txHash
+                      }
+                      target="_blank"
+                      rel="noopener noreferrer"
+                    >
+                      KOVAN Etherscan:{this.state.txHash}
+                    </a>
                   </div>
                 )}
-                {this.state.NRerror === undefined && (
+                {this.state.txStatus === true && (
                   <div>
                     {" "}
                     No Errors Reported :
@@ -352,9 +366,7 @@ class AddNote extends Component {
                 )}
               </div>
             )}
-          </Form>
-        )}
-      </Form>
+      </div>
     );
   }
 }

@@ -93,8 +93,9 @@ class ModifyDescription extends Component {
             self.setState({ error: _error });
             self.setState({ result: 0 });
           } else {
-            self.setState({ result: _result });
+            self.setState({ result: Object.values(_result) });
             self.setState({ error: undefined });
+            console.log(Object.values(_result));
           }
         });
 
@@ -102,6 +103,7 @@ class ModifyDescription extends Component {
     };
 
     return (
+    <div>
       <Form className="RRform">
         {this.state.addr === undefined && (
           <div className="errorResults">
@@ -159,7 +161,7 @@ class ModifyDescription extends Component {
               </Form.Group>
             </Form.Row>
 
-            <Form.Row>
+            {/* <Form.Row>
               <Form.Group as={Col} controlId="formGridFirstName">
                 <Form.Label className="formFont">First Name:</Form.Label>
                 <Form.Control
@@ -189,7 +191,7 @@ class ModifyDescription extends Component {
                   size="lg"
                 />
               </Form.Group>
-            </Form.Row>
+            </Form.Row> */}
 
             <Form.Row>
               <Form.Group className="buttonDisplay">
@@ -203,10 +205,17 @@ class ModifyDescription extends Component {
                 </Button>
               </Form.Group>
             </Form.Row>
-
-            {this.state.result > 0 && (
-              <div className="RRresults">{this.state.result}</div>
+            
+            
+          </Form>
+        )}
+      </Form>
+      {this.state.result[5] === "0" && (
+              <div className="RRresultserr">
+                No Asset Found for Given Data 
+              </div>
             )}
+
             {this.state.result[5] > 0 && ( //conditional rendering
               <div className="RRresults">
                 Status:
@@ -226,9 +235,7 @@ class ModifyDescription extends Component {
                 Token ID :{this.state.result[1]}
               </div>
             )}
-          </Form>
-        )}
-      </Form>
+      </div>
     );
   }
 }
