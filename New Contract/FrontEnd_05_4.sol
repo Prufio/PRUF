@@ -102,10 +102,7 @@ interface StorageInterface {
         uint256 _escrowTime
     ) external;
 
-    function endEscrow(
-        bytes32 _userHash,
-        bytes32 _idxHash,
-    ) external;
+    function endEscrow(bytes32 _userHash, bytes32 _idxHash) external;
 
     function retrieveRecord(bytes32 _idxHash)
         external
@@ -129,6 +126,17 @@ interface StorageInterface {
         returns (uint8);
 
     function retrieveCosts(uint16 _assetClass)
+        external
+        returns (
+            uint256,
+            uint256,
+            uint256,
+            uint256,
+            uint256,
+            uint256
+        );
+
+    function retrieveBaseCosts()
         external
         returns (
             uint256,
@@ -803,7 +811,7 @@ contract FrontEnd is PullPayment, Ownable, IERC721Receiver {
     }
 
     /*
-     * @dev Withdraws user's credit balance from contract 
+     * @dev Withdraws user's credit balance from contract
      */
 
     function $withdraw() external virtual payable {

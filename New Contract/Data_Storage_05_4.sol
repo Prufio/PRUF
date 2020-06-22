@@ -16,6 +16,7 @@
 pragma solidity ^0.6.2;
 
 import "./Ownable.sol";
+import "./SafeMath.sol";
 
 // interface assetTokenInterface {
 //     function ownerOf(uint256) external view returns (address);
@@ -30,6 +31,8 @@ interface ACtokenInterface {
 }
 
 contract Storage is Ownable {
+    using SafeMath for uint256;
+
     struct Record {
         bytes32 recorder; // Address hash of recorder
         bytes32 rightsHolder; // KEK256 Registered owner
@@ -62,6 +65,7 @@ contract Storage is Ownable {
     mapping(string => address) private contractNames; // Authorized contract addresses, indexed by name
     mapping(bytes32 => Record) private database; // Main Data Storage
     mapping(uint16 => Costs) private cost; // Cost per function by asset class
+    Costs private baseCost;
 
     // address minterContractAddress;
     // address assetContractAddress;
@@ -138,12 +142,21 @@ contract Storage is Ownable {
         _;
     }
 
-    modifier isACtokenHolder(bytes32 _idxHash) {
+    modifier isACtokenHolderOfAsset(bytes32 _idxHash) {
         uint256 assetClass256 = uint256(database[_idxHash].assetClass);
         require( //origin address holds assetClass token, or assetClass is >=65000
             (database[_idxHash].assetClass >= 65000) ||
                 (ACtokenContract.ownerOf(assetClass256) == msg.sender),
             "MOD-ACTH-Contract not authorized in asset class"
+        );
+        _;
+    }
+
+    modifier isACtokenHolderOfClass(uint16 _assetClass) {
+        uint256 assetClass256 = uint256(_assetClass);
+        require(
+            (ACtokenContract.ownerOf(assetClass256) == msg.sender),
+            "MOD-ACTH-msg.sender not authorized in asset class"
         );
         _;
     }
@@ -254,7 +267,7 @@ contract Storage is Ownable {
     /*
      * @dev Set function costs per asset class, in Wei
      */
-    function OO_setCosts(
+    function ACTH_setCosts(
         uint16 _class,
         uint256 _newRecordCost,
         uint256 _transferRecordCost,
@@ -262,13 +275,32 @@ contract Storage is Ownable {
         uint256 _reMintRecordCost,
         uint256 _modifyStatusCost,
         uint256 _forceModCost
+    ) external isACtokenHolderOfClass(_class) {
+        cost[_class].cost1 = _newRecordCost.add(baseCost.cost1);
+        cost[_class].cost2 = _transferRecordCost.add(baseCost.cost2);
+        cost[_class].cost3 = _createNoteCost.add(baseCost.cost3);
+        cost[_class].cost4 = _reMintRecordCost.add(baseCost.cost4);
+        cost[_class].cost5 = _modifyStatusCost.add(baseCost.cost5);
+        cost[_class].cost6 = _forceModCost.add(baseCost.cost6);
+    }
+
+    /*
+     * @dev Set function base costs per asset class, in Wei
+     */
+    function OO_setBaseCosts(
+        uint256 _newRecordCost,
+        uint256 _transferRecordCost,
+        uint256 _createNoteCost,
+        uint256 _reMintRecordCost,
+        uint256 _modifyStatusCost,
+        uint256 _forceModCost
     ) external onlyOwner {
-        cost[_class].cost1 = _newRecordCost;
-        cost[_class].cost2 = _transferRecordCost;
-        cost[_class].cost3 = _createNoteCost;
-        cost[_class].cost4 = _reMintRecordCost;
-        cost[_class].cost5 = _modifyStatusCost;
-        cost[_class].cost6 = _forceModCost;
+        baseCost.cost1 = _newRecordCost;
+        baseCost.cost2 = _transferRecordCost;
+        baseCost.cost3 = _createNoteCost;
+        baseCost.cost4 = _reMintRecordCost;
+        baseCost.cost5 = _modifyStatusCost;
+        baseCost.cost6 = _forceModCost;
     }
 
     /*
@@ -644,6 +676,32 @@ contract Storage is Ownable {
             _returnCosts.cost4,
             _returnCosts.cost5,
             _returnCosts.cost6
+        );
+    }
+
+    /*
+     * @dev Retrieve function costs per asset class, in Wei
+     */
+    function retrieveBaseCosts()
+        external
+        view
+        isAuthorized
+        returns (
+            uint256,
+            uint256,
+            uint256,
+            uint256,
+            uint256,
+            uint256
+        )
+    {
+        return (
+            baseCost.cost1,
+            baseCost.cost2,
+            baseCost.cost3,
+            baseCost.cost4,
+            baseCost.cost5,
+            baseCost.cost6
         );
     }
 
