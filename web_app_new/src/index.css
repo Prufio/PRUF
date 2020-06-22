@@ -163,7 +163,7 @@ h4 {
   padding: 2rem;
   display: flex;
   flex-direction: row;
-  justify-content: space-between;
+  justify-content: center;
   margin-top: -2rem;
   opacity: 0.96;
 }
