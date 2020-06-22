@@ -7,53 +7,57 @@ import Form from "react-bootstrap/Form";
 import Col from "react-bootstrap/Col";
 import Button from "react-bootstrap/Button";
 class NewRecord extends Component {
-  constructor(props){
+  constructor(props) {
     super(props);
 
     this.getCosts = async () => {
       const self = this;
-      if(self.state.costArray[0] > 0 || self.state.storage === ""){}else{for(var i = 0; i < 1; i++){
-      self.state.storage.methods
-      .retrieveCosts(3)
-      .call({from: self.state.addr}, function(_error, _result){
-        if(_error){}
-        else{/* console.log("_result: ", _result); */if (_result !== undefined) {self.setState({costArray: Object.values(_result)});}}})
-          }
+      if (self.state.costArray[0] > 0 || self.state.storage === "") {
+      } else {
+        for (var i = 0; i < 1; i++) {
+          self.state.storage.methods
+            .retrieveCosts(3)
+            .call({ from: self.state.addr }, function (_error, _result) {
+              if (_error) {
+              } else {
+                /* console.log("_result: ", _result); */ if (
+                  _result !== undefined
+                ) {
+                  self.setState({ costArray: Object.values(_result) });
+                }
+              }
+            });
         }
-    }
+      }
+    };
 
     this.returnsContract = (contract) => {
       var _web3 = require("web3");
       _web3 = new Web3(_web3.givenProvider);
-      var addrArray = returnAddresses(); 
+      var addrArray = returnAddresses();
       var _frontend_addr = addrArray[1];
       var _storage_addr = addrArray[0];
       const storage_abi = returnStorageAbi();
       const frontEnd_abi = returnFrontEndAbi();
-      const _storage = new _web3.eth.Contract(
-        storage_abi, 
-        _storage_addr);
-      const _frontend = new _web3.eth.Contract(
-        frontEnd_abi,
-        _frontend_addr);
+      const _storage = new _web3.eth.Contract(storage_abi, _storage_addr);
+      const _frontend = new _web3.eth.Contract(frontEnd_abi, _frontend_addr);
 
-        if (contract === 'frontend'){
-          return(_frontend);
-        }
-        else if (contract === 'storage'){
-          return(_storage);
-        }
-    }
+      if (contract === "frontend") {
+        return _frontend;
+      } else if (contract === "storage") {
+        return _storage;
+      }
+    };
 
     this.acctChanger = async () => {
-    const ethereum = window.ethereum;
-    const self = this;
-    var _web3 = require("web3");
-    _web3 = new Web3(_web3.givenProvider);
-      ethereum.on("accountsChanged", function(accounts) {
-      _web3.eth.getAccounts().then((e) => self.setState({addr: e[0]}));
-    });
-    }
+      const ethereum = window.ethereum;
+      const self = this;
+      var _web3 = require("web3");
+      _web3 = new Web3(_web3.givenProvider);
+      ethereum.on("accountsChanged", function (accounts) {
+        _web3.eth.getAccounts().then((e) => self.setState({ addr: e[0] }));
+      });
+    };
 
     //Component state declaration
 
@@ -81,70 +85,102 @@ class NewRecord extends Component {
       frontend: "",
       asset: "3",
       cost: "",
-      storage: ""
-    }
-
+      storage: "",
+    };
   }
 
   componentDidMount() {
-    this.setState({storage: this.returnsContract("storage")})
-    this.setState({frontend: this.returnsContract("frontend")})
+    this.setState({ storage: this.returnsContract("storage") });
+    this.setState({ frontend: this.returnsContract("frontend") });
     //console.log("component mounted")
 
-     var _web3 = require("web3");
+    var _web3 = require("web3");
     _web3 = new Web3(_web3.givenProvider);
-    this.setState({web3: _web3});
-    _web3.eth.getAccounts().then((e) => this.setState({addr: e[0]}));
+    this.setState({ web3: _web3 });
+    _web3.eth.getAccounts().then((e) => this.setState({ addr: e[0] }));
 
-    document.addEventListener("accountListener", this.acctChanger()); 
+    document.addEventListener("accountListener", this.acctChanger());
   }
 
-  componentWillUnmount() { 
+  componentWillUnmount() {
     //console.log("unmounting component")
-    document.removeEventListener("accountListener", this.acctChanger())
-}
+    document.removeEventListener("accountListener", this.acctChanger());
+  }
 
-componentDidUpdate() {
-  if(this.state.addr > 0){
-  if (this.state.costArray[0] < 1){this.getCosts()}}
-}
-  render(){
+  componentDidUpdate() {
+    if (this.state.addr > 0) {
+      if (this.state.costArray[0] < 1) {
+        this.getCosts();
+      }
+    }
+  }
+  render() {
     const self = this;
 
-    async function checkExists(idxHash) { 
+    async function checkExists(idxHash) {
       self.state.storage.methods
         .retrieveRecord(idxHash)
-        .call({ from: self.state.addr }, function(_error, _result){
-          if(_error){self.setState({error: _error.message});self.setState({result: 0})}
-          else if (Object.values(_result)[0] === "0x0000000000000000000000000000000000000000000000000000000000000000"){}
-          else{self.setState({result: _result});alert("WARNING: Record already exists! Reject in metamask and change asset info.")}
-          console.log("In checkExists, _result, _error: ", _result, _error)
-    });
-
+        .call({ from: self.state.addr }, function (_error, _result) {
+          if (_error) {
+            self.setState({ error: _error.message });
+            self.setState({ result: 0 });
+          } else if (
+            Object.values(_result)[0] ===
+            "0x0000000000000000000000000000000000000000000000000000000000000000"
+          ) {
+          } else {
+            self.setState({ result: _result });
+            alert(
+              "WARNING: Record already exists! Reject in metamask and change asset info."
+            );
+          }
+          console.log("In checkExists, _result, _error: ", _result, _error);
+        });
     }
 
     const _newRecord = () => {
       let _cost = this.state.costArray[0];
-      var idxHash = this.state.web3.utils.soliditySha3(this.state.type, this.state.manufacturer, this.state.model, this.state.serial);
-      var rgtRaw = this.state.web3.utils.soliditySha3(this.state.first, this.state.middle, this.state.surname, this.state.id, this.state.secret);
+      var idxHash = this.state.web3.utils.soliditySha3(
+        this.state.type,
+        this.state.manufacturer,
+        this.state.model,
+        this.state.serial
+      );
+      var rgtRaw = this.state.web3.utils.soliditySha3(
+        this.state.first,
+        this.state.middle,
+        this.state.surname,
+        this.state.id,
+        this.state.secret
+      );
       var rgtHash = this.state.web3.utils.soliditySha3(idxHash, rgtRaw);
-  
+
       console.log("idxHash", idxHash);
       console.log("New rgtRaw", rgtRaw);
       console.log("New rgtHash", rgtHash);
       console.log("addr: ", this.state.addr);
       console.log("Cost: ", _cost);
-      
+
       checkExists(idxHash);
 
       this.state.frontend.methods
-        .$newRecord(idxHash, rgtHash, this.state.AssetClass, this.state.CountDownStart, this.state.web3.utils.soliditySha3(this.state.ipfs1))
-        .send({from: this.state.addr, value: _cost}).on("error", function(_error){self.setState({error: _error});self.setState({result: _error.transactionHash});})
+        .$newRecord(
+          idxHash,
+          rgtHash,
+          this.state.AssetClass,
+          this.state.CountDownStart,
+          this.state.web3.utils.soliditySha3(this.state.ipfs1)
+        )
+        .send({ from: this.state.addr, value: _cost })
+        .on("error", function (_error) {
+          self.setState({ error: _error });
+          self.setState({ result: _error.transactionHash });
+        })
         .on("receipt", (receipt) => {
-          this.setState({txHash: receipt.transactionHash});
+          this.setState({ txHash: receipt.transactionHash });
           //Stuff to do when tx confirms
         });
-    
+
       //console.log("txHash",this.state.txHash);
     };
 
@@ -222,9 +258,7 @@ componentDidUpdate() {
                 <Form.Control
                   placeholder="Middle Name"
                   required
-                  onChange={(e) =>
-                    this.setState({ middle: e.target.value })
-                  }
+                  onChange={(e) => this.setState({ middle: e.target.value })}
                   size="lg"
                 />
               </Form.Group>
@@ -310,36 +344,33 @@ componentDidUpdate() {
                 </Button>
               </Form.Group>
             </Form.Row>
-            <Form>
-              <Form.Row>
-                {this.state.txHash > 0 && ( //conditional rendering
-                  <div className="VRresults">
-                    {this.state.NRerror !== undefined && (
-                      <div>
-                        ERROR! Please check etherscan
-                        <br></br>
-                        {this.state.NRerror.message}
-                      </div>
-                    )}
-                    {this.state.NRerror === undefined && (
-                      <div>
-                        {" "}
-                        No Errors Reported :
-                        <a
-                          href={
-                            "https://kovan.etherscan.io/tx/" + this.state.txHash
-                          }
-                          target="_blank"
-                          rel="noopener noreferrer"
-                        >
-                          KOVAN Etherscan:{this.state.txHash}
-                        </a>
-                      </div>
-                    )}
+
+            {this.state.txHash > 0 && ( //conditional rendering
+              <div className="VRresults">
+                {this.state.NRerror !== undefined && (
+                  <div>
+                    ERROR! Please check etherscan
+                    <br></br>
+                    {this.state.NRerror.message}
                   </div>
                 )}
-              </Form.Row>
-            </Form>
+                {this.state.NRerror === undefined && (
+                  <div>
+                    {" "}
+                    No Errors Reported :
+                    <a
+                      href={
+                        "https://kovan.etherscan.io/tx/" + this.state.txHash
+                      }
+                      target="_blank"
+                      rel="noopener noreferrer"
+                    >
+                      KOVAN Etherscan:{this.state.txHash}
+                    </a>
+                  </div>
+                )}
+              </div>
+            )}
           </Form>
         )}
       </Form>
