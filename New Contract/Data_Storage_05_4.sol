@@ -104,7 +104,7 @@ contract Storage is Ownable {
      *
      * 7 = transferrable, automation set/unset (secret confirmed)(ACAdmin can unset)
      * 8 = non-transferrable, automation set/unset (secret confirmed)(ACAdmin can unset)
-     ********status 9 stolen (automation set)(ONLY ACAdmin can unset)
+     ******** status 9 stolen (automation set)(ONLY ACAdmin can unset)
      * 10 = lost (automation set/unset)(ACAdmin can unset)
      * 11 = asset transferred automation set/unset (secret confirmed)(ACAdmin can unset)
      * 12 = escrow - automation set/unset (secret confirmed)(ACAdmin can unset)
@@ -143,16 +143,19 @@ contract Storage is Ownable {
         _;
     }
 
-    modifier isACtokenHolderOfAsset(bytes32 _idxHash) {
-        uint256 assetClass256 = uint256(database[_idxHash].assetClass);
-        require( //origin address holds assetClass token, or assetClass is >=65000
-            (database[_idxHash].assetClass >= 65000) ||
-                (ACtokenContract.ownerOf(assetClass256) == msg.sender),
-            "MOD-ACTH-Contract not authorized in asset class"
-        );
-        _;
-    }
+    // modifier isACtokenHolderOfAsset(bytes32 _idxHash) {
+    //     uint256 assetClass256 = uint256(database[_idxHash].assetClass);
+    //     require( //origin address holds assetClass token, or assetClass is >=65000
+    //         (database[_idxHash].assetClass >= 65000) ||
+    //             (ACtokenContract.ownerOf(assetClass256) == msg.sender),
+    //         "MOD-ACTH-Contract not authorized in asset class"
+    //     );
+    //     _;
+    // }
 
+    /*
+     * @dev Verify caller hods ACtoken of passed assetlcass
+     */
     modifier isACtokenHolderOfClass(uint16 _assetClass) {
         uint256 assetClass256 = uint256(_assetClass);
         require(
