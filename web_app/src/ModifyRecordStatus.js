@@ -166,7 +166,7 @@ class ModifyRecordStatus extends Component {
             </div>
           )}
           {this.state.addr > 0 && (
-            <Form>
+            <div>
               <h2 className="Headertext">Modify Status</h2>
               <br></br>
               <Form.Row>
@@ -292,7 +292,7 @@ class ModifyRecordStatus extends Component {
                   </Button>
                 </Form.Group>
               </Form.Row>
-            </Form>
+            </div>
           )}
         </Form>
         {this.state.txHash > 0 && ( //conditional rendering

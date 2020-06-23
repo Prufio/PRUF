@@ -123,6 +123,20 @@ h4 {
   justify-content: flex-start;
 }
 
+.bannerAdmin {
+  height: 5.0rem;
+  width: 37.0rem;
+  background-color:   rgb(255, 255, 255);
+  color: rgb(5, 225, 221);
+  border-radius: 1.0rem;
+  font-size: 1.4rem;
+  padding: 1.0rem;
+  display:flex;
+  flex-direction: column;
+  justify-content: center;
+  margin-left: auto;
+}
+
 .home {
   height: 15rem;
   width: 75rem;
@@ -274,6 +288,71 @@ h4 {
   padding-left: 2rem;
 }
 
+.ACForm{
+  height: 37.5rem;
+  width: 59rem;
+  background-color: #206ab9;
+  border-radius: 0.5rem;
+  padding: 2rem;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  margin-top: -2rem;
+  opacity: 0.96;
+}
+
+.AUForm{
+  height: 37.5rem;
+  width: 59rem;
+  background-color: #206ab9;
+  border-radius: 0.5rem;
+  padding: 2rem;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  margin-top: -2rem;
+  opacity: 0.96;
+}
+
+.SCForm{
+  height: 64rem;
+  width: 59rem;
+  background-color: #206ab9;
+  border-radius: 0.5rem;
+  padding: 2rem;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  margin-top: -2rem;
+  opacity: 0.96;
+}
+
+.OForm{
+  height: 28rem;
+  width: 59rem;
+  background-color: #206ab9;
+  border-radius: 0.5rem;
+  padding: 2rem;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  margin-top: -2rem;
+  opacity: 0.96;
+}
+
+.RFMCForm{
+  height: 30rem;
+  width: 59rem;
+  background-color: #206ab9;
+  border-radius: 0.5rem;
+  padding: 2rem;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  margin-top: -2rem;
+  opacity: 0.96;
+}
+
 .RRresults {
   height: 16rem;
   width: 59rem;
@@ -354,6 +433,29 @@ h4 {
 .buttonDisplay {
   margin-left: 42rem;
   margin-top: -20rem;
+}
+
+.buttonDisplay2 {
+  margin-top: -21rem;
+  margin-left: 136rem;
+}
+
+.ownerButtonDisplay {
+  margin-left: 40rem;
+  margin-top: 5rem;
+}
+.ownerButtonDisplay2 {
+  margin-left: 40rem;
+  margin-top: auto;
+}
+
+.ownerButtonDisplay3 {
+  margin-left: 21rem;
+  margin-top: 5rem;
+}
+.ownerButtonDisplay4 {
+  margin-left: 21rem;
+  margin-top: auto;
 }
 
 .Headertext {
