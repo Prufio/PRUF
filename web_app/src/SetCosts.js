@@ -107,7 +107,7 @@ class SetCosts extends Component {
           )}
 
           {this.state.addr > 0 && (
-            <Form>
+            <div>
               <h2 className="Headertext">Set Function Costs</h2>
               <br></br>
 
@@ -203,7 +203,7 @@ class SetCosts extends Component {
                   Submit
                 </Button>
               </Form.Group>
-            </Form>
+            </div>
           )}
         </Form>
       </div>

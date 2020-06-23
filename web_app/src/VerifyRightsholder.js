@@ -147,7 +147,7 @@ class VerifyRightHolder extends Component {
             </div>
           )}
           {this.state.addr > 0 && (
-            <Form>
+            <div>
               <h2 className="Headertext">Verify Rights Holder</h2>
               <br></br>
               <Form.Row>
@@ -263,7 +263,7 @@ class VerifyRightHolder extends Component {
                   </Button>
                 </Form.Group>
               </Form.Row>
-            </Form>
+            </div>
           )}
         </Form>
 

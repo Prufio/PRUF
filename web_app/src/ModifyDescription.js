@@ -6,7 +6,7 @@ import Web3 from "web3";
 import Form from "react-bootstrap/Form";
 import Col from "react-bootstrap/Col";
 import Button from "react-bootstrap/Button";
-import bs58 from 'bs58';
+import bs58 from "bs58";
 
 class ModifyDescription extends Component {
   constructor(props) {
@@ -54,8 +54,12 @@ class ModifyDescription extends Component {
   }
 
   componentDidMount() {
-    var _ipfs = new this.state.IPFS({host: "ipfs.infura.io", port: 5001, protocol: "https"})
-    this.setState({ipfs: _ipfs});
+    var _ipfs = new this.state.IPFS({
+      host: "ipfs.infura.io",
+      port: 5001,
+      protocol: "https",
+    });
+    this.setState({ ipfs: _ipfs });
     //console.log("component mounted")
     var _web3 = require("web3");
     _web3 = new Web3(_web3.givenProvider);
@@ -85,17 +89,20 @@ class ModifyDescription extends Component {
     const self = this;
 
     const getBytes32FromIpfsHash = (ipfsListing) => {
-      return ("0x"+bs58.decode(ipfsListing).slice(2).toString('hex'))
-    }
+      return "0x" + bs58.decode(ipfsListing).slice(2).toString("hex");
+    };
 
-    const publishIPFS1 = async() => {
-      console.log("Uploading file to IPFS...")
+    const publishIPFS1 = async () => {
+      console.log("Uploading file to IPFS...");
       await this.state.ipfs.add(this.state.ipfs1, (error, hash) => {
-          if (error) {console.log("Something went wrong. Unable to upload to ipfs")}
-          else{console.log("uploaded at hash: ", hash)}
-          self.setState({hashPath: getBytes32FromIpfsHash(hash)})
-      })
-  }
+        if (error) {
+          console.log("Something went wrong. Unable to upload to ipfs");
+        } else {
+          console.log("uploaded at hash: ", hash);
+        }
+        self.setState({ hashPath: getBytes32FromIpfsHash(hash) });
+      });
+    };
 
     async function checkExists(idxHash) {
       await self.state.storage.methods
@@ -186,7 +193,7 @@ class ModifyDescription extends Component {
             </div>
           )}
           {this.state.addr > 0 && (
-            <Form>
+            <div>
               <h2 className="Headertext">Modify Description</h2>
               <br></br>
               <Form.Row>
@@ -301,32 +308,35 @@ class ModifyDescription extends Component {
                   />
                 </Form.Group>
               </Form.Row>
-              {this.state.hashPath !== "" && (   
-            <Form.Row>
-              <Form.Group className="buttonDisplay">
-                <Button
-                  variant="primary"
-                  type="button"
-                  size="lg"
-                  onClick={_updateDescription}
-                >
-                  Update Description
-                </Button>
-                </Form.Group>
-                </Form.Row>)}
-            {this.state.hashPath === "" && (   <Form.Row>
-              <Form.Group className="buttonDisplay">
-                <Button
-                  variant="primary"
-                  type="button"
-                  size="lg"
-                  onClick={publishIPFS1}
-                >
-                  Load to IPFS
-                </Button>
-                </Form.Group>
-                </Form.Row>)}
-            </Form>
+              {this.state.hashPath !== "" && (
+                <Form.Row>
+                  <Form.Group className="buttonDisplay">
+                    <Button
+                      variant="primary"
+                      type="button"
+                      size="lg"
+                      onClick={_updateDescription}
+                    >
+                      Update Description
+                    </Button>
+                  </Form.Group>
+                </Form.Row>
+              )}
+              {this.state.hashPath === "" && (
+                <Form.Row>
+                  <Form.Group className="buttonDisplay">
+                    <Button
+                      variant="primary"
+                      type="button"
+                      size="lg"
+                      onClick={publishIPFS1}
+                    >
+                      Load to IPFS
+                    </Button>
+                  </Form.Group>
+                </Form.Row>
+              )}
+            </div>
           )}
         </Form>
         {this.state.txHash > 0 && ( //conditional rendering

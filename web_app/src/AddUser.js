@@ -95,7 +95,7 @@ class AddUser extends Component {
           )}
 
           {this.state.addr > 0 && (
-            <Form>
+            <div>
               <h2 className="Headertext">Add User</h2>
               <br></br>
 
@@ -145,7 +145,7 @@ class AddUser extends Component {
                   Submit
                 </Button>
               </Form.Group>
-            </Form>
+            </div>
           )}
         </Form>
       </div>

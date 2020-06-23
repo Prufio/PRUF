@@ -131,7 +131,7 @@ class Main extends Component {
                     Home
                   </NavLink>
                 </li>
-                
+
                 {this.state.ownerMenu === false && (
                   <li>
                     <li>
@@ -161,7 +161,7 @@ class Main extends Component {
                     <li>
                       <NavLink to="/force-modify-record">Modify</NavLink>
                     </li>
-                    </li>
+                  </li>
                 )}
 
                 {this.state.ownerMenu === true && (
@@ -218,14 +218,14 @@ class Main extends Component {
           {this.state.isOwner === true && (
             <Form className="buttonDisplay2">
               <Button
-                    variant="danger"
-                    type="button"
-                    size="lg"
-                    onClick={toggleAdmin}
-                  >
-                    Toggle Admin
-                  </Button>
-                  </Form>
+                variant="danger"
+                type="button"
+                size="lg"
+                onClick={toggleAdmin}
+              >
+                Toggle Admin
+              </Button>
+            </Form>
           )}
         </div>
       </HashRouter>

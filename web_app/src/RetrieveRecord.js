@@ -6,7 +6,7 @@ import Web3 from "web3";
 import Form from "react-bootstrap/Form";
 import Col from "react-bootstrap/Col";
 import Button from "react-bootstrap/Button";
-import bs58 from 'bs58';
+import bs58 from "bs58";
 
 class ModifyDescription extends Component {
   constructor(props) {
@@ -54,8 +54,12 @@ class ModifyDescription extends Component {
   }
 
   componentDidMount() {
-    var _ipfs = new this.state.IPFS({host: "ipfs.infura.io", port: 5001, protocol: "https"})
-    this.setState({ipfs: _ipfs});
+    var _ipfs = new this.state.IPFS({
+      host: "ipfs.infura.io",
+      port: 5001,
+      protocol: "https",
+    });
+    this.setState({ ipfs: _ipfs });
     //console.log("component mounted")
     var _web3 = require("web3");
     _web3 = new Web3(_web3.givenProvider);
@@ -88,26 +92,32 @@ class ModifyDescription extends Component {
       // Add our default ipfs values for first 2 bytes:
       // function:0x12=sha2, size:0x20=256 bits
       // and cut off leading "0x"
-      const hashHex = "1220" + bytes32Hex.slice(2)
-      const hashBytes = Buffer.from(hashHex, 'hex');
-      const hashStr = bs58.encode(hashBytes)
-      return hashStr
-    }
+      const hashHex = "1220" + bytes32Hex.slice(2);
+      const hashBytes = Buffer.from(hashHex, "hex");
+      const hashStr = bs58.encode(hashBytes);
+      return hashStr;
+    };
 
     const getIPFS2 = async (lookup2) => {
       await this.state.ipfs.cat(lookup2, (error, result) => {
-          if (error) {console.log("Something went wrong. Unable to find file on IPFS")}
-          else{console.log("IPFS2 Here's what we found: ", result)}
-          self.setState({ipfs2: result})
-      })
-  }
-  const getIPFS1 = async(lookup1) => {
-    await this.state.ipfs.cat(lookup1, (error, result) => {
-        if (error) {console.log("Something went wrong. Unable to find file on IPFS")}
-        else{console.log("IPFS1 Here's what we found: ", result)}
-        self.setState({ipfs1: result})
-    })
-}
+        if (error) {
+          console.log("Something went wrong. Unable to find file on IPFS");
+        } else {
+          console.log("IPFS2 Here's what we found: ", result);
+        }
+        self.setState({ ipfs2: result });
+      });
+    };
+    const getIPFS1 = async (lookup1) => {
+      await this.state.ipfs.cat(lookup1, (error, result) => {
+        if (error) {
+          console.log("Something went wrong. Unable to find file on IPFS");
+        } else {
+          console.log("IPFS1 Here's what we found: ", result);
+        }
+        self.setState({ ipfs1: result });
+      });
+    };
 
     const _retrieveRecord = () => {
       var idxHash = this.state.web3.utils.soliditySha3(
@@ -130,17 +140,13 @@ class ModifyDescription extends Component {
             self.setState({ result: Object.values(_result) });
             self.setState({ error: undefined });
 
-            getIPFS1(getIpfsHashFromBytes32(Object.values(_result)[8]))
+            getIPFS1(getIpfsHashFromBytes32(Object.values(_result)[8]));
 
-            getIPFS2(getIpfsHashFromBytes32(Object.values(_result)[9]))
+            getIPFS2(getIpfsHashFromBytes32(Object.values(_result)[9]));
 
             //console.log(Object.values(_result));
-
-
           }
         });
-
-      
     };
 
     return (
@@ -153,7 +159,7 @@ class ModifyDescription extends Component {
             </div>
           )}
           {this.state.addr > 0 && (
-            <Form>
+            <div>
               <h2 className="Headertext">Search Records</h2>
               <br></br>
               <Form.Row>
@@ -214,7 +220,7 @@ class ModifyDescription extends Component {
                   </Button>
                 </Form.Group>
               </Form.Row>
-            </Form>
+            </div>
           )}
         </Form>
         {this.state.result[5] === "0" && (

@@ -111,7 +111,7 @@ class Ownership extends Component {
           )}
 
           {this.state.addr > 0 && this.state.toggle === false && (
-            <Form>
+            <div>
               <h2 className="Headertext">Transfer Ownership</h2>
               <br></br>
               <Form.Group as={Col} controlId="formGridNewOwner">
@@ -149,11 +149,11 @@ class Ownership extends Component {
                   </Button>
                 </Form.Group>
               </div>
-            </Form>
+            </div>
           )}
 
           {this.state.addr > 0 && this.state.toggle === true && (
-            <Form>
+            <div>
               <h2 className="Headertext">Renounce Ownership?</h2>
               <div>
                 <Form.Group>
@@ -181,7 +181,7 @@ class Ownership extends Component {
                   </Button>
                 </Form.Group>
               </div>
-            </Form>
+            </div>
           )}
         </Form>
       </div>
