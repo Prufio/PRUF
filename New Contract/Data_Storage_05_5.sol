@@ -555,7 +555,7 @@ contract Storage is Ownable {
      * @dev return a complete record from the database
      */
     function retrieveRecord(bytes32 _idxHash)
-        external
+        internal
         view
         returns (
             //exists(_idxHash)
@@ -585,6 +585,46 @@ contract Storage is Ownable {
         return (
             rec.recorder,
             rec.rightsHolder,
+            rec.lastRecorder,
+            rec.assetStatus,
+            rec.forceModCount,
+            rec.assetClass,
+            rec.countDown,
+            rec.countDownStart,
+            rec.Ipfs1,
+            rec.Ipfs2
+        );
+    }
+
+    function retrieveShortRecord(bytes32 _idxHash)
+        external
+        view
+        returns (
+            //exists(_idxHash)
+            bytes32,
+            bytes32,
+            uint8,
+            uint8,
+            uint16,
+            uint256,
+            uint256,
+            bytes32,
+            bytes32
+        )
+    {
+        Record memory rec = database[_idxHash];
+
+        // if (
+        //     (rec.assetStatus == 3) ||
+        //     (rec.assetStatus == 4) ||
+        //     (rec.assetStatus == 9) ||
+        //     (rec.assetStatus == 10)
+        // ) {
+        //     emit REPORT_B32("Lost or stolen record queried", _idxHash);
+        // }
+
+        return (
+            rec.recorder,
             rec.lastRecorder,
             rec.assetStatus,
             rec.forceModCount,
