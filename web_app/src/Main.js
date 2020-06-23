@@ -43,7 +43,7 @@ class Main extends Component {
             } else {
               self.setState({ owner: _result });
 
-              if (self.state.owner === self.state.addr) {
+              if (_result === self.state.addr) {
                 self.setState({ isOwner: true });
               } else {
                 self.setState({ isOwner: false });
