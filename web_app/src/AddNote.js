@@ -144,6 +144,7 @@ class AddNote extends Component {
               "WARNING: Record DOES NOT EXIST! Reject in metamask and review asset info fields."
             );
           } else {
+            if (Object.values(_result)[9] > 0){alert("Cannot overwrite existing note! Transaction will fail!")}
             self.setState({ result: _result });
           }
           console.log("check debug, _result, _error: ", _result, _error);
