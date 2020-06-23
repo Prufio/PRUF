@@ -6,6 +6,8 @@ import Web3 from "web3";
 import Form from "react-bootstrap/Form";
 import Col from "react-bootstrap/Col";
 import Button from "react-bootstrap/Button";
+import bs58 from 'bs58';
+
 class NewRecord extends Component {
   constructor(props) {
     super(props);
@@ -63,6 +65,10 @@ class NewRecord extends Component {
 
     this.state = {
       addr: "",
+      lookupIPFS1: "",
+      lookupIPFS2: "",
+      IPFS: require("ipfs-mini"),
+      hashPath: "",
       error: undefined,
       NRerror: undefined,
       result: null,
@@ -91,6 +97,8 @@ class NewRecord extends Component {
   }
 
   componentDidMount() {
+    var _ipfs = new this.state.IPFS({host: "ipfs.infura.io", port: 5001, protocol: "https"})
+    this.setState({ipfs: _ipfs});
     this.setState({ storage: this.returnsContract("storage") });
     this.setState({ frontend: this.returnsContract("frontend") });
     //console.log("component mounted")
@@ -117,6 +125,20 @@ class NewRecord extends Component {
   }
   render() {
     const self = this;
+
+    const getBytes32FromIpfsHash = (ipfsListing) => {
+      return ("0x"+bs58.decode(ipfsListing).slice(2).toString('hex'))
+    }
+
+    const publishIPFS1 = async() => {
+      console.log("Uploading file to IPFS...")
+      await this.state.ipfs.add(this.state.ipfs1, (error, hash) => {
+          if (error) {console.log("Something went wrong. Unable to upload to ipfs")}
+          else{console.log("uploaded at hash: ", hash)}
+          self.setState({hashPath: getBytes32FromIpfsHash(hash)})
+      })
+  }
+
 
     async function checkExists(idxHash) {
       self.state.storage.methods
@@ -170,7 +192,7 @@ class NewRecord extends Component {
           rgtHash,
           this.state.AssetClass,
           this.state.CountDownStart,
-          this.state.web3.utils.soliditySha3(this.state.ipfs1)
+          this.state.hashPath
         )
         .send({ from: this.state.addr, value: _cost })
         .on("error", function (_error) {
@@ -336,18 +358,46 @@ class NewRecord extends Component {
                   />
                 </Form.Group>
               </Form.Row>
-              <Form.Row>
-                <Form.Group className="buttonDisplay">
-                  <Button
-                    variant="primary"
-                    type="button"
-                    size="lg"
-                    onClick={_newRecord}
-                  >
-                    Submit
-                  </Button>
+              {this.state.hashPath === "" && (this.state.ipfs1 !== "" &&(   
+            <Form.Row>
+              <Form.Group className="buttonDisplay">
+                <Button
+                  variant="primary"
+                  type="button"
+                  size="lg"
+                  onClick={publishIPFS1}
+                >
+                  Load to IPFS
+                </Button>
                 </Form.Group>
-              </Form.Row>
+                </Form.Row>))}
+            {this.state.hashPath !== "" && (   
+            <Form.Row>
+              <Form.Group className="buttonDisplay">
+                <Button
+                  variant="primary"
+                  type="button"
+                  size="lg"
+                  onClick={_newRecord}
+                >
+                  New Record
+                </Button>
+                </Form.Group>
+                </Form.Row>)}
+
+                {this.state.ipfs1 === "" && ( this.state.hashPath === "" && (   
+                <Form.Row>
+              <Form.Group className="buttonDisplay">
+                <Button
+                  variant="primary"
+                  type="button"
+                  size="lg"
+                  onClick={_newRecord}
+                >
+                  New Record
+                </Button>
+                </Form.Group>
+                </Form.Row>))}
             </Form>
           )}
         </Form>
