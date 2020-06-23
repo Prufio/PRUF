@@ -10,6 +10,14 @@
  * to require an actual, malicious effort to bypass security rather than a little copy-paste. Actual decentralized
  * security is provided with tokenized assets, which do not rely on the coercive trust relationship that creates the
  * incentive for recorders not to engage in malicious practices.
+ *
+ *
+ * Contract Names -
+ *  assetToken
+ *  assetClassToken
+ *  BPdappPayable
+ *  BPdappNonPayable
+ *
  */
 
 // SPDX-License-Identifier: UNLICENSED

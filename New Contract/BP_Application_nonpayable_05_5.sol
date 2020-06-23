@@ -29,12 +29,18 @@
  * 6: verifying that provided verification data matches required data
  * 7: verifying that message contains any required payment
  *
+ * Contract Names -
+ *  assetToken
+ *  assetClassToken
+ *  BPappPayable
+ *  BPappNonPayable
  *
  */
 
 // SPDX-License-Identifier: UNLICENSED
 pragma solidity ^0.6.2;
-import "./PullPayment.sol";
+import "./Ownable.sol";
+import "./SafeMath.sol";
 import "./_ERC721/IERC721Receiver.sol";
 
 interface AssetClassTokenInterface {
@@ -58,14 +64,6 @@ interface AssetTokenInterface {
 }
 
 interface StorageInterface {
-    function newRecord(
-        bytes32 _userHash,
-        bytes32 _idxHash,
-        bytes32 _rgt,
-        uint16 _assetClass,
-        uint256 _countDownStart,
-        bytes32 _Ipfs1
-    ) external;
 
     function modifyRecord(
         bytes32 _userHash,
@@ -86,12 +84,6 @@ interface StorageInterface {
         bytes32 _userHash,
         bytes32 _idxHash,
         bytes32 _Ipfs1
-    ) external;
-
-    function modifyIpfs2(
-        bytes32 _userHash,
-        bytes32 _idxHash,
-        bytes32 _Ipfs2
     ) external;
 
     function setEscrow(
@@ -164,7 +156,7 @@ interface StorageInterface {
         returns (address);
 }
 
-contract FrontEnd is PullPayment, Ownable, IERC721Receiver {
+contract BP_APP_NP is Ownable, IERC721Receiver {
     using SafeMath for uint256;
 
     struct Record {
@@ -199,8 +191,6 @@ contract FrontEnd is PullPayment, Ownable, IERC721Receiver {
     mapping(bytes32 => User) private registeredUsers; // Authorized recorder database
 
     address storageAddress;
-
-    Costs baseCosts;
 
     StorageInterface private Storage; // Set up external contract interface
 
@@ -279,22 +269,16 @@ contract FrontEnd is PullPayment, Ownable, IERC721Receiver {
     /*
      * @dev Address Setters
      */
-    function OO_setAssetClassTokenAddress(address _contractAddress)
-        external
-        onlyOwner
-    {
-        require(_contractAddress != address(0), "Invalid contract address");
-        AssetClassTokenAddress = _contractAddress;
-        AssetClassTokenContract = AssetClassTokenInterface(_contractAddress);
-    }
 
-    function OO_setAssetTokenAddress(address _contractAddress)
+    function OO_getContractAddresses()
         external
         onlyOwner
     {
-        require(_contractAddress != address(0), "Invalid contract address");
-        AssetTokenAddress = _contractAddress;
-        AssetTokenContract = AssetTokenInterface(_contractAddress);
+        AssetClassTokenAddress = Storage.resolveContractAddress("assetClassToken");
+        AssetClassTokenContract = AssetClassTokenInterface(AssetClassTokenAddress);
+
+        AssetTokenAddress = Storage.resolveContractAddress("assetToken");
+        AssetTokenContract = AssetTokenInterface(AssetTokenAddress);
     }
 
     function OO_TX_asset_Token(address _to, bytes32 _idxHash)
@@ -356,31 +340,6 @@ contract FrontEnd is PullPayment, Ownable, IERC721Receiver {
 
     //--------------------------------------External functions--------------------------------------------//
     /*
-     * @dev Portal for AC TokenHolders to set costs
-     */
-    function ACTH_setCosts(
-        uint16 _class,
-        uint256 _newRecordCost,
-        uint256 _transferAssetCost,
-        uint256 _createNoteCost,
-        uint256 _reMintRecordCost,
-        uint256 _changeStatusCost,
-        uint256 _forceModifyCost,
-        address _paymentAddress
-    ) external isACtokenHolder(_class) {
-        Storage.ACTH_setCosts(
-            _class,
-            _newRecordCost,
-            _transferAssetCost,
-            _createNoteCost,
-            _reMintRecordCost,
-            _changeStatusCost,
-            _forceModifyCost,
-            _paymentAddress
-        );
-    }
-
-    /*
      * @dev Compliance for erc721
      */
     function onERC721Received(
@@ -441,167 +400,6 @@ contract FrontEnd is PullPayment, Ownable, IERC721Receiver {
         );
 
         Storage.endEscrow(keccak256(abi.encodePacked(msg.sender)), _idxHash);
-    }
-
-    /*
-     * @dev Wrapper for newRecord
-     */
-    function $newRecord(
-        bytes32 _idxHash,
-        bytes32 _rgtHash,
-        uint16 _assetClass,
-        uint256 _countDownStart,
-        bytes32 _Ipfs
-    ) external payable isAuthorized(_idxHash) {
-        User memory callingUser = getUser();
-        Costs memory cost = getCost(_assetClass);
-        Costs memory baseCost = getBaseCost();
-
-        require(
-            callingUser.userType == 1,
-            "NR: User not authorized to create records"
-        );
-        require(
-            callingUser.authorizedAssetClass == _assetClass,
-            "NR: User not authorized to create records in specified asset class"
-        );
-        require(_rgtHash != 0, "NR: rights holder cannot be zero");
-        require(
-            msg.value >= cost.newRecordCost,
-            "NR: tx value too low. Send more eth."
-        );
-
-        bytes32 userHash = keccak256(abi.encodePacked(msg.sender));
-
-        Storage.newRecord(
-            userHash,
-            _idxHash,
-            _rgtHash,
-            _assetClass,
-            _countDownStart,
-            _Ipfs
-        );
-        deductPayment(
-            baseCost.paymentAddress,
-            baseCost.newRecordCost,
-            cost.paymentAddress,
-            cost.newRecordCost
-        );
-    }
-
-    /*
-     * @dev Modify **Record**.rightsHolder without confirmation required
-     */
-    function $forceModRecord(bytes32 _idxHash, bytes32 _rgtHash)
-        external
-        payable
-        isAuthorized(_idxHash)
-        returns (uint8)
-    {
-        Record memory rec = getRecord(_idxHash);
-        User memory callingUser = getUser();
-        Costs memory cost = getCost(rec.assetClass);
-        Costs memory baseCost = getBaseCost();
-
-        require((rec.rightsHolder != 0), "FMR: Record does not exist");
-
-        require(
-            callingUser.userType == 1,
-            "FMR: User not authorized to force modify records"
-        );
-        require(
-            callingUser.authorizedAssetClass == rec.assetClass,
-            "FMR: User not authorized to modify records in specified asset class"
-        );
-
-        require(_rgtHash != 0, "FMR: rights holder cannot be zero");
-        require(
-            (rec.assetStatus != 3) &&
-                (rec.assetStatus != 4) &&
-                (rec.assetStatus != 9) &&
-                (rec.assetStatus != 10),
-            "FMR: Cannot modify asset in lost or stolen status"
-        );
-        require(
-            (rec.assetStatus != 6) && (rec.assetStatus != 12),
-            "FMR: Cannot modify asset in Escrow"
-        );
-        require(
-            (rec.assetStatus != 5),
-            "FMR:ERR-Cannot change status of asset in transferred status."
-        );
-        require(rec.assetStatus < 200, "FMR: Record locked");
-        require(
-            msg.value >= cost.forceModifyCost,
-            "FMR: tx value too low. Send more eth."
-        );
-
-        if (rec.forceModCount < 255) {
-            rec.forceModCount++;
-        }
-
-        rec.assetStatus = 0;
-        rec.rightsHolder = _rgtHash;
-
-        writeRecord(_idxHash, rec);
-
-        deductPayment(
-            baseCost.paymentAddress,
-            baseCost.newRecordCost,
-            cost.paymentAddress,
-            cost.newRecordCost
-        );
-
-        return rec.forceModCount;
-    }
-
-    /*
-     * @dev Reimport **Record**.rightsHolder (no confirmation required -
-     * posessor is considered to be owner). sets rec.assetStatus to 0.
-     */
-    function $reimportRecord(bytes32 _idxHash, bytes32 _rgtHash)
-        external
-        payable
-        isAuthorized(_idxHash)
-        returns (uint8)
-    {
-        Record memory rec = getRecord(_idxHash);
-        User memory callingUser = getUser();
-        Costs memory cost = getCost(rec.assetClass);
-        Costs memory baseCost = getBaseCost();
-
-        require((rec.rightsHolder != 0), "RR: Record does not exist");
-        require(
-            callingUser.userType == 1,
-            "RR: User not authorized to reimport assets"
-        );
-        require(
-            callingUser.authorizedAssetClass == rec.assetClass,
-            "RR: User not authorized to modify records in specified asset class"
-        );
-        require(
-            rec.assetStatus == 5,
-            "RR: Only status 5 assets can be reimported"
-        );
-        require(rec.assetStatus < 200, "RR: Record locked");
-        require(
-            msg.value >= cost.reMintRecordCost,
-            "RR: tx value too low. Send more eth."
-        );
-
-        rec.assetStatus = 0;
-        rec.rightsHolder = _rgtHash;
-
-        writeRecord(_idxHash, rec);
-
-        deductPayment(
-            baseCost.paymentAddress,
-            baseCost.newRecordCost,
-            cost.paymentAddress,
-            cost.newRecordCost
-        );
-
-        return rec.assetStatus;
     }
 
     /*
@@ -720,56 +518,7 @@ contract FrontEnd is PullPayment, Ownable, IERC721Receiver {
         return (rec.countDown);
     }
 
-    /*
-     * @dev Transfer Rights to new rightsHolder with confirmation
-     */
-    function $transferAsset(
-        bytes32 _idxHash,
-        bytes32 _rgtHash,
-        bytes32 _newrgtHash
-    ) external payable isAuthorized(_idxHash) returns (uint8) {
-        Record memory rec = getRecord(_idxHash);
-        User memory callingUser = getUser();
-        Costs memory cost = getCost(rec.assetClass);
-        Costs memory baseCost = getBaseCost();
-
-        require((rec.rightsHolder != 0), "TA: Record does not exist");
-        require(
-            callingUser.authorizedAssetClass == rec.assetClass,
-            "TA: User not authorized to modify records in specified asset class"
-        );
-        require(_newrgtHash != 0, "TA:ERR-new Rightsholder cannot be blank");
-        require( //-------------------------------------Should an asset in escrow be transferrable?
-            ((rec.assetStatus != 6) && (rec.assetStatus != 6)), //Should it be contingent on the original recorder address?
-            "TA: Cannot transfer asset in Escrow" //If so, it must not erase the recorder, or escrow termination will be broken!
-        );
-        require(
-            (rec.assetStatus == 1) || (rec.assetStatus == 7),
-            "TA:ERR--Asset assetStatus is not transferrable"
-        );
-        require(rec.assetStatus < 200, "RR: Record locked");
-        require(
-            rec.rightsHolder == _rgtHash,
-            "TA:ERR-Rightsholder does not match supplied data"
-        );
-        require(
-            msg.value >= cost.transferAssetCost,
-            "TA: tx value too low. Send more eth."
-        );
-
-        rec.rightsHolder = _newrgtHash;
-
-        writeRecord(_idxHash, rec);
-
-        deductPayment(
-            baseCost.paymentAddress,
-            baseCost.newRecordCost,
-            cost.paymentAddress,
-            cost.newRecordCost
-        );
-
-        return (170);
-    }
+    
 
     /*
      * @dev Modify **Record**.Ipfs1 with confirmation
@@ -805,57 +554,6 @@ contract FrontEnd is PullPayment, Ownable, IERC721Receiver {
         writeRecordIpfs1(_idxHash, rec);
 
         return rec.Ipfs1;
-    }
-
-    /*
-     * @dev Modify **Record**.Ipfs2 with confirmation
-     */
-
-    function $addIpfs2Note(
-        bytes32 _idxHash,
-        bytes32 _rgtHash,
-        bytes32 _IpfsHash
-    ) external payable isAuthorized(_idxHash) returns (bytes32) {
-        Record memory rec = getRecord(_idxHash);
-        User memory callingUser = getUser();
-        Costs memory cost = getCost(rec.assetClass);
-        Costs memory baseCost = getBaseCost();
-
-        require((rec.rightsHolder != 0), "MI2: Record does not exist");
-        require(
-            callingUser.authorizedAssetClass == rec.assetClass,
-            "MI2: User not authorized to modify records in specified asset class"
-        );
-        require( //-------------------------------------Should an asset in escrow be modifiable?
-            ((rec.assetStatus != 6) && (rec.assetStatus != 12)), //Should it be contingent on the original recorder address?
-            "MI2: Cannot modify asset in Escrow" //If so, it must not erase the recorder, or escrow termination will be broken!
-        );
-        require(rec.assetStatus < 200, "MI1: Record locked");
-        require(
-            rec.Ipfs2 == 0,
-            "MI2: Ipfs2 has data already. Overwrite not permitted"
-        );
-        require(
-            rec.rightsHolder == _rgtHash,
-            "MI2: Rightsholder does not match supplied data"
-        );
-        require(
-            msg.value >= cost.createNoteCost,
-            "MI2: tx value too low. Send more eth."
-        );
-
-        rec.Ipfs2 = _IpfsHash;
-
-        writeRecordIpfs2(_idxHash, rec);
-
-        deductPayment(
-            baseCost.paymentAddress,
-            baseCost.newRecordCost,
-            cost.paymentAddress,
-            cost.newRecordCost
-        );
-
-        return rec.Ipfs2;
     }
 
     //--------------------------------------------------------------------------------------Private functions
@@ -906,42 +604,7 @@ contract FrontEnd is PullPayment, Ownable, IERC721Receiver {
         return (rec); // Returns Record struct rec
     }
 
-    /*
-     * @dev retrieves Base Costs from Storage and returns Costs struct
-     */
-    function getBaseCost() private returns (Costs memory) {
-        Costs memory cost;
-        (
-            cost.newRecordCost,
-            cost.transferAssetCost,
-            cost.createNoteCost,
-            cost.reMintRecordCost,
-            cost.changeStatusCost,
-            cost.forceModifyCost,
-            cost.paymentAddress
-        ) = Storage.retrieveBaseCosts();
-
-        return (cost);
-    }
-
-    /*
-     * @dev retrieves costs from Storage and returns Costs struct
-     */
-    function getCost(uint16 _class) private returns (Costs memory) {
-        Costs memory cost;
-        (
-            cost.newRecordCost,
-            cost.transferAssetCost,
-            cost.createNoteCost,
-            cost.reMintRecordCost,
-            cost.changeStatusCost,
-            cost.forceModifyCost,
-            cost.paymentAddress
-        ) = Storage.retrieveCosts(_class);
-
-        return (cost);
-    }
-
+    
     //--------------------------------------------------------------------------------------Storage Writing private functions
 
     /*
@@ -954,15 +617,6 @@ contract FrontEnd is PullPayment, Ownable, IERC721Receiver {
         bytes32 userHash = keccak256(abi.encodePacked(msg.sender)); // Get a userhash for authentication and recorder logging
 
         Storage.modifyIpfs1(userHash, _idxHash, _rec.Ipfs1); // Send data to storage
-    }
-
-    function writeRecordIpfs2(bytes32 _idxHash, Record memory _rec)
-        private
-        isAuthorized(_idxHash)
-    {
-        bytes32 userHash = keccak256(abi.encodePacked(msg.sender)); // Get a userhash for authentication and recorder logging
-
-        Storage.modifyIpfs1(userHash, _idxHash, _rec.Ipfs2); // Send data to storage
     }
 
     /*
@@ -984,30 +638,4 @@ contract FrontEnd is PullPayment, Ownable, IERC721Receiver {
         ); // Send data and writehash to storage
     }
 
-    /*--------------------------------------------------------------------------------------PAYMENT FUNCTIONS
-     * @dev Deducts payment from transaction
-     */
-    function deductPayment(
-        address _basePaymentAddress,
-        uint256 _baseAmount,
-        address _ACTHpaymentAddress,
-        uint256 _ACTHamount
-    ) private {
-        uint256 messageValue = msg.value;
-        uint256 change;
-        uint256 total = _baseAmount.add(_ACTHamount);
-
-        change = messageValue.sub(total);
-        _asyncTransfer(_basePaymentAddress, _baseAmount);
-        _asyncTransfer(_ACTHpaymentAddress, _ACTHamount);
-        _asyncTransfer(msg.sender, change);
-    }
-
-    /*
-     * @dev Withdraws user's credit balance from contract
-     */
-
-    function $withdraw() external virtual payable {
-        withdrawPayments(msg.sender);
-    }
 }
