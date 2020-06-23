@@ -89,7 +89,7 @@ class Main extends Component {
   }
 
   componentDidUpdate() {
-    if (this.state.addr !== undefined && this.state.web3 !== undefined) { for(let i =0;i<3;i++){this.getOwner()} }
+    if (this.state.web3 !== undefined) { for(let i =0;i<3;i++){this.getOwner()} }
   }
 
   componentDidCatch(){}
