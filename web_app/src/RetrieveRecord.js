@@ -6,6 +6,7 @@ import Web3 from "web3";
 import Form from "react-bootstrap/Form";
 import Col from "react-bootstrap/Col";
 import Button from "react-bootstrap/Button";
+import bs58 from 'bs58';
 
 class ModifyDescription extends Component {
   constructor(props) {
@@ -25,12 +26,17 @@ class ModifyDescription extends Component {
 
     this.state = {
       addr: "",
+      lookupIPFS1: "",
+      lookupIPFS2: "",
+      IPFS: require("ipfs-mini"),
+      hashPath: "",
       error: undefined,
       NRerror: undefined,
       result: [],
       AssetClass: "",
       CountDownStart: "",
       ipfs1: "",
+      ipfs2: "",
       txHash: "",
       type: "",
       manufacturer: "",
@@ -48,6 +54,8 @@ class ModifyDescription extends Component {
   }
 
   componentDidMount() {
+    var _ipfs = new this.state.IPFS({host: "ipfs.infura.io", port: 5001, protocol: "https"})
+    this.setState({ipfs: _ipfs});
     //console.log("component mounted")
     var _web3 = require("web3");
     _web3 = new Web3(_web3.givenProvider);
@@ -75,6 +83,32 @@ class ModifyDescription extends Component {
 
   render() {
     const self = this;
+
+    const getIpfsHashFromBytes32 = (bytes32Hex) => {
+      // Add our default ipfs values for first 2 bytes:
+      // function:0x12=sha2, size:0x20=256 bits
+      // and cut off leading "0x"
+      const hashHex = "1220" + bytes32Hex.slice(2)
+      const hashBytes = Buffer.from(hashHex, 'hex');
+      const hashStr = bs58.encode(hashBytes)
+      return hashStr
+    }
+
+    const getIPFS2 = async (lookup2) => {
+      await this.state.ipfs.cat(lookup2, (error, result) => {
+          if (error) {console.log("Something went wrong. Unable to find file on IPFS")}
+          else{console.log("IPFS2 Here's what we found: ", result)}
+          self.setState({ipfs2: result})
+      })
+  }
+  const getIPFS1 = async(lookup1) => {
+    await this.state.ipfs.cat(lookup1, (error, result) => {
+        if (error) {console.log("Something went wrong. Unable to find file on IPFS")}
+        else{console.log("IPFS1 Here's what we found: ", result)}
+        self.setState({ipfs1: result})
+    })
+}
+
     const _retrieveRecord = () => {
       var idxHash = this.state.web3.utils.soliditySha3(
         this.state.type,
@@ -95,11 +129,18 @@ class ModifyDescription extends Component {
           } else {
             self.setState({ result: Object.values(_result) });
             self.setState({ error: undefined });
-            console.log(Object.values(_result));
+
+            getIPFS1(getIpfsHashFromBytes32(Object.values(_result)[8]))
+
+            getIPFS2(getIpfsHashFromBytes32(Object.values(_result)[9]))
+
+            //console.log(Object.values(_result));
+
+
           }
         });
 
-      console.log(this.state.result);
+      
     };
 
     return (
@@ -192,9 +233,9 @@ class ModifyDescription extends Component {
             <br></br>
             Count :{this.state.result[6]} of {this.state.result[7]}
             <br></br>
-            Ipfs1 Hash :{this.state.result[8]}
+            Ipfs1 :{this.state.ipfs1}
             <br></br>
-            Ipfs2 Hash :{this.state.result[9]}
+            Ipfs2 :{this.state.ipfs2}
             <br></br>
             Token ID :{this.state.result[1]}
           </div>

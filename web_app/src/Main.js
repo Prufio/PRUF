@@ -12,6 +12,7 @@ import RetrieveRecord from "./RetrieveRecord";
 import TransferAsset from "./TransferAsset";
 import VerifyRightsholder from "./VerifyRightsholder";
 
+
 class Main extends Component {
   constructor(props) {
     super(props);
