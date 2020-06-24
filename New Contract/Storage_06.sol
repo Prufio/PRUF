@@ -47,6 +47,7 @@ contract Storage is Ownable {
         bytes32 Ipfs1; // Publically viewable asset description
         bytes32 Ipfs2; // Publically viewable immutable notes
         uint256 timeLock; // Time sensitive mutex
+        uint16 numberOfTransfers; //number of transfers and forcemods
     }
 
     struct User {
@@ -340,7 +341,8 @@ contract Storage is Ownable {
         bytes32 _rgtHash,
         uint8 _newAssetStatus,
         uint256 _countDown,
-        uint8 _forceCount
+        uint8 _forceCount,
+        uint16 _numberOfTransfers
     )
         external
         isAuthorized
@@ -362,6 +364,10 @@ contract Storage is Ownable {
             "MR:ERR-new forceModCount less than original forceModCount"
         );
         require(
+            _numberOfTransfers >= database[idxHash].numberOfTransfers,
+            "MR:ERR-new transferCount less than original transferCount"
+        );
+        require(
             _newAssetStatus < 200,
             "MR:ERR-assetStatus over 199 cannot be set by user"
         );
@@ -381,6 +387,7 @@ contract Storage is Ownable {
         rec.countDown = _countDown;
         rec.assetStatus = _newAssetStatus;
         rec.forceModCount = _forceCount;
+        rec.numberOfTransfers = _numberOfTransfers;
 
         database[idxHash] = rec;
         emit REPORT("Record modified");
@@ -569,7 +576,8 @@ contract Storage is Ownable {
             uint256,
             uint256,
             bytes32,
-            bytes32
+            bytes32,
+            uint16
         )
     {
         Record memory rec = database[_idxHash];
@@ -593,7 +601,8 @@ contract Storage is Ownable {
             rec.countDown,
             rec.countDownStart,
             rec.Ipfs1,
-            rec.Ipfs2
+            rec.Ipfs2,
+            rec.numberOfTransfers
         );
     }
 
@@ -610,7 +619,8 @@ contract Storage is Ownable {
             uint256,
             uint256,
             bytes32,
-            bytes32
+            bytes32,
+            uint16
         )
     {
         Record memory rec = database[_idxHash];
@@ -633,7 +643,8 @@ contract Storage is Ownable {
             rec.countDown,
             rec.countDownStart,
             rec.Ipfs1,
-            rec.Ipfs2
+            rec.Ipfs2,
+            rec.numberOfTransfers
         );
     }
 

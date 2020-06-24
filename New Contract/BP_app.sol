@@ -78,7 +78,8 @@ interface StorageInterface {
         bytes32 _rgtHash,
         uint8 _assetStatus,
         uint256 _countDown,
-        uint8 _forceCount
+        uint8 _forceCount,
+        uint16 _numberOfTransfers
     ) external;
 
     function setStolenOrLost(
@@ -131,7 +132,8 @@ interface StorageInterface {
             uint256,
             uint256,
             bytes32,
-            bytes32
+            bytes32,
+            uint16
         );
 
     function _verifyRightsHolder(bytes32, bytes32) external returns (uint256);
@@ -174,7 +176,7 @@ contract BP_APP is PullPayment, Ownable, IERC721Receiver {
 
     struct Record {
         bytes32 recorder; // Address hash of recorder
-        bytes32 rightsHolder; // KEK256 Registered  owner
+        bytes32 rightsHolder; // KEK256 Registered owner
         bytes32 lastRecorder; // Address hash of last non-automation recorder
         uint8 assetStatus; // Status - Transferrable, locked, in transfer, stolen, lost, etc.
         uint8 forceModCount; // Number of times asset has been forceModded.
@@ -184,6 +186,7 @@ contract BP_APP is PullPayment, Ownable, IERC721Receiver {
         bytes32 Ipfs1; // Publically viewable asset description
         bytes32 Ipfs2; // Publically viewable immutable notes
         uint256 timeLock; // Time sensitive mutex
+        uint16 numberOfTransfers; //number of transfers and forcemods
     }
 
     struct User {
@@ -461,6 +464,10 @@ contract BP_APP is PullPayment, Ownable, IERC721Receiver {
             rec.forceModCount++;
         }
 
+        if (rec.numberOfTransfers < 65335) {
+            rec.numberOfTransfers++;
+        }
+
         rec.assetStatus = 0;
         rec.rightsHolder = _rgtHash;
 
@@ -509,6 +516,10 @@ contract BP_APP is PullPayment, Ownable, IERC721Receiver {
             msg.value >= cost.reMintRecordCost,
             "RR: tx value too low. Send more eth."
         );
+
+        if (rec.numberOfTransfers < 65335) {
+            rec.numberOfTransfers++;
+        }
 
         rec.assetStatus = 0;
         rec.rightsHolder = _rgtHash;
@@ -663,7 +674,8 @@ contract BP_APP is PullPayment, Ownable, IERC721Receiver {
                 uint256 _countDown,
                 uint256 _countDownStart,
                 bytes32 _Ipfs1,
-                bytes32 _Ipfs2
+                bytes32 _Ipfs2,
+                uint16 _numberOfTransfers
             ) = Storage.retrieveRecord(_idxHash); // Get record from storage contract
 
             rec.recorder = _recorder;
@@ -676,6 +688,7 @@ contract BP_APP is PullPayment, Ownable, IERC721Receiver {
             rec.countDownStart = _countDownStart;
             rec.Ipfs1 = _Ipfs1;
             rec.Ipfs2 = _Ipfs2;
+            rec.numberOfTransfers = _numberOfTransfers;
         } //end of scope limit for stack depth
 
         return (rec); // Returns Record struct rec
@@ -743,7 +756,8 @@ contract BP_APP is PullPayment, Ownable, IERC721Receiver {
             _rec.rightsHolder,
             _rec.assetStatus,
             _rec.countDown,
-            _rec.forceModCount
+            _rec.forceModCount,
+            _rec.numberOfTransfers
         ); // Send data and writehash to storage
     }
 
