@@ -1,6 +1,7 @@
 import React, { Component } from "react";
 import returnStorageAbi from "./stor_abi";
-import returnFrontEndAbi from "./front_abi";
+import returnBPFAbi from "./BP_free_abi";
+import returnBPPAbi from "./BP_payable_abi";
 import returnAddresses from "./Contracts";
 import Web3 from "web3";
 import Form from "react-bootstrap/Form";
@@ -31,21 +32,28 @@ class ModifyDescription extends Component {
         }
       }
     };
+
     this.returnsContract = (contract) => {
       var _web3 = require("web3");
       _web3 = new Web3(_web3.givenProvider);
       var addrArray = returnAddresses();
-      var _frontend_addr = addrArray[1];
+      var _BPFreeAddr = addrArray[1]
+      var _BPPayableAaddr = addrArray[2];
       var _storage_addr = addrArray[0];
       const storage_abi = returnStorageAbi();
-      const frontEnd_abi = returnFrontEndAbi();
-      const _storage = new _web3.eth.Contract(storage_abi, _storage_addr);
-      const _frontend = new _web3.eth.Contract(frontEnd_abi, _frontend_addr);
+      const BPFreeAbi = returnBPFAbi();
+      const BPPayableAbi = returnBPPAbi();
 
-      if (contract === "frontend") {
-        return _frontend;
+      const _storage = new _web3.eth.Contract(storage_abi, _storage_addr);
+      const _BPFree = new _web3.eth.Contract(BPFreeAbi, _BPFreeAddr);
+      const _BPPayable = new _web3.eth.Contract(BPPayableAbi, _BPPayableAaddr)
+
+      if (contract === "BPF") {
+        return _BPFree;
       } else if (contract === "storage") {
         return _storage;
+      } else if (contract === "BPP"){
+        return _BPPayable;
       }
     };
 
@@ -87,14 +95,16 @@ class ModifyDescription extends Component {
       newId: "",
       newSecret: "",
       web3: null,
-      frontend: "",
+      frontendPayable: "",
+      frontendFree: "",
       storage: "",
     };
   }
 
   componentDidMount() {
     this.setState({ storage: this.returnsContract("storage") });
-    this.setState({ frontend: this.returnsContract("frontend") });
+    this.setState({ frontendFree: this.returnsContract("BPF") });
+    this.setState({ frontendPayable: this.returnsContract("BPP") });
     //console.log("component mounted")
 
     var _web3 = require("web3");
@@ -191,7 +201,7 @@ class ModifyDescription extends Component {
       checkExists(idxHash);
       checkMatch(idxHash, rgtHash);
 
-      this.state.frontend.methods
+      this.state.frontendPayable.methods
         .$transferAsset(idxHash, rgtHash, newRgtHash)
         .send({ from: this.state.addr, value: this.state.costArray[1] })
         .on("error", function (_error) {

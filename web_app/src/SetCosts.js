@@ -1,6 +1,7 @@
 import React, { Component } from "react";
 import returnStorageAbi from "./stor_abi";
-import returnFrontEndAbi from "./front_abi";
+import returnBPFAbi from "./BP_free_abi";
+import returnBPPAbi from "./BP_payable_abi";
 import returnAddresses from "./Contracts";
 import Web3 from "web3";
 import Form from "react-bootstrap/Form";
@@ -10,6 +11,30 @@ import Col from "react-bootstrap/Col";
 class SetCosts extends Component {
   constructor(props) {
     super(props);
+
+    this.returnsContract = (contract) => {
+      var _web3 = require("web3");
+      _web3 = new Web3(_web3.givenProvider);
+      var addrArray = returnAddresses();
+      var _BPFreeAddr = addrArray[1]
+      var _BPPayableAaddr = addrArray[2];
+      var _storage_addr = addrArray[0];
+      const storage_abi = returnStorageAbi();
+      const BPFreeAbi = returnBPFAbi();
+      const BPPayableAbi = returnBPPAbi();
+
+      const _storage = new _web3.eth.Contract(storage_abi, _storage_addr);
+      const _BPFree = new _web3.eth.Contract(BPFreeAbi, _BPFreeAddr);
+      const _BPPayable = new _web3.eth.Contract(BPPayableAbi, _BPPayableAaddr)
+
+      if (contract === "BPF") {
+        return _BPFree;
+      } else if (contract === "storage") {
+        return _storage;
+      } else if (contract === "BPP"){
+        return _BPPayable;
+      }
+    };
 
     this.acctChanger = async () => {
       const ethereum = window.ethereum;
@@ -39,6 +64,8 @@ class SetCosts extends Component {
       cost4: 0,
       cost5: 0,
       forceModCost: 0,
+      frontendPayable: "",
+      frontendFree: "",
     };
   }
 
@@ -47,17 +74,9 @@ class SetCosts extends Component {
     _web3 = new Web3(_web3.givenProvider);
     this.setState({ web3: _web3 });
     _web3.eth.getAccounts().then((e) => this.setState({ addr: e[0] }));
-    var addrArray = returnAddresses();
-    var _frontend_addr = addrArray[1];
-    var _storage_addr = addrArray[0];
-    const storage_abi = returnStorageAbi();
-    const frontEnd_abi = returnFrontEndAbi();
-    const _storage = new _web3.eth.Contract(storage_abi, _storage_addr);
-    const _frontend = new _web3.eth.Contract(frontEnd_abi, _frontend_addr);
-
-    this.setState({ storage: _storage });
-    this.setState({ frontend: _frontend });
-
+    this.setState({ storage: this.returnsContract("storage") });
+    this.setState({ frontendFree: this.returnsContract("BPF") });
+    this.setState({ frontendPayable: this.returnsContract("BPP") });
     document.addEventListener("accountListener", this.acctChanger());
   }
 
