@@ -2,120 +2,36 @@ function returnFrontEndAbi() {
 	return (
 		[
 			{
+				"anonymous": false,
 				"inputs": [
 					{
-						"internalType": "bytes32",
-						"name": "_idxHash",
-						"type": "bytes32"
+						"indexed": true,
+						"internalType": "address",
+						"name": "previousOwner",
+						"type": "address"
 					},
 					{
-						"internalType": "bytes32",
-						"name": "_rgtHash",
-						"type": "bytes32"
-					},
-					{
-						"internalType": "uint256",
-						"name": "_decAmount",
-						"type": "uint256"
+						"indexed": true,
+						"internalType": "address",
+						"name": "newOwner",
+						"type": "address"
 					}
 				],
-				"name": "_decCounter",
-				"outputs": [
-					{
-						"internalType": "uint256",
-						"name": "",
-						"type": "uint256"
-					}
-				],
-				"stateMutability": "nonpayable",
-				"type": "function"
+				"name": "OwnershipTransferred",
+				"type": "event"
 			},
 			{
+				"anonymous": false,
 				"inputs": [
 					{
-						"internalType": "bytes32",
-						"name": "_idxHash",
-						"type": "bytes32"
-					},
-					{
-						"internalType": "bytes32",
-						"name": "_rgtHash",
-						"type": "bytes32"
-					},
-					{
-						"internalType": "bytes32",
-						"name": "_IpfsHash",
-						"type": "bytes32"
+						"indexed": false,
+						"internalType": "string",
+						"name": "_msg",
+						"type": "string"
 					}
 				],
-				"name": "_modIpfs1",
-				"outputs": [
-					{
-						"internalType": "bytes32",
-						"name": "",
-						"type": "bytes32"
-					}
-				],
-				"stateMutability": "nonpayable",
-				"type": "function"
-			},
-			{
-				"inputs": [
-					{
-						"internalType": "bytes32",
-						"name": "_idxHash",
-						"type": "bytes32"
-					},
-					{
-						"internalType": "bytes32",
-						"name": "_rgtHash",
-						"type": "bytes32"
-					},
-					{
-						"internalType": "uint8",
-						"name": "_newAssetStatus",
-						"type": "uint8"
-					}
-				],
-				"name": "_modStatus",
-				"outputs": [
-					{
-						"internalType": "uint8",
-						"name": "",
-						"type": "uint8"
-					}
-				],
-				"stateMutability": "nonpayable",
-				"type": "function"
-			},
-			{
-				"inputs": [
-					{
-						"internalType": "bytes32",
-						"name": "_idxHash",
-						"type": "bytes32"
-					},
-					{
-						"internalType": "bytes32",
-						"name": "_rgtHash",
-						"type": "bytes32"
-					},
-					{
-						"internalType": "uint8",
-						"name": "_newAssetStatus",
-						"type": "uint8"
-					}
-				],
-				"name": "_setLostOrStolen",
-				"outputs": [
-					{
-						"internalType": "uint8",
-						"name": "",
-						"type": "uint8"
-					}
-				],
-				"stateMutability": "nonpayable",
-				"type": "function"
+				"name": "REPORT",
+				"type": "event"
 			},
 			{
 				"inputs": [
@@ -266,34 +182,84 @@ function returnFrontEndAbi() {
 			{
 				"inputs": [
 					{
-						"internalType": "address",
-						"name": "",
-						"type": "address"
-					},
-					{
-						"internalType": "address",
-						"name": "",
-						"type": "address"
+						"internalType": "uint16",
+						"name": "_class",
+						"type": "uint16"
 					},
 					{
 						"internalType": "uint256",
-						"name": "",
+						"name": "_newRecordCost",
 						"type": "uint256"
 					},
 					{
-						"internalType": "bytes",
-						"name": "",
-						"type": "bytes"
-					}
-				],
-				"name": "onERC721Received",
-				"outputs": [
+						"internalType": "uint256",
+						"name": "_transferAssetCost",
+						"type": "uint256"
+					},
 					{
-						"internalType": "bytes4",
-						"name": "",
-						"type": "bytes4"
+						"internalType": "uint256",
+						"name": "_createNoteCost",
+						"type": "uint256"
+					},
+					{
+						"internalType": "uint256",
+						"name": "_reMintRecordCost",
+						"type": "uint256"
+					},
+					{
+						"internalType": "uint256",
+						"name": "_changeStatusCost",
+						"type": "uint256"
+					},
+					{
+						"internalType": "uint256",
+						"name": "_forceModifyCost",
+						"type": "uint256"
+					},
+					{
+						"internalType": "address",
+						"name": "_paymentAddress",
+						"type": "address"
 					}
 				],
+				"name": "ACTH_setCosts",
+				"outputs": [],
+				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "address",
+						"name": "_to",
+						"type": "address"
+					},
+					{
+						"internalType": "bytes32",
+						"name": "_idxHash",
+						"type": "bytes32"
+					}
+				],
+				"name": "OO_TX_AC_Token",
+				"outputs": [],
+				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "address",
+						"name": "_to",
+						"type": "address"
+					},
+					{
+						"internalType": "bytes32",
+						"name": "_idxHash",
+						"type": "bytes32"
+					}
+				],
+				"name": "OO_TX_asset_Token",
+				"outputs": [],
 				"stateMutability": "nonpayable",
 				"type": "function"
 			},
@@ -350,19 +316,6 @@ function returnFrontEndAbi() {
 				"inputs": [
 					{
 						"internalType": "address",
-						"name": "_addr",
-						"type": "address"
-					}
-				],
-				"name": "OO_setMainWallet",
-				"outputs": [],
-				"stateMutability": "nonpayable",
-				"type": "function"
-			},
-			{
-				"inputs": [
-					{
-						"internalType": "address",
 						"name": "_storageAddress",
 						"type": "address"
 					}
@@ -375,17 +328,128 @@ function returnFrontEndAbi() {
 			{
 				"inputs": [
 					{
-						"internalType": "address",
-						"name": "_to",
-						"type": "address"
+						"internalType": "bytes32",
+						"name": "_idxHash",
+						"type": "bytes32"
 					},
+					{
+						"internalType": "bytes32",
+						"name": "_rgtHash",
+						"type": "bytes32"
+					},
+					{
+						"internalType": "uint256",
+						"name": "_decAmount",
+						"type": "uint256"
+					}
+				],
+				"name": "_decCounter",
+				"outputs": [
+					{
+						"internalType": "uint256",
+						"name": "",
+						"type": "uint256"
+					}
+				],
+				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "bytes32",
+						"name": "_idxHash",
+						"type": "bytes32"
+					},
+					{
+						"internalType": "bytes32",
+						"name": "_rgtHash",
+						"type": "bytes32"
+					},
+					{
+						"internalType": "bytes32",
+						"name": "_IpfsHash",
+						"type": "bytes32"
+					}
+				],
+				"name": "_modIpfs1",
+				"outputs": [
+					{
+						"internalType": "bytes32",
+						"name": "",
+						"type": "bytes32"
+					}
+				],
+				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "bytes32",
+						"name": "_idxHash",
+						"type": "bytes32"
+					},
+					{
+						"internalType": "bytes32",
+						"name": "_rgtHash",
+						"type": "bytes32"
+					},
+					{
+						"internalType": "uint8",
+						"name": "_newAssetStatus",
+						"type": "uint8"
+					}
+				],
+				"name": "_modStatus",
+				"outputs": [
+					{
+						"internalType": "uint8",
+						"name": "",
+						"type": "uint8"
+					}
+				],
+				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "bytes32",
+						"name": "_idxHash",
+						"type": "bytes32"
+					},
+					{
+						"internalType": "bytes32",
+						"name": "_rgtHash",
+						"type": "bytes32"
+					},
+					{
+						"internalType": "uint8",
+						"name": "_newAssetStatus",
+						"type": "uint8"
+					}
+				],
+				"name": "_setLostOrStolen",
+				"outputs": [
+					{
+						"internalType": "uint8",
+						"name": "",
+						"type": "uint8"
+					}
+				],
+				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
+				"inputs": [
 					{
 						"internalType": "bytes32",
 						"name": "_idxHash",
 						"type": "bytes32"
 					}
 				],
-				"name": "OO_TX_AC_Token",
+				"name": "endEscrow",
 				"outputs": [],
 				"stateMutability": "nonpayable",
 				"type": "function"
@@ -394,82 +458,33 @@ function returnFrontEndAbi() {
 				"inputs": [
 					{
 						"internalType": "address",
-						"name": "_to",
+						"name": "",
 						"type": "address"
 					},
 					{
-						"internalType": "bytes32",
-						"name": "_idxHash",
-						"type": "bytes32"
-					}
-				],
-				"name": "OO_TX_asset_Token",
-				"outputs": [],
-				"stateMutability": "nonpayable",
-				"type": "function"
-			},
-			{
-				"anonymous": false,
-				"inputs": [
-					{
-						"indexed": true,
 						"internalType": "address",
-						"name": "previousOwner",
+						"name": "",
 						"type": "address"
 					},
 					{
-						"indexed": true,
-						"internalType": "address",
-						"name": "newOwner",
-						"type": "address"
-					}
-				],
-				"name": "OwnershipTransferred",
-				"type": "event"
-			},
-			{
-				"inputs": [],
-				"name": "renounceOwnership",
-				"outputs": [],
-				"stateMutability": "nonpayable",
-				"type": "function"
-			},
-			{
-				"anonymous": false,
-				"inputs": [
+						"internalType": "uint256",
+						"name": "",
+						"type": "uint256"
+					},
 					{
-						"indexed": false,
-						"internalType": "string",
-						"name": "_msg",
-						"type": "string"
+						"internalType": "bytes",
+						"name": "",
+						"type": "bytes"
 					}
 				],
-				"name": "REPORT",
-				"type": "event"
-			},
-			{
-				"inputs": [
+				"name": "onERC721Received",
+				"outputs": [
 					{
-						"internalType": "address",
-						"name": "newOwner",
-						"type": "address"
+						"internalType": "bytes4",
+						"name": "",
+						"type": "bytes4"
 					}
 				],
-				"name": "transferOwnership",
-				"outputs": [],
-				"stateMutability": "nonpayable",
-				"type": "function"
-			},
-			{
-				"inputs": [
-					{
-						"internalType": "address payable",
-						"name": "payee",
-						"type": "address"
-					}
-				],
-				"name": "withdrawPayments",
-				"outputs": [],
 				"stateMutability": "nonpayable",
 				"type": "function"
 			},
@@ -503,6 +518,62 @@ function returnFrontEndAbi() {
 					}
 				],
 				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [],
+				"name": "renounceOwnership",
+				"outputs": [],
+				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "bytes32",
+						"name": "_idxHash",
+						"type": "bytes32"
+					},
+					{
+						"internalType": "uint8",
+						"name": "_newAssetStatus",
+						"type": "uint8"
+					},
+					{
+						"internalType": "uint256",
+						"name": "_escrowTime",
+						"type": "uint256"
+					}
+				],
+				"name": "setEscrow",
+				"outputs": [],
+				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "address",
+						"name": "newOwner",
+						"type": "address"
+					}
+				],
+				"name": "transferOwnership",
+				"outputs": [],
+				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "address payable",
+						"name": "payee",
+						"type": "address"
+					}
+				],
+				"name": "withdrawPayments",
+				"outputs": [],
+				"stateMutability": "nonpayable",
 				"type": "function"
 			}
 		]

@@ -28,6 +28,7 @@ class SetCosts extends Component {
       error: undefined,
       result: "",
       authAddr: "",
+      paymentAddr: "",
       userType: "",
       assetClass: "",
       storage: "",
@@ -70,14 +71,15 @@ class SetCosts extends Component {
 
     const setCosts = () => {
       this.state.storage.methods
-        .OO_setCosts(
+        .ACTH_setCosts(
           this.state.assetClass,
           this.state.newRecordCost,
           this.state.transferRecordCost,
           this.state.createNoteCost,
           this.state.cost4,
           this.state.cost5,
-          this.state.forceModCost
+          this.state.forceModCost,
+          this.state.paymentAddr
         )
 
         .send({ from: this.state.addr })
@@ -188,6 +190,20 @@ class SetCosts extends Component {
                   required
                   onChange={(e) =>
                     this.setState({ forceModCost: e.target.value })
+                  }
+                  size="lg"
+                />
+              </Form.Group>
+
+              <Form.Group as={Col} controlId="formGridPaymentAddr">
+                <Form.Label className="formFont">
+                  Payment Address :
+                </Form.Label>
+                <Form.Control
+                  placeholder="Payment Address"
+                  required
+                  onChange={(e) =>
+                    this.setState({ paymentAddr: e.target.value })
                   }
                   size="lg"
                 />

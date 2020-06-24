@@ -85,11 +85,11 @@ class Main extends Component {
     ethereum.enable();
     _web3.eth.getAccounts().then((e) => this.setState({ addr: e[0] }));
     document.addEventListener("accountListener", this.acctChanger());
-    //document.addEventListener("ownerGetter", this.getOwner());
+    document.addEventListener("ownerGetter", this.getOwner());
   }
 
   componentDidUpdate() {
-    if (this.state.web3 !== undefined) { for(let i =0;i<3;i++){this.getOwner()} }
+     for(let i =0;i<5;i++){this.getOwner()} 
   }
 
   componentDidCatch(){}

@@ -106,7 +106,7 @@ class AddContract extends Component {
                 <Form.Control
                   placeholder="Contract Address"
                   required
-                  onChange={(e) => this.setState({ addr: e.target.value })}
+                  onChange={(e) => this.setState({ authAddress: e.target.value })}
                   size="lg"
                 />
               </Form.Group>
