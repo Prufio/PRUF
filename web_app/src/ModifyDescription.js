@@ -115,6 +115,9 @@ class ModifyDescription extends Component {
               "WARNING: Record DOES NOT EXIST! Reject in metamask and review asset info fields."
             );
           } else {
+            if (Object.values(_result)[7] === self.state.hashPath){
+              alert("WARNING: Record description matches current submission! Reject in metamask and check description field.")
+            }
             self.setState({ result1: _result });
           }
           console.log("check debug, _result, _error: ", _result, _error);

@@ -123,6 +123,7 @@ class VerifyRightHolder extends Component {
             self.setState({ result: 0 });
           } else {
             self.setState({ result: _result });
+            console.log("verify.call result: ", _result);
             self.setState({ error: undefined });
           }
         });
