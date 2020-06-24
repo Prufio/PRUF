@@ -85,14 +85,18 @@ class Main extends Component {
     ethereum.enable();
     _web3.eth.getAccounts().then((e) => this.setState({ addr: e[0] }));
     document.addEventListener("accountListener", this.acctChanger());
-    for(let i =0;i<5;i++){this.getOwner()} 
+    for (let i = 0; i < 5; i++) {
+      this.getOwner();
+    }
   }
 
   componentDidUpdate() {
-     for(let i =0;i<5;i++){this.getOwner()} 
+    for (let i = 0; i < 5; i++) {
+      this.getOwner();
+    }
   }
 
-  componentDidCatch(){}
+  componentDidCatch() {}
 
   componentWillUnmount() {
     console.log("unmounting component");
@@ -132,14 +136,13 @@ class Main extends Component {
           <div className="BannerForm">
             <div className="page">
               <ul className="header">
-                <li>
-                  <NavLink exact to="/">
-                    Home
-                  </NavLink>
-                </li>
-
                 {this.state.ownerMenu === false && (
-                  <a>
+                  <nav>
+                    <li>
+                      <NavLink exact to="/">
+                        Home
+                      </NavLink>
+                    </li>
                     <li>
                       <NavLink to="/new-record">New</NavLink>
                     </li>
@@ -167,11 +170,16 @@ class Main extends Component {
                     <li>
                       <NavLink to="/force-modify-record">Modify</NavLink>
                     </li>
-                  </a>
+                  </nav>
                 )}
 
                 {this.state.ownerMenu === true && (
-                  <a>
+                  <nav>
+                    <li>
+                      <NavLink exact to="/">
+                        Home
+                      </NavLink>
+                    </li>
                     <li>
                       <NavLink to="/add-user">Add User</NavLink>
                     </li>
@@ -187,7 +195,7 @@ class Main extends Component {
                     <li>
                       <NavLink to="/reset-fmc">Reset FMC</NavLink>
                     </li>
-                  </a>
+                  </nav>
                 )}
               </ul>
               <div className="content">
@@ -222,23 +230,18 @@ class Main extends Component {
             </div>
           </div>
           <NavLink to="/">
-          {this.state.isOwner === true && (
-            <Form className="buttonDisplay2">
-            
-              <Button
-                variant="danger"
-                type="button"
-                size="lg"
-                onClick={toggleAdmin}
-                class=""
-
-                
-              >
-                Toggle Admin
-              </Button>
-              
-            </Form>
-          )}
+            {this.state.isOwner === true && (
+              <Form className="buttonDisplay2">
+                <Button
+                  variant="danger"
+                  type="button"
+                  size="lg"
+                  onClick={toggleAdmin}
+                >
+                  Toggle Admin
+                </Button>
+              </Form>
+            )}
           </NavLink>
         </div>
       </HashRouter>
