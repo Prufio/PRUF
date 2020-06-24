@@ -159,12 +159,12 @@ class NewRecord extends Component {
       self.state.storage.methods
         .retrieveShortRecord(idxHash)
         .call({ from: self.state.addr }, function (_error, _result) {
-          if (_error){
+          if (_error){ console.log("IN ERROR IN ERROR IN ERROR")
             self.setState({ error: _error.message });
             self.setState({ result: 0 });
           } else if (
-            Object.values(_result)[0] ===
-            "0x0000000000000000000000000000000000000000000000000000000000000000"
+            Object.values(_result)[4] ===
+            "0"
           ) {
           } else {
             self.setState({ result: _result });
