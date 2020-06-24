@@ -830,7 +830,7 @@ contract FrontEnd is PullPayment, Ownable, IERC721Receiver {
             ((rec.assetStatus != 6) && (rec.assetStatus != 12)), //Should it be contingent on the original recorder address?
             "MI2: Cannot modify asset in Escrow" //If so, it must not erase the recorder, or escrow termination will be broken!
         );
-        require(rec.assetStatus < 200, "MI1: Record locked");
+        require(rec.assetStatus < 200, "MI2: Record locked");
         require(
             rec.Ipfs2 == 0,
             "MI2: Ipfs2 has data already. Overwrite not permitted"
@@ -962,7 +962,7 @@ contract FrontEnd is PullPayment, Ownable, IERC721Receiver {
     {
         bytes32 userHash = keccak256(abi.encodePacked(msg.sender)); // Get a userhash for authentication and recorder logging
 
-        Storage.modifyIpfs1(userHash, _idxHash, _rec.Ipfs2); // Send data to storage
+        Storage.modifyIpfs2(userHash, _idxHash, _rec.Ipfs2); // Send data to storage
     }
 
     /*
