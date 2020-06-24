@@ -152,7 +152,7 @@ class ModifyDescription extends Component {
       this.state.storage.methods
         .retrieveShortRecord(idxHash)
         .call({ from: this.state.addr }, function (_error, _result) {
-          if (_error) {
+          if (_error) { console.log(_error)
             self.setState({ error: _error });
             self.setState({ result: 0 });
           } else {
