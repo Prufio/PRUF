@@ -725,7 +725,7 @@ contract BP_APP is PullPayment, Ownable, IERC721Receiver {
     {
         bytes32 userHash = keccak256(abi.encodePacked(msg.sender)); // Get a userhash for authentication and recorder logging
 
-        Storage.modifyIpfs1(userHash, _idxHash, _rec.Ipfs2); // Send data to storage
+        Storage.modifyIpfs2(userHash, _idxHash, _rec.Ipfs2); // Send data to storage
     }
 
     /*
