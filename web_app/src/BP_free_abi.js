@@ -36,200 +36,6 @@ function returnBPFAbi() {
 			{
 				"inputs": [
 					{
-						"internalType": "bytes32",
-						"name": "_idxHash",
-						"type": "bytes32"
-					},
-					{
-						"internalType": "bytes32",
-						"name": "_rgtHash",
-						"type": "bytes32"
-					},
-					{
-						"internalType": "bytes32",
-						"name": "_IpfsHash",
-						"type": "bytes32"
-					}
-				],
-				"name": "$addIpfs2Note",
-				"outputs": [
-					{
-						"internalType": "bytes32",
-						"name": "",
-						"type": "bytes32"
-					}
-				],
-				"stateMutability": "payable",
-				"type": "function"
-			},
-			{
-				"inputs": [
-					{
-						"internalType": "bytes32",
-						"name": "_idxHash",
-						"type": "bytes32"
-					},
-					{
-						"internalType": "bytes32",
-						"name": "_rgtHash",
-						"type": "bytes32"
-					}
-				],
-				"name": "$forceModRecord",
-				"outputs": [
-					{
-						"internalType": "uint8",
-						"name": "",
-						"type": "uint8"
-					}
-				],
-				"stateMutability": "payable",
-				"type": "function"
-			},
-			{
-				"inputs": [
-					{
-						"internalType": "bytes32",
-						"name": "_idxHash",
-						"type": "bytes32"
-					},
-					{
-						"internalType": "bytes32",
-						"name": "_rgtHash",
-						"type": "bytes32"
-					},
-					{
-						"internalType": "uint16",
-						"name": "_assetClass",
-						"type": "uint16"
-					},
-					{
-						"internalType": "uint256",
-						"name": "_countDownStart",
-						"type": "uint256"
-					},
-					{
-						"internalType": "bytes32",
-						"name": "_Ipfs",
-						"type": "bytes32"
-					}
-				],
-				"name": "$newRecord",
-				"outputs": [],
-				"stateMutability": "payable",
-				"type": "function"
-			},
-			{
-				"inputs": [
-					{
-						"internalType": "bytes32",
-						"name": "_idxHash",
-						"type": "bytes32"
-					},
-					{
-						"internalType": "bytes32",
-						"name": "_rgtHash",
-						"type": "bytes32"
-					}
-				],
-				"name": "$reimportRecord",
-				"outputs": [
-					{
-						"internalType": "uint8",
-						"name": "",
-						"type": "uint8"
-					}
-				],
-				"stateMutability": "payable",
-				"type": "function"
-			},
-			{
-				"inputs": [
-					{
-						"internalType": "bytes32",
-						"name": "_idxHash",
-						"type": "bytes32"
-					},
-					{
-						"internalType": "bytes32",
-						"name": "_rgtHash",
-						"type": "bytes32"
-					},
-					{
-						"internalType": "bytes32",
-						"name": "_newrgtHash",
-						"type": "bytes32"
-					}
-				],
-				"name": "$transferAsset",
-				"outputs": [
-					{
-						"internalType": "uint8",
-						"name": "",
-						"type": "uint8"
-					}
-				],
-				"stateMutability": "payable",
-				"type": "function"
-			},
-			{
-				"inputs": [],
-				"name": "$withdraw",
-				"outputs": [],
-				"stateMutability": "payable",
-				"type": "function"
-			},
-			{
-				"inputs": [
-					{
-						"internalType": "uint16",
-						"name": "_class",
-						"type": "uint16"
-					},
-					{
-						"internalType": "uint256",
-						"name": "_newRecordCost",
-						"type": "uint256"
-					},
-					{
-						"internalType": "uint256",
-						"name": "_transferAssetCost",
-						"type": "uint256"
-					},
-					{
-						"internalType": "uint256",
-						"name": "_createNoteCost",
-						"type": "uint256"
-					},
-					{
-						"internalType": "uint256",
-						"name": "_reMintRecordCost",
-						"type": "uint256"
-					},
-					{
-						"internalType": "uint256",
-						"name": "_changeStatusCost",
-						"type": "uint256"
-					},
-					{
-						"internalType": "uint256",
-						"name": "_forceModifyCost",
-						"type": "uint256"
-					},
-					{
-						"internalType": "address",
-						"name": "_paymentAddress",
-						"type": "address"
-					}
-				],
-				"name": "ACTH_setCosts",
-				"outputs": [],
-				"stateMutability": "nonpayable",
-				"type": "function"
-			},
-			{
-				"inputs": [
-					{
 						"internalType": "address",
 						"name": "_to",
 						"type": "address"
@@ -264,50 +70,8 @@ function returnBPFAbi() {
 				"type": "function"
 			},
 			{
-				"inputs": [
-					{
-						"internalType": "address",
-						"name": "_authAddr",
-						"type": "address"
-					},
-					{
-						"internalType": "uint8",
-						"name": "_userType",
-						"type": "uint8"
-					},
-					{
-						"internalType": "uint16",
-						"name": "_authorizedAssetClass",
-						"type": "uint16"
-					}
-				],
-				"name": "OO_addUser",
-				"outputs": [],
-				"stateMutability": "nonpayable",
-				"type": "function"
-			},
-			{
-				"inputs": [
-					{
-						"internalType": "address",
-						"name": "_contractAddress",
-						"type": "address"
-					}
-				],
-				"name": "OO_setAssetClassTokenAddress",
-				"outputs": [],
-				"stateMutability": "nonpayable",
-				"type": "function"
-			},
-			{
-				"inputs": [
-					{
-						"internalType": "address",
-						"name": "_contractAddress",
-						"type": "address"
-					}
-				],
-				"name": "OO_setAssetTokenAddress",
+				"inputs": [],
+				"name": "OO_getContractAddresses",
 				"outputs": [],
 				"stateMutability": "nonpayable",
 				"type": "function"
@@ -502,25 +266,6 @@ function returnBPFAbi() {
 				"type": "function"
 			},
 			{
-				"inputs": [
-					{
-						"internalType": "address",
-						"name": "dest",
-						"type": "address"
-					}
-				],
-				"name": "payments",
-				"outputs": [
-					{
-						"internalType": "uint256",
-						"name": "",
-						"type": "uint256"
-					}
-				],
-				"stateMutability": "view",
-				"type": "function"
-			},
-			{
 				"inputs": [],
 				"name": "renounceOwnership",
 				"outputs": [],
@@ -559,19 +304,6 @@ function returnBPFAbi() {
 					}
 				],
 				"name": "transferOwnership",
-				"outputs": [],
-				"stateMutability": "nonpayable",
-				"type": "function"
-			},
-			{
-				"inputs": [
-					{
-						"internalType": "address payable",
-						"name": "payee",
-						"type": "address"
-					}
-				],
-				"name": "withdrawPayments",
 				"outputs": [],
 				"stateMutability": "nonpayable",
 				"type": "function"
