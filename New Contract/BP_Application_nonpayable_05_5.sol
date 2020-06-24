@@ -194,8 +194,6 @@ contract BP_APP_NP is Ownable, IERC721Receiver {
         address paymentAddress; // 2nd-party fee beneficiary address
     }
 
-    mapping(bytes32 => User) private registeredUsers; // Authorized recorder database
-
     address storageAddress;
 
     StorageInterface private Storage; // Set up external contract interface
@@ -243,9 +241,7 @@ contract BP_APP_NP is Ownable, IERC721Receiver {
         uint256 tokenID = uint256(_idxHash);
 
         //START OF SECTION----------------------------------------------------FAKE AS HELL
-        User memory user = registeredUsers[keccak256(
-            abi.encodePacked(msg.sender)
-        )];
+        User memory user = getUser();
         require(
             ((user.userType == 1) || (user.userType == 9)) && (tokenID > 0),
             "ST:MOD-UA-ERR:User not registered "
@@ -325,31 +321,7 @@ contract BP_APP_NP is Ownable, IERC721Receiver {
         Storage = StorageInterface(_storageAddress);
     }
 
-    /*
-     * @dev Authorize / Deauthorize / Authorize users for an address be permitted to make record modifications
-     * ----------------INSECURE -- keccak256 of address must be generated clientside in release.
-     */
-    function OO_addUser(
-        address _authAddr,
-        uint8 _userType,
-        uint16 _authorizedAssetClass
-    ) external onlyOwner {
-        require(
-            (_userType == 0) ||
-                (_userType == 1) ||
-                (_userType == 9) ||
-                (_userType == 99),
-            "ST:OO-AU-ERR:Invalid user type"
-        );
-
-        bytes32 hash;
-        hash = keccak256(abi.encodePacked(_authAddr));
-
-        emit REPORT("Internal user database access!"); //report access to the internal user database
-        registeredUsers[hash].userType = _userType;
-        registeredUsers[hash].authorizedAssetClass = _authorizedAssetClass;
-    }
-
+    
     //--------------------------------------External functions--------------------------------------------//
     /*
      * @dev Compliance for erc721
@@ -573,8 +545,8 @@ contract BP_APP_NP is Ownable, IERC721Receiver {
     function getUser() private view returns (User memory) {
         //User memory callingUser = getUser();
         User memory user;
-        (user.userType, user.authorizedAssetClass) = BPappPayableContract
-            .getUserExt(keccak256(abi.encodePacked(msg.sender)));
+        (user.userType, user.authorizedAssetClass) =
+        BPappPayableContract.getUserExt(keccak256(abi.encodePacked(msg.sender)));
         return user;
     }
 
