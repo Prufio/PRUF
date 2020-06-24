@@ -271,7 +271,7 @@ class VerifyRightHolder extends Component {
           <div className="VRHresults">
             {this.state.result === "170"
               ? "Match Confirmed :"
-              : "No match found :"}
+              : "Record does not match :"}
             <a
               href={" https://kovan.etherscan.io/tx/" + this.state.txHash}
               target="_blank"
