@@ -25,6 +25,7 @@ pragma solidity ^0.6.2;
 
 import "./Ownable.sol";
 import "./SafeMath.sol";
+import "./ReentrancyGuard.sol";
 
 interface AssetClassTokenInterface {
     function ownerOf(uint256) external view returns (address);
@@ -32,7 +33,7 @@ interface AssetClassTokenInterface {
     //function transfer(uint256,address) external view returns (address);
 }
 
-contract Storage is Ownable {
+contract Storage is Ownable, ReentrancyGuard {
     using SafeMath for uint256;
 
     struct Record {
@@ -71,8 +72,8 @@ contract Storage is Ownable {
     mapping(uint16 => Costs) private cost; // Cost per function by asset class
     Costs private baseCost;
 
-    address AssetClassTokenAddress;
-    AssetClassTokenInterface AssetClassTokenContract; //erc721_token prototype initialization
+    address private AssetClassTokenAddress;
+    AssetClassTokenInterface private AssetClassTokenContract; //erc721_token prototype initialization
 
     /*  NOTES:---------------------------------------------------------------------------------------//
      * Authorized external Contract / address types:   contractAdresses[]
@@ -302,7 +303,7 @@ contract Storage is Ownable {
         uint16 _assetClass,
         uint256 _countDownStart,
         bytes32 _Ipfs1
-    ) external isAuthorized {
+    ) external isAuthorized nonReentrant{
         // uint256 assetClass256 = uint256(_assetClass);
         // require( //origin address holds assetClass token, or assetClass is >=65000
         //     (database[_idxHash].assetClass >= 65000) ||
@@ -347,6 +348,7 @@ contract Storage is Ownable {
     )
         external
         isAuthorized
+        nonReentrant
         exists(_idxHash)
         notEscrow(_idxHash)
         notBlockLocked(_idxHash)
@@ -403,6 +405,7 @@ contract Storage is Ownable {
         uint8 _newAssetStatus
     )
         external
+        nonReentrant
         isAuthorized
         exists(_idxHash)
         notBlockLocked(_idxHash)
@@ -441,6 +444,7 @@ contract Storage is Ownable {
     )
         external
         isAuthorized
+        nonReentrant
         exists(_idxHash)
         notEscrow(_idxHash)
         notBlockLocked(_idxHash)
@@ -475,6 +479,7 @@ contract Storage is Ownable {
      */
     function endEscrow(bytes32 _userHash, bytes32 _idxHash)
         external
+        nonReentrant
         isAuthorized
         notBlockLocked(_idxHash)
         exists(_idxHash) //isACtokenHolder(_idxHash)
@@ -512,6 +517,7 @@ contract Storage is Ownable {
         bytes32 _Ipfs1
     )
         external
+        nonReentrant
         isAuthorized
         exists(_idxHash)
         notEscrow(_idxHash)
@@ -539,6 +545,7 @@ contract Storage is Ownable {
     )
         external
         isAuthorized
+        nonReentrant
         exists(_idxHash)
         notEscrow(_idxHash)
         notBlockLocked(_idxHash)

@@ -40,6 +40,7 @@
 // SPDX-License-Identifier: UNLICENSED
 pragma solidity ^0.6.2;
 import "./PullPayment.sol";
+import "./ReentrancyGuard.sol";
 import "./_ERC721/IERC721Receiver.sol";
 
 interface AssetClassTokenInterface {
@@ -171,7 +172,7 @@ interface StorageInterface {
         returns (address);
 }
 
-contract BP_APP is PullPayment, Ownable, IERC721Receiver {
+contract BP_APP is ReentrancyGuard, PullPayment, Ownable, IERC721Receiver {
     using SafeMath for uint256;
 
     struct Record {
@@ -206,15 +207,15 @@ contract BP_APP is PullPayment, Ownable, IERC721Receiver {
 
     mapping(bytes32 => User) private registeredUsers; // Authorized recorder database
 
-    address storageAddress;
+    address private storageAddress;
 
     StorageInterface private Storage; // Set up external contract interface
 
     // address minterContractAddress;
-    address AssetTokenAddress;
-    AssetTokenInterface AssetTokenContract; //erc721_token prototype initialization
-    address AssetClassTokenAddress;
-    AssetClassTokenInterface AssetClassTokenContract; //erc721_token prototype initialization
+    address private AssetTokenAddress;
+    AssetTokenInterface private AssetTokenContract; //erc721_token prototype initialization
+    address private AssetClassTokenAddress;
+    AssetClassTokenInterface private AssetClassTokenContract; //erc721_token prototype initialization
     // --------------------------------------Events--------------------------------------------//
 
     event REPORT(string _msg);
@@ -287,6 +288,7 @@ contract BP_APP is PullPayment, Ownable, IERC721Receiver {
      */
     function OO_getContractAddresses()
         external
+        nonReentrant
         onlyOwner
     {
         AssetClassTokenAddress = Storage.resolveContractAddress("assetClassToken");
@@ -301,6 +303,7 @@ contract BP_APP is PullPayment, Ownable, IERC721Receiver {
         external
         virtual
         onlyOwner
+        nonReentrant
     {
         AssetTokenContract.transferAssetToken(address(this), _to, _idxHash);
     }
@@ -309,6 +312,7 @@ contract BP_APP is PullPayment, Ownable, IERC721Receiver {
         external
         virtual
         onlyOwner
+        nonReentrant
     {
         AssetClassTokenContract.transferAssetClassToken(
             address(this),
@@ -376,7 +380,7 @@ contract BP_APP is PullPayment, Ownable, IERC721Receiver {
         uint16 _assetClass,
         uint256 _countDownStart,
         bytes32 _Ipfs
-    ) external payable isAuthorized(_idxHash) {
+    ) external payable nonReentrant isAuthorized(_idxHash) {
         User memory callingUser = getUser();
         Costs memory cost = getCost(_assetClass);
         Costs memory baseCost = getBaseCost();
@@ -419,6 +423,7 @@ contract BP_APP is PullPayment, Ownable, IERC721Receiver {
     function $forceModRecord(bytes32 _idxHash, bytes32 _rgtHash)
         external
         payable
+        nonReentrant
         isAuthorized(_idxHash)
         returns (uint8)
     {
@@ -490,6 +495,7 @@ contract BP_APP is PullPayment, Ownable, IERC721Receiver {
     function $reimportRecord(bytes32 _idxHash, bytes32 _rgtHash)
         external
         payable
+        nonReentrant
         isAuthorized(_idxHash)
         returns (uint8)
     {
@@ -543,7 +549,7 @@ contract BP_APP is PullPayment, Ownable, IERC721Receiver {
         bytes32 _idxHash,
         bytes32 _rgtHash,
         bytes32 _newrgtHash
-    ) external payable isAuthorized(_idxHash) returns (uint8) {
+    ) external payable nonReentrant isAuthorized(_idxHash) returns (uint8) {
         Record memory rec = getRecord(_idxHash);
         User memory callingUser = getUser();
         Costs memory cost = getCost(rec.assetClass);
@@ -594,7 +600,7 @@ contract BP_APP is PullPayment, Ownable, IERC721Receiver {
         bytes32 _idxHash,
         bytes32 _rgtHash,
         bytes32 _IpfsHash
-    ) external payable isAuthorized(_idxHash) returns (bytes32) {
+    ) external payable nonReentrant isAuthorized(_idxHash) returns (bytes32) {
         Record memory rec = getRecord(_idxHash);
         User memory callingUser = getUser();
         Costs memory cost = getCost(rec.assetClass);
@@ -784,7 +790,7 @@ contract BP_APP is PullPayment, Ownable, IERC721Receiver {
      * @dev Withdraws user's credit balance from contract
      */
 
-    function $withdraw() external virtual payable {
+    function $withdraw() external virtual payable nonReentrant {
         withdrawPayments(msg.sender);
     }
 }

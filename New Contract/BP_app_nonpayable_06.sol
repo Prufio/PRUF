@@ -41,6 +41,7 @@
 pragma solidity ^0.6.2;
 import "./Ownable.sol";
 import "./SafeMath.sol";
+import "./ReentrancyGuard.sol";
 import "./_ERC721/IERC721Receiver.sol";
 
 interface BPappPayableInterface {
@@ -164,7 +165,7 @@ interface StorageInterface {
         returns (address);
 }
 
-contract BP_APP_NP is Ownable, IERC721Receiver {
+contract BP_APP_NP is Ownable, IERC721Receiver, ReentrancyGuard {
     using SafeMath for uint256;
 
     struct Record {
@@ -197,17 +198,17 @@ contract BP_APP_NP is Ownable, IERC721Receiver {
         address paymentAddress; // 2nd-party fee beneficiary address
     }
 
-    address storageAddress;
+    address private storageAddress;
 
     StorageInterface private Storage; // Set up external contract interface
 
     // address minterContractAddress;
-    address AssetTokenAddress;
-    AssetTokenInterface AssetTokenContract; //erc721_token prototype initialization
-    address AssetClassTokenAddress;
-    AssetClassTokenInterface AssetClassTokenContract; //erc721_token prototype initialization
-    address BPappPayableAddress;
-    BPappPayableInterface BPappPayableContract; //erc721_token prototype initialization
+    address private AssetTokenAddress;
+    AssetTokenInterface private AssetTokenContract; //erc721_token prototype initialization
+    address private AssetClassTokenAddress;
+    AssetClassTokenInterface private AssetClassTokenContract; //erc721_token prototype initialization
+    address private BPappPayableAddress;
+    BPappPayableInterface private BPappPayableContract; //erc721_token prototype initialization
     // --------------------------------------Events--------------------------------------------//
 
     event REPORT(string _msg);
@@ -277,7 +278,7 @@ contract BP_APP_NP is Ownable, IERC721Receiver {
      * @dev Address Setters
      */
 
-    function OO_getContractAddresses() external onlyOwner {
+    function OO_getContractAddresses() external onlyOwner nonReentrant {
         AssetClassTokenAddress = Storage.resolveContractAddress(
             "assetClassToken"
         );
@@ -296,6 +297,7 @@ contract BP_APP_NP is Ownable, IERC721Receiver {
         external
         virtual
         onlyOwner
+        nonReentrant
     {
         AssetTokenContract.transferAssetToken(address(this), _to, _idxHash);
     }
@@ -304,6 +306,7 @@ contract BP_APP_NP is Ownable, IERC721Receiver {
         external
         virtual
         onlyOwner
+        nonReentrant
     {
         AssetClassTokenContract.transferAssetClassToken(
             address(this),
@@ -341,7 +344,7 @@ contract BP_APP_NP is Ownable, IERC721Receiver {
         bytes32 _idxHash,
         uint8 _newAssetStatus,
         uint256 _escrowTime
-    ) external isAuthorized(_idxHash) {
+    ) external nonReentrant isAuthorized(_idxHash) {
         Record memory rec = getRecord(_idxHash);
         User memory callingUser = getUser();
 
@@ -371,7 +374,11 @@ contract BP_APP_NP is Ownable, IERC721Receiver {
         );
     }
 
-    function endEscrow(bytes32 _idxHash) external isAuthorized(_idxHash) {
+    function endEscrow(bytes32 _idxHash)
+        external
+        nonReentrant
+        isAuthorized(_idxHash)
+    {
         Record memory rec = getRecord(_idxHash);
         User memory callingUser = getUser();
 
@@ -395,7 +402,7 @@ contract BP_APP_NP is Ownable, IERC721Receiver {
         bytes32 _idxHash,
         bytes32 _rgtHash,
         uint8 _newAssetStatus
-    ) external isAuthorized(_idxHash) returns (uint8) {
+    ) external nonReentrant isAuthorized(_idxHash) returns (uint8) {
         Record memory rec = getRecord(_idxHash);
         User memory callingUser = getUser();
 
@@ -433,7 +440,7 @@ contract BP_APP_NP is Ownable, IERC721Receiver {
         bytes32 _idxHash,
         bytes32 _rgtHash,
         uint8 _newAssetStatus
-    ) external isAuthorized(_idxHash) returns (uint8) {
+    ) external nonReentrant isAuthorized(_idxHash) returns (uint8) {
         Record memory rec = getRecord(_idxHash);
         rec.assetStatus = _newAssetStatus;
         User memory callingUser = getUser();
@@ -474,7 +481,7 @@ contract BP_APP_NP is Ownable, IERC721Receiver {
         bytes32 _idxHash,
         bytes32 _rgtHash,
         uint256 _decAmount
-    ) external isAuthorized(_idxHash) returns (uint256) {
+    ) external nonReentrant isAuthorized(_idxHash) returns (uint256) {
         Record memory rec = getRecord(_idxHash);
         User memory callingUser = getUser();
 
@@ -511,7 +518,7 @@ contract BP_APP_NP is Ownable, IERC721Receiver {
         bytes32 _idxHash,
         bytes32 _rgtHash,
         bytes32 _IpfsHash
-    ) external isAuthorized(_idxHash) returns (bytes32) {
+    ) external nonReentrant isAuthorized(_idxHash) returns (bytes32) {
         Record memory rec = getRecord(_idxHash);
         User memory callingUser = getUser();
         //Costs memory cost = getCost(rec.assetClass);
