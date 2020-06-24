@@ -566,8 +566,9 @@ contract Storage is Ownable {
      * @dev return a complete record from the database
      */
     function retrieveRecord(bytes32 _idxHash)
-        internal
+        external
         view
+        isAuthorized
         returns (
             //exists(_idxHash)
             bytes32,
