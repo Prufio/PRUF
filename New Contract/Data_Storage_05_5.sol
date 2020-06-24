@@ -26,7 +26,7 @@ pragma solidity ^0.6.2;
 import "./Ownable.sol";
 import "./SafeMath.sol";
 
-interface ACtokenInterface {
+interface AssetClassTokenInterface {
     function ownerOf(uint256) external view returns (address);
     //function mint(uint256) external view returns (address);
     //function transfer(uint256,address) external view returns (address);
@@ -70,8 +70,8 @@ contract Storage is Ownable {
     mapping(uint16 => Costs) private cost; // Cost per function by asset class
     Costs private baseCost;
 
-    address ACcontractAddress;
-    ACtokenInterface ACtokenContract; //erc721_token prototype initialization
+    address AssetClassTokenAddress;
+    AssetClassTokenInterface AssetClassTokenContract; //erc721_token prototype initialization
 
     /*  NOTES:---------------------------------------------------------------------------------------//
      * Authorized external Contract / address types:   contractAdresses[]
@@ -150,7 +150,7 @@ contract Storage is Ownable {
         require((assetClass256 > 0), "What the actual fuck?"); //----------------------------------------------------------FAKE AS HELL
 
         // require( //----------------------------------------------------------THE REAL SHIT
-        //     (ACtokenContract.ownerOf(assetClass256) == msg.sender),
+        //     (AssetClassTokenContract.ownerOf(assetClass256) == msg.sender),
         //     "MOD-ACTH-msg.sender not authorized in asset class"
         // );
         _;
@@ -219,10 +219,13 @@ contract Storage is Ownable {
      * @dev Address Setters
      */
 
-    function OO_set_AC_token(address _contractAddress) external onlyOwner {
-        require(_contractAddress != address(0), "Invalid contract address");
-        ACcontractAddress = _contractAddress;
-        ACtokenContract = ACtokenInterface(_contractAddress);
+    function OO_getTokenAddresses()
+        external
+        onlyOwner
+    {
+        address _contractAddress = resolveContractAddress("assetClassToken");
+        AssetClassTokenAddress = _contractAddress;
+        AssetClassTokenContract = AssetClassTokenInterface(_contractAddress);
     }
 
     /*
@@ -313,7 +316,7 @@ contract Storage is Ownable {
         // uint256 assetClass256 = uint256(_assetClass);
         // require( //origin address holds assetClass token, or assetClass is >=65000
         //     (database[_idxHash].assetClass >= 65000) ||
-        //         (ACtokenContract.ownerOf(assetClass256) == msg.sender),
+        //         (AssetClassTokenContract.ownerOf(assetClass256) == msg.sender),
         //     "NR:ERR-Contract not authorized in asset class"
         // );
         require(
@@ -737,7 +740,7 @@ contract Storage is Ownable {
      * example :  Frontend = ****** so web 3 first asks storage where to find frontend, then calls for frontend functions.
      */
     function resolveContractAddress(string calldata _name)
-        external
+        public
         view
         returns (address)
     {

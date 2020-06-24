@@ -321,7 +321,6 @@ contract BP_APP_NP is Ownable, IERC721Receiver {
         Storage = StorageInterface(_storageAddress);
     }
 
-    
     //--------------------------------------External functions--------------------------------------------//
     /*
      * @dev Compliance for erc721
@@ -545,8 +544,8 @@ contract BP_APP_NP is Ownable, IERC721Receiver {
     function getUser() private view returns (User memory) {
         //User memory callingUser = getUser();
         User memory user;
-        (user.userType, user.authorizedAssetClass) =
-        BPappPayableContract.getUserExt(keccak256(abi.encodePacked(msg.sender)));
+        (user.userType, user.authorizedAssetClass) = BPappPayableContract
+            .getUserExt(keccak256(abi.encodePacked(msg.sender)));
         return user;
     }
 
