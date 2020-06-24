@@ -7,9 +7,48 @@ import Form from "react-bootstrap/Form";
 import Col from "react-bootstrap/Col";
 import Button from "react-bootstrap/Button";
 
-class VerifyRightHolder extends Component {
+class ForceModifyRecord extends Component {
   constructor(props) {
     super(props);
+
+    this.getCosts = async () => {
+      const self = this;
+      if (self.state.costArray[5] > 0 || self.state.storage === "") {
+      } else {
+        for (var i = 0; i < 1; i++) {
+          self.state.storage.methods
+            .retrieveCosts(3)
+            .call({ from: self.state.addr }, function (_error, _result) {
+              if (_error) {
+              } else {
+                /* console.log("_result: ", _result); */ if (
+                  _result !== undefined
+                ) {
+                  self.setState({ costArray: Object.values(_result) });
+                }
+              }
+            });
+        }
+      }
+    };
+
+    this.returnsContract = (contract) => {
+      var _web3 = require("web3");
+      _web3 = new Web3(_web3.givenProvider);
+      var addrArray = returnAddresses();
+      var _frontend_addr = addrArray[1];
+      var _storage_addr = addrArray[0];
+      const storage_abi = returnStorageAbi();
+      const frontEnd_abi = returnFrontEndAbi();
+      const _storage = new _web3.eth.Contract(storage_abi, _storage_addr);
+      const _frontend = new _web3.eth.Contract(frontEnd_abi, _frontend_addr);
+
+      if (contract === "frontend") {
+        return _frontend;
+      } else if (contract === "storage") {
+        return _storage;
+      }
+    };
 
     this.acctChanger = async () => {
       const ethereum = window.ethereum;
@@ -23,12 +62,13 @@ class VerifyRightHolder extends Component {
 
     //Component state declaration
 
+    this.mounted = false;
     this.state = {
       addr: "",
+      costArray: [0],
       error: undefined,
-      error1: undefined,
+      NRerror: undefined,
       result: "",
-      result1: "",
       AssetClass: "",
       CountDownStart: "",
       ipfs1: "",
@@ -42,6 +82,11 @@ class VerifyRightHolder extends Component {
       surname: "",
       id: "",
       secret: "",
+      newFirst: "",
+      newMiddle: "",
+      newSurname: "",
+      newId: "",
+      newSecret: "",
       web3: null,
       frontend: "",
       storage: "",
@@ -49,29 +94,28 @@ class VerifyRightHolder extends Component {
   }
 
   componentDidMount() {
+    this.setState({ storage: this.returnsContract("storage") });
+    this.setState({ frontend: this.returnsContract("frontend") });
     //console.log("component mounted")
+
     var _web3 = require("web3");
     _web3 = new Web3(_web3.givenProvider);
     this.setState({ web3: _web3 });
     _web3.eth.getAccounts().then((e) => this.setState({ addr: e[0] }));
-    var addrArray = returnAddresses();
-    var _frontend_addr = addrArray[1];
-    var _storage_addr = addrArray[0];
-    const frontEnd_abi = returnFrontEndAbi();
-    const storage_abi = returnStorageAbi();
-
-    const _frontend = new _web3.eth.Contract(frontEnd_abi, _frontend_addr);
-
-    const _storage = new _web3.eth.Contract(storage_abi, _storage_addr);
-    this.setState({ frontend: _frontend });
-    this.setState({ storage: _storage });
-
     document.addEventListener("accountListener", this.acctChanger());
   }
 
   componentWillUnmount() {
     //console.log("unmounting component")
     document.removeEventListener("accountListener", this.acctChanger());
+  }
+
+  componentDidUpdate() {
+    if (this.state.addr > 0) {
+      if (this.state.costArray[0] < 1) {
+        this.getCosts();
+      }
+    }
   }
 
   render() {
@@ -81,65 +125,68 @@ class VerifyRightHolder extends Component {
       await self.state.storage.methods
         .retrieveShortRecord(idxHash)
         .call({ from: self.state.addr }, function (_error, _result) {
+          console.log(_result);
           if (_error) {
-            self.setState({ error1: _error });
-            self.setState({ result1: 0 });
+          } else if (Object.values(_result)[5] === "0") {
+            self.setState({ error: _error });
+            self.setState({ result: 0 });
             alert(
               "WARNING: Record DOES NOT EXIST! Reject in metamask and review asset info fields."
             );
           } else {
-            self.setState({ result1: _result });
+            self.setState({ result: _result });
+            alert(
+              "WARNING: Modifying a record will permanently delete existing owner data."
+            );
           }
           console.log("check debug, _result, _error: ", _result, _error);
         });
     }
 
-    const _verify = () => {
+    const _forceModifyRecord = () => {
       var idxHash = this.state.web3.utils.soliditySha3(
         this.state.type,
         this.state.manufacturer,
         this.state.model,
         this.state.serial
       );
-      var rgtRaw = this.state.web3.utils.soliditySha3(
-        this.state.first,
-        this.state.middle,
-        this.state.surname,
-        this.state.id,
-        this.state.secret
+      var newRgtRaw = this.state.web3.utils.soliditySha3(
+        this.state.newFirst,
+        this.state.newMiddle,
+        this.state.newSurname,
+        this.state.newId,
+        this.state.newSecret
       );
-      var rgtHash = this.state.web3.utils.soliditySha3(idxHash, rgtRaw);
+      var newRgtHash = this.state.web3.utils.soliditySha3(idxHash, newRgtRaw);
 
       console.log("idxHash", idxHash);
+      console.log("New rgtRaw", newRgtRaw);
+      console.log("New rgtHash", newRgtHash);
       console.log("addr: ", this.state.addr);
 
       checkExists(idxHash);
 
-      this.state.storage.methods
-        ._verifyRightsHolder(idxHash, rgtHash)
-        .call({ from: this.state.addr }, function (_error, _result) {
-          if (_error) {
-            self.setState({ error: _error });
-            self.setState({ result: 0 });
-          } else {
-            self.setState({ result: _result });
-            self.setState({ error: undefined });
-          }
-        });
-
-      this.state.storage.methods
-        .blockchainVerifyRightsHolder(idxHash, rgtHash)
-        .send({ from: this.state.addr })
+      this.state.frontend.methods
+        .$forceModRecord(idxHash, newRgtHash)
+        .send({ from: this.state.addr, value: this.state.costArray[5] })
+        .on("error", function (_error) {
+          // self.setState({ NRerror: _error });
+          self.setState({ txHash: Object.values(_error)[0].transactionHash });
+          self.setState({ txStatus: false });
+          console.log(Object.values(_error)[0].transactionHash);
+        })
         .on("receipt", (receipt) => {
           this.setState({ txHash: receipt.transactionHash });
-          console.log(this.state.txHash);
+          this.setState({ txStatus: receipt.status });
+          console.log(receipt.status);
+          //Stuff to do when tx confirms
         });
 
-      console.log(this.state.result);
+      console.log(this.state.txHash);
     };
     return (
       <div>
-        <Form className="VRform">
+        <Form className="FMRform">
           {this.state.addr === undefined && (
             <div className="errorResults">
               <h2>WARNING!</h2>
@@ -148,7 +195,7 @@ class VerifyRightHolder extends Component {
           )}
           {this.state.addr > 0 && (
             <div>
-              <h2 className="Headertext">Verify Rights Holder</h2>
+              <h2 className="Headertext">Modify Recrod</h2>
               <br></br>
               <Form.Row>
                 <Form.Group as={Col} controlId="formGridType">
@@ -173,7 +220,6 @@ class VerifyRightHolder extends Component {
                   />
                 </Form.Group>
               </Form.Row>
-
               <Form.Row>
                 <Form.Group as={Col} controlId="formGridModel">
                   <Form.Label className="formFont">Model:</Form.Label>
@@ -195,54 +241,52 @@ class VerifyRightHolder extends Component {
                   />
                 </Form.Group>
               </Form.Row>
-
               <Form.Row>
-                <Form.Group as={Col} controlId="formGridFirstName">
-                  <Form.Label className="formFont">First Name:</Form.Label>
+                <Form.Group as={Col} controlId="formGridNewFirstName">
+                  <Form.Label className="formFont">New First Name:</Form.Label>
                   <Form.Control
-                    placeholder="First Name"
+                    placeholder="New First Name"
                     required
                     onChange={(e) => this.setState({ first: e.target.value })}
                     size="lg"
                   />
                 </Form.Group>
 
-                <Form.Group as={Col} controlId="formGridMiddleName">
-                  <Form.Label className="formFont">Middle Name:</Form.Label>
+                <Form.Group as={Col} controlId="formGridNewMiddleName">
+                  <Form.Label className="formFont">New Middle Name:</Form.Label>
                   <Form.Control
-                    placeholder="Middle Name"
+                    placeholder="New Middle Name"
                     required
                     onChange={(e) => this.setState({ middle: e.target.value })}
                     size="lg"
                   />
                 </Form.Group>
 
-                <Form.Group as={Col} controlId="formGridLastName">
-                  <Form.Label className="formFont">Last Name:</Form.Label>
+                <Form.Group as={Col} controlId="formGridNewLastName">
+                  <Form.Label className="formFont">New Last Name:</Form.Label>
                   <Form.Control
-                    placeholder="Last Name"
+                    placeholder="New Last Name"
                     required
                     onChange={(e) => this.setState({ surname: e.target.value })}
                     size="lg"
                   />
                 </Form.Group>
               </Form.Row>
-
               <Form.Row>
-                <Form.Group as={Col} controlId="formGridIdNumber">
-                  <Form.Label className="formFont">ID Number:</Form.Label>
+                <Form.Group as={Col} controlId="formGridNewIdNumber">
+                  <Form.Label className="formFont">New ID Number:</Form.Label>
                   <Form.Control
-                    placeholder="ID Number"
+                    placeholder="New ID Number"
                     required
                     onChange={(e) => this.setState({ id: e.target.value })}
                     size="lg"
                   />
                 </Form.Group>
 
-                <Form.Group as={Col} controlId="formGridPassword">
-                  <Form.Label className="formFont">Password:</Form.Label>
+                <Form.Group as={Col} controlId="formGridNewPassword">
+                  <Form.Label className="formFont">New Password:</Form.Label>
                   <Form.Control
-                    placeholder="Password"
+                    placeholder="New Password"
                     type="password"
                     required
                     onChange={(e) => this.setState({ secret: e.target.value })}
@@ -250,14 +294,13 @@ class VerifyRightHolder extends Component {
                   />
                 </Form.Group>
               </Form.Row>
-
               <Form.Row>
                 <Form.Group className="buttonDisplay">
                   <Button
                     variant="primary"
                     type="button"
                     size="lg"
-                    onClick={_verify}
+                    onClick={_forceModifyRecord}
                   >
                     Submit
                   </Button>
@@ -266,23 +309,38 @@ class VerifyRightHolder extends Component {
             </div>
           )}
         </Form>
-
         {this.state.txHash > 0 && ( //conditional rendering
-          <div className="VRHresults">
-            {this.state.result === "170"
-              ? "Match Confirmed :"
-              : "Record does not match :"}
-            <a
-              href={" https://kovan.etherscan.io/tx/" + this.state.txHash}
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              KOVAN Etherscan:{this.state.txHash}
-            </a>
+          <div className="Results">
+            {this.state.txStatus === false && (
+              <div>
+                !ERROR! :
+                <a
+                  href={"https://kovan.etherscan.io/tx/" + this.state.txHash}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  KOVAN Etherscan:{this.state.txHash}
+                </a>
+              </div>
+            )}
+            {this.state.txStatus === true && (
+              <div>
+                {" "}
+                No Errors Reported :
+                <a
+                  href={"https://kovan.etherscan.io/tx/" + this.state.txHash}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  KOVAN Etherscan:{this.state.txHash}
+                </a>
+              </div>
+            )}
           </div>
         )}
       </div>
     );
   }
 }
-export default VerifyRightHolder;
+
+export default ForceModifyRecord;
