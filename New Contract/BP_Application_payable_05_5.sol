@@ -32,8 +32,8 @@
  * Contract Names -
  *  assetToken
  *  assetClassToken
- *  BPdappPayable
- *  BPdappNonPayable
+ *  BPappPayable
+ *  BPappNonPayable
  *
  */
 
@@ -635,6 +635,13 @@ contract BP_APP is PullPayment, Ownable, IERC721Receiver {
         User memory user;
         user = registeredUsers[keccak256(abi.encodePacked(msg.sender))];
         return user;
+    }
+
+    /*
+     * @dev Get a User Record from Storage @ msg.sender
+     */
+    function getUserExt(bytes32 _userHash) external view returns (uint8,uint16) {
+        return(registeredUsers[_userHash].userType, registeredUsers[_userHash].authorizedAssetClass);
     }
 
     //--------------------------------------------------------------------------------------Storage Reading private functions

@@ -43,6 +43,13 @@ import "./Ownable.sol";
 import "./SafeMath.sol";
 import "./_ERC721/IERC721Receiver.sol";
 
+interface BPappPayableInterface {
+    function getUserExt(bytes32 _userHash)
+        external
+        view
+        returns (uint8, uint16);
+}
+
 interface AssetClassTokenInterface {
     function ownerOf(uint256) external view returns (address);
 
@@ -64,7 +71,6 @@ interface AssetTokenInterface {
 }
 
 interface StorageInterface {
-
     function modifyRecord(
         bytes32 _userHash,
         bytes32 _idxHash,
@@ -199,6 +205,8 @@ contract BP_APP_NP is Ownable, IERC721Receiver {
     AssetTokenInterface AssetTokenContract; //erc721_token prototype initialization
     address AssetClassTokenAddress;
     AssetClassTokenInterface AssetClassTokenContract; //erc721_token prototype initialization
+    address BPappPayableAddress;
+    BPappPayableInterface BPappPayableContract; //erc721_token prototype initialization
     // --------------------------------------Events--------------------------------------------//
 
     event REPORT(string _msg);
@@ -270,15 +278,19 @@ contract BP_APP_NP is Ownable, IERC721Receiver {
      * @dev Address Setters
      */
 
-    function OO_getContractAddresses()
-        external
-        onlyOwner
-    {
-        AssetClassTokenAddress = Storage.resolveContractAddress("assetClassToken");
-        AssetClassTokenContract = AssetClassTokenInterface(AssetClassTokenAddress);
+    function OO_getContractAddresses() external onlyOwner {
+        AssetClassTokenAddress = Storage.resolveContractAddress(
+            "assetClassToken"
+        );
+        AssetClassTokenContract = AssetClassTokenInterface(
+            AssetClassTokenAddress
+        );
 
         AssetTokenAddress = Storage.resolveContractAddress("assetToken");
         AssetTokenContract = AssetTokenInterface(AssetTokenAddress);
+
+        BPappPayableAddress = Storage.resolveContractAddress("BPappPayable");
+        BPappPayableContract = BPappPayableInterface(BPappPayableAddress);
     }
 
     function OO_TX_asset_Token(address _to, bytes32 _idxHash)
@@ -518,8 +530,6 @@ contract BP_APP_NP is Ownable, IERC721Receiver {
         return (rec.countDown);
     }
 
-    
-
     /*
      * @dev Modify **Record**.Ipfs1 with confirmation
      */
@@ -563,7 +573,8 @@ contract BP_APP_NP is Ownable, IERC721Receiver {
     function getUser() private view returns (User memory) {
         //User memory callingUser = getUser();
         User memory user;
-        user = registeredUsers[keccak256(abi.encodePacked(msg.sender))];
+        (user.userType, user.authorizedAssetClass) = BPappPayableContract
+            .getUserExt(keccak256(abi.encodePacked(msg.sender)));
         return user;
     }
 
@@ -604,7 +615,6 @@ contract BP_APP_NP is Ownable, IERC721Receiver {
         return (rec); // Returns Record struct rec
     }
 
-    
     //--------------------------------------------------------------------------------------Storage Writing private functions
 
     /*
@@ -637,5 +647,4 @@ contract BP_APP_NP is Ownable, IERC721Receiver {
             _rec.forceModCount
         ); // Send data and writehash to storage
     }
-
 }
