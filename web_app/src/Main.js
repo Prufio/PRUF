@@ -14,7 +14,6 @@ import VerifyRightsholder from "./VerifyRightsholder";
 import AddContract from "./AddContract";
 import AddUser from "./AddUser";
 import Ownership from "./Ownership";
-import ResetFMC from "./ResetFMC";
 import SetCosts from "./SetCosts";
 import returnStorageAbi from "./stor_abi";
 import returnAddresses from "./Contracts";
@@ -192,9 +191,6 @@ class Main extends Component {
                     <li>
                       <NavLink to="/ownership">Ownership</NavLink>
                     </li>
-                    <li>
-                      <NavLink to="/reset-fmc">Reset FMC</NavLink>
-                    </li>
                   </nav>
                 )}
               </ul>
@@ -225,7 +221,6 @@ class Main extends Component {
                 <Route path="/set-costs" component={SetCosts} />
                 <Route path="/add-contract" component={AddContract} />
                 <Route path="/ownership" component={Ownership} />
-                <Route path="/reset-fmc" component={ResetFMC} />
               </div>
             </div>
           </div>
