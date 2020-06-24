@@ -127,7 +127,7 @@ class ForceModifyRecord extends Component {
         .call({ from: self.state.addr }, function (_error, _result) {
           console.log(_result);
           if (_error) {
-          } else if (Object.values(_result)[5] === "0") {
+          } else if (Object.values(_result)[4] === "0") {
             self.setState({ error: _error });
             self.setState({ result: 0 });
             alert(
@@ -151,11 +151,11 @@ class ForceModifyRecord extends Component {
         this.state.serial
       );
       var newRgtRaw = this.state.web3.utils.soliditySha3(
-        this.state.newFirst,
-        this.state.newMiddle,
-        this.state.newSurname,
-        this.state.newId,
-        this.state.newSecret
+        this.state.first,
+        this.state.middle,
+        this.state.surname,
+        this.state.id,
+        this.state.secret
       );
       var newRgtHash = this.state.web3.utils.soliditySha3(idxHash, newRgtRaw);
 

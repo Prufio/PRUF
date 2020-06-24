@@ -141,9 +141,9 @@ class ModifyDescription extends Component {
             self.setState({ result: Object.values(_result) });
             self.setState({ error: undefined });
 
-            getIPFS1(getIpfsHashFromBytes32(Object.values(_result)[7]));
+            if (Object.values(_result)[7] > 0) {getIPFS1(getIpfsHashFromBytes32(Object.values(_result)[7]));}
 
-            getIPFS2(getIpfsHashFromBytes32(Object.values(_result)[8]));
+            if (Object.values(_result)[8] > 0) {getIPFS2(getIpfsHashFromBytes32(Object.values(_result)[8]));}
 
             console.log(Object.values(_result));
           }

@@ -210,7 +210,7 @@ class NewRecord extends Component {
         .on("receipt", (receipt) => {
           this.setState({ txHash: receipt.transactionHash });
           this.setState({ txStatus: receipt.status });
-          console.log(receipt.status);
+          //console.log(receipt.status);
           //Stuff to do when tx confirms
         });
     };
