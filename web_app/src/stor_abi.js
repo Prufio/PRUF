@@ -103,19 +103,6 @@ function returnStorageAbi() {
 			{
 				"inputs": [
 					{
-						"internalType": "bytes32",
-						"name": "_idxHash",
-						"type": "bytes32"
-					}
-				],
-				"name": "ADMIN_resetFMC",
-				"outputs": [],
-				"stateMutability": "nonpayable",
-				"type": "function"
-			},
-			{
-				"inputs": [
-					{
 						"internalType": "string",
 						"name": "_name",
 						"type": "string"
@@ -329,6 +316,11 @@ function returnStorageAbi() {
 						"internalType": "uint8",
 						"name": "_forceCount",
 						"type": "uint8"
+					},
+					{
+						"internalType": "uint16",
+						"name": "_numberOfTransfers",
+						"type": "uint16"
 					}
 				],
 				"name": "modifyRecord",
@@ -564,6 +556,11 @@ function returnStorageAbi() {
 						"internalType": "bytes32",
 						"name": "",
 						"type": "bytes32"
+					},
+					{
+						"internalType": "uint16",
+						"name": "",
+						"type": "uint16"
 					}
 				],
 				"stateMutability": "view",
@@ -623,6 +620,11 @@ function returnStorageAbi() {
 						"internalType": "bytes32",
 						"name": "",
 						"type": "bytes32"
+					},
+					{
+						"internalType": "uint16",
+						"name": "",
+						"type": "uint16"
 					}
 				],
 				"stateMutability": "view",
