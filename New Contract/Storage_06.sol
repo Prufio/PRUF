@@ -325,6 +325,7 @@ contract Storage is Ownable {
         rec.lastRecorder = _userHash;
         rec.forceModCount = 0;
         rec.Ipfs1 = _Ipfs1;
+        rec.numberOfTransfers = 0;
 
         database[_idxHash] = rec;
 
