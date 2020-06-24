@@ -106,7 +106,7 @@ class ModifyDescription extends Component {
 
     async function checkExists(idxHash) {
       await self.state.storage.methods
-        .retrieveRecord(idxHash)
+        .retrieveShortRecord(idxHash)
         .call({ from: self.state.addr }, function (_error, _result) {
           if (_error) {
             self.setState({ error: _error });

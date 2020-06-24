@@ -148,9 +148,9 @@ class NewRecord extends Component {
 
     async function checkExists(idxHash) {
       self.state.storage.methods
-        .retrieveRecord(idxHash)
+        .retrieveShortRecord(idxHash)
         .call({ from: self.state.addr }, function (_error, _result) {
-          if (_error) {
+          if (_error){
             self.setState({ error: _error.message });
             self.setState({ result: 0 });
           } else if (
