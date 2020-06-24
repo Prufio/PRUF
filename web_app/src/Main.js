@@ -85,7 +85,7 @@ class Main extends Component {
     ethereum.enable();
     _web3.eth.getAccounts().then((e) => this.setState({ addr: e[0] }));
     document.addEventListener("accountListener", this.acctChanger());
-    document.addEventListener("ownerGetter", this.getOwner());
+    for(let i =0;i<5;i++){this.getOwner()} 
   }
 
   componentDidUpdate() {
@@ -139,7 +139,7 @@ class Main extends Component {
                 </li>
 
                 {this.state.ownerMenu === false && (
-                  <li>
+                  <a>
                     <li>
                       <NavLink to="/new-record">New</NavLink>
                     </li>
@@ -167,11 +167,11 @@ class Main extends Component {
                     <li>
                       <NavLink to="/force-modify-record">Modify</NavLink>
                     </li>
-                  </li>
+                  </a>
                 )}
 
                 {this.state.ownerMenu === true && (
-                  <li>
+                  <a>
                     <li>
                       <NavLink to="/add-user">Add User</NavLink>
                     </li>
@@ -187,7 +187,7 @@ class Main extends Component {
                     <li>
                       <NavLink to="/reset-fmc">Reset FMC</NavLink>
                     </li>
-                  </li>
+                  </a>
                 )}
               </ul>
               <div className="content">
@@ -221,18 +221,25 @@ class Main extends Component {
               </div>
             </div>
           </div>
+          <NavLink to="/">
           {this.state.isOwner === true && (
             <Form className="buttonDisplay2">
+            
               <Button
                 variant="danger"
                 type="button"
                 size="lg"
                 onClick={toggleAdmin}
+                class=""
+
+                
               >
                 Toggle Admin
               </Button>
+              
             </Form>
           )}
+          </NavLink>
         </div>
       </HashRouter>
     );
