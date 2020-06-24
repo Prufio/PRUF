@@ -89,6 +89,7 @@ class ModifyDescription extends Component {
     const self = this;
 
     const getIpfsHashFromBytes32 = (bytes32Hex) => {
+      
       // Add our default ipfs values for first 2 bytes:
       // function:0x12=sha2, size:0x20=256 bits
       // and cut off leading "0x"
@@ -131,7 +132,7 @@ class ModifyDescription extends Component {
       console.log("addr: ", this.state.addr);
 
       this.state.storage.methods
-        .retrieveRecord(idxHash)
+        .retrieveShortRecord(idxHash)
         .call({ from: this.state.addr }, function (_error, _result) {
           if (_error) {
             self.setState({ error: _error });
@@ -140,11 +141,11 @@ class ModifyDescription extends Component {
             self.setState({ result: Object.values(_result) });
             self.setState({ error: undefined });
 
-            getIPFS1(getIpfsHashFromBytes32(Object.values(_result)[8]));
+            getIPFS1(getIpfsHashFromBytes32(Object.values(_result)[7]));
 
-            getIPFS2(getIpfsHashFromBytes32(Object.values(_result)[9]));
+            getIPFS2(getIpfsHashFromBytes32(Object.values(_result)[8]));
 
-            //console.log(Object.values(_result));
+            console.log(Object.values(_result));
           }
         });
     };
@@ -223,27 +224,25 @@ class ModifyDescription extends Component {
             </div>
           )}
         </Form>
-        {this.state.result[5] === "0" && (
+        {this.state.result[4] === "0" && (
           <div className="RRresultserr">No Asset Found for Given Data</div>
         )}
 
-        {this.state.result[5] > 0 && ( //conditional rendering
+        {this.state.result[4] > 0 && ( //conditional rendering
           <div className="RRresults">
             Status:
-            {this.state.result[3]}
+            {this.state.result[2]}
             <br></br>
             Mod Count:
-            {this.state.result[4]}
+            {this.state.result[3]}
             <br></br>
-            Asset Class :{this.state.result[5]}
+            Asset Class :{this.state.result[4]}
             <br></br>
-            Count :{this.state.result[6]} of {this.state.result[7]}
+            Count :{this.state.result[5]} of {this.state.result[6]}
             <br></br>
             Ipfs1 :{this.state.ipfs1}
             <br></br>
             Ipfs2 :{this.state.ipfs2}
-            <br></br>
-            Token ID :{this.state.result[1]}
           </div>
         )}
       </div>
