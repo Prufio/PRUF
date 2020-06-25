@@ -350,17 +350,13 @@ contract BP_APP_NP is Ownable, IERC721Receiver, ReentrancyGuard {
     ) external nonReentrant isAuthorized(_idxHash) {
         Record memory rec = getRecord(_idxHash);
         User memory callingUser = getUser();
-        uint8 _newAssetStatus;
         uint256 escrowTime = now.add(_escrowTime.mul(60)); //set escrow end time to _escrowTime minutes in the future
+        uint8 newAssetStatus;
 
         require((rec.rightsHolder != 0), "SE: Record does not exist");
         require(
             callingUser.authorizedAssetClass == rec.assetClass,
             "SE: User not authorized to modify records in specified asset class"
-        );
-        require(
-            (_newAssetStatus == 6) || (_newAssetStatus == 12),
-            "SE:ERR-Must set to an escrow status"
         );
         require(
             (escrowTime >= now),
@@ -376,17 +372,17 @@ contract BP_APP_NP is Ownable, IERC721Receiver, ReentrancyGuard {
         );
 
         if (callingUser.userType == 1){ //If escrow was initiated by custodial user 
-            _newAssetStatus = 6; //Set asset status to 20 (left custodial escrow)
+            newAssetStatus = 6; //Set asset status to 20 (left custodial escrow)
         }
 
         else if (callingUser.userType == 9){ //If escrow was initiated by automation
-            _newAssetStatus = 12; //Set asset status to 21 (left P2P escrow)
+            newAssetStatus = 12; //Set asset status to 21 (left P2P escrow)
         }
 
         Storage.setEscrow(
             keccak256(abi.encodePacked(msg.sender)),
             _idxHash,
-            _newAssetStatus,
+            newAssetStatus,
             escrowTime
         );
     }
