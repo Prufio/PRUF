@@ -450,16 +450,6 @@ contract BP_APP_NP is Ownable, IERC721Receiver, ReentrancyGuard {
         );
     }
 
-    function getTimelock(bytes32 _idxHash)
-        external
-        isAuthorized(_idxHash)
-        returns (uint256)
-    {
-        Record memory rec = getRecord(_idxHash);
-        emit REPORT("Timelock=");
-        emit REPORT256(rec.timeLock);
-    }
-
     /*
      * @dev Modify **Record**.assetStatus with confirmation required
      */
