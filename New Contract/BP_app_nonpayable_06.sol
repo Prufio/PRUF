@@ -350,7 +350,8 @@ contract BP_APP_NP is Ownable, IERC721Receiver, ReentrancyGuard {
     ) external nonReentrant isAuthorized(_idxHash) {
         Record memory rec = getRecord(_idxHash);
         User memory callingUser = getUser();
-        uint256 escrowTime = now.add(_escrowTime.mul(60)); //set escrow end time to _escrowTime minutes in the future
+        //uint256 escrowTime = now.add(_escrowTime.mul(60)); //set escrow end time to _escrowTime minutes in the future
+        uint256 escrowTime = _escrowTime;
         uint8 newAssetStatus;
 
         require((rec.rightsHolder != 0), "SE: Record does not exist");
@@ -406,9 +407,13 @@ contract BP_APP_NP is Ownable, IERC721Receiver, ReentrancyGuard {
             (rec.assetStatus == 6) || (rec.assetStatus == 12),
             "EE:ERR- record must be in escrow status"
         );
+        // require(
+        //     (rec.timeLock < now ) || (keccak256(abi.encodePacked(msg.sender)) == rec.recorder),
+        //     "EE:ERR- Escrow period not ended"
+        // );
         require(
-            (rec.timeLock < now ) || (keccak256(abi.encodePacked(msg.sender)) == rec.recorder),
-            "EE:ERR- record must be in escrow status"
+            (rec.timeLock < now),
+            "EE:ERR- Escrow period not ended"
         );
 
         if (rec.assetStatus == 6){ //If escrow was initiated by custodial user 
@@ -420,6 +425,15 @@ contract BP_APP_NP is Ownable, IERC721Receiver, ReentrancyGuard {
         }
 
         Storage.endEscrow(keccak256(abi.encodePacked(msg.sender)), _idxHash, _newAssetStatus);
+    }
+    
+    function getTimelock(bytes32 _idxHash)
+        external
+        isAuthorized(_idxHash)
+        returns(uint256)
+    {
+        Record memory rec = getRecord(_idxHash);
+        return (rec.timeLock);
     }
 
     /*
