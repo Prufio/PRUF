@@ -264,11 +264,9 @@ class ModifyDescription extends Component {
 
         {this.state.result[4] > 0 && ( //conditional rendering
           <div className="RRresults">
-            Status: 
-            {this.state.status}
+            Status:{this.state.status}
             <br></br>
-            Mod Count:
-            {this.state.result[3]}
+            Mod Count:{this.state.result[3]}
             <br></br>
             Asset Class :{this.state.result[4]}
             <br></br>

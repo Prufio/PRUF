@@ -346,11 +346,11 @@ contract BP_APP_NP is Ownable, IERC721Receiver, ReentrancyGuard {
 
     function setEscrow(
         bytes32 _idxHash,
-        uint8 _newAssetStatus,
         uint256 _escrowTime
     ) external nonReentrant isAuthorized(_idxHash) {
         Record memory rec = getRecord(_idxHash);
         User memory callingUser = getUser();
+        uint8 _newAssetStatus;
         uint256 escrowTime = now.add(_escrowTime.mul(60)); //set escrow end time to _escrowTime minutes in the future
 
         require((rec.rightsHolder != 0), "SE: Record does not exist");
@@ -374,6 +374,14 @@ contract BP_APP_NP is Ownable, IERC721Receiver, ReentrancyGuard {
                 (rec.assetStatus != 10),
             "SE:ERR-Transferred, lost, or stolen status cannot be set to escrow."
         );
+
+        if (callingUser.userType == 1){ //If escrow was initiated by custodial user 
+            _newAssetStatus = 6; //Set asset status to 20 (left custodial escrow)
+        }
+
+        else if (callingUser.userType == 9){ //If escrow was initiated by automation
+            _newAssetStatus = 12; //Set asset status to 21 (left P2P escrow)
+        }
 
         Storage.setEscrow(
             keccak256(abi.encodePacked(msg.sender)),
