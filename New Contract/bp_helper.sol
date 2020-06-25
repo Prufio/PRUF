@@ -8,7 +8,6 @@ interface erc721_tokenInterface {
 }
 
 contract bp_helper is Ownable {
-
     address erc721ContractAddress;
     erc721_tokenInterface erc721_tokenContract; //erc721_token prototype initialization
 
@@ -18,19 +17,32 @@ contract bp_helper is Ownable {
         erc721_tokenContract = erc721_tokenInterface(contractAddress);
     }
 
-
-    function atWhatAddress (uint256 tokenID) external view onlyOwner returns (address){
+    function atWhatAddress(uint256 tokenID)
+        external
+        view
+        onlyOwner
+        returns (address)
+    {
         return erc721_tokenContract.ownerOf(tokenID);
     }
 
-    function atWhatAddressTokenB32 (bytes32 _tokenID) external view onlyOwner returns (address){
+    function atWhatAddressTokenB32(bytes32 _tokenID)
+        external
+        view
+        onlyOwner
+        returns (address)
+    {
         uint256 tokenID = uint256(_tokenID);
         return erc721_tokenContract.ownerOf(tokenID);
     }
 
-    function atMyAddress (uint256 tokenID) external view returns (string memory){
-        if (erc721_tokenContract.ownerOf(tokenID) == msg.sender){
-             return "token confirmed at sender address";
+    function atMyAddress(uint256 tokenID)
+        external
+        view
+        returns (string memory)
+    {
+        if (erc721_tokenContract.ownerOf(tokenID) == msg.sender) {
+            return "token confirmed at sender address";
         } else {
             return "token not at sender address";
         }
@@ -44,7 +56,11 @@ contract bp_helper is Ownable {
         return (now);
     }
 
-    function getStringHash(string calldata _idx) external pure returns (bytes32) {
+    function getStringHash(string calldata _idx)
+        external
+        pure
+        returns (bytes32)
+    {
         return keccak256(abi.encodePacked(_idx));
     }
 
@@ -102,8 +118,4 @@ contract bp_helper is Ownable {
         );
         return (rawRgtHash, keccak256(abi.encodePacked(_idxHash, rawRgtHash)));
     }
-
-
 }
-
-

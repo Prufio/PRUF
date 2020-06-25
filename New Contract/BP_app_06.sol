@@ -611,7 +611,10 @@ contract BP_APP is ReentrancyGuard, PullPayment, Ownable, IERC721Receiver {
             "MI2: Cannot modify asset in Escrow" //If so, it must not erase the recorder, or escrow termination will be broken!
         );
         require(rec.assetStatus < 200, "MI1: Record locked");
-        require(rec.assetStatus != 5, "MI1: Record In Transferred-unregistered status");
+        require(
+            rec.assetStatus != 5,
+            "MI1: Record In Transferred-unregistered status"
+        );
         require(
             rec.Ipfs2 == 0,
             "MI2: Ipfs2 has data already. Overwrite not permitted"

@@ -102,7 +102,7 @@ interface StorageInterface {
     ) external;
 
     function endEscrow(
-        bytes32 _userHash, 
+        bytes32 _userHash,
         bytes32 _idxHash,
         uint8 _newAssetStatus
     ) external;
@@ -132,6 +132,22 @@ interface StorageInterface {
             bytes32,
             bytes32,
             uint16
+        );
+
+    function retrieveShortRecord(bytes32 _idxHash)
+        external
+        returns (
+            bytes32,
+            bytes32,
+            uint8,
+            uint8,
+            uint16,
+            uint256,
+            uint256,
+            bytes32,
+            bytes32,
+            uint16,
+            uint256
         );
 
     function _verifyRightsHolder(bytes32, bytes32) external returns (uint256);
@@ -216,6 +232,7 @@ contract BP_APP_NP is Ownable, IERC721Receiver, ReentrancyGuard {
     // --------------------------------------Events--------------------------------------------//
 
     event REPORT(string _msg);
+    event REPORT256(uint256 _msg);
     // --------------------------------------Modifiers--------------------------------------------//
     /*
      * @dev msg.sender holds assetClass token
@@ -344,14 +361,15 @@ contract BP_APP_NP is Ownable, IERC721Receiver, ReentrancyGuard {
         return this.onERC721Received.selector;
     }
 
-    function setEscrow(
-        bytes32 _idxHash,
-        uint256 _escrowTime
-    ) external nonReentrant isAuthorized(_idxHash) {
+    function setEscrow(bytes32 _idxHash, uint256 _escrowTime)
+        external
+        nonReentrant
+        isAuthorized(_idxHash)
+    {
         Record memory rec = getRecord(_idxHash);
         User memory callingUser = getUser();
-        //uint256 escrowTime = now.add(_escrowTime.mul(60)); //set escrow end time to _escrowTime minutes in the future
-        uint256 escrowTime = _escrowTime;
+        uint256 escrowTime = now.add(_escrowTime.mul(60)); //set escrow end time to _escrowTime minutes in the future
+        //uint256 escrowTime = _escrowTime;
         uint8 newAssetStatus;
 
         require((rec.rightsHolder != 0), "SE: Record does not exist");
@@ -372,11 +390,11 @@ contract BP_APP_NP is Ownable, IERC721Receiver, ReentrancyGuard {
             "SE:ERR-Transferred, lost, or stolen status cannot be set to escrow."
         );
 
-        if (callingUser.userType == 1){ //If escrow was initiated by custodial user 
+        if (callingUser.userType == 1) {
+            //If escrow was initiated by custodial user
             newAssetStatus = 6; //Set asset status to 20 (left custodial escrow)
-        }
-
-        else if (callingUser.userType == 9){ //If escrow was initiated by automation
+        } else if (callingUser.userType == 9) {
+            //If escrow was initiated by automation
             newAssetStatus = 12; //Set asset status to 21 (left P2P escrow)
         }
 
@@ -394,9 +412,9 @@ contract BP_APP_NP is Ownable, IERC721Receiver, ReentrancyGuard {
         isAuthorized(_idxHash)
     {
         Record memory rec = getRecord(_idxHash);
+        Record memory shortRec = getShortRecord(_idxHash);
         User memory callingUser = getUser();
         uint8 _newAssetStatus;
-
 
         require((rec.rightsHolder != 0), "EE: Record does not exist");
         require(
@@ -407,33 +425,29 @@ contract BP_APP_NP is Ownable, IERC721Receiver, ReentrancyGuard {
             (rec.assetStatus == 6) || (rec.assetStatus == 12),
             "EE:ERR- record must be in escrow status"
         );
-        // require(
-        //     (rec.timeLock < now ) || (keccak256(abi.encodePacked(msg.sender)) == rec.recorder),
-        //     "EE:ERR- Escrow period not ended"
-        // );
         require(
-            (rec.timeLock < now),
+            (shortRec.timeLock < now) ||
+                (keccak256(abi.encodePacked(msg.sender)) == rec.recorder),
             "EE:ERR- Escrow period not ended"
         );
+        // require(
+        //     (shortRec.timeLock < now),
+        //     "EE:ERR- Escrow period not ended"
+        // );
 
-        if (rec.assetStatus == 6){ //If escrow was initiated by custodial user 
+        if (rec.assetStatus == 6) {
+            //If escrow was initiated by custodial user
             _newAssetStatus = 20; //Set asset status to 20 (left custodial escrow)
-        }
-
-        else if (rec.assetStatus == 12){ //If escrow was initiated by automation
+        } else if (rec.assetStatus == 12) {
+            //If escrow was initiated by automation
             _newAssetStatus = 21; //Set asset status to 21 (left P2P escrow)
         }
 
-        Storage.endEscrow(keccak256(abi.encodePacked(msg.sender)), _idxHash, _newAssetStatus);
-    }
-    
-    function getTimelock(bytes32 _idxHash)
-        external
-        isAuthorized(_idxHash)
-        returns(uint256)
-    {
-        Record memory rec = getRecord(_idxHash);
-        return (rec.timeLock);
+        Storage.endEscrow(
+            keccak256(abi.encodePacked(msg.sender)),
+            _idxHash,
+            _newAssetStatus
+        );
     }
 
     /*
@@ -537,7 +551,10 @@ contract BP_APP_NP is Ownable, IERC721Receiver, ReentrancyGuard {
         );
         require(_decAmount > 0, "DC: cannot decrement by negative number");
         require(rec.assetStatus < 200, "DC: Record locked");
-        require(rec.assetStatus != 5, "DC: Record In Transferred-unregistered status");
+        require(
+            rec.assetStatus != 5,
+            "DC: Record In Transferred-unregistered status"
+        );
         require(
             rec.rightsHolder == _rgtHash,
             "DC: Rightsholder does not match supplied data"
@@ -577,7 +594,10 @@ contract BP_APP_NP is Ownable, IERC721Receiver, ReentrancyGuard {
             "MI1: Cannot modify asset in Escrow" //If so, it must not erase the recorder, or escrow termination will be broken!
         );
         require(rec.assetStatus < 200, "MI1: Record locked");
-        require(rec.assetStatus != 5, "DC: Record In Transferred-unregistered status");
+        require(
+            rec.assetStatus != 5,
+            "DC: Record In Transferred-unregistered status"
+        );
         require(
             rec.rightsHolder == _rgtHash,
             "MI1:ERR--Rightsholder does not match supplied data"
@@ -636,6 +656,44 @@ contract BP_APP_NP is Ownable, IERC721Receiver, ReentrancyGuard {
             rec.Ipfs1 = _Ipfs1;
             rec.Ipfs2 = _Ipfs2;
             rec.numberOfTransfers = _numberOfTransfers;
+        } //end of scope limit for stack depth
+
+        return (rec); // Returns Record struct rec
+    }
+
+    /*
+     * @dev Get a ShortRecord from Storage @ idxHash
+     */
+    function getShortRecord(bytes32 _idxHash) private returns (Record memory) {
+        Record memory rec;
+
+        {
+            //Start of scope limit for stack depth
+            (
+                bytes32 _recorder,
+                bytes32 _lastRecorder,
+                uint8 _assetStatus,
+                uint8 _forceModCount,
+                uint16 _assetClass,
+                uint256 _countDown,
+                uint256 _countDownStart,
+                bytes32 _Ipfs1,
+                bytes32 _Ipfs2,
+                uint16 _numberOfTransfers,
+                uint256 _timeLock
+            ) = Storage.retrieveShortRecord(_idxHash); // Get record from storage contract
+
+            rec.recorder = _recorder;
+            rec.lastRecorder = _lastRecorder;
+            rec.assetStatus = _assetStatus;
+            rec.forceModCount = _forceModCount;
+            rec.assetClass = _assetClass;
+            rec.countDown = _countDown;
+            rec.countDownStart = _countDownStart;
+            rec.Ipfs1 = _Ipfs1;
+            rec.Ipfs2 = _Ipfs2;
+            rec.numberOfTransfers = _numberOfTransfers;
+            rec.timeLock = _timeLock;
         } //end of scope limit for stack depth
 
         return (rec); // Returns Record struct rec
