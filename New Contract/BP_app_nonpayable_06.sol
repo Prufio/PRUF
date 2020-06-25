@@ -359,7 +359,7 @@ contract BP_APP_NP is Ownable, IERC721Receiver, ReentrancyGuard {
         );
         require(
             (_escrowTime >= now),
-            "SE:ERR-Must set to a time in the future"
+            "SE:ERR-Escrow must be set to a time in the future"
         );
         require(
             (rec.assetStatus != 3) &&
