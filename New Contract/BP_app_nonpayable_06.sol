@@ -39,9 +39,9 @@
 
 // SPDX-License-Identifier: UNLICENSED
 pragma solidity ^0.6.2;
-import "./Ownable.sol";
-import "./SafeMath.sol";
-import "./ReentrancyGuard.sol";
+import "./Imports/Ownable.sol";
+import "./Imports/SafeMath.sol";
+import "./Imports/ReentrancyGuard.sol";
 import "./_ERC721/IERC721Receiver.sol";
 
 interface BPappPayableInterface {

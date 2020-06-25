@@ -23,9 +23,9 @@
 // SPDX-License-Identifier: UNLICENSED
 pragma solidity ^0.6.2;
 
-import "./Ownable.sol";
-import "./SafeMath.sol";
-import "./ReentrancyGuard.sol";
+import "./Imports/Ownable.sol";
+import "./Imports/SafeMath.sol";
+import "./Imports/ReentrancyGuard.sol";
 
 interface AssetClassTokenInterface {
     function ownerOf(uint256) external view returns (address);
