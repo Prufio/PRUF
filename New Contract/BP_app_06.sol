@@ -39,8 +39,8 @@
 
 // SPDX-License-Identifier: UNLICENSED
 pragma solidity ^0.6.2;
-import "./PullPayment.sol";
-import "./ReentrancyGuard.sol";
+import "./Imports/PullPayment.sol";
+import "./Imports/ReentrancyGuard.sol";
 import "./_ERC721/IERC721Receiver.sol";
 
 interface AssetClassTokenInterface {
