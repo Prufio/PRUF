@@ -19,6 +19,7 @@ import returnStorageAbi from "./stor_abi";
 import returnAddresses from "./Contracts";
 import Button from "react-bootstrap/Button";
 import Form from "react-bootstrap/Form";
+import EscrowManager from "./EscrowManager"
 
 class Main extends Component {
   constructor(props) {
@@ -169,6 +170,9 @@ class Main extends Component {
                     <li>
                       <NavLink to="/force-modify-record">Modify</NavLink>
                     </li>
+                    <li>
+                      <NavLink to="/manage-escrow">Escrow</NavLink>
+                    </li>
                   </nav>
                 )}
 
@@ -216,6 +220,10 @@ class Main extends Component {
                 <Route
                   path="/verify-rights-holder"
                   component={VerifyRightsholder}
+                />
+                <Route
+                  path="/manage-escrow"
+                  component={EscrowManager}
                 />
                 <Route path="/add-user" component={AddUser} />
                 <Route path="/set-costs" component={SetCosts} />
