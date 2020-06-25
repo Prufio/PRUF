@@ -286,18 +286,17 @@ contract BP_APP is ReentrancyGuard, PullPayment, Ownable, IERC721Receiver {
     /*
      * @dev Address Setters
      */
-    function OO_getContractAddresses()
-        external
-        nonReentrant
-        onlyOwner
-    {
-        AssetClassTokenAddress = Storage.resolveContractAddress("assetClassToken");
-        AssetClassTokenContract = AssetClassTokenInterface(AssetClassTokenAddress);
+    function OO_getContractAddresses() external nonReentrant onlyOwner {
+        AssetClassTokenAddress = Storage.resolveContractAddress(
+            "assetClassToken"
+        );
+        AssetClassTokenContract = AssetClassTokenInterface(
+            AssetClassTokenAddress
+        );
 
         AssetTokenAddress = Storage.resolveContractAddress("assetToken");
         AssetTokenContract = AssetTokenInterface(AssetTokenAddress);
     }
-
 
     function OO_TX_asset_Token(address _to, bytes32 _idxHash)
         external
@@ -456,8 +455,8 @@ contract BP_APP is ReentrancyGuard, PullPayment, Ownable, IERC721Receiver {
             "FMR: Cannot modify asset in Escrow"
         );
         require(
-            (rec.assetStatus != 5),
-            "FMR:ERR-Cannot change status of asset in transferred status."
+            rec.assetStatus != 5,
+            "DC: Record In Transferred-unregistered status"
         );
         require(rec.assetStatus < 200, "FMR: Record locked");
         require(
@@ -561,10 +560,6 @@ contract BP_APP is ReentrancyGuard, PullPayment, Ownable, IERC721Receiver {
             "TA: User not authorized to modify records in specified asset class"
         );
         require(_newrgtHash != 0, "TA:ERR-new Rightsholder cannot be blank");
-        require( //-------------------------------------Should an asset in escrow be transferrable?
-            ((rec.assetStatus != 6) && (rec.assetStatus != 6)), //Should it be contingent on the original recorder address?
-            "TA: Cannot transfer asset in Escrow" //If so, it must not erase the recorder, or escrow termination will be broken!
-        );
         require(
             (rec.assetStatus == 1) || (rec.assetStatus == 7),
             "TA:ERR--Asset assetStatus is not transferrable"
@@ -616,6 +611,7 @@ contract BP_APP is ReentrancyGuard, PullPayment, Ownable, IERC721Receiver {
             "MI2: Cannot modify asset in Escrow" //If so, it must not erase the recorder, or escrow termination will be broken!
         );
         require(rec.assetStatus < 200, "MI1: Record locked");
+        require(rec.assetStatus != 5, "MI1: Record In Transferred-unregistered status");
         require(
             rec.Ipfs2 == 0,
             "MI2: Ipfs2 has data already. Overwrite not permitted"
@@ -657,8 +653,15 @@ contract BP_APP is ReentrancyGuard, PullPayment, Ownable, IERC721Receiver {
     /*
      * @dev Get a User Record from Storage @ msg.sender
      */
-    function getUserExt(bytes32 _userHash) external view returns (uint8,uint16) {
-        return(registeredUsers[_userHash].userType, registeredUsers[_userHash].authorizedAssetClass);
+    function getUserExt(bytes32 _userHash)
+        external
+        view
+        returns (uint8, uint16)
+    {
+        return (
+            registeredUsers[_userHash].userType,
+            registeredUsers[_userHash].authorizedAssetClass
+        );
     }
 
     //--------------------------------------------------------------------------------------Storage Reading private functions

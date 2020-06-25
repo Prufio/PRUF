@@ -347,6 +347,7 @@ contract BP_APP_NP is Ownable, IERC721Receiver, ReentrancyGuard {
     ) external nonReentrant isAuthorized(_idxHash) {
         Record memory rec = getRecord(_idxHash);
         User memory callingUser = getUser();
+        uint256 escrowTime = now.add(_escrowTime.mul(60)); //set escrow end time to _escrowTime minutes in the future
 
         require((rec.rightsHolder != 0), "SE: Record does not exist");
         require(
@@ -358,7 +359,7 @@ contract BP_APP_NP is Ownable, IERC721Receiver, ReentrancyGuard {
             "SE:ERR-Must set to an escrow status"
         );
         require(
-            (_escrowTime >= now),
+            (escrowTime >= now),
             "SE:ERR-Escrow must be set to a time in the future"
         );
         require(
@@ -374,7 +375,7 @@ contract BP_APP_NP is Ownable, IERC721Receiver, ReentrancyGuard {
             keccak256(abi.encodePacked(msg.sender)),
             _idxHash,
             _newAssetStatus,
-            _escrowTime
+            escrowTime
         );
     }
 
@@ -393,6 +394,10 @@ contract BP_APP_NP is Ownable, IERC721Receiver, ReentrancyGuard {
         );
         require(
             (rec.assetStatus == 6) || (rec.assetStatus == 12),
+            "EE:ERR- record must be in escrow status"
+        );
+        require(
+            (rec.timeLock < now ) || (keccak256(abi.encodePacked(msg.sender)) == rec.recorder),
             "EE:ERR- record must be in escrow status"
         );
 
@@ -417,12 +422,12 @@ contract BP_APP_NP is Ownable, IERC721Receiver, ReentrancyGuard {
         );
         require(_newAssetStatus < 200, "MS: user cannot set status > 199");
         require(
-            (rec.assetStatus != 6) && (rec.assetStatus != 6),
-            "MS: Cannot change status of asset in Escrow"
+            (rec.assetStatus != 6) && (rec.assetStatus != 12),
+            "MS: Cannot change status of asset in Escrow until escrow is expired"
         );
         require(
             (rec.assetStatus != 5),
-            "MS:ERR-Cannot change status of asset in transferred status."
+            "MS:ERR-Cannot change status of asset in transferred-unregistered status."
         );
         require(rec.assetStatus < 200, "MS: Record locked");
         require(
@@ -495,11 +500,12 @@ contract BP_APP_NP is Ownable, IERC721Receiver, ReentrancyGuard {
             "DC: User not authorized to modify records in specified asset class"
         );
         require( //------------------------------------------should the counter still work when an asset is in escrow?
-            (rec.assetStatus != 6) && (rec.assetStatus != 6), //If so, it must not erase the recorder, or escrow termination will be broken!
+            (rec.assetStatus != 6) && (rec.assetStatus != 12), //If so, it must not erase the recorder, or escrow termination will be broken!
             "DC: Cannot modify asset in Escrow"
         );
         require(_decAmount > 0, "DC: cannot decrement by negative number");
         require(rec.assetStatus < 200, "DC: Record locked");
+        require(rec.assetStatus != 5, "DC: Record In Transferred-unregistered status");
         require(
             rec.rightsHolder == _rgtHash,
             "DC: Rightsholder does not match supplied data"
@@ -539,6 +545,7 @@ contract BP_APP_NP is Ownable, IERC721Receiver, ReentrancyGuard {
             "MI1: Cannot modify asset in Escrow" //If so, it must not erase the recorder, or escrow termination will be broken!
         );
         require(rec.assetStatus < 200, "MI1: Record locked");
+        require(rec.assetStatus != 5, "DC: Record In Transferred-unregistered status");
         require(
             rec.rightsHolder == _rgtHash,
             "MI1:ERR--Rightsholder does not match supplied data"

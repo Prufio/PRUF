@@ -475,7 +475,7 @@ contract Storage is Ownable, ReentrancyGuard {
     }
 
     /*
-     * @dev remove an asset from escrow status.
+     * @dev remove an asset from escrow status
      */
     function endEscrow(bytes32 _userHash, bytes32 _idxHash)
         external
@@ -485,14 +485,6 @@ contract Storage is Ownable, ReentrancyGuard {
         exists(_idxHash) //isACtokenHolder(_idxHash)
     {
         require(
-            (database[_idxHash].recorder == _userHash),
-            "EE:ERR-Escrow can only be ended early by the originator of the escrow."
-        );
-        require(
-            (database[_idxHash].timeLock > now),
-            "EE:ERR-Escrow already expired"
-        );
-        require(
             (database[_idxHash].assetStatus == 6) ||
                 (database[_idxHash].assetStatus == 12),
             "EE:ERR-Asset not in escrow"
@@ -501,7 +493,7 @@ contract Storage is Ownable, ReentrancyGuard {
         database[_idxHash].timeLock = block.number;
         Record memory rec = database[_idxHash];
 
-        rec.timeLock = now;
+        rec.timeLock = block.number;
         (rec.lastRecorder, rec.recorder) = storeRecorder(_idxHash, _userHash);
 
         database[_idxHash] = rec;
