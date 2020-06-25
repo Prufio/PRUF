@@ -407,8 +407,12 @@ contract BP_APP_NP is Ownable, IERC721Receiver, ReentrancyGuard {
             (rec.assetStatus == 6) || (rec.assetStatus == 12),
             "EE:ERR- record must be in escrow status"
         );
+        // require(
+        //     (rec.timeLock < now ) || (keccak256(abi.encodePacked(msg.sender)) == rec.recorder),
+        //     "EE:ERR- Escrow period not ended"
+        // );
         require(
-            (rec.timeLock < now ) || (keccak256(abi.encodePacked(msg.sender)) == rec.recorder),
+            (rec.timeLock < now),
             "EE:ERR- Escrow period not ended"
         );
 
