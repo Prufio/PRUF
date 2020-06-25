@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: UNLICENSED
 pragma solidity ^0.6.2;
 
-import "./Ownable.sol";
+import "./Imports/Ownable.sol";
 
 interface erc721_tokenInterface {
     function ownerOf(uint256) external view returns (address);
@@ -22,7 +22,7 @@ contract bp_helper is Ownable {
     function atWhatAddress (uint256 tokenID) external view onlyOwner returns (address){
         return erc721_tokenContract.ownerOf(tokenID);
     }
-    
+
     function atWhatAddressTokenB32 (bytes32 _tokenID) external view onlyOwner returns (address){
         uint256 tokenID = uint256(_tokenID);
         return erc721_tokenContract.ownerOf(tokenID);
@@ -34,31 +34,32 @@ contract bp_helper is Ownable {
         } else {
             return "token not at sender address";
         }
-
     }
-    
+
     function getBlock() external view returns (uint256) {
         return (block.number);
     }
-    
+
+    function getTime() external view returns (uint256) {
+        return (now);
+    }
+
     function getStringHash(string calldata _idx) external pure returns (bytes32) {
         return keccak256(abi.encodePacked(_idx));
     }
-    
+
     function getB32Hash(bytes32 _idx) external pure returns (bytes32) {
         return keccak256(abi.encodePacked(_idx));
-        
     }
-    
+
     function getAddrHash(address _idx) external pure returns (bytes32) {
         return keccak256(abi.encodePacked(_idx));
-        
     }
-    
+
     function getUint256Hash(uint256 _idx) external pure returns (bytes32) {
         return keccak256(abi.encodePacked(_idx));
     }
-    
+
     function b32_to_uint256(bytes32 b32) external pure returns (uint256) {
         return uint256(b32);
     }
@@ -66,7 +67,7 @@ contract bp_helper is Ownable {
     function uint256_to_b32(uint256 u256) external pure returns (bytes32) {
         return bytes32(u256);
     }
-    
+
     function getIdxHash(
         string memory _idx_type,
         string memory _idx_mfg,
