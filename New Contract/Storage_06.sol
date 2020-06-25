@@ -625,7 +625,8 @@ contract Storage is Ownable, ReentrancyGuard {
             uint256,
             bytes32,
             bytes32,
-            uint16
+            uint16,
+            uint256
         )
     {
         Record memory rec = database[_idxHash];
@@ -649,7 +650,8 @@ contract Storage is Ownable, ReentrancyGuard {
             rec.countDownStart,
             rec.Ipfs1,
             rec.Ipfs2,
-            rec.numberOfTransfers
+            rec.numberOfTransfers,
+            rec.timeLock
         );
     }
 
