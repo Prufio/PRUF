@@ -383,7 +383,7 @@ contract BP_APP_NP is Ownable, IERC721Receiver, ReentrancyGuard {
         );
     }
 
-    function endEscrow(bytes32 _idxHash, )
+    function endEscrow(bytes32 _idxHash)
         external
         nonReentrant
         isAuthorized(_idxHash)
