@@ -101,7 +101,11 @@ interface StorageInterface {
         uint256 _escrowTime
     ) external;
 
-    function endEscrow(bytes32 _userHash, bytes32 _idxHash) external;
+    function endEscrow(
+        bytes32 _userHash, 
+        bytes32 _idxHash,
+        uint8 _newAssetStatus
+    ) external;
 
     function ACTH_setCosts(
         uint16 _class,
@@ -379,13 +383,15 @@ contract BP_APP_NP is Ownable, IERC721Receiver, ReentrancyGuard {
         );
     }
 
-    function endEscrow(bytes32 _idxHash)
+    function endEscrow(bytes32 _idxHash, )
         external
         nonReentrant
         isAuthorized(_idxHash)
     {
         Record memory rec = getRecord(_idxHash);
         User memory callingUser = getUser();
+        uint8 _newAssetStatus;
+
 
         require((rec.rightsHolder != 0), "EE: Record does not exist");
         require(
@@ -401,7 +407,15 @@ contract BP_APP_NP is Ownable, IERC721Receiver, ReentrancyGuard {
             "EE:ERR- record must be in escrow status"
         );
 
-        Storage.endEscrow(keccak256(abi.encodePacked(msg.sender)), _idxHash);
+        if (rec.assetStatus == 6){ //If escrow was initiated by custodial user 
+            _newAsssetStatus = 20; //Set asset status to 20 (left custodial escrow)
+        }
+
+        else if (rec.assetStatus == 12){ //If escrow was initiated by automation
+            _newAssetStatus = 21; //Set asset status to 21 (left P2P escrow)
+        }
+
+        Storage.endEscrow(keccak256(abi.encodePacked(msg.sender)), _idxHash, _newAssetStatus);
     }
 
     /*

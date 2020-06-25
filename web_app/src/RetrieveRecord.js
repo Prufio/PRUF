@@ -72,6 +72,7 @@ class ModifyDescription extends Component {
       surname: "",
       id: "",
       secret: "",
+      status: "",
       web3: null,
       frontendPayable: "",
       frontendFree: "",
@@ -156,7 +157,20 @@ class ModifyDescription extends Component {
             self.setState({ error: _error });
             self.setState({ result: 0 });
           } else {
-            self.setState({ result: Object.values(_result) });
+            if (Object.values(_result)[2] === '0'){  self.setState({ status: 'No status set' });}
+            else if (Object.values(_result)[2] === '1'){  self.setState({ status: 'Transferrable' });}
+            else if (Object.values(_result)[2] === '2'){  self.setState({ status: 'Non-transferrable' });}
+            else if (Object.values(_result)[2] === '3'){  self.setState({ status: 'ASSET REPORTED STOLEN' });}
+            else if (Object.values(_result)[2] === '4'){  self.setState({ status: 'ASSET REPRTED LOST' });}
+            else if (Object.values(_result)[2] === '5'){  self.setState({ status: 'Asset in transfer' });}
+            else if (Object.values(_result)[2] === '6'){  self.setState({ status: 'In escrow (block.number locked)' });}
+            else if (Object.values(_result)[2] === '7'){  self.setState({ status: 'P2P Transferrable' });}
+            else if (Object.values(_result)[2] === '8'){  self.setState({ status: 'P2P Non-transferrable' });}
+            else if (Object.values(_result)[2] === '9'){  self.setState({ status: 'ASSET REPORTED STOLEN (P2P)' });}
+            else if (Object.values(_result)[2] === '10'){  self.setState({ status: 'ASSET REPORTED LOST (P2P)' });}
+            else if (Object.values(_result)[2] === '11'){  self.setState({ status: 'In P2P transfer' });}
+            else if (Object.values(_result)[2] === '12'){  self.setState({ status: 'In escrow (block.time locked)' });}
+            self.setState({ result: Object.values(_result)})
             self.setState({ error: undefined });
 
             if (Object.values(_result)[7] > 0) {getIPFS1(getIpfsHashFromBytes32(Object.values(_result)[7]));}
@@ -248,8 +262,8 @@ class ModifyDescription extends Component {
 
         {this.state.result[4] > 0 && ( //conditional rendering
           <div className="RRresults">
-            Status:
-            {this.state.result[2]}
+            Status: 
+            {this.state.status}
             <br></br>
             Mod Count:
             {this.state.result[3]}
