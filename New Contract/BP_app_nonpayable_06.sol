@@ -350,7 +350,8 @@ contract BP_APP_NP is Ownable, IERC721Receiver, ReentrancyGuard {
     ) external nonReentrant isAuthorized(_idxHash) {
         Record memory rec = getRecord(_idxHash);
         User memory callingUser = getUser();
-        uint256 escrowTime = now.add(_escrowTime.mul(60)); //set escrow end time to _escrowTime minutes in the future
+        //uint256 escrowTime = now.add(_escrowTime.mul(60)); //set escrow end time to _escrowTime minutes in the future
+        uint256 escrowTime = _escrowTime;
         uint8 newAssetStatus;
 
         require((rec.rightsHolder != 0), "SE: Record does not exist");
@@ -408,7 +409,7 @@ contract BP_APP_NP is Ownable, IERC721Receiver, ReentrancyGuard {
         );
         require(
             (rec.timeLock < now ) || (keccak256(abi.encodePacked(msg.sender)) == rec.recorder),
-            "EE:ERR- record must be in escrow status"
+            "EE:ERR- Escrow period not ended"
         );
 
         if (rec.assetStatus == 6){ //If escrow was initiated by custodial user 
