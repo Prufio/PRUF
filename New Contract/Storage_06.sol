@@ -221,10 +221,7 @@ contract Storage is Ownable, ReentrancyGuard {
      * @dev Address Setters
      */
 
-    function OO_getTokenAddresses()
-        external
-        onlyOwner
-    {
+    function OO_getTokenAddresses() external onlyOwner {
         address _contractAddress = resolveContractAddress("assetClassToken");
         AssetClassTokenAddress = _contractAddress;
         AssetClassTokenContract = AssetClassTokenInterface(_contractAddress);
@@ -303,7 +300,7 @@ contract Storage is Ownable, ReentrancyGuard {
         uint16 _assetClass,
         uint256 _countDownStart,
         bytes32 _Ipfs1
-    ) external isAuthorized nonReentrant{
+    ) external isAuthorized nonReentrant {
         // uint256 assetClass256 = uint256(_assetClass);
         // require( //origin address holds assetClass token, or assetClass is >=65000
         //     (database[_idxHash].assetClass >= 65000) ||
@@ -477,13 +474,21 @@ contract Storage is Ownable, ReentrancyGuard {
     /*
      * @dev remove an asset from escrow status
      */
-    function endEscrow(bytes32 _userHash, bytes32 _idxHash)
+    function endEscrow(
+        bytes32 _userHash,
+        bytes32 _idxHash,
+        uint8 _newAssetStatus
+    )
         external
         nonReentrant
         isAuthorized
         notBlockLocked(_idxHash)
         exists(_idxHash) //isACtokenHolder(_idxHash)
     {
+        require(
+            (_newAssetStatus == 20) || (_newAssetStatus == 21),
+            "EE:ERR-Must set to 20 or 21 status" //require to be set to 20 or 21 - escrow ended by type1 (20) or type 9 (21)user
+        );
         require(
             (database[_idxHash].assetStatus == 6) ||
                 (database[_idxHash].assetStatus == 12),
@@ -494,6 +499,7 @@ contract Storage is Ownable, ReentrancyGuard {
         Record memory rec = database[_idxHash];
 
         rec.timeLock = block.number;
+        rec.assetStatus = _newAssetStatus;
         (rec.lastRecorder, rec.recorder) = storeRecorder(_idxHash, _userHash);
 
         database[_idxHash] = rec;
