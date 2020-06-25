@@ -133,6 +133,21 @@ interface StorageInterface {
             bytes32,
             uint16
         );
+    function retrieveShortRecord(bytes32 _idxHash)
+        external
+        returns (
+            bytes32,
+            bytes32,
+            uint8,
+            uint8,
+            uint16,
+            uint256,
+            uint256,
+            bytes32,
+            bytes32,
+            uint16,
+            uint256
+        );
 
     function _verifyRightsHolder(bytes32, bytes32) external returns (uint256);
 
@@ -216,6 +231,7 @@ contract BP_APP_NP is Ownable, IERC721Receiver, ReentrancyGuard {
     // --------------------------------------Events--------------------------------------------//
 
     event REPORT(string _msg);
+    event REPORT256(uint256 _msg);
     // --------------------------------------Modifiers--------------------------------------------//
     /*
      * @dev msg.sender holds assetClass token
@@ -372,7 +388,7 @@ contract BP_APP_NP is Ownable, IERC721Receiver, ReentrancyGuard {
             "SE:ERR-Transferred, lost, or stolen status cannot be set to escrow."
         );
 
-        if (callingUser.userType == 1){ //If escrow was initiated by custodial user 
+        if (callingUser.userType == 1){ //If escrow was initiated by custodial user
             newAssetStatus = 6; //Set asset status to 20 (left custodial escrow)
         }
 
@@ -433,7 +449,8 @@ contract BP_APP_NP is Ownable, IERC721Receiver, ReentrancyGuard {
         returns(uint256)
     {
         Record memory rec = getRecord(_idxHash);
-        return (rec.timeLock);
+        emit REPORT("Timelock=");
+        emit REPORT256(rec.timeLock);
     }
 
     /*
@@ -607,6 +624,44 @@ contract BP_APP_NP is Ownable, IERC721Receiver, ReentrancyGuard {
      * @dev Get a Record from Storage @ idxHash
      */
     function getRecord(bytes32 _idxHash) private returns (Record memory) {
+        Record memory rec;
+
+        {
+            //Start of scope limit for stack depth
+            (
+                bytes32 _recorder,
+                bytes32 _rightsHolder,
+                bytes32 _lastRecorder,
+                uint8 _assetStatus,
+                uint8 _forceModCount,
+                uint16 _assetClass,
+                uint256 _countDown,
+                uint256 _countDownStart,
+                bytes32 _Ipfs1,
+                bytes32 _Ipfs2,
+                uint16 _numberOfTransfers
+            ) = Storage.retrieveRecord(_idxHash); // Get record from storage contract
+
+            rec.recorder = _recorder;
+            rec.rightsHolder = _rightsHolder;
+            rec.lastRecorder = _lastRecorder;
+            rec.assetStatus = _assetStatus;
+            rec.forceModCount = _forceModCount;
+            rec.assetClass = _assetClass;
+            rec.countDown = _countDown;
+            rec.countDownStart = _countDownStart;
+            rec.Ipfs1 = _Ipfs1;
+            rec.Ipfs2 = _Ipfs2;
+            rec.numberOfTransfers = _numberOfTransfers;
+        } //end of scope limit for stack depth
+
+        return (rec); // Returns Record struct rec
+    }
+
+    /*
+     * @dev Get a ShortRecord from Storage @ idxHash
+     */
+    function getShortRecord(bytes32 _idxHash) private returns (Record memory) {
         Record memory rec;
 
         {
