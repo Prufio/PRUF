@@ -170,6 +170,8 @@ class ModifyDescription extends Component {
             else if (Object.values(_result)[2] === '10'){  self.setState({ status: 'ASSET REPORTED LOST (P2P)' });}
             else if (Object.values(_result)[2] === '11'){  self.setState({ status: 'In P2P transfer' });}
             else if (Object.values(_result)[2] === '12'){  self.setState({ status: 'In escrow (block.time locked)' });}
+            else if (Object.values(_result)[2] === '20'){  self.setState({ status: 'Cusdodial escrow ended' });}
+            else if (Object.values(_result)[2] === '21'){  self.setState({ status: 'P2P escrow ended' });}
             self.setState({ result: Object.values(_result)})
             self.setState({ error: undefined });
 
