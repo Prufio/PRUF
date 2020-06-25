@@ -426,6 +426,15 @@ contract BP_APP_NP is Ownable, IERC721Receiver, ReentrancyGuard {
 
         Storage.endEscrow(keccak256(abi.encodePacked(msg.sender)), _idxHash, _newAssetStatus);
     }
+    
+    function getTimelock(bytes32 _idxHash)
+        external
+        isAuthorized(_idxHash)
+        returns(uint256)
+    {
+        Record memory rec = getRecord(_idxHash);
+        return (rec.timeLock);
+    }
 
     /*
      * @dev Modify **Record**.assetStatus with confirmation required
