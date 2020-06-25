@@ -498,7 +498,6 @@ contract Storage is Ownable, ReentrancyGuard {
         database[_idxHash].timeLock = block.number;
         Record memory rec = database[_idxHash];
 
-        rec.timeLock = block.number;
         rec.assetStatus = _newAssetStatus;
         (rec.lastRecorder, rec.recorder) = storeRecorder(_idxHash, _userHash);
 
