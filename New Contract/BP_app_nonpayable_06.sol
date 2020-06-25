@@ -408,7 +408,7 @@ contract BP_APP_NP is Ownable, IERC721Receiver, ReentrancyGuard {
         );
 
         if (rec.assetStatus == 6){ //If escrow was initiated by custodial user 
-            _newAsssetStatus = 20; //Set asset status to 20 (left custodial escrow)
+            _newAssetStatus = 20; //Set asset status to 20 (left custodial escrow)
         }
 
         else if (rec.assetStatus == 12){ //If escrow was initiated by automation
