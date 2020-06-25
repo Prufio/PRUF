@@ -571,7 +571,6 @@ contract Storage is Ownable, ReentrancyGuard {
         view
         isAuthorized
         returns (
-            //exists(_idxHash)
             bytes32,
             bytes32,
             bytes32,
@@ -615,7 +614,6 @@ contract Storage is Ownable, ReentrancyGuard {
         external
         view
         returns (
-            //exists(_idxHash)
             bytes32,
             bytes32,
             uint8,
