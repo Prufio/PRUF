@@ -133,6 +133,7 @@ interface StorageInterface {
             bytes32,
             uint16
         );
+
     function retrieveShortRecord(bytes32 _idxHash)
         external
         returns (
@@ -410,6 +411,7 @@ contract BP_APP_NP is Ownable, IERC721Receiver, ReentrancyGuard {
         isAuthorized(_idxHash)
     {
         Record memory rec = getRecord(_idxHash);
+        Record memory shortRec = getShortRecord(_idxHash);
         User memory callingUser = getUser();
         uint8 _newAssetStatus;
 
@@ -428,11 +430,11 @@ contract BP_APP_NP is Ownable, IERC721Receiver, ReentrancyGuard {
         //     "EE:ERR- Escrow period not ended"
         // );
         require(
-            (rec.timeLock < now),
+            (shortRec.timeLock < now),
             "EE:ERR- Escrow period not ended"
         );
 
-        if (rec.assetStatus == 6){ //If escrow was initiated by custodial user 
+        if (rec.assetStatus == 6){ //If escrow was initiated by custodial user
             _newAssetStatus = 20; //Set asset status to 20 (left custodial escrow)
         }
 
@@ -668,7 +670,6 @@ contract BP_APP_NP is Ownable, IERC721Receiver, ReentrancyGuard {
             //Start of scope limit for stack depth
             (
                 bytes32 _recorder,
-                bytes32 _rightsHolder,
                 bytes32 _lastRecorder,
                 uint8 _assetStatus,
                 uint8 _forceModCount,
@@ -677,11 +678,11 @@ contract BP_APP_NP is Ownable, IERC721Receiver, ReentrancyGuard {
                 uint256 _countDownStart,
                 bytes32 _Ipfs1,
                 bytes32 _Ipfs2,
-                uint16 _numberOfTransfers
-            ) = Storage.retrieveRecord(_idxHash); // Get record from storage contract
+                uint16 _numberOfTransfers,
+                uint256 _timeLock
+            ) = Storage.retrieveShortRecord(_idxHash); // Get record from storage contract
 
             rec.recorder = _recorder;
-            rec.rightsHolder = _rightsHolder;
             rec.lastRecorder = _lastRecorder;
             rec.assetStatus = _assetStatus;
             rec.forceModCount = _forceModCount;
@@ -691,6 +692,7 @@ contract BP_APP_NP is Ownable, IERC721Receiver, ReentrancyGuard {
             rec.Ipfs1 = _Ipfs1;
             rec.Ipfs2 = _Ipfs2;
             rec.numberOfTransfers = _numberOfTransfers;
+            rec.timeLock = _timeLock;
         } //end of scope limit for stack depth
 
         return (rec); // Returns Record struct rec
