@@ -8,6 +8,10 @@ import Form from "react-bootstrap/Form";
 import Col from "react-bootstrap/Col";
 import Button from "react-bootstrap/Button";
 import bs58 from "bs58";
+import returnManufacturers from "./Manufacturers";
+import returnTypes from "./Types";
+import returnAC from "./AssetClasses";
+import returnActions from "./Actions";
 
 class NewRecord extends Component {
   constructor(props) {
@@ -72,6 +76,7 @@ class NewRecord extends Component {
 
     this.state = {
       addr: "",
+      action: "",
       lookupIPFS1: "",
       lookupIPFS2: "",
       IPFS: require("ipfs-mini"),
@@ -81,7 +86,7 @@ class NewRecord extends Component {
       result: null,
       costResult: {},
       costArray: [0],
-      AssetClass: "",
+      AssetClass: "0",
       CountDownStart: "",
       ipfs1: "",
       txHash: "",
@@ -238,31 +243,70 @@ class NewRecord extends Component {
               <h2 className="Headertext">New Record</h2>
               <br></br>
               <Form.Row>
+
+              <Form.Group as={Col} controlId="formGridFormat">
+                <Form.Label className="formFont">Asset Class:</Form.Label>
+                  <Form.Control as="select" size="lg" onChange={(e) => this.setState({ assetClass: e.target.value })}>
+                  <>
+                    <option value="10">Choose an asset class</option>
+                    <option value="3">Firearms Class 01</option>
+                    <option value="4">Firearms Class 02</option>
+                    <option value="5">Firearms Class 03</option>
+                    <option value="6">Firearms Class 09</option>
+                    <option value="7">Motor Vehicles</option>
+                    <option value="8">Art Collectables</option>
+                    <option value="9">Electronics</option>
+                  </>
+                  </Form.Control>
+                </Form.Group>
+                </Form.Row>
+                <Form.Row>
                 <Form.Group as={Col} controlId="formGridType">
                   <Form.Label className="formFont">Type:</Form.Label>
-                  <Form.Control
+
+                  {returnTypes(this.state.assetClass) !== '0' &&(<Form.Control as="select" size="lg" onChange={(e) => this.setState({ type: e.target.value })}>
+                  {returnTypes(this.state.assetClass)}
+                  </Form.Control>
+                  )}
+
+                    {returnTypes(this.state.assetClass) === '0' &&(
+                    <Form.Control
                     placeholder="Type"
                     required
                     onChange={(e) => this.setState({ type: e.target.value })}
                     size="lg"
-                  />
+                  />)}
                 </Form.Group>
 
-                <Form.Group as={Col} controlId="formGridManufacturer">
-                  <Form.Label className="formFont">Manufacturer:</Form.Label>
-                  <Form.Control
+                  <Form.Group as={Col} controlId="formGridManufacturer">
+                    <Form.Label className="formFont">Manufacturer:</Form.Label>
+                    {returnManufacturers(this.state.assetClass) !== '0' &&(<Form.Control as="select" size="lg" onChange={(e) => this.setState({ manufacturer: e.target.value })}>
+                  {returnManufacturers(this.state.assetClass)}
+                  </Form.Control>
+                  )}
+
+                      {returnManufacturers(this.state.assetClass) === '0' &&(
+                    <Form.Control
                     placeholder="Manufacturer"
                     required
-                    onChange={(e) =>
-                      this.setState({ manufacturer: e.target.value })
-                    }
+                    onChange={(e) => this.setState({ manufacturer: e.target.value })}
                     size="lg"
-                  />
-                </Form.Group>
+                  />)}
+                  </Form.Group>
+                  
+                  {returnActions(this.state.assetClass) !== "0" &&(
+                  <Form.Group as={Col} controlId="formGridAction">
+                  <Form.Label className="formFont">Action:</Form.Label>
+                    {returnActions(this.state.assetClass) !== '0' &&(<Form.Control as="select" size="lg" onChange={(e) => this.setState({ action: e.target.value })}>
+                    {returnActions(this.state.assetClass)}
+                    </Form.Control>
+                    )}
+                  </Form.Group>)}
+
               </Form.Row>
 
               <Form.Row>
-                <Form.Group as={Col} controlId="formGridModel">
+              <Form.Group as={Col} controlId="formGridModel">
                   <Form.Label className="formFont">Model:</Form.Label>
                   <Form.Control
                     placeholder="Model"
@@ -337,18 +381,6 @@ class NewRecord extends Component {
                   />
                 </Form.Group>
 
-                <Form.Group as={Col} controlId="formGridCity">
-                  <Form.Label className="formFont">Asset Class:</Form.Label>
-                  <Form.Control
-                    placeholder="Asset Class"
-                    type="number"
-                    required
-                    onChange={(e) =>
-                      this.setState({ AssetClass: e.target.value })
-                    }
-                    size="lg"
-                  />
-                </Form.Group>
               </Form.Row>
               <Form.Row>
                 <Form.Group as={Col} controlId="formGridLogStartValue">
