@@ -232,6 +232,11 @@ function returnStorageAbi() {
 						"internalType": "bytes32",
 						"name": "_idxHash",
 						"type": "bytes32"
+					},
+					{
+						"internalType": "uint8",
+						"name": "_newAssetStatus",
+						"type": "uint8"
 					}
 				],
 				"name": "endEscrow",
@@ -625,6 +630,11 @@ function returnStorageAbi() {
 						"internalType": "uint16",
 						"name": "",
 						"type": "uint16"
+					},
+					{
+						"internalType": "uint256",
+						"name": "",
+						"type": "uint256"
 					}
 				],
 				"stateMutability": "view",

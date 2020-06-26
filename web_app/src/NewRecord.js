@@ -1,7 +1,7 @@
 import React, { Component } from "react";
-import returnStorageAbi from "./stor_abi";
-import returnBPFAbi from "./BP_free_abi";
-import returnBPPAbi from "./BP_payable_abi";
+import returnStorageAbi from "./Storage_ABI";
+import returnBPFAbi from "./BPappNonPayable_ABI";
+import returnBPPAbi from "./BPappPayable_ABI";
 import returnAddresses from "./Contracts";
 import Web3 from "web3";
 import Form from "react-bootstrap/Form";
@@ -203,6 +203,7 @@ class NewRecord extends Component {
       console.log("New rgtHash", rgtHash);
       console.log("addr: ", this.state.addr);
       console.log("Cost: ", _cost);
+      console.log(this.state.assetClass);
 
       checkExists(idxHash);
 
@@ -249,7 +250,7 @@ class NewRecord extends Component {
                   <Form.Control as="select" size="lg" onChange={(e) => this.setState({ assetClass: e.target.value })}>
                   <>
                     <option value="10">Choose an asset class</option>
-                    <option value="3">Firearms Class 01</option>
+                    <option value={Number("3")}>Firearms Class 01</option>
                     <option value="4">Firearms Class 02</option>
                     <option value="5">Firearms Class 03</option>
                     <option value="6">Firearms Class 09</option>
