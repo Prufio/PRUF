@@ -15,7 +15,7 @@ import AddContract from "./AddContract";
 import AddUser from "./AddUser";
 import Ownership from "./Ownership";
 import SetCosts from "./SetCosts";
-import returnStorageAbi from "./stor_abi";
+import returnStorageAbi from "./Storage_ABI";
 import returnAddresses from "./Contracts";
 import Button from "react-bootstrap/Button";
 import Form from "react-bootstrap/Form";

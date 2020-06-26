@@ -1,7 +1,7 @@
 import React, { Component } from "react";
-import returnStorageAbi from "./stor_abi";
-import returnBPFAbi from "./BP_free_abi";
-import returnBPPAbi from "./BP_payable_abi";
+import returnStorageAbi from "./Storage_ABI";
+import returnBPFAbi from "./BPappNonPayable_ABI";
+import returnBPPAbi from "./BPappPayable_ABI";
 import returnAddresses from "./Contracts";
 import Web3 from "web3";
 import Form from "react-bootstrap/Form";

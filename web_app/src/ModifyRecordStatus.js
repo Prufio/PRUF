@@ -1,7 +1,7 @@
 import React, { Component } from "react";
-import returnStorageAbi from "./stor_abi";
-import returnBPFAbi from "./BP_free_abi";
-import returnBPPAbi from "./BP_payable_abi";
+import returnStorageAbi from "./Storage_ABI";
+import returnBPFAbi from "./BPappNonPayable_ABI";
+import returnBPPAbi from "./BPappPayable_ABI";
 import returnAddresses from "./Contracts";
 import Web3 from "web3";
 import Form from "react-bootstrap/Form";
@@ -155,6 +155,7 @@ class ModifyRecordStatus extends Component {
       checkExists(idxHash);
       checkMatch(idxHash, rgtHash);
 
+      if (this.state.status !== "3" && this.state.status !== "4"){
       this.state.frontendFree.methods
         ._modStatus(idxHash, rgtHash, this.state.status)
         .send({ from: this.state.addr })
@@ -169,7 +170,26 @@ class ModifyRecordStatus extends Component {
           this.setState({ txStatus: receipt.status });
           console.log(receipt.status);
           //Stuff to do when tx confirms
-        });
+        });}
+
+        else if (this.state.status === "3" ||this.state.status === "4"){
+          this.state.frontendFree.methods
+        ._setLostOrStolen(idxHash, rgtHash, this.state.status)
+        .send({ from: this.state.addr })
+        .on("error", function (_error) {
+          // self.setState({ NRerror: _error });
+          self.setState({ txHash: Object.values(_error)[0].transactionHash });
+          self.setState({ txStatus: false });
+          console.log(Object.values(_error)[0].transactionHash);
+        })
+        .on("receipt", (receipt) => {
+          this.setState({ txHash: receipt.transactionHash });
+          this.setState({ txStatus: receipt.status });
+          console.log(receipt.status);
+          //Stuff to do when tx confirms
+        });}
+
+        else{alert("Invalid status input")}
 
       console.log(this.state.txHash);
     };
@@ -287,14 +307,14 @@ class ModifyRecordStatus extends Component {
                   />
                 </Form.Group>
 
-                <Form.Group as={Col} controlId="formGridStatus">
-                  <Form.Label className="formFont">Status:</Form.Label>
-                  <Form.Control
-                    placeholder="Status"
-                    required
-                    onChange={(e) => this.setState({ status: e.target.value })}
-                    size="lg"
-                  />
+                <Form.Group as={Col} controlId="formGridFormat">
+                <Form.Label className="formFont">New Status:</Form.Label>
+                  <Form.Control as="select" size="lg" onChange={(e) => this.setState({ status: e.target.value })}>
+                    <option value="1">Transferrable</option>
+                    <option value="2">Non-transferrable</option>
+                    <option value="3">Lost</option>
+                    <option value="4">Stolen</option>
+                  </Form.Control>
                 </Form.Group>
               </Form.Row>
 
