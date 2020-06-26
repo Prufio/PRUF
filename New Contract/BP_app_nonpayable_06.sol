@@ -368,8 +368,7 @@ contract BP_APP_NP is Ownable, IERC721Receiver, ReentrancyGuard {
     {
         Record memory rec = getRecord(_idxHash);
         User memory callingUser = getUser();
-        uint256 escrowTime = now.add(_escrowTime.mul(60)); //set escrow end time to _escrowTime minutes in the future
-        //uint256 escrowTime = _escrowTime;
+        uint256 escrowTime = now.add(_escrowTime); //set escrow end time to _escrowTime seconds in the future
         uint8 newAssetStatus;
 
         require((rec.rightsHolder != 0), "SE: Record does not exist");
