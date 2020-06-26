@@ -81,7 +81,7 @@ class ModifyDescription extends Component {
       NRerror: undefined,
       result1: "",
       result2: "",
-      assetClass: "",
+      assetClass: undefined,
       ipfs1: "",
       txHash: "",
       type: "",
@@ -126,6 +126,7 @@ class ModifyDescription extends Component {
   }
 
   componentWillUnmount() {
+    this.setState({assetClass: undefined})
     //console.log("unmounting component")
     document.removeEventListener("accountListener", this.acctChanger());
   }

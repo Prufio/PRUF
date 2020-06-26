@@ -101,6 +101,7 @@ class AddNote extends Component {
       costArray: [0],
       error: undefined,
       result: "",
+      assetClass: undefined,
       ipfs1: "",
       ipfs2: "",
       txHash: "",
@@ -140,6 +141,7 @@ class AddNote extends Component {
   }
 
   componentWillUnmount() {
+    this.setState({assetClass: undefined})
     //console.log("unmounting component")
     document.removeEventListener("accountListener", this.acctChanger());
   }

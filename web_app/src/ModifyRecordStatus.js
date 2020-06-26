@@ -76,7 +76,7 @@ class ModifyRecordStatus extends Component {
       NRerror: undefined,
       result1: "",
       result2: "",
-      assetClass: "",
+      assetClass: undefined,
       ipfs1: "",
       status: "0",
       txHash: "",
@@ -116,6 +116,7 @@ class ModifyRecordStatus extends Component {
   }
 
   componentWillUnmount() {
+    this.setState({assetClass: undefined})
     //console.log("unmounting component")
     document.removeEventListener("accountListener", this.acctChanger());
   }
