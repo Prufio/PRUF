@@ -8,6 +8,9 @@ import Form from "react-bootstrap/Form";
 import Col from "react-bootstrap/Col";
 import Button from "react-bootstrap/Button";
 import bs58 from "bs58";
+import returnManufacturers from "./Manufacturers";
+import returnTypes from "./Types";
+import returnActions from "./Actions";
 
 class AddNote extends Component {
   constructor(props) {
@@ -15,11 +18,11 @@ class AddNote extends Component {
 
     this.getCosts = async () => {
       const self = this;
-      if (self.state.costArray[2] > 0 || self.state.storage === "") {
+      if (self.state.costArray[0] > 0 || self.state.storage === "" || self.state.assetClass === undefined) {
       } else {
         for (var i = 0; i < 1; i++) {
           self.state.storage.methods
-            .retrieveCosts(3)
+            .retrieveCosts(self.state.assetClass)
             .call({ from: self.state.addr }, function (_error, _result) {
               if (_error) {
               } else {
@@ -34,12 +37,30 @@ class AddNote extends Component {
       }
     };
 
+    this.getAssetClass = async () => {
+      const self = this;
+      console.log("getting asset class");
+      if (self.state.assetClass > 0 || self.state.frontendPayable === "") {
+      } else {
+        self.state.frontendPayable.methods
+          .getUserExt(self.state.web3.utils.soliditySha3(self.state.addr))
+          .call({ from: self.state.addr }, function (_error, _result) {
+            if (_error) {console.log(_error)
+            } else {
+               console.log("_result: ", _result);  if (_result !== undefined ) {
+                self.setState({ assetClass: Object.values(_result)[1] });
+              }
+            }
+          });
+    }
+    };
+
     this.returnsContract = (contract) => {
       var _web3 = require("web3");
       _web3 = new Web3(_web3.givenProvider);
       var addrArray = returnAddresses();
       var _BPFreeAddr = addrArray[1]
-      var _BPPayableAaddr = addrArray[2];
+      var _BPPayableAddr = addrArray[2];
       var _storage_addr = addrArray[0];
       const storage_abi = returnStorageAbi();
       const BPFreeAbi = returnBPFAbi();
@@ -47,7 +68,7 @@ class AddNote extends Component {
 
       const _storage = new _web3.eth.Contract(storage_abi, _storage_addr);
       const _BPFree = new _web3.eth.Contract(BPFreeAbi, _BPFreeAddr);
-      const _BPPayable = new _web3.eth.Contract(BPPayableAbi, _BPPayableAaddr)
+      const _BPPayable = new _web3.eth.Contract(BPPayableAbi, _BPPayableAddr)
 
       if (contract === "BPF") {
         return _BPFree;
@@ -65,9 +86,10 @@ class AddNote extends Component {
       _web3 = new Web3(_web3.givenProvider);
       ethereum.on("accountsChanged", function (accounts) {
         _web3.eth.getAccounts().then((e) => self.setState({ addr: e[0] }));
+        self.setState({assetClass: undefined})
+        self.setState({costArray: [0]})
       });
     };
-
     //Component state declaration
 
     this.state = {
@@ -123,6 +145,11 @@ class AddNote extends Component {
   }
 
   componentDidUpdate() {
+
+    if (this.state.addr > 0 && this.state.assetClass === undefined) {
+      this.getAssetClass();
+    }
+
     if (this.state.addr > 0) {
       if (this.state.costArray[0] < 1) {
         this.getCosts();
@@ -246,25 +273,46 @@ class AddNote extends Component {
               <Form.Row>
                 <Form.Group as={Col} controlId="formGridType">
                   <Form.Label className="formFont">Type:</Form.Label>
-                  <Form.Control
+
+                  {returnTypes(this.state.assetClass) !== '0' &&(<Form.Control as="select" size="lg" onChange={(e) => this.setState({ type: e.target.value })}>
+                  {returnTypes(this.state.assetClass)}
+                  </Form.Control>
+                  )}
+
+                    {returnTypes(this.state.assetClass) === '0' &&(
+                    <Form.Control
                     placeholder="Type"
                     required
                     onChange={(e) => this.setState({ type: e.target.value })}
                     size="lg"
-                  />
+                  />)}
                 </Form.Group>
 
-                <Form.Group as={Col} controlId="formGridManufacturer">
-                  <Form.Label className="formFont">Manufacturer:</Form.Label>
-                  <Form.Control
+                  <Form.Group as={Col} controlId="formGridManufacturer">
+                    <Form.Label className="formFont">Manufacturer:</Form.Label>
+                    {returnManufacturers(this.state.assetClass) !== '0' &&(<Form.Control as="select" size="lg" onChange={(e) => this.setState({ manufacturer: e.target.value })}>
+                  {returnManufacturers(this.state.assetClass)}
+                  </Form.Control>
+                  )}
+
+                      {returnManufacturers(this.state.assetClass) === '0' &&(
+                    <Form.Control
                     placeholder="Manufacturer"
                     required
-                    onChange={(e) =>
-                      this.setState({ manufacturer: e.target.value })
-                    }
+                    onChange={(e) => this.setState({ manufacturer: e.target.value })}
                     size="lg"
-                  />
-                </Form.Group>
+                  />)}
+                  </Form.Group>
+                  
+                  {returnActions(this.state.assetClass) !== "0" &&(
+                  <Form.Group as={Col} controlId="formGridAction">
+                  <Form.Label className="formFont">Action:</Form.Label>
+                    {returnActions(this.state.assetClass) !== '0' &&(<Form.Control as="select" size="lg" onChange={(e) => this.setState({ action: e.target.value })}>
+                    {returnActions(this.state.assetClass)}
+                    </Form.Control>
+                    )}
+                  </Form.Group>)}
+
               </Form.Row>
 
               <Form.Row>
