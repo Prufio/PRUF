@@ -15,8 +15,8 @@
  * Contract Names -
  *  assetToken
  *  assetClassToken
- *  BPdappPayable
- *  BPdappNonPayable
+ *  BPappPayable
+ *  BPappNonPayable
  *
  */
      /*  NOTES:---------------------------------------------------------------------------------------//
