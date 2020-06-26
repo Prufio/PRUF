@@ -86,7 +86,7 @@ class NewRecord extends Component {
       result: null,
       costResult: {},
       costArray: [0],
-      AssetClass: "0",
+      assetClass: "",
       CountDownStart: "",
       ipfs1: "",
       txHash: "",
@@ -211,7 +211,7 @@ class NewRecord extends Component {
         .$newRecord(
           idxHash,
           rgtHash,
-          this.state.AssetClass,
+          this.state.assetClass,
           this.state.CountDownStart,
           this.state.hashPath
         )
@@ -250,7 +250,7 @@ class NewRecord extends Component {
                   <Form.Control as="select" size="lg" onChange={(e) => this.setState({ assetClass: e.target.value })}>
                   <>
                     <option value="10">Choose an asset class</option>
-                    <option value={Number("3")}>Firearms Class 01</option>
+                    <option value={"3"}>Firearms Class 01</option>
                     <option value="4">Firearms Class 02</option>
                     <option value="5">Firearms Class 03</option>
                     <option value="6">Firearms Class 09</option>
