@@ -560,6 +560,10 @@ contract BP_APP is ReentrancyGuard, PullPayment, Ownable, IERC721Receiver {
             callingUser.authorizedAssetClass == rec.assetClass,
             "TA: User not authorized to modify records in specified asset class"
         );
+        require(
+            (rec.assetStatus > 6 ) || (callingUser.userType < 5),
+            "TA:ERR-Only usertype < 5 can change status < 7"
+        );
         require(_newrgtHash != 0, "TA:ERR-new Rightsholder cannot be blank");
         require(
             (rec.assetStatus == 1) || (rec.assetStatus == 7),

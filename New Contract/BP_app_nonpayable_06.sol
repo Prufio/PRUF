@@ -391,10 +391,10 @@ contract BP_APP_NP is Ownable, IERC721Receiver, ReentrancyGuard {
 
         if (callingUser.userType < 5) {
             //If escrow was initiated by custodial user
-            newAssetStatus = 6; //Set asset status to 20 (left custodial escrow)
-        } else if (callingUser.userType > 4) {
-            //If escrow was initiated by automation
-            newAssetStatus = 12; //Set asset status to 21 (left P2P escrow)
+            newAssetStatus = 6; //Set asset status to 6 (left custodial escrow)
+        } else {
+            //escrow initiated by automation
+            newAssetStatus = 12; //Set asset status to 12 (left P2P escrow)
         }
 
         Storage.setEscrow(
@@ -438,8 +438,8 @@ contract BP_APP_NP is Ownable, IERC721Receiver, ReentrancyGuard {
         if (rec.assetStatus == 6) {
             //If escrow was initiated by custodial user
             _newAssetStatus = 20; //Set asset status to 20 (left custodial escrow)
-        } else if (rec.assetStatus == 12) {
-            //If escrow was initiated by automation
+        } else {
+            //escrow initiated by automation
             _newAssetStatus = 21; //Set asset status to 21 (left P2P escrow)
         }
 
@@ -476,8 +476,8 @@ contract BP_APP_NP is Ownable, IERC721Receiver, ReentrancyGuard {
             "MS:ERR-Cannot change status of asset in transferred-unregistered status."
         );
         require(
-            (_newAssetStatus > 6 ) || (callingUser.userType < 5),
-            "SS:ERR-Only usertype < 5 can set to status < 7"
+            (rec.assetStatus > 6 ) || (callingUser.userType < 5),
+            "SS:ERR-Only usertype < 5 can change status < 7"
         );
         require(rec.assetStatus < 200, "MS: Record locked");
         require(
@@ -517,8 +517,8 @@ contract BP_APP_NP is Ownable, IERC721Receiver, ReentrancyGuard {
             "SS:ERR-Must set to a lost or stolen status"
         );
         require(
-            (_newAssetStatus > 6 ) || (callingUser.userType < 5),
-            "SS:ERR-Only usertype < 5 can set to status < 7"
+            (rec.assetStatus > 6) || (_newAssetStatus < 7 ) || (callingUser.userType < 5),
+            "SS:ERR-Only usertype <5 can change a <7 status asset to a >7 status"
         );
         require(
             (rec.assetStatus != 5),
