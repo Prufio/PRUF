@@ -180,6 +180,13 @@ function returnBPPAbi() {
 				"type": "function"
 			},
 			{
+				"inputs": [],
+				"name": "OO_ResolveContractAddresses",
+				"outputs": [],
+				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
 				"inputs": [
 					{
 						"internalType": "address",
@@ -234,13 +241,6 @@ function returnBPPAbi() {
 					}
 				],
 				"name": "OO_addUser",
-				"outputs": [],
-				"stateMutability": "nonpayable",
-				"type": "function"
-			},
-			{
-				"inputs": [],
-				"name": "OO_getContractAddresses",
 				"outputs": [],
 				"stateMutability": "nonpayable",
 				"type": "function"
