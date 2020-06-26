@@ -204,12 +204,23 @@ class EscrowManager extends Component {
     }
 
     const _setEscrow = () => {
-      var idxHash = this.state.web3.utils.soliditySha3(
-        this.state.type,
-        this.state.manufacturer,
-        this.state.model,
-        this.state.serial
-      );
+      var idxHash;
+      
+      if(this.state.action > 0){
+      idxHash = this.state.web3.utils.soliditySha3(
+          this.state.type,
+          this.state.manufacturer,
+          this.state.model,
+          this.state.serial,
+          this.state.action
+        );} 
+      else if(this.state.action === ""){
+        idxHash = this.state.web3.utils.soliditySha3(
+          this.state.type,
+          this.state.manufacturer,
+          this.state.model,
+          this.state.serial
+        );}
 
       console.log("idxHash", idxHash);
       console.log("addr: ", this.state.addr);

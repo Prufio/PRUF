@@ -7,6 +7,7 @@ import Web3 from "web3";
 import Form from "react-bootstrap/Form";
 import Col from "react-bootstrap/Col";
 import Button from "react-bootstrap/Button";
+import ButtonGroup from 'react-bootstrap/ButtonGroup'
 import returnManufacturers from "./Manufacturers";
 import returnTypes from "./Types";
 import returnActions from "./Actions";
@@ -181,14 +182,69 @@ class ForceModifyRecord extends Component {
         });
     }
 
-    const _forceModifyRecord = () => {
+    const _reimportAsset = () => {
       var idxHash = this.state.web3.utils.soliditySha3(
         this.state.type,
         this.state.manufacturer,
         this.state.model,
         this.state.serial
       );
-      var newRgtRaw = this.state.web3.utils.soliditySha3(
+
+      var rgtRaw = this.state.web3.utils.soliditySha3(
+        this.state.first,
+        this.state.middle,
+        this.state.surname,
+        this.state.id,
+        this.state.secret
+      );
+
+      var rgtHash = this.state.web3.utils.soliditySha3(idxHash, rgtRaw);
+
+      console.log("idxHash", idxHash);
+      console.log("New rgtHash", rgtHash);
+      console.log("addr: ", this.state.addr);
+
+      checkExists(idxHash);
+
+      this.state.frontendPayable.methods
+        .$reimportRecord(idxHash, rgtHash)
+        .send({ from: this.state.addr, value: this.state.costArray[3] })
+        .on("error", function (_error) {
+          // self.setState({ NRerror: _error });
+          self.setState({ txHash: Object.values(_error)[0].transactionHash });
+          self.setState({ txStatus: false });
+          console.log(Object.values(_error)[0].transactionHash);
+        })
+        .on("receipt", (receipt) => {
+          this.setState({ txHash: receipt.transactionHash });
+          this.setState({ txStatus: receipt.status });
+          console.log(receipt.status);
+          //Stuff to do when tx confirms
+        });
+      console.log(this.state.txHash);
+    };
+
+    const _forceModifyRecord = () => {
+      var idxHash;
+      var newRgtRaw;
+      
+      if(this.state.action > 0){
+      idxHash = this.state.web3.utils.soliditySha3(
+          this.state.type,
+          this.state.manufacturer,
+          this.state.model,
+          this.state.serial,
+          this.state.action
+        );} 
+      else if(this.state.action === ""){
+        idxHash = this.state.web3.utils.soliditySha3(
+          this.state.type,
+          this.state.manufacturer,
+          this.state.model,
+          this.state.serial
+        );}
+
+      newRgtRaw = this.state.web3.utils.soliditySha3(
         this.state.first,
         this.state.middle,
         this.state.surname,
@@ -355,16 +411,23 @@ class ForceModifyRecord extends Component {
                 </Form.Group>
               </Form.Row>
               <Form.Row>
-                <Form.Group className="buttonDisplay">
-                  <Button
-                    variant="primary"
+                <ButtonGroup className="buttonGroupDisplay" aria-label="choices">
+                <Button variant="primary"
                     type="button"
                     size="lg"
-                    onClick={_forceModifyRecord}
+                    onClick={_forceModifyRecord}>
+                      
+                      Force Modify
+                    </Button> 
+
+                    <Button variant="primary"
+                    type="button"
+                    size="lg"
+                    onClick={_reimportAsset}
                   >
-                    Submit
-                  </Button>
-                </Form.Group>
+                    Re-import
+                    </Button>
+                </ButtonGroup>
               </Form.Row>
             </div>
           )}

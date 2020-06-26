@@ -189,13 +189,26 @@ class ModifyDescription extends Component {
     }
 
     const _updateDescription = () => {
-      var idxHash = this.state.web3.utils.soliditySha3(
-        this.state.type,
-        this.state.manufacturer,
-        this.state.model,
-        this.state.serial
-      );
-      var rgtRaw = this.state.web3.utils.soliditySha3(
+      var idxHash;
+      var rgtRaw;
+      
+      if(this.state.action > 0){
+      idxHash = this.state.web3.utils.soliditySha3(
+          this.state.type,
+          this.state.manufacturer,
+          this.state.model,
+          this.state.serial,
+          this.state.action
+        );} 
+      else if(this.state.action === ""){
+        idxHash = this.state.web3.utils.soliditySha3(
+          this.state.type,
+          this.state.manufacturer,
+          this.state.model,
+          this.state.serial
+        );}
+
+      rgtRaw = this.state.web3.utils.soliditySha3(
         this.state.first,
         this.state.middle,
         this.state.surname,
@@ -230,6 +243,7 @@ class ModifyDescription extends Component {
         });
 
       console.log(this.state.txHash);
+      self.setState({ hashPath: ""});
     };
 
     return (

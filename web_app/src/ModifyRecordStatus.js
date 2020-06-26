@@ -160,13 +160,26 @@ class ModifyRecordStatus extends Component {
     }
 
     const _modifyStatus = () => {
-      var idxHash = this.state.web3.utils.soliditySha3(
-        this.state.type,
-        this.state.manufacturer,
-        this.state.model,
-        this.state.serial
-      );
-      var rgtRaw = this.state.web3.utils.soliditySha3(
+      var idxHash;
+      var rgtRaw;
+      
+      if(this.state.action > 0){
+      idxHash = this.state.web3.utils.soliditySha3(
+          this.state.type,
+          this.state.manufacturer,
+          this.state.model,
+          this.state.serial,
+          this.state.action
+        );} 
+      else if(this.state.action === ""){
+        idxHash = this.state.web3.utils.soliditySha3(
+          this.state.type,
+          this.state.manufacturer,
+          this.state.model,
+          this.state.serial
+        );}
+
+      rgtRaw = this.state.web3.utils.soliditySha3(
         this.state.first,
         this.state.middle,
         this.state.surname,
@@ -183,7 +196,7 @@ class ModifyRecordStatus extends Component {
       checkExists(idxHash);
       checkMatch(idxHash, rgtHash);
 
-      if (this.state.status !== "3" && this.state.status !== "4" && this.state.status !== "0"){
+      if (this.state.status !== "3" && this.state.status !== "4" && this.state.status !== "6" && this.state.status !== "9" && this.state.status !== "10" && this.state.status < 12){
       this.state.frontendFree.methods
         ._modStatus(idxHash, rgtHash, this.state.status)
         .send({ from: this.state.addr })
@@ -200,7 +213,7 @@ class ModifyRecordStatus extends Component {
           //Stuff to do when tx confirms
         });}
 
-        else if (this.state.status === "3" ||this.state.status === "4"){
+        else if (this.state.status === "3" || this.state.status === "4" || this.state.status === "10" || this.state.status === "10"){
           this.state.frontendFree.methods
         ._setLostOrStolen(idxHash, rgtHash, this.state.status)
         .send({ from: this.state.addr })
