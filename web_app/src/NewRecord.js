@@ -38,6 +38,29 @@ class NewRecord extends Component {
       }
     };
 
+    this.getAssetClass = async () => {
+      const self = this;
+      var _web3 = require("web3");
+      _web3 = new Web3(_web3.givenProvider);
+      if (self.state.assetClass > 0 || self.state.frontendPayable === "") {
+      } else {
+        for (var i = 0; i < 1; i++) {
+          self.state.frontendPayable
+            .getUserExt(this.state.web3.soliditySha3(this.state.addr))
+            .call({ from: self.state.addr }, function (_error, _result) {
+              if (_error) {
+              } else {
+                /* console.log("_result: ", _result); */ if (
+                  _result !== undefined
+                ) {
+                  self.setState({ assetClass: Object.values(_result)[1] });
+                }
+              }
+            });
+        }
+      }
+    };
+
     this.returnsContract = (contract) => {
       var _web3 = require("web3");
       _web3 = new Web3(_web3.givenProvider);
@@ -86,7 +109,7 @@ class NewRecord extends Component {
       result: null,
       costResult: {},
       costArray: [0],
-      assetClass: "",
+      assetClass: "10",
       CountDownStart: "",
       ipfs1: "",
       txHash: "",
@@ -249,14 +272,14 @@ class NewRecord extends Component {
                 <Form.Label className="formFont">Asset Class:</Form.Label>
                   <Form.Control as="select" size="lg" onChange={(e) => this.setState({ assetClass: e.target.value })}>
                   <>
-                    <option value="10">Choose an asset class</option>
-                    <option value={"3"}>Firearms Class 01</option>
-                    <option value="4">Firearms Class 02</option>
-                    <option value="5">Firearms Class 03</option>
-                    <option value="6">Firearms Class 09</option>
-                    <option value="7">Motor Vehicles</option>
-                    <option value="8">Art Collectables</option>
-                    <option value="9">Electronics</option>
+                    <option value="10">Choose an asset class (10)</option>
+                    <option value="3">Firearms Class 01 (3)</option>
+                    <option value="4">Firearms Class 02 (4)</option>
+                    <option value="5">Firearms Class 03 (5)</option>
+                    <option value="6">Firearms Class 09 (6)</option>
+                    <option value="7">Motor Vehicles (7)</option>
+                    <option value="8">Art Collectables (8)</option>
+                    <option value="9">Electronics (9)</option>
                   </>
                   </Form.Control>
                 </Form.Group>
