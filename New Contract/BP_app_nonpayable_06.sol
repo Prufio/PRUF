@@ -244,7 +244,7 @@ contract BP_APP_NP is Ownable, IERC721Receiver, ReentrancyGuard {
         require((assetClass256 > 0), "what the actual fuck");
         _;
     }
-    // modifier isACtokenHolder(uint16 _assetClass) { //----------------------------------------THE REAL SHIT
+    // modifier isACtokenHolder(uint16 _assetClass) { //----------------------------------------THE almost REAL SHIT
     //     uint256 assetClass256 = uint256(_assetClass);
     //     require(
     //         (AssetClassTokenContract.ownerOf(assetClass256) == msg.sender),
@@ -256,32 +256,32 @@ contract BP_APP_NP is Ownable, IERC721Receiver, ReentrancyGuard {
     /*
      * @dev Verify user credentials
      * Originating Address:
-     *      Exists in registeredUsers as a usertype 1 or 9
+     *      Exists in registeredUsers as a usertype 1 to 9
      *      Is authorized for asset class
      *      asset token held by this.contract
      * ----OR---- (comment out part that will not be used)
      *      holds asset token
      */
     modifier isAuthorized(bytes32 _idxHash) {
-        uint256 tokenID = uint256(_idxHash);
+        //uint256 tokenID = uint256(_idxHash);
 
         //START OF SECTION----------------------------------------------------FAKE AS HELL
-        User memory user = getUser();
+       User memory user = getUser();
         require(
-            ((user.userType == 1) || (user.userType == 9)) && (tokenID > 0),
+            (user.userType > 0 ) && (user.userType < 10),
             "ST:MOD-UA-ERR:User not registered "
         );
 
         //rem this out for user database access
-        //START OF SECTION----------------------------------------------------THE REAL SHIT
+        //START OF SECTION----------------------------------------------------THE almost REAL SHIT
         // require(
-        //     (AssetTokenContract.ownerOf(tokenID) == msg.sender),
-        //     "MOD-Token: Asset token not found at msg.sender"
+        //     (AssetTokenContract.ownerOf(tokenID) == msg.sender), or maybe needs to be held in this contract?
+        //     "MOD-Token: Asset token not found at msg.sender" or maybe needs to be held in this contract?
         // );
         //END OF SECTION--------------------------------
 
         //rem this out for token only access
-        //START OF SECTION----------------------------------------------------THE REAL SHIT
+        //START OF SECTION----------------------------------------------------THE almost REAL SHIT
         // User memory user = registeredUsers[keccak256(
         //     abi.encodePacked(msg.sender)
         // )];
@@ -299,7 +299,7 @@ contract BP_APP_NP is Ownable, IERC721Receiver, ReentrancyGuard {
      * @dev Address Setters
      */
 
-    function OO_getContractAddresses() external onlyOwner nonReentrant {
+    function OO_ResolveContractAddresses() external onlyOwner nonReentrant {
         AssetClassTokenAddress = Storage.resolveContractAddress(
             "assetClassToken"
         );
@@ -389,10 +389,10 @@ contract BP_APP_NP is Ownable, IERC721Receiver, ReentrancyGuard {
             "SE:ERR-Transferred, lost, or stolen status cannot be set to escrow."
         );
 
-        if (callingUser.userType == 1) {
+        if (callingUser.userType < 5) {
             //If escrow was initiated by custodial user
             newAssetStatus = 6; //Set asset status to 20 (left custodial escrow)
-        } else if (callingUser.userType == 9) {
+        } else if (callingUser.userType > 4) {
             //If escrow was initiated by automation
             newAssetStatus = 12; //Set asset status to 21 (left P2P escrow)
         }
@@ -425,14 +425,15 @@ contract BP_APP_NP is Ownable, IERC721Receiver, ReentrancyGuard {
             "EE:ERR- record must be in escrow status"
         );
         require(
+            ((rec.assetStatus == 12) || (callingUser.userType < 5)),
+            "EE:ERR- Usertype less than 5 required to end this escrow"
+        );
+        require(
             (shortRec.timeLock < now) ||
                 (keccak256(abi.encodePacked(msg.sender)) == rec.recorder),
             "EE:ERR- Escrow period not ended"
         );
-        // require(
-        //     (shortRec.timeLock < now),
-        //     "EE:ERR- Escrow period not ended"
-        // );
+
 
         if (rec.assetStatus == 6) {
             //If escrow was initiated by custodial user
@@ -474,6 +475,10 @@ contract BP_APP_NP is Ownable, IERC721Receiver, ReentrancyGuard {
             (rec.assetStatus != 5),
             "MS:ERR-Cannot change status of asset in transferred-unregistered status."
         );
+        require(
+            (_newAssetStatus > 6 ) || (callingUser.userType < 5),
+            "SS:ERR-Only usertype < 5 can set to status < 7"
+        );
         require(rec.assetStatus < 200, "MS: Record locked");
         require(
             rec.rightsHolder == _rgtHash,
@@ -510,6 +515,10 @@ contract BP_APP_NP is Ownable, IERC721Receiver, ReentrancyGuard {
                 (_newAssetStatus == 9) ||
                 (_newAssetStatus == 10),
             "SS:ERR-Must set to a lost or stolen status"
+        );
+        require(
+            (_newAssetStatus > 6 ) || (callingUser.userType < 5),
+            "SS:ERR-Only usertype < 5 can set to status < 7"
         );
         require(
             (rec.assetStatus != 5),

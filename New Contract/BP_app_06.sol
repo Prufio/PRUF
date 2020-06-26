@@ -230,7 +230,7 @@ contract BP_APP is ReentrancyGuard, PullPayment, Ownable, IERC721Receiver {
         require((assetClass256 > 0), "what the actual fuck");
         _;
     }
-    // modifier isACtokenHolder(uint16 _assetClass) { //----------------------------------------THE REAL SHIT
+    // modifier isACtokenHolder(uint16 _assetClass) { //----------------------------------------THE almost REAL SHIT
     //     uint256 assetClass256 = uint256(_assetClass);
     //     require(
     //         (AssetClassTokenContract.ownerOf(assetClass256) == msg.sender),
@@ -242,34 +242,34 @@ contract BP_APP is ReentrancyGuard, PullPayment, Ownable, IERC721Receiver {
     /*
      * @dev Verify user credentials
      * Originating Address:
-     *      Exists in registeredUsers as a usertype 1 or 9
+     *      Exists in registeredUsers as a usertype 1 to 9
      *      Is authorized for asset class
      *      asset token held by this.contract
      * ----OR---- (comment out part that will not be used)
      *      holds asset token
      */
     modifier isAuthorized(bytes32 _idxHash) {
-        uint256 tokenID = uint256(_idxHash);
+        //uint256 tokenID = uint256(_idxHash);
 
         //START OF SECTION----------------------------------------------------FAKE AS HELL
         User memory user = registeredUsers[keccak256(
             abi.encodePacked(msg.sender)
         )];
         require(
-            ((user.userType == 1) || (user.userType == 9)) && (tokenID > 0),
+            (user.userType > 0 ) && (user.userType < 10),
             "ST:MOD-UA-ERR:User not registered "
         );
 
         //rem this out for user database access
-        //START OF SECTION----------------------------------------------------THE REAL SHIT
+        //START OF SECTION----------------------------------------------------THE almost REAL SHIT
         // require(
-        //     (AssetTokenContract.ownerOf(tokenID) == msg.sender),
-        //     "MOD-Token: Asset token not found at msg.sender"
+        //     (AssetTokenContract.ownerOf(tokenID) == msg.sender), or maybe needs to be held in this contract?
+        //     "MOD-Token: Asset token not found at msg.sender" or maybe needs to be held in this contract?
         // );
         //END OF SECTION--------------------------------
 
         //rem this out for token only access
-        //START OF SECTION----------------------------------------------------THE REAL SHIT
+        //START OF SECTION----------------------------------------------------THE almost REAL SHIT
         // User memory user = registeredUsers[keccak256(
         //     abi.encodePacked(msg.sender)
         // )];
@@ -286,7 +286,7 @@ contract BP_APP is ReentrancyGuard, PullPayment, Ownable, IERC721Receiver {
     /*
      * @dev Address Setters
      */
-    function OO_getContractAddresses() external nonReentrant onlyOwner {
+    function OO_ResolveContractAddresses() external nonReentrant onlyOwner {
         AssetClassTokenAddress = Storage.resolveContractAddress(
             "assetClassToken"
         );
@@ -344,6 +344,7 @@ contract BP_APP is ReentrancyGuard, PullPayment, Ownable, IERC721Receiver {
         require(
             (_userType == 0) ||
                 (_userType == 1) ||
+                (_userType == 2) ||
                 (_userType == 9) ||
                 (_userType == 99),
             "ST:OO-AU-ERR:Invalid user type"
@@ -385,7 +386,7 @@ contract BP_APP is ReentrancyGuard, PullPayment, Ownable, IERC721Receiver {
         Costs memory baseCost = getBaseCost();
 
         require(
-            callingUser.userType == 1,
+            callingUser.userType < 5,
             "NR: User not authorized to create records"
         );
         require(
@@ -505,7 +506,7 @@ contract BP_APP is ReentrancyGuard, PullPayment, Ownable, IERC721Receiver {
 
         require((rec.rightsHolder != 0), "RR: Record does not exist");
         require(
-            callingUser.userType == 1,
+            callingUser.userType < 3,
             "RR: User not authorized to reimport assets"
         );
         require(

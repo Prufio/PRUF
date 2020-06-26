@@ -59,8 +59,10 @@
      *
      * Authorized User Types   registeredUsers[]
      *
-     * 1 = Standard User
-     * 9 = Robot
+     * 1 - 4 = Standard User types
+     * 1 all priveleges
+     * 2 all but force-modify
+     * 5 - 9 = Robot (cannot create of force-modify)
      * 99 = ADMIN (isAdmin)
      * Other = unauth
      *
@@ -123,25 +125,6 @@ contract Storage is Ownable, ReentrancyGuard {
     AssetClassTokenInterface private AssetClassTokenContract; //erc721_token prototype initialization
 
     //----------------------------------------------Modifiers----------------------------------------------//
-
-    /*
-     * @dev Check msg.sender against authorized adresses
-     * msg.sender
-     *      (Exists in registeredUsers as a usertype 99
-     *      and
-     *      Exists in authorizedAddress as a contract type 4)
-     *      or
-     *      Is owner from ownable
-     *
-     */
-    modifier isAdmin() {
-        require(
-            (contractAdresses[keccak256(abi.encodePacked(msg.sender))] == 4) ||
-                (owner() == msg.sender),
-            "MOD-ISADMINaddress does not belong to an Admin"
-        );
-        _;
-    }
 
     /*
      * @dev Verify caller holds ACtoken of passed assetClass
@@ -257,6 +240,7 @@ contract Storage is Ownable, ReentrancyGuard {
         uint256 _forceModCost,
         address _paymentAddress
     ) external isACtokenHolderOfClass(_class) {
+
         cost[_class].cost1 = _newRecordCost.add(baseCost.cost1);
         cost[_class].cost2 = _transferRecordCost.add(baseCost.cost2);
         cost[_class].cost3 = _createNoteCost.add(baseCost.cost3);
@@ -278,6 +262,7 @@ contract Storage is Ownable, ReentrancyGuard {
         uint256 _forceModCost,
         address _paymentAddress
     ) external onlyOwner {
+
         baseCost.cost1 = _newRecordCost;
         baseCost.cost2 = _transferRecordCost;
         baseCost.cost3 = _createNoteCost;
@@ -689,7 +674,6 @@ contract Storage is Ownable, ReentrancyGuard {
     function retrieveCosts(uint16 _assetClass)
         external
         view
-        isAuthorized
         returns (
             uint256,
             uint256,
