@@ -99,7 +99,7 @@ class EscrowManager extends Component {
       NRerror: undefined,
       result1: "",
       result2: "",
-      assetClass: "",
+      assetClass: undefined,
       CountDownStart: "",
       ipfs1: "",
       txHash: "",
@@ -140,6 +140,7 @@ class EscrowManager extends Component {
   }
 
   componentWillUnmount() {
+    this.setState({assetClass: undefined})
     //console.log("unmounting component")
     document.removeEventListener("accountListener", this.acctChanger());
   }

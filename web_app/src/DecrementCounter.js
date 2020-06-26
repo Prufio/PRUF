@@ -75,7 +75,7 @@ class DecrementCounter extends Component {
       error: undefined,
       NRerror: undefined,
       result: "",
-      assetClass: "",
+      assetClass: undefined,
       countDown: "",
       txHash: "",
       type: "",
@@ -113,6 +113,7 @@ class DecrementCounter extends Component {
   }
 
   componentWillUnmount() {
+    this.setState({assetClass: undefined})
     //console.log("unmounting component")
     document.removeEventListener("accountListener", this.acctChanger());
   }

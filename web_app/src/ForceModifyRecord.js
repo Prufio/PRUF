@@ -99,7 +99,7 @@ class ForceModifyRecord extends Component {
       error: undefined,
       NRerror: undefined,
       result: "",
-      assetClass: "",
+      assetClass: undefined,
       CountDownStart: "",
       ipfs1: "",
       txHash: "",
@@ -138,6 +138,7 @@ class ForceModifyRecord extends Component {
   }
 
   componentWillUnmount() {
+    this.setState({assetClass: undefined})
     //console.log("unmounting component")
     document.removeEventListener("accountListener", this.acctChanger());
   }

@@ -76,7 +76,7 @@ class VerifyRightHolder extends Component {
       error1: undefined,
       result: "",
       result1: "",
-      assetClass: "",
+      assetClass: undefined,
       ipfs1: "",
       txHash: "",
       type: "",
@@ -109,6 +109,7 @@ class VerifyRightHolder extends Component {
   }
 
   componentWillUnmount() {
+    this.setState({assetClass: undefined})
     //console.log("unmounting component")
     document.removeEventListener("accountListener", this.acctChanger());
   }
