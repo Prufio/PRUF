@@ -6,6 +6,7 @@ function returnActions (_assetClass) {
 if (_assetClass === "3" || _assetClass === "4" || _assetClass === "5"){
     return (
     <>
+    <option value="0">Choose an action style</option>
     <option value="Semi automatic">Semi automatic</option>
     <option value="Fully automatic">Fully-automatic</option>
     <option value="Bolt action">Bolt action</option>
@@ -19,6 +20,7 @@ if (_assetClass === "3" || _assetClass === "4" || _assetClass === "5"){
 else if (_assetClass === "6"){
     return(
     <>
+    <option value="0">Choose an action style</option>
     <option value="Semi automatic">Semi automatic</option>
     <option value="Fully automatic">Fully-automatic</option>
     <option value="Bolt action">Bolt action</option>

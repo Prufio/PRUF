@@ -10,7 +10,6 @@ import Button from "react-bootstrap/Button";
 import bs58 from "bs58";
 import returnManufacturers from "./Manufacturers";
 import returnTypes from "./Types";
-import returnAC from "./AssetClasses";
 import returnActions from "./Actions";
 
 class NewRecord extends Component {
@@ -19,11 +18,11 @@ class NewRecord extends Component {
 
     this.getCosts = async () => {
       const self = this;
-      if (self.state.costArray[0] > 0 || self.state.storage === "") {
+      if (self.state.costArray[0] > 0 || self.state.storage === "" || self.state.assetClass === undefined) {
       } else {
         for (var i = 0; i < 1; i++) {
           self.state.storage.methods
-            .retrieveCosts(3)
+            .retrieveCosts(self.state.assetClass)
             .call({ from: self.state.addr }, function (_error, _result) {
               if (_error) {
               } else {
@@ -40,25 +39,20 @@ class NewRecord extends Component {
 
     this.getAssetClass = async () => {
       const self = this;
-      var _web3 = require("web3");
-      _web3 = new Web3(_web3.givenProvider);
+      console.log("getting asset class");
       if (self.state.assetClass > 0 || self.state.frontendPayable === "") {
       } else {
-        for (var i = 0; i < 1; i++) {
-          self.state.frontendPayable
-            .getUserExt(this.state.web3.soliditySha3(this.state.addr))
-            .call({ from: self.state.addr }, function (_error, _result) {
-              if (_error) {
-              } else {
-                /* console.log("_result: ", _result); */ if (
-                  _result !== undefined
-                ) {
-                  self.setState({ assetClass: Object.values(_result)[1] });
-                }
+        self.state.frontendPayable.methods
+          .getUserExt(self.state.web3.utils.soliditySha3(self.state.addr))
+          .call({ from: self.state.addr }, function (_error, _result) {
+            if (_error) {console.log(_error)
+            } else {
+               console.log("_result: ", _result);  if (_result !== undefined ) {
+                self.setState({ assetClass: Object.values(_result)[1] });
               }
-            });
-        }
-      }
+            }
+          });
+    }
     };
 
     this.returnsContract = (contract) => {
@@ -66,7 +60,7 @@ class NewRecord extends Component {
       _web3 = new Web3(_web3.givenProvider);
       var addrArray = returnAddresses();
       var _BPFreeAddr = addrArray[1]
-      var _BPPayableAaddr = addrArray[2];
+      var _BPPayableAddr = addrArray[2];
       var _storage_addr = addrArray[0];
       const storage_abi = returnStorageAbi();
       const BPFreeAbi = returnBPFAbi();
@@ -74,7 +68,7 @@ class NewRecord extends Component {
 
       const _storage = new _web3.eth.Contract(storage_abi, _storage_addr);
       const _BPFree = new _web3.eth.Contract(BPFreeAbi, _BPFreeAddr);
-      const _BPPayable = new _web3.eth.Contract(BPPayableAbi, _BPPayableAaddr)
+      const _BPPayable = new _web3.eth.Contract(BPPayableAbi, _BPPayableAddr)
 
       if (contract === "BPF") {
         return _BPFree;
@@ -92,6 +86,8 @@ class NewRecord extends Component {
       _web3 = new Web3(_web3.givenProvider);
       ethereum.on("accountsChanged", function (accounts) {
         _web3.eth.getAccounts().then((e) => self.setState({ addr: e[0] }));
+        self.setState({assetClass: undefined})
+        self.setState({costArray: [0]})
       });
     };
 
@@ -109,8 +105,8 @@ class NewRecord extends Component {
       result: null,
       costResult: {},
       costArray: [0],
-      assetClass: "10",
-      CountDownStart: "",
+      assetClass: undefined,
+      countDownStart: "",
       ipfs1: "",
       txHash: "",
       type: "",
@@ -158,6 +154,11 @@ class NewRecord extends Component {
   }
 
   componentDidUpdate() {
+
+    if (this.state.addr > 0 && this.state.assetClass === undefined) {
+        this.getAssetClass();
+    } 
+
     if (this.state.addr > 0) {
       if (this.state.costArray[0] < 1) {
         this.getCosts();
@@ -235,7 +236,7 @@ class NewRecord extends Component {
           idxHash,
           rgtHash,
           this.state.assetClass,
-          this.state.CountDownStart,
+          this.state.countDownStart,
           this.state.hashPath
         )
         .send({ from: this.state.addr, value: _cost })
@@ -266,7 +267,7 @@ class NewRecord extends Component {
             <div>
               <h2 className="Headertext">New Record</h2>
               <br></br>
-              <Form.Row>
+              {/* <Form.Row>
 
               <Form.Group as={Col} controlId="formGridFormat">
                 <Form.Label className="formFont">Asset Class:</Form.Label>
@@ -283,7 +284,7 @@ class NewRecord extends Component {
                   </>
                   </Form.Control>
                 </Form.Group>
-                </Form.Row>
+                </Form.Row> */}
                 <Form.Row>
                 <Form.Group as={Col} controlId="formGridType">
                   <Form.Label className="formFont">Type:</Form.Label>
@@ -413,7 +414,7 @@ class NewRecord extends Component {
                     placeholder="Log Start Value"
                     required
                     onChange={(e) =>
-                      this.setState({ CountDownStart: e.target.value })
+                      this.setState({ countDownStart: e.target.value })
                     }
                     size="lg"
                   />

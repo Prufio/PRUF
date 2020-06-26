@@ -7,17 +7,38 @@ import Web3 from "web3";
 import Form from "react-bootstrap/Form";
 import Col from "react-bootstrap/Col";
 import Button from "react-bootstrap/Button";
+import returnManufacturers from "./Manufacturers";
+import returnTypes from "./Types";
+import returnActions from "./Actions";
 
 class DecrementCounter extends Component {
   constructor(props) {
     super(props);
+
+    this.getAssetClass = async () => {
+      const self = this;
+      console.log("getting asset class");
+      if (self.state.assetClass > 0 || self.state.frontendPayable === "") {
+      } else {
+        self.state.frontendPayable.methods
+          .getUserExt(self.state.web3.utils.soliditySha3(self.state.addr))
+          .call({ from: self.state.addr }, function (_error, _result) {
+            if (_error) {console.log(_error)
+            } else {
+               console.log("_result: ", _result);  if (_result !== undefined ) {
+                self.setState({ assetClass: Object.values(_result)[1] });
+              }
+            }
+          });
+    }
+    };
 
     this.returnsContract = (contract) => {
       var _web3 = require("web3");
       _web3 = new Web3(_web3.givenProvider);
       var addrArray = returnAddresses();
       var _BPFreeAddr = addrArray[1]
-      var _BPPayableAaddr = addrArray[2];
+      var _BPPayableAddr = addrArray[2];
       var _storage_addr = addrArray[0];
       const storage_abi = returnStorageAbi();
       const BPFreeAbi = returnBPFAbi();
@@ -25,7 +46,7 @@ class DecrementCounter extends Component {
 
       const _storage = new _web3.eth.Contract(storage_abi, _storage_addr);
       const _BPFree = new _web3.eth.Contract(BPFreeAbi, _BPFreeAddr);
-      const _BPPayable = new _web3.eth.Contract(BPPayableAbi, _BPPayableAaddr)
+      const _BPPayable = new _web3.eth.Contract(BPPayableAbi, _BPPayableAddr)
 
       if (contract === "BPF") {
         return _BPFree;
@@ -43,6 +64,7 @@ class DecrementCounter extends Component {
       _web3 = new Web3(_web3.givenProvider);
       ethereum.on("accountsChanged", function (accounts) {
         _web3.eth.getAccounts().then((e) => self.setState({ addr: e[0] }));
+        self.setState({assetClass: undefined})
       });
     };
 
@@ -53,9 +75,8 @@ class DecrementCounter extends Component {
       error: undefined,
       NRerror: undefined,
       result: "",
-      AssetClass: "",
-      CountDownStart: "",
-      CountDown: "",
+      assetClass: "",
+      countDown: "",
       txHash: "",
       type: "",
       manufacturer: "",
@@ -83,6 +104,12 @@ class DecrementCounter extends Component {
     this.setState({ frontendPayable: this.returnsContract("BPP") });
 
     document.addEventListener("accountListener", this.acctChanger());
+  }
+
+  componentDidUpdate(){
+    if (this.state.addr > 0 && this.state.assetClass === undefined) {
+      this.getAssetClass();
+  }
   }
 
   componentWillUnmount() {
@@ -148,13 +175,13 @@ class DecrementCounter extends Component {
       console.log("New rgtRaw", rgtRaw);
       console.log("New rgtHash", rgtHash);
       console.log("addr: ", this.state.addr);
-      console.log("Data: ", this.state.CountDown);
+      console.log("Data: ", this.state.countDown);
 
       checkExists(idxHash);
       checkMatch(idxHash, rgtHash);
 
       this.state.frontendFree.methods
-        ._decCounter(idxHash, rgtHash, this.state.CountDown)
+        ._decCounter(idxHash, rgtHash, this.state.countDown)
         .send({ from: this.state.addr })
         .on("error", function (_error) {
           // self.setState({ NRerror: _error });
@@ -188,25 +215,46 @@ class DecrementCounter extends Component {
               <Form.Row>
                 <Form.Group as={Col} controlId="formGridType">
                   <Form.Label className="formFont">Type:</Form.Label>
-                  <Form.Control
+
+                  {returnTypes(this.state.assetClass) !== '0' &&(<Form.Control as="select" size="lg" onChange={(e) => this.setState({ type: e.target.value })}>
+                  {returnTypes(this.state.assetClass)}
+                  </Form.Control>
+                  )}
+
+                    {returnTypes(this.state.assetClass) === '0' &&(
+                    <Form.Control
                     placeholder="Type"
                     required
                     onChange={(e) => this.setState({ type: e.target.value })}
                     size="lg"
-                  />
+                  />)}
                 </Form.Group>
 
-                <Form.Group as={Col} controlId="formGridManufacturer">
-                  <Form.Label className="formFont">Manufacturer:</Form.Label>
-                  <Form.Control
+                  <Form.Group as={Col} controlId="formGridManufacturer">
+                    <Form.Label className="formFont">Manufacturer:</Form.Label>
+                    {returnManufacturers(this.state.assetClass) !== '0' &&(<Form.Control as="select" size="lg" onChange={(e) => this.setState({ manufacturer: e.target.value })}>
+                  {returnManufacturers(this.state.assetClass)}
+                  </Form.Control>
+                  )}
+
+                      {returnManufacturers(this.state.assetClass) === '0' &&(
+                    <Form.Control
                     placeholder="Manufacturer"
                     required
-                    onChange={(e) =>
-                      this.setState({ manufacturer: e.target.value })
-                    }
+                    onChange={(e) => this.setState({ manufacturer: e.target.value })}
                     size="lg"
-                  />
-                </Form.Group>
+                  />)}
+                  </Form.Group>
+                  
+                  {returnActions(this.state.assetClass) !== "0" &&(
+                  <Form.Group as={Col} controlId="formGridAction">
+                  <Form.Label className="formFont">Action:</Form.Label>
+                    {returnActions(this.state.assetClass) !== '0' &&(<Form.Control as="select" size="lg" onChange={(e) => this.setState({ action: e.target.value })}>
+                    {returnActions(this.state.assetClass)}
+                    </Form.Control>
+                    )}
+                  </Form.Group>)}
+
               </Form.Row>
 
               <Form.Row>
@@ -293,7 +341,7 @@ class DecrementCounter extends Component {
                     placeholder="Countdown Amount"
                     required
                     onChange={(e) =>
-                      this.setState({ CountDown: e.target.value })
+                      this.setState({ countDown: e.target.value })
                     }
                     size="lg"
                   />

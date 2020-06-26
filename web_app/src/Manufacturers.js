@@ -7,6 +7,7 @@ function returnManufacturers (_assetClass) {
 if (_assetClass === "3" || _assetClass === "4" || _assetClass === "5" || _assetClass === "6"){
     return (
     <>
+    <option value="0">Choose a manufacturer</option>
     <option value="556 Tactical">556 Tactical</option>
     <option value="Accurate Armory">Accurate Armory</option>
     <option value="Arctiier">Arctiier</option>
