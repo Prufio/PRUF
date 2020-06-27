@@ -15,8 +15,7 @@ import AddContract from "./AddContract";
 import AddUser from "./AddUser";
 import Ownership from "./Ownership";
 import SetCosts from "./SetCosts";
-import returnStorageAbi from "./Storage_ABI";
-import returnAddresses from "./Contracts";
+import returnContracts from "./Contracts";
 import Button from "react-bootstrap/Button";
 import Form from "react-bootstrap/Form";
 import EscrowManager from "./EscrowManager"
@@ -25,17 +24,38 @@ class Main extends Component {
   constructor(props) {
     super(props);
 
+    this.returnsContract = async () => {
+      const self = this;
+      var contractArray = await returnContracts(self.state.web3);
+      //console.log("RC Main: ", contractArray)
+
+      if(this.state.storage < 1){self.setState({ storage: contractArray[0] });}
+      if(this.state.BPappNonPayable < 1){self.setState({ BPappNonPayable: contractArray[1] });}
+      if(this.state.BPappPayable < 1){self.setState({ BPappPayable: contractArray[2] });}
+    };
+
+    this.getAssetClass = async () => {
+      const self = this;
+      //console.log("getting asset class");
+      if (self.state.assetClass > 0 || self.state.BPappPayable === "") {
+      } else {
+        self.state.BPappPayable.methods
+          .getUserExt(self.state.web3.utils.soliditySha3(self.state.addr))
+          .call({ from: self.state.addr }, function (_error, _result) {
+            if (_error) {console.log(_error)
+            } else {
+               console.log("_result: ", _result);  if (_result !== undefined ) {
+                self.setState({ assetClass: Object.values(_result)[1] });
+              }
+            }
+          });
+    }
+    };
+
     this.getOwner = async () => {
       const self = this;
-      var _web3 = require("web3");
-      _web3 = new Web3(_web3.givenProvider);
-      var addrArray = returnAddresses();
-      var _storage_addr = addrArray[0];
-      const storage_abi = returnStorageAbi();
-      const _storage = new _web3.eth.Contract(storage_abi, _storage_addr);
-
-      if (this.state.owner === "") {
-        _storage.methods
+      if(this.state.storage === "" || this.state.web3 === null || this.state.owner !== ""){}else{
+        this.state.storage.methods
           .owner()
           .call({ from: self.state.addr }, function (_error, _result) {
             if (_error) {
@@ -50,7 +70,7 @@ class Main extends Component {
               }
             }
           });
-      }
+        }
     };
 
     this.acctChanger = async () => {
@@ -60,6 +80,7 @@ class Main extends Component {
       _web3 = new Web3(_web3.givenProvider);
       ethereum.on("accountsChanged", function (accounts) {
         _web3.eth.getAccounts().then((e) => self.setState({ addr: e[0] }));
+        /* self.setState({assetClass: undefined}) */
       });
       if (self.state.addr !== this.state.owner) {
         self.setState({ isOwner: false });
@@ -73,12 +94,17 @@ class Main extends Component {
       web3: null,
       ownerMenu: false,
       owner: "",
+      BPappPayable: "",
+      BPappNonPayable: "",
+      storage: "",
+      assetClass: undefined,
+      contractArray: [],
+
     };
   }
 
   componentDidMount() {
     const ethereum = window.ethereum;
-    console.log("component mounted");
     var _web3 = require("web3");
     _web3 = new Web3(_web3.givenProvider);
     this.setState({ web3: _web3 });
@@ -91,8 +117,20 @@ class Main extends Component {
   }
 
   componentDidUpdate() {
+
+    /* if (this.state.addr > 0 && this.state.assetClass === undefined && this.state.BPappPayable !== "") {
+      for (let i = 0; i < 5; i++) {
+        this.getAssetClass();
+      }
+    }  */
+
+    if (this.state.web3 !== null){
     for (let i = 0; i < 5; i++) {
-      this.getOwner();
+      this.getOwner();}
+    }
+
+    if(this.state.web3 !== null && this.state.BPappPayable < 1){
+      this.returnsContract();
     }
   }
 
@@ -123,7 +161,7 @@ class Main extends Component {
             <div className="userData">
               {this.state.addr > 0 && (
                 <div className="banner">
-                  Currently serving :{this.state.addr}
+                  Currently serving :{this.state.addr} {/* Asset Class: {this.state.assetClass} */}
                 </div>
               )}
               {this.state.addr === undefined && (

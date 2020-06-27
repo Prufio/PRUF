@@ -1,8 +1,5 @@
 import React, { Component } from "react";
-import returnStorageAbi from "./Storage_ABI";
-import returnBPFAbi from "./BPappNonPayable_ABI";
-import returnBPPAbi from "./BPappPayable_ABI";
-import returnAddresses from "./Contracts";
+import returnContracts from "./Contracts";
 import Web3 from "web3";
 import Form from "react-bootstrap/Form";
 import Col from "react-bootstrap/Col";
@@ -38,10 +35,10 @@ class EscrowManager extends Component {
 
     this.getAssetClass = async () => {
       const self = this;
-      console.log("getting asset class");
-      if (self.state.assetClass > 0 || self.state.frontendPayable === "") {
+      //console.log("getting asset class");
+      if (self.state.assetClass > 0 || self.state.BPappPayable === "") {
       } else {
-        self.state.frontendPayable.methods
+        self.state.BPappPayable.methods
           .getUserExt(self.state.web3.utils.soliditySha3(self.state.addr))
           .call({ from: self.state.addr }, function (_error, _result) {
             if (_error) {console.log(_error)
@@ -54,28 +51,14 @@ class EscrowManager extends Component {
     }
     };
 
-    this.returnsContract = (contract) => {
-      var _web3 = require("web3");
-      _web3 = new Web3(_web3.givenProvider);
-      var addrArray = returnAddresses();
-      var _BPFreeAddr = addrArray[1]
-      var _BPPayableAddr = addrArray[2];
-      var _storage_addr = addrArray[0];
-      const storage_abi = returnStorageAbi();
-      const BPFreeAbi = returnBPFAbi();
-      const BPPayableAbi = returnBPPAbi();
+    this.returnsContract = async () => {
+      const self = this;
+      var contractArray = await returnContracts(self.state.web3);
+      //console.log("RC EM: ", contractArray)
 
-      const _storage = new _web3.eth.Contract(storage_abi, _storage_addr);
-      const _BPFree = new _web3.eth.Contract(BPFreeAbi, _BPFreeAddr);
-      const _BPPayable = new _web3.eth.Contract(BPPayableAbi, _BPPayableAddr)
-
-      if (contract === "BPF") {
-        return _BPFree;
-      } else if (contract === "storage") {
-        return _storage;
-      } else if (contract === "BPP"){
-        return _BPPayable;
-      }
+      if(this.state.storage < 1){self.setState({ storage: contractArray[0] });}
+      if(this.state.BPappNonPayable < 1){self.setState({ BPappNonPayable: contractArray[1] });}
+      if(this.state.BPappPayable < 1){self.setState({ BPappPayable: contractArray[2] });}
     };
 
     this.acctChanger = async () => {
@@ -118,17 +101,15 @@ class EscrowManager extends Component {
       newId: "",
       newSecret: "",
       web3: null,
-      frontendPayable: "",
-      frontendFree: "",
+      BPappPayable: "",
+      BPappNonPayable: "",
       storage: "",
       timeFormat: "",
     };
   }
 
   componentDidMount() {
-    this.setState({ storage: this.returnsContract("storage") });
-    this.setState({ frontendFree: this.returnsContract("BPF") });
-    this.setState({ frontendPayable: this.returnsContract("BPP") });
+
     //console.log("component mounted")
 
     var _web3 = require("web3");
@@ -146,6 +127,11 @@ class EscrowManager extends Component {
   }
 
    componentDidUpdate() {
+
+    if(this.state.web3 !== null && this.state.BPappPayable < 1){
+      this.returnsContract();
+    }
+
     if (this.state.addr > 0 && this.state.assetClass === undefined) {
       this.getAssetClass();
     }
@@ -206,21 +192,12 @@ class EscrowManager extends Component {
     const _setEscrow = () => {
       var idxHash;
       
-      if(this.state.action > 0){
       idxHash = this.state.web3.utils.soliditySha3(
-          this.state.type,
-          this.state.manufacturer,
-          this.state.model,
-          this.state.serial,
-          this.state.action
-        );} 
-      else if(this.state.action === ""){
-        idxHash = this.state.web3.utils.soliditySha3(
-          this.state.type,
-          this.state.manufacturer,
-          this.state.model,
-          this.state.serial
-        );}
+        this.state.type,
+        this.state.manufacturer,
+        this.state.model,
+        this.state.serial,
+    );
 
       console.log("idxHash", idxHash);
       console.log("addr: ", this.state.addr);
@@ -228,7 +205,7 @@ class EscrowManager extends Component {
 
       checkExistsSet(idxHash);
 
-      this.state.frontendFree.methods
+      this.state.BPappNonPayable.methods
         .setEscrow(idxHash, _convertTimeTo(this.state.escrowTime, this.state.timeFormat))
         .send({ from: this.state.addr})
         .on("error", function (_error) {
@@ -259,7 +236,7 @@ class EscrowManager extends Component {
   
         checkExistsEnd(idxHash);
   
-        this.state.frontendFree.methods
+        this.state.BPappNonPayable.methods
           .endEscrow(idxHash)
           .send({ from: this.state.addr})
           .on("error", function (_error) {
@@ -280,13 +257,18 @@ class EscrowManager extends Component {
     return (
       <div>
         <Form className="ANform">
-          {this.state.addr === undefined && (
+        {this.state.addr === undefined && (
             <div className="errorResults">
               <h2>WARNING!</h2>
               <h3>Injected web3 not connected to form!</h3>
             </div>
+          )}{this.state.assetClass < 1 && (
+            <div className="errorResults">
+              <h2>No authorized asset class detected at user address.</h2>
+              <h3>Unauthorized users do not have access to forms.</h3>
+            </div>
           )}
-          {this.state.addr > 0 && (
+          {this.state.addr > 0 && this.state.assetClass > 0 &&(
             <div>
               <h2 className="Headertext">Manage Escrow</h2>
               <br></br>
@@ -370,6 +352,7 @@ class EscrowManager extends Component {
                 <Form.Group as={Col} controlId="formGridFormat">
                 <Form.Label className="formFont">Time Unit:</Form.Label>
                   <Form.Control as="select" size="lg" onChange={(e) => this.setState({ timeFormat: e.target.value })}>
+                    <option value="0">Select a time unit</option>
                     <option value="seconds">Seconds</option>
                     <option value="minutes">Minutes</option>
                     <option value="hours">Hours</option>

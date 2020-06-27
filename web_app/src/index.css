@@ -247,7 +247,7 @@ h4 {
 }
 
 .ANform {
-  height: 45rem;
+  height: 48rem;
   width: 59rem;
   background-color: #206ab9;
   border-radius: 0.5rem;
@@ -260,7 +260,7 @@ h4 {
 }
 
 .FMRform {
-  height: 45rem;
+  height: 53rem;
   width: 59rem;
   background-color: #206ab9;
   border-radius: 0.5rem;
@@ -430,12 +430,22 @@ h4 {
   border-radius: 1rem;
 }
 
+.btn2 {
+  font-size: 1.5rem;
+  height: 3rem;
+  width: 30rem;
+  align-items: center;
+  margin-top: 1rem;
+  margin-left: 20;
+}
+
 .buttonDisplay {
   margin-left: 42rem;
   margin-top: -20rem;
 }
 
 .buttonGroupDisplay {
+  height: 5rem;
   margin-left: 30rem;
   margin-top: -20rem;
 }
@@ -474,7 +484,7 @@ h4 {
   display: flex;
   margin-left: auto;
   background-color: black;
-  width: 70rem;
+  width: 85rem;
   border-radius: 1rem 0rem 0rem 0rem;
   height: 3rem;
   margin-top: auto;

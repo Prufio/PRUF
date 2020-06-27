@@ -15,10 +15,10 @@ class AddUser extends Component {
     this.returnsContract = (contract) => {
       var _web3 = require("web3");
       _web3 = new Web3(_web3.givenProvider);
-      var addrArray = returnAddresses();
-      var _BPFreeAddr = addrArray[1]
-      var _BPPayableAaddr = addrArray[2];
-      var _storage_addr = addrArray[0];
+      var contractArray = returnAddresses();
+      var _BPFreeAddr = contractArray[1]
+      var _BPPayableAaddr = contractArray[2];
+      var _storage_addr = contractArray[0];
       const storage_abi = returnStorageAbi();
       const BPFreeAbi = returnBPFAbi();
       const BPPayableAbi = returnBPPAbi();

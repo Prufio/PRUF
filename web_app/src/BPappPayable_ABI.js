@@ -1,4 +1,4 @@
-function returnBPPAbi() {
+function returnBPappPayableAbi() {
 	return (
 		[
 			{
@@ -386,4 +386,4 @@ function returnBPPAbi() {
 	);
 }
 
-export default returnBPPAbi;
+export default returnBPappPayableAbi;

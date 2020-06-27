@@ -1,4 +1,4 @@
-function returnBPFAbi() {
+function returnBPappNonPayableAbi() {
 	return (
 		[
 			{
@@ -320,4 +320,4 @@ function returnBPFAbi() {
 	);
 }
 
-export default returnBPFAbi;
+export default returnBPappNonPayableAbi;

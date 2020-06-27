@@ -1,8 +1,5 @@
 import React, { Component } from "react";
-import returnStorageAbi from "./Storage_ABI";
-import returnBPFAbi from "./BPappNonPayable_ABI";
-import returnBPPAbi from "./BPappPayable_ABI";
-import returnAddresses from "./Contracts";
+import returnContracts from "./Contracts";
 import Web3 from "web3";
 import Form from "react-bootstrap/Form";
 import Col from "react-bootstrap/Col";
@@ -39,10 +36,10 @@ class ForceModifyRecord extends Component {
 
     this.getAssetClass = async () => {
       const self = this;
-      console.log("getting asset class");
-      if (self.state.assetClass > 0 || self.state.frontendPayable === "") {
+      //console.log("getting asset class");
+      if (self.state.assetClass > 0 || self.state.BPappPayable === "") {
       } else {
-        self.state.frontendPayable.methods
+        self.state.BPappPayable.methods
           .getUserExt(self.state.web3.utils.soliditySha3(self.state.addr))
           .call({ from: self.state.addr }, function (_error, _result) {
             if (_error) {console.log(_error)
@@ -55,28 +52,14 @@ class ForceModifyRecord extends Component {
     }
     };
 
-    this.returnsContract = (contract) => {
-      var _web3 = require("web3");
-      _web3 = new Web3(_web3.givenProvider);
-      var addrArray = returnAddresses();
-      var _BPFreeAddr = addrArray[1]
-      var _BPPayableAddr = addrArray[2];
-      var _storage_addr = addrArray[0];
-      const storage_abi = returnStorageAbi();
-      const BPFreeAbi = returnBPFAbi();
-      const BPPayableAbi = returnBPPAbi();
+    this.returnsContract = async () => {
+      const self = this;
+      var contractArray = await returnContracts(self.state.web3);
+      //console.log("RC FMR: ", contractArray)
 
-      const _storage = new _web3.eth.Contract(storage_abi, _storage_addr);
-      const _BPFree = new _web3.eth.Contract(BPFreeAbi, _BPFreeAddr);
-      const _BPPayable = new _web3.eth.Contract(BPPayableAbi, _BPPayableAddr)
-
-      if (contract === "BPF") {
-        return _BPFree;
-      } else if (contract === "storage") {
-        return _storage;
-      } else if (contract === "BPP"){
-        return _BPPayable;
-      }
+      if(this.state.storage < 1){self.setState({ storage: contractArray[0] });}
+      if(this.state.BPappNonPayable < 1){self.setState({ BPappNonPayable: contractArray[1] });}
+      if(this.state.BPappPayable < 1){self.setState({ BPappPayable: contractArray[2] });}
     };
 
     this.acctChanger = async () => {
@@ -119,16 +102,14 @@ class ForceModifyRecord extends Component {
       newId: "",
       newSecret: "",
       web3: null,
-      frontendPayable: "",
-      frontendFree: "",
+      BPappPayable: "",
+      BPappNonPayable: "",
       storage: "",
     };
   }
 
   componentDidMount() {
-    this.setState({ storage: this.returnsContract("storage") });
-    this.setState({ frontendFree: this.returnsContract("BPF") });
-    this.setState({ frontendPayable: this.returnsContract("BPP") });
+
     //console.log("component mounted")
 
     var _web3 = require("web3");
@@ -145,6 +126,10 @@ class ForceModifyRecord extends Component {
   }
 
   componentDidUpdate() {
+
+    if(this.state.web3 !== null && this.state.BPappPayable < 1){
+      this.returnsContract();
+    }
     
     if (this.state.addr > 0 && this.state.assetClass === undefined) {
       this.getAssetClass();
@@ -206,7 +191,7 @@ class ForceModifyRecord extends Component {
 
       checkExists(idxHash);
 
-      this.state.frontendPayable.methods
+      this.state.BPappPayable.methods
         .$reimportRecord(idxHash, rgtHash)
         .send({ from: this.state.addr, value: this.state.costArray[3] })
         .on("error", function (_error) {
@@ -228,21 +213,12 @@ class ForceModifyRecord extends Component {
       var idxHash;
       var newRgtRaw;
       
-      if(this.state.action > 0){
       idxHash = this.state.web3.utils.soliditySha3(
-          this.state.type,
-          this.state.manufacturer,
-          this.state.model,
-          this.state.serial,
-          this.state.action
-        );} 
-      else if(this.state.action === ""){
-        idxHash = this.state.web3.utils.soliditySha3(
-          this.state.type,
-          this.state.manufacturer,
-          this.state.model,
-          this.state.serial
-        );}
+        this.state.type,
+        this.state.manufacturer,
+        this.state.model,
+        this.state.serial,
+    );
 
       newRgtRaw = this.state.web3.utils.soliditySha3(
         this.state.first,
@@ -260,7 +236,7 @@ class ForceModifyRecord extends Component {
 
       checkExists(idxHash);
 
-      this.state.frontendPayable.methods
+      this.state.BPappPayable.methods
         .$forceModRecord(idxHash, newRgtHash)
         .send({ from: this.state.addr, value: this.state.costArray[5] })
         .on("error", function (_error) {
@@ -281,13 +257,18 @@ class ForceModifyRecord extends Component {
     return (
       <div>
         <Form className="FMRform">
-          {this.state.addr === undefined && (
+        {this.state.addr === undefined && (
             <div className="errorResults">
               <h2>WARNING!</h2>
               <h3>Injected web3 not connected to form!</h3>
             </div>
+          )}{this.state.assetClass < 1 && (
+            <div className="errorResults">
+              <h2>No authorized asset class detected at user address.</h2>
+              <h3>Unauthorized users do not have access to forms.</h3>
+            </div>
           )}
-          {this.state.addr > 0 && (
+          {this.state.addr > 0 && this.state.assetClass > 0 &&(
             <div>
               <h2 className="Headertext">Modify Recrod</h2>
               <br></br>
@@ -411,8 +392,34 @@ class ForceModifyRecord extends Component {
                 </Form.Group>
               </Form.Row>
               <Form.Row>
-                <ButtonGroup className="buttonGroupDisplay" aria-label="choices">
-                <Button variant="primary"
+              <div>
+                <Form.Group>
+                  <Button
+                    className="ownerButtonDisplay"
+                    variant="danger"
+                    type="button"
+                    size="lg"
+                    onClick={_forceModifyRecord}
+                  >
+                    Force modify
+                  </Button>
+                </Form.Group>
+              </div>
+              <div>
+                <Form.Group>
+                  <Button
+                    className="ownerButtonDisplay2"
+                    variant="primary"
+                    type="button"
+                    size="lg"
+                    onClick={_reimportAsset}
+                  >
+                    Re-import
+                  </Button>
+                </Form.Group>
+              </div>
+                {/* <ButtonGroup className="buttonGroupDisplay" aria-label="choices">
+                <Button variant="danger"
                     type="button"
                     size="lg"
                     onClick={_forceModifyRecord}>
@@ -427,7 +434,7 @@ class ForceModifyRecord extends Component {
                   >
                     Re-import
                     </Button>
-                </ButtonGroup>
+                </ButtonGroup> */}
               </Form.Row>
             </div>
           )}
