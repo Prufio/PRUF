@@ -218,13 +218,12 @@ contract Storage is Ownable, ReentrancyGuard {
         uint8 _contractAuthLevel
     ) external onlyOwner {
         require(_contractAuthLevel <= 4, "AC:ER-13 Invalid user type");
-        emit REPORT("internal user database access!"); //report access to the internal user database
-
         contractAdresses[keccak256(
             abi.encodePacked(_addr)
         )] = _contractAuthLevel;
 
         contractNames[_name] = _addr;
+        emit REPORT("internal user database access!"); //report access to the internal user database
     }
 
     /*
@@ -285,17 +284,12 @@ contract Storage is Ownable, ReentrancyGuard {
         uint256 _countDownStart,
         bytes32 _Ipfs1
     ) external isAuthorized nonReentrant {
-        // uint256 assetClass256 = uint256(_assetClass);
-        // require( //origin address holds assetClass token, or assetClass is >=65000
-        //     (database[_idxHash].assetClass >= 65000) ||
-        //         (AssetClassTokenContract.ownerOf(assetClass256) == msg.sender),
-        //     "NR:ERR-Contract not authorized in asset class"
-        // );
         require(
             database[_idxHash].rightsHolder == 0,
             "NR:ERR-Record already exists"
         );
         require(_rgt != 0, "NR:ERR-Rightsholder cannot be blank");
+        //^^^^^^^checks^^^^^^^^^
 
         Record memory rec;
 
@@ -310,8 +304,10 @@ contract Storage is Ownable, ReentrancyGuard {
         rec.numberOfTransfers = 0;
 
         database[_idxHash] = rec;
+        //^^^^^^^effects^^^^^^^^^
 
         emit REPORT("New record created");
+        //^^^^^^^interactions^^^^^^^^^
     }
 
     /*
@@ -335,7 +331,7 @@ contract Storage is Ownable, ReentrancyGuard {
         notBlockLocked(_idxHash)
     //isACtokenHolder(_idxHash)
     {
-        bytes32 idxHash = _idxHash;
+        bytes32 idxHash = _idxHash; //stack saving
         bytes32 rgtHash = _rgtHash;
 
         require(rgtHash != 0, "MR:ERR-Rightsholder cannot be blank");
@@ -362,6 +358,7 @@ contract Storage is Ownable, ReentrancyGuard {
                 (_newAssetStatus != 10),
             "SS:ERR-Must use stolenOrLost function to set lost or stolen status"
         );
+        //^^^^^^^checks^^^^^^^^^
 
         database[idxHash].timeLock = block.number;
         Record memory rec = database[_idxHash];
@@ -374,7 +371,9 @@ contract Storage is Ownable, ReentrancyGuard {
         rec.numberOfTransfers = _numberOfTransfers;
 
         database[idxHash] = rec;
+        //^^^^^^^effects^^^^^^^^^
         emit REPORT("Record modified");
+        //^^^^^^^interactions^^^^^^^^^
     }
 
     /*
@@ -403,6 +402,7 @@ contract Storage is Ownable, ReentrancyGuard {
             (database[_idxHash].assetStatus != 5),
             "SS:ERR-Transferred asset cannot be set to lost or stolen after transfer."
         );
+        //^^^^^^^checks^^^^^^^^^
 
         database[_idxHash].timeLock = block.number;
         Record memory rec = database[_idxHash];
@@ -411,7 +411,9 @@ contract Storage is Ownable, ReentrancyGuard {
         rec.assetStatus = _newAssetStatus;
 
         database[_idxHash] = rec;
+        //^^^^^^^effects^^^^^^^^^
         emit REPORT("Asset Marked Stolen / lost");
+        //^^^^^^^interactions^^^^^^^^^
     }
 
     /*
@@ -443,16 +445,20 @@ contract Storage is Ownable, ReentrancyGuard {
                 (database[_idxHash].assetStatus != 10),
             "SE:ERR-Transferred, lost, or stolen status cannot be set to escrow."
         );
+        //^^^^^^^checks^^^^^^^^^
 
         database[_idxHash].timeLock = block.number;
         Record memory rec = database[_idxHash];
 
         (rec.lastRecorder, rec.recorder) = storeRecorder(_idxHash, _userHash);
+        //^^storeRecorder() is view, private
         rec.assetStatus = _newAssetStatus;
         rec.timeLock = _escrowTime;
 
         database[_idxHash] = rec;
+        //^^^^^^^effects^^^^^^^^^
         emit REPORT("Record locked for escrow");
+        //^^^^^^^interactions^^^^^^^^^
     }
 
     /*
@@ -467,7 +473,7 @@ contract Storage is Ownable, ReentrancyGuard {
         nonReentrant
         isAuthorized
         notBlockLocked(_idxHash)
-        exists(_idxHash) //isACtokenHolder(_idxHash)
+        exists(_idxHash)
     {
         require(
             (_newAssetStatus == 20) || (_newAssetStatus == 21),
@@ -478,15 +484,19 @@ contract Storage is Ownable, ReentrancyGuard {
                 (database[_idxHash].assetStatus == 12),
             "EE:ERR-Asset not in escrow"
         );
+        //^^^^^^^checks^^^^^^^^^
 
         database[_idxHash].timeLock = block.number;
         Record memory rec = database[_idxHash];
 
         rec.assetStatus = _newAssetStatus;
         (rec.lastRecorder, rec.recorder) = storeRecorder(_idxHash, _userHash);
+        //^^storeRecorder() is view, private
 
         database[_idxHash] = rec;
+        //^^^^^^^effects^^^^^^^^^
         emit REPORT("Escrow ended");
+        //^^^^^^^interactions^^^^^^^^^
     }
 
     /*
@@ -503,20 +513,23 @@ contract Storage is Ownable, ReentrancyGuard {
         exists(_idxHash)
         notEscrow(_idxHash)
         notBlockLocked(_idxHash)
-    //isACtokenHolder(_idxHash)
     {
         Record memory rec = database[_idxHash];
 
         require((rec.Ipfs1 != _Ipfs1), "MI1: New value same as old");
+        //^^^^^^^checks^^^^^^^^^
 
         database[_idxHash].timeLock = block.number;
 
         rec.Ipfs1 = _Ipfs1;
 
         (rec.lastRecorder, rec.recorder) = storeRecorder(_idxHash, _userHash);
+        //^^storeRecorder() is view, private
 
         database[_idxHash] = rec;
+        //^^^^^^^effects^^^^^^^^^
         emit REPORT("IPFS1 Description Modified");
+        //^^^^^^^interactions^^^^^^^^^
     }
 
     function modifyIpfs2(
@@ -535,15 +548,19 @@ contract Storage is Ownable, ReentrancyGuard {
         Record memory rec = database[_idxHash];
 
         require((rec.Ipfs2 == 0), "MI2: Cannot overwrite IPFS2");
+        //^^^^^^^checks^^^^^^^^^
 
         database[_idxHash].timeLock = block.number;
 
         rec.Ipfs2 = _Ipfs2;
 
         (rec.lastRecorder, rec.recorder) = storeRecorder(_idxHash, _userHash);
+        //^^storeRecorder() is view, private
 
         database[_idxHash] = rec;
+        //^^^^^^^effects^^^^^^^^^
         emit REPORT("IPFS2 Note Added");
+        //^^^^^^^interactions^^^^^^^^^
     }
 
     //--------------------------------External READ ONLY contract functions / authuser---------------------------------//
@@ -570,14 +587,14 @@ contract Storage is Ownable, ReentrancyGuard {
     {
         Record memory rec = database[_idxHash];
 
-        // if (
-        //     (rec.assetStatus == 3) ||
-        //     (rec.assetStatus == 4) ||
-        //     (rec.assetStatus == 9) ||
-        //     (rec.assetStatus == 10)
-        // ) {
-        //     emit REPORT_B32("Lost or stolen record queried", _idxHash);
-        // }
+        //  if (
+        //      (rec.assetStatus == 3) ||
+        //      (rec.assetStatus == 4) ||
+        //      (rec.assetStatus == 9) ||
+        //      (rec.assetStatus == 10)
+        //  ) {
+        //      emit REPORT_B32("Lost or stolen record queried", _idxHash);
+        //  }
 
         return (
             rec.recorder,
@@ -592,6 +609,7 @@ contract Storage is Ownable, ReentrancyGuard {
             rec.Ipfs2,
             rec.numberOfTransfers
         );
+        //^^^^^^^interactions^^^^^^^^^
     }
 
     function retrieveShortRecord(bytes32 _idxHash)
@@ -635,6 +653,7 @@ contract Storage is Ownable, ReentrancyGuard {
             rec.numberOfTransfers,
             rec.timeLock
         );
+        //^^^^^^^interactions^^^^^^^^^
     }
 
     /*
@@ -650,6 +669,7 @@ contract Storage is Ownable, ReentrancyGuard {
         } else {
             return 0;
         }
+        //^^^^^^^checks/interactions^^^^^^^^^
     }
 
     /*
@@ -666,6 +686,7 @@ contract Storage is Ownable, ReentrancyGuard {
             emit REPORT("Rights holder does not match supplied data");
             return 0;
         }
+        //^^^^^^^checks/interactions^^^^^^^^^
     }
 
     /*
@@ -694,6 +715,7 @@ contract Storage is Ownable, ReentrancyGuard {
             _returnCosts.cost6,
             _returnCosts.paymentAddress
         );
+        //^^^^^^^interactions^^^^^^^^^
     }
 
     /*
@@ -722,6 +744,7 @@ contract Storage is Ownable, ReentrancyGuard {
             baseCost.cost6,
             baseCost.paymentAddress
         );
+        //^^^^^^^interactions^^^^^^^^^
     }
 
     /*
@@ -734,18 +757,8 @@ contract Storage is Ownable, ReentrancyGuard {
         returns (address)
     {
         return contractNames[_name];
+        //^^^^^^^interactions^^^^^^^^^
     }
-
-    // /*
-    //  * @dev returns the payment address from baseCosts.payment_address
-    //  */
-    // function getMainWallet()
-    //     external
-    //     view
-    //     returns (address)
-    // {
-    //     return baseCost.paymentAddress;
-    // }
 
     //-----------------------------------------------Private functions------------------------------------------------//
 
@@ -753,14 +766,14 @@ contract Storage is Ownable, ReentrancyGuard {
      * @dev Update lastRecorder
      */
     function storeRecorder(
-        //storeRecorder(_idxHash, _recorder) returns (lastRecorder,recorder)
         bytes32 _idxHash,
         bytes32 _recorder
-    ) internal view returns (bytes32, bytes32) {
+    ) private view returns (bytes32, bytes32) {
         if (database[_idxHash].recorder != _recorder) {
             return (database[_idxHash].recorder, _recorder);
         } else {
             return (database[_idxHash].lastRecorder, _recorder);
         }
+        //^^^^^^^checks/interactions^^^^^^^^^
     }
 }
