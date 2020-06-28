@@ -750,7 +750,7 @@ contract BP_APP is ReentrancyGuard, PullPayment, Ownable, IERC721Receiver {
         ) = Storage.retrieveBaseCosts();
 
         return (cost);
-       //^^^^^^^interactions^^^^^^^^^
+        //^^^^^^^interactions^^^^^^^^^
     }
 
     /*
@@ -777,7 +777,7 @@ contract BP_APP is ReentrancyGuard, PullPayment, Ownable, IERC721Receiver {
     function writeRecordIpfs2(bytes32 _idxHash, Record memory _rec)
         private
         isAuthorized(_idxHash)
-        //^^^^^^^checks^^^^^^^^^
+    //^^^^^^^checks^^^^^^^^^
     {
         bytes32 userHash = keccak256(abi.encodePacked(msg.sender)); // Get a userhash for authentication and recorder logging
 
@@ -791,7 +791,7 @@ contract BP_APP is ReentrancyGuard, PullPayment, Ownable, IERC721Receiver {
     function writeRecord(bytes32 _idxHash, Record memory _rec)
         private
         isAuthorized(_idxHash)
-        //^^^^^^^checks^^^^^^^^^
+    //^^^^^^^checks^^^^^^^^^
     {
         bytes32 userHash = keccak256(abi.encodePacked(msg.sender)); // Get a userhash for authentication and recorder logging
 

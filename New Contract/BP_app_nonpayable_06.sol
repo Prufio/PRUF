@@ -232,7 +232,6 @@ contract BP_APP_NP is Ownable, IERC721Receiver, ReentrancyGuard {
     // --------------------------------------Events--------------------------------------------//
 
     event REPORT(string _msg);
-    event REPORT256(uint256 _msg);
     // --------------------------------------Modifiers--------------------------------------------//
     /*
      * @dev msg.sender holds assetClass token

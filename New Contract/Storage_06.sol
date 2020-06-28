@@ -19,55 +19,55 @@
  *  BPappNonPayable
  *
  */
-     /*  NOTES:---------------------------------------------------------------------------------------//
-     * Authorized external Contract / address types:   contractAdresses[]
-     *
-     * 0   --NONE
-     * 1   --E
-     * 2   --RE
-     * 3   --RWE
-     * 4  --ADMIN (isAdmin)
-     * >4 NONE
-     * Owner (onlyOwner)
-     * other = unauth
-     *
-     *
-     * Record status field key
-     *
-     * 0 = no status, Non transferrable. Default asset creation status
-     *       default after FMR, and after status 5 (essentially a FMR) (IN frontend)
-     * 1 = transferrable
-     * 2 = nontransferrable
-     * 3 = stolen
-     * 4 = lost
-     * 5 = transferred but not reImported (no new rghtsholder information) implies that asset posessor is the owner.
-     *       must be re-imported by ACadmin through regular onboarding process
-     *       no actions besides modify RGT to a new rightsholder can be performed on a statuss 5 asset (no status changes) (Frontend)
-     * 6 = in escrow, locked until timelock expires, but can be set to lost or stolen
-     *       Status 1-6 Actions cannot be performed by automation.
-     *       only ACAdmins can set or unset these statuses, except 5 which can be set by automation
-     *
-     * 7 = transferrable, automation set/unset (secret confirmed)(ACAdmin can unset)
-     * 8 = non-transferrable, automation set/unset (secret confirmed)(ACAdmin can unset)
-     ******** status 9 stolen (automation set)(ONLY ACAdmin can unset)
-     * 10 = lost (automation set/unset)(ACAdmin can unset)
-     * 11 = asset transferred automation set/unset (secret confirmed)(ACAdmin can unset)
-     * 12 = escrow - automation set/unset (secret confirmed)(ACAdmin can unset)
-     *
-     * escrow status = lock time set to a time instead of a block number
-     *
-     *
-     * Authorized User Types   registeredUsers[]
-     *
-     * 1 - 4 = Standard User types
-     * 1 all priveleges
-     * 2 all but force-modify
-     * 5 - 9 = Robot (cannot create of force-modify)
-     * 99 = ADMIN (isAdmin)
-     * Other = unauth
-     *
-     * rgtHash = K256(abiPacked(idxHash,rgtHash))
-     */
+/*  NOTES:---------------------------------------------------------------------------------------//
+ * Authorized external Contract / address types:   contractAdresses[]
+ *
+ * 0   --NONE
+ * 1   --E
+ * 2   --RE
+ * 3   --RWE
+ * 4  --ADMIN (isAdmin)
+ * >4 NONE
+ * Owner (onlyOwner)
+ * other = unauth
+ *
+ *
+ * Record status field key
+ *
+ * 0 = no status, Non transferrable. Default asset creation status
+ *       default after FMR, and after status 5 (essentially a FMR) (IN frontend)
+ * 1 = transferrable
+ * 2 = nontransferrable
+ * 3 = stolen
+ * 4 = lost
+ * 5 = transferred but not reImported (no new rghtsholder information) implies that asset posessor is the owner.
+ *       must be re-imported by ACadmin through regular onboarding process
+ *       no actions besides modify RGT to a new rightsholder can be performed on a statuss 5 asset (no status changes) (Frontend)
+ * 6 = in escrow, locked until timelock expires, but can be set to lost or stolen
+ *       Status 1-6 Actions cannot be performed by automation.
+ *       only ACAdmins can set or unset these statuses, except 5 which can be set by automation
+ *
+ * 7 = transferrable, automation set/unset (secret confirmed)(ACAdmin can unset)
+ * 8 = non-transferrable, automation set/unset (secret confirmed)(ACAdmin can unset)
+ ******** status 9 stolen (automation set)(ONLY ACAdmin can unset)
+ * 10 = lost (automation set/unset)(ACAdmin can unset)
+ * 11 = asset transferred automation set/unset (secret confirmed)(ACAdmin can unset)
+ * 12 = escrow - automation set/unset (secret confirmed)(ACAdmin can unset)
+ *
+ * escrow status = lock time set to a time instead of a block number
+ *
+ *
+ * Authorized User Types   registeredUsers[]
+ *
+ * 1 - 4 = Standard User types
+ * 1 all priveleges
+ * 2 all but force-modify
+ * 5 - 9 = Robot (cannot create of force-modify)
+ * 99 = ADMIN (isAdmin)
+ * Other = unauth
+ *
+ * rgtHash = K256(abiPacked(idxHash,rgtHash))
+ */
 
 // SPDX-License-Identifier: UNLICENSED
 pragma solidity ^0.6.2;
@@ -196,7 +196,6 @@ contract Storage is Ownable, ReentrancyGuard {
     //-----------------------------------------------Events------------------------------------------------//
 
     event REPORT(string _msg);
-    event REPORT_B32(string _msg, bytes32 b32);
 
     //--------------------------------Internal Admin functions / onlyowner or isAdmin---------------------------------//
     /*
@@ -239,7 +238,6 @@ contract Storage is Ownable, ReentrancyGuard {
         uint256 _forceModCost,
         address _paymentAddress
     ) external isACtokenHolderOfClass(_class) {
-
         cost[_class].cost1 = _newRecordCost.add(baseCost.cost1);
         cost[_class].cost2 = _transferRecordCost.add(baseCost.cost2);
         cost[_class].cost3 = _createNoteCost.add(baseCost.cost3);
@@ -261,7 +259,6 @@ contract Storage is Ownable, ReentrancyGuard {
         uint256 _forceModCost,
         address _paymentAddress
     ) external onlyOwner {
-
         baseCost.cost1 = _newRecordCost;
         baseCost.cost2 = _transferRecordCost;
         baseCost.cost3 = _createNoteCost;
@@ -765,10 +762,11 @@ contract Storage is Ownable, ReentrancyGuard {
     /*
      * @dev Update lastRecorder
      */
-    function storeRecorder(
-        bytes32 _idxHash,
-        bytes32 _recorder
-    ) private view returns (bytes32, bytes32) {
+    function storeRecorder(bytes32 _idxHash, bytes32 _recorder)
+        private
+        view
+        returns (bytes32, bytes32)
+    {
         if (database[_idxHash].recorder != _recorder) {
             return (database[_idxHash].recorder, _recorder);
         } else {
