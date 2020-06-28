@@ -1,6 +1,5 @@
 /*  TO DO
- * Recheck user level security and user permissioning /modifiers (after all is done)
- * implement escrow rules /conditions
+ * verify security and user permissioning /modifiers
  *
  * mint a token at asset creation
  *
@@ -11,15 +10,13 @@
  *-----------------------------------------------------------------------------------------------------------------
  *
  * IMPORTANT NOTE : DO NOT REMOVE FROM CODE:
- *      Verification of rgtHash in curated, tokenly non-custodial asset classes is not secure beyond the honorable intentions
+ *      Verification of rgtHash in curated, tokenless asset classes are not secure beyond the honorable intentions
  * of authorized recorders. All blockchain info is readable, so a bad actor could trivially obtain a copy of the
  * correct rgtHash on chain. This "stumbling block" measure is in place primarily to keep honest people honest, and
  * to require an actual, malicious effort to bypass security rather than a little copy-paste. Actual decentralized
  * security is provided with tokenized assets, which do not rely on the coercive trust relationship that creates the
  * incentive for recorders not to engage in malicious practices.
- *
- *
- *
+*
  * Order of require statements:
  * 1: (modifiers)
  * 2: checking the asset existance
@@ -29,16 +26,61 @@
  * 6: verifying that provided verification data matches required data
  * 7: verifying that message contains any required payment
  *
- * Contract Names -
+ *
+ * Contract Resolution Names -
  *  assetToken
  *  assetClassToken
  *  BPappPayable
  *  BPappNonPayable
  *
+ * CONTRACT Types (storage)
+ * 0   --NONE
+ * 1   --E
+ * 2   --RE
+ * 3   --RWE
+ * 4   --ADMIN (isAdmin)
+ * >4  NONE
+ * Owner (onlyOwner)
+ * other = unauth
+ *
+ *
+ * Record status field key
+ *
+ * 0 = no status, Non transferrable. Default asset creation status
+ *       default after FMR, and after status 5 (essentially a FMR) (IN frontend)
+ * 1 = transferrable
+ * 2 = nontransferrable
+ * 3 = stolen
+ * 4 = lost
+ * 5 = transferred but not reImported (no new rghtsholder information) implies that asset posessor is the owner.
+ *       must be re-imported by ACadmin through regular onboarding process
+ *       no actions besides modify RGT to a new rightsholder can be performed on a statuss 5 asset (no status changes) (Frontend)
+ * 6 = in escrow, locked until timelock expires, but can be set to lost or stolen
+ *       Status 1-6 Actions cannot be performed by automation.
+ *       only ACAdmins can set or unset these statuses, except 5 which can be set by automation
+ *
+ * 7 = transferrable, automation set/unset (secret confirmed)(ACAdmin can unset)
+ * 8 = non-transferrable, automation set/unset (secret confirmed)(ACAdmin can unset)
+ * 9 = stolen (automation set)(ONLY ACAdmin can unset)
+ * 10 = lost (automation set/unset)(ACAdmin can unset)
+ * 11 = asset transferred automation set/unset (secret confirmed)(ACAdmin can unset)
+ * 12 = escrow - automation set/unset (secret confirmed)(ACAdmin can unset)
+ *
+ * escrow status = lock time set to a time instead of a block number
+ *
+ *
+ * Authorized User Types   registeredUsers[]
+ *
+ * 1 - 4 = Standard User types
+ * 1 - all priveleges
+ * 2 - all but force-modify
+ * 5 - 9 = Robot (cannot create of force-modify)
+ * Other = unauth
+ *
  */
 
 // SPDX-License-Identifier: UNLICENSED
-pragma solidity ^0.6.2;
+pragma solidity ^0.6.7;
 import "./Imports/PullPayment.sol";
 import "./Imports/ReentrancyGuard.sol";
 import "./_ERC721/IERC721Receiver.sol";

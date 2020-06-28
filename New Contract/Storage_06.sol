@@ -1,7 +1,13 @@
 /*  TO DO
  * verify security and user permissioning /modifiers
- * Decide if rgthash will still be used in storage, and how ? asset tokenHolder verification?
  *
+ * mint a token at asset creation
+ *
+ * @implement remint_asset ?
+ *-----------------------------------------------------------------------------------------------------------------
+ * Should all assets have a token, minted to reside within the contract for curated / "nontokenized" asset classes?
+ * If so, make a move-token function that can be enabled later (set to an address to control it)
+ *-----------------------------------------------------------------------------------------------------------------
  *
  * IMPORTANT NOTE : DO NOT REMOVE FROM CODE:
  *      Verification of rgtHash in curated, tokenless asset classes are not secure beyond the honorable intentions
@@ -10,24 +16,30 @@
  * to require an actual, malicious effort to bypass security rather than a little copy-paste. Actual decentralized
  * security is provided with tokenized assets, which do not rely on the coercive trust relationship that creates the
  * incentive for recorders not to engage in malicious practices.
+*
+ * Order of require statements:
+ * 1: (modifiers)
+ * 2: checking the asset existance
+ * 3: checking the idendity and credentials of the caller
+ * 4: checking the suitability of provided data for the proposed operation
+ * 5: checking the suitability of asset details for the proposed operation
+ * 6: verifying that provided verification data matches required data
+ * 7: verifying that message contains any required payment
  *
  *
- * Contract Names -
+ * Contract Resolution Names -
  *  assetToken
  *  assetClassToken
  *  BPappPayable
  *  BPappNonPayable
  *
- */
-/*  NOTES:---------------------------------------------------------------------------------------//
- * Authorized external Contract / address types:   contractAdresses[]
- *
+ * CONTRACT Types (storage)
  * 0   --NONE
  * 1   --E
  * 2   --RE
  * 3   --RWE
- * 4  --ADMIN (isAdmin)
- * >4 NONE
+ * 4   --ADMIN (isAdmin)
+ * >4  NONE
  * Owner (onlyOwner)
  * other = unauth
  *
@@ -49,7 +61,7 @@
  *
  * 7 = transferrable, automation set/unset (secret confirmed)(ACAdmin can unset)
  * 8 = non-transferrable, automation set/unset (secret confirmed)(ACAdmin can unset)
- ******** status 9 stolen (automation set)(ONLY ACAdmin can unset)
+ * 9 = stolen (automation set)(ONLY ACAdmin can unset)
  * 10 = lost (automation set/unset)(ACAdmin can unset)
  * 11 = asset transferred automation set/unset (secret confirmed)(ACAdmin can unset)
  * 12 = escrow - automation set/unset (secret confirmed)(ACAdmin can unset)
@@ -60,17 +72,15 @@
  * Authorized User Types   registeredUsers[]
  *
  * 1 - 4 = Standard User types
- * 1 all priveleges
- * 2 all but force-modify
+ * 1 - all priveleges
+ * 2 - all but force-modify
  * 5 - 9 = Robot (cannot create of force-modify)
- * 99 = ADMIN (isAdmin)
  * Other = unauth
  *
- * rgtHash = K256(abiPacked(idxHash,rgtHash))
  */
 
 // SPDX-License-Identifier: UNLICENSED
-pragma solidity ^0.6.2;
+pragma solidity ^0.6.7;
 
 import "./Imports/Ownable.sol";
 import "./Imports/SafeMath.sol";
@@ -309,7 +319,6 @@ contract Storage is Ownable, ReentrancyGuard {
 
     /*
      * @dev Modify a record in the database  *read fullHash, write rightsHolder, update recorder, assetClass,countDown update recorder....
-     *  prohibit changes to rightsholder / tokenID above assetClass 49999,
      */
     function modifyRecord(
         bytes32 _userHash,
