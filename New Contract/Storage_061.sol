@@ -172,7 +172,8 @@ contract Storage is Ownable, ReentrancyGuard {
     modifier notEscrow(bytes32 _idxHash) {
         require(
             ((database[_idxHash].assetStatus != 6) &&
-                (database[_idxHash].assetStatus != 12)) ||
+                (database[_idxHash].assetStatus != 12) &&
+                (database[_idxHash].assetStatus != 13)) ||
                 (database[_idxHash].timeLock < now), //Since time here is +/1 a day or so, now can be used as per the 15 second rule (consensys)
             "MOD-U-record modification prohibited while locked in escrow"
         );
@@ -197,8 +198,9 @@ contract Storage is Ownable, ReentrancyGuard {
         //this modifier makes the bold assumption the block number will "never" be reset. hopefully, this is true...
         require(
             ((database[_idxHash].assetStatus == 6) ||
-                (database[_idxHash].assetStatus == 12)) ||
-                database[_idxHash].timeLock < block.number,
+                (database[_idxHash].assetStatus == 12) ||
+                (database[_idxHash].assetStatus == 13) ||
+                (database[_idxHash].timeLock < block.number)),
             "MOD-NTL-record time locked"
         );
         _;
@@ -206,7 +208,7 @@ contract Storage is Ownable, ReentrancyGuard {
 
     //-----------------------------------------------Events------------------------------------------------//
 
-    event REPORT(string _msg);
+    event REPORT(string _msg, bytes32 b32);
 
     //--------------------------------Internal Admin functions / onlyowner or isAdmin---------------------------------//
     /*
@@ -237,7 +239,10 @@ contract Storage is Ownable, ReentrancyGuard {
 
         contractNames[_name] = _addr;
         //^^^^^^^effects^^^^^^^^^
-        emit REPORT("internal user database access!"); //report access to the internal user database
+        emit REPORT(
+            "internal user database access!",
+            bytes32(uint256(_contractAuthLevel))
+        ); //report access to the internal user database
         //^^^^^^^interactions^^^^^^^^^
     }
 
@@ -256,7 +261,7 @@ contract Storage is Ownable, ReentrancyGuard {
     ) external isACtokenHolderOfClass(_class) {
         require(
             priceDivisor != 0,
-             "price divisor is zero. Set base costs first"
+            "price divisor is zero. Set base costs first"
         );
         //^^^^^^^checks^^^^^^^^^
         if (_newRecordCost <= priceThreshold) {
@@ -373,7 +378,7 @@ contract Storage is Ownable, ReentrancyGuard {
         database[_idxHash] = rec;
         //^^^^^^^effects^^^^^^^^^
 
-        emit REPORT("New record created");
+        emit REPORT("New record created", _idxHash);
         //^^^^^^^interactions^^^^^^^^^
     }
 
@@ -438,7 +443,7 @@ contract Storage is Ownable, ReentrancyGuard {
 
         database[idxHash] = rec;
         //^^^^^^^effects^^^^^^^^^
-        emit REPORT("Record modified");
+        emit REPORT("New record created", _idxHash);
         //^^^^^^^interactions^^^^^^^^^
     }
 
@@ -478,7 +483,7 @@ contract Storage is Ownable, ReentrancyGuard {
 
         database[_idxHash] = rec;
         //^^^^^^^effects^^^^^^^^^
-        emit REPORT("Asset Marked Stolen / lost");
+        emit REPORT("New record created", _idxHash);
         //^^^^^^^interactions^^^^^^^^^
     }
 
@@ -486,7 +491,7 @@ contract Storage is Ownable, ReentrancyGuard {
      * @dev Set an asset to escrow status (6/12). Sets timelock for unix timestamp of escrow end.
      */
     function setEscrow(
-        bytes32 _userHash,
+        bytes32 _EscrowOwnerHash,
         bytes32 _idxHash,
         uint8 _newAssetStatus,
         uint256 _escrowTime
@@ -500,7 +505,9 @@ contract Storage is Ownable, ReentrancyGuard {
     //isACtokenHolder(_idxHash)
     {
         require(
-            (_newAssetStatus == 6) || (_newAssetStatus == 12),
+            (_newAssetStatus == 6) ||
+                (_newAssetStatus == 12) ||
+                (_newAssetStatus == 13),
             "SE:ERR-Must set to an escrow status"
         );
         require(
@@ -516,14 +523,17 @@ contract Storage is Ownable, ReentrancyGuard {
         database[_idxHash].timeLock = block.number;
         Record memory rec = database[_idxHash];
 
-        (rec.lastRecorder, rec.recorder) = storeRecorder(_idxHash, _userHash);
+        (rec.lastRecorder, rec.recorder) = storeRecorder(
+            _idxHash,
+            _EscrowOwnerHash
+        );
         //^^storeRecorder() is view, private
         rec.assetStatus = _newAssetStatus;
         rec.timeLock = _escrowTime;
 
         database[_idxHash] = rec;
         //^^^^^^^effects^^^^^^^^^
-        emit REPORT("Record locked for escrow");
+        emit REPORT("Record locked for escrow", _EscrowOwnerHash);
         //^^^^^^^interactions^^^^^^^^^
     }
 
@@ -542,12 +552,13 @@ contract Storage is Ownable, ReentrancyGuard {
         exists(_idxHash)
     {
         require(
-            (_newAssetStatus == 20) || (_newAssetStatus == 21),
-            "EE:ERR-Must set to 20 or 21 status" //require to be set to 20 or 21 - escrow ended by type1 (20) or type 9 (21)user
+            (_newAssetStatus == 20) || (_newAssetStatus == 21 || (_newAssetStatus == 22),
+            "EE:ERR-Must set to 20,21 or 22 status" //require to be set to 20,21 or 22 - escrow ended 
         );
         require(
             (database[_idxHash].assetStatus == 6) ||
-                (database[_idxHash].assetStatus == 12),
+                (database[_idxHash].assetStatus == 12) ||
+                (database[_idxHash].assetStatus == 13),
             "EE:ERR-Asset not in escrow"
         );
         //^^^^^^^checks^^^^^^^^^
@@ -561,7 +572,7 @@ contract Storage is Ownable, ReentrancyGuard {
 
         database[_idxHash] = rec;
         //^^^^^^^effects^^^^^^^^^
-        emit REPORT("Escrow ended");
+        emit REPORT("New record created", _idxHash);
         //^^^^^^^interactions^^^^^^^^^
     }
 
@@ -594,7 +605,7 @@ contract Storage is Ownable, ReentrancyGuard {
 
         database[_idxHash] = rec;
         //^^^^^^^effects^^^^^^^^^
-        emit REPORT("IPFS1 Description Modified");
+        emit REPORT("New record created", _idxHash);
         //^^^^^^^interactions^^^^^^^^^
     }
 
@@ -625,7 +636,7 @@ contract Storage is Ownable, ReentrancyGuard {
 
         database[_idxHash] = rec;
         //^^^^^^^effects^^^^^^^^^
-        emit REPORT("IPFS2 Note Added");
+        emit REPORT("New record created", _idxHash);
         //^^^^^^^interactions^^^^^^^^^
     }
 
@@ -746,10 +757,10 @@ contract Storage is Ownable, ReentrancyGuard {
         returns (uint8)
     {
         if (_rgtHash == database[_idxHash].rightsHolder) {
-            emit REPORT("Rights holder match confirmed");
+            emit REPORT("New record created", _idxHash);
             return 170;
         } else {
-            emit REPORT("Rights holder does not match supplied data");
+            emit REPORT("New record created", _idxHash);
             return 0;
         }
         //^^^^^^^checks/interactions^^^^^^^^^
@@ -772,7 +783,7 @@ contract Storage is Ownable, ReentrancyGuard {
         )
     {
         Costs memory returnCosts = cost[_assetClass];
-        if (returnCosts.paymentAddress != address(0)){
+        if (returnCosts.paymentAddress != address(0)) {
             return (
                 returnCosts.cost1,
                 returnCosts.cost2,

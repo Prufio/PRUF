@@ -55,16 +55,20 @@
  * 5 = transferred but not reImported (no new rghtsholder information) implies that asset posessor is the owner.
  *       must be re-imported by ACadmin through regular onboarding process
  *       no actions besides modify RGT to a new rightsholder can be performed on a statuss 5 asset (no status changes) (Frontend)
- * 6 = in escrow, locked until timelock expires, but can be set to lost or stolen
+ * 6 = in supervised escrow, locked until timelock expires, but can be set to lost or stolen
  *       Status 1-6 Actions cannot be performed by automation.
  *       only ACAdmins can set or unset these statuses, except 5 which can be set by automation
+ * 7 = out of Supervised escrow (user < 5)
  *
- * 7 = transferrable, automation set/unset (secret confirmed)(ACAdmin can unset)
- * 8 = non-transferrable, automation set/unset (secret confirmed)(ACAdmin can unset)
- * 9 = stolen (automation set)(ONLY ACAdmin can unset)
- * 10 = lost (automation set/unset)(ACAdmin can unset)
- * 11 = asset transferred automation set/unset (secret confirmed)(ACAdmin can unset)
- * 12 = escrow - automation set/unset (secret confirmed)(ACAdmin can unset)
+ * 50 Locked escrow
+ * 51 = transferrable, automation set/unset (secret confirmed)(ACAdmin can unset)
+ * 52 = non-transferrable, automation set/unset (secret confirmed)(ACAdmin can unset)
+ * 53 = stolen (automation set)(ONLY ACAdmin can unset)
+ * 54 = lost (automation set/unset)(ACAdmin can unset)
+ * 55 = asset transferred automation set/unset (secret confirmed)(ACAdmin can unset)
+ * 56 = escrow - automation set/unset (secret confirmed)(ACAdmin can unset)
+ * 57 = out of escrow
+ * 58 = out of locked escrow
  *
  * escrow status = lock time set to a time instead of a block number
  *
@@ -374,7 +378,7 @@ contract BP_APP_NP is Ownable, IERC721Receiver, ReentrancyGuard {
         //^^^^^^^interactions^^^^^^^^^
     }
 
-    function setEscrow(bytes32 _idxHash, uint256 _escrowTime, bytes32 _escrowOwnerHash)
+    function setEscrow(bytes32 _idxHash, uint256 _escrowTime, uint8 _escrowStatus, bytes32 _escrowOwnerHash)
         external
         nonReentrant
         isAuthorized(_idxHash)
@@ -401,15 +405,17 @@ contract BP_APP_NP is Ownable, IERC721Receiver, ReentrancyGuard {
                 (rec.assetStatus != 10),
             "SE:ERR-Transferred, lost, or stolen status cannot be set to escrow."
         );
+        require(
+            ((callingUser.userType < 5) && (_escrowStatus == 6)) ||
+            ((callingUser.userType > 4) && (_escrowStatus == 12)) ||
+            (_escrowStatus == 13),
+            "SE:ERR-Must set escrow witihn user type."
+        );
         //^^^^^^^checks^^^^^^^^^
 
-        if (callingUser.userType < 5) {
-            //If escrow was initiated by custodial user
-            newAssetStatus = 6; //Set asset status to 6 (left custodial escrow)
-        } else {
-            //escrow initiated by automation
-            newAssetStatus = 12; //Set asset status to 12 (left P2P escrow)
-        }
+
+        newAssetStatus = 12; //Set asset status to 12 (left P2P escrow)
+
         //^^^^^^^effects^^^^^^^^^
 
         Storage.setEscrow(
@@ -452,11 +458,15 @@ contract BP_APP_NP is Ownable, IERC721Receiver, ReentrancyGuard {
         //^^^^^^^checks^^^^^^^^^
 
         if (rec.assetStatus == 6) {
-            //If escrow was initiated by custodial user
             _newAssetStatus = 20; //Set asset status to 20 (left custodial escrow)
-        } else {
-            //escrow initiated by automation
+        }
+
+        if (rec.assetStatus == 12){
             _newAssetStatus = 21; //Set asset status to 21 (left P2P escrow)
+        }
+
+        if (rec.assetStatus == 13){
+            _newAssetStatus = 22; //Set asset status to 21 (left Locked escrow)
         }
         //^^^^^^^effects^^^^^^^^^
 
@@ -546,6 +556,10 @@ contract BP_APP_NP is Ownable, IERC721Receiver, ReentrancyGuard {
         require(
             (rec.assetStatus != 5),
             "SS:ERR-Transferred asset cannot be set to lost or stolen after transfer."
+        );
+        require(
+            (rec.assetStatus != 13),
+            "SS:ERR-Asset in locked escrow cannot be set to lost or stolen"
         );
         require(rec.assetStatus < 200, "RR: Record locked");
         require(
