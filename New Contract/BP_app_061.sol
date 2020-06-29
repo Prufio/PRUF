@@ -269,37 +269,16 @@ contract BP_APP is ReentrancyGuard, PullPayment, Ownable, IERC721Receiver {
      * ----OR---- (comment out part that will not be used)
      *      holds asset token
      */
-    modifier isAuthorized(bytes32 _idxHash) {
-        //uint256 tokenID = uint256(_idxHash);
+        modifier isAuthorized(bytes32 _idxHash) {
+        uint256 tokenID = uint256(_idxHash);
+        User memory user = getUser();
 
-        //START OF SECTION----------------------------------------------------FAKE AS HELL
-        User memory user = registeredUsers[keccak256(
-            abi.encodePacked(msg.sender)
-        )];
         require(
-            (user.userType > 0) && (user.userType < 10),
+            (((user.userType > 0) && (user.userType < 10)) &&
+            (AssetTokenContract.ownerOf(tokenID) == address(this))) || //User is authorized in database and contract holds token
+            (AssetTokenContract.ownerOf(tokenID) == msg.sender), //or msg.sender is token holder
             "ST:MOD-UA-ERR:User not registered "
         );
-
-        //rem this out for user database access
-        //START OF SECTION----------------------------------------------------THE almost REAL SHIT
-        // require(
-        //     (AssetTokenContract.ownerOf(tokenID) == msg.sender), or maybe needs to be held in this contract?
-        //     "MOD-Token: Asset token not found at msg.sender" or maybe needs to be held in this contract?
-        // );
-        //END OF SECTION--------------------------------
-
-        //rem this out for token only access
-        //START OF SECTION----------------------------------------------------THE almost REAL SHIT
-        // User memory user = registeredUsers[keccak256(
-        //     abi.encodePacked(msg.sender)
-        // )];
-        // require(
-        //     ((user.userType == 1) || (user.userType == 9)) &&
-        //         (AssetTokenContract.ownerOf(tokenID) == address(this)),
-        //     "ST:MOD-UA-ERR:User not registered or token not found locally"
-        // );
-        //END OF SECTION--------------------------------
         _;
     }
 

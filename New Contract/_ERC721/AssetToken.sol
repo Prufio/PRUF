@@ -35,16 +35,16 @@ contract AssetToken is ERC721, Ownable {
         //^^^^^^^interactions^^^^^^^^^
     }
 
-    // function transferAssetToken(
-    //     address from,
-    //     address to,
-    //     bytes32 _idxHash
-    // ) external onlyOwner {
-    //     uint256 tokenId = uint256(_idxHash);
-    //     //^^^^^^^checks^^^^^^^^^
-    //     safeTransferFrom(from, to, tokenId);
-    //     //^^^^^^^interactions^^^^^^^^^
-    // }
+    function transferAssetToken(
+        address from,
+        address to,
+        bytes32 _idxHash
+    ) external onlyOwner {
+        uint256 tokenId = uint256(_idxHash);
+        //^^^^^^^checks^^^^^^^^^
+        safeTransferFrom(from, to, tokenId);
+        //^^^^^^^interactions^^^^^^^^^
+    }
 
     function reMintAssetToken(
         address _reciepientAddress,

@@ -254,6 +254,10 @@ contract Storage is Ownable, ReentrancyGuard {
         uint256 _forceModCost,
         address _paymentAddress
     ) external isACtokenHolderOfClass(_class) {
+        require(
+            priceDivisor != 0,
+             "price divisor is zero. Set base costs first"
+        );
         //^^^^^^^checks^^^^^^^^^
         if (_newRecordCost <= priceThreshold) {
             cost[_class].cost1 = _newRecordCost.add(baseCost.cost1);
@@ -767,16 +771,28 @@ contract Storage is Ownable, ReentrancyGuard {
             address
         )
     {
-        Costs memory _returnCosts = cost[_assetClass];
-        return (
-            _returnCosts.cost1,
-            _returnCosts.cost2,
-            _returnCosts.cost3,
-            _returnCosts.cost4,
-            _returnCosts.cost5,
-            _returnCosts.cost6,
-            _returnCosts.paymentAddress
-        );
+        Costs memory returnCosts = cost[_assetClass];
+        if (returnCosts.paymentAddress != address(0)){
+            return (
+                returnCosts.cost1,
+                returnCosts.cost2,
+                returnCosts.cost3,
+                returnCosts.cost4,
+                returnCosts.cost5,
+                returnCosts.cost6,
+                returnCosts.paymentAddress
+            );
+        } else {
+            return (
+                1 ether,
+                1 ether,
+                1 ether,
+                1 ether,
+                1 ether,
+                1 ether,
+                baseCost.paymentAddress
+            );
+        }
         //^^^^^^^interactions^^^^^^^^^
     }
 

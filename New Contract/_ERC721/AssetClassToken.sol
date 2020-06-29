@@ -33,15 +33,15 @@ contract AssetClassToken is ERC721, Ownable {
         //^^^^^^^interactions^^^^^^^^^
     }
 
-    // function transferAssetClassToken(
-    //     address from,
-    //     address to,
-    //     uint256 tokenId
-    // ) external onlyOwner {
-    //     //^^^^^^^checks^^^^^^^^^
-    //     safeTransferFrom(from, to, tokenId);
-    //     //^^^^^^^interactions^^^^^^^^^
-    // }
+    function transferAssetClassToken(
+        address from,
+        address to,
+        uint256 tokenId
+    ) external onlyOwner {
+        //^^^^^^^checks^^^^^^^^^
+        safeTransferFrom(from, to, tokenId);
+        //^^^^^^^interactions^^^^^^^^^
+    }
 
     function reMintAssetClassToken(
         address _reciepientAddress,
