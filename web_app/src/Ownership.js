@@ -211,7 +211,7 @@ class Ownership extends Component {
     const transfer = () => {
       if(this.state.newOwner < 1){return(alert("Can not transfer to zero address"))}
 
-      else if(this.state.isTxfrStorage === true){
+      if(this.state.isTxfrStorage === true){
       this.state.storage.methods
         .transferOwnership(this.state.newOwner)
         .send({ from: this.state.addr })
@@ -221,10 +221,11 @@ class Ownership extends Component {
         })
         .on("receipt", (receipt) => {
           console.log("Storage ownership Transferred to: ", self.state.newOwner);
+          self.setState({isStorageOwner: false})
           console.log("tx receipt: ", receipt);
         });}
 
-        else if(this.state.isTxfrBPP === true){
+        if(this.state.isTxfrBPP === true){
         this.state.BPappPayable.methods
         .transferOwnership(this.state.newOwner)
         .send({ from: this.state.addr })
@@ -234,10 +235,11 @@ class Ownership extends Component {
         })
         .on("receipt", (receipt) => {
           console.log("BP app ownership Transferred to: ", self.state.newOwner);
+          self.setState({isBPPOwner: false})
           console.log("tx receipt: ", receipt);
         });}
 
-        else if(this.state.isTxfrBPNP === true){
+        if(this.state.isTxfrBPNP === true){
         this.state.BPappNonPayable.methods
         .transferOwnership(this.state.newOwner)
         .send({ from: this.state.addr })
@@ -247,6 +249,7 @@ class Ownership extends Component {
         })
         .on("receipt", (receipt) => {
           console.log("BP app (non-payable) ownership Transferred to: ", self.state.newOwner);
+          self.setState({isBPNPOwner: false})
           console.log("tx receipt: ", receipt);
         });}
 
