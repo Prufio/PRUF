@@ -275,24 +275,6 @@ contract BP_APP_NP is Ownable, IERC721Receiver, ReentrancyGuard {
 
     event REPORT(string _msg);
     // --------------------------------------Modifiers--------------------------------------------//
-    /*
-     * @dev msg.sender holds assetClass token
-     */
-
-    modifier isACtokenHolder(uint16 _assetClass) {
-        //-----------------------------------------FAKE AS HELL
-        uint256 assetClass256 = uint256(_assetClass);
-        require((assetClass256 > 0), "what the actual fuck");
-        _;
-    }
-    // modifier isACtokenHolder(uint16 _assetClass) { //----------------------------------------THE almost REAL SHIT
-    //     uint256 assetClass256 = uint256(_assetClass);
-    //     require(
-    //         (AssetClassTokenContract.ownerOf(assetClass256) == msg.sender),
-    //         "MOD-ACToken: msg.sender not authorized in asset class"
-    //     );
-    //     _;
-    // }
 
     /*
      * @dev Verify user credentials
