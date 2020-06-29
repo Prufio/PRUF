@@ -5,11 +5,11 @@ pragma solidity ^0.6.7;
 import "./ERC721.sol";
 import "./Ownable.sol";
 
-
 contract AssetClassToken is ERC721, Ownable {
-
     mapping(bytes32 => uint8) private registeredAdmins; // Authorized recorder database
+
     constructor() public ERC721("BulletProof Asset Class Token", "BPXAC") {}
+
     event REPORT(string _msg);
 
     modifier isAdmin() {
@@ -26,22 +26,22 @@ contract AssetClassToken is ERC721, Ownable {
         uint256 tokenId,
         string calldata _tokenURI
     ) external isAdmin returns (uint256) {
-    //^^^^^^^checks^^^^^^^^^
+        //^^^^^^^checks^^^^^^^^^
         _safeMint(_reciepientAddress, tokenId);
         _setTokenURI(tokenId, _tokenURI);
         return tokenId;
-    //^^^^^^^interactions^^^^^^^^^
-    }
-
-    function transferAssetClassToken(
-        address from,
-        address to,
-        uint256 tokenId
-    ) external onlyOwner {
-        //^^^^^^^checks^^^^^^^^^
-        safeTransferFrom(from, to, tokenId);
         //^^^^^^^interactions^^^^^^^^^
     }
+
+    // function transferAssetClassToken(
+    //     address from,
+    //     address to,
+    //     uint256 tokenId
+    // ) external onlyOwner {
+    //     //^^^^^^^checks^^^^^^^^^
+    //     safeTransferFrom(from, to, tokenId);
+    //     //^^^^^^^interactions^^^^^^^^^
+    // }
 
     function reMintAssetClassToken(
         address _reciepientAddress,
@@ -57,12 +57,15 @@ contract AssetClassToken is ERC721, Ownable {
         //^^^^^^^interactions^^^^^^^^^
     }
 
-    function OO_addACAdmin(
+    function OO_addACtokenAdmin(
         address _authAddr,
         uint8 _addAdmin // must make this indelible / permenant???????? SECURITY / trustless goals
     ) external onlyOwner {
         bytes32 addrHash = keccak256(abi.encodePacked(_authAddr));
-        require((_addAdmin == 1) || (_addAdmin == 0), "Admin status must be 1 or 0");
+        require(
+            (_addAdmin == 1) || (_addAdmin == 0),
+            "Admin status must be 1 or 0"
+        );
         //^^^^^^^checks^^^^^^^^^
         registeredAdmins[addrHash] = _addAdmin;
         //^^^^^^^effects^^^^^^^^^

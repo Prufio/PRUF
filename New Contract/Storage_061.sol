@@ -16,7 +16,7 @@
  * to require an actual, malicious effort to bypass security rather than a little copy-paste. Actual decentralized
  * security is provided with tokenized assets, which do not rely on the coercive trust relationship that creates the
  * incentive for recorders not to engage in malicious practices.
-*
+ *
  * Order of require statements:
  * 1: (modifiers)
  * 2: checking the asset existance
@@ -131,6 +131,9 @@ contract Storage is Ownable, ReentrancyGuard {
     mapping(uint16 => Costs) private cost; // Cost per function by asset class
     Costs private baseCost;
 
+    uint256 private priceThreshold; //threshold of price where fractional pricing is implemented
+    uint256 private priceDivisor; //fractional pricing divisor
+
     address private AssetClassTokenAddress;
     AssetClassTokenInterface private AssetClassTokenContract; //erc721_token prototype initialization
 
@@ -141,12 +144,10 @@ contract Storage is Ownable, ReentrancyGuard {
      */
     modifier isACtokenHolderOfClass(uint16 _assetClass) {
         uint256 assetClass256 = uint256(_assetClass);
-        require((assetClass256 > 0), "What the actual fuck?"); //----------------------------------------------------------FAKE AS HELL
-
-        // require( //----------------------------------------------------------THE REAL SHIT
-        //     (AssetClassTokenContract.ownerOf(assetClass256) == msg.sender),
-        //     "MOD-ACTH-msg.sender not authorized in asset class"
-        // );
+        require(
+            (AssetClassTokenContract.ownerOf(assetClass256) == msg.sender),
+            "MOD-ACTH-msg.sender not authorized in asset class"
+        );
         _;
     }
 
@@ -213,9 +214,11 @@ contract Storage is Ownable, ReentrancyGuard {
      */
 
     function OO_getTokenAddresses() external onlyOwner {
+        //^^^^^^^checks^^^^^^^^^
         address _contractAddress = resolveContractAddress("assetClassToken");
         AssetClassTokenAddress = _contractAddress;
         AssetClassTokenContract = AssetClassTokenInterface(_contractAddress);
+        //^^^^^^^effects^^^^^^^^^
     }
 
     /*
@@ -227,12 +230,15 @@ contract Storage is Ownable, ReentrancyGuard {
         uint8 _contractAuthLevel
     ) external onlyOwner {
         require(_contractAuthLevel <= 4, "AC:ER-13 Invalid user type");
+        //^^^^^^^checks^^^^^^^^^
         contractAdresses[keccak256(
             abi.encodePacked(_addr)
         )] = _contractAuthLevel;
 
         contractNames[_name] = _addr;
+        //^^^^^^^effects^^^^^^^^^
         emit REPORT("internal user database access!"); //report access to the internal user database
+        //^^^^^^^interactions^^^^^^^^^
     }
 
     /*
@@ -248,13 +254,57 @@ contract Storage is Ownable, ReentrancyGuard {
         uint256 _forceModCost,
         address _paymentAddress
     ) external isACtokenHolderOfClass(_class) {
-        cost[_class].cost1 = _newRecordCost.add(baseCost.cost1);
-        cost[_class].cost2 = _transferRecordCost.add(baseCost.cost2);
-        cost[_class].cost3 = _createNoteCost.add(baseCost.cost3);
-        cost[_class].cost4 = _reMintRecordCost.add(baseCost.cost4);
-        cost[_class].cost5 = _modifyStatusCost.add(baseCost.cost5);
-        cost[_class].cost6 = _forceModCost.add(baseCost.cost6);
+        //^^^^^^^checks^^^^^^^^^
+        if (_newRecordCost <= priceThreshold) {
+            cost[_class].cost1 = _newRecordCost.add(baseCost.cost1);
+        } else {
+            cost[_class].cost1 = _newRecordCost.add(
+                _newRecordCost.div(priceDivisor)
+            );
+        }
+
+        if (_transferRecordCost <= priceThreshold) {
+            cost[_class].cost2 = _transferRecordCost.add(baseCost.cost2);
+        } else {
+            cost[_class].cost2 = _transferRecordCost.add(
+                _transferRecordCost.div(priceDivisor)
+            );
+        }
+
+        if (_createNoteCost <= priceThreshold) {
+            cost[_class].cost3 = _createNoteCost.add(baseCost.cost3);
+        } else {
+            cost[_class].cost3 = _createNoteCost.add(
+                _createNoteCost.div(priceDivisor)
+            );
+        }
+
+        if (_reMintRecordCost <= priceThreshold) {
+            cost[_class].cost4 = _reMintRecordCost.add(baseCost.cost4);
+        } else {
+            cost[_class].cost4 = _reMintRecordCost.add(
+                _reMintRecordCost.div(priceDivisor)
+            );
+        }
+
+        if (_modifyStatusCost <= priceThreshold) {
+            cost[_class].cost5 = _modifyStatusCost.add(baseCost.cost5);
+        } else {
+            cost[_class].cost5 = _modifyStatusCost.add(
+                _modifyStatusCost.div(priceDivisor)
+            );
+        }
+
+        if (_forceModCost <= priceThreshold) {
+            cost[_class].cost6 = _forceModCost.add(baseCost.cost6);
+        } else {
+            cost[_class].cost6 = _forceModCost.add(
+                _forceModCost.div(priceDivisor)
+            );
+        }
+
         cost[_class].paymentAddress = _paymentAddress;
+        //^^^^^^^effects^^^^^^^^^
     }
 
     /*
@@ -267,8 +317,11 @@ contract Storage is Ownable, ReentrancyGuard {
         uint256 _reMintRecordCost,
         uint256 _modifyStatusCost,
         uint256 _forceModCost,
+        uint256 _threshold,
+        uint256 _divisor,
         address _paymentAddress
     ) external onlyOwner {
+        //^^^^^^^checks^^^^^^^^^
         baseCost.cost1 = _newRecordCost;
         baseCost.cost2 = _transferRecordCost;
         baseCost.cost3 = _createNoteCost;
@@ -276,6 +329,9 @@ contract Storage is Ownable, ReentrancyGuard {
         baseCost.cost5 = _modifyStatusCost;
         baseCost.cost6 = _forceModCost;
         baseCost.paymentAddress = _paymentAddress;
+        priceThreshold = _threshold;
+        priceDivisor = _divisor;
+        //^^^^^^^effects^^^^^^^^^
     }
 
     //--------------------------------External "write" contract functions / authuser---------------------------------//
