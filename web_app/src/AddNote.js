@@ -103,6 +103,7 @@ class AddNote extends Component {
       BPappPayable: "",
       BPappNonPayable: "",
       storage: "",
+      isNFA: false,
       hashUrl: "",
     };
   }
@@ -341,7 +342,7 @@ class AddNote extends Component {
               <h2 className="Headertext">Add Note</h2>
               <br></br>
               <Form.Row>
-                <Form.Group as={Col} controlId="formGridType">
+              <Form.Group as={Col} controlId="formGridType">
                   <Form.Label className="formFont">Type:</Form.Label>
 
                   {returnTypes(this.state.assetClass, this.state.isNFA) !== '0' &&(<Form.Control as="select" size="lg" onChange={(e) => this.setState({ type: e.target.value })}>
