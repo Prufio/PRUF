@@ -7,7 +7,6 @@ import Button from "react-bootstrap/Button";
 import bs58 from "bs58";
 import returnManufacturers from "./Manufacturers";
 import returnTypes from "./Types";
-import returnActions from "./Actions";
 import ipfs from "ipfs-mini"
 
 class AddNote extends Component {
@@ -158,42 +157,7 @@ class AddNote extends Component {
     const getBytes32FromIpfsHash = (ipfsListing) => {
       return "0x" + bs58.decode(ipfsListing).slice(2).toString("hex");
     };
-
-    const publishIPFS2 = async () => {
-      let _hashUrl = "https://ipfs.io/ipfs/$/";
-      console.log("Uploading file to IPFS...", this.state.ipfs2);
-      await this.state.ipfs.add(this.state.ipfs2, (error, hash) => {
-        if (error) {
-          console.log("Something went wrong. Unable to upload to ipfs");
-        } else {
-          console.log("uploaded at hash: ", hash);
-        }
-        self.setState({ hashPath: getBytes32FromIpfsHash(hash) });
-        console.log(_hashUrl + hash)
-        self.setState({hashUrl: _hashUrl + hash})
-      });
-    };
-
-    const publishIPFS2Txt = async () => {
-      const self = this;
-      const reader = new FileReader();
-      reader.readAsText(document.getElementById("ipfs2File").files[0])
-      reader.onload = async (event) => {
-      console.log("Uploading file to IPFS...", self.state.ipfs2);
-       await self.state.ipfs.add(event.target.result, (error, hash) => {
-        if (error) {
-          console.log("Something went wrong. Unable to upload to ipfs");
-        } else {
-          console.log("uploaded at hash: ", hash);
-        }
-        let _hashUrl = "https://ipfs.io/ipfs/";
-        self.setState({ hashPath: getBytes32FromIpfsHash(hash) });
-        console.log(_hashUrl + hash)
-        self.setState({hashUrl: _hashUrl + hash})
-        });
-      }
-    };
-
+    
     const publishIPFS2Photo = async () => {
       const self = this;
       const reader = new FileReader();
@@ -330,7 +294,8 @@ class AddNote extends Component {
           )}
           {this.state.addr > 0 && this.state.assetClass > 0 &&(
             <div>
-              <Form.Group>
+              {this.state.assetClass === 3 &&(
+                <Form.Group>
                 <Form.Check
                 className = 'checkBox'
                 size = 'lg'
@@ -339,6 +304,8 @@ class AddNote extends Component {
                 label={`NFA Firearm`}
                 />
                 </Form.Group>
+                )}
+              
               <h2 className="Headertext">Add Note</h2>
               <br></br>
               <Form.Row>

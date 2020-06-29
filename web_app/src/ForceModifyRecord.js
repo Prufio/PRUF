@@ -7,7 +7,6 @@ import Button from "react-bootstrap/Button";
 import ButtonGroup from 'react-bootstrap/ButtonGroup'
 import returnManufacturers from "./Manufacturers";
 import returnTypes from "./Types";
-import returnActions from "./Actions";
 
 class ForceModifyRecord extends Component {
   constructor(props) {
@@ -285,7 +284,8 @@ class ForceModifyRecord extends Component {
           )}
           {this.state.addr > 0 && this.state.assetClass > 0 &&(
             <div>
-              <Form.Group>
+                {this.state.assetClass === 3 &&(
+                <Form.Group>
                 <Form.Check
                 className = 'checkBox'
                 size = 'lg'
@@ -294,6 +294,7 @@ class ForceModifyRecord extends Component {
                 label={`NFA Firearm`}
                 />
                 </Form.Group>
+                )}
               <h2 className="Headertext">Force Modify/Reimport Asset</h2>
               <br></br>
               <Form.Row>
