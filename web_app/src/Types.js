@@ -2,8 +2,7 @@ import React from "react";
 
 
 function returnTypes (_assetClass, _isNFA) {
-if(_isNFA === false){
-if (_assetClass === "3"){
+if(_isNFA === false && _assetClass === "3"){
     return (
     <>
     <option value="0">CHOOSE A FIREARM TYPE</option>
@@ -22,14 +21,13 @@ if (_assetClass === "3"){
     <option value="Handgun (Revolver)">Handgun (Revolver)</option>
     <option value="Handgun (Other)">Handgun (Other)</option>
     </>
-    )}
+    )
 }
 
-else if (_isNFA === true){
-    if (_assetClass === "3"){
+else if (_isNFA === true && _assetClass === "3"){
         return (
         <>
-        <option value="0">CHOOSE A FIREARM TYPE</option>
+        <option value="0">CHOOSE A FIREARM TYPE (NFA)</option>
         <option value="Short Barrel Shotgun">Short Barrel Shotgun</option>
         <option value="Short Barrel Rifle">Short Barrel Rifle</option>
         <option value="Machine Gun">Machine Gun</option>
@@ -38,7 +36,6 @@ else if (_isNFA === true){
         <option value="AOW">AOW</option>    
         </>
         )}
-    }
 
 else { 
 return('0')
