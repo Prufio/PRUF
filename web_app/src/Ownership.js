@@ -9,6 +9,17 @@ class Ownership extends Component {
   constructor(props) {
     super(props);
 
+    this.returnsContract = async () => {
+      const self = this;
+      var contractArray = await returnContracts(self.state.web3);
+      //console.log("RC EM: ", contractArray)
+
+      if(this.state.storage < 1){self.setState({ storage: contractArray[0] });}
+      if(this.state.BPappNonPayable < 1){self.setState({ BPappNonPayable: contractArray[1] });}
+      if(this.state.BPappPayable < 1){self.setState({ BPappPayable: contractArray[2] });}
+    };
+
+
     this.acctChanger = async () => {
       const ethereum = window.ethereum;
       const self = this;
@@ -29,6 +40,7 @@ class Ownership extends Component {
       toggle: false,
       assetClass: "",
       storage: "",
+      web3: null,
     };
   }
 
@@ -37,13 +49,14 @@ class Ownership extends Component {
     _web3 = new Web3(_web3.givenProvider);
     this.setState({ web3: _web3 });
     _web3.eth.getAccounts().then((e) => this.setState({ addr: e[0] }));
-    var contractArray = returnContracts(_web3);
-
-    const _storage = contractArray[0];
-
-    this.setState({ storage: _storage });
-
     document.addEventListener("accountListener", this.acctChanger());
+  }
+
+  componentDidUpdate(){
+    if(this.state.web3 !== null && this.state.storage < 1){
+      this.returnsContract();
+    }
+
   }
 
   componentWillUnmount() {
