@@ -1,6 +1,5 @@
 /*  TO DO
- * Recheck user level security and user permissioning /modifiers (after all is done)
- * implement escrow rules /conditions
+ * verify security and user permissioning /modifiers
  *
  * mint a token at asset creation
  *
@@ -11,15 +10,13 @@
  *-----------------------------------------------------------------------------------------------------------------
  *
  * IMPORTANT NOTE : DO NOT REMOVE FROM CODE:
- *      Verification of rgtHash in curated, tokenly non-custodial asset classes is not secure beyond the honorable intentions
+ *      Verification of rgtHash in curated, tokenless asset classes are not secure beyond the honorable intentions
  * of authorized recorders. All blockchain info is readable, so a bad actor could trivially obtain a copy of the
  * correct rgtHash on chain. This "stumbling block" measure is in place primarily to keep honest people honest, and
  * to require an actual, malicious effort to bypass security rather than a little copy-paste. Actual decentralized
  * security is provided with tokenized assets, which do not rely on the coercive trust relationship that creates the
  * incentive for recorders not to engage in malicious practices.
- *
- *
- *
+*
  * Order of require statements:
  * 1: (modifiers)
  * 2: checking the asset existance
@@ -29,16 +26,61 @@
  * 6: verifying that provided verification data matches required data
  * 7: verifying that message contains any required payment
  *
- * Contract Names -
+ *
+ * Contract Resolution Names -
  *  assetToken
  *  assetClassToken
  *  BPappPayable
  *  BPappNonPayable
  *
+ * CONTRACT Types (storage)
+ * 0   --NONE
+ * 1   --E
+ * 2   --RE
+ * 3   --RWE
+ * 4   --ADMIN (isAdmin)
+ * >4  NONE
+ * Owner (onlyOwner)
+ * other = unauth
+ *
+ *
+ * Record status field key
+ *
+ * 0 = no status, Non transferrable. Default asset creation status
+ *       default after FMR, and after status 5 (essentially a FMR) (IN frontend)
+ * 1 = transferrable
+ * 2 = nontransferrable
+ * 3 = stolen
+ * 4 = lost
+ * 5 = transferred but not reImported (no new rghtsholder information) implies that asset posessor is the owner.
+ *       must be re-imported by ACadmin through regular onboarding process
+ *       no actions besides modify RGT to a new rightsholder can be performed on a statuss 5 asset (no status changes) (Frontend)
+ * 6 = in escrow, locked until timelock expires, but can be set to lost or stolen
+ *       Status 1-6 Actions cannot be performed by automation.
+ *       only ACAdmins can set or unset these statuses, except 5 which can be set by automation
+ *
+ * 7 = transferrable, automation set/unset (secret confirmed)(ACAdmin can unset)
+ * 8 = non-transferrable, automation set/unset (secret confirmed)(ACAdmin can unset)
+ * 9 = stolen (automation set)(ONLY ACAdmin can unset)
+ * 10 = lost (automation set/unset)(ACAdmin can unset)
+ * 11 = asset transferred automation set/unset (secret confirmed)(ACAdmin can unset)
+ * 12 = escrow - automation set/unset (secret confirmed)(ACAdmin can unset)
+ *
+ * escrow status = lock time set to a time instead of a block number
+ *
+ *
+ * Authorized User Types   registeredUsers[]
+ *
+ * 1 - 4 = Standard User types
+ * 1 - all priveleges
+ * 2 - all but force-modify
+ * 5 - 9 = Robot (cannot create of force-modify)
+ * Other = unauth
+ *
  */
 
 // SPDX-License-Identifier: UNLICENSED
-pragma solidity ^0.6.2;
+pragma solidity ^0.6.7;
 import "./Imports/Ownable.sol";
 import "./Imports/SafeMath.sol";
 import "./Imports/ReentrancyGuard.sol";
@@ -232,7 +274,6 @@ contract BP_APP_NP is Ownable, IERC721Receiver, ReentrancyGuard {
     // --------------------------------------Events--------------------------------------------//
 
     event REPORT(string _msg);
-    event REPORT256(uint256 _msg);
     // --------------------------------------Modifiers--------------------------------------------//
     /*
      * @dev msg.sender holds assetClass token
@@ -266,9 +307,9 @@ contract BP_APP_NP is Ownable, IERC721Receiver, ReentrancyGuard {
         //uint256 tokenID = uint256(_idxHash);
 
         //START OF SECTION----------------------------------------------------FAKE AS HELL
-       User memory user = getUser();
+        User memory user = getUser();
         require(
-            (user.userType > 0 ) && (user.userType < 10),
+            (user.userType > 0) && (user.userType < 10),
             "ST:MOD-UA-ERR:User not registered "
         );
 
@@ -300,6 +341,7 @@ contract BP_APP_NP is Ownable, IERC721Receiver, ReentrancyGuard {
      */
 
     function OO_ResolveContractAddresses() external onlyOwner nonReentrant {
+        //^^^^^^^checks^^^^^^^^^
         AssetClassTokenAddress = Storage.resolveContractAddress(
             "assetClassToken"
         );
@@ -312,6 +354,7 @@ contract BP_APP_NP is Ownable, IERC721Receiver, ReentrancyGuard {
 
         BPappPayableAddress = Storage.resolveContractAddress("BPappPayable");
         BPappPayableContract = BPappPayableInterface(BPappPayableAddress);
+        //^^^^^^^effects^^^^^^^^^
     }
 
     function OO_TX_asset_Token(address _to, bytes32 _idxHash)
@@ -319,8 +362,10 @@ contract BP_APP_NP is Ownable, IERC721Receiver, ReentrancyGuard {
         virtual
         onlyOwner
         nonReentrant
+    //^^^^^^^checks^^^^^^^^^
     {
         AssetTokenContract.transferAssetToken(address(this), _to, _idxHash);
+        //^^^^^^^interactions^^^^^^^^^
     }
 
     function OO_TX_AC_Token(address _to, bytes32 _idxHash)
@@ -328,12 +373,14 @@ contract BP_APP_NP is Ownable, IERC721Receiver, ReentrancyGuard {
         virtual
         onlyOwner
         nonReentrant
+    //^^^^^^^checks^^^^^^^^^
     {
         AssetClassTokenContract.transferAssetClassToken(
             address(this),
             _to,
             _idxHash
         );
+        //^^^^^^^interactions^^^^^^^^^
     }
 
     /*
@@ -344,8 +391,10 @@ contract BP_APP_NP is Ownable, IERC721Receiver, ReentrancyGuard {
             _storageAddress != address(0),
             "ADMIN: storage address cannot be zero"
         );
+        //^^^^^^^checks^^^^^^^^^
 
         Storage = StorageInterface(_storageAddress);
+        //^^^^^^^interactions^^^^^^^^^
     }
 
     //--------------------------------------External functions--------------------------------------------//
@@ -359,6 +408,7 @@ contract BP_APP_NP is Ownable, IERC721Receiver, ReentrancyGuard {
         bytes calldata
     ) external virtual override returns (bytes4) {
         return this.onERC721Received.selector;
+        //^^^^^^^interactions^^^^^^^^^
     }
 
     function setEscrow(bytes32 _idxHash, uint256 _escrowTime)
@@ -388,6 +438,7 @@ contract BP_APP_NP is Ownable, IERC721Receiver, ReentrancyGuard {
                 (rec.assetStatus != 10),
             "SE:ERR-Transferred, lost, or stolen status cannot be set to escrow."
         );
+        //^^^^^^^checks^^^^^^^^^
 
         if (callingUser.userType < 5) {
             //If escrow was initiated by custodial user
@@ -396,6 +447,7 @@ contract BP_APP_NP is Ownable, IERC721Receiver, ReentrancyGuard {
             //escrow initiated by automation
             newAssetStatus = 12; //Set asset status to 12 (left P2P escrow)
         }
+        //^^^^^^^effects^^^^^^^^^
 
         Storage.setEscrow(
             keccak256(abi.encodePacked(msg.sender)),
@@ -403,6 +455,7 @@ contract BP_APP_NP is Ownable, IERC721Receiver, ReentrancyGuard {
             newAssetStatus,
             escrowTime
         );
+        //^^^^^^^interactions^^^^^^^^^
     }
 
     function endEscrow(bytes32 _idxHash)
@@ -433,7 +486,7 @@ contract BP_APP_NP is Ownable, IERC721Receiver, ReentrancyGuard {
                 (keccak256(abi.encodePacked(msg.sender)) == rec.recorder),
             "EE:ERR- Escrow period not ended"
         );
-
+        //^^^^^^^checks^^^^^^^^^
 
         if (rec.assetStatus == 6) {
             //If escrow was initiated by custodial user
@@ -442,12 +495,14 @@ contract BP_APP_NP is Ownable, IERC721Receiver, ReentrancyGuard {
             //escrow initiated by automation
             _newAssetStatus = 21; //Set asset status to 21 (left P2P escrow)
         }
+        //^^^^^^^effects^^^^^^^^^
 
         Storage.endEscrow(
             keccak256(abi.encodePacked(msg.sender)),
             _idxHash,
             _newAssetStatus
         );
+        //^^^^^^^interactions^^^^^^^^^
     }
 
     /*
@@ -476,7 +531,7 @@ contract BP_APP_NP is Ownable, IERC721Receiver, ReentrancyGuard {
             "MS:ERR-Cannot change status of asset in transferred-unregistered status."
         );
         require(
-            (rec.assetStatus > 6 ) || (callingUser.userType < 5),
+            (rec.assetStatus > 6) || (callingUser.userType < 5),
             "SS:ERR-Only usertype < 5 can change status < 7"
         );
         require(rec.assetStatus < 200, "MS: Record locked");
@@ -484,12 +539,15 @@ contract BP_APP_NP is Ownable, IERC721Receiver, ReentrancyGuard {
             rec.rightsHolder == _rgtHash,
             "MS: ERR-Rightsholder does not match supplied data"
         );
+        //^^^^^^^checks^^^^^^^^^
 
         rec.assetStatus = _newAssetStatus;
+        //^^^^^^^effects^^^^^^^^^
 
         writeRecord(_idxHash, rec);
 
         return rec.assetStatus;
+        //^^^^^^^interactions^^^^^^^^^
     }
 
     /*
@@ -517,7 +575,9 @@ contract BP_APP_NP is Ownable, IERC721Receiver, ReentrancyGuard {
             "SS:ERR-Must set to a lost or stolen status"
         );
         require(
-            (rec.assetStatus > 6) || (_newAssetStatus < 7 ) || (callingUser.userType < 5),
+            (rec.assetStatus > 6) ||
+                (_newAssetStatus < 7) ||
+                (callingUser.userType < 5),
             "SS:ERR-Only usertype <5 can change a <7 status asset to a >7 status"
         );
         require(
@@ -529,12 +589,15 @@ contract BP_APP_NP is Ownable, IERC721Receiver, ReentrancyGuard {
             rec.rightsHolder == _rgtHash,
             "SS: ERR-Rightsholder does not match supplied data"
         );
+        //^^^^^^^checks^^^^^^^^^
 
         bytes32 userHash = keccak256(abi.encodePacked(msg.sender));
+        //^^^^^^^effects^^^^^^^^^
 
         Storage.setStolenOrLost(userHash, _idxHash, rec.assetStatus);
 
         return rec.assetStatus;
+        //^^^^^^^interactions^^^^^^^^^
     }
 
     /*
@@ -567,15 +630,18 @@ contract BP_APP_NP is Ownable, IERC721Receiver, ReentrancyGuard {
             rec.rightsHolder == _rgtHash,
             "DC: Rightsholder does not match supplied data"
         );
+        //^^^^^^^checks^^^^^^^^^
 
         if (rec.countDown > _decAmount) {
             rec.countDown = rec.countDown.sub(_decAmount);
         } else {
             rec.countDown = 0;
         }
+        //^^^^^^^effects^^^^^^^^^
 
         writeRecord(_idxHash, rec);
         return (rec.countDown);
+        //^^^^^^^interactions^^^^^^^^^
     }
 
     /*
@@ -610,12 +676,15 @@ contract BP_APP_NP is Ownable, IERC721Receiver, ReentrancyGuard {
             rec.rightsHolder == _rgtHash,
             "MI1:ERR--Rightsholder does not match supplied data"
         );
+        //^^^^^^^checks^^^^^^^^^
 
         rec.Ipfs1 = _IpfsHash;
+        //^^^^^^^effects^^^^^^^^^
 
         writeRecordIpfs1(_idxHash, rec);
 
         return rec.Ipfs1;
+        //^^^^^^^interactions^^^^^^^^^
     }
 
     //--------------------------------------------------------------------------------------Private functions
@@ -628,6 +697,7 @@ contract BP_APP_NP is Ownable, IERC721Receiver, ReentrancyGuard {
         (user.userType, user.authorizedAssetClass) = BPappPayableContract
             .getUserExt(keccak256(abi.encodePacked(msg.sender)));
         return user;
+        //^^^^^^^interactions^^^^^^^^^
     }
 
     //--------------------------------------------------------------------------------------Storage Reading private functions
@@ -667,6 +737,7 @@ contract BP_APP_NP is Ownable, IERC721Receiver, ReentrancyGuard {
         } //end of scope limit for stack depth
 
         return (rec); // Returns Record struct rec
+        //^^^^^^^interactions^^^^^^^^^
     }
 
     /*
@@ -705,6 +776,7 @@ contract BP_APP_NP is Ownable, IERC721Receiver, ReentrancyGuard {
         } //end of scope limit for stack depth
 
         return (rec); // Returns Record struct rec
+        //^^^^^^^interactions^^^^^^^^^
     }
 
     //--------------------------------------------------------------------------------------Storage Writing private functions
@@ -715,10 +787,12 @@ contract BP_APP_NP is Ownable, IERC721Receiver, ReentrancyGuard {
     function writeRecordIpfs1(bytes32 _idxHash, Record memory _rec)
         private
         isAuthorized(_idxHash)
+    //^^^^^^^checks^^^^^^^^^
     {
         bytes32 userHash = keccak256(abi.encodePacked(msg.sender)); // Get a userhash for authentication and recorder logging
-
+        //^^^^^^^effects^^^^^^^^^
         Storage.modifyIpfs1(userHash, _idxHash, _rec.Ipfs1); // Send data to storage
+        //^^^^^^^interactions^^^^^^^^^
     }
 
     /*
@@ -727,9 +801,10 @@ contract BP_APP_NP is Ownable, IERC721Receiver, ReentrancyGuard {
     function writeRecord(bytes32 _idxHash, Record memory _rec)
         private
         isAuthorized(_idxHash)
+    //^^^^^^^checks^^^^^^^^^
     {
         bytes32 userHash = keccak256(abi.encodePacked(msg.sender)); // Get a userhash for authentication and recorder logging
-
+        //^^^^^^^effects^^^^^^^^^
         Storage.modifyRecord(
             userHash,
             _idxHash,
@@ -739,5 +814,6 @@ contract BP_APP_NP is Ownable, IERC721Receiver, ReentrancyGuard {
             _rec.forceModCount,
             _rec.numberOfTransfers
         ); // Send data and writehash to storage
+        //^^^^^^^interactions^^^^^^^^^
     }
 }

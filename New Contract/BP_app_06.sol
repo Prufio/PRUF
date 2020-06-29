@@ -1,6 +1,5 @@
 /*  TO DO
- * Recheck user level security and user permissioning /modifiers (after all is done)
- * implement escrow rules /conditions
+ * verify security and user permissioning /modifiers
  *
  * mint a token at asset creation
  *
@@ -11,15 +10,13 @@
  *-----------------------------------------------------------------------------------------------------------------
  *
  * IMPORTANT NOTE : DO NOT REMOVE FROM CODE:
- *      Verification of rgtHash in curated, tokenly non-custodial asset classes is not secure beyond the honorable intentions
+ *      Verification of rgtHash in curated, tokenless asset classes are not secure beyond the honorable intentions
  * of authorized recorders. All blockchain info is readable, so a bad actor could trivially obtain a copy of the
  * correct rgtHash on chain. This "stumbling block" measure is in place primarily to keep honest people honest, and
  * to require an actual, malicious effort to bypass security rather than a little copy-paste. Actual decentralized
  * security is provided with tokenized assets, which do not rely on the coercive trust relationship that creates the
  * incentive for recorders not to engage in malicious practices.
- *
- *
- *
+*
  * Order of require statements:
  * 1: (modifiers)
  * 2: checking the asset existance
@@ -29,16 +26,61 @@
  * 6: verifying that provided verification data matches required data
  * 7: verifying that message contains any required payment
  *
- * Contract Names -
+ *
+ * Contract Resolution Names -
  *  assetToken
  *  assetClassToken
  *  BPappPayable
  *  BPappNonPayable
  *
+ * CONTRACT Types (storage)
+ * 0   --NONE
+ * 1   --E
+ * 2   --RE
+ * 3   --RWE
+ * 4   --ADMIN (isAdmin)
+ * >4  NONE
+ * Owner (onlyOwner)
+ * other = unauth
+ *
+ *
+ * Record status field key
+ *
+ * 0 = no status, Non transferrable. Default asset creation status
+ *       default after FMR, and after status 5 (essentially a FMR) (IN frontend)
+ * 1 = transferrable
+ * 2 = nontransferrable
+ * 3 = stolen
+ * 4 = lost
+ * 5 = transferred but not reImported (no new rghtsholder information) implies that asset posessor is the owner.
+ *       must be re-imported by ACadmin through regular onboarding process
+ *       no actions besides modify RGT to a new rightsholder can be performed on a statuss 5 asset (no status changes) (Frontend)
+ * 6 = in escrow, locked until timelock expires, but can be set to lost or stolen
+ *       Status 1-6 Actions cannot be performed by automation.
+ *       only ACAdmins can set or unset these statuses, except 5 which can be set by automation
+ *
+ * 7 = transferrable, automation set/unset (secret confirmed)(ACAdmin can unset)
+ * 8 = non-transferrable, automation set/unset (secret confirmed)(ACAdmin can unset)
+ * 9 = stolen (automation set)(ONLY ACAdmin can unset)
+ * 10 = lost (automation set/unset)(ACAdmin can unset)
+ * 11 = asset transferred automation set/unset (secret confirmed)(ACAdmin can unset)
+ * 12 = escrow - automation set/unset (secret confirmed)(ACAdmin can unset)
+ *
+ * escrow status = lock time set to a time instead of a block number
+ *
+ *
+ * Authorized User Types   registeredUsers[]
+ *
+ * 1 - 4 = Standard User types
+ * 1 - all priveleges
+ * 2 - all but force-modify
+ * 5 - 9 = Robot (cannot create of force-modify)
+ * Other = unauth
+ *
  */
 
 // SPDX-License-Identifier: UNLICENSED
-pragma solidity ^0.6.2;
+pragma solidity ^0.6.7;
 import "./Imports/PullPayment.sol";
 import "./Imports/ReentrancyGuard.sol";
 import "./_ERC721/IERC721Receiver.sol";
@@ -189,12 +231,10 @@ contract BP_APP is ReentrancyGuard, PullPayment, Ownable, IERC721Receiver {
         uint256 timeLock; // Time sensitive mutex
         uint16 numberOfTransfers; //number of transfers and forcemods
     }
-
     struct User {
         uint8 userType; // User type: 1 = human, 9 = automated
         uint16 authorizedAssetClass; // Asset class in which user is permitted to transact
     }
-
     struct Costs {
         uint256 newRecordCost; // Cost to create a new record
         uint256 transferAssetCost; // Cost to transfer a record from known rights holder to a new one
@@ -208,7 +248,6 @@ contract BP_APP is ReentrancyGuard, PullPayment, Ownable, IERC721Receiver {
     mapping(bytes32 => User) private registeredUsers; // Authorized recorder database
 
     address private storageAddress;
-
     StorageInterface private Storage; // Set up external contract interface
 
     // address minterContractAddress;
@@ -256,7 +295,7 @@ contract BP_APP is ReentrancyGuard, PullPayment, Ownable, IERC721Receiver {
             abi.encodePacked(msg.sender)
         )];
         require(
-            (user.userType > 0 ) && (user.userType < 10),
+            (user.userType > 0) && (user.userType < 10),
             "ST:MOD-UA-ERR:User not registered "
         );
 
@@ -287,6 +326,7 @@ contract BP_APP is ReentrancyGuard, PullPayment, Ownable, IERC721Receiver {
      * @dev Address Setters
      */
     function OO_ResolveContractAddresses() external nonReentrant onlyOwner {
+        //^^^^^^^checks^^^^^^^^^
         AssetClassTokenAddress = Storage.resolveContractAddress(
             "assetClassToken"
         );
@@ -296,6 +336,7 @@ contract BP_APP is ReentrancyGuard, PullPayment, Ownable, IERC721Receiver {
 
         AssetTokenAddress = Storage.resolveContractAddress("assetToken");
         AssetTokenContract = AssetTokenInterface(AssetTokenAddress);
+        //^^^^^^^effects^^^^^^^^^
     }
 
     function OO_TX_asset_Token(address _to, bytes32 _idxHash)
@@ -303,8 +344,10 @@ contract BP_APP is ReentrancyGuard, PullPayment, Ownable, IERC721Receiver {
         virtual
         onlyOwner
         nonReentrant
+    //^^^^^^^checks^^^^^^^^^
     {
         AssetTokenContract.transferAssetToken(address(this), _to, _idxHash);
+        //^^^^^^^interactions^^^^^^^^^
     }
 
     function OO_TX_AC_Token(address _to, bytes32 _idxHash)
@@ -312,12 +355,14 @@ contract BP_APP is ReentrancyGuard, PullPayment, Ownable, IERC721Receiver {
         virtual
         onlyOwner
         nonReentrant
+    //^^^^^^^checks^^^^^^^^^
     {
         AssetClassTokenContract.transferAssetClassToken(
             address(this),
             _to,
             _idxHash
         );
+        //^^^^^^^interactions^^^^^^^^^
     }
 
     /*
@@ -328,8 +373,10 @@ contract BP_APP is ReentrancyGuard, PullPayment, Ownable, IERC721Receiver {
             _storageAddress != address(0),
             "ADMIN: storage address cannot be zero"
         );
+        //^^^^^^^checks^^^^^^^^^
 
         Storage = StorageInterface(_storageAddress);
+        //^^^^^^^effects^^^^^^^^^
     }
 
     /*
@@ -349,13 +396,15 @@ contract BP_APP is ReentrancyGuard, PullPayment, Ownable, IERC721Receiver {
                 (_userType == 99),
             "ST:OO-AU-ERR:Invalid user type"
         );
+        //^^^^^^^checks^^^^^^^^^
 
-        bytes32 hash;
-        hash = keccak256(abi.encodePacked(_authAddr));
+        bytes32 addrHash = keccak256(abi.encodePacked(_authAddr));
 
+        registeredUsers[addrHash].userType = _userType;
+        registeredUsers[addrHash].authorizedAssetClass = _authorizedAssetClass;
+        //^^^^^^^effects^^^^^^^^^
         emit REPORT("Internal user database access!"); //report access to the internal user database
-        registeredUsers[hash].userType = _userType;
-        registeredUsers[hash].authorizedAssetClass = _authorizedAssetClass;
+        //^^^^^^^interactions^^^^^^^^^
     }
 
     //--------------------------------------External functions--------------------------------------------//
@@ -369,6 +418,7 @@ contract BP_APP is ReentrancyGuard, PullPayment, Ownable, IERC721Receiver {
         bytes calldata
     ) external virtual override returns (bytes4) {
         return this.onERC721Received.selector;
+        //^^^^^^^interactions^^^^^^^^^
     }
 
     /*
@@ -398,8 +448,10 @@ contract BP_APP is ReentrancyGuard, PullPayment, Ownable, IERC721Receiver {
             msg.value >= cost.newRecordCost,
             "NR: tx value too low. Send more eth."
         );
+        //^^^^^^^checks^^^^^^^^^
 
         bytes32 userHash = keccak256(abi.encodePacked(msg.sender));
+        //^^^^^^^effects^^^^^^^^^
 
         Storage.newRecord(
             userHash,
@@ -415,6 +467,7 @@ contract BP_APP is ReentrancyGuard, PullPayment, Ownable, IERC721Receiver {
             cost.paymentAddress,
             cost.newRecordCost
         );
+        //^^^^^^^interactions^^^^^^^^^
     }
 
     /*
@@ -464,6 +517,7 @@ contract BP_APP is ReentrancyGuard, PullPayment, Ownable, IERC721Receiver {
             msg.value >= cost.forceModifyCost,
             "FMR: tx value too low. Send more eth."
         );
+        //^^^^^^^checks^^^^^^^^^
 
         if (rec.forceModCount < 255) {
             rec.forceModCount++;
@@ -475,6 +529,7 @@ contract BP_APP is ReentrancyGuard, PullPayment, Ownable, IERC721Receiver {
 
         rec.assetStatus = 0;
         rec.rightsHolder = _rgtHash;
+        //^^^^^^^effects^^^^^^^^^
 
         writeRecord(_idxHash, rec);
 
@@ -486,6 +541,7 @@ contract BP_APP is ReentrancyGuard, PullPayment, Ownable, IERC721Receiver {
         );
 
         return rec.forceModCount;
+        //^^^^^^^interactions^^^^^^^^^
     }
 
     /*
@@ -522,6 +578,7 @@ contract BP_APP is ReentrancyGuard, PullPayment, Ownable, IERC721Receiver {
             msg.value >= cost.reMintRecordCost,
             "RR: tx value too low. Send more eth."
         );
+        //^^^^^^^checks^^^^^^^^^
 
         if (rec.numberOfTransfers < 65335) {
             rec.numberOfTransfers++;
@@ -529,6 +586,7 @@ contract BP_APP is ReentrancyGuard, PullPayment, Ownable, IERC721Receiver {
 
         rec.assetStatus = 0;
         rec.rightsHolder = _rgtHash;
+        //^^^^^^^effects^^^^^^^^^
 
         writeRecord(_idxHash, rec);
 
@@ -540,6 +598,7 @@ contract BP_APP is ReentrancyGuard, PullPayment, Ownable, IERC721Receiver {
         );
 
         return rec.assetStatus;
+        //^^^^^^^interactions^^^^^^^^^
     }
 
     /*
@@ -561,7 +620,7 @@ contract BP_APP is ReentrancyGuard, PullPayment, Ownable, IERC721Receiver {
             "TA: User not authorized to modify records in specified asset class"
         );
         require(
-            (rec.assetStatus > 6 ) || (callingUser.userType < 5),
+            (rec.assetStatus > 6) || (callingUser.userType < 5),
             "TA:ERR-Only usertype < 5 can change status < 7"
         );
         require(_newrgtHash != 0, "TA:ERR-new Rightsholder cannot be blank");
@@ -578,8 +637,10 @@ contract BP_APP is ReentrancyGuard, PullPayment, Ownable, IERC721Receiver {
             msg.value >= cost.transferAssetCost,
             "TA: tx value too low. Send more eth."
         );
+        //^^^^^^^checks^^^^^^^^^
 
         rec.rightsHolder = _newrgtHash;
+        //^^^^^^^effects^^^^^^^^^
 
         writeRecord(_idxHash, rec);
 
@@ -591,6 +652,7 @@ contract BP_APP is ReentrancyGuard, PullPayment, Ownable, IERC721Receiver {
         );
 
         return (170);
+        //^^^^^^^interactions^^^^^^^^^
     }
 
     /*
@@ -632,8 +694,10 @@ contract BP_APP is ReentrancyGuard, PullPayment, Ownable, IERC721Receiver {
             msg.value >= cost.createNoteCost,
             "MI2: tx value too low. Send more eth."
         );
+        //^^^^^^^checks^^^^^^^^^
 
         rec.Ipfs2 = _IpfsHash;
+        //^^^^^^^effects^^^^^^^^^
 
         writeRecordIpfs2(_idxHash, rec);
 
@@ -645,6 +709,7 @@ contract BP_APP is ReentrancyGuard, PullPayment, Ownable, IERC721Receiver {
         );
 
         return rec.Ipfs2;
+        //^^^^^^^interactions^^^^^^^^^
     }
 
     //--------------------------------------------------------------------------------------Private functions
@@ -652,10 +717,8 @@ contract BP_APP is ReentrancyGuard, PullPayment, Ownable, IERC721Receiver {
      * @dev Get a User Record from Storage @ msg.sender
      */
     function getUser() private view returns (User memory) {
-        //User memory callingUser = getUser();
-        User memory user;
-        user = registeredUsers[keccak256(abi.encodePacked(msg.sender))];
-        return user;
+        return registeredUsers[keccak256(abi.encodePacked(msg.sender))];
+        //^^^^^^^interactions^^^^^^^^^
     }
 
     /*
@@ -670,6 +733,7 @@ contract BP_APP is ReentrancyGuard, PullPayment, Ownable, IERC721Receiver {
             registeredUsers[_userHash].userType,
             registeredUsers[_userHash].authorizedAssetClass
         );
+        //^^^^^^^interactions^^^^^^^^^
     }
 
     //--------------------------------------------------------------------------------------Storage Reading private functions
@@ -709,6 +773,7 @@ contract BP_APP is ReentrancyGuard, PullPayment, Ownable, IERC721Receiver {
         } //end of scope limit for stack depth
 
         return (rec); // Returns Record struct rec
+        //^^^^^^^interactions^^^^^^^^^
     }
 
     /*
@@ -727,6 +792,7 @@ contract BP_APP is ReentrancyGuard, PullPayment, Ownable, IERC721Receiver {
         ) = Storage.retrieveBaseCosts();
 
         return (cost);
+        //^^^^^^^interactions^^^^^^^^^
     }
 
     /*
@@ -745,6 +811,7 @@ contract BP_APP is ReentrancyGuard, PullPayment, Ownable, IERC721Receiver {
         ) = Storage.retrieveCosts(_class);
 
         return (cost);
+        //^^^^^^^interactions^^^^^^^^^
     }
 
     //--------------------------------------------------------------------------------------Storage Writing private functions
@@ -752,10 +819,12 @@ contract BP_APP is ReentrancyGuard, PullPayment, Ownable, IERC721Receiver {
     function writeRecordIpfs2(bytes32 _idxHash, Record memory _rec)
         private
         isAuthorized(_idxHash)
+    //^^^^^^^checks^^^^^^^^^
     {
         bytes32 userHash = keccak256(abi.encodePacked(msg.sender)); // Get a userhash for authentication and recorder logging
 
         Storage.modifyIpfs2(userHash, _idxHash, _rec.Ipfs2); // Send data to storage
+        //^^^^^^^interactions^^^^^^^^^
     }
 
     /*
@@ -764,6 +833,7 @@ contract BP_APP is ReentrancyGuard, PullPayment, Ownable, IERC721Receiver {
     function writeRecord(bytes32 _idxHash, Record memory _rec)
         private
         isAuthorized(_idxHash)
+    //^^^^^^^checks^^^^^^^^^
     {
         bytes32 userHash = keccak256(abi.encodePacked(msg.sender)); // Get a userhash for authentication and recorder logging
 
@@ -776,6 +846,7 @@ contract BP_APP is ReentrancyGuard, PullPayment, Ownable, IERC721Receiver {
             _rec.forceModCount,
             _rec.numberOfTransfers
         ); // Send data and writehash to storage
+        //^^^^^^^interactions^^^^^^^^^
     }
 
     /*--------------------------------------------------------------------------------------PAYMENT FUNCTIONS
@@ -795,6 +866,7 @@ contract BP_APP is ReentrancyGuard, PullPayment, Ownable, IERC721Receiver {
         _asyncTransfer(_basePaymentAddress, _baseAmount);
         _asyncTransfer(_ACTHpaymentAddress, _ACTHamount);
         _asyncTransfer(msg.sender, change);
+        //^^^^^^^interactions^^^^^^^^^
     }
 
     /*
@@ -803,5 +875,6 @@ contract BP_APP is ReentrancyGuard, PullPayment, Ownable, IERC721Receiver {
 
     function $withdraw() external virtual payable nonReentrant {
         withdrawPayments(msg.sender);
+        //^^^^^^^interactions^^^^^^^^^
     }
 }
