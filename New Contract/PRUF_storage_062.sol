@@ -86,15 +86,10 @@
 // SPDX-License-Identifier: UNLICENSED
 pragma solidity ^0.6.7;
 
+import "./PRUF_interfaces.sol";
 import "./Imports/Ownable.sol";
 import "./Imports/SafeMath.sol";
 import "./Imports/ReentrancyGuard.sol";
-
-interface AssetClassTokenInterface {
-    function ownerOf(uint256) external view returns (address);
-    //function mint(uint256) external view returns (address);
-    //function transfer(uint256,address) external view returns (address);
-}
 
 contract Storage is Ownable, ReentrancyGuard {
     using SafeMath for uint256;
@@ -474,8 +469,8 @@ contract Storage is Ownable, ReentrancyGuard {
             "SS:ERR-Must set to a lost or stolen status"
         );
         require(
-            (database[_idxHash].assetStatus != 5) &&
-                (database[_idxHash].assetStatus != 55),
+            (database[_idxHash].assetStatus != 5)&&
+            (database[_idxHash].assetStatus != 55),
             "SS:ERR-Transferred asset cannot be set to lost or stolen after transfer."
         );
         //^^^^^^^checks^^^^^^^^^
@@ -545,7 +540,10 @@ contract Storage is Ownable, ReentrancyGuard {
     /*
      * @dev remove an asset from escrow status
      */
-    function endEscrow(bytes32 _userHash, bytes32 _idxHash)
+    function endEscrow(
+        bytes32 _userHash,
+        bytes32 _idxHash
+    )
         external
         nonReentrant
         isAuthorized
@@ -563,15 +561,9 @@ contract Storage is Ownable, ReentrancyGuard {
         database[_idxHash].timeLock = block.number;
         Record memory rec = database[_idxHash];
 
-        if (rec.assetStatus == 6) {
-            rec.assetStatus = 7;
-        }
-        if (rec.assetStatus == 56) {
-            rec.assetStatus = 57;
-        }
-        if (rec.assetStatus == 50) {
-            rec.assetStatus = 58;
-        }
+        if (rec.assetStatus == 6){rec.assetStatus = 7;}
+        if (rec.assetStatus == 56){rec.assetStatus = 57;}
+        if (rec.assetStatus == 50){rec.assetStatus = 58;}
 
         (rec.lastRecorder, rec.recorder) = storeRecorder(_idxHash, _userHash);
         database[_idxHash] = rec;
