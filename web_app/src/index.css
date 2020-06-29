@@ -341,7 +341,7 @@ h4 {
 }
 
 .OForm{
-  height: 28rem;
+  height: 40rem;
   width: 59rem;
   background-color: #be1a1a;
   border-radius: 0.5rem;
@@ -473,6 +473,8 @@ h4 {
   font-weight: bold;
   margin-top: 3rem;
   font-size: large;
+  height: 1rem;
+  width: 10rem;
 }
 
 .ownerButtonDisplay {

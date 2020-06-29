@@ -9,6 +9,67 @@ class Ownership extends Component {
   constructor(props) {
     super(props);
 
+    this.getOwner = async () => {
+      const self = this;
+
+      if(this.state.storage === "" || this.state.web3 === null || this.state.storageOwner !== ""){}else{
+        console.log("Getting storage owner")
+        this.state.storage.methods
+          .owner()
+          .call({ from: self.state.addr }, function (_error, _result) {
+            if (_error) {
+              console.log(_error);
+            } else {
+              self.setState({ storageOwner: _result });
+
+              if (_result === self.state.addr) {
+                self.setState({ isStorageOwner: true });
+              } else {
+                self.setState({ isStorageOwner: false });
+              }
+            }
+          });
+        }
+
+        if(this.state.BPappPayable === "" || this.state.web3 === null || this.state.BPPOwner !== ""){}else{
+          console.log("Getting BPP owner")
+          this.state.BPappPayable.methods
+            .owner()
+            .call({ from: self.state.addr }, function (_error, _result) {
+              if (_error) {
+                console.log(_error);
+              } else {
+                self.setState({ BPPOwner: _result });
+  
+                if (_result === self.state.addr) {
+                  self.setState({ isBPPOwner: true });
+                } else {
+                  self.setState({ isBPPOwner: false });
+                }
+              }
+            });
+          }
+
+          if(this.state.BPappNonPayable === "" || this.state.web3 === null || this.state.BPNPOwner !== ""){}else{
+            console.log("Getting BPNP owner")
+            this.state.BPappNonPayable.methods
+              .owner()
+              .call({ from: self.state.addr }, function (_error, _result) {
+                if (_error) {
+                  console.log(_error);
+                } else {
+                  self.setState({ BPNPOwner: _result });
+    
+                  if (_result === self.state.addr) {
+                    self.setState({ isBPNPOwner: true });
+                  } else {
+                    self.setState({ isBPNPOwner: false });
+                  }
+                }
+              });
+            }
+    };
+
     this.returnsContract = async () => {
       const self = this;
       var contractArray = await returnContracts(self.state.web3);
@@ -33,6 +94,12 @@ class Ownership extends Component {
     //Component state declaration
 
     this.state = {
+      isStorageOwner: undefined,
+      isBPPOwner: undefined,
+      isBPNPOwner: undefined,
+      storageOwner: "",
+      BPPOwner: "",
+      BPNPOwner: "",
       addr: "",
       error: undefined,
       result: "",
@@ -41,6 +108,11 @@ class Ownership extends Component {
       assetClass: "",
       storage: "",
       web3: null,
+      BPappPayable: "",
+      isTxfrStorage: false,
+      isTxfrBPP: false,
+      isTxfrBPNP: false,
+      BPappNonPayable: "",
     };
   }
 
@@ -53,9 +125,15 @@ class Ownership extends Component {
   }
 
   componentDidUpdate(){
-    if(this.state.web3 !== null && this.state.storage < 1){
+
+    if(this.state.web3 !== null && this.state.web3 !== undefined){
       this.returnsContract();
     }
+
+    if (this.state.web3 !== null && this.state.storageOwner < 1){
+      for (let i = 0; i < 5; i++) {
+        this.getOwner();}
+      }
 
   }
 
@@ -66,6 +144,42 @@ class Ownership extends Component {
 
   render() {
     const self = this;
+
+    const handleCheckBox = (e) => {
+      let setTo;
+      if(e === `Storage`){
+        if(this.state.isTxfrStorage === false){
+          setTo = true;
+        }
+        else if(this.state.isTxfrStorage === true){
+          setTo = false;
+        }
+        this.setState({isTxfrStorage: setTo});
+        console.log("Setting txfr", e, "to: ", setTo);
+      }
+
+      else if(e === `BPappPayable`){
+        if(this.state.isTxfrBPP === false){
+          setTo = true;
+        }
+        else if(this.state.isTxfrBPP === true){
+          setTo = false;
+        }
+        this.setState({isTxfrBPP: setTo});
+        console.log("Setting txfr", e, "to: ", setTo);
+      }
+
+      else if(e === `BPappNonPayable`){
+        if(this.state.isTxfrBPNP === false){
+          setTo = true;
+        }
+        else if(this.state.isTxfrBPNP === true){
+          setTo = false;
+        }
+        this.setState({isTxfrBPNP: setTo});
+        console.log("Setting txfr", e, "to: ", setTo);
+      }
+    }
 
     const toggleRenounce = () => {
       if (this.state.toggle === false) {
@@ -95,6 +209,9 @@ class Ownership extends Component {
     };
 
     const transfer = () => {
+      if(this.state.newOwner < 1){return(alert("Can not transfer to zero address"))}
+
+      if(this.state.isTxfrStorage === true){
       this.state.storage.methods
         .transferOwnership(this.state.newOwner)
         .send({ from: this.state.addr })
@@ -103,9 +220,40 @@ class Ownership extends Component {
           self.setState({ result: _error.transactionHash });
         })
         .on("receipt", (receipt) => {
-          console.log("Ownership Transferred to: ", self.state.newOwner);
+          console.log("Storage ownership Transferred to: ", self.state.newOwner);
+          self.setState({isStorageOwner: false})
           console.log("tx receipt: ", receipt);
-        });
+        });}
+
+        if(this.state.isTxfrBPP === true){
+        this.state.BPappPayable.methods
+        .transferOwnership(this.state.newOwner)
+        .send({ from: this.state.addr })
+        .on("error", function (_error) {
+          self.setState({ error: _error });
+          self.setState({ result: _error.transactionHash });
+        })
+        .on("receipt", (receipt) => {
+          console.log("BP app ownership Transferred to: ", self.state.newOwner);
+          self.setState({isBPPOwner: false})
+          console.log("tx receipt: ", receipt);
+        });}
+
+        if(this.state.isTxfrBPNP === true){
+        this.state.BPappNonPayable.methods
+        .transferOwnership(this.state.newOwner)
+        .send({ from: this.state.addr })
+        .on("error", function (_error) {
+          self.setState({ error: _error });
+          self.setState({ result: _error.transactionHash });
+        })
+        .on("receipt", (receipt) => {
+          console.log("BP app (non-payable) ownership Transferred to: ", self.state.newOwner);
+          self.setState({isBPNPOwner: false})
+          console.log("tx receipt: ", receipt);
+        });}
+
+        else{alert("please check boxes corresponding to the contract(s) you'd like to transfer")}
 
       console.log(this.state.txHash);
     };
@@ -122,7 +270,30 @@ class Ownership extends Component {
 
           {this.state.addr > 0 && this.state.toggle === false && (
             <div>
-              <h2 className="Headertext">Transfer Ownership</h2>
+              <Form.Group>
+                {this.state.isStorageOwner === true && (
+                <Form.Check
+                className = 'checkBox'
+                onChange={(e)=>{handleCheckBox(e.target.id)}}
+                id={`Storage`}
+                label={`Storage`}
+                />)}
+                {this.state.isBPPOwner === true && (
+                <Form.Check
+                className = 'checkBox'
+                onChange={(e)=>{handleCheckBox(e.target.id)}}
+                id={`BPappPayable`}
+                label={`BPappPayable`}
+                />)}
+                {this.state.isBPNPOwner === true && (
+                <Form.Check
+                className = 'checkBox'
+                onChange={(e)=>{handleCheckBox(e.target.id)}}
+                id={`BPappNonPayable`}
+                label={`BPappNonPayable`}
+                />)}
+                </Form.Group>
+              <h2 className="Headertext">Manage Ownership</h2>
               <br></br>
               <Form.Group as={Col} controlId="formGridNewOwner">
                 <Form.Label className="formFont">New Owner :</Form.Label>

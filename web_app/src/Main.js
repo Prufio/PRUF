@@ -54,23 +54,63 @@ class Main extends Component {
 
     this.getOwner = async () => {
       const self = this;
-      if(this.state.storage === "" || this.state.web3 === null || this.state.owner !== ""){}else{
+
+      if(this.state.storage === "" || this.state.web3 === null || this.state.storageOwner !== ""){}else{
+        console.log("Getting storage owner")
         this.state.storage.methods
           .owner()
           .call({ from: self.state.addr }, function (_error, _result) {
             if (_error) {
               console.log(_error);
             } else {
-              self.setState({ owner: _result });
+              self.setState({ storageOwner: _result });
 
               if (_result === self.state.addr) {
-                self.setState({ isOwner: true });
+                self.setState({ isStorageOwner: true });
               } else {
-                self.setState({ isOwner: false });
+                self.setState({ isStorageOwner: false });
               }
             }
           });
         }
+
+        if(this.state.BPappPayable === "" || this.state.web3 === null || this.state.BPPOwner !== ""){}else{
+          console.log("Getting BPP owner")
+          this.state.BPappPayable.methods
+            .owner()
+            .call({ from: self.state.addr }, function (_error, _result) {
+              if (_error) {
+                console.log(_error);
+              } else {
+                self.setState({ BPPOwner: _result });
+  
+                if (_result === self.state.addr) {
+                  self.setState({ isBPPOwner: true });
+                } else {
+                  self.setState({ isBPPOwner: false });
+                }
+              }
+            });
+          }
+
+          if(this.state.BPappNonPayable === "" || this.state.web3 === null || this.state.BPNPOwner !== ""){}else{
+            console.log("Getting BPNP owner")
+            this.state.BPappNonPayable.methods
+              .owner()
+              .call({ from: self.state.addr }, function (_error, _result) {
+                if (_error) {
+                  console.log(_error);
+                } else {
+                  self.setState({ BPNPOwner: _result });
+    
+                  if (_result === self.state.addr) {
+                    self.setState({ isBPNPOwner: true });
+                  } else {
+                    self.setState({ isBPNPOwner: false });
+                  }
+                }
+              });
+            }
     };
 
     this.acctChanger = async () => {
@@ -82,18 +122,23 @@ class Main extends Component {
         _web3.eth.getAccounts().then((e) => self.setState({ addr: e[0] }));
         /* self.setState({assetClass: undefined}) */
       });
-      if (self.state.addr !== this.state.owner) {
+    /*   if (self.state.addr !== this.state.owner) {
         self.setState({ isOwner: false });
-      }
+      } */
+      self.setState({ isOwner: false });
     };
     //Component state declaration
 
     this.state = {
-      isOwner: undefined,
+      isStorageOwner: undefined,
+      isBPPOwner: undefined,
+      isBPNPOwner: undefined,
       addr: undefined,
       web3: null,
       ownerMenu: false,
-      owner: "",
+      storageOwner: "",
+      BPPOwner: "",
+      BPNPOwner: "",
       BPappPayable: "",
       BPappNonPayable: "",
       storage: "",
@@ -129,7 +174,7 @@ class Main extends Component {
       this.getOwner();}
     }
 
-    if(this.state.web3 !== null && this.state.BPappPayable < 1){
+    if(this.state.web3 !== null && this.state.storageOwner < 1){
       this.returnsContract();
     }
   }
@@ -144,7 +189,7 @@ class Main extends Component {
 
   render() {
     const toggleAdmin = () => {
-      if (this.state.isOwner) {
+      if (this.state.isStorageOwner || this.state.isBPPOwner || this.state.isBPNPOwner) {
         if (this.state.ownerMenu === false) {
           this.setState({ ownerMenu: true });
         } else {
@@ -271,7 +316,7 @@ class Main extends Component {
             </div>
           </div>
           <NavLink to="/">
-            {this.state.isOwner === true && (
+            {(this.state.isStorageOwner === true || this.state.isBPPOwner === true || this.state.isBPNPOwner === true) && (
               <Form className="buttonDisplay2">
                 <Button
                   variant="danger"
