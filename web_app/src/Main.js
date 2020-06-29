@@ -82,9 +82,10 @@ class Main extends Component {
         _web3.eth.getAccounts().then((e) => self.setState({ addr: e[0] }));
         /* self.setState({assetClass: undefined}) */
       });
-      if (self.state.addr !== this.state.owner) {
+    /*   if (self.state.addr !== this.state.owner) {
         self.setState({ isOwner: false });
-      }
+      } */
+      self.setState({ isOwner: false });
     };
     //Component state declaration
 

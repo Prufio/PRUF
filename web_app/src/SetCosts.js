@@ -40,6 +40,9 @@ class SetCosts extends Component {
       userType: "",
       assetClass: "",
       storage: "",
+      web3: null,
+      BPappPayable: "",
+      BPappNonPayable: "",
 
       newRecordCost: 0,
       transferRecordCost: 0,
@@ -66,7 +69,7 @@ class SetCosts extends Component {
   }
 
   componentDidUpdate(){
-    if(this.state.web3 !== null && this.state.BPappPayable < 1){
+    if(this.state.web3 !== null && this.state.web3 !== undefined && this.state.storage < 1){
       this.returnsContract();
     }
   }
