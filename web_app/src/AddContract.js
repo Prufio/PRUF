@@ -1,5 +1,4 @@
 import React, { Component } from "react";
-import returnStorageAbi from "./Storage_ABI";
 import returnContracts from "./Contracts";
 import Web3 from "web3";
 import Form from "react-bootstrap/Form";
@@ -38,7 +37,7 @@ class AddContract extends Component {
     _web3 = new Web3(_web3.givenProvider);
     this.setState({ web3: _web3 });
     _web3.eth.getAccounts().then((e) => this.setState({ addr: e[0] }));
-    var contractArray = returnContracts();
+    var contractArray = returnContracts(_web3);
     const _storage = contractArray[0];
     this.setState({ storage: _storage });
     document.addEventListener("accountListener", this.acctChanger());

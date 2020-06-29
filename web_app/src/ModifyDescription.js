@@ -7,7 +7,6 @@ import Button from "react-bootstrap/Button";
 import bs58 from "bs58";
 import returnManufacturers from "./Manufacturers";
 import returnTypes from "./Types";
-import returnActions from "./Actions";
 
 class ModifyDescription extends Component {
   constructor(props) {
@@ -253,7 +252,8 @@ class ModifyDescription extends Component {
           )}
           {this.state.addr > 0 && this.state.assetClass > 0 &&(
             <div>
-              <Form.Group>
+                {this.state.assetClass === 3 &&(
+                <Form.Group>
                 <Form.Check
                 className = 'checkBox'
                 size = 'lg'
@@ -262,6 +262,7 @@ class ModifyDescription extends Component {
                 label={`NFA Firearm`}
                 />
                 </Form.Group>
+                )}
               <h2 className="Headertext">Modify Description</h2>
               <br></br>
               <Form.Row>
