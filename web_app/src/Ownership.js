@@ -48,7 +48,7 @@ class Ownership extends Component {
     _web3 = new Web3(_web3.givenProvider);
     this.setState({ web3: _web3 });
     _web3.eth.getAccounts().then((e) => this.setState({ addr: e[0] }));
-    returnsContract();
+    this.returnsContract();
     document.addEventListener("accountListener", this.acctChanger());
   }
 
