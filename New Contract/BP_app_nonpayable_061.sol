@@ -374,7 +374,7 @@ contract BP_APP_NP is Ownable, IERC721Receiver, ReentrancyGuard {
         //^^^^^^^interactions^^^^^^^^^
     }
 
-    function setEscrow(bytes32 _idxHash, uint256 _escrowTime)
+    function setEscrow(bytes32 _idxHash, uint256 _escrowTime, bytes32 _escrowOwnerHash)
         external
         nonReentrant
         isAuthorized(_idxHash)
@@ -413,7 +413,7 @@ contract BP_APP_NP is Ownable, IERC721Receiver, ReentrancyGuard {
         //^^^^^^^effects^^^^^^^^^
 
         Storage.setEscrow(
-            keccak256(abi.encodePacked(msg.sender)),
+            _escrowOwnerHash,
             _idxHash,
             newAssetStatus,
             escrowTime
