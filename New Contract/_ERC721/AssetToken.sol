@@ -24,9 +24,10 @@ contract AssetToken is ERC721, Ownable {
 
     function mintAssetToken(
         address _reciepientAddress,
-        uint256 tokenId,
+        bytes32 _idxHash,
         string calldata _tokenURI
     ) external isAdmin returns (uint256) {
+        uint256 tokenId = uint256(_idxHash);
         //^^^^^^^checks^^^^^^^^^
         _safeMint(_reciepientAddress, tokenId);
         _setTokenURI(tokenId, _tokenURI);
@@ -34,21 +35,23 @@ contract AssetToken is ERC721, Ownable {
         //^^^^^^^interactions^^^^^^^^^
     }
 
-    function transferAssetToken(
-         address from,
-        address to,
-        uint256 tokenId
-    ) external onlyOwner {
-        //^^^^^^^checks^^^^^^^^^
-        safeTransferFrom(from, to, tokenId);
-        //^^^^^^^interactions^^^^^^^^^
-    }
+    // function transferAssetToken(
+    //     address from,
+    //     address to,
+    //     bytes32 _idxHash
+    // ) external onlyOwner {
+    //     uint256 tokenId = uint256(_idxHash);
+    //     //^^^^^^^checks^^^^^^^^^
+    //     safeTransferFrom(from, to, tokenId);
+    //     //^^^^^^^interactions^^^^^^^^^
+    // }
 
     function reMintAssetToken(
-         address _reciepientAddress,
-        uint256 tokenId,
+        address _reciepientAddress,
+        bytes32 _idxHash,
         string calldata _tokenURI
     ) external isAdmin returns (uint256) {
+        uint256 tokenId = uint256(_idxHash);
         require(_exists(tokenId), "Cannot Remint nonexistant token");
         //^^^^^^^checks^^^^^^^^^
         _burn(tokenId);
