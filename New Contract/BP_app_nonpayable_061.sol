@@ -149,8 +149,7 @@ interface StorageInterface {
 
     function endEscrow(
         bytes32 _userHash,
-        bytes32 _idxHash,
-        uint8 _newAssetStatus
+        bytes32 _idxHash
     ) external;
 
     function ACTH_setCosts(
@@ -400,21 +399,27 @@ contract BP_APP_NP is Ownable, IERC721Receiver, ReentrancyGuard {
         require(
             (rec.assetStatus != 3) &&
                 (rec.assetStatus != 4) &&
+                (rec.assetStatus != 53) &&
+                (rec.assetStatus != 54) &&
                 (rec.assetStatus != 5) &&
-                (rec.assetStatus != 9) &&
-                (rec.assetStatus != 10),
+                (rec.assetStatus != 55),
             "SE:ERR-Transferred, lost, or stolen status cannot be set to escrow."
         );
         require(
-            ((callingUser.userType < 5) && (_escrowStatus == 6)) ||
-            ((callingUser.userType > 4) && (_escrowStatus == 12)) ||
-            (_escrowStatus == 13),
-            "SE:ERR-Must set escrow witihn user type."
+            (callingUser.userType < 5)  ||
+            ((callingUser.userType > 4) && (_escrowStatus > 49)),
+            "SE:ERR-Non supervisored agents must set escrow witihn user type."
+        );
+        require(
+            (_escrowStatus == 6) ||
+            (_escrowStatus == 50) ||
+            (_escrowStatus == 56),
+            "SE:ERR-Must specify an valid escrow status"
         );
         //^^^^^^^checks^^^^^^^^^
 
 
-        newAssetStatus = 12; //Set asset status to 12 (left P2P escrow)
+        newAssetStatus = _escrowStatus;
 
         //^^^^^^^effects^^^^^^^^^
 
@@ -435,7 +440,6 @@ contract BP_APP_NP is Ownable, IERC721Receiver, ReentrancyGuard {
         Record memory rec = getRecord(_idxHash);
         Record memory shortRec = getShortRecord(_idxHash);
         User memory callingUser = getUser();
-        uint8 _newAssetStatus;
 
         require((rec.rightsHolder != 0), "EE: Record does not exist");
         require(
@@ -443,11 +447,11 @@ contract BP_APP_NP is Ownable, IERC721Receiver, ReentrancyGuard {
             "EE: User not authorized to modify records in specified asset class"
         );
         require(
-            (rec.assetStatus == 6) || (rec.assetStatus == 12),
+            (rec.assetStatus == 6) || (rec.assetStatus == 50) || (rec.assetStatus == 56),
             "EE:ERR- record must be in escrow status"
         );
         require(
-            ((rec.assetStatus == 12) || (callingUser.userType < 5)),
+            ((rec.assetStatus > 49) || (callingUser.userType < 5)),
             "EE:ERR- Usertype less than 5 required to end this escrow"
         );
         require(
@@ -457,23 +461,9 @@ contract BP_APP_NP is Ownable, IERC721Receiver, ReentrancyGuard {
         );
         //^^^^^^^checks^^^^^^^^^
 
-        if (rec.assetStatus == 6) {
-            _newAssetStatus = 20; //Set asset status to 20 (left custodial escrow)
-        }
-
-        if (rec.assetStatus == 12){
-            _newAssetStatus = 21; //Set asset status to 21 (left P2P escrow)
-        }
-
-        if (rec.assetStatus == 13){
-            _newAssetStatus = 22; //Set asset status to 21 (left Locked escrow)
-        }
-        //^^^^^^^effects^^^^^^^^^
-
         Storage.endEscrow(
             keccak256(abi.encodePacked(msg.sender)),
-            _idxHash,
-            _newAssetStatus
+            _idxHash
         );
         //^^^^^^^interactions^^^^^^^^^
     }
@@ -496,16 +486,16 @@ contract BP_APP_NP is Ownable, IERC721Receiver, ReentrancyGuard {
         );
         require(_newAssetStatus < 200, "MS: user cannot set status > 199");
         require(
-            (rec.assetStatus != 6) && (rec.assetStatus != 12),
+            (rec.assetStatus != 6) && (rec.assetStatus != 50) && (rec.assetStatus != 56),
             "MS: Cannot change status of asset in Escrow until escrow is expired"
         );
         require(
-            (rec.assetStatus != 5),
+            (rec.assetStatus != 5) && (rec.assetStatus != 55),
             "MS:ERR-Cannot change status of asset in transferred-unregistered status."
         );
         require(
-            (rec.assetStatus > 6) || (callingUser.userType < 5),
-            "SS:ERR-Only usertype < 5 can change status < 7"
+            (rec.assetStatus > 49) || (callingUser.userType < 5),
+            "SS:ERR-Only usertype < 5 can change status < 49"
         );
         require(rec.assetStatus < 200, "MS: Record locked");
         require(
@@ -543,22 +533,22 @@ contract BP_APP_NP is Ownable, IERC721Receiver, ReentrancyGuard {
         require(
             (_newAssetStatus == 3) ||
                 (_newAssetStatus == 4) ||
-                (_newAssetStatus == 9) ||
-                (_newAssetStatus == 10),
+                (_newAssetStatus == 53) ||
+                (_newAssetStatus == 54),
             "SS:ERR-Must set to a lost or stolen status"
         );
         require(
-            (rec.assetStatus > 6) ||
-                (_newAssetStatus < 7) ||
-                (callingUser.userType < 5),
-            "SS:ERR-Only usertype <5 can change a <7 status asset to a >7 status"
+            (rec.assetStatus > 49) ||
+                ((_newAssetStatus < 50) &&
+                (callingUser.userType < 5)),
+            "SS:ERR-Only usertype <5 can change a <49 status asset to a >49 status"
         );
         require(
-            (rec.assetStatus != 5),
+            (rec.assetStatus != 5) && (rec.assetStatus != 55),
             "SS:ERR-Transferred asset cannot be set to lost or stolen after transfer."
         );
         require(
-            (rec.assetStatus != 13),
+            (rec.assetStatus != 50),
             "SS:ERR-Asset in locked escrow cannot be set to lost or stolen"
         );
         require(rec.assetStatus < 200, "RR: Record locked");
@@ -594,13 +584,13 @@ contract BP_APP_NP is Ownable, IERC721Receiver, ReentrancyGuard {
             "DC: User not authorized to modify records in specified asset class"
         );
         require( //------------------------------------------should the counter still work when an asset is in escrow?
-            (rec.assetStatus != 6) && (rec.assetStatus != 12), //If so, it must not erase the recorder, or escrow termination will be broken!
+            (rec.assetStatus != 6) && (rec.assetStatus != 50) && (rec.assetStatus != 56), //If so, it must not erase the recorder, or escrow termination will be broken!
             "DC: Cannot modify asset in Escrow"
         );
         require(_decAmount > 0, "DC: cannot decrement by negative number");
         require(rec.assetStatus < 200, "DC: Record locked");
         require(
-            rec.assetStatus != 5,
+            (rec.assetStatus != 5) && (rec.assetStatus != 55),
             "DC: Record In Transferred-unregistered status"
         );
         require(
@@ -641,12 +631,12 @@ contract BP_APP_NP is Ownable, IERC721Receiver, ReentrancyGuard {
 
         require(rec.Ipfs1 != _IpfsHash, "MI1:ERR--New data same as old");
         require( //-------------------------------------Should an asset in escrow be modifiable?
-            ((rec.assetStatus != 6) && (rec.assetStatus != 12)), //Should it be contingent on the original recorder address?
+            (rec.assetStatus != 6) && (rec.assetStatus != 50) && (rec.assetStatus != 56), //Should it be contingent on the original recorder address?
             "MI1: Cannot modify asset in Escrow" //If so, it must not erase the recorder, or escrow termination will be broken!
         );
         require(rec.assetStatus < 200, "MI1: Record locked");
         require(
-            rec.assetStatus != 5,
+            (rec.assetStatus != 5) && (rec.assetStatus != 55),
             "DC: Record In Transferred-unregistered status"
         );
         require(

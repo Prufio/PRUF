@@ -55,16 +55,20 @@
  * 5 = transferred but not reImported (no new rghtsholder information) implies that asset posessor is the owner.
  *       must be re-imported by ACadmin through regular onboarding process
  *       no actions besides modify RGT to a new rightsholder can be performed on a statuss 5 asset (no status changes) (Frontend)
- * 6 = in escrow, locked until timelock expires, but can be set to lost or stolen
+ * 6 = in supervised escrow, locked until timelock expires, but can be set to lost or stolen
  *       Status 1-6 Actions cannot be performed by automation.
  *       only ACAdmins can set or unset these statuses, except 5 which can be set by automation
+ * 7 = out of Supervised escrow (user < 5)
  *
- * 7 = transferrable, automation set/unset (secret confirmed)(ACAdmin can unset)
- * 8 = non-transferrable, automation set/unset (secret confirmed)(ACAdmin can unset)
- * 9 = stolen (automation set)(ONLY ACAdmin can unset)
- * 10 = lost (automation set/unset)(ACAdmin can unset)
- * 11 = asset transferred automation set/unset (secret confirmed)(ACAdmin can unset)
- * 12 = escrow - automation set/unset (secret confirmed)(ACAdmin can unset)
+ * 50 Locked escrow
+ * 51 = transferrable, automation set/unset (secret confirmed)(ACAdmin can unset)
+ * 52 = non-transferrable, automation set/unset (secret confirmed)(ACAdmin can unset)
+ * 53 = stolen (automation set)(ONLY ACAdmin can unset)
+ * 54 = lost (automation set/unset)(ACAdmin can unset)
+ * 55 = asset transferred automation set/unset (secret confirmed)(ACAdmin can unset)
+ * 56 = escrow - automation set/unset (secret confirmed)(ACAdmin can unset)
+ * 57 = out of escrow
+ * 58 = out of locked escrow
  *
  * escrow status = lock time set to a time instead of a block number
  *
@@ -461,16 +465,16 @@ contract BP_APP is ReentrancyGuard, PullPayment, Ownable, IERC721Receiver {
         require(
             (rec.assetStatus != 3) &&
                 (rec.assetStatus != 4) &&
-                (rec.assetStatus != 9) &&
-                (rec.assetStatus != 10),
+                (rec.assetStatus != 53) &&
+                (rec.assetStatus != 54),
             "FMR: Cannot modify asset in lost or stolen status"
         );
         require(
-            (rec.assetStatus != 6) && (rec.assetStatus != 12),
+            (rec.assetStatus != 6) && (rec.assetStatus != 50) && (rec.assetStatus != 56),
             "FMR: Cannot modify asset in Escrow"
         );
         require(
-            rec.assetStatus != 5,
+            (rec.assetStatus != 5) && (rec.assetStatus != 55),
             "DC: Record In Transferred-unregistered status"
         );
         require(rec.assetStatus < 200, "FMR: Record locked");
@@ -531,8 +535,8 @@ contract BP_APP is ReentrancyGuard, PullPayment, Ownable, IERC721Receiver {
             "RR: User not authorized to modify records in specified asset class"
         );
         require(
-            rec.assetStatus == 5,
-            "RR: Only status 5 assets can be reimported"
+            (rec.assetStatus == 5) || (rec.assetStatus == 55),
+            "RR: Only Transferred status assets can be reimported"
         );
         require(rec.assetStatus < 200, "RR: Record locked");
         require(
@@ -581,13 +585,13 @@ contract BP_APP is ReentrancyGuard, PullPayment, Ownable, IERC721Receiver {
             "TA: User not authorized to modify records in specified asset class"
         );
         require(
-            (rec.assetStatus > 6) || (callingUser.userType < 5),
-            "TA:ERR-Only usertype < 5 can change status < 7"
+            (rec.assetStatus > 49) || (callingUser.userType < 5),
+            "TA:ERR-Only usertype < 5 can change status < 50"
         );
         require(_newrgtHash != 0, "TA:ERR-new Rightsholder cannot be blank");
         require(
-            (rec.assetStatus == 1) || (rec.assetStatus == 7),
-            "TA:ERR--Asset assetStatus is not transferrable"
+            (rec.assetStatus == 1) || (rec.assetStatus == 51),
+            "TA:ERR--Asset status is not transferrable"
         );
         require(rec.assetStatus < 200, "RR: Record locked");
         require(
@@ -635,12 +639,12 @@ contract BP_APP is ReentrancyGuard, PullPayment, Ownable, IERC721Receiver {
             "MI2: User not authorized to modify records in specified asset class"
         );
         require( //-------------------------------------Should an asset in escrow be modifiable?
-            ((rec.assetStatus != 6) && (rec.assetStatus != 12)), //Should it be contingent on the original recorder address?
+            (rec.assetStatus != 6) && (rec.assetStatus != 50) && (rec.assetStatus != 56), //Should it be contingent on the original recorder address?
             "MI2: Cannot modify asset in Escrow" //If so, it must not erase the recorder, or escrow termination will be broken!
         );
         require(rec.assetStatus < 200, "MI1: Record locked");
         require(
-            rec.assetStatus != 5,
+            (rec.assetStatus != 5) && (rec.assetStatus != 55),
             "MI1: Record In Transferred-unregistered status"
         );
         require(

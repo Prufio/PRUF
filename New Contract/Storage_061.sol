@@ -55,16 +55,20 @@
  * 5 = transferred but not reImported (no new rghtsholder information) implies that asset posessor is the owner.
  *       must be re-imported by ACadmin through regular onboarding process
  *       no actions besides modify RGT to a new rightsholder can be performed on a statuss 5 asset (no status changes) (Frontend)
- * 6 = in escrow, locked until timelock expires, but can be set to lost or stolen
+ * 6 = in supervised escrow, locked until timelock expires, but can be set to lost or stolen
  *       Status 1-6 Actions cannot be performed by automation.
  *       only ACAdmins can set or unset these statuses, except 5 which can be set by automation
+ * 7 = out of Supervised escrow (user < 5)
  *
- * 7 = transferrable, automation set/unset (secret confirmed)(ACAdmin can unset)
- * 8 = non-transferrable, automation set/unset (secret confirmed)(ACAdmin can unset)
- * 9 = stolen (automation set)(ONLY ACAdmin can unset)
- * 10 = lost (automation set/unset)(ACAdmin can unset)
- * 11 = asset transferred automation set/unset (secret confirmed)(ACAdmin can unset)
- * 12 = escrow - automation set/unset (secret confirmed)(ACAdmin can unset)
+ * 50 Locked escrow
+ * 51 = transferrable, automation set/unset (secret confirmed)(ACAdmin can unset)
+ * 52 = non-transferrable, automation set/unset (secret confirmed)(ACAdmin can unset)
+ * 53 = stolen (automation set)(ONLY ACAdmin can unset)
+ * 54 = lost (automation set/unset)(ACAdmin can unset)
+ * 55 = asset transferred automation set/unset (secret confirmed)(ACAdmin can unset)
+ * 56 = escrow - automation set/unset (secret confirmed)(ACAdmin can unset)
+ * 57 = out of escrow
+ * 58 = out of locked escrow
  *
  * escrow status = lock time set to a time instead of a block number
  *
@@ -172,8 +176,8 @@ contract Storage is Ownable, ReentrancyGuard {
     modifier notEscrow(bytes32 _idxHash) {
         require(
             ((database[_idxHash].assetStatus != 6) &&
-                (database[_idxHash].assetStatus != 12) &&
-                (database[_idxHash].assetStatus != 13)) ||
+                (database[_idxHash].assetStatus != 50) &&
+                (database[_idxHash].assetStatus != 56)) ||
                 (database[_idxHash].timeLock < now), //Since time here is +/1 a day or so, now can be used as per the 15 second rule (consensys)
             "MOD-U-record modification prohibited while locked in escrow"
         );
@@ -198,8 +202,8 @@ contract Storage is Ownable, ReentrancyGuard {
         //this modifier makes the bold assumption the block number will "never" be reset. hopefully, this is true...
         require(
             ((database[_idxHash].assetStatus == 6) ||
-                (database[_idxHash].assetStatus == 12) ||
-                (database[_idxHash].assetStatus == 13) ||
+                (database[_idxHash].assetStatus == 50) ||
+                (database[_idxHash].assetStatus == 56) ||
                 (database[_idxHash].timeLock < block.number)),
             "MOD-NTL-record time locked"
         );
@@ -425,8 +429,8 @@ contract Storage is Ownable, ReentrancyGuard {
         require(
             (_newAssetStatus != 3) &&
                 (_newAssetStatus != 4) &&
-                (_newAssetStatus != 9) &&
-                (_newAssetStatus != 10),
+                (_newAssetStatus != 53) &&
+                (_newAssetStatus != 54),
             "SS:ERR-Must use stolenOrLost function to set lost or stolen status"
         );
         //^^^^^^^checks^^^^^^^^^
@@ -465,12 +469,13 @@ contract Storage is Ownable, ReentrancyGuard {
         require(
             (_newAssetStatus == 3) ||
                 (_newAssetStatus == 4) ||
-                (_newAssetStatus == 9) ||
-                (_newAssetStatus == 10),
+                (_newAssetStatus == 53) ||
+                (_newAssetStatus == 54),
             "SS:ERR-Must set to a lost or stolen status"
         );
         require(
-            (database[_idxHash].assetStatus != 5),
+            (database[_idxHash].assetStatus != 5)&&
+            (database[_idxHash].assetStatus != 55),
             "SS:ERR-Transferred asset cannot be set to lost or stolen after transfer."
         );
         //^^^^^^^checks^^^^^^^^^
@@ -488,7 +493,7 @@ contract Storage is Ownable, ReentrancyGuard {
     }
 
     /*
-     * @dev Set an asset to escrow status (6/12). Sets timelock for unix timestamp of escrow end.
+     * @dev Set an asset to escrow status (6/50/56). Sets timelock for unix timestamp of escrow end.
      */
     function setEscrow(
         bytes32 _EscrowOwnerHash,
@@ -506,16 +511,17 @@ contract Storage is Ownable, ReentrancyGuard {
     {
         require(
             (_newAssetStatus == 6) ||
-                (_newAssetStatus == 12) ||
-                (_newAssetStatus == 13),
+                (_newAssetStatus == 50) ||
+                (_newAssetStatus == 56),
             "SE:ERR-Must set to an escrow status"
         );
         require(
             (database[_idxHash].assetStatus != 3) &&
                 (database[_idxHash].assetStatus != 4) &&
+                (database[_idxHash].assetStatus != 53) &&
+                (database[_idxHash].assetStatus != 54) &&
                 (database[_idxHash].assetStatus != 5) &&
-                (database[_idxHash].assetStatus != 9) &&
-                (database[_idxHash].assetStatus != 10),
+                (database[_idxHash].assetStatus != 55),
             "SE:ERR-Transferred, lost, or stolen status cannot be set to escrow."
         );
         //^^^^^^^checks^^^^^^^^^
@@ -527,7 +533,6 @@ contract Storage is Ownable, ReentrancyGuard {
             _idxHash,
             _EscrowOwnerHash
         );
-        //^^storeRecorder() is view, private
         rec.assetStatus = _newAssetStatus;
         rec.timeLock = _escrowTime;
 
@@ -543,7 +548,6 @@ contract Storage is Ownable, ReentrancyGuard {
     function endEscrow(
         bytes32 _userHash,
         bytes32 _idxHash,
-        uint8 _newAssetStatus
     )
         external
         nonReentrant
@@ -552,13 +556,9 @@ contract Storage is Ownable, ReentrancyGuard {
         exists(_idxHash)
     {
         require(
-            (_newAssetStatus == 20) || (_newAssetStatus == 21 || (_newAssetStatus == 22),
-            "EE:ERR-Must set to 20,21 or 22 status" //require to be set to 20,21 or 22 - escrow ended 
-        );
-        require(
             (database[_idxHash].assetStatus == 6) ||
-                (database[_idxHash].assetStatus == 12) ||
-                (database[_idxHash].assetStatus == 13),
+                (database[_idxHash].assetStatus == 50) ||
+                (database[_idxHash].assetStatus == 56),
             "EE:ERR-Asset not in escrow"
         );
         //^^^^^^^checks^^^^^^^^^
@@ -566,10 +566,11 @@ contract Storage is Ownable, ReentrancyGuard {
         database[_idxHash].timeLock = block.number;
         Record memory rec = database[_idxHash];
 
-        rec.assetStatus = _newAssetStatus;
-        (rec.lastRecorder, rec.recorder) = storeRecorder(_idxHash, _userHash);
-        //^^storeRecorder() is view, private
+        if (rec.assetStatus == 6){rec.assetStatus = 7;}
+        if (rec.assetStatus == 56){rec.assetStatus = 57;}
+        if (rec.assetStatus == 50){rec.assetStatus = 58;}
 
+        (rec.lastRecorder, rec.recorder) = storeRecorder(_idxHash, _userHash);
         database[_idxHash] = rec;
         //^^^^^^^effects^^^^^^^^^
         emit REPORT("New record created", _idxHash);
@@ -667,8 +668,8 @@ contract Storage is Ownable, ReentrancyGuard {
         //  if (
         //      (rec.assetStatus == 3) ||
         //      (rec.assetStatus == 4) ||
-        //      (rec.assetStatus == 9) ||
-        //      (rec.assetStatus == 10)
+        //      (rec.assetStatus == 53) ||
+        //      (rec.assetStatus == 54)
         //  ) {
         //      emit REPORT_B32("Lost or stolen record queried", _idxHash);
         //  }
@@ -711,8 +712,8 @@ contract Storage is Ownable, ReentrancyGuard {
         // if (
         //     (rec.assetStatus == 3) ||
         //     (rec.assetStatus == 4) ||
-        //     (rec.assetStatus == 9) ||
-        //     (rec.assetStatus == 10)
+        //     (rec.assetStatus == 53) ||
+        //     (rec.assetStatus == 54)
         // ) {
         //     emit REPORT_B32("Lost or stolen record queried", _idxHash);
         // }
