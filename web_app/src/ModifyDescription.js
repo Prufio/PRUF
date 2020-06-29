@@ -73,6 +73,7 @@ class ModifyDescription extends Component {
       serial: "",
       first: "",
       middle: "",
+      isNFA: false,
       surname: "",
       id: "",
       secret: "",
@@ -173,6 +174,20 @@ class ModifyDescription extends Component {
         });
     }
 
+    const handleCheckBox = () => {
+      let setTo;
+      if(this.state.isNFA === false){
+        setTo = true;
+      }
+      else if(this.state.isNFA === true){
+        setTo = false;
+      }
+      this.setState({isNFA: setTo});
+      console.log("Setting to: ", setTo);
+      this.setState({manufacturer: ""});
+      this.setState({type: ""});
+    }
+
     const _updateDescription = () => {
       var idxHash;
       var rgtRaw;
@@ -238,18 +253,27 @@ class ModifyDescription extends Component {
           )}
           {this.state.addr > 0 && this.state.assetClass > 0 &&(
             <div>
+              <Form.Group>
+                <Form.Check
+                className = 'checkBox'
+                size = 'lg'
+                onChange={handleCheckBox}
+                id={`NFA Firearm`}
+                label={`NFA Firearm`}
+                />
+                </Form.Group>
               <h2 className="Headertext">Modify Description</h2>
               <br></br>
               <Form.Row>
                 <Form.Group as={Col} controlId="formGridType">
                   <Form.Label className="formFont">Type:</Form.Label>
 
-                  {returnTypes(this.state.assetClass) !== '0' &&(<Form.Control as="select" size="lg" onChange={(e) => this.setState({ type: e.target.value })}>
-                  {returnTypes(this.state.assetClass)}
+                  {returnTypes(this.state.assetClass, this.state.isNFA) !== '0' &&(<Form.Control as="select" size="lg" onChange={(e) => this.setState({ type: e.target.value })}>
+                  {returnTypes(this.state.assetClass, this.state.isNFA)}
                   </Form.Control>
                   )}
 
-                    {returnTypes(this.state.assetClass) === '0' &&(
+                    {returnTypes(this.state.assetClass, this.state.isNFA) === '0' &&(
                     <Form.Control
                     placeholder="Type"
                     required
@@ -260,12 +284,12 @@ class ModifyDescription extends Component {
 
                   <Form.Group as={Col} controlId="formGridManufacturer">
                     <Form.Label className="formFont">Manufacturer:</Form.Label>
-                    {returnManufacturers(this.state.assetClass) !== '0' &&(<Form.Control as="select" size="lg" onChange={(e) => this.setState({ manufacturer: e.target.value })}>
-                  {returnManufacturers(this.state.assetClass)}
+                    {returnManufacturers(this.state.assetClass, this.state.isNFA) !== '0' &&(<Form.Control as="select" size="lg" onChange={(e) => this.setState({ manufacturer: e.target.value })}>
+                  {returnManufacturers(this.state.assetClass, this.state.isNFA)}
                   </Form.Control>
                   )}
 
-                      {returnManufacturers(this.state.assetClass) === '0' &&(
+                      {returnManufacturers(this.state.assetClass, this.state.isNFA) === '0' &&(
                     <Form.Control
                     placeholder="Manufacturer"
                     required
@@ -273,15 +297,6 @@ class ModifyDescription extends Component {
                     size="lg"
                   />)}
                   </Form.Group>
-                  
-                  {returnActions(this.state.assetClass) !== "0" &&(
-                  <Form.Group as={Col} controlId="formGridAction">
-                  <Form.Label className="formFont">Action:</Form.Label>
-                    {returnActions(this.state.assetClass) !== '0' &&(<Form.Control as="select" size="lg" onChange={(e) => this.setState({ action: e.target.value })}>
-                    {returnActions(this.state.assetClass)}
-                    </Form.Control>
-                    )}
-                  </Form.Group>)}
 
               </Form.Row>
 

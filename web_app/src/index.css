@@ -169,7 +169,7 @@ h4 {
 }
 
 .VRform {
-  height: 45rem;
+  height: 50rem;
   width: 59rem;
   background-color: #206ab9;
   border-radius: 0.5rem;
@@ -182,7 +182,7 @@ h4 {
 }
 
 .RRform {
-  height: 30rem;
+  height: 35rem;
   width: 59rem;
   background-color: #206ab9;
   border-radius: 0.5rem;
@@ -195,7 +195,7 @@ h4 {
 }
 
 .TAform {
-  height: 60rem;
+  height: 65rem;
   width: 59rem;
   background-color: #206ab9;
   border-radius: 0.5rem;
@@ -208,7 +208,7 @@ h4 {
 }
 
 .MRform {
-  height: 45rem;
+  height: 50rem;
   width: 59rem;
   background-color: #206ab9;
   border-radius: 0.5rem;
@@ -234,7 +234,7 @@ h4 {
 }
 
 .MDform {
-  height: 45rem;
+  height: 50rem;
   width: 59rem;
   background-color: #206ab9;
   border-radius: 0.5rem;
@@ -247,7 +247,7 @@ h4 {
 }
 
 .ANform {
-  height: 48rem;
+  height: 55rem;
   width: 59rem;
   background-color: #206ab9;
   border-radius: 0.5rem;
@@ -260,7 +260,20 @@ h4 {
 }
 
 .FMRform {
-  height: 53rem;
+  height: 58rem;
+  width: 59rem;
+  background-color: #206ab9;
+  border-radius: 0.5rem;
+  padding: 2rem;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  margin-top: -2rem;
+  opacity: 0.96;
+}
+
+.MEform {
+  height: 50rem;
   width: 59rem;
   background-color: #206ab9;
   border-radius: 0.5rem;
@@ -453,6 +466,13 @@ h4 {
 .buttonDisplay2 {
   margin-top: -21rem;
   margin-left: 136rem;
+}
+
+.checkBox {
+  color: rgb(255, 255, 255);
+  font-weight: bold;
+  margin-top: 3rem;
+  font-size: large;
 }
 
 .ownerButtonDisplay {

@@ -4,10 +4,10 @@ import React from "react";
 
 function returnManufacturers (_assetClass) {
 
-if (_assetClass === "3" || _assetClass === "4" || _assetClass === "5" || _assetClass === "6"){
+if (_assetClass === "3"){
     return (
     <>
-    <option value="0">Choose a manufacturer</option>
+    <option value="0">CHOOSE A MANUFACTURER</option>
     <option value="556 Tactical">556 Tactical</option>
     <option value="Accurate Armory">Accurate Armory</option>
     <option value="Arctiier">Arctiier</option>
@@ -65,6 +65,7 @@ if (_assetClass === "3" || _assetClass === "4" || _assetClass === "5" || _assetC
     <option value="Weatherby">Weatherby</option>
     <option value="Winchester">Winchester</option>
     <option value="Zastava Arms">Zastava Arms</option>
+    <option value="OTHER">OTHER</option>
     </>
     )}
 

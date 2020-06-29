@@ -107,6 +107,7 @@ class NewRecord extends Component {
       BPappPayable: "",
       BPappNonPayable: "",
       storage: "",
+      isNFA: false,
       txStatus: null,
     };
   }
@@ -189,6 +190,20 @@ class NewRecord extends Component {
         });
     }
 
+    const handleCheckBox = () => {
+      let setTo;
+      if(this.state.isNFA === false){
+        setTo = true;
+      }
+      else if(this.state.isNFA === true){
+        setTo = false;
+      }
+      this.setState({isNFA: setTo});
+      console.log("Setting to: ", setTo);
+      this.setState({manufacturer: ""});
+      this.setState({type: ""});
+    }
+
     const _newRecord = () => {
       let _cost = this.state.costArray[0];
       var idxHash;
@@ -260,36 +275,27 @@ class NewRecord extends Component {
           )}
           {this.state.addr > 0 && this.state.assetClass > 0 &&(
             <div>
+              <Form.Group>
+                <Form.Check
+                className = 'checkBox'
+                size = 'lg'
+                onChange={handleCheckBox}
+                id={`NFA Firearm`}
+                label={`NFA Firearm`}
+                />
+                </Form.Group>
               <h2 className="Headertext">New Record</h2>
               <br></br>
-              {/* <Form.Row>
-
-              <Form.Group as={Col} controlId="formGridFormat">
-                <Form.Label className="formFont">Asset Class:</Form.Label>
-                  <Form.Control as="select" size="lg" onChange={(e) => this.setState({ assetClass: e.target.value })}>
-                  <>
-                    <option value="10">Choose an asset class (10)</option>
-                    <option value="3">Firearms Class 01 (3)</option>
-                    <option value="4">Firearms Class 02 (4)</option>
-                    <option value="5">Firearms Class 03 (5)</option>
-                    <option value="6">Firearms Class 09 (6)</option>
-                    <option value="7">Motor Vehicles (7)</option>
-                    <option value="8">Art Collectables (8)</option>
-                    <option value="9">Electronics (9)</option>
-                  </>
-                  </Form.Control>
-                </Form.Group>
-                </Form.Row> */}
-                <Form.Row>
+              <Form.Row>
                 <Form.Group as={Col} controlId="formGridType">
                   <Form.Label className="formFont">Type:</Form.Label>
 
-                  {returnTypes(this.state.assetClass) !== '0' &&(<Form.Control as="select" size="lg" onChange={(e) => this.setState({ type: e.target.value })}>
-                  {returnTypes(this.state.assetClass)}
+                  {returnTypes(this.state.assetClass, this.state.isNFA) !== '0' &&(<Form.Control as="select" size="lg" onChange={(e) => this.setState({ type: e.target.value })}>
+                  {returnTypes(this.state.assetClass, this.state.isNFA)}
                   </Form.Control>
                   )}
 
-                    {returnTypes(this.state.assetClass) === '0' &&(
+                    {returnTypes(this.state.assetClass, this.state.isNFA) === '0' &&(
                     <Form.Control
                     placeholder="Type"
                     required
@@ -300,12 +306,12 @@ class NewRecord extends Component {
 
                   <Form.Group as={Col} controlId="formGridManufacturer">
                     <Form.Label className="formFont">Manufacturer:</Form.Label>
-                    {returnManufacturers(this.state.assetClass) !== '0' &&(<Form.Control as="select" size="lg" onChange={(e) => this.setState({ manufacturer: e.target.value })}>
-                  {returnManufacturers(this.state.assetClass)}
+                    {returnManufacturers(this.state.assetClass, this.state.isNFA) !== '0' &&(<Form.Control as="select" size="lg" onChange={(e) => this.setState({ manufacturer: e.target.value })}>
+                  {returnManufacturers(this.state.assetClass, this.state.isNFA)}
                   </Form.Control>
                   )}
 
-                      {returnManufacturers(this.state.assetClass) === '0' &&(
+                      {returnManufacturers(this.state.assetClass, this.state.isNFA) === '0' &&(
                     <Form.Control
                     placeholder="Manufacturer"
                     required
@@ -313,15 +319,6 @@ class NewRecord extends Component {
                     size="lg"
                   />)}
                   </Form.Group>
-                  
-                  {returnActions(this.state.assetClass) !== "0" &&(
-                  <Form.Group as={Col} controlId="formGridAction">
-                  <Form.Label className="formFont">Action:</Form.Label>
-                    {returnActions(this.state.assetClass) !== '0' &&(<Form.Control as="select" size="lg" onChange={(e) => this.setState({ action: e.target.value })}>
-                    {returnActions(this.state.assetClass)}
-                    </Form.Control>
-                    )}
-                  </Form.Group>)}
 
               </Form.Row>
 
