@@ -41,8 +41,6 @@ class SetCosts extends Component {
       assetClass: "",
       storage: "",
       web3: null,
-      BPappPayable: "",
-      BPappNonPayable: "",
 
       newRecordCost: 0,
       transferRecordCost: 0,

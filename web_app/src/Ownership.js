@@ -210,7 +210,7 @@ class Ownership extends Component {
 
     const transfer = () => {
       if(this.state.newOwner < 1){return(alert("Can not transfer to zero address"))}
-      
+
       else if(this.state.isTxfrStorage === true){
       this.state.storage.methods
         .transferOwnership(this.state.newOwner)
@@ -290,7 +290,7 @@ class Ownership extends Component {
                 label={`BPappNonPayable`}
                 />)}
                 </Form.Group>
-              <h2 className="Headertext">Transfer Ownership</h2>
+              <h2 className="Headertext">Manage Ownership</h2>
               <br></br>
               <Form.Group as={Col} controlId="formGridNewOwner">
                 <Form.Label className="formFont">New Owner :</Form.Label>
