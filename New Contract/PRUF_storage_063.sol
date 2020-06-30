@@ -84,7 +84,7 @@
  * Other = unauth
  *
  */
- 
+
 // SPDX-License-Identifier: UNLICENSED
 pragma solidity ^0.6.7;
 
@@ -216,7 +216,7 @@ contract Storage is Ownable, ReentrancyGuard {
      * @dev Address Setters
      */
 
-    function OO_getTokenAddresses() external onlyOwner {
+    function OO_ResolveContractAddresses() external onlyOwner {
         //^^^^^^^checks^^^^^^^^^
         address _contractAddress = resolveContractAddress("assetClassToken");
         AssetClassTokenAddress = _contractAddress;
