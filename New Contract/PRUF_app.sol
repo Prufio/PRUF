@@ -38,16 +38,16 @@ contract PRUF_APP is
 
         require(
             callingUser.userType < 5,
-            "NR: User not authorized to create records"
+            "PA:NR: User not authorized to create records"
         );
         require(
             callingUser.authorizedAssetClass == _assetClass,
-            "NR: User not authorized to create records in specified asset class"
+            "PA:NR: User not authorized to create records in specified asset class"
         );
-        require(_rgtHash != 0, "NR: rights holder cannot be zero");
+        require(_rgtHash != 0, "PA:NR: rights holder cannot be zero");
         require(
             msg.value >= cost.newRecordCost,
-            "NR: tx value too low. Send more eth."
+            "PA:NR: tx value too low. Send more eth."
         );
         //^^^^^^^checks^^^^^^^^^
 
@@ -86,39 +86,39 @@ contract PRUF_APP is
         Costs memory cost = getCost(rec.assetClass);
         Costs memory baseCost = getBaseCost();
 
-        require((rec.rightsHolder != 0), "FMR: Record does not exist");
+        require((rec.rightsHolder != 0), "PA:FMR: Record does not exist");
 
         require(
             callingUser.userType == 1,
-            "FMR: User not authorized to force modify records"
+            "PA:FMR: User not authorized to force modify records"
         );
         require(
             callingUser.authorizedAssetClass == rec.assetClass,
-            "FMR: User not authorized to modify records in specified asset class"
+            "PA:FMR: User not authorized to modify records in specified asset class"
         );
 
-        require(_rgtHash != 0, "FMR: rights holder cannot be zero");
+        require(_rgtHash != 0, "PA:FMR: rights holder cannot be zero");
         require(
             (rec.assetStatus != 3) &&
                 (rec.assetStatus != 4) &&
                 (rec.assetStatus != 53) &&
                 (rec.assetStatus != 54),
-            "FMR: Cannot modify asset in lost or stolen status"
+            "PA:FMR: Cannot modify asset in lost or stolen status"
         );
         require(
             (rec.assetStatus != 6) &&
                 (rec.assetStatus != 50) &&
                 (rec.assetStatus != 56),
-            "FMR: Cannot modify asset in Escrow"
+            "PA:FMR: Cannot modify asset in Escrow"
         );
         require(
             (rec.assetStatus != 5) && (rec.assetStatus != 55),
-            "DC: Record In Transferred-unregistered status"
+            "PA:FMR: Record In Transferred-unregistered status"
         );
         require(rec.assetStatus < 200, "FMR: Record locked");
         require(
             msg.value >= cost.forceModifyCost,
-            "FMR: tx value too low. Send more eth."
+            "PA:FMR: tx value too low. Send more eth."
         );
         //^^^^^^^checks^^^^^^^^^
 
@@ -144,6 +144,176 @@ contract PRUF_APP is
         );
 
         return rec.forceModCount;
+        //^^^^^^^interactions^^^^^^^^^
+    }
+
+    /*
+     * @dev Transfer Rights to new rightsHolder with confirmation
+     */
+    function $transferAsset(
+        bytes32 _idxHash,
+        bytes32 _rgtHash,
+        bytes32 _newrgtHash
+    ) external payable nonReentrant isAuthorized(_idxHash) returns (uint8) {
+        Record memory rec = getRecord(_idxHash);
+        User memory callingUser = getUser();
+        Costs memory cost = getCost(rec.assetClass);
+        Costs memory baseCost = getBaseCost();
+
+        require((rec.rightsHolder != 0), "PA:TA: Record does not exist");
+        require(
+            callingUser.authorizedAssetClass == rec.assetClass,
+            "PA:TA: User not authorized to modify records in specified asset class"
+        );
+        require(
+            (rec.assetStatus > 49) || (callingUser.userType < 5),
+            "PA:TA:Only usertype < 5 can change status < 50"
+        );
+        require(_newrgtHash != 0, "PA:TA:new Rightsholder cannot be blank");
+        require(
+            (rec.assetStatus == 1) || (rec.assetStatus == 51),
+            "PA:TA:Asset status is not transferrable"
+        );
+        require(rec.assetStatus < 200, "PA:TA: Record locked");
+        require(
+            rec.rightsHolder == _rgtHash,
+            "PA:TA:Rightsholder does not match supplied data"
+        );
+        require(
+            msg.value >= cost.transferAssetCost,
+            "PA:TA: tx value too low. Send more eth."
+        );
+        //^^^^^^^checks^^^^^^^^^
+
+        rec.rightsHolder = _newrgtHash;
+        //^^^^^^^effects^^^^^^^^^
+
+        writeRecord(_idxHash, rec);
+
+        deductPayment(
+            baseCost.paymentAddress,
+            baseCost.newRecordCost,
+            cost.paymentAddress,
+            cost.newRecordCost
+        );
+
+        return (170);
+        //^^^^^^^interactions^^^^^^^^^
+    }
+
+    /*
+     * @dev Modify **Record**.Ipfs2 with confirmation
+     */
+    function $addIpfs2Note(
+        bytes32 _idxHash,
+        bytes32 _rgtHash,
+        bytes32 _IpfsHash
+    ) external payable nonReentrant isAuthorized(_idxHash) returns (bytes32) {
+        Record memory rec = getRecord(_idxHash);
+        User memory callingUser = getUser();
+        Costs memory cost = getCost(rec.assetClass);
+        Costs memory baseCost = getBaseCost();
+
+        require((rec.rightsHolder != 0), "PA:I2: Record does not exist");
+        require(
+            callingUser.authorizedAssetClass == rec.assetClass,
+            "MI2: User not authorized to modify records in specified asset class"
+        );
+        require( //-------------------------------------Should an asset in escrow be modifiable?
+            (rec.assetStatus != 6) &&
+                (rec.assetStatus != 50) &&
+                (rec.assetStatus != 56), //Should it be contingent on the original recorder address?
+            "MI2: Cannot modify asset in Escrow" //If so, it must not erase the recorder, or escrow termination will be broken!
+        );
+        require(rec.assetStatus < 200, "MI1: Record locked");
+        require(
+            (rec.assetStatus != 5) && (rec.assetStatus != 55),
+            "MI1: Record In Transferred-unregistered status"
+        );
+        require(
+            rec.Ipfs2 == 0,
+            "MI2: Ipfs2 has data already. Overwrite not permitted"
+        );
+        require(
+            rec.rightsHolder == _rgtHash,
+            "MI2: Rightsholder does not match supplied data"
+        );
+        require(
+            msg.value >= cost.createNoteCost,
+            "MI2: tx value too low. Send more eth."
+        );
+        //^^^^^^^checks^^^^^^^^^
+
+        rec.Ipfs2 = _IpfsHash;
+        //^^^^^^^effects^^^^^^^^^
+
+        writeRecordIpfs2(_idxHash, rec);
+
+        deductPayment(
+            baseCost.paymentAddress,
+            baseCost.newRecordCost,
+            cost.paymentAddress,
+            cost.newRecordCost
+        );
+
+        return rec.Ipfs2;
+        //^^^^^^^interactions^^^^^^^^^
+    }
+
+    /*
+     * @dev Reimport **Record**.rightsHolder (no confirmation required -
+     * posessor is considered to be owner). sets rec.assetStatus to 0.
+     */
+    function $reimportRecord(bytes32 _idxHash, bytes32 _rgtHash)
+        external
+        payable
+        nonReentrant
+        isAuthorized(_idxHash)
+        returns (uint8)
+    {
+        Record memory rec = getRecord(_idxHash);
+        User memory callingUser = getUser();
+        Costs memory cost = getCost(rec.assetClass);
+        Costs memory baseCost = getBaseCost();
+
+        require((rec.rightsHolder != 0), "RR: Record does not exist");
+        require(
+            callingUser.userType < 3,
+            "RR: User not authorized to reimport assets"
+        );
+        require(
+            callingUser.authorizedAssetClass == rec.assetClass,
+            "RR: User not authorized to modify records in specified asset class"
+        );
+        require(
+            (rec.assetStatus == 5) || (rec.assetStatus == 55),
+            "RR: Only Transferred status assets can be reimported"
+        );
+        require(rec.assetStatus < 200, "RR: Record locked");
+        require(
+            msg.value >= cost.reMintRecordCost,
+            "RR: tx value too low. Send more eth."
+        );
+        //^^^^^^^checks^^^^^^^^^
+
+        if (rec.numberOfTransfers < 65335) {
+            rec.numberOfTransfers++;
+        }
+
+        rec.assetStatus = 0;
+        rec.rightsHolder = _rgtHash;
+        //^^^^^^^effects^^^^^^^^^
+
+        writeRecord(_idxHash, rec);
+
+        deductPayment(
+            baseCost.paymentAddress,
+            baseCost.newRecordCost,
+            cost.paymentAddress,
+            cost.newRecordCost
+        );
+
+        return rec.assetStatus;
         //^^^^^^^interactions^^^^^^^^^
     }
 }
