@@ -164,7 +164,7 @@ contract PRUF is ReentrancyGuard, PullPayment, Ownable, IERC721Receiver {
 
         require(
             (user.userType > 0) && (user.userType < 10),
-            "ST:MOD-UA-ERR:User not registered "
+            "PC:MOD-IA: User not registered"
         );
         _;
     }
@@ -219,7 +219,7 @@ contract PRUF is ReentrancyGuard, PullPayment, Ownable, IERC721Receiver {
     function OO_setStorageContract(address _storageAddress) external onlyOwner {
         require(
             _storageAddress != address(0),
-            "ADMIN: storage address cannot be zero"
+            "PC:SSC: storage address cannot be zero"
         );
         //^^^^^^^checks^^^^^^^^^
 
@@ -242,7 +242,7 @@ contract PRUF is ReentrancyGuard, PullPayment, Ownable, IERC721Receiver {
                 (_userType == 2) ||
                 (_userType == 9) ||
                 (_userType == 99),
-            "ST:OO-AU-ERR:Invalid user type"
+            "PC:AU:Invalid user type"
         );
         //^^^^^^^checks^^^^^^^^^
 
@@ -293,7 +293,6 @@ contract PRUF is ReentrancyGuard, PullPayment, Ownable, IERC721Receiver {
         //^^^^^^^interactions^^^^^^^^^
     }
 
-    //--------------------------------------------------------------------------------------Storage Reading private functions
     /*
      * @dev Get a Record from Storage @ idxHash
      */
@@ -371,7 +370,7 @@ contract PRUF is ReentrancyGuard, PullPayment, Ownable, IERC721Receiver {
         //^^^^^^^interactions^^^^^^^^^
     }
 
-    //--------------------------------------------------------------------------------------Storage Writing private functions
+    //--------------------------------------------------------------------------------------Storage Writing internal functions
 
     function writeRecordIpfs2(bytes32 _idxHash, Record memory _rec)
         internal
