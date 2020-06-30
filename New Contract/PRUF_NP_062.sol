@@ -148,7 +148,7 @@ contract PRUF_NP is Ownable, IERC721Receiver, ReentrancyGuard {
         User memory user = getUser();
 
         require(
-            (user.userType > 0) && (user.userType < 10),
+            ((user.userType > 0) && (user.userType < 10)),
             "ST:MOD-UA-ERR:User not registered "
         );
         _;
