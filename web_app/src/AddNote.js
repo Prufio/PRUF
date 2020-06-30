@@ -104,6 +104,7 @@ class AddNote extends Component {
       storage: "",
       isNFA: false,
       hashUrl: "",
+      hasError: false,
     };
   }
 
@@ -127,10 +128,19 @@ class AddNote extends Component {
     document.addEventListener("accountListener", this.acctChanger());
   }
 
+  componentDidCatch(error, info){
+    console.log(info.componentStack)
+  }
+
   componentWillUnmount() {
     this.setState({assetClass: undefined})
     //console.log("unmounting component")
     document.removeEventListener("accountListener", this.acctChanger());
+  }
+  
+  static getDerivedStateFromError(error) {
+    // Update state so the next render will show the fallback UI.
+    return  {hasError: true} ;
   }
 
   componentDidUpdate() {
@@ -153,6 +163,10 @@ class AddNote extends Component {
 
   render() {
     const self = this;
+
+    if (this.state.hasError){
+      return(<div> Error Occoured. Try reloading the page. </div>)
+    }
 
     const getBytes32FromIpfsHash = (ipfsListing) => {
       return "0x" + bs58.decode(ipfsListing).slice(2).toString("hex");

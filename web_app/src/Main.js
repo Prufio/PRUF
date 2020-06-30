@@ -18,7 +18,7 @@ import SetCosts from "./SetCosts";
 import returnContracts from "./Contracts";
 import Button from "react-bootstrap/Button";
 import Form from "react-bootstrap/Form";
-import EscrowManager from "./EscrowManager"
+import EscrowManager from "./EscrowManager";
 
 class Main extends Component {
   constructor(props) {
@@ -144,7 +144,6 @@ class Main extends Component {
       storage: "",
       assetClass: undefined,
       contractArray: [],
-
     };
   }
 
@@ -159,6 +158,15 @@ class Main extends Component {
     for (let i = 0; i < 5; i++) {
       this.getOwner();
     }
+  }
+
+  componentDidCatch(error, info){
+    console.log(info.componentStack)
+  }
+  
+  static getDerivedStateFromError(error) {
+    // Update state so the next render will show the fallback UI.
+    return { hasError: true };
   }
 
   componentDidUpdate() {
@@ -178,8 +186,6 @@ class Main extends Component {
       this.returnsContract();
     }
   }
-
-  componentDidCatch() {}
 
   componentWillUnmount() {
     console.log("unmounting component");
