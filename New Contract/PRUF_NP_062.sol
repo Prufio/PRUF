@@ -148,8 +148,8 @@ contract PRUF_NP is Ownable, IERC721Receiver, ReentrancyGuard {
         User memory user = getUser();
 
         require(
-            ((user.userType > 0) && (user.userType < 10)),
-            "ST:MOD-UA-ERR:User not registered "
+            (user.userType > 0) && (user.userType < 10),
+            "PNP:MOD: User not registered"
         );
         _;
     }
@@ -208,7 +208,7 @@ contract PRUF_NP is Ownable, IERC721Receiver, ReentrancyGuard {
     function OO_setStorageContract(address _storageAddress) external onlyOwner {
         require(
             _storageAddress != address(0),
-            "ADMIN: storage address cannot be zero"
+            "PNP:SSC: storage address cannot be set to zero"
         );
         //^^^^^^^checks^^^^^^^^^
 
@@ -241,30 +241,30 @@ contract PRUF_NP is Ownable, IERC721Receiver, ReentrancyGuard {
         Record memory rec = getRecord(_idxHash);
         User memory callingUser = getUser();
 
-        require((rec.rightsHolder != 0), "MS: Record does not exist");
+        require((rec.rightsHolder != 0), "PNP:MS: Record does not exist");
         require(
             callingUser.authorizedAssetClass == rec.assetClass,
-            "MS: User not authorized to modify records in specified asset class"
+            "PNP:MS: User not authorized to modify records in specified asset class"
         );
-        require(_newAssetStatus < 200, "MS: user cannot set status > 199");
+        require(_newAssetStatus < 200, "PNP:MS: user cannot set status > 199");
         require(
-            (rec.assetStatus != 6) &&
+                (rec.assetStatus != 6) &&
                 (rec.assetStatus != 50) &&
                 (rec.assetStatus != 56),
-            "MS: Cannot change status of asset in Escrow until escrow is expired"
+            "PNP:MS: Cannot change status of asset in Escrow until escrow is expired"
         );
         require(
             (rec.assetStatus != 5) && (rec.assetStatus != 55),
-            "MS:ERR-Cannot change status of asset in transferred-unregistered status."
+            "PNP:MS: Cannot change status of asset in transferred-unregistered status."
         );
         require(
             (rec.assetStatus > 49) || (callingUser.userType < 5),
-            "SS:ERR-Only usertype < 5 can change status < 49"
+            "PNP:MS: Only usertype < 5 can change status < 49"
         );
-        require(rec.assetStatus < 200, "MS: Record locked");
+        require(rec.assetStatus < 200, "PNP:MS: Record locked");
         require(
             rec.rightsHolder == _rgtHash,
-            "MS: ERR-Rightsholder does not match supplied data"
+            "PNP:MS: Rightsholder does not match supplied data"
         );
         //^^^^^^^checks^^^^^^^^^
 
@@ -289,35 +289,35 @@ contract PRUF_NP is Ownable, IERC721Receiver, ReentrancyGuard {
         rec.assetStatus = _newAssetStatus;
         User memory callingUser = getUser();
 
-        require((rec.rightsHolder != 0), "SS: Record does not exist");
+        require((rec.rightsHolder != 0), "PNP:SLS: Record does not exist");
         require(
             callingUser.authorizedAssetClass == rec.assetClass,
-            "SS: User not authorized to modify records in specified asset class"
+            "PNP:SLS: User not authorized to modify records in specified asset class"
         );
         require(
             (_newAssetStatus == 3) ||
                 (_newAssetStatus == 4) ||
                 (_newAssetStatus == 53) ||
                 (_newAssetStatus == 54),
-            "SS:ERR-Must set to a lost or stolen status"
+            "PNP:SLS: Must set to a lost or stolen status"
         );
         require(
             (rec.assetStatus > 49) ||
                 ((_newAssetStatus < 50) && (callingUser.userType < 5)),
-            "SS:ERR-Only usertype <5 can change a <49 status asset to a >49 status"
+            "PNP:SLS: Only usertype <5 can change a <49 status asset to a >49 status"
         );
         require(
             (rec.assetStatus != 5) && (rec.assetStatus != 55),
-            "SS:ERR-Transferred asset cannot be set to lost or stolen after transfer."
+            "PNP:SLS: Transferred asset cannot be set to lost or stolen after transfer."
         );
         require(
             (rec.assetStatus != 50),
-            "SS:ERR-Asset in locked escrow cannot be set to lost or stolen"
+            "PNP:SLS: Asset in locked escrow cannot be set to lost or stolen"
         );
-        require(rec.assetStatus < 200, "RR: Record locked");
+        require(rec.assetStatus < 200, "PNP:SLS: Record locked");
         require(
             rec.rightsHolder == _rgtHash,
-            "SS: ERR-Rightsholder does not match supplied data"
+            "PNP:SLS: Rightsholder does not match supplied data"
         );
         //^^^^^^^checks^^^^^^^^^
 
@@ -341,26 +341,26 @@ contract PRUF_NP is Ownable, IERC721Receiver, ReentrancyGuard {
         Record memory rec = getRecord(_idxHash);
         User memory callingUser = getUser();
 
-        require((rec.rightsHolder != 0), "DC: Record does not exist");
+        require((rec.rightsHolder != 0), "PNP:DC: Record does not exist");
         require(
             callingUser.authorizedAssetClass == rec.assetClass,
-            "DC: User not authorized to modify records in specified asset class"
+            "PNP:DC: User not authorized to modify records in specified asset class"
         );
         require( //------------------------------------------should the counter still work when an asset is in escrow?
             (rec.assetStatus != 6) &&
                 (rec.assetStatus != 50) &&
                 (rec.assetStatus != 56), //If so, it must not erase the recorder, or escrow termination will be broken!
-            "DC: Cannot modify asset in Escrow"
+            "PNP:DC: Cannot modify asset in Escrow"
         );
-        require(_decAmount > 0, "DC: cannot decrement by negative number");
-        require(rec.assetStatus < 200, "DC: Record locked");
+        require(_decAmount > 0, "PNP:DC: cannot decrement by negative number");
+        require(rec.assetStatus < 200, "PNP:DC: Record locked");
         require(
             (rec.assetStatus != 5) && (rec.assetStatus != 55),
-            "DC: Record In Transferred-unregistered status"
+            "PNP:DC: Record In Transferred-unregistered status"
         );
         require(
             rec.rightsHolder == _rgtHash,
-            "DC: Rightsholder does not match supplied data"
+            "PNP:DC: Rightsholder does not match supplied data"
         );
         //^^^^^^^checks^^^^^^^^^
 
@@ -388,27 +388,27 @@ contract PRUF_NP is Ownable, IERC721Receiver, ReentrancyGuard {
         User memory callingUser = getUser();
         //Costs memory cost = getCost(rec.assetClass);
 
-        require((rec.rightsHolder != 0), "MI1: Record does not exist");
+        require((rec.rightsHolder != 0), "PNP:MI1: Record does not exist");
         require(
             callingUser.authorizedAssetClass == rec.assetClass,
-            "MI1: User not authorized to modify records in specified asset class"
+            "PNP:MI1: User not authorized to modify records in specified asset class"
         );
 
-        require(rec.Ipfs1 != _IpfsHash, "MI1:ERR--New data same as old");
+        require(rec.Ipfs1 != _IpfsHash, "PNP:MI1: New data same as old");
         require( //-------------------------------------Should an asset in escrow be modifiable?
             (rec.assetStatus != 6) &&
                 (rec.assetStatus != 50) &&
                 (rec.assetStatus != 56), //Should it be contingent on the original recorder address?
-            "MI1: Cannot modify asset in Escrow" //If so, it must not erase the recorder, or escrow termination will be broken!
+            "PNP:MI1: Cannot modify asset in Escrow" //If so, it must not erase the recorder, or escrow termination will be broken!
         );
-        require(rec.assetStatus < 200, "MI1: Record locked");
+        require(rec.assetStatus < 200, "PNP:MI1: Record locked");
         require(
             (rec.assetStatus != 5) && (rec.assetStatus != 55),
-            "DC: Record In Transferred-unregistered status"
+            "PNP:DC: Record In Transferred-unregistered status"
         );
         require(
             rec.rightsHolder == _rgtHash,
-            "MI1:ERR--Rightsholder does not match supplied data"
+            "PNP:MI1: Rightsholder does not match supplied data"
         );
         //^^^^^^^checks^^^^^^^^^
 
