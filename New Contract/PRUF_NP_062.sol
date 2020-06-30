@@ -132,23 +132,24 @@ contract PRUF_NP is Ownable, IERC721Receiver, ReentrancyGuard {
     event REPORT(string _msg);
     // --------------------------------------Modifiers--------------------------------------------//
 
-    /*
-     * @dev Verify user credentials
-     * Originating Address:
-     *      Exists in registeredUsers as a usertype 1 to 9
-     *      Is authorized for asset class
-     *      asset token held by this.contract
-     * ----OR---- (comment out part that will not be used)
-     *      holds asset token
-     */
+    // modifier isAuthorized(bytes32 _idxHash) {
+    //     uint256 tokenID = uint256(_idxHash);
+    //     User memory user = getUser();
+
+    //     require(
+    //         (((user.userType > 0) && (user.userType < 10)) &&
+    //             (AssetTokenContract.ownerOf(tokenID) == address(this))) || //User is authorized in database and contract holds token
+    //             (AssetTokenContract.ownerOf(tokenID) == msg.sender), //or msg.sender is token holder
+    //         "ST:MOD-UA-ERR:User not registered "
+    //     );
+    //     _;
+    // }
     modifier isAuthorized(bytes32 _idxHash) {
         uint256 tokenID = uint256(_idxHash);
         User memory user = getUser();
 
         require(
-            (((user.userType > 0) && (user.userType < 10)) &&
-                (AssetTokenContract.ownerOf(tokenID) == prufPayableAddress)) || //User is authorized in database and contract holds token
-                (AssetTokenContract.ownerOf(tokenID) == msg.sender), //or msg.sender is token holder
+            (((user.userType > 0) && (user.userType < 10)), 
             "ST:MOD-UA-ERR:User not registered "
         );
         _;
