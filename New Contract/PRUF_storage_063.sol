@@ -264,56 +264,13 @@ contract Storage is Ownable, ReentrancyGuard {
             priceDivisor != 0,
             "price divisor is zero. Set base costs first"
         );
-        //^^^^^^^checks^^^^^^^^^
-        if (_newRecordCost <= priceThreshold) {
-            cost[_class].cost1 = _newRecordCost.add(baseCost.cost1);
-        } else {
-            cost[_class].cost1 = _newRecordCost.add(
-                _newRecordCost.div(priceDivisor)
-            );
-        }
-
-        if (_transferRecordCost <= priceThreshold) {
-            cost[_class].cost2 = _transferRecordCost.add(baseCost.cost2);
-        } else {
-            cost[_class].cost2 = _transferRecordCost.add(
-                _transferRecordCost.div(priceDivisor)
-            );
-        }
-
-        if (_createNoteCost <= priceThreshold) {
-            cost[_class].cost3 = _createNoteCost.add(baseCost.cost3);
-        } else {
-            cost[_class].cost3 = _createNoteCost.add(
-                _createNoteCost.div(priceDivisor)
-            );
-        }
-
-        if (_reMintRecordCost <= priceThreshold) {
-            cost[_class].cost4 = _reMintRecordCost.add(baseCost.cost4);
-        } else {
-            cost[_class].cost4 = _reMintRecordCost.add(
-                _reMintRecordCost.div(priceDivisor)
-            );
-        }
-
-        if (_modifyStatusCost <= priceThreshold) {
-            cost[_class].cost5 = _modifyStatusCost.add(baseCost.cost5);
-        } else {
-            cost[_class].cost5 = _modifyStatusCost.add(
-                _modifyStatusCost.div(priceDivisor)
-            );
-        }
-
-        if (_forceModCost <= priceThreshold) {
-            cost[_class].cost6 = _forceModCost.add(baseCost.cost6);
-        } else {
-            cost[_class].cost6 = _forceModCost.add(
-                _forceModCost.div(priceDivisor)
-            );
-        }
-
-        cost[_class].paymentAddress = _paymentAddress;
+            cost[_class].cost1 = _newRecordCost;
+            cost[_class].cost2 = _transferRecordCost;
+            cost[_class].cost3 = _createNoteCost;
+            cost[_class].cost4 = _reMintRecordCost;
+            cost[_class].cost5 = _modifyStatusCost;
+            cost[_class].cost6 = _forceModCost;
+            cost[_class].paymentAddress = _paymentAddress;
         //^^^^^^^effects^^^^^^^^^
     }
 
@@ -781,12 +738,51 @@ contract Storage is Ownable, ReentrancyGuard {
         )
     {
         uint256 assetClass256 = uint256(_assetClass);
-        Costs memory returnCosts = cost[_assetClass];
+        Costs memory returnCosts;
+        Costs memory costs = cost[_assetClass];
 
         require(
             (AssetClassTokenContract.ownerOf(assetClass256) != AssetClassTokenAddress), //this will throw in the token contract if not minted
             "PS:RC:Asset class not yet populated"
         );
+        //^^^^^^^checks^^^^^^^^^
+
+        if (costs.cost1 <= priceThreshold) {
+            returnCosts.cost1 = costs.cost1.add(baseCost.cost1);
+        } else {
+            returnCosts.cost1 = costs.cost1.add(costs.cost1.div(priceDivisor));
+        }
+
+        if (costs.cost2 <= priceThreshold) {
+            returnCosts.cost2 = costs.cost2.add(baseCost.cost2);
+        } else {
+            returnCosts.cost2 = costs.cost2.add(costs.cost2.div(priceDivisor));
+        }
+
+        if (costs.cost3 <= priceThreshold) {
+            returnCosts.cost3 = costs.cost3.add(baseCost.cost3);
+        } else {
+            returnCosts.cost3 = costs.cost3.add(costs.cost3.div(priceDivisor));
+        }
+
+        if (costs.cost4 <= priceThreshold) {
+            returnCosts.cost4 = costs.cost4.add(baseCost.cost4);
+        } else {
+            returnCosts.cost4 = costs.cost4.add(costs.cost4.div(priceDivisor));
+        }
+
+        if (costs.cost5 <= priceThreshold) {
+            returnCosts.cost5 = costs.cost5.add(baseCost.cost5);
+        } else {
+            returnCosts.cost5 = costs.cost5.add(costs.cost5.div(priceDivisor));
+        }
+
+        if (costs.cost6 <= priceThreshold) {
+            returnCosts.cost6 = costs.cost6.add(baseCost.cost6);
+        } else {
+            returnCosts.cost6 = costs.cost6.add(costs.cost6.div(priceDivisor));
+        }
+        //^^^^^^^effects^^^^^^^^^
 
         return (
             returnCosts.cost1,
@@ -795,7 +791,7 @@ contract Storage is Ownable, ReentrancyGuard {
             returnCosts.cost4,
             returnCosts.cost5,
             returnCosts.cost6,
-            returnCosts.paymentAddress
+            costs.paymentAddress
         );
         //^^^^^^^interactions^^^^^^^^^
     }

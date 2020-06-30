@@ -472,7 +472,7 @@ contract PRUF is ReentrancyGuard, PullPayment, Ownable, IERC721Receiver {
     ) internal {
         uint256 messageValue = msg.value;
         uint256 change;
-        uint256 total = _baseAmount.add(_ACTHamount);
+        uint256 total = _ACTHamount;
 
         change = messageValue.sub(total);
         _asyncTransfer(_basePaymentAddress, _baseAmount);
