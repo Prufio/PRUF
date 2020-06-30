@@ -16,12 +16,6 @@ contract PRUF_APP is
 {
     using SafeMath for uint256;
 
-    // --------------------------------------Events--------------------------------------------//
-
-    // event REPORT(string _msg);
-
-    // --------------------------------------Modifiers--------------------------------------------//
-
     /*
      * @dev Wrapper for newRecord
      */
@@ -219,11 +213,11 @@ contract PRUF_APP is
             callingUser.authorizedAssetClass == rec.assetClass,
             "PA:I2: User not authorized to modify records in specified asset class"
         );
-        require( //-------------------------------------Should an asset in escrow be modifiable?
+        require(
             (rec.assetStatus != 6) &&
                 (rec.assetStatus != 50) &&
-                (rec.assetStatus != 56), //Should it be contingent on the original recorder address?
-            "PA:I2: Cannot modify asset in Escrow" //If so, it must not erase the recorder, or escrow termination will be broken!
+                (rec.assetStatus != 56),
+            "PA:I2: Cannot modify asset in Escrow"
         );
         require(rec.assetStatus < 200, "PA:I2: Record locked");
         require(
