@@ -31,8 +31,9 @@
  * Contract Resolution Names -
  *  assetToken
  *  assetClassToken
- *  prufPayable
- *  prufNonPayable
+ *  PRUF_APP
+ *  PRUF_NP
+ *  PRUF_simpleEscrow
  *
  * CONTRACT Types (storage)
  * 0   --NONE
@@ -159,7 +160,7 @@ contract PRUF is ReentrancyGuard, PullPayment, Ownable, IERC721Receiver {
     //     );
     //     _;
     // }
-    modifier isAuthorized(bytes32 _idxHash) {
+    modifier isAuthorized(bytes32 _idxHash) virtual {
         User memory user = getUser();
 
         require(
@@ -173,7 +174,12 @@ contract PRUF is ReentrancyGuard, PullPayment, Ownable, IERC721Receiver {
     /*
      * @dev Address Setters
      */
-    function OO_ResolveContractAddresses() external nonReentrant onlyOwner {
+    function OO_ResolveContractAddresses()
+        external
+        virtual
+        nonReentrant
+        onlyOwner
+    {
         //^^^^^^^checks^^^^^^^^^
         AssetClassTokenAddress = Storage.resolveContractAddress(
             "assetClassToken"
@@ -273,7 +279,7 @@ contract PRUF is ReentrancyGuard, PullPayment, Ownable, IERC721Receiver {
     /*
      * @dev Get a User Record from Storage @ msg.sender
      */
-    function getUser() internal view returns (User memory) {
+    function getUser() internal virtual view returns (User memory) {
         return registeredUsers[keccak256(abi.encodePacked(msg.sender))];
         //^^^^^^^interactions^^^^^^^^^
     }
