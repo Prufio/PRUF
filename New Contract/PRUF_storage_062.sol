@@ -782,8 +782,8 @@ contract Storage is Ownable, ReentrancyGuard {
         Costs memory returnCosts = cost[_assetClass];
 
         require(
-            (AssetClassTokenContract.ownerOf(assetClass256) != address(0)), //this will throw in the token contract
-            "MOD-ACTH-msg.sender not authorized in asset class"
+            (AssetClassTokenContract.ownerOf(assetClass256) != AssetClassTokenAddress), //this will throw in the token contract if not minted
+            "PS:RC:Asset class not yet populated"
         );
 
         return (

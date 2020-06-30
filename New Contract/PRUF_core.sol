@@ -332,6 +332,42 @@ contract PRUF is ReentrancyGuard, PullPayment, Ownable, IERC721Receiver {
         //^^^^^^^interactions^^^^^^^^^
     }
 
+    function getShortRecord(bytes32 _idxHash) internal returns (Record memory) {
+        Record memory rec;
+
+        {
+            //Start of scope limit for stack depth
+            (
+                bytes32 _recorder,
+                bytes32 _lastRecorder,
+                uint8 _assetStatus,
+                uint8 _forceModCount,
+                uint16 _assetClass,
+                uint256 _countDown,
+                uint256 _countDownStart,
+                bytes32 _Ipfs1,
+                bytes32 _Ipfs2,
+                uint16 _numberOfTransfers,
+                uint256 _timeLock
+            ) = Storage.retrieveShortRecord(_idxHash); // Get record from storage contract
+
+            rec.recorder = _recorder;
+            rec.lastRecorder = _lastRecorder;
+            rec.assetStatus = _assetStatus;
+            rec.forceModCount = _forceModCount;
+            rec.assetClass = _assetClass;
+            rec.countDown = _countDown;
+            rec.countDownStart = _countDownStart;
+            rec.Ipfs1 = _Ipfs1;
+            rec.Ipfs2 = _Ipfs2;
+            rec.numberOfTransfers = _numberOfTransfers;
+            rec.timeLock = _timeLock;
+        } //end of scope limit for stack depth
+
+        return (rec); // Returns Record struct rec
+        //^^^^^^^interactions^^^^^^^^^
+    }
+
     /*
      * @dev retrieves Base Costs from Storage and returns Costs struct
      */
