@@ -86,8 +86,7 @@
 // SPDX-License-Identifier: UNLICENSED
 pragma solidity ^0.6.7;
 
-import "./PRUF_interfaces.sol";
-import "./PRUF_core.sol";
+import "./PRUF_core_063.sol";
 
 contract PRUF_simpleEscrow is PRUF {
     using SafeMath for uint256;

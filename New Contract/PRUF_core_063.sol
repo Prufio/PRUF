@@ -406,6 +406,20 @@ contract PRUF is ReentrancyGuard, PullPayment, Ownable, IERC721Receiver {
         //^^^^^^^interactions^^^^^^^^^
     }
 
+    /*
+     * @dev Write an Ipfs Record to Storage @ idxHash
+     */
+    function writeRecordIpfs1(bytes32 _idxHash, Record memory _rec)
+        internal
+        isAuthorized(_idxHash)
+    //^^^^^^^checks^^^^^^^^^
+    {
+        bytes32 userHash = keccak256(abi.encodePacked(msg.sender)); // Get a userhash for authentication and recorder logging
+        //^^^^^^^effects^^^^^^^^^
+        Storage.modifyIpfs1(userHash, _idxHash, _rec.Ipfs1); // Send data to storage
+        //^^^^^^^interactions^^^^^^^^^
+    }
+
     //--------------------------------------------------------------------------------------Storage Writing internal functions
 
     function writeRecordIpfs2(bytes32 _idxHash, Record memory _rec)
