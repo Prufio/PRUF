@@ -217,30 +217,30 @@ contract PRUF_APP is
         require((rec.rightsHolder != 0), "PA:I2: Record does not exist");
         require(
             callingUser.authorizedAssetClass == rec.assetClass,
-            "MI2: User not authorized to modify records in specified asset class"
+            "PA:I2: User not authorized to modify records in specified asset class"
         );
         require( //-------------------------------------Should an asset in escrow be modifiable?
             (rec.assetStatus != 6) &&
                 (rec.assetStatus != 50) &&
                 (rec.assetStatus != 56), //Should it be contingent on the original recorder address?
-            "MI2: Cannot modify asset in Escrow" //If so, it must not erase the recorder, or escrow termination will be broken!
+            "PA:I2: Cannot modify asset in Escrow" //If so, it must not erase the recorder, or escrow termination will be broken!
         );
-        require(rec.assetStatus < 200, "MI1: Record locked");
+        require(rec.assetStatus < 200, "PA:I2: Record locked");
         require(
             (rec.assetStatus != 5) && (rec.assetStatus != 55),
-            "MI1: Record In Transferred-unregistered status"
+            "PA:I2: Record In Transferred-unregistered status"
         );
         require(
             rec.Ipfs2 == 0,
-            "MI2: Ipfs2 has data already. Overwrite not permitted"
+            "PA:I2: Ipfs2 has data already. Overwrite not permitted"
         );
         require(
             rec.rightsHolder == _rgtHash,
-            "MI2: Rightsholder does not match supplied data"
+            "PA:I2: Rightsholder does not match supplied data"
         );
         require(
             msg.value >= cost.createNoteCost,
-            "MI2: tx value too low. Send more eth."
+            "PA:I2: tx value too low. Send more eth."
         );
         //^^^^^^^checks^^^^^^^^^
 
@@ -264,7 +264,7 @@ contract PRUF_APP is
      * @dev Reimport **Record**.rightsHolder (no confirmation required -
      * posessor is considered to be owner). sets rec.assetStatus to 0.
      */
-    function $reimportRecord(bytes32 _idxHash, bytes32 _rgtHash)
+    function $importAsset(bytes32 _idxHash, bytes32 _rgtHash)
         external
         payable
         nonReentrant
@@ -276,23 +276,23 @@ contract PRUF_APP is
         Costs memory cost = getCost(rec.assetClass);
         Costs memory baseCost = getBaseCost();
 
-        require((rec.rightsHolder != 0), "RR: Record does not exist");
+        require((rec.rightsHolder != 0), "PA:IA: Record does not exist");
         require(
             callingUser.userType < 3,
-            "RR: User not authorized to reimport assets"
+            "PA:IA: User not authorized to reimport assets"
         );
         require(
             callingUser.authorizedAssetClass == rec.assetClass,
-            "RR: User not authorized to modify records in specified asset class"
+            "PA:IA: User not authorized to modify records in specified asset class"
         );
         require(
             (rec.assetStatus == 5) || (rec.assetStatus == 55),
-            "RR: Only Transferred status assets can be reimported"
+            "PA:IA: Only Transferred status assets can be reimported"
         );
-        require(rec.assetStatus < 200, "RR: Record locked");
+        require(rec.assetStatus < 200, "PA:IA: Record locked");
         require(
             msg.value >= cost.reMintRecordCost,
-            "RR: tx value too low. Send more eth."
+            "PA:IA: tx value too low. Send more eth."
         );
         //^^^^^^^checks^^^^^^^^^
 
