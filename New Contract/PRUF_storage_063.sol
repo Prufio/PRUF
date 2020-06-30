@@ -1,5 +1,6 @@
 /*  TO DO
  * verify security and user permissioning /modifiers
+ * DEAL WITH SUPERVISED VS NONSUPERVISED ASSET CLASS HANDLING (DIFFERENT APPLICATIONS?)
  *
  * mint a token at asset creation
  *
@@ -30,8 +31,9 @@
  * Contract Resolution Names -
  *  assetToken
  *  assetClassToken
- *  prufPayable
- *  prufNonPayable
+ *  PRUF_APP
+ *  PRUF_NP
+ *  PRUF_simpleEscrow
  *
  * CONTRACT Types (storage)
  * 0   --NONE
@@ -82,7 +84,7 @@
  * Other = unauth
  *
  */
-
+ 
 // SPDX-License-Identifier: UNLICENSED
 pragma solidity ^0.6.7;
 

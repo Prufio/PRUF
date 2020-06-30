@@ -26,7 +26,6 @@
  * 6: verifying that provided verification data matches required data
  * 7: verifying that message contains any required payment
  *
- *
  * Contract Resolution Names -
  *  assetToken
  *  assetClassToken
