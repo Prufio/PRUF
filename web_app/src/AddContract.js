@@ -11,12 +11,12 @@ class AddContract extends Component {
 
     this.returnsContract = async () => {
       const self = this;
-      var contractArray = await returnContracts(self.state.web3);
-      console.log("RC AAC: ", contractArray)
+      var contracts = await returnContracts(self.state.web3);
+      console.log("RC AAC: ", contracts)
 
-      self.setState({ storage: contractArray[0] });
-      if(this.state.BPappNonPayable < 1){self.setState({ BPappNonPayable: contractArray[1] });}
-      if(this.state.BPappPayable < 1){self.setState({ BPappPayable: contractArray[2] });}
+      self.setState({ storage: contracts.storage });
+      if(this.state.BPappNonPayable < 1){self.setState({ BPappNonPayable: contracts.nonPayable });}
+      if(this.state.BPappPayable < 1){self.setState({ BPappPayable: contracts.payable });}
     };
 
     this.acctChanger = async () => {

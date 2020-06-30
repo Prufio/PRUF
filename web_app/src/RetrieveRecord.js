@@ -8,7 +8,7 @@ import bs58 from "bs58";
 import returnManufacturers from "./Manufacturers";
 import returnTypes from "./Types";
 
-class ModifyDescription extends Component {
+class RetrieveRecord extends Component {
   constructor(props) {
     super(props);
 
@@ -32,12 +32,12 @@ class ModifyDescription extends Component {
 
     this.returnsContract = async () => {
       const self = this;
-      var contractArray = await returnContracts(self.state.web3);
-      //console.log("RC RR: ", contractArray)
+      var contracts = await returnContracts(self.state.web3);
+      //console.log("RC NR: ", contractArray)
 
-      if(this.state.storage < 1){self.setState({ storage: contractArray[0] });}
-      if(this.state.BPappNonPayable < 1){self.setState({ BPappNonPayable: contractArray[1] });}
-      if(this.state.BPappPayable < 1){self.setState({ BPappPayable: contractArray[2] });}
+      if(this.state.storage < 1){self.setState({ storage: contracts.storage });}
+      if(this.state.BPappNonPayable < 1){self.setState({ BPappNonPayable: contracts.nonPayable });}
+      if(this.state.BPappPayable < 1){self.setState({ BPappPayable: contracts.payable });}
     };
 
     this.acctChanger = async () => {
@@ -349,4 +349,4 @@ class ModifyDescription extends Component {
   }
 }
 
-export default ModifyDescription;
+export default RetrieveRecord;

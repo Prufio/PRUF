@@ -1,43 +1,59 @@
-import returnStorageAbi from "./Storage_ABI";
-import returnBPappNonPayableAbi from "./BPappNonPayable_ABI";
-import returnBPappPayableAbi from "./BPappPayable_ABI";
+import returnABIs from "./returnABIs";
 
 async function returnContracts(_web3) {
+  const abis = returnABIs();
   var addr;
-  var contractArray = [];
+  var contracts = {storage: null,
+                  nonPayable: null,
+                  payable: null,
+                  simpleEscrow: null,
+                  };
+
   _web3.eth.getAccounts().then((e) => addr = e[0]);
-  const storage_abi = returnStorageAbi();
-  const BPappNonPayableAbi = returnBPappNonPayableAbi();
-  const BPappPayableAbi = returnBPappPayableAbi();
-  const storageAddress = "0x315432483985FF59eC70B13ed27538B26C8ed410";
-  const Storage = new _web3.eth.Contract(storage_abi, storageAddress);
-  var BPappNonPayable = null;
-  var BPappPayable = null;
+  const STORAGE_ABI = abis.storage;
+  const PRUF_NP_ABI = abis.nonPayable;
+  const PRUF_APP_ABI = abis.payable;
+  const PRUF_simpleEscrow_ABI = abis.simpleEscrow;
+  const storage_Address = "0xD909fDC5106e21F1d8C266F268c2cd88167e47D5";
+  const Storage = new _web3.eth.Contract(STORAGE_ABI, storage_Address);
+  var PRUF_NP = null;
+  var PRUF_APP = null;
+  var PRUF_simpleEscrow = null;
 
       await Storage.methods
-        .resolveContractAddress("BPappNonPayable")
+        .resolveContractAddress("PRUF_NP")
         .call(function (_error, _result) {
           if (_error) { console.log(_error);
           } else { 
-          BPappNonPayable = new _web3.eth.Contract(BPappNonPayableAbi, _result);}
+          PRUF_NP = new _web3.eth.Contract(PRUF_NP_ABI, _result);}
+          }
+        );
+
+        await Storage.methods
+        .resolveContractAddress("PRUF_APP")
+        .call(function (_error, _result) {
+          if (_error) { console.log(_error);
+          } else { 
+          PRUF_APP = new _web3.eth.Contract(PRUF_APP_ABI, _result);}
           }
         );
 
       await Storage.methods
-        .resolveContractAddress("BPappPayable")
+        .resolveContractAddress("PRUF_simpleEscrow")
         .call(function (_error, _result) {
           if (_error) { console.log(_error);
           } else { 
-            BPappPayable = new _web3.eth.Contract(BPappPayableAbi, _result);}
+            PRUF_simpleEscrow = new _web3.eth.Contract(PRUF_simpleEscrow_ABI, _result);}
           }
         );
 
-  contractArray[0] = Storage;
-  contractArray[1] = BPappNonPayable;
-  contractArray[2] = BPappPayable;
+  contracts.storage = Storage;
+  contracts.nonPayable = PRUF_NP;
+  contracts.payable = PRUF_APP;
+  contracts.simpleEscrow = PRUF_simpleEscrow;
 
 
-  return contractArray;
+  return contracts;
 }
 
 export default returnContracts;
