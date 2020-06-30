@@ -35,9 +35,9 @@ class ModifyDescription extends Component {
     this.getAssetClass = async () => {
       const self = this;
       //console.log("getting asset class");
-      if (self.state.assetClass > 0 || self.state.BPappPayable === "") {
+      if (self.state.assetClass > 0 || self.state.PRUF_APP === "") {
       } else {
-        self.state.BPappPayable.methods
+        self.state.PRUF_APP.methods
           .getUserExt(self.state.web3.utils.soliditySha3(self.state.addr))
           .call({ from: self.state.addr }, function (_error, _result) {
             if (_error) {console.log(_error)
@@ -56,8 +56,8 @@ class ModifyDescription extends Component {
       //console.log("RC NR: ", contractArray)
 
       if(this.state.storage < 1){self.setState({ storage: contracts.storage });}
-      if(this.state.BPappNonPayable < 1){self.setState({ BPappNonPayable: contracts.nonPayable });}
-      if(this.state.BPappPayable < 1){self.setState({ BPappPayable: contracts.payable });}
+      if(this.state.PRUF_NP < 1){self.setState({ PRUF_NP: contracts.nonPayable });}
+      if(this.state.PRUF_APP < 1){self.setState({ PRUF_APP: contracts.payable });}
     };
 
     this.acctChanger = async () => {
@@ -100,8 +100,8 @@ class ModifyDescription extends Component {
       newSecret: "",
       isNFA: false,
       web3: null,
-      BPappPayable: "",
-      BPappNonPayable: "",
+      PRUF_APP: "",
+      PRUF_NP: "",
       storage: "",
     };
   }
@@ -124,7 +124,7 @@ class ModifyDescription extends Component {
 
   componentDidUpdate() {
 
-    if(this.state.web3 !== null && this.state.BPappPayable < 1){
+    if(this.state.web3 !== null && this.state.PRUF_APP < 1){
       this.returnsContract();
     }
 
@@ -230,7 +230,7 @@ class ModifyDescription extends Component {
       checkExists(idxHash);
       checkMatch(idxHash, rgtHash);
 
-      this.state.BPappPayable.methods
+      this.state.PRUF_APP.methods
         .$transferAsset(idxHash, rgtHash, newRgtHash)
         .send({ from: this.state.addr, value: this.state.costArray[1] })
         .on("error", function (_error) {

@@ -15,8 +15,8 @@ class AddContract extends Component {
       console.log("RC AAC: ", contracts)
 
       self.setState({ storage: contracts.storage });
-      if(this.state.BPappNonPayable < 1){self.setState({ BPappNonPayable: contracts.nonPayable });}
-      if(this.state.BPappPayable < 1){self.setState({ BPappPayable: contracts.payable });}
+      if(this.state.PRUF_NP < 1){self.setState({ PRUF_NP: contracts.nonPayable });}
+      if(this.state.PRUF_APP < 1){self.setState({ PRUF_APP: contracts.payable });}
     };
 
     this.acctChanger = async () => {
@@ -40,8 +40,8 @@ class AddContract extends Component {
       authLevel: "",
       storage: "",
       web3: null,
-      BPappPayable: "",
-      BPappNonPayable: "",
+      PRUF_APP: "",
+      PRUF_NP: "",
     };
   }
 

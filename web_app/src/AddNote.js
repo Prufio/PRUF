@@ -37,9 +37,9 @@ class AddNote extends Component {
     this.getAssetClass = async () => {
       const self = this;
       //console.log("getting asset class");
-      if (self.state.assetClass > 0 || self.state.BPappPayable === "") {
+      if (self.state.assetClass > 0 || self.state.PRUF_APP === "") {
       } else {
-        self.state.BPappPayable.methods
+        self.state.PRUF_APP.methods
           .getUserExt(self.state.web3.utils.soliditySha3(self.state.addr))
           .call({ from: self.state.addr }, function (_error, _result) {
             if (_error) {console.log(_error)
@@ -58,8 +58,8 @@ class AddNote extends Component {
       //console.log("RC NR: ", contractArray)
 
       if(this.state.storage < 1){self.setState({ storage: contracts.storage });}
-      if(this.state.BPappNonPayable < 1){self.setState({ BPappNonPayable: contracts.nonPayable });}
-      if(this.state.BPappPayable < 1){self.setState({ BPappPayable: contracts.payable });}
+      if(this.state.PRUF_NP < 1){self.setState({ PRUF_NP: contracts.nonPayable });}
+      if(this.state.PRUF_APP < 1){self.setState({ PRUF_APP: contracts.payable });}
     };
 
     this.acctChanger = async () => {
@@ -99,8 +99,8 @@ class AddNote extends Component {
       id: "",
       secret: "",
       web3: null,
-      BPappPayable: "",
-      BPappNonPayable: "",
+      PRUF_APP: "",
+      PRUF_NP: "",
       storage: "",
       isNFA: false,
       hashUrl: "",
@@ -145,7 +145,7 @@ class AddNote extends Component {
 
   componentDidUpdate() {
 
-    if(this.state.web3 !== null && this.state.BPappPayable < 1){
+    if(this.state.web3 !== null && this.state.PRUF_APP < 1){
       this.returnsContract();
     }
 
@@ -173,6 +173,7 @@ class AddNote extends Component {
     };
     
     const publishIPFS2Photo = async () => {
+      if(document.getElementById("ipfs2File").files[0] !== undefined){
       const self = this;
       const reader = new FileReader();
       reader.readAsArrayBuffer(document.getElementById("ipfs2File").files[0])
@@ -191,6 +192,8 @@ class AddNote extends Component {
         self.setState({hashUrl: _hashUrl + hash})
         });
       }
+    }
+    else{alert("No file chosen for upload!")}
     };
 
     async function checkExists(idxHash) {
@@ -273,7 +276,7 @@ class AddNote extends Component {
       checkExists(idxHash);
       checkMatch(idxHash, rgtHash);
 
-      this.state.BPappPayable.methods
+      this.state.PRUF_APP.methods
         .$addIpfs2Note(idxHash, rgtHash, this.state.hashPath)
         .send({ from: this.state.addr, value: this.state.costArray[2] })
         .on("error", function (_error) {
@@ -443,7 +446,7 @@ class AddNote extends Component {
                 <Form.Row>
                   <Form.Group className="buttonDisplay">
                     <Button
-                      variant="submit"
+                      variant="primary"
                       type="button"
                       size="lg"
                       onClick={setIPFS2}

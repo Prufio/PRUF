@@ -30,16 +30,16 @@ class Main extends Component {
       //console.log("RC NR: ", contractArray)
 
       if(this.state.storage < 1){self.setState({ storage: contracts.storage });}
-      if(this.state.BPappNonPayable < 1){self.setState({ BPappNonPayable: contracts.nonPayable });}
-      if(this.state.BPappPayable < 1){self.setState({ BPappPayable: contracts.payable });}
+      if(this.state.PRUF_NP < 1){self.setState({ PRUF_NP: contracts.nonPayable });}
+      if(this.state.PRUF_APP < 1){self.setState({ PRUF_APP: contracts.payable });}
     };
 
     this.getAssetClass = async () => {
       const self = this;
       //console.log("getting asset class");
-      if (self.state.assetClass > 0 || self.state.BPappPayable === "") {
+      if (self.state.assetClass > 0 || self.state.PRUF_APP === "") {
       } else {
-        self.state.BPappPayable.methods
+        self.state.PRUF_APP.methods
           .getUserExt(self.state.web3.utils.soliditySha3(self.state.addr))
           .call({ from: self.state.addr }, function (_error, _result) {
             if (_error) {console.log(_error)
@@ -56,7 +56,7 @@ class Main extends Component {
       const self = this;
 
       if(this.state.storage === "" || this.state.web3 === null || this.state.storageOwner !== ""){}else{
-        console.log("Getting storage owner")
+        //console.log("Getting storage owner")
         this.state.storage.methods
           .owner()
           .call({ from: self.state.addr }, function (_error, _result) {
@@ -74,9 +74,9 @@ class Main extends Component {
           });
         }
 
-        if(this.state.BPappPayable === "" || this.state.web3 === null || this.state.BPPOwner !== ""){}else{
-          console.log("Getting BPP owner")
-          this.state.BPappPayable.methods
+        if(this.state.PRUF_APP === "" || this.state.web3 === null || this.state.BPPOwner !== ""){}else{
+          //console.log("Getting BPP owner")
+          this.state.PRUF_APP.methods
             .owner()
             .call({ from: self.state.addr }, function (_error, _result) {
               if (_error) {
@@ -93,9 +93,9 @@ class Main extends Component {
             });
           }
 
-          if(this.state.BPappNonPayable === "" || this.state.web3 === null || this.state.BPNPOwner !== ""){}else{
-            console.log("Getting BPNP owner")
-            this.state.BPappNonPayable.methods
+          if(this.state.PRUF_NP === "" || this.state.web3 === null || this.state.BPNPOwner !== ""){}else{
+            //console.log("Getting BPNP owner")
+            this.state.PRUF_NP.methods
               .owner()
               .call({ from: self.state.addr }, function (_error, _result) {
                 if (_error) {
@@ -139,8 +139,8 @@ class Main extends Component {
       storageOwner: "",
       BPPOwner: "",
       BPNPOwner: "",
-      BPappPayable: "",
-      BPappNonPayable: "",
+      PRUF_APP: "",
+      PRUF_NP: "",
       storage: "",
       assetClass: undefined,
       contractArray: [],
@@ -171,15 +171,14 @@ class Main extends Component {
 
   componentDidUpdate() {
 
-    /* if (this.state.addr > 0 && this.state.assetClass === undefined && this.state.BPappPayable !== "") {
+    /* if (this.state.addr > 0 && this.state.assetClass === undefined && this.state.PRUF_APP !== "") {
       for (let i = 0; i < 5; i++) {
         this.getAssetClass();
       }
     }  */
 
     if (this.state.web3 !== null){
-    for (let i = 0; i < 5; i++) {
-      this.getOwner();}
+      this.getOwner();
     }
 
     if(this.state.web3 !== null && this.state.storageOwner < 1){

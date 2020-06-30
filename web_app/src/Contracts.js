@@ -52,7 +52,6 @@ async function returnContracts(_web3) {
   contracts.payable = PRUF_APP;
   contracts.simpleEscrow = PRUF_simpleEscrow;
 
-
   return contracts;
 }
 

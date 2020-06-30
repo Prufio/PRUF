@@ -15,8 +15,8 @@ class SetCosts extends Component {
       //console.log("RC NR: ", contractArray)
 
       if(this.state.storage < 1){self.setState({ storage: contracts.storage });}
-      if(this.state.BPappNonPayable < 1){self.setState({ BPappNonPayable: contracts.nonPayable });}
-      if(this.state.BPappPayable < 1){self.setState({ BPappPayable: contracts.payable });}
+      if(this.state.PRUF_NP < 1){self.setState({ PRUF_NP: contracts.nonPayable });}
+      if(this.state.PRUF_APP < 1){self.setState({ PRUF_APP: contracts.payable });}
     };
 
     this.acctChanger = async () => {
@@ -48,8 +48,8 @@ class SetCosts extends Component {
       cost4: 0,
       cost5: 0,
       forceModCost: 0,
-      BPappPayable: "",
-      BPappNonPayable: "",
+      PRUF_APP: "",
+      PRUF_NP: "",
     };
   }
 
