@@ -778,28 +778,23 @@ contract Storage is Ownable, ReentrancyGuard {
             address
         )
     {
+        uint256 assetClass256 = uint256(_assetClass);
         Costs memory returnCosts = cost[_assetClass];
-        if (returnCosts.paymentAddress != address(0)) {
-            return (
-                returnCosts.cost1,
-                returnCosts.cost2,
-                returnCosts.cost3,
-                returnCosts.cost4,
-                returnCosts.cost5,
-                returnCosts.cost6,
-                returnCosts.paymentAddress
-            );
-        } else {
-            return (
-                1 ether,
-                1 ether,
-                1 ether,
-                1 ether,
-                1 ether,
-                1 ether,
-                baseCost.paymentAddress
-            );
-        }
+
+        require(
+            (AssetClassTokenContract.ownerOf(assetClass256) != AssetClassTokenAddress), //this will throw in the token contract if not minted
+            "PS:RC:Asset class not yet populated"
+        );
+
+        return (
+            returnCosts.cost1,
+            returnCosts.cost2,
+            returnCosts.cost3,
+            returnCosts.cost4,
+            returnCosts.cost5,
+            returnCosts.cost6,
+            returnCosts.paymentAddress
+        );
         //^^^^^^^interactions^^^^^^^^^
     }
 

@@ -1,19 +1,9 @@
 // SPDX-License-Identifier: UNLICENSED
 pragma solidity ^0.6.7;
 
-import "./PRUF_interfaces.sol";
-import "./Imports/PullPayment.sol";
-import "./Imports/ReentrancyGuard.sol";
-import "./_ERC721/IERC721Receiver.sol";
 import "./PRUF_core.sol";
 
-contract PRUF_APP is
-    ReentrancyGuard,
-    PullPayment,
-    Ownable,
-    IERC721Receiver,
-    PRUF
-{
+contract PRUF_APP is PRUF {
     using SafeMath for uint256;
 
     /*
