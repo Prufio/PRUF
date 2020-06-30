@@ -11,12 +11,12 @@ class AddUser extends Component {
 
     this.returnsContract = async () => {
       const self = this;
-      var contractArray = await returnContracts(self.state.web3);
-      //console.log("RC EM: ", contractArray)
+      var contracts = await returnContracts(self.state.web3);
+      //console.log("RC NR: ", contractArray)
 
-      if(this.state.storage < 1){self.setState({ storage: contractArray[0] });}
-      if(this.state.BPappNonPayable < 1){self.setState({ BPappNonPayable: contractArray[1] });}
-      if(this.state.BPappPayable < 1){self.setState({ BPappPayable: contractArray[2] });}
+      if(this.state.storage < 1){self.setState({ storage: contracts.storage });}
+      if(this.state.PRUF_NP < 1){self.setState({ PRUF_NP: contracts.nonPayable });}
+      if(this.state.PRUF_APP < 1){self.setState({ PRUF_APP: contracts.payable });}
     };
 
     this.acctChanger = async () => {
@@ -39,8 +39,8 @@ class AddUser extends Component {
       userType: "",
       assetClass: "",
       storage: "",
-      BPappPayable: "",
-      BPappNonPayable: "",
+      PRUF_APP: "",
+      PRUF_NP: "",
       web3: null,
     };
   }
@@ -69,7 +69,7 @@ class AddUser extends Component {
     const self = this;
 
     const addUser = () => {
-      this.state.BPappPayable.methods
+      this.state.PRUF_APP.methods
         .OO_addUser(
           this.state.authAddr,
           this.state.userType,

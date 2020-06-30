@@ -35,9 +35,9 @@ class EscrowManager extends Component {
     this.getAssetClass = async () => {
       const self = this;
       //console.log("getting asset class");
-      if (self.state.assetClass > 0 || self.state.BPappPayable === "") {
+      if (self.state.assetClass > 0 || self.state.PRUF_APP === "") {
       } else {
-        self.state.BPappPayable.methods
+        self.state.PRUF_APP.methods
           .getUserExt(self.state.web3.utils.soliditySha3(self.state.addr))
           .call({ from: self.state.addr }, function (_error, _result) {
             if (_error) {console.log(_error)
@@ -52,14 +52,13 @@ class EscrowManager extends Component {
 
     this.returnsContract = async () => {
       const self = this;
-      var contractArray = await returnContracts(self.state.web3);
-      //console.log("RC EM: ", contractArray)
+      var contracts = await returnContracts(self.state.web3);
+      //console.log("RC NR: ", contractArray)
 
-      if(this.state.storage < 1){self.setState({ storage: contractArray[0] });}
-      if(this.state.BPappNonPayable < 1){self.setState({ BPappNonPayable: contractArray[1] });}
-      if(this.state.BPappPayable < 1){self.setState({ BPappPayable: contractArray[2] });}
+      if(this.state.storage < 1){self.setState({ storage: contracts.storage });}
+      if(this.state.PRUF_NP < 1){self.setState({ PRUF_NP: contracts.nonPayable });}
+      if(this.state.PRUF_APP < 1){self.setState({ PRUF_APP: contracts.payable });}
     };
-
     this.acctChanger = async () => {
       const ethereum = window.ethereum;
       const self = this;
@@ -101,8 +100,8 @@ class EscrowManager extends Component {
       newId: "",
       newSecret: "",
       web3: null,
-      BPappPayable: "",
-      BPappNonPayable: "",
+      PRUF_APP: "",
+      PRUF_NP: "",
       storage: "",
       timeFormat: "",
     };
@@ -128,7 +127,7 @@ class EscrowManager extends Component {
 
    componentDidUpdate() {
 
-    if(this.state.web3 !== null && this.state.BPappPayable < 1){
+    if(this.state.web3 !== null && this.state.PRUF_APP < 1){
       this.returnsContract();
     }
 
@@ -219,7 +218,7 @@ class EscrowManager extends Component {
 
       checkExistsSet(idxHash);
 
-      this.state.BPappNonPayable.methods
+      this.state.PRUF_NP.methods
         .setEscrow(idxHash, _convertTimeTo(this.state.escrowTime, this.state.timeFormat))
         .send({ from: this.state.addr})
         .on("error", function (_error) {
@@ -250,7 +249,7 @@ class EscrowManager extends Component {
   
         checkExistsEnd(idxHash);
   
-        this.state.BPappNonPayable.methods
+        this.state.PRUF_NP.methods
           .endEscrow(idxHash)
           .send({ from: this.state.addr})
           .on("error", function (_error) {

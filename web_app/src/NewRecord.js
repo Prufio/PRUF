@@ -36,9 +36,9 @@ class NewRecord extends Component {
     this.getAssetClass = async () => {
       const self = this;
       //console.log("getting asset class");
-      if (self.state.assetClass > 0 || self.state.BPappPayable === "") {
+      if (self.state.assetClass > 0 || self.state.PRUF_APP === "") {
       } else {
-        self.state.BPappPayable.methods
+        self.state.PRUF_APP.methods
           .getUserExt(self.state.web3.utils.soliditySha3(self.state.addr))
           .call({ from: self.state.addr }, function (_error, _result) {
             if (_error) {console.log(_error)
@@ -53,12 +53,12 @@ class NewRecord extends Component {
 
     this.returnsContract = async () => {
       const self = this;
-      var contractArray = await returnContracts(self.state.web3);
+      var contracts = await returnContracts(self.state.web3);
       //console.log("RC NR: ", contractArray)
 
-      if(this.state.storage < 1){self.setState({ storage: contractArray[0] });}
-      if(this.state.BPappNonPayable < 1){self.setState({ BPappNonPayable: contractArray[1] });}
-      if(this.state.BPappPayable < 1){self.setState({ BPappPayable: contractArray[2] });}
+      if(this.state.storage < 1){self.setState({ storage: contracts.storage });}
+      if(this.state.PRUF_NP < 1){self.setState({ PRUF_NP: contracts.nonPayable });}
+      if(this.state.PRUF_APP < 1){self.setState({ PRUF_APP: contracts.payable });}
     };
 
     this.acctChanger = async () => {
@@ -103,8 +103,8 @@ class NewRecord extends Component {
       web3: null,
       asset: "3",
       cost: "",
-      BPappPayable: "",
-      BPappNonPayable: "",
+      PRUF_APP: "",
+      PRUF_NP: "",
       storage: "",
       isNFA: false,
       txStatus: null,
@@ -135,11 +135,11 @@ class NewRecord extends Component {
 
   componentDidUpdate() {
 
-    if(this.state.web3 !== null && this.state.BPappPayable < 1){
+    if(this.state.web3 !== null && this.state.PRUF_APP < 1){
       this.returnsContract();
     }
 
-    if (this.state.addr > 0 && this.state.assetClass === undefined && this.state.BPappPayable !== "") {
+    if (this.state.addr > 0 && this.state.assetClass === undefined && this.state.PRUF_APP !== "") {
         this.getAssetClass();
     } 
 
@@ -235,7 +235,7 @@ class NewRecord extends Component {
 
       checkExists(idxHash);
 
-      this.state.BPappPayable.methods
+      this.state.PRUF_APP.methods
         .$newRecord(
           idxHash,
           rgtHash,
@@ -256,6 +256,7 @@ class NewRecord extends Component {
           //console.log(receipt.status);
           self.setState({ hashPath: ""});
         });
+        return(0);
     };
 
     return (

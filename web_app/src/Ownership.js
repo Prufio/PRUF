@@ -31,9 +31,9 @@ class Ownership extends Component {
           });
         }
 
-        if(this.state.BPappPayable === "" || this.state.web3 === null || this.state.BPPOwner !== ""){}else{
+        if(this.state.PRUF_APP === "" || this.state.web3 === null || this.state.BPPOwner !== ""){}else{
           console.log("Getting BPP owner")
-          this.state.BPappPayable.methods
+          this.state.PRUF_APP.methods
             .owner()
             .call({ from: self.state.addr }, function (_error, _result) {
               if (_error) {
@@ -50,9 +50,9 @@ class Ownership extends Component {
             });
           }
 
-          if(this.state.BPappNonPayable === "" || this.state.web3 === null || this.state.BPNPOwner !== ""){}else{
+          if(this.state.PRUF_NP === "" || this.state.web3 === null || this.state.BPNPOwner !== ""){}else{
             console.log("Getting BPNP owner")
-            this.state.BPappNonPayable.methods
+            this.state.PRUF_NP.methods
               .owner()
               .call({ from: self.state.addr }, function (_error, _result) {
                 if (_error) {
@@ -72,12 +72,12 @@ class Ownership extends Component {
 
     this.returnsContract = async () => {
       const self = this;
-      var contractArray = await returnContracts(self.state.web3);
-      //console.log("RC EM: ", contractArray)
+      var contracts = await returnContracts(self.state.web3);
+      //console.log("RC NR: ", contractArray)
 
-      if(this.state.storage < 1){self.setState({ storage: contractArray[0] });}
-      if(this.state.BPappNonPayable < 1){self.setState({ BPappNonPayable: contractArray[1] });}
-      if(this.state.BPappPayable < 1){self.setState({ BPappPayable: contractArray[2] });}
+      if(this.state.storage < 1){self.setState({ storage: contracts.storage });}
+      if(this.state.PRUF_NP < 1){self.setState({ PRUF_NP: contracts.nonPayable });}
+      if(this.state.PRUF_APP < 1){self.setState({ PRUF_APP: contracts.payable });}
     };
 
 
@@ -108,11 +108,11 @@ class Ownership extends Component {
       assetClass: "",
       storage: "",
       web3: null,
-      BPappPayable: "",
+      PRUF_APP: "",
       isTxfrStorage: false,
       isTxfrBPP: false,
       isTxfrBPNP: false,
-      BPappNonPayable: "",
+      PRUF_NP: "",
     };
   }
 
@@ -158,7 +158,7 @@ class Ownership extends Component {
         console.log("Setting txfr", e, "to: ", setTo);
       }
 
-      else if(e === `BPappPayable`){
+      else if(e === `PRUF_APP`){
         if(this.state.isTxfrBPP === false){
           setTo = true;
         }
@@ -169,7 +169,7 @@ class Ownership extends Component {
         console.log("Setting txfr", e, "to: ", setTo);
       }
 
-      else if(e === `BPappNonPayable`){
+      else if(e === `PRUF_NP`){
         if(this.state.isTxfrBPNP === false){
           setTo = true;
         }
@@ -226,7 +226,7 @@ class Ownership extends Component {
         });}
 
         if(this.state.isTxfrBPP === true){
-        this.state.BPappPayable.methods
+        this.state.PRUF_APP.methods
         .transferOwnership(this.state.newOwner)
         .send({ from: this.state.addr })
         .on("error", function (_error) {
@@ -240,7 +240,7 @@ class Ownership extends Component {
         });}
 
         if(this.state.isTxfrBPNP === true){
-        this.state.BPappNonPayable.methods
+        this.state.PRUF_NP.methods
         .transferOwnership(this.state.newOwner)
         .send({ from: this.state.addr })
         .on("error", function (_error) {
@@ -282,15 +282,15 @@ class Ownership extends Component {
                 <Form.Check
                 className = 'checkBox'
                 onChange={(e)=>{handleCheckBox(e.target.id)}}
-                id={`BPappPayable`}
-                label={`BPappPayable`}
+                id={`PRUF_APP`}
+                label={`PRUF_APP`}
                 />)}
                 {this.state.isBPNPOwner === true && (
                 <Form.Check
                 className = 'checkBox'
                 onChange={(e)=>{handleCheckBox(e.target.id)}}
-                id={`BPappNonPayable`}
-                label={`BPappNonPayable`}
+                id={`PRUF_NP`}
+                label={`PRUF_NP`}
                 />)}
                 </Form.Group>
               <h2 className="Headertext">Manage Ownership</h2>
