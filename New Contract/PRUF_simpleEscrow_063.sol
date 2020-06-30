@@ -30,8 +30,10 @@
  * Contract Resolution Names -
  *  assetToken
  *  assetClassToken
- *  prufPayable
- *  prufNonPayable
+ *  PRUF_APP
+ *  PRUF_NP
+ *  PRUF_simpleEscrow
+ *
  *
  * CONTRACT Types (storage)
  * 0   --NONE
@@ -90,6 +92,57 @@ import "./PRUF_core_063.sol";
 
 contract PRUF_simpleEscrow is PRUF {
     using SafeMath for uint256;
+
+    address internal PrufAppAddress;
+    PrufAppInterface internal PrufAppContract; //erc721_token prototype initialization
+
+    /*
+     * @dev Verify user credentials
+     * Originating Address:
+     *      Exists in registeredUsers as a usertype 1 to 9
+     *      Is authorized for asset class
+     */
+    modifier isAuthorized(bytes32 _idxHash) override {
+        User memory user = getUser();
+
+        require(
+            (user.userType > 0) && (user.userType < 10),
+            "PC:MOD-IA: User not registered"
+        );
+        _;
+    }
+
+    function OO_ResolveContractAddresses()
+        external
+        override
+        nonReentrant
+        onlyOwner
+    {
+        //^^^^^^^checks^^^^^^^^^
+        AssetClassTokenAddress = Storage.resolveContractAddress(
+            "assetClassToken"
+        );
+        AssetClassTokenContract = AssetClassTokenInterface(
+            AssetClassTokenAddress
+        );
+
+        AssetTokenAddress = Storage.resolveContractAddress("assetToken");
+        AssetTokenContract = AssetTokenInterface(AssetTokenAddress);
+
+        PrufAppAddress = Storage.resolveContractAddress("PRUF_APP");
+        PrufAppContract = PrufAppInterface(PrufAppAddress);
+        //^^^^^^^effects^^^^^^^^^
+    }
+
+    function getUser() internal override view returns (User memory) {
+        //User memory callingUser = getUser();
+        User memory user;
+        (user.userType, user.authorizedAssetClass) = PrufAppContract.getUserExt(
+            keccak256(abi.encodePacked(msg.sender))
+        );
+        return user;
+        //^^^^^^^interactions^^^^^^^^^
+    }
 
     function setEscrow(
         bytes32 _idxHash,
