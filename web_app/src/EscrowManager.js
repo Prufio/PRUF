@@ -58,6 +58,7 @@ class EscrowManager extends Component {
       if(this.state.storage < 1){self.setState({ storage: contracts.storage });}
       if(this.state.PRUF_NP < 1){self.setState({ PRUF_NP: contracts.nonPayable });}
       if(this.state.PRUF_APP < 1){self.setState({ PRUF_APP: contracts.payable });}
+      if(this.state.PRUF_simpleEscrow < 1){self.setState({ PRUF_simpleEscrow: contracts.simpleEscrow });}
     };
     this.acctChanger = async () => {
       const ethereum = window.ethereum;
@@ -104,6 +105,7 @@ class EscrowManager extends Component {
       PRUF_APP: "",
       PRUF_NP: "",
       storage: "",
+      PRUF_simpleEscrow: "",
       timeFormat: "",
     };
   }
@@ -223,7 +225,7 @@ class EscrowManager extends Component {
 
       checkExistsSet(idxHash);
 
-      this.state.PRUF_NP.methods
+      this.state.PRUF_simpleEscrow.methods
         .setEscrow(idxHash, _convertTimeTo(this.state.escrowTime, this.state.timeFormat))
         .send({ from: this.state.addr})
         .on("error", function (_error) {
@@ -259,7 +261,7 @@ class EscrowManager extends Component {
   
         checkExistsEnd(idxHash);
   
-        this.state.PRUF_NP.methods
+        this.state.PRUF_simpleEscrow.methods
           .endEscrow(idxHash)
           .send({ from: this.state.addr})
           .on("error", function (_error) {

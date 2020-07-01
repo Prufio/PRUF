@@ -434,6 +434,14 @@ h4 {
   justify-content: center;
 }
 
+.TWResults{
+  align-items: center;
+  justify-content: center;
+  font-size: 4rem;
+  flex-direction: column;
+  font-weight: bold;
+}
+
 .btn {
   font-size: 1.5rem;
   height: 3rem;

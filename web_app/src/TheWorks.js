@@ -98,10 +98,10 @@ class THEWORKS extends Component {
       status: "1",
       boolBuddy: false,
 
-      type: "a",
-      manufacturer: "a",
-      model: "a",
-      serial: "a",
+      type: "",
+      manufacturer: "",
+      model: "",
+      serial: "",
 
       first: "a",
       middle: "a",
@@ -128,8 +128,16 @@ class THEWORKS extends Component {
     _web3 = new Web3(_web3.givenProvider);
     this.setState({ web3: _web3 });
     _web3.eth.getAccounts().then((e) => this.setState({ addr: e[0] }));
-
     document.addEventListener("accountListener", this.acctChanger());
+    let _type = String(Math.round(Math.random()*100000000));
+
+    console.log("asset idx info: ", _type);
+
+    this.setState({type: _type})
+    this.setState({manufacturer: _type})
+    this.setState({model: _type})
+    this.setState({serial: _type})
+
     
   }
 
@@ -231,12 +239,14 @@ class THEWORKS extends Component {
             // self.setState({ NRerror: _error });
             self.setState({ txHash: Object.values(_error)[0].transactionHash });
             self.setState({ txStatus: false });
+            self.setState({ ANstats: "AN failure" });
             console.log(Object.values(_error)[0].transactionHash);
           })
           .on("receipt", (receipt) => {
             this.setState({ txHash: receipt.transactionHash });
             this.setState({ txStatus: receipt.status });
             console.log(receipt.status);
+            this.setState({ ANstats: "AN success" });
             _retrieveRecord()
           });
   
@@ -262,7 +272,7 @@ class THEWORKS extends Component {
           this.state.secret
         );
         var rgtHash = this.state.web3.utils.soliditySha3(idxHash, rgtRaw);
-        var _ipfs1 = this.state.web3.utils.soliditySha3(this.state.ipfs1);
+        var _ipfs1 = this.state.web3.utils.soliditySha3("LETS GOOOOOOOO");
   
         console.log("idxHash", idxHash);
         console.log("New rgtRaw", rgtRaw);
@@ -276,12 +286,14 @@ class THEWORKS extends Component {
           .on("error", function (_error) {
             self.setState({ txHash: Object.values(_error)[0].transactionHash });
             self.setState({ txStatus: false });
+            self.setState({ UDstats: "UD failure" });
             console.log(Object.values(_error)[0].transactionHash);
           })
           .on("receipt", (receipt) => {
             this.setState({ txHash: receipt.transactionHash });
             this.setState({ txStatus: receipt.status });
             console.log(receipt.status);
+            this.setState({ UDstats: "UD success" });
             _setIPFS2()
           });
   
@@ -321,12 +333,14 @@ class THEWORKS extends Component {
             // self.setState({ NRerror: _error });
             self.setState({ txHash: Object.values(_error)[0].transactionHash });
             self.setState({ txStatus: false });
+            self.setState({ CDstats: "CD failure" });
             console.log(Object.values(_error)[0].transactionHash);
           })
           .on("receipt", (receipt) => {
             this.setState({ txHash: receipt.transactionHash });
             this.setState({ txStatus: receipt.status });
             console.log(receipt.status);
+            this.setState({ CDstats: "CD success" });
             _updateDescription()
           });
   
@@ -365,12 +379,14 @@ class THEWORKS extends Component {
             // self.setState({ NRerror: _error });
             self.setState({ txHash: Object.values(_error)[0].transactionHash });
             self.setState({ txStatus: false });
+            self.setState({ FMRstats: "FMR failure" });
             console.log(Object.values(_error)[0].transactionHash);
           })
           .on("receipt", (receipt) => {
             this.setState({ txHash: receipt.transactionHash });
             this.setState({ txStatus: receipt.status });
             console.log(receipt.status);
+            this.setState({ FMRstats: "FMR success" });
             _decrementCounter()
           });
   
@@ -418,12 +434,14 @@ class THEWORKS extends Component {
             // self.setState({ NRerror: _error });
             self.setState({ txHash: Object.values(_error)[0].transactionHash });
             self.setState({ txStatus: false });
+            self.setState({ TAstats: "TA failure" });
             console.log(Object.values(_error)[0].transactionHash);
           })
           .on("receipt", (receipt) => {
             this.setState({ txHash: receipt.transactionHash });
             this.setState({ txStatus: receipt.status });
             console.log(receipt.status);
+            this.setState({ TAstats: "TA success" });
             _forceModifyRecord()
           });
         console.log(this.state.txHash);
@@ -462,12 +480,14 @@ class THEWORKS extends Component {
             // self.setState({ NRerror: _error });
             self.setState({ txHash: Object.values(_error)[0].transactionHash });
             self.setState({ txStatus: false });
+            self.setState({ MSstats: "MS failure" });
             console.log(Object.values(_error)[0].transactionHash);
           })
           .on("receipt", (receipt) => {
             this.setState({ txHash: receipt.transactionHash });
             this.setState({ txStatus: receipt.status });
             console.log(receipt.status);
+            this.setState({ MSstats: "MS success" });
             _transferAsset()
           });
   
@@ -513,9 +533,17 @@ class THEWORKS extends Component {
         this.state.storage.methods
           .blockchainVerifyRightsHolder(idxHash, rgtHash)
           .send({ from: this.state.addr })
+          .on("error", function (_error) {
+            // self.setState({ NRerror: _error });
+            self.setState({ txHash: Object.values(_error)[0].transactionHash });
+            self.setState({ txStatus: false });
+            self.setState({ VRHstats: "VRH failure" });
+            console.log(Object.values(_error)[0].transactionHash);
+          })
           .on("receipt", (receipt) => {
             this.setState({ txHash: receipt.transactionHash });
             console.log(this.state.txHash);
+            this.setState({ VRHstats: "VRH success" });
             _modifyStatus()
           });
   
@@ -563,11 +591,14 @@ class THEWORKS extends Component {
           // self.setState({ NRerror: _error });
           self.setState({ txHash: Object.values(_error)[0].transactionHash });
           self.setState({ txStatus: false });
+          self.setState({ NRstats: "NR failure" });
           console.log(Object.values(_error)[0].transactionHash);
         })
         .on("receipt", (receipt) => {
           this.setState({ txHash: receipt.transactionHash });
           this.setState({ txStatus: receipt.status });
+          this.setState({ NRstats: "NR success" });
+
           _verify()
         });
     };
@@ -597,6 +628,7 @@ class THEWORKS extends Component {
             <div>
                 
             <Form className="NRform">
+                <div>
                 <Form.Row>
                   <Form.Group className="buttonDisplay">
                     <Button
@@ -608,7 +640,52 @@ class THEWORKS extends Component {
                     </Button>
                   </Form.Group>
                 </Form.Row>
+                </div>
+                <br></br>
+                <div className="TWResults">
+                <Form.Row>
+                <Form.Group as={Col} controlId="formGridType">
+                    {this.state.NRstats}
+                    </Form.Group>
+                </Form.Row>
+                <Form.Row>
+                <Form.Group as={Col} controlId="formGridType">
+                    {this.state.VRHstats}
+                    </Form.Group>
+                </Form.Row>
+                <Form.Row>
+                <Form.Group as={Col} controlId="formGridType">
+                    {this.state.MSstats}
+                    </Form.Group>
+                </Form.Row>
+                <Form.Row>
+                <Form.Group as={Col} controlId="formGridType">
+                    {this.state.TAstats}
+                    </Form.Group>
+                </Form.Row>
+                <Form.Row>
+                <Form.Group as={Col} controlId="formGridType">
+                    {this.state.FMRstats}
+                    </Form.Group>
+                </Form.Row>
+                <Form.Row>
+                <Form.Group as={Col} controlId="formGridType">
+                    {this.state.DCstats}
+                    </Form.Group>
+                </Form.Row>
+                <Form.Row>
+                <Form.Group as={Col} controlId="formGridType">
+                    {this.state.UDstats}
+                    </Form.Group>
+                </Form.Row>
+                <Form.Row>
+                <Form.Group as={Col} controlId="formGridType">
+                    {this.state.ANstats}
+                </Form.Group>
+                </Form.Row>
+                </div>
             </Form>
+            
 
         </div>)}
 
