@@ -14,7 +14,7 @@ async function returnContracts(_web3) {
   const PRUF_NP_ABI = abis.nonPayable;
   const PRUF_APP_ABI = abis.payable;
   const PRUF_simpleEscrow_ABI = abis.simpleEscrow;
-  const storage_Address = "0x161DfD8D48204792A24f2Bc665Caa85bF8a9f5C2";
+  const storage_Address = "0xb350Ee967437E27F8E811D950d08bCdc4014C14f";
   const Storage = new _web3.eth.Contract(STORAGE_ABI, storage_Address);
   var PRUF_NP = null;
   var PRUF_APP = null;
