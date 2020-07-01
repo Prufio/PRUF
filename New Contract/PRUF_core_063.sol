@@ -396,7 +396,7 @@ contract PRUF is ReentrancyGuard, PullPayment, Ownable, IERC721Receiver {
     /*
      * @dev retrieves costs from Storage and returns Costs struct
      */
-    function getCost(uint16 _class) internal returns (Costs memory) {
+    function getCost(uint16 _assetClass) internal returns (Costs memory) {
         Costs memory cost;
         (
             cost.newRecordCost,
@@ -406,7 +406,7 @@ contract PRUF is ReentrancyGuard, PullPayment, Ownable, IERC721Receiver {
             cost.changeStatusCost,
             cost.forceModifyCost,
             cost.paymentAddress
-        ) = Storage.retrieveCosts(_class);
+        ) = Storage.retrieveCosts(_assetClass);
 
         return (cost);
         //^^^^^^^interactions^^^^^^^^^
@@ -476,7 +476,7 @@ contract PRUF is ReentrancyGuard, PullPayment, Ownable, IERC721Receiver {
 
         change = messageValue.sub(total);
         _asyncTransfer(_basePaymentAddress, _baseAmount);
-        _asyncTransfer(_ACTHpaymentAddress, _ACTHamount);
+        _asyncTransfer(_ACTHpaymentAddress, (_ACTHamount.sub(_baseAmount));
         _asyncTransfer(msg.sender, change);
         //^^^^^^^interactions^^^^^^^^^
     }

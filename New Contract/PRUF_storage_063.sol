@@ -746,7 +746,14 @@ contract Storage is Ownable, ReentrancyGuard {
             (AssetClassTokenContract.ownerOf(assetClass256) != AssetClassTokenAddress), //this will throw in the token contract if not minted
             "PS:RC:Asset class not yet populated"
         );
-        //^^^^^^^checks^^^^^^^^^
+        //^^^^^^^checks^^^^^^^^
+
+            // returnCosts.cost1 = costs.cost1.add(baseCost.cost1);
+            // returnCosts.cost2 = costs.cost2.add(baseCost.cost2);
+            // returnCosts.cost3 = costs.cost3.add(baseCost.cost3);
+            // returnCosts.cost4 = costs.cost4.add(baseCost.cost4)
+            // returnCosts.cost5 = costs.cost5.add(baseCost.cost5);
+            // returnCosts.cost6 = costs.cost6.add(baseCost.cost6);
 
         if (costs.cost1 <= priceThreshold) {
             returnCosts.cost1 = costs.cost1.add(baseCost.cost1);
