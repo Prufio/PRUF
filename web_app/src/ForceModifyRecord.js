@@ -4,7 +4,6 @@ import Web3 from "web3";
 import Form from "react-bootstrap/Form";
 import Col from "react-bootstrap/Col";
 import Button from "react-bootstrap/Button";
-import ButtonGroup from 'react-bootstrap/ButtonGroup'
 import returnManufacturers from "./Manufacturers";
 import returnTypes from "./Types";
 
