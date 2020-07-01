@@ -15,6 +15,7 @@ import AddContract from "./AddContract";
 import AddUser from "./AddUser";
 import Ownership from "./Ownership";
 import SetCosts from "./SetCosts";
+import THEWORKS from "./TheWorks";
 import returnContracts from "./Contracts";
 import Button from "react-bootstrap/Button";
 import Form from "react-bootstrap/Form";
@@ -261,6 +262,9 @@ class Main extends Component {
                     <li>
                       <NavLink to="/manage-escrow">Escrow</NavLink>
                     </li>
+                    <li>
+                      <NavLink to="/the-works">THE WORKS</NavLink>
+                    </li>
                   </nav>
                 )}
 
@@ -317,6 +321,7 @@ class Main extends Component {
                 <Route path="/set-costs" component={SetCosts} />
                 <Route path="/add-contract" component={AddContract} />
                 <Route path="/ownership" component={Ownership} />
+                <Route path="/the-works" component={THEWORKS} />
               </div>
             </div>
           </div>
