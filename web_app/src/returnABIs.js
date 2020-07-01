@@ -94,6 +94,13 @@ function returnABIs() {
             "type": "function"
         },
         {
+            "inputs": [],
+            "name": "OO_ResolveContractAddresses",
+            "outputs": [],
+            "stateMutability": "nonpayable",
+            "type": "function"
+        },
+        {
             "inputs": [
                 {
                     "internalType": "string",
@@ -112,13 +119,6 @@ function returnABIs() {
                 }
             ],
             "name": "OO_addContract",
-            "outputs": [],
-            "stateMutability": "nonpayable",
-            "type": "function"
-        },
-        {
-            "inputs": [],
-            "name": "OO_getTokenAddresses",
             "outputs": [],
             "stateMutability": "nonpayable",
             "type": "function"
