@@ -745,43 +745,52 @@ contract Storage is Ownable, ReentrancyGuard {
             (AssetClassTokenContract.ownerOf(assetClass256) != AssetClassTokenAddress), //this will throw in the token contract if not minted
             "PS:RC:Asset class not yet populated"
         );
-        //^^^^^^^checks^^^^^^^^^
+        //^^^^^^^checks^^^^^^^^
 
-        if (costs.cost1 <= priceThreshold) {
-            returnCosts.cost1 = costs.cost1.add(baseCost.cost1);
-        } else {
-            returnCosts.cost1 = costs.cost1.add(costs.cost1.div(priceDivisor));
-        }
+        returnCosts = baseCost;
 
-        if (costs.cost2 <= priceThreshold) {
-            returnCosts.cost2 = costs.cost2.add(baseCost.cost2);
-        } else {
-            returnCosts.cost2 = costs.cost2.add(costs.cost2.div(priceDivisor));
-        }
+            // returnCosts.cost1 = costs.cost1.add(baseCost.cost1);
+            // returnCosts.cost2 = costs.cost2.add(baseCost.cost2);
+            // returnCosts.cost3 = costs.cost3.add(baseCost.cost3);
+            // returnCosts.cost4 = costs.cost4.add(baseCost.cost4)
+            // returnCosts.cost5 = costs.cost5.add(baseCost.cost5);
+            // returnCosts.cost6 = costs.cost6.add(baseCost.cost6);
 
-        if (costs.cost3 <= priceThreshold) {
-            returnCosts.cost3 = costs.cost3.add(baseCost.cost3);
-        } else {
-            returnCosts.cost3 = costs.cost3.add(costs.cost3.div(priceDivisor));
-        }
+        // if (costs.cost1 <= priceThreshold) {
+        //     returnCosts.cost1 = costs.cost1.add(baseCost.cost1);
+        // } else {
+        //     returnCosts.cost1 = costs.cost1.add(costs.cost1.div(priceDivisor));
+        // }
 
-        if (costs.cost4 <= priceThreshold) {
-            returnCosts.cost4 = costs.cost4.add(baseCost.cost4);
-        } else {
-            returnCosts.cost4 = costs.cost4.add(costs.cost4.div(priceDivisor));
-        }
+        // if (costs.cost2 <= priceThreshold) {
+        //     returnCosts.cost2 = costs.cost2.add(baseCost.cost2);
+        // } else {
+        //     returnCosts.cost2 = costs.cost2.add(costs.cost2.div(priceDivisor));
+        // }
 
-        if (costs.cost5 <= priceThreshold) {
-            returnCosts.cost5 = costs.cost5.add(baseCost.cost5);
-        } else {
-            returnCosts.cost5 = costs.cost5.add(costs.cost5.div(priceDivisor));
-        }
+        // if (costs.cost3 <= priceThreshold) {
+        //     returnCosts.cost3 = costs.cost3.add(baseCost.cost3);
+        // } else {
+        //     returnCosts.cost3 = costs.cost3.add(costs.cost3.div(priceDivisor));
+        // }
 
-        if (costs.cost6 <= priceThreshold) {
-            returnCosts.cost6 = costs.cost6.add(baseCost.cost6);
-        } else {
-            returnCosts.cost6 = costs.cost6.add(costs.cost6.div(priceDivisor));
-        }
+        // if (costs.cost4 <= priceThreshold) {
+        //     returnCosts.cost4 = costs.cost4.add(baseCost.cost4);
+        // } else {
+        //     returnCosts.cost4 = costs.cost4.add(costs.cost4.div(priceDivisor));
+        // }
+
+        // if (costs.cost5 <= priceThreshold) {
+        //     returnCosts.cost5 = costs.cost5.add(baseCost.cost5);
+        // } else {
+        //     returnCosts.cost5 = costs.cost5.add(costs.cost5.div(priceDivisor));
+        // }
+
+        // if (costs.cost6 <= priceThreshold) {
+        //     returnCosts.cost6 = costs.cost6.add(baseCost.cost6);
+        // } else {
+        //     returnCosts.cost6 = costs.cost6.add(costs.cost6.div(priceDivisor));
+        // }
         //^^^^^^^effects^^^^^^^^^
 
         return (
