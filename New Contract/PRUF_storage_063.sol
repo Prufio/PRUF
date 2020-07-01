@@ -117,12 +117,12 @@ contract Storage is Ownable, ReentrancyGuard {
     }
 
     struct Costs {
-        uint256 cost1; // Cost to create a new record / mint asset
-        uint256 cost2; // Cost to transfer a record from known rights holder to a new one
-        uint256 cost3; // Cost to add a static note to an asset
-        uint256 cost4; // Cost to remint an asset
-        uint256 cost5; // Cost to change asset status
-        uint256 cost6; // Cost to brute-force a record transfer
+        uint256 newRecordCost; // Cost to create a new record / mint asset
+        uint256 transferAssetCost; // Cost to transfer a record from known rights holder to a new one
+        uint256 createNoteCost; // Cost to add a static note to an asset
+        uint256 reMintRecordCost; // Cost to remint an asset
+        uint256 changeStatusCost; // Cost to change asset status
+        uint256 forceModifyCost; // Cost to brute-force a record transfer
         address paymentAddress;
     }
 
@@ -253,24 +253,24 @@ contract Storage is Ownable, ReentrancyGuard {
     function ACTH_setCosts(
         uint16 _class,
         uint256 _newRecordCost,
-        uint256 _transferRecordCost,
+        uint256 _transferAssetCost,
         uint256 _createNoteCost,
         uint256 _reMintRecordCost,
-        uint256 _modifyStatusCost,
-        uint256 _forceModCost,
+        uint256 _changeStatusCost,
+        uint256 _forceModifyCost,
         address _paymentAddress
     ) external isACtokenHolderOfClass(_class) {
         require(
             priceDivisor != 0,
             "price divisor is zero. Set base costs first"
         );
-            cost[_class].cost1 = _newRecordCost;
-            cost[_class].cost2 = _transferRecordCost;
-            cost[_class].cost3 = _createNoteCost;
-            cost[_class].cost4 = _reMintRecordCost;
-            cost[_class].cost5 = _modifyStatusCost;
-            cost[_class].cost6 = _forceModCost;
-            cost[_class].paymentAddress = _paymentAddress;
+        cost[_class].newRecordCost = _newRecordCost;
+        cost[_class].transferAssetCost = _transferAssetCost;
+        cost[_class].createNoteCost = _createNoteCost;
+        cost[_class].reMintRecordCost = _reMintRecordCost;
+        cost[_class].changeStatusCost = _changeStatusCost;
+        cost[_class].forceModifyCost = _forceModifyCost;
+        cost[_class].paymentAddress = _paymentAddress;
         //^^^^^^^effects^^^^^^^^^
     }
 
@@ -279,23 +279,24 @@ contract Storage is Ownable, ReentrancyGuard {
      */
     function OO_setBaseCosts(
         uint256 _newRecordCost,
-        uint256 _transferRecordCost,
+        uint256 _transferAssetCost,
         uint256 _createNoteCost,
         uint256 _reMintRecordCost,
-        uint256 _modifyStatusCost,
-        uint256 _forceModCost,
+        uint256 _changeStatusCost,
+        uint256 _forceModifyCost,
         uint256 _threshold,
         uint256 _divisor,
         address _paymentAddress
     ) external onlyOwner {
         //^^^^^^^checks^^^^^^^^^
-        baseCost.cost1 = _newRecordCost;
-        baseCost.cost2 = _transferRecordCost;
-        baseCost.cost3 = _createNoteCost;
-        baseCost.cost4 = _reMintRecordCost;
-        baseCost.cost5 = _modifyStatusCost;
-        baseCost.cost6 = _forceModCost;
+        baseCost.newRecordCost = _newRecordCost;
+        baseCost.transferAssetCost = _transferAssetCost;
+        baseCost.createNoteCost = _createNoteCost;
+        baseCost.reMintRecordCost = _reMintRecordCost;
+        baseCost.changeStatusCost = _changeStatusCost;
+        baseCost.forceModifyCost = _forceModifyCost;
         baseCost.paymentAddress = _paymentAddress;
+
         priceThreshold = _threshold;
         priceDivisor = _divisor;
         //^^^^^^^effects^^^^^^^^^
@@ -428,8 +429,8 @@ contract Storage is Ownable, ReentrancyGuard {
             "SS:ERR-Must set to a lost or stolen status"
         );
         require(
-            (database[_idxHash].assetStatus != 5)&&
-            (database[_idxHash].assetStatus != 55),
+            (database[_idxHash].assetStatus != 5) &&
+                (database[_idxHash].assetStatus != 55),
             "SS:ERR-Transferred asset cannot be set to lost or stolen after transfer."
         );
         //^^^^^^^checks^^^^^^^^^
@@ -499,10 +500,7 @@ contract Storage is Ownable, ReentrancyGuard {
     /*
      * @dev remove an asset from escrow status
      */
-    function endEscrow(
-        bytes32 _userHash,
-        bytes32 _idxHash
-    )
+    function endEscrow(bytes32 _userHash, bytes32 _idxHash)
         external
         nonReentrant
         isAuthorized
@@ -520,9 +518,15 @@ contract Storage is Ownable, ReentrancyGuard {
         database[_idxHash].timeLock = block.number;
         Record memory rec = database[_idxHash];
 
-        if (rec.assetStatus == 6){rec.assetStatus = 7;}
-        if (rec.assetStatus == 56){rec.assetStatus = 57;}
-        if (rec.assetStatus == 50){rec.assetStatus = 58;}
+        if (rec.assetStatus == 6) {
+            rec.assetStatus = 7;
+        }
+        if (rec.assetStatus == 56) {
+            rec.assetStatus = 57;
+        }
+        if (rec.assetStatus == 50) {
+            rec.assetStatus = 58;
+        }
 
         (rec.lastRecorder, rec.recorder) = storeRecorder(_idxHash, _userHash);
         database[_idxHash] = rec;
@@ -742,62 +746,80 @@ contract Storage is Ownable, ReentrancyGuard {
         Costs memory costs = cost[_assetClass];
 
         require(
-            (AssetClassTokenContract.ownerOf(assetClass256) != AssetClassTokenAddress), //this will throw in the token contract if not minted
+            (AssetClassTokenContract.ownerOf(assetClass256) !=
+                AssetClassTokenAddress), //this will throw in the token contract if not minted
             "PS:RC:Asset class not yet populated"
         );
         //^^^^^^^checks^^^^^^^^
 
-            // returnCosts.cost1 = costs.cost1.add(baseCost.cost1);
-            // returnCosts.cost2 = costs.cost2.add(baseCost.cost2);
-            // returnCosts.cost3 = costs.cost3.add(baseCost.cost3);
-            // returnCosts.cost4 = costs.cost4.add(baseCost.cost4)
-            // returnCosts.cost5 = costs.cost5.add(baseCost.cost5);
-            // returnCosts.cost6 = costs.cost6.add(baseCost.cost6);
-
-        if (costs.cost1 <= priceThreshold) {
-            returnCosts.cost1 = costs.cost1.add(baseCost.cost1);
+        if (costs.newRecordCost <= priceThreshold) {
+            returnCosts.newRecordCost = costs.newRecordCost.add(
+                baseCost.newRecordCost
+            );
         } else {
-            returnCosts.cost1 = costs.cost1.add(costs.cost1.div(priceDivisor));
+            returnCosts.newRecordCost = costs.newRecordCost.add(
+                costs.newRecordCost.div(priceDivisor)
+            );
         }
 
-        if (costs.cost2 <= priceThreshold) {
-            returnCosts.cost2 = costs.cost2.add(baseCost.cost2);
+        if (costs.transferAssetCost <= priceThreshold) {
+            returnCosts.transferAssetCost = costs.transferAssetCost.add(
+                baseCost.transferAssetCost
+            );
         } else {
-            returnCosts.cost2 = costs.cost2.add(costs.cost2.div(priceDivisor));
+            returnCosts.transferAssetCost = costs.transferAssetCost.add(
+                costs.transferAssetCost.div(priceDivisor)
+            );
         }
 
-        if (costs.cost3 <= priceThreshold) {
-            returnCosts.cost3 = costs.cost3.add(baseCost.cost3);
+        if (costs.createNoteCost <= priceThreshold) {
+            returnCosts.createNoteCost = costs.createNoteCost.add(
+                baseCost.createNoteCost
+            );
         } else {
-            returnCosts.cost3 = costs.cost3.add(costs.cost3.div(priceDivisor));
+            returnCosts.createNoteCost = costs.createNoteCost.add(
+                costs.createNoteCost.div(priceDivisor)
+            );
         }
 
-        if (costs.cost4 <= priceThreshold) {
-            returnCosts.cost4 = costs.cost4.add(baseCost.cost4);
+        if (costs.reMintRecordCost <= priceThreshold) {
+            returnCosts.reMintRecordCost = costs.reMintRecordCost.add(
+                baseCost.reMintRecordCost
+            );
         } else {
-            returnCosts.cost4 = costs.cost4.add(costs.cost4.div(priceDivisor));
+            returnCosts.reMintRecordCost = costs.reMintRecordCost.add(
+                costs.reMintRecordCost.div(priceDivisor)
+            );
         }
 
-        if (costs.cost5 <= priceThreshold) {
-            returnCosts.cost5 = costs.cost5.add(baseCost.cost5);
+        if (costs.changeStatusCost <= priceThreshold) {
+            returnCosts.changeStatusCost = costs.changeStatusCost.add(
+                baseCost.changeStatusCost
+            );
         } else {
-            returnCosts.cost5 = costs.cost5.add(costs.cost5.div(priceDivisor));
+            returnCosts.changeStatusCost = costs.changeStatusCost.add(
+                costs.changeStatusCost.div(priceDivisor)
+            );
         }
 
-        if (costs.cost6 <= priceThreshold) {
-            returnCosts.cost6 = costs.cost6.add(baseCost.cost6);
+        if (costs.forceModifyCost <= priceThreshold) {
+            returnCosts.forceModifyCost = costs.forceModifyCost.add(
+                baseCost.forceModifyCost
+            );
         } else {
-            returnCosts.cost6 = costs.cost6.add(costs.cost6.div(priceDivisor));
+            returnCosts.forceModifyCost = costs.forceModifyCost.add(
+                costs.forceModifyCost.div(priceDivisor)
+            );
         }
         //^^^^^^^effects^^^^^^^^^
 
         return (
-            returnCosts.cost1,
-            returnCosts.cost2,
-            returnCosts.cost3,
-            returnCosts.cost4,
-            returnCosts.cost5,
-            returnCosts.cost6,
+            returnCosts.newRecordCost,
+            returnCosts.transferAssetCost,
+            returnCosts.createNoteCost,
+            returnCosts.reMintRecordCost,
+            returnCosts.changeStatusCost,
+            returnCosts.forceModifyCost,
             costs.paymentAddress
         );
         //^^^^^^^interactions^^^^^^^^^
@@ -821,12 +843,12 @@ contract Storage is Ownable, ReentrancyGuard {
         )
     {
         return (
-            baseCost.cost1,
-            baseCost.cost2,
-            baseCost.cost3,
-            baseCost.cost4,
-            baseCost.cost5,
-            baseCost.cost6,
+            baseCost.newRecordCost,
+            baseCost.transferAssetCost,
+            baseCost.createNoteCost,
+            baseCost.reMintRecordCost,
+            baseCost.changeStatusCost,
+            baseCost.forceModifyCost,
             baseCost.paymentAddress
         );
         //^^^^^^^interactions^^^^^^^^^
