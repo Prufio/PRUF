@@ -277,7 +277,6 @@ contract Storage is Ownable, ReentrancyGuard {
     /*
      * @dev Set function base costs and payment address, in Wei
      */
-     
     function OO_setBaseCosts(
         uint256 _newRecordCost,
         uint256 _transferRecordCost,
@@ -528,7 +527,7 @@ contract Storage is Ownable, ReentrancyGuard {
         (rec.lastRecorder, rec.recorder) = storeRecorder(_idxHash, _userHash);
         database[_idxHash] = rec;
         //^^^^^^^effects^^^^^^^^^
-        emit REPORT("New record created", _idxHash);
+        emit REPORT("Escrow Ended by", _userHash);
         //^^^^^^^interactions^^^^^^^^^
     }
 
