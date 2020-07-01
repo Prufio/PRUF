@@ -84,6 +84,7 @@ class EscrowManager extends Component {
       CountDownStart: "",
       ipfs1: "",
       txHash: "",
+      txStatus: false,
       type: "",
       manufacturer: "",
       model: "",
@@ -203,6 +204,10 @@ class EscrowManager extends Component {
     }
 
     const _setEscrow = () => {
+      this.setState({ txStatus: false });
+      this.setState({ txHash: "" });
+      this.setState({error: undefined})
+      this.setState({result: ""})
       var idxHash;
       
       idxHash = this.state.web3.utils.soliditySha3(
@@ -234,9 +239,14 @@ class EscrowManager extends Component {
           //Stuff to do when tx confirms
         });
       console.log(this.state.txHash);
+      document.getElementById("MainForm").reset();
     };
 
     const _endEscrow = () => {
+      this.setState({ txStatus: false });
+      this.setState({ txHash: "" });
+      this.setState({error: undefined})
+      this.setState({result: ""})
         var idxHash = this.state.web3.utils.soliditySha3(
           this.state.type,
           this.state.manufacturer,
@@ -265,11 +275,12 @@ class EscrowManager extends Component {
             //Stuff to do when tx confirms
           });
         console.log(this.state.txHash);
+        document.getElementById("MainForm").reset();
       };
 
     return (
       <div>
-        <Form className="MEform">
+        <Form className="MEform" id='MainForm'>
         {this.state.addr === undefined && (
             <div className="errorResults">
               <h2>WARNING!</h2>

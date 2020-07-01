@@ -61,6 +61,7 @@ class VerifyRightHolder extends Component {
       assetClass: undefined,
       ipfs1: "",
       txHash: "",
+      txStatus: false,
       type: "",
       manufacturer: "",
       model: "",
@@ -140,6 +141,10 @@ class VerifyRightHolder extends Component {
     }
 
     const _verify = () => {
+      this.setState({ txStatus: false });
+      this.setState({ txHash: "" });
+      this.setState({error: undefined})
+      this.setState({result: ""})
       var idxHash;
       var rgtRaw;
       
@@ -186,10 +191,11 @@ class VerifyRightHolder extends Component {
         });
 
       console.log(this.state.result);
+      document.getElementById("MainForm").reset();
     };
     return (
       <div>
-        <Form className="VRform">
+        <Form className="VRform" id='MainForm'>
         {this.state.addr === undefined && (
             <div className="errorResults">
               <h2>WARNING!</h2>

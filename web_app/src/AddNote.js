@@ -89,6 +89,7 @@ class AddNote extends Component {
       ipfs1: "",
       ipfs2: "",
       txHash: "",
+      txStatus: false,
       type: "",
       manufacturer: "",
       model: "",
@@ -249,6 +250,10 @@ class AddNote extends Component {
     }
 
     const setIPFS2 = () => {
+      this.setState({ txStatus: false });
+      this.setState({ txHash: "" });
+      this.setState({error: undefined})
+      this.setState({result: ""})
       var idxHash;
       var rgtRaw;
       
@@ -293,11 +298,12 @@ class AddNote extends Component {
         });
 
       console.log(this.state.txHash);
+      document.getElementById("MainForm").reset();
     };
 
     return (
       <div>
-        <Form className="ANform">
+        <Form className="ANform" id='MainForm'>
         {this.state.addr === undefined && (
             <div className="errorResults">
               <h2>WARNING!</h2>
@@ -438,7 +444,7 @@ class AddNote extends Component {
                 </Form.Group>
               </Form.Row>
               <Form.Row>
-                <Form.Group as={Col} size controlId="formGridIpfs2File">
+                <Form.Group as={Col} controlId="formGridIpfs2File">
                   <Form.File size="lg" className="btn2" id="ipfs2File"/>
                 </Form.Group>
               </Form.Row>

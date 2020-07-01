@@ -277,6 +277,7 @@ contract Storage is Ownable, ReentrancyGuard {
     /*
      * @dev Set function base costs and payment address, in Wei
      */
+     
     function OO_setBaseCosts(
         uint256 _newRecordCost,
         uint256 _transferRecordCost,

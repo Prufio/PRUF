@@ -62,6 +62,7 @@ class ModifyRecordStatus extends Component {
       ipfs1: "",
       status: "0",
       txHash: "",
+      txStatus: false,
       type: "",
       manufacturer: "",
       model: "",
@@ -159,6 +160,10 @@ class ModifyRecordStatus extends Component {
     }
 
     const _modifyStatus = () => {
+      this.setState({ txStatus: false });
+      this.setState({ txHash: "" });
+      this.setState({error: undefined})
+      this.setState({result: ""})
       var idxHash;
       var rgtRaw;
       
@@ -223,11 +228,12 @@ class ModifyRecordStatus extends Component {
         else{alert("Invalid status input")}
 
       console.log(this.state.txHash);
+      document.getElementById("MainForm").reset();
     };
 
     return (
       <div>
-        <Form className="MRform">
+        <Form className="MRform" id='MainForm'>
         {this.state.addr === undefined && (
             <div className="errorResults">
               <h2>WARNING!</h2>

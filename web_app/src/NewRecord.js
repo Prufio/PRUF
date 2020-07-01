@@ -91,6 +91,7 @@ class NewRecord extends Component {
       countDownStart: "",
       ipfs1: "",
       txHash: "",
+      txStatus: false,
       type: "",
       manufacturer: "",
       model: "",
@@ -204,7 +205,10 @@ class NewRecord extends Component {
     }
 
     const _newRecord = () => {
-      let _cost = this.state.costArray[0];
+      this.setState({ txStatus: false });
+      this.setState({ txHash: "" });
+      this.setState({error: undefined})
+      this.setState({result: ""})
       var idxHash;
       var rgtRaw;
       
@@ -230,7 +234,6 @@ class NewRecord extends Component {
       console.log("New rgtRaw", rgtRaw);
       console.log("New rgtHash", rgtHash);
       console.log("addr: ", this.state.addr);
-      console.log("Cost: ", _cost);
       console.log(this.state.assetClass);
 
       checkExists(idxHash);
@@ -243,7 +246,7 @@ class NewRecord extends Component {
           this.state.countDownStart,
           this.state.hashPath
         )
-        .send({ from: this.state.addr, value: _cost })
+        .send({ from: this.state.addr, value: this.state.costArray[0]})
         .on("error", function (_error) {
           // self.setState({ NRerror: _error });
           self.setState({ txHash: Object.values(_error)[0].transactionHash });
@@ -256,12 +259,13 @@ class NewRecord extends Component {
           //console.log(receipt.status);
           self.setState({ hashPath: ""});
         });
-        return(0);
+
+        document.getElementById("MainForm").reset();
     };
 
     return (
       <div>
-        <Form className="NRform">
+        <Form className="NRform" id='MainForm'>
           {this.state.addr === undefined && (
             <div className="errorResults">
               <h2>WARNING!</h2>

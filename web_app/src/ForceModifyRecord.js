@@ -85,6 +85,7 @@ class ForceModifyRecord extends Component {
       CountDownStart: "",
       ipfs1: "",
       txHash: "",
+      txStatus: false,
       isNFA: false,
       type: "",
       manufacturer: "",
@@ -181,6 +182,10 @@ class ForceModifyRecord extends Component {
     }
 
     const _reimportAsset = () => {
+      this.setState({ txStatus: false });
+      this.setState({ txHash: "" });
+      this.setState({error: undefined})
+      this.setState({result: ""})
       var idxHash = this.state.web3.utils.soliditySha3(
         this.state.type,
         this.state.manufacturer,
@@ -223,6 +228,10 @@ class ForceModifyRecord extends Component {
     };
 
     const _forceModifyRecord = () => {
+      this.setState({ txStatus: false });
+      this.setState({ txHash: "" });
+      this.setState({error: undefined})
+      this.setState({result: ""})
       var idxHash;
       var newRgtRaw;
       
@@ -266,10 +275,12 @@ class ForceModifyRecord extends Component {
         });
 
       console.log(this.state.txHash);
+      document.getElementById("MainForm").reset();
     };
+
     return (
       <div>
-        <Form className="FMRform">
+        <Form className="FMRform" id='MainForm'>
         {this.state.addr === undefined && (
             <div className="errorResults">
               <h2>WARNING!</h2>

@@ -67,6 +67,7 @@ class DecrementCounter extends Component {
       first: "",
       middle: "",
       surname: "",
+      txStatus: false,
       id: "",
       secret: "",
       isNFA: false,
@@ -156,6 +157,10 @@ class DecrementCounter extends Component {
     }
 
     const _decrementCounter = () => {
+      this.setState({ txStatus: false });
+      this.setState({ txHash: "" });
+      this.setState({error: undefined})
+      this.setState({result: ""})
       var idxHash;
       var rgtRaw;
       
@@ -201,11 +206,12 @@ class DecrementCounter extends Component {
         });
 
       console.log(this.state.txHash);
+      document.getElementById("MainForm").reset();
     };
 
     return (
       <div>
-        <Form className="DCform">
+        <Form className="DCform" id='MainForm'>
         {this.state.addr === undefined && (
             <div className="errorResults">
               <h2>WARNING!</h2>

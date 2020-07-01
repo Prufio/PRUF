@@ -66,6 +66,7 @@ class ModifyDescription extends Component {
       assetClass: undefined,
       ipfs1: "",
       txHash: "",
+      txStatus: false,
       type: "",
       manufacturer: "",
       model: "",
@@ -188,6 +189,10 @@ class ModifyDescription extends Component {
     }
 
     const _updateDescription = () => {
+      this.setState({ txStatus: false });
+      this.setState({ txHash: "" });
+      this.setState({error: undefined})
+      this.setState({result: ""})
       var idxHash;
       var rgtRaw;
       
@@ -234,11 +239,12 @@ class ModifyDescription extends Component {
 
       console.log(this.state.txHash);
       self.setState({ hashPath: ""});
+      document.getElementById("MainForm").reset();
     };
 
     return (
       <div>
-        <Form className="MDform">
+        <Form className="MDform" id='MainForm'>
         {this.state.addr === undefined && (
             <div className="errorResults">
               <h2>WARNING!</h2>
