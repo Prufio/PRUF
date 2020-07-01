@@ -103,6 +103,8 @@ class EscrowManager extends Component {
       newSecret: "",
       web3: null,
       PRUF_APP: "",
+      newStatus: "",
+      agent: "",
       PRUF_NP: "",
       storage: "",
       PRUF_simpleEscrow: "",
@@ -226,7 +228,7 @@ class EscrowManager extends Component {
       checkExistsSet(idxHash);
 
       this.state.PRUF_simpleEscrow.methods
-        .setEscrow(idxHash, _convertTimeTo(this.state.escrowTime, this.state.timeFormat))
+        .setEscrow(idxHash, _convertTimeTo(this.state.escrowTime, this.state.timeFormat), this.state.newStatus, this.state.web3.utils.soliditySha3(this.state.agent))
         .send({ from: this.state.addr})
         .on("error", function (_error) {
           // self.setState({ NRerror: _error });
@@ -362,6 +364,28 @@ class EscrowManager extends Component {
                     placeholder="Serial"
                     required
                     onChange={(e) => this.setState({ serial: e.target.value })}
+                    size="lg"
+                  />
+                </Form.Group>
+              </Form.Row>
+
+              <Form.Row>
+                <Form.Group as={Col} controlId="formGridAgent">
+                  <Form.Label className="formFont">Agent Address:</Form.Label>
+                  <Form.Control
+                    placeholder="agent"
+                    required
+                    onChange={(e) => this.setState({ agent: e.target.value })}
+                    size="lg"
+                  />
+                </Form.Group>
+
+                <Form.Group as={Col} controlId="formGridStatus">
+                  <Form.Label className="formFont">Escrow Status:</Form.Label>
+                  <Form.Control
+                    placeholder="status"
+                    required
+                    onChange={(e) => this.setState({ newStatus: e.target.value })}
                     size="lg"
                   />
                 </Form.Group>

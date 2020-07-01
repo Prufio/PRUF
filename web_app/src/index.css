@@ -168,6 +168,19 @@ h4 {
   opacity: 0.96;
 }
 
+.TWform {
+  height: 57.5rem;
+  width: 63rem;
+  background-color: #206ab9;
+  border-radius: 0.5rem;
+  padding: 2rem;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  margin-top: -2rem;
+  opacity: 0.96;
+}
+
 .VRform {
   height: 50rem;
   width: 59rem;

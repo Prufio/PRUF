@@ -627,21 +627,9 @@ class THEWORKS extends Component {
           {this.state.addr > 0 && this.state.assetClass > 0 &&(
             <div>
                 
-            <Form className="NRform">
-                <div>
-                <Form.Row>
-                  <Form.Group className="buttonDisplay">
-                    <Button
-                      variant="primary"
-                      type="button"
-                      size="lg"
-                      onClick={batchTest}>
-                      LETS GOOOOO
-                    </Button>
-                  </Form.Group>
-                </Form.Row>
-                </div>
-                <br></br>
+            <Form className="TWform">
+                
+
                 <div className="TWResults">
                 <Form.Row>
                 <Form.Group as={Col} controlId="formGridType">
@@ -670,7 +658,7 @@ class THEWORKS extends Component {
                 </Form.Row>
                 <Form.Row>
                 <Form.Group as={Col} controlId="formGridType">
-                    {this.state.DCstats}
+                    {this.state.CDstats}
                     </Form.Group>
                 </Form.Row>
                 <Form.Row>
@@ -684,6 +672,17 @@ class THEWORKS extends Component {
                 </Form.Group>
                 </Form.Row>
                 </div>
+                <Form.Row>
+                  <Form.Group className="buttonDisplay">
+                    <Button
+                      variant="primary"
+                      type="button"
+                      size="lg"
+                      onClick={batchTest}>
+                      LETS GOOOOO
+                    </Button>
+                  </Form.Group>
+                </Form.Row>
             </Form>
             
 
