@@ -207,9 +207,9 @@ contract PRUF_APP is PRUF {
 
         deductPayment(
             baseCost.paymentAddress,
-            baseCost.newRecordCost,
+            baseCost.forceModifyCost,
             cost.paymentAddress,
-            cost.newRecordCost
+            cost.forceModifyCost
         );
 
         return rec.forceModCount;
@@ -261,9 +261,9 @@ contract PRUF_APP is PRUF {
 
         deductPayment(
             baseCost.paymentAddress,
-            baseCost.newRecordCost,
+            baseCost.transferAssetCost,
             cost.paymentAddress,
-            cost.newRecordCost
+            cost.transferAssetCost
         );
 
         return (170);
@@ -320,9 +320,9 @@ contract PRUF_APP is PRUF {
 
         deductPayment(
             baseCost.paymentAddress,
-            baseCost.newRecordCost,
+            baseCost.createNoteCost,
             cost.paymentAddress,
-            cost.newRecordCost
+            cost.createNoteCost
         );
 
         return rec.Ipfs2;
