@@ -9,7 +9,9 @@ class AddUser extends Component {
   constructor(props) {
     super(props);
 
-    this.returnsContract = async () => {
+    //State declaration.....................................................................................................
+
+    this.returnsContract = async () => {//request contracts from returnContracts, which returns an object full of contracts
       const self = this;
       var contracts = await returnContracts(self.state.web3);
       //console.log("RC NR: ", contractArray)
@@ -19,7 +21,7 @@ class AddUser extends Component {
       if(this.state.PRUF_APP < 1){self.setState({ PRUF_APP: contracts.payable });}
     };
 
-    this.acctChanger = async () => {
+    this.acctChanger = async () => {//Handle an address change, update state accordingly
       const ethereum = window.ethereum;
       const self = this;
       var _web3 = require("web3");
@@ -45,7 +47,9 @@ class AddUser extends Component {
     };
   }
 
-  componentDidMount() {
+  //component state-change events......................................................................................................
+
+  componentDidMount() {//stuff to do when component mounts in window
     var _web3 = require("web3");
     _web3 = new Web3(_web3.givenProvider);
     this.setState({ web3: _web3 });
@@ -53,19 +57,19 @@ class AddUser extends Component {
     document.addEventListener("accountListener", this.acctChanger());
   }
 
-  componentDidUpdate(){
+  componentDidUpdate(){//stuff to do when state updates
     if(this.state.web3 !== null && this.state.web3 !== undefined && this.state.storage < 1){
       this.returnsContract();
     }
 
   }
 
-  componentWillUnmount() {
+  componentWillUnmount() {//stuff do do when component unmounts from the window
     //console.log("unmounting component")
     document.removeEventListener("accountListener", this.acctChanger());
   }
 
-  render() {
+  render() {//render continuously produces an up-to-date stateful document  
     const self = this;
 
     const addUser = () => {

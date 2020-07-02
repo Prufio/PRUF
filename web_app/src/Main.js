@@ -25,7 +25,9 @@ class Main extends Component {
   constructor(props) {
     super(props);
 
-    this.returnsContract = async () => {
+    //State declaration.....................................................................................................
+
+    this.returnsContract = async () => {//request contracts from returnContracts, which returns an object full of contracts
       const self = this;
       var contracts = await returnContracts(self.state.web3);
       //console.log("RC NR: ", contractArray)
@@ -35,7 +37,7 @@ class Main extends Component {
       if(this.state.PRUF_APP < 1){self.setState({ PRUF_APP: contracts.payable });}
     };
 
-    this.getAssetClass = async () => {
+    this.getAssetClass = async () => {//under the condition that asset class has not been retrieved and stored in state, get it from user data
       const self = this;
       //console.log("getting asset class");
       if (self.state.assetClass > 0 || self.state.PRUF_APP === "") {
@@ -53,7 +55,7 @@ class Main extends Component {
     }
     };
 
-    this.getOwner = async () => {
+    this.getOwner = async () => {//check user address against contract ownership calls
       const self = this;
 
       if(this.state.storage === "" || this.state.web3 === null || this.state.storageOwner !== ""){}else{
@@ -114,7 +116,7 @@ class Main extends Component {
             }
     };
 
-    this.acctChanger = async () => {
+    this.acctChanger = async () => {//Handle an address change, update state accordingly
       const ethereum = window.ethereum;
       const self = this;
       var _web3 = require("web3");
@@ -148,7 +150,9 @@ class Main extends Component {
     };
   }
 
-  componentDidMount() {
+  //component state-change events......................................................................................................
+
+  componentDidMount() {//stuff to do when component mounts in window
     const ethereum = window.ethereum;
     var _web3 = require("web3");
     _web3 = new Web3(_web3.givenProvider);
@@ -170,7 +174,7 @@ class Main extends Component {
     return { hasError: true };
   }
 
-  componentDidUpdate() {
+  componentDidUpdate() {//stuff to do when state updates
 
     /* if (this.state.addr > 0 && this.state.assetClass === undefined && this.state.PRUF_APP !== "") {
       for (let i = 0; i < 5; i++) {
@@ -187,13 +191,13 @@ class Main extends Component {
     }
   }
 
-  componentWillUnmount() {
+  componentWillUnmount() {//stuff do do when component unmounts from the window
     console.log("unmounting component");
     document.removeEventListener("accountListener", this.acctChanger());
     //document.removeEventListener("ownerGetter", this.getOwner());
   }
 
-  render() {
+  render() {//render continuously produces an up-to-date stateful document  
     const toggleAdmin = () => {
       if (this.state.isStorageOwner || this.state.isBPPOwner || this.state.isBPNPOwner) {
         if (this.state.ownerMenu === false) {

@@ -12,7 +12,9 @@ class NewRecord extends Component {
   constructor(props) {
     super(props);
 
-    this.getCosts = async () => {
+    //State declaration.....................................................................................................
+
+    this.getCosts = async () => {//under the condition that prices are not stored in state, get prices from storage
       const self = this;
       if (self.state.costArray[0] > 0 || self.state.storage === "" || self.state.assetClass === undefined) {
       } else {
@@ -33,7 +35,7 @@ class NewRecord extends Component {
       }
     };
 
-    this.getAssetClass = async () => {
+    this.getAssetClass = async () => {//under the condition that asset class has not been retrieved and stored in state, get it from user data 
       const self = this;
       //console.log("getting asset class");
       if (self.state.assetClass > 0 || self.state.PRUF_APP === "") {
@@ -51,7 +53,7 @@ class NewRecord extends Component {
     }
     };
 
-    this.returnsContract = async () => {
+    this.returnsContract = async () => {//request contracts from returnContracts, which returns an object full of contracts
       const self = this;
       var contracts = await returnContracts(self.state.web3);
       //console.log("RC NR: ", contractArray)
@@ -61,7 +63,7 @@ class NewRecord extends Component {
       if(this.state.PRUF_APP < 1){self.setState({ PRUF_APP: contracts.payable });}
     };
 
-    this.acctChanger = async () => {
+    this.acctChanger = async () => {//Handle an address change, update state accordingly
       const ethereum = window.ethereum;
       const self = this;
       var _web3 = require("web3");
@@ -72,8 +74,6 @@ class NewRecord extends Component {
         self.setState({costArray: [0]})
       });
     };
-
-    //Component state declaration
 
     this.state = {
       addr: "",
@@ -112,7 +112,9 @@ class NewRecord extends Component {
     };
   }
 
-  componentDidMount() {
+  //component state-change events......................................................................................................
+
+  componentDidMount() {//stuff to do when component mounts in window
     var _ipfs = new this.state.IPFS({
       host: "ipfs.infura.io",
       port: 5001,
@@ -128,13 +130,13 @@ class NewRecord extends Component {
     document.addEventListener("accountListener", this.acctChanger());
   }
 
-  componentWillUnmount() {
+  componentWillUnmount() {//stuff do do when component unmounts from the window
     this.setState({assetClass: undefined})
     //console.log("unmounting component")
     document.removeEventListener("accountListener", this.acctChanger());
   }
 
-  componentDidUpdate() {
+  componentDidUpdate() {//stuff to do on a re-render
 
     if(this.state.web3 !== null && this.state.PRUF_APP < 1){
       this.returnsContract();
@@ -150,14 +152,15 @@ class NewRecord extends Component {
       }
     }
   }
-  render() {
+
+  render() {//render continuously produces an up-to-date stateful document  
     const self = this;
 
-    const getBytes32FromIpfsHash = (ipfsListing) => {
+    const getBytes32FromIpfsHash = (ipfsListing) => {// uses bs58 deps to make a bytes 32 out of a bs58 hash
       return "0x" + bs58.decode(ipfsListing).slice(2).toString("hex");
     };
 
-    const publishIPFS1 = async () => {
+    const publishIPFS1 = async () => {//post text field contents to ipfs
       console.log("Uploading file to IPFS...");
       await this.state.ipfs.add(this.state.ipfs1, (error, hash) => {
         if (error) {
@@ -169,7 +172,7 @@ class NewRecord extends Component {
       });
     };
 
-    async function checkExists(idxHash) {
+    async function checkExists(idxHash) {//check whether record of asset exists in the database
       self.state.storage.methods
         .retrieveShortRecord(idxHash)
         .call({ from: self.state.addr }, function (_error, _result) {
@@ -190,7 +193,7 @@ class NewRecord extends Component {
         });
     }
 
-    const handleCheckBox = () => {
+    const handleCheckBox = () => {//checkbox logic
       let setTo;
       if(this.state.isNFA === false){
         setTo = true;
@@ -204,11 +207,12 @@ class NewRecord extends Component {
       this.setState({type: ""});
     }
 
-    const _newRecord = () => {
+    const _newRecord = () => {//create a new asset record
       this.setState({ txStatus: false });
       this.setState({ txHash: "" });
       this.setState({error: undefined})
       this.setState({result: ""})
+      //reset state values before form resubmission
       var idxHash;
       var rgtRaw;
       
@@ -260,10 +264,10 @@ class NewRecord extends Component {
           self.setState({ hashPath: ""});
         });
 
-        document.getElementById("MainForm").reset();
+        document.getElementById("MainForm").reset(); //clear form inputs
     };
 
-    return (
+    return (//default render
       <div>
         <Form className="NRform" id='MainForm'>
           {this.state.addr === undefined && (
