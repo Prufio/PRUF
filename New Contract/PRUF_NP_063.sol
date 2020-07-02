@@ -143,6 +143,8 @@ contract PRUF_NP is PRUF {
         //^^^^^^^interactions^^^^^^^^^
     }
 
+    //--------------------------------------------External Functions--------------------------
+
     /*
      * @dev Modify **Record**.assetStatus with confirmation required
      */

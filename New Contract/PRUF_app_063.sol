@@ -91,6 +91,16 @@ import "./PRUF_core_063.sol";
 contract PRUF_APP is PRUF {
     using SafeMath for uint256;
 
+    modifier isAuthorized(bytes32 _idxHash) override {
+        User memory user = getUser();
+
+        require(
+            (user.userType > 0) && (user.userType < 10),
+            "PC:MOD-IA: User not registered"
+        );
+        _;
+    }
+//--------------------------------------------External Functions--------------------------
     /*
      * @dev Wrapper for newRecord
      */

@@ -96,18 +96,17 @@ contract PRUF_simpleEscrow is PRUF {
     address internal PrufAppAddress;
     PrufAppInterface internal PrufAppContract; //erc721_token prototype initialization
 
-    /*
+   /*
      * @dev Verify user credentials
      * Originating Address:
-     *      Exists in registeredUsers as a usertype 1 to 9
-     *      Is authorized for asset class
+     *      holds asset token at idxHash
      */
-    modifier isAuthorized(bytes32 _idxHash) override {
-        User memory user = getUser();
 
+    modifier isAuthorized(bytes32 _idxHash) override {
+        uint256 tokenID = uint256(_idxHash);
         require(
-            (user.userType > 0) && (user.userType < 10),
-            "PC:MOD-IA: User not registered"
+                 (AssetTokenContract.ownerOf(tokenID) == msg.sender), //msg.sender is token holder
+            "PC:MOD-IA: Caller does not hold token"
         );
         _;
     }
@@ -143,7 +142,7 @@ contract PRUF_simpleEscrow is PRUF {
         return user;
         //^^^^^^^interactions^^^^^^^^^
     }
-
+//--------------------------------------------External Functions--------------------------
     function setEscrow(
         bytes32 _idxHash,
         uint256 _escrowTime,
@@ -151,14 +150,13 @@ contract PRUF_simpleEscrow is PRUF {
         bytes32 _escrowOwnerHash
     ) external nonReentrant isAuthorized(_idxHash) {
         Record memory rec = getRecord(_idxHash);
-        User memory callingUser = getUser();
         uint256 escrowTime = now.add(_escrowTime);
         uint8 newAssetStatus;
 
         require((rec.rightsHolder != 0), "SE: Record does not exist");
         require(
-            callingUser.authorizedAssetClass == rec.assetClass,
-            "SE: User not authorized to modify records in specified asset class"
+            (rec.assetStatus > 49),
+            "PNP:MS: Only custodial usertype can change status < 50"
         );
         require(
             (escrowTime >= now),
@@ -174,15 +172,14 @@ contract PRUF_simpleEscrow is PRUF {
             "SE:ERR-Transferred, lost, or stolen status cannot be set to escrow."
         );
         require(
-            (callingUser.userType < 5) ||
-                ((callingUser.userType > 4) && (_escrowStatus > 49)),
-            "SE:ERR-Non supervisored agents must set escrow witihn user type."
-        );
-        require(
             (_escrowStatus == 6) ||
                 (_escrowStatus == 50) ||
                 (_escrowStatus == 56),
             "SE:ERR-Must specify an valid escrow status"
+        );
+        require(
+            (_escrowStatus > 49),
+            "PNP:MS: Only custodial usertype can set escrow < 50"
         );
         //^^^^^^^checks^^^^^^^^^
 
@@ -220,8 +217,8 @@ contract PRUF_simpleEscrow is PRUF {
             "EE:ERR- record must be in escrow status"
         );
         require(
-            ((rec.assetStatus > 49) || (callingUser.userType < 5)),
-            "EE:ERR- Usertype less than 5 required to end this escrow"
+            (rec.assetStatus > 49),
+            "EE:ERR- Custodial usertype required to end this escrow"
         );
         require(
             (shortRec.timeLock < now) ||
