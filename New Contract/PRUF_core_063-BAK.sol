@@ -149,18 +149,26 @@ contract PRUF is ReentrancyGuard, PullPayment, Ownable, IERC721Receiver {
      *      holds asset token
      */
 
+    // modifier isAuthorized(bytes32 _idxHash) virtual {
+    //     uint256 tokenID = uint256(_idxHash);
+    //     User memory user = getUser();
+    //     require(
+    //        (((user.userType > 0) && (user.userType < 10)) &&
+    //              (AssetTokenContract.ownerOf(tokenID) == address(this))) || //User is authorized in database and contract holds token
+    //              (AssetTokenContract.ownerOf(tokenID) == msg.sender), //or msg.sender is token holder
+    //         "PC:MOD-IA: User not registered or token not found"
+    //     );
+    //     _;
+    // }
     modifier isAuthorized(bytes32 _idxHash) virtual {
-        uint256 tokenID = uint256(_idxHash);
         User memory user = getUser();
+
         require(
-           (((user.userType > 0) && (user.userType < 10)) &&
-                 (AssetTokenContract.ownerOf(tokenID) == address(this))) || //User is authorized in database and contract holds token
-                 (AssetTokenContract.ownerOf(tokenID) == msg.sender), //or msg.sender is token holder
-            "PC:MOD-IA: User not registered or token not found"
+            (user.userType > 0) && (user.userType < 10),
+            "PC:MOD-IA: User not registered"
         );
         _;
     }
-
 
     //----------------------Internal Admin functions / onlyowner or isAdmin----------------------//
     /*
