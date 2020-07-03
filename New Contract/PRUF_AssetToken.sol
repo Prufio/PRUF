@@ -21,10 +21,39 @@ contract AssetToken is Ownable, ReentrancyGuard, ERC721 {
     modifier isAdmin() {
         require(
             (msg.sender == PrufAppAddress) || (msg.sender == owner()),
-            "address does not belong to an Admin"
+            "Calling address does not belong to an Admin"
         );
         _;
     }
+
+    //----------------------Internal Admin functions / onlyowner or isAdmin----------------------//
+
+    /*
+     * @dev Set storage contract to interface with
+     */
+    function OO_setStorageContract(address _storageAddress) external onlyOwner {
+        require(
+            _storageAddress != address(0),
+            "PC:SSC: storage address cannot be zero"
+        );
+        //^^^^^^^checks^^^^^^^^^
+
+        Storage = StorageInterface(_storageAddress);
+        //^^^^^^^effects^^^^^^^^^
+    }
+
+    /*
+     * @dev Address Setters
+     */
+    function OO_ResolveContractAddresses() external nonReentrant onlyOwner {
+        //^^^^^^^checks^^^^^^^^^
+
+        PrufAppAddress = Storage.resolveContractAddress("PRUF_APP");
+        PrufAppContract = PrufAppInterface(PrufAppAddress);
+        //^^^^^^^effects^^^^^^^^^
+    }
+
+
 
     function mintAssetToken(
         address _reciepientAddress,
