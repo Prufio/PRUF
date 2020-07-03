@@ -26,8 +26,8 @@ interface AssetTokenInterface {
         address to,
         bytes32 idxHash
     ) external;
-    
-     function mintAssetToken(
+
+    function mintAssetToken(
         address _reciepientAddress,
         bytes32 _idxHash,
         string calldata _tokenURI

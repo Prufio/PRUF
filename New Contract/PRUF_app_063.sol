@@ -100,12 +100,13 @@ contract PRUF_APP is PRUF {
             "PC:MOD-IA: User not registered"
         );
         require(
-                 (AssetTokenContract.ownerOf(tokenID) == address(this)),
+            (AssetTokenContract.ownerOf(tokenID) == address(this)),
             "PC:MOD-IA: Custodial contract does not hold token"
         );
         _;
     }
-//--------------------------------------------External Functions--------------------------
+
+    //--------------------------------------------External Functions--------------------------
     /*
      * @dev Wrapper for newRecord
      */
@@ -156,6 +157,7 @@ contract PRUF_APP is PRUF {
             cost.paymentAddress,
             cost.newRecordCost
         );
+        AssetTokenContract.mintAssetToken(address(this), _idxHash, "pruf.io");
         //^^^^^^^interactions^^^^^^^^^
     }
 
