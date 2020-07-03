@@ -143,7 +143,7 @@ contract PRUF_NP is PRUF {
     }
 //--------------------------------------------External Functions--------------------------
     /*
-     * @dev Wrapper for newRecord  CAUTION CAN CREATE ASSETS IN ALL ASSET CLASSES!!!!!!!!!!!!!!!!FIX
+     * @dev Wrapper for newRecord  CAUTION ANYONE CAN CREATE ASSETS IN ALL ASSET CLASSES!!!!!!!!!!!!!!!!FIX
      */
     function $newRecord(
         bytes32 _idxHash,
@@ -179,6 +179,8 @@ contract PRUF_NP is PRUF {
             cost.paymentAddress,
             cost.newRecordCost
         );
+
+         AssetTokenContract.mintAssetToken(msg.sender, _idxHash, "pruf.io");
         //^^^^^^^interactions^^^^^^^^^
     }
 

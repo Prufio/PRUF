@@ -161,7 +161,7 @@ contract Storage is Ownable, ReentrancyGuard {
      */
     modifier isAuthorized() {
         require(
-            (contractAdresses[keccak256(abi.encodePacked(msg.sender))] == 3),
+            (contractAdresses[keccak256(abi.encodePacked(msg.sender))] == 1) || (contractAdresses[keccak256(abi.encodePacked(msg.sender))] == 2),
             "MOD-IA-Contract not authorized or improperly permissioned"
         );
         _;
@@ -323,13 +323,18 @@ contract Storage is Ownable, ReentrancyGuard {
         //^^^^^^^checks^^^^^^^^^
 
         Record memory rec;
+        if (contractAdresses[keccak256(abi.encodePacked(msg.sender))] == 1){
+            rec.assetStatus = 0;
+        } else {
+            rec.assetStatus = 51;
+        }
 
         rec.assetClass = _assetClass;
         rec.countDownStart = _countDownStart;
         rec.countDown = _countDownStart;
         rec.recorder = _userHash;
         rec.rightsHolder = _rgt;
-        rec.lastRecorder = _userHash;
+        rec.lastRecorder = keccak256(abi.encodePacked(msg.sender));
         rec.forceModCount = 0;
         rec.Ipfs1 = _Ipfs1;
         rec.numberOfTransfers = 0;
