@@ -100,7 +100,7 @@ contract PRUF_APP is PRUF {
             "PC:MOD-IA: User not registered"
         );
         require(
-                 (AssetTokenContract.ownerOf(tokenID) == address(this)), //msg.sender is token holder
+                 (AssetTokenContract.ownerOf(tokenID) == address(this)),
             "PC:MOD-IA: Custodial contract does not hold token"
         );
         _;
