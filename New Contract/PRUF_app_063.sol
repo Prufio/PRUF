@@ -115,11 +115,15 @@ contract PRUF_APP is PRUF {
         uint16 _assetClass,
         uint256 _countDownStart,
         bytes32 _Ipfs
-    ) external payable nonReentrant isAuthorized(_idxHash) {
+    ) external payable nonReentrant {
         User memory callingUser = getUser();
         Costs memory cost = getCost(_assetClass);
         Costs memory baseCost = getBaseCost();
 
+        require(
+            (callingUser.userType > 0) && (callingUser.userType < 10),
+            "PC:MOD-IA: User not registered"
+        );
         require(
             callingUser.userType < 5,
             "PA:NR: User not authorized to create records"
