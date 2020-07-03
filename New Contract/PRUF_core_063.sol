@@ -93,7 +93,7 @@ import "./Imports/PullPayment.sol";
 import "./Imports/ReentrancyGuard.sol";
 import "./_ERC721/IERC721Receiver.sol";
 
-contract PRUF is ReentrancyGuard, PullPayment, Ownable, IERC721Receiver {
+contract PRUF is ReentrancyGuard, Ownable, IERC721Receiver, PullPayment {
     using SafeMath for uint256;
 
     struct Record {
@@ -150,13 +150,9 @@ contract PRUF is ReentrancyGuard, PullPayment, Ownable, IERC721Receiver {
      */
 
     modifier isAuthorized(bytes32 _idxHash) virtual {
-        uint256 tokenID = uint256(_idxHash);
-        User memory user = getUser();
         require(
-           (((user.userType > 0) && (user.userType < 10)) &&
-                 (AssetTokenContract.ownerOf(tokenID) == address(this))) || //User is authorized in database and contract holds token
-                 (AssetTokenContract.ownerOf(tokenID) == msg.sender), //or msg.sender is token holder
-            "PC:MOD-IA: User not registered or token not found"
+           _idxHash == 0, //function should always be overridden
+            "PC:MOD-IA: Modifier MUST BE OVERRIDDEN"
         );
         _;
     }

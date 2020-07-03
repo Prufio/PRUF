@@ -103,10 +103,15 @@ contract PRUF_NP is PRUF {
      */
     modifier isAuthorized(bytes32 _idxHash) override {
         User memory user = getUser();
+        uint256 tokenID = uint256(_idxHash);
 
         require(
             (user.userType > 0) && (user.userType < 10),
             "PC:MOD-IA: User not registered"
+        );
+        require(
+                 (AssetTokenContract.ownerOf(tokenID) == address(this)), //msg.sender is token holder
+            "PC:MOD-IA: Custodial contract does not hold token"
         );
         _;
     }
