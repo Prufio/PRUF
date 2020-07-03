@@ -1,13 +1,5 @@
-/*  TO DO
+/*  TO DO  //TODO: REMINT!!!
  * verify security and user permissioning /modifiers
- *
- * mint a token at asset creation
- *
- * @implement remint_asset ?
- *-----------------------------------------------------------------------------------------------------------------
- * Should all assets have a token, minted to reside within the contract for curated / "nontokenized" asset classes?
- * If so, make a move-token function that can be enabled later (set to an address to control it)
- *-----------------------------------------------------------------------------------------------------------------
  *
  * IMPORTANT NOTE : DO NOT REMOVE FROM CODE:
  *      Verification of rgtHash in curated, tokenless asset classes are not secure beyond the honorable intentions
@@ -189,83 +181,6 @@ contract PRUF_NP is PRUF {
      */
     function reMintToken() external payable nonReentrant {
 
-    }
-
-    /*
-     * @dev Modify rgtHash (like forceModify)
-     * must be tokenholder or assetTokenContract
-     *
-     */
-    function changeRgt(bytes32 _idxHash, bytes32 _rgtHash) external
-        payable
-        nonReentrant
-        isAuthorized(_idxHash)
-        returns (uint8)
-    {
-        Record memory rec = getRecord(_idxHash);
-        User memory callingUser = getUser();
-        Costs memory cost = getCost(rec.assetClass);
-        Costs memory baseCost = getBaseCost();
-
-        require((rec.rightsHolder != 0), "PA:FMR: Record does not exist");
-
-        require(
-            callingUser.userType == 1,
-            "PA:FMR: User not authorized to force modify records"
-        );
-        require(
-            callingUser.authorizedAssetClass == rec.assetClass,
-            "PA:FMR: User not authorized to modify records in specified asset class"
-        );
-
-        require(_rgtHash != 0, "PA:FMR: rights holder cannot be zero");
-        require(
-            (rec.assetStatus != 3) &&
-                (rec.assetStatus != 4) &&
-                (rec.assetStatus != 53) &&
-                (rec.assetStatus != 54),
-            "PA:FMR: Cannot modify asset in lost or stolen status"
-        );
-        require(
-            (rec.assetStatus != 6) &&
-                (rec.assetStatus != 50) &&
-                (rec.assetStatus != 56),
-            "PA:FMR: Cannot modify asset in Escrow"
-        );
-        require(
-            (rec.assetStatus != 5) && (rec.assetStatus != 55),
-            "PA:FMR: Record In Transferred-unregistered status"
-        );
-        require(rec.assetStatus < 200, "FMR: Record locked");
-        require(
-            msg.value >= cost.forceModifyCost,
-            "PA:FMR: tx value too low. Send more eth."
-        );
-        //^^^^^^^checks^^^^^^^^^
-
-        if (rec.forceModCount < 255) {
-            rec.forceModCount++;
-        }
-
-        if (rec.numberOfTransfers < 65335) {
-            rec.numberOfTransfers++;
-        }
-
-        rec.assetStatus = 0;
-        rec.rightsHolder = _rgtHash;
-        //^^^^^^^effects^^^^^^^^^
-
-        writeRecord(_idxHash, rec);
-
-        deductPayment(
-            baseCost.paymentAddress,
-            baseCost.forceModifyCost,
-            cost.paymentAddress,
-            cost.forceModifyCost
-        );
-
-        return rec.forceModCount;
-        //^^^^^^^interactions^^^^^^^^^
     }
 
     /*

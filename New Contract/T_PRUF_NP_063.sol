@@ -146,6 +146,49 @@ contract PRUF_NP is PRUF {
         //^^^^^^^interactions^^^^^^^^^
     }
 //--------------------------------------------External Functions--------------------------
+
+    /*
+     * @dev Modify rgtHash (like forceModify)
+     * must be tokenholder or assetTokenContract
+     *
+     */
+    function changeRgt(bytes32 _idxHash, bytes32 _rgtHash) external
+        nonReentrant
+        isAuthorized(_idxHash)
+        returns (bytes32)
+    {
+        Record memory rec = getRecord(_idxHash);
+
+        require((rec.rightsHolder != 0), "PA:FMR: Record does not exist");
+        require(_rgtHash != 0, "PA:FMR: rights holder cannot be zero");
+        require(
+            (rec.assetStatus != 3) &&
+                (rec.assetStatus != 4) &&
+                (rec.assetStatus != 53) &&
+                (rec.assetStatus != 54),
+            "PA:FMR: Cannot modify asset in lost or stolen status"
+        );
+        require(
+            (rec.assetStatus != 6) &&
+                (rec.assetStatus != 50) &&
+                (rec.assetStatus != 56),
+            "PA:FMR: Cannot modify asset in Escrow"
+        );
+        require(
+            (rec.assetStatus != 5) && (rec.assetStatus != 55),
+            "PA:FMR: Record In Transferred-unregistered status"
+        );
+        require(rec.assetStatus < 200, "FMR: Record locked");
+        //^^^^^^^checks^^^^^^^^^
+        rec.rightsHolder = _rgtHash;
+        //^^^^^^^effects^^^^^^^^^
+
+        writeRecord(_idxHash, rec);
+
+        return _idxHash;
+        //^^^^^^^interactions^^^^^^^^^
+    }
+
     /*
      * @dev Modify **Record**.assetStatus with confirmation required
      */
