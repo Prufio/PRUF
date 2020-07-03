@@ -7,25 +7,19 @@ import "./_ERC721/Ownable.sol";
 import "./PRUF_interfaces.sol";
 import "./Imports/ReentrancyGuard.sol";
 
-contract AssetClassToken is
-Ownable,
-ReentrancyGuard,
-ERC721 {
-
+contract AssetClassToken is Ownable, ReentrancyGuard, ERC721 {
     constructor() public ERC721("BulletProof Asset Class Token", "BPXAC") {}
 
     address internal PrufAppAddress;
-    PrufAppInterface internal PrufAppContract; //erc721_token prototype initialization
+    PrufAppInterface internal PrufAppContract; // prototype initialization  //change to the acadmin contract
     address internal storageAddress;
     StorageInterface internal Storage; // Set up external contract interface
 
-    mapping(bytes32 => uint8) private registeredAdmins; // Authorized recorder database
     event REPORT(string _msg);
 
     modifier isAdmin() {
         require(
-            (registeredAdmins[keccak256(abi.encodePacked(msg.sender))] == 1) ||
-                (owner() == msg.sender),
+            msg.sender == owner(), //add token admins here
             "address does not belong to an Admin"
         );
         _;
@@ -50,35 +44,12 @@ ERC721 {
     /*
      * @dev Address Setters
      */
-    function OO_ResolveContractAddresses()
-        external
-        nonReentrant
-        onlyOwner
-    {
+    function OO_ResolveContractAddresses() external nonReentrant onlyOwner {
         //^^^^^^^checks^^^^^^^^^
 
         PrufAppAddress = Storage.resolveContractAddress("PRUF_APP");
         PrufAppContract = PrufAppInterface(PrufAppAddress);
         //^^^^^^^effects^^^^^^^^^
-    }
-
-    /*
-     * @dev Token Admin addresses ????? needed?
-     */
-    function OO_addACtokenAdmin(
-        address _authAddr,
-        uint8 _addAdmin // must make this indelible / permenant???????? SECURITY / trustless goals
-    ) external onlyOwner {
-        bytes32 addrHash = keccak256(abi.encodePacked(_authAddr));
-        require(
-            (_addAdmin == 1) || (_addAdmin == 0),
-            "Admin status must be 1 or 0"
-        );
-        //^^^^^^^checks^^^^^^^^^
-        registeredAdmins[addrHash] = _addAdmin;
-        //^^^^^^^effects^^^^^^^^^
-        emit REPORT("internal user database access!"); //report access to the internal user database
-        //^^^^^^^interactions^^^^^^^^^
     }
 
     /*
@@ -125,6 +96,4 @@ ERC721 {
         return tokenId;
         //^^^^^^^interactions^^^^^^^^^
     }
-
-
 }

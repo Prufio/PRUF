@@ -3,20 +3,24 @@
 pragma solidity ^0.6.7;
 
 import "./_ERC721/ERC721.sol";
-import "./Ownable.sol";
+import "./_ERC721/Ownable.sol";
+import "./PRUF_interfaces.sol";
+import "./Imports/ReentrancyGuard.sol";
 
-contract AssetToken is ERC721, Ownable {
-    mapping(bytes32 => uint8) private registeredAdmins; // Authorized recorder database
+contract AssetToken is Ownable, ReentrancyGuard, ERC721 {
 
     constructor() public ERC721("BulletProof Asset Token", "BPXA") {}
+
+    address internal PrufAppAddress;
+    PrufAppInterface internal PrufAppContract; //erc721_token prototype initialization
+    address internal storageAddress;
+    StorageInterface internal Storage; // Set up external contract interface
 
     event REPORT(string _msg);
 
     modifier isAdmin() {
-
         require(
-            (registeredAdmins[keccak256(abi.encodePacked(msg.sender))] == 1) ||
-                (owner() == msg.sender),
+            (msg.sender == PrufAppAddress) || (msg.sender == owner()),
             "address does not belong to an Admin"
         );
         _;
@@ -58,22 +62,6 @@ contract AssetToken is ERC721, Ownable {
         _safeMint(_reciepientAddress, tokenId);
         _setTokenURI(tokenId, _tokenURI);
         return tokenId;
-        //^^^^^^^interactions^^^^^^^^^
-    }
-
-    function OO_addAssetTokenAdmin(
-        address _authAddr,
-        uint8 _addAdmin // must make this indelible / permenant???????? SECURITY / trustless goals
-    ) external onlyOwner {
-        bytes32 addrHash = keccak256(abi.encodePacked(_authAddr));
-        require(
-            (_addAdmin == 1) || (_addAdmin == 0),
-            "Admin status must be 1 or 0"
-        );
-        //^^^^^^^checks^^^^^^^^^
-        registeredAdmins[addrHash] = _addAdmin;
-        //^^^^^^^effects^^^^^^^^^
-        emit REPORT("internal user database access!"); //report access to the internal user database
         //^^^^^^^interactions^^^^^^^^^
     }
 }
