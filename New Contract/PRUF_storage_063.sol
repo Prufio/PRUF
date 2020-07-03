@@ -123,7 +123,7 @@ contract Storage is Ownable, ReentrancyGuard {
         address paymentAddress;
     }
 
-    mapping(bytes32 => uint8) private contractAdresses; // Authorized contract addresses, indexed by address, with auth level 0-255
+    mapping(address => uint8) private contractAdresses; // Authorized contract addresses, indexed by address, with auth level 0-255
     mapping(string => address) private contractNames; // Authorized contract addresses, indexed by name
     mapping(bytes32 => Record) private database; // Main Data Storage
     mapping(uint16 => Costs) private cost; // Cost per function by asset class
@@ -158,7 +158,8 @@ contract Storage is Ownable, ReentrancyGuard {
      */
     modifier isAuthorized() {
         require(
-            (contractAdresses[keccak256(abi.encodePacked(msg.sender))] == 1) || (contractAdresses[keccak256(abi.encodePacked(msg.sender))] == 2),
+            (contractAdresses[msg.sender] == 1) ||
+                (contractAdresses[msg.sender] == 2),
             "MOD-IA-Contract not authorized or improperly permissioned"
         );
         _;
@@ -231,9 +232,7 @@ contract Storage is Ownable, ReentrancyGuard {
     ) external onlyOwner {
         require(_contractAuthLevel <= 4, "AC:ER-13 Invalid user type");
         //^^^^^^^checks^^^^^^^^^
-        contractAdresses[keccak256(
-            abi.encodePacked(_addr)
-        )] = _contractAuthLevel;
+        contractAdresses[_addr] = _contractAuthLevel;
 
         contractNames[_name] = _addr;
         //^^^^^^^effects^^^^^^^^^
@@ -320,7 +319,8 @@ contract Storage is Ownable, ReentrancyGuard {
         //^^^^^^^checks^^^^^^^^^
 
         Record memory rec;
-        if (contractAdresses[keccak256(abi.encodePacked(msg.sender))] == 1){
+        bytes32 senderHash = keccak256(abi.encodePacked(msg.sender));
+        if (contractAdresses[msg.sender] == 1) {
             rec.assetStatus = 0;
         } else {
             rec.assetStatus = 51;
@@ -331,7 +331,7 @@ contract Storage is Ownable, ReentrancyGuard {
         rec.countDown = _countDownStart;
         rec.recorder = _userHash;
         rec.rightsHolder = _rgt;
-        rec.lastRecorder = keccak256(abi.encodePacked(msg.sender));
+        rec.lastRecorder = senderHash;
         rec.forceModCount = 0;
         rec.Ipfs1 = _Ipfs1;
         rec.numberOfTransfers = 0;

@@ -196,7 +196,7 @@ contract PRUF_NP is PRUF {
      * must be tokenholder or assetTokenContract
      *
      */
-    function changeRgt(bytes32 _idxHash, bytes32 _rgtHash) external payable nonReentrant {
+    function changeRgt(bytes32 _idxHash, bytes32 _rgtHash) external
         payable
         nonReentrant
         isAuthorized(_idxHash)
