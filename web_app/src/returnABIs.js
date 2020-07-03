@@ -59,7 +59,7 @@ function returnABIs() {
                 },
                 {
                     "internalType": "uint256",
-                    "name": "_transferRecordCost",
+                    "name": "_transferAssetCost",
                     "type": "uint256"
                 },
                 {
@@ -74,12 +74,12 @@ function returnABIs() {
                 },
                 {
                     "internalType": "uint256",
-                    "name": "_modifyStatusCost",
+                    "name": "_changeStatusCost",
                     "type": "uint256"
                 },
                 {
                     "internalType": "uint256",
-                    "name": "_forceModCost",
+                    "name": "_forceModifyCost",
                     "type": "uint256"
                 },
                 {
@@ -132,7 +132,7 @@ function returnABIs() {
                 },
                 {
                     "internalType": "uint256",
-                    "name": "_transferRecordCost",
+                    "name": "_transferAssetCost",
                     "type": "uint256"
                 },
                 {
@@ -147,12 +147,12 @@ function returnABIs() {
                 },
                 {
                     "internalType": "uint256",
-                    "name": "_modifyStatusCost",
+                    "name": "_changeStatusCost",
                     "type": "uint256"
                 },
                 {
                     "internalType": "uint256",
-                    "name": "_forceModCost",
+                    "name": "_forceModifyCost",
                     "type": "uint256"
                 },
                 {
