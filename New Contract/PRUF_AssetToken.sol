@@ -2,7 +2,7 @@
 
 pragma solidity ^0.6.7;
 
-import "./ERC721.sol";
+import "./_ERC721/ERC721.sol";
 import "./Ownable.sol";
 
 contract AssetToken is ERC721, Ownable {
