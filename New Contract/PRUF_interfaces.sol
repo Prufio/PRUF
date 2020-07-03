@@ -26,6 +26,12 @@ interface AssetTokenInterface {
         address to,
         bytes32 idxHash
     ) external;
+    
+     function mintAssetToken(
+        address _reciepientAddress,
+        bytes32 _idxHash,
+        string calldata _tokenURI
+    ) external returns (uint256);
 }
 
 interface StorageInterface {
