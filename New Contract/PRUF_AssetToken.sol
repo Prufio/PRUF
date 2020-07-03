@@ -54,7 +54,10 @@ contract AssetToken is Ownable, ReentrancyGuard, ERC721 {
     }
 
 
-
+    /*
+     * must be isAdmin
+     *
+     */
     function mintAssetToken(
         address _reciepientAddress,
         bytes32 _idxHash,
@@ -62,23 +65,39 @@ contract AssetToken is Ownable, ReentrancyGuard, ERC721 {
     ) external isAdmin returns (uint256) {
         uint256 tokenId = uint256(_idxHash);
         //^^^^^^^checks^^^^^^^^^
+                                            //MAKE URI ASSET SPECIFIC- has to incorporate the token ID
         _safeMint(_reciepientAddress, tokenId);
         _setTokenURI(tokenId, _tokenURI);
         return tokenId;
         //^^^^^^^interactions^^^^^^^^^
     }
 
+    /*
+     * must hold token
+     * @dev transfer Asset Token
+     * verify is in transferrable status
+     * set rgt to nonremintable 0xFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF
+     *
+     */
     function transferAssetToken(
         address from,
         address to,
         bytes32 _idxHash
-    ) external onlyOwner {
+    ) external isAdmin {
         uint256 tokenId = uint256(_idxHash);
         //^^^^^^^checks^^^^^^^^^
         safeTransferFrom(from, to, tokenId);
         //^^^^^^^interactions^^^^^^^^^
     }
 
+
+    /*
+     * Authorizations?
+     * @dev remint Asset Token
+     * must set a new and unuiqe rgtHash
+     * burns old token
+     * Sends new token to original Caller
+     */
     function reMintAssetToken(
         address _reciepientAddress,
         bytes32 _idxHash,

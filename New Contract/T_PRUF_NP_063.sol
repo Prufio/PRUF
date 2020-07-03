@@ -34,11 +34,17 @@
  *  PRUF_NP
  *  PRUF_simpleEscrow
  *
- *
  * CONTRACT Types (storage)
  * 0   --NONE
+<<<<<<< HEAD:New Contract/T_PRUF_NP_063.sol
+ * 1   --Custodial (contract holds token)
+ * 2   --NonCustodial (rightsHolder holds token)
+ * 4   --ADMIN (isAdmin)
+ * >4  NONE
+=======
  * 1   --Custodial
  * 2   --Non-Custodial
+>>>>>>> master:New Contract/TOK_PRUF_NP_063.sol
  * Owner (onlyOwner)
  * other = unauth
  *
@@ -87,13 +93,13 @@ pragma solidity ^0.6.7;
 
 import "./PRUF_core_063.sol";
 
-contract PRUF_simpleEscrow is PRUF {
+contract PRUF_NP is PRUF {
     using SafeMath for uint256;
 
     address internal PrufAppAddress;
     PrufAppInterface internal PrufAppContract; //erc721_token prototype initialization
 
-   /*
+    /*
      * @dev Verify user credentials
      * Originating Address:
      *      holds asset token at idxHash
@@ -140,91 +146,186 @@ contract PRUF_simpleEscrow is PRUF {
         //^^^^^^^interactions^^^^^^^^^
     }
 //--------------------------------------------External Functions--------------------------
-    function setEscrow(
+    /*
+     * @dev Modify **Record**.assetStatus with confirmation required
+     */
+    function _modStatus(
         bytes32 _idxHash,
-        uint256 _escrowTime,
-        uint8 _escrowStatus,
-        bytes32 _escrowOwnerHash
-    ) external nonReentrant isAuthorized(_idxHash) {
+        bytes32 _rgtHash,
+        uint8 _newAssetStatus
+    ) external nonReentrant isAuthorized(_idxHash) returns (uint8) {
         Record memory rec = getRecord(_idxHash);
-        uint256 escrowTime = now.add(_escrowTime);
-        uint8 newAssetStatus;
 
-        require((rec.rightsHolder != 0), "SE: Record does not exist");
+        require((rec.rightsHolder != 0), "PNP:MS: Record does not exist");
+        require(_newAssetStatus < 200, "PNP:MS: user cannot set status > 199");
+        require(
+            (_newAssetStatus > 49),
+            "PNP:MS: Only custodial usertype can set status < 50"
+        );
         require(
             (rec.assetStatus > 49),
             "PNP:MS: Only custodial usertype can change status < 50"
         );
         require(
-            (escrowTime >= now),
-            "SE:ERR-Escrow must be set to a time in the future"
+            (rec.assetStatus != 6) &&
+                (rec.assetStatus != 50) &&
+                (rec.assetStatus != 56),
+            "PNP:MS: Cannot change status of asset in Escrow until escrow is expired"
         );
         require(
-            (rec.assetStatus != 3) &&
-                (rec.assetStatus != 4) &&
-                (rec.assetStatus != 53) &&
-                (rec.assetStatus != 54) &&
-                (rec.assetStatus != 5) &&
-                (rec.assetStatus != 55),
-            "SE:ERR-Transferred, lost, or stolen status cannot be set to escrow."
+            (rec.assetStatus != 5) && (rec.assetStatus != 55),
+            "PNP:MS: Cannot change status of asset in transferred-unregistered status."
         );
+        require(rec.assetStatus < 200, "PNP:MS: Record locked");
         require(
-            (_escrowStatus == 6) ||
-                (_escrowStatus == 50) ||
-                (_escrowStatus == 56),
-            "SE:ERR-Must specify an valid escrow status"
-        );
-        require(
-            (_escrowStatus > 49),
-            "PNP:MS: Only custodial usertype can set escrow < 50"
+            rec.rightsHolder == _rgtHash,
+            "PNP:MS: Rightsholder does not match supplied data"
         );
         //^^^^^^^checks^^^^^^^^^
 
-        newAssetStatus = _escrowStatus;
-
+        rec.assetStatus = _newAssetStatus;
         //^^^^^^^effects^^^^^^^^^
 
-        Storage.setEscrow(
-            _escrowOwnerHash,
-            _idxHash,
-            newAssetStatus,
-            escrowTime
-        );
+        writeRecord(_idxHash, rec);
+
+        return rec.assetStatus;
         //^^^^^^^interactions^^^^^^^^^
     }
 
-    function endEscrow(bytes32 _idxHash)
-        external
-        nonReentrant
-        isAuthorized(_idxHash)
-    {
+    /*
+     * @dev set **Record**.assetStatus to lost or stolen, with confirmation required.
+     */
+    function _setLostOrStolen(
+        bytes32 _idxHash,
+        bytes32 _rgtHash,
+        uint8 _newAssetStatus
+    ) external nonReentrant isAuthorized(_idxHash) returns (uint8) {
         Record memory rec = getRecord(_idxHash);
-        Record memory shortRec = getShortRecord(_idxHash);
-        User memory callingUser = getUser();
-
-        require((rec.rightsHolder != 0), "EE: Record does not exist");
+        rec.assetStatus = _newAssetStatus;
+        require((rec.rightsHolder != 0), "PNP:SLS: Record does not exist");
         require(
-            callingUser.authorizedAssetClass == rec.assetClass,
-            "EE: User not authorized to modify records in specified asset class"
+            (_newAssetStatus == 3) ||
+                (_newAssetStatus == 4) ||
+                (_newAssetStatus == 53) ||
+                (_newAssetStatus == 54),
+            "PNP:SLS: Must set to a lost or stolen status"
         );
         require(
-            (rec.assetStatus == 6) ||
-                (rec.assetStatus == 50) ||
-                (rec.assetStatus == 56),
-            "EE:ERR- record must be in escrow status"
+            (_newAssetStatus > 49),
+            "PNP:MS: Only custodial usertype can set status < 50"
         );
         require(
-            (rec.assetStatus > 49),
-            "EE:ERR- Custodial usertype required to end this escrow"
+            (rec.assetStatus > 49) ||
+                (_newAssetStatus < 50),
+            "PNP:SLS: Only usertype <5 can change a <49 status asset to a >49 status"
         );
         require(
-            (shortRec.timeLock < now) ||
-                (keccak256(abi.encodePacked(msg.sender)) == rec.recorder),
-            "EE:ERR- Escrow period not ended"
+            (rec.assetStatus != 5) && (rec.assetStatus != 55),
+            "PNP:SLS: Transferred asset cannot be set to lost or stolen after transfer."
+        );
+        require(
+            (rec.assetStatus != 50),
+            "PNP:SLS: Asset in locked escrow cannot be set to lost or stolen"
+        );
+        require(rec.assetStatus < 200, "PNP:SLS: Record locked");
+        require(
+            rec.rightsHolder == _rgtHash,
+            "PNP:SLS: Rightsholder does not match supplied data"
         );
         //^^^^^^^checks^^^^^^^^^
 
-        Storage.endEscrow(keccak256(abi.encodePacked(msg.sender)), _idxHash);
+        bytes32 userHash = keccak256(abi.encodePacked(msg.sender));
+        //^^^^^^^effects^^^^^^^^^
+
+        Storage.setStolenOrLost(userHash, _idxHash, rec.assetStatus);
+
+        return rec.assetStatus;
+        //^^^^^^^interactions^^^^^^^^^
+    }
+
+    /*
+     * @dev Decrement **Record**.countdown with confirmation required
+     */
+    function _decCounter(
+        bytes32 _idxHash,
+        bytes32 _rgtHash,
+        uint256 _decAmount
+    ) external nonReentrant isAuthorized(_idxHash) returns (uint256) {
+        Record memory rec = getRecord(_idxHash);
+
+        require((rec.rightsHolder != 0), "PNP:DC: Record does not exist");
+        require( //------------------------------------------should the counter still work when an asset is in escrow?
+            (rec.assetStatus != 6) &&
+                (rec.assetStatus != 50) &&
+                (rec.assetStatus != 56), //If so, it must not erase the recorder, or escrow termination will be broken!
+            "PNP:DC: Cannot modify asset in Escrow"
+        );
+        require(_decAmount > 0, "PNP:DC: cannot decrement by negative number");
+        require(rec.assetStatus < 200, "PNP:DC: Record locked");
+        require(
+            (rec.assetStatus != 5) && (rec.assetStatus != 55),
+            "PNP:DC: Record In Transferred-unregistered status"
+        );
+        require(
+            rec.rightsHolder == _rgtHash,
+            "PNP:DC: Rightsholder does not match supplied data"
+        );
+        //^^^^^^^checks^^^^^^^^^
+
+        if (rec.countDown > _decAmount) {
+            rec.countDown = rec.countDown.sub(_decAmount);
+        } else {
+            rec.countDown = 0;
+        }
+        //^^^^^^^effects^^^^^^^^^
+
+        writeRecord(_idxHash, rec);
+        return (rec.countDown);
+        //^^^^^^^interactions^^^^^^^^^
+    }
+
+    /*
+     * @dev Modify **Record**.Ipfs1 with confirmation
+     */
+    function _modIpfs1(
+        bytes32 _idxHash,
+        bytes32 _rgtHash,
+        bytes32 _IpfsHash
+    ) external nonReentrant isAuthorized(_idxHash) returns (bytes32) {
+        Record memory rec = getRecord(_idxHash);
+        User memory callingUser = getUser();
+        //Costs memory cost = getCost(rec.assetClass);
+
+        require((rec.rightsHolder != 0), "PNP:MI1: Record does not exist");
+        require(
+            callingUser.authorizedAssetClass == rec.assetClass,
+            "PNP:MI1: User not authorized to modify records in specified asset class"
+        );
+
+        require(rec.Ipfs1 != _IpfsHash, "PNP:MI1: New data same as old");
+        require( //-------------------------------------Should an asset in escrow be modifiable?
+            (rec.assetStatus != 6) &&
+                (rec.assetStatus != 50) &&
+                (rec.assetStatus != 56), //Should it be contingent on the original recorder address?
+            "PNP:MI1: Cannot modify asset in Escrow" //If so, it must not erase the recorder, or escrow termination will be broken!
+        );
+        require(rec.assetStatus < 200, "PNP:MI1: Record locked");
+        require(
+            (rec.assetStatus != 5) && (rec.assetStatus != 55),
+            "PNP:DC: Record In Transferred-unregistered status"
+        );
+        require(
+            rec.rightsHolder == _rgtHash,
+            "PNP:MI1: Rightsholder does not match supplied data"
+        );
+        //^^^^^^^checks^^^^^^^^^
+
+        rec.Ipfs1 = _IpfsHash;
+        //^^^^^^^effects^^^^^^^^^
+
+        writeRecordIpfs1(_idxHash, rec);
+
+        return rec.Ipfs1;
         //^^^^^^^interactions^^^^^^^^^
     }
 }
