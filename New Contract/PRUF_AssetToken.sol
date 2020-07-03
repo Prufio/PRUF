@@ -3,7 +3,7 @@
 pragma solidity ^0.6.7;
 
 import "./_ERC721/ERC721.sol";
-import "./Ownable.sol";
+import "./_ERC721/Ownable.sol"; 
 
 contract AssetToken is ERC721, Ownable {
     mapping(bytes32 => uint8) private registeredAdmins; // Authorized recorder database
