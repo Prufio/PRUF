@@ -37,11 +37,8 @@
  *
  * CONTRACT Types (storage)
  * 0   --NONE
- * 1   --E
- * 2   --RE
- * 3   --RWE
- * 4   --ADMIN (isAdmin)
- * >4  NONE
+ * 1   --Custodial
+ * 2   --Non-Custodial
  * Owner (onlyOwner)
  * other = unauth
  *
