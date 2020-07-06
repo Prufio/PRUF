@@ -187,7 +187,7 @@ contract AssetToken is Ownable, ReentrancyGuard, ERC721 {
     }
 
     /**
-     * @dev Safely burns a token ID and sets the corresponding rgt to zero.
+     * @dev Safely burns a token and sets the corresponding RGT to zero in storage.
      */
     function burn(uint256 tokenId) external nonReentrant {
         bytes32 _idxHash = bytes32(tokenId);
