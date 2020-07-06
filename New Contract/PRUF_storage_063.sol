@@ -359,7 +359,7 @@ contract Storage is Ownable, ReentrancyGuard {
         bytes32 idxHash = _idxHash; //stack saving
         bytes32 rgtHash = _rgtHash;
 
-        require(rgtHash != 0, "MR:ERR-Rightsholder cannot be blank");
+        // require(rgtHash != 0, "MR:ERR-Rightsholder cannot be blank");
         require( //prohibit increasing the countdown value
             _countDown <= database[idxHash].countDown,
             "MR:ERR-new countDown exceeds original countDown"
