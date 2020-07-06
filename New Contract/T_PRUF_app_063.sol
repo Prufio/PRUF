@@ -143,6 +143,7 @@ contract PRUF_NP is PRUF {
         uint256 _countDownStart,
         bytes32 _Ipfs
     ) external payable nonReentrant {
+        uint256 tokenId = uint256 (_idxHash);
         Costs memory cost = getCost(_assetClass);
         Costs memory baseCost = getBaseCost();
 
@@ -171,7 +172,7 @@ contract PRUF_NP is PRUF {
             cost.newRecordCost
         );
 
-         AssetTokenContract.mintAssetToken(msg.sender, _idxHash, "pruf.io");
+         AssetTokenContract.mintAssetToken(msg.sender, tokenId, "pruf.io");
         //^^^^^^^interactions^^^^^^^^^
     }
 
