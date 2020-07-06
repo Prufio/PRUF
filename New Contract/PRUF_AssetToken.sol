@@ -1,4 +1,4 @@
-//TODO: REMINT!!!
+//TODO: REMINT and recycle
 
 // SPDX-License-Identifier: MIT
 
@@ -28,8 +28,8 @@ contract AssetToken is Ownable, ReentrancyGuard, ERC721 {
 
     constructor() public ERC721("BulletProof Asset Token", "BPXA") {}
 
-    address internal PrufAppAddress;
-    PrufAppInterface internal PrufAppContract; //erc721_token prototype initialization
+    address internal T_PrufAppAddress; //isAdmin
+    address internal PrufAppAddress; //isAdmin
     address internal storageAddress;
     StorageInterface internal Storage; // Set up external contract interface
 
@@ -37,7 +37,7 @@ contract AssetToken is Ownable, ReentrancyGuard, ERC721 {
 
     modifier isAdmin() {
         require(
-            (msg.sender == PrufAppAddress) || (msg.sender == owner()),
+            (msg.sender == PrufAppAddress) || (msg.sender == T_PrufAppAddress) || (msg.sender == owner()),
             "Calling address does not belong to an Admin"
         );
         _;
@@ -64,9 +64,8 @@ contract AssetToken is Ownable, ReentrancyGuard, ERC721 {
      */
     function OO_ResolveContractAddresses() external nonReentrant onlyOwner {
         //^^^^^^^checks^^^^^^^^^
-
+        T_PrufAppAddress = Storage.resolveContractAddress("T_PRUF_APP");
         PrufAppAddress = Storage.resolveContractAddress("PRUF_APP");
-        PrufAppContract = PrufAppInterface(PrufAppAddress);
         //^^^^^^^effects^^^^^^^^^
     }
 
