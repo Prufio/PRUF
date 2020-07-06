@@ -1,14 +1,7 @@
 /*  TO DO
  * verify security and user permissioning /modifiers
- * DEAL WITH SUPERVISED VS NONSUPERVISED ASSET CLASS HANDLING (DIFFERENT APPLICATIONS?)
- *
- * mint a token at asset creation
  *
  * @implement remint_asset ?
- *-----------------------------------------------------------------------------------------------------------------
- * Should all assets have a token, minted to reside within the contract for curated / "nontokenized" asset classes?
- * If so, make a move-token function that can be enabled later (set to an address to control it)
- *-----------------------------------------------------------------------------------------------------------------
  *
  * IMPORTANT NOTE : DO NOT REMOVE FROM CODE:
  *      Verification of rgtHash in curated, tokenless asset classes are not secure beyond the honorable intentions

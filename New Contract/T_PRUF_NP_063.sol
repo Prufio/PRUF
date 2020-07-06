@@ -1,13 +1,6 @@
 /*  TO DO
- * verify security and user permissioning /modifiers
- *
- * mint a token at asset creation
  *
  * @implement remint_asset ?
- *-----------------------------------------------------------------------------------------------------------------
- * Should all assets have a token, minted to reside within the contract for curated / "nontokenized" asset classes?
- * If so, make a move-token function that can be enabled later (set to an address to control it)
- *-----------------------------------------------------------------------------------------------------------------
  *
  * IMPORTANT NOTE : DO NOT REMOVE FROM CODE:
  *      Verification of rgtHash in curated, tokenless asset classes are not secure beyond the honorable intentions
@@ -36,15 +29,8 @@
  *
  * CONTRACT Types (storage)
  * 0   --NONE
-<<<<<<< HEAD:New Contract/T_PRUF_NP_063.sol
- * 1   --Custodial (contract holds token)
- * 2   --NonCustodial (rightsHolder holds token)
- * 4   --ADMIN (isAdmin)
- * >4  NONE
-=======
  * 1   --Custodial
  * 2   --Non-Custodial
->>>>>>> master:New Contract/TOK_PRUF_NP_063.sol
  * Owner (onlyOwner)
  * other = unauth
  *
