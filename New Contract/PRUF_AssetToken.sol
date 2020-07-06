@@ -1,4 +1,4 @@
-//TODO: REMINT and recycle
+//TODO: Recycle
 
 // SPDX-License-Identifier: MIT
 
@@ -186,35 +186,35 @@ contract AssetToken is Ownable, ReentrancyGuard, ERC721 {
         //^^^^^^^interactions^^^^^^^^^
     }
 
-    /**
-     * @dev Safely burns a token and sets the corresponding RGT to zero in storage.
-     */
-    function burn(uint256 tokenId) external nonReentrant {
-        bytes32 _idxHash = bytes32(tokenId);
-        Record memory rec = getRecord(_idxHash);
+    // /**
+    //  * @dev Safely burns a token and sets the corresponding RGT to zero in storage.
+    //  */
+    // function burn(uint256 tokenId) external nonReentrant {
+    //     bytes32 _idxHash = bytes32(tokenId);
+    //     Record memory rec = getRecord(_idxHash);
 
-        require(
-            (rec.assetStatus != 3) ||
-                (rec.assetStatus != 4) ||
-                (rec.assetStatus != 6) ||
-                (rec.assetStatus != 50) ||
-                (rec.assetStatus != 53) ||
-                (rec.assetStatus != 54) ||
-                (rec.assetStatus != 56),
-            "Asset in lost, stolen, or escrow status"
-        );
+    //     require(
+    //         (rec.assetStatus != 3) ||
+    //             (rec.assetStatus != 4) ||
+    //             (rec.assetStatus != 6) ||
+    //             (rec.assetStatus != 50) ||
+    //             (rec.assetStatus != 53) ||
+    //             (rec.assetStatus != 54) ||
+    //             (rec.assetStatus != 56),
+    //         "Asset in lost, stolen, or escrow status"
+    //     );
 
-        require(
-            _isApprovedOrOwner(_msgSender(), tokenId),
-            "ERC721: transfer caller is not owner nor approved"
-        );
-        //^^^^^^^checks^^^^^^^^^
-        rec.rightsHolder = 0x0; //burn in storage
-        //^^^^^^^effects^^^^^^^^^
-        writeRecord(_idxHash, rec);
-        _burn(tokenId);
-        //^^^^^^^interactions^^^^^^^^^
-    }
+    //     require(
+    //         _isApprovedOrOwner(_msgSender(), tokenId),
+    //         "ERC721: transfer caller is not owner nor approved"
+    //     );
+    //     //^^^^^^^checks^^^^^^^^^
+    //     rec.rightsHolder = 0x0; //burn in storage
+    //     //^^^^^^^effects^^^^^^^^^
+    //     writeRecord(_idxHash, rec);
+    //     _burn(tokenId);
+    //     //^^^^^^^interactions^^^^^^^^^
+    // }
 
     // /*
     //  * @dev transfer Asset Token
