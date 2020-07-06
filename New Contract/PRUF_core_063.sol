@@ -178,7 +178,8 @@ contract PRUF is ReentrancyGuard, Ownable, IERC721Receiver, PullPayment {
         nonReentrant
     //^^^^^^^checks^^^^^^^^^
     {
-        AssetTokenContract.transferAssetToken(address(this), _to, _idxHash);
+        uint256 tokenId = uint256 (_idxHash);
+        AssetTokenContract.transferAssetToken(address(this), _to, tokenId);
         //^^^^^^^interactions^^^^^^^^^
     }
 
@@ -189,10 +190,11 @@ contract PRUF is ReentrancyGuard, Ownable, IERC721Receiver, PullPayment {
         nonReentrant
     //^^^^^^^checks^^^^^^^^^
     {
+        uint256 tokenId = uint256 (_idxHash);
         AssetClassTokenContract.transferAssetClassToken(
             address(this),
             _to,
-            _idxHash
+            tokenId
         );
         //^^^^^^^interactions^^^^^^^^^
     }

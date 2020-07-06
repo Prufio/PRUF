@@ -77,10 +77,10 @@ contract AssetToken is Ownable, ReentrancyGuard, ERC721 {
      */
     function mintAssetToken(
         address _reciepientAddress,
-        bytes32 _idxHash,
+        uint256 tokenId,
         string calldata _tokenURI
     ) external isAdmin returns (uint256) {
-        uint256 tokenId = uint256(_idxHash);
+        bytes32 _idxHash = uint256(tokenId);
         //^^^^^^^checks^^^^^^^^^
                                             //MAKE URI ASSET SPECIFIC- has to incorporate the token ID
         _safeMint(_reciepientAddress, tokenId);
@@ -97,11 +97,25 @@ contract AssetToken is Ownable, ReentrancyGuard, ERC721 {
      * @param to address to receive the ownership of the given token ID
      * @param tokenId uint256 ID of the token to be transferred
      */
-    function transferFrom(address from, address to, uint256 tokenId) public virtual override {
-        //solhint-disable-next-line max-line-length
+    function transferFrom(address from, address to, uint256 tokenId) public nonReentrant override{
+        bytes32 _idxHash = uint256(tokenId);
+        Record memory rec = getRecord(_idxHash);
+
+        require(
+            rec.assetStatus == 51,
+            "Asset not in transferrable status"
+        );
+
         require(_isApprovedOrOwner(_msgSender(), tokenId), "ERC721: transfer caller is not owner nor approved");
 
+        //^^^^^^^checks^^^^^^^^^
+
+        rec.rightsHolder = 0xFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF;
+        //^^^^^^^effects^^^^^^^^^
+
+        writeRecord(_idxHash, rec);
         _transfer(from, to, tokenId);
+        //^^^^^^^interactions^^^^^^^^^
     }
 
     /**
@@ -115,8 +129,17 @@ contract AssetToken is Ownable, ReentrancyGuard, ERC721 {
      * @param to address to receive the ownership of the given token ID
      * @param tokenId uint256 ID of the token to be transferred
      */
-    function safeTransferFrom(address from, address to, uint256 tokenId) public virtual override {
+    function safeTransferFrom(address from, address to, uint256 tokenId) public nonReentrant override{
+        bytes32 _idxHash = uint256(tokenId);
+        Record memory rec = getRecord(_idxHash);
+
+        //^^^^^^^checks^^^^^^^^^
+        rec.rightsHolder = 0xFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF;
+        //^^^^^^^effects^^^^^^^^^
+
+        writeRecord(_idxHash, rec);
         safeTransferFrom(from, to, tokenId, "");
+        //^^^^^^^interactions^^^^^^^^^
     }
 
     /**
@@ -131,32 +154,16 @@ contract AssetToken is Ownable, ReentrancyGuard, ERC721 {
      * @param tokenId uint256 ID of the token to be transferred
      * @param _data bytes data to send along with a safe transfer check
      */
-    function safeTransferFrom(address from, address to, uint256 tokenId, bytes memory _data) public virtual override {
-        require(_isApprovedOrOwner(_msgSender(), tokenId), "ERC721: transfer caller is not owner nor approved");
-        _safeTransfer(from, to, tokenId, _data);
-    }
-
-    /*
-     * @dev transfer Asset Token
-     * set rgt to nonremintable 0xFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF
-     *
-     */
-    function transferAssetToken(
-        address from,
-        address to,
-        bytes32 _idxHash
-    ) external nonReentrant {
-        uint256 tokenId = uint256(_idxHash);
+    function safeTransferFrom(address from, address to, uint256 tokenId, bytes memory _data) public nonReentrant virtual override {
+        bytes32 _idxHash = uint256(tokenId);
         Record memory rec = getRecord(_idxHash);
 
-        require(
-            ownerOf(tokenId) == msg.sender,
-            "Caller does not hold token"
-        );
         require(
             rec.assetStatus == 51,
             "Asset not in transferrable status"
         );
+
+        require(_isApprovedOrOwner(_msgSender(), tokenId), "ERC721: transfer caller is not owner nor approved");
 
         //^^^^^^^checks^^^^^^^^^
 
@@ -164,9 +171,37 @@ contract AssetToken is Ownable, ReentrancyGuard, ERC721 {
         //^^^^^^^effects^^^^^^^^^
 
         writeRecord(_idxHash, rec);
-        safeTransferFrom(from, to, tokenId);
+        _safeTransfer(from, to, tokenId, _data);
         //^^^^^^^interactions^^^^^^^^^
     }
+
+    // /*
+    //  * @dev transfer Asset Token
+    //  * set rgt to nonremintable 0xFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF
+    //  *
+    //  */
+    // function transferAssetToken(
+    //     address from,
+    //     address to,
+    //     uint256 tokenId
+    // ) external nonReentrant {
+    //     bytes32 _idxHash = uint256(tokenId);
+    //     Record memory rec = getRecord(_idxHash);
+
+    //     require(
+    //         rec.assetStatus == 51,
+    //         "Asset not in transferrable status"
+    //     );
+
+    //     //^^^^^^^checks^^^^^^^^^
+
+    //     rec.rightsHolder = 0xFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF;
+    //     //^^^^^^^effects^^^^^^^^^
+
+    //     writeRecord(_idxHash, rec);
+    //     safeTransferFrom(from, to, tokenId);
+    //     //^^^^^^^interactions^^^^^^^^^
+    // }
 
 
     /*
@@ -178,10 +213,10 @@ contract AssetToken is Ownable, ReentrancyGuard, ERC721 {
      */
     function reMintAssetToken(
         address _reciepientAddress,
-        bytes32 _idxHash,
+        uint256 tokenId,
         string calldata _tokenURI
     ) external isAdmin returns (uint256) {
-        uint256 tokenId = uint256(_idxHash);
+        bytes32 _idxHash = uint256(tokenId);
         require(_exists(tokenId), "Cannot Remint nonexistant token");
         //^^^^^^^checks^^^^^^^^^
         _burn(tokenId);

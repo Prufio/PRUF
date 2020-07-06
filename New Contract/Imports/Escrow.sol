@@ -1,10 +1,10 @@
-//SPDX-License-Identifier: MIT
+// SPDX-License-Identifier: MIT
 
 pragma solidity ^0.6.0;
 
-import "./SafeMath.sol";
-import "./Ownable.sol";
-import "./Address.sol";
+import "../../math/SafeMath.sol";
+import "../../access/Ownable.sol";
+import "../../utils/Address.sol";
 
  /**
   * @title Escrow
@@ -63,4 +63,3 @@ contract Escrow is Ownable {
         emit Withdrawn(payee, payment);
     }
 }
-
