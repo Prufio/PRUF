@@ -1,6 +1,5 @@
 /*  TO DO  //TODO: REMINT!!!
  * verify security and user permissioning /modifiers
- * web3 must stringify number inputs so that they match the solidity outputs.
  *
  * IMPORTANT NOTE : DO NOT REMOVE FROM CODE:
  *      Verification of rgtHash in curated, tokenless asset classes are not secure beyond the honorable intentions
@@ -231,7 +230,7 @@ contract T_PRUF_NP is PRUF {
             baseCost.paymentAddress,
             baseCost.createNoteCost,
             cost.paymentAddress,
-            cost.createNoteCost
+            cost.reMintRecordCost
         );
 
         tokenId = AssetTokenContract.reMintAssetToken(
