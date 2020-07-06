@@ -85,6 +85,7 @@ import "./PRUF_core_063.sol";
 
 contract T_PRUF_NP is PRUF {
     using SafeMath for uint256;
+    using SafeMath for uint8;
 
     address internal PrufAppAddress;
     PrufAppInterface internal PrufAppContract; //erc721_token prototype initialization
@@ -183,9 +184,9 @@ contract T_PRUF_NP is PRUF {
      * @dev Modify **Record**.Ipfs2 with confirmation
      * must Match rgtHash using raw data fields
      */
-    function reMintToken() external payable nonReentrant {
+   // function reMintToken(_idxHash, string memory secret) external payable nonReentrant {
 
-    }
+    //}
 
     /*
      * @dev Modify **Record**.Ipfs2 with confirmation
@@ -198,17 +199,22 @@ contract T_PRUF_NP is PRUF {
         Record memory rec = getRecord(_idxHash);
         Costs memory cost = getCost(rec.assetClass);
         Costs memory baseCost = getBaseCost();
+        uint8 stat = rec.assetStatus;
+
+        if (stat > 99) {
+           stat.sub(100);
+        }
 
         require((rec.rightsHolder != 0), "PA:I2: Record does not exist");
         require(
-            (rec.assetStatus != 6) &&
-                (rec.assetStatus != 50) &&
-                (rec.assetStatus != 56),
+            (stat != 6) &&
+                (stat != 50) &&
+                (stat != 56),
             "PA:I2: Cannot modify asset in Escrow"
         );
-        require(rec.assetStatus < 200, "PA:I2: Record locked");
+        require(stat < 200, "PA:I2: Record locked");
         require(
-            (rec.assetStatus != 5) && (rec.assetStatus != 55),
+            (stat != 5) && (stat != 55),
             "PA:I2: Record In Transferred-unregistered status"
         );
         require(
