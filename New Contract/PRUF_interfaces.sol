@@ -14,7 +14,7 @@ interface AssetClassTokenInterface {
     function transferAssetClassToken(
         address from,
         address to,
-        bytes32 idxHash
+        uint256 tokenIdxHash
     ) external;
 }
 
@@ -24,12 +24,12 @@ interface AssetTokenInterface {
     function transferAssetToken(
         address from,
         address to,
-        bytes32 idxHash
+        uint256 tokenIdxHash
     ) external;
 
     function mintAssetToken(
         address _reciepientAddress,
-        bytes32 _idxHash,
+        uint256 tokenIdxHash,
         string calldata _tokenURI
     ) external returns (uint256);
 }
