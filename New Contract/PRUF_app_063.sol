@@ -63,6 +63,8 @@
  * 57 = out of escrow
  * 58 = out of locked escrow
  *
+ * ADD 100 for NONREMINTABLE!!!
+ *
  * escrow status = lock time set to a time instead of a block number
  *
  *
@@ -83,6 +85,7 @@ import "./PRUF_core_063.sol";
 
 contract PRUF_APP is PRUF {
     using SafeMath for uint256;
+    using SafeMath for uint8;
 
     modifier isAuthorized(bytes32 _idxHash) override {
         User memory user = getUser();
@@ -169,6 +172,11 @@ contract PRUF_APP is PRUF {
         User memory callingUser = getUser();
         Costs memory cost = getCost(rec.assetClass);
         Costs memory baseCost = getBaseCost();
+        uint8 stat = rec.assetStatus;
+
+        if ((stat > 99) && (stat < 200)) {
+           stat.sub(100);
+        }
 
         require((rec.rightsHolder != 0), "PA:FMR: Record does not exist");
 
@@ -183,23 +191,23 @@ contract PRUF_APP is PRUF {
 
         require(_rgtHash != 0, "PA:FMR: rights holder cannot be zero");
         require(
-            (rec.assetStatus != 3) &&
-                (rec.assetStatus != 4) &&
-                (rec.assetStatus != 53) &&
-                (rec.assetStatus != 54),
+            (stat != 3) &&
+                (stat != 4) &&
+                (stat != 53) &&
+                (stat != 54),
             "PA:FMR: Cannot modify asset in lost or stolen status"
         );
         require(
-            (rec.assetStatus != 6) &&
-                (rec.assetStatus != 50) &&
-                (rec.assetStatus != 56),
+            (stat != 6) &&
+                (stat != 50) &&
+                (stat != 56),
             "PA:FMR: Cannot modify asset in Escrow"
         );
         require(
-            (rec.assetStatus != 5) && (rec.assetStatus != 55),
+            (stat != 5) && (stat != 55),
             "PA:FMR: Record In Transferred-unregistered status"
         );
-        require(rec.assetStatus < 200, "FMR: Record locked");
+        require(stat < 200, "FMR: Record locked");
         require(
             msg.value >= cost.forceModifyCost,
             "PA:FMR: tx value too low. Send more eth."
@@ -214,7 +222,7 @@ contract PRUF_APP is PRUF {
             rec.numberOfTransfers++;
         }
 
-        rec.assetStatus = 0;
+        stat = 0;
         rec.rightsHolder = _rgtHash;
         //^^^^^^^effects^^^^^^^^^
 
@@ -243,6 +251,11 @@ contract PRUF_APP is PRUF {
         User memory callingUser = getUser();
         Costs memory cost = getCost(rec.assetClass);
         Costs memory baseCost = getBaseCost();
+        uint8 stat = rec.assetStatus;
+
+        if ((stat > 99) && (stat < 200)) {
+           stat.sub(100);
+        }
 
         require((rec.rightsHolder != 0), "PA:TA: Record does not exist");
         require(
@@ -250,15 +263,15 @@ contract PRUF_APP is PRUF {
             "PA:TA: User not authorized to modify records in specified asset class"
         );
         require(
-            (rec.assetStatus > 49) || (callingUser.userType < 5),
+            (stat > 49) || (callingUser.userType < 5),
             "PA:TA:Only usertype < 5 can change status < 50"
         );
         require(_newrgtHash != 0, "PA:TA:new Rightsholder cannot be blank");
         require(
-            (rec.assetStatus == 1) || (rec.assetStatus == 51),
+            (stat == 1) || (stat == 51),
             "PA:TA:Asset status is not transferrable"
         );
-        require(rec.assetStatus < 200, "PA:TA: Record locked");
+        require(stat < 200, "PA:TA: Record locked");
         require(
             rec.rightsHolder == _rgtHash,
             "PA:TA:Rightsholder does not match supplied data"
@@ -297,6 +310,11 @@ contract PRUF_APP is PRUF {
         User memory callingUser = getUser();
         Costs memory cost = getCost(rec.assetClass);
         Costs memory baseCost = getBaseCost();
+        uint8 stat = rec.assetStatus;
+
+        if ((stat > 99) && (stat < 200)) {
+           stat.sub(100);
+        }
 
         require((rec.rightsHolder != 0), "PA:I2: Record does not exist");
         require(
@@ -304,14 +322,14 @@ contract PRUF_APP is PRUF {
             "PA:I2: User not authorized to modify records in specified asset class"
         );
         require(
-            (rec.assetStatus != 6) &&
-                (rec.assetStatus != 50) &&
-                (rec.assetStatus != 56),
+            (stat != 6) &&
+                (stat != 50) &&
+                (stat != 56),
             "PA:I2: Cannot modify asset in Escrow"
         );
-        require(rec.assetStatus < 200, "PA:I2: Record locked");
+        require(stat < 200, "PA:I2: Record locked");
         require(
-            (rec.assetStatus != 5) && (rec.assetStatus != 55),
+            (stat != 5) && (stat != 55),
             "PA:I2: Record In Transferred-unregistered status"
         );
         require(
@@ -359,6 +377,11 @@ contract PRUF_APP is PRUF {
         User memory callingUser = getUser();
         Costs memory cost = getCost(rec.assetClass);
         Costs memory baseCost = getBaseCost();
+        uint8 stat = rec.assetStatus;
+
+        if ((stat > 99) && (stat < 200)) {
+           stat.sub(100);
+        }
 
         require((rec.rightsHolder != 0), "PA:IA: Record does not exist");
         require(
@@ -370,10 +393,10 @@ contract PRUF_APP is PRUF {
             "PA:IA: User not authorized to modify records in specified asset class"
         );
         require(
-            (rec.assetStatus == 5) || (rec.assetStatus == 55),
+            (stat == 5) || (stat == 55),
             "PA:IA: Only Transferred status assets can be reimported"
         );
-        require(rec.assetStatus < 200, "PA:IA: Record locked");
+        require(stat < 200, "PA:IA: Record locked");
         require(
             msg.value >= cost.reMintRecordCost,
             "PA:IA: tx value too low. Send more eth."
@@ -384,7 +407,7 @@ contract PRUF_APP is PRUF {
             rec.numberOfTransfers++;
         }
 
-        rec.assetStatus = 0;
+        stat = 0;
         rec.rightsHolder = _rgtHash;
         //^^^^^^^effects^^^^^^^^^
 

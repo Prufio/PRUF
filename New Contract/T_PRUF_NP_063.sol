@@ -64,6 +64,8 @@
  * 57 = out of escrow
  * 58 = out of locked escrow
  *
+ * ADD 100 for NONREMINTABLE!!!
+ *
  * escrow status = lock time set to a time instead of a block number
  *
  *
