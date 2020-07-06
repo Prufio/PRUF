@@ -86,6 +86,7 @@ import "./PRUF_core_063.sol";
 
 contract T_PRUF_NP is PRUF {
     using SafeMath for uint256;
+    using SafeMath for uint8;
 
     address internal PrufAppAddress;
     PrufAppInterface internal PrufAppContract; //erc721_token prototype initialization
@@ -99,7 +100,7 @@ contract T_PRUF_NP is PRUF {
     modifier isAuthorized(bytes32 _idxHash) override {
         uint256 tokenID = uint256(_idxHash);
         require(
-                 (AssetTokenContract.ownerOf(tokenID) == msg.sender), //msg.sender is token holder
+            (AssetTokenContract.ownerOf(tokenID) == msg.sender), //msg.sender is token holder
             "PC:MOD-IA: Caller does not hold token"
         );
         _;
@@ -136,14 +137,16 @@ contract T_PRUF_NP is PRUF {
         return user;
         //^^^^^^^interactions^^^^^^^^^
     }
-//--------------------------------------------External Functions--------------------------
+
+    //--------------------------------------------External Functions--------------------------
 
     /*
      * @dev Modify rgtHash (like forceModify)
      * must be tokenholder or assetTokenContract
      *
      */
-    function changeRgt(bytes32 _idxHash, bytes32 _rgtHash) external
+    function changeRgt(bytes32 _idxHash, bytes32 _rgtHash)
+        external
         nonReentrant
         isAuthorized(_idxHash)
         returns (bytes32)
@@ -235,7 +238,7 @@ contract T_PRUF_NP is PRUF {
         uint8 _newAssetStatus
     ) external nonReentrant isAuthorized(_idxHash) returns (uint8) {
         Record memory rec = getRecord(_idxHash);
-        rec.assetStatus = _newAssetStatus;
+
         require((rec.rightsHolder != 0), "PNP:SLS: Record does not exist");
         require(
             (_newAssetStatus == 3) ||
@@ -249,8 +252,7 @@ contract T_PRUF_NP is PRUF {
             "PNP:MS: Only custodial usertype can set status < 50"
         );
         require(
-            (rec.assetStatus > 49) ||
-                (_newAssetStatus < 50),
+            (rec.assetStatus > 49) || (_newAssetStatus < 50),
             "PNP:SLS: Only usertype <5 can change a <49 status asset to a >49 status"
         );
         require(
@@ -267,7 +269,7 @@ contract T_PRUF_NP is PRUF {
             "PNP:SLS: Rightsholder does not match supplied data"
         );
         //^^^^^^^checks^^^^^^^^^
-
+        rec.assetStatus = _newAssetStatus;
         bytes32 userHash = keccak256(abi.encodePacked(msg.sender));
         //^^^^^^^effects^^^^^^^^^
 
@@ -328,7 +330,6 @@ contract T_PRUF_NP is PRUF {
     ) external nonReentrant isAuthorized(_idxHash) returns (bytes32) {
         Record memory rec = getRecord(_idxHash);
         User memory callingUser = getUser();
-        //Costs memory cost = getCost(rec.assetClass);
 
         require((rec.rightsHolder != 0), "PNP:MI1: Record does not exist");
         require(

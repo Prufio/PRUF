@@ -198,21 +198,18 @@ contract T_PRUF_NP is PRUF {
         Record memory rec = getRecord(_idxHash);
         Costs memory cost = getCost(rec.assetClass);
         Costs memory baseCost = getBaseCost();
-        uint8 stat = rec.assetStatus;
         uint256 tokenId = uint256(_idxHash);
-
-        if ((stat > 99) || (stat < 200)) {
-            stat.sub(100);
-        }
 
         require((rec.rightsHolder != 0), "PA:I2: Record does not exist");
         require(
-            (stat != 6) && (stat != 50) && (stat != 56),
+            (rec.assetStatus != 6) &&
+                (rec.assetStatus != 50) &&
+                (rec.assetStatus != 56),
             "PA:I2: Cannot modify asset in Escrow"
         );
-        require(stat < 200, "PA:I2: Record locked");
+        require(rec.assetStatus < 200, "PA:I2: Record locked");
         require(
-            (stat != 5) && (stat != 55),
+            (rec.assetStatus != 5) && (rec.assetStatus != 55),
             "PA:I2: Record In Transferred-unregistered status"
         );
         require(
@@ -254,20 +251,17 @@ contract T_PRUF_NP is PRUF {
         Record memory rec = getRecord(_idxHash);
         Costs memory cost = getCost(rec.assetClass);
         Costs memory baseCost = getBaseCost();
-        uint8 stat = rec.assetStatus;
-
-        if ((stat > 99) || (stat < 200)) {
-            stat.sub(100);
-        }
 
         require((rec.rightsHolder != 0), "PA:I2: Record does not exist");
         require(
-            (stat != 6) && (stat != 50) && (stat != 56),
+            (rec.assetStatus != 6) &&
+                (rec.assetStatus != 50) &&
+                (rec.assetStatus != 56),
             "PA:I2: Cannot modify asset in Escrow"
         );
-        require(stat < 200, "PA:I2: Record locked");
+        require(rec.assetStatus < 200, "PA:I2: Record locked");
         require(
-            (stat != 5) && (stat != 55),
+            (rec.assetStatus != 5) && (rec.assetStatus != 55),
             "PA:I2: Record In Transferred-unregistered status"
         );
         require(
