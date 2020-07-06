@@ -1,4 +1,4 @@
-//TODO: REMINT!!!
+//TODO: REMINT and recycle
 
 // SPDX-License-Identifier: MIT
 
@@ -10,7 +10,6 @@ import "./PRUF_interfaces.sol";
 import "./Imports/ReentrancyGuard.sol";
 
 contract AssetToken is Ownable, ReentrancyGuard, ERC721 {
-
     struct Record {
         bytes32 recorder; // Address hash of recorder
         bytes32 rightsHolder; // KEK256 Registered owner
@@ -28,8 +27,8 @@ contract AssetToken is Ownable, ReentrancyGuard, ERC721 {
 
     constructor() public ERC721("BulletProof Asset Token", "BPXA") {}
 
-    address internal PrufAppAddress;
-    PrufAppInterface internal PrufAppContract; //erc721_token prototype initialization
+    address internal T_PrufAppAddress; //isAdmin
+    address internal PrufAppAddress; //isAdmin
     address internal storageAddress;
     StorageInterface internal Storage; // Set up external contract interface
 
@@ -37,7 +36,9 @@ contract AssetToken is Ownable, ReentrancyGuard, ERC721 {
 
     modifier isAdmin() {
         require(
-            (msg.sender == PrufAppAddress) || (msg.sender == owner()),
+            (msg.sender == PrufAppAddress) ||
+                (msg.sender == T_PrufAppAddress) ||
+                (msg.sender == owner()),
             "Calling address does not belong to an Admin"
         );
         _;
@@ -64,12 +65,10 @@ contract AssetToken is Ownable, ReentrancyGuard, ERC721 {
      */
     function OO_ResolveContractAddresses() external nonReentrant onlyOwner {
         //^^^^^^^checks^^^^^^^^^
-
+        T_PrufAppAddress = Storage.resolveContractAddress("T_PRUF_APP");
         PrufAppAddress = Storage.resolveContractAddress("PRUF_APP");
-        PrufAppContract = PrufAppInterface(PrufAppAddress);
         //^^^^^^^effects^^^^^^^^^
     }
-
 
     /*
      * must be isAdmin
@@ -81,14 +80,14 @@ contract AssetToken is Ownable, ReentrancyGuard, ERC721 {
         string calldata _tokenURI
     ) external isAdmin returns (uint256) {
         //^^^^^^^checks^^^^^^^^^
-                                            //MAKE URI ASSET SPECIFIC- has to incorporate the token ID
+        //MAKE URI ASSET SPECIFIC- has to incorporate the token ID
         _safeMint(_reciepientAddress, tokenId);
         _setTokenURI(tokenId, _tokenURI);
         return tokenId;
         //^^^^^^^interactions^^^^^^^^^
     }
 
-        /**
+    /**
      * @dev Transfers the ownership of a given token ID to another address.
      * Usage of this method is discouraged, use {safeTransferFrom} whenever possible.
      * Requires the msg.sender to be the owner, approved, or operator.
@@ -96,20 +95,25 @@ contract AssetToken is Ownable, ReentrancyGuard, ERC721 {
      * @param to address to receive the ownership of the given token ID
      * @param tokenId uint256 ID of the token to be transferred
      */
-    function transferFrom(address from, address to, uint256 tokenId) public nonReentrant override{
-        bytes32 _idxHash = bytes32 (tokenId);
+    function transferFrom(
+        address from,
+        address to,
+        uint256 tokenId
+    ) public override nonReentrant {
+        bytes32 _idxHash = bytes32(tokenId);
         Record memory rec = getRecord(_idxHash);
 
-        require(
-            rec.assetStatus == 51,
-            "Asset not in transferrable status"
-        );
+        require(rec.assetStatus == 51, "Asset not in transferrable status");
 
-        require(_isApprovedOrOwner(_msgSender(), tokenId), "ERC721: transfer caller is not owner nor approved");
+        require(
+            _isApprovedOrOwner(_msgSender(), tokenId),
+            "ERC721: transfer caller is not owner nor approved"
+        );
 
         //^^^^^^^checks^^^^^^^^^
 
-        rec.rightsHolder = 0xFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF;
+        rec
+            .rightsHolder = 0xFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF;
         //^^^^^^^effects^^^^^^^^^
 
         writeRecord(_idxHash, rec);
@@ -128,12 +132,17 @@ contract AssetToken is Ownable, ReentrancyGuard, ERC721 {
      * @param to address to receive the ownership of the given token ID
      * @param tokenId uint256 ID of the token to be transferred
      */
-    function safeTransferFrom(address from, address to, uint256 tokenId) public nonReentrant override{
-        bytes32 _idxHash = bytes32 (tokenId);
+    function safeTransferFrom(
+        address from,
+        address to,
+        uint256 tokenId
+    ) public override nonReentrant {
+        bytes32 _idxHash = bytes32(tokenId);
         Record memory rec = getRecord(_idxHash);
 
         //^^^^^^^checks^^^^^^^^^
-        rec.rightsHolder = 0xFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF;
+        rec
+            .rightsHolder = 0xFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF;
         //^^^^^^^effects^^^^^^^^^
 
         writeRecord(_idxHash, rec);
@@ -153,20 +162,26 @@ contract AssetToken is Ownable, ReentrancyGuard, ERC721 {
      * @param tokenId uint256 ID of the token to be transferred
      * @param _data bytes data to send along with a safe transfer check
      */
-    function safeTransferFrom(address from, address to, uint256 tokenId, bytes memory _data) public nonReentrant virtual override {
-        bytes32 _idxHash = bytes32 (tokenId);
+    function safeTransferFrom(
+        address from,
+        address to,
+        uint256 tokenId,
+        bytes memory _data
+    ) public virtual override nonReentrant {
+        bytes32 _idxHash = bytes32(tokenId);
         Record memory rec = getRecord(_idxHash);
 
-        require(
-            rec.assetStatus == 51,
-            "Asset not in transferrable status"
-        );
+        require(rec.assetStatus == 51, "Asset not in transferrable status");
 
-        require(_isApprovedOrOwner(_msgSender(), tokenId), "ERC721: transfer caller is not owner nor approved");
+        require(
+            _isApprovedOrOwner(_msgSender(), tokenId),
+            "ERC721: transfer caller is not owner nor approved"
+        );
 
         //^^^^^^^checks^^^^^^^^^
 
-        rec.rightsHolder = 0xFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF;
+        rec
+            .rightsHolder = 0xFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF;
         //^^^^^^^effects^^^^^^^^^
 
         writeRecord(_idxHash, rec);
@@ -202,7 +217,6 @@ contract AssetToken is Ownable, ReentrancyGuard, ERC721 {
     //     //^^^^^^^interactions^^^^^^^^^
     // }
 
-
     /*
      * Authorizations?
      * @dev remint Asset Token
@@ -227,8 +241,7 @@ contract AssetToken is Ownable, ReentrancyGuard, ERC721 {
     /*
      * @dev Write a Record to Storage @ idxHash
      */
-    function writeRecord(bytes32 _idxHash, Record memory _rec) private
-    {
+    function writeRecord(bytes32 _idxHash, Record memory _rec) private {
         bytes32 userHash = keccak256(abi.encodePacked(msg.sender)); // Get a userhash for authentication and recorder logging
 
         Storage.modifyRecord(
