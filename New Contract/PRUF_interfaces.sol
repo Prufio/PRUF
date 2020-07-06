@@ -32,6 +32,13 @@ interface AssetTokenInterface {
         uint256 tokenIdxHash,
         string calldata _tokenURI
     ) external returns (uint256);
+
+    function reMintAssetToken(
+        address _reciepientAddress,
+        uint256 tokenId,
+        string calldata _tokenURI
+    ) external returns (uint256);
+
 }
 
 interface StorageInterface {
