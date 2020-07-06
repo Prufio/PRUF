@@ -26,6 +26,9 @@
  *  PRUF_APP
  *  PRUF_NP
  *  PRUF_simpleEscrow
+ *  T_PRUF_APP
+ *  T_PRUF_NP
+ *  T_PRUF_simpleEscrow
  *
  *
  * CONTRACT Types (storage)
@@ -81,7 +84,7 @@ pragma solidity ^0.6.7;
 
 import "./PRUF_core_063.sol";
 
-contract PRUF_simpleEscrow is PRUF {
+contract T_PRUF_simpleEscrow is PRUF {
     using SafeMath for uint256;
 
     address internal PrufAppAddress;
