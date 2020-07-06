@@ -2,7 +2,7 @@
 
 pragma solidity ^0.6.2;
 
-import "./escrow/Escrow.sol";
+import "./Escrow.sol";
 
 /**
  * @dev Simple implementation of a

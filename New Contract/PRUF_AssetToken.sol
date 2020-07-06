@@ -80,7 +80,6 @@ contract AssetToken is Ownable, ReentrancyGuard, ERC721 {
         uint256 tokenId,
         string calldata _tokenURI
     ) external isAdmin returns (uint256) {
-        bytes32 _idxHash = uint256(tokenId);
         //^^^^^^^checks^^^^^^^^^
                                             //MAKE URI ASSET SPECIFIC- has to incorporate the token ID
         _safeMint(_reciepientAddress, tokenId);
@@ -98,7 +97,7 @@ contract AssetToken is Ownable, ReentrancyGuard, ERC721 {
      * @param tokenId uint256 ID of the token to be transferred
      */
     function transferFrom(address from, address to, uint256 tokenId) public nonReentrant override{
-        bytes32 _idxHash = uint256(tokenId);
+        bytes32 _idxHash = bytes32 (tokenId);
         Record memory rec = getRecord(_idxHash);
 
         require(
@@ -130,7 +129,7 @@ contract AssetToken is Ownable, ReentrancyGuard, ERC721 {
      * @param tokenId uint256 ID of the token to be transferred
      */
     function safeTransferFrom(address from, address to, uint256 tokenId) public nonReentrant override{
-        bytes32 _idxHash = uint256(tokenId);
+        bytes32 _idxHash = bytes32 (tokenId);
         Record memory rec = getRecord(_idxHash);
 
         //^^^^^^^checks^^^^^^^^^
@@ -155,7 +154,7 @@ contract AssetToken is Ownable, ReentrancyGuard, ERC721 {
      * @param _data bytes data to send along with a safe transfer check
      */
     function safeTransferFrom(address from, address to, uint256 tokenId, bytes memory _data) public nonReentrant virtual override {
-        bytes32 _idxHash = uint256(tokenId);
+        bytes32 _idxHash = bytes32 (tokenId);
         Record memory rec = getRecord(_idxHash);
 
         require(
@@ -216,7 +215,6 @@ contract AssetToken is Ownable, ReentrancyGuard, ERC721 {
         uint256 tokenId,
         string calldata _tokenURI
     ) external isAdmin returns (uint256) {
-        bytes32 _idxHash = uint256(tokenId);
         require(_exists(tokenId), "Cannot Remint nonexistant token");
         //^^^^^^^checks^^^^^^^^^
         _burn(tokenId);
