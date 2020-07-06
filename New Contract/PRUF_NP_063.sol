@@ -159,7 +159,7 @@ contract PRUF_NP is PRUF {
             callingUser.authorizedAssetClass == rec.assetClass,
             "PNP:MS: User not authorized to modify records in specified asset class"
         );
-        require(_newAssetStatus < 200, "PNP:MS: user cannot set status > 199");
+        require(_newAssetStatus < 100, "PNP:MS: user cannot set status > 99");
         require(
             (rec.assetStatus != 6) &&
                 (rec.assetStatus != 50) &&

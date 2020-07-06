@@ -189,7 +189,7 @@ contract T_PRUF_NP is PRUF {
         Record memory rec = getRecord(_idxHash);
 
         require((rec.rightsHolder != 0), "PNP:MS: Record does not exist");
-        require(_newAssetStatus < 200, "PNP:MS: user cannot set status > 199");
+        require(_newAssetStatus < 100, "PNP:MS: user cannot set status > 99");
         require(
             (_newAssetStatus > 49),
             "PNP:MS: Only custodial usertype can set status < 50"
