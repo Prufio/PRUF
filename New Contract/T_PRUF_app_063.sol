@@ -1,5 +1,6 @@
 /*  TO DO  //TODO: REMINT!!!
  * verify security and user permissioning /modifiers
+ * web3 must stringify number inputs so that they match the solidity outputs.
  *
  * IMPORTANT NOTE : DO NOT REMOVE FROM CODE:
  *      Verification of rgtHash in curated, tokenless asset classes are not secure beyond the honorable intentions
@@ -101,7 +102,7 @@ contract T_PRUF_NP is PRUF {
     modifier isAuthorized(bytes32 _idxHash) override {
         uint256 tokenID = uint256(_idxHash);
         require(
-                 (AssetTokenContract.ownerOf(tokenID) == msg.sender), //msg.sender is token holder
+            (AssetTokenContract.ownerOf(tokenID) == msg.sender), //msg.sender is token holder
             "PC:MOD-IA: Caller does not hold token"
         );
         _;
@@ -138,7 +139,8 @@ contract T_PRUF_NP is PRUF {
         return user;
         //^^^^^^^interactions^^^^^^^^^
     }
-//--------------------------------------------External Functions--------------------------
+
+    //--------------------------------------------External Functions--------------------------
     /*
      * @dev Wrapper for newRecord  CAUTION ANYONE CAN CREATE ASSETS IN ALL ASSET CLASSES!!!!!!!!!!!!!!!!FIX
      */
@@ -149,7 +151,7 @@ contract T_PRUF_NP is PRUF {
         uint256 _countDownStart,
         bytes32 _Ipfs
     ) external payable nonReentrant {
-        uint256 tokenId = uint256 (_idxHash);
+        uint256 tokenId = uint256(_idxHash);
         Costs memory cost = getCost(_assetClass);
         Costs memory baseCost = getBaseCost();
 
@@ -178,7 +180,7 @@ contract T_PRUF_NP is PRUF {
             cost.newRecordCost
         );
 
-         AssetTokenContract.mintAssetToken(msg.sender, tokenId, "pruf.io");
+        AssetTokenContract.mintAssetToken(msg.sender, tokenId, "pruf.io");
         //^^^^^^^interactions^^^^^^^^^
     }
 
@@ -186,9 +188,61 @@ contract T_PRUF_NP is PRUF {
      * @dev Modify **Record**.Ipfs2 with confirmation
      * must Match rgtHash using raw data fields
      */
-   // function reMintToken(_idxHash, string memory secret) external payable nonReentrant {
+    function reMintToken(
+        bytes32 _idxHash,
+        string memory first,
+        string memory middle,
+        string memory last,
+        string memory id,
+        string memory secret
+    ) external payable nonReentrant isAuthorized(_idxHash) returns (uint256) {
+        Record memory rec = getRecord(_idxHash);
+        Costs memory cost = getCost(rec.assetClass);
+        Costs memory baseCost = getBaseCost();
+        uint8 stat = rec.assetStatus;
+        uint256 tokenId = uint256(_idxHash);
 
-    //}
+        if ((stat > 99) || (stat < 200)) {
+            stat.sub(100);
+        }
+
+        require((rec.rightsHolder != 0), "PA:I2: Record does not exist");
+        require(
+            (stat != 6) && (stat != 50) && (stat != 56),
+            "PA:I2: Cannot modify asset in Escrow"
+        );
+        require(stat < 200, "PA:I2: Record locked");
+        require(
+            (stat != 5) && (stat != 55),
+            "PA:I2: Record In Transferred-unregistered status"
+        );
+        require(
+            rec.rightsHolder ==
+                keccak256(abi.encodePacked(first, middle, last, id, secret)),
+            "PA:I2: Rightsholder does not match supplied data"
+        );
+        require(
+            msg.value >= cost.createNoteCost,
+            "PA:I2: tx value too low. Send more eth."
+        );
+        //^^^^^^^checks^^^^^^^^^
+
+        deductPayment(
+            baseCost.paymentAddress,
+            baseCost.createNoteCost,
+            cost.paymentAddress,
+            cost.createNoteCost
+        );
+
+        tokenId = AssetTokenContract.reMintAssetToken(
+            msg.sender,
+            tokenId,
+            "pruf.io"
+        );
+
+        return tokenId;
+        //^^^^^^^interactions^^^^^^^^^
+    }
 
     /*
      * @dev Modify **Record**.Ipfs2 with confirmation
@@ -203,15 +257,13 @@ contract T_PRUF_NP is PRUF {
         Costs memory baseCost = getBaseCost();
         uint8 stat = rec.assetStatus;
 
-        if (stat > 99) {
-           stat.sub(100);
+        if ((stat > 99) || (stat < 200)) {
+            stat.sub(100);
         }
 
         require((rec.rightsHolder != 0), "PA:I2: Record does not exist");
         require(
-            (stat != 6) &&
-                (stat != 50) &&
-                (stat != 56),
+            (stat != 6) && (stat != 50) && (stat != 56),
             "PA:I2: Cannot modify asset in Escrow"
         );
         require(stat < 200, "PA:I2: Record locked");
