@@ -203,8 +203,7 @@ contract T_PRUF_NP is PRUF {
         require(
             AC_info.custodyType == 2,
             "PA:I2: Contract not authorized for custodial assets"
-            );
-
+        );
         require(rec.rightsHolder != 0, "PA:I2: Record does not exist");
         require(
             (rec.assetStatus != 6) &&
