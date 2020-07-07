@@ -111,6 +111,9 @@ contract PRUF_NP is PRUF {
         _;
     }
 
+    /*
+     * @dev //returns the address of a contract with name _name
+     */
     function OO_ResolveContractAddresses()
         external
         override

@@ -82,7 +82,7 @@
 // SPDX-License-Identifier: UNLICENSED
 pragma solidity ^0.6.7;
 
-import "./PRUF_core_063.sol";
+import "./PRUF_core_064.sol";
 
 contract PRUF_simpleEscrow is PRUF {
     using SafeMath for uint256;
@@ -111,6 +111,9 @@ contract PRUF_simpleEscrow is PRUF {
         _;
     }
 
+    /*
+     * @dev //returns the address of a contract with name _name
+     */
     function OO_ResolveContractAddresses()
         external
         override
