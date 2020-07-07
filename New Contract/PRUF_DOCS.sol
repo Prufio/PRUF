@@ -1,7 +1,9 @@
 /*-----------------------------------------------------------------
  *  TO DO
- *
- * @implement remint_asset ?
+ *  APP and APP NP (and escrow?) contracts need to check if they are in a custodial (1) or non custodial(2) asset type
+ *  Implement burn
+ *  implement recycle
+ *  implement checks in new record for data preservation
 *-----------------------------------------------------------------
 
 *-----------------------------------------------------------------

@@ -162,6 +162,26 @@ contract PRUF is ReentrancyGuard, Ownable, IERC721Receiver, PullPayment {
         _;
     }
 
+    modifier isCustodial(uint16 _assetClass) virtual {
+        AC memory AC_info = getACinfo(_assetClass);
+        require(
+            AC_info.custodyType == 1,
+            "PC:MOD-IA: Asset class is not custodial"
+        );
+        _;
+    }
+
+    modifier isNonCustodial(uint16 _assetClass) virtual {
+        AC memory AC_info = getACinfo(_assetClass);
+        require(
+            AC_info.custodyType == 2,
+            "PC:MOD-IA: Asset class is custodial"
+        );
+        _;
+    }
+
+
+
     //----------------------Internal Admin functions / onlyowner or isAdmin----------------------//
     /*
      * @dev Address Setters
@@ -183,6 +203,7 @@ contract PRUF is ReentrancyGuard, Ownable, IERC721Receiver, PullPayment {
         AssetClassTokenManagerAddress = Storage.resolveContractAddress(
             "assetClassTokenManager"
         );
+
         AssetClassTokenManagerContract = AssetClassTokenManagerInterface(
             AssetClassTokenManagerAddress
         );
@@ -273,28 +294,6 @@ contract PRUF is ReentrancyGuard, Ownable, IERC721Receiver, PullPayment {
     }
 
     //--------------------------------------------------------------------------------------INTERNAL functions
-    /*
-     * @dev Get asset class information from AC_manager (FUNCTION IS VIEW)
-     */
-    function getACinfo(uint16 _assetClass)
-        internal
-        virtual
-        returns (AC memory)
-    {
-        AC memory AC_info;
-        (
-            AC_info.assetClassRoot,
-            AC_info.custodyType,
-            AC_info.extendedData
-        ) = AssetClassTokenManagerContract.getAC_data(_assetClass);
-    }
-
-    // struct AC {
-    //     string name; // NameHash for assetClass
-    //     uint16 assetClassRoot; // asset type root (bycyles - USA Bicycles)
-    //     uint8 custodyType; // custodial or noncustodial
-    //     uint256 extendedData; // asset type root (bycyles - USA Bicycles)
-    // }
 
     /*
      * @dev Get a User Record from Storage @ msg.sender
@@ -317,6 +316,23 @@ contract PRUF is ReentrancyGuard, Ownable, IERC721Receiver, PullPayment {
             registeredUsers[_userHash].authorizedAssetClass
         );
         //^^^^^^^interactions^^^^^^^^^
+    }
+
+    /*
+     * @dev Get asset class information from AC_manager (FUNCTION IS VIEW)
+     */
+    function getACinfo(uint16 _assetClass)
+        internal
+        virtual
+        returns (AC memory)
+    {
+        AC memory AC_info;
+        (
+            AC_info.assetClassRoot,
+            AC_info.custodyType,
+            AC_info.extendedData
+        ) = AssetClassTokenManagerContract.getAC_data(_assetClass);
+        return AC_info;
     }
 
     /*
@@ -433,6 +449,28 @@ contract PRUF is ReentrancyGuard, Ownable, IERC721Receiver, PullPayment {
     }
 
     /*
+     * @dev Write a Record to Storage @ idxHash
+     */
+    function writeRecord(bytes32 _idxHash, Record memory _rec)
+        internal
+        isAuthorized(_idxHash)
+    //^^^^^^^checks^^^^^^^^^
+    {
+        bytes32 userHash = keccak256(abi.encodePacked(msg.sender)); // Get a userhash for authentication and recorder logging
+
+        Storage.modifyRecord(
+            userHash,
+            _idxHash,
+            _rec.rightsHolder,
+            _rec.assetStatus,
+            _rec.countDown,
+            _rec.forceModCount,
+            _rec.numberOfTransfers
+        ); // Send data and writehash to storage
+        //^^^^^^^interactions^^^^^^^^^
+    }
+
+    /*
      * @dev Write an Ipfs Record to Storage @ idxHash
      */
     function writeRecordIpfs1(bytes32 _idxHash, Record memory _rec)
@@ -456,28 +494,6 @@ contract PRUF is ReentrancyGuard, Ownable, IERC721Receiver, PullPayment {
         bytes32 userHash = keccak256(abi.encodePacked(msg.sender)); // Get a userhash for authentication and recorder logging
 
         Storage.modifyIpfs2(userHash, _idxHash, _rec.Ipfs2); // Send data to storage
-        //^^^^^^^interactions^^^^^^^^^
-    }
-
-    /*
-     * @dev Write a Record to Storage @ idxHash
-     */
-    function writeRecord(bytes32 _idxHash, Record memory _rec)
-        internal
-        isAuthorized(_idxHash)
-    //^^^^^^^checks^^^^^^^^^
-    {
-        bytes32 userHash = keccak256(abi.encodePacked(msg.sender)); // Get a userhash for authentication and recorder logging
-
-        Storage.modifyRecord(
-            userHash,
-            _idxHash,
-            _rec.rightsHolder,
-            _rec.assetStatus,
-            _rec.countDown,
-            _rec.forceModCount,
-            _rec.numberOfTransfers
-        ); // Send data and writehash to storage
         //^^^^^^^interactions^^^^^^^^^
     }
 
