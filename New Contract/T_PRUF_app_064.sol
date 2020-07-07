@@ -126,10 +126,6 @@ contract T_PRUF_NP is PRUF {
 
         PrufAppAddress = Storage.resolveContractAddress("PRUF_APP");
         PrufAppContract = PrufAppInterface(PrufAppAddress);
-
-        AssetClassTokenManagerContract = AssetClassTokenManagerInterface(
-        AssetClassTokenManagerAddress
-        );
         //^^^^^^^effects^^^^^^^^^
     }
 

@@ -162,23 +162,23 @@ contract PRUF is ReentrancyGuard, Ownable, IERC721Receiver, PullPayment {
         _;
     }
 
-    modifier isCustodial(uint16 _assetClass) virtual {
-        AC memory AC_info = getACinfo(_assetClass);
-        require(
-            AC_info.custodyType == 1,
-            "PC:MOD-IA: Asset class is not custodial"
-        );
-        _;
-    }
+    // modifier isCustodial(uint16 _assetClass) virtual {
+    //     AC memory AC_info = getACinfo(_assetClass);
+    //     require(
+    //         AC_info.custodyType == 1,
+    //         "PC:MOD-IA: Asset class is not custodial"
+    //     );
+    //     _;
+    // }
 
-    modifier isNonCustodial(uint16 _assetClass) virtual {
-        AC memory AC_info = getACinfo(_assetClass);
-        require(
-            AC_info.custodyType == 2,
-            "PC:MOD-IA: Asset class is custodial"
-        );
-        _;
-    }
+    // modifier isNonCustodial(uint16 _assetClass) virtual {
+    //     AC memory AC_info = getACinfo(_assetClass);
+    //     require(
+    //         AC_info.custodyType == 2,
+    //         "PC:MOD-IA: Asset class is custodial"
+    //     );
+    //     _;
+    // }
 
 
 
