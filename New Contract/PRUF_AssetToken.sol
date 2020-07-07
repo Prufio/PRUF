@@ -75,13 +75,13 @@ contract AssetToken is Ownable, ReentrancyGuard, ERC721 {
      *
      */
     function mintAssetToken(
-        address _reciepientAddress,
+        address _recipientAddress,
         uint256 tokenId,
         string calldata _tokenURI
     ) external isAdmin returns (uint256) {
         //^^^^^^^checks^^^^^^^^^
         //MAKE URI ASSET SPECIFIC- has to incorporate the token ID
-        _safeMint(_reciepientAddress, tokenId);
+        _safeMint(_recipientAddress, tokenId);
         _setTokenURI(tokenId, _tokenURI);
         return tokenId;
         //^^^^^^^interactions^^^^^^^^^
@@ -252,14 +252,14 @@ contract AssetToken is Ownable, ReentrancyGuard, ERC721 {
      * Sends new token to original Caller
      */
     function reMintAssetToken(
-        address _reciepientAddress,
+        address _recipientAddress,
         uint256 tokenId,
         string calldata _tokenURI
     ) external isAdmin returns (uint256) {
         require(_exists(tokenId), "Cannot Remint nonexistant token");
         //^^^^^^^checks^^^^^^^^^
         _burn(tokenId);
-        _safeMint(_reciepientAddress, tokenId);
+        _safeMint(_recipientAddress, tokenId);
         _setTokenURI(tokenId, _tokenURI);
         return tokenId;
         //^^^^^^^interactions^^^^^^^^^
