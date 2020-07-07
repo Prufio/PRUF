@@ -1,3 +1,7 @@
+// SPDX-License-Identifier: UNLICENSED
+
+pragma solidity ^0.6.0;
+
 /*-----------------------------------------------------------------
  *  TO DO
  *
@@ -24,7 +28,7 @@
  *      in record: new rgtHash assigned, anything else left as-was (in case there was a pre-existing record)
  *      token is reissued to recycling address
  *  if recycled in new asset class group:
- *  
+ *
 *-----------------------------------------------------------------
 
 *-----------------------------------------------------------------
