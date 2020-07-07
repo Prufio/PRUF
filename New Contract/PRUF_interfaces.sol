@@ -22,13 +22,13 @@ interface AssetClassTokenInterface {
     ) external;
 
     function mintACToken(
-        address _reciepientAddress,
+        address _recipientAddress,
         uint256 tokenId,
         string calldata _tokenURI
     ) external returns (uint256);
 
     function reMintACToken(
-        address _reciepientAddress,
+        address _recipientAddress,
         uint256 tokenId,
         string calldata _tokenURI
     ) external returns (uint256);
@@ -45,13 +45,13 @@ interface AssetTokenInterface {
     ) external;
 
     function mintAssetToken(
-        address _reciepientAddress,
+        address _recipientAddress,
         uint256 tokenId,
         string calldata _tokenURI
     ) external returns (uint256);
 
     function reMintAssetToken(
-        address _reciepientAddress,
+        address _recipientAddress,
         uint256 tokenId,
         string calldata _tokenURI
     ) external returns (uint256);
