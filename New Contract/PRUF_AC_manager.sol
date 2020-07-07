@@ -114,17 +114,15 @@ contract PRUF_AC_MGR is PRUF {
      * Originating Address:
      *      is owner
      */
-
     modifier isAdmin() {
         require(
-            msg.sender == owner() ||
-            msg.sender == AC_minterAddress,
+            msg.sender == owner() || msg.sender == AC_minterAddress,
             "Calling address does not belong to an Admin"
         );
         _;
     }
 
-     /*
+    /*
      * @dev Verify caller holds ACtoken of passed assetClass
      */
     modifier isACtokenHolderOfClass(uint16 _assetClass) {
@@ -136,6 +134,10 @@ contract PRUF_AC_MGR is PRUF {
         _;
     }
 
+    //--------------------------------------------External Functions--------------------------
+    /*
+     * @dev Mints asset class @ address
+     */
     function createAssetClass(
         uint256 _tokenId,
         address _recipientAddress,
@@ -152,13 +154,20 @@ contract PRUF_AC_MGR is PRUF {
             (_ac.custodyType != 0) || (_assetClassRoot == _assetClass),
             "Root asset class does not exist"
         );
+        //^^^^^^^checks^^^^^^^^^
 
         AC_number[_name] = _assetClass;
         AC_data[_assetClass].name = _name;
         AC_data[_assetClass].assetClassRoot = _assetClassRoot;
         AC_data[_assetClass].custodyType = _custodyType;
+        //^^^^^^^effects^^^^^^^^^
 
-        AssetClassTokenContract.mintACToken(_recipientAddress, _tokenId, "pruf.io/assetClassToken");
+        AssetClassTokenContract.mintACToken(
+            _recipientAddress,
+            _tokenId,
+            "pruf.io/assetClassToken"
+        );
+        //^^^^^^^interactions^^^^^^^^^
     }
 
     /*
@@ -178,6 +187,7 @@ contract PRUF_AC_MGR is PRUF {
             priceDivisor != 0,
             "price divisor is zero. Set base costs first"
         );
+        //^^^^^^^checks^^^^^^^^^
         cost[_class].newRecordCost = _newRecordCost;
         cost[_class].transferAssetCost = _transferAssetCost;
         cost[_class].createNoteCost = _createNoteCost;
@@ -216,7 +226,9 @@ contract PRUF_AC_MGR is PRUF {
         //^^^^^^^effects^^^^^^^^^
     }
 
-
+    /*
+     * @dev Retrieve AC_data @ _tokenId
+     */
     function getAC_data(uint256 _tokenId)
         external
         view
@@ -227,27 +239,30 @@ contract PRUF_AC_MGR is PRUF {
         )
     {
         uint16 assetClass = uint16(_tokenId);
+        //^^^^^^^effects^^^^^^^^^
         return (
             AC_data[assetClass].assetClassRoot,
             AC_data[assetClass].custodyType,
             AC_data[assetClass].extendedData
         );
+        //^^^^^^^interactions^^^^^^^^^
     }
 
+    /*
+     * @dev Retrieve AC_name @ _tokenId
+     */
     function getAC_name(uint256 _tokenId)
         external
         view
-        returns (
-            string memory
-        )
+        returns (string memory)
     {
         uint16 assetClass = uint16(_tokenId);
-        return (
-            AC_data[assetClass].name
-        );
+        //^^^^^^^effects^^^^^^^^^
+        return (AC_data[assetClass].name);
+        //^^^^^^^interactions^^^^^^^^^
     }
 
-     /*
+    /*
      * @dev Retrieve function costs per asset class, in Wei
      */
     function retrieveCosts(uint16 _assetClass)
@@ -362,6 +377,7 @@ contract PRUF_AC_MGR is PRUF {
             uint256,
             address
         )
+    //^^^^^^^checks^^^^^^^^^
     {
         return (
             baseCost.newRecordCost,
@@ -375,18 +391,22 @@ contract PRUF_AC_MGR is PRUF {
         //^^^^^^^interactions^^^^^^^^^
     }
 
+    /*
+     * @dev Retrieve AC_number @ AC_name
+     */
     function resolveAssetClass(string memory _name)
         external
         view
-        returns (
-            uint16
-        )
+        returns (uint16)
+    //^^^^^^^checks^^^^^^^^^
     {
-        return (
-            AC_number[_name]
-        );
+        return (AC_number[_name]);
+        //^^^^^^^interactions^^^^^^^^^
     }
 
+    /*
+     * @dev Address Setters
+     */
     function OO_ResolveContractAddresses()
         external
         override
@@ -402,8 +422,6 @@ contract PRUF_AC_MGR is PRUF {
         );
 
         AC_minterAddress = Storage.resolveContractAddress("PRUF_AC_Minter");
-        //^^^^^^^effects^^^^^^^^^
+        //^^^^^^^interactions^^^^^^^^^
     }
-
-    //--------------------------------------------External Functions--------------------------
 }
