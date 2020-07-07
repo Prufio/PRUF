@@ -183,8 +183,6 @@ contract T_PRUF_NP is PRUF {
     ) external payable nonReentrant {
         uint256 tokenId = uint256(_idxHash);
         Record memory rec = getRecord(_idxHash);
-        Costs memory cost = getCost(_assetClass);
-        Costs memory baseCost = getBaseCost();
         AC memory AC_info = getACinfo(_assetClass);
         AC memory oldAC_info = getACinfo(rec.assetClass);
 
@@ -193,10 +191,6 @@ contract T_PRUF_NP is PRUF {
             "PA:I2: Contract not authorized for custodial assets"
         );
         require(_rgtHash != 0, "PA:NR: rights holder cannot be zero");
-        require(
-            msg.value >= cost.newRecordCost,
-            "PA:NR: tx value too low. Send more eth."
-        );
         //^^^^^^^checks^^^^^^^^^
 
         bytes32 userHash = keccak256(abi.encodePacked(msg.sender));
@@ -222,12 +216,7 @@ contract T_PRUF_NP is PRUF {
             );
         }
 
-        deductPayment(
-            baseCost.paymentAddress,
-            baseCost.newRecordCost,
-            cost.paymentAddress,
-            cost.newRecordCost
-        );
+        deductNewRecordCosts(_assetClass);
 
         AssetTokenContract.mintAssetToken(msg.sender, tokenId, "pruf.io");
         //^^^^^^^interactions^^^^^^^^^
@@ -246,8 +235,6 @@ contract T_PRUF_NP is PRUF {
         string memory secret
     ) external payable nonReentrant isAuthorized(_idxHash) returns (uint256) {
         Record memory rec = getRecord(_idxHash);
-        Costs memory cost = getCost(rec.assetClass);
-        Costs memory baseCost = getBaseCost();
         AC memory AC_info = getACinfo(rec.assetClass);
         uint256 tokenId = uint256(_idxHash);
 
@@ -272,18 +259,9 @@ contract T_PRUF_NP is PRUF {
                 keccak256(abi.encodePacked(first, middle, last, id, secret)),
             "PA:I2: Rightsholder does not match supplied data"
         );
-        require(
-            msg.value >= cost.createNoteCost,
-            "PA:I2: tx value too low. Send more eth."
-        );
         //^^^^^^^checks^^^^^^^^^
 
-        deductPayment(
-            baseCost.paymentAddress,
-            baseCost.createNoteCost,
-            cost.paymentAddress,
-            cost.reMintRecordCost
-        );
+        deductNewRecordCosts(rec.assetClass);
 
         tokenId = AssetTokenContract.reMintAssetToken(
             msg.sender,
@@ -304,8 +282,6 @@ contract T_PRUF_NP is PRUF {
         bytes32 _IpfsHash
     ) external payable nonReentrant isAuthorized(_idxHash) returns (bytes32) {
         Record memory rec = getRecord(_idxHash);
-        Costs memory cost = getCost(rec.assetClass);
-        Costs memory baseCost = getBaseCost();
         AC memory AC_info = getACinfo(rec.assetClass);
 
         require(
@@ -332,10 +308,6 @@ contract T_PRUF_NP is PRUF {
             rec.rightsHolder == _rgtHash,
             "PA:I2: Rightsholder does not match supplied data"
         );
-        require(
-            msg.value >= cost.createNoteCost,
-            "PA:I2: tx value too low. Send more eth."
-        );
         //^^^^^^^checks^^^^^^^^^
 
         rec.Ipfs2 = _IpfsHash;
@@ -343,12 +315,7 @@ contract T_PRUF_NP is PRUF {
 
         writeRecordIpfs2(_idxHash, rec);
 
-        deductPayment(
-            baseCost.paymentAddress,
-            baseCost.createNoteCost,
-            cost.paymentAddress,
-            cost.createNoteCost
-        );
+        deductCreateNoteCosts(rec.assetClass);
 
         return rec.Ipfs2;
         //^^^^^^^interactions^^^^^^^^^

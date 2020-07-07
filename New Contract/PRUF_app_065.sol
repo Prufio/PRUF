@@ -149,8 +149,6 @@ contract PRUF_APP is PRUF {
         uint256 tokenId = uint256(_idxHash);
         User memory callingUser = getUser();
         Record memory rec = getRecord(_idxHash);
-        //Costs memory cost = getCost(_assetClass);
-        //Costs memory baseCost = getBaseCost();
         AC memory AC_info = getACinfo(_assetClass);
         AC memory oldAC_info = getACinfo(rec.assetClass);
 
@@ -171,10 +169,7 @@ contract PRUF_APP is PRUF {
             "PA:NR: User not authorized to create records in specified asset class"
         );
         require(_rgtHash != 0, "PA:NR: rights holder cannot be zero");
-        require(
-            msg.value >= cost.newRecordCost,
-            "PA:NR: tx value too low. Send more eth."
-        );
+
         //^^^^^^^checks^^^^^^^^^
 
         bytes32 userHash = keccak256(abi.encodePacked(msg.sender));
@@ -199,12 +194,7 @@ contract PRUF_APP is PRUF {
                 _Ipfs1
             );
         }
-        deductPayment(
-            baseCost.paymentAddress,
-            baseCost.newRecordCost,
-            cost.paymentAddress,
-            cost.newRecordCost
-        );
+        deductNewRecordCosts(_assetClass);
         AssetTokenContract.mintAssetToken(address(this), tokenId, "pruf.io");
         //^^^^^^^interactions^^^^^^^^^
     }
@@ -221,8 +211,6 @@ contract PRUF_APP is PRUF {
     {
         Record memory rec = getRecord(_idxHash);
         User memory callingUser = getUser();
-        Costs memory cost = getCost(rec.assetClass);
-        Costs memory baseCost = getBaseCost();
         AC memory AC_info = getACinfo(rec.assetClass);
 
         require(
@@ -260,10 +248,6 @@ contract PRUF_APP is PRUF {
             "PA:FMR: Record In Transferred-unregistered status"
         );
         require(rec.assetStatus < 200, "FMR: Record locked");
-        require(
-            msg.value >= cost.forceModifyCost,
-            "PA:FMR: tx value too low. Send more eth."
-        );
         //^^^^^^^checks^^^^^^^^^
 
         if (rec.forceModCount < 255) {
@@ -280,12 +264,7 @@ contract PRUF_APP is PRUF {
 
         writeRecord(_idxHash, rec);
 
-        deductPayment(
-            baseCost.paymentAddress,
-            baseCost.forceModifyCost,
-            cost.paymentAddress,
-            cost.forceModifyCost
-        );
+        deductForceModifyCosts(rec.assetClass);
 
         return rec.forceModCount;
         //^^^^^^^interactions^^^^^^^^^
@@ -301,8 +280,6 @@ contract PRUF_APP is PRUF {
     ) external payable nonReentrant isAuthorized(_idxHash) returns (uint8) {
         Record memory rec = getRecord(_idxHash);
         User memory callingUser = getUser();
-        Costs memory cost = getCost(rec.assetClass);
-        Costs memory baseCost = getBaseCost();
         AC memory AC_info = getACinfo(rec.assetClass);
 
         require(
@@ -328,10 +305,6 @@ contract PRUF_APP is PRUF {
             rec.rightsHolder == _rgtHash,
             "PA:TA:Rightsholder does not match supplied data"
         );
-        require(
-            msg.value >= cost.transferAssetCost,
-            "PA:TA: tx value too low. Send more eth."
-        );
         //^^^^^^^checks^^^^^^^^^
 
         rec.rightsHolder = _newrgtHash;
@@ -339,12 +312,7 @@ contract PRUF_APP is PRUF {
 
         writeRecord(_idxHash, rec);
 
-        deductPayment(
-            baseCost.paymentAddress,
-            baseCost.transferAssetCost,
-            cost.paymentAddress,
-            cost.transferAssetCost
-        );
+        deductTransferAssetCosts(rec.assetClass);
 
         return (170);
         //^^^^^^^interactions^^^^^^^^^
@@ -360,8 +328,6 @@ contract PRUF_APP is PRUF {
     ) external payable nonReentrant isAuthorized(_idxHash) returns (bytes32) {
         Record memory rec = getRecord(_idxHash);
         User memory callingUser = getUser();
-        Costs memory cost = getCost(rec.assetClass);
-        Costs memory baseCost = getBaseCost();
         AC memory AC_info = getACinfo(rec.assetClass);
 
         require(
@@ -392,10 +358,6 @@ contract PRUF_APP is PRUF {
             rec.rightsHolder == _rgtHash,
             "PA:I2: Rightsholder does not match supplied data"
         );
-        require(
-            msg.value >= cost.createNoteCost,
-            "PA:I2: tx value too low. Send more eth."
-        );
         //^^^^^^^checks^^^^^^^^^
 
         rec.Ipfs2 = _IpfsHash;
@@ -403,12 +365,7 @@ contract PRUF_APP is PRUF {
 
         writeRecordIpfs2(_idxHash, rec);
 
-        deductPayment(
-            baseCost.paymentAddress,
-            baseCost.createNoteCost,
-            cost.paymentAddress,
-            cost.createNoteCost
-        );
+        deductCreateNoteCosts(rec.assetClass);
 
         return rec.Ipfs2;
         //^^^^^^^interactions^^^^^^^^^
@@ -427,8 +384,6 @@ contract PRUF_APP is PRUF {
     {
         Record memory rec = getRecord(_idxHash);
         User memory callingUser = getUser();
-        Costs memory cost = getCost(rec.assetClass);
-        Costs memory baseCost = getBaseCost();
         AC memory AC_info = getACinfo(rec.assetClass);
 
         require(
@@ -449,10 +404,6 @@ contract PRUF_APP is PRUF {
             "PA:IA: Only Transferred status assets can be reimported"
         );
         require(rec.assetStatus < 200, "PA:IA: Record locked");
-        require(
-            msg.value >= cost.reMintRecordCost,
-            "PA:IA: tx value too low. Send more eth."
-        );
         //^^^^^^^checks^^^^^^^^^
 
         if (rec.numberOfTransfers < 65335) {
@@ -465,12 +416,7 @@ contract PRUF_APP is PRUF {
 
         writeRecord(_idxHash, rec);
 
-        deductPayment(
-            baseCost.paymentAddress,
-            baseCost.newRecordCost,
-            cost.paymentAddress,
-            cost.newRecordCost
-        );
+        deductNewRecordCosts(rec.assetClass);
 
         return rec.assetStatus;
         //^^^^^^^interactions^^^^^^^^^

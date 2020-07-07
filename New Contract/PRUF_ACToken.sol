@@ -6,7 +6,7 @@ pragma solidity ^0.6.7;
 
 import "./_ERC721/ERC721.sol";
 import "./_ERC721/Ownable.sol";
-import "./PRUF_interfaces_064.sol";
+import "./PRUF_interfaces_065.sol";
 import "./Imports/ReentrancyGuard.sol";
 
 contract AssetClassToken is Ownable, ReentrancyGuard, ERC721 {
