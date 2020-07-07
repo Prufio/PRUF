@@ -114,7 +114,7 @@
 // SPDX-License-Identifier: UNLICENSED
 pragma solidity ^0.6.7;
 
-import "./PRUF_core_064.sol";
+import "./PRUF_core_065.sol";
 
 contract T_PRUF_NP is PRUF {
     using SafeMath for uint256;
