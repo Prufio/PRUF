@@ -20,11 +20,11 @@ pragma solidity ^0.6.0;
 *-----------------------------------------------------------------
 
 *-----------------------------------------------------------------
- *rules for burning records:
+ *Rules for burning records:
  *
- *rules for reminting records:
+ *Rules for reminting records:
  *
- *rules for recycling records:
+ *Rules for recycling records:
  *  if recycled in same asset class group:
  *      in record: new rgtHash assigned, anything else left as-was (in case there was a pre-existing record)
  *      token is reissued to recycling address
@@ -42,6 +42,7 @@ pragma solidity ^0.6.0;
  * 6: checking the suitability of asset details for the proposed operation
  * 7: verifying that provided verification data matches required data
  * 8: verifying that message contains any required payment
+ *
 *-----------------------------------------------------------------
 
 *-----------------------------------------------------------------
@@ -56,6 +57,7 @@ pragma solidity ^0.6.0;
  *  T_PRUF_APP
  *  T_PRUF_NP
  *  T_PRUF_simpleEscrow
+ *
 *-----------------------------------------------------------------
 
 *-----------------------------------------------------------------
@@ -65,12 +67,14 @@ pragma solidity ^0.6.0;
  * 2   --Non-Custodial
  * Owner (onlyOwner)
  * other = unauth
+ *
 *-----------------------------------------------------------------
 
 *-----------------------------------------------------------------
  * ASSET CLASS Types:
  * 1   --Custodial
  * 2   --Non-Custodial
+ *
 *-----------------------------------------------------------------
 
 *-----------------------------------------------------------------
@@ -103,15 +107,12 @@ pragma solidity ^0.6.0;
 *-----------------------------------------------------------------
 
 *-----------------------------------------------------------------
- *
- * escrow status = lock time set to a time instead of a block number
- *
- *
  * Authorized User Types   registeredUsers[]
  * 1 - 4 = Standard User types
  * 1 - all priveleges
  * 2 - all but force-modify
  * 5 - 9 = Robot (cannot create of force-modify)
  * Other = unauth
+ *
 *-----------------------------------------------------------------
  */
