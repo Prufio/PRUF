@@ -117,7 +117,12 @@ contract PRUF_APP is PRUF {
         User memory callingUser = getUser();
         Costs memory cost = getCost(_assetClass);
         Costs memory baseCost = getBaseCost();
+        AC memory AC_info = getACinfo(_assetClass);
 
+        require(
+            AC_info.custodyType == 1,
+            "PA:I2: Contract not authorized for non-custodial assets"
+        );
         require(
             (callingUser.userType > 0) && (callingUser.userType < 10),
             "PC:MOD-IA: User not registered"
@@ -172,6 +177,12 @@ contract PRUF_APP is PRUF {
         User memory callingUser = getUser();
         Costs memory cost = getCost(rec.assetClass);
         Costs memory baseCost = getBaseCost();
+        AC memory AC_info = getACinfo(rec.assetClass);
+
+        require(
+            AC_info.custodyType == 1,
+            "PA:I2: Contract not authorized for non-custodial assets"
+        );
 
         require((rec.rightsHolder != 0), "PA:FMR: Record does not exist");
 
@@ -246,7 +257,12 @@ contract PRUF_APP is PRUF {
         User memory callingUser = getUser();
         Costs memory cost = getCost(rec.assetClass);
         Costs memory baseCost = getBaseCost();
+        AC memory AC_info = getACinfo(rec.assetClass);
 
+        require(
+            AC_info.custodyType == 1,
+            "PA:I2: Contract not authorized for non-custodial assets"
+        );
         require((rec.rightsHolder != 0), "PA:TA: Record does not exist");
         require(
             callingUser.authorizedAssetClass == rec.assetClass,
@@ -300,7 +316,12 @@ contract PRUF_APP is PRUF {
         User memory callingUser = getUser();
         Costs memory cost = getCost(rec.assetClass);
         Costs memory baseCost = getBaseCost();
+        AC memory AC_info = getACinfo(rec.assetClass);
 
+        require(
+            AC_info.custodyType == 1,
+            "PA:I2: Contract not authorized for non-custodial assets"
+        );
         require((rec.rightsHolder != 0), "PA:I2: Record does not exist");
         require(
             callingUser.authorizedAssetClass == rec.assetClass,
@@ -362,7 +383,12 @@ contract PRUF_APP is PRUF {
         User memory callingUser = getUser();
         Costs memory cost = getCost(rec.assetClass);
         Costs memory baseCost = getBaseCost();
+        AC memory AC_info = getACinfo(rec.assetClass);
 
+        require(
+            AC_info.custodyType == 1,
+            "PA:I2: Contract not authorized for non-custodial assets"
+        );
         require((rec.rightsHolder != 0), "PA:IA: Record does not exist");
         require(
             callingUser.userType < 3,

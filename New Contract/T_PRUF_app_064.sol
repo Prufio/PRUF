@@ -153,6 +153,12 @@ contract T_PRUF_NP is PRUF {
         uint256 tokenId = uint256(_idxHash);
         Costs memory cost = getCost(_assetClass);
         Costs memory baseCost = getBaseCost();
+        AC memory AC_info = getACinfo(_assetClass);
+
+        require(
+            AC_info.custodyType == 2,
+            "PA:I2: Contract not authorized for custodial assets"
+        );
         require(_rgtHash != 0, "PA:NR: rights holder cannot be zero");
         require(
             msg.value >= cost.newRecordCost,
@@ -255,7 +261,12 @@ contract T_PRUF_NP is PRUF {
         Record memory rec = getRecord(_idxHash);
         Costs memory cost = getCost(rec.assetClass);
         Costs memory baseCost = getBaseCost();
+        AC memory AC_info = getACinfo(rec.assetClass);
 
+        require(
+            AC_info.custodyType == 2,
+            "PA:I2: Contract not authorized for custodial assets"
+        );
         require((rec.rightsHolder != 0), "PA:I2: Record does not exist");
         require(
             (rec.assetStatus != 6) &&
