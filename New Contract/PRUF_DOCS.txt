@@ -36,8 +36,8 @@ pragma solidity ^0.6.0;
 *-----------------------------------------------------------------
  * Order of require statements:
  * 1: (modifiers)
- * 2: checking the asset existance
- * 3: checking custodial status
+ * 2: checking custodial status
+ * 3: checking the asset existance 
  * 4: checking the idendity and credentials of the caller
  * 5: checking the suitability of provided data for the proposed operation
  * 6: checking the suitability of asset details for the proposed operation
