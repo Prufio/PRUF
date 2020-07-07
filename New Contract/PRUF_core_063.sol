@@ -146,12 +146,11 @@ contract PRUF is ReentrancyGuard, Ownable, IERC721Receiver, PullPayment {
 
     modifier isAuthorized(bytes32 _idxHash) virtual {
         require(
-           _idxHash == 0, //function should always be overridden
+            _idxHash == 0, //function should always be overridden
             "PC:MOD-IA: Modifier MUST BE OVERRIDDEN"
         );
         _;
     }
-
 
     //----------------------Internal Admin functions / onlyowner or isAdmin----------------------//
     /*
@@ -183,7 +182,7 @@ contract PRUF is ReentrancyGuard, Ownable, IERC721Receiver, PullPayment {
         nonReentrant
     //^^^^^^^checks^^^^^^^^^
     {
-        uint256 tokenId = uint256 (_idxHash);
+        uint256 tokenId = uint256(_idxHash);
         AssetTokenContract.transferAssetToken(address(this), _to, tokenId);
         //^^^^^^^interactions^^^^^^^^^
     }
@@ -195,7 +194,7 @@ contract PRUF is ReentrancyGuard, Ownable, IERC721Receiver, PullPayment {
         nonReentrant
     //^^^^^^^checks^^^^^^^^^
     {
-        uint256 tokenId = uint256 (_idxHash);
+        uint256 tokenId = uint256(_idxHash);
         AssetClassTokenContract.transferAssetClassToken(
             address(this),
             _to,

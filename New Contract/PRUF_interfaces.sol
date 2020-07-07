@@ -38,7 +38,6 @@ interface AssetTokenInterface {
         uint256 tokenId,
         string calldata _tokenURI
     ) external returns (uint256);
-
 }
 
 interface StorageInterface {
