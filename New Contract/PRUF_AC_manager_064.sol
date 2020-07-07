@@ -87,7 +87,7 @@
 // SPDX-License-Identifier: UNLICENSED
 pragma solidity ^0.6.7;
 
-import "./PRUF_core_063.sol";
+import "./PRUF_core_064.sol";
 
 contract PRUF_AC_MGR is PRUF {
     using SafeMath for uint256;
@@ -263,6 +263,19 @@ contract PRUF_AC_MGR is PRUF {
     }
 
     /*
+     * @dev Retrieve AC_number @ AC_name
+     */
+    function resolveAssetClass(string memory _name)
+        external
+        view
+        returns (uint16)
+    //^^^^^^^checks^^^^^^^^^
+    {
+        return (AC_number[_name]);
+        //^^^^^^^interactions^^^^^^^^^
+    }
+
+    /*
      * @dev Retrieve function costs per asset class, in Wei
      */
     function retrieveCosts(uint16 _assetClass)
@@ -388,19 +401,6 @@ contract PRUF_AC_MGR is PRUF {
             baseCost.forceModifyCost,
             baseCost.paymentAddress
         );
-        //^^^^^^^interactions^^^^^^^^^
-    }
-
-    /*
-     * @dev Retrieve AC_number @ AC_name
-     */
-    function resolveAssetClass(string memory _name)
-        external
-        view
-        returns (uint16)
-    //^^^^^^^checks^^^^^^^^^
-    {
-        return (AC_number[_name]);
         //^^^^^^^interactions^^^^^^^^^
     }
 

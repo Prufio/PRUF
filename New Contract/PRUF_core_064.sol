@@ -83,7 +83,7 @@
 // SPDX-License-Identifier: UNLICENSED
 pragma solidity ^0.6.7;
 
-import "./PRUF_interfaces.sol";
+import "./PRUF_interfaces_064.sol";
 import "./Imports/PullPayment.sol";
 import "./Imports/ReentrancyGuard.sol";
 import "./_ERC721/IERC721Receiver.sol";
@@ -123,11 +123,13 @@ contract PRUF is ReentrancyGuard, Ownable, IERC721Receiver, PullPayment {
 
     address internal storageAddress;
     StorageInterface internal Storage; // Set up external contract interface
+
     address internal AssetClassTokenManagerAddress;
-    AssetClassTokenManagerInterface internal AssetClassTokenManagerContract;
-    // address minterContractAddress;
+    AssetClassTokenManagerInterface internal AssetClassTokenManagerContract; // Set up external contract interface
+
     address internal AssetTokenAddress;
     AssetTokenInterface internal AssetTokenContract; //erc721_token prototype initialization
+
     address internal AssetClassTokenAddress;
     AssetClassTokenInterface internal AssetClassTokenContract; //erc721_token prototype initialization
     // --------------------------------------Events--------------------------------------------//
@@ -272,6 +274,15 @@ contract PRUF is ReentrancyGuard, Ownable, IERC721Receiver, PullPayment {
      * @dev Get a User Record from Storage @ msg.sender
      */
     function getUser() internal virtual view returns (User memory) {
+        return registeredUsers[keccak256(abi.encodePacked(msg.sender))];
+        //^^^^^^^interactions^^^^^^^^^
+    }
+
+    //--------------------------------------------------------------------------------------INTERNAL functions
+    /*
+     * @dev Get asset class information from AC_manager
+     */
+    function getACinfo() internal virtual view returns (User memory) {
         return registeredUsers[keccak256(abi.encodePacked(msg.sender))];
         //^^^^^^^interactions^^^^^^^^^
     }
