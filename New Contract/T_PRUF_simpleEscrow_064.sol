@@ -107,6 +107,9 @@ contract T_PRUF_simpleEscrow is PRUF {
         _;
     }
 
+    /*
+     * @dev //returns the address of a contract with name _name
+     */
     function OO_ResolveContractAddresses()
         external
         override
@@ -140,6 +143,10 @@ contract T_PRUF_simpleEscrow is PRUF {
     }
 
     //--------------------------------------------External Functions--------------------------
+
+    /*
+     * @dev puts asset into an escrow status for a certain time period
+     */
     function setEscrow(
         bytes32 _idxHash,
         uint256 _escrowTime,
@@ -199,6 +206,9 @@ contract T_PRUF_simpleEscrow is PRUF {
         //^^^^^^^interactions^^^^^^^^^
     }
 
+    /*
+     * @dev takes asset out of excrow status if time period has resolved || is escrow issuer
+     */
     function endEscrow(bytes32 _idxHash)
         external
         nonReentrant

@@ -136,6 +136,9 @@ contract PRUF_simpleEscrow is PRUF {
         //^^^^^^^effects^^^^^^^^^
     }
 
+    /*
+     * @dev makes sure user is authorized for assetClass of asset
+     */
     function getUser() internal override view returns (User memory) {
         //User memory callingUser = getUser();
         User memory user;
@@ -146,6 +149,9 @@ contract PRUF_simpleEscrow is PRUF {
         //^^^^^^^interactions^^^^^^^^^
     }
 
+    /*
+     * @dev puts asset into an escrow status for a certain time period
+     */
     function setEscrow(
         bytes32 _idxHash,
         uint256 _escrowTime,
@@ -207,6 +213,9 @@ contract PRUF_simpleEscrow is PRUF {
         //^^^^^^^interactions^^^^^^^^^
     }
 
+    /*
+     * @dev takes asset out of excrow status if time period has resolved || is escrow issuer
+     */
     function endEscrow(bytes32 _idxHash)
         external
         nonReentrant
