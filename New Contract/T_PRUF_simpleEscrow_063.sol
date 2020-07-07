@@ -92,7 +92,7 @@ contract T_PRUF_simpleEscrow is PRUF {
     address internal PrufAppAddress;
     PrufAppInterface internal PrufAppContract; //erc721_token prototype initialization
 
-   /*
+    /*
      * @dev Verify user credentials
      * Originating Address:
      *      holds asset token at idxHash
@@ -101,7 +101,7 @@ contract T_PRUF_simpleEscrow is PRUF {
     modifier isAuthorized(bytes32 _idxHash) override {
         uint256 tokenID = uint256(_idxHash);
         require(
-                 (AssetTokenContract.ownerOf(tokenID) == msg.sender), //msg.sender is token holder
+            (AssetTokenContract.ownerOf(tokenID) == msg.sender), //msg.sender is token holder
             "PC:MOD-IA: Caller does not hold token"
         );
         _;
@@ -138,7 +138,8 @@ contract T_PRUF_simpleEscrow is PRUF {
         return user;
         //^^^^^^^interactions^^^^^^^^^
     }
-//--------------------------------------------External Functions--------------------------
+
+    //--------------------------------------------External Functions--------------------------
     function setEscrow(
         bytes32 _idxHash,
         uint256 _escrowTime,
