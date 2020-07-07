@@ -119,15 +119,24 @@ contract PRUF is ReentrancyGuard, Ownable, IERC721Receiver, PullPayment {
         address paymentAddress; // 2nd-party fee beneficiary address
     }
 
+    struct AC {
+        string name; // NameHash for assetClass
+        uint16 assetClassRoot; // asset type root (bycyles - USA Bicycles)
+        uint8 custodyType; // custodial or noncustodial
+        uint256 extendedData; // asset type root (bycyles - USA Bicycles)
+    }
+
     mapping(bytes32 => User) internal registeredUsers; // Authorized recorder database
 
     address internal storageAddress;
     StorageInterface internal Storage; // Set up external contract interface
+
     address internal AssetClassTokenManagerAddress;
-    AssetClassTokenManagerInterface internal AssetClassTokenManagerContract;
-    // address minterContractAddress;
+    AssetClassTokenManagerInterface internal AssetClassTokenManagerContract; // Set up external contract interface
+
     address internal AssetTokenAddress;
     AssetTokenInterface internal AssetTokenContract; //erc721_token prototype initialization
+
     address internal AssetClassTokenAddress;
     AssetClassTokenInterface internal AssetClassTokenContract; //erc721_token prototype initialization
     // --------------------------------------Events--------------------------------------------//
@@ -203,11 +212,7 @@ contract PRUF is ReentrancyGuard, Ownable, IERC721Receiver, PullPayment {
     //^^^^^^^checks^^^^^^^^^
     {
         uint256 tokenId = uint256(_idxHash);
-        AssetClassTokenContract.safeTransferFrom(
-            address(this),
-            _to,
-            tokenId
-        );
+        AssetClassTokenContract.safeTransferFrom(address(this), _to, tokenId);
         //^^^^^^^interactions^^^^^^^^^
     }
 
@@ -268,6 +273,29 @@ contract PRUF is ReentrancyGuard, Ownable, IERC721Receiver, PullPayment {
     }
 
     //--------------------------------------------------------------------------------------INTERNAL functions
+    /*
+     * @dev Get asset class information from AC_manager (FUNCTION IS VIEW)
+     */
+    function getACinfo(uint16 _assetClass)
+        internal
+        virtual
+        returns (AC memory)
+    {
+        AC memory AC_info;
+        (
+            AC_info.assetClassRoot,
+            AC_info.custodyType,
+            AC_info.extendedData
+        ) = AssetClassTokenManagerContract.getAC_data(_assetClass);
+    }
+
+    // struct AC {
+    //     string name; // NameHash for assetClass
+    //     uint16 assetClassRoot; // asset type root (bycyles - USA Bicycles)
+    //     uint8 custodyType; // custodial or noncustodial
+    //     uint256 extendedData; // asset type root (bycyles - USA Bicycles)
+    // }
+
     /*
      * @dev Get a User Record from Storage @ msg.sender
      */

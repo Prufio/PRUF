@@ -32,6 +32,28 @@ interface AssetClassTokenManagerInterface {
             uint256,
             address
         );
+
+    function createAssetClass(
+        uint256 _tokenId,
+        address _recipientAddress,
+        string calldata _name,
+        uint16 _assetClass,
+        uint16 _assetClassRoot,
+        uint8 _custodyType
+    ) external;
+
+    function getAC_data(uint16 _assetClass)
+        external
+        returns (
+            uint16,
+            uint8,
+            uint256
+        );
+
+    function resolveAssetClass(string memory _name)
+        external
+        view
+        returns (uint16);
 }
 
 interface AssetClassTokenInterface {
@@ -54,7 +76,6 @@ interface AssetClassTokenInterface {
         uint256 tokenId,
         string calldata _tokenURI
     ) external returns (uint256);
-
 }
 
 interface AssetTokenInterface {

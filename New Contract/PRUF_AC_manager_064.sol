@@ -93,13 +93,6 @@ contract PRUF_AC_MGR is PRUF {
     using SafeMath for uint256;
     using SafeMath for uint8;
 
-    struct AC {
-        string name; // NameHash for assetClass
-        uint16 assetClassRoot; // asset type root (bycyles - USA Bicycles)
-        uint8 custodyType; // custodial or noncustodial
-        uint256 extendedData; // asset type root (bycyles - USA Bicycles)
-    }
-
     mapping(uint16 => Costs) private cost; // Cost per function by asset class
     Costs private baseCost;
     address AC_minterAddress;
@@ -229,7 +222,7 @@ contract PRUF_AC_MGR is PRUF {
     /*
      * @dev Retrieve AC_data @ _tokenId
      */
-    function getAC_data(uint256 _tokenId)
+    function getAC_data(uint16 _assetClass)
         external
         view
         returns (
@@ -238,12 +231,11 @@ contract PRUF_AC_MGR is PRUF {
             uint256
         )
     {
-        uint16 assetClass = uint16(_tokenId);
         //^^^^^^^effects^^^^^^^^^
         return (
-            AC_data[assetClass].assetClassRoot,
-            AC_data[assetClass].custodyType,
-            AC_data[assetClass].extendedData
+            AC_data[_assetClass].assetClassRoot,
+            AC_data[_assetClass].custodyType,
+            AC_data[_assetClass].extendedData
         );
         //^^^^^^^interactions^^^^^^^^^
     }
@@ -259,6 +251,19 @@ contract PRUF_AC_MGR is PRUF {
         uint16 assetClass = uint16(_tokenId);
         //^^^^^^^effects^^^^^^^^^
         return (AC_data[assetClass].name);
+        //^^^^^^^interactions^^^^^^^^^
+    }
+
+    /*
+     * @dev Retrieve AC_number @ AC_name
+     */
+    function resolveAssetClass(string memory _name)
+        external
+        view
+        returns (uint16)
+    //^^^^^^^checks^^^^^^^^^
+    {
+        return (AC_number[_name]);
         //^^^^^^^interactions^^^^^^^^^
     }
 
@@ -388,19 +393,6 @@ contract PRUF_AC_MGR is PRUF {
             baseCost.forceModifyCost,
             baseCost.paymentAddress
         );
-        //^^^^^^^interactions^^^^^^^^^
-    }
-
-    /*
-     * @dev Retrieve AC_number @ AC_name
-     */
-    function resolveAssetClass(string memory _name)
-        external
-        view
-        returns (uint16)
-    //^^^^^^^checks^^^^^^^^^
-    {
-        return (AC_number[_name]);
         //^^^^^^^interactions^^^^^^^^^
     }
 
