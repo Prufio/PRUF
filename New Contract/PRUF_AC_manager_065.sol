@@ -273,7 +273,7 @@ contract PRUF_AC_MGR is PRUF {
     /*
      * @dev Retrieve function costs per asset class, in Wei
      */
-    function gettransferAssetCosts(uint16 _assetClass)
+    function getTransferAssetCosts(uint16 _assetClass)
         external
         returns (
             address,
@@ -301,10 +301,10 @@ contract PRUF_AC_MGR is PRUF {
         );
     }
 
-     /*
+    /*
      * @dev Retrieve function costs per asset class, in Wei
      */
-    function createNoteCosts(uint16 _assetClass)
+    function getCreateNoteCosts(uint16 _assetClass)
         external
         returns (
             address,
@@ -332,12 +332,12 @@ contract PRUF_AC_MGR is PRUF {
         );
     }
 
-     /*
+    /*
      * @dev Retrieve function costs per asset class, in Wei
      */
-    function reMintRecordCosts(uint16 _assetClass)
+    function getReMintRecordCosts(uint16 _assetClass)
         external
-       returns (
+        returns (
             address,
             uint256,
             address,
@@ -363,10 +363,10 @@ contract PRUF_AC_MGR is PRUF {
         );
     }
 
-     /*
+    /*
      * @dev Retrieve function costs per asset class, in Wei
      */
-    function changeStatusCosts(uint16 _assetClass)
+    function getChangeStatusCosts(uint16 _assetClass)
         external
         returns (
             address,
@@ -394,10 +394,10 @@ contract PRUF_AC_MGR is PRUF {
         );
     }
 
-     /*
+    /*
      * @dev Retrieve function costs per asset class, in Wei
      */
-    function forceModifyCosts(uint16 _assetClass)
+    function getForceModifyCosts(uint16 _assetClass)
         external
         returns (
             address,
@@ -424,7 +424,6 @@ contract PRUF_AC_MGR is PRUF {
             costs.forceModifyCost
         );
     }
-
 
     /*
      * @dev Retrieve function costs per asset class, in Wei
