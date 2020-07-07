@@ -33,6 +33,51 @@ interface AssetClassTokenManagerInterface {
             address
         );
 
+    function getNewRecordCosts(uint16 _assetClass)
+        external
+        returns (
+            address,
+            uint256,
+            address,
+            uint256
+        );
+
+    function getTransferAssetCosts(uint16 _assetClass)
+        external
+        returns (
+            address,
+            uint256,
+            address,
+            uint256
+        );
+
+    function getCreateNoteCosts(uint16 _assetClass)
+        external
+        returns (
+            address,
+            uint256,
+            address,
+            uint256
+        );
+
+    function getReMintRecordCosts(uint16 _assetClass)
+        external
+        returns (
+            address,
+            uint256,
+            address,
+            uint256
+        );
+
+    function getChangeStatusCosts(uint16 _assetClass)
+        external
+        returns (
+            address,
+            uint256,
+            address,
+            uint256
+        );
+
     function createAssetClass(
         uint256 _tokenId,
         address _recipientAddress,
@@ -49,6 +94,8 @@ interface AssetClassTokenManagerInterface {
             uint8,
             uint256
         );
+
+    function getAC_name(uint256 _tokenId) external view returns (string memory);
 
     function resolveAssetClass(string memory _name)
         external
