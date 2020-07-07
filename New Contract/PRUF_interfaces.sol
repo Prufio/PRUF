@@ -47,13 +47,11 @@ interface AssetTokenInterface {
     function mintAssetToken(
         address _recipientAddress,
         uint256 tokenId,
-        string calldata _tokenURI
     ) external returns (uint256);
 
     function reMintAssetToken(
         address _recipientAddress,
         uint256 tokenId,
-        string calldata _tokenURI
     ) external returns (uint256);
 }
 
