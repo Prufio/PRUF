@@ -59,11 +59,11 @@ contract AssetClassToken is Ownable, ReentrancyGuard, ERC721 {
      */
     function mintACToken(
         address _recipientAddress,
-        uint256 tokenId,
-        string calldata _tokenURI
+        uint256 tokenId
+        // string calldata _tokenURI
     ) external isAdmin returns (uint256) {
         //^^^^^^^checks^^^^^^^^^
-        //MAKE URI ASSET SPECIFIC- has to incorporate the token ID
+        string memory _tokenURI = "pruf.io/ACtokenId";  //---------------------------fix to actual asst class token id
         _safeMint(_recipientAddress, tokenId);
         _setTokenURI(tokenId, _tokenURI);
         return tokenId;
@@ -182,11 +182,11 @@ contract AssetClassToken is Ownable, ReentrancyGuard, ERC721 {
      */
     function reMintACToken(
         address _recipientAddress,
-        uint256 tokenId,
-        string calldata _tokenURI
+        uint256 tokenId
     ) external isAdmin returns (uint256) {
         require(_exists(tokenId), "Cannot Remint nonexistant token");
         //^^^^^^^checks^^^^^^^^^
+        string memory _tokenURI = "pruf.io/ACtokenId";  //---------------------------fix to actual asst class token id
         _burn(tokenId);
         _safeMint(_recipientAddress, tokenId);
         _setTokenURI(tokenId, _tokenURI);
