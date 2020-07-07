@@ -26,9 +26,12 @@
  *  PRUF_APP
  *  PRUF_NP
  *  PRUF_simpleEscrow
+ *  PRUF_AC_MGR
+ *  PRUF_AC_Minter
  *  T_PRUF_APP
  *  T_PRUF_NP
  *  T_PRUF_simpleEscrow
+ *
  *
  * CONTRACT Types (storage)
  * 0   --NONE
@@ -87,17 +90,24 @@ pragma solidity ^0.6.7;
 import "./PRUF_core_063.sol";
 
 contract PRUF_AC_MGR is PRUF {
-    //using SafeMath for uint256;
-    //using SafeMath for uint8;
+    using SafeMath for uint256;
+    using SafeMath for uint8;
 
     struct AC {
         string name; // NameHash for assetClass
         uint16 assetClassRoot; // asset type root (bycyles - USA Bicycles)
         uint8 custodyType; // custodial or noncustodial
+        uint256 extendedData; // asset type root (bycyles - USA Bicycles)
     }
 
-    mapping(uint16 => AC) internal AC_data; // Authorized recorder database
+    mapping(uint16 => Costs) private cost; // Cost per function by asset class
+    Costs private baseCost;
+    address AC_minterAddress;
+    mapping(uint16 => AC) internal AC_data; // AC info database
     mapping(string => uint16) internal AC_number;
+
+    uint256 private priceThreshold; //threshold of price where fractional pricing is implemented
+    uint256 private priceDivisor; //fractional pricing divisor
 
     /*
      * @dev Verify user credentials
@@ -107,8 +117,21 @@ contract PRUF_AC_MGR is PRUF {
 
     modifier isAdmin() {
         require(
-            msg.sender == owner(),
+            msg.sender == owner() ||
+            msg.sender == AC_minterAddress,
             "Calling address does not belong to an Admin"
+        );
+        _;
+    }
+
+     /*
+     * @dev Verify caller holds ACtoken of passed assetClass
+     */
+    modifier isACtokenHolderOfClass(uint16 _assetClass) {
+        uint256 assetClass256 = uint256(_assetClass);
+        require(
+            (AssetClassTokenContract.ownerOf(assetClass256) == msg.sender),
+            "MOD-ACTH-msg.sender not authorized in asset class"
         );
         _;
     }
@@ -116,23 +139,16 @@ contract PRUF_AC_MGR is PRUF {
     function createAssetClass(
         uint256 _tokenId,
         address _recipientAddress,
-        string calldata _tokenURI,
         string calldata _name,
         uint16 _assetClass,
         uint16 _assetClassRoot,
         uint8 _custodyType
     ) external isAdmin {
-        AC memory _ac = AC_data [_assetClassRoot];
+        AC memory _ac = AC_data[_assetClassRoot];
 
-        require ( //sanity check inputs
-            (_tokenId != 0),
-            "token id cannot be 0"
-        );
-        require ( //sanity check inputs
-             (_custodyType != 0),
-            "custodyType cannot be 0"
-        );
-        require ( //has valid root
+        require((_tokenId != 0), "token id cannot be 0"); //sanity check inputs
+        require((_custodyType != 0), "custodyType cannot be 0"); //sanity check inputs
+        require( //has valid root
             (_ac.custodyType != 0) || (_assetClassRoot == _assetClass),
             "Root asset class does not exist"
         );
@@ -142,8 +158,233 @@ contract PRUF_AC_MGR is PRUF {
         AC_data[_assetClass].assetClassRoot = _assetClassRoot;
         AC_data[_assetClass].custodyType = _custodyType;
 
-        AssetClassTokenContract.mintACToken(_recipientAddress,_tokenId,_tokenURI);
+        AssetClassTokenContract.mintACToken(_recipientAddress, _tokenId, "pruf.io/assetClassToken");
+    }
 
+    /*
+     * @dev Set function costs and payment address per asset class, in Wei
+     */
+    function ACTH_setCosts(
+        uint16 _class,
+        uint256 _newRecordCost,
+        uint256 _transferAssetCost,
+        uint256 _createNoteCost,
+        uint256 _reMintRecordCost,
+        uint256 _changeStatusCost,
+        uint256 _forceModifyCost,
+        address _paymentAddress
+    ) external isACtokenHolderOfClass(_class) {
+        require(
+            priceDivisor != 0,
+            "price divisor is zero. Set base costs first"
+        );
+        cost[_class].newRecordCost = _newRecordCost;
+        cost[_class].transferAssetCost = _transferAssetCost;
+        cost[_class].createNoteCost = _createNoteCost;
+        cost[_class].reMintRecordCost = _reMintRecordCost;
+        cost[_class].changeStatusCost = _changeStatusCost;
+        cost[_class].forceModifyCost = _forceModifyCost;
+        cost[_class].paymentAddress = _paymentAddress;
+        //^^^^^^^effects^^^^^^^^^
+    }
+
+    /*
+     * @dev Set function base costs and payment address, in Wei
+     */
+    function OO_setBaseCosts(
+        uint256 _newRecordCost,
+        uint256 _transferAssetCost,
+        uint256 _createNoteCost,
+        uint256 _reMintRecordCost,
+        uint256 _changeStatusCost,
+        uint256 _forceModifyCost,
+        uint256 _threshold,
+        uint256 _divisor,
+        address _paymentAddress
+    ) external onlyOwner {
+        //^^^^^^^checks^^^^^^^^^
+        baseCost.newRecordCost = _newRecordCost;
+        baseCost.transferAssetCost = _transferAssetCost;
+        baseCost.createNoteCost = _createNoteCost;
+        baseCost.reMintRecordCost = _reMintRecordCost;
+        baseCost.changeStatusCost = _changeStatusCost;
+        baseCost.forceModifyCost = _forceModifyCost;
+        baseCost.paymentAddress = _paymentAddress;
+
+        priceThreshold = _threshold;
+        priceDivisor = _divisor;
+        //^^^^^^^effects^^^^^^^^^
+    }
+
+
+    function getAC_data(uint256 _tokenId)
+        external
+        view
+        returns (
+            uint16,
+            uint8,
+            uint256
+        )
+    {
+        uint16 assetClass = uint16(_tokenId);
+        return (
+            AC_data[assetClass].assetClassRoot,
+            AC_data[assetClass].custodyType,
+            AC_data[assetClass].extendedData
+        );
+    }
+
+    function getAC_name(uint256 _tokenId)
+        external
+        view
+        returns (
+            string memory
+        )
+    {
+        uint16 assetClass = uint16(_tokenId);
+        return (
+            AC_data[assetClass].name
+        );
+    }
+
+     /*
+     * @dev Retrieve function costs per asset class, in Wei
+     */
+    function retrieveCosts(uint16 _assetClass)
+        external
+        view
+        returns (
+            uint256,
+            uint256,
+            uint256,
+            uint256,
+            uint256,
+            uint256,
+            address
+        )
+    {
+        uint256 assetClass256 = uint256(_assetClass);
+        Costs memory returnCosts;
+        Costs memory costs = cost[_assetClass];
+
+        require(
+            (AssetClassTokenContract.ownerOf(assetClass256) !=
+                AssetClassTokenAddress), //this will throw in the token contract if not minted
+            "PS:RC:Asset class not yet populated"
+        );
+        //^^^^^^^checks^^^^^^^^
+
+        if (costs.newRecordCost <= priceThreshold) {
+            returnCosts.newRecordCost = costs.newRecordCost.add(
+                baseCost.newRecordCost
+            );
+        } else {
+            returnCosts.newRecordCost = costs.newRecordCost.add(
+                costs.newRecordCost.div(priceDivisor)
+            );
+        }
+
+        if (costs.transferAssetCost <= priceThreshold) {
+            returnCosts.transferAssetCost = costs.transferAssetCost.add(
+                baseCost.transferAssetCost
+            );
+        } else {
+            returnCosts.transferAssetCost = costs.transferAssetCost.add(
+                costs.transferAssetCost.div(priceDivisor)
+            );
+        }
+
+        if (costs.createNoteCost <= priceThreshold) {
+            returnCosts.createNoteCost = costs.createNoteCost.add(
+                baseCost.createNoteCost
+            );
+        } else {
+            returnCosts.createNoteCost = costs.createNoteCost.add(
+                costs.createNoteCost.div(priceDivisor)
+            );
+        }
+
+        if (costs.reMintRecordCost <= priceThreshold) {
+            returnCosts.reMintRecordCost = costs.reMintRecordCost.add(
+                baseCost.reMintRecordCost
+            );
+        } else {
+            returnCosts.reMintRecordCost = costs.reMintRecordCost.add(
+                costs.reMintRecordCost.div(priceDivisor)
+            );
+        }
+
+        if (costs.changeStatusCost <= priceThreshold) {
+            returnCosts.changeStatusCost = costs.changeStatusCost.add(
+                baseCost.changeStatusCost
+            );
+        } else {
+            returnCosts.changeStatusCost = costs.changeStatusCost.add(
+                costs.changeStatusCost.div(priceDivisor)
+            );
+        }
+
+        if (costs.forceModifyCost <= priceThreshold) {
+            returnCosts.forceModifyCost = costs.forceModifyCost.add(
+                baseCost.forceModifyCost
+            );
+        } else {
+            returnCosts.forceModifyCost = costs.forceModifyCost.add(
+                costs.forceModifyCost.div(priceDivisor)
+            );
+        }
+        //^^^^^^^effects^^^^^^^^^
+
+        return (
+            returnCosts.newRecordCost,
+            returnCosts.transferAssetCost,
+            returnCosts.createNoteCost,
+            returnCosts.reMintRecordCost,
+            returnCosts.changeStatusCost,
+            returnCosts.forceModifyCost,
+            costs.paymentAddress
+        );
+        //^^^^^^^interactions^^^^^^^^^
+    }
+
+    /*
+     * @dev Retrieve function costs per asset class, in Wei
+     */
+    function retrieveBaseCosts()
+        external
+        view
+        returns (
+            uint256,
+            uint256,
+            uint256,
+            uint256,
+            uint256,
+            uint256,
+            address
+        )
+    {
+        return (
+            baseCost.newRecordCost,
+            baseCost.transferAssetCost,
+            baseCost.createNoteCost,
+            baseCost.reMintRecordCost,
+            baseCost.changeStatusCost,
+            baseCost.forceModifyCost,
+            baseCost.paymentAddress
+        );
+        //^^^^^^^interactions^^^^^^^^^
+    }
+
+    function resolveAssetClass(string memory _name)
+        external
+        view
+        returns (
+            uint16
+        )
+    {
+        return (
+            AC_number[_name]
+        );
     }
 
     function OO_ResolveContractAddresses()
@@ -159,6 +400,8 @@ contract PRUF_AC_MGR is PRUF {
         AssetClassTokenContract = AssetClassTokenInterface(
             AssetClassTokenAddress
         );
+
+        AC_minterAddress = Storage.resolveContractAddress("PRUF_AC_Minter");
         //^^^^^^^effects^^^^^^^^^
     }
 

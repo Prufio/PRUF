@@ -89,7 +89,7 @@ import "./Imports/SafeMath.sol";
 import "./Imports/ReentrancyGuard.sol";
 
 contract Storage is Ownable, ReentrancyGuard {
-    using SafeMath for uint256;
+    //using SafeMath for uint256;
 
     struct Record {
         bytes32 recorder; // Address hash of recorder
@@ -111,41 +111,14 @@ contract Storage is Ownable, ReentrancyGuard {
         uint16 authorizedAssetClass; // User authorized for specific asset class
     }
 
-    struct Costs {
-        uint256 newRecordCost; // Cost to create a new record / mint asset
-        uint256 transferAssetCost; // Cost to transfer a record from known rights holder to a new one
-        uint256 createNoteCost; // Cost to add a static note to an asset
-        uint256 reMintRecordCost; // Cost to remint an asset
-        uint256 changeStatusCost; // Cost to change asset status
-        uint256 forceModifyCost; // Cost to brute-force a record transfer
-        address paymentAddress;
-    }
-
     mapping(address => uint8) private contractAdresses; // Authorized contract addresses, indexed by address, with auth level 0-255
     mapping(string => address) private contractNames; // Authorized contract addresses, indexed by name
     mapping(bytes32 => Record) private database; // Main Data Storage
-    mapping(uint16 => Costs) private cost; // Cost per function by asset class
-    Costs private baseCost;
-
-    uint256 private priceThreshold; //threshold of price where fractional pricing is implemented
-    uint256 private priceDivisor; //fractional pricing divisor
 
     address private AssetClassTokenAddress;
     AssetClassTokenInterface private AssetClassTokenContract; //erc721_token prototype initialization
 
     //----------------------------------------------Modifiers----------------------------------------------//
-
-    /*
-     * @dev Verify caller holds ACtoken of passed assetClass
-     */
-    modifier isACtokenHolderOfClass(uint16 _assetClass) {
-        uint256 assetClass256 = uint256(_assetClass);
-        require(
-            (AssetClassTokenContract.ownerOf(assetClass256) == msg.sender),
-            "MOD-ACTH-msg.sender not authorized in asset class"
-        );
-        _;
-    }
 
     /*
      * @dev Verify user credentials
@@ -239,61 +212,6 @@ contract Storage is Ownable, ReentrancyGuard {
             bytes32(uint256(_contractAuthLevel))
         ); //report access to the internal user database
         //^^^^^^^interactions^^^^^^^^^
-    }
-
-    /*
-     * @dev Set function costs and payment address per asset class, in Wei
-     */
-    function ACTH_setCosts(
-        uint16 _class,
-        uint256 _newRecordCost,
-        uint256 _transferAssetCost,
-        uint256 _createNoteCost,
-        uint256 _reMintRecordCost,
-        uint256 _changeStatusCost,
-        uint256 _forceModifyCost,
-        address _paymentAddress
-    ) external isACtokenHolderOfClass(_class) {
-        require(
-            priceDivisor != 0,
-            "price divisor is zero. Set base costs first"
-        );
-        cost[_class].newRecordCost = _newRecordCost;
-        cost[_class].transferAssetCost = _transferAssetCost;
-        cost[_class].createNoteCost = _createNoteCost;
-        cost[_class].reMintRecordCost = _reMintRecordCost;
-        cost[_class].changeStatusCost = _changeStatusCost;
-        cost[_class].forceModifyCost = _forceModifyCost;
-        cost[_class].paymentAddress = _paymentAddress;
-        //^^^^^^^effects^^^^^^^^^
-    }
-
-    /*
-     * @dev Set function base costs and payment address, in Wei
-     */
-    function OO_setBaseCosts(
-        uint256 _newRecordCost,
-        uint256 _transferAssetCost,
-        uint256 _createNoteCost,
-        uint256 _reMintRecordCost,
-        uint256 _changeStatusCost,
-        uint256 _forceModifyCost,
-        uint256 _threshold,
-        uint256 _divisor,
-        address _paymentAddress
-    ) external onlyOwner {
-        //^^^^^^^checks^^^^^^^^^
-        baseCost.newRecordCost = _newRecordCost;
-        baseCost.transferAssetCost = _transferAssetCost;
-        baseCost.createNoteCost = _createNoteCost;
-        baseCost.reMintRecordCost = _reMintRecordCost;
-        baseCost.changeStatusCost = _changeStatusCost;
-        baseCost.forceModifyCost = _forceModifyCost;
-        baseCost.paymentAddress = _paymentAddress;
-
-        priceThreshold = _threshold;
-        priceDivisor = _divisor;
-        //^^^^^^^effects^^^^^^^^^
     }
 
     //--------------------------------External "write" contract functions / authuser---------------------------------//
@@ -723,135 +641,6 @@ contract Storage is Ownable, ReentrancyGuard {
             return 0;
         }
         //^^^^^^^checks/interactions^^^^^^^^^
-    }
-
-    /*
-     * @dev Retrieve function costs per asset class, in Wei
-     */
-    function retrieveCosts(uint16 _assetClass)
-        external
-        view
-        returns (
-            uint256,
-            uint256,
-            uint256,
-            uint256,
-            uint256,
-            uint256,
-            address
-        )
-    {
-        uint256 assetClass256 = uint256(_assetClass);
-        Costs memory returnCosts;
-        Costs memory costs = cost[_assetClass];
-
-        require(
-            (AssetClassTokenContract.ownerOf(assetClass256) !=
-                AssetClassTokenAddress), //this will throw in the token contract if not minted
-            "PS:RC:Asset class not yet populated"
-        );
-        //^^^^^^^checks^^^^^^^^
-
-        if (costs.newRecordCost <= priceThreshold) {
-            returnCosts.newRecordCost = costs.newRecordCost.add(
-                baseCost.newRecordCost
-            );
-        } else {
-            returnCosts.newRecordCost = costs.newRecordCost.add(
-                costs.newRecordCost.div(priceDivisor)
-            );
-        }
-
-        if (costs.transferAssetCost <= priceThreshold) {
-            returnCosts.transferAssetCost = costs.transferAssetCost.add(
-                baseCost.transferAssetCost
-            );
-        } else {
-            returnCosts.transferAssetCost = costs.transferAssetCost.add(
-                costs.transferAssetCost.div(priceDivisor)
-            );
-        }
-
-        if (costs.createNoteCost <= priceThreshold) {
-            returnCosts.createNoteCost = costs.createNoteCost.add(
-                baseCost.createNoteCost
-            );
-        } else {
-            returnCosts.createNoteCost = costs.createNoteCost.add(
-                costs.createNoteCost.div(priceDivisor)
-            );
-        }
-
-        if (costs.reMintRecordCost <= priceThreshold) {
-            returnCosts.reMintRecordCost = costs.reMintRecordCost.add(
-                baseCost.reMintRecordCost
-            );
-        } else {
-            returnCosts.reMintRecordCost = costs.reMintRecordCost.add(
-                costs.reMintRecordCost.div(priceDivisor)
-            );
-        }
-
-        if (costs.changeStatusCost <= priceThreshold) {
-            returnCosts.changeStatusCost = costs.changeStatusCost.add(
-                baseCost.changeStatusCost
-            );
-        } else {
-            returnCosts.changeStatusCost = costs.changeStatusCost.add(
-                costs.changeStatusCost.div(priceDivisor)
-            );
-        }
-
-        if (costs.forceModifyCost <= priceThreshold) {
-            returnCosts.forceModifyCost = costs.forceModifyCost.add(
-                baseCost.forceModifyCost
-            );
-        } else {
-            returnCosts.forceModifyCost = costs.forceModifyCost.add(
-                costs.forceModifyCost.div(priceDivisor)
-            );
-        }
-        //^^^^^^^effects^^^^^^^^^
-
-        return (
-            returnCosts.newRecordCost,
-            returnCosts.transferAssetCost,
-            returnCosts.createNoteCost,
-            returnCosts.reMintRecordCost,
-            returnCosts.changeStatusCost,
-            returnCosts.forceModifyCost,
-            costs.paymentAddress
-        );
-        //^^^^^^^interactions^^^^^^^^^
-    }
-
-    /*
-     * @dev Retrieve function costs per asset class, in Wei
-     */
-    function retrieveBaseCosts()
-        external
-        view
-        isAuthorized
-        returns (
-            uint256,
-            uint256,
-            uint256,
-            uint256,
-            uint256,
-            uint256,
-            address
-        )
-    {
-        return (
-            baseCost.newRecordCost,
-            baseCost.transferAssetCost,
-            baseCost.createNoteCost,
-            baseCost.reMintRecordCost,
-            baseCost.changeStatusCost,
-            baseCost.forceModifyCost,
-            baseCost.paymentAddress
-        );
-        //^^^^^^^interactions^^^^^^^^^
     }
 
     /*
