@@ -107,14 +107,14 @@ contract PRUF_AC_MGR is PRUF {
 
     modifier isAdmin() {
         require(
-            (msg.sender == owner()),
+            msg.sender == owner(),
             "Calling address does not belong to an Admin"
         );
         _;
     }
 
-    function mintACtoken(
-        uint256 tokenId,
+    function createAssetClass(
+        uint256 _tokenId,
         address _recipientAddress,
         string calldata _tokenURI,
         string calldata _name,
@@ -122,12 +122,28 @@ contract PRUF_AC_MGR is PRUF {
         uint16 _assetClassRoot,
         uint8 _custodyType
     ) external isAdmin {
+        AC memory _ac = AC_data [_assetClassRoot];
+
+        require ( //sanity check inputs
+            (_tokenId != 0),
+            "token id cannot be 0"
+        );
+        require ( //sanity check inputs
+             (_custodyType != 0),
+            "custodyType cannot be 0"
+        );
+        require ( //has valid root
+            (_ac.custodyType != 0) || (_assetClassRoot == _assetClass),
+            "Root asset class does not exist"
+        );
+
         AC_number[_name] = _assetClass;
         AC_data[_assetClass].name = _name;
         AC_data[_assetClass].assetClassRoot = _assetClassRoot;
         AC_data[_assetClass].custodyType = _custodyType;
 
-        
+        AssetClassTokenContract.mintACToken(_recipientAddress,_tokenId,_tokenURI);
+
     }
 
     function OO_ResolveContractAddresses()
