@@ -8,28 +8,45 @@ interface PrufAppInterface {
         returns (uint8, uint16);
 }
 
+interface AssetClassTokenManagerInterface {
+    
+}
+
 interface AssetClassTokenInterface {
     function ownerOf(uint256) external view returns (address);
 
-    function transferAssetClassToken(
+    function safeTransferFrom(
         address from,
         address to,
-        uint256 tokenIdxHash
+        uint256 tokenId
     ) external;
+
+    function mintACToken(
+        address _reciepientAddress,
+        uint256 tokenId,
+        string calldata _tokenURI
+    ) external returns (uint256);
+
+    function reMintACToken(
+        address _reciepientAddress,
+        uint256 tokenId,
+        string calldata _tokenURI
+    ) external returns (uint256);
+
 }
 
 interface AssetTokenInterface {
     function ownerOf(uint256) external view returns (address);
 
-    function transferAssetToken(
+    function safeTransferFrom(
         address from,
         address to,
-        uint256 tokenIdxHash
+        uint256 tokenId
     ) external;
 
     function mintAssetToken(
         address _reciepientAddress,
-        uint256 tokenIdxHash,
+        uint256 tokenId,
         string calldata _tokenURI
     ) external returns (uint256);
 
