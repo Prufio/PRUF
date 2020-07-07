@@ -77,6 +77,8 @@
  * 5 - 9 = Robot (cannot create of force-modify)
  * Other = unauth
  *
+
+ ACmanager handles minting, name resolution, custodial status, root asset class, resolution by name or AC
  */
 
 // SPDX-License-Identifier: UNLICENSED
