@@ -158,6 +158,12 @@ contract PRUF_NP is PRUF {
     ) external nonReentrant isAuthorized(_idxHash) returns (uint8) {
         Record memory rec = getRecord(_idxHash);
         User memory callingUser = getUser();
+        AC memory AC_info = getACinfo(rec.assetClass);
+
+        require(
+            AC_info.custodyType == 2,
+            "PA:I2: Contract not authorized for custodial assets"
+        );
 
         require((rec.rightsHolder != 0), "PNP:MS: Record does not exist");
         require(
@@ -206,6 +212,12 @@ contract PRUF_NP is PRUF {
         Record memory rec = getRecord(_idxHash);
         rec.assetStatus = _newAssetStatus;
         User memory callingUser = getUser();
+        AC memory AC_info = getACinfo(rec.assetClass);
+
+        require(
+            AC_info.custodyType == 2,
+            "PA:I2: Contract not authorized for custodial assets"
+        );
 
         require((rec.rightsHolder != 0), "PNP:SLS: Record does not exist");
         require(
@@ -258,6 +270,12 @@ contract PRUF_NP is PRUF {
     ) external nonReentrant isAuthorized(_idxHash) returns (uint256) {
         Record memory rec = getRecord(_idxHash);
         User memory callingUser = getUser();
+        AC memory AC_info = getACinfo(rec.assetClass);
+
+        require(
+            AC_info.custodyType == 2,
+            "PA:I2: Contract not authorized for custodial assets"
+        );
 
         require((rec.rightsHolder != 0), "PNP:DC: Record does not exist");
         require(
@@ -305,6 +323,12 @@ contract PRUF_NP is PRUF {
         Record memory rec = getRecord(_idxHash);
         User memory callingUser = getUser();
         //Costs memory cost = getCost(rec.assetClass);
+        AC memory AC_info = getACinfo(rec.assetClass);
+
+        require(
+            AC_info.custodyType == 2,
+            "PA:I2: Contract not authorized for custodial assets"
+        );
 
         require((rec.rightsHolder != 0), "PNP:MI1: Record does not exist");
         require(
