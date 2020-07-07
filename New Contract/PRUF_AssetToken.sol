@@ -25,7 +25,7 @@ contract AssetToken is Ownable, ReentrancyGuard, ERC721 {
         uint16 numberOfTransfers; //number of transfers and forcemods
     }
 
-    constructor() public ERC721("BulletProof Asset Token", "BPXA") {}
+    constructor() public ERC721("PRüF Asset Token", "PAT") {}
 
     address internal T_PrufAppAddress; //isAdmin
     address internal PrufAppAddress; //isAdmin
