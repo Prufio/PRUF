@@ -1,7 +1,9 @@
-/*  TO DO
- * verify security and user permissioning /modifiers
- * @implement remint_asset ?
+/*-----------------------------------------------------------------
+ *  TO DO
  *
+*-----------------------------------------------------------------
+
+*-----------------------------------------------------------------
  * IMPORTANT NOTE : DO NOT REMOVE FROM CODE:
  *      Verification of rgtHash in curated, tokenless asset classes are not secure beyond the honorable intentions
  * of authorized recorders. All blockchain info is readable, so a bad actor could trivially obtain a copy of the
@@ -9,35 +11,67 @@
  * to require an actual, malicious effort to bypass security rather than a little copy-paste. Actual decentralized
  * security is provided with tokenized assets, which do not rely on the coercive trust relationship that creates the
  * incentive for recorders not to engage in malicious practices.
+*-----------------------------------------------------------------
+
+*-----------------------------------------------------------------
+ *rules for burning records:
  *
+ *rules for reminting records:
+ *
+ *rules for recycling records:
+ *  if recycled in same asset class group:
+ *      in record: new rgtHash assigned, anything else left as-was (in case there was a pre-existing record)
+ *      token is reissued to recycling address
+ *  if recycled in new asset class group:
+ *
+*-----------------------------------------------------------------
+
+*-----------------------------------------------------------------
  * Order of require statements:
  * 1: (modifiers)
- * 2: checking the asset existance
- * 3: checking the idendity and credentials of the caller
- * 4: checking the suitability of provided data for the proposed operation
- * 5: checking the suitability of asset details for the proposed operation
- * 6: verifying that provided verification data matches required data
- * 7: verifying that message contains any required payment
+ * 2: checking custodial status
+ * 3: checking the asset existance
+ * 4: checking the idendity and credentials of the caller
+ * 5: checking the suitability of provided data for the proposed operation
+ * 6: checking the suitability of asset details for the proposed operation
+ * 7: verifying that provided verification data matches required data
+ * 8: verifying that message contains any required payment
  *
- *
+*-----------------------------------------------------------------
+
+*-----------------------------------------------------------------
  * Contract Resolution Names -
  *  assetToken
  *  assetClassToken
  *  PRUF_APP
  *  PRUF_NP
  *  PRUF_simpleEscrow
+ *  PRUF_AC_MGR
+ *  PRUF_AC_Minter
  *  T_PRUF_APP
  *  T_PRUF_NP
  *  T_PRUF_simpleEscrow
  *
- * CONTRACT Types (storage)
+*-----------------------------------------------------------------
+
+*-----------------------------------------------------------------
+ * CONTRACT Types:
  * 0   --NONE
  * 1   --Custodial
  * 2   --Non-Custodial
  * Owner (onlyOwner)
  * other = unauth
  *
+*-----------------------------------------------------------------
+
+*-----------------------------------------------------------------
+ * ASSET CLASS Types:
+ * 1   --Custodial
+ * 2   --Non-Custodial
  *
+*-----------------------------------------------------------------
+
+*-----------------------------------------------------------------
  * Record status field key
  *
  * 0 = no status, Non transferrable. Default asset creation status
@@ -64,19 +98,17 @@
  * 57 = out of escrow
  * 58 = out of locked escrow
  *
- * ADD 100 for NONREMINTABLE!!!
- *
- * escrow status = lock time set to a time instead of a block number
- *
- *
+*-----------------------------------------------------------------
+
+*-----------------------------------------------------------------
  * Authorized User Types   registeredUsers[]
- *
  * 1 - 4 = Standard User types
  * 1 - all priveleges
  * 2 - all but force-modify
  * 5 - 9 = Robot (cannot create of force-modify)
  * Other = unauth
  *
+*-----------------------------------------------------------------
  */
 
 // SPDX-License-Identifier: UNLICENSED
