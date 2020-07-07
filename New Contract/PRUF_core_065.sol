@@ -398,25 +398,6 @@ contract PRUF is ReentrancyGuard, Ownable, IERC721Receiver, PullPayment {
     }
 
     /*
-     * @dev retrieves Base Costs from Storage and returns Costs struct
-     */
-    function getBaseCost() internal returns (Costs memory) {
-        Costs memory cost;
-        (
-            cost.newRecordCost,
-            cost.transferAssetCost,
-            cost.createNoteCost,
-            cost.reMintRecordCost,
-            cost.changeStatusCost,
-            cost.forceModifyCost,
-            cost.paymentAddress
-        ) = AssetClassTokenManagerContract.retrieveBaseCosts();
-
-        return (cost);
-        //^^^^^^^interactions^^^^^^^^^
-    }
-
-    /*
      * @dev retrieves costs from Storage and returns Costs struct
      */
     function getCost(uint16 _assetClass) internal returns (Costs memory) {
@@ -484,7 +465,7 @@ contract PRUF is ReentrancyGuard, Ownable, IERC721Receiver, PullPayment {
         //^^^^^^^interactions^^^^^^^^^
     }
 
-    function deductNewRecordPayment(uint16 _assetClass) internal {
+    function deductNewRecordCosts(uint16 _assetClass) internal {
         Invoice memory pricing;
         (
             pricing.rootAddress,
@@ -495,6 +476,61 @@ contract PRUF is ReentrancyGuard, Ownable, IERC721Receiver, PullPayment {
         deductPayment(pricing);
     }
 
+    function deductTransferAssetCosts(uint16 _assetClass) internal {
+        Invoice memory pricing;
+        (
+            pricing.rootAddress,
+            pricing.rootPrice,
+            pricing.ACTHaddress,
+            pricing.ACTHprice
+        ) = AssetClassTokenManagerContract.getTransferAssetCosts(_assetClass);
+        deductPayment(pricing);
+    }
+
+    function deductCreateNoteCosts(uint16 _assetClass) internal {
+        Invoice memory pricing;
+        (
+            pricing.rootAddress,
+            pricing.rootPrice,
+            pricing.ACTHaddress,
+            pricing.ACTHprice
+        ) = AssetClassTokenManagerContract.getCreateNoteCosts(_assetClass);
+        deductPayment(pricing);
+    }
+
+    function deductReMintRecordCosts(uint16 _assetClass) internal {
+        Invoice memory pricing;
+        (
+            pricing.rootAddress,
+            pricing.rootPrice,
+            pricing.ACTHaddress,
+            pricing.ACTHprice
+        ) = AssetClassTokenManagerContract.getReMintRecordCosts(_assetClass);
+        deductPayment(pricing);
+    }
+
+    function deductChangeStatusCosts(uint16 _assetClass) internal {
+        Invoice memory pricing;
+        (
+            pricing.rootAddress,
+            pricing.rootPrice,
+            pricing.ACTHaddress,
+            pricing.ACTHprice
+        ) = AssetClassTokenManagerContract.getChangeStatusCosts(_assetClass);
+        deductPayment(pricing);
+    }
+
+    function deductForceModifyCosts(uint16 _assetClass) internal {
+        Invoice memory pricing;
+        (
+            pricing.rootAddress,
+            pricing.rootPrice,
+            pricing.ACTHaddress,
+            pricing.ACTHprice
+        ) = AssetClassTokenManagerContract.getForceModifyCosts(_assetClass);
+        deductPayment(pricing);
+    }
+
     /*--------------------------------------------------------------------------------------PAYMENT FUNCTIONS
      * @dev Deducts payment from transaction
      */
@@ -502,10 +538,7 @@ contract PRUF is ReentrancyGuard, Ownable, IERC721Receiver, PullPayment {
         uint256 messageValue = msg.value;
         uint256 change;
         uint256 total = pricing.rootPrice.add(pricing.ACTHprice);
-        require(
-            msg.value >= total,
-            "PA:NR: tx value too low. Send more eth."
-        );
+        require(msg.value >= total, "PA:NR: tx value too low. Send more eth.");
         change = messageValue.sub(total);
         _asyncTransfer(pricing.rootAddress, pricing.rootPrice);
         _asyncTransfer(pricing.ACTHaddress, pricing.ACTHprice);

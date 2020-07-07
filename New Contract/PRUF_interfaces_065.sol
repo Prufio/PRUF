@@ -78,6 +78,15 @@ interface AssetClassTokenManagerInterface {
             uint256
         );
 
+        function getForceModifyCosts(uint16 _assetClass)
+        external
+        returns (
+            address,
+            uint256,
+            address,
+            uint256
+        );
+
     function createAssetClass(
         uint256 _tokenId,
         address _recipientAddress,
