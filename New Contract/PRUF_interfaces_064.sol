@@ -42,7 +42,7 @@ interface AssetClassTokenManagerInterface {
         uint8 _custodyType
     ) external;
 
-    function getAC_data(uint256 _tokenId)
+    function getAC_data(uint16 _assetClass)
         external
         returns (
             uint16,
