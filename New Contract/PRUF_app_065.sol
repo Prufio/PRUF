@@ -149,8 +149,8 @@ contract PRUF_APP is PRUF {
         uint256 tokenId = uint256(_idxHash);
         User memory callingUser = getUser();
         Record memory rec = getRecord(_idxHash);
-        Costs memory cost = getCost(_assetClass);
-        Costs memory baseCost = getBaseCost();
+        //Costs memory cost = getCost(_assetClass);
+        //Costs memory baseCost = getBaseCost();
         AC memory AC_info = getACinfo(_assetClass);
         AC memory oldAC_info = getACinfo(rec.assetClass);
 

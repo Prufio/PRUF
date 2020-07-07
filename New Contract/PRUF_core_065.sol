@@ -126,6 +126,13 @@ contract PRUF is ReentrancyGuard, Ownable, IERC721Receiver, PullPayment {
         uint256 extendedData; // asset type root (bycyles - USA Bicycles)
     }
 
+    struct Invoice {
+        address rootAddress;
+        uint256 rootPrice;
+        address ACTHaddress;
+        uint256 ACTHprice;
+    }
+
     mapping(bytes32 => User) internal registeredUsers; // Authorized recorder database
 
     address internal storageAddress;
@@ -315,7 +322,6 @@ contract PRUF is ReentrancyGuard, Ownable, IERC721Receiver, PullPayment {
         return AC_info;
     }
 
-
     /*
      * @dev Get a Record from Storage @ idxHash
      */
@@ -478,22 +484,28 @@ contract PRUF is ReentrancyGuard, Ownable, IERC721Receiver, PullPayment {
         //^^^^^^^interactions^^^^^^^^^
     }
 
+    function deductNewRecordPayment(uint16 _assetClass) internal {
+        Invoice memory pricing;
+        (
+            pricing.rootAddress,
+            pricing.rootPrice,
+            pricing.ACTHaddress,
+            pricing.ACTHprice
+        ) = AssetClassTokenManagerContract.getNewRecordCosts(_assetClass);
+        deductPayment(pricing);
+    }
+
     /*--------------------------------------------------------------------------------------PAYMENT FUNCTIONS
      * @dev Deducts payment from transaction
      */
-    function deductPayment(
-        address _rootPaymentAddress,
-        uint256 _rootAmount,
-        address _ACTHpaymentAddress,
-        uint256 _ACTHamount
-    ) internal {
+    function deductPayment(Invoice memory pricing) internal {
         uint256 messageValue = msg.value;
         uint256 change;
-        uint256 total = _ACTHamount;
+        uint256 total = pricing.rootPrice.add(pricing.ACTHprice);
 
         change = messageValue.sub(total);
-        _asyncTransfer(_rootPaymentAddress, _rootAmount);
-        _asyncTransfer(_ACTHpaymentAddress, (_ACTHamount.sub(_rootAmount)));
+        _asyncTransfer(pricing.rootAddress, pricing.rootPrice);
+        _asyncTransfer(pricing.ACTHaddress, pricing.ACTHprice);
         _asyncTransfer(msg.sender, change);
         //^^^^^^^interactions^^^^^^^^^
     }
