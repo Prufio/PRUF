@@ -87,25 +87,47 @@ pragma solidity ^0.6.7;
 import "./PRUF_core_063.sol";
 
 contract PRUF_AC_MGR is PRUF {
-    using SafeMath for uint256;
-    using SafeMath for uint8;
+    //using SafeMath for uint256;
+    //using SafeMath for uint8;
 
-    address internal PrufAppAddress;
-    PrufAppInterface internal PrufAppContract; //erc721_token prototype initialization
+    struct AC {
+        string name; // NameHash for assetClass
+        uint16 assetClassRoot; // asset type root (bycyles - USA Bicycles)
+        uint8 custodyType; // custodial or noncustodial
+    }
+
+    mapping(uint16 => AC) internal AC_data; // Authorized recorder database
+    mapping(string => uint16) internal AC_number;
 
     /*
      * @dev Verify user credentials
      * Originating Address:
-     *      holds asset token at idxHash
+     *      is owner
      */
 
-    modifier isAuthorized(bytes32 _idxHash) override {
-        uint256 tokenID = uint256(_idxHash);
+    modifier isAdmin() {
         require(
-            (AssetTokenContract.ownerOf(tokenID) == msg.sender), //msg.sender is token holder
-            "PC:MOD-IA: Caller does not hold token"
+            (msg.sender == owner()),
+            "Calling address does not belong to an Admin"
         );
         _;
+    }
+
+    function mintACtoken(
+        uint256 tokenId,
+        address _recipientAddress,
+        string calldata _tokenURI,
+        string calldata _name,
+        uint16 _assetClass,
+        uint16 _assetClassRoot,
+        uint8 _custodyType
+    ) external isAdmin {
+        AC_number[_name] = _assetClass;
+        AC_data[_assetClass].name = _name;
+        AC_data[_assetClass].assetClassRoot = _assetClassRoot;
+        AC_data[_assetClass].custodyType = _custodyType;
+
+        
     }
 
     function OO_ResolveContractAddresses()
@@ -121,25 +143,8 @@ contract PRUF_AC_MGR is PRUF {
         AssetClassTokenContract = AssetClassTokenInterface(
             AssetClassTokenAddress
         );
-
-        AssetTokenAddress = Storage.resolveContractAddress("assetToken");
-        AssetTokenContract = AssetTokenInterface(AssetTokenAddress);
-
-        PrufAppAddress = Storage.resolveContractAddress("PRUF_APP");
-        PrufAppContract = PrufAppInterface(PrufAppAddress);
         //^^^^^^^effects^^^^^^^^^
     }
 
-    function getUser() internal override view returns (User memory) {
-        //User memory callingUser = getUser();
-        User memory user;
-        (user.userType, user.authorizedAssetClass) = PrufAppContract.getUserExt(
-            keccak256(abi.encodePacked(msg.sender))
-        );
-        return user;
-        //^^^^^^^interactions^^^^^^^^^
-    }
-
     //--------------------------------------------External Functions--------------------------
-
 }
