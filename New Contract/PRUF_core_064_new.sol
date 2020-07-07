@@ -162,26 +162,6 @@ contract PRUF is ReentrancyGuard, Ownable, IERC721Receiver, PullPayment {
         _;
     }
 
-    // modifier isCustodial(uint16 _assetClass) virtual {
-    //     AC memory AC_info = getACinfo(_assetClass);
-    //     require(
-    //         AC_info.custodyType == 1,
-    //         "PC:MOD-IA: Asset class is not custodial"
-    //     );
-    //     _;
-    // }
-
-    // modifier isNonCustodial(uint16 _assetClass) virtual {
-    //     AC memory AC_info = getACinfo(_assetClass);
-    //     require(
-    //         AC_info.custodyType == 2,
-    //         "PC:MOD-IA: Asset class is custodial"
-    //     );
-    //     _;
-    // }
-
-
-
     //----------------------Internal Admin functions / onlyowner or isAdmin----------------------//
     /*
      * @dev Address Setters
@@ -502,8 +482,8 @@ contract PRUF is ReentrancyGuard, Ownable, IERC721Receiver, PullPayment {
      * @dev Deducts payment from transaction
      */
     function deductPayment(
-        address _basePaymentAddress,
-        uint256 _baseAmount,
+        address _rootPaymentAddress,
+        uint256 _rootAmount,
         address _ACTHpaymentAddress,
         uint256 _ACTHamount
     ) internal {
@@ -512,8 +492,8 @@ contract PRUF is ReentrancyGuard, Ownable, IERC721Receiver, PullPayment {
         uint256 total = _ACTHamount;
 
         change = messageValue.sub(total);
-        _asyncTransfer(_basePaymentAddress, _baseAmount);
-        _asyncTransfer(_ACTHpaymentAddress, (_ACTHamount.sub(_baseAmount)));
+        _asyncTransfer(_rootPaymentAddress, _rootAmount);
+        _asyncTransfer(_ACTHpaymentAddress, (_ACTHamount.sub(_rootAmount)));
         _asyncTransfer(msg.sender, change);
         //^^^^^^^interactions^^^^^^^^^
     }

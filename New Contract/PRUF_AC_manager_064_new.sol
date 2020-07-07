@@ -242,13 +242,13 @@ contract PRUF_AC_MGR is PRUF {
     /*
      * @dev Retrieve function costs per asset class, in Wei
      */
-    function retrieveNewRecordCosts(uint16 _assetClass)
+    function getNewRecordCosts(uint16 _assetClass)
         external
         returns (
-            uint256,
             address,
             uint256,
-            address
+            address,
+            uint256
         )
     {
         AC memory AC_info = getACinfo(_assetClass);
@@ -263,23 +263,23 @@ contract PRUF_AC_MGR is PRUF {
             "PS:RC:Asset class not yet populated"
         );
         return (
-            costs.newRecordCost,
-            costs.paymentAddress,
+            rootCosts.paymentAddress,
             rootCosts.newRecordCost,
-            rootCosts.paymentAddress
+            costs.paymentAddress,
+            costs.newRecordCost
         );
     }
 
     /*
      * @dev Retrieve function costs per asset class, in Wei
      */
-    function transferAssetCosts(uint16 _assetClass)
+    function gettransferAssetCosts(uint16 _assetClass)
         external
         returns (
-            uint256,
             address,
             uint256,
-            address
+            address,
+            uint256
         )
     {
         AC memory AC_info = getACinfo(_assetClass);
@@ -294,10 +294,10 @@ contract PRUF_AC_MGR is PRUF {
             "PS:RC:Asset class not yet populated"
         );
         return (
-            costs.transferAssetCost,
-            costs.paymentAddress,
+            rootCosts.paymentAddress,
             rootCosts.transferAssetCost,
-            rootCosts.paymentAddress
+            costs.paymentAddress,
+            costs.transferAssetCost
         );
     }
 
@@ -307,10 +307,10 @@ contract PRUF_AC_MGR is PRUF {
     function createNoteCosts(uint16 _assetClass)
         external
         returns (
-            uint256,
             address,
             uint256,
-            address
+            address,
+            uint256
         )
     {
         AC memory AC_info = getACinfo(_assetClass);
@@ -325,10 +325,10 @@ contract PRUF_AC_MGR is PRUF {
             "PS:RC:Asset class not yet populated"
         );
         return (
-            costs.createNoteCost,
-            costs.paymentAddress,
+            rootCosts.paymentAddress,
             rootCosts.createNoteCost,
-            rootCosts.paymentAddress
+            costs.paymentAddress,
+            costs.createNoteCost
         );
     }
 
@@ -337,11 +337,11 @@ contract PRUF_AC_MGR is PRUF {
      */
     function reMintRecordCosts(uint16 _assetClass)
         external
-        returns (
-            uint256,
+       returns (
             address,
             uint256,
-            address
+            address,
+            uint256
         )
     {
         AC memory AC_info = getACinfo(_assetClass);
@@ -356,10 +356,10 @@ contract PRUF_AC_MGR is PRUF {
             "PS:RC:Asset class not yet populated"
         );
         return (
-            costs.reMintRecordCost,
-            costs.paymentAddress,
+            rootCosts.paymentAddress,
             rootCosts.reMintRecordCost,
-            rootCosts.paymentAddress
+            costs.paymentAddress,
+            costs.reMintRecordCost
         );
     }
 
@@ -369,10 +369,10 @@ contract PRUF_AC_MGR is PRUF {
     function changeStatusCosts(uint16 _assetClass)
         external
         returns (
-            uint256,
             address,
             uint256,
-            address
+            address,
+            uint256
         )
     {
         AC memory AC_info = getACinfo(_assetClass);
@@ -387,10 +387,10 @@ contract PRUF_AC_MGR is PRUF {
             "PS:RC:Asset class not yet populated"
         );
         return (
-            costs.changeStatusCost,
-            costs.paymentAddress,
+            rootCosts.paymentAddress,
             rootCosts.changeStatusCost,
-            rootCosts.paymentAddress
+            costs.paymentAddress,
+            costs.changeStatusCost
         );
     }
 
@@ -400,10 +400,10 @@ contract PRUF_AC_MGR is PRUF {
     function forceModifyCosts(uint16 _assetClass)
         external
         returns (
-            uint256,
             address,
             uint256,
-            address
+            address,
+            uint256
         )
     {
         AC memory AC_info = getACinfo(_assetClass);
@@ -418,10 +418,10 @@ contract PRUF_AC_MGR is PRUF {
             "PS:RC:Asset class not yet populated"
         );
         return (
-            costs.forceModifyCost,
-            costs.paymentAddress,
+            rootCosts.paymentAddress,
             rootCosts.forceModifyCost,
-            rootCosts.paymentAddress
+            costs.paymentAddress,
+            costs.forceModifyCost
         );
     }
 
