@@ -54,8 +54,7 @@ contract AssetClassToken is Ownable, ReentrancyGuard, ERC721 {
     }
 
     /*
-     * must be isAdmin
-     *
+     * mints assetClass token, must be isAdmin
      */
     function mintACToken(
         address _recipientAddress,
