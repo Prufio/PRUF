@@ -192,6 +192,12 @@ contract T_PRUF_NP is PRUF {
         uint8 _newAssetStatus
     ) external nonReentrant isAuthorized(_idxHash) returns (uint8) {
         Record memory rec = getRecord(_idxHash);
+        AC memory AC_info = getACinfo(rec.assetClass);
+
+        require(
+            AC_info.custodyType == 2,
+            "PA:I2: Contract not authorized for custodial assets"
+        );
 
         require((rec.rightsHolder != 0), "PNP:MS: Record does not exist");
         require(_newAssetStatus < 100, "PNP:MS: user cannot set status > 99");
@@ -238,6 +244,12 @@ contract T_PRUF_NP is PRUF {
         uint8 _newAssetStatus
     ) external nonReentrant isAuthorized(_idxHash) returns (uint8) {
         Record memory rec = getRecord(_idxHash);
+        AC memory AC_info = getACinfo(rec.assetClass);
+
+        require(
+            AC_info.custodyType == 2,
+            "PA:I2: Contract not authorized for custodial assets"
+        );
 
         require((rec.rightsHolder != 0), "PNP:SLS: Record does not exist");
         require(
@@ -288,6 +300,12 @@ contract T_PRUF_NP is PRUF {
         uint256 _decAmount
     ) external nonReentrant isAuthorized(_idxHash) returns (uint256) {
         Record memory rec = getRecord(_idxHash);
+        AC memory AC_info = getACinfo(rec.assetClass);
+
+        require(
+            AC_info.custodyType == 2,
+            "PA:I2: Contract not authorized for custodial assets"
+        );
 
         require((rec.rightsHolder != 0), "PNP:DC: Record does not exist");
         require( //------------------------------------------should the counter still work when an asset is in escrow?
@@ -330,6 +348,12 @@ contract T_PRUF_NP is PRUF {
     ) external nonReentrant isAuthorized(_idxHash) returns (bytes32) {
         Record memory rec = getRecord(_idxHash);
         User memory callingUser = getUser();
+        AC memory AC_info = getACinfo(rec.assetClass);
+
+        require(
+            AC_info.custodyType == 2,
+            "PA:I2: Contract not authorized for custodial assets"
+        );
 
         require((rec.rightsHolder != 0), "PNP:MI1: Record does not exist");
         require(
