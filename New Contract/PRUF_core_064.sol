@@ -335,6 +335,7 @@ contract PRUF is ReentrancyGuard, Ownable, IERC721Receiver, PullPayment {
         return AC_info;
     }
 
+
     /*
      * @dev Get a Record from Storage @ idxHash
      */

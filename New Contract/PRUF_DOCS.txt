@@ -4,7 +4,6 @@ pragma solidity ^0.6.0;
 
 /*-----------------------------------------------------------------
  *  TO DO
- *  APP and APP NP (and escrow?) contracts need to check if they are in a custodial (1) or non custodial(2) asset type
  *  Implement burn
  *  implement recycle
  *  implement checks in new record for data preservation

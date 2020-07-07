@@ -148,12 +148,14 @@ contract T_PRUF_NP is PRUF {
         bytes32 _rgtHash,
         uint16 _assetClass,
         uint256 _countDownStart,
-        bytes32 _Ipfs
+        bytes32 _Ipfs1
     ) external payable nonReentrant {
         uint256 tokenId = uint256(_idxHash);
+        Record memory rec = getRecord(_idxHash);
         Costs memory cost = getCost(_assetClass);
         Costs memory baseCost = getBaseCost();
         AC memory AC_info = getACinfo(_assetClass);
+        AC memory oldAC_info = getACinfo(rec.assetClass);
 
         require(
             AC_info.custodyType == 2,
@@ -169,14 +171,26 @@ contract T_PRUF_NP is PRUF {
         bytes32 userHash = keccak256(abi.encodePacked(msg.sender));
         //^^^^^^^effects^^^^^^^^^
 
-        Storage.newRecord(
-            userHash,
-            _idxHash,
-            _rgtHash,
-            _assetClass,
-            _countDownStart,
-            _Ipfs
-        );
+        if (AC_info.assetClassRoot == oldAC_info.assetClassRoot) {
+            Storage.newRecord(
+                userHash,
+                _idxHash,
+                _rgtHash,
+                _assetClass,
+                rec.countDownStart,
+                rec.Ipfs1
+            );
+        } else {
+            Storage.newRecord(
+                userHash,
+                _idxHash,
+                _rgtHash,
+                _assetClass,
+                _countDownStart,
+                _Ipfs1
+            );
+        }
+
         deductPayment(
             baseCost.paymentAddress,
             baseCost.newRecordCost,
