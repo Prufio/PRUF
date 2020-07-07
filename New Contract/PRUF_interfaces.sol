@@ -9,7 +9,29 @@ interface PrufAppInterface {
 }
 
 interface AssetClassTokenManagerInterface {
-    
+    function retrieveCosts(uint16 _assetClass)
+        external
+        returns (
+            uint256,
+            uint256,
+            uint256,
+            uint256,
+            uint256,
+            uint256,
+            address
+        );
+
+    function retrieveBaseCosts()
+        external
+        returns (
+            uint256,
+            uint256,
+            uint256,
+            uint256,
+            uint256,
+            uint256,
+            address
+        );
 }
 
 interface AssetClassTokenInterface {
@@ -134,30 +156,6 @@ interface StorageInterface {
             bytes32,
             uint16,
             uint256
-        );
-
-    function retrieveCosts(uint16 _assetClass)
-        external
-        returns (
-            uint256,
-            uint256,
-            uint256,
-            uint256,
-            uint256,
-            uint256,
-            address
-        );
-
-    function retrieveBaseCosts()
-        external
-        returns (
-            uint256,
-            uint256,
-            uint256,
-            uint256,
-            uint256,
-            uint256,
-            address
         );
 
     function resolveContractAddress(string calldata _name)

@@ -123,7 +123,8 @@ contract PRUF is ReentrancyGuard, Ownable, IERC721Receiver, PullPayment {
 
     address internal storageAddress;
     StorageInterface internal Storage; // Set up external contract interface
-
+    address internal AssetClassTokenManagerAddress;
+    AssetClassTokenManagerInterface internal AssetClassTokenManagerContract;
     // address minterContractAddress;
     address internal AssetTokenAddress;
     AssetTokenInterface internal AssetTokenContract; //erc721_token prototype initialization
@@ -168,6 +169,13 @@ contract PRUF is ReentrancyGuard, Ownable, IERC721Receiver, PullPayment {
         );
         AssetClassTokenContract = AssetClassTokenInterface(
             AssetClassTokenAddress
+        );
+
+        AssetClassTokenManagerAddress = Storage.resolveContractAddress(
+            "assetClassTokenManager"
+        );
+        AssetClassTokenManagerContract = AssetClassTokenManagerInterface(
+            AssetClassTokenManagerAddress
         );
 
         AssetTokenAddress = Storage.resolveContractAddress("assetToken");
@@ -371,7 +379,7 @@ contract PRUF is ReentrancyGuard, Ownable, IERC721Receiver, PullPayment {
             cost.changeStatusCost,
             cost.forceModifyCost,
             cost.paymentAddress
-        ) = Storage.retrieveBaseCosts();
+        ) = AssetClassTokenManagerContract.retrieveBaseCosts();
 
         return (cost);
         //^^^^^^^interactions^^^^^^^^^
@@ -390,7 +398,7 @@ contract PRUF is ReentrancyGuard, Ownable, IERC721Receiver, PullPayment {
             cost.changeStatusCost,
             cost.forceModifyCost,
             cost.paymentAddress
-        ) = Storage.retrieveCosts(_assetClass);
+        ) = AssetClassTokenManagerContract.retrieveCosts(_assetClass);
 
         return (cost);
         //^^^^^^^interactions^^^^^^^^^
