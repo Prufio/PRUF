@@ -115,4 +115,15 @@ pragma solidity ^0.6.0;
  * Other = unauth
  *
 *-----------------------------------------------------------------
+*-----------------------------------------------------------------
+ * ----------SETUP PROCEDURES---------- *
+ * 1 Deploy Contracts
+ * 2 Add contracts @ respective names in storage
+ * 3 Set storage contract in each contract
+ * 4 Resolve contract addresses
+ * 5 Print root && rooted AC token
+ * 6 Set costs for root && rooted AC token
+ * 7 THE WORKS
+ * 
+*-----------------------------------------------------------------
  */
