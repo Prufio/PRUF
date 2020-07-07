@@ -1,7 +1,10 @@
-/*  TO DO
+/*-----------------------------------------------------------------
+ *  TO DO
  *
  * @implement remint_asset ?
- *
+*-----------------------------------------------------------------
+
+*-----------------------------------------------------------------
  * IMPORTANT NOTE : DO NOT REMOVE FROM CODE:
  *      Verification of rgtHash in curated, tokenless asset classes are not secure beyond the honorable intentions
  * of authorized recorders. All blockchain info is readable, so a bad actor could trivially obtain a copy of the
@@ -9,7 +12,22 @@
  * to require an actual, malicious effort to bypass security rather than a little copy-paste. Actual decentralized
  * security is provided with tokenized assets, which do not rely on the coercive trust relationship that creates the
  * incentive for recorders not to engage in malicious practices.
+*-----------------------------------------------------------------
+
+*-----------------------------------------------------------------
+ *rules for burning records:
  *
+ *rules for reminting records:
+ *
+ *rules for recycling records:
+ *  if recycled in same asset class group:
+ *      in record: new rgtHash assigned, anything else left as-was (in case there was a pre-existing record)
+ *      token is reissued to recycling address
+ *  if recycled in new asset class group:
+ *  
+*-----------------------------------------------------------------
+
+*-----------------------------------------------------------------
  * Order of require statements:
  * 1: (modifiers)
  * 2: checking the asset existance
@@ -18,8 +36,9 @@
  * 5: checking the suitability of asset details for the proposed operation
  * 6: verifying that provided verification data matches required data
  * 7: verifying that message contains any required payment
- *
- *
+*-----------------------------------------------------------------
+
+*-----------------------------------------------------------------
  * Contract Resolution Names -
  *  assetToken
  *  assetClassToken
@@ -31,16 +50,18 @@
  *  T_PRUF_APP
  *  T_PRUF_NP
  *  T_PRUF_simpleEscrow
- *
- *
+*-----------------------------------------------------------------
+
+*-----------------------------------------------------------------
  * CONTRACT Types (storage)
  * 0   --NONE
  * 1   --Custodial
  * 2   --Non-Custodial
  * Owner (onlyOwner)
  * other = unauth
- *
- *
+*-----------------------------------------------------------------
+
+*-----------------------------------------------------------------
  * Record status field key
  *
  * 0 = no status, Non transferrable. Default asset creation status
@@ -67,19 +88,18 @@
  * 57 = out of escrow
  * 58 = out of locked escrow
  *
- * ADD 100 for NONREMINTABLE!!!
+*-----------------------------------------------------------------
+
+*-----------------------------------------------------------------
  *
  * escrow status = lock time set to a time instead of a block number
  *
  *
  * Authorized User Types   registeredUsers[]
- *
  * 1 - 4 = Standard User types
  * 1 - all priveleges
  * 2 - all but force-modify
  * 5 - 9 = Robot (cannot create of force-modify)
  * Other = unauth
- *
-
- ACmanager handles minting, name resolution, custodial status, root asset class, resolution by name or AC
+*-----------------------------------------------------------------
  */
