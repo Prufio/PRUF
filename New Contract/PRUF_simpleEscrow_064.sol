@@ -156,6 +156,12 @@ contract PRUF_simpleEscrow is PRUF {
         User memory callingUser = getUser();
         uint256 escrowTime = now.add(_escrowTime);
         uint8 newAssetStatus;
+        AC memory AC_info = getACinfo(rec.assetClass);
+
+        require(
+            AC_info.custodyType == 2,
+            "PA:I2: Contract not authorized for custodial assets"
+        );
 
         require((rec.rightsHolder != 0), "SE: Record does not exist");
         require(
@@ -209,6 +215,12 @@ contract PRUF_simpleEscrow is PRUF {
         Record memory rec = getRecord(_idxHash);
         Record memory shortRec = getShortRecord(_idxHash);
         User memory callingUser = getUser();
+        AC memory AC_info = getACinfo(rec.assetClass);
+
+        require(
+            AC_info.custodyType == 2,
+            "PA:I2: Contract not authorized for custodial assets"
+        );
 
         require((rec.rightsHolder != 0), "EE: Record does not exist");
         require(
