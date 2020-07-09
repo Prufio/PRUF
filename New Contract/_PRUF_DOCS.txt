@@ -99,10 +99,12 @@ pragma solidity ^0.6.0;
  * 52 = non-transferrable, automation set/unset (secret confirmed)(ACAdmin can unset)
  * 53 = stolen (automation set)(ONLY ACAdmin can unset)
  * 54 = lost (automation set/unset)(ACAdmin can unset)
- * 55 = asset transferred automation set/unset (secret confirmed)(ACAdmin can unset)
+ * ###### 55 = asset transferred automation set/unset (secret confirmed)(ACAdmin can unset) ####DO NOT USE????
  * 56 = escrow - automation set/unset (secret confirmed)(ACAdmin can unset)
  * 57 = out of escrow
  * 58 = out of locked escrow
+ * 59 = Undefined
+ * 60 = Burnable
  *
 *-----------------------------------------------------------------
 
@@ -127,3 +129,13 @@ pragma solidity ^0.6.0;
  * 
 *-----------------------------------------------------------------
  */
+
+Implement:
+
+ below 65k
+ mintAsset and reimport asset require an agent.
+ Only an agent can remove from status 55 or status 60.
+ Unreceived transfer sets token to status 55 and either sends or burns the token (set to 60 and burn).
+ burn asset burns the token, requires a status 60. sets rgtHash to 0xFFF.....
+
+ write storage function that allows setting a new asset class

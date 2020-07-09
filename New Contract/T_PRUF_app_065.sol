@@ -223,17 +223,73 @@ contract T_PRUF_NP is PRUF {
     }
 
     /*
-     * @dev Modify **Record**.Ipfs2 with confirmation
-     * must Match rgtHash using raw data fields
+     * @dev Wrapper for RecycleAsset  ---------------------------------------Security Risk-----------REVIEW
+     * if creating new record in same root, and idxHash is identical, only change assetclass, rgthash, and IPFS1
+     * if creating new record in same root and idxhash is different, set old asset to status 60, burn token, and create a new record and token
+     * if creating new record in new root and idxhash is different, set old asset to status 60, burn token, and create a new record and token
+     * if creating new record in new root and idxhash is identical, fail because its probably fraud
+     *
      */
-    function reMintToken(
+
+    function $recycleAsset(
+        bytes32 _newIdxHash,
+        bytes32 _idxHash,
+        bytes32 _rgtHash,
+        uint16 _assetClass,
+        uint256 _countDownStart,
+        bytes32 _Ipfs1
+    ) external payable nonReentrant {
+        uint256 tokenId = uint256(_idxHash);
+        Record memory rec = getRecord(_idxHash);
+        AC memory AC_info = getACinfo(_assetClass);
+        AC memory oldAC_info = getACinfo(rec.assetClass);
+        bytes32 userHash = keccak256(abi.encodePacked(msg.sender));
+
+        require(
+            AC_info.custodyType == 2,
+            "PA:I2: Contract not authorized for custodial assets"
+        );
+        require(_rgtHash != 0, "PA:NR: rights holder cannot be zero");
+        //^^^^^^^checks^^^^^^^^^
+
+
+        if ((AC_info.assetClassRoot == oldAC_info.assetClassRoot) && (_idxHash == _newIdxHash)) {
+            rec.rightsHolder = _rgtHash;
+            rec.assetClass = _assetClass;
+            rec.Ipfs1 = _Ipfs1;
+            //write new asset class to storage
+            //write ipfs1 to storage
+        }
+
+        //...........implement stuff from comments
+
+        Storage.newRecord(
+                userHash,
+                _idxHash,
+                rec.rightsHolder,
+                rec.assetClass,
+                rec.countDownStart,
+                rec.Ipfs1
+            );
+
+        deductNewRecordCosts(_assetClass);
+
+        AssetTokenContract.reMintAssetToken(msg.sender, tokenId, "pruf.io");
+        //^^^^^^^interactions^^^^^^^^^
+    }
+
+    /*
+     * @dev remint token with confirmation of posession of RAWTEXT hash inputs
+     * must Match rgtHash using raw data fields ---------------------------security risk--------REVIEW!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+     */
+    function $reMintToken(
         bytes32 _idxHash,
         string memory first,
         string memory middle,
         string memory last,
         string memory id,
         string memory secret
-    ) external payable nonReentrant isAuthorized(_idxHash) returns (uint256) {
+    ) external payable nonReentrant returns (uint256) {
         Record memory rec = getRecord(_idxHash);
         AC memory AC_info = getACinfo(rec.assetClass);
         uint256 tokenId = uint256(_idxHash);
