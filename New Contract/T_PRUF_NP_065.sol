@@ -14,19 +14,6 @@
 *-----------------------------------------------------------------
 
 *-----------------------------------------------------------------
- *rules for burning records:
- *
- *rules for reminting records:
- *
- *rules for recycling records:
- *  if recycled in same asset class group:
- *      in record: new rgtHash assigned, anything else left as-was (in case there was a pre-existing record)
- *      token is reissued to recycling address
- *  if recycled in new asset class group:
- *
-*-----------------------------------------------------------------
-
-*-----------------------------------------------------------------
  * Order of require statements:
  * 1: (modifiers)
  * 2: checking custodial status
@@ -93,10 +80,12 @@
  * 52 = non-transferrable, automation set/unset (secret confirmed)(ACAdmin can unset)
  * 53 = stolen (automation set)(ONLY ACAdmin can unset)
  * 54 = lost (automation set/unset)(ACAdmin can unset)
- * 55 = asset transferred automation set/unset (secret confirmed)(ACAdmin can unset)
+ * 55 = asset transferred automation set/unset (secret confirmed)(Only ACAdmin can unset) ####DO NOT USE????
  * 56 = escrow - automation set/unset (secret confirmed)(ACAdmin can unset)
  * 57 = out of escrow
  * 58 = out of locked escrow
+ * 59 = Recyclable
+ * 60 = Burned (can only be reimported by an ACAdmin can unset)
  *
 *-----------------------------------------------------------------
 
@@ -108,8 +97,9 @@
  * 5 - 9 = Robot (cannot create of force-modify)
  * Other = unauth
  *
-*-----------------------------------------------------------------
- */
+ *-----------------------------------------------------------------
+*/
+
 
 // SPDX-License-Identifier: UNLICENSED
 pragma solidity ^0.6.7;
