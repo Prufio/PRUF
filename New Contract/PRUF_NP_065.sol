@@ -119,9 +119,6 @@ import "./PRUF_core_065.sol";
 contract PRUF_NP is PRUF {
     using SafeMath for uint256;
 
-    address internal PrufAppAddress;
-    PrufAppInterface internal PrufAppContract; //erc721_token prototype initialization
-
     /*
      * @dev Verify user credentials
      * Originating Address:
@@ -141,41 +138,6 @@ contract PRUF_NP is PRUF {
             "PC:MOD-IA: Custodial contract does not hold token"
         );
         _;
-    }
-
-    /*
-     * @dev //returns the address of a contract with name _name
-     */
-    function OO_ResolveContractAddresses()
-        external
-        override
-        nonReentrant
-        onlyOwner
-    {
-        //^^^^^^^checks^^^^^^^^^
-        AssetClassTokenAddress = Storage.resolveContractAddress(
-            "assetClassToken"
-        );
-        AssetClassTokenContract = AssetClassTokenInterface(
-            AssetClassTokenAddress
-        );
-
-        AssetTokenAddress = Storage.resolveContractAddress("assetToken");
-        AssetTokenContract = AssetTokenInterface(AssetTokenAddress);
-
-        PrufAppAddress = Storage.resolveContractAddress("PRUF_APP");
-        PrufAppContract = PrufAppInterface(PrufAppAddress);
-        //^^^^^^^effects^^^^^^^^^
-    }
-
-    function getUser() internal override view returns (User memory) {
-        //User memory callingUser = getUser();
-        User memory user;
-        (user.userType, user.authorizedAssetClass) = PrufAppContract.getUserExt(
-            keccak256(abi.encodePacked(msg.sender))
-        );
-        return user;
-        //^^^^^^^interactions^^^^^^^^^
     }
 
     //--------------------------------------------External Functions--------------------------
@@ -354,7 +316,6 @@ contract PRUF_NP is PRUF {
     ) external nonReentrant isAuthorized(_idxHash) returns (bytes32) {
         Record memory rec = getRecord(_idxHash);
         User memory callingUser = getUser();
-        //Costs memory cost = getCost(rec.assetClass);
         AC memory AC_info = getACinfo(rec.assetClass);
 
         require(

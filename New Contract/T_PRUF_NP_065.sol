@@ -120,9 +120,6 @@ contract T_PRUF_NP is PRUF {
     using SafeMath for uint256;
     using SafeMath for uint8;
 
-    address internal PrufAppAddress;
-    PrufAppInterface internal PrufAppContract; //erc721_token prototype initialization
-
     /*
      * @dev Verify user credentials
      * Originating Address:
@@ -138,32 +135,10 @@ contract T_PRUF_NP is PRUF {
         _;
     }
 
-    function OO_ResolveContractAddresses()
-        external
-        override
-        nonReentrant
-        onlyOwner
-    {
-        //^^^^^^^checks^^^^^^^^^
-        AssetClassTokenAddress = Storage.resolveContractAddress(
-            "assetClassToken"
-        );
-        AssetClassTokenContract = AssetClassTokenInterface(
-            AssetClassTokenAddress
-        );
-
-        AssetTokenAddress = Storage.resolveContractAddress("assetToken");
-        AssetTokenContract = AssetTokenInterface(AssetTokenAddress);
-
-        PrufAppAddress = Storage.resolveContractAddress("PRUF_APP");
-        PrufAppContract = PrufAppInterface(PrufAppAddress);
-        //^^^^^^^effects^^^^^^^^^
-    }
-
     function getUser() internal override view returns (User memory) {
         //User memory callingUser = getUser();
         User memory user;
-        (user.userType, user.authorizedAssetClass) = PrufAppContract.getUserExt(
+        (user.userType, user.authorizedAssetClass) = AssetClassTokenManagerContract.getUserExt(
             keccak256(abi.encodePacked(msg.sender))
         );
         return user;

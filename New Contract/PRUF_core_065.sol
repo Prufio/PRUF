@@ -177,6 +177,8 @@ contract PRUF is ReentrancyGuard, Ownable, IERC721Receiver, PullPayment {
 
     address internal AssetClassTokenAddress;
     AssetClassTokenInterface internal AssetClassTokenContract; //erc721_token prototype initialization
+
+    address internal PrufAppAddress;
     // --------------------------------------Events--------------------------------------------//
 
     event REPORT(string _msg);
@@ -269,34 +271,6 @@ contract PRUF is ReentrancyGuard, Ownable, IERC721Receiver, PullPayment {
         //^^^^^^^effects^^^^^^^^^
     }
 
-    /*
-     * @dev Authorize / Deauthorize / Authorize users for an address be permitted to make record modifications
-     * ----------------INSECURE -- keccak256 of address must be generated clientside in release.
-     */
-    function OO_addUser(
-        address _authAddr,
-        uint8 _userType,
-        uint16 _authorizedAssetClass
-    ) external onlyOwner {
-        require(
-            (_userType == 0) ||
-                (_userType == 1) ||
-                (_userType == 2) ||
-                (_userType == 9) ||
-                (_userType == 99),
-            "PC:AU:Invalid user type"
-        );
-        //^^^^^^^checks^^^^^^^^^
-
-        bytes32 addrHash = keccak256(abi.encodePacked(_authAddr));
-
-        registeredUsers[addrHash].userType = _userType;
-        registeredUsers[addrHash].authorizedAssetClass = _authorizedAssetClass;
-        //^^^^^^^effects^^^^^^^^^
-        emit REPORT("Internal user database access!"); //report access to the internal user database
-        //^^^^^^^interactions^^^^^^^^^
-    }
-
     //--------------------------------------External functions--------------------------------------------//
     /*
      * @dev Compliance for erc721
@@ -314,25 +288,17 @@ contract PRUF is ReentrancyGuard, Ownable, IERC721Receiver, PullPayment {
     //--------------------------------------------------------------------------------------INTERNAL functions
 
     /*
-     * @dev Get a User Record from Storage @ msg.sender
+     * @dev Get a User Record from AC_manager @ msg.sender
      */
     function getUser() internal virtual view returns (User memory) {
-        return registeredUsers[keccak256(abi.encodePacked(msg.sender))];
-        //^^^^^^^interactions^^^^^^^^^
-    }
-
-    /*
-     * @dev Get a User Record from Storage @ msg.sender
-     */
-    function getUserExt(bytes32 _userHash)
-        external
-        view
-        returns (uint8, uint16)
-    {
-        return (
-            registeredUsers[_userHash].userType,
-            registeredUsers[_userHash].authorizedAssetClass
+        User memory user;
+        (
+            user.userType,
+            user.authorizedAssetClass
+        ) = AssetClassTokenManagerContract.getUserExt(
+            keccak256(abi.encodePacked(msg.sender))
         );
+        return user;
         //^^^^^^^interactions^^^^^^^^^
     }
 

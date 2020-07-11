@@ -157,6 +157,34 @@ contract PRUF_AC_MGR is PRUF {
 
     //--------------------------------------------External Functions--------------------------
     /*
+     * @dev Authorize / Deauthorize / Authorize users for an address be permitted to make record modifications
+     * ----------------INSECURE -- keccak256 of address must be generated clientside in release.
+     */
+    function OO_addUser(
+        address _authAddr,
+        uint8 _userType,
+        uint16 _assetClass
+    ) external isACtokenHolderOfClass(_assetClass) {
+        require(
+            (_userType == 0) ||
+                (_userType == 1) ||
+                (_userType == 2) ||
+                (_userType == 9) ||
+                (_userType == 99),
+            "PC:AU:Invalid user type"
+        );
+        //^^^^^^^checks^^^^^^^^^
+
+        bytes32 addrHash = keccak256(abi.encodePacked(_authAddr));
+
+        registeredUsers[addrHash].userType = _userType;
+        registeredUsers[addrHash].authorizedAssetClass = _assetClass;
+        //^^^^^^^effects^^^^^^^^^
+        emit REPORT("Internal user database access!"); //report access to the internal user database
+        //^^^^^^^interactions^^^^^^^^^
+    }
+
+    /*
      * @dev Mints asset class @ address
      */
     function createAssetClass(
@@ -492,23 +520,17 @@ contract PRUF_AC_MGR is PRUF {
     }
 
     /*
-     * @dev Address Setters
+     * @dev Serve a User Record
      */
-    function OO_ResolveContractAddresses()
+    function getUserExt(bytes32 _userHash)
         external
-        override
-        nonReentrant
-        onlyOwner
+        view
+        returns (uint8, uint16)
     {
-        //^^^^^^^checks^^^^^^^^^
-        AssetClassTokenAddress = Storage.resolveContractAddress(
-            "assetClassToken"
+        return (
+            registeredUsers[_userHash].userType,
+            registeredUsers[_userHash].authorizedAssetClass
         );
-        AssetClassTokenContract = AssetClassTokenInterface(
-            AssetClassTokenAddress
-        );
-
-        AC_minterAddress = Storage.resolveContractAddress("PRUF_AC_Minter");
         //^^^^^^^interactions^^^^^^^^^
     }
 }

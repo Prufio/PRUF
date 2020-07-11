@@ -4,12 +4,10 @@ pragma solidity ^0.6.0;
 
 /*-----------------------------------------------------------------
  *  TO DO :
- *  move user permissioning into AC_manager
- *  make ACtokenHolders able to administrate users in their asset class
  *  
  *  Implement recycle "Burn" 
  *  Implement recycle "Recycle"
- *  (BURN-BURN still burns)
+ *          (assetTokenContract.burn still just burns, sets 0x0 and 60)
 *-----------------------------------------------------------------
 
 *-----------------------------------------------------------------

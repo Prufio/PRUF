@@ -1,14 +1,19 @@
 // SPDX-License-Identifier: UNLICENSED
 pragma solidity ^0.6.7;
 
-interface PrufAppInterface {
+// interface PrufAppInterface {
+//     function getUserExt(bytes32 _userHash)
+//         external
+//         view
+//         returns (uint8, uint16);
+// }
+
+interface AssetClassTokenManagerInterface {
     function getUserExt(bytes32 _userHash)
         external
         view
         returns (uint8, uint16);
-}
 
-interface AssetClassTokenManagerInterface {
     function retrieveCosts(uint16 _assetClass)
         external
         returns (
