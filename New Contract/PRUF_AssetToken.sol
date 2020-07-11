@@ -194,48 +194,21 @@ contract AssetToken is Ownable, ReentrancyGuard, ERC721 {
         Record memory rec = getRecord(_idxHash);
         require(_exists(tokenId), "Cannot Burn nonexistant token");
         require(
-            (rec.assetStatus == 60),
-            "Asset must be in status 60 (deRegistered) to be burned"
+            (rec.assetStatus == 59),
+            "Asset must be in status 59 (recyclable) to be burned"
         );
         require(
             _isApprovedOrOwner(_msgSender(), tokenId),
             "ERC721: transfer caller is not owner nor approved"
         );
         //^^^^^^^checks^^^^^^^^^
-        rec.rightsHolder = 0x0; //burn in storage
+        rec.rightsHolder = 0x0; //delete rightsholder in storage
+        (rec.assetStatus == 60); //set to burned
         //^^^^^^^effects^^^^^^^^^
         writeRecord(_idxHash, rec);
         _burn(tokenId);
         //^^^^^^^interactions^^^^^^^^^
     }
-
-    // /*
-    //  * @dev transfer Asset Token
-    //  * set rgt to nonremintable 0xFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF
-    //  *
-    //  */
-    // function transferAssetToken(
-    //     address from,
-    //     address to,
-    //     uint256 tokenId
-    // ) external nonReentrant {
-    //     bytes32 _idxHash = uint256(tokenId);
-    //     Record memory rec = getRecord(_idxHash);
-
-    //     require(
-    //         rec.assetStatus == 51,
-    //         "Asset not in transferrable status"
-    //     );
-
-    //     //^^^^^^^checks^^^^^^^^^
-
-    //     rec.rightsHolder = 0xFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF;
-    //     //^^^^^^^effects^^^^^^^^^
-
-    //     writeRecord(_idxHash, rec);
-    //     safeTransferFrom(from, to, tokenId);
-    //     //^^^^^^^interactions^^^^^^^^^
-    // }
 
     /*
      * Authorizations?

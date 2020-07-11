@@ -259,10 +259,11 @@ contract Storage is Ownable, ReentrancyGuard {
         bytes32 _Ipfs1
     ) external isAuthorized nonReentrant {
         require(
-            database[_idxHash].rightsHolder == 0,
+            (database[_idxHash].rightsHolder == 0) || (database[_idxHash].assetStatus == 60),
             "NR:ERR-Record already exists"
         );
         require(_rgt != 0, "NR:ERR-Rightsholder cannot be blank");
+        require(_assetClass != 0, "PA:NR: Asset class cannot be zero");
         //^^^^^^^checks^^^^^^^^^
 
         Record memory rec;

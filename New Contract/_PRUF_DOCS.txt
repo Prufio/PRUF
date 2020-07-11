@@ -3,10 +3,34 @@
 pragma solidity ^0.6.0;
 
 /*-----------------------------------------------------------------
- *  TO DO
- *  Implement burn
- *  implement recycle
- *  implement checks in new record for data preservation
+ *  TO DO :
+ *  move user permissioning into AC_manager
+ *  make ACtokenHolders able to administrate users in their asset class
+ *  
+ *  Implement recycle "Burn" 
+ *  Implement recycle "Recycle"
+ *  (BURN-BURN still burns)
+*-----------------------------------------------------------------
+
+*-----------------------------------------------------------------
+ *Rules for reminting tokens: 
+ *  must have the plaintext that generates the rgtHash on-chain
+ *
+ *
+ *Rules for burning records: 
+ *  record is locked in escrow and the escrow contract gets the token. The asset is put into an indefinite escrow, 
+ *  where the escrow amount is unpaid and time is indefinite. the asset owner is the escrow "holder" and can revert
+ *  the escrow if they desire, which reverts the assetToken to their address. escrow amount is determined 
+ *  #AT THE TIME OF RECYCLING# by the new record costs of the AC that the record is being recycled into by
+ *  the new owner.
+ *
+ *
+ * Rules for recycling records:
+ *  escrow amount is the same as registration in the asset class where it will be registered (as per the "recycle asset" call),
+ *  when the fee is paid the escrow is broken, and the asset token is assigned to the sender. The funds (less assetClassRoot fees)
+ *  are divided 50/50 between the old owner (setter of the escrow) and the ACtoken holder for the new asset class. If funds are sent 
+ *  to a dead escrow or there is an overpayment, the balance can be withdrawn.
+ *
 *-----------------------------------------------------------------
 
 *-----------------------------------------------------------------
@@ -17,19 +41,6 @@ pragma solidity ^0.6.0;
  * to require an actual, malicious effort to bypass security rather than a little copy-paste. Actual decentralized
  * security is provided with tokenized assets, which do not rely on the coercive trust relationship that creates the
  * incentive for recorders not to engage in malicious practices.
-*-----------------------------------------------------------------
-
-*-----------------------------------------------------------------
- *Rules for burning records:
- *
- *Rules for reminting records:
- *
- *Rules for recycling records:
- *  if recycled in same asset class group:
- *      in record: new rgtHash assigned, anything else left as-was (in case there was a pre-existing record)
- *      token is reissued to recycling address
- *  if recycled in new asset class group:
- *
 *-----------------------------------------------------------------
 
 *-----------------------------------------------------------------
@@ -99,12 +110,12 @@ pragma solidity ^0.6.0;
  * 52 = non-transferrable, automation set/unset (secret confirmed)(ACAdmin can unset)
  * 53 = stolen (automation set)(ONLY ACAdmin can unset)
  * 54 = lost (automation set/unset)(ACAdmin can unset)
- * ###### 55 = asset transferred automation set/unset (secret confirmed)(ACAdmin can unset) ####DO NOT USE????
+ * 55 = asset transferred automation set/unset (secret confirmed)(Only ACAdmin can unset) ####DO NOT USE????
  * 56 = escrow - automation set/unset (secret confirmed)(ACAdmin can unset)
  * 57 = out of escrow
  * 58 = out of locked escrow
- * 59 = Undefined
- * 60 = Burnable
+ * 59 = Recyclable
+ * 60 = Burned (can only be reimported by an ACAdmin can unset)
  *
 *-----------------------------------------------------------------
 
@@ -124,7 +135,7 @@ pragma solidity ^0.6.0;
  * 3 Set storage contract in each contract
  * 4 Resolve contract addresses
  * 5 Print root && rooted AC token
- * 6 Set costs for root && rooted AC token
+ * 6 Set costs / users for root && rooted AC token
  * 7 THE WORKS
  * 
 *-----------------------------------------------------------------

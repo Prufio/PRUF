@@ -188,15 +188,22 @@ contract T_PRUF_NP is PRUF {
 
         require(
             AC_info.custodyType == 2,
-            "PA:I2: Contract not authorized for custodial assets"
+            "TPA:NR: Contract not authorized for custodial assets"
         );
         require(_rgtHash != 0, "PA:NR: rights holder cannot be zero");
+        require(_assetClass != 0, "PA:NR: Asset class cannot be zero");
+        require( //if creating new record in new root and idxhash is identical, fail because its probably fraud
+            ((AC_info.assetClassRoot == oldAC_info.assetClassRoot) || (rec.assetClass == 0)),
+            "TPA:NR: Cannot re-create asset in new root assetClass"
+        );
         //^^^^^^^checks^^^^^^^^^
 
         bytes32 userHash = keccak256(abi.encodePacked(msg.sender));
         //^^^^^^^effects^^^^^^^^^
 
         if (AC_info.assetClassRoot == oldAC_info.assetClassRoot) {
+            // if record exists as a "dead record" has an old AC, and is being recreated in the same root class,
+            // do not overwrite anything besides assetClass and rightsHolder (storage will set assetStatus to 51)
             Storage.newRecord(
                 userHash,
                 _idxHash,
@@ -205,7 +212,7 @@ contract T_PRUF_NP is PRUF {
                 rec.countDownStart,
                 rec.Ipfs1
             );
-        } else {
+        } else { // Otherwise, idxHash is unuiqe and an entirely new record is created
             Storage.newRecord(
                 userHash,
                 _idxHash,
@@ -219,62 +226,6 @@ contract T_PRUF_NP is PRUF {
         deductNewRecordCosts(_assetClass);
 
         AssetTokenContract.mintAssetToken(msg.sender, tokenId, "pruf.io");
-        //^^^^^^^interactions^^^^^^^^^
-    }
-
-    /*
-     * @dev Wrapper for RecycleAsset  ---------------------------------------Security Risk-----------REVIEW
-     * if creating new record in same root, and idxHash is identical, only change assetclass, rgthash, and IPFS1
-     * if creating new record in same root and idxhash is different, set old asset to status 60, burn token, and create a new record and token
-     * if creating new record in new root and idxhash is different, set old asset to status 60, burn token, and create a new record and token
-     * if creating new record in new root and idxhash is identical, fail because its probably fraud
-     *
-     */
-
-    function $recycleAsset(
-        bytes32 _newIdxHash,
-        bytes32 _idxHash,
-        bytes32 _rgtHash,
-        uint16 _assetClass,
-        uint256 _countDownStart,
-        bytes32 _Ipfs1
-    ) external payable nonReentrant {
-        uint256 tokenId = uint256(_idxHash);
-        Record memory rec = getRecord(_idxHash);
-        AC memory AC_info = getACinfo(_assetClass);
-        AC memory oldAC_info = getACinfo(rec.assetClass);
-        bytes32 userHash = keccak256(abi.encodePacked(msg.sender));
-
-        require(
-            AC_info.custodyType == 2,
-            "PA:I2: Contract not authorized for custodial assets"
-        );
-        require(_rgtHash != 0, "PA:NR: rights holder cannot be zero");
-        //^^^^^^^checks^^^^^^^^^
-
-
-        if ((AC_info.assetClassRoot == oldAC_info.assetClassRoot) && (_idxHash == _newIdxHash)) {
-            rec.rightsHolder = _rgtHash;
-            rec.assetClass = _assetClass;
-            rec.Ipfs1 = _Ipfs1;
-            //write new asset class to storage
-            //write ipfs1 to storage
-        }
-
-        //...........implement stuff from comments
-
-        Storage.newRecord(
-                userHash,
-                _idxHash,
-                rec.rightsHolder,
-                rec.assetClass,
-                rec.countDownStart,
-                rec.Ipfs1
-            );
-
-        deductNewRecordCosts(_assetClass);
-
-        AssetTokenContract.reMintAssetToken(msg.sender, tokenId, "pruf.io");
         //^^^^^^^interactions^^^^^^^^^
     }
 
@@ -300,6 +251,10 @@ contract T_PRUF_NP is PRUF {
         );
         require(rec.rightsHolder != 0, "PA:I2: Record does not exist");
         require(
+            (rec.assetStatus != 60),
+            "TPNP:CR: Record is burned and must be reimported by ACadmin"
+        );
+        require(
             (rec.assetStatus != 6) &&
                 (rec.assetStatus != 50) &&
                 (rec.assetStatus != 56),
@@ -307,8 +262,10 @@ contract T_PRUF_NP is PRUF {
         );
         require(rec.assetStatus < 200, "PA:I2: Record locked");
         require(
-            (rec.assetStatus != 5) && (rec.assetStatus != 55),
-            "PA:I2: Record In Transferred-unregistered status"
+            (rec.assetStatus != 5) &&
+                (rec.assetStatus != 55) &&
+                (rec.assetStatus != 60),
+            "PA:I2: Record In Transferred-unregistered or burned status"
         );
         require(
             rec.rightsHolder ==
@@ -345,6 +302,10 @@ contract T_PRUF_NP is PRUF {
             "PA:I2: Contract not authorized for custodial assets"
         );
         require((rec.rightsHolder != 0), "PA:I2: Record does not exist");
+        require(
+            (rec.assetStatus != 60),
+            "TPNP:CR: Record is burned and must be reimported by ACadmin"
+        );
         require(
             (rec.assetStatus != 6) &&
                 (rec.assetStatus != 50) &&

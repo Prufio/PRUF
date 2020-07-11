@@ -135,7 +135,9 @@ interface AssetClassTokenInterface {
 }
 
 interface AssetTokenInterface {
-    function ownerOf(uint256) external view returns (address);
+    function ownerOf(uint256) external returns (address);
+
+    function burn(uint256) external;
 
     function safeTransferFrom(
         address from,
