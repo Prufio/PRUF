@@ -21,7 +21,7 @@ contract AssetClassToken is Ownable, ReentrancyGuard, ERC721 {
         require(
             (msg.sender == ACmanagerAddress) ||
                 (msg.sender == owner()),
-            "PAT:IA:Calling address does not belong to an Admin"
+            "PACT:IA:Calling address does not belong to an Admin"
         );
         _;
     }
@@ -34,7 +34,7 @@ contract AssetClassToken is Ownable, ReentrancyGuard, ERC721 {
     function OO_setStorageContract(address _storageAddress) external onlyOwner {
         require(
             _storageAddress != address(0),
-            "PAT:SSC: storage address cannot be zero"
+            "PACT:SSC: storage address cannot be zero"
         );
         //^^^^^^^checks^^^^^^^^^
 
@@ -78,7 +78,7 @@ contract AssetClassToken is Ownable, ReentrancyGuard, ERC721 {
         uint256 tokenId,
         string calldata _tokenURI
     ) external isAdmin returns (uint256) {
-        require(_exists(tokenId), "PAT:RM:Cannot Remint nonexistant token");
+        require(_exists(tokenId), "C:RM:Cannot Remint nonexistant token");
         //^^^^^^^checks^^^^^^^^^
         _burn(tokenId);
         _safeMint(_recipientAddress, tokenId);
@@ -102,7 +102,7 @@ contract AssetClassToken is Ownable, ReentrancyGuard, ERC721 {
     ) public override nonReentrant {
         require(
             _isApprovedOrOwner(_msgSender(), tokenId),
-            "PAT:TF: transfer caller is not owner nor approved"
+            "C:TF: transfer caller is not owner nor approved"
         );
         //^^^^^^^checks^^^^^^^^^
 
@@ -152,7 +152,7 @@ contract AssetClassToken is Ownable, ReentrancyGuard, ERC721 {
     ) public virtual override nonReentrant {
         require(
             _isApprovedOrOwner(_msgSender(), tokenId),
-            "PAT:TF: transfer caller is not owner nor approved"
+            "C:TF: transfer caller is not owner nor approved"
         );
         //^^^^^^^checks^^^^^^^^^
         _safeTransfer(from, to, tokenId, _data);
