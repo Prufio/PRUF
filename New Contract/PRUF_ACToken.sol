@@ -47,7 +47,7 @@ contract AssetClassToken is Ownable, ReentrancyGuard, ERC721 {
      */
     function OO_ResolveContractAddresses() external nonReentrant onlyOwner {
         //^^^^^^^checks^^^^^^^^^
-        ACmanagerAddress = Storage.resolveContractAddress("ACmanager");
+        ACmanagerAddress = Storage.resolveContractAddress("PRUF_AC_MGR");
         //^^^^^^^effects^^^^^^^^^
     }
 
