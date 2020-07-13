@@ -383,7 +383,12 @@ contract Storage is Ownable, ReentrancyGuard {
 
         database[_idxHash] = rec;
         //^^^^^^^effects^^^^^^^^^
-        emit REPORT("New record created", _idxHash);
+        if ((_newAssetStatus == 3) || (_newAssetStatus == 53)){
+            emit REPORT("Record status changed to STOLEN", _idxHash);
+        } else {
+            emit REPORT("Record status changed to LOST", _idxHash);
+        }
+
         //^^^^^^^interactions^^^^^^^^^
     }
 
@@ -451,7 +456,7 @@ contract Storage is Ownable, ReentrancyGuard {
             (database[_idxHash].assetStatus == 6) ||
                 (database[_idxHash].assetStatus == 50) ||
                 (database[_idxHash].assetStatus == 56),
-            "EE:ERR-Asset not in escrow"
+            "PS:EE:Asset not in escrow"
         );
         //^^^^^^^checks^^^^^^^^^
 
@@ -504,7 +509,7 @@ contract Storage is Ownable, ReentrancyGuard {
 
         database[_idxHash] = rec;
         //^^^^^^^effects^^^^^^^^^
-        emit REPORT("New record created", _idxHash);
+        emit REPORT("IPFS1 modified", _idxHash);
         //^^^^^^^interactions^^^^^^^^^
     }
 
@@ -535,7 +540,7 @@ contract Storage is Ownable, ReentrancyGuard {
 
         database[_idxHash] = rec;
         //^^^^^^^effects^^^^^^^^^
-        emit REPORT("New record created", _idxHash);
+        emit REPORT("IPFS2 modified", _idxHash);
         //^^^^^^^interactions^^^^^^^^^
     }
 

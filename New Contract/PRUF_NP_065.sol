@@ -121,11 +121,11 @@ contract PRUF_NP is PRUF {
 
         require(
             (user.userType > 0) && (user.userType < 10),
-            "PC:MOD-IA: User not registered"
+            "PNP:IA: User not registered"
         );
         require(
             (AssetTokenContract.ownerOf(tokenID) == PrufAppAddress),
-            "PC:MOD-IA: Custodial contract does not hold token"
+            "PNP:IA: Custodial contract does not hold token"
         );
         _;
     }
@@ -146,7 +146,7 @@ contract PRUF_NP is PRUF {
 
         require(
             AC_info.custodyType == 2,
-            "PA:I2: Contract not authorized for custodial assets"
+            "PNP:MS: Contract not authorized for custodial assets"
         );
 
         require((rec.rightsHolder != 0), "PNP:MS: Record does not exist");
@@ -200,7 +200,7 @@ contract PRUF_NP is PRUF {
 
         require(
             AC_info.custodyType == 2,
-            "PA:I2: Contract not authorized for custodial assets"
+            "PNP:SLS: Contract not authorized for custodial assets"
         );
 
         require((rec.rightsHolder != 0), "PNP:SLS: Record does not exist");
@@ -258,7 +258,7 @@ contract PRUF_NP is PRUF {
 
         require(
             AC_info.custodyType == 2,
-            "PA:I2: Contract not authorized for custodial assets"
+            "PNP:DC: Contract not authorized for custodial assets"
         );
 
         require((rec.rightsHolder != 0), "PNP:DC: Record does not exist");
@@ -310,7 +310,7 @@ contract PRUF_NP is PRUF {
 
         require(
             AC_info.custodyType == 2,
-            "PA:I2: Contract not authorized for custodial assets"
+            "PNP:MI1 Contract not authorized for custodial assets"
         );
 
         require((rec.rightsHolder != 0), "PNP:MI1: Record does not exist");

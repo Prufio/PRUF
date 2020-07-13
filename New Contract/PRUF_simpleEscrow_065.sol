@@ -121,11 +121,11 @@ contract PRUF_simpleEscrow is PRUF {
 
         require(
             (user.userType > 0) && (user.userType < 10),
-            "PC:MOD-IA: User not registered"
+            "PSE:IA:User not registered"
         );
         require(
             AssetTokenContract.ownerOf(tokenID) == PrufAppAddress,
-            "PC:MOD-IA: Custodial contract does not hold token"
+            "PSE:IA: Custodial contract does not hold token"
         );
         _;
     }
@@ -147,17 +147,17 @@ contract PRUF_simpleEscrow is PRUF {
 
         require(
             AC_info.custodyType == 2,
-            "PA:I2: Contract not authorized for custodial assets"
+            "PSE:SE: Contract not authorized for custodial assets"
         );
 
         require((rec.rightsHolder != 0), "SE: Record does not exist");
         require(
             callingUser.authorizedAssetClass == rec.assetClass,
-            "SE: User not authorized to modify records in specified asset class"
+            "PSE:SE: User not authorized to modify records in specified asset class"
         );
         require(
             (escrowTime >= now),
-            "SE:ERR-Escrow must be set to a time in the future"
+            "PSE:SE: Escrow must be set to a time in the future"
         );
         require(
             (rec.assetStatus != 3) &&
@@ -166,18 +166,18 @@ contract PRUF_simpleEscrow is PRUF {
                 (rec.assetStatus != 54) &&
                 (rec.assetStatus != 5) &&
                 (rec.assetStatus != 55),
-            "SE:ERR-Transferred, lost, or stolen status cannot be set to escrow."
+            "PSE:SE: Transferred, lost, or stolen status cannot be set to escrow."
         );
         require(
             (callingUser.userType < 5) ||
                 ((callingUser.userType > 4) && (_escrowStatus > 49)),
-            "SE:ERR-Non supervisored agents must set escrow witihn user type."
+            "PSE:SE: Non supervisored agents must set escrow witihn user type."
         );
         require(
             (_escrowStatus == 6) ||
                 (_escrowStatus == 50) ||
                 (_escrowStatus == 56),
-            "SE:ERR-Must specify an valid escrow status"
+            "PSE:SE: Must specify an valid escrow status"
         );
         //^^^^^^^checks^^^^^^^^^
 
@@ -209,13 +209,13 @@ contract PRUF_simpleEscrow is PRUF {
 
         require(
             AC_info.custodyType == 2,
-            "PA:I2: Contract not authorized for custodial assets"
+            "PSE:EE: Contract not authorized for custodial assets"
         );
 
         require((rec.rightsHolder != 0), "EE: Record does not exist");
         require(
             callingUser.authorizedAssetClass == rec.assetClass,
-            "EE: User not authorized to modify records in specified asset class"
+            "PSE:EE: User not authorized to modify records in specified asset class"
         );
         require(
             (rec.assetStatus == 6) ||
@@ -225,12 +225,12 @@ contract PRUF_simpleEscrow is PRUF {
         );
         require(
             ((rec.assetStatus > 49) || (callingUser.userType < 5)),
-            "EE:ERR- Usertype less than 5 required to end this escrow"
+            "PSE:EE: Usertype less than 5 required to end this escrow"
         );
         require(
             (shortRec.timeLock < now) ||
                 (keccak256(abi.encodePacked(msg.sender)) == rec.recorder),
-            "EE:ERR- Escrow period not ended"
+            "PSE:EE: Escrow period not ended"
         );
         //^^^^^^^checks^^^^^^^^^
 
