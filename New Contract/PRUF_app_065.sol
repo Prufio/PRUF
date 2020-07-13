@@ -107,7 +107,7 @@ import "./PRUF_core_065.sol";
 
 contract PRUF_APP is PRUF {
     using SafeMath for uint256;
-    using SafeMath for uint16;
+    // using SafeMath for uint16;
     using SafeMath for uint8;
 
     modifier isAuthorized(bytes32 _idxHash) override {
@@ -296,8 +296,8 @@ contract PRUF_APP is PRUF {
             "PA:TA:Rightsholder does not match supplied data"
         );
         //^^^^^^^checks^^^^^^^^^
-        if (rec.numberOfTransfers < 65535) {
-            rec.numberOfTransfers = uint16(rec.numberOfTransfers.add(1));
+        if (rec.numberOfTransfers < 65335) {
+            rec.numberOfTransfers++;
         }
 
         rec.rightsHolder = _newrgtHash;

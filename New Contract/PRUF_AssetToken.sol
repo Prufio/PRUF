@@ -8,7 +8,6 @@ import "./PRUF_interfaces_065.sol";
 import "./Imports/ReentrancyGuard.sol";
 
 contract AssetToken is Ownable, ReentrancyGuard, ERC721 {
-    using SafeMath for uint16;
     struct Record {
         bytes32 recorder; // Address hash of recorder
         bytes32 rightsHolder; // KEK256 Registered owner
@@ -113,8 +112,8 @@ contract AssetToken is Ownable, ReentrancyGuard, ERC721 {
         );
 
         //^^^^^^^checks^^^^^^^^^
-        if (rec.numberOfTransfers < 65535) {
-            rec.numberOfTransfers = uint16(rec.numberOfTransfers.add(1));
+        if (rec.numberOfTransfers < 65335) {
+            rec.numberOfTransfers++;
         }
         rec
             .rightsHolder = 0xFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF;
