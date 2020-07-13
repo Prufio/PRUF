@@ -100,7 +100,6 @@
  *-----------------------------------------------------------------
 */
 
-
 // SPDX-License-Identifier: UNLICENSED
 pragma solidity ^0.6.7;
 
@@ -220,6 +219,8 @@ contract PRUF is ReentrancyGuard, Ownable, IERC721Receiver, PullPayment {
 
         AssetTokenAddress = Storage.resolveContractAddress("assetToken");
         AssetTokenContract = AssetTokenInterface(AssetTokenAddress);
+
+        PrufAppAddress = Storage.resolveContractAddress("PRUF_APP");
         //^^^^^^^effects^^^^^^^^^
     }
 
