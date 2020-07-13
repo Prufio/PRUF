@@ -363,7 +363,7 @@ contract PRUF_AC_MGR is PRUF {
         require(
             (AssetClassTokenContract.ownerOf(assetClass256) !=
                 AssetClassTokenAddress), //this will throw in the token contract if not minted
-            "PAM:ACTHSC:Asset class not yet populated"
+            "PAM:Costs:Asset class not yet populated"
         );
         return (
             rootCosts.paymentAddress,
@@ -394,7 +394,7 @@ contract PRUF_AC_MGR is PRUF {
         require(
             (AssetClassTokenContract.ownerOf(assetClass256) !=
                 AssetClassTokenAddress), //this will throw in the token contract if not minted
-            "PS:RC:Asset class not yet populated"
+            "PAM:Costs:Asset class not yet populated"
         );
         return (
             rootCosts.paymentAddress,
@@ -425,7 +425,7 @@ contract PRUF_AC_MGR is PRUF {
         require(
             (AssetClassTokenContract.ownerOf(assetClass256) !=
                 AssetClassTokenAddress), //this will throw in the token contract if not minted
-            "PS:RC:Asset class not yet populated"
+            "PAM:Costs:Asset class not yet populated"
         );
         return (
             rootCosts.paymentAddress,
@@ -456,7 +456,7 @@ contract PRUF_AC_MGR is PRUF {
         require(
             (AssetClassTokenContract.ownerOf(assetClass256) !=
                 AssetClassTokenAddress), //this will throw in the token contract if not minted
-            "PS:RC:Asset class not yet populated"
+            "PAM:Costs:Asset class not yet populated"
         );
         return (
             rootCosts.paymentAddress,
@@ -488,7 +488,7 @@ contract PRUF_AC_MGR is PRUF {
         require(
             (AssetClassTokenContract.ownerOf(assetClass256) !=
                 AssetClassTokenAddress), //this will throw in the token contract if not minted
-            "PS:RC:Asset class not yet populated"
+            "PAM:Costs:Asset class not yet populated"
         );
         //^^^^^^^checks^^^^^^^^
 
