@@ -211,7 +211,7 @@ contract PRUF is ReentrancyGuard, Ownable, IERC721Receiver, PullPayment {
         );
 
         AssetClassTokenManagerAddress = Storage.resolveContractAddress(
-            "assetClassTokenManager"
+            "PRUF_AC_MGR"
         );
 
         AssetClassTokenManagerContract = AssetClassTokenManagerInterface(
@@ -525,7 +525,7 @@ contract PRUF is ReentrancyGuard, Ownable, IERC721Receiver, PullPayment {
         uint256 messageValue = msg.value;
         uint256 change;
         uint256 total = pricing.rootPrice.add(pricing.ACTHprice);
-        require(msg.value >= total, "PA:NR: tx value too low. Send more eth.");
+        require(msg.value >= total, "PC:DP: TX value too low.");
         change = messageValue.sub(total);
         _asyncTransfer(pricing.rootAddress, pricing.rootPrice);
         _asyncTransfer(pricing.ACTHaddress, pricing.ACTHprice);
