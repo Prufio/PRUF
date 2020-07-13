@@ -70,17 +70,16 @@ pragma solidity ^0.6.0;
 *-----------------------------------------------------------------
 
 *-----------------------------------------------------------------
- * CONTRACT Types: 
+ * CONTRACT Types:  contractAdresses (storage)
  * 0   --NONE
  * 1   --Custodial
  * 2   --Non-Custodial
- * Owner (onlyOwner)
- * other = unauth
  *
 *-----------------------------------------------------------------
 
 *-----------------------------------------------------------------
- * ASSET CLASS Types:
+ * ASSET CLASS Types: AC_data.custodyType (AC_manager)
+ * 0   --NONE
  * 1   --Custodial
  * 2   --Non-Custodial
  *
