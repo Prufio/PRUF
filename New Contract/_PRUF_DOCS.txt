@@ -5,7 +5,7 @@ pragma solidity ^0.6.0;
 /*-----------------------------------------------------------------
  *  TO DO :
  *  
- *  Implement recycle "Burn" 
+ *  Implement recycle "Burn" SAME THING AS RECYCLE?
  *  Implement recycle "Recycle"
  *          (assetTokenContract.burn still just burns, sets 0x0 and 60)
 *-----------------------------------------------------------------
@@ -113,7 +113,7 @@ pragma solidity ^0.6.0;
  * 57 = out of escrow
  * 58 = out of locked escrow
  * 59 = Recyclable
- * 60 = Burned (can only be reimported by an ACAdmin can unset)
+ * 60 = Recycled (can only be reimported by an ACAdmin can unset)
  *
 *-----------------------------------------------------------------
 
@@ -133,11 +133,11 @@ pragma solidity ^0.6.0;
  * 3 Set storage contract in each contract
  * 4 Resolve contract addresses
  * 5 Print root && rooted AC token
- * 6 Set costs / users for root && rooted AC token
+ * 6 Set costs / users / types for root && rooted AC token
  * 7 THE WORKS
  * 
 *-----------------------------------------------------------------
- */
+*/
 
 Implement:
 

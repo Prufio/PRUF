@@ -126,7 +126,7 @@ contract PRUF_AC_MGR is PRUF {
      */
     modifier isAdmin() {
         require(
-            msg.sender == owner() || msg.sender == AC_minterAddress,
+            (msg.sender == owner()) || (msg.sender == AC_minterAddress),
             "Calling address does not belong to an Admin"
         );
         _;
