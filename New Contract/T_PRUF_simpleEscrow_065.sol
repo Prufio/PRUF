@@ -119,7 +119,7 @@ contract T_PRUF_simpleEscrow is PRUF {
         uint256 tokenID = uint256(_idxHash);
         require(
             (AssetTokenContract.ownerOf(tokenID) == msg.sender), //msg.sender is token holder
-            "PC:MOD-IA: Caller does not hold token"
+            "TPSE:IA: Caller does not hold token"
         );
         _;
     }
@@ -142,17 +142,17 @@ contract T_PRUF_simpleEscrow is PRUF {
 
         require(
             AC_info.custodyType == 2,
-            "PA:I2: Contract not authorized for custodial assets"
+            "TPSE:SE: Contract not authorized for custodial assets"
         );
 
         require((rec.rightsHolder != 0), "SE: Record does not exist");
         require(
             (rec.assetStatus > 49),
-            "PNP:MS: Only custodial usertype can change status < 50"
+            "TPSE:SE: Only custodial usertype can change status < 50"
         );
         require(
             (escrowTime >= now),
-            "SE:ERR-Escrow must be set to a time in the future"
+            "TPSE:SE:Escrow must be set to a time in the future"
         );
         require(
             (rec.assetStatus != 3) &&
@@ -161,17 +161,17 @@ contract T_PRUF_simpleEscrow is PRUF {
                 (rec.assetStatus != 54) &&
                 (rec.assetStatus != 5) &&
                 (rec.assetStatus != 55),
-            "SE:ERR-Transferred, lost, or stolen status cannot be set to escrow."
+            "TPSE:SE:Transferred, lost, or stolen status cannot be set to escrow."
         );
         require(
             (_escrowStatus == 6) ||
                 (_escrowStatus == 50) ||
                 (_escrowStatus == 56),
-            "SE:ERR-Must specify an valid escrow status"
+            "TPSE:SE:Must specify an valid escrow status"
         );
         require(
             (_escrowStatus > 49),
-            "PNP:MS: Only custodial usertype can set escrow < 50"
+            "TPSE:SE:Only custodial usertype can set escrow < 50"
         );
         //^^^^^^^checks^^^^^^^^^
 
@@ -203,28 +203,28 @@ contract T_PRUF_simpleEscrow is PRUF {
 
         require(
             AC_info.custodyType == 2,
-            "PA:I2: Contract not authorized for custodial assets"
+            "TPSE:EE:Contract not authorized for custodial assets"
         );
 
         require((rec.rightsHolder != 0), "EE: Record does not exist");
         require(
             callingUser.authorizedAssetClass == rec.assetClass,
-            "EE: User not authorized to modify records in specified asset class"
+            "TPSE:EE:User not authorized to modify records in specified asset class"
         );
         require(
             (rec.assetStatus == 6) ||
                 (rec.assetStatus == 50) ||
                 (rec.assetStatus == 56),
-            "EE:ERR- record must be in escrow status"
+            "TPSE:EE:record must be in escrow status"
         );
         require(
             (rec.assetStatus > 49),
-            "EE:ERR- Custodial usertype required to end this escrow"
+            "TPSE:EE:Custodial usertype required to end this escrow"
         );
         require(
             (shortRec.timeLock < now) ||
                 (keccak256(abi.encodePacked(msg.sender)) == rec.recorder),
-            "EE:ERR- Escrow period not ended"
+            "TPSE:EE:Escrow period not ended"
         );
         //^^^^^^^checks^^^^^^^^^
 
