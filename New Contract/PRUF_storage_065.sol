@@ -127,10 +127,10 @@ contract Storage is Ownable, ReentrancyGuard {
         uint16 numberOfTransfers; //number of transfers and forcemods
     }
 
-    struct User {
-        uint8 userType; // Human / Automated / Unauthorized
-        uint16 authorizedAssetClass; // User authorized for specific asset class
-    }
+    // struct User {
+    //     uint8 userType; // Human / Automated / Unauthorized
+    //     uint16 authorizedAssetClass; // User authorized for specific asset class
+    // }
 
     mapping(address => uint8) private contractAdresses; // Authorized contract addresses, indexed by address, with auth level 0-255
     mapping(string => address) private contractNames; // Authorized contract addresses, indexed by name
