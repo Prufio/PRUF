@@ -117,7 +117,6 @@ contract PRUF_AC_MGR is PRUF {
     mapping(string => uint16) internal AC_number;
 
     uint256 private priceThreshold; //threshold of price where fractional pricing is implemented
-    uint256 private priceDivisor; //fractional pricing divisor
 
     /*
      * @dev Verify user credentials
@@ -127,7 +126,7 @@ contract PRUF_AC_MGR is PRUF {
     modifier isAdmin() {
         require(
             (msg.sender == owner()) || (msg.sender == AC_minterAddress),
-            "Calling address does not belong to an Admin"
+            "PAM:IA:Calling address does not belong to an Admin"
         );
         _;
     }
@@ -139,7 +138,7 @@ contract PRUF_AC_MGR is PRUF {
         uint256 assetClass256 = uint256(_assetClass);
         require(
             (AssetClassTokenContract.ownerOf(assetClass256) == msg.sender),
-            "MOD-ACTH-msg.sender not authorized in asset class"
+            "PAM:IACTHoC:msg.sender not authorized in asset class"
         );
         _;
     }
@@ -160,7 +159,7 @@ contract PRUF_AC_MGR is PRUF {
                 (_userType == 2) ||
                 (_userType == 9) ||
                 (_userType == 99),
-            "PC:AU:Invalid user type"
+            "PAM:AU:Invalid user type"
         );
         //^^^^^^^checks^^^^^^^^^
 
@@ -186,11 +185,11 @@ contract PRUF_AC_MGR is PRUF {
     ) external isAdmin {
         AC memory _ac = AC_data[_assetClassRoot];
 
-        require((_tokenId != 0), "token id cannot be 0"); //sanity check inputs
-        require((_custodyType != 0), "custodyType cannot be 0"); //sanity check inputs
+        require((_tokenId != 0), "PAM:CAC: Token id cannot be 0"); //sanity check inputs
+        require((_custodyType != 0), "PAM:CAC:CustodyType cannot be 0"); //sanity check inputs
         require( //has valid root
             (_ac.custodyType != 0) || (_assetClassRoot == _assetClass),
-            "Root asset class does not exist"
+            "PAM:CAC:Root asset class does not exist"
         );
         //^^^^^^^checks^^^^^^^^^
 
@@ -221,10 +220,7 @@ contract PRUF_AC_MGR is PRUF {
         uint256 _forceModifyCost,
         address _paymentAddress
     ) external isACtokenHolderOfClass(_class) {
-        require(
-            priceDivisor != 0,
-            "price divisor is zero. Set base costs first"
-        );
+
         //^^^^^^^checks^^^^^^^^^
         cost[_class].newRecordCost = _newRecordCost;
         cost[_class].transferAssetCost = _transferAssetCost;
@@ -305,7 +301,7 @@ contract PRUF_AC_MGR is PRUF {
         require(
             (AssetClassTokenContract.ownerOf(assetClass256) !=
                 AssetClassTokenAddress), //this will throw in the token contract if not minted
-            "PS:RC:Asset class not yet populated"
+            "PAM:Costs:Asset class not yet populated"
         );
         return (
             rootCosts.paymentAddress,
@@ -336,7 +332,7 @@ contract PRUF_AC_MGR is PRUF {
         require(
             (AssetClassTokenContract.ownerOf(assetClass256) !=
                 AssetClassTokenAddress), //this will throw in the token contract if not minted
-            "PS:RC:Asset class not yet populated"
+            "PAM:Costs:Asset class not yet populated"
         );
         return (
             rootCosts.paymentAddress,
@@ -367,7 +363,7 @@ contract PRUF_AC_MGR is PRUF {
         require(
             (AssetClassTokenContract.ownerOf(assetClass256) !=
                 AssetClassTokenAddress), //this will throw in the token contract if not minted
-            "PS:RC:Asset class not yet populated"
+            "PAM:ACTHSC:Asset class not yet populated"
         );
         return (
             rootCosts.paymentAddress,

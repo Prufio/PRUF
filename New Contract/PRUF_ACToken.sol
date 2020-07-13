@@ -21,7 +21,7 @@ contract AssetClassToken is Ownable, ReentrancyGuard, ERC721 {
         require(
             (msg.sender == ACmanagerAddress) ||
                 (msg.sender == owner()),
-            "Calling address does not belong to an Admin"
+            "ACT:IA:Calling address does not belong to an Admin"
         );
         _;
     }
