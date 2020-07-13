@@ -101,11 +101,11 @@ contract AssetToken is Ownable, ReentrancyGuard, ERC721 {
         bytes32 _idxHash = bytes32(tokenId);
         Record memory rec = getRecord(_idxHash);
 
-        require(rec.assetStatus == 51, "Asset not in transferrable status");
+        require(rec.assetStatus == 51, "AT:TF:Asset not in transferrable status");
 
         require(
             _isApprovedOrOwner(_msgSender(), tokenId),
-            "ERC721: transfer caller is not owner nor approved"
+            "AT:TF: transfer caller is not owner nor approved"
         );
 
         //^^^^^^^checks^^^^^^^^^
@@ -169,11 +169,11 @@ contract AssetToken is Ownable, ReentrancyGuard, ERC721 {
         bytes32 _idxHash = bytes32(tokenId);
         Record memory rec = getRecord(_idxHash);
 
-        require(rec.assetStatus == 51, "Asset not in transferrable status");
+        require(rec.assetStatus == 51, "AT:STF:Asset not in transferrable status");
 
         require(
             _isApprovedOrOwner(_msgSender(), tokenId),
-            "ERC721: transfer caller is not owner nor approved"
+            "AT:STF: transfer caller is not owner nor approved"
         );
         //^^^^^^^checks^^^^^^^^^
         rec
@@ -190,14 +190,14 @@ contract AssetToken is Ownable, ReentrancyGuard, ERC721 {
     function burn(uint256 tokenId) external nonReentrant {
         bytes32 _idxHash = bytes32(tokenId);
         Record memory rec = getRecord(_idxHash);
-        require(_exists(tokenId), "Cannot Burn nonexistant token");
+        require(_exists(tokenId), "AT:B:Cannot Burn nonexistant token");
         require(
             (rec.assetStatus == 59),
-            "Asset must be in status 59 (recyclable) to be burned"
+            "AT:B:Asset must be in status 59 (recyclable) to be burned"
         );
         require(
             _isApprovedOrOwner(_msgSender(), tokenId),
-            "ERC721: transfer caller is not owner nor approved"
+            "AT:B:transfer caller is not owner nor approved"
         );
         //^^^^^^^checks^^^^^^^^^
         rec.rightsHolder = 0x0; //delete rightsholder in storage
@@ -220,7 +220,7 @@ contract AssetToken is Ownable, ReentrancyGuard, ERC721 {
         uint256 tokenId,
         string calldata _tokenURI
     ) external isAdmin returns (uint256) {
-        require(_exists(tokenId), "Cannot Remint nonexistant token");
+        require(_exists(tokenId), "AT:RM:Cannot Remint nonexistant token");
         //^^^^^^^checks^^^^^^^^^
         _burn(tokenId);
         _safeMint(_recipientAddress, tokenId);
