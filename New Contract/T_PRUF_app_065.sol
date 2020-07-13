@@ -121,7 +121,7 @@ contract T_PRUF_NP is PRUF {
         uint256 tokenID = uint256(_idxHash);
         require(
             (AssetTokenContract.ownerOf(tokenID) == msg.sender), //msg.sender is token holder
-            "PC:MOD-IA: Caller does not hold token"
+            "TPA:IA: Caller does not hold token"
         );
         _;
     }
@@ -213,30 +213,30 @@ contract T_PRUF_NP is PRUF {
 
         require(
             AC_info.custodyType == 2,
-            "PA:I2: Contract not authorized for custodial assets"
+            "TPA:RMT:Contract not authorized for custodial assets"
         );
         require(rec.rightsHolder != 0, "PA:I2: Record does not exist");
         require(
             (rec.assetStatus != 60),
-            "TPNP:CR: Record is burned and must be reimported by ACadmin"
+            "TPA:RMT:Record is burned and must be reimported by ACadmin"
         );
         require(
             (rec.assetStatus != 6) &&
                 (rec.assetStatus != 50) &&
                 (rec.assetStatus != 56),
-            "PA:I2: Cannot modify asset in Escrow"
+            "TPA:RMT:Cannot modify asset in Escrow"
         );
         require(rec.assetStatus < 200, "PA:I2: Record locked");
         require(
             (rec.assetStatus != 5) &&
                 (rec.assetStatus != 55) &&
                 (rec.assetStatus != 60),
-            "PA:I2: Record In Transferred-unregistered or burned status"
+            "TPA:RMT:Record In Transferred-unregistered or burned status"
         );
         require(
             rec.rightsHolder ==
                 keccak256(abi.encodePacked(first, middle, last, id, secret)),
-            "PA:I2: Rightsholder does not match supplied data"
+            "TPA:RMT:Rightsholder does not match supplied data"
         );
         //^^^^^^^checks^^^^^^^^^
 
@@ -265,31 +265,31 @@ contract T_PRUF_NP is PRUF {
 
         require(
             AC_info.custodyType == 2,
-            "PA:I2: Contract not authorized for custodial assets"
+            "TPA:I2:Contract not authorized for custodial assets"
         );
         require((rec.rightsHolder != 0), "PA:I2: Record does not exist");
         require(
             (rec.assetStatus != 60),
-            "TPNP:CR: Record is burned and must be reimported by ACadmin"
+            "TPA:I2:Record is burned and must be reimported by ACadmin"
         );
         require(
             (rec.assetStatus != 6) &&
                 (rec.assetStatus != 50) &&
                 (rec.assetStatus != 56),
-            "PA:I2: Cannot modify asset in Escrow"
+            "TPA:I2:Cannot modify asset in Escrow"
         );
         require(rec.assetStatus < 200, "PA:I2: Record locked");
         require(
             (rec.assetStatus != 5) && (rec.assetStatus != 55),
-            "PA:I2: Record In Transferred-unregistered status"
+            "TPA:I2:Record In Transferred-unregistered status"
         );
         require(
             rec.Ipfs2 == 0,
-            "PA:I2: Ipfs2 has data already. Overwrite not permitted"
+            "TPA:I2:Ipfs2 has data already. Overwrite not permitted"
         );
         require(
             rec.rightsHolder == _rgtHash,
-            "PA:I2: Rightsholder does not match supplied data"
+            "TPA:I2:Rightsholder does not match supplied data"
         );
         //^^^^^^^checks^^^^^^^^^
 

@@ -120,7 +120,7 @@ contract T_PRUF_NP is PRUF {
         uint256 tokenID = uint256(_idxHash);
         require(
             (AssetTokenContract.ownerOf(tokenID) == msg.sender), //msg.sender is token holder
-            "PC:MOD-IA: Caller does not hold token"
+            "TPNP:IA: Caller does not hold token"
         );
         _;
     }
