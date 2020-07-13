@@ -8,6 +8,7 @@ import "./PRUF_interfaces_065.sol";
 import "./Imports/ReentrancyGuard.sol";
 
 contract AssetToken is Ownable, ReentrancyGuard, ERC721 {
+    using SafeMath for uint16;
     struct Record {
         bytes32 recorder; // Address hash of recorder
         bytes32 rightsHolder; // KEK256 Registered owner
@@ -101,7 +102,10 @@ contract AssetToken is Ownable, ReentrancyGuard, ERC721 {
         bytes32 _idxHash = bytes32(tokenId);
         Record memory rec = getRecord(_idxHash);
 
-        require(rec.assetStatus == 51, "PAT:MAT:Asset not in transferrable status");
+        require(
+            rec.assetStatus == 51,
+            "PAT:MAT:Asset not in transferrable status"
+        );
 
         require(
             _isApprovedOrOwner(_msgSender(), tokenId),
@@ -109,7 +113,9 @@ contract AssetToken is Ownable, ReentrancyGuard, ERC721 {
         );
 
         //^^^^^^^checks^^^^^^^^^
-
+        if (rec.numberOfTransfers < 65535) {
+            rec.numberOfTransfers = uint16(rec.numberOfTransfers.add(1));
+        }
         rec
             .rightsHolder = 0xFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF;
         //^^^^^^^effects^^^^^^^^^
@@ -169,7 +175,10 @@ contract AssetToken is Ownable, ReentrancyGuard, ERC721 {
         bytes32 _idxHash = bytes32(tokenId);
         Record memory rec = getRecord(_idxHash);
 
-        require(rec.assetStatus == 51, "PAT:STF:Asset not in transferrable status");
+        require(
+            rec.assetStatus == 51,
+            "PAT:STF:Asset not in transferrable status"
+        );
 
         require(
             _isApprovedOrOwner(_msgSender(), tokenId),
