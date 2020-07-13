@@ -152,7 +152,7 @@ contract Storage is Ownable, ReentrancyGuard {
         require(
             (contractAdresses[msg.sender] == 1) ||
                 (contractAdresses[msg.sender] == 2),
-            "MOD-IA-Contract not authorized or improperly permissioned"
+            "PS:IA:Contract not authorized or improperly permissioned"
         );
         _;
     }
@@ -166,7 +166,7 @@ contract Storage is Ownable, ReentrancyGuard {
                 (database[_idxHash].assetStatus != 50) &&
                 (database[_idxHash].assetStatus != 56)) ||
                 (database[_idxHash].timeLock < now), //Since time here is +/1 a day or so, now can be used as per the 15 second rule (consensys)
-            "MOD-U-record modification prohibited while locked in escrow"
+            "PS:NE:record modification prohibited while locked in escrow"
         );
         _;
     }
@@ -177,7 +177,7 @@ contract Storage is Ownable, ReentrancyGuard {
     modifier exists(bytes32 _idxHash) {
         require(
             database[_idxHash].rightsHolder != 0,
-            "MOD-E-record does not exist"
+            "PS:E:record does not exist"
         );
         _;
     }
@@ -192,7 +192,7 @@ contract Storage is Ownable, ReentrancyGuard {
                 (database[_idxHash].assetStatus == 50) ||
                 (database[_idxHash].assetStatus == 56) ||
                 (database[_idxHash].timeLock < block.number)),
-            "MOD-NTL-record time locked"
+            "PS:NBL:record time locked"
         );
         _;
     }
@@ -222,7 +222,7 @@ contract Storage is Ownable, ReentrancyGuard {
         address _addr,
         uint8 _contractAuthLevel
     ) external onlyOwner {
-        require(_contractAuthLevel <= 4, "AC:ER-13 Invalid user type");
+        require(_contractAuthLevel <= 4, "PS:AC: Invalid user type");
         //^^^^^^^checks^^^^^^^^^
         contractAdresses[_addr] = _contractAuthLevel;
 
@@ -250,9 +250,9 @@ contract Storage is Ownable, ReentrancyGuard {
     ) external isAuthorized nonReentrant {
         require(
             (database[_idxHash].rightsHolder == 0) || (database[_idxHash].assetStatus == 60),
-            "NR:ERR-Record already exists"
+            "PS:NR:Record already exists"
         );
-        require(_rgt != 0, "NR:ERR-Rightsholder cannot be blank");
+        require(_rgt != 0, "PS:NR:Rightsholder cannot be blank");
         require(_assetClass != 0, "PA:NR: Asset class cannot be zero");
         //^^^^^^^checks^^^^^^^^^
 
@@ -307,26 +307,26 @@ contract Storage is Ownable, ReentrancyGuard {
         // require(rgtHash != 0, "MR:ERR-Rightsholder cannot be blank");
         require( //prohibit increasing the countdown value
             _countDown <= database[idxHash].countDown,
-            "MR:ERR-new countDown exceeds original countDown"
+            "PS:MR:new countDown exceeds original countDown"
         );
         require(
             _forceCount >= database[idxHash].forceModCount,
-            "MR:ERR-new forceModCount less than original forceModCount"
+            "PS:MR:new forceModCount less than original forceModCount"
         );
         require(
             _numberOfTransfers >= database[idxHash].numberOfTransfers,
-            "MR:ERR-new transferCount less than original transferCount"
+            "PS:MR:new transferCount less than original transferCount"
         );
         require(
             _newAssetStatus < 200,
-            "MR:ERR-assetStatus over 199 cannot be set by user"
+            "PS:MR:assetStatus over 199 cannot be set by user"
         );
         require(
             (_newAssetStatus != 3) &&
                 (_newAssetStatus != 4) &&
                 (_newAssetStatus != 53) &&
                 (_newAssetStatus != 54),
-            "SS:ERR-Must use stolenOrLost function to set lost or stolen status"
+            "PS:MR:Must use stolenOrLost function to set lost or stolen status"
         );
         //^^^^^^^checks^^^^^^^^^
 
@@ -342,7 +342,7 @@ contract Storage is Ownable, ReentrancyGuard {
 
         database[idxHash] = rec;
         //^^^^^^^effects^^^^^^^^^
-        emit REPORT("New record created", _idxHash);
+        emit REPORT("Record Modified", _idxHash);
         //^^^^^^^interactions^^^^^^^^^
     }
 
@@ -366,12 +366,12 @@ contract Storage is Ownable, ReentrancyGuard {
                 (_newAssetStatus == 4) ||
                 (_newAssetStatus == 53) ||
                 (_newAssetStatus == 54),
-            "SS:ERR-Must set to a lost or stolen status"
+            "PS:SSL:Must set to a lost or stolen status"
         );
         require(
             (database[_idxHash].assetStatus != 5) &&
                 (database[_idxHash].assetStatus != 55),
-            "SS:ERR-Transferred asset cannot be set to lost or stolen after transfer."
+            "PS:SSL:Transferred asset cannot be set to lost or stolen after transfer."
         );
         //^^^^^^^checks^^^^^^^^^
 
@@ -408,7 +408,7 @@ contract Storage is Ownable, ReentrancyGuard {
             (_newAssetStatus == 6) ||
                 (_newAssetStatus == 50) ||
                 (_newAssetStatus == 56),
-            "SE:ERR-Must set to an escrow status"
+            "PS:SE: Must set to an escrow status"
         );
         require(
             (database[_idxHash].assetStatus != 3) &&
@@ -417,7 +417,7 @@ contract Storage is Ownable, ReentrancyGuard {
                 (database[_idxHash].assetStatus != 54) &&
                 (database[_idxHash].assetStatus != 5) &&
                 (database[_idxHash].assetStatus != 55),
-            "SE:ERR-Transferred, lost, or stolen status cannot be set to escrow."
+            "PS:SE: Transferred, lost, or stolen status cannot be set to escrow."
         );
         //^^^^^^^checks^^^^^^^^^
 
@@ -492,7 +492,7 @@ contract Storage is Ownable, ReentrancyGuard {
     {
         Record memory rec = database[_idxHash];
 
-        require((rec.Ipfs1 != _Ipfs1), "MI1: New value same as old");
+        require((rec.Ipfs1 != _Ipfs1), "PS:MI1: New value same as old");
         //^^^^^^^checks^^^^^^^^^
 
         database[_idxHash].timeLock = block.number;
@@ -523,7 +523,7 @@ contract Storage is Ownable, ReentrancyGuard {
     {
         Record memory rec = database[_idxHash];
 
-        require((rec.Ipfs2 == 0), "MI2: Cannot overwrite IPFS2");
+        require((rec.Ipfs2 == 0), "PS:MI2: Cannot overwrite IPFS2");
         //^^^^^^^checks^^^^^^^^^
 
         database[_idxHash].timeLock = block.number;
@@ -656,10 +656,10 @@ contract Storage is Ownable, ReentrancyGuard {
         returns (uint8)
     {
         if (_rgtHash == database[_idxHash].rightsHolder) {
-            emit REPORT("New record created", _idxHash);
+            emit REPORT("Record match confirmed", _idxHash);
             return 170;
         } else {
-            emit REPORT("New record created", _idxHash);
+            emit REPORT("Record does not match", _idxHash);
             return 0;
         }
         //^^^^^^^checks/interactions^^^^^^^^^
