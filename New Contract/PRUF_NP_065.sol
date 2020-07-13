@@ -145,8 +145,8 @@ contract PRUF_NP is PRUF {
         AC memory AC_info = getACinfo(rec.assetClass);
 
         require(
-            AC_info.custodyType == 2,
-            "PNP:MS: Contract not authorized for custodial assets"
+            AC_info.custodyType == 1,
+            "PNP:MS: Contract not authorized for non-custodial assets"
         );
 
         require((rec.rightsHolder != 0), "PNP:MS: Record does not exist");
@@ -199,8 +199,8 @@ contract PRUF_NP is PRUF {
         AC memory AC_info = getACinfo(rec.assetClass);
 
         require(
-            AC_info.custodyType == 2,
-            "PNP:SLS: Contract not authorized for custodial assets"
+            AC_info.custodyType == 1,
+            "PNP:SLS: Contract not authorized for non-custodial assets"
         );
 
         require((rec.rightsHolder != 0), "PNP:SLS: Record does not exist");
@@ -257,8 +257,8 @@ contract PRUF_NP is PRUF {
         AC memory AC_info = getACinfo(rec.assetClass);
 
         require(
-            AC_info.custodyType == 2,
-            "PNP:DC: Contract not authorized for custodial assets"
+            AC_info.custodyType == 1,
+            "PNP:DC: Contract not authorized for non-custodial assets"
         );
 
         require((rec.rightsHolder != 0), "PNP:DC: Record does not exist");
@@ -309,8 +309,8 @@ contract PRUF_NP is PRUF {
         AC memory AC_info = getACinfo(rec.assetClass);
 
         require(
-            AC_info.custodyType == 2,
-            "PNP:MI1 Contract not authorized for custodial assets"
+            AC_info.custodyType == 1,
+            "PNP:MI1 Contract not authorized for non-custodial assets"
         );
 
         require((rec.rightsHolder != 0), "PNP:MI1: Record does not exist");
