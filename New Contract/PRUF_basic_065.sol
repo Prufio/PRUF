@@ -36,7 +36,7 @@ contract PRUF_BASIC is ReentrancyGuard, Ownable,  IERC721Receiver {
         string name; // NameHash for assetClass
         uint16 assetClassRoot; // asset type root (bycyles - USA Bicycles)
         uint8 custodyType; // custodial or noncustodial
-        uint256 extendedData; // asset type root (bycyles - USA Bicycles)
+        uint256 extendedData; // Future Use
     }
 
 
