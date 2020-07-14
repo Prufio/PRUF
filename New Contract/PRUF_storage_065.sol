@@ -126,12 +126,12 @@ contract Storage is Ownable, ReentrancyGuard {
         uint16 numberOfTransfers; //number of transfers and forcemods
     }
 
-    // struct User {
-    //     uint8 userType; // Human / Automated / Unauthorized
-    //     uint16 authorizedAssetClass; // User authorized for specific asset class
-    // }
+    struct Contracts {
+         uint8 contractType; // Auth Level / type
+         string name; // Contract Name
+    }
 
-    mapping(address => uint8) private contractAdresses; // Authorized contract addresses, indexed by address, with auth level 0-255
+    mapping(address => Contracts) private contractInfo; // Authorized contract addresses, indexed by address, with auth level 0-255
     mapping(string => address) private contractNames; // Authorized contract addresses, indexed by name
     mapping(bytes32 => Record) private database; // Main Data Storage
 
@@ -149,8 +149,9 @@ contract Storage is Ownable, ReentrancyGuard {
      */
     modifier isAuthorized() {
         require(
-            (contractAdresses[msg.sender] == 1) ||
-                (contractAdresses[msg.sender] == 2),
+            (contractInfo[msg.sender].contractType == 1) ||
+                (contractInfo[msg.sender].contractType == 2) ||
+                (contractInfo[msg.sender].contractType == 3),
             "PS:IA:Contract not authorized or improperly permissioned"
         );
         _;
@@ -218,7 +219,8 @@ contract Storage is Ownable, ReentrancyGuard {
     ) external onlyOwner {
         require(_contractAuthLevel <= 4, "PS:AC: Invalid user type");
         //^^^^^^^checks^^^^^^^^^
-        contractAdresses[_addr] = _contractAuthLevel;
+        contractInfo[_addr].contractType = _contractAuthLevel;
+        contractInfo[_addr].name = _name;
         contractNames[_name] = _addr;
         AssetClassTokenContract = AssetClassTokenInterface(
             contractNames["assetClassToken"]
@@ -256,7 +258,7 @@ contract Storage is Ownable, ReentrancyGuard {
         Record memory rec;
         bytes32 senderHash = keccak256(abi.encodePacked(msg.sender));
 
-        if (contractAdresses[msg.sender] == 1) {
+        if (contractInfo[msg.sender].contractType == 1) {
             rec.assetStatus = 0;
         } else {
             rec.assetStatus = 51;
@@ -392,7 +394,6 @@ contract Storage is Ownable, ReentrancyGuard {
      * @dev Set an asset to escrow status (6/50/56). Sets timelock for unix timestamp of escrow end.
      */
     function setEscrow(
-        bytes32 _EscrowOwnerHash,
         bytes32 _idxHash,
         uint8 _newAssetStatus,
         uint256 _escrowTime
@@ -405,6 +406,10 @@ contract Storage is Ownable, ReentrancyGuard {
         notBlockLocked(_idxHash)
     //isACtokenHolder(_idxHash)
     {
+        require(
+                contractInfo[msg.sender].contractType == 3,
+            "PS:SE: Escrow can only be set by an escrow contract"
+        );
         require(
             (_newAssetStatus == 6) ||
                 (_newAssetStatus == 50) ||
@@ -422,42 +427,49 @@ contract Storage is Ownable, ReentrancyGuard {
         );
         //^^^^^^^checks^^^^^^^^^
 
+        bytes32 callingContractNameHash = keccak256(abi.encodePacked(contractInfo[msg.sender].name));
         database[_idxHash].timeLock = block.number;
         Record memory rec = database[_idxHash];
 
         (rec.lastRecorder, rec.recorder) = storeRecorder(
             _idxHash,
-            _EscrowOwnerHash
+            callingContractNameHash
         );
         rec.assetStatus = _newAssetStatus;
         rec.timeLock = _escrowTime;
 
         database[_idxHash] = rec;
         //^^^^^^^effects^^^^^^^^^
-        emit REPORT("Record locked for escrow", _EscrowOwnerHash);
+        emit REPORT("Record locked for escrow", callingContractNameHash);
         //^^^^^^^interactions^^^^^^^^^
     }
 
     /*
      * @dev remove an asset from escrow status
      */
-    function endEscrow(bytes32 _userHash, bytes32 _idxHash)
+    function endEscrow(bytes32 _idxHash)
         external
         nonReentrant
         isAuthorized
         notBlockLocked(_idxHash)
         exists(_idxHash)
     {
+        bytes32 callingContractNameHash = keccak256(abi.encodePacked(contractInfo[msg.sender].name));
+        Record memory rec = database[_idxHash];
+        require(
+                callingContractNameHash == rec.recorder,
+            "PS:EE:Asset not in escrow"
+        );
         require(
             (database[_idxHash].assetStatus == 6) ||
                 (database[_idxHash].assetStatus == 50) ||
                 (database[_idxHash].assetStatus == 56),
             "PS:EE:Asset not in escrow"
         );
+
         //^^^^^^^checks^^^^^^^^^
 
         database[_idxHash].timeLock = block.number;
-        Record memory rec = database[_idxHash];
 
         if (rec.assetStatus == 6) {
             rec.assetStatus = 7;
@@ -469,10 +481,10 @@ contract Storage is Ownable, ReentrancyGuard {
             rec.assetStatus = 58;
         }
 
-        (rec.lastRecorder, rec.recorder) = storeRecorder(_idxHash, _userHash);
+        (rec.lastRecorder, rec.recorder) = storeRecorder(_idxHash, callingContractNameHash);
         database[_idxHash] = rec;
         //^^^^^^^effects^^^^^^^^^
-        emit REPORT("Escrow Ended by", _userHash);
+        emit REPORT("Escrow Ended by", callingContractNameHash);
         //^^^^^^^interactions^^^^^^^^^
     }
 

@@ -177,13 +177,12 @@ interface StorageInterface {
     ) external;
 
     function setEscrow(
-        bytes32 _userHash,
         bytes32 _idxHash,
         uint8 _newAssetStatus,
         uint256 _escrowTime
     ) external;
 
-    function endEscrow(bytes32 _userHash, bytes32 _idxHash) external;
+    function endEscrow(bytes32 _idxHash) external;
 
     function setStolenOrLost(
         bytes32 _userHash,
