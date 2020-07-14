@@ -1,8 +1,7 @@
 /*-----------------------------------------------------------------
  *  TO DO
  * change costs struct to include deposit-cost and ??? to repace changeststus and remint
-*-----------------------------------------------------------------
-*/
+*-----------------------------------------------------------------*/
 
 // SPDX-License-Identifier: UNLICENSED
 pragma solidity ^0.6.7;
