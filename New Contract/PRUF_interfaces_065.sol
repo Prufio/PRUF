@@ -251,4 +251,8 @@ interface StorageInterface {
     function resolveContractAddress(string calldata _name)
         external
         returns (address);
+
+    function ContractAuthType(address _addr)
+        external
+        returns (uint8);
 }
