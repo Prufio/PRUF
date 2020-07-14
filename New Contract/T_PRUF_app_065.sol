@@ -101,7 +101,6 @@
  *-----------------------------------------------------------------
 */
 
-
 // SPDX-License-Identifier: UNLICENSED
 pragma solidity ^0.6.7;
 
@@ -124,16 +123,6 @@ contract T_PRUF_NP is PRUF {
             "TPA:IA: Caller does not hold token"
         );
         _;
-    }
-
-    function getUser() internal override view returns (User memory) {
-        //User memory callingUser = getUser();
-        User memory user;
-        (user.userType, user.authorizedAssetClass) = AssetClassTokenManagerContract.getUserExt(
-            keccak256(abi.encodePacked(msg.sender))
-        );
-        return user;
-        //^^^^^^^interactions^^^^^^^^^
     }
 
     //--------------------------------------------External Functions--------------------------
@@ -159,7 +148,8 @@ contract T_PRUF_NP is PRUF {
         require(_rgtHash != 0, "PA:NR: rights holder cannot be zero");
         require(_assetClass != 0, "PA:NR: Asset class cannot be zero");
         require( //if creating new record in new root and idxhash is identical, fail because its probably fraud
-            ((AC_info.assetClassRoot == oldAC_info.assetClassRoot) || (rec.assetClass == 0)),
+            ((AC_info.assetClassRoot == oldAC_info.assetClassRoot) ||
+                (rec.assetClass == 0)),
             "TPA:NR: Cannot re-create asset in new root assetClass"
         );
         //^^^^^^^checks^^^^^^^^^
@@ -178,7 +168,8 @@ contract T_PRUF_NP is PRUF {
                 rec.countDownStart,
                 rec.Ipfs1
             );
-        } else { // Otherwise, idxHash is unuiqe and an entirely new record is created
+        } else {
+            // Otherwise, idxHash is unuiqe and an entirely new record is created
             Storage.newRecord(
                 userHash,
                 _idxHash,
@@ -301,6 +292,20 @@ contract T_PRUF_NP is PRUF {
         deductCreateNoteCosts(rec.assetClass);
 
         return rec.Ipfs2;
+        //^^^^^^^interactions^^^^^^^^^
+    }
+
+    //--------------------------------------------Internal Functions--------------------------
+    function getUser() internal override view returns (User memory) {
+        User memory user;
+        (
+            user.userType,
+            user.authorizedAssetClass
+        ) = AssetClassTokenManagerContract.getUserExt(
+            keccak256(abi.encodePacked(msg.sender))
+        );
+
+        return user;
         //^^^^^^^interactions^^^^^^^^^
     }
 }

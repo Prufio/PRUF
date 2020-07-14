@@ -100,7 +100,6 @@
  *-----------------------------------------------------------------
 */
 
-
 // SPDX-License-Identifier: UNLICENSED
 pragma solidity ^0.6.7;
 
@@ -202,17 +201,12 @@ contract Storage is Ownable, ReentrancyGuard {
     event REPORT(string _msg, bytes32 b32);
 
     //--------------------------------Internal Admin functions / onlyowner or isAdmin---------------------------------//
-    /*
-     * @dev Address Setters
-     */
-
-    function OO_ResolveContractAddresses() external onlyOwner {
-        //^^^^^^^checks^^^^^^^^^
-        address _contractAddress = resolveContractAddress("assetClassToken");
-        AssetClassTokenAddress = _contractAddress;
-        AssetClassTokenContract = AssetClassTokenInterface(_contractAddress);
-        //^^^^^^^effects^^^^^^^^^
-    }
+    // /*
+    //  * @dev Address Setters
+    //  */
+    // function OO_ResolveContractAddresses() external onlyOwner {
+    //     AssetClassTokenContract = AssetClassTokenInterface(contractNames["assetClassToken"]);
+    // }
 
     /*
      * @dev Authorize / Deauthorize / Authorize ADRESSES permitted to make record modifications
@@ -225,8 +219,10 @@ contract Storage is Ownable, ReentrancyGuard {
         require(_contractAuthLevel <= 4, "PS:AC: Invalid user type");
         //^^^^^^^checks^^^^^^^^^
         contractAdresses[_addr] = _contractAuthLevel;
-
         contractNames[_name] = _addr;
+        AssetClassTokenContract = AssetClassTokenInterface(
+            contractNames["assetClassToken"]
+        );
         //^^^^^^^effects^^^^^^^^^
         emit REPORT(
             "internal user database access!",
@@ -247,9 +243,10 @@ contract Storage is Ownable, ReentrancyGuard {
         uint16 _assetClass,
         uint256 _countDownStart,
         bytes32 _Ipfs1
-    ) external isAuthorized nonReentrant {
+    ) external nonReentrant isAuthorized {
         require(
-            (database[_idxHash].rightsHolder == 0) || (database[_idxHash].assetStatus == 60),
+            (database[_idxHash].rightsHolder == 0) ||
+                (database[_idxHash].assetStatus == 60),
             "PS:NR:Record already exists"
         );
         require(_rgt != 0, "PS:NR:Rightsholder cannot be blank");
@@ -258,6 +255,7 @@ contract Storage is Ownable, ReentrancyGuard {
 
         Record memory rec;
         bytes32 senderHash = keccak256(abi.encodePacked(msg.sender));
+
         if (contractAdresses[msg.sender] == 1) {
             rec.assetStatus = 0;
         } else {
@@ -294,17 +292,15 @@ contract Storage is Ownable, ReentrancyGuard {
         uint16 _numberOfTransfers
     )
         external
-        isAuthorized
         nonReentrant
+        isAuthorized
         exists(_idxHash)
         notEscrow(_idxHash)
         notBlockLocked(_idxHash)
-    //isACtokenHolder(_idxHash)
     {
         bytes32 idxHash = _idxHash; //stack saving
         bytes32 rgtHash = _rgtHash;
 
-        // require(rgtHash != 0, "MR:ERR-Rightsholder cannot be blank");
         require( //prohibit increasing the countdown value
             _countDown <= database[idxHash].countDown,
             "PS:MR:new countDown exceeds original countDown"
@@ -383,12 +379,12 @@ contract Storage is Ownable, ReentrancyGuard {
 
         database[_idxHash] = rec;
         //^^^^^^^effects^^^^^^^^^
-        if ((_newAssetStatus == 3) || (_newAssetStatus == 53)){
+
+        if ((_newAssetStatus == 3) || (_newAssetStatus == 53)) {
             emit REPORT("Record status changed to STOLEN", _idxHash);
         } else {
             emit REPORT("Record status changed to LOST", _idxHash);
         }
-
         //^^^^^^^interactions^^^^^^^^^
     }
 
@@ -402,8 +398,8 @@ contract Storage is Ownable, ReentrancyGuard {
         uint256 _escrowTime
     )
         external
-        isAuthorized
         nonReentrant
+        isAuthorized
         exists(_idxHash)
         notEscrow(_idxHash)
         notBlockLocked(_idxHash)
@@ -519,8 +515,8 @@ contract Storage is Ownable, ReentrancyGuard {
         bytes32 _Ipfs2
     )
         external
-        isAuthorized
         nonReentrant
+        isAuthorized
         exists(_idxHash)
         notEscrow(_idxHash)
         notBlockLocked(_idxHash)
@@ -540,6 +536,7 @@ contract Storage is Ownable, ReentrancyGuard {
 
         database[_idxHash] = rec;
         //^^^^^^^effects^^^^^^^^^
+
         emit REPORT("IPFS2 modified", _idxHash);
         //^^^^^^^interactions^^^^^^^^^
     }

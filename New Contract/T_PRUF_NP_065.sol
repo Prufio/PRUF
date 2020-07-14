@@ -100,7 +100,6 @@
  *-----------------------------------------------------------------
 */
 
-
 // SPDX-License-Identifier: UNLICENSED
 pragma solidity ^0.6.7;
 
@@ -123,16 +122,6 @@ contract T_PRUF_NP is PRUF {
             "TPNP:IA: Caller does not hold token"
         );
         _;
-    }
-
-    function getUser() internal override view returns (User memory) {
-        //User memory callingUser = getUser();
-        User memory user;
-        (user.userType, user.authorizedAssetClass) = AssetClassTokenManagerContract.getUserExt(
-            keccak256(abi.encodePacked(msg.sender))
-        );
-        return user;
-        //^^^^^^^interactions^^^^^^^^^
     }
 
     //--------------------------------------------External Functions--------------------------
@@ -417,6 +406,20 @@ contract T_PRUF_NP is PRUF {
         writeRecordIpfs1(_idxHash, rec);
 
         return rec.Ipfs1;
+        //^^^^^^^interactions^^^^^^^^^
+    }
+
+    //--------------------------------------------Internal Functions--------------------------
+    function getUser() internal override view returns (User memory) {
+        //User memory callingUser = getUser();
+        User memory user;
+        (
+            user.userType,
+            user.authorizedAssetClass
+        ) = AssetClassTokenManagerContract.getUserExt(
+            keccak256(abi.encodePacked(msg.sender))
+        );
+        return user;
         //^^^^^^^interactions^^^^^^^^^
     }
 }
