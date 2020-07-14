@@ -106,9 +106,6 @@ pragma solidity ^0.6.7;
 import "./PRUF_core_065.sol";
 
 contract PRUF_APP is PRUF {
-    using SafeMath for uint256;
-    // using SafeMath for uint16;
-    using SafeMath for uint8;
 
     modifier isAuthorized(bytes32 _idxHash) override {
         User memory user = getUser();

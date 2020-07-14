@@ -107,7 +107,6 @@ pragma solidity ^0.6.7;
 import "./PRUF_core_065.sol";
 
 contract PRUF_NP is PRUF {
-    using SafeMath for uint256;
 
     /*
      * @dev Verify user credentials
