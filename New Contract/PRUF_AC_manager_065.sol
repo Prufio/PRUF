@@ -134,7 +134,7 @@ contract PRUF_AC_MGR is PRUF {
     }
 
     /*
-     * @dev Retrieve AC_data @ _tokenId
+     * @dev Retrieve AC_data @ _assetClass
      */
     function getAC_data(uint16 _assetClass)
         external
@@ -151,6 +151,25 @@ contract PRUF_AC_MGR is PRUF {
             AC_data[_assetClass].custodyType,
             AC_data[_assetClass].extendedData
         );
+        //^^^^^^^interactions^^^^^^^^^
+    }
+
+    /*
+     * @dev compare the root of two asset classes
+     */
+    function isSameRootAC(uint16 _assetClass1, uint16 _assetClass2)
+        external
+        view
+        returns (
+            uint8
+        )
+    {
+        //^^^^^^^checks^^^^^^^^^
+        if (AC_data[_assetClass1].assetClassRoot == AC_data[_assetClass2].assetClassRoot){
+            return uint8 (170);
+        } else {
+            return uint8 (0);
+        }
         //^^^^^^^interactions^^^^^^^^^
     }
 
