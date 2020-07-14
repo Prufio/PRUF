@@ -390,8 +390,8 @@ contract PRUF_APP is PRUF {
             "PA:IA: User not authorized to modify records in specified asset class"
         );
         require(
-            (rec.assetStatus == 5) || (rec.assetStatus == 55),
-            "PA:IA: Only Transferred status assets can be reimported"
+            (rec.assetStatus == 5) || (rec.assetStatus == 55) || (rec.assetStatus == 70),
+            "PA:IA: Only Transferred or exported assets can be reimported"
         );
         require(rec.assetStatus < 200, "PA:IA: Record locked");
         //^^^^^^^checks^^^^^^^^^
