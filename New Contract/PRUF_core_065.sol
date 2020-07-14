@@ -110,6 +110,8 @@ import "./_ERC721/IERC721Receiver.sol";
 
 contract PRUF is ReentrancyGuard, Ownable, IERC721Receiver, PullPayment {
     using SafeMath for uint256;
+    using SafeMath for uint16;
+    using SafeMath for uint8;
 
     struct Record {
         bytes32 recorder; // Address hash of recorder

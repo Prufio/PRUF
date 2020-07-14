@@ -107,9 +107,6 @@ pragma solidity ^0.6.7;
 import "./PRUF_core_065.sol";
 
 contract T_PRUF_NP is PRUF {
-    using SafeMath for uint256;
-    using SafeMath for uint8;
-
     /*
      * @dev Verify user credentials
      * Originating Address:
@@ -125,9 +122,19 @@ contract T_PRUF_NP is PRUF {
         _;
     }
 
+    modifier isAuthorizedUser(bytes32 _idxHash) {
+        User memory user = getUser();
+        require(
+            (user.userType > 0) && (user.userType < 10),
+            "PA:IA: User not registered"
+        );
+        require(user.authorizedAssetClass == 0, "PA:IA: User not registered");
+        _;
+    }
+
     //--------------------------------------------External Functions--------------------------
     /*
-     * @dev Wrapper for newRecord  CAUTION ANYONE CAN CREATE ASSETS IN ALL ASSET CLASSES!!!!!!!!!!!!!!!!FIX
+     * @dev Wrapper for newRecord
      */
     function $newRecord(
         bytes32 _idxHash,
@@ -137,10 +144,19 @@ contract T_PRUF_NP is PRUF {
         bytes32 _Ipfs1
     ) external payable nonReentrant {
         uint256 tokenId = uint256(_idxHash);
+        User memory user = getUser();
         Record memory rec = getRecord(_idxHash);
         AC memory AC_info = getACinfo(_assetClass);
         AC memory oldAC_info = getACinfo(rec.assetClass);
 
+        require(
+            user.userType == 1,
+            "TPA:NR: User not authorized to create records"
+        );
+        require(
+            user.authorizedAssetClass == _assetClass,
+            "TPA:NR: User not authorized for asset class"
+        );
         require(
             AC_info.custodyType == 2,
             "TPA:NR: Contract not authorized for custodial assets"

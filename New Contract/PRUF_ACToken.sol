@@ -8,7 +8,6 @@ import "./PRUF_interfaces_065.sol";
 import "./Imports/ReentrancyGuard.sol";
 
 contract AssetClassToken is Ownable, ReentrancyGuard, ERC721 {
-
     constructor() public ERC721("PRüF Asset Class Token", "PAC") {}
 
     address internal ACmanagerAddress; //isAdmin
@@ -19,8 +18,7 @@ contract AssetClassToken is Ownable, ReentrancyGuard, ERC721 {
 
     modifier isAdmin() {
         require(
-            (msg.sender == ACmanagerAddress) ||
-                (msg.sender == owner()),
+            (msg.sender == ACmanagerAddress) || (msg.sender == owner()),
             "PACT:IA:Calling address does not belong to an Admin"
         );
         _;
@@ -48,7 +46,7 @@ contract AssetClassToken is Ownable, ReentrancyGuard, ERC721 {
     function OO_ResolveContractAddresses() external nonReentrant onlyOwner {
         //^^^^^^^checks^^^^^^^^^
         ACmanagerAddress = Storage.resolveContractAddress("PRUF_AC_MGR");
-        //^^^^^^^effects^^^^^^^^^
+        //^^^^^^^interactions^^^^^^^^^
     }
 
     /*
@@ -66,7 +64,7 @@ contract AssetClassToken is Ownable, ReentrancyGuard, ERC721 {
         //^^^^^^^interactions^^^^^^^^^
     }
 
-     /*
+    /*
      * Authorizations?
      * @dev remint Asset Token
      * must set a new and unuiqe rgtHash
@@ -80,6 +78,7 @@ contract AssetClassToken is Ownable, ReentrancyGuard, ERC721 {
     ) external isAdmin returns (uint256) {
         require(_exists(tokenId), "C:RM:Cannot Remint nonexistant token");
         //^^^^^^^checks^^^^^^^^^
+
         _burn(tokenId);
         _safeMint(_recipientAddress, tokenId);
         _setTokenURI(tokenId, _tokenURI);
@@ -155,8 +154,8 @@ contract AssetClassToken is Ownable, ReentrancyGuard, ERC721 {
             "C:TF: transfer caller is not owner nor approved"
         );
         //^^^^^^^checks^^^^^^^^^
+
         _safeTransfer(from, to, tokenId, _data);
         //^^^^^^^interactions^^^^^^^^^
     }
-
 }

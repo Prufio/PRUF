@@ -100,7 +100,6 @@
  *-----------------------------------------------------------------
 */
 
-
 // SPDX-License-Identifier: UNLICENSED
 pragma solidity ^0.6.7;
 
@@ -111,11 +110,10 @@ contract PRUF_AC_MGR is PRUF {
     using SafeMath for uint8;
 
     mapping(uint16 => Costs) private cost; // Cost per function by asset class
-    //Costs private baseCost;
-    address AC_minterAddress;
     mapping(uint16 => AC) internal AC_data; // AC info database
     mapping(string => uint16) internal AC_number;
 
+    address AC_minterAddress;
     uint256 private priceThreshold; //threshold of price where fractional pricing is implemented
 
     /*
@@ -220,7 +218,6 @@ contract PRUF_AC_MGR is PRUF {
         uint256 _forceModifyCost,
         address _paymentAddress
     ) external isACtokenHolderOfClass(_class) {
-
         //^^^^^^^checks^^^^^^^^^
         cost[_class].newRecordCost = _newRecordCost;
         cost[_class].transferAssetCost = _transferAssetCost;
@@ -244,7 +241,7 @@ contract PRUF_AC_MGR is PRUF {
             uint256
         )
     {
-        //^^^^^^^effects^^^^^^^^^
+        //^^^^^^^checks^^^^^^^^^
         return (
             AC_data[_assetClass].assetClassRoot,
             AC_data[_assetClass].custodyType,
@@ -261,8 +258,8 @@ contract PRUF_AC_MGR is PRUF {
         view
         returns (string memory)
     {
+        //^^^^^^^checks^^^^^^^^^
         uint16 assetClass = uint16(_tokenId);
-        //^^^^^^^effects^^^^^^^^^
         return (AC_data[assetClass].name);
         //^^^^^^^interactions^^^^^^^^^
     }
@@ -274,8 +271,8 @@ contract PRUF_AC_MGR is PRUF {
         external
         view
         returns (uint16)
-    //^^^^^^^checks^^^^^^^^^
     {
+        //^^^^^^^checks^^^^^^^^^
         return (AC_number[_name]);
         //^^^^^^^interactions^^^^^^^^^
     }
@@ -303,12 +300,14 @@ contract PRUF_AC_MGR is PRUF {
                 AssetClassTokenAddress), //this will throw in the token contract if not minted
             "PAM:Costs:Asset class not yet populated"
         );
+        //^^^^^^^checks^^^^^^^^^
         return (
             rootCosts.paymentAddress,
             rootCosts.newRecordCost,
             costs.paymentAddress,
             costs.newRecordCost
         );
+        //^^^^^^^interactions^^^^^^^^^
     }
 
     /*
@@ -334,12 +333,14 @@ contract PRUF_AC_MGR is PRUF {
                 AssetClassTokenAddress), //this will throw in the token contract if not minted
             "PAM:Costs:Asset class not yet populated"
         );
+        //^^^^^^^checks^^^^^^^^^
         return (
             rootCosts.paymentAddress,
             rootCosts.transferAssetCost,
             costs.paymentAddress,
             costs.transferAssetCost
         );
+        //^^^^^^^interactions^^^^^^^^^
     }
 
     /*
@@ -365,12 +366,14 @@ contract PRUF_AC_MGR is PRUF {
                 AssetClassTokenAddress), //this will throw in the token contract if not minted
             "PAM:Costs:Asset class not yet populated"
         );
+        //^^^^^^^checks^^^^^^^^^
         return (
             rootCosts.paymentAddress,
             rootCosts.createNoteCost,
             costs.paymentAddress,
             costs.createNoteCost
         );
+        //^^^^^^^interactions^^^^^^^^^
     }
 
     /*
@@ -396,12 +399,14 @@ contract PRUF_AC_MGR is PRUF {
                 AssetClassTokenAddress), //this will throw in the token contract if not minted
             "PAM:Costs:Asset class not yet populated"
         );
+        //^^^^^^^checks^^^^^^^^^
         return (
             rootCosts.paymentAddress,
             rootCosts.reMintRecordCost,
             costs.paymentAddress,
             costs.reMintRecordCost
         );
+        //^^^^^^^Interactions^^^^^^^^^
     }
 
     /*
@@ -427,12 +432,14 @@ contract PRUF_AC_MGR is PRUF {
                 AssetClassTokenAddress), //this will throw in the token contract if not minted
             "PAM:Costs:Asset class not yet populated"
         );
+        //^^^^^^^checks^^^^^^^^^
         return (
             rootCosts.paymentAddress,
             rootCosts.changeStatusCost,
             costs.paymentAddress,
             costs.changeStatusCost
         );
+        //^^^^^^^Interactions^^^^^^^^^
     }
 
     /*
@@ -458,12 +465,14 @@ contract PRUF_AC_MGR is PRUF {
                 AssetClassTokenAddress), //this will throw in the token contract if not minted
             "PAM:Costs:Asset class not yet populated"
         );
+        //^^^^^^^checks^^^^^^^^^
         return (
             rootCosts.paymentAddress,
             rootCosts.forceModifyCost,
             costs.paymentAddress,
             costs.forceModifyCost
         );
+        //^^^^^^^Interactions^^^^^^^^^
     }
 
     /*
@@ -512,6 +521,7 @@ contract PRUF_AC_MGR is PRUF {
         view
         returns (uint8, uint16)
     {
+        //^^^^^^^checks^^^^^^^^^
         return (
             registeredUsers[_userHash].userType,
             registeredUsers[_userHash].authorizedAssetClass
