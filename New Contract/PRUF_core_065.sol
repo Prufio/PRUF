@@ -191,7 +191,7 @@ contract PRUF is ReentrancyGuard, Ownable, IERC721Receiver, PullPayment {
         _;
     }
 
-    //----------------------Internal Admin functions / onlyowner or isAdmin----------------------//
+    //----------------------External Admin functions / onlyowner or isAdmin----------------------//
     /*
      * @dev Address Setters
      */
@@ -232,6 +232,7 @@ contract PRUF is ReentrancyGuard, Ownable, IERC721Receiver, PullPayment {
     //^^^^^^^checks^^^^^^^^^
     {
         uint256 tokenId = uint256(_idxHash);
+        //^^^^^^^effects^^^^^^^^^
         AssetTokenContract.safeTransferFrom(address(this), _to, tokenId);
         //^^^^^^^interactions^^^^^^^^^
     }
@@ -241,9 +242,10 @@ contract PRUF is ReentrancyGuard, Ownable, IERC721Receiver, PullPayment {
         virtual
         onlyOwner
         nonReentrant
-    //^^^^^^^checks^^^^^^^^^
     {
+        //^^^^^^^checks^^^^^^^^^
         uint256 tokenId = uint256(_idxHash);
+        //^^^^^^^effects^^^^^^^^^
         AssetClassTokenContract.safeTransferFrom(address(this), _to, tokenId);
         //^^^^^^^interactions^^^^^^^^^
     }
@@ -272,6 +274,7 @@ contract PRUF is ReentrancyGuard, Ownable, IERC721Receiver, PullPayment {
         uint256,
         bytes calldata
     ) external virtual override returns (bytes4) {
+        //^^^^^^^checks^^^^^^^^^
         return this.onERC721Received.selector;
         //^^^^^^^interactions^^^^^^^^^
     }
@@ -282,7 +285,9 @@ contract PRUF is ReentrancyGuard, Ownable, IERC721Receiver, PullPayment {
      * @dev Get a User Record from AC_manager @ msg.sender
      */
     function getUser() internal virtual view returns (User memory) {
+        //^^^^^^^checks^^^^^^^^^
         User memory user;
+        //^^^^^^^effects^^^^^^^^^
         (
             user.userType,
             user.authorizedAssetClass
@@ -301,20 +306,25 @@ contract PRUF is ReentrancyGuard, Ownable, IERC721Receiver, PullPayment {
         virtual
         returns (AC memory)
     {
+        //^^^^^^^checks^^^^^^^^^
         AC memory AC_info;
+        //^^^^^^^effects^^^^^^^^^
         (
             AC_info.assetClassRoot,
             AC_info.custodyType,
             AC_info.extendedData
         ) = AssetClassTokenManagerContract.getAC_data(_assetClass);
         return AC_info;
+        //^^^^^^^interactions^^^^^^^^^
     }
 
     /*
      * @dev Get a Record from Storage @ idxHash
      */
     function getRecord(bytes32 _idxHash) internal returns (Record memory) {
+        //^^^^^^^checks^^^^^^^^^
         Record memory rec;
+        //^^^^^^^effects^^^^^^^^^
 
         {
             //Start of scope limit for stack depth
@@ -350,7 +360,9 @@ contract PRUF is ReentrancyGuard, Ownable, IERC721Receiver, PullPayment {
     }
 
     function getShortRecord(bytes32 _idxHash) internal returns (Record memory) {
+        //^^^^^^^checks^^^^^^^^^
         Record memory rec;
+        //^^^^^^^effects^^^^^^^^^
 
         {
             //Start of scope limit for stack depth
@@ -389,7 +401,9 @@ contract PRUF is ReentrancyGuard, Ownable, IERC721Receiver, PullPayment {
      * @dev retrieves costs from Storage and returns Costs struct
      */
     function getCost(uint16 _assetClass) internal returns (Costs memory) {
+        //^^^^^^^checks^^^^^^^^^
         Costs memory cost;
+        //^^^^^^^effects^^^^^^^^^
         (
             cost.newRecordCost,
             cost.transferAssetCost,
@@ -410,10 +424,10 @@ contract PRUF is ReentrancyGuard, Ownable, IERC721Receiver, PullPayment {
     function writeRecord(bytes32 _idxHash, Record memory _rec)
         internal
         isAuthorized(_idxHash)
-    //^^^^^^^checks^^^^^^^^^
     {
+        //^^^^^^^checks^^^^^^^^^
         bytes32 userHash = keccak256(abi.encodePacked(msg.sender)); // Get a userhash for authentication and recorder logging
-
+        //^^^^^^^effects^^^^^^^^^
         Storage.modifyRecord(
             userHash,
             _idxHash,
@@ -432,8 +446,8 @@ contract PRUF is ReentrancyGuard, Ownable, IERC721Receiver, PullPayment {
     function writeRecordIpfs1(bytes32 _idxHash, Record memory _rec)
         internal
         isAuthorized(_idxHash)
-    //^^^^^^^checks^^^^^^^^^
     {
+        //^^^^^^^checks^^^^^^^^^
         bytes32 userHash = keccak256(abi.encodePacked(msg.sender)); // Get a userhash for authentication and recorder logging
         //^^^^^^^effects^^^^^^^^^
         Storage.modifyIpfs1(userHash, _idxHash, _rec.Ipfs1); // Send data to storage
@@ -445,16 +459,18 @@ contract PRUF is ReentrancyGuard, Ownable, IERC721Receiver, PullPayment {
     function writeRecordIpfs2(bytes32 _idxHash, Record memory _rec)
         internal
         isAuthorized(_idxHash)
-    //^^^^^^^checks^^^^^^^^^
     {
+        //^^^^^^^checks^^^^^^^^^
         bytes32 userHash = keccak256(abi.encodePacked(msg.sender)); // Get a userhash for authentication and recorder logging
-
+        //^^^^^^^effects^^^^^^^^^
         Storage.modifyIpfs2(userHash, _idxHash, _rec.Ipfs2); // Send data to storage
         //^^^^^^^interactions^^^^^^^^^
     }
 
     function deductNewRecordCosts(uint16 _assetClass) internal {
+        //^^^^^^^checks^^^^^^^^^
         Invoice memory pricing;
+        //^^^^^^^effects^^^^^^^^^
         (
             pricing.rootAddress,
             pricing.rootPrice,
@@ -462,10 +478,13 @@ contract PRUF is ReentrancyGuard, Ownable, IERC721Receiver, PullPayment {
             pricing.ACTHprice
         ) = AssetClassTokenManagerContract.getNewRecordCosts(_assetClass);
         deductPayment(pricing);
+        //^^^^^^^interactions^^^^^^^^^
     }
 
     function deductTransferAssetCosts(uint16 _assetClass) internal {
+        //^^^^^^^checks^^^^^^^^^
         Invoice memory pricing;
+        //^^^^^^^effects^^^^^^^^^
         (
             pricing.rootAddress,
             pricing.rootPrice,
@@ -473,10 +492,13 @@ contract PRUF is ReentrancyGuard, Ownable, IERC721Receiver, PullPayment {
             pricing.ACTHprice
         ) = AssetClassTokenManagerContract.getTransferAssetCosts(_assetClass);
         deductPayment(pricing);
+        //^^^^^^^interactions^^^^^^^^^
     }
 
     function deductCreateNoteCosts(uint16 _assetClass) internal {
+        //^^^^^^^checks^^^^^^^^^
         Invoice memory pricing;
+        //^^^^^^^effects^^^^^^^^^
         (
             pricing.rootAddress,
             pricing.rootPrice,
@@ -484,10 +506,13 @@ contract PRUF is ReentrancyGuard, Ownable, IERC721Receiver, PullPayment {
             pricing.ACTHprice
         ) = AssetClassTokenManagerContract.getCreateNoteCosts(_assetClass);
         deductPayment(pricing);
+        //^^^^^^^interactions^^^^^^^^^
     }
 
     function deductReMintRecordCosts(uint16 _assetClass) internal {
+        //^^^^^^^checks^^^^^^^^^
         Invoice memory pricing;
+        //^^^^^^^effects^^^^^^^^^
         (
             pricing.rootAddress,
             pricing.rootPrice,
@@ -495,10 +520,13 @@ contract PRUF is ReentrancyGuard, Ownable, IERC721Receiver, PullPayment {
             pricing.ACTHprice
         ) = AssetClassTokenManagerContract.getReMintRecordCosts(_assetClass);
         deductPayment(pricing);
+        //^^^^^^^interactions^^^^^^^^^
     }
 
     function deductChangeStatusCosts(uint16 _assetClass) internal {
+        //^^^^^^^checks^^^^^^^^^
         Invoice memory pricing;
+        //^^^^^^^effects^^^^^^^^^
         (
             pricing.rootAddress,
             pricing.rootPrice,
@@ -506,10 +534,13 @@ contract PRUF is ReentrancyGuard, Ownable, IERC721Receiver, PullPayment {
             pricing.ACTHprice
         ) = AssetClassTokenManagerContract.getChangeStatusCosts(_assetClass);
         deductPayment(pricing);
+        //^^^^^^^interactions^^^^^^^^^
     }
 
     function deductForceModifyCosts(uint16 _assetClass) internal {
+        //^^^^^^^checks^^^^^^^^^
         Invoice memory pricing;
+        //^^^^^^^effects^^^^^^^^^
         (
             pricing.rootAddress,
             pricing.rootPrice,
@@ -517,9 +548,20 @@ contract PRUF is ReentrancyGuard, Ownable, IERC721Receiver, PullPayment {
             pricing.ACTHprice
         ) = AssetClassTokenManagerContract.getForceModifyCosts(_assetClass);
         deductPayment(pricing);
+        //^^^^^^^interactions^^^^^^^^^
     }
 
-    /*--------------------------------------------------------------------------------------PAYMENT FUNCTIONS
+    //--------------------------------------------------------------PAYMENT FUNCTIONS
+    /*
+     * @dev Withdraws user's credit balance from contract
+     */
+    function $withdraw() external virtual payable nonReentrant {
+        //^^^^^^^checks^^^^^^^^^
+        withdrawPayments(msg.sender);
+        //^^^^^^^interactions^^^^^^^^^
+    }
+
+    /*
      * @dev Deducts payment from transaction
      */
     function deductPayment(Invoice memory pricing) internal {
@@ -527,18 +569,11 @@ contract PRUF is ReentrancyGuard, Ownable, IERC721Receiver, PullPayment {
         uint256 change;
         uint256 total = pricing.rootPrice.add(pricing.ACTHprice);
         require(msg.value >= total, "PC:DP: TX value too low.");
+        //^^^^^^^checks^^^^^^^^^
         change = messageValue.sub(total);
         _asyncTransfer(pricing.rootAddress, pricing.rootPrice);
         _asyncTransfer(pricing.ACTHaddress, pricing.ACTHprice);
         _asyncTransfer(msg.sender, change);
-        //^^^^^^^interactions^^^^^^^^^
-    }
-
-    /*
-     * @dev Withdraws user's credit balance from contract
-     */
-    function $withdraw() external virtual payable nonReentrant {
-        withdrawPayments(msg.sender);
         //^^^^^^^interactions^^^^^^^^^
     }
 }
