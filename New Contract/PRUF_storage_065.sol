@@ -51,6 +51,9 @@ contract Storage is Ownable, ReentrancyGuard {
     address private AssetClassTokenAddress;
     AssetClassTokenInterface private AssetClassTokenContract; //erc721_token prototype initialization
 
+    address internal AssetClassTokenManagerAddress;
+    AssetClassTokenManagerInterface internal AssetClassTokenManagerContract; // Set up external contract interface
+
     //----------------------------------------------Modifiers----------------------------------------------//
 
     /*
@@ -115,12 +118,6 @@ contract Storage is Ownable, ReentrancyGuard {
     event REPORT(string _msg, bytes32 b32);
 
     //--------------------------------Internal Admin functions / onlyowner or isAdmin---------------------------------//
-    // /*
-    //  * @dev Address Setters
-    //  */
-    // function OO_ResolveContractAddresses() external onlyOwner {
-    //     AssetClassTokenContract = AssetClassTokenInterface(contractNames["assetClassToken"]);
-    // }
 
     /*
      * @dev Authorize / Deauthorize / Authorize ADRESSES permitted to make record modifications
@@ -135,8 +132,12 @@ contract Storage is Ownable, ReentrancyGuard {
         contractInfo[_addr].contractType = _contractAuthLevel;
         contractInfo[_addr].name = _name;
         contractNames[_name] = _addr;
+
         AssetClassTokenContract = AssetClassTokenInterface(
             contractNames["assetClassToken"]
+        );
+        AssetClassTokenManagerContract = AssetClassTokenManagerInterface(
+            contractNames["PRUF_AC_MGR"]
         );
         //^^^^^^^effects^^^^^^^^^
         emit REPORT(
@@ -254,6 +255,46 @@ contract Storage is Ownable, ReentrancyGuard {
         database[idxHash] = rec;
         //^^^^^^^effects^^^^^^^^^
         emit REPORT("Record Modified", _idxHash);
+        //^^^^^^^interactions^^^^^^^^^
+    }
+
+    /*
+     * @dev Modify a record in the database  *read fullHash, write rightsHolder, update recorder, assetClass,countDown update recorder....
+     */
+    function changeAC(
+        bytes32 _userHash,
+        bytes32 _idxHash,
+        uint8 _newAssetClass
+    )
+        external
+        nonReentrant
+        isAuthorized
+        exists(_idxHash)
+        notEscrow(_idxHash)
+        notBlockLocked(_idxHash)
+    {
+        bytes32 idxHash = _idxHash; //stack saving
+        database[idxHash].timeLock = block.number;
+        Record memory rec = database[_idxHash];
+
+        //AC memory AC_info = getACinfo(_newAssetClass);
+        //AC memory oldAC_info = getACinfo(rec.assetClass);
+
+        require(
+            AssetClassTokenManagerContract.isSameRootAC(
+                _newAssetClass,
+                rec.assetClass
+            ) == 170,
+            "PS:CAC:Cannot change AC to foreign root"
+        );
+        //^^^^^^^checks^^^^^^^^^
+
+        (rec.lastRecorder, rec.recorder) = storeRecorder(_idxHash, _userHash);
+        rec.assetClass = _newAssetClass;
+        database[idxHash] = rec;
+        //^^^^^^^effects^^^^^^^^^
+
+        emit REPORT("Changed Asset Class", _idxHash);
         //^^^^^^^interactions^^^^^^^^^
     }
 
