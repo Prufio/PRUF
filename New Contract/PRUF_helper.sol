@@ -7,7 +7,7 @@ interface erc721_tokenInterface {
     function ownerOf(uint256) external view returns (address);
 }
 
-contract bp_helper is Ownable {
+contract PRUF_helper is Ownable {
     address erc721ContractAddress;
     erc721_tokenInterface erc721_tokenContract; //erc721_token prototype initialization
 
