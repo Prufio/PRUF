@@ -147,7 +147,7 @@ contract T_PRUF_simpleEscrow is PRUF {
         require((rec.rightsHolder != 0), "SE: Record does not exist");
         require(
             (rec.assetStatus > 49),
-            "TPSE:SE: Only custodial usertype can change status < 50"
+            "TPSE:SE: Only ACadmin authorized user can change status < 50"
         );
         require(
             (escrowTime >= now),
