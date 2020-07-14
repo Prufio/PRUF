@@ -37,14 +37,9 @@ pragma solidity ^0.6.9;
  *                 Import checks for token posession
  *                          change asset class
  *
- *  ** Make a function in storage that changes the asset class
  *
- *  ** Status 70:
- *          is a semi-transferrable status
- *          limit sending to approved addresses
- *          Implement a separate status 70 safeTransfer function 
  *
- *  ** Above 65k segregation (probably by ACinfo custodial type)
+ *  ** Above 65k segregation (probably by ACinfo custodial type) (just need to add a wild west cotract?)
  *
 *-----------------------------------------------------------------
 
