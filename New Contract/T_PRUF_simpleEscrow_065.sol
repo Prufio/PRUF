@@ -108,6 +108,7 @@ import "./PRUF_core_065.sol";
 contract T_PRUF_simpleEscrow is PRUF {
     using SafeMath for uint256;
 
+    mapping (bytes32 => bytes32) private escrows;
     /*
      * @dev Verify user credentials
      * Originating Address:
@@ -130,9 +131,9 @@ contract T_PRUF_simpleEscrow is PRUF {
      */
     function setEscrow(
         bytes32 _idxHash,
+        bytes32 escrowOwnerHash,
         uint256 _escrowTime,
-        uint8 _escrowStatus,
-        bytes32 _escrowOwnerHash
+        uint8 _escrowStatus
     ) external nonReentrant isAuthorized(_idxHash) {
         Record memory rec = getRecord(_idxHash);
         uint256 escrowTime = now.add(_escrowTime);
@@ -174,12 +175,11 @@ contract T_PRUF_simpleEscrow is PRUF {
         );
         //^^^^^^^checks^^^^^^^^^
 
+        escrows[_idxHash] = escrowOwnerHash;
         newAssetStatus = _escrowStatus;
-
         //^^^^^^^effects^^^^^^^^^
 
         Storage.setEscrow(
-            _escrowOwnerHash,
             _idxHash,
             newAssetStatus,
             escrowTime
@@ -222,12 +222,12 @@ contract T_PRUF_simpleEscrow is PRUF {
         );
         require(
             (shortRec.timeLock < now) ||
-                (keccak256(abi.encodePacked(msg.sender)) == rec.recorder),
-            "TPSE:EE:Escrow period not ended"
+                (keccak256(abi.encodePacked(msg.sender)) == escrows[_idxHash]),
+            "PSE:EE: Escrow period not ended and caller is not escrow owner"
         );
         //^^^^^^^checks^^^^^^^^^
 
-        Storage.endEscrow(keccak256(abi.encodePacked(msg.sender)), _idxHash);
+        Storage.endEscrow(_idxHash);
         //^^^^^^^interactions^^^^^^^^^
     }
 }

@@ -109,6 +109,8 @@ import "./PRUF_core_065.sol";
 contract PRUF_simpleEscrow is PRUF {
     using SafeMath for uint256;
 
+    mapping (bytes32 => bytes32) private escrows;
+
     /*
      * @dev Verify user credentials
      * Originating Address:
@@ -135,9 +137,9 @@ contract PRUF_simpleEscrow is PRUF {
      */
     function setEscrow(
         bytes32 _idxHash,
+        bytes32 escrowOwnerHash,
         uint256 _escrowTime,
-        uint8 _escrowStatus,
-        bytes32 _escrowOwnerHash
+        uint8 _escrowStatus
     ) external nonReentrant isAuthorized(_idxHash) {
         Record memory rec = getRecord(_idxHash);
         User memory callingUser = getUser();
@@ -146,8 +148,8 @@ contract PRUF_simpleEscrow is PRUF {
         AC memory AC_info = getACinfo(rec.assetClass);
 
         require(
-            AC_info.custodyType == 2,
-            "PSE:SE: Contract not authorized for custodial assets"
+            AC_info.custodyType == 1,
+            "PSE:SE: Contract not authorized for non-custodial assets"
         );
 
         require((rec.rightsHolder != 0), "SE: Record does not exist");
@@ -171,7 +173,7 @@ contract PRUF_simpleEscrow is PRUF {
         require(
             (callingUser.userType < 5) ||
                 ((callingUser.userType > 4) && (_escrowStatus > 49)),
-            "PSE:SE: Non supervisored agents must set escrow witihn user type."
+            "PSE:SE: Non supervisored agents must set asset status within scope."
         );
         require(
             (_escrowStatus == 6) ||
@@ -181,12 +183,11 @@ contract PRUF_simpleEscrow is PRUF {
         );
         //^^^^^^^checks^^^^^^^^^
 
+        escrows[_idxHash] = escrowOwnerHash;
         newAssetStatus = _escrowStatus;
-
         //^^^^^^^effects^^^^^^^^^
 
         Storage.setEscrow(
-            _escrowOwnerHash,
             _idxHash,
             newAssetStatus,
             escrowTime
@@ -229,12 +230,12 @@ contract PRUF_simpleEscrow is PRUF {
         );
         require(
             (shortRec.timeLock < now) ||
-                (keccak256(abi.encodePacked(msg.sender)) == rec.recorder),
-            "PSE:EE: Escrow period not ended"
+                (keccak256(abi.encodePacked(msg.sender)) == escrows[_idxHash]),
+            "PSE:EE: Escrow period not ended and caller is not escrow owner"
         );
         //^^^^^^^checks^^^^^^^^^
 
-        Storage.endEscrow(keccak256(abi.encodePacked(msg.sender)), _idxHash);
+        Storage.endEscrow(_idxHash);
         //^^^^^^^interactions^^^^^^^^^
     }
 }
