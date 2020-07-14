@@ -40,8 +40,8 @@ contract Storage is Ownable, ReentrancyGuard {
     }
 
     struct Contracts {
-         uint8 contractType; // Auth Level / type
-         string name; // Contract Name
+        uint8 contractType; // Auth Level / type
+        string name; // Contract Name
     }
 
     mapping(address => Contracts) private contractInfo; // Authorized contract addresses, indexed by address, with auth level 0-255
@@ -320,7 +320,7 @@ contract Storage is Ownable, ReentrancyGuard {
     //isACtokenHolder(_idxHash)
     {
         require(
-                contractInfo[msg.sender].contractType == 3,
+            contractInfo[msg.sender].contractType == 3,
             "PS:SE: Escrow can only be set by an escrow contract"
         );
         require(
@@ -340,7 +340,9 @@ contract Storage is Ownable, ReentrancyGuard {
         );
         //^^^^^^^checks^^^^^^^^^
 
-        bytes32 callingContractNameHash = keccak256(abi.encodePacked(contractInfo[msg.sender].name));
+        bytes32 callingContractNameHash = keccak256(
+            abi.encodePacked(contractInfo[msg.sender].name)
+        );
         database[_idxHash].timeLock = block.number;
         Record memory rec = database[_idxHash];
 
@@ -367,11 +369,13 @@ contract Storage is Ownable, ReentrancyGuard {
         notBlockLocked(_idxHash)
         exists(_idxHash)
     {
-        bytes32 callingContractNameHash = keccak256(abi.encodePacked(contractInfo[msg.sender].name));
+        bytes32 callingContractNameHash = keccak256(
+            abi.encodePacked(contractInfo[msg.sender].name)
+        );
         Record memory rec = database[_idxHash];
         require(
-                callingContractNameHash == rec.recorder,
-            "PS:EE:Asset not in escrow"
+            (callingContractNameHash == rec.recorder) || (rec.timeLock < now),
+            "PS:EE:Only contract with same name as setter can end escrow early"
         );
         require(
             (database[_idxHash].assetStatus == 6) ||
@@ -394,7 +398,10 @@ contract Storage is Ownable, ReentrancyGuard {
             rec.assetStatus = 58;
         }
 
-        (rec.lastRecorder, rec.recorder) = storeRecorder(_idxHash, callingContractNameHash);
+        (rec.lastRecorder, rec.recorder) = storeRecorder(
+            _idxHash,
+            callingContractNameHash
+        );
         database[_idxHash] = rec;
         //^^^^^^^effects^^^^^^^^^
         emit REPORT("Escrow Ended by", callingContractNameHash);
