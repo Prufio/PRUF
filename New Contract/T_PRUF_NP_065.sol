@@ -408,18 +408,4 @@ contract T_PRUF_NP is PRUF {
         return rec.Ipfs1;
         //^^^^^^^interactions^^^^^^^^^
     }
-
-    //--------------------------------------------Internal Functions--------------------------
-    function getUser() internal override view returns (User memory) {
-        //User memory callingUser = getUser();
-        User memory user;
-        (
-            user.userType,
-            user.authorizedAssetClass
-        ) = AssetClassTokenManagerContract.getUserExt(
-            keccak256(abi.encodePacked(msg.sender))
-        );
-        return user;
-        //^^^^^^^interactions^^^^^^^^^
-    }
 }
