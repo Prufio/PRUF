@@ -1,7 +1,7 @@
 /*-----------------------------------------------------------------
  *  TO DO
  *
-*-----------------------------------------------------------------*/
+ *-----------------------------------------------------------------*/
 
 // SPDX-License-Identifier: UNLICENSED
 pragma solidity ^0.6.7;
@@ -81,7 +81,7 @@ interface AssetClassTokenManagerInterface {
             uint256
         );
 
-        function getForceModifyCosts(uint16 _assetClass)
+    function getForceModifyCosts(uint16 _assetClass)
         external
         returns (
             address,
@@ -107,11 +107,14 @@ interface AssetClassTokenManagerInterface {
             uint256
         );
 
+    function isSameRootAC(uint16 _assetClass1, uint16 _assetClass2)
+        external
+        returns (uint8);
+
     function getAC_name(uint256 _tokenId) external view returns (string memory);
 
     function resolveAssetClass(string memory _name)
         external
-        view
         returns (uint16);
 }
 
@@ -180,6 +183,12 @@ interface StorageInterface {
         uint8 _forceCount,
         uint16 _numberOfTransfers
     ) external;
+
+    function changeAC(
+        bytes32 _userHash,
+        bytes32 _idxHash,
+        uint8 _newAssetClass
+    )external;
 
     function setEscrow(
         bytes32 _idxHash,
