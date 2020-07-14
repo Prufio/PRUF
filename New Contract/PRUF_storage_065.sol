@@ -645,11 +645,24 @@ contract Storage is Ownable, ReentrancyGuard {
      * example :  Frontend = ****** so web 3 first asks storage where to find frontend, then calls for frontend functions.
      */
     function resolveContractAddress(string memory _name)
-        public
+        external
         view
         returns (address)
     {
         return contractNames[_name];
+        //^^^^^^^interactions^^^^^^^^^
+    }
+
+    /*
+     * @dev //returns the address of a contract with name _name. This is for web3 implementations to find the right contract to interact with
+     * example :  Frontend = ****** so web 3 first asks storage where to find frontend, then calls for frontend functions.
+     */
+    function ContractAuthType(address _addr)
+        external
+        view
+        returns (uint8)
+    {
+        return contractInfo[_addr].contractType;
         //^^^^^^^interactions^^^^^^^^^
     }
 
