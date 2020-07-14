@@ -5,8 +5,8 @@ pragma solidity ^0.6.9;
 /*-----------------------------------------------------------------
  *  TO DO :
  *  AssetTokenContract.burn still just burns, sets 0x0 and 60)  is this wanted?
- *  
- *  Implement Recycle   
+ *
+ *  Implement Recycle
  *          Not possible in Custodial asset classes
  *          Caller must hold token, must be in status 59
  *          Token goes into "indefinite" escrow, RGT set to 0xFFF...
@@ -35,17 +35,22 @@ pragma solidity ^0.6.9;
  *            TO NonCustodial
  *                 Import checks for token posession
  *                          change asset class
- *  
+ *
  *  ** Make a function in storage that changes the asset class
- *                 
+ *
  *  ** Status 70:
  *          is a semi-transferrable status
  *          limit sending to approved addresses
- *                  Implement a separate status 70 safeTransfer function                             
+ *          Implement a separate status 70 safeTransfer function 
+ *
+ *  ** Above 65k segregation (probably by ACinfo custodial type)
+ *
+*-----------------------------------------------------------------
+
 *-----------------------------------------------------------------
  * FUTURE FEATURES
  *      "bottle deposit" on asset creation to encourage recycling
- *  New Recycle :   
+ *  New Recycle :
  *          Not possible in Custodial asset classes
  *          Caller must hold token, must be in status 59
  *          Caller recieves deposit amount (how the bloody hell do we manage this????)
@@ -63,9 +68,7 @@ pragma solidity ^0.6.9;
 *-----------------------------------------------------------------
 
 *-----------------------------------------------------------------
-
-*-----------------------------------------------------------------
- *Rules for reminting tokens: 
+ *Rules for reminting tokens:
  *  must have the plaintext that generates the rgtHash on-chain
  *
  *
@@ -188,16 +191,6 @@ pragma solidity ^0.6.9;
  * 5 Print root && rooted AC token
  * 6 Set costs / users / types for root && rooted AC token
  * 7 THE WORKS
- * 
+ *
 *-----------------------------------------------------------------
 */
-
-Implement:
-
- below 65k
- mintAsset and reimport asset require an agent.
- Only an agent can remove from status 55 or status 60.
- Unreceived transfer sets token to status 55 and either sends or burns the token (set to 60 and burn).
- burn asset burns the token, requires a status 60. sets rgtHash to 0xFFF.....
-
- write storage function that allows setting a new asset class
