@@ -67,6 +67,7 @@ contract AssetToken is Ownable, ReentrancyGuard, ERC721 {
      */
     function OO_ResolveContractAddresses() external nonReentrant onlyOwner {
         //^^^^^^^checks^^^^^^^^^
+
         T_PrufAppAddress = Storage.resolveContractAddress("T_PRUF_APP");
         PrufAppAddress = Storage.resolveContractAddress("PRUF_APP");
         //^^^^^^^effects^^^^^^^^^
@@ -82,6 +83,7 @@ contract AssetToken is Ownable, ReentrancyGuard, ERC721 {
         string calldata _tokenURI
     ) external isAdmin returns (uint256) {
         //^^^^^^^checks^^^^^^^^^
+
         //MAKE URI ASSET SPECIFIC- has to incorporate the token ID
         _safeMint(_recipientAddress, tokenId);
         _setTokenURI(tokenId, _tokenURI);
@@ -106,19 +108,23 @@ contract AssetToken is Ownable, ReentrancyGuard, ERC721 {
         Record memory rec = getRecord(_idxHash);
 
         require(
+            rec.assetStatus != 70,
+            "PAT:MAT:Use authAddressTransfer for status 70"
+        );
+        require(
             rec.assetStatus == 51,
             "PAT:MAT:Asset not in transferrable status"
         );
-
         require(
             _isApprovedOrOwner(_msgSender(), tokenId),
             "PAT:MAT:transfer caller is not owner nor approved"
         );
+        //^^^^^^^checks^^^^^^^^
 
-        //^^^^^^^checks^^^^^^^^^
         if (rec.numberOfTransfers < 65335) {
             rec.numberOfTransfers++;
         }
+
         rec
             .rightsHolder = 0xFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF;
         //^^^^^^^effects^^^^^^^^^
@@ -148,6 +154,7 @@ contract AssetToken is Ownable, ReentrancyGuard, ERC721 {
         Record memory rec = getRecord(_idxHash);
 
         //^^^^^^^checks^^^^^^^^^
+
         rec
             .rightsHolder = 0xFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF;
         //^^^^^^^effects^^^^^^^^^
@@ -179,18 +186,23 @@ contract AssetToken is Ownable, ReentrancyGuard, ERC721 {
         Record memory rec = getRecord(_idxHash);
 
         require(
+            (rec.assetStatus != 70) || (Storage.ContractAuthType(to) > 0),
+            "PAT:STF:Cannot send status 70 asset to unauthorized address"
+        );
+        require(
             rec.assetStatus == 51,
             "PAT:STF:Asset not in transferrable status"
         );
-
         require(
             _isApprovedOrOwner(_msgSender(), tokenId),
             "PAT:STF: transfer caller is not owner nor approved"
         );
         //^^^^^^^checks^^^^^^^^^
+
         rec
             .rightsHolder = 0xFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF;
         //^^^^^^^effects^^^^^^^^^
+
         writeRecord(_idxHash, rec);
         _safeTransfer(from, to, tokenId, _data);
         //^^^^^^^interactions^^^^^^^^^
