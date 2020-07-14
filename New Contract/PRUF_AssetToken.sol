@@ -241,8 +241,9 @@ contract AssetToken is Ownable, ReentrancyGuard, ERC721 {
      * @dev Write a Record to Storage @ idxHash
      */
     function writeRecord(bytes32 _idxHash, Record memory _rec) private {
+        //^^^^^^^checks^^^^^^^^^
         bytes32 userHash = keccak256(abi.encodePacked(msg.sender)); // Get a userhash for authentication and recorder logging
-
+        //^^^^^^^effects^^^^^^^^^
         Storage.modifyRecord(
             userHash,
             _idxHash,
@@ -260,6 +261,7 @@ contract AssetToken is Ownable, ReentrancyGuard, ERC721 {
      */
     function getRecord(bytes32 _idxHash) private returns (Record memory) {
         Record memory rec;
+        //^^^^^^^checks^^^^^^^^^
 
         {
             //Start of scope limit for stack depth
