@@ -190,7 +190,7 @@ contract AssetToken is Ownable, ReentrancyGuard, ERC721 {
             "PAT:STF:Cannot send status 70 asset to unauthorized address"
         );
         require(
-            rec.assetStatus == 51,
+            (rec.assetStatus == 51) || (rec.assetStatus == 70),
             "PAT:STF:Asset not in transferrable status"
         );
         require(
