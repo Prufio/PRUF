@@ -387,6 +387,13 @@ contract Storage is Ownable, ReentrancyGuard {
                 (database[_idxHash].assetStatus != 55),
             "PS:SE: Transferred, lost, or stolen status cannot be set to escrow."
         );
+        require(
+                (database[_idxHash].assetStatus != 6) &&
+                (database[_idxHash].assetStatus != 50) &&
+                (database[_idxHash].assetStatus != 56),
+
+            "PS:SE: Asset already in escrow status."
+        );
         //^^^^^^^checks^^^^^^^^^
 
         bytes32 callingContractNameHash = keccak256(

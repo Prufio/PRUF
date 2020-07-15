@@ -40,7 +40,7 @@ contract PRUF_simpleEscrow is PRUF_BASIC {
      */
     function setEscrow(
         bytes32 _idxHash,
-        bytes32 escrowOwnerHash,
+        bytes32 _escrowOwnerHash,
         uint256 _escrowTime,
         uint8 _escrowStatus
     ) external nonReentrant isAuthorized(_idxHash) {
@@ -54,7 +54,6 @@ contract PRUF_simpleEscrow is PRUF_BASIC {
             AC_info.custodyType == 1,
             "PSE:SE: Contract not authorized for non-custodial assets"
         );
-
         require((rec.rightsHolder != 0), "SE: Record does not exist");
         require(
             callingUser.authorizedAssetClass == rec.assetClass,
@@ -74,6 +73,12 @@ contract PRUF_simpleEscrow is PRUF_BASIC {
             "PSE:SE: Transferred, lost, or stolen status cannot be set to escrow."
         );
         require(
+            (rec.assetStatus != 6) &&
+                (rec.assetStatus != 50) &&
+                (rec.assetStatus != 56),
+            "PSE:SE: Asset already in escrow status."
+        );
+        require(
             (callingUser.userType < 5) ||
                 ((callingUser.userType > 4) && (_escrowStatus > 49)),
             "PSE:SE: Non supervisored agents must set asset status within scope."
@@ -86,21 +91,19 @@ contract PRUF_simpleEscrow is PRUF_BASIC {
         );
         //^^^^^^^checks^^^^^^^^^
 
-        escrows[_idxHash] = escrowOwnerHash;
+        escrows[_idxHash] = _escrowOwnerHash;
         newAssetStatus = _escrowStatus;
         //^^^^^^^effects^^^^^^^^^
 
         Storage.setEscrow(
             _idxHash,
             newAssetStatus,
-            escrowTime
+            escrowTime,
+            _escrowOwnerHash
         );
         //^^^^^^^interactions^^^^^^^^^
     }
 
-    function escrowOwner (bytes32 _idxHash) external view returns(bytes32, bytes32){
-        return (escrows[_idxHash], keccak256(abi.encodePacked(msg.sender)));
-    }
 
     /*
      * @dev takes asset out of excrow status if time period has resolved || is escrow issuer
@@ -114,6 +117,7 @@ contract PRUF_simpleEscrow is PRUF_BASIC {
         Record memory shortRec = getShortRecord(_idxHash);
         User memory callingUser = getUser();
         AC memory AC_info = getACinfo(rec.assetClass);
+        bytes32 ownerHash = Storage.retrieveEscrowOwner(_idxHash);
 
         require(
             AC_info.custodyType == 1,
@@ -137,7 +141,7 @@ contract PRUF_simpleEscrow is PRUF_BASIC {
         );
         require(
             (shortRec.timeLock < now) ||
-                (keccak256(abi.encodePacked(msg.sender)) == escrows[_idxHash]),
+                (keccak256(abi.encodePacked(msg.sender)) == ownerHash),
             "PSE:EE: Escrow period not ended and caller is not escrow owner"
         );
         //^^^^^^^checks^^^^^^^^^

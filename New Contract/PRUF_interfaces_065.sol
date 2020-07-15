@@ -191,7 +191,8 @@ interface StorageInterface {
     function setEscrow(
         bytes32 _idxHash,
         uint8 _newAssetStatus,
-        uint256 _escrowTime
+        uint256 _escrowTime,
+        bytes32 _escrowOwner
     ) external;
 
     function endEscrow(bytes32 _idxHash) external;
@@ -254,6 +255,5 @@ interface StorageInterface {
 
     function retrieveEscrowOwner(bytes32 _idxHash)
         external
-        view
         returns (bytes32);
 }
