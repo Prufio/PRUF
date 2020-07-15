@@ -98,6 +98,10 @@ contract PRUF_simpleEscrow is PRUF_BASIC {
         //^^^^^^^interactions^^^^^^^^^
     }
 
+    function escrowOwner (bytes32 _idxHash) external view returns(bytes32, bytes32){
+        return (escrows[_idxHash], keccak256(abi.encodePacked(msg.sender)));
+    }
+
     /*
      * @dev takes asset out of excrow status if time period has resolved || is escrow issuer
      */
