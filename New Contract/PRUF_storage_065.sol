@@ -322,8 +322,9 @@ contract Storage is Ownable, ReentrancyGuard {
         );
         require(
             (database[_idxHash].assetStatus != 5) &&
-                (database[_idxHash].assetStatus != 55),
-            "PS:SSL:Transferred asset cannot be set to lost or stolen after transfer."
+            (database[_idxHash].assetStatus != 50) &&
+            (database[_idxHash].assetStatus != 55),
+            "PS:SSL:Transferred or escrow locked asset cannot be set to lost or stolen."
         );
         //^^^^^^^checks^^^^^^^^^
 
