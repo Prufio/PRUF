@@ -47,7 +47,7 @@ contract PRUF_simpleEscrow is PRUF_BASIC {
         Record memory rec = getRecord(_idxHash);
         User memory callingUser = getUser();
         uint256 escrowTime = now.add(_escrowTime);
-        uint8 newAssetStatus;
+        uint8 newEscrowStatus;
         AC memory AC_info = getACinfo(rec.assetClass);
 
         require(
@@ -92,12 +92,12 @@ contract PRUF_simpleEscrow is PRUF_BASIC {
         //^^^^^^^checks^^^^^^^^^
 
         escrows[_idxHash] = _escrowOwnerHash;
-        newAssetStatus = _escrowStatus;
+        newEscrowStatus = _escrowStatus;
         //^^^^^^^effects^^^^^^^^^
 
         Storage.setEscrow(
             _idxHash,
-            newAssetStatus,
+            newEscrowStatus,
             escrowTime,
             _escrowOwnerHash
         );
