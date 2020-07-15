@@ -95,7 +95,6 @@ contract PRUF_NP is PRUF {
         uint8 _newAssetStatus
     ) external nonReentrant isAuthorized(_idxHash) returns (uint8) {
         Record memory rec = getRecord(_idxHash);
-        rec.assetStatus = _newAssetStatus;
         User memory callingUser = getUser();
         AC memory AC_info = getACinfo(rec.assetClass);
 
@@ -135,7 +134,7 @@ contract PRUF_NP is PRUF {
             "PNP:SLS: Rightsholder does not match supplied data"
         );
         //^^^^^^^checks^^^^^^^^^
-
+        rec.assetStatus = _newAssetStatus;
         bytes32 userHash = keccak256(abi.encodePacked(msg.sender));
         //^^^^^^^effects^^^^^^^^^
 
