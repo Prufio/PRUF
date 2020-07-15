@@ -113,9 +113,7 @@ interface AssetClassTokenManagerInterface {
 
     function getAC_name(uint256 _tokenId) external view returns (string memory);
 
-    function resolveAssetClass(string memory _name)
-        external
-        returns (uint16);
+    function resolveAssetClass(string memory _name) external returns (uint16);
 }
 
 interface AssetClassTokenInterface {
@@ -188,7 +186,7 @@ interface StorageInterface {
         bytes32 _userHash,
         bytes32 _idxHash,
         uint8 _newAssetClass
-    )external;
+    ) external;
 
     function setEscrow(
         bytes32 _idxHash,
@@ -252,7 +250,10 @@ interface StorageInterface {
         external
         returns (address);
 
-    function ContractAuthType(address _addr)
+    function ContractAuthType(address _addr) external returns (uint8);
+
+    function retrieveEscrowOwner(bytes32 _idxHash)
         external
-        returns (uint8);
+        view
+        returns (bytes32);
 }
