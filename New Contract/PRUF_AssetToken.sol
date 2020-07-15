@@ -38,8 +38,8 @@ contract AssetToken is Ownable, ReentrancyGuard, ERC721 {
 
     modifier isAdmin() {
         require(
-            (msg.sender == PrufAppAddress) ||
-                (msg.sender == T_PrufAppAddress) ||
+            (msg.sender == PrufAppAddress) || //check for minter auth
+                (msg.sender == T_PrufAppAddress) ||  //check for minter auth
                 (msg.sender == owner()),
             "PAT:IA:Calling address does not belong to an Admin"
         );
