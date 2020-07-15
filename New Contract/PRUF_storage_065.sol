@@ -44,6 +44,7 @@ contract Storage is Ownable, ReentrancyGuard {
         string name; // Contract Name
     }
 
+    mapping (bytes32 => bytes32) private escrows;
     mapping(address => Contracts) private contractInfo; // Authorized contract addresses, indexed by address, with auth level 0-255
     mapping(string => address) private contractNames; // Authorized contract addresses, indexed by name
     mapping(bytes32 => Record) private database; // Main Data Storage
@@ -244,6 +245,7 @@ contract Storage is Ownable, ReentrancyGuard {
 
         database[idxHash].timeLock = block.number;
         Record memory rec = database[_idxHash];
+        escrows[_idxHash] = 0; //clear escrow table
 
         (rec.lastRecorder, rec.recorder) = storeRecorder(_idxHash, _userHash);
         rec.rightsHolder = rgtHash;
@@ -327,13 +329,13 @@ contract Storage is Ownable, ReentrancyGuard {
             "PS:SSL:Transferred or escrow locked asset cannot be set to lost or stolen."
         );
         //^^^^^^^checks^^^^^^^^^
-
         database[_idxHash].timeLock = block.number;
+
         Record memory rec = database[_idxHash];
 
         (rec.lastRecorder, rec.recorder) = storeRecorder(_idxHash, _userHash);
         rec.assetStatus = _newAssetStatus;
-
+        escrows[_idxHash] = 0; //clear escrow table
         database[_idxHash] = rec;
         //^^^^^^^effects^^^^^^^^^
 
@@ -351,7 +353,8 @@ contract Storage is Ownable, ReentrancyGuard {
     function setEscrow(
         bytes32 _idxHash,
         uint8 _newAssetStatus,
-        uint256 _escrowTime
+        uint256 _escrowTime,
+        bytes32 _escrowOwner
     )
         external
         nonReentrant
@@ -364,6 +367,10 @@ contract Storage is Ownable, ReentrancyGuard {
         require(
             contractInfo[msg.sender].contractType == 3,
             "PS:SE: Escrow can only be set by an escrow contract"
+        );
+        require(
+            escrows[_idxHash] == 0,
+            "Asset is already listed in escrow table"
         );
         require(
             (_newAssetStatus == 6) ||
@@ -394,6 +401,7 @@ contract Storage is Ownable, ReentrancyGuard {
         );
         rec.assetStatus = _newAssetStatus;
         rec.timeLock = _escrowTime;
+        escrows[_idxHash] = _escrowOwner;
 
         database[_idxHash] = rec;
         //^^^^^^^effects^^^^^^^^^
@@ -444,6 +452,8 @@ contract Storage is Ownable, ReentrancyGuard {
             _idxHash,
             callingContractNameHash
         );
+        rec.timeLock = database[_idxHash].timeLock;
+        escrows[_idxHash] = 0;
         database[_idxHash] = rec;
         //^^^^^^^effects^^^^^^^^^
         emit REPORT("Escrow Ended by", callingContractNameHash);
@@ -607,6 +617,17 @@ contract Storage is Ownable, ReentrancyGuard {
         );
         //^^^^^^^interactions^^^^^^^^^
     }
+
+    function retrieveEscrowOwner(bytes32 _idxHash)
+        external
+        view
+        returns (bytes32)
+    {
+        return escrows[_idxHash];
+        //^^^^^^^checks/interactions^^^^^^^^^
+    }
+
+
 
     /*
      * @dev Compare record.rightsholder with supplied bytes32 rightsholder

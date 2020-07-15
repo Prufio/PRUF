@@ -38,7 +38,7 @@ pragma solidity ^0.6.7;
  *                          change asset class
  *
  *
- *
+ *  ** move escrow owner mapping to storage
  *  ** Above 65k segregation (probably by ACinfo custodial type) (just need to add a wild west cotract?)
  *
 *-----------------------------------------------------------------
