@@ -112,8 +112,8 @@ contract PRUF_simpleEscrow is PRUF_BASIC {
         AC memory AC_info = getACinfo(rec.assetClass);
 
         require(
-            AC_info.custodyType == 2,
-            "PSE:EE: Contract not authorized for custodial assets"
+            AC_info.custodyType == 1,
+            "PSE:EE: Contract not authorized for non-custodial assets"
         );
 
         require((rec.rightsHolder != 0), "EE: Record does not exist");
