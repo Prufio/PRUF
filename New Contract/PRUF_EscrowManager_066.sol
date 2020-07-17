@@ -31,7 +31,7 @@ contract PRUF_escrowManager is PRUF_BASIC {
     modifier isEscrowContract() {
         require(
             Storage.ContractAuthType(msg.sender) == 3, //caller contract is type3 (escrow) and exists in database
-            "PAT:IA:Calling address is not an authorized escrow contract"
+            "PEM:IEC:Calling address is not an authorized escrow contract"
         );
         _;
     }
@@ -80,26 +80,26 @@ contract PRUF_escrowManager is PRUF_BASIC {
 
         require(
             contractInfo.contractType == 3,
-            "PS:SE: Escrow can only be set by an escrow contract"
+            "PEM:SE: Escrow can only be set by an escrow contract"
         );
         require(rec.rightsHolder != 0, "PS:SE:Record does not exist");
         require(
             isEscrow(_newAssetStatus) == 170,
-            "PS:SE: Must set to an escrow status"
+            "PEM:SE: Must set to an escrow status"
         );
         require(
             (isLostOrStolen(rec.assetStatus) == 0) &&
                 (rec.assetStatus != 5) &&
                 (rec.assetStatus != 55),
-            "PS:SE: Txd, L/S status cannot be set to escrow."
+            "PEM:SE: Txd, L/S status cannot be set to escrow."
         );
         require(
             isEscrow(rec.assetStatus) == 0,
-            "PS:SE: Asset already in escrow status."
+            "PEM:SE: Asset already in escrow status."
         );
         require(
             escrows[_idxHash].controllingContractNameHash == 0,
-            "PS:SE: Controlling contract has not released asset."
+            "PEM:SE: Controlling contract has not released asset."
         );
         //^^^^^^^checks^^^^^^^^^
 
@@ -131,14 +131,14 @@ contract PRUF_escrowManager is PRUF_BASIC {
         (contractInfo.contractType, contractInfo.nameHash) = Storage
             .ContractInfoHash(msg.sender);
 
-        require(rec.rightsHolder != 0, "PS:EE:Record does not exist");
+        require(rec.rightsHolder != 0, "PEM:EE:Record does not exist");
         require(
             (contractInfo.nameHash ==
                 escrows[_idxHash].controllingContractNameHash) ||
                 (escrows[_idxHash].timelock < now), // fix rec.recorder
-            "PS:EE:Only contract with same name as setter can end early"
+            "PEM:EE:Only contract with same name as setter can end early"
         );
-        require(isEscrow(rec.assetStatus) == 170, "PS:EE:Asset not in escrow");
+        require(isEscrow(rec.assetStatus) == 170, "PEM:EE:Asset not in escrow");
 
         //^^^^^^^checks^^^^^^^^^
 
@@ -160,7 +160,7 @@ contract PRUF_escrowManager is PRUF_BASIC {
      * @dev Permissive removal of asset from escrow status after time-out
      */
     function PermissiveEndEscrow(bytes32 _idxHash) external nonReentrant {
-        require(escrows[_idxHash].timelock < now, "PS:EE:Escrow not expired");
+        require(escrows[_idxHash].timelock < now, "PEM:PEE:Escrow not expired");
         //^^^^^^^checks^^^^^^^^^
 
         escrows[_idxHash].data = 0;
