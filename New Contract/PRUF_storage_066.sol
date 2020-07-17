@@ -16,7 +16,7 @@
 // SPDX-License-Identifier: UNLICENSED
 pragma solidity ^0.6.7;
 
-import "./PRUF_interfaces_065.sol";
+import "./PRUF_interfaces_066.sol";
 import "./Imports/Ownable.sol";
 import "./Imports/SafeMath.sol";
 import "./Imports/ReentrancyGuard.sol";

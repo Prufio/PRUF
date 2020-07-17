@@ -6,7 +6,7 @@
 // SPDX-License-Identifier: UNLICENSED
 pragma solidity ^0.6.7;
 
-import "./PRUF_core_065.sol";
+import "./PRUF_core_066.sol";
 
 contract PRUF_NP is PRUF {
 

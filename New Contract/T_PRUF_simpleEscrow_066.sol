@@ -6,7 +6,7 @@
 // SPDX-License-Identifier: UNLICENSED
 pragma solidity ^0.6.7;
 
-import "./PRUF_basic_065.sol";
+import "./PRUF_basic_066.sol";
 import "./Imports/Safemath.sol";
 
 

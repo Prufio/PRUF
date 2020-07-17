@@ -6,10 +6,10 @@
 // SPDX-License-Identifier: UNLICENSED
 pragma solidity ^0.6.7;
 
-import "./PRUF_interfaces_065.sol";
+import "./PRUF_interfaces_066.sol";
 import "./Imports/PullPayment.sol";
 import "./Imports/ReentrancyGuard.sol";
-import "./PRUF_basic_065.sol";
+import "./PRUF_basic_066.sol";
 
 contract PRUF is PullPayment, PRUF_BASIC {
 
