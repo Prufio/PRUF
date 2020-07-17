@@ -114,6 +114,29 @@ contract Storage is Ownable, ReentrancyGuard {
         _;
     }
 
+    function isLostOrStolen (uint16 _assetStatus) private pure returns (uint8){
+        if ((_assetStatus != 3) &&
+                (_assetStatus != 4) &&
+                (_assetStatus != 53) &&
+                (_assetStatus != 54)){
+                    return 0;
+                } else {
+                    return 170;
+                }
+    }
+
+    function isEscrow (uint16 _assetStatus) private pure returns (uint8){
+        if ((_assetStatus != 6) &&
+                (_assetStatus != 50) &&
+                (_assetStatus != 56)){
+                    return 0;
+                } else {
+                    return 170;
+                }
+    }
+
+
+
     //-----------------------------------------------Events------------------------------------------------//
 
     event REPORT(string _msg, bytes32 b32);
@@ -235,10 +258,7 @@ contract Storage is Ownable, ReentrancyGuard {
             "PS:MR:assetStatus over 199 cannot be set by user"
         );
         require(
-            (_newAssetStatus != 3) &&
-                (_newAssetStatus != 4) &&
-                (_newAssetStatus != 53) &&
-                (_newAssetStatus != 54),
+            isLostOrStolen(_newAssetStatus) == 0,
             "PS:MR:Must use stolenOrLost function to set lost or stolen status"
         );
         //^^^^^^^checks^^^^^^^^^
@@ -316,10 +336,7 @@ contract Storage is Ownable, ReentrancyGuard {
     //isACtokenHolder(_idxHash)
     {
         require(
-            (_newAssetStatus == 3) ||
-                (_newAssetStatus == 4) ||
-                (_newAssetStatus == 53) ||
-                (_newAssetStatus == 54),
+            isLostOrStolen(_newAssetStatus) == 170,
             "PS:SSL:Must set to a lost or stolen status"
         );
         require(
@@ -379,19 +396,13 @@ contract Storage is Ownable, ReentrancyGuard {
             "PS:SE: Must set to an escrow status"
         );
         require(
-            (database[_idxHash].assetStatus != 3) &&
-                (database[_idxHash].assetStatus != 4) &&
-                (database[_idxHash].assetStatus != 53) &&
-                (database[_idxHash].assetStatus != 54) &&
+            (isLostOrStolen(database[_idxHash].assetStatus) == 0) &&
                 (database[_idxHash].assetStatus != 5) &&
                 (database[_idxHash].assetStatus != 55),
             "PS:SE: Transferred, lost, or stolen status cannot be set to escrow."
         );
         require(
-                (database[_idxHash].assetStatus != 6) &&
-                (database[_idxHash].assetStatus != 50) &&
-                (database[_idxHash].assetStatus != 56),
-
+                isEscrow(database[_idxHash].assetStatus) == 0,
             "PS:SE: Asset already in escrow status."
         );
         //^^^^^^^checks^^^^^^^^^
