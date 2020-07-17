@@ -81,8 +81,7 @@ contract Storage is Ownable, ReentrancyGuard {
         require(
             ((database[_idxHash].assetStatus != 6) &&
                 (database[_idxHash].assetStatus != 50) &&
-                (database[_idxHash].assetStatus != 56)) ||
-                (database[_idxHash].timeLock < now), //Since time here is +/1 a day or so, now can be used as per the 15 second rule (consensys)
+                (database[_idxHash].assetStatus != 56)),
             "PS:NE:rec mod prohib while locked in escrow"
         );
         _;
@@ -384,7 +383,6 @@ contract Storage is Ownable, ReentrancyGuard {
     function setEscrow(
         bytes32 _idxHash,
         uint8 _newAssetStatus,
-        uint256 _escrowTime,
         bytes32 _contractNameHash
     )
         external
@@ -419,8 +417,6 @@ contract Storage is Ownable, ReentrancyGuard {
             _contractNameHash
         );
         rec.assetStatus = _newAssetStatus;
-        rec.timeLock = _escrowTime;
-
         database[_idxHash] = rec;
         //^^^^^^^effects^^^^^^^^^
         emit REPORT("Record locked for escrow", _contractNameHash);
@@ -442,8 +438,8 @@ contract Storage is Ownable, ReentrancyGuard {
             "PS:EE:Not in escrow status"
         );
         //^^^^^^^checks^^^^^^^^^
-        Record memory rec = database[_idxHash];
         database[_idxHash].timeLock = block.number;
+        Record memory rec = database[_idxHash];
 
         if (rec.assetStatus == 6) {
             rec.assetStatus = 7;
@@ -458,7 +454,6 @@ contract Storage is Ownable, ReentrancyGuard {
             _idxHash,
             _contractNameHash
         );
-        rec.timeLock = database[_idxHash].timeLock;
         database[_idxHash] = rec;
         //^^^^^^^effects^^^^^^^^^
         emit REPORT("Escrow Ended by", _contractNameHash);

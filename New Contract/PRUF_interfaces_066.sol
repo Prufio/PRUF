@@ -191,14 +191,10 @@ interface StorageInterface {
     function setEscrow(
         bytes32 _idxHash,
         uint8 _newAssetStatus,
-        uint256 _escrowTime,
-        bytes32 _escrowOwner
+        bytes32 _contractNameHash
     ) external;
 
-    function endEscrow(
-        bytes32 _idxHash,
-        bytes32 _contractNameHash)
-        external;
+    function endEscrow(bytes32 _idxHash, bytes32 _contractNameHash) external;
 
     function setStolenOrLost(
         bytes32 _userHash,
@@ -261,4 +257,38 @@ interface StorageInterface {
     // function retrieveEscrowOwner(bytes32 _idxHash)
     //     external
     //     returns (bytes32);
+}
+
+interface EscrowManagerInterface {
+    function setEscrow(
+        bytes32 _idxHash,
+        uint8 _newAssetStatus,
+        uint8 _data,
+        bytes32 _controllingContractNameHash,
+        bytes32 _escrowOwnerAddressHash,
+        uint256 _timelock,
+        bytes32 _ex1,
+        bytes32 _ex2,
+        bytes32 _ex3
+        ) external;
+
+    function endEscrow(bytes32 _idxHash) external;
+
+    function PermissiveEndEscrow(bytes32 _idxHash) external;
+
+    function retrieveEscrowOwner(bytes32 _idxHash)
+        external
+        returns (bytes32);
+
+    function retrieveEscrowData(bytes32 _idxHash)
+        external
+        returns (
+            uint8 data,
+            bytes32 controllingContractNameHash,
+            bytes32 escrowOwnerAddressHash,
+            uint256 timelock,
+            bytes32 ex1,
+            bytes32 ex2,
+            bytes32 ex3
+        );
 }

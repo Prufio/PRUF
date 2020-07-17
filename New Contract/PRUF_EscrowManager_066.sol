@@ -1,6 +1,7 @@
 /*-----------------------------------------------------------------
  *  TO DO
- *
+ Audit this contract!!!!!
+ * Fix Escrow contracts
  *-----------------------------------------------------------------*/
 
 // SPDX-License-Identifier: UNLICENSED
@@ -14,20 +15,18 @@ contract PRUF_escrowManager is PRUF_BASIC {
 
     struct escrowData {
         uint8 data;
-        bytes32 ControllingContractNameHash;
-        bytes32 EscrowOwnerAddressHash;
-        bytes32 EXT1;
-        bytes32 EXT2;
+        bytes32 controllingContractNameHash;
+        bytes32 escrowOwnerAddressHash;
+        uint256 timelock;
+        bytes32 ex1;
+        bytes32 ex2;
+        bytes32 ex3;
     }
 
-    mapping(bytes32 => bytes32) private escrows;
-    mapping(bytes32 => escrowData) Escrows;
+    mapping(bytes32 => escrowData) escrows;
 
     /*
-     * @dev Verify user credentials
-     * Originating Address:
-     *      Exists in registeredUsers as a usertype 1 to 9
-     *      Is authorized for asset class
+     * Originating Address is escrow contract
      */
     modifier isEscrowContract() {
         require(
@@ -37,32 +36,28 @@ contract PRUF_escrowManager is PRUF_BASIC {
         _;
     }
 
-        function isLostOrStolen (uint16 _assetStatus) private pure returns (uint8){
-        if ((_assetStatus != 3) &&
-                (_assetStatus != 4) &&
-                (_assetStatus != 53) &&
-                (_assetStatus != 54)){
-                    return 0;
-                } else {
-                    return 170;
-                }
+    function isLostOrStolen(uint16 _assetStatus) private pure returns (uint8) {
+        if (
+            (_assetStatus != 3) &&
+            (_assetStatus != 4) &&
+            (_assetStatus != 53) &&
+            (_assetStatus != 54)
+        ) {
+            return 0;
+        } else {
+            return 170;
+        }
     }
 
-    function isEscrow (uint16 _assetStatus) private pure returns (uint8){
-        if ((_assetStatus != 6) &&
-                (_assetStatus != 50) &&
-                (_assetStatus != 56)){
-                    return 0;
-                } else {
-                    return 170;
-                }
+    function isEscrow(uint16 _assetStatus) private pure returns (uint8) {
+        if (
+            (_assetStatus != 6) && (_assetStatus != 50) && (_assetStatus != 56)
+        ) {
+            return 0;
+        } else {
+            return 170;
+        }
     }
-
-    //-----------------------------------------------Events------------------------------------------------//
-
-    event REPORT(string _msg, bytes32 b32);
-
-   
 
     /*
      * @dev Set an asset to escrow status (6/50/56). Sets timelock for unix timestamp of escrow end.
@@ -70,27 +65,26 @@ contract PRUF_escrowManager is PRUF_BASIC {
     function setEscrow(
         bytes32 _idxHash,
         uint8 _newAssetStatus,
-        uint256 _escrowTime,
-        bytes32 _escrowOwner
-    ) external nonReentrant isEscrowContract //exists(_idxHash)
-    //notEscrow(_idxHash)
-    //notBlockLocked(_idxHash)
-    {
+        uint8 _data,
+        bytes32 _controllingContractNameHash,
+        bytes32 _escrowOwnerAddressHash,
+        uint256 _timelock,
+        bytes32 _ex1,
+        bytes32 _ex2,
+        bytes32 _ex3
+    ) external nonReentrant isEscrowContract {
         Record memory rec = getShortRecord(_idxHash);
         ContractDataHash memory contractInfo;
-        (contractInfo.contractType, contractInfo.nameHash) = Storage.ContractInfoHash(
-            msg.sender
-        );
+        (contractInfo.contractType, contractInfo.nameHash) = Storage
+            .ContractInfoHash(msg.sender);
 
         require(
             contractInfo.contractType == 3,
             "PS:SE: Escrow can only be set by an escrow contract"
         );
-        require(escrows[_idxHash] == 0, "Already listed in escrow table"); //FIX BECAUSE STRUCT---------------------------------or rremove?
+        require(rec.rightsHolder != 0, "PS:SE:Record does not exist");
         require(
-            (_newAssetStatus == 6) ||
-                (_newAssetStatus == 50) ||
-                (_newAssetStatus == 56),
+            isEscrow(_newAssetStatus) == 170,
             "PS:SE: Must set to an escrow status"
         );
         require(
@@ -103,16 +97,24 @@ contract PRUF_escrowManager is PRUF_BASIC {
             isEscrow(rec.assetStatus) == 0,
             "PS:SE: Asset already in escrow status."
         );
+        require(
+            escrows[_idxHash].controllingContractNameHash == 0,
+            "PS:SE: Controlling contract has not released asset."
+        );
         //^^^^^^^checks^^^^^^^^^
 
-        
-        rec.assetStatus = _newAssetStatus;
-        rec.timeLock = _escrowTime;
-        escrows[_idxHash] = _escrowOwner;
+        escrows[_idxHash].data = _data;
+        escrows[_idxHash]
+            .controllingContractNameHash = _controllingContractNameHash;
+        escrows[_idxHash].escrowOwnerAddressHash = _escrowOwnerAddressHash;
+        escrows[_idxHash].timelock = _timelock;
+        escrows[_idxHash].ex1 = _ex1;
+        escrows[_idxHash].ex2 = _ex2;
+        escrows[_idxHash].ex3 = _ex3;
 
-         //database[_idxHash] = rec; ----------------------------------send updated data to storage
         //^^^^^^^effects^^^^^^^^^
-        emit REPORT("Record locked for escrow", contractInfo.nameHash);
+
+        Storage.setEscrow(_idxHash, _newAssetStatus, contractInfo.nameHash);
         //^^^^^^^interactions^^^^^^^^^
     }
 
@@ -123,47 +125,54 @@ contract PRUF_escrowManager is PRUF_BASIC {
         external
         nonReentrant
         isEscrowContract
-    //notBlockLocked(_idxHash)
-    //exists(_idxHash)
     {
         Record memory rec = getShortRecord(_idxHash);
         ContractDataHash memory contractInfo;
-        (contractInfo.contractType, contractInfo.nameHash) = Storage.ContractInfoHash(
-            msg.sender
-        );
+        (contractInfo.contractType, contractInfo.nameHash) = Storage
+            .ContractInfoHash(msg.sender);
 
+        require(rec.rightsHolder != 0, "PS:EE:Record does not exist");
         require(
-            (contractInfo.nameHash == rec.recorder) || (rec.timeLock < now),
+            (contractInfo.nameHash ==
+                escrows[_idxHash].controllingContractNameHash) ||
+                (escrows[_idxHash].timelock < now), // fix rec.recorder
             "PS:EE:Only contract with same name as setter can end early"
         );
-        require(
-            (rec.assetStatus == 6) ||
-                (rec.assetStatus == 50) ||
-                (rec.assetStatus == 56),
-            "PS:EE:Asset not in escrow"
-        );
+        require(isEscrow(rec.assetStatus) == 170, "PS:EE:Asset not in escrow");
 
         //^^^^^^^checks^^^^^^^^^
 
-        if (rec.assetStatus == 6) {
-            rec.assetStatus = 7;
-        }
-        if (rec.assetStatus == 56) {
-            rec.assetStatus = 57;
-        }
-        if (rec.assetStatus == 50) {
-            rec.assetStatus = 58;
-        }
+        escrows[_idxHash].data = 0;
+        escrows[_idxHash].controllingContractNameHash = 0;
+        escrows[_idxHash].escrowOwnerAddressHash = 0;
+        escrows[_idxHash].timelock = 0;
+        escrows[_idxHash].ex1 = 0;
+        escrows[_idxHash].ex2 = 0;
+        escrows[_idxHash].ex3 = 0;
 
-        // (rec.lastRecorder, rec.recorder) = Storage.storeRecorder(
-        //     _idxHash,
-        //     contractInfo.NameHash
-        // );
-        //escrows[_idxHash] = 0;  //FIX BECAUSE STRUCT---------------------------------or rremove?
-        //database[_idxHash] = rec; ----------------------------------send updated data to storage
         //^^^^^^^effects^^^^^^^^^
 
-        emit REPORT("Escrow Ended by", contractInfo.nameHash);
+        Storage.endEscrow(_idxHash, contractInfo.nameHash);
+        //^^^^^^^interactions^^^^^^^^^
+    }
+
+    /*
+     * @dev Permissive removal of asset from escrow status after time-out
+     */
+    function PermissiveEndEscrow(bytes32 _idxHash) external nonReentrant {
+        require(escrows[_idxHash].timelock < now, "PS:EE:Escrow not expired");
+        //^^^^^^^checks^^^^^^^^^
+
+        escrows[_idxHash].data = 0;
+        escrows[_idxHash].controllingContractNameHash = 0;
+        escrows[_idxHash].escrowOwnerAddressHash = 0;
+        escrows[_idxHash].timelock = 0;
+        escrows[_idxHash].ex1 = 0;
+        escrows[_idxHash].ex2 = 0;
+        escrows[_idxHash].ex3 = 0;
+        //^^^^^^^effects^^^^^^^^^
+
+        Storage.endEscrow(_idxHash, keccak256(abi.encodePacked(msg.sender)));
         //^^^^^^^interactions^^^^^^^^^
     }
 
@@ -172,10 +181,32 @@ contract PRUF_escrowManager is PRUF_BASIC {
         view
         returns (bytes32)
     {
-        return escrows[_idxHash];
+        return escrows[_idxHash].escrowOwnerAddressHash;
         //^^^^^^^checks/interactions^^^^^^^^^
     }
 
-
-    //----------------------Internal Admin functions / onlyowner or isAdmin----------------------//
+    function retrieveEscrowData(bytes32 _idxHash)
+        external
+        view
+        returns (
+            uint8,
+            bytes32,
+            bytes32,
+            uint256,
+            bytes32,
+            bytes32,
+            bytes32 
+        )
+    {
+        return (
+            escrows[_idxHash].data,
+            escrows[_idxHash].controllingContractNameHash,
+            escrows[_idxHash].escrowOwnerAddressHash,
+            escrows[_idxHash].timelock,
+            escrows[_idxHash].ex1,
+            escrows[_idxHash].ex2,
+            escrows[_idxHash].ex3
+        );
+        //^^^^^^^checks/interactions^^^^^^^^^
+    }
 }

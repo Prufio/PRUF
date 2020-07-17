@@ -1,6 +1,6 @@
 /*-----------------------------------------------------------------
  *  TO DO
- *
+ * Point to escrow manager instead of storage
 *-----------------------------------------------------------------*/
 
 // SPDX-License-Identifier: UNLICENSED
