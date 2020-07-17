@@ -12,8 +12,6 @@ import "./Imports/Safemath.sol";
 contract PRUF_simpleEscrow is PRUF_BASIC {
     using SafeMath for uint256;
 
-    mapping (bytes32 => bytes32) private escrows;
-
     /*
      * @dev Verify user credentials
      * Originating Address:
@@ -91,7 +89,6 @@ contract PRUF_simpleEscrow is PRUF_BASIC {
         );
         //^^^^^^^checks^^^^^^^^^
 
-        escrows[_idxHash] = _escrowOwnerHash;
         newEscrowStatus = _escrowStatus;
         //^^^^^^^effects^^^^^^^^^
 

@@ -195,7 +195,10 @@ interface StorageInterface {
         bytes32 _escrowOwner
     ) external;
 
-    function endEscrow(bytes32 _idxHash) external;
+    function endEscrow(
+        bytes32 _idxHash,
+        bytes32 _contractNameHash)
+        external;
 
     function setStolenOrLost(
         bytes32 _userHash,
@@ -253,7 +256,9 @@ interface StorageInterface {
 
     function ContractAuthType(address _addr) external returns (uint8);
 
-    function retrieveEscrowOwner(bytes32 _idxHash)
-        external
-        returns (bytes32);
+    function ContractInfoHash(address _addr) external returns (uint8, bytes32);
+
+    // function retrieveEscrowOwner(bytes32 _idxHash)
+    //     external
+    //     returns (bytes32);
 }

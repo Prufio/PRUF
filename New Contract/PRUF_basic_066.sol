@@ -39,6 +39,11 @@ contract PRUF_BASIC is ReentrancyGuard, Ownable,  IERC721Receiver {
         uint256 extendedData; // Future Use
     }
 
+    struct ContractDataHash {
+        uint8 contractType; // Auth Level / type
+        bytes32 nameHash; // Contract Name hashed
+    }
+
 
 
     mapping(bytes32 => User) internal registeredUsers; // Authorized recorder database
@@ -204,6 +209,16 @@ contract PRUF_BASIC is ReentrancyGuard, Ownable,  IERC721Receiver {
         ) = AssetClassTokenManagerContract.getAC_data(_assetClass);
         return AC_info;
         //^^^^^^^interactions^^^^^^^^^
+    }
+
+    function getContractInfo(address _addr)
+        internal
+        returns (ContractDataHash memory)
+    {
+        ContractDataHash memory contractInfo;
+        (contractInfo.contractType, contractInfo.nameHash) = Storage.ContractInfoHash(_addr); 
+        return contractInfo;
+        //^^^^^^^checks/interactions^^^^^^^^^
     }
 
     /*

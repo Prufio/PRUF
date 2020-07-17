@@ -118,6 +118,7 @@ pragma solidity ^0.6.7;
  *  T_PRUF_APP
  *  T_PRUF_NP
  *  T_PRUF_simpleEscrow
+ *  PRUF_escrowMGR
  *
 *-----------------------------------------------------------------
 
