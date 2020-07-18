@@ -1,14 +1,13 @@
 /*-----------------------------------------------------------------
  *  TO DO
- * Point to escrow manager instead of storage
-*-----------------------------------------------------------------*/
+ *
+ *-----------------------------------------------------------------*/
 
 // SPDX-License-Identifier: UNLICENSED
 pragma solidity ^0.6.7;
 
 import "./PRUF_basic_066.sol";
 import "./Imports/Safemath.sol";
-
 
 contract T_PRUF_simpleEscrow is PRUF_BASIC {
     using SafeMath for uint256;
@@ -68,8 +67,7 @@ contract T_PRUF_simpleEscrow is PRUF_BASIC {
             "TPSE:SE:Transferred, lost, or stolen status cannot be set to escrow."
         );
         require(
-                (_escrowStatus == 50) ||
-                (_escrowStatus == 56),
+            (_escrowStatus == 50) || (_escrowStatus == 56),
             "TPSE:SE:Must specify a valid escrow status >49"
         );
 
@@ -78,11 +76,15 @@ contract T_PRUF_simpleEscrow is PRUF_BASIC {
         newEscrowStatus = _escrowStatus;
         //^^^^^^^effects^^^^^^^^^
 
-        Storage.setEscrow(
+        escrowMGRcontract.setEscrow(
             _idxHash,
             newEscrowStatus,
+            0,
+            _escrowOwnerHash,
             escrowTime,
-            _escrowOwnerHash
+            0x0,
+            0x0,
+            0x0
         );
         //^^^^^^^interactions^^^^^^^^^
     }
@@ -98,7 +100,7 @@ contract T_PRUF_simpleEscrow is PRUF_BASIC {
         Record memory rec = getRecord(_idxHash);
         Record memory shortRec = getShortRecord(_idxHash);
         AC memory AC_info = getACinfo(rec.assetClass);
-        bytes32 ownerHash = Storage.retrieveEscrowOwner(_idxHash);
+        bytes32 ownerHash = escrowMGRcontract.retrieveEscrowOwner(_idxHash);
 
         require(
             AC_info.custodyType == 2,
@@ -107,8 +109,7 @@ contract T_PRUF_simpleEscrow is PRUF_BASIC {
 
         require((rec.rightsHolder != 0), "EE: Record does not exist");
         require(
-                (rec.assetStatus == 50) ||
-                (rec.assetStatus == 56),
+            (rec.assetStatus == 50) || (rec.assetStatus == 56),
             "TPSE:EE:record must be in escrow status <49"
         );
         require(
@@ -118,7 +119,7 @@ contract T_PRUF_simpleEscrow is PRUF_BASIC {
         );
         //^^^^^^^checks^^^^^^^^^
 
-        Storage.endEscrow(_idxHash);
+        escrowMGRcontract.endEscrow(_idxHash);
         //^^^^^^^interactions^^^^^^^^^
     }
 }

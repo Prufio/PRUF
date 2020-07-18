@@ -264,7 +264,6 @@ interface EscrowManagerInterface {
         bytes32 _idxHash,
         uint8 _newAssetStatus,
         uint8 _data,
-        bytes32 _controllingContractNameHash,
         bytes32 _escrowOwnerAddressHash,
         uint256 _timelock,
         bytes32 _ex1,

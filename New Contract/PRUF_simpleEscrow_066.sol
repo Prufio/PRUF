@@ -1,7 +1,7 @@
 /*-----------------------------------------------------------------
  *  TO DO
- * Point to escrow manager instead of storage
-*-----------------------------------------------------------------*/
+ *
+ *-----------------------------------------------------------------*/
 
 // SPDX-License-Identifier: UNLICENSED
 pragma solidity ^0.6.7;
@@ -92,15 +92,18 @@ contract PRUF_simpleEscrow is PRUF_BASIC {
         newEscrowStatus = _escrowStatus;
         //^^^^^^^effects^^^^^^^^^
 
-        Storage.setEscrow(
+        escrowMGRcontract.setEscrow(
             _idxHash,
             newEscrowStatus,
+            0,
+            _escrowOwnerHash,
             escrowTime,
-            _escrowOwnerHash
+            0x0,
+            0x0,
+            0x0
         );
         //^^^^^^^interactions^^^^^^^^^
     }
-
 
     /*
      * @dev takes asset out of excrow status if time period has resolved || is escrow issuer
@@ -114,7 +117,7 @@ contract PRUF_simpleEscrow is PRUF_BASIC {
         Record memory shortRec = getShortRecord(_idxHash);
         User memory callingUser = getUser();
         AC memory AC_info = getACinfo(rec.assetClass);
-        bytes32 ownerHash = Storage.retrieveEscrowOwner(_idxHash);
+        bytes32 ownerHash = escrowMGRcontract.retrieveEscrowOwner(_idxHash);
 
         require(
             AC_info.custodyType == 1,
@@ -143,7 +146,7 @@ contract PRUF_simpleEscrow is PRUF_BASIC {
         );
         //^^^^^^^checks^^^^^^^^^
 
-        Storage.endEscrow(_idxHash);
+        escrowMGRcontract.endEscrow(_idxHash);
         //^^^^^^^interactions^^^^^^^^^
     }
 }

@@ -43,26 +43,6 @@ pragma solidity ^0.6.7;
 *-----------------------------------------------------------------
 
 *-----------------------------------------------------------------
- * FUTURE FEATURES
- *      "bottle deposit" on asset creation to encourage recycling
- *  New Recycle :
- *          Not possible in Custodial asset classes
- *          Caller must hold token, must be in status 59
- *          Caller recieves deposit amount (how the bloody hell do we manage this????)
- *          Token goes into "indefinite" escrow, RGT set to 0xFFF...
- *              Caller is escrow controller, but escrow contract is "owner", can break escrow 
- *                      (requires repayment of deposit amount, resets to status 51)
- *              Price set when escrow is to be broken by reregistering, from costs of the category 
- *                     that it is to be imported into (endEscrow called from T_PRUF_APP?)
- *              Importing breaks the escrow
- *                  payment divided between ACroot, ACholder, and recycling address (escrow owner)     
- *                  token sent to new owner (payment sender), status set to 51
- *
- *
- *
-*-----------------------------------------------------------------
-
-*-----------------------------------------------------------------
  *Rules for reminting tokens:
  *  must have the plaintext that generates the rgtHash on-chain
  *
@@ -80,6 +60,26 @@ pragma solidity ^0.6.7;
  *  when the fee is paid the escrow is broken, and the asset token is assigned to the sender. The funds (less assetClassRoot fees)
  *  are divided 50/50 between the old owner (setter of the escrow) and the ACtoken holder for the new asset class. If funds are sent 
  *  to a dead escrow or there is an overpayment, the balance can be withdrawn.
+ *
+*-----------------------------------------------------------------
+
+*-----------------------------------------------------------------
+ * FUTURE FEATURES
+ *      "bottle deposit" on asset creation to encourage recycling
+ *  New Recycle :
+ *          Not possible in Custodial asset classes
+ *          Caller must hold token, must be in status 59
+ *          Caller recieves deposit amount (how the bloody hell do we manage this????)
+ *          Token goes into "indefinite" escrow, RGT set to 0xFFF...
+ *              Caller is escrow controller, but escrow contract is "owner", can break escrow 
+ *                      (requires repayment of deposit amount, resets to status 51)
+ *              Price set when escrow is to be broken by reregistering, from costs of the category 
+ *                     that it is to be imported into (endEscrow called from T_PRUF_APP?)
+ *              Importing breaks the escrow
+ *                  payment divided between ACroot, ACholder, and recycling address (escrow owner)     
+ *                  token sent to new owner (payment sender), status set to 51
+ *
+ *
  *
 *-----------------------------------------------------------------
 

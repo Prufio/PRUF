@@ -66,7 +66,6 @@ contract PRUF_escrowManager is PRUF_BASIC {
         bytes32 _idxHash,
         uint8 _newAssetStatus,
         uint8 _data,
-        bytes32 _controllingContractNameHash,
         bytes32 _escrowOwnerAddressHash,
         uint256 _timelock,
         bytes32 _ex1,
@@ -77,6 +76,7 @@ contract PRUF_escrowManager is PRUF_BASIC {
         ContractDataHash memory contractInfo;
         (contractInfo.contractType, contractInfo.nameHash) = Storage
             .ContractInfoHash(msg.sender);
+        bytes32 controllingContractNameHash = contractInfo.nameHash;
 
         require(
             contractInfo.contractType == 3,
@@ -105,7 +105,7 @@ contract PRUF_escrowManager is PRUF_BASIC {
 
         escrows[_idxHash].data = _data;
         escrows[_idxHash]
-            .controllingContractNameHash = _controllingContractNameHash;
+            .controllingContractNameHash = controllingContractNameHash;
         escrows[_idxHash].escrowOwnerAddressHash = _escrowOwnerAddressHash;
         escrows[_idxHash].timelock = _timelock;
         escrows[_idxHash].ex1 = _ex1;

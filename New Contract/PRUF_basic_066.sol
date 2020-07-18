@@ -60,6 +60,9 @@ contract PRUF_BASIC is ReentrancyGuard, Ownable,  IERC721Receiver {
     address internal AssetClassTokenAddress;
     AssetClassTokenInterface internal AssetClassTokenContract; //erc721_token prototype initialization
 
+    address internal escrowMGRAddress;
+    EscrowManagerInterface internal escrowMGRcontract; // Set up external contract interface
+
     address internal PrufAppAddress;
     // --------------------------------------Events--------------------------------------------//
 
@@ -112,6 +115,9 @@ contract PRUF_BASIC is ReentrancyGuard, Ownable,  IERC721Receiver {
 
         AssetTokenAddress = Storage.resolveContractAddress("assetToken");
         AssetTokenContract = AssetTokenInterface(AssetTokenAddress);
+
+        escrowMGRAddress = Storage.resolveContractAddress("PRUF_escrowMGR");
+        escrowMGRcontract = EscrowManagerInterface(escrowMGRAddress);
 
         PrufAppAddress = Storage.resolveContractAddress("PRUF_APP");
         //^^^^^^^effects^^^^^^^^^

@@ -25,16 +25,6 @@ contract T_PRUF_NP is PRUF {
         _;
     }
 
-    modifier isAuthorizedUser(bytes32 _idxHash) {
-        User memory user = getUser();
-        require(
-            (user.userType > 0) && (user.userType < 10),
-            "PA:IA: User not registered"
-        );
-        require(user.authorizedAssetClass == 0, "PA:IA: User not registered");
-        _;
-    }
-
     //--------------------------------------------External Functions--------------------------
     /*
      * @dev Wrapper for newRecord
