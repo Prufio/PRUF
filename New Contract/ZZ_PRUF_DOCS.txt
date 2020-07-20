@@ -129,7 +129,7 @@ pragma solidity ^0.6.7;
  * 1   --Custodial
  * 2   --Non-Custodial
  * 3   --Escrow
- * 4   --Recycler - authorized to change asset classes
+ * 4   --Recycler 
 *-----------------------------------------------------------------
 
 *-----------------------------------------------------------------
