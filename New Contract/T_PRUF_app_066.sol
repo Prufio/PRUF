@@ -2,7 +2,7 @@
  *  TO DO
  * Make Newrecord require authorized user
  * Make recycle .... deposit?
-*-----------------------------------------------------------------*/
+ *-----------------------------------------------------------------*/
 
 // SPDX-License-Identifier: UNLICENSED
 pragma solidity ^0.6.7;
@@ -95,9 +95,29 @@ contract T_PRUF_APP is PRUF {
         //^^^^^^^interactions^^^^^^^^^
     }
 
-    function $importAsset(bytes32 _idxHash, uint16 newAssetClass) external isAuthorized(_idxHash){
-    //change asset class
-    }
+    function $importAsset(bytes32 _idxHash, uint16 _newAssetClass)
+        external payable nonReentrant isAuthorized(_idxHash)
+    {
+        Record memory rec = getRecord(_idxHash);
+
+        require(
+            AssetClassTokenManagerContract.isSameRootAC(
+                _newAssetClass,
+                rec.assetClass
+            ) == 170,
+            "PS:CAC:Cannot change AC to new root"
+        );
+        //^^^^^^^checks^^^^^^^^^
+
+        Storage.changeAC(
+            keccak256(abi.encodePacked(msg.sender)),
+            _idxHash,
+            _newAssetClass
+        );
+
+        deductNewRecordCosts(_newAssetClass);
+        //^^^^^^^interactions / effects^^^^^^^^^^^^
+        }
 
     /*
      * @dev remint token with confirmation of posession of RAWTEXT hash inputs
@@ -159,10 +179,13 @@ contract T_PRUF_APP is PRUF {
     /*
      * @dev Modify **Record**.Ipfs2 with confirmation
      */
-    function $addIpfs2Note(
-        bytes32 _idxHash,
-        bytes32 _IpfsHash
-    ) external payable nonReentrant isAuthorized(_idxHash) returns (bytes32) {
+    function $addIpfs2Note(bytes32 _idxHash, bytes32 _IpfsHash)
+        external
+        payable
+        nonReentrant
+        isAuthorized(_idxHash)
+        returns (bytes32)
+    {
         Record memory rec = getRecord(_idxHash);
         AC memory AC_info = getACinfo(rec.assetClass);
 

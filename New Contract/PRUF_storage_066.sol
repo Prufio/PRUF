@@ -300,10 +300,11 @@ contract Storage is Ownable, ReentrancyGuard {
     function changeAC(
         bytes32 _userHash,
         bytes32 _idxHash,
-        uint8 _newAssetClass
+        uint16 _newAssetClass
     )
         external
         nonReentrant
+        isAuthorized
         exists(_idxHash)
         notEscrow(_idxHash)
         notBlockLocked(_idxHash)
@@ -311,11 +312,6 @@ contract Storage is Ownable, ReentrancyGuard {
         bytes32 idxHash = _idxHash; //stack saving
         database[idxHash].timeLock = block.number;
         Record memory rec = database[_idxHash];
-
-        require(
-                (contractInfo[msg.sender].contractType == 4),
-            "PS:IA:Contract not authorized to change asset classes"
-        );
 
         require(
             AssetClassTokenManagerContract.isSameRootAC(
@@ -445,7 +441,7 @@ contract Storage is Ownable, ReentrancyGuard {
 
         if (rec.assetStatus == 6) {
             rec.assetStatus = 7;
-        } 
+        }
         if (rec.assetStatus == 56) {
             rec.assetStatus = 57;
         }

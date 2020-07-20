@@ -185,7 +185,7 @@ interface StorageInterface {
     function changeAC(
         bytes32 _userHash,
         bytes32 _idxHash,
-        uint8 _newAssetClass
+        uint16 _newAssetClass
     ) external;
 
     function setEscrow(
