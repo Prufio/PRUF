@@ -68,7 +68,8 @@ contract Storage is Ownable, ReentrancyGuard {
         require(
             (contractInfo[msg.sender].contractType == 1) ||
                 (contractInfo[msg.sender].contractType == 2) ||
-                (contractInfo[msg.sender].contractType == 3),
+                (contractInfo[msg.sender].contractType == 3) ||
+                (contractInfo[msg.sender].contractType == 4),
             "PS:IA:Contract not authorized or improperly permissioned"
         );
         _;
@@ -115,7 +116,7 @@ contract Storage is Ownable, ReentrancyGuard {
 
 
     /*
-     * @dev Check record exists in database
+     * @dev Check to see if contract adress is registered to PRUF_escrowMGR
      */
     modifier isEscrowManager() {
         require(
@@ -294,7 +295,7 @@ contract Storage is Ownable, ReentrancyGuard {
     }
 
     /*
-     * @dev Modify a record in the database  *read fullHash, write rightsHolder, update recorder, assetClass,countDown update recorder....
+     * @dev Change asset class of an asset
      */
     function changeAC(
         bytes32 _userHash,
@@ -303,7 +304,6 @@ contract Storage is Ownable, ReentrancyGuard {
     )
         external
         nonReentrant
-        isAuthorized
         exists(_idxHash)
         notEscrow(_idxHash)
         notBlockLocked(_idxHash)
@@ -312,8 +312,10 @@ contract Storage is Ownable, ReentrancyGuard {
         database[idxHash].timeLock = block.number;
         Record memory rec = database[_idxHash];
 
-        //AC memory AC_info = getACinfo(_newAssetClass);
-        //AC memory oldAC_info = getACinfo(rec.assetClass);
+        require(
+                (contractInfo[msg.sender].contractType == 4),
+            "PS:IA:Contract not authorized to change asset classes"
+        );
 
         require(
             AssetClassTokenManagerContract.isSameRootAC(

@@ -89,6 +89,30 @@ contract PRUF_APP is PRUF {
         //^^^^^^^interactions^^^^^^^^^
     }
 
+
+    /*    
+    *     @dev Export FROM Custodial:
+    */
+    function exportAsset(bytes32 _idxHash, address _addr) external payable nonReentrant isAuthorized(_idxHash){
+        uint256 tokenId = uint256(_idxHash);
+        Record memory rec = getRecord(_idxHash);
+        AC memory AC_info = getACinfo(rec.assetClass);
+
+        require(
+            AC_info.custodyType == 1,
+            "PA:FMR: Contract not authorized for non-custodial assets"
+        );
+        require(
+            rec.assetStatus == 51,
+            "PA:EXA: Asset status must be 51 to export"
+        );
+         
+        AssetTokenContract.safeTransferFrom(address(this), _addr, tokenId); // sends token to rightsholder wallet (specified by auth user)
+
+    // *               (APP)  sets asset to status 70
+
+    }
+
     /*
      * @dev Modify **Record**.rightsHolder without confirmation required
      */

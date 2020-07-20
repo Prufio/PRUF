@@ -116,4 +116,35 @@ contract T_PRUF_NP is PRUF {
 
     //--------------------------------------------External Functions--------------------------
 
+
+    /*    
+    *     @dev Import TO Custodial
+    */
+    function importCustodial(bytes32 _idxHash) external isAuthorizedCustodial(_idxHash){
+    // *                 Holder sends to custudial contract
+    // *                 Authorized agent approves / rejects import
+    // *                          change asset class
+    // *                     or to refuse, import then reexport
+
+    }
+
+
+    /*    
+    *     @dev Export FROM nonCustodial:
+    */
+    function exportNC(bytes32 _idxHash) external isAuthorizedNonCustodial(_idxHash){
+    // *             (APP)    sets asset to status 70
+
+    }
+
+
+    /*    
+    *     @dev Import TO nonCustodial:
+    */
+    function importNC(bytes32 _idxHash) external isAuthorizedNonCustodial(_idxHash){
+    // *
+    // *                          change asset class
+
+    }
+
 }
