@@ -72,7 +72,7 @@ contract PRUF_escrowManager is PRUF_BASIC {
         bytes32 _ex2,
         bytes32 _ex3
     ) external nonReentrant isEscrowContract {
-        Record memory rec = getShortRecord(_idxHash);
+        Record memory rec = getRecord(_idxHash);
         ContractDataHash memory contractInfo;
         (contractInfo.contractType, contractInfo.nameHash) = Storage
             .ContractInfoHash(msg.sender);
