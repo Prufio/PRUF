@@ -417,7 +417,7 @@ contract Storage is Ownable, ReentrancyGuard {
         rec.assetStatus = _newAssetStatus;
         database[_idxHash] = rec;
         //^^^^^^^effects^^^^^^^^^
-        emit REPORT("Record locked for escrow", _contractNameHash);
+        emit REPORT("Escrow set successfully", _contractNameHash);
         //^^^^^^^interactions^^^^^^^^^
     }
 
