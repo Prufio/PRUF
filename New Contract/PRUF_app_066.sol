@@ -10,7 +10,7 @@ import "./PRUF_core_066.sol";
 
 contract PRUF_APP is PRUF {
 
-    modifier isAuthorized(bytes32 _idxHash) override {
+    modifier isAuthorized(bytes32 _idxHash) override { //require that user is authorized and token is held by contract
         User memory user = getUser();
         uint256 tokenID = uint256(_idxHash);
 
@@ -87,30 +87,6 @@ contract PRUF_APP is PRUF {
         deductNewRecordCosts(_assetClass);
         AssetTokenContract.mintAssetToken(address(this), tokenId, "pruf.io");
         //^^^^^^^interactions^^^^^^^^^
-    }
-
-
-    /*    
-    *     @dev Export FROM Custodial:
-    */
-    function exportAsset(bytes32 _idxHash, address _addr) external payable nonReentrant isAuthorized(_idxHash){
-        uint256 tokenId = uint256(_idxHash);
-        Record memory rec = getRecord(_idxHash);
-        AC memory AC_info = getACinfo(rec.assetClass);
-
-        require(
-            AC_info.custodyType == 1,
-            "PA:FMR: Contract not authorized for non-custodial assets"
-        );
-        require(
-            rec.assetStatus == 51,
-            "PA:EXA: Asset status must be 51 to export"
-        );
-         
-        AssetTokenContract.safeTransferFrom(address(this), _addr, tokenId); // sends token to rightsholder wallet (specified by auth user)
-
-    // *               (APP)  sets asset to status 70
-
     }
 
     /*
@@ -289,9 +265,10 @@ contract PRUF_APP is PRUF {
     }
 
     /*
-     * @dev Reimport **Record**.rightsHolder (no confirmation required -
-     * posessor is considered to be owner). sets rec.assetStatus to 0.
+     * @dev import **Record** (no confirmation required -
+     * posessor is considered to be owner. sets rec.assetStatus to 0.
      */
+     
     function $importAsset(bytes32 _idxHash, bytes32 _rgtHash)
         external
         payable

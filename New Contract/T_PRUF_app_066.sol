@@ -9,7 +9,7 @@ pragma solidity ^0.6.7;
 
 import "./PRUF_core_066.sol";
 
-contract T_PRUF_NP is PRUF {
+contract T_PRUF_APP is PRUF {
     /*
      * @dev Verify user credentials
      * Originating Address:
@@ -95,6 +95,10 @@ contract T_PRUF_NP is PRUF {
         //^^^^^^^interactions^^^^^^^^^
     }
 
+    function $importAsset(bytes32 _idxHash, uint16 newAssetClass) external isAuthorized(_idxHash){
+    //change asset class
+    }
+
     /*
      * @dev remint token with confirmation of posession of RAWTEXT hash inputs
      * must Match rgtHash using raw data fields ---------------------------security risk--------REVIEW!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
@@ -157,7 +161,6 @@ contract T_PRUF_NP is PRUF {
      */
     function $addIpfs2Note(
         bytes32 _idxHash,
-        bytes32 _rgtHash,
         bytes32 _IpfsHash
     ) external payable nonReentrant isAuthorized(_idxHash) returns (bytes32) {
         Record memory rec = getRecord(_idxHash);
@@ -186,10 +189,6 @@ contract T_PRUF_NP is PRUF {
         require(
             rec.Ipfs2 == 0,
             "TPA:I2:Ipfs2 has data already. Overwrite not permitted"
-        );
-        require(
-            rec.rightsHolder == _rgtHash,
-            "TPA:I2:Rightsholder does not match supplied data"
         );
         //^^^^^^^checks^^^^^^^^^
 

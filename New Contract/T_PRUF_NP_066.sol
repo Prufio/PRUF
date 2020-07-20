@@ -34,7 +34,7 @@ contract T_PRUF_NP is PRUF {
      * must be tokenholder or assetTokenContract
      *
      */
-    function changeRgt(bytes32 _idxHash, bytes32 _rgtHash)
+    function _changeRgt(bytes32 _idxHash, bytes32 _newRgtHash)
         external
         nonReentrant
         isAuthorized(_idxHash)
@@ -50,7 +50,7 @@ contract T_PRUF_NP is PRUF {
 
         require((rec.rightsHolder != 0), "PA:FMR: Record does not exist");
 
-        require(_rgtHash != 0, "TPNP:CR: rights holder cannot be zero");
+        require(_newRgtHash != 0, "TPNP:CR: rights holder cannot be zero");
 
         require(
             (rec.assetStatus != 3) &&
@@ -75,7 +75,7 @@ contract T_PRUF_NP is PRUF {
         );
         require(rec.assetStatus < 200, "TPNP:CR: Record locked");
         //^^^^^^^checks^^^^^^^^^
-        rec.rightsHolder = _rgtHash;
+        rec.rightsHolder = _newRgtHash;
         //^^^^^^^effects^^^^^^^^^
 
         writeRecord(_idxHash, rec);
@@ -84,14 +84,20 @@ contract T_PRUF_NP is PRUF {
         //^^^^^^^interactions^^^^^^^^^
     }
 
+    /*    
+    *     @dev Export FROM nonCustodial - sets asset to status 70 (importable)
+    */
+    function _exportNC(bytes32 _idxHash) external isAuthorized(_idxHash){
+     _modStatus(_idxHash, 70); 
+    }
+
     /*
      * @dev Modify **Record**.assetStatus with confirmation required
      */
     function _modStatus(
         bytes32 _idxHash,
-        bytes32 _rgtHash,
         uint8 _newAssetStatus
-    ) external nonReentrant isAuthorized(_idxHash) returns (uint8) {
+    ) public nonReentrant isAuthorized(_idxHash) returns (uint8) {
         Record memory rec = getRecord(_idxHash);
         AC memory AC_info = getACinfo(rec.assetClass);
 
@@ -127,11 +133,6 @@ contract T_PRUF_NP is PRUF {
             "TPNP:MS: Record is burned and must be reimported by ACadmin"
         );
         require(rec.assetStatus < 200, "TPNP:MS: Record locked");
-
-        require(
-            rec.rightsHolder == _rgtHash,
-            "TPNP:MS: Rightsholder does not match supplied data"
-        );
         //^^^^^^^checks^^^^^^^^^
 
         rec.assetStatus = _newAssetStatus;
@@ -148,7 +149,6 @@ contract T_PRUF_NP is PRUF {
      */
     function _setLostOrStolen(
         bytes32 _idxHash,
-        bytes32 _rgtHash,
         uint8 _newAssetStatus
     ) external nonReentrant isAuthorized(_idxHash) returns (uint8) {
         Record memory rec = getRecord(_idxHash);
@@ -190,10 +190,6 @@ contract T_PRUF_NP is PRUF {
         );
         require(rec.assetStatus < 200, "TPNP:SLS: Record locked");
 
-        require(
-            rec.rightsHolder == _rgtHash,
-            "TPNP:SLS: Rightsholder does not match supplied data"
-        );
         //^^^^^^^checks^^^^^^^^^
         rec.assetStatus = _newAssetStatus;
         bytes32 userHash = keccak256(abi.encodePacked(msg.sender));
@@ -210,7 +206,6 @@ contract T_PRUF_NP is PRUF {
      */
     function _decCounter(
         bytes32 _idxHash,
-        bytes32 _rgtHash,
         uint256 _decAmount
     ) external nonReentrant isAuthorized(_idxHash) returns (uint256) {
         Record memory rec = getRecord(_idxHash);
@@ -239,11 +234,6 @@ contract T_PRUF_NP is PRUF {
             (rec.assetStatus != 60),
             "TPNP:SLS: Record is burned and must be reimported by ACadmin"
         );
-
-        require(
-            rec.rightsHolder == _rgtHash,
-            "TPNP:DC: Rightsholder does not match supplied data"
-        );
         //^^^^^^^checks^^^^^^^^^
 
         if (rec.countDown > _decAmount) {
@@ -263,7 +253,6 @@ contract T_PRUF_NP is PRUF {
      */
     function _modIpfs1(
         bytes32 _idxHash,
-        bytes32 _rgtHash,
         bytes32 _IpfsHash
     ) external nonReentrant isAuthorized(_idxHash) returns (bytes32) {
         Record memory rec = getRecord(_idxHash);
@@ -296,10 +285,6 @@ contract T_PRUF_NP is PRUF {
         require(
             (rec.assetStatus != 60),
             "TPNP:MI1: Record is burned and must be reimported by ACadmin"
-        );
-        require(
-            rec.rightsHolder == _rgtHash,
-            "TPNP:MI1: Rightsholder does not match supplied data"
         );
         //^^^^^^^checks^^^^^^^^^
 

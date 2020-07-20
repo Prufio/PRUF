@@ -1,7 +1,7 @@
 /*-----------------------------------------------------------------
  *  TO DO
  *
-*-----------------------------------------------------------------*/
+ *-----------------------------------------------------------------*/
 
 // SPDX-License-Identifier: UNLICENSED
 pragma solidity ^0.6.7;
@@ -9,7 +9,6 @@ pragma solidity ^0.6.7;
 import "./PRUF_core_066.sol";
 
 contract PRUF_NP is PRUF {
-
     /*
      * @dev Verify user credentials
      * Originating Address:
@@ -78,6 +77,41 @@ contract PRUF_NP is PRUF {
         //^^^^^^^checks^^^^^^^^^
 
         rec.assetStatus = _newAssetStatus;
+        //^^^^^^^effects^^^^^^^^^
+
+        writeRecord(_idxHash, rec);
+
+        return rec.assetStatus;
+        //^^^^^^^interactions^^^^^^^^^
+    }
+
+    /*
+     *     @dev Export FROM Custodial:
+     */
+    function exportAsset(bytes32 _idxHash, address _addr)
+        external
+        payable
+        nonReentrant
+        isAuthorized(_idxHash)
+        returns (uint8)
+    {
+        uint256 tokenId = uint256(_idxHash);
+        Record memory rec = getRecord(_idxHash);
+        AC memory AC_info = getACinfo(rec.assetClass);
+
+        require(
+            AC_info.custodyType == 1,
+            "PA:FMR: Contract not authorized for non-custodial assets"
+        );
+        require( // require transferrable (51) status
+            rec.assetStatus == 51,
+            "PA:EXA: Asset status must be 51 to export"
+        );
+        //^^^^^^^checks^^^^^^^^^
+
+        AssetTokenContract.safeTransferFrom(address(this), _addr, tokenId); // sends token to rightsholder wallet (specified by auth user)
+
+        rec.assetStatus = 70; // Set status to 70 (exported)
         //^^^^^^^effects^^^^^^^^^
 
         writeRecord(_idxHash, rec);
