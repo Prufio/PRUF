@@ -97,11 +97,15 @@ contract PRUF_escrowManager is PRUF_BASIC {
             isEscrow(rec.assetStatus) == 0,
             "PEM:SE: Asset already in escrow status."
         );
-        require(
-            escrows[_idxHash].controllingContractNameHash == 0,
-            "PEM:SE: Controlling contract has not released asset."
-        );
         //^^^^^^^checks^^^^^^^^^
+
+        escrows[_idxHash].data = 0;  //initialize escrow data
+        escrows[_idxHash].controllingContractNameHash = 0;
+        escrows[_idxHash].escrowOwnerAddressHash = 0;
+        escrows[_idxHash].timelock = 0;
+        escrows[_idxHash].ex1 = 0;
+        escrows[_idxHash].ex2 = 0;
+        escrows[_idxHash].ex3 = 0;
 
         escrows[_idxHash].data = _data;
         escrows[_idxHash]
