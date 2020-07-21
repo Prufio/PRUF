@@ -35,7 +35,7 @@ contract Storage is Ownable, ReentrancyGuard {
         uint256 countDownStart; // Starting point for countdown variable (set once)
         bytes32 Ipfs1; // Publically viewable asset description
         bytes32 Ipfs2; // Publically viewable immutable notes
-        uint256 timeLock; // Time sensitive mutex
+        //uint256 timeLock; // Time sensitive mutex
         uint16 numberOfTransfers; //number of transfers and forcemods
     }
 
@@ -102,17 +102,14 @@ contract Storage is Ownable, ReentrancyGuard {
     /*
      * @dev Check record isn't time locked
      */
-    modifier notBlockLocked(bytes32 _idxHash) {
-        //this modifier makes the bold assumption the block number will "never" be reset. hopefully, this is true...
-        require(
-            ((database[_idxHash].assetStatus == 6) ||
-                (database[_idxHash].assetStatus == 50) ||
-                (database[_idxHash].assetStatus == 56) ||
-                (database[_idxHash].timeLock < block.number)),
-            "PS:NBL:rec time locked"
-        );
-        _;
-    }
+    // modifier notBlockLocked(bytes32 _idxHash) {
+    //     //this modifier makes the bold assumption the block number will "never" be reset. hopefully, this is true...
+    //     require(
+    //             database[_idxHash].timeLock < block.number,
+    //         "PS:NBL:rec time locked"
+    //     );
+    //     _;
+    // }
 
 
     /*
@@ -142,6 +139,7 @@ contract Storage is Ownable, ReentrancyGuard {
     function isEscrow (uint16 _assetStatus) private pure returns (uint8){
         if ((_assetStatus != 6) &&
                 (_assetStatus != 50) &&
+                (_assetStatus != 60) &&
                 (_assetStatus != 56)){
                     return 0;
                 } else {
@@ -199,8 +197,11 @@ contract Storage is Ownable, ReentrancyGuard {
         bytes32 _Ipfs1
     ) external nonReentrant isAuthorized {
         require(
-            (database[_idxHash].rightsHolder == 0) ||
-                (database[_idxHash].assetStatus == 60),
+            database[_idxHash].assetStatus != 60,
+            "PS:NR:Asset is recycled. Use T_PRUF_APP recycle instead"
+        );
+        require(
+            database[_idxHash].rightsHolder == 0,
             "PS:NR:Rec already exists"
         );
         require(_rgt != 0, "PS:NR:RGT cannot be blank");
@@ -250,7 +251,7 @@ contract Storage is Ownable, ReentrancyGuard {
         isAuthorized
         exists(_idxHash)
         notEscrow(_idxHash)
-        notBlockLocked(_idxHash)
+        //notBlockLocked(_idxHash)
     {
         bytes32 idxHash = _idxHash; //stack saving
         bytes32 rgtHash = _rgtHash;
@@ -277,7 +278,7 @@ contract Storage is Ownable, ReentrancyGuard {
         );
         //^^^^^^^checks^^^^^^^^^
 
-        database[idxHash].timeLock = block.number;
+        //database[idxHash].timeLock = block.number;
         Record memory rec = database[_idxHash];
         //escrows[_idxHash] = 0; //clear escrow table
 
@@ -307,10 +308,10 @@ contract Storage is Ownable, ReentrancyGuard {
         isAuthorized
         exists(_idxHash)
         notEscrow(_idxHash)
-        notBlockLocked(_idxHash)
+        //notBlockLocked(_idxHash)
     {
         bytes32 idxHash = _idxHash; //stack saving
-        database[idxHash].timeLock = block.number;
+        //database[idxHash].timeLock = block.number;
         Record memory rec = database[_idxHash];
 
         require(
@@ -343,7 +344,7 @@ contract Storage is Ownable, ReentrancyGuard {
         nonReentrant
         isAuthorized
         exists(_idxHash)
-        notBlockLocked(_idxHash)
+        //notBlockLocked(_idxHash)
     //isACtokenHolder(_idxHash)
     {
         require(
@@ -357,7 +358,7 @@ contract Storage is Ownable, ReentrancyGuard {
             "PS:SSL:Txfr or escrow locked asset cannot be set to L/S."
         );
         //^^^^^^^checks^^^^^^^^^
-        database[_idxHash].timeLock = block.number;
+        //database[_idxHash].timeLock = block.number;
 
         Record memory rec = database[_idxHash];
 
@@ -388,7 +389,7 @@ contract Storage is Ownable, ReentrancyGuard {
         isEscrowManager
         exists(_idxHash)
         notEscrow(_idxHash)
-        notBlockLocked(_idxHash)
+        //notBlockLocked(_idxHash)
     //isACtokenHolder(_idxHash)
     {
         require(
@@ -407,13 +408,17 @@ contract Storage is Ownable, ReentrancyGuard {
         );
         //^^^^^^^checks^^^^^^^^^
 
-        database[_idxHash].timeLock = block.number;
+        //database[_idxHash].timeLock = block.number;
         Record memory rec = database[_idxHash];
 
         (rec.lastRecorder, rec.recorder) = storeRecorder(
             _idxHash,
             _contractNameHash
         );
+        
+        if (_newAssetStatus == 60){
+            rec.rightsHolder = 0xFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF;
+        }
         rec.assetStatus = _newAssetStatus;
         database[_idxHash] = rec;
         //^^^^^^^effects^^^^^^^^^
@@ -428,7 +433,7 @@ contract Storage is Ownable, ReentrancyGuard {
         external
         nonReentrant
         isEscrowManager
-        notBlockLocked(_idxHash)
+        //notBlockLocked(_idxHash)
         exists(_idxHash)
     {
         require(
@@ -436,7 +441,7 @@ contract Storage is Ownable, ReentrancyGuard {
             "PS:EE:Not in escrow status"
         );
         //^^^^^^^checks^^^^^^^^^
-        database[_idxHash].timeLock = block.number;
+        //database[_idxHash].timeLock = block.number;
         Record memory rec = database[_idxHash];
 
         if (rec.assetStatus == 6) {
@@ -446,6 +451,9 @@ contract Storage is Ownable, ReentrancyGuard {
             rec.assetStatus = 57;
         }
         if (rec.assetStatus == 50) {
+            rec.assetStatus = 58;
+        }
+        if (rec.assetStatus == 60) {
             rec.assetStatus = 58;
         }
         (rec.lastRecorder, rec.recorder) = storeRecorder(
@@ -471,14 +479,14 @@ contract Storage is Ownable, ReentrancyGuard {
         isAuthorized
         exists(_idxHash)
         notEscrow(_idxHash)
-        notBlockLocked(_idxHash)
+        //notBlockLocked(_idxHash)
     {
         Record memory rec = database[_idxHash];
 
         require((rec.Ipfs1 != _Ipfs1), "PS:MI1: New value same as old");
         //^^^^^^^checks^^^^^^^^^
 
-        database[_idxHash].timeLock = block.number;
+        //database[_idxHash].timeLock = block.number;
 
         rec.Ipfs1 = _Ipfs1;
 
@@ -501,7 +509,7 @@ contract Storage is Ownable, ReentrancyGuard {
         isAuthorized
         exists(_idxHash)
         notEscrow(_idxHash)
-        notBlockLocked(_idxHash)
+        //notBlockLocked(_idxHash)
     //isACtokenHolder(_idxHash)
     {
         Record memory rec = database[_idxHash];
@@ -509,7 +517,7 @@ contract Storage is Ownable, ReentrancyGuard {
         require((rec.Ipfs2 == 0), "PS:MI2: Cannot overwrite IPFS2");
         //^^^^^^^checks^^^^^^^^^
 
-        database[_idxHash].timeLock = block.number;
+        //database[_idxHash].timeLock = block.number;
 
         rec.Ipfs2 = _Ipfs2;
 
@@ -585,8 +593,8 @@ contract Storage is Ownable, ReentrancyGuard {
             uint256,
             bytes32,
             bytes32,
-            uint16,
-            uint256
+            uint16
+            //uint256
         )
     {
         Record memory rec = database[_idxHash];
@@ -610,8 +618,8 @@ contract Storage is Ownable, ReentrancyGuard {
             rec.countDownStart,
             rec.Ipfs1,
             rec.Ipfs2,
-            rec.numberOfTransfers,
-            rec.timeLock
+            rec.numberOfTransfers
+            //rec.timeLock
         );
         //^^^^^^^interactions^^^^^^^^^
     }
