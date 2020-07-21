@@ -35,6 +35,8 @@ class Main extends Component {
       if(this.state.storage < 1){self.setState({ storage: contracts.storage });}
       if(this.state.PRUF_NP < 1){self.setState({ PRUF_NP: contracts.nonPayable });}
       if(this.state.PRUF_APP < 1){self.setState({ PRUF_APP: contracts.payable });}
+      if(this.state.PRUF_simpleEscrow < 1){self.setState({ PRUF_simpleEscrow: contracts.simpleEscrow });}
+      if(this.state.PRUF_AC_manager < 1){self.setState({ PRUF_AC_manager: contracts.actManager });}
     };
 
     this.getAssetClass = async () => {//under the condition that asset class has not been retrieved and stored in state, get it from user data
@@ -145,6 +147,8 @@ class Main extends Component {
       PRUF_APP: "",
       PRUF_NP: "",
       storage: "",
+      PRUF_AC_manager: "",
+      PRUF_simpleEscrow: "",
       assetClass: undefined,
       contractArray: [],
     };

@@ -7,7 +7,7 @@ import Button from "react-bootstrap/Button";
 import returnManufacturers from "./Manufacturers";
 import returnTypes from "./Types";
 
-class VerifyRightHolder extends Component {
+class ForceModifyRecord extends Component {
   constructor(props) {
     super(props);
 
@@ -15,10 +15,10 @@ class VerifyRightHolder extends Component {
 
     this.getCosts = async () => {//under the condition that prices are not stored in state, get prices from storage
       const self = this;
-      if (self.state.costArray[0] > 0 || self.state.PRUF_AC_manager === "" || self.state.assetClass === undefined) {
+      if (self.state.costArray[0] > 0 || self.state.storage === "" || self.state.assetClass === undefined) {
       } else {
         for (var i = 0; i < 1; i++) {
-          self.state.PRUF_AC_manager.methods
+          self.state.storage.methods
             .retrieveCosts(self.state.assetClass)
             .call({ from: self.state.addr }, function (_error, _result) {
               if (_error) {
@@ -37,9 +37,9 @@ class VerifyRightHolder extends Component {
     this.getAssetClass = async () => {//under the condition that asset class has not been retrieved and stored in state, get it from user data
       const self = this;
       //console.log("getting asset class");
-      if (self.state.assetClass > 0 || self.state.PRUF_AC_manager === "") {
+      if (self.state.assetClass > 0 || self.state.PRUF_APP === "") {
       } else {
-        self.state.PRUF_AC_manager.methods
+        self.state.PRUF_APP.methods
           .getUserExt(self.state.web3.utils.soliditySha3(self.state.addr))
           .call({ from: self.state.addr }, function (_error, _result) {
             if (_error) {console.log(_error)
@@ -60,8 +60,6 @@ class VerifyRightHolder extends Component {
       if(this.state.storage < 1){self.setState({ storage: contracts.storage });}
       if(this.state.PRUF_NP < 1){self.setState({ PRUF_NP: contracts.nonPayable });}
       if(this.state.PRUF_APP < 1){self.setState({ PRUF_APP: contracts.payable });}
-      if(this.state.PRUF_simpleEscrow < 1){self.setState({ PRUF_simpleEscrow: contracts.simpleEscrow });}
-      if(this.state.PRUF_AC_manager < 1){self.setState({ PRUF_AC_manager: contracts.actManager });}
     };
 
     this.acctChanger = async () => {//Handle an address change, update state accordingly
@@ -72,21 +70,25 @@ class VerifyRightHolder extends Component {
       ethereum.on("accountsChanged", function (accounts) {
         _web3.eth.getAccounts().then((e) => self.setState({ addr: e[0] }));
         self.setState({assetClass: undefined})
+        self.setState({costArray: [0]})
       });
     };
 
     //Component state declaration
 
+    this.mounted = false;
     this.state = {
       addr: "",
+      costArray: [0],
       error: undefined,
-      error1: undefined,
+      NRerror: undefined,
       result: "",
-      result1: "",
       assetClass: undefined,
+      CountDownStart: "",
       ipfs1: "",
       txHash: "",
       txStatus: false,
+      isNFA: false,
       type: "",
       manufacturer: "",
       model: "",
@@ -96,25 +98,28 @@ class VerifyRightHolder extends Component {
       surname: "",
       id: "",
       secret: "",
-      isNFA: false,
+      newFirst: "",
+      newMiddle: "",
+      newSurname: "",
+      newId: "",
+      newSecret: "",
       web3: null,
       PRUF_APP: "",
       PRUF_NP: "",
       storage: "",
-      PRUF_AC_manager: "",
-      PRUF_simpleEscrow: "",
     };
   }
 
   //component state-change events......................................................................................................
 
   componentDidMount() {//stuff to do when component mounts in window
+
     //console.log("component mounted")
+
     var _web3 = require("web3");
     _web3 = new Web3(_web3.givenProvider);
     this.setState({ web3: _web3 });
     _web3.eth.getAccounts().then((e) => this.setState({ addr: e[0] }));
-
     document.addEventListener("accountListener", this.acctChanger());
   }
 
@@ -124,15 +129,21 @@ class VerifyRightHolder extends Component {
     document.removeEventListener("accountListener", this.acctChanger());
   }
 
-  componentDidUpdate(){//stuff to do when state updates
+  componentDidUpdate() {//stuff to do when state updates
 
     if(this.state.web3 !== null && this.state.PRUF_APP < 1){
       this.returnsContract();
     }
-
+    
     if (this.state.addr > 0 && this.state.assetClass === undefined) {
       this.getAssetClass();
-  }
+    }
+
+    if (this.state.addr > 0) {
+      if (this.state.costArray[0] < 1) {
+        this.getCosts();
+      }
+    }
   }
 
   render() {//render continuously produces an up-to-date stateful document  
@@ -142,14 +153,19 @@ class VerifyRightHolder extends Component {
       await self.state.storage.methods
         .retrieveShortRecord(idxHash)
         .call({ from: self.state.addr }, function (_error, _result) {
+          console.log(_result);
           if (_error) {
-            self.setState({ error1: _error });
-            self.setState({ result1: 0 });
+          } else if (Object.values(_result)[4] === "0") {
+            self.setState({ error: _error });
+            self.setState({ result: 0 });
             alert(
               "WARNING: Record DOES NOT EXIST! Reject in metamask and review asset info fields."
             );
           } else {
-            self.setState({ result1: _result });
+            self.setState({ result: _result });
+            alert(
+              "WARNING: Modifying a record will permanently delete existing owner data."
+            );
           }
           console.log("check debug, _result, _error: ", _result, _error);
         });
@@ -169,13 +185,59 @@ class VerifyRightHolder extends Component {
       this.setState({type: ""});
     }
 
-    const _verify = () => {
+    const _reimportAsset = () => {
+      this.setState({ txStatus: false });
+      this.setState({ txHash: "" });
+      this.setState({error: undefined})
+      this.setState({result: ""})
+      var idxHash = this.state.web3.utils.soliditySha3(
+        this.state.type,
+        this.state.manufacturer,
+        this.state.model,
+        this.state.serial
+      );
+
+      var rgtRaw = this.state.web3.utils.soliditySha3(
+        this.state.first,
+        this.state.middle,
+        this.state.surname,
+        this.state.id,
+        this.state.secret
+      );
+
+      var rgtHash = this.state.web3.utils.soliditySha3(idxHash, rgtRaw);
+
+      console.log("idxHash", idxHash);
+      console.log("New rgtHash", rgtHash);
+      console.log("addr: ", this.state.addr);
+
+      checkExists(idxHash);
+
+      this.state.PRUF_APP.methods
+        .$reimportRecord(idxHash, rgtHash)
+        .send({ from: this.state.addr, value: this.state.costArray[3] })
+        .on("error", function (_error) {
+          // self.setState({ NRerror: _error });
+          self.setState({ txHash: Object.values(_error)[0].transactionHash });
+          self.setState({ txStatus: false });
+          console.log(Object.values(_error)[0].transactionHash);
+        })
+        .on("receipt", (receipt) => {
+          this.setState({ txHash: receipt.transactionHash });
+          this.setState({ txStatus: receipt.status });
+          console.log(receipt.status);
+          //Stuff to do when tx confirms
+        });
+      console.log(this.state.txHash);
+    };
+
+    const _forceModifyRecord = () => {
       this.setState({ txStatus: false });
       this.setState({ txHash: "" });
       this.setState({error: undefined})
       this.setState({result: ""})
       var idxHash;
-      var rgtRaw;
+      var newRgtRaw;
       
       idxHash = this.state.web3.utils.soliditySha3(
         this.state.type,
@@ -184,47 +246,45 @@ class VerifyRightHolder extends Component {
         this.state.serial,
     );
 
-      rgtRaw = this.state.web3.utils.soliditySha3(
+      newRgtRaw = this.state.web3.utils.soliditySha3(
         this.state.first,
         this.state.middle,
         this.state.surname,
         this.state.id,
         this.state.secret
       );
-      var rgtHash = this.state.web3.utils.soliditySha3(idxHash, rgtRaw);
+      var newRgtHash = this.state.web3.utils.soliditySha3(idxHash, newRgtRaw);
 
       console.log("idxHash", idxHash);
+      console.log("New rgtRaw", newRgtRaw);
+      console.log("New rgtHash", newRgtHash);
       console.log("addr: ", this.state.addr);
 
       checkExists(idxHash);
 
-      this.state.storage.methods
-        ._verifyRightsHolder(idxHash, rgtHash)
-        .call({ from: this.state.addr }, function (_error, _result) {
-          if (_error) {
-            self.setState({ error: _error });
-            self.setState({ result: 0 });
-          } else {
-            self.setState({ result: _result });
-            console.log("verify.call result: ", _result);
-            self.setState({ error: undefined });
-          }
-        });
-
-      this.state.storage.methods
-        .blockchainVerifyRightsHolder(idxHash, rgtHash)
-        .send({ from: this.state.addr })
+      this.state.PRUF_APP.methods
+        .$forceModRecord(idxHash, newRgtHash)
+        .send({ from: this.state.addr, value: this.state.costArray[5] })
+        .on("error", function (_error) {
+          // self.setState({ NRerror: _error });
+          self.setState({ txHash: Object.values(_error)[0].transactionHash });
+          self.setState({ txStatus: false });
+          console.log(Object.values(_error)[0].transactionHash);
+        })
         .on("receipt", (receipt) => {
           this.setState({ txHash: receipt.transactionHash });
-          console.log(this.state.txHash);
+          this.setState({ txStatus: receipt.status });
+          console.log(receipt.status);
+          //Stuff to do when tx confirms
         });
 
-      console.log(this.state.result);
+      console.log(this.state.txHash);
       document.getElementById("MainForm").reset();
     };
+
     return (
       <div>
-        <Form className="VRform" id='MainForm'>
+        <Form className="FMRform" id='MainForm'>
         {this.state.addr === undefined && (
             <div className="errorResults">
               <h2>WARNING!</h2>
@@ -249,7 +309,7 @@ class VerifyRightHolder extends Component {
                 />
                 </Form.Group>
                 )}
-              <h2 className="Headertext">Verify Rights Holder</h2>
+              <h2 className="Headertext">Force Modify/Reimport Asset</h2>
               <br></br>
               <Form.Row>
                 <Form.Group as={Col} controlId="formGridType">
@@ -308,54 +368,52 @@ class VerifyRightHolder extends Component {
                   />
                 </Form.Group>
               </Form.Row>
-
               <Form.Row>
-                <Form.Group as={Col} controlId="formGridFirstName">
-                  <Form.Label className="formFont">First Name:</Form.Label>
+                <Form.Group as={Col} controlId="formGridNewFirstName">
+                  <Form.Label className="formFont">New First Name:</Form.Label>
                   <Form.Control
-                    placeholder="First Name"
+                    placeholder="New First Name"
                     required
                     onChange={(e) => this.setState({ first: e.target.value })}
                     size="lg"
                   />
                 </Form.Group>
 
-                <Form.Group as={Col} controlId="formGridMiddleName">
-                  <Form.Label className="formFont">Middle Name:</Form.Label>
+                <Form.Group as={Col} controlId="formGridNewMiddleName">
+                  <Form.Label className="formFont">New Middle Name:</Form.Label>
                   <Form.Control
-                    placeholder="Middle Name"
+                    placeholder="New Middle Name"
                     required
                     onChange={(e) => this.setState({ middle: e.target.value })}
                     size="lg"
                   />
                 </Form.Group>
 
-                <Form.Group as={Col} controlId="formGridLastName">
-                  <Form.Label className="formFont">Last Name:</Form.Label>
+                <Form.Group as={Col} controlId="formGridNewLastName">
+                  <Form.Label className="formFont">New Last Name:</Form.Label>
                   <Form.Control
-                    placeholder="Last Name"
+                    placeholder="New Last Name"
                     required
                     onChange={(e) => this.setState({ surname: e.target.value })}
                     size="lg"
                   />
                 </Form.Group>
               </Form.Row>
-
               <Form.Row>
-                <Form.Group as={Col} controlId="formGridIdNumber">
-                  <Form.Label className="formFont">ID Number:</Form.Label>
+                <Form.Group as={Col} controlId="formGridNewIdNumber">
+                  <Form.Label className="formFont">New ID Number:</Form.Label>
                   <Form.Control
-                    placeholder="ID Number"
+                    placeholder="New ID Number"
                     required
                     onChange={(e) => this.setState({ id: e.target.value })}
                     size="lg"
                   />
                 </Form.Group>
 
-                <Form.Group as={Col} controlId="formGridPassword">
-                  <Form.Label className="formFont">Password:</Form.Label>
+                <Form.Group as={Col} controlId="formGridNewPassword">
+                  <Form.Label className="formFont">New Password:</Form.Label>
                   <Form.Control
-                    placeholder="Password"
+                    placeholder="New Password"
                     type="password"
                     required
                     onChange={(e) => this.setState({ secret: e.target.value })}
@@ -363,39 +421,86 @@ class VerifyRightHolder extends Component {
                   />
                 </Form.Group>
               </Form.Row>
-
               <Form.Row>
-                <Form.Group className="buttonDisplay">
+              <div>
+                <Form.Group>
                   <Button
+                    className="ownerButtonDisplay"
+                    variant="danger"
+                    type="button"
+                    size="lg"
+                    onClick={_forceModifyRecord}
+                  >
+                    Force modify
+                  </Button>
+                </Form.Group>
+              </div>
+              <div>
+                <Form.Group>
+                  <Button
+                    className="ownerButtonDisplay2"
                     variant="primary"
                     type="button"
                     size="lg"
-                    onClick={_verify}
+                    onClick={_reimportAsset}
                   >
-                    Submit
+                    Re-import
                   </Button>
                 </Form.Group>
+              </div>
+                {/* <ButtonGroup className="buttonGroupDisplay" aria-label="choices">
+                <Button variant="danger"
+                    type="button"
+                    size="lg"
+                    onClick={_forceModifyRecord}>
+                      
+                      Force Modify
+                    </Button> 
+
+                    <Button variant="primary"
+                    type="button"
+                    size="lg"
+                    onClick={_reimportAsset}
+                  >
+                    Re-import
+                    </Button>
+                </ButtonGroup> */}
               </Form.Row>
             </div>
           )}
         </Form>
-
         {this.state.txHash > 0 && ( //conditional rendering
-          <div className="VRHresults">
-            {this.state.result === "170"
-              ? "Match Confirmed :"
-              : "Record does not match :"}
-            <a
-              href={" https://kovan.etherscan.io/tx/" + this.state.txHash}
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              KOVAN Etherscan:{this.state.txHash}
-            </a>
+          <div className="Results">
+            {this.state.txStatus === false && (
+              <div>
+                !ERROR! :
+                <a
+                  href={"https://kovan.etherscan.io/tx/" + this.state.txHash}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  KOVAN Etherscan:{this.state.txHash}
+                </a>
+              </div>
+            )}
+            {this.state.txStatus === true && (
+              <div>
+                {" "}
+                No Errors Reported :
+                <a
+                  href={"https://kovan.etherscan.io/tx/" + this.state.txHash}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  KOVAN Etherscan:{this.state.txHash}
+                </a>
+              </div>
+            )}
           </div>
         )}
       </div>
     );
   }
 }
-export default VerifyRightHolder;
+
+export default ForceModifyRecord;

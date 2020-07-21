@@ -14,11 +14,13 @@ class AddContract extends Component {
     this.returnsContract = async () => {//request contracts from returnContracts, which returns an object full of contracts
       const self = this;
       var contracts = await returnContracts(self.state.web3);
-      console.log("RC AAC: ", contracts)
+      //console.log("RC NR: ", contractArray)
 
-      self.setState({ storage: contracts.storage });
+      if(this.state.storage < 1){self.setState({ storage: contracts.storage });}
       if(this.state.PRUF_NP < 1){self.setState({ PRUF_NP: contracts.nonPayable });}
       if(this.state.PRUF_APP < 1){self.setState({ PRUF_APP: contracts.payable });}
+      if(this.state.PRUF_simpleEscrow < 1){self.setState({ PRUF_simpleEscrow: contracts.simpleEscrow });}
+      if(this.state.PRUF_AC_manager < 1){self.setState({ PRUF_AC_manager: contracts.actManager });}
     };
 
     this.acctChanger = async () => {//Handle an address change, update state accordingly
@@ -44,6 +46,8 @@ class AddContract extends Component {
       web3: null,
       PRUF_APP: "",
       PRUF_NP: "",
+      PRUF_AC_manager: "",
+      PRUF_simpleEscrow: "",
     };
   }
 

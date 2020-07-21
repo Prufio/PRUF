@@ -16,10 +16,10 @@ class THEWORKS extends Component {
 
     this.getCosts = async () => {//under the condition that prices are not stored in state, get prices from storage
       const self = this;
-      if (self.state.costArray[0] > 0 || self.state.PRUF_AC_manager === "" || self.state.assetClass === undefined) {
+      if (self.state.costArray[0] > 0 || self.state.storage === "" || self.state.assetClass === undefined) {
       } else {
         for (var i = 0; i < 1; i++) {
-          self.state.PRUF_AC_manager.methods
+          self.state.storage.methods
             .retrieveCosts(self.state.assetClass)
             .call({ from: self.state.addr }, function (_error, _result) {
               if (_error) {
@@ -38,9 +38,9 @@ class THEWORKS extends Component {
     this.getAssetClass = async () => {//under the condition that asset class has not been retrieved and stored in state, get it from user data
       const self = this;
       //console.log("getting asset class");
-      if (self.state.assetClass > 0 || self.state.PRUF_AC_manager === "") {
+      if (self.state.assetClass > 0 || self.state.PRUF_APP === "") {
       } else {
-        self.state.PRUF_AC_manager.methods
+        self.state.PRUF_APP.methods
           .getUserExt(self.state.web3.utils.soliditySha3(self.state.addr))
           .call({ from: self.state.addr }, function (_error, _result) {
             if (_error) {console.log(_error)
@@ -61,8 +61,6 @@ class THEWORKS extends Component {
       if(this.state.storage < 1){self.setState({ storage: contracts.storage });}
       if(this.state.PRUF_NP < 1){self.setState({ PRUF_NP: contracts.nonPayable });}
       if(this.state.PRUF_APP < 1){self.setState({ PRUF_APP: contracts.payable });}
-      if(this.state.PRUF_simpleEscrow < 1){self.setState({ PRUF_simpleEscrow: contracts.simpleEscrow });}
-      if(this.state.PRUF_AC_manager < 1){self.setState({ PRUF_AC_manager: contracts.actManager });}
     };
 
     this.acctChanger = async () => {//Handle an address change, update state accordingly
@@ -123,8 +121,6 @@ class THEWORKS extends Component {
       PRUF_APP: "",
       PRUF_NP: "",
       storage: "",
-      PRUF_AC_manager: "",
-      PRUF_simpleEscrow: "",
       txStatus: null,
     };
   }

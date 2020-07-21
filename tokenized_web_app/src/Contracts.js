@@ -2,21 +2,22 @@ import returnABIs from "./returnABIs";
 
 async function returnContracts(_web3) {
   const abis = returnABIs();
+  var addr;
   var contracts = {storage: null,
                   nonPayable: null,
                   payable: null,
                   simpleEscrow: null,
                   };
+
+  _web3.eth.getAccounts().then((e) => addr = e[0]);
   const STORAGE_ABI = abis.storage;
   const PRUF_NP_ABI = abis.nonPayable;
   const PRUF_APP_ABI = abis.payable;
-  const PRUF_AC_manager_ABI = abis.actManager;
   const PRUF_simpleEscrow_ABI = abis.simpleEscrow;
-  const storage_Address = "0xae0A1529F0FA3Ed53490cE1Dc0E30c5cEa45791d";
+  const storage_Address = "0xc374114EC7E8Cd0aB7acD4485932e8cfa01AF769";
   const Storage = new _web3.eth.Contract(STORAGE_ABI, storage_Address);
   var PRUF_NP = null;
   var PRUF_APP = null;
-  var PRUF_AC_manager = null;
   var PRUF_simpleEscrow = null;
 
       await Storage.methods
@@ -37,15 +38,6 @@ async function returnContracts(_web3) {
           }
         );
 
-        await Storage.methods
-        .resolveContractAddress("PRUF_AC_manager")
-        .call(function (_error, _result) {
-          if (_error) { console.log(_error);
-          } else { 
-          PRUF_AC_manager = new _web3.eth.Contract(PRUF_AC_manager_ABI, _result);}
-          }
-        );
-
       await Storage.methods
         .resolveContractAddress("PRUF_simpleEscrow")
         .call(function (_error, _result) {
@@ -59,7 +51,6 @@ async function returnContracts(_web3) {
   contracts.nonPayable = PRUF_NP;
   contracts.payable = PRUF_APP;
   contracts.simpleEscrow = PRUF_simpleEscrow;
-  contracts.actManager = PRUF_AC_manager;
 
   return contracts;
 }
