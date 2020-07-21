@@ -27,7 +27,7 @@ contract T_PRUF_APP is PRUF {
 
     //--------------------------------------------External Functions--------------------------
     /*
-     * @dev Wrapper for newRecord
+     * @dev Create a  newRecord
      */
     function $newRecord(
         bytes32 _idxHash,
@@ -95,8 +95,14 @@ contract T_PRUF_APP is PRUF {
         //^^^^^^^interactions^^^^^^^^^
     }
 
+    /*
+     * @dev Import a record into a new asset class
+     */
     function $importAsset(bytes32 _idxHash, uint16 _newAssetClass)
-        external payable nonReentrant isAuthorized(_idxHash)
+        external
+        payable
+        nonReentrant
+        isAuthorized(_idxHash)
     {
         Record memory rec = getRecord(_idxHash);
 
@@ -105,7 +111,7 @@ contract T_PRUF_APP is PRUF {
                 _newAssetClass,
                 rec.assetClass
             ) == 170,
-            "PS:CAC:Cannot change AC to new root"
+            "TPA:IA:Cannot change AC to new root"
         );
         //^^^^^^^checks^^^^^^^^^
 
@@ -117,7 +123,8 @@ contract T_PRUF_APP is PRUF {
 
         deductNewRecordCosts(_newAssetClass);
         //^^^^^^^interactions / effects^^^^^^^^^^^^
-        }
+    }
+
 
     /*
      * @dev remint token with confirmation of posession of RAWTEXT hash inputs
@@ -139,7 +146,12 @@ contract T_PRUF_APP is PRUF {
             AC_info.custodyType == 2,
             "TPA:RMT:Contract not authorized for custodial assets"
         );
-        require(rec.rightsHolder != 0, "PA:I2: Record does not exist");
+        require(rec.rightsHolder != 0, "TPA:RMT:Record does not exist");
+        require(
+            rec.rightsHolder !=
+                0xFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF,
+            "TPA:RMT:Record not remintable"
+        );
         require(
             (rec.assetStatus != 60),
             "TPA:RMT:Record is burned and must be reimported by ACadmin"
@@ -150,7 +162,7 @@ contract T_PRUF_APP is PRUF {
                 (rec.assetStatus != 56),
             "TPA:RMT:Cannot modify asset in Escrow"
         );
-        require(rec.assetStatus < 200, "PA:I2: Record locked");
+        require(rec.assetStatus < 200, "TPA:RMT:Record locked");
         require(
             (rec.assetStatus != 5) &&
                 (rec.assetStatus != 55) &&
@@ -159,7 +171,9 @@ contract T_PRUF_APP is PRUF {
         );
         require(
             rec.rightsHolder ==
-                keccak256(abi.encodePacked(first, middle, last, id, secret)),
+                keccak256(
+                    abi.encodePacked(_idxHash, first, middle, last, id, secret)
+                ),
             "TPA:RMT:Rightsholder does not match supplied data"
         );
         //^^^^^^^checks^^^^^^^^^
@@ -204,7 +218,7 @@ contract T_PRUF_APP is PRUF {
                 (rec.assetStatus != 56),
             "TPA:I2:Cannot modify asset in Escrow"
         );
-        require(rec.assetStatus < 200, "PA:I2: Record locked");
+        require(rec.assetStatus < 200, "TPA:I2: Record locked");
         require(
             (rec.assetStatus != 5) && (rec.assetStatus != 55),
             "TPA:I2:Record In Transferred-unregistered status"

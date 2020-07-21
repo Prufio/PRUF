@@ -6,10 +6,9 @@
 // SPDX-License-Identifier: UNLICENSED
 pragma solidity ^0.6.7;
 
-import "./PRUF_basic_066.sol";
-import "./Imports/Safemath.sol";
+import "./PRUF_core_066.sol";
 
-contract PRUF_simpleEscrow is PRUF_BASIC {
+contract PRUF_simpleEscrow is PRUF {
     using SafeMath for uint256;
 
     /*
@@ -100,7 +99,8 @@ contract PRUF_simpleEscrow is PRUF_BASIC {
             escrowTime,
             0x0,
             0x0,
-            0x0
+            address(0),
+            address(0)
         );
         //^^^^^^^interactions^^^^^^^^^
     }
@@ -114,7 +114,8 @@ contract PRUF_simpleEscrow is PRUF_BASIC {
         isAuthorized(_idxHash)
     {
         Record memory rec = getRecord(_idxHash);
-        Record memory shortRec = getShortRecord(_idxHash);
+        //Record memory shortRec = getShortRecord(_idxHash);
+        escrowData memory escrow =  getEscrowData(_idxHash);
         User memory callingUser = getUser();
         AC memory AC_info = getACinfo(rec.assetClass);
         bytes32 ownerHash = escrowMGRcontract.retrieveEscrowOwner(_idxHash);
@@ -140,7 +141,7 @@ contract PRUF_simpleEscrow is PRUF_BASIC {
             "PSE:EE: Usertype less than 5 required to end this escrow"
         );
         require(
-            (shortRec.timeLock < now) ||
+            (escrow.timelock < now) ||
                 (keccak256(abi.encodePacked(msg.sender)) == ownerHash),
             "PSE:EE: Escrow period not ended and caller is not escrow owner"
         );

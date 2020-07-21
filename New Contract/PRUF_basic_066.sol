@@ -24,7 +24,7 @@ contract PRUF_BASIC is ReentrancyGuard, Ownable,  IERC721Receiver {
         uint256 countDownStart; // Starting point for countdown variable (set once)
         bytes32 Ipfs1; // Publically viewable asset description
         bytes32 Ipfs2; // Publically viewable immutable notes
-        uint256 timeLock; // Time sensitive mutex
+        //uint256 timeLock; // Time sensitive mutex
         uint16 numberOfTransfers; //number of transfers and forcemods
     }
     struct User {
@@ -44,7 +44,16 @@ contract PRUF_BASIC is ReentrancyGuard, Ownable,  IERC721Receiver {
         bytes32 nameHash; // Contract Name hashed
     }
 
-
+    struct escrowData {
+        uint8 data;
+        bytes32 controllingContractNameHash;
+        bytes32 escrowOwnerAddressHash;
+        uint256 timelock;
+        bytes32 ex1;
+        bytes32 ex2;
+        address addr1;
+        address addr2;
+    }
 
     mapping(bytes32 => User) internal registeredUsers; // Authorized recorder database
 
@@ -61,9 +70,15 @@ contract PRUF_BASIC is ReentrancyGuard, Ownable,  IERC721Receiver {
     AssetClassTokenInterface internal AssetClassTokenContract; //erc721_token prototype initialization
 
     address internal escrowMGRAddress;
-    EscrowManagerInterface internal escrowMGRcontract; // Set up external contract interface
+    EscrowManagerInterface internal escrowMGRcontract; //Set up external contract interface for escrowmgr
+
+    address internal recyclerAddress;   //Set up external contract interface for recycler
+    RecyclerInterface internal Recycler;
 
     address internal PrufAppAddress;
+    address internal T_PrufAppAddress;
+
+    
     // --------------------------------------Events--------------------------------------------//
 
     event REPORT(string _msg);
@@ -120,6 +135,10 @@ contract PRUF_BASIC is ReentrancyGuard, Ownable,  IERC721Receiver {
         escrowMGRcontract = EscrowManagerInterface(escrowMGRAddress);
 
         PrufAppAddress = Storage.resolveContractAddress("PRUF_APP");
+        T_PrufAppAddress = Storage.resolveContractAddress("T_PRUF_APP");
+
+        recyclerAddress =  Storage.resolveContractAddress("PRUF_recycler");
+        Recycler = RecyclerInterface(recyclerAddress);
         //^^^^^^^effects^^^^^^^^^
     }
 
@@ -285,8 +304,8 @@ contract PRUF_BASIC is ReentrancyGuard, Ownable,  IERC721Receiver {
                 uint256 _countDownStart,
                 bytes32 _Ipfs1,
                 bytes32 _Ipfs2,
-                uint16 _numberOfTransfers,
-                uint256 _timeLock
+                uint16 _numberOfTransfers
+                //uint256 _timeLock
             ) = Storage.retrieveShortRecord(_idxHash); // Get record from storage contract
 
             rec.recorder = _recorder;
@@ -299,7 +318,7 @@ contract PRUF_BASIC is ReentrancyGuard, Ownable,  IERC721Receiver {
             rec.Ipfs1 = _Ipfs1;
             rec.Ipfs2 = _Ipfs2;
             rec.numberOfTransfers = _numberOfTransfers;
-            rec.timeLock = _timeLock;
+            //rec.timeLock = _timeLock;
         } //end of scope limit for stack depth
 
         return (rec); // Returns Record struct rec

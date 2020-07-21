@@ -56,6 +56,32 @@ contract PRUF is PullPayment, PRUF_BASIC {
     }
 
     /*
+     * @dev retrieves costs from Storage and returns Costs struct
+     */
+    function getEscrowData(bytes32 _idxHash) internal returns (escrowData memory) {
+        //^^^^^^^checks^^^^^^^^^
+
+        escrowData memory escrow;
+        //^^^^^^^effects^^^^^^^^^
+
+        (
+            escrow.data,
+            escrow.controllingContractNameHash,
+            escrow.escrowOwnerAddressHash,
+            escrow.timelock,
+            escrow.ex1,
+            escrow.ex2,
+            escrow.addr1,
+            escrow.addr2
+        ) = escrowMGRcontract.retrieveEscrowData(_idxHash);
+
+        return (escrow);
+        //^^^^^^^interactions^^^^^^^^^
+    }
+
+
+
+    /*
      * @dev Write a Record to Storage @ idxHash
      */
     function writeRecord(bytes32 _idxHash, Record memory _rec)
@@ -114,6 +140,21 @@ contract PRUF is PullPayment, PRUF_BASIC {
             pricing.ACTHaddress,
             pricing.ACTHprice
         ) = AssetClassTokenManagerContract.getNewRecordCosts(_assetClass);
+        deductPayment(pricing);
+        //^^^^^^^interactions^^^^^^^^^
+    }
+
+    function deductRecycleCosts(uint16 _assetClass, address _oldOwner) internal {
+        //^^^^^^^checks^^^^^^^^^
+        Invoice memory pricing;
+        //^^^^^^^effects^^^^^^^^^
+        (
+            pricing.rootAddress,
+            pricing.rootPrice,
+            pricing.ACTHaddress,
+            pricing.ACTHprice
+        ) = AssetClassTokenManagerContract.getNewRecordCosts(_assetClass);
+        pricing.ACTHaddress = _oldOwner;
         deductPayment(pricing);
         //^^^^^^^interactions^^^^^^^^^
     }

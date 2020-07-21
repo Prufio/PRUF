@@ -33,13 +33,17 @@ contract AssetToken is Ownable, ReentrancyGuard, ERC721 {
     address internal PrufAppAddress; //isAdmin
     address internal storageAddress;
     StorageInterface internal Storage; // Set up external contract interface
+    address internal recyclerAddress;
+    RecyclerInterface internal Recycler;
 
     event REPORT(string _msg);
 
     modifier isAdmin() {
         require(
-            (msg.sender == PrufAppAddress) || //check for minter auth
-                (msg.sender == T_PrufAppAddress) ||  //check for minter auth
+            (msg.sender == PrufAppAddress) || 
+                (msg.sender == T_PrufAppAddress) ||  
+                (msg.sender == T_PrufAppAddress) ||  
+                (msg.sender == recyclerAddress) ||  
                 (msg.sender == owner()),
             "PAT:IA:Calling address does not belong to an Admin"
         );
@@ -70,6 +74,9 @@ contract AssetToken is Ownable, ReentrancyGuard, ERC721 {
 
         T_PrufAppAddress = Storage.resolveContractAddress("T_PRUF_APP");
         PrufAppAddress = Storage.resolveContractAddress("PRUF_APP");
+
+        recyclerAddress =  Storage.resolveContractAddress("PRUF_recycler");
+        Recycler = RecyclerInterface(recyclerAddress);
         //^^^^^^^effects^^^^^^^^^
     }
 
@@ -211,23 +218,20 @@ contract AssetToken is Ownable, ReentrancyGuard, ERC721 {
     /**
      * @dev Safely burns a token and sets the corresponding RGT to zero in storage.
      */
-    function burn(uint256 tokenId) external nonReentrant {
+    function discard(uint256 tokenId) external nonReentrant isAdmin {
         bytes32 _idxHash = bytes32(tokenId);
         Record memory rec = getRecord(_idxHash);
         require(_exists(tokenId), "PAT:B:Cannot Burn nonexistant token");
         require(
             (rec.assetStatus == 59),
-            "PAT:B:Asset must be in status 59 (recyclable) to be burned"
+            "PAT:B:Asset must be in status 59 (discardable) to be burned"
         );
         require(
             _isApprovedOrOwner(_msgSender(), tokenId),
             "PAT:B:transfer caller is not owner nor approved"
         );
         //^^^^^^^checks^^^^^^^^^
-        rec.rightsHolder = 0x0; //delete rightsholder in storage
-        (rec.assetStatus == 60); //set to burned
-        //^^^^^^^effects^^^^^^^^^
-        writeRecord(_idxHash, rec);
+        Recycler.discard(_idxHash);
         _burn(tokenId);
         //^^^^^^^interactions^^^^^^^^^
     }
@@ -243,7 +247,7 @@ contract AssetToken is Ownable, ReentrancyGuard, ERC721 {
         address _recipientAddress,
         uint256 tokenId,
         string calldata _tokenURI
-    ) external isAdmin returns (uint256) {
+    ) external isAdmin nonReentrant returns (uint256) {
         require(_exists(tokenId), "PAT:RM:Cannot Remint nonexistant token");
         //^^^^^^^checks^^^^^^^^^
         _burn(tokenId);
