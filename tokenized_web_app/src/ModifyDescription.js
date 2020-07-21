@@ -4,42 +4,22 @@ import Web3 from "web3";
 import Form from "react-bootstrap/Form";
 import Col from "react-bootstrap/Col";
 import Button from "react-bootstrap/Button";
+import bs58 from "bs58";
 import returnManufacturers from "./Manufacturers";
 import returnTypes from "./Types";
 
-class VerifyRightHolder extends Component {
+class ModifyDescription extends Component {
   constructor(props) {
     super(props);
 
     //State declaration.....................................................................................................
 
-    this.getCosts = async () => {//under the condition that prices are not stored in state, get prices from storage
-      const self = this;
-      if (self.state.costArray[0] > 0 || self.state.PRUF_AC_manager === "" || self.state.assetClass === undefined) {
-      } else {
-        for (var i = 0; i < 1; i++) {
-          self.state.PRUF_AC_manager.methods
-            .retrieveCosts(self.state.assetClass)
-            .call({ from: self.state.addr }, function (_error, _result) {
-              if (_error) {
-              } else {
-                /* console.log("_result: ", _result); */ if (
-                  _result !== undefined
-                ) {
-                  self.setState({ costArray: Object.values(_result) });
-                }
-              }
-            });
-        }
-      }
-    };
-
     this.getAssetClass = async () => {//under the condition that asset class has not been retrieved and stored in state, get it from user data
       const self = this;
       //console.log("getting asset class");
-      if (self.state.assetClass > 0 || self.state.PRUF_AC_manager === "") {
+      if (self.state.assetClass > 0 || self.state.PRUF_APP < 1) {
       } else {
-        self.state.PRUF_AC_manager.methods
+        self.state.PRUF_APP.methods
           .getUserExt(self.state.web3.utils.soliditySha3(self.state.addr))
           .call({ from: self.state.addr }, function (_error, _result) {
             if (_error) {console.log(_error)
@@ -60,8 +40,6 @@ class VerifyRightHolder extends Component {
       if(this.state.storage < 1){self.setState({ storage: contracts.storage });}
       if(this.state.PRUF_NP < 1){self.setState({ PRUF_NP: contracts.nonPayable });}
       if(this.state.PRUF_APP < 1){self.setState({ PRUF_APP: contracts.payable });}
-      if(this.state.PRUF_simpleEscrow < 1){self.setState({ PRUF_simpleEscrow: contracts.simpleEscrow });}
-      if(this.state.PRUF_AC_manager < 1){self.setState({ PRUF_AC_manager: contracts.actManager });}
     };
 
     this.acctChanger = async () => {//Handle an address change, update state accordingly
@@ -79,10 +57,14 @@ class VerifyRightHolder extends Component {
 
     this.state = {
       addr: "",
+      lookupIPFS1: "",
+      lookupIPFS2: "",
+      IPFS: require("ipfs-mini"),
+      hashPath: "",
       error: undefined,
-      error1: undefined,
-      result: "",
+      NRerror: undefined,
       result1: "",
+      result2: "",
       assetClass: undefined,
       ipfs1: "",
       txHash: "",
@@ -93,22 +75,26 @@ class VerifyRightHolder extends Component {
       serial: "",
       first: "",
       middle: "",
+      isNFA: false,
       surname: "",
       id: "",
       secret: "",
-      isNFA: false,
       web3: null,
       PRUF_APP: "",
       PRUF_NP: "",
       storage: "",
-      PRUF_AC_manager: "",
-      PRUF_simpleEscrow: "",
     };
   }
 
   //component state-change events......................................................................................................
 
   componentDidMount() {//stuff to do when component mounts in window
+    var _ipfs = new this.state.IPFS({
+      host: "ipfs.infura.io",
+      port: 5001,
+      protocol: "https",
+    });
+    this.setState({ ipfs: _ipfs });
     //console.log("component mounted")
     var _web3 = require("web3");
     _web3 = new Web3(_web3.givenProvider);
@@ -116,12 +102,6 @@ class VerifyRightHolder extends Component {
     _web3.eth.getAccounts().then((e) => this.setState({ addr: e[0] }));
 
     document.addEventListener("accountListener", this.acctChanger());
-  }
-
-  componentWillUnmount() {//stuff do do when component unmounts from the window
-    this.setState({assetClass: undefined})
-    //console.log("unmounting component")
-    document.removeEventListener("accountListener", this.acctChanger());
   }
 
   componentDidUpdate(){//stuff to do when state updates
@@ -135,21 +115,64 @@ class VerifyRightHolder extends Component {
   }
   }
 
+  componentWillUnmount() {//stuff do do when component unmounts from the window
+    this.setState({assetClass: undefined})
+    //console.log("unmounting component")
+    document.removeEventListener("accountListener", this.acctChanger());
+  }
+
   render() {//render continuously produces an up-to-date stateful document  
     const self = this;
+
+    const getBytes32FromIpfsHash = (ipfsListing) => {
+      return "0x" + bs58.decode(ipfsListing).slice(2).toString("hex");
+    };
+
+    const publishIPFS1 = async () => {
+      console.log("Uploading file to IPFS...");
+      await this.state.ipfs.add(this.state.ipfs1, (error, hash) => {
+        if (error) {
+          console.log("Something went wrong. Unable to upload to ipfs");
+        } else {
+          console.log("uploaded at hash: ", hash);
+        }
+        self.setState({ hashPath: getBytes32FromIpfsHash(hash) });
+      });
+    };
 
     async function checkExists(idxHash) {
       await self.state.storage.methods
         .retrieveShortRecord(idxHash)
         .call({ from: self.state.addr }, function (_error, _result) {
           if (_error) {
-            self.setState({ error1: _error });
-            self.setState({ result1: 0 });
+            self.setState({ error: _error });
+            self.setState({ result: 0 });
             alert(
               "WARNING: Record DOES NOT EXIST! Reject in metamask and review asset info fields."
             );
           } else {
+            if (Object.values(_result)[7] === self.state.hashPath){
+              alert("WARNING: Record description matches current submission! Reject in metamask and check description field.")
+            }
             self.setState({ result1: _result });
+          }
+          console.log("check debug, _result, _error: ", _result, _error);
+        });
+    }
+
+    async function checkMatch(idxHash, rgtHash) {
+      await self.state.storage.methods
+        ._verifyRightsHolder(idxHash, rgtHash)
+        .call({ from: self.state.addr }, function (_error, _result) {
+          if (_error) {
+            self.setState({ error: _error });
+          } else if (_result === "0") {
+            self.setState({ result: 0 });
+            alert(
+              "WARNING: Record DOES NOT MATCH supplied owner info! Reject in metamask and review owner fields."
+            );
+          } else {
+            self.setState({ result2: _result });
           }
           console.log("check debug, _result, _error: ", _result, _error);
         });
@@ -169,7 +192,7 @@ class VerifyRightHolder extends Component {
       this.setState({type: ""});
     }
 
-    const _verify = () => {
+    const _updateDescription = () => {
       this.setState({ txStatus: false });
       this.setState({ txHash: "" });
       this.setState({error: undefined})
@@ -192,39 +215,40 @@ class VerifyRightHolder extends Component {
         this.state.secret
       );
       var rgtHash = this.state.web3.utils.soliditySha3(idxHash, rgtRaw);
+      var _ipfs1 = this.state.hashPath;
 
       console.log("idxHash", idxHash);
+      console.log("New rgtRaw", rgtRaw);
+      console.log("New rgtHash", rgtHash);
       console.log("addr: ", this.state.addr);
 
       checkExists(idxHash);
+      checkMatch(idxHash, rgtHash);
 
-      this.state.storage.methods
-        ._verifyRightsHolder(idxHash, rgtHash)
-        .call({ from: this.state.addr }, function (_error, _result) {
-          if (_error) {
-            self.setState({ error: _error });
-            self.setState({ result: 0 });
-          } else {
-            self.setState({ result: _result });
-            console.log("verify.call result: ", _result);
-            self.setState({ error: undefined });
-          }
-        });
-
-      this.state.storage.methods
-        .blockchainVerifyRightsHolder(idxHash, rgtHash)
+      this.state.PRUF_NP.methods
+        ._modIpfs1(idxHash, rgtHash, _ipfs1)
         .send({ from: this.state.addr })
+        .on("error", function (_error) {
+          // self.setState({ NRerror: _error });
+          self.setState({ txHash: Object.values(_error)[0].transactionHash });
+          self.setState({ txStatus: false });
+          console.log(Object.values(_error)[0].transactionHash);
+        })
         .on("receipt", (receipt) => {
           this.setState({ txHash: receipt.transactionHash });
-          console.log(this.state.txHash);
+          this.setState({ txStatus: receipt.status });
+          console.log(receipt.status);
+          //Stuff to do when tx confirms
         });
 
-      console.log(this.state.result);
+      console.log(this.state.txHash);
+      self.setState({ hashPath: ""});
       document.getElementById("MainForm").reset();
     };
+
     return (
       <div>
-        <Form className="VRform" id='MainForm'>
+        <Form className="MDform" id='MainForm'>
         {this.state.addr === undefined && (
             <div className="errorResults">
               <h2>WARNING!</h2>
@@ -249,7 +273,7 @@ class VerifyRightHolder extends Component {
                 />
                 </Form.Group>
                 )}
-              <h2 className="Headertext">Verify Rights Holder</h2>
+              <h2 className="Headertext">Modify Description</h2>
               <br></br>
               <Form.Row>
                 <Form.Group as={Col} controlId="formGridType">
@@ -362,40 +386,82 @@ class VerifyRightHolder extends Component {
                     size="lg"
                   />
                 </Form.Group>
-              </Form.Row>
 
-              <Form.Row>
-                <Form.Group className="buttonDisplay">
-                  <Button
-                    variant="primary"
-                    type="button"
+                <Form.Group as={Col} controlId="formGridIpfs1">
+                  <Form.Label className="formFont">
+                    Modify Description:
+                  </Form.Label>
+                  <Form.Control
+                    placeholder="Description"
+                    required
+                    onChange={(e) => this.setState({ ipfs1: e.target.value })}
                     size="lg"
-                    onClick={_verify}
-                  >
-                    Submit
-                  </Button>
+                  />
                 </Form.Group>
               </Form.Row>
+              {this.state.hashPath !== "" && (
+                <Form.Row>
+                  <Form.Group className="buttonDisplay">
+                    <Button
+                      variant="primary"
+                      type="button"
+                      size="lg"
+                      onClick={_updateDescription}
+                    >
+                      Update Description
+                    </Button>
+                  </Form.Group>
+                </Form.Row>
+              )}
+              {this.state.hashPath === "" && (
+                <Form.Row>
+                  <Form.Group className="buttonDisplay">
+                    <Button
+                      variant="primary"
+                      type="button"
+                      size="lg"
+                      onClick={publishIPFS1}
+                    >
+                      Load to IPFS
+                    </Button>
+                  </Form.Group>
+                </Form.Row>
+              )}
             </div>
           )}
         </Form>
-
         {this.state.txHash > 0 && ( //conditional rendering
-          <div className="VRHresults">
-            {this.state.result === "170"
-              ? "Match Confirmed :"
-              : "Record does not match :"}
-            <a
-              href={" https://kovan.etherscan.io/tx/" + this.state.txHash}
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              KOVAN Etherscan:{this.state.txHash}
-            </a>
+          <div className="Results">
+            {this.state.txStatus === false && (
+              <div>
+                !ERROR! :
+                <a
+                  href={"https://kovan.etherscan.io/tx/" + this.state.txHash}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  KOVAN Etherscan:{this.state.txHash}
+                </a>
+              </div>
+            )}
+            {this.state.txStatus === true && (
+              <div>
+                {" "}
+                No Errors Reported :
+                <a
+                  href={"https://kovan.etherscan.io/tx/" + this.state.txHash}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  KOVAN Etherscan:{this.state.txHash}
+                </a>
+              </div>
+            )}
           </div>
         )}
       </div>
     );
   }
 }
-export default VerifyRightHolder;
+
+export default ModifyDescription;

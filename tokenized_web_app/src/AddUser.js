@@ -19,8 +19,6 @@ class AddUser extends Component {
       if(this.state.storage < 1){self.setState({ storage: contracts.storage });}
       if(this.state.PRUF_NP < 1){self.setState({ PRUF_NP: contracts.nonPayable });}
       if(this.state.PRUF_APP < 1){self.setState({ PRUF_APP: contracts.payable });}
-      if(this.state.PRUF_simpleEscrow < 1){self.setState({ PRUF_simpleEscrow: contracts.simpleEscrow });}
-      if(this.state.PRUF_AC_manager < 1){self.setState({ PRUF_AC_manager: contracts.actManager });}
     };
 
     this.acctChanger = async () => {//Handle an address change, update state accordingly
@@ -45,8 +43,6 @@ class AddUser extends Component {
       storage: "",
       PRUF_APP: "",
       PRUF_NP: "",
-      PRUF_AC_manager: "",
-      PRUF_simpleEscrow: "",
       web3: null,
     };
   }
@@ -77,7 +73,7 @@ class AddUser extends Component {
     const self = this;
 
     const addUser = () => {
-      this.state.PRUF_AC_manager.methods
+      this.state.PRUF_APP.methods
         .OO_addUser(
           this.state.authAddr,
           this.state.userType,

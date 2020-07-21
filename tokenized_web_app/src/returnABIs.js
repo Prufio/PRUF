@@ -2393,7 +2393,7 @@ function returnABIs() {
 //............................................................................................................................................
 
         
-        abis.actManager=PRUF_AC_manager;
+        abis.acManager=PRUF_AC_manager;
         abis.storage=STORAGE;
         abis.payable=PRUF_APP;
         abis.nonPayable=PRUF_NP;

@@ -5,7 +5,7 @@ import Form from "react-bootstrap/Form";
 import Button from "react-bootstrap/Button";
 import Col from "react-bootstrap/Col";
 
-class AddUser extends Component {
+class AddContract extends Component {
   constructor(props) {
     super(props);
 
@@ -14,13 +14,11 @@ class AddUser extends Component {
     this.returnsContract = async () => {//request contracts from returnContracts, which returns an object full of contracts
       const self = this;
       var contracts = await returnContracts(self.state.web3);
-      //console.log("RC NR: ", contractArray)
+      console.log("RC AAC: ", contracts)
 
-      if(this.state.storage < 1){self.setState({ storage: contracts.storage });}
+      self.setState({ storage: contracts.storage });
       if(this.state.PRUF_NP < 1){self.setState({ PRUF_NP: contracts.nonPayable });}
       if(this.state.PRUF_APP < 1){self.setState({ PRUF_APP: contracts.payable });}
-      if(this.state.PRUF_simpleEscrow < 1){self.setState({ PRUF_simpleEscrow: contracts.simpleEscrow });}
-      if(this.state.PRUF_AC_manager < 1){self.setState({ PRUF_AC_manager: contracts.actManager });}
     };
 
     this.acctChanger = async () => {//Handle an address change, update state accordingly
@@ -39,15 +37,13 @@ class AddUser extends Component {
       addr: "",
       error: undefined,
       result: "",
-      authAddr: "",
-      userType: "",
-      assetClass: "",
+      authAddress: "",
+      name: "",
+      authLevel: "",
       storage: "",
+      web3: null,
       PRUF_APP: "",
       PRUF_NP: "",
-      PRUF_AC_manager: "",
-      PRUF_simpleEscrow: "",
-      web3: null,
     };
   }
 
@@ -75,13 +71,12 @@ class AddUser extends Component {
 
   render() {//render continuously produces an up-to-date stateful document  
     const self = this;
-
-    const addUser = () => {
-      this.state.PRUF_AC_manager.methods
-        .OO_addUser(
-          this.state.authAddr,
-          this.state.userType,
-          this.state.assetClass
+    const addContract = () => {
+      this.state.storage.methods
+        .OO_addContract(
+          this.state.name,
+          this.state.authAddress,
+          this.state.authLevel
         )
         .send({ from: this.state.addr })
         .on("error", function (_error) {
@@ -89,10 +84,7 @@ class AddUser extends Component {
           self.setState({ result: _error.transactionHash });
         })
         .on("receipt", (receipt) => {
-          console.log(
-            "user added succesfully under asset class",
-            self.state.assetClass
-          );
+          console.log("contract added under authLevel:", self.state.authLevel);
           console.log("tx receipt: ", receipt);
         });
 
@@ -111,41 +103,36 @@ class AddUser extends Component {
 
           {this.state.addr > 0 && (
             <div>
-              <h2 className="Headertext">Add User</h2>
+              <h2 className="Headertext">Add Contract</h2>
               <br></br>
 
               <Form.Group as={Col} controlId="formGridContractName">
-                <Form.Label className="formFont">
-                  Authorized Address :
-                </Form.Label>
+                <Form.Label className="formFont">Contract Name :</Form.Label>
                 <Form.Control
-                  placeholder="Authorized Address"
+                  placeholder="Contract Name"
                   required
-                  onChange={(e) => this.setState({ authAddr: e.target.value })}
+                  onChange={(e) => this.setState({ name: e.target.value })}
                   size="lg"
                 />
               </Form.Group>
 
-              <Form.Group as={Col} controlId="formGridACClass">
-                <Form.Label className="formFont">User Type :</Form.Label>
+              <Form.Group as={Col} controlId="formGridContractAddress">
+                <Form.Label className="formFont">Contract Address :</Form.Label>
                 <Form.Control
-                  placeholder="User Type"
+                  placeholder="Contract Address"
                   required
-                  type="number"
-                  onChange={(e) => this.setState({ userType: e.target.value })}
+                  onChange={(e) => this.setState({ authAddress: e.target.value })}
                   size="lg"
                 />
               </Form.Group>
 
-              <Form.Group as={Col} controlId="formGridACClass">
-                <Form.Label className="formFont">Auth Asset Class :</Form.Label>
+              <Form.Group as={Col} controlId="formGridAuthLevel">
+                <Form.Label className="formFont">Auth Level :</Form.Label>
                 <Form.Control
-                  placeholder="Auth Asset Class"
+                  placeholder="AuthLevel"
                   required
                   type="number"
-                  onChange={(e) =>
-                    this.setState({ assetClass: e.target.value })
-                  }
+                  onChange={(e) => this.setState({ authLevel: e.target.value })}
                   size="lg"
                 />
               </Form.Group>
@@ -155,7 +142,7 @@ class AddUser extends Component {
                   variant="primary"
                   type="button"
                   size="lg"
-                  onClick={addUser}
+                  onClick={addContract}
                 >
                   Submit
                 </Button>
@@ -168,4 +155,4 @@ class AddUser extends Component {
   }
 }
 
-export default AddUser;
+export default AddContract;
