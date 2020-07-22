@@ -188,7 +188,7 @@ contract AssetToken is Ownable, ReentrancyGuard, ERC721 {
         address to,
         uint256 tokenId,
         bytes memory _data
-    ) public virtual override nonReentrant {
+    ) public virtual override {
         bytes32 _idxHash = bytes32(tokenId);
         Record memory rec = getRecord(_idxHash);
 

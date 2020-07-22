@@ -82,7 +82,6 @@ contract PRUF_NP is PRUF {
      */
     function exportAsset(bytes32 _idxHash, address _addr)
         external
-        payable
         nonReentrant
         isAuthorized(_idxHash)
         returns (uint8)
