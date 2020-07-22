@@ -33,7 +33,7 @@ pragma solidity ^0.6.7;
 
 import "./PRUF_core_066.sol";
 
-contract T_PRUF_NP is PRUF {
+contract PRUF_recycler is PRUF {
     using SafeMath for uint256;
 
     //--------------------------------------------External Functions--------------------------
