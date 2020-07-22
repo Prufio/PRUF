@@ -173,12 +173,15 @@ pragma solidity ^0.6.7;
 *-----------------------------------------------------------------
 *-----------------------------------------------------------------
  * ----------SETUP PROCEDURES---------- *
+ * need at least 3 Eth adressses
  * 1 Deploy Contracts
  * 2 Add contracts @ respective names in storage
  * 3 Set storage contract in each contract
  * 4 Resolve contract addresses
- * 5 Print root && rooted AC token
- * 6 Set costs / users / types for root && rooted AC token
+ * 5 Mint 2 root asset tokens. (home, foreign)
+ * 6 Mint 2 cust and 2 non-custodial asset classes in the home asset class
+ * 7 Mint 1 cust and 1 non-custodial asset classes in the foreign asset class 
+ * 8 Set costs / users / types for root && rooted AC token
  * 7 THE WORKS
  *
 *-----------------------------------------------------------------

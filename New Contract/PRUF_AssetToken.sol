@@ -8,7 +8,7 @@ pragma solidity ^0.6.7;
 
 import "./_ERC721/ERC721.sol";
 import "./_ERC721/Ownable.sol";
-import "./PRUF_interfaces_066.sol";
+import "./PRUF_interfaces_067.sol";
 import "./Imports/ReentrancyGuard.sol";
 
 contract AssetToken is Ownable, ReentrancyGuard, ERC721 {
@@ -262,10 +262,10 @@ contract AssetToken is Ownable, ReentrancyGuard, ERC721 {
      */
     function writeRecord(bytes32 _idxHash, Record memory _rec) private {
         //^^^^^^^checks^^^^^^^^^
-        bytes32 userHash = keccak256(abi.encodePacked(msg.sender)); // Get a userhash for authentication and recorder logging
+        //bytes32 userHash = keccak256(abi.encodePacked(msg.sender)); // Get a userhash for authentication and recorder logging
         //^^^^^^^effects^^^^^^^^^
         Storage.modifyRecord(
-            userHash,
+            //userHash,
             _idxHash,
             _rec.rightsHolder,
             _rec.assetStatus,
@@ -286,9 +286,9 @@ contract AssetToken is Ownable, ReentrancyGuard, ERC721 {
         {
             //Start of scope limit for stack depth
             (
-                bytes32 _recorder,
+                //bytes32 _recorder,
                 bytes32 _rightsHolder,
-                bytes32 _lastRecorder,
+                //bytes32 _lastRecorder,
                 uint8 _assetStatus,
                 uint8 _forceModCount,
                 uint16 _assetClass,
@@ -299,9 +299,9 @@ contract AssetToken is Ownable, ReentrancyGuard, ERC721 {
                 uint16 _numberOfTransfers
             ) = Storage.retrieveRecord(_idxHash); // Get record from storage contract
 
-            rec.recorder = _recorder;
+            //rec.recorder = _recorder;
             rec.rightsHolder = _rightsHolder;
-            rec.lastRecorder = _lastRecorder;
+            //rec.lastRecorder = _lastRecorder;
             rec.assetStatus = _assetStatus;
             rec.forceModCount = _forceModCount;
             rec.assetClass = _assetClass;
