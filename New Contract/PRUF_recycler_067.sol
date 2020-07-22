@@ -16,12 +16,12 @@
  *          Caller must hold token, must be in status 59
  *          Caller recieves deposit amount (how the bloody hell do we manage this????)
  *          Token goes into "indefinite" escrow, RGT set to 0xFFF...
- *              Caller is escrow controller, but escrow contract is "owner", can break escrow 
+ *              Caller is escrow controller, but escrow contract is "owner", can break escrow
  *                      (requires repayment of deposit amount, resets to status 51)
- *              Price set when escrow is to be broken by reregistering, from costs of the category 
+ *              Price set when escrow is to be broken by reregistering, from costs of the category
  *                     that it is to be imported into (endEscrow called from T_PRUF_APP?)
  *              Importing breaks the escrow
- *                  payment divided between ACroot, ACholder, and recycling address (escrow owner)     
+ *                  payment divided between ACroot, ACholder, and recycling address (escrow owner)
  *                  token sent to new owner (payment sender), status set to 51
  *
  *
@@ -78,27 +78,27 @@ contract PRUF_recycler is PRUF {
         //^^^^^^^interactions^^^^^^^^^
     }
 
-    /*
-     * @dev takes asset out of excrow status if time period has resolved || is escrow issuer
-     */
-    function recycle(bytes32 _idxHash) external nonReentrant {
-        Record memory rec = getRecord(_idxHash);
-        // bytes32 ownerHash = escrowMGRcontract.retrieveEscrowOwner(_idxHash);
+    // /*
+    //  * @dev takes asset out of excrow status if time period has resolved || is escrow issuer
+    //  */
+    // function recycle(bytes32 _idxHash) external nonReentrant {
+    //     Record memory rec = getRecord(_idxHash);
+    //     // bytes32 ownerHash = escrowMGRcontract.retrieveEscrowOwner(_idxHash);
 
-        require((rec.rightsHolder != 0), "PR:reCon:Record does not exist");
-        require(
-            (rec.assetStatus == 60),
-            "PR:reCon:Record must be recycled first."
-        );
-        require( //caller is escrow owner or T_pruf_app
-            (keccak256(abi.encodePacked(msg.sender)) ==
-                keccak256(abi.encodePacked(T_PrufAppAddress))),
-            "PR:reCon:Caller is not T_PRUF_APP"
-        );
-        //^^^^^^^checks^^^^^^^^^
-        escrowMGRcontract.endEscrow(_idxHash);
-        //^^^^^^^interactions^^^^^^^^^
-    }
+    //     require((rec.rightsHolder != 0), "PR:R:Record does not exist");
+    //     require(
+    //         (rec.assetStatus == 60),
+    //         "PR:R:Record must be recycled first."
+    //     );
+    //     require( //caller is escrow owner or T_pruf_app
+    //         (keccak256(abi.encodePacked(msg.sender)) ==
+    //             keccak256(abi.encodePacked(T_PrufAppAddress))),
+    //         "PR:R:Caller is not T_PRUF_APP"
+    //     );
+    //     //^^^^^^^checks^^^^^^^^^
+    //     escrowMGRcontract.endEscrow(_idxHash);
+    //     //^^^^^^^interactions^^^^^^^^^
+    // }
 
     /*
      * @dev reutilize a recycled asset
@@ -110,23 +110,23 @@ contract PRUF_recycler is PRUF {
     ) external payable nonReentrant {
         //bytes32 senderHash = keccak256(abi.encodePacked(msg.sender));
         uint256 tokenId = uint256(_idxHash);
-        escrowData memory escrow =  getEscrowData(_idxHash);
+        escrowData memory escrow = getEscrowData(_idxHash);
         Record memory rec = getRecord(_idxHash);
         AC memory AC_info = getACinfo(_assetClass);
         AC memory oldAC_info = getACinfo(rec.assetClass);
-        
+
         require(
             AC_info.custodyType == 2,
-            "TPA:RCYCL:Contract not authorized for custodial assets"
+            "PR:R:Contract not authorized for custodial assets"
         );
-        require(_rgtHash != 0, "TPA:RCYCL:Rights holder cannot be zero");
-        require(_assetClass != 0, "TPA:RCYCL:Asset class cannot be zero");
+        require(_rgtHash != 0, "PR:R:Rights holder cannot be zero");
+        require(_assetClass != 0, "PR:R:Asset class cannot be zero");
         require( //if creating new record in new root and idxhash is identical, fail because its probably fraud
             ((AC_info.assetClassRoot == oldAC_info.assetClassRoot) ||
                 (rec.assetClass == 0)),
-            "TPA:RCYCL:Cannot re-create asset in new root assetClass"
+            "PR:R:Cannot re-create asset in new root assetClass"
         );
-        require(rec.assetStatus == 60, "TPA:RCYCL:Asset not discarded");
+        require(rec.assetStatus == 60, "PR:R:Asset not discarded");
         //^^^^^^^checks^^^^^^^^^
 
         rec.rightsHolder = _rgtHash;
