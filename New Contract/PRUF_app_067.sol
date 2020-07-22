@@ -13,7 +13,7 @@ contract PRUF_APP is PRUF {
         //require that user is authorized and token is held by contract
         uint256 tokenID = uint256(_idxHash);
         require(
-            (AssetTokenContract.ownerOf(tokenID) == address(this)),
+            (AssetTokenContract.ownerOf(tokenID) == PrufAppAddress),
             "PA:IA: Custodial contract does not hold token"
         );
         _;
