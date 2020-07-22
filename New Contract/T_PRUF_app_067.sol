@@ -35,7 +35,7 @@ contract T_PRUF_APP is PRUF {
         uint16 _assetClass,
         uint256 _countDownStart,
         bytes32 _Ipfs1
-    ) external payable nonReentrant {
+    ) external payable nonReentrant whenNotPaused {
         uint256 tokenId = uint256(_idxHash);
         Record memory rec = getRecord(_idxHash);
         uint8 userType = getUserType(_assetClass);
@@ -98,6 +98,7 @@ contract T_PRUF_APP is PRUF {
         external
         payable
         nonReentrant
+        whenNotPaused
         isAuthorized(_idxHash)
     {
         Record memory rec = getRecord(_idxHash);
@@ -134,7 +135,7 @@ contract T_PRUF_APP is PRUF {
         string memory last,
         string memory id,
         string memory secret
-    ) external payable nonReentrant returns (uint256) {
+    ) external payable nonReentrant whenNotPaused returns (uint256) {
         Record memory rec = getRecord(_idxHash);
         AC memory AC_info = getACinfo(rec.assetClass);
         uint256 tokenId = uint256(_idxHash);
@@ -194,6 +195,7 @@ contract T_PRUF_APP is PRUF {
         external
         payable
         nonReentrant
+        whenNotPaused
         isAuthorized(_idxHash)
         returns (bytes32)
     {
@@ -236,18 +238,4 @@ contract T_PRUF_APP is PRUF {
         return rec.Ipfs2;
         //^^^^^^^interactions^^^^^^^^^
     }
-
-    //--------------------------------------------Internal Functions--------------------------
-    // function getUser() internal override view returns (User memory) {
-    //     User memory user;
-    //     (
-    //         user.userType,
-    //         user.authorizedAssetClass
-    //     ) = AssetClassTokenManagerContract.getUserExt(
-    //         keccak256(abi.encodePacked(msg.sender))
-    //     );
-
-    //     return user;
-    //     //^^^^^^^interactions^^^^^^^^^
-    // }
 }

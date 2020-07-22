@@ -29,7 +29,7 @@ contract PRUF_APP is PRUF {
         uint16 _assetClass,
         uint256 _countDownStart,
         bytes32 _Ipfs1
-    ) external payable nonReentrant {
+    ) external payable nonReentrant whenNotPaused {
         uint256 tokenId = uint256(_idxHash);
         Record memory rec = getRecord(_idxHash);
         uint8 userType = getUserType(_assetClass);
@@ -76,13 +76,13 @@ contract PRUF_APP is PRUF {
         //^^^^^^^interactions^^^^^^^^^
     }
 
-
     /*
      *     @dev Export FROM Custodial:
      */
     function exportAsset(bytes32 _idxHash, address _addr)
         external
         nonReentrant
+        whenNotPaused
         isAuthorized(_idxHash)
         returns (uint8)
     {
@@ -116,7 +116,6 @@ contract PRUF_APP is PRUF {
         //^^^^^^^interactions^^^^^^^^^
     }
 
-
     /*
      * @dev Modify **Record**.rightsHolder without confirmation required
      */
@@ -124,6 +123,7 @@ contract PRUF_APP is PRUF {
         external
         payable
         nonReentrant
+        whenNotPaused
         isAuthorized(_idxHash)
         returns (uint8)
     {
@@ -190,7 +190,14 @@ contract PRUF_APP is PRUF {
         bytes32 _idxHash,
         bytes32 _rgtHash,
         bytes32 _newrgtHash
-    ) external payable nonReentrant isAuthorized(_idxHash) returns (uint8) {
+    )
+        external
+        payable
+        nonReentrant
+        whenNotPaused
+        isAuthorized(_idxHash)
+        returns (uint8)
+    {
         Record memory rec = getRecord(_idxHash);
         uint8 userType = getUserType(rec.assetClass);
         AC memory AC_info = getACinfo(rec.assetClass);
@@ -241,7 +248,14 @@ contract PRUF_APP is PRUF {
         bytes32 _idxHash,
         bytes32 _rgtHash,
         bytes32 _IpfsHash
-    ) external payable nonReentrant isAuthorized(_idxHash) returns (bytes32) {
+    )
+        external
+        payable
+        nonReentrant
+        whenNotPaused
+        isAuthorized(_idxHash)
+        returns (bytes32)
+    {
         Record memory rec = getRecord(_idxHash);
         uint8 userType = getUserType(rec.assetClass);
         AC memory AC_info = getACinfo(rec.assetClass);
@@ -291,10 +305,15 @@ contract PRUF_APP is PRUF {
      * @dev import **Record** (no confirmation required -
      * posessor is considered to be owner. sets rec.assetStatus to 0.
      */
-    function $importAsset(bytes32 _idxHash, bytes32 _rgtHash, uint16 _newAssetClass)
+    function $importAsset(
+        bytes32 _idxHash,
+        bytes32 _rgtHash,
+        uint16 _newAssetClass
+    )
         external
         payable
         nonReentrant
+        whenNotPaused
         isAuthorized(_idxHash)
         returns (uint8)
     {
@@ -302,14 +321,13 @@ contract PRUF_APP is PRUF {
         uint8 userType = getUserType(_newAssetClass);
         AC memory AC_info = getACinfo(_newAssetClass);
 
-        
         require(
             AC_info.custodyType == 1,
             "PA:IA: Contract not authorized for non-custodial assets"
         );
         require((rec.rightsHolder != 0), "PA:IA: Record does not exist");
         require(userType < 3, "PA:IA: User not authorized to reimport assets");
-        
+
         require(
             (userType > 0) && (userType < 10),
             "PA:IA: User not authorized to modify records in specified asset class"
@@ -337,7 +355,7 @@ contract PRUF_APP is PRUF {
         rec.assetStatus = 0;
         rec.rightsHolder = _rgtHash;
         //^^^^^^^effects^^^^^^^^^
-        
+
         writeRecord(_idxHash, rec);
         Storage.changeAC(_idxHash, _newAssetClass);
         deductNewRecordCosts(rec.assetClass);

@@ -1,9 +1,6 @@
 /*-----------------------------------------------------------------
  *  TO DO :
- *  AssetTokenContract.burn still just burns, sets 0x0 and 60)  is this wanted?
  *
- *
- *  ** Above 65k segregation (probably by ACinfo custodial type) (just need to add a wild west cotract?)
  *
 *-----------------------------------------------------------------
 
@@ -39,12 +36,9 @@ contract PRUF_recycler is PRUF {
     //--------------------------------------------External Functions--------------------------
 
     /*
-     * @dev performs the record escrow functions for a discarded token -- can only be called from asset token contract
+     * @dev //gets item out of recycled status -- caller is assetToken contract
      */
-    function discard(bytes32 _idxHash)
-        external
-        nonReentrant //gets item out of recycled status
-    {
+    function discard(bytes32 _idxHash) external nonReentrant whenNotPaused {
         Record memory rec = getRecord(_idxHash);
 
         require( // caller is assetToken contract
@@ -78,28 +72,6 @@ contract PRUF_recycler is PRUF {
         //^^^^^^^interactions^^^^^^^^^
     }
 
-    // /*
-    //  * @dev takes asset out of excrow status if time period has resolved || is escrow issuer
-    //  */
-    // function recycle(bytes32 _idxHash) external nonReentrant {
-    //     Record memory rec = getRecord(_idxHash);
-    //     // bytes32 ownerHash = escrowMGRcontract.retrieveEscrowOwner(_idxHash);
-
-    //     require((rec.rightsHolder != 0), "PR:R:Record does not exist");
-    //     require(
-    //         (rec.assetStatus == 60),
-    //         "PR:R:Record must be recycled first."
-    //     );
-    //     require( //caller is escrow owner or T_pruf_app
-    //         (keccak256(abi.encodePacked(msg.sender)) ==
-    //             keccak256(abi.encodePacked(T_PrufAppAddress))),
-    //         "PR:R:Caller is not T_PRUF_APP"
-    //     );
-    //     //^^^^^^^checks^^^^^^^^^
-    //     escrowMGRcontract.endEscrow(_idxHash);
-    //     //^^^^^^^interactions^^^^^^^^^
-    // }
-
     /*
      * @dev reutilize a recycled asset
      */
@@ -107,7 +79,7 @@ contract PRUF_recycler is PRUF {
         bytes32 _idxHash,
         bytes32 _rgtHash,
         uint16 _assetClass
-    ) external payable nonReentrant {
+    ) external payable nonReentrant whenNotPaused {
         //bytes32 senderHash = keccak256(abi.encodePacked(msg.sender));
         uint256 tokenId = uint256(_idxHash);
         escrowData memory escrow = getEscrowData(_idxHash);

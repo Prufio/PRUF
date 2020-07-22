@@ -18,9 +18,8 @@ contract PRUF_AC_MGR is PRUF {
     mapping(string => uint16) internal AC_number;
 
     mapping(bytes32 => mapping(uint16 => uint8)) internal registeredUsers; // Authorized recorder database
-    //mapping(bytes32 => User) internal registeredUsers; // Authorized recorder database
 
-    address AC_minterAddress;
+    //address AC_minterAddress;
     uint256 private priceThreshold; //threshold of price where fractional pricing is implemented
 
     /*
@@ -30,7 +29,7 @@ contract PRUF_AC_MGR is PRUF {
      */
     modifier isAdmin() {
         require(
-            (msg.sender == owner()) || (msg.sender == AC_minterAddress),
+            (msg.sender == owner()), // || (msg.sender == AC_minterAddress),
             "PACM:IA:Calling address does not belong to an Admin"
         );
         _;
@@ -57,7 +56,7 @@ contract PRUF_AC_MGR is PRUF {
         address _authAddr,
         uint8 _userType,
         uint16 _assetClass
-    ) external isACtokenHolderOfClass(_assetClass) {
+    ) external whenNotPaused isACtokenHolderOfClass(_assetClass) {
         require(
             (_userType == 0) ||
                 (_userType == 1) ||
@@ -71,8 +70,6 @@ contract PRUF_AC_MGR is PRUF {
         bytes32 addrHash = keccak256(abi.encodePacked(_authAddr));
 
         registeredUsers[addrHash][_assetClass] = _userType;
-        //registeredUsers[addrHash].userType = _userType;
-        //registeredUsers[addrHash].authorizedAssetClass = _assetClass;
         //^^^^^^^effects^^^^^^^^^
         emit REPORT("Internal user database access!"); //report access to the internal user database
         //^^^^^^^interactions^^^^^^^^^
@@ -88,7 +85,7 @@ contract PRUF_AC_MGR is PRUF {
         uint16 _assetClass,
         uint16 _assetClassRoot,
         uint8 _custodyType
-    ) external isAdmin {
+    ) external whenNotPaused isAdmin {
         AC memory _ac = AC_data[_assetClassRoot];
 
         require((_tokenId != 0), "PACM:CAC: Token id cannot be 0"); //sanity check inputs
@@ -125,7 +122,7 @@ contract PRUF_AC_MGR is PRUF {
         uint256 _changeStatusCost,
         uint256 _forceModifyCost,
         address _paymentAddress
-    ) external isACtokenHolderOfClass(_class) {
+    ) external whenNotPaused isACtokenHolderOfClass(_class) {
         //^^^^^^^checks^^^^^^^^^
         cost[_class].newRecordCost = _newRecordCost;
         cost[_class].transferAssetCost = _transferAssetCost;
@@ -450,11 +447,7 @@ contract PRUF_AC_MGR is PRUF {
         returns (uint8)
     {
         //^^^^^^^checks^^^^^^^^^
-        return (
-            registeredUsers[_userHash][_assetClass]
-            //registeredUsers[_userHash].userType,
-            //registeredUsers[_userHash].authorizedAssetClass
-        );
+        return (registeredUsers[_userHash][_assetClass]);
         //^^^^^^^interactions^^^^^^^^^
     }
 }

@@ -6,19 +6,7 @@ pragma solidity ^0.6.7;
 /*-----------------------------------------------------------------
  *  TO DO :
  *
- *  IMPLEMENT PAUSABLE FOR ALL CONTRACTS
- *  
  *
- *  Implement Recycle
- *          Not possible in Custodial asset classes
- *          Caller must hold token, must be in status 59
- *          Token goes into "indefinite" escrow, RGT set to 0xFFF...
- *              Caller is escrow controller, but escrow contract is "owner", can break escrow (resets to status 51)
- *              Price set when escrow is to be broken by reregistering, from costs of the category 
- *                     that it is to be imported into (endEscrow called from T_PRUF_APP?)
- *              Importing breaks the escrow
- *                  payment divided between ACroot, ACholder, and recycling address (escrow owner)     
- *                  token sent to new owner (payment sender), status set to 51
  *
  *
  *
@@ -48,6 +36,18 @@ pragma solidity ^0.6.7;
  *
  * Escrows with escrow.data > 199 cannot be ended by permissive end escrow (escrowmanager) 
  *   and must be ended only within their respective escrow contract.
+ *
+ *
+ *  Recycle rules
+ *          Not possible in Custodial asset classes
+ *          Caller must hold token, must be in status 59
+ *          Token goes into "indefinite" escrow, RGT set to 0xFFF...
+ *              Caller is escrow controller, but escrow contract is "owner", can break escrow (resets to status 51)
+ *              Price set when escrow is to be broken by reregistering, from costs of the category 
+ *                     that it is to be imported into (endEscrow called from T_PRUF_APP?)
+ *              Importing breaks the escrow
+ *                  payment divided between ACroot, ACholder, and recycling address (escrow owner)     
+ *                  token sent to new owner (payment sender), status set to 51
  *
 *-----------------------------------------------------------------
 

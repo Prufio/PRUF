@@ -31,7 +31,13 @@ contract PRUF_NP is PRUF {
         bytes32 _idxHash,
         bytes32 _rgtHash,
         uint8 _newAssetStatus
-    ) external nonReentrant isAuthorized(_idxHash) returns (uint8) {
+    )
+        external
+        nonReentrant
+        whenNotPaused
+        isAuthorized(_idxHash)
+        returns (uint8)
+    {
         Record memory rec = getRecord(_idxHash);
         uint8 userType = getUserType(rec.assetClass);
         AC memory AC_info = getACinfo(rec.assetClass);
@@ -47,7 +53,10 @@ contract PRUF_NP is PRUF {
             "PNP:MS: User not authorized to modify records in specified asset class"
         );
         require(_newAssetStatus < 100, "PNP:MS: user cannot set status > 99");
-        require(_newAssetStatus != 70, "PNP:MS: Use pruf_app.exportAsset to export custodial assets");
+        require(
+            _newAssetStatus != 70,
+            "PNP:MS: Use pruf_app.exportAsset to export custodial assets"
+        );
         require(
             (rec.assetStatus != 6) &&
                 (rec.assetStatus != 50) &&
@@ -85,7 +94,13 @@ contract PRUF_NP is PRUF {
         bytes32 _idxHash,
         bytes32 _rgtHash,
         uint8 _newAssetStatus
-    ) external nonReentrant isAuthorized(_idxHash) returns (uint8) {
+    )
+        external
+        nonReentrant
+        whenNotPaused
+        isAuthorized(_idxHash)
+        returns (uint8)
+    {
         Record memory rec = getRecord(_idxHash);
         uint8 userType = getUserType(rec.assetClass);
         AC memory AC_info = getACinfo(rec.assetClass);
@@ -143,7 +158,13 @@ contract PRUF_NP is PRUF {
         bytes32 _idxHash,
         bytes32 _rgtHash,
         uint256 _decAmount
-    ) external nonReentrant isAuthorized(_idxHash) returns (uint256) {
+    )
+        external
+        nonReentrant
+        whenNotPaused
+        isAuthorized(_idxHash)
+        returns (uint256)
+    {
         Record memory rec = getRecord(_idxHash);
         uint8 userType = getUserType(rec.assetClass);
         AC memory AC_info = getACinfo(rec.assetClass);
@@ -195,7 +216,13 @@ contract PRUF_NP is PRUF {
         bytes32 _idxHash,
         bytes32 _rgtHash,
         bytes32 _IpfsHash
-    ) external nonReentrant isAuthorized(_idxHash) returns (bytes32) {
+    )
+        external
+        nonReentrant
+        whenNotPaused
+        isAuthorized(_idxHash)
+        returns (bytes32)
+    {
         Record memory rec = getRecord(_idxHash);
         uint8 userType = getUserType(rec.assetClass);
         AC memory AC_info = getACinfo(rec.assetClass);

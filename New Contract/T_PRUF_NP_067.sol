@@ -37,6 +37,7 @@ contract T_PRUF_NP is PRUF {
     function _changeRgt(bytes32 _idxHash, bytes32 _newRgtHash)
         external
         nonReentrant
+        whenNotPaused
         isAuthorized(_idxHash)
         returns (bytes32)
     {
@@ -87,7 +88,11 @@ contract T_PRUF_NP is PRUF {
     /*
      *     @dev Export FROM nonCustodial - sets asset to status 70 (importable)
      */
-    function _exportNC(bytes32 _idxHash) external isAuthorized(_idxHash) {
+    function _exportNC(bytes32 _idxHash)
+        external
+        whenNotPaused
+        isAuthorized(_idxHash)
+    {
         _modStatus(_idxHash, 70);
     }
 
@@ -97,6 +102,7 @@ contract T_PRUF_NP is PRUF {
     function _modStatus(bytes32 _idxHash, uint8 _newAssetStatus)
         public
         nonReentrant
+        whenNotPaused
         isAuthorized(_idxHash)
         returns (uint8)
     {
@@ -152,6 +158,7 @@ contract T_PRUF_NP is PRUF {
     function _setLostOrStolen(bytes32 _idxHash, uint8 _newAssetStatus)
         external
         nonReentrant
+        whenNotPaused
         isAuthorized(_idxHash)
         returns (uint8)
     {
@@ -211,6 +218,7 @@ contract T_PRUF_NP is PRUF {
     function _decCounter(bytes32 _idxHash, uint256 _decAmount)
         external
         nonReentrant
+        whenNotPaused
         isAuthorized(_idxHash)
         returns (uint256)
     {
@@ -260,6 +268,7 @@ contract T_PRUF_NP is PRUF {
     function _modIpfs1(bytes32 _idxHash, bytes32 _IpfsHash)
         external
         nonReentrant
+        whenNotPaused
         isAuthorized(_idxHash)
         returns (bytes32)
     {

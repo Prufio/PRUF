@@ -86,6 +86,7 @@ contract PRUF is PullPayment, PRUF_BASIC {
      */
     function writeRecord(bytes32 _idxHash, Record memory _rec)
         internal
+        whenNotPaused
     //isAuthorized(_idxHash)
     {
         //^^^^^^^checks^^^^^^^^^
@@ -108,6 +109,7 @@ contract PRUF is PullPayment, PRUF_BASIC {
      */
     function writeRecordIpfs1(bytes32 _idxHash, Record memory _rec)
         internal
+        whenNotPaused
     //isAuthorized(_idxHash)
     {
         //^^^^^^^checks^^^^^^^^^
@@ -121,6 +123,7 @@ contract PRUF is PullPayment, PRUF_BASIC {
 
     function writeRecordIpfs2(bytes32 _idxHash, Record memory _rec)
         internal
+        whenNotPaused
     //isAuthorized(_idxHash)
     {
         //^^^^^^^checks^^^^^^^^^
@@ -130,7 +133,7 @@ contract PRUF is PullPayment, PRUF_BASIC {
         //^^^^^^^interactions^^^^^^^^^
     }
 
-    function deductNewRecordCosts(uint16 _assetClass) internal {
+    function deductNewRecordCosts(uint16 _assetClass) internal whenNotPaused {
         //^^^^^^^checks^^^^^^^^^
         Invoice memory pricing;
         //^^^^^^^effects^^^^^^^^^
@@ -146,6 +149,7 @@ contract PRUF is PullPayment, PRUF_BASIC {
 
     function deductRecycleCosts(uint16 _assetClass, address _oldOwner)
         internal
+        whenNotPaused
     {
         //^^^^^^^checks^^^^^^^^^
         Invoice memory pricing;
@@ -161,7 +165,10 @@ contract PRUF is PullPayment, PRUF_BASIC {
         //^^^^^^^interactions^^^^^^^^^
     }
 
-    function deductTransferAssetCosts(uint16 _assetClass) internal {
+    function deductTransferAssetCosts(uint16 _assetClass)
+        internal
+        whenNotPaused
+    {
         //^^^^^^^checks^^^^^^^^^
         Invoice memory pricing;
         //^^^^^^^effects^^^^^^^^^
@@ -175,7 +182,7 @@ contract PRUF is PullPayment, PRUF_BASIC {
         //^^^^^^^interactions^^^^^^^^^
     }
 
-    function deductCreateNoteCosts(uint16 _assetClass) internal {
+    function deductCreateNoteCosts(uint16 _assetClass) internal whenNotPaused {
         //^^^^^^^checks^^^^^^^^^
         Invoice memory pricing;
         //^^^^^^^effects^^^^^^^^^
@@ -189,7 +196,10 @@ contract PRUF is PullPayment, PRUF_BASIC {
         //^^^^^^^interactions^^^^^^^^^
     }
 
-    function deductReMintRecordCosts(uint16 _assetClass) internal {
+    function deductReMintRecordCosts(uint16 _assetClass)
+        internal
+        whenNotPaused
+    {
         //^^^^^^^checks^^^^^^^^^
         Invoice memory pricing;
         //^^^^^^^effects^^^^^^^^^
@@ -203,7 +213,10 @@ contract PRUF is PullPayment, PRUF_BASIC {
         //^^^^^^^interactions^^^^^^^^^
     }
 
-    function deductChangeStatusCosts(uint16 _assetClass) internal {
+    function deductChangeStatusCosts(uint16 _assetClass)
+        internal
+        whenNotPaused
+    {
         //^^^^^^^checks^^^^^^^^^
         Invoice memory pricing;
         //^^^^^^^effects^^^^^^^^^
@@ -217,7 +230,7 @@ contract PRUF is PullPayment, PRUF_BASIC {
         //^^^^^^^interactions^^^^^^^^^
     }
 
-    function deductForceModifyCosts(uint16 _assetClass) internal {
+    function deductForceModifyCosts(uint16 _assetClass) internal whenNotPaused {
         //^^^^^^^checks^^^^^^^^^
         Invoice memory pricing;
         //^^^^^^^effects^^^^^^^^^
@@ -244,7 +257,7 @@ contract PRUF is PullPayment, PRUF_BASIC {
     /*
      * @dev Deducts payment from transaction
      */
-    function deductPayment(Invoice memory pricing) internal {
+    function deductPayment(Invoice memory pricing) internal whenNotPaused {
         uint256 messageValue = msg.value;
         uint256 change;
         uint256 total = pricing.rootPrice.add(pricing.ACTHprice);

@@ -76,7 +76,7 @@ contract PRUF_escrowManager is PRUF_BASIC {
         bytes32 _ex2,
         address _addr1,
         address _addr2
-    ) external nonReentrant isEscrowContract {
+    ) external nonReentrant whenNotPaused isEscrowContract {
         Record memory rec = getRecord(_idxHash);
         ContractDataHash memory contractInfo;
         (contractInfo.contractType, contractInfo.nameHash) = Storage
@@ -135,6 +135,7 @@ contract PRUF_escrowManager is PRUF_BASIC {
     function endEscrow(bytes32 _idxHash)
         external
         nonReentrant
+        whenNotPaused
         isEscrowContract
     {
         Record memory rec = getRecord(_idxHash);
@@ -168,7 +169,11 @@ contract PRUF_escrowManager is PRUF_BASIC {
     /*
      * @dev Permissive removal of asset from escrow status after time-out
      */
-    function PermissiveEndEscrow(bytes32 _idxHash) external nonReentrant {
+    function PermissiveEndEscrow(bytes32 _idxHash)
+        external
+        nonReentrant
+        whenNotPaused
+    {
         require(escrows[_idxHash].timelock < now, "PEM:PEE:Escrow not expired");
         require( // do not allow escrows with escrow.data > 199 to be ended by this function
             escrows[_idxHash].data < 200,

@@ -36,7 +36,7 @@ contract T_PRUF_simpleEscrow is PRUF {
         bytes32 _escrowOwnerHash,
         uint256 _escrowTime,
         uint8 _escrowStatus
-    ) external nonReentrant isAuthorized(_idxHash) {
+    ) external nonReentrant whenNotPaused isAuthorized(_idxHash) {
         Record memory rec = getRecord(_idxHash);
         uint256 escrowTime = now.add(_escrowTime);
         uint8 newEscrowStatus;
