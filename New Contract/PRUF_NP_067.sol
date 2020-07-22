@@ -12,17 +12,9 @@ contract PRUF_NP is PRUF {
     /*
      * @dev Verify user credentials
      * Originating Address:
-     *      Exists in registeredUsers as a usertype 1 to 9
-     *      Is authorized for asset class
      */
     modifier isAuthorized(bytes32 _idxHash) override {
-        User memory user = getUser();
         uint256 tokenID = uint256(_idxHash);
-
-        require(
-            (user.userType > 0) && (user.userType < 10),
-            "PNP:IA: User not registered"
-        );
         require(
             (AssetTokenContract.ownerOf(tokenID) == PrufAppAddress),
             "PNP:IA: Custodial contract does not hold token"
@@ -41,7 +33,7 @@ contract PRUF_NP is PRUF {
         uint8 _newAssetStatus
     ) external nonReentrant isAuthorized(_idxHash) returns (uint8) {
         Record memory rec = getRecord(_idxHash);
-        User memory callingUser = getUser();
+        uint8 userType = getUserType(rec.assetClass);
         AC memory AC_info = getACinfo(rec.assetClass);
 
         require(
@@ -51,8 +43,8 @@ contract PRUF_NP is PRUF {
 
         require((rec.rightsHolder != 0), "PNP:MS: Record does not exist");
         require(
-            callingUser.authorizedAssetClass == rec.assetClass,
-            "PNP:MS: User not authorized to modify records in specified asset class"
+            (userType > 0) && (userType < 10),
+            "TPNP:MI1: User not authorized to modify records in specified asset class"
         );
         require(_newAssetStatus < 100, "PNP:MS: user cannot set status > 99");
         require(
@@ -66,7 +58,7 @@ contract PRUF_NP is PRUF {
             "PNP:MS: Cannot change status of asset in transferred-unregistered status."
         );
         require(
-            (rec.assetStatus > 49) || (callingUser.userType < 5),
+            (rec.assetStatus > 49) || (userType < 5),
             "PNP:MS: Only usertype < 5 can change status < 49"
         );
         require(rec.assetStatus < 200, "PNP:MS: Record locked");
@@ -97,11 +89,16 @@ contract PRUF_NP is PRUF {
     {
         uint256 tokenId = uint256(_idxHash);
         Record memory rec = getRecord(_idxHash);
+        uint8 userType = getUserType(rec.assetClass);
         AC memory AC_info = getACinfo(rec.assetClass);
 
         require(
             AC_info.custodyType == 1,
             "PA:FMR: Contract not authorized for non-custodial assets"
+        );
+        require(
+            (userType > 0) && (userType < 10),
+            "TPNP:MI1: User not authorized to modify records in specified asset class"
         );
         require( // require transferrable (51) status
             rec.assetStatus == 51,
@@ -129,7 +126,7 @@ contract PRUF_NP is PRUF {
         uint8 _newAssetStatus
     ) external nonReentrant isAuthorized(_idxHash) returns (uint8) {
         Record memory rec = getRecord(_idxHash);
-        User memory callingUser = getUser();
+        uint8 userType = getUserType(rec.assetClass);
         AC memory AC_info = getACinfo(rec.assetClass);
 
         require(
@@ -139,7 +136,7 @@ contract PRUF_NP is PRUF {
 
         require((rec.rightsHolder != 0), "PNP:SLS: Record does not exist");
         require(
-            callingUser.authorizedAssetClass == rec.assetClass,
+            (userType > 0) && (userType < 10),
             "PNP:SLS: User not authorized to modify records in specified asset class"
         );
         require(
@@ -151,7 +148,7 @@ contract PRUF_NP is PRUF {
         );
         require(
             (rec.assetStatus > 49) ||
-                ((_newAssetStatus < 50) && (callingUser.userType < 5)),
+                ((_newAssetStatus < 50) && (userType < 5)),
             "PNP:SLS: Only usertype <5 can change a <49 status asset to a >49 status"
         );
         require(
@@ -187,7 +184,7 @@ contract PRUF_NP is PRUF {
         uint256 _decAmount
     ) external nonReentrant isAuthorized(_idxHash) returns (uint256) {
         Record memory rec = getRecord(_idxHash);
-        User memory callingUser = getUser();
+        uint8 userType = getUserType(rec.assetClass);
         AC memory AC_info = getACinfo(rec.assetClass);
 
         require(
@@ -197,7 +194,7 @@ contract PRUF_NP is PRUF {
 
         require((rec.rightsHolder != 0), "PNP:DC: Record does not exist");
         require(
-            callingUser.authorizedAssetClass == rec.assetClass,
+            (userType > 0) && (userType < 10),
             "PNP:DC: User not authorized to modify records in specified asset class"
         );
         require( //------------------------------------------should the counter still work when an asset is in escrow?
@@ -239,7 +236,7 @@ contract PRUF_NP is PRUF {
         bytes32 _IpfsHash
     ) external nonReentrant isAuthorized(_idxHash) returns (bytes32) {
         Record memory rec = getRecord(_idxHash);
-        User memory callingUser = getUser();
+        uint8 userType = getUserType(rec.assetClass);
         AC memory AC_info = getACinfo(rec.assetClass);
 
         require(
@@ -249,7 +246,7 @@ contract PRUF_NP is PRUF {
 
         require((rec.rightsHolder != 0), "PNP:MI1: Record does not exist");
         require(
-            callingUser.authorizedAssetClass == rec.assetClass,
+            (userType > 0) && (userType < 10),
             "PNP:MI1: User not authorized to modify records in specified asset class"
         );
 
