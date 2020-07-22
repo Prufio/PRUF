@@ -44,7 +44,6 @@ contract Storage is Ownable, ReentrancyGuard {
         string name; // Contract Name
     }
 
-
     mapping(address => Contracts) private contractInfo; // Authorized contract addresses, indexed by address, with auth level 0-255
     mapping(string => address) private contractNameToAddress; // Authorized contract addresses, indexed by name
     mapping(bytes32 => Record) private database; // Main Data Storage
@@ -111,7 +110,6 @@ contract Storage is Ownable, ReentrancyGuard {
     //     _;
     // }
 
-
     /*
      * @dev Check to see if contract adress is registered to PRUF_escrowMGR
      */
@@ -123,31 +121,31 @@ contract Storage is Ownable, ReentrancyGuard {
         _;
     }
 
-
-
-    function isLostOrStolen (uint16 _assetStatus) private pure returns (uint8){
-        if ((_assetStatus != 3) &&
-                (_assetStatus != 4) &&
-                (_assetStatus != 53) &&
-                (_assetStatus != 54)){
-                    return 0;
-                } else {
-                    return 170;
-                }
+    function isLostOrStolen(uint16 _assetStatus) private pure returns (uint8) {
+        if (
+            (_assetStatus != 3) &&
+            (_assetStatus != 4) &&
+            (_assetStatus != 53) &&
+            (_assetStatus != 54)
+        ) {
+            return 0;
+        } else {
+            return 170;
+        }
     }
 
-    function isEscrow (uint16 _assetStatus) private pure returns (uint8){
-        if ((_assetStatus != 6) &&
-                (_assetStatus != 50) &&
-                (_assetStatus != 60) &&
-                (_assetStatus != 56)){
-                    return 0;
-                } else {
-                    return 170;
-                }
+    function isEscrow(uint16 _assetStatus) private pure returns (uint8) {
+        if (
+            (_assetStatus != 6) &&
+            (_assetStatus != 50) &&
+            (_assetStatus != 60) &&
+            (_assetStatus != 56)
+        ) {
+            return 0;
+        } else {
+            return 170;
+        }
     }
-
-
 
     //-----------------------------------------------Events------------------------------------------------//
 
@@ -251,7 +249,7 @@ contract Storage is Ownable, ReentrancyGuard {
         isAuthorized
         exists(_idxHash)
         notEscrow(_idxHash)
-        //notBlockLocked(_idxHash)
+    //notBlockLocked(_idxHash)
     {
         bytes32 idxHash = _idxHash; //stack saving
         bytes32 rgtHash = _rgtHash;
@@ -308,7 +306,7 @@ contract Storage is Ownable, ReentrancyGuard {
         isAuthorized
         exists(_idxHash)
         notEscrow(_idxHash)
-        //notBlockLocked(_idxHash)
+    //notBlockLocked(_idxHash)
     {
         bytes32 idxHash = _idxHash; //stack saving
         //database[idxHash].timeLock = block.number;
@@ -344,7 +342,7 @@ contract Storage is Ownable, ReentrancyGuard {
         nonReentrant
         isAuthorized
         exists(_idxHash)
-        //notBlockLocked(_idxHash)
+    //notBlockLocked(_idxHash)
     //isACtokenHolder(_idxHash)
     {
         require(
@@ -353,8 +351,8 @@ contract Storage is Ownable, ReentrancyGuard {
         );
         require(
             (database[_idxHash].assetStatus != 5) &&
-            (database[_idxHash].assetStatus != 50) &&
-            (database[_idxHash].assetStatus != 55),
+                (database[_idxHash].assetStatus != 50) &&
+                (database[_idxHash].assetStatus != 55),
             "PS:SSL:Txfr or escrow locked asset cannot be set to L/S."
         );
         //^^^^^^^checks^^^^^^^^^
@@ -389,13 +387,10 @@ contract Storage is Ownable, ReentrancyGuard {
         isEscrowManager
         exists(_idxHash)
         notEscrow(_idxHash)
-        //notBlockLocked(_idxHash)
+    //notBlockLocked(_idxHash)
     //isACtokenHolder(_idxHash)
     {
-        require(
-            isEscrow(_newAssetStatus) == 170,
-            "PS:SE: Status"
-        );
+        require(isEscrow(_newAssetStatus) == 170, "PS:SE: Status");
         require(
             (isLostOrStolen(database[_idxHash].assetStatus) == 0) &&
                 (database[_idxHash].assetStatus != 5) &&
@@ -403,7 +398,7 @@ contract Storage is Ownable, ReentrancyGuard {
             "PS:SE: Cannot be set to escrow"
         );
         require(
-                isEscrow(database[_idxHash].assetStatus) == 0,
+            isEscrow(database[_idxHash].assetStatus) == 0,
             "PS:SE: In escrow status"
         );
         //^^^^^^^checks^^^^^^^^^
@@ -416,8 +411,9 @@ contract Storage is Ownable, ReentrancyGuard {
         //     _contractNameHash
         // );
 
-        if (_newAssetStatus == 60){
-            rec.rightsHolder = 0xFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF;
+        if (_newAssetStatus == 60) {
+            rec
+                .rightsHolder = 0xFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF;
         }
         rec.assetStatus = _newAssetStatus;
         database[_idxHash] = rec;
@@ -437,7 +433,7 @@ contract Storage is Ownable, ReentrancyGuard {
         exists(_idxHash)
     {
         require(
-                isEscrow(database[_idxHash].assetStatus) == 170,
+            isEscrow(database[_idxHash].assetStatus) == 170,
             "PS:EE:Not in escrow status"
         );
         //^^^^^^^checks^^^^^^^^^
@@ -479,7 +475,7 @@ contract Storage is Ownable, ReentrancyGuard {
         isAuthorized
         exists(_idxHash)
         notEscrow(_idxHash)
-        //notBlockLocked(_idxHash)
+    //notBlockLocked(_idxHash)
     {
         Record memory rec = database[_idxHash];
 
@@ -509,7 +505,7 @@ contract Storage is Ownable, ReentrancyGuard {
         isAuthorized
         exists(_idxHash)
         notEscrow(_idxHash)
-        //notBlockLocked(_idxHash)
+    //notBlockLocked(_idxHash)
     //isACtokenHolder(_idxHash)
     {
         Record memory rec = database[_idxHash];
@@ -673,11 +669,7 @@ contract Storage is Ownable, ReentrancyGuard {
     /*
      * @dev //returns the contract type of a contract with address _addr.
      */
-    function ContractAuthType(address _addr)
-        external
-        view
-        returns (uint8)
-    {
+    function ContractAuthType(address _addr) external view returns (uint8) {
         return contractInfo[_addr].contractType;
         //^^^^^^^interactions^^^^^^^^^
     }
@@ -690,10 +682,12 @@ contract Storage is Ownable, ReentrancyGuard {
         view
         returns (uint8, bytes32)
     {
-        return (contractInfo[_addr].contractType, keccak256(abi.encodePacked(contractInfo[_addr].name)));
+        return (
+            contractInfo[_addr].contractType,
+            keccak256(abi.encodePacked(contractInfo[_addr].name))
+        );
         //^^^^^^^interactions^^^^^^^^^
     }
-
 
     //-----------------------------------------------Private functions------------------------------------------------//
 

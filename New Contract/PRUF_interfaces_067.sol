@@ -11,6 +11,7 @@ interface AssetClassTokenManagerInterface {
         external
         view
         returns (uint8);
+
     // function getUserExt(bytes32 _userHash)
     //     external
     //     view
@@ -234,9 +235,11 @@ interface StorageInterface {
             uint16
         );
 
-     function retrieveShortRecord(bytes32 _idxHash) //all but rgtHash
-         external
-         returns (
+    function retrieveShortRecord(
+        bytes32 _idxHash //all but rgtHash
+    )
+        external
+        returns (
             //bytes32,
             //bytes32,
             uint8,
@@ -273,15 +276,13 @@ interface EscrowManagerInterface {
         bytes32 _ex2,
         address _addr1,
         address _addr2
-        ) external;
+    ) external;
 
     function endEscrow(bytes32 _idxHash) external;
 
     function PermissiveEndEscrow(bytes32 _idxHash) external;
 
-    function retrieveEscrowOwner(bytes32 _idxHash)
-        external
-        returns (bytes32);
+    function retrieveEscrowOwner(bytes32 _idxHash) external returns (bytes32);
 
     function retrieveEscrowData(bytes32 _idxHash)
         external
@@ -297,8 +298,8 @@ interface EscrowManagerInterface {
         );
 }
 
-interface RecyclerInterface{
+interface RecyclerInterface {
     function discard(bytes32 _idxHash) external;
-    function recycle(bytes32 _idxHash) external;
 
+    function recycle(bytes32 _idxHash) external;
 }

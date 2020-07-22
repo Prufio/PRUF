@@ -44,7 +44,7 @@ contract PRUF_NP is PRUF {
         require((rec.rightsHolder != 0), "PNP:MS: Record does not exist");
         require(
             (userType > 0) && (userType < 10),
-            "TPNP:MI1: User not authorized to modify records in specified asset class"
+            "PNP:MS: User not authorized to modify records in specified asset class"
         );
         require(_newAssetStatus < 100, "PNP:MS: user cannot set status > 99");
         require(
@@ -94,15 +94,15 @@ contract PRUF_NP is PRUF {
 
         require(
             AC_info.custodyType == 1,
-            "PA:FMR: Contract not authorized for non-custodial assets"
+            "PNP:EA: Contract not authorized for non-custodial assets"
         );
         require(
             (userType > 0) && (userType < 10),
-            "TPNP:MI1: User not authorized to modify records in specified asset class"
+            "PNP:EA: User not authorized to modify records in specified asset class"
         );
         require( // require transferrable (51) status
             rec.assetStatus == 51,
-            "PA:EXA: Asset status must be 51 to export"
+            "PNP:EA: Asset status must be 51 to export"
         );
         //^^^^^^^checks^^^^^^^^^
 
@@ -260,7 +260,7 @@ contract PRUF_NP is PRUF {
         require(rec.assetStatus < 200, "PNP:MI1: Record locked");
         require(
             (rec.assetStatus != 5) && (rec.assetStatus != 55),
-            "PNP:DC: Record In Transferred-unregistered status"
+            "PNP:MI1: Record In Transferred-unregistered status"
         );
         require(
             rec.rightsHolder == _rgtHash,

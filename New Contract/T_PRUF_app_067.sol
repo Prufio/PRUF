@@ -111,15 +111,11 @@ contract T_PRUF_APP is PRUF {
         );
         //^^^^^^^checks^^^^^^^^^
 
-        Storage.changeAC(
-            _idxHash,
-            _newAssetClass
-        );
+        Storage.changeAC(_idxHash, _newAssetClass);
 
         deductNewRecordCosts(_newAssetClass);
         //^^^^^^^interactions / effects^^^^^^^^^^^^
     }
-
 
     /*
      * @dev remint token with confirmation of posession of RAWTEXT hash inputs

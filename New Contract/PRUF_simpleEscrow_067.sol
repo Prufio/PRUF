@@ -70,8 +70,7 @@ contract PRUF_simpleEscrow is PRUF {
             "PSE:SE: Asset already in escrow status."
         );
         require(
-            (userType < 5) ||
-                ((userType > 4) && (_escrowStatus > 49)),
+            (userType < 5) || ((userType > 4) && (_escrowStatus > 49)),
             "PSE:SE: Non supervisored agents must set asset status within scope."
         );
         require(

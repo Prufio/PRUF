@@ -1,7 +1,7 @@
 /*-----------------------------------------------------------------
  *  TO DO
  *
-*-----------------------------------------------------------------*/
+ *-----------------------------------------------------------------*/
 
 // SPDX-License-Identifier: UNLICENSED
 
@@ -81,7 +81,7 @@ contract AssetClassToken is Ownable, ReentrancyGuard, ERC721 {
         uint256 tokenId,
         string calldata _tokenURI
     ) external isAdmin returns (uint256) {
-        require(_exists(tokenId), "C:RM:Cannot Remint nonexistant token");
+        require(_exists(tokenId), "PACT:RM:Cannot Remint nonexistant token");
         //^^^^^^^checks^^^^^^^^^
 
         _burn(tokenId);
@@ -106,7 +106,7 @@ contract AssetClassToken is Ownable, ReentrancyGuard, ERC721 {
     ) public override nonReentrant {
         require(
             _isApprovedOrOwner(_msgSender(), tokenId),
-            "C:TF: transfer caller is not owner nor approved"
+            "PACT:TF: transfer caller is not owner nor approved"
         );
         //^^^^^^^checks^^^^^^^^^
 
@@ -156,7 +156,7 @@ contract AssetClassToken is Ownable, ReentrancyGuard, ERC721 {
     ) public virtual override nonReentrant {
         require(
             _isApprovedOrOwner(_msgSender(), tokenId),
-            "C:TF: transfer caller is not owner nor approved"
+            "PACT:STF: transfer caller is not owner nor approved"
         );
         //^^^^^^^checks^^^^^^^^^
 

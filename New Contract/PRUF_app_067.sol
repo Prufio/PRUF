@@ -1,7 +1,7 @@
 /*-----------------------------------------------------------------
  *  TO DO
  *
-*-----------------------------------------------------------------*/
+ *-----------------------------------------------------------------*/
 
 // SPDX-License-Identifier: UNLICENSED
 pragma solidity ^0.6.7;
@@ -9,8 +9,8 @@ pragma solidity ^0.6.7;
 import "./PRUF_core_067.sol";
 
 contract PRUF_APP is PRUF {
-
-    modifier isAuthorized(bytes32 _idxHash) override { //require that user is authorized and token is held by contract
+    modifier isAuthorized(bytes32 _idxHash) override {
+        //require that user is authorized and token is held by contract
         uint256 tokenID = uint256(_idxHash);
         require(
             (AssetTokenContract.ownerOf(tokenID) == address(this)),
@@ -44,10 +44,7 @@ contract PRUF_APP is PRUF {
             (userType > 0) && (userType < 10),
             "PA:NR: User not authorized to create records in specified asset class"
         );
-        require(
-            userType < 5,
-            "PA:NR: User not authorized to create records"
-        );
+        require(userType < 5, "PA:NR: User not authorized to create records");
         require(_rgtHash != 0, "PA:NR: rights holder cannot be zero");
 
         //^^^^^^^checks^^^^^^^^^
@@ -122,7 +119,7 @@ contract PRUF_APP is PRUF {
             (rec.assetStatus != 5) && (rec.assetStatus != 55),
             "PA:FMR: Record In Transferred-unregistered status"
         );
-        require(rec.assetStatus < 200, "FMR: Record locked");
+        require(rec.assetStatus < 200, "PA:FMR: Record locked");
         //^^^^^^^checks^^^^^^^^^
 
         if (rec.forceModCount < 255) {
@@ -253,7 +250,6 @@ contract PRUF_APP is PRUF {
      * @dev import **Record** (no confirmation required -
      * posessor is considered to be owner. sets rec.assetStatus to 0.
      */
-     
     function $importAsset(bytes32 _idxHash, bytes32 _rgtHash)
         external
         payable
@@ -270,16 +266,15 @@ contract PRUF_APP is PRUF {
             "PA:IA: Contract not authorized for non-custodial assets"
         );
         require((rec.rightsHolder != 0), "PA:IA: Record does not exist");
-        require(
-            userType < 3,
-            "PA:IA: User not authorized to reimport assets"
-        );
+        require(userType < 3, "PA:IA: User not authorized to reimport assets");
         require(
             (userType > 0) && (userType < 10),
             "PA:IA: User not authorized to modify records in specified asset class"
         );
         require(
-            (rec.assetStatus == 5) || (rec.assetStatus == 55) || (rec.assetStatus == 70),
+            (rec.assetStatus == 5) ||
+                (rec.assetStatus == 55) ||
+                (rec.assetStatus == 70),
             "PA:IA: Only Transferred or exported assets can be reimported"
         );
         require(rec.assetStatus < 200, "PA:IA: Record locked");

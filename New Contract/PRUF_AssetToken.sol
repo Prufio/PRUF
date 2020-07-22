@@ -1,7 +1,7 @@
 /*-----------------------------------------------------------------
  *  TO DO
  *
-*-----------------------------------------------------------------*/
+ *-----------------------------------------------------------------*/
 
 // SPDX-License-Identifier: UNLICENSED
 pragma solidity ^0.6.7;
@@ -40,10 +40,10 @@ contract AssetToken is Ownable, ReentrancyGuard, ERC721 {
 
     modifier isAdmin() {
         require(
-            (msg.sender == PrufAppAddress) || 
-                (msg.sender == T_PrufAppAddress) ||  
-                (msg.sender == T_PrufAppAddress) ||  
-                (msg.sender == recyclerAddress) ||  
+            (msg.sender == PrufAppAddress) ||
+                (msg.sender == T_PrufAppAddress) ||
+                (msg.sender == T_PrufAppAddress) ||
+                (msg.sender == recyclerAddress) ||
                 (msg.sender == owner()),
             "PAT:IA:Calling address does not belong to an Admin"
         );
@@ -75,7 +75,7 @@ contract AssetToken is Ownable, ReentrancyGuard, ERC721 {
         T_PrufAppAddress = Storage.resolveContractAddress("T_PRUF_APP");
         PrufAppAddress = Storage.resolveContractAddress("PRUF_APP");
 
-        recyclerAddress =  Storage.resolveContractAddress("PRUF_recycler");
+        recyclerAddress = Storage.resolveContractAddress("PRUF_recycler");
         Recycler = RecyclerInterface(recyclerAddress);
         //^^^^^^^effects^^^^^^^^^
     }
@@ -116,15 +116,15 @@ contract AssetToken is Ownable, ReentrancyGuard, ERC721 {
 
         require(
             rec.assetStatus != 70,
-            "PAT:MAT:Use authAddressTransfer for status 70"
+            "PAT:TF:Use authAddressTransfer for status 70"
         );
         require(
             rec.assetStatus == 51,
-            "PAT:MAT:Asset not in transferrable status"
+            "PAT:TF:Asset not in transferrable status"
         );
         require(
             _isApprovedOrOwner(_msgSender(), tokenId),
-            "PAT:MAT:transfer caller is not owner nor approved"
+            "PAT:TF:transfer caller is not owner nor approved"
         );
         //^^^^^^^checks^^^^^^^^
 
@@ -221,14 +221,14 @@ contract AssetToken is Ownable, ReentrancyGuard, ERC721 {
     function discard(uint256 tokenId) external nonReentrant isAdmin {
         bytes32 _idxHash = bytes32(tokenId);
         Record memory rec = getRecord(_idxHash);
-        require(_exists(tokenId), "PAT:B:Cannot Burn nonexistant token");
+        require(_exists(tokenId), "PAT:D:Cannot Burn nonexistant token");
         require(
             (rec.assetStatus == 59),
-            "PAT:B:Asset must be in status 59 (discardable) to be burned"
+            "PAT:D:Asset must be in status 59 (discardable) to be burned"
         );
         require(
             _isApprovedOrOwner(_msgSender(), tokenId),
-            "PAT:B:transfer caller is not owner nor approved"
+            "PAT:D:transfer caller is not owner nor approved"
         );
         //^^^^^^^checks^^^^^^^^^
         Recycler.discard(_idxHash);

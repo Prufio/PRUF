@@ -1,7 +1,7 @@
 /*-----------------------------------------------------------------
  *  TO DO
  *
-*-----------------------------------------------------------------*/
+ *-----------------------------------------------------------------*/
 
 // SPDX-License-Identifier: UNLICENSED
 pragma solidity ^0.6.7;
@@ -11,8 +11,7 @@ import "./Imports/Ownable.sol";
 import "./Imports/ReentrancyGuard.sol";
 import "./_ERC721/IERC721Receiver.sol";
 
-contract PRUF_BASIC is ReentrancyGuard, Ownable,  IERC721Receiver {
-
+contract PRUF_BASIC is ReentrancyGuard, Ownable, IERC721Receiver {
     struct Record {
         //bytes32 recorder; // Address hash of recorder
         bytes32 rightsHolder; // KEK256 Registered owner
@@ -73,13 +72,12 @@ contract PRUF_BASIC is ReentrancyGuard, Ownable,  IERC721Receiver {
     address internal escrowMGRAddress;
     EscrowManagerInterface internal escrowMGRcontract; //Set up external contract interface for escrowmgr
 
-    address internal recyclerAddress;   //Set up external contract interface for recycler
+    address internal recyclerAddress; //Set up external contract interface for recycler
     RecyclerInterface internal Recycler;
 
     address internal PrufAppAddress;
     address internal T_PrufAppAddress;
 
-    
     // --------------------------------------Events--------------------------------------------//
 
     event REPORT(string _msg);
@@ -98,7 +96,7 @@ contract PRUF_BASIC is ReentrancyGuard, Ownable,  IERC721Receiver {
     modifier isAuthorized(bytes32 _idxHash) virtual {
         require(
             _idxHash == 0, //function should always be overridden
-            "PC:MOD-IA: Modifier MUST BE OVERRIDDEN"
+            "PB:MOD-IA: Modifier MUST BE OVERRIDDEN"
         );
         _;
     }
@@ -138,7 +136,7 @@ contract PRUF_BASIC is ReentrancyGuard, Ownable,  IERC721Receiver {
         PrufAppAddress = Storage.resolveContractAddress("PRUF_APP");
         T_PrufAppAddress = Storage.resolveContractAddress("T_PRUF_APP");
 
-        recyclerAddress =  Storage.resolveContractAddress("PRUF_recycler");
+        recyclerAddress = Storage.resolveContractAddress("PRUF_recycler");
         Recycler = RecyclerInterface(recyclerAddress);
         //^^^^^^^effects^^^^^^^^^
     }
@@ -175,7 +173,7 @@ contract PRUF_BASIC is ReentrancyGuard, Ownable,  IERC721Receiver {
     function OO_setStorageContract(address _storageAddress) external onlyOwner {
         require(
             _storageAddress != address(0),
-            "PC:SSC: storage address cannot be zero"
+            "PB:SSC: storage address cannot be zero"
         );
         //^^^^^^^checks^^^^^^^^^
 
@@ -203,10 +201,18 @@ contract PRUF_BASIC is ReentrancyGuard, Ownable,  IERC721Receiver {
     /*
      * @dev Get a User Record from AC_manager @ msg.sender
      */
-    function getUserType(uint16 _assetClass) internal virtual view returns (uint8) {
+    function getUserType(uint16 _assetClass)
+        internal
+        virtual
+        view
+        returns (uint8)
+    {
         //^^^^^^^checks^^^^^^^^^
-       
-        uint8 userTypeInAssetClass = AssetClassTokenManagerContract.getUserType(keccak256(abi.encodePacked(msg.sender)), _assetClass);
+
+        uint8 userTypeInAssetClass = AssetClassTokenManagerContract.getUserType(
+            keccak256(abi.encodePacked(msg.sender)),
+            _assetClass
+        );
 
         return userTypeInAssetClass;
         //^^^^^^^interactions^^^^^^^^^
@@ -237,7 +243,8 @@ contract PRUF_BASIC is ReentrancyGuard, Ownable,  IERC721Receiver {
         returns (ContractDataHash memory)
     {
         ContractDataHash memory contractInfo;
-        (contractInfo.contractType, contractInfo.nameHash) = Storage.ContractInfoHash(_addr); 
+        (contractInfo.contractType, contractInfo.nameHash) = Storage
+            .ContractInfoHash(_addr);
         return contractInfo;
         //^^^^^^^checks/interactions^^^^^^^^^
     }

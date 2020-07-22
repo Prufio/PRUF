@@ -52,9 +52,9 @@ contract PRUF_escrowManager is PRUF_BASIC {
 
     function isEscrow(uint16 _assetStatus) private pure returns (uint8) {
         if (
-            (_assetStatus != 6) && 
-            (_assetStatus != 50) && 
-            (_assetStatus != 56) && 
+            (_assetStatus != 6) &&
+            (_assetStatus != 50) &&
+            (_assetStatus != 56) &&
             (_assetStatus != 60)
         ) {
             return 0;
@@ -190,7 +190,6 @@ contract PRUF_escrowManager is PRUF_BASIC {
         //^^^^^^^interactions^^^^^^^^^
     }
 
-
     /*
      * @dev return escrow OwnerHash
      */
@@ -203,8 +202,6 @@ contract PRUF_escrowManager is PRUF_BASIC {
         //^^^^^^^checks/interactions^^^^^^^^^
     }
 
-
-    
     /*
      * @dev return complete escrow data
      */

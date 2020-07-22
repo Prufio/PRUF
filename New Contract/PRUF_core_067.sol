@@ -1,7 +1,7 @@
 /*-----------------------------------------------------------------
  *  TO DO
  * change costs struct to include deposit-cost and ??? to repace changeststus and remint
-*-----------------------------------------------------------------*/
+ *-----------------------------------------------------------------*/
 
 // SPDX-License-Identifier: UNLICENSED
 pragma solidity ^0.6.7;
@@ -12,7 +12,6 @@ import "./Imports/ReentrancyGuard.sol";
 import "./PRUF_basic_067.sol";
 
 contract PRUF is PullPayment, PRUF_BASIC {
-
     using SafeMath for uint256;
     using SafeMath for uint16;
     using SafeMath for uint8;
@@ -58,7 +57,10 @@ contract PRUF is PullPayment, PRUF_BASIC {
     /*
      * @dev retrieves costs from Storage and returns Costs struct
      */
-    function getEscrowData(bytes32 _idxHash) internal returns (escrowData memory) {
+    function getEscrowData(bytes32 _idxHash)
+        internal
+        returns (escrowData memory)
+    {
         //^^^^^^^checks^^^^^^^^^
 
         escrowData memory escrow;
@@ -79,14 +81,12 @@ contract PRUF is PullPayment, PRUF_BASIC {
         //^^^^^^^interactions^^^^^^^^^
     }
 
-
-
     /*
      * @dev Write a Record to Storage @ idxHash
      */
     function writeRecord(bytes32 _idxHash, Record memory _rec)
         internal
-        //isAuthorized(_idxHash)
+    //isAuthorized(_idxHash)
     {
         //^^^^^^^checks^^^^^^^^^
         //bytes32 userHash = keccak256(abi.encodePacked(msg.sender)); // Get a userhash for authentication and recorder logging
@@ -108,7 +108,7 @@ contract PRUF is PullPayment, PRUF_BASIC {
      */
     function writeRecordIpfs1(bytes32 _idxHash, Record memory _rec)
         internal
-        //isAuthorized(_idxHash)
+    //isAuthorized(_idxHash)
     {
         //^^^^^^^checks^^^^^^^^^
         //bytes32 userHash = keccak256(abi.encodePacked(msg.sender)); // Get a userhash for authentication and recorder logging
@@ -121,7 +121,7 @@ contract PRUF is PullPayment, PRUF_BASIC {
 
     function writeRecordIpfs2(bytes32 _idxHash, Record memory _rec)
         internal
-        //isAuthorized(_idxHash)
+    //isAuthorized(_idxHash)
     {
         //^^^^^^^checks^^^^^^^^^
         //bytes32 userHash = keccak256(abi.encodePacked(msg.sender)); // Get a userhash for authentication and recorder logging
@@ -144,7 +144,9 @@ contract PRUF is PullPayment, PRUF_BASIC {
         //^^^^^^^interactions^^^^^^^^^
     }
 
-    function deductRecycleCosts(uint16 _assetClass, address _oldOwner) internal {
+    function deductRecycleCosts(uint16 _assetClass, address _oldOwner)
+        internal
+    {
         //^^^^^^^checks^^^^^^^^^
         Invoice memory pricing;
         //^^^^^^^effects^^^^^^^^^

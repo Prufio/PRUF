@@ -1,7 +1,7 @@
 /*-----------------------------------------------------------------
  *  TO DO
  *
-*-----------------------------------------------------------------*/
+ *-----------------------------------------------------------------*/
 
 // SPDX-License-Identifier: UNLICENSED
 pragma solidity ^0.6.7;
@@ -85,19 +85,21 @@ contract T_PRUF_NP is PRUF {
     }
 
     /*
-    *     @dev Export FROM nonCustodial - sets asset to status 70 (importable)
-    */
-    function _exportNC(bytes32 _idxHash) external isAuthorized(_idxHash){
-     _modStatus(_idxHash, 70);
+     *     @dev Export FROM nonCustodial - sets asset to status 70 (importable)
+     */
+    function _exportNC(bytes32 _idxHash) external isAuthorized(_idxHash) {
+        _modStatus(_idxHash, 70);
     }
 
     /*
      * @dev Modify **Record**.assetStatus with confirmation required
      */
-    function _modStatus(
-        bytes32 _idxHash,
-        uint8 _newAssetStatus
-    ) public nonReentrant isAuthorized(_idxHash) returns (uint8) {
+    function _modStatus(bytes32 _idxHash, uint8 _newAssetStatus)
+        public
+        nonReentrant
+        isAuthorized(_idxHash)
+        returns (uint8)
+    {
         Record memory rec = getRecord(_idxHash);
         AC memory AC_info = getACinfo(rec.assetClass);
 
@@ -147,10 +149,12 @@ contract T_PRUF_NP is PRUF {
     /*
      * @dev set **Record**.assetStatus to lost or stolen, with confirmation required.
      */
-    function _setLostOrStolen(
-        bytes32 _idxHash,
-        uint8 _newAssetStatus
-    ) external nonReentrant isAuthorized(_idxHash) returns (uint8) {
+    function _setLostOrStolen(bytes32 _idxHash, uint8 _newAssetStatus)
+        external
+        nonReentrant
+        isAuthorized(_idxHash)
+        returns (uint8)
+    {
         Record memory rec = getRecord(_idxHash);
         AC memory AC_info = getACinfo(rec.assetClass);
 
@@ -204,10 +208,12 @@ contract T_PRUF_NP is PRUF {
     /*
      * @dev Decrement **Record**.countdown with confirmation required
      */
-    function _decCounter(
-        bytes32 _idxHash,
-        uint256 _decAmount
-    ) external nonReentrant isAuthorized(_idxHash) returns (uint256) {
+    function _decCounter(bytes32 _idxHash, uint256 _decAmount)
+        external
+        nonReentrant
+        isAuthorized(_idxHash)
+        returns (uint256)
+    {
         Record memory rec = getRecord(_idxHash);
         AC memory AC_info = getACinfo(rec.assetClass);
 
@@ -251,10 +257,12 @@ contract T_PRUF_NP is PRUF {
     /*
      * @dev Modify **Record**.Ipfs1 with confirmation
      */
-    function _modIpfs1(
-        bytes32 _idxHash,
-        bytes32 _IpfsHash
-    ) external nonReentrant isAuthorized(_idxHash) returns (bytes32) {
+    function _modIpfs1(bytes32 _idxHash, bytes32 _IpfsHash)
+        external
+        nonReentrant
+        isAuthorized(_idxHash)
+        returns (bytes32)
+    {
         Record memory rec = getRecord(_idxHash);
         AC memory AC_info = getACinfo(rec.assetClass);
 

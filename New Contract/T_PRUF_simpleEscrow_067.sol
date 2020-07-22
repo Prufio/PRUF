@@ -100,8 +100,7 @@ contract T_PRUF_simpleEscrow is PRUF {
         bytes32 ownerHash = escrowMGRcontract.retrieveEscrowOwner(_idxHash);
         Record memory rec = getRecord(_idxHash);
         AC memory AC_info = getACinfo(rec.assetClass);
-        escrowData memory escrow =  getEscrowData(_idxHash);
-        
+        escrowData memory escrow = getEscrowData(_idxHash);
 
         require(
             AC_info.custodyType == 2,
