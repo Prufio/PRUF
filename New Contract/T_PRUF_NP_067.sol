@@ -84,11 +84,11 @@ contract T_PRUF_NP is PRUF {
         //^^^^^^^interactions^^^^^^^^^
     }
 
-    /*    
+    /*
     *     @dev Export FROM nonCustodial - sets asset to status 70 (importable)
     */
     function _exportNC(bytes32 _idxHash) external isAuthorized(_idxHash){
-     _modStatus(_idxHash, 70); 
+     _modStatus(_idxHash, 70);
     }
 
     /*
@@ -232,7 +232,7 @@ contract T_PRUF_NP is PRUF {
         );
         require(
             (rec.assetStatus != 60),
-            "TPNP:SLS: Record is burned and must be reimported by ACadmin"
+            "TPNP:DC: Record is burned and must be reimported by ACadmin"
         );
         //^^^^^^^checks^^^^^^^^^
 

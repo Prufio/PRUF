@@ -109,7 +109,7 @@ contract PRUF_simpleEscrow is PRUF {
     {
         Record memory rec = getRecord(_idxHash);
         //Record memory shortRec = getShortRecord(_idxHash);
-        escrowData memory escrow =  getEscrowData(_idxHash);
+        escrowData memory escrow = getEscrowData(_idxHash);
         uint8 userType = getUserType(rec.assetClass);
         AC memory AC_info = getACinfo(rec.assetClass);
         bytes32 ownerHash = escrowMGRcontract.retrieveEscrowOwner(_idxHash);

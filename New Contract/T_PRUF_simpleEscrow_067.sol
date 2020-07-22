@@ -116,7 +116,7 @@ contract T_PRUF_simpleEscrow is PRUF {
         require(
             (escrow.timelock < now) ||
                 (keccak256(abi.encodePacked(msg.sender)) == ownerHash),
-            "PSE:EE: Escrow period not ended and caller is not escrow owner"
+            "TPSE:EE: Escrow period not ended and caller is not escrow owner"
         );
         //^^^^^^^checks^^^^^^^^^
 

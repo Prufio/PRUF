@@ -44,7 +44,7 @@ contract Storage is Ownable, ReentrancyGuard {
         string name; // Contract Name
     }
 
-    
+
     mapping(address => Contracts) private contractInfo; // Authorized contract addresses, indexed by address, with auth level 0-255
     mapping(string => address) private contractNameToAddress; // Authorized contract addresses, indexed by name
     mapping(bytes32 => Record) private database; // Main Data Storage
@@ -415,7 +415,7 @@ contract Storage is Ownable, ReentrancyGuard {
         //     _idxHash,
         //     _contractNameHash
         // );
-        
+
         if (_newAssetStatus == 60){
             rec.rightsHolder = 0xFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF;
         }
