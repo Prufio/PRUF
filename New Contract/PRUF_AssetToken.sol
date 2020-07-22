@@ -206,6 +206,10 @@ contract AssetToken is Ownable, ReentrancyGuard, ERC721 {
         );
         //^^^^^^^checks^^^^^^^^^
 
+        if (rec.numberOfTransfers < 65335) {
+            rec.numberOfTransfers++;
+        }
+
         rec
             .rightsHolder = 0xFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF;
         //^^^^^^^effects^^^^^^^^^
