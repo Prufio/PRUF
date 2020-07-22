@@ -47,6 +47,7 @@ contract PRUF_NP is PRUF {
             "PNP:MS: User not authorized to modify records in specified asset class"
         );
         require(_newAssetStatus < 100, "PNP:MS: user cannot set status > 99");
+        require(_newAssetStatus != 70, "PNP:MS: Use pruf_app.exportAsset to export custodial assets");
         require(
             (rec.assetStatus != 6) &&
                 (rec.assetStatus != 50) &&
