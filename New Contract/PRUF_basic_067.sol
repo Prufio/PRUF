@@ -27,10 +27,11 @@ contract PRUF_BASIC is ReentrancyGuard, Ownable,  IERC721Receiver {
         //uint256 timeLock; // Time sensitive mutex
         uint16 numberOfTransfers; //number of transfers and forcemods
     }
-    struct User {
-        uint8 userType; // User type: 1 = human, 9 = automated
-        uint16 authorizedAssetClass; // Asset class in which user is permitted to transact
-    }
+    // struct User {
+    //     uint8 userType; // User type: 1 = human, 9 = automated
+    //     mapping (uint16 => uint8) authorized;
+    //     //uint16 authorizedAssetClass; // Asset class in which user is permitted to transact
+    // }
 
     struct AC {
         string name; // NameHash for assetClass
@@ -55,7 +56,7 @@ contract PRUF_BASIC is ReentrancyGuard, Ownable,  IERC721Receiver {
         address addr2;
     }
 
-    mapping(bytes32 => User) internal registeredUsers; // Authorized recorder database
+    //mapping(bytes32 => User) internal registeredUsers; // Authorized recorder database
 
     address internal storageAddress;
     StorageInterface internal Storage; // Set up external contract interface
@@ -202,17 +203,12 @@ contract PRUF_BASIC is ReentrancyGuard, Ownable,  IERC721Receiver {
     /*
      * @dev Get a User Record from AC_manager @ msg.sender
      */
-    function getUser() internal virtual view returns (User memory) {
+    function getUserType(uint16 _assetClass) internal virtual view returns (uint8) {
         //^^^^^^^checks^^^^^^^^^
-        User memory user;
-        //^^^^^^^effects^^^^^^^^^
-        (
-            user.userType,
-            user.authorizedAssetClass
-        ) = AssetClassTokenManagerContract.getUserExt(
-            keccak256(abi.encodePacked(msg.sender))
-        );
-        return user;
+       
+        uint8 userTypeInAssetClass = AssetClassTokenManagerContract.getUserType(keccak256(abi.encodePacked(msg.sender)), _assetClass);
+
+        return userTypeInAssetClass;
         //^^^^^^^interactions^^^^^^^^^
     }
 

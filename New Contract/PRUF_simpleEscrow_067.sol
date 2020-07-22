@@ -18,13 +18,7 @@ contract PRUF_simpleEscrow is PRUF {
      *      Is authorized for asset class
      */
     modifier isAuthorized(bytes32 _idxHash) override {
-        User memory user = getUser();
         uint256 tokenID = uint256(_idxHash);
-
-        require(
-            (user.userType > 0) && (user.userType < 10),
-            "PSE:IA:User not registered"
-        );
         require(
             AssetTokenContract.ownerOf(tokenID) == PrufAppAddress,
             "PSE:IA: Custodial contract does not hold token"
@@ -42,7 +36,7 @@ contract PRUF_simpleEscrow is PRUF {
         uint8 _escrowStatus
     ) external nonReentrant isAuthorized(_idxHash) {
         Record memory rec = getRecord(_idxHash);
-        User memory callingUser = getUser();
+        uint8 userType = getUserType(rec.assetClass);
         uint256 escrowTime = now.add(_escrowTime);
         uint8 newEscrowStatus;
         AC memory AC_info = getACinfo(rec.assetClass);
@@ -53,8 +47,8 @@ contract PRUF_simpleEscrow is PRUF {
         );
         require((rec.rightsHolder != 0), "SE: Record does not exist");
         require(
-            callingUser.authorizedAssetClass == rec.assetClass,
-            "PSE:SE: User not authorized to modify records in specified asset class"
+            (userType > 0) && (userType < 10),
+            "TPNP:MI1: User not authorized to modify records in specified asset class"
         );
         require(
             (escrowTime >= now),
@@ -76,8 +70,8 @@ contract PRUF_simpleEscrow is PRUF {
             "PSE:SE: Asset already in escrow status."
         );
         require(
-            (callingUser.userType < 5) ||
-                ((callingUser.userType > 4) && (_escrowStatus > 49)),
+            (userType < 5) ||
+                ((userType > 4) && (_escrowStatus > 49)),
             "PSE:SE: Non supervisored agents must set asset status within scope."
         );
         require(
@@ -116,7 +110,7 @@ contract PRUF_simpleEscrow is PRUF {
         Record memory rec = getRecord(_idxHash);
         //Record memory shortRec = getShortRecord(_idxHash);
         escrowData memory escrow =  getEscrowData(_idxHash);
-        User memory callingUser = getUser();
+        uint8 userType = getUserType(rec.assetClass);
         AC memory AC_info = getACinfo(rec.assetClass);
         bytes32 ownerHash = escrowMGRcontract.retrieveEscrowOwner(_idxHash);
 
@@ -127,8 +121,8 @@ contract PRUF_simpleEscrow is PRUF {
 
         require((rec.rightsHolder != 0), "EE: Record does not exist");
         require(
-            callingUser.authorizedAssetClass == rec.assetClass,
-            "PSE:EE: User not authorized to modify records in specified asset class"
+            (userType > 0) && (userType < 10),
+            "TPNP:MI1: User not authorized to modify records in specified asset class"
         );
         require(
             (rec.assetStatus == 6) ||
@@ -137,7 +131,7 @@ contract PRUF_simpleEscrow is PRUF {
             "EE:ERR- record must be in escrow status"
         );
         require(
-            ((rec.assetStatus > 49) || (callingUser.userType < 5)),
+            ((rec.assetStatus > 49) || (userType < 5)),
             "PSE:EE: Usertype less than 5 required to end this escrow"
         );
         require(

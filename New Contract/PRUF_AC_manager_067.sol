@@ -13,9 +13,13 @@ contract PRUF_AC_MGR is PRUF {
     using SafeMath for uint256;
     using SafeMath for uint8;
 
+
     mapping(uint16 => Costs) private cost; // Cost per function by asset class
     mapping(uint16 => AC) internal AC_data; // AC info database
     mapping(string => uint16) internal AC_number;
+
+    mapping(bytes32 => mapping(uint16 => uint8)) internal registeredUsers; // Authorized recorder database
+    //mapping(bytes32 => User) internal registeredUsers; // Authorized recorder database
 
     address AC_minterAddress;
     uint256 private priceThreshold; //threshold of price where fractional pricing is implemented
@@ -67,8 +71,9 @@ contract PRUF_AC_MGR is PRUF {
 
         bytes32 addrHash = keccak256(abi.encodePacked(_authAddr));
 
-        registeredUsers[addrHash].userType = _userType;
-        registeredUsers[addrHash].authorizedAssetClass = _assetClass;
+        registeredUsers[addrHash][_assetClass] = _userType;
+        //registeredUsers[addrHash].userType = _userType;
+        //registeredUsers[addrHash].authorizedAssetClass = _assetClass;
         //^^^^^^^effects^^^^^^^^^
         emit REPORT("Internal user database access!"); //report access to the internal user database
         //^^^^^^^interactions^^^^^^^^^
@@ -439,15 +444,16 @@ contract PRUF_AC_MGR is PRUF {
     /*
      * @dev Serve a User Record
      */
-    function getUserExt(bytes32 _userHash)
+    function getUserType(bytes32 _userHash, uint16 _assetClass)
         external
         view
-        returns (uint8, uint16)
+        returns (uint8)
     {
         //^^^^^^^checks^^^^^^^^^
         return (
-            registeredUsers[_userHash].userType,
-            registeredUsers[_userHash].authorizedAssetClass
+            registeredUsers[_userHash][_assetClass]
+            //registeredUsers[_userHash].userType,
+            //registeredUsers[_userHash].authorizedAssetClass
         );
         //^^^^^^^interactions^^^^^^^^^
     }

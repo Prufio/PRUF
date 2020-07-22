@@ -256,7 +256,6 @@ contract T_PRUF_NP is PRUF {
         bytes32 _IpfsHash
     ) external nonReentrant isAuthorized(_idxHash) returns (bytes32) {
         Record memory rec = getRecord(_idxHash);
-        User memory callingUser = getUser();
         AC memory AC_info = getACinfo(rec.assetClass);
 
         require(
@@ -265,10 +264,6 @@ contract T_PRUF_NP is PRUF {
         );
 
         require((rec.rightsHolder != 0), "TPNP:MI1: Record does not exist");
-        require(
-            callingUser.authorizedAssetClass == rec.assetClass,
-            "TPNP:MI1: User not authorized to modify records in specified asset class"
-        );
 
         require(rec.Ipfs1 != _IpfsHash, "TPNP:MI1: New data same as old");
         require( //-------------------------------------Should an asset in escrow be modifiable?

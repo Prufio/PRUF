@@ -37,18 +37,14 @@ contract T_PRUF_APP is PRUF {
         bytes32 _Ipfs1
     ) external payable nonReentrant {
         uint256 tokenId = uint256(_idxHash);
-        User memory user = getUser();
         Record memory rec = getRecord(_idxHash);
+        uint8 userType = getUserType(rec.assetClass);
         AC memory AC_info = getACinfo(_assetClass);
         AC memory oldAC_info = getACinfo(rec.assetClass);
 
         require(
-            user.userType == 1,
-            "TPA:NR: User not authorized to create records"
-        );
-        require(
-            user.authorizedAssetClass == _assetClass,
-            "TPA:NR: User not authorized for asset class"
+            userType == 1,
+            "TPA:NR: User not authorized to create records in this asset class"
         );
         require(
             AC_info.custodyType == 2,
@@ -240,16 +236,16 @@ contract T_PRUF_APP is PRUF {
     }
 
     //--------------------------------------------Internal Functions--------------------------
-    function getUser() internal override view returns (User memory) {
-        User memory user;
-        (
-            user.userType,
-            user.authorizedAssetClass
-        ) = AssetClassTokenManagerContract.getUserExt(
-            keccak256(abi.encodePacked(msg.sender))
-        );
+    // function getUser() internal override view returns (User memory) {
+    //     User memory user;
+    //     (
+    //         user.userType,
+    //         user.authorizedAssetClass
+    //     ) = AssetClassTokenManagerContract.getUserExt(
+    //         keccak256(abi.encodePacked(msg.sender))
+    //     );
 
-        return user;
-        //^^^^^^^interactions^^^^^^^^^
-    }
+    //     return user;
+    //     //^^^^^^^interactions^^^^^^^^^
+    // }
 }

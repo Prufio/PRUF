@@ -7,10 +7,14 @@
 pragma solidity ^0.6.7;
 
 interface AssetClassTokenManagerInterface {
-    function getUserExt(bytes32 _userHash)
+    function getUserType(bytes32 _userHash, uint16 _assetClass)
         external
         view
-        returns (uint8, uint16);
+        returns (uint8);
+    // function getUserExt(bytes32 _userHash)
+    //     external
+    //     view
+    //     returns (uint8, uint16);
 
     function retrieveCosts(uint16 _assetClass)
         external
