@@ -86,7 +86,7 @@ contract PRUF is PullPayment, PRUF_BASIC {
      */
     function writeRecord(bytes32 _idxHash, Record memory _rec)
         internal
-        isAuthorized(_idxHash)
+        //isAuthorized(_idxHash)
     {
         //^^^^^^^checks^^^^^^^^^
         //bytes32 userHash = keccak256(abi.encodePacked(msg.sender)); // Get a userhash for authentication and recorder logging
@@ -108,7 +108,7 @@ contract PRUF is PullPayment, PRUF_BASIC {
      */
     function writeRecordIpfs1(bytes32 _idxHash, Record memory _rec)
         internal
-        isAuthorized(_idxHash)
+        //isAuthorized(_idxHash)
     {
         //^^^^^^^checks^^^^^^^^^
         //bytes32 userHash = keccak256(abi.encodePacked(msg.sender)); // Get a userhash for authentication and recorder logging
@@ -121,7 +121,7 @@ contract PRUF is PullPayment, PRUF_BASIC {
 
     function writeRecordIpfs2(bytes32 _idxHash, Record memory _rec)
         internal
-        isAuthorized(_idxHash)
+        //isAuthorized(_idxHash)
     {
         //^^^^^^^checks^^^^^^^^^
         //bytes32 userHash = keccak256(abi.encodePacked(msg.sender)); // Get a userhash for authentication and recorder logging
