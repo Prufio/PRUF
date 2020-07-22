@@ -38,7 +38,7 @@ contract T_PRUF_APP is PRUF {
     ) external payable nonReentrant {
         uint256 tokenId = uint256(_idxHash);
         Record memory rec = getRecord(_idxHash);
-        uint8 userType = getUserType(rec.assetClass);
+        uint8 userType = getUserType(_assetClass);
         AC memory AC_info = getACinfo(_assetClass);
         AC memory oldAC_info = getACinfo(rec.assetClass);
 
