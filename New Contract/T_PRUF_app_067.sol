@@ -101,7 +101,12 @@ contract T_PRUF_APP is PRUF {
         isAuthorized(_idxHash)
     {
         Record memory rec = getRecord(_idxHash);
+        AC memory AC_info = getACinfo(_newAssetClass);
 
+        require(
+            AC_info.custodyType == 2,
+            "TPA:IA: Contract not authorized for custodial assets"
+        );
         require(
             AssetClassTokenManagerContract.isSameRootAC(
                 _newAssetClass,
@@ -109,6 +114,7 @@ contract T_PRUF_APP is PRUF {
             ) == 170,
             "TPA:IA:Cannot change AC to new root"
         );
+        require(rec.assetStatus < 200, "PA:IA: Record locked");
         //^^^^^^^checks^^^^^^^^^
 
         Storage.changeAC(_idxHash, _newAssetClass);
