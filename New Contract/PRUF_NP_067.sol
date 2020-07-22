@@ -78,45 +78,6 @@ contract PRUF_NP is PRUF {
     }
 
     /*
-     *     @dev Export FROM Custodial:
-     */
-    function exportAsset(bytes32 _idxHash, address _addr)
-        external
-        nonReentrant
-        isAuthorized(_idxHash)
-        returns (uint8)
-    {
-        uint256 tokenId = uint256(_idxHash);
-        Record memory rec = getRecord(_idxHash);
-        uint8 userType = getUserType(rec.assetClass);
-        AC memory AC_info = getACinfo(rec.assetClass);
-
-        require(
-            AC_info.custodyType == 1,
-            "PNP:EA: Contract not authorized for non-custodial assets"
-        );
-        require(
-            (userType > 0) && (userType < 10),
-            "PNP:EA: User not authorized to modify records in specified asset class"
-        );
-        require( // require transferrable (51) status
-            rec.assetStatus == 51,
-            "PNP:EA: Asset status must be 51 to export"
-        );
-        //^^^^^^^checks^^^^^^^^^
-
-        AssetTokenContract.safeTransferFrom(address(this), _addr, tokenId); // sends token to rightsholder wallet (specified by auth user)
-
-        rec.assetStatus = 70; // Set status to 70 (exported)
-        //^^^^^^^effects^^^^^^^^^
-
-        writeRecord(_idxHash, rec);
-
-        return rec.assetStatus;
-        //^^^^^^^interactions^^^^^^^^^
-    }
-
-    /*
      * @dev set **Record**.assetStatus to lost or stolen, with confirmation required.
      */
     function _setLostOrStolen(
