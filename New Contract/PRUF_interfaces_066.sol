@@ -141,7 +141,7 @@ interface AssetClassTokenInterface {
 interface AssetTokenInterface {
     function ownerOf(uint256) external returns (address);
 
-    function burn(uint256) external;
+    function discard(uint256) external;
 
     function safeTransferFrom(
         address from,
@@ -242,8 +242,8 @@ interface StorageInterface {
             uint256,
             bytes32,
             bytes32,
-            uint16,
-            uint256
+            uint16
+            //uint256
         );
 
     function resolveContractAddress(string calldata _name)
@@ -268,7 +268,8 @@ interface EscrowManagerInterface {
         uint256 _timelock,
         bytes32 _ex1,
         bytes32 _ex2,
-        bytes32 _ex3
+        address _addr1,
+        address _addr2
         ) external;
 
     function endEscrow(bytes32 _idxHash) external;
@@ -288,6 +289,13 @@ interface EscrowManagerInterface {
             uint256 timelock,
             bytes32 ex1,
             bytes32 ex2,
-            bytes32 ex3
+            address addr1,
+            address addr2
         );
+}
+
+interface RecyclerInterface{
+    function discard(bytes32 _idxHash) external;
+    function recycle(bytes32 _idxHash) external;
+
 }
