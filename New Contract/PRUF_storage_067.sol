@@ -141,14 +141,14 @@ contract Storage is Ownable, ReentrancyGuard, Pausable {
      * @dev Triggers stopped state.
      *
      */
-    function pause() external onlyOwner {
+    function OO_pause() external onlyOwner {
         _pause();
     }
 
     /**
      * @dev Returns to normal state.
      */
-    function unpause() external onlyOwner {
+    function OO_unpause() external onlyOwner {
         _unpause();
     }
 
