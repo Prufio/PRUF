@@ -104,7 +104,11 @@ contract AssetToken is Ownable, ReentrancyGuard, ERC721 {
     function setURI(
         uint256 tokenId,
         string calldata _tokenURI
-    ) external isAdmin returns (uint256) {
+    ) external returns (uint256) {
+        require(
+            _isApprovedOrOwner(_msgSender(), tokenId),
+            "PAT:TF:transfer caller is not owner nor approved"
+        );
         //^^^^^^^checks^^^^^^^^^
 
         _setTokenURI(tokenId, _tokenURI);

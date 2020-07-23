@@ -141,6 +141,12 @@ interface AssetClassTokenInterface {
         uint256 tokenId,
         string calldata _tokenURI
     ) external returns (uint256);
+
+    function name() external view returns (string memory);
+
+    function symbol() external view returns (string memory);
+
+    function tokenURI(uint256 tokenId) external view returns (string memory);
 }
 
 interface AssetTokenInterface {
@@ -165,6 +171,12 @@ interface AssetTokenInterface {
         uint256 tokenId,
         string calldata _tokenURI
     ) external returns (uint256);
+
+    function name() external view returns (string memory);
+
+    function symbol() external view returns (string memory);
+
+    function tokenURI(uint256 tokenId) external view returns (string memory);
 }
 
 interface StorageInterface {
