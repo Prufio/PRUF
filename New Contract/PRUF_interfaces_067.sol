@@ -172,6 +172,8 @@ interface AssetTokenInterface {
         string calldata _tokenURI
     ) external returns (uint256);
 
+    function tokenExists(uint256 tokenId) external returns (uint8);
+
     function name() external view returns (string memory);
 
     function symbol() external view returns (string memory);

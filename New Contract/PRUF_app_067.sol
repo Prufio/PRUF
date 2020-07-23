@@ -355,7 +355,7 @@ contract PRUF_APP is PRUF {
             rec.forceModCount++;
         }
 
-        rec.assetStatus = 0;
+        rec.assetStatus = 0;   // --------------------------------Should this be?
         rec.rightsHolder = _rgtHash;
         //^^^^^^^effects^^^^^^^^^
 

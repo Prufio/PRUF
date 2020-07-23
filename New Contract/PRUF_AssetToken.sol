@@ -99,7 +99,6 @@ contract AssetToken is Ownable, ReentrancyGuard, ERC721 {
 
     /*
      * @dev Set new token URI String
-     *
      */
     function setURI(
         uint256 tokenId,
@@ -116,7 +115,16 @@ contract AssetToken is Ownable, ReentrancyGuard, ERC721 {
         //^^^^^^^interactions^^^^^^^^^
     }
 
-    
+    /*
+     * @dev See if token exists
+     */
+    function tokenExists(uint256 tokenId) external view returns (uint8) {
+        if(_exists(tokenId)){
+            return 170;
+        } else { 
+            return 0;
+        }
+    }
 
     /**
      * @dev Transfers the ownership of a given token ID to another address.
