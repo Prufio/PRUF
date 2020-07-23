@@ -197,6 +197,21 @@ contract PRUF_BASIC is ReentrancyGuard, Ownable, IERC721Receiver, Pausable {
         //^^^^^^^interactions^^^^^^^^^
     }
 
+    /**
+     * @dev Triggers stopped state.
+     *
+     */
+    function pause() external onlyOwner {
+        _pause();
+    }
+
+    /**
+     * @dev Returns to normal state.
+     */
+    function unpause() external onlyOwner {
+        _unpause();
+    }
+
     //--------------------------------------------------------------------------------------INTERNAL functions
 
     /*

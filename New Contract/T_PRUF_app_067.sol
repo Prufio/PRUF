@@ -139,6 +139,7 @@ contract T_PRUF_APP is PRUF {
         Record memory rec = getRecord(_idxHash);
         AC memory AC_info = getACinfo(rec.assetClass);
         uint256 tokenId = uint256(_idxHash);
+        bytes32 rawHash = keccak256(abi.encodePacked(first, middle, last, id, secret));
 
         require(
             AC_info.custodyType == 2,
@@ -169,7 +170,7 @@ contract T_PRUF_APP is PRUF {
         );
         require(
             rec.rightsHolder ==
-               keccak256(abi.encodePacked(_idxHash, keccak256(abi.encodePacked(first, middle, last, id, secret)) )),
+                keccak256(abi.encodePacked(_idxHash, rawHash)),
             "TPA:RMT:Rightsholder does not match supplied data"
         );
         //^^^^^^^checks^^^^^^^^^
