@@ -105,12 +105,12 @@ contract PRUF_APP is PRUF {
         );
         //^^^^^^^checks^^^^^^^^^
 
-        AssetTokenContract.safeTransferFrom(address(this), _addr, tokenId); // sends token to rightsholder wallet (specified by auth user)
-
         rec.assetStatus = 70; // Set status to 70 (exported)
         //^^^^^^^effects^^^^^^^^^
-
+        
         writeRecord(_idxHash, rec);
+
+        AssetTokenContract.safeTransferFrom(address(this), _addr, tokenId); // sends token to rightsholder wallet (specified by auth user)
 
         return rec.assetStatus;
         //^^^^^^^interactions^^^^^^^^^
