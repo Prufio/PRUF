@@ -137,6 +137,21 @@ contract Storage is Ownable, ReentrancyGuard, Pausable {
 
     //--------------------------------Internal Admin functions / onlyowner or isAdmin---------------------------------//
 
+    /**
+     * @dev Triggers stopped state.
+     *
+     */
+    function pause() external onlyOwner {
+        _pause();
+    }
+
+    /**
+     * @dev Returns to normal state.
+     */
+    function unpause() external onlyOwner {
+        _unpause();
+    }
+
     /*
      * @dev Authorize / Deauthorize / Authorize ADRESSES permitted to make record modifications
      */
