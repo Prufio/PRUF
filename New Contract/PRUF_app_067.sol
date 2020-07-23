@@ -106,11 +106,14 @@ contract PRUF_APP is PRUF {
         //^^^^^^^checks^^^^^^^^^
 
         rec.assetStatus = 70; // Set status to 70 (exported)
+
+        if (rec.numberOfTransfers < 65335) {
+            rec.numberOfTransfers++;
+        }
         //^^^^^^^effects^^^^^^^^^
         
-        writeRecord(_idxHash, rec);
-
         AssetTokenContract.safeTransferFrom(address(this), _addr, tokenId); // sends token to rightsholder wallet (specified by auth user)
+        writeRecord(_idxHash, rec);
 
         return rec.assetStatus;
         //^^^^^^^interactions^^^^^^^^^

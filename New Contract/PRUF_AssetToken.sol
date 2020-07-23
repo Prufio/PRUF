@@ -41,10 +41,9 @@ contract AssetToken is Ownable, ReentrancyGuard, ERC721 {
     modifier isAdmin() {
         require(
             (msg.sender == PrufAppAddress) ||
-                (msg.sender == T_PrufAppAddress) ||
-                (msg.sender == T_PrufAppAddress) ||
-                (msg.sender == recyclerAddress) ||
-                (msg.sender == owner()),
+            (msg.sender == T_PrufAppAddress) ||
+            (msg.sender == recyclerAddress) ||
+            (msg.sender == owner()),
             "PAT:IA:Calling address does not belong to an Admin"
         );
         _;
@@ -81,7 +80,7 @@ contract AssetToken is Ownable, ReentrancyGuard, ERC721 {
     }
 
     /*
-     * must be isAdmin
+     * @dev Mint new token
      *
      */
     function mintAssetToken(
@@ -97,6 +96,23 @@ contract AssetToken is Ownable, ReentrancyGuard, ERC721 {
         return tokenId;
         //^^^^^^^interactions^^^^^^^^^
     }
+
+    /*
+     * @dev Set new token URI String
+     *
+     */
+    function setURI(
+        uint256 tokenId,
+        string calldata _tokenURI
+    ) external isAdmin returns (uint256) {
+        //^^^^^^^checks^^^^^^^^^
+
+        _setTokenURI(tokenId, _tokenURI);
+        return tokenId;
+        //^^^^^^^interactions^^^^^^^^^
+    }
+
+    
 
     /**
      * @dev Transfers the ownership of a given token ID to another address.
