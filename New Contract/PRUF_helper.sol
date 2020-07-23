@@ -123,4 +123,27 @@ contract PRUF_helper is Ownable {
         );
         return (rawRgtHash, keccak256(abi.encodePacked(_idxHash, rawRgtHash)));
     }
+
+    function getFuckyRgtHash(
+        bytes32 _idxHash,
+        string memory _rgt_first,
+        string memory _rgt_mid,
+        string memory _rgt_last,
+        string memory _rgt_ID,
+        string memory _rgt_secret
+    ) public pure returns (bytes32) {
+        bytes32 rawRgtHash;
+
+        rawRgtHash = keccak256(
+            abi.encodePacked(
+                _rgt_first,
+                _rgt_mid,
+                _rgt_last,
+                _rgt_ID,
+                _rgt_secret,
+                _idxHash
+            )
+        );
+        return rawRgtHash;
+    }
 }
