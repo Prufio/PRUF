@@ -169,9 +169,7 @@ contract T_PRUF_APP is PRUF {
         );
         require(
             rec.rightsHolder ==
-                keccak256(
-                    abi.encodePacked(_idxHash, first, middle, last, id, secret)
-                ),
+               keccak256(abi.encodePacked(_idxHash, keccak256(abi.encodePacked(_idxHash, first, middle, last, id, secret)) )),
             "TPA:RMT:Rightsholder does not match supplied data"
         );
         //^^^^^^^checks^^^^^^^^^
