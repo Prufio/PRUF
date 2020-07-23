@@ -95,7 +95,6 @@ contract T_PRUF_simpleEscrow is PRUF {
     function endEscrow(bytes32 _idxHash)
         external
         nonReentrant
-        isAuthorized(_idxHash)
     {
         bytes32 ownerHash = escrowMGRcontract.retrieveEscrowOwner(_idxHash);
         Record memory rec = getRecord(_idxHash);
