@@ -25,8 +25,10 @@ pragma solidity ^0.6.7;
 
 /*-----------------------------------------------------------------
  *  TO DO :
- *
- *
+ * Move IPFS1 to tokenURI
+ * "naked" token minting 
+ * Importing naked tokens
+ * Design Json templates for IPFS1 and IPFS2
  *
  *
  *
