@@ -110,16 +110,36 @@ contract CORE is PullPayment, BASIC {
         uint256 tokenId = uint256(_idxHash);
         AC memory AC_info = getACinfo(_assetClass);
 
-        if ((AssetTokenContract.tokenExists(tokenId) == 0) && (AC_info.custodyType == 2)){
-            AssetTokenContract.mintAssetToken(msg.sender, tokenId, "pruf.io");
-        }
+        require (AssetTokenContract.tokenExists(tokenId) == 0, "PC:CR:Asset token already exists");
 
-        if ((AssetTokenContract.tokenExists(tokenId) == 0) && (AC_info.custodyType == 1)){
+        if (AC_info.custodyType == 1){
             AssetTokenContract.mintAssetToken(address(this), tokenId, "pruf.io");
+        }
+        
+        if (AC_info.custodyType == 2){
+            AssetTokenContract.mintAssetToken(msg.sender, tokenId, "pruf.io");
         }
 
         Storage.newRecord(_idxHash, _rgtHash, _assetClass, _countDownStart);
     }
+
+    /*
+     * @dev create a Record in Storage @ idxHash
+     */
+    function actualizeRecord(
+        bytes32 _idxHash,
+        bytes32 _rgtHash,
+        uint16 _assetClass,
+        uint256 _countDownStart
+    ) internal {
+        uint256 tokenId = uint256(_idxHash);
+
+        require (AssetTokenContract.tokenExists(tokenId) == 170, "PC:AR:Asset token not found");
+
+        Storage.newRecord(_idxHash, _rgtHash, _assetClass, _countDownStart);
+    }
+
+
 
     /*
      * @dev Write a Record to Storage @ idxHash
