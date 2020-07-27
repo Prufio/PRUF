@@ -191,8 +191,7 @@ contract APP_NC is CORE {
 
         tokenId = AssetTokenContract.reMintAssetToken(
             msg.sender,
-            tokenId,
-            "pruf.io"
+            tokenId
         );
 
         return tokenId;

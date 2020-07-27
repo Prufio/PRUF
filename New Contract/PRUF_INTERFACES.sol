@@ -180,8 +180,7 @@ interface A_TKN_Interface {
 
     function reMintAssetToken(
         address _recipientAddress,
-        uint256 tokenId,
-        string calldata _tokenURI
+        uint256 tokenId
     ) external returns (uint256);
 
     function tokenExists(uint256 tokenId) external returns (uint8);
