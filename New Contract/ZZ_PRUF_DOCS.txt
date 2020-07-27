@@ -116,18 +116,18 @@ pragma solidity ^0.6.7;
 
 *-----------------------------------------------------------------
  * Contract Resolution Names -
- *  assetToken
- *  assetClassToken
- *  PRUF_APP
- *  PRUF_NP
- *  PRUF_simpleEscrow
- *  PRUF_AC_MGR
- *  PRUF_AC_Minter
- *  T_PRUF_APP
- *  T_PRUF_NP
- *  T_PRUF_simpleEscrow
- *  PRUF_escrowMGR
- *  PRUF_recycler
+ *  A_TKN
+ *  AC_TKN
+ *  APP
+ *  NP
+ *  ECR
+ *  AC_MGR
+ *  AC_MNT
+ *  APP_NC
+ *  NP_NC
+ *  ECR_NC
+ *  ECR_MGR
+ *  RCLR
  *
 *-----------------------------------------------------------------
 

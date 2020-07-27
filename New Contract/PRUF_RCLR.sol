@@ -1,4 +1,4 @@
-/*-----------------------------------------------------------------
+/*-----------------------------------------------------------V0.6.7
 __/\\\\\\\\\\\\\ _____/\\\\\\\\\ _______/\\../\\ ___/\\\\\\\\\\\\\\\
  _\/\\\/////////\\\ _/\\\///////\\\ ____\//..\//____\/\\\///////////__
   _\/\\\.......\/\\\.\/\\\.....\/\\\ ________________\/\\\ ____________
@@ -10,40 +10,17 @@ __/\\\\\\\\\\\\\ _____/\\\\\\\\\ _______/\\../\\ ___/\\\\\\\\\\\\\\\
         _\/// _____________\/// _______\/// __\///////// __\/// _____________
          *-------------------------------------------------------------------*/
 
-         
 /*-----------------------------------------------------------------
  *  TO DO
  *
- *-----------------------------------------------------------------
- */
-
-
-*-----------------------------------------------------------------
- * FUTURE FEATURES
- *      "bottle deposit" on asset creation to encourage recycling
- *  New Recycle :
- *          Not possible in Custodial asset classes
- *          Caller must hold token, must be in status 59
- *          Caller recieves deposit amount (how the bloody hell do we manage this????)
- *          Token goes into "indefinite" escrow, RGT set to 0xFFF...
- *              Caller is escrow controller, but escrow contract is "owner", can break escrow
- *                      (requires repayment of deposit amount, resets to status 51)
- *              Price set when escrow is to be broken by reregistering, from costs of the category
- *                     that it is to be imported into (endEscrow called from T_PRUF_APP?)
- *              Importing breaks the escrow
- *                  payment divided between ACroot, ACholder, and recycling address (escrow owner)
- *                  token sent to new owner (payment sender), status set to 51
- *
- *
- *
-*-----------------------------------------------------------------*/
+ *---------------------------------------------------------------*/
 
 // SPDX-License-Identifier: UNLICENSED
 pragma solidity ^0.6.7;
 
-import "./PRUF_core_067.sol";
+import "./PRUF_CORE.sol";
 
-contract PRUF_recycler is PRUF {
+contract RCLR is CORE {
     using SafeMath for uint256;
 
     //--------------------------------------------External Functions--------------------------

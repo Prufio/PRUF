@@ -1,4 +1,4 @@
-/*-----------------------------------------------------------------
+/*-----------------------------------------------------------V0.6.7
 __/\\\\\\\\\\\\\ _____/\\\\\\\\\ _______/\\../\\ ___/\\\\\\\\\\\\\\\
  _\/\\\/////////\\\ _/\\\///////\\\ ____\//..\//____\/\\\///////////__
   _\/\\\.......\/\\\.\/\\\.....\/\\\ ________________\/\\\ ____________
@@ -10,12 +10,10 @@ __/\\\\\\\\\\\\\ _____/\\\\\\\\\ _______/\\../\\ ___/\\\\\\\\\\\\\\\
         _\/// _____________\/// _______\/// __\///////// __\/// _____________
          *-------------------------------------------------------------------*/
 
-         
 /*-----------------------------------------------------------------
  *  TO DO
  *
- *-----------------------------------------------------------------
- */
+ *-----------------------------------------------------------------*/
 
 // SPDX-License-Identifier: UNLICENSED
 
@@ -23,15 +21,15 @@ pragma solidity ^0.6.7;
 
 import "./_ERC721/ERC721.sol";
 import "./_ERC721/Ownable.sol";
-import "./PRUF_interfaces_067.sol";
+import "./PRUF_INTERFACES.sol";
 import "./Imports/ReentrancyGuard.sol";
 
-contract AssetClassToken is Ownable, ReentrancyGuard, ERC721 {
+contract AC_TKN is Ownable, ReentrancyGuard, ERC721 {
     constructor() public ERC721("PRüF Asset Class Token", "PAC") {}
 
     address internal ACmanagerAddress; //isAdmin
     address internal storageAddress;
-    StorageInterface internal Storage; // Set up external contract interface
+    S_Interface internal Storage; // Set up external contract interface
 
     event REPORT(string _msg);
 
@@ -55,7 +53,7 @@ contract AssetClassToken is Ownable, ReentrancyGuard, ERC721 {
         );
         //^^^^^^^checks^^^^^^^^^
 
-        Storage = StorageInterface(_storageAddress);
+        Storage = S_Interface(_storageAddress);
         //^^^^^^^effects^^^^^^^^^
     }
 
@@ -64,7 +62,7 @@ contract AssetClassToken is Ownable, ReentrancyGuard, ERC721 {
      */
     function OO_ResolveContractAddresses() external nonReentrant onlyOwner {
         //^^^^^^^checks^^^^^^^^^
-        ACmanagerAddress = Storage.resolveContractAddress("PRUF_AC_MGR");
+        ACmanagerAddress = Storage.resolveContractAddress("AC_MGR");
         //^^^^^^^interactions^^^^^^^^^
     }
 

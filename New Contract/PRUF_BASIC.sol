@@ -1,4 +1,4 @@
-/*-----------------------------------------------------------------
+/*-----------------------------------------------------------V0.6.7
 __/\\\\\\\\\\\\\ _____/\\\\\\\\\ _______/\\../\\ ___/\\\\\\\\\\\\\\\
  _\/\\\/////////\\\ _/\\\///////\\\ ____\//..\//____\/\\\///////////__
   _\/\\\.......\/\\\.\/\\\.....\/\\\ ________________\/\\\ ____________
@@ -10,23 +10,21 @@ __/\\\\\\\\\\\\\ _____/\\\\\\\\\ _______/\\../\\ ___/\\\\\\\\\\\\\\\
         _\/// _____________\/// _______\/// __\///////// __\/// _____________
          *-------------------------------------------------------------------*/
 
-         
 /*-----------------------------------------------------------------
  *  TO DO
  *
- *-----------------------------------------------------------------
- */
+ *---------------------------------------------------------------*/
 
 // SPDX-License-Identifier: UNLICENSED
 pragma solidity ^0.6.7;
 
-import "./PRUF_interfaces_067.sol";
+import "./PRUF_INTERFACES.sol";
 import "./Imports/Ownable.sol";
 import "./Imports/Pausable.sol";
 import "./Imports/ReentrancyGuard.sol";
 import "./_ERC721/IERC721Receiver.sol";
 
-contract PRUF_BASIC is ReentrancyGuard, Ownable, IERC721Receiver, Pausable {
+contract BASIC is ReentrancyGuard, Ownable, IERC721Receiver, Pausable {
     struct Record {
         //bytes32 recorder; // Address hash of recorder
         bytes32 rightsHolder; // KEK256 Registered owner
@@ -73,22 +71,22 @@ contract PRUF_BASIC is ReentrancyGuard, Ownable, IERC721Receiver, Pausable {
     //mapping(bytes32 => User) internal registeredUsers; // Authorized recorder database
 
     address internal storageAddress;
-    StorageInterface internal Storage; // Set up external contract interface
+    S_Interface internal Storage; // Set up external contract interface
 
     address internal AssetClassTokenManagerAddress;
-    AssetClassTokenManagerInterface internal AssetClassTokenManagerContract; // Set up external contract interface
+    AC_MGR_Interface internal AssetClassTokenManagerContract; // Set up external contract interface
 
     address internal AssetTokenAddress;
-    AssetTokenInterface internal AssetTokenContract; //erc721_token prototype initialization
+    A_TKN_Interface internal AssetTokenContract; //erc721_token prototype initialization
 
     address internal AssetClassTokenAddress;
-    AssetClassTokenInterface internal AssetClassTokenContract; //erc721_token prototype initialization
+    AC_TKN_Interface internal AssetClassTokenContract; //erc721_token prototype initialization
 
     address internal escrowMGRAddress;
-    EscrowManagerInterface internal escrowMGRcontract; //Set up external contract interface for escrowmgr
+    ECR_MGR_Interface internal escrowMGRcontract; //Set up external contract interface for escrowmgr
 
     address internal recyclerAddress; //Set up external contract interface for recycler
-    RecyclerInterface internal Recycler;
+    RCLR_Interface internal Recycler;
 
     address internal PrufAppAddress;
     address internal T_PrufAppAddress;
@@ -128,31 +126,29 @@ contract PRUF_BASIC is ReentrancyGuard, Ownable, IERC721Receiver, Pausable {
     {
         //^^^^^^^checks^^^^^^^^^
         AssetClassTokenAddress = Storage.resolveContractAddress(
-            "assetClassToken"
+            "AC_TKN"
         );
-        AssetClassTokenContract = AssetClassTokenInterface(
-            AssetClassTokenAddress
-        );
+        AssetClassTokenContract = AC_TKN_Interface(AssetClassTokenAddress);
 
         AssetClassTokenManagerAddress = Storage.resolveContractAddress(
-            "PRUF_AC_MGR"
+            "AC_MGR"
         );
 
-        AssetClassTokenManagerContract = AssetClassTokenManagerInterface(
+        AssetClassTokenManagerContract = AC_MGR_Interface(
             AssetClassTokenManagerAddress
         );
 
-        AssetTokenAddress = Storage.resolveContractAddress("assetToken");
-        AssetTokenContract = AssetTokenInterface(AssetTokenAddress);
+        AssetTokenAddress = Storage.resolveContractAddress("A_TKN");
+        AssetTokenContract = A_TKN_Interface(AssetTokenAddress);
 
-        escrowMGRAddress = Storage.resolveContractAddress("PRUF_escrowMGR");
-        escrowMGRcontract = EscrowManagerInterface(escrowMGRAddress);
+        escrowMGRAddress = Storage.resolveContractAddress("ECR_MGR");
+        escrowMGRcontract = ECR_MGR_Interface(escrowMGRAddress);
 
-        PrufAppAddress = Storage.resolveContractAddress("PRUF_APP");
-        T_PrufAppAddress = Storage.resolveContractAddress("T_PRUF_APP");
+        PrufAppAddress = Storage.resolveContractAddress("APP");
+        T_PrufAppAddress = Storage.resolveContractAddress("APP_NC");
 
-        recyclerAddress = Storage.resolveContractAddress("PRUF_recycler");
-        Recycler = RecyclerInterface(recyclerAddress);
+        recyclerAddress = Storage.resolveContractAddress("RCLR");
+        Recycler = RCLR_Interface(recyclerAddress);
         //^^^^^^^effects^^^^^^^^^
     }
 
@@ -192,7 +188,7 @@ contract PRUF_BASIC is ReentrancyGuard, Ownable, IERC721Receiver, Pausable {
         );
         //^^^^^^^checks^^^^^^^^^
 
-        Storage = StorageInterface(_storageAddress);
+        Storage = S_Interface(_storageAddress);
         //^^^^^^^effects^^^^^^^^^
     }
 

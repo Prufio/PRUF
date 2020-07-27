@@ -1,4 +1,4 @@
-/*-----------------------------------------------------------------
+/*-----------------------------------------------------------V0.6.7
 __/\\\\\\\\\\\\\ _____/\\\\\\\\\ _______/\\../\\ ___/\\\\\\\\\\\\\\\
  _\/\\\/////////\\\ _/\\\///////\\\ ____\//..\//____\/\\\///////////__
   _\/\\\.......\/\\\.\/\\\.....\/\\\ ________________\/\\\ ____________
@@ -10,19 +10,17 @@ __/\\\\\\\\\\\\\ _____/\\\\\\\\\ _______/\\../\\ ___/\\\\\\\\\\\\\\\
         _\/// _____________\/// _______\/// __\///////// __\/// _____________
          *-------------------------------------------------------------------*/
 
-         
 /*-----------------------------------------------------------------
  *  TO DO
  *
- *-----------------------------------------------------------------
- */
+ *---------------------------------------------------------------*/
 
 // SPDX-License-Identifier: UNLICENSED
 pragma solidity ^0.6.7;
 
-import "./PRUF_core_067.sol";
+import "./PRUF_CORE.sol";
 
-contract T_PRUF_APP is PRUF {
+contract APP_NC is CORE {
     /*
      * @dev Verify user credentials
      * Originating Address:
@@ -152,7 +150,9 @@ contract T_PRUF_APP is PRUF {
         Record memory rec = getRecord(_idxHash);
         AC memory AC_info = getACinfo(rec.assetClass);
         uint256 tokenId = uint256(_idxHash);
-        bytes32 rawHash = keccak256(abi.encodePacked(first, middle, last, id, secret));
+        bytes32 rawHash = keccak256(
+            abi.encodePacked(first, middle, last, id, secret)
+        );
 
         require(
             AC_info.custodyType == 2,
@@ -182,8 +182,7 @@ contract T_PRUF_APP is PRUF {
             "TPA:RMT:Record In Transferred-unregistered or burned status"
         );
         require(
-            rec.rightsHolder ==
-                keccak256(abi.encodePacked(_idxHash, rawHash)),
+            rec.rightsHolder == keccak256(abi.encodePacked(_idxHash, rawHash)),
             "TPA:RMT:Rightsholder does not match supplied data"
         );
         //^^^^^^^checks^^^^^^^^^
