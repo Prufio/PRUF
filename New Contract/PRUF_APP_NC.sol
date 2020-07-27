@@ -44,10 +44,8 @@ contract APP_NC is CORE {
         bytes32 _idxHash,
         bytes32 _rgtHash,
         uint16 _assetClass,
-        uint256 _countDownStart,
-        bytes32 _Ipfs1
+        uint256 _countDownStart
     ) external payable nonReentrant whenNotPaused {
-        uint256 tokenId = uint256(_idxHash);
         Record memory rec = getRecord(_idxHash);
         uint8 userType = getUserType(_assetClass);
         AC memory AC_info = getACinfo(_assetClass);
@@ -76,29 +74,23 @@ contract APP_NC is CORE {
         if (AC_info.assetClassRoot == oldAC_info.assetClassRoot) {
             // if record exists as a "dead record" has an old AC, and is being recreated in the same root class,
             // do not overwrite anything besides assetClass and rightsHolder (storage will set assetStatus to 51)
-            Storage.newRecord(
-                //userHash,
+            createRecord(
                 _idxHash,
                 _rgtHash,
                 _assetClass,
-                rec.countDownStart,
-                rec.Ipfs1
+                rec.countDownStart
             );
         } else {
             // Otherwise, idxHash is unuiqe and an entirely new record is created
-            Storage.newRecord(
-                //userHash,
+            createRecord(
                 _idxHash,
                 _rgtHash,
                 _assetClass,
-                _countDownStart,
-                _Ipfs1
+                _countDownStart
             );
         }
 
         deductNewRecordCosts(_assetClass);
-
-        AssetTokenContract.mintAssetToken(msg.sender, tokenId, "pruf.io");
         //^^^^^^^interactions^^^^^^^^^
     }
 

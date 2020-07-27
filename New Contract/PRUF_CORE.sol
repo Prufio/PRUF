@@ -45,11 +45,14 @@ contract CORE is PullPayment, BASIC {
         uint256 ACTHprice;
     }
 
+    //--------------------------------------------------------------------------------------Storage Reading internal functions
+
     /*
      * @dev retrieves costs from Storage and returns Costs struct
      */
     function getCost(uint16 _assetClass) internal returns (Costs memory) {
         //^^^^^^^checks^^^^^^^^^
+
         Costs memory cost;
         //^^^^^^^effects^^^^^^^^^
         (
@@ -93,6 +96,31 @@ contract CORE is PullPayment, BASIC {
         //^^^^^^^interactions^^^^^^^^^
     }
 
+    //--------------------------------------------------------------------------------------Storage Writing internal functions
+
+    /*
+     * @dev create a Record in Storage @ idxHash
+     */
+    function createRecord(
+        bytes32 _idxHash,
+        bytes32 _rgtHash,
+        uint16 _assetClass,
+        uint256 _countDownStart
+    ) internal {
+        uint256 tokenId = uint256(_idxHash);
+        AC memory AC_info = getACinfo(_assetClass);
+
+        if ((AssetTokenContract.tokenExists(tokenId) == 0) && (AC_info.custodyType == 2)){
+            AssetTokenContract.mintAssetToken(msg.sender, tokenId, "pruf.io");
+        }
+
+        if ((AssetTokenContract.tokenExists(tokenId) == 0) && (AC_info.custodyType == 1)){
+            AssetTokenContract.mintAssetToken(address(this), tokenId, "pruf.io");
+        }
+
+        Storage.newRecord(_idxHash, _rgtHash, _assetClass, _countDownStart);
+    }
+
     /*
      * @dev Write a Record to Storage @ idxHash
      */
@@ -102,8 +130,7 @@ contract CORE is PullPayment, BASIC {
     //isAuthorized(_idxHash)
     {
         //^^^^^^^checks^^^^^^^^^
-        //bytes32 userHash = keccak256(abi.encodePacked(msg.sender)); // Get a userhash for authentication and recorder logging
-        //^^^^^^^effects^^^^^^^^^
+
         Storage.modifyRecord(
             //userHash,
             _idxHash,
@@ -122,16 +149,12 @@ contract CORE is PullPayment, BASIC {
     function writeRecordIpfs1(bytes32 _idxHash, Record memory _rec)
         internal
         whenNotPaused
-    //isAuthorized(_idxHash)
     {
-        //^^^^^^^checks^^^^^^^^^
-        //bytes32 userHash = keccak256(abi.encodePacked(msg.sender)); // Get a userhash for authentication and recorder logging
-        //^^^^^^^effects^^^^^^^^^
+        //^^^^^^^Checks^^^^^^^^^
+
         Storage.modifyIpfs1(_idxHash, _rec.Ipfs1); // Send data to storage
         //^^^^^^^interactions^^^^^^^^^
     }
-
-    //--------------------------------------------------------------------------------------Storage Writing internal functions
 
     function writeRecordIpfs2(bytes32 _idxHash, Record memory _rec)
         internal
@@ -139,11 +162,12 @@ contract CORE is PullPayment, BASIC {
     //isAuthorized(_idxHash)
     {
         //^^^^^^^checks^^^^^^^^^
-        //bytes32 userHash = keccak256(abi.encodePacked(msg.sender)); // Get a userhash for authentication and recorder logging
-        //^^^^^^^effects^^^^^^^^^
+
         Storage.modifyIpfs2(_idxHash, _rec.Ipfs2); // Send data to storage
         //^^^^^^^interactions^^^^^^^^^
     }
+
+    //--------------------------------------------------------------------------------------Payment internal functions
 
     function deductNewRecordCosts(uint16 _assetClass) internal whenNotPaused {
         //^^^^^^^checks^^^^^^^^^

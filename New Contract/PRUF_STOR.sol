@@ -201,10 +201,9 @@ contract STOR is Ownable, ReentrancyGuard, Pausable {
      */
     function newRecord(
         bytes32 _idxHash,
-        bytes32 _rgt,
+        bytes32 _rgtHash,
         uint16 _assetClass,
-        uint256 _countDownStart,
-        bytes32 _Ipfs1
+        uint256 _countDownStart
     ) external nonReentrant whenNotPaused isAuthorized {
         require(
             database[_idxHash].assetStatus != 60,
@@ -214,7 +213,7 @@ contract STOR is Ownable, ReentrancyGuard, Pausable {
             database[_idxHash].rightsHolder == 0,
             "PS:NR:Rec already exists"
         );
-        require(_rgt != 0, "PS:NR:RGT cannot be blank");
+        require(_rgtHash != 0, "PS:NR:RGT cannot be blank");
         require(_assetClass != 0, "PA:NR: !Asset class zero ");
         //^^^^^^^checks^^^^^^^^^
 
@@ -229,10 +228,7 @@ contract STOR is Ownable, ReentrancyGuard, Pausable {
         rec.assetClass = _assetClass;
         rec.countDownStart = _countDownStart;
         rec.countDown = _countDownStart;
-        rec.rightsHolder = _rgt;
-        rec.forceModCount = 0;
-        rec.Ipfs1 = _Ipfs1;
-        rec.numberOfTransfers = 0;
+        rec.rightsHolder = _rgtHash;
 
         database[_idxHash] = rec;
         //^^^^^^^effects^^^^^^^^^

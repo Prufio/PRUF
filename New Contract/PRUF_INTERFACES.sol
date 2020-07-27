@@ -198,8 +198,7 @@ interface STOR_Interface {
         bytes32 _idxHash,
         bytes32 _rgt,
         uint16 _assetClass,
-        uint256 _countDownStart,
-        bytes32 _Ipfs1
+        uint256 _countDownStart
     ) external;
 
     function modifyRecord(
