@@ -1,4 +1,4 @@
-/*-----------------------------------------------------------------
+/*-----------------------------------------------------------V0.6.7
 __/\\\\\\\\\\\\\ _____/\\\\\\\\\ _______/\\../\\ ___/\\\\\\\\\\\\\\\
  _\/\\\/////////\\\ _/\\\///////\\\ ____\//..\//____\/\\\///////////__
   _\/\\\.......\/\\\.\/\\\.....\/\\\ ________________\/\\\ ____________
@@ -10,17 +10,15 @@ __/\\\\\\\\\\\\\ _____/\\\\\\\\\ _______/\\../\\ ___/\\\\\\\\\\\\\\\
         _\/// _____________\/// _______\/// __\///////// __\/// _____________
          *-------------------------------------------------------------------*/
 
-         
 /*-----------------------------------------------------------------
  *  TO DO
  *
- *-----------------------------------------------------------------
- */
+ *---------------------------------------------------------------*/
 
 // SPDX-License-Identifier: UNLICENSED
 pragma solidity ^0.6.7;
 
-interface AssetClassTokenManagerInterface {
+interface AC_MGR_Interface {
     function getUserType(bytes32 _userHash, uint16 _assetClass)
         external
         view
@@ -135,7 +133,7 @@ interface AssetClassTokenManagerInterface {
     function resolveAssetClass(string memory _name) external returns (uint16);
 }
 
-interface AssetClassTokenInterface {
+interface AC_TKN_Interface {
     function ownerOf(uint256) external view returns (address);
 
     function safeTransferFrom(
@@ -163,7 +161,7 @@ interface AssetClassTokenInterface {
     function tokenURI(uint256 tokenId) external view returns (string memory);
 }
 
-interface AssetTokenInterface {
+interface A_TKN_Interface {
     function ownerOf(uint256) external returns (address);
 
     function discard(uint256) external;
@@ -182,8 +180,7 @@ interface AssetTokenInterface {
 
     function reMintAssetToken(
         address _recipientAddress,
-        uint256 tokenId,
-        string calldata _tokenURI
+        uint256 tokenId
     ) external returns (uint256);
 
     function tokenExists(uint256 tokenId) external returns (uint8);
@@ -195,7 +192,7 @@ interface AssetTokenInterface {
     function tokenURI(uint256 tokenId) external view returns (string memory);
 }
 
-interface StorageInterface {
+interface STOR_Interface {
     function newRecord(
         //bytes32 _userHash,
         bytes32 _idxHash,
@@ -293,7 +290,7 @@ interface StorageInterface {
     //     returns (bytes32);
 }
 
-interface EscrowManagerInterface {
+interface ECR_MGR_Interface {
     function setEscrow(
         bytes32 _idxHash,
         uint8 _newAssetStatus,
@@ -326,7 +323,7 @@ interface EscrowManagerInterface {
         );
 }
 
-interface RecyclerInterface {
+interface RCLR_Interface {
     function discard(bytes32 _idxHash) external;
 
     function recycle(bytes32 _idxHash) external;

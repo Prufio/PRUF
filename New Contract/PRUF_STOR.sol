@@ -1,4 +1,4 @@
-/*-----------------------------------------------------------------
+/*-----------------------------------------------------------V0.6.7
 __/\\\\\\\\\\\\\ _____/\\\\\\\\\ _______/\\../\\ ___/\\\\\\\\\\\\\\\
  _\/\\\/////////\\\ _/\\\///////\\\ ____\//..\//____\/\\\///////////__
   _\/\\\.......\/\\\.\/\\\.....\/\\\ ________________\/\\\ ____________
@@ -10,14 +10,12 @@ __/\\\\\\\\\\\\\ _____/\\\\\\\\\ _______/\\../\\ ___/\\\\\\\\\\\\\\\
         _\/// _____________\/// _______\/// __\///////// __\/// _____________
          *-------------------------------------------------------------------*/
 
-         
 /*-----------------------------------------------------------------
  *  TO DO
  *
- *-----------------------------------------------------------------
- */
+ *---------------------------------------------------------------*/
 
-*-----------------------------------------------------------------
+/*-----------------------------------------------------------------
  * IMPORTANT NOTE : DO NOT REMOVE FROM CODE:
  *      Verification of rgtHash in curated, custodial classes are not secure beyond the honorable intentions
  * of authorized recorders. All blockchain info is readable, so a bad actor could trivially obtain a copy of the
@@ -25,18 +23,18 @@ __/\\\\\\\\\\\\\ _____/\\\\\\\\\ _______/\\../\\ ___/\\\\\\\\\\\\\\\
  * to require an actual, malicious effort to bypass security rather than a little copy-paste. Actual decentralized
  * security is provided with tokenized assets, which do not rely on the coercive trust relationship that creates the
  * incentive for recorders not to engage in malicious practices.
-*-----------------------------------------------------------------*/
+ *-----------------------------------------------------------------*/
 
 // SPDX-License-Identifier: UNLICENSED
 pragma solidity ^0.6.7;
 
-import "./PRUF_interfaces_067.sol";
+import "./PRUF_INTERFACES.sol";
 import "./Imports/Ownable.sol";
 import "./Imports/Pausable.sol";
 import "./Imports/SafeMath.sol";
 import "./Imports/ReentrancyGuard.sol";
 
-contract Storage is Ownable, ReentrancyGuard, Pausable {
+contract STOR is Ownable, ReentrancyGuard, Pausable {
     struct Record {
         bytes32 rightsHolder; // KEK256 Registered owner
         uint8 assetStatus; // Status - Transferrable, locked, in transfer, stolen, lost, etc.
@@ -59,10 +57,10 @@ contract Storage is Ownable, ReentrancyGuard, Pausable {
     mapping(bytes32 => Record) private database; // Main Data Storage
 
     address private AssetClassTokenAddress;
-    AssetClassTokenInterface private AssetClassTokenContract; //erc721_token prototype initialization
+    AC_TKN_Interface private AssetClassTokenContract; //erc721_token prototype initialization
 
     address internal AssetClassTokenManagerAddress;
-    AssetClassTokenManagerInterface internal AssetClassTokenManagerContract; // Set up external contract interface
+    AC_MGR_Interface internal AssetClassTokenManagerContract; // Set up external contract interface
 
     //----------------------------------------------Modifiers----------------------------------------------//
 
@@ -181,10 +179,10 @@ contract Storage is Ownable, ReentrancyGuard, Pausable {
         contractInfo[_addr].name = _name;
         contractNameToAddress[_name] = _addr;
 
-        AssetClassTokenContract = AssetClassTokenInterface(
+        AssetClassTokenContract = AC_TKN_Interface(
             contractNameToAddress["assetClassToken"]
         );
-        AssetClassTokenManagerContract = AssetClassTokenManagerInterface(
+        AssetClassTokenManagerContract = AC_MGR_Interface(
             contractNameToAddress["PRUF_AC_MGR"]
         );
         //^^^^^^^effects^^^^^^^^^

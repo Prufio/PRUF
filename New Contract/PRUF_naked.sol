@@ -1,4 +1,4 @@
-/*-----------------------------------------------------------------
+/*-----------------------------------------------------------V0.6.7
 __/\\\\\\\\\\\\\ _____/\\\\\\\\\ _______/\\../\\ ___/\\\\\\\\\\\\\\\
  _\/\\\/////////\\\ _/\\\///////\\\ ____\//..\//____\/\\\///////////__
   _\/\\\.......\/\\\.\/\\\.....\/\\\ ________________\/\\\ ____________
@@ -13,9 +13,9 @@ __/\\\\\\\\\\\\\ _____/\\\\\\\\\ _______/\\../\\ ___/\\\\\\\\\\\\\\\
 // SPDX-License-Identifier: UNLICENSED
 pragma solidity ^0.6.7;
 
-import "./PRUF_core_067.sol";
+import "./PRUF_CORE.sol";
 
-contract T_PRUF_APP is PRUF {
+contract T_PRUF_APP is CORE {
     /*
      * @dev Verify user credentials
      * Originating Address:
@@ -186,8 +186,7 @@ contract T_PRUF_APP is PRUF {
 
         tokenId = AssetTokenContract.reMintAssetToken(
             msg.sender,
-            tokenId,
-            "pruf.io"
+            tokenId
         );
 
         return tokenId;
