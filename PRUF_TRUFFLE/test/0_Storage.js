@@ -6,5 +6,6 @@ contract('Storage', () => {
         console.log(PRUF_STORAGE_TEST.address);
         assert(PRUF_STORAGE_TEST.address !== '');
     });
-
 });
+
+
