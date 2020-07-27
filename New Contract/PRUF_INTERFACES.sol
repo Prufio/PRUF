@@ -192,7 +192,7 @@ interface A_TKN_Interface {
     function tokenURI(uint256 tokenId) external view returns (string memory);
 }
 
-interface S_Interface {
+interface STOR_Interface {
     function newRecord(
         //bytes32 _userHash,
         bytes32 _idxHash,

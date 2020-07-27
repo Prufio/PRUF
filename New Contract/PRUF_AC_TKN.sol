@@ -29,7 +29,7 @@ contract AC_TKN is Ownable, ReentrancyGuard, ERC721 {
 
     address internal ACmanagerAddress; //isAdmin
     address internal storageAddress;
-    S_Interface internal Storage; // Set up external contract interface
+    STOR_Interface internal Storage; // Set up external contract interface
 
     event REPORT(string _msg);
 
@@ -53,7 +53,7 @@ contract AC_TKN is Ownable, ReentrancyGuard, ERC721 {
         );
         //^^^^^^^checks^^^^^^^^^
 
-        Storage = S_Interface(_storageAddress);
+        Storage = STOR_Interface(_storageAddress);
         //^^^^^^^effects^^^^^^^^^
     }
 

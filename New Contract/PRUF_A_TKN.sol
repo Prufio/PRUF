@@ -44,7 +44,7 @@ contract A_TKN is Ownable, ReentrancyGuard, ERC721 {
     address internal T_PrufAppAddress; //isAdmin
     address internal PrufAppAddress; //isAdmin
     address internal storageAddress;
-    S_Interface internal Storage; // Set up external contract interface
+    STOR_Interface internal Storage; // Set up external contract interface
     address internal recyclerAddress;
     RCLR_Interface internal Recycler;
 
@@ -73,7 +73,7 @@ contract A_TKN is Ownable, ReentrancyGuard, ERC721 {
         );
         //^^^^^^^checks^^^^^^^^^
 
-        Storage = S_Interface(_storageAddress);
+        Storage = STOR_Interface(_storageAddress);
         //^^^^^^^effects^^^^^^^^^
     }
 

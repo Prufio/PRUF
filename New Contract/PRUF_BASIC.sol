@@ -71,7 +71,7 @@ contract BASIC is ReentrancyGuard, Ownable, IERC721Receiver, Pausable {
     //mapping(bytes32 => User) internal registeredUsers; // Authorized recorder database
 
     address internal storageAddress;
-    S_Interface internal Storage; // Set up external contract interface
+    STOR_Interface internal Storage; // Set up external contract interface
 
     address internal AssetClassTokenManagerAddress;
     AC_MGR_Interface internal AssetClassTokenManagerContract; // Set up external contract interface
@@ -188,7 +188,7 @@ contract BASIC is ReentrancyGuard, Ownable, IERC721Receiver, Pausable {
         );
         //^^^^^^^checks^^^^^^^^^
 
-        Storage = S_Interface(_storageAddress);
+        Storage = STOR_Interface(_storageAddress);
         //^^^^^^^effects^^^^^^^^^
     }
 

@@ -34,7 +34,7 @@ import "./Imports/Pausable.sol";
 import "./Imports/SafeMath.sol";
 import "./Imports/ReentrancyGuard.sol";
 
-contract S is Ownable, ReentrancyGuard, Pausable {
+contract STOR is Ownable, ReentrancyGuard, Pausable {
     struct Record {
         bytes32 rightsHolder; // KEK256 Registered owner
         uint8 assetStatus; // Status - Transferrable, locked, in transfer, stolen, lost, etc.
