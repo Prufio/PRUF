@@ -186,8 +186,7 @@ contract T_PRUF_APP is PRUF {
 
         tokenId = AssetTokenContract.reMintAssetToken(
             msg.sender,
-            tokenId,
-            "pruf.io"
+            tokenId
         );
 
         return tokenId;

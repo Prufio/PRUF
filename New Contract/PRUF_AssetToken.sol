@@ -291,14 +291,14 @@ contract AssetToken is Ownable, ReentrancyGuard, ERC721 {
      */
     function reMintAssetToken(
         address _recipientAddress,
-        uint256 tokenId,
-        string calldata _tokenURI
+        uint256 tokenId
     ) external isAdmin nonReentrant returns (uint256) {
         require(_exists(tokenId), "PAT:RM:Cannot Remint nonexistant token");
         //^^^^^^^checks^^^^^^^^^
+        string memory tokenURI = tokenURI(tokenId);
         _burn(tokenId);
         _safeMint(_recipientAddress, tokenId);
-        _setTokenURI(tokenId, _tokenURI);
+        _setTokenURI(tokenId, tokenURI);
         return tokenId;
         //^^^^^^^interactions^^^^^^^^^
     }

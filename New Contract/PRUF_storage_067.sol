@@ -10,22 +10,23 @@ __/\\\\\\\\\\\\\ _____/\\\\\\\\\ _______/\\../\\ ___/\\\\\\\\\\\\\\\
         _\/// _____________\/// _______\/// __\///////// __\/// _____________
          *-------------------------------------------------------------------*/
 
+
+/*-----------------------------------------------------------------
+ * IMPORTANT NOTE : DO NOT REMOVE FROM CODE:
+ *      Verification of rgtHash in curated, custodial asset classes are not secure beyond the honorable intentions
+ * of authorized recorders. All blockchain info is readable, so a bad actor could trivially obtain a copy of the
+ * correct rgtHash on chain. This "stumbling block" measure is in place primarily to keep honest people honest, and
+ * to require an actual, malicious effort to bypass security rather than a little copy-paste. Actual decentralized
+ * security is provided with tokenized assets, which do not rely on the coercive trust relationship that creates the
+ * incentive for recorders not to engage in malicious practices.
+*----------------------------------------------------------------*/
+
          
 /*-----------------------------------------------------------------
  *  TO DO
  *
  *-----------------------------------------------------------------
  */
-
-*-----------------------------------------------------------------
- * IMPORTANT NOTE : DO NOT REMOVE FROM CODE:
- *      Verification of rgtHash in curated, custodial classes are not secure beyond the honorable intentions
- * of authorized recorders. All blockchain info is readable, so a bad actor could trivially obtain a copy of the
- * correct rgtHash on chain. This "stumbling block" measure is in place primarily to keep honest people honest, and
- * to require an actual, malicious effort to bypass security rather than a little copy-paste. Actual decentralized
- * security is provided with tokenized assets, which do not rely on the coercive trust relationship that creates the
- * incentive for recorders not to engage in malicious practices.
-*-----------------------------------------------------------------*/
 
 // SPDX-License-Identifier: UNLICENSED
 pragma solidity ^0.6.7;
@@ -56,6 +57,7 @@ contract Storage is Ownable, ReentrancyGuard, Pausable {
 
     mapping(address => Contracts) private contractInfo; // Authorized contract addresses, indexed by address, with auth level 0-255
     mapping(string => address) private contractNameToAddress; // Authorized contract addresses, indexed by name
+    
     mapping(bytes32 => Record) private database; // Main Data Storage
 
     address private AssetClassTokenAddress;
