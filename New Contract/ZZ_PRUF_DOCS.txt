@@ -29,7 +29,6 @@ pragma solidity ^0.6.7;
  *      *"naked" token minting 
  *      *Importing naked tokens
  *      *Design Json templates for IPFS1 and IPFS2
- *      *tokenURI copied from old token on remint
  *
  *      *Change contract authorizaton mapping in storage to an asset-class based mapping, E.G. address=>(assetClass=>uint8) 
  *              to determine if a contract is athorized to operate on a given asset class (or root asset class?)
@@ -38,10 +37,10 @@ pragma solidity ^0.6.7;
  *              determination by assetClass.
  *
  *
- *      make a basic newRecord thunk-throught function for pruf_core that includes checks for naked assets
+ *      * Make a basic newRecord thunk-throught function for pruf_core that includes checks for naked assets
  *
  *
- *      *Above 65k segregation (probably by ACinfo custodial type) (just need to add a wild west cotract?)
+ *      * Above 65k segregation (probably by ACinfo custodial type) (just need to add a wild west cotract?)
  *
 *-----------------------------------------------------------------
 
