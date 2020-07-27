@@ -37,10 +37,8 @@ pragma solidity ^0.6.7;
  *              determination by assetClass.
  *
  *
- *      * Make a basic newRecord thunk-throught function for pruf_core that includes checks for naked assets
  *
- *
- *      * Above 65k segregation (probably by ACinfo custodial type) (just need to add a wild west cotract?)
+ *      *Above 65k segregation (probably by ACinfo custodial type) (just need to add a wild west cotract?)
  *
 *-----------------------------------------------------------------
 
