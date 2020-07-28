@@ -237,17 +237,26 @@ contract('PRUF_FULL_TEST', accounts  => {
         })
     })
 
+    it('Should mint a couple of asset root tokens', async () => {
+        console.log("Minting custodial root token")
+        return AC_MGR.createAssetClass('1', account1, 'CUSTODIAL_ROOT', '1','1','1', {from: account1})
+        .then(() => {
+        console.log("Minting non-custodial root token")
+        return AC_MGR.createAssetClass('2', account1, 'NON-CUSTODIAL_ROOT', '2','2','2', {from: account1})
+        })
+    })
+
     it("Should Mint 2 cust and 2 non-cust AC tokens in AC_ROOT 1", async () => {
-        return AC_MGR.createAssetClass("10", account1, "Custodial_AC", "10", "1", "1", {form: account1})
+        return AC_MGR.createAssetClass("10", account1, "Custodial_AC", "10", "1", "1", {from: account1})
 
         .then(() => {
-        return AC_MGR.createAssetClass("11", account1, "Custodial_AC", "11", "1", "1", {form: account1})
+        return AC_MGR.createAssetClass("11", account1, "Custodial_AC", "11", "1", "1", {from: account1})
 
         }).then(() => {
-        return AC_MGR.createAssetClass("12", account1, "Custodial_AC", "12", "1", "2", {form: account1})
+        return AC_MGR.createAssetClass("12", account1, "Non-Custodial_AC", "12", "1", "2", {from: account1})
 
         }).then(() => {
-        return AC_MGR.createAssetClass("13", account1, "Custodial_AC", "13", "1", "2", {form: account1})
+        return AC_MGR.createAssetClass("13", account1, "Non-Custodial_AC", "13", "1", "2", {from: account1})
       })
     })
 
