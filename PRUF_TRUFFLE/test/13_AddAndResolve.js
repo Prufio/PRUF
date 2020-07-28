@@ -112,49 +112,49 @@ contract('PRUF_FULL_TEST', accounts => {
     });
 
     it('Should add contract addresses', async () => {
-        
+
         console.log("Adding APP to storage")
-        return STOR.OO_addContract("APP", APP.address, '1', {from: account1})
+        return STOR.OO_addContract("APP", APP.address, '1', { from: account1 })
 
-        .then(()=>{
-        console.log("Adding NP to storage")
-        return STOR.OO_addContract("NP", NP.address, '1', {from: account1})
+            .then(() => {
+                console.log("Adding NP to storage")
+                return STOR.OO_addContract("NP", NP.address, '1', { from: account1 })
 
-        }).then(()=>{
-        console.log("Adding AC_MGR to storage")
-        return STOR.OO_addContract("AC_MGR", AC_MGR.address, '1', {from: account1})
+            }).then(() => {
+                console.log("Adding AC_MGR to storage")
+                return STOR.OO_addContract("AC_MGR", AC_MGR.address, '1', { from: account1 })
 
-        }).then(()=>{
-        console.log("Adding AC_TKN to storage")
-        return STOR.OO_addContract("AC_TKN", AC_TKN.address, '1', {from: account1})
+            }).then(() => {
+                console.log("Adding AC_TKN to storage")
+                return STOR.OO_addContract("AC_TKN", AC_TKN.address, '1', { from: account1 })
 
-        }).then(()=>{
-        console.log("Adding A_TKN to storage")
-        return STOR.OO_addContract("A_TKN", A_TKN.address, '1', {from: account1})
+            }).then(() => {
+                console.log("Adding A_TKN to storage")
+                return STOR.OO_addContract("A_TKN", A_TKN.address, '1', { from: account1 })
 
-        }).then(()=>{
-        console.log("Adding ECR_MGR to storage")
-        return STOR.OO_addContract("ECR_MGR", ECR_MGR.address, '1', {from: account1})
+            }).then(() => {
+                console.log("Adding ECR_MGR to storage")
+                return STOR.OO_addContract("ECR_MGR", ECR_MGR.address, '1', { from: account1 })
 
-        }).then(()=>{
-        console.log("Adding ECR to storage")
-        return STOR.OO_addContract("ECR", ECR.address, '3', {from: account1})
+            }).then(() => {
+                console.log("Adding ECR to storage")
+                return STOR.OO_addContract("ECR", ECR.address, '3', { from: account1 })
 
-        }).then(()=>{
-        console.log("Adding APP_NC to storage")
-        return STOR.OO_addContract("APP_NC", APP_NC.address, '1', {from: account1})
+            }).then(() => {
+                console.log("Adding APP_NC to storage")
+                return STOR.OO_addContract("APP_NC", APP_NC.address, '1', { from: account1 })
 
-        }).then(()=>{
-        console.log("Adding NP_NC to storage")
-        return STOR.OO_addContract("NP_NC", NP_NC.address, '1', {from: account1})
+            }).then(() => {
+                console.log("Adding NP_NC to storage")
+                return STOR.OO_addContract("NP_NC", NP_NC.address, '1', { from: account1 })
 
-        }).then(()=>{
-        console.log("Adding ECR_NC to storage")
-        return STOR.OO_addContract("ECR_NC", ECR_NC.address, '3', {from: account1})
+            }).then(() => {
+                console.log("Adding ECR_NC to storage")
+                return STOR.OO_addContract("ECR_NC", ECR_NC.address, '3', { from: account1 })
 
-        }).then(()=>{
-        console.log("Adding RCLR to storage")
-        return STOR.OO_addContract("RCLR", RCLR.address, '3', {from: account1})
+            }).then(() => {
+                console.log("Adding RCLR to storage")
+                return STOR.OO_addContract("RCLR", RCLR.address, '3', { from: account1 })
 
             })
     })
@@ -259,61 +259,61 @@ contract('PRUF_FULL_TEST', accounts => {
         console.log("Minting custodial root token")
         return AC_MGR.createAssetClass('1', account1, 'CUSTODIAL_ROOT', '1', '1', '1', { from: account1 })
 
-        .then(() => {
-            console.log("Minting non-custodial root token")
-            return AC_MGR.createAssetClass('2', account1, 'NON-CUSTODIAL_ROOT', '2', '2', '2', { from: account1 })
+            .then(() => {
+                console.log("Minting non-custodial root token")
+                return AC_MGR.createAssetClass('2', account1, 'NON-CUSTODIAL_ROOT', '2', '2', '2', { from: account1 })
             })
     })
 
     it("Should Mint 2 cust and 2 non-cust AC tokens in AC_ROOT 1", async () => {
         console.log("Minting AC 10")
-        return AC_MGR.createAssetClass("10", account1, "Custodial_AC", "10", "1", "1", {from: account1})
+        return AC_MGR.createAssetClass("10", account1, "Custodial_AC", "10", "1", "1", { from: account1 })
 
-        .then(() => {
-        console.log("Minting AC 11")
-        return AC_MGR.createAssetClass("11", account1, "Custodial_AC", "11", "1", "1", {from: account1})
+            .then(() => {
+                console.log("Minting AC 11")
+                return AC_MGR.createAssetClass("11", account1, "Custodial_AC", "11", "1", "1", { from: account1 })
 
-        }).then(() => {
-        console.log("Minting AC 12")
-        return AC_MGR.createAssetClass("12", account1, "Non-Custodial_AC", "12", "1", "2", {from: account1})
+            }).then(() => {
+                console.log("Minting AC 12")
+                return AC_MGR.createAssetClass("12", account1, "Non-Custodial_AC", "12", "1", "2", { from: account1 })
 
-        }).then(() => {
-        console.log("Minting AC 13")
-        return AC_MGR.createAssetClass("13", account1, "Non-Custodial_AC", "13", "1", "2", {from: account1})
-      })
+            }).then(() => {
+                console.log("Minting AC 13")
+                return AC_MGR.createAssetClass("13", account1, "Non-Custodial_AC", "13", "1", "2", { from: account1 })
+            })
     })
 
     it("Should Mint 1 cust and 1 non-cust AC tokens in AC_ROOT 2", async () => {
-        return AC_MGR.createAssetClass("14", account1, "Custodial_AC", "14", "2", "1", {from: account1})
+        return AC_MGR.createAssetClass("14", account1, "Custodial_AC", "14", "2", "1", { from: account1 })
 
-        .then(() => {
-        console.log("Minting AC 15")
-        return AC_MGR.createAssetClass("15", account1, "Non_Custodial_AC", "15", "2", "2", {from: account1})
-      })
+            .then(() => {
+                console.log("Minting AC 15")
+                return AC_MGR.createAssetClass("15", account1, "Non_Custodial_AC", "15", "2", "2", { from: account1 })
+            })
     })
 
-    it('Should add account 2 as a user in AC_Manager', async () => {
+    it('Should add users to AC 10-15 in AC_Manager', async () => {
         console.log("Account2 => AC10")
         return AC_MGR.OO_addUser(account2, '1', '10')
             .then(() => {
                 console.log("Account3 => AC11")
-                return AC_MGR.OO_addUser(account3, '1', '11')
+                return AC_MGR.OO_addUser(account3, '1', '11', { from: account1 })
             })
             .then(() => {
                 console.log("Account3 => AC12")
-                return AC_MGR.OO_addUser(account4, '1', '12')
+                return AC_MGR.OO_addUser(account4, '1', '12', { from: account1 })
             })
             .then(() => {
                 console.log("Account4 => AC13")
-                return AC_MGR.OO_addUser(account5, '1', '13')
+                return AC_MGR.OO_addUser(account5, '1', '13', { from: account1 })
             })
             .then(() => {
                 console.log("Account5 => AC14")
-                return AC_MGR.OO_addUser(account6, '1', '14')
+                return AC_MGR.OO_addUser(account6, '1', '14', { from: account1 })
             })
             .then(() => {
                 console.log("Account6 => AC15")
-                return AC_MGR.OO_addUser(account7, '1', '15')
+                return AC_MGR.OO_addUser(account7, '1', '15', { from: account1 })
             })
     })
 
@@ -321,14 +321,14 @@ contract('PRUF_FULL_TEST', accounts => {
 
         console.log("Setting base costs in root 1")
         return AC_MGR.ACTH_setCosts("1",
-                                    "10000000000000000",
-                                    "10000000000000000",
-                                    "10000000000000000",
-                                    "10000000000000000", 
-                                    "10000000000000000", 
-                                    "10000000000000000", 
-                                    account1,
-                                    {from: account1})
+            "10000000000000000",
+            "10000000000000000",
+            "10000000000000000",
+            "10000000000000000",
+            "10000000000000000",
+            "10000000000000000",
+            account1,
+            { from: account1 })
 
     .then(() => {
         
@@ -343,7 +343,6 @@ contract('PRUF_FULL_TEST', accounts => {
                                     account1,
                                     {from: account1})
     })
-})
 
     it("Should set costs in minted AC's", async () => {
 
