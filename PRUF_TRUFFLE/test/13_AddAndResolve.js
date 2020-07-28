@@ -282,8 +282,14 @@ contract('PRUF_FULL_TEST', accounts => {
     })
 
     it("Should Mint 2 cust and 2 non-cust AC tokens in AC_ROOT 2", async () => {
+        return AC_MGR.createAssetClass("14", account1, "Custodial_AC", "14", "2", "1", {form: account1})
 
-        console.log("Minting AC 14")
+        .then(() => {
+        console.log("Minting AC 15")
+        return AC_MGR.createAssetClass("15", account1, "Non_Custodial_AC", "15", "2", "2", {form: account1})
+      })
+    })
+
     it('Should add account 2 as a user in AC_Manager', async () => {
         console.log("Account2 => AC10")
         return AC_MGR.OO_addUser(account2, '1', '10')
@@ -308,15 +314,6 @@ contract('PRUF_FULL_TEST', accounts => {
                 return AC_MGR.OO_addUser(account7, '1', '15')
             })
     })
-
-    it("Should Mint 2 cust and 2 non-cust AC tokens in AC_ROOT 1", async () => {
-        return AC_MGR.createAssetClass("14", account1, "Custodial_AC", "14", "2", "1", {form: account1})
-
-        .then(() => {
-        console.log("Minting AC 15")
-        return AC_MGR.createAssetClass("15", account1, "Non_Custodial_AC", "15", "2", "2", {form: account1})
-    })
-})
 
     it("Should set base costs in root tokens", async () => {
 
