@@ -138,11 +138,12 @@ contract('PRUF_FULL_TEST', accounts  => {
 
         }).then(()=>{
         return STOR.OO_addContract("RCLR", RCLR.address, '3', {from: account1})
-        
+
         })
     })
 
     it('Should resolve contract addresses', async () => {
+        
         console.log("Resolving in APP")
         return APP.OO_ResolveContractAddresses({from: account1})
         
