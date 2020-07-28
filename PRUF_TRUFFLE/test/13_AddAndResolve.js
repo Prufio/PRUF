@@ -11,12 +11,18 @@ const PRUF_NP_NC = artifacts.require('NP_NC');
 const PRUF_ECR_NC = artifacts.require('ECR_NC');
 const PRUF_RCLR = artifacts.require('RCLR');
 
-contract('PRUF_FULL_TEST', accounts  => {
+contract('PRUF_FULL_TEST', accounts => {
 
     const account1 = accounts[0];
     const account2 = accounts[1];
     const account3 = accounts[2];
     const account4 = accounts[3];
+    const account5 = accounts[4];
+    const account6 = accounts[5];
+    const account7 = accounts[6];
+    const account8 = accounts[7];
+    const account9 = accounts[8];
+    const account10 = accounts[9];
 
     let STOR;
     let APP;
@@ -33,73 +39,73 @@ contract('PRUF_FULL_TEST', accounts  => {
 
 
     it('Should deploy Storage', async () => {
-        const PRUF_STOR_TEST = await PRUF_STOR.deployed({from: account1});
+        const PRUF_STOR_TEST = await PRUF_STOR.deployed({ from: account1 });
         console.log(PRUF_STOR_TEST.address);
         assert(PRUF_STOR_TEST.address !== '');
         STOR = PRUF_STOR_TEST;
     });
     it('Should deploy PRUF_APP', async () => {
-        const PRUF_APP_TEST = await PRUF_APP.deployed({from: account1});
+        const PRUF_APP_TEST = await PRUF_APP.deployed({ from: account1 });
         console.log(PRUF_APP_TEST.address);
         assert(PRUF_APP_TEST.address !== '');
         APP = PRUF_APP_TEST;
     });
     it('Should deploy PRUF_NP', async () => {
-        const PRUF_NP_TEST = await PRUF_NP.deployed({from: account1});
+        const PRUF_NP_TEST = await PRUF_NP.deployed({ from: account1 });
         console.log(PRUF_NP_TEST.address);
         assert(PRUF_NP_TEST.address !== '');
         NP = PRUF_NP_TEST;
     });
     it('Should deploy PRUF_AC_MGR', async () => {
-        const PRUF_AC_MGR_TEST = await PRUF_AC_MGR.deployed({from: account1});
+        const PRUF_AC_MGR_TEST = await PRUF_AC_MGR.deployed({ from: account1 });
         console.log(PRUF_AC_MGR_TEST.address);
         assert(PRUF_AC_MGR_TEST.address !== '');
         AC_MGR = PRUF_AC_MGR_TEST;
     });
     it('Should deploy PRUF_AC_TKN', async () => {
-        const PRUF_AC_TKN_TEST = await PRUF_AC_TKN.deployed({from: account1});
+        const PRUF_AC_TKN_TEST = await PRUF_AC_TKN.deployed({ from: account1 });
         console.log(PRUF_AC_TKN_TEST.address);
         assert(PRUF_AC_TKN_TEST.address !== '')
         AC_TKN = PRUF_AC_TKN_TEST;
     });
     it('Should deploy PRUF_A_TKN', async () => {
-        const PRUF_A_TKN_TEST = await PRUF_A_TKN.deployed({from: account1});
+        const PRUF_A_TKN_TEST = await PRUF_A_TKN.deployed({ from: account1 });
         console.log(PRUF_A_TKN_TEST.address);
         assert(PRUF_A_TKN_TEST.address !== '')
         A_TKN = PRUF_A_TKN_TEST;
     });
     it('Should deploy PRUF_ECR_MGR', async () => {
-        const PRUF_ECR_MGR_TEST = await PRUF_ECR_MGR.deployed({from: account1});
+        const PRUF_ECR_MGR_TEST = await PRUF_ECR_MGR.deployed({ from: account1 });
         console.log(PRUF_ECR_MGR_TEST.address);
         assert(PRUF_ECR_MGR_TEST.address !== '');
         ECR_MGR = PRUF_ECR_MGR_TEST;
     });
     it('Should deploy PRUF_ECR', async () => {
-        const PRUF_ECR_TEST = await PRUF_ECR.deployed({from: account1});
+        const PRUF_ECR_TEST = await PRUF_ECR.deployed({ from: account1 });
         console.log(PRUF_ECR_TEST.address);
         assert(PRUF_ECR_TEST.address !== '');
         ECR = PRUF_ECR_TEST;
     });
     it('Should deploy PRUF_APP_NC', async () => {
-        const PRUF_APP_NC_TEST = await PRUF_APP_NC.deployed({from: account1});
+        const PRUF_APP_NC_TEST = await PRUF_APP_NC.deployed({ from: account1 });
         console.log(PRUF_APP_NC_TEST.address);
         assert(PRUF_APP_NC_TEST.address !== '');
         APP_NC = PRUF_APP_NC_TEST;
     });
     it('Should deploy PRUF_NP_NC', async () => {
-        const PRUF_NP_NC_TEST = await PRUF_NP_NC.deployed({from: account1});
+        const PRUF_NP_NC_TEST = await PRUF_NP_NC.deployed({ from: account1 });
         console.log(PRUF_NP_NC_TEST.address);
         assert(PRUF_NP_NC_TEST.address !== '')
         NP_NC = PRUF_NP_NC_TEST;
     });
     it('Should deploy PRUF_ECR_NC', async () => {
-        const PRUF_ECR_NC_TEST = await PRUF_ECR_NC.deployed({from: account1});
+        const PRUF_ECR_NC_TEST = await PRUF_ECR_NC.deployed({ from: account1 });
         console.log(PRUF_ECR_NC_TEST.address);
         assert(PRUF_ECR_NC_TEST.address !== '');
         ECR_NC = PRUF_ECR_NC_TEST;
     });
     it('Should deploy PRUF_RCLR', async () => {
-        const PRUF_RCLR_TEST = await PRUF_RCLR.deployed({from: account1});
+        const PRUF_RCLR_TEST = await PRUF_RCLR.deployed({ from: account1 });
         console.log(PRUF_RCLR_TEST.address);
         assert(PRUF_RCLR_TEST.address !== '')
         RCLR = PRUF_RCLR_TEST;
@@ -107,157 +113,182 @@ contract('PRUF_FULL_TEST', accounts  => {
 
     it('Should add contract addresses', async () => {
 
-        return STOR.OO_addContract("APP", APP.address, '1', {from: account1})
+        return STOR.OO_addContract("APP", APP.address, '1', { from: account1 })
 
-        .then(()=>{
-        return STOR.OO_addContract("NP", NP.address, '1', {from: account1})
+            .then(() => {
+                return STOR.OO_addContract("NP", NP.address, '1', { from: account1 })
 
-        }).then(()=>{
-        return STOR.OO_addContract("AC_MGR", AC_MGR.address, '1', {from: account1})
+            }).then(() => {
+                return STOR.OO_addContract("AC_MGR", AC_MGR.address, '1', { from: account1 })
 
-        }).then(()=>{
-        return STOR.OO_addContract("AC_TKN", AC_TKN.address, '1', {from: account1})
+            }).then(() => {
+                return STOR.OO_addContract("AC_TKN", AC_TKN.address, '1', { from: account1 })
 
-        }).then(()=>{
-        return STOR.OO_addContract("A_TKN", A_TKN.address, '1', {from: account1})
+            }).then(() => {
+                return STOR.OO_addContract("A_TKN", A_TKN.address, '1', { from: account1 })
 
-        }).then(()=>{
-        return STOR.OO_addContract("ECR_MGR", ECR_MGR.address, '1', {from: account1})
+            }).then(() => {
+                return STOR.OO_addContract("ECR_MGR", ECR_MGR.address, '1', { from: account1 })
 
-        }).then(()=>{
-        return STOR.OO_addContract("ECR", ECR.address, '3', {from: account1})
+            }).then(() => {
+                return STOR.OO_addContract("ECR", ECR.address, '3', { from: account1 })
 
-        }).then(()=>{
-        return STOR.OO_addContract("APP_NC", APP_NC.address, '1', {from: account1})
+            }).then(() => {
+                return STOR.OO_addContract("APP_NC", APP_NC.address, '1', { from: account1 })
 
-        }).then(()=>{
-        return STOR.OO_addContract("NP_NC", NP_NC.address, '1', {from: account1})
+            }).then(() => {
+                return STOR.OO_addContract("NP_NC", NP_NC.address, '1', { from: account1 })
 
-        }).then(()=>{
-        return STOR.OO_addContract("ECR_NC", ECR_NC.address, '3', {from: account1})
+            }).then(() => {
+                return STOR.OO_addContract("ECR_NC", ECR_NC.address, '3', { from: account1 })
 
-        }).then(()=>{
-        return STOR.OO_addContract("RCLR", RCLR.address, '3', {from: account1})
+            }).then(() => {
+                return STOR.OO_addContract("RCLR", RCLR.address, '3', { from: account1 })
 
-        })
+            })
     })
 
     it('Should add Storage in each contract', async () => {
 
         console.log("Adding in APP")
-        return APP.OO_setStorageContract(STOR.address, {from: account1})
+        return APP.OO_setStorageContract(STOR.address, { from: account1 })
 
-        .then(() => {
-            console.log("Adding in NP")
-            return NP.OO_setStorageContract(STOR.address, {from: account1})
+            .then(() => {
+                console.log("Adding in NP")
+                return NP.OO_setStorageContract(STOR.address, { from: account1 })
 
-        }).then(() => {
-            console.log("Adding in AC_MGR")
-            return AC_MGR.OO_setStorageContract(STOR.address, {from: account1})
+            }).then(() => {
+                console.log("Adding in AC_MGR")
+                return AC_MGR.OO_setStorageContract(STOR.address, { from: account1 })
 
-        }).then(() => {
-            console.log("Adding in AC_TKN")
-            return AC_TKN.OO_setStorageContract(STOR.address, {from: account1})
+            }).then(() => {
+                console.log("Adding in AC_TKN")
+                return AC_TKN.OO_setStorageContract(STOR.address, { from: account1 })
 
-        }).then(() => {
-            console.log("Adding in A_TKN")
-            return A_TKN.OO_setStorageContract(STOR.address, {from: account1})
+            }).then(() => {
+                console.log("Adding in A_TKN")
+                return A_TKN.OO_setStorageContract(STOR.address, { from: account1 })
 
-        }).then(() => {
-            console.log("Adding in ECR_MGR")
-            return ECR_MGR.OO_setStorageContract(STOR.address, {from: account1})
-        
-        }).then(() => {
-            console.log("Adding in ECR")
-            return ECR.OO_setStorageContract(STOR.address, {from: account1})
+            }).then(() => {
+                console.log("Adding in ECR_MGR")
+                return ECR_MGR.OO_setStorageContract(STOR.address, { from: account1 })
 
-        }).then(() => {
-            console.log("Adding in APP_NC")
-            return APP_NC.OO_setStorageContract(STOR.address, {from: account1})
+            }).then(() => {
+                console.log("Adding in ECR")
+                return ECR.OO_setStorageContract(STOR.address, { from: account1 })
 
-        }).then(() => {
-            console.log("Adding in NP_NC")
-            return NP_NC.OO_setStorageContract(STOR.address, {from: account1})
+            }).then(() => {
+                console.log("Adding in APP_NC")
+                return APP_NC.OO_setStorageContract(STOR.address, { from: account1 })
 
-        }).then(() => {
-            console.log("Adding in ECR_NC")
-            return ECR_NC.OO_setStorageContract(STOR.address, {from: account1})
-        
-        }).then(() => {
-            console.log("Adding in RCLR")
-            return RCLR.OO_setStorageContract(STOR.address, {from: account1})
-      })
+            }).then(() => {
+                console.log("Adding in NP_NC")
+                return NP_NC.OO_setStorageContract(STOR.address, { from: account1 })
+
+            }).then(() => {
+                console.log("Adding in ECR_NC")
+                return ECR_NC.OO_setStorageContract(STOR.address, { from: account1 })
+
+            }).then(() => {
+                console.log("Adding in RCLR")
+                return RCLR.OO_setStorageContract(STOR.address, { from: account1 })
+            })
     })
 
     it('Should resolve contract addresses', async () => {
-        
+
         console.log("Resolving in APP")
-        return APP.OO_ResolveContractAddresses({from: account1})
-        
-        .then(() => {
-        console.log("Resolving in NP")
-        return NP.OO_ResolveContractAddresses({from: account1})
+        return APP.OO_ResolveContractAddresses({ from: account1 })
 
-        }).then(() => {
-        console.log("Resolving in AC_MGR")
-        return AC_MGR.OO_ResolveContractAddresses({from: account1})
+            .then(() => {
+                console.log("Resolving in NP")
+                return NP.OO_ResolveContractAddresses({ from: account1 })
 
-        }).then(() => {
-        console.log("Resolving in AC_TKN")
-        return AC_TKN.OO_ResolveContractAddresses({from: account1})
+            }).then(() => {
+                console.log("Resolving in AC_MGR")
+                return AC_MGR.OO_ResolveContractAddresses({ from: account1 })
 
-        }).then(() => {
-        console.log("Resolving in A_TKN")
-        return A_TKN.OO_ResolveContractAddresses({from: account1})
+            }).then(() => {
+                console.log("Resolving in AC_TKN")
+                return AC_TKN.OO_ResolveContractAddresses({ from: account1 })
 
-        }).then(() => {
-        console.log("Resolving in ECR_MGR")
-        return ECR_MGR.OO_ResolveContractAddresses({from: account1})
+            }).then(() => {
+                console.log("Resolving in A_TKN")
+                return A_TKN.OO_ResolveContractAddresses({ from: account1 })
 
-        }).then(() => {
-        console.log("Resolving in ECR")
-        return ECR.OO_ResolveContractAddresses({from: account1})
+            }).then(() => {
+                console.log("Resolving in ECR_MGR")
+                return ECR_MGR.OO_ResolveContractAddresses({ from: account1 })
 
-        }).then(() => {
-        console.log("Resolving in APP_NC")
-        return APP_NC.OO_ResolveContractAddresses({from: account1})
+            }).then(() => {
+                console.log("Resolving in ECR")
+                return ECR.OO_ResolveContractAddresses({ from: account1 })
 
-        }).then(() => {
-        console.log("Resolving in NP_NC")
-        return NP_NC.OO_ResolveContractAddresses({from: account1})
+            }).then(() => {
+                console.log("Resolving in APP_NC")
+                return APP_NC.OO_ResolveContractAddresses({ from: account1 })
 
-        }).then(() => {
-        console.log("Resolving in ECR_NC")
-        return ECR_NC.OO_ResolveContractAddresses({from: account1})
+            }).then(() => {
+                console.log("Resolving in NP_NC")
+                return NP_NC.OO_ResolveContractAddresses({ from: account1 })
 
-        }).then(() => {
-        console.log("Resolving in RCLR")
-        return RCLR.OO_ResolveContractAddresses({from: account1})
+            }).then(() => {
+                console.log("Resolving in ECR_NC")
+                return ECR_NC.OO_ResolveContractAddresses({ from: account1 })
 
-        })
+            }).then(() => {
+                console.log("Resolving in RCLR")
+                return RCLR.OO_ResolveContractAddresses({ from: account1 })
+
+            })
     })
 
     it('Should mint a couple of asset root tokens', async () => {
         console.log("Minting custodial root token")
-        return AC_MGR.createAssetClass('1', account1, 'CUSTODIAL_ROOT', '1','1','1', {from: account1})
-        .then(() => {
-        console.log("Minting non-custodial root token")
-        return AC_MGR.createAssetClass('2', account1, 'NON-CUSTODIAL_ROOT', '2','2','2', {from: account1})
-        })
+        return AC_MGR.createAssetClass('1', account1, 'CUSTODIAL_ROOT', '1', '1', '1', { from: account1 })
+            .then(() => {
+                console.log("Minting non-custodial root token")
+                return AC_MGR.createAssetClass('2', account1, 'NON-CUSTODIAL_ROOT', '2', '2', '2', { from: account1 })
+            })
     })
 
     it("Should Mint 2 cust and 2 non-cust AC tokens in AC_ROOT 1", async () => {
-        return AC_MGR.createAssetClass("10", account1, "Custodial_AC", "10", "1", "1", {from: account1})
+        return AC_MGR.createAssetClass("10", account1, "Custodial_AC", "10", "1", "1", { from: account1 })
 
-        .then(() => {
-        return AC_MGR.createAssetClass("11", account1, "Custodial_AC", "11", "1", "1", {from: account1})
+            .then(() => {
+                return AC_MGR.createAssetClass("11", account1, "Custodial_AC", "11", "1", "1", { from: account1 })
 
-        }).then(() => {
-        return AC_MGR.createAssetClass("12", account1, "Non-Custodial_AC", "12", "1", "2", {from: account1})
+            }).then(() => {
+                return AC_MGR.createAssetClass("12", account1, "Non-Custodial_AC", "12", "1", "2", { from: account1 })
 
-        }).then(() => {
-        return AC_MGR.createAssetClass("13", account1, "Non-Custodial_AC", "13", "1", "2", {from: account1})
-      })
+            }).then(() => {
+                return AC_MGR.createAssetClass("13", account1, "Non-Custodial_AC", "13", "1", "2", { from: account1 })
+            })
+    })
+
+    it('Should add account 2 as a user in AC_Manager', async () => {
+        console.log("Account2 => AC10")
+        return AC_MGR.OO_addUser(account2, '1', '10')
+            .then(() => {
+                console.log("Account3 => AC11")
+                return AC_MGR.OO_addUser(account3, '1', '11')
+            })
+            .then(() => {
+                console.log("Account3 => AC12")
+                return AC_MGR.OO_addUser(account4, '1', '12')
+            })
+            .then(() => {
+                console.log("Account4 => AC13")
+                return AC_MGR.OO_addUser(account5, '1', '13')
+            })
+            .then(() => {
+                console.log("Account5 => AC14")
+                return AC_MGR.OO_addUser(account6, '1', '14')
+            })
+            .then(() => {
+                console.log("Account6 => AC15")
+                return AC_MGR.OO_addUser(account7, '1', '15')
+            })
     })
 
 });
