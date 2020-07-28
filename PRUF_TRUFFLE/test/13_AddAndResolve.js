@@ -343,6 +343,7 @@ contract('PRUF_FULL_TEST', accounts => {
                                     account1,
                                     {from: account1})
     })
+    })
 
     it("Should set costs in minted AC's", async () => {
 
