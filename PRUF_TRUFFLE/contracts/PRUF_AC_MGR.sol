@@ -1,15 +1,27 @@
+/*-----------------------------------------------------------V0.6.7
+__/\\\\\\\\\\\\\ _____/\\\\\\\\\ _______/\\../\\ ___/\\\\\\\\\\\\\\\
+ _\/\\\/////////\\\ _/\\\///////\\\ ____\//..\//____\/\\\///////////__
+  _\/\\\.......\/\\\.\/\\\.....\/\\\ ________________\/\\\ ____________
+   _\/\\\\\\\\\\\\\/__\/\\\\\\\\\\\/_____/\\\____/\\\.\/\\\\\\\\\\\ ____
+    _\/\\\/////////____\/\\\//////\\\ ___\/\\\___\/\\\.\/\\\///////______
+     _\/\\\ ____________\/\\\ ___\//\\\ __\/\\\___\/\\\.\/\\\ ____________
+      _\/\\\ ____________\/\\\ ____\//\\\ _\/\\\___\/\\\.\/\\\ ____________
+       _\/\\\ ____________\/\\\ _____\//\\\.\//\\\\\\\\\ _\/\\\ ____________
+        _\/// _____________\/// _______\/// __\///////// __\/// _____________
+         *-------------------------------------------------------------------*/
+
 /*-----------------------------------------------------------------
  *  TO DO
  *
-*-----------------------------------------------------------------
-*/
+ *-----------------------------------------------------------------
+ */
 
 // SPDX-License-Identifier: UNLICENSED
 pragma solidity ^0.6.7;
 
-import "./PRUF_core_065.sol";
+import "./PRUF_CORE.sol";
 
-contract PRUF_AC_MGR is PRUF {
+contract AC_MGR is CORE {
     using SafeMath for uint256;
     using SafeMath for uint8;
 
@@ -17,7 +29,9 @@ contract PRUF_AC_MGR is PRUF {
     mapping(uint16 => AC) internal AC_data; // AC info database
     mapping(string => uint16) internal AC_number;
 
-    address AC_minterAddress;
+    mapping(bytes32 => mapping(uint16 => uint8)) internal registeredUsers; // Authorized recorder database
+
+    //address AC_minterAddress;
     uint256 private priceThreshold; //threshold of price where fractional pricing is implemented
 
     /*
@@ -27,8 +41,8 @@ contract PRUF_AC_MGR is PRUF {
      */
     modifier isAdmin() {
         require(
-            (msg.sender == owner()) || (msg.sender == AC_minterAddress),
-            "PAM:IA:Calling address does not belong to an Admin"
+            (msg.sender == owner()), // || (msg.sender == AC_minterAddress),
+            "PACM:IA:Calling address does not belong to an Admin"
         );
         _;
     }
@@ -40,7 +54,7 @@ contract PRUF_AC_MGR is PRUF {
         uint256 assetClass256 = uint256(_assetClass);
         require(
             (AssetClassTokenContract.ownerOf(assetClass256) == msg.sender),
-            "PAM:IACTHoC:msg.sender not authorized in asset class"
+            "PACM:IACTHoC:msg.sender not authorized in asset class"
         );
         _;
     }
@@ -54,21 +68,20 @@ contract PRUF_AC_MGR is PRUF {
         address _authAddr,
         uint8 _userType,
         uint16 _assetClass
-    ) external isACtokenHolderOfClass(_assetClass) {
+    ) external whenNotPaused isACtokenHolderOfClass(_assetClass) {
         require(
             (_userType == 0) ||
                 (_userType == 1) ||
                 (_userType == 2) ||
                 (_userType == 9) ||
                 (_userType == 99),
-            "PAM:AU:Invalid user type"
+            "PACM:AU:Invalid user type"
         );
         //^^^^^^^checks^^^^^^^^^
 
         bytes32 addrHash = keccak256(abi.encodePacked(_authAddr));
 
-        registeredUsers[addrHash].userType = _userType;
-        registeredUsers[addrHash].authorizedAssetClass = _assetClass;
+        registeredUsers[addrHash][_assetClass] = _userType;
         //^^^^^^^effects^^^^^^^^^
         emit REPORT("Internal user database access!"); //report access to the internal user database
         //^^^^^^^interactions^^^^^^^^^
@@ -84,14 +97,14 @@ contract PRUF_AC_MGR is PRUF {
         uint16 _assetClass,
         uint16 _assetClassRoot,
         uint8 _custodyType
-    ) external isAdmin {
+    ) external whenNotPaused isAdmin {
         AC memory _ac = AC_data[_assetClassRoot];
 
-        require((_tokenId != 0), "PAM:CAC: Token id cannot be 0"); //sanity check inputs
-        require((_custodyType != 0), "PAM:CAC:CustodyType cannot be 0"); //sanity check inputs
+        require((_tokenId != 0), "PACM:CAC: Token id cannot be 0"); //sanity check inputs
+        require((_custodyType != 0), "PACM:CAC:CustodyType cannot be 0"); //sanity check inputs
         require( //has valid root
             (_ac.custodyType != 0) || (_assetClassRoot == _assetClass),
-            "PAM:CAC:Root asset class does not exist"
+            "PACM:CAC:Root asset class does not exist"
         );
         //^^^^^^^checks^^^^^^^^^
 
@@ -121,7 +134,7 @@ contract PRUF_AC_MGR is PRUF {
         uint256 _changeStatusCost,
         uint256 _forceModifyCost,
         address _paymentAddress
-    ) external isACtokenHolderOfClass(_class) {
+    ) external whenNotPaused isACtokenHolderOfClass(_class) {
         //^^^^^^^checks^^^^^^^^^
         cost[_class].newRecordCost = _newRecordCost;
         cost[_class].transferAssetCost = _transferAssetCost;
@@ -160,15 +173,16 @@ contract PRUF_AC_MGR is PRUF {
     function isSameRootAC(uint16 _assetClass1, uint16 _assetClass2)
         external
         view
-        returns (
-            uint8
-        )
+        returns (uint8)
     {
         //^^^^^^^checks^^^^^^^^^
-        if (AC_data[_assetClass1].assetClassRoot == AC_data[_assetClass2].assetClassRoot){
-            return uint8 (170);
+        if (
+            AC_data[_assetClass1].assetClassRoot ==
+            AC_data[_assetClass2].assetClassRoot
+        ) {
+            return uint8(170);
         } else {
-            return uint8 (0);
+            return uint8(0);
         }
         //^^^^^^^interactions^^^^^^^^^
     }
@@ -221,7 +235,7 @@ contract PRUF_AC_MGR is PRUF {
         require(
             (AssetClassTokenContract.ownerOf(assetClass256) !=
                 AssetClassTokenAddress), //this will throw in the token contract if not minted
-            "PAM:Costs:Asset class not yet populated"
+            "PACM:GNRC:Asset class not yet populated"
         );
         //^^^^^^^checks^^^^^^^^^
         return (
@@ -254,7 +268,7 @@ contract PRUF_AC_MGR is PRUF {
         require(
             (AssetClassTokenContract.ownerOf(assetClass256) !=
                 AssetClassTokenAddress), //this will throw in the token contract if not minted
-            "PAM:Costs:Asset class not yet populated"
+            "PACM:GTAC:Asset class not yet populated"
         );
         //^^^^^^^checks^^^^^^^^^
         return (
@@ -287,7 +301,7 @@ contract PRUF_AC_MGR is PRUF {
         require(
             (AssetClassTokenContract.ownerOf(assetClass256) !=
                 AssetClassTokenAddress), //this will throw in the token contract if not minted
-            "PAM:Costs:Asset class not yet populated"
+            "PACM:GCNC:Asset class not yet populated"
         );
         //^^^^^^^checks^^^^^^^^^
         return (
@@ -320,7 +334,7 @@ contract PRUF_AC_MGR is PRUF {
         require(
             (AssetClassTokenContract.ownerOf(assetClass256) !=
                 AssetClassTokenAddress), //this will throw in the token contract if not minted
-            "PAM:Costs:Asset class not yet populated"
+            "PACM:GMRC:Asset class not yet populated"
         );
         //^^^^^^^checks^^^^^^^^^
         return (
@@ -353,7 +367,7 @@ contract PRUF_AC_MGR is PRUF {
         require(
             (AssetClassTokenContract.ownerOf(assetClass256) !=
                 AssetClassTokenAddress), //this will throw in the token contract if not minted
-            "PAM:Costs:Asset class not yet populated"
+            "PACM:GCSC:Asset class not yet populated"
         );
         //^^^^^^^checks^^^^^^^^^
         return (
@@ -386,7 +400,7 @@ contract PRUF_AC_MGR is PRUF {
         require(
             (AssetClassTokenContract.ownerOf(assetClass256) !=
                 AssetClassTokenAddress), //this will throw in the token contract if not minted
-            "PAM:Costs:Asset class not yet populated"
+            "PACM:GFMC:Asset class not yet populated"
         );
         //^^^^^^^checks^^^^^^^^^
         return (
@@ -420,7 +434,7 @@ contract PRUF_AC_MGR is PRUF {
         require(
             (AssetClassTokenContract.ownerOf(assetClass256) !=
                 AssetClassTokenAddress), //this will throw in the token contract if not minted
-            "PAM:Costs:Asset class not yet populated"
+            "PACM:RC:Asset class not yet populated"
         );
         //^^^^^^^checks^^^^^^^^
 
@@ -439,16 +453,13 @@ contract PRUF_AC_MGR is PRUF {
     /*
      * @dev Serve a User Record
      */
-    function getUserExt(bytes32 _userHash)
+    function getUserType(bytes32 _userHash, uint16 _assetClass)
         external
         view
-        returns (uint8, uint16)
+        returns (uint8)
     {
         //^^^^^^^checks^^^^^^^^^
-        return (
-            registeredUsers[_userHash].userType,
-            registeredUsers[_userHash].authorizedAssetClass
-        );
+        return (registeredUsers[_userHash][_assetClass]);
         //^^^^^^^interactions^^^^^^^^^
     }
 }

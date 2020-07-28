@@ -1,22 +1,34 @@
+/*-----------------------------------------------------------V0.6.7
+__/\\\\\\\\\\\\\ _____/\\\\\\\\\ _______/\\../\\ ___/\\\\\\\\\\\\\\\
+ _\/\\\/////////\\\ _/\\\///////\\\ ____\//..\//____\/\\\///////////__
+  _\/\\\.......\/\\\.\/\\\.....\/\\\ ________________\/\\\ ____________
+   _\/\\\\\\\\\\\\\/__\/\\\\\\\\\\\/_____/\\\____/\\\.\/\\\\\\\\\\\ ____
+    _\/\\\/////////____\/\\\//////\\\ ___\/\\\___\/\\\.\/\\\///////______
+     _\/\\\ ____________\/\\\ ___\//\\\ __\/\\\___\/\\\.\/\\\ ____________
+      _\/\\\ ____________\/\\\ ____\//\\\ _\/\\\___\/\\\.\/\\\ ____________
+       _\/\\\ ____________\/\\\ _____\//\\\.\//\\\\\\\\\ _\/\\\ ____________
+        _\/// _____________\/// _______\/// __\///////// __\/// _____________
+         *-------------------------------------------------------------------*/
+
 /*-----------------------------------------------------------------
  *  TO DO
  *
-*-----------------------------------------------------------------*/
+ *---------------------------------------------------------------*/
 
 // SPDX-License-Identifier: UNLICENSED
 pragma solidity ^0.6.7;
 
-import "./PRUF_interfaces_065.sol";
+import "./PRUF_INTERFACES.sol";
 import "./Imports/Ownable.sol";
+import "./Imports/Pausable.sol";
 import "./Imports/ReentrancyGuard.sol";
 import "./_ERC721/IERC721Receiver.sol";
 
-contract PRUF_BASIC is ReentrancyGuard, Ownable,  IERC721Receiver {
-
+contract BASIC is ReentrancyGuard, Ownable, IERC721Receiver, Pausable {
     struct Record {
-        bytes32 recorder; // Address hash of recorder
+        //bytes32 recorder; // Address hash of recorder
         bytes32 rightsHolder; // KEK256 Registered owner
-        bytes32 lastRecorder; // Address hash of last non-automation recorder
+        //bytes32 lastRecorder; // Address hash of last non-automation recorder
         uint8 assetStatus; // Status - Transferrable, locked, in transfer, stolen, lost, etc.
         uint8 forceModCount; // Number of times asset has been forceModded.
         uint16 assetClass; // Type of asset
@@ -24,13 +36,14 @@ contract PRUF_BASIC is ReentrancyGuard, Ownable,  IERC721Receiver {
         uint256 countDownStart; // Starting point for countdown variable (set once)
         bytes32 Ipfs1; // Publically viewable asset description
         bytes32 Ipfs2; // Publically viewable immutable notes
-        uint256 timeLock; // Time sensitive mutex
+        //uint256 timeLock; // Time sensitive mutex
         uint16 numberOfTransfers; //number of transfers and forcemods
     }
-    struct User {
-        uint8 userType; // User type: 1 = human, 9 = automated
-        uint16 authorizedAssetClass; // Asset class in which user is permitted to transact
-    }
+    // struct User {
+    //     uint8 userType; // User type: 1 = human, 9 = automated
+    //     mapping (uint16 => uint8) authorized;
+    //     //uint16 authorizedAssetClass; // Asset class in which user is permitted to transact
+    // }
 
     struct AC {
         string name; // NameHash for assetClass
@@ -39,23 +52,45 @@ contract PRUF_BASIC is ReentrancyGuard, Ownable,  IERC721Receiver {
         uint256 extendedData; // Future Use
     }
 
+    struct ContractDataHash {
+        uint8 contractType; // Auth Level / type
+        bytes32 nameHash; // Contract Name hashed
+    }
 
+    struct escrowData {
+        uint8 data;
+        bytes32 controllingContractNameHash;
+        bytes32 escrowOwnerAddressHash;
+        uint256 timelock;
+        bytes32 ex1;
+        bytes32 ex2;
+        address addr1;
+        address addr2;
+    }
 
-    mapping(bytes32 => User) internal registeredUsers; // Authorized recorder database
+    //mapping(bytes32 => User) internal registeredUsers; // Authorized recorder database
 
     address internal storageAddress;
-    StorageInterface internal Storage; // Set up external contract interface
+    STOR_Interface internal Storage; // Set up external contract interface
 
     address internal AssetClassTokenManagerAddress;
-    AssetClassTokenManagerInterface internal AssetClassTokenManagerContract; // Set up external contract interface
+    AC_MGR_Interface internal AssetClassTokenManagerContract; // Set up external contract interface
 
     address internal AssetTokenAddress;
-    AssetTokenInterface internal AssetTokenContract; //erc721_token prototype initialization
+    A_TKN_Interface internal AssetTokenContract; //erc721_token prototype initialization
 
     address internal AssetClassTokenAddress;
-    AssetClassTokenInterface internal AssetClassTokenContract; //erc721_token prototype initialization
+    AC_TKN_Interface internal AssetClassTokenContract; //erc721_token prototype initialization
+
+    address internal escrowMGRAddress;
+    ECR_MGR_Interface internal escrowMGRcontract; //Set up external contract interface for escrowmgr
+
+    address internal recyclerAddress; //Set up external contract interface for recycler
+    RCLR_Interface internal Recycler;
 
     address internal PrufAppAddress;
+    address internal T_PrufAppAddress;
+
     // --------------------------------------Events--------------------------------------------//
 
     event REPORT(string _msg);
@@ -74,7 +109,7 @@ contract PRUF_BASIC is ReentrancyGuard, Ownable,  IERC721Receiver {
     modifier isAuthorized(bytes32 _idxHash) virtual {
         require(
             _idxHash == 0, //function should always be overridden
-            "PC:MOD-IA: Modifier MUST BE OVERRIDDEN"
+            "PB:MOD-IA: Modifier MUST BE OVERRIDDEN"
         );
         _;
     }
@@ -91,24 +126,29 @@ contract PRUF_BASIC is ReentrancyGuard, Ownable,  IERC721Receiver {
     {
         //^^^^^^^checks^^^^^^^^^
         AssetClassTokenAddress = Storage.resolveContractAddress(
-            "assetClassToken"
+            "AC_TKN"
         );
-        AssetClassTokenContract = AssetClassTokenInterface(
-            AssetClassTokenAddress
-        );
+        AssetClassTokenContract = AC_TKN_Interface(AssetClassTokenAddress);
 
         AssetClassTokenManagerAddress = Storage.resolveContractAddress(
-            "PRUF_AC_MGR"
+            "AC_MGR"
         );
 
-        AssetClassTokenManagerContract = AssetClassTokenManagerInterface(
+        AssetClassTokenManagerContract = AC_MGR_Interface(
             AssetClassTokenManagerAddress
         );
 
-        AssetTokenAddress = Storage.resolveContractAddress("assetToken");
-        AssetTokenContract = AssetTokenInterface(AssetTokenAddress);
+        AssetTokenAddress = Storage.resolveContractAddress("A_TKN");
+        AssetTokenContract = A_TKN_Interface(AssetTokenAddress);
 
-        PrufAppAddress = Storage.resolveContractAddress("PRUF_APP");
+        escrowMGRAddress = Storage.resolveContractAddress("ECR_MGR");
+        escrowMGRcontract = ECR_MGR_Interface(escrowMGRAddress);
+
+        PrufAppAddress = Storage.resolveContractAddress("APP");
+        T_PrufAppAddress = Storage.resolveContractAddress("APP_NC");
+
+        recyclerAddress = Storage.resolveContractAddress("RCLR");
+        Recycler = RCLR_Interface(recyclerAddress);
         //^^^^^^^effects^^^^^^^^^
     }
 
@@ -144,11 +184,11 @@ contract PRUF_BASIC is ReentrancyGuard, Ownable,  IERC721Receiver {
     function OO_setStorageContract(address _storageAddress) external onlyOwner {
         require(
             _storageAddress != address(0),
-            "PC:SSC: storage address cannot be zero"
+            "PB:SSC: storage address cannot be zero"
         );
         //^^^^^^^checks^^^^^^^^^
 
-        Storage = StorageInterface(_storageAddress);
+        Storage = STOR_Interface(_storageAddress);
         //^^^^^^^effects^^^^^^^^^
     }
 
@@ -167,22 +207,40 @@ contract PRUF_BASIC is ReentrancyGuard, Ownable,  IERC721Receiver {
         //^^^^^^^interactions^^^^^^^^^
     }
 
+    /**
+     * @dev Triggers stopped state.
+     *
+     */
+    function OO_pause() external onlyOwner {
+        _pause();
+    }
+
+    /**
+     * @dev Returns to normal state.
+     */
+    function OO_unpause() external onlyOwner {
+        _unpause();
+    }
+
     //--------------------------------------------------------------------------------------INTERNAL functions
 
     /*
      * @dev Get a User Record from AC_manager @ msg.sender
      */
-    function getUser() internal virtual view returns (User memory) {
+    function getUserType(uint16 _assetClass)
+        internal
+        virtual
+        view
+        returns (uint8)
+    {
         //^^^^^^^checks^^^^^^^^^
-        User memory user;
-        //^^^^^^^effects^^^^^^^^^
-        (
-            user.userType,
-            user.authorizedAssetClass
-        ) = AssetClassTokenManagerContract.getUserExt(
-            keccak256(abi.encodePacked(msg.sender))
+
+        uint8 userTypeInAssetClass = AssetClassTokenManagerContract.getUserType(
+            keccak256(abi.encodePacked(msg.sender)),
+            _assetClass
         );
-        return user;
+
+        return userTypeInAssetClass;
         //^^^^^^^interactions^^^^^^^^^
     }
 
@@ -206,6 +264,17 @@ contract PRUF_BASIC is ReentrancyGuard, Ownable,  IERC721Receiver {
         //^^^^^^^interactions^^^^^^^^^
     }
 
+    function getContractInfo(address _addr)
+        internal
+        returns (ContractDataHash memory)
+    {
+        ContractDataHash memory contractInfo;
+        (contractInfo.contractType, contractInfo.nameHash) = Storage
+            .ContractInfoHash(_addr);
+        return contractInfo;
+        //^^^^^^^checks/interactions^^^^^^^^^
+    }
+
     /*
      * @dev Get a Record from Storage @ idxHash
      */
@@ -217,9 +286,9 @@ contract PRUF_BASIC is ReentrancyGuard, Ownable,  IERC721Receiver {
         {
             //Start of scope limit for stack depth
             (
-                bytes32 _recorder,
+                //bytes32 _recorder,
                 bytes32 _rightsHolder,
-                bytes32 _lastRecorder,
+                //bytes32 _lastRecorder,
                 uint8 _assetStatus,
                 uint8 _forceModCount,
                 uint16 _assetClass,
@@ -230,9 +299,9 @@ contract PRUF_BASIC is ReentrancyGuard, Ownable,  IERC721Receiver {
                 uint16 _numberOfTransfers
             ) = Storage.retrieveRecord(_idxHash); // Get record from storage contract
 
-            rec.recorder = _recorder;
+            //rec.recorder = _recorder;
             rec.rightsHolder = _rightsHolder;
-            rec.lastRecorder = _lastRecorder;
+            //rec.lastRecorder = _lastRecorder;
             rec.assetStatus = _assetStatus;
             rec.forceModCount = _forceModCount;
             rec.assetClass = _assetClass;
@@ -241,44 +310,6 @@ contract PRUF_BASIC is ReentrancyGuard, Ownable,  IERC721Receiver {
             rec.Ipfs1 = _Ipfs1;
             rec.Ipfs2 = _Ipfs2;
             rec.numberOfTransfers = _numberOfTransfers;
-        } //end of scope limit for stack depth
-
-        return (rec); // Returns Record struct rec
-        //^^^^^^^interactions^^^^^^^^^
-    }
-
-    function getShortRecord(bytes32 _idxHash) internal returns (Record memory) {
-        //^^^^^^^checks^^^^^^^^^
-        Record memory rec;
-        //^^^^^^^effects^^^^^^^^^
-
-        {
-            //Start of scope limit for stack depth
-            (
-                bytes32 _recorder,
-                bytes32 _lastRecorder,
-                uint8 _assetStatus,
-                uint8 _forceModCount,
-                uint16 _assetClass,
-                uint256 _countDown,
-                uint256 _countDownStart,
-                bytes32 _Ipfs1,
-                bytes32 _Ipfs2,
-                uint16 _numberOfTransfers,
-                uint256 _timeLock
-            ) = Storage.retrieveShortRecord(_idxHash); // Get record from storage contract
-
-            rec.recorder = _recorder;
-            rec.lastRecorder = _lastRecorder;
-            rec.assetStatus = _assetStatus;
-            rec.forceModCount = _forceModCount;
-            rec.assetClass = _assetClass;
-            rec.countDown = _countDown;
-            rec.countDownStart = _countDownStart;
-            rec.Ipfs1 = _Ipfs1;
-            rec.Ipfs2 = _Ipfs2;
-            rec.numberOfTransfers = _numberOfTransfers;
-            rec.timeLock = _timeLock;
         } //end of scope limit for stack depth
 
         return (rec); // Returns Record struct rec

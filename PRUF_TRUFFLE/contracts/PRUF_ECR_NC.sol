@@ -1,19 +1,28 @@
+/*-----------------------------------------------------------V0.6.7
+__/\\\\\\\\\\\\\ _____/\\\\\\\\\ _______/\\../\\ ___/\\\\\\\\\\\\\\\
+ _\/\\\/////////\\\ _/\\\///////\\\ ____\//..\//____\/\\\///////////__
+  _\/\\\.......\/\\\.\/\\\.....\/\\\ ________________\/\\\ ____________
+   _\/\\\\\\\\\\\\\/__\/\\\\\\\\\\\/_____/\\\____/\\\.\/\\\\\\\\\\\ ____
+    _\/\\\/////////____\/\\\//////\\\ ___\/\\\___\/\\\.\/\\\///////______
+     _\/\\\ ____________\/\\\ ___\//\\\ __\/\\\___\/\\\.\/\\\ ____________
+      _\/\\\ ____________\/\\\ ____\//\\\ _\/\\\___\/\\\.\/\\\ ____________
+       _\/\\\ ____________\/\\\ _____\//\\\.\//\\\\\\\\\ _\/\\\ ____________
+        _\/// _____________\/// _______\/// __\///////// __\/// _____________
+         *-------------------------------------------------------------------*/
+
 /*-----------------------------------------------------------------
  *  TO DO
  *
-*-----------------------------------------------------------------*/
+ *---------------------------------------------------------------*/
 
 // SPDX-License-Identifier: UNLICENSED
 pragma solidity ^0.6.7;
 
-import "./PRUF_basic_065.sol";
-import "./Imports/Safemath.sol";
+import "./PRUF_CORE.sol";
 
-
-contract T_PRUF_simpleEscrow is PRUF_BASIC {
+contract ECR_NC is CORE {
     using SafeMath for uint256;
 
-    mapping(bytes32 => bytes32) private escrows;
     /*
      * @dev Verify user credentials
      * Originating Address:
@@ -36,13 +45,13 @@ contract T_PRUF_simpleEscrow is PRUF_BASIC {
      */
     function setEscrow(
         bytes32 _idxHash,
-        bytes32 escrowOwnerHash,
+        bytes32 _escrowOwnerHash,
         uint256 _escrowTime,
         uint8 _escrowStatus
-    ) external nonReentrant isAuthorized(_idxHash) {
+    ) external nonReentrant whenNotPaused isAuthorized(_idxHash) {
         Record memory rec = getRecord(_idxHash);
         uint256 escrowTime = now.add(_escrowTime);
-        uint8 newAssetStatus;
+        uint8 newEscrowStatus;
         AC memory AC_info = getACinfo(rec.assetClass);
 
         require(
@@ -69,37 +78,37 @@ contract T_PRUF_simpleEscrow is PRUF_BASIC {
             "TPSE:SE:Transferred, lost, or stolen status cannot be set to escrow."
         );
         require(
-            (_escrowStatus == 6) ||
-                (_escrowStatus == 50) ||
-                (_escrowStatus == 56),
-            "TPSE:SE:Must specify an valid escrow status"
+            (_escrowStatus == 50) || (_escrowStatus == 56),
+            "TPSE:SE:Must specify a valid escrow status >49"
         );
-        require(
-            (_escrowStatus > 49),
-            "TPSE:SE:Only custodial usertype can set escrow < 50"
-        );
+
         //^^^^^^^checks^^^^^^^^^
 
-        escrows[_idxHash] = escrowOwnerHash;
-        newAssetStatus = _escrowStatus;
+        newEscrowStatus = _escrowStatus;
         //^^^^^^^effects^^^^^^^^^
 
-        Storage.setEscrow(_idxHash, newAssetStatus, escrowTime);
+        escrowMGRcontract.setEscrow(
+            _idxHash,
+            newEscrowStatus,
+            0,
+            _escrowOwnerHash,
+            escrowTime,
+            0x0,
+            0x0,
+            address(0),
+            address(0)
+        );
         //^^^^^^^interactions^^^^^^^^^
     }
 
     /*
      * @dev takes asset out of excrow status if time period has resolved || is escrow issuer
      */
-    function endEscrow(bytes32 _idxHash)
-        external
-        nonReentrant
-        isAuthorized(_idxHash)
-    {
+    function endEscrow(bytes32 _idxHash) external nonReentrant {
+        bytes32 ownerHash = escrowMGRcontract.retrieveEscrowOwner(_idxHash);
         Record memory rec = getRecord(_idxHash);
-        Record memory shortRec = getShortRecord(_idxHash);
-        User memory callingUser = getUser();
         AC memory AC_info = getACinfo(rec.assetClass);
+        escrowData memory escrow = getEscrowData(_idxHash);
 
         require(
             AC_info.custodyType == 2,
@@ -108,27 +117,17 @@ contract T_PRUF_simpleEscrow is PRUF_BASIC {
 
         require((rec.rightsHolder != 0), "EE: Record does not exist");
         require(
-            callingUser.authorizedAssetClass == rec.assetClass,
-            "TPSE:EE:User not authorized to modify records in specified asset class"
+            (rec.assetStatus == 50) || (rec.assetStatus == 56),
+            "TPSE:EE:record must be in escrow status <49"
         );
         require(
-            (rec.assetStatus == 6) ||
-                (rec.assetStatus == 50) ||
-                (rec.assetStatus == 56),
-            "TPSE:EE:record must be in escrow status"
-        );
-        require(
-            (rec.assetStatus > 49),
-            "TPSE:EE:Custodial usertype required to end this escrow"
-        );
-        require(
-            (shortRec.timeLock < now) ||
-                (keccak256(abi.encodePacked(msg.sender)) == escrows[_idxHash]),
-            "PSE:EE: Escrow period not ended and caller is not escrow owner"
+            (escrow.timelock < now) ||
+                (keccak256(abi.encodePacked(msg.sender)) == ownerHash),
+            "TPSE:EE: Escrow period not ended and caller is not escrow owner"
         );
         //^^^^^^^checks^^^^^^^^^
 
-        Storage.endEscrow(_idxHash);
+        escrowMGRcontract.endEscrow(_idxHash);
         //^^^^^^^interactions^^^^^^^^^
     }
 }

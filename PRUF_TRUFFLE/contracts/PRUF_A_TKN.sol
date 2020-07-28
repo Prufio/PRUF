@@ -1,17 +1,29 @@
+/*-----------------------------------------------------------V0.6.7
+__/\\\\\\\\\\\\\ _____/\\\\\\\\\ _______/\\../\\ ___/\\\\\\\\\\\\\\\
+ _\/\\\/////////\\\ _/\\\///////\\\ ____\//..\//____\/\\\///////////__
+  _\/\\\.......\/\\\.\/\\\.....\/\\\ ________________\/\\\ ____________
+   _\/\\\\\\\\\\\\\/__\/\\\\\\\\\\\/_____/\\\____/\\\.\/\\\\\\\\\\\ ____
+    _\/\\\/////////____\/\\\//////\\\ ___\/\\\___\/\\\.\/\\\///////______
+     _\/\\\ ____________\/\\\ ___\//\\\ __\/\\\___\/\\\.\/\\\ ____________
+      _\/\\\ ____________\/\\\ ____\//\\\ _\/\\\___\/\\\.\/\\\ ____________
+       _\/\\\ ____________\/\\\ _____\//\\\.\//\\\\\\\\\ _\/\\\ ____________
+        _\/// _____________\/// _______\/// __\///////// __\/// _____________
+         *-------------------------------------------------------------------*/
+
 /*-----------------------------------------------------------------
  *  TO DO
  *
-*-----------------------------------------------------------------*/
+ *---------------------------------------------------------------*/
 
 // SPDX-License-Identifier: UNLICENSED
 pragma solidity ^0.6.7;
 
 import "./_ERC721/ERC721.sol";
 import "./_ERC721/Ownable.sol";
-import "./PRUF_interfaces_065.sol";
+import "./PRUF_INTERFACES.sol";
 import "./Imports/ReentrancyGuard.sol";
 
-contract AssetToken is Ownable, ReentrancyGuard, ERC721 {
+contract A_TKN is Ownable, ReentrancyGuard, ERC721 {
     struct Record {
         bytes32 recorder; // Address hash of recorder
         bytes32 rightsHolder; // KEK256 Registered owner
@@ -32,14 +44,17 @@ contract AssetToken is Ownable, ReentrancyGuard, ERC721 {
     address internal T_PrufAppAddress; //isAdmin
     address internal PrufAppAddress; //isAdmin
     address internal storageAddress;
-    StorageInterface internal Storage; // Set up external contract interface
+    STOR_Interface internal Storage; // Set up external contract interface
+    address internal recyclerAddress;
+    RCLR_Interface internal Recycler;
 
     event REPORT(string _msg);
 
     modifier isAdmin() {
         require(
-            (msg.sender == PrufAppAddress) || //check for minter auth
-                (msg.sender == T_PrufAppAddress) ||  //check for minter auth
+            (msg.sender == PrufAppAddress) ||
+                (msg.sender == T_PrufAppAddress) ||
+                (msg.sender == recyclerAddress) ||
                 (msg.sender == owner()),
             "PAT:IA:Calling address does not belong to an Admin"
         );
@@ -58,7 +73,7 @@ contract AssetToken is Ownable, ReentrancyGuard, ERC721 {
         );
         //^^^^^^^checks^^^^^^^^^
 
-        Storage = StorageInterface(_storageAddress);
+        Storage = STOR_Interface(_storageAddress);
         //^^^^^^^effects^^^^^^^^^
     }
 
@@ -68,13 +83,16 @@ contract AssetToken is Ownable, ReentrancyGuard, ERC721 {
     function OO_ResolveContractAddresses() external nonReentrant onlyOwner {
         //^^^^^^^checks^^^^^^^^^
 
-        T_PrufAppAddress = Storage.resolveContractAddress("T_PRUF_APP");
-        PrufAppAddress = Storage.resolveContractAddress("PRUF_APP");
+        T_PrufAppAddress = Storage.resolveContractAddress("APP_NC");
+        PrufAppAddress = Storage.resolveContractAddress("APP");
+
+        recyclerAddress = Storage.resolveContractAddress("RCLR");
+        Recycler = RCLR_Interface(recyclerAddress);
         //^^^^^^^effects^^^^^^^^^
     }
 
     /*
-     * must be isAdmin
+     * @dev Mint new token
      *
      */
     function mintAssetToken(
@@ -89,6 +107,35 @@ contract AssetToken is Ownable, ReentrancyGuard, ERC721 {
         _setTokenURI(tokenId, _tokenURI);
         return tokenId;
         //^^^^^^^interactions^^^^^^^^^
+    }
+
+    /*
+     * @dev Set new token URI String
+     */
+    function setURI(uint256 tokenId, string calldata _tokenURI)
+        external
+        returns (uint256)
+    {
+        require(
+            _isApprovedOrOwner(_msgSender(), tokenId),
+            "PAT:TF:transfer caller is not owner nor approved"
+        );
+        //^^^^^^^checks^^^^^^^^^
+
+        _setTokenURI(tokenId, _tokenURI);
+        return tokenId;
+        //^^^^^^^interactions^^^^^^^^^
+    }
+
+    /*
+     * @dev See if token exists
+     */
+    function tokenExists(uint256 tokenId) external view returns (uint8) {
+        if (_exists(tokenId)) {
+            return 170;
+        } else {
+            return 0;
+        }
     }
 
     /**
@@ -109,15 +156,15 @@ contract AssetToken is Ownable, ReentrancyGuard, ERC721 {
 
         require(
             rec.assetStatus != 70,
-            "PAT:MAT:Use authAddressTransfer for status 70"
+            "PAT:TF:Use authAddressTransfer for status 70"
         );
         require(
             rec.assetStatus == 51,
-            "PAT:MAT:Asset not in transferrable status"
+            "PAT:TF:Asset not in transferrable status"
         );
         require(
             _isApprovedOrOwner(_msgSender(), tokenId),
-            "PAT:MAT:transfer caller is not owner nor approved"
+            "PAT:TF:transfer caller is not owner nor approved"
         );
         //^^^^^^^checks^^^^^^^^
 
@@ -181,7 +228,7 @@ contract AssetToken is Ownable, ReentrancyGuard, ERC721 {
         address to,
         uint256 tokenId,
         bytes memory _data
-    ) public virtual override nonReentrant {
+    ) public virtual override {
         bytes32 _idxHash = bytes32(tokenId);
         Record memory rec = getRecord(_idxHash);
 
@@ -199,6 +246,10 @@ contract AssetToken is Ownable, ReentrancyGuard, ERC721 {
         );
         //^^^^^^^checks^^^^^^^^^
 
+        if (rec.numberOfTransfers < 65335) {
+            rec.numberOfTransfers++;
+        }
+
         rec
             .rightsHolder = 0xFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF;
         //^^^^^^^effects^^^^^^^^^
@@ -211,23 +262,20 @@ contract AssetToken is Ownable, ReentrancyGuard, ERC721 {
     /**
      * @dev Safely burns a token and sets the corresponding RGT to zero in storage.
      */
-    function burn(uint256 tokenId) external nonReentrant {
+    function discard(uint256 tokenId) external nonReentrant isAdmin {
         bytes32 _idxHash = bytes32(tokenId);
         Record memory rec = getRecord(_idxHash);
-        require(_exists(tokenId), "PAT:B:Cannot Burn nonexistant token");
+        require(_exists(tokenId), "PAT:D:Cannot Burn nonexistant token");
         require(
             (rec.assetStatus == 59),
-            "PAT:B:Asset must be in status 59 (recyclable) to be burned"
+            "PAT:D:Asset must be in status 59 (discardable) to be burned"
         );
         require(
             _isApprovedOrOwner(_msgSender(), tokenId),
-            "PAT:B:transfer caller is not owner nor approved"
+            "PAT:D:transfer caller is not owner nor approved"
         );
         //^^^^^^^checks^^^^^^^^^
-        rec.rightsHolder = 0x0; //delete rightsholder in storage
-        (rec.assetStatus == 60); //set to burned
-        //^^^^^^^effects^^^^^^^^^
-        writeRecord(_idxHash, rec);
+        Recycler.discard(_idxHash);
         _burn(tokenId);
         //^^^^^^^interactions^^^^^^^^^
     }
@@ -241,14 +289,14 @@ contract AssetToken is Ownable, ReentrancyGuard, ERC721 {
      */
     function reMintAssetToken(
         address _recipientAddress,
-        uint256 tokenId,
-        string calldata _tokenURI
-    ) external isAdmin returns (uint256) {
+        uint256 tokenId
+    ) external isAdmin nonReentrant returns (uint256) {
         require(_exists(tokenId), "PAT:RM:Cannot Remint nonexistant token");
         //^^^^^^^checks^^^^^^^^^
+        string memory tokenURI = tokenURI(tokenId);
         _burn(tokenId);
         _safeMint(_recipientAddress, tokenId);
-        _setTokenURI(tokenId, _tokenURI);
+        _setTokenURI(tokenId, tokenURI);
         return tokenId;
         //^^^^^^^interactions^^^^^^^^^
     }
@@ -258,10 +306,10 @@ contract AssetToken is Ownable, ReentrancyGuard, ERC721 {
      */
     function writeRecord(bytes32 _idxHash, Record memory _rec) private {
         //^^^^^^^checks^^^^^^^^^
-        bytes32 userHash = keccak256(abi.encodePacked(msg.sender)); // Get a userhash for authentication and recorder logging
+        //bytes32 userHash = keccak256(abi.encodePacked(msg.sender)); // Get a userhash for authentication and recorder logging
         //^^^^^^^effects^^^^^^^^^
         Storage.modifyRecord(
-            userHash,
+            //userHash,
             _idxHash,
             _rec.rightsHolder,
             _rec.assetStatus,
@@ -282,9 +330,9 @@ contract AssetToken is Ownable, ReentrancyGuard, ERC721 {
         {
             //Start of scope limit for stack depth
             (
-                bytes32 _recorder,
+                //bytes32 _recorder,
                 bytes32 _rightsHolder,
-                bytes32 _lastRecorder,
+                //bytes32 _lastRecorder,
                 uint8 _assetStatus,
                 uint8 _forceModCount,
                 uint16 _assetClass,
@@ -295,9 +343,9 @@ contract AssetToken is Ownable, ReentrancyGuard, ERC721 {
                 uint16 _numberOfTransfers
             ) = Storage.retrieveRecord(_idxHash); // Get record from storage contract
 
-            rec.recorder = _recorder;
+            //rec.recorder = _recorder;
             rec.rightsHolder = _rightsHolder;
-            rec.lastRecorder = _lastRecorder;
+            //rec.lastRecorder = _lastRecorder;
             rec.assetStatus = _assetStatus;
             rec.forceModCount = _forceModCount;
             rec.assetClass = _assetClass;

@@ -1,7 +1,19 @@
+/*-----------------------------------------------------------V0.6.7
+__/\\\\\\\\\\\\\ _____/\\\\\\\\\ _______/\\../\\ ___/\\\\\\\\\\\\\\\
+ _\/\\\/////////\\\ _/\\\///////\\\ ____\//..\//____\/\\\///////////__
+  _\/\\\.......\/\\\.\/\\\.....\/\\\ ________________\/\\\ ____________
+   _\/\\\\\\\\\\\\\/__\/\\\\\\\\\\\/_____/\\\____/\\\.\/\\\\\\\\\\\ ____
+    _\/\\\/////////____\/\\\//////\\\ ___\/\\\___\/\\\.\/\\\///////______
+     _\/\\\ ____________\/\\\ ___\//\\\ __\/\\\___\/\\\.\/\\\ ____________
+      _\/\\\ ____________\/\\\ ____\//\\\ _\/\\\___\/\\\.\/\\\ ____________
+       _\/\\\ ____________\/\\\ _____\//\\\.\//\\\\\\\\\ _\/\\\ ____________
+        _\/// _____________\/// _______\/// __\///////// __\/// _____________
+         *-------------------------------------------------------------------*/
+
 /*-----------------------------------------------------------------
  *  TO DO
  *
-*-----------------------------------------------------------------*/
+ *-----------------------------------------------------------------*/
 
 // SPDX-License-Identifier: UNLICENSED
 
@@ -9,15 +21,15 @@ pragma solidity ^0.6.7;
 
 import "./_ERC721/ERC721.sol";
 import "./_ERC721/Ownable.sol";
-import "./PRUF_interfaces_065.sol";
+import "./PRUF_INTERFACES.sol";
 import "./Imports/ReentrancyGuard.sol";
 
-contract AssetClassToken is Ownable, ReentrancyGuard, ERC721 {
+contract AC_TKN is Ownable, ReentrancyGuard, ERC721 {
     constructor() public ERC721("PRüF Asset Class Token", "PAC") {}
 
     address internal ACmanagerAddress; //isAdmin
     address internal storageAddress;
-    StorageInterface internal Storage; // Set up external contract interface
+    STOR_Interface internal Storage; // Set up external contract interface
 
     event REPORT(string _msg);
 
@@ -41,7 +53,7 @@ contract AssetClassToken is Ownable, ReentrancyGuard, ERC721 {
         );
         //^^^^^^^checks^^^^^^^^^
 
-        Storage = StorageInterface(_storageAddress);
+        Storage = STOR_Interface(_storageAddress);
         //^^^^^^^effects^^^^^^^^^
     }
 
@@ -50,7 +62,7 @@ contract AssetClassToken is Ownable, ReentrancyGuard, ERC721 {
      */
     function OO_ResolveContractAddresses() external nonReentrant onlyOwner {
         //^^^^^^^checks^^^^^^^^^
-        ACmanagerAddress = Storage.resolveContractAddress("PRUF_AC_MGR");
+        ACmanagerAddress = Storage.resolveContractAddress("AC_MGR");
         //^^^^^^^interactions^^^^^^^^^
     }
 
@@ -81,7 +93,7 @@ contract AssetClassToken is Ownable, ReentrancyGuard, ERC721 {
         uint256 tokenId,
         string calldata _tokenURI
     ) external isAdmin returns (uint256) {
-        require(_exists(tokenId), "C:RM:Cannot Remint nonexistant token");
+        require(_exists(tokenId), "PACT:RM:Cannot Remint nonexistant token");
         //^^^^^^^checks^^^^^^^^^
 
         _burn(tokenId);
@@ -106,7 +118,7 @@ contract AssetClassToken is Ownable, ReentrancyGuard, ERC721 {
     ) public override nonReentrant {
         require(
             _isApprovedOrOwner(_msgSender(), tokenId),
-            "C:TF: transfer caller is not owner nor approved"
+            "PACT:TF: transfer caller is not owner nor approved"
         );
         //^^^^^^^checks^^^^^^^^^
 
@@ -156,7 +168,7 @@ contract AssetClassToken is Ownable, ReentrancyGuard, ERC721 {
     ) public virtual override nonReentrant {
         require(
             _isApprovedOrOwner(_msgSender(), tokenId),
-            "C:TF: transfer caller is not owner nor approved"
+            "PACT:STF: transfer caller is not owner nor approved"
         );
         //^^^^^^^checks^^^^^^^^^
 

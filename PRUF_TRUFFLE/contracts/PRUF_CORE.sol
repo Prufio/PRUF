@@ -1,18 +1,29 @@
+/*-----------------------------------------------------------V0.6.7
+__/\\\\\\\\\\\\\ _____/\\\\\\\\\ _______/\\../\\ ___/\\\\\\\\\\\\\\\
+ _\/\\\/////////\\\ _/\\\///////\\\ ____\//..\//____\/\\\///////////__
+  _\/\\\.......\/\\\.\/\\\.....\/\\\ ________________\/\\\ ____________
+   _\/\\\\\\\\\\\\\/__\/\\\\\\\\\\\/_____/\\\____/\\\.\/\\\\\\\\\\\ ____
+    _\/\\\/////////____\/\\\//////\\\ ___\/\\\___\/\\\.\/\\\///////______
+     _\/\\\ ____________\/\\\ ___\//\\\ __\/\\\___\/\\\.\/\\\ ____________
+      _\/\\\ ____________\/\\\ ____\//\\\ _\/\\\___\/\\\.\/\\\ ____________
+       _\/\\\ ____________\/\\\ _____\//\\\.\//\\\\\\\\\ _\/\\\ ____________
+        _\/// _____________\/// _______\/// __\///////// __\/// _____________
+         *-------------------------------------------------------------------*/
+
 /*-----------------------------------------------------------------
  *  TO DO
- * change costs struct to include deposit-cost and ??? to repace changeststus and remint
-*-----------------------------------------------------------------*/
+ *
+ *---------------------------------------------------------------*/
 
 // SPDX-License-Identifier: UNLICENSED
 pragma solidity ^0.6.7;
 
-import "./PRUF_interfaces_065.sol";
+import "./PRUF_INTERFACES.sol";
 import "./Imports/PullPayment.sol";
 import "./Imports/ReentrancyGuard.sol";
-import "./PRUF_basic_065.sol";
+import "./PRUF_BASIC.sol";
 
-contract PRUF is PullPayment, PRUF_BASIC {
-
+contract CORE is PullPayment, BASIC {
     using SafeMath for uint256;
     using SafeMath for uint16;
     using SafeMath for uint8;
@@ -34,11 +45,14 @@ contract PRUF is PullPayment, PRUF_BASIC {
         uint256 ACTHprice;
     }
 
+    //--------------------------------------------------------------------------------------Storage Reading internal functions
+
     /*
      * @dev retrieves costs from Storage and returns Costs struct
      */
     function getCost(uint16 _assetClass) internal returns (Costs memory) {
         //^^^^^^^checks^^^^^^^^^
+
         Costs memory cost;
         //^^^^^^^effects^^^^^^^^^
         (
@@ -56,17 +70,89 @@ contract PRUF is PullPayment, PRUF_BASIC {
     }
 
     /*
+     * @dev retrieves costs from Storage and returns Costs struct
+     */
+    function getEscrowData(bytes32 _idxHash)
+        internal
+        returns (escrowData memory)
+    {
+        //^^^^^^^checks^^^^^^^^^
+
+        escrowData memory escrow;
+        //^^^^^^^effects^^^^^^^^^
+
+        (
+            escrow.data,
+            escrow.controllingContractNameHash,
+            escrow.escrowOwnerAddressHash,
+            escrow.timelock,
+            escrow.ex1,
+            escrow.ex2,
+            escrow.addr1,
+            escrow.addr2
+        ) = escrowMGRcontract.retrieveEscrowData(_idxHash);
+
+        return (escrow);
+        //^^^^^^^interactions^^^^^^^^^
+    }
+
+    //--------------------------------------------------------------------------------------Storage Writing internal functions
+
+    /*
+     * @dev create a Record in Storage @ idxHash
+     */
+    function createRecord(
+        bytes32 _idxHash,
+        bytes32 _rgtHash,
+        uint16 _assetClass,
+        uint256 _countDownStart
+    ) internal {
+        uint256 tokenId = uint256(_idxHash);
+        AC memory AC_info = getACinfo(_assetClass);
+
+        require (AssetTokenContract.tokenExists(tokenId) == 0, "PC:CR:Asset token already exists");
+
+        if (AC_info.custodyType == 1){
+            AssetTokenContract.mintAssetToken(address(this), tokenId, "pruf.io");
+        }
+        
+        if (AC_info.custodyType == 2){
+            AssetTokenContract.mintAssetToken(msg.sender, tokenId, "pruf.io");
+        }
+
+        Storage.newRecord(_idxHash, _rgtHash, _assetClass, _countDownStart);
+    }
+
+    /*
+     * @dev create a Record in Storage @ idxHash
+     */
+    function actualizeRecord(
+        bytes32 _idxHash,
+        bytes32 _rgtHash,
+        uint16 _assetClass,
+        uint256 _countDownStart
+    ) internal {
+        uint256 tokenId = uint256(_idxHash);
+
+        require (AssetTokenContract.tokenExists(tokenId) == 170, "PC:AR:Asset token not found");
+
+        Storage.newRecord(_idxHash, _rgtHash, _assetClass, _countDownStart);
+    }
+
+
+
+    /*
      * @dev Write a Record to Storage @ idxHash
      */
     function writeRecord(bytes32 _idxHash, Record memory _rec)
         internal
-        isAuthorized(_idxHash)
+        whenNotPaused
+    //isAuthorized(_idxHash)
     {
         //^^^^^^^checks^^^^^^^^^
-        bytes32 userHash = keccak256(abi.encodePacked(msg.sender)); // Get a userhash for authentication and recorder logging
-        //^^^^^^^effects^^^^^^^^^
+
         Storage.modifyRecord(
-            userHash,
+            //userHash,
             _idxHash,
             _rec.rightsHolder,
             _rec.assetStatus,
@@ -82,29 +168,28 @@ contract PRUF is PullPayment, PRUF_BASIC {
      */
     function writeRecordIpfs1(bytes32 _idxHash, Record memory _rec)
         internal
-        isAuthorized(_idxHash)
+        whenNotPaused
     {
-        //^^^^^^^checks^^^^^^^^^
-        bytes32 userHash = keccak256(abi.encodePacked(msg.sender)); // Get a userhash for authentication and recorder logging
-        //^^^^^^^effects^^^^^^^^^
-        Storage.modifyIpfs1(userHash, _idxHash, _rec.Ipfs1); // Send data to storage
+        //^^^^^^^Checks^^^^^^^^^
+
+        Storage.modifyIpfs1(_idxHash, _rec.Ipfs1); // Send data to storage
         //^^^^^^^interactions^^^^^^^^^
     }
-
-    //--------------------------------------------------------------------------------------Storage Writing internal functions
 
     function writeRecordIpfs2(bytes32 _idxHash, Record memory _rec)
         internal
-        isAuthorized(_idxHash)
+        whenNotPaused
+    //isAuthorized(_idxHash)
     {
         //^^^^^^^checks^^^^^^^^^
-        bytes32 userHash = keccak256(abi.encodePacked(msg.sender)); // Get a userhash for authentication and recorder logging
-        //^^^^^^^effects^^^^^^^^^
-        Storage.modifyIpfs2(userHash, _idxHash, _rec.Ipfs2); // Send data to storage
+
+        Storage.modifyIpfs2(_idxHash, _rec.Ipfs2); // Send data to storage
         //^^^^^^^interactions^^^^^^^^^
     }
 
-    function deductNewRecordCosts(uint16 _assetClass) internal {
+    //--------------------------------------------------------------------------------------Payment internal functions
+
+    function deductNewRecordCosts(uint16 _assetClass) internal whenNotPaused {
         //^^^^^^^checks^^^^^^^^^
         Invoice memory pricing;
         //^^^^^^^effects^^^^^^^^^
@@ -118,7 +203,28 @@ contract PRUF is PullPayment, PRUF_BASIC {
         //^^^^^^^interactions^^^^^^^^^
     }
 
-    function deductTransferAssetCosts(uint16 _assetClass) internal {
+    function deductRecycleCosts(uint16 _assetClass, address _oldOwner)
+        internal
+        whenNotPaused
+    {
+        //^^^^^^^checks^^^^^^^^^
+        Invoice memory pricing;
+        //^^^^^^^effects^^^^^^^^^
+        (
+            pricing.rootAddress,
+            pricing.rootPrice,
+            pricing.ACTHaddress,
+            pricing.ACTHprice
+        ) = AssetClassTokenManagerContract.getNewRecordCosts(_assetClass);
+        pricing.ACTHaddress = _oldOwner;
+        deductPayment(pricing);
+        //^^^^^^^interactions^^^^^^^^^
+    }
+
+    function deductTransferAssetCosts(uint16 _assetClass)
+        internal
+        whenNotPaused
+    {
         //^^^^^^^checks^^^^^^^^^
         Invoice memory pricing;
         //^^^^^^^effects^^^^^^^^^
@@ -132,7 +238,7 @@ contract PRUF is PullPayment, PRUF_BASIC {
         //^^^^^^^interactions^^^^^^^^^
     }
 
-    function deductCreateNoteCosts(uint16 _assetClass) internal {
+    function deductCreateNoteCosts(uint16 _assetClass) internal whenNotPaused {
         //^^^^^^^checks^^^^^^^^^
         Invoice memory pricing;
         //^^^^^^^effects^^^^^^^^^
@@ -146,7 +252,10 @@ contract PRUF is PullPayment, PRUF_BASIC {
         //^^^^^^^interactions^^^^^^^^^
     }
 
-    function deductReMintRecordCosts(uint16 _assetClass) internal {
+    function deductReMintRecordCosts(uint16 _assetClass)
+        internal
+        whenNotPaused
+    {
         //^^^^^^^checks^^^^^^^^^
         Invoice memory pricing;
         //^^^^^^^effects^^^^^^^^^
@@ -160,7 +269,10 @@ contract PRUF is PullPayment, PRUF_BASIC {
         //^^^^^^^interactions^^^^^^^^^
     }
 
-    function deductChangeStatusCosts(uint16 _assetClass) internal {
+    function deductChangeStatusCosts(uint16 _assetClass)
+        internal
+        whenNotPaused
+    {
         //^^^^^^^checks^^^^^^^^^
         Invoice memory pricing;
         //^^^^^^^effects^^^^^^^^^
@@ -174,7 +286,7 @@ contract PRUF is PullPayment, PRUF_BASIC {
         //^^^^^^^interactions^^^^^^^^^
     }
 
-    function deductForceModifyCosts(uint16 _assetClass) internal {
+    function deductForceModifyCosts(uint16 _assetClass) internal whenNotPaused {
         //^^^^^^^checks^^^^^^^^^
         Invoice memory pricing;
         //^^^^^^^effects^^^^^^^^^
@@ -201,7 +313,7 @@ contract PRUF is PullPayment, PRUF_BASIC {
     /*
      * @dev Deducts payment from transaction
      */
-    function deductPayment(Invoice memory pricing) internal {
+    function deductPayment(Invoice memory pricing) internal whenNotPaused {
         uint256 messageValue = msg.value;
         uint256 change;
         uint256 total = pricing.rootPrice.add(pricing.ACTHprice);

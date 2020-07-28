@@ -1,15 +1,26 @@
+/*-----------------------------------------------------------V0.6.7
+__/\\\\\\\\\\\\\ _____/\\\\\\\\\ _______/\\../\\ ___/\\\\\\\\\\\\\\\
+ _\/\\\/////////\\\ _/\\\///////\\\ ____\//..\//____\/\\\///////////__
+  _\/\\\.......\/\\\.\/\\\.....\/\\\ ________________\/\\\ ____________
+   _\/\\\\\\\\\\\\\/__\/\\\\\\\\\\\/_____/\\\____/\\\.\/\\\\\\\\\\\ ____
+    _\/\\\/////////____\/\\\//////\\\ ___\/\\\___\/\\\.\/\\\///////______
+     _\/\\\ ____________\/\\\ ___\//\\\ __\/\\\___\/\\\.\/\\\ ____________
+      _\/\\\ ____________\/\\\ ____\//\\\ _\/\\\___\/\\\.\/\\\ ____________
+       _\/\\\ ____________\/\\\ _____\//\\\.\//\\\\\\\\\ _\/\\\ ____________
+        _\/// _____________\/// _______\/// __\///////// __\/// _____________
+         *-------------------------------------------------------------------*/
+
 /*-----------------------------------------------------------------
  *  TO DO
- * Make Newrecord require authorized user
- * Make recycle .... deposit?
-*-----------------------------------------------------------------*/
+ *
+ *---------------------------------------------------------------*/
 
 // SPDX-License-Identifier: UNLICENSED
 pragma solidity ^0.6.7;
 
-import "./PRUF_core_065.sol";
+import "./PRUF_CORE.sol";
 
-contract T_PRUF_NP is PRUF {
+contract APP_NC is CORE {
     /*
      * @dev Verify user credentials
      * Originating Address:
@@ -25,40 +36,24 @@ contract T_PRUF_NP is PRUF {
         _;
     }
 
-    modifier isAuthorizedUser(bytes32 _idxHash) {
-        User memory user = getUser();
-        require(
-            (user.userType > 0) && (user.userType < 10),
-            "PA:IA: User not registered"
-        );
-        require(user.authorizedAssetClass == 0, "PA:IA: User not registered");
-        _;
-    }
-
     //--------------------------------------------External Functions--------------------------
     /*
-     * @dev Wrapper for newRecord
+     * @dev Create a  newRecord
      */
     function $newRecord(
         bytes32 _idxHash,
         bytes32 _rgtHash,
         uint16 _assetClass,
-        uint256 _countDownStart,
-        bytes32 _Ipfs1
-    ) external payable nonReentrant {
-        uint256 tokenId = uint256(_idxHash);
-        User memory user = getUser();
+        uint256 _countDownStart
+    ) external payable nonReentrant whenNotPaused {
         Record memory rec = getRecord(_idxHash);
+        uint8 userType = getUserType(_assetClass);
         AC memory AC_info = getACinfo(_assetClass);
         AC memory oldAC_info = getACinfo(rec.assetClass);
 
         require(
-            user.userType == 1,
-            "TPA:NR: User not authorized to create records"
-        );
-        require(
-            user.authorizedAssetClass == _assetClass,
-            "TPA:NR: User not authorized for asset class"
+            userType == 1,
+            "TPA:NR: User not authorized to create records in this asset class"
         );
         require(
             AC_info.custodyType == 2,
@@ -73,36 +68,63 @@ contract T_PRUF_NP is PRUF {
         );
         //^^^^^^^checks^^^^^^^^^
 
-        bytes32 userHash = keccak256(abi.encodePacked(msg.sender));
+        //bytes32 userHash = keccak256(abi.encodePacked(msg.sender));
         //^^^^^^^effects^^^^^^^^^
 
         if (AC_info.assetClassRoot == oldAC_info.assetClassRoot) {
             // if record exists as a "dead record" has an old AC, and is being recreated in the same root class,
             // do not overwrite anything besides assetClass and rightsHolder (storage will set assetStatus to 51)
-            Storage.newRecord(
-                userHash,
+            createRecord(
                 _idxHash,
                 _rgtHash,
                 _assetClass,
-                rec.countDownStart,
-                rec.Ipfs1
+                rec.countDownStart
             );
         } else {
             // Otherwise, idxHash is unuiqe and an entirely new record is created
-            Storage.newRecord(
-                userHash,
+            createRecord(
                 _idxHash,
                 _rgtHash,
                 _assetClass,
-                _countDownStart,
-                _Ipfs1
+                _countDownStart
             );
         }
 
         deductNewRecordCosts(_assetClass);
-
-        AssetTokenContract.mintAssetToken(msg.sender, tokenId, "pruf.io");
         //^^^^^^^interactions^^^^^^^^^
+    }
+
+    /*
+     * @dev Import a record into a new asset class
+     */
+    function $importAsset(bytes32 _idxHash, uint16 _newAssetClass)
+        external
+        payable
+        nonReentrant
+        whenNotPaused
+        isAuthorized(_idxHash)
+    {
+        Record memory rec = getRecord(_idxHash);
+        AC memory AC_info = getACinfo(_newAssetClass);
+
+        require(
+            AC_info.custodyType == 2,
+            "TPA:IA: Contract not authorized for custodial assets"
+        );
+        require(
+            AssetClassTokenManagerContract.isSameRootAC(
+                _newAssetClass,
+                rec.assetClass
+            ) == 170,
+            "TPA:IA:Cannot change AC to new root"
+        );
+        require(rec.assetStatus < 200, "PA:IA: Record locked");
+        //^^^^^^^checks^^^^^^^^^
+
+        Storage.changeAC(_idxHash, _newAssetClass);
+
+        deductNewRecordCosts(_newAssetClass);
+        //^^^^^^^interactions / effects^^^^^^^^^^^^
     }
 
     /*
@@ -116,16 +138,24 @@ contract T_PRUF_NP is PRUF {
         string memory last,
         string memory id,
         string memory secret
-    ) external payable nonReentrant returns (uint256) {
+    ) external payable nonReentrant whenNotPaused returns (uint256) {
         Record memory rec = getRecord(_idxHash);
         AC memory AC_info = getACinfo(rec.assetClass);
         uint256 tokenId = uint256(_idxHash);
+        bytes32 rawHash = keccak256(
+            abi.encodePacked(first, middle, last, id, secret)
+        );
 
         require(
             AC_info.custodyType == 2,
             "TPA:RMT:Contract not authorized for custodial assets"
         );
-        require(rec.rightsHolder != 0, "PA:I2: Record does not exist");
+        require(rec.rightsHolder != 0, "TPA:RMT:Record does not exist");
+        require(
+            rec.rightsHolder !=
+                0xFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF,
+            "TPA:RMT:Record not remintable"
+        );
         require(
             (rec.assetStatus != 60),
             "TPA:RMT:Record is burned and must be reimported by ACadmin"
@@ -136,7 +166,7 @@ contract T_PRUF_NP is PRUF {
                 (rec.assetStatus != 56),
             "TPA:RMT:Cannot modify asset in Escrow"
         );
-        require(rec.assetStatus < 200, "PA:I2: Record locked");
+        require(rec.assetStatus < 200, "TPA:RMT:Record locked");
         require(
             (rec.assetStatus != 5) &&
                 (rec.assetStatus != 55) &&
@@ -144,8 +174,7 @@ contract T_PRUF_NP is PRUF {
             "TPA:RMT:Record In Transferred-unregistered or burned status"
         );
         require(
-            rec.rightsHolder ==
-                keccak256(abi.encodePacked(first, middle, last, id, secret)),
+            rec.rightsHolder == keccak256(abi.encodePacked(_idxHash, rawHash)),
             "TPA:RMT:Rightsholder does not match supplied data"
         );
         //^^^^^^^checks^^^^^^^^^
@@ -154,8 +183,7 @@ contract T_PRUF_NP is PRUF {
 
         tokenId = AssetTokenContract.reMintAssetToken(
             msg.sender,
-            tokenId,
-            "pruf.io"
+            tokenId
         );
 
         return tokenId;
@@ -165,11 +193,14 @@ contract T_PRUF_NP is PRUF {
     /*
      * @dev Modify **Record**.Ipfs2 with confirmation
      */
-    function $addIpfs2Note(
-        bytes32 _idxHash,
-        bytes32 _rgtHash,
-        bytes32 _IpfsHash
-    ) external payable nonReentrant isAuthorized(_idxHash) returns (bytes32) {
+    function $addIpfs2Note(bytes32 _idxHash, bytes32 _IpfsHash)
+        external
+        payable
+        nonReentrant
+        whenNotPaused
+        isAuthorized(_idxHash)
+        returns (bytes32)
+    {
         Record memory rec = getRecord(_idxHash);
         AC memory AC_info = getACinfo(rec.assetClass);
 
@@ -188,7 +219,7 @@ contract T_PRUF_NP is PRUF {
                 (rec.assetStatus != 56),
             "TPA:I2:Cannot modify asset in Escrow"
         );
-        require(rec.assetStatus < 200, "PA:I2: Record locked");
+        require(rec.assetStatus < 200, "TPA:I2: Record locked");
         require(
             (rec.assetStatus != 5) && (rec.assetStatus != 55),
             "TPA:I2:Record In Transferred-unregistered status"
@@ -196,10 +227,6 @@ contract T_PRUF_NP is PRUF {
         require(
             rec.Ipfs2 == 0,
             "TPA:I2:Ipfs2 has data already. Overwrite not permitted"
-        );
-        require(
-            rec.rightsHolder == _rgtHash,
-            "TPA:I2:Rightsholder does not match supplied data"
         );
         //^^^^^^^checks^^^^^^^^^
 
@@ -211,20 +238,6 @@ contract T_PRUF_NP is PRUF {
         deductCreateNoteCosts(rec.assetClass);
 
         return rec.Ipfs2;
-        //^^^^^^^interactions^^^^^^^^^
-    }
-
-    //--------------------------------------------Internal Functions--------------------------
-    function getUser() internal override view returns (User memory) {
-        User memory user;
-        (
-            user.userType,
-            user.authorizedAssetClass
-        ) = AssetClassTokenManagerContract.getUserExt(
-            keccak256(abi.encodePacked(msg.sender))
-        );
-
-        return user;
         //^^^^^^^interactions^^^^^^^^^
     }
 }
