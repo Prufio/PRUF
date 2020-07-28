@@ -1,14 +1,26 @@
+/*-----------------------------------------------------------V0.6.7
+__/\\\\\\\\\\\\\ _____/\\\\\\\\\ _______/\\../\\ ___/\\\\\\\\\\\\\\\
+ _\/\\\/////////\\\ _/\\\///////\\\ ____\//..\//____\/\\\///////////__
+  _\/\\\.......\/\\\.\/\\\.....\/\\\ ________________\/\\\ ____________
+   _\/\\\\\\\\\\\\\/__\/\\\\\\\\\\\/_____/\\\____/\\\.\/\\\\\\\\\\\ ____
+    _\/\\\/////////____\/\\\//////\\\ ___\/\\\___\/\\\.\/\\\///////______
+     _\/\\\ ____________\/\\\ ___\//\\\ __\/\\\___\/\\\.\/\\\ ____________
+      _\/\\\ ____________\/\\\ ____\//\\\ _\/\\\___\/\\\.\/\\\ ____________
+       _\/\\\ ____________\/\\\ _____\//\\\.\//\\\\\\\\\ _\/\\\ ____________
+        _\/// _____________\/// _______\/// __\///////// __\/// _____________
+         *-------------------------------------------------------------------*/
+
 /*-----------------------------------------------------------------
  *  TO DO
  *
-*-----------------------------------------------------------------*/
+ *---------------------------------------------------------------*/
 
 // SPDX-License-Identifier: UNLICENSED
 pragma solidity ^0.6.7;
 
-import "./PRUF_core_065.sol";
+import "./PRUF_CORE.sol";
 
-contract T_PRUF_NP is PRUF {
+contract NP_NC is CORE {
     using SafeMath for uint256;
     using SafeMath for uint8;
 
@@ -34,9 +46,10 @@ contract T_PRUF_NP is PRUF {
      * must be tokenholder or assetTokenContract
      *
      */
-    function changeRgt(bytes32 _idxHash, bytes32 _rgtHash)
+    function _changeRgt(bytes32 _idxHash, bytes32 _newRgtHash)
         external
         nonReentrant
+        whenNotPaused
         isAuthorized(_idxHash)
         returns (bytes32)
     {
@@ -50,7 +63,7 @@ contract T_PRUF_NP is PRUF {
 
         require((rec.rightsHolder != 0), "PA:FMR: Record does not exist");
 
-        require(_rgtHash != 0, "TPNP:CR: rights holder cannot be zero");
+        require(_newRgtHash != 0, "TPNP:CR: rights holder cannot be zero");
 
         require(
             (rec.assetStatus != 3) &&
@@ -75,7 +88,7 @@ contract T_PRUF_NP is PRUF {
         );
         require(rec.assetStatus < 200, "TPNP:CR: Record locked");
         //^^^^^^^checks^^^^^^^^^
-        rec.rightsHolder = _rgtHash;
+        rec.rightsHolder = _newRgtHash;
         //^^^^^^^effects^^^^^^^^^
 
         writeRecord(_idxHash, rec);
@@ -85,13 +98,26 @@ contract T_PRUF_NP is PRUF {
     }
 
     /*
+     *     @dev Export FROM nonCustodial - sets asset to status 70 (importable)
+     */
+    function _exportNC(bytes32 _idxHash)
+        external
+        whenNotPaused
+        isAuthorized(_idxHash)
+    {
+        _modStatus(_idxHash, 70);
+    }
+
+    /*
      * @dev Modify **Record**.assetStatus with confirmation required
      */
-    function _modStatus(
-        bytes32 _idxHash,
-        bytes32 _rgtHash,
-        uint8 _newAssetStatus
-    ) external nonReentrant isAuthorized(_idxHash) returns (uint8) {
+    function _modStatus(bytes32 _idxHash, uint8 _newAssetStatus)
+        public
+        nonReentrant
+        whenNotPaused
+        isAuthorized(_idxHash)
+        returns (uint8)
+    {
         Record memory rec = getRecord(_idxHash);
         AC memory AC_info = getACinfo(rec.assetClass);
 
@@ -127,11 +153,6 @@ contract T_PRUF_NP is PRUF {
             "TPNP:MS: Record is burned and must be reimported by ACadmin"
         );
         require(rec.assetStatus < 200, "TPNP:MS: Record locked");
-
-        require(
-            rec.rightsHolder == _rgtHash,
-            "TPNP:MS: Rightsholder does not match supplied data"
-        );
         //^^^^^^^checks^^^^^^^^^
 
         rec.assetStatus = _newAssetStatus;
@@ -146,11 +167,13 @@ contract T_PRUF_NP is PRUF {
     /*
      * @dev set **Record**.assetStatus to lost or stolen, with confirmation required.
      */
-    function _setLostOrStolen(
-        bytes32 _idxHash,
-        bytes32 _rgtHash,
-        uint8 _newAssetStatus
-    ) external nonReentrant isAuthorized(_idxHash) returns (uint8) {
+    function _setLostOrStolen(bytes32 _idxHash, uint8 _newAssetStatus)
+        external
+        nonReentrant
+        whenNotPaused
+        isAuthorized(_idxHash)
+        returns (uint8)
+    {
         Record memory rec = getRecord(_idxHash);
         AC memory AC_info = getACinfo(rec.assetClass);
 
@@ -190,16 +213,12 @@ contract T_PRUF_NP is PRUF {
         );
         require(rec.assetStatus < 200, "TPNP:SLS: Record locked");
 
-        require(
-            rec.rightsHolder == _rgtHash,
-            "TPNP:SLS: Rightsholder does not match supplied data"
-        );
         //^^^^^^^checks^^^^^^^^^
         rec.assetStatus = _newAssetStatus;
-        bytes32 userHash = keccak256(abi.encodePacked(msg.sender));
+        //bytes32 userHash = keccak256(abi.encodePacked(msg.sender));
         //^^^^^^^effects^^^^^^^^^
 
-        Storage.setStolenOrLost(userHash, _idxHash, rec.assetStatus);
+        Storage.setStolenOrLost(_idxHash, rec.assetStatus);
 
         return rec.assetStatus;
         //^^^^^^^interactions^^^^^^^^^
@@ -208,11 +227,13 @@ contract T_PRUF_NP is PRUF {
     /*
      * @dev Decrement **Record**.countdown with confirmation required
      */
-    function _decCounter(
-        bytes32 _idxHash,
-        bytes32 _rgtHash,
-        uint256 _decAmount
-    ) external nonReentrant isAuthorized(_idxHash) returns (uint256) {
+    function _decCounter(bytes32 _idxHash, uint256 _decAmount)
+        external
+        nonReentrant
+        whenNotPaused
+        isAuthorized(_idxHash)
+        returns (uint256)
+    {
         Record memory rec = getRecord(_idxHash);
         AC memory AC_info = getACinfo(rec.assetClass);
 
@@ -237,12 +258,7 @@ contract T_PRUF_NP is PRUF {
         );
         require(
             (rec.assetStatus != 60),
-            "TPNP:SLS: Record is burned and must be reimported by ACadmin"
-        );
-
-        require(
-            rec.rightsHolder == _rgtHash,
-            "TPNP:DC: Rightsholder does not match supplied data"
+            "TPNP:DC: Record is burned and must be reimported by ACadmin"
         );
         //^^^^^^^checks^^^^^^^^^
 
@@ -261,13 +277,14 @@ contract T_PRUF_NP is PRUF {
     /*
      * @dev Modify **Record**.Ipfs1 with confirmation
      */
-    function _modIpfs1(
-        bytes32 _idxHash,
-        bytes32 _rgtHash,
-        bytes32 _IpfsHash
-    ) external nonReentrant isAuthorized(_idxHash) returns (bytes32) {
+    function _modIpfs1(bytes32 _idxHash, bytes32 _IpfsHash)
+        external
+        nonReentrant
+        whenNotPaused
+        isAuthorized(_idxHash)
+        returns (bytes32)
+    {
         Record memory rec = getRecord(_idxHash);
-        User memory callingUser = getUser();
         AC memory AC_info = getACinfo(rec.assetClass);
 
         require(
@@ -276,10 +293,6 @@ contract T_PRUF_NP is PRUF {
         );
 
         require((rec.rightsHolder != 0), "TPNP:MI1: Record does not exist");
-        require(
-            callingUser.authorizedAssetClass == rec.assetClass,
-            "TPNP:MI1: User not authorized to modify records in specified asset class"
-        );
 
         require(rec.Ipfs1 != _IpfsHash, "TPNP:MI1: New data same as old");
         require( //-------------------------------------Should an asset in escrow be modifiable?
@@ -296,10 +309,6 @@ contract T_PRUF_NP is PRUF {
         require(
             (rec.assetStatus != 60),
             "TPNP:MI1: Record is burned and must be reimported by ACadmin"
-        );
-        require(
-            rec.rightsHolder == _rgtHash,
-            "TPNP:MI1: Rightsholder does not match supplied data"
         );
         //^^^^^^^checks^^^^^^^^^
 
