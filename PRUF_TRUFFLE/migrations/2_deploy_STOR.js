@@ -1,5 +1,5 @@
-const STOR = artifacts.require('./STOR');
+const PRUF_STOR = artifacts.require('./STOR');
 
 module.exports = function(deployer){
-    deployer.deploy(STOR);
+    deployer.deploy(PRUF_STOR);
 };

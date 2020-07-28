@@ -1,5 +1,5 @@
-const NP_NC = artifacts.require('./NP_NC');
+const PRUF_NP_NC = artifacts.require('./NP_NC');
 
 module.exports = function(deployer){
-    deployer.deploy(NP_NC);
+    deployer.deploy(PRUF_NP_NC);
 };
