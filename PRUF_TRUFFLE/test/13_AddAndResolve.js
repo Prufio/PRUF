@@ -426,7 +426,7 @@ contract('PRUF_FULL_TEST', accounts => {
         '0xb083f25ffc9716fa6c018e077f602f3c6d2377f0bd01917fa75c4e9ca07bee6f',
         '10',
         '5000',
-        {from: account2}
+        {from: account2, value: 20000000000000000}
         )
     })
 
