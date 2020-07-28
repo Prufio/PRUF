@@ -142,6 +142,53 @@ contract('PRUF_FULL_TEST', accounts  => {
         })
     })
 
+    it('Should add Storage in each contract', async () => {
+
+        console.log("Adding in APP")
+        return APP.OO_setStorageContract(STOR.address, {from: account1})
+
+        .then(() => {
+            console.log("Adding in NP")
+            return NP.OO_setStorageContract(STOR.address, {from: account1})
+
+        }).then(() => {
+            console.log("Adding in AC_MGR")
+            return AC_MGR.OO_setStorageContract(STOR.address, {from: account1})
+
+        }).then(() => {
+            console.log("Adding in AC_TKN")
+            return AC_TKN.OO_setStorageContract(STOR.address, {from: account1})
+
+        }).then(() => {
+            console.log("Adding in A_TKN")
+            return A_TKN.OO_setStorageContract(STOR.address, {from: account1})
+
+        }).then(() => {
+            console.log("Adding in ECR_MGR")
+            return ECR_MGR.OO_setStorageContract(STOR.address, {from: account1})
+        
+        }).then(() => {
+            console.log("Adding in ECR")
+            return ECR.OO_setStorageContract(STOR.address, {from: account1})
+
+        }).then(() => {
+            console.log("Adding in APP_NC")
+            return APP_NC.OO_setStorageContract(STOR.address, {from: account1})
+
+        }).then(() => {
+            console.log("Adding in NP_NC")
+            return NP_NC.OO_setStorageContract(STOR.address, {from: account1})
+
+        }).then(() => {
+            console.log("Adding in ECR_NC")
+            return ECR_NC.OO_setStorageContract(STOR.address, {from: account1})
+        
+        }).then(() => {
+            console.log("Adding in RCLR")
+            return RCLR.OO_setStorageContract(STOR.address, {from: account1})
+      })
+    })
+
     it('Should resolve contract addresses', async () => {
         
         console.log("Resolving in APP")
