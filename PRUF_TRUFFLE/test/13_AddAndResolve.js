@@ -255,11 +255,13 @@ contract('PRUF_FULL_TEST', accounts => {
     })
 
     it('Should mint a couple of asset root tokens', async () => {
+
         console.log("Minting custodial root token")
         return AC_MGR.createAssetClass('1', account1, 'CUSTODIAL_ROOT', '1', '1', '1', { from: account1 })
-            .then(() => {
-                console.log("Minting non-custodial root token")
-                return AC_MGR.createAssetClass('2', account1, 'NON-CUSTODIAL_ROOT', '2', '2', '2', { from: account1 })
+
+        .then(() => {
+            console.log("Minting non-custodial root token")
+            return AC_MGR.createAssetClass('2', account1, 'NON-CUSTODIAL_ROOT', '2', '2', '2', { from: account1 })
             })
     })
 
@@ -281,12 +283,12 @@ contract('PRUF_FULL_TEST', accounts => {
       })
     })
 
-    it("Should Mint 2 cust and 2 non-cust AC tokens in AC_ROOT 2", async () => {
-        return AC_MGR.createAssetClass("14", account1, "Custodial_AC", "14", "2", "1", {form: account1})
+    it("Should Mint 1 cust and 1 non-cust AC tokens in AC_ROOT 2", async () => {
+        return AC_MGR.createAssetClass("14", account1, "Custodial_AC", "14", "2", "1", {from: account1})
 
         .then(() => {
         console.log("Minting AC 15")
-        return AC_MGR.createAssetClass("15", account1, "Non_Custodial_AC", "15", "2", "2", {form: account1})
+        return AC_MGR.createAssetClass("15", account1, "Non_Custodial_AC", "15", "2", "2", {from: account1})
       })
     })
 
@@ -327,7 +329,6 @@ contract('PRUF_FULL_TEST', accounts => {
                                     "10000000000000000", 
                                     account1,
                                     {from: account1})
-    })
 
     .then(() => {
         console.log("Setting base costs in root 2")
@@ -341,5 +342,6 @@ contract('PRUF_FULL_TEST', accounts => {
                                     account1,
                                     {from: account1})
     })
+})
 
 });
