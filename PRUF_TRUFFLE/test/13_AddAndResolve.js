@@ -290,28 +290,28 @@ contract('PRUF_FULL_TEST', accounts => {
       })
     })
 
-    it('Should add account 2 as a user in AC_Manager', async () => {
+    it('Should add users to AC 10-15 in AC_Manager', async () => {
         console.log("Account2 => AC10")
         return AC_MGR.OO_addUser(account2, '1', '10')
             .then(() => {
                 console.log("Account3 => AC11")
-                return AC_MGR.OO_addUser(account3, '1', '11')
+                return AC_MGR.OO_addUser(account3, '1', '11', {from: account1})
             })
             .then(() => {
                 console.log("Account3 => AC12")
-                return AC_MGR.OO_addUser(account4, '1', '12')
+                return AC_MGR.OO_addUser(account4, '1', '12', {from: account1})
             })
             .then(() => {
                 console.log("Account4 => AC13")
-                return AC_MGR.OO_addUser(account5, '1', '13')
+                return AC_MGR.OO_addUser(account5, '1', '13', {from: account1})
             })
             .then(() => {
                 console.log("Account5 => AC14")
-                return AC_MGR.OO_addUser(account6, '1', '14')
+                return AC_MGR.OO_addUser(account6, '1', '14', {from: account1})
             })
             .then(() => {
                 console.log("Account6 => AC15")
-                return AC_MGR.OO_addUser(account7, '1', '15')
+                return AC_MGR.OO_addUser(account7, '1', '15', {from: account1})
             })
     })
 
