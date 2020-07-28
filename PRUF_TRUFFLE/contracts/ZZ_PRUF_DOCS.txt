@@ -203,7 +203,7 @@ pragma solidity ^0.6.7;
  * 2: Add contracts @ respective names in storage
  * 3: Set storage contract in each contract
  * 4: Resolve contract addresses
- * 5: Mint 2 root asset tokens. (home, foreign)
+ * 5: Mint 2 root asset tokens. (Custodial, Non-Custodial)
  * 6: Mint 2 cust and 2 non-custodial asset classes in the home asset class
  * 7: Mint 1 cust and 1 non-custodial asset classes in the foreign asset class 
  * 8: Set costs / users / types for root && rooted AC token

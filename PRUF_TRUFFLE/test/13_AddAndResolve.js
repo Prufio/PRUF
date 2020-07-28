@@ -237,4 +237,18 @@ contract('PRUF_FULL_TEST', accounts  => {
         })
     })
 
+    it("Should Mint 2 cust and 2 non-cust AC tokens in AC_ROOT 1", async () => {
+        return AC_MGR.createAssetClass("10", account1, "Custodial_AC", "10", "1", "1", {form: account1})
+
+        .then(() => {
+        return AC_MGR.createAssetClass("11", account1, "Custodial_AC", "11", "1", "1", {form: account1})
+
+        }).then(() => {
+        return AC_MGR.createAssetClass("12", account1, "Custodial_AC", "12", "1", "2", {form: account1})
+
+        }).then(() => {
+        return AC_MGR.createAssetClass("13", account1, "Custodial_AC", "13", "1", "2", {form: account1})
+      })
+    })
+
 });
