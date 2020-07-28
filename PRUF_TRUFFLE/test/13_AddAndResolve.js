@@ -330,18 +330,93 @@ contract('PRUF_FULL_TEST', accounts => {
             account1,
             { from: account1 })
 
-            .then(() => {
-                console.log("Setting base costs in root 2")
-                return AC_MGR.ACTH_setCosts("2",
-                    "10000000000000000",
-                    "10000000000000000",
-                    "10000000000000000",
-                    "10000000000000000",
-                    "10000000000000000",
-                    "10000000000000000",
-                    account1,
-                    { from: account1 })
-            })
+    .then(() => {
+        
+        console.log("Setting base costs in root 2")
+        return AC_MGR.ACTH_setCosts("2",
+                                    "10000000000000000",
+                                    "10000000000000000",
+                                    "10000000000000000",
+                                    "10000000000000000", 
+                                    "10000000000000000", 
+                                    "10000000000000000", 
+                                    account1,
+                                    {from: account1})
+    })
+
+    it("Should set costs in minted AC's", async () => {
+
+        console.log("Setting costs in AC 10")
+        return AC_MGR.ACTH_setCosts("10",
+                                    "10000000000000000",
+                                    "10000000000000000",
+                                    "10000000000000000",
+                                    "10000000000000000", 
+                                    "10000000000000000", 
+                                    "10000000000000000", 
+                                    account1,
+                                    {from: account1})
+
+    .then(() => {
+        console.log("Setting base costs in root 11")
+        return AC_MGR.ACTH_setCosts("11",
+                                    "10000000000000000",
+                                    "10000000000000000",
+                                    "10000000000000000",
+                                    "10000000000000000", 
+                                    "10000000000000000", 
+                                    "10000000000000000", 
+                                    account1,
+                                    {from: account1})
+
+    }).then(() => {
+        console.log("Setting base costs in root 12")
+        return AC_MGR.ACTH_setCosts("12",
+                                    "10000000000000000",
+                                    "10000000000000000",
+                                    "10000000000000000",
+                                    "10000000000000000", 
+                                    "10000000000000000", 
+                                    "10000000000000000", 
+                                    account1,
+                                    {from: account1})
+
+    }).then(() => {
+        console.log("Setting base costs in root 13")
+        return AC_MGR.ACTH_setCosts("13",
+                                    "10000000000000000",
+                                    "10000000000000000",
+                                    "10000000000000000",
+                                    "10000000000000000", 
+                                    "10000000000000000", 
+                                    "10000000000000000", 
+                                    account1,
+                                    {from: account1})
+
+    }).then(() => {
+        console.log("Setting base costs in root 14")
+        return AC_MGR.ACTH_setCosts("14",
+                                    "10000000000000000",
+                                    "10000000000000000",
+                                    "10000000000000000",
+                                    "10000000000000000", 
+                                    "10000000000000000", 
+                                    "10000000000000000", 
+                                    account1,
+                                    {from: account1})
+
+    }).then(() => {
+        console.log("Setting base costs in root 15")
+        return AC_MGR.ACTH_setCosts("15",
+                                    "10000000000000000",
+                                    "10000000000000000",
+                                    "10000000000000000",
+                                    "10000000000000000", 
+                                    "10000000000000000", 
+                                    "10000000000000000", 
+                                    account1,
+                                    {from: account1})
+        })
     })
 
     it('Should mint a big fat meaty record in AC 10', async () => {
