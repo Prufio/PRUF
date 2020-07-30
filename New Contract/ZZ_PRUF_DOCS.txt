@@ -25,16 +25,12 @@ pragma solidity ^0.6.7;
 
 /*-----------------------------------------------------------------
  *TO DO :
- *      *Move IPFS1 to tokenURI
+ *      *Move IPFS1 to tokenURI  ****NOPE!
  *      *"naked" token minting 
  *      *Importing naked tokens:  write app level contract for "actualizeRecord" in pruf_core
  *      *Design Json templates for IPFS1 and IPFS2
  *
- *      *Change contract authorizaton mapping in storage to an asset-class based mapping, E.G. address=>(assetClass=>uint8) 
- *              to determine if a contract is athorized to operate on a given asset class (or root asset class?)
- *              currently storage has address => (type,name) and name = > address. Proposed would change to:
- *              address => (assetClass => type), address=>name  and name = > address for foreward and backward resolution as well as type
- *              determination by assetClass.
+ *      *Change contract authorizaton mapping in AC_manager to include contracts authorized to operate in that asset class.
  *
  *      *Look into record lock functionality/require statements
  *
@@ -200,14 +196,17 @@ pragma solidity ^0.6.7;
  * ----------SETUP PROCEDURES---------- *
  * need at least 3 Eth adressses
  * 1: Deploy Contracts
- * 2: Add contracts @ respective names in storage
+ * 2: Add contracts @ respective names in storage, use asset class 0
  * 3: Set storage contract in each contract
  * 4: Resolve contract addresses
  * 5: Mint 2 root asset tokens. (home, foreign)
  * 6: Mint 2 cust and 2 non-custodial asset classes in the home asset class
  * 7: Mint 1 cust and 1 non-custodial asset classes in the foreign asset class 
- * 8: Set costs / users / types for root && rooted AC token
- * 7: THE WORKS
+ * 8: Authorize contracts @ respective names in storage, using real asset classes 
+        might be able to do this the first time around, if you changed the contract 
+        resolution until later ( skip step 2 and 4, then do 4 after 8?)
+ * 9: Set costs / users / types for root && rooted AC token
+ * 10: THE WORKS
  *
 *-----------------------------------------------------------------
 */

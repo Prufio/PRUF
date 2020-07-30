@@ -264,13 +264,13 @@ contract BASIC is ReentrancyGuard, Ownable, IERC721Receiver, Pausable {
         //^^^^^^^interactions^^^^^^^^^
     }
 
-    function getContractInfo(address _addr)
+    function getContractInfo(address _addr, uint16 _assetClass)
         internal
         returns (ContractDataHash memory)
     {
         ContractDataHash memory contractInfo;
         (contractInfo.contractType, contractInfo.nameHash) = Storage
-            .ContractInfoHash(_addr);
+            .ContractInfoHash(_addr, _assetClass);
         return contractInfo;
         //^^^^^^^checks/interactions^^^^^^^^^
     }

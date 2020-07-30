@@ -315,7 +315,7 @@ contract APP is CORE {
      */
     function $importAsset(
         bytes32 _idxHash,
-        bytes32 _rgtHash,
+        bytes32 _newRgtHash,
         uint16 _newAssetClass
     )
         external
@@ -361,7 +361,7 @@ contract APP is CORE {
         }
 
         rec.assetStatus = 0; // --------------------------------Should this be?
-        rec.rightsHolder = _rgtHash;
+        rec.rightsHolder = _newRgtHash;
         //^^^^^^^effects^^^^^^^^^
 
         writeRecord(_idxHash, rec);
