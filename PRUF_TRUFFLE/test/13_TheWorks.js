@@ -427,10 +427,9 @@ contract('PRUF_FULL_TEST', accounts => {
                                     {from: account1})
         })
     })
-
+    console.log("Running record tests")
     it('Should write record in AC 10 @ IDX&RGT(1)', async () => {
         
-        console.log("Running record tests")
         return APP.$newRecord(
         '0x3531cc3dc5bb231b65d260771886cc583d8fe8fb29b457554cb1930a722a747d', 
         '0xb083f25ffc9716fa6c018e077f602f3c6d2377f0bd01917fa75c4e9ca07bee6f',
@@ -484,15 +483,6 @@ contract('PRUF_FULL_TEST', accounts => {
         )
     })
 
-    it('Should add Ipfs2 note @record(1) to IDX(1)', async () => {
-        return APP.$addIpfs2Note(
-        '0x3531cc3dc5bb231b65d260771886cc583d8fe8fb29b457554cb1930a722a747d', 
-        '0xb083f25ffc9716fa6c018e077f602f3c6d2377f0bd01917fa75c4e9ca07bee6f',
-        '0x3531cc3dc5bb231b65d260771886cc583d8fe8fb29b457554cb1930a722a747d',
-        {from: account2, value: 20000000000000000}
-        )
-    })
-
     it('Should change status of new record(1) to status(51)', async () => {
         return NP._modStatus(
         '0x3531cc3dc5bb231b65d260771886cc583d8fe8fb29b457554cb1930a722a747d', 
@@ -515,6 +505,74 @@ contract('PRUF_FULL_TEST', accounts => {
         '0x3531cc3dc5bb231b65d260771886cc583d8fe8fb29b457554cb1930a722a747d',
         '12',
         {from: account2, value: 20000000000000000}
+        )
+    })
+
+    it('Should re-mint record(1) token to account2', async () => {
+        return APP_NC.$reMintToken(
+        '0x3531cc3dc5bb231b65d260771886cc583d8fe8fb29b457554cb1930a722a747d',
+        '1',
+        '1',
+        '1',
+        '1',
+        '1',
+        {from: account2, value: 20000000000000000}
+        )
+    })
+    it('Should set Ipfs2 note to IDX(1)', async () => {
+        return APP_NC.$addIpfs2Note(
+        '0x3531cc3dc5bb231b65d260771886cc583d8fe8fb29b457554cb1930a722a747d',
+        '0x3531cc3dc5bb231b65d260771886cc583d8fe8fb29b457554cb1930a722a747d',
+        {from: account2, value: 20000000000000000}
+        )
+    })
+
+    it('Should change status of record(1) to status(51)', async () => {
+        return NP_NC._modStatus(
+        '0x3531cc3dc5bb231b65d260771886cc583d8fe8fb29b457554cb1930a722a747d', 
+        '51',
+        {from: account2}
+        )
+    })
+
+    it('Should set record(1) into escrow for 3 minutes', async () => {
+        return ECR_NC.setEscrow(
+        '0x3531cc3dc5bb231b65d260771886cc583d8fe8fb29b457554cb1930a722a747d', 
+        '0xdd4238c78de8c3b265f806a08e56dceae2142cf9514c5038157c71dd6396bf37',
+        '180',
+        '56',
+        {from: account2}
+        )
+    })
+
+    it('Should take record(1) out of escrow', async () => {
+        return ECR_NC.endEscrow(
+        '0x3531cc3dc5bb231b65d260771886cc583d8fe8fb29b457554cb1930a722a747d', 
+        {from: account2}
+        )
+    })
+
+    it('Should change decrement amount @record(1) from (85) to (70)', async () => {
+        return NP_NC._decCounter(
+        '0x3531cc3dc5bb231b65d260771886cc583d8fe8fb29b457554cb1930a722a747d', 
+        '15',
+        {from: account2}
+        )
+    })
+
+    it('Should force modify record(1) RGT(1) to RGT(2)', async () => {
+        return NP_NC._changeRgt(
+        '0x3531cc3dc5bb231b65d260771886cc583d8fe8fb29b457554cb1930a722a747d', 
+        '0x5d5d1ee487d05f715ddd883e185ff5b672bed217ac7f9ab3073b39b19762ce8b',
+        {from: account2}
+        )
+    })
+
+    it('Should modify Ipfs1 note @record(1) to RGT(1)', async () => {
+        return NP_NC._modIpfs1(
+        '0x3531cc3dc5bb231b65d260771886cc583d8fe8fb29b457554cb1930a722a747d', 
+        '0xb083f25ffc9716fa6c018e077f602f3c6d2377f0bd01917fa75c4e9ca07bee6f',
+        {from: account2}
         )
     })
 
@@ -543,7 +601,7 @@ contract('PRUF_FULL_TEST', accounts => {
         )
     })
 
-    it('Should change status of new record(1) to status(1)', async () => {
+    it('Should change status of record(1) to status(1)', async () => {
         return NP._modStatus(
         '0x3531cc3dc5bb231b65d260771886cc583d8fe8fb29b457554cb1930a722a747d', 
         '0xb083f25ffc9716fa6c018e077f602f3c6d2377f0bd01917fa75c4e9ca07bee6f',
@@ -552,9 +610,28 @@ contract('PRUF_FULL_TEST', accounts => {
         )
     })
 
-    it('Should emit record(1)', async () => {
-        return STOR.emitRecord(
+    it('Should set record(1) into escrow for 3 minutes', async () => {
+        return ECR.setEscrow(
         '0x3531cc3dc5bb231b65d260771886cc583d8fe8fb29b457554cb1930a722a747d', 
+        '0xdd4238c78de8c3b265f806a08e56dceae2142cf9514c5038157c71dd6396bf37',
+        '180',
+        '6',
+        {from: account2}
+        )
+    })
+
+    it('Should take record(1) out of escrow', async () => {
+        return ECR.endEscrow(
+        '0x3531cc3dc5bb231b65d260771886cc583d8fe8fb29b457554cb1930a722a747d', 
+        {from: account2}
+        )
+    })
+
+    it('Should change status of record(1) to status(1)', async () => {
+        return NP._modStatus(
+        '0x3531cc3dc5bb231b65d260771886cc583d8fe8fb29b457554cb1930a722a747d', 
+        '0xb083f25ffc9716fa6c018e077f602f3c6d2377f0bd01917fa75c4e9ca07bee6f',
+        '1',
         {from: account2}
         )
     })
