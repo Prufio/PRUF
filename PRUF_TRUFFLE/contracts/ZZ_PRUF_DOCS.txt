@@ -38,8 +38,6 @@ pragma solidity ^0.6.7;
  *
  *      *Look into asset rementants of asset locking
  *
- *      *Add exixtence require in export (APP)
- *
  *      *Do not allow status change to escrow status
  *
  *      *Above 65k segregation (probably by ACinfo custodial type) (just need to add a wild west contract?)
