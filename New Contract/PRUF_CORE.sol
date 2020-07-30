@@ -69,32 +69,7 @@ contract CORE is PullPayment, BASIC {
         //^^^^^^^interactions^^^^^^^^^
     }
 
-    /*
-     * @dev retrieves costs from Storage and returns Costs struct
-     */
-    function getEscrowData(bytes32 _idxHash)
-        internal
-        returns (escrowData memory)
-    {
-        //^^^^^^^checks^^^^^^^^^
 
-        escrowData memory escrow;
-        //^^^^^^^effects^^^^^^^^^
-
-        (
-            escrow.data,
-            escrow.controllingContractNameHash,
-            escrow.escrowOwnerAddressHash,
-            escrow.timelock,
-            escrow.ex1,
-            escrow.ex2,
-            escrow.addr1,
-            escrow.addr2
-        ) = escrowMGRcontract.retrieveEscrowData(_idxHash);
-
-        return (escrow);
-        //^^^^^^^interactions^^^^^^^^^
-    }
 
     //--------------------------------------------------------------------------------------Storage Writing internal functions
 
@@ -126,18 +101,18 @@ contract CORE is PullPayment, BASIC {
     /*
      * @dev create a Record in Storage @ idxHash
      */
-    function actualizeRecord(
-        bytes32 _idxHash,
-        bytes32 _rgtHash,
-        uint16 _assetClass,
-        uint256 _countDownStart
-    ) internal {
-        uint256 tokenId = uint256(_idxHash);
+    // function actualizeRecord(
+    //     bytes32 _idxHash,
+    //     bytes32 _rgtHash,
+    //     uint16 _assetClass,
+    //     uint256 _countDownStart
+    // ) internal {
+    //     uint256 tokenId = uint256(_idxHash);
 
-        require (AssetTokenContract.tokenExists(tokenId) == 170, "PC:AR:Asset token not found");
+    //     require (AssetTokenContract.tokenExists(tokenId) == 170, "PC:AR:Asset token not found");
 
-        Storage.newRecord(_idxHash, _rgtHash, _assetClass, _countDownStart);
-    }
+    //     Storage.newRecord(_idxHash, _rgtHash, _assetClass, _countDownStart);
+    // }
 
 
 

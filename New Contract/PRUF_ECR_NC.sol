@@ -18,9 +18,9 @@ __/\\\\\\\\\\\\\ _____/\\\\\\\\\ _______/\\../\\ ___/\\\\\\\\\\\\\\\
 // SPDX-License-Identifier: UNLICENSED
 pragma solidity ^0.6.7;
 
-import "./PRUF_CORE.sol";
+import "./PRUF_ECR_CORE.sol";
 
-contract ECR_NC is CORE {
+contract ECR_NC is ECR_CORE {
     using SafeMath for uint256;
 
     /*
@@ -130,4 +130,5 @@ contract ECR_NC is CORE {
         escrowMGRcontract.endEscrow(_idxHash);
         //^^^^^^^interactions^^^^^^^^^
     }
+    
 }

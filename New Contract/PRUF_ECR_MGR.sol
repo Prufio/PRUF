@@ -25,28 +25,28 @@ import "./Imports/Safemath.sol";
 contract ECR_MGR is BASIC {
     using SafeMath for uint256;
 
-    // struct escrowData {
-    //     uint8 data;
-    //     bytes32 controllingContractNameHash;
-    //     bytes32 escrowOwnerAddressHash;
-    //     uint256 timelock;
-    //     bytes32 ex1;
-    //     bytes32 ex2;
-    //     address addr1;
-    //     address addr2;
-    // }
+    struct escrowData {
+        uint8 data;
+        bytes32 controllingContractNameHash;
+        bytes32 escrowOwnerAddressHash;
+        uint256 timelock;
+        bytes32 ex1;
+        bytes32 ex2;
+        address addr1;
+        address addr2;
+    }
 
     mapping(bytes32 => escrowData) escrows;
 
-    /*
-     * Originating Address is escrow contract
-     */
-    function isEscrowContract(uint16 _assetClass) private {
-        require(
-            Storage.ContractAuthType(msg.sender, _assetClass) == 3, //caller contract is type3 (escrow) and exists in database
-            "PEM:IEC:Calling address is not an authorized escrow contract, or not authorized for the asset class"
-        );
-    }
+    // /*
+    //  * Originating Address is escrow contract
+    //  */
+    // function isEscrowContract(uint16 _assetClass) private {
+    //     require(
+    //         Storage.ContractAuthType(msg.sender, _assetClass) == 3, //caller contract is type3 (escrow) and exists in database
+    //         "PEM:IEC:Calling address is not an authorized escrow contract, or not authorized for the asset class"
+    //     );
+    // }
 
     function isLostOrStolen(uint16 _assetStatus) private pure returns (uint8) {
         if (
