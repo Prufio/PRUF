@@ -610,6 +610,32 @@ contract('PRUF_FULL_TEST', accounts => {
         )
     })
 
+    it('Should set record(1) into locked escrow for 3 minutes', async () => {
+        return ECR.setEscrow(
+        '0x3531cc3dc5bb231b65d260771886cc583d8fe8fb29b457554cb1930a722a747d', 
+        '0xdd4238c78de8c3b265f806a08e56dceae2142cf9514c5038157c71dd6396bf37',
+        '180',
+        '50',
+        {from: account2}
+        )
+    })
+
+    it('Should take record(1) out of escrow', async () => {
+        return ECR.endEscrow(
+        '0x3531cc3dc5bb231b65d260771886cc583d8fe8fb29b457554cb1930a722a747d', 
+        {from: account2}
+        )
+    })
+
+    it('Should change status of record(1) to status(1)', async () => {
+        return NP._modStatus(
+        '0x3531cc3dc5bb231b65d260771886cc583d8fe8fb29b457554cb1930a722a747d', 
+        '0xb083f25ffc9716fa6c018e077f602f3c6d2377f0bd01917fa75c4e9ca07bee6f',
+        '1',
+        {from: account2}
+        )
+    })
+
     it('Should set record(1) into escrow for 3 minutes', async () => {
         return ECR.setEscrow(
         '0x3531cc3dc5bb231b65d260771886cc583d8fe8fb29b457554cb1930a722a747d', 
@@ -620,9 +646,11 @@ contract('PRUF_FULL_TEST', accounts => {
         )
     })
 
-    it('Should take record(1) out of escrow', async () => {
-        return ECR.endEscrow(
-        '0x3531cc3dc5bb231b65d260771886cc583d8fe8fb29b457554cb1930a722a747d', 
+    it('Should set record(1) to stolen(3) status', async () => {
+        return NP._setLostOrStolen(
+        '0x3531cc3dc5bb231b65d260771886cc583d8fe8fb29b457554cb1930a722a747d',
+        '0xb083f25ffc9716fa6c018e077f602f3c6d2377f0bd01917fa75c4e9ca07bee6f',
+        '3',
         {from: account2}
         )
     })
