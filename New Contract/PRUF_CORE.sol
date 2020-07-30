@@ -115,7 +115,7 @@ contract CORE is PullPayment, BASIC {
         if (AC_info.custodyType == 1){
             AssetTokenContract.mintAssetToken(address(this), tokenId, "pruf.io");
         }
-        
+
         if (AC_info.custodyType == 2){
             AssetTokenContract.mintAssetToken(msg.sender, tokenId, "pruf.io");
         }
