@@ -41,12 +41,11 @@ contract ECR_MGR is BASIC {
     /*
      * Originating Address is escrow contract
      */
-    modifier isEscrowContract() {
+    function isEscrowContract(uint16 _assetClass) private {
         require(
-            Storage.ContractAuthType(msg.sender) == 3, //caller contract is type3 (escrow) and exists in database
-            "PEM:IEC:Calling address is not an authorized escrow contract"
+            Storage.ContractAuthType(msg.sender, _assetClass) == 3, //caller contract is type3 (escrow) and exists in database
+            "PEM:IEC:Calling address is not an authorized escrow contract, or not authorized for the asset class"
         );
-        _;
     }
 
     function isLostOrStolen(uint16 _assetStatus) private pure returns (uint8) {
@@ -88,16 +87,16 @@ contract ECR_MGR is BASIC {
         bytes32 _ex2,
         address _addr1,
         address _addr2
-    ) external nonReentrant whenNotPaused isEscrowContract {
+    ) external nonReentrant whenNotPaused {
         Record memory rec = getRecord(_idxHash);
         ContractDataHash memory contractInfo;
         (contractInfo.contractType, contractInfo.nameHash) = Storage
-            .ContractInfoHash(msg.sender);
+            .ContractInfoHash(msg.sender, rec.assetClass);
         bytes32 controllingContractNameHash = contractInfo.nameHash;
 
         require(
             contractInfo.contractType == 3,
-            "PEM:SE: Escrow can only be set by an escrow contract"
+            "PEM:SE: Escrow can only be set by an authorized escrow contract"
         );
         require(rec.rightsHolder != 0, "PS:SE:Record does not exist");
         require(
@@ -148,12 +147,11 @@ contract ECR_MGR is BASIC {
         external
         nonReentrant
         whenNotPaused
-        isEscrowContract
     {
         Record memory rec = getRecord(_idxHash);
         ContractDataHash memory contractInfo;
         (contractInfo.contractType, contractInfo.nameHash) = Storage
-            .ContractInfoHash(msg.sender);
+            .ContractInfoHash(msg.sender, rec.assetClass);
 
         require(rec.rightsHolder != 0, "PEM:EE:Record does not exist");
         require(

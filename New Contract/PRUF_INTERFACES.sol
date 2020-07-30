@@ -183,7 +183,6 @@ interface A_TKN_Interface {
 
 interface STOR_Interface {
     function newRecord(
-        //bytes32 _userHash,
         bytes32 _idxHash,
         bytes32 _rgt,
         uint16 _assetClass,
@@ -191,7 +190,6 @@ interface STOR_Interface {
     ) external;
 
     function modifyRecord(
-        //bytes32 _userHash,
         bytes32 _idxHash,
         bytes32 _rgtHash,
         uint8 _assetStatus,
@@ -200,11 +198,7 @@ interface STOR_Interface {
         uint16 _numberOfTransfers
     ) external;
 
-    function changeAC(
-        //bytes32 _userHash,
-        bytes32 _idxHash,
-        uint16 _newAssetClass
-    ) external;
+    function changeAC(bytes32 _idxHash, uint16 _newAssetClass) external;
 
     function setEscrow(
         bytes32 _idxHash,
@@ -214,29 +208,15 @@ interface STOR_Interface {
 
     function endEscrow(bytes32 _idxHash, bytes32 _contractNameHash) external;
 
-    function setStolenOrLost(
-        //bytes32 _userHash,
-        bytes32 _idxHash,
-        uint8 _newAssetStatus
-    ) external;
+    function setStolenOrLost(bytes32 _idxHash, uint8 _newAssetStatus) external;
 
-    function modifyIpfs1(
-        //bytes32 _userHash,
-        bytes32 _idxHash,
-        bytes32 _Ipfs1
-    ) external;
+    function modifyIpfs1(bytes32 _idxHash, bytes32 _Ipfs1) external;
 
-    function modifyIpfs2(
-        //bytes32 _userHash,
-        bytes32 _idxHash,
-        bytes32 _Ipfs2
-    ) external;
+    function modifyIpfs2(bytes32 _idxHash, bytes32 _Ipfs2) external;
 
     function retrieveRecord(bytes32 _idxHash)
         external
         returns (
-            //bytes32,
-            //bytes32,
             bytes32,
             uint8,
             uint8,
@@ -253,8 +233,6 @@ interface STOR_Interface {
     )
         external
         returns (
-            //bytes32,
-            //bytes32,
             uint8,
             uint8,
             uint16,
@@ -269,13 +247,13 @@ interface STOR_Interface {
         external
         returns (address);
 
-    function ContractAuthType(address _addr) external returns (uint8);
+    function ContractAuthType(address _addr, uint16 _assetClass)
+        external
+        returns (uint8);
 
-    function ContractInfoHash(address _addr) external returns (uint8, bytes32);
-
-    // function retrieveEscrowOwner(bytes32 _idxHash)
-    //     external
-    //     returns (bytes32);
+    function ContractInfoHash(address _addr, uint16 _assetClass)
+        external
+        returns (uint8, bytes32);
 }
 
 interface ECR_MGR_Interface {
