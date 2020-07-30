@@ -146,7 +146,14 @@ contract STOR is Ownable, ReentrancyGuard, Pausable {
     //-----------------------------------------------Events------------------------------------------------//
 
     event REPORT(string _msg, bytes32 b32);
-
+    event RECORD(uint8,
+            uint8,
+            uint16,
+            uint256,
+            uint256,
+            bytes32,
+            bytes32,
+            uint16);
     //--------------------------------Internal Admin functions / onlyowner or isAdmin---------------------------------//
 
     /**
@@ -549,6 +556,7 @@ contract STOR is Ownable, ReentrancyGuard, Pausable {
     {
         Record memory rec = database[_idxHash];
 
+
         //  if (
         //      (rec.assetStatus == 3) ||
         //      (rec.assetStatus == 4) ||
@@ -641,4 +649,18 @@ contract STOR is Ownable, ReentrancyGuard, Pausable {
     }
 
     //-----------------------------------------------Private functions------------------------------------------------//
+    //-----------------------------------------------TESTING functions------------------------------------------------//
+
+    function emitRecord(bytes32 _idxHash) external {
+        Record memory rec = database[_idxHash];
+        emit RECORD(
+            rec.assetStatus,
+            rec.forceModCount,
+            rec.assetClass,
+            rec.countDown,
+            rec.countDownStart,
+            rec.Ipfs1,
+            rec.Ipfs2,
+            rec.numberOfTransfers);
+    }
 }

@@ -266,6 +266,7 @@ contract('PRUF_FULL_TEST', accounts => {
     })
 
     it("Should Mint 2 cust and 2 non-cust AC tokens in AC_ROOT 1", async () => {
+
         console.log("Minting AC 10")
         return AC_MGR.createAssetClass("10", account1, "Custodial_AC", "10", "1", "1", { from: account1 })
 
@@ -284,6 +285,7 @@ contract('PRUF_FULL_TEST', accounts => {
     })
 
     it("Should Mint 1 cust and 1 non-cust AC tokens in AC_ROOT 2", async () => {
+        
         return AC_MGR.createAssetClass("14", account1, "Custodial_AC", "14", "2", "1", { from: account1 })
 
             .then(() => {
@@ -293,25 +295,31 @@ contract('PRUF_FULL_TEST', accounts => {
     })
 
     it('Should add users to AC 10-15 in AC_Manager', async () => {
+        
         console.log("Account2 => AC10")
         return AC_MGR.OO_addUser(account2, '1', '10')
+            
             .then(() => {
+                console.log("Account2 => AC11")
+                return AC_MGR.OO_addUser(account2, '1', '11', { from: account1 })
+            
+            }).then(() => {
                 console.log("Account3 => AC11")
                 return AC_MGR.OO_addUser(account3, '1', '11', { from: account1 })
-            })
-            .then(() => {
+            
+            }).then(() => {
                 console.log("Account3 => AC12")
                 return AC_MGR.OO_addUser(account4, '1', '12', { from: account1 })
-            })
-            .then(() => {
+            
+            }).then(() => {
                 console.log("Account4 => AC13")
                 return AC_MGR.OO_addUser(account5, '1', '13', { from: account1 })
-            })
-            .then(() => {
+            
+            }).then(() => {
                 console.log("Account5 => AC14")
                 return AC_MGR.OO_addUser(account6, '1', '14', { from: account1 })
-            })
-            .then(() => {
+            
+            }).then(() => {
                 console.log("Account6 => AC15")
                 return AC_MGR.OO_addUser(account7, '1', '15', { from: account1 })
             })
@@ -321,14 +329,14 @@ contract('PRUF_FULL_TEST', accounts => {
 
         console.log("Setting base costs in root 1")
         return AC_MGR.ACTH_setCosts("1",
-            "10000000000000000",
-            "10000000000000000",
-            "10000000000000000",
-            "10000000000000000",
-            "10000000000000000",
-            "10000000000000000",
-            account1,
-            { from: account1 })
+                                    "10000000000000000",
+                                    "10000000000000000",
+                                    "10000000000000000",
+                                    "10000000000000000",
+                                    "10000000000000000",
+                                    "10000000000000000",
+                                    account1,
+                                    {from: account1})
 
     .then(() => {
         
@@ -420,13 +428,134 @@ contract('PRUF_FULL_TEST', accounts => {
         })
     })
 
-    it('Should mint a big fat meaty record in AC 10', async () => {
+    it('Should write record in AC 10 @ IDX&RGT(1)', async () => {
+        
+        console.log("Running record tests")
         return APP.$newRecord(
         '0x3531cc3dc5bb231b65d260771886cc583d8fe8fb29b457554cb1930a722a747d', 
         '0xb083f25ffc9716fa6c018e077f602f3c6d2377f0bd01917fa75c4e9ca07bee6f',
         '10',
-        '5000',
+        '100',
         {from: account2, value: 20000000000000000}
+        )
+    })
+
+    it('Should change status of new record(1) to status(1)', async () => {
+        return NP._modStatus(
+        '0x3531cc3dc5bb231b65d260771886cc583d8fe8fb29b457554cb1930a722a747d', 
+        '0xb083f25ffc9716fa6c018e077f602f3c6d2377f0bd01917fa75c4e9ca07bee6f',
+        '1',
+        {from: account2}
+        )
+    })
+
+    it('Should Transfer record(1) RGT(1) to RGT(2)', async () => {
+        return APP.$transferAsset(
+        '0x3531cc3dc5bb231b65d260771886cc583d8fe8fb29b457554cb1930a722a747d', 
+        '0xb083f25ffc9716fa6c018e077f602f3c6d2377f0bd01917fa75c4e9ca07bee6f',
+        '0x5d5d1ee487d05f715ddd883e185ff5b672bed217ac7f9ab3073b39b19762ce8b',
+        {from: account2, value: 20000000000000000}
+        )
+    })
+
+    it('Should force modify record(1) RGT(2) to RGT(1)', async () => {
+        return APP.$forceModRecord(
+        '0x3531cc3dc5bb231b65d260771886cc583d8fe8fb29b457554cb1930a722a747d', 
+        '0xb083f25ffc9716fa6c018e077f602f3c6d2377f0bd01917fa75c4e9ca07bee6f',
+        {from: account2, value: 20000000000000000}
+        )
+    })
+
+    it('Should change decrement amount @record(1) from (100) to (85)', async () => {
+        return NP._decCounter(
+        '0x3531cc3dc5bb231b65d260771886cc583d8fe8fb29b457554cb1930a722a747d', 
+        '0xb083f25ffc9716fa6c018e077f602f3c6d2377f0bd01917fa75c4e9ca07bee6f',
+        '15',
+        {from: account2}
+        )
+    })
+
+    it('Should modify Ipfs1 note @record(1) to IDX(1)', async () => {
+        return NP._modIpfs1(
+        '0x3531cc3dc5bb231b65d260771886cc583d8fe8fb29b457554cb1930a722a747d', 
+        '0xb083f25ffc9716fa6c018e077f602f3c6d2377f0bd01917fa75c4e9ca07bee6f',
+        '0x3531cc3dc5bb231b65d260771886cc583d8fe8fb29b457554cb1930a722a747d',
+        {from: account2}
+        )
+    })
+
+    it('Should add Ipfs2 note @record(1) to IDX(1)', async () => {
+        return APP.$addIpfs2Note(
+        '0x3531cc3dc5bb231b65d260771886cc583d8fe8fb29b457554cb1930a722a747d', 
+        '0xb083f25ffc9716fa6c018e077f602f3c6d2377f0bd01917fa75c4e9ca07bee6f',
+        '0x3531cc3dc5bb231b65d260771886cc583d8fe8fb29b457554cb1930a722a747d',
+        {from: account2, value: 20000000000000000}
+        )
+    })
+
+    it('Should change status of new record(1) to status(51)', async () => {
+        return NP._modStatus(
+        '0x3531cc3dc5bb231b65d260771886cc583d8fe8fb29b457554cb1930a722a747d', 
+        '0xb083f25ffc9716fa6c018e077f602f3c6d2377f0bd01917fa75c4e9ca07bee6f',
+        '51',
+        {from: account2}
+        )
+    })
+
+    it('Should export record(1) to account2', async () => {
+        return APP.exportAsset(
+        '0x3531cc3dc5bb231b65d260771886cc583d8fe8fb29b457554cb1930a722a747d', 
+        account2,
+        {from: account2}
+        )
+    })
+
+    it('Should import record(1) to AC(12)(NC)', async () => {
+        return APP_NC.$importAsset(
+        '0x3531cc3dc5bb231b65d260771886cc583d8fe8fb29b457554cb1930a722a747d',
+        '12',
+        {from: account2, value: 20000000000000000}
+        )
+    })
+
+    it('Should export record(1)(status70)', async () => {
+        return NP_NC._exportNC(
+        '0x3531cc3dc5bb231b65d260771886cc583d8fe8fb29b457554cb1930a722a747d', 
+        {from: account2}
+        )
+    })
+
+    it('Should transfer record(1) token to PRUF_APP contract', async () => {
+        return A_TKN.safeTransferFrom(
+        account2,
+        APP.address,
+        '0x3531cc3dc5bb231b65d260771886cc583d8fe8fb29b457554cb1930a722a747d',
+        {from: account2}
+        )
+    })
+
+    it('Should import record(1) to AC(11)', async () => {
+        return APP.$importAsset(
+        '0x3531cc3dc5bb231b65d260771886cc583d8fe8fb29b457554cb1930a722a747d',
+        '0xb083f25ffc9716fa6c018e077f602f3c6d2377f0bd01917fa75c4e9ca07bee6f',
+        '11',
+        {from: account2, value: 20000000000000000}
+        )
+    })
+
+    it('Should change status of new record(1) to status(1)', async () => {
+        return NP._modStatus(
+        '0x3531cc3dc5bb231b65d260771886cc583d8fe8fb29b457554cb1930a722a747d', 
+        '0xb083f25ffc9716fa6c018e077f602f3c6d2377f0bd01917fa75c4e9ca07bee6f',
+        '1',
+        {from: account2}
+        )
+    })
+
+    it('Should emit record(1)', async () => {
+        return STOR.emitRecord(
+        '0x3531cc3dc5bb231b65d260771886cc583d8fe8fb29b457554cb1930a722a747d', 
+        {from: account2}
         )
     })
 
