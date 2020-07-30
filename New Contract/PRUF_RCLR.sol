@@ -21,7 +21,7 @@ pragma solidity ^0.6.7;
 import "./PRUF_ECR_CORE.sol";
 import "./PRUF_CORE.sol";
 
-contract RCLR is ECR_CORE , CORE{
+contract RCLR is ECR_CORE, CORE {
     using SafeMath for uint256;
 
     //--------------------------------------------External Functions--------------------------

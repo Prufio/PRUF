@@ -20,9 +20,7 @@ pragma solidity ^0.6.7;
 
 import "./PRUF_ECR_CORE.sol";
 
-
 contract ECR is ECR_CORE {
-
     /*
      * @dev Verify user credentials
      * Originating Address:
@@ -155,5 +153,4 @@ contract ECR is ECR_CORE {
         escrowMGRcontract.endEscrow(_idxHash);
         //^^^^^^^interactions^^^^^^^^^
     }
-
 }

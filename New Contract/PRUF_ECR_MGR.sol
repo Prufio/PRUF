@@ -143,11 +143,7 @@ contract ECR_MGR is BASIC {
     /*
      * @dev remove an asset from escrow status
      */
-    function endEscrow(bytes32 _idxHash)
-        external
-        nonReentrant
-        whenNotPaused
-    {
+    function endEscrow(bytes32 _idxHash) external nonReentrant whenNotPaused {
         Record memory rec = getRecord(_idxHash);
         ContractDataHash memory contractInfo;
         (contractInfo.contractType, contractInfo.nameHash) = Storage

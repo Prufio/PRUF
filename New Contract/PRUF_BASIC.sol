@@ -103,9 +103,7 @@ contract BASIC is ReentrancyGuard, Ownable, IERC721Receiver, Pausable {
         onlyOwner
     {
         //^^^^^^^checks^^^^^^^^^
-        AssetClassTokenAddress = Storage.resolveContractAddress(
-            "AC_TKN"
-        );
+        AssetClassTokenAddress = Storage.resolveContractAddress("AC_TKN");
         AssetClassTokenContract = AC_TKN_Interface(AssetClassTokenAddress);
 
         AssetClassTokenManagerAddress = Storage.resolveContractAddress(

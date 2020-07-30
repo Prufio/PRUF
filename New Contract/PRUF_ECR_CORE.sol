@@ -23,8 +23,7 @@ import "./PRUF_INTERFACES.sol";
 import "./Imports/PullPayment.sol";
 import "./Imports/ReentrancyGuard.sol";
 
-
-contract ECR_CORE is BASIC{
+contract ECR_CORE is BASIC {
     using SafeMath for uint256;
     using SafeMath for uint16;
     using SafeMath for uint8;

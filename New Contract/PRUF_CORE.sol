@@ -69,8 +69,6 @@ contract CORE is PullPayment, BASIC {
         //^^^^^^^interactions^^^^^^^^^
     }
 
-
-
     //--------------------------------------------------------------------------------------Storage Writing internal functions
 
     /*
@@ -85,13 +83,20 @@ contract CORE is PullPayment, BASIC {
         uint256 tokenId = uint256(_idxHash);
         AC memory AC_info = getACinfo(_assetClass);
 
-        require (AssetTokenContract.tokenExists(tokenId) == 0, "PC:CR:Asset token already exists");
+        require(
+            AssetTokenContract.tokenExists(tokenId) == 0,
+            "PC:CR:Asset token already exists"
+        );
 
-        if (AC_info.custodyType == 1){
-            AssetTokenContract.mintAssetToken(address(this), tokenId, "pruf.io");
+        if (AC_info.custodyType == 1) {
+            AssetTokenContract.mintAssetToken(
+                address(this),
+                tokenId,
+                "pruf.io"
+            );
         }
 
-        if (AC_info.custodyType == 2){
+        if (AC_info.custodyType == 2) {
             AssetTokenContract.mintAssetToken(msg.sender, tokenId, "pruf.io");
         }
 
@@ -113,8 +118,6 @@ contract CORE is PullPayment, BASIC {
 
     //     Storage.newRecord(_idxHash, _rgtHash, _assetClass, _countDownStart);
     // }
-
-
 
     /*
      * @dev Write a Record to Storage @ idxHash

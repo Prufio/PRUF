@@ -130,5 +130,4 @@ contract ECR_NC is ECR_CORE {
         escrowMGRcontract.endEscrow(_idxHash);
         //^^^^^^^interactions^^^^^^^^^
     }
-    
 }
