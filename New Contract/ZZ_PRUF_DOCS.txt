@@ -36,7 +36,7 @@ pragma solidity ^0.6.7;
  *              address => (assetClass => type), address=>name  and name = > address for foreward and backward resolution as well as type
  *              determination by assetClass.
  *
- *
+ *      *Look into record lock functionality/require statements
  *
  *      *Above 65k segregation (probably by ACinfo custodial type) (just need to add a wild west contract?)
  *

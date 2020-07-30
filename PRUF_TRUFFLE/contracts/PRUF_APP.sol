@@ -228,7 +228,7 @@ contract APP is CORE {
             (rec.assetStatus == 1) || (rec.assetStatus == 51),
             "PA:TA:Asset status is not transferrable"
         );
-        require(rec.assetStatus < 200, "PA:TA: Record locked");
+        //require(rec.assetStatus < 200, "PA:TA: Record locked");
         require(
             rec.rightsHolder == _rgtHash,
             "PA:TA:Rightsholder does not match supplied data"
