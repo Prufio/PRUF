@@ -422,13 +422,23 @@ contract('PRUF_FULL_TEST', accounts => {
             })
     })
 
-    it('Should mint a record in AC 12', async () => {
+    it('Should mint a record in AC 11', async () => {
         return APP.$newRecord(
             '0xd531cc3dc5bb231b65d260771886cc583d8fe8fb29b457554cb1930a722a747d',
             '0xb083f25ffc9716fa6c018e077f602f3c6d2377f0bd01917fa75c4e9ca07bee6f',
-            '12',
+            '11',
             '5000',
-            { from: account2, value: 20000000000000000 }
+            { from: account3, value: 20000000000000000 }
+        )
+    })
+
+    it('Should mint another record in AC 11', async () => {
+        return APP.$newRecord(
+            '0xe531cc3dc5bb231b65d260771886cc583d8fe8fb29b457554cb1930a722a747d',
+            '0xb083f25ffc9716fa6c018e077f602f3c6d2377f0bd01917fa75c4e9ca07bee6f',
+            '11',
+            '5000',
+            { from: account3, value: 20000000000000000 }
         )
     })
 
@@ -469,6 +479,15 @@ contract('PRUF_FULL_TEST', accounts => {
             '30',
             '6',
             { from: account2 }
+        )
+    })
+    
+    it('Should add asset note to asset 0xe531', async () => {
+        return APP.$addIpfs2Note(
+            '0xe531cc3dc5bb231b65d260771886cc583d8fe8fb29b457554cb1930a722a747d',
+            '0xb083f25ffc9716fa6c018e077f602f3c6d2377f0bd01917fa75c4e9ca07bee6f',
+            '0xa083f25ffc9716fa6c018e077f602f3c6d2377f0bd01917fa75c4e9ca07bnote',
+            { from: account3, value: 20000000000000000 }
         )
     })//END SETUP
 
@@ -560,9 +579,9 @@ contract('PRUF_FULL_TEST', accounts => {
 
     it('Test not active', async () => {
         // @DEV ADD: TRANSFERRED NOT RECIEVED FAILURE CASE
-    })
+    }) //END FORCETRANSFER ASSET
     
-    //END FORCETRANSFER ASSET
+    
 
 
     // TRANSFER ASSET
@@ -634,7 +653,7 @@ contract('PRUF_FULL_TEST', accounts => {
     
     //ADD NOTE 
 
-    it('Should fail to add asset note due to due to non-custodial AC type', async () => {
+    it('Should fail to add asset note due to non-custodial AC type', async () => {
         return APP.$addIpfs2Note(
             '0xb531cc3dc5bb231b65d260771886cc583d8fe8fb29b457554cb1930a722a747d',
             '0xb083f25ffc9716fa6c018e077f602f3c6d2377f0bd01917fa75c4e9ca07bee6f',
@@ -643,14 +662,56 @@ contract('PRUF_FULL_TEST', accounts => {
         )
     })
 
-    it('Should fail to add asset note due to due to asset nonexistence', async () => {
+    it('Should fail to add asset note due to asset nonexistence', async () => {
         return APP.$addIpfs2Note(
-            '0xb531cc3dc5bb231b65d260771886cc583d8fe8fb29b457554cb1930a722a747d',
+            '0x0531cc3dc5bb231b65d260771886cc583d8fe8fb29b457554cb1930a722a747d',
             '0xb083f25ffc9716fa6c018e077f602f3c6d2377f0bd01917fa75c4e9ca07bee6f',
             '0xa083f25ffc9716fa6c018e077f602f3c6d2377f0bd01917fa75c4e9ca07bnote',
             { from: account6, value: 20000000000000000 }
         )
     })
+
+    it('Should fail to add asset note due to user ineligibility in AC', async () => {
+        return APP.$addIpfs2Note(
+            '0x3531cc3dc5bb231b65d260771886cc583d8fe8fb29b457554cb1930a722a747d',
+            '0xb083f25ffc9716fa6c018e077f602f3c6d2377f0bd01917fa75c4e9ca07bee6f',
+            '0xa083f25ffc9716fa6c018e077f602f3c6d2377f0bd01917fa75c4e9ca07bnote',
+            { from: account6, value: 20000000000000000 }
+        )
+    })
+
+    it('Should fail to add asset note due to escrow status', async () => {
+        return APP.$addIpfs2Note(
+            '0xd531cc3dc5bb231b65d260771886cc583d8fe8fb29b457554cb1930a722a747d',
+            '0xb083f25ffc9716fa6c018e077f602f3c6d2377f0bd01917fa75c4e9ca07bee6f',
+            '0xa083f25ffc9716fa6c018e077f602f3c6d2377f0bd01917fa75c4e9ca07bnote',
+            { from: account2, value: 20000000000000000 }
+        )
+    })
+
+    it('Should fail to add asset note due to rgtHash mismatch', async () => {
+        return APP.$addIpfs2Note(
+            '0x3531cc3dc5bb231b65d260771886cc583d8fe8fb29b457554cb1930a722a747d',
+            '0x0083f25ffc9716fa6c018e077f602f3c6d2377f0bd01917fa75c4e9ca07bee6f',
+            '0xa083f25ffc9716fa6c018e077f602f3c6d2377f0bd01917fa75c4e9ca07bnote',
+            { from: account2, value: 20000000000000000 }
+        )
+    })
+
+    it('Should fail to add asset note due to existing note', async () => {
+        return APP.$addIpfs2Note(
+            '0xe531cc3dc5bb231b65d260771886cc583d8fe8fb29b457554cb1930a722a747d',
+            '0xb083f25ffc9716fa6c018e077f602f3c6d2377f0bd01917fa75c4e9ca07bee6f',
+            '0xa083f25ffc9716fa6c018e077f602f3c6d2377f0bd01917fa75c4e9ca07bnote',
+            { from: account3, value: 20000000000000000 }
+        )
+    })
+
+    it('Test not active', async () => {
+        // @DEV ADD: TRANSFERRED NOT RECIEVED FAILURE CASE
+    }) //END ADD NOTE
+    
+
 
 
     it('Should change status to 1', async () => {
