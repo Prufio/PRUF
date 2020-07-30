@@ -35,8 +35,6 @@ contract AC_MGR is CORE {
     mapping(uint16 => Costs) private cost; // Cost per function by asset class
 
     mapping(uint16 => AC) internal AC_data; // AC info database asset class to AC struct (NAME,ACroot,CUSTODIAL/NC,uint256)
-    mapping(uint16 => mapping(bytes32 => uint8))
-        internal AC_AuthorizedContracts;
     mapping(string => uint16) internal AC_number; //name to asset class resolution map
 
     mapping(bytes32 => mapping(uint16 => uint8)) internal registeredUsers; // Authorized recorder database
@@ -156,23 +154,7 @@ contract AC_MGR is CORE {
         //^^^^^^^effects^^^^^^^^^
     }
 
-    /*
-     * @dev set authorizations for contracts to work within asset classes
-     */
-    function ACTH_setContracts(
-        uint16 _assetClass,
-        string memory _authorizedContractName,
-        uint8 _authorizationType
-    ) external isAdmin {
-        //^^^^^^^checks^^^^^^^^^
 
-        bytes32 authContractNameHash = keccak256(
-            abi.encodePacked(_authorizedContractName)
-        );
-
-        AC_AuthorizedContracts[_assetClass][authContractNameHash] = _authorizationType;
-        //^^^^^^^effects^^^^^^^^^
-    }
 
     //-------------------------------------------functions for information retrieval----------------------------------------------
     /*
@@ -256,16 +238,6 @@ contract AC_MGR is CORE {
         //^^^^^^^interactions^^^^^^^^^
     }
 
-    /*
-     * @dev Retrieve authorization for AC and contractNameHash combination
-     */
-    function ContractAC_auth(uint16 _assetClass, bytes32 _authContractNameHash)
-        external
-        view
-        returns (uint8)
-    {
-        return (AC_AuthorizedContracts[_assetClass][_authContractNameHash]);
-    }
 
     //-------------------------------------------functions for payment calculations----------------------------------------------
     /*

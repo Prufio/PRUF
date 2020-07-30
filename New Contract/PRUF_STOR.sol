@@ -52,6 +52,9 @@ contract STOR is Ownable, ReentrancyGuard, Pausable {
         string name; // Contract Name
     }
 
+    mapping(uint16 => mapping(bytes32 => uint8))
+        internal AC_AuthorizedContracts;
+
     mapping(address => Contracts) private contractInfo; // Authorized contract addresses, indexed by address, with auth level 0-255
     mapping(string => address) private contractNameToAddress; // Authorized contract addresses, indexed by name
     mapping(bytes32 => Record) private database; // Main Data Storage
@@ -192,6 +195,24 @@ contract STOR is Ownable, ReentrancyGuard, Pausable {
             bytes32(uint256(_contractAuthLevel))
         ); //report access to the internal user database
         //^^^^^^^interactions^^^^^^^^^
+    }
+
+        /*
+     * @dev set authorizations for contracts to work within asset classes
+     */
+    function ACTH_setContracts(
+        uint16 _assetClass,
+        string memory _authorizedContractName,
+        uint8 _authorizationType
+    ) external onlyOwner {
+        //^^^^^^^checks^^^^^^^^^
+
+        bytes32 authContractNameHash = keccak256(
+            abi.encodePacked(_authorizedContractName)
+        );
+
+        AC_AuthorizedContracts[_assetClass][authContractNameHash] = _authorizationType;
+        //^^^^^^^effects^^^^^^^^^
     }
 
     //--------------------------------External "write" contract functions / authuser---------------------------------//
@@ -624,6 +645,18 @@ contract STOR is Ownable, ReentrancyGuard, Pausable {
         return contractInfo[_addr].contractType;
         //^^^^^^^interactions^^^^^^^^^
     }
+
+    /*
+     * @dev Retrieve authorization for AC and contractNameHash combination
+     */
+    function ContractAC_auth(uint16 _assetClass, bytes32 _authContractNameHash)
+        external
+        view
+        returns (uint8)
+    {
+        return (AC_AuthorizedContracts[_assetClass][_authContractNameHash]);
+    }
+
 
     /*
      * @dev //returns the contract type of a contract with address _addr.
