@@ -25,17 +25,14 @@ pragma solidity ^0.6.7;
 
 /*-----------------------------------------------------------------
  *TO DO :
- *      *Move IPFS1 to tokenURI
+ *      *Move IPFS1 to tokenURI  ****NOPE!
  *      *"naked" token minting 
  *      *Importing naked tokens:  write app level contract for "actualizeRecord" in pruf_core
  *      *Design Json templates for IPFS1 and IPFS2
  *
- *      *Change contract authorizaton mapping in storage to an asset-class based mapping, E.G. address=>(assetClass=>uint8) 
- *              to determine if a contract is athorized to operate on a given asset class (or root asset class?)
- *              currently storage has address => (type,name) and name = > address. Proposed would change to:
- *              address => (assetClass => type), address=>name  and name = > address for foreward and backward resolution as well as type
- *              determination by assetClass.
+ *      *Change contract authorizaton mapping in AC_manager to include contracts authorized to operate in that asset class.
  *
+ *              
  *
  *
  *      *Above 65k segregation (probably by ACinfo custodial type) (just need to add a wild west contract?)

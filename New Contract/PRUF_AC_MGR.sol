@@ -21,13 +21,23 @@ pragma solidity ^0.6.7;
 
 import "./PRUF_CORE.sol";
 
+// struct AC {
+//     string name; // NameHash for assetClass
+//     uint16 assetClassRoot; // asset type root (bycyles - USA Bicycles)
+//     uint8 custodyType; // custodial or noncustodial
+//     uint256 extendedData; // Future Use
+// }
+
 contract AC_MGR is CORE {
     using SafeMath for uint256;
     using SafeMath for uint8;
 
     mapping(uint16 => Costs) private cost; // Cost per function by asset class
-    mapping(uint16 => AC) internal AC_data; // AC info database
-    mapping(string => uint16) internal AC_number;
+
+    mapping(uint16 => AC) internal AC_data; // AC info database asset class to AC struct (NAME,ACroot,CUSTODIAL/NC,uint256)
+    mapping(uint16 => mapping(bytes32 => uint8))
+        internal AC_AuthorizedContracts;
+    mapping(string => uint16) internal AC_number; //name to asset class resolution map
 
     mapping(bytes32 => mapping(uint16 => uint8)) internal registeredUsers; // Authorized recorder database
 
@@ -97,7 +107,7 @@ contract AC_MGR is CORE {
         uint16 _assetClass,
         uint16 _assetClassRoot,
         uint8 _custodyType
-    ) external whenNotPaused isAdmin {
+    ) external isAdmin {
         AC memory _ac = AC_data[_assetClassRoot];
 
         require((_tokenId != 0), "PACM:CAC: Token id cannot be 0"); //sanity check inputs
@@ -144,6 +154,38 @@ contract AC_MGR is CORE {
         cost[_class].forceModifyCost = _forceModifyCost;
         cost[_class].paymentAddress = _paymentAddress;
         //^^^^^^^effects^^^^^^^^^
+    }
+
+    /*
+     * @dev set authorizations for contracts to work within asset classes
+     */
+    function ACTH_setContracts(
+        uint16 _assetClass,
+        string memory _authorizedContractName,
+        uint8 _authorizationType
+    ) external isAdmin {
+        //^^^^^^^checks^^^^^^^^^
+
+        bytes32 authContractNameHash = keccak256(
+            abi.encodePacked(_authorizedContractName)
+        );
+
+        AC_AuthorizedContracts[_assetClass][authContractNameHash] = _authorizationType;
+        //^^^^^^^effects^^^^^^^^^
+    }
+
+    //-------------------------------------------functions for information retrieval----------------------------------------------
+    /*
+     * @dev get a User Record
+     */
+    function getUserType(bytes32 _userHash, uint16 _assetClass)
+        external
+        view
+        returns (uint8)
+    {
+        //^^^^^^^checks^^^^^^^^^
+        return (registeredUsers[_userHash][_assetClass]);
+        //^^^^^^^interactions^^^^^^^^^
     }
 
     /*
@@ -214,6 +256,18 @@ contract AC_MGR is CORE {
         //^^^^^^^interactions^^^^^^^^^
     }
 
+    /*
+     * @dev Retrieve authorization for AC and contractNameHash combination
+     */
+    function ContractAC_auth(uint16 _assetClass, bytes32 _authContractNameHash)
+        external
+        view
+        returns (uint8)
+    {
+        return (AC_AuthorizedContracts[_assetClass][_authContractNameHash]);
+    }
+
+    //-------------------------------------------functions for payment calculations----------------------------------------------
     /*
      * @dev Retrieve function costs per asset class, in Wei
      */
@@ -447,19 +501,6 @@ contract AC_MGR is CORE {
             costs.forceModifyCost,
             costs.paymentAddress
         );
-        //^^^^^^^interactions^^^^^^^^^
-    }
-
-    /*
-     * @dev Serve a User Record
-     */
-    function getUserType(bytes32 _userHash, uint16 _assetClass)
-        external
-        view
-        returns (uint8)
-    {
-        //^^^^^^^checks^^^^^^^^^
-        return (registeredUsers[_userHash][_assetClass]);
         //^^^^^^^interactions^^^^^^^^^
     }
 }
