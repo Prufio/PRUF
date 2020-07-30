@@ -47,16 +47,10 @@ contract STOR is Ownable, ReentrancyGuard, Pausable {
         uint16 numberOfTransfers; //number of transfers and forcemods
     }
 
-    struct Contracts {
-        uint8 contractType; // Auth Level / type
-        string name; // Contract Name
-    }
-
-    mapping(uint16 => mapping(bytes32 => uint8))
-        internal AC_AuthorizedContracts;
-
-    mapping(address => Contracts) private contractInfo; // Authorized contract addresses, indexed by address, with auth level 0-255
+    mapping(address => mapping(uint16 => uint8)) internal contractInfo;
+    mapping(address => string) private contractAdressToName; // Authorized contract addresses, indexed by address, with auth level 0-255
     mapping(string => address) private contractNameToAddress; // Authorized contract addresses, indexed by name
+
     mapping(bytes32 => Record) private database; // Main Data Storage
 
     address private AssetClassTokenAddress;
@@ -74,12 +68,12 @@ contract STOR is Ownable, ReentrancyGuard, Pausable {
      *      Exists in registeredUsers as a usertype 1 or 9
      *      Is authorized for asset class
      */
-    modifier isAuthorized() {
+    modifier isAuthorized(uint16 _assetClass) {
         require(
-            (contractInfo[msg.sender].contractType == 1) ||
-                (contractInfo[msg.sender].contractType == 2) ||
-                (contractInfo[msg.sender].contractType == 3) ||
-                (contractInfo[msg.sender].contractType == 4),
+            (contractInfo[msg.sender][_assetClass] == 1) ||
+                (contractInfo[msg.sender][_assetClass] == 2) ||
+                (contractInfo[msg.sender][_assetClass] == 3) ||
+                (contractInfo[msg.sender][_assetClass] == 4),
             "PS:IA:Contract not authorized or improperly permissioned"
         );
         _;
@@ -168,19 +162,20 @@ contract STOR is Ownable, ReentrancyGuard, Pausable {
     }
 
     /*
-     * @dev Authorize / Deauthorize / Authorize ADRESSES permitted to make record modifications
+     * @dev Authorize / Deauthorize / Authorize ADRESSES permitted to make record modifications, per AssetClass
      */
     function OO_addContract(
         string calldata _name,
         address _addr,
+        uint16 _assetClass,
         uint8 _contractAuthLevel
     ) external onlyOwner {
         require(_contractAuthLevel <= 4, "PS:AC: Invalid user type");
         //^^^^^^^checks^^^^^^^^^
 
-        contractInfo[_addr].contractType = _contractAuthLevel;
-        contractInfo[_addr].name = _name;
+        contractInfo[_addr][_assetClass] = _contractAuthLevel;
         contractNameToAddress[_name] = _addr;
+        contractAdressToName[_addr] = _name;
 
         AssetClassTokenContract = AC_TKN_Interface(
             contractNameToAddress["assetClassToken"]
@@ -197,24 +192,6 @@ contract STOR is Ownable, ReentrancyGuard, Pausable {
         //^^^^^^^interactions^^^^^^^^^
     }
 
-        /*
-     * @dev set authorizations for contracts to work within asset classes
-     */
-    function ACTH_setContracts(
-        uint16 _assetClass,
-        string memory _authorizedContractName,
-        uint8 _authorizationType
-    ) external onlyOwner {
-        //^^^^^^^checks^^^^^^^^^
-
-        bytes32 authContractNameHash = keccak256(
-            abi.encodePacked(_authorizedContractName)
-        );
-
-        AC_AuthorizedContracts[_assetClass][authContractNameHash] = _authorizationType;
-        //^^^^^^^effects^^^^^^^^^
-    }
-
     //--------------------------------External "write" contract functions / authuser---------------------------------//
 
     /*
@@ -225,7 +202,7 @@ contract STOR is Ownable, ReentrancyGuard, Pausable {
         bytes32 _rgtHash,
         uint16 _assetClass,
         uint256 _countDownStart
-    ) external nonReentrant whenNotPaused isAuthorized {
+    ) external nonReentrant whenNotPaused isAuthorized(_assetClass) {
         require(
             database[_idxHash].assetStatus != 60,
             "PS:NR:Asset is recycled. Use T_PRUF_APP recycle instead"
@@ -240,7 +217,7 @@ contract STOR is Ownable, ReentrancyGuard, Pausable {
 
         Record memory rec;
 
-        if (contractInfo[msg.sender].contractType == 1) {
+        if (contractInfo[msg.sender][_assetClass] == 1) {
             rec.assetStatus = 0;
         } else {
             rec.assetStatus = 51;
@@ -272,7 +249,7 @@ contract STOR is Ownable, ReentrancyGuard, Pausable {
         external
         nonReentrant
         whenNotPaused
-        isAuthorized
+        isAuthorized(database[_idxHash].assetClass)
         exists(_idxHash)
         notEscrow(_idxHash)
     {
@@ -322,7 +299,7 @@ contract STOR is Ownable, ReentrancyGuard, Pausable {
         external
         nonReentrant
         whenNotPaused
-        isAuthorized
+        isAuthorized(database[_idxHash].assetClass)
         exists(_idxHash)
         notEscrow(_idxHash)
     {
@@ -351,7 +328,7 @@ contract STOR is Ownable, ReentrancyGuard, Pausable {
     function setStolenOrLost(bytes32 _idxHash, uint8 _newAssetStatus)
         external
         nonReentrant
-        isAuthorized
+        isAuthorized(database[_idxHash].assetClass)
         whenNotPaused
         exists(_idxHash)
     {
@@ -464,7 +441,7 @@ contract STOR is Ownable, ReentrancyGuard, Pausable {
         external
         nonReentrant
         whenNotPaused
-        isAuthorized
+        isAuthorized(database[_idxHash].assetClass)
         exists(_idxHash)
         notEscrow(_idxHash)
     {
@@ -489,7 +466,7 @@ contract STOR is Ownable, ReentrancyGuard, Pausable {
         external
         nonReentrant
         whenNotPaused
-        isAuthorized
+        isAuthorized(database[_idxHash].assetClass)
         exists(_idxHash)
         notEscrow(_idxHash)
     {
@@ -514,7 +491,7 @@ contract STOR is Ownable, ReentrancyGuard, Pausable {
     function retrieveRecord(bytes32 _idxHash)
         external
         view
-        isAuthorized
+        isAuthorized(database[_idxHash].assetClass)
         returns (
             //bytes32,
             //bytes32,
@@ -641,34 +618,26 @@ contract STOR is Ownable, ReentrancyGuard, Pausable {
     /*
      * @dev //returns the contract type of a contract with address _addr.
      */
-    function ContractAuthType(address _addr) external view returns (uint8) {
-        return contractInfo[_addr].contractType;
-        //^^^^^^^interactions^^^^^^^^^
-    }
-
-    /*
-     * @dev Retrieve authorization for AC and contractNameHash combination
-     */
-    function ContractAC_auth(uint16 _assetClass, bytes32 _authContractNameHash)
+    function ContractAuthType(address _addr, uint16 _assetClass)
         external
         view
         returns (uint8)
     {
-        return (AC_AuthorizedContracts[_assetClass][_authContractNameHash]);
+        return contractInfo[_addr][_assetClass];
+        //^^^^^^^interactions^^^^^^^^^
     }
-
 
     /*
      * @dev //returns the contract type of a contract with address _addr.
      */
-    function ContractInfoHash(address _addr)
+    function ContractInfoHash(address _addr, uint16 _assetClass)
         external
         view
         returns (uint8, bytes32)
     {
         return (
-            contractInfo[_addr].contractType,
-            keccak256(abi.encodePacked(contractInfo[_addr].name))
+            contractInfo[_addr][_assetClass],
+            keccak256(abi.encodePacked(contractAdressToName[_addr]))
         );
         //^^^^^^^interactions^^^^^^^^^
     }

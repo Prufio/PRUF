@@ -233,7 +233,8 @@ contract A_TKN is Ownable, ReentrancyGuard, ERC721 {
         Record memory rec = getRecord(_idxHash);
 
         require(
-            (rec.assetStatus != 70) || (Storage.ContractAuthType(to) > 0),
+            (rec.assetStatus != 70) ||
+                (Storage.ContractAuthType(to, rec.assetClass) > 0),
             "PAT:STF:Cannot send status 70 asset to unauthorized address"
         );
         require(
@@ -287,10 +288,12 @@ contract A_TKN is Ownable, ReentrancyGuard, ERC721 {
      * burns old token
      * Sends new token to original Caller
      */
-    function reMintAssetToken(
-        address _recipientAddress,
-        uint256 tokenId
-    ) external isAdmin nonReentrant returns (uint256) {
+    function reMintAssetToken(address _recipientAddress, uint256 tokenId)
+        external
+        isAdmin
+        nonReentrant
+        returns (uint256)
+    {
         require(_exists(tokenId), "PAT:RM:Cannot Remint nonexistant token");
         //^^^^^^^checks^^^^^^^^^
         string memory tokenURI = tokenURI(tokenId);
