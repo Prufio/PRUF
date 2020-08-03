@@ -56,7 +56,6 @@ contract APP_NC is CORE {
             contractInfo.contractType > 0,
             "PNP:MS: Contract not authorized for this asset class"
         );
-
         require(
             userType == 1,
             "TPA:NR: User not authorized to create records in this asset class"
@@ -68,6 +67,7 @@ contract APP_NC is CORE {
                 (rec.assetClass == 0)),
             "TPA:NR: Cannot re-create asset in new root assetClass"
         );
+        require(rec.assetStatus < 200, "TPA:NR: Old Record locked");
         //^^^^^^^checks^^^^^^^^^
 
         //bytes32 userHash = keccak256(abi.encodePacked(msg.sender));
@@ -168,13 +168,13 @@ contract APP_NC is CORE {
                 (rec.assetStatus != 56),
             "TPA:RMT:Cannot modify asset in Escrow"
         );
-        require(rec.assetStatus < 200, "TPA:RMT:Record locked");
         require(
             (rec.assetStatus != 5) &&
                 (rec.assetStatus != 55) &&
                 (rec.assetStatus != 60),
             "TPA:RMT:Record In Transferred-unregistered or burned status"
         );
+        require(rec.assetStatus < 200, "TPA:RMT:Record locked");
         require(
             rec.rightsHolder == keccak256(abi.encodePacked(_idxHash, rawHash)),
             "TPA:RMT:Rightsholder does not match supplied data"
@@ -221,11 +221,11 @@ contract APP_NC is CORE {
                 (rec.assetStatus != 56),
             "TPA:I2:Cannot modify asset in Escrow"
         );
-        require(rec.assetStatus < 200, "TPA:I2: Record locked");
         require(
             (rec.assetStatus != 5) && (rec.assetStatus != 55),
             "TPA:I2:Record In Transferred-unregistered status"
         );
+        require(rec.assetStatus < 200, "TPA:I2: Record locked");
         require(
             rec.Ipfs2 == 0,
             "TPA:I2:Ipfs2 has data already. Overwrite not permitted"

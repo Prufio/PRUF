@@ -291,8 +291,6 @@ contract NP_NC is CORE {
                 (rec.assetStatus != 56), //If so, it must not erase the recorder, or escrow termination will be broken!
             "TPNP:DC: Cannot modify asset in Escrow"
         );
-
-        require(rec.assetStatus < 200, "TPNP:DC: Record locked");
         require(
             (rec.assetStatus != 5) && (rec.assetStatus != 55),
             "TPNP:DC: Record In Transferred-unregistered status"
@@ -301,6 +299,7 @@ contract NP_NC is CORE {
             (rec.assetStatus != 60),
             "TPNP:DC: Record is burned and must be reimported by ACadmin"
         );
+        require(rec.assetStatus < 200, "TPNP:DC: Record locked");
         //^^^^^^^checks^^^^^^^^^
 
         if (rec.countDown > _decAmount) {
@@ -342,7 +341,6 @@ contract NP_NC is CORE {
                 (rec.assetStatus != 56), //Should it be contingent on the original recorder address?
             "TPNP:MI1: Cannot modify asset in Escrow" //If so, it must not erase the recorder, or escrow termination will be broken!
         );
-        require(rec.assetStatus < 200, "TPNP:MI1: Record locked");
         require(
             (rec.assetStatus != 5) && (rec.assetStatus != 55),
             "TPNP:MI1: Record In Transferred-unregistered status"
@@ -351,6 +349,7 @@ contract NP_NC is CORE {
             (rec.assetStatus != 60),
             "TPNP:MI1: Record is burned and must be reimported by ACadmin"
         );
+        require(rec.assetStatus < 200, "TPNP:MI1: Record locked");
         //^^^^^^^checks^^^^^^^^^
 
         rec.Ipfs1 = _IpfsHash;

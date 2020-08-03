@@ -29,7 +29,7 @@ pragma solidity ^0.6.7;
  *      *Importing naked tokens:  write app level contract for "actualizeRecord" in pruf_core
  *      *Design Json templates for IPFS1 and IPFS2
  *
- *      *Audit requires for all app / np level fuctions
+ *      *Audit require ststements for all app / np level fuctions - probably too permissive.
  *
  *      *Look into asset rementants of asset locking
  *

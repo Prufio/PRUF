@@ -97,11 +97,11 @@ contract NP is CORE {
             (rec.assetStatus > 49) || (userType < 5),
             "PNP:MS: Only usertype < 5 can change status < 49"
         );
-        require(rec.assetStatus < 200, "PNP:MS: Record locked");
         require(
             rec.rightsHolder == _rgtHash,
             "PNP:MS: Rightsholder does not match supplied data"
         );
+        require(rec.assetStatus < 200, "PNP:MS: Record locked");
         //^^^^^^^checks^^^^^^^^^
 
         rec.assetStatus = _newAssetStatus;
@@ -212,11 +212,11 @@ contract NP is CORE {
             "PNP:DC: Cannot modify asset in Escrow"
         );
         require(_decAmount > 0, "PNP:DC: cannot decrement by negative number");
-        require(rec.assetStatus < 200, "PNP:DC: Record locked");
         require(
             (rec.assetStatus != 5) && (rec.assetStatus != 55),
             "PNP:DC: Record In Transferred-unregistered status"
         );
+        require(rec.assetStatus < 200, "PNP:DC: Record locked");
         require(
             rec.rightsHolder == _rgtHash,
             "PNP:DC: Rightsholder does not match supplied data"
@@ -271,11 +271,11 @@ contract NP is CORE {
                 (rec.assetStatus != 56), //Should it be contingent on the original recorder address?
             "PNP:MI1: Cannot modify asset in Escrow" //If so, it must not erase the recorder, or escrow termination will be broken!
         );
-        require(rec.assetStatus < 200, "PNP:MI1: Record locked");
         require(
             (rec.assetStatus != 5) && (rec.assetStatus != 55),
             "PNP:MI1: Record In Transferred-unregistered status"
         );
+        require(rec.assetStatus < 200, "PNP:MI1: Record locked");
         require(
             rec.rightsHolder == _rgtHash,
             "PNP:MI1: Rightsholder does not match supplied data"
