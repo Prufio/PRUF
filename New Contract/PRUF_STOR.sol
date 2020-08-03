@@ -194,10 +194,10 @@ contract STOR is Ownable, ReentrancyGuard, Pausable {
         contractAddressToName[_addr] = _name;
 
         AssetClassTokenContract = AC_TKN_Interface(
-            contractNameToAddress["assetClassToken"]
+            contractNameToAddress["AC_TKN"]
         );
         AssetClassTokenManagerContract = AC_MGR_Interface(
-            contractNameToAddress["PRUF_AC_MGR"]
+            contractNameToAddress["AC_MGR"]
         );
         //^^^^^^^effects^^^^^^^^^
 
