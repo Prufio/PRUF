@@ -52,11 +52,11 @@ contract NP is CORE {
     {
         Record memory rec = getRecord(_idxHash);
         uint8 userType = getUserType(rec.assetClass);
-        AC memory AC_info = getACinfo(rec.assetClass);
+        ContractDataHash memory contractInfo = getContractInfo(address(this),rec.assetClass);
 
         require(
-            AC_info.custodyType == 1,
-            "PNP:MS: Contract not authorized for non-custodial assets"
+            contractInfo.contractType > 0,
+            "PNP:MS: Contract not authorized for this asset class"
         );
 
         require((rec.rightsHolder != 0), "PNP:MS: Record does not exist");
@@ -115,11 +115,11 @@ contract NP is CORE {
     {
         Record memory rec = getRecord(_idxHash);
         uint8 userType = getUserType(rec.assetClass);
-        AC memory AC_info = getACinfo(rec.assetClass);
+        ContractDataHash memory contractInfo = getContractInfo(address(this),rec.assetClass);
 
         require(
-            AC_info.custodyType == 1,
-            "PNP:SLS: Contract not authorized for non-custodial assets"
+            contractInfo.contractType > 0,
+            "PNP:MS: Contract not authorized for this asset class"
         );
 
         require((rec.rightsHolder != 0), "PNP:SLS: Record does not exist");
@@ -179,11 +179,11 @@ contract NP is CORE {
     {
         Record memory rec = getRecord(_idxHash);
         uint8 userType = getUserType(rec.assetClass);
-        AC memory AC_info = getACinfo(rec.assetClass);
+        ContractDataHash memory contractInfo = getContractInfo(address(this),rec.assetClass);
 
         require(
-            AC_info.custodyType == 1,
-            "PNP:DC: Contract not authorized for non-custodial assets"
+            contractInfo.contractType > 0,
+            "PNP:MS: Contract not authorized for this asset class"
         );
 
         require((rec.rightsHolder != 0), "PNP:DC: Record does not exist");
@@ -237,11 +237,11 @@ contract NP is CORE {
     {
         Record memory rec = getRecord(_idxHash);
         uint8 userType = getUserType(rec.assetClass);
-        AC memory AC_info = getACinfo(rec.assetClass);
+        ContractDataHash memory contractInfo = getContractInfo(address(this),rec.assetClass);
 
         require(
-            AC_info.custodyType == 1,
-            "PNP:MI1 Contract not authorized for non-custodial assets"
+            contractInfo.contractType > 0,
+            "PNP:MS: Contract not authorized for this asset class"
         );
 
         require((rec.rightsHolder != 0), "PNP:MI1: Record does not exist");

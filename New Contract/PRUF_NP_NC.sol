@@ -54,11 +54,11 @@ contract NP_NC is CORE {
         returns (bytes32)
     {
         Record memory rec = getRecord(_idxHash);
-        AC memory AC_info = getACinfo(rec.assetClass);
+        ContractDataHash memory contractInfo = getContractInfo(address(this),rec.assetClass);
 
         require(
-            AC_info.custodyType == 2,
-            "TPNP:CR: Contract not authorized for custodial assets"
+            contractInfo.contractType > 0,
+            "PNP:MS: Contract not authorized for this asset class"
         );
 
         require((rec.rightsHolder != 0), "PA:FMR: Record does not exist");
@@ -105,6 +105,14 @@ contract NP_NC is CORE {
         whenNotPaused
         isAuthorized(_idxHash)
     {
+        Record memory rec = getRecord(_idxHash);
+        ContractDataHash memory contractInfo = getContractInfo(address(this),rec.assetClass);
+
+        require(
+            contractInfo.contractType > 0,
+            "PNP:MS: Contract not authorized for this asset class"
+        );
+
         _modStatus(_idxHash, 70);
     }
 
@@ -119,11 +127,11 @@ contract NP_NC is CORE {
         returns (uint8)
     {
         Record memory rec = getRecord(_idxHash);
-        AC memory AC_info = getACinfo(rec.assetClass);
+        ContractDataHash memory contractInfo = getContractInfo(address(this),rec.assetClass);
 
         require(
-            AC_info.custodyType == 2,
-            "TPNP:MS: Contract not authorized for custodial assets"
+            contractInfo.contractType > 0,
+            "PNP:MS: Contract not authorized for this asset class"
         );
 
         require((rec.rightsHolder != 0), "TPNP:MS: Record does not exist");
@@ -175,11 +183,11 @@ contract NP_NC is CORE {
         returns (uint8)
     {
         Record memory rec = getRecord(_idxHash);
-        AC memory AC_info = getACinfo(rec.assetClass);
+        ContractDataHash memory contractInfo = getContractInfo(address(this),rec.assetClass);
 
         require(
-            AC_info.custodyType == 2,
-            "TPNP:SLS: Contract not authorized for custodial assets"
+            contractInfo.contractType > 0,
+            "PNP:MS: Contract not authorized for this asset class"
         );
 
         require((rec.rightsHolder != 0), "TPNP:SLS: Record does not exist");
@@ -235,11 +243,11 @@ contract NP_NC is CORE {
         returns (uint256)
     {
         Record memory rec = getRecord(_idxHash);
-        AC memory AC_info = getACinfo(rec.assetClass);
+        ContractDataHash memory contractInfo = getContractInfo(address(this),rec.assetClass);
 
         require(
-            AC_info.custodyType == 2,
-            "TPNP:DC: Contract not authorized for custodial assets"
+            contractInfo.contractType > 0,
+            "PNP:MS: Contract not authorized for this asset class"
         );
         require(_decAmount > 0, "TPNP:DC: cannot decrement by negative number");
 
@@ -285,11 +293,11 @@ contract NP_NC is CORE {
         returns (bytes32)
     {
         Record memory rec = getRecord(_idxHash);
-        AC memory AC_info = getACinfo(rec.assetClass);
+        ContractDataHash memory contractInfo = getContractInfo(address(this),rec.assetClass);
 
         require(
-            AC_info.custodyType == 2,
-            "TPNP:MI1: Contract not authorized for custodial assets"
+            contractInfo.contractType > 0,
+            "PNP:MS: Contract not authorized for this asset class"
         );
 
         require((rec.rightsHolder != 0), "TPNP:MI1: Record does not exist");

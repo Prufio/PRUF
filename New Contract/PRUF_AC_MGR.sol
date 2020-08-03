@@ -21,13 +21,6 @@ pragma solidity ^0.6.7;
 
 import "./PRUF_CORE.sol";
 
-// struct AC {
-//     string name; // NameHash for assetClass
-//     uint16 assetClassRoot; // asset type root (bycyles - USA Bicycles)
-//     uint8 custodyType; // custodial or noncustodial
-//     uint256 extendedData; // Future Use
-// }
-
 contract AC_MGR is CORE {
     using SafeMath for uint256;
     using SafeMath for uint8;

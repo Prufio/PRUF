@@ -45,10 +45,11 @@ contract APP is CORE {
         uint8 userType = getUserType(_assetClass);
         AC memory AC_info = getACinfo(_assetClass);
         AC memory oldAC_info = getACinfo(rec.assetClass);
+        ContractDataHash memory contractInfo = getContractInfo(address(this),_assetClass);
 
         require(
-            AC_info.custodyType == 1,
-            "PA:NR: Contract not authorized for non-custodial assets"
+            contractInfo.contractType > 0,
+            "PNP:MS: Contract not authorized for this asset class"
         );
         require(
             (userType > 0) && (userType < 10),
@@ -94,11 +95,11 @@ contract APP is CORE {
         uint256 tokenId = uint256(_idxHash);
         Record memory rec = getRecord(_idxHash);
         uint8 userType = getUserType(rec.assetClass);
-        AC memory AC_info = getACinfo(rec.assetClass);
+        ContractDataHash memory contractInfo = getContractInfo(address(this),rec.assetClass);
 
         require(
-            AC_info.custodyType == 1,
-            "PNP:EA: Contract not authorized for non-custodial assets"
+            contractInfo.contractType > 0,
+            "PNP:MS: Contract not authorized for this asset class"
         );
         require(
             (userType > 0) && (userType < 10),
@@ -137,11 +138,11 @@ contract APP is CORE {
     {
         Record memory rec = getRecord(_idxHash);
         uint8 userType = getUserType(rec.assetClass);
-        AC memory AC_info = getACinfo(rec.assetClass);
+        ContractDataHash memory contractInfo = getContractInfo(address(this),rec.assetClass);
 
         require(
-            AC_info.custodyType == 1,
-            "PA:FMR: Contract not authorized for non-custodial assets"
+            contractInfo.contractType > 0,
+            "PNP:MS: Contract not authorized for this asset class"
         );
 
         require((rec.rightsHolder != 0), "PA:FMR: Record does not exist");
@@ -208,11 +209,11 @@ contract APP is CORE {
     {
         Record memory rec = getRecord(_idxHash);
         uint8 userType = getUserType(rec.assetClass);
-        AC memory AC_info = getACinfo(rec.assetClass);
+        ContractDataHash memory contractInfo = getContractInfo(address(this),rec.assetClass);
 
         require(
-            AC_info.custodyType == 1,
-            "PA:TA: Contract not authorized for non-custodial assets"
+            contractInfo.contractType > 0,
+            "PNP:MS: Contract not authorized for this asset class"
         );
         require((rec.rightsHolder != 0), "PA:TA: Record does not exist");
         require(
@@ -266,11 +267,11 @@ contract APP is CORE {
     {
         Record memory rec = getRecord(_idxHash);
         uint8 userType = getUserType(rec.assetClass);
-        AC memory AC_info = getACinfo(rec.assetClass);
+        ContractDataHash memory contractInfo = getContractInfo(address(this),rec.assetClass);
 
         require(
-            AC_info.custodyType == 1,
-            "PA:I2: Contract not authorized for non-custodial assets"
+            contractInfo.contractType > 0,
+            "PNP:MS: Contract not authorized for this asset class"
         );
         require((rec.rightsHolder != 0), "PA:I2: Record does not exist");
         require(
@@ -327,11 +328,11 @@ contract APP is CORE {
     {
         Record memory rec = getRecord(_idxHash);
         uint8 userType = getUserType(_newAssetClass);
-        AC memory AC_info = getACinfo(_newAssetClass);
+        ContractDataHash memory contractInfo = getContractInfo(address(this),rec.assetClass);
 
         require(
-            AC_info.custodyType == 1,
-            "PA:IA: Contract not authorized for non-custodial assets"
+            contractInfo.contractType > 0,
+            "PNP:MS: Contract not authorized for this asset class"
         );
         require((rec.rightsHolder != 0), "PA:IA: Record does not exist");
         require(userType < 3, "PA:IA: User not authorized to reimport assets");

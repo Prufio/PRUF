@@ -49,11 +49,11 @@ contract ECR is ECR_CORE {
         uint8 userType = getUserType(rec.assetClass);
         uint256 escrowTime = now.add(_escrowTime);
         uint8 newEscrowStatus;
-        AC memory AC_info = getACinfo(rec.assetClass);
+        ContractDataHash memory contractInfo = getContractInfo(address(this),rec.assetClass);
 
         require(
-            AC_info.custodyType == 1,
-            "PSE:SE: Contract not authorized for non-custodial assets"
+            contractInfo.contractType > 0,
+            "PNP:MS: Contract not authorized for this asset class"
         );
         require((rec.rightsHolder != 0), "SE: Record does not exist");
         require(
@@ -119,13 +119,13 @@ contract ECR is ECR_CORE {
         Record memory rec = getRecord(_idxHash);
         //Record memory shortRec = getShortRecord(_idxHash);
         escrowData memory escrow = getEscrowData(_idxHash);
+        ContractDataHash memory contractInfo = getContractInfo(address(this),rec.assetClass);
         uint8 userType = getUserType(rec.assetClass);
-        AC memory AC_info = getACinfo(rec.assetClass);
         bytes32 ownerHash = escrowMGRcontract.retrieveEscrowOwner(_idxHash);
-
+        
         require(
-            AC_info.custodyType == 1,
-            "PSE:EE: Contract not authorized for non-custodial assets"
+            contractInfo.contractType > 0,
+            "PNP:MS: Contract not authorized for this asset class"
         );
 
         require((rec.rightsHolder != 0), "EE: Record does not exist");
