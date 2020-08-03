@@ -115,53 +115,54 @@ contract('PRUF_FULL_TEST', accounts => {
 
     it('Should add contract addresses', async () => {
 
-        console.log("Adding APP to storage")
-        return STOR.OO_addContract("APP", APP.address, '1', { from: account1 })
+        console.log("Adding APP to storage for use in AC 0")
+        return STOR.OO_addContract("APP", APP.address, '0', '1', { from: account1 })
 
             .then(() => {
-                console.log("Adding NP to storage")
-                return STOR.OO_addContract("NP", NP.address, '1', { from: account1 })
+                console.log("Adding NP to storage for use in AC 0")
+                return STOR.OO_addContract("NP", NP.address, '0', '1', { from: account1 })
 
             }).then(() => {
-                console.log("Adding AC_MGR to storage")
-                return STOR.OO_addContract("AC_MGR", AC_MGR.address, '1', { from: account1 })
+                console.log("Adding AC_MGR to storage for use in AC 0")
+                return STOR.OO_addContract("AC_MGR", AC_MGR.address, '0', '1', { from: account1 })
 
             }).then(() => {
-                console.log("Adding AC_TKN to storage")
-                return STOR.OO_addContract("AC_TKN", AC_TKN.address, '1', { from: account1 })
+                console.log("Adding AC_TKN to storage for use in AC 0")
+                return STOR.OO_addContract("AC_TKN", AC_TKN.address, '0', '1', { from: account1 })
 
             }).then(() => {
-                console.log("Adding A_TKN to storage")
-                return STOR.OO_addContract("A_TKN", A_TKN.address, '1', { from: account1 })
+                console.log("Adding A_TKN to storage for use in AC 0")
+                return STOR.OO_addContract("A_TKN", A_TKN.address, '0', '1', { from: account1 })
 
             }).then(() => {
-                console.log("Adding ECR_MGR to storage")
-                return STOR.OO_addContract("ECR_MGR", ECR_MGR.address, '1', { from: account1 })
+                console.log("Adding ECR_MGR to storage for use in AC 0")
+                return STOR.OO_addContract("ECR_MGR", ECR_MGR.address, '0', '1', { from: account1 })
 
             }).then(() => {
-                console.log("Adding ECR to storage")
-                return STOR.OO_addContract("ECR", ECR.address, '3', { from: account1 })
+                console.log("Adding ECR to storage for use in AC 0")
+                return STOR.OO_addContract("ECR", ECR.address, '0', '3', { from: account1 })
 
             }).then(() => {
-                console.log("Adding APP_NC to storage")
-                return STOR.OO_addContract("APP_NC", APP_NC.address, '1', { from: account1 })
+                console.log("Adding APP_NC to storage for use in AC 0")
+                return STOR.OO_addContract("APP_NC", APP_NC.address, '0', '1', { from: account1 })
 
             }).then(() => {
-                console.log("Adding NP_NC to storage")
-                return STOR.OO_addContract("NP_NC", NP_NC.address, '1', { from: account1 })
+                console.log("Adding NP_NC to storage for use in AC 0")
+                return STOR.OO_addContract("NP_NC", NP_NC.address, '0', '1', { from: account1 })
 
             }).then(() => {
-                console.log("Adding ECR_NC to storage")
-                return STOR.OO_addContract("ECR_NC", ECR_NC.address, '3', { from: account1 })
+                console.log("Adding ECR_NC to storage for use in AC 0")
+                return STOR.OO_addContract("ECR_NC", ECR_NC.address, '0', '3', { from: account1 })
 
             }).then(() => {
-                console.log("Adding RCLR to storage")
-                return STOR.OO_addContract("RCLR", RCLR.address, '3', { from: account1 })
+                console.log("Adding RCLR to storage for use in AC 0")
+                return STOR.OO_addContract("RCLR", RCLR.address, '0', '3', { from: account1 })
 
             })
     })
 
     it('Should add Storage in each contract', async () => {
+
 
         console.log("Adding in APP")
         return APP.OO_setStorageContract(STOR.address, { from: account1 })
@@ -258,45 +259,46 @@ contract('PRUF_FULL_TEST', accounts => {
 
     it('Should mint a couple of asset root tokens', async () => {
 
-        console.log("Minting custodial root token")
+        console.log("Minting root token 1")
         return AC_MGR.createAssetClass('1', account1, 'CUSTODIAL_ROOT', '1', '1', '1', { from: account1 })
 
             .then(() => {
-                console.log("Minting non-custodial root token")
+                console.log("Minting root token 2")
                 return AC_MGR.createAssetClass('2', account1, 'NON-CUSTODIAL_ROOT', '2', '2', '2', { from: account1 })
             })
     })
 
     it("Should Mint 2 cust and 2 non-cust AC tokens in AC_ROOT 1", async () => {
-        console.log("Minting AC 10")
+        console.log("Minting AC 10 -C")
         return AC_MGR.createAssetClass("10", account1, "Custodial_AC1", "10", "1", "1", { from: account1 })
 
             .then(() => {
-                console.log("Minting AC 11")
+                console.log("Minting AC 11 -C")
                 return AC_MGR.createAssetClass("11", account1, "Custodial_AC2", "11", "1", "1", { from: account1 })
 
             }).then(() => {
-                console.log("Minting AC 12")
+                console.log("Minting AC 12 -NC")
                 return AC_MGR.createAssetClass("12", account1, "Non-Custodial_AC1", "12", "1", "2", { from: account1 })
 
             }).then(() => {
-                console.log("Minting AC 13")
+                console.log("Minting AC 13 -NC")
                 return AC_MGR.createAssetClass("13", account1, "Non-Custodial_AC2", "13", "1", "2", { from: account1 })
             })
     })
 
-    it("Should Mint 1 cust and 1 non-cust AC tokens in AC_ROOT 2", async () => {
+    it("Should Mint 2 non-cust AC tokens in AC_ROOT 2", async () => {
+        console.log("Minting AC 14 -NC")
         return AC_MGR.createAssetClass("14", account1, "Non-Custodial_AC3", "14", "2", "2", { from: account1 })
 
             .then(() => {
-                console.log("Minting AC 15")
+                console.log("Minting AC 15 -NC")
                 return AC_MGR.createAssetClass("15", account1, "Non_Custodial_AC4", "15", "2", "2", { from: account1 })
             })
     })
 
     it('Should add users to AC 10-14 in AC_Manager', async () => {
         console.log("Account2 => AC10")
-        return AC_MGR.OO_addUser(account2, '1', '10')
+        return AC_MGR.OO_addUser(account2, '1', '10', { from: account1 })
             .then(() => {
                 console.log("Account3 => AC11")
                 return AC_MGR.OO_addUser(account3, '1', '11', { from: account1 })
@@ -320,9 +322,70 @@ contract('PRUF_FULL_TEST', accounts => {
                 console.log("Account8 => AC10 (ROBOT)")
                 return AC_MGR.OO_addUser(account8, '9', '10', { from: account1 })
             }).then(() => {
-                console.log("Account8 => AC11 (ROBOT)")
+                console.log("Account9 => AC11 (ROBOT)")
                 return AC_MGR.OO_addUser(account9, '9', '11', { from: account1 })
             })
+    })
+
+    it('Should authorize APP in all relevant asset classes', async () => {
+        return STOR.enableContractForAC('APP','10', '3', {from: account1})
+        .then(()=> {
+            return STOR.enableContractForAC('APP','11', '3', {from: account1})
+        })
+    })
+
+    it('Should authorize APP_NC in all relevant asset classes', async () => {
+        return STOR.enableContractForAC('APP_NC','12', '3', {from: account1})
+        .then(()=> {
+            return STOR.enableContractForAC('APP_NC','13', '3', {from: account1})
+        }).then(()=> {
+            return STOR.enableContractForAC('APP_NC','14', '3', {from: account1})
+        })
+    })
+
+    it('Should authorize APP_NP in all relevant asset classes', async () => {
+        return STOR.enableContractForAC('NP','10', '3', {from: account1})
+        .then(()=> {
+            return STOR.enableContractForAC('NP','11', '3', {from: account1})
+        })
+    })
+
+    it('Should authorize NP_NC in all relevant asset classes', async () => {
+        return STOR.enableContractForAC('NP_NC','12', '3', {from: account1})
+        .then(()=> {
+            return STOR.enableContractForAC('NP_NC','13', '3', {from: account1})
+        }).then(()=> {
+            return STOR.enableContractForAC('NP_NC','14', '3', {from: account1})
+        })
+    })
+
+    it('Should authorize ECR in all relevant asset classes', async () => {
+        return STOR.enableContractForAC('ECR','10', '3', {from: account1})
+        .then(()=> {
+            return STOR.enableContractForAC('ECR','11', '3', {from: account1})
+        })
+    })
+
+    it('Should authorize NP_NC in all relevant asset classes', async () => {
+        return STOR.enableContractForAC('ECR_NC','12', '3', {from: account1})
+        .then(()=> {
+            return STOR.enableContractForAC('ECR_NC','13', '3', {from: account1})
+        }).then(()=> {
+            return STOR.enableContractForAC('ECR_NC','14', '3', {from: account1})
+        })
+    })
+
+    it('Should authorize ECR_MGR in all relevant asset classes', async () => {
+        return STOR.enableContractForAC('ECR_MGR','10', '3', {from: account1})
+        .then(()=> {
+            return STOR.enableContractForAC('ECR_MGR','11', '3', {from: account1})
+        }).then(()=> {
+            return STOR.enableContractForAC('ECR_MGR','12', '3', {from: account1})
+        }).then(()=> {
+            return STOR.enableContractForAC('ECR_MGR','13', '3', {from: account1})
+        }).then(()=> {
+            return STOR.enableContractForAC('ECR_MGR','14', '3', {from: account1})
+        })
     })
 
     it("Should set base costs in root tokens", async () => {
