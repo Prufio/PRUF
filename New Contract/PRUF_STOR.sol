@@ -114,6 +114,17 @@ contract STOR is Ownable, ReentrancyGuard, Pausable {
         _;
     }
 
+    // /*
+    //  * @dev Check to see if contract adress is registered to PRUF_AC_MGR
+    //  */
+    // modifier isACmanager() {
+    //     require(
+    //         msg.sender == contractNameToAddress["AC_MGR"],
+    //         "PS:IEM:Caller not AC Mgr"
+    //     );
+    //     _;
+    // }
+
     function isLostOrStolen(uint16 _assetStatus) private pure returns (uint8) {
         if (
             (_assetStatus != 3) &&
@@ -170,6 +181,11 @@ contract STOR is Ownable, ReentrancyGuard, Pausable {
         uint16 _assetClass,
         uint8 _contractAuthLevel
     ) external onlyOwner {
+        require(
+            (_assetClass == 0) || (_assetClass == 65535),
+            "PS:AC: AC not 0 or 65535"
+        );
+
         require(_contractAuthLevel <= 4, "PS:AC: Invalid user type");
         //^^^^^^^checks^^^^^^^^^
 
@@ -183,6 +199,33 @@ contract STOR is Ownable, ReentrancyGuard, Pausable {
         AssetClassTokenManagerContract = AC_MGR_Interface(
             contractNameToAddress["PRUF_AC_MGR"]
         );
+        //^^^^^^^effects^^^^^^^^^
+
+        emit REPORT(
+            "AccessContrl database access!",
+            bytes32(uint256(_contractAuthLevel))
+        ); //report access to the internal user database
+        //^^^^^^^interactions^^^^^^^^^
+    }
+
+    /*
+     * @dev Authorize / Deauthorize / Authorize contract Names permitted to make record modifications, per AssetClass
+     */
+    function enableContractForAC(
+        string calldata _name,
+        uint16 _assetClass,
+        uint8 _contractAuthLevel
+    ) external {
+        uint256 assetClass256 = uint256(_assetClass);
+        require(
+            AssetClassTokenContract.ownerOf(assetClass256) == msg.sender,
+            "PS:AC:Caller not ACtokenHolder"
+        );
+
+        //^^^^^^^checks^^^^^^^^^
+
+        contractInfo[_name][_assetClass] = _contractAuthLevel;
+
         //^^^^^^^effects^^^^^^^^^
 
         emit REPORT(
