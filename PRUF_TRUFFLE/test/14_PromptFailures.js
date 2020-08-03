@@ -144,11 +144,11 @@ contract('PRUF_FULL_TEST', accounts => {
 
             }).then(() => {
                 console.log("Adding APP_NC to storage for use in AC 0")
-                return STOR.OO_addContract("APP_NC", APP_NC.address, '0', '1', { from: account1 })
+                return STOR.OO_addContract("APP_NC", APP_NC.address, '0', '2', { from: account1 })
 
             }).then(() => {
                 console.log("Adding NP_NC to storage for use in AC 0")
-                return STOR.OO_addContract("NP_NC", NP_NC.address, '0', '1', { from: account1 })
+                return STOR.OO_addContract("NP_NC", NP_NC.address, '0', '2', { from: account1 })
 
             }).then(() => {
                 console.log("Adding ECR_NC to storage for use in AC 0")
@@ -328,6 +328,7 @@ contract('PRUF_FULL_TEST', accounts => {
     })
 
     it('Should authorize APP in all relevant asset classes', async () => {
+        console.log("Authorizing APP")
         return STOR.enableContractForAC('APP','10', '3', {from: account1})
         .then(()=> {
             return STOR.enableContractForAC('APP','11', '3', {from: account1})
@@ -335,6 +336,7 @@ contract('PRUF_FULL_TEST', accounts => {
     })
 
     it('Should authorize APP_NC in all relevant asset classes', async () => {
+        console.log("Authorizing APP_NC")
         return STOR.enableContractForAC('APP_NC','12', '3', {from: account1})
         .then(()=> {
             return STOR.enableContractForAC('APP_NC','13', '3', {from: account1})
@@ -343,7 +345,8 @@ contract('PRUF_FULL_TEST', accounts => {
         })
     })
 
-    it('Should authorize APP_NP in all relevant asset classes', async () => {
+    it('Should authorize NP in all relevant asset classes', async () => {
+        console.log("Authorizing NP")
         return STOR.enableContractForAC('NP','10', '3', {from: account1})
         .then(()=> {
             return STOR.enableContractForAC('NP','11', '3', {from: account1})
@@ -351,6 +354,7 @@ contract('PRUF_FULL_TEST', accounts => {
     })
 
     it('Should authorize NP_NC in all relevant asset classes', async () => {
+        console.log("Authorizing NP_NC")
         return STOR.enableContractForAC('NP_NC','12', '3', {from: account1})
         .then(()=> {
             return STOR.enableContractForAC('NP_NC','13', '3', {from: account1})
@@ -360,13 +364,15 @@ contract('PRUF_FULL_TEST', accounts => {
     })
 
     it('Should authorize ECR in all relevant asset classes', async () => {
+        console.log("Authorizing ECR")
         return STOR.enableContractForAC('ECR','10', '3', {from: account1})
         .then(()=> {
             return STOR.enableContractForAC('ECR','11', '3', {from: account1})
         })
     })
 
-    it('Should authorize NP_NC in all relevant asset classes', async () => {
+    it('Should authorize ECR_NC in all relevant asset classes', async () => {
+        console.log("Authorizing ECR_NC")
         return STOR.enableContractForAC('ECR_NC','12', '3', {from: account1})
         .then(()=> {
             return STOR.enableContractForAC('ECR_NC','13', '3', {from: account1})
@@ -376,6 +382,7 @@ contract('PRUF_FULL_TEST', accounts => {
     })
 
     it('Should authorize ECR_MGR in all relevant asset classes', async () => {
+        console.log("Authorizing ECR_MGR")
         return STOR.enableContractForAC('ECR_MGR','10', '3', {from: account1})
         .then(()=> {
             return STOR.enableContractForAC('ECR_MGR','11', '3', {from: account1})
@@ -385,6 +392,62 @@ contract('PRUF_FULL_TEST', accounts => {
             return STOR.enableContractForAC('ECR_MGR','13', '3', {from: account1})
         }).then(()=> {
             return STOR.enableContractForAC('ECR_MGR','14', '3', {from: account1})
+        })
+    })
+
+    it('Should authorize ECR_MGR in all relevant asset classes', async () => {
+        console.log("Authorizing AC_TKN")
+        return STOR.enableContractForAC('AC_TKN','10', '3', {from: account1})
+        .then(()=> {
+            return STOR.enableContractForAC('AC_TKN','11', '3', {from: account1})
+        }).then(()=> {
+            return STOR.enableContractForAC('AC_TKN','12', '3', {from: account1})
+        }).then(()=> {
+            return STOR.enableContractForAC('AC_TKN','13', '3', {from: account1})
+        }).then(()=> {
+            return STOR.enableContractForAC('AC_TKN','14', '3', {from: account1})
+        })
+    })
+
+    it('Should authorize A_TKN in all relevant asset classes', async () => {
+        console.log("Authorizing A_TKN")
+        return STOR.enableContractForAC('A_TKN','10', '3', {from: account1})
+        .then(()=> {
+            return STOR.enableContractForAC('A_TKN','11', '3', {from: account1})
+        }).then(()=> {
+            return STOR.enableContractForAC('A_TKN','12', '3', {from: account1})
+        }).then(()=> {
+            return STOR.enableContractForAC('A_TKN','13', '3', {from: account1})
+        }).then(()=> {
+            return STOR.enableContractForAC('A_TKN','14', '3', {from: account1})
+        })
+    })
+
+    it('Should authorize AC_MGR in all relevant asset classes', async () => {
+        console.log("Authorizing AC_MGR")
+        return STOR.enableContractForAC('AC_MGR','10', '3', {from: account1})
+        .then(()=> {
+            return STOR.enableContractForAC('AC_MGR','11', '3', {from: account1})
+        }).then(()=> {
+            return STOR.enableContractForAC('AC_MGR','12', '3', {from: account1})
+        }).then(()=> {
+            return STOR.enableContractForAC('AC_MGR','13', '3', {from: account1})
+        }).then(()=> {
+            return STOR.enableContractForAC('AC_MGR','14', '3', {from: account1})
+        })
+    })
+
+    it('Should authorize RCLR in all relevant asset classes', async () => {
+        console.log("Authorizing RCLR")
+        return STOR.enableContractForAC('RCLR','10', '3', {from: account1})
+        .then(()=> {
+            return STOR.enableContractForAC('RCLR','11', '3', {from: account1})
+        }).then(()=> {
+            return STOR.enableContractForAC('RCLR','12', '3', {from: account1})
+        }).then(()=> {
+            return STOR.enableContractForAC('RCLR','13', '3', {from: account1})
+        }).then(()=> {
+            return STOR.enableContractForAC('RCLR','14', '3', {from: account1})
         })
     })
 
@@ -599,7 +662,7 @@ contract('PRUF_FULL_TEST', accounts => {
         )
     })
     
-    it('Should export asset 0xf531 to addr 0x3eD3C8bd961092325415C36ddC20D794e98156CB in AC13', async () => {
+    it('Should export asset 0xf531 to account5 in AC13', async () => {
         return APP.exportAsset(
             '0xf531cc3dc5bb231b65d260771886cc583d8fe8fb29b457554cb1930a722a747d',
             account5,

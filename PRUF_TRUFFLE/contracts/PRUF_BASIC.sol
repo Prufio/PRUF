@@ -26,9 +26,7 @@ import "./_ERC721/IERC721Receiver.sol";
 
 contract BASIC is ReentrancyGuard, Ownable, IERC721Receiver, Pausable {
     struct Record {
-        //bytes32 recorder; // Address hash of recorder
         bytes32 rightsHolder; // KEK256 Registered owner
-        //bytes32 lastRecorder; // Address hash of last non-automation recorder
         uint8 assetStatus; // Status - Transferrable, locked, in transfer, stolen, lost, etc.
         uint8 forceModCount; // Number of times asset has been forceModded.
         uint16 assetClass; // Type of asset
@@ -36,14 +34,8 @@ contract BASIC is ReentrancyGuard, Ownable, IERC721Receiver, Pausable {
         uint256 countDownStart; // Starting point for countdown variable (set once)
         bytes32 Ipfs1; // Publically viewable asset description
         bytes32 Ipfs2; // Publically viewable immutable notes
-        //uint256 timeLock; // Time sensitive mutex
         uint16 numberOfTransfers; //number of transfers and forcemods
     }
-    // struct User {
-    //     uint8 userType; // User type: 1 = human, 9 = automated
-    //     mapping (uint16 => uint8) authorized;
-    //     //uint16 authorizedAssetClass; // Asset class in which user is permitted to transact
-    // }
 
     struct AC {
         string name; // NameHash for assetClass
@@ -56,19 +48,6 @@ contract BASIC is ReentrancyGuard, Ownable, IERC721Receiver, Pausable {
         uint8 contractType; // Auth Level / type
         bytes32 nameHash; // Contract Name hashed
     }
-
-    struct escrowData {
-        uint8 data;
-        bytes32 controllingContractNameHash;
-        bytes32 escrowOwnerAddressHash;
-        uint256 timelock;
-        bytes32 ex1;
-        bytes32 ex2;
-        address addr1;
-        address addr2;
-    }
-
-    //mapping(bytes32 => User) internal registeredUsers; // Authorized recorder database
 
     address internal storageAddress;
     STOR_Interface internal Storage; // Set up external contract interface
@@ -105,7 +84,6 @@ contract BASIC is ReentrancyGuard, Ownable, IERC721Receiver, Pausable {
      * ----OR---- (comment out part that will not be used)
      *      holds asset token
      */
-
     modifier isAuthorized(bytes32 _idxHash) virtual {
         require(
             _idxHash == 0, //function should always be overridden
@@ -125,9 +103,7 @@ contract BASIC is ReentrancyGuard, Ownable, IERC721Receiver, Pausable {
         onlyOwner
     {
         //^^^^^^^checks^^^^^^^^^
-        AssetClassTokenAddress = Storage.resolveContractAddress(
-            "AC_TKN"
-        );
+        AssetClassTokenAddress = Storage.resolveContractAddress("AC_TKN");
         AssetClassTokenContract = AC_TKN_Interface(AssetClassTokenAddress);
 
         AssetClassTokenManagerAddress = Storage.resolveContractAddress(
@@ -264,13 +240,15 @@ contract BASIC is ReentrancyGuard, Ownable, IERC721Receiver, Pausable {
         //^^^^^^^interactions^^^^^^^^^
     }
 
-    function getContractInfo(address _addr)
+
+
+    function getContractInfo(address _addr, uint16 _assetClass)
         internal
         returns (ContractDataHash memory)
     {
         ContractDataHash memory contractInfo;
         (contractInfo.contractType, contractInfo.nameHash) = Storage
-            .ContractInfoHash(_addr);
+            .ContractInfoHash(_addr, _assetClass);
         return contractInfo;
         //^^^^^^^checks/interactions^^^^^^^^^
     }

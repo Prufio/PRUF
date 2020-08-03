@@ -50,14 +50,15 @@ contract APP_NC is CORE {
         uint8 userType = getUserType(_assetClass);
         AC memory AC_info = getACinfo(_assetClass);
         AC memory oldAC_info = getACinfo(rec.assetClass);
+        ContractDataHash memory contractInfo = getContractInfo(address(this),rec.assetClass);
 
+        require(
+            contractInfo.contractType > 0,
+            "PNP:MS: Contract not authorized for this asset class"
+        );
         require(
             userType == 1,
             "TPA:NR: User not authorized to create records in this asset class"
-        );
-        require(
-            AC_info.custodyType == 2,
-            "TPA:NR: Contract not authorized for custodial assets"
         );
         require(_rgtHash != 0, "PA:NR: rights holder cannot be zero");
         require(_assetClass != 0, "PA:NR: Asset class cannot be zero");
@@ -66,6 +67,7 @@ contract APP_NC is CORE {
                 (rec.assetClass == 0)),
             "TPA:NR: Cannot re-create asset in new root assetClass"
         );
+        require(rec.assetStatus < 200, "TPA:NR: Old Record locked");
         //^^^^^^^checks^^^^^^^^^
 
         //bytes32 userHash = keccak256(abi.encodePacked(msg.sender));
@@ -105,11 +107,11 @@ contract APP_NC is CORE {
         isAuthorized(_idxHash)
     {
         Record memory rec = getRecord(_idxHash);
-        AC memory AC_info = getACinfo(_newAssetClass);
+        ContractDataHash memory contractInfo = getContractInfo(address(this),rec.assetClass);
 
         require(
-            AC_info.custodyType == 2,
-            "TPA:IA: Contract not authorized for custodial assets"
+            contractInfo.contractType > 0,
+            "PNP:MS: Contract not authorized for this asset class"
         );
         require(
             AssetClassTokenManagerContract.isSameRootAC(
@@ -140,15 +142,15 @@ contract APP_NC is CORE {
         string memory secret
     ) external payable nonReentrant whenNotPaused returns (uint256) {
         Record memory rec = getRecord(_idxHash);
-        AC memory AC_info = getACinfo(rec.assetClass);
+        ContractDataHash memory contractInfo = getContractInfo(address(this),rec.assetClass);
         uint256 tokenId = uint256(_idxHash);
         bytes32 rawHash = keccak256(
             abi.encodePacked(first, middle, last, id, secret)
         );
 
         require(
-            AC_info.custodyType == 2,
-            "TPA:RMT:Contract not authorized for custodial assets"
+            contractInfo.contractType > 0,
+            "PNP:MS: Contract not authorized for this asset class"
         );
         require(rec.rightsHolder != 0, "TPA:RMT:Record does not exist");
         require(
@@ -166,13 +168,13 @@ contract APP_NC is CORE {
                 (rec.assetStatus != 56),
             "TPA:RMT:Cannot modify asset in Escrow"
         );
-        require(rec.assetStatus < 200, "TPA:RMT:Record locked");
         require(
             (rec.assetStatus != 5) &&
                 (rec.assetStatus != 55) &&
                 (rec.assetStatus != 60),
             "TPA:RMT:Record In Transferred-unregistered or burned status"
         );
+        require(rec.assetStatus < 200, "TPA:RMT:Record locked");
         require(
             rec.rightsHolder == keccak256(abi.encodePacked(_idxHash, rawHash)),
             "TPA:RMT:Rightsholder does not match supplied data"
@@ -202,11 +204,11 @@ contract APP_NC is CORE {
         returns (bytes32)
     {
         Record memory rec = getRecord(_idxHash);
-        AC memory AC_info = getACinfo(rec.assetClass);
+        ContractDataHash memory contractInfo = getContractInfo(address(this),rec.assetClass);
 
         require(
-            AC_info.custodyType == 2,
-            "TPA:I2:Contract not authorized for custodial assets"
+            contractInfo.contractType > 0,
+            "PNP:MS: Contract not authorized for this asset class"
         );
         require((rec.rightsHolder != 0), "PA:I2: Record does not exist");
         require(
@@ -219,11 +221,11 @@ contract APP_NC is CORE {
                 (rec.assetStatus != 56),
             "TPA:I2:Cannot modify asset in Escrow"
         );
-        require(rec.assetStatus < 200, "TPA:I2: Record locked");
         require(
             (rec.assetStatus != 5) && (rec.assetStatus != 55),
             "TPA:I2:Record In Transferred-unregistered status"
         );
+        require(rec.assetStatus < 200, "TPA:I2: Record locked");
         require(
             rec.Ipfs2 == 0,
             "TPA:I2:Ipfs2 has data already. Overwrite not permitted"

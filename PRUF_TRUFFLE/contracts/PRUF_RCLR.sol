@@ -18,9 +18,10 @@ __/\\\\\\\\\\\\\ _____/\\\\\\\\\ _______/\\../\\ ___/\\\\\\\\\\\\\\\
 // SPDX-License-Identifier: UNLICENSED
 pragma solidity ^0.6.7;
 
+import "./PRUF_ECR_CORE.sol";
 import "./PRUF_CORE.sol";
 
-contract RCLR is CORE {
+contract RCLR is ECR_CORE, CORE {
     using SafeMath for uint256;
 
     //--------------------------------------------External Functions--------------------------
@@ -76,10 +77,11 @@ contract RCLR is CORE {
         Record memory rec = getRecord(_idxHash);
         AC memory AC_info = getACinfo(_assetClass);
         AC memory oldAC_info = getACinfo(rec.assetClass);
+        ContractDataHash memory contractInfo = getContractInfo(address(this),rec.assetClass);
 
         require(
-            AC_info.custodyType == 2,
-            "PR:R:Contract not authorized for custodial assets"
+            contractInfo.contractType > 0,
+            "PNP:MS: Contract not authorized for this asset class"
         );
         require(_rgtHash != 0, "PR:R:Rights holder cannot be zero");
         require(_assetClass != 0, "PR:R:Asset class cannot be zero");

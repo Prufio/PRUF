@@ -26,8 +26,9 @@ contract AC_MGR is CORE {
     using SafeMath for uint8;
 
     mapping(uint16 => Costs) private cost; // Cost per function by asset class
-    mapping(uint16 => AC) internal AC_data; // AC info database
-    mapping(string => uint16) internal AC_number;
+
+    mapping(uint16 => AC) internal AC_data; // AC info database asset class to AC struct (NAME,ACroot,CUSTODIAL/NC,uint256)
+    mapping(string => uint16) internal AC_number; //name to asset class resolution map
 
     mapping(bytes32 => mapping(uint16 => uint8)) internal registeredUsers; // Authorized recorder database
 
@@ -97,7 +98,7 @@ contract AC_MGR is CORE {
         uint16 _assetClass,
         uint16 _assetClassRoot,
         uint8 _custodyType
-    ) external whenNotPaused isAdmin {
+    ) external isAdmin {
         AC memory _ac = AC_data[_assetClassRoot];
 
         require((_tokenId != 0), "PACM:CAC: Token id cannot be 0"); //sanity check inputs
@@ -144,6 +145,22 @@ contract AC_MGR is CORE {
         cost[_class].forceModifyCost = _forceModifyCost;
         cost[_class].paymentAddress = _paymentAddress;
         //^^^^^^^effects^^^^^^^^^
+    }
+
+
+
+    //-------------------------------------------functions for information retrieval----------------------------------------------
+    /*
+     * @dev get a User Record
+     */
+    function getUserType(bytes32 _userHash, uint16 _assetClass)
+        external
+        view
+        returns (uint8)
+    {
+        //^^^^^^^checks^^^^^^^^^
+        return (registeredUsers[_userHash][_assetClass]);
+        //^^^^^^^interactions^^^^^^^^^
     }
 
     /*
@@ -214,6 +231,8 @@ contract AC_MGR is CORE {
         //^^^^^^^interactions^^^^^^^^^
     }
 
+
+    //-------------------------------------------functions for payment calculations----------------------------------------------
     /*
      * @dev Retrieve function costs per asset class, in Wei
      */
@@ -447,19 +466,6 @@ contract AC_MGR is CORE {
             costs.forceModifyCost,
             costs.paymentAddress
         );
-        //^^^^^^^interactions^^^^^^^^^
-    }
-
-    /*
-     * @dev Serve a User Record
-     */
-    function getUserType(bytes32 _userHash, uint16 _assetClass)
-        external
-        view
-        returns (uint8)
-    {
-        //^^^^^^^checks^^^^^^^^^
-        return (registeredUsers[_userHash][_assetClass]);
         //^^^^^^^interactions^^^^^^^^^
     }
 }
