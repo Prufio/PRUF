@@ -29,6 +29,7 @@ pragma solidity ^0.6.7;
  *      *Importing naked tokens:  write app level contract for "actualizeRecord" in pruf_core
  *      *Design Json templates for IPFS1 and IPFS2
  *
+ *      *Audit requires for all app / np level fuctions
  *
  *      *Look into asset rementants of asset locking
  *
@@ -190,7 +191,7 @@ pragma solidity ^0.6.7;
  * 58 = out of locked escrow
  * 59 = Discardable
  * 60 = Recyclable (can only be reimported by an ACAdmin)
- * 70 = Recycled
+ * 70 = Importable
  *
 *-----------------------------------------------------------------
 
