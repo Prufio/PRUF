@@ -108,7 +108,7 @@ contract STOR is Ownable, ReentrancyGuard, Pausable {
      */
     modifier isEscrowManager() {
         require(
-            msg.sender == contractNameToAddress["ECR_STOR"],
+            msg.sender == contractNameToAddress["ECR_MGR"],
             "PS:IEM:Caller not escrowMgr"
         );
         _;
