@@ -25,26 +25,18 @@ pragma solidity ^0.6.7;
 
 /*-----------------------------------------------------------------
  *TO DO :
- *      *Move IPFS1 to tokenURI  ****NOPE!
  *      *"naked" token minting 
  *      *Importing naked tokens:  write app level contract for "actualizeRecord" in pruf_core
  *      *Design Json templates for IPFS1 and IPFS2
  *
- *      *Change contract authorizaton mapping in AC_manager to include contracts authorized to operate in that asset class.
+ *      *Audit require ststements for all app / np level fuctions - probably too permissive.
  *
  *      *Look into asset rementants of asset locking
- *
- *      *Do not allow status change to escrow statuses(6....), or transferred status 5
- *
- *      *Add status 5 case in transferAsset
- *
- *      *Redundancies regarding non-custodial checks vs. isAuth in PRUF_APP 
  *
  *      *Look into record lock functionality/require statements
  *
  *      *Above 65k segregation (probably by ACinfo custodial type) (just need to add a wild west contract?)
  *      
- *      *allow assetClass holders to designate contracts that can interact with their AC
  *
 *-----------------------------------------------------------------
 
@@ -143,7 +135,7 @@ pragma solidity ^0.6.7;
  *  NP
  *  ECR
  *  AC_MGR
- *  AC_MNT
+ *  AC_MNT ? is this still a thing?
  *  APP_NC
  *  NP_NC
  *  ECR_NC
@@ -197,6 +189,7 @@ pragma solidity ^0.6.7;
  * 58 = out of locked escrow
  * 59 = Discardable
  * 60 = Recyclable (can only be reimported by an ACAdmin)
+ * 70 = Importable
  *
 *-----------------------------------------------------------------
 

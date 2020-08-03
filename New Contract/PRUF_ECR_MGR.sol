@@ -113,6 +113,7 @@ contract ECR_MGR is BASIC {
             isEscrow(rec.assetStatus) == 0,
             "PEM:SE: Asset already in escrow status."
         );
+        require(rec.assetStatus < 200, "TPA:NR: Record locked");
         //^^^^^^^checks^^^^^^^^^
 
         escrows[_idxHash].data = 0; //initialize escrow data

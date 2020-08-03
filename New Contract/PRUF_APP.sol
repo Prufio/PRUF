@@ -57,7 +57,7 @@ contract APP is CORE {
         );
         require(userType < 5, "PA:NR: User not authorized to create records");
         require(_rgtHash != 0, "PA:NR: rights holder cannot be zero");
-
+        require(rec.assetStatus < 200, "TPA:NR: Old Record locked");
         //^^^^^^^checks^^^^^^^^^
 
         //bytes32 userHash = keccak256(abi.encodePacked(msg.sender));
@@ -224,12 +224,10 @@ contract APP is CORE {
             (rec.assetStatus > 49) || (userType < 5),
             "PA:TA:Only usertype < 5 can change status < 50"
         );
-        require(_newrgtHash != 0, "PA:TA:new Rightsholder cannot be blank");
         require(
             (rec.assetStatus == 1) || (rec.assetStatus == 51),
             "PA:TA:Asset status is not transferrable"
         );
-        require(rec.assetStatus < 200, "PA:TA: Record locked");
         require(
             rec.rightsHolder == _rgtHash,
             "PA:TA:Rightsholder does not match supplied data"
@@ -237,6 +235,10 @@ contract APP is CORE {
         //^^^^^^^checks^^^^^^^^^
         if (rec.numberOfTransfers < 65335) {
             rec.numberOfTransfers++;
+        }
+
+        if(_newrgtHash == 0x0){ //set to transferred status
+            rec.assetStatus = 5;
         }
 
         rec.rightsHolder = _newrgtHash;
@@ -354,7 +356,6 @@ contract APP is CORE {
                 (rec.assetStatus == 70),
             "PA:IA: Only Transferred or exported assets can be reimported"
         );
-        require(rec.assetStatus < 200, "PA:IA: Record locked");
         //^^^^^^^checks^^^^^^^^^
 
         if (rec.forceModCount < 255) {
