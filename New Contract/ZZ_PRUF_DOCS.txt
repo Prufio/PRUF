@@ -102,6 +102,13 @@ pragma solidity ^0.6.7;
 *-----------------------------------------------------------------
 
 *-----------------------------------------------------------------
+ * NOTES 
+ * All assetclasses in the same root should use the same data structure to generate the idxHash. Other structures 
+ *     will result in a nonconforming "hidden" asset only findable in its own web interface, and not AC transportable.
+ * When upgrading a contract, all authorized asset classes will have to be added to the new conract entry.
+*-----------------------------------------------------------------
+
+*-----------------------------------------------------------------
  * IMPORTANT NOTE : DO NOT REMOVE FROM CODE:
  *      Verification of rgtHash in curated, custodial asset classes are not secure beyond the honorable intentions
  * of authorized recorders. All blockchain info is readable, so a bad actor could trivially obtain a copy of the

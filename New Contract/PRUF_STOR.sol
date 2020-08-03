@@ -47,8 +47,8 @@ contract STOR is Ownable, ReentrancyGuard, Pausable {
         uint16 numberOfTransfers; //number of transfers and forcemods
     }
 
-    mapping(address => mapping(uint16 => uint8)) internal contractInfo;
-    mapping(address => string) private contractAdressToName; // Authorized contract addresses, indexed by address, with auth level 0-255
+    mapping(string => mapping(uint16 => uint8)) internal contractInfo;
+    mapping(address => string) private contractAddressToName; // Authorized contract addresses, indexed by address, with auth level 0-255
     mapping(string => address) private contractNameToAddress; // Authorized contract addresses, indexed by name
 
     mapping(bytes32 => Record) private database; // Main Data Storage
@@ -70,10 +70,10 @@ contract STOR is Ownable, ReentrancyGuard, Pausable {
      */
     modifier isAuthorized(uint16 _assetClass) {
         require(
-            (contractInfo[msg.sender][_assetClass] == 1) ||
-                (contractInfo[msg.sender][_assetClass] == 2) ||
-                (contractInfo[msg.sender][_assetClass] == 3) ||
-                (contractInfo[msg.sender][_assetClass] == 4),
+            (contractInfo[contractAddressToName[msg.sender]][_assetClass] == 1) ||
+                (contractInfo[contractAddressToName[msg.sender]][_assetClass] == 2) ||
+                (contractInfo[contractAddressToName[msg.sender]][_assetClass] == 3) ||
+                (contractInfo[contractAddressToName[msg.sender]][_assetClass] == 4),
             "PS:IA:Contract not authorized or improperly permissioned"
         );
         _;
@@ -173,9 +173,9 @@ contract STOR is Ownable, ReentrancyGuard, Pausable {
         require(_contractAuthLevel <= 4, "PS:AC: Invalid user type");
         //^^^^^^^checks^^^^^^^^^
 
-        contractInfo[_addr][_assetClass] = _contractAuthLevel;
+        contractInfo[contractAddressToName[_addr]][_assetClass] = _contractAuthLevel;
         contractNameToAddress[_name] = _addr;
-        contractAdressToName[_addr] = _name;
+        contractAddressToName[_addr] = _name;
 
         AssetClassTokenContract = AC_TKN_Interface(
             contractNameToAddress["assetClassToken"]
@@ -217,7 +217,7 @@ contract STOR is Ownable, ReentrancyGuard, Pausable {
 
         Record memory rec;
 
-        if (contractInfo[msg.sender][_assetClass] == 1) {
+        if (contractInfo[contractAddressToName[msg.sender]][_assetClass] == 1) {
             rec.assetStatus = 0;
         } else {
             rec.assetStatus = 51;
@@ -623,7 +623,7 @@ contract STOR is Ownable, ReentrancyGuard, Pausable {
         view
         returns (uint8)
     {
-        return contractInfo[_addr][_assetClass];
+        return contractInfo[contractAddressToName[_addr]][_assetClass];
         //^^^^^^^interactions^^^^^^^^^
     }
 
@@ -636,8 +636,8 @@ contract STOR is Ownable, ReentrancyGuard, Pausable {
         returns (uint8, bytes32)
     {
         return (
-            contractInfo[_addr][_assetClass],
-            keccak256(abi.encodePacked(contractAdressToName[_addr]))
+            contractInfo[contractAddressToName[_addr]][_assetClass],
+            keccak256(abi.encodePacked(contractAddressToName[_addr]))
         );
         //^^^^^^^interactions^^^^^^^^^
     }
