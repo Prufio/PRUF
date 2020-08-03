@@ -173,7 +173,7 @@ contract STOR is Ownable, ReentrancyGuard, Pausable {
         require(_contractAuthLevel <= 4, "PS:AC: Invalid user type");
         //^^^^^^^checks^^^^^^^^^
 
-        contractInfo[contractAddressToName[_addr]][_assetClass] = _contractAuthLevel;
+        contractInfo[_name][_assetClass] = _contractAuthLevel;
         contractNameToAddress[_name] = _addr;
         contractAddressToName[_addr] = _name;
 
