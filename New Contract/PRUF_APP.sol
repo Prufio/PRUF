@@ -224,7 +224,6 @@ contract APP is CORE {
             (rec.assetStatus > 49) || (userType < 5),
             "PA:TA:Only usertype < 5 can change status < 50"
         );
-        require(_newrgtHash != 0, "PA:TA:new Rightsholder cannot be blank");
         require(
             (rec.assetStatus == 1) || (rec.assetStatus == 51),
             "PA:TA:Asset status is not transferrable"
@@ -237,6 +236,10 @@ contract APP is CORE {
         //^^^^^^^checks^^^^^^^^^
         if (rec.numberOfTransfers < 65335) {
             rec.numberOfTransfers++;
+        }
+
+        if(_newrgtHash == 0x0){ //set to transferred status
+            rec.assetStatus = 5;
         }
 
         rec.rightsHolder = _newrgtHash;

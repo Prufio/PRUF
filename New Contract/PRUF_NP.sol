@@ -55,16 +55,30 @@ contract NP is CORE {
         ContractDataHash memory contractInfo = getContractInfo(address(this),rec.assetClass);
 
         require(
-            contractInfo.contractType > 0,
+             contractInfo.contractType > 0,
             "PNP:MS: Contract not authorized for this asset class"
         );
-
         require((rec.rightsHolder != 0), "PNP:MS: Record does not exist");
         require(
             (userType > 0) && (userType < 10),
             "PNP:MS: User not authorized to modify records in specified asset class"
         );
-        require(_newAssetStatus < 100, "PNP:MS: user cannot set status > 99");
+
+        require((_newAssetStatus < 100) &&
+                (_newAssetStatus != 3) &&
+                (_newAssetStatus != 4) &&
+                (_newAssetStatus != 5) &&
+                (_newAssetStatus != 6) &&
+                (_newAssetStatus != 7) &&
+                (_newAssetStatus != 50) &&
+                (_newAssetStatus != 53) &&
+                (_newAssetStatus != 54) &&
+                (_newAssetStatus != 55) &&
+                (_newAssetStatus != 56) &&
+                (_newAssetStatus != 57) &&
+                (_newAssetStatus != 58),
+                "PNP:MS: Specified Status is reserved."
+        );
         require(
             _newAssetStatus != 70,
             "PNP:MS: Use pruf_app.exportAsset to export custodial assets"
