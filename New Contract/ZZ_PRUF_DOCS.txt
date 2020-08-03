@@ -33,8 +33,6 @@ pragma solidity ^0.6.7;
  *
  *      *Look into asset rementants of asset locking
  *
- *      *Do not allow status change to escrow statuses(6....), or transferred status 5
- *
  *      *Look into record lock functionality/require statements
  *
  *      *Above 65k segregation (probably by ACinfo custodial type) (just need to add a wild west contract?)
