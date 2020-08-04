@@ -56,8 +56,8 @@ contract STOR is Ownable, ReentrancyGuard, Pausable {
     address private AC_TKN_Address;
     AC_TKN_Interface private AC_TKN; //erc721_token prototype initialization
 
-    address internal AssetClassTokenManagerAddress;
-    AC_MGR_Interface internal AssetClassTokenManagerContract; // Set up external contract interface
+    address internal AC_MGR_Address;
+    AC_MGR_Interface internal AC_MGR; // Set up external contract interface
 
     //----------------------------------------------Modifiers----------------------------------------------//
 
@@ -70,10 +70,14 @@ contract STOR is Ownable, ReentrancyGuard, Pausable {
      */
     modifier isAuthorized(uint16 _assetClass) {
         require(
-            (contractInfo[contractAddressToName[msg.sender]][_assetClass] == 1) ||
-                (contractInfo[contractAddressToName[msg.sender]][_assetClass] == 2) ||
-                (contractInfo[contractAddressToName[msg.sender]][_assetClass] == 3) ||
-                (contractInfo[contractAddressToName[msg.sender]][_assetClass] == 4),
+            (contractInfo[contractAddressToName[msg.sender]][_assetClass] ==
+                1) ||
+                (contractInfo[contractAddressToName[msg.sender]][_assetClass] ==
+                    2) ||
+                (contractInfo[contractAddressToName[msg.sender]][_assetClass] ==
+                    3) ||
+                (contractInfo[contractAddressToName[msg.sender]][_assetClass] ==
+                    4),
             "PS:IA:Contract not authorized or improperly permissioned"
         );
         _;
@@ -193,12 +197,8 @@ contract STOR is Ownable, ReentrancyGuard, Pausable {
         contractNameToAddress[_name] = _addr;
         contractAddressToName[_addr] = _name;
 
-        AC_TKN = AC_TKN_Interface(
-            contractNameToAddress["AC_TKN"]
-        );
-        AssetClassTokenManagerContract = AC_MGR_Interface(
-            contractNameToAddress["AC_MGR"]
-        );
+        AC_TKN = AC_TKN_Interface(contractNameToAddress["AC_TKN"]);
+        AC_MGR = AC_MGR_Interface(contractNameToAddress["AC_MGR"]);
         //^^^^^^^effects^^^^^^^^^
 
         emit REPORT(
@@ -318,10 +318,7 @@ contract STOR is Ownable, ReentrancyGuard, Pausable {
             isLostOrStolen(_newAssetStatus) == 0,
             "PS:MR:Must use stolenOrLost to set lost or stolen status"
         );
-        require(
-            database[idxHash].assetStatus < 200,
-            "PS:MR:RECORD LOCKED"
-        );
+        require(database[idxHash].assetStatus < 200, "PS:MR:RECORD LOCKED");
         //^^^^^^^checks^^^^^^^^^
 
         Record memory rec = database[_idxHash];
@@ -352,16 +349,10 @@ contract STOR is Ownable, ReentrancyGuard, Pausable {
         Record memory rec = database[_idxHash];
 
         require(
-            AssetClassTokenManagerContract.isSameRootAC(
-                _newAssetClass,
-                rec.assetClass
-            ) == 170,
+            AC_MGR.isSameRootAC(_newAssetClass, rec.assetClass) == 170,
             "PS:CAC:Cannot change AC to new root"
         );
-        require(
-            database[_idxHash].assetStatus < 200,
-            "PS:CAC:RECORD LOCKED"
-        );
+        require(database[_idxHash].assetStatus < 200, "PS:CAC:RECORD LOCKED");
         //^^^^^^^checks^^^^^^^^^
 
         rec.assetClass = _newAssetClass;
@@ -392,10 +383,7 @@ contract STOR is Ownable, ReentrancyGuard, Pausable {
                 (database[_idxHash].assetStatus != 55),
             "PS:SSL:Txfr or escrow locked asset cannot be set to L/S."
         );
-        require(
-            database[_idxHash].assetStatus < 200,
-            "PS:SSL:RECORD LOCKED"
-        );
+        require(database[_idxHash].assetStatus < 200, "PS:SSL:RECORD LOCKED");
         //^^^^^^^checks^^^^^^^^^
 
         Record memory rec = database[_idxHash];
@@ -437,10 +425,7 @@ contract STOR is Ownable, ReentrancyGuard, Pausable {
             isEscrow(database[_idxHash].assetStatus) == 0,
             "PS:SE: In escrow status"
         );
-        require(
-            database[_idxHash].assetStatus < 200,
-            "PS:SE:RECORD LOCKED"
-        );
+        require(database[_idxHash].assetStatus < 200, "PS:SE:RECORD LOCKED");
         //^^^^^^^checks^^^^^^^^^
 
         Record memory rec = database[_idxHash];
@@ -506,10 +491,7 @@ contract STOR is Ownable, ReentrancyGuard, Pausable {
         Record memory rec = database[_idxHash];
 
         require((rec.Ipfs1 != _Ipfs1), "PS:MI1: New value same as old");
-        require(
-            database[_idxHash].assetStatus < 200,
-            "PS:MI1:RECORD LOCKED"
-        );
+        require(database[_idxHash].assetStatus < 200, "PS:MI1:RECORD LOCKED");
         //^^^^^^^checks^^^^^^^^^
 
         rec.Ipfs1 = _Ipfs1;
@@ -535,10 +517,7 @@ contract STOR is Ownable, ReentrancyGuard, Pausable {
         Record memory rec = database[_idxHash];
 
         require((rec.Ipfs2 == 0), "PS:MI2: Cannot overwrite IPFS2");
-        require(
-            database[_idxHash].assetStatus < 200,
-            "PS:MI2:RECORD LOCKED"
-        );
+        require(database[_idxHash].assetStatus < 200, "PS:MI2:RECORD LOCKED");
         //^^^^^^^checks^^^^^^^^^
 
         rec.Ipfs2 = _Ipfs2;

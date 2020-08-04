@@ -147,8 +147,6 @@ contract AC_MGR is CORE {
         //^^^^^^^effects^^^^^^^^^
     }
 
-
-
     //-------------------------------------------functions for information retrieval----------------------------------------------
     /*
      * @dev get a User Record
@@ -231,7 +229,6 @@ contract AC_MGR is CORE {
         //^^^^^^^interactions^^^^^^^^^
     }
 
-
     //-------------------------------------------functions for payment calculations----------------------------------------------
     /*
      * @dev Retrieve function costs per asset class, in Wei
@@ -252,8 +249,7 @@ contract AC_MGR is CORE {
         uint256 assetClass256 = uint256(_assetClass);
 
         require(
-            (AC_TKN.ownerOf(assetClass256) !=
-                AC_TKN_Address), //this will throw in the token contract if not minted
+            (AC_TKN.ownerOf(assetClass256) != AC_TKN_Address), //this will throw in the token contract if not minted
             "PACM:GNRC:Asset class not yet populated"
         );
         //^^^^^^^checks^^^^^^^^^
@@ -285,8 +281,7 @@ contract AC_MGR is CORE {
         uint256 assetClass256 = uint256(_assetClass);
 
         require(
-            (AC_TKN.ownerOf(assetClass256) !=
-                AC_TKN_Address), //this will throw in the token contract if not minted
+            (AC_TKN.ownerOf(assetClass256) != AC_TKN_Address), //this will throw in the token contract if not minted
             "PACM:GTAC:Asset class not yet populated"
         );
         //^^^^^^^checks^^^^^^^^^
@@ -318,8 +313,7 @@ contract AC_MGR is CORE {
         uint256 assetClass256 = uint256(_assetClass);
 
         require(
-            (AC_TKN.ownerOf(assetClass256) !=
-                AC_TKN_Address), //this will throw in the token contract if not minted
+            (AC_TKN.ownerOf(assetClass256) != AC_TKN_Address), //this will throw in the token contract if not minted
             "PACM:GCNC:Asset class not yet populated"
         );
         //^^^^^^^checks^^^^^^^^^
@@ -351,8 +345,7 @@ contract AC_MGR is CORE {
         uint256 assetClass256 = uint256(_assetClass);
 
         require(
-            (AC_TKN.ownerOf(assetClass256) !=
-                AC_TKN_Address), //this will throw in the token contract if not minted
+            (AC_TKN.ownerOf(assetClass256) != AC_TKN_Address), //this will throw in the token contract if not minted
             "PACM:GMRC:Asset class not yet populated"
         );
         //^^^^^^^checks^^^^^^^^^
@@ -384,8 +377,7 @@ contract AC_MGR is CORE {
         uint256 assetClass256 = uint256(_assetClass);
 
         require(
-            (AC_TKN.ownerOf(assetClass256) !=
-                AC_TKN_Address), //this will throw in the token contract if not minted
+            (AC_TKN.ownerOf(assetClass256) != AC_TKN_Address), //this will throw in the token contract if not minted
             "PACM:GCSC:Asset class not yet populated"
         );
         //^^^^^^^checks^^^^^^^^^
@@ -417,8 +409,7 @@ contract AC_MGR is CORE {
         uint256 assetClass256 = uint256(_assetClass);
 
         require(
-            (AC_TKN.ownerOf(assetClass256) !=
-                AC_TKN_Address), //this will throw in the token contract if not minted
+            (AC_TKN.ownerOf(assetClass256) != AC_TKN_Address), //this will throw in the token contract if not minted
             "PACM:GFMC:Asset class not yet populated"
         );
         //^^^^^^^checks^^^^^^^^^
@@ -451,8 +442,7 @@ contract AC_MGR is CORE {
         Costs memory costs = cost[_assetClass];
 
         require(
-            (AC_TKN.ownerOf(assetClass256) !=
-                AC_TKN_Address), //this will throw in the token contract if not minted
+            (AC_TKN.ownerOf(assetClass256) != AC_TKN_Address), //this will throw in the token contract if not minted
             "PACM:RC:Asset class not yet populated"
         );
         //^^^^^^^checks^^^^^^^^
