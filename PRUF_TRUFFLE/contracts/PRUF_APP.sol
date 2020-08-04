@@ -144,7 +144,7 @@ contract APP is CORE {
             "PNP:MS: Contract not authorized for this asset class"
         );
 
-        require((rec.rightsHolder != 0), "PA:FMR: Record does not exist");
+        require((rec.rightsHolder != 0), "PA:FMR: Record unclaimed: import required. ");
 
         require(
             userType == 1,
@@ -217,7 +217,7 @@ contract APP is CORE {
             contractInfo.contractType > 0,
             "PNP:MS: Contract not authorized for this asset class"
         );
-        require((rec.rightsHolder != 0), "PA:TA: Record does not exist");
+        require((rec.rightsHolder != 0), "PA:TA: Record unclaimed: import required. ");
         require(
             (userType > 0) && (userType < 10),
             "PA:TA: User not authorized to modify records in specified asset class"
@@ -244,9 +244,7 @@ contract APP is CORE {
             rec.assetStatus = 5;
         }
 
-        if(rec.assetStatus != 5){
-            rec.rightsHolder = _newrgtHash;
-        }
+        rec.rightsHolder = _newrgtHash;
         //^^^^^^^effects^^^^^^^^^
 
         writeRecord(_idxHash, rec);
@@ -283,7 +281,7 @@ contract APP is CORE {
             contractInfo.contractType > 0,
             "PNP:MS: Contract not authorized for this asset class"
         );
-        require((rec.rightsHolder != 0), "PA:I2: Record does not exist");
+        require((rec.rightsHolder != 0), "PA:I2: Record unclaimed: import required. ");
         require(
             (userType > 0) && (userType < 10),
             "PA:I2: User not authorized to modify records in specified asset class"
@@ -347,7 +345,7 @@ contract APP is CORE {
             contractInfo.contractType > 0,
             "PNP:MS: Contract not authorized for this asset class"
         );
-        require((rec.rightsHolder != 0), "PA:IA: Record does not exist");
+        require((rec.assetClass != 0), "PA:IA: Record does not exist. ");
         require(userType < 3, "PA:IA: User not authorized to reimport assets");
 
         require(

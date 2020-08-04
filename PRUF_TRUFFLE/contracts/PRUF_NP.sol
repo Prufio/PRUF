@@ -61,7 +61,7 @@ contract NP is CORE {
             contractInfo.contractType > 0,
             "PNP:MS: Contract not authorized for this asset class"
         );
-        require((rec.rightsHolder != 0), "PNP:MS: Record does not exist");
+        require((rec.rightsHolder != 0), "PNP:MS: Record unclaimed: import required. ");
         require(
             (userType > 0) && (userType < 10),
             "PNP:MS: User not authorized to modify records in specified asset class"
@@ -143,7 +143,7 @@ contract NP is CORE {
             "PNP:MS: Contract not authorized for this asset class"
         );
 
-        require((rec.rightsHolder != 0), "PNP:SLS: Record does not exist");
+        require((rec.rightsHolder != 0), "PNP:SLS: Record unclaimed: import required. ");
         require(
             (userType > 0) && (userType < 10),
             "PNP:SLS: User not authorized to modify records in specified asset class"
@@ -210,7 +210,7 @@ contract NP is CORE {
             "PNP:MS: Contract not authorized for this asset class"
         );
 
-        require((rec.rightsHolder != 0), "PNP:DC: Record does not exist");
+        require((rec.rightsHolder != 0), "PNP:DC: Record unclaimed: import required. ");
         require(
             (userType > 0) && (userType < 10),
             "PNP:DC: User not authorized to modify records in specified asset class"
@@ -271,7 +271,7 @@ contract NP is CORE {
             "PNP:MS: Contract not authorized for this asset class"
         );
 
-        require((rec.rightsHolder != 0), "PNP:MI1: Record does not exist");
+        require((rec.rightsHolder != 0), "PNP:MI1: Record unclaimed: import required. ");
         require(
             (userType > 0) && (userType < 10),
             "PNP:MI1: User not authorized to modify records in specified asset class"
