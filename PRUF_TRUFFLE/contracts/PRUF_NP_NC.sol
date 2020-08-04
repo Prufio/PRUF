@@ -134,7 +134,11 @@ contract NP_NC is CORE {
         );
         require(rec.assetStatus < 200, "TPNP:EX: Record locked");
 
-        _modStatus(_idxHash, 70);
+        STOR.modifyRecord(_idxHash,rec.rightsHolder,
+            70,
+            rec.countDown,
+            rec.forceModCount,
+            rec.numberOfTransfers);
     }
 
     /*

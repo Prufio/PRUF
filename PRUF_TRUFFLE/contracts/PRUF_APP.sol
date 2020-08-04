@@ -95,15 +95,15 @@ contract APP is CORE {
 
         require(
             contractInfo.contractType > 0,
-            "PNP:MS: Contract not authorized for this asset class"
+            "PA:MS: Contract not authorized for this asset class"
         );
         require(
             (userType > 0) && (userType < 10),
-            "PNP:EA: User not authorized to modify records in specified asset class"
+            "PA:EA: User not authorized to modify records in specified asset class"
         );
         require( // require transferrable (51) status
             rec.assetStatus == 51,
-            "PNP:EA: Asset status must be 51 to export"
+            "PA:EA: Asset status must be 51 to export"
         );
         //^^^^^^^checks^^^^^^^^^
 
