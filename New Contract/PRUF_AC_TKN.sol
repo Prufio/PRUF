@@ -27,15 +27,15 @@ import "./Imports/ReentrancyGuard.sol";
 contract AC_TKN is Ownable, ReentrancyGuard, ERC721 {
     constructor() public ERC721("PRüF Asset Class Token", "PAC") {}
 
-    address internal ACmanagerAddress; //isAdmin
-    address internal storageAddress;
-    STOR_Interface internal Storage; // Set up external contract interface
+    address internal AC_MGR_Address; //isAdmin
+    address internal STOR_Address;
+    STOR_Interface internal STOR; // Set up external contract interface
 
     event REPORT(string _msg);
 
     modifier isAdmin() {
         require(
-            (msg.sender == ACmanagerAddress) || (msg.sender == owner()),
+            (msg.sender == AC_MGR_Address) || (msg.sender == owner()),
             "PACT:IA:Calling address does not belong to an Admin"
         );
         _;
@@ -53,7 +53,7 @@ contract AC_TKN is Ownable, ReentrancyGuard, ERC721 {
         );
         //^^^^^^^checks^^^^^^^^^
 
-        Storage = STOR_Interface(_storageAddress);
+        STOR = STOR_Interface(_storageAddress);
         //^^^^^^^effects^^^^^^^^^
     }
 
@@ -62,7 +62,7 @@ contract AC_TKN is Ownable, ReentrancyGuard, ERC721 {
      */
     function OO_ResolveContractAddresses() external nonReentrant onlyOwner {
         //^^^^^^^checks^^^^^^^^^
-        ACmanagerAddress = Storage.resolveContractAddress("AC_MGR");
+        AC_MGR_Address = STOR.resolveContractAddress("AC_MGR");
         //^^^^^^^interactions^^^^^^^^^
     }
 

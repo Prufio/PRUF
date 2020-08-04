@@ -43,7 +43,7 @@ contract ECR_MGR is BASIC {
     //  */
     // function isEscrowContract(uint16 _assetClass) private {
     //     require(
-    //         Storage.ContractAuthType(msg.sender, _assetClass) == 3, //caller contract is type3 (escrow) and exists in database
+    //         STOR.ContractAuthType(msg.sender, _assetClass) == 3, //caller contract is type3 (escrow) and exists in database
     //         "PEM:IEC:Calling address is not an authorized escrow contract, or not authorized for the asset class"
     //     );
     // }
@@ -90,7 +90,7 @@ contract ECR_MGR is BASIC {
     ) external nonReentrant whenNotPaused {
         Record memory rec = getRecord(_idxHash);
         ContractDataHash memory contractInfo;
-        (contractInfo.contractType, contractInfo.nameHash) = Storage
+        (contractInfo.contractType, contractInfo.nameHash) = STOR
             .ContractInfoHash(msg.sender, rec.assetClass);
         bytes32 controllingContractNameHash = contractInfo.nameHash;
 
@@ -137,7 +137,7 @@ contract ECR_MGR is BASIC {
 
         //^^^^^^^effects^^^^^^^^^
 
-        Storage.setEscrow(_idxHash, _newAssetStatus, contractInfo.nameHash);
+        STOR.setEscrow(_idxHash, _newAssetStatus, contractInfo.nameHash);
         //^^^^^^^interactions^^^^^^^^^
     }
 
@@ -147,7 +147,7 @@ contract ECR_MGR is BASIC {
     function endEscrow(bytes32 _idxHash) external nonReentrant whenNotPaused {
         Record memory rec = getRecord(_idxHash);
         ContractDataHash memory contractInfo;
-        (contractInfo.contractType, contractInfo.nameHash) = Storage
+        (contractInfo.contractType, contractInfo.nameHash) = STOR
             .ContractInfoHash(msg.sender, rec.assetClass);
 
         require(rec.rightsHolder != 0, "PEM:EE:Record does not exist");
@@ -169,7 +169,7 @@ contract ECR_MGR is BASIC {
         escrows[_idxHash].addr1 = address(0);
         //^^^^^^^effects^^^^^^^^^
 
-        Storage.endEscrow(_idxHash, contractInfo.nameHash);
+        STOR.endEscrow(_idxHash, contractInfo.nameHash);
         //^^^^^^^interactions^^^^^^^^^
     }
 
@@ -181,7 +181,10 @@ contract ECR_MGR is BASIC {
         nonReentrant
         whenNotPaused
     {
-        require(escrows[_idxHash].timelock < block.timestamp, "PEM:PEE:Escrow not expired");
+        require(
+            escrows[_idxHash].timelock < block.timestamp,
+            "PEM:PEE:Escrow not expired"
+        );
         require( // do not allow escrows with escrow.data > 199 to be ended by this function
             escrows[_idxHash].data < 200,
             "PEM:PEE:Escrow not endable with permissiveEndEscrow"
@@ -198,7 +201,7 @@ contract ECR_MGR is BASIC {
         escrows[_idxHash].addr1 = address(0);
         //^^^^^^^effects^^^^^^^^^
 
-        Storage.endEscrow(_idxHash, keccak256(abi.encodePacked(msg.sender)));
+        STOR.endEscrow(_idxHash, keccak256(abi.encodePacked(msg.sender)));
         //^^^^^^^interactions^^^^^^^^^
     }
 

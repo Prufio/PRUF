@@ -58,8 +58,8 @@ contract BASIC is ReentrancyGuard, Ownable, IERC721Receiver, Pausable {
     address internal AssetTokenAddress;
     A_TKN_Interface internal AssetTokenContract; //erc721_token prototype initialization
 
-    address internal AssetClassTokenAddress;
-    AC_TKN_Interface internal AssetClassTokenContract; //erc721_token prototype initialization
+    address internal AC_TKN_Address;
+    AC_TKN_Interface internal AC_TKN; //erc721_token prototype initialization
 
     address internal escrowMGRAddress;
     ECR_MGR_Interface internal escrowMGRcontract; //Set up external contract interface for escrowmgr
@@ -103,8 +103,8 @@ contract BASIC is ReentrancyGuard, Ownable, IERC721Receiver, Pausable {
         onlyOwner
     {
         //^^^^^^^checks^^^^^^^^^
-        AssetClassTokenAddress = Storage.resolveContractAddress("AC_TKN");
-        AssetClassTokenContract = AC_TKN_Interface(AssetClassTokenAddress);
+        AC_TKN_Address = Storage.resolveContractAddress("AC_TKN");
+        AC_TKN = AC_TKN_Interface(AC_TKN_Address);
 
         AssetClassTokenManagerAddress = Storage.resolveContractAddress(
             "AC_MGR"
@@ -150,7 +150,7 @@ contract BASIC is ReentrancyGuard, Ownable, IERC721Receiver, Pausable {
         //^^^^^^^checks^^^^^^^^^
         uint256 tokenId = uint256(_idxHash);
         //^^^^^^^effects^^^^^^^^^
-        AssetClassTokenContract.safeTransferFrom(address(this), _to, tokenId);
+        AC_TKN.safeTransferFrom(address(this), _to, tokenId);
         //^^^^^^^interactions^^^^^^^^^
     }
 

@@ -53,8 +53,8 @@ contract STOR is Ownable, ReentrancyGuard, Pausable {
 
     mapping(bytes32 => Record) private database; // Main Data Storage
 
-    address private AssetClassTokenAddress;
-    AC_TKN_Interface private AssetClassTokenContract; //erc721_token prototype initialization
+    address private AC_TKN_Address;
+    AC_TKN_Interface private AC_TKN; //erc721_token prototype initialization
 
     address internal AssetClassTokenManagerAddress;
     AC_MGR_Interface internal AssetClassTokenManagerContract; // Set up external contract interface
@@ -193,7 +193,7 @@ contract STOR is Ownable, ReentrancyGuard, Pausable {
         contractNameToAddress[_name] = _addr;
         contractAddressToName[_addr] = _name;
 
-        AssetClassTokenContract = AC_TKN_Interface(
+        AC_TKN = AC_TKN_Interface(
             contractNameToAddress["AC_TKN"]
         );
         AssetClassTokenManagerContract = AC_MGR_Interface(
@@ -218,7 +218,7 @@ contract STOR is Ownable, ReentrancyGuard, Pausable {
     ) external {
         uint256 assetClass256 = uint256(_assetClass);
         require(
-            AssetClassTokenContract.ownerOf(assetClass256) == msg.sender,
+            AC_TKN.ownerOf(assetClass256) == msg.sender,
             "PS:AC:Caller not ACtokenHolder"
         );
 

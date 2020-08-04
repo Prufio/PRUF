@@ -33,7 +33,7 @@ contract NP_NC is CORE {
     modifier isAuthorized(bytes32 _idxHash) override {
         uint256 tokenID = uint256(_idxHash);
         require(
-            (AssetTokenContract.ownerOf(tokenID) == msg.sender), //msg.sender is token holder
+            (A_TKN.ownerOf(tokenID) == msg.sender), //msg.sender is token holder
             "TPNP:IA: Caller does not hold token"
         );
         _;
@@ -43,7 +43,7 @@ contract NP_NC is CORE {
 
     /*
      * @dev Modify rgtHash (like forceModify)
-     * must be tokenholder or assetTokenContract
+     * must be tokenholder or A_TKN
      *
      */
     function _changeRgt(bytes32 _idxHash, bytes32 _newRgtHash)
@@ -54,7 +54,10 @@ contract NP_NC is CORE {
         returns (bytes32)
     {
         Record memory rec = getRecord(_idxHash);
-        ContractDataHash memory contractInfo = getContractInfo(address(this),rec.assetClass);
+        ContractDataHash memory contractInfo = getContractInfo(
+            address(this),
+            rec.assetClass
+        );
 
         require(
             contractInfo.contractType > 0,
@@ -106,7 +109,10 @@ contract NP_NC is CORE {
         isAuthorized(_idxHash)
     {
         Record memory rec = getRecord(_idxHash);
-        ContractDataHash memory contractInfo = getContractInfo(address(this),rec.assetClass);
+        ContractDataHash memory contractInfo = getContractInfo(
+            address(this),
+            rec.assetClass
+        );
 
         require(
             contractInfo.contractType > 0,
@@ -142,7 +148,10 @@ contract NP_NC is CORE {
         returns (uint8)
     {
         Record memory rec = getRecord(_idxHash);
-        ContractDataHash memory contractInfo = getContractInfo(address(this),rec.assetClass);
+        ContractDataHash memory contractInfo = getContractInfo(
+            address(this),
+            rec.assetClass
+        );
 
         require(
             contractInfo.contractType > 0,
@@ -151,7 +160,8 @@ contract NP_NC is CORE {
 
         require((rec.rightsHolder != 0), "TPNP:MS: Record does not exist");
 
-        require((_newAssetStatus < 100) &&
+        require(
+            (_newAssetStatus < 100) &&
                 (_newAssetStatus != 3) &&
                 (_newAssetStatus != 4) &&
                 (_newAssetStatus != 5) &&
@@ -164,7 +174,7 @@ contract NP_NC is CORE {
                 (_newAssetStatus != 56) &&
                 (_newAssetStatus != 57) &&
                 (_newAssetStatus != 58),
-                "PNP:MS: Specified Status is reserved."
+            "PNP:MS: Specified Status is reserved."
         );
         require(
             _newAssetStatus != 70,
@@ -216,7 +226,10 @@ contract NP_NC is CORE {
         returns (uint8)
     {
         Record memory rec = getRecord(_idxHash);
-        ContractDataHash memory contractInfo = getContractInfo(address(this),rec.assetClass);
+        ContractDataHash memory contractInfo = getContractInfo(
+            address(this),
+            rec.assetClass
+        );
 
         require(
             contractInfo.contractType > 0,
@@ -259,7 +272,7 @@ contract NP_NC is CORE {
         //bytes32 userHash = keccak256(abi.encodePacked(msg.sender));
         //^^^^^^^effects^^^^^^^^^
 
-        Storage.setStolenOrLost(_idxHash, rec.assetStatus);
+        STOR.setStolenOrLost(_idxHash, rec.assetStatus);
 
         return rec.assetStatus;
         //^^^^^^^interactions^^^^^^^^^
@@ -276,7 +289,10 @@ contract NP_NC is CORE {
         returns (uint256)
     {
         Record memory rec = getRecord(_idxHash);
-        ContractDataHash memory contractInfo = getContractInfo(address(this),rec.assetClass);
+        ContractDataHash memory contractInfo = getContractInfo(
+            address(this),
+            rec.assetClass
+        );
 
         require(
             contractInfo.contractType > 0,
@@ -325,7 +341,10 @@ contract NP_NC is CORE {
         returns (bytes32)
     {
         Record memory rec = getRecord(_idxHash);
-        ContractDataHash memory contractInfo = getContractInfo(address(this),rec.assetClass);
+        ContractDataHash memory contractInfo = getContractInfo(
+            address(this),
+            rec.assetClass
+        );
 
         require(
             contractInfo.contractType > 0,

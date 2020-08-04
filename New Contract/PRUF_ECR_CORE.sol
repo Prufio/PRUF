@@ -60,7 +60,7 @@ contract ECR_CORE is BASIC {
             escrow.ex2,
             escrow.addr1,
             escrow.addr2
-        ) = escrowMGRcontract.retrieveEscrowData(_idxHash);
+        ) = ECR_MGR.retrieveEscrowData(_idxHash);
 
         return (escrow);
         //^^^^^^^interactions^^^^^^^^^

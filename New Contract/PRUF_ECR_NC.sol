@@ -32,7 +32,7 @@ contract ECR_NC is ECR_CORE {
     modifier isAuthorized(bytes32 _idxHash) override {
         uint256 tokenID = uint256(_idxHash);
         require(
-            (AssetTokenContract.ownerOf(tokenID) == msg.sender), //msg.sender is token holder
+            (A_TKN.ownerOf(tokenID) == msg.sender), //msg.sender is token holder
             "TPSE:IA: Caller does not hold token"
         );
         _;
@@ -52,7 +52,10 @@ contract ECR_NC is ECR_CORE {
         Record memory rec = getRecord(_idxHash);
         uint256 escrowTime = block.timestamp.add(_escrowTime);
         uint8 newEscrowStatus;
-        ContractDataHash memory contractInfo = getContractInfo(address(this),rec.assetClass);
+        ContractDataHash memory contractInfo = getContractInfo(
+            address(this),
+            rec.assetClass
+        );
 
         require(
             contractInfo.contractType > 0,
@@ -87,7 +90,7 @@ contract ECR_NC is ECR_CORE {
         newEscrowStatus = _escrowStatus;
         //^^^^^^^effects^^^^^^^^^
 
-        escrowMGRcontract.setEscrow(
+        ECR_MGR.setEscrow(
             _idxHash,
             newEscrowStatus,
             0,
@@ -105,10 +108,13 @@ contract ECR_NC is ECR_CORE {
      * @dev takes asset out of excrow status if time period has resolved || is escrow issuer
      */
     function endEscrow(bytes32 _idxHash) external nonReentrant {
-        bytes32 ownerHash = escrowMGRcontract.retrieveEscrowOwner(_idxHash);
+        bytes32 ownerHash = ECR_MGR.retrieveEscrowOwner(_idxHash);
         Record memory rec = getRecord(_idxHash);
         escrowData memory escrow = getEscrowData(_idxHash);
-        ContractDataHash memory contractInfo = getContractInfo(address(this),rec.assetClass);
+        ContractDataHash memory contractInfo = getContractInfo(
+            address(this),
+            rec.assetClass
+        );
 
         require(
             contractInfo.contractType > 0,
@@ -127,7 +133,7 @@ contract ECR_NC is ECR_CORE {
         );
         //^^^^^^^checks^^^^^^^^^
 
-        escrowMGRcontract.endEscrow(_idxHash);
+        ECR_MGR.endEscrow(_idxHash);
         //^^^^^^^interactions^^^^^^^^^
     }
 }
