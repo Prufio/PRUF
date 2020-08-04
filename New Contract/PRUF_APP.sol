@@ -25,7 +25,7 @@ contract APP is CORE {
         //require that user is authorized and token is held by contract
         uint256 tokenID = uint256(_idxHash);
         require(
-            (AssetTokenContract.ownerOf(tokenID) == PrufAppAddress),
+            (A_TKN.ownerOf(tokenID) == APP_Address),
             "PA:IA: Custodial contract does not hold token"
         );
         _;
@@ -45,7 +45,10 @@ contract APP is CORE {
         uint8 userType = getUserType(_assetClass);
         AC memory AC_info = getACinfo(_assetClass);
         AC memory oldAC_info = getACinfo(rec.assetClass);
-        ContractDataHash memory contractInfo = getContractInfo(address(this),_assetClass);
+        ContractDataHash memory contractInfo = getContractInfo(
+            address(this),
+            _assetClass
+        );
 
         require(
             contractInfo.contractType > 0,
@@ -64,19 +67,9 @@ contract APP is CORE {
         //^^^^^^^effects^^^^^^^^^
 
         if (AC_info.assetClassRoot == oldAC_info.assetClassRoot) {
-            createRecord(
-                _idxHash,
-                _rgtHash,
-                _assetClass,
-                rec.countDownStart
-            );
+            createRecord(_idxHash, _rgtHash, _assetClass, rec.countDownStart);
         } else {
-            createRecord(
-                _idxHash,
-                _rgtHash,
-                _assetClass,
-                _countDownStart
-            );
+            createRecord(_idxHash, _rgtHash, _assetClass, _countDownStart);
         }
         deductNewRecordCosts(_assetClass);
         //^^^^^^^interactions^^^^^^^^^
@@ -95,7 +88,10 @@ contract APP is CORE {
         uint256 tokenId = uint256(_idxHash);
         Record memory rec = getRecord(_idxHash);
         uint8 userType = getUserType(rec.assetClass);
-        ContractDataHash memory contractInfo = getContractInfo(address(this),rec.assetClass);
+        ContractDataHash memory contractInfo = getContractInfo(
+            address(this),
+            rec.assetClass
+        );
 
         require(
             contractInfo.contractType > 0,
@@ -118,7 +114,7 @@ contract APP is CORE {
         }
         //^^^^^^^effects^^^^^^^^^
 
-        AssetTokenContract.safeTransferFrom(address(this), _addr, tokenId); // sends token to rightsholder wallet (specified by auth user)
+        A_TKN.safeTransferFrom(address(this), _addr, tokenId); // sends token to rightsholder wallet (specified by auth user)
         writeRecord(_idxHash, rec);
 
         return rec.assetStatus;
@@ -138,7 +134,10 @@ contract APP is CORE {
     {
         Record memory rec = getRecord(_idxHash);
         uint8 userType = getUserType(rec.assetClass);
-        ContractDataHash memory contractInfo = getContractInfo(address(this),rec.assetClass);
+        ContractDataHash memory contractInfo = getContractInfo(
+            address(this),
+            rec.assetClass
+        );
 
         require(
             contractInfo.contractType > 0,
@@ -209,7 +208,10 @@ contract APP is CORE {
     {
         Record memory rec = getRecord(_idxHash);
         uint8 userType = getUserType(rec.assetClass);
-        ContractDataHash memory contractInfo = getContractInfo(address(this),rec.assetClass);
+        ContractDataHash memory contractInfo = getContractInfo(
+            address(this),
+            rec.assetClass
+        );
 
         require(
             contractInfo.contractType > 0,
@@ -237,7 +239,8 @@ contract APP is CORE {
             rec.numberOfTransfers++;
         }
 
-        if(_newrgtHash == 0x0){ //set to transferred status
+        if (_newrgtHash == 0x0) {
+            //set to transferred status
             rec.assetStatus = 5;
         }
 
@@ -269,7 +272,10 @@ contract APP is CORE {
     {
         Record memory rec = getRecord(_idxHash);
         uint8 userType = getUserType(rec.assetClass);
-        ContractDataHash memory contractInfo = getContractInfo(address(this),rec.assetClass);
+        ContractDataHash memory contractInfo = getContractInfo(
+            address(this),
+            rec.assetClass
+        );
 
         require(
             contractInfo.contractType > 0,
@@ -330,7 +336,10 @@ contract APP is CORE {
     {
         Record memory rec = getRecord(_idxHash);
         uint8 userType = getUserType(_newAssetClass);
-        ContractDataHash memory contractInfo = getContractInfo(address(this),rec.assetClass);
+        ContractDataHash memory contractInfo = getContractInfo(
+            address(this),
+            rec.assetClass
+        );
 
         require(
             contractInfo.contractType > 0,
@@ -344,10 +353,7 @@ contract APP is CORE {
             "PA:IA: User not authorized to modify records in specified asset class"
         );
         require(
-            AssetClassTokenManagerContract.isSameRootAC(
-                _newAssetClass,
-                rec.assetClass
-            ) == 170,
+            AC_MGR.isSameRootAC(_newAssetClass, rec.assetClass) == 170,
             "TPA:IA:Cannot change AC to new root"
         );
         require(
@@ -367,7 +373,7 @@ contract APP is CORE {
         //^^^^^^^effects^^^^^^^^^
 
         writeRecord(_idxHash, rec);
-        Storage.changeAC(_idxHash, _newAssetClass);
+        STOR.changeAC(_idxHash, _newAssetClass);
         deductNewRecordCosts(rec.assetClass);
 
         return rec.assetStatus;

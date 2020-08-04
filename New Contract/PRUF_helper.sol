@@ -71,7 +71,7 @@ contract PRUF_helper is Ownable {
     }
 
     function getTime() external view returns (uint256) {
-        return (now);
+        return (block.timestamp);
     }
 
     function getStringHash(string calldata _idx)

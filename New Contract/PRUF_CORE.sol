@@ -63,7 +63,7 @@ contract CORE is PullPayment, BASIC {
             cost.changeStatusCost,
             cost.forceModifyCost,
             cost.paymentAddress
-        ) = AssetClassTokenManagerContract.retrieveCosts(_assetClass);
+        ) = AC_MGR.retrieveCosts(_assetClass);
 
         return (cost);
         //^^^^^^^interactions^^^^^^^^^
@@ -84,12 +84,12 @@ contract CORE is PullPayment, BASIC {
         AC memory AC_info = getACinfo(_assetClass);
 
         require(
-            AssetTokenContract.tokenExists(tokenId) == 0,
+            A_TKN.tokenExists(tokenId) == 0,
             "PC:CR:Asset token already exists"
         );
 
         if (AC_info.custodyType == 1) {
-            AssetTokenContract.mintAssetToken(
+            A_TKN.mintAssetToken(
                 address(this),
                 tokenId,
                 "pruf.io"
@@ -97,10 +97,10 @@ contract CORE is PullPayment, BASIC {
         }
 
         if (AC_info.custodyType == 2) {
-            AssetTokenContract.mintAssetToken(msg.sender, tokenId, "pruf.io");
+            A_TKN.mintAssetToken(msg.sender, tokenId, "pruf.io");
         }
 
-        Storage.newRecord(_idxHash, _rgtHash, _assetClass, _countDownStart);
+        STOR.newRecord(_idxHash, _rgtHash, _assetClass, _countDownStart);
     }
 
     /*
@@ -129,7 +129,7 @@ contract CORE is PullPayment, BASIC {
     {
         //^^^^^^^checks^^^^^^^^^
 
-        Storage.modifyRecord(
+        STOR.modifyRecord(
             //userHash,
             _idxHash,
             _rec.rightsHolder,
@@ -150,7 +150,7 @@ contract CORE is PullPayment, BASIC {
     {
         //^^^^^^^Checks^^^^^^^^^
 
-        Storage.modifyIpfs1(_idxHash, _rec.Ipfs1); // Send data to storage
+        STOR.modifyIpfs1(_idxHash, _rec.Ipfs1); // Send data to storage
         //^^^^^^^interactions^^^^^^^^^
     }
 
@@ -161,7 +161,7 @@ contract CORE is PullPayment, BASIC {
     {
         //^^^^^^^checks^^^^^^^^^
 
-        Storage.modifyIpfs2(_idxHash, _rec.Ipfs2); // Send data to storage
+        STOR.modifyIpfs2(_idxHash, _rec.Ipfs2); // Send data to storage
         //^^^^^^^interactions^^^^^^^^^
     }
 
@@ -176,7 +176,7 @@ contract CORE is PullPayment, BASIC {
             pricing.rootPrice,
             pricing.ACTHaddress,
             pricing.ACTHprice
-        ) = AssetClassTokenManagerContract.getNewRecordCosts(_assetClass);
+        ) = AC_MGR.getNewRecordCosts(_assetClass);
         deductPayment(pricing);
         //^^^^^^^interactions^^^^^^^^^
     }
@@ -193,7 +193,7 @@ contract CORE is PullPayment, BASIC {
             pricing.rootPrice,
             pricing.ACTHaddress,
             pricing.ACTHprice
-        ) = AssetClassTokenManagerContract.getNewRecordCosts(_assetClass);
+        ) = AC_MGR.getNewRecordCosts(_assetClass);
         pricing.ACTHaddress = _oldOwner;
         deductPayment(pricing);
         //^^^^^^^interactions^^^^^^^^^
@@ -211,7 +211,7 @@ contract CORE is PullPayment, BASIC {
             pricing.rootPrice,
             pricing.ACTHaddress,
             pricing.ACTHprice
-        ) = AssetClassTokenManagerContract.getTransferAssetCosts(_assetClass);
+        ) = AC_MGR.getTransferAssetCosts(_assetClass);
         deductPayment(pricing);
         //^^^^^^^interactions^^^^^^^^^
     }
@@ -225,7 +225,7 @@ contract CORE is PullPayment, BASIC {
             pricing.rootPrice,
             pricing.ACTHaddress,
             pricing.ACTHprice
-        ) = AssetClassTokenManagerContract.getCreateNoteCosts(_assetClass);
+        ) = AC_MGR.getCreateNoteCosts(_assetClass);
         deductPayment(pricing);
         //^^^^^^^interactions^^^^^^^^^
     }
@@ -242,7 +242,7 @@ contract CORE is PullPayment, BASIC {
             pricing.rootPrice,
             pricing.ACTHaddress,
             pricing.ACTHprice
-        ) = AssetClassTokenManagerContract.getReMintRecordCosts(_assetClass);
+        ) = AC_MGR.getReMintRecordCosts(_assetClass);
         deductPayment(pricing);
         //^^^^^^^interactions^^^^^^^^^
     }
@@ -259,7 +259,7 @@ contract CORE is PullPayment, BASIC {
             pricing.rootPrice,
             pricing.ACTHaddress,
             pricing.ACTHprice
-        ) = AssetClassTokenManagerContract.getChangeStatusCosts(_assetClass);
+        ) = AC_MGR.getChangeStatusCosts(_assetClass);
         deductPayment(pricing);
         //^^^^^^^interactions^^^^^^^^^
     }
@@ -273,7 +273,7 @@ contract CORE is PullPayment, BASIC {
             pricing.rootPrice,
             pricing.ACTHaddress,
             pricing.ACTHprice
-        ) = AssetClassTokenManagerContract.getForceModifyCosts(_assetClass);
+        ) = AC_MGR.getForceModifyCosts(_assetClass);
         deductPayment(pricing);
         //^^^^^^^interactions^^^^^^^^^
     }

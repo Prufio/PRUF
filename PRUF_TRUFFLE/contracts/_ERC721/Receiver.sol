@@ -3,6 +3,7 @@ pragma solidity ^0.6.0;
 
 
 
+// SPDX-License-Identifier: MIT
 /**
  * @title ERC721 token receiver interface
  * @dev Interface for any contract that wants to support safeTransfers

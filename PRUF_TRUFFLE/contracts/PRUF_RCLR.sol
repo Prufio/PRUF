@@ -33,7 +33,7 @@ contract RCLR is ECR_CORE, CORE {
         Record memory rec = getRecord(_idxHash);
 
         require( // caller is assetToken contract
-            msg.sender == AssetTokenAddress,
+            msg.sender == A_TKN_Address,
             "PR:Recycle:Caller is not Asset Token Contract"
         );
 
@@ -45,11 +45,11 @@ contract RCLR is ECR_CORE, CORE {
 
         //^^^^^^^checks^^^^^^^^^
 
-        uint256 escrowTime = now + 3153600000000; //100,000 years in the FUTURE.........
+        uint256 escrowTime = block.timestamp + 3153600000000; //100,000 years in the FUTURE.........
         bytes32 escrowOwnerHash = keccak256(abi.encodePacked(msg.sender));
         //^^^^^^^effects^^^^^^^^^
 
-        escrowMGRcontract.setEscrow(
+        ECR_MGR.setEscrow(
             _idxHash,
             60, //recycled status
             255, //escrow data 255 is recycled
@@ -77,7 +77,10 @@ contract RCLR is ECR_CORE, CORE {
         Record memory rec = getRecord(_idxHash);
         AC memory AC_info = getACinfo(_assetClass);
         AC memory oldAC_info = getACinfo(rec.assetClass);
-        ContractDataHash memory contractInfo = getContractInfo(address(this),rec.assetClass);
+        ContractDataHash memory contractInfo = getContractInfo(
+            address(this),
+            rec.assetClass
+        );
 
         require(
             contractInfo.contractType > 0,
@@ -99,9 +102,9 @@ contract RCLR is ECR_CORE, CORE {
         }
         //^^^^^^^effects^^^^^^^^^^^^
 
-        AssetTokenContract.mintAssetToken(msg.sender, tokenId, "pruf.io");
-        Storage.changeAC(_idxHash, _assetClass);
-        escrowMGRcontract.endEscrow(_idxHash);
+        A_TKN.mintAssetToken(msg.sender, tokenId, "pruf.io");
+        STOR.changeAC(_idxHash, _assetClass);
+        ECR_MGR.endEscrow(_idxHash);
         writeRecord(_idxHash, rec);
         deductRecycleCosts(_assetClass, escrow.addr2);
         //^^^^^^^interactions^^^^^^^^^^^^
