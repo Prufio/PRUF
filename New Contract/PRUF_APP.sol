@@ -244,7 +244,9 @@ contract APP is CORE {
             rec.assetStatus = 5;
         }
 
-        rec.rightsHolder = _newrgtHash;
+        if(rec.assetStatus != 5){
+            rec.rightsHolder = _newrgtHash;
+        }
         //^^^^^^^effects^^^^^^^^^
 
         writeRecord(_idxHash, rec);
