@@ -296,70 +296,39 @@ contract('PRUF_FULL_TEST', accounts => {
             })
     })
 
-    it('Should add users to AC 10-14 in AC_Manager', async () => {
-        console.log("Account2 => AC10")
-        return AC_MGR.OO_addUser(account2, '1', '10', { from: account1 })
-            .then(() => {
-                console.log("Account3 => AC11")
-                return AC_MGR.OO_addUser(account3, '1', '11', { from: account1 })
-            })
-            .then(() => {
-                console.log("Account4 => AC12")
-                return AC_MGR.OO_addUser(account4, '1', '12', { from: account1 })
-            })
-            .then(() => {
-                console.log("Account5 => AC13")
-                return AC_MGR.OO_addUser(account5, '1', '13', { from: account1 })
-            })
-            .then(() => {
-                console.log("Account6 => AC14")
-                return AC_MGR.OO_addUser(account6, '1', '14', { from: account1 })
-            })
-            .then(() => {
-                console.log("Account7 => AC14 (ROBOT)")
-                return AC_MGR.OO_addUser(account7, '9', '14', { from: account1 })
-            }).then(() => {
-                console.log("Account8 => AC10 (ROBOT)")
-                return AC_MGR.OO_addUser(account8, '9', '10', { from: account1 })
-            }).then(() => {
-                console.log("Account9 => AC11 (ROBOT)")
-                return AC_MGR.OO_addUser(account9, '9', '11', { from: account1 })
-            })
-    })
-
     it('Should authorize APP in all relevant asset classes', async () => {
         console.log("Authorizing APP")
-        return STOR.enableContractForAC('APP','10', '3', {from: account1})
+        return STOR.enableContractForAC('APP','10', '1', {from: account1})
         .then(()=> {
-            return STOR.enableContractForAC('APP','11', '3', {from: account1})
+            return STOR.enableContractForAC('APP','11', '1', {from: account1})
         })
     })
 
     it('Should authorize APP_NC in all relevant asset classes', async () => {
         console.log("Authorizing APP_NC")
-        return STOR.enableContractForAC('APP_NC','12', '3', {from: account1})
+        return STOR.enableContractForAC('APP_NC','12', '1', {from: account1})
         .then(()=> {
-            return STOR.enableContractForAC('APP_NC','13', '3', {from: account1})
+            return STOR.enableContractForAC('APP_NC','13', '1', {from: account1})
         }).then(()=> {
-            return STOR.enableContractForAC('APP_NC','14', '3', {from: account1})
+            return STOR.enableContractForAC('APP_NC','14', '1', {from: account1})
         })
     })
 
     it('Should authorize NP in all relevant asset classes', async () => {
         console.log("Authorizing NP")
-        return STOR.enableContractForAC('NP','10', '3', {from: account1})
+        return STOR.enableContractForAC('NP','10', '1', {from: account1})
         .then(()=> {
-            return STOR.enableContractForAC('NP','11', '3', {from: account1})
+            return STOR.enableContractForAC('NP','11', '1', {from: account1})
         })
     })
 
     it('Should authorize NP_NC in all relevant asset classes', async () => {
         console.log("Authorizing NP_NC")
-        return STOR.enableContractForAC('NP_NC','12', '3', {from: account1})
+        return STOR.enableContractForAC('NP_NC','12', '1', {from: account1})
         .then(()=> {
-            return STOR.enableContractForAC('NP_NC','13', '3', {from: account1})
+            return STOR.enableContractForAC('NP_NC','13', '1', {from: account1})
         }).then(()=> {
-            return STOR.enableContractForAC('NP_NC','14', '3', {from: account1})
+            return STOR.enableContractForAC('NP_NC','14', '1', {from: account1})
         })
     })
 
@@ -395,59 +364,59 @@ contract('PRUF_FULL_TEST', accounts => {
         })
     })
 
-    it('Should authorize ECR_MGR in all relevant asset classes', async () => {
+    it('Should authorize AC_TKN in all relevant asset classes', async () => {
         console.log("Authorizing AC_TKN")
-        return STOR.enableContractForAC('AC_TKN','10', '3', {from: account1})
+        return STOR.enableContractForAC('AC_TKN','10', '1', {from: account1})
         .then(()=> {
-            return STOR.enableContractForAC('AC_TKN','11', '3', {from: account1})
+            return STOR.enableContractForAC('AC_TKN','11', '1', {from: account1})
         }).then(()=> {
-            return STOR.enableContractForAC('AC_TKN','12', '3', {from: account1})
+            return STOR.enableContractForAC('AC_TKN','12', '1', {from: account1})
         }).then(()=> {
-            return STOR.enableContractForAC('AC_TKN','13', '3', {from: account1})
+            return STOR.enableContractForAC('AC_TKN','13', '1', {from: account1})
         }).then(()=> {
-            return STOR.enableContractForAC('AC_TKN','14', '3', {from: account1})
+            return STOR.enableContractForAC('AC_TKN','14', '1', {from: account1})
         })
     })
 
     it('Should authorize A_TKN in all relevant asset classes', async () => {
         console.log("Authorizing A_TKN")
-        return STOR.enableContractForAC('A_TKN','10', '3', {from: account1})
+        return STOR.enableContractForAC('A_TKN','10', '1', {from: account1})
         .then(()=> {
-            return STOR.enableContractForAC('A_TKN','11', '3', {from: account1})
+            return STOR.enableContractForAC('A_TKN','11', '1', {from: account1})
         }).then(()=> {
-            return STOR.enableContractForAC('A_TKN','12', '3', {from: account1})
+            return STOR.enableContractForAC('A_TKN','12', '1', {from: account1})
         }).then(()=> {
-            return STOR.enableContractForAC('A_TKN','13', '3', {from: account1})
+            return STOR.enableContractForAC('A_TKN','13', '1', {from: account1})
         }).then(()=> {
-            return STOR.enableContractForAC('A_TKN','14', '3', {from: account1})
+            return STOR.enableContractForAC('A_TKN','14', '1', {from: account1})
         })
     })
 
     it('Should authorize AC_MGR in all relevant asset classes', async () => {
         console.log("Authorizing AC_MGR")
-        return STOR.enableContractForAC('AC_MGR','10', '3', {from: account1})
+        return STOR.enableContractForAC('AC_MGR','10', '1', {from: account1})
         .then(()=> {
-            return STOR.enableContractForAC('AC_MGR','11', '3', {from: account1})
+            return STOR.enableContractForAC('AC_MGR','11', '1', {from: account1})
         }).then(()=> {
-            return STOR.enableContractForAC('AC_MGR','12', '3', {from: account1})
+            return STOR.enableContractForAC('AC_MGR','12', '1', {from: account1})
         }).then(()=> {
-            return STOR.enableContractForAC('AC_MGR','13', '3', {from: account1})
+            return STOR.enableContractForAC('AC_MGR','13', '1', {from: account1})
         }).then(()=> {
-            return STOR.enableContractForAC('AC_MGR','14', '3', {from: account1})
+            return STOR.enableContractForAC('AC_MGR','14', '1', {from: account1})
         })
     })
 
     it('Should authorize RCLR in all relevant asset classes', async () => {
         console.log("Authorizing RCLR")
-        return STOR.enableContractForAC('RCLR','10', '3', {from: account1})
+        return STOR.enableContractForAC('RCLR','10', '1', {from: account1})
         .then(()=> {
-            return STOR.enableContractForAC('RCLR','11', '3', {from: account1})
+            return STOR.enableContractForAC('RCLR','11', '1', {from: account1})
         }).then(()=> {
-            return STOR.enableContractForAC('RCLR','12', '3', {from: account1})
+            return STOR.enableContractForAC('RCLR','12', '1', {from: account1})
         }).then(()=> {
-            return STOR.enableContractForAC('RCLR','13', '3', {from: account1})
+            return STOR.enableContractForAC('RCLR','13', '1', {from: account1})
         }).then(()=> {
-            return STOR.enableContractForAC('RCLR','14', '3', {from: account1})
+            return STOR.enableContractForAC('RCLR','14', '1', {from: account1})
         })
     })
 
@@ -493,7 +462,7 @@ contract('PRUF_FULL_TEST', accounts => {
             { from: account1 })
 
             .then(() => {
-                console.log("Setting base costs in root 11")
+                console.log("Setting base costs in AC 11")
                 return AC_MGR.ACTH_setCosts("11",
                     "10000000000000000",
                     "10000000000000000",
@@ -505,7 +474,7 @@ contract('PRUF_FULL_TEST', accounts => {
                     { from: account1 })
 
             }).then(() => {
-                console.log("Setting base costs in root 12")
+                console.log("Setting base costs in AC 12")
                 return AC_MGR.ACTH_setCosts("12",
                     "10000000000000000",
                     "10000000000000000",
@@ -517,7 +486,7 @@ contract('PRUF_FULL_TEST', accounts => {
                     { from: account1 })
 
             }).then(() => {
-                console.log("Setting base costs in root 13")
+                console.log("Setting base costs in AC 13")
                 return AC_MGR.ACTH_setCosts("13",
                     "10000000000000000",
                     "10000000000000000",
@@ -529,7 +498,7 @@ contract('PRUF_FULL_TEST', accounts => {
                     { from: account1 })
 
             }).then(() => {
-                console.log("Setting base costs in root 14")
+                console.log("Setting base costs in AC 14")
                 return AC_MGR.ACTH_setCosts("14",
                     "10000000000000000",
                     "10000000000000000",
@@ -541,7 +510,7 @@ contract('PRUF_FULL_TEST', accounts => {
                     { from: account1 })
 
             }).then(() => {
-                console.log("Setting base costs in root 15")
+                console.log("Setting base costs in AC 15")
                 return AC_MGR.ACTH_setCosts("15",
                     "10000000000000000",
                     "10000000000000000",
@@ -554,7 +523,38 @@ contract('PRUF_FULL_TEST', accounts => {
             })
     })
 
-    it('Should mint a record in AC 11', async () => {
+    it('Should add users to AC 10-14 in AC_Manager', async () => {
+        console.log("Account2 => AC10")
+        return AC_MGR.OO_addUser(account2, '1', '10', { from: account1 })
+            .then(() => {
+                console.log("Account3 => AC11")
+                return AC_MGR.OO_addUser(account3, '1', '11', { from: account1 })
+            })
+            .then(() => {
+                console.log("Account4 => AC12")
+                return AC_MGR.OO_addUser(account4, '1', '12', { from: account1 })
+            })
+            .then(() => {
+                console.log("Account5 => AC13")
+                return AC_MGR.OO_addUser(account5, '1', '13', { from: account1 })
+            })
+            .then(() => {
+                console.log("Account6 => AC14")
+                return AC_MGR.OO_addUser(account6, '1', '14', { from: account1 })
+            })
+            .then(() => {
+                console.log("Account7 => AC14 (ROBOT)")
+                return AC_MGR.OO_addUser(account7, '9', '14', { from: account1 })
+            }).then(() => {
+                console.log("Account8 => AC10 (ROBOT)")
+                return AC_MGR.OO_addUser(account8, '9', '10', { from: account1 })
+            }).then(() => {
+                console.log("Account9 => AC11 (ROBOT)")
+                return AC_MGR.OO_addUser(account9, '9', '11', { from: account1 })
+            })
+    })
+
+    it('Should mint a record in AC 11', async () => { //Put into escrow, used in ForceTransfer, Transfer
         return APP.$newRecord(
             '0xd531cc3dc5bb231b65d260771886cc583d8fe8fb29b457554cb1930a722a747d',
             '0xb083f25ffc9716fa6c018e077f602f3c6d2377f0bd01917fa75c4e9ca07bee6f',
@@ -564,7 +564,7 @@ contract('PRUF_FULL_TEST', accounts => {
         )
     })
 
-    it('Should mint a second record in AC 11', async () => {
+    it('Should mint a second record in AC 11', async () => { //Note added, used in AddNote
         return APP.$newRecord(
             '0xe531cc3dc5bb231b65d260771886cc583d8fe8fb29b457554cb1930a722a747d',
             '0xb083f25ffc9716fa6c018e077f602f3c6d2377f0bd01917fa75c4e9ca07bee6f',
@@ -574,9 +574,9 @@ contract('PRUF_FULL_TEST', accounts => {
         )
     })
 
-    it('Should mint a third record in AC 11', async () => {
+    it('Should mint a third record in AC 11', async () => { // Status changed, exported, used in Import
         return APP.$newRecord(
-            '0xf531cc3dc5bb231b65d260771886cc583d8fe8fb29b457554cb1930a722a747d',
+            '0xf531cc3dc5bb231b65d260771886cc583d8fe8fb29b457554cb1930a722aeeef',
             '0xb083f25ffc9716fa6c018e077f602f3c6d2377f0bd01917fa75c4e9ca07bee6f',
             '11',
             '5000',
@@ -584,7 +584,7 @@ contract('PRUF_FULL_TEST', accounts => {
         )
     })
 
-    it('Should mint a record in AC 10', async () => {
+    it('Should mint a record in AC 10', async () => { //Bare custodial record, Used all over
         return APP.$newRecord(
             '0x3531cc3dc5bb231b65d260771886cc583d8fe8fb29b457554cb1930a722a747d',
             '0xb083f25ffc9716fa6c018e077f602f3c6d2377f0bd01917fa75c4e9ca07bee6f',
@@ -594,7 +594,7 @@ contract('PRUF_FULL_TEST', accounts => {
         )
     })
 
-    it('Should mint a second record in AC 10', async () => {
+    it('Should mint a second record in AC 10', async () => { // Used in import 
         return APP.$newRecord(
             '0xaa31cc3dc5bb231b65d260771886cc583d8fe8fb29b457554cb1930a722a747d',
             '0xb083f25ffc9716fa6c018e077f602f3c6d2377f0bd01917fa75c4e9ca07bee6f',
@@ -604,7 +604,17 @@ contract('PRUF_FULL_TEST', accounts => {
         )
     })
 
-    it('Should mint a record in AC 13', async () => {
+    it('Should mint a third record in AC 10', async () => { // Transferred, not claimed, used in status !== status 5 checks 
+        return APP.$newRecord(
+            '0xbb31cc3dc5bb231b65d260771886cc583d8fe8fb29b457554cb1930a722a747d',
+            '0xb083f25ffc9716fa6c018e077f602f3c6d2377f0bd01917fa75c4e9ca07bee6f',
+            '10',
+            '5000',
+            { from: account2, value: 20000000000000000 }
+        )
+    })
+
+    it('Should mint a record in AC 13', async () => { //unused
         return APP_NC.$newRecord(
             '0xab31cc3dc5bb231b65d260771886cc583d8fe8fb29b457554cb1930a722a747d',
             '0xb083f25ffc9716fa6c018e077f602f3c6d2377f0bd01917fa75c4e9ca07bee6f',
@@ -614,7 +624,7 @@ contract('PRUF_FULL_TEST', accounts => {
         )
     })
 
-    it('Should mint a record in AC 14', async () => {
+    it('Should mint a record in AC 14', async () => { //Bare NC record, used in custody checks
         return APP_NC.$newRecord(
             '0xb531cc3dc5bb231b65d260771886cc583d8fe8fb29b457554cb1930a722a747d',
             '0xb083f25ffc9716fa6c018e077f602f3c6d2377f0bd01917fa75c4e9ca07bee6f',
@@ -624,7 +634,7 @@ contract('PRUF_FULL_TEST', accounts => {
         )
     })
 
-    it('Should mint a second record in AC 14', async () => {
+    it('Should mint a second record in AC 14', async () => { //unused
         return APP_NC.$newRecord(
             '0xc531cc3dc5bb231b65d260771886cc583d8fe8fb29b457554cb1930a722a747d',
             '0xb083f25ffc9716fa6c018e077f602f3c6d2377f0bd01917fa75c4e9ca07bee6f',
@@ -634,14 +644,33 @@ contract('PRUF_FULL_TEST', accounts => {
         )
     })
 
+    /* it('Should log the short record of asset 0xf531 before status mod', async () => {
+        let asset = await STOR.retrieveShortRecord('0xf531cc3dc5bb231b65d260771886cc583d8fe8fb29b457554cb1930a722aeeef')
+        return console.log(asset)
+    }) */
+
     it('Should change status of asset 0xf531 to 51 for export eligibility', async () => {
-        NP._modStatus(
-            '0xf531cc3dc5bb231b65d260771886cc583d8fe8fb29b457554cb1930a722a747d',
+        return NP._modStatus(
+            '0xf531cc3dc5bb231b65d260771886cc583d8fe8fb29b457554cb1930a722aeeef',
             '0xb083f25ffc9716fa6c018e077f602f3c6d2377f0bd01917fa75c4e9ca07bee6f',
             '51',
             { from: account3 }
         )
     })
+
+    it('Should change status of asset 0xbb31 to 1 for transfer eligibility', async () => {
+        return NP._modStatus(
+            '0xbb31cc3dc5bb231b65d260771886cc583d8fe8fb29b457554cb1930a722a747d',
+            '0xb083f25ffc9716fa6c018e077f602f3c6d2377f0bd01917fa75c4e9ca07bee6f',
+            '1',
+            { from: account2 }
+        )
+    })
+
+   /*  it('Should log the short record of asset 0xf531 after status mod', async () => {
+        let asset = await STOR.retrieveShortRecord('0xf531cc3dc5bb231b65d260771886cc583d8fe8fb29b457554cb1930a722aeeef')
+        return console.log(asset)
+    }) */
 
     it('Should put asset 0xd531 into an escrow', async () => {
         return ECR.setEscrow(
@@ -653,7 +682,7 @@ contract('PRUF_FULL_TEST', accounts => {
         )
     })
     
-    it('Should add asset note to asset 0xe531', async () => {
+    it('Should add asset note to asset 0xe531', async () => { 
         return APP.$addIpfs2Note(
             '0xe531cc3dc5bb231b65d260771886cc583d8fe8fb29b457554cb1930a722a747d',
             '0xb083f25ffc9716fa6c018e077f602f3c6d2377f0bd01917fa75c4e9ca07bee6f',
@@ -661,112 +690,142 @@ contract('PRUF_FULL_TEST', accounts => {
             { from: account3, value: 20000000000000000 }
         )
     })
+
+    it('Should transfer asset 0xbb31 to unclaimed', async () => { // Transferred, not claimed, used in status !== status 5 checks 
+        return APP.$transferAsset(
+            '0xbb31cc3dc5bb231b65d260771886cc583d8fe8fb29b457554cb1930a722a747d',
+            '0xb083f25ffc9716fa6c018e077f602f3c6d2377f0bd01917fa75c4e9ca07bee6f',
+            '0x0000000000000000000000000000000000000000000000000000000000000000',
+            { from: account2, value: 20000000000000000 }
+        )
+    })
     
-    it('Should export asset 0xf531 to account5 in AC13', async () => {
+    it('Should export asset 0xf531 to account2 in AC10', async () => {
         return APP.exportAsset(
-            '0xf531cc3dc5bb231b65d260771886cc583d8fe8fb29b457554cb1930a722a747d',
-            account5,
+            '0xf531cc3dc5bb231b65d260771886cc583d8fe8fb29b457554cb1930a722aeeef',
+            APP.address,
             { from: account3 }
         )
     })
-    
-    //END SETUP
+
+    //
+    //
+    // END SETUP
+    //
+    //
+
+    //
+    //
+    // APP FAILBATCH
+    //
+    //
 
 
     //EXPORT ASSET
-
+    //1
     it('Should fail to export asset due to non-custodial AC type (FAILS IN ISAUTHORIZED MOD)', async () => {
         return APP.exportAsset(
             '0xb531cc3dc5bb231b65d260771886cc583d8fe8fb29b457554cb1930a722a747d',
-            '0x0004feb54a4ACfcD7E4F7AC8709c749e519Cb5cf',
+            account10,
             { from: account6 }
         )
     })
-
+    //2
     it('Should fail to export asset due to user ineligibility in AC', async () => {
         return APP.exportAsset(
             '0x3531cc3dc5bb231b65d260771886cc583d8fe8fb29b457554cb1930a722a747d',
-            '0x0004feb54a4ACfcD7E4F7AC8709c749e519Cb5cf',
+            account10,
             { from: account6 }
         )
     })
+    
+    /* it('Should log the short record of asset 0x3531 before attempt to export', async () => {
+        let asset = await STOR.retrieveShortRecord('0x3531cc3dc5bb231b65d260771886cc583d8fe8fb29b457554cb1930a722a747d')
+        return console.log(asset)
+    }) */
 
+    //3
     it('Should fail to export asset due to asset status !== 51', async () => {
         return APP.exportAsset(
             '0x3531cc3dc5bb231b65d260771886cc583d8fe8fb29b457554cb1930a722a747d',
-            '0x0004feb54a4ACfcD7E4F7AC8709c749e519Cb5cf',
+            account10,
             { from: account2 }
         )
     }) //END EXPORT ASSET
 
 
     //FORCETRANSFER ASSET
-    it('Should fail to transfer the record due to non-custodial AC type', async () => {
+    //4
+    it('Should fail to forceTransfer the record due to non-custodial AC type', async () => {
         return APP.$forceModRecord(
             '0xb531cc3dc5bb231b65d260771886cc583d8fe8fb29b457554cb1930a722a747d',
             '0xa083f25ffc9716fa6c018e077f602f3c6d2377f0bd01917fa75c4e9ca07bee6f',
             { from: account6, value: 20000000000000000 }
         )
     })
-
-    it('Should fail to transfer the record due to nonexistance', async () => {
+    //5
+    it('Should fail to forceTransfer the record due to nonexistance', async () => {
         return APP.$forceModRecord(
             '0x0531cc3dc5bb231b65d260771886cc583d8fe8fb29b457554cb1930a722a747d',
             '0xa083f25ffc9716fa6c018e077f602f3c6d2377f0bd01917fa75c4e9ca07bee6f',
             { from: account2, value: 20000000000000000 }
         )
     })
-
-    it('Should fail to transfer the record due to nonHuman user type', async () => {
+    //6
+    it('Should fail to forceTransfer the record due to nonHuman user type', async () => {
         return APP.$forceModRecord(
             '0x3531cc3dc5bb231b65d260771886cc583d8fe8fb29b457554cb1930a722a747d',
             '0xa083f25ffc9716fa6c018e077f602f3c6d2377f0bd01917fa75c4e9ca07bee6f',
             { from: account7, value: 20000000000000000 }
         )
     })
-
-    it('Should fail to transfer the record due to empty NRH field', async () => {
+    //7
+    it('Should fail to forceTransfer the record due to empty NRH field', async () => {
         return APP.$forceModRecord(
             '0x3531cc3dc5bb231b65d260771886cc583d8fe8fb29b457554cb1930a722a747d',
             '0x0000000000000000000000000000000000000000000000000000000000000000',
             { from: account2, value: 20000000000000000 }
         )
     })
-
+    //SHOULD PASS
     it('Should change status to 3', async () => {
-        NP._setLostOrStolen(
+        return NP._setLostOrStolen(
             '0x3531cc3dc5bb231b65d260771886cc583d8fe8fb29b457554cb1930a722a747d',
             '0xb083f25ffc9716fa6c018e077f602f3c6d2377f0bd01917fa75c4e9ca07bee6f',
             '3',
             { from: account2 }
         )
     })
-
-    it('Should fail to transfer the record due to lost or stolen status', async () => {
+    //8
+    it('Should fail to forceTransfer the record due to lost or stolen status', async () => {
         return APP.$forceModRecord(
             '0x3531cc3dc5bb231b65d260771886cc583d8fe8fb29b457554cb1930a722a747d',
             '0xa083f25ffc9716fa6c018e077f602f3c6d2377f0bd01917fa75c4e9ca07bee6f',
             { from: account2, value: 20000000000000000 }
         )
     })
-
-    it('Should fail to transfer the record due to escrow status', async () => {
+    //9
+    it('Should fail to forceTransfer the record due to escrow status', async () => {
         return APP.$forceModRecord(
             '0xd531cc3dc5bb231b65d260771886cc583d8fe8fb29b457554cb1930a722a747d',
             '0xa083f25ffc9716fa6c018e077f602f3c6d2377f0bd01917fa75c4e9ca07bee6f',
             { from: account3, value: 20000000000000000 }
         )
     })
-
-    it('Test not active', async () => {
-        // @DEV ADD: TRANSFERRED NOT RECIEVED FAILURE CASE
+    //10
+    it('Should fail to forceTransfer asset due to transferred/unclaimed status', async () => {
+        return APP.$forceModRecord(
+            '0xbb31cc3dc5bb231b65d260771886cc583d8fe8fb29b457554cb1930a722a747d',
+            '0xa083f25ffc9716fa6c018e077f602f3c6d2377f0bd01917fa75c4e9ca07bee6f',
+            { from: account2, value: 20000000000000000 }
+        )
     }) //END FORCETRANSFER ASSET
     
     
 
 
     // TRANSFER ASSET
-
+    //11
     it('Should fail to transfer the record due to non-custodial AC type', async () => {
         return APP.$transferAsset(
             '0xb531cc3dc5bb231b65d260771886cc583d8fe8fb29b457554cb1930a722a747d',
@@ -776,7 +835,7 @@ contract('PRUF_FULL_TEST', accounts => {
         )
     })
 
-
+    //12
     it('Should fail to transfer the record due to asset nonexistance', async () => {
         return APP.$transferAsset(
             '0x0531cc3dc5bb231b65d260771886cc583d8fe8fb29b457554cb1930a722a747d',
@@ -785,7 +844,7 @@ contract('PRUF_FULL_TEST', accounts => {
             { from: account2, value: 20000000000000000 }
         )
     })
-
+    //13
     it('Should fail to transfer the record due to user ineligibility in AC', async () => {
         return APP.$transferAsset(
             '0x3531cc3dc5bb231b65d260771886cc583d8fe8fb29b457554cb1930a722a747d',
@@ -794,7 +853,7 @@ contract('PRUF_FULL_TEST', accounts => {
             { from: account3, value: 20000000000000000 }
         )
     })
-
+    //14
     it('Should fail to transfer the record due to userType > 5 && assetStatus < 50', async () => {
         return APP.$transferAsset(
             '0x3531cc3dc5bb231b65d260771886cc583d8fe8fb29b457554cb1930a722a747d',
@@ -803,16 +862,7 @@ contract('PRUF_FULL_TEST', accounts => {
             { from: account8, value: 20000000000000000 }
         )
     })
-
-    it('Should fail to transfer the record due to empty NRH field', async () => {
-        return APP.$transferAsset(
-            '0x3531cc3dc5bb231b65d260771886cc583d8fe8fb29b457554cb1930a722a747d',
-            '0xb083f25ffc9716fa6c018e077f602f3c6d2377f0bd01917fa75c4e9ca07bee6f',
-            '0x0000000000000000000000000000000000000000000000000000000000000000',
-            { from: account2, value: 20000000000000000 }
-        )
-    })
-
+    //15
     it('Should fail to transfer the record due to status nontransferrable', async () => {
         return APP.$transferAsset(
             '0x3531cc3dc5bb231b65d260771886cc583d8fe8fb29b457554cb1930a722a747d',
@@ -821,16 +871,16 @@ contract('PRUF_FULL_TEST', accounts => {
             { from: account2, value: 20000000000000000 }
         )
     })
-
+    //SHOULD PASS
     it('Should change status to 1', async () => {
-        NP._modStatus(
+        return NP._modStatus(
             '0x3531cc3dc5bb231b65d260771886cc583d8fe8fb29b457554cb1930a722a747d',
             '0xb083f25ffc9716fa6c018e077f602f3c6d2377f0bd01917fa75c4e9ca07bee6f',
             '1',
             { from: account2 }
         )
     })
-
+    //16    
     it('Should fail to transfer the record due to rgtHash mismatch', async () => {
         return APP.$transferAsset(
             '0x3531cc3dc5bb231b65d260771886cc583d8fe8fb29b457554cb1930a722a747d',
@@ -838,10 +888,10 @@ contract('PRUF_FULL_TEST', accounts => {
             '0xa083f25ffc9716fa6c018e077f602f3c6d2377f0bd01917fa75c4e9ca07bee6f',
             { from: account2, value: 20000000000000000 }
         )
-    }) 
-    
+    })
+    //SHOULD PASS    
     it('Should change status to 0', async () => {
-        NP._modStatus(
+        return NP._modStatus(
             '0x3531cc3dc5bb231b65d260771886cc583d8fe8fb29b457554cb1930a722a747d',
             '0xb083f25ffc9716fa6c018e077f602f3c6d2377f0bd01917fa75c4e9ca07bee6f',
             '0',
@@ -851,7 +901,7 @@ contract('PRUF_FULL_TEST', accounts => {
 
     
     //ADD NOTE 
-
+    //17
     it('Should fail to add asset note due to non-custodial AC type', async () => {
         return APP.$addIpfs2Note(
             '0xb531cc3dc5bb231b65d260771886cc583d8fe8fb29b457554cb1930a722a747d',
@@ -860,7 +910,7 @@ contract('PRUF_FULL_TEST', accounts => {
             { from: account6, value: 20000000000000000 }
         )
     })
-
+    //18
     it('Should fail to add asset note due to asset nonexistence', async () => {
         return APP.$addIpfs2Note(
             '0x0531cc3dc5bb231b65d260771886cc583d8fe8fb29b457554cb1930a722a747d',
@@ -869,7 +919,7 @@ contract('PRUF_FULL_TEST', accounts => {
             { from: account6, value: 20000000000000000 }
         )
     })
-
+    //19
     it('Should fail to add asset note due to user ineligibility in AC', async () => {
         return APP.$addIpfs2Note(
             '0x3531cc3dc5bb231b65d260771886cc583d8fe8fb29b457554cb1930a722a747d',
@@ -878,7 +928,7 @@ contract('PRUF_FULL_TEST', accounts => {
             { from: account6, value: 20000000000000000 }
         )
     })
-
+    //20
     it('Should fail to add asset note due to escrow status', async () => {
         return APP.$addIpfs2Note(
             '0xd531cc3dc5bb231b65d260771886cc583d8fe8fb29b457554cb1930a722a747d',
@@ -887,7 +937,7 @@ contract('PRUF_FULL_TEST', accounts => {
             { from: account3, value: 20000000000000000 }
         )
     })
-
+    //21
     it('Should fail to add asset note due to rgtHash mismatch', async () => {
         return APP.$addIpfs2Note(
             '0x3531cc3dc5bb231b65d260771886cc583d8fe8fb29b457554cb1930a722a747d',
@@ -896,7 +946,7 @@ contract('PRUF_FULL_TEST', accounts => {
             { from: account2, value: 20000000000000000 }
         )
     })
-
+    //22
     it('Should fail to add asset note due to existing note', async () => {
         return APP.$addIpfs2Note(
             '0xe531cc3dc5bb231b65d260771886cc583d8fe8fb29b457554cb1930a722a747d',
@@ -905,14 +955,19 @@ contract('PRUF_FULL_TEST', accounts => {
             { from: account3, value: 20000000000000000 }
         )
     })
-
-    it('Test not active', async () => {
-        // @DEV ADD: TRANSFERRED NOT RECIEVED FAILURE CASE
+    //23
+    it('Should fail to add asset note due to transferred/unclaimed status', async () => {
+        return APP.$addIpfs2Note(
+            '0xbb31cc3dc5bb231b65d260771886cc583d8fe8fb29b457554cb1930a722a747d',
+            '0xb083f25ffc9716fa6c018e077f602f3c6d2377f0bd01917fa75c4e9ca07bee6f',
+            '0xa083f25ffc9716fa6c018e077f602f3c6d2377f0bd01917fa75c4e9ca07b0000',
+            { from: account2, value: 20000000000000000 }
+        )
     }) //END ADD NOTE
 
 
     //IMPORT ASSET
-
+    //24
     it('Should fail to import an asset due to non-custodial AC type', async () => {
         return APP.$importAsset(
             '0xb531cc3dc5bb231b65d260771886cc583d8fe8fb29b457554cb1930a722a747d',
@@ -921,7 +976,7 @@ contract('PRUF_FULL_TEST', accounts => {
             { from: account6, value: 20000000000000000 }
         )
     })
-
+    //25
     it('Should fail to import an asset due to asset nonexistence', async () => {
         return APP.$importAsset(
             '0x0531cc3dc5bb231b65d260771886cc583d8fe8fb29b457554cb1930a722a747d',
@@ -930,34 +985,34 @@ contract('PRUF_FULL_TEST', accounts => {
             { from: account6, value: 20000000000000000 }
         )
     })
-
+    //26
     it('Should fail to import an asset due to userType > 3', async () => {
         return APP.$importAsset(
-            '0xf531cc3dc5bb231b65d260771886cc583d8fe8fb29b457554cb1930a722a747d',
+            '0xf531cc3dc5bb231b65d260771886cc583d8fe8fb29b457554cb1930a722aeeef',
             '0xb083f25ffc9716fa6c018e077f602f3c6d2377f0bd01917fa75c4e9ca07bee6f',
             '10',
             { from: account8, value: 20000000000000000 }
         )
     })
-
+    //27
     it('Should fail to import an asset due to user ineligibility in AC', async () => {
         return APP.$importAsset(
-            '0xf531cc3dc5bb231b65d260771886cc583d8fe8fb29b457554cb1930a722a747d',
+            '0xf531cc3dc5bb231b65d260771886cc583d8fe8fb29b457554cb1930a722aeeef',
             '0xb083f25ffc9716fa6c018e077f602f3c6d2377f0bd01917fa75c4e9ca07bee6f',
             '10',
             { from: account3, value: 20000000000000000 }
         )
     })
-
+    //28
     it('Should fail to import an asset due to attempted change of root AC', async () => {
         return APP.$importAsset(
-            '0xf531cc3dc5bb231b65d260771886cc583d8fe8fb29b457554cb1930a722a747d',
+            '0xf531cc3dc5bb231b65d260771886cc583d8fe8fb29b457554cb1930a722aeeef',
             '0xb083f25ffc9716fa6c018e077f602f3c6d2377f0bd01917fa75c4e9ca07bee6f',
             '14',
             { from: account6, value: 20000000000000000 }
         )
     })
-
+    //29
     it('Should fail to import an asset due to nonExported status', async () => {
         return APP.$importAsset(
             '0xaa31cc3dc5bb231b65d260771886cc583d8fe8fb29b457554cb1930a722a747d',
@@ -967,9 +1022,19 @@ contract('PRUF_FULL_TEST', accounts => {
         )
     })
 
-    //END PRUF_APP_FAILBATCH///////////////////////////////////////////////////////////////////
+    //
+    //
+    // END APP FAILBATCH
+    //
+    //
 
-    //BEGIN PRUF_NP_FAILBATCH//////////////////////////////////////////////////////////////////
+
+    ///
+    //
+    // NP FAILBATCH
+    //
+    //
+
 
 
     /* it('Should change status to 1', async () => {
