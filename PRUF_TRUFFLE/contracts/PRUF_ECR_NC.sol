@@ -18,9 +18,9 @@ __/\\\\\\\\\\\\\ _____/\\\\\\\\\ _______/\\../\\ ___/\\\\\\\\\\\\\\\
 // SPDX-License-Identifier: UNLICENSED
 pragma solidity ^0.6.7;
 
-import "./PRUF_CORE.sol";
+import "./PRUF_ECR_CORE.sol";
 
-contract ECR_NC is CORE {
+contract ECR_NC is ECR_CORE {
     using SafeMath for uint256;
 
     /*
@@ -52,11 +52,11 @@ contract ECR_NC is CORE {
         Record memory rec = getRecord(_idxHash);
         uint256 escrowTime = now.add(_escrowTime);
         uint8 newEscrowStatus;
-        AC memory AC_info = getACinfo(rec.assetClass);
+        ContractDataHash memory contractInfo = getContractInfo(address(this),rec.assetClass);
 
         require(
-            AC_info.custodyType == 2,
-            "TPSE:SE: Contract not authorized for custodial assets"
+            contractInfo.contractType > 0,
+            "PNP:MS: Contract not authorized for this asset class"
         );
 
         require((rec.rightsHolder != 0), "SE: Record does not exist");
@@ -107,12 +107,12 @@ contract ECR_NC is CORE {
     function endEscrow(bytes32 _idxHash) external nonReentrant {
         bytes32 ownerHash = escrowMGRcontract.retrieveEscrowOwner(_idxHash);
         Record memory rec = getRecord(_idxHash);
-        AC memory AC_info = getACinfo(rec.assetClass);
         escrowData memory escrow = getEscrowData(_idxHash);
+        ContractDataHash memory contractInfo = getContractInfo(address(this),rec.assetClass);
 
         require(
-            AC_info.custodyType == 2,
-            "TPSE:EE:Contract not authorized for custodial assets"
+            contractInfo.contractType > 0,
+            "PNP:MS: Contract not authorized for this asset class"
         );
 
         require((rec.rightsHolder != 0), "EE: Record does not exist");

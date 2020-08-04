@@ -54,11 +54,11 @@ contract NP_NC is CORE {
         returns (bytes32)
     {
         Record memory rec = getRecord(_idxHash);
-        AC memory AC_info = getACinfo(rec.assetClass);
+        ContractDataHash memory contractInfo = getContractInfo(address(this),rec.assetClass);
 
         require(
-            AC_info.custodyType == 2,
-            "TPNP:CR: Contract not authorized for custodial assets"
+            contractInfo.contractType > 0,
+            "PNP:MS: Contract not authorized for this asset class"
         );
 
         require((rec.rightsHolder != 0), "PA:FMR: Record does not exist");
@@ -105,6 +105,29 @@ contract NP_NC is CORE {
         whenNotPaused
         isAuthorized(_idxHash)
     {
+        Record memory rec = getRecord(_idxHash);
+        ContractDataHash memory contractInfo = getContractInfo(address(this),rec.assetClass);
+
+        require(
+            contractInfo.contractType > 0,
+            "TPNP:EX: Contract not authorized for this asset class"
+        );
+        require(
+            (rec.assetStatus != 6) &&
+                (rec.assetStatus != 50) &&
+                (rec.assetStatus != 56),
+            "TPNP:EX: Cannot change status of asset in Escrow until escrow is expired"
+        );
+        require(
+            (rec.assetStatus != 5) && (rec.assetStatus != 55),
+            "TPNP:EX: Cannot change status of asset in transferred-unregistered status."
+        );
+        require(
+            (rec.assetStatus != 60),
+            "TPNP:EX: Record is burned and must be reimported by ACadmin"
+        );
+        require(rec.assetStatus < 200, "TPNP:EX: Record locked");
+
         _modStatus(_idxHash, 70);
     }
 
@@ -119,16 +142,34 @@ contract NP_NC is CORE {
         returns (uint8)
     {
         Record memory rec = getRecord(_idxHash);
-        AC memory AC_info = getACinfo(rec.assetClass);
+        ContractDataHash memory contractInfo = getContractInfo(address(this),rec.assetClass);
 
         require(
-            AC_info.custodyType == 2,
-            "TPNP:MS: Contract not authorized for custodial assets"
+            contractInfo.contractType > 0,
+            "PNP:MS: Contract not authorized for this asset class"
         );
 
         require((rec.rightsHolder != 0), "TPNP:MS: Record does not exist");
 
-        require(_newAssetStatus < 200, "TPNP:MS: user cannot set status > 199");
+        require((_newAssetStatus < 100) &&
+                (_newAssetStatus != 3) &&
+                (_newAssetStatus != 4) &&
+                (_newAssetStatus != 5) &&
+                (_newAssetStatus != 6) &&
+                (_newAssetStatus != 7) &&
+                (_newAssetStatus != 50) &&
+                (_newAssetStatus != 53) &&
+                (_newAssetStatus != 54) &&
+                (_newAssetStatus != 55) &&
+                (_newAssetStatus != 56) &&
+                (_newAssetStatus != 57) &&
+                (_newAssetStatus != 58),
+                "PNP:MS: Specified Status is reserved."
+        );
+        require(
+            _newAssetStatus != 70,
+            "PNP:MS: Use exportNC to export custodial assets"
+        );
         require(
             (_newAssetStatus > 49),
             "TPNP:MS: Only custodial usertype can set status < 50"
@@ -175,11 +216,11 @@ contract NP_NC is CORE {
         returns (uint8)
     {
         Record memory rec = getRecord(_idxHash);
-        AC memory AC_info = getACinfo(rec.assetClass);
+        ContractDataHash memory contractInfo = getContractInfo(address(this),rec.assetClass);
 
         require(
-            AC_info.custodyType == 2,
-            "TPNP:SLS: Contract not authorized for custodial assets"
+            contractInfo.contractType > 0,
+            "PNP:MS: Contract not authorized for this asset class"
         );
 
         require((rec.rightsHolder != 0), "TPNP:SLS: Record does not exist");
@@ -235,11 +276,11 @@ contract NP_NC is CORE {
         returns (uint256)
     {
         Record memory rec = getRecord(_idxHash);
-        AC memory AC_info = getACinfo(rec.assetClass);
+        ContractDataHash memory contractInfo = getContractInfo(address(this),rec.assetClass);
 
         require(
-            AC_info.custodyType == 2,
-            "TPNP:DC: Contract not authorized for custodial assets"
+            contractInfo.contractType > 0,
+            "PNP:MS: Contract not authorized for this asset class"
         );
         require(_decAmount > 0, "TPNP:DC: cannot decrement by negative number");
 
@@ -250,8 +291,6 @@ contract NP_NC is CORE {
                 (rec.assetStatus != 56), //If so, it must not erase the recorder, or escrow termination will be broken!
             "TPNP:DC: Cannot modify asset in Escrow"
         );
-
-        require(rec.assetStatus < 200, "TPNP:DC: Record locked");
         require(
             (rec.assetStatus != 5) && (rec.assetStatus != 55),
             "TPNP:DC: Record In Transferred-unregistered status"
@@ -260,6 +299,7 @@ contract NP_NC is CORE {
             (rec.assetStatus != 60),
             "TPNP:DC: Record is burned and must be reimported by ACadmin"
         );
+        require(rec.assetStatus < 200, "TPNP:DC: Record locked");
         //^^^^^^^checks^^^^^^^^^
 
         if (rec.countDown > _decAmount) {
@@ -285,11 +325,11 @@ contract NP_NC is CORE {
         returns (bytes32)
     {
         Record memory rec = getRecord(_idxHash);
-        AC memory AC_info = getACinfo(rec.assetClass);
+        ContractDataHash memory contractInfo = getContractInfo(address(this),rec.assetClass);
 
         require(
-            AC_info.custodyType == 2,
-            "TPNP:MI1: Contract not authorized for custodial assets"
+            contractInfo.contractType > 0,
+            "PNP:MS: Contract not authorized for this asset class"
         );
 
         require((rec.rightsHolder != 0), "TPNP:MI1: Record does not exist");
@@ -301,7 +341,6 @@ contract NP_NC is CORE {
                 (rec.assetStatus != 56), //Should it be contingent on the original recorder address?
             "TPNP:MI1: Cannot modify asset in Escrow" //If so, it must not erase the recorder, or escrow termination will be broken!
         );
-        require(rec.assetStatus < 200, "TPNP:MI1: Record locked");
         require(
             (rec.assetStatus != 5) && (rec.assetStatus != 55),
             "TPNP:MI1: Record In Transferred-unregistered status"
@@ -310,6 +349,7 @@ contract NP_NC is CORE {
             (rec.assetStatus != 60),
             "TPNP:MI1: Record is burned and must be reimported by ACadmin"
         );
+        require(rec.assetStatus < 200, "TPNP:MI1: Record locked");
         //^^^^^^^checks^^^^^^^^^
 
         rec.Ipfs1 = _IpfsHash;
