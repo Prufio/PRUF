@@ -45,7 +45,7 @@ contract RCLR is ECR_CORE, CORE {
 
         //^^^^^^^checks^^^^^^^^^
 
-        uint256 escrowTime = now + 3153600000000; //100,000 years in the FUTURE.........
+        uint256 escrowTime = block.timestamp + 3153600000000; //100,000 years in the FUTURE.........
         bytes32 escrowOwnerHash = keccak256(abi.encodePacked(msg.sender));
         //^^^^^^^effects^^^^^^^^^
 

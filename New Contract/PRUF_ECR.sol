@@ -47,7 +47,7 @@ contract ECR is ECR_CORE {
     ) external nonReentrant whenNotPaused isAuthorized(_idxHash) {
         Record memory rec = getRecord(_idxHash);
         uint8 userType = getUserType(rec.assetClass);
-        uint256 escrowTime = now.add(_escrowTime);
+        uint256 escrowTime = block.timestamp.add(_escrowTime);
         uint8 newEscrowStatus;
         AC memory AC_info = getACinfo(rec.assetClass);
 
@@ -61,7 +61,7 @@ contract ECR is ECR_CORE {
             "TPNP:MI1: User not authorized to modify records in specified asset class"
         );
         require(
-            (escrowTime >= now),
+            (escrowTime >= block.timestamp),
             "PSE:SE: Escrow must be set to a time in the future"
         );
         require(
@@ -144,7 +144,7 @@ contract ECR is ECR_CORE {
             "PSE:EE: Usertype less than 5 required to end this escrow"
         );
         require(
-            (escrow.timelock < now) ||
+            (escrow.timelock < block.timestamp) ||
                 (keccak256(abi.encodePacked(msg.sender)) == ownerHash),
             "PSE:EE: Escrow period not ended and caller is not escrow owner"
         );

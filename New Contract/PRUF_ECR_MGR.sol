@@ -180,7 +180,7 @@ contract ECR_MGR is BASIC {
         nonReentrant
         whenNotPaused
     {
-        require(escrows[_idxHash].timelock < now, "PEM:PEE:Escrow not expired");
+        require(escrows[_idxHash].timelock < block.timestamp, "PEM:PEE:Escrow not expired");
         require( // do not allow escrows with escrow.data > 199 to be ended by this function
             escrows[_idxHash].data < 200,
             "PEM:PEE:Escrow not endable with permissiveEndEscrow"

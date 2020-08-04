@@ -50,7 +50,7 @@ contract ECR_NC is ECR_CORE {
         uint8 _escrowStatus
     ) external nonReentrant whenNotPaused isAuthorized(_idxHash) {
         Record memory rec = getRecord(_idxHash);
-        uint256 escrowTime = now.add(_escrowTime);
+        uint256 escrowTime = block.timestamp.add(_escrowTime);
         uint8 newEscrowStatus;
         AC memory AC_info = getACinfo(rec.assetClass);
 
@@ -65,7 +65,7 @@ contract ECR_NC is ECR_CORE {
             "TPSE:SE: Only ACadmin authorized user can change status < 50"
         );
         require(
-            (escrowTime >= now),
+            (escrowTime >= block.timestamp),
             "TPSE:SE:Escrow must be set to a time in the future"
         );
         require(
@@ -121,7 +121,7 @@ contract ECR_NC is ECR_CORE {
             "TPSE:EE:record must be in escrow status <49"
         );
         require(
-            (escrow.timelock < now) ||
+            (escrow.timelock < block.timestamp) ||
                 (keccak256(abi.encodePacked(msg.sender)) == ownerHash),
             "TPSE:EE: Escrow period not ended and caller is not escrow owner"
         );
