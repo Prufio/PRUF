@@ -242,7 +242,7 @@ contract STOR is Ownable, ReentrancyGuard, Pausable {
     ) external nonReentrant whenNotPaused isAuthorized(_assetClass) {
         require(
             database[_idxHash].assetStatus != 60,
-            "PS:NR:Asset is recycled. Use T_PRUF_APP recycle instead"
+            "PS:NR:Asset is recycled. Use PRUF_APP_NC recycle instead"
         );
         require(
             database[_idxHash].rightsHolder == 0,

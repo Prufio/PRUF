@@ -52,7 +52,7 @@ contract APP is CORE {
 
         require(
             contractInfo.contractType > 0,
-            "PNP:MS: Contract not authorized for this asset class"
+            "PNP:MS: This contract not authorized for specified AC"
         );
         require(
             (userType > 0) && (userType < 10),
@@ -96,7 +96,7 @@ contract APP is CORE {
 
         require(
             contractInfo.contractType > 0,
-            "PA:MS: Contract not authorized for this asset class"
+            "PA:MS: This contract not authorized for specified AC"
         );
         require(
             (userType > 0) && (userType < 10),
@@ -143,7 +143,7 @@ contract APP is CORE {
 
         require(
             contractInfo.contractType > 0,
-            "PNP:MS: Contract not authorized for this asset class"
+            "PNP:MS: This contract not authorized for specified AC"
         );
 
         require((rec.rightsHolder != 0), "PA:FMR: Record unclaimed: import required. ");
@@ -217,7 +217,7 @@ contract APP is CORE {
 
         require(
             contractInfo.contractType > 0,
-            "PNP:MS: Contract not authorized for this asset class"
+            "PNP:MS: This contract not authorized for specified AC"
         );
         require((rec.rightsHolder != 0), "PA:TA: Record unclaimed: import required. ");
         require(
@@ -281,7 +281,7 @@ contract APP is CORE {
 
         require(
             contractInfo.contractType > 0,
-            "PNP:MS: Contract not authorized for this asset class"
+            "PNP:MS: This contract not authorized for specified AC"
         );
         require((rec.rightsHolder != 0), "PA:I2: Record unclaimed: import required. ");
         require(
@@ -345,7 +345,7 @@ contract APP is CORE {
 
         require(
             contractInfo.contractType > 0,
-            "PNP:MS: Contract not authorized for this asset class"
+            "PNP:MS: This contract not authorized for specified AC"
         );
         require((rec.assetClass != 0), "PA:IA: Record does not exist. ");
         require(userType < 3, "PA:IA: User not authorized to reimport assets");
