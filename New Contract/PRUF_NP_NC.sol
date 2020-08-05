@@ -113,6 +113,7 @@ contract NP_NC is CORE {
             address(this),
             rec.assetClass
         );
+        AC memory AC_info = getACinfo(rec.assetClass);
 
         require(
             contractInfo.contractType > 0,
@@ -134,11 +135,10 @@ contract NP_NC is CORE {
         );
         require(rec.assetStatus < 200, "TPNP:EX: Record locked");
 
-        STOR.modifyRecord(_idxHash,rec.rightsHolder,
-            70,
-            rec.countDown,
-            rec.forceModCount,
-            rec.numberOfTransfers);
+        rec.assetStatus = 70; // Set status to 70 (exported)
+        writeRecord(_idxHash, rec);
+        STOR.changeAC(_idxHash, AC_info.assetClassRoot); //set assetClass to the root AC of the assetClass
+
     }
 
     /*

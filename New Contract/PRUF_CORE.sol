@@ -130,7 +130,6 @@ contract CORE is PullPayment, BASIC {
         //^^^^^^^checks^^^^^^^^^
 
         STOR.modifyRecord(
-            //userHash,
             _idxHash,
             _rec.rightsHolder,
             _rec.assetStatus,
