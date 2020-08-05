@@ -585,7 +585,7 @@ contract('PRUF_BOOTSTRAP', accounts => {
             })
     })
 
-
+})
 
     //
     //
