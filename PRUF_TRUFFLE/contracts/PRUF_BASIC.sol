@@ -26,9 +26,7 @@ import "./_ERC721/IERC721Receiver.sol";
 
 contract BASIC is ReentrancyGuard, Ownable, IERC721Receiver, Pausable {
     struct Record {
-        //bytes32 recorder; // Address hash of recorder
         bytes32 rightsHolder; // KEK256 Registered owner
-        //bytes32 lastRecorder; // Address hash of last non-automation recorder
         uint8 assetStatus; // Status - Transferrable, locked, in transfer, stolen, lost, etc.
         uint8 forceModCount; // Number of times asset has been forceModded.
         uint16 assetClass; // Type of asset
@@ -36,14 +34,8 @@ contract BASIC is ReentrancyGuard, Ownable, IERC721Receiver, Pausable {
         uint256 countDownStart; // Starting point for countdown variable (set once)
         bytes32 Ipfs1; // Publically viewable asset description
         bytes32 Ipfs2; // Publically viewable immutable notes
-        //uint256 timeLock; // Time sensitive mutex
         uint16 numberOfTransfers; //number of transfers and forcemods
     }
-    // struct User {
-    //     uint8 userType; // User type: 1 = human, 9 = automated
-    //     mapping (uint16 => uint8) authorized;
-    //     //uint16 authorizedAssetClass; // Asset class in which user is permitted to transact
-    // }
 
     struct AC {
         string name; // NameHash for assetClass
@@ -57,39 +49,26 @@ contract BASIC is ReentrancyGuard, Ownable, IERC721Receiver, Pausable {
         bytes32 nameHash; // Contract Name hashed
     }
 
-    struct escrowData {
-        uint8 data;
-        bytes32 controllingContractNameHash;
-        bytes32 escrowOwnerAddressHash;
-        uint256 timelock;
-        bytes32 ex1;
-        bytes32 ex2;
-        address addr1;
-        address addr2;
-    }
+    address internal STOR_Address;
+    STOR_Interface internal STOR; // Set up external contract interface
 
-    //mapping(bytes32 => User) internal registeredUsers; // Authorized recorder database
+    address internal AC_MGR_Address;
+    AC_MGR_Interface internal AC_MGR; // Set up external contract interface
 
-    address internal storageAddress;
-    STOR_Interface internal Storage; // Set up external contract interface
+    address internal A_TKN_Address;
+    A_TKN_Interface internal A_TKN; //erc721_token prototype initialization
 
-    address internal AssetClassTokenManagerAddress;
-    AC_MGR_Interface internal AssetClassTokenManagerContract; // Set up external contract interface
+    address internal AC_TKN_Address;
+    AC_TKN_Interface internal AC_TKN; //erc721_token prototype initialization
 
-    address internal AssetTokenAddress;
-    A_TKN_Interface internal AssetTokenContract; //erc721_token prototype initialization
+    address internal ECR_MGR_Address;
+    ECR_MGR_Interface internal ECR_MGR; //Set up external contract interface for escrowmgr
 
-    address internal AssetClassTokenAddress;
-    AC_TKN_Interface internal AssetClassTokenContract; //erc721_token prototype initialization
+    address internal RCLR_Address; //Set up external contract interface for recycler
+    RCLR_Interface internal RCLR;
 
-    address internal escrowMGRAddress;
-    ECR_MGR_Interface internal escrowMGRcontract; //Set up external contract interface for escrowmgr
-
-    address internal recyclerAddress; //Set up external contract interface for recycler
-    RCLR_Interface internal Recycler;
-
-    address internal PrufAppAddress;
-    address internal T_PrufAppAddress;
+    address internal APP_Address;
+    address internal APP_NC_Address;
 
     // --------------------------------------Events--------------------------------------------//
 
@@ -105,7 +84,6 @@ contract BASIC is ReentrancyGuard, Ownable, IERC721Receiver, Pausable {
      * ----OR---- (comment out part that will not be used)
      *      holds asset token
      */
-
     modifier isAuthorized(bytes32 _idxHash) virtual {
         require(
             _idxHash == 0, //function should always be overridden
@@ -125,30 +103,28 @@ contract BASIC is ReentrancyGuard, Ownable, IERC721Receiver, Pausable {
         onlyOwner
     {
         //^^^^^^^checks^^^^^^^^^
-        AssetClassTokenAddress = Storage.resolveContractAddress(
-            "AC_TKN"
-        );
-        AssetClassTokenContract = AC_TKN_Interface(AssetClassTokenAddress);
+        AC_TKN_Address = STOR.resolveContractAddress("AC_TKN");
+        AC_TKN = AC_TKN_Interface(AC_TKN_Address);
 
-        AssetClassTokenManagerAddress = Storage.resolveContractAddress(
+        AC_MGR_Address = STOR.resolveContractAddress(
             "AC_MGR"
         );
 
-        AssetClassTokenManagerContract = AC_MGR_Interface(
-            AssetClassTokenManagerAddress
+        AC_MGR = AC_MGR_Interface(
+            AC_MGR_Address
         );
 
-        AssetTokenAddress = Storage.resolveContractAddress("A_TKN");
-        AssetTokenContract = A_TKN_Interface(AssetTokenAddress);
+        A_TKN_Address = STOR.resolveContractAddress("A_TKN");
+        A_TKN = A_TKN_Interface(A_TKN_Address);
 
-        escrowMGRAddress = Storage.resolveContractAddress("ECR_MGR");
-        escrowMGRcontract = ECR_MGR_Interface(escrowMGRAddress);
+        ECR_MGR_Address = STOR.resolveContractAddress("ECR_MGR");
+        ECR_MGR = ECR_MGR_Interface(ECR_MGR_Address);
 
-        PrufAppAddress = Storage.resolveContractAddress("APP");
-        T_PrufAppAddress = Storage.resolveContractAddress("APP_NC");
+        APP_Address = STOR.resolveContractAddress("APP");
+        APP_NC_Address = STOR.resolveContractAddress("APP_NC");
 
-        recyclerAddress = Storage.resolveContractAddress("RCLR");
-        Recycler = RCLR_Interface(recyclerAddress);
+        RCLR_Address = STOR.resolveContractAddress("RCLR");
+        RCLR = RCLR_Interface(RCLR_Address);
         //^^^^^^^effects^^^^^^^^^
     }
 
@@ -161,7 +137,7 @@ contract BASIC is ReentrancyGuard, Ownable, IERC721Receiver, Pausable {
     {
         uint256 tokenId = uint256(_idxHash);
         //^^^^^^^effects^^^^^^^^^
-        AssetTokenContract.safeTransferFrom(address(this), _to, tokenId);
+        A_TKN.safeTransferFrom(address(this), _to, tokenId);
         //^^^^^^^interactions^^^^^^^^^
     }
 
@@ -174,7 +150,7 @@ contract BASIC is ReentrancyGuard, Ownable, IERC721Receiver, Pausable {
         //^^^^^^^checks^^^^^^^^^
         uint256 tokenId = uint256(_idxHash);
         //^^^^^^^effects^^^^^^^^^
-        AssetClassTokenContract.safeTransferFrom(address(this), _to, tokenId);
+        AC_TKN.safeTransferFrom(address(this), _to, tokenId);
         //^^^^^^^interactions^^^^^^^^^
     }
 
@@ -188,7 +164,7 @@ contract BASIC is ReentrancyGuard, Ownable, IERC721Receiver, Pausable {
         );
         //^^^^^^^checks^^^^^^^^^
 
-        Storage = STOR_Interface(_storageAddress);
+        STOR = STOR_Interface(_storageAddress);
         //^^^^^^^effects^^^^^^^^^
     }
 
@@ -235,7 +211,7 @@ contract BASIC is ReentrancyGuard, Ownable, IERC721Receiver, Pausable {
     {
         //^^^^^^^checks^^^^^^^^^
 
-        uint8 userTypeInAssetClass = AssetClassTokenManagerContract.getUserType(
+        uint8 userTypeInAssetClass = AC_MGR.getUserType(
             keccak256(abi.encodePacked(msg.sender)),
             _assetClass
         );
@@ -259,18 +235,20 @@ contract BASIC is ReentrancyGuard, Ownable, IERC721Receiver, Pausable {
             AC_info.assetClassRoot,
             AC_info.custodyType,
             AC_info.extendedData
-        ) = AssetClassTokenManagerContract.getAC_data(_assetClass);
+        ) = AC_MGR.getAC_data(_assetClass);
         return AC_info;
         //^^^^^^^interactions^^^^^^^^^
     }
 
-    function getContractInfo(address _addr)
+
+
+    function getContractInfo(address _addr, uint16 _assetClass)
         internal
         returns (ContractDataHash memory)
     {
         ContractDataHash memory contractInfo;
-        (contractInfo.contractType, contractInfo.nameHash) = Storage
-            .ContractInfoHash(_addr);
+        (contractInfo.contractType, contractInfo.nameHash) = STOR
+            .ContractInfoHash(_addr, _assetClass);
         return contractInfo;
         //^^^^^^^checks/interactions^^^^^^^^^
     }
@@ -297,7 +275,7 @@ contract BASIC is ReentrancyGuard, Ownable, IERC721Receiver, Pausable {
                 bytes32 _Ipfs1,
                 bytes32 _Ipfs2,
                 uint16 _numberOfTransfers
-            ) = Storage.retrieveRecord(_idxHash); // Get record from storage contract
+            ) = STOR.retrieveRecord(_idxHash); // Get record from storage contract
 
             //rec.recorder = _recorder;
             rec.rightsHolder = _rightsHolder;

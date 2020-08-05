@@ -30,7 +30,7 @@ contract APP_NC is CORE {
     modifier isAuthorized(bytes32 _idxHash) override {
         uint256 tokenID = uint256(_idxHash);
         require(
-            (AssetTokenContract.ownerOf(tokenID) == msg.sender), //msg.sender is token holder
+            (A_TKN.ownerOf(tokenID) == msg.sender), //msg.sender is token holder
             "TPA:IA: Caller does not hold token"
         );
         _;
@@ -75,7 +75,7 @@ contract APP_NC is CORE {
 
         if (AC_info.assetClassRoot == oldAC_info.assetClassRoot) {
             // if record exists as a "dead record" has an old AC, and is being recreated in the same root class,
-            // do not overwrite anything besides assetClass and rightsHolder (storage will set assetStatus to 51)
+            // do not overwrite anything besides assetClass and rightsHolder (STOR will set assetStatus to 51)
             createRecord(
                 _idxHash,
                 _rgtHash,
@@ -114,7 +114,7 @@ contract APP_NC is CORE {
             "PNP:MS: Contract not authorized for this asset class"
         );
         require(
-            AssetClassTokenManagerContract.isSameRootAC(
+            AC_MGR.isSameRootAC(
                 _newAssetClass,
                 rec.assetClass
             ) == 170,
@@ -123,7 +123,7 @@ contract APP_NC is CORE {
         require(rec.assetStatus < 200, "PA:IA: Record locked");
         //^^^^^^^checks^^^^^^^^^
 
-        Storage.changeAC(_idxHash, _newAssetClass);
+        STOR.changeAC(_idxHash, _newAssetClass);
 
         deductNewRecordCosts(_newAssetClass);
         //^^^^^^^interactions / effects^^^^^^^^^^^^
@@ -183,7 +183,7 @@ contract APP_NC is CORE {
 
         deductNewRecordCosts(rec.assetClass);
 
-        tokenId = AssetTokenContract.reMintAssetToken(
+        tokenId = A_TKN.reMintAssetToken(
             msg.sender,
             tokenId
         );

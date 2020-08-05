@@ -41,20 +41,20 @@ contract A_TKN is Ownable, ReentrancyGuard, ERC721 {
 
     constructor() public ERC721("PRüF Asset Token", "PAT") {}
 
-    address internal T_PrufAppAddress; //isAdmin
-    address internal PrufAppAddress; //isAdmin
-    address internal storageAddress;
-    STOR_Interface internal Storage; // Set up external contract interface
-    address internal recyclerAddress;
-    RCLR_Interface internal Recycler;
+    address internal APP_NC_Address; //isAdmin
+    address internal APP_Address; //isAdmin
+    address internal STOR_Address;
+    address internal RCLR_Address;
+    STOR_Interface internal STOR; // Set up external contract interface
+    RCLR_Interface internal RCLR;
 
     event REPORT(string _msg);
 
     modifier isAdmin() {
         require(
-            (msg.sender == PrufAppAddress) ||
-                (msg.sender == T_PrufAppAddress) ||
-                (msg.sender == recyclerAddress) ||
+            (msg.sender == APP_Address) ||
+                (msg.sender == APP_NC_Address) ||
+                (msg.sender == RCLR_Address) ||
                 (msg.sender == owner()),
             "PAT:IA:Calling address does not belong to an Admin"
         );
@@ -73,7 +73,7 @@ contract A_TKN is Ownable, ReentrancyGuard, ERC721 {
         );
         //^^^^^^^checks^^^^^^^^^
 
-        Storage = STOR_Interface(_storageAddress);
+        STOR = STOR_Interface(_storageAddress);
         //^^^^^^^effects^^^^^^^^^
     }
 
@@ -83,11 +83,11 @@ contract A_TKN is Ownable, ReentrancyGuard, ERC721 {
     function OO_ResolveContractAddresses() external nonReentrant onlyOwner {
         //^^^^^^^checks^^^^^^^^^
 
-        T_PrufAppAddress = Storage.resolveContractAddress("APP_NC");
-        PrufAppAddress = Storage.resolveContractAddress("APP");
+        APP_NC_Address = STOR.resolveContractAddress("APP_NC");
+        APP_Address = STOR.resolveContractAddress("APP");
 
-        recyclerAddress = Storage.resolveContractAddress("RCLR");
-        Recycler = RCLR_Interface(recyclerAddress);
+        RCLR_Address = STOR.resolveContractAddress("RCLR");
+        RCLR = RCLR_Interface(RCLR_Address);
         //^^^^^^^effects^^^^^^^^^
     }
 
@@ -233,7 +233,8 @@ contract A_TKN is Ownable, ReentrancyGuard, ERC721 {
         Record memory rec = getRecord(_idxHash);
 
         require(
-            (rec.assetStatus != 70) || (Storage.ContractAuthType(to) > 0),
+            (rec.assetStatus != 70) ||
+                (STOR.ContractAuthType(to, rec.assetClass) > 0),
             "PAT:STF:Cannot send status 70 asset to unauthorized address"
         );
         require(
@@ -275,7 +276,7 @@ contract A_TKN is Ownable, ReentrancyGuard, ERC721 {
             "PAT:D:transfer caller is not owner nor approved"
         );
         //^^^^^^^checks^^^^^^^^^
-        Recycler.discard(_idxHash);
+        RCLR.discard(_idxHash);
         _burn(tokenId);
         //^^^^^^^interactions^^^^^^^^^
     }
@@ -287,10 +288,12 @@ contract A_TKN is Ownable, ReentrancyGuard, ERC721 {
      * burns old token
      * Sends new token to original Caller
      */
-    function reMintAssetToken(
-        address _recipientAddress,
-        uint256 tokenId
-    ) external isAdmin nonReentrant returns (uint256) {
+    function reMintAssetToken(address _recipientAddress, uint256 tokenId)
+        external
+        isAdmin
+        nonReentrant
+        returns (uint256)
+    {
         require(_exists(tokenId), "PAT:RM:Cannot Remint nonexistant token");
         //^^^^^^^checks^^^^^^^^^
         string memory tokenURI = tokenURI(tokenId);
@@ -308,7 +311,7 @@ contract A_TKN is Ownable, ReentrancyGuard, ERC721 {
         //^^^^^^^checks^^^^^^^^^
         //bytes32 userHash = keccak256(abi.encodePacked(msg.sender)); // Get a userhash for authentication and recorder logging
         //^^^^^^^effects^^^^^^^^^
-        Storage.modifyRecord(
+        STOR.modifyRecord(
             //userHash,
             _idxHash,
             _rec.rightsHolder,
@@ -341,7 +344,7 @@ contract A_TKN is Ownable, ReentrancyGuard, ERC721 {
                 bytes32 _Ipfs1,
                 bytes32 _Ipfs2,
                 uint16 _numberOfTransfers
-            ) = Storage.retrieveRecord(_idxHash); // Get record from storage contract
+            ) = STOR.retrieveRecord(_idxHash); // Get record from storage contract
 
             //rec.recorder = _recorder;
             rec.rightsHolder = _rightsHolder;

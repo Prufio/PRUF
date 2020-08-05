@@ -18,9 +18,10 @@ __/\\\\\\\\\\\\\ _____/\\\\\\\\\ _______/\\../\\ ___/\\\\\\\\\\\\\\\
 // SPDX-License-Identifier: UNLICENSED
 pragma solidity ^0.6.7;
 
+import "./PRUF_ECR_CORE.sol";
 import "./PRUF_CORE.sol";
 
-contract RCLR is CORE {
+contract RCLR is ECR_CORE, CORE {
     using SafeMath for uint256;
 
     //--------------------------------------------External Functions--------------------------
@@ -32,7 +33,7 @@ contract RCLR is CORE {
         Record memory rec = getRecord(_idxHash);
 
         require( // caller is assetToken contract
-            msg.sender == AssetTokenAddress,
+            msg.sender == A_TKN_Address,
             "PR:Recycle:Caller is not Asset Token Contract"
         );
 
@@ -44,11 +45,11 @@ contract RCLR is CORE {
 
         //^^^^^^^checks^^^^^^^^^
 
-        uint256 escrowTime = now + 3153600000000; //100,000 years in the FUTURE.........
+        uint256 escrowTime = block.timestamp + 3153600000000; //100,000 years in the FUTURE.........
         bytes32 escrowOwnerHash = keccak256(abi.encodePacked(msg.sender));
         //^^^^^^^effects^^^^^^^^^
 
-        escrowMGRcontract.setEscrow(
+        ECR_MGR.setEscrow(
             _idxHash,
             60, //recycled status
             255, //escrow data 255 is recycled
@@ -76,10 +77,14 @@ contract RCLR is CORE {
         Record memory rec = getRecord(_idxHash);
         AC memory AC_info = getACinfo(_assetClass);
         AC memory oldAC_info = getACinfo(rec.assetClass);
+        ContractDataHash memory contractInfo = getContractInfo(
+            address(this),
+            rec.assetClass
+        );
 
         require(
-            AC_info.custodyType == 2,
-            "PR:R:Contract not authorized for custodial assets"
+            contractInfo.contractType > 0,
+            "PNP:MS: Contract not authorized for this asset class"
         );
         require(_rgtHash != 0, "PR:R:Rights holder cannot be zero");
         require(_assetClass != 0, "PR:R:Asset class cannot be zero");
@@ -97,9 +102,9 @@ contract RCLR is CORE {
         }
         //^^^^^^^effects^^^^^^^^^^^^
 
-        AssetTokenContract.mintAssetToken(msg.sender, tokenId, "pruf.io");
-        Storage.changeAC(_idxHash, _assetClass);
-        escrowMGRcontract.endEscrow(_idxHash);
+        A_TKN.mintAssetToken(msg.sender, tokenId, "pruf.io");
+        STOR.changeAC(_idxHash, _assetClass);
+        ECR_MGR.endEscrow(_idxHash);
         writeRecord(_idxHash, rec);
         deductRecycleCosts(_assetClass, escrow.addr2);
         //^^^^^^^interactions^^^^^^^^^^^^

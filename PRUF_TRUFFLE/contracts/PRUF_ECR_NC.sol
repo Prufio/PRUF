@@ -18,9 +18,9 @@ __/\\\\\\\\\\\\\ _____/\\\\\\\\\ _______/\\../\\ ___/\\\\\\\\\\\\\\\
 // SPDX-License-Identifier: UNLICENSED
 pragma solidity ^0.6.7;
 
-import "./PRUF_CORE.sol";
+import "./PRUF_ECR_CORE.sol";
 
-contract ECR_NC is CORE {
+contract ECR_NC is ECR_CORE {
     using SafeMath for uint256;
 
     /*
@@ -32,7 +32,7 @@ contract ECR_NC is CORE {
     modifier isAuthorized(bytes32 _idxHash) override {
         uint256 tokenID = uint256(_idxHash);
         require(
-            (AssetTokenContract.ownerOf(tokenID) == msg.sender), //msg.sender is token holder
+            (A_TKN.ownerOf(tokenID) == msg.sender), //msg.sender is token holder
             "TPSE:IA: Caller does not hold token"
         );
         _;
@@ -50,13 +50,16 @@ contract ECR_NC is CORE {
         uint8 _escrowStatus
     ) external nonReentrant whenNotPaused isAuthorized(_idxHash) {
         Record memory rec = getRecord(_idxHash);
-        uint256 escrowTime = now.add(_escrowTime);
+        uint256 escrowTime = block.timestamp.add(_escrowTime);
         uint8 newEscrowStatus;
-        AC memory AC_info = getACinfo(rec.assetClass);
+        ContractDataHash memory contractInfo = getContractInfo(
+            address(this),
+            rec.assetClass
+        );
 
         require(
-            AC_info.custodyType == 2,
-            "TPSE:SE: Contract not authorized for custodial assets"
+            contractInfo.contractType > 0,
+            "PNP:MS: Contract not authorized for this asset class"
         );
 
         require((rec.rightsHolder != 0), "SE: Record does not exist");
@@ -65,7 +68,7 @@ contract ECR_NC is CORE {
             "TPSE:SE: Only ACadmin authorized user can change status < 50"
         );
         require(
-            (escrowTime >= now),
+            (escrowTime >= block.timestamp),
             "TPSE:SE:Escrow must be set to a time in the future"
         );
         require(
@@ -87,7 +90,7 @@ contract ECR_NC is CORE {
         newEscrowStatus = _escrowStatus;
         //^^^^^^^effects^^^^^^^^^
 
-        escrowMGRcontract.setEscrow(
+        ECR_MGR.setEscrow(
             _idxHash,
             newEscrowStatus,
             0,
@@ -105,14 +108,17 @@ contract ECR_NC is CORE {
      * @dev takes asset out of excrow status if time period has resolved || is escrow issuer
      */
     function endEscrow(bytes32 _idxHash) external nonReentrant {
-        bytes32 ownerHash = escrowMGRcontract.retrieveEscrowOwner(_idxHash);
+        bytes32 ownerHash = ECR_MGR.retrieveEscrowOwner(_idxHash);
         Record memory rec = getRecord(_idxHash);
-        AC memory AC_info = getACinfo(rec.assetClass);
         escrowData memory escrow = getEscrowData(_idxHash);
+        ContractDataHash memory contractInfo = getContractInfo(
+            address(this),
+            rec.assetClass
+        );
 
         require(
-            AC_info.custodyType == 2,
-            "TPSE:EE:Contract not authorized for custodial assets"
+            contractInfo.contractType > 0,
+            "PNP:MS: Contract not authorized for this asset class"
         );
 
         require((rec.rightsHolder != 0), "EE: Record does not exist");
@@ -121,13 +127,13 @@ contract ECR_NC is CORE {
             "TPSE:EE:record must be in escrow status <49"
         );
         require(
-            (escrow.timelock < now) ||
+            (escrow.timelock < block.timestamp) ||
                 (keccak256(abi.encodePacked(msg.sender)) == ownerHash),
             "TPSE:EE: Escrow period not ended and caller is not escrow owner"
         );
         //^^^^^^^checks^^^^^^^^^
 
-        escrowMGRcontract.endEscrow(_idxHash);
+        ECR_MGR.endEscrow(_idxHash);
         //^^^^^^^interactions^^^^^^^^^
     }
 }

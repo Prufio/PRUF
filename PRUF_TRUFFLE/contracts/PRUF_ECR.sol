@@ -18,11 +18,9 @@ __/\\\\\\\\\\\\\ _____/\\\\\\\\\ _______/\\../\\ ___/\\\\\\\\\\\\\\\
 // SPDX-License-Identifier: UNLICENSED
 pragma solidity ^0.6.7;
 
-import "./PRUF_CORE.sol";
+import "./PRUF_ECR_CORE.sol";
 
-contract ECR is CORE {
-    using SafeMath for uint256;
-
+contract ECR is ECR_CORE {
     /*
      * @dev Verify user credentials
      * Originating Address:
@@ -32,7 +30,7 @@ contract ECR is CORE {
     modifier isAuthorized(bytes32 _idxHash) override {
         uint256 tokenID = uint256(_idxHash);
         require(
-            AssetTokenContract.ownerOf(tokenID) == PrufAppAddress,
+            A_TKN.ownerOf(tokenID) == APP_Address,
             "PSE:IA: Custodial contract does not hold token"
         );
         _;
@@ -49,13 +47,16 @@ contract ECR is CORE {
     ) external nonReentrant whenNotPaused isAuthorized(_idxHash) {
         Record memory rec = getRecord(_idxHash);
         uint8 userType = getUserType(rec.assetClass);
-        uint256 escrowTime = now.add(_escrowTime);
+        uint256 escrowTime = block.timestamp.add(_escrowTime);
         uint8 newEscrowStatus;
-        AC memory AC_info = getACinfo(rec.assetClass);
+        ContractDataHash memory contractInfo = getContractInfo(
+            address(this),
+            rec.assetClass
+        );
 
         require(
-            AC_info.custodyType == 1,
-            "PSE:SE: Contract not authorized for non-custodial assets"
+            contractInfo.contractType > 0,
+            "PNP:MS: Contract not authorized for this asset class"
         );
         require((rec.rightsHolder != 0), "SE: Record does not exist");
         require(
@@ -63,7 +64,7 @@ contract ECR is CORE {
             "TPNP:MI1: User not authorized to modify records in specified asset class"
         );
         require(
-            (escrowTime >= now),
+            (escrowTime >= block.timestamp),
             "PSE:SE: Escrow must be set to a time in the future"
         );
         require(
@@ -96,7 +97,7 @@ contract ECR is CORE {
         newEscrowStatus = _escrowStatus;
         //^^^^^^^effects^^^^^^^^^
 
-        escrowMGRcontract.setEscrow(
+        ECR_MGR.setEscrow(
             _idxHash,
             newEscrowStatus,
             0,
@@ -121,13 +122,16 @@ contract ECR is CORE {
         Record memory rec = getRecord(_idxHash);
         //Record memory shortRec = getShortRecord(_idxHash);
         escrowData memory escrow = getEscrowData(_idxHash);
+        ContractDataHash memory contractInfo = getContractInfo(
+            address(this),
+            rec.assetClass
+        );
         uint8 userType = getUserType(rec.assetClass);
-        AC memory AC_info = getACinfo(rec.assetClass);
-        bytes32 ownerHash = escrowMGRcontract.retrieveEscrowOwner(_idxHash);
+        bytes32 ownerHash = ECR_MGR.retrieveEscrowOwner(_idxHash);
 
         require(
-            AC_info.custodyType == 1,
-            "PSE:EE: Contract not authorized for non-custodial assets"
+            contractInfo.contractType > 0,
+            "PNP:MS: Contract not authorized for this asset class"
         );
 
         require((rec.rightsHolder != 0), "EE: Record does not exist");
@@ -146,13 +150,13 @@ contract ECR is CORE {
             "PSE:EE: Usertype less than 5 required to end this escrow"
         );
         require(
-            (escrow.timelock < now) ||
+            (escrow.timelock < block.timestamp) ||
                 (keccak256(abi.encodePacked(msg.sender)) == ownerHash),
             "PSE:EE: Escrow period not ended and caller is not escrow owner"
         );
         //^^^^^^^checks^^^^^^^^^
 
-        escrowMGRcontract.endEscrow(_idxHash);
+        ECR_MGR.endEscrow(_idxHash);
         //^^^^^^^interactions^^^^^^^^^
     }
 }

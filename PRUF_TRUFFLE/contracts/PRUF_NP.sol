@@ -28,7 +28,7 @@ contract NP is CORE {
     modifier isAuthorized(bytes32 _idxHash) override {
         uint256 tokenID = uint256(_idxHash);
         require(
-            (AssetTokenContract.ownerOf(tokenID) == PrufAppAddress),
+            (A_TKN.ownerOf(tokenID) == APP_Address),
             "PNP:IA: Custodial contract does not hold token"
         );
         _;
@@ -52,19 +52,37 @@ contract NP is CORE {
     {
         Record memory rec = getRecord(_idxHash);
         uint8 userType = getUserType(rec.assetClass);
-        AC memory AC_info = getACinfo(rec.assetClass);
-
-        require(
-            AC_info.custodyType == 1,
-            "PNP:MS: Contract not authorized for non-custodial assets"
+        ContractDataHash memory contractInfo = getContractInfo(
+            address(this),
+            rec.assetClass
         );
 
-        require((rec.rightsHolder != 0), "PNP:MS: Record does not exist");
+        require(
+            contractInfo.contractType > 0,
+            "PNP:MS: Contract not authorized for this asset class"
+        );
+        require((rec.rightsHolder != 0), "PNP:MS: Record unclaimed: import required. ");
         require(
             (userType > 0) && (userType < 10),
             "PNP:MS: User not authorized to modify records in specified asset class"
         );
-        require(_newAssetStatus < 100, "PNP:MS: user cannot set status > 99");
+
+        require(
+            (_newAssetStatus < 100) &&
+                (_newAssetStatus != 3) &&
+                (_newAssetStatus != 4) &&
+                (_newAssetStatus != 5) &&
+                (_newAssetStatus != 6) &&
+                (_newAssetStatus != 7) &&
+                (_newAssetStatus != 50) &&
+                (_newAssetStatus != 53) &&
+                (_newAssetStatus != 54) &&
+                (_newAssetStatus != 55) &&
+                (_newAssetStatus != 56) &&
+                (_newAssetStatus != 57) &&
+                (_newAssetStatus != 58),
+            "PNP:MS: Specified Status is reserved."
+        );
         require(
             _newAssetStatus != 70,
             "PNP:MS: Use pruf_app.exportAsset to export custodial assets"
@@ -83,11 +101,11 @@ contract NP is CORE {
             (rec.assetStatus > 49) || (userType < 5),
             "PNP:MS: Only usertype < 5 can change status < 49"
         );
-        require(rec.assetStatus < 200, "PNP:MS: Record locked");
         require(
             rec.rightsHolder == _rgtHash,
             "PNP:MS: Rightsholder does not match supplied data"
         );
+        require(rec.assetStatus < 200, "PNP:MS: Record locked");
         //^^^^^^^checks^^^^^^^^^
 
         rec.assetStatus = _newAssetStatus;
@@ -115,14 +133,17 @@ contract NP is CORE {
     {
         Record memory rec = getRecord(_idxHash);
         uint8 userType = getUserType(rec.assetClass);
-        AC memory AC_info = getACinfo(rec.assetClass);
-
-        require(
-            AC_info.custodyType == 1,
-            "PNP:SLS: Contract not authorized for non-custodial assets"
+        ContractDataHash memory contractInfo = getContractInfo(
+            address(this),
+            rec.assetClass
         );
 
-        require((rec.rightsHolder != 0), "PNP:SLS: Record does not exist");
+        require(
+            contractInfo.contractType > 0,
+            "PNP:MS: Contract not authorized for this asset class"
+        );
+
+        require((rec.rightsHolder != 0), "PNP:SLS: Record unclaimed: import required. ");
         require(
             (userType > 0) && (userType < 10),
             "PNP:SLS: User not authorized to modify records in specified asset class"
@@ -157,7 +178,7 @@ contract NP is CORE {
         //bytes32 userHash = keccak256(abi.encodePacked(msg.sender));
         //^^^^^^^effects^^^^^^^^^
 
-        Storage.setStolenOrLost(_idxHash, rec.assetStatus);
+        STOR.setStolenOrLost(_idxHash, rec.assetStatus);
 
         return rec.assetStatus;
         //^^^^^^^interactions^^^^^^^^^
@@ -179,14 +200,17 @@ contract NP is CORE {
     {
         Record memory rec = getRecord(_idxHash);
         uint8 userType = getUserType(rec.assetClass);
-        AC memory AC_info = getACinfo(rec.assetClass);
-
-        require(
-            AC_info.custodyType == 1,
-            "PNP:DC: Contract not authorized for non-custodial assets"
+        ContractDataHash memory contractInfo = getContractInfo(
+            address(this),
+            rec.assetClass
         );
 
-        require((rec.rightsHolder != 0), "PNP:DC: Record does not exist");
+        require(
+            contractInfo.contractType > 0,
+            "PNP:MS: Contract not authorized for this asset class"
+        );
+
+        require((rec.rightsHolder != 0), "PNP:DC: Record unclaimed: import required. ");
         require(
             (userType > 0) && (userType < 10),
             "PNP:DC: User not authorized to modify records in specified asset class"
@@ -198,11 +222,11 @@ contract NP is CORE {
             "PNP:DC: Cannot modify asset in Escrow"
         );
         require(_decAmount > 0, "PNP:DC: cannot decrement by negative number");
-        require(rec.assetStatus < 200, "PNP:DC: Record locked");
         require(
             (rec.assetStatus != 5) && (rec.assetStatus != 55),
             "PNP:DC: Record In Transferred-unregistered status"
         );
+        require(rec.assetStatus < 200, "PNP:DC: Record locked");
         require(
             rec.rightsHolder == _rgtHash,
             "PNP:DC: Rightsholder does not match supplied data"
@@ -237,14 +261,17 @@ contract NP is CORE {
     {
         Record memory rec = getRecord(_idxHash);
         uint8 userType = getUserType(rec.assetClass);
-        AC memory AC_info = getACinfo(rec.assetClass);
-
-        require(
-            AC_info.custodyType == 1,
-            "PNP:MI1 Contract not authorized for non-custodial assets"
+        ContractDataHash memory contractInfo = getContractInfo(
+            address(this),
+            rec.assetClass
         );
 
-        require((rec.rightsHolder != 0), "PNP:MI1: Record does not exist");
+        require(
+            contractInfo.contractType > 0,
+            "PNP:MS: Contract not authorized for this asset class"
+        );
+
+        require((rec.rightsHolder != 0), "PNP:MI1: Record unclaimed: import required. ");
         require(
             (userType > 0) && (userType < 10),
             "PNP:MI1: User not authorized to modify records in specified asset class"
@@ -257,11 +284,11 @@ contract NP is CORE {
                 (rec.assetStatus != 56), //Should it be contingent on the original recorder address?
             "PNP:MI1: Cannot modify asset in Escrow" //If so, it must not erase the recorder, or escrow termination will be broken!
         );
-        require(rec.assetStatus < 200, "PNP:MI1: Record locked");
         require(
             (rec.assetStatus != 5) && (rec.assetStatus != 55),
             "PNP:MI1: Record In Transferred-unregistered status"
         );
+        require(rec.assetStatus < 200, "PNP:MI1: Record locked");
         require(
             rec.rightsHolder == _rgtHash,
             "PNP:MI1: Rightsholder does not match supplied data"
