@@ -264,9 +264,7 @@ contract BASIC is ReentrancyGuard, Ownable, IERC721Receiver, Pausable {
         {
             //Start of scope limit for stack depth
             (
-                //bytes32 _recorder,
                 bytes32 _rightsHolder,
-                //bytes32 _lastRecorder,
                 uint8 _assetStatus,
                 uint8 _forceModCount,
                 uint16 _assetClass,
@@ -277,9 +275,7 @@ contract BASIC is ReentrancyGuard, Ownable, IERC721Receiver, Pausable {
                 uint16 _numberOfTransfers
             ) = Storage.retrieveRecord(_idxHash); // Get record from storage contract
 
-            //rec.recorder = _recorder;
             rec.rightsHolder = _rightsHolder;
-            //rec.lastRecorder = _lastRecorder;
             rec.assetStatus = _assetStatus;
             rec.forceModCount = _forceModCount;
             rec.assetClass = _assetClass;
