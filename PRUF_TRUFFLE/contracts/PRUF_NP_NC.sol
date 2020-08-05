@@ -16,7 +16,7 @@ __/\\\\\\\\\\\\\ _____/\\\\\\\\\ _______/\\../\\ ___/\\\\\\\\\\\\\\\
  *---------------------------------------------------------------*/
 
 // SPDX-License-Identifier: UNLICENSED
-pragma solidity ^0.6.7;
+pragma solidity ^0.7.0;
 
 import "./PRUF_CORE.sol";
 
@@ -64,7 +64,7 @@ contract NP_NC is CORE {
             "PNP:MS: Contract not authorized for this asset class"
         );
 
-        require((rec.rightsHolder != 0), "PA:FMR: Record does not exist");
+        require((rec.assetClass != 0), "PA:FMR: Record does not exist");
 
         require(_newRgtHash != 0, "TPNP:CR: rights holder cannot be zero");
 
@@ -162,7 +162,7 @@ contract NP_NC is CORE {
             "PNP:MS: Contract not authorized for this asset class"
         );
 
-        require((rec.rightsHolder != 0), "TPNP:MS: Record does not exist");
+        require((rec.assetClass != 0), "TPNP:MS: Record does not exist");
 
         require(
             (_newAssetStatus < 100) &&
@@ -240,7 +240,7 @@ contract NP_NC is CORE {
             "PNP:MS: Contract not authorized for this asset class"
         );
 
-        require((rec.rightsHolder != 0), "TPNP:SLS: Record does not exist");
+        require((rec.assetClass != 0), "TPNP:SLS: Record does not exist");
         require(
             (_newAssetStatus == 3) ||
                 (_newAssetStatus == 4) ||
@@ -304,7 +304,7 @@ contract NP_NC is CORE {
         );
         require(_decAmount > 0, "TPNP:DC: cannot decrement by negative number");
 
-        require((rec.rightsHolder != 0), "TPNP:DC: Record does not exist");
+        require((rec.assetClass != 0), "TPNP:DC: Record does not exist");
         require( //------------------------------------------should the counter still work when an asset is in escrow?
             (rec.assetStatus != 6) &&
                 (rec.assetStatus != 50) &&
@@ -355,7 +355,7 @@ contract NP_NC is CORE {
             "PNP:MS: Contract not authorized for this asset class"
         );
 
-        require((rec.rightsHolder != 0), "TPNP:MI1: Record does not exist");
+        require((rec.assetClass != 0), "TPNP:MI1: Record does not exist");
 
         require(rec.Ipfs1 != _IpfsHash, "TPNP:MI1: New data same as old");
         require( //-------------------------------------Should an asset in escrow be modifiable?

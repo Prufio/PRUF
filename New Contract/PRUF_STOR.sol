@@ -26,7 +26,7 @@ __/\\\\\\\\\\\\\ _____/\\\\\\\\\ _______/\\../\\ ___/\\\\\\\\\\\\\\\
  *-----------------------------------------------------------------*/
 
 // SPDX-License-Identifier: UNLICENSED
-pragma solidity ^0.6.7;
+pragma solidity ^0.7.0;
 
 import "./PRUF_INTERFACES.sol";
 import "./Imports/Ownable.sol";
@@ -101,7 +101,7 @@ contract STOR is Ownable, ReentrancyGuard, Pausable {
      */
     modifier exists(bytes32 _idxHash) {
         require(
-            database[_idxHash].rightsHolder != 0,
+            database[_idxHash].assetClass != 0,
             "PS:E:rec does not exist"
         );
         _;

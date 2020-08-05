@@ -711,7 +711,7 @@ contract('PRUF_FULL_TEST', accounts => {
         
         return APP.$newRecord(
         '0x54504a0f5147c9104ec2eb44b310674a57a337acd90083d946c3fd39bac4f2b2', 
-        '0xb083f25ffc9716fa6c018e077f602f3c6d2377f0bd01917fa75c4e9ca07bee6f',
+        '0x0e69eb84e028dc5e631c372e69871d1b072a1ebc12266e477c71b90d89d4008f',
         '10',
         '100',
         {from: account2, value: 20000000000000000}
@@ -722,7 +722,7 @@ contract('PRUF_FULL_TEST', accounts => {
     it('Should change status of new record(5) to status(1)', async () => {
         return NP._modStatus(
         '0x54504a0f5147c9104ec2eb44b310674a57a337acd90083d946c3fd39bac4f2b2', 
-        '0xb083f25ffc9716fa6c018e077f602f3c6d2377f0bd01917fa75c4e9ca07bee6f',
+        '0x0e69eb84e028dc5e631c372e69871d1b072a1ebc12266e477c71b90d89d4008f',
         '1',
         {from: account2}
         )
@@ -732,7 +732,7 @@ contract('PRUF_FULL_TEST', accounts => {
     it('Should Transfer record(5) RGT(1) to RGT(2)', async () => {
         return APP.$transferAsset(
         '0x54504a0f5147c9104ec2eb44b310674a57a337acd90083d946c3fd39bac4f2b2', 
-        '0xb083f25ffc9716fa6c018e077f602f3c6d2377f0bd01917fa75c4e9ca07bee6f',
+        '0x0e69eb84e028dc5e631c372e69871d1b072a1ebc12266e477c71b90d89d4008f',
         '0x5d5d1ee487d05f715ddd883e185ff5b672bed217ac7f9ab3073b39b19762ce8b',
         {from: account2, value: 20000000000000000}
         )
@@ -742,7 +742,7 @@ contract('PRUF_FULL_TEST', accounts => {
     it('Should force modify record(5) RGT(2) to RGT(1)', async () => {
         return APP.$forceModRecord(
         '0x54504a0f5147c9104ec2eb44b310674a57a337acd90083d946c3fd39bac4f2b2', 
-        '0xb083f25ffc9716fa6c018e077f602f3c6d2377f0bd01917fa75c4e9ca07bee6f',
+        '0x0e69eb84e028dc5e631c372e69871d1b072a1ebc12266e477c71b90d89d4008f',
         {from: account2, value: 20000000000000000}
         )
     })
@@ -751,7 +751,7 @@ contract('PRUF_FULL_TEST', accounts => {
     it('Should change decrement amount @record(5) from (100) to (85)', async () => {
         return NP._decCounter(
         '0x54504a0f5147c9104ec2eb44b310674a57a337acd90083d946c3fd39bac4f2b2', 
-        '0xb083f25ffc9716fa6c018e077f602f3c6d2377f0bd01917fa75c4e9ca07bee6f',
+        '0x0e69eb84e028dc5e631c372e69871d1b072a1ebc12266e477c71b90d89d4008f',
         '15',
         {from: account2}
         )
@@ -761,7 +761,7 @@ contract('PRUF_FULL_TEST', accounts => {
     it('Should modify Ipfs1 note @record(5) to IDX(1)', async () => {
         return NP._modIpfs1(
         '0x54504a0f5147c9104ec2eb44b310674a57a337acd90083d946c3fd39bac4f2b2', 
-        '0xb083f25ffc9716fa6c018e077f602f3c6d2377f0bd01917fa75c4e9ca07bee6f',
+        '0x0e69eb84e028dc5e631c372e69871d1b072a1ebc12266e477c71b90d89d4008f',
         '0x54504a0f5147c9104ec2eb44b310674a57a337acd90083d946c3fd39bac4f2b2',
         {from: account2}
         )
@@ -771,7 +771,7 @@ contract('PRUF_FULL_TEST', accounts => {
     it('Should change status of new record(5) to status(51)', async () => {
         return NP._modStatus(
         '0x54504a0f5147c9104ec2eb44b310674a57a337acd90083d946c3fd39bac4f2b2', 
-        '0xb083f25ffc9716fa6c018e077f602f3c6d2377f0bd01917fa75c4e9ca07bee6f',
+        '0x0e69eb84e028dc5e631c372e69871d1b072a1ebc12266e477c71b90d89d4008f',
         '51',
         {from: account2}
         )
@@ -867,7 +867,7 @@ contract('PRUF_FULL_TEST', accounts => {
     it('Should modify Ipfs1 note @record(5) to RGT(1)', async () => {
         return NP_NC._modIpfs1(
         '0x54504a0f5147c9104ec2eb44b310674a57a337acd90083d946c3fd39bac4f2b2', 
-        '0xb083f25ffc9716fa6c018e077f602f3c6d2377f0bd01917fa75c4e9ca07bee6f',
+        '0x0e69eb84e028dc5e631c372e69871d1b072a1ebc12266e477c71b90d89d4008f',
         {from: account2}
         )
     })
@@ -894,7 +894,7 @@ contract('PRUF_FULL_TEST', accounts => {
     it('Should import record(5) to AC(11)', async () => {
         return APP.$importAsset(
         '0x54504a0f5147c9104ec2eb44b310674a57a337acd90083d946c3fd39bac4f2b2',
-        '0xb083f25ffc9716fa6c018e077f602f3c6d2377f0bd01917fa75c4e9ca07bee6f',
+        '0x0e69eb84e028dc5e631c372e69871d1b072a1ebc12266e477c71b90d89d4008f',
         '11',
         {from: account2, value: 20000000000000000}
         )
@@ -904,7 +904,7 @@ contract('PRUF_FULL_TEST', accounts => {
     it('Should change status of record(5) to status(1)', async () => {
         return NP._modStatus(
         '0x54504a0f5147c9104ec2eb44b310674a57a337acd90083d946c3fd39bac4f2b2', 
-        '0xb083f25ffc9716fa6c018e077f602f3c6d2377f0bd01917fa75c4e9ca07bee6f',
+        '0x0e69eb84e028dc5e631c372e69871d1b072a1ebc12266e477c71b90d89d4008f',
         '1',
         {from: account2}
         )
@@ -933,7 +933,7 @@ contract('PRUF_FULL_TEST', accounts => {
     it('Should change status of record(5) to status(1)', async () => {
         return NP._modStatus(
         '0x54504a0f5147c9104ec2eb44b310674a57a337acd90083d946c3fd39bac4f2b2', 
-        '0xb083f25ffc9716fa6c018e077f602f3c6d2377f0bd01917fa75c4e9ca07bee6f',
+        '0x0e69eb84e028dc5e631c372e69871d1b072a1ebc12266e477c71b90d89d4008f',
         '1',
         {from: account2}
         )
@@ -954,7 +954,7 @@ contract('PRUF_FULL_TEST', accounts => {
     it('Should set record(5) to stolen(3) status', async () => {
         return NP._setLostOrStolen(
         '0x54504a0f5147c9104ec2eb44b310674a57a337acd90083d946c3fd39bac4f2b2',
-        '0xb083f25ffc9716fa6c018e077f602f3c6d2377f0bd01917fa75c4e9ca07bee6f',
+        '0x0e69eb84e028dc5e631c372e69871d1b072a1ebc12266e477c71b90d89d4008f',
         '3',
         {from: account2}
         )
@@ -964,7 +964,7 @@ contract('PRUF_FULL_TEST', accounts => {
     it('Should change status of record(5) to status(1)', async () => {
         return NP._modStatus(
         '0x54504a0f5147c9104ec2eb44b310674a57a337acd90083d946c3fd39bac4f2b2', 
-        '0xb083f25ffc9716fa6c018e077f602f3c6d2377f0bd01917fa75c4e9ca07bee6f',
+        '0x0e69eb84e028dc5e631c372e69871d1b072a1ebc12266e477c71b90d89d4008f',
         '1',
         {from: account2}
         )
