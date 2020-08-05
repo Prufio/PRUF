@@ -113,17 +113,9 @@ contract STOR is Ownable, ReentrancyGuard, Pausable {
         _;
     }
 
-    // /*
-    //  * @dev Check to see if contract adress is registered to PRUF_AC_MGR
-    //  */
-    // modifier isACmanager() {
-    //     require(
-    //         msg.sender == contractNameToAddress["AC_MGR"],
-    //         "PS:IEM:Caller not AC Mgr"
-    //     );
-    //     _;
-    // }
-
+    /*
+     * @dev Check to see if record is in lost or stolen status
+     */
     function isLostOrStolen(uint16 _assetStatus) private pure returns (uint8) {
         if (
             (_assetStatus != 3) &&
@@ -137,6 +129,9 @@ contract STOR is Ownable, ReentrancyGuard, Pausable {
         }
     }
 
+    /*
+     * @dev Check to see if record is in escrow status
+     */
     function isEscrow(uint16 _assetStatus) private pure returns (uint8) {
         if (
             (_assetStatus != 6) &&
@@ -156,15 +151,14 @@ contract STOR is Ownable, ReentrancyGuard, Pausable {
 
     //--------------------------------Internal Admin functions / onlyowner or isAdmin---------------------------------//
 
-    /**
+    /*
      * @dev Triggers stopped state.
-     *
      */
     function pause() external onlyOwner {
         _pause();
     }
 
-    /**
+    /*
      * @dev Returns to normal state.
      */
     function unpause() external onlyOwner {

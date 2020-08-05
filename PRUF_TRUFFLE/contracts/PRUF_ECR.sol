@@ -120,7 +120,6 @@ contract ECR is ECR_CORE {
         isAuthorized(_idxHash)
     {
         Record memory rec = getRecord(_idxHash);
-        //Record memory shortRec = getShortRecord(_idxHash);
         escrowData memory escrow = getEscrowData(_idxHash);
         ContractDataHash memory contractInfo = getContractInfo(
             address(this),
