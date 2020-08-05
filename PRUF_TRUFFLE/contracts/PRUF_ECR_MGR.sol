@@ -17,7 +17,7 @@ __/\\\\\\\\\\\\\ _____/\\\\\\\\\ _______/\\../\\ ___/\\\\\\\\\\\\\\\
  */
 
 // SPDX-License-Identifier: UNLICENSED
-pragma solidity ^0.7.0;
+pragma solidity ^0.6.7;
 
 import "./PRUF_BASIC.sol";
 import "./Imports/Safemath.sol";
