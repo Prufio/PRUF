@@ -58,7 +58,7 @@ contract ECR is ECR_CORE {
             contractInfo.contractType > 0,
             "PNP:MS: Contract not authorized for this asset class"
         );
-        require((rec.rightsHolder != 0), "SE: Record does not exist");
+        require((rec.assetClass != 0), "SE: Record does not exist");
         require(
             (userType > 0) && (userType < 10),
             "TPNP:MI1: User not authorized to modify records in specified asset class"
@@ -134,7 +134,7 @@ contract ECR is ECR_CORE {
             "PNP:MS: Contract not authorized for this asset class"
         );
 
-        require((rec.rightsHolder != 0), "EE: Record does not exist");
+        require((rec.assetClass != 0), "EE: Record does not exist");
         require(
             (userType > 0) && (userType < 10),
             "TPNP:MI1: User not authorized to modify records in specified asset class"

@@ -101,7 +101,7 @@ contract STOR is Ownable, ReentrancyGuard, Pausable {
      */
     modifier exists(bytes32 _idxHash) {
         require(
-            database[_idxHash].rightsHolder != 0,
+            database[_idxHash].assetClass != 0,
             "PS:E:rec does not exist"
         );
         _;
