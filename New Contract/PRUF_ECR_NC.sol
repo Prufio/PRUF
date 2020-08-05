@@ -16,7 +16,7 @@ __/\\\\\\\\\\\\\ _____/\\\\\\\\\ _______/\\../\\ ___/\\\\\\\\\\\\\\\
  *---------------------------------------------------------------*/
 
 // SPDX-License-Identifier: UNLICENSED
-pragma solidity ^0.6.7;
+pragma solidity ^0.7.0;
 
 import "./PRUF_ECR_CORE.sol";
 
@@ -62,7 +62,7 @@ contract ECR_NC is ECR_CORE {
             "PNP:MS: Contract not authorized for this asset class"
         );
 
-        require((rec.rightsHolder != 0), "SE: Record does not exist");
+        require((rec.assetClass != 0), "SE: Record does not exist");
         require(
             (rec.assetStatus > 49),
             "TPSE:SE: Only ACadmin authorized user can change status < 50"
@@ -121,7 +121,7 @@ contract ECR_NC is ECR_CORE {
             "PNP:MS: Contract not authorized for this asset class"
         );
 
-        require((rec.rightsHolder != 0), "EE: Record does not exist");
+        require((rec.assetClass != 0), "EE: Record does not exist");
         require(
             (rec.assetStatus == 50) || (rec.assetStatus == 56),
             "TPSE:EE:record must be in escrow status <49"

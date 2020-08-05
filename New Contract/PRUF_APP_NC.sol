@@ -16,7 +16,7 @@ __/\\\\\\\\\\\\\ _____/\\\\\\\\\ _______/\\../\\ ___/\\\\\\\\\\\\\\\
  *---------------------------------------------------------------*/
 
 // SPDX-License-Identifier: UNLICENSED
-pragma solidity ^0.6.7;
+pragma solidity ^0.7.0;
 
 import "./PRUF_CORE.sol";
 
@@ -152,7 +152,7 @@ contract APP_NC is CORE {
             contractInfo.contractType > 0,
             "PNP:MS: Contract not authorized for this asset class"
         );
-        require(rec.rightsHolder != 0, "TPA:RMT:Record does not exist");
+        require(rec.rightsHolder != 0, "TPA:RMT:Record not remintable");
         require(
             rec.rightsHolder !=
                 0xFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF,
@@ -177,7 +177,7 @@ contract APP_NC is CORE {
         require(rec.assetStatus < 200, "TPA:RMT:Record locked");
         require(
             rec.rightsHolder == keccak256(abi.encodePacked(_idxHash, rawHash)),
-            "TPA:RMT:Rightsholder does not match supplied data"
+            "TPA:RMT:Rightsholder does not match hash from data"
         );
         //^^^^^^^checks^^^^^^^^^
 
@@ -210,7 +210,7 @@ contract APP_NC is CORE {
             contractInfo.contractType > 0,
             "PNP:MS: Contract not authorized for this asset class"
         );
-        require((rec.rightsHolder != 0), "PA:I2: Record does not exist");
+        require((rec.assetClass != 0), "PA:I2: Record does not exist");
         require(
             (rec.assetStatus != 60),
             "TPA:I2:Record is burned and must be reimported by ACadmin"

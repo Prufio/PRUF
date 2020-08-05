@@ -17,7 +17,7 @@ __/\\\\\\\\\\\\\ _____/\\\\\\\\\ _______/\\../\\ ___/\\\\\\\\\\\\\\\
  */
 
 // SPDX-License-Identifier: UNLICENSED
-pragma solidity ^0.6.7;
+pragma solidity ^0.7.0;
 
 import "./PRUF_BASIC.sol";
 import "./Imports/Safemath.sol";
@@ -98,7 +98,7 @@ contract ECR_MGR is BASIC {
             contractInfo.contractType == 3,
             "PEM:SE: Escrow can only be set by an authorized escrow contract"
         );
-        require(rec.rightsHolder != 0, "PS:SE:Record does not exist");
+        require(rec.assetClass != 0, "PS:SE:Record does not exist");
         require(
             isEscrow(_newAssetStatus) == 170,
             "PEM:SE: Must set to an escrow status"
@@ -150,7 +150,7 @@ contract ECR_MGR is BASIC {
         (contractInfo.contractType, contractInfo.nameHash) = STOR
             .ContractInfoHash(msg.sender, rec.assetClass);
 
-        require(rec.rightsHolder != 0, "PEM:EE:Record does not exist");
+        require(rec.assetClass != 0, "PEM:EE:Record does not exist");
         require(
             (contractInfo.nameHash ==
                 escrows[_idxHash].controllingContractNameHash),

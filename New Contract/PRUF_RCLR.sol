@@ -16,7 +16,7 @@ __/\\\\\\\\\\\\\ _____/\\\\\\\\\ _______/\\../\\ ___/\\\\\\\\\\\\\\\
  *---------------------------------------------------------------*/
 
 // SPDX-License-Identifier: UNLICENSED
-pragma solidity ^0.6.7;
+pragma solidity ^0.7.0;
 
 import "./PRUF_ECR_CORE.sol";
 import "./PRUF_CORE.sol";
@@ -37,7 +37,7 @@ contract RCLR is ECR_CORE, CORE {
             "PR:Recycle:Caller is not Asset Token Contract"
         );
 
-        require((rec.rightsHolder != 0), "SE: Record does not exist");
+        require((rec.assetClass != 0), "SE: Record does not exist");
         require(
             (rec.assetStatus == 59),
             "PR:Recycle:Must be in recyclable status"
