@@ -37,7 +37,7 @@ contract RCLR is ECR_CORE, CORE {
             "PR:Recycle:Caller is not Asset Token Contract"
         );
 
-        require((rec.rightsHolder != 0), "SE: Record does not exist");
+        require((rec.assetClass != 0), "SE: Record does not exist");
         require(
             (rec.assetStatus == 59),
             "PR:Recycle:Must be in recyclable status"

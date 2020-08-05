@@ -62,7 +62,7 @@ contract ECR_NC is ECR_CORE {
             "PNP:MS: Contract not authorized for this asset class"
         );
 
-        require((rec.rightsHolder != 0), "SE: Record does not exist");
+        require((rec.assetClass != 0), "SE: Record does not exist");
         require(
             (rec.assetStatus > 49),
             "TPSE:SE: Only ACadmin authorized user can change status < 50"
@@ -121,7 +121,7 @@ contract ECR_NC is ECR_CORE {
             "PNP:MS: Contract not authorized for this asset class"
         );
 
-        require((rec.rightsHolder != 0), "EE: Record does not exist");
+        require((rec.assetClass != 0), "EE: Record does not exist");
         require(
             (rec.assetStatus == 50) || (rec.assetStatus == 56),
             "TPSE:EE:record must be in escrow status <49"
