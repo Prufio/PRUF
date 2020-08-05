@@ -651,7 +651,7 @@ contract STOR is Ownable, ReentrancyGuard, Pausable {
      * @dev //returns the address of a contract with name _name. This is for web3 implementations to find the right contract to interact with
      * example :  Frontend = ****** so web 3 first asks storage where to find frontend, then calls for frontend functions.
      */
-    function resolveContractAddress(string memory _name)
+    function resolveContractAddress(string calldata _name)
         external
         view
         returns (address)

@@ -135,11 +135,11 @@ contract APP_NC is CORE {
      */
     function $reMintToken(
         bytes32 _idxHash,
-        string memory first,
-        string memory middle,
-        string memory last,
-        string memory id,
-        string memory secret
+        string calldata first,
+        string calldata middle,
+        string calldata last,
+        string calldata id,
+        string calldata secret
     ) external payable nonReentrant whenNotPaused returns (uint256) {
         Record memory rec = getRecord(_idxHash);
         ContractDataHash memory contractInfo = getContractInfo(address(this),rec.assetClass);

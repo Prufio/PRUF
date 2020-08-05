@@ -38,7 +38,7 @@ interface AC_MGR_Interface {
 
     function getAC_name(uint256 _tokenId) external view returns (string memory);
 
-    function resolveAssetClass(string memory _name) external returns (uint16);
+    function resolveAssetClass(string calldata _name) external returns (uint16);
 
     function ContractAC_auth(uint16 _assetClass, bytes32 _authContractNameHash)
         external

@@ -219,7 +219,7 @@ contract AC_MGR is CORE {
     /*
      * @dev Retrieve AC_number @ AC_name
      */
-    function resolveAssetClass(string memory _name)
+    function resolveAssetClass(string calldata _name)
         external
         view
         returns (uint16)
