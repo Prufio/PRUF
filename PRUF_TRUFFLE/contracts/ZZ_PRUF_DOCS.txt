@@ -208,7 +208,7 @@ pragma solidity ^0.6.7;
  * ----------SETUP PROCEDURES---------- *
  * need at least 3 Eth adressses
  * 1: Deploy Contracts
- * 2: Add token contracts @ respective name in storage, use assetclass 0
+ * 2: Add contracts @ respective name in storage, use assetclass 0
  * 3: Resolve token contract addresses
  * 4: Set storage contract in each contract
  * 5: Mint 2 root asset tokens. (home, foreign)
