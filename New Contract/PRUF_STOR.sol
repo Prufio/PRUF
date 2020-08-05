@@ -536,7 +536,7 @@ contract STOR is Ownable, ReentrancyGuard, Pausable {
     function retrieveRecord(bytes32 _idxHash)
         external
         view
-        isAuthorized(database[_idxHash].assetClass)
+        isAuthorized(0)
         returns (
             //bytes32,
             //bytes32,

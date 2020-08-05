@@ -92,30 +92,31 @@ contract APP is CORE {
             address(this),
             rec.assetClass
         );
+        AC memory AC_info = getACinfo(rec.assetClass);
 
         require(
             contractInfo.contractType > 0,
-            "PNP:MS: Contract not authorized for this asset class"
+            "PA:MS: Contract not authorized for this asset class"
         );
         require(
             (userType > 0) && (userType < 10),
-            "PNP:EA: User not authorized to modify records in specified asset class"
+            "PA:EA: User not authorized to modify records in specified asset class"
         );
         require( // require transferrable (51) status
             rec.assetStatus == 51,
-            "PNP:EA: Asset status must be 51 to export"
+            "PA:EA: Asset status must be 51 to export"
         );
         //^^^^^^^checks^^^^^^^^^
-
-        rec.assetStatus = 70; // Set status to 70 (exported)
-
+        
         if (rec.numberOfTransfers < 65335) {
             rec.numberOfTransfers++;
         }
+        rec.assetStatus = 70; // Set status to 70 (exported)
         //^^^^^^^effects^^^^^^^^^
 
-        A_TKN.safeTransferFrom(address(this), _addr, tokenId); // sends token to rightsholder wallet (specified by auth user)
         writeRecord(_idxHash, rec);
+        STOR.changeAC(_idxHash, AC_info.assetClassRoot);
+        A_TKN.safeTransferFrom(address(this), _addr, tokenId); // sends token to rightsholder wallet (specified by auth user)
 
         return rec.assetStatus;
         //^^^^^^^interactions^^^^^^^^^
@@ -144,7 +145,7 @@ contract APP is CORE {
             "PNP:MS: Contract not authorized for this asset class"
         );
 
-        require((rec.rightsHolder != 0), "PA:FMR: Record does not exist");
+        require((rec.rightsHolder != 0), "PA:FMR: Record unclaimed: import required. ");
 
         require(
             userType == 1,
@@ -217,7 +218,7 @@ contract APP is CORE {
             contractInfo.contractType > 0,
             "PNP:MS: Contract not authorized for this asset class"
         );
-        require((rec.rightsHolder != 0), "PA:TA: Record does not exist");
+        require((rec.rightsHolder != 0), "PA:TA: Record unclaimed: import required. ");
         require(
             (userType > 0) && (userType < 10),
             "PA:TA: User not authorized to modify records in specified asset class"
@@ -244,9 +245,7 @@ contract APP is CORE {
             rec.assetStatus = 5;
         }
 
-        if(rec.assetStatus != 5){
-            rec.rightsHolder = _newrgtHash;
-        }
+        rec.rightsHolder = _newrgtHash;
         //^^^^^^^effects^^^^^^^^^
 
         writeRecord(_idxHash, rec);
@@ -283,7 +282,7 @@ contract APP is CORE {
             contractInfo.contractType > 0,
             "PNP:MS: Contract not authorized for this asset class"
         );
-        require((rec.rightsHolder != 0), "PA:I2: Record does not exist");
+        require((rec.rightsHolder != 0), "PA:I2: Record unclaimed: import required. ");
         require(
             (userType > 0) && (userType < 10),
             "PA:I2: User not authorized to modify records in specified asset class"
@@ -347,7 +346,7 @@ contract APP is CORE {
             contractInfo.contractType > 0,
             "PNP:MS: Contract not authorized for this asset class"
         );
-        require((rec.rightsHolder != 0), "PA:IA: Record does not exist");
+        require((rec.assetClass != 0), "PA:IA: Record does not exist. ");
         require(userType < 3, "PA:IA: User not authorized to reimport assets");
 
         require(
