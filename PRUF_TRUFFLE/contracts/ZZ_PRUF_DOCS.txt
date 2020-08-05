@@ -37,8 +37,6 @@ pragma solidity ^0.6.7;
  *
  *      *Above 65k segregation (probably by ACinfo custodial type) (just need to add a wild west contract?)
  *
- *      *exporting an asset from a custodial assetclass(and vice versa) should change assetClass to assetClassRoot || 0. Otherwise
- *      *the NC contracts will have to be authorized in custodial assetclasses.
  *
  *      
  *
