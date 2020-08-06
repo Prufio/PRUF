@@ -1098,13 +1098,15 @@
                 'aaa'
             )
         })
+        //SHOULD PASS
         it('Should remove asset9 from escrow', async () => {
             return ECR_NC.endEscrow(
                 asset9,
                 {from: account6}
             )
         })
-        it('Should fail to remint asset token due to unclaimed status', async () => { //@DEV MAKE THIS ACTUALLY WORK
+        //14
+        it('Should fail to remint asset token due to unclaimed status', async () => { //UNREACHABLE ERROR
             return APP_NC.$reMintToken(
                 asset9,
                 'aaa',
@@ -1114,7 +1116,8 @@
                 'aaa'
             )
         })
-        it('Should fail to remint asset token due to unclaimed status', async () => { 
+        //15
+        it('Should fail to remint asset token due to rightsHolder mismatch', async () => { 
             return APP_NC.$reMintToken(
                 asset9,
                 'bbb',
