@@ -102,7 +102,7 @@ contract APP_NC is CORE {
         Record memory rec = getRecord(_idxHash);
         ContractDataHash memory contractInfo = getContractInfo(
             address(this),
-            rec.assetClass
+            _newAssetClass
         );
 
         require(
@@ -132,7 +132,6 @@ contract APP_NC is CORE {
     //     whenNotPaused
     // {
     //     uint256 tokenID = uint256(_idxHash);
-
     //     Record memory rec = getRecord(_idxHash);
     //     ContractDataHash memory contractInfo = getContractInfo(address(this),rec.assetClass);
 
@@ -156,10 +155,7 @@ contract APP_NC is CORE {
     //         ) == 170,
     //         "TPA:INA: authCode and assetClass verification failed"
     //     );
-    //     require(rec.assetStatus < 200, "PA:IA: Record locked");
     //     //^^^^^^^checks^^^^^^^^^
-
-    //     STOR.changeAC(_idxHash, _newAssetClass);
 
     //     deductNewRecordCosts(_newAssetClass);
     //     //^^^^^^^interactions / effects^^^^^^^^^^^^

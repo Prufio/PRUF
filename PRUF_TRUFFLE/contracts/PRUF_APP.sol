@@ -343,21 +343,21 @@ contract APP is CORE {
         payable
         nonReentrant
         whenNotPaused
-        isAuthorized(_idxHash)
+        isAuthorized(_idxHash) //contract holds token (user sent to contract)
         returns (uint8)
     {
         Record memory rec = getRecord(_idxHash);
         uint8 userType = getUserType(_newAssetClass);
         ContractDataHash memory contractInfo = getContractInfo(
             address(this),
-            rec.assetClass
+            _newAssetClass
         );
 
         require(
             contractInfo.contractType > 0,
             "A:IA: This contract not authorized for specified AC"
         );
-        require((rec.assetClass != 0), "A:IA: Record does not exist. ");
+        require(rec.assetClass != 0, "A:IA: Record does not exist. ");
         require(userType < 3, "A:IA: User not authorized to reimport assets");
         require(
             (userType > 0) && (userType < 10),
@@ -385,7 +385,7 @@ contract APP is CORE {
 
         writeRecord(_idxHash, rec);
         STOR.changeAC(_idxHash, _newAssetClass);
-        deductNewRecordCosts(rec.assetClass);
+        deductNewRecordCosts(_newAssetClass);
 
         return rec.assetStatus;
         //^^^^^^^interactions^^^^^^^^^

@@ -262,7 +262,7 @@ contract A_TKN is Ownable, ReentrancyGuard, ERC721 {
     /**
      * @dev Safely burns a token and sets the corresponding RGT to zero in storage.
      */
-    function discard(uint256 tokenId) external nonReentrant isAdmin {
+    function discard(uint256 tokenId) external nonReentrant {
         bytes32 _idxHash = bytes32(tokenId);
         Record memory rec = getRecord(_idxHash);
 
