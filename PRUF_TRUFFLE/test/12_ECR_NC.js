@@ -1,5 +1,3 @@
-console.log("//**************************************BOOTSTRAP**********************************************/")
-
 const PRUF_STOR = artifacts.require('STOR');
 const PRUF_APP = artifacts.require('APP');
 const PRUF_NP = artifacts.require('NP');
@@ -14,6 +12,8 @@ const PRUF_ECR_NC = artifacts.require('ECR_NC');
 const PRUF_RCLR = artifacts.require('RCLR');
 
 contract('PRUF_ECR_NC', accounts => {
+
+    console.log("//**************************************BOOTSTRAP**********************************************/")
 
     const account1 = accounts[0];
     const account2 = accounts[1];

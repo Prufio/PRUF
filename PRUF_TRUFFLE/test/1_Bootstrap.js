@@ -24,8 +24,11 @@ let APP_NC;
 let NP_NC;
 let RCLR;
 
-contract('PRUF_BOOTSTRAP', accounts => {
 
+contract('PRUF_BOOTSTRAP', accounts => {
+    
+    console.log("//**************************************BOOTSTRAP**********************************************/")
+    
     const account1 = accounts[0];
     const account2 = accounts[1];
     const account3 = accounts[2];
