@@ -47,6 +47,7 @@
     let rgt3;
     let rgt4;
     let rgt5;
+    let escrowOwnerAddressHash;
     let rgt000 = "0x0000000000000000000000000000000000000000000000000000000000000000";
     
         //
@@ -239,6 +240,12 @@
                 'jjj',
                 'jjj'
             );
+            asset11 = await Helper.getIdxHash(
+                'kkk',
+                'kkk',
+                'kkk',
+                'kkk'
+            );
 
             rgt1 = await Helper.getJustRgtHash(
                 asset1,
@@ -280,6 +287,9 @@
                 'eee',
                 'eee',
                 'eee'
+            )
+            escrowOwnerAddressHash = await Helper.getAddrHash(
+                account6
             )
             
         })
@@ -480,13 +490,13 @@
     
         it('Should authorize APP_NC in all relevant asset classes', async () => {
             console.log("Authorizing APP_NC")
-            return STOR.enableContractForAC('APP_NC', '12', '1', { from: account1 })
+            return STOR.enableContractForAC('APP_NC', '12', '2', { from: account1 })
                 .then(() => {
-                    return STOR.enableContractForAC('APP_NC', '13', '1', { from: account1 })
+                    return STOR.enableContractForAC('APP_NC', '13', '2', { from: account1 })
                 }).then(() => {
-                    return STOR.enableContractForAC('APP_NC', '14', '1', { from: account1 })
+                    return STOR.enableContractForAC('APP_NC', '14', '2', { from: account1 })
                 }).then(() => {
-                    return STOR.enableContractForAC('APP_NC', '2', '1', { from: account1 })
+                    return STOR.enableContractForAC('APP_NC', '2', '2', { from: account1 })
                 })
         })
     
@@ -502,13 +512,13 @@
     
         it('Should authorize NP_NC in all relevant asset classes', async () => {
             console.log("Authorizing NP_NC")
-            return STOR.enableContractForAC('NP_NC', '12', '1', { from: account1 })
+            return STOR.enableContractForAC('NP_NC', '12', '2', { from: account1 })
                 .then(() => {
-                    return STOR.enableContractForAC('NP_NC', '13', '1', { from: account1 })
+                    return STOR.enableContractForAC('NP_NC', '13', '2', { from: account1 })
                 }).then(() => {
-                    return STOR.enableContractForAC('NP_NC', '14', '1', { from: account1 })
+                    return STOR.enableContractForAC('NP_NC', '14', '2', { from: account1 })
                 }).then(() => {
-                    return STOR.enableContractForAC('NP_NC', '2', '1', { from: account1 })
+                    return STOR.enableContractForAC('NP_NC', '2', '2', { from: account1 })
                 })
         })
     
@@ -558,11 +568,11 @@
                 .then(() => {
                     return STOR.enableContractForAC('AC_TKN', '11', '1', { from: account1 })
                 }).then(() => {
-                    return STOR.enableContractForAC('AC_TKN', '12', '1', { from: account1 })
+                    return STOR.enableContractForAC('AC_TKN', '12', '2', { from: account1 })
                 }).then(() => {
-                    return STOR.enableContractForAC('AC_TKN', '13', '1', { from: account1 })
+                    return STOR.enableContractForAC('AC_TKN', '13', '2', { from: account1 })
                 }).then(() => {
-                    return STOR.enableContractForAC('AC_TKN', '14', '1', { from: account1 })
+                    return STOR.enableContractForAC('AC_TKN', '14', '2', { from: account1 })
                 })
         })
     
@@ -572,15 +582,15 @@
                 .then(() => {
                     return STOR.enableContractForAC('A_TKN', '11', '1', { from: account1 })
                 }).then(() => {
-                    return STOR.enableContractForAC('A_TKN', '12', '1', { from: account1 })
+                    return STOR.enableContractForAC('A_TKN', '12', '2', { from: account1 })
                 }).then(() => {
-                    return STOR.enableContractForAC('A_TKN', '13', '1', { from: account1 })
+                    return STOR.enableContractForAC('A_TKN', '13', '2', { from: account1 })
                 }).then(() => {
-                    return STOR.enableContractForAC('A_TKN', '14', '1', { from: account1 })
+                    return STOR.enableContractForAC('A_TKN', '14', '2', { from: account1 })
                 }).then(() => {
                     return STOR.enableContractForAC('A_TKN', '1', '1', { from: account1 })
                 }).then(() => {
-                    return STOR.enableContractForAC('A_TKN', '2', '1', { from: account1 })
+                    return STOR.enableContractForAC('A_TKN', '2', '2', { from: account1 })
                 })
         })
     
@@ -590,33 +600,33 @@
                 .then(() => {
                     return STOR.enableContractForAC('AC_MGR', '11', '1', { from: account1 })
                 }).then(() => {
-                    return STOR.enableContractForAC('AC_MGR', '12', '1', { from: account1 })
+                    return STOR.enableContractForAC('AC_MGR', '12', '2', { from: account1 })
                 }).then(() => {
-                    return STOR.enableContractForAC('AC_MGR', '13', '1', { from: account1 })
+                    return STOR.enableContractForAC('AC_MGR', '13', '2', { from: account1 })
                 }).then(() => {
-                    return STOR.enableContractForAC('AC_MGR', '14', '1', { from: account1 })
+                    return STOR.enableContractForAC('AC_MGR', '14', '2', { from: account1 })
                 }).then(() => {
                     return STOR.enableContractForAC('AC_MGR', '1', '1', { from: account1 })
                 }).then(() => {
-                    return STOR.enableContractForAC('AC_MGR', '2', '1', { from: account1 })
+                    return STOR.enableContractForAC('AC_MGR', '2', '2', { from: account1 })
                 })
         })
     
         it('Should authorize RCLR in all relevant asset classes', async () => {
             console.log("Authorizing RCLR")
-            return STOR.enableContractForAC('RCLR', '10', '1', { from: account1 })
+            return STOR.enableContractForAC('RCLR', '10', '3', { from: account1 })
                 .then(() => {
-                    return STOR.enableContractForAC('RCLR', '11', '1', { from: account1 })
+                    return STOR.enableContractForAC('RCLR', '11', '3', { from: account1 })
                 }).then(() => {
-                    return STOR.enableContractForAC('RCLR', '12', '1', { from: account1 })
+                    return STOR.enableContractForAC('RCLR', '12', '3', { from: account1 })
                 }).then(() => {
-                    return STOR.enableContractForAC('RCLR', '13', '1', { from: account1 })
+                    return STOR.enableContractForAC('RCLR', '13', '3', { from: account1 })
                 }).then(() => {
-                    return STOR.enableContractForAC('RCLR', '14', '1', { from: account1 })
+                    return STOR.enableContractForAC('RCLR', '14', '3', { from: account1 })
                 }).then(() => {
-                    return STOR.enableContractForAC('RCLR', '1', '1', { from: account1 })
+                    return STOR.enableContractForAC('RCLR', '1', '3', { from: account1 })
                 }).then(() => {
-                    return STOR.enableContractForAC('RCLR', '2', '1', { from: account1 })
+                    return STOR.enableContractForAC('RCLR', '2', '3', { from: account1 })
                 })
         })
     
@@ -842,6 +852,16 @@
                 { from: account6, value: 20000000000000000 }
             )
         })
+
+        it('Should mint a third record in AC 14', async () => { //status changed to 51, burned
+            return APP_NC.$newRecord(
+                asset11,
+                rgt1,
+                '14',
+                '5000',
+                { from: account6, value: 20000000000000000 }
+            )
+        })
     
         it('Should change status of asset6 to 51 for export eligibility', async () => {
             return NP._modStatus(
@@ -849,6 +869,14 @@
                 rgt1,
                 '51',
                 { from: account3 }
+            )
+        })
+
+        it('Should change status of asset11 to 59 for discard eligibility', async () => {
+            return NP_NC._modStatus(
+                asset11,
+                '59',
+                { from: account6 }
             )
         })
     
@@ -865,18 +893,18 @@
             return ECR.setEscrow(
                 asset4,
                 rgt1,
-                '30',
+                '1',
                 '6',
                 { from: account3 }
             )
         })
 
         it('Should put asset9 into an escrow', async () => {
-            return ECR.setEscrow(
+            return ECR_NC.setEscrow(
                 asset9,
-                rgt1,
-                '30',
-                '6',
+                escrowOwnerAddressHash,
+                '1',
+                '50',
                 { from: account6 }
             )
         })
@@ -904,6 +932,13 @@
                 asset6,
                 APP.address,
                 { from: account3 }
+            )
+        })
+
+        it('Should discard asset11', async () => {
+            return A_TKN.discard(
+                asset11,
+                { from: account6 }
             )
         })
     
@@ -1042,9 +1077,9 @@
             )
         })
         //12
-        it('Should fail to remint asset token due to burned status', async () => { //@DEV MAKE THIS ACTUALLY WORK
+        it('Should fail to remint asset token due to burned status (GETS CAUGHT IN 0xfff CHECK)', async () => { //GETS CAUGHT IN 0xfff CHECK
             return APP_NC.$reMintToken(
-                asset10,
+                asset11,
                 'aaa',
                 'aaa',
                 'aaa',
@@ -1061,6 +1096,12 @@
                 'aaa',
                 'aaa',
                 'aaa'
+            )
+        })
+        it('Should remove asset9 from escrow', async () => {
+            return ECR_NC.endEscrow(
+                asset9,
+                {from: account6}
             )
         })
         it('Should fail to remint asset token due to unclaimed status', async () => { //@DEV MAKE THIS ACTUALLY WORK
