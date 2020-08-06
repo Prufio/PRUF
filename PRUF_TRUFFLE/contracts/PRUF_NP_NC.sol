@@ -61,7 +61,7 @@ contract NP_NC is CORE {
 
         require(
             contractInfo.contractType > 0,
-            "PNP:MS: Contract not authorized for this asset class"
+            "PNP:MS: This contract not authorized for specified AC"
         );
 
         require((rec.assetClass != 0), "PA:FMR: Record does not exist");
@@ -117,7 +117,7 @@ contract NP_NC is CORE {
 
         require(
             contractInfo.contractType > 0,
-            "TPNP:EX: Contract not authorized for this asset class"
+            "TPNP:EX: This contract not authorized for specified AC"
         );
         require(
             (rec.assetStatus != 6) &&
@@ -159,7 +159,7 @@ contract NP_NC is CORE {
 
         require(
             contractInfo.contractType > 0,
-            "PNP:MS: Contract not authorized for this asset class"
+            "PNP:MS: This contract not authorized for specified AC"
         );
 
         require((rec.assetClass != 0), "TPNP:MS: Record does not exist");
@@ -237,7 +237,7 @@ contract NP_NC is CORE {
 
         require(
             contractInfo.contractType > 0,
-            "PNP:MS: Contract not authorized for this asset class"
+            "PNP:MS: This contract not authorized for specified AC"
         );
 
         require((rec.assetClass != 0), "TPNP:SLS: Record does not exist");
@@ -300,7 +300,7 @@ contract NP_NC is CORE {
 
         require(
             contractInfo.contractType > 0,
-            "PNP:MS: Contract not authorized for this asset class"
+            "PNP:MS: This contract not authorized for specified AC"
         );
         require(_decAmount > 0, "TPNP:DC: cannot decrement by negative number");
 
@@ -352,7 +352,7 @@ contract NP_NC is CORE {
 
         require(
             contractInfo.contractType > 0,
-            "PNP:MS: Contract not authorized for this asset class"
+            "PNP:MS: This contract not authorized for specified AC"
         );
 
         require((rec.assetClass != 0), "TPNP:MI1: Record does not exist");

@@ -56,7 +56,7 @@ contract ECR is ECR_CORE {
 
         require(
             contractInfo.contractType > 0,
-            "PNP:MS: Contract not authorized for this asset class"
+            "PNP:MS: This contract not authorized for specified AC"
         );
         require((rec.assetClass != 0), "SE: Record does not exist");
         require(
@@ -120,7 +120,6 @@ contract ECR is ECR_CORE {
         isAuthorized(_idxHash)
     {
         Record memory rec = getRecord(_idxHash);
-        //Record memory shortRec = getShortRecord(_idxHash);
         escrowData memory escrow = getEscrowData(_idxHash);
         ContractDataHash memory contractInfo = getContractInfo(
             address(this),
@@ -131,7 +130,7 @@ contract ECR is ECR_CORE {
 
         require(
             contractInfo.contractType > 0,
-            "PNP:MS: Contract not authorized for this asset class"
+            "PNP:MS: This contract not authorized for specified AC"
         );
 
         require((rec.assetClass != 0), "EE: Record does not exist");

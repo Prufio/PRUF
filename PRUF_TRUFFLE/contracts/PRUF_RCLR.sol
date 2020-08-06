@@ -84,9 +84,9 @@ contract RCLR is ECR_CORE, CORE {
 
         require(
             contractInfo.contractType > 0,
-            "PNP:MS: Contract not authorized for this asset class"
+            "PNP:MS: This contract not authorized for specified AC"
         );
-        require(_rgtHash != 0, "PR:R:Rights holder cannot be zero");
+        require(_rgtHash != 0, "PR:R:New rights holder cannot be zero");
         require(_assetClass != 0, "PR:R:Asset class cannot be zero");
         require( //if creating new record in new root and idxhash is identical, fail because its probably fraud
             ((AC_info.assetClassRoot == oldAC_info.assetClassRoot) ||

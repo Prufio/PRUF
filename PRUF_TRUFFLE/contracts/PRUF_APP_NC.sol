@@ -54,7 +54,7 @@ contract APP_NC is CORE {
 
         require(
             contractInfo.contractType > 0,
-            "PNP:MS: Contract not authorized for this asset class"
+            "PNP:MS: This contract not authorized for specified AC"
         );
         require(
             userType == 1,
@@ -111,7 +111,7 @@ contract APP_NC is CORE {
 
         require(
             contractInfo.contractType > 0,
-            "PNP:MS: Contract not authorized for this asset class"
+            "PNP:MS: This contract not authorized for specified AC"
         );
         require(
             AC_MGR.isSameRootAC(
@@ -150,7 +150,7 @@ contract APP_NC is CORE {
 
         require(
             contractInfo.contractType > 0,
-            "PNP:MS: Contract not authorized for this asset class"
+            "PNP:MS: This contract not authorized for specified AC"
         );
         require(rec.rightsHolder != 0, "TPA:RMT:Record not remintable");
         require(
@@ -208,7 +208,7 @@ contract APP_NC is CORE {
 
         require(
             contractInfo.contractType > 0,
-            "PNP:MS: Contract not authorized for this asset class"
+            "PNP:MS: This contract not authorized for specified AC"
         );
         require((rec.assetClass != 0), "PA:I2: Record does not exist");
         require(

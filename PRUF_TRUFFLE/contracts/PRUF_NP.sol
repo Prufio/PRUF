@@ -59,7 +59,7 @@ contract NP is CORE {
 
         require(
             contractInfo.contractType > 0,
-            "PNP:MS: Contract not authorized for this asset class"
+            "PNP:MS: This contract not authorized for specified AC"
         );
         require((rec.rightsHolder != 0), "PNP:MS: Record unclaimed: import required. ");
         require(
@@ -140,7 +140,7 @@ contract NP is CORE {
 
         require(
             contractInfo.contractType > 0,
-            "PNP:MS: Contract not authorized for this asset class"
+            "PNP:MS: This contract not authorized for specified AC"
         );
 
         require((rec.rightsHolder != 0), "PNP:SLS: Record unclaimed: import required. ");
@@ -207,7 +207,7 @@ contract NP is CORE {
 
         require(
             contractInfo.contractType > 0,
-            "PNP:MS: Contract not authorized for this asset class"
+            "PNP:MS: This contract not authorized for specified AC"
         );
 
         require((rec.rightsHolder != 0), "PNP:DC: Record unclaimed: import required. ");
@@ -268,7 +268,7 @@ contract NP is CORE {
 
         require(
             contractInfo.contractType > 0,
-            "PNP:MS: Contract not authorized for this asset class"
+            "PNP:MS: This contract not authorized for specified AC"
         );
 
         require((rec.rightsHolder != 0), "PNP:MI1: Record unclaimed: import required. ");
