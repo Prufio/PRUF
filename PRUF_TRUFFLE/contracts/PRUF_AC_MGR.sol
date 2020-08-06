@@ -102,7 +102,6 @@ contract AC_MGR is CORE {
         AC memory _ac = AC_data[_assetClassRoot];
 
         require((_tokenId != 0), "ACM:CAC: Token id cannot be 0"); //sanity check inputs
-        require((_custodyType != 0), "ACM:CAC:CustodyType cannot be 0"); //sanity check inputs
         require( //has valid root
             (_ac.custodyType != 0) || (_assetClassRoot == _assetClass),
             "ACM:CAC:Root asset class does not exist"
