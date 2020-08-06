@@ -108,7 +108,6 @@ contract NP is CORE {
             rec.rightsHolder == _rgtHash,
             "NP:MS: Rightsholder does not match supplied data"
         );
-        require(rec.assetStatus < 200, "NP:MS: Record locked");
         //^^^^^^^checks^^^^^^^^^
 
         rec.assetStatus = _newAssetStatus;
@@ -173,7 +172,6 @@ contract NP is CORE {
             (rec.assetStatus != 50),
             "NP:SLS: Asset in locked escrow cannot be set to lost or stolen"
         );
-        require(rec.assetStatus < 200, "NP:SLS: Record locked");
         require(
             rec.rightsHolder == _rgtHash,
             "NP:SLS: Rightsholder does not match supplied data"
@@ -234,7 +232,6 @@ contract NP is CORE {
             (rec.assetStatus != 5) && (rec.assetStatus != 55),
             "NP:DC: Record In Transferred-unregistered status"
         );
-        require(rec.assetStatus < 200, "NP:DC: Record locked");
         require(
             rec.rightsHolder == _rgtHash,
             "NP:DC: Rightsholder does not match supplied data"
@@ -297,7 +294,6 @@ contract NP is CORE {
             (rec.assetStatus != 5) && (rec.assetStatus != 55),
             "NP:MI1: Record In Transferred-unregistered status"
         );
-        require(rec.assetStatus < 200, "NP:MI1: Record locked");
         require(
             rec.rightsHolder == _rgtHash,
             "NP:MI1: Rightsholder does not match supplied data"

@@ -241,6 +241,10 @@ contract A_TKN is Ownable, ReentrancyGuard, ERC721 {
             "AT:STF:Asset not in transferrable status"
         );
         require(
+            to != address(0),
+            "AT:STF:Cannot transfer asset to zero adress. Use discard."
+        );
+        require(
             _isApprovedOrOwner(_msgSender(), tokenId),
             "AT:STF: transfer caller is not owner nor approved"
         );
@@ -266,10 +270,10 @@ contract A_TKN is Ownable, ReentrancyGuard, ERC721 {
         bytes32 _idxHash = bytes32(tokenId);
         Record memory rec = getRecord(_idxHash);
 
-        require(_exists(tokenId), "AT:D:Cannot Burn nonexistant token");
+        require(_exists(tokenId), "AT:D:Cannot discard nonexistant token");
         require(
             (rec.assetStatus == 59),
-            "AT:D:Asset must be in status 59 (discardable) to be burned"
+            "AT:D:Asset must be in status 59 (discardable) to be discarded"
         );
         require(
             _isApprovedOrOwner(_msgSender(), tokenId),

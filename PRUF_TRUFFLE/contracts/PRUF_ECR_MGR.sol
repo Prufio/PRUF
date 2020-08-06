@@ -27,8 +27,8 @@ contract ECR_MGR is BASIC {
 
     struct escrowData {
         uint8 data;
-        bytes32 controllingContractNameHash;
-        bytes32 escrowOwnerAddressHash;
+        bytes32 controllingContractNameHash; //hash of the name of the controlling escrow contract
+        bytes32 escrowOwnerAddressHash; //hash of an address designated as an executor for the escrow contract
         uint256 timelock;
         bytes32 ex1;
         bytes32 ex2;
@@ -113,7 +113,6 @@ contract ECR_MGR is BASIC {
             isEscrow(rec.assetStatus) == 0,
             "EM:SE: Asset already in escrow status."
         );
-        require(rec.assetStatus < 200, "EM:SE: Record locked");
         //^^^^^^^checks^^^^^^^^^
 
         escrows[_idxHash].data = 0; //initialize escrow data

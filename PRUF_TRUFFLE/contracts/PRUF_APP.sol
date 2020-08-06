@@ -61,7 +61,6 @@ contract APP is CORE {
         );
         require(userType < 5, "A:NR: User not authorized to create records");
         require(_rgtHash != 0, "A:NR: rights holder cannot be zero");
-        require(rec.assetStatus < 200, "A:NR: Old Record locked");
         //^^^^^^^checks^^^^^^^^^
 
         //bytes32 userHash = keccak256(abi.encodePacked(msg.sender));
@@ -173,7 +172,6 @@ contract APP is CORE {
             (rec.assetStatus != 5) && (rec.assetStatus != 55),
             "A:FMR: Record In Transferred-unregistered status"
         );
-        require(rec.assetStatus < 200, "A:FMR: Record locked");
         //^^^^^^^checks^^^^^^^^^
 
         if (rec.forceModCount < 255) {
@@ -304,7 +302,6 @@ contract APP is CORE {
                 (rec.assetStatus != 56),
             "A:I2: Cannot modify asset in Escrow"
         );
-        require(rec.assetStatus < 200, "A:I2: Record locked");
         require(
             (rec.assetStatus != 5) && (rec.assetStatus != 55),
             "A:I2: Record In Transferred-unregistered status"
@@ -343,21 +340,21 @@ contract APP is CORE {
         payable
         nonReentrant
         whenNotPaused
-        isAuthorized(_idxHash)
+        isAuthorized(_idxHash) //contract holds token (user sent to contract)
         returns (uint8)
     {
         Record memory rec = getRecord(_idxHash);
         uint8 userType = getUserType(_newAssetClass);
         ContractDataHash memory contractInfo = getContractInfo(
             address(this),
-            rec.assetClass
+            _newAssetClass
         );
 
         require(
             contractInfo.contractType > 0,
             "A:IA: This contract not authorized for specified AC"
         );
-        require((rec.assetClass != 0), "A:IA: Record does not exist. ");
+        require(rec.assetClass != 0, "A:IA: Record does not exist. ");
         require(userType < 3, "A:IA: User not authorized to reimport assets");
         require(
             (userType > 0) && (userType < 10),
@@ -385,7 +382,7 @@ contract APP is CORE {
 
         writeRecord(_idxHash, rec);
         STOR.changeAC(_idxHash, _newAssetClass);
-        deductNewRecordCosts(rec.assetClass);
+        deductNewRecordCosts(_newAssetClass);
 
         return rec.assetStatus;
         //^^^^^^^interactions^^^^^^^^^

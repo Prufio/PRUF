@@ -86,7 +86,7 @@ contract NP_NC is CORE {
             (rec.assetStatus != 60),
             "NPNC:CR: Record is burned and must be reimported by ACadmin"
         );
-        require(rec.assetStatus < 200, "TPNP:CR: Record locked");
+
         //^^^^^^^checks^^^^^^^^^
         rec.rightsHolder = _newRgtHash;
         //^^^^^^^effects^^^^^^^^^
@@ -130,7 +130,6 @@ contract NP_NC is CORE {
             (rec.assetStatus != 60),
             "NPNC:EX: Record is burned and must be reimported by ACadmin"
         );
-        require(rec.assetStatus < 200, "NPNC:EX: Record locked");
 
         rec.assetStatus = 70; // Set status to 70 (exported)
         writeRecord(_idxHash, rec);
@@ -200,7 +199,6 @@ contract NP_NC is CORE {
             (rec.assetStatus != 60),
             "NPNC:MS: Record is burned and must be reimported by ACadmin"
         );
-        require(rec.assetStatus < 200, "NPNC:MS: Record locked");
         //^^^^^^^checks^^^^^^^^^
 
         rec.assetStatus = _newAssetStatus;
@@ -260,7 +258,6 @@ contract NP_NC is CORE {
             (rec.assetStatus != 60),
             "NPNC:SLS: Record is burned and must be reimported by ACadmin"
         );
-        require(rec.assetStatus < 200, "NPNC:SLS: Record locked");
 
         //^^^^^^^checks^^^^^^^^^
         rec.assetStatus = _newAssetStatus;
@@ -309,7 +306,6 @@ contract NP_NC is CORE {
             (rec.assetStatus != 60),
             "NPNC:DC: Record is burned and must be reimported by ACadmin"
         );
-        require(rec.assetStatus < 200, "NPNC:DC: Record locked");
         //^^^^^^^checks^^^^^^^^^
 
         if (rec.countDown > _decAmount) {
@@ -360,7 +356,6 @@ contract NP_NC is CORE {
             (rec.assetStatus != 60),
             "NPNC:MI1: Record is burned and must be reimported by ACadmin"
         );
-        require(rec.assetStatus < 200, "NPNC:MI1: Record locked");
         //^^^^^^^checks^^^^^^^^^
 
         rec.Ipfs1 = _IpfsHash;

@@ -70,7 +70,6 @@ contract APP_NC is CORE {
                 (rec.assetClass == 0)),
             "ANC:NR: Cannot re-create asset in new root assetClass"
         );
-        require(rec.assetStatus < 200, "ANC:NR: Old Record locked");
         //^^^^^^^checks^^^^^^^^^
 
         //bytes32 userHash = keccak256(abi.encodePacked(msg.sender));
@@ -102,7 +101,7 @@ contract APP_NC is CORE {
         Record memory rec = getRecord(_idxHash);
         ContractDataHash memory contractInfo = getContractInfo(
             address(this),
-            rec.assetClass
+            _newAssetClass
         );
 
         require(
@@ -113,7 +112,6 @@ contract APP_NC is CORE {
             AC_MGR.isSameRootAC(_newAssetClass, rec.assetClass) == 170,
             "ANC:IA:Cannot change AC to new root"
         );
-        require(rec.assetStatus < 200, "ANC:IA: Record locked");
         //^^^^^^^checks^^^^^^^^^
 
         STOR.changeAC(_idxHash, _newAssetClass);
@@ -122,48 +120,39 @@ contract APP_NC is CORE {
         //^^^^^^^interactions / effects^^^^^^^^^^^^
     }
 
-    // /*
-    //  * @dev Import a record into a new asset class
-    //  */
-    // function $importNakedAsset(bytes32 _idxHash, string calldata authCode, uint16 _newAssetClass)
-    //     external
-    //     payable
-    //     nonReentrant
-    //     whenNotPaused
-    // {
-    //     uint256 tokenID = uint256(_idxHash);
+    /*
+     * @dev Import a record into a new asset class
+     */
+    function $importNakedAsset(bytes32 _idxHash, string calldata authCode, uint16 _newAssetClass)
+        external
+        payable
+        nonReentrant
+        whenNotPaused
+    {
+        uint256 tokenID = uint256(_idxHash);
+        Record memory rec = getRecord(_idxHash);
+        ContractDataHash memory contractInfo = getContractInfo(address(this),rec.assetClass);
 
-    //     Record memory rec = getRecord(_idxHash);
-    //     ContractDataHash memory contractInfo = getContractInfo(address(this),rec.assetClass);
+        require(
+            A_TKN.ownerOf(tokenID) == address(this),
+            "PNP:INA: Token not found in importing contract"
+        );
+        require(
+            contractInfo.contractType > 0,
+            "PNP:INA: This contract not authorized for specified AC"
+        );
+        require(
+            rec.assetClass == 0,
+            "PNP:INA: Asset already registered in system"
+        );
+        //^^^^^^^checks^^^^^^^^^
 
-    //     require(
-    //         A_TKN.ownerOf(tokenID) == address(this),
-    //         "PNP:INA: Token not found in importing contract"
-    //     );
-    //     require(
-    //         contractInfo.contractType > 0,
-    //         "PNP:INA: This contract not authorized for specified AC"
-    //     );
-    //     require(
-    //         rec.assetClass == 0,
-    //         "PNP:INA: Asset already registered in system"
-    //     );
+        //transfer token to caller from assetToken if matching data
 
-    //     require(
-    //         AC_MGR.isSameRootAC(
-    //             _newAssetClass,
-    //             rec.assetClass
-    //         ) == 170,
-    //         "TPA:INA: authCode and assetClass verification failed"
-    //     );
-    //     require(rec.assetStatus < 200, "PA:IA: Record locked");
-    //     //^^^^^^^checks^^^^^^^^^
+        //Create a new record. (call newRecord? without making a token?)
 
-    //     STOR.changeAC(_idxHash, _newAssetClass);
-
-    //     deductNewRecordCosts(_newAssetClass);
-    //     //^^^^^^^interactions / effects^^^^^^^^^^^^
-    // }
+        //^^^^^^^interactions / effects^^^^^^^^^^^^
+    }
 
     /*
      * @dev remint token with confirmation of posession of RAWTEXT hash inputs
@@ -198,10 +187,6 @@ contract APP_NC is CORE {
             "ANC:RMT:Record not remintable"
         );
         require(
-            (rec.assetStatus != 60),
-            "ANC:RMT:Record is burned and must be reimported by ACadmin"
-        );
-        require(
             (rec.assetStatus != 6) &&
                 (rec.assetStatus != 50) &&
                 (rec.assetStatus != 56),
@@ -211,9 +196,8 @@ contract APP_NC is CORE {
             (rec.assetStatus != 5) &&
                 (rec.assetStatus != 55) &&
                 (rec.assetStatus != 60),
-            "ANC:RMT:Record In Transferred-unregistered or burned status"
+            "ANC:RMT:Record In Transferred-unregistered or discarded status"
         );
-        require(rec.assetStatus < 200, "ANC:RMT:Record locked");
         require(
             rec.rightsHolder == keccak256(abi.encodePacked(_idxHash, rawHash)),
             "ANC:RMT:Rightsholder does not match hash from data"
@@ -264,7 +248,6 @@ contract APP_NC is CORE {
             (rec.assetStatus != 5) && (rec.assetStatus != 55),
             "ANC:I2:Record In Transferred-unregistered status"
         );
-        require(rec.assetStatus < 200, "ANC:I2: Record locked");
         require(
             rec.Ipfs2 == 0,
             "ANC:I2:Ipfs2 has data already. Overwrite not permitted"
