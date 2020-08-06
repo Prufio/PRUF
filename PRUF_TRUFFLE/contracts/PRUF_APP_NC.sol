@@ -123,15 +123,19 @@ contract APP_NC is CORE {
     /*
      * @dev Import a record into a new asset class
      */
-    function $importNakedAsset(bytes32 _idxHash, string calldata authCode, uint16 _newAssetClass, bytes32 _rgtHash, uint256 _countDownStart)
-        external
-        payable
-        nonReentrant
-        whenNotPaused
-    {
+    function $importNakedAsset(
+        bytes32 _idxHash,
+        string calldata _authCode,
+        uint16 _newAssetClass,
+        bytes32 _rgtHash,
+        uint256 _countDownStart
+    ) external payable nonReentrant whenNotPaused {
         uint256 tokenID = uint256(_idxHash);
         Record memory rec = getRecord(_idxHash);
-        ContractDataHash memory contractInfo = getContractInfo(address(this),rec.assetClass);
+        ContractDataHash memory contractInfo = getContractInfo(
+            address(this),
+            rec.assetClass
+        );
 
         require(
             A_TKN.ownerOf(tokenID) == address(this),
@@ -147,13 +151,11 @@ contract APP_NC is CORE {
         );
         //^^^^^^^checks^^^^^^^^^
 
-        //transfer token to caller from assetToken if matching data
+        A_TKN.claimNakedToken(tokenID, _newAssetClass, _authCode); //Verify supplied data matches tokenURI
 
-        STOR.newRecord(
-        _idxHash,
-        _rgtHash,
-        _newAssetClass,
-        _countDownStart);
+        STOR.newRecord(_idxHash, _rgtHash, _newAssetClass, _countDownStart); // Make a new record at the tokenID b32
+
+        A_TKN.safeTransferFrom(address(this), msg.sender, tokenID); // sends token from this holding contract to caller wallet
 
         //^^^^^^^interactions / effects^^^^^^^^^^^^
     }

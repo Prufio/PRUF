@@ -179,6 +179,12 @@ interface A_TKN_Interface {
     function symbol() external view returns (string memory);
 
     function setURI(uint256 tokenId, string memory _tokenURI) external;
+
+    function claimNakedToken(
+        uint256 tokenId,
+        uint16 _assetClass,
+        string calldata _authCode
+    ) external;
 }
 
 interface STOR_Interface {
