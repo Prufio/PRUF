@@ -56,7 +56,7 @@ contract A_TKN is Ownable, ReentrancyGuard, ERC721 {
                 (msg.sender == APP_NC_Address) ||
                 (msg.sender == RCLR_Address) ||
                 (msg.sender == owner()),
-            "PAT:IA:Calling address does not belong to an Admin"
+            "AT:MOD-IA:Calling address does not belong to an Admin"
         );
         _;
     }
@@ -69,7 +69,7 @@ contract A_TKN is Ownable, ReentrancyGuard, ERC721 {
     function OO_setStorageContract(address _storageAddress) external onlyOwner {
         require(
             _storageAddress != address(0),
-            "PAT:SSC: storage address cannot be zero"
+            "AT:SSC: storage address cannot be zero"
         );
         //^^^^^^^checks^^^^^^^^^
 
@@ -93,7 +93,6 @@ contract A_TKN is Ownable, ReentrancyGuard, ERC721 {
 
     /*
      * @dev Mint new token
-     *
      */
     function mintAssetToken(
         address _recipientAddress,
@@ -118,7 +117,7 @@ contract A_TKN is Ownable, ReentrancyGuard, ERC721 {
     {
         require(
             _isApprovedOrOwner(_msgSender(), tokenId),
-            "PAT:TF:transfer caller is not owner nor approved"
+            "AT:SURI:transfer caller is not owner nor approved"
         );
         //^^^^^^^checks^^^^^^^^^
 
@@ -156,15 +155,15 @@ contract A_TKN is Ownable, ReentrancyGuard, ERC721 {
 
         require(
             rec.assetStatus != 70,
-            "PAT:TF:Use authAddressTransfer for status 70"
+            "AT:TF:Use authAddressTransfer for status 70"
         );
         require(
             rec.assetStatus == 51,
-            "PAT:TF:Asset not in transferrable status"
+            "AT:TF:Asset not in transferrable status"
         );
         require(
             _isApprovedOrOwner(_msgSender(), tokenId),
-            "PAT:TF:transfer caller is not owner nor approved"
+            "AT:TF:transfer caller is not owner nor approved"
         );
         //^^^^^^^checks^^^^^^^^
 
@@ -235,15 +234,15 @@ contract A_TKN is Ownable, ReentrancyGuard, ERC721 {
         require(
             (rec.assetStatus != 70) ||
                 (STOR.ContractAuthType(to, rec.assetClass) > 0),
-            "PAT:STF:Cannot send status 70 asset to unauthorized address"
+            "AT:STF:Cannot send status 70 asset to unauthorized address"
         );
         require(
             (rec.assetStatus == 51) || (rec.assetStatus == 70),
-            "PAT:STF:Asset not in transferrable status"
+            "AT:STF:Asset not in transferrable status"
         );
         require(
             _isApprovedOrOwner(_msgSender(), tokenId),
-            "PAT:STF: transfer caller is not owner nor approved"
+            "AT:STF: transfer caller is not owner nor approved"
         );
         //^^^^^^^checks^^^^^^^^^
 
@@ -266,14 +265,15 @@ contract A_TKN is Ownable, ReentrancyGuard, ERC721 {
     function discard(uint256 tokenId) external nonReentrant isAdmin {
         bytes32 _idxHash = bytes32(tokenId);
         Record memory rec = getRecord(_idxHash);
-        require(_exists(tokenId), "PAT:D:Cannot Burn nonexistant token");
+
+        require(_exists(tokenId), "AT:D:Cannot Burn nonexistant token");
         require(
             (rec.assetStatus == 59),
-            "PAT:D:Asset must be in status 59 (discardable) to be burned"
+            "AT:D:Asset must be in status 59 (discardable) to be burned"
         );
         require(
             _isApprovedOrOwner(_msgSender(), tokenId),
-            "PAT:D:transfer caller is not owner nor approved"
+            "AT:D:transfer caller is not owner nor approved"
         );
         //^^^^^^^checks^^^^^^^^^
         RCLR.discard(_idxHash);
@@ -294,7 +294,7 @@ contract A_TKN is Ownable, ReentrancyGuard, ERC721 {
         nonReentrant
         returns (uint256)
     {
-        require(_exists(tokenId), "PAT:RM:Cannot Remint nonexistant token");
+        require(_exists(tokenId), "AT:RM:Cannot Remint nonexistant token");
         //^^^^^^^checks^^^^^^^^^
         string memory tokenURI = tokenURI(tokenId);
         _burn(tokenId);

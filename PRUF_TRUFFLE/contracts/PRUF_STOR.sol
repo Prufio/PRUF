@@ -76,7 +76,7 @@ contract STOR is Ownable, ReentrancyGuard, Pausable {
                     3) ||
                 (contractInfo[contractAddressToName[msg.sender]][_assetClass] ==
                     4),
-            "PS:IA:Contract not authorized or improperly permissioned"
+            "S:MOD-IA:Contract not authorized or improperly permissioned"
         );
         _;
     }
@@ -89,7 +89,7 @@ contract STOR is Ownable, ReentrancyGuard, Pausable {
             ((database[_idxHash].assetStatus != 6) &&
                 (database[_idxHash].assetStatus != 50) &&
                 (database[_idxHash].assetStatus != 56)),
-            "PS:NE:rec mod prohib while locked in escrow"
+            "S:MOD-NE:rec mod prohib while locked in escrow"
         );
         _;
     }
@@ -98,7 +98,10 @@ contract STOR is Ownable, ReentrancyGuard, Pausable {
      * @dev Check record exists in database
      */
     modifier exists(bytes32 _idxHash) {
-        require(database[_idxHash].assetClass != 0, "PS:E:rec does not exist");
+        require(
+            database[_idxHash].assetClass != 0,
+            "S:MOD-E:rec does not exist"
+        );
         _;
     }
 
@@ -108,7 +111,7 @@ contract STOR is Ownable, ReentrancyGuard, Pausable {
     modifier isEscrowManager() {
         require(
             msg.sender == contractNameToAddress["ECR_MGR"],
-            "PS:IEM:Caller not escrowMgr"
+            "S:MOD-IEM:Caller not escrowMgr"
         );
         _;
     }
@@ -176,10 +179,9 @@ contract STOR is Ownable, ReentrancyGuard, Pausable {
     ) external onlyOwner {
         require(
             (_assetClass == 0) || (_assetClass == 65535),
-            "PS:AC: AC not 0 or 65535"
+            "S:AC: AC not 0 or 65535"
         );
-
-        require(_contractAuthLevel <= 4, "PS:AC: Invalid user type");
+        require(_contractAuthLevel <= 4, "S:AC: Invalid user type");
         //^^^^^^^checks^^^^^^^^^
 
         contractInfo[_name][_assetClass] = _contractAuthLevel;
@@ -208,7 +210,7 @@ contract STOR is Ownable, ReentrancyGuard, Pausable {
         uint256 assetClass256 = uint256(_assetClass);
         require(
             AC_TKN.ownerOf(assetClass256) == msg.sender,
-            "PS:AC:Caller not ACtokenHolder"
+            "S:ECFAC:Caller not ACtokenHolder"
         );
 
         //^^^^^^^checks^^^^^^^^^
@@ -236,14 +238,14 @@ contract STOR is Ownable, ReentrancyGuard, Pausable {
     ) external nonReentrant whenNotPaused isAuthorized(_assetClass) {
         require(
             database[_idxHash].assetStatus != 60,
-            "PS:NR:Asset is recycled. Use PRUF_APP_NC recycle instead"
+            "S:NR:Asset is recycled. Use PRUF_APP_NC recycle instead"
         );
         require(
             database[_idxHash].rightsHolder == 0,
-            "PS:NR:Rec already exists"
+            "S:NR:Rec already exists"
         );
-        require(_rgtHash != 0, "PS:NR:RGT cannot be blank");
-        require(_assetClass != 0, "PA:NR: !Asset class zero ");
+        require(_rgtHash != 0, "S:NR:RGT cannot be blank");
+        require(_assetClass != 0, "S:NR:AC != 0");
         //^^^^^^^checks^^^^^^^^^
 
         Record memory rec;
@@ -289,25 +291,25 @@ contract STOR is Ownable, ReentrancyGuard, Pausable {
 
         require( //prohibit increasing the countdown value
             _countDown <= database[idxHash].countDown,
-            "PS:MR:new countDown +!"
+            "S:MR:new countDown +!"
         );
         require(
             _forceCount >= database[idxHash].forceModCount,
-            "PS:MR:new forceModCount -!"
+            "S:MR:new forceModCount -!"
         );
         require(
             _numberOfTransfers >= database[idxHash].numberOfTransfers,
-            "PS:MR:new transferCount -!"
+            "S:MR:new transferCount -!"
         );
         require(
             _newAssetStatus < 200,
-            "PS:MR:assetStatus > 199 cannot be set by user"
+            "S:MR:assetStatus > 199 cannot be set by user"
         );
         require(
             isLostOrStolen(_newAssetStatus) == 0,
-            "PS:MR:Must use stolenOrLost to set lost or stolen status"
+            "S:MR:Must use stolenOrLost to set lost or stolen status"
         );
-        require(database[idxHash].assetStatus < 200, "PS:MR:RECORD LOCKED");
+        require(database[idxHash].assetStatus < 200, "S:MR:RECORD LOCKED");
         //^^^^^^^checks^^^^^^^^^
 
         Record memory rec = database[_idxHash];
@@ -339,9 +341,9 @@ contract STOR is Ownable, ReentrancyGuard, Pausable {
 
         require(
             AC_MGR.isSameRootAC(_newAssetClass, rec.assetClass) == 170,
-            "PS:CAC:Cannot change AC to new root"
+            "S:CAC:Cannot change AC to new root"
         );
-        require(database[_idxHash].assetStatus < 200, "PS:CAC:RECORD LOCKED");
+        require(database[_idxHash].assetStatus < 200, "S:CAC:RECORD LOCKED");
         //^^^^^^^checks^^^^^^^^^
 
         rec.assetClass = _newAssetClass;
@@ -364,15 +366,15 @@ contract STOR is Ownable, ReentrancyGuard, Pausable {
     {
         require(
             isLostOrStolen(_newAssetStatus) == 170,
-            "PS:SSL:Must set to L/S"
+            "S:SSL:Must set to L/S"
         );
         require(
             (database[_idxHash].assetStatus != 5) &&
                 (database[_idxHash].assetStatus != 50) &&
                 (database[_idxHash].assetStatus != 55),
-            "PS:SSL:Txfr or escrow locked asset cannot be set to L/S."
+            "S:SSL:Txfr or escrow locked asset cannot be set to L/S."
         );
-        require(database[_idxHash].assetStatus < 200, "PS:SSL:RECORD LOCKED");
+        require(database[_idxHash].assetStatus < 200, "S:SSL:RECORD LOCKED");
         //^^^^^^^checks^^^^^^^^^
 
         Record memory rec = database[_idxHash];
@@ -403,18 +405,21 @@ contract STOR is Ownable, ReentrancyGuard, Pausable {
         exists(_idxHash)
         notEscrow(_idxHash)
     {
-        require(isEscrow(_newAssetStatus) == 170, "PS:SE: Status");
+        require(
+            isEscrow(_newAssetStatus) == 170,
+            "S:SE: Asset already in escrow"
+        );
         require(
             (isLostOrStolen(database[_idxHash].assetStatus) == 0) &&
                 (database[_idxHash].assetStatus != 5) &&
                 (database[_idxHash].assetStatus != 55),
-            "PS:SE: Cannot be set to escrow"
+            "S:SE: Cannot be set to escrow"
         );
         require(
             isEscrow(database[_idxHash].assetStatus) == 0,
-            "PS:SE: In escrow status"
+            "S:SE: In escrow status"
         );
-        require(database[_idxHash].assetStatus < 200, "PS:SE:RECORD LOCKED");
+        require(database[_idxHash].assetStatus < 200, "S:SE:RECORD LOCKED");
         //^^^^^^^checks^^^^^^^^^
 
         Record memory rec = database[_idxHash];
@@ -423,6 +428,7 @@ contract STOR is Ownable, ReentrancyGuard, Pausable {
             rec
                 .rightsHolder = 0xFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF;
         }
+
         rec.assetStatus = _newAssetStatus;
         database[_idxHash] = rec;
         //^^^^^^^effects^^^^^^^^^
@@ -442,7 +448,7 @@ contract STOR is Ownable, ReentrancyGuard, Pausable {
     {
         require(
             isEscrow(database[_idxHash].assetStatus) == 170,
-            "PS:EE:Not in escrow status"
+            "S:EE:Not in escrow status"
         );
         //^^^^^^^checks^^^^^^^^^
         Record memory rec = database[_idxHash];
@@ -479,8 +485,8 @@ contract STOR is Ownable, ReentrancyGuard, Pausable {
     {
         Record memory rec = database[_idxHash];
 
-        require((rec.Ipfs1 != _Ipfs1), "PS:MI1: New value same as old");
-        require(database[_idxHash].assetStatus < 200, "PS:MI1:RECORD LOCKED");
+        require((rec.Ipfs1 != _Ipfs1), "S:MI1: New value same as old");
+        require(database[_idxHash].assetStatus < 200, "S:MI1:RECORD LOCKED");
         //^^^^^^^checks^^^^^^^^^
 
         rec.Ipfs1 = _Ipfs1;
@@ -505,8 +511,8 @@ contract STOR is Ownable, ReentrancyGuard, Pausable {
     {
         Record memory rec = database[_idxHash];
 
-        require((rec.Ipfs2 == 0), "PS:MI2: Cannot overwrite IPFS2");
-        require(database[_idxHash].assetStatus < 200, "PS:MI2:RECORD LOCKED");
+        require((rec.Ipfs2 == 0), "S:MI2: Cannot overwrite IPFS2");
+        require(database[_idxHash].assetStatus < 200, "S:MI2:RECORD LOCKED");
         //^^^^^^^checks^^^^^^^^^
 
         rec.Ipfs2 = _Ipfs2;

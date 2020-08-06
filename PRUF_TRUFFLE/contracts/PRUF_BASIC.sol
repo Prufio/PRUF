@@ -87,7 +87,7 @@ contract BASIC is ReentrancyGuard, Ownable, IERC721Receiver, Pausable {
     modifier isAuthorized(bytes32 _idxHash) virtual {
         require(
             _idxHash == 0, //function should always be overridden
-            "PB:MOD-IA: Modifier MUST BE OVERRIDDEN"
+            "B:MOD-IA: Modifier MUST BE OVERRIDDEN"
         );
         _;
     }
@@ -106,13 +106,9 @@ contract BASIC is ReentrancyGuard, Ownable, IERC721Receiver, Pausable {
         AC_TKN_Address = STOR.resolveContractAddress("AC_TKN");
         AC_TKN = AC_TKN_Interface(AC_TKN_Address);
 
-        AC_MGR_Address = STOR.resolveContractAddress(
-            "AC_MGR"
-        );
+        AC_MGR_Address = STOR.resolveContractAddress("AC_MGR");
 
-        AC_MGR = AC_MGR_Interface(
-            AC_MGR_Address
-        );
+        AC_MGR = AC_MGR_Interface(AC_MGR_Address);
 
         A_TKN_Address = STOR.resolveContractAddress("A_TKN");
         A_TKN = A_TKN_Interface(A_TKN_Address);
@@ -160,7 +156,7 @@ contract BASIC is ReentrancyGuard, Ownable, IERC721Receiver, Pausable {
     function OO_setStorageContract(address _storageAddress) external onlyOwner {
         require(
             _storageAddress != address(0),
-            "PB:SSC: storage address cannot be zero"
+            "B:SSC: storage address cannot be zero"
         );
         //^^^^^^^checks^^^^^^^^^
 
@@ -239,8 +235,6 @@ contract BASIC is ReentrancyGuard, Ownable, IERC721Receiver, Pausable {
         return AC_info;
         //^^^^^^^interactions^^^^^^^^^
     }
-
-
 
     function getContractInfo(address _addr, uint16 _assetClass)
         internal

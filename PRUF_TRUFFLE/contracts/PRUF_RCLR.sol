@@ -34,14 +34,10 @@ contract RCLR is ECR_CORE, CORE {
 
         require( // caller is assetToken contract
             msg.sender == A_TKN_Address,
-            "PR:Recycle:Caller is not Asset Token Contract"
+            "R:D:Caller is not Asset Token Contract"
         );
-
-        require((rec.assetClass != 0), "SE: Record does not exist");
-        require(
-            (rec.assetStatus == 59),
-            "PR:Recycle:Must be in recyclable status"
-        );
+        require((rec.assetClass != 0), "R:D:Record does not exist");
+        require((rec.assetStatus == 59), "R:D:Must be in recyclable status");
 
         //^^^^^^^checks^^^^^^^^^
 
@@ -84,16 +80,16 @@ contract RCLR is ECR_CORE, CORE {
 
         require(
             contractInfo.contractType > 0,
-            "PNP:MS: This contract not authorized for specified AC"
+            "R:R: This contract not authorized for specified AC"
         );
-        require(_rgtHash != 0, "PR:R:New rights holder cannot be zero");
-        require(_assetClass != 0, "PR:R:Asset class cannot be zero");
+        require(_rgtHash != 0, "R:R:New rights holder cannot be zero");
+        require(_assetClass != 0, "R:R:Asset class cannot be zero");
         require( //if creating new record in new root and idxhash is identical, fail because its probably fraud
             ((AC_info.assetClassRoot == oldAC_info.assetClassRoot) ||
                 (rec.assetClass == 0)),
-            "PR:R:Cannot re-create asset in new root assetClass"
+            "R:R:Cannot re-create asset in new root assetClass"
         );
-        require(rec.assetStatus == 60, "PR:R:Asset not discarded");
+        require(rec.assetStatus == 60, "R:R:Asset not discarded");
         //^^^^^^^checks^^^^^^^^^
 
         rec.rightsHolder = _rgtHash;

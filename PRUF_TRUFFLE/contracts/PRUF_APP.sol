@@ -26,12 +26,13 @@ contract APP is CORE {
         uint256 tokenID = uint256(_idxHash);
         require(
             (A_TKN.ownerOf(tokenID) == APP_Address),
-            "PA:IA: Custodial contract does not hold token"
+            "A:MOD-IA: Custodial contract does not hold token"
         );
         _;
     }
 
     //--------------------------------------------External Functions--------------------------
+
     /*
      * @dev Wrapper for newRecord
      */
@@ -52,15 +53,15 @@ contract APP is CORE {
 
         require(
             contractInfo.contractType > 0,
-            "PNP:MS: This contract not authorized for specified AC"
+            "A:NR: This contract not authorized for specified AC"
         );
         require(
             (userType > 0) && (userType < 10),
-            "PA:NR: User not authorized to create records in specified asset class"
+            "A:NR: User not authorized to create records in specified asset class"
         );
-        require(userType < 5, "PA:NR: User not authorized to create records");
-        require(_rgtHash != 0, "PA:NR: rights holder cannot be zero");
-        require(rec.assetStatus < 200, "TPA:NR: Old Record locked");
+        require(userType < 5, "A:NR: User not authorized to create records");
+        require(_rgtHash != 0, "A:NR: rights holder cannot be zero");
+        require(rec.assetStatus < 200, "A:NR: Old Record locked");
         //^^^^^^^checks^^^^^^^^^
 
         //bytes32 userHash = keccak256(abi.encodePacked(msg.sender));
@@ -96,28 +97,27 @@ contract APP is CORE {
 
         require(
             contractInfo.contractType > 0,
-            "PA:MS: This contract not authorized for specified AC"
+            "A:MS: This contract not authorized for specified AC"
         );
         require(
             (userType > 0) && (userType < 10),
-            "PA:EA: User not authorized to modify records in specified asset class"
+            "A:EA: User not authorized to modify records in specified asset class"
         );
         require( // require transferrable (51) status
             rec.assetStatus == 51,
-            "PA:EA: Asset status must be 51 to export"
+            "A:EA: Asset status must be 51 to export"
         );
         //^^^^^^^checks^^^^^^^^^
-        
+
         if (rec.numberOfTransfers < 65335) {
             rec.numberOfTransfers++;
         }
         rec.assetStatus = 70; // Set status to 70 (exported)
         //^^^^^^^effects^^^^^^^^^
-        
+
         A_TKN.safeTransferFrom(address(this), _addr, tokenId); // sends token to rightsholder wallet (specified by auth user)
         writeRecord(_idxHash, rec);
         STOR.changeAC(_idxHash, AC_info.assetClassRoot);
-        
 
         return rec.assetStatus;
         //^^^^^^^interactions^^^^^^^^^
@@ -143,34 +143,37 @@ contract APP is CORE {
 
         require(
             contractInfo.contractType > 0,
-            "PNP:MS: This contract not authorized for specified AC"
+            "A:FMR: This contract not authorized for specified AC"
         );
 
-        require((rec.rightsHolder != 0), "PA:FMR: Record unclaimed: import required. ");
+        require(
+            (rec.rightsHolder != 0),
+            "A:FMR: Record unclaimed: import required. "
+        );
 
         require(
             userType == 1,
-            "PA:FMR: User not authorized to force modify records in this asset class"
+            "A:FMR: User not authorized to force modify records in this asset class"
         );
-        require(_rgtHash != 0, "PA:FMR: rights holder cannot be zero");
+        require(_rgtHash != 0, "A:FMR: rights holder cannot be zero");
         require(
             (rec.assetStatus != 3) &&
                 (rec.assetStatus != 4) &&
                 (rec.assetStatus != 53) &&
                 (rec.assetStatus != 54),
-            "PA:FMR: Cannot modify asset in lost or stolen status"
+            "A:FMR: Cannot modify asset in lost or stolen status"
         );
         require(
             (rec.assetStatus != 6) &&
                 (rec.assetStatus != 50) &&
                 (rec.assetStatus != 56),
-            "PA:FMR: Cannot modify asset in Escrow"
+            "A:FMR: Cannot modify asset in Escrow"
         );
         require(
             (rec.assetStatus != 5) && (rec.assetStatus != 55),
-            "PA:FMR: Record In Transferred-unregistered status"
+            "A:FMR: Record In Transferred-unregistered status"
         );
-        require(rec.assetStatus < 200, "PA:FMR: Record locked");
+        require(rec.assetStatus < 200, "A:FMR: Record locked");
         //^^^^^^^checks^^^^^^^^^
 
         if (rec.forceModCount < 255) {
@@ -217,24 +220,27 @@ contract APP is CORE {
 
         require(
             contractInfo.contractType > 0,
-            "PNP:MS: This contract not authorized for specified AC"
+            "A:TA: This contract not authorized for specified AC"
         );
-        require((rec.rightsHolder != 0), "PA:TA: Record unclaimed: import required. ");
+        require(
+            (rec.rightsHolder != 0),
+            "A:TA: Record unclaimed: import required. "
+        );
         require(
             (userType > 0) && (userType < 10),
-            "PA:TA: User not authorized to modify records in specified asset class"
+            "A:TA: User not authorized to modify records in specified asset class"
         );
         require(
             (rec.assetStatus > 49) || (userType < 5),
-            "PA:TA:Only usertype < 5 can change status < 50"
+            "A:TA:Only usertype < 5 can change status < 50"
         );
         require(
             (rec.assetStatus == 1) || (rec.assetStatus == 51),
-            "PA:TA:Asset status is not transferrable"
+            "A:TA:Asset status is not transferrable"
         );
         require(
             rec.rightsHolder == _rgtHash,
-            "PA:TA:Rightsholder does not match supplied data"
+            "A:TA:Rightsholder does not match supplied data"
         );
         //^^^^^^^checks^^^^^^^^^
         if (rec.numberOfTransfers < 65335) {
@@ -282,31 +288,34 @@ contract APP is CORE {
 
         require(
             contractInfo.contractType > 0,
-            "PNP:MS: This contract not authorized for specified AC"
+            "A:I2: This contract not authorized for specified AC"
         );
-        require((rec.rightsHolder != 0), "PA:I2: Record unclaimed: import required. ");
+        require(
+            (rec.rightsHolder != 0),
+            "A:I2: Record unclaimed: import required. "
+        );
         require(
             (userType > 0) && (userType < 10),
-            "PA:I2: User not authorized to modify records in specified asset class"
+            "A:I2: User not authorized to modify records in specified asset class"
         );
         require(
             (rec.assetStatus != 6) &&
                 (rec.assetStatus != 50) &&
                 (rec.assetStatus != 56),
-            "PA:I2: Cannot modify asset in Escrow"
+            "A:I2: Cannot modify asset in Escrow"
         );
-        require(rec.assetStatus < 200, "PA:I2: Record locked");
+        require(rec.assetStatus < 200, "A:I2: Record locked");
         require(
             (rec.assetStatus != 5) && (rec.assetStatus != 55),
-            "PA:I2: Record In Transferred-unregistered status"
+            "A:I2: Record In Transferred-unregistered status"
         );
         require(
             rec.Ipfs2 == 0,
-            "PA:I2: Ipfs2 has data already. Overwrite not permitted"
+            "A:I2: Ipfs2 has data already. Overwrite not permitted"
         );
         require(
             rec.rightsHolder == _rgtHash,
-            "PA:I2: Rightsholder does not match supplied data"
+            "A:I2: Rightsholder does not match supplied data"
         );
         //^^^^^^^checks^^^^^^^^^
 
@@ -346,24 +355,23 @@ contract APP is CORE {
 
         require(
             contractInfo.contractType > 0,
-            "PNP:MS: This contract not authorized for specified AC"
+            "A:IA: This contract not authorized for specified AC"
         );
-        require((rec.assetClass != 0), "PA:IA: Record does not exist. ");
-        require(userType < 3, "PA:IA: User not authorized to reimport assets");
-
+        require((rec.assetClass != 0), "A:IA: Record does not exist. ");
+        require(userType < 3, "A:IA: User not authorized to reimport assets");
         require(
             (userType > 0) && (userType < 10),
-            "PA:IA: User not authorized to modify records in specified asset class"
+            "A:IA: User not authorized to modify records in specified asset class"
         );
         require(
             AC_MGR.isSameRootAC(_newAssetClass, rec.assetClass) == 170,
-            "TPA:IA:Cannot change AC to new root"
+            "A:IA:Cannot change AC to new root"
         );
         require(
             (rec.assetStatus == 5) ||
                 (rec.assetStatus == 55) ||
                 (rec.assetStatus == 70),
-            "PA:IA: Only Transferred or exported assets can be reimported"
+            "A:IA: Only Transferred or exported assets can be reimported"
         );
         //^^^^^^^checks^^^^^^^^^
 

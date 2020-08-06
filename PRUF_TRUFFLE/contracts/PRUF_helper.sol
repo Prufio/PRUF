@@ -10,7 +10,6 @@ __/\\\\\\\\\\\\\ _____/\\\\\\\\\ _______/\\../\\ ___/\\\\\\\\\\\\\\\
         _\/// _____________\/// _______\/// __\///////// __\/// _____________
          *-------------------------------------------------------------------*/
 
-         
 /*-----------------------------------------------------------------
  *  TO DO
  *
@@ -160,26 +159,36 @@ contract Helper is Ownable {
         return rawRgtHash;
     }
 
-
-function bytes32toString(bytes32 _bytes32) public pure returns (string memory) {
-
-    bytes memory bytesArray = new bytes(32);
-    for (uint256 i; i < 32; i++) {
-        bytesArray[i] = _bytes32[i];
+    function bytes32toString(bytes32 _bytes32)
+        public
+        pure
+        returns (string memory)
+    {
+        bytes memory bytesArray = new bytes(32);
+        for (uint256 i; i < 32; i++) {
+            bytesArray[i] = _bytes32[i];
         }
-    return string(bytesArray);
+        return string(bytesArray);
     }
 
-    function isSameAsString(string memory _string , bytes32 _b32) public pure returns (string memory,string memory,uint8){
+    function isSameAsString(string memory _string, bytes32 _b32)
+        public
+        pure
+        returns (
+            string memory,
+            string memory,
+            uint8
+        )
+    {
         string memory newString = bytes32toString(_b32);
 
-        if(keccak256(abi.encodePacked(_string)) == keccak256(abi.encodePacked(newString))){
-            return (_string, newString,170);
+        if (
+            keccak256(abi.encodePacked(_string)) ==
+            keccak256(abi.encodePacked(newString))
+        ) {
+            return (_string, newString, 170);
         } else {
-            return (_string, newString,0);
+            return (_string, newString, 0);
         }
-    }   
-
+    }
 }
-
-

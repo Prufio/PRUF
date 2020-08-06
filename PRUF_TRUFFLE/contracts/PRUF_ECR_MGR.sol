@@ -96,24 +96,24 @@ contract ECR_MGR is BASIC {
 
         require(
             contractInfo.contractType == 3,
-            "PEM:SE: Escrow can only be set by an authorized escrow contract"
+            "EM:SE: Escrow can only be set by an authorized escrow contract"
         );
-        require(rec.assetClass != 0, "PS:SE:Record does not exist");
+        require(rec.assetClass != 0, "EM:SE:Record does not exist");
         require(
             isEscrow(_newAssetStatus) == 170,
-            "PEM:SE: Must set to an escrow status"
+            "EM:SE: Must set to an escrow status"
         );
         require(
             (isLostOrStolen(rec.assetStatus) == 0) &&
                 (rec.assetStatus != 5) &&
                 (rec.assetStatus != 55),
-            "PEM:SE: Txd, L/S status cannot be set to escrow."
+            "EM:SE: Txd, L/S status cannot be set to escrow."
         );
         require(
             isEscrow(rec.assetStatus) == 0,
-            "PEM:SE: Asset already in escrow status."
+            "EM:SE: Asset already in escrow status."
         );
-        require(rec.assetStatus < 200, "TPA:NR: Record locked");
+        require(rec.assetStatus < 200, "EM:SE: Record locked");
         //^^^^^^^checks^^^^^^^^^
 
         escrows[_idxHash].data = 0; //initialize escrow data
@@ -150,13 +150,13 @@ contract ECR_MGR is BASIC {
         (contractInfo.contractType, contractInfo.nameHash) = STOR
             .ContractInfoHash(msg.sender, rec.assetClass);
 
-        require(rec.assetClass != 0, "PEM:EE:Record does not exist");
+        require(rec.assetClass != 0, "EM:EE:Record does not exist");
         require(
             (contractInfo.nameHash ==
                 escrows[_idxHash].controllingContractNameHash),
-            "PEM:EE:Only contract with same name as setter can end escrow"
+            "EM:EE:Only contract with same name as setter can end escrow"
         );
-        require(isEscrow(rec.assetStatus) == 170, "PEM:EE:Asset not in escrow");
+        require(isEscrow(rec.assetStatus) == 170, "EM:EE:Asset not in escrow");
 
         //^^^^^^^checks^^^^^^^^^
 
@@ -183,11 +183,11 @@ contract ECR_MGR is BASIC {
     {
         require(
             escrows[_idxHash].timelock < block.timestamp,
-            "PEM:PEE:Escrow not expired"
+            "EM:PEE:Escrow not expired"
         );
         require( // do not allow escrows with escrow.data > 199 to be ended by this function
             escrows[_idxHash].data < 200,
-            "PEM:PEE:Escrow not endable with permissiveEndEscrow"
+            "EM:PEE:Escrow not endable with permissiveEndEscrow"
         );
         //^^^^^^^checks^^^^^^^^^
 

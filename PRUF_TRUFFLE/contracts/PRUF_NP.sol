@@ -29,7 +29,7 @@ contract NP is CORE {
         uint256 tokenID = uint256(_idxHash);
         require(
             (A_TKN.ownerOf(tokenID) == APP_Address),
-            "PNP:IA: Custodial contract does not hold token"
+            "NP:MOD-IA: Custodial contract does not hold token"
         );
         _;
     }
@@ -59,12 +59,15 @@ contract NP is CORE {
 
         require(
             contractInfo.contractType > 0,
-            "PNP:MS: This contract not authorized for specified AC"
+            "NP:MS: This contract not authorized for specified AC"
         );
-        require((rec.rightsHolder != 0), "PNP:MS: Record unclaimed: import required. ");
+        require(
+            (rec.rightsHolder != 0),
+            "NP:MS: Record unclaimed: import required."
+        );
         require(
             (userType > 0) && (userType < 10),
-            "PNP:MS: User not authorized to modify records in specified asset class"
+            "NP:MS: User not authorized to modify records in specified asset class"
         );
 
         require(
@@ -81,31 +84,31 @@ contract NP is CORE {
                 (_newAssetStatus != 56) &&
                 (_newAssetStatus != 57) &&
                 (_newAssetStatus != 58),
-            "PNP:MS: Specified Status is reserved."
+            "NP:MS: Specified Status is reserved."
         );
         require(
             _newAssetStatus != 70,
-            "PNP:MS: Use pruf_app.exportAsset to export custodial assets"
+            "NP:MS: Use pruf_app.exportAsset to export custodial assets"
         );
         require(
             (rec.assetStatus != 6) &&
                 (rec.assetStatus != 50) &&
                 (rec.assetStatus != 56),
-            "PNP:MS: Cannot change status of asset in Escrow until escrow is expired"
+            "NP:MS: Cannot change status of asset in Escrow until escrow is expired"
         );
         require(
             (rec.assetStatus != 5) && (rec.assetStatus != 55),
-            "PNP:MS: Cannot change status of asset in transferred-unregistered status."
+            "NP:MS: Cannot change status of asset in transferred-unregistered status."
         );
         require(
             (rec.assetStatus > 49) || (userType < 5),
-            "PNP:MS: Only usertype < 5 can change status < 49"
+            "NP:MS: Only usertype < 5 can change status < 49"
         );
         require(
             rec.rightsHolder == _rgtHash,
-            "PNP:MS: Rightsholder does not match supplied data"
+            "NP:MS: Rightsholder does not match supplied data"
         );
-        require(rec.assetStatus < 200, "PNP:MS: Record locked");
+        require(rec.assetStatus < 200, "NP:MS: Record locked");
         //^^^^^^^checks^^^^^^^^^
 
         rec.assetStatus = _newAssetStatus;
@@ -140,38 +143,40 @@ contract NP is CORE {
 
         require(
             contractInfo.contractType > 0,
-            "PNP:MS: This contract not authorized for specified AC"
+            "NP:SLS: This contract not authorized for specified AC"
         );
-
-        require((rec.rightsHolder != 0), "PNP:SLS: Record unclaimed: import required. ");
+        require(
+            (rec.rightsHolder != 0),
+            "NP:SLS: Record unclaimed: import required. "
+        );
         require(
             (userType > 0) && (userType < 10),
-            "PNP:SLS: User not authorized to modify records in specified asset class"
+            "NP:SLS: User not authorized to modify records in specified asset class"
         );
         require(
             (_newAssetStatus == 3) ||
                 (_newAssetStatus == 4) ||
                 (_newAssetStatus == 53) ||
                 (_newAssetStatus == 54),
-            "PNP:SLS: Must set to a lost or stolen status"
+            "NP:SLS: Must set to a lost or stolen status"
         );
         require(
             (rec.assetStatus > 49) ||
                 ((_newAssetStatus < 50) && (userType < 5)),
-            "PNP:SLS: Only usertype <5 can change a <49 status asset to a >49 status"
+            "NP:SLS: Only usertype <5 can change a <49 status asset to a >49 status"
         );
         require(
             (rec.assetStatus != 5) && (rec.assetStatus != 55),
-            "PNP:SLS: Transferred asset cannot be set to lost or stolen after transfer."
+            "NP:SLS: Transferred asset cannot be set to lost or stolen after transfer."
         );
         require(
             (rec.assetStatus != 50),
-            "PNP:SLS: Asset in locked escrow cannot be set to lost or stolen"
+            "NP:SLS: Asset in locked escrow cannot be set to lost or stolen"
         );
-        require(rec.assetStatus < 200, "PNP:SLS: Record locked");
+        require(rec.assetStatus < 200, "NP:SLS: Record locked");
         require(
             rec.rightsHolder == _rgtHash,
-            "PNP:SLS: Rightsholder does not match supplied data"
+            "NP:SLS: Rightsholder does not match supplied data"
         );
         //^^^^^^^checks^^^^^^^^^
         rec.assetStatus = _newAssetStatus;
@@ -207,29 +212,32 @@ contract NP is CORE {
 
         require(
             contractInfo.contractType > 0,
-            "PNP:MS: This contract not authorized for specified AC"
+            "NP:DC: This contract not authorized for specified AC"
         );
 
-        require((rec.rightsHolder != 0), "PNP:DC: Record unclaimed: import required. ");
+        require(
+            (rec.rightsHolder != 0),
+            "NP:DC: Record unclaimed: import required. "
+        );
         require(
             (userType > 0) && (userType < 10),
-            "PNP:DC: User not authorized to modify records in specified asset class"
+            "NP:DC: User not authorized to modify records in specified asset class"
         );
         require( //------------------------------------------should the counter still work when an asset is in escrow?
             (rec.assetStatus != 6) &&
                 (rec.assetStatus != 50) &&
                 (rec.assetStatus != 56), //If so, it must not erase the recorder, or escrow termination will be broken!
-            "PNP:DC: Cannot modify asset in Escrow"
+            "NP:DC: Cannot modify asset in Escrow"
         );
-        require(_decAmount > 0, "PNP:DC: cannot decrement by negative number");
+        require(_decAmount > 0, "NP:DC: cannot decrement by negative number");
         require(
             (rec.assetStatus != 5) && (rec.assetStatus != 55),
-            "PNP:DC: Record In Transferred-unregistered status"
+            "NP:DC: Record In Transferred-unregistered status"
         );
-        require(rec.assetStatus < 200, "PNP:DC: Record locked");
+        require(rec.assetStatus < 200, "NP:DC: Record locked");
         require(
             rec.rightsHolder == _rgtHash,
-            "PNP:DC: Rightsholder does not match supplied data"
+            "NP:DC: Rightsholder does not match supplied data"
         );
         //^^^^^^^checks^^^^^^^^^
 
@@ -268,30 +276,31 @@ contract NP is CORE {
 
         require(
             contractInfo.contractType > 0,
-            "PNP:MS: This contract not authorized for specified AC"
+            "NP:MI1: This contract not authorized for specified AC"
         );
-
-        require((rec.rightsHolder != 0), "PNP:MI1: Record unclaimed: import required. ");
+        require(
+            (rec.rightsHolder != 0),
+            "NP:MI1: Record unclaimed: import required. "
+        );
         require(
             (userType > 0) && (userType < 10),
-            "PNP:MI1: User not authorized to modify records in specified asset class"
+            "NP:MI1: User not authorized to modify records in specified asset class"
         );
-
-        require(rec.Ipfs1 != _IpfsHash, "PNP:MI1: New data same as old");
+        require(rec.Ipfs1 != _IpfsHash, "NP:MI1: New data same as old");
         require( //-------------------------------------Should an asset in escrow be modifiable?
             (rec.assetStatus != 6) &&
                 (rec.assetStatus != 50) &&
                 (rec.assetStatus != 56), //Should it be contingent on the original recorder address?
-            "PNP:MI1: Cannot modify asset in Escrow" //If so, it must not erase the recorder, or escrow termination will be broken!
+            "NP:MI1: Cannot modify asset in Escrow" //If so, it must not erase the recorder, or escrow termination will be broken!
         );
         require(
             (rec.assetStatus != 5) && (rec.assetStatus != 55),
-            "PNP:MI1: Record In Transferred-unregistered status"
+            "NP:MI1: Record In Transferred-unregistered status"
         );
-        require(rec.assetStatus < 200, "PNP:MI1: Record locked");
+        require(rec.assetStatus < 200, "NP:MI1: Record locked");
         require(
             rec.rightsHolder == _rgtHash,
-            "PNP:MI1: Rightsholder does not match supplied data"
+            "NP:MI1: Rightsholder does not match supplied data"
         );
         //^^^^^^^checks^^^^^^^^^
 

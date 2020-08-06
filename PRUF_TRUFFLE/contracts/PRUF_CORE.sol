@@ -85,15 +85,11 @@ contract CORE is PullPayment, BASIC {
 
         require(
             A_TKN.tokenExists(tokenId) == 0,
-            "PC:CR:Asset token already exists"
+            "C:CR:Asset token already exists"
         );
 
         if (AC_info.custodyType == 1) {
-            A_TKN.mintAssetToken(
-                address(this),
-                tokenId,
-                "pruf.io"
-            );
+            A_TKN.mintAssetToken(address(this), tokenId, "pruf.io");
         }
 
         if (AC_info.custodyType == 2) {
@@ -294,7 +290,7 @@ contract CORE is PullPayment, BASIC {
         uint256 messageValue = msg.value;
         uint256 change;
         uint256 total = pricing.rootPrice.add(pricing.ACTHprice);
-        require(msg.value >= total, "PC:DP: TX value too low.");
+        require(msg.value >= total, "C:DP: TX value too low.");
         //^^^^^^^checks^^^^^^^^^
         change = messageValue.sub(total);
         _asyncTransfer(pricing.rootAddress, pricing.rootPrice);

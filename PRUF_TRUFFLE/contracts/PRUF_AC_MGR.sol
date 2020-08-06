@@ -43,7 +43,7 @@ contract AC_MGR is CORE {
     modifier isAdmin() {
         require(
             (msg.sender == owner()), // || (msg.sender == AC_minterAddress),
-            "PACM:IA:Calling address does not belong to an Admin"
+            "ACM:MOD-IA:Calling address does not belong to an Admin"
         );
         _;
     }
@@ -55,7 +55,7 @@ contract AC_MGR is CORE {
         uint256 assetClass256 = uint256(_assetClass);
         require(
             (AC_TKN.ownerOf(assetClass256) == msg.sender),
-            "PACM:IACTHoC:msg.sender not authorized in asset class"
+            "ACM:MOD-IACTHoC:msg.sender not authorized in asset class"
         );
         _;
     }
@@ -76,7 +76,7 @@ contract AC_MGR is CORE {
                 (_userType == 2) ||
                 (_userType == 9) ||
                 (_userType == 99),
-            "PACM:AU:Invalid user type"
+            "ACM:AU:Invalid user type"
         );
         //^^^^^^^checks^^^^^^^^^
 
@@ -101,11 +101,11 @@ contract AC_MGR is CORE {
     ) external isAdmin {
         AC memory _ac = AC_data[_assetClassRoot];
 
-        require((_tokenId != 0), "PACM:CAC: Token id cannot be 0"); //sanity check inputs
-        require((_custodyType != 0), "PACM:CAC:CustodyType cannot be 0"); //sanity check inputs
+        require((_tokenId != 0), "ACM:CAC: Token id cannot be 0"); //sanity check inputs
+        require((_custodyType != 0), "ACM:CAC:CustodyType cannot be 0"); //sanity check inputs
         require( //has valid root
             (_ac.custodyType != 0) || (_assetClassRoot == _assetClass),
-            "PACM:CAC:Root asset class does not exist"
+            "ACM:CAC:Root asset class does not exist"
         );
         //^^^^^^^checks^^^^^^^^^
 
@@ -250,7 +250,7 @@ contract AC_MGR is CORE {
 
         require(
             (AC_TKN.ownerOf(assetClass256) != AC_TKN_Address), //this will throw in the token contract if not minted
-            "PACM:GNRC:Asset class not yet populated"
+            "ACM:GNRC:Asset class not yet populated"
         );
         //^^^^^^^checks^^^^^^^^^
         return (
@@ -282,7 +282,7 @@ contract AC_MGR is CORE {
 
         require(
             (AC_TKN.ownerOf(assetClass256) != AC_TKN_Address), //this will throw in the token contract if not minted
-            "PACM:GTAC:Asset class not yet populated"
+            "ACM:GTAC:Asset class not yet populated"
         );
         //^^^^^^^checks^^^^^^^^^
         return (
@@ -314,7 +314,7 @@ contract AC_MGR is CORE {
 
         require(
             (AC_TKN.ownerOf(assetClass256) != AC_TKN_Address), //this will throw in the token contract if not minted
-            "PACM:GCNC:Asset class not yet populated"
+            "ACM:GCNC:Asset class not yet populated"
         );
         //^^^^^^^checks^^^^^^^^^
         return (
@@ -346,7 +346,7 @@ contract AC_MGR is CORE {
 
         require(
             (AC_TKN.ownerOf(assetClass256) != AC_TKN_Address), //this will throw in the token contract if not minted
-            "PACM:GMRC:Asset class not yet populated"
+            "ACM:GMRC:Asset class not yet populated"
         );
         //^^^^^^^checks^^^^^^^^^
         return (
@@ -378,7 +378,7 @@ contract AC_MGR is CORE {
 
         require(
             (AC_TKN.ownerOf(assetClass256) != AC_TKN_Address), //this will throw in the token contract if not minted
-            "PACM:GCSC:Asset class not yet populated"
+            "ACM:GCSC:Asset class not yet populated"
         );
         //^^^^^^^checks^^^^^^^^^
         return (
@@ -410,7 +410,7 @@ contract AC_MGR is CORE {
 
         require(
             (AC_TKN.ownerOf(assetClass256) != AC_TKN_Address), //this will throw in the token contract if not minted
-            "PACM:GFMC:Asset class not yet populated"
+            "ACM:GFMC:Asset class not yet populated"
         );
         //^^^^^^^checks^^^^^^^^^
         return (
@@ -443,7 +443,7 @@ contract AC_MGR is CORE {
 
         require(
             (AC_TKN.ownerOf(assetClass256) != AC_TKN_Address), //this will throw in the token contract if not minted
-            "PACM:RC:Asset class not yet populated"
+            "ACM:RC:Asset class not yet populated"
         );
         //^^^^^^^checks^^^^^^^^
 

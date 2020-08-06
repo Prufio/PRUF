@@ -31,7 +31,7 @@ contract ECR is ECR_CORE {
         uint256 tokenID = uint256(_idxHash);
         require(
             A_TKN.ownerOf(tokenID) == APP_Address,
-            "PSE:IA: Custodial contract does not hold token"
+            "E:MOD-IA: Custodial contract does not hold token"
         );
         _;
     }
@@ -56,16 +56,16 @@ contract ECR is ECR_CORE {
 
         require(
             contractInfo.contractType > 0,
-            "PNP:MS: This contract not authorized for specified AC"
+            "E:SE: This contract not authorized for specified AC"
         );
-        require((rec.assetClass != 0), "SE: Record does not exist");
+        require((rec.assetClass != 0), "E:SE: Record does not exist");
         require(
             (userType > 0) && (userType < 10),
-            "TPNP:MI1: User not authorized to modify records in specified asset class"
+            "E:SE: User not authorized to modify records in specified asset class"
         );
         require(
             (escrowTime >= block.timestamp),
-            "PSE:SE: Escrow must be set to a time in the future"
+            "E:SE: Escrow must be set to a time in the future"
         );
         require(
             (rec.assetStatus != 3) &&
@@ -74,23 +74,23 @@ contract ECR is ECR_CORE {
                 (rec.assetStatus != 54) &&
                 (rec.assetStatus != 5) &&
                 (rec.assetStatus != 55),
-            "PSE:SE: Transferred, lost, or stolen status cannot be set to escrow."
+            "E:SE: Transferred, lost, or stolen status cannot be set to escrow."
         );
         require(
             (rec.assetStatus != 6) &&
                 (rec.assetStatus != 50) &&
                 (rec.assetStatus != 56),
-            "PSE:SE: Asset already in escrow status."
+            "E:SE: Asset already in escrow status."
         );
         require(
             (userType < 5) || ((userType > 4) && (_escrowStatus > 49)),
-            "PSE:SE: Non supervisored agents must set asset status within scope."
+            "E:SE: Non supervisored agents must set asset status within scope."
         );
         require(
             (_escrowStatus == 6) ||
                 (_escrowStatus == 50) ||
                 (_escrowStatus == 56),
-            "PSE:SE: Must specify an valid escrow status"
+            "E:SE: Must specify an valid escrow status"
         );
         //^^^^^^^checks^^^^^^^^^
 
@@ -130,28 +130,28 @@ contract ECR is ECR_CORE {
 
         require(
             contractInfo.contractType > 0,
-            "PNP:MS: This contract not authorized for specified AC"
+            "E:EE: This contract not authorized for specified AC"
         );
 
-        require((rec.assetClass != 0), "EE: Record does not exist");
+        require((rec.assetClass != 0), "E:EE: Record does not exist");
         require(
             (userType > 0) && (userType < 10),
-            "TPNP:MI1: User not authorized to modify records in specified asset class"
+            "E:EE: User not authorized to modify records in specified asset class"
         );
         require(
             (rec.assetStatus == 6) ||
                 (rec.assetStatus == 50) ||
                 (rec.assetStatus == 56),
-            "EE:ERR- record must be in escrow status"
+            "E:EE- record must be in escrow status"
         );
         require(
             ((rec.assetStatus > 49) || (userType < 5)),
-            "PSE:EE: Usertype less than 5 required to end this escrow"
+            "E:EE: Usertype less than 5 required to end this escrow"
         );
         require(
             (escrow.timelock < block.timestamp) ||
                 (keccak256(abi.encodePacked(msg.sender)) == ownerHash),
-            "PSE:EE: Escrow period not ended and caller is not escrow owner"
+            "E:EE: Escrow period not ended and caller is not escrow owner"
         );
         //^^^^^^^checks^^^^^^^^^
 

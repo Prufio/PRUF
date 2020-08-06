@@ -31,7 +31,7 @@ contract APP_NC is CORE {
         uint256 tokenID = uint256(_idxHash);
         require(
             (A_TKN.ownerOf(tokenID) == msg.sender), //msg.sender is token holder
-            "TPA:IA: Caller does not hold token"
+            "ANC:MOD-IA: Caller does not hold token"
         );
         _;
     }
@@ -50,24 +50,27 @@ contract APP_NC is CORE {
         uint8 userType = getUserType(_assetClass);
         AC memory AC_info = getACinfo(_assetClass);
         AC memory oldAC_info = getACinfo(rec.assetClass);
-        ContractDataHash memory contractInfo = getContractInfo(address(this),rec.assetClass);
+        ContractDataHash memory contractInfo = getContractInfo(
+            address(this),
+            rec.assetClass
+        );
 
         require(
             contractInfo.contractType > 0,
-            "PNP:MS: This contract not authorized for specified AC"
+            "ANC:NR: This contract not authorized for specified AC"
         );
         require(
             userType == 1,
-            "TPA:NR: User not authorized to create records in this asset class"
+            "ANC:NR: User not authorized to create records in this asset class"
         );
-        require(_rgtHash != 0, "PA:NR: rights holder cannot be zero");
-        require(_assetClass != 0, "PA:NR: Asset class cannot be zero");
+        require(_rgtHash != 0, "ANC:NR: rights holder cannot be zero");
+        require(_assetClass != 0, "ANC:NR: Asset class cannot be zero");
         require( //if creating new record in new root and idxhash is identical, fail because its probably fraud
             ((AC_info.assetClassRoot == oldAC_info.assetClassRoot) ||
                 (rec.assetClass == 0)),
-            "TPA:NR: Cannot re-create asset in new root assetClass"
+            "ANC:NR: Cannot re-create asset in new root assetClass"
         );
-        require(rec.assetStatus < 200, "TPA:NR: Old Record locked");
+        require(rec.assetStatus < 200, "ANC:NR: Old Record locked");
         //^^^^^^^checks^^^^^^^^^
 
         //bytes32 userHash = keccak256(abi.encodePacked(msg.sender));
@@ -76,20 +79,10 @@ contract APP_NC is CORE {
         if (AC_info.assetClassRoot == oldAC_info.assetClassRoot) {
             // if record exists as a "dead record" has an old AC, and is being recreated in the same root class,
             // do not overwrite anything besides assetClass and rightsHolder (STOR will set assetStatus to 51)
-            createRecord(
-                _idxHash,
-                _rgtHash,
-                _assetClass,
-                rec.countDownStart
-            );
+            createRecord(_idxHash, _rgtHash, _assetClass, rec.countDownStart);
         } else {
             // Otherwise, idxHash is unuiqe and an entirely new record is created
-            createRecord(
-                _idxHash,
-                _rgtHash,
-                _assetClass,
-                _countDownStart
-            );
+            createRecord(_idxHash, _rgtHash, _assetClass, _countDownStart);
         }
 
         deductNewRecordCosts(_assetClass);
@@ -107,20 +100,20 @@ contract APP_NC is CORE {
         isAuthorized(_idxHash)
     {
         Record memory rec = getRecord(_idxHash);
-        ContractDataHash memory contractInfo = getContractInfo(address(this),rec.assetClass);
+        ContractDataHash memory contractInfo = getContractInfo(
+            address(this),
+            rec.assetClass
+        );
 
         require(
             contractInfo.contractType > 0,
-            "PNP:IA: This contract not authorized for specified AC"
+            "ANC:IA: This contract not authorized for specified AC"
         );
         require(
-            AC_MGR.isSameRootAC(
-                _newAssetClass,
-                rec.assetClass
-            ) == 170,
-            "TPA:IA:Cannot change AC to new root"
+            AC_MGR.isSameRootAC(_newAssetClass, rec.assetClass) == 170,
+            "ANC:IA:Cannot change AC to new root"
         );
-        require(rec.assetStatus < 200, "PA:IA: Record locked");
+        require(rec.assetStatus < 200, "ANC:IA: Record locked");
         //^^^^^^^checks^^^^^^^^^
 
         STOR.changeAC(_idxHash, _newAssetClass);
@@ -185,7 +178,10 @@ contract APP_NC is CORE {
         string calldata secret
     ) external payable nonReentrant whenNotPaused returns (uint256) {
         Record memory rec = getRecord(_idxHash);
-        ContractDataHash memory contractInfo = getContractInfo(address(this),rec.assetClass);
+        ContractDataHash memory contractInfo = getContractInfo(
+            address(this),
+            rec.assetClass
+        );
         uint256 tokenId = uint256(_idxHash);
         bytes32 rawHash = keccak256(
             abi.encodePacked(first, middle, last, id, secret)
@@ -193,43 +189,40 @@ contract APP_NC is CORE {
 
         require(
             contractInfo.contractType > 0,
-            "PNP:MS: This contract not authorized for specified AC"
+            "ANC:RMT: This contract not authorized for specified AC"
         );
-        require(rec.rightsHolder != 0, "TPA:RMT:Record not remintable");
+        require(rec.rightsHolder != 0, "ANC:RMT:Record not remintable");
         require(
             rec.rightsHolder !=
                 0xFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF,
-            "TPA:RMT:Record not remintable"
+            "ANC:RMT:Record not remintable"
         );
         require(
             (rec.assetStatus != 60),
-            "TPA:RMT:Record is burned and must be reimported by ACadmin"
+            "ANC:RMT:Record is burned and must be reimported by ACadmin"
         );
         require(
             (rec.assetStatus != 6) &&
                 (rec.assetStatus != 50) &&
                 (rec.assetStatus != 56),
-            "TPA:RMT:Cannot modify asset in Escrow"
+            "ANC:RMT:Cannot modify asset in Escrow"
         );
         require(
             (rec.assetStatus != 5) &&
                 (rec.assetStatus != 55) &&
                 (rec.assetStatus != 60),
-            "TPA:RMT:Record In Transferred-unregistered or burned status"
+            "ANC:RMT:Record In Transferred-unregistered or burned status"
         );
-        require(rec.assetStatus < 200, "TPA:RMT:Record locked");
+        require(rec.assetStatus < 200, "ANC:RMT:Record locked");
         require(
             rec.rightsHolder == keccak256(abi.encodePacked(_idxHash, rawHash)),
-            "TPA:RMT:Rightsholder does not match hash from data"
+            "ANC:RMT:Rightsholder does not match hash from data"
         );
         //^^^^^^^checks^^^^^^^^^
 
         deductNewRecordCosts(rec.assetClass);
 
-        tokenId = A_TKN.reMintAssetToken(
-            msg.sender,
-            tokenId
-        );
+        tokenId = A_TKN.reMintAssetToken(msg.sender, tokenId);
 
         return tokenId;
         //^^^^^^^interactions^^^^^^^^^
@@ -247,31 +240,34 @@ contract APP_NC is CORE {
         returns (bytes32)
     {
         Record memory rec = getRecord(_idxHash);
-        ContractDataHash memory contractInfo = getContractInfo(address(this),rec.assetClass);
+        ContractDataHash memory contractInfo = getContractInfo(
+            address(this),
+            rec.assetClass
+        );
 
         require(
             contractInfo.contractType > 0,
-            "PNP:MS: This contract not authorized for specified AC"
+            "ANC:I2: This contract not authorized for specified AC"
         );
-        require((rec.assetClass != 0), "PA:I2: Record does not exist");
+        require((rec.assetClass != 0), "ANC:I2: Record does not exist");
         require(
             (rec.assetStatus != 60),
-            "TPA:I2:Record is burned and must be reimported by ACadmin"
+            "ANC:I2:Record is burned and must be reimported by ACadmin"
         );
         require(
             (rec.assetStatus != 6) &&
                 (rec.assetStatus != 50) &&
                 (rec.assetStatus != 56),
-            "TPA:I2:Cannot modify asset in Escrow"
+            "ANC:I2:Cannot modify asset in Escrow"
         );
         require(
             (rec.assetStatus != 5) && (rec.assetStatus != 55),
-            "TPA:I2:Record In Transferred-unregistered status"
+            "ANC:I2:Record In Transferred-unregistered status"
         );
-        require(rec.assetStatus < 200, "TPA:I2: Record locked");
+        require(rec.assetStatus < 200, "ANC:I2: Record locked");
         require(
             rec.Ipfs2 == 0,
-            "TPA:I2:Ipfs2 has data already. Overwrite not permitted"
+            "ANC:I2:Ipfs2 has data already. Overwrite not permitted"
         );
         //^^^^^^^checks^^^^^^^^^
 

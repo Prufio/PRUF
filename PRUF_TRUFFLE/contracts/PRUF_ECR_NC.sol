@@ -33,7 +33,7 @@ contract ECR_NC is ECR_CORE {
         uint256 tokenID = uint256(_idxHash);
         require(
             (A_TKN.ownerOf(tokenID) == msg.sender), //msg.sender is token holder
-            "TPSE:IA: Caller does not hold token"
+            "ENC:MOD-IA: Caller does not hold token"
         );
         _;
     }
@@ -59,17 +59,17 @@ contract ECR_NC is ECR_CORE {
 
         require(
             contractInfo.contractType > 0,
-            "PNP:MS: This contract not authorized for specified AC"
+            "ENC:SE: This contract not authorized for specified AC"
         );
 
         require((rec.assetClass != 0), "SE: Record does not exist");
         require(
             (rec.assetStatus > 49),
-            "TPSE:SE: Only ACadmin authorized user can change status < 50"
+            "ENC:SE: Only ACadmin authorized user can change status < 50"
         );
         require(
             (escrowTime >= block.timestamp),
-            "TPSE:SE:Escrow must be set to a time in the future"
+            "ENC:SE:Escrow must be set to a time in the future"
         );
         require(
             (rec.assetStatus != 3) &&
@@ -78,11 +78,11 @@ contract ECR_NC is ECR_CORE {
                 (rec.assetStatus != 54) &&
                 (rec.assetStatus != 5) &&
                 (rec.assetStatus != 55),
-            "TPSE:SE:Transferred, lost, or stolen status cannot be set to escrow."
+            "ENC:SE:Transferred, lost, or stolen status cannot be set to escrow."
         );
         require(
             (_escrowStatus == 50) || (_escrowStatus == 56),
-            "TPSE:SE:Must specify a valid escrow status >49"
+            "ENC:SE:Must specify a valid escrow status >49"
         );
 
         //^^^^^^^checks^^^^^^^^^
@@ -118,18 +118,18 @@ contract ECR_NC is ECR_CORE {
 
         require(
             contractInfo.contractType > 0,
-            "PNP:MS: This contract not authorized for specified AC"
+            "ENC:EE: This contract not authorized for specified AC"
         );
 
-        require((rec.assetClass != 0), "EE: Record does not exist");
+        require((rec.assetClass != 0), "ENC:EE: Record does not exist");
         require(
             (rec.assetStatus == 50) || (rec.assetStatus == 56),
-            "TPSE:EE:record must be in escrow status <49"
+            "ENC:EE:record must be in escrow status <49"
         );
         require(
             (escrow.timelock < block.timestamp) ||
                 (keccak256(abi.encodePacked(msg.sender)) == ownerHash),
-            "TPSE:EE: Escrow period not ended and caller is not escrow owner"
+            "ENC:EE: Escrow period not ended and caller is not escrow owner"
         );
         //^^^^^^^checks^^^^^^^^^
 

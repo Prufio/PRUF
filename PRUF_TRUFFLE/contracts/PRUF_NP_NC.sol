@@ -34,7 +34,7 @@ contract NP_NC is CORE {
         uint256 tokenID = uint256(_idxHash);
         require(
             (A_TKN.ownerOf(tokenID) == msg.sender), //msg.sender is token holder
-            "TPNP:IA: Caller does not hold token"
+            "NPNC:MOD-IA: Caller does not hold token"
         );
         _;
     }
@@ -61,33 +61,30 @@ contract NP_NC is CORE {
 
         require(
             contractInfo.contractType > 0,
-            "PNP:MS: This contract not authorized for specified AC"
+            "NPNC:CR: This contract not authorized for specified AC"
         );
-
-        require((rec.assetClass != 0), "PA:FMR: Record does not exist");
-
-        require(_newRgtHash != 0, "TPNP:CR: rights holder cannot be zero");
-
+        require((rec.assetClass != 0), "NPNC:CR: Record does not exist");
+        require(_newRgtHash != 0, "NPNC:CR: rights holder cannot be zero");
         require(
             (rec.assetStatus != 3) &&
                 (rec.assetStatus != 4) &&
                 (rec.assetStatus != 53) &&
                 (rec.assetStatus != 54),
-            "TPNP:CR: Cannot modify asset in lost or stolen status"
+            "NPNC:CR: Cannot modify asset in lost or stolen status"
         );
         require(
             (rec.assetStatus != 6) &&
                 (rec.assetStatus != 50) &&
                 (rec.assetStatus != 56),
-            "TPNP:CR: Cannot modify asset in Escrow"
+            "NPNC:CR: Cannot modify asset in Escrow"
         );
         require(
             (rec.assetStatus != 5) && (rec.assetStatus != 55),
-            "TPNP:CR: Cannot modify asset in transferred-unregistered status"
+            "NPNC:CR: Cannot modify asset in transferred-unregistered status"
         );
         require(
             (rec.assetStatus != 60),
-            "TPNP:CR: Record is burned and must be reimported by ACadmin"
+            "NPNC:CR: Record is burned and must be reimported by ACadmin"
         );
         require(rec.assetStatus < 200, "TPNP:CR: Record locked");
         //^^^^^^^checks^^^^^^^^^
@@ -117,28 +114,27 @@ contract NP_NC is CORE {
 
         require(
             contractInfo.contractType > 0,
-            "TPNP:EX: This contract not authorized for specified AC"
+            "NPNC:EX: This contract not authorized for specified AC"
         );
         require(
             (rec.assetStatus != 6) &&
                 (rec.assetStatus != 50) &&
                 (rec.assetStatus != 56),
-            "TPNP:EX: Cannot change status of asset in Escrow until escrow is expired"
+            "NPNC:EX: Cannot change status of asset in Escrow until escrow is expired"
         );
         require(
             (rec.assetStatus != 5) && (rec.assetStatus != 55),
-            "TPNP:EX: Cannot change status of asset in transferred-unregistered status."
+            "NPNC:EX: Cannot change status of asset in transferred-unregistered status."
         );
         require(
             (rec.assetStatus != 60),
-            "TPNP:EX: Record is burned and must be reimported by ACadmin"
+            "NPNC:EX: Record is burned and must be reimported by ACadmin"
         );
-        require(rec.assetStatus < 200, "TPNP:EX: Record locked");
+        require(rec.assetStatus < 200, "NPNC:EX: Record locked");
 
         rec.assetStatus = 70; // Set status to 70 (exported)
         writeRecord(_idxHash, rec);
         STOR.changeAC(_idxHash, AC_info.assetClassRoot); //set assetClass to the root AC of the assetClass
-
     }
 
     /*
@@ -159,11 +155,9 @@ contract NP_NC is CORE {
 
         require(
             contractInfo.contractType > 0,
-            "PNP:MS: This contract not authorized for specified AC"
+            "NPNC:MS: This contract not authorized for specified AC"
         );
-
-        require((rec.assetClass != 0), "TPNP:MS: Record does not exist");
-
+        require((rec.assetClass != 0), "NPNC:MS: Record does not exist");
         require(
             (_newAssetStatus < 100) &&
                 (_newAssetStatus != 3) &&
@@ -178,36 +172,35 @@ contract NP_NC is CORE {
                 (_newAssetStatus != 56) &&
                 (_newAssetStatus != 57) &&
                 (_newAssetStatus != 58),
-            "PNP:MS: Specified Status is reserved."
+            "NPNC:MS: Specified Status is reserved."
         );
         require(
             _newAssetStatus != 70,
-            "PNP:MS: Use exportNC to export custodial assets"
+            "NPNC:MS: Use exportNC to export custodial assets"
         );
         require(
             (_newAssetStatus > 49),
-            "TPNP:MS: Only custodial usertype can set status < 50"
+            "NPNC:MS: Only custodial usertype can set status < 50"
         );
-
         require(
             (rec.assetStatus > 49),
-            "TPNP:MS: Only custodial usertype can change status < 50"
+            "NPNC:MS: Only custodial usertype can change status < 50"
         );
         require(
             (rec.assetStatus != 6) &&
                 (rec.assetStatus != 50) &&
                 (rec.assetStatus != 56),
-            "TPNP:MS: Cannot change status of asset in Escrow until escrow is expired"
+            "NPNC:MS: Cannot change status of asset in Escrow until escrow is expired"
         );
         require(
             (rec.assetStatus != 5) && (rec.assetStatus != 55),
-            "TPNP:MS: Cannot change status of asset in transferred-unregistered status."
+            "NPNC:MS: Cannot change status of asset in transferred-unregistered status."
         );
         require(
             (rec.assetStatus != 60),
-            "TPNP:MS: Record is burned and must be reimported by ACadmin"
+            "NPNC:MS: Record is burned and must be reimported by ACadmin"
         );
-        require(rec.assetStatus < 200, "TPNP:MS: Record locked");
+        require(rec.assetStatus < 200, "NPNC:MS: Record locked");
         //^^^^^^^checks^^^^^^^^^
 
         rec.assetStatus = _newAssetStatus;
@@ -237,39 +230,37 @@ contract NP_NC is CORE {
 
         require(
             contractInfo.contractType > 0,
-            "PNP:MS: This contract not authorized for specified AC"
+            "NPNC:SLS: This contract not authorized for specified AC"
         );
-
-        require((rec.assetClass != 0), "TPNP:SLS: Record does not exist");
+        require((rec.assetClass != 0), "NPNC:SLS: Record does not exist");
         require(
             (_newAssetStatus == 3) ||
                 (_newAssetStatus == 4) ||
                 (_newAssetStatus == 53) ||
                 (_newAssetStatus == 54),
-            "TPNP:SLS: Must set to a lost or stolen status"
+            "NPNC:SLS: Must set to a lost or stolen status"
         );
         require(
             (_newAssetStatus > 49),
-            "TPNP:SLS: Only custodial usertype can set status < 50"
+            "NPNC:SLS: Only custodial usertype can set status < 50"
         );
         require(
             (rec.assetStatus > 49) || (_newAssetStatus < 50),
-            "TPNP:SLS: Only usertype <5 can change a <49 status asset to a >49 status"
+            "NPNC:SLS: Only usertype <5 can change a <49 status asset to a >49 status"
         );
-
         require(
             (rec.assetStatus != 5) && (rec.assetStatus != 55),
-            "TPNP:SLS: Transferred asset cannot be set to lost or stolen after transfer."
+            "NPNC:SLS: Transferred asset cannot be set to lost or stolen after transfer."
         );
         require(
             (rec.assetStatus != 50),
-            "TPNP:SLS: Asset in locked escrow cannot be set to lost or stolen"
+            "NPNC:SLS: Asset in locked escrow cannot be set to lost or stolen"
         );
         require(
             (rec.assetStatus != 60),
-            "TPNP:SLS: Record is burned and must be reimported by ACadmin"
+            "NPNC:SLS: Record is burned and must be reimported by ACadmin"
         );
-        require(rec.assetStatus < 200, "TPNP:SLS: Record locked");
+        require(rec.assetStatus < 200, "NPNC:SLS: Record locked");
 
         //^^^^^^^checks^^^^^^^^^
         rec.assetStatus = _newAssetStatus;
@@ -300,26 +291,25 @@ contract NP_NC is CORE {
 
         require(
             contractInfo.contractType > 0,
-            "PNP:MS: This contract not authorized for specified AC"
+            "NPNC:DC: This contract not authorized for specified AC"
         );
-        require(_decAmount > 0, "TPNP:DC: cannot decrement by negative number");
-
-        require((rec.assetClass != 0), "TPNP:DC: Record does not exist");
+        require(_decAmount > 0, "NPNC:DC: cannot decrement by negative number");
+        require((rec.assetClass != 0), "NPNC:DC: Record does not exist");
         require( //------------------------------------------should the counter still work when an asset is in escrow?
             (rec.assetStatus != 6) &&
                 (rec.assetStatus != 50) &&
                 (rec.assetStatus != 56), //If so, it must not erase the recorder, or escrow termination will be broken!
-            "TPNP:DC: Cannot modify asset in Escrow"
+            "NPNC:DC: Cannot modify asset in Escrow"
         );
         require(
             (rec.assetStatus != 5) && (rec.assetStatus != 55),
-            "TPNP:DC: Record In Transferred-unregistered status"
+            "NPNC:DC: Record In Transferred-unregistered status"
         );
         require(
             (rec.assetStatus != 60),
-            "TPNP:DC: Record is burned and must be reimported by ACadmin"
+            "NPNC:DC: Record is burned and must be reimported by ACadmin"
         );
-        require(rec.assetStatus < 200, "TPNP:DC: Record locked");
+        require(rec.assetStatus < 200, "NPNC:DC: Record locked");
         //^^^^^^^checks^^^^^^^^^
 
         if (rec.countDown > _decAmount) {
@@ -352,27 +342,25 @@ contract NP_NC is CORE {
 
         require(
             contractInfo.contractType > 0,
-            "PNP:MS: This contract not authorized for specified AC"
+            "NPNC:MI1: This contract not authorized for specified AC"
         );
-
-        require((rec.assetClass != 0), "TPNP:MI1: Record does not exist");
-
-        require(rec.Ipfs1 != _IpfsHash, "TPNP:MI1: New data same as old");
+        require((rec.assetClass != 0), "NPNC:MI1: Record does not exist");
+        require(rec.Ipfs1 != _IpfsHash, "NPNC:MI1: New data same as old");
         require( //-------------------------------------Should an asset in escrow be modifiable?
             (rec.assetStatus != 6) &&
                 (rec.assetStatus != 50) &&
                 (rec.assetStatus != 56), //Should it be contingent on the original recorder address?
-            "TPNP:MI1: Cannot modify asset in Escrow" //If so, it must not erase the recorder, or escrow termination will be broken!
+            "NPNC:MI1: Cannot modify asset in Escrow" //If so, it must not erase the recorder, or escrow termination will be broken!
         );
         require(
             (rec.assetStatus != 5) && (rec.assetStatus != 55),
-            "TPNP:MI1: Record In Transferred-unregistered status"
+            "NPNC:MI1: Record In Transferred-unregistered status"
         );
         require(
             (rec.assetStatus != 60),
-            "TPNP:MI1: Record is burned and must be reimported by ACadmin"
+            "NPNC:MI1: Record is burned and must be reimported by ACadmin"
         );
-        require(rec.assetStatus < 200, "TPNP:MI1: Record locked");
+        require(rec.assetStatus < 200, "NPNC:MI1: Record locked");
         //^^^^^^^checks^^^^^^^^^
 
         rec.Ipfs1 = _IpfsHash;
