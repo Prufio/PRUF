@@ -194,10 +194,6 @@ contract APP_NC is CORE {
             "ANC:RMT:Record not remintable"
         );
         require(
-            (rec.assetStatus != 60),
-            "ANC:RMT:Record is burned and must be reimported by ACadmin"
-        );
-        require(
             (rec.assetStatus != 6) &&
                 (rec.assetStatus != 50) &&
                 (rec.assetStatus != 56),
@@ -207,9 +203,8 @@ contract APP_NC is CORE {
             (rec.assetStatus != 5) &&
                 (rec.assetStatus != 55) &&
                 (rec.assetStatus != 60),
-            "ANC:RMT:Record In Transferred-unregistered or burned status"
+            "ANC:RMT:Record In Transferred-unregistered or discarded status"
         );
-        require(rec.assetStatus < 200, "ANC:RMT:Record locked");
         require(
             rec.rightsHolder == keccak256(abi.encodePacked(_idxHash, rawHash)),
             "ANC:RMT:Rightsholder does not match hash from data"
