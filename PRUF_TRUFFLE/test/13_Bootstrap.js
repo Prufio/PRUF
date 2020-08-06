@@ -114,7 +114,34 @@ contract('PRUF_BOOTSTRAP', accounts => {
         console.log(PRUF_RCLR_TEST.address);
         assert(PRUF_RCLR_TEST.address !== '')
         RCLR = PRUF_RCLR_TEST;
+    })
+
+    it('Should make a json of contract', async () => {
+        var fs = require('fs');
+        var contracts = {
+            content: []
+         };
+         console.log("Storing contract addreesses in json file...")
+         contracts.content.push(STOR.address);
+         contracts.content.push(APP.address);
+         contracts.content.push(NP.address);
+         contracts.content.push(AC_MGR.address);
+         contracts.content.push(AC_TKN.address);
+         contracts.content.push(A_TKN.address);
+         contracts.content.push(ECR_MGR.address);
+         contracts.content.push(ECR.address);
+         contracts.content.push(ECR_NC.address);
+         contracts.content.push(APP_NC.address);
+         contracts.content.push(NP_NC.address);
+         contracts.content.push(RCLR.address);
+         
+         var json = JSON.stringify(contracts);
+
+         fs.writeFile('contracts.json', json, 'utf8', callback);
+         return console.log("contracts object: ", contracts.content);
     });
+
+    
 
     it('Should add contract addresses', async () => {
 
@@ -586,6 +613,7 @@ contract('PRUF_BOOTSTRAP', accounts => {
     })
 
 })
+    
 
     //
     //
