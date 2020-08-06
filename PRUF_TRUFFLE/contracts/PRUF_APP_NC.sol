@@ -147,8 +147,10 @@ contract APP_NC is CORE {
         );
         //^^^^^^^checks^^^^^^^^^
 
-        deductNewRecordCosts(_newAssetClass);
-        
+        //transfer token to caller from assetToken if matching data
+
+        //Create a new record. (call newRecord? without making a token?)
+
         //^^^^^^^interactions / effects^^^^^^^^^^^^
     }
 
