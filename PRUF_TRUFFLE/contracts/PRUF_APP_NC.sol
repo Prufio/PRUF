@@ -123,7 +123,7 @@ contract APP_NC is CORE {
     /*
      * @dev Import a record into a new asset class
      */
-    function $importNakedAsset(bytes32 _idxHash, string calldata authCode, uint16 _newAssetClass)
+    function $importNakedAsset(bytes32 _idxHash, string calldata authCode, uint16 _newAssetClass, bytes32 _rgtHash, uint256 _countDownStart)
         external
         payable
         nonReentrant
@@ -149,7 +149,11 @@ contract APP_NC is CORE {
 
         //transfer token to caller from assetToken if matching data
 
-        //Create a new record. (call newRecord? without making a token?)
+        STOR.newRecord(
+        _idxHash,
+        _rgtHash,
+        _newAssetClass,
+        _countDownStart);
 
         //^^^^^^^interactions / effects^^^^^^^^^^^^
     }

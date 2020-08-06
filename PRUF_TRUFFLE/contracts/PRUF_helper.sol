@@ -10,7 +10,6 @@ __/\\\\\\\\\\\\\ _____/\\\\\\\\\ _______/\\../\\ ___/\\\\\\\\\\\\\\\
         _\/// _____________\/// _______\/// __\///////// __\/// _____________
          *-------------------------------------------------------------------*/
 
-         
 /*-----------------------------------------------------------------
  *  TO DO
  *
@@ -182,8 +181,24 @@ contract Helper is Ownable {
         return rawRgtHash;
     }
 
+    function getNakedTokenHash(uint16 _assetClass, string memory _authCode)
+        public
+        pure
+        returns (uint256)
+    {
+        bytes32 tokHash;
 
-    function uint256toString(uint256 number) public pure returns (string memory){
+        tokHash = keccak256(abi.encodePacked(_assetClass, _authCode));
+        uint256 uintHash = uint256(tokHash);
+
+        return uintHash;
+    }
+
+    function uint256toString(uint256 number)
+        public
+        pure
+        returns (string memory)
+    {
         // Inspired by OraclizeAPI's implementation - MIT licence
         // https://github.com/oraclize/ethereum-api/blob/b42146b063c7d6ee1358846c198246239e9360e8/oraclizeAPI_0.4.25.sol
 
@@ -200,12 +215,9 @@ contract Helper is Ownable {
         uint256 index = digits - 1;
         temp = number;
         while (temp != 0) {
-            buffer[index--] = byte(uint8(48 + temp % 10));
+            buffer[index--] = bytes1(uint8(48 + (temp % 10)));
             temp /= 10;
         }
-        return  string(buffer);
+        return string(buffer);
     }
-
 }
-
-

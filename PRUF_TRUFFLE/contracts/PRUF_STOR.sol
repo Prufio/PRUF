@@ -328,12 +328,12 @@ contract STOR is Ownable, ReentrancyGuard, Pausable {
         external
         nonReentrant
         whenNotPaused
-        isAuthorized(_newAssetClass)
         exists(_idxHash)
         notEscrow(_idxHash)
+        isAuthorized(0)  //is an authorized contract, generically
     {
         Record memory rec = database[_idxHash];
-
+        
         require(
             AC_MGR.isSameRootAC(_newAssetClass, rec.assetClass) == 170,
             "S:CAC:Cannot change AC to new root"

@@ -126,6 +126,11 @@ contract A_TKN is Ownable, ReentrancyGuard, ERC721 {
         //^^^^^^^interactions^^^^^^^^^
     }
 
+    // function claimNakedToken(bytes32 _idxHash, string calldata authCode){
+    //     if ((hash of URI) == (hash of (hash of assetClass + authCode)))
+
+    // }
+
     /*
      * @dev See if token exists
      */
