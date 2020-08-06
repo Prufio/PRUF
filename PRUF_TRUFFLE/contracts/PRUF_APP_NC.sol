@@ -120,44 +120,37 @@ contract APP_NC is CORE {
         //^^^^^^^interactions / effects^^^^^^^^^^^^
     }
 
-    // /*
-    //  * @dev Import a record into a new asset class
-    //  */
-    // function $importNakedAsset(bytes32 _idxHash, string calldata authCode, uint16 _newAssetClass)
-    //     external
-    //     payable
-    //     nonReentrant
-    //     whenNotPaused
-    // {
-    //     uint256 tokenID = uint256(_idxHash);
-    //     Record memory rec = getRecord(_idxHash);
-    //     ContractDataHash memory contractInfo = getContractInfo(address(this),rec.assetClass);
+    /*
+     * @dev Import a record into a new asset class
+     */
+    function $importNakedAsset(bytes32 _idxHash, string calldata authCode, uint16 _newAssetClass)
+        external
+        payable
+        nonReentrant
+        whenNotPaused
+    {
+        uint256 tokenID = uint256(_idxHash);
+        Record memory rec = getRecord(_idxHash);
+        ContractDataHash memory contractInfo = getContractInfo(address(this),rec.assetClass);
 
-    //     require(
-    //         A_TKN.ownerOf(tokenID) == address(this),
-    //         "PNP:INA: Token not found in importing contract"
-    //     );
-    //     require(
-    //         contractInfo.contractType > 0,
-    //         "PNP:INA: This contract not authorized for specified AC"
-    //     );
-    //     require(
-    //         rec.assetClass == 0,
-    //         "PNP:INA: Asset already registered in system"
-    //     );
+        require(
+            A_TKN.ownerOf(tokenID) == address(this),
+            "PNP:INA: Token not found in importing contract"
+        );
+        require(
+            contractInfo.contractType > 0,
+            "PNP:INA: This contract not authorized for specified AC"
+        );
+        require(
+            rec.assetClass == 0,
+            "PNP:INA: Asset already registered in system"
+        );
+        //^^^^^^^checks^^^^^^^^^
 
-    //     require(
-    //         AC_MGR.isSameRootAC(
-    //             _newAssetClass,
-    //             rec.assetClass
-    //         ) == 170,
-    //         "TPA:INA: authCode and assetClass verification failed"
-    //     );
-    //     //^^^^^^^checks^^^^^^^^^
-
-    //     deductNewRecordCosts(_newAssetClass);
-    //     //^^^^^^^interactions / effects^^^^^^^^^^^^
-    // }
+        deductNewRecordCosts(_newAssetClass);
+        
+        //^^^^^^^interactions / effects^^^^^^^^^^^^
+    }
 
     /*
      * @dev remint token with confirmation of posession of RAWTEXT hash inputs

@@ -89,7 +89,7 @@ contract CORE is PullPayment, BASIC {
         );
 
         require(
-            AC_info.custodyType != 0,
+            AC_info.custodyType != 3,
             "C:CR:Cannot create asset in a root asset class"
         );
 
