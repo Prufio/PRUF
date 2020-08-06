@@ -215,7 +215,7 @@ pragma solidity ^0.6.7;
  * 5: Mint 2 root asset tokens. (home, foreign) !(CustodyType 3)!
  * 6: Mint 2 cust and 2 non-custodial assetclasses in the home assetclass
  * 7: Mint 1 cust and 1 non-custodial assetclasses in the foreign assetclass 
- * 8: Authorize contracts @ respective names in storage using existing assetclasses, type 1 for custodial, type 2 for non-custodial, 3 for root asset classes
+ * 8: Authorize contracts @ respective names in storage using existing assetclasses, type 1 for custodial, type 2 for non-custodial, 0 for root asset classes
  * 9: Resolve Contract Addresses
  * 10: Set costs / users / types for root && rooted AC token
  * 11: THE WORKS

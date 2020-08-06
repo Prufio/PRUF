@@ -250,11 +250,11 @@ contract STOR is Ownable, ReentrancyGuard, Pausable {
 
         Record memory rec;
 
-        //if (contractInfo[contractAddressToName[msg.sender]][_assetClass] == 1) {
-        //     rec.assetStatus = 0;
-        // } else {
+        if (contractInfo[contractAddressToName[msg.sender]][_assetClass] == 1) {
+             rec.assetStatus = 0;
+         } else {
             rec.assetStatus = 51;
-        //}
+        }
 
         rec.assetClass = _assetClass;
         rec.countDownStart = _countDownStart;
