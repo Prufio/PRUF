@@ -472,11 +472,11 @@
         it('Should mint a couple of asset root tokens', async () => {
     
             console.log("Minting root token 1 -C")
-            return AC_MGR.createAssetClass('1', account1, 'CUSTODIAL_ROOT', '1', '1', '1', { from: account1 })
+            return AC_MGR.createAssetClass('1', account1, 'CUSTODIAL_ROOT', '1', '1', '0', { from: account1 })
     
                 .then(() => {
                     console.log("Minting root token 2 -NC")
-                    return AC_MGR.createAssetClass('2', account1, 'NON-CUSTODIAL_ROOT', '2', '2', '2', { from: account1 })
+                    return AC_MGR.createAssetClass('2', account1, 'NON-CUSTODIAL_ROOT', '2', '2', '0', { from: account1 })
                 })
         })
     
@@ -734,30 +734,30 @@
         it('Should authorize RCLR in all relevant asset classes', async () => {
             
             console.log("Authorizing RCLR")
-            return STOR.enableContractForAC('RCLR', '10', '1', { from: account1 })
+            return STOR.enableContractForAC('RCLR', '10', '3', { from: account1 })
                 
                 .then(() => {
-                    return STOR.enableContractForAC('RCLR', '11', '1', { from: account1 })
+                    return STOR.enableContractForAC('RCLR', '11', '3', { from: account1 })
                 })
                 
                 .then(() => {
-                    return STOR.enableContractForAC('RCLR', '12', '1', { from: account1 })
+                    return STOR.enableContractForAC('RCLR', '12', '3', { from: account1 })
                 })
                 
                 .then(() => {
-                    return STOR.enableContractForAC('RCLR', '13', '1', { from: account1 })
+                    return STOR.enableContractForAC('RCLR', '13', '3', { from: account1 })
                 })
                 
                 .then(() => {
-                    return STOR.enableContractForAC('RCLR', '14', '1', { from: account1 })
+                    return STOR.enableContractForAC('RCLR', '14', '3', { from: account1 })
                 })
                 
                 .then(() => {
-                    return STOR.enableContractForAC('RCLR', '1', '1', { from: account1 })
+                    return STOR.enableContractForAC('RCLR', '1', '3', { from: account1 })
                 })
                 
                 .then(() => {
-                    return STOR.enableContractForAC('RCLR', '2', '1', { from: account1 })
+                    return STOR.enableContractForAC('RCLR', '2', '3', { from: account1 })
                 })
         })
     
