@@ -244,6 +244,7 @@ contract APP is CORE {
         if (_newrgtHash == 0x0) {
             //set to transferred status
             rec.assetStatus = 5;
+            _newrgtHash = 0xFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF;
         }
 
         rec.rightsHolder = _newrgtHash;

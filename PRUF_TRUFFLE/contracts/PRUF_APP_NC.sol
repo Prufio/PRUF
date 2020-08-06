@@ -111,7 +111,7 @@ contract APP_NC is CORE {
 
         require(
             contractInfo.contractType > 0,
-            "PNP:MS: This contract not authorized for specified AC"
+            "PNP:IA: This contract not authorized for specified AC"
         );
         require(
             AC_MGR.isSameRootAC(
@@ -128,6 +128,49 @@ contract APP_NC is CORE {
         deductNewRecordCosts(_newAssetClass);
         //^^^^^^^interactions / effects^^^^^^^^^^^^
     }
+
+    // /*
+    //  * @dev Import a record into a new asset class
+    //  */
+    // function $importNakedAsset(bytes32 _idxHash, string calldata authCode, uint16 _newAssetClass)
+    //     external
+    //     payable
+    //     nonReentrant
+    //     whenNotPaused
+    // {
+    //     uint256 tokenID = uint256(_idxHash);
+
+    //     Record memory rec = getRecord(_idxHash);
+    //     ContractDataHash memory contractInfo = getContractInfo(address(this),rec.assetClass);
+
+    //     require(
+    //         A_TKN.ownerOf(tokenID) == address(this),
+    //         "PNP:INA: Token not found in importing contract"
+    //     );
+    //     require(
+    //         contractInfo.contractType > 0,
+    //         "PNP:INA: This contract not authorized for specified AC"
+    //     );
+    //     require(
+    //         rec.assetClass == 0,
+    //         "PNP:INA: Asset already registered in system"
+    //     );
+
+    //     require(
+    //         AC_MGR.isSameRootAC(
+    //             _newAssetClass,
+    //             rec.assetClass
+    //         ) == 170,
+    //         "TPA:INA: authCode and assetClass verification failed"
+    //     );
+    //     require(rec.assetStatus < 200, "PA:IA: Record locked");
+    //     //^^^^^^^checks^^^^^^^^^
+
+    //     STOR.changeAC(_idxHash, _newAssetClass);
+
+    //     deductNewRecordCosts(_newAssetClass);
+    //     //^^^^^^^interactions / effects^^^^^^^^^^^^
+    // }
 
     /*
      * @dev remint token with confirmation of posession of RAWTEXT hash inputs
