@@ -88,6 +88,11 @@ contract CORE is PullPayment, BASIC {
             "C:CR:Asset token already exists"
         );
 
+        require(
+            AC_info.custodyType != 0,
+            "C:CR:Cannot create asset in a root asset class"
+        );
+
         if (AC_info.custodyType == 1) {
             A_TKN.mintAssetToken(address(this), tokenId, "pruf.io");
         }
