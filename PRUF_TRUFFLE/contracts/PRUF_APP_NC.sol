@@ -70,7 +70,6 @@ contract APP_NC is CORE {
                 (rec.assetClass == 0)),
             "ANC:NR: Cannot re-create asset in new root assetClass"
         );
-        require(rec.assetStatus < 200, "ANC:NR: Old Record locked");
         //^^^^^^^checks^^^^^^^^^
 
         //bytes32 userHash = keccak256(abi.encodePacked(msg.sender));
@@ -113,7 +112,6 @@ contract APP_NC is CORE {
             AC_MGR.isSameRootAC(_newAssetClass, rec.assetClass) == 170,
             "ANC:IA:Cannot change AC to new root"
         );
-        require(rec.assetStatus < 200, "ANC:IA: Record locked");
         //^^^^^^^checks^^^^^^^^^
 
         STOR.changeAC(_idxHash, _newAssetClass);
@@ -255,7 +253,6 @@ contract APP_NC is CORE {
             (rec.assetStatus != 5) && (rec.assetStatus != 55),
             "ANC:I2:Record In Transferred-unregistered status"
         );
-        require(rec.assetStatus < 200, "ANC:I2: Record locked");
         require(
             rec.Ipfs2 == 0,
             "ANC:I2:Ipfs2 has data already. Overwrite not permitted"

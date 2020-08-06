@@ -61,7 +61,6 @@ contract APP is CORE {
         );
         require(userType < 5, "A:NR: User not authorized to create records");
         require(_rgtHash != 0, "A:NR: rights holder cannot be zero");
-        require(rec.assetStatus < 200, "A:NR: Old Record locked");
         //^^^^^^^checks^^^^^^^^^
 
         //bytes32 userHash = keccak256(abi.encodePacked(msg.sender));
@@ -173,7 +172,6 @@ contract APP is CORE {
             (rec.assetStatus != 5) && (rec.assetStatus != 55),
             "A:FMR: Record In Transferred-unregistered status"
         );
-        require(rec.assetStatus < 200, "A:FMR: Record locked");
         //^^^^^^^checks^^^^^^^^^
 
         if (rec.forceModCount < 255) {
@@ -304,7 +302,6 @@ contract APP is CORE {
                 (rec.assetStatus != 56),
             "A:I2: Cannot modify asset in Escrow"
         );
-        require(rec.assetStatus < 200, "A:I2: Record locked");
         require(
             (rec.assetStatus != 5) && (rec.assetStatus != 55),
             "A:I2: Record In Transferred-unregistered status"
