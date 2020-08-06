@@ -1,4 +1,4 @@
-//
+    //
     //
     // DECLARATIONS
     //
@@ -472,11 +472,11 @@
         it('Should mint a couple of asset root tokens', async () => {
     
             console.log("Minting root token 1 -C")
-            return AC_MGR.createAssetClass('1', account1, 'CUSTODIAL_ROOT', '1', '1', '0', { from: account1 })
+            return AC_MGR.createAssetClass('1', account1, 'CUSTODIAL_ROOT', '1', '1', '3', { from: account1 })
     
                 .then(() => {
                     console.log("Minting root token 2 -NC")
-                    return AC_MGR.createAssetClass('2', account1, 'NON-CUSTODIAL_ROOT', '2', '2', '0', { from: account1 })
+                    return AC_MGR.createAssetClass('2', account1, 'NON-CUSTODIAL_ROOT', '2', '2', '3', { from: account1 })
                 })
         })
     
