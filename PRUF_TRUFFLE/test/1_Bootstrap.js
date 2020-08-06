@@ -876,6 +876,11 @@
             return AC_MGR.OO_addUser(account2, '1', '10', { from: account1 })
                 
                 .then(() => {
+                    console.log("Account2 => AC11")
+                    return AC_MGR.OO_addUser(account2, '1', '11', { from: account1 })
+                })
+                
+                .then(() => {
                     console.log("Account3 => AC11")
                     return AC_MGR.OO_addUser(account3, '1', '11', { from: account1 })
                 })
