@@ -74,6 +74,7 @@
         //
     
         it('Should deploy Storage', async () => {
+            console.log('//**************************BEGIN BOOTSTRAP**************************//')
             const PRUF_STOR_TEST = await PRUF_STOR.deployed({ from: account1 });
             console.log(PRUF_STOR_TEST.address);
             assert(PRUF_STOR_TEST.address !== '');
@@ -911,6 +912,8 @@
         //EXPORT ASSET
         //1
         it('Should fail to export asset due to non-custodial AC type (FAILS IN ISAUTHORIZED MOD)', async () => {
+            console.log('//**************************BEGIN APP FAILBATCH**************************//')
+            console.log('//**************************EXPORT ASSET**************************//')
             return APP.exportAsset(
                 asset8,
                 account10,
@@ -944,6 +947,8 @@
         //FORCETRANSFER ASSET
         //4
         it('Should fail to forceTransfer the record due to non-custodial AC type', async () => {
+            console.log('//**************************FORCETRANSFER ASSET**************************//')
+
             return APP.$forceModRecord(
                 asset8,
                 rgt2,
@@ -1014,6 +1019,8 @@
         // TRANSFER ASSET
         //11
         it('Should fail to transfer the record due to non-custodial AC type', async () => {
+            console.log('//**************************TRANSFER ASSET**************************//')
+
             return APP.$transferAsset(
                 asset8,
                 rgt1,
@@ -1090,6 +1097,8 @@
         //ADD NOTE 
         //17
         it('Should fail to add asset note due to non-custodial AC type', async () => {
+            console.log('//**************************ADD NOTE**************************//')
+
             return APP.$addIpfs2Note(
                 asset8,
                 rgt1,
@@ -1156,6 +1165,8 @@
         //IMPORT ASSET
         //24
         it('Should fail to import an asset due to non-custodial AC type', async () => {
+            console.log('//**************************IMPORT ASSET**************************//')
+
             return APP.$importAsset(
                 asset8,
                 rgt1,
