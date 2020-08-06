@@ -73,8 +73,8 @@
         //ENVIRONMENT SETUP
         //
         //
-        console.log('//**************************BEGIN BOOTSTRAP**************************//')
         it('Should deploy Storage', async () => {
+            console.log('//**************************BEGIN BOOTSTRAP**************************//')
             const PRUF_STOR_TEST = await PRUF_STOR.deployed({ from: account1 });
             console.log(PRUF_STOR_TEST.address);
             assert(PRUF_STOR_TEST.address !== '');
@@ -901,7 +901,7 @@
         // END SETUP ENVIRONMENT
         //
         //
-        console.log('//**************************BEGIN APP_NC FAILBATCH**************************//')
+        
         //
         //
         // APP_NC FAILBATCH
@@ -909,8 +909,10 @@
         //
 
         //NEW RECORD
-        console.log('//**************************NEW RECORD**************************//')
+        
         it('Should fail to create new record due to existing record at idx', async () => {
+            console.log('//**************************BEGIN APP_NC FAILBATCH**************************//')
+            console.log('//**************************NEW RECORD**************************//')
             return APP_NC.$newRecord(
                 asset9,
                 rgt1,
@@ -973,8 +975,9 @@
         //END NEW RECORD
 
         //IMPORT ASSET
-        console.log('//**************************IMPORT ASSET**************************//')
+        
         it('Should fail to import asset due to custodial AC type', async () => {
+            console.log('//**************************IMPORT ASSET**************************//')
             return APP_NC.$importAsset(
                 asset1,
                 '10',
@@ -993,8 +996,9 @@
         //END IMPORT ASSET
 
         //REMINT TOKEN
-        console.log('//**************************REMINT TOKEN**************************//')
+        
         it('Should fail to remint asset token due to custodial AC type', async () => {
+            console.log('//**************************REMINT TOKEN**************************//')
             return APP_NC.$reMintToken(
                 asset1,
                 'aaa',
