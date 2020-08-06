@@ -10,6 +10,7 @@ __/\\\\\\\\\\\\\ _____/\\\\\\\\\ _______/\\../\\ ___/\\\\\\\\\\\\\\\
         _\/// _____________\/// _______\/// __\///////// __\/// _____________
          *-------------------------------------------------------------------*/
 
+         
 /*-----------------------------------------------------------------
  *  TO DO
  *
@@ -159,36 +160,30 @@ contract Helper is Ownable {
         return rawRgtHash;
     }
 
-    function bytes32toString(bytes32 _bytes32)
-        public
-        pure
-        returns (string memory)
-    {
-        bytes memory bytesArray = new bytes(32);
-        for (uint256 i; i < 32; i++) {
-            bytesArray[i] = _bytes32[i];
+
+    function toString(uint256 value) internal pure returns (string memory) {
+        // Inspired by OraclizeAPI's implementation - MIT licence
+        // https://github.com/oraclize/ethereum-api/blob/b42146b063c7d6ee1358846c198246239e9360e8/oraclizeAPI_0.4.25.sol
+
+        if (value == 0) {
+            return "0";
         }
-        return string(bytesArray);
+        uint256 temp = value;
+        uint256 digits;
+        while (temp != 0) {
+            digits++;
+            temp /= 10;
+        }
+        bytes memory buffer = new bytes(digits);
+        uint256 index = digits - 1;
+        temp = value;
+        while (temp != 0) {
+            buffer[index--] = byte(uint8(48 + temp % 10));
+            temp /= 10;
+        }
+        return string(buffer);
     }
 
-    function isSameAsString(string memory _string, bytes32 _b32)
-        public
-        pure
-        returns (
-            string memory,
-            string memory,
-            uint8
-        )
-    {
-        string memory newString = bytes32toString(_b32);
-
-        if (
-            keccak256(abi.encodePacked(_string)) ==
-            keccak256(abi.encodePacked(newString))
-        ) {
-            return (_string, newString, 170);
-        } else {
-            return (_string, newString, 0);
-        }
-    }
 }
+
+
