@@ -64,9 +64,7 @@ contract STOR is Ownable, ReentrancyGuard, Pausable {
     /*
      * @dev Verify user credentials
      *
-     * Originating Address:
-     *      Exists in registeredUsers as a usertype 1 or 9
-     *      Is authorized for asset class
+     * Originating Address is authorized for asset class
      */
     modifier isAuthorized(uint16 _assetClass) {
         require(
@@ -100,10 +98,7 @@ contract STOR is Ownable, ReentrancyGuard, Pausable {
      * @dev Check record exists in database
      */
     modifier exists(bytes32 _idxHash) {
-        require(
-            database[_idxHash].assetClass != 0,
-            "PS:E:rec does not exist"
-        );
+        require(database[_idxHash].assetClass != 0, "PS:E:rec does not exist");
         _;
     }
 
