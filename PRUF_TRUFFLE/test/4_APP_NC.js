@@ -55,7 +55,7 @@
         //
         //
     
-        contract('PRUF_APP', accounts => {
+        contract('PRUF_APP_NC', accounts => {
             
             const account1 = accounts[0];
             const account2 = accounts[1];
@@ -240,15 +240,16 @@
                 'jjj'
             );
 
-            rgt1 = await Helper.getRgtHash(
+            rgt1 = await Helper.getJustRgtHash(
                 asset1,
                 'aaa',
                 'aaa',
                 'aaa',
                 'aaa',
-                'aaa'
+                'aaa',
             )
-            rgt2 = await Helper.getRgtHash(
+
+            rgt2 = await Helper.getJustRgtHash(
                 asset2,
                 'bbb',
                 'bbb',
@@ -256,7 +257,7 @@
                 'bbb',
                 'bbb'
             )
-            rgt3 = await Helper.getRgtHash(
+            rgt3 = await Helper.getJustRgtHash(
                 asset3,
                 'ccc',
                 'ccc',
@@ -264,7 +265,7 @@
                 'ccc',
                 'ccc'
             )
-            rgt4 = await Helper.getRgtHash(
+            rgt4 = await Helper.getJustRgtHash(
                 asset4,
                 'ddd',
                 'ddd',
@@ -272,7 +273,7 @@
                 'ddd',
                 'ddd'
             )
-            rgt5 = await Helper.getRgtHash(
+            rgt5 = await Helper.getJustRgtHash(
                 asset5,
                 'eee',
                 'eee',
@@ -869,6 +870,16 @@
                 { from: account3 }
             )
         })
+
+        it('Should put asset9 into an escrow', async () => {
+            return ECR.setEscrow(
+                asset9,
+                rgt1,
+                '30',
+                '6',
+                { from: account6 }
+            )
+        })
     
         it('Should add asset note to asset5', async () => {
             return APP.$addIpfs2Note(
@@ -909,7 +920,7 @@
         //
 
         //NEW RECORD
-        
+        //1
         it('Should fail to create new record due to existing record at idx', async () => {
             console.log('//**************************BEGIN APP_NC FAILBATCH**************************//')
             console.log('//**************************NEW RECORD**************************//')
@@ -921,7 +932,7 @@
                 { from: account6, value: 20000000000000000 }
             )
         })
-
+        //2
         it('Should fail to create new record due to custodial AC type', async () => {
             return APP_NC.$newRecord(
                 asset10,
@@ -931,7 +942,7 @@
                 { from: account2, value: 20000000000000000 }
             )
         })
-
+        //3
         it('Should fail to create new record due to nonHuman user type', async () => {
             return APP_NC.$newRecord(
                 asset10,
@@ -941,7 +952,7 @@
                 { from: account7, value: 20000000000000000 }
             )
         })
-
+        //4
         it('Should fail to create new record due to rgt == 0x0...', async () => {
             return APP_NC.$newRecord(
                 asset10,
@@ -951,31 +962,31 @@
                 { from: account6, value: 20000000000000000 }
             )
         })
-
+        //5
         it('Should fail to create new record due to AC == 0', async () => {
             return APP_NC.$newRecord(
                 asset10,
                 rgt1,
                 '0',
                 '5000',
-                { from: account7, value: 20000000000000000 }
+                { from: account6, value: 20000000000000000 }
             )
         })
-
+        //6
         it('Should fail to re-create new record due to attempted change of root AC', async () => {
             return APP_NC.$newRecord(
                 asset7,
                 rgt1,
                 '14',
                 '5000',
-                { from: account7, value: 20000000000000000 }
+                { from: account6, value: 20000000000000000 }
             )
         })
 
         //END NEW RECORD
 
         //IMPORT ASSET
-        
+        //7
         it('Should fail to import asset due to custodial AC type', async () => {
             console.log('//**************************IMPORT ASSET**************************//')
             return APP_NC.$importAsset(
@@ -984,19 +995,19 @@
                 { from: account2, value: 20000000000000000 }
             )
         })
-
+        //8
         it('Should fail to import asset due to attempted change of root AC', async () => {
             return APP_NC.$importAsset(
                 asset7,
                 '14',
-                { from: account6, value: 20000000000000000 }
+                { from: account5, value: 20000000000000000 }
             )
         })
-
+        
         //END IMPORT ASSET
 
         //REMINT TOKEN
-        
+        //9
         it('Should fail to remint asset token due to custodial AC type', async () => {
             console.log('//**************************REMINT TOKEN**************************//')
             return APP_NC.$reMintToken(
@@ -1008,11 +1019,64 @@
                 'aaa'
             )
         })
-
+        //10
         it('Should fail to remint asset token due to rgtHash == 0', async () => {
             return APP_NC.$reMintToken(
                 asset10,
                 'aaa',
+                'aaa',
+                'aaa',
+                'aaa',
+                'aaa'
+            )
+        })
+        //11
+        it('Should fail to remint asset token due to rec.rightsHolder == 0xfff...', async () => { //@DEV MAKE THIS ACTUALLY WORK
+            return APP_NC.$reMintToken(
+                asset10,
+                'aaa',
+                'aaa',
+                'aaa',
+                'aaa',
+                'aaa'
+            )
+        })
+        //12
+        it('Should fail to remint asset token due to burned status', async () => { //@DEV MAKE THIS ACTUALLY WORK
+            return APP_NC.$reMintToken(
+                asset10,
+                'aaa',
+                'aaa',
+                'aaa',
+                'aaa',
+                'aaa'
+            )
+        })
+        //13
+        it('Should fail to remint asset token due to escrow status', async () => { 
+            return APP_NC.$reMintToken(
+                asset9,
+                'aaa',
+                'aaa',
+                'aaa',
+                'aaa',
+                'aaa'
+            )
+        })
+        it('Should fail to remint asset token due to unclaimed status', async () => { //@DEV MAKE THIS ACTUALLY WORK
+            return APP_NC.$reMintToken(
+                asset9,
+                'aaa',
+                'aaa',
+                'aaa',
+                'aaa',
+                'aaa'
+            )
+        })
+        it('Should fail to remint asset token due to unclaimed status', async () => { 
+            return APP_NC.$reMintToken(
+                asset9,
+                'bbb',
                 'aaa',
                 'aaa',
                 'aaa',

@@ -15,6 +15,7 @@
     const PRUF_NP_NC = artifacts.require('NP_NC');
     const PRUF_ECR_NC = artifacts.require('ECR_NC');
     const PRUF_RCLR = artifacts.require('RCLR');
+    const PRUF_HELPER = artifacts.require('Helper');
     
     let STOR;
     let APP;
@@ -240,7 +241,7 @@
                 'jjj'
             );
     
-            rgt1 = await Helper.getRgtHash(
+            rgt1 = await Helper.getJustRgtHash(
                 asset1,
                 'aaa',
                 'aaa',
@@ -248,7 +249,7 @@
                 'aaa',
                 'aaa'
             )
-            rgt2 = await Helper.getRgtHash(
+            rgt2 = await Helper.getJustRgtHash(
                 asset2,
                 'bbb',
                 'bbb',
@@ -256,7 +257,7 @@
                 'bbb',
                 'bbb'
             )
-            rgt3 = await Helper.getRgtHash(
+            rgt3 = await Helper.getJustRgtHash(
                 asset3,
                 'ccc',
                 'ccc',
@@ -264,7 +265,7 @@
                 'ccc',
                 'ccc'
             )
-            rgt4 = await Helper.getRgtHash(
+            rgt4 = await Helper.getJustRgtHash(
                 asset4,
                 'ddd',
                 'ddd',
@@ -272,7 +273,7 @@
                 'ddd',
                 'ddd'
             )
-            rgt5 = await Helper.getRgtHash(
+            rgt5 = await Helper.getJustRgtHash(
                 asset5,
                 'eee',
                 'eee',
@@ -843,7 +844,7 @@
             )
         })
     
-        it('Should change status of asset 0xf531 to 51 for export eligibility', async () => {
+        it('Should change status of asset asset6 to 51 for export eligibility', async () => {
             return NP._modStatus(
                 asset6,
                 rgt1,
@@ -852,7 +853,7 @@
             )
         })
     
-        it('Should change status of asset 0xbb31 to 1 for transfer eligibility', async () => {
+        it('Should change status of asset asset2 to 1 for transfer eligibility', async () => {
             return NP._modStatus(
                 asset2,
                 rgt1,
@@ -861,7 +862,7 @@
             )
         })
     
-        it('Should put asset 0xd531 into an escrow', async () => {
+        it('Should put asset asset4 into an escrow', async () => {
             return ECR.setEscrow(
                 asset4,
                 rgt1,
@@ -870,8 +871,18 @@
                 { from: account3 }
             )
         })
+
+        it('Should put asset9 into an escrow', async () => {
+            return ECR.setEscrow(
+                asset9,
+                rgt1,
+                '30',
+                '6',
+                { from: account6 }
+            )
+        })
     
-        it('Should add asset note to asset 0xe531', async () => {
+        it('Should add asset note to asset asset5', async () => {
             return APP.$addIpfs2Note(
                 asset5,
                 rgt1,
@@ -880,7 +891,7 @@
             )
         })
     
-        it('Should transfer asset 0xbb31 to unclaimed', async () => { // Transferred, not claimed, used in status !== status 5 checks 
+        it('Should transfer asset asset2 to unclaimed', async () => { // Transferred, not claimed, used in status !== status 5 checks 
             return APP.$transferAsset(
                 asset2,
                 rgt1,
@@ -889,7 +900,7 @@
             )
         })
     
-        it('Should export asset 0xf531 to account2 in AC10', async () => {
+        it('Should export asset asset6 to account2 in AC10', async () => {
             return APP.exportAsset(
                 asset6,
                 APP.address,
@@ -908,11 +919,47 @@
         // APP FAILBATCH
         //
         //
+
+        //NEW RECORD
+        //1
+        it('Should fail to create new record due to non-custodial AC type', async () => {
+            console.log('//**************************BEGIN APP FAILBATCH**************************//')
+            console.log('//**************************NEW RECORD**************************//')
+            return APP.$newRecord(
+                asset10,
+                rgt1,
+                '12',
+                '5000',
+                {from: account4, value: 20000000000000000}
+            )
+
+        })
+        //2
+        it('Should fail to create new record due to user ineligibility', async () => {
+            return APP.$newRecord(
+                asset10,
+                rgt1,
+                '10',
+                '5000',
+                {from: account8, value: 20000000000000000}
+            )
+
+        })
+        //3
+        it('Should fail to create new record due to rgtHash == 0x0...', async () => {
+            return APP.$newRecord(
+                asset10,
+                rgt000,
+                '10',
+                '5000',
+                {from: account2, value: 20000000000000000}
+            )
+
+        })
     
         //EXPORT ASSET
         //1
         it('Should fail to export asset due to non-custodial AC type (FAILS IN ISAUTHORIZED MOD)', async () => {
-            console.log('//**************************BEGIN APP FAILBATCH**************************//')
             console.log('//**************************EXPORT ASSET**************************//')
             return APP.exportAsset(
                 asset8,
