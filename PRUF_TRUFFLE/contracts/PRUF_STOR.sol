@@ -328,7 +328,7 @@ contract STOR is Ownable, ReentrancyGuard, Pausable {
         external
         nonReentrant
         whenNotPaused
-        isAuthorized(database[_idxHash].assetClass)
+        isAuthorized(_newAssetClass)
         exists(_idxHash)
         notEscrow(_idxHash)
     {
