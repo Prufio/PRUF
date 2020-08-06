@@ -13,7 +13,7 @@ const PRUF_NP_NC = artifacts.require('NP_NC');
 const PRUF_ECR_NC = artifacts.require('ECR_NC');
 const PRUF_RCLR = artifacts.require('RCLR');
 
-contract('THE_WORKS_BASIC', accounts => {
+contract('PRUF_A_TKN', accounts => {
 
     const account1 = accounts[0];
     const account2 = accounts[1];
