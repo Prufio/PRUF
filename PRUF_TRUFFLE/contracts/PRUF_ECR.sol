@@ -28,9 +28,9 @@ contract ECR is ECR_CORE {
      *      Is authorized for asset class
      */
     modifier isAuthorized(bytes32 _idxHash) override {
-        uint256 tokenID = uint256(_idxHash);
+        uint256 tokenId = uint256(_idxHash);
         require(
-            A_TKN.ownerOf(tokenID) == APP_Address,
+            A_TKN.ownerOf(tokenId) == APP_Address,
             "E:MOD-IA: Custodial contract does not hold token"
         );
         _;

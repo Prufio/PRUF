@@ -204,7 +204,7 @@ contract Receiver is Context, ERC165, IERC721, IERC721Metadata, IERC721Enumerabl
         if (bytes(_tokenURI).length > 0) {
             return string(abi.encodePacked(_baseURI, _tokenURI));
         }
-        // If there is a baseURI but no tokenURI, concatenate the tokenID to the baseURI.
+        // If there is a baseURI but no tokenURI, concatenate the tokenId to the baseURI.
         return string(abi.encodePacked(_baseURI, tokenId.toString()));
     }
 

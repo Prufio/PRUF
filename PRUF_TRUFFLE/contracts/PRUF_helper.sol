@@ -34,13 +34,13 @@ contract Helper is Ownable {
         erc721_tokenContract = erc721_tokenInterface(contractAddress);
     }
 
-    function atWhatAddress(uint256 tokenID)
+    function atWhatAddress(uint256 tokenId)
         external
         view
         onlyOwner
         returns (address)
     {
-        return erc721_tokenContract.ownerOf(tokenID);
+        return erc721_tokenContract.ownerOf(tokenId);
     }
 
     function atWhatAddressTokenB32(bytes32 _tokenID)
@@ -49,16 +49,16 @@ contract Helper is Ownable {
         onlyOwner
         returns (address)
     {
-        uint256 tokenID = uint256(_tokenID);
-        return erc721_tokenContract.ownerOf(tokenID);
+        uint256 tokenId = uint256(_tokenID);
+        return erc721_tokenContract.ownerOf(tokenId);
     }
 
-    function atMyAddress(uint256 tokenID)
+    function atMyAddress(uint256 tokenId)
         external
         view
         returns (string memory)
     {
-        if (erc721_tokenContract.ownerOf(tokenID) == msg.sender) {
+        if (erc721_tokenContract.ownerOf(tokenId) == msg.sender) {
             return "token confirmed at sender address";
         } else {
             return "token not at sender address";

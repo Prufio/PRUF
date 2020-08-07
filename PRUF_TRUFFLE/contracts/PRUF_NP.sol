@@ -26,9 +26,9 @@ contract NP is CORE {
      * Originating Address:
      */
     modifier isAuthorized(bytes32 _idxHash) override {
-        uint256 tokenID = uint256(_idxHash);
+        uint256 tokenId = uint256(_idxHash);
         require(
-            (A_TKN.ownerOf(tokenID) == APP_Address),
+            (A_TKN.ownerOf(tokenId) == APP_Address),
             "NP:MOD-IA: Custodial contract does not hold token"
         );
         _;

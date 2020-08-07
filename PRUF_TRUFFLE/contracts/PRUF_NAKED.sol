@@ -21,19 +21,54 @@ pragma solidity ^0.6.7;
 import "./PRUF_CORE.sol";
 
 contract NAKED is CORE {
+    uint256 importDiscount = 1;
+
     /*
      * @dev Verify user credentials
      * Originating Address:
      *      holds asset token at idxHash
      */
-
     modifier isAuthorized(bytes32 _idxHash) override {
-        uint256 tokenID = uint256(_idxHash);
+        uint256 tokenId = uint256(_idxHash);
         require(
-            (A_TKN.ownerOf(tokenID) == msg.sender), //msg.sender is token holder
+            (A_TKN.ownerOf(tokenId) == msg.sender), //msg.sender is token holder
             "ANC:MOD-IA: Caller does not hold token"
         );
         _;
+    }
+
+    /*
+     * @dev Sets import discount for this contract
+     */
+    function setImportDiscount(uint256 _importDiscount) external onlyOwner {
+        if (_importDiscount < 1) {
+            importDiscount = 1;
+        } else {
+            importDiscount = _importDiscount;
+        }
+    }
+
+    function mintNakedAsset(
+        //how do we do auth for this function?!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+        bytes32 _idxHash,
+        string calldata _tokenURI // token URI needs to be K256(packed( uint16 assetClass, string authCode)) supplied off chain
+    ) external nonReentrant whenNotPaused {
+        uint256 tokenId = uint256(_idxHash);
+        Record memory rec = getRecord(_idxHash);
+
+        require(
+            A_TKN.tokenExists(tokenId) == 0,
+            "PNP:INA: Token already exists"
+        );
+        require(
+            rec.assetClass == 0,
+            "PNP:INA: Asset already registered in system"
+        );
+        //^^^^^^^checks^^^^^^^^^
+
+        A_TKN.mintAssetToken(address(this), tokenId, _tokenURI); //mint a naked token
+
+        //^^^^^^^interactions / effects^^^^^^^^^^^^
     }
 
     /*
@@ -46,7 +81,7 @@ contract NAKED is CORE {
         bytes32 _rgtHash,
         uint256 _countDownStart
     ) external payable nonReentrant whenNotPaused {
-        uint256 tokenID = uint256(_idxHash);
+        uint256 tokenId = uint256(_idxHash);
         Record memory rec = getRecord(_idxHash);
         ContractDataHash memory contractInfo = getContractInfo(
             address(this),
@@ -54,11 +89,11 @@ contract NAKED is CORE {
         );
 
         require(
-            A_TKN.ownerOf(tokenID) == address(this),
+            A_TKN.ownerOf(tokenId) == address(this),
             "PNP:INA: Token not found in importing contract"
         );
         require(
-            contractInfo.contractType > 0, 
+            contractInfo.contractType > 0,
             "PNP:INA: This contract not authorized for specified AC"
         );
         require(
@@ -67,17 +102,37 @@ contract NAKED is CORE {
         );
         //^^^^^^^checks^^^^^^^^^
 
-        A_TKN.validateNakedToken(tokenID, _newAssetClass, _authCode); //Verify supplied data matches tokenURI
+        A_TKN.validateNakedToken(tokenId, _newAssetClass, _authCode); //Verify supplied data matches tokenURI
 
-        STOR.newRecord(_idxHash, _rgtHash, _newAssetClass, _countDownStart); // Make a new record at the tokenID b32
+        STOR.newRecord(_idxHash, _rgtHash, _newAssetClass, _countDownStart); // Make a new record at the tokenId b32
 
-        A_TKN.setURI(tokenID, "pruf.io"); // set URI
+        A_TKN.setURI(tokenId, "pruf.io"); // set URI
 
-        A_TKN.safeTransferFrom(address(this), msg.sender, tokenID); // sends token from this holding contract to caller wallet
+        A_TKN.safeTransferFrom(address(this), msg.sender, tokenId); // sends token from this holding contract to caller wallet
+
+        deductImportRecordCosts(_newAssetClass);
 
         //^^^^^^^interactions / effects^^^^^^^^^^^^
     }
 
+    function deductImportRecordCosts(uint16 _assetClass)
+        internal
+        whenNotPaused
+    {
+        //^^^^^^^checks^^^^^^^^^
+        Invoice memory pricing;
+        //^^^^^^^effects^^^^^^^^^
+        (
+            pricing.rootAddress,
+            pricing.rootPrice,
+            pricing.ACTHaddress,
+            pricing.ACTHprice
+        ) = AC_MGR.getNewRecordCosts(_assetClass);
 
-    
+        pricing.rootPrice = pricing.rootPrice.div(2);
+        pricing.ACTHprice = pricing.ACTHprice.div(2);
+
+        deductPayment(pricing);
+        //^^^^^^^interactions^^^^^^^^^
+    }
 }

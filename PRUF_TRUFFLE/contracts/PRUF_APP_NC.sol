@@ -28,9 +28,9 @@ contract APP_NC is CORE {
      */
 
     modifier isAuthorized(bytes32 _idxHash) override {
-        uint256 tokenID = uint256(_idxHash);
+        uint256 tokenId = uint256(_idxHash);
         require(
-            (A_TKN.ownerOf(tokenID) == msg.sender), //msg.sender is token holder
+            (A_TKN.ownerOf(tokenId) == msg.sender), //msg.sender is token holder
             "ANC:MOD-IA: Caller does not hold token"
         );
         _;

@@ -23,9 +23,9 @@ import "./PRUF_CORE.sol";
 contract APP is CORE {
     modifier isAuthorized(bytes32 _idxHash) override {
         //require that user is authorized and token is held by contract
-        uint256 tokenID = uint256(_idxHash);
+        uint256 tokenId = uint256(_idxHash);
         require(
-            (A_TKN.ownerOf(tokenID) == APP_Address),
+            (A_TKN.ownerOf(tokenId) == APP_Address),
             "A:MOD-IA: Custodial contract does not hold token"
         );
         _;

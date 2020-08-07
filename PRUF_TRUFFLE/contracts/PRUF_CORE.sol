@@ -45,6 +45,7 @@ contract CORE is PullPayment, BASIC {
         uint256 ACTHprice;
     }
 
+
     //--------------------------------------------------------------------------------------Storage Reading internal functions
 
     /*
@@ -104,21 +105,6 @@ contract CORE is PullPayment, BASIC {
         STOR.newRecord(_idxHash, _rgtHash, _assetClass, _countDownStart);
     }
 
-    /*
-     * @dev create a Record in Storage @ idxHash
-     */
-    // function actualizeRecord(
-    //     bytes32 _idxHash,
-    //     bytes32 _rgtHash,
-    //     uint16 _assetClass,
-    //     uint256 _countDownStart
-    // ) internal {
-    //     uint256 tokenId = uint256(_idxHash);
-
-    //     require (AssetTokenContract.tokenExists(tokenId) == 170, "PC:AR:Asset token not found");
-
-    //     Storage.newRecord(_idxHash, _rgtHash, _assetClass, _countDownStart);
-    // }
 
     /*
      * @dev Write a Record to Storage @ idxHash
