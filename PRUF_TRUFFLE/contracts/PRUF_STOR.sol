@@ -68,14 +68,10 @@ contract STOR is Ownable, ReentrancyGuard, Pausable {
      */
     modifier isAuthorized(uint16 _assetClass) {
         require(
-            (contractInfo[contractAddressToName[msg.sender]][_assetClass] ==
-                1) ||
-                (contractInfo[contractAddressToName[msg.sender]][_assetClass] ==
-                    2) ||
-                (contractInfo[contractAddressToName[msg.sender]][_assetClass] ==
-                    3) ||
-                (contractInfo[contractAddressToName[msg.sender]][_assetClass] ==
-                    4),
+            (contractInfo[contractAddressToName[msg.sender]][_assetClass] >
+                0) &&
+                (contractInfo[contractAddressToName[msg.sender]][_assetClass] <
+                    5),
             "S:MOD-IA:Contract not authorized or improperly permissioned"
         );
         _;
@@ -86,9 +82,7 @@ contract STOR is Ownable, ReentrancyGuard, Pausable {
      */
     modifier notEscrow(bytes32 _idxHash) {
         require(
-            ((database[_idxHash].assetStatus != 6) &&
-                (database[_idxHash].assetStatus != 50) &&
-                (database[_idxHash].assetStatus != 56)),
+             isEscrow(database[_idxHash].assetStatus) == 0,
             "S:MOD-NE:rec mod prohib while locked in escrow"
         );
         _;
@@ -642,18 +636,6 @@ contract STOR is Ownable, ReentrancyGuard, Pausable {
         returns (address)
     {
         return contractNameToAddress[_name];
-        //^^^^^^^interactions^^^^^^^^^
-    }
-
-    /*
-     * @dev //returns the contract type of a contract with address _addr.
-     */
-    function ContractAuthType(address _addr, uint16 _assetClass)
-        external
-        view
-        returns (uint8)
-    {
-        return contractInfo[contractAddressToName[_addr]][_assetClass];
         //^^^^^^^interactions^^^^^^^^^
     }
 

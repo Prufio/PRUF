@@ -253,10 +253,6 @@ interface STOR_Interface {
         external
         returns (address);
 
-    function ContractAuthType(address _addr, uint16 _assetClass)
-        external
-        returns (uint8);
-
     function ContractInfoHash(address _addr, uint16 _assetClass)
         external
         returns (uint8, bytes32);

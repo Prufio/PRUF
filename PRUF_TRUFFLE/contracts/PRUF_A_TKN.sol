@@ -256,10 +256,10 @@ contract A_TKN is Ownable, ReentrancyGuard, ERC721 {
     ) public virtual override {
         bytes32 _idxHash = bytes32(tokenId);
         Record memory rec = getRecord(_idxHash);
+        (uint8 isAuth,) =  STOR.ContractInfoHash(to, 0); // trailing comma because does not use the returned hash
 
         require( // ensure that status 70 assets are only sent to an actual PRUF contract
-            (rec.assetStatus != 70) ||
-                (STOR.ContractAuthType(to, 0) > 0),
+            (rec.assetStatus != 70) || (isAuth > 0),
             "AT:STF:Cannot send status 70 asset to unauthorized address"
         );
         require(
