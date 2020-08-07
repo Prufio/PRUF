@@ -97,8 +97,8 @@ contract NP is CORE {
             "NP:MS: Cannot change status of asset in Escrow until escrow is expired"
         );
         require(
-            (rec.assetStatus != 5) && (rec.assetStatus != 55),
-            "NP:MS: Cannot change status of asset in transferred-unregistered status."
+            (rec.assetStatus != 5) && (rec.assetStatus != 55) && (rec.assetStatus != 70),
+            "NP:MS: Cannot change status of asset in transferred or exported status."
         );
         require(
             (rec.assetStatus > 49) || (userType < 5),

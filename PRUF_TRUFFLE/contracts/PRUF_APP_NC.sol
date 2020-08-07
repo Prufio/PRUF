@@ -103,6 +103,10 @@ contract APP_NC is CORE {
             address(this),
             _newAssetClass
         );
+        require(
+            rec.assetStatus == 70,
+            "ANC:IA: Asset not exported"
+        );
 
         require(
             contractInfo.contractType > 0,
