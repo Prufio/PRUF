@@ -83,8 +83,8 @@ contract ECR is ECR_CORE {
             "E:SE: Asset already in escrow status."
         );
         require(
-            (userType < 5) || ((userType > 4) && (_escrowStatus > 49)),
-            "E:SE: Non supervisored agents must set asset status within scope."
+            (userType < 5) || (( userType > 4) && ( userType < 10) && (_escrowStatus > 49)),
+            "E:SE: Non supervisored agents must set escrow status within scope."
         );
         require(
             (_escrowStatus == 6) ||

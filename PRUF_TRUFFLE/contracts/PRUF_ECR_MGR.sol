@@ -38,16 +38,6 @@ contract ECR_MGR is BASIC {
 
     mapping(bytes32 => escrowData) escrows;
 
-    // /*
-    //  * Originating Address is escrow contract
-    //  */
-    // function isEscrowContract(uint16 _assetClass) private {
-    //     require(
-    //         STOR.ContractAuthType(msg.sender, _assetClass) == 3, //caller contract is type3 (escrow) and exists in database
-    //         "PEM:IEC:Calling address is not an authorized escrow contract, or not authorized for the asset class"
-    //     );
-    // }
-
     function isLostOrStolen(uint16 _assetStatus) private pure returns (uint8) {
         if (
             (_assetStatus != 3) &&
@@ -89,9 +79,10 @@ contract ECR_MGR is BASIC {
         address _addr2
     ) external nonReentrant whenNotPaused {
         Record memory rec = getRecord(_idxHash);
-        ContractDataHash memory contractInfo;
-        (contractInfo.contractType, contractInfo.nameHash) = STOR
-            .ContractInfoHash(msg.sender, rec.assetClass);
+        ContractDataHash memory contractInfo = getContractInfo(
+            msg.sender,
+            rec.assetClass
+        );
         bytes32 controllingContractNameHash = contractInfo.nameHash;
 
         require(
@@ -145,9 +136,10 @@ contract ECR_MGR is BASIC {
      */
     function endEscrow(bytes32 _idxHash) external nonReentrant whenNotPaused {
         Record memory rec = getRecord(_idxHash);
-        ContractDataHash memory contractInfo;
-        (contractInfo.contractType, contractInfo.nameHash) = STOR
-            .ContractInfoHash(msg.sender, rec.assetClass);
+        ContractDataHash memory contractInfo = getContractInfo(
+            msg.sender,
+            rec.assetClass
+        );
 
         require(rec.assetClass != 0, "EM:EE:Record does not exist");
         require(

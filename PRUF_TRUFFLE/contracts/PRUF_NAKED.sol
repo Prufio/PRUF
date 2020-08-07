@@ -21,21 +21,7 @@ pragma solidity ^0.6.7;
 import "./PRUF_CORE.sol";
 
 contract NAKED is CORE {
-    uint256 importDiscount = 1;
-
-    /*
-     * @dev Verify user credentials
-     * Originating Address:
-     *      holds asset token at idxHash
-     */
-    modifier isAuthorized(bytes32 _idxHash) override {
-        uint256 tokenId = uint256(_idxHash);
-        require(
-            (A_TKN.ownerOf(tokenId) == msg.sender), //msg.sender is token holder
-            "ANC:MOD-IA: Caller does not hold token"
-        );
-        _;
-    }
+    uint256 importDiscount = 2;
 
     /*
      * @dev Sets import discount for this contract
@@ -49,13 +35,19 @@ contract NAKED is CORE {
     }
 
     function mintNakedAsset(
-        //how do we do auth for this function?!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
         bytes32 _idxHash,
-        string calldata _tokenURI // token URI needs to be K256(packed( uint16 assetClass, string authCode)) supplied off chain
+        string calldata _tokenURI, // token URI needs to be K256(packed( uint16 assetClass, string authCode)) supplied off chain
+        uint16 _assetClass
     ) external nonReentrant whenNotPaused {
         uint256 tokenId = uint256(_idxHash);
         Record memory rec = getRecord(_idxHash);
+        uint8 userType = getUserType(_assetClass);
 
+        require(
+            (AC_TKN.ownerOf(_assetClass) == msg.sender), //msg.sender is token holder
+            "ANC:MOD-IA: Caller does not hold asset token"
+        );
+        require(userType == 10,"user not authorized to mint naked assets");
         require(
             A_TKN.tokenExists(tokenId) == 0,
             "PNP:INA: Token already exists"
@@ -90,7 +82,7 @@ contract NAKED is CORE {
 
         require(
             A_TKN.ownerOf(tokenId) == address(this),
-            "PNP:INA: Token not found in importing contract"
+            "PNP:INA: Token not found in PRUF_NAKED"
         );
         require(
             contractInfo.contractType > 0,
@@ -129,8 +121,8 @@ contract NAKED is CORE {
             pricing.ACTHprice
         ) = AC_MGR.getNewRecordCosts(_assetClass);
 
-        pricing.rootPrice = pricing.rootPrice.div(2);
-        pricing.ACTHprice = pricing.ACTHprice.div(2);
+        pricing.rootPrice = pricing.rootPrice.div(importDiscount);
+        pricing.ACTHprice = pricing.ACTHprice.div(importDiscount);
 
         deductPayment(pricing);
         //^^^^^^^interactions^^^^^^^^^
