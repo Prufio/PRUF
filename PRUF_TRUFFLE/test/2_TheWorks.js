@@ -41,13 +41,19 @@
     let asset8;
     let asset9;
     let asset10;
-    
+    let asset11;
+    let asset12;
+
     let rgt1;
     let rgt2;
     let rgt3;
     let rgt4;
     let rgt5;
+    let rgt12;
     let rgt000 = "0x0000000000000000000000000000000000000000000000000000000000000000";
+
+    let account2Hash;
+    let account6Hash;
     
         //
         //
@@ -252,6 +258,20 @@
             'jjj'
         )
 
+        asset11 = await Helper.getIdxHash(
+            'kkk',
+            'kkk',
+            'kkk',
+            'kkk'
+        )
+
+        asset12 = await Helper.getIdxHash(
+            'lll',
+            'lll',
+            'lll',
+            'lll'
+        )
+
         rgt1 = await Helper.getJustRgtHash(
             asset1,
             'aaa',
@@ -295,6 +315,24 @@
             'eee',
             'eee',
             'eee'
+        )
+
+        rgt12 = await Helper.getJustRgtHash(
+            asset12,
+            'a',
+            'a',
+            'a',
+            'a',
+            'a'
+        )
+
+
+        account2Hash = await Helper.getAddrHash(
+            account2
+        )
+
+        account6Hash = await Helper.getAddrHash(
+            account6
         )
     })
 
@@ -523,28 +561,28 @@
                 return STOR.enableContractForAC('APP', '11', '1', { from: account1 })
             })
 
-            .then(() => {
-                return STOR.enableContractForAC('APP', '1', '1', { from: account1 })
-            })
+            // .then(() => {
+            //     return STOR.enableContractForAC('APP', '1', '1', { from: account1 })
+            // })
     })
 
 
     it('Should authorize APP_NC in all relevant asset classes', async () => {
         
         console.log("Authorizing APP_NC")
-        return STOR.enableContractForAC('APP_NC', '12', '1', { from: account1 })
+        return STOR.enableContractForAC('APP_NC', '12', '2', { from: account1 })
             
         .then(() => {
-                return STOR.enableContractForAC('APP_NC', '13', '1', { from: account1 })
+                return STOR.enableContractForAC('APP_NC', '13', '2', { from: account1 })
             })
             
             .then(() => {
-                return STOR.enableContractForAC('APP_NC', '14', '1', { from: account1 })
+                return STOR.enableContractForAC('APP_NC', '14', '2', { from: account1 })
             })
             
-            .then(() => {
-                return STOR.enableContractForAC('APP_NC', '2', '1', { from: account1 })
-            })
+            // .then(() => {
+            //     return STOR.enableContractForAC('APP_NC', '2', '2', { from: account1 })
+            // })
     })
 
 
@@ -557,28 +595,28 @@
                 return STOR.enableContractForAC('NP', '11', '1', { from: account1 })
             })
             
-            .then(() => {
-                return STOR.enableContractForAC('NP', '1', '1', { from: account1 })
-            })
+            // .then(() => {
+            //     return STOR.enableContractForAC('NP', '1', '1', { from: account1 })
+            // })
     })
 
 
     it('Should authorize NP_NC in all relevant asset classes', async () => {
         
         console.log("Authorizing NP_NC")
-        return STOR.enableContractForAC('NP_NC', '12', '1', { from: account1 })
+        return STOR.enableContractForAC('NP_NC', '12', '2', { from: account1 })
             
             .then(() => {
-                return STOR.enableContractForAC('NP_NC', '13', '1', { from: account1 })
+                return STOR.enableContractForAC('NP_NC', '13', '2', { from: account1 })
             })
 
             .then(() => {
-                return STOR.enableContractForAC('NP_NC', '14', '1', { from: account1 })
+                return STOR.enableContractForAC('NP_NC', '14', '2', { from: account1 })
             })
 
-            .then(() => {
-                return STOR.enableContractForAC('NP_NC', '2', '1', { from: account1 })
-            })
+            // .then(() => {
+            //     return STOR.enableContractForAC('NP_NC', '2', '0', { from: account1 })
+            // })
     })
 
 
@@ -591,9 +629,9 @@
                 return STOR.enableContractForAC('ECR', '11', '3', { from: account1 })
             })
             
-            .then(() => {
-                return STOR.enableContractForAC('ECR', '1', '3', { from: account1 })
-            })
+            // .then(() => {
+            //     return STOR.enableContractForAC('ECR', '1', '3', { from: account1 })
+            // })
     })
 
 
@@ -610,9 +648,9 @@
                 return STOR.enableContractForAC('ECR_NC', '14', '3', { from: account1 })
             })
             
-            .then(() => {
-                return STOR.enableContractForAC('ECR_NC', '2', '3', { from: account1 })
-            })
+            // .then(() => {
+            //     return STOR.enableContractForAC('ECR_NC', '2', '3', { from: account1 })
+            // })
     })
 
     it('Should authorize ECR_MGR in all relevant asset classes', async () => {
@@ -636,13 +674,13 @@
                 return STOR.enableContractForAC('ECR_MGR', '14', '3', { from: account1 })
             })
             
-            .then(() => {
-                return STOR.enableContractForAC('ECR_MGR', '1', '3', { from: account1 })
-            })
+            // .then(() => {
+            //     return STOR.enableContractForAC('ECR_MGR', '1', '3', { from: account1 })
+            // })
             
-            .then(() => {
-                return STOR.enableContractForAC('ECR_MGR', '2', '3', { from: account1 })
-            })
+            // .then(() => {
+            //     return STOR.enableContractForAC('ECR_MGR', '2', '3', { from: account1 })
+            // })
     })
 
 
@@ -656,15 +694,15 @@
             })
             
             .then(() => {
-                return STOR.enableContractForAC('AC_TKN', '12', '1', { from: account1 })
+                return STOR.enableContractForAC('AC_TKN', '12', '2', { from: account1 })
             })
             
             .then(() => {
-                return STOR.enableContractForAC('AC_TKN', '13', '1', { from: account1 })
+                return STOR.enableContractForAC('AC_TKN', '13', '2', { from: account1 })
             })
             
             .then(() => {
-                return STOR.enableContractForAC('AC_TKN', '14', '1', { from: account1 })
+                return STOR.enableContractForAC('AC_TKN', '14', '2', { from: account1 })
             })
     })
 
@@ -679,15 +717,15 @@
             })
             
             .then(() => {
-                return STOR.enableContractForAC('A_TKN', '12', '1', { from: account1 })
+                return STOR.enableContractForAC('A_TKN', '12', '2', { from: account1 })
             })
             
             .then(() => {
-                return STOR.enableContractForAC('A_TKN', '13', '1', { from: account1 })
+                return STOR.enableContractForAC('A_TKN', '13', '2', { from: account1 })
             })
             
             .then(() => {
-                return STOR.enableContractForAC('A_TKN', '14', '1', { from: account1 })
+                return STOR.enableContractForAC('A_TKN', '14', '2', { from: account1 })
             })
             
             .then(() => {
@@ -710,24 +748,24 @@
             })
             
             .then(() => {
-                return STOR.enableContractForAC('AC_MGR', '12', '1', { from: account1 })
+                return STOR.enableContractForAC('AC_MGR', '12', '2', { from: account1 })
             })
             
             .then(() => {
-                return STOR.enableContractForAC('AC_MGR', '13', '1', { from: account1 })
+                return STOR.enableContractForAC('AC_MGR', '13', '2', { from: account1 })
             })
             
             .then(() => {
-                return STOR.enableContractForAC('AC_MGR', '14', '1', { from: account1 })
+                return STOR.enableContractForAC('AC_MGR', '14', '2', { from: account1 })
             })
             
-            .then(() => {
-                return STOR.enableContractForAC('AC_MGR', '1', '1', { from: account1 })
-            })
+            // .then(() => {
+            //     return STOR.enableContractForAC('AC_MGR', '1', '0', { from: account1 })
+            // })
             
-            .then(() => {
-                return STOR.enableContractForAC('AC_MGR', '2', '1', { from: account1 })
-            })
+            // .then(() => {
+            //     return STOR.enableContractForAC('AC_MGR', '2', '0', { from: account1 })
+            // })
     })
 
 
@@ -752,13 +790,13 @@
                 return STOR.enableContractForAC('RCLR', '14', '3', { from: account1 })
             })
             
-            .then(() => {
-                return STOR.enableContractForAC('RCLR', '1', '3', { from: account1 })
-            })
+            // .then(() => {
+            //     return STOR.enableContractForAC('RCLR', '1', '0', { from: account1 })
+            // })
             
-            .then(() => {
-                return STOR.enableContractForAC('RCLR', '2', '3', { from: account1 })
-            })
+            // .then(() => {
+            //     return STOR.enableContractForAC('RCLR', '2', '0', { from: account1 })
+            // })
     })
 
 
@@ -926,8 +964,8 @@
 
         console.log("//**************************************BEGIN THE WORKS**********************************************/")
         return APP.$newRecord(
-        '0x54504a0f5147c9104ec2eb44b310674a57a337acd90083d946c3fd39bac4f2b2', 
-        '0x0e69eb84e028dc5e631c372e69871d1b072a1ebc12266e477c71b90d89d4008f',
+        asset12, 
+        rgt12,
         '10',
         '100',
         {from: account2, value: 20000000000000000}
@@ -937,8 +975,8 @@
 
     it('Should change status of new record(5) to status(1)', async () => {
         return NP._modStatus(
-        '0x54504a0f5147c9104ec2eb44b310674a57a337acd90083d946c3fd39bac4f2b2', 
-        '0x0e69eb84e028dc5e631c372e69871d1b072a1ebc12266e477c71b90d89d4008f',
+        asset12, 
+        rgt12,
         '1',
         {from: account2}
         )
@@ -947,9 +985,9 @@
 
     it('Should Transfer record(5) RGT(1) to RGT(2)', async () => {
         return APP.$transferAsset(
-        '0x54504a0f5147c9104ec2eb44b310674a57a337acd90083d946c3fd39bac4f2b2', 
-        '0x0e69eb84e028dc5e631c372e69871d1b072a1ebc12266e477c71b90d89d4008f',
-        '0x5d5d1ee487d05f715ddd883e185ff5b672bed217ac7f9ab3073b39b19762ce8b',
+        asset12, 
+        rgt12,
+        rgt2,
         {from: account2, value: 20000000000000000}
         )
     })
@@ -957,8 +995,8 @@
 
     it('Should force modify record(5) RGT(2) to RGT(1)', async () => {
         return APP.$forceModRecord(
-        '0x54504a0f5147c9104ec2eb44b310674a57a337acd90083d946c3fd39bac4f2b2', 
-        '0x0e69eb84e028dc5e631c372e69871d1b072a1ebc12266e477c71b90d89d4008f',
+        asset12, 
+        rgt12,
         {from: account2, value: 20000000000000000}
         )
     })
@@ -966,8 +1004,8 @@
 
     it('Should change decrement amount @record(5) from (100) to (85)', async () => {
         return NP._decCounter(
-        '0x54504a0f5147c9104ec2eb44b310674a57a337acd90083d946c3fd39bac4f2b2', 
-        '0x0e69eb84e028dc5e631c372e69871d1b072a1ebc12266e477c71b90d89d4008f',
+        asset12, 
+        rgt12,
         '15',
         {from: account2}
         )
@@ -976,9 +1014,9 @@
 
     it('Should modify Ipfs1 note @record(5) to IDX(1)', async () => {
         return NP._modIpfs1(
-        '0x54504a0f5147c9104ec2eb44b310674a57a337acd90083d946c3fd39bac4f2b2', 
-        '0x0e69eb84e028dc5e631c372e69871d1b072a1ebc12266e477c71b90d89d4008f',
-        '0x54504a0f5147c9104ec2eb44b310674a57a337acd90083d946c3fd39bac4f2b2',
+        asset12, 
+        rgt12,
+        asset12,
         {from: account2}
         )
     })
@@ -986,8 +1024,8 @@
 
     it('Should change status of new record(5) to status(51)', async () => {
         return NP._modStatus(
-        '0x54504a0f5147c9104ec2eb44b310674a57a337acd90083d946c3fd39bac4f2b2', 
-        '0x0e69eb84e028dc5e631c372e69871d1b072a1ebc12266e477c71b90d89d4008f',
+        asset12, 
+        rgt12,
         '51',
         {from: account2}
         )
@@ -996,7 +1034,7 @@
 
     it('Should export record(5) to account2', async () => {
         return APP.exportAsset(
-        '0x54504a0f5147c9104ec2eb44b310674a57a337acd90083d946c3fd39bac4f2b2', 
+        asset12, 
         account2,
         {from: account2}
         )
@@ -1005,7 +1043,7 @@
 
     it('Should import record(5) to AC(12)(NC)', async () => {
         return APP_NC.$importAsset(
-        '0x54504a0f5147c9104ec2eb44b310674a57a337acd90083d946c3fd39bac4f2b2',
+        asset12,
         '12',
         {from: account2, value: 20000000000000000}
         )
@@ -1014,12 +1052,12 @@
 
     it('Should re-mint record(5) token to account2', async () => {
         return APP_NC.$reMintToken(
-        '0x54504a0f5147c9104ec2eb44b310674a57a337acd90083d946c3fd39bac4f2b2',
-        '1',
-        '1',
-        '1',
-        '1',
-        '1',
+        asset12,
+        'a',
+        'a',
+        'a',
+        'a',
+        'a',
         {from: account2, value: 20000000000000000}
         )
     })
@@ -1027,8 +1065,8 @@
 
     it('Should set Ipfs2 note to IDX(1)', async () => {
         return APP_NC.$addIpfs2Note(
-        '0x54504a0f5147c9104ec2eb44b310674a57a337acd90083d946c3fd39bac4f2b2',
-        '0x54504a0f5147c9104ec2eb44b310674a57a337acd90083d946c3fd39bac4f2b2',
+        asset12,
+        asset12,
         {from: account2, value: 20000000000000000}
         )
     })
@@ -1036,7 +1074,7 @@
 
     it('Should change status of record(5) to status(51)', async () => {
         return NP_NC._modStatus(
-        '0x54504a0f5147c9104ec2eb44b310674a57a337acd90083d946c3fd39bac4f2b2', 
+        asset12, 
         '51',
         {from: account2}
         )
@@ -1045,8 +1083,8 @@
 
     it('Should set record(5) into escrow for 3 minutes', async () => {
         return ECR_NC.setEscrow(
-        '0x54504a0f5147c9104ec2eb44b310674a57a337acd90083d946c3fd39bac4f2b2', 
-        '0xdd4238c78de8c3b265f806a08e56dceae2142cf9514c5038157c71dd6396bf37',
+        asset12, 
+        account2Hash,
         '180',
         '56',
         {from: account2}
@@ -1056,7 +1094,7 @@
 
     it('Should take record(5) out of escrow', async () => {
         return ECR_NC.endEscrow(
-        '0x54504a0f5147c9104ec2eb44b310674a57a337acd90083d946c3fd39bac4f2b2', 
+        asset12, 
         {from: account2}
         )
     })
@@ -1064,7 +1102,7 @@
 
     it('Should change decrement amount @record(5) from (85) to (70)', async () => {
         return NP_NC._decCounter(
-        '0x54504a0f5147c9104ec2eb44b310674a57a337acd90083d946c3fd39bac4f2b2', 
+        asset12, 
         '15',
         {from: account2}
         )
@@ -1073,8 +1111,8 @@
 
     it('Should force modify record(5) RGT(1) to RGT(2)', async () => {
         return NP_NC._changeRgt(
-        '0x54504a0f5147c9104ec2eb44b310674a57a337acd90083d946c3fd39bac4f2b2', 
-        '0x5d5d1ee487d05f715ddd883e185ff5b672bed217ac7f9ab3073b39b19762ce8b',
+        asset12, 
+        rgt2,
         {from: account2}
         )
     })
@@ -1082,8 +1120,8 @@
 
     it('Should modify Ipfs1 note @record(5) to RGT(1)', async () => {
         return NP_NC._modIpfs1(
-        '0x54504a0f5147c9104ec2eb44b310674a57a337acd90083d946c3fd39bac4f2b2', 
-        '0x0e69eb84e028dc5e631c372e69871d1b072a1ebc12266e477c71b90d89d4008f',
+        asset12, 
+        rgt12,
         {from: account2}
         )
     })
@@ -1091,7 +1129,7 @@
 
     it('Should export record(5)(status70)', async () => {
         return NP_NC._exportNC(
-        '0x54504a0f5147c9104ec2eb44b310674a57a337acd90083d946c3fd39bac4f2b2', 
+        asset12, 
         {from: account2}
         )
     })
@@ -1101,7 +1139,7 @@
         return A_TKN.safeTransferFrom(
         account2,
         APP.address,
-        '0x54504a0f5147c9104ec2eb44b310674a57a337acd90083d946c3fd39bac4f2b2',
+        asset12,
         {from: account2}
         )
     })
@@ -1109,8 +1147,8 @@
 
     it('Should import record(5) to AC(11)', async () => {
         return APP.$importAsset(
-        '0x54504a0f5147c9104ec2eb44b310674a57a337acd90083d946c3fd39bac4f2b2',
-        '0x0e69eb84e028dc5e631c372e69871d1b072a1ebc12266e477c71b90d89d4008f',
+        asset12,
+        rgt12,
         '11',
         {from: account2, value: 20000000000000000}
         )
@@ -1119,8 +1157,8 @@
 
     it('Should change status of record(5) to status(1)', async () => {
         return NP._modStatus(
-        '0x54504a0f5147c9104ec2eb44b310674a57a337acd90083d946c3fd39bac4f2b2', 
-        '0x0e69eb84e028dc5e631c372e69871d1b072a1ebc12266e477c71b90d89d4008f',
+        asset12, 
+        rgt12,
         '1',
         {from: account2}
         )
@@ -1129,8 +1167,8 @@
 
     it('Should set record(5) into locked escrow for 3 minutes', async () => {
         return ECR.setEscrow(
-        '0x54504a0f5147c9104ec2eb44b310674a57a337acd90083d946c3fd39bac4f2b2', 
-        '0xdd4238c78de8c3b265f806a08e56dceae2142cf9514c5038157c71dd6396bf37',
+        asset12, 
+        account2Hash,
         '180',
         '50',
         {from: account2}
@@ -1140,7 +1178,7 @@
 
     it('Should take record(5) out of escrow', async () => {
         return ECR.endEscrow(
-        '0x54504a0f5147c9104ec2eb44b310674a57a337acd90083d946c3fd39bac4f2b2', 
+        asset12, 
         {from: account2}
         )
     })
@@ -1148,8 +1186,8 @@
 
     it('Should change status of record(5) to status(1)', async () => {
         return NP._modStatus(
-        '0x54504a0f5147c9104ec2eb44b310674a57a337acd90083d946c3fd39bac4f2b2', 
-        '0x0e69eb84e028dc5e631c372e69871d1b072a1ebc12266e477c71b90d89d4008f',
+        asset12, 
+        rgt12,
         '1',
         {from: account2}
         )
@@ -1158,8 +1196,8 @@
 
     it('Should set record(5) into escrow for 3 minutes', async () => {
         return ECR.setEscrow(
-        '0x54504a0f5147c9104ec2eb44b310674a57a337acd90083d946c3fd39bac4f2b2', 
-        '0xdd4238c78de8c3b265f806a08e56dceae2142cf9514c5038157c71dd6396bf37',
+        asset12, 
+        account2Hash,
         '180',
         '6',
         {from: account2}
@@ -1169,8 +1207,8 @@
 
     it('Should set record(5) to stolen(3) status', async () => {
         return NP._setLostOrStolen(
-        '0x54504a0f5147c9104ec2eb44b310674a57a337acd90083d946c3fd39bac4f2b2',
-        '0x0e69eb84e028dc5e631c372e69871d1b072a1ebc12266e477c71b90d89d4008f',
+        asset12,
+        rgt12,
         '3',
         {from: account2}
         )
@@ -1179,8 +1217,8 @@
 
     it('Should change status of record(5) to status(1)', async () => {
         return NP._modStatus(
-        '0x54504a0f5147c9104ec2eb44b310674a57a337acd90083d946c3fd39bac4f2b2', 
-        '0x0e69eb84e028dc5e631c372e69871d1b072a1ebc12266e477c71b90d89d4008f',
+        asset12, 
+        rgt12,
         '1',
         {from: account2}
         )
