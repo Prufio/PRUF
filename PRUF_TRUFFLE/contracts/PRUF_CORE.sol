@@ -44,7 +44,8 @@ contract CORE is PullPayment, BASIC {
         address ACTHaddress;
         uint256 ACTHprice;
     }
-
+    //--------------------------------------------------------------------------------------status test internal functions
+    
 
     //--------------------------------------------------------------------------------------Storage Reading internal functions
 

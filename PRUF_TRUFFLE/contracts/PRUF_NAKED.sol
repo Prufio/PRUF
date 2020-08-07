@@ -66,7 +66,7 @@ contract NAKED is CORE {
     /*
      * @dev Import a record into a new asset class
      */
-    function $importNakedAsset(
+    function $claimNakedAsset(
         bytes32 _idxHash,
         string calldata _authCode,
         uint16 _newAssetClass,

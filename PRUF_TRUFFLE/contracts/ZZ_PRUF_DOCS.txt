@@ -221,4 +221,14 @@ pragma solidity ^0.6.7;
  * 11: THE WORKS
  *
 *-----------------------------------------------------------------
+
+Round robin test pattern:
+
+1: Create an asset as non-custodial naked asset
+2: claim the asset
+3: try to claim again (fail)
+4: add IPFS2 note
+5: add IPFS2 note again (fail)
+6: 
+
 */
