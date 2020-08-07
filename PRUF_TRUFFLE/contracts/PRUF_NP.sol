@@ -1,4 +1,4 @@
-/*-----------------------------------------------------------V0.6.7
+/*-----------------------------------------------------------V0.6.8
 __/\\\\\\\\\\\\\ _____/\\\\\\\\\ _______/\\../\\ ___/\\\\\\\\\\\\\\\
  _\/\\\/////////\\\ _/\\\///////\\\ ____\//..\//____\/\\\///////////__
   _\/\\\.......\/\\\.\/\\\.....\/\\\ ________________\/\\\ ____________
@@ -71,34 +71,31 @@ contract NP is CORE {
         );
 
         require(
+            isLostOrStolen(_newAssetStatus) == 0,
+            "NP:MS: Cannot place asset in lost or stolen status using modStatus"
+        );
+        require(
+            isEscrow(_newAssetStatus) == 0,
+            "NP:MS: Cannot place asset in Escrow using modStatus"
+        );
+        require(
+            needsImport(_newAssetStatus) == 0,
+            "NP:MS: Cannot place asset in unregistered, exported, or discarded status using modStatus"
+        );
+        require(
             (_newAssetStatus < 100) &&
-                (_newAssetStatus != 3) &&
-                (_newAssetStatus != 4) &&
-                (_newAssetStatus != 5) &&
-                (_newAssetStatus != 6) &&
                 (_newAssetStatus != 7) &&
-                (_newAssetStatus != 50) &&
-                (_newAssetStatus != 53) &&
-                (_newAssetStatus != 54) &&
-                (_newAssetStatus != 55) &&
-                (_newAssetStatus != 56) &&
                 (_newAssetStatus != 57) &&
                 (_newAssetStatus != 58),
             "NP:MS: Specified Status is reserved."
         );
         require(
-            _newAssetStatus != 70,
-            "NP:MS: Use pruf_app.exportAsset to export custodial assets"
-        );
-        require(
-            (rec.assetStatus != 6) &&
-                (rec.assetStatus != 50) &&
-                (rec.assetStatus != 56),
+            isEscrow(rec.assetStatus) == 0,
             "NP:MS: Cannot change status of asset in Escrow until escrow is expired"
         );
         require(
-            (rec.assetStatus != 5) && (rec.assetStatus != 55) && (rec.assetStatus != 70),
-            "NP:MS: Cannot change status of asset in transferred or exported status."
+            needsImport(rec.assetStatus) == 0,
+            "NP:MS: Record in unregistered, exported, or discarded status"
         );
         require(
             (rec.assetStatus > 49) || (userType < 5),
@@ -153,10 +150,7 @@ contract NP is CORE {
             "NP:SLS: User not authorized to modify records in specified asset class"
         );
         require(
-            (_newAssetStatus == 3) ||
-                (_newAssetStatus == 4) ||
-                (_newAssetStatus == 53) ||
-                (_newAssetStatus == 54),
+            isLostOrStolen(_newAssetStatus) == 170,
             "NP:SLS: Must set to a lost or stolen status"
         );
         require(
@@ -177,8 +171,8 @@ contract NP is CORE {
             "NP:SLS: Rightsholder does not match supplied data"
         );
         //^^^^^^^checks^^^^^^^^^
+
         rec.assetStatus = _newAssetStatus;
-        //bytes32 userHash = keccak256(abi.encodePacked(msg.sender));
         //^^^^^^^effects^^^^^^^^^
 
         STOR.setStolenOrLost(_idxHash, rec.assetStatus);
@@ -221,16 +215,15 @@ contract NP is CORE {
             (userType > 0) && (userType < 10),
             "NP:DC: User not authorized to modify records in specified asset class"
         );
-        require( //------------------------------------------should the counter still work when an asset is in escrow?
-            (rec.assetStatus != 6) &&
-                (rec.assetStatus != 50) &&
-                (rec.assetStatus != 56), //If so, it must not erase the recorder, or escrow termination will be broken!
+        require(
+            isEscrow(rec.assetStatus) == 0,
             "NP:DC: Cannot modify asset in Escrow"
         );
         require(_decAmount > 0, "NP:DC: cannot decrement by negative number");
+
         require(
-            (rec.assetStatus != 5) && (rec.assetStatus != 55),
-            "NP:DC: Record In Transferred-unregistered status"
+            needsImport(rec.assetStatus) == 0,
+            "NP:DC Record in unregistered, exported, or discarded status"
         );
         require(
             rec.rightsHolder == _rgtHash,
@@ -284,15 +277,14 @@ contract NP is CORE {
             "NP:MI1: User not authorized to modify records in specified asset class"
         );
         require(rec.Ipfs1 != _IpfsHash, "NP:MI1: New data same as old");
-        require( //-------------------------------------Should an asset in escrow be modifiable?
-            (rec.assetStatus != 6) &&
-                (rec.assetStatus != 50) &&
-                (rec.assetStatus != 56), //Should it be contingent on the original recorder address?
-            "NP:MI1: Cannot modify asset in Escrow" //If so, it must not erase the recorder, or escrow termination will be broken!
+        
+        require(
+            isEscrow(rec.assetStatus) == 0,
+           "NP:MI1: Cannot modify asset in Escrow"
         );
         require(
-            (rec.assetStatus != 5) && (rec.assetStatus != 55),
-            "NP:MI1: Record In Transferred-unregistered status"
+            needsImport(rec.assetStatus) == 0,
+            "NP:MI1: Record in unregistered, exported, or discarded status"
         );
         require(
             rec.rightsHolder == _rgtHash,

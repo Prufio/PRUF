@@ -1,4 +1,4 @@
-/*-----------------------------------------------------------V0.6.7
+/*-----------------------------------------------------------V0.6.8
 __/\\\\\\\\\\\\\ _____/\\\\\\\\\ _______/\\../\\ ___/\\\\\\\\\\\\\\\
  _\/\\\/////////\\\ _/\\\///////\\\ ____\//..\//____\/\\\///////////__
   _\/\\\.......\/\\\.\/\\\.....\/\\\ ________________\/\\\ ____________
@@ -35,6 +35,8 @@ contract APP_NC is CORE {
         );
         _;
     }
+
+
 
     //--------------------------------------------External Functions--------------------------
     /*
@@ -107,7 +109,6 @@ contract APP_NC is CORE {
             rec.assetStatus == 70,
             "ANC:IA: Asset not exported"
         );
-
         require(
             contractInfo.contractType > 0,
             "ANC:IA: This contract not authorized for specified AC"
@@ -159,15 +160,11 @@ contract APP_NC is CORE {
             "ANC:RMT:Record not remintable"
         );
         require(
-            (rec.assetStatus != 6) &&
-                (rec.assetStatus != 50) &&
-                (rec.assetStatus != 56),
+            isEscrow(rec.assetStatus) == 0,
             "ANC:RMT:Cannot modify asset in Escrow"
         );
         require(
-            (rec.assetStatus != 5) &&
-                (rec.assetStatus != 55) &&
-                (rec.assetStatus != 60),
+            needsImport(rec.assetStatus) == 0,
             "ANC:RMT:Record In Transferred-unregistered or discarded status"
         );
         require(
@@ -207,18 +204,12 @@ contract APP_NC is CORE {
         );
         require((rec.assetClass != 0), "ANC:I2: Record does not exist");
         require(
-            (rec.assetStatus != 60),
-            "ANC:I2:Record is burned and must be reimported by ACadmin"
-        );
-        require(
-            (rec.assetStatus != 6) &&
-                (rec.assetStatus != 50) &&
-                (rec.assetStatus != 56),
+            isEscrow(rec.assetStatus) == 0,
             "ANC:I2:Cannot modify asset in Escrow"
         );
         require(
-            (rec.assetStatus != 5) && (rec.assetStatus != 55),
-            "ANC:I2:Record In Transferred-unregistered status"
+            needsImport(rec.assetStatus) == 0,
+            "ANC:I2:Record In Transferred, exported, or discarded status"
         );
         require(
             rec.Ipfs2 == 0,

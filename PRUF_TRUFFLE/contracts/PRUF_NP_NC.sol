@@ -1,4 +1,4 @@
-/*-----------------------------------------------------------V0.6.7
+/*-----------------------------------------------------------V0.6.8
 __/\\\\\\\\\\\\\ _____/\\\\\\\\\ _______/\\../\\ ___/\\\\\\\\\\\\\\\
  _\/\\\/////////\\\ _/\\\///////\\\ ____\//..\//____\/\\\///////////__
   _\/\\\.......\/\\\.\/\\\.....\/\\\ ________________\/\\\ ____________
@@ -66,28 +66,19 @@ contract NP_NC is CORE {
         require((rec.assetClass != 0), "NPNC:CR: Record does not exist");
         require(_newRgtHash != 0, "NPNC:CR: rights holder cannot be zero");
         require(
-            (rec.assetStatus != 3) &&
-                (rec.assetStatus != 4) &&
-                (rec.assetStatus != 53) &&
-                (rec.assetStatus != 54),
+            isLostOrStolen(rec.assetStatus) == 0,
             "NPNC:CR: Cannot modify asset in lost or stolen status"
         );
         require(
-            (rec.assetStatus != 6) &&
-                (rec.assetStatus != 50) &&
-                (rec.assetStatus != 56),
+            isEscrow(rec.assetStatus) == 0,
             "NPNC:CR: Cannot modify asset in Escrow"
         );
         require(
-            (rec.assetStatus != 5) && (rec.assetStatus != 55),
-            "NPNC:CR: Cannot modify asset in transferred-unregistered status"
+            needsImport(rec.assetStatus) == 0,
+            "NPNC:CR: Cannot modify asset in unregistered, exported, or discarded status"
         );
-        require(
-            (rec.assetStatus != 60),
-            "NPNC:CR: Record is burned and must be reimported by ACadmin"
-        );
-
         //^^^^^^^checks^^^^^^^^^
+
         rec.rightsHolder = _newRgtHash;
         //^^^^^^^effects^^^^^^^^^
 
@@ -149,24 +140,23 @@ contract NP_NC is CORE {
         );
         require((rec.assetClass != 0), "NPNC:MS: Record does not exist");
         require(
+            isLostOrStolen(_newAssetStatus) == 0,
+            "NPNC:MS: Cannot place asset in lost or stolen status using modStatus"
+        );
+        require(
+            isEscrow(_newAssetStatus) == 0,
+            "NPNC:MS: Cannot place asset in Escrow using modStatus"
+        );
+        require(
+            needsImport(_newAssetStatus) == 0,
+            "NPNC:MS: Cannot place asset in unregistered, exported, or discarded status using modStatus"
+        );
+        require(
             (_newAssetStatus < 100) &&
-                (_newAssetStatus != 3) &&
-                (_newAssetStatus != 4) &&
-                (_newAssetStatus != 5) &&
-                (_newAssetStatus != 6) &&
                 (_newAssetStatus != 7) &&
-                (_newAssetStatus != 50) &&
-                (_newAssetStatus != 53) &&
-                (_newAssetStatus != 54) &&
-                (_newAssetStatus != 55) &&
-                (_newAssetStatus != 56) &&
                 (_newAssetStatus != 57) &&
                 (_newAssetStatus != 58),
             "NPNC:MS: Specified Status is reserved."
-        );
-        require(
-            _newAssetStatus != 70,
-            "NPNC:MS: Use exportNC to export custodial assets"
         );
         require(
             (_newAssetStatus > 49),
@@ -177,18 +167,12 @@ contract NP_NC is CORE {
             "NPNC:MS: Only custodial usertype can change status < 50"
         );
         require(
-            (rec.assetStatus != 6) &&
-                (rec.assetStatus != 50) &&
-                (rec.assetStatus != 56),
+            isEscrow(rec.assetStatus) == 0,
             "NPNC:MS: Cannot change status of asset in Escrow until escrow is expired"
         );
         require(
-            (rec.assetStatus != 5) && (rec.assetStatus != 55) && (rec.assetStatus != 70),
-            "NPNC:MS: Cannot change status of asset in transferred or exported status."
-        );
-        require(
-            (rec.assetStatus != 60),
-            "NPNC:MS: Record is burned and must be reimported by ACadmin"
+            needsImport(rec.assetStatus) == 0,
+            "NPNC:MS: Asset is in in unregistered, exported, or discarded status."
         );
         //^^^^^^^checks^^^^^^^^^
 
@@ -223,31 +207,20 @@ contract NP_NC is CORE {
         );
         require((rec.assetClass != 0), "NPNC:SLS: Record does not exist");
         require(
-            (_newAssetStatus == 3) ||
-                (_newAssetStatus == 4) ||
-                (_newAssetStatus == 53) ||
-                (_newAssetStatus == 54),
+            isLostOrStolen(_newAssetStatus) == 170,
             "NPNC:SLS: Must set to a lost or stolen status"
         );
         require(
-            (_newAssetStatus > 49),
-            "NPNC:SLS: Only custodial usertype can set status < 50"
+            (_newAssetStatus > 49) && (rec.assetStatus > 49),
+            "NPNC:SLS: Only custodial usertype can set or change status < 50"
         );
         require(
-            (rec.assetStatus > 49) || (_newAssetStatus < 50),
-            "NPNC:SLS: Only usertype <5 can change a <49 status asset to a >49 status"
-        );
-        require(
-            (rec.assetStatus != 5) && (rec.assetStatus != 55),
-            "NPNC:SLS: Transferred asset cannot be set to lost or stolen after transfer."
+             needsImport(rec.assetStatus) == 0,
+            "NPNC:SLS: Transferred,exported,or discarded asset cannot be set to lost or stolen"
         );
         require(
             (rec.assetStatus != 50),
             "NPNC:SLS: Asset in locked escrow cannot be set to lost or stolen"
-        );
-        require(
-            (rec.assetStatus != 60),
-            "NPNC:SLS: Record is burned and must be reimported by ACadmin"
         );
 
         //^^^^^^^checks^^^^^^^^^
@@ -283,19 +256,13 @@ contract NP_NC is CORE {
         );
         require(_decAmount > 0, "NPNC:DC: cannot decrement by negative number");
         require((rec.assetClass != 0), "NPNC:DC: Record does not exist");
-        require( //------------------------------------------should the counter still work when an asset is in escrow?
-            (rec.assetStatus != 6) &&
-                (rec.assetStatus != 50) &&
-                (rec.assetStatus != 56), //If so, it must not erase the recorder, or escrow termination will be broken!
+        require(
+            isEscrow(rec.assetStatus) == 0,
             "NPNC:DC: Cannot modify asset in Escrow"
         );
         require(
-            (rec.assetStatus != 5) && (rec.assetStatus != 55),
-            "NPNC:DC: Record In Transferred-unregistered status"
-        );
-        require(
-            (rec.assetStatus != 60),
-            "NPNC:DC: Record is burned and must be reimported by ACadmin"
+            needsImport(rec.assetStatus) == 0,
+            "NPNC:DC: Record in unregistered, exported, or discarded status"
         );
         //^^^^^^^checks^^^^^^^^^
 
@@ -333,19 +300,13 @@ contract NP_NC is CORE {
         );
         require((rec.assetClass != 0), "NPNC:MI1: Record does not exist");
         require(rec.Ipfs1 != _IpfsHash, "NPNC:MI1: New data same as old");
-        require( //-------------------------------------Should an asset in escrow be modifiable?
-            (rec.assetStatus != 6) &&
-                (rec.assetStatus != 50) &&
-                (rec.assetStatus != 56), //Should it be contingent on the original recorder address?
-            "NPNC:MI1: Cannot modify asset in Escrow" //If so, it must not erase the recorder, or escrow termination will be broken!
+        require(
+            isEscrow(rec.assetStatus) == 0,
+            "NPNC:MI1: Cannot modify asset in Escrow"
         );
         require(
-            (rec.assetStatus != 5) && (rec.assetStatus != 55),
-            "NPNC:MI1: Record In Transferred-unregistered status"
-        );
-        require(
-            (rec.assetStatus != 60),
-            "NPNC:MI1: Record is burned and must be reimported by ACadmin"
+            needsImport(rec.assetStatus) == 0,
+            "NPNC:MI1: Record in unregistered, exported, or discarded status"
         );
         //^^^^^^^checks^^^^^^^^^
 

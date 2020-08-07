@@ -1,4 +1,4 @@
-/*-----------------------------------------------------------V0.6.7
+/*-----------------------------------------------------------V0.6.8
 __/\\\\\\\\\\\\\ _____/\\\\\\\\\ _______/\\../\\ ___/\\\\\\\\\\\\\\\
  _\/\\\/////////\\\ _/\\\///////\\\ ____\//..\//____\/\\\///////////__
   _\/\\\.......\/\\\.\/\\\.....\/\\\ ________________\/\\\ ____________
@@ -44,67 +44,8 @@ contract CORE is PullPayment, BASIC {
         address ACTHaddress;
         uint256 ACTHprice;
     }
-    //--------------------------------------------------------------------------------------status test internal functions
-
-    //     function isLostOrStolen(uint16 _assetStatus) private pure returns (uint8) {
-    //     if (
-    //         (_assetStatus != 3) &&
-    //         (_assetStatus != 4) &&
-    //         (_assetStatus != 53) &&
-    //         (_assetStatus != 54)
-    //     ) {
-    //         return 0;
-    //     } else {
-    //         return 170;
-    //     }
-    // }
-
-    // /*
-    //  * @dev Check to see if record is in escrow status
-    //  */
-    // function isEscrow(uint16 _assetStatus) private pure returns (uint8) {
-    //     if (
-    //         (_assetStatus != 6) &&
-    //         (_assetStatus != 50) &&
-    //         (_assetStatus != 56)
-    //     ) {
-    //         return 0;
-    //     } else {
-    //         return 170;
-    //     }
-    // }
-
-    // function isActive(uint16 _assetStatus) private pure returns (uint8) {
-    //     if (
-    //         (_assetStatus != 5) &&
-    //         (_assetStatus != 55) &&
-    //         (_assetStatus != 70) &&
-    //         (_assetStatus != 60) &&
-    //         (_assetStatus < 100)
-    //     ) {
-    //         return 0;
-    //     } else {
-    //         return 170;
-    //     }
-    // }
-
-    // function isReserved(uint16 _assetStatus) private pure returns (uint8) {
-    //     if (
-    //         (_assetStatus != 7) &&
-    //         (_assetStatus != 57) &&
-    //         (_assetStatus != 58) &&
-    //         (_assetStatus != 60) &&
-    //         (_assetStatus < 70)
-    //     ) {
-    //         return 0;
-    //     } else {
-    //         return 170;
-    //     }
-    // }
-
 
     
-
     //--------------------------------------------------------------------------------------Storage Reading internal functions
 
     /*
@@ -348,4 +289,64 @@ contract CORE is PullPayment, BASIC {
         _asyncTransfer(msg.sender, change);
         //^^^^^^^interactions^^^^^^^^^
     }
+
+//--------------------------------------------------------------------------------------status test internal functions
+
+    function isLostOrStolen(uint16 _assetStatus) internal pure returns (uint8) {
+        if (
+            (_assetStatus != 3) &&
+            (_assetStatus != 4) &&
+            (_assetStatus != 53) &&
+            (_assetStatus != 54)
+        ) {
+            return 0;
+        } else {
+            return 170;
+        }
+    }
+
+    /*
+     * @dev Check to see if record is in escrow status
+     */
+    function isEscrow(uint16 _assetStatus) internal pure returns (uint8) {
+        if (
+            (_assetStatus != 6) &&
+            (_assetStatus != 50) &&
+            (_assetStatus != 56)
+        ) {
+            return 0;
+        } else {
+            return 170;
+        }
+    }
+
+    function needsImport(uint16 _assetStatus) internal pure returns (uint8) {
+        if (
+            (_assetStatus != 5) &&
+            (_assetStatus != 55) &&
+            (_assetStatus != 70) &&
+            (_assetStatus != 60)
+        ) {
+            return 0;
+        } else {
+            return 170;
+        }
+    }
+
+    // function isReserved(uint16 _assetStatus) internal pure returns (uint8) {
+    //     if (
+    //         (_assetStatus != 7) &&
+    //         (_assetStatus != 57) &&
+    //         (_assetStatus != 58) &&
+    //         (_assetStatus != 60) &&
+    //         (_assetStatus != 70)
+    //     ) {
+    //         return 0;
+    //     } else {
+    //         return 170;
+    //     }
+    // }
+
+
+    
 }

@@ -1,4 +1,4 @@
-/*-----------------------------------------------------------V0.6.7
+/*-----------------------------------------------------------V0.6.8
 __/\\\\\\\\\\\\\ _____/\\\\\\\\\ _______/\\../\\ ___/\\\\\\\\\\\\\\\
  _\/\\\/////////\\\ _/\\\///////\\\ ____\//..\//____\/\\\///////////__
   _\/\\\.......\/\\\.\/\\\.....\/\\\ ________________\/\\\ ____________
@@ -174,7 +174,7 @@ contract APP is CORE {
         rec.assetStatus = 0;
         rec.rightsHolder = _newRgtHash;
         //^^^^^^^effects^^^^^^^^^
-        
+
         STOR.changeAC(_idxHash, _newAssetClass);
         writeRecord(_idxHash, rec);
         deductNewRecordCosts(_newAssetClass);
@@ -205,33 +205,26 @@ contract APP is CORE {
             contractInfo.contractType > 0,
             "A:FMR: This contract not authorized for specified AC"
         );
-
         require(
             (rec.rightsHolder != 0),
             "A:FMR: Record unclaimed: import required. "
         );
-
         require(
             userType == 1,
             "A:FMR: User not authorized to force modify records in this asset class"
         );
         require(_rgtHash != 0, "A:FMR: rights holder cannot be zero");
         require(
-            (rec.assetStatus != 3) &&
-                (rec.assetStatus != 4) &&
-                (rec.assetStatus != 53) &&
-                (rec.assetStatus != 54),
-            "A:FMR: Cannot modify asset in lost or stolen status"
+            isLostOrStolen(rec.assetStatus) == 0,
+            "A:FMR: Asset marked lost or stolen"
         );
         require(
-            (rec.assetStatus != 6) &&
-                (rec.assetStatus != 50) &&
-                (rec.assetStatus != 56),
-            "A:FMR: Cannot modify asset in Escrow"
+            isEscrow(rec.assetStatus) == 0,
+            "A:FMR: Asset in escrow"
         );
         require(
-            (rec.assetStatus != 5) && (rec.assetStatus != 55),
-            "A:FMR: Record In Transferred-unregistered status"
+            needsImport(rec.assetStatus) == 0,
+            "A:FMR: Asset needs re-imported"
         );
         //^^^^^^^checks^^^^^^^^^
 
@@ -358,14 +351,16 @@ contract APP is CORE {
             "A:I2: User not authorized to modify records in specified asset class"
         );
         require(
-            (rec.assetStatus != 6) &&
-                (rec.assetStatus != 50) &&
-                (rec.assetStatus != 56),
-            "A:I2: Cannot modify asset in Escrow"
+            isLostOrStolen(rec.assetStatus) == 0,
+            "A:FMR: Asset marked lost or stolen"
         );
         require(
-            (rec.assetStatus != 5) && (rec.assetStatus != 55),
-            "A:I2: Record In Transferred-unregistered status"
+            isEscrow(rec.assetStatus) == 0,
+            "A:FMR: Asset in escrow"
+        );
+        require(
+            needsImport(rec.assetStatus) == 0,
+            "A:FMR: Asset needs re-imported"
         );
         require(
             rec.Ipfs2 == 0,
@@ -387,6 +382,4 @@ contract APP is CORE {
         return rec.Ipfs2;
         //^^^^^^^interactions^^^^^^^^^
     }
-
-    
 }
