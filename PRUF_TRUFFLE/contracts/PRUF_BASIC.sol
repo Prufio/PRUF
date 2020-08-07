@@ -67,8 +67,10 @@ contract BASIC is ReentrancyGuard, Ownable, IERC721Receiver, Pausable {
     address internal RCLR_Address; //Set up external contract interface for recycler
     RCLR_Interface internal RCLR;
 
+    address internal NAKED_Address; 
     address internal APP_Address;
     address internal APP_NC_Address;
+    
 
     // --------------------------------------Events--------------------------------------------//
 

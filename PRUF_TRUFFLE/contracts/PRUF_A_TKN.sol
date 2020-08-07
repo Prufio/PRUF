@@ -45,8 +45,10 @@ contract A_TKN is Ownable, ReentrancyGuard, ERC721 {
     address internal APP_Address; //isAdmin
     address internal STOR_Address;
     address internal RCLR_Address;
+    address internal NAKED_Address;
     STOR_Interface internal STOR; // Set up external contract interface
     RCLR_Interface internal RCLR;
+    
 
     event REPORT(string _msg);
 
@@ -55,6 +57,7 @@ contract A_TKN is Ownable, ReentrancyGuard, ERC721 {
             (msg.sender == APP_Address) ||
                 (msg.sender == APP_NC_Address) ||
                 (msg.sender == RCLR_Address) ||
+                (msg.sender == NAKED_Address) ||
                 (msg.sender == owner()),
             "AT:MOD-IA:Calling address does not belong to an Admin"
         );
@@ -85,6 +88,7 @@ contract A_TKN is Ownable, ReentrancyGuard, ERC721 {
 
         APP_NC_Address = STOR.resolveContractAddress("APP_NC");
         APP_Address = STOR.resolveContractAddress("APP");
+        NAKED_Address = STOR.resolveContractAddress("NAKED");
 
         RCLR_Address = STOR.resolveContractAddress("RCLR");
         RCLR = RCLR_Interface(RCLR_Address);
