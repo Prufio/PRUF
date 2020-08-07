@@ -1340,265 +1340,272 @@
 
         it('Should write record in AC 10 @ IDX&RGT(1)', async () => {
 
-            console.log("//**************************************BEGIN THE WORKS**********************************************/")
-            return APP.$newRecord(
-            asset12, 
-            rgt12,
-            '10',
-            '100',
-            {from: account2, value: 20000000000000000}
-            )
-        })
-    
-    
-        it('Should change status of new record(5) to status(1)', async () => {
-            return NP._modStatus(
-            asset12, 
-            rgt12,
-            '1',
-            {from: account2}
-            )
-        })
-    
-    
-        it('Should Transfer record(5) RGT(1) to RGT(2)', async () => {
-            return APP.$transferAsset(
-            asset12, 
-            rgt12,
-            rgt2,
-            {from: account2, value: 20000000000000000}
-            )
-        })
-    
-    
-        it('Should force modify record(5) RGT(2) to RGT(1)', async () => {
-            return APP.$forceModRecord(
-            asset12, 
-            rgt12,
-            {from: account2, value: 20000000000000000}
-            )
-        })
-    
-    
-        it('Should change decrement amount @record(5) from (100) to (85)', async () => {
-            return NP._decCounter(
-            asset12, 
-            rgt12,
-            '15',
-            {from: account2}
-            )
-        })
-    
-    
-        it('Should modify Ipfs1 note @record(5) to IDX(1)', async () => {
-            return NP._modIpfs1(
-            asset12, 
-            rgt12,
-            asset12,
-            {from: account2}
-            )
-        })
-    
-    
-        it('Should change status of new record(5) to status(51)', async () => {
-            return NP._modStatus(
-            asset12, 
-            rgt12,
-            '51',
-            {from: account2}
-            )
-        })
-    
-    
-        it('Should export record(5) to account2', async () => {
-            return APP.exportAsset(
-            asset12, 
-            account2,
-            {from: account2}
-            )
-        })
-    
-    
-        it('Should import record(5) to AC(12)(NC)', async () => {
-            return APP_NC.$importAsset(
-            asset12,
-            '12',
-            {from: account2, value: 20000000000000000}
-            )
-        })
-    
-    
-        it('Should re-mint record(5) token to account2', async () => {
-            return APP_NC.$reMintToken(
-            asset12,
-            'a',
-            'a',
-            'a',
-            'a',
-            'a',
-            {from: account2, value: 20000000000000000}
-            )
-        })
-    
-    
-        it('Should set Ipfs2 note to IDX(1)', async () => {
-            return APP_NC.$addIpfs2Note(
-            asset12,
-            asset12,
-            {from: account2, value: 20000000000000000}
-            )
-        })
-    
-    
-        it('Should change status of record(5) to status(51)', async () => {
-            return NP_NC._modStatus(
-            asset12, 
-            '51',
-            {from: account2}
-            )
-        })
-    
-    
-        it('Should set record(5) into escrow for 3 minutes', async () => {
-            return ECR_NC.setEscrow(
-            asset12, 
-            account2Hash,
-            '180',
-            '56',
-            {from: account2}
-            )
-        })
-    
-    
-        it('Should take record(5) out of escrow', async () => {
-            return ECR_NC.endEscrow(
-            asset12, 
-            {from: account2}
-            )
-        })
-    
-    
-        it('Should change decrement amount @record(5) from (85) to (70)', async () => {
-            return NP_NC._decCounter(
-            asset12, 
-            '15',
-            {from: account2}
-            )
-        })
-    
-    
-        it('Should force modify record(5) RGT(1) to RGT(2)', async () => {
-            return NP_NC._changeRgt(
-            asset12, 
-            rgt2,
-            {from: account2}
-            )
-        })
-    
-    
-        it('Should modify Ipfs1 note @record(5) to RGT(1)', async () => {
-            return NP_NC._modIpfs1(
-            asset12, 
-            rgt12,
-            {from: account2}
-            )
-        })
-    
-    
-        it('Should export record(5)(status70)', async () => {
-            return NP_NC._exportNC(
-            asset12, 
-            {from: account2}
-            )
-        })
-    
-    
-        it('Should transfer record(5) token to PRUF_APP contract', async () => {
-            return A_TKN.safeTransferFrom(
-            account2,
-            APP.address,
-            asset12,
-            {from: account2}
-            )
-        })
-    
-    
-        it('Should import record(5) to AC(11)', async () => {
-            return APP.$importAsset(
-            asset12,
-            rgt12,
-            '11',
-            {from: account2, value: 20000000000000000}
-            )
-        })
-    
-    
-        it('Should change status of record(5) to status(1)', async () => {
-            return NP._modStatus(
-            asset12, 
-            rgt12,
-            '1',
-            {from: account2}
-            )
-        })
-    
-    
-        it('Should set record(5) into locked escrow for 3 minutes', async () => {
-            return ECR.setEscrow(
-            asset12, 
-            account2Hash,
-            '180',
-            '50',
-            {from: account2}
-            )
-        })
-    
-    
-        it('Should take record(5) out of escrow', async () => {
-            return ECR.endEscrow(
-            asset12, 
-            {from: account2}
-            )
-        })
-    
-    
-        it('Should change status of record(5) to status(1)', async () => {
-            return NP._modStatus(
-            asset12, 
-            rgt12,
-            '1',
-            {from: account2}
-            )
-        })
-    
-    
-        it('Should set record(5) into escrow for 3 minutes', async () => {
-            return ECR.setEscrow(
-            asset12, 
-            account2Hash,
-            '180',
-            '6',
-            {from: account2}
-            )
-        })
-    
-    
-        it('Should set record(5) to stolen(3) status', async () => {
-            return NP._setLostOrStolen(
-            asset12,
-            rgt12,
-            '3',
-            {from: account2}
-            )
-        })
-    
-    
-        it('Should change status of record(5) to status(1)', async () => {
-            return NP._modStatus(
-            asset12, 
-            rgt12,
-            '1',
-            {from: account2}
-            )
-        })
+        console.log("//**************************************BEGIN THE WORKS**********************************************/")
+        return APP.$newRecord(
+        asset12, 
+        rgt12,
+        '10',
+        '100',
+        {from: account2, value: 20000000000000000}
+        )
+    })
+
+
+    it('Should change status of new record(5) to status(1)', async () => {
+        return NP._modStatus(
+        asset12, 
+        rgt12,
+        '1',
+        {from: account2}
+        )
+    })
+
+
+    it('Should Transfer record(5) RGT(1) to RGT(2)', async () => {
+        return APP.$transferAsset(
+        asset12, 
+        rgt12,
+        rgt2,
+        {from: account2, value: 20000000000000000}
+        )
+    })
+
+
+    it('Should force modify record(5) RGT(2) to RGT(1)', async () => {
+        return APP.$forceModRecord(
+        asset12, 
+        rgt12,
+        {from: account2, value: 20000000000000000}
+        )
+    })
+
+
+    it('Should change decrement amount @record(5) from (100) to (85)', async () => {
+        return NP._decCounter(
+        asset12, 
+        rgt12,
+        '15',
+        {from: account2}
+        )
+    })
+
+
+    it('Should modify Ipfs1 note @record(5) to IDX(1)', async () => {
+        return NP._modIpfs1(
+        asset12, 
+        rgt12,
+        asset12,
+        {from: account2}
+        )
+    })
+
+
+    it('Should change status of new record(5) to status(51)', async () => {
+        return NP._modStatus(
+        asset12, 
+        rgt12,
+        '51',
+        {from: account2}
+        )
+    })
+
+
+    it('Should export record(5) to account2', async () => {
+        return APP.exportAsset(
+        asset12, 
+        account2,
+        {from: account2}
+        )
+    })
+
+
+    it('Should import record(5) to AC(12)(NC)', async () => {
+        return APP_NC.$importAsset(
+        asset12,
+        '12',
+        {from: account2, value: 20000000000000000}
+        )
+    })
+
+
+    it('Should re-mint record(5) token to account2', async () => {
+        return APP_NC.$reMintToken(
+        asset12,
+        'a',
+        'a',
+        'a',
+        'a',
+        'a',
+        {from: account2, value: 20000000000000000}
+        )
+    })
+
+
+    it('Should set Ipfs2 note to IDX(1)', async () => {
+        return APP_NC.$addIpfs2Note(
+        asset12,
+        asset12,
+        {from: account2, value: 20000000000000000}
+        )
+    })
+
+
+    it('Should change status of record(5) to status(51)', async () => {
+        return NP_NC._modStatus(
+        asset12, 
+        '51',
+        {from: account2}
+        )
+    })
+
+
+    it('Should set record(5) into escrow for 3 minutes', async () => {
+        return ECR_NC.setEscrow(
+        asset12, 
+        account2Hash,
+        '180',
+        '56',
+        {from: account2}
+        )
+    })
+
+
+    it('Should take record(5) out of escrow', async () => {
+        return ECR_NC.endEscrow(
+        asset12, 
+        {from: account2}
+        )
+    })
+
+
+    it('Should change decrement amount @record(5) from (85) to (70)', async () => {
+        return NP_NC._decCounter(
+        asset12, 
+        '15',
+        {from: account2}
+        )
+    })
+
+
+    it('Should force modify record(5) RGT(1) to RGT(2)', async () => {
+        return NP_NC._changeRgt(
+        asset12, 
+        rgt2,
+        {from: account2}
+        )
+    })
+
+
+    it('Should modify Ipfs1 note @record(5) to RGT(1)', async () => {
+        return NP_NC._modIpfs1(
+        asset12, 
+        rgt12,
+        {from: account2}
+        )
+    })
+
+    it('Should change status of record(5) to status(51)', async () => {
+        return NP_NC._modStatus(
+        asset12, 
+        '51',
+        {from: account2}
+        )
+    })
+
+    it('Should export record(5)(status70)', async () => {
+        return NP_NC._exportNC(
+        asset12, 
+        {from: account2}
+        )
+    })
+
+
+    it('Should transfer record(5) token to PRUF_APP contract', async () => {
+        return A_TKN.safeTransferFrom(
+        account2,
+        APP.address,
+        asset12,
+        {from: account2}
+        )
+    })
+
+
+    it('Should import record(5) to AC(11)', async () => {
+        return APP.$importAsset(
+        asset12,
+        rgt12,
+        '11',
+        {from: account2, value: 20000000000000000}
+        )
+    })
+
+
+    it('Should change status of record(5) to status(1)', async () => {
+        return NP._modStatus(
+        asset12, 
+        rgt12,
+        '1',
+        {from: account2}
+        )
+    })
+
+
+    it('Should set record(5) into locked escrow for 3 minutes', async () => {
+        return ECR.setEscrow(
+        asset12, 
+        account2Hash,
+        '180',
+        '50',
+        {from: account2}
+        )
+    })
+
+
+    it('Should take record(5) out of escrow', async () => {
+        return ECR.endEscrow(
+        asset12, 
+        {from: account2}
+        )
+    })
+
+
+    it('Should change status of record(5) to status(1)', async () => {
+        return NP._modStatus(
+        asset12, 
+        rgt12,
+        '1',
+        {from: account2}
+        )
+    })
+
+
+    it('Should set record(5) into escrow for 3 minutes', async () => {
+        return ECR.setEscrow(
+        asset12, 
+        account2Hash,
+        '180',
+        '6',
+        {from: account2}
+        )
+    })
+
+
+    it('Should set record(5) to stolen(3) status', async () => {
+        return NP._setLostOrStolen(
+        asset12,
+        rgt12,
+        '3',
+        {from: account2}
+        )
+    })
+
+
+    it('Should change status of record(5) to status(1)', async () => {
+        return NP._modStatus(
+        asset12, 
+        rgt12,
+        '1',
+        {from: account2}
+        )
+    })
 })

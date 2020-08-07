@@ -1696,6 +1696,13 @@
             )
         })
     
+        it('Should change status of record(5) to status(51)', async () => {
+            return NP_NC._modStatus(
+            asset12, 
+            '51',
+            {from: account2}
+            )
+        })
     
         it('Should export record(5)(status70)', async () => {
             return NP_NC._exportNC(
