@@ -142,7 +142,7 @@ contract APP_NC is CORE {
             "PNP:INA: Token not found in importing contract"
         );
         require(
-            contractInfo.contractType > 0,
+            contractInfo.contractType > 0, 
             "PNP:INA: This contract not authorized for specified AC"
         );
         require(
@@ -151,9 +151,11 @@ contract APP_NC is CORE {
         );
         //^^^^^^^checks^^^^^^^^^
 
-        A_TKN.claimNakedToken(tokenID, _newAssetClass, _authCode); //Verify supplied data matches tokenURI
+        A_TKN.validateNakedToken(tokenID, _newAssetClass, _authCode); //Verify supplied data matches tokenURI
 
         STOR.newRecord(_idxHash, _rgtHash, _newAssetClass, _countDownStart); // Make a new record at the tokenID b32
+
+        A_TKN.setURI(tokenID, "pruf.io"); // set URI
 
         A_TKN.safeTransferFrom(address(this), msg.sender, tokenID); // sends token from this holding contract to caller wallet
 

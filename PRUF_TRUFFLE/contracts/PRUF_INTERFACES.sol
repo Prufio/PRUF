@@ -180,7 +180,7 @@ interface A_TKN_Interface {
 
     function setURI(uint256 tokenId, string memory _tokenURI) external;
 
-    function claimNakedToken(
+    function validateNakedToken(
         uint256 tokenId,
         uint16 _assetClass,
         string calldata _authCode
