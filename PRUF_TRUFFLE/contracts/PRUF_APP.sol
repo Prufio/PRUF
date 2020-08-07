@@ -379,9 +379,9 @@ contract APP is CORE {
         rec.assetStatus = 0; // --------------------------------Should this be?
         rec.rightsHolder = _newRgtHash;
         //^^^^^^^effects^^^^^^^^^
-
-        writeRecord(_idxHash, rec);
+        
         STOR.changeAC(_idxHash, _newAssetClass);
+        writeRecord(_idxHash, rec);
         deductNewRecordCosts(_newAssetClass);
 
         return rec.assetStatus;
