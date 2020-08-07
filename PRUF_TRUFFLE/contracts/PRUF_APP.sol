@@ -123,6 +123,67 @@ contract APP is CORE {
     }
 
     /*
+     * @dev import **Record** (no confirmation required -
+     * posessor is considered to be owner. sets rec.assetStatus to 0.
+     */
+    function $importAsset(
+        bytes32 _idxHash,
+        bytes32 _newRgtHash,
+        uint16 _newAssetClass
+    )
+        external
+        payable
+        nonReentrant
+        whenNotPaused
+        isAuthorized(_idxHash) //contract holds token (user sent to contract)
+        returns (uint8)
+    {
+        Record memory rec = getRecord(_idxHash);
+        uint8 userType = getUserType(_newAssetClass);
+        ContractDataHash memory contractInfo = getContractInfo(
+            address(this),
+            _newAssetClass
+        );
+
+        require(
+            contractInfo.contractType > 0,
+            "A:IA: This contract not authorized for specified AC"
+        );
+        require(rec.assetClass != 0, "A:IA: Record does not exist. ");
+        require(userType < 3, "A:IA: User not authorized to reimport assets");
+        require(
+            (userType > 0) && (userType < 10),
+            "A:IA: User not authorized to modify records in specified asset class"
+        );
+        require(
+            AC_MGR.isSameRootAC(_newAssetClass, rec.assetClass) == 170,
+            "A:IA:Cannot change AC to new root"
+        );
+        require(
+            (rec.assetStatus == 5) ||
+                (rec.assetStatus == 55) ||
+                (rec.assetStatus == 70),
+            "A:IA: Only Transferred or exported assets can be reimported"
+        );
+        //^^^^^^^checks^^^^^^^^^
+
+        if (rec.forceModCount < 255) {
+            rec.forceModCount++;
+        }
+
+        rec.assetStatus = 0;
+        rec.rightsHolder = _newRgtHash;
+        //^^^^^^^effects^^^^^^^^^
+        
+        STOR.changeAC(_idxHash, _newAssetClass);
+        writeRecord(_idxHash, rec);
+        deductNewRecordCosts(_newAssetClass);
+
+        return rec.assetStatus;
+        //^^^^^^^interactions^^^^^^^^^
+    }
+
+    /*
      * @dev Modify **Record**.rightsHolder without confirmation required
      */
     function $forceModRecord(bytes32 _idxHash, bytes32 _rgtHash)
@@ -327,64 +388,5 @@ contract APP is CORE {
         //^^^^^^^interactions^^^^^^^^^
     }
 
-    /*
-     * @dev import **Record** (no confirmation required -
-     * posessor is considered to be owner. sets rec.assetStatus to 0.
-     */
-    function $importAsset(
-        bytes32 _idxHash,
-        bytes32 _newRgtHash,
-        uint16 _newAssetClass
-    )
-        external
-        payable
-        nonReentrant
-        whenNotPaused
-        isAuthorized(_idxHash) //contract holds token (user sent to contract)
-        returns (uint8)
-    {
-        Record memory rec = getRecord(_idxHash);
-        uint8 userType = getUserType(_newAssetClass);
-        ContractDataHash memory contractInfo = getContractInfo(
-            address(this),
-            _newAssetClass
-        );
-
-        require(
-            contractInfo.contractType > 0,
-            "A:IA: This contract not authorized for specified AC"
-        );
-        require(rec.assetClass != 0, "A:IA: Record does not exist. ");
-        require(userType < 3, "A:IA: User not authorized to reimport assets");
-        require(
-            (userType > 0) && (userType < 10),
-            "A:IA: User not authorized to modify records in specified asset class"
-        );
-        require(
-            AC_MGR.isSameRootAC(_newAssetClass, rec.assetClass) == 170,
-            "A:IA:Cannot change AC to new root"
-        );
-        require(
-            (rec.assetStatus == 5) ||
-                (rec.assetStatus == 55) ||
-                (rec.assetStatus == 70),
-            "A:IA: Only Transferred or exported assets can be reimported"
-        );
-        //^^^^^^^checks^^^^^^^^^
-
-        if (rec.forceModCount < 255) {
-            rec.forceModCount++;
-        }
-
-        rec.assetStatus = 0; // --------------------------------Should this be?
-        rec.rightsHolder = _newRgtHash;
-        //^^^^^^^effects^^^^^^^^^
-        
-        STOR.changeAC(_idxHash, _newAssetClass);
-        writeRecord(_idxHash, rec);
-        deductNewRecordCosts(_newAssetClass);
-
-        return rec.assetStatus;
-        //^^^^^^^interactions^^^^^^^^^
-    }
+    
 }

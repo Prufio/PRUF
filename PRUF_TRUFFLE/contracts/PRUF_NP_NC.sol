@@ -113,22 +113,13 @@ contract NP_NC is CORE {
         AC memory AC_info = getACinfo(rec.assetClass);
 
         require(
+            rec.assetStatus == 51,
+            "NPNC:EX: Must be in transferrable status (51)"
+        );
+
+        require(
             contractInfo.contractType > 0,
             "NPNC:EX: This contract not authorized for specified AC"
-        );
-        require(
-            (rec.assetStatus != 6) &&
-                (rec.assetStatus != 50) &&
-                (rec.assetStatus != 56),
-            "NPNC:EX: Cannot change status of asset in Escrow until escrow is expired"
-        );
-        require(
-            (rec.assetStatus != 5) && (rec.assetStatus != 55),
-            "NPNC:EX: Cannot change status of asset in transferred-unregistered status."
-        );
-        require(
-            (rec.assetStatus != 60),
-            "NPNC:EX: Record is burned and must be reimported by ACadmin"
         );
 
         rec.assetStatus = 70; // Set status to 70 (exported)

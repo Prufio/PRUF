@@ -117,9 +117,10 @@ contract APP_NC is CORE {
             "ANC:IA:Cannot change AC to new root"
         );
         //^^^^^^^checks^^^^^^^^^
+        rec.assetStatus = 52;
 
         STOR.changeAC(_idxHash, _newAssetClass);
-
+        writeRecord(_idxHash, rec);
         deductNewRecordCosts(_newAssetClass);
         //^^^^^^^interactions / effects^^^^^^^^^^^^
     }
