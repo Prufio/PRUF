@@ -49,6 +49,8 @@
     let rgt4;
     let rgt5;
     let rgt000 = "0x0000000000000000000000000000000000000000000000000000000000000000";
+
+    let token;
     
         //
         //
@@ -260,6 +262,13 @@
             'kkk'
         )
 
+        asset12 = await Helper.getIdxHash(
+            '5',
+            '5',
+            '5',
+            '5'
+        )
+
         rgt1 = await Helper.getJustRgtHash(
             asset1,
             'aaa',
@@ -303,6 +312,10 @@
             'eee',
             'eee',
             'eee'
+        )
+
+        token = await Helper.b32_to_uint256(
+            asset12
         )
     })
 
@@ -608,14 +621,14 @@
     it('Should authorize ECR_NC in all relevant asset classes', async () => {
         
         console.log("Authorizing ECR_NC")
-        return STOR.enableContractForAC('ECR_NC', '12', '2', { from: account1 })
+        return STOR.enableContractForAC('ECR_NC', '12', '3', { from: account1 })
             
             .then(() => {
-                return STOR.enableContractForAC('ECR_NC', '13', '2', { from: account1 })
+                return STOR.enableContractForAC('ECR_NC', '13', '3', { from: account1 })
             })
             
             .then(() => {
-                return STOR.enableContractForAC('ECR_NC', '14', '2', { from: account1 })
+                return STOR.enableContractForAC('ECR_NC', '14', '3', { from: account1 })
             })
             
             .then(() => {
@@ -1499,15 +1512,15 @@
             )
         })
         
-        //29
-        it('Should fail to import an asset due to nonExported status', async () => {
-            return APP.$importAsset(
-                asset2,
-                rgt1,
-                '10',
-                { from: account2, value: 20000000000000000 }
-            )
-        })
+        // //29
+        // it('Should fail to import an asset due to nonExported status', async () => {
+        //     return APP.$importAsset(
+        //         asset2,
+        //         rgt1,
+        //         '10',
+        //         { from: account2, value: 20000000000000000 }
+        //     )
+        // })
     
         //
         //
@@ -1692,9 +1705,9 @@
     
         it('Should transfer record(5) token to PRUF_APP contract', async () => {
             return A_TKN.safeTransferFrom(
-            account2,
+            "0xc573D7c3556c5c854a03261295564651D4a71417",
             APP.address,
-            '0x54504a0f5147c9104ec2eb44b310674a57a337acd90083d946c3fd39bac4f2b2',
+            token,
             {from: account2}
             )
         })
