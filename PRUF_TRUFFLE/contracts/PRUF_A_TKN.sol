@@ -43,6 +43,7 @@ contract A_TKN is Ownable, ReentrancyGuard, ERC721 {
 
     address internal APP_NC_Address; //isAdmin
     address internal APP_Address; //isAdmin
+    address internal NP_Address;
     address internal STOR_Address;
     address internal RCLR_Address;
     address internal NAKED_Address;
@@ -56,6 +57,7 @@ contract A_TKN is Ownable, ReentrancyGuard, ERC721 {
         require(
             (msg.sender == APP_Address) ||
                 (msg.sender == APP_NC_Address) ||
+                (msg.sender == NP_Address) ||
                 (msg.sender == RCLR_Address) ||
                 (msg.sender == NAKED_Address) ||
                 (msg.sender == owner()),
@@ -88,6 +90,7 @@ contract A_TKN is Ownable, ReentrancyGuard, ERC721 {
 
         APP_NC_Address = STOR.resolveContractAddress("APP_NC");
         APP_Address = STOR.resolveContractAddress("APP");
+        NP_Address = STOR.resolveContractAddress("NP");
         NAKED_Address = STOR.resolveContractAddress("NAKED");
 
         RCLR_Address = STOR.resolveContractAddress("RCLR");
