@@ -300,4 +300,51 @@ contract NP is CORE {
         return rec.Ipfs1;
         //^^^^^^^interactions^^^^^^^^^
     }
+
+    /*
+     *     @dev Export FROM Custodial:
+     */
+    function exportAsset(bytes32 _idxHash, address _addr)
+        external
+        nonReentrant
+        whenNotPaused
+        isAuthorized(_idxHash)
+        returns (uint8)
+    {
+        uint256 tokenId = uint256(_idxHash);
+        Record memory rec = getRecord(_idxHash);
+        uint8 userType = getUserType(rec.assetClass);
+        ContractDataHash memory contractInfo = getContractInfo(
+            address(this),
+            rec.assetClass
+        );
+        AC memory AC_info = getACinfo(rec.assetClass);
+
+        require(
+            contractInfo.contractType > 0,
+            "A:MS: This contract not authorized for specified AC"
+        );
+        require(
+            (userType > 0) && (userType < 10),
+            "A:EA: User not authorized to modify records in specified asset class"
+        );
+        require( // require transferrable (51) status
+            rec.assetStatus == 51,
+            "A:EA: Asset status must be 51 to export"
+        );
+        //^^^^^^^checks^^^^^^^^^
+
+        if (rec.numberOfTransfers < 65335) {
+            rec.numberOfTransfers++;
+        }
+        rec.assetStatus = 70; // Set status to 70 (exported)
+        //^^^^^^^effects^^^^^^^^^
+
+        A_TKN.safeTransferFrom(address(this), _addr, tokenId); // sends token to rightsholder wallet (specified by auth user)
+        writeRecord(_idxHash, rec);
+        STOR.changeAC(_idxHash, AC_info.assetClassRoot);
+
+        return rec.assetStatus;
+        //^^^^^^^interactions^^^^^^^^^
+    }
 }
