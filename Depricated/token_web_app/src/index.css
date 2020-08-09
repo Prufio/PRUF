@@ -1,0 +1,346 @@
+   * {
+    font-family: sans-serif;
+    font-size: 62.5% ;
+  }
+  
+  body {
+    background-color: rgb(255, 255, 255);
+    padding: 2.0rem;
+    margin: 0;
+  }
+  h1, h2, h3, h4, ul, li {
+    font-family: sans-serif;
+  }
+
+  p {
+    text-align: center;
+  }
+
+
+
+  h1 {
+    font-size: 4.0rem;
+    text-align: center;
+  }
+  h2 {
+    font-size: 3.5rem;
+    text-align: center;
+  }
+  h3 {
+    font-size: 2.0rem;
+    text-align: center;
+  }
+  h4 {
+    font-size: 1.0rem;
+    text-align: center;
+  }
+
+  .formtext {
+    font-size: 6.0rem;
+  }
+
+  .page {
+    padding: 0.0rem;
+    display:flex;
+    flex-direction: row;
+    justify-content: left center;
+    align-items: flex-start;
+  }
+
+  .header li {
+    display: inline;
+    list-style-type: none;
+    margin: 0rem auto;
+  }
+
+  .header {
+    width: 15rem;
+    /* height: 90rem; */
+    background-color: rgb(0, 0, 0);
+    padding: 0rem;
+    border-radius: 1.0rem;
+    margin-top: 2rem;
+  }
+
+  .header li a { 
+    color: rgb(255, 255, 255);
+    font-weight: bold;
+    text-decoration: none;
+    font-size: 1.6rem;
+    padding: 1.2rem;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: normal;
+  }
+
+  .content {
+    font-size: 4.0rem;
+    padding: 2.0rem;
+    margin-right: 1.0rem;
+  }
+  .content h2 {
+    padding: 0;
+    margin: 0;
+    margin-right: 1.0rem;
+  }
+  .content li {
+    margin-bottom: 1.0rem;
+  }
+  .active {
+    background-color: #0099FF;
+
+  }
+
+  .banner {
+    height: 5.0rem;
+    width: 37.0rem;
+    background-color:   rgb(0, 0, 0);
+    color: rgb(5, 225, 221);
+    border-radius: 1.0rem;
+    font-size: 1.4rem;
+    padding: 1.0rem;
+    display:flex;
+    flex-direction: row;
+    justify-content: flex-start;
+    margin-top: 1rem;
+  }
+
+  .home {
+    height: 15.0rem;
+    width: 20.0rem;
+    background-color:   #0099FF;
+    border-radius: 1.0rem;
+    font-weight: bold;
+    text-decoration: none;
+    font-size: 3.0rem;
+    padding: 1.0rem;
+    display:flex;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: center;
+    margin: 0 auto; 
+  }
+
+  .NRform {
+    height: 90.0rem;
+    width: 20.0rem;
+    background-color:  rgb(5, 164, 161);
+    border-radius: 1.0rem;
+    font-weight: default;
+    text-decoration: none;
+    font-size: 2.0rem;
+    padding: 1.0rem;
+    display:flex;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: center;
+    margin: 0 auto; 
+  }
+
+  .VRform {
+    height: 75.0rem;
+    width: 20.0rem;
+    background-color:  rgb(5, 164, 161);
+    border-radius: 1.0rem;
+    font-weight: default;
+    text-decoration: none;
+    font-size: 2.0rem;
+    padding: 1.0rem;
+    display:flex;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: center;
+    margin: 0 auto; 
+  }
+
+  .RRform {
+    height: 40.0rem;
+    width: 20.0rem;
+    background-color:  rgb(5, 164, 161);
+    border-radius: 1.0rem;
+    font-weight: default;
+    text-decoration: none;
+    font-size: 2.0rem;
+    padding: 1.0rem;
+    display:flex;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: center;
+    margin: 0 auto; 
+  }
+
+  .TAform {
+    height: 102.0rem;
+    width: 20.0rem;
+    background-color:  rgb(5, 164, 161);
+    border-radius: 1.0rem;
+    font-weight: default;
+    text-decoration: none;
+    font-size: 2.0rem;
+    padding: 1.0rem;
+    display:flex;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: center;
+    margin: 0 auto; 
+  }
+
+  .MRform {
+    height: 90.0rem;
+    width: 20.0rem;
+    background-color:  rgb(5, 164, 161);
+    border-radius: 1.0rem;
+    font-weight: default;
+    text-decoration: none;
+    font-size: 2.0rem;
+    padding: 1.0rem;
+    display:flex;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: center;
+    margin: 0 auto; 
+  }
+
+  .DCform {
+    height: 90.0rem;
+    width: 20.0rem;
+    background-color:  rgb(5, 164, 161);
+    border-radius: 1.0rem;
+    font-weight: default;
+    text-decoration: none;
+    font-size: 2.0rem;
+    padding: 1.0rem;
+    display:flex;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: center;
+    margin: 0 auto; 
+  }
+
+  .MDform {
+    height: 90.0rem;
+    width: 20.0rem;
+    background-color:  rgb(5, 164, 161);
+    border-radius: 1.0rem;
+    font-weight: default;
+    text-decoration: none;
+    font-size: 2.0rem;
+    padding: 1.0rem;
+    display:flex;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: center;
+    margin: 0 auto; 
+  }
+
+  .ANform {
+    height: 90.0rem;
+    width: 20.0rem;
+    background-color:  rgb(248, 215, 69);
+    border-radius: 1.0rem;
+    font-weight: default;
+    text-decoration: none;
+    font-size: 2.0rem;
+    padding: 1.0rem;
+    display:flex;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: center;
+    margin: 0 auto; 
+  }
+
+  .FMRform {
+    height: 90.0rem;
+    width: 20.0rem;
+    background-color:  rgb(221, 7, 7);
+    border-radius: 1.0rem;
+    font-weight: default;
+    text-decoration: none;
+    font-size: 2.0rem;
+    padding: 1.0rem;
+    display:flex;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: center;
+    margin: 0 auto; 
+  }
+
+  .RRresults {
+    height: 27.0rem;
+    width: 20.0rem;
+    background-color:rgb(5, 164, 161);
+    border-radius: 1.0rem;
+    font-weight: default;
+    text-decoration: none;
+    font-size: 1.4rem;
+    padding: 1.0rem;
+    display:flex;
+    word-wrap: break-word;
+    /* overflow: hidden; */
+    text-overflow: ellipsis;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: normal;
+    margin: 0 auto; 
+  }
+
+  .VRresults {
+    height: 10.0rem;
+    width: 20.0rem;
+    background-color:rgb(5, 164, 161);
+    border-radius: 1.0rem;
+    font-weight: default;
+    text-decoration: none;
+    font-size: 1.5rem;
+    padding: 1.0rem;
+    display:flex;
+    word-wrap: break-word;
+    /* overflow: hidden; */
+    text-overflow: ellipsis;
+    flex-direction: column;
+    justify-content: space-between;
+    margin: 0 auto; 
+  }
+
+  /* TEST */
+  .NRTform {
+    height: 25.0rem;
+    width: 80.0rem;
+    background-color:  rgb(5, 164, 161);
+    border-radius: 1.0rem;
+    font-weight: default;
+    text-decoration: none;
+    font-size: 6.0rem;
+    padding: 1.0rem;
+    display:flex;
+    justify-content: space-between;
+    margin: 0 auto; 
+  }
+
+  .btn {
+    font-size: 1.5rem;
+    height: 3rem;
+    width: 13rem;
+    align-items: center;
+    margin-top: 22rem;
+    border-radius: 1rem;
+  }
+  .VRresultstest {
+    max-height: 7.0rem;
+    max-width: 15.0rem;
+    background-color:rgb(5, 164, 161);
+    border-radius: 1.0rem;
+    font-weight: default;
+    text-decoration: none;
+    font-size: 1.5rem;
+    padding: 1.0rem;
+    display:flex;
+    word-wrap: break-word;
+    /* overflow: hidden; */
+    text-overflow: ellipsis;
+    flex-direction: column;
+    justify-content: space-between;
+  }
+  /* TEST */
+
