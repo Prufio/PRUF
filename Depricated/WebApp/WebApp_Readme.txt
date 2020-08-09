@@ -1,1 +1,0 @@
-Folder for files and art related to the Web3 Application site
