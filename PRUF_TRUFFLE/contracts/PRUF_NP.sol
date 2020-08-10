@@ -62,10 +62,6 @@ contract NP is CORE {
             "NP:MS: This contract not authorized for specified AC"
         );
         require(
-            (rec.rightsHolder != 0),
-            "NP:MS: Record unclaimed: import required."
-        );
-        require(
             (userType > 0) && (userType < 10),
             "NP:MS: User not authorized to modify records in specified asset class"
         );

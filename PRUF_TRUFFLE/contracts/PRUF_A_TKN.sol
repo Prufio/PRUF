@@ -49,7 +49,6 @@ contract A_TKN is Ownable, ReentrancyGuard, ERC721 {
     address internal NAKED_Address;
     STOR_Interface internal STOR; // Set up external contract interface
     RCLR_Interface internal RCLR;
-    
 
     event REPORT(string _msg);
 
@@ -138,7 +137,7 @@ contract A_TKN is Ownable, ReentrancyGuard, ERC721 {
         uint16 _assetClass,
         string calldata _authCode
     ) external view {
-        require(  // Forgive me my trespasses...
+        require( // Forgive me my trespasses...
             keccak256(abi.encodePacked(tokenURI(tokenId))) ==
                 keccak256(
                     abi.encodePacked(
@@ -259,7 +258,7 @@ contract A_TKN is Ownable, ReentrancyGuard, ERC721 {
     ) public virtual override {
         bytes32 _idxHash = bytes32(tokenId);
         Record memory rec = getRecord(_idxHash);
-        (uint8 isAuth,) =  STOR.ContractInfoHash(to, 0); // trailing comma because does not use the returned hash
+        (uint8 isAuth, ) = STOR.ContractInfoHash(to, 0); // trailing comma because does not use the returned hash
 
         require( // ensure that status 70 assets are only sent to an actual PRUF contract
             (rec.assetStatus != 70) || (isAuth > 0),
