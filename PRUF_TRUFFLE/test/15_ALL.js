@@ -2174,7 +2174,7 @@
         it('Should transfer asset12 token to PRUF_APP contract', async () => {
             return A_TKN.safeTransferFrom(
             account2,
-            NP.address,
+            APP.address,
             asset12,
             {from: account2}
             )

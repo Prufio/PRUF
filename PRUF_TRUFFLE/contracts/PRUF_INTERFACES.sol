@@ -298,5 +298,5 @@ interface RCLR_Interface {
 }
 
 interface APP_Interface{
-    function OO_TX_asset_Token(address _to, bytes32 _idxHash) external;
+    function TX_asset_Token(address _to, bytes32 _idxHash) external;
 }

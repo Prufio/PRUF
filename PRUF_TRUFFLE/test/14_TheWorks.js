@@ -1,4 +1,4 @@
-    //
+//
     //
     // DECLARATIONS
     //
@@ -49,8 +49,10 @@
     let rgt3;
     let rgt4;
     let rgt5;
+    let rgt6;
     let rgt12;
     let rgt000 = "0x0000000000000000000000000000000000000000000000000000000000000000";
+    let rgtFFF = "0xFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF";
 
     let account2Hash;
     let account6Hash;
@@ -315,6 +317,15 @@
             'eee',
             'eee',
             'eee'
+        )
+
+        rgt6 = await Helper.getJustRgtHash(
+            asset6,
+            'fff',
+            'fff',
+            'fff',
+            'fff',
+            'fff'
         )
 
         rgt12 = await Helper.getJustRgtHash(
@@ -959,7 +970,6 @@
             })
     })
 
-
     it('Should write record in AC 10 @ IDX&RGT(1)', async () => {
 
         console.log("//**************************************BEGIN THE WORKS**********************************************/")
@@ -1145,7 +1155,7 @@
     it('Should transfer asset12 token to PRUF_APP contract', async () => {
         return A_TKN.safeTransferFrom(
         account2,
-        NP.address,
+        APP.address,
         asset12,
         {from: account2}
         )
@@ -1229,6 +1239,16 @@
         '1',
         {from: account2}
         )
+    })
+
+    it("Should retrieve asset12", async () =>{ 
+        var Record = [];
+        
+        return await STOR.retrieveShortRecord(asset12, {from: account2}, function (_err, _result) {
+            if(_err){} 
+            else{Record = Object.values(_result)
+        console.log(Record)}
+        })
     })
 
 });

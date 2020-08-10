@@ -62,10 +62,6 @@ contract NP is CORE {
             "NP:MS: This contract not authorized for specified AC"
         );
         require(
-            (rec.rightsHolder != 0),
-            "NP:MS: Record unclaimed: import required."
-        );
-        require(
             (userType > 0) && (userType < 10),
             "NP:MS: User not authorized to modify records in specified asset class"
         );
@@ -270,7 +266,7 @@ contract NP is CORE {
         );
         require(
             (rec.rightsHolder != 0),
-            "NP:MI1: Record unclaimed: import required. "
+            "NP:MI1: Record unclaimed: import required."
         );
         require(
             (userType > 0) && (userType < 10),
@@ -339,7 +335,7 @@ contract NP is CORE {
         rec.assetStatus = 70; // Set status to 70 (exported)
         //^^^^^^^effects^^^^^^^^^
 
-        APP.OO_TX_asset_Token(_addr, _idxHash);
+        APP.TX_asset_Token(_addr, _idxHash);
         writeRecord(_idxHash, rec);
         STOR.changeAC(_idxHash, AC_info.assetClassRoot);
 

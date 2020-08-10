@@ -181,7 +181,7 @@ pragma solidity ^0.6.7;
  * 2 = nontransferrable
  * 3 = stolen
  * 4 = lost
- * 5 = transferred but not reImported (no new rghtsholder information) implies that asset posessor is the owner.
+ * 5 = transferred but not reImported (no new rghtsholder information) implies that asset posessor is the owner. (discarded)
  *       must be re-imported by ACadmin through regular onboarding process
  *       no actions besides modify RGT to a new rightsholder can be performed on a statuss 5 asset (no status changes) (Frontend)
  * 6 = in supervised escrow, locked until timelock expires, but can be set to lost or stolen
@@ -194,13 +194,13 @@ pragma solidity ^0.6.7;
  * 52 = non-transferrable, automation set/unset (secret confirmed)(ACAdmin can unset)
  * 53 = stolen (automation set)(ONLY ACAdmin can unset)
  * 54 = lost (automation set/unset)(ACAdmin can unset)
- * 55 = asset transferred automation set/unset (secret confirmed)(Only ACAdmin can unset) ####DO NOT USE????
+ * 55 = asset transferred automation set/unset (secret confirmed)(Only ACAdmin can unset) (discarded) ####DO NOT USE???? 
  * 56 = escrow - automation set/unset (secret confirmed)(ACAdmin can unset)
  * 57 = out of escrow
  * 58 = out of locked escrow
  * 59 = Discardable
- * 60 = Recyclable (can only be reimported by an ACAdmin)
- * 70 = Importable
+ * 60 = Recyclable (can only be reimported by an ACAdmin) (discarded)
+ * 70 = Importable(Exported)
  *
 *-----------------------------------------------------------------
 
