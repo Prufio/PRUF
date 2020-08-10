@@ -62,14 +62,18 @@ contract BASIC is ReentrancyGuard, Ownable, IERC721Receiver, Pausable {
     AC_TKN_Interface internal AC_TKN; //erc721_token prototype initialization
 
     address internal ECR_MGR_Address;
-    ECR_MGR_Interface internal ECR_MGR; //Set up external contract interface for escrowmgr
+    ECR_MGR_Interface internal ECR_MGR; //Set up external contract interface 
 
-    address internal RCLR_Address; //Set up external contract interface for recycler
+    address internal RCLR_Address; //Set up external contract interface
     RCLR_Interface internal RCLR;
 
+    address internal APP_Address; //Set up external contract interface 
+    APP_Interface internal APP;
+
     address internal NAKED_Address; 
-    address internal APP_Address;
     address internal APP_NC_Address;
+    address internal NP_Address;
+    
     
 
     // --------------------------------------Events--------------------------------------------//
@@ -119,20 +123,26 @@ contract BASIC is ReentrancyGuard, Ownable, IERC721Receiver, Pausable {
         ECR_MGR = ECR_MGR_Interface(ECR_MGR_Address);
 
         APP_Address = STOR.resolveContractAddress("APP");
-        APP_NC_Address = STOR.resolveContractAddress("APP_NC");
+        APP = APP_Interface(APP_Address);
 
         RCLR_Address = STOR.resolveContractAddress("RCLR");
         RCLR = RCLR_Interface(RCLR_Address);
+
+        APP_NC_Address = STOR.resolveContractAddress("APP_NC");
+        NP_Address = STOR.resolveContractAddress("NP");
         //^^^^^^^effects^^^^^^^^^
     }
 
     function OO_TX_asset_Token(address _to, bytes32 _idxHash)
         external
         virtual
-        onlyOwner
         nonReentrant
     //^^^^^^^checks^^^^^^^^^
     {
+        require (
+            (msg.sender == owner()) || (msg.sender == NP_Address),
+            "PB:TX:Invalid caller for transfer token"
+        );
         uint256 tokenId = uint256(_idxHash);
         //^^^^^^^effects^^^^^^^^^
         A_TKN.safeTransferFrom(address(this), _to, tokenId);

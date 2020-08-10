@@ -296,3 +296,7 @@ interface RCLR_Interface {
 
     function recycle(bytes32 _idxHash) external;
 }
+
+interface APP_Interface{
+    function OO_TX_asset_Token(address _to, bytes32 _idxHash) external;
+}
