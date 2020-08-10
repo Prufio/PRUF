@@ -55,6 +55,7 @@
     let rgtFFF = "0xFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF";
 
     let account2Hash;
+    let account4Hash;
     let account6Hash;
     
         //
@@ -340,6 +341,10 @@
 
         account2Hash = await Helper.getAddrHash(
             account2
+        )
+
+        account4Hash = await Helper.getAddrHash(
+            account4
         )
 
         account6Hash = await Helper.getAddrHash(
@@ -920,7 +925,8 @@
 
 
     it('Should add users to AC 10-14 in AC_Manager', async () => {
-        
+
+        console.log("//**************************************END BOOTSTRAP**********************************************/")
         console.log("Account2 => AC10")
         return AC_MGR.OO_addUser(account2, '1', '10', { from: account1 })
             
@@ -969,6 +975,7 @@
                 return AC_MGR.OO_addUser(account10, '1', '15', { from: account1 })
             })
     })
+
 
     it('Should write record in AC 10 @ IDX&RGT(1)', async () => {
 
