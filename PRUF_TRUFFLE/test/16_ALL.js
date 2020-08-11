@@ -1,4 +1,4 @@
- //
+//
     //
     // DECLARATIONS
     //
@@ -15,6 +15,7 @@
     const PRUF_NP_NC = artifacts.require('NP_NC');
     const PRUF_ECR_NC = artifacts.require('ECR_NC');
     const PRUF_RCLR = artifacts.require('RCLR');
+    const PRUF_NAKED = artifacts.require('NAKED');
     const PRUF_HELPER = artifacts.require('Helper');
     
     let STOR;
@@ -43,27 +44,24 @@
     let asset10;
     let asset11;
     let asset12;
-    let asset13;
-    let asset14;
-    let asset15;
-    let asset16;
-    let asset17;
-    let asset18;
-    let asset19;
-    let asset20;
-    let asset21;
-    let asset22;
 
     let rgt1;
     let rgt2;
     let rgt3;
     let rgt4;
     let rgt5;
+    let rgt6;
     let rgt12;
     let rgt000 = "0x0000000000000000000000000000000000000000000000000000000000000000";
+    let rgtFFF = "0xFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF";
 
     let account2Hash;
+    let account4Hash;
     let account6Hash;
+
+    let account000 = '0x0000000000000000000000000000000000000000'
+
+    let nakedTokenHash1;
     
         //
         //
@@ -71,7 +69,7 @@
         //
         //
     
-    contract('APP', accounts => {
+    contract('ALL', accounts => {
             
         console.log('//**************************BEGIN BOOTSTRAP**************************//')
 
@@ -180,6 +178,14 @@
     })
 
 
+    it('Should deploy PRUF_NAKED', async () => {
+        const PRUF_NAKED_TEST = await PRUF_NAKED.deployed({ from: account1 });
+        console.log(PRUF_NAKED_TEST.address);
+        assert(PRUF_NAKED_TEST.address !== '')
+        NAKED = PRUF_NAKED_TEST;
+    })
+
+
     it('Should deploy PRUF_RCLR', async () => {
         const PRUF_RCLR_TEST = await PRUF_RCLR.deployed({ from: account1 });
         console.log(PRUF_RCLR_TEST.address);
@@ -282,76 +288,6 @@
             'lll'
         )
 
-        asset13 = await Helper.getIdxHash(
-            'mmm',
-            'mmm',
-            'mmm',
-            'mmm'
-        )
-
-        asset14 = await Helper.getIdxHash(
-            'nnn',
-            'nnn',
-            'nnn',
-            'nnn'
-        )
-
-        asset15 = await Helper.getIdxHash(
-            'ooo',
-            'ooo',
-            'ooo',
-            'ooo'
-        )
-
-        asset16 = await Helper.getIdxHash(
-            'ppp',
-            'ppp',
-            'ppp',
-            'ppp'
-        )
-
-        asset17 = await Helper.getIdxHash(
-            'qqq',
-            'qqq',
-            'qqq',
-            'qqq'
-        )
-
-        asset18 = await Helper.getIdxHash(
-            'rrr',
-            'rrr',
-            'rrr',
-            'rrr'
-        )
-
-        asset19 = await Helper.getIdxHash(
-            'sss',
-            'sss',
-            'sss',
-            'sss'
-        )
-
-        asset20 = await Helper.getIdxHash(
-            'ttt',
-            'ttt',
-            'ttt',
-            'ttt'
-        )
-
-        asset21 = await Helper.getIdxHash(
-            'uuu',
-            'uuu',
-            'uuu',
-            'uuu'
-        )
-
-        asset22 = await Helper.getIdxHash(
-            'vvv',
-            'vvv',
-            'vvv',
-            'vvv'
-        )
-
         rgt1 = await Helper.getJustRgtHash(
             asset1,
             'aaa',
@@ -397,6 +333,15 @@
             'eee'
         )
 
+        rgt6 = await Helper.getJustRgtHash(
+            asset6,
+            'fff',
+            'fff',
+            'fff',
+            'fff',
+            'fff'
+        )
+
         rgt12 = await Helper.getJustRgtHash(
             asset12,
             'a',
@@ -411,8 +356,18 @@
             account2
         )
 
+        account4Hash = await Helper.getAddrHash(
+            account4
+        )
+
         account6Hash = await Helper.getAddrHash(
             account6
+        )
+
+
+        nakedTokenHash1 = await Helper.getNakedTokenHash(
+            '10',
+            '1'
         )
     })
 
@@ -465,6 +420,11 @@
             .then(() => {
                 console.log("Adding ECR_NC to storage for use in AC 0")
                 return STOR.OO_addContract("ECR_NC", ECR_NC.address, '0', '3', { from: account1 })
+            })
+
+            .then(() => {
+                console.log("Adding NAKED to storage for use in AC 0")
+                return STOR.OO_addContract("NAKED", NAKED.address, '0', '1', { from: account1 })
             })
             
             .then(() => {
@@ -523,6 +483,11 @@
                 console.log("Adding in ECR_NC")
                 return ECR_NC.OO_setStorageContract(STOR.address, { from: account1 })
             })
+
+            .then(() => {
+                console.log("Adding in NAKED")
+                return NAKED.OO_setStorageContract(STOR.address, { from: account1 })
+            })
             
             .then(() => {
                 console.log("Adding in RCLR")
@@ -578,6 +543,11 @@
             .then(() => {
                 console.log("Resolving in ECR_NC")
                 return ECR_NC.OO_ResolveContractAddresses({ from: account1 })
+            })
+
+            .then(() => {
+                console.log("Resolving in NAKED")
+                return NAKED.OO_ResolveContractAddresses({ from: account1 })
             })
             
             .then(() => {
@@ -818,6 +788,37 @@
     })
 
 
+    it('Should authorize NAKED in all relevant asset classes', async () => {
+        
+        console.log("Authorizing NAKED")
+        return STOR.enableContractForAC('NAKED', '10', '1', { from: account1 })
+            
+            .then(() => {
+                return STOR.enableContractForAC('NAKED', '11', '1', { from: account1 })
+            })
+            
+            .then(() => {
+                return STOR.enableContractForAC('NAKED', '12', '2', { from: account1 })
+            })
+            
+            .then(() => {
+                return STOR.enableContractForAC('NAKED', '13', '2', { from: account1 })
+            })
+            
+            .then(() => {
+                return STOR.enableContractForAC('NAKED', '14', '2', { from: account1 })
+            })
+            
+            .then(() => {
+                return STOR.enableContractForAC('NAKED', '1', '1', { from: account1 })
+            })
+            
+            .then(() => {
+                return STOR.enableContractForAC('NAKED', '2', '1', { from: account1 })
+            })
+    })
+
+
     it('Should authorize AC_MGR in all relevant asset classes', async () => {
         
         console.log("Authorizing AC_MGR")
@@ -989,7 +990,8 @@
 
 
     it('Should add users to AC 10-14 in AC_Manager', async () => {
-        
+
+        console.log("//**************************************END BOOTSTRAP**********************************************/")
         console.log("Account2 => AC10")
         return AC_MGR.OO_addUser(account2, '1', '10', { from: account1 })
             
@@ -1035,10 +1037,9 @@
             
             .then(() => {
                 console.log("Account10 => AC15")
-                return AC_MGR.OO_addUser(account10, '1', '15', { from: account1 })
+                return AC_MGR.OO_addUser(account10, '10', '15', { from: account1 })
             })
     })
-    
     
         it('Should mint a record in AC 10', async () => { //Bare custodial record, Used all over
             console.log("//************************************************************BEGIN APP TEST**********************************************************//")
