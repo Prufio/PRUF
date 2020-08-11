@@ -54,6 +54,7 @@
     let rgt000 = "0x0000000000000000000000000000000000000000000000000000000000000000";
     let rgtFFF = "0xFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF";
 
+    let account000 = '0x0000000000000000000000000000000000000000'
     let account2Hash;
     let account4Hash;
     let account6Hash;
@@ -974,6 +975,57 @@
                 console.log("Account10 => AC15")
                 return AC_MGR.OO_addUser(account10, '1', '15', { from: account1 })
             })
+    })
+
+
+    it('Should fail because storageAddress != 0', async () => {
+
+        console.log("//**************************************BEGIN AC_TKN TESTS**********************************************/")
+        console.log("//**************************************BEGIN AC_TKN FAIL BATCH**********************************************/")
+        console.log("//********************************BEGIN OO_setStorageContract FAIL BATCH****************************************/")
+        return AC_TKN.OO_setStorageContract(
+        account000, 
+        {from: account1}
+        )
+    })
+
+
+    it('Should fail because token doesnt exist', async () => {
+
+        console.log("//*********************************END OO_setStorageContract FAIL BATCH*****************************************/")
+        console.log("//********************************BEGIN reMintACToken FAIL BATCH****************************************/")
+        return AC_TKN.reMintACToken(
+        account1,
+        '30',
+        'Pruf.io',
+        {from: account1}
+        )
+    })
+
+
+    it('Should fail because caller is not owner of token or approved', async () => {
+
+        console.log("//*********************************END reMintACToken FAIL BATCH*****************************************/")
+        console.log("//********************************BEGIN transferFrom FAIL BATCH****************************************/")
+        return AC_TKN.transferFrom(
+        account1,
+        account4,
+        '11',
+        {from: account2}
+        )
+    })
+
+
+    it('Should fail because caller is not owner of token or approved', async () => {
+
+        console.log("//*********************************END transferFrom FAIL BATCH*****************************************/")
+        console.log("//********************************BEGIN safeTransferFrom FAIL BATCH****************************************/")
+        return AC_TKN.safeTransferFrom(
+        account1,
+        account4,
+        '11',
+        {from: account2}
+        )
     })
 
 
