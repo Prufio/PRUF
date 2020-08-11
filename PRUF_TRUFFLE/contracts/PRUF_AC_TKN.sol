@@ -165,7 +165,7 @@ contract AC_TKN is Ownable, ReentrancyGuard, ERC721 {
         address to,
         uint256 tokenId,
         bytes memory _data
-    ) public virtual override nonReentrant {
+    ) public virtual override {
         require(
             _isApprovedOrOwner(_msgSender(), tokenId),
             "ACT:STF: transfer caller is not owner nor approved"

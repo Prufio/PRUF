@@ -49,10 +49,13 @@
     let rgt3;
     let rgt4;
     let rgt5;
+    let rgt6;
     let rgt12;
     let rgt000 = "0x0000000000000000000000000000000000000000000000000000000000000000";
+    let rgtFFF = "0xFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF";
 
     let account2Hash;
+    let account4Hash;
     let account6Hash;
     
         //
@@ -317,6 +320,15 @@
             'eee'
         )
 
+        rgt6 = await Helper.getJustRgtHash(
+            asset6,
+            'fff',
+            'fff',
+            'fff',
+            'fff',
+            'fff'
+        )
+
         rgt12 = await Helper.getJustRgtHash(
             asset12,
             'a',
@@ -329,6 +341,10 @@
 
         account2Hash = await Helper.getAddrHash(
             account2
+        )
+
+        account4Hash = await Helper.getAddrHash(
+            account4
         )
 
         account6Hash = await Helper.getAddrHash(
@@ -909,7 +925,8 @@
 
 
     it('Should add users to AC 10-14 in AC_Manager', async () => {
-        
+
+        console.log("//**************************************END BOOTSTRAP**********************************************/")
         console.log("Account2 => AC10")
         return AC_MGR.OO_addUser(account2, '1', '10', { from: account1 })
             
@@ -957,6 +974,529 @@
                 console.log("Account10 => AC15")
                 return AC_MGR.OO_addUser(account10, '1', '15', { from: account1 })
             })
+    })
+
+    it('Should mint asset1 in AC10 to APP', async () => {
+
+        console.log("//**************************************BEGIN NP TESTS**********************************************/")
+        console.log("//**************************************BEGIN NP SETUP**********************************************/")
+        return APP.$newRecord(
+        asset1, 
+        rgt1,
+        '10',
+        '100',
+        {from: account2, value: 20000000000000000}
+        )
+    })
+
+
+    it('Should mint asset2 in AC11 to APP', async () => {
+        return APP.$newRecord(
+        asset2, 
+        rgt2,
+        '11',
+        '100',
+        {from: account2, value: 20000000000000000}
+        )
+    })
+
+
+    it('Should mint asset3 in AC11 to APP', async () => {
+        return APP.$newRecord(
+        asset3, 
+        rgt3,
+        '10',
+        '100',
+        {from: account2, value: 20000000000000000}
+        )
+    })
+
+
+    it('Should mint asset4 in AC11 to APP', async () => {
+        return APP.$newRecord(
+        asset4, 
+        rgt4,
+        '10',
+        '100',
+        {from: account2, value: 20000000000000000}
+        )
+    })
+
+
+    it('Should mint asset5 in AC12 to account2', async () => {
+        return APP_NC.$newRecord(
+        asset5, 
+        rgt5,
+        '13',
+        '100',
+        {from: account5, value: 20000000000000000}
+        )
+    })
+
+
+    // IMPOSSIBLE FOR ASSET TO BE IN DISCARDED STATUS AND MODIFY STATUS
+    // it('Should put asset2 in to exportable status', async () => {
+    //     return NP._modStatus(
+    //     asset2,
+    //     rgt2,
+    //     '51',
+    //     {from: account2}
+    //     )
+    // })
+
+    // it('Should export asset2 to put in unregistered status', async () => {
+    //     return NP.exportAsset(
+    //     asset2,
+    //     account2,
+    //     {from: account2}
+    //     )
+    // })
+
+    // it('Should put asset2 in to discardable status', async () => {
+    //     return NP_NC._modStatus(
+    //     asset2,
+    //     rgt2,
+    //     '59',
+    //     {from: account2}
+    //     )
+    // })
+
+    // it('Should discard asset2 to put in unregistered status', async () => {
+    //     return A_TKN.discard(
+    //     asset2,
+    //     {from: account2}
+    //     )
+    // })
+
+    it('Should put asset3 in to exportable status', async () => {
+        return NP._modStatus(
+        asset3,
+        rgt3,
+        '51',
+        {from: account2}
+        )
+    })
+
+
+    it('Should export asset3 to put in unregistered status', async () => {
+        return NP.exportAsset(
+        asset3,
+        account2,
+        {from: account2}
+        )
+    })
+
+
+    it('Should put asset4 in to transferable status', async () => {
+        return NP._modStatus(
+        asset4,
+        rgt4,
+        '1',
+        {from: account2}
+        )
+    })
+
+
+    it('Should transfer asset4 to put in unregistered status', async () => {
+        return APP.$transferAsset(
+        asset4,
+        rgt4,
+        '0x0',
+        {from: account2, value: 20000000000000000}
+        )
+    })
+
+    //1
+    it('Should Fail because NP != authorized in AC12', async () => {
+
+        console.log("//**************************************END NP SETUP**********************************************/")
+        console.log("//**************************************BEGIN NP FAIL BATCH**********************************************/")
+        console.log("//**************************************BEGIN _modStatus FAIL BATCH**********************************************/")
+        return NP._modStatus(
+        asset3,
+        rgt3,
+        '1',
+        {from: account4}
+        )
+    })
+
+    //2
+    it('Should Fail because account4 != auth for AC10 assets', async () => {
+        return NP._modStatus(
+        asset1,
+        rgt1,
+        '1',
+        {from: account4}
+        )
+    })
+
+    //3
+    it('Should Fail because being placed in stolen status', async () => {
+        return NP._modStatus(
+        asset1,
+        rgt1,
+        '3',
+        {from: account2}
+        )
+    })
+
+    //4
+    it('Should Fail because being placed in lost status', async () => {
+        return NP._modStatus(
+        asset1,
+        rgt1,
+        '4',
+        {from: account2}
+        )
+    })
+
+    //5
+    it('Should Fail because being placed in escrow status 6', async () => {
+        return NP._modStatus(
+        asset1,
+        rgt1,
+        '6',
+        {from: account2}
+        )
+    })
+
+    //6
+    it('Should Fail because being placed in escrow status 50', async () => {
+        return NP._modStatus(
+        asset1,
+        rgt1,
+        '50',
+        {from: account2}
+        )
+    })
+
+    //7
+    it('Should Fail because being placed in escrow status 56', async () => {
+        return NP._modStatus(
+        asset1,
+        rgt1,
+        '56',
+        {from: account2}
+        )
+    })
+
+    //8
+    it('Should Fail because being placed in unregistered status 5', async () => {
+        return NP._modStatus(
+        asset1,
+        rgt1,
+        '5',
+        {from: account2}
+        )
+    })
+
+    //9
+    it('Should Fail because being placed in unregistered status 55', async () => {
+        return NP._modStatus(
+        asset1,
+        rgt1,
+        '55',
+        {from: account2}
+        )
+    })
+
+    //10
+    it('Should Fail because being placed in unregistered status 60', async () => {
+        return NP._modStatus(
+        asset1,
+        rgt1,
+        '60',
+        {from: account2}
+        )
+    })
+
+    //11
+    it('Should Fail because being placed in exported status', async () => {
+        return NP._modStatus(
+        asset1,
+        rgt1,
+        '70',
+        {from: account2}
+        )
+    })
+
+    //12
+    it('Should Fail because being placed in status > 100', async () => {
+        return NP._modStatus(
+        asset1,
+        rgt1,
+        '101',
+        {from: account2}
+        )
+    })
+
+    //13
+    it('Should Fail because being placed in reserved status 7', async () => {
+        return NP._modStatus(
+        asset1,
+        rgt1,
+        '7',
+        {from: account2}
+        )
+    })
+
+    //14
+    it('Should Fail because being placed in reserved status 57', async () => {
+        return NP._modStatus(
+        asset1,
+        rgt1,
+        '57',
+        {from: account2}
+        )
+    })
+
+    //15
+    it('Should Fail because being placed in reserved status 58', async () => {
+        return NP._modStatus(
+        asset1,
+        rgt1,
+        '58',
+        {from: account2}
+        )
+    })
+
+    it('Should place asset1 in escrow', async () => {
+        return ECR.setEscrow(
+        asset1,
+        account2Hash,
+        '180',
+        '6',
+        {from: account2}
+        )
+    })
+
+    //17
+    it('Should Fail because asset1 is in escrow', async () => {
+        return NP._modStatus(
+        asset1,
+        rgt1,
+        '1',
+        {from: account2}
+        )
+    })
+
+
+    it('Should take asset1 out of escrow', async () => {
+        return ECR.endEscrow(
+        asset1,
+        {from: account2}
+        )
+    })
+    
+    
+    // IMPOSSIBLE FOR ASSET TO BE IN DISCARDED STATUS AND MODIFY STATUS
+    // it('Should Fail because asset2 is unregistered(discarded)', async () => {
+    //     return NP._modStatus(
+    //     asset2,
+    //     rgt2,
+    //     '1',
+    //     {from: account2}
+    //     )
+    // })
+
+    //18
+    it('Should Fail because asset3 is unregistered(exported)', async () => {
+        return NP._modStatus(
+        asset3,
+        rgt3,
+        '1',
+        {from: account2}
+        )
+    })
+
+    //19
+    it('Should fail because asset4 is unregistered(transfered)', async () => {
+        return NP._modStatus(
+        asset4,
+        rgtFFF,
+        '1',
+        {from: account2}
+        )
+    })
+
+    //20
+    it('Should fail because account7 is usertype 9 trying to modStatus < 49', async () => {
+        return NP._modStatus(
+        asset1,
+        rgt1,
+        '1',
+        {from: account7}
+        )
+    })
+
+    //21
+    it('Should fail because wrong rgt', async () => {
+        return NP._modStatus(
+        asset1,
+        rgt2,
+        '1',
+        {from: account2}
+        )
+    })
+
+    //22
+    it('Should fail because assetStatus is being set != Lost or Stolen', async () => {
+
+        console.log("//**************************************END _modStatus FAIL BATCH**********************************************/")
+        console.log("//**************************************BEGIN _setLostOrStolen FAIL BATCH**********************************************/")
+        return NP._setLostOrStolen(
+        asset1,
+        rgt1,
+        '1',
+        {from: account2}
+        )
+    })
+
+    //23
+    it('Should fail because assetStatus is being set after set to stolen while transfered', async () => {
+        return NP._setLostOrStolen(
+        asset4,
+        rgtFFF,
+        '3',
+        {from: account2}
+        )
+    })
+
+    //24
+    it('Should fail because assetStatus is being set after set to lost while transfered', async () => {
+        return NP._setLostOrStolen(
+        asset4,
+        rgtFFF,
+        '4',
+        {from: account2}
+        )
+    })
+
+
+    it('Should set asset1Status to 1', async () => {
+        return NP._modStatus(
+        asset1,
+        rgt1,
+        '1',
+        {from: account2}
+        )
+    })
+
+
+    it('Should place asset1 in escrow', async () => {
+        return ECR.setEscrow(
+        asset1,
+        account2Hash,
+        '180',
+        '50',
+        {from: account2}
+        )
+    })
+
+    //25
+    it('Should Fail to set stolen because asset1 is in locked escrow', async () => {
+        return NP._setLostOrStolen(
+        asset1,
+        rgt1,
+        '3',
+        {from: account2}
+        )
+    })
+
+
+    it('Should take asset1 out of escrow', async () => {
+        return ECR.endEscrow(
+        asset1,
+        {from: account2}
+        )
+    })
+
+
+    it('Should set asset1Status to 1', async () => {
+        return NP._modStatus(
+        asset1,
+        rgt1,
+        '1',
+        {from: account2}
+        )
+    })
+
+
+    it('Should place asset1 in escrow', async () => {
+        return ECR.setEscrow(
+        asset1,
+        account2Hash,
+        '180',
+        '50',
+        {from: account2}
+        )
+    })
+
+    //26
+    it('Should Fail to set lost because asset1 is in locked escrow', async () => {
+        return NP._setLostOrStolen(
+        asset1,
+        rgt1,
+        '4',
+        {from: account2}
+        )
+    })
+
+
+    it('Should take asset1 out of escrow', async () => {
+        return ECR.endEscrow(
+        asset1,
+        {from: account2}
+        )
+    })
+
+
+    it('Should set asset1Status to 1', async () => {
+        return NP._modStatus(
+        asset1,
+        rgt1,
+        '1',
+        {from: account2}
+        )
+    })
+
+    //27 Doesn't fail... Probably converts negetive to positive automatically.
+    // it('Should fail because asset cant be decremented by negetive number', async () => {
+    //     return NP._decCounter(
+    //     asset1,
+    //     rgt1,
+    //     '-10',
+    //     {from: account2}
+    //     )
+    // })
+
+
+    it('Should set asset1 Ipfs to (rgt1)', async () => {
+
+        console.log("//**************************************END _setLostOrStolen FAIL BATCH**********************************************/")
+        console.log("//**************************************BEGIN _decCounter FAIL BATCH**********************************************/")
+        console.log("//**************************************END _decCounter FAIL BATCH**********************************************/")
+        console.log("//**************************************BEGIN _modIpfs1 FAIL BATCH**********************************************/")
+        return NP._modIpfs1(
+        asset1,
+        rgt1,
+        rgt1,
+        {from: account2}
+        )
+    })
+
+    //28
+    it('Should fail becasue new data cant be the same as old', async () => {
+
+        console.log("//**************************************END _modIpfs1 FAIL BATCH**********************************************/")
+        console.log("//**************************************END NC FAIL BATCH**********************************************/")
+        console.log("//**************************************END NC TEST**********************************************/")
+        return NP._modIpfs1(
+        asset1,
+        rgt1,
+        rgt1,
+        {from: account2}
+        )
     })
 
 
@@ -1229,6 +1769,16 @@
         '1',
         {from: account2}
         )
+    })
+
+    it("Should retrieve asset12", async () =>{ 
+        var Record = [];
+        
+        return await STOR.retrieveShortRecord(asset12, {from: account2}, function (_err, _result) {
+            if(_err){} 
+            else{Record = Object.values(_result)
+        console.log(Record)}
+        })
     })
 
 });

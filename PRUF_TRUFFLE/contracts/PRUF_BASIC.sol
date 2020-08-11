@@ -133,7 +133,7 @@ contract BASIC is ReentrancyGuard, Ownable, IERC721Receiver, Pausable {
         //^^^^^^^effects^^^^^^^^^
     }
 
-    function OO_TX_asset_Token(address _to, bytes32 _idxHash)
+    function TX_asset_Token(address _to, bytes32 _idxHash)
         external
         virtual
         nonReentrant

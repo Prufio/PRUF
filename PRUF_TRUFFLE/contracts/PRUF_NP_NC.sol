@@ -172,7 +172,7 @@ contract NP_NC is CORE {
         );
         require(
             needsImport(rec.assetStatus) == 0,
-            "NPNC:MS: Asset is in in unregistered, exported, or discarded status."
+            "NPNC:MS: Asset is in ann unregistered, exported, or discarded status."
         );
         //^^^^^^^checks^^^^^^^^^
 
