@@ -75,6 +75,7 @@ contract AC_MGR is CORE {
                 (_userType == 1) ||
                 (_userType == 2) ||
                 (_userType == 9) ||
+                (_userType == 10) ||
                 (_userType == 99),
             "ACM:AU:Invalid user type"
         );

@@ -123,7 +123,7 @@ contract A_TKN is Ownable, ReentrancyGuard, ERC721 {
     {
         require(
             _isApprovedOrOwner(_msgSender(), tokenId),
-            "AT:SURI:transfer caller is not owner nor approved"
+            "AT:SURI:caller is not owner nor approved"
         );
         //^^^^^^^checks^^^^^^^^^
 
