@@ -976,8 +976,64 @@
             })
     })
 
+
+    it('Should fail because usertype is not valid', async () => {
+
+        console.log("//**************************************BEGIN AC_MGR TEST**********************************************/")
+        console.log("//**************************************BEGIN AC_MGR FAIL BATCH**********************************************/")
+        console.log("//**************************************BEGIN OO_addUser FAIL BATCH**********************************************/")
+        return AC_MGR.OO_addUser(
+        account2, 
+        '10',
+        '10',
+        {from: account1}
+        )
+    })
+
+
+    it('Should fail because AC_TKN ID != 0', async () => {
+
+        console.log("//**************************************END OO_addUser FAIL BATCH**********************************************/")
+        console.log("//**************************************BEGIN createAssetClass FAIL BATCH**********************************************/")
+        return AC_MGR.createAssetClass(
+        '0', 
+        account2,
+        '20',
+        '20',
+        '1',
+        '1',
+        {from: account1}
+        )
+    })
+
+    it('Should fail because RootAC doesnt exist', async () => {
+        return AC_MGR.createAssetClass(
+        '20', 
+        account2,
+        'AC20',
+        '20',
+        '30',
+        '1',
+        {from: account1}
+        )
+    })
+
+    it('Should fail because AC_TKN ID != 0', async () => {
+
+        console.log("//**************************************END createAssetClass FAIL BATCH**********************************************/")
+        console.log("//*************************************BEGIN getNewRecordCosts FAIL BATCH**********************************************/")
+        return AC_MGR.getNewRecordCosts(
+        '0',
+        {from: account1}
+        )
+    })
+
+
     it('Should write record in AC 10 @ IDX&RGT(1)', async () => {
 
+        console.log("//**************************************END getNewRecordCosts FAIL BATCH**********************************************/")
+        console.log("//**************************************END AC_MGR FAIL BATCH**********************************************/")
+        console.log("//**************************************END AC_MGR TEST**********************************************/")
         console.log("//**************************************BEGIN THE WORKS**********************************************/")
         return APP.$newRecord(
         asset12, 
