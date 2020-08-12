@@ -415,7 +415,7 @@
             
             .then(() => {
                 console.log("Adding ECR to storage for use in AC 0")
-                return STOR.OO_addContract("ECR", ECR.address, '0', '3', { from: account1 })
+                return STOR.OO_addContract("ECR", ECR.address, '0', '0', { from: account1 })
             })
 
             .then(() => {
