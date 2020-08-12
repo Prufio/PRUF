@@ -20,7 +20,7 @@ pragma solidity ^0.6.7;
 
 import "./PRUF_ECR_CORE.sol";
 
-contract ECR is ECR_CORE {
+contract ECR2 is ECR_CORE {
     /*
      * @dev Verify user credentials
      * Originating Address:
@@ -54,7 +54,7 @@ contract ECR is ECR_CORE {
             rec.assetClass
         );
 
-        require(                                                                   //Storage IA mod takes care of it?
+        require(
             contractInfo.contractType > 0,
             "E:SE: This contract not authorized for specified AC"
         );
@@ -128,7 +128,7 @@ contract ECR is ECR_CORE {
         uint8 userType = getUserType(rec.assetClass);
         bytes32 ownerHash = ECR_MGR.retrieveEscrowOwner(_idxHash);
 
-        require(                                                                 //Storage IA mod takes care of it?
+        require(
             contractInfo.contractType > 0,
             "E:EE: This contract not authorized for specified AC"
         );

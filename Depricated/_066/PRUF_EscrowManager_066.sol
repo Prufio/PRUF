@@ -168,7 +168,7 @@ contract PRUF_escrowManager is PRUF_BASIC {
     /*
      * @dev Permissive removal of asset from escrow status after time-out
      */
-    function PermissiveEndEscrow(bytes32 _idxHash) external nonReentrant {
+    function permissiveEndEscrow(bytes32 _idxHash) external nonReentrant {
         require(escrows[_idxHash].timelock < now, "PEM:PEE:Escrow not expired");
         require( // do not allow escrows with escrow.data > 199 to be ended by this function
             escrows[_idxHash].data < 200,
