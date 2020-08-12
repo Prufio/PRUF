@@ -273,7 +273,7 @@ interface ECR_MGR_Interface {
 
     function endEscrow(bytes32 _idxHash) external;
 
-    function PermissiveEndEscrow(bytes32 _idxHash) external;
+    function permissiveEndEscrow(bytes32 _idxHash) external;
 
     function retrieveEscrowOwner(bytes32 _idxHash) external returns (bytes32);
 
