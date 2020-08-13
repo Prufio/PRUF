@@ -45,16 +45,16 @@ contract NAKED is CORE {
 
         require(
             (AC_TKN.ownerOf(_assetClass) == msg.sender), //msg.sender is token holder
-            "ANC:MOD-IA: Caller does not hold asset token"
+            "N:MNA:Caller does not hold asset token"
         );
-        require(userType == 10,"user not authorized to mint naked assets");
+        require(userType == 10,"N:MNA:user not authorized to mint naked assets");
         require(
             A_TKN.tokenExists(tokenId) == 0,
-            "PNP:INA: Token already exists"
+            "N:MNA: Token already exists"
         );
         require(
             rec.assetClass == 0,
-            "PNP:INA: Asset already registered in system"
+            "N:MNA: Asset already registered in system"
         );
         //^^^^^^^checks^^^^^^^^^
         string memory tokenURI;
