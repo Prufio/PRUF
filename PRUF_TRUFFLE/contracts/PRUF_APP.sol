@@ -39,7 +39,7 @@ contract APP is CORE {
     function $newRecord(
         bytes32 _idxHash,
         bytes32 _rgtHash,
-        uint16 _assetClass,
+        uint256 _assetClass,
         uint256 _countDownStart
     ) external payable nonReentrant whenNotPaused {
         Record memory rec = getRecord(_idxHash);
@@ -84,7 +84,7 @@ contract APP is CORE {
     function $importAsset(
         bytes32 _idxHash,
         bytes32 _newRgtHash,
-        uint16 _newAssetClass
+        uint256 _newAssetClass
     )
         external
         payable

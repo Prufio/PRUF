@@ -65,7 +65,7 @@ contract RCLR is ECR_CORE, CORE {
     function $recycle(
         bytes32 _idxHash,
         bytes32 _rgtHash,
-        uint16 _assetClass
+        uint256 _assetClass
     ) external payable nonReentrant whenNotPaused {
         //bytes32 senderHash = keccak256(abi.encodePacked(msg.sender));
         uint256 tokenId = uint256(_idxHash);

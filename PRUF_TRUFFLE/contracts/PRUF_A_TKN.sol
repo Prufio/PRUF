@@ -30,7 +30,7 @@ contract A_TKN is Ownable, ReentrancyGuard, ERC721 {
         bytes32 lastRecorder; // Address hash of last non-automation recorder
         uint8 assetStatus; // Status - Transferrable, locked, in transfer, stolen, lost, etc.
         uint8 forceModCount; // Number of times asset has been forceModded.
-        uint16 assetClass; // Type of asset
+        uint256 assetClass; // Type of asset
         uint256 countDown; // Variable that can only be dencreased from countDownStart
         uint256 countDownStart; // Starting point for countdown variable (set once)
         bytes32 Ipfs1; // Publically viewable asset description
@@ -134,7 +134,7 @@ contract A_TKN is Ownable, ReentrancyGuard, ERC721 {
 
     function validateNakedToken(
         uint256 tokenId,
-        uint16 _assetClass,
+        uint256 _assetClass,
         string calldata _authCode
     ) external view {
         require( // Forgive me my trespasses...
@@ -370,7 +370,7 @@ contract A_TKN is Ownable, ReentrancyGuard, ERC721 {
                 //bytes32 _lastRecorder,
                 uint8 _assetStatus,
                 uint8 _forceModCount,
-                uint16 _assetClass,
+                uint256 _assetClass,
                 uint256 _countDown,
                 uint256 _countDownStart,
                 bytes32 _Ipfs1,

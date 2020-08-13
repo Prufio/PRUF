@@ -36,8 +36,8 @@ contract NAKED is CORE {
 
     function mintNakedAsset(
         bytes32 _idxHash,
-        string calldata _tokenURI, // token URI needs to be K256(packed( uint16 assetClass, string authCode)) supplied off chain
-        uint16 _assetClass
+        string calldata _tokenURI, // token URI needs to be K256(packed( uint256 assetClass, string authCode)) supplied off chain
+        uint256 _assetClass
     ) external nonReentrant whenNotPaused {
         uint256 tokenId = uint256(_idxHash);
         Record memory rec = getRecord(_idxHash);
@@ -69,7 +69,7 @@ contract NAKED is CORE {
     function $claimNakedAsset(
         bytes32 _idxHash,
         string calldata _authCode,
-        uint16 _newAssetClass,
+        uint256 _newAssetClass,
         bytes32 _rgtHash,
         uint256 _countDownStart
     ) external payable nonReentrant whenNotPaused {
@@ -107,7 +107,7 @@ contract NAKED is CORE {
         //^^^^^^^interactions / effects^^^^^^^^^^^^
     }
 
-    function deductImportRecordCosts(uint16 _assetClass)
+    function deductImportRecordCosts(uint256 _assetClass)
         internal
         whenNotPaused
     {

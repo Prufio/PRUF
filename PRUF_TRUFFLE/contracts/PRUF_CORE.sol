@@ -51,7 +51,7 @@ contract CORE is PullPayment, BASIC {
     /*
      * @dev retrieves costs from Storage and returns Costs struct
      */
-    function getCost(uint16 _assetClass) internal returns (Costs memory) {
+    function getCost(uint256 _assetClass) internal returns (Costs memory) {
         //^^^^^^^checks^^^^^^^^^
 
         Costs memory cost;
@@ -78,7 +78,7 @@ contract CORE is PullPayment, BASIC {
     function createRecord(
         bytes32 _idxHash,
         bytes32 _rgtHash,
-        uint16 _assetClass,
+        uint256 _assetClass,
         uint256 _countDownStart
     ) internal {
         uint256 tokenId = uint256(_idxHash);
@@ -153,7 +153,7 @@ contract CORE is PullPayment, BASIC {
 
     //--------------------------------------------------------------------------------------Payment internal functions
 
-    function deductNewRecordCosts(uint16 _assetClass) internal whenNotPaused {
+    function deductNewRecordCosts(uint256 _assetClass) internal whenNotPaused {
         //^^^^^^^checks^^^^^^^^^
         Invoice memory pricing;
         //^^^^^^^effects^^^^^^^^^
@@ -167,7 +167,7 @@ contract CORE is PullPayment, BASIC {
         //^^^^^^^interactions^^^^^^^^^
     }
 
-    function deductRecycleCosts(uint16 _assetClass, address _oldOwner)
+    function deductRecycleCosts(uint256 _assetClass, address _oldOwner)
         internal
         whenNotPaused
     {
@@ -185,7 +185,7 @@ contract CORE is PullPayment, BASIC {
         //^^^^^^^interactions^^^^^^^^^
     }
 
-    function deductTransferAssetCosts(uint16 _assetClass)
+    function deductTransferAssetCosts(uint256 _assetClass)
         internal
         whenNotPaused
     {
@@ -202,7 +202,7 @@ contract CORE is PullPayment, BASIC {
         //^^^^^^^interactions^^^^^^^^^
     }
 
-    function deductCreateNoteCosts(uint16 _assetClass) internal whenNotPaused {
+    function deductCreateNoteCosts(uint256 _assetClass) internal whenNotPaused {
         //^^^^^^^checks^^^^^^^^^
         Invoice memory pricing;
         //^^^^^^^effects^^^^^^^^^
@@ -216,7 +216,7 @@ contract CORE is PullPayment, BASIC {
         //^^^^^^^interactions^^^^^^^^^
     }
 
-    function deductReMintRecordCosts(uint16 _assetClass)
+    function deductReMintRecordCosts(uint256 _assetClass)
         internal
         whenNotPaused
     {
@@ -233,7 +233,7 @@ contract CORE is PullPayment, BASIC {
         //^^^^^^^interactions^^^^^^^^^
     }
 
-    function deductChangeStatusCosts(uint16 _assetClass)
+    function deductChangeStatusCosts(uint256 _assetClass)
         internal
         whenNotPaused
     {
@@ -250,7 +250,7 @@ contract CORE is PullPayment, BASIC {
         //^^^^^^^interactions^^^^^^^^^
     }
 
-    function deductForceModifyCosts(uint16 _assetClass) internal whenNotPaused {
+    function deductForceModifyCosts(uint256 _assetClass) internal whenNotPaused {
         //^^^^^^^checks^^^^^^^^^
         Invoice memory pricing;
         //^^^^^^^effects^^^^^^^^^
@@ -292,7 +292,7 @@ contract CORE is PullPayment, BASIC {
 
 //--------------------------------------------------------------------------------------status test internal functions
 
-    function isLostOrStolen(uint16 _assetStatus) internal pure returns (uint8) {
+    function isLostOrStolen(uint8 _assetStatus) internal pure returns (uint8) {
         if (
             (_assetStatus != 3) &&
             (_assetStatus != 4) &&
@@ -308,7 +308,7 @@ contract CORE is PullPayment, BASIC {
     /*
      * @dev Check to see if record is in escrow status
      */
-    function isEscrow(uint16 _assetStatus) internal pure returns (uint8) {
+    function isEscrow(uint8 _assetStatus) internal pure returns (uint8) {
         if (
             (_assetStatus != 6) &&
             (_assetStatus != 50) &&
@@ -320,7 +320,7 @@ contract CORE is PullPayment, BASIC {
         }
     }
 
-    function needsImport(uint16 _assetStatus) internal pure returns (uint8) {
+    function needsImport(uint8 _assetStatus) internal pure returns (uint8) {
         if (
             (_assetStatus != 5) &&
             (_assetStatus != 55) &&
@@ -333,7 +333,7 @@ contract CORE is PullPayment, BASIC {
         }
     }
 
-    // function isReserved(uint16 _assetStatus) internal pure returns (uint8) {
+    // function isReserved(uint8 _assetStatus) internal pure returns (uint8) {
     //     if (
     //         (_assetStatus != 7) &&
     //         (_assetStatus != 57) &&
