@@ -67,12 +67,9 @@ contract STOR is Ownable, ReentrancyGuard, Pausable {
      * Originating Address is authorized for asset class
      */
     modifier isAuthorized(uint256 _assetClass) {
+        uint8 auth = contractInfo[contractAddressToName[msg.sender]][_assetClass];
         require(
-            ((contractInfo[contractAddressToName[msg.sender]][_assetClass] >
-                0) &&
-                (contractInfo[contractAddressToName[msg.sender]][_assetClass] <
-                    5) || (contractInfo[contractAddressToName[msg.sender]][_assetClass] ==
-                    10)),
+            ((auth > 0) && (auth < 5)) || (auth == 10),
             "S:MOD-IA:Cntrct not prmsnd"
         );
         _;
