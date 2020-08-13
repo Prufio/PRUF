@@ -809,6 +809,10 @@
             .then(() => {
                 return STOR.enableContractForAC('A_TKN', '14', '2', { from: account1 })
             })
+
+            .then(() => {
+                return STOR.enableContractForAC('A_TKN', '15', '2', { from: account10 })
+            })
             
             .then(() => {
                 return STOR.enableContractForAC('A_TKN', '1', '1', { from: account1 })
@@ -1103,7 +1107,6 @@
     })
 
 
-
     it('Should change status of asset2 to discardable', async () => {
         return NP_NC._modStatus(
         asset2, 
@@ -1240,6 +1243,16 @@
             rgt3,
             '100',
             {from: account10, value: 20000000000000000}
+            )
+    })
+
+
+    it('Should transfer token back to NAKED', async () => {
+        return A_TKN.safeTransferFrom(
+            account10, 
+            NAKED.address,
+            asset3,
+            {from: account10}
             )
     })
 
