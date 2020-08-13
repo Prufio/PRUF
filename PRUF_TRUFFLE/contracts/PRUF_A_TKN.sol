@@ -240,17 +240,17 @@ contract A_TKN is Ownable, ReentrancyGuard, ERC721 {
         address from,
         address to,
         uint256 tokenId
-    ) public override nonReentrant {
-        bytes32 _idxHash = bytes32(tokenId);
-        Record memory rec = getRecord(_idxHash);
+    ) public override {
+        //bytes32 _idxHash = bytes32(tokenId);
+        //Record memory rec = getRecord(_idxHash);
 
         //^^^^^^^checks^^^^^^^^^
 
-        rec
-            .rightsHolder = 0xFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF;
+        // rec
+        //     .rightsHolder = 0xFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF;
         //^^^^^^^effects^^^^^^^^^
 
-        writeRecord(_idxHash, rec);
+        //writeRecord(_idxHash, rec);
         safeTransferFrom(from, to, tokenId, "");
         //^^^^^^^interactions^^^^^^^^^
     }
@@ -272,7 +272,7 @@ contract A_TKN is Ownable, ReentrancyGuard, ERC721 {
         address to,
         uint256 tokenId,
         bytes memory _data
-    ) public virtual override {
+    ) public virtual override nonReentrant {
         bytes32 _idxHash = bytes32(tokenId);
         Record memory rec = getRecord(_idxHash);
         (uint8 isAuth, ) = STOR.ContractInfoHash(to, 0); // trailing comma because does not use the returned hash
