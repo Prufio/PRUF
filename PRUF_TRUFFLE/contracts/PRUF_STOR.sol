@@ -39,7 +39,7 @@ contract STOR is Ownable, ReentrancyGuard, Pausable {
         bytes32 rightsHolder; // KEK256 Registered owner
         uint8 assetStatus; // Status - Transferrable, locked, in transfer, stolen, lost, etc.
         uint8 forceModCount; // Number of times asset has been forceModded.
-        uint16 assetClass; // Type of asset
+        uint256 assetClass; // Type of asset
         uint256 countDown; // Variable that can only be dencreased from countDownStart
         uint256 countDownStart; // Starting point for countdown variable (set once)
         bytes32 Ipfs1; // Publically viewable asset description
@@ -47,7 +47,7 @@ contract STOR is Ownable, ReentrancyGuard, Pausable {
         uint16 numberOfTransfers; //number of transfers and forcemods
     }
 
-    mapping(string => mapping(uint16 => uint8)) internal contractInfo;
+    mapping(string => mapping(uint256 => uint8)) internal contractInfo;
     mapping(address => string) private contractAddressToName; // Authorized contract addresses, indexed by address, with auth level 0-255
     mapping(string => address) private contractNameToAddress; // Authorized contract addresses, indexed by name
 
@@ -66,7 +66,7 @@ contract STOR is Ownable, ReentrancyGuard, Pausable {
      *
      * Originating Address is authorized for asset class
      */
-    modifier isAuthorized(uint16 _assetClass) {
+    modifier isAuthorized(uint256 _assetClass) {
         require(
             (contractInfo[contractAddressToName[msg.sender]][_assetClass] >
                 0) &&
@@ -113,7 +113,7 @@ contract STOR is Ownable, ReentrancyGuard, Pausable {
     /*
      * @dev Check to see if record is in lost or stolen status
      */
-    function isLostOrStolen(uint16 _assetStatus) private pure returns (uint8) {
+    function isLostOrStolen(uint8 _assetStatus) private pure returns (uint8) {
         if (
             (_assetStatus != 3) &&
             (_assetStatus != 4) &&
@@ -129,7 +129,7 @@ contract STOR is Ownable, ReentrancyGuard, Pausable {
     /*
      * @dev Check to see if record is in escrow status
      */
-    function isEscrow(uint16 _assetStatus) private pure returns (uint8) {
+    function isEscrow(uint8 _assetStatus) private pure returns (uint8) {
         if (
             (_assetStatus != 6) &&
             (_assetStatus != 50) &&
@@ -168,7 +168,7 @@ contract STOR is Ownable, ReentrancyGuard, Pausable {
     function OO_addContract(
         string calldata _name,
         address _addr,
-        uint16 _assetClass,
+        uint256 _assetClass,
         uint8 _contractAuthLevel
     ) external onlyOwner {
         require(
@@ -198,12 +198,11 @@ contract STOR is Ownable, ReentrancyGuard, Pausable {
      */
     function enableContractForAC(
         string calldata _name,
-        uint16 _assetClass,
+        uint256 _assetClass,
         uint8 _contractAuthLevel
     ) external {
-        uint256 assetClass256 = uint256(_assetClass);
         require(
-            AC_TKN.ownerOf(assetClass256) == msg.sender,
+            AC_TKN.ownerOf(_assetClass) == msg.sender,
             "S:ECFAC:Caller not ACtokenHolder"
         );
 
@@ -227,7 +226,7 @@ contract STOR is Ownable, ReentrancyGuard, Pausable {
     function newRecord(
         bytes32 _idxHash,
         bytes32 _rgtHash,
-        uint16 _assetClass,
+        uint256 _assetClass,
         uint256 _countDownStart
     ) external nonReentrant whenNotPaused isAuthorized(_assetClass) {
         require(
@@ -318,7 +317,7 @@ contract STOR is Ownable, ReentrancyGuard, Pausable {
     /*
      * @dev Change asset class of an asset
      */
-    function changeAC(bytes32 _idxHash, uint16 _newAssetClass)
+    function changeAC(bytes32 _idxHash, uint256 _newAssetClass)
         external
         nonReentrant
         whenNotPaused
@@ -522,7 +521,7 @@ contract STOR is Ownable, ReentrancyGuard, Pausable {
             bytes32,
             uint8,
             uint8,
-            uint16,
+            uint256,
             uint256,
             uint256,
             bytes32,
@@ -561,7 +560,7 @@ contract STOR is Ownable, ReentrancyGuard, Pausable {
         returns (
             uint8,
             uint8,
-            uint16,
+            uint256,
             uint256,
             uint256,
             bytes32,
@@ -642,7 +641,7 @@ contract STOR is Ownable, ReentrancyGuard, Pausable {
     /*
      * @dev //returns the contract type of a contract with address _addr.
      */
-    function ContractInfoHash(address _addr, uint16 _assetClass)
+    function ContractInfoHash(address _addr, uint256 _assetClass)
         external
         view
         returns (uint8, bytes32)

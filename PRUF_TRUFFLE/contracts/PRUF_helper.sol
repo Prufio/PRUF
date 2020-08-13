@@ -43,13 +43,13 @@ contract Helper is Ownable {
         return erc721_tokenContract.ownerOf(tokenId);
     }
 
-    function atWhatAddressTokenB32(bytes32 _tokenID)
+    function atWhatAddressTokenB32(bytes32 _tokenB32)
         external
         view
         onlyOwner
         returns (address)
     {
-        uint256 tokenId = uint256(_tokenID);
+        uint256 tokenId = uint256(_tokenB32);
         return erc721_tokenContract.ownerOf(tokenId);
     }
 
@@ -181,7 +181,7 @@ contract Helper is Ownable {
         return rawRgtHash;
     }
 
-    function getNakedTokenHash(uint16 _assetClass, string memory _authCode)
+    function getNakedTokenHash(uint256 _assetClass, string memory _authCode)
         public
         pure
         returns (uint256)

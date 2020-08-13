@@ -19,32 +19,32 @@ __/\\\\\\\\\\\\\ _____/\\\\\\\\\ _______/\\../\\ ___/\\\\\\\\\\\\\\\
 pragma solidity ^0.6.7;
 
 interface AC_MGR_Interface {
-    function getUserType(bytes32 _userHash, uint16 _assetClass)
+    function getUserType(bytes32 _userHash, uint256 _assetClass)
         external
         view
         returns (uint8);
 
-    function getAC_data(uint16 _assetClass)
+    function getAC_data(uint256 _assetClass)
         external
         returns (
-            uint16,
+            uint256,
             uint8,
             uint256
         );
 
-    function isSameRootAC(uint16 _assetClass1, uint16 _assetClass2)
+    function isSameRootAC(uint256 _assetClass1, uint256 _assetClass2)
         external
         returns (uint8);
 
     function getAC_name(uint256 _tokenId) external view returns (string memory);
 
-    function resolveAssetClass(string calldata _name) external returns (uint16);
+    function resolveAssetClass(string calldata _name) external returns (uint256);
 
-    function ContractAC_auth(uint16 _assetClass, bytes32 _authContractNameHash)
+    function ContractAC_auth(uint256 _assetClass, bytes32 _authContractNameHash)
         external
         returns (uint8);
 
-    function retrieveCosts(uint16 _assetClass)
+    function retrieveCosts(uint256 _assetClass)
         external
         returns (
             uint256,
@@ -68,7 +68,7 @@ interface AC_MGR_Interface {
             address
         );
 
-    function getNewRecordCosts(uint16 _assetClass)
+    function getNewRecordCosts(uint256 _assetClass)
         external
         returns (
             address,
@@ -77,7 +77,7 @@ interface AC_MGR_Interface {
             uint256
         );
 
-    function getTransferAssetCosts(uint16 _assetClass)
+    function getTransferAssetCosts(uint256 _assetClass)
         external
         returns (
             address,
@@ -86,7 +86,7 @@ interface AC_MGR_Interface {
             uint256
         );
 
-    function getCreateNoteCosts(uint16 _assetClass)
+    function getCreateNoteCosts(uint256 _assetClass)
         external
         returns (
             address,
@@ -95,7 +95,7 @@ interface AC_MGR_Interface {
             uint256
         );
 
-    function getReMintRecordCosts(uint16 _assetClass)
+    function getReMintRecordCosts(uint256 _assetClass)
         external
         returns (
             address,
@@ -104,7 +104,7 @@ interface AC_MGR_Interface {
             uint256
         );
 
-    function getChangeStatusCosts(uint16 _assetClass)
+    function getChangeStatusCosts(uint256 _assetClass)
         external
         returns (
             address,
@@ -113,7 +113,7 @@ interface AC_MGR_Interface {
             uint256
         );
 
-    function getForceModifyCosts(uint16 _assetClass)
+    function getForceModifyCosts(uint256 _assetClass)
         external
         returns (
             address,
@@ -182,7 +182,7 @@ interface A_TKN_Interface {
 
     function validateNakedToken(
         uint256 tokenId,
-        uint16 _assetClass,
+        uint256 _assetClass,
         string calldata _authCode
     ) external;
 }
@@ -191,7 +191,7 @@ interface STOR_Interface {
     function newRecord(
         bytes32 _idxHash,
         bytes32 _rgt,
-        uint16 _assetClass,
+        uint256 _assetClass,
         uint256 _countDownStart
     ) external;
 
@@ -204,7 +204,7 @@ interface STOR_Interface {
         uint16 _numberOfTransfers
     ) external;
 
-    function changeAC(bytes32 _idxHash, uint16 _newAssetClass) external;
+    function changeAC(bytes32 _idxHash, uint256 _newAssetClass) external;
 
     function setEscrow(
         bytes32 _idxHash,
@@ -226,7 +226,7 @@ interface STOR_Interface {
             bytes32,
             uint8,
             uint8,
-            uint16,
+            uint256,
             uint256,
             uint256,
             bytes32,
@@ -241,7 +241,7 @@ interface STOR_Interface {
         returns (
             uint8,
             uint8,
-            uint16,
+            uint256,
             uint256,
             uint256,
             bytes32,
@@ -253,7 +253,7 @@ interface STOR_Interface {
         external
         returns (address);
 
-    function ContractInfoHash(address _addr, uint16 _assetClass)
+    function ContractInfoHash(address _addr, uint256 _assetClass)
         external
         returns (uint8, bytes32);
 }

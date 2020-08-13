@@ -25,12 +25,12 @@ contract AC_MGR is CORE {
     using SafeMath for uint256;
     using SafeMath for uint8;
 
-    mapping(uint16 => Costs) private cost; // Cost per function by asset class
+    mapping(uint256 => Costs) private cost; // Cost per function by asset class
 
-    mapping(uint16 => AC) internal AC_data; // AC info database asset class to AC struct (NAME,ACroot,CUSTODIAL/NC,uint256)
-    mapping(string => uint16) internal AC_number; //name to asset class resolution map
+    mapping(uint256 => AC) internal AC_data; // AC info database asset class to AC struct (NAME,ACroot,CUSTODIAL/NC,uint256)
+    mapping(string => uint256) internal AC_number; //name to asset class resolution map
 
-    mapping(bytes32 => mapping(uint16 => uint8)) internal registeredUsers; // Authorized recorder database
+    mapping(bytes32 => mapping(uint256 => uint8)) internal registeredUsers; // Authorized recorder database
 
     //address AC_minterAddress;
     uint256 private priceThreshold; //threshold of price where fractional pricing is implemented
@@ -51,10 +51,9 @@ contract AC_MGR is CORE {
     /*
      * @dev Verify caller holds ACtoken of passed assetClass
      */
-    modifier isACtokenHolderOfClass(uint16 _assetClass) {
-        uint256 assetClass256 = uint256(_assetClass);
+    modifier isACtokenHolderOfClass(uint256 _assetClass) {
         require(
-            (AC_TKN.ownerOf(assetClass256) == msg.sender),
+            (AC_TKN.ownerOf(_assetClass) == msg.sender),
             "ACM:MOD-IACTHoC:msg.sender not authorized in asset class"
         );
         _;
@@ -68,7 +67,7 @@ contract AC_MGR is CORE {
     function OO_addUser(
         address _authAddr,
         uint8 _userType,
-        uint16 _assetClass
+        uint256 _assetClass
     ) external whenNotPaused isACtokenHolderOfClass(_assetClass) {
         require(
             (_userType == 0) ||
@@ -96,8 +95,8 @@ contract AC_MGR is CORE {
         uint256 _tokenId,
         address _recipientAddress,
         string calldata _name,
-        uint16 _assetClass,
-        uint16 _assetClassRoot,
+        uint256 _assetClass,
+        uint256 _assetClassRoot,
         uint8 _custodyType
     ) external isAdmin {
         AC memory _ac = AC_data[_assetClassRoot];
@@ -127,7 +126,7 @@ contract AC_MGR is CORE {
      * @dev Set function costs and payment address per asset class, in Wei
      */
     function ACTH_setCosts(
-        uint16 _class,
+        uint256 _class,
         uint256 _newRecordCost,
         uint256 _transferAssetCost,
         uint256 _createNoteCost,
@@ -151,7 +150,7 @@ contract AC_MGR is CORE {
     /*
      * @dev get a User Record
      */
-    function getUserType(bytes32 _userHash, uint16 _assetClass)
+    function getUserType(bytes32 _userHash, uint256 _assetClass)
         external
         view
         returns (uint8)
@@ -164,11 +163,11 @@ contract AC_MGR is CORE {
     /*
      * @dev Retrieve AC_data @ _assetClass
      */
-    function getAC_data(uint16 _assetClass)
+    function getAC_data(uint256 _assetClass)
         external
         view
         returns (
-            uint16,
+            uint256,
             uint8,
             uint256
         )
@@ -185,7 +184,7 @@ contract AC_MGR is CORE {
     /*
      * @dev compare the root of two asset classes
      */
-    function isSameRootAC(uint16 _assetClass1, uint16 _assetClass2)
+    function isSameRootAC(uint256 _assetClass1, uint256 _assetClass2)
         external
         view
         returns (uint8)
@@ -211,7 +210,7 @@ contract AC_MGR is CORE {
         returns (string memory)
     {
         //^^^^^^^checks^^^^^^^^^
-        uint16 assetClass = uint16(_tokenId);
+        uint256 assetClass = _tokenId;
         return (AC_data[assetClass].name);
         //^^^^^^^interactions^^^^^^^^^
     }
@@ -222,7 +221,7 @@ contract AC_MGR is CORE {
     function resolveAssetClass(string calldata _name)
         external
         view
-        returns (uint16)
+        returns (uint256)
     {
         //^^^^^^^checks^^^^^^^^^
         return (AC_number[_name]);
@@ -233,7 +232,7 @@ contract AC_MGR is CORE {
     /*
      * @dev Retrieve function costs per asset class, in Wei
      */
-    function getNewRecordCosts(uint16 _assetClass)
+    function getNewRecordCosts(uint256 _assetClass)
         external
         returns (
             address,
@@ -244,12 +243,11 @@ contract AC_MGR is CORE {
     {
         AC memory AC_info = getACinfo(_assetClass);
         Costs memory costs = cost[_assetClass];
-        uint16 rootAssetClass = AC_info.assetClassRoot;
+        uint256 rootAssetClass = AC_info.assetClassRoot;
         Costs memory rootCosts = cost[rootAssetClass];
-        uint256 assetClass256 = uint256(_assetClass);
 
         require(
-            (AC_TKN.ownerOf(assetClass256) != AC_TKN_Address), //this will throw in the token contract if not minted
+            (AC_TKN.ownerOf(_assetClass) != AC_TKN_Address), //this will throw in the token contract if not minted
             "ACM:GNRC:Asset class not yet populated"
         );
         //^^^^^^^checks^^^^^^^^^
@@ -265,7 +263,7 @@ contract AC_MGR is CORE {
     /*
      * @dev Retrieve function costs per asset class, in Wei
      */
-    function getTransferAssetCosts(uint16 _assetClass)
+    function getTransferAssetCosts(uint256 _assetClass)
         external
         returns (
             address,
@@ -276,12 +274,11 @@ contract AC_MGR is CORE {
     {
         AC memory AC_info = getACinfo(_assetClass);
         Costs memory costs = cost[_assetClass];
-        uint16 rootAssetClass = AC_info.assetClassRoot;
+        uint256 rootAssetClass = AC_info.assetClassRoot;
         Costs memory rootCosts = cost[rootAssetClass];
-        uint256 assetClass256 = uint256(_assetClass);
 
         require(
-            (AC_TKN.ownerOf(assetClass256) != AC_TKN_Address), //this will throw in the token contract if not minted
+            (AC_TKN.ownerOf(_assetClass) != AC_TKN_Address), //this will throw in the token contract if not minted
             "ACM:GTAC:Asset class not yet populated"
         );
         //^^^^^^^checks^^^^^^^^^
@@ -297,7 +294,7 @@ contract AC_MGR is CORE {
     /*
      * @dev Retrieve function costs per asset class, in Wei
      */
-    function getCreateNoteCosts(uint16 _assetClass)
+    function getCreateNoteCosts(uint256 _assetClass)
         external
         returns (
             address,
@@ -308,12 +305,11 @@ contract AC_MGR is CORE {
     {
         AC memory AC_info = getACinfo(_assetClass);
         Costs memory costs = cost[_assetClass];
-        uint16 rootAssetClass = AC_info.assetClassRoot;
+        uint256 rootAssetClass = AC_info.assetClassRoot;
         Costs memory rootCosts = cost[rootAssetClass];
-        uint256 assetClass256 = uint256(_assetClass);
 
         require(
-            (AC_TKN.ownerOf(assetClass256) != AC_TKN_Address), //this will throw in the token contract if not minted
+            (AC_TKN.ownerOf(_assetClass) != AC_TKN_Address), //this will throw in the token contract if not minted
             "ACM:GCNC:Asset class not yet populated"
         );
         //^^^^^^^checks^^^^^^^^^
@@ -329,7 +325,7 @@ contract AC_MGR is CORE {
     /*
      * @dev Retrieve function costs per asset class, in Wei
      */
-    function getReMintRecordCosts(uint16 _assetClass)
+    function getReMintRecordCosts(uint256 _assetClass)
         external
         returns (
             address,
@@ -340,12 +336,11 @@ contract AC_MGR is CORE {
     {
         AC memory AC_info = getACinfo(_assetClass);
         Costs memory costs = cost[_assetClass];
-        uint16 rootAssetClass = AC_info.assetClassRoot;
+        uint256 rootAssetClass = AC_info.assetClassRoot;
         Costs memory rootCosts = cost[rootAssetClass];
-        uint256 assetClass256 = uint256(_assetClass);
 
         require(
-            (AC_TKN.ownerOf(assetClass256) != AC_TKN_Address), //this will throw in the token contract if not minted
+            (AC_TKN.ownerOf(_assetClass) != AC_TKN_Address), //this will throw in the token contract if not minted
             "ACM:GMRC:Asset class not yet populated"
         );
         //^^^^^^^checks^^^^^^^^^
@@ -361,7 +356,7 @@ contract AC_MGR is CORE {
     /*
      * @dev Retrieve function costs per asset class, in Wei
      */
-    function getChangeStatusCosts(uint16 _assetClass)
+    function getChangeStatusCosts(uint256 _assetClass)
         external
         returns (
             address,
@@ -372,12 +367,11 @@ contract AC_MGR is CORE {
     {
         AC memory AC_info = getACinfo(_assetClass);
         Costs memory costs = cost[_assetClass];
-        uint16 rootAssetClass = AC_info.assetClassRoot;
+        uint256 rootAssetClass = AC_info.assetClassRoot;
         Costs memory rootCosts = cost[rootAssetClass];
-        uint256 assetClass256 = uint256(_assetClass);
 
         require(
-            (AC_TKN.ownerOf(assetClass256) != AC_TKN_Address), //this will throw in the token contract if not minted
+            (AC_TKN.ownerOf(_assetClass) != AC_TKN_Address), //this will throw in the token contract if not minted
             "ACM:GCSC:Asset class not yet populated"
         );
         //^^^^^^^checks^^^^^^^^^
@@ -393,7 +387,7 @@ contract AC_MGR is CORE {
     /*
      * @dev Retrieve function costs per asset class, in Wei
      */
-    function getForceModifyCosts(uint16 _assetClass)
+    function getForceModifyCosts(uint256 _assetClass)
         external
         returns (
             address,
@@ -404,12 +398,11 @@ contract AC_MGR is CORE {
     {
         AC memory AC_info = getACinfo(_assetClass);
         Costs memory costs = cost[_assetClass];
-        uint16 rootAssetClass = AC_info.assetClassRoot;
+        uint256 rootAssetClass = AC_info.assetClassRoot;
         Costs memory rootCosts = cost[rootAssetClass];
-        uint256 assetClass256 = uint256(_assetClass);
 
         require(
-            (AC_TKN.ownerOf(assetClass256) != AC_TKN_Address), //this will throw in the token contract if not minted
+            (AC_TKN.ownerOf(_assetClass) != AC_TKN_Address), //this will throw in the token contract if not minted
             "ACM:GFMC:Asset class not yet populated"
         );
         //^^^^^^^checks^^^^^^^^^
@@ -425,7 +418,7 @@ contract AC_MGR is CORE {
     /*
      * @dev Retrieve function costs per asset class, in Wei
      */
-    function retrieveCosts(uint16 _assetClass)
+    function retrieveCosts(uint256 _assetClass)
         external
         view
         returns (
@@ -438,11 +431,10 @@ contract AC_MGR is CORE {
             address
         )
     {
-        uint256 assetClass256 = uint256(_assetClass);
         Costs memory costs = cost[_assetClass];
 
         require(
-            (AC_TKN.ownerOf(assetClass256) != AC_TKN_Address), //this will throw in the token contract if not minted
+            (AC_TKN.ownerOf(_assetClass) != AC_TKN_Address), //this will throw in the token contract if not minted
             "ACM:RC:Asset class not yet populated"
         );
         //^^^^^^^checks^^^^^^^^
