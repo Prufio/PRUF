@@ -1162,120 +1162,239 @@
         )
     })
 
-    //                                                   !!!CANNOT BE SET BY CURRENT CONTRACTS 8/13/2020!!!
-    // it('Should write asset5 in AC 12', async () => {
-    //     return APP_NC.$newRecord(
-    //     asset5,
-    //     rgt5,
-    //     '12',
-    //     '100',
-    //     {from: account4, value: 20000000000000000}
-    //     )
-    // })
+
+    it('Should write asset5 in AC 12', async () => {
+        return APP.$newRecord(
+        asset5,
+        rgt5,
+        '10',
+        '100',
+        {from: account2, value: 20000000000000000}
+        )
+    })
 
 
-    // it('Should set asset5 into status 51', async () => {
-    //     return NP_NC._modStatus(
-    //     asset5, 
-    //     rgt5,
-    //     '51',
-    //     {from: account4}
-    //     )
-    // })
+    it('Should set asset5 into status 1', async () => {
+        return NP._modStatus(
+        asset5, 
+        rgt5,
+        '1',
+        {from: account2}
+        )
+    })
 
 
-    // it('Should transfer asset5 to 0x0', async () => {
-    //     return APP_NC.$transferAsset(
-    //     asset5, 
-    //     rgt5,
-    //     rgt000,
-    //     {from: account2, value: 20000000000000000}
-    //     )
-    // })
+    it('Should make ECR_NC unauthorized', async () => {
 
-
-    it('Should make ECR unatuhorized', async () => {
-
-        console.log("//**************************************END ECR SETUP**********************************************/")
-        console.log("//**************************************BEGIN ECR FAIL BATCH**********************************************/")
+        console.log("//**************************************END ECR_NC SETUP**********************************************/")
+        console.log("//**************************************BEGIN ECR_NC FAIL BATCH**********************************************/")
         console.log("//**************************************BEGIN setEscrow FAIL BATCH**********************************************/")
         
-            console.log("unAuthorizing ECR")
-            return STOR.enableContractForAC('ECR', '10', '1', { from: account1 })
+            console.log("unAuthorizing ECR_NC")
+            return STOR.enableContractForAC('ECR_NC', '12', '0', { from: account1 })
                 
                 .then(() => {
-                    return STOR.enableContractForAC('ECR', '11', '1', { from: account1 })
+                    return STOR.enableContractForAC('ECR_NC', '13', '0', { from: account1 })
+                })
+
+                .then(() => {
+                    return STOR.enableContractForAC('ECR_NC', '14', '0', { from: account1 })
                 })
                 
     })
 
 
     it('Should set asset1 into status 1', async () => {
-        return NP._modStatus(
+        return NP_NC._modStatus(
         asset1, 
-        rgt1,
-        '1',
-        {from: account2}
+        '51',
+        {from: account4}
         )
     })
 
     //1
-    it('Should fail because ECR is not an authorized escrow contract', async () => {
-        return ECR.setEscrow(
+    it('Should fail because ECR_NC is not auth in AC', async () => {
+        return ECR_NC.setEscrow(
         asset1, 
-        account2Hash,
+        account4Hash,
         '180',
-        '6',
-        {from: account2}
+        '56',
+        {from: account4}
         )
     })
 
 
-    it('Should authorize ECR', async () => {
-            console.log("Authorizing ECR")
-            return STOR.enableContractForAC('ECR', '10', '3', { from: account1 })
+    it('Should make ECR_NC Authorized', async () => {
+            console.log("Authorizing ECR_NC")
+            return STOR.enableContractForAC('ECR_NC', '12', '3', { from: account1 })
                 
                 .then(() => {
-                    return STOR.enableContractForAC('ECR', '11', '3', { from: account1 })
+                    return STOR.enableContractForAC('ECR_NC', '13', '3', { from: account1 })
+                })
+
+                .then(() => {
+                    return STOR.enableContractForAC('ECR_NC', '14', '3', { from: account1 })
                 })
                 
     })
 
     //2
     it('Should fail because record does not exist', async () => {
-        return ECR.setEscrow(
+        return ECR_NC.setEscrow(
         asset10, 
-        account2Hash,
+        account4Hash,
         '180',
-        '6',
-        {from: account2}
+        '56',
+        {from: account4}
         )
     })
 
     //3
-    it('Should fail because user not authorized in AC', async () => {
-        return ECR.setEscrow(
+    it('Should fail because set status != < 50', async () => {
+        return ECR_NC.setEscrow(
         asset2, 
-        account2Hash,
+        account4Hash,
         '180',
         '6',
-        {from: account3}
+        {from: account4}
         )
     })
 
     //4
     it('Should fail because you cannot set a time in the past', async () => {
-        return ECR.setEscrow(
+        return ECR_NC.setEscrow(
         asset1, 
-        account2Hash,
+        account4Hash,
         '-180',
-        '6',
-        {from: account2}
+        '56',
+        {from: account4}
         )
     })
 
+    // //5                                                 //Impossible to set to status55 in NC asset contracts
+    // it('Should fail because you cannot put transfered record into escrow', async () => {
+    //     return ECR.setEscrow(
+    //     asset5, 
+    //     account2Hash,
+    //     '180',
+    //     '6',
+    //     {from: account2}
+    //     )
+    // })
+
     //5
-    it('Should fail because you cannot put transfered record into escrow', async () => {
+    it('Should fail because you cannot put stolen record into escrow', async () => {
+        return ECR_NC.setEscrow(
+        asset3, 
+        account4Hash,
+        '180',
+        '56',
+        {from: account4}
+        )
+    })
+
+    //6
+    it('Should fail because you cannot put lost record into escrow', async () => {
+        return ECR_NC.setEscrow(
+        asset4, 
+        account4Hash,
+        '180',
+        '56',
+        {from: account4}
+        )
+    })
+
+    //7
+    it('Should fail because being set to a nonescrow status', async () => {
+        return ECR_NC.setEscrow(
+        asset1, 
+        account4Hash,
+        '180',
+        '52',
+        {from: account4}
+        )
+    })
+
+
+    it('Should set asset1 into status 51', async () => {
+
+        console.log("//**************************************END setEscrow FAIL BATCH**********************************************/")
+        console.log("//**************************************BEGIN endEscrow FAIL BATCH**********************************************/")
+        return NP_NC._modStatus(
+        asset1, 
+        '51',
+        {from: account4}
+        )
+    })
+
+    
+    it('Should put asset1 into escrow', async () => {
+        return ECR_NC.setEscrow(
+        asset1, 
+        account4Hash,
+        '180',
+        '56',
+        {from: account4}
+        )
+    })
+
+
+    it('Should make ECR_NC unauthorized', async () => {
+        console.log("unAuthorizing ECR_NC")
+        return STOR.enableContractForAC('ECR_NC', '12', '0', { from: account1 })
+            
+            .then(() => {
+                return STOR.enableContractForAC('ECR_NC', '13', '0', { from: account1 })
+            })
+
+            .then(() => {
+                return STOR.enableContractForAC('ECR_NC', '14', '0', { from: account1 })
+            })
+            
+    })
+
+    //8
+    it('Should fail because ECR_NC is not an authorized escrow contract', async () => {
+        return ECR_NC.endEscrow(
+        asset1,
+        {from: account4}
+        )
+    })
+
+
+    it('Should make ECR_NC Authorized', async () => {
+            console.log("Authorizing ECR_NC")
+            return STOR.enableContractForAC('ECR_NC', '12', '3', { from: account1 })
+                
+                .then(() => {
+                    return STOR.enableContractForAC('ECR_NC', '13', '3', { from: account1 })
+                })
+
+                .then(() => {
+                    return STOR.enableContractForAC('ECR_NC', '14', '3', { from: account1 })
+                })
+                
+    })
+
+
+    it('Should take asset1 out of escrow', async () => {
+        return ECR_NC.endEscrow(
+        asset1, 
+        {from: account4}
+        )
+    })
+
+
+    it('Should set asset1 into status 51', async () => {
+        return NP_NC._modStatus(
+        asset1, 
+        '51',
+        {from: account4}
+        )
+    })
+
+
+    it('Should put asset5 into escrow', async () => {
         return ECR.setEscrow(
         asset5, 
         account2Hash,
@@ -1285,240 +1404,69 @@
         )
     })
 
-    //6
-    it('Should fail because you cannot put stolen record into escrow', async () => {
-        return ECR.setEscrow(
-        asset3, 
-        account2Hash,
-        '180',
-        '6',
-        {from: account2}
-        )
-    })
-
-    //7
-    it('Should fail because you cannot put lost record into escrow', async () => {
-        return ECR.setEscrow(
-        asset4, 
-        account2Hash,
-        '180',
-        '6',
-        {from: account2}
-        )
-    })
-
-    it('Should put asset1 into escrow', async () => {
-        return ECR.setEscrow(
-        asset1, 
-        account2Hash,
-        '180',
-        '6',
-        {from: account2}
-        )
-    })
-
-    //8
-    it('Should fail because record already in escrow', async () => {
-        return ECR.setEscrow(
-        asset1, 
-        account2Hash,
-        '180',
-        '6',
-        {from: account2}
-        )
-    })
-
-
-    it('Should take asset1 out of escrow', async () => {
-        return ECR.endEscrow(
-        asset1,
-        {from: account2}
-        )
-    })
-
-
-    it('Should set asset1 into status 1', async () => {
-        return NP._modStatus(
-        asset1, 
-        rgt1,
-        '1',
-        {from: account2}
-        )
-    })
 
     //9
-    it('Should fail because not being set to escrow status', async () => {
-        return ECR.setEscrow(
-        asset1, 
-        account2Hash,
-        '180',
-        '1',
-        {from: account2}
-        )
-    })
-
-
-    // it('Should put asset1 into escrow', async () => {
-    //     return ECR.setEscrow(
-    //     asset1, 
-    //     account2Hash,
-    //     '180',
-    //     '6',
-    //     {from: account2}
-    //     )
-    // })
-
-
-    // it('Should make ECR unatuhorized', async () => {
-        // return STOR.enableContractForAC('ECR', '10', '0', { from: account1 })
-                
-        //     .then(() => {
-        //         return STOR.enableContractForAC('ECR', '11', '0', { from: account1 })
-        //     })
-    //         console.log("Adding ECR to storage for use in AC 0")
-    //         return STOR.OO_addContract("ECR", ECR.address, '0', '0', { from: account1 })
-    // })
-
-    //8
-    // it('Should fail because contract not authorized', async () => {                         !!!!!!!!STORAGE THROWS FIRST!!!!!!!!!!!
-    //     return ECR.endEscrow(
-    //     asset1, 
-    //     {from: account2}
-    //     )
-    // })
-
-    
-    // it('Should authorize ECR', async () => {
-    //     console.log("Authorizing ECR")
-    //     return STOR.enableContractForAC('ECR', '10', '3', { from: account1 })
-            
-    //         .then(() => {
-    //             return STOR.enableContractForAC('ECR', '11', '3', { from: account1 })
-    //         })
-            
-    // })
-
-
-    // it('Should take asset1 out of escrow', async () => {
-    //     return ECR.endEscrow(
-    //     asset1,
-    //     {from: account2}
-    //     )
-    // })
-
-
-    // it('Should set asset1 into status 1', async () => {
-    //     return NP._modStatus(
-    //     asset1, 
-    //     rgt1,
-    //     '1',
-    //     {from: account2}
-    //     )
-    // })
-
-    //10
-    it('Should fail because record does not exist', async () => {
- 
-        console.log("//**************************************END setEscrow FAIL BATCH**********************************************/")
-        console.log("//**************************************BEGIN endEscrow FAIL BATCH**********************************************/")
-        return ECR.endEscrow(
-        asset10, 
-        {from: account2}
-        )
-    })
-
-
-    //11
-    it('Should fail because user not authorized for AC', async () => {
-        return ECR.endEscrow(
-        asset1, 
+    it('Should fail because record in escrow <50', async () => {
+        return ECR_NC.endEscrow(
+        asset5, 
         {from: account4}
         )
     })
 
 
-    //12
-    it('Should fail because record not in escrow', async () => {
+    it('Should take asset5 out of escrow', async () => {
         return ECR.endEscrow(
-        asset1, 
-        {from: account2}
-        )
-    })
-
-    it('Should put asset1 into escrow', async () => {
-        return ECR.setEscrow(
-        asset1, 
-        account2Hash,
-        '180',
-        '6',
-        {from: account2}
-        )
-    })
-
-    //13
-    it('Should fail usertype is not < 5', async () => {
-        return ECR.endEscrow(
-        asset1, 
-        {from: account8}
-        )
-    })
-
-
-    it('Should take asset1 out of escrow', async () => {
-        return ECR.endEscrow(
-        asset1,
+        asset5,
         {from: account2}
         )
     })
 
 
-    it('Should set asset1 into status 1', async () => {
-        return NP._modStatus(
-        asset1, 
-        rgt1,
-        '1',
-        {from: account2}
+    //10
+    it('Should fail because record does not exist', async () => {
+        return ECR_NC.endEscrow(
+        asset10, 
+        {from: account4}
         )
     })
 
 
     it('Should put asset1 into escrow', async () => {
-        return ECR.setEscrow(
+        return ECR_NC.setEscrow(
         asset1, 
-        account2Hash,
+        account4Hash,
         '180',
-        '6',
-        {from: account2}
+        '56',
+        {from: account4}
         )
     })
 
-    //14
+    //11
     it('Should fail because caller != escrow owner', async () => {
-        return ECR.endEscrow(
+        return ECR_NC.endEscrow(
         asset1,
-        {from: account3}
+        {from: account5}
         )
     })
 
 
     it('Should take asset1 out of escrow', async () => {
-        return ECR.endEscrow(
+        return ECR_NC.endEscrow(
         asset1,
-        {from: account2}
+        {from: account4}
         )
     })
 
 
-    it('Should set asset1 into status 1', async () => {
+    it('Should set asset1 into status 51', async () => {
 
         console.log("//**************************************END endEscrow FAIL BATCH**********************************************/")
-        console.log("//**************************************END ECR FAIL BATCH**********************************************/")
-        console.log("//**************************************END ECR TEST**********************************************/")
-        return NP._modStatus(
-        asset1, 
-        rgt1,
-        '1',
-        {from: account2}
+        console.log("//**************************************END ECR_NC FAIL BATCH**********************************************/")
+        console.log("//**************************************END ECR_NC TEST**********************************************/")
+        return NP_NC._modStatus(
+        asset1,
+        '51',
+        {from: account4}
         )
     })
 

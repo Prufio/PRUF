@@ -72,7 +72,7 @@
         //
         //
     
-    contract('ECR', accounts => {
+    contract('BOOTSTRAP', accounts => {
             
         console.log('//**************************BEGIN BOOTSTRAP**************************//')
 

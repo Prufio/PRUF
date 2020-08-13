@@ -124,7 +124,7 @@ contract ECR_NC is ECR_CORE {
         require((rec.assetClass != 0), "ENC:EE: Record does not exist");
         require(
             (rec.assetStatus == 50) || (rec.assetStatus == 56),
-            "ENC:EE:record must be in escrow status <49"
+            "ENC:EE:record must be in escrow status > 49"
         );
         require(
             (escrow.timelock < block.timestamp) ||
