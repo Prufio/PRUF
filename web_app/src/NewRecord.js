@@ -14,7 +14,7 @@ class NewRecord extends Component {
 
     //State declaration.....................................................................................................
 
-    this.getCosts = async () => {//under the condition that prices are not stored in state, get prices from storage
+    this.getCosts = async () => {//under the condition that prices are not stored in state, get prices from STOR
       const self = this;
       if (self.state.costArray[0] > 0 || self.state.PRUF_AC_manager === "" || self.state.assetClass === undefined) {
       } else {
@@ -58,9 +58,9 @@ class NewRecord extends Component {
       var contracts = await returnContracts(self.state.web3);
       //console.log("RC NR: ", contractArray)
 
-      if(this.state.storage < 1){self.setState({ storage: contracts.storage });}
-      if(this.state.PRUF_NP < 1){self.setState({ PRUF_NP: contracts.nonPayable });}
-      if(this.state.PRUF_APP < 1){self.setState({ PRUF_APP: contracts.payable });}
+      if(this.state.STOR < 1){self.setState({ STOR: contracts.STOR });}
+      if(this.state.NP < 1){self.setState({ NP: contracts.NP });}
+      if(this.state.APP < 1){self.setState({ APP: contracts.payable });}
       if(this.state.PRUF_simpleEscrow < 1){self.setState({ PRUF_simpleEscrow: contracts.simpleEscrow });}
       if(this.state.PRUF_AC_manager < 1){self.setState({ PRUF_AC_manager: contracts.actManager });}
     };
@@ -106,9 +106,9 @@ class NewRecord extends Component {
       web3: null,
       asset: "3",
       cost: "",
-      PRUF_APP: "",
-      PRUF_NP: "",
-      storage: "",
+      APP: "",
+      NP: "",
+      STOR: "",
       PRUF_AC_manager: "",
       PRUF_simpleEscrow: "",
       isNFA: false,
@@ -142,11 +142,11 @@ class NewRecord extends Component {
 
   componentDidUpdate() {//stuff to do on a re-render
 
-    if(this.state.web3 !== null && this.state.PRUF_APP < 1){
+    if(this.state.web3 !== null && this.state.APP < 1){
       this.returnsContract();
     }
 
-    if (this.state.addr > 0 && this.state.assetClass === undefined && this.state.PRUF_APP !== "") {
+    if (this.state.addr > 0 && this.state.assetClass === undefined && this.state.APP !== "") {
         this.getAssetClass();
     } 
 
@@ -177,7 +177,7 @@ class NewRecord extends Component {
     };
 
     async function checkExists(idxHash) {//check whether record of asset exists in the database
-      self.state.storage.methods
+      self.state.STOR.methods
         .retrieveShortRecord(idxHash)
         .call({ from: self.state.addr }, function (_error, _result) {
           if (_error){ console.log("IN ERROR IN ERROR IN ERROR")
@@ -246,7 +246,7 @@ class NewRecord extends Component {
 
       checkExists(idxHash);
 
-      this.state.PRUF_APP.methods
+      this.state.APP.methods
         .$newRecord(
           idxHash,
           rgtHash,

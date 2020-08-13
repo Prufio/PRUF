@@ -13,7 +13,7 @@ class ForceModifyRecord extends Component {
 
     //State declaration.....................................................................................................
 
-    this.getCosts = async () => {//under the condition that prices are not stored in state, get prices from storage
+    this.getCosts = async () => {//under the condition that prices are not stored in state, get prices from STOR
       const self = this;
       if (self.state.costArray[0] > 0 || self.state.PRUF_AC_manager === "" || self.state.assetClass === undefined) {
       } else {
@@ -57,9 +57,9 @@ class ForceModifyRecord extends Component {
       var contracts = await returnContracts(self.state.web3);
       //console.log("RC NR: ", contractArray)
 
-      if(this.state.storage < 1){self.setState({ storage: contracts.storage });}
-      if(this.state.PRUF_NP < 1){self.setState({ PRUF_NP: contracts.nonPayable });}
-      if(this.state.PRUF_APP < 1){self.setState({ PRUF_APP: contracts.payable });}
+      if(this.state.STOR < 1){self.setState({ STOR: contracts.STOR });}
+      if(this.state.NP < 1){self.setState({ NP: contracts.NP });}
+      if(this.state.APP < 1){self.setState({ APP: contracts.payable });}
       if(this.state.PRUF_simpleEscrow < 1){self.setState({ PRUF_simpleEscrow: contracts.simpleEscrow });}
       if(this.state.PRUF_AC_manager < 1){self.setState({ PRUF_AC_manager: contracts.actManager });}
     };
@@ -106,9 +106,9 @@ class ForceModifyRecord extends Component {
       newId: "",
       newSecret: "",
       web3: null,
-      PRUF_APP: "",
-      PRUF_NP: "",
-      storage: "",
+      APP: "",
+      NP: "",
+      STOR: "",
       PRUF_AC_manager: "",
       PRUF_simpleEscrow: "",
     };
@@ -135,7 +135,7 @@ class ForceModifyRecord extends Component {
 
   componentDidUpdate() {//stuff to do when state updates
 
-    if(this.state.web3 !== null && this.state.PRUF_APP < 1){
+    if(this.state.web3 !== null && this.state.APP < 1){
       this.returnsContract();
     }
     
@@ -154,7 +154,7 @@ class ForceModifyRecord extends Component {
     const self = this;
 
     async function checkExists(idxHash) {
-      await self.state.storage.methods
+      await self.state.STOR.methods
         .retrieveShortRecord(idxHash)
         .call({ from: self.state.addr }, function (_error, _result) {
           console.log(_result);
@@ -217,7 +217,7 @@ class ForceModifyRecord extends Component {
 
       checkExists(idxHash);
 
-      this.state.PRUF_APP.methods
+      this.state.APP.methods
         .$reimportRecord(idxHash, rgtHash)
         .send({ from: this.state.addr, value: this.state.costArray[3] })
         .on("error", function (_error) {
@@ -266,7 +266,7 @@ class ForceModifyRecord extends Component {
 
       checkExists(idxHash);
 
-      this.state.PRUF_APP.methods
+      this.state.APP.methods
         .$forceModRecord(idxHash, newRgtHash)
         .send({ from: this.state.addr, value: this.state.costArray[5] })
         .on("error", function (_error) {

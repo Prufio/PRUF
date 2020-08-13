@@ -1,12 +1,12 @@
 function returnABIs() {
-    let abis = {storage:"",
+    let abis = {STOR:"",
                 payable:"",
-                nonPayable:"",
+                NP:"",
                 core:"",
                 simpleEscrow:"",
                 }; 
     
-    const STORAGE = [
+    const STOR = [
         {
             "anonymous": false,
             "inputs": [
@@ -706,7 +706,7 @@ function returnABIs() {
 
 //............................................................................................................................................
 
-    const PRUF_APP = [
+    const APP = [
         {
             "anonymous": false,
             "inputs": [
@@ -1091,7 +1091,7 @@ function returnABIs() {
 
 //............................................................................................................................................
 
-        const PRUF_NP = [
+        const NP = [
             {
                 "anonymous": false,
                 "inputs": [
@@ -2394,9 +2394,9 @@ function returnABIs() {
 
         
         abis.actManager=PRUF_AC_manager;
-        abis.storage=STORAGE;
-        abis.payable=PRUF_APP;
-        abis.nonPayable=PRUF_NP;
+        abis.STOR=STORAGE;
+        abis.payable=APP;
+        abis.NP=NP;
         abis.simpleEscrow=PRUF_simpleEscrow;
 
         return (abis);

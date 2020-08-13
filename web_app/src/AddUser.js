@@ -16,9 +16,9 @@ class AddUser extends Component {
       var contracts = await returnContracts(self.state.web3);
       //console.log("RC NR: ", contractArray)
 
-      if(this.state.storage < 1){self.setState({ storage: contracts.storage });}
-      if(this.state.PRUF_NP < 1){self.setState({ PRUF_NP: contracts.nonPayable });}
-      if(this.state.PRUF_APP < 1){self.setState({ PRUF_APP: contracts.payable });}
+      if(this.state.STOR < 1){self.setState({ STOR: contracts.STOR });}
+      if(this.state.NP < 1){self.setState({ NP: contracts.NP });}
+      if(this.state.APP < 1){self.setState({ APP: contracts.payable });}
       if(this.state.PRUF_simpleEscrow < 1){self.setState({ PRUF_simpleEscrow: contracts.simpleEscrow });}
       if(this.state.PRUF_AC_manager < 1){self.setState({ PRUF_AC_manager: contracts.actManager });}
     };
@@ -42,9 +42,9 @@ class AddUser extends Component {
       authAddr: "",
       userType: "",
       assetClass: "",
-      storage: "",
-      PRUF_APP: "",
-      PRUF_NP: "",
+      STOR: "",
+      APP: "",
+      NP: "",
       PRUF_AC_manager: "",
       PRUF_simpleEscrow: "",
       web3: null,
@@ -62,7 +62,7 @@ class AddUser extends Component {
   }
 
   componentDidUpdate(){//stuff to do when state updates
-    if(this.state.web3 !== null && this.state.web3 !== undefined && this.state.storage < 1){
+    if(this.state.web3 !== null && this.state.web3 !== undefined && this.state.STOR < 1){
       this.returnsContract();
     }
 
