@@ -31,6 +31,12 @@
     let NP_NC;
     let RCLR;
     let Helper;
+
+    let string1Hash;
+    let string2Hash;
+    let string3Hash;
+    let string4Hash;
+    let string5Hash;
     
     let asset1;
     let asset2;
@@ -374,6 +380,26 @@
         nakedTokenHash3 = await Helper.getNakedTokenHash(
             '15',
             '3'
+        )
+
+        string1Hash = await Helper.getStringHash(
+            '1'
+        )
+
+        string2Hash = await Helper.getStringHash(
+            '2'
+        )
+
+        string3Hash = await Helper.getStringHash(
+            '3'
+        )
+
+        string4Hash = await Helper.getStringHash(
+            '4'
+        )
+
+        string5Hash = await Helper.getStringHash(
+            '5'
         )
     })
 
@@ -1102,7 +1128,7 @@
         console.log("//**************************************BEGIN mintNakedAsset FAIL BATCH**********************************************/")
         return NAKED.mintNakedAsset(
         asset1, 
-        '1',
+        string1Hash,
         '15',
         {from: account9}
         )
@@ -1117,7 +1143,7 @@
     it('Should fail becasue caller not authrorized to mintNakedAssets', async () => {
         return NAKED.mintNakedAsset(
         asset1, 
-        '1',
+        string1Hash,
         '15',
         {from: account10}
         )
@@ -1132,7 +1158,7 @@
     it('Should mintNakedAsset1', async () => {
         return NAKED.mintNakedAsset(
         asset1, 
-        '1',
+        string1Hash,
         '15',
         {from: account10}
         )
@@ -1142,7 +1168,7 @@
     it('Should fail because nakedAsset1 token already exists', async () => {
         return NAKED.mintNakedAsset(
         asset1, 
-        '1',
+        string1Hash,
         '15',
         {from: account10}
         )
@@ -1152,7 +1178,7 @@
     it('Should fail becasue asset2 already recorded', async () => {
         return NAKED.mintNakedAsset(
         asset2, 
-        '1',
+        string1Hash,
         '15',
         {from: account10}
         )
