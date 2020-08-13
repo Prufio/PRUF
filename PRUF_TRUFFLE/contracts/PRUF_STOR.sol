@@ -273,8 +273,8 @@ contract STOR is Ownable, ReentrancyGuard, Pausable {
         external
         nonReentrant
         whenNotPaused
-        isAuthorized(database[_idxHash].assetClass)
         exists(_idxHash)
+        isAuthorized(database[_idxHash].assetClass)
         notEscrow(_idxHash)
     {
         bytes32 idxHash = _idxHash; //stack saving
@@ -345,9 +345,11 @@ contract STOR is Ownable, ReentrancyGuard, Pausable {
     function setStolenOrLost(bytes32 _idxHash, uint8 _newAssetStatus)
         external
         nonReentrant
-        isAuthorized(database[_idxHash].assetClass)
         whenNotPaused
         exists(_idxHash)
+        isAuthorized(database[_idxHash].assetClass)
+        
+        
     {
         require(
             isLostOrStolen(_newAssetStatus) == 170,
@@ -462,8 +464,8 @@ contract STOR is Ownable, ReentrancyGuard, Pausable {
         external
         nonReentrant
         whenNotPaused
-        isAuthorized(database[_idxHash].assetClass)
         exists(_idxHash)
+        isAuthorized(database[_idxHash].assetClass)
         notEscrow(_idxHash)
     {
         Record memory rec = database[_idxHash];
@@ -487,8 +489,8 @@ contract STOR is Ownable, ReentrancyGuard, Pausable {
         external
         nonReentrant
         whenNotPaused
-        isAuthorized(database[_idxHash].assetClass)
         exists(_idxHash)
+        isAuthorized(database[_idxHash].assetClass)
         notEscrow(_idxHash)
     {
         Record memory rec = database[_idxHash];
