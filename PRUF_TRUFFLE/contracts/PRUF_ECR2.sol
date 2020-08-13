@@ -20,25 +20,21 @@ pragma solidity ^0.6.7;
 
 import "./PRUF_ECR_CORE.sol";
 
-contract ECR_NC is ECR_CORE {
-    using SafeMath for uint256;
-
+contract ECR2 is ECR_CORE {
     /*
      * @dev Verify user credentials
      * Originating Address:
-     *      holds asset token at idxHash
+     *      Exists in registeredUsers as a usertype 1 to 9
+     *      Is authorized for asset class
      */
-
     modifier isAuthorized(bytes32 _idxHash) override {
         uint256 tokenId = uint256(_idxHash);
         require(
-            (A_TKN.ownerOf(tokenId) == msg.sender), //msg.sender is token holder
-            "ENC:MOD-IA: Caller does not hold token"
+            A_TKN.ownerOf(tokenId) == APP_Address,
+            "E:MOD-IA: Custodial contract does not hold token"
         );
         _;
     }
-
-    //--------------------------------------------External Functions--------------------------
 
     /*
      * @dev puts asset into an escrow status for a certain time period
@@ -50,6 +46,7 @@ contract ECR_NC is ECR_CORE {
         uint8 _escrowStatus
     ) external nonReentrant whenNotPaused isAuthorized(_idxHash) {
         Record memory rec = getRecord(_idxHash);
+        uint8 userType = getUserType(rec.assetClass);
         uint256 escrowTime = block.timestamp.add(_escrowTime);
         uint8 newEscrowStatus;
         ContractDataHash memory contractInfo = getContractInfo(
@@ -59,17 +56,16 @@ contract ECR_NC is ECR_CORE {
 
         require(
             contractInfo.contractType > 0,
-            "ENC:SE: This contract not authorized for specified AC"
+            "E:SE: This contract not authorized for specified AC"
         );
-
-        require((rec.assetClass != 0), "SE: Record does not exist");
+        require((rec.assetClass != 0), "E:SE: Record does not exist");
         require(
-            (rec.assetStatus > 49),
-            "ENC:SE: Only ACadmin authorized user can change status < 50"
+            (userType > 0) && (userType < 10),
+            "E:SE: User not authorized to modify records in specified asset class"
         );
         require(
             (escrowTime >= block.timestamp),
-            "ENC:SE:Escrow must be set to a time in the future"
+            "E:SE: Escrow must be set to a time in the future"
         );
         require(
             (rec.assetStatus != 3) &&
@@ -78,13 +74,24 @@ contract ECR_NC is ECR_CORE {
                 (rec.assetStatus != 54) &&
                 (rec.assetStatus != 5) &&
                 (rec.assetStatus != 55),
-            "ENC:SE:Transferred, lost, or stolen status cannot be set to escrow."
+            "E:SE: Transferred, lost, or stolen status cannot be set to escrow."
         );
         require(
-            (_escrowStatus == 50) || (_escrowStatus == 56),
-            "ENC:SE:Must specify a valid escrow status >49"
+            (rec.assetStatus != 6) &&
+                (rec.assetStatus != 50) &&
+                (rec.assetStatus != 56),
+            "E:SE: Asset already in escrow status."
         );
-
+        require(
+            (userType < 5) || (( userType > 4) && ( userType < 10) && (_escrowStatus > 49)),
+            "E:SE: Non supervisored agents must set escrow status within scope."
+        );
+        require(
+            (_escrowStatus == 6) ||
+                (_escrowStatus == 50) ||
+                (_escrowStatus == 56),
+            "E:SE: Must specify an valid escrow status"
+        );
         //^^^^^^^checks^^^^^^^^^
 
         newEscrowStatus = _escrowStatus;
@@ -107,29 +114,44 @@ contract ECR_NC is ECR_CORE {
     /*
      * @dev takes asset out of excrow status if time period has resolved || is escrow issuer
      */
-    function endEscrow(bytes32 _idxHash) external nonReentrant {
-        bytes32 ownerHash = ECR_MGR.retrieveEscrowOwner(_idxHash);
+    function endEscrow(bytes32 _idxHash)
+        external
+        nonReentrant
+        isAuthorized(_idxHash)
+    {
         Record memory rec = getRecord(_idxHash);
         escrowData memory escrow = getEscrowData(_idxHash);
         ContractDataHash memory contractInfo = getContractInfo(
             address(this),
             rec.assetClass
         );
+        uint8 userType = getUserType(rec.assetClass);
+        bytes32 ownerHash = ECR_MGR.retrieveEscrowOwner(_idxHash);
 
         require(
             contractInfo.contractType > 0,
-            "ENC:EE: This contract not authorized for specified AC"
+            "E:EE: This contract not authorized for specified AC"
         );
 
-        require((rec.assetClass != 0), "ENC:EE: Record does not exist");
+        require((rec.assetClass != 0), "E:EE: Record does not exist");
         require(
-            (rec.assetStatus == 50) || (rec.assetStatus == 56),
-            "ENC:EE:record must be in escrow status > 49"
+            (userType > 0) && (userType < 10),
+            "E:EE: User not authorized to modify records in specified asset class"
+        );
+        require(
+            (rec.assetStatus == 6) ||
+                (rec.assetStatus == 50) ||
+                (rec.assetStatus == 56),
+            "E:EE- record must be in escrow status"
+        );
+        require(
+            ((rec.assetStatus > 49) || (userType < 5)),
+            "E:EE: Usertype less than 5 required to end this escrow"
         );
         require(
             (escrow.timelock < block.timestamp) ||
                 (keccak256(abi.encodePacked(msg.sender)) == ownerHash),
-            "ENC:EE: Escrow period not ended and caller is not escrow owner"
+            "E:EE: Escrow period not ended and caller is not escrow owner"
         );
         //^^^^^^^checks^^^^^^^^^
 

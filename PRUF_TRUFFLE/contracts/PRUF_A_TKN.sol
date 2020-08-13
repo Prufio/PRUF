@@ -30,7 +30,7 @@ contract A_TKN is Ownable, ReentrancyGuard, ERC721 {
         bytes32 lastRecorder; // Address hash of last non-automation recorder
         uint8 assetStatus; // Status - Transferrable, locked, in transfer, stolen, lost, etc.
         uint8 forceModCount; // Number of times asset has been forceModded.
-        uint16 assetClass; // Type of asset
+        uint256 assetClass; // Type of asset
         uint256 countDown; // Variable that can only be dencreased from countDownStart
         uint256 countDownStart; // Starting point for countdown variable (set once)
         bytes32 Ipfs1; // Publically viewable asset description
@@ -115,6 +115,28 @@ contract A_TKN is Ownable, ReentrancyGuard, ERC721 {
     }
 
     /*
+     * @dev remint Asset Token
+     * must set a new and unuiqe rgtHash
+     * burns old token
+     * Sends new token to original Caller
+     */
+    function reMintAssetToken(address _recipientAddress, uint256 tokenId)
+        external
+        isAdmin
+        nonReentrant
+        returns (uint256)
+    {
+        require(_exists(tokenId), "AT:RM:Cannot Remint nonexistant token");
+        //^^^^^^^checks^^^^^^^^^
+        string memory tokenURI = tokenURI(tokenId);
+        _burn(tokenId);
+        _safeMint(_recipientAddress, tokenId);
+        _setTokenURI(tokenId, tokenURI);
+        return tokenId;
+        //^^^^^^^interactions^^^^^^^^^
+    }
+
+    /*
      * @dev Set new token URI String
      */
     function setURI(uint256 tokenId, string calldata _tokenURI)
@@ -134,22 +156,17 @@ contract A_TKN is Ownable, ReentrancyGuard, ERC721 {
 
     function validateNakedToken(
         uint256 tokenId,
-        uint16 _assetClass,
+        uint256 _assetClass,
         string calldata _authCode
     ) external view {
-        require( // Forgive me my trespasses...
-            keccak256(abi.encodePacked(tokenURI(tokenId))) ==
-                keccak256(
-                    abi.encodePacked(
-                        uint256toString(
-                            uint256(
-                                keccak256(
-                                    abi.encodePacked(_assetClass, _authCode)
-                                )
-                            )
-                        )
-                    )
-                ),
+        bytes32 _hashedAuthCode = keccak256(abi.encodePacked(_authCode));
+        bytes32 b32URI = keccak256(abi.encodePacked(_hashedAuthCode, _assetClass));
+        string memory authString = uint256toString(uint256(b32URI));
+        string memory URI = tokenURI(tokenId);
+
+
+        require(
+            keccak256(abi.encodePacked(URI)) == keccak256(abi.encodePacked(authString)),
             "Supplied authCode and assetclass do not match token URI"
         );
     }
@@ -223,17 +240,17 @@ contract A_TKN is Ownable, ReentrancyGuard, ERC721 {
         address from,
         address to,
         uint256 tokenId
-    ) public override nonReentrant {
-        bytes32 _idxHash = bytes32(tokenId);
-        Record memory rec = getRecord(_idxHash);
+    ) public override {
+        //bytes32 _idxHash = bytes32(tokenId);
+        //Record memory rec = getRecord(_idxHash);
 
         //^^^^^^^checks^^^^^^^^^
 
-        rec
-            .rightsHolder = 0xFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF;
+        // rec
+        //     .rightsHolder = 0xFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF;
         //^^^^^^^effects^^^^^^^^^
 
-        writeRecord(_idxHash, rec);
+        //writeRecord(_idxHash, rec);
         safeTransferFrom(from, to, tokenId, "");
         //^^^^^^^interactions^^^^^^^^^
     }
@@ -255,7 +272,7 @@ contract A_TKN is Ownable, ReentrancyGuard, ERC721 {
         address to,
         uint256 tokenId,
         bytes memory _data
-    ) public virtual override {
+    ) public virtual override nonReentrant {
         bytes32 _idxHash = bytes32(tokenId);
         Record memory rec = getRecord(_idxHash);
         (uint8 isAuth, ) = STOR.ContractInfoHash(to, 0); // trailing comma because does not use the returned hash
@@ -313,28 +330,7 @@ contract A_TKN is Ownable, ReentrancyGuard, ERC721 {
         //^^^^^^^interactions^^^^^^^^^
     }
 
-    /*
-     * Authorizations?
-     * @dev remint Asset Token
-     * must set a new and unuiqe rgtHash
-     * burns old token
-     * Sends new token to original Caller
-     */
-    function reMintAssetToken(address _recipientAddress, uint256 tokenId)
-        external
-        isAdmin
-        nonReentrant
-        returns (uint256)
-    {
-        require(_exists(tokenId), "AT:RM:Cannot Remint nonexistant token");
-        //^^^^^^^checks^^^^^^^^^
-        string memory tokenURI = tokenURI(tokenId);
-        _burn(tokenId);
-        _safeMint(_recipientAddress, tokenId);
-        _setTokenURI(tokenId, tokenURI);
-        return tokenId;
-        //^^^^^^^interactions^^^^^^^^^
-    }
+  
 
     /*
      * @dev Write a Record to Storage @ idxHash
@@ -370,7 +366,7 @@ contract A_TKN is Ownable, ReentrancyGuard, ERC721 {
                 //bytes32 _lastRecorder,
                 uint8 _assetStatus,
                 uint8 _forceModCount,
-                uint16 _assetClass,
+                uint256 _assetClass,
                 uint256 _countDown,
                 uint256 _countDownStart,
                 bytes32 _Ipfs1,

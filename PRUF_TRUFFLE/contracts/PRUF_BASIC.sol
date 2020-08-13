@@ -29,7 +29,7 @@ contract BASIC is ReentrancyGuard, Ownable, IERC721Receiver, Pausable {
         bytes32 rightsHolder; // KEK256 Registered owner
         uint8 assetStatus; // Status - Transferrable, locked, in transfer, stolen, lost, etc.
         uint8 forceModCount; // Number of times asset has been forceModded.
-        uint16 assetClass; // Type of asset
+        uint256 assetClass; // Type of asset
         uint256 countDown; // Variable that can only be dencreased from countDownStart
         uint256 countDownStart; // Starting point for countdown variable (set once)
         bytes32 Ipfs1; // Publically viewable asset description
@@ -39,7 +39,7 @@ contract BASIC is ReentrancyGuard, Ownable, IERC721Receiver, Pausable {
 
     struct AC {
         string name; // NameHash for assetClass
-        uint16 assetClassRoot; // asset type root (bycyles - USA Bicycles)
+        uint256 assetClassRoot; // asset type root (bycyles - USA Bicycles)
         uint8 custodyType; // custodial or noncustodial
         uint256 extendedData; // Future Use
     }
@@ -211,7 +211,7 @@ contract BASIC is ReentrancyGuard, Ownable, IERC721Receiver, Pausable {
     /*
      * @dev Get a User Record from AC_manager @ msg.sender
      */
-    function getUserType(uint16 _assetClass)
+    function getUserType(uint256 _assetClass)
         internal
         virtual
         view
@@ -231,7 +231,7 @@ contract BASIC is ReentrancyGuard, Ownable, IERC721Receiver, Pausable {
     /*
      * @dev Get asset class information from AC_manager (FUNCTION IS VIEW)
      */
-    function getACinfo(uint16 _assetClass)
+    function getACinfo(uint256 _assetClass)
         internal
         virtual
         returns (AC memory)
@@ -248,7 +248,7 @@ contract BASIC is ReentrancyGuard, Ownable, IERC721Receiver, Pausable {
         //^^^^^^^interactions^^^^^^^^^
     }
 
-    function getContractInfo(address _addr, uint16 _assetClass)
+    function getContractInfo(address _addr, uint256 _assetClass)
         internal
         returns (ContractDataHash memory)
     {
@@ -273,7 +273,7 @@ contract BASIC is ReentrancyGuard, Ownable, IERC721Receiver, Pausable {
                 bytes32 _rightsHolder,
                 uint8 _assetStatus,
                 uint8 _forceModCount,
-                uint16 _assetClass,
+                uint256 _assetClass,
                 uint256 _countDown,
                 uint256 _countDownStart,
                 bytes32 _Ipfs1,

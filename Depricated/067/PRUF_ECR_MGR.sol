@@ -167,7 +167,7 @@ contract ECR_MGR is BASIC {
     /*
      * @dev Permissive removal of asset from escrow status after time-out
      */
-    function PermissiveEndEscrow(bytes32 _idxHash)
+    function permissiveEndEscrow(bytes32 _idxHash)
         external
         nonReentrant
         whenNotPaused

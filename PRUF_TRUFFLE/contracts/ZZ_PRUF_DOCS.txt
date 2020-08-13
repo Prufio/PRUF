@@ -26,19 +26,16 @@ pragma solidity ^0.6.7;
 /*-----------------------------------------------------------------
  *TO DO :
  *      *"naked" token minting 
- *      *Importing naked tokens:  write app level contract for "actualizeRecord" in pruf_core
  *
  *      *Design Json templates for IPFS1 and IPFS2
  *
  *      *Audit require ststements for all app / np level fuctions - probably too permissive.
  *
- *      *Look into asset rementants of asset locking
- *      *ARE WE GOING TO HAVE ASSET LOCKING?????????????????????
- *      *Look into record lock functionality/require statements
  *
  *      *Above 65k segregation (probably by ACinfo custodial type) (just need to add a wild west contract?)
  *
- *
+ *      *find a way to find and react to assets being in a dead asset class
+ *      
  *      
  *
 *-----------------------------------------------------------------
@@ -193,8 +190,9 @@ pragma solidity ^0.6.7;
  * 51 = transferrable, automation set/unset (secret confirmed)(ACAdmin can unset)
  * 52 = non-transferrable, automation set/unset (secret confirmed)(ACAdmin can unset)
  * 53 = stolen (automation set)(ONLY ACAdmin can unset)
- * 54 = lost (automation set/unset)(ACAdmin can unset)
- * 55 = asset transferred automation set/unset (secret confirmed)(Only ACAdmin can unset) (discarded) ####DO NOT USE???? 
+ * 54 = lost (automation set/unset)(ACAdmin can unset)             
+ * 55 = asset transferred automation set/unset (secret confirmed)(Only ACAdmin can unset) (discarded) ####DO NOT USE????
+                ^^!!!CANNOT BE SET BY CURRENT CONTRACTS 8/13/2020!!!^^
  * 56 = escrow - automation set/unset (secret confirmed)(ACAdmin can unset)
  * 57 = out of escrow
  * 58 = out of locked escrow

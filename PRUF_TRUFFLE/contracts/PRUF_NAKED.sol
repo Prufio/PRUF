@@ -36,8 +36,8 @@ contract NAKED is CORE {
 
     function mintNakedAsset(
         bytes32 _idxHash,
-        string calldata _tokenURI, // token URI needs to be K256(packed( uint16 assetClass, string authCode)) supplied off chain
-        uint16 _assetClass
+        bytes32 _hashedAuthCode, // token URI needs to be K256(packed( uint256 assetClass, string authCode)) supplied off chain
+        uint256 _assetClass
     ) external nonReentrant whenNotPaused {
         uint256 tokenId = uint256(_idxHash);
         Record memory rec = getRecord(_idxHash);
@@ -45,20 +45,24 @@ contract NAKED is CORE {
 
         require(
             (AC_TKN.ownerOf(_assetClass) == msg.sender), //msg.sender is token holder
-            "ANC:MOD-IA: Caller does not hold asset token"
+            "N:MNA:Caller does not hold asset token"
         );
-        require(userType == 10,"user not authorized to mint naked assets");
+        require(userType == 10,"N:MNA:user not authorized to mint naked assets");
         require(
             A_TKN.tokenExists(tokenId) == 0,
-            "PNP:INA: Token already exists"
+            "N:MNA: Token already exists"
         );
         require(
             rec.assetClass == 0,
-            "PNP:INA: Asset already registered in system"
+            "N:MNA: Asset already registered in system"
         );
         //^^^^^^^checks^^^^^^^^^
+        string memory tokenURI;
+        bytes32 b32URI = keccak256(abi.encodePacked(_hashedAuthCode, _assetClass));
+        tokenURI = uint256toString(uint256(b32URI));
 
-        A_TKN.mintAssetToken(address(this), tokenId, _tokenURI); //mint a naked token
+
+        A_TKN.mintAssetToken(address(this), tokenId, tokenURI); //mint a naked token
 
         //^^^^^^^interactions / effects^^^^^^^^^^^^
     }
@@ -69,7 +73,7 @@ contract NAKED is CORE {
     function $claimNakedAsset(
         bytes32 _idxHash,
         string calldata _authCode,
-        uint16 _newAssetClass,
+        uint256 _newAssetClass,
         bytes32 _rgtHash,
         uint256 _countDownStart
     ) external payable nonReentrant whenNotPaused {
@@ -107,7 +111,37 @@ contract NAKED is CORE {
         //^^^^^^^interactions / effects^^^^^^^^^^^^
     }
 
-    function deductImportRecordCosts(uint16 _assetClass)
+
+    function uint256toString(uint256 number)
+        public
+        pure
+        returns (string memory)
+    {
+        // Inspired by OraclizeAPI's implementation - MIT licence
+        // https://github.com/oraclize/ethereum-api/blob/b42146b063c7d6ee1358846c198246239e9360e8/oraclizeAPI_0.4.25.sol
+        // shamelessly jacked straight outa OpenZepplin  openzepplin.org
+
+        if (number == 0) {
+            return "0";
+        }
+        uint256 temp = number;
+        uint256 digits;
+        while (temp != 0) {
+            digits++;
+            temp /= 10;
+        }
+        bytes memory buffer = new bytes(digits);
+        uint256 index = digits - 1;
+        temp = number;
+        while (temp != 0) {
+            buffer[index--] = bytes1(uint8(48 + (temp % 10)));
+            temp /= 10;
+        }
+        return string(buffer);
+    }
+
+
+    function deductImportRecordCosts(uint256 _assetClass)
         internal
         whenNotPaused
     {

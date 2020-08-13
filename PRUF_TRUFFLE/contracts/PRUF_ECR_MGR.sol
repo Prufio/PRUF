@@ -38,7 +38,7 @@ contract ECR_MGR is BASIC {
 
     mapping(bytes32 => escrowData) escrows;
 
-    function isLostOrStolen(uint16 _assetStatus) private pure returns (uint8) {
+    function isLostOrStolen(uint8 _assetStatus) private pure returns (uint8) {
         if (
             (_assetStatus != 3) &&
             (_assetStatus != 4) &&
@@ -51,7 +51,7 @@ contract ECR_MGR is BASIC {
         }
     }
 
-    function isEscrow(uint16 _assetStatus) private pure returns (uint8) {
+    function isEscrow(uint8 _assetStatus) private pure returns (uint8) {
         if (
             (_assetStatus != 6) &&
             (_assetStatus != 50) &&
@@ -167,7 +167,7 @@ contract ECR_MGR is BASIC {
     /*
      * @dev Permissive removal of asset from escrow status after time-out
      */
-    function PermissiveEndEscrow(bytes32 _idxHash)
+    function permissiveEndEscrow(bytes32 _idxHash)
         external
         nonReentrant
         whenNotPaused

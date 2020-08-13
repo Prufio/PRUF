@@ -31,6 +31,12 @@
     let NP_NC;
     let RCLR;
     let Helper;
+
+    let string1Hash;
+    let string2Hash;
+    let string3Hash;
+    let string4Hash;
+    let string5Hash;
     
     let asset1;
     let asset2;
@@ -61,7 +67,8 @@
 
     let account000 = '0x0000000000000000000000000000000000000000'
 
-    let nakedTokenHash1;
+    let nakedAuthCode1;
+    let nakedAuthCode3;
     
         //
         //
@@ -365,9 +372,34 @@
         )
 
 
-        nakedTokenHash1 = await Helper.getNakedTokenHash(
-            '10',
+        nakedAuthCode1 = await Helper.getURIfromAuthcode(
+            '15',
             '1'
+        )
+
+        nakedAuthCode3 = await Helper.getURIfromAuthcode(
+            '15',
+            '3'
+        )
+
+        string1Hash = await Helper.getStringHash(
+            '1'
+        )
+
+        string2Hash = await Helper.getStringHash(
+            '2'
+        )
+
+        string3Hash = await Helper.getStringHash(
+            '3'
+        )
+
+        string4Hash = await Helper.getStringHash(
+            '4'
+        )
+
+        string5Hash = await Helper.getStringHash(
+            '5'
         )
     })
 
@@ -598,7 +630,7 @@
 
             .then(() => {
                 console.log("Minting AC 15 -NC")
-                return AC_MGR.createAssetClass("15", account1, "Non_Custodial_AC4", "15", "2", "2", { from: account1 })
+                return AC_MGR.createAssetClass("15", account10, "Non_Custodial_AC4", "15", "2", "2", { from: account1 })
             })
     })
 
@@ -777,6 +809,10 @@
             .then(() => {
                 return STOR.enableContractForAC('A_TKN', '14', '2', { from: account1 })
             })
+
+            .then(() => {
+                return STOR.enableContractForAC('A_TKN', '15', '2', { from: account10 })
+            })
             
             .then(() => {
                 return STOR.enableContractForAC('A_TKN', '1', '1', { from: account1 })
@@ -807,6 +843,10 @@
             
             .then(() => {
                 return STOR.enableContractForAC('NAKED', '14', '2', { from: account1 })
+            })
+
+            .then(() => {
+                return STOR.enableContractForAC('NAKED', '15', '2', { from: account10 })
             })
             
             .then(() => {
@@ -984,7 +1024,7 @@
                     "10000000000000000",
                     "10000000000000000",
                     account1,
-                    { from: account1 })
+                    { from: account10 })
             })
     })
 
@@ -1036,8 +1076,481 @@
             })
             
             .then(() => {
-                console.log("Account10 => AC15")
-                return AC_MGR.OO_addUser(account10, '10', '15', { from: account1 })
+                console.log("Account10 => AC15 (NAKEDMINTER)")
+                return AC_MGR.OO_addUser(account10, '10', '15', { from: account10 })
             })
+    })
+
+
+    it('Should write record2 in AC 12', async () => {
+
+        console.log("//**************************************BEGIN NAKED TEST**********************************************/")
+        console.log("//**************************************BEGIN NAKED SETUP**********************************************/")
+        return APP_NC.$newRecord(
+        asset2, 
+        rgt2,
+        '12',
+        '100',
+        {from: account4, value: 20000000000000000}
+        )
+    })
+
+
+    it('Should write record4 in AC 12', async () => {
+        return APP_NC.$newRecord(
+        asset4, 
+        rgt4,
+        '12',
+        '100',
+        {from: account4, value: 20000000000000000}
+        )
+    })
+
+
+    it('Should change status of asset2 to discardable', async () => {
+        return NP_NC._modStatus(
+        asset2, 
+        '59',
+        {from: account4}
+        )
+    })
+
+
+    it('Should discard asset2', async () => {
+        return A_TKN.discard(
+        asset2,
+        {from: account4}
+        )
+    })
+
+
+    it('Should fail becasue caller does not hold AC token', async () => {
+
+        console.log("//**************************************END NAKED SETUP**********************************************/")
+        console.log("//**************************************BEGIN NAKED FAIL BATCH**********************************************/")
+        console.log("//**************************************BEGIN mintNakedAsset FAIL BATCH**********************************************/")
+        return NAKED.mintNakedAsset(
+        asset1, 
+        string1Hash,
+        '15',
+        {from: account9}
+        )
+    })
+
+
+    it('Should unauthorize account10 to mintNakedAssets', async () => {
+            return AC_MGR.OO_addUser(account10, '1', '15', { from: account10 })
+    })
+
+
+    it('Should fail becasue caller not authrorized to mintNakedAssets', async () => {
+        return NAKED.mintNakedAsset(
+        asset1, 
+        string1Hash,
+        '15',
+        {from: account10}
+        )
+    })
+
+
+    it('Should authorize account10 to mintNakedAssets', async () => {
+        return AC_MGR.OO_addUser(account10, '10', '15', { from: account10 })
+    })
+
+
+    it('Should mintNakedAsset1', async () => {
+        return NAKED.mintNakedAsset(
+        asset1, 
+        string1Hash,
+        '15',
+        {from: account10}
+        )
+    })
+
+
+    it('Should fail because nakedAsset1 token already exists', async () => {
+        return NAKED.mintNakedAsset(
+        asset1, 
+        string1Hash,
+        '15',
+        {from: account10}
+        )
+    })
+
+
+    it('Should fail becasue asset2 already recorded', async () => {
+        return NAKED.mintNakedAsset(
+        asset2, 
+        string1Hash,
+        '15',
+        {from: account10}
+        )
+    })
+
+
+    it('Should fail becasue token not found in NAKED', async () => {
+
+        console.log("//**************************************END mintNakedAsset FAIL BATCH**********************************************/")
+        console.log("//**************************************BEGIN $claimNakedAsset FAIL BATCH**********************************************/")
+        return NAKED.$claimNakedAsset(
+        asset4, 
+        '4',
+        '15',
+        rgt1,
+        '100',
+        {from: account10}
+        )
+    })
+
+
+    it('Should mintNakedAsset3', async () => {
+        return NAKED.mintNakedAsset(
+        asset3, 
+        string3Hash,
+        '15',
+        {from: account10}
+        )
+    })
+
+
+    it('Should unauthorize NAKED in AC15', async () => {
+            return STOR.enableContractForAC('NAKED', '15', '0', { from: account10 })
+    })
+
+    
+    it('Should fail because NAKED not authorized in AC15', async () => {
+        return NAKED.$claimNakedAsset(
+            asset3, 
+            '3',
+            '15',
+            rgt3,
+            '100',
+            {from: account10, value: 20000000000000000}
+            )
+        })
+
+
+    it('Should authorize NAKED in AC15', async () => {
+        return STOR.enableContractForAC('NAKED', '15', '2', { from: account10 })
+    })
+    
+    
+    it('Should claimNakedAsset3', async () => {
+        return NAKED.$claimNakedAsset(
+            asset3, 
+            '3',
+            '15',
+            rgt3,
+            '100',
+            {from: account10, value: 20000000000000000}
+            )
+    })
+
+
+    it('Should transfer token back to NAKED', async () => {
+        return A_TKN.safeTransferFrom(
+            account10, 
+            NAKED.address,
+            asset3,
+            {from: account10}
+            )
+    })
+
+
+    it('Should fail becasue asset is already registered', async () => {
+        
+        console.log("//**************************************END $claimNakedAsset FAIL BATCH**********************************************/")
+        console.log("//**************************************END NAKED FAIL BATCH**********************************************/")
+        console.log("//**************************************END NAKED TEST**********************************************/")
+        return NAKED.$claimNakedAsset(
+            asset3, 
+            '3',
+            '15',
+            rgt3,
+            '100',
+            {from: account10, value: 20000000000000000}
+            )
+    })
+
+
+    it('Should write record12 in AC 10', async () => {
+
+        console.log("//**************************************BEGIN THE WORKS**********************************************/")
+        return APP.$newRecord(
+        asset12, 
+        rgt12,
+        '10',
+        '100',
+        {from: account2, value: 20000000000000000}
+        )
+    })
+
+
+    it('Should change status of asset12 to status(1)', async () => {
+        return NP._modStatus(
+        asset12, 
+        rgt12,
+        '1',
+        {from: account2}
+        )
+    })
+
+
+    it('Should Transfer asset12 RGT(12) to RGT(2)', async () => {
+        return APP.$transferAsset(
+        asset12, 
+        rgt12,
+        rgt2,
+        {from: account2, value: 20000000000000000}
+        )
+    })
+
+
+    it('Should force modify asset12 RGT(2) to RGT(12)', async () => {
+        return APP.$forceModRecord(
+        asset12, 
+        rgt12,
+        {from: account2, value: 20000000000000000}
+        )
+    })
+
+
+    it('Should change decrement amount @asset12 from (100) to (85)', async () => {
+        return NP._decCounter(
+        asset12, 
+        rgt12,
+        '15',
+        {from: account2}
+        )
+    })
+
+
+    it('Should modify Ipfs1 note @asset12 to IDX(1)', async () => {
+        return NP._modIpfs1(
+        asset12, 
+        rgt12,
+        asset12,
+        {from: account2}
+        )
+    })
+
+
+    it('Should change status of new asset12 to status(51)', async () => {
+        return NP._modStatus(
+        asset12, 
+        rgt12,
+        '51',
+        {from: account2}
+        )
+    })
+
+
+    it('Should export asset12 to account2', async () => {
+        return NP.exportAsset(
+        asset12, 
+        account2,
+        {from: account2}
+        )
+    })
+
+
+    it('Should import asset12 to AC(12)(NC)', async () => {
+        return APP_NC.$importAsset(
+        asset12,
+        '12',
+        {from: account2, value: 20000000000000000}
+        )
+    })
+
+
+    it('Should re-mint asset12 token to account2', async () => {
+        return APP_NC.$reMintToken(
+        asset12,
+        'a',
+        'a',
+        'a',
+        'a',
+        'a',
+        {from: account2, value: 20000000000000000}
+        )
+    })
+
+
+    it('Should set Ipfs2 note to IDX(1)', async () => {
+        return APP_NC.$addIpfs2Note(
+        asset12,
+        asset12,
+        {from: account2, value: 20000000000000000}
+        )
+    })
+
+
+    it('Should change status of asset12 to status(51)', async () => {
+        return NP_NC._modStatus(
+        asset12, 
+        '51',
+        {from: account2}
+        )
+    })
+
+
+    it('Should set asset12 into escrow for 3 minutes', async () => {
+        return ECR_NC.setEscrow(
+        asset12, 
+        account2Hash,
+        '180',
+        '56',
+        {from: account2}
+        )
+    })
+
+
+    it('Should take asset12 out of escrow', async () => {
+        return ECR_NC.endEscrow(
+        asset12, 
+        {from: account2}
+        )
+    })
+
+
+    it('Should change decrement amount @asset12 from (85) to (70)', async () => {
+        return NP_NC._decCounter(
+        asset12, 
+        '15',
+        {from: account2}
+        )
+    })
+
+
+    it('Should force modify asset12 RGT(1) to RGT(2)', async () => {
+        return NP_NC._changeRgt(
+        asset12, 
+        rgt2,
+        {from: account2}
+        )
+    })
+
+
+    it('Should modify Ipfs1 note @asset12 to RGT(1)', async () => {
+        return NP_NC._modIpfs1(
+        asset12, 
+        rgt12,
+        {from: account2}
+        )
+    })
+
+    it('Should change status of asset12 to status(51)', async () => {
+        return NP_NC._modStatus(
+        asset12, 
+        '51',
+        {from: account2}
+        )
+    })
+
+    it('Should export asset12(status70)', async () => {
+        return NP_NC._exportNC(
+        asset12, 
+        {from: account2}
+        )
+    })
+
+
+    it('Should transfer asset12 token to PRUF_APP contract', async () => {
+        return A_TKN.safeTransferFrom(
+        account2,
+        APP.address,
+        asset12,
+        {from: account2}
+        )
+    })
+
+
+    it('Should import asset12 to AC(11)', async () => {
+        return APP.$importAsset(
+        asset12,
+        rgt12,
+        '11',
+        {from: account2, value: 20000000000000000}
+        )
+    })
+
+
+    it('Should change status of asset12 to status(1)', async () => {
+        return NP._modStatus(
+        asset12, 
+        rgt12,
+        '1',
+        {from: account2}
+        )
+    })
+
+
+    it('Should set asset12 into locked escrow for 3 minutes', async () => {
+        return ECR.setEscrow(
+        asset12, 
+        account2Hash,
+        '180',
+        '50',
+        {from: account2}
+        )
+    })
+
+
+    it('Should take asset12 out of escrow', async () => {
+        return ECR.endEscrow(
+        asset12, 
+        {from: account2}
+        )
+    })
+
+
+    it('Should change status of asset12 to status(1)', async () => {
+        return NP._modStatus(
+        asset12, 
+        rgt12,
+        '1',
+        {from: account2}
+        )
+    })
+
+
+    it('Should set asset12 into escrow for 3 minutes', async () => {
+        return ECR.setEscrow(
+        asset12, 
+        account2Hash,
+        '180',
+        '6',
+        {from: account2}
+        )
+    })
+
+
+    it('Should set asset12 to stolen(3) status', async () => {
+        return NP._setLostOrStolen(
+        asset12,
+        rgt12,
+        '3',
+        {from: account2}
+        )
+    })
+
+
+    it('Should change status of asset12 to status(1)', async () => {
+        return NP._modStatus(
+        asset12, 
+        rgt12,
+        '1',
+        {from: account2}
+        )
+    })
+
+    it("Should retrieve asset12", async () =>{ 
+        var Record = [];
+        
+        return await STOR.retrieveShortRecord(asset12, {from: account2}, function (_err, _result) {
+            if(_err){} 
+            else{Record = Object.values(_result)
+        console.log(Record)}
+        })
     })
 })
