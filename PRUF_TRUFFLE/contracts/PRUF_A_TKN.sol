@@ -137,20 +137,15 @@ contract A_TKN is Ownable, ReentrancyGuard, ERC721 {
         uint256 _assetClass,
         string calldata _authCode
     ) external view {
-        require( // Forgive me my trespasses...
-            keccak256(abi.encodePacked(tokenURI(tokenId))) ==
-                keccak256(
-                    abi.encodePacked(
-                        uint256toString(
-                            uint256(
-                                keccak256(
-                                    abi.encodePacked(_assetClass, _authCode)
-                                )
-                            )
-                        )
-                    )
-                ),
-            "AT:VNT:Supplied authCode and assetclass do not match token URI"
+        bytes32 _hashedAuthCode = keccak256(abi.encodePacked(_authCode));
+        bytes32 b32URI = keccak256(abi.encodePacked(_hashedAuthCode, _assetClass));
+        string memory authString = uint256toString(uint256(b32URI));
+        string memory URI = tokenURI(tokenId);
+
+
+        require(
+            keccak256(abi.encodePacked(URI)) == keccak256(abi.encodePacked(authString)),
+            "Supplied authCode and assetclass do not match token URI"
         );
     }
 

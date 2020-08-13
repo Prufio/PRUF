@@ -181,17 +181,15 @@ contract Helper is Ownable {
         return rawRgtHash;
     }
 
-    function getNakedTokenHash(uint256 _assetClass, string memory _authCode)
-        public
-        pure
-        returns (uint256)
-    {
-        bytes32 tokHash;
+    function getURIfromAuthcode(
+        uint256 _assetClass,
+        string calldata _authCode
+    ) external pure returns (string memory){
+        bytes32 _hashedAuthCode = keccak256(abi.encodePacked(_authCode));
+        bytes32 b32URI = keccak256(abi.encodePacked(_hashedAuthCode, _assetClass));
+        string memory authString = uint256toString(uint256(b32URI));
 
-        tokHash = keccak256(abi.encodePacked(_assetClass, _authCode));
-        uint256 uintHash = uint256(tokHash);
-
-        return uintHash;
+        return authString;
     }
 
     function uint256toString(uint256 number)
