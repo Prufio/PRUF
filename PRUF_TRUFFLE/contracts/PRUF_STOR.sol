@@ -170,8 +170,8 @@ contract STOR is Ownable, ReentrancyGuard, Pausable {
         uint8 _contractAuthLevel
     ) external onlyOwner {
         require(
-            (_assetClass == 0) || (_assetClass == 65535),
-            "S:AC: AC not 0 or 65535"
+            (_assetClass == 0),
+            "S:AC: AC not 0"
         );
         require(_contractAuthLevel <= 4, "S:AC: Invalid user type");
         //^^^^^^^checks^^^^^^^^^

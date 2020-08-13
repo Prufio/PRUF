@@ -115,6 +115,28 @@ contract A_TKN is Ownable, ReentrancyGuard, ERC721 {
     }
 
     /*
+     * @dev remint Asset Token
+     * must set a new and unuiqe rgtHash
+     * burns old token
+     * Sends new token to original Caller
+     */
+    function reMintAssetToken(address _recipientAddress, uint256 tokenId)
+        external
+        isAdmin
+        nonReentrant
+        returns (uint256)
+    {
+        require(_exists(tokenId), "AT:RM:Cannot Remint nonexistant token");
+        //^^^^^^^checks^^^^^^^^^
+        string memory tokenURI = tokenURI(tokenId);
+        _burn(tokenId);
+        _safeMint(_recipientAddress, tokenId);
+        _setTokenURI(tokenId, tokenURI);
+        return tokenId;
+        //^^^^^^^interactions^^^^^^^^^
+    }
+
+    /*
      * @dev Set new token URI String
      */
     function setURI(uint256 tokenId, string calldata _tokenURI)
@@ -308,28 +330,7 @@ contract A_TKN is Ownable, ReentrancyGuard, ERC721 {
         //^^^^^^^interactions^^^^^^^^^
     }
 
-    /*
-     * Authorizations?
-     * @dev remint Asset Token
-     * must set a new and unuiqe rgtHash
-     * burns old token
-     * Sends new token to original Caller
-     */
-    function reMintAssetToken(address _recipientAddress, uint256 tokenId)
-        external
-        isAdmin
-        nonReentrant
-        returns (uint256)
-    {
-        require(_exists(tokenId), "AT:RM:Cannot Remint nonexistant token");
-        //^^^^^^^checks^^^^^^^^^
-        string memory tokenURI = tokenURI(tokenId);
-        _burn(tokenId);
-        _safeMint(_recipientAddress, tokenId);
-        _setTokenURI(tokenId, tokenURI);
-        return tokenId;
-        //^^^^^^^interactions^^^^^^^^^
-    }
+  
 
     /*
      * @dev Write a Record to Storage @ idxHash
