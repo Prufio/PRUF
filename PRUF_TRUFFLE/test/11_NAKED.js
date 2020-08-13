@@ -67,8 +67,8 @@
 
     let account000 = '0x0000000000000000000000000000000000000000'
 
-    let nakedTokenHash1;
-    let nakedTokenHash3;
+    let nakedAuthCode1;
+    let nakedAuthCode3;
     
         //
         //
@@ -372,12 +372,12 @@
         )
 
 
-        nakedTokenHash1 = await Helper.getNakedTokenHash(
+        nakedAuthCode1 = await Helper.getURIfromAuthcode(
             '15',
             '1'
         )
 
-        nakedTokenHash3 = await Helper.getNakedTokenHash(
+        nakedAuthCode3 = await Helper.getURIfromAuthcode(
             '15',
             '3'
         )
@@ -1203,7 +1203,7 @@
     it('Should mintNakedAsset3', async () => {
         return NAKED.mintNakedAsset(
         asset3, 
-        '3',
+        string3Hash,
         '15',
         {from: account10}
         )
