@@ -193,8 +193,9 @@ pragma solidity ^0.6.7;
  * 51 = transferrable, automation set/unset (secret confirmed)(ACAdmin can unset)
  * 52 = non-transferrable, automation set/unset (secret confirmed)(ACAdmin can unset)
  * 53 = stolen (automation set)(ONLY ACAdmin can unset)
- * 54 = lost (automation set/unset)(ACAdmin can unset)
- * 55 = asset transferred automation set/unset (secret confirmed)(Only ACAdmin can unset) (discarded) ####DO NOT USE???? 
+ * 54 = lost (automation set/unset)(ACAdmin can unset)             
+ * 55 = asset transferred automation set/unset (secret confirmed)(Only ACAdmin can unset) (discarded) ####DO NOT USE????
+                ^^!!!CANNOT BE SET BY CURRENT CONTRACTS 8/13/2020!!!^^
  * 56 = escrow - automation set/unset (secret confirmed)(ACAdmin can unset)
  * 57 = out of escrow
  * 58 = out of locked escrow

@@ -11,6 +11,7 @@
     const PRUF_A_TKN = artifacts.require('A_TKN');
     const PRUF_ECR_MGR = artifacts.require('ECR_MGR');
     const PRUF_ECR = artifacts.require('ECR');
+    const PRUF_ECR2 = artifacts.require('ECR2');
     const PRUF_APP_NC = artifacts.require('APP_NC');
     const PRUF_NP_NC = artifacts.require('NP_NC');
     const PRUF_ECR_NC = artifacts.require('ECR_NC');
@@ -26,10 +27,12 @@
     let A_TKN;
     let ECR_MGR;
     let ECR;
+    let ECR2;
     let ECR_NC;
     let APP_NC;
     let NP_NC;
     let RCLR;
+    let NAKED
     let Helper;
     
     let asset1;
@@ -69,7 +72,7 @@
         //
         //
     
-    contract('BOOTSTRAP', accounts => {
+    contract('ECR', accounts => {
             
         console.log('//**************************BEGIN BOOTSTRAP**************************//')
 
@@ -199,6 +202,14 @@
         console.log(PRUF_HELPER_TEST.address);
         assert(PRUF_HELPER_TEST.address !== '')
         Helper = PRUF_HELPER_TEST;
+    })
+
+
+    it('Should deploy PRUF_ECR2', async () => {
+        const PRUF_ECR2_TEST = await PRUF_ECR2.deployed({ from: account1 });
+        console.log(PRUF_ECR2_TEST.address);
+        assert(PRUF_ECR2_TEST.address !== '');
+        ECR2 = PRUF_ECR2_TEST;
     })
 
 
@@ -406,6 +417,11 @@
                 console.log("Adding ECR to storage for use in AC 0")
                 return STOR.OO_addContract("ECR", ECR.address, '0', '3', { from: account1 })
             })
+
+            .then(() => {
+                console.log("Adding ECR2 to storage for use in AC 0")
+                return STOR.OO_addContract("ECR2", ECR2.address, '0', '3', { from: account1 })
+            })
             
             .then(() => {
                 console.log("Adding APP_NC to storage for use in AC 0")
@@ -468,6 +484,11 @@
                 console.log("Adding in ECR")
                 return ECR.OO_setStorageContract(STOR.address, { from: account1 })
             })
+
+            .then(() => {
+                console.log("Adding in ECR2")
+                return ECR2.OO_setStorageContract(STOR.address, { from: account1 })
+            })
             
             .then(() => {
                 console.log("Adding in APP_NC")
@@ -529,6 +550,11 @@
             .then(() => {
                 console.log("Resolving in ECR")
                 return ECR.OO_ResolveContractAddresses({ from: account1 })
+            })
+
+            .then(() => {
+                console.log("Resolving in ECR2")
+                return ECR2.OO_ResolveContractAddresses({ from: account1 })
             })
             
             .then(() => {
@@ -682,6 +708,18 @@
             // .then(() => {
             //     return STOR.enableContractForAC('ECR', '1', '3', { from: account1 })
             // })
+    })
+
+
+    it('Should authorize ECR2 in all relevant asset classes', async () => {
+        
+        console.log("Authorizing ECR2")
+        return STOR.enableContractForAC('ECR2', '10', '3', { from: account1 })
+            
+            .then(() => {
+                return STOR.enableContractForAC('ECR2', '11', '3', { from: account1 })
+            })
+            
     })
 
 
