@@ -143,7 +143,7 @@ contract A_TKN is Ownable, ReentrancyGuard, ERC721 {
         string memory URI = tokenURI(tokenId);
 
 
-        require( // Forgive me my trespasses...
+        require(
             keccak256(abi.encodePacked(URI)) == keccak256(abi.encodePacked(authString)),
             "Supplied authCode and assetclass do not match token URI"
         );
