@@ -115,6 +115,28 @@ contract A_TKN is Ownable, ReentrancyGuard, ERC721 {
     }
 
     /*
+     * @dev remint Asset Token
+     * must set a new and unuiqe rgtHash
+     * burns old token
+     * Sends new token to original Caller
+     */
+    function reMintAssetToken(address _recipientAddress, uint256 tokenId)
+        external
+        isAdmin
+        nonReentrant
+        returns (uint256)
+    {
+        require(_exists(tokenId), "AT:RM:Cannot Remint nonexistant token");
+        //^^^^^^^checks^^^^^^^^^
+        string memory tokenURI = tokenURI(tokenId);
+        _burn(tokenId);
+        _safeMint(_recipientAddress, tokenId);
+        _setTokenURI(tokenId, tokenURI);
+        return tokenId;
+        //^^^^^^^interactions^^^^^^^^^
+    }
+
+    /*
      * @dev Set new token URI String
      */
     function setURI(uint256 tokenId, string calldata _tokenURI)
@@ -218,17 +240,17 @@ contract A_TKN is Ownable, ReentrancyGuard, ERC721 {
         address from,
         address to,
         uint256 tokenId
-    ) public override nonReentrant {
-        bytes32 _idxHash = bytes32(tokenId);
-        Record memory rec = getRecord(_idxHash);
+    ) public override {
+        //bytes32 _idxHash = bytes32(tokenId);
+        //Record memory rec = getRecord(_idxHash);
 
         //^^^^^^^checks^^^^^^^^^
 
-        rec
-            .rightsHolder = 0xFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF;
+        // rec
+        //     .rightsHolder = 0xFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF;
         //^^^^^^^effects^^^^^^^^^
 
-        writeRecord(_idxHash, rec);
+        //writeRecord(_idxHash, rec);
         safeTransferFrom(from, to, tokenId, "");
         //^^^^^^^interactions^^^^^^^^^
     }
@@ -250,7 +272,7 @@ contract A_TKN is Ownable, ReentrancyGuard, ERC721 {
         address to,
         uint256 tokenId,
         bytes memory _data
-    ) public virtual override {
+    ) public virtual override nonReentrant {
         bytes32 _idxHash = bytes32(tokenId);
         Record memory rec = getRecord(_idxHash);
         (uint8 isAuth, ) = STOR.ContractInfoHash(to, 0); // trailing comma because does not use the returned hash
@@ -308,28 +330,7 @@ contract A_TKN is Ownable, ReentrancyGuard, ERC721 {
         //^^^^^^^interactions^^^^^^^^^
     }
 
-    /*
-     * Authorizations?
-     * @dev remint Asset Token
-     * must set a new and unuiqe rgtHash
-     * burns old token
-     * Sends new token to original Caller
-     */
-    function reMintAssetToken(address _recipientAddress, uint256 tokenId)
-        external
-        isAdmin
-        nonReentrant
-        returns (uint256)
-    {
-        require(_exists(tokenId), "AT:RM:Cannot Remint nonexistant token");
-        //^^^^^^^checks^^^^^^^^^
-        string memory tokenURI = tokenURI(tokenId);
-        _burn(tokenId);
-        _safeMint(_recipientAddress, tokenId);
-        _setTokenURI(tokenId, tokenURI);
-        return tokenId;
-        //^^^^^^^interactions^^^^^^^^^
-    }
+  
 
     /*
      * @dev Write a Record to Storage @ idxHash
