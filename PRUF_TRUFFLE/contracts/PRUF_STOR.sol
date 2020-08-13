@@ -73,7 +73,7 @@ contract STOR is Ownable, ReentrancyGuard, Pausable {
                 (contractInfo[contractAddressToName[msg.sender]][_assetClass] <
                     5) || (contractInfo[contractAddressToName[msg.sender]][_assetClass] ==
                     10)),
-            "S:MOD-IA:Contract not auth or improperly permissioned"
+            "S:MOD-IA:Cntrct not prmsnd"
         );
         _;
     }
@@ -188,7 +188,7 @@ contract STOR is Ownable, ReentrancyGuard, Pausable {
         //^^^^^^^effects^^^^^^^^^
 
         emit REPORT(
-            "AccessContrl database access!",
+            "ACDA",
             bytes32(uint256(_contractAuthLevel))
         ); //report access to the internal user database
         //^^^^^^^interactions^^^^^^^^^
@@ -213,7 +213,7 @@ contract STOR is Ownable, ReentrancyGuard, Pausable {
         //^^^^^^^effects^^^^^^^^^
 
         emit REPORT(
-            "AccessContrl database access!",
+            "ACDA",
             bytes32(uint256(_contractAuthLevel))
         ); //report access to the internal user database
         //^^^^^^^interactions^^^^^^^^^
@@ -232,7 +232,7 @@ contract STOR is Ownable, ReentrancyGuard, Pausable {
     ) external nonReentrant whenNotPaused isAuthorized(_assetClass) {
         require(
             database[_idxHash].assetStatus != 60,
-            "S:NR:Asset is recycled. Use PRUF_APP_NC recycle instead"
+            "S:NR:Asset is rcycl. Use PRUF_APP_NC rcycl instead"
         );
         require(
             database[_idxHash].rightsHolder == 0,
@@ -258,7 +258,7 @@ contract STOR is Ownable, ReentrancyGuard, Pausable {
         database[_idxHash] = rec;
         //^^^^^^^effects^^^^^^^^^
 
-        emit REPORT("New rec created", _idxHash);
+        emit REPORT("NEW REC", _idxHash);
         //^^^^^^^interactions^^^^^^^^^
     }
 
@@ -285,19 +285,19 @@ contract STOR is Ownable, ReentrancyGuard, Pausable {
 
         require( //prohibit increasing the countdown value
             _countDown <= database[idxHash].countDown,
-            "S:MR:new countDown +!"
+            "S:MR:countDown +!"
         );
         require(
             _forceCount >= database[idxHash].forceModCount,
-            "S:MR:new forceModCount -!"
+            "S:MR:forceModCount -!"
         );
         require(
             _numberOfTransfers >= database[idxHash].numberOfTransfers,
-            "S:MR:new transferCount -!"
+            "S:MR:transferCount -!"
         );
         require(
             isLostOrStolen(_newAssetStatus) == 0,
-            "S:MR:Must use L/S to set lost or stolen status"
+            "S:MR:Must use L/S to set L/S status"
         );
         //^^^^^^^checks^^^^^^^^^
 
@@ -311,7 +311,7 @@ contract STOR is Ownable, ReentrancyGuard, Pausable {
         database[idxHash] = rec;
         //^^^^^^^effects^^^^^^^^^
 
-        emit REPORT("Rec Modified", _idxHash);
+        emit REPORT("REC MOD", _idxHash);
         //^^^^^^^interactions^^^^^^^^^
     }
 
@@ -330,7 +330,7 @@ contract STOR is Ownable, ReentrancyGuard, Pausable {
         
         require(
             AC_MGR.isSameRootAC(_newAssetClass, rec.assetClass) == 170,
-            "S:CAC:Cannot change AC to new root"
+            "S:CAC:Cannot mod AC to new root"
         );
         //^^^^^^^checks^^^^^^^^^
 
@@ -338,14 +338,14 @@ contract STOR is Ownable, ReentrancyGuard, Pausable {
         database[_idxHash] = rec;
         //^^^^^^^effects^^^^^^^^^
 
-        emit REPORT("Changed Asset Class", _idxHash);
+        emit REPORT("UPD AC", _idxHash);
         //^^^^^^^interactions^^^^^^^^^
     }
 
     /*
      * @dev Set an asset tot stolen or lost. Allows narrow modification of status 6/12 assets, normally locked
      */
-    function setLostOrStolen(bytes32 _idxHash, uint8 _newAssetStatus)
+    function setStolenOrLost(bytes32 _idxHash, uint8 _newAssetStatus)
         external
         nonReentrant
         isAuthorized(database[_idxHash].assetClass)
@@ -360,7 +360,7 @@ contract STOR is Ownable, ReentrancyGuard, Pausable {
             (database[_idxHash].assetStatus != 5) &&
                 (database[_idxHash].assetStatus != 50) &&
                 (database[_idxHash].assetStatus != 55),
-            "S:SSL:Txfr or ecr locked asset cannot be set to L/S."
+            "S:SSL:Txfr or ecr locked asset != L/S."
         );
         //^^^^^^^checks^^^^^^^^^
 
@@ -370,9 +370,9 @@ contract STOR is Ownable, ReentrancyGuard, Pausable {
         //^^^^^^^effects^^^^^^^^^
 
         if ((_newAssetStatus == 3) || (_newAssetStatus == 53)) {
-            emit REPORT("Status changed to STOLEN", _idxHash);
+            emit REPORT("STOLEN", _idxHash);
         } else {
-            emit REPORT("Status changed to LOST", _idxHash);
+            emit REPORT("LOST", _idxHash);
         }
         //^^^^^^^interactions^^^^^^^^^
     }
@@ -394,17 +394,17 @@ contract STOR is Ownable, ReentrancyGuard, Pausable {
     {
         require(
             isEscrow(_newAssetStatus) == 170,
-            "S:SE: Asset already in ecr"
+            "S:SE: Asset in ecr"
         );
         require(
             (isLostOrStolen(database[_idxHash].assetStatus) == 0) &&
                 (database[_idxHash].assetStatus != 5) &&
                 (database[_idxHash].assetStatus != 55),
-            "S:SE: Cannot be set to ecr"
+            "S:SE: != ecr"
         );
         require(
             isEscrow(database[_idxHash].assetStatus) == 0,
-            "S:SE: In ecr status"
+            "S:SE: In ecr stat"
         );
         //^^^^^^^checks^^^^^^^^^
 
@@ -418,7 +418,7 @@ contract STOR is Ownable, ReentrancyGuard, Pausable {
         rec.assetStatus = _newAssetStatus;
         database[_idxHash] = rec;
         //^^^^^^^effects^^^^^^^^^
-        emit REPORT("Ecr set successfully", _contractNameHash);
+        emit REPORT("ECR SET", _contractNameHash);
         //^^^^^^^interactions^^^^^^^^^
     }
 
@@ -434,7 +434,7 @@ contract STOR is Ownable, ReentrancyGuard, Pausable {
     {
         require(
             isEscrow(database[_idxHash].assetStatus) == 170,
-            "S:EE:Not in ecr status"
+            "S:EE:!= ecr stat"
         );
         //^^^^^^^checks^^^^^^^^^
         Record memory rec = database[_idxHash];
@@ -454,7 +454,7 @@ contract STOR is Ownable, ReentrancyGuard, Pausable {
 
         database[_idxHash] = rec;
         //^^^^^^^effects^^^^^^^^^
-        emit REPORT("Ecr Ended by contract:", _contractNameHash);
+        emit REPORT("ECR END:", _contractNameHash);
         //^^^^^^^interactions^^^^^^^^^
     }
 
@@ -471,14 +471,14 @@ contract STOR is Ownable, ReentrancyGuard, Pausable {
     {
         Record memory rec = database[_idxHash];
 
-        require((rec.Ipfs1 != _Ipfs1), "S:MI1: New value same as old");
+        require((rec.Ipfs1 != _Ipfs1), "S:MI1: New value = old");
         //^^^^^^^checks^^^^^^^^^
 
         rec.Ipfs1 = _Ipfs1;
 
         database[_idxHash] = rec;
         //^^^^^^^effects^^^^^^^^^
-        emit REPORT("IPFS1 modified", _idxHash);
+        emit REPORT("I1 mod", _idxHash);
         //^^^^^^^interactions^^^^^^^^^
     }
 
@@ -496,7 +496,7 @@ contract STOR is Ownable, ReentrancyGuard, Pausable {
     {
         Record memory rec = database[_idxHash];
 
-        require((rec.Ipfs2 == 0), "S:MI2: Cannot overwrite IPFS2");
+        require((rec.Ipfs2 == 0), "S:MI2: ! overwrite I2");
         //^^^^^^^checks^^^^^^^^^
 
         rec.Ipfs2 = _Ipfs2;
@@ -504,7 +504,7 @@ contract STOR is Ownable, ReentrancyGuard, Pausable {
         database[_idxHash] = rec;
         //^^^^^^^effects^^^^^^^^^
 
-        emit REPORT("IPFS2 modified", _idxHash);
+        emit REPORT("I2 mod", _idxHash);
         //^^^^^^^interactions^^^^^^^^^
     }
 
@@ -617,10 +617,10 @@ contract STOR is Ownable, ReentrancyGuard, Pausable {
         returns (uint8)
     {
         if (_rgtHash == database[_idxHash].rightsHolder) {
-            emit REPORT("Record match confirmed", _idxHash);
+            emit REPORT("Match confirmed", _idxHash);
             return 170;
         } else {
-            emit REPORT("Record does not match", _idxHash);
+            emit REPORT("Does not match", _idxHash);
             return 0;
         }
         //^^^^^^^checks/interactions^^^^^^^^^
