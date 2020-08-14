@@ -97,10 +97,10 @@ contract RCLR is ECR_CORE, CORE {
             rec.numberOfTransfers++;
         }
         //^^^^^^^effects^^^^^^^^^^^^
-
+        
         A_TKN.mintAssetToken(msg.sender, tokenId, "pruf.io");
-        STOR.changeAC(_idxHash, _assetClass);
         ECR_MGR.endEscrow(_idxHash);
+        STOR.changeAC(_idxHash, _assetClass);
         writeRecord(_idxHash, rec);
         deductRecycleCosts(_assetClass, escrow.addr2);
         //^^^^^^^interactions^^^^^^^^^^^^
