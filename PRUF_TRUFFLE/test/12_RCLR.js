@@ -1176,6 +1176,11 @@
                 console.log("Account10 => AC15 (NAKEDMINTER)")
                 return AC_MGR.OO_addUser(account10, '10', '15', { from: account10 })
             })
+
+            .then(() => {
+                console.log("Account10 => AC15 (NAKEDMINTER)")
+                return AC_MGR.OO_addUser(account10, '1', '10', { from: account1 })
+            })
     })
 
 
