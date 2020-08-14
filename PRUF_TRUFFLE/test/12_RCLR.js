@@ -9,8 +9,10 @@
     const PRUF_AC_MGR = artifacts.require('AC_MGR');
     const PRUF_AC_TKN = artifacts.require('AC_TKN');
     const PRUF_A_TKN = artifacts.require('A_TKN');
+    const PRUF_A_TKN2 = artifacts.require('A_TKN2');
     const PRUF_ECR_MGR = artifacts.require('ECR_MGR');
     const PRUF_ECR = artifacts.require('ECR');
+    const PRUF_ECR2 = artifacts.require('ECR2');
     const PRUF_APP_NC = artifacts.require('APP_NC');
     const PRUF_NP_NC = artifacts.require('NP_NC');
     const PRUF_ECR_NC = artifacts.require('ECR_NC');
@@ -24,13 +26,21 @@
     let AC_MGR;
     let AC_TKN;
     let A_TKN;
+    let A_TKN2;
     let ECR_MGR;
     let ECR;
+    let ECR2;
     let ECR_NC;
     let APP_NC;
     let NP_NC;
     let RCLR;
     let Helper;
+
+    let string1Hash;
+    let string2Hash;
+    let string3Hash;
+    let string4Hash;
+    let string5Hash;
     
     let asset1;
     let asset2;
@@ -61,7 +71,8 @@
 
     let account000 = '0x0000000000000000000000000000000000000000'
 
-    let nakedTokenHash1;
+    let nakedAuthCode1;
+    let nakedAuthCode3;
     
         //
         //
@@ -199,6 +210,22 @@
         console.log(PRUF_HELPER_TEST.address);
         assert(PRUF_HELPER_TEST.address !== '')
         Helper = PRUF_HELPER_TEST;
+    })
+
+
+    it('Should deploy PRUF_ECR2', async () => {
+        const PRUF_ECR2_TEST = await PRUF_ECR2.deployed({ from: account1 });
+        console.log(PRUF_ECR2_TEST.address);
+        assert(PRUF_ECR2_TEST.address !== '');
+        ECR2 = PRUF_ECR2_TEST;
+    })
+
+
+    it('Should deploy PRUF_A_TKN2', async () => {
+        const PRUF_A_TKN2_TEST = await PRUF_A_TKN2.deployed({ from: account1 });
+        console.log(PRUF_A_TKN2_TEST.address);
+        assert(PRUF_A_TKN2_TEST.address !== '')
+        A_TKN2 = PRUF_A_TKN2_TEST;
     })
 
 
@@ -365,9 +392,34 @@
         )
 
 
-        nakedTokenHash1 = await Helper.getNakedTokenHash(
-            '10',
+        nakedAuthCode1 = await Helper.getURIfromAuthcode(
+            '15',
             '1'
+        )
+
+        nakedAuthCode3 = await Helper.getURIfromAuthcode(
+            '15',
+            '3'
+        )
+
+        string1Hash = await Helper.getStringHash(
+            '1'
+        )
+
+        string2Hash = await Helper.getStringHash(
+            '2'
+        )
+
+        string3Hash = await Helper.getStringHash(
+            '3'
+        )
+
+        string4Hash = await Helper.getStringHash(
+            '4'
+        )
+
+        string5Hash = await Helper.getStringHash(
+            '5'
         )
     })
 
@@ -396,6 +448,11 @@
                 console.log("Adding A_TKN to storage for use in AC 0")
                 return STOR.OO_addContract("A_TKN", A_TKN.address, '0', '1', { from: account1 })
             })
+
+            .then(() => {
+                console.log("Adding A_TKN2 to storage for use in AC 0")
+                return STOR.OO_addContract("A_TKN2", A_TKN2.address, '0', '1', { from: account1 })
+            })
             
             .then(() => {
                 console.log("Adding ECR_MGR to storage for use in AC 0")
@@ -405,6 +462,11 @@
             .then(() => {
                 console.log("Adding ECR to storage for use in AC 0")
                 return STOR.OO_addContract("ECR", ECR.address, '0', '3', { from: account1 })
+            })
+
+            .then(() => {
+                console.log("Adding ECR2 to storage for use in AC 0")
+                return STOR.OO_addContract("ECR2", ECR2.address, '0', '3', { from: account1 })
             })
             
             .then(() => {
@@ -458,6 +520,11 @@
                 console.log("Adding in A_TKN")
                 return A_TKN.OO_setStorageContract(STOR.address, { from: account1 })
             })
+
+            .then(() => {
+                console.log("Adding in A_TKN2")
+                return A_TKN2.OO_setStorageContract(STOR.address, { from: account1 })
+            })
             
             .then(() => {
                 console.log("Adding in ECR_MGR")
@@ -467,6 +534,11 @@
             .then(() => {
                 console.log("Adding in ECR")
                 return ECR.OO_setStorageContract(STOR.address, { from: account1 })
+            })
+
+            .then(() => {
+                console.log("Adding in ECR2")
+                return ECR2.OO_setStorageContract(STOR.address, { from: account1 })
             })
             
             .then(() => {
@@ -520,6 +592,11 @@
                 console.log("Resolving in A_TKN")
                 return A_TKN.OO_ResolveContractAddresses({ from: account1 })
             })
+
+            .then(() => {
+                console.log("Resolving in A_TKN2")
+                return A_TKN2.OO_ResolveContractAddresses({ from: account1 })
+            })
             
             .then(() => {
                 console.log("Resolving in ECR_MGR")
@@ -529,6 +606,11 @@
             .then(() => {
                 console.log("Resolving in ECR")
                 return ECR.OO_ResolveContractAddresses({ from: account1 })
+            })
+
+            .then(() => {
+                console.log("Resolving in ECR2")
+                return ECR2.OO_ResolveContractAddresses({ from: account1 })
             })
             
             .then(() => {
@@ -598,7 +680,7 @@
 
             .then(() => {
                 console.log("Minting AC 15 -NC")
-                return AC_MGR.createAssetClass("15", account1, "Non_Custodial_AC4", "15", "2", "2", { from: account1 })
+                return AC_MGR.createAssetClass("15", account10, "Non_Custodial_AC4", "15", "2", "2", { from: account1 })
             })
     })
 
@@ -682,6 +764,18 @@
             // .then(() => {
             //     return STOR.enableContractForAC('ECR', '1', '3', { from: account1 })
             // })
+    })
+
+
+    it('Should authorize ECR2 in all relevant asset classes', async () => {
+        
+        console.log("Authorizing ECR2")
+        return STOR.enableContractForAC('ECR2', '10', '3', { from: account1 })
+            
+            .then(() => {
+                return STOR.enableContractForAC('ECR2', '11', '3', { from: account1 })
+            })
+            
     })
 
 
@@ -777,6 +871,10 @@
             .then(() => {
                 return STOR.enableContractForAC('A_TKN', '14', '2', { from: account1 })
             })
+
+            .then(() => {
+                return STOR.enableContractForAC('A_TKN', '15', '2', { from: account10 })
+            })
             
             .then(() => {
                 return STOR.enableContractForAC('A_TKN', '1', '1', { from: account1 })
@@ -784,6 +882,41 @@
             
             .then(() => {
                 return STOR.enableContractForAC('A_TKN', '2', '1', { from: account1 })
+            })
+    })
+
+
+    it('Should authorize A_TKN2 in all relevant asset classes', async () => {
+        
+        console.log("Authorizing A_TKN2")
+        return STOR.enableContractForAC('A_TKN2', '10', '1', { from: account1 })
+            
+            .then(() => {
+                return STOR.enableContractForAC('A_TKN2', '11', '1', { from: account1 })
+            })
+            
+            .then(() => {
+                return STOR.enableContractForAC('A_TKN2', '12', '2', { from: account1 })
+            })
+            
+            .then(() => {
+                return STOR.enableContractForAC('A_TKN2', '13', '2', { from: account1 })
+            })
+            
+            .then(() => {
+                return STOR.enableContractForAC('A_TKN2', '14', '2', { from: account1 })
+            })
+
+            .then(() => {
+                return STOR.enableContractForAC('A_TKN2', '15', '2', { from: account10 })
+            })
+            
+            .then(() => {
+                return STOR.enableContractForAC('A_TKN2', '1', '1', { from: account1 })
+            })
+            
+            .then(() => {
+                return STOR.enableContractForAC('A_TKN2', '2', '1', { from: account1 })
             })
     })
 
@@ -807,6 +940,10 @@
             
             .then(() => {
                 return STOR.enableContractForAC('NAKED', '14', '2', { from: account1 })
+            })
+
+            .then(() => {
+                return STOR.enableContractForAC('NAKED', '15', '2', { from: account10 })
             })
             
             .then(() => {
@@ -984,7 +1121,7 @@
                     "10000000000000000",
                     "10000000000000000",
                     account1,
-                    { from: account1 })
+                    { from: account10 })
             })
     })
 
@@ -1036,9 +1173,146 @@
             })
             
             .then(() => {
-                console.log("Account10 => AC15")
-                return AC_MGR.OO_addUser(account10, '10', '15', { from: account1 })
+                console.log("Account10 => AC15 (NAKEDMINTER)")
+                return AC_MGR.OO_addUser(account10, '10', '15', { from: account10 })
             })
+    })
+
+
+    it('Should write asset1 in AC 12', async () => {
+
+        console.log("//**************************************BEGIN RCLR TEST**********************************************/")
+        console.log("//**************************************BEGIN RCLR SETUP**********************************************/")
+        return APP_NC.$newRecord(
+        asset1,
+        rgt1,
+        '12',
+        '100',
+        {from: account4, value: 20000000000000000}
+        )
+    })
+    
+
+    it('Should put asset1 into status 59(discardable)', async () => {
+        return NP_NC._modStatus(
+        asset1, 
+        '59',
+        {from: account4}
+        )
+    })
+
+
+    it('Should write asset2 in AC 12', async () => {
+        return APP_NC.$newRecord(
+        asset2, 
+        rgt2,
+        '12',
+        '100',
+        {from: account4, value: 20000000000000000}
+        )
+    })
+
+
+    it('Should put asset2 into status 59(discardable)', async () => {
+        return NP_NC._modStatus(
+        asset2, 
+        '59',
+        {from: account4}
+        )
+    })
+
+
+    it('Should discard asset2', async () => {
+        return A_TKN.discard(
+        asset2,
+        {from: account4}
+        )
+    })
+
+
+    // it('Should fail becasue caller is not A_TKN contract)', async () => {
+
+    //     console.log("//**************************************END RCLR SETUP**********************************************/")
+    //     console.log("//**************************************BEGIN RCLR FAIL BATCH**********************************************/")
+    //     console.log("//**************************************BEGIN discard FAIL BATCH**********************************************/")
+    //     return A_TKN2.discard(
+    //     asset1, 
+    //     {from: account4}
+    //     )
+    // })
+
+
+    it('Should unauthorize RCLR in AC12)', async () => {
+
+        console.log("//**************************************END RCLR SETUP**********************************************/")
+        console.log("//**************************************BEGIN RCLR FAIL BATCH**********************************************/")
+        console.log("//**************************************BEGIN $recycle FAIL BATCH**********************************************/")
+        return STOR.enableContractForAC('RCLR', '12', '0', { from: account1 })     
+    })
+
+
+    it('Should fail because RCLR not authoriized in AC)', async () => { 
+        return RCLR.$recycle(
+            asset2,
+            rgt2, 
+            '12', 
+            { from: account4, value: 20000000000000000 }
+            )     
+    })
+
+
+    it('Should authorize RCLR in AC12)', async () => {  
+        return STOR.enableContractForAC('RCLR', '12', '2', { from: account1 })     
+    })
+
+
+    it('Should fail because newRGT != 0)', async () => {
+        return RCLR.$recycle(
+            asset1,
+            rgt000, 
+            '12', 
+            { from: account4, value: 20000000000000000 }
+            )     
+    })
+
+
+    it('Should fail because newAC != 0)', async () => {
+        return RCLR.$recycle(
+            asset1,
+            rgt1, 
+            '0', 
+            { from: account4, value: 20000000000000000 }
+            )     
+    })
+
+
+    it('Should fail because you cannot recycle asset into different root AC)', async () => {
+        return RCLR.$recycle(
+            asset1,
+            rgt1, 
+            '14', 
+            { from: account6, value: 20000000000000000 }
+            )     
+    })
+
+
+    it('Should recycle asset2)', async () => {
+        return RCLR.$recycle(
+            asset2,
+            rgt2, 
+            '12', 
+            { from: account4, value: 20000000000000000 }
+            )     
+    })
+
+
+    it('Should fail because asset2 is not discarded)', async () => {
+        return RCLR.$recycle(
+            asset2,
+            rgt2, 
+            '12', 
+            { from: account4, value: 20000000000000000 }
+            )     
     })
 
 
