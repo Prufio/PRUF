@@ -14,28 +14,28 @@ class Ownership extends Component {
     this.getOwner = async () => {//check user address against contract ownership calls
       const self = this;
 
-      if(this.state.storage === "" || this.state.web3 === null || this.state.storageOwner !== ""){}else{
-        console.log("Getting storage owner")
-        this.state.storage.methods
+      if(this.state.STOR === "" || this.state.web3 === null || this.state.STOROwner !== ""){}else{
+        console.log("Getting STOR owner")
+        this.state.STOR.methods
           .owner()
           .call({ from: self.state.addr }, function (_error, _result) {
             if (_error) {
               console.log(_error);
             } else {
-              self.setState({ storageOwner: _result });
+              self.setState({ STOROwner: _result });
 
               if (_result === self.state.addr) {
-                self.setState({ isStorageOwner: true });
+                self.setState({ isSTOROwner: true });
               } else {
-                self.setState({ isStorageOwner: false });
+                self.setState({ isSTOROwner: false });
               }
             }
           });
         }
 
-        if(this.state.PRUF_APP === "" || this.state.web3 === null || this.state.BPPOwner !== ""){}else{
+        if(this.state.APP === "" || this.state.web3 === null || this.state.BPPOwner !== ""){}else{
           console.log("Getting BPP owner")
-          this.state.PRUF_APP.methods
+          this.state.APP.methods
             .owner()
             .call({ from: self.state.addr }, function (_error, _result) {
               if (_error) {
@@ -52,9 +52,9 @@ class Ownership extends Component {
             });
           }
 
-          if(this.state.PRUF_NP === "" || this.state.web3 === null || this.state.BPNPOwner !== ""){}else{
+          if(this.state.NP === "" || this.state.web3 === null || this.state.BPNPOwner !== ""){}else{
             console.log("Getting BPNP owner")
-            this.state.PRUF_NP.methods
+            this.state.NP.methods
               .owner()
               .call({ from: self.state.addr }, function (_error, _result) {
                 if (_error) {
@@ -77,9 +77,9 @@ class Ownership extends Component {
       var contracts = await returnContracts(self.state.web3);
       //console.log("RC NR: ", contractArray)
 
-      if(this.state.storage < 1){self.setState({ storage: contracts.storage });}
-      if(this.state.PRUF_NP < 1){self.setState({ PRUF_NP: contracts.nonPayable });}
-      if(this.state.PRUF_APP < 1){self.setState({ PRUF_APP: contracts.payable });}
+      if(this.state.STOR < 1){self.setState({ STOR: contracts.STOR });}
+      if(this.state.NP < 1){self.setState({ NP: contracts.NP });}
+      if(this.state.APP < 1){self.setState({ APP: contracts.payable });}
       if(this.state.PRUF_simpleEscrow < 1){self.setState({ PRUF_simpleEscrow: contracts.simpleEscrow });}
       if(this.state.PRUF_AC_manager < 1){self.setState({ PRUF_AC_manager: contracts.actManager });}
     };
@@ -98,10 +98,10 @@ class Ownership extends Component {
     //Component state declaration
 
     this.state = {
-      isStorageOwner: undefined,
+      isSTOROwner: undefined,
       isBPPOwner: undefined,
       isBPNPOwner: undefined,
-      storageOwner: "",
+      STOROwner: "",
       BPPOwner: "",
       BPNPOwner: "",
       addr: "",
@@ -110,13 +110,13 @@ class Ownership extends Component {
       newOwner: "",
       toggle: false,
       assetClass: "",
-      storage: "",
+      STOR: "",
       web3: null,
-      PRUF_APP: "",
-      isTxfrStorage: false,
+      APP: "",
+      isTxfrSTOR: false,
       isTxfrBPP: false,
       isTxfrBPNP: false,
-      PRUF_NP: "",
+      NP: "",
       PRUF_AC_manager: "",
       PRUF_simpleEscrow: "",
     };
@@ -138,7 +138,7 @@ class Ownership extends Component {
       this.returnsContract();
     }
 
-    if (this.state.web3 !== null && this.state.storageOwner < 1){
+    if (this.state.web3 !== null && this.state.STOROwner < 1){
       for (let i = 0; i < 5; i++) {
         this.getOwner();}
       }
@@ -155,18 +155,18 @@ class Ownership extends Component {
 
     const handleCheckBox = (e) => {
       let setTo;
-      if(e === `Storage`){
-        if(this.state.isTxfrStorage === false){
+      if(e === `STOR`){
+        if(this.state.isTxfrSTOR === false){
           setTo = true;
         }
-        else if(this.state.isTxfrStorage === true){
+        else if(this.state.isTxfrSTOR === true){
           setTo = false;
         }
-        this.setState({isTxfrStorage: setTo});
+        this.setState({isTxfrSTOR: setTo});
         console.log("Setting txfr", e, "to: ", setTo);
       }
 
-      else if(e === `PRUF_APP`){
+      else if(e === `APP`){
         if(this.state.isTxfrBPP === false){
           setTo = true;
         }
@@ -177,7 +177,7 @@ class Ownership extends Component {
         console.log("Setting txfr", e, "to: ", setTo);
       }
 
-      else if(e === `PRUF_NP`){
+      else if(e === `NP`){
         if(this.state.isTxfrBPNP === false){
           setTo = true;
         }
@@ -193,7 +193,7 @@ class Ownership extends Component {
       if (this.state.toggle === false) {
         this.setState({ toggle: true });
         alert(
-          "You are about to renounce the current storage contract. Proceed with caution."
+          "You are about to renounce the current STOR contract. Proceed with caution."
         );
       } else {
         this.setState({ toggle: false });
@@ -201,7 +201,7 @@ class Ownership extends Component {
     };
 
     const renounce = () => {
-      this.state.storage.methods
+      this.state.STOR.methods
         .renounceOwnership()
         .send({ from: this.state.addr })
         .on("error", function (_error) {
@@ -219,8 +219,8 @@ class Ownership extends Component {
     const transfer = () => {
       if(this.state.newOwner < 1){return(alert("Can not transfer to zero address"))}
 
-      if(this.state.isTxfrStorage === true){
-      this.state.storage.methods
+      if(this.state.isTxfrSTOR === true){
+      this.state.STOR.methods
         .transferOwnership(this.state.newOwner)
         .send({ from: this.state.addr })
         .on("error", function (_error) {
@@ -228,13 +228,13 @@ class Ownership extends Component {
           self.setState({ result: _error.transactionHash });
         })
         .on("receipt", (receipt) => {
-          console.log("Storage ownership Transferred to: ", self.state.newOwner);
-          self.setState({isStorageOwner: false})
+          console.log("STOR ownership Transferred to: ", self.state.newOwner);
+          self.setState({isSTOROwner: false})
           console.log("tx receipt: ", receipt);
         });}
 
         if(this.state.isTxfrBPP === true){
-        this.state.PRUF_APP.methods
+        this.state.APP.methods
         .transferOwnership(this.state.newOwner)
         .send({ from: this.state.addr })
         .on("error", function (_error) {
@@ -248,7 +248,7 @@ class Ownership extends Component {
         });}
 
         if(this.state.isTxfrBPNP === true){
-        this.state.PRUF_NP.methods
+        this.state.NP.methods
         .transferOwnership(this.state.newOwner)
         .send({ from: this.state.addr })
         .on("error", function (_error) {
@@ -279,26 +279,26 @@ class Ownership extends Component {
           {this.state.addr > 0 && this.state.toggle === false && (
             <div>
               <Form.Group>
-                {this.state.isStorageOwner === true && (
+                {this.state.isSTOROwner === true && (
                 <Form.Check
                 className = 'checkBox'
                 onChange={(e)=>{handleCheckBox(e.target.id)}}
-                id={`Storage`}
-                label={`Storage`}
+                id={`STOR`}
+                label={`STOR`}
                 />)}
                 {this.state.isBPPOwner === true && (
                 <Form.Check
                 className = 'checkBox'
                 onChange={(e)=>{handleCheckBox(e.target.id)}}
-                id={`PRUF_APP`}
-                label={`PRUF_APP`}
+                id={`APP`}
+                label={`APP`}
                 />)}
                 {this.state.isBPNPOwner === true && (
                 <Form.Check
                 className = 'checkBox'
                 onChange={(e)=>{handleCheckBox(e.target.id)}}
-                id={`PRUF_NP`}
-                label={`PRUF_NP`}
+                id={`NP`}
+                label={`NP`}
                 />)}
                 </Form.Group>
               <h2 className="Headertext">Manage Ownership</h2>

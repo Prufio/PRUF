@@ -13,7 +13,7 @@ class ModifyRecordStatus extends Component {
 
     //State declaration.....................................................................................................
 
-    this.getCosts = async () => {//under the condition that prices are not stored in state, get prices from storage
+    this.getCosts = async () => {//under the condition that prices are not stored in state, get prices from STOR
       const self = this;
       if (self.state.costArray[0] > 0 || self.state.PRUF_AC_manager === "" || self.state.assetClass === undefined) {
       } else {
@@ -57,9 +57,9 @@ class ModifyRecordStatus extends Component {
       var contracts = await returnContracts(self.state.web3);
       //console.log("RC NR: ", contractArray)
 
-      if(this.state.storage < 1){self.setState({ storage: contracts.storage });}
-      if(this.state.PRUF_NP < 1){self.setState({ PRUF_NP: contracts.nonPayable });}
-      if(this.state.PRUF_APP < 1){self.setState({ PRUF_APP: contracts.payable });}
+      if(this.state.STOR < 1){self.setState({ STOR: contracts.STOR });}
+      if(this.state.NP < 1){self.setState({ NP: contracts.NP });}
+      if(this.state.APP < 1){self.setState({ APP: contracts.payable });}
       if(this.state.PRUF_simpleEscrow < 1){self.setState({ PRUF_simpleEscrow: contracts.simpleEscrow });}
       if(this.state.PRUF_AC_manager < 1){self.setState({ PRUF_AC_manager: contracts.actManager });}
     };
@@ -99,11 +99,11 @@ class ModifyRecordStatus extends Component {
       secret: "",
       isNFA: false,
       web3: null,
-      PRUF_APP: "",
-      PRUF_NP: "",
+      APP: "",
+      NP: "",
       PRUF_AC_manager: "",
       PRUF_simpleEscrow: "",
-      storage: "",
+      STOR: "",
     };
   }
 
@@ -121,7 +121,7 @@ class ModifyRecordStatus extends Component {
 
   componentDidUpdate(){//stuff to do when state updates
 
-    if(this.state.web3 !== null && this.state.PRUF_APP < 1){
+    if(this.state.web3 !== null && this.state.APP < 1){
       this.returnsContract();
     }
 
@@ -140,7 +140,7 @@ class ModifyRecordStatus extends Component {
     const self = this;
 
     async function checkExists(idxHash) {
-      await self.state.storage.methods
+      await self.state.STOR.methods
         .retrieveShortRecord(idxHash)
         .call({ from: self.state.addr }, function (_error, _result) {
           if (_error) {
@@ -157,7 +157,7 @@ class ModifyRecordStatus extends Component {
     }
 
     async function checkMatch(idxHash, rgtHash) {
-      await self.state.storage.methods
+      await self.state.STOR.methods
         ._verifyRightsHolder(idxHash, rgtHash)
         .call({ from: self.state.addr }, function (_error, _result) {
           if (_error) {
@@ -221,7 +221,7 @@ class ModifyRecordStatus extends Component {
       checkMatch(idxHash, rgtHash);
 
       if (this.state.status !== "3" && this.state.status !== "4" && this.state.status !== "6" && this.state.status !== "9" && this.state.status !== "10" && this.state.status < 12){
-      this.state.PRUF_NP.methods
+      this.state.NP.methods
         ._modStatus(idxHash, rgtHash, this.state.status)
         .send({ from: this.state.addr })
         .on("error", function (_error) {
@@ -238,7 +238,7 @@ class ModifyRecordStatus extends Component {
         });}
 
         else if (this.state.status === "3" || this.state.status === "4" || this.state.status === "10" || this.state.status === "10"){
-          this.state.PRUF_NP.methods
+          this.state.NP.methods
         ._setLostOrStolen(idxHash, rgtHash, this.state.status)
         .send({ from: this.state.addr })
         .on("error", function (_error) {

@@ -14,7 +14,7 @@ class THEWORKS extends Component {
 
     //State declaration.....................................................................................................
 
-    this.getCosts = async () => {//under the condition that prices are not stored in state, get prices from storage
+    this.getCosts = async () => {//under the condition that prices are not stored in state, get prices from STOR
       const self = this;
       if (self.state.costArray[0] > 0 || self.state.PRUF_AC_manager === "" || self.state.assetClass === undefined) {
       } else {
@@ -58,9 +58,9 @@ class THEWORKS extends Component {
       var contracts = await returnContracts(self.state.web3);
       //console.log("RC NR: ", contractArray)
 
-      if(this.state.storage < 1){self.setState({ storage: contracts.storage });}
-      if(this.state.PRUF_NP < 1){self.setState({ PRUF_NP: contracts.nonPayable });}
-      if(this.state.PRUF_APP < 1){self.setState({ PRUF_APP: contracts.payable });}
+      if(this.state.STOR < 1){self.setState({ STOR: contracts.STOR });}
+      if(this.state.NP < 1){self.setState({ NP: contracts.NP });}
+      if(this.state.APP < 1){self.setState({ APP: contracts.payable });}
       if(this.state.PRUF_simpleEscrow < 1){self.setState({ PRUF_simpleEscrow: contracts.simpleEscrow });}
       if(this.state.PRUF_AC_manager < 1){self.setState({ PRUF_AC_manager: contracts.actManager });}
     };
@@ -120,9 +120,9 @@ class THEWORKS extends Component {
       newSecret: "b",
 
       web3: null,
-      PRUF_APP: "",
-      PRUF_NP: "",
-      storage: "",
+      APP: "",
+      NP: "",
+      STOR: "",
       PRUF_AC_manager: "",
       PRUF_simpleEscrow: "",
       txStatus: null,
@@ -157,11 +157,11 @@ class THEWORKS extends Component {
 
   componentDidUpdate() {//stuff to do when state updates
 
-    if(this.state.web3 !== null && this.state.PRUF_APP < 1){
+    if(this.state.web3 !== null && this.state.APP < 1){
       this.returnsContract();
     }
 
-    if (this.state.addr > 0 && this.state.assetClass === undefined && this.state.PRUF_APP !== "") {
+    if (this.state.addr > 0 && this.state.assetClass === undefined && this.state.APP !== "") {
         this.getAssetClass();
     } 
 
@@ -188,7 +188,7 @@ class THEWORKS extends Component {
         console.log("idxHash", idxHash);
         console.log("addr: ", this.state.addr);
   
-        this.state.storage.methods
+        this.state.STOR.methods
           .retrieveShortRecord(idxHash)
           .call({ from: this.state.addr }, function (_error, _result) {
             if (_error) { console.log(_error)
@@ -240,7 +240,7 @@ class THEWORKS extends Component {
         console.log("New rgtRaw", rgtRaw);
         console.log("addr: ", this.state.addr);
   
-        this.state.PRUF_APP.methods
+        this.state.APP.methods
           .$addIpfs2Note(idxHash, rgtHash, this.state.web3.utils.soliditySha3(this.state.ipfs1))
           .send({ from: this.state.addr, value: this.state.costArray[2] })
           .on("error", function (_error) {
@@ -288,7 +288,7 @@ class THEWORKS extends Component {
         console.log("addr: ", this.state.addr);
         console.log("new desc: ", _ipfs1);
   
-        this.state.PRUF_NP.methods
+        this.state.NP.methods
           ._modIpfs1(idxHash, rgtHash, _ipfs1)
           .send({ from: this.state.addr })
           .on("error", function (_error) {
@@ -334,7 +334,7 @@ class THEWORKS extends Component {
         console.log("addr: ", this.state.addr);
         console.log("CountDown amt: ", this.state.countDown);
   
-        this.state.PRUF_NP.methods
+        this.state.NP.methods
           ._decCounter(idxHash, rgtHash, this.state.countDown)
           .send({ from: this.state.addr })
           .on("error", function (_error) {
@@ -380,7 +380,7 @@ class THEWORKS extends Component {
         console.log("New rgtHash", newRgtHash);
         console.log("addr: ", this.state.addr);
   
-        this.state.PRUF_APP.methods
+        this.state.APP.methods
           .$forceModRecord(idxHash, newRgtHash)
           .send({ from: this.state.addr, value: this.state.costArray[5] })
           .on("error", function (_error) {
@@ -435,7 +435,7 @@ class THEWORKS extends Component {
         console.log("New rgtHash", rgtHash);
         console.log("addr: ", this.state.addr);
   
-        this.state.PRUF_APP.methods
+        this.state.APP.methods
           .$transferAsset(idxHash, rgtHash, newRgtHash)
           .send({ from: this.state.addr, value: this.state.costArray[1] })
           .on("error", function (_error) {
@@ -481,7 +481,7 @@ class THEWORKS extends Component {
         console.log("addr: ", this.state.addr);
   
 
-        this.state.PRUF_NP.methods
+        this.state.NP.methods
           ._modStatus(idxHash, rgtHash, this.state.status)
           .send({ from: this.state.addr })
           .on("error", function (_error) {
@@ -525,7 +525,7 @@ class THEWORKS extends Component {
         console.log("idxHash", idxHash);
         console.log("addr: ", this.state.addr);
   
-        this.state.storage.methods
+        this.state.STOR.methods
           ._verifyRightsHolder(idxHash, rgtHash)
           .call({ from: this.state.addr }, function (_error, _result) {
             if (_error) {
@@ -538,7 +538,7 @@ class THEWORKS extends Component {
             }
           });
   
-        this.state.storage.methods
+        this.state.STOR.methods
           .blockchainVerifyRightsHolder(idxHash, rgtHash)
           .send({ from: this.state.addr })
           .on("error", function (_error) {
@@ -586,7 +586,7 @@ class THEWORKS extends Component {
       console.log("addr: ", this.state.addr);
       console.log(this.state.assetClass);
 
-      this.state.PRUF_APP.methods
+      this.state.APP.methods
         .$newRecord(
           idxHash,
           rgtHash,
@@ -612,7 +612,7 @@ class THEWORKS extends Component {
     };
 
     const batchTest = () => {
-        if(this.state.PRUF_APP !== ""){
+        if(this.state.APP !== ""){
             _newRecord();
         }
         else{

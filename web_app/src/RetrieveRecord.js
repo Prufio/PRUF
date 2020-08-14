@@ -14,7 +14,7 @@ class RetrieveRecord extends Component {
 
     //State declaration.....................................................................................................
 
-    this.getCosts = async () => {//under the condition that prices are not stored in state, get prices from storage
+    this.getCosts = async () => {//under the condition that prices are not stored in state, get prices from STOR
       const self = this;
       if (self.state.costArray[0] > 0 || self.state.PRUF_AC_manager === "" || self.state.assetClass === undefined) {
       } else {
@@ -58,9 +58,9 @@ class RetrieveRecord extends Component {
       var contracts = await returnContracts(self.state.web3);
       //console.log("RC NR: ", contractArray)
 
-      if(this.state.storage < 1){self.setState({ storage: contracts.storage });}
-      if(this.state.PRUF_NP < 1){self.setState({ PRUF_NP: contracts.nonPayable });}
-      if(this.state.PRUF_APP < 1){self.setState({ PRUF_APP: contracts.payable });}
+      if(this.state.STOR < 1){self.setState({ STOR: contracts.STOR });}
+      if(this.state.NP < 1){self.setState({ NP: contracts.NP });}
+      if(this.state.APP < 1){self.setState({ APP: contracts.payable });}
       if(this.state.PRUF_simpleEscrow < 1){self.setState({ PRUF_simpleEscrow: contracts.simpleEscrow });}
       if(this.state.PRUF_AC_manager < 1){self.setState({ PRUF_AC_manager: contracts.actManager });}
     };
@@ -102,12 +102,12 @@ class RetrieveRecord extends Component {
       secret: "",
       status: "",
       web3: null,
-      PRUF_APP: "",
+      APP: "",
       isNFA: false,
-      PRUF_NP: "",
+      NP: "",
       PRUF_AC_manager: "",
       PRUF_simpleEscrow: "",
-      storage: "",
+      STOR: "",
     };
   }
 
@@ -133,7 +133,7 @@ class RetrieveRecord extends Component {
 
     if(this.state.ipfs2 > 0) {console.log(this.state.ipfs2);}
 
-    if(this.state.web3 !== null && this.state.PRUF_APP < 1){
+    if(this.state.web3 !== null && this.state.APP < 1){
       this.returnsContract();
     }
 
@@ -212,7 +212,7 @@ class RetrieveRecord extends Component {
       console.log("idxHash", idxHash);
       console.log("addr: ", this.state.addr);
 
-      this.state.storage.methods
+      this.state.STOR.methods
         .retrieveShortRecord(idxHash)
         .call({ from: this.state.addr }, function (_error, _result) {
           if (_error) { console.log(_error)
