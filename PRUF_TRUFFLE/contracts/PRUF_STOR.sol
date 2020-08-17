@@ -396,7 +396,7 @@ contract STOR is Ownable, ReentrancyGuard, Pausable {
             isEscrow(_newAssetStatus) == 170,
             "S:SE: Asset in ecr"
         );
-        require(
+        require(                                                                //Redundant, triggered in ECR_MGR
             (isLostOrStolen(database[_idxHash].assetStatus) == 0) &&
                 (database[_idxHash].assetStatus != 5) &&
                 (database[_idxHash].assetStatus != 55),
