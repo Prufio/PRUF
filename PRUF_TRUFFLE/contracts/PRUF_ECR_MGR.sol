@@ -142,12 +142,13 @@ contract ECR_MGR is BASIC {
         );
 
         require(rec.assetClass != 0, "EM:EE:Record does not exist");
+        require(isEscrow(rec.assetStatus) == 170, "EM:EE:Asset not in escrow");
         require(
             (contractInfo.nameHash ==
                 escrows[_idxHash].controllingContractNameHash),
             "EM:EE:Only contract with same name as setter can end escrow"
         );
-        require(isEscrow(rec.assetStatus) == 170, "EM:EE:Asset not in escrow");
+        
 
         //^^^^^^^checks^^^^^^^^^
 

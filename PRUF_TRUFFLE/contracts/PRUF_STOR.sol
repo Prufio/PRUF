@@ -231,6 +231,7 @@ contract STOR is Ownable, ReentrancyGuard, Pausable {
             database[_idxHash].assetStatus != 60,
             "S:NR:Asset is rcycl. Use PRUF_APP_NC rcycl instead"
         );
+                                                                                                 //vvvRedundant??vvv
         require(
             database[_idxHash].rightsHolder == 0,
             "S:NR:Rec already exists"
@@ -391,7 +392,7 @@ contract STOR is Ownable, ReentrancyGuard, Pausable {
         exists(_idxHash)
         notEscrow(_idxHash)
     {
-        require(
+        require(                                                                //Redundant, triggered in ECR_MGR           
             isEscrow(_newAssetStatus) == 170,
             "S:SE: Asset in ecr"
         );
@@ -401,7 +402,7 @@ contract STOR is Ownable, ReentrancyGuard, Pausable {
                 (database[_idxHash].assetStatus != 55),
             "S:SE: != ecr"
         );
-        require(
+        require(                                                                //Redundant, triggered in ECR_MGR
             isEscrow(database[_idxHash].assetStatus) == 0,
             "S:SE: In ecr stat"
         );

@@ -36,7 +36,7 @@ pragma solidity ^0.6.7;
  *
  *      *find a way to find and react to assets being in a dead asset class
  *      
- *      
+ *      * fix logic for uint8 forcemodcount && uint16 transfercount in storage 
  *
 *-----------------------------------------------------------------
 
