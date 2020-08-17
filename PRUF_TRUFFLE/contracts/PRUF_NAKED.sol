@@ -44,8 +44,8 @@ contract NAKED is CORE {
         uint8 userType = getUserType(_assetClass);
 
         require(
-            (AC_TKN.ownerOf(_assetClass) == msg.sender), //msg.sender is token holder
-            "N:MNA:Caller does not hold asset token"
+            (AC_TKN.ownerOf(_assetClass) == msg.sender), //msg.sender is AC token holder
+            "N:MNA:Caller does not hold AC token"
         );
         require(userType == 10,"N:MNA:user not authorized to mint naked assets");
         require(

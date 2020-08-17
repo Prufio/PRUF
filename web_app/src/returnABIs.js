@@ -1,9 +1,9 @@
 function returnABIs() {
     let abis = {STOR:"",
-                payable:"",
+                APP:"",
                 NP:"",
-                core:"",
-                simpleEscrow:"",
+                ECR:"",
+                AC_MGR:"",
                 }; 
     
     const STOR = [
@@ -31,6 +31,19 @@ function returnABIs() {
             "inputs": [
                 {
                     "indexed": false,
+                    "internalType": "address",
+                    "name": "account",
+                    "type": "address"
+                }
+            ],
+            "name": "Paused",
+            "type": "event"
+        },
+        {
+            "anonymous": false,
+            "inputs": [
+                {
+                    "indexed": false,
                     "internalType": "string",
                     "name": "_msg",
                     "type": "string"
@@ -46,58 +59,45 @@ function returnABIs() {
             "type": "event"
         },
         {
+            "anonymous": false,
             "inputs": [
                 {
-                    "internalType": "uint16",
-                    "name": "_class",
-                    "type": "uint16"
-                },
-                {
-                    "internalType": "uint256",
-                    "name": "_newRecordCost",
-                    "type": "uint256"
-                },
-                {
-                    "internalType": "uint256",
-                    "name": "_transferAssetCost",
-                    "type": "uint256"
-                },
-                {
-                    "internalType": "uint256",
-                    "name": "_createNoteCost",
-                    "type": "uint256"
-                },
-                {
-                    "internalType": "uint256",
-                    "name": "_reMintRecordCost",
-                    "type": "uint256"
-                },
-                {
-                    "internalType": "uint256",
-                    "name": "_changeStatusCost",
-                    "type": "uint256"
-                },
-                {
-                    "internalType": "uint256",
-                    "name": "_forceModifyCost",
-                    "type": "uint256"
-                },
-                {
+                    "indexed": false,
                     "internalType": "address",
-                    "name": "_paymentAddress",
+                    "name": "account",
                     "type": "address"
                 }
             ],
-            "name": "ACTH_setCosts",
-            "outputs": [],
-            "stateMutability": "nonpayable",
-            "type": "function"
+            "name": "Unpaused",
+            "type": "event"
         },
         {
-            "inputs": [],
-            "name": "OO_ResolveContractAddresses",
-            "outputs": [],
-            "stateMutability": "nonpayable",
+            "inputs": [
+                {
+                    "internalType": "address",
+                    "name": "_addr",
+                    "type": "address"
+                },
+                {
+                    "internalType": "uint256",
+                    "name": "_assetClass",
+                    "type": "uint256"
+                }
+            ],
+            "name": "ContractInfoHash",
+            "outputs": [
+                {
+                    "internalType": "uint8",
+                    "name": "",
+                    "type": "uint8"
+                },
+                {
+                    "internalType": "bytes32",
+                    "name": "",
+                    "type": "bytes32"
+                }
+            ],
+            "stateMutability": "view",
             "type": "function"
         },
         {
@@ -113,65 +113,17 @@ function returnABIs() {
                     "type": "address"
                 },
                 {
+                    "internalType": "uint256",
+                    "name": "_assetClass",
+                    "type": "uint256"
+                },
+                {
                     "internalType": "uint8",
                     "name": "_contractAuthLevel",
                     "type": "uint8"
                 }
             ],
             "name": "OO_addContract",
-            "outputs": [],
-            "stateMutability": "nonpayable",
-            "type": "function"
-        },
-        {
-            "inputs": [
-                {
-                    "internalType": "uint256",
-                    "name": "_newRecordCost",
-                    "type": "uint256"
-                },
-                {
-                    "internalType": "uint256",
-                    "name": "_transferAssetCost",
-                    "type": "uint256"
-                },
-                {
-                    "internalType": "uint256",
-                    "name": "_createNoteCost",
-                    "type": "uint256"
-                },
-                {
-                    "internalType": "uint256",
-                    "name": "_reMintRecordCost",
-                    "type": "uint256"
-                },
-                {
-                    "internalType": "uint256",
-                    "name": "_changeStatusCost",
-                    "type": "uint256"
-                },
-                {
-                    "internalType": "uint256",
-                    "name": "_forceModifyCost",
-                    "type": "uint256"
-                },
-                {
-                    "internalType": "uint256",
-                    "name": "_threshold",
-                    "type": "uint256"
-                },
-                {
-                    "internalType": "uint256",
-                    "name": "_divisor",
-                    "type": "uint256"
-                },
-                {
-                    "internalType": "address",
-                    "name": "_paymentAddress",
-                    "type": "address"
-                }
-            ],
-            "name": "OO_setBaseCosts",
             "outputs": [],
             "stateMutability": "nonpayable",
             "type": "function"
@@ -228,12 +180,53 @@ function returnABIs() {
             "inputs": [
                 {
                     "internalType": "bytes32",
-                    "name": "_userHash",
+                    "name": "_idxHash",
+                    "type": "bytes32"
+                },
+                {
+                    "internalType": "uint256",
+                    "name": "_newAssetClass",
+                    "type": "uint256"
+                }
+            ],
+            "name": "changeAC",
+            "outputs": [],
+            "stateMutability": "nonpayable",
+            "type": "function"
+        },
+        {
+            "inputs": [
+                {
+                    "internalType": "string",
+                    "name": "_name",
+                    "type": "string"
+                },
+                {
+                    "internalType": "uint256",
+                    "name": "_assetClass",
+                    "type": "uint256"
+                },
+                {
+                    "internalType": "uint8",
+                    "name": "_contractAuthLevel",
+                    "type": "uint8"
+                }
+            ],
+            "name": "enableContractForAC",
+            "outputs": [],
+            "stateMutability": "nonpayable",
+            "type": "function"
+        },
+        {
+            "inputs": [
+                {
+                    "internalType": "bytes32",
+                    "name": "_idxHash",
                     "type": "bytes32"
                 },
                 {
                     "internalType": "bytes32",
-                    "name": "_idxHash",
+                    "name": "_contractNameHash",
                     "type": "bytes32"
                 }
             ],
@@ -244,11 +237,6 @@ function returnABIs() {
         },
         {
             "inputs": [
-                {
-                    "internalType": "bytes32",
-                    "name": "_userHash",
-                    "type": "bytes32"
-                },
                 {
                     "internalType": "bytes32",
                     "name": "_idxHash",
@@ -269,11 +257,6 @@ function returnABIs() {
             "inputs": [
                 {
                     "internalType": "bytes32",
-                    "name": "_userHash",
-                    "type": "bytes32"
-                },
-                {
-                    "internalType": "bytes32",
                     "name": "_idxHash",
                     "type": "bytes32"
                 },
@@ -290,11 +273,6 @@ function returnABIs() {
         },
         {
             "inputs": [
-                {
-                    "internalType": "bytes32",
-                    "name": "_userHash",
-                    "type": "bytes32"
-                },
                 {
                     "internalType": "bytes32",
                     "name": "_idxHash",
@@ -335,33 +313,23 @@ function returnABIs() {
             "inputs": [
                 {
                     "internalType": "bytes32",
-                    "name": "_userHash",
-                    "type": "bytes32"
-                },
-                {
-                    "internalType": "bytes32",
                     "name": "_idxHash",
                     "type": "bytes32"
                 },
                 {
                     "internalType": "bytes32",
-                    "name": "_rgt",
+                    "name": "_rgtHash",
                     "type": "bytes32"
                 },
                 {
-                    "internalType": "uint16",
+                    "internalType": "uint256",
                     "name": "_assetClass",
-                    "type": "uint16"
+                    "type": "uint256"
                 },
                 {
                     "internalType": "uint256",
                     "name": "_countDownStart",
                     "type": "uint256"
-                },
-                {
-                    "internalType": "bytes32",
-                    "name": "_Ipfs1",
-                    "type": "bytes32"
                 }
             ],
             "name": "newRecord",
@@ -377,6 +345,26 @@ function returnABIs() {
                     "internalType": "address",
                     "name": "",
                     "type": "address"
+                }
+            ],
+            "stateMutability": "view",
+            "type": "function"
+        },
+        {
+            "inputs": [],
+            "name": "pause",
+            "outputs": [],
+            "stateMutability": "nonpayable",
+            "type": "function"
+        },
+        {
+            "inputs": [],
+            "name": "paused",
+            "outputs": [
+                {
+                    "internalType": "bool",
+                    "name": "",
+                    "type": "bool"
                 }
             ],
             "stateMutability": "view",
@@ -409,98 +397,6 @@ function returnABIs() {
             "type": "function"
         },
         {
-            "inputs": [],
-            "name": "retrieveBaseCosts",
-            "outputs": [
-                {
-                    "internalType": "uint256",
-                    "name": "",
-                    "type": "uint256"
-                },
-                {
-                    "internalType": "uint256",
-                    "name": "",
-                    "type": "uint256"
-                },
-                {
-                    "internalType": "uint256",
-                    "name": "",
-                    "type": "uint256"
-                },
-                {
-                    "internalType": "uint256",
-                    "name": "",
-                    "type": "uint256"
-                },
-                {
-                    "internalType": "uint256",
-                    "name": "",
-                    "type": "uint256"
-                },
-                {
-                    "internalType": "uint256",
-                    "name": "",
-                    "type": "uint256"
-                },
-                {
-                    "internalType": "address",
-                    "name": "",
-                    "type": "address"
-                }
-            ],
-            "stateMutability": "view",
-            "type": "function"
-        },
-        {
-            "inputs": [
-                {
-                    "internalType": "uint16",
-                    "name": "_assetClass",
-                    "type": "uint16"
-                }
-            ],
-            "name": "retrieveCosts",
-            "outputs": [
-                {
-                    "internalType": "uint256",
-                    "name": "",
-                    "type": "uint256"
-                },
-                {
-                    "internalType": "uint256",
-                    "name": "",
-                    "type": "uint256"
-                },
-                {
-                    "internalType": "uint256",
-                    "name": "",
-                    "type": "uint256"
-                },
-                {
-                    "internalType": "uint256",
-                    "name": "",
-                    "type": "uint256"
-                },
-                {
-                    "internalType": "uint256",
-                    "name": "",
-                    "type": "uint256"
-                },
-                {
-                    "internalType": "uint256",
-                    "name": "",
-                    "type": "uint256"
-                },
-                {
-                    "internalType": "address",
-                    "name": "",
-                    "type": "address"
-                }
-            ],
-            "stateMutability": "view",
-            "type": "function"
-        },
-        {
             "inputs": [
                 {
                     "internalType": "bytes32",
@@ -516,16 +412,6 @@ function returnABIs() {
                     "type": "bytes32"
                 },
                 {
-                    "internalType": "bytes32",
-                    "name": "",
-                    "type": "bytes32"
-                },
-                {
-                    "internalType": "bytes32",
-                    "name": "",
-                    "type": "bytes32"
-                },
-                {
                     "internalType": "uint8",
                     "name": "",
                     "type": "uint8"
@@ -536,9 +422,9 @@ function returnABIs() {
                     "type": "uint8"
                 },
                 {
-                    "internalType": "uint16",
+                    "internalType": "uint256",
                     "name": "",
-                    "type": "uint16"
+                    "type": "uint256"
                 },
                 {
                     "internalType": "uint256",
@@ -580,16 +466,6 @@ function returnABIs() {
             "name": "retrieveShortRecord",
             "outputs": [
                 {
-                    "internalType": "bytes32",
-                    "name": "",
-                    "type": "bytes32"
-                },
-                {
-                    "internalType": "bytes32",
-                    "name": "",
-                    "type": "bytes32"
-                },
-                {
                     "internalType": "uint8",
                     "name": "",
                     "type": "uint8"
@@ -600,9 +476,9 @@ function returnABIs() {
                     "type": "uint8"
                 },
                 {
-                    "internalType": "uint16",
+                    "internalType": "uint256",
                     "name": "",
-                    "type": "uint16"
+                    "type": "uint256"
                 },
                 {
                     "internalType": "uint256",
@@ -628,11 +504,6 @@ function returnABIs() {
                     "internalType": "uint16",
                     "name": "",
                     "type": "uint16"
-                },
-                {
-                    "internalType": "uint256",
-                    "name": "",
-                    "type": "uint256"
                 }
             ],
             "stateMutability": "view",
@@ -640,11 +511,6 @@ function returnABIs() {
         },
         {
             "inputs": [
-                {
-                    "internalType": "bytes32",
-                    "name": "_EscrowOwnerHash",
-                    "type": "bytes32"
-                },
                 {
                     "internalType": "bytes32",
                     "name": "_idxHash",
@@ -656,9 +522,9 @@ function returnABIs() {
                     "type": "uint8"
                 },
                 {
-                    "internalType": "uint256",
-                    "name": "_escrowTime",
-                    "type": "uint256"
+                    "internalType": "bytes32",
+                    "name": "_contractNameHash",
+                    "type": "bytes32"
                 }
             ],
             "name": "setEscrow",
@@ -668,11 +534,6 @@ function returnABIs() {
         },
         {
             "inputs": [
-                {
-                    "internalType": "bytes32",
-                    "name": "_userHash",
-                    "type": "bytes32"
-                },
                 {
                     "internalType": "bytes32",
                     "name": "_idxHash",
@@ -698,6 +559,13 @@ function returnABIs() {
                 }
             ],
             "name": "transferOwnership",
+            "outputs": [],
+            "stateMutability": "nonpayable",
+            "type": "function"
+        },
+        {
+            "inputs": [],
+            "name": "unpause",
             "outputs": [],
             "stateMutability": "nonpayable",
             "type": "function"
@@ -765,7 +633,7 @@ function returnABIs() {
                     "type": "bytes32"
                 }
             ],
-            "stateMutability": "payable",
+            "stateMutability": "APP",
             "type": "function"
         },
         {
@@ -789,7 +657,7 @@ function returnABIs() {
                     "type": "uint8"
                 }
             ],
-            "stateMutability": "payable",
+            "stateMutability": "APP",
             "type": "function"
         },
         {
@@ -813,7 +681,7 @@ function returnABIs() {
                     "type": "uint8"
                 }
             ],
-            "stateMutability": "payable",
+            "stateMutability": "APP",
             "type": "function"
         },
         {
@@ -846,7 +714,7 @@ function returnABIs() {
             ],
             "name": "$newRecord",
             "outputs": [],
-            "stateMutability": "payable",
+            "stateMutability": "APP",
             "type": "function"
         },
         {
@@ -875,21 +743,21 @@ function returnABIs() {
                     "type": "uint8"
                 }
             ],
-            "stateMutability": "payable",
+            "stateMutability": "APP",
             "type": "function"
         },
         {
             "inputs": [],
             "name": "$withdraw",
             "outputs": [],
-            "stateMutability": "payable",
+            "stateMutability": "APP",
             "type": "function"
         },
         {
             "inputs": [],
             "name": "OO_ResolveContractAddresses",
             "outputs": [],
-            "stateMutability": "nonpayable",
+            "stateMutability": "nonAPP",
             "type": "function"
         },
         {
@@ -907,7 +775,7 @@ function returnABIs() {
             ],
             "name": "OO_TX_AC_Token",
             "outputs": [],
-            "stateMutability": "nonpayable",
+            "stateMutability": "nonAPP",
             "type": "function"
         },
         {
@@ -925,7 +793,7 @@ function returnABIs() {
             ],
             "name": "OO_TX_asset_Token",
             "outputs": [],
-            "stateMutability": "nonpayable",
+            "stateMutability": "nonAPP",
             "type": "function"
         },
         {
@@ -948,7 +816,7 @@ function returnABIs() {
             ],
             "name": "OO_addUser",
             "outputs": [],
-            "stateMutability": "nonpayable",
+            "stateMutability": "nonAPP",
             "type": "function"
         },
         {
@@ -961,7 +829,7 @@ function returnABIs() {
             ],
             "name": "OO_setStorageContract",
             "outputs": [],
-            "stateMutability": "nonpayable",
+            "stateMutability": "nonAPP",
             "type": "function"
         },
         {
@@ -1019,7 +887,7 @@ function returnABIs() {
                     "type": "bytes4"
                 }
             ],
-            "stateMutability": "nonpayable",
+            "stateMutability": "nonAPP",
             "type": "function"
         },
         {
@@ -1058,7 +926,7 @@ function returnABIs() {
             "inputs": [],
             "name": "renounceOwnership",
             "outputs": [],
-            "stateMutability": "nonpayable",
+            "stateMutability": "nonAPP",
             "type": "function"
         },
         {
@@ -1071,20 +939,20 @@ function returnABIs() {
             ],
             "name": "transferOwnership",
             "outputs": [],
-            "stateMutability": "nonpayable",
+            "stateMutability": "nonAPP",
             "type": "function"
         },
         {
             "inputs": [
                 {
-                    "internalType": "address payable",
+                    "internalType": "address APP",
                     "name": "payee",
                     "type": "address"
                 }
             ],
             "name": "withdrawPayments",
             "outputs": [],
-            "stateMutability": "nonpayable",
+            "stateMutability": "nonAPP",
             "type": "function"
         }
     ]
@@ -1128,14 +996,14 @@ function returnABIs() {
                 "inputs": [],
                 "name": "$withdraw",
                 "outputs": [],
-                "stateMutability": "payable",
+                "stateMutability": "APP",
                 "type": "function"
             },
             {
                 "inputs": [],
                 "name": "OO_ResolveContractAddresses",
                 "outputs": [],
-                "stateMutability": "nonpayable",
+                "stateMutability": "nonAPP",
                 "type": "function"
             },
             {
@@ -1153,7 +1021,7 @@ function returnABIs() {
                 ],
                 "name": "OO_TX_AC_Token",
                 "outputs": [],
-                "stateMutability": "nonpayable",
+                "stateMutability": "nonAPP",
                 "type": "function"
             },
             {
@@ -1171,7 +1039,7 @@ function returnABIs() {
                 ],
                 "name": "OO_TX_asset_Token",
                 "outputs": [],
-                "stateMutability": "nonpayable",
+                "stateMutability": "nonAPP",
                 "type": "function"
             },
             {
@@ -1194,7 +1062,7 @@ function returnABIs() {
                 ],
                 "name": "OO_addUser",
                 "outputs": [],
-                "stateMutability": "nonpayable",
+                "stateMutability": "nonAPP",
                 "type": "function"
             },
             {
@@ -1207,7 +1075,7 @@ function returnABIs() {
                 ],
                 "name": "OO_setStorageContract",
                 "outputs": [],
-                "stateMutability": "nonpayable",
+                "stateMutability": "nonAPP",
                 "type": "function"
             },
             {
@@ -1236,7 +1104,7 @@ function returnABIs() {
                         "type": "uint256"
                     }
                 ],
-                "stateMutability": "nonpayable",
+                "stateMutability": "nonAPP",
                 "type": "function"
             },
             {
@@ -1265,7 +1133,7 @@ function returnABIs() {
                         "type": "bytes32"
                     }
                 ],
-                "stateMutability": "nonpayable",
+                "stateMutability": "nonAPP",
                 "type": "function"
             },
             {
@@ -1294,7 +1162,7 @@ function returnABIs() {
                         "type": "uint8"
                     }
                 ],
-                "stateMutability": "nonpayable",
+                "stateMutability": "nonAPP",
                 "type": "function"
             },
             {
@@ -1323,7 +1191,7 @@ function returnABIs() {
                         "type": "uint8"
                     }
                 ],
-                "stateMutability": "nonpayable",
+                "stateMutability": "nonAPP",
                 "type": "function"
             },
             {
@@ -1381,7 +1249,7 @@ function returnABIs() {
                         "type": "bytes4"
                     }
                 ],
-                "stateMutability": "nonpayable",
+                "stateMutability": "nonAPP",
                 "type": "function"
             },
             {
@@ -1420,7 +1288,7 @@ function returnABIs() {
                 "inputs": [],
                 "name": "renounceOwnership",
                 "outputs": [],
-                "stateMutability": "nonpayable",
+                "stateMutability": "nonAPP",
                 "type": "function"
             },
             {
@@ -1433,27 +1301,27 @@ function returnABIs() {
                 ],
                 "name": "transferOwnership",
                 "outputs": [],
-                "stateMutability": "nonpayable",
+                "stateMutability": "nonAPP",
                 "type": "function"
             },
             {
                 "inputs": [
                     {
-                        "internalType": "address payable",
+                        "internalType": "address APP",
                         "name": "payee",
                         "type": "address"
                     }
                 ],
                 "name": "withdrawPayments",
                 "outputs": [],
-                "stateMutability": "nonpayable",
+                "stateMutability": "nonAPP",
                 "type": "function"
             }
         ]
         
 //............................................................................................................................................
 
-        const PRUF_simpleEscrow = [
+        const ECR = [
             {
                 "anonymous": false,
                 "inputs": [
@@ -1490,14 +1358,14 @@ function returnABIs() {
                 "inputs": [],
                 "name": "$withdraw",
                 "outputs": [],
-                "stateMutability": "payable",
+                "stateMutability": "APP",
                 "type": "function"
             },
             {
                 "inputs": [],
                 "name": "OO_ResolveContractAddresses",
                 "outputs": [],
-                "stateMutability": "nonpayable",
+                "stateMutability": "nonAPP",
                 "type": "function"
             },
             {
@@ -1515,7 +1383,7 @@ function returnABIs() {
                 ],
                 "name": "OO_TX_AC_Token",
                 "outputs": [],
-                "stateMutability": "nonpayable",
+                "stateMutability": "nonAPP",
                 "type": "function"
             },
             {
@@ -1533,7 +1401,7 @@ function returnABIs() {
                 ],
                 "name": "OO_TX_asset_Token",
                 "outputs": [],
-                "stateMutability": "nonpayable",
+                "stateMutability": "nonAPP",
                 "type": "function"
             },
             {
@@ -1556,7 +1424,7 @@ function returnABIs() {
                 ],
                 "name": "OO_addUser",
                 "outputs": [],
-                "stateMutability": "nonpayable",
+                "stateMutability": "nonAPP",
                 "type": "function"
             },
             {
@@ -1569,7 +1437,7 @@ function returnABIs() {
                 ],
                 "name": "OO_setStorageContract",
                 "outputs": [],
-                "stateMutability": "nonpayable",
+                "stateMutability": "nonAPP",
                 "type": "function"
             },
             {
@@ -1582,7 +1450,7 @@ function returnABIs() {
                 ],
                 "name": "endEscrow",
                 "outputs": [],
-                "stateMutability": "nonpayable",
+                "stateMutability": "nonAPP",
                 "type": "function"
             },
             {
@@ -1640,7 +1508,7 @@ function returnABIs() {
                         "type": "bytes4"
                     }
                 ],
-                "stateMutability": "nonpayable",
+                "stateMutability": "nonAPP",
                 "type": "function"
             },
             {
@@ -1679,7 +1547,7 @@ function returnABIs() {
                 "inputs": [],
                 "name": "renounceOwnership",
                 "outputs": [],
-                "stateMutability": "nonpayable",
+                "stateMutability": "nonAPP",
                 "type": "function"
             },
             {
@@ -1707,7 +1575,7 @@ function returnABIs() {
                 ],
                 "name": "setEscrow",
                 "outputs": [],
-                "stateMutability": "nonpayable",
+                "stateMutability": "nonAPP",
                 "type": "function"
             },
             {
@@ -1720,27 +1588,27 @@ function returnABIs() {
                 ],
                 "name": "transferOwnership",
                 "outputs": [],
-                "stateMutability": "nonpayable",
+                "stateMutability": "nonAPP",
                 "type": "function"
             },
             {
                 "inputs": [
                     {
-                        "internalType": "address payable",
+                        "internalType": "address APP",
                         "name": "payee",
                         "type": "address"
                     }
                 ],
                 "name": "withdrawPayments",
                 "outputs": [],
-                "stateMutability": "nonpayable",
+                "stateMutability": "nonAPP",
                 "type": "function"
             }
         ]
 
 //............................................................................................................................................
 
- const PRUF_AC_manager = [
+ const AC_MGR = [
 	{
 		"anonymous": false,
 		"inputs": [
@@ -1777,7 +1645,7 @@ function returnABIs() {
 		"inputs": [],
 		"name": "$withdraw",
 		"outputs": [],
-		"stateMutability": "payable",
+		"stateMutability": "APP",
 		"type": "function"
 	},
 	{
@@ -1825,14 +1693,14 @@ function returnABIs() {
 		],
 		"name": "ACTH_setCosts",
 		"outputs": [],
-		"stateMutability": "nonpayable",
+		"stateMutability": "nonAPP",
 		"type": "function"
 	},
 	{
 		"inputs": [],
 		"name": "OO_ResolveContractAddresses",
 		"outputs": [],
-		"stateMutability": "nonpayable",
+		"stateMutability": "nonAPP",
 		"type": "function"
 	},
 	{
@@ -1850,7 +1718,7 @@ function returnABIs() {
 		],
 		"name": "OO_TX_AC_Token",
 		"outputs": [],
-		"stateMutability": "nonpayable",
+		"stateMutability": "nonAPP",
 		"type": "function"
 	},
 	{
@@ -1868,7 +1736,7 @@ function returnABIs() {
 		],
 		"name": "OO_TX_asset_Token",
 		"outputs": [],
-		"stateMutability": "nonpayable",
+		"stateMutability": "nonAPP",
 		"type": "function"
 	},
 	{
@@ -1891,7 +1759,7 @@ function returnABIs() {
 		],
 		"name": "OO_addUser",
 		"outputs": [],
-		"stateMutability": "nonpayable",
+		"stateMutability": "nonAPP",
 		"type": "function"
 	},
 	{
@@ -1904,7 +1772,7 @@ function returnABIs() {
 		],
 		"name": "OO_setStorageContract",
 		"outputs": [],
-		"stateMutability": "nonpayable",
+		"stateMutability": "nonAPP",
 		"type": "function"
 	},
 	{
@@ -1942,7 +1810,7 @@ function returnABIs() {
 		],
 		"name": "createAssetClass",
 		"outputs": [],
-		"stateMutability": "nonpayable",
+		"stateMutability": "nonAPP",
 		"type": "function"
 	},
 	{
@@ -2024,7 +1892,7 @@ function returnABIs() {
 				"type": "uint256"
 			}
 		],
-		"stateMutability": "nonpayable",
+		"stateMutability": "nonAPP",
 		"type": "function"
 	},
 	{
@@ -2058,7 +1926,7 @@ function returnABIs() {
 				"type": "uint256"
 			}
 		],
-		"stateMutability": "nonpayable",
+		"stateMutability": "nonAPP",
 		"type": "function"
 	},
 	{
@@ -2092,7 +1960,7 @@ function returnABIs() {
 				"type": "uint256"
 			}
 		],
-		"stateMutability": "nonpayable",
+		"stateMutability": "nonAPP",
 		"type": "function"
 	},
 	{
@@ -2126,7 +1994,7 @@ function returnABIs() {
 				"type": "uint256"
 			}
 		],
-		"stateMutability": "nonpayable",
+		"stateMutability": "nonAPP",
 		"type": "function"
 	},
 	{
@@ -2160,7 +2028,7 @@ function returnABIs() {
 				"type": "uint256"
 			}
 		],
-		"stateMutability": "nonpayable",
+		"stateMutability": "nonAPP",
 		"type": "function"
 	},
 	{
@@ -2194,7 +2062,7 @@ function returnABIs() {
 				"type": "uint256"
 			}
 		],
-		"stateMutability": "nonpayable",
+		"stateMutability": "nonAPP",
 		"type": "function"
 	},
 	{
@@ -2252,7 +2120,7 @@ function returnABIs() {
 				"type": "bytes4"
 			}
 		],
-		"stateMutability": "nonpayable",
+		"stateMutability": "nonAPP",
 		"type": "function"
 	},
 	{
@@ -2291,7 +2159,7 @@ function returnABIs() {
 		"inputs": [],
 		"name": "renounceOwnership",
 		"outputs": [],
-		"stateMutability": "nonpayable",
+		"stateMutability": "nonAPP",
 		"type": "function"
 	},
 	{
@@ -2372,20 +2240,20 @@ function returnABIs() {
 		],
 		"name": "transferOwnership",
 		"outputs": [],
-		"stateMutability": "nonpayable",
+		"stateMutability": "nonAPP",
 		"type": "function"
 	},
 	{
 		"inputs": [
 			{
-				"internalType": "address payable",
+				"internalType": "address APP",
 				"name": "payee",
 				"type": "address"
 			}
 		],
 		"name": "withdrawPayments",
 		"outputs": [],
-		"stateMutability": "nonpayable",
+		"stateMutability": "nonAPP",
 		"type": "function"
 	}
 ];
@@ -2393,11 +2261,11 @@ function returnABIs() {
 //............................................................................................................................................
 
         
-        abis.actManager=PRUF_AC_manager;
-        abis.STOR=STORAGE;
-        abis.payable=APP;
+        abis.AC_MGR=AC_MGR;
+        abis.STOR=STOR;
+        abis.APP=APP;
         abis.NP=NP;
-        abis.simpleEscrow=PRUF_simpleEscrow;
+        abis.ECR=ECR;
 
         return (abis);
 }
