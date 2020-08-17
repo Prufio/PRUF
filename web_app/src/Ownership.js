@@ -79,9 +79,9 @@ class Ownership extends Component {
 
       if(this.state.STOR < 1){self.setState({ STOR: contracts.STOR });}
       if(this.state.NP < 1){self.setState({ NP: contracts.NP });}
-      if(this.state.APP < 1){self.setState({ APP: contracts.payable });}
-      if(this.state.PRUF_simpleEscrow < 1){self.setState({ PRUF_simpleEscrow: contracts.simpleEscrow });}
-      if(this.state.PRUF_AC_manager < 1){self.setState({ PRUF_AC_manager: contracts.actManager });}
+      if(this.state.APP < 1){self.setState({ APP: contracts.APP });}
+      if(this.state.ECR < 1){self.setState({ ECR: contracts.ECR });}
+      if(this.state.AC_MGR < 1){self.setState({ AC_MGR: contracts.AC_MGR });}
     };
 
 
@@ -117,8 +117,8 @@ class Ownership extends Component {
       isTxfrBPP: false,
       isTxfrBPNP: false,
       NP: "",
-      PRUF_AC_manager: "",
-      PRUF_simpleEscrow: "",
+      AC_MGR: "",
+      ECR: "",
     };
   }
 
@@ -256,7 +256,7 @@ class Ownership extends Component {
           self.setState({ result: _error.transactionHash });
         })
         .on("receipt", (receipt) => {
-          console.log("BP app (non-payable) ownership Transferred to: ", self.state.newOwner);
+          console.log("BP app (non-APP) ownership Transferred to: ", self.state.newOwner);
           self.setState({isBPNPOwner: false})
           console.log("tx receipt: ", receipt);
         });}

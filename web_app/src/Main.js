@@ -32,19 +32,19 @@ class Main extends Component {
       var contracts = await returnContracts(self.state.web3);
       //console.log("RC NR: ", contractArray)
 
-      if(this.state.storage < 1){self.setState({ storage: contracts.storage });}
-      if(this.state.PRUF_NP < 1){self.setState({ PRUF_NP: contracts.nonPayable });}
-      if(this.state.PRUF_APP < 1){self.setState({ PRUF_APP: contracts.payable });}
-      if(this.state.PRUF_simpleEscrow < 1){self.setState({ PRUF_simpleEscrow: contracts.simpleEscrow });}
-      if(this.state.PRUF_AC_manager < 1){self.setState({ PRUF_AC_manager: contracts.actManager });}
+      if(this.state.STOR < 1){self.setState({ STOR: contracts.STOR });}
+      if(this.state.NP < 1){self.setState({ NP: contracts.NP });}
+      if(this.state.APP < 1){self.setState({ APP: contracts.APP });}
+      if(this.state.ECR < 1){self.setState({ ECR: contracts.ECR });}
+      if(this.state.AC_MGR < 1){self.setState({ AC_MGR: contracts.AC_MGR });}
     };
 
     this.getAssetClass = async () => {//under the condition that asset class has not been retrieved and stored in state, get it from user data
       const self = this;
       //console.log("getting asset class");
-      if (self.state.assetClass > 0 || self.state.PRUF_APP === "") {
+      if (self.state.assetClass > 0 || self.state.APP === "") {
       } else {
-        self.state.PRUF_APP.methods
+        self.state.APP.methods
           .getUserExt(self.state.web3.utils.soliditySha3(self.state.addr))
           .call({ from: self.state.addr }, function (_error, _result) {
             if (_error) {console.log(_error)
@@ -60,28 +60,28 @@ class Main extends Component {
     this.getOwner = async () => {//check user address against contract ownership calls
       const self = this;
 
-      if(this.state.storage === "" || this.state.web3 === null || this.state.storageOwner !== ""){}else{
-        //console.log("Getting storage owner")
-        this.state.storage.methods
+      if(this.state.STOR === "" || this.state.web3 === null || this.state.STOROwner !== ""){}else{
+        //console.log("Getting STOR owner")
+        this.state.STOR.methods
           .owner()
           .call({ from: self.state.addr }, function (_error, _result) {
             if (_error) {
               console.log(_error);
             } else {
-              self.setState({ storageOwner: _result });
+              self.setState({ STOROwner: _result });
 
               if (_result === self.state.addr) {
-                self.setState({ isStorageOwner: true });
+                self.setState({ isSTOROwner: true });
               } else {
-                self.setState({ isStorageOwner: false });
+                self.setState({ isSTOROwner: false });
               }
             }
           });
         }
 
-        if(this.state.PRUF_APP === "" || this.state.web3 === null || this.state.BPPOwner !== ""){}else{
+        if(this.state.APP === "" || this.state.web3 === null || this.state.BPPOwner !== ""){}else{
           //console.log("Getting BPP owner")
-          this.state.PRUF_APP.methods
+          this.state.APP.methods
             .owner()
             .call({ from: self.state.addr }, function (_error, _result) {
               if (_error) {
@@ -98,9 +98,9 @@ class Main extends Component {
             });
           }
 
-          if(this.state.PRUF_NP === "" || this.state.web3 === null || this.state.BPNPOwner !== ""){}else{
+          if(this.state.NP === "" || this.state.web3 === null || this.state.BPNPOwner !== ""){}else{
             //console.log("Getting BPNP owner")
-            this.state.PRUF_NP.methods
+            this.state.NP.methods
               .owner()
               .call({ from: self.state.addr }, function (_error, _result) {
                 if (_error) {
@@ -135,20 +135,20 @@ class Main extends Component {
     //Component state declaration
 
     this.state = {
-      isStorageOwner: undefined,
+      isSTOROwner: undefined,
       isBPPOwner: undefined,
       isBPNPOwner: undefined,
       addr: undefined,
       web3: null,
       ownerMenu: false,
-      storageOwner: "",
+      STOROwner: "",
       BPPOwner: "",
       BPNPOwner: "",
-      PRUF_APP: "",
-      PRUF_NP: "",
-      storage: "",
-      PRUF_AC_manager: "",
-      PRUF_simpleEscrow: "",
+      APP: "",
+      NP: "",
+      STOR: "",
+      AC_MGR: "",
+      ECR: "",
       assetClass: undefined,
       contractArray: [],
     };
@@ -180,7 +180,7 @@ class Main extends Component {
 
   componentDidUpdate() {//stuff to do when state updates
 
-    /* if (this.state.addr > 0 && this.state.assetClass === undefined && this.state.PRUF_APP !== "") {
+    /* if (this.state.addr > 0 && this.state.assetClass === undefined && this.state.APP !== "") {
       for (let i = 0; i < 5; i++) {
         this.getAssetClass();
       }
@@ -190,7 +190,7 @@ class Main extends Component {
       this.getOwner();
     }
 
-    if(this.state.web3 !== null && this.state.storageOwner < 1){
+    if(this.state.web3 !== null && this.state.STOROwner < 1){
       this.returnsContract();
     }
   }
@@ -203,7 +203,7 @@ class Main extends Component {
 
   render() {//render continuously produces an up-to-date stateful document  
     const toggleAdmin = () => {
-      if (this.state.isStorageOwner || this.state.isBPPOwner || this.state.isBPNPOwner) {
+      if (this.state.isSTOROwner || this.state.isBPPOwner || this.state.isBPNPOwner) {
         if (this.state.ownerMenu === false) {
           this.setState({ ownerMenu: true });
         } else {
@@ -334,7 +334,7 @@ class Main extends Component {
             </div>
           </div>
           <NavLink to="/">
-            {(this.state.isStorageOwner === true || this.state.isBPPOwner === true || this.state.isBPNPOwner === true) && (
+            {(this.state.isSTOROwner === true || this.state.isBPPOwner === true || this.state.isBPNPOwner === true) && (
               <Form className="buttonDisplay2">
                 <Button
                   variant="danger"
