@@ -84,7 +84,7 @@
         //
         //
     
-    contract('STOR', accounts => {
+    contract('ECR_CORE', accounts => {
             
         console.log('//**************************BEGIN BOOTSTRAP**************************//')
 
@@ -1241,3 +1241,4 @@
                 return AC_MGR.OO_addUser(account10, '1', '10', { from: account1 })
             })
     })
+})
