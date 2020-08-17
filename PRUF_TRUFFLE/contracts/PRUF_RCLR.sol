@@ -30,15 +30,14 @@ contract RCLR is ECR_CORE, CORE {
      * @dev //gets item out of recycled status -- caller is assetToken contract
      */
     function discard(bytes32 _idxHash) external nonReentrant whenNotPaused {
-        Record memory rec = getRecord(_idxHash);
+        // Record memory rec = getRecord(_idxHash);
 
         require( // caller is assetToken contract
             msg.sender == A_TKN_Address,
-            "R:D:Caller is not Asset Token Contract"
+            "R:D:Caller is not Asset Token Contract"                                                       //CANNOT TEST WITH CURRENT CONTRACTS, TOKEN != EXIST IN MEM OF OTHER CONTRACTS
         );
-        require((rec.assetClass != 0), "R:D:Record does not exist");
-        require((rec.assetStatus == 59), "R:D:Must be in recyclable status");
-
+        // require((rec.assetClass != 0), "R:D:Record does not exist");                                    //REDUNDANT DUE TO CALLING FUNCTION, AND CALLER == A_TKN ONLY
+        // require((rec.assetStatus == 59), "R:D:Must be in recyclable status");                           // REDUNDANT DUE TO CALLING FUNCTION, AND CALLER == A_TKN ONLY
         //^^^^^^^checks^^^^^^^^^
 
         uint256 escrowTime = block.timestamp + 3153600000000; //100,000 years in the FUTURE.........
@@ -97,10 +96,11 @@ contract RCLR is ECR_CORE, CORE {
             rec.numberOfTransfers++;
         }
         //^^^^^^^effects^^^^^^^^^^^^
-
+        
         A_TKN.mintAssetToken(msg.sender, tokenId, "pruf.io");
-        STOR.changeAC(_idxHash, _assetClass);
         ECR_MGR.endEscrow(_idxHash);
+        STOR.changeAC(_idxHash, _assetClass);
+        rec.assetStatus = 58;
         writeRecord(_idxHash, rec);
         deductRecycleCosts(_assetClass, escrow.addr2);
         //^^^^^^^interactions^^^^^^^^^^^^

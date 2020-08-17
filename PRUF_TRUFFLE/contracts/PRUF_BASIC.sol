@@ -133,7 +133,7 @@ contract BASIC is ReentrancyGuard, Ownable, IERC721Receiver, Pausable {
         //^^^^^^^effects^^^^^^^^^
     }
 
-    function TX_asset_Token(address _to, bytes32 _idxHash)
+    function transferAssetToken(address _to, bytes32 _idxHash)
         external
         virtual
         nonReentrant
@@ -149,7 +149,7 @@ contract BASIC is ReentrancyGuard, Ownable, IERC721Receiver, Pausable {
         //^^^^^^^interactions^^^^^^^^^
     }
 
-    function OO_TX_AC_Token(address _to, bytes32 _idxHash)
+    function OO_transferACToken(address _to, bytes32 _idxHash)
         external
         virtual
         onlyOwner

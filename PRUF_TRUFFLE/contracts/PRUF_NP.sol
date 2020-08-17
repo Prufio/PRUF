@@ -335,7 +335,7 @@ contract NP is CORE {
         rec.assetStatus = 70; // Set status to 70 (exported)
         //^^^^^^^effects^^^^^^^^^
 
-        APP.TX_asset_Token(_addr, _idxHash);
+        APP.transferAssetToken(_addr, _idxHash);
         writeRecord(_idxHash, rec);
         STOR.changeAC(_idxHash, AC_info.assetClassRoot);
 

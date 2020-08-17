@@ -9,6 +9,7 @@
     const PRUF_AC_MGR = artifacts.require('AC_MGR');
     const PRUF_AC_TKN = artifacts.require('AC_TKN');
     const PRUF_A_TKN = artifacts.require('A_TKN');
+    const PRUF_A_TKN2 = artifacts.require('A_TKN2');
     const PRUF_ECR_MGR = artifacts.require('ECR_MGR');
     const PRUF_ECR = artifacts.require('ECR');
     const PRUF_ECR2 = artifacts.require('ECR2');
@@ -25,6 +26,7 @@
     let AC_MGR;
     let AC_TKN;
     let A_TKN;
+    let A_TKN2;
     let ECR_MGR;
     let ECR;
     let ECR2;
@@ -32,8 +34,13 @@
     let APP_NC;
     let NP_NC;
     let RCLR;
-    let NAKED
     let Helper;
+
+    let string1Hash;
+    let string2Hash;
+    let string3Hash;
+    let string4Hash;
+    let string5Hash;
     
     let asset1;
     let asset2;
@@ -64,7 +71,8 @@
 
     let account000 = '0x0000000000000000000000000000000000000000'
 
-    let nakedTokenHash1;
+    let nakedAuthCode1;
+    let nakedAuthCode3;
     
         //
         //
@@ -210,6 +218,14 @@
         console.log(PRUF_ECR2_TEST.address);
         assert(PRUF_ECR2_TEST.address !== '');
         ECR2 = PRUF_ECR2_TEST;
+    })
+
+
+    it('Should deploy PRUF_A_TKN2', async () => {
+        const PRUF_A_TKN2_TEST = await PRUF_A_TKN2.deployed({ from: account1 });
+        console.log(PRUF_A_TKN2_TEST.address);
+        assert(PRUF_A_TKN2_TEST.address !== '')
+        A_TKN2 = PRUF_A_TKN2_TEST;
     })
 
 
@@ -376,9 +392,34 @@
         )
 
 
-        nakedTokenHash1 = await Helper.getNakedTokenHash(
-            '10',
+        nakedAuthCode1 = await Helper.getURIfromAuthcode(
+            '15',
             '1'
+        )
+
+        nakedAuthCode3 = await Helper.getURIfromAuthcode(
+            '15',
+            '3'
+        )
+
+        string1Hash = await Helper.getStringHash(
+            '1'
+        )
+
+        string2Hash = await Helper.getStringHash(
+            '2'
+        )
+
+        string3Hash = await Helper.getStringHash(
+            '3'
+        )
+
+        string4Hash = await Helper.getStringHash(
+            '4'
+        )
+
+        string5Hash = await Helper.getStringHash(
+            '5'
         )
     })
 
@@ -406,6 +447,11 @@
             .then(() => {
                 console.log("Adding A_TKN to storage for use in AC 0")
                 return STOR.OO_addContract("A_TKN", A_TKN.address, '0', '1', { from: account1 })
+            })
+
+            .then(() => {
+                console.log("Adding A_TKN2 to storage for use in AC 0")
+                return STOR.OO_addContract("A_TKN2", A_TKN2.address, '0', '1', { from: account1 })
             })
             
             .then(() => {
@@ -474,6 +520,11 @@
                 console.log("Adding in A_TKN")
                 return A_TKN.OO_setStorageContract(STOR.address, { from: account1 })
             })
+
+            .then(() => {
+                console.log("Adding in A_TKN2")
+                return A_TKN2.OO_setStorageContract(STOR.address, { from: account1 })
+            })
             
             .then(() => {
                 console.log("Adding in ECR_MGR")
@@ -540,6 +591,11 @@
             .then(() => {
                 console.log("Resolving in A_TKN")
                 return A_TKN.OO_ResolveContractAddresses({ from: account1 })
+            })
+
+            .then(() => {
+                console.log("Resolving in A_TKN2")
+                return A_TKN2.OO_ResolveContractAddresses({ from: account1 })
             })
             
             .then(() => {
@@ -624,7 +680,7 @@
 
             .then(() => {
                 console.log("Minting AC 15 -NC")
-                return AC_MGR.createAssetClass("15", account1, "Non_Custodial_AC4", "15", "2", "2", { from: account1 })
+                return AC_MGR.createAssetClass("15", account10, "Non_Custodial_AC4", "15", "2", "2", { from: account1 })
             })
     })
 
@@ -815,6 +871,10 @@
             .then(() => {
                 return STOR.enableContractForAC('A_TKN', '14', '2', { from: account1 })
             })
+
+            .then(() => {
+                return STOR.enableContractForAC('A_TKN', '15', '2', { from: account10 })
+            })
             
             .then(() => {
                 return STOR.enableContractForAC('A_TKN', '1', '1', { from: account1 })
@@ -822,6 +882,41 @@
             
             .then(() => {
                 return STOR.enableContractForAC('A_TKN', '2', '1', { from: account1 })
+            })
+    })
+
+
+    it('Should authorize A_TKN2 in all relevant asset classes', async () => {
+        
+        console.log("Authorizing A_TKN2")
+        return STOR.enableContractForAC('A_TKN2', '10', '1', { from: account1 })
+            
+            .then(() => {
+                return STOR.enableContractForAC('A_TKN2', '11', '1', { from: account1 })
+            })
+            
+            .then(() => {
+                return STOR.enableContractForAC('A_TKN2', '12', '2', { from: account1 })
+            })
+            
+            .then(() => {
+                return STOR.enableContractForAC('A_TKN2', '13', '2', { from: account1 })
+            })
+            
+            .then(() => {
+                return STOR.enableContractForAC('A_TKN2', '14', '2', { from: account1 })
+            })
+
+            .then(() => {
+                return STOR.enableContractForAC('A_TKN2', '15', '2', { from: account10 })
+            })
+            
+            .then(() => {
+                return STOR.enableContractForAC('A_TKN2', '1', '1', { from: account1 })
+            })
+            
+            .then(() => {
+                return STOR.enableContractForAC('A_TKN2', '2', '1', { from: account1 })
             })
     })
 
@@ -845,6 +940,10 @@
             
             .then(() => {
                 return STOR.enableContractForAC('NAKED', '14', '2', { from: account1 })
+            })
+
+            .then(() => {
+                return STOR.enableContractForAC('NAKED', '15', '2', { from: account10 })
             })
             
             .then(() => {
@@ -1022,7 +1121,7 @@
                     "10000000000000000",
                     "10000000000000000",
                     account1,
-                    { from: account1 })
+                    { from: account10 })
             })
     })
 
@@ -1074,8 +1173,13 @@
             })
             
             .then(() => {
-                console.log("Account10 => AC15")
-                return AC_MGR.OO_addUser(account10, '10', '15', { from: account1 })
+                console.log("Account10 => AC15 (NAKEDMINTER)")
+                return AC_MGR.OO_addUser(account10, '10', '15', { from: account10 })
+            })
+
+            .then(() => {
+                console.log("Account10 => AC15 (NAKEDMINTER)")
+                return AC_MGR.OO_addUser(account10, '1', '10', { from: account1 })
             })
     })
 })
