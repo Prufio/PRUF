@@ -19,7 +19,8 @@
     const PRUF_RCLR = artifacts.require('RCLR');
     const PRUF_NAKED = artifacts.require('NAKED');
     const PRUF_HELPER = artifacts.require('Helper');
-    
+    const PRUF_MAL_APP = artifacts.require('MAL_APP');
+
     let STOR;
     let APP;
     let NP;
@@ -35,6 +36,7 @@
     let NP_NC;
     let RCLR;
     let Helper;
+    let MAL_APP;
 
     let string1Hash;
     let string2Hash;
@@ -61,6 +63,8 @@
     let rgt4;
     let rgt5;
     let rgt6;
+    let rgt7;
+    let rgt8;
     let rgt12;
     let rgt000 = "0x0000000000000000000000000000000000000000000000000000000000000000";
     let rgtFFF = "0xFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF";
@@ -228,6 +232,13 @@
         A_TKN2 = PRUF_A_TKN2_TEST;
     })
 
+    it('Should deploy PRUF_MAL_APP', async () => {
+        const PRUF_MAL_APP_TEST = await PRUF_MAL_APP.deployed({ from: account1 });
+        console.log(PRUF_MAL_APP_TEST.address);
+        assert(PRUF_MAL_APP_TEST.address !== '')
+        MAL_APP = PRUF_MAL_APP_TEST;
+    })
+
 
     it('Should build a few IDX and RGT hashes', async () => {
 
@@ -369,6 +380,24 @@
             'fff'
         )
 
+        rgt7 = await Helper.getJustRgtHash(
+            asset7,
+            'ggg',
+            'ggg',
+            'ggg',
+            'ggg',
+            'ggg'
+        )
+
+        rgt8 = await Helper.getJustRgtHash(
+            asset7,
+            'hhh',
+            'hhh',
+            'hhh',
+            'hhh',
+            'hhh'
+        )
+
         rgt12 = await Helper.getJustRgtHash(
             asset12,
             'a',
@@ -493,6 +522,11 @@
                 console.log("Adding RCLR to storage for use in AC 0")
                 return STOR.OO_addContract("RCLR", RCLR.address, '0', '3', { from: account1 })
             })
+
+            .then(() => {
+                console.log("Adding MAL_APP to storage for use in AC 0")
+                return STOR.OO_addContract("MAL_APP", MAL_APP.address, '0', '1', { from: account1 })
+            })
     })
 
 
@@ -504,6 +538,11 @@
             .then(() => {
                 console.log("Adding in NP")
                 return NP.OO_setStorageContract(STOR.address, { from: account1 })
+            })
+
+            .then(() => {
+                console.log("Adding in MAL_APP")
+                return MAL_APP.OO_setStorageContract(STOR.address, { from: account1 })
             })
             
             .then(() => {
@@ -576,6 +615,11 @@
             .then(() => {
                 console.log("Resolving in NP")
                 return NP.OO_ResolveContractAddresses({ from: account1 })
+            })
+
+            .then(() => {
+                console.log("Resolving in MAL_APP")
+                return MAL_APP.OO_ResolveContractAddresses({ from: account1 })
             })
             
             .then(() => {
@@ -725,6 +769,21 @@
             
             .then(() => {
                 return STOR.enableContractForAC('NP', '11', '1', { from: account1 })
+            })
+            
+            // .then(() => {
+            //     return STOR.enableContractForAC('NP', '1', '1', { from: account1 })
+            // })
+    })
+
+
+    it('Should authorize MAL_APP in all relevant asset classes', async () => {
+        
+        console.log("Authorizing MAL_APP")
+        return STOR.enableContractForAC('MAL_APP', '10', '1', { from: account1 })
+            
+            .then(() => {
+                return STOR.enableContractForAC('MAL_APP', '11', '1', { from: account1 })
             })
             
             // .then(() => {
