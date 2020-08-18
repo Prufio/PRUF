@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import returnContracts from "./Contracts";
+import RCFJ from "./RetrieveContractsFromJSON"
 import Web3 from "web3";
 import Form from "react-bootstrap/Form";
 import Col from "react-bootstrap/Col";
@@ -7,6 +7,12 @@ import Button from "react-bootstrap/Button";
 import bs58 from "bs58";
 import returnManufacturers from "./Manufacturers";
 import returnTypes from "./Types";
+
+let contracts;
+
+async function setupContractEnvironment(_web3) {
+    contracts = window.contracts;
+}
 
 class RetrieveRecord extends Component {
   constructor(props) {
@@ -53,16 +59,21 @@ class RetrieveRecord extends Component {
     }
     };
 
-    this.returnsContract = async () => {//request contracts from returnContracts, which returns an object full of contracts
-      const self = this;
-      var contracts = await returnContracts(self.state.web3);
-      //console.log("RC NR: ", contractArray)
-
-      if(this.state.STOR < 1){self.setState({ STOR: contracts.STOR });}
-      if(this.state.NP < 1){self.setState({ NP: contracts.NP });}
-      if(this.state.APP < 1){self.setState({ APP: contracts.APP });}
-      if(this.state.ECR < 1){self.setState({ ECR: contracts.ECR });}
-      if(this.state.AC_MGR < 1){self.setState({ AC_MGR: contracts.AC_MGR });}
+    this.getContracts = async () => {
+          const self = this;
+          self.setState({STOR: contracts.content[0]});
+          self.setState({APP: contracts.content[1]});
+          self.setState({NP: contracts.content[2]});
+          self.setState({AC_MGR: contracts.content[3]});
+          self.setState({AC_TKN: contracts.content[4]});
+          self.setState({A_TKN: contracts.content[5]});
+          self.setState({ECR_MGR: contracts.content[6]});
+          self.setState({ECR: contracts.content[7]});
+          self.setState({ECR2: contracts.content[8]});
+          self.setState({ECR_NC: contracts.content[9]});
+          self.setState({APP_NC: contracts.content[10]});
+          self.setState({NP_NC: contracts.content[11]});
+          self.setState({RCLR: contracts.content[12]});
     };
 
     this.acctChanger = async () => {//Handle an address change, update state accordingly
@@ -102,12 +113,20 @@ class RetrieveRecord extends Component {
       secret: "",
       status: "",
       web3: null,
-      APP: "",
       isNFA: false,
+      APP: "",
       NP: "",
-      AC_MGR: "",
-      ECR: "",
       STOR: "",
+      AC_MGR: "",
+      ECR_NC: "",
+      ECR_MGR: "",
+      AC_TKN: "",
+      A_TKN: "",
+      APP_NC: "",
+      NP_NC: "",
+      ECR2: "",
+      NAKED: "",
+      RCLR: "",
     };
   }
 
@@ -123,6 +142,7 @@ class RetrieveRecord extends Component {
     //console.log("component mounted")
     var _web3 = require("web3");
     _web3 = new Web3(_web3.givenProvider);
+    setupContractEnvironment(_web3);
     this.setState({ web3: _web3 });
     _web3.eth.getAccounts().then((e) => this.setState({ addr: e[0] }));
 
@@ -134,7 +154,7 @@ class RetrieveRecord extends Component {
     if(this.state.ipfs2 > 0) {console.log(this.state.ipfs2);}
 
     if(this.state.web3 !== null && this.state.APP < 1){
-      this.returnsContract();
+      this.getContracts();
     }
 
     if (this.state.addr > 0 && this.state.assetClass === undefined) {

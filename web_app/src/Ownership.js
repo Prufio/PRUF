@@ -1,9 +1,15 @@
 import React, { Component } from "react";
-import returnContracts from "./Contracts";
+import RCFJ from "./RetrieveContractsFromJSON"
 import Web3 from "web3";
 import Form from "react-bootstrap/Form";
 import Button from "react-bootstrap/Button";
 import Col from "react-bootstrap/Col";
+
+let contracts;
+
+async function setupContractEnvironment(_web3) {
+    contracts = window.contracts;
+}
 
 class Ownership extends Component {
   constructor(props) {
@@ -72,16 +78,21 @@ class Ownership extends Component {
             }
     };
 
-    this.returnsContract = async () => {//request contracts from returnContracts, which returns an object full of contracts
-      const self = this;
-      var contracts = await returnContracts(self.state.web3);
-      //console.log("RC NR: ", contractArray)
-
-      if(this.state.STOR < 1){self.setState({ STOR: contracts.STOR });}
-      if(this.state.NP < 1){self.setState({ NP: contracts.NP });}
-      if(this.state.APP < 1){self.setState({ APP: contracts.APP });}
-      if(this.state.ECR < 1){self.setState({ ECR: contracts.ECR });}
-      if(this.state.AC_MGR < 1){self.setState({ AC_MGR: contracts.AC_MGR });}
+    this.getContracts = async () => {
+          const self = this;
+          self.setState({STOR: contracts.content[0]});
+          self.setState({APP: contracts.content[1]});
+          self.setState({NP: contracts.content[2]});
+          self.setState({AC_MGR: contracts.content[3]});
+          self.setState({AC_TKN: contracts.content[4]});
+          self.setState({A_TKN: contracts.content[5]});
+          self.setState({ECR_MGR: contracts.content[6]});
+          self.setState({ECR: contracts.content[7]});
+          self.setState({ECR2: contracts.content[8]});
+          self.setState({ECR_NC: contracts.content[9]});
+          self.setState({APP_NC: contracts.content[10]});
+          self.setState({NP_NC: contracts.content[11]});
+          self.setState({RCLR: contracts.content[12]});
     };
 
 
@@ -110,15 +121,23 @@ class Ownership extends Component {
       newOwner: "",
       toggle: false,
       assetClass: "",
-      STOR: "",
       web3: null,
-      APP: "",
       isTxfrSTOR: false,
       isTxfrBPP: false,
       isTxfrBPNP: false,
+      APP: "",
       NP: "",
+      STOR: "",
       AC_MGR: "",
-      ECR: "",
+      ECR_NC: "",
+      ECR_MGR: "",
+      AC_TKN: "",
+      A_TKN: "",
+      APP_NC: "",
+      NP_NC: "",
+      ECR2: "",
+      NAKED: "",
+      RCLR: "",
     };
   }
 
@@ -127,6 +146,7 @@ class Ownership extends Component {
   componentDidMount() {//stuff to do when component mounts in window
     var _web3 = require("web3");
     _web3 = new Web3(_web3.givenProvider);
+    setupContractEnvironment(_web3);
     this.setState({ web3: _web3 });
     _web3.eth.getAccounts().then((e) => this.setState({ addr: e[0] }));
     document.addEventListener("accountListener", this.acctChanger());
@@ -135,7 +155,7 @@ class Ownership extends Component {
   componentDidUpdate(){//stuff to do when state updates
 
     if(this.state.web3 !== null && this.state.web3 !== undefined){
-      this.returnsContract();
+      this.getContracts();
     }
 
     if (this.state.web3 !== null && this.state.STOROwner < 1){

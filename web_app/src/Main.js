@@ -16,27 +16,39 @@ import AddUser from "./AddUser";
 import Ownership from "./Ownership";
 import SetCosts from "./SetCosts";
 import THEWORKS from "./TheWorks";
-import returnContracts from "./Contracts";
+import buildContracts from "./Contracts";
 import Button from "react-bootstrap/Button";
 import Form from "react-bootstrap/Form";
 import EscrowManager from "./EscrowManager";
+import RCFJ from "./RetrieveContractsFromJSON"
+
+async function setupContractEnvironment(_web3) {
+    return window.contracts = await buildContracts(_web3);
+}
 
 class Main extends Component {
   constructor(props) {
     super(props);
 
-    //State declaration.....................................................................................................
-
-    this.returnsContract = async () => {//request contracts from returnContracts, which returns an object full of contracts
+    //State declaration....................................................................................................
+    this.getContracts = async () => {
       const self = this;
-      var contracts = await returnContracts(self.state.web3);
-      //console.log("RC NR: ", contractArray)
+        self.setState({ STOR: window.contracts.content[0] });
+        self.setState({ APP: window.contracts.content[1] });
+        self.setState({ NP: window.contracts.content[2] });
+        self.setState({ AC_MGR: window.contracts.content[3] });
+        self.setState({ AC_TKN: window.contracts.content[4] });
+        self.setState({ A_TKN: window.contracts.content[5] });
+        self.setState({ ECR_MGR: window.contracts.content[6] });
+        self.setState({ ECR: window.contracts.content[7] });
+        self.setState({ ECR2: window.contracts.content[8] });
+        self.setState({ ECR_NC: window.contracts.content[9] });
+        self.setState({ APP_NC: window.contracts.content[10] });
+        self.setState({ NP_NC: window.contracts.content[11] });
+        self.setState({ RCLR: window.contracts.content[12] });
 
-      if(this.state.STOR < 1){self.setState({ STOR: contracts.STOR });}
-      if(this.state.NP < 1){self.setState({ NP: contracts.NP });}
-      if(this.state.APP < 1){self.setState({ APP: contracts.APP });}
-      if(this.state.ECR < 1){self.setState({ ECR: contracts.ECR });}
-      if(this.state.AC_MGR < 1){self.setState({ AC_MGR: contracts.AC_MGR });}
+        console.log("contracts: ", window.contracts.content)
+
     };
 
     this.getAssetClass = async () => {//under the condition that asset class has not been retrieved and stored in state, get it from user data
@@ -47,20 +59,21 @@ class Main extends Component {
         self.state.APP.methods
           .getUserExt(self.state.web3.utils.soliditySha3(self.state.addr))
           .call({ from: self.state.addr }, function (_error, _result) {
-            if (_error) {console.log(_error)
+            if (_error) {
+              console.log(_error)
             } else {
-               console.log("_result: ", _result);  if (_result !== undefined ) {
+              console.log("_result: ", _result); if (_result !== undefined) {
                 self.setState({ assetClass: Object.values(_result)[1] });
               }
             }
           });
-    }
+      }
     };
 
     this.getOwner = async () => {//check user address against contract ownership calls
       const self = this;
 
-      if(this.state.STOR === "" || this.state.web3 === null || this.state.STOROwner !== ""){}else{
+      if (this.state.STOR === "" || this.state.web3 === null || this.state.STOROwner !== "") { } else {
         //console.log("Getting STOR owner")
         this.state.STOR.methods
           .owner()
@@ -77,45 +90,45 @@ class Main extends Component {
               }
             }
           });
-        }
+      }
 
-        if(this.state.APP === "" || this.state.web3 === null || this.state.BPPOwner !== ""){}else{
-          //console.log("Getting BPP owner")
-          this.state.APP.methods
-            .owner()
-            .call({ from: self.state.addr }, function (_error, _result) {
-              if (_error) {
-                console.log(_error);
+      if (this.state.APP === "" || this.state.web3 === null || this.state.BPPOwner !== "") { } else {
+        //console.log("Getting BPP owner")
+        this.state.APP.methods
+          .owner()
+          .call({ from: self.state.addr }, function (_error, _result) {
+            if (_error) {
+              console.log(_error);
+            } else {
+              self.setState({ BPPOwner: _result });
+
+              if (_result === self.state.addr) {
+                self.setState({ isBPPOwner: true });
               } else {
-                self.setState({ BPPOwner: _result });
-  
-                if (_result === self.state.addr) {
-                  self.setState({ isBPPOwner: true });
-                } else {
-                  self.setState({ isBPPOwner: false });
-                }
+                self.setState({ isBPPOwner: false });
               }
-            });
-          }
-
-          if(this.state.NP === "" || this.state.web3 === null || this.state.BPNPOwner !== ""){}else{
-            //console.log("Getting BPNP owner")
-            this.state.NP.methods
-              .owner()
-              .call({ from: self.state.addr }, function (_error, _result) {
-                if (_error) {
-                  console.log(_error);
-                } else {
-                  self.setState({ BPNPOwner: _result });
-    
-                  if (_result === self.state.addr) {
-                    self.setState({ isBPNPOwner: true });
-                  } else {
-                    self.setState({ isBPNPOwner: false });
-                  }
-                }
-              });
             }
+          });
+      }
+
+      if (this.state.NP === "" || this.state.web3 === null || this.state.BPNPOwner !== "") { } else {
+        //console.log("Getting BPNP owner")
+        this.state.NP.methods
+          .owner()
+          .call({ from: self.state.addr }, function (_error, _result) {
+            if (_error) {
+              console.log(_error);
+            } else {
+              self.setState({ BPNPOwner: _result });
+
+              if (_result === self.state.addr) {
+                self.setState({ isBPNPOwner: true });
+              } else {
+                self.setState({ isBPNPOwner: false });
+              }
+            }
+          });
+      }
     };
 
     this.acctChanger = async () => {//Handle an address change, update state accordingly
@@ -127,9 +140,9 @@ class Main extends Component {
         _web3.eth.getAccounts().then((e) => self.setState({ addr: e[0] }));
         /* self.setState({assetClass: undefined}) */
       });
-    /*   if (self.state.addr !== this.state.owner) {
-        self.setState({ isOwner: false });
-      } */
+      /*   if (self.state.addr !== this.state.owner) {
+          self.setState({ isOwner: false });
+        } */
       self.setState({ isOwner: false });
     };
     //Component state declaration
@@ -148,7 +161,15 @@ class Main extends Component {
       NP: "",
       STOR: "",
       AC_MGR: "",
-      ECR: "",
+      ECR_NC: "",
+      ECR_MGR: "",
+      AC_TKN: "",
+      A_TKN: "",
+      APP_NC: "",
+      NP_NC: "",
+      ECR2: "",
+      NAKED: "",
+      RCLR: "",
       assetClass: undefined,
       contractArray: [],
     };
@@ -160,6 +181,7 @@ class Main extends Component {
     const ethereum = window.ethereum;
     var _web3 = require("web3");
     _web3 = new Web3(_web3.givenProvider);
+    setupContractEnvironment(_web3);
     this.setState({ web3: _web3 });
     ethereum.enable();
     _web3.eth.getAccounts().then((e) => this.setState({ addr: e[0] }));
@@ -169,10 +191,10 @@ class Main extends Component {
     }
   }
 
-  componentDidCatch(error, info){
+  componentDidCatch(error, info) {
     console.log(info.componentStack)
   }
-  
+
   static getDerivedStateFromError(error) {
     // Update state so the next render will show the fallback UI.
     return { hasError: true };
@@ -186,12 +208,14 @@ class Main extends Component {
       }
     }  */
 
-    if (this.state.web3 !== null){
+    console.log(window.contracts)
+
+    if (this.state.web3 !== null) {
       this.getOwner();
     }
 
-    if(this.state.web3 !== null && this.state.STOROwner < 1){
-      this.returnsContract();
+    if (this.state.web3 !== null && window.contracts > 0) {
+      this.getContracts();
     }
   }
 
