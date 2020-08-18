@@ -102,9 +102,9 @@ contract APP is CORE {
 
         require(
             contractInfo.contractType > 0,
-            "A:IA: This contract not authorized for specified AC"
+            "A:IA: unauthorized for AC. Orphan token?"
         );
-        require(rec.assetClass != 0, "A:IA: Record does not exist. ");
+        require(rec.assetClass != 0, "A:IA: Record does not exist. ");                                             //CANNOT BE TESTED, ASSERT??
         require(userType < 3, "A:IA: User not authorized to import assets");
         require(
             (userType > 0) && (userType < 10),
@@ -173,7 +173,7 @@ contract APP is CORE {
             isEscrow(rec.assetStatus) == 0,
             "A:FMR: Asset in escrow"
         );
-        require(
+        require(                                                      //IMPOSSIBLE TO THROW REVERTS IN REQ1
             needsImport(rec.assetStatus) == 0,
             "A:FMR: Asset needs re-imported"
         );
@@ -223,7 +223,7 @@ contract APP is CORE {
 
         require(
             contractInfo.contractType > 0,
-            "A:TA: This contract not authorized for specified AC"
+            "A:TA: unauthorized for AC. Orphan token?"
         );
         require(
             (userType > 0) && (userType < 10),
@@ -287,7 +287,7 @@ contract APP is CORE {
 
         require(
             contractInfo.contractType > 0,
-            "A:I2: This contract not authorized for specified AC"
+            "A:I2: unauthorized for AC. Orphan token?"
         );
         require(
             (userType > 0) && (userType < 10),
@@ -301,7 +301,7 @@ contract APP is CORE {
             isEscrow(rec.assetStatus) == 0,
             "A:FMR: Asset in escrow"
         );
-        require(
+        require(                                                      //IMPOSSIBLE TO THROW REVERTS IN REQ1
             needsImport(rec.assetStatus) == 0,
             "A:FMR: Asset needs re-imported"
         );

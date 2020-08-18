@@ -1357,24 +1357,6 @@
         })
 
 
-        it('Should mint nakedAsset7 in AC 15', async () => { //Bare custodial record, Used all over
-            return NAKED.mintNakedAsset(
-                asset7,
-                nakedAuthCode7,
-                '15',
-                {from: account10}
-            )
-        })
-
-
-        it('Should transfer nakedAsset7 to APP', async () => { //Bare custodial record, Used all over
-            return NP.transferAssetToken(
-                APP.address,
-                asset7,
-                {from: account10}
-            )
-        })
-
         //1
         it('Should fail becasue contract not auth in AC', async () => {
             console.log("//************************************************************END APP SETUP**********************************************************//")
@@ -1422,6 +1404,17 @@
             )
         })
 
+
+        //4
+        it('Should transfer asset2 to APP', async () => {
+            return A_TKN.safeTransferFrom(
+                account2,
+                APP.address,
+                asset2,
+                {from: account2}
+            )
+        })
+
         //5
         it('Should fail because contract not auth in AC', async () => {
             
@@ -1435,14 +1428,19 @@
             )
         })
 
-        //6
-        it('Should fail becasue record does not exist', async () => {
-            return APP.$importAsset(
-                asset7,
-                rgt1,
-                '10',
-                {from: account2, value: 20000000000000000}
-            )
+        // //6                                                                                               //CANNOT BE TESTED
+        // it('Should fail becasue record does not exist', async () => {
+        //     return APP.$importAsset(
+        //         asset7,
+        //         rgt1,
+        //         '10',
+        //         {from: account2, value: 20000000000000000}
+        //     )
+        // })
+
+
+        it('Should authorize account9 in AC10', async () => {
+            return AC_MGR.OO_addUser(account9, '9', '10', { from: account1 })
         })
 
         //7
@@ -1453,6 +1451,11 @@
                 '10',
                 {from: account9, value: 20000000000000000}
             )
+        })
+
+
+        it('Should unauthorize account9 in AC10', async () => {
+            return AC_MGR.OO_addUser(account9, '0', '10', { from: account1 })
         })
 
         //8
@@ -1696,14 +1699,15 @@
             )
         })
 
-        //21
-        it('Should fail becasue asset needs reimported', async () => {
-            return APP.$forceModRecord(
-                asset2,
-                rgt1,
-                {from: account2, value: 20000000000000000}
-            )
-        })
+        //                                                                                         IMPOSSIBLE TO THROW
+        // //21
+        // it('Should fail becasue asset needs reimported', async () => {
+        //     return APP.$forceModRecord(
+        //         asset2,
+        //         rgt1,
+        //         {from: account2, value: 20000000000000000}
+        //     )
+        // })
 
         //22
         it('Should fail because contract does not hold token', async () => {
@@ -1788,6 +1792,16 @@
             )
         })
 
+
+        it('Should put asset1 into status 1', async () => {
+            return NP._modStatus(
+                asset1,
+                rgt1,
+                '1',
+                {from: account2}
+            )
+        })
+
         //27
         it('Should fail becasue rgt does not match record', async () => {
             return APP.$transferAsset(
@@ -1803,7 +1817,7 @@
             
             console.log("//************************************************************END $transferAsset FAIL BATCH**********************************************************//")
             console.log('//**************************BEGIN $addIpfsNote FAIL BATCH**************************//')
-            return APP.$addIpfsNote(
+            return APP.$addIpfs2Note(
                 asset3,
                 rgt3,
                 rgt2,
@@ -1818,7 +1832,7 @@
 
         //29
         it('Should fail becasue contract not auth in AC', async () => {
-            return APP.$addIpfsNote(
+            return APP.$addIpfs2Note(
                 asset1,
                 rgt1,
                 rgt1,
@@ -1833,7 +1847,7 @@
 
         //30
         it('Should fail becasue user not auth in AC', async () => {
-            return APP.$addIpfsNote(
+            return APP.$addIpfs2Note(
                 asset1,
                 rgt1,
                 rgt1,
@@ -1843,7 +1857,7 @@
 
         //31
         it('Should fail becasue asset in stolen status', async () => {
-            return APP.$addIpfsNote(
+            return APP.$addIpfs2Note(
                 asset4,
                 rgt4,
                 rgt4,
@@ -1853,7 +1867,7 @@
 
         //32
         it('Should fail becasue asset in lost status', async () => {
-            return APP.$addIpfsNote(
+            return APP.$addIpfs2Note(
                 asset5,
                 rgt5,
                 rgt5,
@@ -1987,16 +2001,16 @@
                 {from: account2}
             )
         })
-
-        //36
-        it('Should fail becasue asset needs imported', async () => {
-            return APP.$addIpfs2Note(
-                asset2,
-                rgt2,
-                rgt2,
-                {from: account2, value: 20000000000000000}
-            )
-        })
+        //                                                                                           IMPOSSIBLE TO THROW
+        // //36
+        // it('Should fail becasue asset needs imported', async () => {
+        //     return APP.$addIpfs2Note(
+        //         asset2,
+        //         rgt2,
+        //         rgt2,
+        //         {from: account2, value: 20000000000000000}
+        //     )
+        // })
 
 
         it('Should write Ipfs2 note on asset1', async () => {
@@ -2301,5 +2315,16 @@
             '1',
             {from: account2}
             )
+        })
+
+
+        it("Should retrieve asset12", async () =>{ 
+            var Record = [];
+            
+            return await STOR.retrieveShortRecord(asset12, {from: account2}, function (_err, _result) {
+                if(_err){} 
+                else{Record = Object.values(_result)
+            console.log(Record)}
+            })
         })
     })
