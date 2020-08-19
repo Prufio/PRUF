@@ -270,16 +270,16 @@ contract STOR is Ownable, ReentrancyGuard, Pausable {
         isAuthorized(database[_idxHash].assetClass)
         notEscrow(_idxHash)
     {
+        Record memory rec = database[_idxHash];
         bytes32 idxHash = _idxHash; //stack saving
-        bytes32 rgtHash = _rgtHash;
 
-        require(_countDown <= database[idxHash].countDown, "S:MR:countDown +!"); //prohibit increasing the countdown value
+        require(_countDown <= rec.countDown, "S:MR:countDown +!"); //prohibit increasing the countdown value
         require(
-            (_forceModCount == database[idxHash].forceModCount) || ((_forceModCount == database[idxHash].forceModCount ++ ) && (_forceModCount != 0)),
+            (_forceModCount == rec.forceModCount) || ((_forceModCount == rec.forceModCount ++ ) && (_forceModCount != 0)),
             "S:MR:forceModCount err"
         );
         require(
-            (_numberOfTransfers == database[idxHash].numberOfTransfers) || ((_numberOfTransfers == database[idxHash].numberOfTransfers ++ ) && (_numberOfTransfers != 0)),
+            (_numberOfTransfers == rec.numberOfTransfers) || ((_numberOfTransfers == rec.numberOfTransfers ++ ) && (_numberOfTransfers != 0)),
             "S:MR:transferCount err"
         );
         require(
@@ -288,8 +288,7 @@ contract STOR is Ownable, ReentrancyGuard, Pausable {
         );
         //^^^^^^^checks^^^^^^^^^
 
-        Record memory rec = database[_idxHash];
-        rec.rightsHolder = rgtHash;
+        rec.rightsHolder = _rgtHash;
         rec.countDown = _countDown;
         rec.assetStatus = _newAssetStatus;
         rec.forceModCount = _forceModCount;
