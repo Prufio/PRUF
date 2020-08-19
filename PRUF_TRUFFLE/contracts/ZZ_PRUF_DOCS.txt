@@ -32,7 +32,7 @@ pragma solidity ^0.6.7;
  *
  *      *Above 65k segregation (probably by ACinfo custodial type) (just need to add a wild west contract?)
  *
- *      *find a way to find and react to assets being in a dead asset class
+ *      *find a way to find and react to assets being in a dead asset class (future)
  *
 *-----------------------------------------------------------------
 

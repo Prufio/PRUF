@@ -253,8 +253,8 @@ contract NP_NC is CORE {
             contractInfo.contractType > 0,
             "NPNC:DC: This contract not authorized for specified AC"
         );
-        require(_decAmount > 0, "NPNC:DC: cannot decrement by negative number");
-        require((rec.assetClass != 0), "NPNC:DC: Record does not exist");
+        //require(_decAmount > 0, "NPNC:DC: cannot decrement by negative number");  //not possible, uint
+        //require((rec.assetClass != 0), "NPNC:DC: Record does not exist"); //verified in storage
         require(
             isEscrow(rec.assetStatus) == 0,
             "NPNC:DC: Cannot modify asset in Escrow"
