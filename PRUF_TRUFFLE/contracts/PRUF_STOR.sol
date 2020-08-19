@@ -223,7 +223,6 @@ contract STOR is Ownable, ReentrancyGuard, Pausable {
             database[_idxHash].assetStatus != 60,
             "S:NR:Asset is rcycl. Use PRUF_APP_NC rcycl instead"
         );
-        //vvvRedundant??vvv
         require(
             database[_idxHash].assetClass == 0,
             "S:NR:Rec already exists"
@@ -342,19 +341,20 @@ contract STOR is Ownable, ReentrancyGuard, Pausable {
         exists(_idxHash)
         isAuthorized(database[_idxHash].assetClass)
     {
+        Record memory rec = database[_idxHash];
+
         require(
             isLostOrStolen(_newAssetStatus) == 170,
             "S:SSL:Must set to L/S"
         );
         require(
-            (database[_idxHash].assetStatus != 5) &&
-                (database[_idxHash].assetStatus != 50) &&
-                (database[_idxHash].assetStatus != 55),
+            (rec.assetStatus != 5) &&
+                (rec.assetStatus != 50) &&
+                (rec.assetStatus != 55),
             "S:SSL:Txfr or ecr locked asset != L/S."
         );
         //^^^^^^^checks^^^^^^^^^
 
-        Record memory rec = database[_idxHash];
         rec.assetStatus = _newAssetStatus;
         database[_idxHash] = rec;
         //^^^^^^^effects^^^^^^^^^
@@ -382,20 +382,19 @@ contract STOR is Ownable, ReentrancyGuard, Pausable {
         exists(_idxHash)
         notEscrow(_idxHash)
     {
-        require(isEscrow(_newAssetStatus) == 170, "S:SE: Asset in ecr"); //Redundant, triggered in ECR_MGR
-        require( //Redundant, triggered in ECR_MGR
-            (isLostOrStolen(database[_idxHash].assetStatus) == 0) &&
-                (database[_idxHash].assetStatus != 5) &&
-                (database[_idxHash].assetStatus != 55),
+        Record memory rec = database[_idxHash];
+        require(isEscrow(_newAssetStatus) == 170, "S:SE: Asset in ecr"); 
+        require(
+            (isLostOrStolen(rec.assetStatus) == 0) &&
+                (rec.assetStatus != 5) &&
+                (rec.assetStatus != 55),
             "S:SE: != ecr"
         );
-        require( //Redundant, triggered in ECR_MGR
-            isEscrow(database[_idxHash].assetStatus) == 0,
+        require(
+            isEscrow(rec.assetStatus) == 0,
             "S:SE: In ecr stat"
         );
         //^^^^^^^checks^^^^^^^^^
-
-        Record memory rec = database[_idxHash];
 
         if (_newAssetStatus == 60) {
             rec
@@ -419,12 +418,12 @@ contract STOR is Ownable, ReentrancyGuard, Pausable {
         isEscrowManager
         exists(_idxHash)
     {
+        Record memory rec = database[_idxHash];
         require(
-            isEscrow(database[_idxHash].assetStatus) == 170,
+            isEscrow(rec.assetStatus) == 170,
             "S:EE:!= ecr stat"
         );
         //^^^^^^^checks^^^^^^^^^
-        Record memory rec = database[_idxHash];
 
         if (rec.assetStatus == 6) {
             rec.assetStatus = 7;
