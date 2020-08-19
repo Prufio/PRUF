@@ -225,11 +225,11 @@ contract STOR is Ownable, ReentrancyGuard, Pausable {
         );
         //vvvRedundant??vvv
         require(
-            database[_idxHash].rightsHolder == 0,
+            database[_idxHash].assetClass == 0,
             "S:NR:Rec already exists"
         );
-        require(_rgtHash != 0, "S:NR:RGT != 0");
-        require(_assetClass != 0, "S:NR:AC != 0");
+        require(_rgtHash != 0, "S:NR:RGT = 0");
+        require(_assetClass != 0, "S:NR:AC = 0");
         //^^^^^^^checks^^^^^^^^^
 
         Record memory rec;

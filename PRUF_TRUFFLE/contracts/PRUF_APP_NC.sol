@@ -59,19 +59,21 @@ contract APP_NC is CORE {
 
         require(
             contractInfo.contractType > 0,
-            "ANC:NR: This contract not authorized for specified AC"
+            "ANC:NR: contract not auth in AC"
         );
         require(
             userType == 1,
-            "ANC:NR: User not authorized to create records in this asset class"
+            "ANC:NR: User not auth in AC"
         );
-        require(_rgtHash != 0, "ANC:NR: rights holder cannot be zero");
-        require(_assetClass != 0, "ANC:NR: Asset class cannot be zero");
-        require( //if creating new record in new root and idxhash is identical, fail because its probably fraud
-            ((AC_info.assetClassRoot == oldAC_info.assetClassRoot) ||
-                (rec.assetClass == 0)),
-            "ANC:NR: Cannot re-create asset in new root assetClass"
-        );
+        require(_rgtHash != 0, "ANC:NR: rgt = 0");
+        require(_assetClass != 0, "ANC:NR: AC = 0");
+
+                            // using newRecord to overwrite is depricated, storage checks for pre-existing asset
+        // require( //if creating new record in new root and idxhash is identical, fail because its probably fraud
+        //     ((AC_info.assetClassRoot == oldAC_info.assetClassRoot) ||
+        //         (rec.assetClass == 0)),
+        //     "ANC:NR: Cannot re-create asset in new root AC"
+        // );
         //^^^^^^^checks^^^^^^^^^
 
         //bytes32 userHash = keccak256(abi.encodePacked(msg.sender));
@@ -111,7 +113,7 @@ contract APP_NC is CORE {
         );
         require(
             contractInfo.contractType > 0,
-            "ANC:IA: This contract not authorized for specified AC"
+            "ANC:IA: contract not auth for AC"
         );
         require(
             AC_MGR.isSameRootAC(_newAssetClass, rec.assetClass) == 170,
@@ -151,9 +153,8 @@ contract APP_NC is CORE {
 
         require(
             contractInfo.contractType > 0,
-            "ANC:RMT: This contract not authorized for specified AC"
+            "ANC:RMT: contract not auth for AC"
         );
-        require(rec.rightsHolder != 0, "ANC:RMT:Record not remintable");
         require(
             rec.rightsHolder !=
                 0xFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF,
@@ -200,9 +201,9 @@ contract APP_NC is CORE {
 
         require(
             contractInfo.contractType > 0,
-            "ANC:I2: This contract not authorized for specified AC"
+            "ANC:I2: contract not auth for AC"
         );
-        require((rec.assetClass != 0), "ANC:I2: Record does not exist");
+       // require((rec.assetClass != 0), "ANC:I2: Record does not exist");               //impossible, throws in storage
         require(
             isEscrow(rec.assetStatus) == 0,
             "ANC:I2:Cannot modify asset in Escrow"

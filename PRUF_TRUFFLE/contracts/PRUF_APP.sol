@@ -96,7 +96,7 @@ contract APP is CORE {
             contractInfo.contractType > 0,
             "A:IA: unauthorized for AC. Orphan token?"
         );
-        require(rec.assetClass != 0, "A:IA: Record does not exist. ");                                             //CANNOT BE TESTED, ASSERT??
+        require(rec.assetClass != 0, "A:IA: Record does not exist. ");                 //CANNOT BE TESTED, ASSERT??
         require(userType < 3, "A:IA: User not authorized to import assets");
         require((userType > 0) && (userType < 10), "A:IA: User not auth in AC");
         require(

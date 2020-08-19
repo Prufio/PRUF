@@ -77,6 +77,7 @@
 
     let nakedAuthCode1;
     let nakedAuthCode3;
+    let nakedAuthCode7;
     
         //
         //
@@ -421,14 +422,19 @@
         )
 
 
-        nakedAuthCode1 = await Helper.getURIfromAuthcode(
+        nakedAuthCode1 = await Helper.getURIb32fromAuthcode(
             '15',
             '1'
         )
 
-        nakedAuthCode3 = await Helper.getURIfromAuthcode(
+        nakedAuthCode3 = await Helper.getURIb32fromAuthcode(
             '15',
             '3'
+        )
+
+        nakedAuthCode7 = await Helper.getURIb32fromAuthcode(
+            '15',
+            '7'
         )
 
         string1Hash = await Helper.getStringHash(
