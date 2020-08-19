@@ -23,7 +23,6 @@ import "./PRUF_CORE.sol";
 
 contract AC_MGR is CORE {
     using SafeMath for uint256;
-    using SafeMath for uint8;
 
     mapping(uint256 => Costs) private cost; // Cost per function by asset class
 

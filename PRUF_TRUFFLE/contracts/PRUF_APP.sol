@@ -51,14 +51,8 @@ contract APP is CORE {
             _assetClass
         );
 
-        require(                                                                             //MAKE INTO MODIFIER?!?!?!?!
-            contractInfo.contractType > 0,
-            "A:NR: contract not auth in AC"
-        );
-        require(
-            (userType > 0) && (userType < 10),
-            "A:NR: User not auth in AC"
-        );
+        require(contractInfo.contractType > 0, "A:NR: contract not auth in AC"); //MAKE INTO MODIFIER?!?!?!?!
+        require((userType > 0) && (userType < 10), "A:NR: User not auth in AC");
         require(userType < 5, "A:NR: User not authorized to create records");
         require(_rgtHash != 0, "A:NR: RGT = 0");
         //^^^^^^^checks^^^^^^^^^
@@ -74,8 +68,6 @@ contract APP is CORE {
         deductNewRecordCosts(_assetClass);
         //^^^^^^^interactions^^^^^^^^^
     }
-
-    
 
     /*
      * @dev import **Record** (no confirmation required -
@@ -106,10 +98,7 @@ contract APP is CORE {
         );
         require(rec.assetClass != 0, "A:IA: Record does not exist. ");                                             //CANNOT BE TESTED, ASSERT??
         require(userType < 3, "A:IA: User not authorized to import assets");
-        require(
-            (userType > 0) && (userType < 10),
-            "A:IA: User not auth in AC"
-        );
+        require((userType > 0) && (userType < 10), "A:IA: User not auth in AC");
         require(
             AC_MGR.isSameRootAC(_newAssetClass, rec.assetClass) == 170,
             "A:IA:Cannot change AC to new root"
@@ -160,15 +149,13 @@ contract APP is CORE {
             contractInfo.contractType > 0,
             "A:FMR: unauthorized for AC. Orphan token?"
         );
-        require(
-            userType == 1,
-            "A:FMR: User not auth in AC"
-        );
+        require(userType == 1, "A:FMR: User not auth in AC");
         require(_rgtHash != 0, "A:FMR:RGT = 0");
         require(
             isLostOrStolen(rec.assetStatus) == 0,
             "A:FMR: Asset marked L/S"
         );
+        require(isEscrow(rec.assetStatus) == 0, "A:FMR: Asset in escrow");
         require(
             isEscrow(rec.assetStatus) == 0,
             "A:FMR: Asset in escrow"
@@ -225,10 +212,7 @@ contract APP is CORE {
             contractInfo.contractType > 0,
             "A:TA: unauthorized for AC. Orphan token?"
         );
-        require(
-            (userType > 0) && (userType < 10),
-            "A:TA: User not auth in AC"
-        );
+        require((userType > 0) && (userType < 10), "A:TA: User not auth in AC");
         require(
             (rec.assetStatus > 49) || (userType < 5),
             "A:TA:Only usertype < 5 can change status < 50"
@@ -289,14 +273,12 @@ contract APP is CORE {
             contractInfo.contractType > 0,
             "A:I2: unauthorized for AC. Orphan token?"
         );
-        require(
-            (userType > 0) && (userType < 10),
-            "A:I2: User not auth in AC"
-        );
+        require((userType > 0) && (userType < 10), "A:I2: User not auth in AC");
         require(
             isLostOrStolen(rec.assetStatus) == 0,
             "A:FMR: Asset marked lost or stolen"
         );
+        require(isEscrow(rec.assetStatus) == 0, "A:FMR: Asset in escrow");
         require(
             isEscrow(rec.assetStatus) == 0,
             "A:FMR: Asset in escrow"

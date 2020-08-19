@@ -25,8 +25,6 @@ import "./Imports/ReentrancyGuard.sol";
 
 contract ECR_CORE is BASIC {
     using SafeMath for uint256;
-    using SafeMath for uint16;
-    using SafeMath for uint8;
 
     struct escrowData {
         uint8 data;

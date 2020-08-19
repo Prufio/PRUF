@@ -22,7 +22,6 @@ import "./PRUF_CORE.sol";
 
 contract NP_NC is CORE {
     using SafeMath for uint256;
-    using SafeMath for uint8;
 
     /*
      * @dev Verify user credentials
@@ -215,7 +214,7 @@ contract NP_NC is CORE {
             "NPNC:SLS: Only custodial usertype can set or change status < 50"
         );
         require(
-             needsImport(rec.assetStatus) == 0,
+            needsImport(rec.assetStatus) == 0,
             "NPNC:SLS: Transferred,exported,or discarded asset cannot be set to lost or stolen"
         );
         require(

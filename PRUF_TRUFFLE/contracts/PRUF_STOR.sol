@@ -67,7 +67,8 @@ contract STOR is Ownable, ReentrancyGuard, Pausable {
      * Originating Address is authorized for asset class
      */
     modifier isAuthorized(uint256 _assetClass) {
-        uint8 auth = contractInfo[contractAddressToName[msg.sender]][_assetClass];
+        uint8 auth = contractInfo[contractAddressToName[msg
+            .sender]][_assetClass];
         require(
             ((auth > 0) && (auth < 5)) || (auth == 10),
             "S:MOD-IA:Cntrct not prmsnd"
@@ -80,7 +81,7 @@ contract STOR is Ownable, ReentrancyGuard, Pausable {
      */
     modifier notEscrow(bytes32 _idxHash) {
         require(
-             isEscrow(database[_idxHash].assetStatus) == 0,
+            isEscrow(database[_idxHash].assetStatus) == 0,
             "S:MOD-NE:rec mod prohib while locked in ecr"
         );
         _;
@@ -169,10 +170,7 @@ contract STOR is Ownable, ReentrancyGuard, Pausable {
         uint256 _assetClass,
         uint8 _contractAuthLevel
     ) external onlyOwner {
-        require(
-            (_assetClass == 0),
-            "S:AC: AC not 0"
-        );
+        require((_assetClass == 0), "S:AC: AC not 0");
         require(_contractAuthLevel <= 4, "S:AC: Invalid user type");
         //^^^^^^^checks^^^^^^^^^
 
@@ -184,10 +182,7 @@ contract STOR is Ownable, ReentrancyGuard, Pausable {
         AC_MGR = AC_MGR_Interface(contractNameToAddress["AC_MGR"]);
         //^^^^^^^effects^^^^^^^^^
 
-        emit REPORT(
-            "ACDA",
-            bytes32(uint256(_contractAuthLevel))
-        ); //report access to the internal user database
+        emit REPORT("ACDA", bytes32(uint256(_contractAuthLevel))); //report access to the internal user database
         //^^^^^^^interactions^^^^^^^^^
     }
 
@@ -209,10 +204,7 @@ contract STOR is Ownable, ReentrancyGuard, Pausable {
         contractInfo[_name][_assetClass] = _contractAuthLevel;
         //^^^^^^^effects^^^^^^^^^
 
-        emit REPORT(
-            "ACDA",
-            bytes32(uint256(_contractAuthLevel))
-        ); //report access to the internal user database
+        emit REPORT("ACDA", bytes32(uint256(_contractAuthLevel))); //report access to the internal user database
         //^^^^^^^interactions^^^^^^^^^
     }
 
@@ -231,7 +223,7 @@ contract STOR is Ownable, ReentrancyGuard, Pausable {
             database[_idxHash].assetStatus != 60,
             "S:NR:Asset is rcycl. Use PRUF_APP_NC rcycl instead"
         );
-                                                                                                 //vvvRedundant??vvv
+        //vvvRedundant??vvv
         require(
             database[_idxHash].rightsHolder == 0,
             "S:NR:Rec already exists"
@@ -243,8 +235,8 @@ contract STOR is Ownable, ReentrancyGuard, Pausable {
         Record memory rec;
 
         if (contractInfo[contractAddressToName[msg.sender]][_assetClass] == 1) {
-             rec.assetStatus = 0;
-         } else {
+            rec.assetStatus = 0;
+        } else {
             rec.assetStatus = 51;
         }
 
@@ -268,7 +260,7 @@ contract STOR is Ownable, ReentrancyGuard, Pausable {
         bytes32 _rgtHash,
         uint8 _newAssetStatus,
         uint256 _countDown,
-        uint8 _forceCount,
+        uint8 _forceModCount,
         uint16 _numberOfTransfers
     )
         external
@@ -281,12 +273,9 @@ contract STOR is Ownable, ReentrancyGuard, Pausable {
         bytes32 idxHash = _idxHash; //stack saving
         bytes32 rgtHash = _rgtHash;
 
-        require( //prohibit increasing the countdown value
-            _countDown <= database[idxHash].countDown,
-            "S:MR:countDown +!"
-        );
+        require(_countDown <= database[idxHash].countDown, "S:MR:countDown +!"); //prohibit increasing the countdown value
         require(
-            _forceCount >= database[idxHash].forceModCount,
+            _forceModCount >= database[idxHash].forceModCount,
             "S:MR:forceModCount -!"
         );
         require(
@@ -303,7 +292,7 @@ contract STOR is Ownable, ReentrancyGuard, Pausable {
         rec.rightsHolder = rgtHash;
         rec.countDown = _countDown;
         rec.assetStatus = _newAssetStatus;
-        rec.forceModCount = _forceCount;
+        rec.forceModCount = _forceModCount;
         rec.numberOfTransfers = _numberOfTransfers;
 
         database[idxHash] = rec;
@@ -322,10 +311,10 @@ contract STOR is Ownable, ReentrancyGuard, Pausable {
         whenNotPaused
         exists(_idxHash)
         notEscrow(_idxHash)
-        isAuthorized(0)  //is an authorized contract, generically
+        isAuthorized(0) //is an authorized contract, generically
     {
         Record memory rec = database[_idxHash];
-        
+
         require(
             AC_MGR.isSameRootAC(_newAssetClass, rec.assetClass) == 170,
             "S:CAC:Cannot mod AC to new root"
@@ -349,8 +338,6 @@ contract STOR is Ownable, ReentrancyGuard, Pausable {
         whenNotPaused
         exists(_idxHash)
         isAuthorized(database[_idxHash].assetClass)
-        
-        
     {
         require(
             isLostOrStolen(_newAssetStatus) == 170,
@@ -392,17 +379,14 @@ contract STOR is Ownable, ReentrancyGuard, Pausable {
         exists(_idxHash)
         notEscrow(_idxHash)
     {
-        require(                                                                //Redundant, triggered in ECR_MGR           
-            isEscrow(_newAssetStatus) == 170,
-            "S:SE: Asset in ecr"
-        );
-        require(                                                                //Redundant, triggered in ECR_MGR
+        require(isEscrow(_newAssetStatus) == 170, "S:SE: Asset in ecr"); //Redundant, triggered in ECR_MGR
+        require( //Redundant, triggered in ECR_MGR
             (isLostOrStolen(database[_idxHash].assetStatus) == 0) &&
                 (database[_idxHash].assetStatus != 5) &&
                 (database[_idxHash].assetStatus != 55),
             "S:SE: != ecr"
         );
-        require(                                                                //Redundant, triggered in ECR_MGR
+        require( //Redundant, triggered in ECR_MGR
             isEscrow(database[_idxHash].assetStatus) == 0,
             "S:SE: In ecr stat"
         );
