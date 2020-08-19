@@ -111,7 +111,7 @@ contract APP is CORE {
         );
         //^^^^^^^checks^^^^^^^^^
 
-        rec.incrementForceModCount = 1;
+        rec.incrementForceModCount = 170;
 
         rec.assetStatus = 0;
         rec.rightsHolder = _newRgtHash;
@@ -164,9 +164,9 @@ contract APP is CORE {
         );
         //^^^^^^^checks^^^^^^^^^
 
-        rec.incrementForceModCount = 1;
+        rec.incrementForceModCount = 170;
      
-        rec.incrementNumberOfTransfers = 1;
+        rec.incrementNumberOfTransfers = 170;
 
         rec.assetStatus = 0;
         rec.rightsHolder = _rgtHash;
@@ -220,8 +220,8 @@ contract APP is CORE {
             "A:TA:Rightsholder does not match supplied data"
         );
         //^^^^^^^checks^^^^^^^^^
-        
-        rec.incrementNumberOfTransfers = 1;
+
+        rec.incrementNumberOfTransfers = 170;
 
         if (_newrgtHash == 0x0) {
             //set to transferred status

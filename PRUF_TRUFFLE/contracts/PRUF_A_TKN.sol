@@ -211,7 +211,7 @@ contract A_TKN is Ownable, ReentrancyGuard, ERC721 {
         );
         //^^^^^^^checks^^^^^^^^
 
-        rec.incrementNumberOfTransfers = 1;
+        rec.incrementNumberOfTransfers = 170;
 
         rec
             .rightsHolder = 0xFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF;
@@ -292,7 +292,7 @@ contract A_TKN is Ownable, ReentrancyGuard, ERC721 {
         );
         //^^^^^^^checks^^^^^^^^^
 
-        rec.incrementNumberOfTransfers = 1;
+        rec.incrementNumberOfTransfers = 170;
 
         rec
             .rightsHolder = 0xFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF;

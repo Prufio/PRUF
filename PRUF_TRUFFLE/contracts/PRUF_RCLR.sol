@@ -91,7 +91,7 @@ contract RCLR is ECR_CORE, CORE {
         //^^^^^^^checks^^^^^^^^^
 
         rec.rightsHolder = _rgtHash;
-        rec.incrementNumberOfTransfers = 1;
+        rec.incrementNumberOfTransfers = 170;
         //^^^^^^^effects^^^^^^^^^^^^
         
         A_TKN.mintAssetToken(msg.sender, tokenId, "pruf.io");

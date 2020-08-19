@@ -329,8 +329,8 @@ contract NP is CORE {
         );
         //^^^^^^^checks^^^^^^^^^
 
-        rec.incrementNumberOfTransfers = 1;
-        
+        rec.incrementNumberOfTransfers = 170;
+
         rec.assetStatus = 70; // Set status to 70 (exported)
         //^^^^^^^effects^^^^^^^^^
 
