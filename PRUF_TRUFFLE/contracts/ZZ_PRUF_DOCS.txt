@@ -32,7 +32,7 @@ pragma solidity ^0.6.7;
  *
  *      *Above 65k segregation (probably by ACinfo custodial type) (just need to add a wild west contract?)
  *
- *      *find a way to find and react to assets being in a dead asset class
+ *      *find a way to find and react to assets being in a dead asset class (future, API verified, works w/ AC0)
  *
 *-----------------------------------------------------------------
 
@@ -224,5 +224,26 @@ Round robin test pattern:
 4: add IPFS2 note
 5: add IPFS2 note again (fail)
 6: 
+
+
+
+
+
+sec tok ideas
+
+beancoin style - 1 token = 1 share
+disadvantage is that each share must be redeemed separately, so higher gas costs
+
+escrow style - sends tokens to escrow, escrow holds until escrow is up, then returns tokens and authorizes the address for funds.
+
+special escrow-send tokens:
+        creates a mapping of address to quantity of tokens.
+        address that is used casnot be overwritten.
+        escrow ends every 1000 blocks (starts at arbitrary time)
+end escrow after escrow end block passes (all escrows end at the same time) (caller must be setter)
+        sends tokens back to caller
+        authorizes the fractional share of that (AND ONLY THAT) end blocks takings to the caller adress (IF YOU MISS ONE, THATS ON YOU)
+
+
 
 */
