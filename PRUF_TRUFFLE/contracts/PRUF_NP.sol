@@ -329,9 +329,8 @@ contract NP is CORE {
         );
         //^^^^^^^checks^^^^^^^^^
 
-        if (rec.numberOfTransfers < 65335) {
-            rec.numberOfTransfers++;
-        }
+        rec.incrementNumberOfTransfers = 1;
+        
         rec.assetStatus = 70; // Set status to 70 (exported)
         //^^^^^^^effects^^^^^^^^^
 

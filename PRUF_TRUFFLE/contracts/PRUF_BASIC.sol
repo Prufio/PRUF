@@ -28,13 +28,13 @@ contract BASIC is ReentrancyGuard, Ownable, IERC721Receiver, Pausable {
     struct Record {
         bytes32 rightsHolder; // KEK256 Registered owner
         uint8 assetStatus; // Status - Transferrable, locked, in transfer, stolen, lost, etc.
-        uint8 forceModCount; // Number of times asset has been forceModded.
+        uint256 incrementForceModCount; // Number of times asset has been forceModded.
         uint256 assetClass; // Type of asset
         uint256 countDown; // Variable that can only be dencreased from countDownStart
         uint256 countDownStart; // Starting point for countdown variable (set once)
         bytes32 Ipfs1; // Publically viewable asset description
         bytes32 Ipfs2; // Publically viewable immutable notes
-        uint16 numberOfTransfers; //number of transfers and forcemods
+        uint256 incrementNumberOfTransfers; //number of transfers and forcemods
     }
 
     struct AC {
@@ -272,24 +272,20 @@ contract BASIC is ReentrancyGuard, Ownable, IERC721Receiver, Pausable {
             (
                 bytes32 _rightsHolder,
                 uint8 _assetStatus,
-                uint8 _forceModCount,
                 uint256 _assetClass,
                 uint256 _countDown,
                 uint256 _countDownStart,
                 bytes32 _Ipfs1,
-                bytes32 _Ipfs2,
-                uint16 _numberOfTransfers
+                bytes32 _Ipfs2
             ) = STOR.retrieveRecord(_idxHash); // Get record from storage contract
 
             rec.rightsHolder = _rightsHolder;
             rec.assetStatus = _assetStatus;
-            rec.forceModCount = _forceModCount;
             rec.assetClass = _assetClass;
             rec.countDown = _countDown;
             rec.countDownStart = _countDownStart;
             rec.Ipfs1 = _Ipfs1;
             rec.Ipfs2 = _Ipfs2;
-            rec.numberOfTransfers = _numberOfTransfers;
         } //end of scope limit for stack depth
 
         return (rec); // Returns Record struct rec

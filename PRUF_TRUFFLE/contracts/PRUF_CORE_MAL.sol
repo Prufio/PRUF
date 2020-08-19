@@ -119,8 +119,8 @@ contract CORE_MAL is PullPayment, BASIC {
             _rec.rightsHolder,
             _rec.assetStatus,
             _rec.countDown,
-            _rec.forceModCount,
-            _rec.numberOfTransfers
+            _rec.incrementForceModCount,
+            _rec.incrementNumberOfTransfers
         ); // Send data and writehash to storage
         //^^^^^^^interactions^^^^^^^^^
     }

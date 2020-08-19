@@ -259,8 +259,8 @@ contract STOR is Ownable, ReentrancyGuard, Pausable {
         bytes32 _rgtHash,
         uint8 _newAssetStatus,
         uint256 _countDown,
-        uint8 _forceModCount,
-        uint16 _numberOfTransfers
+        uint256 _incrementForceModCount,
+        uint256 _incrementNumberOfTransfers
     )
         external
         nonReentrant
@@ -274,14 +274,6 @@ contract STOR is Ownable, ReentrancyGuard, Pausable {
 
         require(_countDown <= rec.countDown, "S:MR:countDown +!"); //prohibit increasing the countdown value
         require(
-            (_forceModCount == rec.forceModCount) || ((_forceModCount == rec.forceModCount ++ ) && (_forceModCount != 0)),
-            "S:MR:forceModCount err"
-        );
-        require(
-            (_numberOfTransfers == rec.numberOfTransfers) || ((_numberOfTransfers == rec.numberOfTransfers ++ ) && (_numberOfTransfers != 0)),
-            "S:MR:transferCount err"
-        );
-        require(
             isLostOrStolen(_newAssetStatus) == 0,
             "S:MR:Must use L/S to set L/S status"
         );
@@ -290,8 +282,14 @@ contract STOR is Ownable, ReentrancyGuard, Pausable {
         rec.rightsHolder = _rgtHash;
         rec.countDown = _countDown;
         rec.assetStatus = _newAssetStatus;
-        rec.forceModCount = _forceModCount;
-        rec.numberOfTransfers = _numberOfTransfers;
+
+        if ((_incrementForceModCount == 170) && (rec.forceModCount < 255)){
+            rec.forceModCount = rec.forceModCount++;
+        }
+        if ((_incrementNumberOfTransfers == 170) && (rec.numberOfTransfers < 65535)){
+            rec.numberOfTransfers = rec.numberOfTransfers++;
+        }
+
 
         database[idxHash] = rec;
         //^^^^^^^effects^^^^^^^^^
