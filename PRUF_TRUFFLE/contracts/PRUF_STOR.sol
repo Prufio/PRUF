@@ -275,12 +275,12 @@ contract STOR is Ownable, ReentrancyGuard, Pausable {
 
         require(_countDown <= database[idxHash].countDown, "S:MR:countDown +!"); //prohibit increasing the countdown value
         require(
-            _forceModCount >= database[idxHash].forceModCount,
-            "S:MR:forceModCount -!"
+            (_forceModCount == database[idxHash].forceModCount) || ((_forceModCount == database[idxHash].forceModCount ++ ) && (_forceModCount != 0)),
+            "S:MR:forceModCount err"
         );
         require(
-            _numberOfTransfers >= database[idxHash].numberOfTransfers,
-            "S:MR:transferCount -!"
+            (_numberOfTransfers == database[idxHash].numberOfTransfers) || ((_numberOfTransfers == database[idxHash].numberOfTransfers ++ ) && (_numberOfTransfers != 0)),
+            "S:MR:transferCount err"
         );
         require(
             isLostOrStolen(_newAssetStatus) == 0,
