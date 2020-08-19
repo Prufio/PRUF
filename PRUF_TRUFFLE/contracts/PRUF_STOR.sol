@@ -505,13 +505,11 @@ contract STOR is Ownable, ReentrancyGuard, Pausable {
             //bytes32,
             bytes32,
             uint8,
-            uint8,
             uint256,
             uint256,
             uint256,
             bytes32,
-            bytes32,
-            uint16
+            bytes32
         )
     {
         Record memory rec = database[_idxHash];
@@ -528,13 +526,11 @@ contract STOR is Ownable, ReentrancyGuard, Pausable {
         return (
             rec.rightsHolder,
             rec.assetStatus,
-            rec.forceModCount,
             rec.assetClass,
             rec.countDown,
             rec.countDownStart,
             rec.Ipfs1,
-            rec.Ipfs2,
-            rec.numberOfTransfers
+            rec.Ipfs2
         );
         //^^^^^^^interactions^^^^^^^^^
     }
