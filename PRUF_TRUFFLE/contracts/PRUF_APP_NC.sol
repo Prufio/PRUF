@@ -48,13 +48,13 @@ contract APP_NC is CORE {
         uint256 _assetClass,
         uint256 _countDownStart
     ) external payable nonReentrant whenNotPaused {
-        Record memory rec = getRecord(_idxHash);
+        //Record memory rec = getRecord(_idxHash);
         uint8 userType = getUserType(_assetClass);
-        AC memory AC_info = getACinfo(_assetClass);
-        AC memory oldAC_info = getACinfo(rec.assetClass);
+        //AC memory AC_info = getACinfo(_assetClass);
+        //AC memory oldAC_info = getACinfo(rec.assetClass);
         ContractDataHash memory contractInfo = getContractInfo(
             address(this),
-            rec.assetClass
+            _assetClass
         );
 
         require(
@@ -79,14 +79,16 @@ contract APP_NC is CORE {
         //bytes32 userHash = keccak256(abi.encodePacked(msg.sender));
         //^^^^^^^effects^^^^^^^^^
 
-        if (AC_info.assetClassRoot == oldAC_info.assetClassRoot) {
-            // if record exists as a "dead record" has an old AC, and is being recreated in the same root class,
-            // do not overwrite anything besides assetClass and rightsHolder (STOR will set assetStatus to 51)
-            createRecord(_idxHash, _rgtHash, _assetClass, rec.countDownStart);
-        } else {
-            // Otherwise, idxHash is unuiqe and an entirely new record is created
-            createRecord(_idxHash, _rgtHash, _assetClass, _countDownStart);
-        }
+        // if (AC_info.assetClassRoot == oldAC_info.assetClassRoot) {
+        //     // if record exists as a "dead record" has an old AC, and is being recreated in the same root class,
+        //     // do not overwrite anything besides assetClass and rightsHolder (STOR will set assetStatus to 51)
+        //     createRecord(_idxHash, _rgtHash, _assetClass, rec.countDownStart);
+        // } else {
+        //     // Otherwise, idxHash is unuiqe and an entirely new record is created
+        //     createRecord(_idxHash, _rgtHash, _assetClass, _countDownStart);
+        // }
+
+        createRecord(_idxHash, _rgtHash, _assetClass, _countDownStart);
 
         deductNewRecordCosts(_assetClass);
         //^^^^^^^interactions^^^^^^^^^
