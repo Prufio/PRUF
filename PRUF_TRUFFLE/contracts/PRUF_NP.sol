@@ -59,11 +59,11 @@ contract NP is CORE {
 
         require(
             contractInfo.contractType > 0,
-            "NP:MS: This contract not authorized for specified AC"
+            "NP:MS: contract not auth for AC"
         );
         require(
             (userType > 0) && (userType < 10),
-            "NP:MS: User not authorized to modify records in specified asset class"
+            "NP:MS: User not auth in AC"
         );
 
         require(
@@ -87,7 +87,7 @@ contract NP is CORE {
         );
         require(
             isEscrow(rec.assetStatus) == 0,
-            "NP:MS: Cannot change status of asset in Escrow until escrow is expired"
+            "NP:MS: Cannot modify asset in escrow"
         );
         require(
             needsImport(rec.assetStatus) == 0,
@@ -135,12 +135,12 @@ contract NP is CORE {
 
         require(
             contractInfo.contractType > 0,
-            "NP:SLS: This contract not authorized for specified AC"
+            "NP:SLS: contract not auth in AC"
         );
-        require(
-            (rec.rightsHolder != 0),
-            "NP:SLS: Record unclaimed: import required. "
-        );
+        // require(                                                             //redundant, will throw in storage
+        //     (rec.rightsHolder != 0),
+        //     "NP:SLS: Record unclaimed: import required. "
+        // );
         require(
             (userType > 0) && (userType < 10),
             "NP:SLS: User not authorized to modify records in specified asset class"
@@ -317,15 +317,15 @@ contract NP is CORE {
 
         require(
             contractInfo.contractType > 0,
-            "A:MS: This contract not authorized for specified AC"
+            "NP:MS: This contract not authorized for specified AC"
         );
         require(
             (userType > 0) && (userType < 10),
-            "A:EA: User not authorized to modify records in specified asset class"
+            "NP:EA: User not authorized to modify records in specified asset class"
         );
         require( // require transferrable (51) status
             rec.assetStatus == 51,
-            "A:EA: Asset status must be 51 to export"
+            "NP:EA: Asset status must be 51 to export"
         );
         //^^^^^^^checks^^^^^^^^^
 
