@@ -200,8 +200,8 @@ interface STOR_Interface {
         bytes32 _rgtHash,
         uint8 _assetStatus,
         uint256 _countDown,
-        uint8 _forceCount,
-        uint16 _numberOfTransfers
+        uint256 _incrementForceCount,
+        uint256 _incrementNumberOfTransfers
     ) external;
 
     function changeAC(bytes32 _idxHash, uint256 _newAssetClass) external;
@@ -225,29 +225,27 @@ interface STOR_Interface {
         returns (
             bytes32,
             uint8,
-            uint8,
             uint256,
             uint256,
             uint256,
             bytes32,
-            bytes32,
-            uint16
+            bytes32
         );
 
-    function retrieveShortRecord(
-        bytes32 _idxHash //all but rgtHash
-    )
-        external
-        returns (
-            uint8,
-            uint8,
-            uint256,
-            uint256,
-            uint256,
-            bytes32,
-            bytes32,
-            uint16
-        );
+    // function retrieveShortRecord(
+    //     bytes32 _idxHash //all but rgtHash
+    // )
+    //     external
+    //     returns (
+    //         uint8,
+    //         uint8,
+    //         uint256,
+    //         uint256,
+    //         uint256,
+    //         bytes32,
+    //         bytes32,
+    //         uint16
+    //     );
 
     function resolveContractAddress(string calldata _name)
         external

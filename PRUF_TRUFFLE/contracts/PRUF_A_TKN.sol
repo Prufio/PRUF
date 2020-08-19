@@ -25,18 +25,15 @@ import "./Imports/ReentrancyGuard.sol";
 
 contract A_TKN is Ownable, ReentrancyGuard, ERC721 {
     struct Record {
-        bytes32 recorder; // Address hash of recorder
         bytes32 rightsHolder; // KEK256 Registered owner
-        bytes32 lastRecorder; // Address hash of last non-automation recorder
         uint8 assetStatus; // Status - Transferrable, locked, in transfer, stolen, lost, etc.
-        uint8 forceModCount; // Number of times asset has been forceModded.
+        uint256 incrementForceModCount; // Number of times asset has been forceModded.
         uint256 assetClass; // Type of asset
         uint256 countDown; // Variable that can only be dencreased from countDownStart
         uint256 countDownStart; // Starting point for countdown variable (set once)
         bytes32 Ipfs1; // Publically viewable asset description
         bytes32 Ipfs2; // Publically viewable immutable notes
-        uint256 timeLock; // Time sensitive mutex
-        uint16 numberOfTransfers; //number of transfers and forcemods
+        uint256 incrementNumberOfTransfers; //number of transfers and forcemods
     }
 
     constructor() public ERC721("PRüF Asset Token", "PAT") {}
@@ -160,13 +157,15 @@ contract A_TKN is Ownable, ReentrancyGuard, ERC721 {
         string calldata _authCode
     ) external view {
         bytes32 _hashedAuthCode = keccak256(abi.encodePacked(_authCode));
-        bytes32 b32URI = keccak256(abi.encodePacked(_hashedAuthCode, _assetClass));
+        bytes32 b32URI = keccak256(
+            abi.encodePacked(_hashedAuthCode, _assetClass)
+        );
         string memory authString = uint256toString(uint256(b32URI));
         string memory URI = tokenURI(tokenId);
 
-
         require(
-            keccak256(abi.encodePacked(URI)) == keccak256(abi.encodePacked(authString)),
+            keccak256(abi.encodePacked(URI)) ==
+                keccak256(abi.encodePacked(authString)),
             "Supplied authCode and assetclass do not match token URI"
         );
     }
@@ -212,9 +211,7 @@ contract A_TKN is Ownable, ReentrancyGuard, ERC721 {
         );
         //^^^^^^^checks^^^^^^^^
 
-        if (rec.numberOfTransfers < 65335) {
-            rec.numberOfTransfers++;
-        }
+        rec.incrementNumberOfTransfers = 1;
 
         rec
             .rightsHolder = 0xFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF;
@@ -295,9 +292,7 @@ contract A_TKN is Ownable, ReentrancyGuard, ERC721 {
         );
         //^^^^^^^checks^^^^^^^^^
 
-        if (rec.numberOfTransfers < 65335) {
-            rec.numberOfTransfers++;
-        }
+        rec.incrementNumberOfTransfers = 1;
 
         rec
             .rightsHolder = 0xFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF;
@@ -330,8 +325,6 @@ contract A_TKN is Ownable, ReentrancyGuard, ERC721 {
         //^^^^^^^interactions^^^^^^^^^
     }
 
-  
-
     /*
      * @dev Write a Record to Storage @ idxHash
      */
@@ -345,8 +338,8 @@ contract A_TKN is Ownable, ReentrancyGuard, ERC721 {
             _rec.rightsHolder,
             _rec.assetStatus,
             _rec.countDown,
-            _rec.forceModCount,
-            _rec.numberOfTransfers
+            _rec.incrementForceModCount,
+            _rec.incrementNumberOfTransfers
         ); // Send data and writehash to storage
         //^^^^^^^interactions^^^^^^^^^
     }
@@ -365,26 +358,22 @@ contract A_TKN is Ownable, ReentrancyGuard, ERC721 {
                 bytes32 _rightsHolder,
                 //bytes32 _lastRecorder,
                 uint8 _assetStatus,
-                uint8 _forceModCount,
                 uint256 _assetClass,
                 uint256 _countDown,
                 uint256 _countDownStart,
                 bytes32 _Ipfs1,
-                bytes32 _Ipfs2,
-                uint16 _numberOfTransfers
+                bytes32 _Ipfs2
             ) = STOR.retrieveRecord(_idxHash); // Get record from storage contract
 
             //rec.recorder = _recorder;
             rec.rightsHolder = _rightsHolder;
             //rec.lastRecorder = _lastRecorder;
             rec.assetStatus = _assetStatus;
-            rec.forceModCount = _forceModCount;
             rec.assetClass = _assetClass;
             rec.countDown = _countDown;
             rec.countDownStart = _countDownStart;
             rec.Ipfs1 = _Ipfs1;
             rec.Ipfs2 = _Ipfs2;
-            rec.numberOfTransfers = _numberOfTransfers;
         } //end of scope limit for stack depth
 
         return (rec); // Returns Record struct rec

@@ -111,9 +111,7 @@ contract APP is CORE {
         );
         //^^^^^^^checks^^^^^^^^^
 
-        if (rec.forceModCount < 255) {
-            rec.forceModCount++;
-        }
+        rec.incrementForceModCount = 1;
 
         rec.assetStatus = 0;
         rec.rightsHolder = _newRgtHash;
@@ -166,13 +164,9 @@ contract APP is CORE {
         );
         //^^^^^^^checks^^^^^^^^^
 
-        if (rec.forceModCount < 255) {
-            rec.forceModCount++;
-        }
-
-        if (rec.numberOfTransfers < 65335) {
-            rec.numberOfTransfers++;
-        }
+        rec.incrementForceModCount = 1;
+     
+        rec.incrementNumberOfTransfers = 1;
 
         rec.assetStatus = 0;
         rec.rightsHolder = _rgtHash;
@@ -182,7 +176,7 @@ contract APP is CORE {
 
         deductForceModifyCosts(rec.assetClass);
 
-        return rec.forceModCount;
+        return 170;
         //^^^^^^^interactions^^^^^^^^^
     }
 
@@ -226,9 +220,8 @@ contract APP is CORE {
             "A:TA:Rightsholder does not match supplied data"
         );
         //^^^^^^^checks^^^^^^^^^
-        if (rec.numberOfTransfers < 65335) {
-            rec.numberOfTransfers++;
-        }
+        
+        rec.incrementNumberOfTransfers = 1;
 
         if (_newrgtHash == 0x0) {
             //set to transferred status
