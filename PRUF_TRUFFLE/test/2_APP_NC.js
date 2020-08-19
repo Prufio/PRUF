@@ -1207,7 +1207,7 @@
             return NP._modStatus(
                 asset1,
                 rgt1,
-                '51',
+                '1',
                 { from: account2 }
             )
         })
