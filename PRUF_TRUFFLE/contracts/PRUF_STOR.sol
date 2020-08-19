@@ -316,6 +316,10 @@ contract STOR is Ownable, ReentrancyGuard, Pausable {
         Record memory rec = database[_idxHash];
 
         require(
+            _newAssetClass != 0,
+            "S:CAC:Cannot set AC-0"
+        );
+        require(
             AC_MGR.isSameRootAC(_newAssetClass, rec.assetClass) == 170,
             "S:CAC:Cannot mod AC to new root"
         );
