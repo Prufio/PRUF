@@ -1207,7 +1207,7 @@
             return NP._modStatus(
                 asset1,
                 rgt1,
-                '1',
+                '51',
                 { from: account2 }
             )
         })
@@ -1257,14 +1257,14 @@
         it('Should change status of asset3 to 59', async () => { //Put into escrow, used in ForceTransfer, Transfer
             return NP_NC._modStatus(
                 asset3,
-                '59',
+                '51',
                 { from: account6 }
             )
         })
 
 
         it('Should export asset3', async () => { //Put into escrow, used in ForceTransfer, Transfer
-            return NP_NC.exportNC(
+            return NP_NC._exportNC(
                 asset3,
                 { from: account6 }
             )
@@ -1338,8 +1338,8 @@
             console.log("//**************************************************BEGIN APP_NC FAIL BATCH***************************************************//")
             console.log("//**************************************************BEGIN $newRecord FAIL BATCH***************************************************//")
             return APP_NC.$newRecord(
-                asset2,
-                rgt2,
+                asset8,
+                rgt8,
                 '10',
                 '5000',
                 { from: account2, value: 20000000000000000 }
