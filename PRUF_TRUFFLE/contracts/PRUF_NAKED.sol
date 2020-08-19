@@ -53,7 +53,7 @@ contract NAKED is CORE {
             "N:MNA: Token already exists"
         );
         require(
-            rec.assetClass == 0,
+            rec.assetClass == 0,    //verified as non-redundant
             "N:MNA: Asset already registered in system"
         );
         //^^^^^^^checks^^^^^^^^^
@@ -92,10 +92,10 @@ contract NAKED is CORE {
             contractInfo.contractType > 0,
             "PNP:INA: This contract not authorized for specified AC"
         );
-        require(
-            rec.assetClass == 0,
-            "PNP:INA: Asset already registered in system"
-        );
+        // require( //redundant
+        //     rec.assetClass == 0,
+        //     "PNP:INA: Asset already registered in system"
+        // );
         //^^^^^^^checks^^^^^^^^^
 
         A_TKN.validateNakedToken(tokenId, _newAssetClass, _authCode); //Verify supplied data matches tokenURI
