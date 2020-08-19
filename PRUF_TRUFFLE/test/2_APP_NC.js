@@ -1207,7 +1207,7 @@
             return NP._modStatus(
                 asset1,
                 rgt1,
-                '1',
+                '51',
                 { from: account2 }
             )
         })
@@ -1222,14 +1222,14 @@
         })
 
 
-        it('Should transfer asset1 to APP_NC', async () => { //Put into escrow, used in ForceTransfer, Transfer
-            return A_TKN.safeTransferFrom(
-                account2,
-                APP_NC.address,
-                asset1,
-                { from: account2 }
-            )
-        })
+        // it('Should transfer asset1 to APP_NC', async () => { //Put into escrow, used in ForceTransfer, Transfer
+        //     return A_TKN.safeTransferFrom(
+        //         account2,
+        //         APP_NC.address,
+        //         asset1,
+        //         { from: account2 }
+        //     )
+        // })
 
 
         it('Should mint asset2 in AC 13', async () => { //Put into escrow, used in ForceTransfer, Transfer
@@ -1254,17 +1254,17 @@
         })
 
 
-        it('Should change status of asset3 to 59', async () => { //Put into escrow, used in ForceTransfer, Transfer
+        it('Should change status of asset3 to 51', async () => { //Put into escrow, used in ForceTransfer, Transfer
             return NP_NC._modStatus(
                 asset3,
-                '59',
+                '51',
                 { from: account6 }
             )
         })
 
 
         it('Should export asset3', async () => { //Put into escrow, used in ForceTransfer, Transfer
-            return NP_NC.exportNC(
+            return NP_NC._exportNC(
                 asset3,
                 { from: account6 }
             )
@@ -1331,6 +1331,25 @@
             )
         })
 
+
+        it('Should change status of asset6 to 51', async () => { //Put into escrow, used in ForceTransfer, Transfer
+            return NP._modStatus(
+                asset6,
+                rgt6,
+                '51',
+                { from: account2 }
+            )
+        })
+
+
+        it('Should export asset6', async () => { //Put into escrow, used in ForceTransfer, Transfer
+            return NP.exportAsset(
+                asset6,
+                account2,
+                { from: account2 }
+            )
+        })
+
         //1
         it('Should fail because contract not auth in AC', async () => {
 
@@ -1338,15 +1357,15 @@
             console.log("//**************************************************BEGIN APP_NC FAIL BATCH***************************************************//")
             console.log("//**************************************************BEGIN $newRecord FAIL BATCH***************************************************//")
             return APP_NC.$newRecord(
-                asset2,
-                rgt2,
+                asset8,
+                rgt8,
                 '10',
                 '5000',
                 { from: account2, value: 20000000000000000 }
             )
         })
 
-
+        //2
         it('Should fail because user not auth in AC', async () => {
             return APP_NC.$newRecord(
                 asset2,
@@ -1357,7 +1376,7 @@
             )
         })
 
-        //4
+        //3
         it('Should fail because rgt = 0', async () => {
             return APP_NC.$newRecord(
                 asset2,
@@ -1368,7 +1387,7 @@
             )
         })
 
-        //5
+        //4
         it('Should fail because AC = 0', async () => {
             return APP_NC.$newRecord(
                 asset2,
@@ -1379,19 +1398,19 @@
             )
         })
 
-
+        //5
         it('Should fail because caller does not hold token', async () => {
 
             console.log("//**************************************************END $newRecord FAIL BATCH***************************************************//")
             console.log("//**************************************************BEGIN $importAsset FAIL BATCH***************************************************//")
-            return APP_NC.$newRecord(
+            return APP_NC.$importAsset(
                 asset2,
                 '13',
                 { from: account4, value: 20000000000000000 }
             )
         })
 
-        //7
+        //6
         it('Should fail becasue asset not exported', async () => {
             return APP_NC.$importAsset(
                 asset2,
@@ -1400,7 +1419,7 @@
             )
         })
 
-        //8
+        //7
         it('Should fail because contract not auth in AC', async () => {
             return APP_NC.$importAsset(
                 asset1,
@@ -1458,7 +1477,7 @@
             )
         })
 
-        //13
+        //11
         it('Should fail because asset in escrow status', async () => { 
             return APP_NC.$reMintToken(
                 asset5,
@@ -1489,19 +1508,19 @@
         })
 
         //14
-        it('Should fail because asset needs import', async () => { //UNREACHABLE ERROR
-            return APP_NC.$reMintToken(
-                asset3,
-                'ccc',
-                'ccc',
-                'ccc',
-                'ccc',
-                'ccc',
-                { from: account6, value: 20000000000000000 }
-            )
-        })
+        // it('Should fail because asset needs import', async () => { //UNREACHABLE ERROR
+        //     return APP_NC.$reMintToken(
+        //         asset3,
+        //         'ccc',
+        //         'ccc',
+        //         'ccc',
+        //         'ccc',
+        //         'ccc',
+        //         { from: account6, value: 20000000000000000 }
+        //     )
+        // })
 
-        //15
+        //12
         it('Should fail because rgt doesnt match rgthash', async () => { 
             return APP_NC.$reMintToken(
                 asset5,
@@ -1514,7 +1533,7 @@
             )
         })
 
-
+        //13
         it('Should fail because caller not holder of token', async () => {
 
             console.log("//**************************************************END $reMintToken FAIL BATCH***************************************************//")
@@ -1526,6 +1545,7 @@
             )
         })
 
+        //14
         it('Should fail because contract not auth in AC', async () => {
             return APP_NC.$addIpfs2Note(
                 asset6,
@@ -1545,7 +1565,7 @@
             )
         })
 
-        //13
+        //15
         it('Should fail because asset in escrow status', async () => { 
             return APP_NC.$addIpfs2Note(
                 asset5,
@@ -1571,14 +1591,14 @@
             )
         })
 
-
-        it('Should fail because asset needs import', async () => { 
-            return APP_NC.$addIpfs2Note(
-                asset3,
-                rgt3,
-                { from: account4, value: 20000000000000000 }
-            )
-        })
+                                                                                            //UNREACHABLE ERROR
+        // it('Should fail because asset needs import', async () => { 
+        //     return APP_NC.$addIpfs2Note(
+        //         asset3,
+        //         rgt3,
+        //         { from: account6, value: 20000000000000000 }
+        //     )
+        // })
 
 
         it('Should write ipfs2', async () => { 
@@ -1589,7 +1609,7 @@
             )
         })
 
-
+        //16
         it('Should fail becasue attempting to overwrite ipfs2', async () => { 
             return APP_NC.$addIpfs2Note(
                 asset5,
