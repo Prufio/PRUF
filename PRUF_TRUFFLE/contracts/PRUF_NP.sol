@@ -272,7 +272,7 @@ contract NP is CORE {
             (userType > 0) && (userType < 10),
             "NP:MI1: user not auth in AC"
         );
-        require(rec.Ipfs1 != _IpfsHash, "NP:MI1: New data same as old");
+        // require(rec.Ipfs1 != _IpfsHash, "NP:MI1: New data same as old");                              //REDUNDANT, THROWS IN STORAGE
         
         require(
             isEscrow(rec.assetStatus) == 0,
