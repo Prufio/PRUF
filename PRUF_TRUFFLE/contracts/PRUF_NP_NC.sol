@@ -22,7 +22,6 @@ import "./PRUF_CORE.sol";
 
 contract NP_NC is CORE {
     using SafeMath for uint256;
-    using SafeMath for uint8;
 
     /*
      * @dev Verify user credentials
@@ -215,7 +214,7 @@ contract NP_NC is CORE {
             "NPNC:SLS: Only custodial usertype can set or change status < 50"
         );
         require(
-             needsImport(rec.assetStatus) == 0,
+            needsImport(rec.assetStatus) == 0,
             "NPNC:SLS: Transferred,exported,or discarded asset cannot be set to lost or stolen"
         );
         require(
@@ -254,8 +253,8 @@ contract NP_NC is CORE {
             contractInfo.contractType > 0,
             "NPNC:DC: This contract not authorized for specified AC"
         );
-        require(_decAmount > 0, "NPNC:DC: cannot decrement by negative number");
-        require((rec.assetClass != 0), "NPNC:DC: Record does not exist");
+        //require(_decAmount > 0, "NPNC:DC: cannot decrement by negative number");  //not possible, uint
+        //require((rec.assetClass != 0), "NPNC:DC: Record does not exist"); //verified in storage
         require(
             isEscrow(rec.assetStatus) == 0,
             "NPNC:DC: Cannot modify asset in Escrow"

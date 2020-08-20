@@ -59,11 +59,11 @@ contract NP is CORE {
 
         require(
             contractInfo.contractType > 0,
-            "NP:MS: This contract not authorized for specified AC"
+            "NP:MS: contract not auth for AC"
         );
         require(
             (userType > 0) && (userType < 10),
-            "NP:MS: User not authorized to modify records in specified asset class"
+            "NP:MS: User not auth in AC"
         );
 
         require(
@@ -87,9 +87,9 @@ contract NP is CORE {
         );
         require(
             isEscrow(rec.assetStatus) == 0,
-            "NP:MS: Cannot change status of asset in Escrow until escrow is expired"
+            "NP:MS: Cannot modify asset in escrow"
         );
-        require(
+        require(                                                        
             needsImport(rec.assetStatus) == 0,
             "NP:MS: Record in unregistered, exported, or discarded status"
         );
@@ -135,15 +135,15 @@ contract NP is CORE {
 
         require(
             contractInfo.contractType > 0,
-            "NP:SLS: This contract not authorized for specified AC"
+            "NP:SLS: contract not auth in AC"
         );
-        require(
-            (rec.rightsHolder != 0),
-            "NP:SLS: Record unclaimed: import required. "
-        );
+        // require(                                                             //redundant, will throw in storage
+        //     (rec.rightsHolder != 0),
+        //     "NP:SLS: Record unclaimed: import required. "
+        // );
         require(
             (userType > 0) && (userType < 10),
-            "NP:SLS: User not authorized to modify records in specified asset class"
+            "NP:SLS: user not auth in AC"
         );
         require(
             isLostOrStolen(_newAssetStatus) == 170,
@@ -200,22 +200,22 @@ contract NP is CORE {
 
         require(
             contractInfo.contractType > 0,
-            "NP:DC: This contract not authorized for specified AC"
+            "NP:DC: contract not auth in AC"
         );
 
-        require(
-            (rec.rightsHolder != 0),
-            "NP:DC: Record unclaimed: import required. "
-        );
+        // require(                                                                      //redundant, will throw in storage
+        //     (rec.rightsHolder != 0),
+        //     "NP:DC: Record unclaimed: import required. "
+        // );
         require(
             (userType > 0) && (userType < 10),
-            "NP:DC: User not authorized to modify records in specified asset class"
+            "NP:DC: user not auth in AC"
         );
         require(
             isEscrow(rec.assetStatus) == 0,
             "NP:DC: Cannot modify asset in Escrow"
         );
-        require(_decAmount > 0, "NP:DC: cannot decrement by negative number");
+        // require(_decAmount > 0, "NP:DC: cannot decrement by negative number");                //redundant, will throw in storage
 
         require(
             needsImport(rec.assetStatus) == 0,
@@ -262,15 +262,15 @@ contract NP is CORE {
 
         require(
             contractInfo.contractType > 0,
-            "NP:MI1: This contract not authorized for specified AC"
+            "NP:MI1: contract not auth in AC"
         );
-        require(
-            (rec.rightsHolder != 0),
-            "NP:MI1: Record unclaimed: import required."
-        );
+        // require(                                                                           //redundant, will throw in storage
+        //     (rec.rightsHolder != 0),
+        //     "NP:MI1: Record unclaimed: import required."
+        // );
         require(
             (userType > 0) && (userType < 10),
-            "NP:MI1: User not authorized to modify records in specified asset class"
+            "NP:MI1: user not auth in AC"
         );
         require(rec.Ipfs1 != _IpfsHash, "NP:MI1: New data same as old");
         
@@ -317,21 +317,20 @@ contract NP is CORE {
 
         require(
             contractInfo.contractType > 0,
-            "A:MS: This contract not authorized for specified AC"
+            "NP:MS: contract not auth in AC"
         );
         require(
             (userType > 0) && (userType < 10),
-            "A:EA: User not authorized to modify records in specified asset class"
+            "NP:EA: user not auth in AC"
         );
         require( // require transferrable (51) status
             rec.assetStatus == 51,
-            "A:EA: Asset status must be 51 to export"
+            "NP:EA: Asset status must be 51 to export"
         );
         //^^^^^^^checks^^^^^^^^^
 
-        if (rec.numberOfTransfers < 65335) {
-            rec.numberOfTransfers++;
-        }
+        rec.incrementNumberOfTransfers = 170;
+
         rec.assetStatus = 70; // Set status to 70 (exported)
         //^^^^^^^effects^^^^^^^^^
 

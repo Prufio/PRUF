@@ -25,8 +25,6 @@ import "./PRUF_BASIC.sol";
 
 contract CORE_MAL is PullPayment, BASIC {
     using SafeMath for uint256;
-    using SafeMath for uint16;
-    using SafeMath for uint8;
 
     struct Costs {
         uint256 newRecordCost; // Cost to create a new record
@@ -121,8 +119,8 @@ contract CORE_MAL is PullPayment, BASIC {
             _rec.rightsHolder,
             _rec.assetStatus,
             _rec.countDown,
-            _rec.forceModCount,
-            _rec.numberOfTransfers
+            _rec.incrementForceModCount,
+            _rec.incrementNumberOfTransfers
         ); // Send data and writehash to storage
         //^^^^^^^interactions^^^^^^^^^
     }

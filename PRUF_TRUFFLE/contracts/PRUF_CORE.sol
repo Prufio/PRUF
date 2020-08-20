@@ -25,8 +25,6 @@ import "./PRUF_BASIC.sol";
 
 contract CORE is PullPayment, BASIC {
     using SafeMath for uint256;
-    using SafeMath for uint16;
-    using SafeMath for uint8;
 
     struct Costs {
         uint256 newRecordCost; // Cost to create a new record
@@ -45,7 +43,6 @@ contract CORE is PullPayment, BASIC {
         uint256 ACTHprice;
     }
 
-    
     //--------------------------------------------------------------------------------------Storage Reading internal functions
 
     /*
@@ -105,7 +102,6 @@ contract CORE is PullPayment, BASIC {
         STOR.newRecord(_idxHash, _rgtHash, _assetClass, _countDownStart);
     }
 
-
     /*
      * @dev Write a Record to Storage @ idxHash
      */
@@ -121,8 +117,8 @@ contract CORE is PullPayment, BASIC {
             _rec.rightsHolder,
             _rec.assetStatus,
             _rec.countDown,
-            _rec.forceModCount,
-            _rec.numberOfTransfers
+            _rec.incrementForceModCount,
+            _rec.incrementNumberOfTransfers
         ); // Send data and writehash to storage
         //^^^^^^^interactions^^^^^^^^^
     }
@@ -250,7 +246,10 @@ contract CORE is PullPayment, BASIC {
         //^^^^^^^interactions^^^^^^^^^
     }
 
-    function deductForceModifyCosts(uint256 _assetClass) internal whenNotPaused {
+    function deductForceModifyCosts(uint256 _assetClass)
+        internal
+        whenNotPaused
+    {
         //^^^^^^^checks^^^^^^^^^
         Invoice memory pricing;
         //^^^^^^^effects^^^^^^^^^
@@ -290,8 +289,6 @@ contract CORE is PullPayment, BASIC {
         //^^^^^^^interactions^^^^^^^^^
     }
 
-//--------------------------------------------------------------------------------------status test internal functions
-
     function isLostOrStolen(uint8 _assetStatus) internal pure returns (uint8) {
         if (
             (_assetStatus != 3) &&
@@ -305,14 +302,14 @@ contract CORE is PullPayment, BASIC {
         }
     }
 
+    //----------------------------------------------------------------------STATUS CHECKS
+
     /*
      * @dev Check to see if record is in escrow status
      */
     function isEscrow(uint8 _assetStatus) internal pure returns (uint8) {
         if (
-            (_assetStatus != 6) &&
-            (_assetStatus != 50) &&
-            (_assetStatus != 56)
+            (_assetStatus != 6) && (_assetStatus != 50) && (_assetStatus != 56)
         ) {
             return 0;
         } else {
@@ -332,21 +329,4 @@ contract CORE is PullPayment, BASIC {
             return 170;
         }
     }
-
-    // function isReserved(uint8 _assetStatus) internal pure returns (uint8) {
-    //     if (
-    //         (_assetStatus != 7) &&
-    //         (_assetStatus != 57) &&
-    //         (_assetStatus != 58) &&
-    //         (_assetStatus != 60) &&
-    //         (_assetStatus != 70)
-    //     ) {
-    //         return 0;
-    //     } else {
-    //         return 170;
-    //     }
-    // }
-
-
-    
 }

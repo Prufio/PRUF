@@ -23,7 +23,6 @@ import "./PRUF_CORE.sol";
 
 contract AC_MGR is CORE {
     using SafeMath for uint256;
-    using SafeMath for uint8;
 
     mapping(uint256 => Costs) private cost; // Cost per function by asset class
 
@@ -64,7 +63,7 @@ contract AC_MGR is CORE {
      * @dev Authorize / Deauthorize / Authorize users for an address be permitted to make record modifications
      * ----------------INSECURE -- keccak256 of address must be generated clientside in release.
      */
-    function OO_addUser(
+    function OO_addUser(                             //swap arg!!!!!!!!!
         address _authAddr,
         uint8 _userType,
         uint256 _assetClass

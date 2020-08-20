@@ -84,17 +84,14 @@ contract RCLR is ECR_CORE, CORE {
         require(_rgtHash != 0, "R:R:New rights holder cannot be zero");
         require(_assetClass != 0, "R:R:Asset class cannot be zero");
         require( //if creating new record in new root and idxhash is identical, fail because its probably fraud
-            ((AC_info.assetClassRoot == oldAC_info.assetClassRoot) ||
-                (rec.assetClass == 0)),
+            AC_info.assetClassRoot == oldAC_info.assetClassRoot, // || (rec.assetClass == 0)),
             "R:R:Cannot re-create asset in new root assetClass"
         );
         require(rec.assetStatus == 60, "R:R:Asset not discarded");
         //^^^^^^^checks^^^^^^^^^
 
         rec.rightsHolder = _rgtHash;
-        if (rec.numberOfTransfers < 65335) {
-            rec.numberOfTransfers++;
-        }
+        rec.incrementNumberOfTransfers = 170;
         //^^^^^^^effects^^^^^^^^^^^^
         
         A_TKN.mintAssetToken(msg.sender, tokenId, "pruf.io");

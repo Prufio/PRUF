@@ -90,20 +90,22 @@ contract ECR_MGR is BASIC {
             "EM:SE: Escrow can only be set by an authorized escrow contract"
         );
         require(rec.assetClass != 0, "EM:SE:Record does not exist");
-        require(
-            isEscrow(_newAssetStatus) == 170,
-            "EM:SE: Must set to an escrow status"
-        );
-        require(
-            (isLostOrStolen(rec.assetStatus) == 0) &&
-                (rec.assetStatus != 5) &&
-                (rec.assetStatus != 55),
-            "EM:SE: Txd, L/S status cannot be set to escrow."
-        );
-        require(
-            isEscrow(rec.assetStatus) == 0,
-            "EM:SE: Asset already in escrow status."
-        );
+
+        // require(  //all of these are redundant because they throw in storage
+        //     isEscrow(_newAssetStatus) == 170,
+        //     "EM:SE: Must set to an escrow status"
+        // );
+        // require(
+        //     (isLostOrStolen(rec.assetStatus) == 0) &&
+        //         (rec.assetStatus != 5) &&
+        //         (rec.assetStatus != 55),
+        //     "EM:SE: Txd, L/S status cannot be set to escrow."
+        // );
+        // require(
+        //     isEscrow(rec.assetStatus) == 0,
+        //     "EM:SE: Asset already in escrow status."
+        // );
+
         //^^^^^^^checks^^^^^^^^^
 
         escrows[_idxHash].data = 0; //initialize escrow data

@@ -51,16 +51,10 @@ contract APP is CORE {
             _assetClass
         );
 
-        require(
-            contractInfo.contractType > 0,
-            "A:NR: This contract not authorized for specified AC"
-        );
-        require(
-            (userType > 0) && (userType < 10),
-            "A:NR: User not authorized to create records in specified asset class"
-        );
+        require(contractInfo.contractType > 0, "A:NR: contract not auth in AC"); //MAKE INTO MODIFIER?!?!?!?!
+        require((userType > 0) && (userType < 10), "A:NR: User not auth in AC");
         require(userType < 5, "A:NR: User not authorized to create records");
-        require(_rgtHash != 0, "A:NR: rights holder cannot be zero");
+        require(_rgtHash != 0, "A:NR: RGT = 0");
         //^^^^^^^checks^^^^^^^^^
 
         //bytes32 userHash = keccak256(abi.encodePacked(msg.sender));
@@ -74,8 +68,6 @@ contract APP is CORE {
         deductNewRecordCosts(_assetClass);
         //^^^^^^^interactions^^^^^^^^^
     }
-
-    
 
     /*
      * @dev import **Record** (no confirmation required -
@@ -102,14 +94,11 @@ contract APP is CORE {
 
         require(
             contractInfo.contractType > 0,
-            "A:IA: This contract not authorized for specified AC"
+            "A:IA: unauthorized for AC. Orphan token?"
         );
-        require(rec.assetClass != 0, "A:IA: Record does not exist. ");
-        require(userType < 3, "A:IA: User not authorized to reimport assets");
-        require(
-            (userType > 0) && (userType < 10),
-            "A:IA: User not authorized to modify records in specified asset class"
-        );
+        require(rec.assetClass != 0, "A:IA: Record does not exist. ");                 //CANNOT BE TESTED, ASSERT??
+        require(userType < 3, "A:IA: User not authorized to import assets");
+        require((userType > 0) && (userType < 10), "A:IA: User not auth in AC");
         require(
             AC_MGR.isSameRootAC(_newAssetClass, rec.assetClass) == 170,
             "A:IA:Cannot change AC to new root"
@@ -122,9 +111,7 @@ contract APP is CORE {
         );
         //^^^^^^^checks^^^^^^^^^
 
-        if (rec.forceModCount < 255) {
-            rec.forceModCount++;
-        }
+        rec.incrementForceModCount = 170;
 
         rec.assetStatus = 0;
         rec.rightsHolder = _newRgtHash;
@@ -158,38 +145,28 @@ contract APP is CORE {
 
         require(
             contractInfo.contractType > 0,
-            "A:FMR: This contract not authorized for specified AC"
+            "A:FMR: unauthorized for AC. Orphan token?"
         );
-        require(
-            (rec.rightsHolder != 0),
-            "A:FMR: Record unclaimed: import required. "
-        );
-        require(
-            userType == 1,
-            "A:FMR: User not authorized to force modify records in this asset class"
-        );
-        require(_rgtHash != 0, "A:FMR: rights holder cannot be zero");
+        require(userType == 1, "A:FMR: User not auth in AC");
+        require(_rgtHash != 0, "A:FMR:RGT = 0");
         require(
             isLostOrStolen(rec.assetStatus) == 0,
-            "A:FMR: Asset marked lost or stolen"
+            "A:FMR: Asset marked L/S"
         );
+        require(isEscrow(rec.assetStatus) == 0, "A:FMR: Asset in escrow");
         require(
             isEscrow(rec.assetStatus) == 0,
             "A:FMR: Asset in escrow"
         );
-        require(
+        require(                                                      //IMPOSSIBLE TO THROW REVERTS IN REQ1
             needsImport(rec.assetStatus) == 0,
             "A:FMR: Asset needs re-imported"
         );
         //^^^^^^^checks^^^^^^^^^
 
-        if (rec.forceModCount < 255) {
-            rec.forceModCount++;
-        }
-
-        if (rec.numberOfTransfers < 65335) {
-            rec.numberOfTransfers++;
-        }
+        rec.incrementForceModCount = 170;
+     
+        rec.incrementNumberOfTransfers = 170;
 
         rec.assetStatus = 0;
         rec.rightsHolder = _rgtHash;
@@ -199,7 +176,7 @@ contract APP is CORE {
 
         deductForceModifyCosts(rec.assetClass);
 
-        return rec.forceModCount;
+        return 170;
         //^^^^^^^interactions^^^^^^^^^
     }
 
@@ -227,32 +204,24 @@ contract APP is CORE {
 
         require(
             contractInfo.contractType > 0,
-            "A:TA: This contract not authorized for specified AC"
+            "A:TA: unauthorized for AC. Orphan token?"
         );
-        require(
-            (rec.rightsHolder != 0),
-            "A:TA: Record unclaimed: import required. "
-        );
-        require(
-            (userType > 0) && (userType < 10),
-            "A:TA: User not authorized to modify records in specified asset class"
-        );
+        require((userType > 0) && (userType < 10), "A:TA: User not auth in AC");
         require(
             (rec.assetStatus > 49) || (userType < 5),
             "A:TA:Only usertype < 5 can change status < 50"
         );
         require(
             (rec.assetStatus == 1) || (rec.assetStatus == 51),
-            "A:TA:Asset status is not transferrable"
+            "A:TA:Asset status != transferrable"
         );
         require(
             rec.rightsHolder == _rgtHash,
             "A:TA:Rightsholder does not match supplied data"
         );
         //^^^^^^^checks^^^^^^^^^
-        if (rec.numberOfTransfers < 65335) {
-            rec.numberOfTransfers++;
-        }
+
+        rec.incrementNumberOfTransfers = 170;
 
         if (_newrgtHash == 0x0) {
             //set to transferred status
@@ -295,25 +264,19 @@ contract APP is CORE {
 
         require(
             contractInfo.contractType > 0,
-            "A:I2: This contract not authorized for specified AC"
+            "A:I2: unauthorized for AC. Orphan token?"
         );
-        require(
-            (rec.rightsHolder != 0),
-            "A:I2: Record unclaimed: import required. "
-        );
-        require(
-            (userType > 0) && (userType < 10),
-            "A:I2: User not authorized to modify records in specified asset class"
-        );
+        require((userType > 0) && (userType < 10), "A:I2: User not auth in AC");
         require(
             isLostOrStolen(rec.assetStatus) == 0,
             "A:FMR: Asset marked lost or stolen"
         );
+        require(isEscrow(rec.assetStatus) == 0, "A:FMR: Asset in escrow");
         require(
             isEscrow(rec.assetStatus) == 0,
             "A:FMR: Asset in escrow"
         );
-        require(
+        require(                                                      //IMPOSSIBLE TO THROW REVERTS IN REQ1
             needsImport(rec.assetStatus) == 0,
             "A:FMR: Asset needs re-imported"
         );

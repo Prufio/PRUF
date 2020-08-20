@@ -9,7 +9,6 @@
     const PRUF_AC_MGR = artifacts.require('AC_MGR');
     const PRUF_AC_TKN = artifacts.require('AC_TKN');
     const PRUF_A_TKN = artifacts.require('A_TKN');
-    const PRUF_A_TKN2 = artifacts.require('A_TKN2');
     const PRUF_ECR_MGR = artifacts.require('ECR_MGR');
     const PRUF_ECR = artifacts.require('ECR');
     const PRUF_ECR2 = artifacts.require('ECR2');
@@ -27,7 +26,6 @@
     let AC_MGR;
     let AC_TKN;
     let A_TKN;
-    let A_TKN2;
     let ECR_MGR;
     let ECR;
     let ECR2;
@@ -77,6 +75,7 @@
 
     let nakedAuthCode1;
     let nakedAuthCode3;
+    let nakedAuthCode7;
     
         //
         //
@@ -224,13 +223,6 @@
         ECR2 = PRUF_ECR2_TEST;
     })
 
-
-    it('Should deploy PRUF_A_TKN2', async () => {
-        const PRUF_A_TKN2_TEST = await PRUF_A_TKN2.deployed({ from: account1 });
-        console.log(PRUF_A_TKN2_TEST.address);
-        assert(PRUF_A_TKN2_TEST.address !== '')
-        A_TKN2 = PRUF_A_TKN2_TEST;
-    })
 
     it('Should deploy PRUF_MAL_APP', async () => {
         const PRUF_MAL_APP_TEST = await PRUF_MAL_APP.deployed({ from: account1 });
@@ -421,14 +413,19 @@
         )
 
 
-        nakedAuthCode1 = await Helper.getURIfromAuthcode(
+        nakedAuthCode1 = await Helper.getURIb32fromAuthcode(
             '15',
             '1'
         )
 
-        nakedAuthCode3 = await Helper.getURIfromAuthcode(
+        nakedAuthCode3 = await Helper.getURIb32fromAuthcode(
             '15',
             '3'
+        )
+
+        nakedAuthCode7 = await Helper.getURIb32fromAuthcode(
+            '15',
+            '7'
         )
 
         string1Hash = await Helper.getStringHash(
@@ -476,11 +473,6 @@
             .then(() => {
                 console.log("Adding A_TKN to storage for use in AC 0")
                 return STOR.OO_addContract("A_TKN", A_TKN.address, '0', '1', { from: account1 })
-            })
-
-            .then(() => {
-                console.log("Adding A_TKN2 to storage for use in AC 0")
-                return STOR.OO_addContract("A_TKN2", A_TKN2.address, '0', '1', { from: account1 })
             })
             
             .then(() => {
@@ -559,11 +551,6 @@
                 console.log("Adding in A_TKN")
                 return A_TKN.OO_setStorageContract(STOR.address, { from: account1 })
             })
-
-            .then(() => {
-                console.log("Adding in A_TKN2")
-                return A_TKN2.OO_setStorageContract(STOR.address, { from: account1 })
-            })
             
             .then(() => {
                 console.log("Adding in ECR_MGR")
@@ -635,11 +622,6 @@
             .then(() => {
                 console.log("Resolving in A_TKN")
                 return A_TKN.OO_ResolveContractAddresses({ from: account1 })
-            })
-
-            .then(() => {
-                console.log("Resolving in A_TKN2")
-                return A_TKN2.OO_ResolveContractAddresses({ from: account1 })
             })
             
             .then(() => {
@@ -945,41 +927,6 @@
     })
 
 
-    it('Should authorize A_TKN2 in all relevant asset classes', async () => {
-        
-        console.log("Authorizing A_TKN2")
-        return STOR.enableContractForAC('A_TKN2', '10', '1', { from: account1 })
-            
-            .then(() => {
-                return STOR.enableContractForAC('A_TKN2', '11', '1', { from: account1 })
-            })
-            
-            .then(() => {
-                return STOR.enableContractForAC('A_TKN2', '12', '2', { from: account1 })
-            })
-            
-            .then(() => {
-                return STOR.enableContractForAC('A_TKN2', '13', '2', { from: account1 })
-            })
-            
-            .then(() => {
-                return STOR.enableContractForAC('A_TKN2', '14', '2', { from: account1 })
-            })
-
-            .then(() => {
-                return STOR.enableContractForAC('A_TKN2', '15', '2', { from: account10 })
-            })
-            
-            .then(() => {
-                return STOR.enableContractForAC('A_TKN2', '1', '1', { from: account1 })
-            })
-            
-            .then(() => {
-                return STOR.enableContractForAC('A_TKN2', '2', '1', { from: account1 })
-            })
-    })
-
-
     it('Should authorize NAKED in all relevant asset classes', async () => {
         
         console.log("Authorizing NAKED")
@@ -1243,38 +1190,10 @@
     })
 
     
-        it('Should mint a record in AC 11', async () => { //Put into escrow, used in ForceTransfer, Transfer
-            console.log("//************************************************************BEGIN APP_NC TEST**********************************************************//")
-            return APP.$newRecord(
-                asset4,
-                rgt1,
-                '11',
-                '5000',
-                { from: account3, value: 20000000000000000 }
-            )
-        })
-    
-        it('Should mint a second record in AC 11', async () => { //Note added, used in AddNote
-            return APP.$newRecord(
-                asset5,
-                rgt1,
-                '11',
-                '5000',
-                { from: account3, value: 20000000000000000 }
-            )
-        })
-    
-        it('Should mint a third record in AC 11', async () => { // Status changed, exported, used in Import
-            return APP.$newRecord(
-                asset6,
-                rgt1,
-                '11',
-                '5000',
-                { from: account3, value: 20000000000000000 }
-            )
-        })
-    
-        it('Should mint a record in AC 10', async () => { //Bare custodial record, Used all over
+        it('Should mint asset1 in AC 10', async () => { //Put into escrow, used in ForceTransfer, Transfer
+
+            console.log("//**************************************************BEGIN APP_NC TEST***************************************************//")
+            console.log("//**************************************************BEGIN APP_NC SETUP***************************************************//")
             return APP.$newRecord(
                 asset1,
                 rgt1,
@@ -1283,233 +1202,225 @@
                 { from: account2, value: 20000000000000000 }
             )
         })
-    
-        it('Should mint a second record in AC 10', async () => { // Used in import 
-            return APP.$newRecord(
-                asset2,
+
+        it('Should change status of asset1 to 51', async () => { //Put into escrow, used in ForceTransfer, Transfer
+            return NP._modStatus(
+                asset1,
                 rgt1,
-                '10',
-                '5000',
-                { from: account2, value: 20000000000000000 }
+                '51',
+                { from: account2 }
             )
         })
-    
-        it('Should mint a third record in AC 10', async () => { // Transferred, not claimed, used in status !== status 5 checks 
-            return APP.$newRecord(
-                asset3,
-                rgt1,
-                '10',
-                '5000',
-                { from: account2, value: 20000000000000000 }
+
+
+        it('Should export asset1', async () => { //Put into escrow, used in ForceTransfer, Transfer
+            return NP.exportAsset(
+                asset1,
+                account2,
+                { from: account2 }
             )
         })
-    
-        it('Should mint a record in AC 13', async () => { //unused
+
+
+        // it('Should transfer asset1 to APP_NC', async () => { //Put into escrow, used in ForceTransfer, Transfer
+        //     return A_TKN.safeTransferFrom(
+        //         account2,
+        //         APP_NC.address,
+        //         asset1,
+        //         { from: account2 }
+        //     )
+        // })
+
+
+        it('Should mint asset2 in AC 13', async () => { //Put into escrow, used in ForceTransfer, Transfer
             return APP_NC.$newRecord(
-                asset7,
-                rgt1,
+                asset2,
+                rgt2,
                 '13',
                 '5000',
                 { from: account5, value: 20000000000000000 }
             )
         })
-    
-        it('Should mint a record in AC 14', async () => { //Bare NC record, used in custody checks
+
+
+        it('Should mint asset3 in AC 14', async () => { //Put into escrow, used in ForceTransfer, Transfer
             return APP_NC.$newRecord(
-                asset8,
-                rgt1,
-                '14',
-                '5000',
-                { from: account6, value: 20000000000000000 }
-            )
-        })
-    
-        it('Should mint a second record in AC 14', async () => { //unused
-            return APP_NC.$newRecord(
-                asset9,
-                rgt1,
+                asset3,
+                rgt3,
                 '14',
                 '5000',
                 { from: account6, value: 20000000000000000 }
             )
         })
 
-        it('Should mint a third record in AC 14', async () => { //status changed to 51, burned
-            return APP_NC.$newRecord(
-                asset11,
-                rgt1,
-                '14',
-                '5000',
-                { from: account6, value: 20000000000000000 }
-            )
-        })
-    
-        it('Should change status of asset6 to 51 for export eligibility', async () => {
-            return NP._modStatus(
-                asset6,
-                rgt1,
-                '51',
-                { from: account3 }
-            )
-        })
 
-        it('Should change status of asset11 to 59 for discard eligibility', async () => {
+        it('Should change status of asset3 to 51', async () => { //Put into escrow, used in ForceTransfer, Transfer
             return NP_NC._modStatus(
-                asset11,
-                '59',
-                { from: account6 }
-            )
-        })
-    
-        it('Should change status of asset3 to 1 for transfer eligibility', async () => {
-            return NP._modStatus(
                 asset3,
-                rgt1,
-                '1',
-                { from: account2 }
-            )
-        })
-    
-        it('Should put asset4 into an escrow', async () => {
-            return ECR.setEscrow(
-                asset4,
-                rgt1,
-                '1',
-                '6',
-                { from: account3 }
+                '51',
+                { from: account6 }
             )
         })
 
-        it('Should put asset9 into an escrow', async () => {
-            return ECR_NC.setEscrow(
-                asset9,
-                account6Hash,
-                '1',
-                '50',
+
+        it('Should export asset3', async () => { //Put into escrow, used in ForceTransfer, Transfer
+            return NP_NC._exportNC(
+                asset3,
                 { from: account6 }
             )
         })
-    
-        it('Should add asset note to asset5', async () => {
-            return APP.$addIpfs2Note(
-                asset5,
-                rgt1,
-                '0xa083f25ffc9716fa6c018e077f602f3c6d2377f0bd01917fa75c4e9ca07b0000',
-                { from: account3, value: 20000000000000000 }
+
+
+        it('Should mint asset4 in AC 12', async () => { //Put into escrow, used in ForceTransfer, Transfer
+            return APP_NC.$newRecord(
+                asset4,
+                rgt4,
+                '12',
+                '5000',
+                { from: account4, value: 20000000000000000 }
             )
         })
-    
-        it('Should transfer asset3 to unclaimed', async () => { // Transferred, not claimed, used in status !== status 5 checks 
-            return APP.$transferAsset(
-                asset3,
-                rgt1,
-                rgt000,
+
+
+        it('Should change status of asset4 to 51', async () => { //Put into escrow, used in ForceTransfer, Transfer
+            return NP_NC._modStatus(
+                asset4,
+                '51',
+                { from: account4 }
+            )
+        })
+
+
+        it('Should transfer asset4 to account5', async () => { //Put into escrow, used in ForceTransfer, Transfer
+            return A_TKN.safeTransferFrom(
+                account4,
+                account5,
+                asset4,
+                { from: account4 }
+            )
+        })
+
+
+        it('Should mint asset5 in AC 12', async () => { //Put into escrow, used in ForceTransfer, Transfer
+            return APP_NC.$newRecord(
+                asset5,
+                rgt5,
+                '12',
+                '5000',
+                { from: account4, value: 20000000000000000 }
+            )
+        })
+
+
+        it('Should change status of asset5 to 51', async () => { //Put into escrow, used in ForceTransfer, Transfer
+            return NP_NC._modStatus(
+                asset5,
+                '51',
+                { from: account4 }
+            )
+        })
+
+
+        it('Should mint asset6 in AC 10', async () => { //Put into escrow, used in ForceTransfer, Transfer
+            return APP.$newRecord(
+                asset6,
+                rgt6,
+                '10',
+                '5000',
                 { from: account2, value: 20000000000000000 }
             )
         })
-    
-        it('Should export asset6 to account2 in AC10', async () => {
+
+
+        it('Should change status of asset6 to 51', async () => { //Put into escrow, used in ForceTransfer, Transfer
+            return NP._modStatus(
+                asset6,
+                rgt6,
+                '51',
+                { from: account2 }
+            )
+        })
+
+
+        it('Should export asset6', async () => { //Put into escrow, used in ForceTransfer, Transfer
             return NP.exportAsset(
                 asset6,
-                NP.address,
-                { from: account3 }
+                account2,
+                { from: account2 }
             )
         })
 
-        it('Should discard asset11', async () => {
-            return A_TKN.discard(
-                asset11,
-                { from: account6 }
-            )
-        })
-    
-        //
-        //
-        // END SETUP ENVIRONMENT
-        //
-        //
-        
-        //
-        //
-        // APP_NC FAILBATCH
-        //
-        //
-
-        //NEW RECORD
         //1
-        it('Should fail to create new record due to existing record at idx', async () => {
-            console.log('//**************************BEGIN APP_NC FAILBATCH**************************//')
-            console.log('//**************************NEW RECORD**************************//')
+        it('Should fail because contract not auth in AC', async () => {
+
+            console.log("//**************************************************END APP_NC SETUP***************************************************//")
+            console.log("//**************************************************BEGIN APP_NC FAIL BATCH***************************************************//")
+            console.log("//**************************************************BEGIN $newRecord FAIL BATCH***************************************************//")
             return APP_NC.$newRecord(
-                asset9,
-                rgt1,
-                '14',
+                asset8,
+                rgt8,
+                '10',
                 '5000',
-                { from: account6, value: 20000000000000000 }
+                { from: account2, value: 20000000000000000 }
             )
         })
 
         //2
-        it('Should fail to create new record due to custodial AC type', async () => {
+        it('Should fail because user not auth in AC', async () => {
             return APP_NC.$newRecord(
-                asset10,
-                rgt1,
-                '10',
+                asset2,
+                rgt2,
+                '12',
                 '5000',
                 { from: account2, value: 20000000000000000 }
             )
         })
 
         //3
-        it('Should fail to create new record due to nonHuman user type', async () => {
+        it('Should fail because rgt = 0', async () => {
             return APP_NC.$newRecord(
-                asset10,
-                rgt1,
-                '14',
+                asset2,
+                rgt000,
+                '12',
                 '5000',
-                { from: account7, value: 20000000000000000 }
+                { from: account4, value: 20000000000000000 }
             )
         })
 
         //4
-        it('Should fail to create new record due to rgt == 0x0...', async () => {
+        it('Should fail because AC = 0', async () => {
             return APP_NC.$newRecord(
-                asset10,
-                rgt000,
-                '14',
+                asset2,
+                rgt2,
+                '0',
                 '5000',
-                { from: account6, value: 20000000000000000 }
+                { from: account4, value: 20000000000000000 }
             )
         })
 
         //5
-        it('Should fail to create new record due to AC == 0', async () => {
-            return APP_NC.$newRecord(
-                asset10,
-                rgt1,
-                '0',
-                '5000',
-                { from: account6, value: 20000000000000000 }
+        it('Should fail because caller does not hold token', async () => {
+
+            console.log("//**************************************************END $newRecord FAIL BATCH***************************************************//")
+            console.log("//**************************************************BEGIN $importAsset FAIL BATCH***************************************************//")
+            return APP_NC.$importAsset(
+                asset2,
+                '13',
+                { from: account4, value: 20000000000000000 }
             )
         })
 
         //6
-        it('Should fail to re-create new record due to attempted change of root AC', async () => {
-            return APP_NC.$newRecord(
-                asset7,
-                rgt1,
-                '14',
-                '5000',
-                { from: account6, value: 20000000000000000 }
+        it('Should fail becasue asset not exported', async () => {
+            return APP_NC.$importAsset(
+                asset2,
+                '13',
+                { from: account5, value: 20000000000000000 }
             )
         })
 
-        //END NEW RECORD
-
-        //IMPORT ASSET
         //7
-        it('Should fail to import asset due to custodial AC type', async () => {
-            console.log('//**************************IMPORT ASSET**************************//')
+        it('Should fail because contract not auth in AC', async () => {
             return APP_NC.$importAsset(
                 asset1,
                 '10',
@@ -1518,112 +1429,201 @@
         })
 
         //8
-        it('Should fail to import asset due to attempted change of root AC', async () => {
+        it('Should fail you cannot import into new root AC', async () => {
             return APP_NC.$importAsset(
-                asset7,
-                '14',
-                { from: account5, value: 20000000000000000 }
+                asset3,
+                '13',
+                { from: account6, value: 20000000000000000 }
             )
         })
-        
-        //END IMPORT ASSET
 
-        //REMINT TOKEN
         //9
-        it('Should fail to remint asset token due to custodial AC type', async () => {
-            console.log('//**************************REMINT TOKEN**************************//')
+        it('Should fail because contract not auth in AC', async () => {
+
+            console.log("//**************************************************END $importAsset FAIL BATCH***************************************************//")
+            console.log("//**************************************************BEGIN $reMintToken FAIL BATCH***************************************************//")
             return APP_NC.$reMintToken(
                 asset1,
                 'aaa',
                 'aaa',
                 'aaa',
                 'aaa',
-                'aaa'
+                'aaa',
+                { from: account2, value: 20000000000000000 }
             )
         })
 
         //10
-        it('Should fail to remint asset token due to rgtHash == 0', async () => {
+        it('Should fail to remint asset token due to rgtHash = 0xFFF...', async () => {
             return APP_NC.$reMintToken(
-                asset10,
-                'aaa',
-                'aaa',
-                'aaa',
-                'aaa',
-                'aaa'
+                asset4,
+                'ddd',
+                'ddd',
+                'ddd',
+                'ddd',
+                'ddd',
+                { from: account5, value: 20000000000000000 }
+            )
+        })
+
+
+        it('Should put asset5 into escrow', async () => {
+            return ECR_NC.setEscrow(
+                asset5,
+                account4Hash,
+                '180',
+                '56',
+                {from: account4}
             )
         })
 
         //11
-        it('Should fail to remint asset token due to rec.rightsHolder == 0xfff...', async () => { //@DEV MAKE THIS ACTUALLY WORK
+        it('Should fail because asset in escrow status', async () => { 
             return APP_NC.$reMintToken(
-                asset10,
-                'aaa',
-                'aaa',
-                'aaa',
-                'aaa',
-                'aaa'
+                asset5,
+                'eee',
+                'eee',
+                'eee',
+                'eee',
+                'eee',
+                { from: account4, value: 20000000000000000 }
             )
         })
 
-        //12
-        it('Should fail to remint asset token due to burned status (GETS CAUGHT IN 0xfff CHECK)', async () => { //GETS CAUGHT IN 0xfff CHECK
-            return APP_NC.$reMintToken(
-                asset11,
-                'aaa',
-                'aaa',
-                'aaa',
-                'aaa',
-                'aaa'
-            )
-        })
 
-        //13
-        it('Should fail to remint asset token due to escrow status', async () => { 
-            return APP_NC.$reMintToken(
-                asset9,
-                'aaa',
-                'aaa',
-                'aaa',
-                'aaa',
-                'aaa'
-            )
-        })
-
-        //SHOULD PASS
-        it('Should remove asset9 from escrow', async () => {
+        it('Should remove asset5 from escrow', async () => {
             return ECR_NC.endEscrow(
-                asset9,
-                {from: account6}
+                asset5,
+                {from: account4}
+            )
+        })
+
+
+        it('Should change asset5 status 51', async () => {
+            return NP_NC._modStatus(
+                asset5,
+                '51',
+                {from: account4}
             )
         })
 
         //14
-        it('Should fail to remint asset token due to unclaimed status', async () => { //UNREACHABLE ERROR
+        // it('Should fail because asset needs import', async () => { //UNREACHABLE ERROR
+        //     return APP_NC.$reMintToken(
+        //         asset3,
+        //         'ccc',
+        //         'ccc',
+        //         'ccc',
+        //         'ccc',
+        //         'ccc',
+        //         { from: account6, value: 20000000000000000 }
+        //     )
+        // })
+
+        //12
+        it('Should fail because rgt doesnt match rgthash', async () => { 
             return APP_NC.$reMintToken(
-                asset9,
-                'aaa',
-                'aaa',
-                'aaa',
-                'aaa',
-                'aaa'
+                asset5,
+                'ddd',
+                'eee',
+                'eee',
+                'eee',
+                'eee',
+                { from: account4, value: 20000000000000000 }
+            )
+        })
+
+        //13
+        it('Should fail because caller not holder of token', async () => {
+
+            console.log("//**************************************************END $reMintToken FAIL BATCH***************************************************//")
+            console.log("//**************************************************BEGIN $addIpfs2Note FAIL BATCH***************************************************//")
+            return APP_NC.$addIpfs2Note(
+                asset5,
+                rgt5,
+                { from: account5, value: 20000000000000000 }
+            )
+        })
+
+        //14
+        it('Should fail because contract not auth in AC', async () => {
+            return APP_NC.$addIpfs2Note(
+                asset6,
+                rgt6,
+                { from: account2, value: 20000000000000000 }
+            )
+        })
+
+
+        it('Should put asset5 into escrow', async () => {
+            return ECR_NC.setEscrow(
+                asset5,
+                account4Hash,
+                '180',
+                '56',
+                {from: account4}
             )
         })
 
         //15
-        it('Should fail to remint asset token due to rightsHolder mismatch', async () => { 
-            return APP_NC.$reMintToken(
-                asset9,
-                'bbb',
-                'aaa',
-                'aaa',
-                'aaa',
-                'aaa'
+        it('Should fail because asset in escrow status', async () => { 
+            return APP_NC.$addIpfs2Note(
+                asset5,
+                rgt5,
+                { from: account4, value: 20000000000000000 }
             )
         })
 
-        it('Should write record in AC 10 @ IDX&RGT(1)', async () => {
 
+        it('Should remove asset5 from escrow', async () => {
+            return ECR_NC.endEscrow(
+                asset5,
+                {from: account4}
+            )
+        })
+
+
+        it('Should change asset5 status 51', async () => {
+            return NP_NC._modStatus(
+                asset5,
+                '51',
+                {from: account4}
+            )
+        })
+
+                                                                                            //UNREACHABLE ERROR
+        // it('Should fail because asset needs import', async () => { 
+        //     return APP_NC.$addIpfs2Note(
+        //         asset3,
+        //         rgt3,
+        //         { from: account6, value: 20000000000000000 }
+        //     )
+        // })
+
+
+        it('Should write ipfs2', async () => { 
+            return APP_NC.$addIpfs2Note(
+                asset5,
+                rgt5,
+                { from: account4, value: 20000000000000000 }
+            )
+        })
+
+        //16
+        it('Should fail becasue attempting to overwrite ipfs2', async () => { 
+            return APP_NC.$addIpfs2Note(
+                asset5,
+                rgt4,
+                { from: account4, value: 20000000000000000 }
+            )
+        })
+
+
+    it('Should write record in AC 10 @ IDX&RGT(1)', async () => {
+
+        console.log("//**************************************************END $addIpfs2Note FAIL BATCH***************************************************//")
+        console.log("//**************************************************END APP_NC FAIL BATCH***************************************************//")
+        console.log("//**************************************************END APP_NC TEST***************************************************//")
         console.log("//**************************************BEGIN THE WORKS**********************************************/")
         return APP.$newRecord(
         asset12, 
