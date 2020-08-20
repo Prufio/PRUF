@@ -34,6 +34,8 @@ pragma solidity ^0.6.7;
  *
  *      *find a way to find and react to assets being in a dead asset class (future, API verified, works w/ AC0)
  *
+ *      *minting in storage?
+ *
 *-----------------------------------------------------------------
 
 *-----------------------------------------------------------------

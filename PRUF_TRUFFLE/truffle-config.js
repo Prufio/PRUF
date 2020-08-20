@@ -18,11 +18,11 @@
  *
  */
 
-const HDWalletProvider = require('@truffle/hdwallet-provider');
-// const infuraKey = "fj4jll3k.....";
-//
-const fs = require('fs');
-const mnemonic = "dress cradle trigger claim seminar front fit stone high barely series copy";
+// const HDWalletProvider = require('@truffle/hdwallet-provider');
+// // const infuraKey = "fj4jll3k.....";
+// //
+// const fs = require('fs');
+// const mnemonic = "dress cradle trigger claim seminar front fit stone high barely series copy";
 
 module.exports = {
   /**
