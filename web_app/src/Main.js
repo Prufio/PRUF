@@ -23,7 +23,9 @@ import EscrowManager from "./EscrowManager";
 import RCFJ from "./RetrieveContractsFromJSON"
 
 async function setupContractEnvironment(_web3) {
-    return window.contracts = await buildContracts(_web3);
+    console.log("Setting up contracts")
+    window.contracts = await buildContracts(_web3);
+    return console.log(window.contracts);
 }
 
 class Main extends Component {
@@ -47,88 +49,22 @@ class Main extends Component {
         self.setState({ NP_NC: window.contracts.content[11] });
         self.setState({ RCLR: window.contracts.content[12] });
 
+        window.STOR = window.contracts.content[0];
+        window.APP = window.contracts.content[1];
+        window.NP = window.contracts.content[2];
+        window.AC_MGR = window.contracts.content[3];
+        window.AC_TKN = window.contracts.content[4];
+        window.A_TKN = window.contracts.content[5];
+        window.ECR_MGR = window.contracts.content[6];
+        window.ECR = window.contracts.content[7];
+        window.ECR2 = window.contracts.content[8];
+        window.ECR_NC = window.contracts.content[9];
+        window.APP_NC = window.contracts.content[10];
+        window.NP_NC = window.contracts.content[11];
+        window.RCLR = window.contracts.content[12];
+
         console.log("contracts: ", window.contracts.content)
 
-    };
-
-    this.getAssetClass = async () => {//under the condition that asset class has not been retrieved and stored in state, get it from user data
-      const self = this;
-      //console.log("getting asset class");
-      if (self.state.assetClass > 0 || self.state.APP === "") {
-      } else {
-        self.state.APP.methods
-          .getUserExt(self.state.web3.utils.soliditySha3(self.state.addr))
-          .call({ from: self.state.addr }, function (_error, _result) {
-            if (_error) {
-              console.log(_error)
-            } else {
-              console.log("_result: ", _result); if (_result !== undefined) {
-                self.setState({ assetClass: Object.values(_result)[1] });
-              }
-            }
-          });
-      }
-    };
-
-    this.getOwner = async () => {//check user address against contract ownership calls
-      const self = this;
-
-      if (this.state.STOR === "" || this.state.web3 === null || this.state.STOROwner !== "") { } else {
-        //console.log("Getting STOR owner")
-        this.state.STOR.methods
-          .owner()
-          .call({ from: self.state.addr }, function (_error, _result) {
-            if (_error) {
-              console.log(_error);
-            } else {
-              self.setState({ STOROwner: _result });
-
-              if (_result === self.state.addr) {
-                self.setState({ isSTOROwner: true });
-              } else {
-                self.setState({ isSTOROwner: false });
-              }
-            }
-          });
-      }
-
-      if (this.state.APP === "" || this.state.web3 === null || this.state.BPPOwner !== "") { } else {
-        //console.log("Getting BPP owner")
-        this.state.APP.methods
-          .owner()
-          .call({ from: self.state.addr }, function (_error, _result) {
-            if (_error) {
-              console.log(_error);
-            } else {
-              self.setState({ BPPOwner: _result });
-
-              if (_result === self.state.addr) {
-                self.setState({ isBPPOwner: true });
-              } else {
-                self.setState({ isBPPOwner: false });
-              }
-            }
-          });
-      }
-
-      if (this.state.NP === "" || this.state.web3 === null || this.state.BPNPOwner !== "") { } else {
-        //console.log("Getting BPNP owner")
-        this.state.NP.methods
-          .owner()
-          .call({ from: self.state.addr }, function (_error, _result) {
-            if (_error) {
-              console.log(_error);
-            } else {
-              self.setState({ BPNPOwner: _result });
-
-              if (_result === self.state.addr) {
-                self.setState({ isBPNPOwner: true });
-              } else {
-                self.setState({ isBPNPOwner: false });
-              }
-            }
-          });
-      }
     };
 
     this.acctChanger = async () => {//Handle an address change, update state accordingly
@@ -137,8 +73,10 @@ class Main extends Component {
       var _web3 = require("web3");
       _web3 = new Web3(_web3.givenProvider);
       ethereum.on("accountsChanged", function (accounts) {
-        _web3.eth.getAccounts().then((e) => self.setState({ addr: e[0] }));
-        /* self.setState({assetClass: undefined}) */
+        _web3.eth.getAccounts().then((e) => 
+        {
+          window.addr = e[0];
+          return self.setState({ addr: e[0] })});
       });
       /*   if (self.state.addr !== this.state.owner) {
           self.setState({ isOwner: false });
@@ -183,12 +121,10 @@ class Main extends Component {
     _web3 = new Web3(_web3.givenProvider);
     setupContractEnvironment(_web3);
     this.setState({ web3: _web3 });
+    window.web3 = _web3;
     ethereum.enable();
     _web3.eth.getAccounts().then((e) => this.setState({ addr: e[0] }));
     document.addEventListener("accountListener", this.acctChanger());
-    for (let i = 0; i < 5; i++) {
-      this.getOwner();
-    }
   }
 
   componentDidCatch(error, info) {
@@ -204,15 +140,15 @@ class Main extends Component {
 
     /* if (this.state.addr > 0 && this.state.assetClass === undefined && this.state.APP !== "") {
       for (let i = 0; i < 5; i++) {
-        this.getAssetClass();
+        //this.getAssetClass();
       }
     }  */
 
-    console.log(window.contracts)
+   /*  console.log(window.contracts) */
 
-    if (this.state.web3 !== null) {
+    /* if (this.state.web3 !== null) {
       this.getOwner();
-    }
+    } */
 
     if (this.state.web3 !== null && window.contracts > 0) {
       this.getContracts();
@@ -226,7 +162,7 @@ class Main extends Component {
   }
 
   render() {//render continuously produces an up-to-date stateful document  
-    const toggleAdmin = () => {
+    /* const toggleAdmin = () => {
       if (this.state.isSTOROwner || this.state.isBPPOwner || this.state.isBPNPOwner) {
         if (this.state.ownerMenu === false) {
           this.setState({ ownerMenu: true });
@@ -234,7 +170,7 @@ class Main extends Component {
           this.setState({ ownerMenu: false });
         }
       }
-    };
+    }; */
 
     return (
       <HashRouter>
@@ -244,7 +180,7 @@ class Main extends Component {
             <div className="userData">
               {this.state.addr > 0 && (
                 <div className="banner">
-                  Currently serving :{this.state.addr} {/* Asset Class: {this.state.assetClass} */}
+                  Currently serving :{this.state.addr} 
                 </div>
               )}
               {this.state.addr === undefined && (
@@ -300,7 +236,7 @@ class Main extends Component {
                   </nav>
                 )}
 
-                {this.state.ownerMenu === true && (
+                {/* {this.state.ownerMenu === true && (
                   <nav>
                     <li>
                       <NavLink exact to="/">
@@ -320,7 +256,7 @@ class Main extends Component {
                       <NavLink to="/ownership">Ownership</NavLink>
                     </li>
                   </nav>
-                )}
+                )} */}
               </ul>
               <div className="content">
                 <Route exact path="/" component={Home} />
@@ -349,16 +285,16 @@ class Main extends Component {
                   path="/manage-escrow"
                   component={EscrowManager}
                 />
-                <Route path="/add-user" component={AddUser} />
+                {/* <Route path="/add-user" component={AddUser} />
                 <Route path="/set-costs" component={SetCosts} />
                 <Route path="/add-contract" component={AddContract} />
-                <Route path="/ownership" component={Ownership} />
+                <Route path="/ownership" component={Ownership} /> */}
                 <Route path="/the-works" component={THEWORKS} />
               </div>
             </div>
           </div>
           <NavLink to="/">
-            {(this.state.isSTOROwner === true || this.state.isBPPOwner === true || this.state.isBPNPOwner === true) && (
+            {/* {(this.state.isSTOROwner === true || this.state.isBPPOwner === true || this.state.isBPNPOwner === true) && (
               <Form className="buttonDisplay2">
                 <Button
                   variant="danger"
@@ -369,7 +305,7 @@ class Main extends Component {
                   Toggle Admin
                 </Button>
               </Form>
-            )}
+            )} */}
           </NavLink>
         </div>
       </HashRouter>

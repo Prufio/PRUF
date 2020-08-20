@@ -42,7 +42,7 @@ class AddNote extends Component {
       }
     };
 
-    this.getAssetClass = async () => {//under the condition that asset class has not been retrieved and stored in state, get it from user data
+    /* this.getAssetClass = async () => {//under the condition that asset class has not been retrieved and stored in state, get it from user data
       const self = this;
       //console.log("getting asset class");
       if (self.state.assetClass > 0 || self.state.AC_MGR === "") {
@@ -58,7 +58,7 @@ class AddNote extends Component {
             }
           });
     }
-    };
+    }; */
 
     this.getContracts = async () => {
           const self = this;
@@ -181,7 +181,7 @@ class AddNote extends Component {
 
 
     if (this.state.addr > 0 && this.state.assetClass === undefined) {
-      this.getAssetClass();
+      //this.getAssetClass();
     }
 
     if (this.state.addr > 0) {

@@ -93,7 +93,9 @@ async function buildContracts(_web3) {
       if (_error) {
         console.log(_error);
       } else {
+        console.log(_result)
         AC_MGR = new _web3.eth.Contract(AC_MGR_ABI, _result);
+        console.log(AC_MGR)
       }
     }
     );
