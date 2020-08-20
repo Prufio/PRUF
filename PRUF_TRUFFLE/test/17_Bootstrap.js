@@ -9,7 +9,6 @@
     const PRUF_AC_MGR = artifacts.require('AC_MGR');
     const PRUF_AC_TKN = artifacts.require('AC_TKN');
     const PRUF_A_TKN = artifacts.require('A_TKN');
-    const PRUF_A_TKN2 = artifacts.require('A_TKN2');
     const PRUF_ECR_MGR = artifacts.require('ECR_MGR');
     const PRUF_ECR = artifacts.require('ECR');
     const PRUF_ECR2 = artifacts.require('ECR2');
@@ -27,7 +26,6 @@
     let AC_MGR;
     let AC_TKN;
     let A_TKN;
-    let A_TKN2;
     let ECR_MGR;
     let ECR;
     let ECR2;
@@ -225,13 +223,6 @@
         ECR2 = PRUF_ECR2_TEST;
     })
 
-
-    it('Should deploy PRUF_A_TKN2', async () => {
-        const PRUF_A_TKN2_TEST = await PRUF_A_TKN2.deployed({ from: account1 });
-        console.log(PRUF_A_TKN2_TEST.address);
-        assert(PRUF_A_TKN2_TEST.address !== '')
-        A_TKN2 = PRUF_A_TKN2_TEST;
-    })
 
     it('Should deploy PRUF_MAL_APP', async () => {
         const PRUF_MAL_APP_TEST = await PRUF_MAL_APP.deployed({ from: account1 });
@@ -483,11 +474,6 @@
                 console.log("Adding A_TKN to storage for use in AC 0")
                 return STOR.OO_addContract("A_TKN", A_TKN.address, '0', '1', { from: account1 })
             })
-
-            .then(() => {
-                console.log("Adding A_TKN2 to storage for use in AC 0")
-                return STOR.OO_addContract("A_TKN2", A_TKN2.address, '0', '1', { from: account1 })
-            })
             
             .then(() => {
                 console.log("Adding ECR_MGR to storage for use in AC 0")
@@ -565,11 +551,6 @@
                 console.log("Adding in A_TKN")
                 return A_TKN.OO_setStorageContract(STOR.address, { from: account1 })
             })
-
-            .then(() => {
-                console.log("Adding in A_TKN2")
-                return A_TKN2.OO_setStorageContract(STOR.address, { from: account1 })
-            })
             
             .then(() => {
                 console.log("Adding in ECR_MGR")
@@ -641,11 +622,6 @@
             .then(() => {
                 console.log("Resolving in A_TKN")
                 return A_TKN.OO_ResolveContractAddresses({ from: account1 })
-            })
-
-            .then(() => {
-                console.log("Resolving in A_TKN2")
-                return A_TKN2.OO_ResolveContractAddresses({ from: account1 })
             })
             
             .then(() => {
@@ -947,41 +923,6 @@
             
             .then(() => {
                 return STOR.enableContractForAC('A_TKN', '2', '1', { from: account1 })
-            })
-    })
-
-
-    it('Should authorize A_TKN2 in all relevant asset classes', async () => {
-        
-        console.log("Authorizing A_TKN2")
-        return STOR.enableContractForAC('A_TKN2', '10', '1', { from: account1 })
-            
-            .then(() => {
-                return STOR.enableContractForAC('A_TKN2', '11', '1', { from: account1 })
-            })
-            
-            .then(() => {
-                return STOR.enableContractForAC('A_TKN2', '12', '2', { from: account1 })
-            })
-            
-            .then(() => {
-                return STOR.enableContractForAC('A_TKN2', '13', '2', { from: account1 })
-            })
-            
-            .then(() => {
-                return STOR.enableContractForAC('A_TKN2', '14', '2', { from: account1 })
-            })
-
-            .then(() => {
-                return STOR.enableContractForAC('A_TKN2', '15', '2', { from: account10 })
-            })
-            
-            .then(() => {
-                return STOR.enableContractForAC('A_TKN2', '1', '1', { from: account1 })
-            })
-            
-            .then(() => {
-                return STOR.enableContractForAC('A_TKN2', '2', '1', { from: account1 })
             })
     })
 
