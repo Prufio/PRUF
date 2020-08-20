@@ -1,4 +1,0 @@
-Test each function for accessability from origin, authorized, authorized robot
-Test functionality for error catching / proper functionality / malformed input
-
-Report tests passed and failed with context in a text document
