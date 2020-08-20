@@ -1,4 +1,4 @@
-const PRUF_APP = artifacts.require('./APP');
+const PRUF_APP = artifacts.require('APP');
 
 module.exports = function(deployer){
     deployer.deploy(PRUF_APP);
