@@ -8,12 +8,6 @@ import bs58 from "bs58";
 import returnManufacturers from "./Manufacturers";
 import returnTypes from "./Types";
 
-let contracts;
-
-async function setupContractEnvironment(_web3) {
-    contracts = window.contracts;
-}
-
 class NewRecord extends Component {
   constructor(props) {
     super(props);
@@ -41,7 +35,7 @@ class NewRecord extends Component {
       }
     };
 
-    this.getAssetClass = async () => {//under the condition that asset class has not been retrieved and stored in state, get it from user data
+    /* this.getAssetClass = async () => {//under the condition that asset class has not been retrieved and stored in state, get it from user data
       const self = this;
       //console.log("getting asset class");
       if (self.state.assetClass > 0 || self.state.AC_MGR === "") {
@@ -57,7 +51,7 @@ class NewRecord extends Component {
             }
           });
     }
-    };
+    }; */
 
     this.getContracts = async () => {
           const self = this;
@@ -147,7 +141,6 @@ class NewRecord extends Component {
 
     var _web3 = require("web3");
     _web3 = new Web3(_web3.givenProvider);
-    setupContractEnvironment(_web3);
     console.log(window.contracts)
     this.setState({ web3: _web3 });
     _web3.eth.getAccounts().then((e) => this.setState({ addr: e[0] }));
@@ -163,13 +156,9 @@ class NewRecord extends Component {
 
   componentDidUpdate() {//stuff to do on a re-render
 
-    if(this.state.web3 !== null && this.state.APP < 1){
+    if(this.state.web3 !== null && window.contracts > 0){
       this.getContracts();
     }
-
-    if (this.state.addr > 0 && this.state.assetClass === undefined && this.state.APP !== "") {
-        this.getAssetClass();
-    } 
 
     if (this.state.addr > 0) {
       if (this.state.costArray[0] < 1) {
