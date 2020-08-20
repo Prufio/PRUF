@@ -48,11 +48,11 @@ module.exports = {
     // tab if you use this network and you must also set the `host`, `port` and `network_id`
     // options below to some value.
     //
-    /* development: {
+    development: {
       host: "127.0.0.1",     // Localhost (default: none)
       port: 7545,            // Standard Ethereum port (default: none)
       network_id: "5777",       // Any network (default: none)
-     }, */
+     },
 
     // Another network with more advanced options...
     // advanced: {
@@ -69,10 +69,10 @@ module.exports = {
      kovan: {
        provider: () => new HDWalletProvider(mnemonic, `https://kovan.infura.io/v3/ab9233de7c4b4adea39fcf3c41914959`),
        gas: 5500000,        // Ropsten has a lower block limit than mainnet
-       confirmations: 2,    // # of confs to wait between deployments. (default: 0)
+       confirmations: 3,    // # of confs to wait between deployments. (default: 0)
        infuraKey: 'af4acccb0278465a84e7408788f9141e', // 
        network_id: 42,      // kovan network id
-       timeoutBlocks: 200,  // # of blocks before a deployment times out  (minimum/default: 50)
+       timeoutBlocks: 600,  // # of blocks before a deployment times out  (minimum/default: 50)
        skipDryRun: true     // Skip dry run before migrations? (default: false for public nets )
      },
 
@@ -96,7 +96,7 @@ module.exports = {
       docker: false,        // Use "0.5.1" you've installed locally with docker (default: false)
       settings: {          // See the solidity docs for advice about optimization and evmVersion
        optimizer: {
-         enabled: false,
+         enabled: true,
          runs: 200
        },
        evmVersion: ""

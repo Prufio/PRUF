@@ -332,7 +332,7 @@
       "type": "function"
     }
   ],
-  "metadata": "{\"compiler\":{\"version\":\"0.6.9+commit.3e3065ac\"},\"language\":\"Solidity\",\"output\":{\"abi\":[{\"anonymous\":false,\"inputs\":[{\"indexed\":true,\"internalType\":\"address\",\"name\":\"owner\",\"type\":\"address\"},{\"indexed\":true,\"internalType\":\"address\",\"name\":\"approved\",\"type\":\"address\"},{\"indexed\":true,\"internalType\":\"uint256\",\"name\":\"tokenId\",\"type\":\"uint256\"}],\"name\":\"Approval\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":true,\"internalType\":\"address\",\"name\":\"owner\",\"type\":\"address\"},{\"indexed\":true,\"internalType\":\"address\",\"name\":\"operator\",\"type\":\"address\"},{\"indexed\":false,\"internalType\":\"bool\",\"name\":\"approved\",\"type\":\"bool\"}],\"name\":\"ApprovalForAll\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":true,\"internalType\":\"address\",\"name\":\"from\",\"type\":\"address\"},{\"indexed\":true,\"internalType\":\"address\",\"name\":\"to\",\"type\":\"address\"},{\"indexed\":true,\"internalType\":\"uint256\",\"name\":\"tokenId\",\"type\":\"uint256\"}],\"name\":\"Transfer\",\"type\":\"event\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"to\",\"type\":\"address\"},{\"internalType\":\"uint256\",\"name\":\"tokenId\",\"type\":\"uint256\"}],\"name\":\"approve\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"owner\",\"type\":\"address\"}],\"name\":\"balanceOf\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"balance\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"tokenId\",\"type\":\"uint256\"}],\"name\":\"getApproved\",\"outputs\":[{\"internalType\":\"address\",\"name\":\"operator\",\"type\":\"address\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"owner\",\"type\":\"address\"},{\"internalType\":\"address\",\"name\":\"operator\",\"type\":\"address\"}],\"name\":\"isApprovedForAll\",\"outputs\":[{\"internalType\":\"bool\",\"name\":\"\",\"type\":\"bool\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"name\",\"outputs\":[{\"internalType\":\"string\",\"name\":\"\",\"type\":\"string\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"tokenId\",\"type\":\"uint256\"}],\"name\":\"ownerOf\",\"outputs\":[{\"internalType\":\"address\",\"name\":\"owner\",\"type\":\"address\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"from\",\"type\":\"address\"},{\"internalType\":\"address\",\"name\":\"to\",\"type\":\"address\"},{\"internalType\":\"uint256\",\"name\":\"tokenId\",\"type\":\"uint256\"}],\"name\":\"safeTransferFrom\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"from\",\"type\":\"address\"},{\"internalType\":\"address\",\"name\":\"to\",\"type\":\"address\"},{\"internalType\":\"uint256\",\"name\":\"tokenId\",\"type\":\"uint256\"},{\"internalType\":\"bytes\",\"name\":\"data\",\"type\":\"bytes\"}],\"name\":\"safeTransferFrom\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"operator\",\"type\":\"address\"},{\"internalType\":\"bool\",\"name\":\"_approved\",\"type\":\"bool\"}],\"name\":\"setApprovalForAll\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"bytes4\",\"name\":\"interfaceId\",\"type\":\"bytes4\"}],\"name\":\"supportsInterface\",\"outputs\":[{\"internalType\":\"bool\",\"name\":\"\",\"type\":\"bool\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"symbol\",\"outputs\":[{\"internalType\":\"string\",\"name\":\"\",\"type\":\"string\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"tokenId\",\"type\":\"uint256\"}],\"name\":\"tokenURI\",\"outputs\":[{\"internalType\":\"string\",\"name\":\"\",\"type\":\"string\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"from\",\"type\":\"address\"},{\"internalType\":\"address\",\"name\":\"to\",\"type\":\"address\"},{\"internalType\":\"uint256\",\"name\":\"tokenId\",\"type\":\"uint256\"}],\"name\":\"transferFrom\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"}],\"devdoc\":{\"details\":\"See https://eips.ethereum.org/EIPS/eip-721\",\"methods\":{\"approve(address,uint256)\":{\"details\":\"Gives permission to `to` to transfer `tokenId` token to another account. The approval is cleared when the token is transferred. Only a single account can be approved at a time, so approving the zero address clears previous approvals. Requirements: - The caller must own the token or be an approved operator. - `tokenId` must exist. Emits an {Approval} event.\"},\"balanceOf(address)\":{\"details\":\"Returns the number of tokens in ``owner``'s account.\"},\"getApproved(uint256)\":{\"details\":\"Returns the account approved for `tokenId` token. Requirements: - `tokenId` must exist.\"},\"isApprovedForAll(address,address)\":{\"details\":\"Returns if the `operator` is allowed to manage all of the assets of `owner`. See {setApprovalForAll}\"},\"name()\":{\"details\":\"Returns the token collection name.\"},\"ownerOf(uint256)\":{\"details\":\"Returns the owner of the `tokenId` token. Requirements: - `tokenId` must exist.\"},\"safeTransferFrom(address,address,uint256)\":{\"details\":\"Safely transfers `tokenId` token from `from` to `to`, checking first that contract recipients are aware of the ERC721 protocol to prevent tokens from being forever locked. Requirements: - `from` cannot be the zero address. - `to` cannot be the zero address. - `tokenId` token must exist and be owned by `from`. - If the caller is not `from`, it must be have been allowed to move this token by either {approve} or {setApprovalForAll}. - If `to` refers to a smart contract, it must implement {IERC721Receiver-onERC721Received}, which is called upon a safe transfer. Emits a {Transfer} event.\"},\"safeTransferFrom(address,address,uint256,bytes)\":{\"details\":\"Safely transfers `tokenId` token from `from` to `to`. Requirements: - `from` cannot be the zero address. - `to` cannot be the zero address. - `tokenId` token must exist and be owned by `from`. - If the caller is not `from`, it must be approved to move this token by either {approve} or {setApprovalForAll}. - If `to` refers to a smart contract, it must implement {IERC721Receiver-onERC721Received}, which is called upon a safe transfer. Emits a {Transfer} event.\"},\"setApprovalForAll(address,bool)\":{\"details\":\"Approve or remove `operator` as an operator for the caller. Operators can call {transferFrom} or {safeTransferFrom} for any token owned by the caller. Requirements: - The `operator` cannot be the caller. Emits an {ApprovalForAll} event.\"},\"supportsInterface(bytes4)\":{\"details\":\"Returns true if this contract implements the interface defined by `interfaceId`. See the corresponding https://eips.ethereum.org/EIPS/eip-165#how-interfaces-are-identified[EIP section] to learn more about how these ids are created. This function call must use less than 30 000 gas.\"},\"symbol()\":{\"details\":\"Returns the token collection symbol.\"},\"tokenURI(uint256)\":{\"details\":\"Returns the Uniform Resource Identifier (URI) for `tokenId` token.\"},\"transferFrom(address,address,uint256)\":{\"details\":\"Transfers `tokenId` token from `from` to `to`. WARNING: Usage of this method is discouraged, use {safeTransferFrom} whenever possible. Requirements: - `from` cannot be the zero address. - `to` cannot be the zero address. - `tokenId` token must be owned by `from`. - If the caller is not `from`, it must be approved to move this token by either {approve} or {setApprovalForAll}. Emits a {Transfer} event.\"}},\"title\":\"ERC-721 Non-Fungible Token Standard, optional metadata extension\"},\"userdoc\":{\"methods\":{}}},\"settings\":{\"compilationTarget\":{\"/C/Users/Blayde/Documents/ETHDEV/bulletproof/PRUF_TRUFFLE/contracts/_ERC721/IERC721Metadata.sol\":\"IERC721Metadata\"},\"evmVersion\":\"istanbul\",\"libraries\":{},\"metadata\":{\"bytecodeHash\":\"ipfs\"},\"optimizer\":{\"enabled\":false,\"runs\":200},\"remappings\":[]},\"sources\":{\"/C/Users/Blayde/Documents/ETHDEV/bulletproof/PRUF_TRUFFLE/contracts/_ERC721/IERC165.sol\":{\"keccak256\":\"0xe422884a5ef330f9f92024cbabf06101ee132889600ce2da21ecccef6d00699f\",\"license\":\"MIT\",\"urls\":[\"bzz-raw://2f3ab2e8a2811cd0a053e5b4271a828e5c2044c0ff3b97d78512758b536beaf4\",\"dweb:/ipfs/QmeFi4p4m7D1uUys15uPCzWLN1K2EUA3becSBNazJTtc7v\"]},\"/C/Users/Blayde/Documents/ETHDEV/bulletproof/PRUF_TRUFFLE/contracts/_ERC721/IERC721.sol\":{\"keccak256\":\"0x82b4793991986bf15e014b709d98316892805d132329cf83982a0a6e4a32f1cf\",\"license\":\"MIT\",\"urls\":[\"bzz-raw://f6760e696ab3850ead6ab008a469cb419439a7929288d1013c6769e2645f5d7b\",\"dweb:/ipfs/QmV4WCwGFUQzmWiH5iVCpGj5nbG4d4btYfvLVazmPBK2CU\"]},\"/C/Users/Blayde/Documents/ETHDEV/bulletproof/PRUF_TRUFFLE/contracts/_ERC721/IERC721Metadata.sol\":{\"keccak256\":\"0xf3f62c312a3dcc958db5881e4e1b267b57ac2364e6763094dae90a956eaa71ed\",\"license\":\"MIT\",\"urls\":[\"bzz-raw://e707aaf4a910fdde96979aff7ad28df8c6cdb59bc47f34105c73a55e5d6163b2\",\"dweb:/ipfs/QmYEguAwm6LBX2n3ibvKPgqo6eRdsbMbxYqXwZbwq4Y8X2\"]}},\"version\":1}",
+  "metadata": "{\"compiler\":{\"version\":\"0.6.9+commit.3e3065ac\"},\"language\":\"Solidity\",\"output\":{\"abi\":[{\"anonymous\":false,\"inputs\":[{\"indexed\":true,\"internalType\":\"address\",\"name\":\"owner\",\"type\":\"address\"},{\"indexed\":true,\"internalType\":\"address\",\"name\":\"approved\",\"type\":\"address\"},{\"indexed\":true,\"internalType\":\"uint256\",\"name\":\"tokenId\",\"type\":\"uint256\"}],\"name\":\"Approval\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":true,\"internalType\":\"address\",\"name\":\"owner\",\"type\":\"address\"},{\"indexed\":true,\"internalType\":\"address\",\"name\":\"operator\",\"type\":\"address\"},{\"indexed\":false,\"internalType\":\"bool\",\"name\":\"approved\",\"type\":\"bool\"}],\"name\":\"ApprovalForAll\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":true,\"internalType\":\"address\",\"name\":\"from\",\"type\":\"address\"},{\"indexed\":true,\"internalType\":\"address\",\"name\":\"to\",\"type\":\"address\"},{\"indexed\":true,\"internalType\":\"uint256\",\"name\":\"tokenId\",\"type\":\"uint256\"}],\"name\":\"Transfer\",\"type\":\"event\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"to\",\"type\":\"address\"},{\"internalType\":\"uint256\",\"name\":\"tokenId\",\"type\":\"uint256\"}],\"name\":\"approve\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"owner\",\"type\":\"address\"}],\"name\":\"balanceOf\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"balance\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"tokenId\",\"type\":\"uint256\"}],\"name\":\"getApproved\",\"outputs\":[{\"internalType\":\"address\",\"name\":\"operator\",\"type\":\"address\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"owner\",\"type\":\"address\"},{\"internalType\":\"address\",\"name\":\"operator\",\"type\":\"address\"}],\"name\":\"isApprovedForAll\",\"outputs\":[{\"internalType\":\"bool\",\"name\":\"\",\"type\":\"bool\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"name\",\"outputs\":[{\"internalType\":\"string\",\"name\":\"\",\"type\":\"string\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"tokenId\",\"type\":\"uint256\"}],\"name\":\"ownerOf\",\"outputs\":[{\"internalType\":\"address\",\"name\":\"owner\",\"type\":\"address\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"from\",\"type\":\"address\"},{\"internalType\":\"address\",\"name\":\"to\",\"type\":\"address\"},{\"internalType\":\"uint256\",\"name\":\"tokenId\",\"type\":\"uint256\"}],\"name\":\"safeTransferFrom\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"from\",\"type\":\"address\"},{\"internalType\":\"address\",\"name\":\"to\",\"type\":\"address\"},{\"internalType\":\"uint256\",\"name\":\"tokenId\",\"type\":\"uint256\"},{\"internalType\":\"bytes\",\"name\":\"data\",\"type\":\"bytes\"}],\"name\":\"safeTransferFrom\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"operator\",\"type\":\"address\"},{\"internalType\":\"bool\",\"name\":\"_approved\",\"type\":\"bool\"}],\"name\":\"setApprovalForAll\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"bytes4\",\"name\":\"interfaceId\",\"type\":\"bytes4\"}],\"name\":\"supportsInterface\",\"outputs\":[{\"internalType\":\"bool\",\"name\":\"\",\"type\":\"bool\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"symbol\",\"outputs\":[{\"internalType\":\"string\",\"name\":\"\",\"type\":\"string\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"tokenId\",\"type\":\"uint256\"}],\"name\":\"tokenURI\",\"outputs\":[{\"internalType\":\"string\",\"name\":\"\",\"type\":\"string\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"from\",\"type\":\"address\"},{\"internalType\":\"address\",\"name\":\"to\",\"type\":\"address\"},{\"internalType\":\"uint256\",\"name\":\"tokenId\",\"type\":\"uint256\"}],\"name\":\"transferFrom\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"}],\"devdoc\":{\"details\":\"See https://eips.ethereum.org/EIPS/eip-721\",\"methods\":{\"approve(address,uint256)\":{\"details\":\"Gives permission to `to` to transfer `tokenId` token to another account. The approval is cleared when the token is transferred. Only a single account can be approved at a time, so approving the zero address clears previous approvals. Requirements: - The caller must own the token or be an approved operator. - `tokenId` must exist. Emits an {Approval} event.\"},\"balanceOf(address)\":{\"details\":\"Returns the number of tokens in ``owner``'s account.\"},\"getApproved(uint256)\":{\"details\":\"Returns the account approved for `tokenId` token. Requirements: - `tokenId` must exist.\"},\"isApprovedForAll(address,address)\":{\"details\":\"Returns if the `operator` is allowed to manage all of the assets of `owner`. See {setApprovalForAll}\"},\"name()\":{\"details\":\"Returns the token collection name.\"},\"ownerOf(uint256)\":{\"details\":\"Returns the owner of the `tokenId` token. Requirements: - `tokenId` must exist.\"},\"safeTransferFrom(address,address,uint256)\":{\"details\":\"Safely transfers `tokenId` token from `from` to `to`, checking first that contract recipients are aware of the ERC721 protocol to prevent tokens from being forever locked. Requirements: - `from` cannot be the zero address. - `to` cannot be the zero address. - `tokenId` token must exist and be owned by `from`. - If the caller is not `from`, it must be have been allowed to move this token by either {approve} or {setApprovalForAll}. - If `to` refers to a smart contract, it must implement {IERC721Receiver-onERC721Received}, which is called upon a safe transfer. Emits a {Transfer} event.\"},\"safeTransferFrom(address,address,uint256,bytes)\":{\"details\":\"Safely transfers `tokenId` token from `from` to `to`. Requirements: - `from` cannot be the zero address. - `to` cannot be the zero address. - `tokenId` token must exist and be owned by `from`. - If the caller is not `from`, it must be approved to move this token by either {approve} or {setApprovalForAll}. - If `to` refers to a smart contract, it must implement {IERC721Receiver-onERC721Received}, which is called upon a safe transfer. Emits a {Transfer} event.\"},\"setApprovalForAll(address,bool)\":{\"details\":\"Approve or remove `operator` as an operator for the caller. Operators can call {transferFrom} or {safeTransferFrom} for any token owned by the caller. Requirements: - The `operator` cannot be the caller. Emits an {ApprovalForAll} event.\"},\"supportsInterface(bytes4)\":{\"details\":\"Returns true if this contract implements the interface defined by `interfaceId`. See the corresponding https://eips.ethereum.org/EIPS/eip-165#how-interfaces-are-identified[EIP section] to learn more about how these ids are created. This function call must use less than 30 000 gas.\"},\"symbol()\":{\"details\":\"Returns the token collection symbol.\"},\"tokenURI(uint256)\":{\"details\":\"Returns the Uniform Resource Identifier (URI) for `tokenId` token.\"},\"transferFrom(address,address,uint256)\":{\"details\":\"Transfers `tokenId` token from `from` to `to`. WARNING: Usage of this method is discouraged, use {safeTransferFrom} whenever possible. Requirements: - `from` cannot be the zero address. - `to` cannot be the zero address. - `tokenId` token must be owned by `from`. - If the caller is not `from`, it must be approved to move this token by either {approve} or {setApprovalForAll}. Emits a {Transfer} event.\"}},\"title\":\"ERC-721 Non-Fungible Token Standard, optional metadata extension\"},\"userdoc\":{\"methods\":{}}},\"settings\":{\"compilationTarget\":{\"/C/Users/Blayde/Documents/ETHDEV/bulletproof/PRUF_TRUFFLE/contracts/_ERC721/IERC721Metadata.sol\":\"IERC721Metadata\"},\"evmVersion\":\"istanbul\",\"libraries\":{},\"metadata\":{\"bytecodeHash\":\"ipfs\"},\"optimizer\":{\"enabled\":true,\"runs\":200},\"remappings\":[]},\"sources\":{\"/C/Users/Blayde/Documents/ETHDEV/bulletproof/PRUF_TRUFFLE/contracts/_ERC721/IERC165.sol\":{\"keccak256\":\"0xe422884a5ef330f9f92024cbabf06101ee132889600ce2da21ecccef6d00699f\",\"license\":\"MIT\",\"urls\":[\"bzz-raw://2f3ab2e8a2811cd0a053e5b4271a828e5c2044c0ff3b97d78512758b536beaf4\",\"dweb:/ipfs/QmeFi4p4m7D1uUys15uPCzWLN1K2EUA3becSBNazJTtc7v\"]},\"/C/Users/Blayde/Documents/ETHDEV/bulletproof/PRUF_TRUFFLE/contracts/_ERC721/IERC721.sol\":{\"keccak256\":\"0x82b4793991986bf15e014b709d98316892805d132329cf83982a0a6e4a32f1cf\",\"license\":\"MIT\",\"urls\":[\"bzz-raw://f6760e696ab3850ead6ab008a469cb419439a7929288d1013c6769e2645f5d7b\",\"dweb:/ipfs/QmV4WCwGFUQzmWiH5iVCpGj5nbG4d4btYfvLVazmPBK2CU\"]},\"/C/Users/Blayde/Documents/ETHDEV/bulletproof/PRUF_TRUFFLE/contracts/_ERC721/IERC721Metadata.sol\":{\"keccak256\":\"0xf3f62c312a3dcc958db5881e4e1b267b57ac2364e6763094dae90a956eaa71ed\",\"license\":\"MIT\",\"urls\":[\"bzz-raw://e707aaf4a910fdde96979aff7ad28df8c6cdb59bc47f34105c73a55e5d6163b2\",\"dweb:/ipfs/QmYEguAwm6LBX2n3ibvKPgqo6eRdsbMbxYqXwZbwq4Y8X2\"]}},\"version\":1}",
   "bytecode": "0x",
   "deployedBytecode": "0x",
   "sourceMap": "",
@@ -343,15 +343,15 @@
     "absolutePath": "/C/Users/Blayde/Documents/ETHDEV/bulletproof/PRUF_TRUFFLE/contracts/_ERC721/IERC721Metadata.sol",
     "exportedSymbols": {
       "IERC721Metadata": [
-        15697
+        14574
       ]
     },
-    "id": 15698,
+    "id": 14575,
     "license": "MIT",
     "nodeType": "SourceUnit",
     "nodes": [
       {
-        "id": 15672,
+        "id": 14549,
         "literals": [
           "solidity",
           "^",
@@ -359,16 +359,16 @@
           ".2"
         ],
         "nodeType": "PragmaDirective",
-        "src": "35:23:45"
+        "src": "35:23:44"
       },
       {
         "absolutePath": "/C/Users/Blayde/Documents/ETHDEV/bulletproof/PRUF_TRUFFLE/contracts/_ERC721/IERC721.sol",
         "file": "./IERC721.sol",
-        "id": 15673,
+        "id": 14550,
         "nodeType": "ImportDirective",
-        "scope": 15698,
-        "sourceUnit": 15640,
-        "src": "62:23:45",
+        "scope": 14575,
+        "sourceUnit": 14517,
+        "src": "62:23:44",
         "symbolAliases": [],
         "unitAlias": ""
       },
@@ -379,38 +379,38 @@
             "arguments": null,
             "baseName": {
               "contractScope": null,
-              "id": 15675,
+              "id": 14552,
               "name": "IERC721",
               "nodeType": "UserDefinedTypeName",
-              "referencedDeclaration": 15639,
-              "src": "256:7:45",
+              "referencedDeclaration": 14516,
+              "src": "256:7:44",
               "typeDescriptions": {
-                "typeIdentifier": "t_contract$_IERC721_$15639",
+                "typeIdentifier": "t_contract$_IERC721_$14516",
                 "typeString": "contract IERC721"
               }
             },
-            "id": 15676,
+            "id": 14553,
             "nodeType": "InheritanceSpecifier",
-            "src": "256:7:45"
+            "src": "256:7:44"
           }
         ],
         "contractDependencies": [
-          15523,
-          15639
+          14400,
+          14516
         ],
         "contractKind": "interface",
         "documentation": {
-          "id": 15674,
+          "id": 14551,
           "nodeType": "StructuredDocumentation",
-          "src": "89:136:45",
+          "src": "89:136:44",
           "text": " @title ERC-721 Non-Fungible Token Standard, optional metadata extension\n @dev See https://eips.ethereum.org/EIPS/eip-721"
         },
         "fullyImplemented": false,
-        "id": 15697,
+        "id": 14574,
         "linearizedBaseContracts": [
-          15697,
-          15639,
-          15523
+          14574,
+          14516,
+          14400
         ],
         "name": "IERC721Metadata",
         "nodeType": "ContractDefinition",
@@ -418,13 +418,13 @@
           {
             "body": null,
             "documentation": {
-              "id": 15677,
+              "id": 14554,
               "nodeType": "StructuredDocumentation",
-              "src": "273:60:45",
+              "src": "273:60:44",
               "text": " @dev Returns the token collection name."
             },
             "functionSelector": "06fdde03",
-            "id": 15682,
+            "id": 14559,
             "implemented": false,
             "kind": "function",
             "modifiers": [],
@@ -432,24 +432,24 @@
             "nodeType": "FunctionDefinition",
             "overrides": null,
             "parameters": {
-              "id": 15678,
+              "id": 14555,
               "nodeType": "ParameterList",
               "parameters": [],
-              "src": "352:2:45"
+              "src": "352:2:44"
             },
             "returnParameters": {
-              "id": 15681,
+              "id": 14558,
               "nodeType": "ParameterList",
               "parameters": [
                 {
                   "constant": false,
-                  "id": 15680,
+                  "id": 14557,
                   "mutability": "mutable",
                   "name": "",
                   "nodeType": "VariableDeclaration",
                   "overrides": null,
-                  "scope": 15682,
-                  "src": "378:13:45",
+                  "scope": 14559,
+                  "src": "378:13:44",
                   "stateVariable": false,
                   "storageLocation": "memory",
                   "typeDescriptions": {
@@ -457,10 +457,10 @@
                     "typeString": "string"
                   },
                   "typeName": {
-                    "id": 15679,
+                    "id": 14556,
                     "name": "string",
                     "nodeType": "ElementaryTypeName",
-                    "src": "378:6:45",
+                    "src": "378:6:44",
                     "typeDescriptions": {
                       "typeIdentifier": "t_string_storage_ptr",
                       "typeString": "string"
@@ -470,10 +470,10 @@
                   "visibility": "internal"
                 }
               ],
-              "src": "377:15:45"
+              "src": "377:15:44"
             },
-            "scope": 15697,
-            "src": "339:54:45",
+            "scope": 14574,
+            "src": "339:54:44",
             "stateMutability": "view",
             "virtual": false,
             "visibility": "external"
@@ -481,13 +481,13 @@
           {
             "body": null,
             "documentation": {
-              "id": 15683,
+              "id": 14560,
               "nodeType": "StructuredDocumentation",
-              "src": "401:62:45",
+              "src": "401:62:44",
               "text": " @dev Returns the token collection symbol."
             },
             "functionSelector": "95d89b41",
-            "id": 15688,
+            "id": 14565,
             "implemented": false,
             "kind": "function",
             "modifiers": [],
@@ -495,24 +495,24 @@
             "nodeType": "FunctionDefinition",
             "overrides": null,
             "parameters": {
-              "id": 15684,
+              "id": 14561,
               "nodeType": "ParameterList",
               "parameters": [],
-              "src": "484:2:45"
+              "src": "484:2:44"
             },
             "returnParameters": {
-              "id": 15687,
+              "id": 14564,
               "nodeType": "ParameterList",
               "parameters": [
                 {
                   "constant": false,
-                  "id": 15686,
+                  "id": 14563,
                   "mutability": "mutable",
                   "name": "",
                   "nodeType": "VariableDeclaration",
                   "overrides": null,
-                  "scope": 15688,
-                  "src": "510:13:45",
+                  "scope": 14565,
+                  "src": "510:13:44",
                   "stateVariable": false,
                   "storageLocation": "memory",
                   "typeDescriptions": {
@@ -520,10 +520,10 @@
                     "typeString": "string"
                   },
                   "typeName": {
-                    "id": 15685,
+                    "id": 14562,
                     "name": "string",
                     "nodeType": "ElementaryTypeName",
-                    "src": "510:6:45",
+                    "src": "510:6:44",
                     "typeDescriptions": {
                       "typeIdentifier": "t_string_storage_ptr",
                       "typeString": "string"
@@ -533,10 +533,10 @@
                   "visibility": "internal"
                 }
               ],
-              "src": "509:15:45"
+              "src": "509:15:44"
             },
-            "scope": 15697,
-            "src": "469:56:45",
+            "scope": 14574,
+            "src": "469:56:44",
             "stateMutability": "view",
             "virtual": false,
             "visibility": "external"
@@ -544,13 +544,13 @@
           {
             "body": null,
             "documentation": {
-              "id": 15689,
+              "id": 14566,
               "nodeType": "StructuredDocumentation",
-              "src": "533:92:45",
+              "src": "533:92:44",
               "text": " @dev Returns the Uniform Resource Identifier (URI) for `tokenId` token."
             },
             "functionSelector": "c87b56dd",
-            "id": 15696,
+            "id": 14573,
             "implemented": false,
             "kind": "function",
             "modifiers": [],
@@ -558,18 +558,18 @@
             "nodeType": "FunctionDefinition",
             "overrides": null,
             "parameters": {
-              "id": 15692,
+              "id": 14569,
               "nodeType": "ParameterList",
               "parameters": [
                 {
                   "constant": false,
-                  "id": 15691,
+                  "id": 14568,
                   "mutability": "mutable",
                   "name": "tokenId",
                   "nodeType": "VariableDeclaration",
                   "overrides": null,
-                  "scope": 15696,
-                  "src": "649:15:45",
+                  "scope": 14573,
+                  "src": "649:15:44",
                   "stateVariable": false,
                   "storageLocation": "default",
                   "typeDescriptions": {
@@ -577,10 +577,10 @@
                     "typeString": "uint256"
                   },
                   "typeName": {
-                    "id": 15690,
+                    "id": 14567,
                     "name": "uint256",
                     "nodeType": "ElementaryTypeName",
-                    "src": "649:7:45",
+                    "src": "649:7:44",
                     "typeDescriptions": {
                       "typeIdentifier": "t_uint256",
                       "typeString": "uint256"
@@ -590,21 +590,21 @@
                   "visibility": "internal"
                 }
               ],
-              "src": "648:17:45"
+              "src": "648:17:44"
             },
             "returnParameters": {
-              "id": 15695,
+              "id": 14572,
               "nodeType": "ParameterList",
               "parameters": [
                 {
                   "constant": false,
-                  "id": 15694,
+                  "id": 14571,
                   "mutability": "mutable",
                   "name": "",
                   "nodeType": "VariableDeclaration",
                   "overrides": null,
-                  "scope": 15696,
-                  "src": "689:13:45",
+                  "scope": 14573,
+                  "src": "689:13:44",
                   "stateVariable": false,
                   "storageLocation": "memory",
                   "typeDescriptions": {
@@ -612,10 +612,10 @@
                     "typeString": "string"
                   },
                   "typeName": {
-                    "id": 15693,
+                    "id": 14570,
                     "name": "string",
                     "nodeType": "ElementaryTypeName",
-                    "src": "689:6:45",
+                    "src": "689:6:44",
                     "typeDescriptions": {
                       "typeIdentifier": "t_string_storage_ptr",
                       "typeString": "string"
@@ -625,34 +625,34 @@
                   "visibility": "internal"
                 }
               ],
-              "src": "688:15:45"
+              "src": "688:15:44"
             },
-            "scope": 15697,
-            "src": "631:73:45",
+            "scope": 14574,
+            "src": "631:73:44",
             "stateMutability": "view",
             "virtual": false,
             "visibility": "external"
           }
         ],
-        "scope": 15698,
-        "src": "227:480:45"
+        "scope": 14575,
+        "src": "227:480:44"
       }
     ],
-    "src": "35:674:45"
+    "src": "35:674:44"
   },
   "legacyAST": {
     "absolutePath": "/C/Users/Blayde/Documents/ETHDEV/bulletproof/PRUF_TRUFFLE/contracts/_ERC721/IERC721Metadata.sol",
     "exportedSymbols": {
       "IERC721Metadata": [
-        15697
+        14574
       ]
     },
-    "id": 15698,
+    "id": 14575,
     "license": "MIT",
     "nodeType": "SourceUnit",
     "nodes": [
       {
-        "id": 15672,
+        "id": 14549,
         "literals": [
           "solidity",
           "^",
@@ -660,16 +660,16 @@
           ".2"
         ],
         "nodeType": "PragmaDirective",
-        "src": "35:23:45"
+        "src": "35:23:44"
       },
       {
         "absolutePath": "/C/Users/Blayde/Documents/ETHDEV/bulletproof/PRUF_TRUFFLE/contracts/_ERC721/IERC721.sol",
         "file": "./IERC721.sol",
-        "id": 15673,
+        "id": 14550,
         "nodeType": "ImportDirective",
-        "scope": 15698,
-        "sourceUnit": 15640,
-        "src": "62:23:45",
+        "scope": 14575,
+        "sourceUnit": 14517,
+        "src": "62:23:44",
         "symbolAliases": [],
         "unitAlias": ""
       },
@@ -680,38 +680,38 @@
             "arguments": null,
             "baseName": {
               "contractScope": null,
-              "id": 15675,
+              "id": 14552,
               "name": "IERC721",
               "nodeType": "UserDefinedTypeName",
-              "referencedDeclaration": 15639,
-              "src": "256:7:45",
+              "referencedDeclaration": 14516,
+              "src": "256:7:44",
               "typeDescriptions": {
-                "typeIdentifier": "t_contract$_IERC721_$15639",
+                "typeIdentifier": "t_contract$_IERC721_$14516",
                 "typeString": "contract IERC721"
               }
             },
-            "id": 15676,
+            "id": 14553,
             "nodeType": "InheritanceSpecifier",
-            "src": "256:7:45"
+            "src": "256:7:44"
           }
         ],
         "contractDependencies": [
-          15523,
-          15639
+          14400,
+          14516
         ],
         "contractKind": "interface",
         "documentation": {
-          "id": 15674,
+          "id": 14551,
           "nodeType": "StructuredDocumentation",
-          "src": "89:136:45",
+          "src": "89:136:44",
           "text": " @title ERC-721 Non-Fungible Token Standard, optional metadata extension\n @dev See https://eips.ethereum.org/EIPS/eip-721"
         },
         "fullyImplemented": false,
-        "id": 15697,
+        "id": 14574,
         "linearizedBaseContracts": [
-          15697,
-          15639,
-          15523
+          14574,
+          14516,
+          14400
         ],
         "name": "IERC721Metadata",
         "nodeType": "ContractDefinition",
@@ -719,13 +719,13 @@
           {
             "body": null,
             "documentation": {
-              "id": 15677,
+              "id": 14554,
               "nodeType": "StructuredDocumentation",
-              "src": "273:60:45",
+              "src": "273:60:44",
               "text": " @dev Returns the token collection name."
             },
             "functionSelector": "06fdde03",
-            "id": 15682,
+            "id": 14559,
             "implemented": false,
             "kind": "function",
             "modifiers": [],
@@ -733,24 +733,24 @@
             "nodeType": "FunctionDefinition",
             "overrides": null,
             "parameters": {
-              "id": 15678,
+              "id": 14555,
               "nodeType": "ParameterList",
               "parameters": [],
-              "src": "352:2:45"
+              "src": "352:2:44"
             },
             "returnParameters": {
-              "id": 15681,
+              "id": 14558,
               "nodeType": "ParameterList",
               "parameters": [
                 {
                   "constant": false,
-                  "id": 15680,
+                  "id": 14557,
                   "mutability": "mutable",
                   "name": "",
                   "nodeType": "VariableDeclaration",
                   "overrides": null,
-                  "scope": 15682,
-                  "src": "378:13:45",
+                  "scope": 14559,
+                  "src": "378:13:44",
                   "stateVariable": false,
                   "storageLocation": "memory",
                   "typeDescriptions": {
@@ -758,10 +758,10 @@
                     "typeString": "string"
                   },
                   "typeName": {
-                    "id": 15679,
+                    "id": 14556,
                     "name": "string",
                     "nodeType": "ElementaryTypeName",
-                    "src": "378:6:45",
+                    "src": "378:6:44",
                     "typeDescriptions": {
                       "typeIdentifier": "t_string_storage_ptr",
                       "typeString": "string"
@@ -771,10 +771,10 @@
                   "visibility": "internal"
                 }
               ],
-              "src": "377:15:45"
+              "src": "377:15:44"
             },
-            "scope": 15697,
-            "src": "339:54:45",
+            "scope": 14574,
+            "src": "339:54:44",
             "stateMutability": "view",
             "virtual": false,
             "visibility": "external"
@@ -782,13 +782,13 @@
           {
             "body": null,
             "documentation": {
-              "id": 15683,
+              "id": 14560,
               "nodeType": "StructuredDocumentation",
-              "src": "401:62:45",
+              "src": "401:62:44",
               "text": " @dev Returns the token collection symbol."
             },
             "functionSelector": "95d89b41",
-            "id": 15688,
+            "id": 14565,
             "implemented": false,
             "kind": "function",
             "modifiers": [],
@@ -796,24 +796,24 @@
             "nodeType": "FunctionDefinition",
             "overrides": null,
             "parameters": {
-              "id": 15684,
+              "id": 14561,
               "nodeType": "ParameterList",
               "parameters": [],
-              "src": "484:2:45"
+              "src": "484:2:44"
             },
             "returnParameters": {
-              "id": 15687,
+              "id": 14564,
               "nodeType": "ParameterList",
               "parameters": [
                 {
                   "constant": false,
-                  "id": 15686,
+                  "id": 14563,
                   "mutability": "mutable",
                   "name": "",
                   "nodeType": "VariableDeclaration",
                   "overrides": null,
-                  "scope": 15688,
-                  "src": "510:13:45",
+                  "scope": 14565,
+                  "src": "510:13:44",
                   "stateVariable": false,
                   "storageLocation": "memory",
                   "typeDescriptions": {
@@ -821,10 +821,10 @@
                     "typeString": "string"
                   },
                   "typeName": {
-                    "id": 15685,
+                    "id": 14562,
                     "name": "string",
                     "nodeType": "ElementaryTypeName",
-                    "src": "510:6:45",
+                    "src": "510:6:44",
                     "typeDescriptions": {
                       "typeIdentifier": "t_string_storage_ptr",
                       "typeString": "string"
@@ -834,10 +834,10 @@
                   "visibility": "internal"
                 }
               ],
-              "src": "509:15:45"
+              "src": "509:15:44"
             },
-            "scope": 15697,
-            "src": "469:56:45",
+            "scope": 14574,
+            "src": "469:56:44",
             "stateMutability": "view",
             "virtual": false,
             "visibility": "external"
@@ -845,13 +845,13 @@
           {
             "body": null,
             "documentation": {
-              "id": 15689,
+              "id": 14566,
               "nodeType": "StructuredDocumentation",
-              "src": "533:92:45",
+              "src": "533:92:44",
               "text": " @dev Returns the Uniform Resource Identifier (URI) for `tokenId` token."
             },
             "functionSelector": "c87b56dd",
-            "id": 15696,
+            "id": 14573,
             "implemented": false,
             "kind": "function",
             "modifiers": [],
@@ -859,18 +859,18 @@
             "nodeType": "FunctionDefinition",
             "overrides": null,
             "parameters": {
-              "id": 15692,
+              "id": 14569,
               "nodeType": "ParameterList",
               "parameters": [
                 {
                   "constant": false,
-                  "id": 15691,
+                  "id": 14568,
                   "mutability": "mutable",
                   "name": "tokenId",
                   "nodeType": "VariableDeclaration",
                   "overrides": null,
-                  "scope": 15696,
-                  "src": "649:15:45",
+                  "scope": 14573,
+                  "src": "649:15:44",
                   "stateVariable": false,
                   "storageLocation": "default",
                   "typeDescriptions": {
@@ -878,10 +878,10 @@
                     "typeString": "uint256"
                   },
                   "typeName": {
-                    "id": 15690,
+                    "id": 14567,
                     "name": "uint256",
                     "nodeType": "ElementaryTypeName",
-                    "src": "649:7:45",
+                    "src": "649:7:44",
                     "typeDescriptions": {
                       "typeIdentifier": "t_uint256",
                       "typeString": "uint256"
@@ -891,21 +891,21 @@
                   "visibility": "internal"
                 }
               ],
-              "src": "648:17:45"
+              "src": "648:17:44"
             },
             "returnParameters": {
-              "id": 15695,
+              "id": 14572,
               "nodeType": "ParameterList",
               "parameters": [
                 {
                   "constant": false,
-                  "id": 15694,
+                  "id": 14571,
                   "mutability": "mutable",
                   "name": "",
                   "nodeType": "VariableDeclaration",
                   "overrides": null,
-                  "scope": 15696,
-                  "src": "689:13:45",
+                  "scope": 14573,
+                  "src": "689:13:44",
                   "stateVariable": false,
                   "storageLocation": "memory",
                   "typeDescriptions": {
@@ -913,10 +913,10 @@
                     "typeString": "string"
                   },
                   "typeName": {
-                    "id": 15693,
+                    "id": 14570,
                     "name": "string",
                     "nodeType": "ElementaryTypeName",
-                    "src": "689:6:45",
+                    "src": "689:6:44",
                     "typeDescriptions": {
                       "typeIdentifier": "t_string_storage_ptr",
                       "typeString": "string"
@@ -926,20 +926,20 @@
                   "visibility": "internal"
                 }
               ],
-              "src": "688:15:45"
+              "src": "688:15:44"
             },
-            "scope": 15697,
-            "src": "631:73:45",
+            "scope": 14574,
+            "src": "631:73:44",
             "stateMutability": "view",
             "virtual": false,
             "visibility": "external"
           }
         ],
-        "scope": 15698,
-        "src": "227:480:45"
+        "scope": 14575,
+        "src": "227:480:44"
       }
     ],
-    "src": "35:674:45"
+    "src": "35:674:44"
   },
   "compiler": {
     "name": "solc",
@@ -947,7 +947,7 @@
   },
   "networks": {},
   "schemaVersion": "3.0.23",
-  "updatedAt": "2020-08-20T14:42:11.340Z",
+  "updatedAt": "2020-08-20T17:17:06.472Z",
   "devdoc": {
     "details": "See https://eips.ethereum.org/EIPS/eip-721",
     "methods": {

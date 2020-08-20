@@ -22,48 +22,38 @@ import Form from "react-bootstrap/Form";
 import EscrowManager from "./EscrowManager";
 import RCFJ from "./RetrieveContractsFromJSON"
 
-async function setupContractEnvironment(_web3) {
-    console.log("Setting up contracts")
-    window.contracts = await buildContracts(_web3);
-    return console.log(window.contracts);
-}
+
 
 class Main extends Component {
   constructor(props) {
     super(props);
 
+    this.setupContractEnvironment = async (_web3) => {
+      console.log("Setting up contracts")
+      window.contracts = await buildContracts(_web3)
+      await this.setState({contracts: window.contracts})
+      return this.getContracts()
+  }
+
     //State declaration....................................................................................................
     this.getContracts = async () => {
       const self = this;
-        self.setState({ STOR: window.contracts.content[0] });
-        self.setState({ APP: window.contracts.content[1] });
-        self.setState({ NP: window.contracts.content[2] });
-        self.setState({ AC_MGR: window.contracts.content[3] });
-        self.setState({ AC_TKN: window.contracts.content[4] });
-        self.setState({ A_TKN: window.contracts.content[5] });
-        self.setState({ ECR_MGR: window.contracts.content[6] });
-        self.setState({ ECR: window.contracts.content[7] });
-        self.setState({ ECR2: window.contracts.content[8] });
-        self.setState({ ECR_NC: window.contracts.content[9] });
-        self.setState({ APP_NC: window.contracts.content[10] });
-        self.setState({ NP_NC: window.contracts.content[11] });
-        self.setState({ RCLR: window.contracts.content[12] });
+        await self.setState({ STOR: window.contracts.content[0] });
+        await self.setState({ APP: window.contracts.content[1] });
+        await self.setState({ NP: window.contracts.content[2] });
+        await self.setState({ AC_MGR: window.contracts.content[3] });
+        await self.setState({ AC_TKN: window.contracts.content[4] });
+        await self.setState({ A_TKN: window.contracts.content[5] });
+        await self.setState({ ECR_MGR: window.contracts.content[6] });
+        await self.setState({ ECR: window.contracts.content[7] });
+        await self.setState({ ECR2: window.contracts.content[8] });
+        await self.setState({ ECR_NC: window.contracts.content[9] });
+        await self.setState({ APP_NC: window.contracts.content[10] });
+        await self.setState({ NP_NC: window.contracts.content[11] });
+        await self.setState({ RCLR: window.contracts.content[12] });
+        await self.setState({ NAKED: window.contracts.content[13] });
 
-        window.STOR = window.contracts.content[0];
-        window.APP = window.contracts.content[1];
-        window.NP = window.contracts.content[2];
-        window.AC_MGR = window.contracts.content[3];
-        window.AC_TKN = window.contracts.content[4];
-        window.A_TKN = window.contracts.content[5];
-        window.ECR_MGR = window.contracts.content[6];
-        window.ECR = window.contracts.content[7];
-        window.ECR2 = window.contracts.content[8];
-        window.ECR_NC = window.contracts.content[9];
-        window.APP_NC = window.contracts.content[10];
-        window.NP_NC = window.contracts.content[11];
-        window.RCLR = window.contracts.content[12];
-
-        console.log("contracts: ", window.contracts.content)
+        console.log("contracts: ", window.contracts)
 
     };
 
@@ -119,11 +109,11 @@ class Main extends Component {
     const ethereum = window.ethereum;
     var _web3 = require("web3");
     _web3 = new Web3(_web3.givenProvider);
-    setupContractEnvironment(_web3);
+    this.setupContractEnvironment(_web3);
     this.setState({ web3: _web3 });
     window.web3 = _web3;
     ethereum.enable();
-    _web3.eth.getAccounts().then((e) => this.setState({ addr: e[0] }));
+    _web3.eth.getAccounts().then((e) => window.addr = e[0]);
     document.addEventListener("accountListener", this.acctChanger());
   }
 
@@ -151,7 +141,7 @@ class Main extends Component {
     } */
 
     if (this.state.web3 !== null && window.contracts > 0) {
-      this.getContracts();
+      //this.getContracts();
     }
   }
 
@@ -178,12 +168,12 @@ class Main extends Component {
           <div className="imageForm">
             <img src={require("./BP Logo.png")} alt="Bulletproof Logo" />
             <div className="userData">
-              {this.state.addr > 0 && (
+              {window.addr > 0 && (
                 <div className="banner">
-                  Currently serving :{this.state.addr} 
+                  Currently serving :{window.addr}
                 </div>
               )}
-              {this.state.addr === undefined && (
+              {window.addr === undefined && (
                 <div className="banner">
                   Currently serving: NOBODY! Log into web3 provider!
                 </div>
@@ -193,7 +183,7 @@ class Main extends Component {
           <div className="BannerForm">
             <div className="page">
               <ul className="header">
-                {this.state.ownerMenu === false && (
+                {window.contracts !== undefined && (
                   <nav>
                     <li>
                       <NavLink exact to="/">
