@@ -62,25 +62,25 @@ contract ECR_NC is ECR_CORE {
             "ENC:SE: This contract not authorized for specified AC"
         );
 
-        require((rec.assetClass != 0), "SE: Record does not exist");
-        require(
-            (rec.assetStatus > 49),
-            "ENC:SE: Only ACadmin authorized user can change status < 50"
-        );
-        require(
+        // require((rec.assetClass != 0), "SE: Record does not exist");              //REDUNDANT, THROWS IN STORAGE
+        // require(                                                                //REDUNDANT, CHECKS IN LAST REQ
+        //     (rec.assetStatus > 49),
+        //     "ENC:SE: Only ACadmin authorized user can change status < 50"
+        // );
+        require(                                                //REDUNDANT, THROWS IN SAFEMATH
             (escrowTime >= block.timestamp),
             "ENC:SE:Escrow must be set to a time in the future"
         );
-        require(
-            (rec.assetStatus != 3) &&
-                (rec.assetStatus != 4) &&
-                (rec.assetStatus != 53) &&
-                (rec.assetStatus != 54) &&
-                (rec.assetStatus != 5) &&
-                (rec.assetStatus != 55),
-            "ENC:SE:Transferred, lost, or stolen status cannot be set to escrow."
-        );
-        require(
+        // require(                                                   //REDUNDANT, THROWS IN STORAGE
+        //     (rec.assetStatus != 3) &&
+        //         (rec.assetStatus != 4) &&
+        //         (rec.assetStatus != 53) &&
+        //         (rec.assetStatus != 54) &&
+        //         (rec.assetStatus != 5) &&
+        //         (rec.assetStatus != 55),
+        //     "ENC:SE:Transferred, lost, or stolen status cannot be set to escrow."
+        // );
+        require(                                                                                  //LIMITING??
             (_escrowStatus == 50) || (_escrowStatus == 56),
             "ENC:SE:Must specify a valid escrow status >49"
         );
@@ -121,8 +121,8 @@ contract ECR_NC is ECR_CORE {
             "ENC:EE: This contract not authorized for specified AC"
         );
 
-        require((rec.assetClass != 0), "ENC:EE: Record does not exist");
-        require(
+        // require((rec.assetClass != 0), "ENC:EE: Record does not exist");              //REDUNDANT, THROWS IN STORAGE
+        require(                                                                      //LIMITING, CHANGE TO >49 NOT 50 OR 56
             (rec.assetStatus == 50) || (rec.assetStatus == 56),
             "ENC:EE:record must be in escrow status > 49"
         );
