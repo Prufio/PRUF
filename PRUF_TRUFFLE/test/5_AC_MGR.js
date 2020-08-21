@@ -1189,7 +1189,7 @@
             })
     })
 
-
+    //1
     it('Should fail because caller does not hold AC token', async () => {
 
         console.log("//**************************************BEGIN AC_MGR TEST**********************************************/")
@@ -1203,7 +1203,7 @@
         )
     })
 
-
+    //2
     it('Should fail because usertype is not valid', async () => {
         return AC_MGR.OO_addUser(
         account2, 
@@ -1213,7 +1213,7 @@
         )
     })
 
-
+    //3
     it('Should fail because caller is not Owner', async () => {
 
         console.log("//**************************************END OO_addUser FAIL BATCH**********************************************/")
@@ -1229,7 +1229,7 @@
         )
     })
 
-
+    //4
     it('Should fail because AC_TKN ID != 0', async () => {
         return AC_MGR.createAssetClass(
         '0', 
@@ -1242,7 +1242,7 @@
         )
     })
 
-
+    //5
     it('Should fail because RootAC doesnt exist', async () => {
         return AC_MGR.createAssetClass(
         '20', 
@@ -1252,6 +1252,24 @@
         '30',
         '1',
         {from: account1}
+        )
+    })
+
+    //6
+    it('Should fail because caller does not hold AC token', async () => {
+
+        console.log("//**************************************END createAssetClass FAIL BATCH**********************************************/")
+        console.log("//**************************************BEGIN ACTH_setCosts FAIL BATCH**********************************************/")
+        return AC_MGR.ACTH_setCosts(
+        '10', 
+        '20000000000000000',
+        '20000000000000000',
+        '20000000000000000',
+        '20000000000000000',
+        '20000000000000000',
+        '20000000000000000',
+        account2,
+        {from: account2}
         )
     })
 
@@ -1335,7 +1353,7 @@
 
     it('Should write record in AC 10 @ IDX&RGT(1)', async () => {
 
-        console.log("//**************************************END createAssetClass FAIL BATCH**********************************************/")
+        console.log("//**************************************END ACTH_setCosts FAIL BATCH**********************************************/")
         console.log("//**************************************END AC_MGR FAIL BATCH**********************************************/")
         console.log("//**************************************END AC_MGR TEST**********************************************/")
         console.log("//**************************************BEGIN THE WORKS**********************************************/")
