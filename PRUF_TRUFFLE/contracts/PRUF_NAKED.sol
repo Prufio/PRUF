@@ -48,10 +48,10 @@ contract NAKED is CORE {
             "N:MNA:Caller does not hold AC token"
         );
         require(userType == 10,"N:MNA:user not authorized to mint naked assets");
-        require(
-            A_TKN.tokenExists(tokenId) == 0,
-            "N:MNA: Token already exists"
-        );
+        // require(                                                                   //REDUNDANT, THROWS IN _mint
+        //     A_TKN.tokenExists(tokenId) == 0,
+        //     "N:MNA: Token already exists"
+        // );
         require(
             rec.assetClass == 0,    //verified as non-redundant
             "N:MNA: Asset already registered in system"
@@ -86,11 +86,11 @@ contract NAKED is CORE {
 
         require(
             A_TKN.ownerOf(tokenId) == address(this),
-            "PNP:INA: Token not found in PRUF_NAKED"
+            "N:CNA: Token not found in PRUF_NAKED"
         );
         require(
             contractInfo.contractType > 0,
-            "PNP:INA: This contract not authorized for specified AC"
+            "N:CNA: This contract not authorized for specified AC"
         );
         // require( //redundant
         //     rec.assetClass == 0,

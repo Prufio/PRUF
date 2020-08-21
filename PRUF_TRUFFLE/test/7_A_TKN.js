@@ -1442,18 +1442,18 @@
         )
     })
 
+    // //15
+    // it('Should fail because you cannot discard a nonexistant token', async () => {
+
+    //     console.log("//**************************************END safeTransferFrom FAIL BATCH**********************************************/")
+    //     console.log("//**************************************BEGIN discard FAIL BATCH**********************************************/")
+    //     return A_TKN.discard(
+    //     asset6,
+    //     {from: account4}
+    //     )
+    // })
+
     //15
-    it('Should fail because you cannot discard a nonexistant token', async () => {
-
-        console.log("//**************************************END safeTransferFrom FAIL BATCH**********************************************/")
-        console.log("//**************************************BEGIN discard FAIL BATCH**********************************************/")
-        return A_TKN.discard(
-        asset6,
-        {from: account4}
-        )
-    })
-
-    //16
     it('Should fail because asset isnt in a discardable status', async () => {
         return A_TKN.discard(
         asset1, 
@@ -1470,7 +1470,7 @@
         )
     })
 
-    //17
+    //16
     it('Should fail because caller != approved || owner', async () => {
         return A_TKN.discard(
         asset1, 
