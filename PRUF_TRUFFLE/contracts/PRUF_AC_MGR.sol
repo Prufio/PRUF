@@ -245,9 +245,9 @@ contract AC_MGR is CORE {
         uint256 rootAssetClass = AC_info.assetClassRoot;
         Costs memory rootCosts = cost[rootAssetClass];
 
-        require(
+        require(                                                                                                  //REDUNDANT, WILL THROW IN ERC721
             (AC_TKN.ownerOf(_assetClass) != AC_TKN_Address), //this will throw in the token contract if not minted
-            "ACM:GNRC:Asset class not yet populated"
+            "ACM:GNRC:AC not yet populated"
         );
         //^^^^^^^checks^^^^^^^^^
         return (
@@ -276,9 +276,9 @@ contract AC_MGR is CORE {
         uint256 rootAssetClass = AC_info.assetClassRoot;
         Costs memory rootCosts = cost[rootAssetClass];
 
-        require(
+        require(                                                                                                  //REDUNDANT, WILL THROW IN ERC721
             (AC_TKN.ownerOf(_assetClass) != AC_TKN_Address), //this will throw in the token contract if not minted
-            "ACM:GTAC:Asset class not yet populated"
+            "ACM:GTAC:AC not yet populated"
         );
         //^^^^^^^checks^^^^^^^^^
         return (
@@ -307,9 +307,9 @@ contract AC_MGR is CORE {
         uint256 rootAssetClass = AC_info.assetClassRoot;
         Costs memory rootCosts = cost[rootAssetClass];
 
-        require(
+        require(                                                                                                  //REDUNDANT, WILL THROW IN ERC721
             (AC_TKN.ownerOf(_assetClass) != AC_TKN_Address), //this will throw in the token contract if not minted
-            "ACM:GCNC:Asset class not yet populated"
+            "ACM:GCNC:AC not yet populated"
         );
         //^^^^^^^checks^^^^^^^^^
         return (
@@ -338,9 +338,9 @@ contract AC_MGR is CORE {
         uint256 rootAssetClass = AC_info.assetClassRoot;
         Costs memory rootCosts = cost[rootAssetClass];
 
-        require(
+        require(                                                                                                  //REDUNDANT, WILL THROW IN ERC721
             (AC_TKN.ownerOf(_assetClass) != AC_TKN_Address), //this will throw in the token contract if not minted
-            "ACM:GMRC:Asset class not yet populated"
+            "ACM:GMRC:AC not yet populated"
         );
         //^^^^^^^checks^^^^^^^^^
         return (
@@ -369,9 +369,9 @@ contract AC_MGR is CORE {
         uint256 rootAssetClass = AC_info.assetClassRoot;
         Costs memory rootCosts = cost[rootAssetClass];
 
-        require(
+        require(                                                                                                  //REDUNDANT, WILL THROW IN ERC721
             (AC_TKN.ownerOf(_assetClass) != AC_TKN_Address), //this will throw in the token contract if not minted
-            "ACM:GCSC:Asset class not yet populated"
+            "ACM:GCSC:AC not yet populated"
         );
         //^^^^^^^checks^^^^^^^^^
         return (
@@ -400,9 +400,9 @@ contract AC_MGR is CORE {
         uint256 rootAssetClass = AC_info.assetClassRoot;
         Costs memory rootCosts = cost[rootAssetClass];
 
-        require(
+        require(                                                                                                  //REDUNDANT, WILL THROW IN ERC721
             (AC_TKN.ownerOf(_assetClass) != AC_TKN_Address), //this will throw in the token contract if not minted
-            "ACM:GFMC:Asset class not yet populated"
+            "ACM:GFMC:AC not yet populated"
         );
         //^^^^^^^checks^^^^^^^^^
         return (
@@ -432,9 +432,9 @@ contract AC_MGR is CORE {
     {
         Costs memory costs = cost[_assetClass];
 
-        require(
+        require(                                                                                                  //REDUNDANT, WILL THROW IN ERC721
             (AC_TKN.ownerOf(_assetClass) != AC_TKN_Address), //this will throw in the token contract if not minted
-            "ACM:RC:Asset class not yet populated"
+            "ACM:RC:AC not yet populated"
         );
         //^^^^^^^checks^^^^^^^^
 

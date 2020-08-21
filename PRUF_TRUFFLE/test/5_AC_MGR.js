@@ -9,7 +9,6 @@
     const PRUF_AC_MGR = artifacts.require('AC_MGR');
     const PRUF_AC_TKN = artifacts.require('AC_TKN');
     const PRUF_A_TKN = artifacts.require('A_TKN');
-    const PRUF_A_TKN2 = artifacts.require('A_TKN2');
     const PRUF_ECR_MGR = artifacts.require('ECR_MGR');
     const PRUF_ECR = artifacts.require('ECR');
     const PRUF_ECR2 = artifacts.require('ECR2');
@@ -27,7 +26,6 @@
     let AC_MGR;
     let AC_TKN;
     let A_TKN;
-    let A_TKN2;
     let ECR_MGR;
     let ECR;
     let ECR2;
@@ -77,6 +75,7 @@
 
     let nakedAuthCode1;
     let nakedAuthCode3;
+    let nakedAuthCode7;
     
         //
         //
@@ -224,13 +223,6 @@
         ECR2 = PRUF_ECR2_TEST;
     })
 
-
-    it('Should deploy PRUF_A_TKN2', async () => {
-        const PRUF_A_TKN2_TEST = await PRUF_A_TKN2.deployed({ from: account1 });
-        console.log(PRUF_A_TKN2_TEST.address);
-        assert(PRUF_A_TKN2_TEST.address !== '')
-        A_TKN2 = PRUF_A_TKN2_TEST;
-    })
 
     it('Should deploy PRUF_MAL_APP', async () => {
         const PRUF_MAL_APP_TEST = await PRUF_MAL_APP.deployed({ from: account1 });
@@ -421,14 +413,19 @@
         )
 
 
-        nakedAuthCode1 = await Helper.getURIfromAuthcode(
+        nakedAuthCode1 = await Helper.getURIb32fromAuthcode(
             '15',
             '1'
         )
 
-        nakedAuthCode3 = await Helper.getURIfromAuthcode(
+        nakedAuthCode3 = await Helper.getURIb32fromAuthcode(
             '15',
             '3'
+        )
+
+        nakedAuthCode7 = await Helper.getURIb32fromAuthcode(
+            '15',
+            '7'
         )
 
         string1Hash = await Helper.getStringHash(
@@ -477,11 +474,6 @@
                 console.log("Adding A_TKN to storage for use in AC 0")
                 return STOR.OO_addContract("A_TKN", A_TKN.address, '0', '1', { from: account1 })
             })
-
-            .then(() => {
-                console.log("Adding A_TKN2 to storage for use in AC 0")
-                return STOR.OO_addContract("A_TKN2", A_TKN2.address, '0', '1', { from: account1 })
-            })
             
             .then(() => {
                 console.log("Adding ECR_MGR to storage for use in AC 0")
@@ -515,7 +507,7 @@
 
             .then(() => {
                 console.log("Adding NAKED to storage for use in AC 0")
-                return STOR.OO_addContract("NAKED", NAKED.address, '0', '1', { from: account1 })
+                return STOR.OO_addContract("NAKED", NAKED.address, '0', '2', { from: account1 })
             })
             
             .then(() => {
@@ -558,11 +550,6 @@
             .then(() => {
                 console.log("Adding in A_TKN")
                 return A_TKN.OO_setStorageContract(STOR.address, { from: account1 })
-            })
-
-            .then(() => {
-                console.log("Adding in A_TKN2")
-                return A_TKN2.OO_setStorageContract(STOR.address, { from: account1 })
             })
             
             .then(() => {
@@ -635,11 +622,6 @@
             .then(() => {
                 console.log("Resolving in A_TKN")
                 return A_TKN.OO_ResolveContractAddresses({ from: account1 })
-            })
-
-            .then(() => {
-                console.log("Resolving in A_TKN2")
-                return A_TKN2.OO_ResolveContractAddresses({ from: account1 })
             })
             
             .then(() => {
@@ -945,41 +927,6 @@
     })
 
 
-    it('Should authorize A_TKN2 in all relevant asset classes', async () => {
-        
-        console.log("Authorizing A_TKN2")
-        return STOR.enableContractForAC('A_TKN2', '10', '1', { from: account1 })
-            
-            .then(() => {
-                return STOR.enableContractForAC('A_TKN2', '11', '1', { from: account1 })
-            })
-            
-            .then(() => {
-                return STOR.enableContractForAC('A_TKN2', '12', '2', { from: account1 })
-            })
-            
-            .then(() => {
-                return STOR.enableContractForAC('A_TKN2', '13', '2', { from: account1 })
-            })
-            
-            .then(() => {
-                return STOR.enableContractForAC('A_TKN2', '14', '2', { from: account1 })
-            })
-
-            .then(() => {
-                return STOR.enableContractForAC('A_TKN2', '15', '2', { from: account10 })
-            })
-            
-            .then(() => {
-                return STOR.enableContractForAC('A_TKN2', '1', '1', { from: account1 })
-            })
-            
-            .then(() => {
-                return STOR.enableContractForAC('A_TKN2', '2', '1', { from: account1 })
-            })
-    })
-
-
     it('Should authorize NAKED in all relevant asset classes', async () => {
         
         console.log("Authorizing NAKED")
@@ -1243,7 +1190,7 @@
     })
 
 
-    it('Should fail because usertype is not valid', async () => {
+    it('Should fail because caller does not hold AC token', async () => {
 
         console.log("//**************************************BEGIN AC_MGR TEST**********************************************/")
         console.log("//**************************************BEGIN AC_MGR FAIL BATCH**********************************************/")
@@ -1252,15 +1199,38 @@
         account2, 
         '10',
         '10',
+        {from: account2}
+        )
+    })
+
+
+    it('Should fail because usertype is not valid', async () => {
+        return AC_MGR.OO_addUser(
+        account2, 
+        '11',
+        '10',
         {from: account1}
         )
     })
 
 
-    it('Should fail because AC_TKN ID != 0', async () => {
+    it('Should fail because caller is not Owner', async () => {
 
         console.log("//**************************************END OO_addUser FAIL BATCH**********************************************/")
         console.log("//**************************************BEGIN createAssetClass FAIL BATCH**********************************************/")
+        return AC_MGR.createAssetClass(
+        '32', 
+        account2,
+        '20',
+        '20',
+        '1',
+        '1',
+        {from: account2}
+        )
+    })
+
+
+    it('Should fail because AC_TKN ID != 0', async () => {
         return AC_MGR.createAssetClass(
         '0', 
         account2,
@@ -1271,6 +1241,7 @@
         {from: account1}
         )
     })
+
 
     it('Should fail because RootAC doesnt exist', async () => {
         return AC_MGR.createAssetClass(
@@ -1284,20 +1255,87 @@
         )
     })
 
-    it('Should fail because AC_TKN ID != 0', async () => {
 
-        console.log("//**************************************END createAssetClass FAIL BATCH**********************************************/")
-        console.log("//*************************************BEGIN getNewRecordCosts FAIL BATCH**********************************************/")
-        return AC_MGR.getNewRecordCosts(
-        '0',
-        {from: account1}
-        )
-    })
+    // it('Should fail because AC does not exist', async () => {                                                       //REDUNDANT, WILL THROW IN ERC721
+
+    //     console.log("//**************************************END createAssetClass FAIL BATCH**********************************************/")
+    //     console.log("//*************************************BEGIN getNewRecordCosts FAIL BATCH**********************************************/")
+    //     return AC_MGR.getNewRecordCosts(
+    //     '30',
+    //     {from: account1}
+    //     )
+    // })
+
+
+    // it('Should fail because AC does not exist', async () => {
+
+    //     console.log("//**************************************END getNewRecordCosts FAIL BATCH**********************************************/")
+    //     console.log("//*************************************BEGIN getTransferAssetCosts FAIL BATCH**********************************************/")
+    //     return AC_MGR.getTransferAssetCosts(
+    //     '30',
+    //     {from: account1}
+    //     )
+    // })
+
+
+    // it('Should fail because AC does not exist', async () => {
+
+    //     console.log("//**************************************END getTransferAssetCosts FAIL BATCH**********************************************/")
+    //     console.log("//*************************************BEGIN getCreateNoteCosts FAIL BATCH**********************************************/")
+    //     return AC_MGR.getCreateNoteCosts(
+    //     '30',
+    //     {from: account1}
+    //     )
+    // })
+
+
+    // it('Should fail because AC does not exist', async () => {
+
+    //     console.log("//**************************************END getCreateNoteCosts FAIL BATCH**********************************************/")
+    //     console.log("//*************************************BEGIN getReMintRecordCosts FAIL BATCH**********************************************/")
+    //     return AC_MGR.getReMintRecordCosts(
+    //     '30',
+    //     {from: account1}
+    //     )
+    // })
+
+
+    // it('Should fail because AC does not exist', async () => {
+
+    //     console.log("//**************************************END getReMintRecordCosts FAIL BATCH**********************************************/")
+    //     console.log("//*************************************BEGIN getChangeStatusCosts FAIL BATCH**********************************************/")
+    //     return AC_MGR.getChangeStatusCosts(
+    //     '30',
+    //     {from: account1}
+    //     )
+    // })
+
+
+    // it('Should fail because AC does not exist', async () => {
+
+    //     console.log("//**************************************END getChangeStatusCosts FAIL BATCH**********************************************/")
+    //     console.log("//*************************************BEGIN getForceModifyCosts FAIL BATCH**********************************************/")
+    //     return AC_MGR.getForceModifyCosts(
+    //     '30',
+    //     {from: account1}
+    //     )
+    // })
+
+
+    // it('Should fail because AC does not exist', async () => {
+
+    //     console.log("//**************************************END getForceModifyCosts FAIL BATCH**********************************************/")
+    //     console.log("//*************************************BEGIN retrieveCosts FAIL BATCH**********************************************/")
+    //     return AC_MGR.retrieveCosts(
+    //     '30',
+    //     {from: account1}
+    //     )
+    // })
 
 
     it('Should write record in AC 10 @ IDX&RGT(1)', async () => {
 
-        console.log("//**************************************END getNewRecordCosts FAIL BATCH**********************************************/")
+        console.log("//**************************************END createAssetClass FAIL BATCH**********************************************/")
         console.log("//**************************************END AC_MGR FAIL BATCH**********************************************/")
         console.log("//**************************************END AC_MGR TEST**********************************************/")
         console.log("//**************************************BEGIN THE WORKS**********************************************/")
