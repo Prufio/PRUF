@@ -316,7 +316,6 @@ contract A_TKN is Ownable, ReentrancyGuard, ERC721 {
             _isApprovedOrOwner(_msgSender(), tokenId),
             "AT:D:transfer caller is not owner nor approved"
         );
-        require(_exists(tokenId), "AT:D:Cannot discard nonexistant token");
         require(
             (rec.assetStatus == 59),
             "AT:D:Asset must be in status 59 (discardable) to be discarded"

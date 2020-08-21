@@ -9,7 +9,6 @@
     const PRUF_AC_MGR = artifacts.require('AC_MGR');
     const PRUF_AC_TKN = artifacts.require('AC_TKN');
     const PRUF_A_TKN = artifacts.require('A_TKN');
-    const PRUF_A_TKN2 = artifacts.require('A_TKN2');
     const PRUF_ECR_MGR = artifacts.require('ECR_MGR');
     const PRUF_ECR = artifacts.require('ECR');
     const PRUF_ECR2 = artifacts.require('ECR2');
@@ -27,7 +26,6 @@
     let AC_MGR;
     let AC_TKN;
     let A_TKN;
-    let A_TKN2;
     let ECR_MGR;
     let ECR;
     let ECR2;
@@ -77,6 +75,7 @@
 
     let nakedAuthCode1;
     let nakedAuthCode3;
+    let nakedAuthCode7;
     
         //
         //
@@ -224,13 +223,6 @@
         ECR2 = PRUF_ECR2_TEST;
     })
 
-
-    it('Should deploy PRUF_A_TKN2', async () => {
-        const PRUF_A_TKN2_TEST = await PRUF_A_TKN2.deployed({ from: account1 });
-        console.log(PRUF_A_TKN2_TEST.address);
-        assert(PRUF_A_TKN2_TEST.address !== '')
-        A_TKN2 = PRUF_A_TKN2_TEST;
-    })
 
     it('Should deploy PRUF_MAL_APP', async () => {
         const PRUF_MAL_APP_TEST = await PRUF_MAL_APP.deployed({ from: account1 });
@@ -421,14 +413,19 @@
         )
 
 
-        nakedAuthCode1 = await Helper.getURIfromAuthcode(
+        nakedAuthCode1 = await Helper.getURIb32fromAuthcode(
             '15',
             '1'
         )
 
-        nakedAuthCode3 = await Helper.getURIfromAuthcode(
+        nakedAuthCode3 = await Helper.getURIb32fromAuthcode(
             '15',
             '3'
+        )
+
+        nakedAuthCode7 = await Helper.getURIb32fromAuthcode(
+            '15',
+            '7'
         )
 
         string1Hash = await Helper.getStringHash(
@@ -477,11 +474,6 @@
                 console.log("Adding A_TKN to storage for use in AC 0")
                 return STOR.OO_addContract("A_TKN", A_TKN.address, '0', '1', { from: account1 })
             })
-
-            .then(() => {
-                console.log("Adding A_TKN2 to storage for use in AC 0")
-                return STOR.OO_addContract("A_TKN2", A_TKN2.address, '0', '1', { from: account1 })
-            })
             
             .then(() => {
                 console.log("Adding ECR_MGR to storage for use in AC 0")
@@ -515,7 +507,7 @@
 
             .then(() => {
                 console.log("Adding NAKED to storage for use in AC 0")
-                return STOR.OO_addContract("NAKED", NAKED.address, '0', '1', { from: account1 })
+                return STOR.OO_addContract("NAKED", NAKED.address, '0', '2', { from: account1 })
             })
             
             .then(() => {
@@ -558,11 +550,6 @@
             .then(() => {
                 console.log("Adding in A_TKN")
                 return A_TKN.OO_setStorageContract(STOR.address, { from: account1 })
-            })
-
-            .then(() => {
-                console.log("Adding in A_TKN2")
-                return A_TKN2.OO_setStorageContract(STOR.address, { from: account1 })
             })
             
             .then(() => {
@@ -635,11 +622,6 @@
             .then(() => {
                 console.log("Resolving in A_TKN")
                 return A_TKN.OO_ResolveContractAddresses({ from: account1 })
-            })
-
-            .then(() => {
-                console.log("Resolving in A_TKN2")
-                return A_TKN2.OO_ResolveContractAddresses({ from: account1 })
             })
             
             .then(() => {
@@ -941,41 +923,6 @@
             
             .then(() => {
                 return STOR.enableContractForAC('A_TKN', '2', '1', { from: account1 })
-            })
-    })
-
-
-    it('Should authorize A_TKN2 in all relevant asset classes', async () => {
-        
-        console.log("Authorizing A_TKN2")
-        return STOR.enableContractForAC('A_TKN2', '10', '1', { from: account1 })
-            
-            .then(() => {
-                return STOR.enableContractForAC('A_TKN2', '11', '1', { from: account1 })
-            })
-            
-            .then(() => {
-                return STOR.enableContractForAC('A_TKN2', '12', '2', { from: account1 })
-            })
-            
-            .then(() => {
-                return STOR.enableContractForAC('A_TKN2', '13', '2', { from: account1 })
-            })
-            
-            .then(() => {
-                return STOR.enableContractForAC('A_TKN2', '14', '2', { from: account1 })
-            })
-
-            .then(() => {
-                return STOR.enableContractForAC('A_TKN2', '15', '2', { from: account10 })
-            })
-            
-            .then(() => {
-                return STOR.enableContractForAC('A_TKN2', '1', '1', { from: account1 })
-            })
-            
-            .then(() => {
-                return STOR.enableContractForAC('A_TKN2', '2', '1', { from: account1 })
             })
     })
 
@@ -1399,121 +1346,113 @@
                 
     })
 
-    //2
-    it('Should fail because record does not exist', async () => {
-        return ECR.setEscrow(
-        asset10, 
-        account2Hash,
-        '180',
-        '6',
-        {from: account2}
-        )
-    })
+    // //2                                                           //redundant because they throw in storage
+    // it('Should fail because record does not exist', async () => {
+    //     return ECR.setEscrow(
+    //     asset10, 
+    //     account2Hash,
+    //     '180',
+    //     '6',
+    //     {from: account2}
+    //     )
+    // })
 
-    //3
-    it('Should fail because not being set to escrow status', async () => {
-        return ECR.setEscrow(
-        asset1, 
-        account2Hash,
-        '180',
-        '1',
-        {from: account2}
-        )
-    })
+    // //3                                                           //redundant because they throw in storage                                     
+    // it('Should fail because not being set to escrow status', async () => {
+    //     return ECR.setEscrow(
+    //     asset1, 
+    //     account2Hash,
+    //     '180',
+    //     '1',
+    //     {from: account2}
+    //     )
+    // })
 
-    //4
-    it('Should fail because you cannot put transfered record into escrow', async () => {
-        return ECR.setEscrow(
-        asset2, 
-        account2Hash,
-        '180',
-        '6',
-        {from: account2}
-        )
-    })
+    // //4                                                           //redundant because they throw in storage
+    // it('Should fail because you cannot put transfered record into escrow', async () => {
+    //     return ECR.setEscrow(
+    //     asset2, 
+    //     account2Hash,
+    //     '180',
+    //     '6',
+    //     {from: account2}
+    //     )
+    // })
 
-    //5
-    it('Should fail because you cannot put stolen record into escrow', async () => {
-        return ECR.setEscrow(
-        asset3, 
-        account2Hash,
-        '180',
-        '6',
-        {from: account2}
-        )
-    })
+    // //5                                                           //redundant because they throw in storage
+    // it('Should fail because you cannot put stolen record into escrow', async () => {
+    //     return ECR.setEscrow(
+    //     asset3, 
+    //     account2Hash,
+    //     '180',
+    //     '6',
+    //     {from: account2}
+    //     )
+    // })
 
-    //6
-    it('Should fail because you cannot put lost record into escrow', async () => {
-        return ECR.setEscrow(
-        asset4, 
-        account2Hash,
-        '180',
-        '6',
-        {from: account2}
-        )
-    })
-
-
-    it('Should put asset1 into escrow', async () => {
-        return ECR.setEscrow(
-        asset1, 
-        account2Hash,
-        '180',
-        '6',
-        {from: account2}
-        )
-    })
-
-    //7
-    it('Should fail because record already in escrow', async () => {
-        return ECR.setEscrow(
-        asset1, 
-        account2Hash,
-        '180',
-        '6',
-        {from: account2}
-        )
-    })
+    // //6                                                           //redundant because they throw in storage
+    // it('Should fail because you cannot put lost record into escrow', async () => {
+    //     return ECR.setEscrow(
+    //     asset4, 
+    //     account2Hash,
+    //     '180',
+    //     '6',
+    //     {from: account2}
+    //     )
+    // })
 
 
-    it('Should take asset1 out of escrow', async () => {
-        return ECR.endEscrow(
-        asset1,
-        {from: account2}
-        )
-    })
+    // it('Should put asset1 into escrow', async () => {
+    //     return ECR.setEscrow(
+    //     asset1, 
+    //     account2Hash,
+    //     '180',
+    //     '6',
+    //     {from: account2}
+    //     )
+    // })
+
+    // //7
+    // it('Should fail because record already in escrow', async () => {
+    //     return ECR.setEscrow(
+    //     asset1, 
+    //     account2Hash,
+    //     '180',
+    //     '6',
+    //     {from: account2}
+    //     )
+    // })
 
 
-    it('Should set asset1 into status 1', async () => {
-        return NP._modStatus(
-        asset1, 
-        rgt1,
-        '1',
-        {from: account2}
-        )
-    })
+    // it('Should take asset1 out of escrow', async () => {
+    //     return ECR.endEscrow(
+    //     asset1,
+    //     {from: account2}
+    //     )
+    // })
+
+
+    // it('Should set asset1 into status 1', async () => {
+    //     return NP._modStatus(
+    //     asset1, 
+    //     rgt1,
+    //     '1',
+    //     {from: account2}
+    //     )
+    // })
 
     //8
-    it('Should fail because record does not exist', async () => {
+    it('Should put asset1 into escrow', async () => {
 
         console.log("//**************************************END setEscrow FAIL BATCH**********************************************/")
         console.log("//**************************************BEGIN endEscrow FAIL BATCH**********************************************/")
-        return ECR.endEscrow(
-        asset10, 
-        {from: account2}
-        )
-    })
-
-
-    it('Should put asset1 into escrow', async () => {
         return ECR.setEscrow(
-        asset1, 
-        account2Hash,
-        '180',
-        '6',
-        {from: account2}
-        )
+            asset1, 
+            account2Hash,
+            '180',
+            '6',
+            {from: account2}
+            )
     })
 
     //9
@@ -1542,13 +1481,13 @@
         )
     })
 
-    //10
-    it('Should fail because record not in escrow', async () => {
-        return ECR.endEscrow(
-        asset1, 
-        {from: account2}
-        )
-    })
+    // //10
+    // it('Should fail because record not in escrow', async () => {
+    //     return ECR.endEscrow(
+    //     asset1, 
+    //     {from: account2}
+    //     )
+    // })
 
 
     it('Should set asset1 into escrow', async () => {
@@ -1591,50 +1530,49 @@
     })
 
 
-    it('Should put asset1 into escrow', async () => {
-        return ECR2.setEscrow(
-        asset1, 
-        account2Hash,
-        '180',
-        '6',
-        {from: account2}
-        )
-    })
-
-    //not possible in truffle
-    // //12
-    // it('Should fail because record escrow is not endable with permissiveEndEscrow', async () => {
-    //     return ECR_MGR.permissiveEndEscrow(
+    // it('Should put asset1 into escrow', async () => {
+    //     return ECR2.setEscrow(
     //     asset1, 
+    //     account2Hash,
+    //     '180',
+    //     '6',
+    //     {from: account2}
+    //     )
+    // })
+
+    // //not possible in truffle
+    // // //12
+    // // it('Should fail because record escrow is not endable with permissiveEndEscrow', async () => {
+    // //     return ECR_MGR.permissiveEndEscrow(
+    // //     asset1, 
+    // //     {from: account2}
+    // //     )
+    // // })
+
+
+    // it('Should take asset1 out of escrow', async () => {
+    //     return ECR2.endEscrow(
+    //     asset1,
     //     {from: account2}
     //     )
     // })
 
 
-    it('Should take asset1 out of escrow', async () => {
-
-        console.log("//**************************************END permissiveEndEscrow FAIL BATCH**********************************************/")
-        console.log("//**************************************END ECR_MGR FAIL BATCH**********************************************/")
-        console.log("//**************************************END ECR_MGR TEST**********************************************/")
-        return ECR2.endEscrow(
-        asset1,
-        {from: account2}
-        )
-    })
-
-
-    it('Should set asset1 into status 1', async () => {
-        return NP._modStatus(
-        asset1, 
-        rgt1,
-        '1',
-        {from: account2}
-        )
-    })
+    // it('Should set asset1 into status 1', async () => {
+    //     return NP._modStatus(
+    //     asset1, 
+    //     rgt1,
+    //     '1',
+    //     {from: account2}
+    //     )
+    // })
 
 
     it('Should write record12 in AC 10', async () => {
 
+        console.log("//**************************************END permissiveEndEscrow FAIL BATCH**********************************************/")
+        console.log("//**************************************END ECR_MGR FAIL BATCH**********************************************/")
+        console.log("//**************************************END ECR_MGR TEST**********************************************/")
         console.log("//**************************************BEGIN THE WORKS**********************************************/")
         return APP.$newRecord(
         asset12, 

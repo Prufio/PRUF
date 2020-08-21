@@ -89,7 +89,7 @@ contract ECR_MGR is BASIC {
             contractInfo.contractType == 3,
             "EM:SE: Escrow can only be set by an authorized escrow contract"
         );
-        require(rec.assetClass != 0, "EM:SE:Record does not exist");
+        // require(rec.assetClass != 0, "EM:SE:Record does not exist");           //redundant because they throw in storage
 
         // require(  //all of these are redundant because they throw in storage
         //     isEscrow(_newAssetStatus) == 170,
@@ -143,8 +143,8 @@ contract ECR_MGR is BASIC {
             rec.assetClass
         );
 
-        require(rec.assetClass != 0, "EM:EE:Record does not exist");
-        require(isEscrow(rec.assetStatus) == 170, "EM:EE:Asset not in escrow");
+        // require(rec.assetClass != 0, "EM:EE:Record does not exist");         //redundant because they throw in storage
+        // require(isEscrow(rec.assetStatus) == 170, "EM:EE:Asset not in escrow"); //redundant because they throw in storage
         require(
             (contractInfo.nameHash ==
                 escrows[_idxHash].controllingContractNameHash),
@@ -170,7 +170,7 @@ contract ECR_MGR is BASIC {
     /*
      * @dev Permissive removal of asset from escrow status after time-out
      */
-    function permissiveEndEscrow(bytes32 _idxHash)
+    function permissiveEndEscrow(bytes32 _idxHash)                                               //CANNOT TEST IN TRUFFLE
         external
         nonReentrant
         whenNotPaused
