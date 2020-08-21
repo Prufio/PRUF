@@ -1441,7 +1441,7 @@
     //     )
     // })
 
-    //8
+
     it('Should put asset1 into escrow', async () => {
 
         console.log("//**************************************END setEscrow FAIL BATCH**********************************************/")
@@ -1455,7 +1455,7 @@
             )
     })
 
-    //9
+    //2
     it('Should fail because contract is not the same as the setter contract', async () => {
         return ECR2.endEscrow(
         asset1, 
@@ -1503,7 +1503,7 @@
         )
     })
 
-    //11
+    //3
     it('Should fail because record escrow is not expired', async () => {
         return ECR_MGR.permissiveEndEscrow(
         asset1,
