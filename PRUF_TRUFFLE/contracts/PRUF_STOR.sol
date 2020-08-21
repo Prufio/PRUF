@@ -390,7 +390,7 @@ contract STOR is Ownable, ReentrancyGuard, Pausable {
         notEscrow(_idxHash)
     {
         Record memory rec = database[_idxHash];
-        require(isEscrow(_newAssetStatus) == 170, "S:SE: Asset in ecr"); 
+        require(isEscrow(_newAssetStatus) == 170, "S:SE: stat must = ecr"); 
         require(
             (isLostOrStolen(rec.assetStatus) == 0) &&
                 (rec.assetStatus != 5) &&
