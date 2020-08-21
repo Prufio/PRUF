@@ -36,14 +36,23 @@ import "./Imports/ReentrancyGuard.sol";
 
 contract STOR is Ownable, ReentrancyGuard, Pausable {
     struct Record {
-        bytes32 rightsHolder; // KEK256 Registered owner
-        uint8 assetStatus; // Status - Transferrable, locked, in transfer, stolen, lost, etc.
-        uint8 forceModCount; // Number of times asset has been forceModded.
+        // bytes32 rightsHolder; // KEK256 Registered owner
+        // uint8 assetStatus; // Status - Transferrable, locked, in transfer, stolen, lost, etc.
+        // uint8 forceModCount; // Number of times asset has been forceModded.
+        // uint256 assetClass; // Type of asset
+        // uint256 countDown; // Variable that can only be dencreased from countDownStart
+        // uint256 countDownStart; // Starting point for countdown variable (set once)
+        // bytes32 Ipfs1; // Publically viewable asset description
+        // bytes32 Ipfs2; // Publically viewable immutable notes
+        // uint16 numberOfTransfers; //number of transfers and forcemods
         uint256 assetClass; // Type of asset
         uint256 countDown; // Variable that can only be dencreased from countDownStart
         uint256 countDownStart; // Starting point for countdown variable (set once)
         bytes32 Ipfs1; // Publically viewable asset description
         bytes32 Ipfs2; // Publically viewable immutable notes
+        bytes32 rightsHolder; // KEK256 Registered owner
+        uint8 assetStatus; // Status - Transferrable, locked, in transfer, stolen, lost, etc.
+        uint8 forceModCount; // Number of times asset has been forceModded.
         uint16 numberOfTransfers; //number of transfers and forcemods
     }
 
