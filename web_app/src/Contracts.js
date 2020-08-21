@@ -1,10 +1,10 @@
 import returnABIs from "./returnABIs";
 
 async function buildContracts(_web3) {
-  
+
 
   const abis = returnABIs();
-  
+
 
   const STOR_ABI = abis.STOR;
   const NP_ABI = abis.NP;
@@ -21,7 +21,7 @@ async function buildContracts(_web3) {
   const NAKED_ABI = abis.NAKED;
   const RCLR_ABI = abis.RCLR;
 
-  const STOR_Address = "0xae0A1529F0FA3Ed53490cE1Dc0E30c5cEa45791d";
+  const STOR_Address = "0xED3491EE84CB14C7F994e421f4266B2C80e739D7";
 
   const STOR = new _web3.eth.Contract(STOR_ABI, STOR_Address);
 
@@ -49,21 +49,23 @@ async function buildContracts(_web3) {
       if (_error) {
         console.log(_error);
       } else {
+        console.log(_result);
         NP = new _web3.eth.Contract(NP_ABI, _result);
       }
     }
-    );
-
-  await STOR.methods
-    .resolveContractAddress("NP_NC")
-    .call(function (_error, _result) {
-      if (_error) {
-        console.log(_error);
-      } else {
-        NP_NC = new _web3.eth.Contract(NP_NC_ABI, _result);
-      }
-    }
-    );
+    ).then(async () => {
+      await STOR.methods
+        .resolveContractAddress("NP_NC")
+        .call(function (_error, _result) {
+          if (_error) {
+            console.log(_error);
+          } else {
+            console.log(_result);
+            NP_NC = new _web3.eth.Contract(NP_NC_ABI, _result);
+          }
+        }
+        );
+    });
 
   await STOR.methods
     .resolveContractAddress("APP")
@@ -71,6 +73,7 @@ async function buildContracts(_web3) {
       if (_error) {
         console.log(_error);
       } else {
+        console.log(_result);
         APP = new _web3.eth.Contract(APP_ABI, _result);
       }
     }
@@ -82,6 +85,7 @@ async function buildContracts(_web3) {
       if (_error) {
         console.log(_error);
       } else {
+        console.log(_result);
         APP_NC = new _web3.eth.Contract(APP_NC_ABI, _result);
       }
     }
@@ -95,7 +99,6 @@ async function buildContracts(_web3) {
       } else {
         console.log(_result)
         AC_MGR = new _web3.eth.Contract(AC_MGR_ABI, _result);
-        console.log(AC_MGR)
       }
     }
     );
@@ -106,6 +109,7 @@ async function buildContracts(_web3) {
       if (_error) {
         console.log(_error);
       } else {
+        console.log(_result);
         AC_TKN = new _web3.eth.Contract(AC_TKN_ABI, _result);
       }
     }
@@ -117,6 +121,7 @@ async function buildContracts(_web3) {
       if (_error) {
         console.log(_error);
       } else {
+        console.log(_result);
         ECR = new _web3.eth.Contract(ECR_ABI, _result);
       }
     }
@@ -128,6 +133,7 @@ async function buildContracts(_web3) {
       if (_error) {
         console.log(_error);
       } else {
+        console.log(_result);
         ECR2 = new _web3.eth.Contract(ECR2_ABI, _result);
       }
     }
@@ -139,6 +145,7 @@ async function buildContracts(_web3) {
       if (_error) {
         console.log(_error);
       } else {
+        console.log(_result);
         ECR_NC = new _web3.eth.Contract(ECR_NC_ABI, _result);
       }
     }
@@ -150,6 +157,7 @@ async function buildContracts(_web3) {
       if (_error) {
         console.log(_error);
       } else {
+        console.log(_result);
         ECR_MGR = new _web3.eth.Contract(ECR_MGR_ABI, _result);
       }
     }
@@ -161,6 +169,7 @@ async function buildContracts(_web3) {
       if (_error) {
         console.log(_error);
       } else {
+        console.log(_result);
         A_TKN = new _web3.eth.Contract(A_TKN_ABI, _result);
       }
     }
@@ -172,6 +181,7 @@ async function buildContracts(_web3) {
       if (_error) {
         console.log(_error);
       } else {
+        console.log(_result);
         RCLR = new _web3.eth.Contract(RCLR_ABI, _result);
       }
     }
@@ -183,6 +193,7 @@ async function buildContracts(_web3) {
       if (_error) {
         console.log(_error);
       } else {
+        console.log(_result);
         NAKED = new _web3.eth.Contract(NAKED_ABI, _result);
       }
     }
@@ -201,10 +212,11 @@ async function buildContracts(_web3) {
   _contracts.content.push(APP_NC);   //10
   _contracts.content.push(NP_NC);    //11
   _contracts.content.push(RCLR);     //12
+  _contracts.content.push(NAKED);    //13
 
   console.log(_contracts)
   return _contracts;
-  
+
 }
 
 export default buildContracts;

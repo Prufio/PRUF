@@ -8,6 +8,21 @@ class Home extends Component {
   constructor(props) {
     super(props);
 
+    this._checkCreds = () => {
+      console.log(window.contracts.content[3]);
+      console.log(window.web3)
+      console.log(window.addr)
+      console.log(window.assetClass)
+      window.contracts.content[3].methods
+      .getUserType(window.web3.utils.soliditySha3(window.addr), window.assetClass)
+      .call({from: window.addr}, (_error, _result) => {
+        if(_error){console.log("Error: ", _error)}
+        else{this.setState({authLevel: _result})
+            console.log(_result)
+        }
+      }); 
+    }
+
     this.state = {
       addr: undefined,
       web3: null,
@@ -30,22 +45,23 @@ class Home extends Component {
     };
   }
 
+  componentDidMount() {
+    console.log(window)
+
+  }
+
+  componentDidUpdate() {
+    if(window.contracts > 0){
+      this.getContracts();
+    }
+  }
+
   render() {
 
-    const _checkCreds = () => {
-      window.AC_MGR.methods
-      .getUserType(window.web3.utils.soliditySha3(window.addr, window.assetClass))
-      .call({from: window.addr}, (_error, _result) => {
-        if(_error){console.log("Error: ", _error)}
-        else{this.setState({authLevel: _result})
-            console.log(_result)
-        }
-      });
-    }
     
-    const _setAC = () => {
+    const _setAC = async () => {
       window.assetClass = this.state.assetClass;
-      _checkCreds();
+      this._checkCreds();
       return this.forceUpdate()
     }
 
@@ -60,9 +76,10 @@ class Home extends Component {
         </p>
         <p> V 0.2.3</p>
 
-    <p> {window.assetClass > 0 && (<div>You are in asset class {window.assetClass} as {this.state.authLevel}</div>)}</p>
-        <br></br>
-        <Form.Group as={Col} controlId="formGridAC">
+    <div> {window.assetClass > 0 && (<div>You are in asset class {window.assetClass} as {this.state.authLevel}</div>)}</div>
+        {window.contracts !== undefined && (
+          <div>
+          <Form.Group as={Col} controlId="formGridAC">
           <Form.Label className="formFont">Input desired asset class index # : </Form.Label>
           <Form.Control
             placeholder="Asset Class"
@@ -72,7 +89,6 @@ class Home extends Component {
             size="lg"
           />
         </Form.Group>
-        <br></br>
         <Form.Row>
           <Form.Group className="buttonDisplay">
             <Button
@@ -85,6 +101,9 @@ class Home extends Component {
                   </Button>
           </Form.Group>
         </Form.Row>
+        </div>
+        )}
+        {window.contracts === undefined && (<div> <Form.Row><h1>Connecting to the blockchain...</h1></Form.Row></div>)}
       </div>
     );
   }
