@@ -24,12 +24,12 @@ import "./PRUF_CORE.sol";
 contract AC_MGR is CORE {
     using SafeMath for uint256;
 
-    mapping(uint256 => Costs) private cost; // Cost per function by asset class
+    mapping(uint32 => Costs) private cost; // Cost per function by asset class
 
-    mapping(uint256 => AC) internal AC_data; // AC info database asset class to AC struct (NAME,ACroot,CUSTODIAL/NC,uint256)
-    mapping(string => uint256) internal AC_number; //name to asset class resolution map
+    mapping(uint32 => AC) internal AC_data; // AC info database asset class to AC struct (NAME,ACroot,CUSTODIAL/NC,uint32)
+    mapping(string => uint32) internal AC_number; //name to asset class resolution map
 
-    mapping(bytes32 => mapping(uint256 => uint8)) internal registeredUsers; // Authorized recorder database
+    mapping(bytes32 => mapping(uint32 => uint8)) internal registeredUsers; // Authorized recorder database by asset class, by address hash
 
     //address AC_minterAddress;
     uint256 private priceThreshold; //threshold of price where fractional pricing is implemented
@@ -50,7 +50,7 @@ contract AC_MGR is CORE {
     /*
      * @dev Verify caller holds ACtoken of passed assetClass
      */
-    modifier isACtokenHolderOfClass(uint256 _assetClass) {
+    modifier isACtokenHolderOfClass(uint32 _assetClass) {
         require(
             (AC_TKN.ownerOf(_assetClass) == msg.sender),
             "ACM:MOD-IACTHoC:msg.sender not authorized in asset class"
@@ -66,7 +66,7 @@ contract AC_MGR is CORE {
     function OO_addUser(                             //swap arg!!!!!!!!!
         address _authAddr,
         uint8 _userType,
-        uint256 _assetClass
+        uint32 _assetClass
     ) external whenNotPaused isACtokenHolderOfClass(_assetClass) {
         require(
             (_userType == 0) ||
@@ -91,16 +91,16 @@ contract AC_MGR is CORE {
      * @dev Mints asset class @ address
      */
     function createAssetClass(
-        uint256 _tokenId,
         address _recipientAddress,
         string calldata _name,
-        uint256 _assetClass,
-        uint256 _assetClassRoot,
+        uint32 _assetClass,
+        uint32 _assetClassRoot,
         uint8 _custodyType
     ) external isAdmin {
         AC memory _ac = AC_data[_assetClassRoot];
+        uint256 tokenId = uint256(_assetClass);
 
-        require((_tokenId != 0), "ACM:CAC: Token id cannot be 0"); //sanity check inputs
+        require((tokenId != 0), "ACM:CAC: Token id cannot be 0"); //sanity check inputs
         require( //has valid root
             (_ac.custodyType != 0) || (_assetClassRoot == _assetClass),
             "ACM:CAC:Root asset class does not exist"
@@ -115,7 +115,7 @@ contract AC_MGR is CORE {
 
         AC_TKN.mintACToken(
             _recipientAddress,
-            _tokenId,
+            tokenId,
             "pruf.io/assetClassToken"
         );
         //^^^^^^^interactions^^^^^^^^^
@@ -125,7 +125,7 @@ contract AC_MGR is CORE {
      * @dev Set function costs and payment address per asset class, in Wei
      */
     function ACTH_setCosts(
-        uint256 _class,
+        uint32 _class,
         uint256 _newRecordCost,
         uint256 _transferAssetCost,
         uint256 _createNoteCost,
@@ -149,7 +149,7 @@ contract AC_MGR is CORE {
     /*
      * @dev get a User Record
      */
-    function getUserType(bytes32 _userHash, uint256 _assetClass)
+    function getUserType(bytes32 _userHash, uint32 _assetClass)
         external
         view
         returns (uint8)
@@ -162,13 +162,13 @@ contract AC_MGR is CORE {
     /*
      * @dev Retrieve AC_data @ _assetClass
      */
-    function getAC_data(uint256 _assetClass)
+    function getAC_data(uint32 _assetClass)
         external
         view
         returns (
-            uint256,
+            uint32,
             uint8,
-            uint256
+            uint32
         )
     {
         //^^^^^^^checks^^^^^^^^^
@@ -183,7 +183,7 @@ contract AC_MGR is CORE {
     /*
      * @dev compare the root of two asset classes
      */
-    function isSameRootAC(uint256 _assetClass1, uint256 _assetClass2)
+    function isSameRootAC(uint32 _assetClass1, uint32 _assetClass2)
         external
         view
         returns (uint8)
@@ -203,13 +203,13 @@ contract AC_MGR is CORE {
     /*
      * @dev Retrieve AC_name @ _tokenId
      */
-    function getAC_name(uint256 _tokenId)
+    function getAC_name(uint32 _tokenId)
         external
         view
         returns (string memory)
     {
         //^^^^^^^checks^^^^^^^^^
-        uint256 assetClass = _tokenId;
+        uint32 assetClass = _tokenId;   //check for overflow andf throw
         return (AC_data[assetClass].name);
         //^^^^^^^interactions^^^^^^^^^
     }
@@ -220,7 +220,7 @@ contract AC_MGR is CORE {
     function resolveAssetClass(string calldata _name)
         external
         view
-        returns (uint256)
+        returns (uint32)
     {
         //^^^^^^^checks^^^^^^^^^
         return (AC_number[_name]);
@@ -231,7 +231,7 @@ contract AC_MGR is CORE {
     /*
      * @dev Retrieve function costs per asset class, in Wei
      */
-    function getNewRecordCosts(uint256 _assetClass)
+    function getNewRecordCosts(uint32 _assetClass)
         external
         returns (
             address,
@@ -242,7 +242,7 @@ contract AC_MGR is CORE {
     {
         AC memory AC_info = getACinfo(_assetClass);
         Costs memory costs = cost[_assetClass];
-        uint256 rootAssetClass = AC_info.assetClassRoot;
+        uint32 rootAssetClass = AC_info.assetClassRoot;
         Costs memory rootCosts = cost[rootAssetClass];
 
         require(                                                                                                  //REDUNDANT, WILL THROW IN ERC721
@@ -262,7 +262,7 @@ contract AC_MGR is CORE {
     /*
      * @dev Retrieve function costs per asset class, in Wei
      */
-    function getTransferAssetCosts(uint256 _assetClass)
+    function getTransferAssetCosts(uint32 _assetClass)
         external
         returns (
             address,
@@ -273,7 +273,7 @@ contract AC_MGR is CORE {
     {
         AC memory AC_info = getACinfo(_assetClass);
         Costs memory costs = cost[_assetClass];
-        uint256 rootAssetClass = AC_info.assetClassRoot;
+        uint32 rootAssetClass = AC_info.assetClassRoot;
         Costs memory rootCosts = cost[rootAssetClass];
 
         require(                                                                                                  //REDUNDANT, WILL THROW IN ERC721
@@ -293,7 +293,7 @@ contract AC_MGR is CORE {
     /*
      * @dev Retrieve function costs per asset class, in Wei
      */
-    function getCreateNoteCosts(uint256 _assetClass)
+    function getCreateNoteCosts(uint32 _assetClass)
         external
         returns (
             address,
@@ -304,7 +304,7 @@ contract AC_MGR is CORE {
     {
         AC memory AC_info = getACinfo(_assetClass);
         Costs memory costs = cost[_assetClass];
-        uint256 rootAssetClass = AC_info.assetClassRoot;
+        uint32 rootAssetClass = AC_info.assetClassRoot;
         Costs memory rootCosts = cost[rootAssetClass];
 
         require(                                                                                                  //REDUNDANT, WILL THROW IN ERC721
@@ -324,7 +324,7 @@ contract AC_MGR is CORE {
     /*
      * @dev Retrieve function costs per asset class, in Wei
      */
-    function getReMintRecordCosts(uint256 _assetClass)
+    function getReMintRecordCosts(uint32 _assetClass)
         external
         returns (
             address,
@@ -335,7 +335,7 @@ contract AC_MGR is CORE {
     {
         AC memory AC_info = getACinfo(_assetClass);
         Costs memory costs = cost[_assetClass];
-        uint256 rootAssetClass = AC_info.assetClassRoot;
+        uint32 rootAssetClass = AC_info.assetClassRoot;
         Costs memory rootCosts = cost[rootAssetClass];
 
         require(                                                                                                  //REDUNDANT, WILL THROW IN ERC721
@@ -355,7 +355,7 @@ contract AC_MGR is CORE {
     /*
      * @dev Retrieve function costs per asset class, in Wei
      */
-    function getChangeStatusCosts(uint256 _assetClass)
+    function getChangeStatusCosts(uint32 _assetClass)
         external
         returns (
             address,
@@ -366,7 +366,7 @@ contract AC_MGR is CORE {
     {
         AC memory AC_info = getACinfo(_assetClass);
         Costs memory costs = cost[_assetClass];
-        uint256 rootAssetClass = AC_info.assetClassRoot;
+        uint32 rootAssetClass = AC_info.assetClassRoot;
         Costs memory rootCosts = cost[rootAssetClass];
 
         require(                                                                                                  //REDUNDANT, WILL THROW IN ERC721
@@ -386,7 +386,7 @@ contract AC_MGR is CORE {
     /*
      * @dev Retrieve function costs per asset class, in Wei
      */
-    function getForceModifyCosts(uint256 _assetClass)
+    function getForceModifyCosts(uint32 _assetClass)
         external
         returns (
             address,
@@ -397,7 +397,7 @@ contract AC_MGR is CORE {
     {
         AC memory AC_info = getACinfo(_assetClass);
         Costs memory costs = cost[_assetClass];
-        uint256 rootAssetClass = AC_info.assetClassRoot;
+        uint32 rootAssetClass = AC_info.assetClassRoot;
         Costs memory rootCosts = cost[rootAssetClass];
 
         require(                                                                                                  //REDUNDANT, WILL THROW IN ERC721
@@ -417,7 +417,7 @@ contract AC_MGR is CORE {
     /*
      * @dev Retrieve function costs per asset class, in Wei
      */
-    function retrieveCosts(uint256 _assetClass)
+    function retrieveCosts(uint32 _assetClass)
         external
         view
         returns (

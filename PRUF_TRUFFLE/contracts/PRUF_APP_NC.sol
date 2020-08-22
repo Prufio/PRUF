@@ -36,8 +36,6 @@ contract APP_NC is CORE {
         _;
     }
 
-
-
     //--------------------------------------------External Functions--------------------------
     /*
      * @dev Create a  newRecord
@@ -45,8 +43,8 @@ contract APP_NC is CORE {
     function $newRecord(
         bytes32 _idxHash,
         bytes32 _rgtHash,
-        uint256 _assetClass,
-        uint256 _countDownStart
+        uint32 _assetClass,
+        uint32 _countDownStart
     ) external payable nonReentrant whenNotPaused {
         //Record memory rec = getRecord(_idxHash);
         uint8 userType = getUserType(_assetClass);
@@ -61,15 +59,11 @@ contract APP_NC is CORE {
             contractInfo.contractType > 0,
             "ANC:NR: contract not auth in AC"
         );
-        require(_assetClass != 0, "ANC:NR: AC = 0");                    //theoretically unneccesary
-        require(
-            userType == 1,
-            "ANC:NR: User not auth in AC"
-        );
+        require(_assetClass != 0, "ANC:NR: AC = 0"); //theoretically unneccesary
+        require(userType == 1, "ANC:NR: User not auth in AC");
         require(_rgtHash != 0, "ANC:NR: rgt = 0");
 
-
-                            // using newRecord to overwrite is depricated, storage checks for pre-existing asset
+        // using newRecord to overwrite is depricated, storage checks for pre-existing asset
         // require( //if creating new record in new root and idxhash is identical, fail because its probably fraud
         //     ((AC_info.assetClassRoot == oldAC_info.assetClassRoot) ||
         //         (rec.assetClass == 0)),
@@ -98,7 +92,7 @@ contract APP_NC is CORE {
     /*
      * @dev Import a record into a new asset class
      */
-    function $importAsset(bytes32 _idxHash, uint256 _newAssetClass)
+    function $importAsset(bytes32 _idxHash, uint32 _newAssetClass)
         external
         payable
         nonReentrant
@@ -110,10 +104,7 @@ contract APP_NC is CORE {
             address(this),
             _newAssetClass
         );
-        require(
-            rec.assetStatus == 70,
-            "ANC:IA: Asset not exported"
-        );
+        require(rec.assetStatus == 70, "ANC:IA: Asset not exported");
         require(
             contractInfo.contractType > 0,
             "ANC:IA: contract not auth for AC"
@@ -130,7 +121,6 @@ contract APP_NC is CORE {
         deductNewRecordCosts(_newAssetClass);
         //^^^^^^^interactions / effects^^^^^^^^^^^^
     }
-
 
     /*
      * @dev remint token with confirmation of posession of RAWTEXT hash inputs
@@ -206,7 +196,7 @@ contract APP_NC is CORE {
             contractInfo.contractType > 0,
             "ANC:I2: contract not auth for AC"
         );
-       // require((rec.assetClass != 0), "ANC:I2: Record does not exist");               //impossible, throws in storage
+        // require((rec.assetClass != 0), "ANC:I2: Record does not exist");               //impossible, throws in storage
         require(
             isEscrow(rec.assetStatus) == 0,
             "ANC:I2:Cannot modify asset in Escrow"

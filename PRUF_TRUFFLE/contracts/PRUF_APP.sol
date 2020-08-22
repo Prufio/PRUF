@@ -39,8 +39,8 @@ contract APP is CORE {
     function $newRecord(
         bytes32 _idxHash,
         bytes32 _rgtHash,
-        uint256 _assetClass,
-        uint256 _countDownStart
+        uint32 _assetClass,
+        uint32 _countDownStart
     ) external payable nonReentrant whenNotPaused {
         Record memory rec = getRecord(_idxHash);
         uint8 userType = getUserType(_assetClass);
@@ -76,7 +76,7 @@ contract APP is CORE {
     function $importAsset(
         bytes32 _idxHash,
         bytes32 _newRgtHash,
-        uint256 _newAssetClass
+        uint32 _newAssetClass
     )
         external
         payable
@@ -96,7 +96,7 @@ contract APP is CORE {
             contractInfo.contractType > 0,
             "A:IA: unauthorized for AC. Orphan token?"
         );
-        require(rec.assetClass != 0, "A:IA: Record does not exist. ");                 //CANNOT BE TESTED, ASSERT??
+        require(rec.assetClass != 0, "A:IA: Record does not exist. "); //CANNOT BE TESTED, ASSERT??
         require(userType < 3, "A:IA: User not authorized to import assets");
         require((userType > 0) && (userType < 10), "A:IA: User not auth in AC");
         require(
@@ -154,18 +154,15 @@ contract APP is CORE {
             "A:FMR: Asset marked L/S"
         );
         require(isEscrow(rec.assetStatus) == 0, "A:FMR: Asset in escrow");
-        require(
-            isEscrow(rec.assetStatus) == 0,
-            "A:FMR: Asset in escrow"
-        );
-        require(                                                      //IMPOSSIBLE TO THROW REVERTS IN REQ1
+        require(isEscrow(rec.assetStatus) == 0, "A:FMR: Asset in escrow");
+        require( //IMPOSSIBLE TO THROW REVERTS IN REQ1
             needsImport(rec.assetStatus) == 0,
             "A:FMR: Asset needs re-imported"
         );
         //^^^^^^^checks^^^^^^^^^
 
         rec.incrementForceModCount = 170;
-     
+
         rec.incrementNumberOfTransfers = 170;
 
         rec.assetStatus = 0;
@@ -272,11 +269,8 @@ contract APP is CORE {
             "A:FMR: Asset marked lost or stolen"
         );
         require(isEscrow(rec.assetStatus) == 0, "A:FMR: Asset in escrow");
-        require(
-            isEscrow(rec.assetStatus) == 0,
-            "A:FMR: Asset in escrow"
-        );
-        require(                                                      //IMPOSSIBLE TO THROW REVERTS IN REQ1
+        require(isEscrow(rec.assetStatus) == 0, "A:FMR: Asset in escrow");
+        require( //IMPOSSIBLE TO THROW REVERTS IN REQ1
             needsImport(rec.assetStatus) == 0,
             "A:FMR: Asset needs re-imported"
         );

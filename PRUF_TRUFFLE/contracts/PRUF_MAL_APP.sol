@@ -40,8 +40,8 @@ contract MAL_APP is CORE_MAL {
         function $newRecord(
         bytes32 _idxHash,
         bytes32 _rgtHash,
-        uint256 _assetClass,
-        uint256 _countDownStart
+        uint32 _assetClass,
+        uint32 _countDownStart
     ) external payable 
     // nonReentrant whenNotPaused 
     {
@@ -225,13 +225,13 @@ contract MAL_APP is CORE_MAL {
     function _decCounter(
         bytes32 _idxHash,
         bytes32 _rgtHash,
-        uint256 _decAmount
+        uint32 _decAmount
     )
         external
         // nonReentrant
         // whenNotPaused
         // isAuthorized(_idxHash)
-        returns (uint256)
+        returns (uint32)
     {
         Record memory rec = getRecord(_idxHash);
         // uint8 userType = getUserType(rec.assetClass);
@@ -275,7 +275,11 @@ contract MAL_APP is CORE_MAL {
         //     rec.countDown = 0;
         // }
         //^^^^^^^effects^^^^^^^^^
-        rec.countDown = rec.countDown.sub(_decAmount);
+        if (rec.countDown > _decAmount){
+            rec.countDown = rec.countDown - _decAmount;
+        } else {
+            rec.countDown = 0;
+        }
         writeRecord(_idxHash, rec);
         return (rec.countDown);
         //^^^^^^^interactions^^^^^^^^^
@@ -530,7 +534,7 @@ contract MAL_APP is CORE_MAL {
     /*
      *     @dev Export FROM Custodial:
      */
-    function changeAC(bytes32 _idxHash, uint256 newAssetClass)
+    function changeAC(bytes32 _idxHash, uint32 newAssetClass)
         external
         // nonReentrant
         // whenNotPaused

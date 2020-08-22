@@ -36,27 +36,18 @@ import "./Imports/ReentrancyGuard.sol";
 
 contract STOR is Ownable, ReentrancyGuard, Pausable {
     struct Record {
-        // bytes32 rightsHolder; // KEK256 Registered owner
-        // uint8 assetStatus; // Status - Transferrable, locked, in transfer, stolen, lost, etc.
-        // uint8 forceModCount; // Number of times asset has been forceModded.
-        // uint256 assetClass; // Type of asset
-        // uint256 countDown; // Variable that can only be dencreased from countDownStart
-        // uint256 countDownStart; // Starting point for countdown variable (set once)
-        // bytes32 Ipfs1; // Publically viewable asset description
-        // bytes32 Ipfs2; // Publically viewable immutable notes
-        // uint16 numberOfTransfers; //number of transfers and forcemods
-        uint256 assetClass; // Type of asset
-        uint256 countDown; // Variable that can only be dencreased from countDownStart
-        uint256 countDownStart; // Starting point for countdown variable (set once)
-        bytes32 Ipfs1; // Publically viewable asset description
-        bytes32 Ipfs2; // Publically viewable immutable notes
-        bytes32 rightsHolder; // KEK256 Registered owner
         uint8 assetStatus; // Status - Transferrable, locked, in transfer, stolen, lost, etc.
         uint8 forceModCount; // Number of times asset has been forceModded.
         uint16 numberOfTransfers; //number of transfers and forcemods
+        uint32 assetClass; // Type of asset
+        uint32 countDown; // Variable that can only be dencreased from countDownStart
+        uint32 countDownStart; // Starting point for countdown variable (set once)
+        bytes32 Ipfs1; // Publically viewable asset description
+        bytes32 Ipfs2; // Publically viewable immutable notes
+        bytes32 rightsHolder; // KEK256 Registered owner
     }
 
-    mapping(string => mapping(uint256 => uint8)) internal contractInfo;
+    mapping(string => mapping(uint32 => uint8)) internal contractInfo;
     mapping(address => string) private contractAddressToName; // Authorized contract addresses, indexed by address, with auth level 0-255
     mapping(string => address) private contractNameToAddress; // Authorized contract addresses, indexed by name
 
@@ -75,7 +66,7 @@ contract STOR is Ownable, ReentrancyGuard, Pausable {
      *
      * Originating Address is authorized for asset class
      */
-    modifier isAuthorized(uint256 _assetClass) {
+    modifier isAuthorized(uint32 _assetClass) {
         uint8 auth = contractInfo[contractAddressToName[msg
             .sender]][_assetClass];
         require(
@@ -176,7 +167,7 @@ contract STOR is Ownable, ReentrancyGuard, Pausable {
     function OO_addContract(
         string calldata _name,
         address _addr,
-        uint256 _assetClass,
+        uint32 _assetClass,
         uint8 _contractAuthLevel
     ) external onlyOwner {
         require((_assetClass == 0), "S:AC: AC not 0");
@@ -200,7 +191,7 @@ contract STOR is Ownable, ReentrancyGuard, Pausable {
      */
     function enableContractForAC(
         string calldata _name,
-        uint256 _assetClass,
+        uint32 _assetClass,
         uint8 _contractAuthLevel
     ) external {
         require(
@@ -225,8 +216,8 @@ contract STOR is Ownable, ReentrancyGuard, Pausable {
     function newRecord(
         bytes32 _idxHash,
         bytes32 _rgtHash,
-        uint256 _assetClass,
-        uint256 _countDownStart
+        uint32 _assetClass,
+        uint32 _countDownStart
     ) external nonReentrant whenNotPaused isAuthorized(_assetClass) {
         require(
             database[_idxHash].assetStatus != 60,
@@ -267,7 +258,7 @@ contract STOR is Ownable, ReentrancyGuard, Pausable {
         bytes32 _idxHash,
         bytes32 _rgtHash,
         uint8 _newAssetStatus,
-        uint256 _countDown,
+        uint32 _countDown,
         uint256 _incrementForceModCount,
         uint256 _incrementNumberOfTransfers
     )
@@ -310,7 +301,7 @@ contract STOR is Ownable, ReentrancyGuard, Pausable {
     /*
      * @dev Change asset class of an asset
      */
-    function changeAC(bytes32 _idxHash, uint256 _newAssetClass)
+    function changeAC(bytes32 _idxHash, uint32 _newAssetClass)
         external
         nonReentrant
         whenNotPaused
@@ -514,9 +505,9 @@ contract STOR is Ownable, ReentrancyGuard, Pausable {
             //bytes32,
             bytes32,
             uint8,
-            uint256,
-            uint256,
-            uint256,
+            uint32,
+            uint32,
+            uint32,
             bytes32,
             bytes32
         )
@@ -550,9 +541,9 @@ contract STOR is Ownable, ReentrancyGuard, Pausable {
         returns (
             uint8,
             uint8,
-            uint256,
-            uint256,
-            uint256,
+            uint32,
+            uint32,
+            uint32,
             bytes32,
             bytes32,
             uint16
@@ -631,7 +622,7 @@ contract STOR is Ownable, ReentrancyGuard, Pausable {
     /*
      * @dev //returns the contract type of a contract with address _addr.
      */
-    function ContractInfoHash(address _addr, uint256 _assetClass)
+    function ContractInfoHash(address _addr, uint32 _assetClass)
         external
         view
         returns (uint8, bytes32)

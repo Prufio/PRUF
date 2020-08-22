@@ -21,7 +21,7 @@ pragma solidity ^0.6.7;
 import "./PRUF_CORE.sol";
 
 contract NP_NC is CORE {
-    using SafeMath for uint256;
+    //using SafeMath for uint256;
 
     /*
      * @dev Verify user credentials
@@ -231,12 +231,12 @@ contract NP_NC is CORE {
     /*
      * @dev Decrement **Record**.countdown with confirmation required
      */
-    function _decCounter(bytes32 _idxHash, uint256 _decAmount)
+    function _decCounter(bytes32 _idxHash, uint32 _decAmount)
         external
         nonReentrant
         whenNotPaused
         isAuthorized(_idxHash)
-        returns (uint256)
+        returns (uint32)
     {
         Record memory rec = getRecord(_idxHash);
         ContractDataHash memory contractInfo = getContractInfo(
@@ -261,7 +261,7 @@ contract NP_NC is CORE {
         //^^^^^^^checks^^^^^^^^^
 
         if (rec.countDown > _decAmount) {
-            rec.countDown = rec.countDown.sub(_decAmount);
+            rec.countDown = rec.countDown - _decAmount;
         } else {
             rec.countDown = 0;
         }

@@ -48,7 +48,7 @@ contract CORE is PullPayment, BASIC {
     /*
      * @dev retrieves costs from Storage and returns Costs struct
      */
-    function getCost(uint256 _assetClass) internal returns (Costs memory) {
+    function getCost(uint32 _assetClass) internal returns (Costs memory) {
         //^^^^^^^checks^^^^^^^^^
 
         Costs memory cost;
@@ -75,8 +75,8 @@ contract CORE is PullPayment, BASIC {
     function createRecord(
         bytes32 _idxHash,
         bytes32 _rgtHash,
-        uint256 _assetClass,
-        uint256 _countDownStart
+        uint32 _assetClass,
+        uint32 _countDownStart
     ) internal {
         uint256 tokenId = uint256(_idxHash);
         AC memory AC_info = getACinfo(_assetClass);
@@ -149,7 +149,7 @@ contract CORE is PullPayment, BASIC {
 
     //--------------------------------------------------------------------------------------Payment internal functions
 
-    function deductNewRecordCosts(uint256 _assetClass) internal whenNotPaused {
+    function deductNewRecordCosts(uint32 _assetClass) internal whenNotPaused {
         //^^^^^^^checks^^^^^^^^^
         Invoice memory pricing;
         //^^^^^^^effects^^^^^^^^^
@@ -163,7 +163,7 @@ contract CORE is PullPayment, BASIC {
         //^^^^^^^interactions^^^^^^^^^
     }
 
-    function deductRecycleCosts(uint256 _assetClass, address _oldOwner)
+    function deductRecycleCosts(uint32 _assetClass, address _oldOwner)
         internal
         whenNotPaused
     {
@@ -181,7 +181,7 @@ contract CORE is PullPayment, BASIC {
         //^^^^^^^interactions^^^^^^^^^
     }
 
-    function deductTransferAssetCosts(uint256 _assetClass)
+    function deductTransferAssetCosts(uint32 _assetClass)
         internal
         whenNotPaused
     {
@@ -198,7 +198,7 @@ contract CORE is PullPayment, BASIC {
         //^^^^^^^interactions^^^^^^^^^
     }
 
-    function deductCreateNoteCosts(uint256 _assetClass) internal whenNotPaused {
+    function deductCreateNoteCosts(uint32 _assetClass) internal whenNotPaused {
         //^^^^^^^checks^^^^^^^^^
         Invoice memory pricing;
         //^^^^^^^effects^^^^^^^^^
@@ -212,7 +212,7 @@ contract CORE is PullPayment, BASIC {
         //^^^^^^^interactions^^^^^^^^^
     }
 
-    function deductReMintRecordCosts(uint256 _assetClass)
+    function deductReMintRecordCosts(uint32 _assetClass)
         internal
         whenNotPaused
     {
@@ -229,7 +229,7 @@ contract CORE is PullPayment, BASIC {
         //^^^^^^^interactions^^^^^^^^^
     }
 
-    function deductChangeStatusCosts(uint256 _assetClass)
+    function deductChangeStatusCosts(uint32 _assetClass)
         internal
         whenNotPaused
     {
@@ -246,7 +246,7 @@ contract CORE is PullPayment, BASIC {
         //^^^^^^^interactions^^^^^^^^^
     }
 
-    function deductForceModifyCosts(uint256 _assetClass)
+    function deductForceModifyCosts(uint32 _assetClass)
         internal
         whenNotPaused
     {

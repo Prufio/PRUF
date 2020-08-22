@@ -89,7 +89,7 @@ contract NP is CORE {
             isEscrow(rec.assetStatus) == 0,
             "NP:MS: Cannot modify asset in escrow"
         );
-        require(                                                        
+        require(
             needsImport(rec.assetStatus) == 0,
             "NP:MS: Record in unregistered, exported, or discarded status"
         );
@@ -183,13 +183,13 @@ contract NP is CORE {
     function _decCounter(
         bytes32 _idxHash,
         bytes32 _rgtHash,
-        uint256 _decAmount
+        uint32 _decAmount
     )
         external
         nonReentrant
         whenNotPaused
         isAuthorized(_idxHash)
-        returns (uint256)
+        returns (uint32)
     {
         Record memory rec = getRecord(_idxHash);
         uint8 userType = getUserType(rec.assetClass);
@@ -228,7 +228,7 @@ contract NP is CORE {
         //^^^^^^^checks^^^^^^^^^
 
         if (rec.countDown > _decAmount) {
-            rec.countDown = rec.countDown.sub(_decAmount);
+            rec.countDown = rec.countDown - _decAmount;
         } else {
             rec.countDown = 0;
         }
@@ -273,10 +273,10 @@ contract NP is CORE {
             "NP:MI1: user not auth in AC"
         );
         // require(rec.Ipfs1 != _IpfsHash, "NP:MI1: New data same as old");                              //REDUNDANT, THROWS IN STORAGE
-        
+
         require(
             isEscrow(rec.assetStatus) == 0,
-           "NP:MI1: Cannot modify asset in Escrow"
+            "NP:MI1: Cannot modify asset in Escrow"
         );
         require(
             needsImport(rec.assetStatus) == 0,

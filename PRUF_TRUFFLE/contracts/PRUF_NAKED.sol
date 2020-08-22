@@ -36,8 +36,8 @@ contract NAKED is CORE {
 
     function mintNakedAsset(
         bytes32 _idxHash,
-        bytes32 _hashedAuthCode, // token URI needs to be K256(packed( uint256 assetClass, string authCode)) supplied off chain
-        uint256 _assetClass
+        bytes32 _hashedAuthCode, // token URI needs to be K256(packed( uint32 assetClass, string authCode)) supplied off chain
+        uint32 _assetClass
     ) external nonReentrant whenNotPaused {
         uint256 tokenId = uint256(_idxHash);
         Record memory rec = getRecord(_idxHash);
@@ -47,20 +47,24 @@ contract NAKED is CORE {
             (AC_TKN.ownerOf(_assetClass) == msg.sender), //msg.sender is AC token holder
             "N:MNA:Caller does not hold AC token"
         );
-        require(userType == 10,"N:MNA:user not authorized to mint naked assets");
+        require(
+            userType == 10,
+            "N:MNA:user not authorized to mint naked assets"
+        );
         // require(                                                                   //REDUNDANT, THROWS IN _mint
         //     A_TKN.tokenExists(tokenId) == 0,
         //     "N:MNA: Token already exists"
         // );
         require(
-            rec.assetClass == 0,    //verified as non-redundant
+            rec.assetClass == 0, //verified as non-redundant
             "N:MNA: Asset already registered in system"
         );
         //^^^^^^^checks^^^^^^^^^
         string memory tokenURI;
-        bytes32 b32URI = keccak256(abi.encodePacked(_hashedAuthCode, _assetClass));
+        bytes32 b32URI = keccak256(
+            abi.encodePacked(_hashedAuthCode, _assetClass)
+        );
         tokenURI = uint256toString(uint256(b32URI));
-
 
         A_TKN.mintAssetToken(address(this), tokenId, tokenURI); //mint a naked token
 
@@ -73,9 +77,9 @@ contract NAKED is CORE {
     function $claimNakedAsset(
         bytes32 _idxHash,
         string calldata _authCode,
-        uint256 _newAssetClass,
+        uint32 _newAssetClass,
         bytes32 _rgtHash,
-        uint256 _countDownStart
+        uint32 _countDownStart
     ) external payable nonReentrant whenNotPaused {
         uint256 tokenId = uint256(_idxHash);
         Record memory rec = getRecord(_idxHash);
@@ -111,7 +115,6 @@ contract NAKED is CORE {
         //^^^^^^^interactions / effects^^^^^^^^^^^^
     }
 
-
     function uint256toString(uint256 number)
         public
         pure
@@ -140,8 +143,7 @@ contract NAKED is CORE {
         return string(buffer);
     }
 
-
-    function deductImportRecordCosts(uint256 _assetClass)
+    function deductImportRecordCosts(uint32 _assetClass)
         internal
         whenNotPaused
     {

@@ -34,7 +34,7 @@ contract RCLR is ECR_CORE, CORE {
 
         require( // caller is assetToken contract
             msg.sender == A_TKN_Address,
-            "R:D:Caller is not Asset Token Contract"                                                       //CANNOT TEST WITH CURRENT CONTRACTS, TOKEN != EXIST IN MEM OF OTHER CONTRACTS
+            "R:D:Caller is not Asset Token Contract" //CANNOT TEST WITH CURRENT CONTRACTS, TOKEN != EXIST IN MEM OF OTHER CONTRACTS
         );
         // require((rec.assetClass != 0), "R:D:Record does not exist");                                    //REDUNDANT DUE TO CALLING FUNCTION, AND CALLER == A_TKN ONLY
         // require((rec.assetStatus == 59), "R:D:Must be in recyclable status");                           // REDUNDANT DUE TO CALLING FUNCTION, AND CALLER == A_TKN ONLY
@@ -64,7 +64,7 @@ contract RCLR is ECR_CORE, CORE {
     function $recycle(
         bytes32 _idxHash,
         bytes32 _rgtHash,
-        uint256 _assetClass
+        uint32 _assetClass
     ) external payable nonReentrant whenNotPaused {
         //bytes32 senderHash = keccak256(abi.encodePacked(msg.sender));
         uint256 tokenId = uint256(_idxHash);
@@ -93,7 +93,7 @@ contract RCLR is ECR_CORE, CORE {
         rec.rightsHolder = _rgtHash;
         rec.incrementNumberOfTransfers = 170;
         //^^^^^^^effects^^^^^^^^^^^^
-        
+
         A_TKN.mintAssetToken(msg.sender, tokenId, "pruf.io");
         ECR_MGR.endEscrow(_idxHash);
         STOR.changeAC(_idxHash, _assetClass);

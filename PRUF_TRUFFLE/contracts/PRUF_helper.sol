@@ -182,7 +182,7 @@ contract Helper is Ownable {
     }
 
     function getURIfromAuthcode(
-        uint256 _assetClass,
+        uint32 _assetClass,
         string calldata _authCode
     ) external pure returns (string memory){
         bytes32 _hashedAuthCode = keccak256(abi.encodePacked(_authCode));
@@ -193,7 +193,7 @@ contract Helper is Ownable {
     }
 
     function getURIb32fromAuthcode(
-        uint256 _assetClass,
+        uint32 _assetClass,
         string calldata _authCode
     ) external pure returns (bytes32){
         bytes32 _hashedAuthCode = keccak256(abi.encodePacked(_authCode));
