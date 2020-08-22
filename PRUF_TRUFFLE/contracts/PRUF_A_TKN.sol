@@ -27,13 +27,13 @@ contract A_TKN is Ownable, ReentrancyGuard, ERC721 {
     struct Record {
         bytes32 rightsHolder; // KEK256 Registered owner
         uint8 assetStatus; // Status - Transferrable, locked, in transfer, stolen, lost, etc.
-        uint256 incrementForceModCount; // Number of times asset has been forceModded.
-        uint256 assetClass; // Type of asset
-        uint256 countDown; // Variable that can only be dencreased from countDownStart
-        uint256 countDownStart; // Starting point for countdown variable (set once)
+        uint256 incrementForceModCount; // increment flag for Number of times asset has been forceModded.
+        uint32 assetClass; // Type of asset
+        uint32 countDown; // Variable that can only be dencreased from countDownStart
+        uint32 countDownStart; // Starting point for countdown variable (set once)
         bytes32 Ipfs1; // Publically viewable asset description
         bytes32 Ipfs2; // Publically viewable immutable notes
-        uint256 incrementNumberOfTransfers; //number of transfers and forcemods
+        uint256 incrementNumberOfTransfers; //increment flag for number of transfers and forcemods
     }
 
     constructor() public ERC721("PRüF Asset Token", "PAT") {}
@@ -153,7 +153,7 @@ contract A_TKN is Ownable, ReentrancyGuard, ERC721 {
 
     function validateNakedToken(
         uint256 tokenId,
-        uint256 _assetClass,
+        uint32 _assetClass,
         string calldata _authCode
     ) external view {
         bytes32 _hashedAuthCode = keccak256(abi.encodePacked(_authCode));
@@ -360,9 +360,9 @@ contract A_TKN is Ownable, ReentrancyGuard, ERC721 {
                 bytes32 _rightsHolder,
                 //bytes32 _lastRecorder,
                 uint8 _assetStatus,
-                uint256 _assetClass,
-                uint256 _countDown,
-                uint256 _countDownStart,
+                uint32 _assetClass,
+                uint32 _countDown,
+                uint32 _countDownStart,
                 bytes32 _Ipfs1,
                 bytes32 _Ipfs2
             ) = STOR.retrieveRecord(_idxHash); // Get record from storage contract

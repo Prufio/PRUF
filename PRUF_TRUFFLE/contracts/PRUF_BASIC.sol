@@ -26,22 +26,22 @@ import "./_ERC721/IERC721Receiver.sol";
 
 contract BASIC is ReentrancyGuard, Ownable, IERC721Receiver, Pausable {
     struct Record {
-        bytes32 rightsHolder; // KEK256 Registered owner
         uint8 assetStatus; // Status - Transferrable, locked, in transfer, stolen, lost, etc.
-        uint256 incrementForceModCount; // Number of times asset has been forceModded.
-        uint256 assetClass; // Type of asset
-        uint256 countDown; // Variable that can only be dencreased from countDownStart
-        uint256 countDownStart; // Starting point for countdown variable (set once)
+        uint32 assetClass; // Type of asset
+        uint32 countDown; // Variable that can only be dencreased from countDownStart
+        uint32 countDownStart; // Starting point for countdown variable (set once)
+        uint256 incrementNumberOfTransfers; //increment flag for number of transfers and forcemods
+        uint256 incrementForceModCount; // increment flag for Number of times asset has been forceModded.
+        bytes32 rightsHolder; // KEK256 Registered owner
         bytes32 Ipfs1; // Publically viewable asset description
         bytes32 Ipfs2; // Publically viewable immutable notes
-        uint256 incrementNumberOfTransfers; //number of transfers and forcemods
     }
 
     struct AC {
         string name; // NameHash for assetClass
-        uint256 assetClassRoot; // asset type root (bycyles - USA Bicycles)
+        uint32 assetClassRoot; // asset type root (bycyles - USA Bicycles)
         uint8 custodyType; // custodial or noncustodial
-        uint256 extendedData; // Future Use
+        uint32 extendedData; // Future Use
     }
 
     struct ContractDataHash {
@@ -62,19 +62,17 @@ contract BASIC is ReentrancyGuard, Ownable, IERC721Receiver, Pausable {
     AC_TKN_Interface internal AC_TKN; //erc721_token prototype initialization
 
     address internal ECR_MGR_Address;
-    ECR_MGR_Interface internal ECR_MGR; //Set up external contract interface 
+    ECR_MGR_Interface internal ECR_MGR; //Set up external contract interface
 
     address internal RCLR_Address; //Set up external contract interface
     RCLR_Interface internal RCLR;
 
-    address internal APP_Address; //Set up external contract interface 
+    address internal APP_Address; //Set up external contract interface
     APP_Interface internal APP;
 
-    address internal NAKED_Address; 
+    address internal NAKED_Address;
     address internal APP_NC_Address;
     address internal NP_Address;
-    
-    
 
     // --------------------------------------Events--------------------------------------------//
 
@@ -139,7 +137,7 @@ contract BASIC is ReentrancyGuard, Ownable, IERC721Receiver, Pausable {
         nonReentrant
     //^^^^^^^checks^^^^^^^^^
     {
-        require (
+        require(
             (msg.sender == owner()) || (msg.sender == NP_Address),
             "PB:TX:Invalid caller for transfer token"
         );
@@ -211,7 +209,7 @@ contract BASIC is ReentrancyGuard, Ownable, IERC721Receiver, Pausable {
     /*
      * @dev Get a User Record from AC_manager @ msg.sender
      */
-    function getUserType(uint256 _assetClass)
+    function getUserType(uint32 _assetClass)
         internal
         virtual
         view
@@ -231,12 +229,13 @@ contract BASIC is ReentrancyGuard, Ownable, IERC721Receiver, Pausable {
     /*
      * @dev Get asset class information from AC_manager (FUNCTION IS VIEW)
      */
-    function getACinfo(uint256 _assetClass)
+    function getACinfo(uint32 _assetClass)
         internal
         virtual
         returns (AC memory)
     {
         //^^^^^^^checks^^^^^^^^^
+        
         AC memory AC_info;
         //^^^^^^^effects^^^^^^^^^
         (
@@ -248,7 +247,7 @@ contract BASIC is ReentrancyGuard, Ownable, IERC721Receiver, Pausable {
         //^^^^^^^interactions^^^^^^^^^
     }
 
-    function getContractInfo(address _addr, uint256 _assetClass)
+    function getContractInfo(address _addr, uint32 _assetClass)
         internal
         returns (ContractDataHash memory)
     {
@@ -272,9 +271,9 @@ contract BASIC is ReentrancyGuard, Ownable, IERC721Receiver, Pausable {
             (
                 bytes32 _rightsHolder,
                 uint8 _assetStatus,
-                uint256 _assetClass,
-                uint256 _countDown,
-                uint256 _countDownStart,
+                uint32 _assetClass,
+                uint32 _countDown,
+                uint32 _countDownStart,
                 bytes32 _Ipfs1,
                 bytes32 _Ipfs2
             ) = STOR.retrieveRecord(_idxHash); // Get record from storage contract
