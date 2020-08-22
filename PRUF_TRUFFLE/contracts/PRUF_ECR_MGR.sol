@@ -145,7 +145,7 @@ contract ECR_MGR is BASIC {
 
         // require(rec.assetClass != 0, "EM:EE:Record does not exist");         //redundant because they throw in storage
         // require(isEscrow(rec.assetStatus) == 170, "EM:EE:Asset not in escrow"); //redundant because they throw in storage
-        require(
+        require(                                          //requires that its in escrow in the first place, will throw if asset not in escrow???
             (contractInfo.nameHash ==
                 escrows[_idxHash].controllingContractNameHash),
             "EM:EE:Only contract with same name as setter can end escrow"

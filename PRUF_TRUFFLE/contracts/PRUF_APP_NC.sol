@@ -50,18 +50,18 @@ contract APP_NC is CORE {
         uint8 userType = getUserType(_assetClass);
         //AC memory AC_info = getACinfo(_assetClass);
         //AC memory oldAC_info = getACinfo(rec.assetClass);
-        ContractDataHash memory contractInfo = getContractInfo(
-            address(this),
-            _assetClass
-        );
+        // ContractDataHash memory contractInfo = getContractInfo(
+        //     address(this),
+        //     _assetClass
+        // );
 
-        require(
-            contractInfo.contractType > 0,
-            "ANC:NR: contract not auth in AC"
-        );
-        require(_assetClass != 0, "ANC:NR: AC = 0"); //theoretically unneccesary
+        // require(                                         //REDUNDANT, THROWS IN STORAGE
+        //     contractInfo.contractType > 0,
+        //     "ANC:NR: contract not auth in AC"
+        // );
+        // require(_assetClass != 0, "ANC:NR: AC = 0");                                         //REDUNDANT, THROWS IN STORAGE
         require(userType == 1, "ANC:NR: User not auth in AC");
-        require(_rgtHash != 0, "ANC:NR: rgt = 0");
+        // require(_rgtHash != 0, "ANC:NR: rgt = 0");                                         //REDUNDANT, THROWS IN STORAGE
 
         // using newRecord to overwrite is depricated, storage checks for pre-existing asset
         // require( //if creating new record in new root and idxhash is identical, fail because its probably fraud

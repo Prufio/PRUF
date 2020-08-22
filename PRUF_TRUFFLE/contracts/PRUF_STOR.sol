@@ -223,7 +223,7 @@ contract STOR is Ownable, ReentrancyGuard, Pausable {
             database[_idxHash].assetStatus != 60,
             "S:NR:Asset is rcycl. Use PRUF_APP_NC rcycl instead"
         );
-        require(
+        require(                                                        //REDUNDANT, WILL THROW IN CORE createRecord
             database[_idxHash].assetClass == 0,
             "S:NR:Rec already exists"
         );
@@ -272,7 +272,7 @@ contract STOR is Ownable, ReentrancyGuard, Pausable {
         Record memory rec = database[_idxHash];
         bytes32 idxHash = _idxHash; //stack saving
 
-        require(_countDown <= rec.countDown, "S:MR:countDown +!"); //prohibit increasing the countdown value
+        require(_countDown <= rec.countDown, "S:MR:countDown +!"); //prohibit increasing the countdown value  //IMPOSSIBLE TO THROW?? !!UINT!!
         require(
             isLostOrStolen(_newAssetStatus) == 0,
             "S:MR:Must use L/S to set L/S status"
@@ -348,7 +348,7 @@ contract STOR is Ownable, ReentrancyGuard, Pausable {
         require(
             (rec.assetStatus != 5) &&
                 (rec.assetStatus != 50) &&
-                (rec.assetStatus != 55),
+                (rec.assetStatus != 55),                      //IMPOSSIBLE TO SET TO STAT 55 IN CURRENT CONTRACTS
             "S:SSL:Txfr or ecr locked asset != L/S."
         );
         //^^^^^^^checks^^^^^^^^^
