@@ -70,23 +70,23 @@ contract RCLR is ECR_CORE, CORE {
         uint256 tokenId = uint256(_idxHash);
         escrowData memory escrow = getEscrowData(_idxHash);
         Record memory rec = getRecord(_idxHash);
-        AC memory AC_info = getACinfo(_assetClass);
-        AC memory oldAC_info = getACinfo(rec.assetClass);
-        ContractDataHash memory contractInfo = getContractInfo(
-            address(this),
-            rec.assetClass
-        );
+        // AC memory AC_info = getACinfo(_assetClass);
+        // AC memory oldAC_info = getACinfo(rec.assetClass);
+        // ContractDataHash memory contractInfo = getContractInfo(
+        //     address(this),
+        //     rec.assetClass
+        // );
 
-        require(
-            contractInfo.contractType > 0,
-            "R:R: This contract not authorized for specified AC"
-        );
+        // require(                             //THROWS IN STORAGE
+        //     contractInfo.contractType > 0,
+        //     "R:R: This contract not authorized for specified AC"
+        // );
         require(_rgtHash != 0, "R:R:New rights holder cannot be zero");
-        require(_assetClass != 0, "R:R:Asset class cannot be zero");
-        require( //if creating new record in new root and idxhash is identical, fail because its probably fraud
-            AC_info.assetClassRoot == oldAC_info.assetClassRoot, // || (rec.assetClass == 0)),
-            "R:R:Cannot re-create asset in new root assetClass"
-        );
+        // require(_assetClass != 0, "R:R:Asset class cannot be zero");                             //THROWS IN STORAGE changeAC
+        // require( //if creating new record in new root and idxhash is identical, fail because its probably fraud                             //THROWS IN STORAGE changeAC
+        //     AC_info.assetClassRoot == oldAC_info.assetClassRoot, // || (rec.assetClass == 0)),
+        //     "R:R:Cannot re-create asset in new root assetClass"
+        // );
         require(rec.assetStatus == 60, "R:R:Asset not discarded");
         //^^^^^^^checks^^^^^^^^^
 
