@@ -1321,26 +1321,26 @@
     })
 
 
-    it('Should unauthorize NAKED in AC15', async () => {
-            return STOR.enableContractForAC('NAKED', '15', '0', { from: account10 })
-    })
+    // it('Should unauthorize NAKED in AC15', async () => {                      //CHECKS IN STORAGE MOD-IA
+    //         return STOR.enableContractForAC('NAKED', '15', '0', { from: account10 })
+    // })
 
-    //5
-    it('Should fail because NAKED not authorized in AC15', async () => {
-        return NAKED.$claimNakedAsset(
-            asset3, 
-            '3',
-            '15',
-            rgt3,
-            '100',
-            {from: account10, value: 20000000000000000}
-            )
-        })
+    // //5
+    // it('Should fail because NAKED not authorized in AC15', async () => {
+    //     return NAKED.$claimNakedAsset(
+    //         asset3, 
+    //         '3',
+    //         '15',
+    //         rgt3,
+    //         '100',
+    //         {from: account10, value: 20000000000000000}
+    //         )
+    //     })
 
 
-    it('Should authorize NAKED in AC15', async () => {
-        return STOR.enableContractForAC('NAKED', '15', '2', { from: account10 })
-    })
+    // it('Should authorize NAKED in AC15', async () => {
+    //     return STOR.enableContractForAC('NAKED', '15', '2', { from: account10 })
+    // })
     
     
     // it('Should claimNakedAsset3', async () => {

@@ -78,20 +78,20 @@ contract NAKED is CORE {
         uint256 _countDownStart
     ) external payable nonReentrant whenNotPaused {
         uint256 tokenId = uint256(_idxHash);
-        Record memory rec = getRecord(_idxHash);
-        ContractDataHash memory contractInfo = getContractInfo(
-            address(this),
-            rec.assetClass
-        );
+        // Record memory rec = getRecord(_idxHash);
+        // ContractDataHash memory contractInfo = getContractInfo(
+        //     address(this),
+        //     rec.assetClass
+        // );
 
         require(
             A_TKN.ownerOf(tokenId) == address(this),
             "N:CNA: Token not found in PRUF_NAKED"
         );
-        require(
-            contractInfo.contractType > 0,
-            "N:CNA: This contract not authorized for specified AC"
-        );
+        // require(                                                     // REDUNDANT, CHECKS IN STORAGE
+        //     contractInfo.contractType > 0,
+        //     "N:CNA: This contract not authorized for specified AC"
+        // );
         // require( //redundant
         //     rec.assetClass == 0,
         //     "PNP:INA: Asset already registered in system"
