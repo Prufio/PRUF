@@ -46,15 +46,15 @@ contract APP is CORE {
         uint8 userType = getUserType(_assetClass);
         AC memory AC_info = getACinfo(_assetClass);
         AC memory oldAC_info = getACinfo(rec.assetClass);
-        ContractDataHash memory contractInfo = getContractInfo(
-            address(this),
-            _assetClass
-        );
+        // ContractDataHash memory contractInfo = getContractInfo(
+        //     address(this),
+        //     _assetClass
+        // );
 
-        require(contractInfo.contractType > 0, "A:NR: contract not auth in AC"); //MAKE INTO MODIFIER?!?!?!?!
+        // require(contractInfo.contractType > 0, "A:NR: contract not auth in AC"); //MAKE INTO MODIFIER?!?!?!?!    //REDUNDANT, THROWS IN STORAGE newRecord
         require((userType > 0) && (userType < 10), "A:NR: User not auth in AC");
         require(userType < 5, "A:NR: User not authorized to create records");
-        require(_rgtHash != 0, "A:NR: RGT = 0");
+        // require(_rgtHash != 0, "A:NR: RGT = 0");                      //REDUNDANT, THROWS IN STORAGE newRecord
         //^^^^^^^checks^^^^^^^^^
 
         //bytes32 userHash = keccak256(abi.encodePacked(msg.sender));
@@ -262,7 +262,7 @@ contract APP is CORE {
             rec.assetClass
         );
 
-        require(
+        require(                                                                           //redundant, will throw in storage
             contractInfo.contractType > 0,
             "A:I2: unauthorized for AC. Orphan token?"
         );
@@ -271,19 +271,18 @@ contract APP is CORE {
             isLostOrStolen(rec.assetStatus) == 0,
             "A:FMR: Asset marked lost or stolen"
         );
-        require(isEscrow(rec.assetStatus) == 0, "A:FMR: Asset in escrow");
-        require(
-            isEscrow(rec.assetStatus) == 0,
-            "A:FMR: Asset in escrow"
-        );
+        // require(                                                                           //redundant, will throw in storage
+        //     isEscrow(rec.assetStatus) == 0,
+        //     "A:FMR: Asset in escrow"
+        // );
         require(                                                      //IMPOSSIBLE TO THROW REVERTS IN REQ1
             needsImport(rec.assetStatus) == 0,
             "A:FMR: Asset needs re-imported"
         );
-        require(
-            rec.Ipfs2 == 0,
-            "A:I2: Ipfs2 has data already. Overwrite not permitted"
-        );
+        // require(                                                                           //redundant, will throw in storage
+        //     rec.Ipfs2 == 0,
+        //     "A:I2: Ipfs2 has data already. Overwrite not permitted"
+        // );
         require(
             rec.rightsHolder == _rgtHash,
             "A:I2: Rightsholder does not match supplied data"

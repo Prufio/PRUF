@@ -179,8 +179,8 @@ contract STOR is Ownable, ReentrancyGuard, Pausable {
         uint256 _assetClass,
         uint8 _contractAuthLevel
     ) external onlyOwner {
-        require((_assetClass == 0), "S:AC: AC not 0");
-        require(_contractAuthLevel <= 4, "S:AC: Invalid user type");
+        require(_assetClass == 0, "S:AC: AC not 0");
+        require(_contractAuthLevel <= 4, "S:AC: Invalid auth lv");
         //^^^^^^^checks^^^^^^^^^
 
         contractInfo[_name][_assetClass] = _contractAuthLevel;
@@ -395,12 +395,12 @@ contract STOR is Ownable, ReentrancyGuard, Pausable {
             (isLostOrStolen(rec.assetStatus) == 0) &&
                 (rec.assetStatus != 5) &&
                 (rec.assetStatus != 55),
-            "S:SE: != ecr"
+            "S:SE: Txfr || L/S asset"
         );
-        require(
-            isEscrow(rec.assetStatus) == 0,
-            "S:SE: In ecr stat"
-        );
+        // require(                                           //REDUNDANT, CHECKS WITH MOD-NE
+        //     isEscrow(rec.assetStatus) == 0,
+        //     "S:SE: In ecr stat"
+        // );
         //^^^^^^^checks^^^^^^^^^
 
         if (_newAssetStatus == 60) {

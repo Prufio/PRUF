@@ -255,15 +255,15 @@ contract NP is CORE {
     {
         Record memory rec = getRecord(_idxHash);
         uint8 userType = getUserType(rec.assetClass);
-        ContractDataHash memory contractInfo = getContractInfo(
-            address(this),
-            rec.assetClass
-        );
+        // ContractDataHash memory contractInfo = getContractInfo(
+        //     address(this),
+        //     rec.assetClass
+        // );
 
-        require(
-            contractInfo.contractType > 0,
-            "NP:MI1: contract not auth in AC"
-        );
+        // require(                                                                           //redundant, will throw in storage
+        //     contractInfo.contractType > 0,
+        //     "NP:MI1: contract not auth in AC"
+        // );
         // require(                                                                           //redundant, will throw in storage
         //     (rec.rightsHolder != 0),
         //     "NP:MI1: Record unclaimed: import required."
@@ -274,10 +274,10 @@ contract NP is CORE {
         );
         // require(rec.Ipfs1 != _IpfsHash, "NP:MI1: New data same as old");                              //REDUNDANT, THROWS IN STORAGE
         
-        require(
-            isEscrow(rec.assetStatus) == 0,
-           "NP:MI1: Cannot modify asset in Escrow"
-        );
+        // require(                                                                           //redundant, will throw in storage
+        //     isEscrow(rec.assetStatus) == 0,
+        //    "NP:MI1: Cannot modify asset in Escrow"
+        // );
         require(
             needsImport(rec.assetStatus) == 0,
             "NP:MI1: Record in unregistered, exported, or discarded status"
