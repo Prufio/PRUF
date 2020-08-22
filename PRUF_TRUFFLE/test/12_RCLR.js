@@ -1253,31 +1253,35 @@
     // })
 
 
-    it('Should unauthorize RCLR in AC12)', async () => {
+    // it('Should unauthorize RCLR in AC12)', async () => {
+
+    //     console.log("//**************************************END RCLR SETUP**********************************************/")
+    //     console.log("//**************************************BEGIN RCLR FAIL BATCH**********************************************/")
+    //     console.log("//**************************************BEGIN $recycle FAIL BATCH**********************************************/")
+    //     return STOR.enableContractForAC('RCLR', '12', '0', { from: account1 })     
+    // })
+
+
+    // it('Should fail because RCLR not authoriized in AC)', async () => { 
+    //     return RCLR.$recycle(
+    //         asset2,
+    //         rgt2, 
+    //         '12', 
+    //         { from: account4, value: 20000000000000000 }
+    //         )     
+    // })
+
+
+    // it('Should authorize RCLR in AC12)', async () => {  
+    //     return STOR.enableContractForAC('RCLR', '12', '2', { from: account1 })     
+    // })
+
+
+    it('Should fail because newRGT != 0)', async () => {
 
         console.log("//**************************************END RCLR SETUP**********************************************/")
         console.log("//**************************************BEGIN RCLR FAIL BATCH**********************************************/")
         console.log("//**************************************BEGIN $recycle FAIL BATCH**********************************************/")
-        return STOR.enableContractForAC('RCLR', '12', '0', { from: account1 })     
-    })
-
-
-    it('Should fail because RCLR not authoriized in AC)', async () => { 
-        return RCLR.$recycle(
-            asset2,
-            rgt2, 
-            '12', 
-            { from: account4, value: 20000000000000000 }
-            )     
-    })
-
-
-    it('Should authorize RCLR in AC12)', async () => {  
-        return STOR.enableContractForAC('RCLR', '12', '2', { from: account1 })     
-    })
-
-
-    it('Should fail because newRGT != 0)', async () => {
         return RCLR.$recycle(
             asset1,
             rgt000, 
@@ -1287,24 +1291,24 @@
     })
 
 
-    it('Should fail because newAC != 0)', async () => {
-        return RCLR.$recycle(
-            asset1,
-            rgt1, 
-            '0', 
-            { from: account4, value: 20000000000000000 }
-            )     
-    })
+    // it('Should fail because newAC != 0)', async () => {
+    //     return RCLR.$recycle(
+    //         asset1,
+    //         rgt1, 
+    //         '0', 
+    //         { from: account4, value: 20000000000000000 }
+    //         )     
+    // })
 
 
-    it('Should fail because you cannot recycle asset into different root AC)', async () => {
-        return RCLR.$recycle(
-            asset1,
-            rgt1, 
-            '14', 
-            { from: account6, value: 20000000000000000 }
-            )     
-    })
+    // it('Should fail because you cannot recycle asset into different root AC)', async () => {
+    //     return RCLR.$recycle(
+    //         asset1,
+    //         rgt1, 
+    //         '14', 
+    //         { from: account6, value: 20000000000000000 }
+    //         )     
+    // })
 
 
     it('Should recycle asset2)', async () => {
@@ -1329,6 +1333,9 @@
 
     it('Should write record in AC 10 @ IDX&RGT(1)', async () => {
 
+        console.log("//**************************************END $recycle FAIL BATCH**********************************************/")
+        console.log("//**************************************END RCLR FAIL BATCH**********************************************/")
+        console.log("//**************************************END RCLR TEST**********************************************/")
         console.log("//**************************************BEGIN THE WORKS**********************************************/")
         return APP.$newRecord(
         asset12, 
