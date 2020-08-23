@@ -244,22 +244,22 @@ contract NP is CORE {
     {
         Record memory rec = getRecord(_idxHash);
         uint8 userType = getUserType(rec.assetClass);
-        ContractDataHash memory contractInfo = getContractInfo(
-            address(this),
-            rec.assetClass
-        );
+        // ContractDataHash memory contractInfo = getContractInfo(
+        //     address(this),
+        //     rec.assetClass
+        // );
 
-        require(
-            contractInfo.contractType > 0,
-            "NP:MI1: contract not auth in AC"
-        );
+        // require(                                                                           //redundant, will throw in storage
+        //     contractInfo.contractType > 0,
+        //     "NP:MI1: contract not auth in AC"
+        // );
+        // require(                                                                           //redundant, will throw in storage
+        //     (rec.rightsHolder != 0),
+        //     "NP:MI1: Record unclaimed: import required."
+        // );
         require(
             (userType > 0) && (userType < 10),
             "NP:MI1: user not auth in AC"
-        );
-        require(
-            isEscrow(rec.assetStatus) == 0,
-            "NP:MI1: Cannot modify asset in Escrow"
         );
         require(
             needsImport(rec.assetStatus) == 0,

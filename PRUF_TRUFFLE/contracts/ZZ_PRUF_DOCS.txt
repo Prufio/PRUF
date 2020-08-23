@@ -40,6 +40,8 @@ pragma solidity ^0.6.7;
  *
  *      *make "pruf verify" contract, stores ipfs? with list of "held" assets?
  *
+ *      *A_TKN manager for auth upgradability?
+ *
 *-----------------------------------------------------------------
 
 *-----------------------------------------------------------------

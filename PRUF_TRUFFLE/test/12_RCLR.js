@@ -83,7 +83,7 @@
         //
         //
     
-    contract('NAKED', accounts => {
+    contract('RCLR', accounts => {
             
         console.log('//**************************BEGIN BOOTSTRAP**************************//')
 

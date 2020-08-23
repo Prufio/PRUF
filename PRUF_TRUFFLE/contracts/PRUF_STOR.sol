@@ -171,8 +171,8 @@ contract STOR is Ownable, ReentrancyGuard, Pausable {
         uint32 _assetClass,
         uint8 _contractAuthLevel
     ) external onlyOwner {
-        require((_assetClass == 0), "S:AC: AC not 0");
-        require(_contractAuthLevel <= 4, "S:AC: Invalid user type");
+        require(_assetClass == 0, "S:AC: AC not 0");
+        require(_contractAuthLevel <= 4, "S:AC: Invalid auth lv");
         //^^^^^^^checks^^^^^^^^^
 
         contractInfo[_name][_assetClass] = _contractAuthLevel;
@@ -270,7 +270,7 @@ contract STOR is Ownable, ReentrancyGuard, Pausable {
         Record memory rec = database[_idxHash];
         bytes32 idxHash = _idxHash; //stack saving
 
-        require(_countDown <= rec.countDown, "S:MR:countDown +!"); //prohibit increasing the countdown value
+        require(_countDown <= rec.countDown, "S:MR:countDown +!"); //prohibit increasing the countdown value  //IMPOSSIBLE TO THROW?? !!UINT!!
         require(
             isLostOrStolen(_newAssetStatus) == 0,
             "S:MR:Must use L/S to set L/S status"
@@ -345,8 +345,8 @@ contract STOR is Ownable, ReentrancyGuard, Pausable {
         require(
             (rec.assetStatus != 5) &&
                 (rec.assetStatus != 50) &&
-                (rec.assetStatus != 55),
-            "S:SSL:Txfr or ecr locked asset ! L/S."
+                (rec.assetStatus != 55),                      //IMPOSSIBLE TO SET TO STAT 55 IN CURRENT CONTRACTS
+            "S:SSL:Txfr or ecr locked asset != L/S."
         );
         //^^^^^^^checks^^^^^^^^^
 
@@ -379,9 +379,12 @@ contract STOR is Ownable, ReentrancyGuard, Pausable {
             (isLostOrStolen(rec.assetStatus) == 0) &&
                 (rec.assetStatus != 5) &&
                 (rec.assetStatus != 55),
-            "S:SE: ! ecr"
+            "S:SE: Txfr || L/S asset"
         );
-        require(isEscrow(rec.assetStatus) == 0, "S:SE: In ecr stat");
+        // require(                                           //REDUNDANT, CHECKS WITH MOD-NE
+        //     isEscrow(rec.assetStatus) == 0,
+        //     "S:SE: In ecr stat"
+        // );
         //^^^^^^^checks^^^^^^^^^
 
         if (_newAssetStatus == 60) {
