@@ -208,11 +208,10 @@ interface STOR_Interface {
 
     function setEscrow(
         bytes32 _idxHash,
-        uint8 _newAssetStatus,
-        bytes32 _contractNameHash
+        uint8 _newAssetStatus
     ) external;
 
-    function endEscrow(bytes32 _idxHash, bytes32 _contractNameHash) external;
+    function endEscrow(bytes32 _idxHash) external;
 
     function setStolenOrLost(bytes32 _idxHash, uint8 _newAssetStatus) external;
 

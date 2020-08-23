@@ -129,7 +129,7 @@ contract ECR_MGR is BASIC {
 
         //^^^^^^^effects^^^^^^^^^
 
-        STOR.setEscrow(_idxHash, _newAssetStatus, contractInfo.nameHash);
+        STOR.setEscrow(_idxHash, _newAssetStatus);
         //^^^^^^^interactions^^^^^^^^^
     }
 
@@ -150,7 +150,6 @@ contract ECR_MGR is BASIC {
                 escrows[_idxHash].controllingContractNameHash),
             "EM:EE:Only contract with same name as setter can end escrow"
         );
-        
 
         //^^^^^^^checks^^^^^^^^^
 
@@ -163,18 +162,16 @@ contract ECR_MGR is BASIC {
         escrows[_idxHash].addr1 = address(0);
         //^^^^^^^effects^^^^^^^^^
 
-        STOR.endEscrow(_idxHash, contractInfo.nameHash);
+        STOR.endEscrow(_idxHash);
         //^^^^^^^interactions^^^^^^^^^
     }
 
     /*
      * @dev Permissive removal of asset from escrow status after time-out
      */
-    function permissiveEndEscrow(bytes32 _idxHash)                                               //CANNOT TEST IN TRUFFLE
-        external
-        nonReentrant
-        whenNotPaused
-    {
+    function permissiveEndEscrow(
+        bytes32 _idxHash //CANNOT TEST IN TRUFFLE
+    ) external nonReentrant whenNotPaused {
         require(
             escrows[_idxHash].timelock < block.timestamp,
             "EM:PEE:Escrow not expired"
@@ -195,7 +192,7 @@ contract ECR_MGR is BASIC {
         escrows[_idxHash].addr1 = address(0);
         //^^^^^^^effects^^^^^^^^^
 
-        STOR.endEscrow(_idxHash, keccak256(abi.encodePacked(msg.sender)));
+        STOR.endEscrow(_idxHash);
         //^^^^^^^interactions^^^^^^^^^
     }
 
