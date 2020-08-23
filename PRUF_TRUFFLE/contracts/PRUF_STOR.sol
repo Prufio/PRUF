@@ -35,7 +35,7 @@ import "./Imports/SafeMath.sol";
 import "./Imports/ReentrancyGuard.sol";
 
 contract STOR is Ownable, ReentrancyGuard, Pausable {
-    struct Record {
+    struct Record {                                                                             // Still have room for a free bytes(16) or a uint 128 !!!
         uint8 assetStatus; // Status - Transferrable, locked, in transfer, stolen, lost, etc.
         uint8 forceModCount; // Number of times asset has been forceModded.
         uint16 numberOfTransfers; //number of transfers and forcemods
