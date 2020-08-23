@@ -46,42 +46,10 @@ contract APP_NC is CORE {
         uint32 _assetClass,
         uint32 _countDownStart
     ) external payable nonReentrant whenNotPaused {
-        //Record memory rec = getRecord(_idxHash);
         uint8 userType = getUserType(_assetClass);
-        //AC memory AC_info = getACinfo(_assetClass);
-        //AC memory oldAC_info = getACinfo(rec.assetClass);
-        // ContractDataHash memory contractInfo = getContractInfo(
-        //     address(this),
-        //     _assetClass
-        // );
 
-        // require(                                         //REDUNDANT, THROWS IN STORAGE
-        //     contractInfo.contractType > 0,
-        //     "ANC:NR: contract not auth in AC"
-        // );
-        // require(_assetClass != 0, "ANC:NR: AC = 0");                                         //REDUNDANT, THROWS IN STORAGE
         require(userType == 1, "ANC:NR: User not auth in AC");
-        // require(_rgtHash != 0, "ANC:NR: rgt = 0");                                         //REDUNDANT, THROWS IN STORAGE
-
-        // using newRecord to overwrite is depricated, storage checks for pre-existing asset
-        // require( //if creating new record in new root and idxhash is identical, fail because its probably fraud
-        //     ((AC_info.assetClassRoot == oldAC_info.assetClassRoot) ||
-        //         (rec.assetClass == 0)),
-        //     "ANC:NR: Cannot re-create asset in new root AC"
-        // );
-        //^^^^^^^checks^^^^^^^^^
-
-        //bytes32 userHash = keccak256(abi.encodePacked(msg.sender));
-        //^^^^^^^effects^^^^^^^^^
-
-        // if (AC_info.assetClassRoot == oldAC_info.assetClassRoot) {
-        //     // if record exists as a "dead record" has an old AC, and is being recreated in the same root class,
-        //     // do not overwrite anything besides assetClass and rightsHolder (STOR will set assetStatus to 51)
-        //     createRecord(_idxHash, _rgtHash, _assetClass, rec.countDownStart);
-        // } else {
-        //     // Otherwise, idxHash is unuiqe and an entirely new record is created
-        //     createRecord(_idxHash, _rgtHash, _assetClass, _countDownStart);
-        // }
+        //^^^^^^^Checks^^^^^^^^^
 
         createRecord(_idxHash, _rgtHash, _assetClass, _countDownStart);
 
@@ -100,15 +68,8 @@ contract APP_NC is CORE {
         isAuthorized(_idxHash)
     {
         Record memory rec = getRecord(_idxHash);
-        ContractDataHash memory contractInfo = getContractInfo(
-            address(this),
-            _newAssetClass
-        );
+
         require(rec.assetStatus == 70, "ANC:IA: Asset not exported");
-        require(
-            contractInfo.contractType > 0,
-            "ANC:IA: contract not auth for AC"
-        );
         require(
             AC_MGR.isSameRootAC(_newAssetClass, rec.assetClass) == 170,
             "ANC:IA:Cannot change AC to new root"
@@ -187,26 +148,9 @@ contract APP_NC is CORE {
         returns (bytes32)
     {
         Record memory rec = getRecord(_idxHash);
-        ContractDataHash memory contractInfo = getContractInfo(
-            address(this),
-            rec.assetClass
-        );
-
-        require(
-            contractInfo.contractType > 0,
-            "ANC:I2: contract not auth for AC"
-        );
-        require(
-            isEscrow(rec.assetStatus) == 0,
-            "ANC:I2:Cannot modify asset in Escrow"
-        );
         require(
             needsImport(rec.assetStatus) == 0,
             "ANC:I2:Record In Transferred, exported, or discarded status"
-        );
-        require(
-            rec.Ipfs2 == 0,
-            "ANC:I2:Ipfs2 has data already. Overwrite not permitted"
         );
         //^^^^^^^checks^^^^^^^^^
 

@@ -52,43 +52,16 @@ contract NP is CORE {
     {
         Record memory rec = getRecord(_idxHash);
         uint8 userType = getUserType(rec.assetClass);
-        ContractDataHash memory contractInfo = getContractInfo(
-            address(this),
-            rec.assetClass
-        );
 
-        require(
-            contractInfo.contractType > 0,
-            "NP:MS: contract not auth for AC"
-        );
         require(
             (userType > 0) && (userType < 10),
             "NP:MS: User not auth in AC"
-        );
-
-        require(
-            isLostOrStolen(_newAssetStatus) == 0,
-            "NP:MS: Cannot place asset in lost or stolen status using modStatus"
-        );
-        require(
-            isEscrow(_newAssetStatus) == 0,
-            "NP:MS: Cannot place asset in Escrow using modStatus"
         );
         require(
             needsImport(_newAssetStatus) == 0,
             "NP:MS: Cannot place asset in unregistered, exported, or discarded status using modStatus"
         );
-        require(
-            (_newAssetStatus < 100) &&
-                (_newAssetStatus != 7) &&
-                (_newAssetStatus != 57) &&
-                (_newAssetStatus != 58),
-            "NP:MS: Specified Status is reserved."
-        );
-        require(
-            isEscrow(rec.assetStatus) == 0,
-            "NP:MS: Cannot modify asset in escrow"
-        );
+        require(_newAssetStatus < 100, "NP:MS: Specified Status is reserved.");
         require(
             needsImport(rec.assetStatus) == 0,
             "NP:MS: Record in unregistered, exported, or discarded status"
@@ -128,35 +101,14 @@ contract NP is CORE {
     {
         Record memory rec = getRecord(_idxHash);
         uint8 userType = getUserType(rec.assetClass);
-        ContractDataHash memory contractInfo = getContractInfo(
-            address(this),
-            rec.assetClass
-        );
-
-        require(
-            contractInfo.contractType > 0,
-            "NP:SLS: contract not auth in AC"
-        );
         require(
             (userType > 0) && (userType < 10),
             "NP:SLS: user not auth in AC"
         );
         require(
-            isLostOrStolen(_newAssetStatus) == 170,
-            "NP:SLS: Must set to a lost or stolen status"
-        );
-        require(
             (rec.assetStatus > 49) ||
                 ((_newAssetStatus < 50) && (userType < 5)),
             "NP:SLS: Only usertype <5 can change a <49 status asset to a >49 status"
-        );
-        require(
-            (rec.assetStatus != 5) && (rec.assetStatus != 55),
-            "NP:SLS: Transferred asset cannot be set to lost or stolen after transfer."
-        );
-        require(
-            (rec.assetStatus != 50),
-            "NP:SLS: Asset in locked escrow cannot be set to lost or stolen"
         );
         require(
             rec.rightsHolder == _rgtHash,
@@ -189,22 +141,10 @@ contract NP is CORE {
     {
         Record memory rec = getRecord(_idxHash);
         uint8 userType = getUserType(rec.assetClass);
-        ContractDataHash memory contractInfo = getContractInfo(
-            address(this),
-            rec.assetClass
-        );
 
-        require(
-            contractInfo.contractType > 0,
-            "NP:DC: contract not auth in AC"
-        );
         require(
             (userType > 0) && (userType < 10),
             "NP:DC: user not auth in AC"
-        );
-        require(
-            isEscrow(rec.assetStatus) == 0,
-            "NP:DC: Cannot modify asset in Escrow"
         );
         require(
             needsImport(rec.assetStatus) == 0,
@@ -244,19 +184,6 @@ contract NP is CORE {
     {
         Record memory rec = getRecord(_idxHash);
         uint8 userType = getUserType(rec.assetClass);
-        // ContractDataHash memory contractInfo = getContractInfo(
-        //     address(this),
-        //     rec.assetClass
-        // );
-
-        // require(                                                                           //redundant, will throw in storage
-        //     contractInfo.contractType > 0,
-        //     "NP:MI1: contract not auth in AC"
-        // );
-        // require(                                                                           //redundant, will throw in storage
-        //     (rec.rightsHolder != 0),
-        //     "NP:MI1: Record unclaimed: import required."
-        // );
         require(
             (userType > 0) && (userType < 10),
             "NP:MI1: user not auth in AC"
@@ -292,16 +219,8 @@ contract NP is CORE {
     {
         Record memory rec = getRecord(_idxHash);
         uint8 userType = getUserType(rec.assetClass);
-        ContractDataHash memory contractInfo = getContractInfo(
-            address(this),
-            rec.assetClass
-        );
         AC memory AC_info = getACinfo(rec.assetClass);
 
-        require(
-            contractInfo.contractType > 0,
-            "NP:MS: contract not auth in AC"
-        );
         require(
             (userType > 0) && (userType < 10),
             "NP:EA: user not auth in AC"
