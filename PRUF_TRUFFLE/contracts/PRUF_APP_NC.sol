@@ -196,7 +196,6 @@ contract APP_NC is CORE {
             contractInfo.contractType > 0,
             "ANC:I2: contract not auth for AC"
         );
-        // require((rec.assetClass != 0), "ANC:I2: Record does not exist");               //impossible, throws in storage
         require(
             isEscrow(rec.assetStatus) == 0,
             "ANC:I2:Cannot modify asset in Escrow"

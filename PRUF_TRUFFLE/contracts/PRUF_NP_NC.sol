@@ -62,7 +62,6 @@ contract NP_NC is CORE {
             contractInfo.contractType > 0,
             "NPNC:CR: contract not auth in AC"
         );
-        // require((rec.assetClass != 0), "NPNC:CR: Record does not exist");                          //REDUNDANT, CHECKS IN STORAGE
         require(_newRgtHash != 0, "NPNC:CR: rights holder cannot be zero");
         require(
             isLostOrStolen(rec.assetStatus) == 0,
@@ -72,7 +71,7 @@ contract NP_NC is CORE {
             isEscrow(rec.assetStatus) == 0,
             "NPNC:CR: Cannot modify asset in Escrow"
         );
-        require(                                                                                     //IMPOSSIBLE, ASSET CANNOT MEET STATUS IN NC CONTRACTS
+        require( //STATE UNREACHABLE: CANNOT MEET STATUS IN NC CONTRACTS CTS:PREFERRED
             needsImport(rec.assetStatus) == 0,
             "NPNC:CR: Cannot modify asset in unregistered, exported, or discarded status"
         );
@@ -136,7 +135,6 @@ contract NP_NC is CORE {
             contractInfo.contractType > 0,
             "NPNC:MS: contract not auth in AC"
         );
-        // require((rec.assetClass != 0), "NPNC:MS: Record does not exist");                                     //REDUNDANT, THROWS IN STORAGE
         require(
             isLostOrStolen(_newAssetStatus) == 0,
             "NPNC:MS: Cannot place asset in lost or stolen status using modStatus"
@@ -145,7 +143,7 @@ contract NP_NC is CORE {
             isEscrow(_newAssetStatus) == 0,
             "NPNC:MS: Cannot place asset in Escrow using modStatus"
         );
-        require(                                                                                     //IMPOSSIBLE, ASSET CANNOT MEET STATUS IN NC CONTRACTS
+        require( //STATE UNREACHABLE: CANNOT MEET STATUS IN NC CONTRACTS CTS:PREFERRED
             needsImport(_newAssetStatus) == 0,
             "NPNC:MS: Cannot place asset in unregistered, exported, or discarded status using modStatus"
         );
@@ -156,7 +154,7 @@ contract NP_NC is CORE {
                 (_newAssetStatus != 58),
             "NPNC:MS: Specified Status is reserved."
         );
-        require(                                                             //NOT TRIGGERABLE WITH CURRENT CONTRACTS
+        require( //IMPOSSIBLE WITH CURRENT CONTRACTS CTS:PREFERRED
             (_newAssetStatus > 49) && (rec.assetStatus > 49),
             "NPNC:SLS: Only custodial usertype can set or change status < 50"
         );
@@ -199,16 +197,15 @@ contract NP_NC is CORE {
             contractInfo.contractType > 0,
             "NPNC:SLS: contract not auth in AC"
         );
-        // require((rec.assetClass != 0), "NPNC:SLS: Record does not exist");                        //REDUNDANT, THROWS IN STORAGE
         require(
             isLostOrStolen(_newAssetStatus) == 170,
             "NPNC:SLS: Must set to a lost or stolen status"
         );
-        require(                                                             //NOT TRIGGERABLE WITH CURRENT CONTRACTS
+        require( //STATE UNREACHABLE: CANNOT MEET STATUS WITH CURRENT CONTRACTS CTS:PREFERRED
             (_newAssetStatus > 49) && (rec.assetStatus > 49),
             "NPNC:SLS: Only custodial usertype can set or change status < 50"
         );
-        require(                                                                                     //IMPOSSIBLE, ASSET CANNOT MEET STATUS IN NC CONTRACTS
+        require( //STATE UNREACHABLE: CANNOT MEET STATUS IN NC CONTRACTS CTS:PREFERRED
             needsImport(rec.assetStatus) == 0,
             "NPNC:SLS: Transferred,exported,or discarded asset cannot be set to lost or stolen"
         );
@@ -254,7 +251,7 @@ contract NP_NC is CORE {
             isEscrow(rec.assetStatus) == 0,
             "NPNC:DC: Cannot modify asset in Escrow"
         );
-        require(                                                                                     //IMPOSSIBLE, ASSET CANNOT MEET STATUS IN NC CONTRACTS
+        require( //IMPOSSIBLE, ASSET CANNOT MEET STATUS IN NC CONTRACTS CTS:PREFERRED
             needsImport(rec.assetStatus) == 0,
             "NPNC:DC: Record in unregistered, exported, or discarded status"
         );
@@ -292,13 +289,11 @@ contract NP_NC is CORE {
             contractInfo.contractType > 0,
             "NPNC:MI1: contract not auth in AC"
         );
-        // require((rec.assetClass != 0), "NPNC:MI1: Record does not exist");                              //REDUNDANT, THROWS IN STORAGE
-        // require(rec.Ipfs1 != _IpfsHash, "NPNC:MI1: New data same as old");                              //REDUNDANT, THROWS IN STORAGE
         require(
             isEscrow(rec.assetStatus) == 0,
             "NPNC:MI1: Cannot modify asset in Escrow"
         );
-        require(                                                                                     //IMPOSSIBLE, ASSET CANNOT MEET STATUS IN NC CONTRACTS
+        require( //IMPOSSIBLE, ASSET CANNOT MEET STATUS IN NC CONTRACTS CTS:PREFERRED
             needsImport(rec.assetStatus) == 0,
             "NPNC:MI1: Record in unregistered, exported, or discarded status"
         );

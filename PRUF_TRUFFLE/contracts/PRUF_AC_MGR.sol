@@ -63,7 +63,8 @@ contract AC_MGR is CORE {
      * @dev Authorize / Deauthorize / Authorize users for an address be permitted to make record modifications
      * ----------------INSECURE -- keccak256 of address must be generated clientside in release.
      */
-    function OO_addUser(                             //swap arg!!!!!!!!!
+    function OO_addUser(
+        //swap arg!!!!!!!!!
         address _authAddr,
         uint8 _userType,
         uint32 _assetClass
@@ -203,13 +204,9 @@ contract AC_MGR is CORE {
     /*
      * @dev Retrieve AC_name @ _tokenId
      */
-    function getAC_name(uint32 _tokenId)
-        external
-        view
-        returns (string memory)
-    {
+    function getAC_name(uint32 _tokenId) external view returns (string memory) {
         //^^^^^^^checks^^^^^^^^^
-        uint32 assetClass = _tokenId;   //check for overflow andf throw
+        uint32 assetClass = _tokenId; //check for overflow andf throw
         return (AC_data[assetClass].name);
         //^^^^^^^interactions^^^^^^^^^
     }
@@ -245,7 +242,7 @@ contract AC_MGR is CORE {
         uint32 rootAssetClass = AC_info.assetClassRoot;
         Costs memory rootCosts = cost[rootAssetClass];
 
-        require(                                                                                                  //REDUNDANT, WILL THROW IN ERC721
+        require(                            //only useful if tokens will be pre-minted (and stored in AC_TKN contract)
             (AC_TKN.ownerOf(_assetClass) != AC_TKN_Address), //this will throw in the token contract if not minted
             "ACM:GNRC:AC not yet populated"
         );
@@ -276,7 +273,7 @@ contract AC_MGR is CORE {
         uint32 rootAssetClass = AC_info.assetClassRoot;
         Costs memory rootCosts = cost[rootAssetClass];
 
-        require(                                                                                                  //REDUNDANT, WILL THROW IN ERC721
+        require(                            //only useful if tokens will be pre-minted (and stored in AC_TKN contract)
             (AC_TKN.ownerOf(_assetClass) != AC_TKN_Address), //this will throw in the token contract if not minted
             "ACM:GTAC:AC not yet populated"
         );
@@ -307,7 +304,7 @@ contract AC_MGR is CORE {
         uint32 rootAssetClass = AC_info.assetClassRoot;
         Costs memory rootCosts = cost[rootAssetClass];
 
-        require(                                                                                                  //REDUNDANT, WILL THROW IN ERC721
+        require(                            //only useful if tokens will be pre-minted (and stored in AC_TKN contract)
             (AC_TKN.ownerOf(_assetClass) != AC_TKN_Address), //this will throw in the token contract if not minted
             "ACM:GCNC:AC not yet populated"
         );
@@ -338,7 +335,7 @@ contract AC_MGR is CORE {
         uint32 rootAssetClass = AC_info.assetClassRoot;
         Costs memory rootCosts = cost[rootAssetClass];
 
-        require(                                                                                                  //REDUNDANT, WILL THROW IN ERC721
+        require( //, WILL THROW IN ERC721
             (AC_TKN.ownerOf(_assetClass) != AC_TKN_Address), //this will throw in the token contract if not minted
             "ACM:GMRC:AC not yet populated"
         );
@@ -369,7 +366,7 @@ contract AC_MGR is CORE {
         uint32 rootAssetClass = AC_info.assetClassRoot;
         Costs memory rootCosts = cost[rootAssetClass];
 
-        require(                                                                                                  //REDUNDANT, WILL THROW IN ERC721
+        require(                            //only useful if tokens will be pre-minted (and stored in AC_TKN contract)
             (AC_TKN.ownerOf(_assetClass) != AC_TKN_Address), //this will throw in the token contract if not minted
             "ACM:GCSC:AC not yet populated"
         );
@@ -400,7 +397,7 @@ contract AC_MGR is CORE {
         uint32 rootAssetClass = AC_info.assetClassRoot;
         Costs memory rootCosts = cost[rootAssetClass];
 
-        require(                                                                                                  //REDUNDANT, WILL THROW IN ERC721
+        require( //, WILL THROW IN ERC721
             (AC_TKN.ownerOf(_assetClass) != AC_TKN_Address), //this will throw in the token contract if not minted
             "ACM:GFMC:AC not yet populated"
         );
@@ -432,7 +429,7 @@ contract AC_MGR is CORE {
     {
         Costs memory costs = cost[_assetClass];
 
-        require(                                                                                                  //REDUNDANT, WILL THROW IN ERC721
+        require(                            //only useful if tokens will be pre-minted (and stored in AC_TKN contract)
             (AC_TKN.ownerOf(_assetClass) != AC_TKN_Address), //this will throw in the token contract if not minted
             "ACM:RC:AC not yet populated"
         );

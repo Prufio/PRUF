@@ -30,14 +30,14 @@ contract RCLR is ECR_CORE, CORE {
      * @dev //gets item out of recycled status -- caller is assetToken contract
      */
     function discard(bytes32 _idxHash) external nonReentrant whenNotPaused {
-        // Record memory rec = getRecord(_idxHash);
+        Record memory rec = getRecord(_idxHash);
 
-        require( // caller is assetToken contract
+        require( // caller is assetToken contract  //STATE UNREACHABLE: CANNOT MEET STATUS WITH CURRENT CONTRACTS CTS:PREFERRED,
             msg.sender == A_TKN_Address,
-            "R:D:Caller is not Asset Token Contract" //CANNOT TEST WITH CURRENT CONTRACTS, TOKEN != EXIST IN MEM OF OTHER CONTRACTS
+            "R:D:Caller is not Asset Token Contract"
         );
-        // require((rec.assetClass != 0), "R:D:Record does not exist");                                    //REDUNDANT DUE TO CALLING FUNCTION, AND CALLER == A_TKN ONLY
-        // require((rec.assetStatus == 59), "R:D:Must be in recyclable status");                           // REDUNDANT DUE TO CALLING FUNCTION, AND CALLER == A_TKN ONLY
+        require((rec.assetClass != 0), "R:D:Record does not exist");
+        require((rec.assetStatus == 59), "R:D:Must be in recyclable status");
         //^^^^^^^checks^^^^^^^^^
 
         uint256 escrowTime = block.timestamp + 3153600000000; //100,000 years in the FUTURE.........

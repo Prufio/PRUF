@@ -54,42 +54,18 @@ contract ECR is ECR_CORE {
             rec.assetClass
         );
 
-        require(
-            contractInfo.contractType > 0,
-            "E:SE: contract not auth in AC"
-        );
-        // require((rec.assetClass != 0), "E:SE: Record does not exist");                       //redundant because WILL throw in storage
-        require(
-            (userType > 0) && (userType < 10),
-            "E:SE: user not auth in AC"
-        );
-        require(                                                            //redundnat, THROWS IN SAFEMATH
+        require(contractInfo.contractType > 0, "E:SE: contract not auth in AC");
+        require((userType > 0) && (userType < 10), "E:SE: user not auth in AC");
+        require( //REDUNDANT, THROWS IN SAFEMATH CTS:PREFERRED
             (escrowTime >= block.timestamp),
             "E:SE: Escrow must be set to a time in the future"
         );
-        // require(                                                   //redundant because WILL throw in storage
-        //     (rec.assetStatus != 3) &&
-        //         (rec.assetStatus != 4) &&
-        //         (rec.assetStatus != 53) &&
-        //         (rec.assetStatus != 54) &&
-        //         (rec.assetStatus != 5) &&
-        //         (rec.assetStatus != 55),
-        //     "E:SE: Transferred, lost, or stolen status cannot be set to escrow."
-        // );
-        // require(                                                    //redundant because WILL throw in storage
-        //     (rec.assetStatus != 6) &&
-        //         (rec.assetStatus != 50) &&
-        //         (rec.assetStatus != 56),
-        //     "E:SE: Asset already in escrow status."
-        // );
         require(
-            (userType < 5) || (( userType > 4) && ( userType < 10) && (_escrowStatus > 49)),
+            (userType < 5) ||
+                ((userType > 4) && (userType < 10) && (_escrowStatus > 49)),
             "E:SE: Non supervisored agents must set escrow status within scope."
         );
-        require(
-            (_escrowStatus != 60),
-            "E:SE: Cannot set to recycled status."
-        );
+        require((_escrowStatus != 60), "E:SE: Cannot set to recycled status.");
         //^^^^^^^checks^^^^^^^^^
 
         newEscrowStatus = _escrowStatus;
@@ -126,16 +102,8 @@ contract ECR is ECR_CORE {
         uint8 userType = getUserType(rec.assetClass);
         bytes32 ownerHash = ECR_MGR.retrieveEscrowOwner(_idxHash);
 
-        require(
-            contractInfo.contractType > 0,
-            "E:EE: contract not auth in AC"
-        );
-
-        // require((rec.assetClass != 0), "E:EE: Record does not exist");           //redundant because WILL throw in storage
-        require(
-            (userType > 0) && (userType < 10),
-            "E:EE: user not auth in AC"
-        );
+        require(contractInfo.contractType > 0, "E:EE: contract not auth in AC");
+        require((userType > 0) && (userType < 10), "E:EE: user not auth in AC");
         require(
             (rec.assetStatus == 6) ||
                 (rec.assetStatus == 50) ||

@@ -137,10 +137,6 @@ contract NP is CORE {
             contractInfo.contractType > 0,
             "NP:SLS: contract not auth in AC"
         );
-        // require(                                                             //redundant, will throw in storage
-        //     (rec.rightsHolder != 0),
-        //     "NP:SLS: Record unclaimed: import required. "
-        // );
         require(
             (userType > 0) && (userType < 10),
             "NP:SLS: user not auth in AC"
@@ -202,11 +198,6 @@ contract NP is CORE {
             contractInfo.contractType > 0,
             "NP:DC: contract not auth in AC"
         );
-
-        // require(                                                                      //redundant, will throw in storage
-        //     (rec.rightsHolder != 0),
-        //     "NP:DC: Record unclaimed: import required. "
-        // );
         require(
             (userType > 0) && (userType < 10),
             "NP:DC: user not auth in AC"
@@ -215,8 +206,6 @@ contract NP is CORE {
             isEscrow(rec.assetStatus) == 0,
             "NP:DC: Cannot modify asset in Escrow"
         );
-        // require(_decAmount > 0, "NP:DC: cannot decrement by negative number");                //redundant, will throw in storage
-
         require(
             needsImport(rec.assetStatus) == 0,
             "NP:DC Record in unregistered, exported, or discarded status"
@@ -264,16 +253,10 @@ contract NP is CORE {
             contractInfo.contractType > 0,
             "NP:MI1: contract not auth in AC"
         );
-        // require(                                                                           //redundant, will throw in storage
-        //     (rec.rightsHolder != 0),
-        //     "NP:MI1: Record unclaimed: import required."
-        // );
         require(
             (userType > 0) && (userType < 10),
             "NP:MI1: user not auth in AC"
         );
-        // require(rec.Ipfs1 != _IpfsHash, "NP:MI1: New data same as old");                              //REDUNDANT, THROWS IN STORAGE
-
         require(
             isEscrow(rec.assetStatus) == 0,
             "NP:MI1: Cannot modify asset in Escrow"

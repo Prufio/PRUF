@@ -96,7 +96,7 @@ contract APP is CORE {
             contractInfo.contractType > 0,
             "A:IA: unauthorized for AC. Orphan token?"
         );
-        require(rec.assetClass != 0, "A:IA: Record does not exist. "); //CANNOT BE TESTED, ASSERT??
+        //require(rec.assetClass != 0, "A:IA: Record does not exist. "); //STATE UNREACHABLE: CANNOT BE TESTED, will throw in CHANGEAC
         require(userType < 3, "A:IA: User not authorized to import assets");
         require((userType > 0) && (userType < 10), "A:IA: User not auth in AC");
         require(
@@ -155,7 +155,7 @@ contract APP is CORE {
         );
         require(isEscrow(rec.assetStatus) == 0, "A:FMR: Asset in escrow");
         require(isEscrow(rec.assetStatus) == 0, "A:FMR: Asset in escrow");
-        require( //IMPOSSIBLE TO THROW REVERTS IN REQ1
+        require( //IMPOSSIBLE TO THROW REVERTS IN REQ1 CTS:PREFERRED
             needsImport(rec.assetStatus) == 0,
             "A:FMR: Asset needs re-imported"
         );
@@ -270,7 +270,7 @@ contract APP is CORE {
         );
         require(isEscrow(rec.assetStatus) == 0, "A:FMR: Asset in escrow");
         require(isEscrow(rec.assetStatus) == 0, "A:FMR: Asset in escrow");
-        require( //IMPOSSIBLE TO THROW REVERTS IN REQ1
+        require( //IMPOSSIBLE TO THROW REVERTS IN REQ1 CTS:PREFERRED
             needsImport(rec.assetStatus) == 0,
             "A:FMR: Asset needs re-imported"
         );

@@ -51,12 +51,8 @@ contract NAKED is CORE {
             userType == 10,
             "N:MNA:user not authorized to mint naked assets"
         );
-        // require(                                                                   //REDUNDANT, THROWS IN _mint
-        //     A_TKN.tokenExists(tokenId) == 0,
-        //     "N:MNA: Token already exists"
-        // );
         require(
-            rec.assetClass == 0, //verified as non-redundant
+            rec.assetClass == 0, //verified as VALID
             "N:MNA: Asset already registered in system"
         );
         //^^^^^^^checks^^^^^^^^^
@@ -92,17 +88,9 @@ contract NAKED is CORE {
             A_TKN.ownerOf(tokenId) == address(this),
             "N:CNA: Token not found in PRUF_NAKED"
         );
-        // require(                                                     // REDUNDANT, CHECKS IN STORAGE
-        //     contractInfo.contractType > 0,
-        //     "N:CNA: This contract not authorized for specified AC"
-        // );
-        // require( //redundant
-        //     rec.assetClass == 0,
-        //     "PNP:INA: Asset already registered in system"
-        // );
         //^^^^^^^checks^^^^^^^^^
 
-        A_TKN.validateNakedToken(tokenId, _newAssetClass, _authCode); //Verify supplied data matches tokenURI
+        A_TKN.validateNakedToken(tokenId, _newAssetClass, _authCode); //check supplied data matches tokenURI
 
         STOR.newRecord(_idxHash, _rgtHash, _newAssetClass, _countDownStart); // Make a new record at the tokenId b32
 

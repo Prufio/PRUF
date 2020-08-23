@@ -62,25 +62,15 @@ contract ECR_NC is ECR_CORE {
             "ENC:SE: This contract not authorized for specified AC"
         );
 
-        // require((rec.assetClass != 0), "SE: Record does not exist");              //REDUNDANT, THROWS IN STORAGE
-        // require(                                                                //REDUNDANT, CHECKS IN LAST REQ
-        //     (rec.assetStatus > 49),
-        //     "ENC:SE: Only ACadmin authorized user can change status < 50"
-        // );
-        require(                                                //REDUNDANT, THROWS IN SAFEMATH
+        require( //REDUNDANT, CHECKS IN LAST REQ CTS:DISCUSS
+            (rec.assetStatus > 49),
+            "ENC:SE: Only ACadmin authorized user can change status < 50"
+        );
+        require( //REDUNDANT, THROWS IN SAFEMATH  CTS:PREFERRED
             (escrowTime >= block.timestamp),
             "ENC:SE:Escrow must be set to a time in the future"
         );
-        // require(                                                   //REDUNDANT, THROWS IN STORAGE
-        //     (rec.assetStatus != 3) &&
-        //         (rec.assetStatus != 4) &&
-        //         (rec.assetStatus != 53) &&
-        //         (rec.assetStatus != 54) &&
-        //         (rec.assetStatus != 5) &&
-        //         (rec.assetStatus != 55),
-        //     "ENC:SE:Transferred, lost, or stolen status cannot be set to escrow."
-        // );
-        require(                                                                                  //LIMITING??
+        require( //LIMITING  CTS:PREFERRED
             (_escrowStatus == 50) || (_escrowStatus == 56),
             "ENC:SE:Must specify a valid escrow status >49"
         );
@@ -120,9 +110,7 @@ contract ECR_NC is ECR_CORE {
             contractInfo.contractType > 0,
             "ENC:EE: This contract not authorized for specified AC"
         );
-
-        // require((rec.assetClass != 0), "ENC:EE: Record does not exist");              //REDUNDANT, THROWS IN STORAGE
-        require(                                                                      //LIMITING, CHANGE TO >49 NOT 50 OR 56
+        require( //LIMITING, CHANGE TO >49 NOT 50 OR 56?  CTS:50||56 preferrable.
             (rec.assetStatus == 50) || (rec.assetStatus == 56),
             "ENC:EE:record must be in escrow status > 49"
         );
