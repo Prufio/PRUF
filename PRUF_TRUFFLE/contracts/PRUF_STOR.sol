@@ -395,10 +395,6 @@ contract STOR is Ownable, ReentrancyGuard, Pausable {
         require(isEscrow(_newAssetStatus) == 170, "S:SE: stat must = ecr");
         require((isLostOrStolen(rec.assetStatus) == 0), "S:MI2:L/S asset");
         require((isTransferred(rec.assetStatus) == 0), "S:MI2: Txfrd asset");
-        // require(                                           //REDUNDANT, CHECKS WITH MOD-NE
-        //     isEscrow(rec.assetStatus) == 0,
-        //     "S:SE: In ecr stat"
-        // );
         //^^^^^^^checks^^^^^^^^^
 
         if (_newAssetStatus == 60) {
