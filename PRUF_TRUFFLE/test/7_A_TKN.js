@@ -1248,18 +1248,26 @@
     })
 
     //1
-    it('Should fail because storage addr = 0', async () => {
+    it('Should fail because caller is not owner', async () => {
 
         console.log("//**************************************END A_TKN TEST SETUP**********************************************/")
         console.log("//**************************************BEGIN A_TKN FAIL BATCH**********************************************/")
         console.log("//**************************************BEGIN OO_setStorageContract FAIL BATCH**********************************************/")
+        return A_TKN.OO_setStorageContract(
+        STOR.address,
+        {from: account2}
+        )
+    })
+
+    //2
+    it('Should fail because storage addr = 0', async () => {
         return A_TKN.OO_setStorageContract(
         account000,
         {from: account1}
         )
     })
 
-    //2
+    //3
     it('Should fail because caller is not owner', async () => {
 
         console.log("//**************************************END OO_setStorageContract FAIL BATCH**********************************************/")
@@ -1269,7 +1277,7 @@
         )
     })
 
-    //3
+    //4
     it('Should fail because caller is not owner or approved', async () => {
 
         console.log("//**************************************END OO_ResolveContractAddresses FAIL BATCH**********************************************/")
@@ -1282,7 +1290,7 @@
         )
     })
 
-    //4
+    //5
     it('Should fail because caller is not owner or approved', async () => {
 
         console.log("//**************************************END mintAssetToken FAIL BATCH**********************************************/")
@@ -1294,7 +1302,7 @@
         )
     })
 
-    //5
+    //6
     it('Should fail because attempting to remint non-existant token', async () => {
         return A_TKN.reMintAssetToken(
         account1,
@@ -1303,8 +1311,7 @@
         )
     })
 
-
-    //6
+    //7
     it('Should fail because caller != approved || owner', async () => {
 
         console.log("//**************************************END reMintAssetToken FAIL BATCH**********************************************/")
@@ -1316,7 +1323,7 @@
         )
     })
 
-    //7
+    //8
     it('Should fail because authCode != (AC+URI)Hash', async () => {
 
         console.log("//**************************************END setURI FAIL BATCH**********************************************/")
@@ -1329,11 +1336,21 @@
         )
     })
 
-    //8
-    it('Should fail because asset in exported status', async () => {
+    //9
+    it('Should fail because caller is not owner or approved', async () => {
 
         console.log("//**************************************END validateNakedToken FAIL BATCH**********************************************/")
         console.log("//**************************************BEGIN transferFrom FAIL BATCH**********************************************/")
+        return A_TKN.transferFrom(
+        account4,
+        account5,
+        asset1,
+        {from: account5}
+        )
+    })
+
+    //10
+    it('Should fail because asset in exported status', async () => {
         return A_TKN.transferFrom(
         account4,
         account5,
@@ -1351,7 +1368,7 @@
         )
     })
 
-    //9
+    //11
     it('Should fail because asset not in transferable status', async () => {
         return A_TKN.transferFrom(
         account4,
@@ -1361,21 +1378,21 @@
         )
     })
 
-    //10
-    it('Should fail because caller != approved || owner', async () => {
-        return A_TKN.transferFrom(
-        account4,
-        account5,
-        asset1,
-        {from: account5}
-        )
+    //12
+    it('Should fail because caller not owner or approved', async () => {
+
+        console.log("//**************************************END transferFrom FAIL BATCH**********************************************/")
+        console.log("//**************************************BEGIN safeTransferFrom FAIL BATCH**********************************************/")
+        return A_TKN.safeTransferFrom(
+            account4,
+            account6,
+            asset1, 
+            {from: account5}
+            )
     })
 
 
     it('Should put asset2 into status51', async () => {
-
-        console.log("//**************************************END transferFrom FAIL BATCH**********************************************/")
-        console.log("//**************************************BEGIN safeTransferFrom FAIL BATCH**********************************************/")
         return NP_NC._modStatus(
         asset2,
         '51',
@@ -1391,7 +1408,7 @@
         )
     })
 
-    //11
+    //13
     it('Should fail because asset2 is in status 70, and not being sent to an authorized addr(contract)', async () => {
         return A_TKN.safeTransferFrom(
         account4,
@@ -1410,7 +1427,7 @@
         )
     })
 
-    //12
+    //14
     it('Should fail because asset2 is not in a transferable status', async () => {
         return A_TKN.safeTransferFrom(
         account4,
@@ -1429,23 +1446,13 @@
         )
     })
 
-    //13
+    //15
     it('Should fail because you cannot transfer to 0 addr', async () => {
         return A_TKN.safeTransferFrom(
         account4,
         account000,
         asset2, 
         {from: account4}
-        )
-    })
-
-    //14
-    it('Should fail because caller != approved || owner', async () => {
-        return A_TKN.safeTransferFrom(
-        account4,
-        account6,
-        asset1, 
-        {from: account5}
         )
     })
 
@@ -1460,30 +1467,30 @@
     //     )
     // })
 
-    //15
-    it('Should fail because asset isnt in a discardable status', async () => {
-        return A_TKN.discard(
-        asset1, 
-        {from: account4}
-        )
-    })
+    // //15
+    // it('Should fail because asset isnt in a discardable status', async () => {
+    //     return A_TKN.discard(
+    //     asset1, 
+    //     {from: account4}
+    //     )
+    // })
 
 
-    it('Should put asset1 into status59', async () => {
-        return NP_NC._modStatus(
-        asset1,
-        '59',
-        {from: account4}
-        )
-    })
+    // it('Should put asset1 into status59', async () => {
+    //     return NP_NC._modStatus(
+    //     asset1,
+    //     '59',
+    //     {from: account4}
+    //     )
+    // })
 
-    //16
-    it('Should fail because caller != approved || owner', async () => {
-        return A_TKN.discard(
-        asset1, 
-        {from: account5}
-        )
-    })
+    // //16
+    // it('Should fail because caller != approved || owner', async () => {
+    //     return A_TKN.discard(
+    //     asset1, 
+    //     {from: account5}
+    //     )
+    // })
 
     // CANNOT EXECUTE, IMPOSSIBLE...
     // //14
@@ -1500,7 +1507,7 @@
 
 
     it('Should write record in AC 10 @ IDX&RGT(1)', async () => {
-        console.log("//**************************************END discard FAIL BATCH**********************************************/")
+        console.log("//**************************************END safeTransferFrom FAIL BATCH**********************************************/")
         console.log("//**************************************END A_TKN FAIL BATCH**********************************************/")
         console.log("//**************************************END A_TKN TEST**********************************************/")
         console.log("//**************************************BEGIN THE WORKS**********************************************/")
