@@ -123,7 +123,7 @@ contract NP_NC is CORE {
             _newAssetStatus < 100,
             "NPNC:MS: Specified Status is reserved."
         );
-        require( //IMPOSSIBLE WITH CURRENT CONTRACTS CTS:PREFERRED
+        require( //STATE UNREACHABLE WITH CURRENT CONTRACTS CTS:PREFERRED
             (_newAssetStatus > 49) && (rec.assetStatus > 49),
             "NPNC:SLS: Only custodial usertype can set or change status < 50"
         );
@@ -185,7 +185,7 @@ contract NP_NC is CORE {
     {
         Record memory rec = getRecord(_idxHash);
 
-        require( //IMPOSSIBLE, ASSET CANNOT MEET STATUS IN NC CONTRACTS CTS:PREFERRED
+        require( //STATE UNREACHABLE ASSET CANNOT MEET STATUS IN NC CONTRACTS CTS:PREFERRED
             needsImport(rec.assetStatus) == 0,
             "NPNC:DC: Record in unregistered, exported, or discarded status"
         );
