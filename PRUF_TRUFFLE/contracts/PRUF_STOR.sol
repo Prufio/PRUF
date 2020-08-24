@@ -284,12 +284,12 @@ contract STOR is Ownable, ReentrancyGuard, Pausable {
         require(_countDown <= rec.countDown, "S:MR:countDown +!"); //prohibit increasing the countdown value  //IMPOSSIBLE TO THROW?? !!UINT!!
         require(isLostOrStolen(_newAssetStatus) == 0, "S:MR:Must use L/S");
         require(isEscrow(_newAssetStatus) == 0, "S:MR:Must use ECR");
-        require(
-            (_newAssetStatus != 7) &&
-                (_newAssetStatus != 57) &&
-                (_newAssetStatus != 58),
-            "S:MR: Stat Rsrvd"
-        );
+        // require(
+        //     (_newAssetStatus != 7) &&
+        //         (_newAssetStatus != 57) &&
+        //         (_newAssetStatus != 58),
+        //     "S:MR: Stat Rsrvd"
+        // );
         require(_rgtHash != 0, "S:MR: rgtHash = 0");
         //^^^^^^^checks^^^^^^^^^
 

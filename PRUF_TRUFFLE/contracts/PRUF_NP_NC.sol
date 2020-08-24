@@ -109,6 +109,12 @@ contract NP_NC is CORE {
     {
         Record memory rec = getRecord(_idxHash);
 
+        require(
+            (_newAssetStatus != 7) &&
+            (_newAssetStatus != 57) &&
+            (_newAssetStatus != 58),
+            "NP:MS: Stat Rsrvd"
+        );
         require( //STATE UNREACHABLE: CANNOT MEET STATUS IN NC CONTRACTS CTS:PREFERRED
             needsImport(_newAssetStatus) == 0,
             "NPNC:MS: Cannot place asset in unregistered, exported, or discarded status using modStatus"

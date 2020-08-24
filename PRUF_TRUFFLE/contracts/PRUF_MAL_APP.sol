@@ -654,8 +654,7 @@ contract MAL_APP is CORE_MAL {
 
         function setEscrowStor(
         bytes32 _idxHash,
-        uint8 _escrowStatus,
-        bytes32 _contractNameHash
+        uint8 _escrowStatus
     ) external 
     // nonReentrant whenNotPaused isAuthorized(_idxHash) 
     {
@@ -713,8 +712,7 @@ contract MAL_APP is CORE_MAL {
 
         STOR.setEscrow(
             _idxHash,
-            _escrowStatus,
-            _contractNameHash
+            _escrowStatus
         );
         //^^^^^^^interactions^^^^^^^^^
     }
@@ -768,7 +766,7 @@ contract MAL_APP is CORE_MAL {
     }
 
 
-    function endEscrowStor(bytes32 _idxHash, bytes32 contractHash)
+    function endEscrowStor(bytes32 _idxHash)
         external
         // nonReentrant
         // isAuthorized(_idxHash)
@@ -809,7 +807,7 @@ contract MAL_APP is CORE_MAL {
         // );
         //^^^^^^^checks^^^^^^^^^
 
-        STOR.endEscrow(_idxHash, contractHash);
+        STOR.endEscrow(_idxHash);
         //^^^^^^^interactions^^^^^^^^^
     }
 

@@ -58,6 +58,12 @@ contract NP is CORE {
             "NP:MS: User not auth in AC"
         );
         require(
+            (_newAssetStatus != 7) &&
+            (_newAssetStatus != 57) &&
+            (_newAssetStatus != 58),
+            "NP:MS: Stat Rsrvd"
+        );
+        require(
             needsImport(_newAssetStatus) == 0,
             "NP:MS: Cannot place asset in unregistered, exported, or discarded status using modStatus"
         );
