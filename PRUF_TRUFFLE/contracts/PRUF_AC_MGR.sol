@@ -63,8 +63,7 @@ contract AC_MGR is CORE {
      * @dev Authorize / Deauthorize / Authorize users for an address be permitted to make record modifications
      * ----------------INSECURE -- keccak256 of address must be generated clientside in release.
      */
-    function OO_addUser(
-        //swap arg!!!!!!!!!
+    function OO_addUser(                                                                      //swap arg!!!!!!!!!
         address _authAddr,
         uint8 _userType,
         uint32 _assetClass
@@ -101,7 +100,7 @@ contract AC_MGR is CORE {
         AC memory _ac = AC_data[_assetClassRoot];
         uint256 tokenId = uint256(_assetClass);
 
-        require((tokenId != 0), "ACM:CAC: Token id cannot be 0"); //sanity check inputs
+        require((tokenId != 0), "ACM:CAC: AC cannot be 0"); //sanity check inputs
         require( //has valid root
             (_ac.custodyType != 0) || (_assetClassRoot == _assetClass),
             "ACM:CAC:Root asset class does not exist"

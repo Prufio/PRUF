@@ -1226,7 +1226,6 @@
         console.log("//**************************************END OO_addUser FAIL BATCH**********************************************/")
         console.log("//**************************************BEGIN createAssetClass FAIL BATCH**********************************************/")
         return AC_MGR.createAssetClass(
-        '32', 
         account2,
         '20',
         '20',
@@ -1239,10 +1238,9 @@
     //4
     it('Should fail because AC_TKN ID != 0', async () => {
         return AC_MGR.createAssetClass(
-        '0', 
         account2,
         '20',
-        '20',
+        '0',
         '1',
         '1',
         {from: account1}
@@ -1251,8 +1249,7 @@
 
     //5
     it('Should fail because RootAC doesnt exist', async () => {
-        return AC_MGR.createAssetClass(
-        '20', 
+        return AC_MGR.createAssetClass( 
         account2,
         'AC20',
         '20',
