@@ -60,14 +60,14 @@ contract NP is CORE {
         require(
             (_newAssetStatus != 7) &&
             (_newAssetStatus != 57) &&
-            (_newAssetStatus != 58),
+            (_newAssetStatus != 58) &&
+            (_newAssetStatus < 100),
             "NP:MS: Stat Rsrvd"
         );
         require(
             needsImport(_newAssetStatus) == 0,
             "NP:MS: Cannot place asset in unregistered, exported, or discarded status using modStatus"
         );
-        require(_newAssetStatus < 100, "NP:MS: Specified Status is reserved.");
         require(
             needsImport(rec.assetStatus) == 0,
             "NP:MS: Record in unregistered, exported, or discarded status"
