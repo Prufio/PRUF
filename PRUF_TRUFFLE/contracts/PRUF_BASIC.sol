@@ -139,7 +139,7 @@ contract BASIC is ReentrancyGuard, Ownable, IERC721Receiver, Pausable {
     {
         require(
             (msg.sender == owner()) || (msg.sender == NP_Address),
-            "PB:TX:Invalid caller for transfer token"
+            "B:TX:Invalid caller for transfer token"
         );
         uint256 tokenId = uint256(_idxHash);
         //^^^^^^^effects^^^^^^^^^

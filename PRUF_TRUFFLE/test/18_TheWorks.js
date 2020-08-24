@@ -41,6 +41,8 @@
     let string3Hash;
     let string4Hash;
     let string5Hash;
+
+    let ECR_MGRHASH;
     
     let asset1;
     let asset2;
@@ -446,6 +448,11 @@
 
         string5Hash = await Helper.getStringHash(
             '5'
+        )
+
+
+        ECR_MGRHASH = await Helper.getStringHash(
+            'ECR_MGR'
         )
     })
 
@@ -1188,7 +1195,6 @@
                 return AC_MGR.OO_addUser(account10, '1', '10', { from: account1 })
             })
     })
-
 
 
     it('Should write record in AC 10 @ IDX&RGT(1)', async () => {
