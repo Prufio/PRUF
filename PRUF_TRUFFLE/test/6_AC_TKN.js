@@ -1197,18 +1197,26 @@
     })
 
     //1
-    it('Should fail because storageAddress != 0', async () => {
+    it('Should fail because caller is not owner', async () => {
 
         console.log("//**************************************BEGIN AC_TKN TEST**********************************************/")
         console.log("//**************************************BEGIN AC_TKN FAIL BATCH**********************************************/")
         console.log("//********************************BEGIN OO_setStorageContract FAIL BATCH****************************************/")
+        return AC_TKN.OO_setStorageContract(
+        STOR.address, 
+        {from: account2}
+        )
+    })
+
+    //2
+    it('Should fail because storageAddress != 0', async () => {
         return AC_TKN.OO_setStorageContract(
         account000, 
         {from: account1}
         )
     })
 
-    //2
+    //3
     it('Should fail because is not owner', async () => {
 
         console.log("//*********************************END OO_setStorageContract FAIL BATCH*****************************************/")
@@ -1218,7 +1226,7 @@
         )
     })
 
-    //3
+    //4
     it('Should fail because is not owner/AC_MGR', async () => {
 
         console.log("//*********************************END OO_ResolveContractAddresses FAIL BATCH*****************************************/")
@@ -1231,7 +1239,7 @@
         )
     })
 
-    //4
+    //5
     it('Should fail because is not owner/AC_MGR', async () => {
 
         console.log("//*********************************END mintACToken FAIL BATCH*****************************************/")
@@ -1244,7 +1252,7 @@
         )
     })
 
-    //5
+    //6
     it('Should fail because token doesnt exist', async () => {
         return AC_TKN.reMintACToken(
         account1,
@@ -1254,7 +1262,7 @@
         )
     })
 
-    //6
+    //7
     it('Should fail because caller is not owner of token or approved', async () => {
 
         console.log("//*********************************END reMintACToken FAIL BATCH*****************************************/")
@@ -1267,7 +1275,7 @@
         )
     })
 
-    //7
+    //8
     it('Should fail because caller is not owner of token or approved', async () => {
 
         console.log("//*********************************END transferFrom FAIL BATCH*****************************************/")
