@@ -112,22 +112,19 @@ contract NP_NC is CORE {
         require(
             (_newAssetStatus != 7) &&
             (_newAssetStatus != 57) &&
-            (_newAssetStatus != 58),
-            "NP:MS: Stat Rsrvd"
+            (_newAssetStatus != 58) &&
+            (_newAssetStatus < 100),
+            "NPNC:MS: Stat Rsrvd"
         );
         require( //STATE UNREACHABLE: CANNOT MEET STATUS IN NC CONTRACTS CTS:PREFERRED
             needsImport(_newAssetStatus) == 0,
             "NPNC:MS: Cannot place asset in unregistered, exported, or discarded status using modStatus"
         );
-        require(
-            _newAssetStatus < 100,
-            "NPNC:MS: Specified Status is reserved."
-        );
         require( //IMPOSSIBLE WITH CURRENT CONTRACTS CTS:PREFERRED
             (_newAssetStatus > 49) && (rec.assetStatus > 49),
             "NPNC:SLS: Only custodial usertype can set or change status < 50"
         );
-        require(
+        require(//STATE UNREACHABLE: CANNOT MEET STATUS IN NC CONTRACTS
             needsImport(rec.assetStatus) == 0,
             "NPNC:MS: Asset is in an unregistered, exported, or discarded status."
         );
