@@ -90,15 +90,7 @@ contract ECR_MGR is BASIC {
             "EM:SE: Escrow can only be set by an authorized escrow contract"
         );
         //^^^^^^^checks^^^^^^^^^
-
-        escrows[_idxHash].data = 0; //initialize escrow data
-        escrows[_idxHash].controllingContractNameHash = 0;
-        escrows[_idxHash].escrowOwnerAddressHash = 0;
-        escrows[_idxHash].timelock = 0;
-        escrows[_idxHash].ex1 = 0;
-        escrows[_idxHash].ex2 = 0;
-        escrows[_idxHash].addr1 = address(0);
-        escrows[_idxHash].addr1 = address(0);
+        delete escrows[_idxHash];
 
         escrows[_idxHash].data = _data;
         escrows[_idxHash]
@@ -134,13 +126,7 @@ contract ECR_MGR is BASIC {
 
         //^^^^^^^checks^^^^^^^^^
 
-        escrows[_idxHash].data = 0;
-        escrows[_idxHash].controllingContractNameHash = 0;
-        escrows[_idxHash].escrowOwnerAddressHash = 0;
-        escrows[_idxHash].timelock = 0;
-        escrows[_idxHash].ex1 = 0;
-        escrows[_idxHash].addr1 = address(0);
-        escrows[_idxHash].addr1 = address(0);
+        delete escrows[_idxHash];
         //^^^^^^^effects^^^^^^^^^
 
         STOR.endEscrow(_idxHash);
@@ -165,14 +151,7 @@ contract ECR_MGR is BASIC {
         );
         //^^^^^^^checks^^^^^^^^^
 
-        escrows[_idxHash].data = 0;
-        escrows[_idxHash].controllingContractNameHash = 0;
-        escrows[_idxHash].escrowOwnerAddressHash = 0;
-        escrows[_idxHash].timelock = 0;
-        escrows[_idxHash].ex1 = 0;
-        escrows[_idxHash].ex2 = 0;
-        escrows[_idxHash].addr1 = address(0);
-        escrows[_idxHash].addr1 = address(0);
+        delete escrows[_idxHash];
         //^^^^^^^effects^^^^^^^^^
 
         STOR.endEscrow(_idxHash);
