@@ -61,8 +61,7 @@ contract ECR_NC is ECR_CORE {
             contractInfo.contractType > 0,
             "ENC:SE: This contract not authorized for specified AC"
         );
-
-        require( //REDUNDANT, CHECKS IN LAST REQ CTS:DISCUSS
+        require(
             (rec.assetStatus > 49),
             "ENC:SE: Only ACadmin authorized user can change status < 50"
         );
