@@ -182,7 +182,7 @@ contract NP_NC is CORE {
     {
         Record memory rec = getRecord(_idxHash);
 
-        require( //IMPOSSIBLE, ASSET CANNOT MEET STATUS IN NC CONTRACTS CTS:PREFERRED
+        require( //STATE UNREACHABLE ASSET CANNOT MEET STATUS IN NC CONTRACTS CTS:PREFERRED
             needsImport(rec.assetStatus) == 0,
             "NPNC:DC: Record in unregistered, exported, or discarded status"
         );

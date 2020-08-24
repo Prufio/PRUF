@@ -281,7 +281,7 @@ contract STOR is Ownable, ReentrancyGuard, Pausable {
         Record memory rec = database[_idxHash];
         bytes32 idxHash = _idxHash; //stack saving
 
-        require(_countDown <= rec.countDown, "S:MR:countDown +!"); //prohibit increasing the countdown value  //IMPOSSIBLE TO THROW?? !!UINT!!
+        require(_countDown <= rec.countDown, "S:MR:countDown +!"); //prohibit increasing the countdown value  //IMPOSSIBLE TO THROW
         require(isLostOrStolen(_newAssetStatus) == 0, "S:MR:Must use L/S");
         require(isEscrow(_newAssetStatus) == 0, "S:MR:Must use ECR");
         // require(
@@ -363,7 +363,7 @@ contract STOR is Ownable, ReentrancyGuard, Pausable {
         require(
             (rec.assetStatus != 5) &&
                 (rec.assetStatus != 50) &&
-                (rec.assetStatus != 55), //IMPOSSIBLE TO SET TO STAT 55 IN CURRENT CONTRACTS
+                (rec.assetStatus != 55), //STATE UNREACHABLE TO SET TO STAT 55 IN CURRENT CONTRACTS
             "S:SSL:Txfr or ecr-locked asset != L/S."
         );
         //^^^^^^^checks^^^^^^^^^
