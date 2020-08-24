@@ -1,92 +1,15 @@
 import React, { Component } from "react";
-import RCFJ from "./RetrieveContractsFromJSON"
-import Web3 from "web3";
 import Form from "react-bootstrap/Form";
 import Col from "react-bootstrap/Col";
 import Button from "react-bootstrap/Button";
 import returnManufacturers from "./Manufacturers";
 import returnTypes from "./Types";
 
-let contracts;
-
-async function setupContractEnvironment(_web3) {
-    contracts = window.contracts;
-}
-
 class ModifyRecordStatus extends Component {
   constructor(props) {
     super(props);
 
     //State declaration.....................................................................................................
-
-    this.getCosts = async () => {//under the condition that prices are not stored in state, get prices from STOR
-      const self = this;
-      if (self.state.costArray[0] > 0 || self.state.AC_MGR === "" || self.state.assetClass === undefined) {
-      } else {
-        for (var i = 0; i < 1; i++) {
-          self.state.AC_MGR.methods
-            .retrieveCosts(self.state.assetClass)
-            .call({ from: self.state.addr }, function (_error, _result) {
-              if (_error) {
-              } else {
-                /* console.log("_result: ", _result); */ if (
-                  _result !== undefined
-                ) {
-                  self.setState({ costArray: Object.values(_result) });
-                }
-              }
-            });
-        }
-      }
-    };
-
-    /* this.getAssetClass = async () => {//under the condition that asset class has not been retrieved and stored in state, get it from user data
-      const self = this;
-      //console.log("getting asset class");
-      if (self.state.assetClass > 0 || self.state.AC_MGR === "") {
-      } else {
-        self.state.AC_MGR.methods
-          .getUserExt(self.state.web3.utils.soliditySha3(self.state.addr))
-          .call({ from: self.state.addr }, function (_error, _result) {
-            if (_error) {console.log(_error)
-            } else {
-               console.log("_result: ", _result);  if (_result !== undefined ) {
-                self.setState({ assetClass: Object.values(_result)[1] });
-              }
-            }
-          });
-    }
-    }; */
-
-    this.getContracts = async () => {
-          const self = this;
-          self.setState({STOR: contracts.content[0]});
-          self.setState({APP: contracts.content[1]});
-          self.setState({NP: contracts.content[2]});
-          self.setState({AC_MGR: contracts.content[3]});
-          self.setState({AC_TKN: contracts.content[4]});
-          self.setState({A_TKN: contracts.content[5]});
-          self.setState({ECR_MGR: contracts.content[6]});
-          self.setState({ECR: contracts.content[7]});
-          self.setState({ECR2: contracts.content[8]});
-          self.setState({ECR_NC: contracts.content[9]});
-          self.setState({APP_NC: contracts.content[10]});
-          self.setState({NP_NC: contracts.content[11]});
-          self.setState({RCLR: contracts.content[12]});
-    };
-
-    this.acctChanger = async () => {//Handle an address change, update state accordingly
-      const ethereum = window.ethereum;
-      const self = this;
-      var _web3 = require("web3");
-      _web3 = new Web3(_web3.givenProvider);
-      ethereum.on("accountsChanged", function (accounts) {
-        _web3.eth.getAccounts().then((e) => self.setState({ addr: e[0] }));
-        self.setState({assetClass: undefined})
-      });
-    };
-
-    //Component state declaration
 
     this.state = {
       addr: "",
@@ -109,58 +32,28 @@ class ModifyRecordStatus extends Component {
       id: "",
       secret: "",
       isNFA: false,
-      web3: null,
-      APP: "",
-      NP: "",
-      STOR: "",
-      AC_MGR: "",
-      ECR_NC: "",
-      ECR_MGR: "",
-      AC_TKN: "",
-      A_TKN: "",
-      APP_NC: "",
-      NP_NC: "",
-      ECR2: "",
-      NAKED: "",
-      RCLR: "",
     };
   }
 
   //component state-change events......................................................................................................
 
   componentDidMount() {//stuff to do when component mounts in window
-    //console.log("component mounted")
-    var _web3 = require("web3");
-    _web3 = new Web3(_web3.givenProvider);
-    setupContractEnvironment(_web3);
-    this.setState({ web3: _web3 });
-    _web3.eth.getAccounts().then((e) => this.setState({ addr: e[0] }));
-
-    document.addEventListener("accountListener", this.acctChanger());
+ 
   }
 
   componentDidUpdate(){//stuff to do when state updates
 
-    if(this.state.web3 !== null && this.state.APP < 1){
-      this.getContracts();
-    }
-
-    if (this.state.addr > 0 && this.state.assetClass === undefined) {
-      //this.getAssetClass();
-  }
   }
 
   componentWillUnmount() {//stuff do do when component unmounts from the window
-    this.setState({assetClass: undefined})
-    //console.log("unmounting component")
-    document.removeEventListener("accountListener", this.acctChanger());
+
   }
 
   render() {//render continuously produces an up-to-date stateful document  
     const self = this;
 
     async function checkExists(idxHash) {
-      await self.state.STOR.methods
+      await window.contracts.STOR.methods
         .retrieveShortRecord(idxHash)
         .call({ from: self.state.addr }, function (_error, _result) {
           if (_error) {
@@ -177,7 +70,7 @@ class ModifyRecordStatus extends Component {
     }
 
     async function checkMatch(idxHash, rgtHash) {
-      await self.state.STOR.methods
+      await window.contracts.STOR.methods
         ._verifyRightsHolder(idxHash, rgtHash)
         .call({ from: self.state.addr }, function (_error, _result) {
           if (_error) {
@@ -216,34 +109,34 @@ class ModifyRecordStatus extends Component {
       var idxHash;
       var rgtRaw;
       
-      idxHash = this.state.web3.utils.soliditySha3(
+      idxHash = window.web3.utils.soliditySha3(
         this.state.type,
         this.state.manufacturer,
         this.state.model,
         this.state.serial,
     );
 
-      rgtRaw = this.state.web3.utils.soliditySha3(
+      rgtRaw = window.web3.utils.soliditySha3(
         this.state.first,
         this.state.middle,
         this.state.surname,
         this.state.id,
         this.state.secret
       );
-      var rgtHash = this.state.web3.utils.soliditySha3(idxHash, rgtRaw);
+      var rgtHash = window.web3.utils.soliditySha3(idxHash, rgtRaw);
 
       console.log("idxHash", idxHash);
       console.log("New rgtRaw", rgtRaw);
       console.log("New rgtHash", rgtHash);
-      console.log("addr: ", this.state.addr);
+      console.log("addr: ", window.addr);
 
       checkExists(idxHash);
       checkMatch(idxHash, rgtHash);
 
       if (this.state.status !== "3" && this.state.status !== "4" && this.state.status !== "6" && this.state.status !== "9" && this.state.status !== "10" && this.state.status < 12){
-      this.state.NP.methods
+        window.contracts.NP.methods
         ._modStatus(idxHash, rgtHash, this.state.status)
-        .send({ from: this.state.addr })
+        .send({ from: window.addr })
         .on("error", function (_error) {
           // self.setState({ NRerror: _error });
           self.setState({ txHash: Object.values(_error)[0].transactionHash });
@@ -258,9 +151,9 @@ class ModifyRecordStatus extends Component {
         });}
 
         else if (this.state.status === "3" || this.state.status === "4" || this.state.status === "10" || this.state.status === "10"){
-          this.state.NP.methods
+          window.contracts.NP.methods
         ._setLostOrStolen(idxHash, rgtHash, this.state.status)
-        .send({ from: this.state.addr })
+        .send({ from: window.addr })
         .on("error", function (_error) {
           // self.setState({ NRerror: _error });
           self.setState({ txHash: Object.values(_error)[0].transactionHash });
@@ -283,20 +176,20 @@ class ModifyRecordStatus extends Component {
     return (
       <div>
         <Form className="MRform" id='MainForm'>
-        {this.state.addr === undefined && (
+        {window.addr === undefined && (
             <div className="errorResults">
-              <h2>WARNING!</h2>
-              <h3>Injected web3 not connected to form!</h3>
+              <h2>User address unreachable</h2>
+              <h3>Please connect web3 provider.</h3>
             </div>
-          )}{this.state.assetClass < 1 && (
+          )}{window.assetClass === undefined && (
             <div className="errorResults">
-              <h2>No authorized asset class detected at user address.</h2>
-              <h3>Unauthorized users do not have access to forms.</h3>
+              <h2>No asset class selected.</h2>
+              <h3>Please select asset class in home page to use forms.</h3>
             </div>
           )}
-          {this.state.addr > 0 && this.state.assetClass > 0 &&(
+          {window.addr > 0 && window.assetClass > 0 &&(
             <div>
-                {this.state.assetClass === 3 &&(
+                {window.assetClass === 3 &&(
                 <Form.Group>
                 <Form.Check
                 className = 'checkBox'
@@ -313,12 +206,12 @@ class ModifyRecordStatus extends Component {
                 <Form.Group as={Col} controlId="formGridType">
                   <Form.Label className="formFont">Type:</Form.Label>
 
-                  {returnTypes(this.state.assetClass, this.state.isNFA) !== '0' &&(<Form.Control as="select" size="lg" onChange={(e) => this.setState({ type: e.target.value })}>
-                  {returnTypes(this.state.assetClass, this.state.isNFA)}
+                  {returnTypes(window.assetClass, this.state.isNFA) !== '0' &&(<Form.Control as="select" size="lg" onChange={(e) => this.setState({ type: e.target.value })}>
+                  {returnTypes(window.assetClass, this.state.isNFA)}
                   </Form.Control>
                   )}
 
-                    {returnTypes(this.state.assetClass, this.state.isNFA) === '0' &&(
+                    {returnTypes(window.assetClass, this.state.isNFA) === '0' &&(
                     <Form.Control
                     placeholder="Type"
                     required
@@ -329,12 +222,12 @@ class ModifyRecordStatus extends Component {
 
                   <Form.Group as={Col} controlId="formGridManufacturer">
                     <Form.Label className="formFont">Manufacturer:</Form.Label>
-                    {returnManufacturers(this.state.assetClass, this.state.isNFA) !== '0' &&(<Form.Control as="select" size="lg" onChange={(e) => this.setState({ manufacturer: e.target.value })}>
-                  {returnManufacturers(this.state.assetClass, this.state.isNFA)}
+                    {returnManufacturers(window.assetClass, this.state.isNFA) !== '0' &&(<Form.Control as="select" size="lg" onChange={(e) => this.setState({ manufacturer: e.target.value })}>
+                  {returnManufacturers(window.assetClass, this.state.isNFA)}
                   </Form.Control>
                   )}
 
-                      {returnManufacturers(this.state.assetClass, this.state.isNFA) === '0' &&(
+                      {returnManufacturers(window.assetClass, this.state.isNFA) === '0' &&(
                     <Form.Control
                     placeholder="Manufacturer"
                     required

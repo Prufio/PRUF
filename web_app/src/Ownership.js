@@ -1,112 +1,13 @@
 import React, { Component } from "react";
-import RCFJ from "./RetrieveContractsFromJSON"
-import Web3 from "web3";
 import Form from "react-bootstrap/Form";
 import Button from "react-bootstrap/Button";
 import Col from "react-bootstrap/Col";
-
-let contracts;
-
-async function setupContractEnvironment(_web3) {
-    contracts = window.contracts;
-}
 
 class Ownership extends Component {
   constructor(props) {
     super(props);
 
     //State declaration.....................................................................................................
-
-    this.getOwner = async () => {//check user address against contract ownership calls
-      const self = this;
-
-      if(this.state.STOR === "" || this.state.web3 === null || this.state.STOROwner !== ""){}else{
-        console.log("Getting STOR owner")
-        this.state.STOR.methods
-          .owner()
-          .call({ from: self.state.addr }, function (_error, _result) {
-            if (_error) {
-              console.log(_error);
-            } else {
-              self.setState({ STOROwner: _result });
-
-              if (_result === self.state.addr) {
-                self.setState({ isSTOROwner: true });
-              } else {
-                self.setState({ isSTOROwner: false });
-              }
-            }
-          });
-        }
-
-        if(this.state.APP === "" || this.state.web3 === null || this.state.BPPOwner !== ""){}else{
-          console.log("Getting BPP owner")
-          this.state.APP.methods
-            .owner()
-            .call({ from: self.state.addr }, function (_error, _result) {
-              if (_error) {
-                console.log(_error);
-              } else {
-                self.setState({ BPPOwner: _result });
-  
-                if (_result === self.state.addr) {
-                  self.setState({ isBPPOwner: true });
-                } else {
-                  self.setState({ isBPPOwner: false });
-                }
-              }
-            });
-          }
-
-          if(this.state.NP === "" || this.state.web3 === null || this.state.BPNPOwner !== ""){}else{
-            console.log("Getting BPNP owner")
-            this.state.NP.methods
-              .owner()
-              .call({ from: self.state.addr }, function (_error, _result) {
-                if (_error) {
-                  console.log(_error);
-                } else {
-                  self.setState({ BPNPOwner: _result });
-    
-                  if (_result === self.state.addr) {
-                    self.setState({ isBPNPOwner: true });
-                  } else {
-                    self.setState({ isBPNPOwner: false });
-                  }
-                }
-              });
-            }
-    };
-
-    this.getContracts = async () => {
-          const self = this;
-          self.setState({STOR: contracts.content[0]});
-          self.setState({APP: contracts.content[1]});
-          self.setState({NP: contracts.content[2]});
-          self.setState({AC_MGR: contracts.content[3]});
-          self.setState({AC_TKN: contracts.content[4]});
-          self.setState({A_TKN: contracts.content[5]});
-          self.setState({ECR_MGR: contracts.content[6]});
-          self.setState({ECR: contracts.content[7]});
-          self.setState({ECR2: contracts.content[8]});
-          self.setState({ECR_NC: contracts.content[9]});
-          self.setState({APP_NC: contracts.content[10]});
-          self.setState({NP_NC: contracts.content[11]});
-          self.setState({RCLR: contracts.content[12]});
-    };
-
-
-    this.acctChanger = async () => {//Handle an address change, update state accordingly
-      const ethereum = window.ethereum;
-      const self = this;
-      var _web3 = require("web3");
-      _web3 = new Web3(_web3.givenProvider);
-      ethereum.on("accountsChanged", function (accounts) {
-        _web3.eth.getAccounts().then((e) => self.setState({ addr: e[0] }));
-      });
-    };
-
-    //Component state declaration
 
     this.state = {
       isSTOROwner: undefined,
@@ -125,43 +26,16 @@ class Ownership extends Component {
       isTxfrSTOR: false,
       isTxfrBPP: false,
       isTxfrBPNP: false,
-      APP: "",
-      NP: "",
-      STOR: "",
-      AC_MGR: "",
-      ECR_NC: "",
-      ECR_MGR: "",
-      AC_TKN: "",
-      A_TKN: "",
-      APP_NC: "",
-      NP_NC: "",
-      ECR2: "",
-      NAKED: "",
-      RCLR: "",
     };
   }
 
   //component state-change events......................................................................................................
 
   componentDidMount() {//stuff to do when component mounts in window
-    var _web3 = require("web3");
-    _web3 = new Web3(_web3.givenProvider);
-    setupContractEnvironment(_web3);
-    this.setState({ web3: _web3 });
-    _web3.eth.getAccounts().then((e) => this.setState({ addr: e[0] }));
-    document.addEventListener("accountListener", this.acctChanger());
+
   }
 
   componentDidUpdate(){//stuff to do when state updates
-
-    if(this.state.web3 !== null && this.state.web3 !== undefined){
-      this.getContracts();
-    }
-
-    if (this.state.web3 !== null && this.state.STOROwner < 1){
-      for (let i = 0; i < 5; i++) {
-        this.getOwner();}
-      }
 
   }
 
@@ -221,9 +95,9 @@ class Ownership extends Component {
     };
 
     const renounce = () => {
-      this.state.STOR.methods
+      window.contracts.STOR.methods
         .renounceOwnership()
-        .send({ from: this.state.addr })
+        .send({ from: window.addr })
         .on("error", function (_error) {
           self.setState({ error: _error });
           self.setState({ result: _error.transactionHash });
@@ -240,9 +114,9 @@ class Ownership extends Component {
       if(this.state.newOwner < 1){return(alert("Can not transfer to zero address"))}
 
       if(this.state.isTxfrSTOR === true){
-      this.state.STOR.methods
+        window.contracts.STOR.methods
         .transferOwnership(this.state.newOwner)
-        .send({ from: this.state.addr })
+        .send({ from: window.addr })
         .on("error", function (_error) {
           self.setState({ error: _error });
           self.setState({ result: _error.transactionHash });
@@ -254,9 +128,9 @@ class Ownership extends Component {
         });}
 
         if(this.state.isTxfrBPP === true){
-        this.state.APP.methods
+          window.contracts.APP.methods
         .transferOwnership(this.state.newOwner)
-        .send({ from: this.state.addr })
+        .send({ from: window.addr })
         .on("error", function (_error) {
           self.setState({ error: _error });
           self.setState({ result: _error.transactionHash });
@@ -268,9 +142,9 @@ class Ownership extends Component {
         });}
 
         if(this.state.isTxfrBPNP === true){
-        this.state.NP.methods
+          window.contracts.NP.methods
         .transferOwnership(this.state.newOwner)
-        .send({ from: this.state.addr })
+        .send({ from: window.addr })
         .on("error", function (_error) {
           self.setState({ error: _error });
           self.setState({ result: _error.transactionHash });
@@ -289,14 +163,14 @@ class Ownership extends Component {
     return (
       <div>
         <Form className="OForm">
-          {this.state.addr === undefined && (
+          {window.addr === undefined && (
             <div className="VRresults">
-              <h2>WARNING!</h2>
-              Injected web3 not connected to form!
+              <h2>User address unreachable</h2>
+              Please connect web3 provider.
             </div>
           )}
 
-          {this.state.addr > 0 && this.state.toggle === false && (
+          {window.addr > 0 && this.state.toggle === false && (
             <div>
               <Form.Group>
                 {this.state.isSTOROwner === true && (
@@ -361,7 +235,7 @@ class Ownership extends Component {
             </div>
           )}
 
-          {this.state.addr > 0 && this.state.toggle === true && (
+          {window.addr > 0 && this.state.toggle === true && (
             <div>
               <h2 className="Headertext">Renounce Ownership?</h2>
               <div>

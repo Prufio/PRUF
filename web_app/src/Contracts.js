@@ -214,7 +214,7 @@ async function buildContracts(_web3) {
   _contracts.content.push(RCLR);     //12
   _contracts.content.push(NAKED);    //13
 
-  console.log(_contracts)
+  //console.log(_contracts)
   return _contracts;
 
 }

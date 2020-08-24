@@ -17,10 +17,7 @@ import Ownership from "./Ownership";
 import SetCosts from "./SetCosts";
 import THEWORKS from "./TheWorks";
 import buildContracts from "./Contracts";
-import Button from "react-bootstrap/Button";
-import Form from "react-bootstrap/Form";
 import EscrowManager from "./EscrowManager";
-import RCFJ from "./RetrieveContractsFromJSON"
 
 
 
@@ -30,31 +27,31 @@ class Main extends Component {
 
     this.setupContractEnvironment = async (_web3) => {
       console.log("Setting up contracts")
-      window.contracts = await buildContracts(_web3)
-      await this.setState({contracts: window.contracts})
+      window._contracts = await buildContracts(_web3)
+      await this.setState({contracts: window._contracts})
       return this.getContracts()
   }
 
     //State declaration....................................................................................................
     this.getContracts = async () => {
-      const self = this;
-        await self.setState({ STOR: window.contracts.content[0] });
-        await self.setState({ APP: window.contracts.content[1] });
-        await self.setState({ NP: window.contracts.content[2] });
-        await self.setState({ AC_MGR: window.contracts.content[3] });
-        await self.setState({ AC_TKN: window.contracts.content[4] });
-        await self.setState({ A_TKN: window.contracts.content[5] });
-        await self.setState({ ECR_MGR: window.contracts.content[6] });
-        await self.setState({ ECR: window.contracts.content[7] });
-        await self.setState({ ECR2: window.contracts.content[8] });
-        await self.setState({ ECR_NC: window.contracts.content[9] });
-        await self.setState({ APP_NC: window.contracts.content[10] });
-        await self.setState({ NP_NC: window.contracts.content[11] });
-        await self.setState({ RCLR: window.contracts.content[12] });
-        await self.setState({ NAKED: window.contracts.content[13] });
 
-        console.log("contracts: ", window.contracts)
+        window.contracts = {
+          STOR: window._contracts.content[0],
+          APP: window._contracts.content[1],
+          NP: window._contracts.content[2],
+          AC_MGR: window._contracts.content[3],
+          AC_TKN: window._contracts.content[4],
+          A_TKN: window._contracts.content[5],
+          ECR_MGR: window._contracts.content[6],
+          ECR: window._contracts.content[7],
+          ECR2: window._contracts.content[8],
+          ECR_NC: window._contracts.content[9],
+          APP_NC: window._contracts.content[10],
+          NP_NC: window._contracts.content[11],
+          RCLR: window._contracts.content[12],
+        }
 
+        return console.log("contracts: ", window.contracts)
     };
 
     this.acctChanger = async () => {//Handle an address change, update state accordingly
@@ -66,16 +63,14 @@ class Main extends Component {
         _web3.eth.getAccounts().then((e) => 
         {
           window.addr = e[0];
-          return self.setState({ addr: e[0] })});
+          self.setState({addr: e[0]})
+        });
       });
-      /*   if (self.state.addr !== this.state.owner) {
-          self.setState({ isOwner: false });
-        } */
-      self.setState({ isOwner: false });
     };
     //Component state declaration
 
     this.state = {
+      IPFS: require("ipfs-mini"),
       isSTOROwner: undefined,
       isBPPOwner: undefined,
       isBPNPOwner: undefined,
@@ -113,7 +108,14 @@ class Main extends Component {
     this.setState({ web3: _web3 });
     window.web3 = _web3;
     ethereum.enable();
-    _web3.eth.getAccounts().then((e) => window.addr = e[0]);
+    var _ipfs = new this.state.IPFS({
+      host: "ipfs.infura.io",
+      port: 5001,
+      protocol: "https",
+    });
+    window.ipfs = _ipfs
+    //console.log(window.ipfs)
+    _web3.eth.getAccounts().then((e) => {this.state.addr = e[0]; window.addr = e[0]});
     document.addEventListener("accountListener", this.acctChanger());
   }
 
@@ -128,21 +130,6 @@ class Main extends Component {
 
   componentDidUpdate() {//stuff to do when state updates
 
-    /* if (this.state.addr > 0 && this.state.assetClass === undefined && this.state.APP !== "") {
-      for (let i = 0; i < 5; i++) {
-        //this.getAssetClass();
-      }
-    }  */
-
-   /*  console.log(window.contracts) */
-
-    /* if (this.state.web3 !== null) {
-      this.getOwner();
-    } */
-
-    if (this.state.web3 !== null && window.contracts > 0) {
-      //this.getContracts();
-    }
   }
 
   componentWillUnmount() {//stuff do do when component unmounts from the window
@@ -152,15 +139,10 @@ class Main extends Component {
   }
 
   render() {//render continuously produces an up-to-date stateful document  
-    /* const toggleAdmin = () => {
-      if (this.state.isSTOROwner || this.state.isBPPOwner || this.state.isBPNPOwner) {
-        if (this.state.ownerMenu === false) {
-          this.setState({ ownerMenu: true });
-        } else {
-          this.setState({ ownerMenu: false });
-        }
-      }
-    }; */
+
+    if (this.state.hasError === true){
+      return(<div> Error Occoured. Try reloading the page. </div>)
+    }
 
     return (
       <HashRouter>
@@ -168,12 +150,12 @@ class Main extends Component {
           <div className="imageForm">
             <img src={require("./BP Logo.png")} alt="Bulletproof Logo" />
             <div className="userData">
-              {window.addr > 0 && (
+              {this.state.addr > 0 && (
                 <div className="banner">
-                  Currently serving :{window.addr}
+                  Currently serving :{this.state.addr}
                 </div>
               )}
-              {window.addr === undefined && (
+              {this.state.addr === undefined && (
                 <div className="banner">
                   Currently serving: NOBODY! Log into web3 provider!
                 </div>
@@ -183,7 +165,7 @@ class Main extends Component {
           <div className="BannerForm">
             <div className="page">
               <ul className="header">
-                {window.contracts !== undefined && (
+                {window._contracts !== undefined && (
                   <nav>
                     <li>
                       <NavLink exact to="/">
@@ -220,9 +202,9 @@ class Main extends Component {
                     <li>
                       <NavLink to="/manage-escrow">Escrow</NavLink>
                     </li>
-                    <li>
+                    {/* <li>
                       <NavLink to="/the-works">THE WORKS</NavLink>
-                    </li>
+                    </li> */}
                   </nav>
                 )}
 
@@ -279,7 +261,7 @@ class Main extends Component {
                 <Route path="/set-costs" component={SetCosts} />
                 <Route path="/add-contract" component={AddContract} />
                 <Route path="/ownership" component={Ownership} /> */}
-                <Route path="/the-works" component={THEWORKS} />
+                {/* <Route path="/the-works" component={THEWORKS} /> */}
               </div>
             </div>
           </div>

@@ -1,49 +1,13 @@
 import React, { Component } from "react";
-import RCFJ from "./RetrieveContractsFromJSON"
-import Web3 from "web3";
 import Form from "react-bootstrap/Form";
 import Button from "react-bootstrap/Button";
 import Col from "react-bootstrap/Col";
-
-let contracts;
-
-async function setupContractEnvironment(_web3) {
-    contracts = window.contracts;
-}
 
 class SetCosts extends Component {
   constructor(props) {
     super(props);
 
     //State declaration.....................................................................................................
-
-    this.getContracts = async () => {
-          const self = this;
-          let contracts = await RCFJ
-          self.setState({STOR: contracts.content[0]});
-          self.setState({APP: contracts.content[1]});
-          self.setState({NP: contracts.content[2]});
-          self.setState({AC_MGR: contracts.content[3]});
-          self.setState({AC_TKN: contracts.content[4]});
-          self.setState({A_TKN: contracts.content[5]});
-          self.setState({ECR_MGR: contracts.content[6]});
-          self.setState({ECR: contracts.content[7]});
-          self.setState({ECR2: contracts.content[8]});
-          self.setState({ECR_NC: contracts.content[9]});
-          self.setState({APP_NC: contracts.content[10]});
-          self.setState({NP_NC: contracts.content[11]});
-          self.setState({RCLR: contracts.content[12]});
-    };
-
-    this.acctChanger = async () => {//Handle an address change, update state accordingly
-      const ethereum = window.ethereum;
-      const self = this;
-      var _web3 = require("web3");
-      _web3 = new Web3(_web3.givenProvider);
-      ethereum.on("accountsChanged", function (accounts) {
-        _web3.eth.getAccounts().then((e) => self.setState({ addr: e[0] }));
-      });
-    };
 
     //Component state declaration
 
@@ -63,51 +27,31 @@ class SetCosts extends Component {
       cost4: 0,
       cost5: 0,
       forceModCost: 0,
-      APP: "",
-      NP: "",
-      STOR: "",
-      AC_MGR: "",
-      ECR_NC: "",
-      ECR_MGR: "",
-      AC_TKN: "",
-      A_TKN: "",
-      APP_NC: "",
-      NP_NC: "",
-      ECR2: "",
-      NAKED: "",
-      RCLR: "",
+ 
     };
   }
 
   //component state-change events......................................................................................................
 
   componentDidMount() {//stuff to do when component mounts in window
-    var _web3 = require("web3");
-    _web3 = new Web3(_web3.givenProvider);
-    setupContractEnvironment(_web3);
-    this.setState({ web3: _web3 });
-    _web3.eth.getAccounts().then((e) => this.setState({ addr: e[0] }));
-    document.addEventListener("accountListener", this.acctChanger());
+  
   }
 
   componentWillUnmount() {//stuff do do when component unmounts from the window
-    //console.log("unmounting component")
-    document.removeEventListener("accountListener", this.acctChanger());
+
   }
 
   componentDidUpdate(){//stuff to do when state updates
-    if(this.state.web3 !== null && this.state.web3 !== undefined && this.state.STOR < 1){
-      this.getContracts();
-    }
+
   }
 
   render() {//render continuously produces an up-to-date stateful document  
     const self = this;
 
     const setCosts = () => {
-      this.state.STOR.methods
+      window.contracts.STOR.methods
         .ACTH_setCosts(
-          this.state.assetClass,
+          window.assetClass,
           this.state.newRecordCost,
           this.state.transferRecordCost,
           this.state.createNoteCost,
@@ -117,7 +61,7 @@ class SetCosts extends Component {
           this.state.paymentAddr
         )
 
-        .send({ from: this.state.addr })
+        .send({ from: window.addr })
         .on("error", function (_error) {
           self.setState({ error: _error });
           self.setState({ result: _error.transactionHash });
@@ -136,14 +80,14 @@ class SetCosts extends Component {
     return (
       <div>
         <Form className="SCForm">
-          {this.state.addr === undefined && (
+          {window.addr === undefined && (
             <div className="VRresults">
-              <h2>WARNING!</h2>
-              Injected web3 not connected to form!
+              <h2>User address unreachable</h2>
+              Please connect web3 provider.
             </div>
           )}
 
-          {this.state.addr > 0 && (
+          {window.addr > 0 && (
             <div>
               <h2 className="Headertext">Set Function Costs</h2>
               <br></br>

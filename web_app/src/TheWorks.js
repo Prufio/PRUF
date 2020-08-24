@@ -1,18 +1,8 @@
 import React, { Component } from "react";
-import RCFJ from "./RetrieveContractsFromJSON"
-import Web3 from "web3";
 import Form from "react-bootstrap/Form";
 import Col from "react-bootstrap/Col";
 import Button from "react-bootstrap/Button";
-import bs58 from "bs58";
-import returnManufacturers from "./Manufacturers";
-import returnTypes from "./Types";
 
-let contracts;
-
-async function setupContractEnvironment(_web3) {
-    contracts = window.contracts;
-}
 
 class THEWORKS extends Component {
   constructor(props) {
@@ -20,81 +10,10 @@ class THEWORKS extends Component {
 
     //State declaration.....................................................................................................
 
-    this.getCosts = async () => {//under the condition that prices are not stored in state, get prices from STOR
-      const self = this;
-      if (self.state.costArray[0] > 0 || self.state.AC_MGR === "" || self.state.assetClass === undefined) {
-      } else {
-        for (var i = 0; i < 1; i++) {
-          self.state.AC_MGR.methods
-            .retrieveCosts(self.state.assetClass)
-            .call({ from: self.state.addr }, function (_error, _result) {
-              if (_error) {
-              } else {
-                /* console.log("_result: ", _result); */ if (
-                  _result !== undefined
-                ) {
-                  self.setState({ costArray: Object.values(_result) });
-                }
-              }
-            });
-        }
-      }
-    };
-
-    /* this.getAssetClass = async () => {//under the condition that asset class has not been retrieved and stored in state, get it from user data
-      const self = this;
-      //console.log("getting asset class");
-      if (self.state.assetClass > 0 || self.state.AC_MGR === "") {
-      } else {
-        self.state.AC_MGR.methods
-          .getUserExt(self.state.web3.utils.soliditySha3(self.state.addr))
-          .call({ from: self.state.addr }, function (_error, _result) {
-            if (_error) {console.log(_error)
-            } else {
-               console.log("_result: ", _result);  if (_result !== undefined ) {
-                self.setState({ assetClass: Object.values(_result)[1] });
-              }
-            }
-          });
-    }
-    }; */
-
-    this.getContracts = async () => {
-          const self = this;
-          self.setState({STOR: contracts.content[0]});
-          self.setState({APP: contracts.content[1]});
-          self.setState({NP: contracts.content[2]});
-          self.setState({AC_MGR: contracts.content[3]});
-          self.setState({AC_TKN: contracts.content[4]});
-          self.setState({A_TKN: contracts.content[5]});
-          self.setState({ECR_MGR: contracts.content[6]});
-          self.setState({ECR: contracts.content[7]});
-          self.setState({ECR2: contracts.content[8]});
-          self.setState({ECR_NC: contracts.content[9]});
-          self.setState({APP_NC: contracts.content[10]});
-          self.setState({NP_NC: contracts.content[11]});
-          self.setState({RCLR: contracts.content[12]});
-    };
-
-    this.acctChanger = async () => {//Handle an address change, update state accordingly
-      const ethereum = window.ethereum;
-      const self = this;
-      var _web3 = require("web3");
-      _web3 = new Web3(_web3.givenProvider);
-      ethereum.on("accountsChanged", function (accounts) {
-        _web3.eth.getAccounts().then((e) => self.setState({ addr: e[0] }));
-        self.setState({assetClass: undefined})
-        self.setState({costArray: [0]})
-      });
-    };
-
-    //Component state declaration
-
     this.state = {
       addr: "",
       lookupIPFS1: "",
       lookupIPFS2: "",
-      IPFS: require("ipfs-mini"),
       hashPath: "",
       error: undefined,
       NRerror: undefined,
@@ -108,7 +27,6 @@ class THEWORKS extends Component {
       countDown:"555",
       ipfs1: "a",
       txHash: "",
-      txStatus: false,
 
       status: "1",
       boolBuddy: false,
@@ -130,20 +48,6 @@ class THEWORKS extends Component {
       newId: "b",
       newSecret: "b",
 
-      web3: null,
-      APP: "",
-      NP: "",
-      STOR: "",
-      AC_MGR: "",
-      ECR_NC: "",
-      ECR_MGR: "",
-      AC_TKN: "",
-      A_TKN: "",
-      APP_NC: "",
-      NP_NC: "",
-      ECR2: "",
-      NAKED: "",
-      RCLR: "",
       txStatus: null,
     };
   }
@@ -151,45 +55,24 @@ class THEWORKS extends Component {
   //component state-change events......................................................................................................
 
   componentDidMount() {//stuff to do when component mounts in window
-    var _web3 = require("web3");
-    _web3 = new Web3(_web3.givenProvider);
-    setupContractEnvironment(_web3);
-    this.setState({ web3: _web3 });
-    _web3.eth.getAccounts().then((e) => this.setState({ addr: e[0] }));
-    document.addEventListener("accountListener", this.acctChanger());
-    let _type = String(Math.round(Math.random()*100000000));
+    let idxSeed = String(Math.round(Math.random()*100000000));
 
-    console.log("asset idx info: ", _type);
+    console.log("asset idx info: ", idxSeed);
 
-    this.setState({type: _type})
-    this.setState({manufacturer: _type})
-    this.setState({model: _type})
-    this.setState({serial: _type})
+    this.setState({type: idxSeed})
+    this.setState({manufacturer: idxSeed})
+    this.setState({model: idxSeed})
+    this.setState({serial: idxSeed})
 
     
   }
 
   componentWillUnmount() {//stuff do do when component unmounts from the window
-    this.setState({assetClass: undefined})
-    //console.log("unmounting component")
-    document.removeEventListener("accountListener", this.acctChanger());
+
   }
 
   componentDidUpdate() {//stuff to do when state updates
 
-    if(this.state.web3 !== null && this.state.APP < 1){
-      this.getContracts();
-    }
-
-    if (this.state.addr > 0 && this.state.assetClass === undefined && this.state.APP !== "") {
-        //this.getAssetClass();
-    } 
-
-    if (this.state.addr > 0) {
-      if (this.state.costArray[0] < 1) {
-        this.getCosts();
-      }
-    }
   }
   render() {//render continuously produces an up-to-date stateful document  
     const self = this;
@@ -198,7 +81,7 @@ class THEWORKS extends Component {
         const self = this;
         var idxHash;
         
-        idxHash = this.state.web3.utils.soliditySha3(
+        idxHash = window.web3.utils.soliditySha3(
           this.state.type,
           this.state.manufacturer,
           this.state.model,
@@ -206,11 +89,11 @@ class THEWORKS extends Component {
       );
   
         console.log("idxHash", idxHash);
-        console.log("addr: ", this.state.addr);
+        console.log("addr: ", window.addr);
   
-        this.state.STOR.methods
+        window.contracts.STOR.methods
           .retrieveShortRecord(idxHash)
-          .call({ from: this.state.addr }, function (_error, _result) {
+          .call({ from: window.addr }, function (_error, _result) {
             if (_error) { console.log(_error)
               self.setState({ error: _error });
               self.setState({ RRresult: 0 });
@@ -239,14 +122,14 @@ class THEWORKS extends Component {
         var idxHash;
         var rgtRaw;
         
-        idxHash = this.state.web3.utils.soliditySha3(
+        idxHash = window.web3.utils.soliditySha3(
           this.state.type,
           this.state.manufacturer,
           this.state.model,
           this.state.serial,
       );
   
-        rgtRaw = this.state.web3.utils.soliditySha3(
+        rgtRaw = window.web3.utils.soliditySha3(
           this.state.first,
           this.state.middle,
           this.state.surname,
@@ -254,15 +137,15 @@ class THEWORKS extends Component {
           this.state.secret
         );
   
-        var rgtHash = this.state.web3.utils.soliditySha3(idxHash, rgtRaw);
+        var rgtHash = window.web3.utils.soliditySha3(idxHash, rgtRaw);
   
         console.log("idxHash", idxHash);
         console.log("New rgtRaw", rgtRaw);
-        console.log("addr: ", this.state.addr);
+        console.log("addr: ", window.addr);
   
-        this.state.APP.methods
-          .$addIpfs2Note(idxHash, rgtHash, this.state.web3.utils.soliditySha3(this.state.ipfs1))
-          .send({ from: this.state.addr, value: this.state.costArray[2] })
+        window.contracts.APP.methods
+          .$addIpfs2Note(idxHash, rgtHash, window.web3.utils.soliditySha3(this.state.ipfs1))
+          .send({ from: window.addr, value: window.costs.createNoteCost })
           .on("error", function (_error) {
             // self.setState({ NRerror: _error });
             self.setState({ txHash: Object.values(_error)[0].transactionHash });
@@ -285,32 +168,32 @@ class THEWORKS extends Component {
         var idxHash;
         var rgtRaw;
         
-        idxHash = this.state.web3.utils.soliditySha3(
+        idxHash = window.web3.utils.soliditySha3(
           this.state.type,
           this.state.manufacturer,
           this.state.model,
           this.state.serial,
       );
   
-        rgtRaw = this.state.web3.utils.soliditySha3(
+        rgtRaw = window.web3.utils.soliditySha3(
           this.state.first,
           this.state.middle,
           this.state.surname,
           this.state.id,
           this.state.secret
         );
-        var rgtHash = this.state.web3.utils.soliditySha3(idxHash, rgtRaw);
-        var _ipfs1 = this.state.web3.utils.soliditySha3("LETS GOOOOOOOO");
+        var rgtHash = window.web3.utils.soliditySha3(idxHash, rgtRaw);
+        var _ipfs1 = window.web3.utils.soliditySha3("LETS GOOOOOOOO");
   
         console.log("idxHash", idxHash);
         console.log("New rgtRaw", rgtRaw);
         console.log("New rgtHash", rgtHash);
-        console.log("addr: ", this.state.addr);
+        console.log("addr: ", window.addr);
         console.log("new desc: ", _ipfs1);
   
-        this.state.NP.methods
+        window.contracts.NP.methods
           ._modIpfs1(idxHash, rgtHash, _ipfs1)
-          .send({ from: this.state.addr })
+          .send({ from: window.addr })
           .on("error", function (_error) {
             self.setState({ txHash: Object.values(_error)[0].transactionHash });
             self.setState({ txStatus: false });
@@ -332,31 +215,31 @@ class THEWORKS extends Component {
         var idxHash;
         var rgtRaw;
         
-        idxHash = this.state.web3.utils.soliditySha3(
+        idxHash = window.web3.utils.soliditySha3(
           this.state.type,
           this.state.manufacturer,
           this.state.model,
           this.state.serial,
       );
   
-        rgtRaw = this.state.web3.utils.soliditySha3(
+        rgtRaw = window.web3.utils.soliditySha3(
           this.state.first,
           this.state.middle,
           this.state.surname,
           this.state.id,
           this.state.secret
         );
-        var rgtHash = this.state.web3.utils.soliditySha3(idxHash, rgtRaw);
+        var rgtHash = window.web3.utils.soliditySha3(idxHash, rgtRaw);
   
         console.log("idxHash", idxHash);
         console.log("New rgtRaw", rgtRaw);
         console.log("New rgtHash", rgtHash);
-        console.log("addr: ", this.state.addr);
+        console.log("addr: ", window.addr);
         console.log("CountDown amt: ", this.state.countDown);
   
-        this.state.NP.methods
+        window.contracts.NP.methods
           ._decCounter(idxHash, rgtHash, this.state.countDown)
-          .send({ from: this.state.addr })
+          .send({ from: window.addr })
           .on("error", function (_error) {
             // self.setState({ NRerror: _error });
             self.setState({ txHash: Object.values(_error)[0].transactionHash });
@@ -379,30 +262,30 @@ class THEWORKS extends Component {
         var idxHash;
         var newRgtRaw;
         
-        idxHash = this.state.web3.utils.soliditySha3(
+        idxHash = window.web3.utils.soliditySha3(
           this.state.type,
           this.state.manufacturer,
           this.state.model,
           this.state.serial,
       );
   
-        newRgtRaw = this.state.web3.utils.soliditySha3(
+        newRgtRaw = window.web3.utils.soliditySha3(
           this.state.first,
           this.state.middle,
           this.state.surname,
           this.state.id,
           this.state.secret
         );
-        var newRgtHash = this.state.web3.utils.soliditySha3(idxHash, newRgtRaw);
+        var newRgtHash = window.web3.utils.soliditySha3(idxHash, newRgtRaw);
   
         console.log("idxHash", idxHash);
         console.log("New rgtRaw", newRgtRaw);
         console.log("New rgtHash", newRgtHash);
-        console.log("addr: ", this.state.addr);
+        console.log("addr: ", window.addr);
   
-        this.state.APP.methods
+        window.contracts.APP.methods
           .$forceModRecord(idxHash, newRgtHash)
-          .send({ from: this.state.addr, value: this.state.costArray[5] })
+          .send({ from: window.addr, value: window.costs.forceTransferCost })
           .on("error", function (_error) {
             // self.setState({ NRerror: _error });
             self.setState({ txHash: Object.values(_error)[0].transactionHash });
@@ -425,39 +308,39 @@ class THEWORKS extends Component {
         var idxHash;
         var rgtRaw;
         
-        idxHash = this.state.web3.utils.soliditySha3(
+        idxHash = window.web3.utils.soliditySha3(
           this.state.type,
           this.state.manufacturer,
           this.state.model,
           this.state.serial,
       );
   
-        rgtRaw = this.state.web3.utils.soliditySha3(
+        rgtRaw = window.web3.utils.soliditySha3(
           this.state.first,
           this.state.middle,
           this.state.surname,
           this.state.id,
           this.state.secret
         );
-        var rgtHash = this.state.web3.utils.soliditySha3(idxHash, rgtRaw);
+        var rgtHash = window.web3.utils.soliditySha3(idxHash, rgtRaw);
   
-        var newRgtRaw = this.state.web3.utils.soliditySha3(
+        var newRgtRaw = window.web3.utils.soliditySha3(
           this.state.newFirst,
           this.state.newMiddle,
           this.state.newSurname,
           this.state.newId,
           this.state.newSecret
         );
-        var newRgtHash = this.state.web3.utils.soliditySha3(idxHash, newRgtRaw);
+        var newRgtHash = window.web3.utils.soliditySha3(idxHash, newRgtRaw);
   
         console.log("idxHash", idxHash);
         console.log("New rgtRaw", rgtRaw);
         console.log("New rgtHash", rgtHash);
-        console.log("addr: ", this.state.addr);
+        console.log("addr: ", window.addr);
   
-        this.state.APP.methods
+        window.contracts.APP.methods
           .$transferAsset(idxHash, rgtHash, newRgtHash)
-          .send({ from: this.state.addr, value: this.state.costArray[1] })
+          .send({ from: window.addr, value: window.costs.transferAssetCost })
           .on("error", function (_error) {
             // self.setState({ NRerror: _error });
             self.setState({ txHash: Object.values(_error)[0].transactionHash });
@@ -479,31 +362,31 @@ class THEWORKS extends Component {
         var idxHash;
         var rgtRaw;
         
-        idxHash = this.state.web3.utils.soliditySha3(
+        idxHash = window.web3.utils.soliditySha3(
           this.state.type,
           this.state.manufacturer,
           this.state.model,
           this.state.serial,
       );
   
-        rgtRaw = this.state.web3.utils.soliditySha3(
+        rgtRaw = window.web3.utils.soliditySha3(
           this.state.first,
           this.state.middle,
           this.state.surname,
           this.state.id,
           this.state.secret
         );
-        var rgtHash = this.state.web3.utils.soliditySha3(idxHash, rgtRaw);
+        var rgtHash = window.web3.utils.soliditySha3(idxHash, rgtRaw);
   
         console.log("idxHash", idxHash);
         console.log("New rgtRaw", rgtRaw);
         console.log("New rgtHash", rgtHash);
-        console.log("addr: ", this.state.addr);
+        console.log("addr: ", window.addr);
   
 
-        this.state.NP.methods
+        window.contracts.NP.methods
           ._modStatus(idxHash, rgtHash, this.state.status)
-          .send({ from: this.state.addr })
+          .send({ from: window.addr })
           .on("error", function (_error) {
             // self.setState({ NRerror: _error });
             self.setState({ txHash: Object.values(_error)[0].transactionHash });
@@ -526,28 +409,28 @@ class THEWORKS extends Component {
         var idxHash;
         var rgtRaw;
         
-        idxHash = this.state.web3.utils.soliditySha3(
+        idxHash = window.web3.utils.soliditySha3(
           this.state.type,
           this.state.manufacturer,
           this.state.model,
           this.state.serial,
       );
   
-        rgtRaw = this.state.web3.utils.soliditySha3(
+        rgtRaw = window.web3.utils.soliditySha3(
           this.state.first,
           this.state.middle,
           this.state.surname,
           this.state.id,
           this.state.secret
         );
-        var rgtHash = this.state.web3.utils.soliditySha3(idxHash, rgtRaw);
+        var rgtHash = window.web3.utils.soliditySha3(idxHash, rgtRaw);
   
         console.log("idxHash", idxHash);
-        console.log("addr: ", this.state.addr);
+        console.log("addr: ", window.addr);
   
-        this.state.STOR.methods
+        window.contracts.STOR.methods
           ._verifyRightsHolder(idxHash, rgtHash)
-          .call({ from: this.state.addr }, function (_error, _result) {
+          .call({ from: window.addr }, function (_error, _result) {
             if (_error) {
               self.setState({ error: _error });
               self.setState({ result: 0 });
@@ -558,9 +441,9 @@ class THEWORKS extends Component {
             }
           });
   
-        this.state.STOR.methods
+          window.contracts.STOR.methods
           .blockchainVerifyRightsHolder(idxHash, rgtHash)
-          .send({ from: this.state.addr })
+          .send({ from: window.addr })
           .on("error", function (_error) {
             // self.setState({ NRerror: _error });
             self.setState({ txHash: Object.values(_error)[0].transactionHash });
@@ -582,7 +465,7 @@ class THEWORKS extends Component {
       var idxHash;
       var rgtRaw;
       
-      idxHash = this.state.web3.utils.soliditySha3(
+      idxHash = window.web3.utils.soliditySha3(
           this.state.type,
           this.state.manufacturer,
           this.state.model,
@@ -590,7 +473,7 @@ class THEWORKS extends Component {
       );
 
 
-      rgtRaw = this.state.web3.utils.soliditySha3(
+      rgtRaw = window.web3.utils.soliditySha3(
         this.state.first,
         this.state.middle,
         this.state.surname,
@@ -598,23 +481,23 @@ class THEWORKS extends Component {
         this.state.secret
       );
 
-      var rgtHash = this.state.web3.utils.soliditySha3(idxHash, rgtRaw);
+      var rgtHash = window.web3.utils.soliditySha3(idxHash, rgtRaw);
 
       console.log("idxHash", idxHash);
       console.log("New rgtRaw", rgtRaw);
       console.log("New rgtHash", rgtHash);
-      console.log("addr: ", this.state.addr);
-      console.log(this.state.assetClass);
+      console.log("addr: ", window.addr);
+      console.log(window.assetClass);
 
-      this.state.APP.methods
+      window.contracts.APP.methods
         .$newRecord(
           idxHash,
           rgtHash,
-          this.state.assetClass,
+          window.assetClass,
           this.state.countDownStart,
-          this.state.web3.utils.soliditySha3(this.state.ipfs1)
+          window.web3.utils.soliditySha3(this.state.ipfs1)
         )
-        .send({ from: this.state.addr, value: this.state.costArray[0]})
+        .send({ from: window.addr, value: window.costs.newRecordCost})
         .on("error", function (_error) {
           // self.setState({ NRerror: _error });
           self.setState({ txHash: Object.values(_error)[0].transactionHash });
@@ -632,7 +515,7 @@ class THEWORKS extends Component {
     };
 
     const batchTest = () => {
-        if(this.state.APP !== ""){
+        if(window.contracts.APP !== ""){
             _newRecord();
         }
         else{
@@ -641,18 +524,18 @@ class THEWORKS extends Component {
 
     return (
       <div>
-          {this.state.addr === undefined && (
+          {window.addr === undefined && (
             <div className="errorResults">
-              <h2>WARNING!</h2>
-              <h3>Injected web3 not connected to form!</h3>
+              <h2>User address unreachable</h2>
+              <h3>Please connect web3 provider.</h3>
             </div>
-          )}{this.state.assetClass < 1 && (
+          )}{window.assetClass === undefined && (
             <div className="errorResults">
-              <h2>No authorized asset class detected at user address.</h2>
-              <h3>Unauthorized users do not have access to forms.</h3>
+              <h2>No asset class selected.</h2>
+              <h3>Please select asset class in home page to use forms.</h3>
             </div>
           )}
-          {this.state.addr > 0 && this.state.assetClass > 0 &&(
+          {window.addr > 0 && window.assetClass > 0 &&(
             <div>
                 
             <Form className="TWform">

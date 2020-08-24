@@ -8,17 +8,45 @@ class Home extends Component {
   constructor(props) {
     super(props);
 
+    this.getCosts = async () => {
+      //console.log("Getting cost array");
+      await window.contracts.AC_MGR.methods
+      .retrieveCosts(window.assetClass)
+      .call({from: window.addr}, (_error, _result) => {
+        if (_error){console.log("Error: ", _error)}
+        else {
+          //console.log("result in getCosts: ", Object.values(_result));
+          window.costArray = Object.values(_result)
+        }
+      })
+      //console.log("before setting window-level costs")
+      window.costs = {
+        newRecordCost: window.costArray[0],
+        transferAssetCost: window.costArray[1],
+        createNoteCost: window.costArray[2],
+        remintAssetCost: window.costArray[3],
+        importAssetCost: window.costArray[4],
+        forceTransferCost: window.costArray[5],
+        beneficiaryAddress: window.costArray[6]
+      }
+      //console.log("window costs object: ", window.costs);
+      //console.log("this should come last");
+    }
+
     this._checkCreds = () => {
-      console.log(window.contracts.content[3]);
-      console.log(window.web3)
-      console.log(window.addr)
-      console.log(window.assetClass)
-      window.contracts.content[3].methods
+      //console.log(window.contracts.AC_MGR);
+      //console.log(window.web3)
+      //console.log(window.addr)
+      //console.log(window.assetClass)
+      window.contracts.AC_MGR.methods
       .getUserType(window.web3.utils.soliditySha3(window.addr), window.assetClass)
       .call({from: window.addr}, (_error, _result) => {
         if(_error){console.log("Error: ", _error)}
-        else{this.setState({authLevel: _result})
-            console.log(_result)
+        else{
+          if (_result === "0"){this.setState({authLevel: "Standard User (read-only access)"})}
+          else if(_result === "1"){this.setState({authLevel: "Administrator"})}
+          else if(_result === "9"){this.setState({authLevel: "Robot"})}
+            //console.log(_result)
         }
       }); 
     }
@@ -46,23 +74,24 @@ class Home extends Component {
   }
 
   componentDidMount() {
-    console.log(window)
 
   }
 
   componentDidUpdate() {
-    if(window.contracts > 0){
-      this.getContracts();
-    }
+
   }
 
   render() {
 
     
     const _setAC = async () => {
+      if(this.state.assetClass === "0"){window.assetClass = undefined; return this.forceUpdate()}
+      else{
       window.assetClass = this.state.assetClass;
-      this._checkCreds();
+      await this._checkCreds();
+      await this.getCosts();
       return this.forceUpdate()
+      }
     }
 
     return (
@@ -76,8 +105,8 @@ class Home extends Component {
         </p>
         <p> V 0.2.3</p>
 
-    <div> {window.assetClass > 0 && (<div>You are in asset class {window.assetClass} as {this.state.authLevel}</div>)}</div>
-        {window.contracts !== undefined && (
+    <div> {window.assetClass > 0 && (<div>Operating in asset class {window.assetClass} as {this.state.authLevel}</div>)}</div>
+        {window._contracts !== undefined && (
           <div>
           <Form.Group as={Col} controlId="formGridAC">
           <Form.Label className="formFont">Input desired asset class index # : </Form.Label>
@@ -103,7 +132,7 @@ class Home extends Component {
         </Form.Row>
         </div>
         )}
-        {window.contracts === undefined && (<div> <Form.Row><h1>Connecting to the blockchain...</h1></Form.Row></div>)}
+        {window._contracts === undefined && (<div> <Form.Row><h1>Connecting to the blockchain...</h1></Form.Row></div>)}
       </div>
     );
   }
