@@ -36,8 +36,8 @@ contract NAKED is CORE {
 
     function mintNakedAsset(
         bytes32 _idxHash,
-        bytes32 _hashedAuthCode, // token URI needs to be K256(packed( uint256 assetClass, string authCode)) supplied off chain
-        uint256 _assetClass
+        bytes32 _hashedAuthCode, // token URI needs to be K256(packed( uint32 assetClass, string authCode)) supplied off chain
+        uint32 _assetClass
     ) external nonReentrant whenNotPaused {
         uint256 tokenId = uint256(_idxHash);
         Record memory rec = getRecord(_idxHash);
@@ -47,20 +47,20 @@ contract NAKED is CORE {
             (AC_TKN.ownerOf(_assetClass) == msg.sender), //msg.sender is AC token holder
             "N:MNA:Caller does not hold AC token"
         );
-        require(userType == 10,"N:MNA:user not authorized to mint naked assets");
         require(
-            A_TKN.tokenExists(tokenId) == 0,
-            "N:MNA: Token already exists"
+            userType == 10,
+            "N:MNA:user not authorized to mint naked assets"
         );
         require(
-            rec.assetClass == 0,    //verified as non-redundant
+            rec.assetClass == 0, //verified as VALID
             "N:MNA: Asset already registered in system"
         );
         //^^^^^^^checks^^^^^^^^^
         string memory tokenURI;
-        bytes32 b32URI = keccak256(abi.encodePacked(_hashedAuthCode, _assetClass));
+        bytes32 b32URI = keccak256(
+            abi.encodePacked(_hashedAuthCode, _assetClass)
+        );
         tokenURI = uint256toString(uint256(b32URI));
-
 
         A_TKN.mintAssetToken(address(this), tokenId, tokenURI); //mint a naked token
 
@@ -73,32 +73,24 @@ contract NAKED is CORE {
     function $claimNakedAsset(
         bytes32 _idxHash,
         string calldata _authCode,
-        uint256 _newAssetClass,
+        uint32 _newAssetClass,
         bytes32 _rgtHash,
-        uint256 _countDownStart
+        uint32 _countDownStart
     ) external payable nonReentrant whenNotPaused {
         uint256 tokenId = uint256(_idxHash);
-        Record memory rec = getRecord(_idxHash);
-        ContractDataHash memory contractInfo = getContractInfo(
-            address(this),
-            rec.assetClass
-        );
+        // Record memory rec = getRecord(_idxHash);
+        // ContractDataHash memory contractInfo = getContractInfo(
+        //     address(this),
+        //     rec.assetClass
+        // );
 
         require(
             A_TKN.ownerOf(tokenId) == address(this),
-            "PNP:INA: Token not found in PRUF_NAKED"
+            "N:CNA: Token not found in PRUF_NAKED"
         );
-        require(
-            contractInfo.contractType > 0,
-            "PNP:INA: This contract not authorized for specified AC"
-        );
-        // require( //redundant
-        //     rec.assetClass == 0,
-        //     "PNP:INA: Asset already registered in system"
-        // );
         //^^^^^^^checks^^^^^^^^^
 
-        A_TKN.validateNakedToken(tokenId, _newAssetClass, _authCode); //Verify supplied data matches tokenURI
+        A_TKN.validateNakedToken(tokenId, _newAssetClass, _authCode); //check supplied data matches tokenURI
 
         STOR.newRecord(_idxHash, _rgtHash, _newAssetClass, _countDownStart); // Make a new record at the tokenId b32
 
@@ -110,7 +102,6 @@ contract NAKED is CORE {
 
         //^^^^^^^interactions / effects^^^^^^^^^^^^
     }
-
 
     function uint256toString(uint256 number)
         public
@@ -140,8 +131,7 @@ contract NAKED is CORE {
         return string(buffer);
     }
 
-
-    function deductImportRecordCosts(uint256 _assetClass)
+    function deductImportRecordCosts(uint32 _assetClass)
         internal
         whenNotPaused
     {

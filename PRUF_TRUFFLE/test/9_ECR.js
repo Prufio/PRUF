@@ -9,7 +9,6 @@
     const PRUF_AC_MGR = artifacts.require('AC_MGR');
     const PRUF_AC_TKN = artifacts.require('AC_TKN');
     const PRUF_A_TKN = artifacts.require('A_TKN');
-    const PRUF_A_TKN2 = artifacts.require('A_TKN2');
     const PRUF_ECR_MGR = artifacts.require('ECR_MGR');
     const PRUF_ECR = artifacts.require('ECR');
     const PRUF_ECR2 = artifacts.require('ECR2');
@@ -27,7 +26,6 @@
     let AC_MGR;
     let AC_TKN;
     let A_TKN;
-    let A_TKN2;
     let ECR_MGR;
     let ECR;
     let ECR2;
@@ -43,6 +41,8 @@
     let string3Hash;
     let string4Hash;
     let string5Hash;
+
+    let ECR_MGRHASH;
     
     let asset1;
     let asset2;
@@ -77,6 +77,7 @@
 
     let nakedAuthCode1;
     let nakedAuthCode3;
+    let nakedAuthCode7;
     
         //
         //
@@ -224,13 +225,6 @@
         ECR2 = PRUF_ECR2_TEST;
     })
 
-
-    it('Should deploy PRUF_A_TKN2', async () => {
-        const PRUF_A_TKN2_TEST = await PRUF_A_TKN2.deployed({ from: account1 });
-        console.log(PRUF_A_TKN2_TEST.address);
-        assert(PRUF_A_TKN2_TEST.address !== '')
-        A_TKN2 = PRUF_A_TKN2_TEST;
-    })
 
     it('Should deploy PRUF_MAL_APP', async () => {
         const PRUF_MAL_APP_TEST = await PRUF_MAL_APP.deployed({ from: account1 });
@@ -421,14 +415,19 @@
         )
 
 
-        nakedAuthCode1 = await Helper.getURIfromAuthcode(
+        nakedAuthCode1 = await Helper.getURIb32fromAuthcode(
             '15',
             '1'
         )
 
-        nakedAuthCode3 = await Helper.getURIfromAuthcode(
+        nakedAuthCode3 = await Helper.getURIb32fromAuthcode(
             '15',
             '3'
+        )
+
+        nakedAuthCode7 = await Helper.getURIb32fromAuthcode(
+            '15',
+            '7'
         )
 
         string1Hash = await Helper.getStringHash(
@@ -449,6 +448,11 @@
 
         string5Hash = await Helper.getStringHash(
             '5'
+        )
+
+
+        ECR_MGRHASH = await Helper.getStringHash(
+            'ECR_MGR'
         )
     })
 
@@ -476,11 +480,6 @@
             .then(() => {
                 console.log("Adding A_TKN to storage for use in AC 0")
                 return STOR.OO_addContract("A_TKN", A_TKN.address, '0', '1', { from: account1 })
-            })
-
-            .then(() => {
-                console.log("Adding A_TKN2 to storage for use in AC 0")
-                return STOR.OO_addContract("A_TKN2", A_TKN2.address, '0', '1', { from: account1 })
             })
             
             .then(() => {
@@ -515,7 +514,7 @@
 
             .then(() => {
                 console.log("Adding NAKED to storage for use in AC 0")
-                return STOR.OO_addContract("NAKED", NAKED.address, '0', '1', { from: account1 })
+                return STOR.OO_addContract("NAKED", NAKED.address, '0', '2', { from: account1 })
             })
             
             .then(() => {
@@ -558,11 +557,6 @@
             .then(() => {
                 console.log("Adding in A_TKN")
                 return A_TKN.OO_setStorageContract(STOR.address, { from: account1 })
-            })
-
-            .then(() => {
-                console.log("Adding in A_TKN2")
-                return A_TKN2.OO_setStorageContract(STOR.address, { from: account1 })
             })
             
             .then(() => {
@@ -636,11 +630,6 @@
                 console.log("Resolving in A_TKN")
                 return A_TKN.OO_ResolveContractAddresses({ from: account1 })
             })
-
-            .then(() => {
-                console.log("Resolving in A_TKN2")
-                return A_TKN2.OO_ResolveContractAddresses({ from: account1 })
-            })
             
             .then(() => {
                 console.log("Resolving in ECR_MGR")
@@ -686,11 +675,11 @@
     it('Should mint a couple of asset root tokens', async () => {
 
         console.log("Minting root token 1 -C")
-        return AC_MGR.createAssetClass('1', account1, 'CUSTODIAL_ROOT', '1', '1', '3', { from: account1 })
+        return AC_MGR.createAssetClass(account1, 'CUSTODIAL_ROOT', '1', '1', '3', { from: account1 })
 
             .then(() => {
                 console.log("Minting root token 2 -NC")
-                return AC_MGR.createAssetClass('2', account1, 'NON-CUSTODIAL_ROOT', '2', '2', '3', { from: account1 })
+                return AC_MGR.createAssetClass(account1, 'NON-CUSTODIAL_ROOT', '2', '2', '3', { from: account1 })
             })
     })
 
@@ -698,21 +687,21 @@
     it("Should Mint 2 cust and 2 non-cust AC tokens in AC_ROOT 1", async () => {
         
         console.log("Minting AC 10 -C")
-        return AC_MGR.createAssetClass("10", account1, "Custodial_AC1", "10", "1", "1", { from: account1 })
+        return AC_MGR.createAssetClass(account1, "Custodial_AC1", "10", "1", "1", { from: account1 })
 
             .then(() => {
                 console.log("Minting AC 11 -C")
-                return AC_MGR.createAssetClass("11", account1, "Custodial_AC2", "11", "1", "1", { from: account1 })
+                return AC_MGR.createAssetClass(account1, "Custodial_AC2", "11", "1", "1", { from: account1 })
             })
             
             .then(() => {
                 console.log("Minting AC 12 -NC")
-                return AC_MGR.createAssetClass("12", account1, "Non-Custodial_AC1", "12", "1", "2", { from: account1 })
+                return AC_MGR.createAssetClass(account1, "Non-Custodial_AC1", "12", "1", "2", { from: account1 })
             })
             
             .then(() => {
                 console.log("Minting AC 13 -NC")
-                return AC_MGR.createAssetClass("13", account1, "Non-Custodial_AC2", "13", "1", "2", { from: account1 })
+                return AC_MGR.createAssetClass(account1, "Non-Custodial_AC2", "13", "1", "2", { from: account1 })
             })
     })
 
@@ -720,11 +709,11 @@
     it("Should Mint 2 non-cust AC tokens in AC_ROOT 2", async () => {
         
         console.log("Minting AC 14 -NC")
-        return AC_MGR.createAssetClass("14", account1, "Non-Custodial_AC3", "14", "2", "2", { from: account1 })
+        return AC_MGR.createAssetClass(account1, "Non-Custodial_AC3", "14", "2", "2", { from: account1 })
 
             .then(() => {
                 console.log("Minting AC 15 -NC")
-                return AC_MGR.createAssetClass("15", account10, "Non_Custodial_AC4", "15", "2", "2", { from: account1 })
+                return AC_MGR.createAssetClass(account10, "Non_Custodial_AC4", "15", "2", "2", { from: account1 })
             })
     })
 
@@ -941,41 +930,6 @@
             
             .then(() => {
                 return STOR.enableContractForAC('A_TKN', '2', '1', { from: account1 })
-            })
-    })
-
-
-    it('Should authorize A_TKN2 in all relevant asset classes', async () => {
-        
-        console.log("Authorizing A_TKN2")
-        return STOR.enableContractForAC('A_TKN2', '10', '1', { from: account1 })
-            
-            .then(() => {
-                return STOR.enableContractForAC('A_TKN2', '11', '1', { from: account1 })
-            })
-            
-            .then(() => {
-                return STOR.enableContractForAC('A_TKN2', '12', '2', { from: account1 })
-            })
-            
-            .then(() => {
-                return STOR.enableContractForAC('A_TKN2', '13', '2', { from: account1 })
-            })
-            
-            .then(() => {
-                return STOR.enableContractForAC('A_TKN2', '14', '2', { from: account1 })
-            })
-
-            .then(() => {
-                return STOR.enableContractForAC('A_TKN2', '15', '2', { from: account10 })
-            })
-            
-            .then(() => {
-                return STOR.enableContractForAC('A_TKN2', '1', '1', { from: account1 })
-            })
-            
-            .then(() => {
-                return STOR.enableContractForAC('A_TKN2', '2', '1', { from: account1 })
             })
     })
 
@@ -1361,19 +1315,39 @@
     })
 
 
-    it('Should make ECR unatuhorized', async () => {
+    it('Should write asset6 in AC 12', async () => {
+        return APP_NC.$newRecord(
+        asset6,
+        rgt6,
+        '12',
+        '100',
+        {from: account4, value: 20000000000000000}
+        )
+    })
+
+    //1
+    it('Should fail becasue custodial contract does not hold token', async () => {
 
         console.log("//**************************************END ECR SETUP**********************************************/")
         console.log("//**************************************BEGIN ECR FAIL BATCH**********************************************/")
         console.log("//**************************************BEGIN setEscrow FAIL BATCH**********************************************/")
-        
-            console.log("unAuthorizing ECR")
-            return STOR.enableContractForAC('ECR', '10', '1', { from: account1 })
+        return ECR.setEscrow(
+            asset6,
+            account4Hash,
+            '180',
+            '6',
+            {from: account4}
+            )
+                
+    })
+
+
+    it('Should make ECR unatuhorized', async () => {
+            return STOR.enableContractForAC('ECR', '10', '0', { from: account1 })
                 
                 .then(() => {
-                    return STOR.enableContractForAC('ECR', '11', '1', { from: account1 })
+                    return STOR.enableContractForAC('ECR', '11', '0', { from: account1 })
                 })
-                
     })
 
 
@@ -1386,7 +1360,7 @@
         )
     })
 
-    //1
+    //2
     it('Should fail because ECR is not an authorized escrow contract', async () => {
         return ECR.setEscrow(
         asset1, 
@@ -1404,20 +1378,19 @@
                 
                 .then(() => {
                     return STOR.enableContractForAC('ECR', '11', '3', { from: account1 })
-                })
-                
+                })  
     })
 
-    //2
-    it('Should fail because record does not exist', async () => {
-        return ECR.setEscrow(
-        asset10, 
-        account2Hash,
-        '180',
-        '6',
-        {from: account2}
-        )
-    })
+    // //2
+    // it('Should fail because record does not exist', async () => {
+    //     return ECR.setEscrow(
+    //     asset10, 
+    //     account2Hash,
+    //     '180',
+    //     '6',
+    //     {from: account2}
+    //     )
+    // })
 
     //3
     it('Should fail because user not authorized in AC', async () => {
@@ -1430,7 +1403,7 @@
         )
     })
 
-    //4
+    //4                                                                                  //THROWS IN SAFEMATH
     it('Should fail because you cannot set a time in the past', async () => {
         return ECR.setEscrow(
         asset1, 
@@ -1441,88 +1414,120 @@
         )
     })
 
+
+    it('Should auth account10 in AC 10 as robot', async () => {
+        return AC_MGR.OO_addUser(account10, '9', '10', { from: account1 })
+    })
+
     //5
-    it('Should fail because you cannot put transfered record into escrow', async () => {
+    it('Should fail because usertype > 4 cannot set escrow < 49', async () => {
         return ECR.setEscrow(
-        asset5, 
+        asset1, 
         account2Hash,
         '180',
         '6',
-        {from: account2}
+        {from: account10}
         )
+    })
+
+
+    it('Should unauth account10 in AC 10 as robot', async () => {
+        return AC_MGR.OO_addUser(account10, '1', '10', { from: account1 })
     })
 
     //6
-    it('Should fail because you cannot put stolen record into escrow', async () => {
-        return ECR.setEscrow(
-        asset3, 
-        account2Hash,
-        '180',
-        '6',
-        {from: account2}
-        )
-    })
-
-    //7
-    it('Should fail because you cannot put lost record into escrow', async () => {
-        return ECR.setEscrow(
-        asset4, 
-        account2Hash,
-        '180',
-        '6',
-        {from: account2}
-        )
-    })
-
-    it('Should put asset1 into escrow', async () => {
+    it('Should fail because you cannot set to recycled through escrow', async () => {
         return ECR.setEscrow(
         asset1, 
         account2Hash,
         '180',
-        '6',
+        '60',
         {from: account2}
         )
     })
 
-    //8
-    it('Should fail because record already in escrow', async () => {
-        return ECR.setEscrow(
-        asset1, 
-        account2Hash,
-        '180',
-        '6',
-        {from: account2}
-        )
-    })
+    // //5
+    // it('Should fail because you cannot put transfered record into escrow', async () => {
+    //     return ECR.setEscrow(
+    //     asset5, 
+    //     account2Hash,
+    //     '180',
+    //     '6',
+    //     {from: account2}
+    //     )
+    // })
+
+    // //6
+    // it('Should fail because you cannot put stolen record into escrow', async () => {
+    //     return ECR.setEscrow(
+    //     asset3, 
+    //     account2Hash,
+    //     '180',
+    //     '6',
+    //     {from: account2}
+    //     )
+    // })
+
+    // //7
+    // it('Should fail because you cannot put lost record into escrow', async () => {
+    //     return ECR.setEscrow(
+    //     asset4, 
+    //     account2Hash,
+    //     '180',
+    //     '6',
+    //     {from: account2}
+    //     )
+    // })
+
+    // it('Should put asset1 into escrow', async () => {
+    //     return ECR.setEscrow(
+    //     asset1, 
+    //     account2Hash,
+    //     '180',
+    //     '6',
+    //     {from: account2}
+    //     )
+    // })
+
+    // //8
+    // it('Should fail because record already in escrow', async () => {
+    //     return ECR.setEscrow(
+    //     asset1, 
+    //     account2Hash,
+    //     '180',
+    //     '6',
+    //     {from: account2}
+    //     )
+    // })
 
 
-    it('Should take asset1 out of escrow', async () => {
-        return ECR.endEscrow(
-        asset1,
-        {from: account2}
-        )
-    })
+    // it('Should take asset1 out of escrow', async () => {
+    //     return ECR.endEscrow(
+    //     asset1,
+    //     {from: account2}
+    //     )
+    // })
 
 
-    it('Should set asset1 into status 1', async () => {
-        return NP._modStatus(
-        asset1, 
-        rgt1,
-        '1',
-        {from: account2}
-        )
-    })
+    // it('Should set asset1 into status 1', async () => {
+    //     return NP._modStatus(
+    //     asset1, 
+    //     rgt1,
+    //     '1',
+    //     {from: account2}
+    //     )
+    // })
 
     //9
-    it('Should fail because not being set to escrow status', async () => {
-        return ECR.setEscrow(
-        asset1, 
-        account2Hash,
-        '180',
-        '1',
-        {from: account2}
-        )
-    })
+    // it('Should fail because not being set to escrow status', async () => {
+    //     return ECR.setEscrow(
+    //     asset1, 
+    //     account2Hash,
+    //     '180',
+    //     '1',
+    //     {from: account2}
+    //     )
+    // })
 
 
     // it('Should put asset1 into escrow', async () => {
@@ -1583,19 +1588,74 @@
     //     )
     // })
 
-    //10
-    it('Should fail because record does not exist', async () => {
- 
+    //7
+    it('Should fail becasue custodial contract does not hold token', async () => {
+
         console.log("//**************************************END setEscrow FAIL BATCH**********************************************/")
         console.log("//**************************************BEGIN endEscrow FAIL BATCH**********************************************/")
         return ECR.endEscrow(
-        asset10, 
+            asset6,
+            {from: account4}
+            )
+                
+    })
+
+
+    it('Should put asset1 into escrow', async () => {
+        return ECR.setEscrow(
+        asset1, 
+        account2Hash,
+        '180',
+        '6',
         {from: account2}
         )
     })
 
 
-    //11
+    it('Should make ECR unatuhorized', async () => {
+        return STOR.enableContractForAC('ECR', '10', '0', { from: account1 })  
+            .then(() => {
+                return STOR.enableContractForAC('ECR', '11', '0', { from: account1 })
+            })
+    })
+
+    //8
+    it('Should fail because ECR is not an authorized escrow contract', async () => {
+        return ECR.endEscrow(
+        asset1, 
+        {from: account2}
+        )
+    })
+
+
+    it('Should authorize ECR', async () => {
+            console.log("Authorizing ECR")
+            return STOR.enableContractForAC('ECR', '10', '3', { from: account1 })
+                
+                .then(() => {
+                    return STOR.enableContractForAC('ECR', '11', '3', { from: account1 })
+                })  
+    })
+
+
+    it('Should take asset1 out of escrow', async () => {
+        return ECR.endEscrow(
+        asset1,
+        {from: account2}
+        )
+    })
+
+
+    it('Should set asset1 into status 1', async () => {
+        return NP._modStatus(
+        asset1, 
+        rgt1,
+        '1',
+        {from: account2}
+        )
+    })
+
+    //9
     it('Should fail because user not authorized for AC', async () => {
         return ECR.endEscrow(
         asset1, 
@@ -1604,7 +1664,7 @@
     })
 
 
-    //12
+    //10
     it('Should fail because record not in escrow', async () => {
         return ECR.endEscrow(
         asset1, 
@@ -1622,7 +1682,7 @@
         )
     })
 
-    //13
+    //11
     it('Should fail usertype is not < 5', async () => {
         return ECR.endEscrow(
         asset1, 
@@ -1652,18 +1712,23 @@
     it('Should put asset1 into escrow', async () => {
         return ECR.setEscrow(
         asset1, 
-        account2Hash,
+        account4Hash,
         '180',
         '6',
         {from: account2}
         )
     })
 
-    //14
+
+    it('Should authorize account4 in AC10', async () => {
+        return AC_MGR.OO_addUser(account4, '1', '10', { from: account1 })
+    })
+
+    //12
     it('Should fail because caller != escrow owner', async () => {
         return ECR.endEscrow(
         asset1,
-        {from: account3}
+        {from: account1}
         )
     })
 
@@ -1671,16 +1736,17 @@
     it('Should take asset1 out of escrow', async () => {
         return ECR.endEscrow(
         asset1,
-        {from: account2}
+        {from: account4}
         )
     })
 
 
-    it('Should set asset1 into status 1', async () => {
+    it('Should unauthorize account4 in AC10', async () => {
+        return AC_MGR.OO_addUser(account4, '0', '10', { from: account1 })
+    })
 
-        console.log("//**************************************END endEscrow FAIL BATCH**********************************************/")
-        console.log("//**************************************END ECR FAIL BATCH**********************************************/")
-        console.log("//**************************************END ECR TEST**********************************************/")
+
+    it('Should set asset1 into status 1', async () => {
         return NP._modStatus(
         asset1, 
         rgt1,
@@ -1692,6 +1758,9 @@
 
     it('Should write record12 in AC 10', async () => {
 
+        console.log("//**************************************END endEscrow FAIL BATCH**********************************************/")
+        console.log("//**************************************END ECR FAIL BATCH**********************************************/")
+        console.log("//**************************************END ECR TEST**********************************************/")
         console.log("//**************************************BEGIN THE WORKS**********************************************/")
         return APP.$newRecord(
         asset12, 

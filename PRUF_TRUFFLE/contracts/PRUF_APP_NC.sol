@@ -36,8 +36,6 @@ contract APP_NC is CORE {
         _;
     }
 
-
-
     //--------------------------------------------External Functions--------------------------
     /*
      * @dev Create a  newRecord
@@ -45,49 +43,13 @@ contract APP_NC is CORE {
     function $newRecord(
         bytes32 _idxHash,
         bytes32 _rgtHash,
-        uint256 _assetClass,
-        uint256 _countDownStart
+        uint32 _assetClass,
+        uint32 _countDownStart
     ) external payable nonReentrant whenNotPaused {
-        //Record memory rec = getRecord(_idxHash);
         uint8 userType = getUserType(_assetClass);
-        //AC memory AC_info = getACinfo(_assetClass);
-        //AC memory oldAC_info = getACinfo(rec.assetClass);
-        ContractDataHash memory contractInfo = getContractInfo(
-            address(this),
-            _assetClass
-        );
 
-        require(
-            contractInfo.contractType > 0,
-            "ANC:NR: contract not auth in AC"
-        );
-        require(_assetClass != 0, "ANC:NR: AC = 0");                    //theoretically unneccesary
-        require(
-            userType == 1,
-            "ANC:NR: User not auth in AC"
-        );
-        require(_rgtHash != 0, "ANC:NR: rgt = 0");
-
-
-                            // using newRecord to overwrite is depricated, storage checks for pre-existing asset
-        // require( //if creating new record in new root and idxhash is identical, fail because its probably fraud
-        //     ((AC_info.assetClassRoot == oldAC_info.assetClassRoot) ||
-        //         (rec.assetClass == 0)),
-        //     "ANC:NR: Cannot re-create asset in new root AC"
-        // );
-        //^^^^^^^checks^^^^^^^^^
-
-        //bytes32 userHash = keccak256(abi.encodePacked(msg.sender));
-        //^^^^^^^effects^^^^^^^^^
-
-        // if (AC_info.assetClassRoot == oldAC_info.assetClassRoot) {
-        //     // if record exists as a "dead record" has an old AC, and is being recreated in the same root class,
-        //     // do not overwrite anything besides assetClass and rightsHolder (STOR will set assetStatus to 51)
-        //     createRecord(_idxHash, _rgtHash, _assetClass, rec.countDownStart);
-        // } else {
-        //     // Otherwise, idxHash is unuiqe and an entirely new record is created
-        //     createRecord(_idxHash, _rgtHash, _assetClass, _countDownStart);
-        // }
+        require(userType == 1, "ANC:NR: User not auth in AC");
+        //^^^^^^^Checks^^^^^^^^^
 
         createRecord(_idxHash, _rgtHash, _assetClass, _countDownStart);
 
@@ -98,7 +60,7 @@ contract APP_NC is CORE {
     /*
      * @dev Import a record into a new asset class
      */
-    function $importAsset(bytes32 _idxHash, uint256 _newAssetClass)
+    function $importAsset(bytes32 _idxHash, uint32 _newAssetClass)
         external
         payable
         nonReentrant
@@ -106,18 +68,8 @@ contract APP_NC is CORE {
         isAuthorized(_idxHash)
     {
         Record memory rec = getRecord(_idxHash);
-        ContractDataHash memory contractInfo = getContractInfo(
-            address(this),
-            _newAssetClass
-        );
-        require(
-            rec.assetStatus == 70,
-            "ANC:IA: Asset not exported"
-        );
-        require(
-            contractInfo.contractType > 0,
-            "ANC:IA: contract not auth for AC"
-        );
+
+        require(rec.assetStatus == 70, "ANC:IA: Asset not exported");
         require(
             AC_MGR.isSameRootAC(_newAssetClass, rec.assetClass) == 170,
             "ANC:IA:Cannot change AC to new root"
@@ -130,7 +82,6 @@ contract APP_NC is CORE {
         deductNewRecordCosts(_newAssetClass);
         //^^^^^^^interactions / effects^^^^^^^^^^^^
     }
-
 
     /*
      * @dev remint token with confirmation of posession of RAWTEXT hash inputs
@@ -167,7 +118,7 @@ contract APP_NC is CORE {
             isEscrow(rec.assetStatus) == 0,
             "ANC:RMT:Cannot modify asset in Escrow"
         );
-        require(
+        require(                                          //STATE UNREACHABLE
             needsImport(rec.assetStatus) == 0,
             "ANC:RMT:Record In Transferred-unregistered or discarded status"
         );
@@ -197,27 +148,9 @@ contract APP_NC is CORE {
         returns (bytes32)
     {
         Record memory rec = getRecord(_idxHash);
-        ContractDataHash memory contractInfo = getContractInfo(
-            address(this),
-            rec.assetClass
-        );
-
-        require(
-            contractInfo.contractType > 0,
-            "ANC:I2: contract not auth for AC"
-        );
-       // require((rec.assetClass != 0), "ANC:I2: Record does not exist");               //impossible, throws in storage
-        require(
-            isEscrow(rec.assetStatus) == 0,
-            "ANC:I2:Cannot modify asset in Escrow"
-        );
-        require(
+        require(                                          //STATE UNREACHABLE
             needsImport(rec.assetStatus) == 0,
             "ANC:I2:Record In Transferred, exported, or discarded status"
-        );
-        require(
-            rec.Ipfs2 == 0,
-            "ANC:I2:Ipfs2 has data already. Overwrite not permitted"
         );
         //^^^^^^^checks^^^^^^^^^
 

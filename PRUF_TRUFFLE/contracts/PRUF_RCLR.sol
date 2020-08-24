@@ -30,14 +30,14 @@ contract RCLR is ECR_CORE, CORE {
      * @dev //gets item out of recycled status -- caller is assetToken contract
      */
     function discard(bytes32 _idxHash) external nonReentrant whenNotPaused {
-        // Record memory rec = getRecord(_idxHash);
+        Record memory rec = getRecord(_idxHash);
 
-        require( // caller is assetToken contract
+        require( // caller is assetToken contract  //STATE UNREACHABLE: CANNOT MEET STATUS WITH CURRENT CONTRACTS CTS:PREFERRED,
             msg.sender == A_TKN_Address,
-            "R:D:Caller is not Asset Token Contract"                                                       //CANNOT TEST WITH CURRENT CONTRACTS, TOKEN != EXIST IN MEM OF OTHER CONTRACTS
+            "R:D:Caller is not Asset Token Contract"
         );
-        // require((rec.assetClass != 0), "R:D:Record does not exist");                                    //REDUNDANT DUE TO CALLING FUNCTION, AND CALLER == A_TKN ONLY
-        // require((rec.assetStatus == 59), "R:D:Must be in recyclable status");                           // REDUNDANT DUE TO CALLING FUNCTION, AND CALLER == A_TKN ONLY
+        require((rec.assetClass != 0), "R:D:Record does not exist");
+        require((rec.assetStatus == 59), "R:D:Must be in recyclable status");
         //^^^^^^^checks^^^^^^^^^
 
         uint256 escrowTime = block.timestamp + 3153600000000; //100,000 years in the FUTURE.........
@@ -64,36 +64,36 @@ contract RCLR is ECR_CORE, CORE {
     function $recycle(
         bytes32 _idxHash,
         bytes32 _rgtHash,
-        uint256 _assetClass
+        uint32 _assetClass
     ) external payable nonReentrant whenNotPaused {
         //bytes32 senderHash = keccak256(abi.encodePacked(msg.sender));
         uint256 tokenId = uint256(_idxHash);
         escrowData memory escrow = getEscrowData(_idxHash);
         Record memory rec = getRecord(_idxHash);
-        AC memory AC_info = getACinfo(_assetClass);
-        AC memory oldAC_info = getACinfo(rec.assetClass);
-        ContractDataHash memory contractInfo = getContractInfo(
-            address(this),
-            rec.assetClass
-        );
+        // AC memory AC_info = getACinfo(_assetClass);
+        // AC memory oldAC_info = getACinfo(rec.assetClass);
+        // ContractDataHash memory contractInfo = getContractInfo(
+        //     address(this),
+        //     rec.assetClass
+        // );
 
-        require(
-            contractInfo.contractType > 0,
-            "R:R: This contract not authorized for specified AC"
-        );
+        // require(                             //THROWS IN STORAGE
+        //     contractInfo.contractType > 0,
+        //     "R:R: This contract not authorized for specified AC"
+        // );
         require(_rgtHash != 0, "R:R:New rights holder cannot be zero");
-        require(_assetClass != 0, "R:R:Asset class cannot be zero");
-        require( //if creating new record in new root and idxhash is identical, fail because its probably fraud
-            AC_info.assetClassRoot == oldAC_info.assetClassRoot, // || (rec.assetClass == 0)),
-            "R:R:Cannot re-create asset in new root assetClass"
-        );
+        // require(_assetClass != 0, "R:R:Asset class cannot be zero");                             //THROWS IN STORAGE changeAC
+        // require( //if creating new record in new root and idxhash is identical, fail because its probably fraud                             //THROWS IN STORAGE changeAC
+        //     AC_info.assetClassRoot == oldAC_info.assetClassRoot, // || (rec.assetClass == 0)),
+        //     "R:R:Cannot re-create asset in new root assetClass"
+        // );
         require(rec.assetStatus == 60, "R:R:Asset not discarded");
         //^^^^^^^checks^^^^^^^^^
 
         rec.rightsHolder = _rgtHash;
         rec.incrementNumberOfTransfers = 170;
         //^^^^^^^effects^^^^^^^^^^^^
-        
+
         A_TKN.mintAssetToken(msg.sender, tokenId, "pruf.io");
         ECR_MGR.endEscrow(_idxHash);
         STOR.changeAC(_idxHash, _assetClass);

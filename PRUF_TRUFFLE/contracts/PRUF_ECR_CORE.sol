@@ -27,12 +27,12 @@ contract ECR_CORE is BASIC {
     using SafeMath for uint256;
 
     struct escrowData {
-        uint8 data;
         bytes32 controllingContractNameHash;
         bytes32 escrowOwnerAddressHash;
-        uint256 timelock;
         bytes32 ex1;
         bytes32 ex2;
+        uint256 timelock;
+        uint8 data;
         address addr1;
         address addr2;
     }

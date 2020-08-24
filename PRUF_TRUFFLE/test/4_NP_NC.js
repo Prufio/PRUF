@@ -41,6 +41,8 @@
     let string3Hash;
     let string4Hash;
     let string5Hash;
+
+    let ECR_MGRHASH;
     
     let asset1;
     let asset2;
@@ -447,6 +449,11 @@
         string5Hash = await Helper.getStringHash(
             '5'
         )
+
+
+        ECR_MGRHASH = await Helper.getStringHash(
+            'ECR_MGR'
+        )
     })
 
 
@@ -668,11 +675,11 @@
     it('Should mint a couple of asset root tokens', async () => {
 
         console.log("Minting root token 1 -C")
-        return AC_MGR.createAssetClass('1', account1, 'CUSTODIAL_ROOT', '1', '1', '3', { from: account1 })
+        return AC_MGR.createAssetClass(account1, 'CUSTODIAL_ROOT', '1', '1', '3', { from: account1 })
 
             .then(() => {
                 console.log("Minting root token 2 -NC")
-                return AC_MGR.createAssetClass('2', account1, 'NON-CUSTODIAL_ROOT', '2', '2', '3', { from: account1 })
+                return AC_MGR.createAssetClass(account1, 'NON-CUSTODIAL_ROOT', '2', '2', '3', { from: account1 })
             })
     })
 
@@ -680,21 +687,21 @@
     it("Should Mint 2 cust and 2 non-cust AC tokens in AC_ROOT 1", async () => {
         
         console.log("Minting AC 10 -C")
-        return AC_MGR.createAssetClass("10", account1, "Custodial_AC1", "10", "1", "1", { from: account1 })
+        return AC_MGR.createAssetClass(account1, "Custodial_AC1", "10", "1", "1", { from: account1 })
 
             .then(() => {
                 console.log("Minting AC 11 -C")
-                return AC_MGR.createAssetClass("11", account1, "Custodial_AC2", "11", "1", "1", { from: account1 })
+                return AC_MGR.createAssetClass(account1, "Custodial_AC2", "11", "1", "1", { from: account1 })
             })
             
             .then(() => {
                 console.log("Minting AC 12 -NC")
-                return AC_MGR.createAssetClass("12", account1, "Non-Custodial_AC1", "12", "1", "2", { from: account1 })
+                return AC_MGR.createAssetClass(account1, "Non-Custodial_AC1", "12", "1", "2", { from: account1 })
             })
             
             .then(() => {
                 console.log("Minting AC 13 -NC")
-                return AC_MGR.createAssetClass("13", account1, "Non-Custodial_AC2", "13", "1", "2", { from: account1 })
+                return AC_MGR.createAssetClass(account1, "Non-Custodial_AC2", "13", "1", "2", { from: account1 })
             })
     })
 
@@ -702,11 +709,11 @@
     it("Should Mint 2 non-cust AC tokens in AC_ROOT 2", async () => {
         
         console.log("Minting AC 14 -NC")
-        return AC_MGR.createAssetClass("14", account1, "Non-Custodial_AC3", "14", "2", "2", { from: account1 })
+        return AC_MGR.createAssetClass(account1, "Non-Custodial_AC3", "14", "2", "2", { from: account1 })
 
             .then(() => {
                 console.log("Minting AC 15 -NC")
-                return AC_MGR.createAssetClass("15", account10, "Non_Custodial_AC4", "15", "2", "2", { from: account1 })
+                return AC_MGR.createAssetClass(account10, "Non_Custodial_AC4", "15", "2", "2", { from: account1 })
             })
     })
 
@@ -1248,23 +1255,23 @@
     })
 
 
-    it('Should put asset5 in exportable status', async () => {
-        return NP._modStatus(
-        asset5,
-        rgt5,
-        '51',
-        {from: account2}
-        )
-    })
+    // it('Should put asset5 in exportable status', async () => {
+    //     return NP._modStatus(
+    //     asset5,
+    //     rgt5,
+    //     '51',
+    //     {from: account2}
+    //     )
+    // })
 
 
-    it('Should export asset5 to account 4', async () => {
-        return NP.exportAsset(
-        asset5,
-        account4,
-        {from: account2}
-        )
-    })
+    // it('Should export asset5 to account 4', async () => {
+    //     return NP.exportAsset(
+    //     asset5,
+    //     account4,
+    //     {from: account2}
+    //     )
+    // })
 
 
     it('Should put asset2 in to discardable status', async () => {
@@ -1374,32 +1381,32 @@
     })
 
 
-    it('Should unauthorize NP_NC in AC12', async () => {
-        return STOR.enableContractForAC('NP_NC', '12', '0', { from: account1 })
-    })
+    // it('Should unauthorize NP_NC in AC12', async () => {
+    //     return STOR.enableContractForAC('NP_NC', '12', '0', { from: account1 })
+    // })
 
-    //2
-    it('Should fail because contract isnt auth in assetClass', async () => {
-        return NP_NC._changeRgt(
-        asset1,
-        rgt2,
-        {from: account4}
-        )
-    })
+    // //2
+    // it('Should fail because contract isnt auth in assetClass', async () => {
+    //     return NP_NC._changeRgt(
+    //     asset1,
+    //     rgt2,
+    //     {from: account4}
+    //     )
+    // })
 
 
-    it('Should authorize NP_NC in AC12', async () => {
-        return STOR.enableContractForAC('NP_NC', '12', '2', { from: account1 })
-    })
+    // it('Should authorize NP_NC in AC12', async () => {
+    //     return STOR.enableContractForAC('NP_NC', '12', '2', { from: account1 })
+    // })
 
-    //3
-    it('Should Fail because rgt = 0', async () => {
-        return NP_NC._changeRgt(
-        asset1,
-        rgt000,
-        {from: account4}
-        )
-    })
+    // //3
+    // it('Should Fail because rgt = 0', async () => {
+    //     return NP_NC._changeRgt(
+    //     asset1,
+    //     rgt000,
+    //     {from: account4}
+    //     )
+    // })
 
     // //30
     // it('Should fail because record doesnt exist', async () => {
@@ -1418,7 +1425,7 @@
     //     )
     // })
 
-    //4
+    //2
     it('Should fail because record is in stolen status', async () => {
         return NP_NC._changeRgt(
         asset6,
@@ -1436,7 +1443,7 @@
     //     )
     // })
 
-    //5
+    //3
     it('Should fail because record is in lost status', async () => {
         return NP_NC._changeRgt(
         asset7,
@@ -1446,50 +1453,50 @@
     })
 
 
-    it('Should put asset1 into status 51', async () => {
-        return NP_NC._modStatus(
-        asset1,
-        '51',
-        {from: account4}
-        )
-    })
+    // it('Should put asset1 into status 51', async () => {
+    //     return NP_NC._modStatus(
+    //     asset1,
+    //     '51',
+    //     {from: account4}
+    //     )
+    // })
 
 
-    it('Should put asset1 into escrow', async () => {
-        return ECR_NC.setEscrow(
-        asset1,
-        account4Hash,
-        '180',
-        '56',
-        {from: account4}
-        )
-    })
+    // it('Should put asset1 into escrow', async () => {
+    //     return ECR_NC.setEscrow(
+    //     asset1,
+    //     account4Hash,
+    //     '180',
+    //     '56',
+    //     {from: account4}
+    //     )
+    // })
 
-    //6
-    it('Should fail because record is in escrow', async () => {
-        return NP_NC._changeRgt(
-        asset1,
-        rgt6,
-        {from: account4}
-        )
-    })
-
-
-    it('Should take asset1 out of escrow', async () => {
-        return ECR_NC.endEscrow(
-        asset1,
-        {from: account4}
-        )
-    })
+    // //6
+    // it('Should fail because record is in escrow', async () => {
+    //     return NP_NC._changeRgt(
+    //     asset1,
+    //     rgt6,
+    //     {from: account4}
+    //     )
+    // })
 
 
-    it('Should put asset1 into status 51', async () => {
-        return NP_NC._modStatus(
-        asset1,
-        '51',
-        {from: account4}
-        )
-    })
+    // it('Should take asset1 out of escrow', async () => {
+    //     return ECR_NC.endEscrow(
+    //     asset1,
+    //     {from: account4}
+    //     )
+    // })
+
+
+    // it('Should put asset1 into status 51', async () => {
+    //     return NP_NC._modStatus(
+    //     asset1,
+    //     '51',
+    //     {from: account4}
+    //     )
+    // })
 
     // //7                                                                                       //CANT THROW BECAUSE IMPOSSIBLE TO PUT ASSET INTO STATUS 55/5
     // it('Should fail because record is transfered', async () => {
@@ -1519,15 +1526,15 @@
     // })
 
 
-    it('Should put asset1 into status 52', async () => {
-        return NP_NC._modStatus(
-        asset1,
-        '52',
-        {from: account4}
-        )
-    })
+    // it('Should put asset1 into status 52', async () => {
+    //     return NP_NC._modStatus(
+    //     asset1,
+    //     '52',
+    //     {from: account4}
+    //     )
+    // })
 
-    //7
+    //4
     it('Should fail because caller does not hold token', async () => {
 
         console.log("//**************************************END _changeRgt FAIL BATCH**********************************************/")
@@ -1539,25 +1546,34 @@
     })
 
 
-    it('Should unauthorize NP_NC in AC12', async () => {
-        return STOR.enableContractForAC('NP_NC', '12', '0', { from: account1 })
-    })
+    // it('Should unauthorize NP_NC in AC12', async () => {
+    //     return STOR.enableContractForAC('NP_NC', '12', '0', { from: account1 })
+    // })
 
-    //8
-    it('Should fail because contract isnt auth in assetClass', async () => {
-        return NP_NC._exportNC(
+    // //8
+    // it('Should fail because contract isnt auth in assetClass', async () => {
+    //     return NP_NC._exportNC(
+    //     asset1,
+    //     {from: account4}
+    //     )
+    // })
+
+
+    // it('Should authorize NP_NC in AC12', async () => {
+    //     return STOR.enableContractForAC('NP_NC', '12', '2', { from: account1 })
+    // })
+
+
+    it('Should set asset1 stat to 52', async () => {
+        return NP_NC._modStatus(
         asset1,
+        '52',
         {from: account4}
         )
     })
 
 
-    it('Should authorize NP_NC in AC12', async () => {
-        return STOR.enableContractForAC('NP_NC', '12', '2', { from: account1 })
-    })
-
-
-    //9
+    //5
     it('Should fail because record != status51', async () => {
         return NP_NC._exportNC(
         asset1,
@@ -1565,7 +1581,7 @@
         )
     })
 
-    //10
+    //6
     it('Should Fail because caller does not hold token', async () => {
 
         console.log("//**************************************END _exportNC FAIL BATCH**********************************************/")
@@ -1578,23 +1594,23 @@
     })
 
 
-    it('Should unauthorize NP_NC in AC12', async () => {
-        return STOR.enableContractForAC('NP_NC', '12', '0', { from: account1 })
-    })
+    // it('Should unauthorize NP_NC in AC12', async () => {
+    //     return STOR.enableContractForAC('NP_NC', '12', '0', { from: account1 })
+    // })
 
-    //11
-    it('Should fail because contract isnt auth in assetClass', async () => {
-        return NP_NC._modStatus(
-        asset1,
-        '51',
-        {from: account4}
-        )
-    })
+    // //11
+    // it('Should fail because contract isnt auth in assetClass', async () => {
+    //     return NP_NC._modStatus(
+    //     asset1,
+    //     '51',
+    //     {from: account4}
+    //     )
+    // })
 
 
-    it('Should authorize NP_NC in AC12', async () => {
-        return STOR.enableContractForAC('NP_NC', '12', '2', { from: account1 })
-    })
+    // it('Should authorize NP_NC in AC12', async () => {
+    //     return STOR.enableContractForAC('NP_NC', '12', '2', { from: account1 })
+    // })
 
     // //2
     // it('Should Fail because account4 != auth for AC10 assets', async () => {
@@ -1606,69 +1622,60 @@
     // })
 
     //12
-    it('Should Fail because being placed in stolen status', async () => {
-        return NP_NC._modStatus(
-        asset1,
-        '53',
-        {from: account4}
-        )
-    })
+    // it('Should Fail because being placed in stolen status', async () => {
+    //     return NP_NC._modStatus(
+    //     asset1,
+    //     '53',
+    //     {from: account4}
+    //     )
+    // })
 
-    //13
-    it('Should Fail because being placed in lost status', async () => {
-        return NP_NC._modStatus(
-        asset1,
-        '54',
-        {from: account4}
-        )
-    })
+    // //13
+    // it('Should Fail because being placed in lost status', async () => {
+    //     return NP_NC._modStatus(
+    //     asset1,
+    //     '54',
+    //     {from: account4}
+    //     )
+    // })
 
     //14
-    it('Should Fail because being placed in escrow status 56', async () => {
-        return NP_NC._modStatus(
-        asset1,
-        '56',
-        {from: account4}
-        )
-    })
+    // it('Should Fail because being placed in escrow status 56', async () => {
+    //     return NP_NC._modStatus(
+    //     asset1,
+    //     '56',
+    //     {from: account4}
+    //     )
+    // })
 
-    //15
-    it('Should Fail because being placed in escrow status 50', async () => {
-        return NP_NC._modStatus(
-        asset1,
-        '50',
-        {from: account4}
-        )
-    })
+    // //15
+    // it('Should Fail because being placed in escrow status 50', async () => {
+    //     return NP_NC._modStatus(
+    //     asset1,
+    //     '50',
+    //     {from: account4}
+    //     )
+    // })
 
-    //16
-    it('Should Fail because being placed in unregistered status 55', async () => {
-        return NP_NC._modStatus(
-        asset1,
-        '55',
-        {from: account4}
-        )
-    })
+    // //16
+    // it('Should Fail because being placed in unregistered status 55', async () => {
+    //     return NP_NC._modStatus(
+    //     asset1,
+    //     '55',
+    //     {from: account4}
+    //     )
+    // })
 
-    //17
-    it('Should Fail because being placed in unregistered status 60', async () => {
-        return NP_NC._modStatus(
-        asset1,
-        '60',
-        {from: account4}
-        )
-    })
+    // //17
+    // it('Should Fail because being placed in unregistered status 60', async () => {
+    //     return NP_NC._modStatus(
+    //     asset1,
+    //     '60',
+    //     {from: account4}
+    //     )
+    // })
 
-    //18
-    it('Should Fail because being placed in exported status', async () => {
-        return NP_NC._modStatus(
-        asset1,
-        '70',
-        {from: account4}
-        )
-    })
-
-    //19
+    //7
     it('Should Fail because being placed in status > 100', async () => {
         return NP_NC._modStatus(
         asset1,
@@ -1677,7 +1684,7 @@
         )
     })
 
-    //20
+    //8
     it('Should Fail because being placed in status 7', async () => {
         return NP_NC._modStatus(
         asset1,
@@ -1686,7 +1693,7 @@
         )
     })
 
-    //21
+    //9
     it('Should Fail because being placed in reserved status 57', async () => {
         return NP_NC._modStatus(
         asset1,
@@ -1695,7 +1702,7 @@
         )
     })
 
-    //22
+    //10
     it('Should Fail because being placed in reserved status 58', async () => {
         return NP_NC._modStatus(
         asset1,
@@ -1704,16 +1711,25 @@
         )
     })
 
-    // //13
-    // it('Should Fail because being placed in status <50', async () => {
-    //     return NP_NC._modStatus(
-    //     asset1,
-    //     '1',
-    //     {from: account4}
-    //     )
-    // })
+    //11
+    it('Should Fail because being placed in exported status', async () => {
+        return NP_NC._modStatus(
+        asset1,
+        '70',
+        {from: account4}
+        )
+    })
 
-    // //14
+    //12
+    it('Should Fail because being placed in status <50', async () => {
+        return NP_NC._modStatus(
+        asset1,
+        '1',
+        {from: account4}
+        )
+    })
+
+    // //13                                                         //Not possible
     // it('Should Fail because recordStatus <50', async () => {
     //     return NP_NC._modStatus(
     //     asset5,
@@ -1723,32 +1739,32 @@
     // })
 
 
-    it('Should place asset1 in escrow', async () => {
-        return ECR_NC.setEscrow(
-        asset1,
-        account4Hash,
-        '180',
-        '56',
-        {from: account4}
-        )
-    })
+    // it('Should place asset1 in escrow', async () => {
+    //     return ECR_NC.setEscrow(
+    //     asset1,
+    //     account4Hash,
+    //     '180',
+    //     '56',
+    //     {from: account4}
+    //     )
+    // })
 
-    //23
-    it('Should Fail because asset1 is in escrow', async () => {
-        return NP_NC._modStatus(
-        asset1,
-        '51',
-        {from: account4}
-        )
-    })
+    // //23
+    // it('Should Fail because asset1 is in escrow', async () => {
+    //     return NP_NC._modStatus(
+    //     asset1,
+    //     '51',
+    //     {from: account4}
+    //     )
+    // })
 
 
-    it('Should take asset1 out of escrow', async () => {
-        return ECR_NC.endEscrow(
-        asset1,
-        {from: account4}
-        )
-    })
+    // it('Should take asset1 out of escrow', async () => {
+    //     return ECR_NC.endEscrow(
+    //     asset1,
+    //     {from: account4}
+    //     )
+    // })
 
     // //27
     // it('Should Fail because asset3 is unregistered(exported)', async () => {
@@ -1777,7 +1793,7 @@
     //     )
     // })
 
-    //24
+    //14
     it('Should fail because caller does not hold token', async () => {
 
         console.log("//**************************************END _modStatus FAIL BATCH**********************************************/")
@@ -1790,34 +1806,34 @@
     })
 
 
-    it('Should unauthorize NP_NC in AC12', async () => {
-        return STOR.enableContractForAC('NP_NC', '12', '0', { from: account1 })
-    })
+    // it('Should unauthorize NP_NC in AC12', async () => {
+    //     return STOR.enableContractForAC('NP_NC', '12', '0', { from: account1 })
+    // })
 
-    //25
-    it('Should fail because contract isnt auth in assetClass', async () => {
-        return NP_NC._setLostOrStolen(
-        asset1,
-        '53',
-        {from: account4}
-        )
-    })
+    // //25
+    // it('Should fail because contract isnt auth in assetClass', async () => {
+    //     return NP_NC._setLostOrStolen(
+    //     asset1,
+    //     '53',
+    //     {from: account4}
+    //     )
+    // })
 
 
-    it('Should authorize NP_NC in AC12', async () => {
-        return STOR.enableContractForAC('NP_NC', '12', '2', { from: account1 })
-    })
+    // it('Should authorize NP_NC in AC12', async () => {
+    //     return STOR.enableContractForAC('NP_NC', '12', '2', { from: account1 })
+    // })
 
-    //26
-    it('Should fail because assetStatus is being set != Lost or Stolen', async () => {
-        return NP_NC._setLostOrStolen(
-        asset1,
-        '51',
-        {from: account4}
-        )
-    })
+    // //26
+    // it('Should fail because assetStatus is being set != Lost or Stolen', async () => {
+    //     return NP_NC._setLostOrStolen(
+    //     asset1,
+    //     '51',
+    //     {from: account4}
+    //     )
+    // })
 
-    //27
+    //15
     it('Should fail because assetStatus is < 50', async () => {
         return NP_NC._setLostOrStolen(
         asset1,
@@ -1853,7 +1869,7 @@
     //     )
     // })
 
-    // //37
+    // //16
     // it('Should fail because assetStatus is being set after set to lost while discarded', async () => {
     //     return NP_NC._setLostOrStolen(
     //     asset2,
@@ -1863,89 +1879,89 @@
     // })
 
 
-    it('Should set asset1Status to 51', async () => {
-        return NP_NC._modStatus(
-        asset1,
-        '51',
-        {from: account4}
-        )
-    })
+    // it('Should set asset1Status to 51', async () => {
+    //     return NP_NC._modStatus(
+    //     asset1,
+    //     '51',
+    //     {from: account4}
+    //     )
+    // })
 
 
-    it('Should place asset1 in escrow', async () => {
-        return ECR_NC.setEscrow(
-        asset1,
-        account4Hash,
-        '180',
-        '50',
-        {from: account4}
-        )
-    })
+    // it('Should place asset1 in escrow', async () => {
+    //     return ECR_NC.setEscrow(
+    //     asset1,
+    //     account4Hash,
+    //     '180',
+    //     '50',
+    //     {from: account4}
+    //     )
+    // })
 
-    //28
-    it('Should Fail to set stolen because asset1 is in locked escrow', async () => {
-        return NP_NC._setLostOrStolen(
-        asset1,
-        '53',
-        {from: account4}
-        )
-    })
-
-
-    it('Should take asset1 out of escrow', async () => {
-        return ECR_NC.endEscrow(
-        asset1,
-        {from: account4}
-        )
-    })
+    // //28
+    // it('Should Fail to set stolen because asset1 is in locked escrow', async () => {
+    //     return NP_NC._setLostOrStolen(
+    //     asset1,
+    //     '53',
+    //     {from: account4}
+    //     )
+    // })
 
 
-    it('Should set asset1Status to 51', async () => {
-        return NP_NC._modStatus(
-        asset1,
-        '51',
-        {from: account4}
-        )
-    })
+    // it('Should take asset1 out of escrow', async () => {
+    //     return ECR_NC.endEscrow(
+    //     asset1,
+    //     {from: account4}
+    //     )
+    // })
 
 
-    it('Should place asset1 in escrow', async () => {
-        return ECR_NC.setEscrow(
-        asset1,
-        account4Hash,
-        '180',
-        '50',
-        {from: account4}
-        )
-    })
-
-    //29
-    it('Should Fail to set lost because asset1 is in locked escrow', async () => {
-        return NP_NC._setLostOrStolen(
-        asset1,
-        '54',
-        {from: account4}
-        )
-    })
+    // it('Should set asset1Status to 51', async () => {
+    //     return NP_NC._modStatus(
+    //     asset1,
+    //     '51',
+    //     {from: account4}
+    //     )
+    // })
 
 
-    it('Should take asset1 out of escrow', async () => {
-        return ECR_NC.endEscrow(
-        asset1,
-        {from: account4}
-        )
-    })
+    // it('Should place asset1 in escrow', async () => {
+    //     return ECR_NC.setEscrow(
+    //     asset1,
+    //     account4Hash,
+    //     '180',
+    //     '50',
+    //     {from: account4}
+    //     )
+    // })
+
+    // //29
+    // it('Should Fail to set lost because asset1 is in locked escrow', async () => {
+    //     return NP_NC._setLostOrStolen(
+    //     asset1,
+    //     '54',
+    //     {from: account4}
+    //     )
+    // })
 
 
-    it('Should set asset1Status to 51', async () => {
-        return NP_NC._modStatus(
-        asset1,
-        '51',
-        {from: account4}
-        )
-    })
+    // it('Should take asset1 out of escrow', async () => {
+    //     return ECR_NC.endEscrow(
+    //     asset1,
+    //     {from: account4}
+    //     )
+    // })
 
-    //30
+
+    // it('Should set asset1Status to 51', async () => {
+    //     return NP_NC._modStatus(
+    //     asset1,
+    //     '51',
+    //     {from: account4}
+    //     )
+    // })
+
+    //16
     it('Should fail becasue caller does not hold token', async () => {
 
         console.log("//**************************************END _setLostOrStolen FAIL BATCH**********************************************/")
@@ -1958,58 +1974,58 @@
     })
 
 
-    it('Should unauthorize NP_NC in AC12', async () => {
-        return STOR.enableContractForAC('NP_NC', '12', '0', { from: account1 })
-    })
+    // it('Should unauthorize NP_NC in AC12', async () => {
+    //     return STOR.enableContractForAC('NP_NC', '12', '0', { from: account1 })
+    // })
 
-    //31
-    it('Should fail because contract isnt auth in assetClass', async () => {
-        return NP_NC._decCounter(
-        asset1,
-        '15',
-        {from: account4}
-        )
-    })
-
-
-    it('Should authorize NP_NC in AC12', async () => {
-        return STOR.enableContractForAC('NP_NC', '12', '2', { from: account1 })
-    })
+    // //31
+    // it('Should fail because contract isnt auth in assetClass', async () => {
+    //     return NP_NC._decCounter(
+    //     asset1,
+    //     '15',
+    //     {from: account4}
+    //     )
+    // })
 
 
-    it('Should put asset1 into escrow', async () => {
-        return ECR_NC.setEscrow(
-        asset1,
-        account4Hash,
-        '180',
-        '56',
-        {from: account4}
-        )
-    })
+    // it('Should authorize NP_NC in AC12', async () => {
+    //     return STOR.enableContractForAC('NP_NC', '12', '2', { from: account1 })
+    // })
 
-    //32
-    it('Should fail because you cant decrement while in escrow', async () => {
-        return NP_NC._decCounter(
-        asset1,
-        '15',
-        {from: account4}
-        )
-    })
 
-    it('Should take asset1 out of escrow', async () => {
-        return ECR_NC.endEscrow(
-        asset1,
-        {from: account4}
-        )
-    })
+    // it('Should put asset1 into escrow', async () => {
+    //     return ECR_NC.setEscrow(
+    //     asset1,
+    //     account4Hash,
+    //     '180',
+    //     '56',
+    //     {from: account4}
+    //     )
+    // })
 
-    it('Should set asset1Status to 51', async () => {
-        return NP_NC._modStatus(
-        asset1,
-        '51',
-        {from: account4}
-        )
-    })
+    // //32
+    // it('Should fail because you cant decrement while in escrow', async () => {
+    //     return NP_NC._decCounter(
+    //     asset1,
+    //     '15',
+    //     {from: account4}
+    //     )
+    // })
+
+    // it('Should take asset1 out of escrow', async () => {
+    //     return ECR_NC.endEscrow(
+    //     asset1,
+    //     {from: account4}
+    //     )
+    // })
+
+    // it('Should set asset1Status to 51', async () => {
+    //     return NP_NC._modStatus(
+    //     asset1,
+    //     '51',
+    //     {from: account4}
+    //     )
+    // })
 
 
     // //43
@@ -2021,7 +2037,7 @@
     //     )
     // })
 
-    //33
+    //17
     it('Should fail because caller does not hold token', async () => {
 
         console.log("//**************************************END _decCounter FAIL BATCH**********************************************/")
@@ -2034,58 +2050,58 @@
     })
 
 
-    it('Should unauthorize NP_NC in AC12', async () => {
-        return STOR.enableContractForAC('NP_NC', '12', '0', { from: account1 })
-    })
+    // it('Should unauthorize NP_NC in AC12', async () => {
+    //     return STOR.enableContractForAC('NP_NC', '12', '0', { from: account1 })
+    // })
 
-    //34
-    it('Should fail because contract isnt auth in assetClass', async () => {
-        return NP_NC._modIpfs1(
-        asset1,
-        rgt1,
-        {from: account4}
-        )
-    })
-
-
-    it('Should authorize NP_NC in AC12', async () => {
-        return STOR.enableContractForAC('NP_NC', '12', '2', { from: account1 })
-    })
+    // //34
+    // it('Should fail because contract isnt auth in assetClass', async () => {
+    //     return NP_NC._modIpfs1(
+    //     asset1,
+    //     rgt1,
+    //     {from: account4}
+    //     )
+    // })
 
 
-    it('Should put asset1 into escrow', async () => {
-        return ECR_NC.setEscrow(
-        asset1,
-        account4Hash,
-        '180',
-        '56',
-        {from: account4}
-        )
-    })
+    // it('Should authorize NP_NC in AC12', async () => {
+    //     return STOR.enableContractForAC('NP_NC', '12', '2', { from: account1 })
+    // })
 
-    //35
-    it('Should fail because you modify asset while in escrow', async () => {
-        return NP_NC._modIpfs1(
-        asset1,
-        rgt1,
-        {from: account4}
-        )
-    })
 
-    it('Should take asset1 out of escrow', async () => {
-        return ECR_NC.endEscrow(
-        asset1,
-        {from: account4}
-        )
-    })
+    // it('Should put asset1 into escrow', async () => {
+    //     return ECR_NC.setEscrow(
+    //     asset1,
+    //     account4Hash,
+    //     '180',
+    //     '56',
+    //     {from: account4}
+    //     )
+    // })
 
-    it('Should set asset1Status to 51', async () => {
-        return NP_NC._modStatus(
-        asset1,
-        '51',
-        {from: account4}
-        )
-    })
+    // //35
+    // it('Should fail because you modify asset while in escrow', async () => {
+    //     return NP_NC._modIpfs1(
+    //     asset1,
+    //     rgt1,
+    //     {from: account4}
+    //     )
+    // })
+
+    // it('Should take asset1 out of escrow', async () => {
+    //     return ECR_NC.endEscrow(
+    //     asset1,
+    //     {from: account4}
+    //     )
+    // })
+
+    // it('Should set asset1Status to 51', async () => {
+    //     return NP_NC._modStatus(
+    //     asset1,
+    //     '51',
+    //     {from: account4}
+    //     )
+    // })
 
 
     // //47

@@ -39,22 +39,16 @@ contract APP is CORE {
     function $newRecord(
         bytes32 _idxHash,
         bytes32 _rgtHash,
-        uint256 _assetClass,
-        uint256 _countDownStart
+        uint32 _assetClass,
+        uint32 _countDownStart
     ) external payable nonReentrant whenNotPaused {
         Record memory rec = getRecord(_idxHash);
         uint8 userType = getUserType(_assetClass);
         AC memory AC_info = getACinfo(_assetClass);
         AC memory oldAC_info = getACinfo(rec.assetClass);
-        ContractDataHash memory contractInfo = getContractInfo(
-            address(this),
-            _assetClass
-        );
 
-        require(contractInfo.contractType > 0, "A:NR: contract not auth in AC"); //MAKE INTO MODIFIER?!?!?!?!
         require((userType > 0) && (userType < 10), "A:NR: User not auth in AC");
         require(userType < 5, "A:NR: User not authorized to create records");
-        require(_rgtHash != 0, "A:NR: RGT = 0");
         //^^^^^^^checks^^^^^^^^^
 
         //bytes32 userHash = keccak256(abi.encodePacked(msg.sender));
@@ -76,7 +70,7 @@ contract APP is CORE {
     function $importAsset(
         bytes32 _idxHash,
         bytes32 _newRgtHash,
-        uint256 _newAssetClass
+        uint32 _newAssetClass
     )
         external
         payable
@@ -87,16 +81,7 @@ contract APP is CORE {
     {
         Record memory rec = getRecord(_idxHash);
         uint8 userType = getUserType(_newAssetClass);
-        ContractDataHash memory contractInfo = getContractInfo(
-            address(this),
-            _newAssetClass
-        );
 
-        require(
-            contractInfo.contractType > 0,
-            "A:IA: unauthorized for AC. Orphan token?"
-        );
-        require(rec.assetClass != 0, "A:IA: Record does not exist. ");                 //CANNOT BE TESTED, ASSERT??
         require(userType < 3, "A:IA: User not authorized to import assets");
         require((userType > 0) && (userType < 10), "A:IA: User not auth in AC");
         require(
@@ -138,34 +123,21 @@ contract APP is CORE {
     {
         Record memory rec = getRecord(_idxHash);
         uint8 userType = getUserType(rec.assetClass);
-        ContractDataHash memory contractInfo = getContractInfo(
-            address(this),
-            rec.assetClass
-        );
-
-        require(
-            contractInfo.contractType > 0,
-            "A:FMR: unauthorized for AC. Orphan token?"
-        );
+        
         require(userType == 1, "A:FMR: User not auth in AC");
         require(_rgtHash != 0, "A:FMR:RGT = 0");
         require(
             isLostOrStolen(rec.assetStatus) == 0,
             "A:FMR: Asset marked L/S"
         );
-        require(isEscrow(rec.assetStatus) == 0, "A:FMR: Asset in escrow");
-        require(
-            isEscrow(rec.assetStatus) == 0,
-            "A:FMR: Asset in escrow"
-        );
-        require(                                                      //IMPOSSIBLE TO THROW REVERTS IN REQ1
+        require( //IMPOSSIBLE TO THROW REVERTS IN REQ1 CTS:PREFERRED
             needsImport(rec.assetStatus) == 0,
             "A:FMR: Asset needs re-imported"
         );
         //^^^^^^^checks^^^^^^^^^
 
         rec.incrementForceModCount = 170;
-     
+
         rec.incrementNumberOfTransfers = 170;
 
         rec.assetStatus = 0;
@@ -197,15 +169,7 @@ contract APP is CORE {
     {
         Record memory rec = getRecord(_idxHash);
         uint8 userType = getUserType(rec.assetClass);
-        ContractDataHash memory contractInfo = getContractInfo(
-            address(this),
-            rec.assetClass
-        );
 
-        require(
-            contractInfo.contractType > 0,
-            "A:TA: unauthorized for AC. Orphan token?"
-        );
         require((userType > 0) && (userType < 10), "A:TA: User not auth in AC");
         require(
             (rec.assetStatus > 49) || (userType < 5),
@@ -257,32 +221,12 @@ contract APP is CORE {
     {
         Record memory rec = getRecord(_idxHash);
         uint8 userType = getUserType(rec.assetClass);
-        ContractDataHash memory contractInfo = getContractInfo(
-            address(this),
-            rec.assetClass
-        );
 
-        require(
-            contractInfo.contractType > 0,
-            "A:I2: unauthorized for AC. Orphan token?"
-        );
         require((userType > 0) && (userType < 10), "A:I2: User not auth in AC");
-        require(
-            isLostOrStolen(rec.assetStatus) == 0,
-            "A:FMR: Asset marked lost or stolen"
-        );
-        require(isEscrow(rec.assetStatus) == 0, "A:FMR: Asset in escrow");
-        require(
-            isEscrow(rec.assetStatus) == 0,
-            "A:FMR: Asset in escrow"
-        );
-        require(                                                      //IMPOSSIBLE TO THROW REVERTS IN REQ1
+
+        require( //IMPOSSIBLE TO THROW REVERTS IN REQ1 CTS:PREFERRED
             needsImport(rec.assetStatus) == 0,
             "A:FMR: Asset needs re-imported"
-        );
-        require(
-            rec.Ipfs2 == 0,
-            "A:I2: Ipfs2 has data already. Overwrite not permitted"
         );
         require(
             rec.rightsHolder == _rgtHash,

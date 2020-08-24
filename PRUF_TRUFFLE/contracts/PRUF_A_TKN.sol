@@ -27,13 +27,13 @@ contract A_TKN is Ownable, ReentrancyGuard, ERC721 {
     struct Record {
         bytes32 rightsHolder; // KEK256 Registered owner
         uint8 assetStatus; // Status - Transferrable, locked, in transfer, stolen, lost, etc.
-        uint256 incrementForceModCount; // Number of times asset has been forceModded.
-        uint256 assetClass; // Type of asset
-        uint256 countDown; // Variable that can only be dencreased from countDownStart
-        uint256 countDownStart; // Starting point for countdown variable (set once)
+        uint256 incrementForceModCount; // increment flag for Number of times asset has been forceModded.
+        uint32 assetClass; // Type of asset
+        uint32 countDown; // Variable that can only be dencreased from countDownStart
+        uint32 countDownStart; // Starting point for countdown variable (set once)
         bytes32 Ipfs1; // Publically viewable asset description
         bytes32 Ipfs2; // Publically viewable immutable notes
-        uint256 incrementNumberOfTransfers; //number of transfers and forcemods
+        uint256 incrementNumberOfTransfers; //increment flag for number of transfers and forcemods
     }
 
     constructor() public ERC721("PRüF Asset Token", "PAT") {}
@@ -153,7 +153,7 @@ contract A_TKN is Ownable, ReentrancyGuard, ERC721 {
 
     function validateNakedToken(
         uint256 tokenId,
-        uint256 _assetClass,
+        uint32 _assetClass,
         string calldata _authCode
     ) external view {
         bytes32 _hashedAuthCode = keccak256(abi.encodePacked(_authCode));
@@ -166,7 +166,7 @@ contract A_TKN is Ownable, ReentrancyGuard, ERC721 {
         require(
             keccak256(abi.encodePacked(URI)) ==
                 keccak256(abi.encodePacked(authString)),
-            "Supplied authCode and assetclass do not match token URI"
+            "AT:VNT:Supplied authCode and assetclass do not match token URI"
         );
     }
 
@@ -196,7 +196,11 @@ contract A_TKN is Ownable, ReentrancyGuard, ERC721 {
     ) public override nonReentrant {
         bytes32 _idxHash = bytes32(tokenId);
         Record memory rec = getRecord(_idxHash);
-
+        
+        require(
+            _isApprovedOrOwner(_msgSender(), tokenId),
+            "AT:TF:transfer caller is not owner nor approved"
+        );
         require(
             rec.assetStatus != 70,
             "AT:TF:Use authAddressTransfer for status 70"
@@ -205,10 +209,7 @@ contract A_TKN is Ownable, ReentrancyGuard, ERC721 {
             rec.assetStatus == 51,
             "AT:TF:Asset not in transferrable status"
         );
-        require(
-            _isApprovedOrOwner(_msgSender(), tokenId),
-            "AT:TF:transfer caller is not owner nor approved"
-        );
+        
         //^^^^^^^checks^^^^^^^^
 
         rec.incrementNumberOfTransfers = 170;
@@ -274,6 +275,10 @@ contract A_TKN is Ownable, ReentrancyGuard, ERC721 {
         Record memory rec = getRecord(_idxHash);
         (uint8 isAuth, ) = STOR.ContractInfoHash(to, 0); // trailing comma because does not use the returned hash
 
+        require(
+            _isApprovedOrOwner(_msgSender(), tokenId),
+            "AT:STF: transfer caller is not owner nor approved"
+        );
         require( // ensure that status 70 assets are only sent to an actual PRUF contract
             (rec.assetStatus != 70) || (isAuth > 0),
             "AT:STF:Cannot send status 70 asset to unauthorized address"
@@ -284,12 +289,9 @@ contract A_TKN is Ownable, ReentrancyGuard, ERC721 {
         );
         require(
             to != address(0),
-            "AT:STF:Cannot transfer asset to zero adress. Use discard."
+            "AT:STF:Cannot transfer asset to zero address. Use discard."
         );
-        require(
-            _isApprovedOrOwner(_msgSender(), tokenId),
-            "AT:STF: transfer caller is not owner nor approved"
-        );
+
         //^^^^^^^checks^^^^^^^^^
 
         rec.incrementNumberOfTransfers = 170;
@@ -308,17 +310,17 @@ contract A_TKN is Ownable, ReentrancyGuard, ERC721 {
      */
     function discard(uint256 tokenId) external nonReentrant {
         bytes32 _idxHash = bytes32(tokenId);
-        Record memory rec = getRecord(_idxHash);
+        //Record memory rec = getRecord(_idxHash);
+        
+        // require(                 //REDUNDANT---will throw in RCLR.discard()
+        //     _isApprovedOrOwner(_msgSender(), tokenId),
+        //     "AT:D:transfer caller is not owner nor approved"
+        // );
+        // require(
+        //     (rec.assetStatus == 59),
+        //     "AT:D:Asset must be in status 59 (discardable) to be discarded"
+        // );
 
-        require(_exists(tokenId), "AT:D:Cannot discard nonexistant token");
-        require(
-            (rec.assetStatus == 59),
-            "AT:D:Asset must be in status 59 (discardable) to be discarded"
-        );
-        require(
-            _isApprovedOrOwner(_msgSender(), tokenId),
-            "AT:D:transfer caller is not owner nor approved"
-        );
         //^^^^^^^checks^^^^^^^^^
         RCLR.discard(_idxHash);
         _burn(tokenId);
@@ -358,9 +360,9 @@ contract A_TKN is Ownable, ReentrancyGuard, ERC721 {
                 bytes32 _rightsHolder,
                 //bytes32 _lastRecorder,
                 uint8 _assetStatus,
-                uint256 _assetClass,
-                uint256 _countDown,
-                uint256 _countDownStart,
+                uint32 _assetClass,
+                uint32 _countDown,
+                uint32 _countDownStart,
                 bytes32 _Ipfs1,
                 bytes32 _Ipfs2
             ) = STOR.retrieveRecord(_idxHash); // Get record from storage contract

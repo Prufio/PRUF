@@ -40,8 +40,8 @@ contract MAL_APP is CORE_MAL {
         function $newRecord(
         bytes32 _idxHash,
         bytes32 _rgtHash,
-        uint256 _assetClass,
-        uint256 _countDownStart
+        uint32 _assetClass,
+        uint32 _countDownStart
     ) external payable 
     // nonReentrant whenNotPaused 
     {
@@ -83,7 +83,7 @@ contract MAL_APP is CORE_MAL {
      */
     function _modStatus(
         bytes32 _idxHash,
-        bytes32 _rgtHash,
+        // bytes32 _rgtHash,
         uint8 _newAssetStatus
     )
         external
@@ -139,10 +139,10 @@ contract MAL_APP is CORE_MAL {
         //     (rec.assetStatus > 49) || (userType < 5),
         //     "NP:MS: Only usertype < 5 can change status < 49"
         // );
-        require(
-            rec.rightsHolder == _rgtHash,
-            "NP:MS: Rightsholder does not match supplied data"
-        );
+        // require(
+        //     rec.rightsHolder == _rgtHash,
+        //     "NP:MS: Rightsholder does not match supplied data"
+        // );
         //^^^^^^^checks^^^^^^^^^
 
         rec.assetStatus = _newAssetStatus;
@@ -159,7 +159,7 @@ contract MAL_APP is CORE_MAL {
      */
     function _setLostOrStolen(
         bytes32 _idxHash,
-        bytes32 _rgtHash,
+        // bytes32 _rgtHash,
         uint8 _newAssetStatus
     )
         external
@@ -204,10 +204,10 @@ contract MAL_APP is CORE_MAL {
         //     (rec.assetStatus != 50),
         //     "NP:SLS: Asset in locked escrow cannot be set to lost or stolen"
         // );
-        require(
-            rec.rightsHolder == _rgtHash,
-            "NP:SLS: Rightsholder does not match supplied data"
-        );
+        // require(
+        //     rec.rightsHolder == _rgtHash,
+        //     "NP:SLS: Rightsholder does not match supplied data"
+        // );
         //^^^^^^^checks^^^^^^^^^
 
         rec.assetStatus = _newAssetStatus;
@@ -224,14 +224,14 @@ contract MAL_APP is CORE_MAL {
      */
     function _decCounter(
         bytes32 _idxHash,
-        bytes32 _rgtHash,
-        uint256 _decAmount
+        // bytes32 _rgtHash,
+        uint32 _decAmount
     )
         external
         // nonReentrant
         // whenNotPaused
         // isAuthorized(_idxHash)
-        returns (uint256)
+        returns (uint32)
     {
         Record memory rec = getRecord(_idxHash);
         // uint8 userType = getUserType(rec.assetClass);
@@ -263,10 +263,10 @@ contract MAL_APP is CORE_MAL {
         //     needsImport(rec.assetStatus) == 0,
         //     "NP:DC Record in unregistered, exported, or discarded status"
         // );
-        require(
-            rec.rightsHolder == _rgtHash,
-            "NP:DC: Rightsholder does not match supplied data"
-        );
+        // require(
+        //     rec.rightsHolder == _rgtHash,
+        //     "NP:DC: Rightsholder does not match supplied data"
+        // );
         //^^^^^^^checks^^^^^^^^^
 
         // if (rec.countDown > _decAmount) {
@@ -275,7 +275,11 @@ contract MAL_APP is CORE_MAL {
         //     rec.countDown = 0;
         // }
         //^^^^^^^effects^^^^^^^^^
-        rec.countDown = rec.countDown.sub(_decAmount);
+        if (rec.countDown > _decAmount){
+            rec.countDown = rec.countDown - _decAmount;
+        } else {
+            rec.countDown = 0;
+        }
         writeRecord(_idxHash, rec);
         return (rec.countDown);
         //^^^^^^^interactions^^^^^^^^^
@@ -407,7 +411,7 @@ contract MAL_APP is CORE_MAL {
      */
     function _modIpfs1(
         bytes32 _idxHash,
-        bytes32 _rgtHash,
+        // bytes32 _rgtHash,
         bytes32 _IpfsHash
     )
         external
@@ -445,10 +449,10 @@ contract MAL_APP is CORE_MAL {
         //     needsImport(rec.assetStatus) == 0,
         //     "NP:MI1: Record in unregistered, exported, or discarded status"
         // );
-        require(
-            rec.rightsHolder == _rgtHash,
-            "NP:MI1: Rightsholder does not match supplied data"
-        );
+        // require(
+        //     rec.rightsHolder == _rgtHash,
+        //     "NP:MI1: Rightsholder does not match supplied data"
+        // );
         //^^^^^^^checks^^^^^^^^^
 
         rec.Ipfs1 = _IpfsHash;
@@ -465,7 +469,7 @@ contract MAL_APP is CORE_MAL {
      */
     function $addIpfs2Note(
         bytes32 _idxHash,
-        bytes32 _rgtHash,
+        // bytes32 _rgtHash,
         bytes32 _IpfsHash
     )
         external
@@ -510,10 +514,10 @@ contract MAL_APP is CORE_MAL {
         //     rec.Ipfs2 == 0,
         //     "A:I2: Ipfs2 has data already. Overwrite not permitted"
         // );
-        require(
-            rec.rightsHolder == _rgtHash,
-            "A:I2: Rightsholder does not match supplied data"
-        );
+        // require(
+        //     rec.rightsHolder == _rgtHash,
+        //     "A:I2: Rightsholder does not match supplied data"
+        // );
         //^^^^^^^checks^^^^^^^^^
 
         rec.Ipfs2 = _IpfsHash;
@@ -530,7 +534,7 @@ contract MAL_APP is CORE_MAL {
     /*
      *     @dev Export FROM Custodial:
      */
-    function changeAC(bytes32 _idxHash, uint256 newAssetClass)
+    function changeAC(bytes32 _idxHash, uint32 newAssetClass)
         external
         // nonReentrant
         // whenNotPaused
@@ -647,6 +651,72 @@ contract MAL_APP is CORE_MAL {
         //^^^^^^^interactions^^^^^^^^^
     }
 
+
+        function setEscrowStor(
+        bytes32 _idxHash,
+        uint8 _escrowStatus
+    ) external 
+    // nonReentrant whenNotPaused isAuthorized(_idxHash) 
+    {
+        // Record memory rec = getRecord(_idxHash);
+        // uint8 userType = getUserType(rec.assetClass);
+        // uint256 escrowTime = block.timestamp.add(_escrowTime);
+        // uint8 newEscrowStatus;
+        // ContractDataHash memory contractInfo = getContractInfo(
+        //     address(this),
+        //     rec.assetClass
+        // );
+
+        // require(                                                                   //Storage IA mod takes care of it?
+        //     contractInfo.contractType > 0,
+        //     "E:SE: This contract not authorized for specified AC"
+        // );
+        // require((rec.assetClass != 0), "E:SE: Record does not exist");
+        // require(
+        //     (userType > 0) && (userType < 10),
+        //     "E:SE: User not authorized to modify records in specified asset class"
+        // );
+        // require(
+        //     (escrowTime >= block.timestamp),
+        //     "E:SE: Escrow must be set to a time in the future"
+        // );
+        // require(
+        //     (rec.assetStatus != 3) &&
+        //         (rec.assetStatus != 4) &&
+        //         (rec.assetStatus != 53) &&
+        //         (rec.assetStatus != 54) &&
+        //         (rec.assetStatus != 5) &&
+        //         (rec.assetStatus != 55),
+        //     "E:SE: Transferred, lost, or stolen status cannot be set to escrow."
+        // );
+        // require(
+        //     (rec.assetStatus != 6) &&
+        //         (rec.assetStatus != 50) &&
+        //         (rec.assetStatus != 56),
+        //     "E:SE: Asset already in escrow status."
+        // );
+        // require(
+        //     (userType < 5) || (( userType > 4) && ( userType < 10) && (_escrowStatus > 49)),
+        //     "E:SE: Non supervisored agents must set escrow status within scope."
+        // );
+        // require(
+        //     (_escrowStatus == 6) ||
+        //         (_escrowStatus == 50) ||
+        //         (_escrowStatus == 56),
+        //     "E:SE: Must specify an valid escrow status"
+        // );
+        //^^^^^^^checks^^^^^^^^^
+
+        // newEscrowStatus = _escrowStatus;
+        //^^^^^^^effects^^^^^^^^^
+
+        STOR.setEscrow(
+            _idxHash,
+            _escrowStatus
+        );
+        //^^^^^^^interactions^^^^^^^^^
+    }
+
     /*
      * @dev takes asset out of excrow status if time period has resolved || is escrow issuer
      */
@@ -694,4 +764,58 @@ contract MAL_APP is CORE_MAL {
         ECR_MGR.endEscrow(_idxHash);
         //^^^^^^^interactions^^^^^^^^^
     }
+
+
+    function endEscrowStor(bytes32 _idxHash)
+        external
+        // nonReentrant
+        // isAuthorized(_idxHash)
+    {
+        // Record memory rec = getRecord(_idxHash);
+        // escrowData memory escrow = getEscrowData(_idxHash);
+        // ContractDataHash memory contractInfo = getContractInfo(
+        //     address(this),
+        //     rec.assetClass
+        // );
+        // uint8 userType = getUserType(rec.assetClass);
+        // bytes32 ownerHash = ECR_MGR.retrieveEscrowOwner(_idxHash);
+
+        // require(                                                                 //Storage IA mod takes care of it?
+        //     contractInfo.contractType > 0,
+        //     "E:EE: This contract not authorized for specified AC"
+        // );
+
+        // require((rec.assetClass != 0), "E:EE: Record does not exist");
+        // require(
+        //     (userType > 0) && (userType < 10),
+        //     "E:EE: User not authorized to modify records in specified asset class"
+        // );
+        // require(
+        //     (rec.assetStatus == 6) ||
+        //         (rec.assetStatus == 50) ||
+        //         (rec.assetStatus == 56),
+        //     "E:EE- record must be in escrow status"
+        // );
+        // require(
+        //     ((rec.assetStatus > 49) || (userType < 5)),
+        //     "E:EE: Usertype less than 5 required to end this escrow"
+        // );
+        // require(
+        //     (escrow.timelock < block.timestamp) ||
+        //         (keccak256(abi.encodePacked(msg.sender)) == ownerHash),
+        //     "E:EE: Escrow period not ended and caller is not escrow owner"
+        // );
+        //^^^^^^^checks^^^^^^^^^
+
+        STOR.endEscrow(_idxHash);
+        //^^^^^^^interactions^^^^^^^^^
+    }
+
+    function retrieveRecordStor(bytes32 _idxHash)
+        external
+    {
+        STOR.retrieveRecord(_idxHash);
+        //^^^^^^^interactions^^^^^^^^^
+    }
+    
 }

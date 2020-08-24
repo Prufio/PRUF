@@ -89,33 +89,8 @@ contract ECR_MGR is BASIC {
             contractInfo.contractType == 3,
             "EM:SE: Escrow can only be set by an authorized escrow contract"
         );
-        require(rec.assetClass != 0, "EM:SE:Record does not exist");
-
-        // require(  //all of these are redundant because they throw in storage
-        //     isEscrow(_newAssetStatus) == 170,
-        //     "EM:SE: Must set to an escrow status"
-        // );
-        // require(
-        //     (isLostOrStolen(rec.assetStatus) == 0) &&
-        //         (rec.assetStatus != 5) &&
-        //         (rec.assetStatus != 55),
-        //     "EM:SE: Txd, L/S status cannot be set to escrow."
-        // );
-        // require(
-        //     isEscrow(rec.assetStatus) == 0,
-        //     "EM:SE: Asset already in escrow status."
-        // );
-
         //^^^^^^^checks^^^^^^^^^
-
-        escrows[_idxHash].data = 0; //initialize escrow data
-        escrows[_idxHash].controllingContractNameHash = 0;
-        escrows[_idxHash].escrowOwnerAddressHash = 0;
-        escrows[_idxHash].timelock = 0;
-        escrows[_idxHash].ex1 = 0;
-        escrows[_idxHash].ex2 = 0;
-        escrows[_idxHash].addr1 = address(0);
-        escrows[_idxHash].addr1 = address(0);
+        delete escrows[_idxHash];
 
         escrows[_idxHash].data = _data;
         escrows[_idxHash]
@@ -129,7 +104,7 @@ contract ECR_MGR is BASIC {
 
         //^^^^^^^effects^^^^^^^^^
 
-        STOR.setEscrow(_idxHash, _newAssetStatus, contractInfo.nameHash);
+        STOR.setEscrow(_idxHash, _newAssetStatus);
         //^^^^^^^interactions^^^^^^^^^
     }
 
@@ -143,27 +118,18 @@ contract ECR_MGR is BASIC {
             rec.assetClass
         );
 
-        require(rec.assetClass != 0, "EM:EE:Record does not exist");
-        require(isEscrow(rec.assetStatus) == 170, "EM:EE:Asset not in escrow");
         require(
             (contractInfo.nameHash ==
                 escrows[_idxHash].controllingContractNameHash),
             "EM:EE:Only contract with same name as setter can end escrow"
         );
-        
 
         //^^^^^^^checks^^^^^^^^^
 
-        escrows[_idxHash].data = 0;
-        escrows[_idxHash].controllingContractNameHash = 0;
-        escrows[_idxHash].escrowOwnerAddressHash = 0;
-        escrows[_idxHash].timelock = 0;
-        escrows[_idxHash].ex1 = 0;
-        escrows[_idxHash].addr1 = address(0);
-        escrows[_idxHash].addr1 = address(0);
+        delete escrows[_idxHash];
         //^^^^^^^effects^^^^^^^^^
 
-        STOR.endEscrow(_idxHash, contractInfo.nameHash);
+        STOR.endEscrow(_idxHash);
         //^^^^^^^interactions^^^^^^^^^
     }
 
@@ -185,17 +151,10 @@ contract ECR_MGR is BASIC {
         );
         //^^^^^^^checks^^^^^^^^^
 
-        escrows[_idxHash].data = 0;
-        escrows[_idxHash].controllingContractNameHash = 0;
-        escrows[_idxHash].escrowOwnerAddressHash = 0;
-        escrows[_idxHash].timelock = 0;
-        escrows[_idxHash].ex1 = 0;
-        escrows[_idxHash].ex2 = 0;
-        escrows[_idxHash].addr1 = address(0);
-        escrows[_idxHash].addr1 = address(0);
+        delete escrows[_idxHash];
         //^^^^^^^effects^^^^^^^^^
 
-        STOR.endEscrow(_idxHash, keccak256(abi.encodePacked(msg.sender)));
+        STOR.endEscrow(_idxHash);
         //^^^^^^^interactions^^^^^^^^^
     }
 
