@@ -235,7 +235,7 @@ contract STOR is Ownable, ReentrancyGuard, Pausable {
             database[_idxHash].assetStatus != 60,
             "S:NR:Asset is rcycl. Use PRUF_APP_NC rcycl"
         );
-        require(database[_idxHash].assetClass == 0, "S:NR:Rec already exists");
+        require(database[_idxHash].assetClass == 0, "S:NR:Rec already exists");            //THROWS IN CORE createRecord CTS: EXAMINE
         require(_rgtHash != 0, "S:NR:RGT = 0");
         require(_assetClass != 0, "S:NR:AC = 0");
         //^^^^^^^checks^^^^^^^^^
@@ -281,7 +281,7 @@ contract STOR is Ownable, ReentrancyGuard, Pausable {
         Record memory rec = database[_idxHash];
         bytes32 idxHash = _idxHash; //stack saving
 
-        require(_countDown <= rec.countDown, "S:MR:countDown +!"); //prohibit increasing the countdown value  //IMPOSSIBLE TO THROW
+        require(_countDown <= rec.countDown, "S:MR:countDown +!"); //prohibit increasing the countdown value  //REDUNDANT, THROWS IN SAFEMATH
         require(isLostOrStolen(_newAssetStatus) == 0, "S:MR:Must use L/S");
         require(isEscrow(_newAssetStatus) == 0, "S:MR:Must use ECR");
         // require(
