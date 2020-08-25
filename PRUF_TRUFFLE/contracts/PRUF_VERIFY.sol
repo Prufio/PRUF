@@ -156,20 +156,20 @@ contract VERIFY is CORE {
     }
 }
 
-function getACinfo(uint32 _assetClass)
-        internal
-        virtual
-        returns (AC memory)
-    {
-        //^^^^^^^checks^^^^^^^^^
+// function getACinfo(uint32 _assetClass)
+//         internal
+//         virtual
+//         returns (AC memory)
+//     {
+//         //^^^^^^^checks^^^^^^^^^
         
-        AC memory AC_info;
-        //^^^^^^^effects^^^^^^^^^
-        (
-            AC_info.assetClassRoot,
-            AC_info.custodyType,
-            AC_info.extendedData
-        ) = AC_MGR.getAC_data(_assetClass);
-        return AC_info;
-        //^^^^^^^interactions^^^^^^^^^
-    }
+//         AC memory AC_info;
+//         //^^^^^^^effects^^^^^^^^^
+//         (
+//             AC_info.assetClassRoot,
+//             AC_info.custodyType,
+//             AC_info.extendedData
+//         ) = AC_MGR.getAC_data(_assetClass);
+//         return AC_info;
+//         //^^^^^^^interactions^^^^^^^^^
+//     }
