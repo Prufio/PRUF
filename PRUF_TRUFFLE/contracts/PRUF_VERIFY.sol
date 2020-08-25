@@ -12,6 +12,7 @@ __/\\\\\\\\\\\\\ _____/\\\\\\\\\ _______/\\../\\ ___/\\\\\\\\\\\\\\\
 
 /*-----------------------------------------------------------------
  *  TO DO
+ *   need to limit access to specified AC's !
  *
  * only trusted entities can put items "in pouch"
  * only trusted entities can take items "out"
@@ -46,11 +47,10 @@ contract VERIFY is CORE {
 
     mapping(bytes32 => bytes32) internal items;
     mapping(bytes32 => ItemData) internal itemData;
-
-
     modifier isAuthorized(bytes32 _idxHash) override {
         Record memory rec = getRecord(_idxHash);
         uint256 tokenId = uint256(_idxHash);
+
 
         require(
             (A_TKN.ownerOf(tokenId) == msg.sender), //msg.sender is token holder
@@ -155,21 +155,21 @@ contract VERIFY is CORE {
         );
     }
 }
-
-function getACinfo(uint32 _assetClass)
-        internal
-        virtual
-        returns (AC memory)
-    {
-        //^^^^^^^checks^^^^^^^^^
+// AC memory AC_info = getACinfo(rec.assetClass);
+// function getACinfo(uint32 _assetClass)
+//         internal
+//         virtual
+//         returns (AC memory)
+//     {
+//         //^^^^^^^checks^^^^^^^^^
         
-        AC memory AC_info;
-        //^^^^^^^effects^^^^^^^^^
-        (
-            AC_info.assetClassRoot,
-            AC_info.custodyType,
-            AC_info.extendedData
-        ) = AC_MGR.getAC_data(_assetClass);
-        return AC_info;
-        //^^^^^^^interactions^^^^^^^^^
-    }
+//         AC memory AC_info;
+//         //^^^^^^^effects^^^^^^^^^
+//         (
+//             AC_info.assetClassRoot,
+//             AC_info.custodyType,
+//             AC_info.extendedData
+//         ) = AC_MGR.getAC_data(_assetClass);
+//         return AC_info;
+//         //^^^^^^^interactions^^^^^^^^^
+//     }
