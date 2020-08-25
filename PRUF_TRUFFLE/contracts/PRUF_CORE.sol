@@ -289,6 +289,12 @@ contract CORE is PullPayment, BASIC {
         //^^^^^^^interactions^^^^^^^^^
     }
 
+
+//----------------------------------------------------------------------STATUS CHECKS
+
+    /*
+     * @dev Check to see if record is lost or stolen
+     */
     function isLostOrStolen(uint8 _assetStatus) internal pure returns (uint8) {
         if (
             (_assetStatus != 3) &&
@@ -302,8 +308,7 @@ contract CORE is PullPayment, BASIC {
         }
     }
 
-    //----------------------------------------------------------------------STATUS CHECKS
-
+    
     /*
      * @dev Check to see if record is in escrow status
      */
@@ -317,6 +322,10 @@ contract CORE is PullPayment, BASIC {
         }
     }
 
+
+    /*
+     * @dev Check to see if record needs imported
+     */
     function needsImport(uint8 _assetStatus) internal pure returns (uint8) {
         if (
             (_assetStatus != 5) &&

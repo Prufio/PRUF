@@ -119,6 +119,10 @@ contract ECR_MGR is BASIC {
         );
 
         require(
+            isEscrow(rec.assetStatus) == 170,
+            "EM:EE:Asset not in escrow status"
+        );
+        require(
             (contractInfo.nameHash ==
                 escrows[_idxHash].controllingContractNameHash),
             "EM:EE:Only contract with same name as setter can end escrow"
