@@ -155,11 +155,9 @@ contract VERIFY is CORE {
         );
     }
 }
-<<<<<<< HEAD
 
-=======
 // AC memory AC_info = getACinfo(rec.assetClass);
->>>>>>> master
+
 // function getACinfo(uint32 _assetClass)
 //         internal
 //         virtual
