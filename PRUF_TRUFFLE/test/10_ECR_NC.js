@@ -1373,7 +1373,7 @@
     // })
 
     //3
-    it('Should fail because set status = < 50', async () => {
+    it('Should fail because set status < 50', async () => {
         return ECR_NC.setEscrow(
         asset2, 
         account4Hash,
@@ -1384,12 +1384,23 @@
     })
 
     //4
-    it('Should fail because you cannot set a time in the past', async () => {
+    // it('Should fail because you cannot set a time in the past', async () => {
+    //     return ECR_NC.setEscrow(
+    //     asset1, 
+    //     account4Hash,
+    //     '-180',
+    //     '56',
+    //     {from: account4}
+    //     )
+    // })
+
+    //5
+    it('Should fail because not being set to auth NC escrow status', async () => {
         return ECR_NC.setEscrow(
         asset1, 
         account4Hash,
-        '-180',
-        '56',
+        '180',
+        '6',
         {from: account4}
         )
     })
@@ -1438,22 +1449,25 @@
     //     )
     // })
 
-    //5
-    it('Should fail because caller does not hold token', async () => {
+    // //5
+    // it('Should fail because caller does not hold token', async () => {
 
-        console.log("//**************************************END setEscrow FAIL BATCH**********************************************/")
-        console.log("//**************************************BEGIN endEscrow FAIL BATCH**********************************************/")
-        return ECR_NC.setEscrow(
-        asset5, 
-        account2Hash,
-        '180',
-        '50',
-        {from: account4}
-        )
-    })
+    //     console.log("//**************************************END setEscrow FAIL BATCH**********************************************/")
+    //     console.log("//**************************************BEGIN endEscrow FAIL BATCH**********************************************/")
+    //     return ECR_NC.setEscrow(
+    //     asset5, 
+    //     account2Hash,
+    //     '180',
+    //     '50',
+    //     {from: account4}
+    //     )
+    // })
 
 
     it('Should set asset1 into status 51', async () => {
+
+        console.log("//**************************************END setEscrow FAIL BATCH**********************************************/")
+        console.log("//**************************************BEGIN endEscrow FAIL BATCH**********************************************/")
         return NP_NC._modStatus(
         asset1, 
         '51',

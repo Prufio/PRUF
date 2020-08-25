@@ -1318,14 +1318,14 @@
     })
 
 
-    it('Should mintNakedAsset3', async () => {
-        return NAKED.mintNakedAsset(
-        asset3, 
-        string3Hash,
-        '15',
-        {from: account10}
-        )
-    })
+    // it('Should mintNakedAsset3', async () => {
+    //     return NAKED.mintNakedAsset(
+    //     asset3, 
+    //     string3Hash,
+    //     '15',
+    //     {from: account10}
+    //     )
+    // })
 
 
     // it('Should unauthorize NAKED in AC15', async () => {                      //CHECKS IN STORAGE MOD-IA
