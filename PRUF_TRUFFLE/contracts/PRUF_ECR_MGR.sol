@@ -145,7 +145,7 @@ contract ECR_MGR is BASIC {
             escrows[_idxHash].timelock < block.timestamp,
             "EM:PEE:Escrow not expired"
         );
-        require( // do not allow escrows with escrow.data > 199 to be ended by this function
+        require( // do not allow escrows with escrow.data > 199 to be ended by this function     //STATE UNREACHABLE CTS:PREFERRED
             escrows[_idxHash].data < 200,
             "EM:PEE:Escrow not endable with permissiveEndEscrow"
         );
