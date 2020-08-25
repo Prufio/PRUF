@@ -1384,15 +1384,15 @@
     })
 
     //4
-    it('Should fail because you cannot set a time in the past', async () => {
-        return ECR_NC.setEscrow(
-        asset1, 
-        account4Hash,
-        '-180',
-        '56',
-        {from: account4}
-        )
-    })
+    // it('Should fail because you cannot set a time in the past', async () => {
+    //     return ECR_NC.setEscrow(
+    //     asset1, 
+    //     account4Hash,
+    //     '-180',
+    //     '56',
+    //     {from: account4}
+    //     )
+    // })
 
     //5
     it('Should fail because not being set to auth NC escrow status', async () => {
