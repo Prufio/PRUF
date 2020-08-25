@@ -11,11 +11,6 @@ import NewRecord from "./NewRecord";
 import RetrieveRecord from "./RetrieveRecord";
 import TransferAsset from "./TransferAsset";
 import VerifyRightsholder from "./VerifyRightsholder";
-import AddContract from "./AddContract";
-import AddUser from "./AddUser";
-import Ownership from "./Ownership";
-import SetCosts from "./SetCosts";
-import THEWORKS from "./TheWorks";
 import buildContracts from "./Contracts";
 import EscrowManager from "./EscrowManager";
 
@@ -201,34 +196,10 @@ class Main extends Component {
                     </li>
                     <li>
                       <NavLink to="/manage-escrow">Escrow</NavLink>
-                    </li>
-                    {/* <li>
-                      <NavLink to="/the-works">THE WORKS</NavLink>
-                    </li> */}
+                    </li>           
                   </nav>
                 )}
 
-                {/* {this.state.ownerMenu === true && (
-                  <nav>
-                    <li>
-                      <NavLink exact to="/">
-                        Home
-                      </NavLink>
-                    </li>
-                    <li>
-                      <NavLink to="/add-user">Add User</NavLink>
-                    </li>
-                    <li>
-                      <NavLink to="/set-costs">Set Costs</NavLink>
-                    </li>
-                    <li>
-                      <NavLink to="/add-contract">Add Contract</NavLink>
-                    </li>
-                    <li>
-                      <NavLink to="/ownership">Ownership</NavLink>
-                    </li>
-                  </nav>
-                )} */}
               </ul>
               <div className="content">
                 <Route exact path="/" component={Home} />
@@ -257,27 +228,10 @@ class Main extends Component {
                   path="/manage-escrow"
                   component={EscrowManager}
                 />
-                {/* <Route path="/add-user" component={AddUser} />
-                <Route path="/set-costs" component={SetCosts} />
-                <Route path="/add-contract" component={AddContract} />
-                <Route path="/ownership" component={Ownership} /> */}
-                {/* <Route path="/the-works" component={THEWORKS} /> */}
               </div>
             </div>
           </div>
           <NavLink to="/">
-            {/* {(this.state.isSTOROwner === true || this.state.isBPPOwner === true || this.state.isBPNPOwner === true) && (
-              <Form className="buttonDisplay2">
-                <Button
-                  variant="danger"
-                  type="button"
-                  size="lg"
-                  onClick={toggleAdmin}
-                >
-                  Toggle Admin
-                </Button>
-              </Form>
-            )} */}
           </NavLink>
         </div>
       </HashRouter>

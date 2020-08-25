@@ -68,15 +68,20 @@ class AddUser extends Component {
               Please connect web3 provider.
             </div>
           )}
-
-          {window.addr > 0 && (
+          {window.assetClass === undefined && (
+            <div className="errorResults">
+              <h2>No asset class selected.</h2>
+              <h3>Please select asset class in home page to use forms.</h3>
+            </div>
+          )}
+          {window.addr > 0 && window.assetClass > 0 &&(
             <div>
               <h2 className="Headertext">Add User</h2>
               <br></br>
 
               <Form.Group as={Col} controlId="formGridContractName">
                 <Form.Label className="formFont">
-                  Authorized Address :
+                  User Address :
                 </Form.Label>
                 <Form.Control
                   placeholder="Authorized Address"
@@ -93,19 +98,6 @@ class AddUser extends Component {
                   required
                   type="number"
                   onChange={(e) => this.setState({ userType: e.target.value })}
-                  size="lg"
-                />
-              </Form.Group>
-
-              <Form.Group as={Col} controlId="formGridACClass">
-                <Form.Label className="formFont">Auth Asset Class :</Form.Label>
-                <Form.Control
-                  placeholder="Auth Asset Class"
-                  required
-                  type="number"
-                  onChange={(e) =>
-                    this.setState({ assetClass: e.target.value })
-                  }
                   size="lg"
                 />
               </Form.Group>

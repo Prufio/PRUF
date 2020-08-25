@@ -40,8 +40,7 @@ class Ownership extends Component {
   }
 
   componentWillUnmount() {//stuff do do when component unmounts from the window
-    //console.log("unmounting component")
-    document.removeEventListener("accountListener", this.acctChanger());
+
   }
 
   render() {//render continuously produces an up-to-date stateful document  
