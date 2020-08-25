@@ -1337,8 +1337,7 @@
             '180',
             '6',
             {from: account4}
-            )
-                
+            )      
     })
 
 
@@ -1403,23 +1402,23 @@
         )
     })
 
-    //4                                                                                  //THROWS IN SAFEMATH
-    it('Should fail because you cannot set a time in the past', async () => {
-        return ECR.setEscrow(
-        asset1, 
-        account2Hash,
-        '-180',
-        '6',
-        {from: account2}
-        )
-    })
+    // //4                                                                                  //THROWS IN SAFEMATH
+    // it('Should fail because you cannot set a time in the past', async () => {
+    //     return ECR.setEscrow(
+    //     asset1, 
+    //     account2Hash,
+    //     '-180',
+    //     '6',
+    //     {from: account2}
+    //     )
+    // })
 
 
     it('Should auth account10 in AC 10 as robot', async () => {
         return AC_MGR.OO_addUser(account10, '9', '10', { from: account1 })
     })
 
-    //5
+    //4
     it('Should fail because usertype > 4 cannot set escrow < 49', async () => {
         return ECR.setEscrow(
         asset1, 
@@ -1435,7 +1434,7 @@
         return AC_MGR.OO_addUser(account10, '1', '10', { from: account1 })
     })
 
-    //6
+    //5
     it('Should fail because you cannot set to recycled through escrow', async () => {
         return ECR.setEscrow(
         asset1, 
@@ -1588,7 +1587,7 @@
     //     )
     // })
 
-    //7
+    //6
     it('Should fail becasue custodial contract does not hold token', async () => {
 
         console.log("//**************************************END setEscrow FAIL BATCH**********************************************/")
@@ -1619,7 +1618,7 @@
             })
     })
 
-    //8
+    //7
     it('Should fail because ECR is not an authorized escrow contract', async () => {
         return ECR.endEscrow(
         asset1, 
@@ -1655,7 +1654,7 @@
         )
     })
 
-    //9
+    //8
     it('Should fail because user not authorized for AC', async () => {
         return ECR.endEscrow(
         asset1, 
@@ -1664,13 +1663,13 @@
     })
 
 
-    //10
-    it('Should fail because record not in escrow', async () => {
-        return ECR.endEscrow(
-        asset1, 
-        {from: account2}
-        )
-    })
+    // //9
+    // it('Should fail because asset is in discarded status', async () => {
+    //     return ECR.endEscrow(
+    //     asset5, 
+    //     {from: account2}
+    //     )
+    // })
 
     it('Should put asset1 into escrow', async () => {
         return ECR.setEscrow(
@@ -1682,7 +1681,7 @@
         )
     })
 
-    //11
+    //9
     it('Should fail usertype is not < 5', async () => {
         return ECR.endEscrow(
         asset1, 
@@ -1724,11 +1723,11 @@
         return AC_MGR.OO_addUser(account4, '1', '10', { from: account1 })
     })
 
-    //12
+    //10
     it('Should fail because caller != escrow owner', async () => {
         return ECR.endEscrow(
         asset1,
-        {from: account1}
+        {from: account2}
         )
     })
 

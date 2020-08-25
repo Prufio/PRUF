@@ -104,11 +104,9 @@ contract ECR is ECR_CORE {
 
         require(contractInfo.contractType > 0, "E:EE: contract not auth in AC");
         require((userType > 0) && (userType < 10), "E:EE: user not auth in AC");
-        require(
-            (rec.assetStatus == 6) ||
-                (rec.assetStatus == 50) ||
-                (rec.assetStatus == 56),
-            "E:EE- record must be in escrow status"
+        require(                                      //STATE UNREACHABLE CTS:EXAMINE
+            (rec.assetStatus != 60),
+            "E:EE- Asset is discarded, use Recycle"
         );
         require(
             ((rec.assetStatus > 49) || (userType < 5)),
