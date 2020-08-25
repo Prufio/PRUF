@@ -17,6 +17,7 @@ class Home extends Component {
         else {
           //console.log("result in getCosts: ", Object.values(_result));
           window.costArray = Object.values(_result)
+          return window.authLevel = this.state.authLevel
         }
       })
       //console.log("before setting window-level costs")
@@ -74,7 +75,9 @@ class Home extends Component {
   }
 
   componentDidMount() {
-
+    if (window.authLevel !== undefined){
+      this.setState({authLevel: window.authLevel})
+    }
   }
 
   componentDidUpdate() {
