@@ -13,6 +13,8 @@ __/\\\\\\\\\\\\\ _____/\\\\\\\\\ _______/\\../\\ ___/\\\\\\\\\\\\\\\
 /*-----------------------------------------------------------------
  *  TO DO
  *
+ *-----------------------------------------------------------------
+ * PRUF core provides additional core functionality covering cost getters, payment processing, withdrawls, common test conditionals, and setters for data in storage
  *---------------------------------------------------------------*/
 
 // SPDX-License-Identifier: UNLICENSED
@@ -27,6 +29,7 @@ contract CORE is PullPayment, BASIC {
     using SafeMath for uint256;
 
     struct Costs {
+        //Struct to hold costs for various functions
         uint256 newRecordCost; // Cost to create a new record
         uint256 transferAssetCost; // Cost to transfer a record from known rights holder to a new one
         uint256 createNoteCost; // Cost to add a static note to an asset
@@ -37,6 +40,7 @@ contract CORE is PullPayment, BASIC {
     }
 
     struct Invoice {
+        //invoice struct to facilitate payment messaging in-contract
         address rootAddress;
         uint256 rootPrice;
         address ACTHaddress;
@@ -70,7 +74,7 @@ contract CORE is PullPayment, BASIC {
     //--------------------------------------------------------------------------------------Storage Writing internal functions
 
     /*
-     * @dev create a Record in Storage @ idxHash
+     * @dev create a Record in Storage @ idxHash (SETTER)
      */
     function createRecord(
         bytes32 _idxHash,
@@ -103,7 +107,7 @@ contract CORE is PullPayment, BASIC {
     }
 
     /*
-     * @dev Write a Record to Storage @ idxHash
+     * @dev Write a Record to Storage @ idxHash (SETTER)
      */
     function writeRecord(bytes32 _idxHash, Record memory _rec)
         internal
@@ -124,7 +128,7 @@ contract CORE is PullPayment, BASIC {
     }
 
     /*
-     * @dev Write an Ipfs Record to Storage @ idxHash
+     * @dev Write an Ipfs Record to Storage @ idxHash  (SETTER)
      */
     function writeRecordIpfs1(bytes32 _idxHash, Record memory _rec)
         internal
@@ -136,6 +140,9 @@ contract CORE is PullPayment, BASIC {
         //^^^^^^^interactions^^^^^^^^^
     }
 
+    /*
+     * @dev Write an Ipfs Record to Storage @ idxHash  (SETTER)
+     */
     function writeRecordIpfs2(bytes32 _idxHash, Record memory _rec)
         internal
         whenNotPaused
@@ -149,6 +156,9 @@ contract CORE is PullPayment, BASIC {
 
     //--------------------------------------------------------------------------------------Payment internal functions
 
+    /*
+     * @dev Send payment to appropriate pullPayment adresses for payable function
+     */
     function deductNewRecordCosts(uint32 _assetClass) internal whenNotPaused {
         //^^^^^^^checks^^^^^^^^^
         Invoice memory pricing;
@@ -163,6 +173,9 @@ contract CORE is PullPayment, BASIC {
         //^^^^^^^interactions^^^^^^^^^
     }
 
+    /*
+     * @dev Send payment to appropriate pullPayment adresses for payable function
+     */
     function deductRecycleCosts(uint32 _assetClass, address _oldOwner)
         internal
         whenNotPaused
@@ -181,6 +194,9 @@ contract CORE is PullPayment, BASIC {
         //^^^^^^^interactions^^^^^^^^^
     }
 
+    /*
+     * @dev Send payment to appropriate pullPayment adresses for payable function
+     */
     function deductTransferAssetCosts(uint32 _assetClass)
         internal
         whenNotPaused
@@ -198,6 +214,9 @@ contract CORE is PullPayment, BASIC {
         //^^^^^^^interactions^^^^^^^^^
     }
 
+    /*
+     * @dev Send payment to appropriate pullPayment adresses for payable function
+     */
     function deductCreateNoteCosts(uint32 _assetClass) internal whenNotPaused {
         //^^^^^^^checks^^^^^^^^^
         Invoice memory pricing;
@@ -212,6 +231,9 @@ contract CORE is PullPayment, BASIC {
         //^^^^^^^interactions^^^^^^^^^
     }
 
+    /*
+     * @dev Send payment to appropriate pullPayment adresses for payable function
+     */
     function deductReMintRecordCosts(uint32 _assetClass)
         internal
         whenNotPaused
@@ -229,6 +251,9 @@ contract CORE is PullPayment, BASIC {
         //^^^^^^^interactions^^^^^^^^^
     }
 
+    /*
+     * @dev Send payment to appropriate pullPayment adresses for payable function
+     */
     function deductChangeStatusCosts(uint32 _assetClass)
         internal
         whenNotPaused
@@ -246,10 +271,10 @@ contract CORE is PullPayment, BASIC {
         //^^^^^^^interactions^^^^^^^^^
     }
 
-    function deductForceModifyCosts(uint32 _assetClass)
-        internal
-        whenNotPaused
-    {
+    /*
+     * @dev Send payment to appropriate pullPayment adresses for payable function
+     */
+    function deductForceModifyCosts(uint32 _assetClass) internal whenNotPaused {
         //^^^^^^^checks^^^^^^^^^
         Invoice memory pricing;
         //^^^^^^^effects^^^^^^^^^
@@ -264,6 +289,7 @@ contract CORE is PullPayment, BASIC {
     }
 
     //--------------------------------------------------------------PAYMENT FUNCTIONS
+
     /*
      * @dev Withdraws user's credit balance from contract
      */
@@ -289,8 +315,7 @@ contract CORE is PullPayment, BASIC {
         //^^^^^^^interactions^^^^^^^^^
     }
 
-
-//----------------------------------------------------------------------STATUS CHECKS
+    //----------------------------------------------------------------------STATUS CHECKS
 
     /*
      * @dev Check to see if record is lost or stolen
@@ -308,7 +333,6 @@ contract CORE is PullPayment, BASIC {
         }
     }
 
-    
     /*
      * @dev Check to see if record is in escrow status
      */
@@ -321,7 +345,6 @@ contract CORE is PullPayment, BASIC {
             return 170;
         }
     }
-
 
     /*
      * @dev Check to see if record needs imported
