@@ -185,6 +185,12 @@ interface A_TKN_Interface {
         external
         returns (uint256 tokenId);
 
+    function validateNakedToken(  //throws if authcode does not match
+        uint256 tokenId,
+        uint32 _assetClass,
+        string calldata _authCode
+    ) external;
+
     function tokenExists(uint256 tokenId)
         external
         returns (uint8 uint8_Bool_type_0_170);
