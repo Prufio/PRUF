@@ -15,6 +15,11 @@ __/\\\\\\\\\\\\\ _____/\\\\\\\\\ _______/\\../\\ ___/\\\\\\\\\\\\\\\
  *
  *---------------------------------------------------------------*/
 
+ /*-----------------------------------------------------------------
+ *  PRUF STOR is the primary data repository for the PRUF system. No direct user writes are permitted in STOR, all data must come from explicitly approved contracts.
+ *  PRUF STOR  stores records in a map of Records, foreward and reverse name resolution for approved contracts, as well as contract authorization data.
+ *---------------------------------------------------------------*/
+
 /*-----------------------------------------------------------------
  * IMPORTANT NOTE : DO NOT REMOVE FROM CODE:
  *      Verification of rgtHash in curated, custodial classes are not secure beyond the honorable intentions
@@ -48,7 +53,7 @@ contract STOR is Ownable, ReentrancyGuard, Pausable {
         bytes32 rightsHolder; // KEK256 Registered owner
     }
 
-    mapping(string => mapping(uint32 => uint8)) internal contractInfo;
+    mapping(string => mapping(uint32 => uint8)) internal contractInfo; // name=>AC=>authorization level
     mapping(address => string) private contractAddressToName; // Authorized contract addresses, indexed by address, with auth level 0-255
     mapping(string => address) private contractNameToAddress; // Authorized contract addresses, indexed by name
 
@@ -58,7 +63,7 @@ contract STOR is Ownable, ReentrancyGuard, Pausable {
     AC_TKN_Interface private AC_TKN; //erc721_token prototype initialization
 
     address internal AC_MGR_Address;
-    AC_MGR_Interface internal AC_MGR; // Set up external contract interface
+    AC_MGR_Interface internal AC_MGR; // Set up external contract interface for AC_MGR
 
     //----------------------------------------------Modifiers----------------------------------------------//
 
@@ -78,7 +83,7 @@ contract STOR is Ownable, ReentrancyGuard, Pausable {
     }
 
     /*
-     * @dev Check record _idxHash exists and is not locked
+     * @dev Check record _idxHash is not in escrow
      */
     modifier notEscrow(bytes32 _idxHash) {
         require(
@@ -100,7 +105,7 @@ contract STOR is Ownable, ReentrancyGuard, Pausable {
     }
 
     /*
-     * @dev Check to see if contract adress is registered to PRUF_escrowMGR
+     * @dev Check to see if contract address resolves to ECR_MGR
      */
     modifier isEscrowManager() {
         require(
@@ -111,7 +116,7 @@ contract STOR is Ownable, ReentrancyGuard, Pausable {
     }
 
     /*
-     * @dev Check to see if record is in lost or stolen status
+     * @dev Check to see a status matches lost or stolen status
      */
     function isLostOrStolen(uint8 _assetStatus) private pure returns (uint8) {
         if (
@@ -127,7 +132,7 @@ contract STOR is Ownable, ReentrancyGuard, Pausable {
     }
 
     /*
-     * @dev Check to see if record is in transferred status
+     * @dev Check to see a status matches transferred status
      */
     function isTransferred(uint8 _assetStatus) private pure returns (uint8) {
         if ((_assetStatus != 5) && (_assetStatus != 55)) {
@@ -138,7 +143,7 @@ contract STOR is Ownable, ReentrancyGuard, Pausable {
     }
 
     /*
-     * @dev Check to see if record is in escrow status
+     * @dev Check to see a status matches escrow status
      */
     function isEscrow(uint8 _assetStatus) private pure returns (uint8) {
         if (
@@ -199,7 +204,7 @@ contract STOR is Ownable, ReentrancyGuard, Pausable {
     }
 
     /*
-     * @dev Authorize / Deauthorize / Authorize contract Names permitted to make record modifications, per AssetClass
+     * @dev Authorize / Deauthorize / Authorize contract NAMES permitted to make record modifications, per AssetClass
      */
     function enableContractForAC(
         string calldata _name,
