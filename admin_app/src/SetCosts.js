@@ -24,8 +24,8 @@ class SetCosts extends Component {
       newRecordCost: 0,
       transferRecordCost: 0,
       createNoteCost: 0,
-      cost4: 0,
-      cost5: 0,
+      remintCost: 0,
+      importCost: 0,
       forceModCost: 0,
  
     };
@@ -55,8 +55,8 @@ class SetCosts extends Component {
           this.state.newRecordCost,
           this.state.transferRecordCost,
           this.state.createNoteCost,
-          this.state.cost4,
-          this.state.cost5,
+          this.state.remintCost,
+          this.state.importCost,
           this.state.forceModCost,
           this.state.paymentAddr
         )
@@ -86,23 +86,16 @@ class SetCosts extends Component {
               Please connect web3 provider.
             </div>
           )}
-
-          {window.addr > 0 && (
+          {window.assetClass === undefined && (
+            <div className="errorResults">
+              <h2>No asset class selected.</h2>
+              <h3>Please select asset class in home page to use forms.</h3>
+            </div>
+          )}
+          {window.addr > 0 && window.assetClass > 0 &&(
             <div>
-              <h2 className="Headertext">Set Function Costs</h2>
+              <h2 className="Headertext">Set Costs</h2>
               <br></br>
-
-              <Form.Group as={Col} controlId="formGridAssetClassCost">
-                <Form.Label className="formFont">Asset Class :</Form.Label>
-                <Form.Control
-                  placeholder="Asset Class Cost"
-                  required
-                  onChange={(e) =>
-                    this.setState({ assetClass: e.target.value })
-                  }
-                  size="lg"
-                />
-              </Form.Group>
 
               <Form.Group as={Col} controlId="formGridNewRecordCost">
                 <Form.Label className="formFont">New record :</Form.Label>
@@ -140,22 +133,22 @@ class SetCosts extends Component {
                 />
               </Form.Group>
 
-              <Form.Group as={Col} controlId="formGridCost4Cost">
-                <Form.Label className="formFont">Cost 4 :</Form.Label>
+              <Form.Group as={Col} controlId="formGridRemintCost">
+                <Form.Label className="formFont">Remint Asset :</Form.Label>
                 <Form.Control
                   placeholder="Cost 4 Cost"
                   required
-                  onChange={(e) => this.setState({ cost4: e.target.value })}
+                  onChange={(e) => this.setState({ remintCost: e.target.value })}
                   size="lg"
                 />
               </Form.Group>
 
-              <Form.Group as={Col} controlId="formGridCost5Cost">
-                <Form.Label className="formFont">Cost 5 :</Form.Label>
+              <Form.Group as={Col} controlId="formGridImportCost">
+                <Form.Label className="formFont">Import Asset :</Form.Label>
                 <Form.Control
                   placeholder="Cost 5 Cost"
                   required
-                  onChange={(e) => this.setState({ cost5: e.target.value })}
+                  onChange={(e) => this.setState({ importCost: e.target.value })}
                   size="lg"
                 />
               </Form.Group>
@@ -176,7 +169,7 @@ class SetCosts extends Component {
 
               <Form.Group as={Col} controlId="formGridPaymentAddr">
                 <Form.Label className="formFont">
-                  Payment Address :
+                  Beneficiary Address :
                 </Form.Label>
                 <Form.Control
                   placeholder="Payment Address"

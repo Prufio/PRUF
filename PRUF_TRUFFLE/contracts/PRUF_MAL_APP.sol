@@ -817,5 +817,27 @@ contract MAL_APP is CORE_MAL {
         STOR.retrieveRecord(_idxHash);
         //^^^^^^^interactions^^^^^^^^^
     }
+
+
+        /**
+     * @dev Safely burns a token and sets the corresponding RGT to zero in storage.
+     */
+    function discard(uint256 tokenId) external nonReentrant {
+        bytes32 _idxHash = bytes32(tokenId);
+        //Record memory rec = getRecord(_idxHash);
+        
+        // require(                 //REDUNDANT---will throw in RCLR.discard()
+        //     _isApprovedOrOwner(_msgSender(), tokenId),
+        //     "AT:D:transfer caller is not owner nor approved"
+        // );
+        // require(
+        //     (rec.assetStatus == 59),
+        //     "AT:D:Asset must be in status 59 (discardable) to be discarded"
+        // );
+
+        //^^^^^^^checks^^^^^^^^^
+        RCLR.discard(_idxHash);
+        //^^^^^^^interactions^^^^^^^^^
+    }
     
 }
