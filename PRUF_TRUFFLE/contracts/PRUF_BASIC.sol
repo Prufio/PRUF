@@ -13,6 +13,9 @@ __/\\\\\\\\\\\\\ _____/\\\\\\\\\ _______/\\../\\ ___/\\\\\\\\\\\\\\\
 /*-----------------------------------------------------------------
  *  TO DO
  *
+ *-----------------------------------------------------------------
+ *PRUF basic provides core data structures and functionality to PRUF contracts.
+ *Features include contract name resolution, and getters for records, users, and asset class information.
  *---------------------------------------------------------------*/
 
 // SPDX-License-Identifier: UNLICENSED
@@ -26,6 +29,7 @@ import "./_ERC721/IERC721Receiver.sol";
 
 contract BASIC is ReentrancyGuard, Ownable, IERC721Receiver, Pausable {
     struct Record {
+        //struct for holding and manipulating record data
         uint8 assetStatus; // Status - Transferrable, locked, in transfer, stolen, lost, etc.
         uint32 assetClass; // Type of asset
         uint32 countDown; // Variable that can only be dencreased from countDownStart
@@ -38,6 +42,7 @@ contract BASIC is ReentrancyGuard, Ownable, IERC721Receiver, Pausable {
     }
 
     struct AC {
+        //Struct for holding and manipulating assetClass data
         string name; // NameHash for assetClass
         uint32 assetClassRoot; // asset type root (bycyles - USA Bicycles)
         uint8 custodyType; // custodial or noncustodial
@@ -45,29 +50,30 @@ contract BASIC is ReentrancyGuard, Ownable, IERC721Receiver, Pausable {
     }
 
     struct ContractDataHash {
+        //Struct for holding and manipulating contract authorization data
         uint8 contractType; // Auth Level / type
         bytes32 nameHash; // Contract Name hashed
     }
 
     address internal STOR_Address;
-    STOR_Interface internal STOR; // Set up external contract interface
+    STOR_Interface internal STOR;
 
     address internal AC_MGR_Address;
-    AC_MGR_Interface internal AC_MGR; // Set up external contract interface
+    AC_MGR_Interface internal AC_MGR;
 
     address internal A_TKN_Address;
-    A_TKN_Interface internal A_TKN; //erc721_token prototype initialization
+    A_TKN_Interface internal A_TKN;
 
     address internal AC_TKN_Address;
-    AC_TKN_Interface internal AC_TKN; //erc721_token prototype initialization
+    AC_TKN_Interface internal AC_TKN;
 
     address internal ECR_MGR_Address;
-    ECR_MGR_Interface internal ECR_MGR; //Set up external contract interface
+    ECR_MGR_Interface internal ECR_MGR;
 
-    address internal RCLR_Address; //Set up external contract interface
+    address internal RCLR_Address;
     RCLR_Interface internal RCLR;
 
-    address internal APP_Address; //Set up external contract interface
+    address internal APP_Address;
     APP_Interface internal APP;
 
     address internal NAKED_Address;
@@ -98,7 +104,7 @@ contract BASIC is ReentrancyGuard, Ownable, IERC721Receiver, Pausable {
 
     //----------------------External Admin functions / onlyowner or isAdmin----------------------//
     /*
-     * @dev Address Setters
+     * @dev Resolve Contract Addresses from STOR
      */
     function OO_ResolveContractAddresses()
         external
@@ -131,6 +137,9 @@ contract BASIC is ReentrancyGuard, Ownable, IERC721Receiver, Pausable {
         //^^^^^^^effects^^^^^^^^^
     }
 
+    /*
+     * @dev Transfer any assetTokens from contract
+     */
     function transferAssetToken(address _to, bytes32 _idxHash)
         external
         virtual
@@ -147,6 +156,9 @@ contract BASIC is ReentrancyGuard, Ownable, IERC721Receiver, Pausable {
         //^^^^^^^interactions^^^^^^^^^
     }
 
+    /*
+     * @dev Transfer any assetClassTokens from contract
+     */
     function OO_transferACToken(address _to, bytes32 _idxHash)
         external
         virtual
@@ -161,7 +173,7 @@ contract BASIC is ReentrancyGuard, Ownable, IERC721Receiver, Pausable {
     }
 
     /*
-     * @dev Set storage contract to interface with
+     * @dev Set adress of STOR contract to interface with
      */
     function OO_setStorageContract(address _storageAddress) external onlyOwner {
         require(
@@ -227,7 +239,7 @@ contract BASIC is ReentrancyGuard, Ownable, IERC721Receiver, Pausable {
     }
 
     /*
-     * @dev Get asset class information from AC_manager (FUNCTION IS VIEW)
+     * @dev Get asset class information from AC_manager and return an AC Struct
      */
     function getACinfo(uint32 _assetClass)
         internal
@@ -235,7 +247,7 @@ contract BASIC is ReentrancyGuard, Ownable, IERC721Receiver, Pausable {
         returns (AC memory)
     {
         //^^^^^^^checks^^^^^^^^^
-        
+
         AC memory AC_info;
         //^^^^^^^effects^^^^^^^^^
         (
@@ -247,6 +259,9 @@ contract BASIC is ReentrancyGuard, Ownable, IERC721Receiver, Pausable {
         //^^^^^^^interactions^^^^^^^^^
     }
 
+    /*
+     * @dev Get contract information from STOR and return a ContractDataHash Struct
+     */
     function getContractInfo(address _addr, uint32 _assetClass)
         internal
         returns (ContractDataHash memory)
@@ -259,7 +274,7 @@ contract BASIC is ReentrancyGuard, Ownable, IERC721Receiver, Pausable {
     }
 
     /*
-     * @dev Get a Record from Storage @ idxHash
+     * @dev Get a Record from Storage @ idxHash and return a Record Struct
      */
     function getRecord(bytes32 _idxHash) internal returns (Record memory) {
         //^^^^^^^checks^^^^^^^^^
