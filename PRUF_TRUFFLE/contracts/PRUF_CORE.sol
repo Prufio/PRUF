@@ -50,7 +50,7 @@ contract CORE is PullPayment, BASIC {
     //--------------------------------------------------------------------------------------Storage Reading internal functions
 
     /*
-     * @dev retrieves costs from Storage and returns Costs struct
+     * @dev retrieves costs from Storage and returns Costs struct (GETTER)
      */
     function getCost(uint32 _assetClass) internal returns (Costs memory) {
         //^^^^^^^checks^^^^^^^^^

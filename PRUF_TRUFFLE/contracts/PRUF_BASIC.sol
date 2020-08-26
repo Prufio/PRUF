@@ -80,7 +80,7 @@ contract BASIC is ReentrancyGuard, Ownable, IERC721Receiver, Pausable {
     address internal APP_NC_Address;
     address internal NP_Address;
 
-    // --------------------------------------Events--------------------------------------------//
+    // --------------------------------------REPORTING--------------------------------------------//
 
     event REPORT(string _msg);
     // --------------------------------------Modifiers--------------------------------------------//
@@ -96,7 +96,7 @@ contract BASIC is ReentrancyGuard, Ownable, IERC721Receiver, Pausable {
      */
     modifier isAuthorized(bytes32 _idxHash) virtual {
         require(
-            _idxHash == 0, //function should always be overridden
+            _idxHash == 0, //function should always be overridden!!! will throw if not
             "B:MOD-IA: Modifier MUST BE OVERRIDDEN"
         );
         _;
@@ -138,7 +138,7 @@ contract BASIC is ReentrancyGuard, Ownable, IERC721Receiver, Pausable {
     }
 
     /*
-     * @dev Transfer any assetTokens from contract
+     * @dev Transfer any specified assetToken from contract
      */
     function transferAssetToken(address _to, bytes32 _idxHash)
         external
@@ -157,7 +157,7 @@ contract BASIC is ReentrancyGuard, Ownable, IERC721Receiver, Pausable {
     }
 
     /*
-     * @dev Transfer any assetClassTokens from contract
+     * @dev Transfer any specified assetClassToken from contract
      */
     function OO_transferACToken(address _to, bytes32 _idxHash)
         external
@@ -188,7 +188,7 @@ contract BASIC is ReentrancyGuard, Ownable, IERC721Receiver, Pausable {
 
     //--------------------------------------External functions--------------------------------------------//
     /*
-     * @dev Compliance for erc721
+     * @dev Compliance for erc721 reciever
      */
     function onERC721Received(
         address,
@@ -202,7 +202,7 @@ contract BASIC is ReentrancyGuard, Ownable, IERC721Receiver, Pausable {
     }
 
     /**
-     * @dev Triggers stopped state.
+     * @dev Triggers stopped state. (pausable)
      *
      */
     function OO_pause() external onlyOwner {
@@ -210,7 +210,7 @@ contract BASIC is ReentrancyGuard, Ownable, IERC721Receiver, Pausable {
     }
 
     /**
-     * @dev Returns to normal state.
+     * @dev Returns to normal state. (pausable)
      */
     function OO_unpause() external onlyOwner {
         _unpause();
@@ -219,7 +219,7 @@ contract BASIC is ReentrancyGuard, Ownable, IERC721Receiver, Pausable {
     //--------------------------------------------------------------------------------------INTERNAL functions
 
     /*
-     * @dev Get a User Record from AC_manager @ msg.sender
+     * @dev Get a User type Record from AC_manager for msg.sender, by assetClass
      */
     function getUserType(uint32 _assetClass)
         internal
