@@ -321,7 +321,7 @@ class AddNote extends Component {
               </Form.Row>
               <Form.Row>
                 <Form.Group as={Col} controlId="formGridIpfs2File">
-                  <Form.File size="lg" className="btn2" id="ipfs2File"/>
+                  <Form.File onChange= {(e) => this.setState({hashPath: ""})} size="lg" className="btn2" id="ipfs2File"/>
                 </Form.Group>
               </Form.Row>
               {this.state.hashPath !== "" && (

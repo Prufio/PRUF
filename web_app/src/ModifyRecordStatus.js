@@ -133,7 +133,7 @@ class ModifyRecordStatus extends Component {
       checkExists(idxHash);
       checkMatch(idxHash, rgtHash);
 
-      if (this.state.status !== "3" && this.state.status !== "4" && this.state.status !== "6" && this.state.status !== "9" && this.state.status !== "10" && this.state.status < 12){
+      if (this.state.status !== "3" && this.state.status !== "4" && this.state.status !== "6" && this.state.status !== "9" && this.state.status !== "10"){
         window.contracts.NP.methods
         ._modStatus(idxHash, rgtHash, this.state.status)
         .send({ from: window.addr })
@@ -322,6 +322,7 @@ class ModifyRecordStatus extends Component {
                     <option value="2">Non-transferrable</option>
                     <option value="3">Stolen</option>
                     <option value="4">Lost</option>
+                    <option value="51">Export-ready</option>
                   </Form.Control>
                 </Form.Group>
               </Form.Row>

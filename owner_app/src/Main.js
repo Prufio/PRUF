@@ -6,6 +6,7 @@ import AddContract from "./AddContract";
 import Ownership from "./Ownership";
 import THEWORKS from "./TheWorks";
 import buildContracts from "./Contracts";
+import ParticleBox from "./ParticleBox"
 
 
 
@@ -133,6 +134,8 @@ class Main extends Component {
     }
 
     return (
+      <div>
+      <ParticleBox/>
       <HashRouter>
         <div>
           <div className="imageForm">
@@ -183,6 +186,7 @@ class Main extends Component {
           </NavLink>
         </div>
       </HashRouter>
+      </div>
     );
   }
 }

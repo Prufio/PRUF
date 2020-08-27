@@ -48,24 +48,20 @@ class ExportAsset extends Component {
 
     
 
-    async function checkExists(idxHash) {//check whether record of asset exists in the database
-      window.contracts.STOR.methods
+    async function checkExists(idxHash) {
+      await window.contracts.STOR.methods
         .retrieveShortRecord(idxHash)
         .call({ from: self.state.addr }, function (_error, _result) {
-          if (_error){ console.log("IN ERROR IN ERROR IN ERROR")
-            self.setState({ error: _error.message });
+          if (_error) {
+            self.setState({ error: _error });
             self.setState({ result: 0 });
-          } else if (
-            Object.values(_result)[4] ===
-            "0"
-          ) {
-          } else {
-            self.setState({ result: _result });
             alert(
-              "WARNING: Record already exists! Reject in metamask and change asset info."
+              "WARNING: Record DOES NOT EXIST! Reject in metamask and review asset info fields."
             );
+          } else {
+            self.setState({ result1: _result });
           }
-          console.log("In checkExists, _result, _error: ", _result, _error);
+          console.log("check debug, _result, _error: ", _result, _error);
         });
     }
 
@@ -91,7 +87,7 @@ class ExportAsset extends Component {
 
       window.contracts.NP.methods
         .exportAsset(
-          idxHash,
+          idxHash,window.contracts.APP._address
         )
         .send({from: window.addr})
         .on("error", function (_error) {
@@ -183,7 +179,7 @@ class ExportAsset extends Component {
                   />
                 </Form.Group>
               </Form.Row>
-              <Form.Row>
+{/*               <Form.Row>
                 <Form.Group as={Col} controlId="formGridAgent">
                   <Form.Label className="formFont">Import Agent Address:</Form.Label>
                   <Form.Control
@@ -195,7 +191,7 @@ class ExportAsset extends Component {
                   />
                 </Form.Group>
 
-              </Form.Row>
+              </Form.Row> */}
               
                 <Form.Row>
                   <Form.Group className="buttonDisplay">

@@ -14,6 +14,7 @@ import VerifyRightsholder from "./VerifyRightsholder";
 import buildContracts from "./Contracts";
 import EscrowManager from "./EscrowManager";
 import ExportAsset from "./ExportAsset";
+import ParticleBox from './ParticleBox';
 
 
 
@@ -141,7 +142,11 @@ class Main extends Component {
     }
 
     return (
+      <div>
+      <ParticleBox/>
       <HashRouter>
+        
+    
         <div>
           <div className="imageForm">
             <img src={require("./BP Logo.png")} alt="Bulletproof Logo" />
@@ -240,6 +245,7 @@ class Main extends Component {
           </NavLink>
         </div>
       </HashRouter>
+      </div>
     );
   }
 }
