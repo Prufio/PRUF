@@ -51,6 +51,15 @@ class NewRecord extends Component {
   render() {//render continuously produces an up-to-date stateful document  
     const self = this;
 
+    async function tenThousandHashesOf(varToHash){
+      var tempHash = varToHash;
+      for (var i = 0; i < 10000; i++){
+          tempHash = window.web3.utils.soliditySha3(tempHash);
+          console.log(tempHash);
+      }
+      return tempHash;
+  }
+
     async function checkExists(idxHash) {//check whether record of asset exists in the database
       window.contracts.STOR.methods
         .retrieveShortRecord(idxHash)
@@ -98,6 +107,7 @@ class NewRecord extends Component {
       );
 
       var rgtHash = window.web3.utils.soliditySha3(idxHash, rgtRaw);
+      //rgtHash = tenThousandHashesOf(rgtHash)
 
       console.log("idxHash", idxHash);
       console.log("New rgtRaw", rgtRaw);
@@ -284,12 +294,15 @@ class NewRecord extends Component {
                     >
                       New Record
                     </Button>
+                    <div className="LittleText"> Cost in AC {window.assetClass}: {Number(window.costs.newRecordCost)/1000000000000000000} ETH</div>
                   </Form.Group>
+                  
+                  
                 </Form.Row>
 
                 <br></br>
 
-                <h3>New record cost in AC {window.assetClass}: {Number(window.costs.newRecordCost)/1000000000000000000} ETH</h3>
+                
             </div>
           )}
         </Form>

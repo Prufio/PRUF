@@ -168,6 +168,19 @@ h4 {
   opacity: 0.96;
 }
 
+.EAform {
+  height: 35rem;
+  width: 59rem;
+  background-color: #206ab9;
+  border-radius: 0.5rem;
+  padding: 2rem;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  margin-top: -2rem;
+  opacity: 0.96;
+}
+
 .TWform {
   height: 57.5rem;
   width: 63rem;
@@ -195,7 +208,7 @@ h4 {
 }
 
 .RRform {
-  height: 35rem;
+  height: 30rem;
   width: 59rem;
   background-color: #206ab9;
   border-radius: 0.5rem;
@@ -234,7 +247,7 @@ h4 {
 }
 
 .DCform {
-  height: 45rem;
+  height: 43rem;
   width: 59rem;
   background-color: #206ab9;
   border-radius: 0.5rem;
@@ -247,7 +260,7 @@ h4 {
 }
 
 .MDform {
-  height: 50rem;
+  height: 44rem;
   width: 59rem;
   background-color: #206ab9;
   border-radius: 0.5rem;
@@ -522,6 +535,13 @@ h4 {
   font-size: x-large;
   font-family: Tahoma, Geneva, sans-serif;
 }
+
+.LittleText {
+  color: rgb(255, 255, 255);
+  font-size: small;
+  font-family: Tahoma, Geneva, sans-serif;
+}
+
 
 .userData {
   display: flex;

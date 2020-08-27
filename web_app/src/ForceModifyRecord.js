@@ -94,7 +94,7 @@ class ForceModifyRecord extends Component {
       this.setState({type: ""});
     }
 
-    const _reimportAsset = () => {
+    const _importAsset = () => {
       this.setState({ txStatus: false });
       this.setState({ txHash: "" });
       this.setState({error: undefined})
@@ -123,7 +123,7 @@ class ForceModifyRecord extends Component {
       checkExists(idxHash);
 
       window.contracts.APP.methods
-        .$reimportRecord(idxHash, rgtHash)
+        .$importAsset(idxHash, rgtHash, this.window.assetClass)
         .send({ from: window.addr, value: window.costs.importAssetCost })
         .on("error", function (_error) {
           // self.setState({ NRerror: _error });
@@ -218,7 +218,7 @@ class ForceModifyRecord extends Component {
                 />
                 </Form.Group>
                 )}
-              <h2 className="Headertext">Force Modify/Reimport Asset</h2>
+              <h2 className="Headertext">Force Modify/Import Asset</h2>
               <br></br>
               <Form.Row>
                 <Form.Group as={Col} controlId="formGridType">
@@ -342,7 +342,9 @@ class ForceModifyRecord extends Component {
                   >
                     Force modify
                   </Button>
+                  <div className="LittleText"> Cost in AC {window.assetClass}: {Number(window.costs.forceTransferCost)/1000000000000000000} ETH</div>
                 </Form.Group>
+                <br></br>
               </div>
               <div>
                 <Form.Group>
@@ -351,15 +353,16 @@ class ForceModifyRecord extends Component {
                     variant="primary"
                     type="button"
                     size="lg"
-                    onClick={_reimportAsset}
+                    onClick={_importAsset}
                   >
-                    Re-import
+                    Import
                   </Button>
+                  <div className="LittleText"> Cost in AC {window.assetClass}: {Number(window.costs.importAssetCost)/1000000000000000000} ETH</div>
                 </Form.Group>
 
                 <br></br>
 
-                <h3>Force transfer cost in AC {window.assetClass}: {Number(window.costs.forceTransferCost)/1000000000000000000} ETH</h3>
+                
               </div>
                 {/* <ButtonGroup className="buttonGroupDisplay" aria-label="choices">
                 <Button variant="danger"

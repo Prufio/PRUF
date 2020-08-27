@@ -13,6 +13,7 @@ import TransferAsset from "./TransferAsset";
 import VerifyRightsholder from "./VerifyRightsholder";
 import buildContracts from "./Contracts";
 import EscrowManager from "./EscrowManager";
+import ExportAsset from "./ExportAsset";
 
 
 
@@ -192,6 +193,9 @@ class Main extends Component {
                       <NavLink to="/add-note">Add Note</NavLink>
                     </li>
                     <li>
+                      <NavLink to="/export-asset">Export</NavLink>
+                    </li>
+                    <li>
                       <NavLink to="/force-modify-record">Modify</NavLink>
                     </li>
                     <li>
@@ -220,6 +224,7 @@ class Main extends Component {
                   component={ModifyDescription}
                 />
                 <Route path="/add-note" component={AddNote} />
+                <Route path="/export-asset" component={ExportAsset} />
                 <Route
                   path="/verify-rights-holder"
                   component={VerifyRightsholder}

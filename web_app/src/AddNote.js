@@ -335,6 +335,7 @@ class AddNote extends Component {
                     >
                       Add Note
                     </Button>
+                    <div className="LittleText"> Cost in AC {window.assetClass}: {Number(window.costs.createNoteCost)/1000000000000000000} ETH</div>
                   </Form.Group>
                 </Form.Row>
               )}
@@ -349,13 +350,12 @@ class AddNote extends Component {
                     >
                       Load to IPFS
                     </Button>
+                    
                   </Form.Group>
                 </Form.Row>
               )}
               
               <br></br>
-
-              <h3>Add note cost in AC {window.assetClass}: {Number(window.costs.createNoteCost)/1000000000000000000} ETH</h3>
             </div>
           )}
         </Form>
