@@ -380,12 +380,11 @@ class ModifyDescription extends Component {
                   >
                     Transfer
                   </Button>
+                  <div className="LittleText"> Cost in AC {window.assetClass}: {Number(window.costs.transferAssetCost)/1000000000000000000} ETH</div>
                 </Form.Group>
                 </Form.Row>
                 
                 <br></br>
-
-                <h3>Transfer asset cost in AC {window.assetClass}: {Number(window.costs.transferAssetCost)/1000000000000000000} ETH</h3>
                 </div>
           )}
         </Form>

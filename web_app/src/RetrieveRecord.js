@@ -122,30 +122,30 @@ class RetrieveRecord extends Component {
             self.setState({ error: _error });
             self.setState({ result: 0 });
           } else {
-            if (Object.values(_result)[2] === '0'){  self.setState({ status: 'No status set' });}
-            else if (Object.values(_result)[2] === '1'){  self.setState({ status: 'Transferrable' });}
-            else if (Object.values(_result)[2] === '2'){  self.setState({ status: 'Non-transferrable' });}
-            else if (Object.values(_result)[2] === '3'){  self.setState({ status: 'ASSET REPORTED STOLEN' });}
-            else if (Object.values(_result)[2] === '4'){  self.setState({ status: 'ASSET REPRTED LOST' });}
-            else if (Object.values(_result)[2] === '5'){  self.setState({ status: 'Asset in transfer' });}
-            else if (Object.values(_result)[2] === '6'){  self.setState({ status: 'In escrow (block.number locked)' });}
-            else if (Object.values(_result)[2] === '7'){  self.setState({ status: 'P2P Transferrable' });}
-            else if (Object.values(_result)[2] === '8'){  self.setState({ status: 'P2P Non-transferrable' });}
-            else if (Object.values(_result)[2] === '9'){  self.setState({ status: 'ASSET REPORTED STOLEN (P2P)' });}
-            else if (Object.values(_result)[2] === '10'){  self.setState({ status: 'ASSET REPORTED LOST (P2P)' });}
-            else if (Object.values(_result)[2] === '11'){  self.setState({ status: 'In P2P transfer' });}
-            else if (Object.values(_result)[2] === '12'){  self.setState({ status: 'In escrow (block.time locked)' });}
-            else if (Object.values(_result)[2] === '20'){  self.setState({ status: 'Cusdodial escrow ended' });}
-            else if (Object.values(_result)[2] === '21'){  self.setState({ status: 'P2P escrow ended' });}
+            if (Object.values(_result)[0] === '0'){  self.setState({ status: 'No status set' });}
+            else if (Object.values(_result)[0] === '1'){  self.setState({ status: 'Transferrable' });}
+            else if (Object.values(_result)[0] === '2'){  self.setState({ status: 'Non-transferrable' });}
+            else if (Object.values(_result)[0] === '3'){  self.setState({ status: 'ASSET REPORTED STOLEN' });}
+            else if (Object.values(_result)[0] === '4'){  self.setState({ status: 'ASSET REPRTED LOST' });}
+            else if (Object.values(_result)[0] === '5'){  self.setState({ status: 'Asset in transfer' });}
+            else if (Object.values(_result)[0] === '6'){  self.setState({ status: 'In escrow (block.number locked)' });}
+            else if (Object.values(_result)[0] === '7'){  self.setState({ status: 'P2P Transferrable' });}
+            else if (Object.values(_result)[0] === '8'){  self.setState({ status: 'P2P Non-transferrable' });}
+            else if (Object.values(_result)[0] === '9'){  self.setState({ status: 'ASSET REPORTED STOLEN (P2P)' });}
+            else if (Object.values(_result)[0] === '10'){  self.setState({ status: 'ASSET REPORTED LOST (P2P)' });}
+            else if (Object.values(_result)[0] === '11'){  self.setState({ status: 'In P2P transfer' });}
+            else if (Object.values(_result)[0] === '12'){  self.setState({ status: 'In escrow (block.time locked)' });}
+            else if (Object.values(_result)[0] === '20'){  self.setState({ status: 'Cusdodial escrow ended' });}
+            else if (Object.values(_result)[0] === '21'){  self.setState({ status: 'P2P escrow ended' });}
             self.setState({ result: Object.values(_result)})
             self.setState({ error: undefined });
 
-            if (Object.values(_result)[7] > 0) {getIPFS1(getIpfsHashFromBytes32(Object.values(_result)[7]));}
+            if (Object.values(_result)[5] > 0) {getIPFS1(getIpfsHashFromBytes32(Object.values(_result)[5]));}
 
-            if (Object.values(_result)[8] > 0) {
+            if (Object.values(_result)[6] > 0) {
             console.log("Getting ipfs2 set up...")
             let knownUrl = "https://ipfs.io/ipfs/";
-            let hash = String(getIpfsHashFromBytes32(Object.values(_result)[8]));
+            let hash = String(getIpfsHashFromBytes32(Object.values(_result)[6]));
             let fullUrl = knownUrl+hash;
             console.log(fullUrl);
             getIPFS2(fullUrl);}
@@ -263,17 +263,19 @@ class RetrieveRecord extends Component {
           <div className="RRresults">
             Asset Found!
             <br></br>
-            Status:{this.state.status}
+            Status : {this.state.status}
             <br></br>
-            Mod Count:{this.state.result[3]}
+            Mod Count : {this.state.result[1]}
             <br></br>
-            Asset Class :{this.state.result[4]}
+            Asset Class : {this.state.result[2]}
             <br></br>
-            Count :{this.state.result[5]} of {this.state.result[6]}
+            Count : {this.state.result[3]} of {this.state.result[4]}
             <br></br>
-            IPFS Description :{this.state.ipfs1}
+            IPFS Description : {this.state.ipfs1}
             <br></br>
-            IPFS Note {this.state.ipfs2}
+            IPFS Note : {this.state.ipfs2}
+            <br></br>
+            Number of transfers : {this.state.result[7]}
           </div>
         )}
       </div>
