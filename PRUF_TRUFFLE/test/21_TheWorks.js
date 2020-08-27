@@ -90,7 +90,7 @@
         //
         //
     
-    contract('THE WORKS CUSTODIAL', accounts => {
+    contract('THE WORKS', accounts => {
             
         console.log('//**************************BEGIN BOOTSTRAP**************************//')
 
@@ -1910,6 +1910,1264 @@
         var Record = [];
         
         return await STOR.retrieveShortRecord(asset12, {from: account2}, function (_err, _result) {
+            if(_err){} 
+            else{Record = Object.values(_result)
+        console.log(Record)}
+        })
+    })
+
+
+    it('Should write asset13 in AC 12', async () => {
+
+        console.log("//**************************************BEGIN THE WORKS NON CUSTODIAL**********************************************/")
+        return APP_NC.$newRecord(
+        asset13, 
+        rgt13,
+        '12',
+        '100',
+        {from: account4, value: 20000000000000000}
+        )
+    })
+
+
+    it("Should retrieve show clean asset 13", async () =>{ 
+        var Record = [];
+        
+        return await STOR.retrieveShortRecord(asset13, {from: account4}, function (_err, _result) {
+            if(_err){} 
+            else{Record = Object.values(_result)
+        console.log(Record)}
+        })
+    })
+
+
+    it('Should decrement asset13 amount from (100) to (85)', async () => {
+        return NP_NC._decCounter(
+        asset13, 
+        '15',
+        {from: account4}
+        )
+    })
+
+
+    it("Should retrieve asset13 @newDecCount(85)", async () =>{ 
+        var Record = [];
+        
+        return await STOR.retrieveShortRecord(asset13, {from: account4}, function (_err, _result) {
+            if(_err){} 
+            else{Record = Object.values(_result)
+        console.log(Record)}
+        })
+    })
+
+
+    it('Should modify Ipfs1 note @asset13 to (asset13)', async () => {
+        return NP_NC._modIpfs1(
+        asset13, 
+        asset13,
+        {from: account4}
+        )
+    })
+
+
+    it("Should retrieve asset13 with newIpfs1(asset13)", async () =>{ 
+        var Record = [];
+        
+        return await STOR.retrieveShortRecord(asset13, {from: account4}, function (_err, _result) {
+            if(_err){} 
+            else{Record = Object.values(_result)
+        console.log(Record)}
+        })
+    })
+
+
+    it('Should set Ipfs2 note to (asset13)', async () => {
+        return APP_NC.$addIpfs2Note(
+        asset13,
+        asset13,
+        {from: account4, value: 20000000000000000}
+        )
+    })
+
+
+    it("Should retrieve asset13 with newIpfs2(asset13)", async () =>{ 
+        var Record = [];
+        
+        return await STOR.retrieveShortRecord(asset13, {from: account4}, function (_err, _result) {
+            if(_err){} 
+            else{Record = Object.values(_result)
+        console.log(Record)}
+        })
+    })
+
+
+    it('Should re-mint asset13 token to account4', async () => {
+        return APP_NC.$reMintToken(
+        asset13,
+        'a',
+        'a',
+        'a',
+        'a',
+        'a',
+        {from: account4, value: 20000000000000000}
+        )
+    })
+
+
+    it("Should retrieve asset13 @noChange", async () =>{ 
+        var Record = [];
+        
+        return await STOR.retrieveShortRecord(asset13, {from: account4}, function (_err, _result) {
+            if(_err){} 
+            else{Record = Object.values(_result)
+        console.log(Record)}
+        })
+    })
+
+
+    it('Should force modify asset13 rgt13 to RGT(2)', async () => {
+        return NP_NC._changeRgt(
+        asset13, 
+        rgt2,
+        {from: account4}
+        )
+    })
+
+
+    it("Should retrieve asset13 @newRgt(2)", async () =>{ 
+        var Record = [];
+        
+        return await STOR.retrieveShortRecord(asset13, {from: account4}, function (_err, _result) {
+            if(_err){} 
+            else{Record = Object.values(_result)
+        console.log(Record)}
+        })
+    })
+
+
+    it('Should set asset13 to stolen(53) status', async () => {
+        return NP_NC._setLostOrStolen(
+        asset13,
+        '53',
+        {from: account4}
+        )
+    })
+
+
+    it("Should retrieve asset13 @newStatus(53)", async () =>{ 
+        var Record = [];
+        
+        return await STOR.retrieveShortRecord(asset13, {from: account4}, function (_err, _result) {
+            if(_err){} 
+            else{Record = Object.values(_result)
+        console.log(Record)}
+        })
+    })
+
+
+    it('Should change status of new asset12 to status(51)', async () => {
+        return NP_NC._modStatus(
+        asset13, 
+        '51',
+        {from: account4}
+        )
+    })
+
+
+    it("Should retrieve asset13 @stat(51)", async () =>{ 
+        var Record = [];
+        
+        return await STOR.retrieveShortRecord(asset13, {from: account4}, function (_err, _result) {
+            if(_err){} 
+            else{Record = Object.values(_result)
+        console.log(Record)}
+        })
+    })
+
+
+    it('Should set asset12 into escrow for 3 minutes', async () => {
+        return ECR_NC.setEscrow(
+        asset13, 
+        account4Hash,
+        '180',
+        '56',
+        {from: account4}
+        )
+    })
+
+
+    it("Should retrieve asset13 @newStatus((56)(ECR))", async () =>{ 
+        var Record = [];
+        
+        return await STOR.retrieveShortRecord(asset13, {from: account4}, function (_err, _result) {
+            if(_err){} 
+            else{Record = Object.values(_result)
+        console.log(Record)}
+        })
+    })
+
+
+    it('Should take asset12 out of escrow', async () => {
+        return ECR_NC.endEscrow(
+        asset13, 
+        {from: account4}
+        )
+    })
+
+
+    it("Should retrieve asset13  @newStatus(57)", async () =>{ 
+        var Record = [];
+        
+        return await STOR.retrieveShortRecord(asset13, {from: account4}, function (_err, _result) {
+            if(_err){} 
+            else{Record = Object.values(_result)
+        console.log(Record)}
+        })
+    })
+
+
+    it('Should change status of new asset12 to status(51)', async () => {
+        return NP_NC._modStatus(
+        asset13, 
+        '51',
+        {from: account4}
+        )
+    })
+
+
+    it("Should retrieve asset13 @stat(51)", async () =>{ 
+        var Record = [];
+        
+        return await STOR.retrieveShortRecord(asset13, {from: account4}, function (_err, _result) {
+            if(_err){} 
+            else{Record = Object.values(_result)
+        console.log(Record)}
+        })
+    })
+
+///
+    it('Should export asset13 to account4', async () => {
+        return NP_NC._exportNC(
+        asset13,
+        {from: account4}
+        )
+    })
+
+
+    it("Should retrieve asset13 @newStatus(70(exported)) && @newAC(root(1))", async () =>{ 
+        var Record = [];
+        
+        return await STOR.retrieveShortRecord(asset13, {from: account4}, function (_err, _result) {
+            if(_err){} 
+            else{Record = Object.values(_result)
+        console.log(Record)}
+        })
+    })
+
+
+    it('Should transfer asset13 token to PRUF_APP contract', async () => {
+        return A_TKN.safeTransferFrom(
+        account4,
+        APP.address,
+        asset13,
+        {from: account4}
+        )
+    })
+
+
+    it("Should retrieve asset13 @ +1 N.O.T", async () =>{ 
+        var Record = [];
+        
+        return await STOR.retrieveShortRecord(asset13, {from: account4}, function (_err, _result) {
+            if(_err){} 
+            else{Record = Object.values(_result)
+        console.log(Record)}
+        })
+    })
+
+
+    it('Should import asset13 to AC(10)', async () => {
+        return APP.$importAsset(
+        asset13,
+        rgt13,
+        '10',
+        {from: account4, value: 20000000000000000}
+        )
+    })
+
+
+    it("Should retrieve asset13 @newAC(10) && newStatus(0)", async () =>{ 
+        var Record = [];
+        
+        return await STOR.retrieveShortRecord(asset13, {from: account4}, function (_err, _result) {
+            if(_err){} 
+            else{Record = Object.values(_result)
+        console.log(Record)}
+        })
+    })
+
+
+    it('Should change status of asset13 to status(1)', async () => {
+        return NP._modStatus(
+        asset13,
+        rgt13, 
+        '1',
+        {from: account4}
+        )
+    })
+
+
+    it("Should retrieve asset13 @newStatus(1)", async () =>{ 
+        var Record = [];
+        
+        return await STOR.retrieveShortRecord(asset13, {from: account4}, function (_err, _result) {
+            if(_err){} 
+            else{Record = Object.values(_result)
+        console.log(Record)}
+        })
+    })
+
+
+    it('Should set asset13 into escrow for 3 minutes', async () => {
+        return ECR.setEscrow(
+        asset13, 
+        account4Hash,
+        '180',
+        '6',
+        {from: account4}
+        )
+    })
+
+
+    it("Should retrieve asset13 @newStatus((6)(ECR))", async () =>{ 
+        var Record = [];
+        
+        return await STOR.retrieveShortRecord(asset13, {from: account4}, function (_err, _result) {
+            if(_err){} 
+            else{Record = Object.values(_result)
+        console.log(Record)}
+        })
+    })
+
+
+    it('Should take asset13 out of escrow', async () => {
+        return ECR.endEscrow(
+        asset13, 
+        {from: account4}
+        )
+    })
+
+
+    it("Should retrieve asset13  @newStatus(7)", async () =>{ 
+        var Record = [];
+        
+        return await STOR.retrieveShortRecord(asset13, {from: account4}, function (_err, _result) {
+            if(_err){} 
+            else{Record = Object.values(_result)
+        console.log(Record)}
+        })
+    })
+
+
+    it('Should change decrement amount @asset13 from (85) to (70)', async () => {
+        return NP._decCounter(
+        asset13,
+        rgt13, 
+        '15',
+        {from: account4}
+        )
+    })
+
+
+    it("Should retrieve asset13 @newDecAmount(70)", async () =>{ 
+        var Record = [];
+        
+        return await STOR.retrieveShortRecord(asset13, {from: account4}, function (_err, _result) {
+            if(_err){} 
+            else{Record = Object.values(_result)
+        console.log(Record)}
+        })
+    })
+
+
+    it('Should modify Ipfs1 @asset13 to RGT(12)', async () => {
+        return NP._modIpfs1(
+        asset13,
+        rgt13, 
+        rgt13,
+        {from: account4}
+        )
+    })
+
+
+    it("Should retrieve asset13 @newIpfs1(rgt13)", async () =>{ 
+        var Record = [];
+        
+        return await STOR.retrieveShortRecord(asset13, {from: account4}, function (_err, _result) {
+            if(_err){} 
+            else{Record = Object.values(_result)
+        console.log(Record)}
+        })
+    })
+
+
+    it('Should set asset13 to stolen(3) status', async () => {
+        return NP._setLostOrStolen(
+        asset13,
+        rgt13,
+        '3',
+        {from: account4}
+        )
+    })
+
+
+    it("Should retrieve asset13 @newStatus(3)", async () =>{ 
+        var Record = [];
+        
+        return await STOR.retrieveShortRecord(asset13, {from: account4}, function (_err, _result) {
+            if(_err){} 
+            else{Record = Object.values(_result)
+        console.log(Record)}
+        })
+    })
+
+
+    it('Should change status of asset13 to status(1)', async () => {
+        return NP._modStatus(
+        asset13,
+        rgt13, 
+        '1',
+        {from: account4}
+        )
+    })
+
+
+    it("Should retrieve asset13 @newStatus(1)", async () =>{ 
+        var Record = [];
+        
+        return await STOR.retrieveShortRecord(asset13, {from: account4}, function (_err, _result) {
+            if(_err){} 
+            else{Record = Object.values(_result)
+        console.log(Record)}
+        })
+    })
+
+
+    it('Should Transfer asset13 RGT(13) to RGT(2)', async () => {
+        return APP.$transferAsset(
+        asset13, 
+        rgt13,
+        rgt2,
+        {from: account4, value: 20000000000000000}
+        )
+    })
+
+
+    it("Should retrieve asset13 @newRgt(rgt2) && +1 N.O.T", async () =>{ 
+        var Record = [];
+        
+        return await STOR.retrieveShortRecord(asset13, {from: account4}, function (_err, _result) {
+            if(_err){} 
+            else{Record = Object.values(_result)
+        console.log(Record)}
+        })
+    })
+
+
+    it('Should force modify asset13 RGT(2) to RGT(13)', async () => {
+        return APP.$forceModRecord(
+        asset13, 
+        rgt13,
+        {from: account4, value: 20000000000000000}
+        )
+    })
+
+
+    it("Should retrieve asset12 @newStat(0) && @newRgt(rgt12) && +1 FMR count && +1 N.O.T", async () =>{ 
+        var Record = [];
+        
+        return await STOR.retrieveShortRecord(asset13, {from: account4}, function (_err, _result) {
+            if(_err){} 
+            else{Record = Object.values(_result)
+        console.log(Record)}
+        })
+    })
+
+
+    it('Should change asset13 status to (51)', async () => {
+        return NP._modStatus(
+        asset13, 
+        rgt13,
+        '51',
+        {from: account4}
+        )
+    })
+
+
+    it("Should retrieve asset12 @newStat(51)", async () =>{ 
+        var Record = [];
+        
+        return await STOR.retrieveShortRecord(asset13, {from: account4}, function (_err, _result) {
+            if(_err){} 
+            else{Record = Object.values(_result)
+        console.log(Record)}
+        })
+    })
+
+
+    it('Should export asset13(status70)', async () => {
+        return NP.exportAsset(
+        asset13,
+        account4, 
+        {from: account4}
+        )
+    })
+///
+
+    it("Should retrieve asset13 @newAC (root(1)) && @newStatus(exported(70)) && + 1 N.O.T", async () =>{ 
+        var Record = [];
+        
+        return await STOR.retrieveShortRecord(asset13, {from: account4}, function (_err, _result) {
+            if(_err){} 
+            else{Record = Object.values(_result)
+        console.log(Record)}
+        })
+    })
+
+
+    it('Should import asset13 to AC(12)', async () => {
+        return APP_NC.$importAsset(
+        asset13,
+        '12',
+        {from: account4, value: 20000000000000000}
+        )
+    })
+
+
+    it("Should retrieve asset13 @newAC(12) && newStatus(52)", async () =>{ 
+        var Record = [];
+        
+        return await STOR.retrieveShortRecord(asset13, {from: account4}, function (_err, _result) {
+            if(_err){} 
+            else{Record = Object.values(_result)
+        console.log(Record)}
+        })
+    })
+
+
+    it('Should change status of asset13 to status(51)', async () => {
+        return NP_NC._modStatus(
+        asset13, 
+        '51',
+        {from: account4}
+        )
+    })
+
+
+    it("Should retrieve asset13 @newStatus(51)", async () =>{ 
+        var Record = [];
+        
+        return await STOR.retrieveShortRecord(asset13, {from: account4}, function (_err, _result) {
+            if(_err){} 
+            else{Record = Object.values(_result)
+        console.log(Record)}
+        })
+    })
+
+
+    it('Should change status of asset13 to status(59)', async () => {
+        return NP_NC._modStatus(
+        asset13, 
+        '59',
+        {from: account4}
+        )
+    })
+
+
+    it("Should retrieve asset13 @newStaus(59)", async () =>{ 
+        var Record = [];
+        
+        return await STOR.retrieveShortRecord(asset13, {from: account4}, function (_err, _result) {
+            if(_err){} 
+            else{Record = Object.values(_result)
+        console.log(Record)}
+        })
+    })
+
+
+    it('Should discard asset13', async () => {
+        return A_TKN.discard(
+        asset13,
+        {from: account4}
+        )
+    })
+
+
+    it("Should retrieve asset13 @newStaus((60)discarded)", async () =>{ 
+        var Record = [];
+        
+        return await STOR.retrieveShortRecord(asset13, {from: account4}, function (_err, _result) {
+            if(_err){} 
+            else{Record = Object.values(_result)
+        console.log(Record)}
+        })
+    })
+
+
+    it('Should $recycle asset13', async () => {
+        return RCLR.$recycle(
+        asset13,
+        rgt13,
+        '12',
+        {from: account4, value: 20000000000000000}
+        )
+    })
+
+
+    it("Should retrieve asset13  @newRgt(13) && @newAC(12) && +1 N.O.T && @newStatus(58)", async () =>{ 
+        var Record = [];
+        
+        return await STOR.retrieveShortRecord(asset13, {from: account4}, function (_err, _result) {
+            if(_err){} 
+            else{Record = Object.values(_result)
+        console.log(Record)}
+        })
+    })
+
+
+    it('Should write nakedAsset14 in AC 15', async () => {
+
+        console.log("//**************************************BEGIN THE WORKS NAKED**********************************************/")
+        return NAKED.mintNakedAsset(
+        asset14, 
+        string14Hash,
+        '16',
+        {from: account10}
+        )
+    })
+
+
+    it("Should retrieve show clean asset 14", async () =>{ 
+        var Record = [];
+        
+        return await STOR.retrieveShortRecord(asset14, {from: account10}, function (_err, _result) {
+            if(_err){} 
+            else{Record = Object.values(_result)
+        console.log(Record)}
+        })
+    })
+
+
+    it('Should claim nakedAsset14 in AC 12', async () => {
+        return NAKED.$claimNakedAsset(
+        asset14, 
+        '14',
+        '16',
+        rgt14,
+        '100',
+        {from: account4, value: 20000000000000000}
+        )
+    })
+
+
+    it("Should retrieve asset14 @newRecord style fillout", async () =>{ 
+        var Record = [];
+        
+        return await STOR.retrieveShortRecord(asset14, {from: account10}, function (_err, _result) {
+            if(_err){} 
+            else{Record = Object.values(_result)
+        console.log(Record)}
+        })
+    })
+
+
+    it('Should decrement asset14 amount from (100) to (85)', async () => {
+        return NP_NC._decCounter(
+        asset14, 
+        '15',
+        {from: account4}
+        )
+    })
+
+
+    it("Should retrieve asset14 @newDecCount(85)", async () =>{ 
+        var Record = [];
+        
+        return await STOR.retrieveShortRecord(asset14, {from: account4}, function (_err, _result) {
+            if(_err){} 
+            else{Record = Object.values(_result)
+        console.log(Record)}
+        })
+    })
+
+
+    it('Should modify Ipfs1 note @asset14 to (asset14)', async () => {
+        return NP_NC._modIpfs1(
+        asset14, 
+        asset14,
+        {from: account4}
+        )
+    })
+
+
+    it("Should retrieve asset14 with newIpfs1(asset14)", async () =>{ 
+        var Record = [];
+        
+        return await STOR.retrieveShortRecord(asset14, {from: account4}, function (_err, _result) {
+            if(_err){} 
+            else{Record = Object.values(_result)
+        console.log(Record)}
+        })
+    })
+
+
+    it('Should set Ipfs2 note to (asset14)', async () => {
+        return APP_NC.$addIpfs2Note(
+        asset14,
+        asset14,
+        {from: account4, value: 20000000000000000}
+        )
+    })
+
+
+    it("Should retrieve asset14 with newIpfs2(asset14)", async () =>{ 
+        var Record = [];
+        
+        return await STOR.retrieveShortRecord(asset14, {from: account4}, function (_err, _result) {
+            if(_err){} 
+            else{Record = Object.values(_result)
+        console.log(Record)}
+        })
+    })
+
+
+    it('Should force modify asset14 to RGT(14)', async () => {
+        return NP_NC._changeRgt(
+        asset14, 
+        rgt14,
+        {from: account4}
+        )
+    })
+
+
+    it("Should retrieve asset14 @newRgt(2)", async () =>{ 
+        var Record = [];
+        
+        return await STOR.retrieveShortRecord(asset14, {from: account4}, function (_err, _result) {
+            if(_err){} 
+            else{Record = Object.values(_result)
+        console.log(Record)}
+        })
+    })
+
+
+    it('Should re-mint asset14 token to account4', async () => {
+        return APP_NC.$reMintToken(
+        asset14,
+        'a',
+        'a',
+        'a',
+        'a',
+        'a',
+        {from: account4, value: 20000000000000000}
+        )
+    })
+
+
+    it("Should retrieve asset14 @noChange", async () =>{ 
+        var Record = [];
+        
+        return await STOR.retrieveShortRecord(asset14, {from: account4}, function (_err, _result) {
+            if(_err){} 
+            else{Record = Object.values(_result)
+        console.log(Record)}
+        })
+    })
+
+
+    it('Should set asset14 to stolen(53) status', async () => {
+        return NP_NC._setLostOrStolen(
+        asset14,
+        '53',
+        {from: account4}
+        )
+    })
+
+
+    it("Should retrieve asset14 @newStatus(53)", async () =>{ 
+        var Record = [];
+        
+        return await STOR.retrieveShortRecord(asset14, {from: account4}, function (_err, _result) {
+            if(_err){} 
+            else{Record = Object.values(_result)
+        console.log(Record)}
+        })
+    })
+
+
+    it('Should change status of new asset12 to status(51)', async () => {
+        return NP_NC._modStatus(
+        asset14, 
+        '51',
+        {from: account4}
+        )
+    })
+
+
+    it("Should retrieve asset14 @stat(51)", async () =>{ 
+        var Record = [];
+        
+        return await STOR.retrieveShortRecord(asset14, {from: account4}, function (_err, _result) {
+            if(_err){} 
+            else{Record = Object.values(_result)
+        console.log(Record)}
+        })
+    })
+
+
+    it('Should set asset12 into escrow for 3 minutes', async () => {
+        return ECR_NC.setEscrow(
+        asset14, 
+        account4Hash,
+        '180',
+        '56',
+        {from: account4}
+        )
+    })
+
+
+    it("Should retrieve asset14 @newStatus((56)(ECR))", async () =>{ 
+        var Record = [];
+        
+        return await STOR.retrieveShortRecord(asset14, {from: account4}, function (_err, _result) {
+            if(_err){} 
+            else{Record = Object.values(_result)
+        console.log(Record)}
+        })
+    })
+
+
+    it('Should take asset12 out of escrow', async () => {
+        return ECR_NC.endEscrow(
+        asset14, 
+        {from: account4}
+        )
+    })
+
+
+    it("Should retrieve asset14  @newStatus(57)", async () =>{ 
+        var Record = [];
+        
+        return await STOR.retrieveShortRecord(asset14, {from: account4}, function (_err, _result) {
+            if(_err){} 
+            else{Record = Object.values(_result)
+        console.log(Record)}
+        })
+    })
+
+
+    it('Should change status of new asset12 to status(51)', async () => {
+        return NP_NC._modStatus(
+        asset14, 
+        '51',
+        {from: account4}
+        )
+    })
+
+
+    it("Should retrieve asset14 @stat(51)", async () =>{ 
+        var Record = [];
+        
+        return await STOR.retrieveShortRecord(asset14, {from: account4}, function (_err, _result) {
+            if(_err){} 
+            else{Record = Object.values(_result)
+        console.log(Record)}
+        })
+    })
+
+///
+    it('Should export asset14 to account4', async () => {
+        return NP_NC._exportNC(
+        asset14,
+        {from: account4}
+        )
+    })
+
+
+    it("Should retrieve asset14 @newStatus(70(exported)) && @newAC(root(1))", async () =>{ 
+        var Record = [];
+        
+        return await STOR.retrieveShortRecord(asset14, {from: account4}, function (_err, _result) {
+            if(_err){} 
+            else{Record = Object.values(_result)
+        console.log(Record)}
+        })
+    })
+
+
+    it('Should transfer asset14 token to PRUF_APP contract', async () => {
+        return A_TKN.safeTransferFrom(
+        account4,
+        APP.address,
+        asset14,
+        {from: account4}
+        )
+    })
+
+
+    it("Should retrieve asset14 @ +1 N.O.T", async () =>{ 
+        var Record = [];
+        
+        return await STOR.retrieveShortRecord(asset14, {from: account4}, function (_err, _result) {
+            if(_err){} 
+            else{Record = Object.values(_result)
+        console.log(Record)}
+        })
+    })
+
+
+    it('Should import asset14 to AC(10)', async () => {
+        return APP.$importAsset(
+        asset14,
+        rgt14,
+        '10',
+        {from: account4, value: 20000000000000000}
+        )
+    })
+
+
+    it("Should retrieve asset14 @newAC(10) && newStatus(0) && + 1 FMRcount", async () =>{ 
+        var Record = [];
+        
+        return await STOR.retrieveShortRecord(asset14, {from: account4}, function (_err, _result) {
+            if(_err){} 
+            else{Record = Object.values(_result)
+        console.log(Record)}
+        })
+    })
+
+
+    it('Should change status of asset14 to status(1)', async () => {
+        return NP._modStatus(
+        asset14,
+        rgt14, 
+        '1',
+        {from: account4}
+        )
+    })
+
+
+    it("Should retrieve asset14 @newStatus(1)", async () =>{ 
+        var Record = [];
+        
+        return await STOR.retrieveShortRecord(asset14, {from: account4}, function (_err, _result) {
+            if(_err){} 
+            else{Record = Object.values(_result)
+        console.log(Record)}
+        })
+    })
+
+
+    it('Should set asset14 into escrow for 3 minutes', async () => {
+        return ECR.setEscrow(
+        asset14, 
+        account4Hash,
+        '180',
+        '6',
+        {from: account4}
+        )
+    })
+
+
+    it("Should retrieve asset14 @newStatus((6)(ECR))", async () =>{ 
+        var Record = [];
+        
+        return await STOR.retrieveShortRecord(asset14, {from: account4}, function (_err, _result) {
+            if(_err){} 
+            else{Record = Object.values(_result)
+        console.log(Record)}
+        })
+    })
+
+
+    it('Should take asset14 out of escrow', async () => {
+        return ECR.endEscrow(
+        asset14, 
+        {from: account4}
+        )
+    })
+
+
+    it("Should retrieve asset14  @newStatus(7)", async () =>{ 
+        var Record = [];
+        
+        return await STOR.retrieveShortRecord(asset14, {from: account4}, function (_err, _result) {
+            if(_err){} 
+            else{Record = Object.values(_result)
+        console.log(Record)}
+        })
+    })
+
+
+    it('Should change decrement amount @asset14 from (85) to (70)', async () => {
+        return NP._decCounter(
+        asset14,
+        rgt14, 
+        '15',
+        {from: account4}
+        )
+    })
+
+
+    it("Should retrieve asset14 @newDecAmount(70)", async () =>{ 
+        var Record = [];
+        
+        return await STOR.retrieveShortRecord(asset14, {from: account4}, function (_err, _result) {
+            if(_err){} 
+            else{Record = Object.values(_result)
+        console.log(Record)}
+        })
+    })
+
+
+    it('Should modify Ipfs1 @asset14 to RGT(12)', async () => {
+        return NP._modIpfs1(
+        asset14,
+        rgt14, 
+        rgt14,
+        {from: account4}
+        )
+    })
+
+
+    it("Should retrieve asset14 @newIpfs1(rgt14)", async () =>{ 
+        var Record = [];
+        
+        return await STOR.retrieveShortRecord(asset14, {from: account4}, function (_err, _result) {
+            if(_err){} 
+            else{Record = Object.values(_result)
+        console.log(Record)}
+        })
+    })
+
+
+    it('Should set asset14 to stolen(3) status', async () => {
+        return NP._setLostOrStolen(
+        asset14,
+        rgt14,
+        '3',
+        {from: account4}
+        )
+    })
+
+
+    it("Should retrieve asset14 @newStatus(3)", async () =>{ 
+        var Record = [];
+        
+        return await STOR.retrieveShortRecord(asset14, {from: account4}, function (_err, _result) {
+            if(_err){} 
+            else{Record = Object.values(_result)
+        console.log(Record)}
+        })
+    })
+
+
+    it('Should change status of asset14 to status(1)', async () => {
+        return NP._modStatus(
+        asset14,
+        rgt14, 
+        '1',
+        {from: account4}
+        )
+    })
+
+
+    it("Should retrieve asset14 @newStatus(1)", async () =>{ 
+        var Record = [];
+        
+        return await STOR.retrieveShortRecord(asset14, {from: account4}, function (_err, _result) {
+            if(_err){} 
+            else{Record = Object.values(_result)
+        console.log(Record)}
+        })
+    })
+
+
+    it('Should Transfer asset14 RGT(14) to RGT(2)', async () => {
+        return APP.$transferAsset(
+        asset14, 
+        rgt14,
+        rgt2,
+        {from: account4, value: 20000000000000000}
+        )
+    })
+
+
+    it("Should retrieve asset14 @newRgt(rgt2) && +1 N.O.T", async () =>{ 
+        var Record = [];
+        
+        return await STOR.retrieveShortRecord(asset14, {from: account4}, function (_err, _result) {
+            if(_err){} 
+            else{Record = Object.values(_result)
+        console.log(Record)}
+        })
+    })
+
+
+    it('Should force modify asset14 RGT(2) to RGT(14)', async () => {
+        return APP.$forceModRecord(
+        asset14, 
+        rgt14,
+        {from: account4, value: 20000000000000000}
+        )
+    })
+
+
+    it("Should retrieve asset12 @newStat(0) && @newRgt(rgt12) && +1 FMR count && +1 N.O.T", async () =>{ 
+        var Record = [];
+        
+        return await STOR.retrieveShortRecord(asset14, {from: account4}, function (_err, _result) {
+            if(_err){} 
+            else{Record = Object.values(_result)
+        console.log(Record)}
+        })
+    })
+
+
+    it('Should change asset14 status to (51)', async () => {
+        return NP._modStatus(
+        asset14, 
+        rgt14,
+        '51',
+        {from: account4}
+        )
+    })
+
+
+    it("Should retrieve asset12 @newStat(51)", async () =>{ 
+        var Record = [];
+        
+        return await STOR.retrieveShortRecord(asset14, {from: account4}, function (_err, _result) {
+            if(_err){} 
+            else{Record = Object.values(_result)
+        console.log(Record)}
+        })
+    })
+
+
+    it('Should export asset14(status70)', async () => {
+        return NP.exportAsset(
+        asset14,
+        account4, 
+        {from: account4}
+        )
+    })
+///
+
+    it("Should retrieve asset14 @newAC (root(1)) && @newStatus(exported(70)) && + 1 N.O.T", async () =>{ 
+        var Record = [];
+        
+        return await STOR.retrieveShortRecord(asset14, {from: account4}, function (_err, _result) {
+            if(_err){} 
+            else{Record = Object.values(_result)
+        console.log(Record)}
+        })
+    })
+
+
+    it('Should import asset14 to AC(12)', async () => {
+        return APP_NC.$importAsset(
+        asset14,
+        '12',
+        {from: account4, value: 20000000000000000}
+        )
+    })
+
+
+    it("Should retrieve asset14 @newAC(12) && newStatus(52)", async () =>{ 
+        var Record = [];
+        
+        return await STOR.retrieveShortRecord(asset14, {from: account4}, function (_err, _result) {
+            if(_err){} 
+            else{Record = Object.values(_result)
+        console.log(Record)}
+        })
+    })
+
+
+    it('Should change status of asset14 to status(51)', async () => {
+        return NP_NC._modStatus(
+        asset14, 
+        '51',
+        {from: account4}
+        )
+    })
+
+
+    it("Should retrieve asset14 @newStatus(51)", async () =>{ 
+        var Record = [];
+        
+        return await STOR.retrieveShortRecord(asset14, {from: account4}, function (_err, _result) {
+            if(_err){} 
+            else{Record = Object.values(_result)
+        console.log(Record)}
+        })
+    })
+
+
+    it('Should change status of asset14 to status(59)', async () => {
+        return NP_NC._modStatus(
+        asset14, 
+        '59',
+        {from: account4}
+        )
+    })
+
+
+    it("Should retrieve asset14 @newStaus(59)", async () =>{ 
+        var Record = [];
+        
+        return await STOR.retrieveShortRecord(asset14, {from: account4}, function (_err, _result) {
+            if(_err){} 
+            else{Record = Object.values(_result)
+        console.log(Record)}
+        })
+    })
+
+
+    it('Should discard asset14', async () => {
+        return A_TKN.discard(
+        asset14,
+        {from: account4}
+        )
+    })
+
+
+    it("Should retrieve asset14 @newStaus((60)discarded)", async () =>{ 
+        var Record = [];
+        
+        return await STOR.retrieveShortRecord(asset14, {from: account4}, function (_err, _result) {
+            if(_err){} 
+            else{Record = Object.values(_result)
+        console.log(Record)}
+        })
+    })
+
+
+    it('Should $recycle asset14', async () => {
+        return RCLR.$recycle(
+        asset14,
+        rgt14,
+        '12',
+        {from: account4, value: 20000000000000000}
+        )
+    })
+
+
+    it("Should retrieve asset14  @newRgt(13) && @newAC(12) && +1 N.O.T && @newStatus(58)", async () =>{ 
+        var Record = [];
+        
+        return await STOR.retrieveShortRecord(asset14, {from: account4}, function (_err, _result) {
             if(_err){} 
             else{Record = Object.values(_result)
         console.log(Record)}
