@@ -298,13 +298,13 @@ contract STOR is Ownable, ReentrancyGuard, Pausable {
         rec.assetStatus = _newAssetStatus;
 
         if ((_incrementForceModCount == 170) && (rec.forceModCount < 255)) {
-            rec.forceModCount = rec.forceModCount++;
+            rec.forceModCount = rec.forceModCount + 1;
         }
         if (
             (_incrementNumberOfTransfers == 170) &&
             (rec.numberOfTransfers < 65535)
         ) {
-            rec.numberOfTransfers = rec.numberOfTransfers++;
+            rec.numberOfTransfers = rec.numberOfTransfers + 1;
         }
 
         database[idxHash] = rec;

@@ -201,7 +201,7 @@ contract A_TKN is Ownable, ReentrancyGuard, ERC721 {
             _isApprovedOrOwner(_msgSender(), tokenId),
             "AT:TF:transfer caller is not owner nor approved"
         );
-        require(
+        require(                                                 //REDUNDANT, THROWS BECAUSE OF NEXT REQ CTS:EXAMINE
             rec.assetStatus != 70,
             "AT:TF:Use authAddressTransfer for status 70"
         );
