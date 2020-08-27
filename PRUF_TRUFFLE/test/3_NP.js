@@ -1461,12 +1461,12 @@
     // })
 
     //2
-    it('Should Fail because account4 != auth for AC10 assets', async () => {
+    it('Should Fail because account5 != auth for AC10 assets', async () => {
         return NP._modStatus(
         asset1,
         rgt1,
         '1',
-        {from: account4}
+        {from: account5}
         )
     })
 
@@ -1691,12 +1691,12 @@
     // })
 
     //12
-    it('Should Fail because account4 != auth for AC10 assets', async () => {
+    it('Should Fail because account5 != auth for AC10 assets', async () => {
         return NP._setLostOrStolen(
         asset1,
         rgt1,
         '3',
-        {from: account4}
+        {from: account5}
         )
     })
 
@@ -1896,7 +1896,7 @@
         asset1,
         rgt1,
         '15',
-        {from: account4}
+        {from: account5}
         )
     })
 
@@ -1993,12 +1993,12 @@
     // })
 
     //20
-    it('Should Fail because account4 != auth for AC10 assets', async () => {
+    it('Should Fail because account5 != auth for AC10 assets', async () => {
         return NP._modIpfs1(
         asset1,
         rgt1,
         rgt1,
-        {from: account4}
+        {from: account5}
         )
     })
 
@@ -2134,8 +2134,8 @@
     it('Should write record in AC 10 @ IDX&RGT(1)', async () => {
 
         console.log("//**************************************END _modIpfs1 FAIL BATCH**********************************************/")
-        console.log("//**************************************END NC FAIL BATCH**********************************************/")
-        console.log("//**************************************END NC TEST**********************************************/")
+        console.log("//**************************************END NP FAIL BATCH**********************************************/")
+        console.log("//**************************************END NP TEST**********************************************/")
         console.log("//**************************************BEGIN THE WORKS**********************************************/")
         return APP.$newRecord(
         asset12, 
