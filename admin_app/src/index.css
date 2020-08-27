@@ -109,6 +109,11 @@ h4 {
   background-color: #5da2e9;
 }
 
+.downsizeLogo {
+  height: 1rem;
+  width: 1rem;
+}
+
 .formFont {
   font-size: large;
   color: rgb(255, 255, 255);
@@ -298,6 +303,11 @@ h4 {
   opacity: 0.96;
 }
 
+.downSizeLogo{
+  object-fit: cover;
+  width: 7%;
+}
+
 .BannerForm {
   height: 5rem;
   max-width: none;
@@ -313,6 +323,7 @@ h4 {
   display: flex;
   padding-left: 2rem;
 }
+
 
 .ACForm{
   height: 37.5rem;

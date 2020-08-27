@@ -265,6 +265,11 @@ h4 {
   opacity: 0.96;
 }
 
+.downSizeLogo{
+  object-fit: cover;
+  width: 7%;
+}
+
 .MDform {
   height: 44rem;
   width: 59rem;
@@ -332,6 +337,7 @@ h4 {
   display: flex;
   padding-left: 2rem;
 }
+
 
 .ACForm{
   height: 37.5rem;

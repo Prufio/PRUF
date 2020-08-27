@@ -149,7 +149,7 @@ class Main extends Component {
     
         <div>
           <div className="imageForm">
-            <img src={require("./BP Logo.png")} alt="Bulletproof Logo" />
+            <img className="downSizeLogo" src={require("./Pruf.png")} alt="Pruf Logo" />
             <div className="userData">
               {this.state.addr > 0 && (
                 <div className="banner">
