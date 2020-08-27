@@ -16,6 +16,11 @@ __/\\\\\\\\\\\\\ _____/\\\\\\\\\ _______/\\../\\ ___/\\\\\\\\\\\\\\\
  *---------------------------------------------------------------*/
 
 /*-----------------------------------------------------------------
+ *  PRUF STOR is the primary data repository for the PRUF system. No direct user writes are permitted in STOR, all data must come from explicitly approved contracts.
+ *  PRUF STOR  stores records in a map of Records, foreward and reverse name resolution for approved contracts, as well as contract authorization data.
+ *---------------------------------------------------------------*/
+
+/*-----------------------------------------------------------------
  * IMPORTANT NOTE : DO NOT REMOVE FROM CODE:
  *      Verification of rgtHash in curated, custodial classes are not secure beyond the honorable intentions
  * of authorized recorders. All blockchain info is readable, so a bad actor could trivially obtain a copy of the
@@ -48,7 +53,7 @@ contract STOR is Ownable, ReentrancyGuard, Pausable {
         bytes32 rightsHolder; // KEK256 Registered owner
     }
 
-    mapping(string => mapping(uint32 => uint8)) internal contractInfo;
+    mapping(string => mapping(uint32 => uint8)) internal contractInfo; // name=>AC=>authorization level
     mapping(address => string) private contractAddressToName; // Authorized contract addresses, indexed by address, with auth level 0-255
     mapping(string => address) private contractNameToAddress; // Authorized contract addresses, indexed by name
 
@@ -58,7 +63,7 @@ contract STOR is Ownable, ReentrancyGuard, Pausable {
     AC_TKN_Interface private AC_TKN; //erc721_token prototype initialization
 
     address internal AC_MGR_Address;
-    AC_MGR_Interface internal AC_MGR; // Set up external contract interface
+    AC_MGR_Interface internal AC_MGR; // Set up external contract interface for AC_MGR
 
     //----------------------------------------------Modifiers----------------------------------------------//
 
@@ -78,7 +83,7 @@ contract STOR is Ownable, ReentrancyGuard, Pausable {
     }
 
     /*
-     * @dev Check record _idxHash exists and is not locked
+     * @dev Check record _idxHash is not in escrow
      */
     modifier notEscrow(bytes32 _idxHash) {
         require(
@@ -89,7 +94,7 @@ contract STOR is Ownable, ReentrancyGuard, Pausable {
     }
 
     /*
-     * @dev Check record exists in database
+     * @dev Check record _idxHash exists in database
      */
     modifier exists(bytes32 _idxHash) {
         require(
@@ -100,7 +105,7 @@ contract STOR is Ownable, ReentrancyGuard, Pausable {
     }
 
     /*
-     * @dev Check to see if contract adress is registered to PRUF_escrowMGR
+     * @dev Check to see if contract address resolves to ECR_MGR
      */
     modifier isEscrowManager() {
         require(
@@ -111,7 +116,7 @@ contract STOR is Ownable, ReentrancyGuard, Pausable {
     }
 
     /*
-     * @dev Check to see if record is in lost or stolen status
+     * @dev Check to see a status matches lost or stolen status
      */
     function isLostOrStolen(uint8 _assetStatus) private pure returns (uint8) {
         if (
@@ -127,7 +132,7 @@ contract STOR is Ownable, ReentrancyGuard, Pausable {
     }
 
     /*
-     * @dev Check to see if record is in transferred status
+     * @dev Check to see a status matches transferred status
      */
     function isTransferred(uint8 _assetStatus) private pure returns (uint8) {
         if ((_assetStatus != 5) && (_assetStatus != 55)) {
@@ -138,7 +143,7 @@ contract STOR is Ownable, ReentrancyGuard, Pausable {
     }
 
     /*
-     * @dev Check to see if record is in escrow status
+     * @dev Check to see a status matches escrow status
      */
     function isEscrow(uint8 _assetStatus) private pure returns (uint8) {
         if (
@@ -160,14 +165,14 @@ contract STOR is Ownable, ReentrancyGuard, Pausable {
     //--------------------------------Internal Admin functions / onlyowner or isAdmin---------------------------------//
 
     /*
-     * @dev Triggers stopped state.
+     * @dev Triggers stopped state. (pausable)
      */
     function pause() external onlyOwner {
         _pause();
     }
 
     /*
-     * @dev Returns to normal state.
+     * @dev Returns to normal state. (pausable)
      */
     function unpause() external onlyOwner {
         _unpause();
@@ -175,6 +180,7 @@ contract STOR is Ownable, ReentrancyGuard, Pausable {
 
     /*
      * @dev Authorize / Deauthorize / Authorize ADRESSES permitted to make record modifications, per AssetClass
+     * populates contract name resolution and data mappings
      */
     function OO_addContract(
         string calldata _name,
@@ -199,7 +205,8 @@ contract STOR is Ownable, ReentrancyGuard, Pausable {
     }
 
     /*
-     * @dev Authorize / Deauthorize / Authorize contract Names permitted to make record modifications, per AssetClass
+     * @dev Authorize / Deauthorize / Authorize contract NAMES permitted to make record modifications, per AssetClass
+     * allows ACtokenHolder to auithorize or deauthorize specific contracts to work within their asset class
      */
     function enableContractForAC(
         string calldata _name,
@@ -223,19 +230,24 @@ contract STOR is Ownable, ReentrancyGuard, Pausable {
     //--------------------------------External "write" contract functions / authuser---------------------------------//
 
     /*
-     * @dev Make a new record in the database  *read fullHash, write rightsHolder, recorders, assetClass,countDownStart --new_record
+     * @dev Make a new record, writing to the 'database' mapping with basic initial asset data
      */
     function newRecord(
         bytes32 _idxHash,
         bytes32 _rgtHash,
         uint32 _assetClass,
         uint32 _countDownStart
-    ) external nonReentrant whenNotPaused isAuthorized(_assetClass) {
+    )
+        external
+        nonReentrant
+        whenNotPaused
+        isAuthorized(_assetClass) //calling contract must be authorized in relevant assetClass
+    {
         require(
             database[_idxHash].assetStatus != 60,
             "S:NR:Asset is rcycl. Use PRUF_APP_NC rcycl"
         );
-        require(database[_idxHash].assetClass == 0, "S:NR:Rec already exists");
+        require(database[_idxHash].assetClass == 0, "S:NR:Rec already exists"); //THROWS IN CORE createRecord CTS: EXAMINE
         require(_rgtHash != 0, "S:NR:RGT = 0");
         require(_assetClass != 0, "S:NR:AC = 0");
         //^^^^^^^checks^^^^^^^^^
@@ -261,7 +273,7 @@ contract STOR is Ownable, ReentrancyGuard, Pausable {
     }
 
     /*
-     * @dev Modify a record in the database  *read fullHash, write rightsHolder, update recorder, assetClass,countDown update recorder....
+     * @dev Modify a record, writing to the 'database' mapping with updates to multiple fields
      */
     function modifyRecord(
         bytes32 _idxHash,
@@ -274,14 +286,14 @@ contract STOR is Ownable, ReentrancyGuard, Pausable {
         external
         nonReentrant
         whenNotPaused
-        exists(_idxHash)
-        isAuthorized(database[_idxHash].assetClass)
-        notEscrow(_idxHash)
+        exists(_idxHash) //asset must exist in 'database'
+        isAuthorized(database[_idxHash].assetClass) //calling contract must be authorized in relevant assetClass
+        notEscrow(_idxHash) // asset must not be held in escrow status
     {
         Record memory rec = database[_idxHash];
         bytes32 idxHash = _idxHash; //stack saving
 
-        require(_countDown <= rec.countDown, "S:MR:countDown +!"); //prohibit increasing the countdown value  //IMPOSSIBLE TO THROW
+        require(_countDown <= rec.countDown, "S:MR:countDown +!"); //prohibit increasing the countdown value  //REDUNDANT, THROWS IN SAFEMATH
         require(isLostOrStolen(_newAssetStatus) == 0, "S:MR:Must use L/S");
         require(isEscrow(_newAssetStatus) == 0, "S:MR:Must use ECR");
         // require(
@@ -315,25 +327,25 @@ contract STOR is Ownable, ReentrancyGuard, Pausable {
     }
 
     /*
-     * @dev Change asset class of an asset
+     * @dev Change asset class of an asset - writes to assetClass in the 'Record' struct of the 'database' at _idxHash
      */
     function changeAC(bytes32 _idxHash, uint32 _newAssetClass)
         external
         nonReentrant
         whenNotPaused
-        exists(_idxHash)
-        notEscrow(_idxHash)
+        exists(_idxHash) //asset must exist in 'database'
+        notEscrow(_idxHash) // asset must not be held in escrow status
         isAuthorized(0) //is an authorized contract, generically
     {
         Record memory rec = database[_idxHash];
 
         require(_newAssetClass != 0, "S:CAC:Cannot set AC-0");
-        require(
+        require( //require new assetClass is in the same root as old assetClass
             AC_MGR.isSameRootAC(_newAssetClass, rec.assetClass) == 170,
             "S:CAC:Cannot mod AC to new root"
         );
-        require((isLostOrStolen(rec.assetStatus) == 0), "S:CAC:L/S asset");
-        require((isTransferred(rec.assetStatus) == 0), "S:CAC:Txfrd asset");
+        require((isLostOrStolen(rec.assetStatus) == 0), "S:CAC:L/S asset"); //asset cannot be in lost or stolen status
+        require((isTransferred(rec.assetStatus) == 0), "S:CAC:Txfrd asset"); //asset cannot be in transferred status
         //^^^^^^^checks^^^^^^^^^
 
         rec.assetClass = _newAssetClass;
@@ -345,22 +357,22 @@ contract STOR is Ownable, ReentrancyGuard, Pausable {
     }
 
     /*
-     * @dev Set an asset tot stolen or lost. Allows narrow modification of status 6/12 assets, normally locked
+     * @dev Set an asset to stolen or lost. Allows narrow modification of status 6/12 assets, normally locked
      */
     function setStolenOrLost(bytes32 _idxHash, uint8 _newAssetStatus)
         external
         nonReentrant
         whenNotPaused
-        exists(_idxHash)
-        isAuthorized(database[_idxHash].assetClass)
+        exists(_idxHash) //asset must exist in 'database'
+        isAuthorized(database[_idxHash].assetClass) //calling contract must be authorized in relevant assetClass
     {
         Record memory rec = database[_idxHash];
 
         require(
-            isLostOrStolen(_newAssetStatus) == 170,
+            isLostOrStolen(_newAssetStatus) == 170, //proposed new status must be L/S status
             "S:SSL:Must set to L/S"
         );
-        require(
+        require( //asset cannot be set l/s if in transferred or locked escrow status
             (rec.assetStatus != 5) &&
                 (rec.assetStatus != 50) &&
                 (rec.assetStatus != 55), //STATE UNREACHABLE TO SET TO STAT 55 IN CURRENT CONTRACTS
@@ -381,23 +393,24 @@ contract STOR is Ownable, ReentrancyGuard, Pausable {
     }
 
     /*
-     * @dev Set an asset to escrow status (6/50/56). Sets timelock for unix timestamp of escrow end.
+     * @dev Set an asset to escrow locked status (6/50/56).
      */
     function setEscrow(bytes32 _idxHash, uint8 _newAssetStatus)
         external
         nonReentrant
         whenNotPaused
         isEscrowManager
-        exists(_idxHash)
-        notEscrow(_idxHash)
+        exists(_idxHash) //asset must exist in 'database'
+        notEscrow(_idxHash) // asset must not be held in escrow status
     {
         Record memory rec = database[_idxHash];
-        require(isEscrow(_newAssetStatus) == 170, "S:SE: stat must = ecr");
-        require((isLostOrStolen(rec.assetStatus) == 0), "S:MI2:L/S asset");
-        require((isTransferred(rec.assetStatus) == 0), "S:MI2: Txfrd asset");
+        require(isEscrow(_newAssetStatus) == 170, "S:SE: stat must = ecr"); //proposed new status must be an escrow status
+        require((isLostOrStolen(rec.assetStatus) == 0), "S:MI2:L/S asset"); //asset cannot be in lost or stolen status
+        require((isTransferred(rec.assetStatus) == 0), "S:MI2: Txfrd asset"); //asset cannot be in transferred status
         //^^^^^^^checks^^^^^^^^^
 
         if (_newAssetStatus == 60) {
+            //if setting to "discarded" status, set rgt to 0xFFF... (to prevent reminting)
             rec
                 .rightsHolder = 0xFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF;
         }
@@ -410,17 +423,17 @@ contract STOR is Ownable, ReentrancyGuard, Pausable {
     }
 
     /*
-     * @dev remove an asset from escrow status
+     * @dev remove an asset from escrow status. Implicitly trusts escrowManager ECR_MGR contract
      */
     function endEscrow(bytes32 _idxHash)
         external
         nonReentrant
         whenNotPaused
-        isEscrowManager
-        exists(_idxHash)
+        isEscrowManager //calling contract must be ECR_MGR
+        exists(_idxHash) //asset must exist in 'database'
     {
         Record memory rec = database[_idxHash];
-        require(isEscrow(rec.assetStatus) == 170, "S:EE:! ecr stat");
+        require(isEscrow(rec.assetStatus) == 170, "S:EE:! ecr stat"); //asset must be in an escrow status
         //^^^^^^^checks^^^^^^^^^
 
         if (rec.assetStatus == 6) {
@@ -449,12 +462,12 @@ contract STOR is Ownable, ReentrancyGuard, Pausable {
         external
         nonReentrant
         whenNotPaused
-        exists(_idxHash)
-        isAuthorized(database[_idxHash].assetClass)
-        notEscrow(_idxHash)
+        exists(_idxHash) //asset must exist in 'database'
+        isAuthorized(database[_idxHash].assetClass) //calling contract must be authorized in relevant assetClass
+        notEscrow(_idxHash) // asset must not be held in escrow status
     {
         Record memory rec = database[_idxHash];
-        require((isTransferred(rec.assetStatus) == 0), "S:MI2: Txfrd asset");
+        require((isTransferred(rec.assetStatus) == 0), "S:MI2: Txfrd asset"); //asset cannot be in transferred status
 
         require((rec.Ipfs1 != _Ipfs1), "S:MI1: New value = old");
         //^^^^^^^checks^^^^^^^^^
@@ -475,15 +488,15 @@ contract STOR is Ownable, ReentrancyGuard, Pausable {
         external
         nonReentrant
         whenNotPaused
-        exists(_idxHash)
-        isAuthorized(database[_idxHash].assetClass)
-        notEscrow(_idxHash)
+        exists(_idxHash) //asset must exist in 'database'
+        isAuthorized(database[_idxHash].assetClass) //calling contract must be authorized in relevant assetClass
+        notEscrow(_idxHash) // asset must not be held in escrow status
     {
         Record memory rec = database[_idxHash];
-        require((isLostOrStolen(rec.assetStatus) == 0), "S:MI2:L/S asset");
-        require((isTransferred(rec.assetStatus) == 0), "S:MI2: Txfrd. asset");
+        require((isLostOrStolen(rec.assetStatus) == 0), "S:MI2:L/S asset"); //asset cannot be in lost or stolen status
+        require((isTransferred(rec.assetStatus) == 0), "S:MI2: Txfrd. asset"); //asset cannot be in transferred status
 
-        require((rec.Ipfs2 == 0), "S:MI2: ! overwrite I2");
+        require((rec.Ipfs2 == 0), "S:MI2: ! overwrite I2"); //IPFS2 record is immutable after first write
         //^^^^^^^checks^^^^^^^^^
 
         rec.Ipfs2 = _Ipfs2;
@@ -497,12 +510,12 @@ contract STOR is Ownable, ReentrancyGuard, Pausable {
 
     //--------------------------------External READ ONLY contract functions / authuser---------------------------------//
     /*
-     * @dev return a complete record from the database
+     * @dev return a record from the database, including rgt
      */
     function retrieveRecord(bytes32 _idxHash)
         external
         view
-        isAuthorized(0)
+        isAuthorized(0) //calling contract must be authorized, generically
         returns (
             bytes32,
             uint8,
@@ -536,6 +549,9 @@ contract STOR is Ownable, ReentrancyGuard, Pausable {
         //^^^^^^^interactions^^^^^^^^^
     }
 
+    /*
+     * @dev return a record from the database w/o rgt
+     */
     function retrieveShortRecord(bytes32 _idxHash)
         external
         view
@@ -576,6 +592,7 @@ contract STOR is Ownable, ReentrancyGuard, Pausable {
 
     /*
      * @dev Compare record.rightsholder with supplied bytes32 rightsholder
+     * return 170 if matches, 0 if not
      */
     function _verifyRightsHolder(bytes32 _idxHash, bytes32 _rgtHash)
         external
@@ -591,7 +608,7 @@ contract STOR is Ownable, ReentrancyGuard, Pausable {
     }
 
     /*
-     * @dev Compare record.rightsholder with supplied bytes32 rightsholder (writes in blockchain)
+     * @dev Compare record.rightsholder with supplied bytes32 rightsholder (writes an emit in blockchain for independant verification)
      */
     function blockchainVerifyRightsHolder(bytes32 _idxHash, bytes32 _rgtHash)
         external

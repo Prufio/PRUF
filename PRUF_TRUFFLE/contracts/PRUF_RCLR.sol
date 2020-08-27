@@ -32,11 +32,11 @@ contract RCLR is ECR_CORE, CORE {
     function discard(bytes32 _idxHash) external nonReentrant whenNotPaused {
         Record memory rec = getRecord(_idxHash);
 
-        require( // caller is assetToken contract  //STATE UNREACHABLE: CANNOT MEET STATUS WITH CURRENT CONTRACTS CTS:PREFERRED,
+        require(
             msg.sender == A_TKN_Address,
             "R:D:Caller is not Asset Token Contract"
         );
-        require((rec.assetClass != 0), "R:D:Record does not exist");
+        // require((rec.assetClass != 0), "R:D:Record does not exist");                    //REDUNDANT, THROWS IN STORAGE CTS:EXAMINE
         require((rec.assetStatus == 59), "R:D:Must be in recyclable status");
         //^^^^^^^checks^^^^^^^^^
 

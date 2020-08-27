@@ -1458,14 +1458,14 @@
         )
     })
 
-    // //7                                                                               
+    // //7                                                                   //THROWS IN CORE                                                                              
     // it('Should fail because asset already exists', async () => {
-    //     return APP_NC.$newRecord(
+    //     return APP.$newRecord(
     //     asset2,
     //     rgt2,
-    //     '12',
+    //     '10',
     //     '100',
-    //     {from: account4, value: 20000000000000000}
+    //     {from: account2, value: 20000000000000000}
     //     )
     // })
 
@@ -1676,6 +1676,39 @@
     })
 
 
+    //16
+    it('Should fail because you cannot set assetStatus to ECR stat(6) with modifyRecord', async () => {
+
+        return MAL_APP._modStatus(
+        asset2,
+        '6',
+        {from: account2}
+        )
+    })
+
+
+    //17
+    it('Should fail because you cannot set assetStatus to ECR stat(56) with modifyRecord', async () => {
+
+        return MAL_APP._modStatus(
+        asset2,
+        '56',
+        {from: account2}
+        )
+    })
+
+
+    //18
+    it('Should fail because you cannot set assetStatus to ECR stat(50) with modifyRecord', async () => {
+
+        return MAL_APP._modStatus(
+        asset2,
+        '50',
+        {from: account2}
+        )
+    })
+
+
     it('Should authorize account2 in AC 2', async () => {
 
         console.log("//**************************************END modifyRecord FAIL BATCH**********************************************/")
@@ -1784,6 +1817,26 @@
         return MAL_APP.changeAC(
         asset2,
         '2',
+        {from: account2}
+        )
+    })
+
+
+    //21
+    it('Should fail because record is in L/S status', async () => {
+        return MAL_APP.changeAC(
+        asset4,
+        '11',
+        {from: account2}
+        )
+    })
+
+
+    //22
+    it('Should fail because record is in TXFR stat', async () => {
+        return MAL_APP.changeAC(
+        asset3,
+        '11',
         {from: account2}
         )
     })
@@ -1899,7 +1952,6 @@
         return MAL_APP.setEscrowStor(
         asset2,
         '50',
-        ECR_MGRHASH,
         {from: account2}
         )
     })
@@ -1960,6 +2012,18 @@
         )
     })
 
+
+    //31                                                                         
+    it('Should fail because asset in transfered stat', async () => {
+        return MAL_APP.setEscrow(
+        asset3,
+        account2Hash,
+        '180',
+        '6',
+        {from: account2}
+        )
+    })
+
     //33                                                                         
     it('Should fail because calling contract != ECR_MGR', async () => {
 
@@ -1967,7 +2031,6 @@
         console.log("//**************************************BEGIN endEscrow FAIL BATCH**********************************************/")
         return MAL_APP.endEscrowStor(
             asset8,
-            ECR_MGRHASH,
             {from: account2}
             )
     })
@@ -2096,6 +2159,28 @@
             asset7,
             // rgt7,
             rgt7,
+            {from: account2, value: 20000000000000000}
+        )
+    })
+
+
+    //42
+    it('Should fail becasue asset in L/S stat', async () => {
+        return MAL_APP.$addIpfs2Note(
+            asset4,
+            // rgt7,
+            rgt4,
+            {from: account2, value: 20000000000000000}
+        )
+    })
+
+
+    //42
+    it('Should fail becasue asset in transfered stat', async () => {
+        return MAL_APP.$addIpfs2Note(
+            asset3,
+            // rgt7,
+            rgt3,
             {from: account2, value: 20000000000000000}
         )
     })

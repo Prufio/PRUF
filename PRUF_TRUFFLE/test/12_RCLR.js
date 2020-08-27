@@ -1248,16 +1248,16 @@
     })
 
 
-    // it('Should fail becasue caller is not A_TKN contract)', async () => {
+    it('Should fail becasue caller is not A_TKN contract)', async () => {
 
-    //     console.log("//**************************************END RCLR SETUP**********************************************/")
-    //     console.log("//**************************************BEGIN RCLR FAIL BATCH**********************************************/")
-    //     console.log("//**************************************BEGIN discard FAIL BATCH**********************************************/")
-    //     return A_TKN2.discard(
-    //     asset1, 
-    //     {from: account4}
-    //     )
-    // })
+        console.log("//**************************************END RCLR SETUP**********************************************/")
+        console.log("//**************************************BEGIN RCLR FAIL BATCH**********************************************/")
+        console.log("//**************************************BEGIN discard FAIL BATCH**********************************************/")
+        return MAL_APP.discard(
+        asset1,
+        {from: account4}
+        )
+    })
 
 
     // it('Should unauthorize RCLR in AC12)', async () => {
@@ -1269,14 +1269,12 @@
     // })
 
 
-    // it('Should fail because RCLR not authoriized in AC)', async () => { 
-    //     return RCLR.$recycle(
-    //         asset2,
-    //         rgt2, 
-    //         '12', 
-    //         { from: account4, value: 20000000000000000 }
-    //         )     
-    // })
+    it('Should fail because status must be 59)', async () => { 
+        return A_TKN.discard(
+            asset2,
+            { from: account4}
+            )     
+    })
 
 
     // it('Should authorize RCLR in AC12)', async () => {  
@@ -1284,10 +1282,9 @@
     // })
 
 
-    it('Should fail because newRGT != 0)', async () => {
+    it('Should fail because newRGT = 0)', async () => {
 
-        console.log("//**************************************END RCLR SETUP**********************************************/")
-        console.log("//**************************************BEGIN RCLR FAIL BATCH**********************************************/")
+        console.log("//**************************************END discard FAIL BATCH**********************************************/")
         console.log("//**************************************BEGIN $recycle FAIL BATCH**********************************************/")
         return RCLR.$recycle(
             asset1,
@@ -1328,7 +1325,7 @@
     })
 
 
-    it('Should fail because asset2 is not discarded)', async () => {
+    it('Should fail because asset2 is not discarded', async () => {
         return RCLR.$recycle(
             asset2,
             rgt2, 
