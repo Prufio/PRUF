@@ -1242,7 +1242,7 @@
     })
 
 
-    it('Should Transfer asset12 RGT(1) to RGT(2)', async () => {
+    it('Should Transfer asset12 RGT(12) to RGT(2)', async () => {
         return APP.$transferAsset(
         asset12, 
         rgt12,
