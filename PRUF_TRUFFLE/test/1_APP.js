@@ -41,6 +41,7 @@
     let string3Hash;
     let string4Hash;
     let string5Hash;
+    let string14Hash;
 
     let ECR_MGRHASH;
     
@@ -56,6 +57,8 @@
     let asset10;
     let asset11;
     let asset12;
+    let asset13;
+    let asset14;
 
     let rgt1;
     let rgt2;
@@ -66,6 +69,8 @@
     let rgt7;
     let rgt8;
     let rgt12;
+    let rgt13;
+    let rgt14;
     let rgt000 = "0x0000000000000000000000000000000000000000000000000000000000000000";
     let rgtFFF = "0xFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF";
 
@@ -320,6 +325,20 @@
             'lll'
         )
 
+        asset13 = await Helper.getIdxHash(
+            'mmm',
+            'mmm',
+            'mmm',
+            'mmm'
+        )
+
+        asset14 = await Helper.getIdxHash(
+            'nnn',
+            'nnn',
+            'nnn',
+            'nnn'
+        )
+
         rgt1 = await Helper.getJustRgtHash(
             asset1,
             'aaa',
@@ -401,6 +420,24 @@
             'a'
         )
 
+        rgt13 = await Helper.getJustRgtHash(
+            asset13,
+            'a',
+            'a',
+            'a',
+            'a',
+            'a'
+        )
+
+        rgt14 = await Helper.getJustRgtHash(
+            asset14,
+            'a',
+            'a',
+            'a',
+            'a',
+            'a'
+        )
+
 
         account2Hash = await Helper.getAddrHash(
             account2
@@ -448,6 +485,10 @@
 
         string5Hash = await Helper.getStringHash(
             '5'
+        )
+
+        string14Hash = await Helper.getStringHash(
+            '14'
         )
 
 
@@ -703,6 +744,11 @@
                 console.log("Minting AC 13 -NC")
                 return AC_MGR.createAssetClass(account1, "Non-Custodial_AC2", "13", "1", "2", { from: account1 })
             })
+
+            .then(() => {
+                console.log("Minting AC 16 -NC")
+                return AC_MGR.createAssetClass(account10, "Non_Custodial_AC5", "16", "1", "2", { from: account1 })
+            })
     })
 
 
@@ -743,6 +789,10 @@
             
             .then(() => {
                 return STOR.enableContractForAC('APP_NC', '14', '2', { from: account1 })
+            })
+
+            .then(() => {
+                return STOR.enableContractForAC('APP_NC', '16', '2', { from: account10 })
             })
             
             // .then(() => {
@@ -794,6 +844,10 @@
                 return STOR.enableContractForAC('NP_NC', '14', '2', { from: account1 })
             })
 
+            .then(() => {
+                return STOR.enableContractForAC('NP_NC', '16', '2', { from: account10 })
+            })
+
             // .then(() => {
             //     return STOR.enableContractForAC('NP_NC', '2', '0', { from: account1 })
             // })
@@ -839,6 +893,10 @@
             .then(() => {
                 return STOR.enableContractForAC('ECR_NC', '14', '3', { from: account1 })
             })
+
+            .then(() => {
+                return STOR.enableContractForAC('ECR_NC', '16', '3', { from: account10 })
+            })
             
             // .then(() => {
             //     return STOR.enableContractForAC('ECR_NC', '2', '3', { from: account1 })
@@ -864,6 +922,10 @@
             
             .then(() => {
                 return STOR.enableContractForAC('ECR_MGR', '14', '3', { from: account1 })
+            })
+
+            .then(() => {
+                return STOR.enableContractForAC('ECR_MGR', '16', '3', { from: account10 })
             })
             
             // .then(() => {
@@ -923,6 +985,10 @@
             .then(() => {
                 return STOR.enableContractForAC('A_TKN', '15', '2', { from: account10 })
             })
+
+            .then(() => {
+                return STOR.enableContractForAC('A_TKN', '16', '2', { from: account10 })
+            })
             
             .then(() => {
                 return STOR.enableContractForAC('A_TKN', '1', '1', { from: account1 })
@@ -957,6 +1023,10 @@
 
             .then(() => {
                 return STOR.enableContractForAC('NAKED', '15', '2', { from: account10 })
+            })
+
+            .then(() => {
+                return STOR.enableContractForAC('NAKED', '16', '2', { from: account10 })
             })
             
             .then(() => {
@@ -1019,6 +1089,10 @@
             
             .then(() => {
                 return STOR.enableContractForAC('RCLR', '14', '3', { from: account1 })
+            })
+
+            .then(() => {
+                return STOR.enableContractForAC('RCLR', '16', '3', { from: account10 })
             })
             
             // .then(() => {
@@ -1135,6 +1209,79 @@
                     "10000000000000000",
                     account1,
                     { from: account10 })
+            })
+    })
+
+
+    it('Should add users to AC 10-14 in AC_Manager', async () => {
+
+        console.log("//**************************************END BOOTSTRAP**********************************************/")
+        console.log("Account2 => AC10")
+        return AC_MGR.OO_addUser(account2, '1', '10', { from: account1 })
+            
+            .then(() => {
+                console.log("Account2 => AC11")
+                return AC_MGR.OO_addUser(account2, '1', '11', { from: account1 })
+            })
+            
+            .then(() => {
+                console.log("Account3 => AC11")
+                return AC_MGR.OO_addUser(account3, '1', '11', { from: account1 })
+            })
+
+            .then(() => {
+                console.log("Account4 => AC10")
+                return AC_MGR.OO_addUser(account4, '1', '10', { from: account1 })
+            })
+            
+            .then(() => {
+                console.log("Account4 => AC12")
+                return AC_MGR.OO_addUser(account4, '1', '12', { from: account1 })
+            })
+
+            .then(() => {
+                console.log("Account4 => AC12")
+                return AC_MGR.OO_addUser(account4, '1', '16', { from: account10 })
+            })
+            
+            .then(() => {
+                console.log("Account5 => AC13")
+                return AC_MGR.OO_addUser(account5, '1', '13', { from: account1 })
+            })
+            
+            .then(() => {
+                console.log("Account6 => AC14")
+                return AC_MGR.OO_addUser(account6, '1', '14', { from: account1 })
+            })
+            
+            .then(() => {
+                console.log("Account7 => AC14 (ROBOT)")
+                return AC_MGR.OO_addUser(account7, '9', '14', { from: account1 })
+            })
+            
+            .then(() => {
+                console.log("Account8 => AC10 (ROBOT)")
+                return AC_MGR.OO_addUser(account8, '9', '10', { from: account1 })
+            })
+            
+            .then(() => {
+                console.log("Account9 => AC11 (ROBOT)")
+                return AC_MGR.OO_addUser(account9, '9', '11', { from: account1 })
+            })
+            
+            .then(() => {
+                console.log("Account10 => AC15 (NAKEDMINTER)")
+                return AC_MGR.OO_addUser(account10, '10', '15', { from: account10 })
+            })
+
+            .then(() => {
+                console.log("Account10 => AC15 (NAKEDMINTER)")
+                return AC_MGR.OO_addUser(account10, '10', '16', { from: account10 })
+            })
+
+            .then(() => {
+                console.log("Account10 => AC15 (NAKEDMINTER)")
+                return AC_MGR.OO_addUser(account10, '1', '10', { from: account1 })
             })
     })
 
@@ -1340,7 +1487,7 @@
                 rgt1,
                 '10',
                 '5000',
-                {from: account4, value: 20000000000000000}
+                {from: account5, value: 20000000000000000}
             )
         })
 
@@ -1437,7 +1584,7 @@
                 asset2,
                 rgt2,
                 '10',
-                {from: account4, value: 20000000000000000}
+                {from: account5, value: 20000000000000000}
             )
         })
 
@@ -1507,7 +1654,7 @@
             return APP.$forceModRecord(
                 asset1,
                 rgt2,
-                {from: account4, value: 20000000000000000}
+                {from: account5, value: 20000000000000000}
             )
         })
 

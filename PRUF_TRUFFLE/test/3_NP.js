@@ -41,6 +41,7 @@
     let string3Hash;
     let string4Hash;
     let string5Hash;
+    let string14Hash;
 
     let ECR_MGRHASH;
     
@@ -56,6 +57,8 @@
     let asset10;
     let asset11;
     let asset12;
+    let asset13;
+    let asset14;
 
     let rgt1;
     let rgt2;
@@ -66,6 +69,8 @@
     let rgt7;
     let rgt8;
     let rgt12;
+    let rgt13;
+    let rgt14;
     let rgt000 = "0x0000000000000000000000000000000000000000000000000000000000000000";
     let rgtFFF = "0xFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF";
 
@@ -320,6 +325,20 @@
             'lll'
         )
 
+        asset13 = await Helper.getIdxHash(
+            'mmm',
+            'mmm',
+            'mmm',
+            'mmm'
+        )
+
+        asset14 = await Helper.getIdxHash(
+            'nnn',
+            'nnn',
+            'nnn',
+            'nnn'
+        )
+
         rgt1 = await Helper.getJustRgtHash(
             asset1,
             'aaa',
@@ -401,6 +420,24 @@
             'a'
         )
 
+        rgt13 = await Helper.getJustRgtHash(
+            asset13,
+            'a',
+            'a',
+            'a',
+            'a',
+            'a'
+        )
+
+        rgt14 = await Helper.getJustRgtHash(
+            asset14,
+            'a',
+            'a',
+            'a',
+            'a',
+            'a'
+        )
+
 
         account2Hash = await Helper.getAddrHash(
             account2
@@ -448,6 +485,10 @@
 
         string5Hash = await Helper.getStringHash(
             '5'
+        )
+
+        string14Hash = await Helper.getStringHash(
+            '14'
         )
 
 
@@ -703,6 +744,11 @@
                 console.log("Minting AC 13 -NC")
                 return AC_MGR.createAssetClass(account1, "Non-Custodial_AC2", "13", "1", "2", { from: account1 })
             })
+
+            .then(() => {
+                console.log("Minting AC 16 -NC")
+                return AC_MGR.createAssetClass(account10, "Non_Custodial_AC5", "16", "1", "2", { from: account1 })
+            })
     })
 
 
@@ -743,6 +789,10 @@
             
             .then(() => {
                 return STOR.enableContractForAC('APP_NC', '14', '2', { from: account1 })
+            })
+
+            .then(() => {
+                return STOR.enableContractForAC('APP_NC', '16', '2', { from: account10 })
             })
             
             // .then(() => {
@@ -794,6 +844,10 @@
                 return STOR.enableContractForAC('NP_NC', '14', '2', { from: account1 })
             })
 
+            .then(() => {
+                return STOR.enableContractForAC('NP_NC', '16', '2', { from: account10 })
+            })
+
             // .then(() => {
             //     return STOR.enableContractForAC('NP_NC', '2', '0', { from: account1 })
             // })
@@ -839,6 +893,10 @@
             .then(() => {
                 return STOR.enableContractForAC('ECR_NC', '14', '3', { from: account1 })
             })
+
+            .then(() => {
+                return STOR.enableContractForAC('ECR_NC', '16', '3', { from: account10 })
+            })
             
             // .then(() => {
             //     return STOR.enableContractForAC('ECR_NC', '2', '3', { from: account1 })
@@ -864,6 +922,10 @@
             
             .then(() => {
                 return STOR.enableContractForAC('ECR_MGR', '14', '3', { from: account1 })
+            })
+
+            .then(() => {
+                return STOR.enableContractForAC('ECR_MGR', '16', '3', { from: account10 })
             })
             
             // .then(() => {
@@ -923,6 +985,10 @@
             .then(() => {
                 return STOR.enableContractForAC('A_TKN', '15', '2', { from: account10 })
             })
+
+            .then(() => {
+                return STOR.enableContractForAC('A_TKN', '16', '2', { from: account10 })
+            })
             
             .then(() => {
                 return STOR.enableContractForAC('A_TKN', '1', '1', { from: account1 })
@@ -957,6 +1023,10 @@
 
             .then(() => {
                 return STOR.enableContractForAC('NAKED', '15', '2', { from: account10 })
+            })
+
+            .then(() => {
+                return STOR.enableContractForAC('NAKED', '16', '2', { from: account10 })
             })
             
             .then(() => {
@@ -1019,6 +1089,10 @@
             
             .then(() => {
                 return STOR.enableContractForAC('RCLR', '14', '3', { from: account1 })
+            })
+
+            .then(() => {
+                return STOR.enableContractForAC('RCLR', '16', '3', { from: account10 })
             })
             
             // .then(() => {
@@ -1154,10 +1228,20 @@
                 console.log("Account3 => AC11")
                 return AC_MGR.OO_addUser(account3, '1', '11', { from: account1 })
             })
+
+            .then(() => {
+                console.log("Account4 => AC10")
+                return AC_MGR.OO_addUser(account4, '1', '10', { from: account1 })
+            })
             
             .then(() => {
                 console.log("Account4 => AC12")
                 return AC_MGR.OO_addUser(account4, '1', '12', { from: account1 })
+            })
+
+            .then(() => {
+                console.log("Account4 => AC12")
+                return AC_MGR.OO_addUser(account4, '1', '16', { from: account10 })
             })
             
             .then(() => {
@@ -1188,6 +1272,11 @@
             .then(() => {
                 console.log("Account10 => AC15 (NAKEDMINTER)")
                 return AC_MGR.OO_addUser(account10, '10', '15', { from: account10 })
+            })
+
+            .then(() => {
+                console.log("Account10 => AC15 (NAKEDMINTER)")
+                return AC_MGR.OO_addUser(account10, '10', '16', { from: account10 })
             })
 
             .then(() => {
@@ -1372,12 +1461,12 @@
     // })
 
     //2
-    it('Should Fail because account4 != auth for AC10 assets', async () => {
+    it('Should Fail because account5 != auth for AC10 assets', async () => {
         return NP._modStatus(
         asset1,
         rgt1,
         '1',
-        {from: account4}
+        {from: account5}
         )
     })
 
@@ -1602,12 +1691,12 @@
     // })
 
     //12
-    it('Should Fail because account4 != auth for AC10 assets', async () => {
+    it('Should Fail because account5 != auth for AC10 assets', async () => {
         return NP._setLostOrStolen(
         asset1,
         rgt1,
         '3',
-        {from: account4}
+        {from: account5}
         )
     })
 
@@ -1807,7 +1896,7 @@
         asset1,
         rgt1,
         '15',
-        {from: account4}
+        {from: account5}
         )
     })
 
@@ -1904,12 +1993,12 @@
     // })
 
     //20
-    it('Should Fail because account4 != auth for AC10 assets', async () => {
+    it('Should Fail because account5 != auth for AC10 assets', async () => {
         return NP._modIpfs1(
         asset1,
         rgt1,
         rgt1,
-        {from: account4}
+        {from: account5}
         )
     })
 
@@ -2045,8 +2134,8 @@
     it('Should write record in AC 10 @ IDX&RGT(1)', async () => {
 
         console.log("//**************************************END _modIpfs1 FAIL BATCH**********************************************/")
-        console.log("//**************************************END NC FAIL BATCH**********************************************/")
-        console.log("//**************************************END NC TEST**********************************************/")
+        console.log("//**************************************END NP FAIL BATCH**********************************************/")
+        console.log("//**************************************END NP TEST**********************************************/")
         console.log("//**************************************BEGIN THE WORKS**********************************************/")
         return APP.$newRecord(
         asset12, 
