@@ -104,7 +104,7 @@ contract ECR is ECR_CORE {
 
         require(contractInfo.contractType > 0, "E:EE: contract not auth in AC");
         require((userType > 0) && (userType < 10), "E:EE: user not auth in AC");
-        require(                                      //STATE UNREACHABLE CTS:EXAMINE
+        require(                                      //STATE UNREACHABLE CTS:PREFERRED
             (rec.assetStatus != 60),
             "E:EE- Asset is discarded, use Recycle"
         );

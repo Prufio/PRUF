@@ -36,7 +36,6 @@ contract RCLR is ECR_CORE, CORE {
             msg.sender == A_TKN_Address,
             "R:D:Caller is not Asset Token Contract"
         );
-        // require((rec.assetClass != 0), "R:D:Record does not exist");                    //REDUNDANT, THROWS IN STORAGE CTS:EXAMINE
         require((rec.assetStatus == 59), "R:D:Must be in recyclable status");
         //^^^^^^^checks^^^^^^^^^
 

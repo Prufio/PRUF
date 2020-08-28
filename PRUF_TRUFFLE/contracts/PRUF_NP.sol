@@ -237,8 +237,6 @@ contract NP is CORE {
         );
         //^^^^^^^checks^^^^^^^^^
 
-        // rec.incrementNumberOfTransfers = 170;            //REDUNDANT, ALREADY DONE IN A_TKN.safeTransferFrom through APP.transferAssetToken CTS:EXAMINE
-
         rec.assetStatus = 70; // Set status to 70 (exported)
         //^^^^^^^effects^^^^^^^^^
 
