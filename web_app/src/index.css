@@ -322,6 +322,11 @@ h4 {
   opacity: 0.96;
 }
 
+.headerButtons {
+  max-width: 30rem;
+  max-height: 3rem;
+}
+
 .BannerForm {
   height: 5rem;
   max-width: none;
