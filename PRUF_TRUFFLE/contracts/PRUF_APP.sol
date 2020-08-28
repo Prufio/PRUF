@@ -84,10 +84,6 @@ contract APP is CORE {
 
         require(userType < 3, "A:IA: User not authorized to import assets");
         require((userType > 0) && (userType < 10), "A:IA: User not auth in AC");
-        require(                                                                             //REDUNDANT, THROWS IN STORAGE CTS:EXAMINE
-            AC_MGR.isSameRootAC(_newAssetClass, rec.assetClass) == 170,
-            "A:IA:Cannot change AC to new root"
-        );
         require(
             (rec.assetStatus == 5) ||
                 (rec.assetStatus == 55) ||
@@ -125,7 +121,6 @@ contract APP is CORE {
         uint8 userType = getUserType(rec.assetClass);
         
         require(userType == 1, "A:FMR: User not auth in AC");
-        require(_rgtHash != 0, "A:FMR:RGT = 0");                  //REDUNDANT, THROWS IN STORAGE modifyRecord CTS: EXAMINE
         require(
             isLostOrStolen(rec.assetStatus) == 0,
             "A:FMR: Asset marked L/S"

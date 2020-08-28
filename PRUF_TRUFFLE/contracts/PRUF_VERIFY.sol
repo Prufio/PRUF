@@ -136,7 +136,7 @@ contract VERIFY is CORE {
     }
 
 
-    function examine(bytes32 _itemHash)
+    function getItemData(bytes32 _itemHash)
         external
         view
         returns (
