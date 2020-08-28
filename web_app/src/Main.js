@@ -18,7 +18,7 @@ class Main extends Component {
     super(props);
 
     this.toggleMenu = (menuChoice) => {
-      if(window.ipfs === undefined){return}
+      console.log("Changing menu to: ", menuChoice);
       if (menuChoice === 'ACAdmin') {
         return this.setState({
           assetClassHolderMenuBool: true,
@@ -70,9 +70,6 @@ class Main extends Component {
         if (error) { console.log(error) }
         else { _assetClassBal = result; console.log("assetClassBal", _assetClassBal); }
       });
-
-      console.log(await window.contracts.A_TKN.methods.balanceOf(window.addr));
-      console.log(await window.contracts.AC_TKN.methods.balanceOf(window.addr));
 
       if (Number(_assetBal) > 0) {
         this.setState({ assetHolderBool: true })
@@ -142,7 +139,6 @@ class Main extends Component {
       isBPNPOwner: undefined,
       addr: undefined,
       web3: null,
-      ownerMenu: false,
       STOROwner: "",
       BPPOwner: "",
       BPNPOwner: "",
@@ -190,6 +186,7 @@ class Main extends Component {
     //console.log(window.ipfs)
     _web3.eth.getAccounts().then((e) => { this.state.addr = e[0]; window.addr = e[0] });
     document.addEventListener("accountListener", this.acctChanger());
+    
 
   }
 
@@ -218,11 +215,6 @@ class Main extends Component {
       return (<div> Error Occoured. Try reloading the page. </div>)
     }
 
-    const buttonWrangler = (menuChoice) => {
-      if (this.state.hasMounted === undefined){return}
-      else{this.toggleMenu(menuChoice)}
-    }
-
     return (
       <div>
         <ParticleBox />
@@ -230,47 +222,7 @@ class Main extends Component {
           <div>
             <div className="imageForm">
               <img className="downSizeLogo" src={require("./Pruf.png")} alt="Pruf Logo" />
-              <div className="headerButtons">
-              {this.state.assetClassHolderBool === true && (
-                <Button
-                  variant="primary"
-                  type="button"
-                  size=""
-                  onClick={buttonWrangler("ACAdmin")}
-                >
-                  AC Admin Menu
-                </Button>)}
 
-              {this.state.assetHolderBool === true && (
-                <Button
-                  variant="primary"
-                  type="button"
-                  size="lg"
-                  onClick={buttonWrangler("NC")}
-                >
-                  NonCustodial Menu
-                </Button>)}
-
-              {this.state.basicMenuBool === false && (
-                <Button
-                  variant="primary"
-                  type="button"
-                  size="lg"
-                  onClick={buttonWrangler("basic")}
-                >
-                  Basic Menu
-                </Button>)}
-
-              {this.state.isAuthUser === true && (
-                <Button
-                  variant="primary"
-                  type="button"
-                  size="lg"
-                  onClick={buttonWrangler("authUser")}
-                >
-                  Authorized User Menu
-                </Button>)}
-                </div>
               <div className="userData">
                 {this.state.addr > 0 && (
                   <div className="banner">
@@ -302,6 +254,43 @@ class Main extends Component {
                 <div className="content">
                   <Route exact path="/" component={Home} />
                   <Router />
+                </div>
+                <div className="headerButtons">
+              {this.state.assetClassHolderBool === true && this.state.assetClassHolderMenuBool === false &&(
+                <Button className="btn3"
+                  variant="primary"
+                  type="button"
+                  onClick={()=>{this.toggleMenu("ACAdmin")}}
+                >
+                  AC Admin Menu
+                </Button>)}
+
+              {this.state.assetHolderBool === true && this.state.assetHolderMenuBool === false &&(
+                <Button className="btn3"
+                  variant="primary"
+                  type="button"
+                  onClick={()=>{this.toggleMenu("NC")}}
+                >
+                  NonCustodial Menu
+                </Button>)}
+
+              {this.state.basicMenuBool === false && (
+                <Button className="btn3"
+                  variant="primary"
+                  type="button"
+                  onClick={()=>{this.toggleMenu("basic")}}
+                >
+                  Basic Menu
+                </Button>)}
+
+              {this.state.isAuthUser === true && this.state.authorizedUserMenuBool === false && (
+                <Button className="btn3"
+                  variant="primary"
+                  type="button"
+                  onClick={()=>{this.toggleMenu("authUser")}}
+                >
+                  Authorized User Menu
+                </Button>)}
                 </div>
               </div>
             </div>
