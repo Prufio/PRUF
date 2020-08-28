@@ -137,6 +137,7 @@ class RetrieveRecord extends Component {
             else if (Object.values(_result)[0] === '12'){  self.setState({ status: 'In escrow (block.time locked)' });}
             else if (Object.values(_result)[0] === '20'){  self.setState({ status: 'Cusdodial escrow ended' });}
             else if (Object.values(_result)[0] === '21'){  self.setState({ status: 'P2P escrow ended' });}
+            else if (Object.values(_result)[0] === '51'){  self.setState({ status: 'Transferrable, export eligible' });}
             self.setState({ result: Object.values(_result)})
             self.setState({ error: undefined });
 

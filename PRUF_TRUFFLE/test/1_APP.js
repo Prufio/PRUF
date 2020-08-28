@@ -1487,7 +1487,7 @@
                 rgt1,
                 '10',
                 '5000',
-                {from: account4, value: 20000000000000000}
+                {from: account5, value: 20000000000000000}
             )
         })
 
@@ -1584,7 +1584,7 @@
                 asset2,
                 rgt2,
                 '10',
-                {from: account4, value: 20000000000000000}
+                {from: account5, value: 20000000000000000}
             )
         })
 
@@ -1654,7 +1654,7 @@
             return APP.$forceModRecord(
                 asset1,
                 rgt2,
-                {from: account4, value: 20000000000000000}
+                {from: account5, value: 20000000000000000}
             )
         })
 

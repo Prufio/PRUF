@@ -49,15 +49,15 @@ class SetCosts extends Component {
     const self = this;
 
     const setCosts = () => {
-      window.contracts.STOR.methods
+      window.contracts.AC_MGR.methods
         .ACTH_setCosts(
           window.assetClass,
-          this.state.newRecordCost,
-          this.state.transferRecordCost,
-          this.state.createNoteCost,
-          this.state.remintCost,
-          this.state.importCost,
-          this.state.forceModCost,
+          Number(this.state.newRecordCost)*1000000000000000000,
+          Number(this.state.transferRecordCost)*1000000000000000000,
+          Number(this.state.createNoteCost)*1000000000000000000,
+          Number(this.state.remintCost)*1000000000000000000,
+          Number(this.state.importCost)*1000000000000000000,
+          Number(this.state.forceModCost)*1000000000000000000,
           this.state.paymentAddr
         )
 
@@ -69,7 +69,7 @@ class SetCosts extends Component {
         .on("receipt", (receipt) => {
           console.log(
             "costs succesfully updated under asset class",
-            self.state.assetClass
+            window.assetClass
           );
           console.log("tx receipt: ", receipt);
         });
@@ -100,7 +100,7 @@ class SetCosts extends Component {
               <Form.Group as={Col} controlId="formGridNewRecordCost">
                 <Form.Label className="formFont">New record :</Form.Label>
                 <Form.Control
-                  placeholder="New Record Cost"
+                  placeholder="New Record Cost (ETH)"
                   required
                   onChange={(e) =>
                     this.setState({ newRecordCost: e.target.value })
@@ -112,7 +112,7 @@ class SetCosts extends Component {
               <Form.Group as={Col} controlId="formGridTransferAssetCost">
                 <Form.Label className="formFont">Transfer Asstet :</Form.Label>
                 <Form.Control
-                  placeholder="Transfer Asset Cost"
+                  placeholder="Transfer Asset Cost (ETH)"
                   required
                   onChange={(e) =>
                     this.setState({ transferRecordCost: e.target.value })
@@ -124,7 +124,7 @@ class SetCosts extends Component {
               <Form.Group as={Col} controlId="formGridAddNoteCost">
                 <Form.Label className="formFont">Add Note :</Form.Label>
                 <Form.Control
-                  placeholder="Add Note Cost"
+                  placeholder="Add Note Cost (ETH)"
                   required
                   onChange={(e) =>
                     this.setState({ createNoteCost: e.target.value })
@@ -136,7 +136,7 @@ class SetCosts extends Component {
               <Form.Group as={Col} controlId="formGridRemintCost">
                 <Form.Label className="formFont">Remint Asset :</Form.Label>
                 <Form.Control
-                  placeholder="Cost 4 Cost"
+                  placeholder="Remint Asset Cost (ETH)"
                   required
                   onChange={(e) => this.setState({ remintCost: e.target.value })}
                   size="lg"
@@ -146,7 +146,7 @@ class SetCosts extends Component {
               <Form.Group as={Col} controlId="formGridImportCost">
                 <Form.Label className="formFont">Import Asset :</Form.Label>
                 <Form.Control
-                  placeholder="Cost 5 Cost"
+                  placeholder="Import Asset Cost (ETH)"
                   required
                   onChange={(e) => this.setState({ importCost: e.target.value })}
                   size="lg"
@@ -158,7 +158,7 @@ class SetCosts extends Component {
                   Force Modify Record :
                 </Form.Label>
                 <Form.Control
-                  placeholder="Force Modify Record Cost"
+                  placeholder="Force Modify Record Cost (ETH)"
                   required
                   onChange={(e) =>
                     this.setState({ forceModCost: e.target.value })

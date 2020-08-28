@@ -48,6 +48,7 @@ class Home extends Component {
           else if(_result === "1"){this.setState({authLevel: "Administrator"})}
           else if(_result === "9"){this.setState({authLevel: "Robot"})}
             //console.log(_result)
+            
         }
       }); 
     }
@@ -89,12 +90,12 @@ class Home extends Component {
 
     
     const _setAC = async () => {
-      if(this.state.assetClass === "0" || this.state.assetClass === undefined){window.assetClass = undefined; return this.forceUpdate()}
+      if(this.state.assetClass === "0"){window.assetClass = undefined; return this.forceUpdate()}
       else{
       window.assetClass = this.state.assetClass;
       await this._checkCreds();
       await this.getCosts();
-      return this.forceUpdate()
+      return this.forceUpdate();
       }
     }
 

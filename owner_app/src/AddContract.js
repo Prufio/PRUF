@@ -40,6 +40,7 @@ class AddContract extends Component {
         .OO_addContract(
           this.state.name,
           this.state.authAddress,
+          "0",
           this.state.authLevel
         )
         .send({ from: window.addr })

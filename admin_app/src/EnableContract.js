@@ -86,7 +86,7 @@ class enableContract extends Component {
           )}
           {window.addr > 0 && window.assetClass > 0 &&(
             <div>
-              <h2 className="Headertext">Add Contract</h2>
+              <h2 className="Headertext">Enable Contract</h2>
               <br></br>
 
               <Form.Group as={Col} controlId="formGridContractName">

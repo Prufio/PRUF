@@ -3,8 +3,13 @@
   font-size: 62.5%;
 }
 
+.downSizeLogo{
+  object-fit: cover;
+  width: 7%;
+}
+
 body {
-  background-image: url(2.png);
+  background-image: url(BlueBack.png);
   -webkit-backgrount-size: cover;
   background-size: cover;
   background-position: center center fixed;
