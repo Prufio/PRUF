@@ -1,20 +1,15 @@
 import React, { Component } from "react";
+import Button from "react-bootstrap/Button";
 import { Route, NavLink, HashRouter } from "react-router-dom";
 import Web3 from "web3";
 import Home from "./Home";
-import AddNote from "./AddNote";
-import DecrementCounter from "./DecrementCounter";
-import ForceModifyRecord from "./ForceModifyRecord";
-import ModifyDescription from "./ModifyDescription";
-import ModifyRecordStatus from "./ModifyRecordStatus";
-import NewRecord from "./NewRecord";
-import RetrieveRecord from "./RetrieveRecord";
-import TransferAsset from "./TransferAsset";
-import VerifyRightsholder from "./VerifyRightsholder";
-import buildContracts from "./Contracts";
-import EscrowManager from "./EscrowManager";
-import ExportAsset from "./ExportAsset";
-import ParticleBox from './ParticleBox';
+import buildContracts from "./Resources/Contracts";
+import NonCustodialComponent from "./Resources/NonCustodialComponent";
+import AdminComponent from "./Resources/AdminComponent";
+import AuthorizedUserComponent from "./Resources/AuthorizedUserComponent";
+import BasicComponent from "./Resources/BasicComponent"
+import ParticleBox from './Resources/ParticleBox';
+import Router from "./Router";
 
 
 
@@ -22,33 +17,104 @@ class Main extends Component {
   constructor(props) {
     super(props);
 
+    this.toggleMenu = (menuChoice) => {
+      console.log("Changing menu to: ", menuChoice);
+      if (menuChoice === 'ACAdmin') {
+        return this.setState({
+          assetClassHolderMenuBool: true,
+          assetHolderMenuBool: false,
+          basicMenuBool: false,
+          authorizedUserMenuBool: false
+        })
+      }
+
+      else if (menuChoice === 'basic') {
+        return this.setState({
+          basicMenuBool: true,
+          assetHolderMenuBool: false,
+          assetClassHolderMenuBool: false,
+          authorizedUserMenuBool: false
+        })
+      }
+
+      else if (menuChoice === 'NC') {
+        return this.setState({
+          assetHolderMenuBool: true,
+          basicMenuBool: false,
+          assetClassHolderMenuBool: false,
+          authorizedUserMenuBool: false
+        })
+      }
+
+      else if (menuChoice === 'authUser') {
+        return this.setState({
+          authorizedUserMenuBool: true,
+          assetHolderMenuBool: false,
+          assetClassHolderMenuBool: false,
+          basicMenuBool: false
+        })
+
+      }
+    }
+
+    this.determineTokenBalance = async () => {
+      let _assetClassBal;
+      let _assetBal;
+      console.log("getting balance info from token contracts...")
+      await window.contracts.A_TKN.methods.balanceOf(window.addr).call({ from: window.addr }, (error, result) => {
+        if (error) { console.log(error) }
+        else { _assetBal = result; console.log("assetBal: ", _assetBal); }
+      });
+
+      await window.contracts.AC_TKN.methods.balanceOf(window.addr).call({ from: window.addr }, (error, result) => {
+        if (error) { console.log(error) }
+        else { _assetClassBal = result; console.log("assetClassBal", _assetClassBal); }
+      });
+
+      if (Number(_assetBal) > 0) {
+        this.setState({ assetHolderBool: true })
+      }
+
+      if (Number(_assetClassBal) > 0) {
+        this.setState({ assetClassHolderBool: true })
+      }
+
+      window.balances = {
+        assetBal: Number(_assetBal),
+        assetClassBal: Number(_assetClassBal)
+      }
+
+      console.log("token balances: ", window.balances)
+    }
+
     this.setupContractEnvironment = async (_web3) => {
       console.log("Setting up contracts")
       window._contracts = await buildContracts(_web3)
-      await this.setState({contracts: window._contracts})
+      await this.setState({ contracts: window._contracts })
       return this.getContracts()
-  }
+    }
 
     //State declaration....................................................................................................
     this.getContracts = async () => {
 
-        window.contracts = {
-          STOR: window._contracts.content[0],
-          APP: window._contracts.content[1],
-          NP: window._contracts.content[2],
-          AC_MGR: window._contracts.content[3],
-          AC_TKN: window._contracts.content[4],
-          A_TKN: window._contracts.content[5],
-          ECR_MGR: window._contracts.content[6],
-          ECR: window._contracts.content[7],
-          ECR2: window._contracts.content[8],
-          ECR_NC: window._contracts.content[9],
-          APP_NC: window._contracts.content[10],
-          NP_NC: window._contracts.content[11],
-          RCLR: window._contracts.content[12],
-        }
+      window.contracts = {
+        STOR: window._contracts.content[0],
+        APP: window._contracts.content[1],
+        NP: window._contracts.content[2],
+        AC_MGR: window._contracts.content[3],
+        AC_TKN: window._contracts.content[4],
+        A_TKN: window._contracts.content[5],
+        ECR_MGR: window._contracts.content[6],
+        ECR: window._contracts.content[7],
+        ECR2: window._contracts.content[8],
+        ECR_NC: window._contracts.content[9],
+        APP_NC: window._contracts.content[10],
+        NP_NC: window._contracts.content[11],
+        RCLR: window._contracts.content[12],
+      }
 
-        return console.log("contracts: ", window.contracts)
+      console.log("contracts: ", window.contracts)
+      return this.determineTokenBalance();
     };
 
     this.acctChanger = async () => {//Handle an address change, update state accordingly
@@ -57,10 +123,10 @@ class Main extends Component {
       var _web3 = require("web3");
       _web3 = new Web3(_web3.givenProvider);
       ethereum.on("accountsChanged", function (accounts) {
-        _web3.eth.getAccounts().then((e) => 
-        {
+        _web3.eth.getAccounts().then((e) => {
           window.addr = e[0];
-          self.setState({addr: e[0]})
+          self.setState({ addr: e[0] })
+          self.setupContractEnvironment(window.web3);
         });
       });
     };
@@ -73,7 +139,6 @@ class Main extends Component {
       isBPNPOwner: undefined,
       addr: undefined,
       web3: null,
-      ownerMenu: false,
       STOROwner: "",
       BPPOwner: "",
       BPNPOwner: "",
@@ -92,6 +157,13 @@ class Main extends Component {
       RCLR: "",
       assetClass: undefined,
       contractArray: [],
+      isAuthUser: false,
+      assetHolderBool: false,
+      assetClassHolderBool: false,
+      assetHolderMenuBool: false,
+      assetClassHolderMenuBool: false,
+      basicMenuBool: true,
+      authorizedUserMenuBool: false
     };
   }
 
@@ -112,8 +184,10 @@ class Main extends Component {
     });
     window.ipfs = _ipfs
     //console.log(window.ipfs)
-    _web3.eth.getAccounts().then((e) => {this.state.addr = e[0]; window.addr = e[0]});
+    _web3.eth.getAccounts().then((e) => { this.state.addr = e[0]; window.addr = e[0] });
     document.addEventListener("accountListener", this.acctChanger());
+    
+
   }
 
   componentDidCatch(error, info) {
@@ -137,114 +211,93 @@ class Main extends Component {
 
   render() {//render continuously produces an up-to-date stateful document  
 
-    if (this.state.hasError === true){
-      return(<div> Error Occoured. Try reloading the page. </div>)
+    if (this.state.hasError === true) {
+      return (<div> Error Occoured. Try reloading the page. </div>)
     }
 
     return (
       <div>
-      <ParticleBox/>
-      <HashRouter>
-        
-    
-        <div>
-          <div className="imageForm">
-            <img className="downSizeLogo" src={require("./Pruf.png")} alt="Pruf Logo" />
-            <div className="userData">
-              {this.state.addr > 0 && (
-                <div className="banner">
-                  Currently serving :{this.state.addr}
-                </div>
-              )}
-              {this.state.addr === undefined && (
-                <div className="banner">
-                  Currently serving: NOBODY! Log into web3 provider!
-                </div>
-              )}
-            </div>
-          </div>
-          <div className="BannerForm">
-            <div className="page">
-              <ul className="header">
-                {window._contracts !== undefined && (
-                  <nav>
-                    <li>
-                      <NavLink exact to="/">
-                        Home
-                      </NavLink>
-                    </li>
-                    <li>
-                      <NavLink to="/new-record">New</NavLink>
-                    </li>
-                    <li>
-                      <NavLink to="/verify-rights-holder">Verify</NavLink>
-                    </li>
-                    <li>
-                      <NavLink to="/retrieve-record">Search</NavLink>
-                    </li>
-                    <li>
-                      <NavLink to="/transfer-asset">Transfer</NavLink>
-                    </li>
-                    <li>
-                      <NavLink to="/modify-record-status">Status</NavLink>
-                    </li>
-                    <li>
-                      <NavLink to="/decrement-counter">Countdown</NavLink>
-                    </li>
-                    <li>
-                      <NavLink to="/modify-description">Description</NavLink>
-                    </li>
-                    <li>
-                      <NavLink to="/add-note">Add Note</NavLink>
-                    </li>
-                    <li>
-                      <NavLink to="/export-asset">Export</NavLink>
-                    </li>
-                    <li>
-                      <NavLink to="/force-modify-record">Modify</NavLink>
-                    </li>
-                    <li>
-                      <NavLink to="/manage-escrow">Escrow</NavLink>
-                    </li>           
-                  </nav>
-                )}
+        <ParticleBox />
+        <HashRouter>
+          <div>
+            <div className="imageForm">
+              <img className="downSizeLogo" src={require("./Pruf.png")} alt="Pruf Logo" />
 
-              </ul>
-              <div className="content">
-                <Route exact path="/" component={Home} />
-                <Route path="/new-record" component={NewRecord} />
-                <Route path="/retrieve-record" component={RetrieveRecord} />
-                <Route
-                  path="/force-modify-record"
-                  component={ForceModifyRecord}
-                />
-                <Route path="/transfer-asset" component={TransferAsset} />
-                <Route
-                  path="/modify-record-status"
-                  component={ModifyRecordStatus}
-                />
-                <Route path="/decrement-counter" component={DecrementCounter} />
-                <Route
-                  path="/modify-description"
-                  component={ModifyDescription}
-                />
-                <Route path="/add-note" component={AddNote} />
-                <Route path="/export-asset" component={ExportAsset} />
-                <Route
-                  path="/verify-rights-holder"
-                  component={VerifyRightsholder}
-                />
-                <Route
-                  path="/manage-escrow"
-                  component={EscrowManager}
-                />
+              <div className="userData">
+                {this.state.addr > 0 && (
+                  <div className="banner">
+                    Currently serving :{this.state.addr}
+                  </div>
+                )}
+                {this.state.addr === undefined && (
+                  <div className="banner">
+                    Currently serving: NOBODY! Log into web3 provider!
+                  </div>
+                )}
               </div>
             </div>
+            <div className="BannerForm">
+              <div className="page">
+                <ul className="header">
+                  {window._contracts !== undefined && (
+                    <nav>
+                      <li>
+                        <NavLink exact to="/">Home</NavLink>
+                      </li>
+                      {this.state.assetHolderMenuBool === true && (<NonCustodialComponent />)}
+                      {this.state.assetClassHolderMenuBool === true && (<AdminComponent />)}
+                      {this.state.authorizedUserMenuBool === true && (<AuthorizedUserComponent />)}
+                      {this.state.basicMenuBool === true && (<BasicComponent />)}
+                    </nav>
+                  )}
+                </ul>
+                <div className="content">
+                  <Route exact path="/" component={Home} />
+                  <Router />
+                </div>
+                <div className="headerButtons">
+              {this.state.assetClassHolderBool === true && this.state.assetClassHolderMenuBool === false &&(
+                <Button className="btn3"
+                  variant="primary"
+                  type="button"
+                  onClick={()=>{this.toggleMenu("ACAdmin")}}
+                >
+                  AC Admin Menu
+                </Button>)}
+
+              {this.state.assetHolderBool === true && this.state.assetHolderMenuBool === false &&(
+                <Button className="btn3"
+                  variant="primary"
+                  type="button"
+                  onClick={()=>{this.toggleMenu("NC")}}
+                >
+                  NonCustodial Menu
+                </Button>)}
+
+              {this.state.basicMenuBool === false && (
+                <Button className="btn3"
+                  variant="primary"
+                  type="button"
+                  onClick={()=>{this.toggleMenu("basic")}}
+                >
+                  Basic Menu
+                </Button>)}
+
+              {this.state.isAuthUser === true && this.state.authorizedUserMenuBool === false && (
+                <Button className="btn3"
+                  variant="primary"
+                  type="button"
+                  onClick={()=>{this.toggleMenu("authUser")}}
+                >
+                  Authorized User Menu
+                </Button>)}
+                </div>
+              </div>
+            </div>
+            <NavLink to="/">
+            </NavLink>
           </div>
-          <NavLink to="/">
-          </NavLink>
-        </div>
-      </HashRouter>
+        </HashRouter>
       </div>
     );
   }

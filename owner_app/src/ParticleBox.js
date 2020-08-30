@@ -31,7 +31,7 @@ class ParticleBox extends Component {
             "interactivity": {
                 "events": {
                     "onhover": {
-                        "enable": false,
+                        "enable": true,
                         "mode": "repulse"
                     }
                 }

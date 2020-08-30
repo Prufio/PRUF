@@ -123,6 +123,7 @@ h4 {
 
 .banner {
   height: 1rem;
+  max-width: 90rem;
   color: rgb(255, 255, 255);
   font-size: 2rem;
   flex-direction: row;
@@ -322,6 +323,15 @@ h4 {
   opacity: 0.96;
 }
 
+.headerButtons {
+  margin-left: 1rem;
+  flex-direction: row;
+  justify-content: flex-start;
+  display: flex;
+  max-height: 3rem;
+  margin-top: -21.75rem;
+}
+
 .BannerForm {
   height: 5rem;
   max-width: none;
@@ -486,6 +496,14 @@ h4 {
   width: 13rem;
   align-items: center;
   margin-top: 22rem;
+  border-radius: 1rem;
+}
+
+.btn3 {
+  font-size: 1.5rem;
+  height: 3rem;
+  width: 12rem;
+  align-items: center;
   border-radius: 1rem;
 }
 
