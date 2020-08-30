@@ -42,6 +42,11 @@ pragma solidity ^0.6.7;
  *
  *      *A_TKN manager for auth upgradability?
  *
+ *      * all multi-map data structures need to be protected from accidental overwrite!
+ *
+ *      *identify funtionality in core contracts that needs to be killable
+ *
+ *
 *-----------------------------------------------------------------
 
 *-----------------------------------------------------------------
