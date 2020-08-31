@@ -28,27 +28,25 @@ pragma solidity ^0.6.7;
  *
  *      *Design Json templates for IPFS1 and IPFS2
  *
- *      *Audit require ststements for all app / np level fuctions - probably too permissive.
- *
  *      *Above 65k segregation (probably by ACinfo custodial type) (just need to add a wild west contract?)
  *
  *      *find a way to find and react to assets being in a dead asset class (future, API verified, works w/ AC0)
- *
- *      *minting in storage?  WHY?
  *
  *      *what do we do (if anything) with the 128 "free" bits in the storage struct?
  *
  *      *make "pruf verify" contract, stores ipfs? with list of "held" assets?
  *
- *      *A_TKN manager for auth upgradability?
- *
- *      * all multi-map data structures need to be protected from accidental overwrite!
+ *      *A_TKN manager for auth upgradability?  so we can add more authorized adresses to a_tkn?
+ *                       (msg.sender == APP_Address) ||
+ *                       (msg.sender == APP_NC_Address) ||
+ *                       (msg.sender == NP_Address) ||
+ *                       (msg.sender == RCLR_Address) ||
+ *                       (msg.sender == NAKED_Address) ||
+ *                       (msg.sender == owner()),
  *
  *      *identify funtionality in core contracts that needs to be killable
  *
- *      *break escrow down into smaller mappings
- *
- *      *find functionality that we want to be able to destroy
+ *      *break escrow_mgr down into smaller mappings
  *
  *
 *-----------------------------------------------------------------
