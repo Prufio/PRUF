@@ -256,13 +256,8 @@ interface ECR_MGR_Interface {
     function setEscrow(
         bytes32 _idxHash,
         uint8 _newAssetStatus,
-        uint8 _data,
         bytes32 _escrowOwnerAddressHash,
-        uint256 _timelock,
-        bytes32 _ex1,
-        bytes32 _ex2,
-        address _addr1,
-        address _addr2
+        uint256 _timelock
     ) external;
 
     function endEscrow(bytes32 _idxHash) external;
@@ -276,15 +271,62 @@ interface ECR_MGR_Interface {
     function retrieveEscrowData(bytes32 _idxHash)
         external
         returns (
-            uint8 data,
             bytes32 controllingContractNameHash,
             bytes32 escrowOwnerAddressHash,
-            uint256 timelock,
-            bytes32 ex1,
-            bytes32 ex2,
-            address addr1,
-            address addr2
+            uint256 timelock
         );
+
+    function retrieveEscrowDataLight(bytes32 _idxHash)
+        external
+        view
+        returns (
+        uint8 _escrowData,
+        uint8 _u8_1,
+        uint8 _u8_2,
+        uint8 _u8_3,
+        uint16 _u16_1,
+        uint16 _u16_2,
+        uint32 _u32_1,
+        address _addr_1
+    );
+
+    function retrieveEscrowDataHeavy(bytes32 _idxHash)
+        external
+        view
+        returns (
+            uint32 _u32_2,
+            uint32 _u32_3,
+            uint32 _u32_4,
+            address _addr_2,
+            bytes32 _b32_1,
+            bytes32 _b32_2,
+            uint256 _u256_1,
+            uint256 _u256_2
+    );
+
+    function setEscrowDataLight(
+        bytes32 _idxHash,
+        uint8 _escrowData,
+        uint8 _u8_1,
+        uint8 _u8_2,
+        uint8 _u8_3,
+        uint16 _u16_1,
+        uint16 _u16_2,
+        uint32 _u32_1,
+        address _addr_1) 
+    external;
+
+    function setEscrowDataHeavy(
+        bytes32 _idxHash,
+        uint32 _u32_2,
+        uint32 _u32_3,
+        uint32 _u32_4,
+        address _addr_2,
+        bytes32 _b32_1,
+        bytes32 _b32_2,
+        uint256 _u256_1,
+        uint256 _u256_2) 
+    external;
 }
 
 interface RCLR_Interface {

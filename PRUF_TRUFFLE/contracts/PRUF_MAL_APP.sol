@@ -640,13 +640,8 @@ contract MAL_APP is CORE_MAL {
         ECR_MGR.setEscrow(
             _idxHash,
             newEscrowStatus,
-            0,
             _escrowOwnerHash,
-            escrowTime,
-            0x0,
-            0x0,
-            address(0),
-            address(0)
+            escrowTime
         );
         //^^^^^^^interactions^^^^^^^^^
     }

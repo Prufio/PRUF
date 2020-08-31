@@ -46,8 +46,6 @@ pragma solidity ^0.6.7;
  *
  *      *identify funtionality in core contracts that needs to be killable
  *
- *      *break escrow_mgr down into smaller mappings
- *
  *
 *-----------------------------------------------------------------
 

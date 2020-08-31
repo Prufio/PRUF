@@ -26,10 +26,10 @@ contract AC_MGR is CORE {
 
     mapping(uint32 => Costs) private cost; // Cost per function by asset class
 
-    mapping(uint32 => AC) internal AC_data; // AC info database asset class to AC struct (NAME,ACroot,CUSTODIAL/NC,uint32)
-    mapping(string => uint32) internal AC_number; //name to asset class resolution map
+    mapping(uint32 => AC) private AC_data; // AC info database asset class to AC struct (NAME,ACroot,CUSTODIAL/NC,uint32)
+    mapping(string => uint32) private AC_number; //name to asset class resolution map
 
-    mapping(bytes32 => mapping(uint32 => uint8)) internal registeredUsers; // Authorized recorder database by asset class, by address hash
+    mapping(bytes32 => mapping(uint32 => uint8)) private registeredUsers; // Authorized recorder database by asset class, by address hash
 
     //address AC_minterAddress;
     uint256 private priceThreshold; //threshold of price where fractional pricing is implemented

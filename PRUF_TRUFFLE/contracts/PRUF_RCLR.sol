@@ -46,12 +46,26 @@ contract RCLR is ECR_CORE, CORE {
         ECR_MGR.setEscrow(
             _idxHash,
             60, //recycled status
-            255, //escrow data 255 is recycled
             escrowOwnerHash,
-            escrowTime,
-            0x0,
-            0x0,
-            address(0),
+            escrowTime
+        );
+
+        ECR_MGR.setEscrow(
+            _idxHash,
+            60, //recycled status
+            escrowOwnerHash,
+            escrowTime
+        );
+
+        ECR_MGR.setEscrowDataLight(
+            _idxHash,
+            255, //escrow data 255 is recycled
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
             msg.sender
         );
         //^^^^^^^interactions^^^^^^^^^
@@ -65,27 +79,13 @@ contract RCLR is ECR_CORE, CORE {
         bytes32 _rgtHash,
         uint32 _assetClass
     ) external payable nonReentrant whenNotPaused {
-        //bytes32 senderHash = keccak256(abi.encodePacked(msg.sender));
-        uint256 tokenId = uint256(_idxHash);
-        escrowData memory escrow = getEscrowData(_idxHash);
-        Record memory rec = getRecord(_idxHash);
-        // AC memory AC_info = getACinfo(_assetClass);
-        // AC memory oldAC_info = getACinfo(rec.assetClass);
-        // ContractDataHash memory contractInfo = getContractInfo(
-        //     address(this),
-        //     rec.assetClass
-        // );
 
-        // require(                             //THROWS IN STORAGE
-        //     contractInfo.contractType > 0,
-        //     "R:R: This contract not authorized for specified AC"
-        // );
+        uint256 tokenId = uint256(_idxHash);
+        escrowDataExtLight memory escrowDataLight = getEscrowDataLight(_idxHash);
+        Record memory rec = getRecord(_idxHash);
+
         require(_rgtHash != 0, "R:R:New rights holder cannot be zero");
-        // require(_assetClass != 0, "R:R:Asset class cannot be zero");                             //THROWS IN STORAGE changeAC
-        // require( //if creating new record in new root and idxhash is identical, fail because its probably fraud                             //THROWS IN STORAGE changeAC
-        //     AC_info.assetClassRoot == oldAC_info.assetClassRoot, // || (rec.assetClass == 0)),
-        //     "R:R:Cannot re-create asset in new root assetClass"
-        // );
+
         require(rec.assetStatus == 60, "R:R:Asset not discarded");
         //^^^^^^^checks^^^^^^^^^
 
@@ -98,7 +98,7 @@ contract RCLR is ECR_CORE, CORE {
         STOR.changeAC(_idxHash, _assetClass);
         rec.assetStatus = 58;
         writeRecord(_idxHash, rec);
-        deductRecycleCosts(_assetClass, escrow.addr2);
+        deductRecycleCosts(_assetClass, escrowDataLight.addr_1);
         //^^^^^^^interactions^^^^^^^^^^^^
     }
 }

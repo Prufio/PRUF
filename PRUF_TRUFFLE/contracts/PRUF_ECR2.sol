@@ -83,7 +83,8 @@ contract ECR2 is ECR_CORE {
             "E:SE: Asset already in escrow status."
         );
         require(
-            (userType < 5) || (( userType > 4) && ( userType < 10) && (_escrowStatus > 49)),
+            (userType < 5) ||
+                ((userType > 4) && (userType < 10) && (_escrowStatus > 49)),
             "E:SE: Non supervisored agents must set escrow status within scope."
         );
         require(
@@ -100,13 +101,8 @@ contract ECR2 is ECR_CORE {
         ECR_MGR.setEscrow(
             _idxHash,
             newEscrowStatus,
-            0,
             _escrowOwnerHash,
-            escrowTime,
-            0x0,
-            0x0,
-            address(0),
-            address(0)
+            escrowTime
         );
         //^^^^^^^interactions^^^^^^^^^
     }

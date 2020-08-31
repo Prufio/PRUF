@@ -26,18 +26,48 @@ import "./Imports/Safemath.sol";
 contract ECR_MGR is BASIC {
     using SafeMath for uint256;
 
+    // struct escrowData {
+    //     uint8 data;
+    //     bytes32 controllingContractNameHash; //hash of the name of the controlling escrow contract
+    //     bytes32 escrowOwnerAddressHash; //hash of an address designated as an executor for the escrow contract
+    //     uint256 timelock;
+    //     bytes32 ex1;
+    //     bytes32 ex2;
+    //     address addr1;
+    //     address addr2;
+    // }
+
     struct escrowData {
-        uint8 data;
         bytes32 controllingContractNameHash; //hash of the name of the controlling escrow contract
         bytes32 escrowOwnerAddressHash; //hash of an address designated as an executor for the escrow contract
         uint256 timelock;
-        bytes32 ex1;
-        bytes32 ex2;
-        address addr1;
-        address addr2;
     }
 
-    mapping(bytes32 => escrowData) escrows;
+    struct escrowDataExtLight {  //1 slot
+        uint8 escrowData;
+        uint8 u8_1;
+        uint8 u8_2;
+        uint8 u8_3;
+        uint16 u16_1;
+        uint16 u16_2;
+        uint32 u32_1;
+        address addr_1;
+    }
+
+    struct escrowDataExtHeavy { // 5 slots
+        uint32  u32_2;
+        uint32  u32_3;
+        uint32  u32_4;
+        address addr_2;
+        bytes32 b32_1;
+        bytes32 b32_2;
+        uint256 u256_1;
+        uint256 u256_2;
+    }
+
+    mapping(bytes32 => escrowData) private escrows;
+    mapping(bytes32 => escrowDataExtLight) private EscrowDataLight;
+    mapping(bytes32 => escrowDataExtHeavy) private EscrowDataHeavy;
 
     function isLostOrStolen(uint8 _assetStatus) private pure returns (uint8) {
         if (
@@ -71,13 +101,8 @@ contract ECR_MGR is BASIC {
     function setEscrow(
         bytes32 _idxHash,
         uint8 _newAssetStatus,
-        uint8 _data,
         bytes32 _escrowOwnerAddressHash,
-        uint256 _timelock,
-        bytes32 _ex1,
-        bytes32 _ex2,
-        address _addr1,
-        address _addr2
+        uint256 _timelock
     ) external nonReentrant whenNotPaused {
         Record memory rec = getRecord(_idxHash);
         ContractDataHash memory contractInfo = getContractInfo(
@@ -93,16 +118,10 @@ contract ECR_MGR is BASIC {
         //^^^^^^^checks^^^^^^^^^
         delete escrows[_idxHash];
 
-        escrows[_idxHash].data = _data;
         escrows[_idxHash]
             .controllingContractNameHash = controllingContractNameHash;
         escrows[_idxHash].escrowOwnerAddressHash = _escrowOwnerAddressHash;
         escrows[_idxHash].timelock = _timelock;
-        escrows[_idxHash].ex1 = _ex1;
-        escrows[_idxHash].ex2 = _ex2;
-        escrows[_idxHash].addr1 = _addr1;
-        escrows[_idxHash].addr2 = _addr2;
-
         //^^^^^^^effects^^^^^^^^^
 
         STOR.setEscrow(_idxHash, _newAssetStatus);
@@ -139,6 +158,106 @@ contract ECR_MGR is BASIC {
     }
 
     /*
+     * @dev Set data in EDL mapping  // NEW DS:TEST
+     * Must be setter contract
+     * Must be in  escrow
+     */
+    function setEscrowDataLight(
+        bytes32 _idxHash,
+        uint8 _escrowData,
+        uint8 _u8_1,
+        uint8 _u8_2,
+        uint8 _u8_3,
+        uint16 _u16_1,
+        uint16 _u16_2,
+        uint32 _u32_1,
+        address _addr_1) 
+        external nonReentrant whenNotPaused {
+
+        Record memory rec = getRecord(_idxHash);
+        ContractDataHash memory contractInfo = getContractInfo(
+            msg.sender,
+            rec.assetClass
+        );
+
+        require(
+            isEscrow(rec.assetStatus) == 170,
+            "EM:SEDL:Asset not in escrow status"
+        );
+        require(
+            (contractInfo.nameHash ==
+                escrows[_idxHash].controllingContractNameHash),
+            "EM:SEDL:Only contract with same name as setter can modify escrow data"
+        );
+        //^^^^^^^checks^^^^^^^^^
+
+        escrowDataExtLight memory escrowDataLight;
+
+        escrowDataLight.escrowData = _escrowData;
+        escrowDataLight.u8_1 = _u8_1;
+        escrowDataLight.u8_2 = _u8_2;
+        escrowDataLight.u8_3 = _u8_3;
+        escrowDataLight.u16_1 = _u16_1;
+        escrowDataLight.u16_2 = _u16_2;
+        escrowDataLight.u32_1 = _u32_1;
+        escrowDataLight.addr_1 = _addr_1;
+
+        EscrowDataLight[_idxHash] = escrowDataLight; //set in EDL map
+        //^^^^^^^effects^^^^^^^^^
+    }
+
+
+    /*
+     * @dev Set data in EDL mapping  // NEW DS:TEST
+     * Must be setter contract
+     * Must be in  escrow
+     */
+    function setEscrowDataHeavy(
+        bytes32 _idxHash,
+        uint32 _u32_2,
+        uint32 _u32_3,
+        uint32 _u32_4,
+        address _addr_2,
+        bytes32 _b32_1,
+        bytes32 _b32_2,
+        uint256 _u256_1,
+        uint256 _u256_2) 
+        external nonReentrant whenNotPaused {
+
+        Record memory rec = getRecord(_idxHash);
+        ContractDataHash memory contractInfo = getContractInfo(
+            msg.sender,
+            rec.assetClass
+        );
+
+        require(
+            isEscrow(rec.assetStatus) == 170,
+            "EM:SEDL:Asset not in escrow status"
+        );
+        require(
+            (contractInfo.nameHash ==
+                escrows[_idxHash].controllingContractNameHash),
+            "EM:SEDL:Only contract with same name as setter can modify escrow data"
+        );
+        //^^^^^^^checks^^^^^^^^^
+
+        escrowDataExtHeavy memory escrowDataHeavy;
+            escrowDataHeavy.u32_2 = _u32_2;
+            escrowDataHeavy.u32_3 = _u32_3;
+            escrowDataHeavy.u32_4 = _u32_4;
+            escrowDataHeavy.addr_2 = _addr_2;
+            escrowDataHeavy.b32_1 = _b32_1;
+            escrowDataHeavy.b32_2 = _b32_2;
+            escrowDataHeavy.u256_1 = _u256_1;
+            escrowDataHeavy.u256_1 = _u256_2;
+
+        EscrowDataHeavy[_idxHash] = escrowDataHeavy; //set in EDL map
+        //^^^^^^^effects^^^^^^^^^
+    }
+
+
+
+    /*
      * @dev Permissive removal of asset from escrow status after time-out
      */
     function permissiveEndEscrow(bytes32 _idxHash)
@@ -151,7 +270,7 @@ contract ECR_MGR is BASIC {
             "EM:PEE:Escrow not expired"
         );
         require( // do not allow escrows with escrow.data > 199 to be ended by this function     //STATE UNREACHABLE CTS:PREFERRED
-            escrows[_idxHash].data < 200,
+            EscrowDataLight[_idxHash].escrowData < 200,
             "EM:PEE:Escrow not endable with permissiveEndEscrow"
         );
         //^^^^^^^checks^^^^^^^^^
@@ -176,32 +295,85 @@ contract ECR_MGR is BASIC {
     }
 
     /*
-     * @dev return complete escrow data
+     * @dev return escrow data @ IDX
      */
     function retrieveEscrowData(bytes32 _idxHash)
         external
         view
         returns (
-            uint8,
             bytes32,
             bytes32,
-            uint256,
-            bytes32,
-            bytes32,
-            address,
-            address
+            uint256
         )
     {
         escrowData memory escrow = escrows[_idxHash];
         return (
-            escrow.data,
             escrow.controllingContractNameHash,
             escrow.escrowOwnerAddressHash,
-            escrow.timelock,
-            escrow.ex1,
-            escrow.ex2,
-            escrow.addr1,
-            escrow.addr2
+            escrow.timelock
+        );
+        //^^^^^^^checks/interactions^^^^^^^^^
+    }
+
+    /*
+     * @dev return EscrowDataLight @ IDX // NEW DS:TEST
+     */
+    function retrieveEscrowDataLight(bytes32 _idxHash)
+        external
+        view
+        returns (
+            uint8,
+            uint8,
+            uint8,
+            uint8,
+            uint16,
+            uint16,
+            uint32,
+            address
+            )
+    {
+        escrowDataExtLight memory escrowDataLight = EscrowDataLight[_idxHash];
+
+        return (
+            escrowDataLight.escrowData,
+            escrowDataLight.u8_1,
+            escrowDataLight.u8_2,
+            escrowDataLight.u8_3,
+            escrowDataLight.u16_1,
+            escrowDataLight.u16_2,
+            escrowDataLight.u32_1,
+            escrowDataLight.addr_1
+        );
+        //^^^^^^^checks/interactions^^^^^^^^^
+    }
+
+    /*
+     * @dev return EscrowDataHeavy @ IDX      // NEW DS:TEST
+     */
+    function retrieveEscrowDataHeavy(bytes32 _idxHash)
+        external
+        view
+        returns (
+            uint32,
+            uint32,
+            uint32,
+            address,
+            bytes32,
+            bytes32,
+            uint256,
+            uint256
+            )
+    {
+        escrowDataExtHeavy memory escrowDataHeavy = EscrowDataHeavy[_idxHash];
+        return (
+            escrowDataHeavy.u32_2,
+            escrowDataHeavy.u32_3,
+            escrowDataHeavy.u32_4,
+            escrowDataHeavy.addr_2,
+            escrowDataHeavy.b32_1,
+            escrowDataHeavy.b32_2,
+            escrowDataHeavy.u256_1,
+            escrowDataHeavy.u256_2
         );
         //^^^^^^^checks/interactions^^^^^^^^^
     }
