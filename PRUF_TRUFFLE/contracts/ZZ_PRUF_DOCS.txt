@@ -46,6 +46,10 @@ pragma solidity ^0.6.7;
  *
  *      *identify funtionality in core contracts that needs to be killable
  *
+ *      *break escrow down into smaller mappings
+ *
+ *      *find functionality that we want to be able to destroy
+ *
  *
 *-----------------------------------------------------------------
 

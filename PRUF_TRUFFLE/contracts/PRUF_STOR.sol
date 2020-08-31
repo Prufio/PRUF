@@ -192,9 +192,9 @@ contract STOR is Ownable, ReentrancyGuard, Pausable {
         require(_contractAuthLevel <= 4, "S:AC: Invalid auth lv");
         //^^^^^^^checks^^^^^^^^^
 
-        contractInfo[_name][_assetClass] = _contractAuthLevel;
-        contractNameToAddress[_name] = _addr;
-        contractAddressToName[_addr] = _name;
+        contractInfo[_name][_assetClass] = _contractAuthLevel;  //does not pose an partial record overwrite risk
+        contractNameToAddress[_name] = _addr; //does not pose an partial record overwrite risk
+        contractAddressToName[_addr] = _name; //does not pose an partial record overwrite risk
 
         AC_TKN = AC_TKN_Interface(contractNameToAddress["AC_TKN"]);
         AC_MGR = AC_MGR_Interface(contractNameToAddress["AC_MGR"]);
@@ -220,7 +220,7 @@ contract STOR is Ownable, ReentrancyGuard, Pausable {
 
         //^^^^^^^checks^^^^^^^^^
 
-        contractInfo[_name][_assetClass] = _contractAuthLevel;
+        contractInfo[_name][_assetClass] = _contractAuthLevel; //does not pose an partial record overwrite risk
         //^^^^^^^effects^^^^^^^^^
 
         emit REPORT("ACDA", bytes32(uint256(_contractAuthLevel))); //report access to the internal user database

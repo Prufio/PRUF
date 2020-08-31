@@ -63,7 +63,8 @@ contract AC_MGR is CORE {
      * @dev Authorize / Deauthorize / Authorize users for an address be permitted to make record modifications
      * ----------------INSECURE -- keccak256 of address must be generated clientside in release.
      */
-    function OO_addUser(                                                                      //swap arg!!!!!!!!!
+    function OO_addUser(
+        //swap arg!!!!!!!!!
         address _authAddr,
         uint8 _userType,
         uint32 _assetClass
@@ -88,7 +89,11 @@ contract AC_MGR is CORE {
     }
 
     /*
-     * @dev Mints asset class @ address
+     * @dev Mints asset class token and creates an assetClass. Mints to @address
+     * Requires that:                                                       DS:TEST
+     *  name is unuiqe
+     *  AC is not provisioned with a root (proxy for not yet registered)
+     *  that ACtoken does not exist
      */
     function createAssetClass(
         address _recipientAddress,
@@ -105,6 +110,12 @@ contract AC_MGR is CORE {
             (_ac.custodyType != 0) || (_assetClassRoot == _assetClass),
             "ACM:CAC:Root asset class does not exist"
         );
+
+        require(AC_number[_name] == 0, "ACM:CAC:AC name already in use"); //NEW    DS:TEST
+        require(
+            (AC_data[_assetClass].assetClassRoot == 0),
+            "ACM:CAC:AC already in use"
+        ); //NEW    DS:TEST
         //^^^^^^^checks^^^^^^^^^
 
         AC_number[_name] = _assetClass;
@@ -122,10 +133,36 @@ contract AC_MGR is CORE {
     }
 
     /*
+     * @dev Modifies an assetClass //NEW    DS:TEST
+     * Sets a new AC name. Asset Classes cannot be moved to a new root or custody type.
+     * Requires that:
+     *  caller holds ACtoken
+     *  name is unuiqe or same as old name
+     */
+    function updateACname(string calldata _name, uint32 _assetClass)
+        external
+        isACtokenHolderOfClass(_assetClass)
+    {
+        require( //NEW    DS:TEST should pass if name is same as old name or name is unassigned. Should fail if name is assigned to other AC
+            (AC_number[_name] == 0) || //name is unassigned
+                (keccak256(abi.encodePacked(_name)) == //name is same as old name
+                    (keccak256(abi.encodePacked(AC_data[_assetClass].name)))),
+            "ACM:UAC:AC name already in use in other AC"
+        );
+        //^^^^^^^checks^^^^^^^^^
+
+        delete AC_number[AC_data[_assetClass].name];
+
+        AC_number[_name] = _assetClass;
+        AC_data[_assetClass].name = _name;
+        //^^^^^^^effects^^^^^^^^^
+    }
+
+    /*
      * @dev Set function costs and payment address per asset class, in Wei
      */
     function ACTH_setCosts(
-        uint32 _class,
+        uint32 _assetClass,
         uint256 _newRecordCost,
         uint256 _transferAssetCost,
         uint256 _createNoteCost,
@@ -133,15 +170,15 @@ contract AC_MGR is CORE {
         uint256 _changeStatusCost,
         uint256 _forceModifyCost,
         address _paymentAddress
-    ) external whenNotPaused isACtokenHolderOfClass(_class) {
+    ) external whenNotPaused isACtokenHolderOfClass(_assetClass) {
         //^^^^^^^checks^^^^^^^^^
-        cost[_class].newRecordCost = _newRecordCost;
-        cost[_class].transferAssetCost = _transferAssetCost;
-        cost[_class].createNoteCost = _createNoteCost;
-        cost[_class].reMintRecordCost = _reMintRecordCost;
-        cost[_class].changeStatusCost = _changeStatusCost;
-        cost[_class].forceModifyCost = _forceModifyCost;
-        cost[_class].paymentAddress = _paymentAddress;
+        cost[_assetClass].newRecordCost = _newRecordCost;
+        cost[_assetClass].transferAssetCost = _transferAssetCost;
+        cost[_assetClass].createNoteCost = _createNoteCost;
+        cost[_assetClass].reMintRecordCost = _reMintRecordCost;
+        cost[_assetClass].changeStatusCost = _changeStatusCost;
+        cost[_assetClass].forceModifyCost = _forceModifyCost;
+        cost[_assetClass].paymentAddress = _paymentAddress;
         //^^^^^^^effects^^^^^^^^^
     }
 
@@ -241,7 +278,7 @@ contract AC_MGR is CORE {
         uint32 rootAssetClass = AC_info.assetClassRoot;
         Costs memory rootCosts = cost[rootAssetClass];
 
-        require(                            //only useful if tokens will be pre-minted (and stored in AC_TKN contract)
+        require( //only useful if tokens will be pre-minted (and stored in AC_TKN contract)
             (AC_TKN.ownerOf(_assetClass) != AC_TKN_Address), //this will throw in the token contract if not minted
             "ACM:GNRC:AC not yet populated"
         );
@@ -272,7 +309,7 @@ contract AC_MGR is CORE {
         uint32 rootAssetClass = AC_info.assetClassRoot;
         Costs memory rootCosts = cost[rootAssetClass];
 
-        require(                            //only useful if tokens will be pre-minted (and stored in AC_TKN contract)
+        require( //only useful if tokens will be pre-minted (and stored in AC_TKN contract)
             (AC_TKN.ownerOf(_assetClass) != AC_TKN_Address), //this will throw in the token contract if not minted
             "ACM:GTAC:AC not yet populated"
         );
@@ -303,7 +340,7 @@ contract AC_MGR is CORE {
         uint32 rootAssetClass = AC_info.assetClassRoot;
         Costs memory rootCosts = cost[rootAssetClass];
 
-        require(                            //only useful if tokens will be pre-minted (and stored in AC_TKN contract)
+        require( //only useful if tokens will be pre-minted (and stored in AC_TKN contract)
             (AC_TKN.ownerOf(_assetClass) != AC_TKN_Address), //this will throw in the token contract if not minted
             "ACM:GCNC:AC not yet populated"
         );
@@ -365,7 +402,7 @@ contract AC_MGR is CORE {
         uint32 rootAssetClass = AC_info.assetClassRoot;
         Costs memory rootCosts = cost[rootAssetClass];
 
-        require(                            //only useful if tokens will be pre-minted (and stored in AC_TKN contract)
+        require( //only useful if tokens will be pre-minted (and stored in AC_TKN contract)
             (AC_TKN.ownerOf(_assetClass) != AC_TKN_Address), //this will throw in the token contract if not minted
             "ACM:GCSC:AC not yet populated"
         );
@@ -428,7 +465,7 @@ contract AC_MGR is CORE {
     {
         Costs memory costs = cost[_assetClass];
 
-        require(                            //only useful if tokens will be pre-minted (and stored in AC_TKN contract)
+        require( //only useful if tokens will be pre-minted (and stored in AC_TKN contract)
             (AC_TKN.ownerOf(_assetClass) != AC_TKN_Address), //this will throw in the token contract if not minted
             "ACM:RC:AC not yet populated"
         );
