@@ -36,14 +36,6 @@ pragma solidity ^0.6.7;
  *
  *      *make "pruf verify" contract, stores ipfs? with list of "held" assets?
  *
- *      *A_TKN manager for auth upgradability?  so we can add more authorized adresses to a_tkn?
- *                       (msg.sender == APP_Address) ||
- *                       (msg.sender == APP_NC_Address) ||
- *                       (msg.sender == NP_Address) ||
- *                       (msg.sender == RCLR_Address) ||
- *                       (msg.sender == NAKED_Address) ||
- *                       (msg.sender == owner()),
- *
  *      *identify funtionality in core contracts that needs to be killable
  *
  *

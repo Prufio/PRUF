@@ -50,13 +50,6 @@ contract RCLR is ECR_CORE, CORE {
             escrowTime
         );
 
-        ECR_MGR.setEscrow(
-            _idxHash,
-            60, //recycled status
-            escrowOwnerHash,
-            escrowTime
-        );
-
         ECR_MGR.setEscrowDataLight(
             _idxHash,
             255, //escrow data 255 is recycled
