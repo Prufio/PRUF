@@ -737,7 +737,7 @@
 
             .then(() => {
                 console.log("Should correct name of AC11")
-                return AC_MGR.updateACname(account1, "Custodial_AC2", "11", { from: account1 })
+                return AC_MGR.updateACname("Custodial_AC2", "11", { from: account1 })
             })
             
             .then(() => {
@@ -1790,8 +1790,48 @@
     })
 
 
-    it('Should modify asset12 escrowDatalight', async () => {
-        return ECR.setEscrow(
+    it('Should take asset12 out of escrow', async () => {
+        return ECR.endEscrow(
+        asset12, 
+        {from: account2}
+        )
+    })
+
+
+    it("Should retrieve asset12 @newStatus(58)", async () =>{ 
+        var Record = [];
+        
+        return await STOR.retrieveShortRecord(asset12, {from: account2}, function (_err, _result) {
+            if(_err){} 
+            else{Record = Object.values(_result)
+        console.log(Record)}
+        })
+    })
+
+
+    it('Should change status of asset12 to status(1)', async () => {
+        return NP._modStatus(
+        asset12, 
+        rgt12,
+        '1',
+        {from: account2}
+        )
+    })
+
+
+    it("Should retrieve asset12 @newStatus(1)", async () =>{ 
+        var Record = [];
+        
+        return await STOR.retrieveShortRecord(asset12, {from: account2}, function (_err, _result) {
+            if(_err){} 
+            else{Record = Object.values(_result)
+        console.log(Record)}
+        })
+    })
+
+
+    it('Should set asset12 into extendedEscrow', async () => {
+        return ECR.setEscrowExtendedData(
         asset12, 
         account2Hash,
         '180',
@@ -1812,9 +1852,49 @@
     })
 
 
-    it('Should modify asset12 escrowDataHeavy', async () => {
-        return ECR.setEscrow(
+    it('Should take asset12 out of escrow', async () => {
+        return ECR.endEscrow(
         asset12, 
+        {from: account2}
+        )
+    })
+
+
+    it("Should retrieve asset12 @newStatus(58)", async () =>{ 
+        var Record = [];
+        
+        return await STOR.retrieveShortRecord(asset12, {from: account2}, function (_err, _result) {
+            if(_err){} 
+            else{Record = Object.values(_result)
+        console.log(Record)}
+        })
+    })
+
+
+    it('Should change status of asset12 to status(1)', async () => {
+        return NP._modStatus(
+        asset12, 
+        rgt12,
+        '1',
+        {from: account2}
+        )
+    })
+
+
+    it("Should retrieve asset12 @newStatus(1)", async () =>{ 
+        var Record = [];
+        
+        return await STOR.retrieveShortRecord(asset12, {from: account2}, function (_err, _result) {
+            if(_err){} 
+            else{Record = Object.values(_result)
+        console.log(Record)}
+        })
+    })
+
+
+    it('Should set asset12 into extendedEscrow', async () => {
+        return ECR.setEscrowExtendedData(
+        asset12,
         account2Hash,
         '180',
         '50',
