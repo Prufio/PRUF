@@ -1598,7 +1598,8 @@
         '6',
         '6',
         '6',
-        account2,
+        '6',
+        ECR2.address,
         {from: account2}
         )
     })
@@ -1624,7 +1625,26 @@
         '6',
         '6',
         '6',
+        '6',
         account2,
+        {from: account2}
+        )
+    })
+
+
+    it('Should take asset1 out of escrow', async () => {
+        return ECR.endEscrow(
+        asset1,
+        {from: account2}
+        )
+    })
+
+
+    it('Should set asset1 into status 1', async () => {
+        return NP._modStatus(
+        asset1, 
+        rgt1,
+        '1',
         {from: account2}
         )
     })
@@ -1640,9 +1660,10 @@
         '6',
         '6',
         account2,
+        string1Hash,
+        string1Hash,
         '6',
-        string1Hash,
-        string1Hash,
+        '6',
         {from: account2}
         )
     })
@@ -1661,14 +1682,33 @@
     //6
     it('Should fail because contract not same as setter', async () => {
         return ECR2._setEscrowDataHeavy(
+            asset1,
+            '180',
+            '6',
+            '6',
+            account2,
+            string1Hash,
+            string1Hash,
+            '6',
+            '6',
+            {from: account2},
+        )
+    })
+
+
+    it('Should take asset1 out of escrow', async () => {
+        return ECR.endEscrow(
         asset1,
-        '180',
-        '6',
-        '6',
-        account2,
-        string1Hash,
-        string1Hash,
-        '6',
+        {from: account2}
+        )
+    })
+
+
+    it('Should set asset1 into status 1', async () => {
+        return NP._modStatus(
+        asset1, 
+        rgt1,
+        '1',
         {from: account2}
         )
     })

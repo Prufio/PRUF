@@ -1852,57 +1852,6 @@
     })
 
 
-    it('Should take asset12 out of escrow', async () => {
-        return ECR.endEscrow(
-        asset12, 
-        {from: account2}
-        )
-    })
-
-
-    it("Should retrieve asset12 @newStatus(58)", async () =>{ 
-        var Record = [];
-        
-        return await STOR.retrieveShortRecord(asset12, {from: account2}, function (_err, _result) {
-            if(_err){} 
-            else{Record = Object.values(_result)
-        console.log(Record)}
-        })
-    })
-
-
-    it('Should change status of asset12 to status(1)', async () => {
-        return NP._modStatus(
-        asset12, 
-        rgt12,
-        '1',
-        {from: account2}
-        )
-    })
-
-
-    it("Should retrieve asset12 @newStatus(1)", async () =>{ 
-        var Record = [];
-        
-        return await STOR.retrieveShortRecord(asset12, {from: account2}, function (_err, _result) {
-            if(_err){} 
-            else{Record = Object.values(_result)
-        console.log(Record)}
-        })
-    })
-
-
-    it('Should set asset12 into extendedEscrow', async () => {
-        return ECR.setEscrowExtendedData(
-        asset12,
-        account2Hash,
-        '180',
-        '50',
-        {from: account2}
-        )
-    })
-
-
     it("Should retrieve asset12 escrowDataHeavy", async () =>{ 
         var ecrData = [];
         
