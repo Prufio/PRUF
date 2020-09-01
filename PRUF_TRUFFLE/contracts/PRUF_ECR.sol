@@ -71,7 +71,7 @@ contract ECR is ECR_CORE {
         newEscrowStatus = _escrowStatus;
         //^^^^^^^effects^^^^^^^^^
 
-        ECR_MGR.setEscrow(
+        _setEscrowData(
             _idxHash,
             newEscrowStatus,
             _escrowOwnerHash,
@@ -123,7 +123,7 @@ contract ECR is ECR_CORE {
         escrowDataHeavy.u256_1 = 9999;
         //^^^^^^^effects^^^^^^^^^
 
-        ECR_MGR.setEscrow(                         // Sets escrow in ECR_MGR
+        _setEscrowData(
             _idxHash,
             newEscrowStatus,
             _escrowOwnerHash,

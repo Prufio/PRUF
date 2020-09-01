@@ -79,7 +79,7 @@ contract ECR_NC is ECR_CORE {
         newEscrowStatus = _escrowStatus;
         //^^^^^^^effects^^^^^^^^^
 
-        ECR_MGR.setEscrow(
+        _setEscrowData(
             _idxHash,
             newEscrowStatus,
             _escrowOwnerHash,

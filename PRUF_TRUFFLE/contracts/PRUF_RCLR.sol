@@ -46,7 +46,7 @@ contract RCLR is ECR_CORE, CORE {
         escrowDataLight.addr_1 = msg.sender;
         //^^^^^^^effects^^^^^^^^^
 
-        ECR_MGR.setEscrow(
+       _setEscrowData(
             _idxHash,
             60, //recycled status
             escrowOwnerHash,
