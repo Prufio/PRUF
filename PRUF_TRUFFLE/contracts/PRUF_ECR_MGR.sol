@@ -26,18 +26,7 @@ import "./Imports/Safemath.sol";
 contract ECR_MGR is BASIC {
     using SafeMath for uint256;
 
-    // struct escrowData {
-    //     uint8 data;
-    //     bytes32 controllingContractNameHash; //hash of the name of the controlling escrow contract
-    //     bytes32 escrowOwnerAddressHash; //hash of an address designated as an executor for the escrow contract
-    //     uint256 timelock;
-    //     bytes32 ex1;
-    //     bytes32 ex2;
-    //     address addr1;
-    //     address addr2;
-    // }
-
-    struct escrowData {
+    struct escrowData { //3 slots
         bytes32 controllingContractNameHash; //hash of the name of the controlling escrow contract
         bytes32 escrowOwnerAddressHash; //hash of an address designated as an executor for the escrow contract
         uint256 timelock;
@@ -96,7 +85,7 @@ contract ECR_MGR is BASIC {
     }
 
     /*
-     * @dev Set an asset to escrow status (6/50/56). Sets timelock for unix timestamp of escrow end.
+     * @dev Set an asset to escrow status (6/50/56). Sets timelock for unix timestamp of escrow end. //breaking changes DS:TEST
      */
     function setEscrow(
         bytes32 _idxHash,

@@ -63,21 +63,20 @@ contract AC_MGR is CORE {
      * @dev Authorize / Deauthorize / Authorize users for an address be permitted to make record modifications
      * ----------------INSECURE -- keccak256 of address must be generated clientside in release.
      */
-    function OO_addUser(
-        //swap arg!!!!!!!!!
+    function OO_addUser(                    // DS:TEST (removed requires)
         address _authAddr,
         uint8 _userType,
         uint32 _assetClass
     ) external whenNotPaused isACtokenHolderOfClass(_assetClass) {
-        require(
-            (_userType == 0) ||
-                (_userType == 1) ||
-                (_userType == 2) ||
-                (_userType == 9) ||
-                (_userType == 10) ||
-                (_userType == 99),
-            "ACM:AU:Invalid user type"
-        );
+        // require(
+        //     (_userType == 0) ||
+        //         (_userType == 1) ||
+        //         (_userType == 2) ||
+        //         (_userType == 9) ||
+        //         (_userType == 10) ||
+        //         (_userType == 99),
+        //     "ACM:AU:Invalid user type"
+        // );
         //^^^^^^^checks^^^^^^^^^
 
         bytes32 addrHash = keccak256(abi.encodePacked(_authAddr));

@@ -56,7 +56,7 @@ contract ECR_CORE is BASIC {
 
 
     /*
-     * @dev retrieves costs from Storage and returns Costs struct
+     * @dev retrieves escrow data and returns escrow struct
      */
     function getEscrowData(bytes32 _idxHash)
         internal
@@ -78,7 +78,7 @@ contract ECR_CORE is BASIC {
     }
 
     /*
-     * @dev retrieves costs from Storage and returns Costs struct
+     * @dev retrieves extended escrow data and returns escrowDataExtLight struct
      */
     function getEscrowDataLight(bytes32 _idxHash)
         internal view
@@ -105,7 +105,7 @@ contract ECR_CORE is BASIC {
     }
 
     /*
-     * @dev retrieves costs from Storage and returns Costs struct
+     * @dev retrieves extended escrow data and returns escrowDataExtHeavy struct
      */
     function getEscrowDataHeavy(bytes32 _idxHash)
         internal view
