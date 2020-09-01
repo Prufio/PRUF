@@ -48,7 +48,7 @@ contract ECR_NC is ECR_CORE {
         bytes32 _escrowOwnerHash,
         uint256 _escrowTime,
         uint8 _escrowStatus
-    ) external nonReentrant whenNotPaused isAuthorized(_idxHash) {
+    ) external nonReentrant isAuthorized(_idxHash) {
         Record memory rec = getRecord(_idxHash);
         uint256 escrowTime = block.timestamp.add(_escrowTime);
         uint8 newEscrowStatus;
@@ -79,12 +79,7 @@ contract ECR_NC is ECR_CORE {
         newEscrowStatus = _escrowStatus;
         //^^^^^^^effects^^^^^^^^^
 
-        _setEscrowData(
-            _idxHash,
-            newEscrowStatus,
-            _escrowOwnerHash,
-            escrowTime
-        );
+        _setEscrowData(_idxHash, newEscrowStatus, _escrowOwnerHash, escrowTime);
         //^^^^^^^interactions^^^^^^^^^
     }
 

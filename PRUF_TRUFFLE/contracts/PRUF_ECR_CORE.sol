@@ -61,8 +61,7 @@ contract ECR_CORE is BASIC {
         uint8 _newAssetStatus,
         bytes32 _escrowOwnerAddressHash,
         uint256 _timelock
-    ) internal nonReentrant whenNotPaused {
-
+    ) internal whenNotPaused {
         ECR_MGR.setEscrow(
             _idxHash,
             _newAssetStatus,
@@ -74,8 +73,7 @@ contract ECR_CORE is BASIC {
     function _setEscrowDataLight(
         bytes32 _idxHash,
         escrowDataExtLight memory escrowDataLight
-    ) internal nonReentrant whenNotPaused {
-
+    ) internal whenNotPaused {
         ECR_MGR.setEscrowDataLight(
             _idxHash,
             escrowDataLight.escrowData,
@@ -93,8 +91,7 @@ contract ECR_CORE is BASIC {
     function _setEscrowDataHeavy(
         bytes32 _idxHash,
         escrowDataExtHeavy memory escrowDataHeavy
-    ) internal nonReentrant whenNotPaused {
-
+    ) internal whenNotPaused {
         ECR_MGR.setEscrowDataHeavy(
             _idxHash,
             escrowDataHeavy.u32_2,

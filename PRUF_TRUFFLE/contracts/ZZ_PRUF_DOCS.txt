@@ -38,6 +38,8 @@ pragma solidity ^0.6.7;
  *
  *      *identify funtionality in core contracts that needs to be killable
  *
+ *      *add "wallet token" so that keybase verified users can register as authorized asset minters. (remove type 1 user restriction)
+ *
  *
 *-----------------------------------------------------------------
 

@@ -44,7 +44,7 @@ contract ECR is ECR_CORE {
         bytes32 _escrowOwnerHash,
         uint256 _escrowTime,
         uint8 _escrowStatus
-    ) external nonReentrant whenNotPaused isAuthorized(_idxHash) {
+    ) external nonReentrant isAuthorized(_idxHash) {
         Record memory rec = getRecord(_idxHash);
         uint8 userType = getUserType(rec.assetClass);
         uint256 escrowTime = block.timestamp.add(_escrowTime);
@@ -71,12 +71,7 @@ contract ECR is ECR_CORE {
         newEscrowStatus = _escrowStatus;
         //^^^^^^^effects^^^^^^^^^
 
-        _setEscrowData(
-            _idxHash,
-            newEscrowStatus,
-            _escrowOwnerHash,
-            escrowTime
-        );
+        _setEscrowData(_idxHash, newEscrowStatus, _escrowOwnerHash, escrowTime);
         //^^^^^^^interactions^^^^^^^^^
     }
 
@@ -84,12 +79,12 @@ contract ECR is ECR_CORE {
      * @dev puts asset into an escrow status for a certain time period
      * Includes sample code for setting extended data
      */
-    function setEscrowExtendedData(  
+    function setEscrowExtendedData(
         bytes32 _idxHash,
         bytes32 _escrowOwnerHash,
         uint256 _escrowTime,
         uint8 _escrowStatus
-    ) external nonReentrant whenNotPaused isAuthorized(_idxHash) {
+    ) external nonReentrant isAuthorized(_idxHash) {
         Record memory rec = getRecord(_idxHash);
         uint8 userType = getUserType(rec.assetClass);
         uint256 escrowTime = block.timestamp.add(_escrowTime);
@@ -115,7 +110,7 @@ contract ECR is ECR_CORE {
 
         newEscrowStatus = _escrowStatus;
 
-        escrowDataExtLight memory escrowDataLight;  //demo for setting "light" struct data
+        escrowDataExtLight memory escrowDataLight; //demo for setting "light" struct data
         escrowDataLight.escrowData = 5;
         escrowDataLight.addr_1 = msg.sender;
 
@@ -123,19 +118,13 @@ contract ECR is ECR_CORE {
         escrowDataHeavy.u256_1 = 9999;
         //^^^^^^^effects^^^^^^^^^
 
-        _setEscrowData(
-            _idxHash,
-            newEscrowStatus,
-            _escrowOwnerHash,
-            escrowTime
-        );
+        _setEscrowData(_idxHash, newEscrowStatus, _escrowOwnerHash, escrowTime);
 
-        _setEscrowDataLight(_idxHash, escrowDataLight);  //Sets "light" EXT data
+        _setEscrowDataLight(_idxHash, escrowDataLight); //Sets "light" EXT data
 
-        _setEscrowDataHeavy(_idxHash, escrowDataHeavy);  //Sets "Heavy" EXT data
+        _setEscrowDataHeavy(_idxHash, escrowDataHeavy); //Sets "Heavy" EXT data
         //^^^^^^^interactions^^^^^^^^^
     }
-
 
     /*
      * @dev takes asset out of excrow status if time period has resolved || is escrow issuer
@@ -156,7 +145,7 @@ contract ECR is ECR_CORE {
 
         require(contractInfo.contractType > 0, "E:EE: contract not auth in AC");
         require((userType > 0) && (userType < 10), "E:EE: user not auth in AC");
-        require(                                      //STATE UNREACHABLE CTS:PREFERRED
+        require( //STATE UNREACHABLE CTS:PREFERRED
             (rec.assetStatus != 60),
             "E:EE- Asset is discarded, use Recycle"
         );
