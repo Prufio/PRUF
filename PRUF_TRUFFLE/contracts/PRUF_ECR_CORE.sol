@@ -56,11 +56,26 @@ contract ECR_CORE is BASIC {
         uint256 u256_2;
     }
 
+    function _setEscrowData(
+        bytes32 _idxHash,
+        uint8 _newAssetStatus,
+        bytes32 _escrowOwnerAddressHash,
+        uint256 _timelock
+    ) internal nonReentrant whenNotPaused {
+
+        ECR_MGR.setEscrow(
+            _idxHash,
+            _newAssetStatus,
+            _escrowOwnerAddressHash,
+            _timelock
+        );
+    }
+
     function _setEscrowDataLight(
         bytes32 _idxHash,
         escrowDataExtLight memory escrowDataLight
     ) internal nonReentrant whenNotPaused {
-        
+
         ECR_MGR.setEscrowDataLight(
             _idxHash,
             escrowDataLight.escrowData,
