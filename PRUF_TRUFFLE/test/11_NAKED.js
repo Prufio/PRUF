@@ -1331,7 +1331,7 @@
     it('Should fail becasue caller does not hold AC token', async () => {
 
         console.log("//**************************************END NAKED SETUP**********************************************/")
-        console.log("//**************************************BEGIN NAKED FAIL BATCH**********************************************/")
+        console.log("//**************************************BEGIN NAKED FAIL BATCH (4)**********************************************/")
         console.log("//**************************************BEGIN mintNakedAsset FAIL BATCH**********************************************/")
         return NAKED.mintNakedAsset(
         asset1, 

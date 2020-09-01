@@ -1393,7 +1393,7 @@
     it('Should fail because caller is not holder of token', async () => {
 
         console.log("//**************************************END ECR_NC SETUP**********************************************/")
-        console.log("//**************************************BEGIN ECR_NC FAIL BATCH**********************************************/")
+        console.log("//**************************************BEGIN ECR_NC FAIL BATCH (8)**********************************************/")
         console.log("//**************************************BEGIN setEscrow FAIL BATCH**********************************************/")
         return ECR_NC.setEscrow(
             asset5,

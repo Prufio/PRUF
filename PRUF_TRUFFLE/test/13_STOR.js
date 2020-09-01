@@ -1476,7 +1476,7 @@
     it('Should fail because caller is not owner', async () => {
 
         console.log("//**************************************END STOR SETUP**********************************************/")
-        console.log("//**************************************BEGIN STOR FAIL BATCH**********************************************/")
+        console.log("//**************************************BEGIN STOR FAIL BATCH (44)**********************************************/")
         console.log("//**************************************BEGIN OO_addContract FAIL BATCH**********************************************/")
         return STOR.OO_addContract(
         'ECR2',

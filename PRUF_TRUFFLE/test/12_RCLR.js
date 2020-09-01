@@ -1336,11 +1336,11 @@
         )
     })
 
-
+    //1
     it('Should fail becasue caller is not A_TKN contract)', async () => {
 
         console.log("//**************************************END RCLR SETUP**********************************************/")
-        console.log("//**************************************BEGIN RCLR FAIL BATCH**********************************************/")
+        console.log("//**************************************BEGIN RCLR FAIL BATCH (4)**********************************************/")
         console.log("//**************************************BEGIN discard FAIL BATCH**********************************************/")
         return MAL_APP.discard(
         asset1,
@@ -1357,7 +1357,7 @@
     //     return STOR.enableContractForAC('RCLR', '12', '0', { from: account1 })     
     // })
 
-
+    //2
     it('Should fail because status must be 59)', async () => { 
         return A_TKN.discard(
             asset2,
@@ -1370,7 +1370,7 @@
     //     return STOR.enableContractForAC('RCLR', '12', '2', { from: account1 })     
     // })
 
-
+    //3
     it('Should fail because newRGT = 0)', async () => {
 
         console.log("//**************************************END discard FAIL BATCH**********************************************/")
@@ -1413,7 +1413,7 @@
             )     
     })
 
-
+    //4
     it('Should fail because asset2 is not discarded', async () => {
         return RCLR.$recycle(
             asset2,

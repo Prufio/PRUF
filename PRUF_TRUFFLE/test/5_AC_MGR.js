@@ -1289,7 +1289,7 @@
     it('Should fail because caller does not hold AC token', async () => {
 
         console.log("//**************************************BEGIN AC_MGR TEST**********************************************/")
-        console.log("//**************************************BEGIN AC_MGR FAIL BATCH**********************************************/")
+        console.log("//**************************************BEGIN AC_MGR FAIL BATCH (10)**********************************************/")
         console.log("//**************************************BEGIN OO_addUser FAIL BATCH**********************************************/")
         return AC_MGR.OO_addUser(
         account2, 
@@ -1348,10 +1348,58 @@
         )
     })
 
+
     //6
+    it('Should fail because ACname is already in use', async () => {
+        return AC_MGR.createAssetClass( 
+        account2,
+        'Custodial_AC1',
+        '20',
+        '1',
+        '1',
+        {from: account1}
+        )
+    })
+
+
+    //7
+    it('Should fail because AC already exists', async () => {
+        return AC_MGR.createAssetClass( 
+        account2,
+        'AC20',
+        '10',
+        '1',
+        '1',
+        {from: account1}
+        )
+    })
+
+    //8
     it('Should fail because caller does not hold AC token', async () => {
 
         console.log("//**************************************END createAssetClass FAIL BATCH**********************************************/")
+        console.log("//**************************************BEGIN updateACname FAIL BATCH**********************************************/")
+        return AC_MGR.updateACname(
+        'Custodial_AC1+', 
+        '1',
+        {from: account2}
+        )
+    })
+
+    //9
+    it('Should fail because used name being signed to different AC', async () => {
+        return AC_MGR.updateACname( 
+        account2,
+        'Custodial_AC1',
+        '2',
+        {from: account1}
+        )
+    })
+
+    //10
+    it('Should fail because caller does not hold AC token', async () => {
+
+        console.log("//**************************************END updateACname FAIL BATCH**********************************************/")
         console.log("//**************************************BEGIN ACTH_setCosts FAIL BATCH**********************************************/")
         return AC_MGR.ACTH_setCosts(
         '10', 
