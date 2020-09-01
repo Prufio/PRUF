@@ -1302,7 +1302,7 @@
     it('Should fail because assetToken already exists', async () => {
 
         console.log("//**************************************END CORE SETUP**********************************************/")
-        console.log("//**************************************BEGIN CORE FAIL BATCH**********************************************/")
+        console.log("//**************************************BEGIN CORE FAIL BATCH (3)**********************************************/")
         console.log("//**************************************BEGIN createRecord FAIL BATCH**********************************************/")
         return APP.$newRecord(
         asset1, 

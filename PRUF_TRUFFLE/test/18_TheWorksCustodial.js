@@ -732,7 +732,12 @@
 
             .then(() => {
                 console.log("Minting AC 11 -C")
-                return AC_MGR.createAssetClass(account1, "Custodial_AC2", "11", "1", "1", { from: account1 })
+                return AC_MGR.createAssetClass(account1, "Custodial_AC", "11", "1", "1", { from: account1 })
+            })
+
+            .then(() => {
+                console.log("Should correct name of AC11")
+                return AC_MGR.updateACname(account1, "Custodial_AC2", "11", { from: account1 })
             })
             
             .then(() => {
@@ -1781,6 +1786,50 @@
             if(_err){} 
             else{Record = Object.values(_result)
         console.log(Record)}
+        })
+    })
+
+
+    it('Should modify asset12 escrowDatalight', async () => {
+        return ECR.setEscrow(
+        asset12, 
+        account2Hash,
+        '180',
+        '50',
+        {from: account2}
+        )
+    })
+
+
+    it("Should retrieve asset12 escrowDataLight", async () =>{ 
+        var ecrData = [];
+        
+        return await ECR_MGR.retrieveEscrowDataLight(asset12, {from: account2}, function (_err, _result) {
+            if(_err){} 
+            else{ecrData = Object.values(_result)
+        console.log(ecrData)}
+        })
+    })
+
+
+    it('Should modify asset12 escrowDataHeavy', async () => {
+        return ECR.setEscrow(
+        asset12, 
+        account2Hash,
+        '180',
+        '50',
+        {from: account2}
+        )
+    })
+
+
+    it("Should retrieve asset12 escrowDataHeavy", async () =>{ 
+        var ecrData = [];
+        
+        return await ECR_MGR.retrieveEscrowDataHeavy(asset12, {from: account2}, function (_err, _result) {
+            if(_err){} 
+            else{ecrData = Object.values(_result)
+        console.log(ecrData)}
         })
     })
 

@@ -1679,7 +1679,7 @@
     //6
     it('Should fail becasue custodial contract does not hold token', async () => {
 
-        console.log("//**************************************END setEscrow FAIL BATCH**********************************************/")
+        console.log("//**************************************END setEscrow FAIL BATCH (10)**********************************************/")
         console.log("//**************************************BEGIN endEscrow FAIL BATCH**********************************************/")
         return ECR.endEscrow(
             asset6,
