@@ -170,12 +170,13 @@ pragma solidity ^0.6.7;
 
 *-----------------------------------------------------------------
  * Authorized User Types   registeredUsers[]
+ * 0 = NO AUTHORIZATIONS
  * 1 - 4 = Standard User types
  * 1 - all priveleges
  * 2 - all but force-modify
  * 5 - 9 = Robot (cannot create or force-modify)
  * 10 = issue naked assets only
- * Other = no authorizations
+ * Other = no internal authorizations, but can be used by external functions
 *-----------------------------------------------------------------
 
 *-----------------------------------------------------------------
