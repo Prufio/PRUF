@@ -32,7 +32,8 @@ contract ECR_CORE is BASIC {
         uint256 timelock;
     }
 
-    struct escrowDataExtLight {  //1 slot
+    struct escrowDataExtLight {
+        //1 slot
         uint8 escrowData;
         uint8 u8_1;
         uint8 u8_2;
@@ -43,10 +44,11 @@ contract ECR_CORE is BASIC {
         address addr_1;
     }
 
-    struct escrowDataExtHeavy { // 5 slots
-        uint32  u32_2;
-        uint32  u32_3;
-        uint32  u32_4;
+    struct escrowDataExtHeavy {
+        // 5 slots
+        uint32 u32_2;
+        uint32 u32_3;
+        uint32 u32_4;
         address addr_2;
         bytes32 b32_1;
         bytes32 b32_2;
@@ -54,6 +56,43 @@ contract ECR_CORE is BASIC {
         uint256 u256_2;
     }
 
+    function _setEscrowDataLight(
+        bytes32 _idxHash,
+        escrowDataExtLight memory escrowDataLight
+    ) internal nonReentrant whenNotPaused {
+        
+        ECR_MGR.setEscrowDataLight(
+            _idxHash,
+            escrowDataLight.escrowData,
+            escrowDataLight.u8_1,
+            escrowDataLight.u8_2,
+            escrowDataLight.u8_3,
+            escrowDataLight.u16_1,
+            escrowDataLight.u16_2,
+            escrowDataLight.u32_1,
+            escrowDataLight.addr_1
+        );
+        //^^^^^^^effects^^^^^^^^^
+    }
+
+    function _setEscrowDataHeavy(
+        bytes32 _idxHash,
+        escrowDataExtHeavy memory escrowDataHeavy
+    ) internal nonReentrant whenNotPaused {
+
+        ECR_MGR.setEscrowDataHeavy(
+            _idxHash,
+            escrowDataHeavy.u32_2,
+            escrowDataHeavy.u32_3,
+            escrowDataHeavy.u32_4,
+            escrowDataHeavy.addr_2,
+            escrowDataHeavy.b32_1,
+            escrowDataHeavy.b32_2,
+            escrowDataHeavy.u256_1,
+            escrowDataHeavy.u256_2
+        );
+        //^^^^^^^effects^^^^^^^^^
+    }
 
     /*
      * @dev retrieves escrow data and returns escrow struct
@@ -81,7 +120,8 @@ contract ECR_CORE is BASIC {
      * @dev retrieves extended escrow data and returns escrowDataExtLight struct
      */
     function getEscrowDataLight(bytes32 _idxHash)
-        internal view
+        internal
+        view
         returns (escrowDataExtLight memory)
     {
         //^^^^^^^checks^^^^^^^^^
@@ -90,14 +130,14 @@ contract ECR_CORE is BASIC {
         //^^^^^^^effects^^^^^^^^^
 
         (
-        escrowDataLight.escrowData,
-        escrowDataLight.u8_1,
-        escrowDataLight.u8_2,
-        escrowDataLight.u8_3,
-        escrowDataLight.u16_1,
-        escrowDataLight.u16_2,
-        escrowDataLight.u32_1,
-        escrowDataLight.addr_1
+            escrowDataLight.escrowData,
+            escrowDataLight.u8_1,
+            escrowDataLight.u8_2,
+            escrowDataLight.u8_3,
+            escrowDataLight.u16_1,
+            escrowDataLight.u16_2,
+            escrowDataLight.u32_1,
+            escrowDataLight.addr_1
         ) = ECR_MGR.retrieveEscrowDataLight(_idxHash);
 
         return (escrowDataLight);
@@ -108,7 +148,8 @@ contract ECR_CORE is BASIC {
      * @dev retrieves extended escrow data and returns escrowDataExtHeavy struct
      */
     function getEscrowDataHeavy(bytes32 _idxHash)
-        internal view
+        internal
+        view
         returns (escrowDataExtHeavy memory)
     {
         //^^^^^^^checks^^^^^^^^^
