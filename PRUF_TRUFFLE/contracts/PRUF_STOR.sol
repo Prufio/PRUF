@@ -192,7 +192,7 @@ contract STOR is Ownable, ReentrancyGuard, Pausable {
         require(_contractAuthLevel <= 4, "S:AC: Invalid auth lv");
         //^^^^^^^checks^^^^^^^^^
 
-        contractInfo[_name][_assetClass] = _contractAuthLevel;  //does not pose an partial record overwrite risk
+        contractInfo[_name][_assetClass] = _contractAuthLevel; //does not pose an partial record overwrite risk
         contractNameToAddress[_name] = _addr; //does not pose an partial record overwrite risk
         contractAddressToName[_addr] = _name; //does not pose an partial record overwrite risk
 

@@ -238,7 +238,7 @@ contract ECR_MGR is BASIC {
             escrowDataHeavy.b32_1 = _b32_1;
             escrowDataHeavy.b32_2 = _b32_2;
             escrowDataHeavy.u256_1 = _u256_1;
-            escrowDataHeavy.u256_1 = _u256_2;
+            escrowDataHeavy.u256_2 = _u256_2;
 
         EscrowDataHeavy[_idxHash] = escrowDataHeavy; //set in EDL map
         //^^^^^^^effects^^^^^^^^^
