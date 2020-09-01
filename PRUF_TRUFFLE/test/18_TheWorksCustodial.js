@@ -737,7 +737,7 @@
 
             .then(() => {
                 console.log("Should correct name of AC11")
-                return AC_MGR.updateACname(account1, "Custodial_AC2", "11", { from: account1 })
+                return AC_MGR.updateACname("Custodial_AC2", "11", { from: account1 })
             })
             
             .then(() => {

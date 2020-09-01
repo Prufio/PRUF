@@ -1594,6 +1594,11 @@
         asset1,
         '180',
         '6',
+        '6',
+        '6',
+        '6',
+        '6',
+        account2,
         {from: account2}
         )
     })
@@ -1615,6 +1620,11 @@
         asset1,
         '180',
         '6',
+        '6',
+        '6',
+        '6',
+        '6',
+        account2,
         {from: account2}
         )
     })
@@ -1628,6 +1638,11 @@
         asset1,
         '180',
         '6',
+        '6',
+        account2,
+        '6',
+        string1Hash,
+        string1Hash,
         {from: account2}
         )
     })
@@ -1648,6 +1663,11 @@
         return ECR2._setEscrowDataHeavy(
         asset1,
         '180',
+        '6',
+        '6',
+        account2,
+        string1Hash,
+        string1Hash,
         '6',
         {from: account2}
         )
