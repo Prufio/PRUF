@@ -64,24 +64,29 @@ contract AC_MGR is CORE {
      * ----------------INSECURE -- keccak256 of address must be generated clientside in release.
      */
     function OO_addUser(
+        // DS:TEST (removed requires)
         address _authAddr,
         uint8 _userType,
         uint32 _assetClass
     ) external whenNotPaused isACtokenHolderOfClass(_assetClass) {
-        // require(
-        //     (_userType == 0) ||
-        //         (_userType == 1) ||
-        //         (_userType == 2) ||
-        //         (_userType == 9) ||
-        //         (_userType == 10) ||
-        //         (_userType == 99),
-        //     "ACM:AU:Invalid user type"
-        // );
+        require( //AC 0 is reserved for the # of AC's that the adressHash is registered in                                // DS:TEST NEW
+            AC_data[_assetClass].assetClassRoot != 0,
+            "ACM:AU specified asset class not populated"
+        );
         //^^^^^^^checks^^^^^^^^^
 
         bytes32 addrHash = keccak256(abi.encodePacked(_authAddr));
 
         registeredUsers[addrHash][_assetClass] = _userType;
+
+        if ((_userType != 0) && (registeredUsers[addrHash][0] < 255)) {
+            registeredUsers[addrHash][0]++;
+        }
+
+        if ((_userType == 0) && (registeredUsers[addrHash][0] > 0)) {
+            registeredUsers[addrHash][0]--;
+        }
+
         //^^^^^^^effects^^^^^^^^^
         emit REPORT("Internal user database access!"); //report access to the internal user database
         //^^^^^^^interactions^^^^^^^^^
@@ -89,7 +94,7 @@ contract AC_MGR is CORE {
 
     /*
      * @dev Mints asset class token and creates an assetClass. Mints to @address
-     * Requires that:
+     * Requires that:                                                       DS:TEST
      *  name is unuiqe
      *  AC is not provisioned with a root (proxy for not yet registered)
      *  that ACtoken does not exist
@@ -110,11 +115,11 @@ contract AC_MGR is CORE {
             "ACM:CAC:Root asset class does not exist"
         );
 
-        require(AC_number[_name] == 0, "ACM:CAC:AC name already in use");
+        require(AC_number[_name] == 0, "ACM:CAC:AC name already in use"); //NEW    DS:TEST
         require(
             (AC_data[_assetClass].assetClassRoot == 0),
             "ACM:CAC:AC already in use"
-        );
+        ); //NEW    DS:TEST
         //^^^^^^^checks^^^^^^^^^
 
         AC_number[_name] = _assetClass;
@@ -132,7 +137,7 @@ contract AC_MGR is CORE {
     }
 
     /*
-     * @dev Modifies an assetClass //NEW
+     * @dev Modifies an assetClass //NEW    DS:TEST !!FUNC!!
      * Sets a new AC name. Asset Classes cannot be moved to a new root or custody type.
      * Requires that:
      *  caller holds ACtoken
@@ -142,7 +147,7 @@ contract AC_MGR is CORE {
         external
         isACtokenHolderOfClass(_assetClass)
     {
-        require( //should pass if name is same as old name or name is unassigned. Should fail if name is assigned to other AC
+        require( //NEW    DS:TEST should pass if name is same as old name or name is unassigned. Should fail if name is assigned to other AC
             (AC_number[_name] == 0) || //name is unassigned
                 (keccak256(abi.encodePacked(_name)) == //name is same as old name
                     (keccak256(abi.encodePacked(AC_data[_assetClass].name)))),
