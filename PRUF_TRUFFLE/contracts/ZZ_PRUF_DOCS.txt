@@ -149,6 +149,7 @@ pragma solidity ^0.6.7;
 
 *-----------------------------------------------------------------
  * CONTRACT Types:  contractAdresses (storage)
+ * -----------------  AC0 is a flag for a contract being a pruf authorized contract, in general
  * 0   --Not Authorized
  * 1   --Authorized Contract for CUSTODIAL assets (contract will create assets with custodial assetStatus 0)
  * 2   --Authorized Contract for NON_CUSTODIAL assets (contract will create assets with custodial assetStatus 51)
@@ -163,7 +164,8 @@ pragma solidity ^0.6.7;
 *-----------------------------------------------------------------
 
 *-----------------------------------------------------------------
- * Authorized User Types   registeredUsers[]
+ * Authorized User Types, per AC
+ * -----------------  AC0 stores an count on the number of AC's a gicen addressHash is registered in
  * 0 = NO AUTHORIZATIONS
  * 1 - 4 = Standard User types
  * 1 - all priveleges
