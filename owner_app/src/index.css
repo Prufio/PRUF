@@ -371,6 +371,19 @@ h4 {
   opacity: 0.96;
 }
 
+.MACForm{
+  height: 55rem;
+  width: 59rem;
+  background-color: #be1a1a;
+  border-radius: 0.5rem;
+  padding: 2rem;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  margin-top: -2rem;
+  opacity: 0.96;
+}
+
 .RFMCForm{
   height: 30rem;
   width: 59rem;

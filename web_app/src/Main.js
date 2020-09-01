@@ -9,6 +9,29 @@ import AdminComponent from "./Resources/AdminComponent";
 import AuthorizedUserComponent from "./Resources/AuthorizedUserComponent";
 import BasicComponent from "./Resources/BasicComponent"
 import ParticleBox from './Resources/ParticleBox';
+import AddNoteNC from "./NonCustodial/AddNote";
+import DecrementCounterNC from "./NonCustodial/DecrementCounter";
+import ForceModifyRecordNC from "./NonCustodial/ForceModifyRecord";
+import ModifyDescriptionNC from "./NonCustodial/ModifyDescription";
+import ModifyRecordStatusNC from "./NonCustodial/ModifyRecordStatus";
+import NewRecordNC from "./NonCustodial/NewRecord";
+import RetrieveRecordNC from "./NonCustodial/RetrieveRecord";
+import TransferAssetNC from "./NonCustodial/TransferAsset";
+import VerifyRightsholderNC from "./NonCustodial/VerifyRightsholder";
+import EscrowManagerNC from "./NonCustodial/EscrowManager";
+import ExportAssetNC from "./NonCustodial/ExportAsset";
+
+import AddNote from "./Custodial/AddNote";
+import DecrementCounter from "./Custodial/DecrementCounter";
+import ForceModifyRecord from "./Custodial/ForceModifyRecord";
+import ModifyDescription from "./Custodial/ModifyDescription";
+import ModifyRecordStatus from "./Custodial/ModifyRecordStatus";
+import NewRecord from "./Custodial/NewRecord";
+import RetrieveRecord from "./Custodial/RetrieveRecord";
+import TransferAsset from "./Custodial/TransferAsset";
+import VerifyRightsholder from "./Custodial/VerifyRightsholder";
+import EscrowManager from "./Custodial/EscrowManager";
+import ExportAsset from "./Custodial/ExportAsset";
 import Router from "./Router";
 
 
@@ -157,7 +180,7 @@ class Main extends Component {
       RCLR: "",
       assetClass: undefined,
       contractArray: [],
-      isAuthUser: false,
+      isAuthUser: window.isAuthUser,
       assetHolderBool: false,
       assetClassHolderBool: false,
       assetHolderMenuBool: false,
@@ -186,7 +209,7 @@ class Main extends Component {
     //console.log(window.ipfs)
     _web3.eth.getAccounts().then((e) => { this.state.addr = e[0]; window.addr = e[0] });
     document.addEventListener("accountListener", this.acctChanger());
-    
+
 
   }
 
@@ -253,44 +276,45 @@ class Main extends Component {
                 </ul>
                 <div className="content">
                   <Route exact path="/" component={Home} />
-                  <Router />
+                  <Router/>
                 </div>
+
                 <div className="headerButtons">
-              {this.state.assetClassHolderBool === true && this.state.assetClassHolderMenuBool === false &&(
-                <Button className="btn3"
-                  variant="primary"
-                  type="button"
-                  onClick={()=>{this.toggleMenu("ACAdmin")}}
-                >
-                  AC Admin Menu
-                </Button>)}
+                  {this.state.assetClassHolderBool === true && this.state.assetClassHolderMenuBool === false && (
+                    <Button className="btn3"
+                      variant="primary"
+                      type="button"
+                      onClick={() => { this.toggleMenu("ACAdmin") }}
+                    >
+                      AC Admin Menu
+                    </Button>)}
 
-              {this.state.assetHolderBool === true && this.state.assetHolderMenuBool === false &&(
-                <Button className="btn3"
-                  variant="primary"
-                  type="button"
-                  onClick={()=>{this.toggleMenu("NC")}}
-                >
-                  NonCustodial Menu
-                </Button>)}
+                  {this.state.assetHolderBool === true && this.state.assetHolderMenuBool === false && (
+                    <Button className="btn3"
+                      variant="primary"
+                      type="button"
+                      onClick={() => { this.toggleMenu("NC") }}
+                    >
+                      NonCustodial Menu
+                    </Button>)}
 
-              {this.state.basicMenuBool === false && (
-                <Button className="btn3"
-                  variant="primary"
-                  type="button"
-                  onClick={()=>{this.toggleMenu("basic")}}
-                >
-                  Basic Menu
-                </Button>)}
+                  {this.state.basicMenuBool === false && (
+                    <Button className="btn3"
+                      variant="primary"
+                      type="button"
+                      onClick={() => { this.toggleMenu("basic") }}
+                    >
+                      Basic Menu
+                    </Button>)}
 
-              {this.state.isAuthUser === true && this.state.authorizedUserMenuBool === false && (
-                <Button className="btn3"
-                  variant="primary"
-                  type="button"
-                  onClick={()=>{this.toggleMenu("authUser")}}
-                >
-                  Authorized User Menu
-                </Button>)}
+                  {window.isAuthUser === true && this.state.authorizedUserMenuBool === false && (
+                    <Button className="btn3"
+                      variant="primary"
+                      type="button"
+                      onClick={() => { this.toggleMenu("authUser") }}
+                    >
+                      Authorized User Menu
+                    </Button>)}
                 </div>
               </div>
             </div>

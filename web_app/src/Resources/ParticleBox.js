@@ -22,10 +22,10 @@ class ParticleBox extends Component {
           params={{
             "particles": {
                 "number": {
-                    "value": 80
+                    "value": 90
                 },
                 "size": {
-                    "value": 3
+                    "value": 4
                 }
             },
             "interactivity": {

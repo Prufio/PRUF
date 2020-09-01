@@ -1,6 +1,10 @@
 import React, { Component } from "react";
 import { Route, NavLink, HashRouter } from "react-router-dom";
 
+import SetCosts from "./ACAdmin/SetCosts"
+import EnableContract from "./ACAdmin/EnableContract"
+import AddUser from "./ACAdmin/AddUser"
+
 import AddNoteNC from "./NonCustodial/AddNote";
 import DecrementCounterNC from "./NonCustodial/DecrementCounter";
 import ForceModifyRecordNC from "./NonCustodial/ForceModifyRecord";
@@ -26,9 +30,13 @@ import EscrowManager from "./Custodial/EscrowManager";
 import ExportAsset from "./Custodial/ExportAsset";
 
 class Router extends Component {
-    render() {
+    render(){
         return (
-            <div>
+            <>
+                <Route path="/add-user" component={AddUser}/>
+                <Route path="/enable-contract" component={EnableContract}/>
+                <Route path="/set-costs" component={SetCosts}/>
+
                 <Route path="/new-record" component={NewRecord} />
                 <Route path="/retrieve-record" component={RetrieveRecord} />
                 <Route path="/force-modify-record" component={ForceModifyRecord}/>
@@ -52,7 +60,7 @@ class Router extends Component {
                 <Route path="/export-asset-NC" component={ExportAssetNC} />
                 <Route path="/verify-rights-holder-NC"component={VerifyRightsholderNC}/>
                 <Route path="/manage-escrow-NC" component={EscrowManagerNC}/>
-            </div>
+            </>
         )
     }
 }

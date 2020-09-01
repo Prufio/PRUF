@@ -44,9 +44,9 @@ class Home extends Component {
       .call({from: window.addr}, (_error, _result) => {
         if(_error){console.log("Error: ", _error)}
         else{
-          if (_result === "0"){this.setState({authLevel: "Standard User (read-only access)"})}
-          else if(_result === "1"){this.setState({authLevel: "Administrator"})}
-          else if(_result === "9"){this.setState({authLevel: "Robot"})}
+          if (_result === "0"){this.setState({authLevel: "Standard User (read-only access)"}); window.isAuthUser = false}
+          else if(_result === "1"){this.setState({authLevel: "Authorized User"}); window.isAuthUser = true}
+          else if(_result === "9"){this.setState({authLevel: "Robot"}); window.isAuthUser = false}
             //console.log(_result)
         }
       }); 

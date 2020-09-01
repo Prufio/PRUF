@@ -5,6 +5,7 @@ import Home from "./Home";
 import AddContract from "./AddContract";
 import Ownership from "./Ownership";
 import THEWORKS from "./TheWorks";
+import MintAssetClass from "./MintAssetClass"
 import buildContracts from "./Contracts";
 import ParticleBox from "./ParticleBox";
 import DropdownButton from "react";
@@ -167,7 +168,7 @@ class Main extends Component {
                 <ul className="header">
                   {window._contracts !== undefined && (
                     <nav>
-                      <DropdownButton
+                     {/*  <DropdownButton
                         id="dropdown-basic-button"
                         title="Menu Selection"
                       >
@@ -178,7 +179,7 @@ class Main extends Component {
                         <Dropdown.Item href="#/action-3">
                           Something else
                         </Dropdown.Item>
-                      </DropdownButton>
+                      </DropdownButton> */}
                       <li>
                         <NavLink exact to="/">
                           Home
@@ -191,6 +192,9 @@ class Main extends Component {
                         <NavLink to="/ownership">Ownership</NavLink>
                       </li>
                       <li>
+                        <NavLink to="/mint-ac">Create AC</NavLink>
+                      </li>
+                      <li>
                         <NavLink to="/the-works">THE WORKS</NavLink>
                       </li>
                     </nav>
@@ -200,6 +204,7 @@ class Main extends Component {
                   <Route exact path="/" component={Home} />
                   <Route path="/add-contract" component={AddContract} />
                   <Route path="/ownership" component={Ownership} />
+                  <Route path="/mint-ac" component={MintAssetClass}/>
                   <Route path="/the-works" component={THEWORKS} />
                 </div>
               </div>

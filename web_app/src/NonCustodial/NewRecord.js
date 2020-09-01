@@ -117,7 +117,7 @@ class NewRecordNC extends Component {
 
       checkExists(idxHash);
 
-      window.contracts.APP.methods
+      window.contracts.APP_NC.methods
         .$newRecord(
           idxHash,
           rgtHash,
