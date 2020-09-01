@@ -158,7 +158,7 @@ contract ECR_MGR is BASIC {
     }
 
     /*
-     * @dev Set data in EDL mapping  // NEW DS:TEST
+     * @dev Set data in EDL mapping  // NEW DS:TEST !!FUNC!!
      * Must be setter contract
      * Must be in  escrow
      */
@@ -208,7 +208,7 @@ contract ECR_MGR is BASIC {
 
 
     /*
-     * @dev Set data in EDL mapping  // NEW DS:TEST
+     * @dev Set data in EDL mapping  // NEW DS:TEST  !!FUNC!!
      * Must be setter contract
      * Must be in  escrow
      */
@@ -316,7 +316,7 @@ contract ECR_MGR is BASIC {
     }
 
     /*
-     * @dev return EscrowDataLight @ IDX // NEW DS:TEST
+     * @dev return EscrowDataLight @ IDX // NEW DS:TEST !!FUNC!!
      */
     function retrieveEscrowDataLight(bytes32 _idxHash)
         external
@@ -348,7 +348,7 @@ contract ECR_MGR is BASIC {
     }
 
     /*
-     * @dev return EscrowDataHeavy @ IDX      // NEW DS:TEST
+     * @dev return EscrowDataHeavy @ IDX      // NEW DS:TEST !!FUNC!!
      */
     function retrieveEscrowDataHeavy(bytes32 _idxHash)
         external

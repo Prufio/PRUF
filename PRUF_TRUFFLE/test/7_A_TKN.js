@@ -1340,7 +1340,7 @@
     it('Should fail because caller is not owner', async () => {
 
         console.log("//**************************************END A_TKN TEST SETUP**********************************************/")
-        console.log("//**************************************BEGIN A_TKN FAIL BATCH**********************************************/")
+        console.log("//**************************************BEGIN A_TKN FAIL BATCH (15)**********************************************/")
         console.log("//**************************************BEGIN OO_setStorageContract FAIL BATCH**********************************************/")
         return A_TKN.OO_setStorageContract(
         STOR.address,

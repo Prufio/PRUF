@@ -1480,7 +1480,7 @@
         it('Should fail because user not auth in AC', async () => {
 
             console.log("//************************************************************END APP SETUP**********************************************************//")
-            console.log('//**************************BEGIN APP FAIL BATCH**************************//')
+            console.log('//**************************BEGIN APP FAIL BATCH (19)**************************//')
             console.log('//**************************BEGIN $newRecord FAIL BATCH**************************//')
             return APP.$newRecord(
                 asset10,

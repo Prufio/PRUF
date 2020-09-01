@@ -133,7 +133,7 @@ contract AC_MGR is CORE {
     }
 
     /*
-     * @dev Modifies an assetClass //NEW    DS:TEST
+     * @dev Modifies an assetClass //NEW    DS:TEST !!FUNC!!
      * Sets a new AC name. Asset Classes cannot be moved to a new root or custody type.
      * Requires that:
      *  caller holds ACtoken

@@ -1303,6 +1303,7 @@
     it('Should fail becasue caller != owner', async () => {
 
         console.log("//**************************************END BASIC SETUP**********************************************/")
+        console.log("//**************************************BEGIN BASIC FAIL BATCH (5)**********************************************/")
         console.log("//**************************************BEGIN OO_ResolveContractAddresses FAIL BATCH**********************************************/")
         return APP.OO_ResolveContractAddresses(
         {from: account2}
