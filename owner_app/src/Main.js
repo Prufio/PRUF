@@ -6,6 +6,7 @@ import AddContract from "./AddContract";
 import Ownership from "./Ownership";
 import THEWORKS from "./TheWorks";
 import MintAssetClass from "./MintAssetClass"
+import SetupAndResolveContracts from "./SetupAndResolveContracts"
 import buildContracts from "./Contracts";
 import ParticleBox from "./ParticleBox";
 import DropdownButton from "react";
@@ -33,11 +34,12 @@ class Main extends Component {
         A_TKN: window._contracts.content[5],
         ECR_MGR: window._contracts.content[6],
         ECR: window._contracts.content[7],
-        ECR2: window._contracts.content[8],
+        VERIFY: window._contracts.content[8],
         ECR_NC: window._contracts.content[9],
         APP_NC: window._contracts.content[10],
         NP_NC: window._contracts.content[11],
         RCLR: window._contracts.content[12],
+        NAKED: window._contracts.content[13],
       };
 
       return console.log("contracts: ", window.contracts);
@@ -186,6 +188,9 @@ class Main extends Component {
                         </NavLink>
                       </li>
                       <li>
+                        <NavLink to="/setup">Setup Contracts</NavLink>
+                      </li>
+                      <li>
                         <NavLink to="/add-contract">Add Contract</NavLink>
                       </li>
                       <li>
@@ -202,6 +207,7 @@ class Main extends Component {
                 </ul>
                 <div className="content">
                   <Route exact path="/" component={Home} />
+                  <Route exact path="/setup" component={SetupAndResolveContracts} />
                   <Route path="/add-contract" component={AddContract} />
                   <Route path="/ownership" component={Ownership} />
                   <Route path="/mint-ac" component={MintAssetClass}/>

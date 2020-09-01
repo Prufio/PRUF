@@ -54,7 +54,6 @@ class MintAssetClass extends Component {
       const newAC = async () => {
 
         await window.contracts.AC_MGR.methods.createAssetClass(
-            self.state.ACIndex,
             self.state.ACAdmin,
             self.state.ACName,
             self.state.ACIndex,
