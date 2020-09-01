@@ -41,33 +41,21 @@ contract RCLR is ECR_CORE, CORE {
 
         uint256 escrowTime = block.timestamp + 3153600000000; //100,000 years in the FUTURE.........
         bytes32 escrowOwnerHash = keccak256(abi.encodePacked(msg.sender));
+        escrowDataExtLight memory escrowDataLight;
+        escrowDataLight.escrowData = 255;
+        escrowDataLight.addr_1 = msg.sender;
         //^^^^^^^effects^^^^^^^^^
 
-        ECR_MGR.setEscrow(
+       _setEscrowData(
             _idxHash,
             60, //recycled status
             escrowOwnerHash,
             escrowTime
         );
 
-        ECR_MGR.setEscrow(
+        _setEscrowDataLight(
             _idxHash,
-            60, //recycled status
-            escrowOwnerHash,
-            escrowTime
-        );
-
-        ECR_MGR.setEscrowDataLight(
-            _idxHash,
-            255, //escrow data 255 is recycled
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            msg.sender
-        );
+            escrowDataLight);
         //^^^^^^^interactions^^^^^^^^^
     }
 

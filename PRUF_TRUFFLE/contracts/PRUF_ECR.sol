@@ -44,7 +44,7 @@ contract ECR is ECR_CORE {
         bytes32 _escrowOwnerHash,
         uint256 _escrowTime,
         uint8 _escrowStatus
-    ) external nonReentrant whenNotPaused isAuthorized(_idxHash) {
+    ) external nonReentrant isAuthorized(_idxHash) {
         Record memory rec = getRecord(_idxHash);
         uint8 userType = getUserType(rec.assetClass);
         uint256 escrowTime = block.timestamp.add(_escrowTime);
@@ -71,12 +71,58 @@ contract ECR is ECR_CORE {
         newEscrowStatus = _escrowStatus;
         //^^^^^^^effects^^^^^^^^^
 
-        ECR_MGR.setEscrow(
-            _idxHash,
-            newEscrowStatus,
-            _escrowOwnerHash,
-            escrowTime
+        _setEscrowData(_idxHash, newEscrowStatus, _escrowOwnerHash, escrowTime);
+        //^^^^^^^interactions^^^^^^^^^
+    }
+
+    /*
+     * @dev puts asset into an escrow status for a certain time period
+     * Includes sample code for setting extended data
+     */
+    function setEscrowExtendedData(
+        bytes32 _idxHash,
+        bytes32 _escrowOwnerHash,
+        uint256 _escrowTime,
+        uint8 _escrowStatus
+    ) external nonReentrant isAuthorized(_idxHash) {
+        Record memory rec = getRecord(_idxHash);
+        uint8 userType = getUserType(rec.assetClass);
+        uint256 escrowTime = block.timestamp.add(_escrowTime);
+        uint8 newEscrowStatus;
+        ContractDataHash memory contractInfo = getContractInfo(
+            address(this),
+            rec.assetClass
         );
+
+        require(contractInfo.contractType > 0, "E:SE: contract not auth in AC");
+        require((userType > 0) && (userType < 10), "E:SE: user not auth in AC");
+        require( //REDUNDANT, THROWS IN SAFEMATH CTS:PREFERRED
+            (escrowTime >= block.timestamp),
+            "E:SE: Escrow must be set to a time in the future"
+        );
+        require(
+            (userType < 5) ||
+                ((userType > 4) && (userType < 10) && (_escrowStatus > 49)),
+            "E:SE: Non supervisored agents must set escrow status within scope."
+        );
+        require((_escrowStatus != 60), "E:SE: Cannot set to recycled status.");
+        //^^^^^^^checks^^^^^^^^^
+
+        newEscrowStatus = _escrowStatus;
+
+        escrowDataExtLight memory escrowDataLight; //demo for setting "light" struct data
+        escrowDataLight.escrowData = 5;
+        escrowDataLight.addr_1 = msg.sender;
+
+        escrowDataExtHeavy memory escrowDataHeavy; //demo for setting "Heavy" struct data
+        escrowDataHeavy.u256_1 = 9999;
+        //^^^^^^^effects^^^^^^^^^
+
+        _setEscrowData(_idxHash, newEscrowStatus, _escrowOwnerHash, escrowTime);
+
+        _setEscrowDataLight(_idxHash, escrowDataLight); //Sets "light" EXT data
+
+        _setEscrowDataHeavy(_idxHash, escrowDataHeavy); //Sets "Heavy" EXT data
         //^^^^^^^interactions^^^^^^^^^
     }
 
@@ -99,7 +145,7 @@ contract ECR is ECR_CORE {
 
         require(contractInfo.contractType > 0, "E:EE: contract not auth in AC");
         require((userType > 0) && (userType < 10), "E:EE: user not auth in AC");
-        require(                                      //STATE UNREACHABLE CTS:PREFERRED
+        require( //STATE UNREACHABLE CTS:PREFERRED
             (rec.assetStatus != 60),
             "E:EE- Asset is discarded, use Recycle"
         );

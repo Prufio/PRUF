@@ -85,7 +85,7 @@ contract ECR_MGR is BASIC {
     }
 
     /*
-     * @dev Set an asset to escrow status (6/50/56). Sets timelock for unix timestamp of escrow end. //breaking changes DS:TEST
+     * @dev Set an asset to escrow status (6/50/56). Sets timelock for unix timestamp of escrow end.
      */
     function setEscrow(
         bytes32 _idxHash,
@@ -147,7 +147,7 @@ contract ECR_MGR is BASIC {
     }
 
     /*
-     * @dev Set data in EDL mapping  // NEW DS:TEST !!FUNC!!
+     * @dev Set data in EDL mapping
      * Must be setter contract
      * Must be in  escrow
      */
@@ -197,7 +197,7 @@ contract ECR_MGR is BASIC {
 
 
     /*
-     * @dev Set data in EDL mapping  // NEW DS:TEST  !!FUNC!!
+     * @dev Set data in EDL mapping
      * Must be setter contract
      * Must be in  escrow
      */
@@ -238,7 +238,7 @@ contract ECR_MGR is BASIC {
             escrowDataHeavy.b32_1 = _b32_1;
             escrowDataHeavy.b32_2 = _b32_2;
             escrowDataHeavy.u256_1 = _u256_1;
-            escrowDataHeavy.u256_1 = _u256_2;
+            escrowDataHeavy.u256_2 = _u256_2;
 
         EscrowDataHeavy[_idxHash] = escrowDataHeavy; //set in EDL map
         //^^^^^^^effects^^^^^^^^^
@@ -305,7 +305,7 @@ contract ECR_MGR is BASIC {
     }
 
     /*
-     * @dev return EscrowDataLight @ IDX // NEW DS:TEST !!FUNC!!
+     * @dev return EscrowDataLight @ IDX
      */
     function retrieveEscrowDataLight(bytes32 _idxHash)
         external
@@ -337,7 +337,7 @@ contract ECR_MGR is BASIC {
     }
 
     /*
-     * @dev return EscrowDataHeavy @ IDX      // NEW DS:TEST !!FUNC!!
+     * @dev return EscrowDataHeavy @ IDX
      */
     function retrieveEscrowDataHeavy(bytes32 _idxHash)
         external

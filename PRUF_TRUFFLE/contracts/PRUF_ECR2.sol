@@ -104,10 +104,10 @@ contract ECR2 is ECR_CORE {
             _escrowOwnerHash,
             escrowTime
         );
-        //^^^^^^^interactions^^^^^^^^^
+        //^^^^^^^^interactions^^^^^^^^^
     }
 
-    /*
+    /* 
      * @dev takes asset out of excrow status if time period has resolved || is escrow issuer
      */
     function endEscrow(bytes32 _idxHash)

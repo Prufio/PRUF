@@ -1289,7 +1289,7 @@
     it('Should fail because caller does not hold AC token', async () => {
 
         console.log("//**************************************BEGIN AC_MGR TEST**********************************************/")
-        console.log("//**************************************BEGIN AC_MGR FAIL BATCH (10)**********************************************/")
+        console.log("//**************************************BEGIN AC_MGR FAIL BATCH (9)**********************************************/")
         console.log("//**************************************BEGIN OO_addUser FAIL BATCH**********************************************/")
         return AC_MGR.OO_addUser(
         account2, 
@@ -1300,16 +1300,6 @@
     })
 
     //2
-    it('Should fail because usertype is not valid', async () => {
-        return AC_MGR.OO_addUser(
-        account2, 
-        '11',
-        '10',
-        {from: account1}
-        )
-    })
-
-    //3
     it('Should fail because caller is not Owner', async () => {
 
         console.log("//**************************************END OO_addUser FAIL BATCH**********************************************/")
@@ -1324,7 +1314,7 @@
         )
     })
 
-    //4
+    //3
     it('Should fail because AC_TKN ID != 0', async () => {
         return AC_MGR.createAssetClass(
         account2,
@@ -1336,7 +1326,7 @@
         )
     })
 
-    //5
+    //4
     it('Should fail because RootAC doesnt exist', async () => {
         return AC_MGR.createAssetClass( 
         account2,
@@ -1349,7 +1339,7 @@
     })
 
 
-    //6
+    //5
     it('Should fail because ACname is already in use', async () => {
         return AC_MGR.createAssetClass( 
         account2,
@@ -1362,7 +1352,7 @@
     })
 
 
-    //7
+    //6
     it('Should fail because AC already exists', async () => {
         return AC_MGR.createAssetClass( 
         account2,
@@ -1374,7 +1364,7 @@
         )
     })
 
-    //8
+    //7
     it('Should fail because caller does not hold AC token', async () => {
 
         console.log("//**************************************END createAssetClass FAIL BATCH**********************************************/")
@@ -1386,7 +1376,7 @@
         )
     })
 
-    //9
+    //8
     it('Should fail because used name being signed to different AC', async () => {
         return AC_MGR.updateACname( 
         account2,
@@ -1396,7 +1386,7 @@
         )
     })
 
-    //10
+    //9
     it('Should fail because caller does not hold AC token', async () => {
 
         console.log("//**************************************END updateACname FAIL BATCH**********************************************/")
