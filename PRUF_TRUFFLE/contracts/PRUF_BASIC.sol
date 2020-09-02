@@ -67,6 +67,9 @@ contract BASIC is ReentrancyGuard, Ownable, IERC721Receiver, Pausable {
     address internal AC_TKN_Address;
     AC_TKN_Interface internal AC_TKN;
 
+    address internal ID_TKN_Address;
+    ID_TKN_Interface internal ID_TKN;
+
     address internal ECR_MGR_Address;
     ECR_MGR_Interface internal ECR_MGR;
 
@@ -117,11 +120,13 @@ contract BASIC is ReentrancyGuard, Ownable, IERC721Receiver, Pausable {
         AC_TKN = AC_TKN_Interface(AC_TKN_Address);
 
         AC_MGR_Address = STOR.resolveContractAddress("AC_MGR");
-
         AC_MGR = AC_MGR_Interface(AC_MGR_Address);
 
         A_TKN_Address = STOR.resolveContractAddress("A_TKN");
         A_TKN = A_TKN_Interface(A_TKN_Address);
+
+        ID_TKN_Address = STOR.resolveContractAddress("ID_TKN");
+        ID_TKN = ID_TKN_Interface(ID_TKN_Address);
 
         ECR_MGR_Address = STOR.resolveContractAddress("ECR_MGR");
         ECR_MGR = ECR_MGR_Interface(ECR_MGR_Address);
