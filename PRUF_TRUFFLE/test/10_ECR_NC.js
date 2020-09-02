@@ -1393,7 +1393,7 @@
     it('Should fail because caller is not holder of token', async () => {
 
         console.log("//**************************************END ECR_NC SETUP**********************************************/")
-        console.log("//**************************************BEGIN ECR_NC FAIL BATCH (8)**********************************************/")
+        console.log("//**************************************BEGIN ECR_NC FAIL BATCH (7)**********************************************/")
         console.log("//**************************************BEGIN setEscrow FAIL BATCH**********************************************/")
         return ECR_NC.setEscrow(
             asset5,
@@ -1483,7 +1483,7 @@
     //     )
     // })
 
-    //5
+    //4
     it('Should fail because not being set to auth NC escrow status', async () => {
         return ECR_NC.setEscrow(
         asset1, 
@@ -1590,7 +1590,7 @@
             
     })
 
-    //6
+    //5
     it('Should fail because ECR_NC is not an authroized in AC', async () => {
         return ECR_NC.endEscrow(
         asset1,
@@ -1647,7 +1647,7 @@
     })
 
 
-    //7
+    //6
     it('Should fail because record in escrow <50', async () => {
         return ECR_NC.endEscrow(
         asset5, 
@@ -1688,7 +1688,7 @@
         )
     })
 
-    //8
+    //7
     it('Should fail because caller != escrow owner', async () => {
         return ECR_NC.endEscrow(
         asset1,
