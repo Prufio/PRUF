@@ -46,9 +46,10 @@ contract APP_NC is CORE {
         uint32 _assetClass,
         uint32 _countDownStart
     ) external payable nonReentrant whenNotPaused {
-        uint8 userType = getUserType(_assetClass);
-
-        require(userType == 1, "ANC:NR: User not auth in AC");
+        require(
+            (ID_TKN.balanceOf(msg.sender) == 1), //msg.sender is token holder  //NEW DS:TEST
+            "ANC:MOD-IA: Caller does not hold a valid PRuF_ID token"
+        );
         //^^^^^^^Checks^^^^^^^^^
 
         createRecord(_idxHash, _rgtHash, _assetClass, _countDownStart);

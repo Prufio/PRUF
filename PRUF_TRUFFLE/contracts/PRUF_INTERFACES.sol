@@ -202,6 +202,40 @@ interface A_TKN_Interface {
     function setURI(uint256 tokenId, string memory _tokenURI) external;
 }
 
+interface ID_TKN_Interface {
+    function ownerOf(uint256 tokenId)
+        external
+        returns (address tokenHolderAdress);
+
+    function safeTransferFrom(
+        address from,
+        address to,
+        uint256 tokenId
+    ) external;
+
+    function mintPRUF_IDToken(
+        address _recipientAddress,
+        uint256 _tokenId,
+        string calldata _tokenURI
+    ) external returns (uint256 tokenId);
+
+    function reMintPRUF_IDToken(address _recipientAddress, uint256 _tokenId)
+        external
+        returns (uint256 tokenId);
+
+    function tokenExists(uint256 tokenId)
+        external
+        returns (uint8 uint8_Bool_type_0_170);
+
+    function name() external view returns (string memory tokenName);
+
+    function symbol() external view returns (string memory tokenSymbol);
+
+    function setURI(uint256 tokenId, string memory _tokenURI) external;
+
+    function balanceOf(address owner) external view returns (uint256 balance);
+}
+
 interface STOR_Interface {
     function newRecord(
         bytes32 _idxHash,
