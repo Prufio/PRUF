@@ -1,14 +1,10 @@
-//
-    //
-    // DECLARATIONS
-    //
-    //
     const PRUF_STOR = artifacts.require('STOR');
     const PRUF_APP = artifacts.require('APP');
     const PRUF_NP = artifacts.require('NP');
     const PRUF_AC_MGR = artifacts.require('AC_MGR');
     const PRUF_AC_TKN = artifacts.require('AC_TKN');
     const PRUF_A_TKN = artifacts.require('A_TKN');
+    const PRUF_ID_TKN = artifacts.require('ID_TKN');
     const PRUF_ECR_MGR = artifacts.require('ECR_MGR');
     const PRUF_ECR = artifacts.require('ECR');
     const PRUF_ECR2 = artifacts.require('ECR2');
@@ -26,6 +22,7 @@
     let AC_MGR;
     let AC_TKN;
     let A_TKN;
+    let ID_TKN;
     let ECR_MGR;
     let ECR;
     let ECR2;
@@ -84,12 +81,6 @@
     let nakedAuthCode3;
     let nakedAuthCode7;
     
-        //
-        //
-        // END DECLARATIONS
-        //
-        //
-    
     contract('A_TKN', accounts => {
             
         console.log('//**************************BEGIN BOOTSTRAP**************************//')
@@ -105,11 +96,6 @@
         const account9 = accounts[8];
         const account10 = accounts[9];
 
-    //
-    //
-    //ENVIRONMENT SETUP
-    //
-    //
 
     it('Should deploy Storage', async () => {
         const PRUF_STOR_TEST = await PRUF_STOR.deployed({ from: account1 });
@@ -220,6 +206,14 @@
         console.log(PRUF_HELPER_TEST.address);
         assert(PRUF_HELPER_TEST.address !== '')
         Helper = PRUF_HELPER_TEST;
+    })
+
+
+    it('Should deploy PRUF_ID_TKN', async () => {
+        const PRUF_ID_TKN_TEST = await PRUF_ID_TKN.deployed({ from: account1 });
+        console.log(PRUF_ID_TKN_TEST.address);
+        assert(PRUF_ID_TKN_TEST.address !== '')
+        ID_TKN = PRUF_ID_TKN_TEST;
     })
 
 
@@ -522,6 +516,11 @@
                 console.log("Adding A_TKN to storage for use in AC 0")
                 return STOR.OO_addContract("A_TKN", A_TKN.address, '0', '1', { from: account1 })
             })
+
+            .then(() => {
+                console.log("Adding ID_TKN to storage for use in AC 0")
+                return STOR.OO_addContract("ID_TKN", ID_TKN.address, '0', '1', { from: account1 })
+            })
             
             .then(() => {
                 console.log("Adding ECR_MGR to storage for use in AC 0")
@@ -771,10 +770,6 @@
         .then(() => {
                 return STOR.enableContractForAC('APP', '11', '1', { from: account1 })
             })
-
-            // .then(() => {
-            //     return STOR.enableContractForAC('APP', '1', '1', { from: account1 })
-            // })
     })
 
 
@@ -794,10 +789,6 @@
             .then(() => {
                 return STOR.enableContractForAC('APP_NC', '16', '2', { from: account10 })
             })
-            
-            // .then(() => {
-            //     return STOR.enableContractForAC('APP_NC', '2', '2', { from: account1 })
-            // })
     })
 
 
@@ -809,10 +800,6 @@
             .then(() => {
                 return STOR.enableContractForAC('NP', '11', '1', { from: account1 })
             })
-            
-            // .then(() => {
-            //     return STOR.enableContractForAC('NP', '1', '1', { from: account1 })
-            // })
     })
 
 
@@ -824,10 +811,6 @@
             .then(() => {
                 return STOR.enableContractForAC('MAL_APP', '11', '1', { from: account1 })
             })
-            
-            // .then(() => {
-            //     return STOR.enableContractForAC('NP', '1', '1', { from: account1 })
-            // })
     })
 
 
@@ -847,10 +830,6 @@
             .then(() => {
                 return STOR.enableContractForAC('NP_NC', '16', '2', { from: account10 })
             })
-
-            // .then(() => {
-            //     return STOR.enableContractForAC('NP_NC', '2', '0', { from: account1 })
-            // })
     })
 
 
@@ -862,10 +841,6 @@
             .then(() => {
                 return STOR.enableContractForAC('ECR', '11', '3', { from: account1 })
             })
-            
-            // .then(() => {
-            //     return STOR.enableContractForAC('ECR', '1', '3', { from: account1 })
-            // })
     })
 
 
@@ -877,7 +852,6 @@
             .then(() => {
                 return STOR.enableContractForAC('ECR2', '11', '3', { from: account1 })
             })
-            
     })
 
 
@@ -897,11 +871,8 @@
             .then(() => {
                 return STOR.enableContractForAC('ECR_NC', '16', '3', { from: account10 })
             })
-            
-            // .then(() => {
-            //     return STOR.enableContractForAC('ECR_NC', '2', '3', { from: account1 })
-            // })
     })
+
 
     it('Should authorize ECR_MGR in all relevant asset classes', async () => {
         
@@ -927,14 +898,6 @@
             .then(() => {
                 return STOR.enableContractForAC('ECR_MGR', '16', '3', { from: account10 })
             })
-            
-            // .then(() => {
-            //     return STOR.enableContractForAC('ECR_MGR', '1', '3', { from: account1 })
-            // })
-            
-            // .then(() => {
-            //     return STOR.enableContractForAC('ECR_MGR', '2', '3', { from: account1 })
-            // })
     })
 
 
@@ -1059,14 +1022,6 @@
             .then(() => {
                 return STOR.enableContractForAC('AC_MGR', '14', '2', { from: account1 })
             })
-            
-            // .then(() => {
-            //     return STOR.enableContractForAC('AC_MGR', '1', '0', { from: account1 })
-            // })
-            
-            // .then(() => {
-            //     return STOR.enableContractForAC('AC_MGR', '2', '0', { from: account1 })
-            // })
     })
 
 
@@ -1094,14 +1049,6 @@
             .then(() => {
                 return STOR.enableContractForAC('RCLR', '16', '3', { from: account10 })
             })
-            
-            // .then(() => {
-            //     return STOR.enableContractForAC('RCLR', '1', '0', { from: account1 })
-            // })
-            
-            // .then(() => {
-            //     return STOR.enableContractForAC('RCLR', '2', '0', { from: account1 })
-            // })
     })
 
 
@@ -1286,10 +1233,19 @@
     })
 
 
-    it('Should mint asset1 to account4', async () => {
+    it('Should mint ID_TKN(1) to account4', async () => {
 
         console.log("//**************************************BEGIN A_TKN TEST**********************************************/")
         console.log("//**************************************BEGIN A_TKN TEST SETUP**********************************************/")
+        return ID_TKN.mintPRUF_IDToken(
+        account4, 
+        '1',
+        {from: account1}
+        )
+    })
+
+
+    it('Should mint asset1 to account4', async () => {
         return APP_NC.$newRecord(
         asset1, 
         rgt1,
@@ -1298,6 +1254,7 @@
         {from: account4, value: 20000000000000000}
         )
     })
+
 
     it('Should mint asset2 to account4', async () => {
         return APP_NC.$newRecord(
@@ -1308,15 +1265,6 @@
         {from: account4, value: 20000000000000000}
         )
     })
-
-    // it("Should Mint cust AC15 token to account2", async () => {
-        
-    //     return AC_TKN.safeTransferFrom(
-    //     account1, 
-    //     account10, 
-    //     '15',
-    //     { from: account1 })
-    // })
 
 
     it('Should mint nakedAsset3', async () => {
@@ -1544,55 +1492,6 @@
         {from: account4}
         )
     })
-
-    // //15
-    // it('Should fail because you cannot discard a nonexistant token', async () => {
-
-    //     console.log("//**************************************END safeTransferFrom FAIL BATCH**********************************************/")
-    //     console.log("//**************************************BEGIN discard FAIL BATCH**********************************************/")
-    //     return A_TKN.discard(
-    //     asset6,
-    //     {from: account4}
-    //     )
-    // })
-
-    // //15
-    // it('Should fail because asset isnt in a discardable status', async () => {
-    //     return A_TKN.discard(
-    //     asset1, 
-    //     {from: account4}
-    //     )
-    // })
-
-
-    // it('Should put asset1 into status59', async () => {
-    //     return NP_NC._modStatus(
-    //     asset1,
-    //     '59',
-    //     {from: account4}
-    //     )
-    // })
-
-    // //16
-    // it('Should fail because caller != approved || owner', async () => {
-    //     return A_TKN.discard(
-    //     asset1, 
-    //     {from: account5}
-    //     )
-    // })
-
-    // CANNOT EXECUTE, IMPOSSIBLE...
-    // //14
-    // it('Should fail because you cannot remint a nonexistant token', async () => {
-
-    //     console.log("//**************************************END discard FAIL BATCH**********************************************/")
-    //     console.log("//**************************************BEGIN reMintAssetToken FAIL BATCH**********************************************/")
-    //     return APP_NC.$reMintToken(
-    //     asset6,
-
-    //     {from: account4}
-    //     )
-    // })
 
 
     it('Should write record in AC 10 @ IDX&RGT(1)', async () => {
