@@ -158,6 +158,7 @@ pragma solidity ^0.6.7;
  * 1   --Authorized Contract for CUSTODIAL assets (contract will create assets with custodial assetStatus 0)
  * 2   --Authorized Contract for NON_CUSTODIAL assets (contract will create assets with custodial assetStatus 51)
  * 3   --Escrow contracts, Recycler (contracts authorized for ECR-MGR management)
+ * 10  --Pruf contracts with no specific permissions, but still trusted
 *-----------------------------------------------------------------
 
 *-----------------------------------------------------------------

@@ -189,7 +189,7 @@ contract STOR is Ownable, ReentrancyGuard, Pausable {
         uint8 _contractAuthLevel
     ) external onlyOwner {
         require(_assetClass == 0, "S:AC: AC not 0");
-        require(_contractAuthLevel <= 4, "S:AC: Invalid auth lv");
+        //require(_contractAuthLevel <= 10, "S:AC: Invalid auth lv");  //DS:TEST - removed require
         //^^^^^^^checks^^^^^^^^^
 
         contractInfo[_name][_assetClass] = _contractAuthLevel; //does not pose an partial record overwrite risk
