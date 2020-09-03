@@ -117,7 +117,7 @@ contract ID_TKN is Ownable, ERC721 {
     ) public override {
         require(
             _isApprovedOrOwner(_msgSender(), tokenId),
-            "AT:TF:transfer caller is not owner nor approved"
+            "PIDT:TF:transfer caller is not owner nor approved"
         );
         require(
             to == from,
@@ -166,7 +166,7 @@ contract ID_TKN is Ownable, ERC721 {
     ) public virtual override {
         require(
             _isApprovedOrOwner(_msgSender(), tokenId),
-            "AT:STF: transfer caller is not owner nor approved"
+            "PIDT:STF: transfer caller is not owner nor approved"
         );
         require(
             to == from,
