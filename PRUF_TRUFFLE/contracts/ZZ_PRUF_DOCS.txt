@@ -138,7 +138,7 @@ pragma solidity ^0.6.7;
  * Contract Resolution Names -
  *  A_TKN - 1
  *  AC_TKN - 1
- *  ID_TKN - 1
+ *  ID_TKN - 10
  *
  *  APP - 1
  *  NP - 1
