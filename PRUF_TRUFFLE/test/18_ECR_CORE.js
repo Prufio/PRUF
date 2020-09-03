@@ -95,6 +95,7 @@
         const account8 = accounts[7];
         const account9 = accounts[8];
         const account10 = accounts[9];
+        
 
     it('Should deploy Storage', async () => {
         const PRUF_STOR_TEST = await PRUF_STOR.deployed({ from: account1 });
