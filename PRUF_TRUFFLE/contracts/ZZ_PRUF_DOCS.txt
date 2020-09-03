@@ -136,18 +136,22 @@ pragma solidity ^0.6.7;
 
 *-----------------------------------------------------------------
  * Contract Resolution Names -
- *  A_TKN
- *  AC_TKN
- *  ID_TKN
- *  APP
- *  NP
- *  ECR
- *  AC_MGR
- *  APP_NC
- *  NP_NC
- *  ECR_NC
- *  ECR_MGR
- *  RCLR
+ *  A_TKN - 1
+ *  AC_TKN - 1
+ *  ID_TKN - 1
+ *
+ *  APP - 1
+ *  NP - 1
+ *  APP_NC - 2
+ *  NP_NC - 2
+ *
+ *  ECR - 3
+ *  ECR_NC - 3
+ *  RCLR - 3
+ *
+ *  ECR_MGR - 1
+ *  AC_MGR - 1
+ *  VFY - 1 ????
  *
 *-----------------------------------------------------------------
 
