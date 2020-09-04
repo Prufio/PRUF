@@ -1293,7 +1293,7 @@
     })
 
     //1
-    it('Should fail becasue caller is not A_TKN contract)', async () => {
+    it('Should fail becasue caller is not A_TKN contract', async () => {
 
         console.log("//**************************************END RCLR SETUP**********************************************/")
         console.log("//**************************************BEGIN RCLR FAIL BATCH (4)**********************************************/")
@@ -1305,7 +1305,7 @@
     })
 
     //2
-    it('Should fail because status must be 59)', async () => { 
+    it('Should fail because status must be 59', async () => { 
         return A_TKN.discard(
             asset2,
             { from: account4}
@@ -1313,7 +1313,7 @@
     })
 
     //3
-    it('Should fail because newRGT = 0)', async () => {
+    it('Should fail because newRGT = 0', async () => {
 
         console.log("//**************************************END discard FAIL BATCH**********************************************/")
         console.log("//**************************************BEGIN $recycle FAIL BATCH**********************************************/")
@@ -1326,7 +1326,7 @@
     })
 
 
-    it('Should recycle asset2)', async () => {
+    it('Should recycle asset2', async () => {
         return RCLR.$recycle(
             asset2,
             rgt2, 

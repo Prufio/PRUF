@@ -1374,7 +1374,7 @@
     it('Should fail becasue custodial contract does not hold token', async () => {
 
         console.log("//**************************************END ECR SETUP**********************************************/")
-        console.log("//**************************************BEGIN ECR FAIL BATCH**********************************************/")
+        console.log("//**************************************BEGIN ECR FAIL BATCH (10)**********************************************/")
         console.log("//**************************************BEGIN setEscrow FAIL BATCH**********************************************/")
         return ECR.setEscrow(
             asset6,
@@ -1405,7 +1405,7 @@
     })
 
     //2
-    it('Should fail because ECR is not an authorized escrow contract', async () => {
+    it('Should fail because ECR is not an authorized contract', async () => {
         return ECR.setEscrow(
         asset1, 
         account2Hash,
@@ -1500,7 +1500,7 @@
     })
 
     //7
-    it('Should fail because ECR is not an authorized escrow contract', async () => {
+    it('Should fail because ECR is not an authorized contract', async () => {
         return ECR.endEscrow(
         asset1, 
         {from: account2}
@@ -1535,11 +1535,40 @@
         )
     })
 
+
+    it('Should put asset1 into escrow', async () => {
+        return ECR.setEscrow(
+        asset1, 
+        account2Hash,
+        '180',
+        '6',
+        {from: account2}
+        )
+    })
+
     //8
     it('Should fail because user not authorized for AC', async () => {
         return ECR.endEscrow(
         asset1, 
-        {from: account4}
+        {from: account5}
+        )
+    })
+
+
+    it('Should take asset1 out of escrow', async () => {
+        return ECR.endEscrow(
+        asset1,
+        {from: account2}
+        )
+    })
+
+
+    it('Should set asset1 into status 1', async () => {
+        return NP._modStatus(
+        asset1, 
+        rgt1,
+        '1',
+        {from: account2}
         )
     })
 

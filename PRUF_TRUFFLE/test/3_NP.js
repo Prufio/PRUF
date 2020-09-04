@@ -1609,12 +1609,32 @@
         )
     })
 
+
+    it('Should set asset1 to newAssetStatus(51)', async () => {
+        return NP._modStatus(
+        asset1,
+        rgt1,
+        '51',
+        {from: account2}
+        )
+    })
+
     //24
-    it('Should Fail because account4 != auth for AC10 assets', async () => {
+    it('Should Fail because account5 != auth for AC10 assets', async () => {
         return NP.exportAsset(
         asset1,
         account4,
-        {from: account4}
+        {from: account5}
+        )
+    })
+
+
+    it('Should set asset1 to newAssetStatus(1)', async () => {
+        return NP._modStatus(
+        asset1,
+        rgt1,
+        '1',
+        {from: account2}
         )
     })
 

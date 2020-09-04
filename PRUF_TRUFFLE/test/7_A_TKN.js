@@ -1288,7 +1288,7 @@
     it('Should fail because caller is not owner', async () => {
 
         console.log("//**************************************END A_TKN TEST SETUP**********************************************/")
-        console.log("//**************************************BEGIN A_TKN FAIL BATCH (15)**********************************************/")
+        console.log("//**************************************BEGIN A_TKN FAIL BATCH (14)**********************************************/")
         console.log("//**************************************BEGIN OO_setStorageContract FAIL BATCH**********************************************/")
         return A_TKN.OO_setStorageContract(
         STOR.address,
@@ -1386,16 +1386,6 @@
         )
     })
 
-    //10
-    it('Should fail because asset in exported status', async () => {
-        return A_TKN.transferFrom(
-        account4,
-        account5,
-        asset2,
-        {from: account4}
-        )
-    })
-
 
     it('Should import asset2', async () => {
         return APP_NC.$importAsset(
@@ -1405,7 +1395,7 @@
         )
     })
 
-    //11
+    //10
     it('Should fail because asset not in transferable status', async () => {
         return A_TKN.transferFrom(
         account4,
@@ -1415,7 +1405,7 @@
         )
     })
 
-    //12
+    //11
     it('Should fail because caller not owner or approved', async () => {
 
         console.log("//**************************************END transferFrom FAIL BATCH**********************************************/")
@@ -1445,7 +1435,7 @@
         )
     })
 
-    //13
+    //12
     it('Should fail because asset2 is in status 70, and not being sent to an authorized addr(contract)', async () => {
         return A_TKN.safeTransferFrom(
         account4,
@@ -1464,7 +1454,7 @@
         )
     })
 
-    //14
+    //13
     it('Should fail because asset2 is not in a transferable status', async () => {
         return A_TKN.safeTransferFrom(
         account4,
@@ -1483,7 +1473,7 @@
         )
     })
 
-    //15
+    //14
     it('Should fail because you cannot transfer to 0 addr', async () => {
         return A_TKN.safeTransferFrom(
         account4,

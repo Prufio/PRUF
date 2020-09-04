@@ -102,7 +102,7 @@ contract ECR is ECR_CORE {
         );
         require(
             (userType < 5) ||
-                ((userType > 4) && (userType < 10) && (_escrowStatus > 49)),
+                ((userType > 4) && (userType < 10) && (_escrowStatus > 49)),  //CTS: EXAMINE, weirdly worded.. 
             "E:SE: Non supervisored agents must set escrow status within scope."
         );
         require((_escrowStatus != 60), "E:SE: Cannot set to recycled status.");
