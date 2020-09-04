@@ -132,6 +132,16 @@ pragma solidity ^0.6.7;
 *-----------------------------------------------------------------
 
 *-----------------------------------------------------------------
+        Cost indexes
+        1 newRecordCost // Cost to create a new record
+        2 transferAssetCost // Cost to transfer a record from known rights holder to a new one
+        3 createNoteCost // Cost to add a static note to an asset
+        4 reMintRecordCost // Extra
+        5 changeStatusCost // Extra
+        6 forceModifyCost // Cost to brute-force a record transfer
+*-----------------------------------------------------------------
+
+*-----------------------------------------------------------------
  * Contract Resolution Names -
  *  A_TKN - 1
  *  AC_TKN - 1
