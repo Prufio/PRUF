@@ -18,10 +18,10 @@ __/\\\\\\\\\\\\\ _____/\\\\\\\\\ _______/\\../\\ ___/\\\\\\\\\\\\\\\
 // SPDX-License-Identifier: UNLICENSED
 pragma solidity ^0.6.7;
 
-import "./_ERC721/ERC721.sol";
-import "./_ERC721/Ownable.sol";
+import "./Imports/token/ERC721/ERC721.sol";
+import "./Imports/access/Ownable.sol";
 import "./PRUF_INTERFACES.sol";
-import "./Imports/ReentrancyGuard.sol";
+import "./Imports/utils/ReentrancyGuard.sol";
 
 contract A_TKN is Ownable, ReentrancyGuard, ERC721 {
     struct Record {

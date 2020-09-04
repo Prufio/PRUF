@@ -22,10 +22,10 @@ __/\\\\\\\\\\\\\ _____/\\\\\\\\\ _______/\\../\\ ___/\\\\\\\\\\\\\\\
 pragma solidity ^0.6.7;
 
 import "./PRUF_INTERFACES.sol";
-import "./Imports/Ownable.sol";
-import "./Imports/Pausable.sol";
-import "./Imports/ReentrancyGuard.sol";
-import "./_ERC721/IERC721Receiver.sol";
+import "./Imports/access/Ownable.sol";
+import "./Imports/utils/Pausable.sol";
+import "./Imports/utils/ReentrancyGuard.sol";
+import "./Imports/token/ERC721/IERC721Receiver.sol";
 
 contract BASIC is ReentrancyGuard, Ownable, IERC721Receiver, Pausable {
     struct Record {

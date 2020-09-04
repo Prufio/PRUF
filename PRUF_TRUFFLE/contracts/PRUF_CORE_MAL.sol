@@ -19,8 +19,8 @@ __/\\\\\\\\\\\\\ _____/\\\\\\\\\ _______/\\../\\ ___/\\\\\\\\\\\\\\\
 pragma solidity ^0.6.7;
 
 import "./PRUF_INTERFACES.sol";
-import "./Imports/PullPayment.sol";
-import "./Imports/ReentrancyGuard.sol";
+import "./Imports/payment/PullPayment.sol";
+import "./Imports/utils/ReentrancyGuard.sol";
 import "./PRUF_BASIC.sol";
 
 contract CORE_MAL is PullPayment, BASIC {
