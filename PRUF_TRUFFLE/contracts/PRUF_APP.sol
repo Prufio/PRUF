@@ -59,7 +59,8 @@ contract APP is CORE {
         } else {
             createRecord(_idxHash, _rgtHash, _assetClass, _countDownStart);
         }
-        deductNewRecordCosts(_assetClass);
+        deductServiceCosts(_assetClass, 1);
+
         //^^^^^^^interactions^^^^^^^^^
     }
 
@@ -100,7 +101,8 @@ contract APP is CORE {
 
         STOR.changeAC(_idxHash, _newAssetClass);
         writeRecord(_idxHash, rec);
-        deductNewRecordCosts(_newAssetClass);
+        deductServiceCosts(_newAssetClass, 1);
+
 
         return rec.assetStatus;
         //^^^^^^^interactions^^^^^^^^^
@@ -141,7 +143,7 @@ contract APP is CORE {
 
         writeRecord(_idxHash, rec);
 
-        deductForceModifyCosts(rec.assetClass);
+        deductServiceCosts(rec.assetClass, 6);
 
         return 170;
         //^^^^^^^interactions^^^^^^^^^
@@ -193,7 +195,7 @@ contract APP is CORE {
 
         writeRecord(_idxHash, rec);
 
-        deductTransferAssetCosts(rec.assetClass);
+        deductServiceCosts(rec.assetClass, 2);
 
         return (170);
         //^^^^^^^interactions^^^^^^^^^
@@ -234,7 +236,7 @@ contract APP is CORE {
 
         writeRecordIpfs2(_idxHash, rec);
 
-        deductCreateNoteCosts(rec.assetClass);
+        deductServiceCosts(rec.assetClass, 3);
 
         return rec.Ipfs2;
         //^^^^^^^interactions^^^^^^^^^

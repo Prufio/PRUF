@@ -46,6 +46,7 @@ contract BASIC is ReentrancyGuard, Ownable, IERC721Receiver, Pausable {
         string name; // NameHash for assetClass
         uint32 assetClassRoot; // asset type root (bycyles - USA Bicycles)
         uint8 custodyType; // custodial or noncustodial
+        uint32 discount;
         uint32 extendedData; // Future Use
     }
 
@@ -258,6 +259,7 @@ contract BASIC is ReentrancyGuard, Ownable, IERC721Receiver, Pausable {
         (
             AC_info.assetClassRoot,
             AC_info.custodyType,
+            AC_info.discount,
             AC_info.extendedData
         ) = AC_MGR.getAC_data(_assetClass);
         return AC_info;

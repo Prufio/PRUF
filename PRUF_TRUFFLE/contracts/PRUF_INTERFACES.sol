@@ -195,7 +195,14 @@ interface AC_MGR_Interface {
         returns (
             uint32 assetClassRoot,
             uint8 custodyType,
+            uint32 discount,
             uint32 extendedData
+        );
+
+    function getAC_discount(uint32 _assetClass)
+        external
+        returns (
+            uint32
         );
 
     function isSameRootAC(uint32 _assetClass1, uint32 _assetClass2)
@@ -215,83 +222,22 @@ interface AC_MGR_Interface {
         external
         returns (uint8 contractTypeInAssetClass);
 
-    function retrieveCosts(uint32 _assetClass)
+    function retrieveCosts(uint32 _assetClass, uint16 _service)
         external
         returns (
-            uint256 newRecordCost,
-            uint256 transferAssetCost,
-            uint256 createNoteCost,
-            uint256 reMintRecordCost,
-            uint256 changeStatusCost,
-            uint256 forceModifyCost,
+            uint256 serviceCost,
             address paymentAddress
         );
 
-    function retrieveBaseCosts()
+    function getServiceCosts(uint32 _assetClass, uint16 _service)
         external
         returns (
-            uint256 newRecordCost,
-            uint256 transferAssetCost,
-            uint256 createNoteCost,
-            uint256 reMintRecordCost,
-            uint256 changeStatusCost,
-            uint256 forceModifyCost,
-            address paymentAddress
+            address,
+            uint256,
+            address,
+            uint256
         );
 
-    function getNewRecordCosts(uint32 _assetClass)
-        external
-        returns (
-            address rootPaymentAddress,
-            uint256 rootFunctionCost,
-            address paymentAddress,
-            uint256 functionCost
-        );
-
-    function getTransferAssetCosts(uint32 _assetClass)
-        external
-        returns (
-            address rootPaymentAddress,
-            uint256 rootFunctionCost,
-            address paymentAddress,
-            uint256 functionCost
-        );
-
-    function getCreateNoteCosts(uint32 _assetClass)
-        external
-        returns (
-            address rootPaymentAddress,
-            uint256 rootFunctionCost,
-            address paymentAddress,
-            uint256 functionCost
-        );
-
-    function getReMintRecordCosts(uint32 _assetClass)
-        external
-        returns (
-            address rootPaymentAddress,
-            uint256 rootFunctionCost,
-            address paymentAddress,
-            uint256 functionCost
-        );
-
-    function getChangeStatusCosts(uint32 _assetClass)
-        external
-        returns (
-            address rootPaymentAddress,
-            uint256 rootFunctionCost,
-            address paymentAddress,
-            uint256 functionCost
-        );
-
-    function getForceModifyCosts(uint32 _assetClass)
-        external
-        returns (
-            address rootPaymentAddress,
-            uint256 rootFunctionCost,
-            address paymentAddress,
-            uint256 functionCost
-        );
 }
 
 

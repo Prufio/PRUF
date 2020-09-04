@@ -54,7 +54,8 @@ contract APP_NC is CORE {
 
         createRecord(_idxHash, _rgtHash, _assetClass, _countDownStart);
 
-        deductNewRecordCosts(_assetClass);
+        deductServiceCosts(_assetClass, 1);
+
         //^^^^^^^interactions^^^^^^^^^
     }
 
@@ -80,7 +81,8 @@ contract APP_NC is CORE {
 
         STOR.changeAC(_idxHash, _newAssetClass);
         writeRecord(_idxHash, rec);
-        deductNewRecordCosts(_newAssetClass);
+        deductServiceCosts(_newAssetClass, 1);
+
         //^^^^^^^interactions / effects^^^^^^^^^^^^
     }
 
@@ -129,7 +131,7 @@ contract APP_NC is CORE {
         );
         //^^^^^^^checks^^^^^^^^^
 
-        deductNewRecordCosts(rec.assetClass);
+        deductServiceCosts(rec.assetClass, 1);
 
         tokenId = A_TKN.reMintAssetToken(msg.sender, tokenId);
 
@@ -160,7 +162,7 @@ contract APP_NC is CORE {
 
         writeRecordIpfs2(_idxHash, rec);
 
-        deductCreateNoteCosts(rec.assetClass);
+        deductServiceCosts(rec.assetClass, 3);
 
         return rec.Ipfs2;
         //^^^^^^^interactions^^^^^^^^^

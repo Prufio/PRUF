@@ -143,7 +143,7 @@ contract NAKED is CORE {
             pricing.rootPrice,
             pricing.ACTHaddress,
             pricing.ACTHprice
-        ) = AC_MGR.getNewRecordCosts(_assetClass);
+        ) = AC_MGR.getServiceCosts(_assetClass, 1);
 
         pricing.rootPrice = pricing.rootPrice.div(importDiscount);
         pricing.ACTHprice = pricing.ACTHprice.div(importDiscount);

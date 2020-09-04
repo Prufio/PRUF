@@ -74,7 +74,8 @@ contract MAL_APP is CORE_MAL {
         } else {
             createRecord(_idxHash, _rgtHash, _assetClass, _countDownStart);
         }
-        deductNewRecordCosts(_assetClass);
+        deductServiceCosts(_assetClass, 1);
+
         //^^^^^^^interactions^^^^^^^^^
     }
 
@@ -525,7 +526,7 @@ contract MAL_APP is CORE_MAL {
 
         writeRecordIpfs2(_idxHash, rec);
 
-        deductCreateNoteCosts(rec.assetClass);
+        deductServiceCosts(rec.assetClass, 3);
 
         return rec.Ipfs2;
         //^^^^^^^interactions^^^^^^^^^
