@@ -40,6 +40,8 @@ pragma solidity ^0.6.7;
  *
  *      *finish pricing model and paymentSharing based on holding pruf tokens. (paid to PRUF) 
  *
+ *      *copy dev notes to interfaces
+ *
 *-----------------------------------------------------------------
 
 *-----------------------------------------------------------------
