@@ -173,6 +173,27 @@ contract AC_MGR is CORE {
     }
 
     /*
+     * @dev Increases priceShare in an assetClass //DS:TEST the fuck out of this
+     * 
+     */
+    function increasePriceShare(uint32 _assetClass, uint256 _increaseAmount)
+        external
+    {
+        require( //require caller is PRUF_TKN
+            (msg.sender == PRUF_TKN_Address),
+            "ACM:IPS: Caller is not PRUF_TKN contract"
+        );
+        uint256 discount = AC_data[_assetClass].discount;
+        //^^^^^^^checks^^^^^^^^^
+
+        discount = discount.add(_increaseAmount);
+        if (discount > 9000) discount = 9000;
+
+        AC_data[_assetClass].discount = uint32(discount); //type conversion safe because discount always <= 10000
+        //^^^^^^^effects^^^^^^^^^
+    }
+
+    /*
      * @dev Set function costs and payment address per asset class, in Wei
      */
     function ACTH_setCosts(

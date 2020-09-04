@@ -202,8 +202,11 @@ interface AC_MGR_Interface {
     function getAC_discount(uint32 _assetClass)
         external
         returns (
-            uint32
+            uint256
         );
+    
+    function increasePriceShare(uint32 _assetClass, uint256 _increaseAmount)
+        external;
 
     function isSameRootAC(uint32 _assetClass1, uint32 _assetClass2)
         external

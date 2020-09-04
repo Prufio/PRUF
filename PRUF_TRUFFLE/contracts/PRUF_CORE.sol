@@ -146,14 +146,17 @@ contract CORE is PullPayment, BASIC {
     //--------------------------------------------------------------------------------------Payment internal functions
 
     /*
-     * @dev Send payment to appropriate pullPayment adresses for payable function
+     * @dev Send payment to appropriate pullPayment adresses for payable function  //DS:TEST the fuck out of this
      */
-    function deductServiceCosts(uint32 _assetClass, uint16 _service) internal whenNotPaused {
+    function deductServiceCosts(uint32 _assetClass, uint16 _service)
+        internal
+        whenNotPaused
+    {
         //^^^^^^^checks^^^^^^^^^
         Invoice memory pricing;
-        uint256 ACTHnet = AC_MGR.getAC_discount(_assetClass);
-        require (
-            (ACTHnet >=10) && (ACTHnet <= 100),
+        uint256 ACTHnetPercent = AC_MGR.getAC_discount(_assetClass).div(uint256(100));
+        require(
+            (ACTHnetPercent >= 10) && (ACTHnetPercent <= 100),
             "PC:DSC:invalid discount value for price calculation"
         );
         (
@@ -164,12 +167,12 @@ contract CORE is PullPayment, BASIC {
         ) = AC_MGR.getServiceCosts(_assetClass, _service);
 
         //^^^^^^^effects^^^^^^^^^
-        
-        uint256 percent = pricing.ACTHprice.div(uint256(100));  //calculate 1% of listed ACTH price
 
-        pricing.ACTHprice = ACTHnet.mul(percent); 
+        uint256 percent = pricing.ACTHprice.div(uint256(100)); //calculate 1% of listed ACTH price
 
-        uint256 prufShare = (uint256(100).sub(ACTHnet));
+        pricing.ACTHprice = ACTHnetPercent.mul(percent);
+
+        uint256 prufShare = (uint256(100).sub(ACTHnetPercent));
         pricing.rootPrice = prufShare.mul(percent);
 
         deductPayment(pricing);
