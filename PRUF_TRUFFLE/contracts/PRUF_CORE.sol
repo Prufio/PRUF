@@ -151,13 +151,27 @@ contract CORE is PullPayment, BASIC {
     function deductServiceCosts(uint32 _assetClass, uint16 _service) internal whenNotPaused {
         //^^^^^^^checks^^^^^^^^^
         Invoice memory pricing;
-        //^^^^^^^effects^^^^^^^^^
+        uint256 ACTHnet = AC_MGR.getAC_discount(_assetClass);
+        require (
+            (ACTHnet >=10) && (ACTHnet <= 100),
+            "PC:DSC:invalid discount value for price calculation"
+        );
         (
             pricing.rootAddress,
             pricing.rootPrice,
             pricing.ACTHaddress,
             pricing.ACTHprice
         ) = AC_MGR.getServiceCosts(_assetClass, _service);
+
+        //^^^^^^^effects^^^^^^^^^
+        
+        uint256 percent = pricing.ACTHprice.div(uint256(100));  //calculate 1% of listed ACTH price
+
+        pricing.ACTHprice = ACTHnet.mul(percent); 
+
+        uint256 prufShare = (uint256(100).sub(ACTHnet));
+        pricing.rootPrice = prufShare.mul(percent);
+
         deductPayment(pricing);
         //^^^^^^^interactions^^^^^^^^^
     }
