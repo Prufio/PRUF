@@ -18,7 +18,7 @@ __/\\\\\\\\\\\\\ _____/\\\\\\\\\ _______/\\../\\ ___/\\\\\\\\\\\\\\\
 // SPDX-License-Identifier: UNLICENSED
 pragma solidity ^0.6.7;
 
-import "./Imports/Ownable.sol";
+import "./Imports/access/Ownable.sol";
 
 interface erc721_tokenInterface {
     function ownerOf(uint256) external view returns (address);

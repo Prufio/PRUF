@@ -34,10 +34,10 @@ __/\\\\\\\\\\\\\ _____/\\\\\\\\\ _______/\\../\\ ___/\\\\\\\\\\\\\\\
 pragma solidity ^0.6.7;
 
 import "./PRUF_INTERFACES.sol";
-import "./Imports/Ownable.sol";
-import "./Imports/Pausable.sol";
-import "./Imports/SafeMath.sol";
-import "./Imports/ReentrancyGuard.sol";
+import "./Imports/access/Ownable.sol";
+import "./Imports/utils/Pausable.sol";
+import "./Imports/math/Safemath.sol";
+import "./Imports/utils/ReentrancyGuard.sol";
 
 contract STOR is Ownable, ReentrancyGuard, Pausable {
     struct Record {
