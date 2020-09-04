@@ -64,12 +64,11 @@ contract AC_MGR is CORE {
      * ----------------INSECURE -- keccak256 of address must be generated clientside in release.
      */
     function OO_addUser(
-        // DS:TEST (removed requires)
         address _authAddr,
         uint8 _userType,
         uint32 _assetClass
     ) external whenNotPaused isACtokenHolderOfClass(_assetClass) {
-        require( //AC 0 is reserved for the # of AC's that the adressHash is registered in                                // DS:TEST NEW
+        require( //AC 0 is reserved for the # of AC's that the adressHash is registered in   CTS:EXAMINE Redundant?? Checks with mod??(throws in ERC721, nonexistant token) 
             AC_data[_assetClass].assetClassRoot != 0,
             "ACM:AU specified asset class not populated"
         );
@@ -94,7 +93,7 @@ contract AC_MGR is CORE {
 
     /*
      * @dev Mints asset class token and creates an assetClass. Mints to @address
-     * Requires that:                                                       DS:TEST
+     * Requires that:
      *  name is unuiqe
      *  AC is not provisioned with a root (proxy for not yet registered)
      *  that ACtoken does not exist
@@ -115,11 +114,11 @@ contract AC_MGR is CORE {
             "ACM:CAC:Root asset class does not exist"
         );
 
-        require(AC_number[_name] == 0, "ACM:CAC:AC name already in use"); //NEW    DS:TEST
+        require(AC_number[_name] == 0, "ACM:CAC:AC name already in use");
         require(
             (AC_data[_assetClass].assetClassRoot == 0),
             "ACM:CAC:AC already in use"
-        ); //NEW    DS:TEST
+        );
         //^^^^^^^checks^^^^^^^^^
 
         AC_number[_name] = _assetClass;
@@ -137,7 +136,7 @@ contract AC_MGR is CORE {
     }
 
     /*
-     * @dev Modifies an assetClass //NEW    DS:TEST !!FUNC!!
+     * @dev Modifies an assetClass
      * Sets a new AC name. Asset Classes cannot be moved to a new root or custody type.
      * Requires that:
      *  caller holds ACtoken
@@ -147,7 +146,7 @@ contract AC_MGR is CORE {
         external
         isACtokenHolderOfClass(_assetClass)
     {
-        require( //NEW    DS:TEST should pass if name is same as old name or name is unassigned. Should fail if name is assigned to other AC
+        require( //should pass if name is same as old name or name is unassigned. Should fail if name is assigned to other AC
             (AC_number[_name] == 0) || //name is unassigned
                 (keccak256(abi.encodePacked(_name)) == //name is same as old name
                     (keccak256(abi.encodePacked(AC_data[_assetClass].name)))),

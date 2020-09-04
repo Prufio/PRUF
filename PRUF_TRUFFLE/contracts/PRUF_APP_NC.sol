@@ -47,7 +47,7 @@ contract APP_NC is CORE {
         uint32 _countDownStart
     ) external payable nonReentrant whenNotPaused {
         require(
-            (ID_TKN.balanceOf(msg.sender) == 1), //msg.sender is token holder  //NEW DS:TEST
+            (ID_TKN.balanceOf(msg.sender) == 1), //msg.sender is token holder
             "ANC:MOD-IA: Caller does not hold a valid PRuF_ID token"
         );
         //^^^^^^^Checks^^^^^^^^^

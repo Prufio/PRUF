@@ -1,8 +1,3 @@
-//
-    //
-    // DECLARATIONS
-    //
-    //
     const PRUF_STOR = artifacts.require('STOR');
     const PRUF_APP = artifacts.require('APP');
     const PRUF_NP = artifacts.require('NP');
@@ -85,12 +80,6 @@
     let nakedAuthCode1;
     let nakedAuthCode3;
     let nakedAuthCode7;
-    
-        //
-        //
-        // END DECLARATIONS
-        //
-        //
     
     contract('ID_TKN', accounts => {
             
@@ -535,7 +524,7 @@
 
             .then(() => {
                 console.log("Adding ID_TKN to storage for use in AC 0")
-                return STOR.OO_addContract("ID_TKN", ID_TKN.address, '0', '10', { from: account1 })
+                return STOR.OO_addContract("ID_TKN", ID_TKN.address, '0', '1', { from: account1 })
             })
             
             .then(() => {
@@ -613,11 +602,6 @@
             .then(() => {
                 console.log("Adding in A_TKN")
                 return A_TKN.OO_setStorageContract(STOR.address, { from: account1 })
-            })
-
-            .then(() => {
-                console.log("Adding in ID_TKN")
-                return ID_TKN.OO_setStorageContract(STOR.address, { from: account1 })
             })
             
             .then(() => {
@@ -791,10 +775,6 @@
         .then(() => {
                 return STOR.enableContractForAC('APP', '11', '1', { from: account1 })
             })
-
-            // .then(() => {
-            //     return STOR.enableContractForAC('APP', '1', '1', { from: account1 })
-            // })
     })
 
 
@@ -814,10 +794,6 @@
             .then(() => {
                 return STOR.enableContractForAC('APP_NC', '16', '2', { from: account10 })
             })
-            
-            // .then(() => {
-            //     return STOR.enableContractForAC('APP_NC', '2', '2', { from: account1 })
-            // })
     })
 
 
@@ -829,10 +805,6 @@
             .then(() => {
                 return STOR.enableContractForAC('NP', '11', '1', { from: account1 })
             })
-            
-            // .then(() => {
-            //     return STOR.enableContractForAC('NP', '1', '1', { from: account1 })
-            // })
     })
 
 
@@ -844,10 +816,6 @@
             .then(() => {
                 return STOR.enableContractForAC('MAL_APP', '11', '1', { from: account1 })
             })
-            
-            // .then(() => {
-            //     return STOR.enableContractForAC('NP', '1', '1', { from: account1 })
-            // })
     })
 
 
@@ -867,10 +835,6 @@
             .then(() => {
                 return STOR.enableContractForAC('NP_NC', '16', '2', { from: account10 })
             })
-
-            // .then(() => {
-            //     return STOR.enableContractForAC('NP_NC', '2', '0', { from: account1 })
-            // })
     })
 
 
@@ -882,10 +846,6 @@
             .then(() => {
                 return STOR.enableContractForAC('ECR', '11', '3', { from: account1 })
             })
-            
-            // .then(() => {
-            //     return STOR.enableContractForAC('ECR', '1', '3', { from: account1 })
-            // })
     })
 
 
@@ -897,7 +857,6 @@
             .then(() => {
                 return STOR.enableContractForAC('ECR2', '11', '3', { from: account1 })
             })
-            
     })
 
 
@@ -917,11 +876,8 @@
             .then(() => {
                 return STOR.enableContractForAC('ECR_NC', '16', '3', { from: account10 })
             })
-            
-            // .then(() => {
-            //     return STOR.enableContractForAC('ECR_NC', '2', '3', { from: account1 })
-            // })
     })
+
 
     it('Should authorize ECR_MGR in all relevant asset classes', async () => {
         
@@ -947,14 +903,6 @@
             .then(() => {
                 return STOR.enableContractForAC('ECR_MGR', '16', '3', { from: account10 })
             })
-            
-            // .then(() => {
-            //     return STOR.enableContractForAC('ECR_MGR', '1', '3', { from: account1 })
-            // })
-            
-            // .then(() => {
-            //     return STOR.enableContractForAC('ECR_MGR', '2', '3', { from: account1 })
-            // })
     })
 
 
@@ -1020,7 +968,6 @@
     })
 
 
-
     it('Should authorize NAKED in all relevant asset classes', async () => {
         
         console.log("Authorizing NAKED")
@@ -1080,14 +1027,6 @@
             .then(() => {
                 return STOR.enableContractForAC('AC_MGR', '14', '2', { from: account1 })
             })
-            
-            // .then(() => {
-            //     return STOR.enableContractForAC('AC_MGR', '1', '0', { from: account1 })
-            // })
-            
-            // .then(() => {
-            //     return STOR.enableContractForAC('AC_MGR', '2', '0', { from: account1 })
-            // })
     })
 
 
@@ -1115,14 +1054,6 @@
             .then(() => {
                 return STOR.enableContractForAC('RCLR', '16', '3', { from: account10 })
             })
-            
-            // .then(() => {
-            //     return STOR.enableContractForAC('RCLR', '1', '0', { from: account1 })
-            // })
-            
-            // .then(() => {
-            //     return STOR.enableContractForAC('RCLR', '2', '0', { from: account1 })
-            // })
     })
 
 
@@ -1347,7 +1278,7 @@
 
         console.log("//**************************************END reMintPRUF_IDToken FAIL BATCH**********************************************/")
         console.log("//**************************************BEGIN setURI FAIL BATCH**********************************************/")
-        return ID_TKN.MintPRUF_IDToken(
+        return ID_TKN.mintPRUF_IDToken(
         account2, 
         asset1,
         {from: account1}
@@ -1357,7 +1288,7 @@
 
     //4
     it('Should Fail because caller is not ownerOrApproved', async () => {
-        return ID_TKN.reMintPRUF_IDToken(
+        return ID_TKN.setURI(
         asset1, 
         'Pruf.io',
         {from: account3}
