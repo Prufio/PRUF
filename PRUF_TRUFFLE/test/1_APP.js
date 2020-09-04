@@ -1636,11 +1636,16 @@
             )
         })
 
-        //13
-        it('Should fail because contract does not hold token', async () => {
-            
+
+        it('Should add account2 to AC 10 @userType(11)', async () => {
+
             console.log("//************************************************************END $forceModRecord FAIL BATCH**********************************************************//")
             console.log('//**************************BEGIN $transferAsset FAIL BATCH**************************//')
+            return AC_MGR.OO_addUser(account2, '11', '10', { from: account1 })
+        })
+
+        //13
+        it('Should fail because contract does not hold token', async () => {
             return APP.$transferAsset(
                 asset3,
                 rgt3,
@@ -1655,8 +1660,13 @@
                 asset1,
                 rgt1,
                 rgt2,
-                {from: account4, value: 20000000000000000}
+                {from: account2, value: 20000000000000000}
             )
+        })
+
+
+        it('Should add account2 to AC 10 @userType(1)', async () => {
+            return AC_MGR.OO_addUser(account2, '1', '10', { from: account1 })
         })
 
 
