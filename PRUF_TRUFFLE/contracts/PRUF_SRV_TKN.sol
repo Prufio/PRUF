@@ -153,6 +153,7 @@ contract PRUF_TKN is
      * - the caller must have a balance of at least `amount`.
      */
     function purchaseACtoken(
+        string memory _name,
         uint32 _assetClassRoot,
         uint8 _custodyType //DS:TEST the fuck out of this
     ) public returns (bool) {
@@ -168,16 +169,16 @@ contract PRUF_TKN is
             "PRuf:IS:Only 4294000000 AC tokens allowed"
         );
 
-        _burn(_msgSender(), currentACtokenPrice);
-
         //mint an asset class token to msg.sender, at tokenID ACtokenIndex, with URI = root asset Class #
         AC_MGR.createAssetClass(
             msg.sender,
-            uint256toString(uint256(_assetClassRoot)),
+            _name,
             uint32(ACtokenIndex), //safe because ACtokenIndex <  4294000000 required
             _assetClassRoot,
             _custodyType
         );
+
+        _burn(_msgSender(), currentACtokenPrice);
 
         uint256 newACtokenPrice;
         uint256 numberOfTokensSold = ACtokenIndex.sub(uint256(10000));
