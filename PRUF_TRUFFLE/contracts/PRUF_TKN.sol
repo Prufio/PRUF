@@ -25,7 +25,6 @@ import "./Imports/token/ERC20/ERC20.sol";
 import "./Imports/token/ERC20/ERC20Burnable.sol";
 import "./Imports/token/ERC20/ERC20Pausable.sol";
 import "./Imports/token/ERC20/ERC20Snapshot.sol";
-import "./Imports/utils/Strings.sol";
 
 /**
  * @dev {ERC20} token, including:
