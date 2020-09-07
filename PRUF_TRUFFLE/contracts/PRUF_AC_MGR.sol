@@ -51,7 +51,7 @@ contract AC_MGR is CORE {
      */
     modifier isAdmin() {
         require(
-            (msg.sender == owner()), // || (msg.sender == AC_minterAddress),
+            (msg.sender == owner()) || (msg.sender == PRUF_TKN_Address),
             "ACM:MOD-IA:Calling address does not belong to an Admin"
         );
         _;
