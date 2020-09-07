@@ -41,25 +41,6 @@ contract CORE is PullPayment, BASIC {
         uint256 ACTHprice;
     }
 
-    //--------------------------------------------------------------------------------------Storage Reading internal functions
-
-    // /*
-    //  * @dev retrieves costs from Storage and returns Costs struct (GETTER)
-    //  */
-    // function getCost(uint32 _assetClass, uint16 _service) internal returns (Costs memory) {
-    //     //^^^^^^^checks^^^^^^^^^
-
-    //     Costs memory cost;
-    //     //^^^^^^^effects^^^^^^^^^
-    //     (
-    //         cost.serviceCost,
-    //         cost.paymentAddress
-    //     ) = AC_MGR.retrieveCosts(_assetClass, _service);
-
-    //     return (cost);
-    //     //^^^^^^^interactions^^^^^^^^^
-    // }
-
     //--------------------------------------------------------------------------------------Storage Writing internal functions
 
     /*
@@ -173,7 +154,7 @@ contract CORE is PullPayment, BASIC {
         pricing.ACTHprice = ACTHnetPercent.mul(percent);
 
         uint256 prufShare = (uint256(100).sub(ACTHnetPercent));
-        pricing.rootPrice = prufShare.mul(percent);
+        pricing.rootPrice = pricing.rootPrice.add(prufShare.mul(percent));
 
         deductPayment(pricing);
         //^^^^^^^interactions^^^^^^^^^
