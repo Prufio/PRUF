@@ -1456,7 +1456,7 @@
             })
     })
 
-
+    
     it('Should write asset12 in AC 10', async () => {
 
         console.log("//**************************************BEGIN THE WORKS CUSTODIAL**********************************************/")

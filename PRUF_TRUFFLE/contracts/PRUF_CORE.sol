@@ -136,7 +136,7 @@ contract CORE is PullPayment, BASIC {
         //^^^^^^^checks^^^^^^^^^
         Invoice memory pricing;
         uint256 ACTHnetPercent = AC_MGR.getAC_discount(_assetClass).div(uint256(100));
-        require(
+        require(                     //IMPOSSIBLE TO REACH
             (ACTHnetPercent >= 10) && (ACTHnetPercent <= 100),
             "PC:DSC:invalid discount value for price calculation"
         );
