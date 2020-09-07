@@ -36,15 +36,13 @@ pragma solidity ^0.6.7;
  *
  *      *make "pruf verify" contract, stores ipfs? with list of "held" assets?
  *
- *      *identify funtionality in core contracts that needs to be killable
- *
- *      *finish pricing model and paymentSharing based on holding pruf tokens. (paid to PRUF) 
- *
  *      *copy dev notes to interfaces
  *
  *      *find any recursive calls (especially in bacic, core, ecr_core)
  *
  *      *Look up AC Data in the web interface
+ *
+ *      *Security token
  *
 *-----------------------------------------------------------------
 
