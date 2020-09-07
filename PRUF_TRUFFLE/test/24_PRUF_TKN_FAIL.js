@@ -1406,8 +1406,8 @@ it('Should add users to AC 10-14 in AC_Manager', async () => {
 
 it('Should mint 30000 Pruf Tokens to account1', async () => {
 
-    console.log("//**************************************BEGIN Discount TEST**********************************************/")
-    console.log("//**************************************BEGIN Discount SETUP**********************************************/")
+    console.log("//**************************************BEGIN PRUF_TKN TEST**********************************************/")
+    console.log("//**************************************BEGIN PRUF_TKN SETUP**********************************************/")
     return PRUF_TKN.mint(
     account1,
     '30000',
@@ -1419,8 +1419,8 @@ it('Should mint 30000 Pruf Tokens to account1', async () => {
 //1
 it('Should fail because storageAddr != 0', async () => {
 
-    console.log("//**************************************END Discount SETUP**********************************************/")
-    console.log("//**************************************BEGIN Discount FAIL TEST (12)**********************************************/")
+    console.log("//**************************************END PRUF_TKN SETUP**********************************************/")
+    console.log("//**************************************BEGIN PRUF_TKN FAIL TEST (12)**********************************************/")
     console.log("//**************************************BEGIN AdminSetStorageContract FAIL TEST**********************************************/")
     return PRUF_TKN.AdminSetStorageContract(
     account000,
@@ -1534,7 +1534,8 @@ it('Should fail because caller is not pauser', async () => {
 it('Should fail because caller is not pauser', async () => {
 
     console.log("//**************************************END pause FAIL TEST**********************************************/")
-    console.log("//**************************************BEGIN unpause FAIL TEST**********************************************/")
+    console.log("//**************************************END PRUF_TKN FAIL TEST**********************************************/")
+    console.log("//**************************************END PRUF_TKN TEST**********************************************/")
     return PRUF_TKN.unpause(
     {from: account2}
     )
