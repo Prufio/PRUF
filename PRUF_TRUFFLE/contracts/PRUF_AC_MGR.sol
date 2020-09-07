@@ -134,7 +134,7 @@ contract AC_MGR is CORE {
         AC_number[_name] = _assetClass;
         AC_data[_assetClass].name = _name;
         AC_data[_assetClass].assetClassRoot = _assetClassRoot;
-        AC_data[_assetClass].discount = 30;
+        AC_data[_assetClass].discount = 3000;  //basic discount, 30% (70% to PRUF)
         AC_data[_assetClass].custodyType = _custodyType;
         //^^^^^^^effects^^^^^^^^^
 
