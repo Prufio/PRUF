@@ -210,7 +210,7 @@ contract PRUF_TKN is
     function currentACtokenInfo() external view returns (uint256, uint256) {
         //^^^^^^^checks^^^^^^^^^
 
-        uint256 numberOfTokensSold = uint256(10000).sub(ACtokenIndex);
+        uint256 numberOfTokensSold = ACtokenIndex.sub(uint256(10000));
         return (numberOfTokensSold, currentACtokenPrice);
         //^^^^^^^effects^^^^^^^^^
     }
