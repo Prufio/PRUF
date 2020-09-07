@@ -19,14 +19,22 @@ __/\\\\\\\\\\\\\ _____/\\\\\\\\\ _______/\\../\\ ___/\\\\\\\\\\\\\\\
 pragma solidity ^0.6.7;
 
 import "./Imports/access/Ownable.sol";
+import "./Imports/math/Safemath.sol";
+
+
 
 interface erc721_tokenInterface {
     function ownerOf(uint256) external view returns (address);
 }
 
 contract Helper is Ownable {
+    using SafeMath for uint256;
+
     address erc721ContractAddress;
     erc721_tokenInterface erc721_tokenContract; //erc721_token prototype initialization
+
+    uint256 internal ACtokenIndex = 10000;
+    uint256 internal currentACtokenPrice = 5000;
 
     function setErc721_tokenAddress(address contractAddress) public onlyOwner {
         require(contractAddress != address(0), "Invalid contract address");
@@ -227,5 +235,27 @@ contract Helper is Ownable {
             temp /= 10;
         }
         return string(buffer);
+    }
+
+    function purchaseACtoken() public returns (uint256, uint256) {
+
+        if (ACtokenIndex < 4294000001) ACtokenIndex.add(10); //increment ACtokenIndex up to last one
+
+        require(
+            ACtokenIndex < 4294000000,
+            "PRuf:IS:Only 4294000000 AC tokens allowed"
+        );
+
+        uint256 numberOfTokensSold = uint256(ACtokenIndex.sub(10000));
+        uint256 priceBlockIndex = numberOfTokensSold.div(100); //blocks in 100 tokens
+        uint256 newACtokenPrice = ((priceBlockIndex.mul(106)).div(100)).mul(currentACtokenPrice); //block * lastprice * 1.06
+
+        if (newACtokenPrice > 100000) newACtokenPrice = 100000;
+        currentACtokenPrice = newACtokenPrice;
+        return (currentACtokenPrice, newACtokenPrice);
+    }
+
+    function _Getprice() public view returns (uint256) {
+        return (currentACtokenPrice);
     }
 }
