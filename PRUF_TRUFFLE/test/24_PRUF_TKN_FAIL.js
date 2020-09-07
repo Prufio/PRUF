@@ -77,13 +77,13 @@ let account2Hash;
 let account4Hash;
 let account6Hash;
 
-let account000 = '0x000000000000000000000000000000000000000000'
+let account000 = '0x0000000000000000000000000000000000000000'
 
 let nakedAuthCode1;
 let nakedAuthCode3;
 let nakedAuthCode7;
 
-contract('Discount', accounts => {
+contract('PRUF_TKN', accounts => {
         
     console.log('//**************************BEGIN BOOTSTRAP**************************//')
 
@@ -1420,7 +1420,7 @@ it('Should mint 30000 Pruf Tokens to account1', async () => {
 it('Should fail because storageAddr != 0', async () => {
 
     console.log("//**************************************END Discount SETUP**********************************************/")
-    console.log("//**************************************BEGIN Discount FAIL TEST**********************************************/")
+    console.log("//**************************************BEGIN Discount FAIL TEST (12)**********************************************/")
     console.log("//**************************************BEGIN AdminSetStorageContract FAIL TEST**********************************************/")
     return PRUF_TKN.AdminSetStorageContract(
     account000,
@@ -1486,16 +1486,57 @@ it('Should fail because overall amount sent > 6000', async () => {
     )
 })
 
-
-//5
-it('Should fail because senders balanceOf < amount sent', async () => {
+//8
+it('Should fail because balanceOf sender < ACtokenPrice', async () => {
 
     console.log("//**************************************END increaseShare FAIL TEST**********************************************/")
     console.log("//**************************************BEGIN purchaseACtoken FAIL TEST**********************************************/")
-    return PRUF_TKN.increaseShare(
-    '10',
-    '40000',
-    {from: account1}
+    return PRUF_TKN.purchaseACtoken(
+    '1',
+    '1',
+    {from: account2}
+    )
+})
+
+//9
+it('Should fail because caller is not Admin', async () => {
+
+    console.log("//**************************************END purchaseACtoken FAIL TEST**********************************************/")
+    console.log("//**************************************BEGIN AdminResolveContractAddresses FAIL TEST**********************************************/")
+    return PRUF_TKN.AdminResolveContractAddresses(
+    {from: account2}
+    )
+})
+
+//10
+it('Should fail because caller is not minter', async () => {
+
+    console.log("//**************************************END AdminResolveContractAddresses FAIL TEST**********************************************/")
+    console.log("//**************************************BEGIN mint FAIL TEST**********************************************/")
+    return PRUF_TKN.mint(
+    account2,
+    '10000000000000000',
+    {from: account2}
+    )
+})
+
+//11
+it('Should fail because caller is not pauser', async () => {
+
+    console.log("//**************************************END mint FAIL TEST**********************************************/")
+    console.log("//**************************************BEGIN pause FAIL TEST**********************************************/")
+    return PRUF_TKN.pause(
+    {from: account2}
+    )
+})
+
+//12
+it('Should fail because caller is not pauser', async () => {
+
+    console.log("//**************************************END pause FAIL TEST**********************************************/")
+    console.log("//**************************************BEGIN unpause FAIL TEST**********************************************/")
+    return PRUF_TKN.unpause(
+    {from: account2}
     )
 })
 })

@@ -99,7 +99,7 @@ contract PRUF_TKN is
     function AdminSetPaymentAddress(address _paymentAddress) external {
         require(
             _paymentAddress != address(0),
-            "PRuF:SPA: storage address cannot be zero"
+            "PRuF:SPA: payment address cannot be zero"
         );
 
         require(
@@ -163,7 +163,7 @@ contract PRUF_TKN is
             balanceOf(msg.sender) >= currentACtokenPrice,
             "PRuf:IS:Insufficient PRuF token Balance for transaction"
         );
-        require(
+        require(               //Impossible to test??
             ACtokenIndex < 4294000000,
             "PRuf:IS:Only 4294000000 AC tokens allowed"
         );
