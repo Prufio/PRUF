@@ -303,7 +303,7 @@ contract AC_MGR is CORE {
      * @dev Retrieve function costs per asset class, per service type, in Wei  //NEW DS:TEST
      */
     function getServiceCosts(uint32 _assetClass, uint16 _service)
-        external
+        external view
         returns (
             address,
             uint256,
@@ -311,7 +311,7 @@ contract AC_MGR is CORE {
             uint256
         )
     {
-        AC memory AC_info = getACinfo(_assetClass);
+        AC memory AC_info = AC_data[_assetClass];
         require(AC_info.assetClassRoot != 0, "ACM:GC:AC not yet populated");
 
         require(_service != 0, "ACM:GC:Service type zero is invalid");

@@ -42,6 +42,8 @@ pragma solidity ^0.6.7;
  *
  *      *copy dev notes to interfaces
  *
+ *      *find any recursive calls (especially in bacic, core, ecr_core)
+ *
 *-----------------------------------------------------------------
 
 *-----------------------------------------------------------------
