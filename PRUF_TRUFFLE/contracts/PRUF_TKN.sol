@@ -25,6 +25,7 @@ import "./Imports/token/ERC20/ERC20.sol";
 import "./Imports/token/ERC20/ERC20Burnable.sol";
 import "./Imports/token/ERC20/ERC20Pausable.sol";
 import "./Imports/token/ERC20/ERC20Snapshot.sol";
+import "./Imports/utils/Strings.sol";
 
 /**
  * @dev {ERC20} token, including:
@@ -58,8 +59,10 @@ contract PRUF_TKN is
 
     address internal paymentAddress;
 
+    uint256 internal ACtokenIndex = 10000;
+
     /**
-     * @dev Grants `DEFAULT_ADMIN_ROLE`, `MINTER_ROLE` and `PAUSER_ROLE` to the 
+     * @dev Grants `DEFAULT_ADMIN_ROLE`, `MINTER_ROLE` and `PAUSER_ROLE` to the
      * account that deploys the contract.
      *
      * See {ERC20-constructor}.
@@ -110,17 +113,20 @@ contract PRUF_TKN is
     }
 
     /**
-     * @dev See {IERC20-transfer}.
+     * @dev See {IERC20-transfer}. Increase payment share of an asset class
      *
      * Requirements:
-     *
      * - `recipient` cannot be the zero address.
      * - the caller must have a balance of at least `amount`.
      */
-    function increaseShare(uint32 _assetClass, uint256 _amount) //DS:TEST the fuck out of this
-        public
-        returns (bool)
-    {
+    function increaseShare(
+        uint32 _assetClass,
+        uint256 _amount //DS:TEST the fuck out of this
+    ) public returns (bool) {
+        require(
+            balanceOf(msg.sender) >= _amount,
+            "PRuf:IS:Insufficient PRuF token Balance for transaction"
+        );
         require(
             _amount > 99,
             "PRuf:IS:amount < 100 will not increase price share"
@@ -138,6 +144,52 @@ contract PRUF_TKN is
 
         AC_MGR.increasePriceShare(_assetClass, _amount);
         return true;
+    }
+
+    /**
+     * @dev See {IERC20-transfer}. Burns (amoutn) tokens and mints a new asset class token to the caller address
+     *
+     * Requirements:
+     * - the caller must have a balance of at least `amount`.
+     */
+    function purchaseACtoken(
+        uint32 _assetClassRoot,
+        uint8 _custodyType //DS:TEST the fuck out of this
+    ) public returns (bool) {
+        uint256 amount = 100; //make adjustable
+
+        require(
+            balanceOf(msg.sender) >= amount,
+            "PRuf:IS:Insufficient PRuF token Balance for transaction"
+        );
+        require(
+            ACtokenIndex < 4294000000,
+            "PRuf:IS:Only 4294000000 AC tokens allowed"
+        );
+
+        _burn(_msgSender(), amount);
+
+        //mint an asset class token to msg.sender, at tokenID ACtokenIndex, with URI = root asset Class #
+        AC_MGR.createAssetClass(
+            msg.sender,
+            uint256toString(uint256(_assetClassRoot)),
+            uint32(ACtokenIndex), //safe because ACtokenIndex <  4294000000 required
+            _assetClassRoot,
+            _custodyType
+        );
+
+        if (ACtokenIndex < 4294000001) ACtokenIndex++; //increment ACtokenIndex up to last one
+
+        return true;
+    }
+
+    /*
+     * @dev return current AC token index pointer
+     */
+    function currentACtokenIndex() external view returns (uint256) {
+        //^^^^^^^checks^^^^^^^^^
+        return ACtokenIndex;
+        //^^^^^^^effects^^^^^^^^^
     }
 
     /*
@@ -213,5 +265,33 @@ contract PRUF_TKN is
         uint256 amount
     ) internal virtual override(ERC20, ERC20Pausable, ERC20Snapshot) {
         super._beforeTokenTransfer(from, to, amount);
+    }
+
+    function uint256toString(uint256 number)
+        private
+        pure
+        returns (string memory)
+    {
+        // Inspired by OraclizeAPI's implementation - MIT licence
+        // https://github.com/oraclize/ethereum-api/blob/b42146b063c7d6ee1358846c198246239e9360e8/oraclizeAPI_0.4.25.sol
+        // shamelessly jacked straight outa OpenZepplin  openzepplin.org
+
+        if (number == 0) {
+            return "0";
+        }
+        uint256 temp = number;
+        uint256 digits;
+        while (temp != 0) {
+            digits++;
+            temp /= 10;
+        }
+        bytes memory buffer = new bytes(digits);
+        uint256 index = digits - 1;
+        temp = number;
+        while (temp != 0) {
+            buffer[index--] = bytes1(uint8(48 + (temp % 10)));
+            temp /= 10;
+        }
+        return string(buffer);
     }
 }
