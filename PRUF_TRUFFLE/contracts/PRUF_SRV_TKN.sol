@@ -179,10 +179,24 @@ contract PRUF_TKN is
             _custodyType
         );
 
-        uint256 numberOfTokensSold = uint256(ACtokenIndex.sub(10000));
-        uint256 priceBlockIndex = numberOfTokensSold.div(100); //blocks in 100 tokens
-        uint256 newACtokenPrice = ((priceBlockIndex.mul(106)).div(100)).mul(currentACtokenPrice); //block * lastprice * 1.06
-        if (newACtokenPrice > 100000) newACtokenPrice = 100000;
+        uint256 newACtokenPrice;
+        uint256 numberOfTokensSold = ACtokenIndex.sub(uint256(10000));
+
+        if (numberOfTokensSold >= 4000) {
+            newACtokenPrice = 100000;
+        } else if (numberOfTokensSold >= 2000) {
+            newACtokenPrice = 75937;
+        } else if (numberOfTokensSold >= 1000) {
+            newACtokenPrice = 50625;
+        } else if (numberOfTokensSold >= 500) {
+            newACtokenPrice = 33750;
+        } else if (numberOfTokensSold >= 250) {
+            newACtokenPrice = 22500;
+        } else if (numberOfTokensSold >= 125) {
+            newACtokenPrice = 15000;
+        } else {
+            newACtokenPrice = 10000;
+        }
 
         currentACtokenPrice = newACtokenPrice;
 
