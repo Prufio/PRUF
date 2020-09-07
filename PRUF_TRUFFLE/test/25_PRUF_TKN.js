@@ -1475,18 +1475,19 @@ it("Should retrieve balanceOf(30000) Pruf tokens @account2", async () =>{
 
 
 it("Should retrieve cost of ACtoken", async () =>{ 
-    var Balance = [];
+    var ACSaleInfo = [];
     
     return await PRUF_TKN.currentACtokenInfo({from: account2}, function (_err, _result) {
         if(_err){} 
-        else{Balance = Object.values(_result)
-    console.log(Balance)}
+        else{ACSaleInfo = Object.values(_result)
+    console.log(ACSaleInfo)}
     })
 })
 
 
 it('Should purchace ACtoken to account2', async () => {
     return PRUF_TKN.purchaseACtoken(
+    'account2FTW',
     '1',
     '1',
     {from: account2}
@@ -1537,18 +1538,19 @@ it("Should retrieve balanceOf(30000) Pruf tokens @account3", async () =>{
 
 
 it("Should retrieve cost of ACtoken", async () =>{ 
-    var Balance = [];
+    var ACSaleInfo = [];
     
     return await PRUF_TKN.currentACtokenInfo({from: account2}, function (_err, _result) {
         if(_err){} 
-        else{Balance = Object.values(_result)
-    console.log(Balance)}
+        else{ACSaleInfo = Object.values(_result)
+    console.log(ACSaleInfo)}
     })
 })
 
 
 it('Should purchace ACtoken to account3', async () => {
     return PRUF_TKN.purchaseACtoken(
+    'account3FTW',
     '1',
     '1',
     {from: account3}
