@@ -146,7 +146,7 @@ contract PRUF_TKN is
     }
 
     /**
-     * @dev See {IERC20-transfer}. Burns (amoutn) tokens and mints a new asset class token to the caller address
+     * @dev Burns (amout) tokens and mints a new asset class token to the caller address
      *
      * Requirements:
      * - the caller must have a balance of at least `amount`.
