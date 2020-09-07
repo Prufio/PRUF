@@ -80,12 +80,12 @@ contract PRUF_TKN is
     function AdminSetStorageContract(address _storageAddress) external {
         require(
             _storageAddress != address(0),
-            "B:SSC: storage address cannot be zero"
+            "PRuF:SSC: storage address cannot be zero"
         );
 
         require(
             hasRole(DEFAULT_ADMIN_ROLE, _msgSender()),
-            "PRuF:M: must have DEFAULT_ADMIN_ROLE"
+            "PRuF:SSC: must have DEFAULT_ADMIN_ROLE"
         );
         //^^^^^^^checks^^^^^^^^^
 
@@ -99,12 +99,12 @@ contract PRUF_TKN is
     function AdminSetPaymentAddress(address _paymentAddress) external {
         require(
             _paymentAddress != address(0),
-            "B:SSC: storage address cannot be zero"
+            "PRuF:SPA: storage address cannot be zero"
         );
 
         require(
             hasRole(DEFAULT_ADMIN_ROLE, _msgSender()),
-            "PRuF:M: must have DEFAULT_ADMIN_ROLE"
+            "PRuF:SPA: must have DEFAULT_ADMIN_ROLE"
         );
         //^^^^^^^checks^^^^^^^^^
 
@@ -198,7 +198,7 @@ contract PRUF_TKN is
     function AdminResolveContractAddresses() external virtual {
         require(
             hasRole(DEFAULT_ADMIN_ROLE, _msgSender()),
-            "PRuF:M: must have DEFAULT_ADMIN_ROLE"
+            "PRuF:RCA: must have DEFAULT_ADMIN_ROLE"
         );
         //^^^^^^^checks^^^^^^^^^
 
