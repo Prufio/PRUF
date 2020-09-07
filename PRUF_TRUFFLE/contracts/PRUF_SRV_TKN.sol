@@ -59,6 +59,7 @@ contract PRUF_TKN is
     address internal paymentAddress;
 
     uint256 internal ACtokenIndex = 10000;
+    uint256 internal currentACtokenPrice = 5000;
 
     /**
      * @dev Grants `DEFAULT_ADMIN_ROLE`, `MINTER_ROLE` and `PAUSER_ROLE` to the
@@ -155,10 +156,11 @@ contract PRUF_TKN is
         uint32 _assetClassRoot,
         uint8 _custodyType //DS:TEST the fuck out of this
     ) public returns (bool) {
-        uint256 amount = 100; //make adjustable
+
+        if (ACtokenIndex < 4294000001) ACtokenIndex++; //increment ACtokenIndex up to last one
 
         require(
-            balanceOf(msg.sender) >= amount,
+            balanceOf(msg.sender) >= currentACtokenPrice,
             "PRuf:IS:Insufficient PRuF token Balance for transaction"
         );
         require(
@@ -166,7 +168,7 @@ contract PRUF_TKN is
             "PRuf:IS:Only 4294000000 AC tokens allowed"
         );
 
-        _burn(_msgSender(), amount);
+        _burn(_msgSender(), currentACtokenPrice);
 
         //mint an asset class token to msg.sender, at tokenID ACtokenIndex, with URI = root asset Class #
         AC_MGR.createAssetClass(
@@ -177,7 +179,12 @@ contract PRUF_TKN is
             _custodyType
         );
 
-        if (ACtokenIndex < 4294000001) ACtokenIndex++; //increment ACtokenIndex up to last one
+        uint256 numberOfTokensSold = uint256(ACtokenIndex.sub(10000));
+        uint256 priceBlockIndex = numberOfTokensSold.div(100); //blocks in 100 tokens
+        uint256 newACtokenPrice = ((priceBlockIndex.mul(106)).div(100)).mul(currentACtokenPrice); //block * lastprice * 1.06
+        if (newACtokenPrice > 100000) newACtokenPrice = 100000;
+
+        currentACtokenPrice = newACtokenPrice;
 
         return true;
     }
@@ -185,9 +192,11 @@ contract PRUF_TKN is
     /*
      * @dev return current AC token index pointer
      */
-    function currentACtokenIndex() external view returns (uint256) {
+    function currentACtokenInfo() external view returns (uint256, uint256) {
         //^^^^^^^checks^^^^^^^^^
-        return ACtokenIndex;
+
+        uint256 numberOfTokensSold = uint256(10000).sub(ACtokenIndex);
+        return (numberOfTokensSold, currentACtokenPrice);
         //^^^^^^^effects^^^^^^^^^
     }
 
