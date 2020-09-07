@@ -59,7 +59,7 @@ contract PRUF_TKN is
     address internal paymentAddress;
 
     uint256 internal ACtokenIndex = 10000;
-    uint256 internal currentACtokenPrice = 5000;
+    uint256 internal currentACtokenPrice = 10000;
 
     /**
      * @dev Grants `DEFAULT_ADMIN_ROLE`, `MINTER_ROLE` and `PAUSER_ROLE` to the
