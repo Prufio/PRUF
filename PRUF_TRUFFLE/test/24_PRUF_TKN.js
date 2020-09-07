@@ -1404,17 +1404,10 @@ it('Should add users to AC 10-14 in AC_Manager', async () => {
 })
 
 
-it('Should set PaymentAddress', async () => {
+it('Should mint 30000 Pruf Tokens to account1', async () => {
 
+    console.log("//**************************************BEGIN Discount TEST**********************************************/")
     console.log("//**************************************BEGIN Discount SETUP**********************************************/")
-    return PRUF_TKN.AdminSetPaymentAddress(
-    account8,
-    {from: account1}
-    )
-})
-
-
-it('Should write asset12 in AC 10', async () => {
     return PRUF_TKN.mint(
     account1,
     '30000',
@@ -1423,98 +1416,86 @@ it('Should write asset12 in AC 10', async () => {
 })
 
 
-it('Should increaseShare to 45/55 split @AC13', async () => {
-    return PRUF_TKN.increaseShare(
-    '13',
-    '1500',
-    {from: account1}
-    )
-})
-
-
-it('Should increaseShare to 90/10 split @AC11', async () => {
-    return PRUF_TKN.increaseShare(
-    '11',
-    '6000',
-    {from: account1}
-    )
-})
-
-
-it('Should write asset1 in AC 10', async () => {
+//1
+it('Should fail because storageAddr != 0', async () => {
 
     console.log("//**************************************END Discount SETUP**********************************************/")
-    console.log("//**************************************BEGIN Discount TEST**********************************************/")
-    return APP.$newRecord(
-    asset1, 
-    rgt1,
-    '10',
-    '100',
-    {from: account2, value: 200000000000000000}
+    console.log("//**************************************BEGIN Discount FAIL TEST**********************************************/")
+    console.log("//**************************************BEGIN AdminSetStorageContract FAIL TEST**********************************************/")
+    return PRUF_TKN.AdminSetStorageContract(
+    account000,
+    {from: account1}
     )
 })
 
-
-it('Should write asset2 in AC 13', async () => {
-    return APP.$newRecord(
-    asset2, 
-    rgt2,
-    '13',
-    '100',
-    {from: account2, value: 600000000000000000}
-    )
-})
-
-
-it('Should write asset3 in AC 11', async () => {
-    return APP.$newRecord(
-    asset3, 
-    rgt3,
-    '11',
-    '100',
-    {from: account2, value: 300000000000000000}
-    )
-})
-
-
-it('Should withdraw from APP @ACC4', async () => {
-    return APP.$withdraw(
-    {from: account4}
-    )
-})
-
-
-it('Should withdraw from APP @ACC5', async () => {
-    return APP.$withdraw(
-    {from: account5}
-    )
-})
-
-
-it('Should withdraw from APP @ACC6', async () => {
-    return APP.$withdraw(
-    {from: account6}
-    )
-})
-
-
-it('Should withdraw from APP @ACC7', async () => {
-    return APP.$withdraw(
-    {from: account7}
-    )
-})
-
-
-it("Should retrieve balanceOf Pruf tokens @account8", async () =>{ 
-
-    console.log("//**************************************END Discount TEST**********************************************/")
-    var Balance = [];
+//2
+it('Should fail because caller is not Admin', async () => {
     
-    return await PRUF_TKN.balanceOf(account8, {from: account8}, function (_err, _result) {
-        if(_err){} 
-        else{Balance = Object.values(_result)
-    console.log(Balance)}
-    })
+    return PRUF_TKN.AdminSetStorageContract(
+    STOR.address,
+    {from: account2}
+    )
 })
 
+//3
+it('Should fail because paymentAddr != 0', async () => {
+
+    console.log("//**************************************END AdminSetStorageContract FAIL TEST**********************************************/")
+    console.log("//**************************************BEGIN AdminSetPaymentAddress FAIL TEST**********************************************/")
+    return PRUF_TKN.AdminSetPaymentAddress(
+    account000,
+    {from: account1}
+    )
+})
+
+//4
+it('Should fail because caller is not Admin', async () => {
+    return PRUF_TKN.AdminSetPaymentAddress(
+    account8,
+    {from: account2}
+    )
+})
+
+//5
+it('Should fail because senders balanceOf < amount sent', async () => {
+
+    console.log("//**************************************END AdminSetPaymentAddress FAIL TEST**********************************************/")
+    console.log("//**************************************BEGIN increaseShare FAIL TEST**********************************************/")
+    return PRUF_TKN.increaseShare(
+    '10',
+    '40000',
+    {from: account1}
+    )
+})
+
+//6
+it('Should fail because amount sent < 100', async () => {
+    return PRUF_TKN.increaseShare(
+    '10',
+    '80',
+    {from: account1}
+    )
+})
+
+//7
+it('Should fail because overall amount sent > 6000', async () => {
+    return PRUF_TKN.increaseShare(
+    '10',
+    '6001',
+    {from: account1}
+    )
+})
+
+
+//5
+it('Should fail because senders balanceOf < amount sent', async () => {
+
+    console.log("//**************************************END increaseShare FAIL TEST**********************************************/")
+    console.log("//**************************************BEGIN purchaseACtoken FAIL TEST**********************************************/")
+    return PRUF_TKN.increaseShare(
+    '10',
+    '40000',
+    {from: account1}
+    )
+})
 })
