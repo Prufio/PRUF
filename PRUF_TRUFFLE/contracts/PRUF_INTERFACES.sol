@@ -235,11 +235,26 @@ interface AC_MGR_Interface {
     function getServiceCosts(uint32 _assetClass, uint16 _service)
         external
         returns (
-            address,
-            uint256,
-            address,
-            uint256
+            address rootPaymentAddress,
+            uint256 rootPaymentCost,
+            address PaymentAddress,
+            uint256 PaymentCost
         );
+
+    /*
+     * @dev Mints asset class token and creates an assetClass. Mints to @address
+     * Requires that:
+     *  name is unuiqe
+     *  AC is not provisioned with a root (proxy for not yet registered)
+     *  that ACtoken does not exist
+     */
+    function createAssetClass(
+        address _recipientAddress,
+        string calldata _name,
+        uint32 _assetClass,
+        uint32 _assetClassRoot,
+        uint8 _custodyType
+    ) external;
 
 }
 
