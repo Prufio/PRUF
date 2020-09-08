@@ -1460,7 +1460,7 @@
     it('Should fail because caller does not hold AC token', async () => {
 
         console.log("//**************************************BEGIN AC_MGR TEST**********************************************/")
-        console.log("//**************************************BEGIN AC_MGR FAIL BATCH (10)**********************************************/")
+        console.log("//**************************************BEGIN AC_MGR FAIL BATCH (11)**********************************************/")
         console.log("//**************************************BEGIN OO_addUser FAIL BATCH**********************************************/")
         return AC_MGR.OO_addUser(
         account2, 
@@ -1567,19 +1567,49 @@
     })
 
     //10
-    it('Should fail because caller does not hold AC token', async () => {
+    it('Should fail because caller is not PRUF_TKN', async () => {
 
         console.log("//**************************************END updateACname FAIL BATCH**********************************************/")
+        console.log("//**************************************BEGIN increasePriceShare FAIL BATCH**********************************************/")
+        return AC_MGR.increasePriceShare(
+        '10', 
+        '1',
+        {from: account1}
+        )
+    })
+
+    //11
+    it('Should fail because caller does not hold AC token', async () => {
+
+        console.log("//**************************************END increasePriceShare FAIL BATCH**********************************************/")
         console.log("//**************************************BEGIN ACTH_setCosts FAIL BATCH**********************************************/")
         return AC_MGR.ACTH_setCosts(
-        '10', 
-        '20000000000000000',
-        '20000000000000000',
-        '20000000000000000',
-        '20000000000000000',
-        '20000000000000000',
+        '10',
+        '1', 
         '20000000000000000',
         account2,
+        {from: account2}
+        )
+    })
+
+    //12
+    it('Should fail because AC not yet populated', async () => {
+
+        console.log("//**************************************END ACTH_setCosts FAIL BATCH**********************************************/")
+        console.log("//**************************************BEGIN getServiceCosts FAIL BATCH**********************************************/")
+        return AC_MGR.getServiceCosts(
+        '20',
+        '1',
+        {from: account2}
+        )
+    })
+
+
+    //13
+    it('Should fail because service 0 is not valid', async () => {
+        return AC_MGR.getServiceCosts(
+        '10',
+        '0',
         {from: account2}
         )
     })
@@ -1587,7 +1617,7 @@
 
     it('Should write record in AC 10 @ IDX&RGT(1)', async () => {
 
-        console.log("//**************************************END ACTH_setCosts FAIL BATCH**********************************************/")
+        console.log("//**************************************END getServiceCosts FAIL BATCH**********************************************/")
         console.log("//**************************************END AC_MGR FAIL BATCH**********************************************/")
         console.log("//**************************************END AC_MGR TEST**********************************************/")
         console.log("//**************************************BEGIN THE WORKS**********************************************/")

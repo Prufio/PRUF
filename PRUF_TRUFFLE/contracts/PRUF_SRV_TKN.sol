@@ -119,7 +119,7 @@ contract PRUF_TKN is
      * - `recipient` cannot be the zero address.
      * - the caller must have a balance of at least `amount`.
      */
-    function increaseShare(
+    function increaseShare(//CTS:EXAMINE should have require that caller is owner of token??
         uint32 _assetClass,
         uint256 _amount //DS:TEST the fuck out of this
     ) public returns (bool) {
