@@ -1567,7 +1567,7 @@
     })
 
     //10
-    it('Should fail because caller is not PRUF_TKN', async () => {
+    it('Should fail because caller is not UTIL_TKN', async () => {
 
         console.log("//**************************************END updateACname FAIL BATCH**********************************************/")
         console.log("//**************************************BEGIN increasePriceShare FAIL BATCH**********************************************/")

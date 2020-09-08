@@ -1,5 +1,5 @@
-const PRUF_SRV_TKN = artifacts.require('./PRUF_TKN');
+const UTIL_TKN = artifacts.require('./UTIL_TKN');
 
 module.exports = function(deployer){
-    deployer.deploy(PRUF_SRV_TKN);
+    deployer.deploy(UTIL_TKN);
 };

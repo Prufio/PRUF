@@ -155,7 +155,7 @@ contract PRUF_TKN is
     function purchaseACtoken(
         string memory _name,
         uint32 _assetClassRoot,
-        uint8 _custodyType //DS:TEST the fuck out of this
+        uint8 _custodyType
     ) public returns (bool) {
 
         if (ACtokenIndex < 4294000001) ACtokenIndex++; //increment ACtokenIndex up to last one

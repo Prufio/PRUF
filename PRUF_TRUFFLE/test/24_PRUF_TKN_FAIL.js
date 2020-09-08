@@ -15,7 +15,7 @@ const PRUF_RCLR = artifacts.require('RCLR');
 const PRUF_NAKED = artifacts.require('NAKED');
 const PRUF_HELPER = artifacts.require('Helper');
 const PRUF_MAL_APP = artifacts.require('MAL_APP');
-const PRUF_SRV_TKN = artifacts.require('PRUF_TKN');
+const PRUF_TKN = artifacts.require('UTIL_TKN');
 
 let STOR;
 let APP;
@@ -33,7 +33,7 @@ let NP_NC;
 let RCLR;
 let Helper;
 let MAL_APP;
-let PRUF_TKN;
+let UTIL_TKN;
 
 let string1Hash;
 let string2Hash;
@@ -83,7 +83,7 @@ let nakedAuthCode1;
 let nakedAuthCode3;
 let nakedAuthCode7;
 
-contract('PRUF_TKN', accounts => {
+contract('UTIL_TKN', accounts => {
         
     console.log('//**************************BEGIN BOOTSTRAP**************************//')
 
@@ -235,11 +235,11 @@ it('Should deploy PRUF_MAL_APP', async () => {
 })
 
 
-it('Should deploy PRUF_TKN', async () => {
-    const PRUF_SRV_TKN_TEST = await PRUF_SRV_TKN.deployed({ from: account1 });
-    console.log(PRUF_SRV_TKN_TEST.address);
-    assert(PRUF_SRV_TKN_TEST.address !== '')
-    PRUF_TKN = PRUF_SRV_TKN_TEST;
+it('Should deploy UTIL_TKN', async () => {
+    const PRUF_TKN_TEST = await PRUF_TKN.deployed({ from: account1 });
+    console.log(PRUF_TKN_TEST.address);
+    assert(PRUF_TKN_TEST.address !== '')
+    UTIL_TKN = PRUF_TKN_TEST;
 })
 
 
@@ -578,8 +578,8 @@ it('Should add contract addresses', async () => {
         })
 
         .then(() => {
-            console.log("Adding PRUF_TKN to storage for use in AC 0")
-            return STOR.OO_addContract("PRUF_TKN", PRUF_TKN.address, '0', '1', { from: account1 })
+            console.log("Adding UTIL_TKN to storage for use in AC 0")
+            return STOR.OO_addContract("UTIL_TKN", UTIL_TKN.address, '0', '1', { from: account1 })
         })
 })
 
@@ -655,8 +655,8 @@ it('Should add Storage in each contract', async () => {
         })
 
         .then(() => {
-            console.log("Adding in PRUF_TKN")
-            return PRUF_TKN.AdminSetStorageContract(STOR.address, { from: account1 })
+            console.log("Adding in UTIL_TKN")
+            return UTIL_TKN.AdminSetStorageContract(STOR.address, { from: account1 })
         })
 })
 
@@ -731,8 +731,8 @@ it('Should resolve contract addresses', async () => {
         })
 
         .then(() => {
-            console.log("Resolving in PRUF_TKN")
-            return PRUF_TKN.AdminResolveContractAddresses({ from: account1 })
+            console.log("Resolving in UTIL_TKN")
+            return UTIL_TKN.AdminResolveContractAddresses({ from: account1 })
         })
 })
 
@@ -1406,9 +1406,9 @@ it('Should add users to AC 10-14 in AC_Manager', async () => {
 
 it('Should mint 30000 Pruf Tokens to account1', async () => {
 
-    console.log("//**************************************BEGIN PRUF_TKN TEST**********************************************/")
-    console.log("//**************************************BEGIN PRUF_TKN SETUP**********************************************/")
-    return PRUF_TKN.mint(
+    console.log("//**************************************BEGIN UTIL_TKN TEST**********************************************/")
+    console.log("//**************************************BEGIN UTIL_TKN SETUP**********************************************/")
+    return UTIL_TKN.mint(
     account1,
     '30000',
     {from: account1}
@@ -1417,7 +1417,7 @@ it('Should mint 30000 Pruf Tokens to account1', async () => {
 
 
 it('Should set payment address to account1', async () => {
-    return PRUF_TKN.AdminSetPaymentAddress(
+    return UTIL_TKN.AdminSetPaymentAddress(
     account1,
     {from: account1}
     )
@@ -1427,10 +1427,10 @@ it('Should set payment address to account1', async () => {
 //1
 it('Should fail because storageAddr != 0', async () => {
 
-    console.log("//**************************************END PRUF_TKN SETUP**********************************************/")
-    console.log("//**************************************BEGIN PRUF_TKN FAIL TEST (13)**********************************************/")
+    console.log("//**************************************END UTIL_TKN SETUP**********************************************/")
+    console.log("//**************************************BEGIN UTIL_TKN FAIL TEST (13)**********************************************/")
     console.log("//**************************************BEGIN AdminSetStorageContract FAIL TEST**********************************************/")
-    return PRUF_TKN.AdminSetStorageContract(
+    return UTIL_TKN.AdminSetStorageContract(
     account000,
     {from: account1}
     )
@@ -1439,7 +1439,7 @@ it('Should fail because storageAddr != 0', async () => {
 //2
 it('Should fail because caller is not Admin', async () => {
     
-    return PRUF_TKN.AdminSetStorageContract(
+    return UTIL_TKN.AdminSetStorageContract(
     STOR.address,
     {from: account2}
     )
@@ -1450,7 +1450,7 @@ it('Should fail because paymentAddr != 0', async () => {
 
     console.log("//**************************************END AdminSetStorageContract FAIL TEST**********************************************/")
     console.log("//**************************************BEGIN AdminSetPaymentAddress FAIL TEST**********************************************/")
-    return PRUF_TKN.AdminSetPaymentAddress(
+    return UTIL_TKN.AdminSetPaymentAddress(
     account000,
     {from: account1}
     )
@@ -1458,7 +1458,7 @@ it('Should fail because paymentAddr != 0', async () => {
 
 //4
 it('Should fail because caller is not Admin', async () => {
-    return PRUF_TKN.AdminSetPaymentAddress(
+    return UTIL_TKN.AdminSetPaymentAddress(
     account8,
     {from: account2}
     )
@@ -1469,7 +1469,7 @@ it('Should fail because senders balanceOf < amount sent', async () => {
 
     console.log("//**************************************END AdminSetPaymentAddress FAIL TEST**********************************************/")
     console.log("//**************************************BEGIN increaseShare FAIL TEST**********************************************/")
-    return PRUF_TKN.increaseShare(
+    return UTIL_TKN.increaseShare(
     '10',
     '40000',
     {from: account1}
@@ -1478,7 +1478,7 @@ it('Should fail because senders balanceOf < amount sent', async () => {
 
 //6
 it('Should fail because amount sent < 100', async () => {
-    return PRUF_TKN.increaseShare(
+    return UTIL_TKN.increaseShare(
     '10',
     '80',
     {from: account1}
@@ -1487,7 +1487,7 @@ it('Should fail because amount sent < 100', async () => {
 
 //7
 it('Should fail because overall amount sent > 6000', async () => {
-    return PRUF_TKN.increaseShare(
+    return UTIL_TKN.increaseShare(
     '10',
     '6001',
     {from: account1}
@@ -1496,7 +1496,7 @@ it('Should fail because overall amount sent > 6000', async () => {
 
 
 it('Should increaseShare by 5999', async () => {
-    return PRUF_TKN.increaseShare(
+    return UTIL_TKN.increaseShare(
     '10',
     '5999',
     {from: account1}
@@ -1505,7 +1505,7 @@ it('Should increaseShare by 5999', async () => {
 
 //8
 it('Should fail because overall amount sent > 6000', async () => {
-    return PRUF_TKN.increaseShare(
+    return UTIL_TKN.increaseShare(
     '10',
     '2',
     {from: account1}
@@ -1517,7 +1517,7 @@ it('Should fail because balanceOf sender < ACtokenPrice', async () => {
 
     console.log("//**************************************END increaseShare FAIL TEST**********************************************/")
     console.log("//**************************************BEGIN purchaseACtoken FAIL TEST**********************************************/")
-    return PRUF_TKN.purchaseACtoken(
+    return UTIL_TKN.purchaseACtoken(
     'Account1FTW',
     '1',
     '1',
@@ -1530,7 +1530,7 @@ it('Should fail because caller is not Admin', async () => {
 
     console.log("//**************************************END purchaseACtoken FAIL TEST**********************************************/")
     console.log("//**************************************BEGIN AdminResolveContractAddresses FAIL TEST**********************************************/")
-    return PRUF_TKN.AdminResolveContractAddresses(
+    return UTIL_TKN.AdminResolveContractAddresses(
     {from: account2}
     )
 })
@@ -1540,7 +1540,7 @@ it('Should fail because caller is not minter', async () => {
 
     console.log("//**************************************END AdminResolveContractAddresses FAIL TEST**********************************************/")
     console.log("//**************************************BEGIN mint FAIL TEST**********************************************/")
-    return PRUF_TKN.mint(
+    return UTIL_TKN.mint(
     account2,
     '10000000000000000',
     {from: account2}
@@ -1552,7 +1552,7 @@ it('Should fail because caller is not pauser', async () => {
 
     console.log("//**************************************END mint FAIL TEST**********************************************/")
     console.log("//**************************************BEGIN pause FAIL TEST**********************************************/")
-    return PRUF_TKN.pause(
+    return UTIL_TKN.pause(
     {from: account2}
     )
 })
@@ -1561,9 +1561,9 @@ it('Should fail because caller is not pauser', async () => {
 it('Should fail because caller is not pauser', async () => {
 
     console.log("//**************************************END pause FAIL TEST**********************************************/")
-    console.log("//**************************************END PRUF_TKN FAIL TEST**********************************************/")
-    console.log("//**************************************END PRUF_TKN TEST**********************************************/")
-    return PRUF_TKN.unpause(
+    console.log("//**************************************END UTIL_TKN FAIL TEST**********************************************/")
+    console.log("//**************************************END UTIL_TKN TEST**********************************************/")
+    return UTIL_TKN.unpause(
     {from: account2}
     )
 })

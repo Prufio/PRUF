@@ -15,7 +15,7 @@ const PRUF_RCLR = artifacts.require('RCLR');
 const PRUF_NAKED = artifacts.require('NAKED');
 const PRUF_HELPER = artifacts.require('Helper');
 const PRUF_MAL_APP = artifacts.require('MAL_APP');
-const PRUF_SRV_TKN = artifacts.require('PRUF_TKN');
+const PRUF_SRV_TKN = artifacts.require('UTIL_TKN');
 
 let STOR;
 let APP;
@@ -33,7 +33,7 @@ let NP_NC;
 let RCLR;
 let Helper;
 let MAL_APP;
-let PRUF_TKN;
+let UTIL_TKN;
 
 let string1Hash;
 let string2Hash;
@@ -83,7 +83,7 @@ let nakedAuthCode1;
 let nakedAuthCode3;
 let nakedAuthCode7;
 
-contract('PRUF_TKN', accounts => {
+contract('UTIL_TKN', accounts => {
         
     console.log('//**************************BEGIN BOOTSTRAP**************************//')
 
@@ -235,11 +235,11 @@ it('Should deploy PRUF_MAL_APP', async () => {
 })
 
 
-it('Should deploy PRUF_TKN', async () => {
+it('Should deploy UTIL_TKN', async () => {
     const PRUF_SRV_TKN_TEST = await PRUF_SRV_TKN.deployed({ from: account1 });
     console.log(PRUF_SRV_TKN_TEST.address);
     assert(PRUF_SRV_TKN_TEST.address !== '')
-    PRUF_TKN = PRUF_SRV_TKN_TEST;
+    UTIL_TKN = PRUF_SRV_TKN_TEST;
 })
 
 
@@ -578,8 +578,8 @@ it('Should add contract addresses', async () => {
         })
 
         .then(() => {
-            console.log("Adding PRUF_TKN to storage for use in AC 0")
-            return STOR.OO_addContract("PRUF_TKN", PRUF_TKN.address, '0', '1', { from: account1 })
+            console.log("Adding UTIL_TKN to storage for use in AC 0")
+            return STOR.OO_addContract("UTIL_TKN", UTIL_TKN.address, '0', '1', { from: account1 })
         })
 })
 
@@ -655,8 +655,8 @@ it('Should add Storage in each contract', async () => {
         })
 
         .then(() => {
-            console.log("Adding in PRUF_TKN")
-            return PRUF_TKN.AdminSetStorageContract(STOR.address, { from: account1 })
+            console.log("Adding in UTIL_TKN")
+            return UTIL_TKN.AdminSetStorageContract(STOR.address, { from: account1 })
         })
 })
 
@@ -731,8 +731,8 @@ it('Should resolve contract addresses', async () => {
         })
 
         .then(() => {
-            console.log("Resolving in PRUF_TKN")
-            return PRUF_TKN.AdminResolveContractAddresses({ from: account1 })
+            console.log("Resolving in UTIL_TKN")
+            return UTIL_TKN.AdminResolveContractAddresses({ from: account1 })
         })
 })
 
@@ -1406,8 +1406,8 @@ it('Should add users to AC 10-14 in AC_Manager', async () => {
 
 it('Should set PaymentAddress', async () => {
 
-    console.log("//**************************************BEGIN PRUF_TKN**********************************************/")
-    return PRUF_TKN.AdminSetPaymentAddress(
+    console.log("//**************************************BEGIN UTIL_TKN**********************************************/")
+    return UTIL_TKN.AdminSetPaymentAddress(
     account8,
     {from: account1}
     )
@@ -1415,7 +1415,7 @@ it('Should set PaymentAddress', async () => {
 
 
 it('Should mint 30000 tokens to account1', async () => {
-    return PRUF_TKN.mint(
+    return UTIL_TKN.mint(
     account1,
     '30000',
     {from: account1}
@@ -1426,7 +1426,7 @@ it('Should mint 30000 tokens to account1', async () => {
 it("Should retrieve balanceOf(30000) Pruf tokens @account1", async () =>{ 
     var Balance = [];
     
-    return await PRUF_TKN.balanceOf(account1, {from: account1}, function (_err, _result) {
+    return await UTIL_TKN.balanceOf(account1, {from: account1}, function (_err, _result) {
         if(_err){} 
         else{Balance = Object.values(_result)
     console.log(Balance)}
@@ -1435,7 +1435,7 @@ it("Should retrieve balanceOf(30000) Pruf tokens @account1", async () =>{
 
 
 it('Should increaseShare to 45/55 split @AC13', async () => {
-    return PRUF_TKN.increaseShare(
+    return UTIL_TKN.increaseShare(
     '13',
     '1500',
     {from: account1}
@@ -1455,7 +1455,7 @@ it("Should retrieve AC_discount @AC13 45/55", async () =>{
 
 
 it('Should mint 30000 tokens to account2', async () => {
-    return PRUF_TKN.mint(
+    return UTIL_TKN.mint(
     account2,
     '30000',
     {from: account1}
@@ -1466,7 +1466,7 @@ it('Should mint 30000 tokens to account2', async () => {
 it("Should retrieve balanceOf(30000) Pruf tokens @account2", async () =>{ 
     var Balance = [];
     
-    return await PRUF_TKN.balanceOf(account2, {from: account2}, function (_err, _result) {
+    return await UTIL_TKN.balanceOf(account2, {from: account2}, function (_err, _result) {
         if(_err){} 
         else{Balance = Object.values(_result)
     console.log(Balance)}
@@ -1477,7 +1477,7 @@ it("Should retrieve balanceOf(30000) Pruf tokens @account2", async () =>{
 it("Should retrieve cost of ACtoken", async () =>{ 
     var ACSaleInfo = [];
     
-    return await PRUF_TKN.currentACtokenInfo({from: account2}, function (_err, _result) {
+    return await UTIL_TKN.currentACtokenInfo({from: account2}, function (_err, _result) {
         if(_err){} 
         else{ACSaleInfo = Object.values(_result)
     console.log(ACSaleInfo)}
@@ -1486,7 +1486,7 @@ it("Should retrieve cost of ACtoken", async () =>{
 
 
 it('Should purchace ACtoken to account2', async () => {
-    return PRUF_TKN.purchaseACtoken(
+    return UTIL_TKN.purchaseACtoken(
     'account2FTW',
     '1',
     '1',
@@ -1498,7 +1498,7 @@ it('Should purchace ACtoken to account2', async () => {
 it("Should retrieve 30000 - cost of purchaseACtoken", async () =>{ 
     var Balance = [];
     
-    return await PRUF_TKN.balanceOf(account2, {from: account2}, function (_err, _result) {
+    return await UTIL_TKN.balanceOf(account2, {from: account2}, function (_err, _result) {
         if(_err){} 
         else{Balance = Object.values(_result)
     console.log(Balance)}
@@ -1518,7 +1518,7 @@ it("Should retrieve balanceOf(1) ACtokens @account2", async () =>{
 
 
 it('Should mint 30000 tokens to account3', async () => {
-    return PRUF_TKN.mint(
+    return UTIL_TKN.mint(
     account3,
     '30000',
     {from: account1}
@@ -1529,7 +1529,7 @@ it('Should mint 30000 tokens to account3', async () => {
 it("Should retrieve balanceOf(30000) Pruf tokens @account3", async () =>{ 
     var Balance = [];
     
-    return await PRUF_TKN.balanceOf(account3, {from: account3}, function (_err, _result) {
+    return await UTIL_TKN.balanceOf(account3, {from: account3}, function (_err, _result) {
         if(_err){} 
         else{Balance = Object.values(_result)
     console.log(Balance)}
@@ -1540,7 +1540,7 @@ it("Should retrieve balanceOf(30000) Pruf tokens @account3", async () =>{
 it("Should retrieve cost of ACtoken", async () =>{ 
     var ACSaleInfo = [];
     
-    return await PRUF_TKN.currentACtokenInfo({from: account2}, function (_err, _result) {
+    return await UTIL_TKN.currentACtokenInfo({from: account2}, function (_err, _result) {
         if(_err){} 
         else{ACSaleInfo = Object.values(_result)
     console.log(ACSaleInfo)}
@@ -1549,7 +1549,7 @@ it("Should retrieve cost of ACtoken", async () =>{
 
 
 it('Should purchace ACtoken to account3', async () => {
-    return PRUF_TKN.purchaseACtoken(
+    return UTIL_TKN.purchaseACtoken(
     'account3FTW',
     '1',
     '1',
@@ -1561,7 +1561,7 @@ it('Should purchace ACtoken to account3', async () => {
 it("Should retrieve 30000 - cost of purchaseACtoken", async () =>{ 
     var Balance = [];
     
-    return await PRUF_TKN.balanceOf(account3, {from: account3}, function (_err, _result) {
+    return await UTIL_TKN.balanceOf(account3, {from: account3}, function (_err, _result) {
         if(_err){} 
         else{Balance = Object.values(_result)
     console.log(Balance)}
@@ -1581,14 +1581,14 @@ it("Should retrieve balanceOf(1) ACtokens @account3", async () =>{
 
 
 it('Should pause contract', async () => {
-    return PRUF_TKN.pause(
+    return UTIL_TKN.pause(
     {from: account1}
     )
 })
 
 
 it('Should unpause contract', async () => {
-    return PRUF_TKN.unpause(
+    return UTIL_TKN.unpause(
     {from: account1}
     )
 })

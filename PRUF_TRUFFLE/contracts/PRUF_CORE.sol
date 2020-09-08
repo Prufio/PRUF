@@ -127,7 +127,7 @@ contract CORE is PullPayment, BASIC {
     //--------------------------------------------------------------------------------------Payment internal functions
 
     /*
-     * @dev Send payment to appropriate pullPayment adresses for payable function  //DS:TEST the fuck out of this
+     * @dev Send payment to appropriate pullPayment adresses for payable function
      */
     function deductServiceCosts(uint32 _assetClass, uint16 _service)
         internal
