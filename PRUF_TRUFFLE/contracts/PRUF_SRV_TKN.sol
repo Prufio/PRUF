@@ -121,7 +121,7 @@ contract PRUF_TKN is
      */
     function increaseShare(//CTS:EXAMINE should have require that caller is owner of token??
         uint32 _assetClass,
-        uint256 _amount //DS:TEST the fuck out of this
+        uint256 _amount
     ) public returns (bool) {
         require(
             balanceOf(msg.sender) >= _amount,
@@ -132,7 +132,7 @@ contract PRUF_TKN is
             "PRuf:IS:amount < 100 will not increase price share"
         );
 
-        require(_amount <= 6000, "PRuf:IS:amount > 10000 exceeds max"); // 3k-9k is 6K - 10K is more than possibly required in any forseeable circumstance
+        require(_amount <= 6000, "PRuf:IS:amount > 6000 exceeds max"); // 3k-9k is 6K - 10K is more than possibly required in any forseeable circumstance
 
         uint256 oldShare = uint256(AC_MGR.getAC_discount(_assetClass));
 
