@@ -119,7 +119,7 @@ contract UTIL_TKN is
      * - `recipient` cannot be the zero address.
      * - the caller must have a balance of at least `amount`.
      */
-    function increaseShare(//CTS:EXAMINE should have require that caller is owner of token??
+    function increaseShare(
         uint32 _assetClass,
         uint256 _amount
     ) public returns (bool) {
