@@ -173,7 +173,7 @@ contract AC_MGR is CORE {
     }
 
     /*
-     * @dev Increases priceShare in an assetClass //DS:TEST the fuck out of this
+     * @dev Increases priceShare in an assetClass
      *
      */
     function increasePriceShare(uint32 _assetClass, uint256 _increaseAmount)
@@ -300,7 +300,7 @@ contract AC_MGR is CORE {
     //-------------------------------------------functions for payment calculations----------------------------------------------
 
     /*
-     * @dev Retrieve function costs per asset class, per service type, in Wei  //NEW DS:TEST
+     * @dev Retrieve function costs per asset class, per service type, in Wei
      */
     function getServiceCosts(uint32 _assetClass, uint16 _service)
         external view
