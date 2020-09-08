@@ -78,10 +78,6 @@ contract AC_MGR is CORE {
         uint8 _userType,
         uint32 _assetClass
     ) external whenNotPaused isACtokenHolderOfClass(_assetClass) {
-        require( //AC 0 is reserved for the # of AC's that the adressHash is registered in   CTS:EXAMINE Redundant?? Checks with mod??(throws in ERC721, nonexistant token)
-            AC_data[_assetClass].assetClassRoot != 0,
-            "ACM:AU specified asset class not populated"
-        );
         //^^^^^^^checks^^^^^^^^^
 
         bytes32 addrHash = keccak256(abi.encodePacked(_authAddr));
