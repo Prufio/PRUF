@@ -57,7 +57,7 @@ contract VERIFY is CORE {
             "VFY:MOD-IA: Caller does not hold token"
         );
         require(
-            (getUserType(rec.assetClass) >= 1),
+            (getCallingUserType(rec.assetClass) >= 1),
             "VFY:MOD-IA: User not authorized for this operation"
         );
         _;
@@ -126,7 +126,7 @@ contract VERIFY is CORE {
             "VFY:MI: Caller does not hold token"
         );
         require(
-            (getUserType(rec.assetClass) == 1),   // must be userType 1 in the assetClass
+            (getCallingUserType(rec.assetClass) == 1),   // must be userType 1 in the assetClass
             "VFY:MI: User not authorized for this operation"
         );
         require(items[_itemHash] == _idxHash, "VFY:TO:item not held by caller"); //check to see if held by _idxHash

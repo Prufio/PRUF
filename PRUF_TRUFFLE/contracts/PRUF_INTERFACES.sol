@@ -18,7 +18,7 @@ __/\\\\\\\\\\\\\ _____/\\\\\\\\\ _______/\\../\\ ___/\\\\\\\\\\\\\\\
 // SPDX-License-Identifier: UNLICENSED
 pragma solidity ^0.6.7;
 
-interface PRUF_TKN_Interface {
+interface UTIL_TKN_Interface {
     /**
      * @dev Returns the amount of tokens in existence.
      */

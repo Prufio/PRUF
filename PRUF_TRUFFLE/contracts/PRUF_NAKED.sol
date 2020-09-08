@@ -41,7 +41,7 @@ contract NAKED is CORE {
     ) external nonReentrant whenNotPaused {
         uint256 tokenId = uint256(_idxHash);
         Record memory rec = getRecord(_idxHash);
-        uint8 userType = getUserType(_assetClass);
+        uint8 userType = getCallingUserType(_assetClass);
 
         require(
             (AC_TKN.ownerOf(_assetClass) == msg.sender), //msg.sender is AC token holder

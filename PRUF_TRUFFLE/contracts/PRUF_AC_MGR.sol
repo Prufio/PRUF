@@ -51,7 +51,7 @@ contract AC_MGR is CORE {
      */
     modifier isAdmin() {
         require(
-            (msg.sender == owner()) || (msg.sender == PRUF_TKN_Address),
+            (msg.sender == owner()) || (msg.sender == UTIL_TKN_Address),
             "ACM:MOD-IA:Calling address does not belong to an Admin"
         );
         _;
@@ -179,9 +179,9 @@ contract AC_MGR is CORE {
     function increasePriceShare(uint32 _assetClass, uint256 _increaseAmount)
         external
     {
-        require( //require caller is PRUF_TKN
-            (msg.sender == PRUF_TKN_Address),
-            "ACM:IPS: Caller is not PRUF_TKN contract"
+        require( //require caller is UTIL_TKN
+            (msg.sender == UTIL_TKN_Address),
+            "ACM:IPS: Caller is not UTIL_TKN contract"
         );
         uint256 discount = AC_data[_assetClass].discount;
         //^^^^^^^checks^^^^^^^^^

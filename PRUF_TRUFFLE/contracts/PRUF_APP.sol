@@ -43,7 +43,7 @@ contract APP is CORE {
         uint32 _countDownStart
     ) external payable nonReentrant whenNotPaused {
         Record memory rec = getRecord(_idxHash);
-        uint8 userType = getUserType(_assetClass);
+        uint8 userType = getCallingUserType(_assetClass);
         AC memory AC_info = getACinfo(_assetClass);
         AC memory oldAC_info = getACinfo(rec.assetClass);
 
@@ -81,7 +81,7 @@ contract APP is CORE {
         returns (uint8)
     {
         Record memory rec = getRecord(_idxHash);
-        uint8 userType = getUserType(_newAssetClass);
+        uint8 userType = getCallingUserType(_newAssetClass);
 
         require(userType < 3, "A:IA: User not authorized to import assets");
         require((userType > 0) && (userType < 10), "A:IA: User not auth in AC");
@@ -120,7 +120,7 @@ contract APP is CORE {
         returns (uint8)
     {
         Record memory rec = getRecord(_idxHash);
-        uint8 userType = getUserType(rec.assetClass);
+        uint8 userType = getCallingUserType(rec.assetClass);
         
         require(userType == 1, "A:FMR: User not auth in AC");
         require(
@@ -165,7 +165,7 @@ contract APP is CORE {
         returns (uint8)
     {
         Record memory rec = getRecord(_idxHash);
-        uint8 userType = getUserType(rec.assetClass);
+        uint8 userType = getCallingUserType(rec.assetClass);
 
         require((userType > 0) && (userType < 10), "A:TA: User not auth in AC");
         require(
@@ -217,7 +217,7 @@ contract APP is CORE {
         returns (bytes32)
     {
         Record memory rec = getRecord(_idxHash);
-        uint8 userType = getUserType(rec.assetClass);
+        uint8 userType = getCallingUserType(rec.assetClass);
 
         require((userType > 0) && (userType < 10), "A:I2: User not auth in AC");
 

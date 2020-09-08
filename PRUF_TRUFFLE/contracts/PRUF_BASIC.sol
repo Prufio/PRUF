@@ -62,8 +62,8 @@ contract BASIC is ReentrancyGuard, Ownable, IERC721Receiver, Pausable {
     address internal AC_MGR_Address;
     AC_MGR_Interface internal AC_MGR;
 
-    address internal PRUF_TKN_Address;
-    PRUF_TKN_Interface internal PRUF_TKN;
+    address internal UTIL_TKN_Address;
+    UTIL_TKN_Interface internal UTIL_TKN;
 
     address internal A_TKN_Address;
     A_TKN_Interface internal A_TKN;
@@ -126,8 +126,8 @@ contract BASIC is ReentrancyGuard, Ownable, IERC721Receiver, Pausable {
         AC_MGR_Address = STOR.resolveContractAddress("AC_MGR");
         AC_MGR = AC_MGR_Interface(AC_MGR_Address);
 
-        PRUF_TKN_Address = STOR.resolveContractAddress("PRUF_TKN");
-        PRUF_TKN = PRUF_TKN_Interface(PRUF_TKN_Address);
+        UTIL_TKN_Address = STOR.resolveContractAddress("UTIL_TKN");
+        UTIL_TKN = UTIL_TKN_Interface(UTIL_TKN_Address);
 
         A_TKN_Address = STOR.resolveContractAddress("A_TKN");
         A_TKN = A_TKN_Interface(A_TKN_Address);
@@ -233,7 +233,7 @@ contract BASIC is ReentrancyGuard, Ownable, IERC721Receiver, Pausable {
     /*
      * @dev Get a User type Record from AC_manager for msg.sender, by assetClass
      */
-    function getUserType(uint32 _assetClass)
+    function getCallingUserType(uint32 _assetClass)
         internal
         virtual
         view

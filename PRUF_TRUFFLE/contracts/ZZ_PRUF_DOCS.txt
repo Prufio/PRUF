@@ -106,7 +106,8 @@ pragma solidity ^0.6.7;
 *-----------------------------------------------------------------
  * NOTES 
  * All assetclasses in the same root should use the same data structure to generate the idxHash. Other structures 
- *     will result in a nonconforming "hidden" asset only findable in its own web interface, and not AC transportable.
+ *      will result in a nonconforming "hidden" asset only findable in its own web interface, and not AC transportable.
+ *
  * When upgrading a contract, all authorized asset classes will be linked to the name, not the newly deplyed contract address
 *-----------------------------------------------------------------
 
@@ -118,6 +119,24 @@ pragma solidity ^0.6.7;
  * to require an actual, malicious effort to bypass security rather than a little copy-paste. Actual decentralized
  * security is provided with tokenized assets, which do not rely on the coercive trust relationship that creates the
  * incentive for recorders not to engage in malicious practices.
+*-----------------------------------------------------------------
+
+*-----------------------------------------------------------------
+ * Crucial orders:
+ * 1: Checks
+ * 2: Effects (on local data)
+ * 3: Interactions (with other contracts, including returns)
+ *
+ * 0: Global (Storage) declarations and data structures
+ * 1: constructor
+ * 2: receive function (if exists)
+ * 3: fallback function (if exists)
+ * 4: external
+ * 5: public
+ * 6: internal
+ * 7: private
+ * * - within a group, view and pure are last
+ *
 *-----------------------------------------------------------------
 
 *-----------------------------------------------------------------

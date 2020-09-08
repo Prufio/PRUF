@@ -46,7 +46,7 @@ contract ECR is ECR_CORE {
         uint8 _escrowStatus
     ) external nonReentrant isAuthorized(_idxHash) {
         Record memory rec = getRecord(_idxHash);
-        uint8 userType = getUserType(rec.assetClass);
+        uint8 userType = getCallingUserType(rec.assetClass);
         uint256 escrowTime = block.timestamp.add(_escrowTime);
         uint8 newEscrowStatus;
         ContractDataHash memory contractInfo = getContractInfo(
@@ -86,7 +86,7 @@ contract ECR is ECR_CORE {
         uint8 _escrowStatus
     ) external nonReentrant isAuthorized(_idxHash) {
         Record memory rec = getRecord(_idxHash);
-        uint8 userType = getUserType(rec.assetClass);
+        uint8 userType = getCallingUserType(rec.assetClass);
         uint256 escrowTime = block.timestamp.add(_escrowTime);
         uint8 newEscrowStatus;
         ContractDataHash memory contractInfo = getContractInfo(
@@ -140,7 +140,7 @@ contract ECR is ECR_CORE {
             address(this),
             rec.assetClass
         );
-        uint8 userType = getUserType(rec.assetClass);
+        uint8 userType = getCallingUserType(rec.assetClass);
         bytes32 ownerHash = ECR_MGR.retrieveEscrowOwner(_idxHash);
 
         require(contractInfo.contractType > 0, "E:EE: contract not auth in AC");
