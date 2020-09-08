@@ -58,7 +58,7 @@ contract UTIL_TKN is
 
     address internal paymentAddress;
 
-    uint256 internal ACtokenIndex = 10000;
+    uint256 internal ACtokenIndex = 1000000; //asset tokens created in sequence at 1,000,000 +
     uint256 internal currentACtokenPrice = 10000;
 
     /**
@@ -136,7 +136,7 @@ contract UTIL_TKN is
     function currentACtokenInfo() external view returns (uint256, uint256) {
         //^^^^^^^checks^^^^^^^^^
 
-        uint256 numberOfTokensSold = ACtokenIndex.sub(uint256(10000));
+        uint256 numberOfTokensSold = ACtokenIndex.sub(uint256(1000000));
         return (numberOfTokensSold, currentACtokenPrice);
         //^^^^^^^effects/interactions^^^^^^^^^
     }
@@ -201,7 +201,7 @@ contract UTIL_TKN is
         if (ACtokenIndex < 4294000000) ACtokenIndex++; //increment ACtokenIndex up to last one
 
         uint256 newACtokenPrice;
-        uint256 numberOfTokensSold = ACtokenIndex.sub(uint256(10000));
+        uint256 numberOfTokensSold = ACtokenIndex.sub(uint256(1000000));
 
         if (numberOfTokensSold >= 4000) {
             newACtokenPrice = 100000;
