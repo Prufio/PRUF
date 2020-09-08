@@ -158,21 +158,20 @@ contract UTIL_TKN is
             "PRuf:IS:Insufficient PRuF token Balance for transaction"
         );
         require(
-            _amount > 99,
-            "PRuf:IS:amount < 100 will not increase price share"
+            _amount > 199,
+            "PRuf:IS:amount < 200 will not increase price share"
         );
 
-        require(_amount <= 6000, "PRuf:IS:amount > 6000 exceeds max"); // 3k-9k is 6K - 10K is more than possibly required in any forseeable circumstance
         //^^^^^^^checks^^^^^^^^^
 
         uint256 oldShare = uint256(AC_MGR.getAC_discount(_assetClass));
 
-        uint256 maxPayment = uint256(9000).sub(oldShare); //max payment percentage never goes over 90%
+        uint256 maxPayment = (uint256(9000).sub(oldShare)).mul(uint256(2)); //max payment percentage never goes over 90%
         if (_amount > maxPayment) _amount = maxPayment;
 
         _transfer(_msgSender(), paymentAddress, _amount);
 
-        AC_MGR.increasePriceShare(_assetClass, _amount);
+        AC_MGR.increasePriceShare(_assetClass, _amount.div(uint256(2)));
         return true;
         //^^^^^^^effects/interactions^^^^^^^^^
     }

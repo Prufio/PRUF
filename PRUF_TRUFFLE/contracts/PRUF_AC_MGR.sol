@@ -249,7 +249,7 @@ contract AC_MGR is BASIC {
     }
 
     /*
-     * @dev Retrieve AC_discount @ _assetClass
+     * @dev Retrieve AC_discount @ _assetClass, in percent ACTH share, * 100 (9000 = 90%)
      */
     function getAC_discount(uint32 _assetClass) external view returns (uint32) {
         //^^^^^^^checks^^^^^^^^^

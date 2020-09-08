@@ -32,17 +32,21 @@ pragma solidity ^0.6.7;
  *
  *      *find a way to find and react to assets being in a dead asset class (future, API verified, works w/ AC0)
  *
+ *      *Eventually flatten contracts and factor interface file
+ *
  *      *what do we do (if anything) with the 128 "free" bits in the storage struct?
- *
- *      *make "pruf verify" contract, stores ipfs? with list of "held" assets?
- *
- *      *copy dev notes to interfaces
- *
- *      *find any recursive calls (especially in bacic, core, ecr_core)
  *
  *      *Look up AC Data in the web interface
  *
+ *      *find any recursive calls
+ *
  *      *Security token
+ *
+ *      *Define / document protocol
+ *
+ *      *copy dev notes to interfaces
+ *
+ *      *make "pruf verify" contract, stores ipfs? with list of "held" assets?
  *
 *-----------------------------------------------------------------
 

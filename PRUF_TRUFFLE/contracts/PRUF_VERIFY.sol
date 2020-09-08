@@ -41,7 +41,6 @@ contract VERIFY is CORE {
         uint8 status; //Item status (suspect, counterfiet, stolen, lost, etc) //maybe only bank /mint can mark counterfiet?
         uint32 value; //denomination, if applicable
         uint32 collisions; //number of times the item was attempted to be "locked" when held
-        //uint32 assetClass; //assetClass of item (must be the same assetClass as the _idxHash)
         //room here for more data for 32 bytes!
     }
 
@@ -74,11 +73,8 @@ contract VERIFY is CORE {
             "VFY:PI:item already held by caller"
         );
         //^^^^^^^checks^^^^^^^^^
-        if (
-            (items[_itemHash] != 0) &&
-            (itemData[_itemHash].collisions < 4294967295)
-        ) {
-            itemData[_itemHash].collisions++;
+        if (items[_itemHash] != 0) {
+            if (itemData[_itemHash].collisions < 4294967295) itemData[_itemHash].collisions++;
             return 0;
         } else {
             items[_itemHash] = _idxHash; // put item _asset into wallet _idxHash\
