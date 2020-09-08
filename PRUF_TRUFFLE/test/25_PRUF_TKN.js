@@ -1437,7 +1437,7 @@ it("Should retrieve balanceOf(30000) Pruf tokens @account1", async () =>{
 it('Should increaseShare to 45/55 split @AC13', async () => {
     return UTIL_TKN.increaseShare(
     '13',
-    '1500',
+    '3000',
     {from: account1}
     )
 })

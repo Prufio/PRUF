@@ -1426,7 +1426,7 @@ it('Should write asset12 in AC 10', async () => {
 it('Should increaseShare to 45/55 split @AC13', async () => {
     return UTIL_TKN.increaseShare(
     '13',
-    '1500',
+    '3000',
     {from: account1}
     )
 })
@@ -1435,7 +1435,7 @@ it('Should increaseShare to 45/55 split @AC13', async () => {
 it('Should increaseShare to 90/10 split @AC11', async () => {
     return UTIL_TKN.increaseShare(
     '11',
-    '6000',
+    '12000',
     {from: account1}
     )
 })

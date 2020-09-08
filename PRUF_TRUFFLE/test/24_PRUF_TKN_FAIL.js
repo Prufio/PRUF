@@ -1428,7 +1428,7 @@ it('Should set payment address to account1', async () => {
 it('Should fail because storageAddr != 0', async () => {
 
     console.log("//**************************************END UTIL_TKN SETUP**********************************************/")
-    console.log("//**************************************BEGIN UTIL_TKN FAIL TEST (13)**********************************************/")
+    console.log("//**************************************BEGIN UTIL_TKN FAIL TEST (11)**********************************************/")
     console.log("//**************************************BEGIN AdminSetStorageContract FAIL TEST**********************************************/")
     return UTIL_TKN.AdminSetStorageContract(
     account000,
@@ -1486,33 +1486,6 @@ it('Should fail because amount sent < 100', async () => {
 })
 
 //7
-it('Should fail because overall amount sent > 6000', async () => {
-    return UTIL_TKN.increaseShare(
-    '10',
-    '6001',
-    {from: account1}
-    )
-})
-
-
-it('Should increaseShare by 5999', async () => {
-    return UTIL_TKN.increaseShare(
-    '10',
-    '5999',
-    {from: account1}
-    )
-})
-
-//8
-it('Should fail because overall amount sent > 6000', async () => {
-    return UTIL_TKN.increaseShare(
-    '10',
-    '2',
-    {from: account1}
-    )
-})
-
-//9
 it('Should fail because balanceOf sender < ACtokenPrice', async () => {
 
     console.log("//**************************************END increaseShare FAIL TEST**********************************************/")
@@ -1525,7 +1498,7 @@ it('Should fail because balanceOf sender < ACtokenPrice', async () => {
     )
 })
 
-//10
+//8
 it('Should fail because caller is not Admin', async () => {
 
     console.log("//**************************************END purchaseACtoken FAIL TEST**********************************************/")
@@ -1535,7 +1508,7 @@ it('Should fail because caller is not Admin', async () => {
     )
 })
 
-//11
+//9
 it('Should fail because caller is not minter', async () => {
 
     console.log("//**************************************END AdminResolveContractAddresses FAIL TEST**********************************************/")
@@ -1547,7 +1520,7 @@ it('Should fail because caller is not minter', async () => {
     )
 })
 
-//12
+//10
 it('Should fail because caller is not pauser', async () => {
 
     console.log("//**************************************END mint FAIL TEST**********************************************/")
@@ -1557,7 +1530,7 @@ it('Should fail because caller is not pauser', async () => {
     )
 })
 
-//13
+//11
 it('Should fail because caller is not pauser', async () => {
 
     console.log("//**************************************END pause FAIL TEST**********************************************/")
