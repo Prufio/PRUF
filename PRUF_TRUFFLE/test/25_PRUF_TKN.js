@@ -1548,14 +1548,23 @@ it("Should retrieve cost of ACtoken", async () =>{
 })
 
 
-it("Should purchace ACtoken to account3 and display ACnumber", async () =>{ 
-    var ACnumber = [];
+it('Should purchace ACtoken to account3', async () => {
+    return UTIL_TKN.purchaseACtoken(
+    'account3FTW',
+    '1',
+    '1',
+    {from: account3}
+    )
+})
+
+
+it("Should retrieve owner of AC1000002, should be account3", async () =>{ 
+    var ACowner = [];
     
-    return await UTIL_TKN.purchaseACtoken('account3FTW', '1', '1', {from: account3},
-    function (_err, _result) {
+    return await AC_TKN.ownerOf('1000002', {from: account3}, function (_err, _result) {
         if(_err){} 
-        else{ACnumber = Object.values(_result)
-    console.log(ACnumber)}
+        else{ACowner = Object.values(_result)
+    console.log(ACowner)}
     })
 })
 
