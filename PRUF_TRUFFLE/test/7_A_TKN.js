@@ -644,70 +644,70 @@
     it('Should resolve contract addresses', async () => {
 
         console.log("Resolving in APP")
-        return APP.OO_ResolveContractAddresses({ from: account1 })
+        return APP.OO_resolveContractAddresses({ from: account1 })
 
             .then(() => {
                 console.log("Resolving in NP")
-                return NP.OO_ResolveContractAddresses({ from: account1 })
+                return NP.OO_resolveContractAddresses({ from: account1 })
             })
 
             .then(() => {
                 console.log("Resolving in MAL_APP")
-                return MAL_APP.OO_ResolveContractAddresses({ from: account1 })
+                return MAL_APP.OO_resolveContractAddresses({ from: account1 })
             })
             
             .then(() => {
                 console.log("Resolving in AC_MGR")
-                return AC_MGR.OO_ResolveContractAddresses({ from: account1 })
+                return AC_MGR.OO_resolveContractAddresses({ from: account1 })
             })
             
             .then(() => {
                 console.log("Resolving in AC_TKN")
-                return AC_TKN.OO_ResolveContractAddresses({ from: account1 })
+                return AC_TKN.OO_resolveContractAddresses({ from: account1 })
             })
             
             .then(() => {
                 console.log("Resolving in A_TKN")
-                return A_TKN.OO_ResolveContractAddresses({ from: account1 })
+                return A_TKN.OO_resolveContractAddresses({ from: account1 })
             })
             
             .then(() => {
                 console.log("Resolving in ECR_MGR")
-                return ECR_MGR.OO_ResolveContractAddresses({ from: account1 })
+                return ECR_MGR.OO_resolveContractAddresses({ from: account1 })
             })
             
             .then(() => {
                 console.log("Resolving in ECR")
-                return ECR.OO_ResolveContractAddresses({ from: account1 })
+                return ECR.OO_resolveContractAddresses({ from: account1 })
             })
 
             .then(() => {
                 console.log("Resolving in ECR2")
-                return ECR2.OO_ResolveContractAddresses({ from: account1 })
+                return ECR2.OO_resolveContractAddresses({ from: account1 })
             })
             
             .then(() => {
                 console.log("Resolving in APP_NC")
-                return APP_NC.OO_ResolveContractAddresses({ from: account1 })})
+                return APP_NC.OO_resolveContractAddresses({ from: account1 })})
             
             .then(() => {
                 console.log("Resolving in NP_NC")
-                return NP_NC.OO_ResolveContractAddresses({ from: account1 })
+                return NP_NC.OO_resolveContractAddresses({ from: account1 })
             })
             
             .then(() => {
                 console.log("Resolving in ECR_NC")
-                return ECR_NC.OO_ResolveContractAddresses({ from: account1 })
+                return ECR_NC.OO_resolveContractAddresses({ from: account1 })
             })
 
             .then(() => {
                 console.log("Resolving in NAKED")
-                return NAKED.OO_ResolveContractAddresses({ from: account1 })
+                return NAKED.OO_resolveContractAddresses({ from: account1 })
             })
             
             .then(() => {
                 console.log("Resolving in RCLR")
-                return RCLR.OO_ResolveContractAddresses({ from: account1 })
+                return RCLR.OO_resolveContractAddresses({ from: account1 })
             })
     })
 
@@ -1532,8 +1532,8 @@
     it('Should fail because caller is not owner', async () => {
 
         console.log("//**************************************END OO_setStorageContract FAIL BATCH**********************************************/")
-        console.log("//**************************************BEGIN OO_ResolveContractAddresses FAIL BATCH**********************************************/")
-        return A_TKN.OO_ResolveContractAddresses(
+        console.log("//**************************************BEGIN OO_resolveContractAddresses FAIL BATCH**********************************************/")
+        return A_TKN.OO_resolveContractAddresses(
         {from: account2}
         )
     })
@@ -1541,7 +1541,7 @@
     //4
     it('Should fail because caller is not owner or approved', async () => {
 
-        console.log("//**************************************END OO_ResolveContractAddresses FAIL BATCH**********************************************/")
+        console.log("//**************************************END OO_resolveContractAddresses FAIL BATCH**********************************************/")
         console.log("//**************************************BEGIN mintAssetToken FAIL BATCH**********************************************/")
         return A_TKN.mintAssetToken(
         account1,

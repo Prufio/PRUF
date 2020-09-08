@@ -48,7 +48,7 @@ class SetupAndResolveContracts extends Component {
         const self = this;
 
         const resolveContractAddresses = async () => {
-            await this.state.APP.methods.OO_ResolveContractAddresses().send({ from: window.addr })
+            await this.state.APP.methods.OO_resolveContractAddresses().send({ from: window.addr })
                 .on("error", function (_error) {
                     console.log("ERR: ", _error)
                 })
@@ -56,7 +56,7 @@ class SetupAndResolveContracts extends Component {
                     console.log("Resolved in APP");
                     console.log("tx receipt: ", receipt);
                 });
-            await this.state.NP.methods.OO_ResolveContractAddresses().send({ from: window.addr })
+            await this.state.NP.methods.OO_resolveContractAddresses().send({ from: window.addr })
                 .on("error", function (_error) {
                     console.log("ERR: ", _error)
                 })
@@ -64,7 +64,7 @@ class SetupAndResolveContracts extends Component {
                     console.log("Resolved in NP");
                     console.log("tx receipt: ", receipt);
                 });
-            await this.state.APP_NC.methods.OO_ResolveContractAddresses().send({ from: window.addr })
+            await this.state.APP_NC.methods.OO_resolveContractAddresses().send({ from: window.addr })
                 .on("error", function (_error) {
                     console.log("ERR: ", _error)
                 })
@@ -72,7 +72,7 @@ class SetupAndResolveContracts extends Component {
                     console.log("Resolved in APP_NC");
                     console.log("tx receipt: ", receipt);
                 });
-            await this.state.NP_NC.methods.OO_ResolveContractAddresses().send({ from: window.addr })
+            await this.state.NP_NC.methods.OO_resolveContractAddresses().send({ from: window.addr })
                 .on("error", function (_error) {
                     console.log("ERR: ", _error)
                 })
@@ -80,7 +80,7 @@ class SetupAndResolveContracts extends Component {
                     console.log("Resolved in NP_NC");
                     console.log("tx receipt: ", receipt);
                 });
-            await this.state.ECR.methods.OO_ResolveContractAddresses().send({ from: window.addr })
+            await this.state.ECR.methods.OO_resolveContractAddresses().send({ from: window.addr })
                 .on("error", function (_error) {
                     console.log("ERR: ", _error)
                 })
@@ -88,7 +88,7 @@ class SetupAndResolveContracts extends Component {
                     console.log("Resolved in ECR");
                     console.log("tx receipt: ", receipt);
                 });
-            await this.state.ECR_NC.methods.OO_ResolveContractAddresses().send({ from: window.addr })
+            await this.state.ECR_NC.methods.OO_resolveContractAddresses().send({ from: window.addr })
                 .on("error", function (_error) {
                     console.log("ERR: ", _error)
                 })
@@ -96,7 +96,7 @@ class SetupAndResolveContracts extends Component {
                     console.log("Resolved in ECR_NC");
                     console.log("tx receipt: ", receipt);
                 });
-            await this.state.ECR_MGR.methods.OO_ResolveContractAddresses().send({ from: window.addr })
+            await this.state.ECR_MGR.methods.OO_resolveContractAddresses().send({ from: window.addr })
                 .on("error", function (_error) {
                     console.log("ERR: ", _error)
                 })
@@ -104,7 +104,7 @@ class SetupAndResolveContracts extends Component {
                     console.log("Resolved in ECR_MGR");
                     console.log("tx receipt: ", receipt);
                 });
-            await this.state.A_TKN.methods.OO_ResolveContractAddresses().send({ from: window.addr })
+            await this.state.A_TKN.methods.OO_resolveContractAddresses().send({ from: window.addr })
                 .on("error", function (_error) {
                     console.log("ERR: ", _error)
                 })
@@ -112,7 +112,7 @@ class SetupAndResolveContracts extends Component {
                     console.log("Resolved in A_TKN");
                     console.log("tx receipt: ", receipt);
                 });
-            await this.state.AC_TKN.methods.OO_ResolveContractAddresses().send({ from: window.addr })
+            await this.state.AC_TKN.methods.OO_resolveContractAddresses().send({ from: window.addr })
                 .on("error", function (_error) {
                     console.log("ERR: ", _error)
                 })
@@ -120,7 +120,7 @@ class SetupAndResolveContracts extends Component {
                     console.log("Resolved in AC_TKN");
                     console.log("tx receipt: ", receipt);
                 });
-            await this.state.AC_MGR.methods.OO_ResolveContractAddresses().send({ from: window.addr })
+            await this.state.AC_MGR.methods.OO_resolveContractAddresses().send({ from: window.addr })
                 .on("error", function (_error) {
                     console.log("ERR: ", _error)
                 })
@@ -128,7 +128,7 @@ class SetupAndResolveContracts extends Component {
                     console.log("Resolved in AC_MGR");
                     console.log("tx receipt: ", receipt);
                 });
-            await this.state.RCLR.methods.OO_ResolveContractAddresses().send({ from: window.addr })
+            await this.state.RCLR.methods.OO_resolveContractAddresses().send({ from: window.addr })
                 .on("error", function (_error) {
                     console.log("ERR: ", _error)
                 })
@@ -136,7 +136,7 @@ class SetupAndResolveContracts extends Component {
                     console.log("Resolved in RCLR");
                     console.log("tx receipt: ", receipt);
                 });
-            await this.state.NAKED.methods.OO_ResolveContractAddresses().send({ from: window.addr })
+            await this.state.NAKED.methods.OO_resolveContractAddresses().send({ from: window.addr })
                 .on("error", function (_error) {
                     console.log("ERR: ", _error)
                 })
@@ -144,7 +144,7 @@ class SetupAndResolveContracts extends Component {
                     console.log("Resolved in NAKED");
                     console.log("tx receipt: ", receipt);
                 });
-            await this.state.VERIFY.methods.OO_ResolveContractAddresses().send({ from: window.addr })
+            await this.state.VERIFY.methods.OO_resolveContractAddresses().send({ from: window.addr })
                 .on("error", function (_error) {
                     console.log("ERR: ", _error)
                 })

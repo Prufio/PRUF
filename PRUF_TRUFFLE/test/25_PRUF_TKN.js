@@ -664,70 +664,70 @@ it('Should add Storage in each contract', async () => {
 it('Should resolve contract addresses', async () => {
 
     console.log("Resolving in APP")
-    return APP.OO_ResolveContractAddresses({ from: account1 })
+    return APP.OO_resolveContractAddresses({ from: account1 })
 
         .then(() => {
             console.log("Resolving in NP")
-            return NP.OO_ResolveContractAddresses({ from: account1 })
+            return NP.OO_resolveContractAddresses({ from: account1 })
         })
 
         .then(() => {
             console.log("Resolving in MAL_APP")
-            return MAL_APP.OO_ResolveContractAddresses({ from: account1 })
+            return MAL_APP.OO_resolveContractAddresses({ from: account1 })
         })
         
         .then(() => {
             console.log("Resolving in AC_MGR")
-            return AC_MGR.OO_ResolveContractAddresses({ from: account1 })
+            return AC_MGR.OO_resolveContractAddresses({ from: account1 })
         })
         
         .then(() => {
             console.log("Resolving in AC_TKN")
-            return AC_TKN.OO_ResolveContractAddresses({ from: account1 })
+            return AC_TKN.OO_resolveContractAddresses({ from: account1 })
         })
         
         .then(() => {
             console.log("Resolving in A_TKN")
-            return A_TKN.OO_ResolveContractAddresses({ from: account1 })
+            return A_TKN.OO_resolveContractAddresses({ from: account1 })
         })
         
         .then(() => {
             console.log("Resolving in ECR_MGR")
-            return ECR_MGR.OO_ResolveContractAddresses({ from: account1 })
+            return ECR_MGR.OO_resolveContractAddresses({ from: account1 })
         })
         
         .then(() => {
             console.log("Resolving in ECR")
-            return ECR.OO_ResolveContractAddresses({ from: account1 })
+            return ECR.OO_resolveContractAddresses({ from: account1 })
         })
 
         .then(() => {
             console.log("Resolving in ECR2")
-            return ECR2.OO_ResolveContractAddresses({ from: account1 })
+            return ECR2.OO_resolveContractAddresses({ from: account1 })
         })
         
         .then(() => {
             console.log("Resolving in APP_NC")
-            return APP_NC.OO_ResolveContractAddresses({ from: account1 })})
+            return APP_NC.OO_resolveContractAddresses({ from: account1 })})
         
         .then(() => {
             console.log("Resolving in NP_NC")
-            return NP_NC.OO_ResolveContractAddresses({ from: account1 })
+            return NP_NC.OO_resolveContractAddresses({ from: account1 })
         })
         
         .then(() => {
             console.log("Resolving in ECR_NC")
-            return ECR_NC.OO_ResolveContractAddresses({ from: account1 })
+            return ECR_NC.OO_resolveContractAddresses({ from: account1 })
         })
 
         .then(() => {
             console.log("Resolving in NAKED")
-            return NAKED.OO_ResolveContractAddresses({ from: account1 })
+            return NAKED.OO_resolveContractAddresses({ from: account1 })
         })
         
         .then(() => {
             console.log("Resolving in RCLR")
-            return RCLR.OO_ResolveContractAddresses({ from: account1 })
+            return RCLR.OO_resolveContractAddresses({ from: account1 })
         })
 
         .then(() => {
@@ -1548,13 +1548,15 @@ it("Should retrieve cost of ACtoken", async () =>{
 })
 
 
-it('Should purchace ACtoken to account3', async () => {
-    return UTIL_TKN.purchaseACtoken(
-    'account3FTW',
-    '1',
-    '1',
-    {from: account3}
-    )
+it("Should purchace ACtoken to account3 and display ACnumber", async () =>{ 
+    var ACnumber = [];
+    
+    return await UTIL_TKN.purchaseACtoken('account3FTW', '1', '1', {from: account3},
+    function (_err, _result) {
+        if(_err){} 
+        else{ACnumber = Object.values(_result)
+    console.log(ACnumber)}
+    })
 })
 
 
