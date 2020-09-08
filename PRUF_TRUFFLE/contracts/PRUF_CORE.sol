@@ -69,7 +69,7 @@ contract CORE is PullPayment, BASIC {
             A_TKN.mintAssetToken(address(this), tokenId, "pruf.io");
         }
 
-        if (AC_info.custodyType == 2) {
+        if ((AC_info.custodyType == 2) || (AC_info.custodyType == 4)) {
             A_TKN.mintAssetToken(msg.sender, tokenId, "pruf.io");
         }
 
