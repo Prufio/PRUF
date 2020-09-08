@@ -1558,10 +1558,21 @@ it('Should purchace ACtoken to account3', async () => {
 })
 
 
-it("Should retrieve owner of AC1000002, should be account3", async () =>{ 
+it("Should retrieve balanceOf(1) ACtokens @account3", async () =>{ 
+    var Balance = [];
+    
+    return await AC_TKN.balanceOf(account3, {from: account3}, function (_err, _result) {
+        if(_err){} 
+        else{Balance = Object.values(_result)
+    console.log(Balance)}
+    })
+})
+
+
+it("Should make sure account3 is owner of AC1000002", async () =>{ 
     var ACnumber = [];
     
-    return await AC_TKN.tokenOfOwnerByIndex(account3, '1', {from: account3}, function (_err, _result) {
+    return await AC_TKN.tokenOfOwnerByIndex(account3, '0', {from: account3}, function (_err, _result) {
         if(_err){} 
         else{ACnumber = Object.values(_result)
     console.log(ACnumber)}
@@ -1573,17 +1584,6 @@ it("Should retrieve 30000 - cost of purchaseACtoken", async () =>{
     var Balance = [];
     
     return await UTIL_TKN.balanceOf(account3, {from: account3}, function (_err, _result) {
-        if(_err){} 
-        else{Balance = Object.values(_result)
-    console.log(Balance)}
-    })
-})
-
-
-it("Should retrieve balanceOf(1) ACtokens @account3", async () =>{ 
-    var Balance = [];
-    
-    return await AC_TKN.balanceOf(account3, {from: account3}, function (_err, _result) {
         if(_err){} 
         else{Balance = Object.values(_result)
     console.log(Balance)}
