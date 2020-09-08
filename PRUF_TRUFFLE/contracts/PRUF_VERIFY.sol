@@ -19,6 +19,7 @@ __/\\\\\\\\\\\\\ _____/\\\\\\\\\ _______/\\../\\ ___/\\\\\\\\\\\\\\\
  * only pouchholder can mark item status, etc
  * joe public can check only?
  * statuses:
+ *
  * 0 = no status; clean
  * 1 = items with this SN are questionable (found an item that is apparently not real, or collisions found)
  * 2 = items with this SN are counterfiet (original, authentic item recovered (and held/destroyed), or SN does not officially exist) (SUPER AUTH ONLY)
@@ -46,7 +47,8 @@ contract VERIFY is CORE {
 
     mapping(bytes32 => bytes32) internal items;
     mapping(bytes32 => ItemData) internal itemData;
-    modifier isAuthorized(bytes32 _idxHash) override {
+
+    modifier isAuthorized(bytes32 _idxHash) override {  //checks to see if caller holds the wallet token (asset token minted as a wallet)
         Record memory rec = getRecord(_idxHash);
         uint256 tokenId = uint256(_idxHash);
 
@@ -93,7 +95,7 @@ contract VERIFY is CORE {
     }
 
 
-    function transfer(                                                               //IS THIS A TERRIBLE IDEA? EXAMINE
+    function transfer(            //IS THIS A TERRIBLE IDEA? EXAMINE
         bytes32 _idxHash,
         bytes32 _newIdxHash,
         bytes32 _itemHash
@@ -104,7 +106,7 @@ contract VERIFY is CORE {
         require(items[_itemHash] == _idxHash, "VFY:TO:item not held by caller"); //check to see if held by _idxHash
         require(    //must move to same asset class
             AC_MGR.isSameRootAC(rec.assetClass, newRec.assetClass) == 170,
-            "VFY:TO:item not held by caller"
+            "VFY:TO:Wallet is not in the same asset class"
         ); 
 
         items[_itemHash] = _newIdxHash; // transfer item _asset
@@ -144,30 +146,9 @@ contract VERIFY is CORE {
     {
         return (
             items[_itemHash], //holding _idxHash, if any
-            itemData[_itemHash].status,
-            itemData[_itemHash].value,
-            itemData[_itemHash].collisions
-            //,itemData[_itemHash].assetClass
+            itemData[_itemHash].status, //item status
+            itemData[_itemHash].value, //value field (example 10 for 10USD bill)
+            itemData[_itemHash].collisions //number of collisions on this serial number
         );
     }
 }
-
-// AC memory AC_info = getACinfo(rec.assetClass);
-
-// function getACinfo(uint32 _assetClass)
-//         internal
-//         virtual
-//         returns (AC memory)
-//     {
-//         //^^^^^^^checks^^^^^^^^^
-        
-//         AC memory AC_info;
-//         //^^^^^^^effects^^^^^^^^^
-//         (
-//             AC_info.assetClassRoot,
-//             AC_info.custodyType,
-//             AC_info.extendedData
-//         ) = AC_MGR.getAC_data(_assetClass);
-//         return AC_info;
-//         //^^^^^^^interactions^^^^^^^^^
-//     }
