@@ -15,7 +15,7 @@ const PRUF_RCLR = artifacts.require('RCLR');
 const PRUF_NAKED = artifacts.require('NAKED');
 const PRUF_HELPER = artifacts.require('Helper');
 const PRUF_MAL_APP = artifacts.require('MAL_APP');
-const PRUF_SRV_TKN = artifacts.require('UTIL_TKN');
+const PRUF_TKN = artifacts.require('UTIL_TKN');
 
 let STOR;
 let APP;
@@ -236,10 +236,10 @@ it('Should deploy PRUF_MAL_APP', async () => {
 
 
 it('Should deploy UTIL_TKN', async () => {
-    const PRUF_SRV_TKN_TEST = await PRUF_SRV_TKN.deployed({ from: account1 });
-    console.log(PRUF_SRV_TKN_TEST.address);
-    assert(PRUF_SRV_TKN_TEST.address !== '')
-    UTIL_TKN = PRUF_SRV_TKN_TEST;
+    const PRUF_TKN_TEST = await PRUF_TKN.deployed({ from: account1 });
+    console.log(PRUF_TKN_TEST.address);
+    assert(PRUF_TKN_TEST.address !== '')
+    UTIL_TKN = PRUF_TKN_TEST;
 })
 
 
@@ -579,7 +579,7 @@ it('Should add contract addresses', async () => {
 
         .then(() => {
             console.log("Adding UTIL_TKN to storage for use in AC 0")
-            return STOR.OO_addContract("UTIL_TKN", UTIL_TKN.address, '0', '1', { from: account1 })
+            return STOR.OO_addContract("PRUF_TKN", UTIL_TKN.address, '0', '1', { from: account1 })
         })
 })
 
@@ -1591,5 +1591,18 @@ it('Should unpause contract', async () => {
     return UTIL_TKN.unpause(
     {from: account1}
     )
+})
+
+
+it("Should retrieve balanceOf Pruf tokens @account8", async () =>{ 
+
+    console.log("//**************************************END Discount TEST**********************************************/")
+    var Balance = [];
+    
+    return await UTIL_TKN.balanceOf(account8, {from: account8}, function (_err, _result) {
+        if(_err){} 
+        else{Balance = Object.values(_result)
+    console.log(Balance)}
+    })
 })
 })
