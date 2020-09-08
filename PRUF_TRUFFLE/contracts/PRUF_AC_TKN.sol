@@ -60,7 +60,7 @@ contract AC_TKN is Ownable, ReentrancyGuard, ERC721 {
     /*
      * @dev Address Setters
      */
-    function OO_ResolveContractAddresses() external nonReentrant onlyOwner {
+    function OO_resolveContractAddresses() external nonReentrant onlyOwner {
         //^^^^^^^checks^^^^^^^^^
         AC_MGR_Address = STOR.resolveContractAddress("AC_MGR");
         //^^^^^^^interactions^^^^^^^^^

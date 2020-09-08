@@ -664,70 +664,70 @@ it('Should add Storage in each contract', async () => {
 it('Should resolve contract addresses', async () => {
 
     console.log("Resolving in APP")
-    return APP.OO_ResolveContractAddresses({ from: account1 })
+    return APP.OO_resolveContractAddresses({ from: account1 })
 
         .then(() => {
             console.log("Resolving in NP")
-            return NP.OO_ResolveContractAddresses({ from: account1 })
+            return NP.OO_resolveContractAddresses({ from: account1 })
         })
 
         .then(() => {
             console.log("Resolving in MAL_APP")
-            return MAL_APP.OO_ResolveContractAddresses({ from: account1 })
+            return MAL_APP.OO_resolveContractAddresses({ from: account1 })
         })
         
         .then(() => {
             console.log("Resolving in AC_MGR")
-            return AC_MGR.OO_ResolveContractAddresses({ from: account1 })
+            return AC_MGR.OO_resolveContractAddresses({ from: account1 })
         })
         
         .then(() => {
             console.log("Resolving in AC_TKN")
-            return AC_TKN.OO_ResolveContractAddresses({ from: account1 })
+            return AC_TKN.OO_resolveContractAddresses({ from: account1 })
         })
         
         .then(() => {
             console.log("Resolving in A_TKN")
-            return A_TKN.OO_ResolveContractAddresses({ from: account1 })
+            return A_TKN.OO_resolveContractAddresses({ from: account1 })
         })
         
         .then(() => {
             console.log("Resolving in ECR_MGR")
-            return ECR_MGR.OO_ResolveContractAddresses({ from: account1 })
+            return ECR_MGR.OO_resolveContractAddresses({ from: account1 })
         })
         
         .then(() => {
             console.log("Resolving in ECR")
-            return ECR.OO_ResolveContractAddresses({ from: account1 })
+            return ECR.OO_resolveContractAddresses({ from: account1 })
         })
 
         .then(() => {
             console.log("Resolving in ECR2")
-            return ECR2.OO_ResolveContractAddresses({ from: account1 })
+            return ECR2.OO_resolveContractAddresses({ from: account1 })
         })
         
         .then(() => {
             console.log("Resolving in APP_NC")
-            return APP_NC.OO_ResolveContractAddresses({ from: account1 })})
+            return APP_NC.OO_resolveContractAddresses({ from: account1 })})
         
         .then(() => {
             console.log("Resolving in NP_NC")
-            return NP_NC.OO_ResolveContractAddresses({ from: account1 })
+            return NP_NC.OO_resolveContractAddresses({ from: account1 })
         })
         
         .then(() => {
             console.log("Resolving in ECR_NC")
-            return ECR_NC.OO_ResolveContractAddresses({ from: account1 })
+            return ECR_NC.OO_resolveContractAddresses({ from: account1 })
         })
 
         .then(() => {
             console.log("Resolving in NAKED")
-            return NAKED.OO_ResolveContractAddresses({ from: account1 })
+            return NAKED.OO_resolveContractAddresses({ from: account1 })
         })
         
         .then(() => {
             console.log("Resolving in RCLR")
-            return RCLR.OO_ResolveContractAddresses({ from: account1 })
+            return RCLR.OO_resolveContractAddresses({ from: account1 })
         })
 
         .then(() => {
@@ -1428,7 +1428,7 @@ it('Should set payment address to account1', async () => {
 it('Should fail because storageAddr != 0', async () => {
 
     console.log("//**************************************END UTIL_TKN SETUP**********************************************/")
-    console.log("//**************************************BEGIN UTIL_TKN FAIL TEST (13)**********************************************/")
+    console.log("//**************************************BEGIN UTIL_TKN FAIL TEST (11)**********************************************/")
     console.log("//**************************************BEGIN AdminSetStorageContract FAIL TEST**********************************************/")
     return UTIL_TKN.AdminSetStorageContract(
     account000,
@@ -1486,33 +1486,6 @@ it('Should fail because amount sent < 100', async () => {
 })
 
 //7
-it('Should fail because overall amount sent > 6000', async () => {
-    return UTIL_TKN.increaseShare(
-    '10',
-    '6001',
-    {from: account1}
-    )
-})
-
-
-it('Should increaseShare by 5999', async () => {
-    return UTIL_TKN.increaseShare(
-    '10',
-    '5999',
-    {from: account1}
-    )
-})
-
-//8
-it('Should fail because overall amount sent > 6000', async () => {
-    return UTIL_TKN.increaseShare(
-    '10',
-    '2',
-    {from: account1}
-    )
-})
-
-//9
 it('Should fail because balanceOf sender < ACtokenPrice', async () => {
 
     console.log("//**************************************END increaseShare FAIL TEST**********************************************/")
@@ -1525,7 +1498,7 @@ it('Should fail because balanceOf sender < ACtokenPrice', async () => {
     )
 })
 
-//10
+//8
 it('Should fail because caller is not Admin', async () => {
 
     console.log("//**************************************END purchaseACtoken FAIL TEST**********************************************/")
@@ -1535,7 +1508,7 @@ it('Should fail because caller is not Admin', async () => {
     )
 })
 
-//11
+//9
 it('Should fail because caller is not minter', async () => {
 
     console.log("//**************************************END AdminResolveContractAddresses FAIL TEST**********************************************/")
@@ -1547,7 +1520,7 @@ it('Should fail because caller is not minter', async () => {
     )
 })
 
-//12
+//10
 it('Should fail because caller is not pauser', async () => {
 
     console.log("//**************************************END mint FAIL TEST**********************************************/")
@@ -1557,7 +1530,7 @@ it('Should fail because caller is not pauser', async () => {
     )
 })
 
-//13
+//11
 it('Should fail because caller is not pauser', async () => {
 
     console.log("//**************************************END pause FAIL TEST**********************************************/")

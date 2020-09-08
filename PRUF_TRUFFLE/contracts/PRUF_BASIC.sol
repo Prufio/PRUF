@@ -113,7 +113,7 @@ contract BASIC is ReentrancyGuard, Ownable, IERC721Receiver, Pausable {
     /*
      * @dev Resolve Contract Addresses from STOR
      */
-    function OO_ResolveContractAddresses()
+    function OO_resolveContractAddresses()
         external
         virtual
         nonReentrant
