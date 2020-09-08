@@ -112,6 +112,23 @@ contract UTIL_TKN is
         //^^^^^^^effects^^^^^^^^^
     }
 
+
+    /*
+     * @dev Resolve Contract Addresses from STOR
+     */
+    function AdminResolveContractAddresses() external virtual {
+        require(
+            hasRole(DEFAULT_ADMIN_ROLE, _msgSender()),
+            "PRuF:RCA: must have DEFAULT_ADMIN_ROLE"
+        );
+        //^^^^^^^checks^^^^^^^^^
+
+        AC_MGR_Address = STOR.resolveContractAddress("AC_MGR");
+        AC_MGR = AC_MGR_Interface(AC_MGR_Address);
+
+        //^^^^^^^effects^^^^^^^^^
+    }
+
     /**
      * @dev See {IERC20-transfer}. Increase payment share of an asset class
      *
@@ -215,21 +232,6 @@ contract UTIL_TKN is
         //^^^^^^^effects^^^^^^^^^
     }
 
-    /*
-     * @dev Resolve Contract Addresses from STOR
-     */
-    function AdminResolveContractAddresses() external virtual {
-        require(
-            hasRole(DEFAULT_ADMIN_ROLE, _msgSender()),
-            "PRuF:RCA: must have DEFAULT_ADMIN_ROLE"
-        );
-        //^^^^^^^checks^^^^^^^^^
-
-        AC_MGR_Address = STOR.resolveContractAddress("AC_MGR");
-        AC_MGR = AC_MGR_Interface(AC_MGR_Address);
-
-        //^^^^^^^effects^^^^^^^^^
-    }
 
     /**
      * @dev Creates `amount` new tokens for `to`.
