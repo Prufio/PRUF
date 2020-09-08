@@ -19,10 +19,17 @@ __/\\\\\\\\\\\\\ _____/\\\\\\\\\ _______/\\../\\ ___/\\\\\\\\\\\\\\\
 // SPDX-License-Identifier: UNLICENSED
 pragma solidity ^0.6.7;
 
-import "./PRUF_CORE.sol";
+import "./PRUF_BASIC.sol";
+import "./Imports/math/Safemath.sol";
 
-contract AC_MGR is CORE {
+contract AC_MGR is BASIC {
     using SafeMath for uint256;
+
+    struct Costs {
+        uint256 serviceCost; // Cost in the given item category
+        address paymentAddress; // 2nd-party fee beneficiary address
+    }
+
 
     //mapping(uint32 => Costs) private cost; // Cost per function by asset class
     mapping(uint32 => mapping(uint16 => Costs)) private cost; // Cost per function by asset class => Cost Type

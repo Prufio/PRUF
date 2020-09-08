@@ -129,12 +129,13 @@ pragma solidity ^0.6.7;
  *
  * 0: Global (Storage) declarations and data structures
  * 1: constructor
- * 2: receive function (if exists)
- * 3: fallback function (if exists)
- * 4: external
- * 5: public
- * 6: internal
- * 7: private
+ * 2: modifiers
+ * 3: receive function (if exists)
+ * 4: fallback function (if exists)
+ * 5: external
+ * 6: public
+ * 7: internal
+ * 8: private
  * * - within a group, view and pure are last
  *
 *-----------------------------------------------------------------
