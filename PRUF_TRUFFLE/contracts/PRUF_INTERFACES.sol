@@ -36,7 +36,9 @@ interface UTIL_TKN_Interface {
      *
      * Emits a {Transfer} event.
      */
-    function transfer(address recipient, uint256 amount) external returns (bool);
+    function transfer(address recipient, uint256 amount)
+        external
+        returns (bool);
 
     /**
      * @dev Returns the remaining number of tokens that `spender` will be
@@ -45,7 +47,10 @@ interface UTIL_TKN_Interface {
      *
      * This value changes when {approve} or {transferFrom} are called.
      */
-    function allowance(address owner, address spender) external view returns (uint256);
+    function allowance(address owner, address spender)
+        external
+        view
+        returns (uint256);
 
     /**
      * @dev Sets `amount` as the allowance of `spender` over the caller's tokens.
@@ -72,8 +77,11 @@ interface UTIL_TKN_Interface {
      *
      * Emits a {Transfer} event.
      */
-    function transferFrom(address sender, address recipient, uint256 amount) external returns (bool);
-    
+    function transferFrom(
+        address sender,
+        address recipient,
+        uint256 amount
+    ) external returns (bool);
 }
 
 interface AC_TKN_Interface {
@@ -108,6 +116,26 @@ interface AC_TKN_Interface {
         external
         view
         returns (string memory URI);
+
+    /**
+     * @dev Returns the total amount of tokens stored by the contract.
+     */
+    function totalSupply() external view returns (uint256);
+
+    /**
+     * @dev Returns a token ID owned by `owner` at a given `index` of its token list.
+     * Use along with {balanceOf} to enumerate all of ``owner``'s tokens.
+     */
+    function tokenOfOwnerByIndex(address owner, uint256 index)
+        external
+        view
+        returns (uint256 tokenId);
+
+    /**
+     * @dev Returns a token ID at a given `index` of all the tokens stored by the contract.
+     * Use along with {totalSupply} to enumerate all tokens.
+     */
+    function tokenByIndex(uint256 index) external view returns (uint256);
 }
 
 interface A_TKN_Interface {
@@ -133,7 +161,8 @@ interface A_TKN_Interface {
         external
         returns (uint256 tokenId);
 
-    function validateNakedToken(  //throws if authcode does not match
+    function validateNakedToken(
+        //throws if authcode does not match
         uint256 tokenId,
         uint32 _assetClass,
         string calldata _authCode
@@ -148,6 +177,26 @@ interface A_TKN_Interface {
     function symbol() external view returns (string memory tokenSymbol);
 
     function setURI(uint256 tokenId, string memory _tokenURI) external;
+
+    /**
+     * @dev Returns the total amount of tokens stored by the contract.
+     */
+    function totalSupply() external view returns (uint256);
+
+    /**
+     * @dev Returns a token ID owned by `owner` at a given `index` of its token list.
+     * Use along with {balanceOf} to enumerate all of ``owner``'s tokens.
+     */
+    function tokenOfOwnerByIndex(address owner, uint256 index)
+        external
+        view
+        returns (uint256 tokenId);
+
+    /**
+     * @dev Returns a token ID at a given `index` of all the tokens stored by the contract.
+     * Use along with {totalSupply} to enumerate all tokens.
+     */
+    function tokenByIndex(uint256 index) external view returns (uint256);
 }
 
 interface ID_TKN_Interface {
@@ -182,6 +231,26 @@ interface ID_TKN_Interface {
     function setURI(uint256 tokenId, string memory _tokenURI) external;
 
     function balanceOf(address owner) external view returns (uint256 balance);
+
+    /**
+     * @dev Returns the total amount of tokens stored by the contract.
+     */
+    function totalSupply() external view returns (uint256);
+
+    /**
+     * @dev Returns a token ID owned by `owner` at a given `index` of its token list.
+     * Use along with {balanceOf} to enumerate all of ``owner``'s tokens.
+     */
+    function tokenOfOwnerByIndex(address owner, uint256 index)
+        external
+        view
+        returns (uint256 tokenId);
+
+    /**
+     * @dev Returns a token ID at a given `index` of all the tokens stored by the contract.
+     * Use along with {totalSupply} to enumerate all tokens.
+     */
+    function tokenByIndex(uint256 index) external view returns (uint256);
 }
 
 interface AC_MGR_Interface {
@@ -199,12 +268,8 @@ interface AC_MGR_Interface {
             uint32 extendedData
         );
 
-    function getAC_discount(uint32 _assetClass)
-        external
-        returns (
-            uint256
-        );
-    
+    function getAC_discount(uint32 _assetClass) external returns (uint256);
+
     function increasePriceShare(uint32 _assetClass, uint256 _increaseAmount)
         external;
 
@@ -227,10 +292,7 @@ interface AC_MGR_Interface {
 
     function retrieveCosts(uint32 _assetClass, uint16 _service)
         external
-        returns (
-            uint256 serviceCost,
-            address paymentAddress
-        );
+        returns (uint256 serviceCost, address paymentAddress);
 
     function getServiceCosts(uint32 _assetClass, uint16 _service)
         external
@@ -255,9 +317,7 @@ interface AC_MGR_Interface {
         uint32 _assetClassRoot,
         uint8 _custodyType
     ) external;
-
 }
-
 
 interface STOR_Interface {
     function newRecord(
@@ -337,15 +397,15 @@ interface ECR_MGR_Interface {
         external
         view
         returns (
-        uint8 _escrowData,
-        uint8 _u8_1,
-        uint8 _u8_2,
-        uint8 _u8_3,
-        uint16 _u16_1,
-        uint16 _u16_2,
-        uint32 _u32_1,
-        address _addr_1
-    );
+            uint8 _escrowData,
+            uint8 _u8_1,
+            uint8 _u8_2,
+            uint8 _u8_3,
+            uint16 _u16_1,
+            uint16 _u16_2,
+            uint32 _u32_1,
+            address _addr_1
+        );
 
     function retrieveEscrowDataHeavy(bytes32 _idxHash)
         external
@@ -359,7 +419,7 @@ interface ECR_MGR_Interface {
             bytes32 _b32_2,
             uint256 _u256_1,
             uint256 _u256_2
-    );
+        );
 
     function setEscrowDataLight(
         bytes32 _idxHash,
@@ -370,8 +430,8 @@ interface ECR_MGR_Interface {
         uint16 _u16_1,
         uint16 _u16_2,
         uint32 _u32_1,
-        address _addr_1) 
-    external;
+        address _addr_1
+    ) external;
 
     function setEscrowDataHeavy(
         bytes32 _idxHash,
@@ -382,8 +442,8 @@ interface ECR_MGR_Interface {
         bytes32 _b32_1,
         bytes32 _b32_2,
         uint256 _u256_1,
-        uint256 _u256_2) 
-    external;
+        uint256 _u256_2
+    ) external;
 }
 
 interface RCLR_Interface {
