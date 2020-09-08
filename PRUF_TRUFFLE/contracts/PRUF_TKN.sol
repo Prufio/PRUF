@@ -126,8 +126,21 @@ contract UTIL_TKN is
         AC_MGR_Address = STOR.resolveContractAddress("AC_MGR");
         AC_MGR = AC_MGR_Interface(AC_MGR_Address);
 
-        //^^^^^^^effects^^^^^^^^^
+        //^^^^^^^effects/interactions^^^^^^^^^
     }
+
+
+    /*
+     * @dev return current AC token index pointer
+     */
+    function currentACtokenInfo() external view returns (uint256, uint256) {
+        //^^^^^^^checks^^^^^^^^^
+
+        uint256 numberOfTokensSold = ACtokenIndex.sub(uint256(10000));
+        return (numberOfTokensSold, currentACtokenPrice);
+        //^^^^^^^effects/interactions^^^^^^^^^
+    }
+
 
     /**
      * @dev See {IERC20-transfer}. Increase payment share of an asset class
@@ -150,17 +163,18 @@ contract UTIL_TKN is
         );
 
         require(_amount <= 6000, "PRuf:IS:amount > 6000 exceeds max"); // 3k-9k is 6K - 10K is more than possibly required in any forseeable circumstance
+        //^^^^^^^checks^^^^^^^^^
 
         uint256 oldShare = uint256(AC_MGR.getAC_discount(_assetClass));
 
         uint256 maxPayment = uint256(9000).sub(oldShare); //max payment percentage never goes over 90%
-
         if (_amount > maxPayment) _amount = maxPayment;
 
         _transfer(_msgSender(), paymentAddress, _amount);
 
         AC_MGR.increasePriceShare(_assetClass, _amount);
         return true;
+        //^^^^^^^effects/interactions^^^^^^^^^
     }
 
     /**
@@ -175,8 +189,6 @@ contract UTIL_TKN is
         uint8 _custodyType
     ) public returns (bool) {
 
-        if (ACtokenIndex < 4294000001) ACtokenIndex++; //increment ACtokenIndex up to last one
-
         require(
             balanceOf(msg.sender) >= currentACtokenPrice,
             "PRuf:IS:Insufficient PRuF token Balance for transaction"
@@ -185,17 +197,9 @@ contract UTIL_TKN is
             ACtokenIndex < 4294000000,
             "PRuf:IS:Only 4294000000 AC tokens allowed"
         );
+        //^^^^^^^checks^^^^^^^^^
 
-        //mint an asset class token to msg.sender, at tokenID ACtokenIndex, with URI = root asset Class #
-        AC_MGR.createAssetClass(
-            msg.sender,
-            _name,
-            uint32(ACtokenIndex), //safe because ACtokenIndex <  4294000000 required
-            _assetClassRoot,
-            _custodyType
-        );
-
-        _burn(_msgSender(), currentACtokenPrice);
+        if (ACtokenIndex < 4294000000) ACtokenIndex++; //increment ACtokenIndex up to last one
 
         uint256 newACtokenPrice;
         uint256 numberOfTokensSold = ACtokenIndex.sub(uint256(10000));
@@ -215,23 +219,26 @@ contract UTIL_TKN is
         } else {
             newACtokenPrice = 10000;
         }
+        //^^^^^^^effects^^^^^^^^^
+
+        //mint an asset class token to msg.sender, at tokenID ACtokenIndex, with URI = root asset Class #
+        AC_MGR.createAssetClass(
+            msg.sender,
+            _name,
+            uint32(ACtokenIndex), //safe because ACtokenIndex <  4294000000 required
+            _assetClassRoot,
+            _custodyType
+        );
+
+        _burn(_msgSender(), currentACtokenPrice);
 
         currentACtokenPrice = newACtokenPrice;
 
         return true;
+        //^^^^^^^effects/interactions^^^^^^^^^
     }
 
-    /*
-     * @dev return current AC token index pointer
-     */
-    function currentACtokenInfo() external view returns (uint256, uint256) {
-        //^^^^^^^checks^^^^^^^^^
-
-        uint256 numberOfTokensSold = ACtokenIndex.sub(uint256(10000));
-        return (numberOfTokensSold, currentACtokenPrice);
-        //^^^^^^^effects^^^^^^^^^
-    }
-
+    
 
     /**
      * @dev Creates `amount` new tokens for `to`.
@@ -247,7 +254,10 @@ contract UTIL_TKN is
             hasRole(MINTER_ROLE, _msgSender()),
             "PRuF:M: must have minter role to mint"
         );
+         //^^^^^^^checks^^^^^^^^^
+
         _mint(to, amount);
+        //^^^^^^^interactions^^^^^^^^^
     }
 
     /**
@@ -264,7 +274,9 @@ contract UTIL_TKN is
             hasRole(PAUSER_ROLE, _msgSender()),
             "PRuF:P: must have pauser role to pause"
         );
+        //^^^^^^^checks^^^^^^^^^
         _pause();
+        //^^^^^^^effects^^^^^^^^
     }
 
     /**
@@ -281,7 +293,9 @@ contract UTIL_TKN is
             hasRole(PAUSER_ROLE, _msgSender()),
             "PRuF:U: must have pauser role to unpause"
         );
+        //^^^^^^^checks^^^^^^^^^
         _unpause();
+        //^^^^^^^effects^^^^^^^^
     }
 
     function _beforeTokenTransfer(
@@ -291,32 +305,5 @@ contract UTIL_TKN is
     ) internal virtual override(ERC20, ERC20Pausable, ERC20Snapshot) {
         super._beforeTokenTransfer(from, to, amount);
     }
-
-    function uint256toString(uint256 number)
-        private
-        pure
-        returns (string memory)
-    {
-        // Inspired by OraclizeAPI's implementation - MIT licence
-        // https://github.com/oraclize/ethereum-api/blob/b42146b063c7d6ee1358846c198246239e9360e8/oraclizeAPI_0.4.25.sol
-        // shamelessly jacked straight outa OpenZepplin  openzepplin.org
-
-        if (number == 0) {
-            return "0";
-        }
-        uint256 temp = number;
-        uint256 digits;
-        while (temp != 0) {
-            digits++;
-            temp /= 10;
-        }
-        bytes memory buffer = new bytes(digits);
-        uint256 index = digits - 1;
-        temp = number;
-        while (temp != 0) {
-            buffer[index--] = bytes1(uint8(48 + (temp % 10)));
-            temp /= 10;
-        }
-        return string(buffer);
-    }
+    
 }
