@@ -131,12 +131,15 @@ contract CORE is PullPayment, BASIC {
      */
     function deductServiceCosts(uint32 _assetClass, uint16 _service)
         internal
+        virtual
         whenNotPaused
     {
         //^^^^^^^checks^^^^^^^^^
         Invoice memory pricing;
-        uint256 ACTHnetPercent = AC_MGR.getAC_discount(_assetClass).div(uint256(100));
-        require(                     //IMPOSSIBLE TO REACH
+        uint256 ACTHnetPercent = AC_MGR.getAC_discount(_assetClass).div(
+            uint256(100)
+        );
+        require( //IMPOSSIBLE TO REACH
             (ACTHnetPercent >= 10) && (ACTHnetPercent <= 100),
             "PC:DSC:invalid discount value for price calculation"
         );
@@ -165,6 +168,7 @@ contract CORE is PullPayment, BASIC {
      */
     function deductRecycleCosts(uint32 _assetClass, address _oldOwner)
         internal
+        virtual
         whenNotPaused
     {
         //^^^^^^^checks^^^^^^^^^
