@@ -1559,12 +1559,12 @@ it('Should purchace ACtoken to account3', async () => {
 
 
 it("Should retrieve owner of AC1000002, should be account3", async () =>{ 
-    var ACowner = [];
+    var ACnumber = [];
     
-    return await AC_TKN.ownerOf('1000002', {from: account3}, function (_err, _result) {
+    return await AC_TKN.tokenOfOwnerByIndex(account3, '1', {from: account3}, function (_err, _result) {
         if(_err){} 
-        else{ACowner = Object.values(_result)
-    console.log(ACowner)}
+        else{ACnumber = Object.values(_result)
+    console.log(ACnumber)}
     })
 })
 
