@@ -1470,16 +1470,6 @@
         )
     })
 
-    //2
-    it('Should fail because AC is not populated', async () => {
-        return AC_MGR.OO_addUser(
-        account2,
-        '1',
-        '18',
-        {from: account1}
-        )
-    })
-
     //3
     it('Should fail because caller is not Owner', async () => {
 
