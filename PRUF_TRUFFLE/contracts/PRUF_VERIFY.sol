@@ -47,9 +47,13 @@ contract VERIFY is CORE {
 
     mapping(bytes32 => bytes32) private items;
     mapping(bytes32 => ItemData) private itemData;
-    mapping(bytes32 => uint8) private idxAuthInVerify; 
+    mapping(bytes32 => uint8) private idxAuthInVerify;
 
-
+    /**
+     * Requires:
+     *      the caller must posess Asset token _idxhash
+     *      Asset Token must be set to value = 1 in  idxAuthInVerify
+     */
     modifier isAuthorized(bytes32 _idxHash) override {
         //checks to see if caller holds the wallet token (asset token minted as a wallet)
         uint256 tokenId = uint256(_idxHash);
@@ -65,44 +69,58 @@ contract VERIFY is CORE {
         _;
     }
 
-    function authorizeTokenForVerify (bytes32 _idxHash, uint8 _verified, uint32 _assetClass) external {
+    /*
+     * @dev:authorize an asset token _idxHash as a wallet token in verify
+     *      the caller must posess AC token for given asset Class
+     *      AC must be VERIFY custody type (4)
+     *      AC of Asset token to be approved must be of the same assetClass as the held ACtoken
+     */
+    function authorizeTokenForVerify(
+        bytes32 _idxHash,
+        uint8 _verified,
+        uint32 _assetClass
+    ) external {
         AC memory ACdata = getACinfo(_assetClass);
         Record memory rec = getRecord(_idxHash);
 
-        require (
+        require(
             AC_TKN.ownerOf(uint256(_assetClass)) == msg.sender,
             "VFY:ATFV: caller does not hold AC token"
         );
-        require (
-            ACdata.custodyType == 4,
-            "VFY:ATFV: AC not VERIFY enabled"
-        );
-        require (
+        require(ACdata.custodyType == 4, "VFY:ATFV: AC not VERIFY enabled");
+        require(
             rec.assetClass == _assetClass,
             "VFY:ATFV: AC of Asset Token does not match supplied AC "
         );
+        //^^^^^^^checks^^^^^^^^^
 
         idxAuthInVerify[_idxHash] = _verified;
+        //^^^^^^^effects^^^^^^^^^
     }
 
-    function safePutIn(bytes32 _idxHash, bytes32 _itemHash, uint32 maxCollisions)
-        external
-        isAuthorized(_idxHash)
-        returns (uint256)
-    {
+    /*
+     * @dev:Put an item into the (_idxHash) verify wallet, with maximum assurances
+     *      the caller must posess Asset token, must pass isAuth
+     *      item cannot already be registered as "in" the callers wallet
+     *      itemData.status must be 0 (clean)
+     *      Item collisions cannot exceed maxCollisions
+     *      If item is not marked as held, it will be listed as held "in" the callers wallet (return 170)
+     *      If item is marked as held in another wallet, collisions++ (return 0)
+     */
+    function safePutIn(
+        bytes32 _idxHash,
+        bytes32 _itemHash,
+        uint32 maxCollisions
+    ) external isAuthorized(_idxHash) returns (uint256) {
         require( //check to see if held by _idxHash
             items[_itemHash] != _idxHash,
             "VFY:PI:item already held by caller"
         );
-        require( //check to see if held by _idxHash
-            itemData[_itemHash].status == 0,
-            "VFY:PI:item status not zero"
-        );
-        require( //check to see if held by _idxHash
+        require(itemData[_itemHash].status == 0, "VFY:PI:item status not zero"); //check to see if item status is clean
+        require( //check to see if collisions > limit
             itemData[_itemHash].collisions <= maxCollisions,
             "VFY:PI:item collisions exceeds limit"
         );
-
 
         //^^^^^^^checks^^^^^^^^^
         if (items[_itemHash] != 0) {
@@ -116,6 +134,13 @@ contract VERIFY is CORE {
         //^^^^^^^effects / interactions^^^^^^^^^
     }
 
+    /*
+     * @dev:Put an item into the (_idxHash) verify wallet
+     *      the caller must posess Asset token, must pass isAuth
+     *      item cannot already be registered as "in" the callers wallet
+     *      If item is not marked as held, it will be listed as held "in" the callers wallet (return 170)
+     *      If item is marked as held in another wallet, collisions++ (return 0)
+     */
     function putIn(bytes32 _idxHash, bytes32 _itemHash)
         external
         isAuthorized(_idxHash)
@@ -137,12 +162,26 @@ contract VERIFY is CORE {
         //^^^^^^^effects / interactions^^^^^^^^^
     }
 
+    /*
+     * @dev:Take an item out of the (_idxHash) verify wallet
+     *      the caller must posess Asset token, must pass isAuth
+     *      item must be registered as "in" the callers wallet
+     *      If item is not marked as held, it will be listed as held "in" the callers wallet (return 170)
+     *      If item is marked as held in another wallet, collisions++ (return 0)
+     */
     function takeOut(bytes32 _idxHash, bytes32 _itemHash)
         external
         isAuthorized(_idxHash)
+        returns (uint256)
     {
         require(items[_itemHash] == _idxHash, "VFY:TO:item not held by caller"); //check to see if held by _idxHash
+        //^^^^^^^checks^^^^^^^^^
+
         items[_itemHash] = 0; // release item _asset
+        //^^^^^^^effects^^^^^^^^^
+
+        return 170;
+        //^^^^^^^interactions^^^^^^^^^
     }
 
     function transfer(
@@ -150,7 +189,7 @@ contract VERIFY is CORE {
         bytes32 _idxHash,
         bytes32 _newIdxHash,
         bytes32 _itemHash
-    ) external isAuthorized(_idxHash) {
+    ) external isAuthorized(_idxHash) returns (uint256) {
         Record memory rec = getRecord(_idxHash);
         Record memory newRec = getRecord(_newIdxHash);
 
@@ -159,29 +198,44 @@ contract VERIFY is CORE {
             AC_MGR.isSameRootAC(rec.assetClass, newRec.assetClass) == 170,
             "VFY:TO:Wallet is not in the same asset class"
         );
+        //^^^^^^^checks^^^^^^^^^
 
         items[_itemHash] = _newIdxHash; // transfer item _asset
+        //^^^^^^^effects^^^^^^^^^
+
+        return 170;
+        //^^^^^^^interactions^^^^^^^^^
     }
 
+    /*
+     * @dev:Mark an item with a status (see docs at top of contract)
+     *      the caller must posess Asset token, must pass isAuth and user must be auth as a "1" in that AC
+     *      item must be listed as "in" the callers wallet
+     */
     function markItem(
         bytes32 _idxHash,
         bytes32 _itemHash,
         uint8 _status,
         uint32 _value
-    ) external isAuthorized(_idxHash){
+    ) external isAuthorized(_idxHash) returns (uint256) {
         Record memory rec = getRecord(_idxHash);
         uint256 tokenId = uint256(_idxHash);
 
         require(
-            (A_TKN.ownerOf(tokenId) == msg.sender) && (getCallingUserType(rec.assetClass) == 1), //msg.sender is token holder
+            (A_TKN.ownerOf(tokenId) == msg.sender) &&
+                (getCallingUserType(rec.assetClass) == 1), //msg.sender is token holder
             "VFY:MI: Caller does not hold token or is not authorized as a admin user (type1) in the asset class"
         );
         require(items[_itemHash] == _idxHash, "VFY:TO:item not held by caller"); //check to see if held by _idxHash
 
         itemData[_itemHash].status = _status;
         itemData[_itemHash].value = _value;
+        return 170;
     }
 
+    /*
+     * @dev:Retrieve data about an item
+     */
     function getItemData(bytes32 _itemHash)
         external
         view
