@@ -48,6 +48,8 @@ pragma solidity ^0.6.7;
  *
  *      *make "pruf verify" contract, stores ipfs? with list of "held" assets?
  *
+ *      *make ac tokens or asset tokens enumerable? (probably?)
+ *
 *-----------------------------------------------------------------
 
 *-----------------------------------------------------------------
@@ -203,6 +205,8 @@ pragma solidity ^0.6.7;
  * 0   --NONE
  * 1   --Custodial
  * 2   --Non-Custodial
+ * 3   --Root (n/a)
+ * 4   --Verify-Non-Custodial
 *-----------------------------------------------------------------
 
 *-----------------------------------------------------------------
