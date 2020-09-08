@@ -40,7 +40,7 @@ import "./Imports/token/ERC20/ERC20Snapshot.sol";
  * roles, as well as the default admin role, which will let it grant both minter
  * and pauser roles to other accounts.
  */
-contract PRUF_TKN is
+contract UTIL_TKN is
     Context,
     AccessControl,
     ERC20Burnable,
