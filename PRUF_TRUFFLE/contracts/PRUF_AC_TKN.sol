@@ -1,4 +1,4 @@
-/*-----------------------------------------------------------V0.6.8
+/*-----------------------------------------------------------V0.7.0
 __/\\\\\\\\\\\\\ _____/\\\\\\\\\ _______/\\../\\ ___/\\\\\\\\\\\\\\\
  _\/\\\/////////\\\ _/\\\///////\\\ ____\//..\//____\/\\\///////////__
   _\/\\\.......\/\\\.\/\\\.....\/\\\ ________________\/\\\ ____________
@@ -19,10 +19,10 @@ __/\\\\\\\\\\\\\ _____/\\\\\\\\\ _______/\\../\\ ___/\\\\\\\\\\\\\\\
 
 pragma solidity ^0.6.7;
 
-import "./_ERC721/ERC721.sol";
-import "./_ERC721/Ownable.sol";
+import "./Imports/token/ERC721/ERC721.sol";
+import "./Imports/access/Ownable.sol";
 import "./PRUF_INTERFACES.sol";
-import "./Imports/ReentrancyGuard.sol";
+import "./Imports/utils/ReentrancyGuard.sol";
 
 contract AC_TKN is Ownable, ReentrancyGuard, ERC721 {
     constructor() public ERC721("PRüF Asset Class Token", "PAC") {}
@@ -60,7 +60,7 @@ contract AC_TKN is Ownable, ReentrancyGuard, ERC721 {
     /*
      * @dev Address Setters
      */
-    function OO_ResolveContractAddresses() external nonReentrant onlyOwner {
+    function OO_resolveContractAddresses() external nonReentrant onlyOwner {
         //^^^^^^^checks^^^^^^^^^
         AC_MGR_Address = STOR.resolveContractAddress("AC_MGR");
         //^^^^^^^interactions^^^^^^^^^

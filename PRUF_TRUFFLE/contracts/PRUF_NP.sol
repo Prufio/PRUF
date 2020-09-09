@@ -1,4 +1,4 @@
-/*-----------------------------------------------------------V0.6.8
+/*-----------------------------------------------------------V0.7.0
 __/\\\\\\\\\\\\\ _____/\\\\\\\\\ _______/\\../\\ ___/\\\\\\\\\\\\\\\
  _\/\\\/////////\\\ _/\\\///////\\\ ____\//..\//____\/\\\///////////__
   _\/\\\.......\/\\\.\/\\\.....\/\\\ ________________\/\\\ ____________
@@ -51,7 +51,7 @@ contract NP is CORE {
         returns (uint8)
     {
         Record memory rec = getRecord(_idxHash);
-        uint8 userType = getUserType(rec.assetClass);
+        uint8 userType = getCallingUserType(rec.assetClass);
 
         require(
             (userType > 0) && (userType < 10),
@@ -106,7 +106,7 @@ contract NP is CORE {
         returns (uint8)
     {
         Record memory rec = getRecord(_idxHash);
-        uint8 userType = getUserType(rec.assetClass);
+        uint8 userType = getCallingUserType(rec.assetClass);
         require(
             (userType > 0) && (userType < 10),
             "NP:SLS: user not auth in AC"
@@ -146,7 +146,7 @@ contract NP is CORE {
         returns (uint32)
     {
         Record memory rec = getRecord(_idxHash);
-        uint8 userType = getUserType(rec.assetClass);
+        uint8 userType = getCallingUserType(rec.assetClass);
 
         require(
             (userType > 0) && (userType < 10),
@@ -189,7 +189,7 @@ contract NP is CORE {
         returns (bytes32)
     {
         Record memory rec = getRecord(_idxHash);
-        uint8 userType = getUserType(rec.assetClass);
+        uint8 userType = getCallingUserType(rec.assetClass);
         require(
             (userType > 0) && (userType < 10),
             "NP:MI1: user not auth in AC"
@@ -224,7 +224,7 @@ contract NP is CORE {
         returns (uint8)
     {
         Record memory rec = getRecord(_idxHash);
-        uint8 userType = getUserType(rec.assetClass);
+        uint8 userType = getCallingUserType(rec.assetClass);
         AC memory AC_info = getACinfo(rec.assetClass);
 
         require(

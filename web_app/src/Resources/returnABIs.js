@@ -770,7 +770,7 @@ function returnABIs() {
 		},
 		{
 			"inputs": [],
-			"name": "OO_ResolveContractAddresses",
+			"name": "OO_resolveContractAddresses",
 			"outputs": [],
 			"stateMutability": "nonpayable",
 			"type": "function"
@@ -1022,7 +1022,7 @@ function returnABIs() {
 			},
 			{
 				"inputs": [],
-				"name": "OO_ResolveContractAddresses",
+				"name": "OO_resolveContractAddresses",
 				"outputs": [],
 				"stateMutability": "nonpayable",
 				"type": "function"
@@ -1407,7 +1407,7 @@ function returnABIs() {
 			},
 			{
 				"inputs": [],
-				"name": "OO_ResolveContractAddresses",
+				"name": "OO_resolveContractAddresses",
 				"outputs": [],
 				"stateMutability": "nonpayable",
 				"type": "function"
@@ -1744,7 +1744,7 @@ function returnABIs() {
 	},
 	{
 		"inputs": [],
-		"name": "OO_ResolveContractAddresses",
+		"name": "OO_resolveContractAddresses",
 		"outputs": [],
 		"stateMutability": "nonpayable",
 		"type": "function"
@@ -2485,7 +2485,7 @@ const AC_TKN =[
 	},
 	{
 		"inputs": [],
-		"name": "OO_ResolveContractAddresses",
+		"name": "OO_resolveContractAddresses",
 		"outputs": [],
 		"stateMutability": "nonpayable",
 		"type": "function"
@@ -3037,7 +3037,7 @@ const A_TKN = [
 	},
 	{
 		"inputs": [],
-		"name": "OO_ResolveContractAddresses",
+		"name": "OO_resolveContractAddresses",
 		"outputs": [],
 		"stateMutability": "nonpayable",
 		"type": "function"
@@ -3668,7 +3668,7 @@ const NAKED = [
 	},
 	{
 		"inputs": [],
-		"name": "OO_ResolveContractAddresses",
+		"name": "OO_resolveContractAddresses",
 		"outputs": [],
 		"stateMutability": "nonpayable",
 		"type": "function"
@@ -4089,7 +4089,7 @@ const APP_NC = [
 	},
 	{
 		"inputs": [],
-		"name": "OO_ResolveContractAddresses",
+		"name": "OO_resolveContractAddresses",
 		"outputs": [],
 		"stateMutability": "nonpayable",
 		"type": "function"
@@ -4341,7 +4341,7 @@ const NP_NC = [
 	},
 	{
 		"inputs": [],
-		"name": "OO_ResolveContractAddresses",
+		"name": "OO_resolveContractAddresses",
 		"outputs": [],
 		"stateMutability": "nonpayable",
 		"type": "function"
@@ -4749,7 +4749,7 @@ const RCLR = [
 	},
 	{
 		"inputs": [],
-		"name": "OO_ResolveContractAddresses",
+		"name": "OO_resolveContractAddresses",
 		"outputs": [],
 		"stateMutability": "nonpayable",
 		"type": "function"
@@ -5007,7 +5007,7 @@ const ECR_NC = [
 	},
 	{
 		"inputs": [],
-		"name": "OO_ResolveContractAddresses",
+		"name": "OO_resolveContractAddresses",
 		"outputs": [],
 		"stateMutability": "nonpayable",
 		"type": "function"
@@ -5279,7 +5279,7 @@ const VERIFY = [
 	},
 	{
 		"inputs": [],
-		"name": "OO_ResolveContractAddresses",
+		"name": "OO_resolveContractAddresses",
 		"outputs": [],
 		"stateMutability": "nonpayable",
 		"type": "function"
@@ -5640,7 +5640,7 @@ const ECR_MGR = [
 	},
 	{
 		"inputs": [],
-		"name": "OO_ResolveContractAddresses",
+		"name": "OO_resolveContractAddresses",
 		"outputs": [],
 		"stateMutability": "nonpayable",
 		"type": "function"

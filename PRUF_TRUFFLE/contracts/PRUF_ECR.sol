@@ -1,4 +1,4 @@
-/*-----------------------------------------------------------V0.6.8
+/*-----------------------------------------------------------V0.7.0
 __/\\\\\\\\\\\\\ _____/\\\\\\\\\ _______/\\../\\ ___/\\\\\\\\\\\\\\\
  _\/\\\/////////\\\ _/\\\///////\\\ ____\//..\//____\/\\\///////////__
   _\/\\\.......\/\\\.\/\\\.....\/\\\ ________________\/\\\ ____________
@@ -46,7 +46,7 @@ contract ECR is ECR_CORE {
         uint8 _escrowStatus
     ) external nonReentrant isAuthorized(_idxHash) {
         Record memory rec = getRecord(_idxHash);
-        uint8 userType = getUserType(rec.assetClass);
+        uint8 userType = getCallingUserType(rec.assetClass);
         uint256 escrowTime = block.timestamp.add(_escrowTime);
         uint8 newEscrowStatus;
         ContractDataHash memory contractInfo = getContractInfo(
@@ -86,7 +86,7 @@ contract ECR is ECR_CORE {
         uint8 _escrowStatus
     ) external nonReentrant isAuthorized(_idxHash) {
         Record memory rec = getRecord(_idxHash);
-        uint8 userType = getUserType(rec.assetClass);
+        uint8 userType = getCallingUserType(rec.assetClass);
         uint256 escrowTime = block.timestamp.add(_escrowTime);
         uint8 newEscrowStatus;
         ContractDataHash memory contractInfo = getContractInfo(
@@ -102,7 +102,7 @@ contract ECR is ECR_CORE {
         );
         require(
             (userType < 5) ||
-                ((userType > 4) && (userType < 10) && (_escrowStatus > 49)),
+                ((userType > 4) && (userType < 10) && (_escrowStatus > 49)),  //CTS: EXAMINE, weirdly worded.. 
             "E:SE: Non supervisored agents must set escrow status within scope."
         );
         require((_escrowStatus != 60), "E:SE: Cannot set to recycled status.");
@@ -140,7 +140,7 @@ contract ECR is ECR_CORE {
             address(this),
             rec.assetClass
         );
-        uint8 userType = getUserType(rec.assetClass);
+        uint8 userType = getCallingUserType(rec.assetClass);
         bytes32 ownerHash = ECR_MGR.retrieveEscrowOwner(_idxHash);
 
         require(contractInfo.contractType > 0, "E:EE: contract not auth in AC");

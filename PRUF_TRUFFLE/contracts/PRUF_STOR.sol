@@ -1,4 +1,4 @@
-/*-----------------------------------------------------------V0.6.8
+/*-----------------------------------------------------------V0.7.0
 __/\\\\\\\\\\\\\ _____/\\\\\\\\\ _______/\\../\\ ___/\\\\\\\\\\\\\\\
  _\/\\\/////////\\\ _/\\\///////\\\ ____\//..\//____\/\\\///////////__
   _\/\\\.......\/\\\.\/\\\.....\/\\\ ________________\/\\\ ____________
@@ -34,10 +34,10 @@ __/\\\\\\\\\\\\\ _____/\\\\\\\\\ _______/\\../\\ ___/\\\\\\\\\\\\\\\
 pragma solidity ^0.6.7;
 
 import "./PRUF_INTERFACES.sol";
-import "./Imports/Ownable.sol";
-import "./Imports/Pausable.sol";
-import "./Imports/SafeMath.sol";
-import "./Imports/ReentrancyGuard.sol";
+import "./Imports/access/Ownable.sol";
+import "./Imports/utils/Pausable.sol";
+import "./Imports/math/Safemath.sol";
+import "./Imports/utils/ReentrancyGuard.sol";
 
 contract STOR is Ownable, ReentrancyGuard, Pausable {
     struct Record {
@@ -189,7 +189,7 @@ contract STOR is Ownable, ReentrancyGuard, Pausable {
         uint8 _contractAuthLevel
     ) external onlyOwner {
         require(_assetClass == 0, "S:AC: AC not 0");
-        require(_contractAuthLevel <= 4, "S:AC: Invalid auth lv");
+        //require(_contractAuthLevel <= 10, "S:AC: Invalid auth lv");
         //^^^^^^^checks^^^^^^^^^
 
         contractInfo[_name][_assetClass] = _contractAuthLevel; //does not pose an partial record overwrite risk

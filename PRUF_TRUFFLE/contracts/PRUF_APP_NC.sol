@@ -1,4 +1,4 @@
-/*-----------------------------------------------------------V0.6.8
+/*-----------------------------------------------------------V0.7.0
 __/\\\\\\\\\\\\\ _____/\\\\\\\\\ _______/\\../\\ ___/\\\\\\\\\\\\\\\
  _\/\\\/////////\\\ _/\\\///////\\\ ____\//..\//____\/\\\///////////__
   _\/\\\.......\/\\\.\/\\\.....\/\\\ ________________\/\\\ ____________
@@ -46,14 +46,16 @@ contract APP_NC is CORE {
         uint32 _assetClass,
         uint32 _countDownStart
     ) external payable nonReentrant whenNotPaused {
-        uint8 userType = getUserType(_assetClass);
-
-        require(userType == 1, "ANC:NR: User not auth in AC");
+        require(
+            (ID_TKN.balanceOf(msg.sender) == 1), //msg.sender is token holder
+            "ANC:MOD-IA: Caller does not hold a valid PRuF_ID token"
+        );
         //^^^^^^^Checks^^^^^^^^^
 
         createRecord(_idxHash, _rgtHash, _assetClass, _countDownStart);
 
-        deductNewRecordCosts(_assetClass);
+        deductServiceCosts(_assetClass, 1);
+
         //^^^^^^^interactions^^^^^^^^^
     }
 
@@ -79,7 +81,8 @@ contract APP_NC is CORE {
 
         STOR.changeAC(_idxHash, _newAssetClass);
         writeRecord(_idxHash, rec);
-        deductNewRecordCosts(_newAssetClass);
+        deductServiceCosts(_newAssetClass, 1);
+
         //^^^^^^^interactions / effects^^^^^^^^^^^^
     }
 
@@ -128,7 +131,7 @@ contract APP_NC is CORE {
         );
         //^^^^^^^checks^^^^^^^^^
 
-        deductNewRecordCosts(rec.assetClass);
+        deductServiceCosts(rec.assetClass, 1);
 
         tokenId = A_TKN.reMintAssetToken(msg.sender, tokenId);
 
@@ -159,7 +162,7 @@ contract APP_NC is CORE {
 
         writeRecordIpfs2(_idxHash, rec);
 
-        deductCreateNoteCosts(rec.assetClass);
+        deductServiceCosts(rec.assetClass, 3);
 
         return rec.Ipfs2;
         //^^^^^^^interactions^^^^^^^^^

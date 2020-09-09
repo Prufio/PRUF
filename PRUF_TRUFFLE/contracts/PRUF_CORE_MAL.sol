@@ -1,4 +1,4 @@
-/*-----------------------------------------------------------V0.6.8
+/*-----------------------------------------------------------V0.7.0
 __/\\\\\\\\\\\\\ _____/\\\\\\\\\ _______/\\../\\ ___/\\\\\\\\\\\\\\\
  _\/\\\/////////\\\ _/\\\///////\\\ ____\//..\//____\/\\\///////////__
   _\/\\\.......\/\\\.\/\\\.....\/\\\ ________________\/\\\ ____________
@@ -19,20 +19,15 @@ __/\\\\\\\\\\\\\ _____/\\\\\\\\\ _______/\\../\\ ___/\\\\\\\\\\\\\\\
 pragma solidity ^0.6.7;
 
 import "./PRUF_INTERFACES.sol";
-import "./Imports/PullPayment.sol";
-import "./Imports/ReentrancyGuard.sol";
+import "./Imports/payment/PullPayment.sol";
+import "./Imports/utils/ReentrancyGuard.sol";
 import "./PRUF_BASIC.sol";
 
 contract CORE_MAL is PullPayment, BASIC {
     using SafeMath for uint256;
 
     struct Costs {
-        uint256 newRecordCost; // Cost to create a new record
-        uint256 transferAssetCost; // Cost to transfer a record from known rights holder to a new one
-        uint256 createNoteCost; // Cost to add a static note to an asset
-        uint256 reMintRecordCost; // Extra
-        uint256 changeStatusCost; // Extra
-        uint256 forceModifyCost; // Cost to brute-force a record transfer
+        uint256 serviceCost; // Cost to brute-force a record transfer
         address paymentAddress; // 2nd-party fee beneficiary address
     }
 
@@ -46,27 +41,22 @@ contract CORE_MAL is PullPayment, BASIC {
     
     //--------------------------------------------------------------------------------------Storage Reading internal functions
 
-    /*
-     * @dev retrieves costs from Storage and returns Costs struct
-     */
-    function getCost(uint32 _assetClass) internal returns (Costs memory) {
-        //^^^^^^^checks^^^^^^^^^
+    // /*
+    //  * @dev retrieves costs from Storage and returns Costs struct
+    //  */
+    // function getCost(uint32 _assetClass, ) internal returns (Costs memory) {
+    //     //^^^^^^^checks^^^^^^^^^
 
-        Costs memory cost;
-        //^^^^^^^effects^^^^^^^^^
-        (
-            cost.newRecordCost,
-            cost.transferAssetCost,
-            cost.createNoteCost,
-            cost.reMintRecordCost,
-            cost.changeStatusCost,
-            cost.forceModifyCost,
-            cost.paymentAddress
-        ) = AC_MGR.retrieveCosts(_assetClass);
+    //     Costs memory cost;
+    //     //^^^^^^^effects^^^^^^^^^
+    //     (
+    //         cost.serviceCost,
+    //         cost.paymentAddress
+    //     ) = AC_MGR.retrieveCosts(_assetClass);
 
-        return (cost);
-        //^^^^^^^interactions^^^^^^^^^
-    }
+    //     return (cost);
+    //     //^^^^^^^interactions^^^^^^^^^
+    // }
 
     //--------------------------------------------------------------------------------------Storage Writing internal functions
 
@@ -151,7 +141,10 @@ contract CORE_MAL is PullPayment, BASIC {
 
     //--------------------------------------------------------------------------------------Payment internal functions
 
-    function deductNewRecordCosts(uint32 _assetClass) internal whenNotPaused {
+    /*
+     * @dev Send payment to appropriate pullPayment adresses for payable function
+     */
+    function deductServiceCosts(uint32 _assetClass, uint16 _service) internal whenNotPaused {
         //^^^^^^^checks^^^^^^^^^
         Invoice memory pricing;
         //^^^^^^^effects^^^^^^^^^
@@ -160,107 +153,12 @@ contract CORE_MAL is PullPayment, BASIC {
             pricing.rootPrice,
             pricing.ACTHaddress,
             pricing.ACTHprice
-        ) = AC_MGR.getNewRecordCosts(_assetClass);
+        ) = AC_MGR.getServiceCosts(_assetClass, _service);
         deductPayment(pricing);
         //^^^^^^^interactions^^^^^^^^^
     }
 
-    function deductRecycleCosts(uint32 _assetClass, address _oldOwner)
-        internal
-        whenNotPaused
-    {
-        //^^^^^^^checks^^^^^^^^^
-        Invoice memory pricing;
-        //^^^^^^^effects^^^^^^^^^
-        (
-            pricing.rootAddress,
-            pricing.rootPrice,
-            pricing.ACTHaddress,
-            pricing.ACTHprice
-        ) = AC_MGR.getNewRecordCosts(_assetClass);
-        pricing.ACTHaddress = _oldOwner;
-        deductPayment(pricing);
-        //^^^^^^^interactions^^^^^^^^^
-    }
-
-    function deductTransferAssetCosts(uint32 _assetClass)
-        internal
-        whenNotPaused
-    {
-        //^^^^^^^checks^^^^^^^^^
-        Invoice memory pricing;
-        //^^^^^^^effects^^^^^^^^^
-        (
-            pricing.rootAddress,
-            pricing.rootPrice,
-            pricing.ACTHaddress,
-            pricing.ACTHprice
-        ) = AC_MGR.getTransferAssetCosts(_assetClass);
-        deductPayment(pricing);
-        //^^^^^^^interactions^^^^^^^^^
-    }
-
-    function deductCreateNoteCosts(uint32 _assetClass) internal whenNotPaused {
-        //^^^^^^^checks^^^^^^^^^
-        Invoice memory pricing;
-        //^^^^^^^effects^^^^^^^^^
-        (
-            pricing.rootAddress,
-            pricing.rootPrice,
-            pricing.ACTHaddress,
-            pricing.ACTHprice
-        ) = AC_MGR.getCreateNoteCosts(_assetClass);
-        deductPayment(pricing);
-        //^^^^^^^interactions^^^^^^^^^
-    }
-
-    function deductReMintRecordCosts(uint32 _assetClass)
-        internal
-        whenNotPaused
-    {
-        //^^^^^^^checks^^^^^^^^^
-        Invoice memory pricing;
-        //^^^^^^^effects^^^^^^^^^
-        (
-            pricing.rootAddress,
-            pricing.rootPrice,
-            pricing.ACTHaddress,
-            pricing.ACTHprice
-        ) = AC_MGR.getReMintRecordCosts(_assetClass);
-        deductPayment(pricing);
-        //^^^^^^^interactions^^^^^^^^^
-    }
-
-    function deductChangeStatusCosts(uint32 _assetClass)
-        internal
-        whenNotPaused
-    {
-        //^^^^^^^checks^^^^^^^^^
-        Invoice memory pricing;
-        //^^^^^^^effects^^^^^^^^^
-        (
-            pricing.rootAddress,
-            pricing.rootPrice,
-            pricing.ACTHaddress,
-            pricing.ACTHprice
-        ) = AC_MGR.getChangeStatusCosts(_assetClass);
-        deductPayment(pricing);
-        //^^^^^^^interactions^^^^^^^^^
-    }
-
-    function deductForceModifyCosts(uint32 _assetClass) internal whenNotPaused {
-        //^^^^^^^checks^^^^^^^^^
-        Invoice memory pricing;
-        //^^^^^^^effects^^^^^^^^^
-        (
-            pricing.rootAddress,
-            pricing.rootPrice,
-            pricing.ACTHaddress,
-            pricing.ACTHprice
-        ) = AC_MGR.getForceModifyCosts(_assetClass);
-        deductPayment(pricing);
-        //^^^^^^^interactions^^^^^^^^^
-    }
+    
 
     //--------------------------------------------------------------PAYMENT FUNCTIONS
     /*

@@ -1,4 +1,4 @@
-/*-----------------------------------------------------------V0.6.8
+/*-----------------------------------------------------------V0.7.0
 __/\\\\\\\\\\\\\ _____/\\\\\\\\\ _______/\\../\\ ___/\\\\\\\\\\\\\\\
  _\/\\\/////////\\\ _/\\\///////\\\ ____\//..\//____\/\\\///////////__
   _\/\\\.......\/\\\.\/\\\.....\/\\\ ________________\/\\\ ____________
@@ -41,7 +41,7 @@ contract NAKED is CORE {
     ) external nonReentrant whenNotPaused {
         uint256 tokenId = uint256(_idxHash);
         Record memory rec = getRecord(_idxHash);
-        uint8 userType = getUserType(_assetClass);
+        uint8 userType = getCallingUserType(_assetClass);
 
         require(
             (AC_TKN.ownerOf(_assetClass) == msg.sender), //msg.sender is AC token holder
@@ -143,7 +143,7 @@ contract NAKED is CORE {
             pricing.rootPrice,
             pricing.ACTHaddress,
             pricing.ACTHprice
-        ) = AC_MGR.getNewRecordCosts(_assetClass);
+        ) = AC_MGR.getServiceCosts(_assetClass, 1);
 
         pricing.rootPrice = pricing.rootPrice.div(importDiscount);
         pricing.ACTHprice = pricing.ACTHprice.div(importDiscount);

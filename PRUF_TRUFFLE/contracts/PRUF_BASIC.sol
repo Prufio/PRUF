@@ -1,4 +1,4 @@
-/*-----------------------------------------------------------V0.6.8
+/*-----------------------------------------------------------V0.7.0
 __/\\\\\\\\\\\\\ _____/\\\\\\\\\ _______/\\../\\ ___/\\\\\\\\\\\\\\\
  _\/\\\/////////\\\ _/\\\///////\\\ ____\//..\//____\/\\\///////////__
   _\/\\\.......\/\\\.\/\\\.....\/\\\ ________________\/\\\ ____________
@@ -22,10 +22,10 @@ __/\\\\\\\\\\\\\ _____/\\\\\\\\\ _______/\\../\\ ___/\\\\\\\\\\\\\\\
 pragma solidity ^0.6.7;
 
 import "./PRUF_INTERFACES.sol";
-import "./Imports/Ownable.sol";
-import "./Imports/Pausable.sol";
-import "./Imports/ReentrancyGuard.sol";
-import "./_ERC721/IERC721Receiver.sol";
+import "./Imports/access/Ownable.sol";
+import "./Imports/utils/Pausable.sol";
+import "./Imports/utils/ReentrancyGuard.sol";
+import "./Imports/token/ERC721/IERC721Receiver.sol";
 
 contract BASIC is ReentrancyGuard, Ownable, IERC721Receiver, Pausable {
     struct Record {
@@ -46,6 +46,7 @@ contract BASIC is ReentrancyGuard, Ownable, IERC721Receiver, Pausable {
         string name; // NameHash for assetClass
         uint32 assetClassRoot; // asset type root (bycyles - USA Bicycles)
         uint8 custodyType; // custodial or noncustodial
+        uint32 discount;
         uint32 extendedData; // Future Use
     }
 
@@ -61,11 +62,17 @@ contract BASIC is ReentrancyGuard, Ownable, IERC721Receiver, Pausable {
     address internal AC_MGR_Address;
     AC_MGR_Interface internal AC_MGR;
 
+    address internal UTIL_TKN_Address;
+    UTIL_TKN_Interface internal UTIL_TKN;
+
     address internal A_TKN_Address;
     A_TKN_Interface internal A_TKN;
 
     address internal AC_TKN_Address;
     AC_TKN_Interface internal AC_TKN;
+
+    address internal ID_TKN_Address;
+    ID_TKN_Interface internal ID_TKN;
 
     address internal ECR_MGR_Address;
     ECR_MGR_Interface internal ECR_MGR;
@@ -106,7 +113,7 @@ contract BASIC is ReentrancyGuard, Ownable, IERC721Receiver, Pausable {
     /*
      * @dev Resolve Contract Addresses from STOR
      */
-    function OO_ResolveContractAddresses()
+    function OO_resolveContractAddresses()
         external
         virtual
         nonReentrant
@@ -117,11 +124,16 @@ contract BASIC is ReentrancyGuard, Ownable, IERC721Receiver, Pausable {
         AC_TKN = AC_TKN_Interface(AC_TKN_Address);
 
         AC_MGR_Address = STOR.resolveContractAddress("AC_MGR");
-
         AC_MGR = AC_MGR_Interface(AC_MGR_Address);
+
+        UTIL_TKN_Address = STOR.resolveContractAddress("UTIL_TKN");
+        UTIL_TKN = UTIL_TKN_Interface(UTIL_TKN_Address);
 
         A_TKN_Address = STOR.resolveContractAddress("A_TKN");
         A_TKN = A_TKN_Interface(A_TKN_Address);
+
+        ID_TKN_Address = STOR.resolveContractAddress("ID_TKN");
+        ID_TKN = ID_TKN_Interface(ID_TKN_Address);
 
         ECR_MGR_Address = STOR.resolveContractAddress("ECR_MGR");
         ECR_MGR = ECR_MGR_Interface(ECR_MGR_Address);
@@ -221,7 +233,7 @@ contract BASIC is ReentrancyGuard, Ownable, IERC721Receiver, Pausable {
     /*
      * @dev Get a User type Record from AC_manager for msg.sender, by assetClass
      */
-    function getUserType(uint32 _assetClass)
+    function getCallingUserType(uint32 _assetClass)
         internal
         virtual
         view
@@ -253,6 +265,7 @@ contract BASIC is ReentrancyGuard, Ownable, IERC721Receiver, Pausable {
         (
             AC_info.assetClassRoot,
             AC_info.custodyType,
+            AC_info.discount,
             AC_info.extendedData
         ) = AC_MGR.getAC_data(_assetClass);
         return AC_info;

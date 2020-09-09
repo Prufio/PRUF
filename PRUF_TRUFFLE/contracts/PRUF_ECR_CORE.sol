@@ -1,4 +1,4 @@
-/*-----------------------------------------------------------V0.6.8
+/*-----------------------------------------------------------V0.7.0
 __/\\\\\\\\\\\\\ _____/\\\\\\\\\ _______/\\../\\ ___/\\\\\\\\\\\\\\\
  _\/\\\/////////\\\ _/\\\///////\\\ ____\//..\//____\/\\\///////////__
   _\/\\\.......\/\\\.\/\\\.....\/\\\ ________________\/\\\ ____________
@@ -20,8 +20,8 @@ pragma solidity ^0.6.7;
 
 import "./PRUF_BASIC.sol";
 import "./PRUF_INTERFACES.sol";
-import "./Imports/PullPayment.sol";
-import "./Imports/ReentrancyGuard.sol";
+import "./Imports/payment/PullPayment.sol";
+import "./Imports/utils/ReentrancyGuard.sol";
 
 contract ECR_CORE is BASIC {
     using SafeMath for uint256;

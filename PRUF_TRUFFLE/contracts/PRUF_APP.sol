@@ -1,4 +1,4 @@
-/*-----------------------------------------------------------V0.6.8
+/*-----------------------------------------------------------V0.7.0
 __/\\\\\\\\\\\\\ _____/\\\\\\\\\ _______/\\../\\ ___/\\\\\\\\\\\\\\\
  _\/\\\/////////\\\ _/\\\///////\\\ ____\//..\//____\/\\\///////////__
   _\/\\\.......\/\\\.\/\\\.....\/\\\ ________________\/\\\ ____________
@@ -43,7 +43,7 @@ contract APP is CORE {
         uint32 _countDownStart
     ) external payable nonReentrant whenNotPaused {
         Record memory rec = getRecord(_idxHash);
-        uint8 userType = getUserType(_assetClass);
+        uint8 userType = getCallingUserType(_assetClass);
         AC memory AC_info = getACinfo(_assetClass);
         AC memory oldAC_info = getACinfo(rec.assetClass);
 
@@ -59,7 +59,8 @@ contract APP is CORE {
         } else {
             createRecord(_idxHash, _rgtHash, _assetClass, _countDownStart);
         }
-        deductNewRecordCosts(_assetClass);
+        deductServiceCosts(_assetClass, 1);
+
         //^^^^^^^interactions^^^^^^^^^
     }
 
@@ -80,7 +81,7 @@ contract APP is CORE {
         returns (uint8)
     {
         Record memory rec = getRecord(_idxHash);
-        uint8 userType = getUserType(_newAssetClass);
+        uint8 userType = getCallingUserType(_newAssetClass);
 
         require(userType < 3, "A:IA: User not authorized to import assets");
         require((userType > 0) && (userType < 10), "A:IA: User not auth in AC");
@@ -100,7 +101,8 @@ contract APP is CORE {
 
         STOR.changeAC(_idxHash, _newAssetClass);
         writeRecord(_idxHash, rec);
-        deductNewRecordCosts(_newAssetClass);
+        deductServiceCosts(_newAssetClass, 1);
+
 
         return rec.assetStatus;
         //^^^^^^^interactions^^^^^^^^^
@@ -118,7 +120,7 @@ contract APP is CORE {
         returns (uint8)
     {
         Record memory rec = getRecord(_idxHash);
-        uint8 userType = getUserType(rec.assetClass);
+        uint8 userType = getCallingUserType(rec.assetClass);
         
         require(userType == 1, "A:FMR: User not auth in AC");
         require(
@@ -141,7 +143,7 @@ contract APP is CORE {
 
         writeRecord(_idxHash, rec);
 
-        deductForceModifyCosts(rec.assetClass);
+        deductServiceCosts(rec.assetClass, 6);
 
         return 170;
         //^^^^^^^interactions^^^^^^^^^
@@ -163,7 +165,7 @@ contract APP is CORE {
         returns (uint8)
     {
         Record memory rec = getRecord(_idxHash);
-        uint8 userType = getUserType(rec.assetClass);
+        uint8 userType = getCallingUserType(rec.assetClass);
 
         require((userType > 0) && (userType < 10), "A:TA: User not auth in AC");
         require(
@@ -193,7 +195,7 @@ contract APP is CORE {
 
         writeRecord(_idxHash, rec);
 
-        deductTransferAssetCosts(rec.assetClass);
+        deductServiceCosts(rec.assetClass, 2);
 
         return (170);
         //^^^^^^^interactions^^^^^^^^^
@@ -215,7 +217,7 @@ contract APP is CORE {
         returns (bytes32)
     {
         Record memory rec = getRecord(_idxHash);
-        uint8 userType = getUserType(rec.assetClass);
+        uint8 userType = getCallingUserType(rec.assetClass);
 
         require((userType > 0) && (userType < 10), "A:I2: User not auth in AC");
 
@@ -234,7 +236,7 @@ contract APP is CORE {
 
         writeRecordIpfs2(_idxHash, rec);
 
-        deductCreateNoteCosts(rec.assetClass);
+        deductServiceCosts(rec.assetClass, 3);
 
         return rec.Ipfs2;
         //^^^^^^^interactions^^^^^^^^^

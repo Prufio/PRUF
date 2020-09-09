@@ -1,4 +1,4 @@
-/*-----------------------------------------------------------V0.6.8
+/*-----------------------------------------------------------V0.7.0
 __/\\\\\\\\\\\\\ _____/\\\\\\\\\ _______/\\../\\ ___/\\\\\\\\\\\\\\\
  _\/\\\/////////\\\ _/\\\///////\\\ ____\//..\//____\/\\\///////////__
   _\/\\\.......\/\\\.\/\\\.....\/\\\ ________________\/\\\ ____________
@@ -46,7 +46,7 @@ contract MAL_APP is CORE_MAL {
     // nonReentrant whenNotPaused 
     {
         Record memory rec = getRecord(_idxHash);
-        // uint8 userType = getUserType(_assetClass);
+        // uint8 userType = getCallingUserType(_assetClass);
         AC memory AC_info = getACinfo(_assetClass);
         AC memory oldAC_info = getACinfo(rec.assetClass);
         // ContractDataHash memory contractInfo = getContractInfo(
@@ -74,7 +74,8 @@ contract MAL_APP is CORE_MAL {
         } else {
             createRecord(_idxHash, _rgtHash, _assetClass, _countDownStart);
         }
-        deductNewRecordCosts(_assetClass);
+        deductServiceCosts(_assetClass, 1);
+
         //^^^^^^^interactions^^^^^^^^^
     }
 
@@ -93,7 +94,7 @@ contract MAL_APP is CORE_MAL {
         returns (uint8)
     {
         Record memory rec = getRecord(_idxHash);
-        // uint8 userType = getUserType(rec.assetClass);
+        // uint8 userType = getCallingUserType(rec.assetClass);
         // ContractDataHash memory contractInfo = getContractInfo(
         //     address(this),
         //     rec.assetClass
@@ -169,7 +170,7 @@ contract MAL_APP is CORE_MAL {
         returns (uint8)
     {
         Record memory rec = getRecord(_idxHash);
-        // uint8 userType = getUserType(rec.assetClass);
+        // uint8 userType = getCallingUserType(rec.assetClass);
         // ContractDataHash memory contractInfo = getContractInfo(
         //     address(this),
         //     rec.assetClass
@@ -234,7 +235,7 @@ contract MAL_APP is CORE_MAL {
         returns (uint32)
     {
         Record memory rec = getRecord(_idxHash);
-        // uint8 userType = getUserType(rec.assetClass);
+        // uint8 userType = getCallingUserType(rec.assetClass);
         // ContractDataHash memory contractInfo = getContractInfo(
         //     address(this),
         //     rec.assetClass
@@ -300,7 +301,7 @@ contract MAL_APP is CORE_MAL {
     //     returns (uint8)
     // {
     //     Record memory rec = getRecord(_idxHash);
-    //     // uint8 userType = getUserType(rec.assetClass);
+    //     // uint8 userType = getCallingUserType(rec.assetClass);
     //     // ContractDataHash memory contractInfo = getContractInfo(
     //     //     address(this),
     //     //     rec.assetClass
@@ -359,7 +360,7 @@ contract MAL_APP is CORE_MAL {
     //     returns (uint16)
     // {
     //     Record memory rec = getRecord(_idxHash);
-    //     // uint8 userType = getUserType(rec.assetClass);
+    //     // uint8 userType = getCallingUserType(rec.assetClass);
     //     // ContractDataHash memory contractInfo = getContractInfo(
     //     //     address(this),
     //     //     rec.assetClass
@@ -421,7 +422,7 @@ contract MAL_APP is CORE_MAL {
         returns (bytes32)
     {
         Record memory rec = getRecord(_idxHash);
-        // uint8 userType = getUserType(rec.assetClass);
+        // uint8 userType = getCallingUserType(rec.assetClass);
         // ContractDataHash memory contractInfo = getContractInfo(
         //     address(this),
         //     rec.assetClass
@@ -480,7 +481,7 @@ contract MAL_APP is CORE_MAL {
         returns (bytes32)
     {
         Record memory rec = getRecord(_idxHash);
-        // uint8 userType = getUserType(rec.assetClass);
+        // uint8 userType = getCallingUserType(rec.assetClass);
         // ContractDataHash memory contractInfo = getContractInfo(
         //     address(this),
         //     rec.assetClass
@@ -525,7 +526,7 @@ contract MAL_APP is CORE_MAL {
 
         writeRecordIpfs2(_idxHash, rec);
 
-        deductCreateNoteCosts(rec.assetClass);
+        deductServiceCosts(rec.assetClass, 3);
 
         return rec.Ipfs2;
         //^^^^^^^interactions^^^^^^^^^
@@ -542,7 +543,7 @@ contract MAL_APP is CORE_MAL {
         returns (uint8)
     {
         Record memory rec = getRecord(_idxHash);
-        // uint8 userType = getUserType(rec.assetClass);
+        // uint8 userType = getCallingUserType(rec.assetClass);
         // ContractDataHash memory contractInfo = getContractInfo(
         //     address(this),
         //     rec.assetClass
@@ -586,7 +587,7 @@ contract MAL_APP is CORE_MAL {
     // nonReentrant whenNotPaused isAuthorized(_idxHash) 
     {
         // Record memory rec = getRecord(_idxHash);
-        // uint8 userType = getUserType(rec.assetClass);
+        // uint8 userType = getCallingUserType(rec.assetClass);
         uint256 escrowTime = block.timestamp.add(_escrowTime);
         uint8 newEscrowStatus;
         // ContractDataHash memory contractInfo = getContractInfo(
@@ -654,7 +655,7 @@ contract MAL_APP is CORE_MAL {
     // nonReentrant whenNotPaused isAuthorized(_idxHash) 
     {
         // Record memory rec = getRecord(_idxHash);
-        // uint8 userType = getUserType(rec.assetClass);
+        // uint8 userType = getCallingUserType(rec.assetClass);
         // uint256 escrowTime = block.timestamp.add(_escrowTime);
         // uint8 newEscrowStatus;
         // ContractDataHash memory contractInfo = getContractInfo(
@@ -726,7 +727,7 @@ contract MAL_APP is CORE_MAL {
         //     address(this),
         //     rec.assetClass
         // );
-        // uint8 userType = getUserType(rec.assetClass);
+        // uint8 userType = getCallingUserType(rec.assetClass);
         // bytes32 ownerHash = ECR_MGR.retrieveEscrowOwner(_idxHash);
 
         // require(                                                                 //Storage IA mod takes care of it?
@@ -772,7 +773,7 @@ contract MAL_APP is CORE_MAL {
         //     address(this),
         //     rec.assetClass
         // );
-        // uint8 userType = getUserType(rec.assetClass);
+        // uint8 userType = getCallingUserType(rec.assetClass);
         // bytes32 ownerHash = ECR_MGR.retrieveEscrowOwner(_idxHash);
 
         // require(                                                                 //Storage IA mod takes care of it?

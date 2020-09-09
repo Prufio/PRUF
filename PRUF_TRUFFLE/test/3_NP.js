@@ -1,14 +1,10 @@
-//
-    //
-    // DECLARATIONS
-    //
-    //
     const PRUF_STOR = artifacts.require('STOR');
     const PRUF_APP = artifacts.require('APP');
     const PRUF_NP = artifacts.require('NP');
     const PRUF_AC_MGR = artifacts.require('AC_MGR');
     const PRUF_AC_TKN = artifacts.require('AC_TKN');
     const PRUF_A_TKN = artifacts.require('A_TKN');
+    const PRUF_ID_TKN = artifacts.require('ID_TKN');
     const PRUF_ECR_MGR = artifacts.require('ECR_MGR');
     const PRUF_ECR = artifacts.require('ECR');
     const PRUF_ECR2 = artifacts.require('ECR2');
@@ -26,6 +22,7 @@
     let AC_MGR;
     let AC_TKN;
     let A_TKN;
+    let ID_TKN;
     let ECR_MGR;
     let ECR;
     let ECR2;
@@ -84,12 +81,6 @@
     let nakedAuthCode3;
     let nakedAuthCode7;
     
-        //
-        //
-        // END DECLARATIONS
-        //
-        //
-    
     contract('NP', accounts => {
             
         console.log('//**************************BEGIN BOOTSTRAP**************************//')
@@ -104,12 +95,6 @@
         const account8 = accounts[7];
         const account9 = accounts[8];
         const account10 = accounts[9];
-
-    //
-    //
-    //ENVIRONMENT SETUP
-    //
-    //
 
     it('Should deploy Storage', async () => {
         const PRUF_STOR_TEST = await PRUF_STOR.deployed({ from: account1 });
@@ -220,6 +205,14 @@
         console.log(PRUF_HELPER_TEST.address);
         assert(PRUF_HELPER_TEST.address !== '')
         Helper = PRUF_HELPER_TEST;
+    })
+
+
+    it('Should deploy PRUF_ID_TKN', async () => {
+        const PRUF_ID_TKN_TEST = await PRUF_ID_TKN.deployed({ from: account1 });
+        console.log(PRUF_ID_TKN_TEST.address);
+        assert(PRUF_ID_TKN_TEST.address !== '')
+        ID_TKN = PRUF_ID_TKN_TEST;
     })
 
 
@@ -522,6 +515,11 @@
                 console.log("Adding A_TKN to storage for use in AC 0")
                 return STOR.OO_addContract("A_TKN", A_TKN.address, '0', '1', { from: account1 })
             })
+
+            .then(() => {
+                console.log("Adding ID_TKN to storage for use in AC 0")
+                return STOR.OO_addContract("ID_TKN", ID_TKN.address, '0', '1', { from: account1 })
+            })
             
             .then(() => {
                 console.log("Adding ECR_MGR to storage for use in AC 0")
@@ -645,70 +643,70 @@
     it('Should resolve contract addresses', async () => {
 
         console.log("Resolving in APP")
-        return APP.OO_ResolveContractAddresses({ from: account1 })
+        return APP.OO_resolveContractAddresses({ from: account1 })
 
             .then(() => {
                 console.log("Resolving in NP")
-                return NP.OO_ResolveContractAddresses({ from: account1 })
+                return NP.OO_resolveContractAddresses({ from: account1 })
             })
 
             .then(() => {
                 console.log("Resolving in MAL_APP")
-                return MAL_APP.OO_ResolveContractAddresses({ from: account1 })
+                return MAL_APP.OO_resolveContractAddresses({ from: account1 })
             })
             
             .then(() => {
                 console.log("Resolving in AC_MGR")
-                return AC_MGR.OO_ResolveContractAddresses({ from: account1 })
+                return AC_MGR.OO_resolveContractAddresses({ from: account1 })
             })
             
             .then(() => {
                 console.log("Resolving in AC_TKN")
-                return AC_TKN.OO_ResolveContractAddresses({ from: account1 })
+                return AC_TKN.OO_resolveContractAddresses({ from: account1 })
             })
             
             .then(() => {
                 console.log("Resolving in A_TKN")
-                return A_TKN.OO_ResolveContractAddresses({ from: account1 })
+                return A_TKN.OO_resolveContractAddresses({ from: account1 })
             })
             
             .then(() => {
                 console.log("Resolving in ECR_MGR")
-                return ECR_MGR.OO_ResolveContractAddresses({ from: account1 })
+                return ECR_MGR.OO_resolveContractAddresses({ from: account1 })
             })
             
             .then(() => {
                 console.log("Resolving in ECR")
-                return ECR.OO_ResolveContractAddresses({ from: account1 })
+                return ECR.OO_resolveContractAddresses({ from: account1 })
             })
 
             .then(() => {
                 console.log("Resolving in ECR2")
-                return ECR2.OO_ResolveContractAddresses({ from: account1 })
+                return ECR2.OO_resolveContractAddresses({ from: account1 })
             })
             
             .then(() => {
                 console.log("Resolving in APP_NC")
-                return APP_NC.OO_ResolveContractAddresses({ from: account1 })})
+                return APP_NC.OO_resolveContractAddresses({ from: account1 })})
             
             .then(() => {
                 console.log("Resolving in NP_NC")
-                return NP_NC.OO_ResolveContractAddresses({ from: account1 })
+                return NP_NC.OO_resolveContractAddresses({ from: account1 })
             })
             
             .then(() => {
                 console.log("Resolving in ECR_NC")
-                return ECR_NC.OO_ResolveContractAddresses({ from: account1 })
+                return ECR_NC.OO_resolveContractAddresses({ from: account1 })
             })
 
             .then(() => {
                 console.log("Resolving in NAKED")
-                return NAKED.OO_ResolveContractAddresses({ from: account1 })
+                return NAKED.OO_resolveContractAddresses({ from: account1 })
             })
             
             .then(() => {
                 console.log("Resolving in RCLR")
-                return RCLR.OO_ResolveContractAddresses({ from: account1 })
+                return RCLR.OO_resolveContractAddresses({ from: account1 })
             })
     })
 
@@ -771,10 +769,6 @@
         .then(() => {
                 return STOR.enableContractForAC('APP', '11', '1', { from: account1 })
             })
-
-            // .then(() => {
-            //     return STOR.enableContractForAC('APP', '1', '1', { from: account1 })
-            // })
     })
 
 
@@ -794,10 +788,6 @@
             .then(() => {
                 return STOR.enableContractForAC('APP_NC', '16', '2', { from: account10 })
             })
-            
-            // .then(() => {
-            //     return STOR.enableContractForAC('APP_NC', '2', '2', { from: account1 })
-            // })
     })
 
 
@@ -809,10 +799,6 @@
             .then(() => {
                 return STOR.enableContractForAC('NP', '11', '1', { from: account1 })
             })
-            
-            // .then(() => {
-            //     return STOR.enableContractForAC('NP', '1', '1', { from: account1 })
-            // })
     })
 
 
@@ -824,10 +810,6 @@
             .then(() => {
                 return STOR.enableContractForAC('MAL_APP', '11', '1', { from: account1 })
             })
-            
-            // .then(() => {
-            //     return STOR.enableContractForAC('NP', '1', '1', { from: account1 })
-            // })
     })
 
 
@@ -847,10 +829,6 @@
             .then(() => {
                 return STOR.enableContractForAC('NP_NC', '16', '2', { from: account10 })
             })
-
-            // .then(() => {
-            //     return STOR.enableContractForAC('NP_NC', '2', '0', { from: account1 })
-            // })
     })
 
 
@@ -862,10 +840,6 @@
             .then(() => {
                 return STOR.enableContractForAC('ECR', '11', '3', { from: account1 })
             })
-            
-            // .then(() => {
-            //     return STOR.enableContractForAC('ECR', '1', '3', { from: account1 })
-            // })
     })
 
 
@@ -897,10 +871,6 @@
             .then(() => {
                 return STOR.enableContractForAC('ECR_NC', '16', '3', { from: account10 })
             })
-            
-            // .then(() => {
-            //     return STOR.enableContractForAC('ECR_NC', '2', '3', { from: account1 })
-            // })
     })
 
     it('Should authorize ECR_MGR in all relevant asset classes', async () => {
@@ -927,14 +897,6 @@
             .then(() => {
                 return STOR.enableContractForAC('ECR_MGR', '16', '3', { from: account10 })
             })
-            
-            // .then(() => {
-            //     return STOR.enableContractForAC('ECR_MGR', '1', '3', { from: account1 })
-            // })
-            
-            // .then(() => {
-            //     return STOR.enableContractForAC('ECR_MGR', '2', '3', { from: account1 })
-            // })
     })
 
 
@@ -1059,14 +1021,6 @@
             .then(() => {
                 return STOR.enableContractForAC('AC_MGR', '14', '2', { from: account1 })
             })
-            
-            // .then(() => {
-            //     return STOR.enableContractForAC('AC_MGR', '1', '0', { from: account1 })
-            // })
-            
-            // .then(() => {
-            //     return STOR.enableContractForAC('AC_MGR', '2', '0', { from: account1 })
-            // })
     })
 
 
@@ -1094,122 +1048,338 @@
             .then(() => {
                 return STOR.enableContractForAC('RCLR', '16', '3', { from: account10 })
             })
-            
-            // .then(() => {
-            //     return STOR.enableContractForAC('RCLR', '1', '0', { from: account1 })
-            // })
-            
-            // .then(() => {
-            //     return STOR.enableContractForAC('RCLR', '2', '0', { from: account1 })
-            // })
-    })
-
-
-    it("Should set base costs in root tokens", async () => {
-
-        console.log("Setting base costs in root 1")
-        return AC_MGR.ACTH_setCosts("1",
-            "10000000000000000",
-            "10000000000000000",
-            "10000000000000000",
-            "10000000000000000",
-            "10000000000000000",
-            "10000000000000000",
-            account1,
-            { from: account1 })
-
-            .then(() => {
-                console.log("Setting base costs in root 2")
-                return AC_MGR.ACTH_setCosts("2",
-                    "10000000000000000",
-                    "10000000000000000",
-                    "10000000000000000",
-                    "10000000000000000",
-                    "10000000000000000",
-                    "10000000000000000",
-                    account1,
-                    { from: account1 })
-            })
     })
 
 
     it("Should set costs in minted AC's", async () => {
 
         console.log("Setting costs in AC 10")
-        return AC_MGR.ACTH_setCosts("10",
-            "10000000000000000",
-            "10000000000000000",
-            "10000000000000000",
-            "10000000000000000",
-            "10000000000000000",
+        return AC_MGR.ACTH_setCosts(
+            "10",
+            "1",
             "10000000000000000",
             account1,
             { from: account1 })
 
             .then(() => {
-                console.log("Setting base costs in AC 11")
-                return AC_MGR.ACTH_setCosts("11",
-                    "10000000000000000",
-                    "10000000000000000",
-                    "10000000000000000",
-                    "10000000000000000",
-                    "10000000000000000",
+                return AC_MGR.ACTH_setCosts(
+                    "10",
+                    "2",
                     "10000000000000000",
                     account1,
                     { from: account1 })
+            })
+
+            .then(() => {
+                return AC_MGR.ACTH_setCosts(
+                    "10",
+                    "3",
+                    "10000000000000000",
+                    account1,
+                    { from: account1 })
+            })
+
+            .then(() => {
+                return AC_MGR.ACTH_setCosts(
+                    "10",
+                    "4",
+                    "10000000000000000",
+                    account1,
+                    { from: account1 })
+            })
+
+            .then(() => {
+                return AC_MGR.ACTH_setCosts(
+                    "10",
+                    "5",
+                    "10000000000000000",
+                    account1,
+                    { from: account1 })
+            })
+
+            .then(() => {
+                return AC_MGR.ACTH_setCosts(
+                    "10",
+                    "6",
+                    "10000000000000000",
+                    account1,
+                    { from: account1 })
+            })
+
+            .then(() => {
+                console.log("Setting base costs in AC 11")
+                return AC_MGR.ACTH_setCosts(
+                    "11",
+                    "1",
+                    "10000000000000000",
+                    account1,
+                    { from: account1 })
+                })
+
+                .then(() => {
+                    return AC_MGR.ACTH_setCosts(
+                        "11",
+                        "2",
+                        "10000000000000000",
+                        account1,
+                        { from: account1 })
+                })
+    
+                .then(() => {
+                    return AC_MGR.ACTH_setCosts(
+                        "11",
+                        "3",
+                        "10000000000000000",
+                        account1,
+                        { from: account1 })
+                })
+    
+                .then(() => {
+                    return AC_MGR.ACTH_setCosts(
+                        "11",
+                        "4",
+                        "10000000000000000",
+                        account1,
+                        { from: account1 })
+                })
+    
+                .then(() => {
+                    return AC_MGR.ACTH_setCosts(
+                        "11",
+                        "5",
+                        "10000000000000000",
+                        account1,
+                        { from: account1 })
+                })
+    
+                .then(() => {
+                    return AC_MGR.ACTH_setCosts(
+                        "11",
+                        "6",
+                        "10000000000000000",
+                        account1,
+                        { from: account1 })
                 })
             
             .then(() => {
                 console.log("Setting base costs in AC 12")
-                return AC_MGR.ACTH_setCosts("12",
-                    "10000000000000000",
-                    "10000000000000000",
-                    "10000000000000000",
-                    "10000000000000000",
-                    "10000000000000000",
+                return AC_MGR.ACTH_setCosts(
+                    "12",
+                    "1",
                     "10000000000000000",
                     account1,
                     { from: account1 })
+                })
+
+                .then(() => {
+                    return AC_MGR.ACTH_setCosts(
+                        "12",
+                        "2",
+                        "10000000000000000",
+                        account1,
+                        { from: account1 })
+                })
+    
+                .then(() => {
+                    return AC_MGR.ACTH_setCosts(
+                        "12",
+                        "3",
+                        "10000000000000000",
+                        account1,
+                        { from: account1 })
+                })
+    
+                .then(() => {
+                    return AC_MGR.ACTH_setCosts(
+                        "12",
+                        "4",
+                        "10000000000000000",
+                        account1,
+                        { from: account1 })
+                })
+    
+                .then(() => {
+                    return AC_MGR.ACTH_setCosts(
+                        "12",
+                        "5",
+                        "10000000000000000",
+                        account1,
+                        { from: account1 })
+                })
+    
+                .then(() => {
+                    return AC_MGR.ACTH_setCosts(
+                        "12",
+                        "6",
+                        "10000000000000000",
+                        account1,
+                        { from: account1 })
                 })
             
             .then(() => {
                 console.log("Setting base costs in AC 13")
-                return AC_MGR.ACTH_setCosts("13",
-                    "10000000000000000",
-                    "10000000000000000",
-                    "10000000000000000",
-                    "10000000000000000",
-                    "10000000000000000",
+                return AC_MGR.ACTH_setCosts(
+                    "13",
+                    "1",
                     "10000000000000000",
                     account1,
                     { from: account1 })
+                })
+
+                .then(() => {
+                    return AC_MGR.ACTH_setCosts(
+                        "13",
+                        "2",
+                        "10000000000000000",
+                        account1,
+                        { from: account1 })
+                })
+    
+                .then(() => {
+                    return AC_MGR.ACTH_setCosts(
+                        "13",
+                        "3",
+                        "10000000000000000",
+                        account1,
+                        { from: account1 })
+                })
+    
+                .then(() => {
+                    return AC_MGR.ACTH_setCosts(
+                        "13",
+                        "4",
+                        "10000000000000000",
+                        account1,
+                        { from: account1 })
+                })
+    
+                .then(() => {
+                    return AC_MGR.ACTH_setCosts(
+                        "13",
+                        "5",
+                        "10000000000000000",
+                        account1,
+                        { from: account1 })
+                })
+    
+                .then(() => {
+                    return AC_MGR.ACTH_setCosts(
+                        "13",
+                        "6",
+                        "10000000000000000",
+                        account1,
+                        { from: account1 })
                 })
             
             .then(() => {
                 console.log("Setting base costs in AC 14")
-                return AC_MGR.ACTH_setCosts("14",
-                    "10000000000000000",
-                    "10000000000000000",
-                    "10000000000000000",
-                    "10000000000000000",
-                    "10000000000000000",
+                return AC_MGR.ACTH_setCosts(
+                    "14",
+                    "1",
                     "10000000000000000",
                     account1,
                     { from: account1 })
                 })
+
+                .then(() => {
+                    return AC_MGR.ACTH_setCosts(
+                        "14",
+                        "2",
+                        "10000000000000000",
+                        account1,
+                        { from: account1 })
+                })
+    
+                .then(() => {
+                    return AC_MGR.ACTH_setCosts(
+                        "14",
+                        "3",
+                        "10000000000000000",
+                        account1,
+                        { from: account1 })
+                })
+    
+                .then(() => {
+                    return AC_MGR.ACTH_setCosts(
+                        "14",
+                        "4",
+                        "10000000000000000",
+                        account1,
+                        { from: account1 })
+                })
+    
+                .then(() => {
+                    return AC_MGR.ACTH_setCosts(
+                        "14",
+                        "5",
+                        "10000000000000000",
+                        account1,
+                        { from: account1 })
+                })
+    
+                .then(() => {
+                    return AC_MGR.ACTH_setCosts(
+                        "14",
+                        "6",
+                        "10000000000000000",
+                        account1,
+                        { from: account1 })
+                })
             
             .then(() => {
                 console.log("Setting base costs in AC 15")
-                return AC_MGR.ACTH_setCosts("15",
-                    "10000000000000000",
-                    "10000000000000000",
-                    "10000000000000000",
-                    "10000000000000000",
-                    "10000000000000000",
+                return AC_MGR.ACTH_setCosts(
+                    "15",
+                    "1",
                     "10000000000000000",
                     account1,
                     { from: account10 })
             })
+
+                .then(() => {
+                    return AC_MGR.ACTH_setCosts(
+                        "15",
+                        "2",
+                        "10000000000000000",
+                        account1,
+                        { from: account10 })
+                })
+    
+                .then(() => {
+                    return AC_MGR.ACTH_setCosts(
+                        "15",
+                        "3",
+                        "10000000000000000",
+                        account1,
+                        { from: account10 })
+                })
+    
+                .then(() => {
+                    return AC_MGR.ACTH_setCosts(
+                        "15",
+                        "4",
+                        "10000000000000000",
+                        account1,
+                        { from: account10 })
+                })
+    
+                .then(() => {
+                    return AC_MGR.ACTH_setCosts(
+                        "15",
+                        "5",
+                        "10000000000000000",
+                        account1,
+                        { from: account10 })
+                })
+    
+                .then(() => {
+                    return AC_MGR.ACTH_setCosts(
+                        "15",
+                        "6",
+                        "10000000000000000",
+                        account1,
+                        { from: account10 })
+                })
     })
 
 
@@ -1333,6 +1503,15 @@
     })
 
 
+    it('Should mint ID_TKN(1) to account5', async () => {
+        return ID_TKN.mintPRUF_IDToken(
+        account5, 
+        '1',
+        {from: account1}
+        )
+    })
+
+
     it('Should mint asset5 in AC12 to account5', async () => {
         return APP_NC.$newRecord(
         asset5, 
@@ -1343,40 +1522,6 @@
         )
     })
 
-
-    // IMPOSSIBLE FOR ASSET TO BE IN DISCARDED STATUS AND MODIFY STATUS
-    // it('Should put asset2 in to exportable status', async () => {
-    //     return NP._modStatus(
-    //     asset2,
-    //     rgt2,
-    //     '51',
-    //     {from: account2}
-    //     )
-    // })
-
-    // it('Should export asset2 to put in unregistered status', async () => {
-    //     return NP.exportAsset(
-    //     asset2,
-    //     account2,
-    //     {from: account2}
-    //     )
-    // })
-
-    // it('Should put asset2 in to discardable status', async () => {
-    //     return NP_NC._modStatus(
-    //     asset2,
-    //     rgt2,
-    //     '59',
-    //     {from: account2}
-    //     )
-    // })
-
-    // it('Should discard asset2 to put in unregistered status', async () => {
-    //     return A_TKN.discard(
-    //     asset2,
-    //     {from: account2}
-    //     )
-    // })
 
     it('Should put asset3 in to exportable status', async () => {
         return NP._modStatus(
@@ -1440,26 +1585,6 @@
         )
     })
 
-
-    // it('Should unauthorize NP in AC10', async () => {
-    //     return STOR.enableContractForAC('NP', '10', '0', { from: account1 })
-    // })
-
-    // //2
-    // it('Should Fail because NP != authorized in AC10', async () => {
-    //     return NP._modStatus(
-    //     asset1,
-    //     rgt1,
-    //     '1',
-    //     {from: account4}
-    //     )
-    // })
-
-
-    // it('Should authorize NP in AC10', async () => {
-    //     return STOR.enableContractForAC('NP', '10', '1', { from: account1 })
-    // })
-
     //2
     it('Should Fail because account5 != auth for AC10 assets', async () => {
         return NP._modStatus(
@@ -1469,56 +1594,6 @@
         {from: account5}
         )
     })
-
-    // //4
-    // it('Should Fail because being placed in stolen status', async () => {
-    //     return NP._modStatus(
-    //     asset1,
-    //     rgt1,
-    //     '3',
-    //     {from: account2}
-    //     )
-    // })
-
-    // //5
-    // it('Should Fail because being placed in lost status', async () => {
-    //     return NP._modStatus(
-    //     asset1,
-    //     rgt1,
-    //     '4',
-    //     {from: account2}
-    //     )
-    // })
-
-    // //6
-    // it('Should Fail because being placed in escrow status 6', async () => {
-    //     return NP._modStatus(
-    //     asset1,
-    //     rgt1,
-    //     '6',
-    //     {from: account2}
-    //     )
-    // })
-
-    // //7
-    // it('Should Fail because being placed in escrow status 50', async () => {
-    //     return NP._modStatus(
-    //     asset1,
-    //     rgt1,
-    //     '50',
-    //     {from: account2}
-    //     )
-    // })
-
-    // //8
-    // it('Should Fail because being placed in escrow status 56', async () => {
-    //     return NP._modStatus(
-    //     asset1,
-    //     rgt1,
-    //     '56',
-    //     {from: account2}
-    //     )
-    // })
 
     //3
     it('Should Fail because being placed in exported status', async () => {
@@ -1569,55 +1644,6 @@
         {from: account2}
         )
     })
-
-    // it('Should place asset1 in escrow', async () => {
-    //     return ECR.setEscrow(
-    //     asset1,
-    //     account2Hash,
-    //     '180',
-    //     '6',
-    //     {from: account2}
-    //     )
-    // })
-
-    // //14
-    // it('Should Fail because asset1 is in escrow', async () => {
-    //     return NP._modStatus(
-    //     asset1,
-    //     rgt1,
-    //     '1',
-    //     {from: account2}
-    //     )
-    // })
-
-
-    // it('Should take asset1 out of escrow', async () => {
-    //     return ECR.endEscrow(
-    //     asset1,
-    //     {from: account2}
-    //     )
-    // })
-    
-    
-    // IMPOSSIBLE FOR ASSET TO BE IN DISCARDED STATUS AND MODIFY STATUS
-    // it('Should Fail because asset2 is unregistered(discarded)', async () => {
-    //     return NP._modStatus(
-    //     asset2,
-    //     rgt2,
-    //     '1',
-    //     {from: account2}
-    //     )
-    // })
-
-    // //15
-    // it('Should Fail because asset3 is unregistered(exported)', async () => {
-    //     return NP._modStatus(
-    //     asset3,
-    //     rgt3,
-    //     '1',
-    //     {from: account2}
-    //     )
-    // })
 
     //8
     it('Should fail because asset4 is unregistered(transfered)', async () => {
@@ -1670,26 +1696,6 @@
         )
     })
 
-
-    // it('Should unauthorize NP in AC10', async () => {
-    //     return STOR.enableContractForAC('NP', '10', '0', { from: account1 })
-    // })
-
-    // //19
-    // it('Should Fail because NP != authorized in AC10', async () => {
-    //     return NP._setLostOrStolen(
-    //     asset1,
-    //     rgt1,
-    //     '3',
-    //     {from: account2}
-    //     )
-    // })
-
-
-    // it('Should authorize NP in AC10', async () => {
-    //     return STOR.enableContractForAC('NP', '10', '1', { from: account1 })
-    // })
-
     //12
     it('Should Fail because account5 != auth for AC10 assets', async () => {
         return NP._setLostOrStolen(
@@ -1699,16 +1705,6 @@
         {from: account5}
         )
     })
-
-    // //21
-    // it('Should fail because assetStatus is being set != Lost or Stolen', async () => {
-    //     return NP._setLostOrStolen(
-    //     asset1,
-    //     rgt1,
-    //     '1',
-    //     {from: account2}
-    //     )
-    // })
 
 
     it('Should authorize account7 in AC 10', async () => {
@@ -1729,115 +1725,6 @@
         return AC_MGR.OO_addUser(account7, '0', '10', { from: account1 })
     })
 
-    // //23
-    // it('Should fail because assetStatus is being set after set to stolen while transfered', async () => {
-    //     return NP._setLostOrStolen(
-    //     asset4,
-    //     rgtFFF,
-    //     '3',
-    //     {from: account2}
-    //     )
-    // })
-
-    // //24
-    // it('Should fail because assetStatus is being set after set to lost while transfered', async () => {
-    //     return NP._setLostOrStolen(
-    //     asset4,
-    //     rgtFFF,
-    //     '4',
-    //     {from: account2}
-    //     )
-    // })
-
-
-    // it('Should set asset1Status to 1', async () => {
-    //     return NP._modStatus(
-    //     asset1,
-    //     rgt1,
-    //     '1',
-    //     {from: account2}
-    //     )
-    // })
-
-
-    // it('Should place asset1 in escrow', async () => {
-    //     return ECR.setEscrow(
-    //     asset1,
-    //     account2Hash,
-    //     '180',
-    //     '50',
-    //     {from: account2}
-    //     )
-    // })
-
-    // //25
-    // it('Should Fail to set stolen because asset1 is in locked escrow', async () => {
-    //     return NP._setLostOrStolen(
-    //     asset1,
-    //     rgt1,
-    //     '3',
-    //     {from: account2}
-    //     )
-    // })
-
-
-    // it('Should take asset1 out of escrow', async () => {
-    //     return ECR.endEscrow(
-    //     asset1,
-    //     {from: account2}
-    //     )
-    // })
-
-
-    // it('Should set asset1Status to 1', async () => {
-    //     return NP._modStatus(
-    //     asset1,
-    //     rgt1,
-    //     '1',
-    //     {from: account2}
-    //     )
-    // })
-
-
-    // it('Should place asset1 in escrow', async () => {
-    //     return ECR.setEscrow(
-    //     asset1,
-    //     account2Hash,
-    //     '180',
-    //     '50',
-    //     {from: account2}
-    //     )
-    // })
-
-    // //26
-    // it('Should Fail to set lost because asset1 is in locked escrow', async () => {
-    //     return NP._setLostOrStolen(
-    //     asset1,
-    //     rgt1,
-    //     '4',
-    //     {from: account2}
-    //     )
-    // })
-
-
-    // it('Should take asset1 out of escrow', async () => {
-    //     return ECR.endEscrow(
-    //     asset1,
-    //     {from: account2}
-    //     )
-    // })
-
-
-    // it('Should set asset1Status to 1', async () => {
-    //     return NP._modStatus(
-    //     asset1,
-    //     rgt1,
-    //     '1',
-    //     {from: account2}
-    //     )
-    // })
-
-
     //14
     it('Should fail because wrong rgt', async () => {
         return NP._setLostOrStolen(
@@ -1847,16 +1734,6 @@
         {from: account2}
         )
     })
-
-    //27 Doesn't fail... Probably converts negetive to positive automatically.
-    // it('Should fail because asset cant be decremented by negetive number', async () => {
-    //     return NP._decCounter(
-    //     asset1,
-    //     rgt1,
-    //     '-10',
-    //     {from: account2}
-    //     )
-    // })
 
     //15
     it('Should fail because APP does not hold token', async () => {
@@ -1871,25 +1748,6 @@
         )
     })
 
-    // it('Should unauthorize NP in AC10', async () => {
-    //     return STOR.enableContractForAC('NP', '10', '0', { from: account1 })
-    // })
-
-    // //29
-    // it('Should Fail because NP != authorized in AC10', async () => {
-    //     return NP._decCounter(
-    //     asset1,
-    //     rgt1,
-    //     '15',
-    //     {from: account2}
-    //     )
-    // })
-
-
-    // it('Should authorize NP in AC10', async () => {
-    //     return STOR.enableContractForAC('NP', '10', '1', { from: account1 })
-    // })
-
     //16
     it('Should Fail because account4 != auth for AC10 assets', async () => {
         return NP._decCounter(
@@ -1899,45 +1757,6 @@
         {from: account5}
         )
     })
-
-
-    // it('Should place asset1 in escrow', async () => {
-    //     return ECR.setEscrow(
-    //     asset1,
-    //     account2Hash,
-    //     '180',
-    //     '50',
-    //     {from: account2}
-    //     )
-    // })
-
-    // //31
-    // it('Should Fail to set lost because asset1 is in locked escrow', async () => {
-    //     return NP._decCounter(
-    //     asset1,
-    //     rgt1,
-    //     '15',
-    //     {from: account2}
-    //     )
-    // })
-
-
-    // it('Should take asset1 out of escrow', async () => {
-    //     return ECR.endEscrow(
-    //     asset1,
-    //     {from: account2}
-    //     )
-    // })
-
-
-    // it('Should set asset1Status to 1', async () => {
-    //     return NP._modStatus(
-    //     asset1,
-    //     rgt1,
-    //     '1',
-    //     {from: account2}
-    //     )
-    // })
 
     //17
     it('Should fail because asset4 is unregistered(transfered)', async () => {
@@ -1972,26 +1791,6 @@
         )
     })
 
-
-    // it('Should unauthorize NP in AC10', async () => {
-    //     return STOR.enableContractForAC('NP', '10', '0', { from: account1 })
-    // })
-
-    // //35
-    // it('Should Fail because NP != authorized in AC10', async () => {
-    //     return NP._modIpfs1(
-    //     asset1,
-    //     rgt1,
-    //     rgt1,
-    //     {from: account2}
-    //     )
-    // })
-
-
-    // it('Should authorize NP in AC10', async () => {
-    //     return STOR.enableContractForAC('NP', '10', '1', { from: account1 })
-    // })
-
     //20
     it('Should Fail because account5 != auth for AC10 assets', async () => {
         return NP._modIpfs1(
@@ -2002,65 +1801,6 @@
         )
     })
 
-
-    // it('Should set asset1 Ipfs to (rgt1)', async () => {
-    //     return NP._modIpfs1(
-    //     asset1,
-    //     rgt1,
-    //     rgt1,
-    //     {from: account2}
-    //     )
-    // })
-
-    // //37
-    // it('Should fail becasue new data cant be the same as old', async () => {
-    //     return NP._modIpfs1(
-    //     asset1,
-    //     rgt1,
-    //     rgt1,
-    //     {from: account2}
-    //     )
-    // })
-
-
-    // it('Should place asset1 in escrow', async () => {
-    //     return ECR.setEscrow(
-    //     asset1,
-    //     account2Hash,
-    //     '180',
-    //     '50',
-    //     {from: account2}
-    //     )
-    // })
-
-    // //38
-    // it('Should Fail to set lost because asset1 is in locked escrow', async () => {
-    //     return NP._modIpfs1(
-    //     asset1,
-    //     rgt1,
-    //     rgt2,
-    //     {from: account2}
-    //     )
-    // })
-
-
-    // it('Should take asset1 out of escrow', async () => {
-    //     return ECR.endEscrow(
-    //     asset1,
-    //     {from: account2}
-    //     )
-    // })
-
-
-    // it('Should set asset1Status to 1', async () => {
-    //     return NP._modStatus(
-    //     asset1,
-    //     rgt1,
-    //     '1',
-    //     {from: account2}
-    //     )
-    // })
-
     //21
     it('Should fail because asset4 is unregistered(transfered)', async () => {
         return NP._modIpfs1(
@@ -2070,7 +1810,6 @@
         {from: account2}
         )
     })
-
 
     //22
     it('Should fail because wrong rgt', async () => {
@@ -2094,30 +1833,32 @@
         )
     })
 
-    // it('Should unauthorize NP in AC10', async () => {
-    //     return STOR.enableContractForAC('NP', '10', '0', { from: account1 })
-    // })
 
-    // //41
-    // it('Should Fail because NP != authorized in AC10', async () => {
-    //     return NP.exportAsset(
-    //     asset1,
-    //     account2,
-    //     {from: account2}
-    //     )
-    // })
-
-
-    // it('Should authorize NP in AC10', async () => {
-    //     return STOR.enableContractForAC('NP', '10', '1', { from: account1 })
-    // })
+    it('Should set asset1 to newAssetStatus(51)', async () => {
+        return NP._modStatus(
+        asset1,
+        rgt1,
+        '51',
+        {from: account2}
+        )
+    })
 
     //24
-    it('Should Fail because account4 != auth for AC10 assets', async () => {
+    it('Should Fail because account5 != auth for AC10 assets', async () => {
         return NP.exportAsset(
         asset1,
         account4,
-        {from: account4}
+        {from: account5}
+        )
+    })
+
+
+    it('Should set asset1 to newAssetStatus(1)', async () => {
+        return NP._modStatus(
+        asset1,
+        rgt1,
+        '1',
+        {from: account2}
         )
     })
 

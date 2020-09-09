@@ -1,14 +1,10 @@
-//
-    //
-    // DECLARATIONS
-    //
-    //
     const PRUF_STOR = artifacts.require('STOR');
     const PRUF_APP = artifacts.require('APP');
     const PRUF_NP = artifacts.require('NP');
     const PRUF_AC_MGR = artifacts.require('AC_MGR');
     const PRUF_AC_TKN = artifacts.require('AC_TKN');
     const PRUF_A_TKN = artifacts.require('A_TKN');
+    const PRUF_ID_TKN = artifacts.require('ID_TKN');
     const PRUF_ECR_MGR = artifacts.require('ECR_MGR');
     const PRUF_ECR = artifacts.require('ECR');
     const PRUF_ECR2 = artifacts.require('ECR2');
@@ -26,6 +22,7 @@
     let AC_MGR;
     let AC_TKN;
     let A_TKN;
+    let ID_TKN;
     let ECR_MGR;
     let ECR;
     let ECR2;
@@ -84,12 +81,6 @@
     let nakedAuthCode3;
     let nakedAuthCode7;
     
-        //
-        //
-        // END DECLARATIONS
-        //
-        //
-    
     contract('AC_MGR', accounts => {
             
         console.log('//**************************BEGIN BOOTSTRAP**************************//')
@@ -105,11 +96,6 @@
         const account9 = accounts[8];
         const account10 = accounts[9];
 
-    //
-    //
-    //ENVIRONMENT SETUP
-    //
-    //
 
     it('Should deploy Storage', async () => {
         const PRUF_STOR_TEST = await PRUF_STOR.deployed({ from: account1 });
@@ -220,6 +206,14 @@
         console.log(PRUF_HELPER_TEST.address);
         assert(PRUF_HELPER_TEST.address !== '')
         Helper = PRUF_HELPER_TEST;
+    })
+
+
+    it('Should deploy PRUF_ID_TKN', async () => {
+        const PRUF_ID_TKN_TEST = await PRUF_ID_TKN.deployed({ from: account1 });
+        console.log(PRUF_ID_TKN_TEST.address);
+        assert(PRUF_ID_TKN_TEST.address !== '')
+        ID_TKN = PRUF_ID_TKN_TEST;
     })
 
 
@@ -522,6 +516,11 @@
                 console.log("Adding A_TKN to storage for use in AC 0")
                 return STOR.OO_addContract("A_TKN", A_TKN.address, '0', '1', { from: account1 })
             })
+
+            .then(() => {
+                console.log("Adding ID_TKN to storage for use in AC 0")
+                return STOR.OO_addContract("ID_TKN", ID_TKN.address, '0', '1', { from: account1 })
+            })
             
             .then(() => {
                 console.log("Adding ECR_MGR to storage for use in AC 0")
@@ -645,70 +644,70 @@
     it('Should resolve contract addresses', async () => {
 
         console.log("Resolving in APP")
-        return APP.OO_ResolveContractAddresses({ from: account1 })
+        return APP.OO_resolveContractAddresses({ from: account1 })
 
             .then(() => {
                 console.log("Resolving in NP")
-                return NP.OO_ResolveContractAddresses({ from: account1 })
+                return NP.OO_resolveContractAddresses({ from: account1 })
             })
 
             .then(() => {
                 console.log("Resolving in MAL_APP")
-                return MAL_APP.OO_ResolveContractAddresses({ from: account1 })
+                return MAL_APP.OO_resolveContractAddresses({ from: account1 })
             })
             
             .then(() => {
                 console.log("Resolving in AC_MGR")
-                return AC_MGR.OO_ResolveContractAddresses({ from: account1 })
+                return AC_MGR.OO_resolveContractAddresses({ from: account1 })
             })
             
             .then(() => {
                 console.log("Resolving in AC_TKN")
-                return AC_TKN.OO_ResolveContractAddresses({ from: account1 })
+                return AC_TKN.OO_resolveContractAddresses({ from: account1 })
             })
             
             .then(() => {
                 console.log("Resolving in A_TKN")
-                return A_TKN.OO_ResolveContractAddresses({ from: account1 })
+                return A_TKN.OO_resolveContractAddresses({ from: account1 })
             })
             
             .then(() => {
                 console.log("Resolving in ECR_MGR")
-                return ECR_MGR.OO_ResolveContractAddresses({ from: account1 })
+                return ECR_MGR.OO_resolveContractAddresses({ from: account1 })
             })
             
             .then(() => {
                 console.log("Resolving in ECR")
-                return ECR.OO_ResolveContractAddresses({ from: account1 })
+                return ECR.OO_resolveContractAddresses({ from: account1 })
             })
 
             .then(() => {
                 console.log("Resolving in ECR2")
-                return ECR2.OO_ResolveContractAddresses({ from: account1 })
+                return ECR2.OO_resolveContractAddresses({ from: account1 })
             })
             
             .then(() => {
                 console.log("Resolving in APP_NC")
-                return APP_NC.OO_ResolveContractAddresses({ from: account1 })})
+                return APP_NC.OO_resolveContractAddresses({ from: account1 })})
             
             .then(() => {
                 console.log("Resolving in NP_NC")
-                return NP_NC.OO_ResolveContractAddresses({ from: account1 })
+                return NP_NC.OO_resolveContractAddresses({ from: account1 })
             })
             
             .then(() => {
                 console.log("Resolving in ECR_NC")
-                return ECR_NC.OO_ResolveContractAddresses({ from: account1 })
+                return ECR_NC.OO_resolveContractAddresses({ from: account1 })
             })
 
             .then(() => {
                 console.log("Resolving in NAKED")
-                return NAKED.OO_ResolveContractAddresses({ from: account1 })
+                return NAKED.OO_resolveContractAddresses({ from: account1 })
             })
             
             .then(() => {
                 console.log("Resolving in RCLR")
-                return RCLR.OO_ResolveContractAddresses({ from: account1 })
+                return RCLR.OO_resolveContractAddresses({ from: account1 })
             })
     })
 
@@ -771,10 +770,6 @@
         .then(() => {
                 return STOR.enableContractForAC('APP', '11', '1', { from: account1 })
             })
-
-            // .then(() => {
-            //     return STOR.enableContractForAC('APP', '1', '1', { from: account1 })
-            // })
     })
 
 
@@ -794,10 +789,6 @@
             .then(() => {
                 return STOR.enableContractForAC('APP_NC', '16', '2', { from: account10 })
             })
-            
-            // .then(() => {
-            //     return STOR.enableContractForAC('APP_NC', '2', '2', { from: account1 })
-            // })
     })
 
 
@@ -809,10 +800,6 @@
             .then(() => {
                 return STOR.enableContractForAC('NP', '11', '1', { from: account1 })
             })
-            
-            // .then(() => {
-            //     return STOR.enableContractForAC('NP', '1', '1', { from: account1 })
-            // })
     })
 
 
@@ -824,10 +811,6 @@
             .then(() => {
                 return STOR.enableContractForAC('MAL_APP', '11', '1', { from: account1 })
             })
-            
-            // .then(() => {
-            //     return STOR.enableContractForAC('NP', '1', '1', { from: account1 })
-            // })
     })
 
 
@@ -847,10 +830,6 @@
             .then(() => {
                 return STOR.enableContractForAC('NP_NC', '16', '2', { from: account10 })
             })
-
-            // .then(() => {
-            //     return STOR.enableContractForAC('NP_NC', '2', '0', { from: account1 })
-            // })
     })
 
 
@@ -862,10 +841,6 @@
             .then(() => {
                 return STOR.enableContractForAC('ECR', '11', '3', { from: account1 })
             })
-            
-            // .then(() => {
-            //     return STOR.enableContractForAC('ECR', '1', '3', { from: account1 })
-            // })
     })
 
 
@@ -877,7 +852,6 @@
             .then(() => {
                 return STOR.enableContractForAC('ECR2', '11', '3', { from: account1 })
             })
-            
     })
 
 
@@ -897,11 +871,8 @@
             .then(() => {
                 return STOR.enableContractForAC('ECR_NC', '16', '3', { from: account10 })
             })
-            
-            // .then(() => {
-            //     return STOR.enableContractForAC('ECR_NC', '2', '3', { from: account1 })
-            // })
     })
+
 
     it('Should authorize ECR_MGR in all relevant asset classes', async () => {
         
@@ -927,14 +898,6 @@
             .then(() => {
                 return STOR.enableContractForAC('ECR_MGR', '16', '3', { from: account10 })
             })
-            
-            // .then(() => {
-            //     return STOR.enableContractForAC('ECR_MGR', '1', '3', { from: account1 })
-            // })
-            
-            // .then(() => {
-            //     return STOR.enableContractForAC('ECR_MGR', '2', '3', { from: account1 })
-            // })
     })
 
 
@@ -1059,14 +1022,6 @@
             .then(() => {
                 return STOR.enableContractForAC('AC_MGR', '14', '2', { from: account1 })
             })
-            
-            // .then(() => {
-            //     return STOR.enableContractForAC('AC_MGR', '1', '0', { from: account1 })
-            // })
-            
-            // .then(() => {
-            //     return STOR.enableContractForAC('AC_MGR', '2', '0', { from: account1 })
-            // })
     })
 
 
@@ -1094,122 +1049,338 @@
             .then(() => {
                 return STOR.enableContractForAC('RCLR', '16', '3', { from: account10 })
             })
-            
-            // .then(() => {
-            //     return STOR.enableContractForAC('RCLR', '1', '0', { from: account1 })
-            // })
-            
-            // .then(() => {
-            //     return STOR.enableContractForAC('RCLR', '2', '0', { from: account1 })
-            // })
-    })
-
-
-    it("Should set base costs in root tokens", async () => {
-
-        console.log("Setting base costs in root 1")
-        return AC_MGR.ACTH_setCosts("1",
-            "10000000000000000",
-            "10000000000000000",
-            "10000000000000000",
-            "10000000000000000",
-            "10000000000000000",
-            "10000000000000000",
-            account1,
-            { from: account1 })
-
-            .then(() => {
-                console.log("Setting base costs in root 2")
-                return AC_MGR.ACTH_setCosts("2",
-                    "10000000000000000",
-                    "10000000000000000",
-                    "10000000000000000",
-                    "10000000000000000",
-                    "10000000000000000",
-                    "10000000000000000",
-                    account1,
-                    { from: account1 })
-            })
     })
 
 
     it("Should set costs in minted AC's", async () => {
 
         console.log("Setting costs in AC 10")
-        return AC_MGR.ACTH_setCosts("10",
-            "10000000000000000",
-            "10000000000000000",
-            "10000000000000000",
-            "10000000000000000",
-            "10000000000000000",
+        return AC_MGR.ACTH_setCosts(
+            "10",
+            "1",
             "10000000000000000",
             account1,
             { from: account1 })
 
             .then(() => {
-                console.log("Setting base costs in AC 11")
-                return AC_MGR.ACTH_setCosts("11",
-                    "10000000000000000",
-                    "10000000000000000",
-                    "10000000000000000",
-                    "10000000000000000",
-                    "10000000000000000",
+                return AC_MGR.ACTH_setCosts(
+                    "10",
+                    "2",
                     "10000000000000000",
                     account1,
                     { from: account1 })
+            })
+
+            .then(() => {
+                return AC_MGR.ACTH_setCosts(
+                    "10",
+                    "3",
+                    "10000000000000000",
+                    account1,
+                    { from: account1 })
+            })
+
+            .then(() => {
+                return AC_MGR.ACTH_setCosts(
+                    "10",
+                    "4",
+                    "10000000000000000",
+                    account1,
+                    { from: account1 })
+            })
+
+            .then(() => {
+                return AC_MGR.ACTH_setCosts(
+                    "10",
+                    "5",
+                    "10000000000000000",
+                    account1,
+                    { from: account1 })
+            })
+
+            .then(() => {
+                return AC_MGR.ACTH_setCosts(
+                    "10",
+                    "6",
+                    "10000000000000000",
+                    account1,
+                    { from: account1 })
+            })
+
+            .then(() => {
+                console.log("Setting base costs in AC 11")
+                return AC_MGR.ACTH_setCosts(
+                    "11",
+                    "1",
+                    "10000000000000000",
+                    account1,
+                    { from: account1 })
+                })
+
+                .then(() => {
+                    return AC_MGR.ACTH_setCosts(
+                        "11",
+                        "2",
+                        "10000000000000000",
+                        account1,
+                        { from: account1 })
+                })
+    
+                .then(() => {
+                    return AC_MGR.ACTH_setCosts(
+                        "11",
+                        "3",
+                        "10000000000000000",
+                        account1,
+                        { from: account1 })
+                })
+    
+                .then(() => {
+                    return AC_MGR.ACTH_setCosts(
+                        "11",
+                        "4",
+                        "10000000000000000",
+                        account1,
+                        { from: account1 })
+                })
+    
+                .then(() => {
+                    return AC_MGR.ACTH_setCosts(
+                        "11",
+                        "5",
+                        "10000000000000000",
+                        account1,
+                        { from: account1 })
+                })
+    
+                .then(() => {
+                    return AC_MGR.ACTH_setCosts(
+                        "11",
+                        "6",
+                        "10000000000000000",
+                        account1,
+                        { from: account1 })
                 })
             
             .then(() => {
                 console.log("Setting base costs in AC 12")
-                return AC_MGR.ACTH_setCosts("12",
-                    "10000000000000000",
-                    "10000000000000000",
-                    "10000000000000000",
-                    "10000000000000000",
-                    "10000000000000000",
+                return AC_MGR.ACTH_setCosts(
+                    "12",
+                    "1",
                     "10000000000000000",
                     account1,
                     { from: account1 })
+                })
+
+                .then(() => {
+                    return AC_MGR.ACTH_setCosts(
+                        "12",
+                        "2",
+                        "10000000000000000",
+                        account1,
+                        { from: account1 })
+                })
+    
+                .then(() => {
+                    return AC_MGR.ACTH_setCosts(
+                        "12",
+                        "3",
+                        "10000000000000000",
+                        account1,
+                        { from: account1 })
+                })
+    
+                .then(() => {
+                    return AC_MGR.ACTH_setCosts(
+                        "12",
+                        "4",
+                        "10000000000000000",
+                        account1,
+                        { from: account1 })
+                })
+    
+                .then(() => {
+                    return AC_MGR.ACTH_setCosts(
+                        "12",
+                        "5",
+                        "10000000000000000",
+                        account1,
+                        { from: account1 })
+                })
+    
+                .then(() => {
+                    return AC_MGR.ACTH_setCosts(
+                        "12",
+                        "6",
+                        "10000000000000000",
+                        account1,
+                        { from: account1 })
                 })
             
             .then(() => {
                 console.log("Setting base costs in AC 13")
-                return AC_MGR.ACTH_setCosts("13",
-                    "10000000000000000",
-                    "10000000000000000",
-                    "10000000000000000",
-                    "10000000000000000",
-                    "10000000000000000",
+                return AC_MGR.ACTH_setCosts(
+                    "13",
+                    "1",
                     "10000000000000000",
                     account1,
                     { from: account1 })
+                })
+
+                .then(() => {
+                    return AC_MGR.ACTH_setCosts(
+                        "13",
+                        "2",
+                        "10000000000000000",
+                        account1,
+                        { from: account1 })
+                })
+    
+                .then(() => {
+                    return AC_MGR.ACTH_setCosts(
+                        "13",
+                        "3",
+                        "10000000000000000",
+                        account1,
+                        { from: account1 })
+                })
+    
+                .then(() => {
+                    return AC_MGR.ACTH_setCosts(
+                        "13",
+                        "4",
+                        "10000000000000000",
+                        account1,
+                        { from: account1 })
+                })
+    
+                .then(() => {
+                    return AC_MGR.ACTH_setCosts(
+                        "13",
+                        "5",
+                        "10000000000000000",
+                        account1,
+                        { from: account1 })
+                })
+    
+                .then(() => {
+                    return AC_MGR.ACTH_setCosts(
+                        "13",
+                        "6",
+                        "10000000000000000",
+                        account1,
+                        { from: account1 })
                 })
             
             .then(() => {
                 console.log("Setting base costs in AC 14")
-                return AC_MGR.ACTH_setCosts("14",
-                    "10000000000000000",
-                    "10000000000000000",
-                    "10000000000000000",
-                    "10000000000000000",
-                    "10000000000000000",
+                return AC_MGR.ACTH_setCosts(
+                    "14",
+                    "1",
                     "10000000000000000",
                     account1,
                     { from: account1 })
                 })
+
+                .then(() => {
+                    return AC_MGR.ACTH_setCosts(
+                        "14",
+                        "2",
+                        "10000000000000000",
+                        account1,
+                        { from: account1 })
+                })
+    
+                .then(() => {
+                    return AC_MGR.ACTH_setCosts(
+                        "14",
+                        "3",
+                        "10000000000000000",
+                        account1,
+                        { from: account1 })
+                })
+    
+                .then(() => {
+                    return AC_MGR.ACTH_setCosts(
+                        "14",
+                        "4",
+                        "10000000000000000",
+                        account1,
+                        { from: account1 })
+                })
+    
+                .then(() => {
+                    return AC_MGR.ACTH_setCosts(
+                        "14",
+                        "5",
+                        "10000000000000000",
+                        account1,
+                        { from: account1 })
+                })
+    
+                .then(() => {
+                    return AC_MGR.ACTH_setCosts(
+                        "14",
+                        "6",
+                        "10000000000000000",
+                        account1,
+                        { from: account1 })
+                })
             
             .then(() => {
                 console.log("Setting base costs in AC 15")
-                return AC_MGR.ACTH_setCosts("15",
-                    "10000000000000000",
-                    "10000000000000000",
-                    "10000000000000000",
-                    "10000000000000000",
-                    "10000000000000000",
+                return AC_MGR.ACTH_setCosts(
+                    "15",
+                    "1",
                     "10000000000000000",
                     account1,
                     { from: account10 })
             })
+
+                .then(() => {
+                    return AC_MGR.ACTH_setCosts(
+                        "15",
+                        "2",
+                        "10000000000000000",
+                        account1,
+                        { from: account10 })
+                })
+    
+                .then(() => {
+                    return AC_MGR.ACTH_setCosts(
+                        "15",
+                        "3",
+                        "10000000000000000",
+                        account1,
+                        { from: account10 })
+                })
+    
+                .then(() => {
+                    return AC_MGR.ACTH_setCosts(
+                        "15",
+                        "4",
+                        "10000000000000000",
+                        account1,
+                        { from: account10 })
+                })
+    
+                .then(() => {
+                    return AC_MGR.ACTH_setCosts(
+                        "15",
+                        "5",
+                        "10000000000000000",
+                        account1,
+                        { from: account10 })
+                })
+    
+                .then(() => {
+                    return AC_MGR.ACTH_setCosts(
+                        "15",
+                        "6",
+                        "10000000000000000",
+                        account1,
+                        { from: account10 })
+                })
     })
 
 
@@ -1289,7 +1460,7 @@
     it('Should fail because caller does not hold AC token', async () => {
 
         console.log("//**************************************BEGIN AC_MGR TEST**********************************************/")
-        console.log("//**************************************BEGIN AC_MGR FAIL BATCH (9)**********************************************/")
+        console.log("//**************************************BEGIN AC_MGR FAIL BATCH (11)**********************************************/")
         console.log("//**************************************BEGIN OO_addUser FAIL BATCH**********************************************/")
         return AC_MGR.OO_addUser(
         account2, 
@@ -1299,7 +1470,7 @@
         )
     })
 
-    //2
+    //3
     it('Should fail because caller is not Owner', async () => {
 
         console.log("//**************************************END OO_addUser FAIL BATCH**********************************************/")
@@ -1314,7 +1485,7 @@
         )
     })
 
-    //3
+    //4
     it('Should fail because AC_TKN ID != 0', async () => {
         return AC_MGR.createAssetClass(
         account2,
@@ -1326,7 +1497,7 @@
         )
     })
 
-    //4
+    //5
     it('Should fail because RootAC doesnt exist', async () => {
         return AC_MGR.createAssetClass( 
         account2,
@@ -1339,7 +1510,7 @@
     })
 
 
-    //5
+    //6
     it('Should fail because ACname is already in use', async () => {
         return AC_MGR.createAssetClass( 
         account2,
@@ -1352,7 +1523,7 @@
     })
 
 
-    //6
+    //7
     it('Should fail because AC already exists', async () => {
         return AC_MGR.createAssetClass( 
         account2,
@@ -1364,7 +1535,7 @@
         )
     })
 
-    //7
+    //8
     it('Should fail because caller does not hold AC token', async () => {
 
         console.log("//**************************************END createAssetClass FAIL BATCH**********************************************/")
@@ -1376,115 +1547,67 @@
         )
     })
 
-    //8
+    //9
     it('Should fail because used name being signed to different AC', async () => {
         return AC_MGR.updateACname( 
-        account2,
         'Custodial_AC1',
         '2',
         {from: account1}
         )
     })
 
-    //9
-    it('Should fail because caller does not hold AC token', async () => {
+    //10
+    it('Should fail because caller is not UTIL_TKN', async () => {
 
         console.log("//**************************************END updateACname FAIL BATCH**********************************************/")
+        console.log("//**************************************BEGIN increasePriceShare FAIL BATCH**********************************************/")
+        return AC_MGR.increasePriceShare(
+        '10', 
+        '1',
+        {from: account1}
+        )
+    })
+
+    //11
+    it('Should fail because caller does not hold AC token', async () => {
+
+        console.log("//**************************************END increasePriceShare FAIL BATCH**********************************************/")
         console.log("//**************************************BEGIN ACTH_setCosts FAIL BATCH**********************************************/")
         return AC_MGR.ACTH_setCosts(
-        '10', 
-        '20000000000000000',
-        '20000000000000000',
-        '20000000000000000',
-        '20000000000000000',
-        '20000000000000000',
+        '10',
+        '1', 
         '20000000000000000',
         account2,
         {from: account2}
         )
     })
 
+    //12
+    it('Should fail because AC not yet populated', async () => {
 
-    // it('Should fail because AC does not exist', async () => {                                                       //REDUNDANT, WILL THROW IN ERC721
-
-    //     console.log("//**************************************END createAssetClass FAIL BATCH**********************************************/")
-    //     console.log("//*************************************BEGIN getNewRecordCosts FAIL BATCH**********************************************/")
-    //     return AC_MGR.getNewRecordCosts(
-    //     '30',
-    //     {from: account1}
-    //     )
-    // })
-
-
-    // it('Should fail because AC does not exist', async () => {
-
-    //     console.log("//**************************************END getNewRecordCosts FAIL BATCH**********************************************/")
-    //     console.log("//*************************************BEGIN getTransferAssetCosts FAIL BATCH**********************************************/")
-    //     return AC_MGR.getTransferAssetCosts(
-    //     '30',
-    //     {from: account1}
-    //     )
-    // })
+        console.log("//**************************************END ACTH_setCosts FAIL BATCH**********************************************/")
+        console.log("//**************************************BEGIN getServiceCosts FAIL BATCH**********************************************/")
+        return AC_MGR.getServiceCosts(
+        '20',
+        '1',
+        {from: account2}
+        )
+    })
 
 
-    // it('Should fail because AC does not exist', async () => {
-
-    //     console.log("//**************************************END getTransferAssetCosts FAIL BATCH**********************************************/")
-    //     console.log("//*************************************BEGIN getCreateNoteCosts FAIL BATCH**********************************************/")
-    //     return AC_MGR.getCreateNoteCosts(
-    //     '30',
-    //     {from: account1}
-    //     )
-    // })
-
-
-    // it('Should fail because AC does not exist', async () => {
-
-    //     console.log("//**************************************END getCreateNoteCosts FAIL BATCH**********************************************/")
-    //     console.log("//*************************************BEGIN getReMintRecordCosts FAIL BATCH**********************************************/")
-    //     return AC_MGR.getReMintRecordCosts(
-    //     '30',
-    //     {from: account1}
-    //     )
-    // })
-
-
-    // it('Should fail because AC does not exist', async () => {
-
-    //     console.log("//**************************************END getReMintRecordCosts FAIL BATCH**********************************************/")
-    //     console.log("//*************************************BEGIN getChangeStatusCosts FAIL BATCH**********************************************/")
-    //     return AC_MGR.getChangeStatusCosts(
-    //     '30',
-    //     {from: account1}
-    //     )
-    // })
-
-
-    // it('Should fail because AC does not exist', async () => {
-
-    //     console.log("//**************************************END getChangeStatusCosts FAIL BATCH**********************************************/")
-    //     console.log("//*************************************BEGIN getForceModifyCosts FAIL BATCH**********************************************/")
-    //     return AC_MGR.getForceModifyCosts(
-    //     '30',
-    //     {from: account1}
-    //     )
-    // })
-
-
-    // it('Should fail because AC does not exist', async () => {
-
-    //     console.log("//**************************************END getForceModifyCosts FAIL BATCH**********************************************/")
-    //     console.log("//*************************************BEGIN retrieveCosts FAIL BATCH**********************************************/")
-    //     return AC_MGR.retrieveCosts(
-    //     '30',
-    //     {from: account1}
-    //     )
-    // })
+    //13
+    it('Should fail because service 0 is not valid', async () => {
+        return AC_MGR.getServiceCosts(
+        '10',
+        '0',
+        {from: account2}
+        )
+    })
 
 
     it('Should write record in AC 10 @ IDX&RGT(1)', async () => {
 
-        console.log("//**************************************END ACTH_setCosts FAIL BATCH**********************************************/")
+        console.log("//**************************************END getServiceCosts FAIL BATCH**********************************************/")
         console.log("//**************************************END AC_MGR FAIL BATCH**********************************************/")
         console.log("//**************************************END AC_MGR TEST**********************************************/")
         console.log("//**************************************BEGIN THE WORKS**********************************************/")

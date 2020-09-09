@@ -1,4 +1,4 @@
-/*-----------------------------------------------------------V0.6.8
+/*-----------------------------------------------------------V0.7.0
 __/\\\\\\\\\\\\\ _____/\\\\\\\\\ _______/\\../\\ ___/\\\\\\\\\\\\\\\
  _\/\\\/////////\\\ _/\\\///////\\\ ____\//..\//____\/\\\///////////__
   _\/\\\.......\/\\\.\/\\\.....\/\\\ ________________\/\\\ ____________
@@ -18,114 +18,70 @@ __/\\\\\\\\\\\\\ _____/\\\\\\\\\ _______/\\../\\ ___/\\\\\\\\\\\\\\\
 // SPDX-License-Identifier: UNLICENSED
 pragma solidity ^0.6.7;
 
-interface AC_MGR_Interface {
-    function getUserType(bytes32 _userHash, uint32 _assetClass)
+interface UTIL_TKN_Interface {
+    /**
+     * @dev Returns the amount of tokens in existence.
+     */
+    function totalSupply() external view returns (uint256);
+
+    /**
+     * @dev Returns the amount of tokens owned by `account`.
+     */
+    function balanceOf(address account) external view returns (uint256);
+
+    /**
+     * @dev Moves `amount` tokens from the caller's account to `recipient`.
+     *
+     * Returns a boolean value indicating whether the operation succeeded.
+     *
+     * Emits a {Transfer} event.
+     */
+    function transfer(address recipient, uint256 amount)
+        external
+        returns (bool);
+
+    /**
+     * @dev Returns the remaining number of tokens that `spender` will be
+     * allowed to spend on behalf of `owner` through {transferFrom}. This is
+     * zero by default.
+     *
+     * This value changes when {approve} or {transferFrom} are called.
+     */
+    function allowance(address owner, address spender)
         external
         view
-        returns (uint8 userTypeInAssetClass);
+        returns (uint256);
 
-    function getAC_data(uint32 _assetClass)
-        external
-        returns (
-            uint32 assetClassRoot,
-            uint8 custodyType,
-            uint32 extendedData
-        );
+    /**
+     * @dev Sets `amount` as the allowance of `spender` over the caller's tokens.
+     *
+     * Returns a boolean value indicating whether the operation succeeded.
+     *
+     * IMPORTANT: Beware that changing an allowance with this method brings the risk
+     * that someone may use both the old and the new allowance by unfortunate
+     * transaction ordering. One possible solution to mitigate this race
+     * condition is to first reduce the spender's allowance to 0 and set the
+     * desired value afterwards:
+     * https://github.com/ethereum/EIPs/issues/20#issuecomment-263524729
+     *
+     * Emits an {Approval} event.
+     */
+    function approve(address spender, uint256 amount) external returns (bool);
 
-    function isSameRootAC(uint32 _assetClass1, uint32 _assetClass2)
-        external
-        returns (uint8 uint8_Bool_type_0_170);
-
-    function getAC_name(uint32 _tokenId)
-        external
-        view
-        returns (string memory ACname);
-
-    function resolveAssetClass(string calldata _name)
-        external
-        returns (uint32 assetClass);
-
-    function ContractAC_auth(uint32 _assetClass, bytes32 _authContractNameHash)
-        external
-        returns (uint8 contractTypeInAssetClass);
-
-    function retrieveCosts(uint32 _assetClass)
-        external
-        returns (
-            uint256 newRecordCost,
-            uint256 transferAssetCost,
-            uint256 createNoteCost,
-            uint256 reMintRecordCost,
-            uint256 changeStatusCost,
-            uint256 forceModifyCost,
-            address paymentAddress
-        );
-
-    function retrieveBaseCosts()
-        external
-        returns (
-            uint256 newRecordCost,
-            uint256 transferAssetCost,
-            uint256 createNoteCost,
-            uint256 reMintRecordCost,
-            uint256 changeStatusCost,
-            uint256 forceModifyCost,
-            address paymentAddress
-        );
-
-    function getNewRecordCosts(uint32 _assetClass)
-        external
-        returns (
-            address rootPaymentAddress,
-            uint256 rootFunctionCost,
-            address paymentAddress,
-            uint256 functionCost
-        );
-
-    function getTransferAssetCosts(uint32 _assetClass)
-        external
-        returns (
-            address rootPaymentAddress,
-            uint256 rootFunctionCost,
-            address paymentAddress,
-            uint256 functionCost
-        );
-
-    function getCreateNoteCosts(uint32 _assetClass)
-        external
-        returns (
-            address rootPaymentAddress,
-            uint256 rootFunctionCost,
-            address paymentAddress,
-            uint256 functionCost
-        );
-
-    function getReMintRecordCosts(uint32 _assetClass)
-        external
-        returns (
-            address rootPaymentAddress,
-            uint256 rootFunctionCost,
-            address paymentAddress,
-            uint256 functionCost
-        );
-
-    function getChangeStatusCosts(uint32 _assetClass)
-        external
-        returns (
-            address rootPaymentAddress,
-            uint256 rootFunctionCost,
-            address paymentAddress,
-            uint256 functionCost
-        );
-
-    function getForceModifyCosts(uint32 _assetClass)
-        external
-        returns (
-            address rootPaymentAddress,
-            uint256 rootFunctionCost,
-            address paymentAddress,
-            uint256 functionCost
-        );
+    /**
+     * @dev Moves `amount` tokens from `sender` to `recipient` using the
+     * allowance mechanism. `amount` is then deducted from the caller's
+     * allowance.
+     *
+     * Returns a boolean value indicating whether the operation succeeded.
+     *
+     * Emits a {Transfer} event.
+     */
+    function transferFrom(
+        address sender,
+        address recipient,
+        uint256 amount
+    ) external returns (bool);
 }
 
 interface AC_TKN_Interface {
@@ -160,6 +116,26 @@ interface AC_TKN_Interface {
         external
         view
         returns (string memory URI);
+
+    /**
+     * @dev Returns the total amount of tokens stored by the contract.
+     */
+    function totalSupply() external view returns (uint256);
+
+    /**
+     * @dev Returns a token ID owned by `owner` at a given `index` of its token list.
+     * Use along with {balanceOf} to enumerate all of ``owner``'s tokens.
+     */
+    function tokenOfOwnerByIndex(address owner, uint256 index)
+        external
+        view
+        returns (uint256 tokenId);
+
+    /**
+     * @dev Returns a token ID at a given `index` of all the tokens stored by the contract.
+     * Use along with {totalSupply} to enumerate all tokens.
+     */
+    function tokenByIndex(uint256 index) external view returns (uint256);
 }
 
 interface A_TKN_Interface {
@@ -185,7 +161,8 @@ interface A_TKN_Interface {
         external
         returns (uint256 tokenId);
 
-    function validateNakedToken(  //throws if authcode does not match
+    function validateNakedToken(
+        //throws if authcode does not match
         uint256 tokenId,
         uint32 _assetClass,
         string calldata _authCode
@@ -200,6 +177,146 @@ interface A_TKN_Interface {
     function symbol() external view returns (string memory tokenSymbol);
 
     function setURI(uint256 tokenId, string memory _tokenURI) external;
+
+    /**
+     * @dev Returns the total amount of tokens stored by the contract.
+     */
+    function totalSupply() external view returns (uint256);
+
+    /**
+     * @dev Returns a token ID owned by `owner` at a given `index` of its token list.
+     * Use along with {balanceOf} to enumerate all of ``owner``'s tokens.
+     */
+    function tokenOfOwnerByIndex(address owner, uint256 index)
+        external
+        view
+        returns (uint256 tokenId);
+
+    /**
+     * @dev Returns a token ID at a given `index` of all the tokens stored by the contract.
+     * Use along with {totalSupply} to enumerate all tokens.
+     */
+    function tokenByIndex(uint256 index) external view returns (uint256);
+}
+
+interface ID_TKN_Interface {
+    function ownerOf(uint256 tokenId)
+        external
+        returns (address tokenHolderAdress);
+
+    function safeTransferFrom(
+        address from,
+        address to,
+        uint256 tokenId
+    ) external;
+
+    function mintPRUF_IDToken(
+        address _recipientAddress,
+        uint256 _tokenId,
+        string calldata _tokenURI
+    ) external returns (uint256 tokenId);
+
+    function reMintPRUF_IDToken(address _recipientAddress, uint256 _tokenId)
+        external
+        returns (uint256 tokenId);
+
+    function tokenExists(uint256 tokenId)
+        external
+        returns (uint8 uint8_Bool_type_0_170);
+
+    function name() external view returns (string memory tokenName);
+
+    function symbol() external view returns (string memory tokenSymbol);
+
+    function setURI(uint256 tokenId, string memory _tokenURI) external;
+
+    function balanceOf(address owner) external view returns (uint256 balance);
+
+    /**
+     * @dev Returns the total amount of tokens stored by the contract.
+     */
+    function totalSupply() external view returns (uint256);
+
+    /**
+     * @dev Returns a token ID owned by `owner` at a given `index` of its token list.
+     * Use along with {balanceOf} to enumerate all of ``owner``'s tokens.
+     */
+    function tokenOfOwnerByIndex(address owner, uint256 index)
+        external
+        view
+        returns (uint256 tokenId);
+
+    /**
+     * @dev Returns a token ID at a given `index` of all the tokens stored by the contract.
+     * Use along with {totalSupply} to enumerate all tokens.
+     */
+    function tokenByIndex(uint256 index) external view returns (uint256);
+}
+
+interface AC_MGR_Interface {
+    function getUserType(bytes32 _userHash, uint32 _assetClass)
+        external
+        view
+        returns (uint8 userTypeInAssetClass);
+
+    function getAC_data(uint32 _assetClass)
+        external
+        returns (
+            uint32 assetClassRoot,
+            uint8 custodyType,
+            uint32 discount,
+            uint32 extendedData
+        );
+
+    function getAC_discount(uint32 _assetClass) external returns (uint256);
+
+    function increasePriceShare(uint32 _assetClass, uint256 _increaseAmount)
+        external;
+
+    function isSameRootAC(uint32 _assetClass1, uint32 _assetClass2)
+        external
+        returns (uint8 uint8_Bool_type_0_170);
+
+    function getAC_name(uint32 _tokenId)
+        external
+        view
+        returns (string memory ACname);
+
+    function resolveAssetClass(string calldata _name)
+        external
+        returns (uint32 assetClass);
+
+    function ContractAC_auth(uint32 _assetClass, bytes32 _authContractNameHash)
+        external
+        returns (uint8 contractTypeInAssetClass);
+
+    function retrieveCosts(uint32 _assetClass, uint16 _service)
+        external
+        returns (uint256 serviceCost, address paymentAddress);
+
+    function getServiceCosts(uint32 _assetClass, uint16 _service)
+        external
+        returns (
+            address rootPaymentAddress,
+            uint256 rootPaymentCost,
+            address PaymentAddress,
+            uint256 PaymentCost
+        );
+
+    /*
+     * @dev Mints asset class token and creates an assetClass. Mints to @address
+     * Requires that:
+     *  name is unuiqe
+     *  AC is not provisioned with a root (proxy for not yet registered)
+     *  that ACtoken does not exist
+     */
+    function createAssetClass(
+        address _recipientAddress,
+        string calldata _name,
+        uint32 _assetClass,
+        uint32 _assetClassRoot,
+        uint8 _custodyType
+    ) external;
 }
 
 interface STOR_Interface {
@@ -280,15 +397,15 @@ interface ECR_MGR_Interface {
         external
         view
         returns (
-        uint8 _escrowData,
-        uint8 _u8_1,
-        uint8 _u8_2,
-        uint8 _u8_3,
-        uint16 _u16_1,
-        uint16 _u16_2,
-        uint32 _u32_1,
-        address _addr_1
-    );
+            uint8 _escrowData,
+            uint8 _u8_1,
+            uint8 _u8_2,
+            uint8 _u8_3,
+            uint16 _u16_1,
+            uint16 _u16_2,
+            uint32 _u32_1,
+            address _addr_1
+        );
 
     function retrieveEscrowDataHeavy(bytes32 _idxHash)
         external
@@ -302,7 +419,7 @@ interface ECR_MGR_Interface {
             bytes32 _b32_2,
             uint256 _u256_1,
             uint256 _u256_2
-    );
+        );
 
     function setEscrowDataLight(
         bytes32 _idxHash,
@@ -313,8 +430,8 @@ interface ECR_MGR_Interface {
         uint16 _u16_1,
         uint16 _u16_2,
         uint32 _u32_1,
-        address _addr_1) 
-    external;
+        address _addr_1
+    ) external;
 
     function setEscrowDataHeavy(
         bytes32 _idxHash,
@@ -325,8 +442,8 @@ interface ECR_MGR_Interface {
         bytes32 _b32_1,
         bytes32 _b32_2,
         uint256 _u256_1,
-        uint256 _u256_2) 
-    external;
+        uint256 _u256_2
+    ) external;
 }
 
 interface RCLR_Interface {

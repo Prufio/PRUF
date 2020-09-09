@@ -1,4 +1,4 @@
-/*-----------------------------------------------------------V0.6.8
+/*-----------------------------------------------------------V0.7.0
 __/\\\\\\\\\\\\\ _____/\\\\\\\\\ _______/\\../\\ ___/\\\\\\\\\\\\\\\
  _\/\\\/////////\\\ _/\\\///////\\\ ____\//..\//____\/\\\///////////__
   _\/\\\.......\/\\\.\/\\\.....\/\\\ ________________\/\\\ ____________
@@ -18,15 +18,23 @@ __/\\\\\\\\\\\\\ _____/\\\\\\\\\ _______/\\../\\ ___/\\\\\\\\\\\\\\\
 // SPDX-License-Identifier: UNLICENSED
 pragma solidity ^0.6.7;
 
-import "./Imports/Ownable.sol";
+import "./Imports/access/Ownable.sol";
+import "./Imports/math/Safemath.sol";
+
+
 
 interface erc721_tokenInterface {
     function ownerOf(uint256) external view returns (address);
 }
 
 contract Helper is Ownable {
+    using SafeMath for uint256;
+
     address erc721ContractAddress;
     erc721_tokenInterface erc721_tokenContract; //erc721_token prototype initialization
+
+    uint256 private ACtokenIndex = 10000;
+    uint256 private currentACtokenPrice = 5000;
 
     function setErc721_tokenAddress(address contractAddress) public onlyOwner {
         require(contractAddress != address(0), "Invalid contract address");
@@ -227,5 +235,40 @@ contract Helper is Ownable {
             temp /= 10;
         }
         return string(buffer);
+    }
+
+    function purchaseACtoken() public { //returns (uint256, uint256) {
+
+        ACtokenIndex = ACtokenIndex.add(uint256(50)); //increment ACtokenIndex up to last one
+
+        require(
+            ACtokenIndex < 4294000000,
+            "PRuf:IS:Only 4294000000 AC tokens allowed"
+        );
+
+        uint256 newACtokenPrice;
+
+        uint256 numberOfTokensSold = ACtokenIndex.sub(uint256(10000));
+        if (numberOfTokensSold >= 4000) {
+            newACtokenPrice = 100000;
+        } else if (numberOfTokensSold >= 2000) {
+            newACtokenPrice = 75937;
+        } else if (numberOfTokensSold >= 1000) {
+            newACtokenPrice = 50625;
+        } else if (numberOfTokensSold >= 500) {
+            newACtokenPrice = 33750;
+        } else if (numberOfTokensSold >= 250) {
+            newACtokenPrice = 22500;
+        } else if (numberOfTokensSold >= 125) {
+            newACtokenPrice = 15000;
+        } else {
+            newACtokenPrice = 10000;
+        }
+        
+        currentACtokenPrice = newACtokenPrice;
+    }
+
+    function _Getprice() public view returns (uint256,uint256) {
+        return (currentACtokenPrice, ACtokenIndex);
     }
 }
