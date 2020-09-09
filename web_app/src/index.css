@@ -77,10 +77,11 @@ h4 {
   opacity: 1;
 }
 .particles {
+  box-sizing: border-box;
   position: "absolute";
   top: 0;
   left: 0;
-  width: "100%";
+  width: calc(100vw - 1px);
   height: "100%";
 }
 .header li a {
