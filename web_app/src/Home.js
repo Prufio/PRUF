@@ -72,7 +72,7 @@ class Home extends Component {
               <Form.Control
                 placeholder="Asset Class"
                 required
-                type="number"
+                type="text"
                 onChange={(e) => this.setState({ assetClass: e.target.value })}
                 size="lg"
               />
