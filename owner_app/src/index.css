@@ -54,6 +54,15 @@ h4 {
   font-size: 6rem;
 }
 
+.particles {
+  box-sizing: border-box;
+  position: "absolute";
+  top: 0;
+  left: 0;
+  width: calc(100vw - 1px);
+  height: "100%";
+}
+
 .page {
   display: flex;
   flex-direction: column;

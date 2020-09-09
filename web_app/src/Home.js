@@ -8,50 +8,6 @@ class Home extends Component {
   constructor(props) {
     super(props);
 
-    this.getCosts = async () => {
-      //console.log("Getting cost array");
-      await window.contracts.AC_MGR.methods
-      .retrieveCosts(window.assetClass)
-      .call({from: window.addr}, (_error, _result) => {
-        if (_error){console.log("Error: ", _error)}
-        else {
-          //console.log("result in getCosts: ", Object.values(_result));
-          window.costArray = Object.values(_result)
-          return window.authLevel = this.state.authLevel
-        }
-      })
-      //console.log("before setting window-level costs")
-      window.costs = {
-        newRecordCost: window.costArray[0],
-        transferAssetCost: window.costArray[1],
-        createNoteCost: window.costArray[2],
-        remintAssetCost: window.costArray[3],
-        importAssetCost: window.costArray[4],
-        forceTransferCost: window.costArray[5],
-        beneficiaryAddress: window.costArray[6]
-      }
-      //console.log("window costs object: ", window.costs);
-      //console.log("this should come last");
-    }
-
-    this._checkCreds = () => {
-      //console.log(window.contracts.AC_MGR);
-      //console.log(window.web3)
-      //console.log(window.addr)
-      //console.log(window.assetClass)
-      window.contracts.AC_MGR.methods
-      .getUserType(window.web3.utils.soliditySha3(window.addr), window.assetClass)
-      .call({from: window.addr}, (_error, _result) => {
-        if(_error){console.log("Error: ", _error)}
-        else{
-          if (_result === "0"){this.setState({authLevel: "Standard User (read-only access)"}); window.isAuthUser = false}
-          else if(_result === "1"){this.setState({authLevel: "Authorized User"}); window.isAuthUser = true}
-          else if(_result === "9"){this.setState({authLevel: "Robot"}); window.isAuthUser = false}
-            //console.log(_result)
-        }
-      }); 
-    }
-
     this.state = {
       addr: undefined,
       web3: null,
@@ -75,8 +31,8 @@ class Home extends Component {
   }
 
   componentDidMount() {
-    if (window.authLevel !== undefined){
-      this.setState({authLevel: window.authLevel})
+    if (window.authLevel !== undefined) {
+      this.setState({ authLevel: window.authLevel })
     }
   }
 
@@ -86,14 +42,15 @@ class Home extends Component {
 
   render() {
 
-    
+
     const _setAC = async () => {
-      if(this.state.assetClass === "0"){window.assetClass = undefined; return this.forceUpdate()}
-      else{
-      window.assetClass = this.state.assetClass;
-      await this._checkCreds();
-      await this.getCosts();
-      return this.forceUpdate()
+      if (this.state.assetClass === "0") { window.assetClass = undefined; return this.forceUpdate() }
+      else {
+        window.assetClass = this.state.assetClass;
+        await window.utils.checkCreds();
+        await window.utils.getCosts();
+        console.log(window.authLevel);
+        return this.setState({authLevel: window.authLevel});
       }
     }
 
@@ -108,32 +65,32 @@ class Home extends Component {
         </p>
         <p> V 0.2.3</p>
 
-    <div> {window.assetClass > 0 && (<div>Operating in asset class {window.assetClass} as {this.state.authLevel}</div>)}</div>
+        <div> {window.assetClass > 0 && (<div>Operating in asset class {window.assetClass} as {window.authLevel}</div>)}</div>
         {window._contracts !== undefined && (
           <div>
-          <Form.Group as={Col} controlId="formGridAC">
-          <Form.Label className="formFont">Input desired asset class index # : </Form.Label>
-          <Form.Control
-            placeholder="Asset Class"
-            required
-            type="number" 
-            onChange={(e) => this.setState({ assetClass: e.target.value })}
-            size="lg"
-          />
-        </Form.Group>
-        <Form.Row>
-          <Form.Group className="buttonDisplay">
-            <Button
-              variant="primary"
-              type="button"
-              size="lg"
-              onClick={_setAC}
-            >
-              Access PRuF
+            <Form.Group as={Col} controlId="formGridAC">
+              <Form.Label className="formFont">Input desired asset class index # : </Form.Label>
+              <Form.Control
+                placeholder="Asset Class"
+                required
+                type="number"
+                onChange={(e) => this.setState({ assetClass: e.target.value })}
+                size="lg"
+              />
+            </Form.Group>
+            <Form.Row>
+              <Form.Group className="buttonDisplay">
+                <Button
+                  variant="primary"
+                  type="button"
+                  size="lg"
+                  onClick={_setAC}
+                >
+                  Access PRuF
                   </Button>
-          </Form.Group>
-        </Form.Row>
-        </div>
+              </Form.Group>
+            </Form.Row>
+          </div>
         )}
         {window._contracts === undefined && (<div> <Form.Row><h1>Connecting to the blockchain...</h1></Form.Row></div>)}
       </div>
