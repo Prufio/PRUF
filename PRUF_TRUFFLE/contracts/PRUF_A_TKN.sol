@@ -151,6 +151,9 @@ contract A_TKN is Ownable, ReentrancyGuard, ERC721 {
         //^^^^^^^interactions^^^^^^^^^
     }
 
+    /*
+     * @dev Reassures user that token is minted in the PRUF system
+     */
     function validateNakedToken(
         uint256 tokenId,
         uint32 _assetClass,

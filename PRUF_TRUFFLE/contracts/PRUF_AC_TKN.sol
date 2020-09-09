@@ -67,7 +67,7 @@ contract AC_TKN is Ownable, ReentrancyGuard, ERC721 {
     }
 
     /*
-     * mints assetClass token, must be isAdmin
+     * @dev Mints assetClass token, must be isAdmin
      */
     function mintACToken(
         address _recipientAddress,
