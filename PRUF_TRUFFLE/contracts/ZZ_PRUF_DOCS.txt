@@ -36,6 +36,8 @@ pragma solidity ^0.6.7;
  *
  *      *what do we do (if anything) with the 128 "free" bits in the storage struct?
  *
+ *      *rebrand verify and naked
+ *
  *      *Look up AC Data in the web interface
  *
  *      *Pruf token enumerator in web3 for all pruf tokens
@@ -301,6 +303,17 @@ special escrow-send tokens:
 end escrow after escrow end block passes (all escrows end at the same time) (caller must be setter)
         sends tokens back to caller
         authorizes the fractional share of that (AND ONLY THAT) end blocks takings to the caller adress (IF YOU MISS ONE, THATS ON YOU)
+
+
+
+*---------------------------------------PRuF Protocols-------------------------------------------
+
+Verify
+
+trust enabled
+        secure transfer
+        boomerang
+        marketspace
 
 
 
