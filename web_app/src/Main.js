@@ -8,31 +8,8 @@ import buildWindowUtils from "./Resources/WindowUtils"
 import NonCustodialComponent from "./Resources/NonCustodialComponent";
 import AdminComponent from "./Resources/AdminComponent";
 import AuthorizedUserComponent from "./Resources/AuthorizedUserComponent";
-import BasicComponent from "./Resources/BasicComponent"
+import BasicComponent from "./Resources/BasicComponent";
 import ParticleBox from './Resources/ParticleBox';
-import AddNoteNC from "./NonCustodial/AddNote";
-import DecrementCounterNC from "./NonCustodial/DecrementCounter";
-import ForceModifyRecordNC from "./NonCustodial/ForceModifyRecord";
-import ModifyDescriptionNC from "./NonCustodial/ModifyDescription";
-import ModifyRecordStatusNC from "./NonCustodial/ModifyRecordStatus";
-import NewRecordNC from "./NonCustodial/NewRecord";
-import RetrieveRecordNC from "./NonCustodial/RetrieveRecord";
-import TransferAssetNC from "./NonCustodial/TransferAsset";
-import VerifyRightsholderNC from "./NonCustodial/VerifyRightsholder";
-import EscrowManagerNC from "./NonCustodial/EscrowManager";
-import ExportAssetNC from "./NonCustodial/ExportAsset";
-
-import AddNote from "./Custodial/AddNote";
-import DecrementCounter from "./Custodial/DecrementCounter";
-import ForceModifyRecord from "./Custodial/ForceModifyRecord";
-import ModifyDescription from "./Custodial/ModifyDescription";
-import ModifyRecordStatus from "./Custodial/ModifyRecordStatus";
-import NewRecord from "./Custodial/NewRecord";
-import RetrieveRecord from "./Custodial/RetrieveRecord";
-import TransferAsset from "./Custodial/TransferAsset";
-import VerifyRightsholder from "./Custodial/VerifyRightsholder";
-import EscrowManager from "./Custodial/EscrowManager";
-import ExportAsset from "./Custodial/ExportAsset";
 import Router from "./Router";
 
 
@@ -42,7 +19,7 @@ class Main extends Component {
     super(props);
 
     this.toggleMenu = (menuChoice) => {
-      console.log("Changing menu to: ", menuChoice);
+      //console.log("Changing menu to: ", menuChoice);
       if (menuChoice === 'ACAdmin') {
         return this.setState({
           assetClassHolderMenuBool: true,
@@ -105,8 +82,6 @@ class Main extends Component {
       this.setState({ assetHolderBool: window.assetHolderBool })
       this.setState({ assetClassHolderBool: window.assetClassHolderBool })
       return this.setState({hasFetchedBalances: window.hasFetchedBalances })
-      
-      
     }
 
     //Component state declaration
@@ -136,7 +111,7 @@ class Main extends Component {
       RCLR: "",
       assetClass: undefined,
       contractArray: [],
-      isAuthUser: window.isAuthUser,
+      isAuthUser: undefined,
       assetHolderBool: false,
       assetClassHolderBool: false,
       assetHolderMenuBool: false,
@@ -157,14 +132,13 @@ class Main extends Component {
     this.setupContractEnvironment(_web3);
     this.setState({ web3: _web3 });
     window.web3 = _web3;
-    ethereum.enable();
+    ethereum.enable()
     var _ipfs = new this.state.IPFS({
       host: "ipfs.infura.io",
       port: 5001,
       protocol: "https",
     });
     window.ipfs = _ipfs
-    //console.log(window.ipfs)
     _web3.eth.getAccounts().then((e) => { this.state.addr = e[0]; window.addr = e[0] });
     window.addEventListener("accountListener", this.acctChanger());
 
@@ -184,6 +158,8 @@ class Main extends Component {
     if (window.addr !== undefined && !this.state.hasFetchedBalances && window.contracts > 0){
       this.setupContractEnvironment(window.web3);
     }
+
+    
   }
 
   componentWillUnmount() {//stuff do do when component unmounts from the window

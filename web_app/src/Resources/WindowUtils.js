@@ -3,6 +3,7 @@ import { Component } from "react";
 function buildWindowUtils () {
 
     const _checkCreds = async () => {
+        window.isAuthUser = undefined;
         if (window.contracts !== undefined) {
             window.contracts.AC_MGR.methods
                 .getUserType(window.web3.utils.soliditySha3(window.addr), window.assetClass)
@@ -19,7 +20,7 @@ function buildWindowUtils () {
         }
 
         else{
-            console.log("Window.contracts object is undefined.")
+            console.log("window.contracts object is undefined.")
         }
     }
 

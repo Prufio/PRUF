@@ -31,7 +31,7 @@ class Home extends Component {
   }
 
   componentDidMount() {
-    if (window.authLevel !== undefined) {
+    if (window.AuthLevel !== undefined) {
       this.setState({ authLevel: window.authLevel })
     }
   }
@@ -41,7 +41,6 @@ class Home extends Component {
   }
 
   render() {
-
 
     const _setAC = async () => {
       if (this.state.assetClass === "0") { window.assetClass = undefined; return this.forceUpdate() }
@@ -63,7 +62,7 @@ class Home extends Component {
           <br />
           Provenance
         </p>
-        <p> V 0.2.3</p>
+        <p> V 1.0.0</p>
 
         <div> {window.assetClass > 0 && (<div>Operating in asset class {window.assetClass} as {window.authLevel}</div>)}</div>
         {window._contracts !== undefined && (
