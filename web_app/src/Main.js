@@ -4,6 +4,7 @@ import { Route, NavLink, HashRouter } from "react-router-dom";
 import Web3 from "web3";
 import Home from "./Home";
 import buildContracts from "./Resources/Contracts";
+import buildWindowUtils from "./Resources/WindowUtils"
 import NonCustodialComponent from "./Resources/NonCustodialComponent";
 import AdminComponent from "./Resources/AdminComponent";
 import AuthorizedUserComponent from "./Resources/AuthorizedUserComponent";
@@ -80,67 +81,6 @@ class Main extends Component {
       }
     }
 
-    this.determineTokenBalance = async () => {
-      let _assetClassBal;
-      let _assetBal;
-      console.log("getting balance info from token contracts...")
-      await window.contracts.A_TKN.methods.balanceOf(window.addr).call({ from: window.addr }, (error, result) => {
-        if (error) { console.log(error) }
-        else { _assetBal = result; console.log("assetBal: ", _assetBal); }
-      });
-
-      await window.contracts.AC_TKN.methods.balanceOf(window.addr).call({ from: window.addr }, (error, result) => {
-        if (error) { console.log(error) }
-        else { _assetClassBal = result; console.log("assetClassBal", _assetClassBal); }
-      });
-
-      if (Number(_assetBal) > 0) {
-        this.setState({ assetHolderBool: true })
-      }
-
-      if (Number(_assetClassBal) > 0) {
-        this.setState({ assetClassHolderBool: true })
-      }
-
-      window.balances = {
-        assetBal: Number(_assetBal),
-        assetClassBal: Number(_assetClassBal)
-      }
-
-      console.log("token balances: ", window.balances)
-    }
-
-    this.setupContractEnvironment = async (_web3) => {
-      console.log("Setting up contracts")
-      window._contracts = await buildContracts(_web3)
-      await this.setState({ contracts: window._contracts })
-      return this.getContracts()
-    }
-
-    //State declaration....................................................................................................
-    this.getContracts = async () => {
-
-      window.contracts = {
-        STOR: window._contracts.content[0],
-        APP: window._contracts.content[1],
-        NP: window._contracts.content[2],
-        AC_MGR: window._contracts.content[3],
-        AC_TKN: window._contracts.content[4],
-        A_TKN: window._contracts.content[5],
-        ECR_MGR: window._contracts.content[6],
-        ECR: window._contracts.content[7],
-        VERIFY: window._contracts.content[8],
-        ECR_NC: window._contracts.content[9],
-        APP_NC: window._contracts.content[10],
-        NP_NC: window._contracts.content[11],
-        RCLR: window._contracts.content[12],
-        NAKED: window._contracts.content[13],
-      }
-
-      console.log("contracts: ", window.contracts)
-      return this.determineTokenBalance();
-    };
-
     this.acctChanger = async () => {//Handle an address change, update state accordingly
       const ethereum = window.ethereum;
       const self = this;
@@ -154,6 +94,21 @@ class Main extends Component {
         });
       });
     };
+
+    this.setupContractEnvironment = async (_web3) => {
+      console.log("Setting up contracts")
+      window._contracts = await buildContracts(_web3)
+      await this.setState({ contracts: window._contracts })
+      await window.utils.getContracts()
+      await window.utils.determineTokenBalance()
+      console.log("bools...", window.assetHolderBool, window.assetClassHolderBool, window.hasFetchedBalances)
+      this.setState({ assetHolderBool: window.assetHolderBool })
+      this.setState({ assetClassHolderBool: window.assetClassHolderBool })
+      return this.setState({hasFetchedBalances: window.hasFetchedBalances })
+      
+      
+    }
+
     //Component state declaration
 
     this.state = {
@@ -187,13 +142,15 @@ class Main extends Component {
       assetHolderMenuBool: false,
       assetClassHolderMenuBool: false,
       basicMenuBool: true,
-      authorizedUserMenuBool: false
+      authorizedUserMenuBool: false,
+      hasFetchedBalances: false,
     };
   }
 
   //component state-change events......................................................................................................
 
   componentDidMount() {//stuff to do when component mounts in window
+    buildWindowUtils()
     const ethereum = window.ethereum;
     var _web3 = require("web3");
     _web3 = new Web3(_web3.givenProvider);
@@ -209,7 +166,7 @@ class Main extends Component {
     window.ipfs = _ipfs
     //console.log(window.ipfs)
     _web3.eth.getAccounts().then((e) => { this.state.addr = e[0]; window.addr = e[0] });
-    document.addEventListener("accountListener", this.acctChanger());
+    window.addEventListener("accountListener", this.acctChanger());
 
 
   }
@@ -224,19 +181,21 @@ class Main extends Component {
   }
 
   componentDidUpdate() {//stuff to do when state updates
-
+    if (window.addr !== undefined && !this.state.hasFetchedBalances && window.contracts > 0){
+      this.setupContractEnvironment(window.web3);
+    }
   }
 
   componentWillUnmount() {//stuff do do when component unmounts from the window
     console.log("unmounting component");
-    document.removeEventListener("accountListener", this.acctChanger());
-    //document.removeEventListener("ownerGetter", this.getOwner());
+    window.removeEventListener("accountListener", this.acctChanger());
+    //window.removeEventListener("ownerGetter", this.getOwner());
   }
 
-  render() {//render continuously produces an up-to-date stateful document  
+  render() {//render continuously produces an up-to-date stateful webpage  
 
     if (this.state.hasError === true) {
-      return (<div> Error Occoured. Try reloading the page. </div>)
+      return (<h1> An error occoured. Ensure you are connected to metamask and reload the page. </h1>)
     }
 
     return (
