@@ -436,7 +436,7 @@ h4 {
   color: white;
   background-color: black;
   border-radius: 0rem 0rem 1rem 1rem;
-  font-size: 1.3rem;
+  font-size: 1.4rem;
   display: flex;
   padding: 2rem;
   justify-content: center;
@@ -463,13 +463,14 @@ h4 {
   color: white;
   border-radius: 1rem;
   font-size: 1.4rem;
-  padding: 1rem;
+  padding: 0.5rem;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
   align-items: normal;
-  margin-left: 2.5rem;
-  margin-top: 20rem;
+  margin-left: auto;
+  margin-right: auto;
+  margin-bottom: 10rem;
 }
 
 .VRHresults {
@@ -508,6 +509,7 @@ h4 {
   width: 12rem;
   align-items: center;
   border-radius: 1rem;
+  margin-top: 40rem;
 }
 
 .btn2 {
@@ -569,10 +571,21 @@ h4 {
   font-family: Tahoma, Geneva, sans-serif;
 }
 
-.LittleText {
+.LittleTextModify {
+  display: flex;
   color: rgb(255, 255, 255);
   font-size: small;
   font-family: Tahoma, Geneva, sans-serif;
+  margin-left: 39rem;
+}
+
+
+.LittleTextTransfer {
+  display: flex;
+  color: rgb(255, 255, 255);
+  font-size: small;
+  font-family: Tahoma, Geneva, sans-serif;
+  margin-left: -1.5rem;
 }
 
 
