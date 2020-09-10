@@ -22,7 +22,7 @@ class ParticleBox extends Component {
           params={{
             "particles": {
                 "number": {
-                    "value": 90
+                    "value": 110
                 },
                 "size": {
                     "value": 4
@@ -32,7 +32,7 @@ class ParticleBox extends Component {
                 "events": {
                     "onhover": {
                         "enable": true,
-                        "mode": "repulse"
+                        "mode": "attract"
                     }
                 }
             }

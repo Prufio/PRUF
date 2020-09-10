@@ -4,7 +4,7 @@ import { Route, NavLink, HashRouter } from "react-router-dom";
 import Web3 from "web3";
 import Home from "./Home";
 import buildContracts from "./Resources/Contracts";
-import buildWindowUtils from "./Resources/WindowUtils"
+import buildWindowUtils from "./Resources/WindowUtils";
 import NonCustodialComponent from "./Resources/NonCustodialComponent";
 import AdminComponent from "./Resources/AdminComponent";
 import AuthorizedUserComponent from "./Resources/AuthorizedUserComponent";
@@ -19,7 +19,6 @@ class Main extends Component {
     super(props);
 
     this.toggleMenu = (menuChoice) => {
-      //console.log("Changing menu to: ", menuChoice);
       if (menuChoice === 'ACAdmin') {
         return this.setState({
           assetClassHolderMenuBool: true,
@@ -81,7 +80,7 @@ class Main extends Component {
       console.log("bools...", window.assetHolderBool, window.assetClassHolderBool, window.hasFetchedBalances)
       this.setState({ assetHolderBool: window.assetHolderBool })
       this.setState({ assetClassHolderBool: window.assetClassHolderBool })
-      return this.setState({hasFetchedBalances: window.hasFetchedBalances })
+      return this.setState({ hasFetchedBalances: window.hasFetchedBalances })
     }
 
     //Component state declaration
@@ -126,23 +125,30 @@ class Main extends Component {
 
   componentDidMount() {//stuff to do when component mounts in window
     buildWindowUtils()
-    const ethereum = window.ethereum;
-    var _web3 = require("web3");
-    _web3 = new Web3(_web3.givenProvider);
-    this.setupContractEnvironment(_web3);
-    this.setState({ web3: _web3 });
-    window.web3 = _web3;
-    ethereum.enable()
-    var _ipfs = new this.state.IPFS({
-      host: "ipfs.infura.io",
-      port: 5001,
-      protocol: "https",
-    });
-    window.ipfs = _ipfs
-    _web3.eth.getAccounts().then((e) => { this.state.addr = e[0]; window.addr = e[0] });
-    window.addEventListener("accountListener", this.acctChanger());
+    if (window.ethereum) {
 
+      const ethereum = window.ethereum;
+      var _web3 = require("web3");
+      _web3 = new Web3(_web3.givenProvider);
+      this.setupContractEnvironment(_web3);
+      this.setState({ web3: _web3 });
+      window.web3 = _web3;
 
+      ethereum.enable()
+
+      var _ipfs = new this.state.IPFS({
+        host: "ipfs.infura.io",
+        port: 5001,
+        protocol: "https",
+      });
+      window.ipfs = _ipfs
+
+      _web3.eth.getAccounts().then((e) => { this.setState({addr: e[0]}); window.addr = e[0] });
+      window.addEventListener("accountListener", this.acctChanger());
+    }
+    else {
+      this.setState({ hasError: true })
+    }
   }
 
   componentDidCatch(error, info) {
@@ -155,11 +161,11 @@ class Main extends Component {
   }
 
   componentDidUpdate() {//stuff to do when state updates
-    if (window.addr !== undefined && !this.state.hasFetchedBalances && window.contracts > 0){
+    if (window.addr !== undefined && !this.state.hasFetchedBalances && window.contracts > 0) {
       this.setupContractEnvironment(window.web3);
     }
 
-    
+
   }
 
   componentWillUnmount() {//stuff do do when component unmounts from the window
@@ -171,7 +177,7 @@ class Main extends Component {
   render() {//render continuously produces an up-to-date stateful webpage  
 
     if (this.state.hasError === true) {
-      return (<h1> An error occoured. Ensure you are connected to metamask and reload the page. </h1>)
+      return (<div><h1>)-:</h1><h2> An error occoured. Ensure you are connected to metamask and reload the page. Mobile support coming soon.</h2></div>)
     }
 
     return (
@@ -180,7 +186,7 @@ class Main extends Component {
         <HashRouter>
           <div>
             <div className="imageForm">
-              <img className="downSizeLogo" src={require("./Pruf.png")} alt="Pruf Logo" />
+              <img className="downSizeLogo" src={require("./Resources/Pruf.png")} alt="Pruf Logo" />
 
               <div className="userData">
                 {this.state.addr > 0 && (
@@ -212,7 +218,7 @@ class Main extends Component {
                 </ul>
                 <div className="content">
                   <Route exact path="/" component={Home} />
-                  <Router/>
+                  <Router />
                 </div>
 
                 <div className="headerButtons">
@@ -243,7 +249,7 @@ class Main extends Component {
                       Basic Menu
                     </Button>)}
 
-                  {window.isAuthUser === true && this.state.authorizedUserMenuBool === false && (
+                  {this.state.isAuthUser === true && this.state.authorizedUserMenuBool === false && (
                     <Button className="btn3"
                       variant="primary"
                       type="button"

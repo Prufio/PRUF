@@ -4,7 +4,7 @@
 }
 
 body {
-   background-image: url(BlueBack.png);
+   background-image: url(./Resources/BlueBack.png);
   -webkit-backgrount-size: cover;
   background-size: cover;
   box-sizing: border-box;
