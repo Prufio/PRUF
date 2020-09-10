@@ -107,7 +107,7 @@ class Home extends Component {
           <br />
           Provenance
         </p>
-        <p> V 0.2.3</p>
+        <p> V 1.0.0</p>
 
     <div> {window.assetClass > 0 && (<div>Operating in asset class {window.assetClass} as {this.state.authLevel}</div>)}</div>
         {window._contracts !== undefined && (
@@ -117,7 +117,7 @@ class Home extends Component {
           <Form.Control
             placeholder="Asset Class"
             required
-            type="number" 
+            type="text" 
             onChange={(e) => this.setState({ assetClass: e.target.value })}
             size="lg"
           />

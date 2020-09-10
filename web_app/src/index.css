@@ -4,9 +4,11 @@
 }
 
 body {
-   background-image: url(BlueBack.png);
+   background-image: url(./Resources/BlueBack.png);
   -webkit-backgrount-size: cover;
   background-size: cover;
+  box-sizing: border-box;
+  overflow-x: hidden;
   background-position: center center fixed;  
   /* background-color: rgb(12, 59, 79);
   margin: 0; */
@@ -81,7 +83,7 @@ h4 {
   position: "absolute";
   top: 0;
   left: 0;
-  width: calc(100vw - 1px);
+  width: "100%";
   height: "100%";
 }
 .header li a {

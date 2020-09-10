@@ -9,20 +9,20 @@ class ParticleBox extends Component {
 
 
     return (
-        <div
+        <div 
         style={{
         position: "absolute",
         top: 0,
         left: 0,
         width: "100%",
         height: "100%"
-        }}
+        }} 
         >
         <Particles
           params={{
             "particles": {
                 "number": {
-                    "value": 90
+                    "value": 110
                 },
                 "size": {
                     "value": 4
@@ -32,7 +32,7 @@ class ParticleBox extends Component {
                 "events": {
                     "onhover": {
                         "enable": true,
-                        "mode": "repulse"
+                        "mode": "attract"
                     }
                 }
             }
