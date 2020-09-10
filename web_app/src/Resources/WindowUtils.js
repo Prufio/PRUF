@@ -1,5 +1,3 @@
-import { Component } from "react";
-
 function buildWindowUtils () {
 
     const _checkCreds = async () => {
@@ -96,9 +94,17 @@ function buildWindowUtils () {
         if (Number(_assetBal) > 0) {
           window.assetHolderBool = true
         }
+        
+        else if (Number(_assetBal === 0 || _assetBal === undefined)){
+          window.assetHolderBool = false
+        }
   
         if (Number(_assetClassBal) > 0) {
           window.assetClassHolderBool = true
+        }
+
+        else if (Number(_assetClassBal === 0 || _assetClassBal === undefined)){
+          window.assetClassHolderBool = false
         }
   
         window.balances = {

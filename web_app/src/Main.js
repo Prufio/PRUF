@@ -19,6 +19,7 @@ class Main extends Component {
     super(props);
 
     this.toggleMenu = (menuChoice) => {
+      this.setState({ routeRequest: "ACAdmin" });
       if (menuChoice === 'ACAdmin') {
         return this.setState({
           assetClassHolderMenuBool: true,
@@ -29,6 +30,7 @@ class Main extends Component {
       }
 
       else if (menuChoice === 'basic') {
+        this.setState({ routeRequest: "basic" });
         return this.setState({
           basicMenuBool: true,
           assetHolderMenuBool: false,
@@ -38,6 +40,7 @@ class Main extends Component {
       }
 
       else if (menuChoice === 'NC') {
+        this.setState({ routeRequest: "NC" });
         return this.setState({
           assetHolderMenuBool: true,
           basicMenuBool: false,
@@ -47,6 +50,7 @@ class Main extends Component {
       }
 
       else if (menuChoice === 'authUser') {
+        this.setState({ routeRequest: "authUser" });
         return this.setState({
           authorizedUserMenuBool: true,
           assetHolderMenuBool: false,
@@ -73,6 +77,17 @@ class Main extends Component {
 
     this.setupContractEnvironment = async (_web3) => {
       console.log("Setting up contracts")
+      await this.setState({
+        isAuthUser: undefined,
+        assetHolderBool: false,
+        assetClassHolderBool: false,
+        assetHolderMenuBool: false,
+        assetClassHolderMenuBool: false,
+        basicMenuBool: true,
+        authorizedUserMenuBool: false,
+        hasFetchedBalances: false,
+        routeRequest: "basic"
+      })
       window._contracts = await buildContracts(_web3)
       await this.setState({ contracts: window._contracts })
       await window.utils.getContracts()
@@ -118,6 +133,7 @@ class Main extends Component {
       basicMenuBool: true,
       authorizedUserMenuBool: false,
       hasFetchedBalances: false,
+      routeRequest: "basic"
     };
   }
 
@@ -143,7 +159,7 @@ class Main extends Component {
       });
       window.ipfs = _ipfs
 
-      _web3.eth.getAccounts().then((e) => { this.setState({addr: e[0]}); window.addr = e[0] });
+      _web3.eth.getAccounts().then((e) => { this.setState({ addr: e[0] }); window.addr = e[0] });
       window.addEventListener("accountListener", this.acctChanger());
     }
     else {
@@ -172,6 +188,10 @@ class Main extends Component {
     console.log("unmounting component");
     window.removeEventListener("accountListener", this.acctChanger());
     //window.removeEventListener("ownerGetter", this.getOwner());
+  }
+
+  updateAuthLevelInMain () {
+    this.setState({authLevel: window.authLevel})
   }
 
   render() {//render continuously produces an up-to-date stateful webpage  
@@ -218,7 +238,7 @@ class Main extends Component {
                 </ul>
                 <div className="content">
                   <Route exact path="/" component={Home} />
-                  <Router />
+                  {Router(this.state.routeRequest)}
                 </div>
 
                 <div className="headerButtons">
