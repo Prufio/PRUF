@@ -140,7 +140,7 @@ class VerifyRightHolder extends Component {
         <Form className="VRform" id='MainForm'>
         {window.addr === undefined && (
             <div className="errorResults">
-              <h2>User address not found</h2>
+              <h2>User address unreachable</h2>
               <h3>Please connect web3 provider.</h3>
             </div>
           )}{window.assetClass === undefined && (

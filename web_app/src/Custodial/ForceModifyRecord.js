@@ -342,9 +342,9 @@ class ForceModifyRecord extends Component {
                   >
                     Force modify
                   </Button>
-                  <div className="LittleText"> Cost in AC {window.assetClass}: {Number(window.costs.forceTransferCost)/1000000000000000000} ETH</div>
+                  <div className="LittleTextModify"> Cost in AC {window.assetClass}: {Number(window.costs.forceTransferCost)/1000000000000000000} ETH</div>
                 </Form.Group>
-                <br></br>
+                <br></br>  
               </div>
               <div>
                 <Form.Group>
@@ -357,7 +357,7 @@ class ForceModifyRecord extends Component {
                   >
                     Import
                   </Button>
-                  <div className="LittleText"> Cost in AC {window.assetClass}: {Number(window.costs.importAssetCost)/1000000000000000000} ETH</div>
+                  <div className="LittleTextModify"> Cost in AC {window.assetClass}: {Number(window.costs.importAssetCost)/1000000000000000000} ETH</div>
                 </Form.Group>
 
                 <br></br>
