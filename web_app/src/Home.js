@@ -49,20 +49,14 @@ class Home extends Component {
         await window.utils.checkCreds();
         await window.utils.getCosts();
         console.log(window.authLevel);
-        return this.setState({authLevel: window.authLevel});
+        return this.setState({ authLevel: window.authLevel });
       }
     }
 
     return (
       <div className="home">
-        <p>
-          PRuF
-          <br />
-          Blockchain
-          <br />
-          Provenance
-        </p>
-        <p> V 1.0.0</p>
+        <img src={require("./Resources/Pruf AR cropped.png")} alt="Pruf Logo Home" />
+        <p> V 1.0.1</p>
 
         <div> {window.assetClass > 0 && (<div>Operating in asset class {window.assetClass} as {window.authLevel}</div>)}</div>
         {window._contracts !== undefined && (
@@ -78,20 +72,19 @@ class Home extends Component {
               />
             </Form.Group>
             <Form.Row>
-              <Form.Group className="buttonDisplay">
-                <Button
-                  variant="primary"
-                  type="button"
-                  size="lg"
-                  onClick={_setAC}
-                >
-                  Access PRuF
+              <Button
+                className="buttonDisplayHome"
+                variant="primary"
+                type="button"
+                size="lg"
+                onClick={_setAC}
+              >
+                Access PRuF
                   </Button>
-              </Form.Group>
             </Form.Row>
           </div>
         )}
-        {window._contracts === undefined && (<div> <Form.Row><h1>Connecting to the blockchain...</h1></Form.Row></div>)}
+        {window._contracts === undefined && (<div> <Form.Row><h1>Connecting to Blockchain Provider...</h1></Form.Row></div>)}
       </div>
     );
   }
