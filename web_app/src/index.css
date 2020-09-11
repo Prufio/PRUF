@@ -205,7 +205,7 @@ h4 {
 }
 
 .VRform {
-  height: 50rem;
+  height: 45rem;
   width: 59rem;
   background-color: #206ab9;
   border-radius: 0.5rem;
@@ -519,6 +519,11 @@ h4 {
   align-items: center;
   margin-top: 1rem;
   margin-left: 20;
+}
+
+.buttonDisplayHome {
+  margin-left: 48rem;
+  margin-top: auto;
 }
 
 .buttonDisplay {
