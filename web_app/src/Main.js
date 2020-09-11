@@ -22,7 +22,7 @@ class Main extends Component {
       if (this.state.isAuthUser != window.isAuthUser) {
         this.setState({isAuthUser: window.isAuthUser})
       }
-    }, 200) 
+    },200)
 
     this.toggleMenu = (menuChoice) => {
       this.setState({ routeRequest: "ACAdmin" });
