@@ -18,6 +18,12 @@ class Main extends Component {
   constructor(props) {
     super(props);
 
+    this.updateAuthLevel = setInterval(() => {
+      if (this.state.isAuthUser != window.isAuthUser) {
+        this.setState({isAuthUser: window.isAuthUser})
+      }
+    }, 200) 
+
     this.toggleMenu = (menuChoice) => {
       this.setState({ routeRequest: "ACAdmin" });
       if (menuChoice === 'ACAdmin') {
@@ -140,6 +146,7 @@ class Main extends Component {
   //component state-change events......................................................................................................
 
   componentDidMount() {//stuff to do when component mounts in window
+
     buildWindowUtils()
     if (window.ethereum) {
 
@@ -161,6 +168,7 @@ class Main extends Component {
 
       _web3.eth.getAccounts().then((e) => { this.setState({ addr: e[0] }); window.addr = e[0] });
       window.addEventListener("accountListener", this.acctChanger());
+      //window.addEventListener("authLevelListener", this.updateAuthLevel());
     }
     else {
       this.setState({ hasError: true })
@@ -187,11 +195,8 @@ class Main extends Component {
   componentWillUnmount() {//stuff do do when component unmounts from the window
     console.log("unmounting component");
     window.removeEventListener("accountListener", this.acctChanger());
+    //window.removeEventListener("authLevelListener", this.updateAuthLevel());
     //window.removeEventListener("ownerGetter", this.getOwner());
-  }
-
-  updateAuthLevelInMain () {
-    this.setState({authLevel: window.authLevel})
   }
 
   render() {//render continuously produces an up-to-date stateful webpage  
