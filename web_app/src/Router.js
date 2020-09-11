@@ -29,40 +29,67 @@ import VerifyRightsholder from "./Custodial/VerifyRightsholder";
 import EscrowManager from "./Custodial/EscrowManager";
 import ExportAsset from "./Custodial/ExportAsset";
 
-class Router extends Component {
-    render(){
+function Router(routeRequest) {
+    if (routeRequest === "authUser") {
         return (
             <>
-                <Route path="/add-user" component={AddUser}/>
-                <Route path="/enable-contract" component={EnableContract}/>
-                <Route path="/set-costs" component={SetCosts}/>
-
                 <Route path="/new-record" component={NewRecord} />
                 <Route path="/retrieve-record" component={RetrieveRecord} />
-                <Route path="/force-modify-record" component={ForceModifyRecord}/>
+                <Route path="/force-modify-record" component={ForceModifyRecord} />
                 <Route path="/transfer-asset" component={TransferAsset} />
-                <Route path="/modify-record-status" component={ModifyRecordStatus}/>
+                <Route path="/modify-record-status" component={ModifyRecordStatus} />
                 <Route path="/decrement-counter" component={DecrementCounter} />
-                <Route path="/modify-description" component={ModifyDescription}/>
+                <Route path="/modify-description" component={ModifyDescription} />
                 <Route path="/add-note" component={AddNote} />
                 <Route path="/export-asset" component={ExportAsset} />
-                <Route path="/verify-rights-holder"component={VerifyRightsholder}/>
-                <Route path="/manage-escrow" component={EscrowManager}/>
-
-                <Route path="/new-record-NC" component={NewRecordNC} />
-                <Route path="/retrieve-record-NC" component={RetrieveRecordNC} />
-                <Route path="/force-modify-record-NC" component={ForceModifyRecordNC}/>
-                <Route path="/transfer-asset-NC" component={TransferAssetNC} />
-                <Route path="/modify-record-status-NC" component={ModifyRecordStatusNC}/>
-                <Route path="/decrement-counter-NC" component={DecrementCounterNC} />
-                <Route path="/modify-description-NC" component={ModifyDescriptionNC}/>
-                <Route path="/add-note-NC" component={AddNoteNC} />
-                <Route path="/export-asset-NC" component={ExportAssetNC} />
-                <Route path="/verify-rights-holder-NC"component={VerifyRightsholderNC}/>
-                <Route path="/manage-escrow-NC" component={EscrowManagerNC}/>
+                <Route path="/verify-rights-holder" component={VerifyRightsholder} />
+                <Route path="/manage-escrow" component={EscrowManager} />
             </>
         )
     }
+
+    else if (routeRequest === "NC") {
+        return (
+            <>
+                <Route path="/new-record-NC" component={NewRecordNC} />
+                <Route path="/retrieve-record-NC" component={RetrieveRecordNC} />
+                <Route path="/force-modify-record-NC" component={ForceModifyRecordNC} />
+                <Route path="/transfer-asset-NC" component={TransferAssetNC} />
+                <Route path="/modify-record-status-NC" component={ModifyRecordStatusNC} />
+                <Route path="/decrement-counter-NC" component={DecrementCounterNC} />
+                <Route path="/modify-description-NC" component={ModifyDescriptionNC} />
+                <Route path="/add-note-NC" component={AddNoteNC} />
+                <Route path="/export-asset-NC" component={ExportAssetNC} />
+                <Route path="/verify-rights-holder-NC" component={VerifyRightsholderNC} />
+                <Route path="/manage-escrow-NC" component={EscrowManagerNC} />
+            </>)
+    }
+
+    else if (routeRequest === "ACAdmin") {
+        return (
+        <>
+        <Route path="/add-user" component={AddUser} />
+        <Route path="/enable-contract" component={EnableContract} />
+        <Route path="/set-costs" component={SetCosts} />
+        </>)
+    }
+
+    else if (routeRequest === "basic") {
+        return (
+            <>
+            <Route path="/verify-rights-holder" component={VerifyRightsholder} />
+            <Route path="/retrieve-record" component={RetrieveRecord} />
+            </>
+        )
+    }
+
+    else {
+        return (
+            <>
+            </>
+        )
+    }
+    
 }
 
 export default Router;
