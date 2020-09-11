@@ -4,11 +4,11 @@
 }
 
 body {
-   background-image: url(./Resources/BlueBack.png);
+  background-image: url(./Resources/BlueBack.png);
   -webkit-backgrount-size: cover;
   background-size: cover;
   box-sizing: border-box;
-  overflow-x: hidden;
+  overflow: hidden;
   background-position: center center fixed;  
   /* background-color: rgb(12, 59, 79);
   margin: 0; */
