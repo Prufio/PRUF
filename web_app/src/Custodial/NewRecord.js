@@ -294,7 +294,7 @@ class NewRecord extends Component {
                     >
                       New Record
                     </Button>
-                    <div className="LittleText"> Cost in AC {window.assetClass}: {Number(window.costs.newRecordCost)/1000000000000000000} ETH</div>
+                    <div className="LittleTextNewRecord"> Cost in AC {window.assetClass}: {Number(window.costs.newRecordCost)/1000000000000000000} ETH</div>
                   </Form.Group>
                   
                   

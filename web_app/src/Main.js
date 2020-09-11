@@ -11,6 +11,7 @@ import AuthorizedUserComponent from "./Resources/AuthorizedUserComponent";
 import BasicComponent from "./Resources/BasicComponent";
 import ParticleBox from './Resources/ParticleBox';
 import Router from "./Router";
+import { Link } from "react-router-dom";
 
 
 
@@ -20,9 +21,9 @@ class Main extends Component {
 
     this.updateAuthLevel = setInterval(() => {
       if (this.state.isAuthUser != window.isAuthUser) {
-        this.setState({isAuthUser: window.isAuthUser})
+        this.setState({ isAuthUser: window.isAuthUser })
       }
-    },200)
+    }, 200)
 
     this.toggleMenu = (menuChoice) => {
       this.setState({ routeRequest: "ACAdmin" });
@@ -211,8 +212,7 @@ class Main extends Component {
         <HashRouter>
           <div>
             <div className="imageForm">
-              <img className="downSizeLogo" src={require("./Resources/Pruf.png")} alt="Pruf Logo" />
-
+              <Link to="/"><img className="downSizeLogo" src={require("./Resources/pruf ar long.png")} alt="Pruf Logo" /></Link> 
               <div className="userData">
                 {this.state.addr > 0 && (
                   <div className="banner">
