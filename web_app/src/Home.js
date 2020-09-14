@@ -47,7 +47,7 @@ class Home extends Component {
       else {
         window.assetClass = this.state.assetClass;
         await window.utils.checkCreds();
-        await window.utils.getCosts();
+        await window.utils.getCosts(6);
         console.log(window.authLevel);
         return this.setState({ authLevel: window.authLevel });
       }

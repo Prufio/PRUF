@@ -770,14 +770,14 @@ function returnABIs() {
 		},
 		{
 			"inputs": [],
-			"name": "OO_resolveContractAddresses",
+			"name": "OO_pause",
 			"outputs": [],
 			"stateMutability": "nonpayable",
 			"type": "function"
 		},
 		{
 			"inputs": [],
-			"name": "OO_pause",
+			"name": "OO_resolveContractAddresses",
 			"outputs": [],
 			"stateMutability": "nonpayable",
 			"type": "function"
@@ -1022,14 +1022,14 @@ function returnABIs() {
 			},
 			{
 				"inputs": [],
-				"name": "OO_resolveContractAddresses",
+				"name": "OO_pause",
 				"outputs": [],
 				"stateMutability": "nonpayable",
 				"type": "function"
 			},
 			{
 				"inputs": [],
-				"name": "OO_pause",
+				"name": "OO_resolveContractAddresses",
 				"outputs": [],
 				"stateMutability": "nonpayable",
 				"type": "function"
@@ -1407,14 +1407,14 @@ function returnABIs() {
 			},
 			{
 				"inputs": [],
-				"name": "OO_resolveContractAddresses",
+				"name": "OO_pause",
 				"outputs": [],
 				"stateMutability": "nonpayable",
 				"type": "function"
 			},
 			{
 				"inputs": [],
-				"name": "OO_pause",
+				"name": "OO_resolveContractAddresses",
 				"outputs": [],
 				"stateMutability": "nonpayable",
 				"type": "function"
@@ -1688,13 +1688,6 @@ function returnABIs() {
 		"type": "event"
 	},
 	{
-		"inputs": [],
-		"name": "$withdraw",
-		"outputs": [],
-		"stateMutability": "payable",
-		"type": "function"
-	},
-	{
 		"inputs": [
 			{
 				"internalType": "uint32",
@@ -1702,33 +1695,13 @@ function returnABIs() {
 				"type": "uint32"
 			},
 			{
-				"internalType": "uint256",
-				"name": "_newRecordCost",
-				"type": "uint256"
+				"internalType": "uint16",
+				"name": "_service",
+				"type": "uint16"
 			},
 			{
 				"internalType": "uint256",
-				"name": "_transferAssetCost",
-				"type": "uint256"
-			},
-			{
-				"internalType": "uint256",
-				"name": "_createNoteCost",
-				"type": "uint256"
-			},
-			{
-				"internalType": "uint256",
-				"name": "_reMintRecordCost",
-				"type": "uint256"
-			},
-			{
-				"internalType": "uint256",
-				"name": "_changeStatusCost",
-				"type": "uint256"
-			},
-			{
-				"internalType": "uint256",
-				"name": "_forceModifyCost",
+				"name": "_serviceCost",
 				"type": "uint256"
 			},
 			{
@@ -1738,13 +1711,6 @@ function returnABIs() {
 			}
 		],
 		"name": "ACTH_setCosts",
-		"outputs": [],
-		"stateMutability": "nonpayable",
-		"type": "function"
-	},
-	{
-		"inputs": [],
-		"name": "OO_resolveContractAddresses",
 		"outputs": [],
 		"stateMutability": "nonpayable",
 		"type": "function"
@@ -1775,6 +1741,13 @@ function returnABIs() {
 	{
 		"inputs": [],
 		"name": "OO_pause",
+		"outputs": [],
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"inputs": [],
+		"name": "OO_resolveContractAddresses",
 		"outputs": [],
 		"stateMutability": "nonpayable",
 		"type": "function"
@@ -1874,6 +1847,30 @@ function returnABIs() {
 				"internalType": "uint32",
 				"name": "",
 				"type": "uint32"
+			},
+			{
+				"internalType": "uint32",
+				"name": "",
+				"type": "uint32"
+			}
+		],
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "uint32",
+				"name": "_assetClass",
+				"type": "uint32"
+			}
+		],
+		"name": "getAC_discount",
+		"outputs": [
+			{
+				"internalType": "uint32",
+				"name": "",
+				"type": "uint32"
 			}
 		],
 		"stateMutability": "view",
@@ -1904,9 +1901,14 @@ function returnABIs() {
 				"internalType": "uint32",
 				"name": "_assetClass",
 				"type": "uint32"
+			},
+			{
+				"internalType": "uint16",
+				"name": "_service",
+				"type": "uint16"
 			}
 		],
-		"name": "getChangeStatusCosts",
+		"name": "getServiceCosts",
 		"outputs": [
 			{
 				"internalType": "address",
@@ -1929,177 +1931,7 @@ function returnABIs() {
 				"type": "uint256"
 			}
 		],
-		"stateMutability": "nonpayable",
-		"type": "function"
-	},
-	{
-		"inputs": [
-			{
-				"internalType": "uint32",
-				"name": "_assetClass",
-				"type": "uint32"
-			}
-		],
-		"name": "getCreateNoteCosts",
-		"outputs": [
-			{
-				"internalType": "address",
-				"name": "",
-				"type": "address"
-			},
-			{
-				"internalType": "uint256",
-				"name": "",
-				"type": "uint256"
-			},
-			{
-				"internalType": "address",
-				"name": "",
-				"type": "address"
-			},
-			{
-				"internalType": "uint256",
-				"name": "",
-				"type": "uint256"
-			}
-		],
-		"stateMutability": "nonpayable",
-		"type": "function"
-	},
-	{
-		"inputs": [
-			{
-				"internalType": "uint32",
-				"name": "_assetClass",
-				"type": "uint32"
-			}
-		],
-		"name": "getForceModifyCosts",
-		"outputs": [
-			{
-				"internalType": "address",
-				"name": "",
-				"type": "address"
-			},
-			{
-				"internalType": "uint256",
-				"name": "",
-				"type": "uint256"
-			},
-			{
-				"internalType": "address",
-				"name": "",
-				"type": "address"
-			},
-			{
-				"internalType": "uint256",
-				"name": "",
-				"type": "uint256"
-			}
-		],
-		"stateMutability": "nonpayable",
-		"type": "function"
-	},
-	{
-		"inputs": [
-			{
-				"internalType": "uint32",
-				"name": "_assetClass",
-				"type": "uint32"
-			}
-		],
-		"name": "getNewRecordCosts",
-		"outputs": [
-			{
-				"internalType": "address",
-				"name": "",
-				"type": "address"
-			},
-			{
-				"internalType": "uint256",
-				"name": "",
-				"type": "uint256"
-			},
-			{
-				"internalType": "address",
-				"name": "",
-				"type": "address"
-			},
-			{
-				"internalType": "uint256",
-				"name": "",
-				"type": "uint256"
-			}
-		],
-		"stateMutability": "nonpayable",
-		"type": "function"
-	},
-	{
-		"inputs": [
-			{
-				"internalType": "uint32",
-				"name": "_assetClass",
-				"type": "uint32"
-			}
-		],
-		"name": "getReMintRecordCosts",
-		"outputs": [
-			{
-				"internalType": "address",
-				"name": "",
-				"type": "address"
-			},
-			{
-				"internalType": "uint256",
-				"name": "",
-				"type": "uint256"
-			},
-			{
-				"internalType": "address",
-				"name": "",
-				"type": "address"
-			},
-			{
-				"internalType": "uint256",
-				"name": "",
-				"type": "uint256"
-			}
-		],
-		"stateMutability": "nonpayable",
-		"type": "function"
-	},
-	{
-		"inputs": [
-			{
-				"internalType": "uint32",
-				"name": "_assetClass",
-				"type": "uint32"
-			}
-		],
-		"name": "getTransferAssetCosts",
-		"outputs": [
-			{
-				"internalType": "address",
-				"name": "",
-				"type": "address"
-			},
-			{
-				"internalType": "uint256",
-				"name": "",
-				"type": "uint256"
-			},
-			{
-				"internalType": "address",
-				"name": "",
-				"type": "address"
-			},
-			{
-				"internalType": "uint256",
-				"name": "",
-				"type": "uint256"
-			}
-		],
-		"stateMutability": "nonpayable",
+		"stateMutability": "view",
 		"type": "function"
 	},
 	{
@@ -2124,6 +1956,24 @@ function returnABIs() {
 			}
 		],
 		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "uint32",
+				"name": "_assetClass",
+				"type": "uint32"
+			},
+			{
+				"internalType": "uint256",
+				"name": "_increaseAmount",
+				"type": "uint256"
+			}
+		],
+		"name": "increasePriceShare",
+		"outputs": [],
+		"stateMutability": "nonpayable",
 		"type": "function"
 	},
 	{
@@ -2211,25 +2061,6 @@ function returnABIs() {
 		"type": "function"
 	},
 	{
-		"inputs": [
-			{
-				"internalType": "address",
-				"name": "dest",
-				"type": "address"
-			}
-		],
-		"name": "payments",
-		"outputs": [
-			{
-				"internalType": "uint256",
-				"name": "",
-				"type": "uint256"
-			}
-		],
-		"stateMutability": "view",
-		"type": "function"
-	},
-	{
 		"inputs": [],
 		"name": "renounceOwnership",
 		"outputs": [],
@@ -2250,55 +2081,6 @@ function returnABIs() {
 				"internalType": "uint32",
 				"name": "",
 				"type": "uint32"
-			}
-		],
-		"stateMutability": "view",
-		"type": "function"
-	},
-	{
-		"inputs": [
-			{
-				"internalType": "uint32",
-				"name": "_assetClass",
-				"type": "uint32"
-			}
-		],
-		"name": "retrieveCosts",
-		"outputs": [
-			{
-				"internalType": "uint256",
-				"name": "",
-				"type": "uint256"
-			},
-			{
-				"internalType": "uint256",
-				"name": "",
-				"type": "uint256"
-			},
-			{
-				"internalType": "uint256",
-				"name": "",
-				"type": "uint256"
-			},
-			{
-				"internalType": "uint256",
-				"name": "",
-				"type": "uint256"
-			},
-			{
-				"internalType": "uint256",
-				"name": "",
-				"type": "uint256"
-			},
-			{
-				"internalType": "uint256",
-				"name": "",
-				"type": "uint256"
-			},
-			{
-				"internalType": "address",
-				"name": "",
-				"type": "address"
 			}
 		],
 		"stateMutability": "view",
@@ -2349,19 +2131,6 @@ function returnABIs() {
 			}
 		],
 		"name": "updateACname",
-		"outputs": [],
-		"stateMutability": "nonpayable",
-		"type": "function"
-	},
-	{
-		"inputs": [
-			{
-				"internalType": "address payable",
-				"name": "payee",
-				"type": "address"
-			}
-		],
-		"name": "withdrawPayments",
 		"outputs": [],
 		"stateMutability": "nonpayable",
 		"type": "function"
@@ -4089,14 +3858,14 @@ const APP_NC = [
 	},
 	{
 		"inputs": [],
-		"name": "OO_resolveContractAddresses",
+		"name": "OO_pause",
 		"outputs": [],
 		"stateMutability": "nonpayable",
 		"type": "function"
 	},
 	{
 		"inputs": [],
-		"name": "OO_pause",
+		"name": "OO_resolveContractAddresses",
 		"outputs": [],
 		"stateMutability": "nonpayable",
 		"type": "function"
@@ -4341,14 +4110,14 @@ const NP_NC = [
 	},
 	{
 		"inputs": [],
-		"name": "OO_resolveContractAddresses",
+		"name": "OO_pause",
 		"outputs": [],
 		"stateMutability": "nonpayable",
 		"type": "function"
 	},
 	{
 		"inputs": [],
-		"name": "OO_pause",
+		"name": "OO_resolveContractAddresses",
 		"outputs": [],
 		"stateMutability": "nonpayable",
 		"type": "function"
@@ -4749,14 +4518,14 @@ const RCLR = [
 	},
 	{
 		"inputs": [],
-		"name": "OO_resolveContractAddresses",
+		"name": "OO_pause",
 		"outputs": [],
 		"stateMutability": "nonpayable",
 		"type": "function"
 	},
 	{
 		"inputs": [],
-		"name": "OO_pause",
+		"name": "OO_resolveContractAddresses",
 		"outputs": [],
 		"stateMutability": "nonpayable",
 		"type": "function"
@@ -5007,14 +4776,14 @@ const ECR_NC = [
 	},
 	{
 		"inputs": [],
-		"name": "OO_resolveContractAddresses",
+		"name": "OO_pause",
 		"outputs": [],
 		"stateMutability": "nonpayable",
 		"type": "function"
 	},
 	{
 		"inputs": [],
-		"name": "OO_pause",
+		"name": "OO_resolveContractAddresses",
 		"outputs": [],
 		"stateMutability": "nonpayable",
 		"type": "function"
@@ -5640,14 +5409,14 @@ const ECR_MGR = [
 	},
 	{
 		"inputs": [],
-		"name": "OO_resolveContractAddresses",
+		"name": "OO_pause",
 		"outputs": [],
 		"stateMutability": "nonpayable",
 		"type": "function"
 	},
 	{
 		"inputs": [],
-		"name": "OO_pause",
+		"name": "OO_resolveContractAddresses",
 		"outputs": [],
 		"stateMutability": "nonpayable",
 		"type": "function"

@@ -21,7 +21,7 @@ async function buildContracts(_web3) {
   const NAKED_ABI = abis.NAKED;
   const RCLR_ABI = abis.RCLR;
 
-  const STOR_Address = "0x13ab39E67A68E2c0075FdE792B5C408CF674cEDd";
+  const STOR_Address = "0x630A1e0059BC7b14EDd6ad116Ea31420E96c3BbE";
 
   const STOR = new _web3.eth.Contract(STOR_ABI, STOR_Address);
 

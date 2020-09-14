@@ -22,29 +22,35 @@ function buildWindowUtils () {
         }
     }
 
-    const _getCosts = async () => {
+    const _getCosts = async (numOfServices) => {
+        window.costArray = [];
         if (window.contracts !== undefined) {
             //console.log("Getting cost array");
-            await window.contracts.AC_MGR.methods
-                .retrieveCosts(window.assetClass)
+            for(var i=1; i <= numOfServices; i++){
+              await window.contracts.AC_MGR.methods
+                .getServiceCosts(window.assetClass, i)
                 .call({ from: window.addr }, (_error, _result) => {
                     if (_error) { console.log("Error: ", _error) }
                     else {
                         //console.log("result in getCosts: ", Object.values(_result));
-                        window.costArray = Object.values(_result)
-                        window.utils.checkCreds()
+                        window.costArray.push(Number((Object.values(_result)[1])) + Number((Object.values(_result)[3])))
                     }
                 })
+            }
+            
             //console.log("before setting window-level costs")
-            window.costs = {
+
+              window.costs = {
                 newRecordCost: window.costArray[0],
                 transferAssetCost: window.costArray[1],
                 createNoteCost: window.costArray[2],
                 remintAssetCost: window.costArray[3],
                 importAssetCost: window.costArray[4],
                 forceTransferCost: window.costArray[5],
-                beneficiaryAddress: window.costArray[6]
             }
+
+            window.utils.checkCreds()
+
             console.log("window costs object: ", window.costs);
             //console.log("this should come last");
         }
