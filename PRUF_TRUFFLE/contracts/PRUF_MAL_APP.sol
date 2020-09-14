@@ -808,7 +808,7 @@ contract MAL_APP is CORE_MAL {
     }
 
     function retrieveRecordStor(bytes32 _idxHash)
-        external
+        external view
     {
         STOR.retrieveRecord(_idxHash);
         //^^^^^^^interactions^^^^^^^^^

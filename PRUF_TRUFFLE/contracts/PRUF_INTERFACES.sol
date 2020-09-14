@@ -167,7 +167,7 @@ interface UTIL_TKN_Interface {
         uint256 amount
     ) external returns (bool);
 }
-
+//------------------------------------------------------------------------------------------------
 /*
  * @dev Interface for AC_TKN
  * INHERIANCE:
@@ -313,6 +313,9 @@ interface AC_TKN_Interface {
     function tokenByIndex(uint256 index) external view returns (uint256);
 }
 
+
+
+//------------------------------------------------------------------------------------------------
 /*
  * @dev Interface for A_TKN
  * INHERIANCE:
@@ -443,6 +446,11 @@ interface A_TKN_Interface {
         returns (address tokenHolderAdress);
 
     /**
+     * @dev Returns the amount of tokens owned by `account`.
+     */
+    function balanceOf(address account) external returns (uint256);
+
+    /**
      * @dev Returns the name of the token.
      */
     function name() external returns (string memory tokenName);
@@ -477,6 +485,9 @@ interface A_TKN_Interface {
     function tokenByIndex(uint256 index) external returns (uint256);
 }
 
+
+
+//------------------------------------------------------------------------------------------------
 /*
  * @dev Interface for ID_TKN
  * INHERIANCE:
@@ -563,7 +574,6 @@ interface ID_TKN_Interface {
         view
         returns (address tokenHolderAdress);
 
-
      /**
      * @dev Returns the amount of tokens owned by `account`.
      */
@@ -608,6 +618,9 @@ interface ID_TKN_Interface {
     function tokenByIndex(uint256 index) external view returns (uint256);
 }
 
+
+
+//------------------------------------------------------------------------------------------------
 /*
  * @dev Interface for AC_MGR
  * INHERIANCE:
@@ -727,6 +740,9 @@ interface AC_MGR_Interface {
         );
 }
 
+
+
+//------------------------------------------------------------------------------------------------
 /*
  * @dev Interface for STOR
  * INHERIANCE:
@@ -886,6 +902,9 @@ interface STOR_Interface {
         returns (uint8, bytes32);
 }
 
+
+
+//------------------------------------------------------------------------------------------------
 /*
  * @dev Interface for ECR_MGR
  * INHERIANCE:
@@ -1000,6 +1019,9 @@ interface ECR_MGR_Interface {
         );
 }
 
+
+
+//------------------------------------------------------------------------------------------------
 /*
  * @dev Interface for RCLR
  * INHERIANCE:
@@ -1012,6 +1034,8 @@ interface RCLR_Interface {
     function recycle(bytes32 _idxHash) external payable;
 }
 
+
+//------------------------------------------------------------------------------------------------
 /*
  * @dev Interface for APP
  * INHERIANCE:

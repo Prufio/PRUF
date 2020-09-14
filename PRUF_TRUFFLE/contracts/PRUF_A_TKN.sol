@@ -348,7 +348,7 @@ contract A_TKN is Ownable, ReentrancyGuard, ERC721 {
     /*
      * @dev Get a Record from Storage @ idxHash
      */
-    function getRecord(bytes32 _idxHash) private returns (Record memory) {
+    function getRecord(bytes32 _idxHash) private view returns (Record memory) {
         Record memory rec;
         //^^^^^^^checks^^^^^^^^^
 
