@@ -136,7 +136,7 @@ contract CORE is PullPayment, BASIC {
     {
         //^^^^^^^checks^^^^^^^^^
         Invoice memory pricing;
-        uint256 ACTHnetPercent = AC_MGR.getAC_discount(_assetClass).div(
+        uint256 ACTHnetPercent = uint256(AC_MGR.getAC_discount(_assetClass)).div(
             uint256(100)
         );
         require( //IMPOSSIBLE TO REACH

@@ -41,7 +41,7 @@ interface UTIL_TKN_Interface {
     /*
      * @dev Resolve Contract Addresses from STOR
      */
-    function AdminResolveContractAddresses() external virtual;
+    function AdminResolveContractAddresses() external;
 
     /*
      * @dev return current AC token index pointer
@@ -56,7 +56,7 @@ interface UTIL_TKN_Interface {
      * - the caller must have a balance of at least `amount`.
      */
     function increaseShare(uint32 _assetClass, uint256 _amount)
-        public
+        external
         returns (bool);
 
     /**
@@ -69,7 +69,7 @@ interface UTIL_TKN_Interface {
         string memory _name,
         uint32 _assetClassRoot,
         uint8 _custodyType
-    ) public returns (uint256);
+    ) external returns (uint256);
 
     /**
      * @dev Creates `amount` new tokens for `to`.
@@ -80,7 +80,7 @@ interface UTIL_TKN_Interface {
      *
      * - the caller must have the `MINTER_ROLE`.
      */
-    function mint(address to, uint256 amount) public virtual;
+    function mint(address to, uint256 amount) external;
 
     /**
      * @dev Pauses all token transfers.
@@ -91,7 +91,7 @@ interface UTIL_TKN_Interface {
      *
      * - the caller must have the `PAUSER_ROLE`.
      */
-    function pause() public virtual;
+    function pause() external;
 
     /**
      * @dev Unpauses all token transfers.
@@ -102,17 +102,17 @@ interface UTIL_TKN_Interface {
      *
      * - the caller must have the `PAUSER_ROLE`.
      */
-    function unpause() public virtual;
+    function unpause() external;
 
     /**
      * @dev Returns the amount of tokens in existence.
      */
-    function totalSupply() external view returns (uint256);
+    function totalSupply() external returns (uint256);
 
     /**
      * @dev Returns the amount of tokens owned by `account`.
      */
-    function balanceOf(address account) external view returns (uint256);
+    function balanceOf(address account) external returns (uint256);
 
     /**
      * @dev Moves `amount` tokens from the caller's account to `recipient`.
@@ -134,7 +134,6 @@ interface UTIL_TKN_Interface {
      */
     function allowance(address owner, address spender)
         external
-        view
         returns (uint256);
 
     /**
@@ -220,7 +219,7 @@ interface AC_TKN_Interface {
         address from,
         address to,
         uint256 tokenId
-    ) public override;
+    ) external;
 
     /**
      * @dev Safely transfers the ownership of a given token ID to another address
@@ -237,7 +236,7 @@ interface AC_TKN_Interface {
         address from,
         address to,
         uint256 tokenId
-    ) public override;
+    ) external;
 
     /**
      * @dev Safely transfers the ownership of a given token ID to another address
@@ -256,7 +255,7 @@ interface AC_TKN_Interface {
         address to,
         uint256 tokenId,
         bytes memory _data
-    ) public virtual override;
+    ) external;
 
     /**
      * @dev Returns the owner of the `tokenId` token.
@@ -269,6 +268,11 @@ interface AC_TKN_Interface {
         external
         view
         returns (address tokenHolderAdress);
+
+    /**
+     * @dev Returns the amount of tokens owned by `account`.
+     */
+    function balanceOf(address account) external returns (uint256);
 
     /**
      * @dev Returns the name of the token.
@@ -379,7 +383,7 @@ interface A_TKN_Interface {
         address from,
         address to,
         uint256 tokenId
-    ) public override;
+    ) external;
 
     /**
      * @dev Safely transfers the ownership of a given token ID to another address
@@ -396,7 +400,7 @@ interface A_TKN_Interface {
         address from,
         address to,
         uint256 tokenId
-    ) public override;
+    ) external;
 
     /**
      * @dev Safely transfers the ownership of a given token ID to another address
@@ -415,7 +419,7 @@ interface A_TKN_Interface {
         address to,
         uint256 tokenId,
         bytes memory _data
-    ) public virtual override;
+    ) external;
 
     /**
      * @dev Safely burns a token and sets the corresponding RGT to zero in storage.
@@ -425,10 +429,7 @@ interface A_TKN_Interface {
     /**
      * @dev Converts uint256 to string form @OpenZeppelin.
      */
-    function uint256toString(uint256 number)
-        public
-        pure
-        returns (string memory);
+    function uint256toString(uint256 number) external returns (string memory);
 
     /**
      * @dev Returns the owner of the `tokenId` token.
@@ -439,31 +440,27 @@ interface A_TKN_Interface {
      */
     function ownerOf(uint256 tokenId)
         external
-        view
         returns (address tokenHolderAdress);
 
     /**
      * @dev Returns the name of the token.
      */
-    function name() external view returns (string memory tokenName);
+    function name() external returns (string memory tokenName);
 
     /**
      * @dev Returns the token collection symbol.
      */
-    function symbol() external view returns (string memory tokenSymbol);
+    function symbol() external returns (string memory tokenSymbol);
 
     /**
      * @dev Returns the Uniform Resource Identifier (URI) for `tokenId` token.
      */
-    function tokenURI(uint256 tokenId)
-        external
-        view
-        returns (string memory URI);
+    function tokenURI(uint256 tokenId) external returns (string memory URI);
 
     /**
      * @dev Returns the total amount of tokens stored by the contract.
      */
-    function totalSupply() external view returns (uint256);
+    function totalSupply() external returns (uint256);
 
     /**
      * @dev Returns a token ID owned by `owner` at a given `index` of its token list.
@@ -471,14 +468,13 @@ interface A_TKN_Interface {
      */
     function tokenOfOwnerByIndex(address owner, uint256 index)
         external
-        view
         returns (uint256 tokenId);
 
     /**
      * @dev Returns a token ID at a given `index` of all the tokens stored by the contract.
      * Use along with {totalSupply} to enumerate all tokens.
      */
-    function tokenByIndex(uint256 index) external view returns (uint256);
+    function tokenByIndex(uint256 index) external returns (uint256);
 }
 
 /*
@@ -520,7 +516,7 @@ interface ID_TKN_Interface {
         address from,
         address to,
         uint256 tokenId
-    ) public override;
+    ) external;
 
     /**
      * @dev Safely blocks the transfer of a given token ID to another address
@@ -534,7 +530,7 @@ interface ID_TKN_Interface {
         address from,
         address to,
         uint256 tokenId
-    ) public override;
+    ) external;
 
     /**
      * @dev Safely blocks the transfer of a given token ID to another address
@@ -553,7 +549,7 @@ interface ID_TKN_Interface {
         address to,
         uint256 tokenId,
         bytes memory _data
-    ) public virtual override;
+    ) external;
 
     /**
      * @dev Returns the owner of the `tokenId` token.
@@ -566,6 +562,12 @@ interface ID_TKN_Interface {
         external
         view
         returns (address tokenHolderAdress);
+
+
+     /**
+     * @dev Returns the amount of tokens owned by `account`.
+     */
+    function balanceOf(address account) external returns (uint256);
 
     /**
      * @dev Returns the name of the token.

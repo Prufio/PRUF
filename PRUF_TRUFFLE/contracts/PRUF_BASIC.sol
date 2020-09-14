@@ -256,6 +256,7 @@ contract BASIC is ReentrancyGuard, Ownable, IERC721Receiver, Pausable {
     function getACinfo(uint32 _assetClass)
         internal
         virtual
+        view
         returns (AC memory)
     {
         //^^^^^^^checks^^^^^^^^^
@@ -277,6 +278,7 @@ contract BASIC is ReentrancyGuard, Ownable, IERC721Receiver, Pausable {
      */
     function getContractInfo(address _addr, uint32 _assetClass)
         internal
+        view
         returns (ContractDataHash memory)
     {
         ContractDataHash memory contractInfo;
@@ -289,7 +291,7 @@ contract BASIC is ReentrancyGuard, Ownable, IERC721Receiver, Pausable {
     /*
      * @dev Get a Record from Storage @ idxHash and return a Record Struct
      */
-    function getRecord(bytes32 _idxHash) internal returns (Record memory) {
+    function getRecord(bytes32 _idxHash) internal view returns (Record memory) {
         //^^^^^^^checks^^^^^^^^^
         Record memory rec;
         //^^^^^^^effects^^^^^^^^^
