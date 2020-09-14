@@ -48,12 +48,6 @@ pragma solidity ^0.6.7;
  *
  *      *Define / document protocol
  *
- *      *copy dev notes to interfaces
- *
- *      *make "pruf verify" contract, stores ipfs? with list of "held" assets?
- *
- *      *make ac tokens or asset tokens enumerable? (probably?)
- *
 *-----------------------------------------------------------------
 
 *-----------------------------------------------------------------
