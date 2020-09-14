@@ -11,7 +11,7 @@ import AuthorizedUserComponent from "./Resources/AuthorizedUserComponent";
 import BasicComponent from "./Resources/BasicComponent";
 import ParticleBox from './Resources/ParticleBox';
 import Router from "./Router";
-import { Link } from "react-router-dom";
+
 
 
 
@@ -212,7 +212,7 @@ class Main extends Component {
         <HashRouter>
           <div>
             <div className="imageForm">
-              <Link to="/"><img className="downSizeLogo" src={require("./Resources/pruf ar long.png")} alt="Pruf Logo" /></Link> 
+              <img className="downSizeLogo" src={require("./Resources/pruf ar long.png")} alt="Pruf Logo" />
               <div className="userData">
                 {this.state.addr > 0 && (
                   <div className="banner">
@@ -281,7 +281,7 @@ class Main extends Component {
                       onClick={() => { this.toggleMenu("authUser") }}
                     >
                       Authorized User Menu
-                    </Button>)}
+                      </Button>)}
                 </div>
               </div>
             </div>

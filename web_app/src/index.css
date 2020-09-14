@@ -151,7 +151,7 @@ h4 {
   height: 40rem;
   width: 75rem;
   color: white;
-  background-color: #206ab9;
+  background-color: #002a40;
   border-radius: 1rem;
   font-weight: bold;
   text-decoration: none;
@@ -302,7 +302,7 @@ h4 {
 }
 
 .FMRform {
-  height: 55rem;
+  height: 52rem;
   width: 59rem;
   background-color: #005480;
   border-radius: 0.5rem;
@@ -315,7 +315,7 @@ h4 {
 }
 
 .MEform {
-  height: 50rem;
+  height: 47rem;
   width: 59rem;
   background-color: #005480;
   border-radius: 0.5rem;
@@ -555,7 +555,7 @@ h4 {
 
 .ownerButtonDisplay {
   margin-left: 40rem;
-  margin-top: 5rem;
+  margin-top: 2rem;
 }
 .ownerButtonDisplay2 {
   margin-left: 40rem;
