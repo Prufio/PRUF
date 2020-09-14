@@ -104,7 +104,7 @@ class enableContract extends Component {
                 <Form.Control
                   placeholder="AuthLevel"
                   required
-                  type="number"
+                  type="text"
                   onChange={(e) => this.setState({ authLevel: e.target.value })}
                   size="lg"
                 />

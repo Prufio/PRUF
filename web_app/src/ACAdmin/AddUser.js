@@ -96,7 +96,7 @@ class AddUser extends Component {
                 <Form.Control
                   placeholder="User Type"
                   required
-                  type="number"
+                  type="text"
                   onChange={(e) => this.setState({ userType: e.target.value })}
                   size="lg"
                 />
