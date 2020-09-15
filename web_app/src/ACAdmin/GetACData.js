@@ -44,6 +44,7 @@ class GetACData extends Component {
 
     const getAC_data = async () => {
         let ref;
+        let tempData;
 
         if (
             this.state.assetClass.charAt(0) === "0" ||
@@ -63,15 +64,15 @@ class GetACData extends Component {
               ref ="name"
           }
       
-        let acDoesExist = await window.utils.checkForAC ("id", this.state.assetClass);
+        let acDoesExist = await window.utils.checkForAC (ref, this.state.assetClass);
         if (acDoesExist) {
-        else{alert("Asset class does not exist!")}
-            await window.utils.getACData (ref, this.state.assetClass)
+            let tempData = await window.utils.getACData (ref, this.state.assetClass)
                 await this.setState({
-                    ACData: window.ACData
+                    ACData: tempData
                 });
-                console.log(window.ACData);
-        };
+                console.log(tempData);
+        }
+        else{alert("Asset class does not exist!")}
     };
 
     return (
