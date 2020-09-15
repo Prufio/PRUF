@@ -118,7 +118,7 @@ class GetACData extends Component {
           <div className="GACDresults">
             Asset Class Found!
             <br></br>
-            AC : {this.state.assetClass}
+            AC : {this.state.ACData.AC}
             <br></br>
             Root AC : {this.state.ACData.root}
             <br></br>
