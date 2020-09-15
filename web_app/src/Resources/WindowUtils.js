@@ -198,8 +198,10 @@ function buildWindowUtils() {
 
       }
 
+      else if (ref === "id"){tempAC = ac;}
+
       await window.contracts.AC_MGR.methods
-        .getAC_data(ac)
+        .getAC_data(tempAC)
         .call({ from: window.addr }, (_error, _result) => {
           if (_error) { console.log("Error: ", _error) }
           else {
@@ -217,7 +219,8 @@ function buildWindowUtils() {
               root: Object.values(_result)[0],
               custodyType: _custodyType,
               discount: Object.values(_result)[2],
-              exData: Object.values(_result)[3]
+              exData: Object.values(_result)[3],
+              AC: tempAC
             }
           }
         });
