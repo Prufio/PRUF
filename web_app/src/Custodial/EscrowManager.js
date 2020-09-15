@@ -59,58 +59,6 @@ class EscrowManager extends Component {
   render() {//render continuously produces an up-to-date stateful document  
     const self = this;
 
-    async function checkExistsSet(idxHash) {
-      await window.contracts.STOR.methods
-        .retrieveShortRecord(idxHash)
-        .call({ from: self.state.addr }, function (_error, _result) {
-          if (_error) {
-            self.setState({ error: _error });
-            self.setState({ result: 0 });
-            alert(
-              "WARNING: Record DOES NOT EXIST! Reject in metamask and review asset info fields."
-            );
-          } else {
-            if (Object.values(_result)[2] === '6' || Object.values(_result)[2] === '12') {
-              alert("WARNING: Asset already in escrow! Reject in metamask and wait for active escrow status to expire.")
-            }
-            self.setState({ result1: _result });
-          }
-          console.log("check debug, _result, _error: ", _result, _error);
-        });
-    }
-
-    async function checkExistsEnd(idxHash) {
-      await window.contracts.STOR.methods
-        .retrieveShortRecord(idxHash)
-        .call({ from: self.state.addr }, function (_error, _result) {
-          if (_error) {
-            self.setState({ error: _error });
-            self.setState({ result: 0 });
-            alert(
-              "WARNING: Record DOES NOT EXIST! Reject in metamask and review asset info fields."
-            );
-          } else {
-            if (Object.values(_result)[2] !== '6' && Object.values(_result)[2] !== '12') {
-              alert("WARNING: Asset is not in escrow! Reject in metamask and check status in search.")
-            }
-            self.setState({ result1: _result });
-          }
-          console.log("check debug, _result, _error: ", _result, _error);
-        });
-    }
-    const _convertTimeTo = (rawTime, to) => {
-      var time;
-
-      if (to === "seconds") { time = rawTime }
-      else if (to === "minutes") { time = rawTime * 60 }
-      else if (to === "hours") { time = rawTime * 3600 }
-      else if (to === "days") { time = rawTime * 86400 }
-      else if (to === "weeks") { time = rawTime * 604800 }
-      else { alert("Invalid time unit") }
-      return (time);
-    }
-
-
     const _setEscrow = async () => {
       this.setState({ txStatus: false });
       this.setState({ txHash: "" });

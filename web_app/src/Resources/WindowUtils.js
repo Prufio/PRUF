@@ -178,14 +178,19 @@ function buildWindowUtils() {
 
   }
 
-  const _getACData = async () => {
+  const _getACData = async (ac) => {
     if (window.contracts !== undefined) {
       window.contracts.AC_MGR.methods
-        .getACData(window.assetClass)
+        .getAC_data(ac)
         .call({ from: window.addr }, (_error, _result) => {
           if (_error) { console.log("Error: ", _error) }
           else {
-            window.ACData = Object.values(_result)
+            window.ACData = {
+              root: Object.values(_result)[0],
+              custodyType: Object.values(_result)[1],
+              discount: Object.values(_result)[2],
+              exData: Object.values(_result)[3]
+            }
             console.log(window.ACData);
           }
         });
