@@ -178,9 +178,27 @@ function buildWindowUtils() {
 
   }
 
-  const _getACData = async (ac) => {
+  const _getACData = async (ref, ac) => {
+    let tempData;
+    let tempAC;
+
     if (window.contracts !== undefined) {
-      window.contracts.AC_MGR.methods
+
+      if (ref === "name") {
+        console.log("Using name ref")
+        await window.contracts.AC_MGR.methods
+          .resolveAssetClass(ac)
+          .call({ from: window.addr }, (_error, _result) => {
+            if (_error) { console.log("Error: ", _error) }
+            else {
+              if (Number(_result) > 0) { tempAC = Number(_result) }
+              else { return 0 }
+            }
+          });
+
+      }
+
+      await window.contracts.AC_MGR.methods
         .getAC_data(ac)
         .call({ from: window.addr }, (_error, _result) => {
           if (_error) { console.log("Error: ", _error) }
@@ -194,17 +212,17 @@ function buildWindowUtils() {
             else{
               _custodyType = "Non-Custodial"
             }
-            
-            window.ACData = {
+
+            tempData = {
               root: Object.values(_result)[0],
               custodyType: _custodyType,
               discount: Object.values(_result)[2],
               exData: Object.values(_result)[3]
             }
-            console.log(window.ACData);
           }
         });
-    }
+      return tempData;
+  }
 
   }
 

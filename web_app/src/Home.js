@@ -41,7 +41,6 @@ class Home extends Component {
   render() {
 
     const _setAC = async () => {
-      await window.utils.getACData(this.state.assetClass)
       let acDoesExist;
       if (this.state.assetClass === "0") { window.assetClass = undefined; return this.forceUpdate() }
       else {
