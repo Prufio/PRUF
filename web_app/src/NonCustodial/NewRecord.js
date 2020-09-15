@@ -2,7 +2,7 @@ import React, { Component } from "react";
 import Form from "react-bootstrap/Form";
 import Col from "react-bootstrap/Col";
 import Button from "react-bootstrap/Button";
-import returnManufacturers from "./Manufacturers";
+import returnManufacturers from "../Resources/Manufacturers";
 
 class NewRecordNC extends Component {
   constructor(props) {
@@ -45,26 +45,27 @@ class NewRecordNC extends Component {
 
   }
   componentDidUpdate() {//stuff to do on a re-render
-    
+
   }
 
   render() {//render continuously produces an up-to-date stateful document  
     const self = this;
 
-    async function tenThousandHashesOf(varToHash){
+    async function tenThousandHashesOf(varToHash) {
       var tempHash = varToHash;
-      for (var i = 0; i < 10000; i++){
-          tempHash = window.web3.utils.soliditySha3(tempHash);
-          console.log(tempHash);
+      for (var i = 0; i < 10000; i++) {
+        tempHash = window.web3.utils.soliditySha3(tempHash);
+        console.log(tempHash);
       }
       return tempHash;
-  }
+    }
 
     async function checkExists(idxHash) {//check whether record of asset exists in the database
       window.contracts.STOR.methods
         .retrieveShortRecord(idxHash)
         .call({ from: self.state.addr }, function (_error, _result) {
-          if (_error){ console.log("IN ERROR IN ERROR IN ERROR")
+          if (_error) {
+            console.log("IN ERROR IN ERROR IN ERROR")
             self.setState({ error: _error.message });
             self.setState({ result: 0 });
           } else if (
@@ -84,17 +85,17 @@ class NewRecordNC extends Component {
     const _newRecord = () => {//create a new asset record
       this.setState({ txStatus: false });
       this.setState({ txHash: "" });
-      this.setState({error: undefined})
-      this.setState({result: ""})
+      this.setState({ error: undefined })
+      this.setState({ result: "" })
       //reset state values before form resubmission
       var idxHash;
       var rgtRaw;
-      
+
       idxHash = window.web3.utils.soliditySha3(
-          this.state.type,
-          this.state.manufacturer,
-          this.state.model,
-          this.state.serial,
+        this.state.type,
+        this.state.manufacturer,
+        this.state.model,
+        this.state.serial,
       );
 
 
@@ -124,7 +125,7 @@ class NewRecordNC extends Component {
           window.assetClass,
           this.state.countDownStart
         )
-        .send({from: window.addr, value: window.costs.newRecordCost})
+        .send({ from: window.addr, value: window.costs.newRecordCost })
         .on("error", function (_error) {
           // self.setState({ NRerror: _error });
           self.setState({ txHash: Object.values(_error)[0].transactionHash });
@@ -136,7 +137,7 @@ class NewRecordNC extends Component {
           this.setState({ txStatus: receipt.status });
         });
 
-        document.getElementById("MainForm").reset(); //clear form inputs
+      document.getElementById("MainForm").reset(); //clear form inputs
     };
 
     return (//default render
@@ -153,7 +154,7 @@ class NewRecordNC extends Component {
               <h3>Please select asset class in home page to use forms.</h3>
             </div>
           )}
-          {window.addr > 0 && window.assetClass > 0 &&(
+          {window.addr > 0 && window.assetClass > 0 && (
             <div>
               <h2 className="Headertext">New Record</h2>
               <br></br>
@@ -166,8 +167,8 @@ class NewRecordNC extends Component {
                   </Form.Control>
                   )} */}
 
-                    {/* {returnTypes(window.assetClass, this.state.isNFA) === '0' &&( */}
-                    <Form.Control
+                  {/* {returnTypes(window.assetClass, this.state.isNFA) === '0' &&( */}
+                  <Form.Control
                     placeholder="Type"
                     required
                     onChange={(e) => this.setState({ type: e.target.value })}
@@ -175,26 +176,21 @@ class NewRecordNC extends Component {
                   />{/* )} */}
                 </Form.Group>
 
-                  <Form.Group as={Col} controlId="formGridManufacturer">
-                    <Form.Label className="formFont">Manufacturer:</Form.Label>
-                    {returnManufacturers(window.assetClass, this.state.isNFA) !== '0' &&(<Form.Control as="select" size="lg" onChange={(e) => this.setState({ manufacturer: e.target.value })}>
-                  {returnManufacturers(window.assetClass, this.state.isNFA)}
-                  </Form.Control>
-                  )}
+                <Form.Group as={Col} controlId="formGridManufacturer">
+                  <Form.Label className="formFont">Manufacturer:</Form.Label>
 
-                      {returnManufacturers(window.assetClass, this.state.isNFA) === '0' &&(
-                    <Form.Control
+                  <Form.Control
                     placeholder="Manufacturer"
                     required
                     onChange={(e) => this.setState({ manufacturer: e.target.value })}
                     size="lg"
-                  />)}
-                  </Form.Group>
+                  />
+                </Form.Group>
 
               </Form.Row>
 
               <Form.Row>
-              <Form.Group as={Col} controlId="formGridModel">
+                <Form.Group as={Col} controlId="formGridModel">
                   <Form.Label className="formFont">Model:</Form.Label>
                   <Form.Control
                     placeholder="Model"
@@ -284,25 +280,25 @@ class NewRecordNC extends Component {
                 </Form.Group>
 
               </Form.Row>
-                <Form.Row>
-                  <Form.Group className="buttonDisplay">
-                    <Button
-                      variant="primary"
-                      type="button"
-                      size="lg"
-                      onClick={_newRecord}
-                    >
-                      New Record
+              <Form.Row>
+                <Form.Group className="buttonDisplay">
+                  <Button
+                    variant="primary"
+                    type="button"
+                    size="lg"
+                    onClick={_newRecord}
+                  >
+                    New Record
                     </Button>
-                    <div className="LittleText"> Cost in AC {window.assetClass}: {Number(window.costs.newRecordCost)/1000000000000000000} ETH</div>
-                  </Form.Group>
-                  
-                  
-                </Form.Row>
+                  <div className="LittleText"> Cost in AC {window.assetClass}: {Number(window.costs.newRecordCost) / 1000000000000000000} ETH</div>
+                </Form.Group>
 
-                <br></br>
 
-                
+              </Form.Row>
+
+              <br></br>
+
+
             </div>
           )}
         </Form>

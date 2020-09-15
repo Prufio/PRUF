@@ -2,8 +2,7 @@ import React, { Component } from "react";
 import Form from "react-bootstrap/Form";
 import Col from "react-bootstrap/Col";
 import Button from "react-bootstrap/Button";
-import returnManufacturers from "./Manufacturers";
-import returnTypes from "./Types";
+
 
 class ModifyDescriptionNC extends Component {
   constructor(props) {
@@ -47,7 +46,7 @@ class ModifyDescriptionNC extends Component {
   }
 
   componentWillUnmount() {//stuff do do when component unmounts from the window
-    
+
   }
 
   componentDidUpdate() {//stuff to do when state updates
@@ -94,34 +93,22 @@ class ModifyDescriptionNC extends Component {
         });
     }
 
-    const handleCheckBox = () => {
-      let setTo;
-      if(this.state.isNFA === false){
-        setTo = true;
-      }
-      else if(this.state.isNFA === true){
-        setTo = false;
-      }
-      this.setState({isNFA: setTo});
-      console.log("Setting to: ", setTo);
-      this.setState({manufacturer: ""});
-      this.setState({type: ""});
-    }
+
 
     const _transferAsset = () => {
       this.setState({ txStatus: false });
       this.setState({ txHash: "" });
-      this.setState({error: undefined})
-      this.setState({result: ""})
+      this.setState({ error: undefined })
+      this.setState({ result: "" })
       var idxHash;
       var rgtRaw;
-      
+
       idxHash = window.web3.utils.soliditySha3(
         this.state.type,
         this.state.manufacturer,
         this.state.model,
         this.state.serial,
-    );
+      );
 
       rgtRaw = window.web3.utils.soliditySha3(
         this.state.first,
@@ -171,7 +158,7 @@ class ModifyDescriptionNC extends Component {
     return (
       <div>
         <Form className="TAform" id='MainForm'>
-        {window.addr === undefined && (
+          {window.addr === undefined && (
             <div className="errorResults">
               <h2>User address unreachable</h2>
               <h3>Please connect web3 provider.</h3>
@@ -182,54 +169,35 @@ class ModifyDescriptionNC extends Component {
               <h3>Please select asset class in home page to use forms.</h3>
             </div>
           )}
-          {window.addr > 0 && window.assetClass > 0 &&(
+          {window.addr > 0 && window.assetClass > 0 && (
             <div>
-                {window.assetClass === 3 &&(
-                <Form.Group>
-                <Form.Check
-                className = 'checkBox'
-                size = 'lg'
-                onChange={handleCheckBox}
-                id={`NFA Firearm`}
-                label={`NFA Firearm`}
-                />
-                </Form.Group>
-                )}
+
               <h2 className="Headertext">Transfer Asset</h2>
               <br></br>
               <Form.Row>
                 <Form.Group as={Col} controlId="formGridType">
                   <Form.Label className="formFont">Type:</Form.Label>
 
-                  {returnTypes(window.assetClass, this.state.isNFA) !== '0' &&(<Form.Control as="select" size="lg" onChange={(e) => this.setState({ type: e.target.value })}>
-                  {returnTypes(window.assetClass, this.state.isNFA)}
-                  </Form.Control>
-                  )}
 
-                    {returnTypes(window.assetClass, this.state.isNFA) === '0' &&(
-                    <Form.Control
+
+                  <Form.Control
                     placeholder="Type"
                     required
                     onChange={(e) => this.setState({ type: e.target.value })}
                     size="lg"
-                  />)}
+                  />
                 </Form.Group>
 
-                  <Form.Group as={Col} controlId="formGridManufacturer">
-                    <Form.Label className="formFont">Manufacturer:</Form.Label>
-                    {returnManufacturers(window.assetClass, this.state.isNFA) !== '0' &&(<Form.Control as="select" size="lg" onChange={(e) => this.setState({ manufacturer: e.target.value })}>
-                  {returnManufacturers(window.assetClass, this.state.isNFA)}
-                  </Form.Control>
-                  )}
+                <Form.Group as={Col} controlId="formGridManufacturer">
+                  <Form.Label className="formFont">Manufacturer:</Form.Label>
 
-                      {returnManufacturers(window.assetClass, this.state.isNFA) === '0' &&(
-                    <Form.Control
+                  <Form.Control
                     placeholder="Manufacturer"
                     required
                     onChange={(e) => this.setState({ manufacturer: e.target.value })}
                     size="lg"
-                  />)}
-                  </Form.Group>
+                  />
+                </Form.Group>
 
               </Form.Row>
               <Form.Row>
@@ -380,12 +348,12 @@ class ModifyDescriptionNC extends Component {
                   >
                     Transfer
                   </Button>
-                  <div className="LittleText"> Cost in AC {window.assetClass}: {Number(window.costs.transferAssetCost)/1000000000000000000} ETH</div>
+                  <div className="LittleText"> Cost in AC {window.assetClass}: {Number(window.costs.transferAssetCost) / 1000000000000000000} ETH</div>
                 </Form.Group>
-                </Form.Row>
-                
-                <br></br>
-                </div>
+              </Form.Row>
+
+              <br></br>
+            </div>
           )}
         </Form>
         {this.state.txHash > 0 && ( //conditional rendering
