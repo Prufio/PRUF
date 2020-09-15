@@ -432,8 +432,34 @@ h4 {
   opacity: 0.96;
 }
 
+.GACDForm{
+  height: 19rem;
+  width: 59rem;
+  background-color: #005480;
+  border-radius: 0.5rem;
+  padding: 2rem;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  margin-top: -2rem;
+  opacity: 0.96;
+}
+
 .RRresults {
   height: 16rem;
+  width: 59rem;
+  color: white;
+  background-color: #002a40;
+  border-radius: 0rem 0rem 1rem 1rem;
+  font-size: 1.3rem;
+  display: flex;
+  padding: 2rem;
+  justify-content: center;
+  align-items: center;
+}
+
+.GACDresults {
+  height: 10rem;
   width: 59rem;
   color: white;
   background-color: #002a40;

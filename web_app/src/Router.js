@@ -5,6 +5,7 @@ import SetCosts from "./ACAdmin/SetCosts"
 import EnableContract from "./ACAdmin/EnableContract"
 import AddUser from "./ACAdmin/AddUser"
 import UpdateACName from "./ACAdmin/UpdateACName"
+import GetACData from "./ACAdmin/GetACData"
 
 import AddNoteNC from "./NonCustodial/AddNote";
 import DecrementCounterNC from "./NonCustodial/DecrementCounter";
@@ -83,6 +84,7 @@ function Router(routeRequest) {
                 <Route path="/update-ac-name" component={UpdateACName} />
                 <Route path="/mint-pip-asset" component={MintPipAsset} />
                 <Route path="/claim-pip-asset" component={ClaimPipAsset} />
+                <Route path="/get-ac-data" component={GetACData} />
             </>)
     }
 
