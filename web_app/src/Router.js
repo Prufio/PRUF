@@ -49,8 +49,8 @@ function Router(routeRequest) {
                 <Route path="/export-asset" component={ExportAsset} />
                 <Route path="/verify-rights-holder" component={VerifyRightsholder} />
                 <Route path="/manage-escrow" component={EscrowManager} />
-                <Route path="/mintPipAsset" component={MintPipAsset} />
-                <Route path="/claimPipAsset" component={ClaimPipAsset} />
+                <Route path="/mint-pip-asset" component={MintPipAsset} />
+                <Route path="/claim-pip-asset" component={ClaimPipAsset} />
             </>
         )
     }
@@ -69,8 +69,8 @@ function Router(routeRequest) {
                 <Route path="/export-asset-NC" component={ExportAssetNC} />
                 <Route path="/verify-rights-holder-NC" component={VerifyRightsholderNC} />
                 <Route path="/manage-escrow-NC" component={EscrowManagerNC} />
-                <Route path="/mintPipAsset" component={MintPipAsset} />
-                <Route path="/claimPipAsset" component={ClaimPipAsset} />
+                <Route path="/mint-pip-asset" component={MintPipAsset} />
+                <Route path="/claim-pip-asset" component={ClaimPipAsset} />
             </>)
     }
 
@@ -81,8 +81,8 @@ function Router(routeRequest) {
                 <Route path="/enable-contract" component={EnableContract} />
                 <Route path="/set-costs" component={SetCosts} />
                 <Route path="/update-ac-name" component={UpdateACName} />
-                <Route path="/mintPipAsset" component={MintPipAsset} />
-                <Route path="/claimPipAsset" component={ClaimPipAsset} />
+                <Route path="/mint-pip-asset" component={MintPipAsset} />
+                <Route path="/claim-pip-asset" component={ClaimPipAsset} />
             </>)
     }
 
@@ -92,8 +92,8 @@ function Router(routeRequest) {
                 <Route path="/verify-lite" component={VerifyLite} />
                 <Route path="/verify-rights-holder" component={VerifyRightsholder} />
                 <Route path="/retrieve-record" component={RetrieveRecord} />
-                <Route path="/mintPipAsset" component={MintPipAsset} />
-                <Route path="/claimPipAsset" component={ClaimPipAsset} />
+                <Route path="/mint-pip-asset" component={MintPipAsset} />
+                <Route path="/claim-pip-asset" component={ClaimPipAsset} />
             </>
         )
     }
