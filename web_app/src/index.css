@@ -355,9 +355,9 @@ h4 {
 
 
 .ACForm{
-  height: 37.5rem;
+  height: 28.5rem;
   width: 59rem;
-  background-color: #be1a1a;
+  background-color: #005480;
   border-radius: 0.5rem;
   padding: 2rem;
   display: flex;
@@ -370,7 +370,7 @@ h4 {
 .AUForm{
   height: 37.5rem;
   width: 59rem;
-  background-color: #be1a1a;
+  background-color: #005480;
   border-radius: 0.5rem;
   padding: 2rem;
   display: flex;
@@ -381,9 +381,9 @@ h4 {
 }
 
 .SCForm{
-  height: 72rem;
+  height: 36rem;
   width: 59rem;
-  background-color: #be1a1a;
+  background-color: #005480;
   border-radius: 0.5rem;
   padding: 2rem;
   display: flex;
@@ -396,7 +396,7 @@ h4 {
 .OForm{
   height: 40rem;
   width: 59rem;
-  background-color: #be1a1a;
+  background-color: #005480;
   border-radius: 0.5rem;
   padding: 2rem;
   display: flex;
@@ -409,7 +409,7 @@ h4 {
 .RFMCForm{
   height: 30rem;
   width: 59rem;
-  background-color: #be1a1a;
+  background-color: #005480;
   border-radius: 0.5rem;
   padding: 2rem;
   display: flex;
