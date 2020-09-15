@@ -16,6 +16,9 @@ class AdminComponent extends Component {
             <li>
                 <NavLink to="/update-ac-name">Update Name</NavLink>
             </li>
+            <li>
+                <NavLink to="/get-ac-data">Get AC Data</NavLink>
+            </li>
         </>
         )
     }
