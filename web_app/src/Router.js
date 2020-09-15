@@ -29,6 +29,7 @@ import TransferAsset from "./Custodial/TransferAsset";
 import VerifyRightsholder from "./Custodial/VerifyRightsholder";
 import EscrowManager from "./Custodial/EscrowManager";
 import ExportAsset from "./Custodial/ExportAsset";
+import VerifyLite from "./Custodial/VerifyLite"
 
 import MintPipAsset from "./Pip/MintPipAsset";
 import ClaimPipAsset from "./Pip/ClaimPipAsset";
@@ -36,7 +37,7 @@ import ClaimPipAsset from "./Pip/ClaimPipAsset";
 function Router(routeRequest) {
     if (routeRequest === "authUser") {
         return (
-            <>
+            <>  
                 <Route path="/new-record" component={NewRecord} />
                 <Route path="/retrieve-record" component={RetrieveRecord} />
                 <Route path="/force-modify-record" component={ForceModifyRecord} />
@@ -88,6 +89,7 @@ function Router(routeRequest) {
     else if (routeRequest === "basic") {
         return (
             <>
+                <Route path="/verify-lite" component={VerifyLite} />
                 <Route path="/verify-rights-holder" component={VerifyRightsholder} />
                 <Route path="/retrieve-record" component={RetrieveRecord} />
                 <Route path="/mintPipAsset" component={MintPipAsset} />

@@ -58,28 +58,6 @@ class ForceModifyRecord extends Component {
   render() {//render continuously produces an up-to-date stateful document  
     const self = this;
 
-    async function checkExists(idxHash) {
-      await window.contracts.STOR.methods
-        .retrieveShortRecord(idxHash)
-        .call({ from: self.state.addr }, function (_error, _result) {
-          console.log(_result);
-          if (_error) {
-          } else if (Object.values(_result)[4] === "0") {
-            self.setState({ error: _error });
-            self.setState({ result: 0 });
-            alert(
-              "WARNING: Record DOES NOT EXIST! Reject in metamask and review asset info fields."
-            );
-          } else {
-            self.setState({ result: _result });
-            alert(
-              "WARNING: Modifying a record will permanently delete existing owner data."
-            );
-          }
-          console.log("check debug, _result, _error: ", _result, _error);
-        });
-    }
-
     const handleCheckBox = () => {
       let setTo;
       if(this.state.isNFA === false){
@@ -94,7 +72,7 @@ class ForceModifyRecord extends Component {
       this.setState({type: ""});
     }
 
-    const _importAsset = () => {
+    const _importAsset = async () => {
       this.setState({ txStatus: false });
       this.setState({ txHash: "" });
       this.setState({error: undefined})
@@ -120,7 +98,10 @@ class ForceModifyRecord extends Component {
       console.log("New rgtHash", rgtHash);
       console.log("addr: ", window.addr);
 
-      checkExists(idxHash);
+      var doesExist = await window.utils.checkAssetExists(idxHash);
+      if (!doesExist){
+        return alert("Asset doesnt exist! Ensure data fields are correct before submission.")
+      }
 
       window.contracts.APP.methods
         .$importAsset(idxHash, rgtHash, this.window.assetClass)
@@ -138,6 +119,7 @@ class ForceModifyRecord extends Component {
           //Stuff to do when tx confirms
         });
       console.log(this.state.txHash);
+      return document.getElementById("MainForm").reset();
     };
 
     const _forceModifyRecord = () => {
@@ -169,7 +151,11 @@ class ForceModifyRecord extends Component {
       console.log("New rgtHash", newRgtHash);
       console.log("addr: ", window.addr);
 
-      checkExists(idxHash);
+      var doesExist = await window.utils.checkAssetExists(idxHash);
+
+      if (!doesExist){
+        return alert("Asset doesnt exist! Ensure data fields are correct before submission.")
+      }
 
       window.contracts.APP.methods
         .$forceModRecord(idxHash, newRgtHash)
@@ -188,7 +174,7 @@ class ForceModifyRecord extends Component {
         });
 
       console.log(this.state.txHash);
-      document.getElementById("MainForm").reset();
+      return document.getElementById("MainForm").reset();
     };
 
     return (

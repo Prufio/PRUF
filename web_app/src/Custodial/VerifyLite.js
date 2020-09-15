@@ -5,8 +5,7 @@ import Button from "react-bootstrap/Button";
 import returnManufacturers from "./Manufacturers";
 import returnTypes from "./Types";
 
-
-class DecrementCounter extends Component {
+class VerifyLite extends Component {
   constructor(props) {
     super(props);
 
@@ -15,11 +14,13 @@ class DecrementCounter extends Component {
     this.state = {
       addr: "",
       error: undefined,
-      NRerror: undefined,
+      error1: undefined,
       result: "",
+      result1: "",
       assetClass: undefined,
-      countDown: "",
+      ipfs1: "",
       txHash: "",
+      txStatus: false,
       type: "",
       manufacturer: "",
       model: "",
@@ -27,7 +28,6 @@ class DecrementCounter extends Component {
       first: "",
       middle: "",
       surname: "",
-      txStatus: false,
       id: "",
       secret: "",
       isNFA: false,
@@ -37,6 +37,10 @@ class DecrementCounter extends Component {
   //component state-change events......................................................................................................
 
   componentDidMount() {//stuff to do when component mounts in window
+ 
+  }
+
+  componentWillUnmount() {//stuff do do when component unmounts from the window
 
   }
 
@@ -44,63 +48,10 @@ class DecrementCounter extends Component {
 
   }
 
-  componentWillUnmount() {//stuff do do when component unmounts from the window
-
-  }
-
   render() {//render continuously produces an up-to-date stateful document  
     const self = this;
 
-    async function checkExists(idxHash) {
-      await window.contracts.STOR.methods
-        .retrieveShortRecord(idxHash)
-        .call({ from: self.state.addr }, function (_error, _result) {
-          if (_error) {
-            self.setState({ error: _error });
-            self.setState({ result: 0 });
-            alert(
-              "WARNING: Record DOES NOT EXIST! Reject in metamask and review asset info fields."
-            );
-          } else {
-            self.setState({ result: _result });
-          }
-          console.log("check debug, _result, _error: ", _result, _error);
-        });
-    }
-
-    async function checkMatch(idxHash, rgtHash) {
-      await window.contracts.STOR.methods
-        ._verifyRightsHolder(idxHash, rgtHash)
-        .call({ from: self.state.addr }, function (_error, _result) {
-          if (_error) {
-            self.setState({ error: _error });
-          } else if (_result === "0") {
-            self.setState({ result: 0 });
-            alert(
-              "WARNING: Record DOES NOT MATCH supplied owner info! Reject in metamask and review owner info fields."
-            );
-          } else {
-            self.setState({ result: _result });
-          }
-          console.log("check debug, _result, _error: ", _result, _error);
-        });
-    }
-
-    const handleCheckBox = () => {
-      let setTo;
-      if(this.state.isNFA === false){
-        setTo = true;
-      }
-      else if(this.state.isNFA === true){
-        setTo = false;
-      }
-      this.setState({isNFA: setTo});
-      console.log("Setting to: ", setTo);
-      this.setState({manufacturer: ""});
-      this.setState({type: ""});
-    }
-
-    const _decrementCounter = async () => {
+    const _verify = () => {
       this.setState({ txStatus: false });
       this.setState({ txHash: "" });
       this.setState({error: undefined})
@@ -125,13 +76,9 @@ class DecrementCounter extends Component {
       var rgtHash = window.web3.utils.soliditySha3(idxHash, rgtRaw);
 
       console.log("idxHash", idxHash);
-      console.log("New rgtRaw", rgtRaw);
-      console.log("New rgtHash", rgtHash);
       console.log("addr: ", window.addr);
-      console.log("Data: ", this.state.countDown);
 
       var doesExist = await window.utils.checkAssetExists(idxHash);
-      var noteExists = await window.utils.checkNoteExists(idxHash);
       var infoMatches = await window.utils.checkMatch(idxHash, rgtHash);
 
       if (!doesExist){
@@ -142,29 +89,15 @@ class DecrementCounter extends Component {
         return alert("Owner data fields do not match data on record. Ensure data fields are correct before submission.")
       }
 
-      window.contracts.NP.methods
-        ._decCounter(idxHash, rgtHash, this.state.countDown)
-        .send({ from: window.addr })
-        .on("error", function (_error) {
-          // self.setState({ NRerror: _error });
-          self.setState({ txHash: Object.values(_error)[0].transactionHash });
-          self.setState({ txStatus: false });
-          console.log(Object.values(_error)[0].transactionHash);
-        })
-        .on("receipt", (receipt) => {
-          this.setState({ txHash: receipt.transactionHash });
-          this.setState({ txStatus: receipt.status });
-          console.log(receipt.status);
-          //Stuff to do when tx confirms
-        });
+        self.setState({ result: "170" });
+        console.log("verify.call result: ", _result);
 
-      console.log(this.state.txHash);
-      return document.getElementById("MainForm").reset();
+        return document.getElementById("MainForm").reset();
     };
 
     return (
       <div>
-        <Form className="DCform" id='MainForm'>
+        <Form className="VRform" id='MainForm'>
         {window.addr === undefined && (
             <div className="errorResults">
               <h2>User address unreachable</h2>
@@ -189,7 +122,7 @@ class DecrementCounter extends Component {
                 />
                 </Form.Group>
                 )}
-              <h2 className="Headertext">Decrement Counter</h2>
+              <h2 className="Headertext">Verify Lite</h2>
               <br></br>
               <Form.Row>
                 <Form.Group as={Col} controlId="formGridType">
@@ -226,6 +159,7 @@ class DecrementCounter extends Component {
                   </Form.Group>
 
               </Form.Row>
+
               <Form.Row>
                 <Form.Group as={Col} controlId="formGridModel">
                   <Form.Label className="formFont">Model:</Form.Label>
@@ -301,28 +235,15 @@ class DecrementCounter extends Component {
                     size="lg"
                   />
                 </Form.Group>
-
-                <Form.Group as={Col} controlId="formGridCountdown">
-                  <Form.Label className="formFont">
-                    Countdown Amount:
-                  </Form.Label>
-                  <Form.Control
-                    placeholder="Countdown Amount"
-                    required
-                    onChange={(e) =>
-                      this.setState({ countDown: e.target.value })
-                    }
-                    size="lg"
-                  />
-                </Form.Group>
               </Form.Row>
+
               <Form.Row>
                 <Form.Group className="buttonDisplay">
                   <Button
                     variant="primary"
                     type="button"
                     size="lg"
-                    onClick={_decrementCounter}
+                    onClick={_verify}
                   >
                     Submit
                   </Button>
@@ -331,38 +252,16 @@ class DecrementCounter extends Component {
             </div>
           )}
         </Form>
+
         {this.state.txHash > 0 && ( //conditional rendering
-          <div className="Results">
-            {this.state.txStatus === false && (
-              <div>
-                !ERROR! :
-                <a
-                  href={"https://kovan.etherscan.io/tx/" + this.state.txHash}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                >
-                  KOVAN Etherscan:{this.state.txHash}
-                </a>
-              </div>
-            )}
-            {this.state.txStatus === true && (
-              <div>
-                {" "}
-                No Errors Reported :
-                <a
-                  href={"https://kovan.etherscan.io/tx/" + this.state.txHash}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                >
-                  KOVAN Etherscan:{this.state.txHash}
-                </a>
-              </div>
-            )}
+          <div className="VRHresults">
+            {this.state.result === "170"
+              ? "Match Confirmed :"
+              : "Record does not match :"}
           </div>
         )}
       </div>
     );
   }
 }
-
-export default DecrementCounter;
+export default VerifyLite;

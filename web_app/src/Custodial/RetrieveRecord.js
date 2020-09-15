@@ -101,7 +101,7 @@ class RetrieveRecord extends Component {
       this.setState({type: ""});
     }
 
-    const _retrieveRecord = () => {
+    const _retrieveRecord = async () => {
       const self = this;
       var idxHash;
       

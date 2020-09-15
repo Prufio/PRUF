@@ -46,25 +46,6 @@ class ExportAsset extends Component {
   render() {//render continuously produces an up-to-date stateful document  
     const self = this;
 
-    
-
-    async function checkExists(idxHash) {
-      await window.contracts.STOR.methods
-        .retrieveShortRecord(idxHash)
-        .call({ from: self.state.addr }, function (_error, _result) {
-          if (_error) {
-            self.setState({ error: _error });
-            self.setState({ result: 0 });
-            alert(
-              "WARNING: Record DOES NOT EXIST! Reject in metamask and review asset info fields."
-            );
-          } else {
-            self.setState({ result1: _result });
-          }
-          console.log("check debug, _result, _error: ", _result, _error);
-        });
-    }
-
     const _exportAsset = async () => {//create a new asset record
       this.setState({ txStatus: false });
       this.setState({ txHash: "" });
@@ -83,7 +64,10 @@ class ExportAsset extends Component {
       console.log("idxHash", idxHash);
       console.log("addr: ", this.state.agentAddress);
 
-      checkExists(idxHash);
+      var doesExist = await window.utils.checkAssetExists(idxHash);
+      if (!doesExist){
+        return alert("Asset doesnt exist! Ensure data fields are correct before submission.")
+      }
 
       window.contracts.NP.methods
         .exportAsset(
@@ -101,7 +85,7 @@ class ExportAsset extends Component {
           this.setState({ txStatus: receipt.status });
         });
 
-        document.getElementById("MainForm").reset(); //clear form inputs
+        return document.getElementById("MainForm").reset(); //clear form inputs
     };
 
     return (//default render

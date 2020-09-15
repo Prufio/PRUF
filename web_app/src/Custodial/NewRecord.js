@@ -51,37 +51,7 @@ class NewRecord extends Component {
   render() {//render continuously produces an up-to-date stateful document  
     const self = this;
 
-    async function tenThousandHashesOf(varToHash){
-      var tempHash = varToHash;
-      for (var i = 0; i < 10000; i++){
-          tempHash = window.web3.utils.soliditySha3(tempHash);
-          console.log(tempHash);
-      }
-      return tempHash;
-  }
-
-    async function checkExists(idxHash) {//check whether record of asset exists in the database
-      window.contracts.STOR.methods
-        .retrieveShortRecord(idxHash)
-        .call({ from: self.state.addr }, function (_error, _result) {
-          if (_error){ console.log("IN ERROR IN ERROR IN ERROR")
-            self.setState({ error: _error.message });
-            self.setState({ result: 0 });
-          } else if (
-            Object.values(_result)[4] ===
-            "0"
-          ) {
-          } else {
-            self.setState({ result: _result });
-            alert(
-              "WARNING: Record already exists! Reject in metamask and change asset info."
-            );
-          }
-          console.log("In checkExists, _result, _error: ", _result, _error);
-        });
-    }
-
-    const _newRecord = () => {//create a new asset record
+    const _newRecord = async () => {//create a new asset record
       this.setState({ txStatus: false });
       this.setState({ txHash: "" });
       this.setState({error: undefined})
@@ -115,9 +85,10 @@ class NewRecord extends Component {
       console.log("addr: ", window.addr);
       console.log(window.assetClass);
 
-      checkExists(idxHash);
+      var doesExist = window.utils.checkAssetExists(idxHash);
 
-      window.contracts.APP.methods
+      if(!doesExist){
+        window.contracts.APP.methods
         .$newRecord(
           idxHash,
           rgtHash,
@@ -135,8 +106,10 @@ class NewRecord extends Component {
           this.setState({ txHash: receipt.transactionHash });
           this.setState({ txStatus: receipt.status });
         });
+      }
+        else{alert("Record already exists! Try again.")}
 
-        document.getElementById("MainForm").reset(); //clear form inputs
+        return document.getElementById("MainForm").reset(); //clear form inputs
     };
 
     return (//default render

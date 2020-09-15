@@ -73,59 +73,8 @@ class AddNote extends Component {
     else{alert("No file chosen for upload!")}
     };
 
-    async function checkExists(idxHash) {
-      await window.contracts.STOR.methods
-        .retrieveShortRecord(idxHash)
-        .call({ from: self.state.addr }, function (_error, _result) {
-          if (_error) {
-            self.setState({ error: _error });
-            self.setState({ result: 0 });
-            alert(
-              "WARNING: Record DOES NOT EXIST! Reject in metamask and review asset info fields."
-            );
-          } else {
-            if (Object.values(_result)[8] > 0) {
-              alert("Cannot overwrite existing note! Transaction will fail!");
-            }
-            self.setState({ result: _result });
-          }
-          console.log("check debug, _result, _error: ", _result, _error);
-        });
-    }
+    const setIPFS2 = async () => {
 
-    async function checkMatch(idxHash, rgtHash) {
-      await window.contracts.STOR.methods
-        ._verifyRightsHolder(idxHash, rgtHash)
-        .call({ from: self.state.addr }, function (_error, _result) {
-          if (_error) {
-            self.setState({ error: _error });
-          } else if (_result === "0") {
-            self.setState({ result: 0 });
-            alert(
-              "WARNING: Record DOES NOT MATCH supplied owner info! Reject in metamask and review owner fields."
-            );
-          } else {
-            self.setState({ result: _result });
-          }
-          console.log("check debug, _result, _error: ", _result, _error);
-        });
-    }
-
-    const handleCheckBox = () => {
-      let setTo;
-      if(this.state.isNFA === false){
-        setTo = true;
-      }
-      else if(this.state.isNFA === true){
-        setTo = false;
-      }
-      this.setState({isNFA: setTo});
-      console.log("Setting to: ", setTo);
-      this.setState({manufacturer: ""});
-      this.setState({type: ""});
-    }
-
-    const setIPFS2 = () => {
       this.setState({ txStatus: false });
       this.setState({ txHash: "" });
       this.setState({error: undefined})
@@ -153,11 +102,24 @@ class AddNote extends Component {
       console.log("idxHash", idxHash);
       console.log("New rgtRaw", rgtRaw);
       console.log("addr: ", window.addr);
+      
+      var noteExists = await window.utils.checkNoteExists(idxHash);
+      var doesExist = await window.utils.checkAssetExists(idxHash);
+      var infoMatches = await window.utils.checkMatch(idxHash, rgtHash);
 
-      checkExists(idxHash);
-      checkMatch(idxHash, rgtHash);
+      if (!doesExist){
+        return alert("Asset doesnt exist! Ensure data fields are correct before submission.")
+      }
 
-      window.contracts.APP.methods
+      if (!infoMatches){
+        return alert("Owner data fields do not match data on record. Ensure data fields are correct before submission.")
+      }
+
+      if (noteExists){
+        return alert("Asset note already exists! Cannot overwrite existing note.")
+      }
+
+        await window.contracts.APP.methods
         .$addIpfs2Note(idxHash, rgtHash, this.state.hashPath)
         .send({ from: window.addr, value: window.costs.createNoteCost })
         .on("error", function (_error) {
@@ -172,9 +134,11 @@ class AddNote extends Component {
           console.log(receipt.status);
           //Stuff to do when tx confirms
         });
+      
+     
 
       console.log(this.state.txHash);
-      document.getElementById("MainForm").reset();
+      return document.getElementById("MainForm").reset();
     };
 
     return (

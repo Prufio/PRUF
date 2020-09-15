@@ -61,55 +61,6 @@ class EscrowManager extends Component {
   render() {//render continuously produces an up-to-date stateful document  
     const self = this;
 
-    async function checkExistsSet(idxHash) {
-      await window.contracts.STOR.methods
-        .retrieveShortRecord(idxHash)
-        .call({ from: self.state.addr }, function (_error, _result) {
-          if (_error) {
-            self.setState({ error: _error });
-            self.setState({ result: 0 });
-            alert(
-              "WARNING: Record DOES NOT EXIST! Reject in metamask and review asset info fields."
-            );
-          }else {
-            if (Object.values(_result)[2] === '6' || Object.values(_result)[2] === '12'){
-                alert("WARNING: Asset already in escrow! Reject in metamask and wait for active escrow status to expire.")}
-            self.setState({ result1: _result });
-          }
-          console.log("check debug, _result, _error: ", _result, _error);
-        });
-    }
-
-    async function checkExistsEnd(idxHash) {
-        await window.contracts.STOR.methods
-          .retrieveShortRecord(idxHash)
-          .call({ from: self.state.addr }, function (_error, _result) {
-            if (_error) {
-              self.setState({ error: _error });
-              self.setState({ result: 0 });
-              alert(
-                "WARNING: Record DOES NOT EXIST! Reject in metamask and review asset info fields."
-              );
-            }else {
-              if (Object.values(_result)[2] !== '6' && Object.values(_result)[2] !== '12'){
-                  alert("WARNING: Asset is not in escrow! Reject in metamask and check status in search.")}
-              self.setState({ result1: _result });
-            }
-            console.log("check debug, _result, _error: ", _result, _error);
-          });
-      }
-    const _convertTimeTo = (rawTime, to) => {
-        var time;
-
-        if      (to === "seconds") {time = rawTime}
-        else if (to === "minutes") {time = rawTime*60}
-        else if (to === "hours") {time = rawTime*3600}
-        else if (to === "days") {time = rawTime*86400}
-        else if (to === "weeks") {time = rawTime*604800}
-        else{alert("Invalid time unit")}
-        return (time);
-    }
-
     const handleCheckBox = () => {
       let setTo;
       if(this.state.isNFA === false){
@@ -124,7 +75,7 @@ class EscrowManager extends Component {
       this.setState({type: ""});
     }
 
-    const _setEscrow = () => {
+    const _setEscrow = async () => {
       this.setState({ txStatus: false });
       this.setState({ txHash: "" });
       this.setState({error: undefined})
@@ -142,10 +93,11 @@ class EscrowManager extends Component {
       console.log("addr: ", window.addr);
       console.log("time: ", this.state.escrowTime, "format: ", this.state.timeFormat);
 
-      checkExistsSet(idxHash);
+      isInEscrow = await window.utils.checkEscrowStatus(idxHash);
+      if(isInEscrow){return alert("Asset already in an escrow status. End current escrow to set new escrow conditions")}
 
       window.contracts.ECR.methods
-        .setEscrow(idxHash, _convertTimeTo(this.state.escrowTime, this.state.timeFormat), this.state.newStatus, window.web3.utils.soliditySha3(this.state.agent))
+        .setEscrow(idxHash, window.utils._convertTimeTo(this.state.escrowTime, this.state.timeFormat), this.state.newStatus, window.web3.utils.soliditySha3(this.state.agent))
         .send({ from: window.addr})
         .on("error", function (_error) {
           // self.setState({ NRerror: _error });
@@ -160,14 +112,15 @@ class EscrowManager extends Component {
           //Stuff to do when tx confirms
         });
       console.log(this.state.txHash);
-      document.getElementById("MainForm").reset();
+      return document.getElementById("MainForm").reset();
     };
 
-    const _endEscrow = () => {
+    const _endEscrow = async () => {
       this.setState({ txStatus: false });
       this.setState({ txHash: "" });
       this.setState({error: undefined})
       this.setState({result: ""})
+
         var idxHash = window.web3.utils.soliditySha3(
           this.state.type,
           this.state.manufacturer,
@@ -178,7 +131,8 @@ class EscrowManager extends Component {
         console.log("idxHash", idxHash);
         console.log("addr: ", window.addr);
   
-        checkExistsEnd(idxHash);
+        isInEscrow = await window.utils.checkEscrowStatus(idxHash);
+        if(isInEscrow){return alert("Asset is not in an escrow status.")}
   
         window.contracts.ECR.methods
           .endEscrow(idxHash)
@@ -196,7 +150,7 @@ class EscrowManager extends Component {
             //Stuff to do when tx confirms
           });
         console.log(this.state.txHash);
-        document.getElementById("MainForm").reset();
+        return document.getElementById("MainForm").reset();
       };
 
     return (
