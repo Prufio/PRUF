@@ -107,7 +107,7 @@ class ForceModifyRecord extends Component {
       return document.getElementById("MainForm").reset();
     };
 
-    const _forceModifyRecord = () => {
+    const _forceModifyRecord = async () => {
       this.setState({ txStatus: false });
       this.setState({ txHash: "" });
       this.setState({ error: undefined })

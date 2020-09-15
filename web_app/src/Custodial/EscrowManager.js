@@ -129,7 +129,7 @@ class EscrowManager extends Component {
       console.log("addr: ", window.addr);
       console.log("time: ", this.state.escrowTime, "format: ", this.state.timeFormat);
 
-      isInEscrow = await window.utils.checkEscrowStatus(idxHash);
+      var isInEscrow = await window.utils.checkEscrowStatus(idxHash);
       if(isInEscrow){return alert("Asset already in an escrow status. End current escrow to set new escrow conditions")}
 
       window.contracts.ECR.methods
@@ -167,7 +167,7 @@ class EscrowManager extends Component {
         console.log("idxHash", idxHash);
         console.log("addr: ", window.addr);
   
-        isInEscrow = await window.utils.checkEscrowStatus(idxHash);
+        var isInEscrow = await window.utils.checkEscrowStatus(idxHash);
         if(isInEscrow){return alert("Asset is not in an escrow status.")}
   
         window.contracts.ECR.methods
@@ -188,30 +188,6 @@ class EscrowManager extends Component {
         console.log(this.state.txHash);
         return document.getElementById("MainForm").reset();
       };
-
-      console.log("idxHash", idxHash);
-      console.log("addr: ", window.addr);
-
-      checkExistsEnd(idxHash);
-
-      window.contracts.ECR.methods
-        .endEscrow(idxHash)
-        .send({ from: window.addr })
-        .on("error", function (_error) {
-          // self.setState({ NRerror: _error });
-          self.setState({ txHash: Object.values(_error)[0].transactionHash });
-          self.setState({ txStatus: false });
-          console.log(Object.values(_error)[0].transactionHash);
-        })
-        .on("receipt", (receipt) => {
-          this.setState({ txHash: receipt.transactionHash });
-          this.setState({ txStatus: receipt.status });
-          console.log(receipt.status);
-          //Stuff to do when tx confirms
-        });
-      console.log(this.state.txHash);
-      document.getElementById("MainForm").reset();
-    };
 
     return (
       <div>

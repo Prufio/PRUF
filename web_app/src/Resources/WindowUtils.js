@@ -1,96 +1,101 @@
 function buildWindowUtils() {
 
-    //UTIL_TKN.methods.currentACtokenInfo
+  //UTIL_TKN.methods.currentACtokenInfo
 
-    const _tenThousandHashesOf = async (varToHash) => {
-      var tempHash = varToHash;
-      for (var i = 0; i < 10000; i++){
-          tempHash = window.web3.utils.soliditySha3(tempHash);
-          console.log(tempHash);
-      }
-      return tempHash;
+  const _tenThousandHashesOf = (varToHash) => {
+    var tempHash = varToHash;
+    for (var i = 0; i < 10000; i++) {
+      tempHash = window.web3.utils.soliditySha3(tempHash);
+      console.log(tempHash);
+    }
+    return tempHash;
   }
 
   const _convertTimeTo = (rawTime, to) => {
     var time;
-
-    if      (to === "seconds") {time = rawTime}
-    else if (to === "minutes") {time = rawTime*60}
-    else if (to === "hours") {time = rawTime*3600}
-    else if (to === "days") {time = rawTime*86400}
-    else if (to === "weeks") {time = rawTime*604800}
-    else{alert("Invalid time unit")}
+    if (to === "seconds") { time = rawTime }
+    else if (to === "minutes") { time = rawTime * 60 }
+    else if (to === "hours") { time = rawTime * 3600 }
+    else if (to === "days") { time = rawTime * 86400 }
+    else if (to === "weeks") { time = rawTime * 604800 }
+    else { alert("Invalid time unit") }
     return (time);
-}
+  }
 
-    const _checkAssetExists = async (idxHash) => {
-      await window.contracts.STOR.methods
-        .retrieveShortRecord(idxHash)
-        .call({ from: self.state.addr }, function (_error, _result) {
-          if (_error){ return(console.log("IN ERROR IN ERROR IN ERROR"))
-          } else if (
-            Object.values(_result)[4] ===
-            "0"
-          ) { return (false)
-          } else {
-            return (true)
+  const _checkAssetExists = async (idxHash) => {
+    await window.contracts.STOR.methods
+      .retrieveShortRecord(idxHash)
+      .call({ from: window.addr }, function (_error, _result) {
+        if (_error) {
+          return (console.log("IN ERROR IN ERROR IN ERROR"))
+        } else if (
+          Object.values(_result)[4] ===
+          "0"
+        ) {
+          return (false)
+        } else {
+          return (true)
+        }
+
+      });
+  }
+
+  const _checkMatch = async (idxHash, rgtHash) => {
+    await window.contracts.STOR.methods
+      ._verifyRightsHolder(idxHash, rgtHash)
+      .call({ from: window.addr }, function (_error, _result) {
+        if (_error) {
+          console.log(_error);
+        } else if (_result === "0") {
+          return (false)
+        } else {
+          return (true)
+        }
+        console.log("check debug, _result, _error: ", _result, _error);
+      });
+  }
+
+  const _checkEscrowStatus = async (idxHash) => {
+    await window.contracts.STOR.methods
+      .retrieveShortRecord(idxHash)
+      .call({ from: window.addr }, function (_error, _result) {
+        if (_error) {
+          console.log(_error);
+        } else if (Object.values(_result)[2] === '6' || Object.values(_result)[2] === '12') {
+          return true
+        }
+        else { return false }
+      });
+  }
+
+  const _checkNoteExists = async (idxHash) => {
+    await window.contracts.STOR.methods
+      .retrieveShortRecord(idxHash)
+      .call({ from: window.addr }, function (_error, _result) {
+        if (_error) {
+          return (console.log("IN ERROR IN ERROR IN ERROR"))
+        } else if (
+          Object.values(_result)[8] > 0
+        ) {
+          return (true)
+        } else {
+          return (false)
+        }
+
+      });
+  }
+
+  const _resolveAC = async () => {
+    if (window.contracts !== undefined) {
+      await window.contracts.AC_MGR.methods
+        .resolveAssetClass(window.assetClassName)
+        .call({ from: window.addr }, (_error, _result) => {
+          if (_error) { console.log("Error: ", _error) }
+          else {
+            window.assetClass = _result
+            console.log("resolved AC name ", window.assetClassName, " as: ", window.assetClass);
           }
-          
         });
-    }
-
-    const _checkMatch = (idxHash, rgtHash) => {
-      await window.contracts.STOR.methods
-        ._verifyRightsHolder(idxHash, rgtHash)
-        .call({ from: self.state.addr }, function (_error, _result) {
-          if (_error) { console.log(error);
-          } else if (_result === "0") {
-          return(false)
-          } else {
-            return(true)
-          }
-          console.log("check debug, _result, _error: ", _result, _error);
-        });
-    }
-
-    async function _checkEscrowStatus(idxHash) {
-      await window.contracts.STOR.methods
-        .retrieveShortRecord(idxHash)
-        .call({ from: self.state.addr }, function (_error, _result) {
-          if (_error) { console.log(error);
-          }else if (Object.values(_result)[2] === '6' || Object.values(_result)[2] === '12'){
-                return true
-          }
-          else{return false}
-        });
-    }
-
-    const _checkNoteExists = async (idxHash) => {
-      await window.contracts.STOR.methods
-        .retrieveShortRecord(idxHash)
-        .call({ from: self.state.addr }, function (_error, _result) {
-          if (_error){ return(console.log("IN ERROR IN ERROR IN ERROR"))
-          } else if (
-            Object.values(_result)[8] > 0
-          ) { return (true)
-          } else {
-            return (false)
-          }
-          
-        });
-    }
-
-    const _resolveAC = async () => {
-      if (window.contracts !== undefined) {
-        await window.contracts.AC_MGR.methods
-            .resolveAssetClass(window.assetClassName)
-            .call({ from: window.addr }, (_error, _result) => {
-                if (_error) { console.log("Error: ", _error) }
-                else {
-                  window.assetClass = _result
-                  console.log("resolved AC name ",window.assetClassName," as: ",  window.assetClass);
-                }
-            });
     }
 
     window.utils.checkCreds();
@@ -268,43 +273,27 @@ function buildWindowUtils() {
       else if (Number(_assetClassBal === 0 || _assetClassBal === undefined)) {
         window.assetClassHolderBool = false
       }
+    }
+  }
 
     window.utils = {
-        checkCreds: _checkCreds,
-        getCosts: _getCosts,
-        getContracts: _getContracts,
-        determineTokenBalance: _determineTokenBalance,
-        getACData: _getACData,
-        resolveAC: _resolveAC,
-        checkACName: _checkACName,
-        checkAssetExists: _checkAssetExists,
-        checkNoteExists: _checkNoteExists,
-        checkMatch: _checkMatch,
-        checkEscrowStatus: _checkEscrowStatus,
-        tenThousandHashesOf: _tenThousandHashesOf,
-        convertTimeTo: _convertTimeTo,
-
-
-    }
-
-    else {
-      console.log("Not connected to web3 provider...")
-    }
+      checkCreds: _checkCreds,
+      getCosts: _getCosts,
+      getContracts: _getContracts,
+      determineTokenBalance: _determineTokenBalance,
+      getACData: _getACData,
+      resolveAC: _resolveAC,
+      checkACName: _checkACName,
+      checkAssetExists: _checkAssetExists,
+      checkNoteExists: _checkNoteExists,
+      checkMatch: _checkMatch,
+      checkEscrowStatus: _checkEscrowStatus,
+      tenThousandHashesOf: _tenThousandHashesOf,
+      convertTimeTo: _convertTimeTo,
 
   }
 
   console.log("Setting up window utils")
-
-  window.utils = {
-    checkCreds: _checkCreds,
-    getCosts: _getCosts,
-    getContracts: _getContracts,
-    determineTokenBalance: _determineTokenBalance,
-    getACData: _getACData,
-    resolveAC: _resolveAC,
-    checkACName: _checkACName,
-  }
-
   return console.log("Utils loaded: ", window.utils)
 }
 

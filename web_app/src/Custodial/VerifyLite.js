@@ -2,8 +2,6 @@ import React, { Component } from "react";
 import Form from "react-bootstrap/Form";
 import Col from "react-bootstrap/Col";
 import Button from "react-bootstrap/Button";
-import returnManufacturers from "./Manufacturers";
-import returnTypes from "./Types";
 
 class VerifyLite extends Component {
   constructor(props) {
@@ -51,7 +49,7 @@ class VerifyLite extends Component {
   render() {//render continuously produces an up-to-date stateful document  
     const self = this;
 
-    const _verify = () => {
+    const _verify = async () => {
       this.setState({ txStatus: false });
       this.setState({ txHash: "" });
       this.setState({error: undefined})
@@ -90,7 +88,6 @@ class VerifyLite extends Component {
       }
 
         self.setState({ result: "170" });
-        console.log("verify.call result: ", _result);
 
         return document.getElementById("MainForm").reset();
     };
@@ -103,59 +100,30 @@ class VerifyLite extends Component {
               <h2>User address unreachable</h2>
               <h3>Please connect web3 provider.</h3>
             </div>
-          )}{window.assetClass === undefined && (
-            <div className="errorResults">
-              <h2>No asset class selected.</h2>
-              <h3>Please select asset class in home page to use forms.</h3>
-            </div>
           )}
-          {window.addr > 0 && window.assetClass > 0 &&(
+          {window.addr > 0 &&(
             <div>
-                {window.assetClass === 3 &&(
-                <Form.Group>
-                <Form.Check
-                className = 'checkBox'
-                size = 'lg'
-                onChange={handleCheckBox}
-                id={`NFA Firearm`}
-                label={`NFA Firearm`}
-                />
-                </Form.Group>
-                )}
-              <h2 className="Headertext">Verify Lite</h2>
+              <h2 className="Headertext">Verify Rights Holder</h2>
               <br></br>
               <Form.Row>
                 <Form.Group as={Col} controlId="formGridType">
                   <Form.Label className="formFont">Type:</Form.Label>
-
-                  {returnTypes(window.assetClass, this.state.isNFA) !== '0' &&(<Form.Control as="select" size="lg" onChange={(e) => this.setState({ type: e.target.value })}>
-                  {returnTypes(window.assetClass, this.state.isNFA)}
-                  </Form.Control>
-                  )}
-
-                    {returnTypes(window.assetClass, this.state.isNFA) === '0' &&(
                     <Form.Control
                     placeholder="Type"
                     required
                     onChange={(e) => this.setState({ type: e.target.value })}
                     size="lg"
-                  />)}
+                  />
                 </Form.Group>
 
                   <Form.Group as={Col} controlId="formGridManufacturer">
                     <Form.Label className="formFont">Manufacturer:</Form.Label>
-                    {returnManufacturers(window.assetClass, this.state.isNFA) !== '0' &&(<Form.Control as="select" size="lg" onChange={(e) => this.setState({ manufacturer: e.target.value })}>
-                  {returnManufacturers(window.assetClass, this.state.isNFA)}
-                  </Form.Control>
-                  )}
-
-                      {returnManufacturers(window.assetClass, this.state.isNFA) === '0' &&(
                     <Form.Control
                     placeholder="Manufacturer"
                     required
                     onChange={(e) => this.setState({ manufacturer: e.target.value })}
                     size="lg"
-                  />)}
+                  />
                   </Form.Group>
 
               </Form.Row>
@@ -258,6 +226,13 @@ class VerifyLite extends Component {
             {this.state.result === "170"
               ? "Match Confirmed :"
               : "Record does not match :"}
+            <a
+              href={" https://kovan.etherscan.io/tx/" + this.state.txHash}
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              KOVAN Etherscan:{this.state.txHash}
+            </a>
           </div>
         )}
       </div>

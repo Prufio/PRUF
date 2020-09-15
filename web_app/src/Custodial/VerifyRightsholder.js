@@ -51,20 +51,6 @@ class VerifyRightHolder extends Component {
   render() {//render continuously produces an up-to-date stateful document  
     const self = this;
 
-    const handleCheckBox = () => {
-      let setTo;
-      if(this.state.isNFA === false){
-        setTo = true;
-      }
-      else if(this.state.isNFA === true){
-        setTo = false;
-      }
-      this.setState({isNFA: setTo});
-      console.log("Setting to: ", setTo);
-      this.setState({manufacturer: ""});
-      this.setState({type: ""});
-    }
-
     const _verify = async () => {
       this.setState({ txStatus: false });
       this.setState({ txHash: "" });
