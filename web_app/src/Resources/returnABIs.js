@@ -6,7 +6,7 @@ function returnABIs() {
                 AC_MGR:"",
                 AC_TKN:"",
                 A_TKN: "",
-                NAKED: "",
+                PIP: "",
                 APP_NC: "",
                 NP_NC: "",
                 RCLR: "",
@@ -3328,7 +3328,7 @@ const A_TKN = [
 				"type": "string"
 			}
 		],
-		"name": "validateNakedToken",
+		"name": "validatePipToken",
 		"outputs": [],
 		"stateMutability": "view",
 		"type": "function"
@@ -3337,7 +3337,7 @@ const A_TKN = [
 
 //............................................................................................................................................
 
-const NAKED = [
+const PIP = [
 	{
 		"anonymous": false,
 		"inputs": [
@@ -3424,7 +3424,7 @@ const NAKED = [
 				"type": "uint32"
 			}
 		],
-		"name": "$claimNakedAsset",
+		"name": "$claimPipAsset",
 		"outputs": [],
 		"stateMutability": "payable",
 		"type": "function"
@@ -3506,7 +3506,7 @@ const NAKED = [
 				"type": "uint32"
 			}
 		],
-		"name": "mintNakedAsset",
+		"name": "mintPipAsset",
 		"outputs": [],
 		"stateMutability": "nonpayable",
 		"type": "function"
@@ -6448,7 +6448,7 @@ const ID_TKN = [
         abis.A_TKN=A_TKN;
         abis.AC_TKN=AC_TKN;
         abis.APP_NC=APP_NC;
-        abis.NAKED=NAKED;
+        abis.PIP=PIP;
         abis.VERIFY=VERIFY;
         abis.RCLR=RCLR;
         abis.STOR=STOR;

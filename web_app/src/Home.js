@@ -23,7 +23,7 @@ class Home extends Component {
       NP_NC: "",
       ECR2: "",
       authLevel: "",
-      NAKED: "",
+      PIP: "",
       RCLR: "",
       assetClass: undefined,
       contractArray: [],

@@ -178,6 +178,32 @@ h4 {
   opacity: 0.96;
 }
 
+.MNAform {
+  height: 36rem;
+  width: 59rem;
+  background-color: #005480;
+  border-radius: 0.5rem;
+  padding: 2rem;
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  margin-top: -2rem;
+  opacity: 0.96;
+}
+
+.CNAform {
+  height: 43rem;
+  width: 59rem;
+  background-color: #005480;
+  border-radius: 0.5rem;
+  padding: 2rem;
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  margin-top: -2rem;
+  opacity: 0.96;
+}
+
 .EAform {
   height: 29rem;
   width: 59rem;

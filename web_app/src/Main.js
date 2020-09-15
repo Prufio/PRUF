@@ -64,8 +64,8 @@ class Main extends Component {
           assetClassHolderMenuBool: false,
           basicMenuBool: false
         })
-
       }
+
     }
 
     this.acctChanger = async () => {//Handle an address change, update state accordingly
@@ -128,7 +128,7 @@ class Main extends Component {
       APP_NC: "",
       NP_NC: "",
       ECR2: "",
-      NAKED: "",
+      PIP: "",
       RCLR: "",
       assetClass: undefined,
       contractArray: [],

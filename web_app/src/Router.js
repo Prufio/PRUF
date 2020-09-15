@@ -29,6 +29,9 @@ import VerifyRightsholder from "./Custodial/VerifyRightsholder";
 import EscrowManager from "./Custodial/EscrowManager";
 import ExportAsset from "./Custodial/ExportAsset";
 
+import MintPipAsset from "./Pip/MintPipAsset";
+import ClaimPipAsset from "./Pip/ClaimPipAsset";
+
 function Router(routeRequest) {
     if (routeRequest === "authUser") {
         return (
@@ -44,6 +47,8 @@ function Router(routeRequest) {
                 <Route path="/export-asset" component={ExportAsset} />
                 <Route path="/verify-rights-holder" component={VerifyRightsholder} />
                 <Route path="/manage-escrow" component={EscrowManager} />
+                <Route path="/mintPipAsset" component={MintPipAsset} />
+                <Route path="/claimPipAsset" component={ClaimPipAsset} />
             </>
         )
     }
@@ -62,23 +67,29 @@ function Router(routeRequest) {
                 <Route path="/export-asset-NC" component={ExportAssetNC} />
                 <Route path="/verify-rights-holder-NC" component={VerifyRightsholderNC} />
                 <Route path="/manage-escrow-NC" component={EscrowManagerNC} />
+                <Route path="/mintPipAsset" component={MintPipAsset} />
+                <Route path="/claimPipAsset" component={ClaimPipAsset} />
             </>)
     }
 
     else if (routeRequest === "ACAdmin") {
         return (
-        <>
-        <Route path="/add-user" component={AddUser} />
-        <Route path="/enable-contract" component={EnableContract} />
-        <Route path="/set-costs" component={SetCosts} />
-        </>)
+            <>
+                <Route path="/add-user" component={AddUser} />
+                <Route path="/enable-contract" component={EnableContract} />
+                <Route path="/set-costs" component={SetCosts} />
+                <Route path="/mintPipAsset" component={MintPipAsset} />
+                <Route path="/claimPipAsset" component={ClaimPipAsset} />
+            </>)
     }
 
     else if (routeRequest === "basic") {
         return (
             <>
-            <Route path="/verify-rights-holder" component={VerifyRightsholder} />
-            <Route path="/retrieve-record" component={RetrieveRecord} />
+                <Route path="/verify-rights-holder" component={VerifyRightsholder} />
+                <Route path="/retrieve-record" component={RetrieveRecord} />
+                <Route path="/mintPipAsset" component={MintPipAsset} />
+                <Route path="/claimPipAsset" component={ClaimPipAsset} />
             </>
         )
     }
@@ -89,7 +100,7 @@ function Router(routeRequest) {
             </>
         )
     }
-    
+
 }
 
 export default Router;

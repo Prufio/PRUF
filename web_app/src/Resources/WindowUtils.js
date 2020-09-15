@@ -75,7 +75,7 @@ function buildWindowUtils () {
           APP_NC: window._contracts.content[10],
           NP_NC: window._contracts.content[11],
           RCLR: window._contracts.content[12],
-          NAKED: window._contracts.content[13],
+          PIP: window._contracts.content[13],
         }
   
         console.log("contracts: ", window.contracts)

@@ -3328,7 +3328,7 @@ const A_TKN = [
 				"type": "string"
 			}
 		],
-		"name": "validateNakedToken",
+		"name": "validatePipToken",
 		"outputs": [],
 		"stateMutability": "view",
 		"type": "function"
@@ -3424,7 +3424,7 @@ const NAKED = [
 				"type": "uint32"
 			}
 		],
-		"name": "$claimNakedAsset",
+		"name": "$claimPipAsset",
 		"outputs": [],
 		"stateMutability": "payable",
 		"type": "function"
@@ -3506,7 +3506,7 @@ const NAKED = [
 				"type": "uint32"
 			}
 		],
-		"name": "mintNakedAsset",
+		"name": "mintPipAsset",
 		"outputs": [],
 		"stateMutability": "nonpayable",
 		"type": "function"

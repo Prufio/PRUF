@@ -18,7 +18,7 @@ async function buildContracts(_web3) {
   const AC_TKN_ABI = abis.AC_TKN;
   const APP_NC_ABI = abis.APP_NC;
   const NP_NC_ABI = abis.NP_NC;
-  const NAKED_ABI = abis.NAKED;
+  const PIP_ABI = abis.PIP;
   const RCLR_ABI = abis.RCLR;
 
   const STOR_Address = "0x630A1e0059BC7b14EDd6ad116Ea31420E96c3BbE";
@@ -37,7 +37,7 @@ async function buildContracts(_web3) {
   let APP_NC = null;
   let NP_NC = null;
   let RCLR = null;
-  let NAKED = null;
+  let PIP = null;
   let ID_TKN = null;
 
   var _contracts = {
@@ -189,13 +189,13 @@ async function buildContracts(_web3) {
     );
 
   await STOR.methods
-    .resolveContractAddress("NAKED")
+    .resolveContractAddress("PIP")
     .call(function (_error, _result) {
       if (_error) {
         console.log(_error);
       } else {
         console.log(_result);
-        NAKED = new _web3.eth.Contract(NAKED_ABI, _result);
+        PIP = new _web3.eth.Contract(PIP_ABI, _result);
       }
     }
     );
@@ -225,7 +225,7 @@ async function buildContracts(_web3) {
   _contracts.content.push(APP_NC);   //10
   _contracts.content.push(NP_NC);    //11
   _contracts.content.push(RCLR);     //12
-  _contracts.content.push(NAKED);    //13
+  _contracts.content.push(PIP);    //13
 
   //console.log(_contracts)
   return _contracts;
