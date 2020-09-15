@@ -41,6 +41,7 @@ class Home extends Component {
   render() {
 
     const _setAC = async () => {
+      let acDoesExist;
       if (this.state.assetClass === "0") { window.assetClass = undefined; return this.forceUpdate() }
       else {
         if (
@@ -55,6 +56,11 @@ class Home extends Component {
           this.state.assetClass.charAt(0) === "8" ||
           this.state.assetClass.charAt(0) === "9"
         ) {
+          acDoesExist = await window.utils.checkForAC("id", this.state.assetClass);
+          await console.log("Exists?", acDoesExist)
+          
+          if(!acDoesExist){return alert("Asset class does not currently exist. Consider minting it yourself!")}
+
           window.assetClass = this.state.assetClass;
           window.utils.resolveACFromID()
           await window.utils.checkCreds();
@@ -64,6 +70,11 @@ class Home extends Component {
         }
 
         else {
+          acDoesExist = await window.utils.checkForAC("name", this.state.assetClass);
+          await console.log("Exists?",acDoesExist)
+          
+          if(!acDoesExist){return alert("Asset class does not currently exist. Consider minting it yourself!")}
+
           window.assetClassName = this.state.assetClass
           await window.utils.resolveAC();
           return this.setState({ authLevel: window.authLevel });

@@ -113,7 +113,7 @@ function buildWindowUtils() {
           else {
             window.assetClassName = _result
             console.log("resolved AC name ", window.assetClassName, " from AC index ", window.assetClass);
-            return(window.assetClassName)
+            return (window.assetClassName)
           }
         });
     }
@@ -121,6 +121,40 @@ function buildWindowUtils() {
     window.utils.checkCreds();
     window.utils.getCosts(6);
     console.log("User authLevel: ", window.authLevel);
+
+  }
+
+  const _checkForAC = async (ref, ac) => {
+    let tempBool;
+    if (window.contracts !== undefined) {
+      if (ref === "id") {
+        console.log("Using id ref")
+        await window.contracts.AC_MGR.methods
+          .getAC_name(ac)
+          .call({ from: window.addr }, (_error, _result) => {
+            if (_error) { console.log("Error: ", _error) }
+            else {
+              if (_result !== "") { tempBool = true }
+              else { tempBool = false }
+            }
+          });
+      }
+
+      else if (ref === "name") {
+        console.log("Using name ref")
+        await window.contracts.AC_MGR.methods
+          .resolveAssetClass(ac)
+          .call({ from: window.addr }, (_error, _result) => {
+            if (_error) { console.log("Error: ", _error) }
+            else {
+              if (Number(_result) > 0) { tempBool = true }
+              else { tempBool = false }
+            }
+          });
+      }
+
+      return tempBool;
+    }
 
   }
 
@@ -296,21 +330,22 @@ function buildWindowUtils() {
     }
   }
 
-    window.utils = {
-      checkCreds: _checkCreds,
-      getCosts: _getCosts,
-      getContracts: _getContracts,
-      determineTokenBalance: _determineTokenBalance,
-      getACData: _getACData,
-      resolveAC: _resolveAC,
-      checkACName: _checkACName,
-      checkAssetExists: _checkAssetExists,
-      checkNoteExists: _checkNoteExists,
-      checkMatch: _checkMatch,
-      checkEscrowStatus: _checkEscrowStatus,
-      tenThousandHashesOf: _tenThousandHashesOf,
-      convertTimeTo: _convertTimeTo,
-      resolveACFromID: _resolveACFromID,
+  window.utils = {
+    checkCreds: _checkCreds,
+    getCosts: _getCosts,
+    getContracts: _getContracts,
+    determineTokenBalance: _determineTokenBalance,
+    getACData: _getACData,
+    resolveAC: _resolveAC,
+    checkACName: _checkACName,
+    checkAssetExists: _checkAssetExists,
+    checkNoteExists: _checkNoteExists,
+    checkMatch: _checkMatch,
+    checkEscrowStatus: _checkEscrowStatus,
+    tenThousandHashesOf: _tenThousandHashesOf,
+    convertTimeTo: _convertTimeTo,
+    resolveACFromID: _resolveACFromID,
+    checkForAC: _checkForAC,
 
   }
 
