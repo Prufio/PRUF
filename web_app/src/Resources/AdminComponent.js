@@ -13,6 +13,9 @@ class AdminComponent extends Component {
                 <li>
                     <NavLink to="/enable-contract">Enable Contract</NavLink>
                 </li>
+                <li>
+                    <NavLink to="/update-ac-name">Update Name</NavLink>
+                </li>
                 </>
         )
     }

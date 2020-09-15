@@ -4,6 +4,7 @@ import { Route } from "react-router-dom";
 import SetCosts from "./ACAdmin/SetCosts"
 import EnableContract from "./ACAdmin/EnableContract"
 import AddUser from "./ACAdmin/AddUser"
+import UpdateACName from "./ACAdmin/UpdateACName"
 
 import AddNoteNC from "./NonCustodial/AddNote";
 import DecrementCounterNC from "./NonCustodial/DecrementCounter";
@@ -71,6 +72,7 @@ function Router(routeRequest) {
         <Route path="/add-user" component={AddUser} />
         <Route path="/enable-contract" component={EnableContract} />
         <Route path="/set-costs" component={SetCosts} />
+        <Route path="/update-ac-name" component={UpdateACName} />
         </>)
     }
 

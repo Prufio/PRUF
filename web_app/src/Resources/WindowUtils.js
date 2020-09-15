@@ -16,6 +16,27 @@ function buildWindowUtils () {
                 }
             });
     }
+
+    window.utils.checkCreds();
+    window.utils.getCosts(6);
+    console.log("User authLevel: ", window.authLevel);
+
+    }
+
+    const _checkACName = async (name) => {
+      if (window.contracts !== undefined) {
+        await window.contracts.AC_MGR.methods
+            .resolveAssetClass(name)
+            .call({ from: window.addr }, (_error, _result) => {
+                if (_error) { console.log(_error) }
+                else {
+                  console.log("resolved successfully to AC: ",_result)
+                  if(Number(_result) > 0){return(true)}
+                  else {return false}
+                }
+            });
+    }
+    
     window.utils.checkCreds();
     window.utils.getCosts(6);
     console.log("User authLevel: ", window.authLevel);
@@ -196,6 +217,7 @@ function buildWindowUtils () {
         determineTokenBalance: _determineTokenBalance,
         getACData: _getACData,
         resolveAC: _resolveAC,
+        checkACName: _checkACName,
     }
 
     return console.log("Utils loaded: ", window.utils)

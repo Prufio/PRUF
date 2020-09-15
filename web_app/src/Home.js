@@ -78,8 +78,9 @@ class Home extends Component {
         <div> {window.assetClass > 0 && (<div>Operating in asset class {window.assetClass} ({window.assetClassName}) as {window.authLevel}</div>)}</div>
         {window._contracts !== undefined && (
           <div>
+            <br></br>
             <Form.Group as={Col} controlId="formGridAC">
-              <Form.Label className="formFont">Input desired asset class index # or Name : </Form.Label>
+              <Form.Label className="formFont">Input desired asset class index # or name : </Form.Label>
               <Form.Control
                 placeholder="Asset Class"
                 required
