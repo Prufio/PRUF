@@ -85,7 +85,7 @@ class NewRecord extends Component {
       console.log("addr: ", window.addr);
       console.log(window.assetClass);
 
-      var doesExist = window.utils.checkAssetExists(idxHash);
+      var doesExist = await window.utils.checkAssetExists(idxHash);
 
       if(!doesExist){
         window.contracts.APP.methods
@@ -100,7 +100,6 @@ class NewRecord extends Component {
           // self.setState({ NRerror: _error });
           self.setState({ txHash: Object.values(_error)[0].transactionHash });
           self.setState({ txStatus: false });
-          console.log(Object.values(_error)[0].transactionHash);
         })
         .on("receipt", (receipt) => {
           this.setState({ txHash: receipt.transactionHash });
