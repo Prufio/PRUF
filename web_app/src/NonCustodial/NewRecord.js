@@ -161,19 +161,12 @@ class NewRecordNC extends Component {
               <Form.Row>
                 <Form.Group as={Col} controlId="formGridType">
                   <Form.Label className="formFont">Type:</Form.Label>
-
-                  {/* {returnTypes(window.assetClass, this.state.isNFA) !== '0' &&(<Form.Control as="select" size="lg" onChange={(e) => this.setState({ type: e.target.value })}>
-                  {returnTypes(window.assetClass, this.state.isNFA)}
-                  </Form.Control>
-                  )} */}
-
-                  {/* {returnTypes(window.assetClass, this.state.isNFA) === '0' &&( */}
                   <Form.Control
                     placeholder="Type"
                     required
                     onChange={(e) => this.setState({ type: e.target.value })}
                     size="lg"
-                  />{/* )} */}
+                  />
                 </Form.Group>
 
                 <Form.Group as={Col} controlId="formGridManufacturer">
