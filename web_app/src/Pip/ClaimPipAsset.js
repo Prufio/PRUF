@@ -114,7 +114,7 @@ class ClaimPipAsset extends Component {
 
         return (//default render
             <div>
-                <Form className="CNAform" id='MainForm'>
+                <Form className="CPAform" id='MainForm'>
                     {window.addr === undefined && (
                         <div className="errorResults">
                             <h2>User address unreachable</h2>

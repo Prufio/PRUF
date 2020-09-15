@@ -310,7 +310,7 @@ class EscrowManager extends Component {
               <div>
                 <Form.Group>
                   <Button
-                    className="ownerButtonDisplay2"
+                    className="ownerButtonDisplay5"
                     variant="primary"
                     type="button"
                     size="lg"
