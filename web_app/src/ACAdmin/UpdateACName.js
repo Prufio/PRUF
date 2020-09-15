@@ -24,7 +24,7 @@ class UpdateACName extends Component {
     console.log("component mounted")
   }
 
-  componentDidUpdate(){//stuff to do when state updates
+  componentDidUpdate() {//stuff to do when state updates
 
   }
 
@@ -36,34 +36,34 @@ class UpdateACName extends Component {
     const self = this;
 
     const updateName = async () => {
-    var alreadyExists = await window.utils.checkACName(this.state.newACName)
+      var alreadyExists = await window.utils.checkACName(this.state.newACName)
 
-    if(alreadyExists){
+      if (alreadyExists) {
         return (alert("AC name already exists! Choose a different name and try again"))
-    }
-    else{
-      await window.contracts.AC_MGR.methods
-        .updateACname(
-          this.state.newACName,
-          window.assetClass
-        )
-        .send({ from: window.addr })
-        .on("error", function (_error) {
-          self.setState({ error: _error });
-          self.setState({ result: _error.transactionHash });
-        })
-        .on("receipt", (receipt) => {
-          console.log(
-            "updated name to ", self.state.newACName, " in AC ",
+      }
+      else {
+        await window.contracts.AC_MGR.methods
+          .updateACname(
+            this.state.newACName,
             window.assetClass
-          );
-          console.log("tx receipt: ", receipt);
-        });
+          )
+          .send({ from: window.addr })
+          .on("error", function (_error) {
+            self.setState({ error: _error });
+            self.setState({ result: _error.transactionHash });
+          })
+          .on("receipt", (receipt) => {
+            console.log(
+              "updated name to ", self.state.newACName, " in AC ",
+              window.assetClass
+            );
+            console.log("tx receipt: ", receipt);
+          });
 
-      console.log(this.state.txHash);
-    };
-}
-    
+        console.log(this.state.txHash);
+      };
+    }
+
 
     return (
       <div>
@@ -82,7 +82,7 @@ class UpdateACName extends Component {
             </div>
           )}
 
-          {window.addr > 0 && window.assetClass > 0 &&(
+          {window.addr > 0 && window.assetClass > 0 && (
             <div>
               <h2 className="Headertext">Update AC Name</h2>
               <br></br>

@@ -1,10 +1,9 @@
-import React, { Component } from "react";
+Fimport React, { Component } from "react";
 import Form from "react-bootstrap/Form";
 import Col from "react-bootstrap/Col";
 import Button from "react-bootstrap/Button";
 import bs58 from "bs58";
-import returnManufacturers from "../Resources/Manufacturers";
-import returnTypes from "./Types";
+
 
 class ModifyDescriptionNC extends Component {
   constructor(props) {
@@ -110,19 +109,7 @@ class ModifyDescriptionNC extends Component {
         });
     }
 
-    const handleCheckBox = () => {
-      let setTo;
-      if(this.state.isNFA === false){
-        setTo = true;
-      }
-      else if(this.state.isNFA === true){
-        setTo = false;
-      }
-      this.setState({isNFA: setTo});
-      console.log("Setting to: ", setTo);
-      this.setState({manufacturer: ""});
-      this.setState({type: ""});
-    }
+
 
     const _updateDescription = () => {
       this.setState({ txStatus: false });
@@ -194,51 +181,32 @@ class ModifyDescriptionNC extends Component {
           )}
           {window.addr > 0 && window.assetClass > 0 &&(
             <div>
-                {window.assetClass === 3 &&(
-                <Form.Group>
-                <Form.Check
-                className = 'checkBox'
-                size = 'lg'
-                onChange={handleCheckBox}
-                id={`NFA Firearm`}
-                label={`NFA Firearm`}
-                />
-                </Form.Group>
-                )}
+
               <h2 className="Headertext">Modify Description</h2>
               <br></br>
               <Form.Row>
                 <Form.Group as={Col} controlId="formGridType">
                   <Form.Label className="formFont">Type:</Form.Label>
 
-                  {returnTypes(window.assetClass, this.state.isNFA) !== '0' &&(<Form.Control as="select" size="lg" onChange={(e) => this.setState({ type: e.target.value })}>
-                  {returnTypes(window.assetClass, this.state.isNFA)}
-                  </Form.Control>
-                  )}
 
-                    {returnTypes(window.assetClass, this.state.isNFA) === '0' &&(
+
                     <Form.Control
                     placeholder="Type"
                     required
                     onChange={(e) => this.setState({ type: e.target.value })}
                     size="lg"
-                  />)}
+                  />
                 </Form.Group>
 
                   <Form.Group as={Col} controlId="formGridManufacturer">
                     <Form.Label className="formFont">Manufacturer:</Form.Label>
-                    {returnManufacturers(window.assetClass, this.state.isNFA) !== '0' &&(<Form.Control as="select" size="lg" onChange={(e) => this.setState({ manufacturer: e.target.value })}>
-                  {returnManufacturers(window.assetClass, this.state.isNFA)}
-                  </Form.Control>
-                  )}
-
-                      {returnManufacturers(window.assetClass, this.state.isNFA) === '0' &&(
+                      
                     <Form.Control
                     placeholder="Manufacturer"
                     required
                     onChange={(e) => this.setState({ manufacturer: e.target.value })}
                     size="lg"
-                  />)}
+                  />
                   </Form.Group>
 
               </Form.Row>

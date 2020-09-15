@@ -41,7 +41,7 @@ class RetrieveRecord extends Component {
 
   }
 
-  componentDidUpdate(){//stuff to do when state updates
+  componentDidUpdate() {//stuff to do when state updates
 
   }
 
@@ -53,7 +53,7 @@ class RetrieveRecord extends Component {
     const self = this;
 
     const getIpfsHashFromBytes32 = (bytes32Hex) => {
-      
+
       // Add our default ipfs values for first 2 bytes:
       // function:0x12=sha2, size:0x20=256 bits
       // and cut off leading "0x"
@@ -72,7 +72,8 @@ class RetrieveRecord extends Component {
          }
          self.setState({ ipfs2: result });
        }); */
-       self.setState({ipfs2: lookup2});};
+      self.setState({ ipfs2: lookup2 });
+    };
 
     const getIPFS1 = async (lookup1) => {
       await window.ipfs.cat(lookup1, (error, result) => {
@@ -85,30 +86,18 @@ class RetrieveRecord extends Component {
       });
     };
 
-    const handleCheckBox = () => {
-      let setTo;
-      if(this.state.isNFA === false){
-        setTo = true;
-      }
-      else if(this.state.isNFA === true){
-        setTo = false;
-      }
-      this.setState({isNFA: setTo});
-      console.log("Setting to: ", setTo);
-      this.setState({manufacturer: ""});
-      this.setState({type: ""});
-    }
+
 
     const _retrieveRecord = () => {
       const self = this;
       var idxHash;
-      
+
       idxHash = window.web3.utils.soliditySha3(
         this.state.type,
         this.state.manufacturer,
         this.state.model,
         this.state.serial,
-    );
+      );
 
       console.log("idxHash", idxHash);
       console.log("addr: ", window.addr);
@@ -116,58 +105,61 @@ class RetrieveRecord extends Component {
       window.contracts.STOR.methods
         .retrieveShortRecord(idxHash)
         .call({ from: window.addr }, function (_error, _result) {
-          if (_error) { console.log(_error)
+          if (_error) {
+            console.log(_error)
             self.setState({ error: _error });
             self.setState({ result: 0 });
           } else {
-            if (Object.values(_result)[0] === '0'){  self.setState({ status: 'No status set' });}
-            else if (Object.values(_result)[0] === '1'){  self.setState({ status: 'Transferrable' });}
-            else if (Object.values(_result)[0] === '2'){  self.setState({ status: 'Non-transferrable' });}
-            else if (Object.values(_result)[0] === '3'){  self.setState({ status: 'ASSET REPORTED STOLEN' });}
-            else if (Object.values(_result)[0] === '4'){  self.setState({ status: 'ASSET REPRTED LOST' });}
-            else if (Object.values(_result)[0] === '5'){  self.setState({ status: 'Asset in transfer' });}
-            else if (Object.values(_result)[0] === '6'){  self.setState({ status: 'In escrow (block.number locked)' });}
-            else if (Object.values(_result)[0] === '7'){  self.setState({ status: 'P2P Transferrable' });}
-            else if (Object.values(_result)[0] === '8'){  self.setState({ status: 'P2P Non-transferrable' });}
-            else if (Object.values(_result)[0] === '9'){  self.setState({ status: 'ASSET REPORTED STOLEN (P2P)' });}
-            else if (Object.values(_result)[0] === '10'){  self.setState({ status: 'ASSET REPORTED LOST (P2P)' });}
-            else if (Object.values(_result)[0] === '11'){  self.setState({ status: 'In P2P transfer' });}
-            else if (Object.values(_result)[0] === '12'){  self.setState({ status: 'In escrow (block.time locked)' });}
-            else if (Object.values(_result)[0] === '20'){  self.setState({ status: 'Cusdodial escrow ended' });}
-            else if (Object.values(_result)[0] === '21'){  self.setState({ status: 'P2P escrow ended' });}
-            else if (Object.values(_result)[0] === '51'){  self.setState({ status: 'Transferrable, export eligible' });}
-            self.setState({ result: Object.values(_result)})
+            if (Object.values(_result)[0] === '0') { self.setState({ status: 'No status set' }); }
+            else if (Object.values(_result)[0] === '1') { self.setState({ status: 'Transferrable' }); }
+            else if (Object.values(_result)[0] === '2') { self.setState({ status: 'Non-transferrable' }); }
+            else if (Object.values(_result)[0] === '3') { self.setState({ status: 'ASSET REPORTED STOLEN' }); }
+            else if (Object.values(_result)[0] === '4') { self.setState({ status: 'ASSET REPRTED LOST' }); }
+            else if (Object.values(_result)[0] === '5') { self.setState({ status: 'Asset in transfer' }); }
+            else if (Object.values(_result)[0] === '6') { self.setState({ status: 'In escrow (block.number locked)' }); }
+            else if (Object.values(_result)[0] === '7') { self.setState({ status: 'P2P Transferrable' }); }
+            else if (Object.values(_result)[0] === '8') { self.setState({ status: 'P2P Non-transferrable' }); }
+            else if (Object.values(_result)[0] === '9') { self.setState({ status: 'ASSET REPORTED STOLEN (P2P)' }); }
+            else if (Object.values(_result)[0] === '10') { self.setState({ status: 'ASSET REPORTED LOST (P2P)' }); }
+            else if (Object.values(_result)[0] === '11') { self.setState({ status: 'In P2P transfer' }); }
+            else if (Object.values(_result)[0] === '12') { self.setState({ status: 'In escrow (block.time locked)' }); }
+            else if (Object.values(_result)[0] === '20') { self.setState({ status: 'Cusdodial escrow ended' }); }
+            else if (Object.values(_result)[0] === '21') { self.setState({ status: 'P2P escrow ended' }); }
+            else if (Object.values(_result)[0] === '51') { self.setState({ status: 'Transferrable, export eligible' }); }
+            self.setState({ result: Object.values(_result) })
             self.setState({ error: undefined });
 
-            if (Object.values(_result)[5] > 0) {getIPFS1(getIpfsHashFromBytes32(Object.values(_result)[5]));}
+            if (Object.values(_result)[5] > 0) { getIPFS1(getIpfsHashFromBytes32(Object.values(_result)[5])); }
 
             if (Object.values(_result)[6] > 0) {
-            console.log("Getting ipfs2 set up...")
-            let knownUrl = "https://ipfs.io/ipfs/";
-            let hash = String(getIpfsHashFromBytes32(Object.values(_result)[6]));
-            let fullUrl = knownUrl+hash;
-            console.log(fullUrl);
-            getIPFS2(fullUrl);}
-        }});
+              console.log("Getting ipfs2 set up...")
+              let knownUrl = "https://ipfs.io/ipfs/";
+              let hash = String(getIpfsHashFromBytes32(Object.values(_result)[6]));
+              let fullUrl = knownUrl + hash;
+              console.log(fullUrl);
+              getIPFS2(fullUrl);
+            }
+          }
+        });
     };
 
     return (
       <div>
         <Form className="RRform">
-        {window.addr === undefined && (
+          {window.addr === undefined && (
             <div className="errorResults">
               <h2>User address unreachable</h2>
               <h3>Please connect web3 provider.</h3>
             </div>
           )}
-          {window.addr > 0 &&(
+          {window.addr > 0 && (
             <div>
               <h2 className="Headertext">Search Records</h2>
               <br></br>
               <Form.Row>
                 <Form.Group as={Col} controlId="formGridType">
                   <Form.Label className="formFont">Type:</Form.Label>
-                    <Form.Control
+                  <Form.Control
                     placeholder="Type"
                     required
                     onChange={(e) => this.setState({ type: e.target.value })}
@@ -175,15 +167,15 @@ class RetrieveRecord extends Component {
                   />
                 </Form.Group>
 
-                  <Form.Group as={Col} controlId="formGridManufacturer">
-                    <Form.Label className="formFont">Manufacturer:</Form.Label>
-                    <Form.Control
+                <Form.Group as={Col} controlId="formGridManufacturer">
+                  <Form.Label className="formFont">Manufacturer:</Form.Label>
+                  <Form.Control
                     placeholder="Manufacturer"
                     required
                     onChange={(e) => this.setState({ manufacturer: e.target.value })}
                     size="lg"
                   />
-                  </Form.Group>
+                </Form.Group>
 
               </Form.Row>
 

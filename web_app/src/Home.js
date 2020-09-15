@@ -43,26 +43,26 @@ class Home extends Component {
     const _setAC = async () => {
       if (this.state.assetClass === "0") { window.assetClass = undefined; return this.forceUpdate() }
       else {
-        if(
+        if (
           this.state.assetClass.charAt(0) === "0" ||
           this.state.assetClass.charAt(0) === "1" ||
           this.state.assetClass.charAt(0) === "2" ||
           this.state.assetClass.charAt(0) === "3" ||
           this.state.assetClass.charAt(0) === "4" ||
-          this.state.assetClass.charAt(0) === "5" || 
+          this.state.assetClass.charAt(0) === "5" ||
           this.state.assetClass.charAt(0) === "6" ||
           this.state.assetClass.charAt(0) === "7" ||
           this.state.assetClass.charAt(0) === "8" ||
           this.state.assetClass.charAt(0) === "9"
-          ){
-        window.assetClass = this.state.assetClass;
-        await window.utils.checkCreds();
-        await window.utils.getCosts(6);
-        console.log(window.authLevel);
-        return this.setState({ authLevel: window.authLevel });
+        ) {
+          window.assetClass = this.state.assetClass;
+          await window.utils.checkCreds();
+          await window.utils.getCosts(6);
+          console.log(window.authLevel);
+          return this.setState({ authLevel: window.authLevel });
         }
 
-        else{
+        else {
           window.assetClassName = this.state.assetClass
           await window.utils.resolveAC();
           return this.setState({ authLevel: window.authLevel });

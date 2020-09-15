@@ -2,8 +2,7 @@ import React, { Component } from "react";
 import Form from "react-bootstrap/Form";
 import Col from "react-bootstrap/Col";
 import Button from "react-bootstrap/Button";
-import returnManufacturers from "../Resources/Manufacturers";
-import returnTypes from "./Types";
+
 
 class ForceModifyRecordNC extends Component {
   constructor(props) {
@@ -80,25 +79,13 @@ class ForceModifyRecordNC extends Component {
         });
     }
 
-    const handleCheckBox = () => {
-      let setTo;
-      if(this.state.isNFA === false){
-        setTo = true;
-      }
-      else if(this.state.isNFA === true){
-        setTo = false;
-      }
-      this.setState({isNFA: setTo});
-      console.log("Setting to: ", setTo);
-      this.setState({manufacturer: ""});
-      this.setState({type: ""});
-    }
+
 
     const _importAsset = () => {
       this.setState({ txStatus: false });
       this.setState({ txHash: "" });
-      this.setState({error: undefined})
-      this.setState({result: ""})
+      this.setState({ error: undefined })
+      this.setState({ result: "" })
       var idxHash = window.web3.utils.soliditySha3(
         this.state.type,
         this.state.manufacturer,
@@ -143,17 +130,17 @@ class ForceModifyRecordNC extends Component {
     const _forceModifyRecord = () => {
       this.setState({ txStatus: false });
       this.setState({ txHash: "" });
-      this.setState({error: undefined})
-      this.setState({result: ""})
+      this.setState({ error: undefined })
+      this.setState({ result: "" })
       var idxHash;
       var newRgtRaw;
-      
+
       idxHash = window.web3.utils.soliditySha3(
         this.state.type,
         this.state.manufacturer,
         this.state.model,
         this.state.serial,
-    );
+      );
 
       newRgtRaw = window.web3.utils.soliditySha3(
         this.state.first,
@@ -194,7 +181,7 @@ class ForceModifyRecordNC extends Component {
     return (
       <div>
         <Form className="FMRform" id='MainForm'>
-        {window.addr === undefined && (
+          {window.addr === undefined && (
             <div className="errorResults">
               <h2>User address unreachable</h2>
               <h3>Please connect web3 provider.</h3>
@@ -205,54 +192,35 @@ class ForceModifyRecordNC extends Component {
               <h3>Please select asset class in home page to use forms.</h3>
             </div>
           )}
-          {window.addr > 0 && window.assetClass > 0 &&(
+          {window.addr > 0 && window.assetClass > 0 && (
             <div>
-                {window.assetClass === 3 &&(
-                <Form.Group>
-                <Form.Check
-                className = 'checkBox'
-                size = 'lg'
-                onChange={handleCheckBox}
-                id={`NFA Firearm`}
-                label={`NFA Firearm`}
-                />
-                </Form.Group>
-                )}
+
               <h2 className="Headertext">Force Modify/Import Asset</h2>
               <br></br>
               <Form.Row>
                 <Form.Group as={Col} controlId="formGridType">
                   <Form.Label className="formFont">Type:</Form.Label>
 
-                  {returnTypes(window.assetClass, this.state.isNFA) !== '0' &&(<Form.Control as="select" size="lg" onChange={(e) => this.setState({ type: e.target.value })}>
-                  {returnTypes(window.assetClass, this.state.isNFA)}
-                  </Form.Control>
-                  )}
 
-                    {returnTypes(window.assetClass, this.state.isNFA) === '0' &&(
-                    <Form.Control
+
+                  <Form.Control
                     placeholder="Type"
                     required
                     onChange={(e) => this.setState({ type: e.target.value })}
                     size="lg"
-                  />)}
+                  />
                 </Form.Group>
 
-                  <Form.Group as={Col} controlId="formGridManufacturer">
-                    <Form.Label className="formFont">Manufacturer:</Form.Label>
-                    {returnManufacturers(window.assetClass, this.state.isNFA) !== '0' &&(<Form.Control as="select" size="lg" onChange={(e) => this.setState({ manufacturer: e.target.value })}>
-                  {returnManufacturers(window.assetClass, this.state.isNFA)}
-                  </Form.Control>
-                  )}
+                <Form.Group as={Col} controlId="formGridManufacturer">
+                  <Form.Label className="formFont">Manufacturer:</Form.Label>
 
-                      {returnManufacturers(window.assetClass, this.state.isNFA) === '0' &&(
-                    <Form.Control
+                  <Form.Control
                     placeholder="Manufacturer"
                     required
                     onChange={(e) => this.setState({ manufacturer: e.target.value })}
                     size="lg"
-                  />)}
-                  </Form.Group>
+                  />
+                </Form.Group>
 
               </Form.Row>
 
@@ -331,39 +299,39 @@ class ForceModifyRecordNC extends Component {
                 </Form.Group>
               </Form.Row>
               <Form.Row>
-              <div>
-                <Form.Group>
-                  <Button
-                    className="ownerButtonDisplay"
-                    variant="danger"
-                    type="button"
-                    size="lg"
-                    onClick={_forceModifyRecord}
-                  >
-                    Force modify
+                <div>
+                  <Form.Group>
+                    <Button
+                      className="ownerButtonDisplay"
+                      variant="danger"
+                      type="button"
+                      size="lg"
+                      onClick={_forceModifyRecord}
+                    >
+                      Force modify
                   </Button>
-                  <div className="LittleText"> Cost in AC {window.assetClass}: {Number(window.costs.forceTransferCost)/1000000000000000000} ETH</div>
-                </Form.Group>
-                <br></br>
-              </div>
-              <div>
-                <Form.Group>
-                  <Button
-                    className="ownerButtonDisplay2"
-                    variant="primary"
-                    type="button"
-                    size="lg"
-                    onClick={_importAsset}
-                  >
-                    Import
+                    <div className="LittleText"> Cost in AC {window.assetClass}: {Number(window.costs.forceTransferCost) / 1000000000000000000} ETH</div>
+                  </Form.Group>
+                  <br></br>
+                </div>
+                <div>
+                  <Form.Group>
+                    <Button
+                      className="ownerButtonDisplay2"
+                      variant="primary"
+                      type="button"
+                      size="lg"
+                      onClick={_importAsset}
+                    >
+                      Import
                   </Button>
-                  <div className="LittleText"> Cost in AC {window.assetClass}: {Number(window.costs.importAssetCost)/1000000000000000000} ETH</div>
-                </Form.Group>
+                    <div className="LittleText"> Cost in AC {window.assetClass}: {Number(window.costs.importAssetCost) / 1000000000000000000} ETH</div>
+                  </Form.Group>
 
-                <br></br>
+                  <br></br>
 
-                
-              </div>
+
+                </div>
                 {/* <ButtonGroup className="buttonGroupDisplay" aria-label="choices">
                 <Button variant="danger"
                     type="button"
