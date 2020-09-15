@@ -185,9 +185,19 @@ function buildWindowUtils() {
         .call({ from: window.addr }, (_error, _result) => {
           if (_error) { console.log("Error: ", _error) }
           else {
+            let _custodyType;
+
+            if(Object.values(_result)[1] === "1"){
+              _custodyType = "Custodial"
+            }
+
+            else{
+              _custodyType = "Non-Custodial"
+            }
+            
             window.ACData = {
               root: Object.values(_result)[0],
-              custodyType: Object.values(_result)[1],
+              custodyType: _custodyType,
               discount: Object.values(_result)[2],
               exData: Object.values(_result)[3]
             }
