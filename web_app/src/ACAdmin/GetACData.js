@@ -65,7 +65,7 @@ class GetACData extends Component {
       
         let acDoesExist = await window.utils.checkForAC ("id", this.state.assetClass);
         if (acDoesExist) {
-            await window.utils.getACData (this.state.assetClass)
+            await window.utils.getACData (ref, this.state.assetClass)
                 await this.setState({
                     ACData: window.ACData
                 });
