@@ -5,7 +5,7 @@ async function buildContracts(_web3) {
 
   const abis = returnABIs();
 
-
+  const ID_TKN_ABI = abis.ID_TKN;
   const STOR_ABI = abis.STOR;
   const NP_ABI = abis.NP;
   const APP_ABI = abis.APP;
@@ -38,6 +38,7 @@ async function buildContracts(_web3) {
   let NP_NC = null;
   let RCLR = null;
   let NAKED = null;
+  let ID_TKN = null;
 
   var _contracts = {
     content: []
@@ -171,6 +172,18 @@ async function buildContracts(_web3) {
       } else {
         console.log(_result);
         RCLR = new _web3.eth.Contract(RCLR_ABI, _result);
+      }
+    }
+    );
+
+    await STOR.methods
+    .resolveContractAddress("ID_TKN")
+    .call(function (_error, _result) {
+      if (_error) {
+        console.log(_error);
+      } else {
+        console.log(_result);
+        ID_TKN = new _web3.eth.Contract(ID_TKN_ABI, _result);
       }
     }
     );
