@@ -22,6 +22,8 @@ class SetupAndResolveContracts extends Component {
             ATKN_ADDR: "",
             ACTKN_ADDR: "",
             ACMGR_ADDR: "",
+            IDTKN_ADDR: "",
+            PRUFTKN_ADDR: "",
             ECR_ADDR: "",
             ECRMGR_ADDR: "",
             ECRNC_ADDR: "",
@@ -488,6 +490,8 @@ class SetupAndResolveContracts extends Component {
                 A_TKN: new window.web3.eth.Contract(this.abis.A_TKN, this.state.ATKN_ADDR),
                 AC_TKN: new window.web3.eth.Contract(this.abis.AC_TKN, this.state.ACTKN_ADDR),
                 AC_MGR: new window.web3.eth.Contract(this.abis.AC_MGR, this.state.ACMGR_ADDR),
+                ID_TKN: new window.web3.eth.Contract(this.abis.ID_TKN, this.state.IDTKN_ADDR),
+                PRUF_TKN: new window.web3.eth.Contract(this.abis.PRUF_TKN, this.state.PRUFTKN_ADDR),
                 NAKED: new window.web3.eth.Contract(this.abis.NAKED, this.state.NAKED_ADDR),
                 RCLR: new window.web3.eth.Contract(this.abis.RCLR, this.state.RCLR_ADDR),
                 VERIFY: new window.web3.eth.Contract(this.abis.VERIFY, this.state.VERIFY_ADDR),
@@ -605,6 +609,24 @@ class SetupAndResolveContracts extends Component {
                                     placeholder="Address"
                                     required
                                     onChange={(e) => this.setState({ ACMGR_ADDR: e.target.value })}
+                                    size="lg"
+                                />
+                            </Form.Group>
+                            <Form.Group as={Col} controlId="formGridNewOwner">
+                                <Form.Label className="formFont">ID_TKN :</Form.Label>
+                                <Form.Control
+                                    placeholder="Address"
+                                    required
+                                    onChange={(e) => this.setState({ IDTKN_ADDR: e.target.value })}
+                                    size="lg"
+                                />
+                            </Form.Group>
+                            <Form.Group as={Col} controlId="formGridNewOwner">
+                                <Form.Label className="formFont">PRUF_TKN :</Form.Label>
+                                <Form.Control
+                                    placeholder="Address"
+                                    required
+                                    onChange={(e) => this.setState({ PRUFTKN_ADDR: e.target.value })}
                                     size="lg"
                                 />
                             </Form.Group>

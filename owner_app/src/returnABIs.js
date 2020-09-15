@@ -12,7 +12,8 @@ function returnABIs() {
                 RCLR: "",
                 ECR_NC: "",
                 VERIFY: "",
-                ECR_MGR: "",
+				ECR_MGR: "",
+				ID_TKN: "",
                 }; 
     
     const STOR = [
@@ -770,14 +771,14 @@ function returnABIs() {
 		},
 		{
 			"inputs": [],
-			"name": "OO_resolveContractAddresses",
+			"name": "OO_pause",
 			"outputs": [],
 			"stateMutability": "nonpayable",
 			"type": "function"
 		},
 		{
 			"inputs": [],
-			"name": "OO_pause",
+			"name": "OO_resolveContractAddresses",
 			"outputs": [],
 			"stateMutability": "nonpayable",
 			"type": "function"
@@ -1022,14 +1023,14 @@ function returnABIs() {
 			},
 			{
 				"inputs": [],
-				"name": "OO_resolveContractAddresses",
+				"name": "OO_pause",
 				"outputs": [],
 				"stateMutability": "nonpayable",
 				"type": "function"
 			},
 			{
 				"inputs": [],
-				"name": "OO_pause",
+				"name": "OO_resolveContractAddresses",
 				"outputs": [],
 				"stateMutability": "nonpayable",
 				"type": "function"
@@ -1407,14 +1408,14 @@ function returnABIs() {
 			},
 			{
 				"inputs": [],
-				"name": "OO_resolveContractAddresses",
+				"name": "OO_pause",
 				"outputs": [],
 				"stateMutability": "nonpayable",
 				"type": "function"
 			},
 			{
 				"inputs": [],
-				"name": "OO_pause",
+				"name": "OO_resolveContractAddresses",
 				"outputs": [],
 				"stateMutability": "nonpayable",
 				"type": "function"
@@ -1688,13 +1689,6 @@ function returnABIs() {
 		"type": "event"
 	},
 	{
-		"inputs": [],
-		"name": "$withdraw",
-		"outputs": [],
-		"stateMutability": "payable",
-		"type": "function"
-	},
-	{
 		"inputs": [
 			{
 				"internalType": "uint32",
@@ -1702,33 +1696,13 @@ function returnABIs() {
 				"type": "uint32"
 			},
 			{
-				"internalType": "uint256",
-				"name": "_newRecordCost",
-				"type": "uint256"
+				"internalType": "uint16",
+				"name": "_service",
+				"type": "uint16"
 			},
 			{
 				"internalType": "uint256",
-				"name": "_transferAssetCost",
-				"type": "uint256"
-			},
-			{
-				"internalType": "uint256",
-				"name": "_createNoteCost",
-				"type": "uint256"
-			},
-			{
-				"internalType": "uint256",
-				"name": "_reMintRecordCost",
-				"type": "uint256"
-			},
-			{
-				"internalType": "uint256",
-				"name": "_changeStatusCost",
-				"type": "uint256"
-			},
-			{
-				"internalType": "uint256",
-				"name": "_forceModifyCost",
+				"name": "_serviceCost",
 				"type": "uint256"
 			},
 			{
@@ -1738,13 +1712,6 @@ function returnABIs() {
 			}
 		],
 		"name": "ACTH_setCosts",
-		"outputs": [],
-		"stateMutability": "nonpayable",
-		"type": "function"
-	},
-	{
-		"inputs": [],
-		"name": "OO_resolveContractAddresses",
 		"outputs": [],
 		"stateMutability": "nonpayable",
 		"type": "function"
@@ -1775,6 +1742,13 @@ function returnABIs() {
 	{
 		"inputs": [],
 		"name": "OO_pause",
+		"outputs": [],
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"inputs": [],
+		"name": "OO_resolveContractAddresses",
 		"outputs": [],
 		"stateMutability": "nonpayable",
 		"type": "function"
@@ -1874,6 +1848,30 @@ function returnABIs() {
 				"internalType": "uint32",
 				"name": "",
 				"type": "uint32"
+			},
+			{
+				"internalType": "uint32",
+				"name": "",
+				"type": "uint32"
+			}
+		],
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "uint32",
+				"name": "_assetClass",
+				"type": "uint32"
+			}
+		],
+		"name": "getAC_discount",
+		"outputs": [
+			{
+				"internalType": "uint32",
+				"name": "",
+				"type": "uint32"
 			}
 		],
 		"stateMutability": "view",
@@ -1904,9 +1902,14 @@ function returnABIs() {
 				"internalType": "uint32",
 				"name": "_assetClass",
 				"type": "uint32"
+			},
+			{
+				"internalType": "uint16",
+				"name": "_service",
+				"type": "uint16"
 			}
 		],
-		"name": "getChangeStatusCosts",
+		"name": "getServiceCosts",
 		"outputs": [
 			{
 				"internalType": "address",
@@ -1929,177 +1932,7 @@ function returnABIs() {
 				"type": "uint256"
 			}
 		],
-		"stateMutability": "nonpayable",
-		"type": "function"
-	},
-	{
-		"inputs": [
-			{
-				"internalType": "uint32",
-				"name": "_assetClass",
-				"type": "uint32"
-			}
-		],
-		"name": "getCreateNoteCosts",
-		"outputs": [
-			{
-				"internalType": "address",
-				"name": "",
-				"type": "address"
-			},
-			{
-				"internalType": "uint256",
-				"name": "",
-				"type": "uint256"
-			},
-			{
-				"internalType": "address",
-				"name": "",
-				"type": "address"
-			},
-			{
-				"internalType": "uint256",
-				"name": "",
-				"type": "uint256"
-			}
-		],
-		"stateMutability": "nonpayable",
-		"type": "function"
-	},
-	{
-		"inputs": [
-			{
-				"internalType": "uint32",
-				"name": "_assetClass",
-				"type": "uint32"
-			}
-		],
-		"name": "getForceModifyCosts",
-		"outputs": [
-			{
-				"internalType": "address",
-				"name": "",
-				"type": "address"
-			},
-			{
-				"internalType": "uint256",
-				"name": "",
-				"type": "uint256"
-			},
-			{
-				"internalType": "address",
-				"name": "",
-				"type": "address"
-			},
-			{
-				"internalType": "uint256",
-				"name": "",
-				"type": "uint256"
-			}
-		],
-		"stateMutability": "nonpayable",
-		"type": "function"
-	},
-	{
-		"inputs": [
-			{
-				"internalType": "uint32",
-				"name": "_assetClass",
-				"type": "uint32"
-			}
-		],
-		"name": "getNewRecordCosts",
-		"outputs": [
-			{
-				"internalType": "address",
-				"name": "",
-				"type": "address"
-			},
-			{
-				"internalType": "uint256",
-				"name": "",
-				"type": "uint256"
-			},
-			{
-				"internalType": "address",
-				"name": "",
-				"type": "address"
-			},
-			{
-				"internalType": "uint256",
-				"name": "",
-				"type": "uint256"
-			}
-		],
-		"stateMutability": "nonpayable",
-		"type": "function"
-	},
-	{
-		"inputs": [
-			{
-				"internalType": "uint32",
-				"name": "_assetClass",
-				"type": "uint32"
-			}
-		],
-		"name": "getReMintRecordCosts",
-		"outputs": [
-			{
-				"internalType": "address",
-				"name": "",
-				"type": "address"
-			},
-			{
-				"internalType": "uint256",
-				"name": "",
-				"type": "uint256"
-			},
-			{
-				"internalType": "address",
-				"name": "",
-				"type": "address"
-			},
-			{
-				"internalType": "uint256",
-				"name": "",
-				"type": "uint256"
-			}
-		],
-		"stateMutability": "nonpayable",
-		"type": "function"
-	},
-	{
-		"inputs": [
-			{
-				"internalType": "uint32",
-				"name": "_assetClass",
-				"type": "uint32"
-			}
-		],
-		"name": "getTransferAssetCosts",
-		"outputs": [
-			{
-				"internalType": "address",
-				"name": "",
-				"type": "address"
-			},
-			{
-				"internalType": "uint256",
-				"name": "",
-				"type": "uint256"
-			},
-			{
-				"internalType": "address",
-				"name": "",
-				"type": "address"
-			},
-			{
-				"internalType": "uint256",
-				"name": "",
-				"type": "uint256"
-			}
-		],
-		"stateMutability": "nonpayable",
+		"stateMutability": "view",
 		"type": "function"
 	},
 	{
@@ -2124,6 +1957,24 @@ function returnABIs() {
 			}
 		],
 		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "uint32",
+				"name": "_assetClass",
+				"type": "uint32"
+			},
+			{
+				"internalType": "uint256",
+				"name": "_increaseAmount",
+				"type": "uint256"
+			}
+		],
+		"name": "increasePriceShare",
+		"outputs": [],
+		"stateMutability": "nonpayable",
 		"type": "function"
 	},
 	{
@@ -2211,25 +2062,6 @@ function returnABIs() {
 		"type": "function"
 	},
 	{
-		"inputs": [
-			{
-				"internalType": "address",
-				"name": "dest",
-				"type": "address"
-			}
-		],
-		"name": "payments",
-		"outputs": [
-			{
-				"internalType": "uint256",
-				"name": "",
-				"type": "uint256"
-			}
-		],
-		"stateMutability": "view",
-		"type": "function"
-	},
-	{
 		"inputs": [],
 		"name": "renounceOwnership",
 		"outputs": [],
@@ -2250,55 +2082,6 @@ function returnABIs() {
 				"internalType": "uint32",
 				"name": "",
 				"type": "uint32"
-			}
-		],
-		"stateMutability": "view",
-		"type": "function"
-	},
-	{
-		"inputs": [
-			{
-				"internalType": "uint32",
-				"name": "_assetClass",
-				"type": "uint32"
-			}
-		],
-		"name": "retrieveCosts",
-		"outputs": [
-			{
-				"internalType": "uint256",
-				"name": "",
-				"type": "uint256"
-			},
-			{
-				"internalType": "uint256",
-				"name": "",
-				"type": "uint256"
-			},
-			{
-				"internalType": "uint256",
-				"name": "",
-				"type": "uint256"
-			},
-			{
-				"internalType": "uint256",
-				"name": "",
-				"type": "uint256"
-			},
-			{
-				"internalType": "uint256",
-				"name": "",
-				"type": "uint256"
-			},
-			{
-				"internalType": "uint256",
-				"name": "",
-				"type": "uint256"
-			},
-			{
-				"internalType": "address",
-				"name": "",
-				"type": "address"
 			}
 		],
 		"stateMutability": "view",
@@ -2349,19 +2132,6 @@ function returnABIs() {
 			}
 		],
 		"name": "updateACname",
-		"outputs": [],
-		"stateMutability": "nonpayable",
-		"type": "function"
-	},
-	{
-		"inputs": [
-			{
-				"internalType": "address payable",
-				"name": "payee",
-				"type": "address"
-			}
-		],
-		"name": "withdrawPayments",
 		"outputs": [],
 		"stateMutability": "nonpayable",
 		"type": "function"
@@ -4089,14 +3859,14 @@ const APP_NC = [
 	},
 	{
 		"inputs": [],
-		"name": "OO_resolveContractAddresses",
+		"name": "OO_pause",
 		"outputs": [],
 		"stateMutability": "nonpayable",
 		"type": "function"
 	},
 	{
 		"inputs": [],
-		"name": "OO_pause",
+		"name": "OO_resolveContractAddresses",
 		"outputs": [],
 		"stateMutability": "nonpayable",
 		"type": "function"
@@ -4341,14 +4111,14 @@ const NP_NC = [
 	},
 	{
 		"inputs": [],
-		"name": "OO_resolveContractAddresses",
+		"name": "OO_pause",
 		"outputs": [],
 		"stateMutability": "nonpayable",
 		"type": "function"
 	},
 	{
 		"inputs": [],
-		"name": "OO_pause",
+		"name": "OO_resolveContractAddresses",
 		"outputs": [],
 		"stateMutability": "nonpayable",
 		"type": "function"
@@ -4749,14 +4519,14 @@ const RCLR = [
 	},
 	{
 		"inputs": [],
-		"name": "OO_resolveContractAddresses",
+		"name": "OO_pause",
 		"outputs": [],
 		"stateMutability": "nonpayable",
 		"type": "function"
 	},
 	{
 		"inputs": [],
-		"name": "OO_pause",
+		"name": "OO_resolveContractAddresses",
 		"outputs": [],
 		"stateMutability": "nonpayable",
 		"type": "function"
@@ -5007,14 +4777,14 @@ const ECR_NC = [
 	},
 	{
 		"inputs": [],
-		"name": "OO_resolveContractAddresses",
+		"name": "OO_pause",
 		"outputs": [],
 		"stateMutability": "nonpayable",
 		"type": "function"
 	},
 	{
 		"inputs": [],
-		"name": "OO_pause",
+		"name": "OO_resolveContractAddresses",
 		"outputs": [],
 		"stateMutability": "nonpayable",
 		"type": "function"
@@ -5640,14 +5410,14 @@ const ECR_MGR = [
 	},
 	{
 		"inputs": [],
-		"name": "OO_resolveContractAddresses",
+		"name": "OO_pause",
 		"outputs": [],
 		"stateMutability": "nonpayable",
 		"type": "function"
 	},
 	{
 		"inputs": [],
-		"name": "OO_pause",
+		"name": "OO_resolveContractAddresses",
 		"outputs": [],
 		"stateMutability": "nonpayable",
 		"type": "function"
@@ -6108,6 +5878,571 @@ const ECR_MGR = [
 
 //............................................................................................................................................
 
+const ID_TKN = [
+	{
+		"inputs": [],
+		"stateMutability": "nonpayable",
+		"type": "constructor"
+	},
+	{
+		"anonymous": false,
+		"inputs": [
+			{
+				"indexed": true,
+				"internalType": "address",
+				"name": "owner",
+				"type": "address"
+			},
+			{
+				"indexed": true,
+				"internalType": "address",
+				"name": "approved",
+				"type": "address"
+			},
+			{
+				"indexed": true,
+				"internalType": "uint256",
+				"name": "tokenId",
+				"type": "uint256"
+			}
+		],
+		"name": "Approval",
+		"type": "event"
+	},
+	{
+		"anonymous": false,
+		"inputs": [
+			{
+				"indexed": true,
+				"internalType": "address",
+				"name": "owner",
+				"type": "address"
+			},
+			{
+				"indexed": true,
+				"internalType": "address",
+				"name": "operator",
+				"type": "address"
+			},
+			{
+				"indexed": false,
+				"internalType": "bool",
+				"name": "approved",
+				"type": "bool"
+			}
+		],
+		"name": "ApprovalForAll",
+		"type": "event"
+	},
+	{
+		"anonymous": false,
+		"inputs": [
+			{
+				"indexed": true,
+				"internalType": "address",
+				"name": "previousOwner",
+				"type": "address"
+			},
+			{
+				"indexed": true,
+				"internalType": "address",
+				"name": "newOwner",
+				"type": "address"
+			}
+		],
+		"name": "OwnershipTransferred",
+		"type": "event"
+	},
+	{
+		"anonymous": false,
+		"inputs": [
+			{
+				"indexed": false,
+				"internalType": "string",
+				"name": "_msg",
+				"type": "string"
+			}
+		],
+		"name": "REPORT",
+		"type": "event"
+	},
+	{
+		"anonymous": false,
+		"inputs": [
+			{
+				"indexed": true,
+				"internalType": "address",
+				"name": "from",
+				"type": "address"
+			},
+			{
+				"indexed": true,
+				"internalType": "address",
+				"name": "to",
+				"type": "address"
+			},
+			{
+				"indexed": true,
+				"internalType": "uint256",
+				"name": "tokenId",
+				"type": "uint256"
+			}
+		],
+		"name": "Transfer",
+		"type": "event"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "address",
+				"name": "to",
+				"type": "address"
+			},
+			{
+				"internalType": "uint256",
+				"name": "tokenId",
+				"type": "uint256"
+			}
+		],
+		"name": "approve",
+		"outputs": [],
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "address",
+				"name": "owner",
+				"type": "address"
+			}
+		],
+		"name": "balanceOf",
+		"outputs": [
+			{
+				"internalType": "uint256",
+				"name": "",
+				"type": "uint256"
+			}
+		],
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"inputs": [],
+		"name": "baseURI",
+		"outputs": [
+			{
+				"internalType": "string",
+				"name": "",
+				"type": "string"
+			}
+		],
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "uint256",
+				"name": "tokenId",
+				"type": "uint256"
+			}
+		],
+		"name": "getApproved",
+		"outputs": [
+			{
+				"internalType": "address",
+				"name": "",
+				"type": "address"
+			}
+		],
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "address",
+				"name": "owner",
+				"type": "address"
+			},
+			{
+				"internalType": "address",
+				"name": "operator",
+				"type": "address"
+			}
+		],
+		"name": "isApprovedForAll",
+		"outputs": [
+			{
+				"internalType": "bool",
+				"name": "",
+				"type": "bool"
+			}
+		],
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "address",
+				"name": "_recipientAddress",
+				"type": "address"
+			},
+			{
+				"internalType": "uint256",
+				"name": "tokenId",
+				"type": "uint256"
+			}
+		],
+		"name": "mintPRUF_IDToken",
+		"outputs": [
+			{
+				"internalType": "uint256",
+				"name": "",
+				"type": "uint256"
+			}
+		],
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"inputs": [],
+		"name": "name",
+		"outputs": [
+			{
+				"internalType": "string",
+				"name": "",
+				"type": "string"
+			}
+		],
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"inputs": [],
+		"name": "owner",
+		"outputs": [
+			{
+				"internalType": "address",
+				"name": "",
+				"type": "address"
+			}
+		],
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "uint256",
+				"name": "tokenId",
+				"type": "uint256"
+			}
+		],
+		"name": "ownerOf",
+		"outputs": [
+			{
+				"internalType": "address",
+				"name": "",
+				"type": "address"
+			}
+		],
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "address",
+				"name": "_recipientAddress",
+				"type": "address"
+			},
+			{
+				"internalType": "uint256",
+				"name": "tokenId",
+				"type": "uint256"
+			}
+		],
+		"name": "reMintPRUF_IDToken",
+		"outputs": [
+			{
+				"internalType": "uint256",
+				"name": "",
+				"type": "uint256"
+			}
+		],
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"inputs": [],
+		"name": "renounceOwnership",
+		"outputs": [],
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "address",
+				"name": "from",
+				"type": "address"
+			},
+			{
+				"internalType": "address",
+				"name": "to",
+				"type": "address"
+			},
+			{
+				"internalType": "uint256",
+				"name": "tokenId",
+				"type": "uint256"
+			}
+		],
+		"name": "safeTransferFrom",
+		"outputs": [],
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "address",
+				"name": "from",
+				"type": "address"
+			},
+			{
+				"internalType": "address",
+				"name": "to",
+				"type": "address"
+			},
+			{
+				"internalType": "uint256",
+				"name": "tokenId",
+				"type": "uint256"
+			},
+			{
+				"internalType": "bytes",
+				"name": "_data",
+				"type": "bytes"
+			}
+		],
+		"name": "safeTransferFrom",
+		"outputs": [],
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "address",
+				"name": "operator",
+				"type": "address"
+			},
+			{
+				"internalType": "bool",
+				"name": "approved",
+				"type": "bool"
+			}
+		],
+		"name": "setApprovalForAll",
+		"outputs": [],
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "uint256",
+				"name": "tokenId",
+				"type": "uint256"
+			},
+			{
+				"internalType": "string",
+				"name": "_tokenURI",
+				"type": "string"
+			}
+		],
+		"name": "setURI",
+		"outputs": [
+			{
+				"internalType": "uint256",
+				"name": "",
+				"type": "uint256"
+			}
+		],
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "bytes4",
+				"name": "interfaceId",
+				"type": "bytes4"
+			}
+		],
+		"name": "supportsInterface",
+		"outputs": [
+			{
+				"internalType": "bool",
+				"name": "",
+				"type": "bool"
+			}
+		],
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"inputs": [],
+		"name": "symbol",
+		"outputs": [
+			{
+				"internalType": "string",
+				"name": "",
+				"type": "string"
+			}
+		],
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "uint256",
+				"name": "index",
+				"type": "uint256"
+			}
+		],
+		"name": "tokenByIndex",
+		"outputs": [
+			{
+				"internalType": "uint256",
+				"name": "",
+				"type": "uint256"
+			}
+		],
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "uint256",
+				"name": "tokenId",
+				"type": "uint256"
+			}
+		],
+		"name": "tokenExists",
+		"outputs": [
+			{
+				"internalType": "uint8",
+				"name": "",
+				"type": "uint8"
+			}
+		],
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "address",
+				"name": "owner",
+				"type": "address"
+			},
+			{
+				"internalType": "uint256",
+				"name": "index",
+				"type": "uint256"
+			}
+		],
+		"name": "tokenOfOwnerByIndex",
+		"outputs": [
+			{
+				"internalType": "uint256",
+				"name": "",
+				"type": "uint256"
+			}
+		],
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "uint256",
+				"name": "tokenId",
+				"type": "uint256"
+			}
+		],
+		"name": "tokenURI",
+		"outputs": [
+			{
+				"internalType": "string",
+				"name": "",
+				"type": "string"
+			}
+		],
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"inputs": [],
+		"name": "totalSupply",
+		"outputs": [
+			{
+				"internalType": "uint256",
+				"name": "",
+				"type": "uint256"
+			}
+		],
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "address",
+				"name": "from",
+				"type": "address"
+			},
+			{
+				"internalType": "address",
+				"name": "to",
+				"type": "address"
+			},
+			{
+				"internalType": "uint256",
+				"name": "tokenId",
+				"type": "uint256"
+			}
+		],
+		"name": "transferFrom",
+		"outputs": [],
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "address",
+				"name": "newOwner",
+				"type": "address"
+			}
+		],
+		"name": "transferOwnership",
+		"outputs": [],
+		"stateMutability": "nonpayable",
+		"type": "function"
+	}
+];
+
+//............................................................................................................................................
+		abis.ID_TKN=ID_TKN;
         abis.AC_MGR=AC_MGR;
         abis.NP_NC=NP_NC;
         abis.A_TKN=A_TKN;
