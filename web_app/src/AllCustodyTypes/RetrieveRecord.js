@@ -3,10 +3,8 @@ import Form from "react-bootstrap/Form";
 import Col from "react-bootstrap/Col";
 import Button from "react-bootstrap/Button";
 import bs58 from "bs58";
-import returnManufacturers from "./Manufacturers";
-import returnTypes from "./Types";
 
-class RetrieveRecordNC extends Component {
+class RetrieveRecord extends Component {
   constructor(props) {
     super(props);
 
@@ -161,63 +159,33 @@ class RetrieveRecordNC extends Component {
               <h2>User address unreachable</h2>
               <h3>Please connect web3 provider.</h3>
             </div>
-          )}{window.assetClass === undefined && (
-            <div className="errorResults">
-              <h2>No asset class selected.</h2>
-              <h3>Please select asset class in home page to use forms.</h3>
-            </div>
           )}
-          {window.addr > 0 && window.assetClass > 0 &&(
+          {window.addr > 0 &&(
             <div>
-                {window.assetClass === 3 &&(
-                <Form.Group>
-                <Form.Check
-                className = 'checkBox'
-                size = 'lg'
-                onChange={handleCheckBox}
-                id={`NFA Firearm`}
-                label={`NFA Firearm`}
-                />
-                </Form.Group>
-                )}
               <h2 className="Headertext">Search Records</h2>
               <br></br>
               <Form.Row>
                 <Form.Group as={Col} controlId="formGridType">
                   <Form.Label className="formFont">Type:</Form.Label>
-
-                  {returnTypes(window.assetClass, this.state.isNFA) !== '0' &&(<Form.Control as="select" size="lg" onChange={(e) => this.setState({ type: e.target.value })}>
-                  {returnTypes(window.assetClass, this.state.isNFA)}
-                  </Form.Control>
-                  )}
-
-                    {returnTypes(window.assetClass, this.state.isNFA) === '0' &&(
                     <Form.Control
                     placeholder="Type"
                     required
                     onChange={(e) => this.setState({ type: e.target.value })}
                     size="lg"
-                  />)}
+                  />
                 </Form.Group>
 
                   <Form.Group as={Col} controlId="formGridManufacturer">
                     <Form.Label className="formFont">Manufacturer:</Form.Label>
-                    {returnManufacturers(window.assetClass, this.state.isNFA) !== '0' &&(<Form.Control as="select" size="lg" onChange={(e) => this.setState({ manufacturer: e.target.value })}>
-                  {returnManufacturers(window.assetClass, this.state.isNFA)}
-                  </Form.Control>
-                  )}
-
-                      {returnManufacturers(window.assetClass, this.state.isNFA) === '0' &&(
                     <Form.Control
                     placeholder="Manufacturer"
                     required
                     onChange={(e) => this.setState({ manufacturer: e.target.value })}
                     size="lg"
-                  />)}
+                  />
                   </Form.Group>
 
               </Form.Row>
-              
 
               <Form.Row>
                 <Form.Group as={Col} controlId="formGridModel">
@@ -284,4 +252,4 @@ class RetrieveRecordNC extends Component {
   }
 }
 
-export default RetrieveRecordNC;
+export default RetrieveRecord;

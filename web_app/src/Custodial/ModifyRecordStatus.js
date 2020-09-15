@@ -2,7 +2,7 @@ import React, { Component } from "react";
 import Form from "react-bootstrap/Form";
 import Col from "react-bootstrap/Col";
 import Button from "react-bootstrap/Button";
-import returnManufacturers from "./Manufacturers";
+import returnManufacturers from "../Resources/Manufacturers";
 import returnTypes from "./Types";
 
 class ModifyRecordStatus extends Component {
