@@ -104,6 +104,26 @@ function buildWindowUtils() {
 
   }
 
+  const _resolveACFromID = async () => {
+    if (window.contracts !== undefined) {
+      await window.contracts.AC_MGR.methods
+        .getAC_name(window.assetClass)
+        .call({ from: window.addr }, (_error, _result) => {
+          if (_error) { console.log("Error: ", _error) }
+          else {
+            window.assetClassName = _result
+            console.log("resolved AC name ", window.assetClassName, " from AC index ", window.assetClass);
+            return(window.assetClassName)
+          }
+        });
+    }
+
+    window.utils.checkCreds();
+    window.utils.getCosts(6);
+    console.log("User authLevel: ", window.authLevel);
+
+  }
+
   const _checkACName = async (name) => {
     if (window.contracts !== undefined) {
       await window.contracts.AC_MGR.methods
@@ -290,6 +310,7 @@ function buildWindowUtils() {
       checkEscrowStatus: _checkEscrowStatus,
       tenThousandHashesOf: _tenThousandHashesOf,
       convertTimeTo: _convertTimeTo,
+      resolveACFromID: _resolveACFromID,
 
   }
 

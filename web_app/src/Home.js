@@ -56,6 +56,7 @@ class Home extends Component {
           this.state.assetClass.charAt(0) === "9"
         ) {
           window.assetClass = this.state.assetClass;
+          window.utils.resolveACFromID()
           await window.utils.checkCreds();
           await window.utils.getCosts(6);
           console.log(window.authLevel);
