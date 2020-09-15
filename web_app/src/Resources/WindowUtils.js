@@ -1,20 +1,97 @@
 function buildWindowUtils () {
 
+    //UTIL_TKN.methods.currentACtokenInfo
+    //AC_MGR.methods.getACData(AC)
+    //AC_MGR.methods.resolveAssetClass(AC NAME)
+
+    const _resolveAC = async () => {
+      if (window.contracts !== undefined) {
+        await window.contracts.AC_MGR.methods
+            .resolveAssetClass(window.assetClassName)
+            .call({ from: window.addr }, (_error, _result) => {
+                if (_error) { console.log("Error: ", _error) }
+                else {
+                  window.assetClass = _result
+                  console.log("resolved AC name ",window.assetClassName," as: ",  window.assetClass);
+                }
+            });
+    }
+
+    window.utils.checkCreds();
+    window.utils.getCosts(6);
+    console.log("User authLevel: ", window.authLevel);
+
+    }
+
+    const _checkACName = async (name) => {
+      if (window.contracts !== undefined) {
+        await window.contracts.AC_MGR.methods
+            .resolveAssetClass(name)
+            .call({ from: window.addr }, (_error, _result) => {
+                if (_error) { console.log(_error) }
+                else {
+                  console.log("resolved successfully to AC: ",_result)
+                  if(Number(_result) > 0){return(true)}
+                  else {return false}
+                }
+            });
+    }
+    
+    window.utils.checkCreds();
+    window.utils.getCosts(6);
+    console.log("User authLevel: ", window.authLevel);
+
+    }
+
+    const _getACData = async () => {
+      if (window.contracts !== undefined) {
+        window.contracts.AC_MGR.methods
+            .getACData(window.assetClass)
+            .call({ from: window.addr }, (_error, _result) => {
+                if (_error) { console.log("Error: ", _error) }
+                else {
+                  window.ACData = Object.values(_result)
+                  console.log(window.ACData);
+                }
+            });
+    }
+
+    }
+
     const _checkCreds = async () => {
         window.isAuthUser = undefined;
         if (window.contracts !== undefined) {
-            window.contracts.AC_MGR.methods
+
+              await window.contracts.AC_TKN.methods
+              .ownerOf(window.assetClass)
+              .call({ from: window.addr }, (_error, _result) => {
+                  if (_error) { console.log("Error: ", _error) }
+                  else {
+                      if (_result === window.addr){
+                        window.isACAdmin = true;
+                      }
+                      else{
+                        window.isACAdmin = false;
+                      }
+                  }
+              });
+
+              await window.contracts.AC_MGR.methods
                 .getUserType(window.web3.utils.soliditySha3(window.addr), window.assetClass)
                 .call({ from: window.addr }, (_error, _result) => {
                     if (_error) { console.log("Error: ", _error) }
                     else {
-                        if (_result === "0") { window.authLevel = "Standard User (read-only access)"; window.isAuthUser = false;}
-                        else if (_result === "1") { window.authLevel = "Authorized User"; window.isAuthUser = true;}
-                        else if (_result === "9") { window.authLevel = "Robot"; window.isAuthUser = false;}
+                        if (_result === "0" && window.isACAdmin === false) { window.authLevel = "Standard User"; window.isAuthUser = false;}
+                        else if (_result === "1" && window.isACAdmin === false) { window.authLevel = "Authorized User"; window.isAuthUser = true;}
+                        else if (_result === "9" && window.isACAdmin === false) { window.authLevel = "Robot"; window.isAuthUser = false;}
+                        else if (_result === "1" && window.isACAdmin === true) {window.authLevel = "Authorized User/AC Admin"; window.isAuthUser = true;}
+                        else if (_result === "9" && window.isACAdmin === true) {window.authLevel = "Robot/AC Admin"; window.isAuthUser = false;}
+                        else if (_result === "0" && window.isACAdmin === true) {window.authLevel = "AC Admin"; window.isAuthUser = false;}
                         console.log(_result)
                         return (window.authLevel)
                     }
                 });
+            
         }
 
         else{
@@ -26,6 +103,7 @@ function buildWindowUtils () {
         window.costArray = [];
         if (window.contracts !== undefined) {
             //console.log("Getting cost array");
+
             for(var i=1; i <= numOfServices; i++){
               await window.contracts.AC_MGR.methods
                 .getServiceCosts(window.assetClass, i)
@@ -76,6 +154,8 @@ function buildWindowUtils () {
           NP_NC: window._contracts.content[11],
           RCLR: window._contracts.content[12],
           PIP: window._contracts.content[13],
+          ID_TKN: window._contracts.content[14],
+          UTIL_TKN: window._contracts.content[15]
         }
   
         console.log("contracts: ", window.contracts)
@@ -135,6 +215,9 @@ function buildWindowUtils () {
         getCosts: _getCosts,
         getContracts: _getContracts,
         determineTokenBalance: _determineTokenBalance,
+        getACData: _getACData,
+        resolveAC: _resolveAC,
+        checkACName: _checkACName,
     }
 
     return console.log("Utils loaded: ", window.utils)

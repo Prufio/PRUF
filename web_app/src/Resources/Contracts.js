@@ -20,6 +20,7 @@ async function buildContracts(_web3) {
   const NP_NC_ABI = abis.NP_NC;
   const PIP_ABI = abis.PIP;
   const RCLR_ABI = abis.RCLR;
+  const UTIL_TKN_ABI = abis.UTIL_TKN;
 
   const STOR_Address = "0x630A1e0059BC7b14EDd6ad116Ea31420E96c3BbE";
 
@@ -39,6 +40,7 @@ async function buildContracts(_web3) {
   let RCLR = null;
   let PIP = null;
   let ID_TKN = null;
+  let UTIL_TKN = null;
 
   var _contracts = {
     content: []
@@ -176,7 +178,7 @@ async function buildContracts(_web3) {
     }
     );
 
-    await STOR.methods
+  await STOR.methods
     .resolveContractAddress("ID_TKN")
     .call(function (_error, _result) {
       if (_error) {
@@ -184,6 +186,18 @@ async function buildContracts(_web3) {
       } else {
         console.log(_result);
         ID_TKN = new _web3.eth.Contract(ID_TKN_ABI, _result);
+      }
+    }
+    );
+
+  await STOR.methods
+    .resolveContractAddress("UTIL_TKN")
+    .call(function (_error, _result) {
+      if (_error) {
+        console.log(_error);
+      } else {
+        console.log(_result);
+        UTIL_TKN = new _web3.eth.Contract(UTIL_TKN_ABI, _result);
       }
     }
     );
@@ -200,7 +214,7 @@ async function buildContracts(_web3) {
     }
     );
 
-    await STOR.methods
+  await STOR.methods
     .resolveContractAddress("VERIFY")
     .call(function (_error, _result) {
       if (_error) {
@@ -225,6 +239,8 @@ async function buildContracts(_web3) {
   _contracts.content.push(APP_NC);   //10
   _contracts.content.push(NP_NC);    //11
   _contracts.content.push(RCLR);     //12
+  _contracts.content.push(ID_TKN);   //14
+  _contracts.content.push(UTIL_TKN); //15
   _contracts.content.push(PIP);    //13
 
   //console.log(_contracts)
