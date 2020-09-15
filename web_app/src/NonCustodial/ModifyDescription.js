@@ -1,4 +1,4 @@
-Fimport React, { Component } from "react";
+import React, { Component } from "react";
 import Form from "react-bootstrap/Form";
 import Col from "react-bootstrap/Col";
 import Button from "react-bootstrap/Button";
@@ -44,7 +44,7 @@ class ModifyDescriptionNC extends Component {
 
   }
 
-  componentDidUpdate(){//stuff to do when state updates
+  componentDidUpdate() {//stuff to do when state updates
 
   }
 
@@ -82,7 +82,7 @@ class ModifyDescriptionNC extends Component {
               "WARNING: Record DOES NOT EXIST! Reject in metamask and review asset info fields."
             );
           } else {
-            if (Object.values(_result)[7] === self.state.hashPath){
+            if (Object.values(_result)[7] === self.state.hashPath) {
               alert("WARNING: Record description matches current submission! Reject in metamask and check description field.")
             }
             self.setState({ result1: _result });
@@ -114,17 +114,17 @@ class ModifyDescriptionNC extends Component {
     const _updateDescription = () => {
       this.setState({ txStatus: false });
       this.setState({ txHash: "" });
-      this.setState({error: undefined})
-      this.setState({result: ""})
+      this.setState({ error: undefined })
+      this.setState({ result: "" })
       var idxHash;
       var rgtRaw;
-      
+
       idxHash = window.web3.utils.soliditySha3(
         this.state.type,
         this.state.manufacturer,
         this.state.model,
         this.state.serial,
-    );
+      );
 
       rgtRaw = window.web3.utils.soliditySha3(
         this.state.first,
@@ -161,14 +161,14 @@ class ModifyDescriptionNC extends Component {
         });
 
       console.log(this.state.txHash);
-      self.setState({ hashPath: ""});
+      self.setState({ hashPath: "" });
       document.getElementById("MainForm").reset();
     };
 
     return (
       <div>
         <Form className="MDform" id='MainForm'>
-        {window.addr === undefined && (
+          {window.addr === undefined && (
             <div className="errorResults">
               <h2>User address unreachable</h2>
               <h3>Please connect web3 provider.</h3>
@@ -179,7 +179,7 @@ class ModifyDescriptionNC extends Component {
               <h3>Please select asset class in home page to use forms.</h3>
             </div>
           )}
-          {window.addr > 0 && window.assetClass > 0 &&(
+          {window.addr > 0 && window.assetClass > 0 && (
             <div>
 
               <h2 className="Headertext">Modify Description</h2>
@@ -190,7 +190,7 @@ class ModifyDescriptionNC extends Component {
 
 
 
-                    <Form.Control
+                  <Form.Control
                     placeholder="Type"
                     required
                     onChange={(e) => this.setState({ type: e.target.value })}
@@ -198,16 +198,16 @@ class ModifyDescriptionNC extends Component {
                   />
                 </Form.Group>
 
-                  <Form.Group as={Col} controlId="formGridManufacturer">
-                    <Form.Label className="formFont">Manufacturer:</Form.Label>
-                      
-                    <Form.Control
+                <Form.Group as={Col} controlId="formGridManufacturer">
+                  <Form.Label className="formFont">Manufacturer:</Form.Label>
+
+                  <Form.Control
                     placeholder="Manufacturer"
                     required
                     onChange={(e) => this.setState({ manufacturer: e.target.value })}
                     size="lg"
                   />
-                  </Form.Group>
+                </Form.Group>
 
               </Form.Row>
 
