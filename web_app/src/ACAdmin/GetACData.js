@@ -43,6 +43,25 @@ class GetACData extends Component {
     const self = this;
 
     const getAC_data = async () => {
+        let ref;
+
+        if (
+            this.state.assetClass.charAt(0) === "0" ||
+            this.state.assetClass.charAt(0) === "1" ||
+            this.state.assetClass.charAt(0) === "2" ||
+            this.state.assetClass.charAt(0) === "3" ||
+            this.state.assetClass.charAt(0) === "4" ||
+            this.state.assetClass.charAt(0) === "5" ||
+            this.state.assetClass.charAt(0) === "6" ||
+            this.state.assetClass.charAt(0) === "7" ||
+            this.state.assetClass.charAt(0) === "8" ||
+            this.state.assetClass.charAt(0) === "9"
+          ) {
+              ref = "id"
+          }
+          else {
+              ref ="name"
+          }
       
         let acDoesExist = await window.utils.checkForAC ("id", this.state.assetClass);
         if (acDoesExist) {
@@ -96,6 +115,8 @@ class GetACData extends Component {
         {this.state.ACData !== undefined && ( //conditional rendering
           <div className="GACDresults">
             Asset Class Found!
+            <br></br>
+            AC : {this.state.assetClass}
             <br></br>
             Root AC : {this.state.ACData.root}
             <br></br>
