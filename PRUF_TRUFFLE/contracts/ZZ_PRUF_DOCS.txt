@@ -268,12 +268,18 @@ pragma solidity ^0.6.7;
  * statuses:
  *
  * 0 = no status; clean
- * 1 = items with this SN are questionable (found an item that is apparently not real, or MANY collisions found)
- * 2 = items with this SN are counterfiet (original, authentic item recovered (and held/destroyed), or SN does not officially exist) (SUPER AUTH ONLY)
- * 3 = this item SN was stolen
- * 4 = this item SN was lost
- * 5 =
+ * 1 = items with this SN are questionable (found an item that is apparently not real) --settable/clearable by type 2-3 user
+ * 2 = items with this SN are counterfiet (original, authentic item recovered (and held/destroyed), or SN does not officially exist) --settable/clearable by type 3 user
+ * 3 = this item SN was stolen --settable/clearable by type 2-3 user
+ * 4 = this item SN was lost --settable/clearable by type 2-3 user
+ * 5 = this item SN is in process --settable by type 2-3 user - clearable by type 3 user 
  * 6 =
+ *
+ * usertypes are indicated in idxAuthInVerify[_idxHash] - Auth levels are set when enabling an asset to be a pruf-verify wallet
+ * 0 not authorized
+ * 1 basic auth
+ * 2 priveledged level auth
+ * 3 admin level auth
  - ---------------------------------------------------------------*/
 
  /*-----------------------------------------------------------------
