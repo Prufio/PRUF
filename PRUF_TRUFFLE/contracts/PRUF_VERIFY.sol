@@ -21,11 +21,11 @@ __/\\\\\\\\\\\\\ _____/\\\\\\\\\ _______/\\../\\ ___/\\\\\\\\\\\\\\\
  * statuses:
  *
  * 0 = no status; clean
- * 1 = items with this SN are questionable (found an item that is apparently not real)
- * 2 = items with this SN are counterfiet (original, authentic item recovered (and held/destroyed), or SN does not officially exist) (SUPER AUTH ONLY)
- * 3 = this item SN was stolen
- * 4 = this item SN was lost
- * 5 = this item SN is in process
+ * 1 = items with this SN are questionable (found an item that is apparently not real) --settable/clearable by type 2-3 user
+ * 2 = items with this SN are counterfiet (original, authentic item recovered (and held/destroyed), or SN does not officially exist) --settable/clearable by type 3 user
+ * 3 = this item SN was stolen --settable/clearable by type 2-3 user
+ * 4 = this item SN was lost --settable/clearable by type 2-3 user
+ * 5 = this item SN is in process --settable by type 2-3 user - clearable by type 3 user 
  * 6 =
  *
  * usertypes are indicated in idxAuthInVerify[_idxHash] 
@@ -273,8 +273,8 @@ contract VERIFY is CORE {
     ) external isAuthorized(_idxHash) returns (uint256) {
 
         require(
-            (_status == 3) || (_status == 4) || (_status == 5) || (_status == 1) || (_status == 0),
-            "VFY:MI:must set to 0 || 1 || 3 || 4 || 5 only"
+            (_status != 2),
+            "VFY:MI:must set to 0 || 1 || 3 || 4 || 5+ only"
         ); //verify _status is l/s
         require(
                 idxAuthInVerify[_idxHash] > 1, //token is auth privelidged+
