@@ -45,7 +45,7 @@ contract VERIFY is CORE {
     using SafeMath for uint256;
 
     struct ItemData {
-        uint8 status; //Item status (suspect, counterfeit, stolen, lost, etc) //maybe only bank /mint can mark counterfeit?
+        uint8 status; //Item status (suspect, counterfeit, stolen, lost, etc) type 3+ user
         uint32 value; //denomination, if applicable
         uint32 collisions; //number of times the item was attempted to be "locked" when held
         //room here for more data for 32 bytes!
@@ -78,9 +78,9 @@ contract VERIFY is CORE {
 
     /*
      * @dev:authorize an asset token _idxHash as a wallet token in verify
-     *      the caller must posess AC token for given asset Class
-     *      AC must be VERIFY custody type (4)
-     *      AC of Asset token to be approved must be of the same assetClass as the held ACtoken
+     *      the caller must posess AC token for given asset Class (reverts)
+     *      AC must be VERIFY custody type (4) (reverts)
+     *      AC of Asset token to be approved must be of the same assetClass as the held ACtoken (reverts)
      */
     function authorizeTokenForVerify(
         bytes32 _idxHash,
@@ -106,13 +106,13 @@ contract VERIFY is CORE {
     }
 
     /*
-     * @dev:Put an item into the (_idxHash) verify wallet, with maximum assurances
-     *      the caller must posess Asset token, must pass isAuth
-     *      item cannot already be registered as "in" the callers wallet
-     *      itemData.status must be 0 (clean)
-     *      Item collisions cannot exceed maxCollisions
+     * @dev:Put an item into the (_idxHash) VERIFY wallet, with maximum assurances
+     *      the caller must posess Asset token, must pass isAuth (reverts)
+     *      item cannot already be registered as "in" the callers wallet (reverts)
+     *      itemData.status must be 0 (clean) (returns status)
+     *      Item collisions cannot exceed maxCollisions (returns 100)
+     *      If item is marked as held in another wallet, collisions++ (return 0)     
      *      If item is not marked as held, it will be listed as held "in" the callers wallet (return 170)
-     *      If item is marked as held in another wallet, collisions++ (return 0)
      */
     function safePutIn(
         bytes32 _idxHash,
@@ -148,10 +148,12 @@ contract VERIFY is CORE {
 
     /*
      * @dev:Put an item into the (_idxHash) verify wallet
-     *      the caller must posess Asset token, must pass isAuth
-     *      item cannot already be registered as "in" the callers wallet
-     *      If item is not marked as held, it will be listed as held "in" the callers wallet (return 170)
+     *      the caller must posess Asset token, must pass isAuth (reverts)
+     *      item cannot already be registered as "in" the callers wallet (reverts)
+     *      if status is stolen return 3
+     *      if status is counterfeit return 2
      *      If item is marked as held in another wallet, collisions++ (return 0)
+     *      If item is not marked as held, it will be listed as held "in" the callers wallet (return 170)
      */
     function putIn(bytes32 _idxHash, bytes32 _itemHash)
         external
@@ -187,9 +189,9 @@ contract VERIFY is CORE {
 
     /*
      * @dev:Take an item out of the (_idxHash) verify wallet
-     *      the caller must posess Asset token, must pass isAuth
-     *      item must be registered as "in" the callers wallet
-     *      must not be lost/stolen
+     *      the caller must posess Asset token, must pass isAuth (reverts)
+     *      item must be registered as "in" the callers wallet (reverts)
+     *      must not be lost/stolen (reverts)
      */
     function takeOut(bytes32 _idxHash, bytes32 _itemHash)
         external
@@ -213,10 +215,10 @@ contract VERIFY is CORE {
 
     /*
      * @dev:Transfer an item out of one (_idxHash) verify wallet into another
-     *      the caller must posess Asset token, must pass isAuth
-     *      item must be registered as "in" the callers wallet
-     *      item must not be lost/stolen
-     *      destination wallet must be in same asset class as sending wallet
+     *      the caller must posess Asset token, must pass isAuth (reverts)
+     *      item must be registered as "in" the callers wallet (reverts)
+     *      item must not be lost/stolen (reverts)
+     *      destination wallet must be in same asset class as sending wallet (reverts)
      */
     function transfer(
         //IS THIS A TERRIBLE IDEA? EXAMINE
@@ -251,8 +253,8 @@ contract VERIFY is CORE {
     }
 
     /*
-     * @dev:Mark an item conterfeit . Admin function, user marks conterfeit regardless of holder
-     *      the caller must posess Asset token at a 3 userlevel
+     * @dev:Mark an item conterfeit . Admin function, user marks conterfeit regardless of who holds it
+     *      the caller must posess Asset token authorized at userlevel 3
      */
     function AdminMarkCounterfeit(
         bytes32 _idxHash,
@@ -273,8 +275,9 @@ contract VERIFY is CORE {
 
     /*
      * @dev:Mark an item with a status (see docs at top of contract)
-     *      the caller must posess Asset token, must pass isAuth and user must be auth as a 3 in that AC
-     *      item must be listed as "in" the callers wallet
+     *      the caller must posess Asset token, must pass isAuth and user must be auth as a 3 in that AC (reverts)
+     *      item must be listed as "in" the callers wallet (reverts)
+     *      Other than that, unrestricted power to change ststus of held items
      */
     function markItem(
         bytes32 _idxHash,
@@ -300,6 +303,7 @@ contract VERIFY is CORE {
 
     /*
      * @dev:Retrieve data about an item
+     * unrestricted access
      */
     function getItemData(bytes32 _itemHash)
         external
