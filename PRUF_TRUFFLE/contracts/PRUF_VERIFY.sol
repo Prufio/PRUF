@@ -186,7 +186,7 @@ contract VERIFY is CORE {
         returns (uint256)
     {
         require(items[_itemHash] == _idxHash, "VFY:TO:item not held by caller"); //check to see if held by _idxHash
-         require( 
+        require( 
             (itemData[_itemHash].status != 3) &&
             (itemData[_itemHash].status != 4), "VFY:T:Item SN is marked as lost or stolen"
         );
@@ -242,7 +242,7 @@ contract VERIFY is CORE {
      *      the caller must posess Asset token, must pass isAuth and user must be auth as a "1" in that AC
      *      item must be listed as "in" the callers wallet
      */
-    function AdminMarkItem(
+    function adminMarkItem(
         bytes32 _idxHash,
         bytes32 _itemHash,
         uint8 _status,
@@ -278,7 +278,7 @@ contract VERIFY is CORE {
         ); //verify _status is l/s
         require(
                 idxAuthInVerify[_idxHash] > 1, //token is auth privelidged+
-            "VFY:MILS: Caller does not hold token or is not authorized as a verified user (>= 2) in the asset class"
+            "VFY:MILS: Caller does not hold token or is not authorized as a verified user (>= 2) in the asset token"
         );
         require(
             (itemData[_itemHash].status != 2) &&
