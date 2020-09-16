@@ -380,8 +380,34 @@ h4 {
   opacity: 0.96;
 }
 
+.UNForm{
+  height: 19rem;
+  width: 59rem;
+  background-color: #005480;
+  border-radius: 0.5rem;
+  padding: 2rem;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  margin-top: -2rem;
+  opacity: 0.96;
+}
+
+.ECForm{
+  height: 26rem;
+  width: 59rem;
+  background-color: #005480;
+  border-radius: 0.5rem;
+  padding: 2rem;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  margin-top: -2rem;
+  opacity: 0.96;
+}
+
 .AUForm{
-  height: 37.5rem;
+  height: 26rem;
   width: 59rem;
   background-color: #005480;
   border-radius: 0.5rem;
@@ -394,7 +420,7 @@ h4 {
 }
 
 .SCForm{
-  height: 36rem;
+  height: 33.5rem;
   width: 59rem;
   background-color: #005480;
   border-radius: 0.5rem;
@@ -439,7 +465,7 @@ h4 {
   border-radius: 0.5rem;
   padding: 2rem;
   display: flex;
-  flex-direction: row;
+  flex-direction: center;
   justify-content: space-between;
   margin-top: -2rem;
   opacity: 0.96;
