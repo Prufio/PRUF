@@ -12,11 +12,11 @@ __/\\\\\\\\\\\\\ _____/\\\\\\\\\ _______/\\../\\ ___/\\\\\\\\\\\\\\\
 
 /*-----------------------------------------------------------------
  *  TO DO
- *   need to limit access to specified AC's !
  *
- * only trusted entities can put items "in pouch" auth as user type 1+ in asset class
+/*-----------------------------------------------------------------
+ * only tokenHolder can put items "in pouch" 
  * only trusted entities can take items "out"
- * only pouchholder can mark item status, etc
+ * only pouchholder can mark item status, auth as user type 1+ in asset class
  * joe public can check only?
  * statuses:
  *
@@ -27,6 +27,11 @@ __/\\\\\\\\\\\\\ _____/\\\\\\\\\ _______/\\../\\ ___/\\\\\\\\\\\\\\\
  * 4 = this item SN was lost
  * 5 =
  * 6 =
+ *
+ * usertypes are 
+ * (1) for admin (all functions) 
+ * (2) all but mark item, can mark l/s only)
+ * holds token only (no usertype) for check in / out of wallet functionality only
  *---------------------------------------------------------------*/
 
 // SPDX-License-Identifier: UNLICENSED
@@ -222,11 +227,38 @@ contract VERIFY is CORE {
         uint256 tokenId = uint256(_idxHash);
 
         require(
-            (A_TKN.ownerOf(tokenId) == msg.sender) &&
-                (getCallingUserType(rec.assetClass) == 1), //msg.sender is token holder
+            (A_TKN.ownerOf(tokenId) == msg.sender) && //msg.sender is token holder
+                (getCallingUserType(rec.assetClass) == 1), //msg sender is auth in asset class
             "VFY:MI: Caller does not hold token or is not authorized as a admin user (type1) in the asset class"
         );
-        require(items[_itemHash] == _idxHash, "VFY:TO:item not held by caller"); //check to see if held by _idxHash
+        require(items[_itemHash] == _idxHash, "VFY:MI:item not held by caller"); //check to see if held by _idxHash
+
+        itemData[_itemHash].status = _status;
+        itemData[_itemHash].value = _value;
+        return 170;
+    }
+
+        /*
+     * @dev:Mark an item with lost or stolen status (see docs at top of contract)
+     *      the caller must posess Asset token, must pass isAuth and user must be auth as a "1" in that AC
+     *      item must be listed as "in" the callers wallet
+     */
+    function markLS(
+        bytes32 _idxHash,
+        bytes32 _itemHash,
+        uint8 _status,
+        uint32 _value
+    ) external isAuthorized(_idxHash) returns (uint256) {
+        Record memory rec = getRecord(_idxHash);
+        uint256 tokenId = uint256(_idxHash);
+
+        require((_status == 3) || (_status == 4), "VFY:MILS:must set to L/S 3 || 4 only"); //verify _status is l/s
+        require(
+            (A_TKN.ownerOf(tokenId) == msg.sender) && //msg.sender is token holder
+                (getCallingUserType(rec.assetClass) <= 2), //msg sender is auth in asset class
+            "VFY:MILS: Caller does not hold token or is not authorized as a verified user (>= 2) in the asset class"
+        );
+        require(items[_itemHash] == _idxHash, "VFY:MILS:item not held by caller"); //check to see if held by _idxHash
 
         itemData[_itemHash].status = _status;
         itemData[_itemHash].value = _value;
