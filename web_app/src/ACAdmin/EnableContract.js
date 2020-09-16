@@ -71,7 +71,7 @@ class enableContract extends Component {
 
     return (
       <div>
-        <Form className="ACForm">
+        <Form className="ECForm">
           {window.addr === undefined && (
             <div className="VRresults">
               <h2>User address unreachable</h2>
@@ -88,7 +88,6 @@ class enableContract extends Component {
             <div>
               <h2 className="Headertext">Enable Contract</h2>
               <br></br>
-
               <Form.Group as={Col} controlId="formGridContractName">
                 <Form.Label className="formFont">Contract Name :</Form.Label>
                 <Form.Control
@@ -98,7 +97,6 @@ class enableContract extends Component {
                   size="lg"
                 />
               </Form.Group>
-
               <Form.Group as={Col} controlId="formGridAuthLevel">
                 <Form.Label className="formFont">Auth Level :</Form.Label>
                 <Form.Control
@@ -109,7 +107,6 @@ class enableContract extends Component {
                   size="lg"
                 />
               </Form.Group>
-
               <Form.Group className="buttonDisplay">
                 <Button
                   variant="primary"
