@@ -248,12 +248,10 @@ contract VERIFY is CORE {
         uint8 _status,
         uint32 _value
     ) external isAuthorized(_idxHash) returns (uint256) {
-        uint256 tokenId = uint256(_idxHash);
 
         require(
-            (A_TKN.ownerOf(tokenId) == msg.sender) && //msg.sender is token holder
-                (idxAuthInVerify[_idxHash] == 3), //token is auth amdmin
-            "VFY:MI: Caller does not hold token or is not authorized as a admin user (type1) in the asset class"
+                idxAuthInVerify[_idxHash] == 3, //token is auth amdmin
+            "VFY:MI: Caller not authorized as a admin user (type3) in the asset class"
         );
         require(items[_itemHash] == _idxHash, "VFY:MI:item not held by caller"); //check to see if held by _idxHash
 
@@ -273,15 +271,13 @@ contract VERIFY is CORE {
         uint8 _status,
         uint32 _value
     ) external isAuthorized(_idxHash) returns (uint256) {
-        uint256 tokenId = uint256(_idxHash);
 
         require(
             (_status == 3) || (_status == 4) || (_status == 5) || (_status == 1) || (_status == 0),
             "VFY:MI:must set to 0 || 1 || 3 || 4 || 5 only"
         ); //verify _status is l/s
         require(
-            (A_TKN.ownerOf(tokenId) == msg.sender) && //msg.sender is token holder
-                (idxAuthInVerify[_idxHash] > 1), //token is auth privelidged+
+                idxAuthInVerify[_idxHash] > 1, //token is auth privelidged+
             "VFY:MILS: Caller does not hold token or is not authorized as a verified user (>= 2) in the asset class"
         );
         require(
