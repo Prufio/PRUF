@@ -5,6 +5,9 @@ class BasicComponent extends Component {
     render() {
         return (<>
                 <li>
+                    <NavLink to="/verify-lite">Verify Lite</NavLink>
+                </li>
+                <li>
                     <NavLink to="/verify-rights-holder">Verify</NavLink>
                 </li>
                 <li>

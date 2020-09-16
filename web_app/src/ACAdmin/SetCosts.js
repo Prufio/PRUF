@@ -23,21 +23,21 @@ class SetCosts extends Component {
       serviceIndex: "",
 
       serviceCost: 0,
- 
+
     };
   }
 
   //component state-change events......................................................................................................
 
   componentDidMount() {//stuff to do when component mounts in window
-  
+
   }
 
   componentWillUnmount() {//stuff do do when component unmounts from the window
 
   }
 
-  componentDidUpdate(){//stuff to do when state updates
+  componentDidUpdate() {//stuff to do when state updates
 
   }
 
@@ -49,7 +49,7 @@ class SetCosts extends Component {
         .ACTH_setCosts(
           window.assetClass,
           this.state.serviceIndex,
-          Number(this.state.serviceCost)*1000000000000000000,
+          Number(this.state.serviceCost) * 1000000000000000000,
           this.state.beneficiary
         )
 
@@ -84,7 +84,7 @@ class SetCosts extends Component {
               <h3>Please select asset class in home page to use forms.</h3>
             </div>
           )}
-          {window.addr > 0 && window.assetClass > 0 &&(
+          {window.addr > 0 && window.assetClass > 0 && (
             <div>
               <h2 className="Headertext">Set Costs</h2>
               <br></br>

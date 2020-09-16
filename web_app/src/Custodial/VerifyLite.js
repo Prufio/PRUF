@@ -2,10 +2,8 @@ import React, { Component } from "react";
 import Form from "react-bootstrap/Form";
 import Col from "react-bootstrap/Col";
 import Button from "react-bootstrap/Button";
-import returnManufacturers from "./Manufacturers";
-import returnTypes from "./Types";
 
-class VerifyRightHolderNC extends Component {
+class VerifyLite extends Component {
   constructor(props) {
     super(props);
 
@@ -51,38 +49,7 @@ class VerifyRightHolderNC extends Component {
   render() {//render continuously produces an up-to-date stateful document  
     const self = this;
 
-    async function checkExists(idxHash) {
-      await window.contracts.STOR.methods
-        .retrieveShortRecord(idxHash)
-        .call({ from: self.state.addr }, function (_error, _result) {
-          if (_error) {
-            self.setState({ error1: _error });
-            self.setState({ result1: 0 });
-            alert(
-              "WARNING: Record DOES NOT EXIST! Reject in metamask and review asset info fields."
-            );
-          } else {
-            self.setState({ result1: _result });
-          }
-          console.log("check debug, _result, _error: ", _result, _error);
-        });
-    }
-
-    const handleCheckBox = () => {
-      let setTo;
-      if(this.state.isNFA === false){
-        setTo = true;
-      }
-      else if(this.state.isNFA === true){
-        setTo = false;
-      }
-      this.setState({isNFA: setTo});
-      console.log("Setting to: ", setTo);
-      this.setState({manufacturer: ""});
-      this.setState({type: ""});
-    }
-
-    const _verify = () => {
+    const _verify = async () => {
       this.setState({ txStatus: false });
       this.setState({ txHash: "" });
       this.setState({error: undefined})
@@ -109,93 +76,56 @@ class VerifyRightHolderNC extends Component {
       console.log("idxHash", idxHash);
       console.log("addr: ", window.addr);
 
-      checkExists(idxHash);
+      var doesExist = await window.utils.checkAssetExists(idxHash);
+      var infoMatches = await window.utils.checkMatch(idxHash, rgtHash);
 
-      window.contracts.STOR.methods
-        ._verifyRightsHolder(idxHash, rgtHash)
-        .call({ from: window.addr }, function (_error, _result) {
-          if (_error) {
-            self.setState({ error: _error });
-            self.setState({ result: 0 });
-          } else {
-            self.setState({ result: _result });
-            console.log("verify.call result: ", _result);
-            self.setState({ error: undefined });
-          }
-        });
+      if (!doesExist){
+        return alert("Asset doesnt exist! Ensure data fields are correct before submission.")
+      }
 
-        window.contracts.STOR.methods
-        .blockchainVerifyRightsHolder(idxHash, rgtHash)
-        .send({ from: window.addr })
-        .on("receipt", (receipt) => {
-          this.setState({ txHash: receipt.transactionHash });
-          console.log(this.state.txHash);
-        });
+      if (!infoMatches){
+        return alert("Owner data fields do not match data on record. Ensure data fields are correct before submission.")
+      }
 
-      console.log(this.state.result);
-      document.getElementById("MainForm").reset();
+      if(infoMatches){return alert("Match confirmed")}
+
+        self.setState({ result: "170" });
+
+        return document.getElementById("MainForm").reset();
     };
+
     return (
       <div>
         <Form className="VRform" id='MainForm'>
         {window.addr === undefined && (
             <div className="errorResults">
-              <h2>User address not found</h2>
+              <h2>User address unreachable</h2>
               <h3>Please connect web3 provider.</h3>
             </div>
-          )}{window.assetClass === undefined && (
-            <div className="errorResults">
-              <h2>No asset class selected.</h2>
-              <h3>Please select asset class in home page to use forms.</h3>
-            </div>
           )}
-          {window.addr > 0 && window.assetClass > 0 &&(
+          {window.addr > 0 &&(
             <div>
-                {window.assetClass === 3 &&(
-                <Form.Group>
-                <Form.Check
-                className = 'checkBox'
-                size = 'lg'
-                onChange={handleCheckBox}
-                id={`NFA Firearm`}
-                label={`NFA Firearm`}
-                />
-                </Form.Group>
-                )}
               <h2 className="Headertext">Verify Rights Holder</h2>
               <br></br>
               <Form.Row>
                 <Form.Group as={Col} controlId="formGridType">
                   <Form.Label className="formFont">Type:</Form.Label>
-
-                  {returnTypes(window.assetClass, this.state.isNFA) !== '0' &&(<Form.Control as="select" size="lg" onChange={(e) => this.setState({ type: e.target.value })}>
-                  {returnTypes(window.assetClass, this.state.isNFA)}
-                  </Form.Control>
-                  )}
-
-                    {returnTypes(window.assetClass, this.state.isNFA) === '0' &&(
                     <Form.Control
                     placeholder="Type"
                     required
                     onChange={(e) => this.setState({ type: e.target.value })}
                     size="lg"
-                  />)}
+                  />
                 </Form.Group>
 
                   <Form.Group as={Col} controlId="formGridManufacturer">
                     <Form.Label className="formFont">Manufacturer:</Form.Label>
-                    {returnManufacturers(window.assetClass, this.state.isNFA) !== '0' &&(<Form.Control as="select" size="lg" onChange={(e) => this.setState({ manufacturer: e.target.value })}>
-                  {returnManufacturers(window.assetClass, this.state.isNFA)}
-                  </Form.Control>
-                  )}
-
-                      {returnManufacturers(window.assetClass, this.state.isNFA) === '0' &&(
                     <Form.Control
                     placeholder="Manufacturer"
                     required
                     onChange={(e) => this.setState({ manufacturer: e.target.value })}
                     size="lg"
-                  />)}
+                  />
                   </Form.Group>
 
               </Form.Row>
@@ -311,4 +241,4 @@ class VerifyRightHolderNC extends Component {
     );
   }
 }
-export default VerifyRightHolderNC;
+export default VerifyLite;

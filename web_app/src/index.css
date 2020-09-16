@@ -166,7 +166,33 @@ h4 {
 }
 
 .NRform {
-  height: 52.5rem;
+  height: 49rem;
+  width: 59rem;
+  background-color: #005480;
+  border-radius: 0.5rem;
+  padding: 2rem;
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  margin-top: -2rem;
+  opacity: 0.96;
+}
+
+.MPAform {
+  height: 32.5rem;
+  width: 59rem;
+  background-color: #005480;
+  border-radius: 0.5rem;
+  padding: 2rem;
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  margin-top: -2rem;
+  opacity: 0.96;
+}
+
+.CPAform {
+  height: 40rem;
   width: 59rem;
   background-color: #005480;
   border-radius: 0.5rem;
@@ -179,7 +205,7 @@ h4 {
 }
 
 .EAform {
-  height: 29rem;
+  height: 25.5rem;
   width: 59rem;
   background-color: #005480;
   border-radius: 0.5rem;
@@ -191,21 +217,8 @@ h4 {
   opacity: 0.96;
 }
 
-.TWform {
-  height: 57.5rem;
-  width: 63rem;
-  background-color: #005480;
-  border-radius: 0.5rem;
-  padding: 2rem;
-  display: flex;
-  flex-direction: row;
-  justify-content: center;
-  margin-top: -2rem;
-  opacity: 0.96;
-}
-
 .VRform {
-  height: 44rem;
+  height: 40rem;
   width: 59rem;
   background-color: #005480;
   border-radius: 0.5rem;
@@ -218,7 +231,7 @@ h4 {
 }
 
 .RRform {
-  height: 29rem;
+  height: 25.5rem;
   width: 59rem;
   background-color: #005480;
   border-radius: 0.5rem;
@@ -231,7 +244,7 @@ h4 {
 }
 
 .TAform {
-  height: 59.5rem;
+  height: 56rem;
   width: 59rem;
   background-color: #005480;
   border-radius: 0.5rem;
@@ -244,7 +257,7 @@ h4 {
 }
 
 .MRform {
-  height: 43rem;
+  height: 40rem;
   width: 59rem;
   background-color: #005480;
   border-radius: 0.5rem;
@@ -257,7 +270,7 @@ h4 {
 }
 
 .DCform {
-  height: 43rem;
+  height: 40rem;
   width: 59rem;
   background-color: #005480;
   border-radius: 0.5rem;
@@ -276,7 +289,7 @@ h4 {
 }
 
 .MDform {
-  height: 43rem;
+  height: 40rem;
   width: 59rem;
   background-color: #005480;
   border-radius: 0.5rem;
@@ -289,7 +302,7 @@ h4 {
 }
 
 .ANform {
-  height: 48rem;
+  height: 44.5rem;
   width: 59rem;
   background-color: #005480;
   border-radius: 0.5rem;
@@ -302,7 +315,7 @@ h4 {
 }
 
 .FMRform {
-  height: 52rem;
+  height: 47.5rem;
   width: 59rem;
   background-color: #005480;
   border-radius: 0.5rem;
@@ -315,7 +328,7 @@ h4 {
 }
 
 .MEform {
-  height: 47rem;
+  height: 44rem;
   width: 59rem;
   background-color: #005480;
   border-radius: 0.5rem;
@@ -355,9 +368,9 @@ h4 {
 
 
 .ACForm{
-  height: 37.5rem;
+  height: 28.5rem;
   width: 59rem;
-  background-color: #be1a1a;
+  background-color: #005480;
   border-radius: 0.5rem;
   padding: 2rem;
   display: flex;
@@ -370,7 +383,7 @@ h4 {
 .AUForm{
   height: 37.5rem;
   width: 59rem;
-  background-color: #be1a1a;
+  background-color: #005480;
   border-radius: 0.5rem;
   padding: 2rem;
   display: flex;
@@ -381,9 +394,9 @@ h4 {
 }
 
 .SCForm{
-  height: 72rem;
+  height: 36rem;
   width: 59rem;
-  background-color: #be1a1a;
+  background-color: #005480;
   border-radius: 0.5rem;
   padding: 2rem;
   display: flex;
@@ -396,7 +409,7 @@ h4 {
 .OForm{
   height: 40rem;
   width: 59rem;
-  background-color: #be1a1a;
+  background-color: #005480;
   border-radius: 0.5rem;
   padding: 2rem;
   display: flex;
@@ -409,7 +422,20 @@ h4 {
 .RFMCForm{
   height: 30rem;
   width: 59rem;
-  background-color: #be1a1a;
+  background-color: #005480;
+  border-radius: 0.5rem;
+  padding: 2rem;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  margin-top: -2rem;
+  opacity: 0.96;
+}
+
+.GACDForm{
+  height: 19rem;
+  width: 59rem;
+  background-color: #005480;
   border-radius: 0.5rem;
   padding: 2rem;
   display: flex;
@@ -421,6 +447,19 @@ h4 {
 
 .RRresults {
   height: 16rem;
+  width: 59rem;
+  color: white;
+  background-color: #002a40;
+  border-radius: 0rem 0rem 1rem 1rem;
+  font-size: 1.3rem;
+  display: flex;
+  padding: 2rem;
+  justify-content: center;
+  align-items: center;
+}
+
+.GACDresults {
+  height: 13rem;
   width: 59rem;
   color: white;
   background-color: #002a40;
@@ -519,18 +558,18 @@ h4 {
   height: 3rem;
   width: 30rem;
   align-items: center;
-  margin-top: 1rem;
+  margin-top: 0.5rem;
   margin-left: 20;
 }
 
 .buttonDisplayHome {
   margin-left: 48rem;
-  margin-top: auto;
+  margin-top: 0.5rem;
 }
 
 .buttonDisplay {
   margin-left: 42rem;
-  margin-top: -20rem;
+  margin-top: -21.5rem;
 }
 
 .buttonGroupDisplay {
@@ -555,20 +594,25 @@ h4 {
 
 .ownerButtonDisplay {
   margin-left: 40rem;
-  margin-top: 2rem;
+  margin-top: 0.5rem;
 }
 .ownerButtonDisplay2 {
   margin-left: 40rem;
-  margin-top: auto;
+  margin-top: -1rem;
 }
 
 .ownerButtonDisplay3 {
   margin-left: 21rem;
-  margin-top: 5rem;
+  margin-top: 0.5rem;
 }
 .ownerButtonDisplay4 {
   margin-left: 21rem;
   margin-top: auto;
+}
+
+.ownerButtonDisplay5 {
+  margin-left: 40rem;
+  margin-top: 0rem;
 }
 
 .Headertext {

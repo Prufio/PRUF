@@ -12,7 +12,7 @@
     const PRUF_NP_NC = artifacts.require('NP_NC');
     const PRUF_ECR_NC = artifacts.require('ECR_NC');
     const PRUF_RCLR = artifacts.require('RCLR');
-    const PRUF_NAKED = artifacts.require('NAKED');
+    const PRUF_PIP = artifacts.require('PIP');
     const PRUF_HELPER = artifacts.require('Helper');
     const PRUF_MAL_APP = artifacts.require('MAL_APP');
 
@@ -81,7 +81,7 @@
     let nakedAuthCode3;
     let nakedAuthCode7;
     
-    contract('NAKED', accounts => {
+    contract('PIP', accounts => {
             
         console.log('//**************************BEGIN BOOTSTRAP**************************//')
 
@@ -185,11 +185,11 @@
     })
 
 
-    it('Should deploy PRUF_NAKED', async () => {
-        const PRUF_NAKED_TEST = await PRUF_NAKED.deployed({ from: account1 });
-        console.log(PRUF_NAKED_TEST.address);
-        assert(PRUF_NAKED_TEST.address !== '')
-        NAKED = PRUF_NAKED_TEST;
+    it('Should deploy PRUF_PIP', async () => {
+        const PRUF_PIP_TEST = await PRUF_PIP.deployed({ from: account1 });
+        console.log(PRUF_PIP_TEST.address);
+        assert(PRUF_PIP_TEST.address !== '')
+        PIP = PRUF_PIP_TEST;
     })
 
 
@@ -553,8 +553,8 @@
             })
 
             .then(() => {
-                console.log("Adding NAKED to storage for use in AC 0")
-                return STOR.OO_addContract("NAKED", NAKED.address, '0', '2', { from: account1 })
+                console.log("Adding PIP to storage for use in AC 0")
+                return STOR.OO_addContract("PIP", PIP.address, '0', '2', { from: account1 })
             })
             
             .then(() => {
@@ -630,8 +630,8 @@
             })
 
             .then(() => {
-                console.log("Adding in NAKED")
-                return NAKED.OO_setStorageContract(STOR.address, { from: account1 })
+                console.log("Adding in PIP")
+                return PIP.OO_setStorageContract(STOR.address, { from: account1 })
             })
             
             .then(() => {
@@ -701,8 +701,8 @@
             })
 
             .then(() => {
-                console.log("Resolving in NAKED")
-                return NAKED.OO_resolveContractAddresses({ from: account1 })
+                console.log("Resolving in PIP")
+                return PIP.OO_resolveContractAddresses({ from: account1 })
             })
             
             .then(() => {
@@ -963,41 +963,41 @@
     })
 
 
-    it('Should authorize NAKED in all relevant asset classes', async () => {
+    it('Should authorize PIP in all relevant asset classes', async () => {
         
-        console.log("Authorizing NAKED")
-        return STOR.enableContractForAC('NAKED', '10', '1', { from: account1 })
+        console.log("Authorizing PIP")
+        return STOR.enableContractForAC('PIP', '10', '1', { from: account1 })
             
             .then(() => {
-                return STOR.enableContractForAC('NAKED', '11', '1', { from: account1 })
+                return STOR.enableContractForAC('PIP', '11', '1', { from: account1 })
             })
             
             .then(() => {
-                return STOR.enableContractForAC('NAKED', '12', '2', { from: account1 })
+                return STOR.enableContractForAC('PIP', '12', '2', { from: account1 })
             })
             
             .then(() => {
-                return STOR.enableContractForAC('NAKED', '13', '2', { from: account1 })
+                return STOR.enableContractForAC('PIP', '13', '2', { from: account1 })
             })
             
             .then(() => {
-                return STOR.enableContractForAC('NAKED', '14', '2', { from: account1 })
+                return STOR.enableContractForAC('PIP', '14', '2', { from: account1 })
             })
 
             .then(() => {
-                return STOR.enableContractForAC('NAKED', '15', '2', { from: account10 })
+                return STOR.enableContractForAC('PIP', '15', '2', { from: account10 })
             })
 
             .then(() => {
-                return STOR.enableContractForAC('NAKED', '16', '2', { from: account10 })
+                return STOR.enableContractForAC('PIP', '16', '2', { from: account10 })
             })
             
             .then(() => {
-                return STOR.enableContractForAC('NAKED', '1', '1', { from: account1 })
+                return STOR.enableContractForAC('PIP', '1', '1', { from: account1 })
             })
             
             .then(() => {
-                return STOR.enableContractForAC('NAKED', '2', '1', { from: account1 })
+                return STOR.enableContractForAC('PIP', '2', '1', { from: account1 })
             })
     })
 
@@ -1441,17 +1441,17 @@
             })
             
             .then(() => {
-                console.log("Account10 => AC15 (NAKEDMINTER)")
+                console.log("Account10 => AC15 (PIPMINTER)")
                 return AC_MGR.OO_addUser(account10, '10', '15', { from: account10 })
             })
 
             .then(() => {
-                console.log("Account10 => AC15 (NAKEDMINTER)")
+                console.log("Account10 => AC15 (PIPMINTER)")
                 return AC_MGR.OO_addUser(account10, '10', '16', { from: account10 })
             })
 
             .then(() => {
-                console.log("Account10 => AC15 (NAKEDMINTER)")
+                console.log("Account10 => AC15 (PIPMINTER)")
                 return AC_MGR.OO_addUser(account10, '1', '10', { from: account1 })
             })
     })
@@ -1459,8 +1459,8 @@
 
     it('Should write ID_TKN(1) to address4', async () => {
 
-        console.log("//**************************************BEGIN NAKED TEST**********************************************/")
-        console.log("//**************************************BEGIN NAKED SETUP**********************************************/")
+        console.log("//**************************************BEGIN PIP TEST**********************************************/")
+        console.log("//**************************************BEGIN PIP SETUP**********************************************/")
         return ID_TKN.mintPRUF_IDToken(
         account4,
         '1',
@@ -1510,10 +1510,10 @@
     //1
     it('Should fail becasue caller does not hold AC token', async () => {
 
-        console.log("//**************************************END NAKED SETUP**********************************************/")
-        console.log("//**************************************BEGIN NAKED FAIL BATCH (4)**********************************************/")
-        console.log("//**************************************BEGIN mintNakedAsset FAIL BATCH**********************************************/")
-        return NAKED.mintNakedAsset(
+        console.log("//**************************************END PIP SETUP**********************************************/")
+        console.log("//**************************************BEGIN PIP FAIL BATCH (4)**********************************************/")
+        console.log("//**************************************BEGIN mintPipAsset FAIL BATCH**********************************************/")
+        return PIP.mintPipAsset(
         asset1, 
         string1Hash,
         '15',
@@ -1522,13 +1522,13 @@
     })
 
 
-    it('Should unauthorize account10 to mintNakedAssets', async () => {
+    it('Should unauthorize account10 to mintPipAssets', async () => {
             return AC_MGR.OO_addUser(account10, '1', '15', { from: account10 })
     })
 
     //2
-    it('Should fail becasue caller not authrorized to mintNakedAssets', async () => {
-        return NAKED.mintNakedAsset(
+    it('Should fail becasue caller not authrorized to mintPipAssets', async () => {
+        return PIP.mintPipAsset(
         asset1, 
         string1Hash,
         '15',
@@ -1537,13 +1537,13 @@
     })
 
 
-    it('Should authorize account10 to mintNakedAssets', async () => {
+    it('Should authorize account10 to mintPipAssets', async () => {
         return AC_MGR.OO_addUser(account10, '10', '15', { from: account10 })
     })
 
 
-    it('Should mintNakedAsset1', async () => {
-        return NAKED.mintNakedAsset(
+    it('Should mintPipAsset1', async () => {
+        return PIP.mintPipAsset(
         asset1, 
         string1Hash,
         '15',
@@ -1553,7 +1553,7 @@
 
     //3
     it('Should fail becasue asset2 already recorded', async () => {
-        return NAKED.mintNakedAsset(
+        return PIP.mintPipAsset(
         asset2, 
         string1Hash,
         '15',
@@ -1562,11 +1562,11 @@
     })
 
     //4
-    it('Should fail becasue token not found in NAKED', async () => {
+    it('Should fail becasue token not found in PIP', async () => {
 
-        console.log("//**************************************END mintNakedAsset FAIL BATCH**********************************************/")
-        console.log("//**************************************BEGIN $claimNakedAsset FAIL BATCH**********************************************/")
-        return NAKED.$claimNakedAsset(
+        console.log("//**************************************END mintPipAsset FAIL BATCH**********************************************/")
+        console.log("//**************************************BEGIN $claimPipAsset FAIL BATCH**********************************************/")
+        return PIP.$claimPipAsset(
         asset4, 
         '4',
         '15',
@@ -1579,9 +1579,9 @@
 
     it('Should write record12 in AC 10', async () => {
 
-        console.log("//**************************************END $claimNakedAsset FAIL BATCH**********************************************/")
-        console.log("//**************************************END NAKED FAIL BATCH**********************************************/")
-        console.log("//**************************************END NAKED TEST**********************************************/")
+        console.log("//**************************************END $claimPipAsset FAIL BATCH**********************************************/")
+        console.log("//**************************************END PIP FAIL BATCH**********************************************/")
+        console.log("//**************************************END PIP TEST**********************************************/")
         console.log("//**************************************BEGIN THE WORKS**********************************************/")
         return APP.$newRecord(
         asset12, 

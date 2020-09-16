@@ -8,50 +8,6 @@ class Home extends Component {
   constructor(props) {
     super(props);
 
-    this.getCosts = async () => {
-      //console.log("Getting cost array");
-      await window.contracts.AC_MGR.methods
-      .retrieveCosts(window.assetClass)
-      .call({from: window.addr}, (_error, _result) => {
-        if (_error){console.log("Error: ", _error)}
-        else {
-          //console.log("result in getCosts: ", Object.values(_result));
-          window.costArray = Object.values(_result)
-          return window.authLevel = this.state.authLevel
-        }
-      })
-      //console.log("before setting window-level costs")
-      window.costs = {
-        newRecordCost: window.costArray[0],
-        transferAssetCost: window.costArray[1],
-        createNoteCost: window.costArray[2],
-        remintAssetCost: window.costArray[3],
-        importAssetCost: window.costArray[4],
-        forceTransferCost: window.costArray[5],
-        beneficiaryAddress: window.costArray[6]
-      }
-      //console.log("window costs object: ", window.costs);
-      //console.log("this should come last");
-    }
-
-    this._checkCreds = () => {
-      //console.log(window.contracts.AC_MGR);
-      //console.log(window.web3)
-      //console.log(window.addr)
-      //console.log(window.assetClass)
-      window.contracts.AC_MGR.methods
-      .getUserType(window.web3.utils.soliditySha3(window.addr), window.assetClass)
-      .call({from: window.addr}, (_error, _result) => {
-        if(_error){console.log("Error: ", _error)}
-        else{
-          if (_result === "0"){this.setState({authLevel: "Standard User (read-only access)"})}
-          else if(_result === "1"){this.setState({authLevel: "Administrator"})}
-          else if(_result === "9"){this.setState({authLevel: "Robot"})}
-            //console.log(_result)
-        }
-      }); 
-    }
-
     this.state = {
       addr: undefined,
       web3: null,
@@ -75,10 +31,9 @@ class Home extends Component {
   }
 
   componentDidMount() {
-    if (window.authLevel !== undefined){
-      this.setState({authLevel: window.authLevel})
+    if (window.AuthLevel !== undefined) {
+      this.setState({ authLevel: window.authLevel })
     }
-
   }
 
   componentDidUpdate() {
@@ -87,27 +42,21 @@ class Home extends Component {
 
   render() {
 
-    
     const _setAC = async () => {
-      if(this.state.assetClass === "0" || this.state.assetClass === undefined){window.assetClass = undefined; return this.forceUpdate()}
-      else{
-      window.assetClass = this.state.assetClass;
-      await this._checkCreds();
-      await this.getCosts();
-      return this.forceUpdate()
+      if (this.state.assetClass === "0") { window.assetClass = undefined; return this.forceUpdate() }
+      else {
+        window.assetClass = this.state.assetClass;
+        await window.utils.checkCreds();
+        await window.utils.getCosts(6);
+        console.log(window.authLevel);
+        return this.setState({ authLevel: window.authLevel });
       }
     }
 
     return (
       <div className="home">
-        <p>
-          PRuF
-          <br />
-          Blockchain
-          <br />
-          Provenance
-        </p>
-        <p> V 1.0.0</p>
+        <img src={require("./Pruf AR cropped.png")} alt="Pruf Logo Home" />
+        <p> V 1.0.1</p>
 
     <div> {window.assetClass > 0 && (<div>Operating in asset class {window.assetClass} as {this.state.authLevel}</div>)}</div>
         {window._contracts !== undefined && (

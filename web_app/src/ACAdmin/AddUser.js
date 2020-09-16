@@ -25,7 +25,7 @@ class AddUser extends Component {
 
   }
 
-  componentDidUpdate(){//stuff to do when state updates
+  componentDidUpdate() {//stuff to do when state updates
 
   }
 
@@ -61,7 +61,7 @@ class AddUser extends Component {
 
     return (
       <div>
-        <Form className="ACForm">
+        <Form className="AUForm">
           {window.addr === undefined && (
             <div className="VRresults">
               <h2>User address unreachable</h2>
@@ -74,7 +74,7 @@ class AddUser extends Component {
               <h3>Please select asset class in home page to use forms.</h3>
             </div>
           )}
-          {window.addr > 0 && window.assetClass > 0 &&(
+          {window.addr > 0 && window.assetClass > 0 && (
             <div>
               <h2 className="Headertext">Add User</h2>
               <br></br>

@@ -3,8 +3,7 @@ import Form from "react-bootstrap/Form";
 import Col from "react-bootstrap/Col";
 import Button from "react-bootstrap/Button";
 import bs58 from "bs58";
-import returnManufacturers from "./Manufacturers";
-import returnTypes from "./Types";
+
 
 class ModifyDescription extends Component {
   constructor(props) {
@@ -45,7 +44,7 @@ class ModifyDescription extends Component {
 
   }
 
-  componentDidUpdate(){//stuff to do when state updates
+  componentDidUpdate() {//stuff to do when state updates
 
   }
 
@@ -72,72 +71,22 @@ class ModifyDescription extends Component {
       });
     };
 
-    async function checkExists(idxHash) {
-      await window.contracts.STOR.methods
-        .retrieveShortRecord(idxHash)
-        .call({ from: self.state.addr }, function (_error, _result) {
-          if (_error) {
-            self.setState({ error: _error });
-            self.setState({ result: 0 });
-            alert(
-              "WARNING: Record DOES NOT EXIST! Reject in metamask and review asset info fields."
-            );
-          } else {
-            if (Object.values(_result)[7] === self.state.hashPath){
-              alert("WARNING: Record description matches current submission! Reject in metamask and check description field.")
-            }
-            self.setState({ result1: _result });
-          }
-          console.log("check debug, _result, _error: ", _result, _error);
-        });
-    }
 
-    async function checkMatch(idxHash, rgtHash) {
-      await window.contracts.STOR.methods
-        ._verifyRightsHolder(idxHash, rgtHash)
-        .call({ from: self.state.addr }, function (_error, _result) {
-          if (_error) {
-            self.setState({ error: _error });
-          } else if (_result === "0") {
-            self.setState({ result: 0 });
-            alert(
-              "WARNING: Record DOES NOT MATCH supplied owner info! Reject in metamask and review owner fields."
-            );
-          } else {
-            self.setState({ result2: _result });
-          }
-          console.log("check debug, _result, _error: ", _result, _error);
-        });
-    }
 
-    const handleCheckBox = () => {
-      let setTo;
-      if(this.state.isNFA === false){
-        setTo = true;
-      }
-      else if(this.state.isNFA === true){
-        setTo = false;
-      }
-      this.setState({isNFA: setTo});
-      console.log("Setting to: ", setTo);
-      this.setState({manufacturer: ""});
-      this.setState({type: ""});
-    }
-
-    const _updateDescription = () => {
+    const _updateDescription = async () => {
       this.setState({ txStatus: false });
       this.setState({ txHash: "" });
-      this.setState({error: undefined})
-      this.setState({result: ""})
+      this.setState({ error: undefined })
+      this.setState({ result: "" })
       var idxHash;
       var rgtRaw;
-      
+
       idxHash = window.web3.utils.soliditySha3(
         this.state.type,
         this.state.manufacturer,
         this.state.model,
         this.state.serial,
-    );
+      );
 
       rgtRaw = window.web3.utils.soliditySha3(
         this.state.first,
@@ -154,8 +103,16 @@ class ModifyDescription extends Component {
       console.log("New rgtHash", rgtHash);
       console.log("addr: ", window.addr);
 
-      checkExists(idxHash);
-      checkMatch(idxHash, rgtHash);
+      var doesExist = await window.utils.checkAssetExists(idxHash);
+      var infoMatches = await window.utils.checkMatch(idxHash, rgtHash);
+
+      if (!doesExist){
+        return alert("Asset doesnt exist! Ensure data fields are correct before submission.")
+      }
+
+      if (!infoMatches){
+        return alert("Owner data fields do not match data on record. Ensure data fields are correct before submission.")
+      }
 
       window.contracts.NP.methods
         ._modIpfs1(idxHash, rgtHash, _ipfs1)
@@ -175,13 +132,13 @@ class ModifyDescription extends Component {
 
       console.log(this.state.txHash);
       self.setState({ hashPath: ""});
-      document.getElementById("MainForm").reset();
+      return document.getElementById("MainForm").reset();
     };
 
     return (
       <div>
         <Form className="MDform" id='MainForm'>
-        {window.addr === undefined && (
+          {window.addr === undefined && (
             <div className="errorResults">
               <h2>User address unreachable</h2>
               <h3>Please connect web3 provider.</h3>
@@ -192,54 +149,32 @@ class ModifyDescription extends Component {
               <h3>Please select asset class in home page to use forms.</h3>
             </div>
           )}
-          {window.addr > 0 && window.assetClass > 0 &&(
+          {window.addr > 0 && window.assetClass > 0 && (
             <div>
-                {window.assetClass === 3 &&(
-                <Form.Group>
-                <Form.Check
-                className = 'checkBox'
-                size = 'lg'
-                onChange={handleCheckBox}
-                id={`NFA Firearm`}
-                label={`NFA Firearm`}
-                />
-                </Form.Group>
-                )}
+
               <h2 className="Headertext">Modify Description</h2>
               <br></br>
               <Form.Row>
                 <Form.Group as={Col} controlId="formGridType">
                   <Form.Label className="formFont">Type:</Form.Label>
-
-                  {returnTypes(window.assetClass, this.state.isNFA) !== '0' &&(<Form.Control as="select" size="lg" onChange={(e) => this.setState({ type: e.target.value })}>
-                  {returnTypes(window.assetClass, this.state.isNFA)}
-                  </Form.Control>
-                  )}
-
-                    {returnTypes(window.assetClass, this.state.isNFA) === '0' &&(
-                    <Form.Control
+                  <Form.Control
                     placeholder="Type"
                     required
                     onChange={(e) => this.setState({ type: e.target.value })}
                     size="lg"
-                  />)}
+                  />
                 </Form.Group>
 
-                  <Form.Group as={Col} controlId="formGridManufacturer">
-                    <Form.Label className="formFont">Manufacturer:</Form.Label>
-                    {returnManufacturers(window.assetClass, this.state.isNFA) !== '0' &&(<Form.Control as="select" size="lg" onChange={(e) => this.setState({ manufacturer: e.target.value })}>
-                  {returnManufacturers(window.assetClass, this.state.isNFA)}
-                  </Form.Control>
-                  )}
+                <Form.Group as={Col} controlId="formGridManufacturer">
+                  <Form.Label className="formFont">Manufacturer:</Form.Label>
 
-                      {returnManufacturers(window.assetClass, this.state.isNFA) === '0' &&(
-                    <Form.Control
+                  <Form.Control
                     placeholder="Manufacturer"
                     required
                     onChange={(e) => this.setState({ manufacturer: e.target.value })}
                     size="lg"
-                  />)}
-                  </Form.Group>
+                  />
+                </Form.Group>
 
               </Form.Row>
 

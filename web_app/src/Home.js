@@ -23,7 +23,7 @@ class Home extends Component {
       NP_NC: "",
       ECR2: "",
       authLevel: "",
-      NAKED: "",
+      PIP: "",
       RCLR: "",
       assetClass: undefined,
       contractArray: [],
@@ -31,9 +31,7 @@ class Home extends Component {
   }
 
   componentDidMount() {
-    if (window.AuthLevel !== undefined) {
-      this.setState({ authLevel: window.authLevel })
-    }
+    window.assetClassName = "unresolved";
   }
 
   componentDidUpdate() {
@@ -43,13 +41,44 @@ class Home extends Component {
   render() {
 
     const _setAC = async () => {
+      let acDoesExist;
       if (this.state.assetClass === "0") { window.assetClass = undefined; return this.forceUpdate() }
       else {
-        window.assetClass = this.state.assetClass;
-        await window.utils.checkCreds();
-        await window.utils.getCosts(6);
-        console.log(window.authLevel);
-        return this.setState({ authLevel: window.authLevel });
+        if (
+          this.state.assetClass.charAt(0) === "0" ||
+          this.state.assetClass.charAt(0) === "1" ||
+          this.state.assetClass.charAt(0) === "2" ||
+          this.state.assetClass.charAt(0) === "3" ||
+          this.state.assetClass.charAt(0) === "4" ||
+          this.state.assetClass.charAt(0) === "5" ||
+          this.state.assetClass.charAt(0) === "6" ||
+          this.state.assetClass.charAt(0) === "7" ||
+          this.state.assetClass.charAt(0) === "8" ||
+          this.state.assetClass.charAt(0) === "9"
+        ) {
+          acDoesExist = await window.utils.checkForAC("id", this.state.assetClass);
+          await console.log("Exists?", acDoesExist)
+          
+          if(!acDoesExist){return alert("Asset class does not currently exist. Consider minting it yourself!")}
+
+          window.assetClass = this.state.assetClass;
+          window.utils.resolveACFromID()
+          await window.utils.checkCreds();
+          await window.utils.getCosts(6);
+          console.log(window.authLevel);
+          return this.setState({ authLevel: window.authLevel });
+        }
+
+        else {
+          acDoesExist = await window.utils.checkForAC("name", this.state.assetClass);
+          await console.log("Exists?",acDoesExist)
+          
+          if(!acDoesExist){return alert("Asset class does not currently exist. Consider minting it yourself!")}
+
+          window.assetClassName = this.state.assetClass
+          await window.utils.resolveAC();
+          return this.setState({ authLevel: window.authLevel });
+        }
       }
     }
 
@@ -58,11 +87,12 @@ class Home extends Component {
         <img src={require("./Resources/Pruf AR cropped.png")} alt="Pruf Logo Home" />
         <p> V 1.0.1</p>
 
-        <div> {window.assetClass > 0 && (<div>Operating in asset class {window.assetClass} as {window.authLevel}</div>)}</div>
+        <div> {window.assetClass > 0 && (<div>Operating in asset class {window.assetClass} ({window.assetClassName}) as {window.authLevel}</div>)}</div>
         {window._contracts !== undefined && (
           <div>
+            <br></br>
             <Form.Group as={Col} controlId="formGridAC">
-              <Form.Label className="formFont">Input desired asset class index # : </Form.Label>
+              <Form.Label className="formFont">Input desired asset class index # or name : </Form.Label>
               <Form.Control
                 placeholder="Asset Class"
                 required

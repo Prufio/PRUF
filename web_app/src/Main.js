@@ -20,8 +20,11 @@ class Main extends Component {
     super(props);
 
     this.updateAuthLevel = setInterval(() => {
-      if (this.state.isAuthUser != window.isAuthUser) {
+      if (this.state.isAuthUser !== window.isAuthUser) {
         this.setState({ isAuthUser: window.isAuthUser })
+      }
+      if (this.state.isACAdmin !== window.isACAdmin) {
+        this.setState({ isACAdmin: window.isACAdmin })
       }
     }, 200)
 
@@ -64,8 +67,8 @@ class Main extends Component {
           assetClassHolderMenuBool: false,
           basicMenuBool: false
         })
-
       }
+
     }
 
     this.acctChanger = async () => {//Handle an address change, update state accordingly
@@ -128,7 +131,7 @@ class Main extends Component {
       APP_NC: "",
       NP_NC: "",
       ECR2: "",
-      NAKED: "",
+      PIP: "",
       RCLR: "",
       assetClass: undefined,
       contractArray: [],
@@ -140,6 +143,7 @@ class Main extends Component {
       basicMenuBool: true,
       authorizedUserMenuBool: false,
       hasFetchedBalances: false,
+      isACAdmin: undefined,
       routeRequest: "basic"
     };
   }
@@ -147,7 +151,6 @@ class Main extends Component {
   //component state-change events......................................................................................................
 
   componentDidMount() {//stuff to do when component mounts in window
-
     buildWindowUtils()
     if (window.ethereum) {
 
@@ -247,7 +250,7 @@ class Main extends Component {
                 </div>
 
                 <div className="headerButtons">
-                  {this.state.assetClassHolderBool === true && this.state.assetClassHolderMenuBool === false && (
+                  {this.state.isACAdmin === true && this.state.assetClassHolderMenuBool === false && (
                     <Button className="btn3"
                       variant="primary"
                       type="button"
@@ -281,7 +284,7 @@ class Main extends Component {
                       onClick={() => { this.toggleMenu("authUser") }}
                     >
                       Authorized User Menu
-                      </Button>)}
+                    </Button>)}
                 </div>
               </div>
             </div>

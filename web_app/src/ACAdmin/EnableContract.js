@@ -23,19 +23,19 @@ class enableContract extends Component {
   //component state-change events......................................................................................................
 
   componentDidMount() {//stuff to do when component mounts in window
-    if (window.assetClass !== undefined){
-      this.setState({assetClass: window.assetClass})
+    if (window.assetClass !== undefined) {
+      this.setState({ assetClass: window.assetClass })
       console.log("updating AC")
     }
   }
 
-  componentDidUpdate(){//stuff to do when state updates
-    if (window.assetClass !== undefined && this.state.assetClass < 1){
-      this.setState({assetClass: window.assetClass})
+  componentDidUpdate() {//stuff to do when state updates
+    if (window.assetClass !== undefined && this.state.assetClass < 1) {
+      this.setState({ assetClass: window.assetClass })
       console.log("updating AC")
     }
 
-    if (window.assetClass === undefined){
+    if (window.assetClass === undefined) {
       console.log("window not serving AC")
     }
   }
@@ -84,7 +84,7 @@ class enableContract extends Component {
               <h3>Please select asset class in home page to use forms.</h3>
             </div>
           )}
-          {window.addr > 0 && window.assetClass > 0 &&(
+          {window.addr > 0 && window.assetClass > 0 && (
             <div>
               <h2 className="Headertext">Enable Contract</h2>
               <br></br>

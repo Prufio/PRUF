@@ -5,12 +5,12 @@ import Home from "./Home";
 import AddContract from "./AddContract";
 import Ownership from "./Ownership";
 import THEWORKS from "./TheWorks";
-import MintAssetClass from "./MintAssetClass"
-import SetupAndResolveContracts from "./SetupAndResolveContracts"
+import MintAssetClass from "./MintAssetClass";
+import MintPRUF_IDToken from "./MintPRUF_ID";
+import ReMintPRUF_IDToken from "./ReMintPRUF_ID";
+import SetupAndResolveContracts from "./SetupAndResolveContracts";
 import buildContracts from "./Contracts";
 import ParticleBox from "./ParticleBox";
-import DropdownButton from "react";
-import Dropdown from "react";
 
 class Main extends Component {
   constructor(props) {
@@ -84,6 +84,7 @@ class Main extends Component {
       ECR2: "",
       NAKED: "",
       RCLR: "",
+      ID_TKN: "",
       assetClass: undefined,
       contractArray: [],
     };
@@ -149,7 +150,7 @@ class Main extends Component {
             <div className="imageForm">
               <img
                 className="downSizeLogo"
-                src={require("./Pruf.png")}
+                src={require("./pruf ar long.png")}
                 alt="Pruf Logo"
               />
               <div className="userData">
@@ -200,6 +201,12 @@ class Main extends Component {
                         <NavLink to="/mint-ac">Create AC</NavLink>
                       </li>
                       <li>
+                        <NavLink to="/mint-ID_TKN">Create ID_TKN</NavLink>
+                      </li>
+                      <li>
+                        <NavLink to="/reMint-ID_TKN">ReMint ID_TKN</NavLink>
+                      </li>
+                      <li>
                         <NavLink to="/the-works">THE WORKS</NavLink>
                       </li>
                     </nav>
@@ -211,6 +218,8 @@ class Main extends Component {
                   <Route path="/add-contract" component={AddContract} />
                   <Route path="/ownership" component={Ownership} />
                   <Route path="/mint-ac" component={MintAssetClass}/>
+                  <Route path="/mint-ID_TKN" component={MintPRUF_IDToken}/>
+                  <Route path="/reMint-ID_TKN" component={ReMintPRUF_IDToken}/>
                   <Route path="/the-works" component={THEWORKS} />
                 </div>
               </div>
