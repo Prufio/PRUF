@@ -261,9 +261,9 @@ pragma solidity ^0.6.7;
 /*-----------------------------------------------------------------
  * ------------------ PRUF VERIFY ITEM STATUSES -------------------
  *-----------------------------------------------------------------
- * only trusted entities can put items "in pouch" auth as user type 1+ in asset class
+ * only trusted entities can put items "in pouch" 
  * only trusted entities can take items "out"
- * only pouchholder can mark item status, etc
+ * only pouchholder + can mark item status, etc
  * joe public can check only?
  * statuses:
  *
