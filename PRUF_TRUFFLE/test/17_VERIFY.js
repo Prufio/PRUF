@@ -1530,7 +1530,7 @@ it('Should mint asset1', async () => {
 it('Should authorize asset1 as verify wallet', async () => {
     return VERIFY.authorizeTokenForVerify(
     asset1,
-    '1',
+    '2',
     '12',
     {from: account1}
     )
@@ -1551,7 +1551,7 @@ it('Should mint asset2', async () => {
 it('Should authorize asset2 as verify wallet', async () => {
     return VERIFY.authorizeTokenForVerify(
     asset2,
-    '1',
+    '3',
     '14',
     {from: account2}
     )
@@ -1579,11 +1579,11 @@ it('Should mint asset4', async () => {
     )
 })
 
-it('Should authorize asset2 as verify wallet', async () => {
+it('Should authorize asset4 as verify wallet', async () => {
     return VERIFY.authorizeTokenForVerify(
     asset4,
-    '1',
-    '13',
+    '2',
+    '12',
     {from: account1}
     )
 })
@@ -1610,11 +1610,33 @@ it('Should mint asset6', async () => {
     )
 })
 
+
 it('Should authorize asset6 as verify wallet', async () => {
     return VERIFY.authorizeTokenForVerify(
     asset6,
-    '1',
+    '2',
     '15',
+    {from: account2}
+    )
+})
+
+
+it('Should mint asset7', async () => {
+    return APP_NC.$newRecord(
+    asset7,
+    rgt7,
+    '14',
+    '100',
+    {from: account2, value: 20000000000000000 }
+    )
+})
+
+
+it('Should authorize asset7 as verify wallet', async () => {
+    return VERIFY.authorizeTokenForVerify(
+    asset7,
+    '1',
+    '14',
     {from: account2}
     )
 })
@@ -1623,11 +1645,11 @@ it('Should authorize asset6 as verify wallet', async () => {
 it('Should fail because caller does not hold AC token', async () => {
 
     console.log("//**************************************END VERIFY SETUP**********************************************/")
-    console.log("//**************************************BEGIN VERIFY FAIL BATCH ()**********************************************/")
+    console.log("//**************************************BEGIN VERIFY FAIL BATCH (33)**********************************************/")
     console.log("//**************************************BEGIN authorizeTokenForVerify FAIL BATCH**********************************************/")
     return VERIFY.authorizeTokenForVerify(
     asset6,
-    '1',
+    '2',
     '12',
     {from: account2}
     )
@@ -1637,7 +1659,7 @@ it('Should fail because caller does not hold AC token', async () => {
 it('Should fail because AC is not VERIFY authorized', async () => {
     return VERIFY.authorizeTokenForVerify(
     asset4,
-    '1',
+    '2',
     '10',
     {from: account1}
     )
@@ -1647,7 +1669,7 @@ it('Should fail because AC is not VERIFY authorized', async () => {
 it('Should fail because AC of asset token does not match supplied AC', async () => {
     return VERIFY.authorizeTokenForVerify(
     asset3,
-    '1',
+    '2',
     '13',
     {from: account1}
     )
@@ -1717,7 +1739,6 @@ it('Should mark string1 as status 1', async () => {
 })
 
 
-
 it('Should takeOut string1 from asset1', async () => {
     return VERIFY.takeOut(
     asset1,
@@ -1756,8 +1777,8 @@ it('Should change string1 status to 0', async () => {
     )
 })
 
-//8
-it('Should fail to add 1 collision to string1', async () => {
+
+it('Should add 1 collision to string1', async () => {
     return VERIFY.putIn(
     asset1,
     string1Hash,
@@ -1765,21 +1786,21 @@ it('Should fail to add 1 collision to string1', async () => {
     )
 })
 
+
 it('Should takeOut string1 from asset1', async () => {
     return VERIFY.takeOut(
-    asset1,
+    asset2,
     string1Hash,
-    {from: account1}
+    {from: account2}
     )
 })
 
-
-//9
+//8
 it('Should fail because string1 maxCollisions exceeds 1', async () => {
     return VERIFY.safePutIn(
     asset2,
     string1Hash,
-    '1',
+    '0',
     {from: account2}
     )
 })
@@ -1794,7 +1815,7 @@ it('Should put string1 into asset2', async () => {
 })
 
 
-//10
+//9
 it('Should fail because caller does not hold verify wallet', async () => {
 
     console.log("//**************************************END safePutIn FAIL BATCH**********************************************/")
@@ -1806,7 +1827,7 @@ it('Should fail because caller does not hold verify wallet', async () => {
     )
 })
 
-//11
+//10
 it('Should fail because asset3 is not verified wallet', async () => {
     return VERIFY.putIn(
     asset3,
@@ -1815,8 +1836,37 @@ it('Should fail because asset3 is not verified wallet', async () => {
     )
 })
 
+//11
+it('Should fail because string1 already in callers verify wallet', async () => {
+    return VERIFY.putIn(
+    asset2,
+    string1Hash,
+    {from: account2}
+    )
+})
+
+
+it('Should mark string1 counterfeit', async () => {
+    return VERIFY.adminMarkItem(
+    asset2,
+    string1Hash,
+    '2',
+    '0',
+    {from: account2}
+    )
+})
+
+
+it('Should takeOut string1 from asset2', async () => {
+    return VERIFY.takeOut(
+    asset2,
+    string1Hash,
+    {from: account2}
+    )
+})
+
 //12
-it('Should fail because string1 already in verify wallet', async () => {
+it('Should fail because string1 is marked status2(counterfeit)', async () => {
     return VERIFY.putIn(
     asset1,
     string1Hash,
@@ -1825,7 +1875,54 @@ it('Should fail because string1 already in verify wallet', async () => {
 })
 
 
+
+it('Should put string1 into asset2)', async () => {
+    return VERIFY.putIn(
+    asset2,
+    string1Hash,
+    {from: account2}
+    )
+})
+
+
+it('Should mark string1 status 3(stolen)', async () => {
+    return VERIFY.adminMarkItem(
+    asset2,
+    string1Hash,
+    '3',
+    '0',
+    {from: account2}
+    )
+})
+
+
+it('Should takeOut string1 from asset2', async () => {
+    return VERIFY.takeOut(
+    asset2,
+    string1Hash,
+    {from: account2}
+    )
+})
+
 //13
+it('Should fail because string1 is marked status3(stolen)', async () => {
+    return VERIFY.putIn(
+    asset1,
+    string1Hash,
+    {from: account1}
+    )
+})
+
+it('Should put string1 into asset2', async () => {
+    return VERIFY.safePutIn(
+    asset2,
+    string1Hash,
+    '20',
+    {from: account2}
+    )
+})
+
+//14
 it('Should fail because caller does not hold verify wallet', async () => {
 
     console.log("//**************************************END putIn FAIL BATCH**********************************************/")
@@ -1837,7 +1934,7 @@ it('Should fail because caller does not hold verify wallet', async () => {
     )
 })
 
-//14
+//15
 it('Should fail because asset3 is not verified wallet', async () => {
     return VERIFY.takeOut(
     asset3,
@@ -1846,7 +1943,7 @@ it('Should fail because asset3 is not verified wallet', async () => {
     )
 })
 
-//15
+//16
 it('Should fail because caller does not hold item', async () => {
     return VERIFY.takeOut(
     asset1,
@@ -1855,8 +1952,16 @@ it('Should fail because caller does not hold item', async () => {
     )
 })
 
+//17
+it('Should fail because caller does not hold item', async () => {
+    return VERIFY.takeOut(
+    asset2,
+    string1Hash,
+    {from: account2}
+    )
+})
 
-//16
+//18
 it('Should fail because caller does not hold verify wallet', async () => {
 
     console.log("//**************************************END takeOut FAIL BATCH**********************************************/")
@@ -1869,7 +1974,7 @@ it('Should fail because caller does not hold verify wallet', async () => {
     )
 })
 
-//17
+//19
 it('Should fail because asset3 is not verified wallet', async () => {
     return VERIFY.transfer(
     asset3,
@@ -1879,7 +1984,7 @@ it('Should fail because asset3 is not verified wallet', async () => {
     )
 })
 
-//18
+//20
 it('Should fail because caller does not hold item', async () => {
     return VERIFY.transfer(
     asset1,
@@ -1889,7 +1994,7 @@ it('Should fail because caller does not hold item', async () => {
     )
 })
 
-//19
+//21
 it('Should fail because wallet is not in the same AC', async () => {
     return VERIFY.transfer(
     asset2,
@@ -1899,10 +2004,120 @@ it('Should fail because wallet is not in the same AC', async () => {
     )
 })
 
-//20
+
+it('Should mark string1 status 2(Counterfeit)', async () => {
+    return VERIFY.adminMarkItem(
+    asset2,
+    string1Hash,
+    '2',
+    '0',
+    {from: account2}
+    )
+})
+
+//22
+it('Should fail because item is marked status2(Counterfeit)', async () => {
+    return VERIFY.transfer(
+    asset2,
+    asset7,
+    string1Hash,
+    {from: account2}
+    )
+})
+
+
+it('Should mark string1 status 3(Stolen)', async () => {
+    return VERIFY.adminMarkItem(
+    asset2,
+    string1Hash,
+    '3',
+    '0',
+    {from: account2}
+    )
+})
+
+//23
+it('Should fail because item is marked L/S)', async () => {
+    return VERIFY.transfer(
+    asset2,
+    asset7,
+    string1Hash,
+    {from: account2}
+    )
+})
+
+//24
 it('Should fail because caller does not hold verify wallet', async () => {
 
     console.log("//**************************************END transfer FAIL BATCH**********************************************/")
+    console.log("//**************************************BEGIN adminMarkItem FAIL BATCH**********************************************/")
+    return VERIFY.adminMarkItem(
+    asset2,
+    string1Hash,
+    '1',
+    '0',
+    {from: account1}
+    )
+})
+
+//25
+it('Should fail because asset3 is not verified wallet', async () => {
+    return VERIFY.adminMarkItem(
+    asset3,
+    string2Hash,
+    '1',
+    '0',
+    {from: account1}
+    )
+})
+
+
+it('Should mark string1 to status0', async () => {
+    return VERIFY.adminMarkItem(
+    asset2,
+    string1Hash,
+    '0',
+    '0',
+    {from: account2}
+    )
+})
+
+
+it('Should transfer string1 to asset7', async () => {
+    return VERIFY.transfer(
+    asset2,
+    asset7,
+    string1Hash,
+    {from: account2}
+    )
+})
+
+//26
+it('Should fail because caller is not authLevel3 in verify wallet', async () => {
+    return VERIFY.adminMarkItem(
+    asset7,
+    string1Hash,
+    '1',
+    '0',
+    {from: account2}
+    )
+})
+
+//27
+it('Should fail because caller does not hold item', async () => {
+    return VERIFY.adminMarkItem(
+    asset1,
+    string1Hash,
+    '1',
+    '0',
+    {from: account1}
+    )
+})
+
+//28
+it('Should fail because caller does not hold verify wallet', async () => {
+
+    console.log("//**************************************END adminMarkItem FAIL BATCH**********************************************/")
     console.log("//**************************************BEGIN markItem FAIL BATCH**********************************************/")
     return VERIFY.markItem(
     asset2,
@@ -1913,7 +2128,7 @@ it('Should fail because caller does not hold verify wallet', async () => {
     )
 })
 
-//21
+//29
 it('Should fail because asset3 is not verified wallet', async () => {
     return VERIFY.markItem(
     asset3,
@@ -1924,8 +2139,65 @@ it('Should fail because asset3 is not verified wallet', async () => {
     )
 })
 
-//22
+//30
+it('Should fail because decclared status cannot = 2', async () => {
+    return VERIFY.markItem(
+    asset7,
+    string1Hash,
+    '2',
+    '0',
+    {from: account2}
+    )
+})
+
+//31
+it('Should fail because user not authroized >1 authLevel', async () => {
+    return VERIFY.markItem(
+    asset7,
+    string1Hash,
+    '1',
+    '0',
+    {from: account2}
+    )
+})
+
+
+it('Should transfer string1 to asset2', async () => {
+    return VERIFY.transfer(
+    asset7,
+    asset2,
+    string1Hash,
+    {from: account2}
+    )
+})
+
+
+it('Should mark item as 5(In Process)', async () => {
+    return VERIFY.adminMarkItem(
+    asset2,
+    string1Hash,
+    '5',
+    '0',
+    {from: account2}
+    )
+})
+
+//32
+it('Should fail because item is in status5(In Process)', async () => {
+    return VERIFY.markItem(
+    asset2,
+    string1Hash,
+    '1',
+    '0',
+    {from: account2}
+    )
+})
+
+//33
 it('Should fail because caller does not hold item', async () => {
+
+    console.log("//**************************************END VERIFY FAIL BATCH**********************************************/")
+    console.log("//**************************************END VERIFY TEST**********************************************/")
     return VERIFY.markItem(
     asset1,
     string1Hash,
