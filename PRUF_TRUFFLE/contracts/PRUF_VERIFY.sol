@@ -173,7 +173,7 @@ contract VERIFY is CORE {
             //if status is counterfeit return 2
             return 2;
         }
-        
+
         if (items[_itemHash] != 0) {
             if (itemData[_itemHash].collisions < 4294967295)
                 itemData[_itemHash].collisions++;
