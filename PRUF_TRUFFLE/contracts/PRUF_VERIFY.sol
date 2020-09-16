@@ -228,7 +228,7 @@ contract VERIFY is CORE {
 
         require(
             (A_TKN.ownerOf(tokenId) == msg.sender) && //msg.sender is token holder
-                (idxAuthInVerify[_idxHash] == 1), //token is auth amdmin asset class
+                (idxAuthInVerify[_idxHash] == 1), //token is auth admin asset class
             "VFY:MI: Caller does not hold token or is not authorized as a admin user (type1) in the asset class"
         );
         require(items[_itemHash] == _idxHash, "VFY:MI:item not held by caller"); //check to see if held by _idxHash

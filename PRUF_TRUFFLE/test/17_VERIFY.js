@@ -794,8 +794,8 @@ it('Should authorize APP_NC in all relevant asset classes', async () => {
     console.log("Authorizing APP_NC")
     return STOR.enableContractForAC('APP_NC', '10', '2', { from: account1 })
         
-    .then(() => {
-            return STOR.enableContractForAC('APP_NC', '11', '2', { from: account1 })
+        .then(() => {
+            return STOR.enableContractForAC('APP_NC', '11', '2', { from: account2 })
         })
         
         .then(() => {
@@ -804,6 +804,14 @@ it('Should authorize APP_NC in all relevant asset classes', async () => {
 
         .then(() => {
             return STOR.enableContractForAC('APP_NC', '13', '4', { from: account1 })
+        })
+
+        .then(() => {
+            return STOR.enableContractForAC('APP_NC', '14', '4', { from: account2 })
+        })
+
+        .then(() => {
+            return STOR.enableContractForAC('APP_NC', '15', '4', { from: account2 })
         })
 
 })
@@ -837,7 +845,7 @@ it('Should authorize NP_NC in all relevant asset classes', async () => {
     return STOR.enableContractForAC('NP_NC', '10', '2', { from: account1 })
         
         .then(() => {
-            return STOR.enableContractForAC('NP_NC', '11', '2', { from: account1 })
+            return STOR.enableContractForAC('NP_NC', '11', '2', { from: account2 })
         })
 
         .then(() => {
@@ -846,6 +854,14 @@ it('Should authorize NP_NC in all relevant asset classes', async () => {
 
         .then(() => {
             return STOR.enableContractForAC('NP_NC', '13', '4', { from: account1 })
+        })
+
+        .then(() => {
+            return STOR.enableContractForAC('NP_NC', '14', '4', { from: account2 })
+        })
+
+        .then(() => {
+            return STOR.enableContractForAC('NP_NC', '15', '4', { from: account2 })
         })
 })
 
@@ -924,7 +940,7 @@ it('Should authorize AC_TKN in all relevant asset classes', async () => {
     return STOR.enableContractForAC('AC_TKN', '10', '2', { from: account1 })
         
         .then(() => {
-            return STOR.enableContractForAC('AC_TKN', '11', '2', { from: account1 })
+            return STOR.enableContractForAC('AC_TKN', '11', '2', { from: account2 })
         })
         
         .then(() => {
@@ -932,7 +948,15 @@ it('Should authorize AC_TKN in all relevant asset classes', async () => {
         })
         
         .then(() => {
-            return STOR.enableContractForAC('AC_TKN', '13', '5', { from: account1 })
+            return STOR.enableContractForAC('AC_TKN', '13', '4', { from: account1 })
+        })
+
+        .then(() => {
+            return STOR.enableContractForAC('AC_TKN', '14', '4', { from: account2 })
+        })
+        
+        .then(() => {
+            return STOR.enableContractForAC('AC_TKN', '15', '4', { from: account2 })
         })
 })
 
@@ -943,7 +967,7 @@ it('Should authorize A_TKN in all relevant asset classes', async () => {
     return STOR.enableContractForAC('A_TKN', '10', '2', { from: account1 })
         
         .then(() => {
-            return STOR.enableContractForAC('A_TKN', '11', '2', { from: account1 })
+            return STOR.enableContractForAC('A_TKN', '11', '2', { from: account2 })
         })
         
         .then(() => {
@@ -952,6 +976,14 @@ it('Should authorize A_TKN in all relevant asset classes', async () => {
         
         .then(() => {
             return STOR.enableContractForAC('A_TKN', '13', '4', { from: account1 })
+        })
+
+        .then(() => {
+            return STOR.enableContractForAC('A_TKN', '14', '4', { from: account2 })
+        })
+        
+        .then(() => {
+            return STOR.enableContractForAC('A_TKN', '15', '4', { from: account2 })
         })
 })
 
@@ -1001,7 +1033,7 @@ it('Should authorize AC_MGR in all relevant asset classes', async () => {
     return STOR.enableContractForAC('AC_MGR', '10', '2', { from: account1 })
         
         .then(() => {
-            return STOR.enableContractForAC('AC_MGR', '11', '2', { from: account1 })
+            return STOR.enableContractForAC('AC_MGR', '11', '2', { from: account2 })
         })
         
         .then(() => {
@@ -1010,6 +1042,14 @@ it('Should authorize AC_MGR in all relevant asset classes', async () => {
         
         .then(() => {
             return STOR.enableContractForAC('AC_MGR', '13', '4', { from: account1 })
+        })
+
+        .then(() => {
+            return STOR.enableContractForAC('AC_MGR', '14', '4', { from: account2 })
+        })
+        
+        .then(() => {
+            return STOR.enableContractForAC('AC_MGR', '15', '4', { from: account2 })
         })
 })
 
@@ -1048,6 +1088,14 @@ it('Should authorize VERIFY in all relevant asset classes', async () => {
 
     .then(() => {
         return STOR.enableContractForAC('VERIFY', '13', '4', { from: account1 })
+    })
+
+    .then(() => {
+        return STOR.enableContractForAC('VERIFY', '14', '4', { from: account2 })
+    })
+
+    .then(() => {
+        return STOR.enableContractForAC('VERIFY', '15', '4', { from: account2 })
     })
 })
 
@@ -1493,7 +1541,7 @@ it('Should mint asset2', async () => {
     return APP_NC.$newRecord(
     asset2,
     rgt2,
-    '13',
+    '14',
     '100',
     {from: account2, value: 20000000000000000 }
     )
@@ -1531,6 +1579,15 @@ it('Should mint asset4', async () => {
     )
 })
 
+it('Should authorize asset2 as verify wallet', async () => {
+    return VERIFY.authorizeTokenForVerify(
+    asset4,
+    '1',
+    '13',
+    {from: account1}
+    )
+})
+
 
 it('Should mint asset5', async () => {
     return APP_NC.$newRecord(
@@ -1547,9 +1604,18 @@ it('Should mint asset6', async () => {
     return APP_NC.$newRecord(
     asset6,
     rgt6,
-    '14',
+    '15',
     '100',
     {from: account2, value: 20000000000000000 }
+    )
+})
+
+it('Should authorize asset6 as verify wallet', async () => {
+    return VERIFY.authorizeTokenForVerify(
+    asset6,
+    '1',
+    '15',
+    {from: account2}
     )
 })
 
@@ -1580,7 +1646,7 @@ it('Should fail because AC is not VERIFY authorized', async () => {
 //3
 it('Should fail because AC of asset token does not match supplied AC', async () => {
     return VERIFY.authorizeTokenForVerify(
-    asset4,
+    asset3,
     '1',
     '13',
     {from: account1}
@@ -1669,4 +1735,204 @@ it('Should fail because string1 is not in status 0', async () => {
     {from: account2}
     )
 })
+
+
+it('Should put string1 into asset2', async () => {
+    return VERIFY.putIn(
+    asset2,
+    string1Hash,
+    {from: account2}
+    )
+})
+
+
+it('Should change string1 status to 0', async () => {
+    return VERIFY.markItem(
+    asset2,
+    string1Hash,
+    '0',
+    '0',
+    {from: account2}
+    )
+})
+
+//8
+it('Should fail to add 1 collision to string1', async () => {
+    return VERIFY.putIn(
+    asset1,
+    string1Hash,
+    {from: account1}
+    )
+})
+
+it('Should takeOut string1 from asset1', async () => {
+    return VERIFY.takeOut(
+    asset1,
+    string1Hash,
+    {from: account1}
+    )
+})
+
+
+//9
+it('Should fail because string1 maxCollisions exceeds 1', async () => {
+    return VERIFY.safePutIn(
+    asset2,
+    string1Hash,
+    '1',
+    {from: account2}
+    )
+})
+
+
+it('Should put string1 into asset2', async () => {
+    return VERIFY.putIn(
+    asset2,
+    string1Hash,
+    {from: account2}
+    )
+})
+
+
+//10
+it('Should fail because caller does not hold verify wallet', async () => {
+
+    console.log("//**************************************END safePutIn FAIL BATCH**********************************************/")
+    console.log("//**************************************BEGIN putIn FAIL BATCH**********************************************/")
+    return VERIFY.putIn(
+    asset2,
+    string1Hash,
+    {from: account1}
+    )
+})
+
+//11
+it('Should fail because asset3 is not verified wallet', async () => {
+    return VERIFY.putIn(
+    asset3,
+    string2Hash,
+    {from: account1}
+    )
+})
+
+//12
+it('Should fail because string1 already in verify wallet', async () => {
+    return VERIFY.putIn(
+    asset1,
+    string1Hash,
+    {from: account1}
+    )
+})
+
+
+//13
+it('Should fail because caller does not hold verify wallet', async () => {
+
+    console.log("//**************************************END putIn FAIL BATCH**********************************************/")
+    console.log("//**************************************BEGIN takeOut FAIL BATCH**********************************************/")
+    return VERIFY.takeOut(
+    asset2,
+    string1Hash,
+    {from: account1}
+    )
+})
+
+//14
+it('Should fail because asset3 is not verified wallet', async () => {
+    return VERIFY.takeOut(
+    asset3,
+    string2Hash,
+    {from: account1}
+    )
+})
+
+//15
+it('Should fail because caller does not hold item', async () => {
+    return VERIFY.takeOut(
+    asset1,
+    string1Hash,
+    {from: account1}
+    )
+})
+
+
+//16
+it('Should fail because caller does not hold verify wallet', async () => {
+
+    console.log("//**************************************END takeOut FAIL BATCH**********************************************/")
+    console.log("//**************************************BEGIN transfer FAIL BATCH**********************************************/")
+    return VERIFY.transfer(
+    asset2,
+    asset1,
+    string1Hash,
+    {from: account1}
+    )
+})
+
+//17
+it('Should fail because asset3 is not verified wallet', async () => {
+    return VERIFY.transfer(
+    asset3,
+    asset1,
+    string2Hash,
+    {from: account1}
+    )
+})
+
+//18
+it('Should fail because caller does not hold item', async () => {
+    return VERIFY.transfer(
+    asset1,
+    asset4,
+    string1Hash,
+    {from: account1}
+    )
+})
+
+//19
+it('Should fail because wallet is not in the same AC', async () => {
+    return VERIFY.transfer(
+    asset2,
+    asset6,
+    string1Hash,
+    {from: account2}
+    )
+})
+
+//20
+it('Should fail because caller does not hold verify wallet', async () => {
+
+    console.log("//**************************************END transfer FAIL BATCH**********************************************/")
+    console.log("//**************************************BEGIN markItem FAIL BATCH**********************************************/")
+    return VERIFY.markItem(
+    asset2,
+    string1Hash,
+    '1',
+    '0',
+    {from: account1}
+    )
+})
+
+//21
+it('Should fail because asset3 is not verified wallet', async () => {
+    return VERIFY.markItem(
+    asset3,
+    string2Hash,
+    '1',
+    '0',
+    {from: account1}
+    )
+})
+
+//22
+it('Should fail because caller does not hold item', async () => {
+    return VERIFY.markItem(
+    asset1,
+    string1Hash,
+    '1',
+    '0',
+    {from: account1}
+    )
+})
+
 })
