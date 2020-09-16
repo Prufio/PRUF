@@ -29,9 +29,10 @@ __/\\\\\\\\\\\\\ _____/\\\\\\\\\ _______/\\../\\ ___/\\\\\\\\\\\\\\\
  * 6 =
  *
  * usertypes are indicated in idxAuthInVerify[_idxHash] 
- * 0 basic verify authorized
- * 1 for admin level auth
- * 2 for priveledged level auth
+ * 0 not authorized
+ * 1 basic auth
+ * 2 priveledged level auth
+ * 3 admin level auth
  *---------------------------------------------------------------*/
 
 // SPDX-License-Identifier: UNLICENSED
@@ -69,7 +70,7 @@ contract VERIFY is CORE {
             "VFY:MOD-IA: Caller does not hold verify enabled token"
         );
         require(
-            (idxAuthInVerify[_idxHash] == 1),
+            (idxAuthInVerify[_idxHash] > 0),
             "VFY:MOD-IA: Token IDX not listed in VERIFY approved tokens"  //must be auth or "1"
         );
         _;
@@ -228,7 +229,7 @@ contract VERIFY is CORE {
 
         require(
             (A_TKN.ownerOf(tokenId) == msg.sender) && //msg.sender is token holder
-                (idxAuthInVerify[_idxHash] == 1), //token is auth amdmin asset class
+                (idxAuthInVerify[_idxHash] == 3), //token is auth amdmin 
             "VFY:MI: Caller does not hold token or is not authorized as a admin user (type1) in the asset class"
         );
         require(items[_itemHash] == _idxHash, "VFY:MI:item not held by caller"); //check to see if held by _idxHash
@@ -251,10 +252,10 @@ contract VERIFY is CORE {
     ) external isAuthorized(_idxHash) returns (uint256) {
         uint256 tokenId = uint256(_idxHash);
 
-        require((_status == 3) || (_status == 4), "VFY:MILS:must set to L/S 3 || 4 only"); //verify _status is l/s
+        require((_status == 3) || (_status == 4) || (_status == 0), "VFY:MILS:must set to L/S 3 || 4 || 0 only"); //verify _status is l/s
         require(
             (A_TKN.ownerOf(tokenId) == msg.sender) && //msg.sender is token holder
-                (idxAuthInVerify[_idxHash] > 0), //msg sender is auth in asset class
+                (idxAuthInVerify[_idxHash] > 1), //token is auth privelidged+
             "VFY:MILS: Caller does not hold token or is not authorized as a verified user (>= 2) in the asset class"
         );
         require(items[_itemHash] == _idxHash, "VFY:MILS:item not held by caller"); //check to see if held by _idxHash
@@ -285,3 +286,32 @@ contract VERIFY is CORE {
         );
     }
 }
+
+/*-----------------------------------------------------------------
+ *  TESTING
+ *
+/*-----------------------------------------------------------------
+ Make a 2 Verify AC's (custody type 4)
+ make 2 assets in each new AC (1,2) (3,4)
+ verify all 4 Assets as pruf verify wallets
+ make wallet 
+
+ put an item (A) in wallet 1 (should succeed) 
+ try to put the same item is wallet 2 (should fail)
+ take item A out of wallet 1 (should succeed)
+ put item A in wallet 2 (should succeed) 
+ transfer item A to wallet 3 (should fail)
+ transfer item A to wallet 1 (should succeed)
+ take item A out of wallet 1 (should succeed)
+ safePutIn item A to wallet 2 with collision threshold at 1 (should succeed)
+ put item A to wallet 3 (should fail)
+ take item A out of wallet 1 (should fail)
+ take item A out of wallet 2 (should succeed)
+ safePutIn item A to wallet 2 with collision threshold at 1 (should Fail)
+ safePutIn item A to wallet 3 with collision threshold at 2 (should succeed)
+ transfer item A to wallet 1 (should fail)
+ transfer item A to wallet 4 (should succeed)
+
+ 
+
+ *---------------------------------------------------------------*/
