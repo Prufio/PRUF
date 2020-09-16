@@ -22,7 +22,7 @@ __/\\\\\\\\\\\\\ _____/\\\\\\\\\ _______/\\../\\ ___/\\\\\\\\\\\\\\\
  *
  * 0 = no status; clean
  * 1 = items with this SN are questionable (found an item that is apparently not real) --settable/clearable by type 2-3 user
- * 2 = items with this SN are counterfiet (original, authentic item recovered (and held/destroyed), or SN does not officially exist) --settable/clearable by type 3 user
+ * 2 = items with this SN are counterfeit (original, authentic item recovered (and held/destroyed), or SN does not officially exist) --settable/clearable by type 3 user
  * 3 = this item SN was stolen --settable/clearable by type 2-3 user
  * 4 = this item SN was lost --settable/clearable by type 2-3 user
  * 5 = this item SN is in process --settable by type 2-3 user - clearable by type 3 user 
@@ -45,7 +45,7 @@ contract VERIFY is CORE {
     using SafeMath for uint256;
 
     struct ItemData {
-        uint8 status; //Item status (suspect, counterfiet, stolen, lost, etc) //maybe only bank /mint can mark counterfiet?
+        uint8 status; //Item status (suspect, counterfeit, stolen, lost, etc) //maybe only bank /mint can mark counterfeit?
         uint32 value; //denomination, if applicable
         uint32 collisions; //number of times the item was attempted to be "locked" when held
         //room here for more data for 32 bytes!
@@ -123,13 +123,18 @@ contract VERIFY is CORE {
             items[_itemHash] != _idxHash,
             "VFY:PI:item already held by caller"
         );
-        require(itemData[_itemHash].status == 0, "VFY:PI:item status not zero"); //check to see if item status is clean
-        require( //check to see if collisions > limit
-            itemData[_itemHash].collisions <= maxCollisions,
-            "VFY:PI:item collisions exceeds limit"
-        );
-
         //^^^^^^^checks^^^^^^^^^
+
+        if (itemData[_itemHash].status != 0) {
+            //if status is not "clean" (0) return the status
+            return itemData[_itemHash].status;
+        }
+
+        if (itemData[_itemHash].collisions > maxCollisions) {
+            //if status is not "clean" (0) return the status
+            return 100; //return 100 if max collisions exceeded
+        }
+
         if (items[_itemHash] != 0) {
             if (itemData[_itemHash].collisions < 4294967295)
                 itemData[_itemHash].collisions++;
@@ -157,12 +162,18 @@ contract VERIFY is CORE {
             items[_itemHash] != _idxHash,
             "VFY:PI:item already held by caller"
         );
-        require(
-            itemData[_itemHash].status != 2,
-            "VFY:PI:item marked counterfiet"
-        ); //check to see if item status is clean
-        require(itemData[_itemHash].status != 3, "VFY:PI:item marked stolen"); //check to see if item status is clean
         //^^^^^^^checks^^^^^^^^^
+
+        if (itemData[_itemHash].status == 3) {
+            //if status is stolen return 3
+            return 3;
+        }
+
+        if (itemData[_itemHash].status == 2) {
+            //if status is counterfeit return 2
+            return 2;
+        }
+        
         if (items[_itemHash] != 0) {
             if (itemData[_itemHash].collisions < 4294967295)
                 itemData[_itemHash].collisions++;
@@ -186,9 +197,10 @@ contract VERIFY is CORE {
         returns (uint256)
     {
         require(items[_itemHash] == _idxHash, "VFY:TO:item not held by caller"); //check to see if held by _idxHash
-         require( 
+        require(
             (itemData[_itemHash].status != 3) &&
-            (itemData[_itemHash].status != 4), "VFY:T:Item SN is marked as lost or stolen"
+                (itemData[_itemHash].status != 4),
+            "VFY:T:Item SN is marked as lost or stolen"
         );
         //^^^^^^^checks^^^^^^^^^
 
@@ -199,7 +211,6 @@ contract VERIFY is CORE {
         //^^^^^^^interactions^^^^^^^^^
     }
 
-
     /*
      * @dev:Transfer an item out of one (_idxHash) verify wallet into another
      *      the caller must posess Asset token, must pass isAuth
@@ -207,7 +218,8 @@ contract VERIFY is CORE {
      *      item must not be lost/stolen
      *      destination wallet must be in same asset class as sending wallet
      */
-    function transfer( //IS THIS A TERRIBLE IDEA? EXAMINE
+    function transfer(
+        //IS THIS A TERRIBLE IDEA? EXAMINE
         bytes32 _idxHash,
         bytes32 _newIdxHash,
         bytes32 _itemHash
@@ -222,11 +234,12 @@ contract VERIFY is CORE {
         );
         require(
             itemData[_itemHash].status != 2,
-            "VFY:PI:item marked counterfiet"
+            "VFY:PI:item marked counterfeit"
         ); //check to see if item status is clean
-        require( 
+        require(
             (itemData[_itemHash].status != 3) &&
-            (itemData[_itemHash].status != 4), "VFY:T:Item SN is marked as lost or stolen"
+                (itemData[_itemHash].status != 4),
+            "VFY:T:Item SN is marked as lost or stolen"
         );
         //^^^^^^^checks^^^^^^^^^
 
@@ -238,31 +251,29 @@ contract VERIFY is CORE {
     }
 
     /*
-     * @dev:Mark an item with a status (see docs at top of contract)
-     *      the caller must posess Asset token, must pass isAuth and user must be auth as a "1" in that AC
-     *      item must be listed as "in" the callers wallet
+     * @dev:Mark an item conterfeit . Admin function, user marks conterfeit regardless of holder
+     *      the caller must posess Asset token at a 3 userlevel
      */
-    function AdminMarkItem(
+    function AdminMarkCounterfeit(
         bytes32 _idxHash,
-        bytes32 _itemHash,
-        uint8 _status,
-        uint32 _value
+        bytes32 _itemHash
     ) external isAuthorized(_idxHash) returns (uint256) {
-
         require(
-                idxAuthInVerify[_idxHash] == 3, //token is auth amdmin
+            idxAuthInVerify[_idxHash] == 3, //token is auth amdmin
             "VFY:MI: Caller not authorized as a admin user (type3) in the asset class"
         );
-        require(items[_itemHash] == _idxHash, "VFY:MI:item not held by caller"); //check to see if held by _idxHash
+        //^^^^^^^checks^^^^^^^^^
 
-        itemData[_itemHash].status = _status;
-        itemData[_itemHash].value = _value;
+        itemData[_itemHash].status = 2;
+        //^^^^^^^effects^^^^^^^^^
+
         return 170;
+        //^^^^^^^interactions^^^^^^^^^
     }
 
     /*
-     * @dev:Mark an item with lost or stolen status (see docs at top of contract)
-     *      the caller must posess Asset token, must pass isAuth and user must be auth as a "1" in that AC
+     * @dev:Mark an item with a status (see docs at top of contract)
+     *      the caller must posess Asset token, must pass isAuth and user must be auth as a 3 in that AC
      *      item must be listed as "in" the callers wallet
      */
     function markItem(
@@ -271,28 +282,20 @@ contract VERIFY is CORE {
         uint8 _status,
         uint32 _value
     ) external isAuthorized(_idxHash) returns (uint256) {
-
         require(
-            (_status != 2),
-            "VFY:MI:must set to 0 || 1 || 3 || 4 || 5+ only"
-        ); //verify _status is l/s
-        require(
-                idxAuthInVerify[_idxHash] > 1, //token is auth privelidged+
-            "VFY:MILS: Caller does not hold token or is not authorized as a verified user (>= 2) in the asset class"
-        );
-        require(
-            (itemData[_itemHash].status != 2) &&
-            (itemData[_itemHash].status != 5), "VFY:MLS:Item SN is marked as countefiet or in process"
+            idxAuthInVerify[_idxHash] > 3, //token is auth privelidged+
+            "VFY:MI: Caller not authorized as a verified user (>= 3)"
         );
 
-        require(
-            items[_itemHash] == _idxHash,
-            "VFY:MILS:item not held by caller"
-        ); //check to see if held by _idxHash
+        require(items[_itemHash] == _idxHash, "VFY:MI:item not held by caller"); //check to see if held by _idxHash
+        //^^^^^^^checks^^^^^^^^^
 
         itemData[_itemHash].status = _status;
         itemData[_itemHash].value = _value;
+        //^^^^^^^effects^^^^^^^^^
+
         return 170;
+        //^^^^^^^interactions^^^^^^^^^
     }
 
     /*
@@ -343,13 +346,13 @@ contract VERIFY is CORE {
  transfer item A to wallet 4 (should succeed)
 
 
- AdminMark item A as counterfiet (2) (should succeed)
- transfer item A to wallet 3 (should fail) -- counterfiet
+ AdminMark item A as counterfeit (2) (should succeed)
+ transfer item A to wallet 3 (should fail) -- counterfeit
 
  mark item A as in process (5)  (should succeed)
  transfer item A to wallet 3 (should succeed)
 
- mark item A as counterfiet (2) (should fail) -- not auth
+ mark item A as counterfeit (2) (should fail) -- not auth
  mark item A as lost (4) (should fail) -- in process
  take item A out of wallet 3 (should succeed)
 
@@ -368,7 +371,7 @@ contract VERIFY is CORE {
 
  * 0 = no status; clean
  * 1 = items with this SN are questionable (found an item that is apparently not real)
- * 2 = items with this SN are counterfiet (original, authentic item recovered (and held/destroyed), or SN does not officially exist) (SUPER AUTH ONLY)
+ * 2 = items with this SN are counterfeit (original, authentic item recovered (and held/destroyed), or SN does not officially exist) (SUPER AUTH ONLY)
  * 3 = this item SN was stolen
  * 4 = this item SN was lost
  * 5 = this item SN is in process
