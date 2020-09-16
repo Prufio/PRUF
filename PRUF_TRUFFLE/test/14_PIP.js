@@ -77,9 +77,9 @@
 
     let account000 = '0x0000000000000000000000000000000000000000'
 
-    let nakedAuthCode1;
-    let nakedAuthCode3;
-    let nakedAuthCode7;
+    let PipAuthCode1;
+    let PipAuthCode3;
+    let PipAuthCode7;
     
     contract('PIP', accounts => {
             
@@ -446,17 +446,17 @@
         )
 
 
-        nakedAuthCode1 = await Helper.getURIb32fromAuthcode(
+        PipAuthCode1 = await Helper.getURIb32fromAuthcode(
             '15',
             '1'
         )
 
-        nakedAuthCode3 = await Helper.getURIb32fromAuthcode(
+        PipAuthCode3 = await Helper.getURIb32fromAuthcode(
             '15',
             '3'
         )
 
-        nakedAuthCode7 = await Helper.getURIb32fromAuthcode(
+        PipAuthCode7 = await Helper.getURIb32fromAuthcode(
             '15',
             '7'
         )
