@@ -20,7 +20,7 @@ pragma solidity ^0.6.7;
 
 import "./PRUF_CORE.sol";
 
-contract NAKED is CORE {
+contract PIP is CORE {
     uint256 importDiscount = 2;
 
     /*
@@ -34,7 +34,7 @@ contract NAKED is CORE {
         }
     }
 
-    function mintNakedAsset(
+    function mintPipAsset(
         bytes32 _idxHash,
         bytes32 _hashedAuthCode, // token URI needs to be K256(packed( uint32 assetClass, string authCode)) supplied off chain
         uint32 _assetClass
@@ -47,10 +47,7 @@ contract NAKED is CORE {
             (AC_TKN.ownerOf(_assetClass) == msg.sender), //msg.sender is AC token holder
             "N:MNA:Caller does not hold AC token"
         );
-        require(
-            userType == 10,
-            "N:MNA:user not authorized to mint naked assets"
-        );
+        require(userType == 10, "N:MNA:user not authorized to mint PIP assets");
         require(
             rec.assetClass == 0, //verified as VALID
             "N:MNA: Asset already registered in system"
@@ -62,7 +59,7 @@ contract NAKED is CORE {
         );
         tokenURI = uint256toString(uint256(b32URI));
 
-        A_TKN.mintAssetToken(address(this), tokenId, tokenURI); //mint a naked token
+        A_TKN.mintAssetToken(address(this), tokenId, tokenURI); //mint a PIP token
 
         //^^^^^^^interactions / effects^^^^^^^^^^^^
     }
@@ -70,7 +67,7 @@ contract NAKED is CORE {
     /*
      * @dev Import a record into a new asset class
      */
-    function $claimNakedAsset(
+    function $claimPipAsset(
         bytes32 _idxHash,
         string calldata _authCode,
         uint32 _newAssetClass,
@@ -86,11 +83,11 @@ contract NAKED is CORE {
 
         require(
             A_TKN.ownerOf(tokenId) == address(this),
-            "N:CNA: Token not found in PRUF_NAKED"
+            "N:CNA: Token not found in PRUF_PIP"
         );
         //^^^^^^^checks^^^^^^^^^
 
-        A_TKN.validateNakedToken(tokenId, _newAssetClass, _authCode); //check supplied data matches tokenURI
+        A_TKN.validatePipToken(tokenId, _newAssetClass, _authCode); //check supplied data matches tokenURI
 
         STOR.newRecord(_idxHash, _rgtHash, _newAssetClass, _countDownStart); // Make a new record at the tokenId b32
 

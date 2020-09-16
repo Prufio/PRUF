@@ -12,11 +12,11 @@ __/\\\\\\\\\\\\\ _____/\\\\\\\\\ _______/\\../\\ ___/\\\\\\\\\\\\\\\
 
 /*-----------------------------------------------------------------
  *  TO DO
- *   need to limit access to specified AC's !
  *
- * only trusted entities can put items "in pouch" auth as user type 1+ in asset class
+/*-----------------------------------------------------------------
+ * only tokenHolder can put items "in pouch" 
  * only trusted entities can take items "out"
- * only pouchholder can mark item status, etc
+ * only pouchholder can mark item status, auth as user type 1+ in asset class
  * joe public can check only?
  * statuses:
  *
@@ -27,6 +27,11 @@ __/\\\\\\\\\\\\\ _____/\\\\\\\\\ _______/\\../\\ ___/\\\\\\\\\\\\\\\
  * 4 = this item SN was lost
  * 5 =
  * 6 =
+ *
+ * usertypes are indicated in idxAuthInVerify[_idxHash] 
+ * 0 basic verify authorized
+ * 1 for admin level auth
+ * 2 for priveledged level auth
  *---------------------------------------------------------------*/
 
 // SPDX-License-Identifier: UNLICENSED
@@ -45,9 +50,10 @@ contract VERIFY is CORE {
         //room here for more data for 32 bytes!
     }
 
-    mapping(bytes32 => bytes32) private items;
-    mapping(bytes32 => ItemData) private itemData;
-    mapping(bytes32 => uint8) private idxAuthInVerify;
+    mapping(bytes32 => bytes32) private items; // itemHash -> idxHash of the owning wallet
+    mapping(bytes32 => ItemData) private itemData; //itemhash -> itemdata
+
+    mapping(bytes32 => uint8) private idxAuthInVerify; //idxHash -> verification level
 
     /**
      * Requires:
@@ -64,7 +70,7 @@ contract VERIFY is CORE {
         );
         require(
             (idxAuthInVerify[_idxHash] == 1),
-            "VFY:MOD-IA: Token IDX not listed in VERIFY approved tokens"
+            "VFY:MOD-IA: Token IDX not listed in VERIFY approved tokens"  //must be auth or "1"
         );
         _;
     }
@@ -77,7 +83,7 @@ contract VERIFY is CORE {
      */
     function authorizeTokenForVerify(
         bytes32 _idxHash,
-        uint8 _verified,
+        uint8 _verified,   //0 for not verify authorized, 1 for admin level auth, 2 for priveledged level auth and 3 = basic verify authorization
         uint32 _assetClass
     ) external {
         AC memory ACdata = getACinfo(_assetClass);
@@ -218,15 +224,40 @@ contract VERIFY is CORE {
         uint8 _status,
         uint32 _value
     ) external isAuthorized(_idxHash) returns (uint256) {
-        Record memory rec = getRecord(_idxHash);
         uint256 tokenId = uint256(_idxHash);
 
         require(
-            (A_TKN.ownerOf(tokenId) == msg.sender) &&
-                (getCallingUserType(rec.assetClass) == 1), //msg.sender is token holder
+            (A_TKN.ownerOf(tokenId) == msg.sender) && //msg.sender is token holder
+                (idxAuthInVerify[_idxHash] == 1), //token is auth amdmin asset class
             "VFY:MI: Caller does not hold token or is not authorized as a admin user (type1) in the asset class"
         );
-        require(items[_itemHash] == _idxHash, "VFY:TO:item not held by caller"); //check to see if held by _idxHash
+        require(items[_itemHash] == _idxHash, "VFY:MI:item not held by caller"); //check to see if held by _idxHash
+
+        itemData[_itemHash].status = _status;
+        itemData[_itemHash].value = _value;
+        return 170;
+    }
+
+        /*
+     * @dev:Mark an item with lost or stolen status (see docs at top of contract)
+     *      the caller must posess Asset token, must pass isAuth and user must be auth as a "1" in that AC
+     *      item must be listed as "in" the callers wallet
+     */
+    function markLS(
+        bytes32 _idxHash,
+        bytes32 _itemHash,
+        uint8 _status,
+        uint32 _value
+    ) external isAuthorized(_idxHash) returns (uint256) {
+        uint256 tokenId = uint256(_idxHash);
+
+        require((_status == 3) || (_status == 4), "VFY:MILS:must set to L/S 3 || 4 only"); //verify _status is l/s
+        require(
+            (A_TKN.ownerOf(tokenId) == msg.sender) && //msg.sender is token holder
+                (idxAuthInVerify[_idxHash] > 0), //msg sender is auth in asset class
+            "VFY:MILS: Caller does not hold token or is not authorized as a verified user (>= 2) in the asset class"
+        );
+        require(items[_itemHash] == _idxHash, "VFY:MILS:item not held by caller"); //check to see if held by _idxHash
 
         itemData[_itemHash].status = _status;
         itemData[_itemHash].value = _value;

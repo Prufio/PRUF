@@ -23,52 +23,58 @@ function buildWindowUtils() {
   }
 
   const _checkAssetExists = async (idxHash) => {
+    let tempBool;
     await window.contracts.STOR.methods
       .retrieveShortRecord(idxHash)
       .call({ from: window.addr }, function (_error, _result) {
         if (_error) {
           return (console.log("IN ERROR IN ERROR IN ERROR"))
         } else if (
-          Object.values(_result)[4] ===
-          "0"
+          Object.values(_result)[2] === "0"
         ) {
-          return (false)
+          tempBool = false;
         } else {
-          return (true)
+          tempBool = true;
         }
 
       });
+      console.log(tempBool);
+      return tempBool;
   }
 
   const _checkMatch = async (idxHash, rgtHash) => {
+    let tempBool;
     await window.contracts.STOR.methods
       ._verifyRightsHolder(idxHash, rgtHash)
       .call({ from: window.addr }, function (_error, _result) {
         if (_error) {
           console.log(_error);
         } else if (_result === "0") {
-          return (false)
+          tempBool = false;
         } else {
-          return (true)
+          tempBool = true;
         }
         console.log("check debug, _result, _error: ", _result, _error);
       });
+      return tempBool;
   }
 
   const _checkEscrowStatus = async (idxHash) => {
+    let tempBool;
     await window.contracts.STOR.methods
       .retrieveShortRecord(idxHash)
       .call({ from: window.addr }, function (_error, _result) {
         if (_error) {
           console.log(_error);
         } else if (Object.values(_result)[2] === '6' || Object.values(_result)[2] === '12') {
-          return true
+          tempBool = true
         }
-        else { return false }
+        else { tempBool = false }
       });
   }
 
   const _checkNoteExists = async (idxHash) => {
+    let tempBool;
     await window.contracts.STOR.methods
       .retrieveShortRecord(idxHash)
       .call({ from: window.addr }, function (_error, _result) {
@@ -77,9 +83,9 @@ function buildWindowUtils() {
         } else if (
           Object.values(_result)[8] > 0
         ) {
-          return (true)
+          tempBool = true
         } else {
-          return (false)
+          tempBool = false
         }
 
       });

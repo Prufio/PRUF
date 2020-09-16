@@ -87,6 +87,8 @@ class VerifyLite extends Component {
         return alert("Owner data fields do not match data on record. Ensure data fields are correct before submission.")
       }
 
+      if(infoMatches){return alert("Match confirmed")}
+
         self.setState({ result: "170" });
 
         return document.getElementById("MainForm").reset();
