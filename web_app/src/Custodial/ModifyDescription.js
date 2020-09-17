@@ -98,14 +98,7 @@ class ModifyDescription extends Component {
 
      const publishIPFS1 = async () => {
       console.log(this.state.oldDescription)
-      let oldRefHash;
-      let oldDescription;
       let newDescription;
-      let resultingJSONPhotoKeys = [];
-      let resultingJSONPhotoValues = [];
-
-      let resultingJSONTextKeys = [];
-      let resultingJSONTextValues = [];
 
       console.log("Checking payload...")
 
