@@ -25,11 +25,6 @@ class ModifyRecordStatusNC extends Component {
       manufacturer: "",
       model: "",
       serial: "",
-      first: "",
-      middle: "",
-      surname: "",
-      id: "",
-      secret: "",
       isNFA: false,
     };
   }
@@ -59,7 +54,6 @@ class ModifyRecordStatusNC extends Component {
       this.setState({ error: undefined })
       this.setState({ result: "" })
       var idxHash;
-      var rgtRaw;
 
       idxHash = window.web3.utils.soliditySha3(
         this.state.type,
@@ -68,34 +62,19 @@ class ModifyRecordStatusNC extends Component {
         this.state.serial,
       );
 
-      rgtRaw = window.web3.utils.soliditySha3(
-        this.state.first,
-        this.state.middle,
-        this.state.surname,
-        this.state.id,
-        this.state.secret
-      );
-      var rgtHash = window.web3.utils.soliditySha3(idxHash, rgtRaw);
-
       console.log("idxHash", idxHash);
-      console.log("New rgtRaw", rgtRaw);
-      console.log("New rgtHash", rgtHash);
+
       console.log("addr: ", window.addr);
 
       var doesExist = await window.utils.checkAssetExists(idxHash);
-      var infoMatches = await window.utils.checkMatch(idxHash, rgtHash);
 
       if (!doesExist){
         return alert("Asset doesnt exist! Ensure data fields are correct before submission.")
       }
 
-      if (!infoMatches){
-        return alert("Owner data fields do not match data on record. Ensure data fields are correct before submission.")
-      }
-
       if (this.state.status !== "3" && this.state.status !== "4" && this.state.status !== "6" && this.state.status !== "9" && this.state.status !== "10"){
-        window.contracts.NP.methods
-          ._modStatus(idxHash, rgtHash, this.state.status)
+        window.contracts.NP_NC.methods
+          ._modStatus(idxHash, this.state.status)
           .send({ from: window.addr })
           .on("error", function (_error) {
             // self.setState({ NRerror: _error });
@@ -112,8 +91,8 @@ class ModifyRecordStatusNC extends Component {
       }
 
       else if (this.state.status === "3" || this.state.status === "4" || this.state.status === "10" || this.state.status === "10") {
-        window.contracts.NP.methods
-          ._setLostOrStolen(idxHash, rgtHash, this.state.status)
+        window.contracts.NP_NC.methods
+          ._setLostOrStolen(idxHash, this.state.status)
           .send({ from: window.addr })
           .on("error", function (_error) {
             // self.setState({ NRerror: _error });
@@ -137,19 +116,14 @@ class ModifyRecordStatusNC extends Component {
 
     return (
       <div>
-        <Form className="MRform" id='MainForm'>
+        <Form className="MRNCform" id='MainForm'>
           {window.addr === undefined && (
             <div className="errorResults">
               <h2>User address unreachable</h2>
               <h3>Please connect web3 provider.</h3>
             </div>
-          )}{window.assetClass === undefined && (
-            <div className="errorResults">
-              <h2>No asset class selected.</h2>
-              <h3>Please select asset class in home page to use forms.</h3>
-            </div>
           )}
-          {window.addr > 0 && window.assetClass > 0 && (
+          {window.addr > 0 && (
             <div>
 
               <h2 className="Headertext">Change Asset Status</h2>
@@ -202,61 +176,7 @@ class ModifyRecordStatusNC extends Component {
                   />
                 </Form.Group>
               </Form.Row>
-
               <Form.Row>
-                <Form.Group as={Col} controlId="formGridFirstName">
-                  <Form.Label className="formFont">First Name:</Form.Label>
-                  <Form.Control
-                    placeholder="First Name"
-                    required
-                    onChange={(e) => this.setState({ first: e.target.value })}
-                    size="lg"
-                  />
-                </Form.Group>
-
-                <Form.Group as={Col} controlId="formGridMiddleName">
-                  <Form.Label className="formFont">Middle Name:</Form.Label>
-                  <Form.Control
-                    placeholder="Middle Name"
-                    required
-                    onChange={(e) => this.setState({ middle: e.target.value })}
-                    size="lg"
-                  />
-                </Form.Group>
-
-                <Form.Group as={Col} controlId="formGridLastName">
-                  <Form.Label className="formFont">Last Name:</Form.Label>
-                  <Form.Control
-                    placeholder="Last Name"
-                    required
-                    onChange={(e) => this.setState({ surname: e.target.value })}
-                    size="lg"
-                  />
-                </Form.Group>
-              </Form.Row>
-
-              <Form.Row>
-                <Form.Group as={Col} controlId="formGridIdNumber">
-                  <Form.Label className="formFont">ID Number:</Form.Label>
-                  <Form.Control
-                    placeholder="ID Number"
-                    required
-                    onChange={(e) => this.setState({ id: e.target.value })}
-                    size="lg"
-                  />
-                </Form.Group>
-
-                <Form.Group as={Col} controlId="formGridPassword">
-                  <Form.Label className="formFont">Password:</Form.Label>
-                  <Form.Control
-                    placeholder="Password"
-                    type="password"
-                    required
-                    onChange={(e) => this.setState({ secret: e.target.value })}
-                    size="lg"
-                  />
-                </Form.Group>
-
                 <Form.Group as={Col} controlId="formGridFormat">
                   <Form.Label className="formFont">New Status:</Form.Label>
                   <Form.Control as="select" size="lg" onChange={(e) => this.setState({ status: e.target.value })}>

@@ -2,7 +2,6 @@ import React, { Component } from "react";
 import Form from "react-bootstrap/Form";
 import Col from "react-bootstrap/Col";
 import Button from "react-bootstrap/Button";
-import returnManufacturers from "../Resources/Manufacturers";
 
 class NewRecordNC extends Component {
   constructor(props) {
@@ -30,7 +29,6 @@ class NewRecordNC extends Component {
       surname: "",
       id: "",
       secret: "",
-      isNFA: false,
       txStatus: null,
     };
   }
@@ -88,7 +86,7 @@ class NewRecordNC extends Component {
       var doesExist = await window.utils.checkAssetExists(idxHash);
 
       if(!doesExist){
-        window.contracts.APP.methods
+        window.contracts.APP_NC.methods
         .$newRecord(
           idxHash,
           rgtHash,

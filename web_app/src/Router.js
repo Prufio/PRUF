@@ -55,7 +55,7 @@ function Router(routeRequest) {
         )
     }
 
-    else if (routeRequest === "NC") {
+    else if (routeRequest === "NCAdmin") {
         return (
             <>
                 <Route path="/new-record-NC" component={NewRecordNC} />

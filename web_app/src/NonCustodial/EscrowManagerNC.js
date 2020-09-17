@@ -80,8 +80,8 @@ class EscrowManagerNC extends Component {
       var isInEscrow = await window.utils.checkEscrowStatus(idxHash);
       if(isInEscrow){return alert("Asset already in an escrow status. End current escrow to set new escrow conditions")}
 
-      window.contracts.ECR.methods
-        .setEscrow(idxHash, window.utils._convertTimeTo(this.state.escrowTime, this.state.timeFormat), this.state.newStatus, window.web3.utils.soliditySha3(this.state.agent))
+      window.contracts.ECR_NC.methods
+        .setEscrow(idxHash, this.state.newStatus, window.web3.utils.soliditySha3(this.state.agent), window.utils._convertTimeTo(this.state.escrowTime, this.state.timeFormat), this.state.newStatus)
         .send({ from: window.addr})
         .on("error", function (_error) {
           // self.setState({ NRerror: _error });
@@ -118,7 +118,7 @@ class EscrowManagerNC extends Component {
         var isInEscrow = await window.utils.checkEscrowStatus(idxHash);
         if(isInEscrow){return alert("Asset is not in an escrow status.")}
   
-        window.contracts.ECR.methods
+        window.contracts.ECR_NC.methods
           .endEscrow(idxHash)
           .send({ from: window.addr})
           .on("error", function (_error) {
@@ -145,13 +145,8 @@ class EscrowManagerNC extends Component {
               <h2>User address unreachable</h2>
               <h3>Please connect web3 provider.</h3>
             </div>
-          )}{window.assetClass === undefined && (
-            <div className="errorResults">
-              <h2>No asset class selected.</h2>
-              <h3>Please select asset class in home page to use forms.</h3>
-            </div>
           )}
-          {window.addr > 0 && window.assetClass > 0 && (
+          {window.addr > 0 && (
             <div>
               <h2 className="Headertext">Manage Escrow</h2>
               <br></br>
@@ -204,7 +199,7 @@ class EscrowManagerNC extends Component {
                 <Form.Group as={Col} controlId="formGridAgent">
                   <Form.Label className="formFont">Agent Address:</Form.Label>
                   <Form.Control
-                    placeholder="agent"
+                    placeholder="Address"
                     required
                     onChange={(e) => this.setState({ agent: e.target.value })}
                     size="lg"

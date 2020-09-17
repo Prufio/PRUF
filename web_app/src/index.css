@@ -256,8 +256,34 @@ h4 {
   opacity: 0.96;
 }
 
+.TANCform {
+  height: 33rem;
+  width: 59rem;
+  background-color: #005480;
+  border-radius: 0.5rem;
+  padding: 2rem;
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  margin-top: -2rem;
+  opacity: 0.96;
+}
+
 .MRform {
   height: 40rem;
+  width: 59rem;
+  background-color: #005480;
+  border-radius: 0.5rem;
+  padding: 2rem;
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  margin-top: -2rem;
+  opacity: 0.96;
+}
+
+.MRNCform {
+  height: 33rem;
   width: 59rem;
   background-color: #005480;
   border-radius: 0.5rem;
@@ -283,7 +309,7 @@ h4 {
 }
 
 .DCNCform {
-  height: 40rem;
+  height: 33rem;
   width: 59rem;
   background-color: #005480;
   border-radius: 0.5rem;

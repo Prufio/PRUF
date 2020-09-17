@@ -142,9 +142,9 @@ class ForceModifyRecordNC extends Component {
         return alert("Asset doesnt exist! Ensure data fields are correct before submission.")
       }
 
-      window.contracts.APP.methods
-        .$forceModRecord(idxHash, newRgtHash)
-        .send({ from: window.addr, value: window.costs.forceTransferCost })
+      window.contracts.NP_NC.methods
+        ._changeRgt(idxHash, newRgtHash)
+        .send({ from: window.addr})
         .on("error", function (_error) {
           // self.setState({ NRerror: _error });
           self.setState({ txHash: Object.values(_error)[0].transactionHash });

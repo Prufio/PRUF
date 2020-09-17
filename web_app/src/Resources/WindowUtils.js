@@ -343,6 +343,7 @@ function buildWindowUtils() {
     if (window.addr !== undefined) {
       let _assetClassBal;
       let _assetBal;
+      let _IDTokenBal;
       console.log("getting balance info from token contracts...")
       await window.contracts.A_TKN.methods.balanceOf(window.addr).call({ from: window.addr }, (error, result) => {
         if (error) { console.log(error) }
@@ -352,6 +353,11 @@ function buildWindowUtils() {
       await window.contracts.AC_TKN.methods.balanceOf(window.addr).call({ from: window.addr }, (error, result) => {
         if (error) { console.log(error) }
         else { _assetClassBal = result; console.log("assetClassBal", _assetClassBal); }
+      });
+
+      await window.contracts.ID_TKN.methods.balanceOf(window.addr).call({ from: window.addr }, (error, result) => {
+        if (error) { console.log(error) }
+        else { _IDTokenBal = result; console.log("IDTokenBal", _IDTokenBal); }
       });
 
       if (Number(_assetBal) > 0) {
@@ -368,6 +374,14 @@ function buildWindowUtils() {
 
       else if (Number(_assetClassBal === 0 || _assetClassBal === undefined)) {
         window.assetClassHolderBool = false
+      }
+
+      if (Number(_IDTokenBal) > 0) {
+        window.IDHolderBool = true
+      }
+
+      else if (Number(_IDTokenBal === 0 || _IDTokenBal === undefined)) {
+        window.IDHolderBool = false
       }
     }
   }

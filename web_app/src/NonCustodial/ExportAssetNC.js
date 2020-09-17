@@ -69,9 +69,9 @@ class ExportAssetNC extends Component {
         return alert("Asset doesnt exist! Ensure data fields are correct before submission.")
       }
 
-      window.contracts.NP.methods
+      window.contracts.NP_NC.methods
         .exportAsset(
-          idxHash, window.contracts.APP._address
+          idxHash
         )
         .send({ from: window.addr })
         .on("error", function (_error) {
@@ -96,13 +96,8 @@ class ExportAssetNC extends Component {
               <h2>User address unreachable</h2>
               <h3>Please connect web3 provider.</h3>
             </div>
-          )}{window.assetClass === undefined && (
-            <div className="errorResults">
-              <h2>No asset class selected.</h2>
-              <h3>Please select asset class in home page to use forms.</h3>
-            </div>
           )}
-          {window.addr > 0 && window.assetClass > 0 && (
+          {window.addr > 0 && (
             <div>
               <h2 className="Headertext">Export</h2>
               <br></br>

@@ -25,17 +25,7 @@ class ModifyDescriptionNC extends Component {
       manufacturer: "",
       model: "",
       serial: "",
-      first: "",
-      middle: "",
-      surname: "",
-      id: "",
-      secret: "",
-      newFirst: "",
-      newMiddle: "",
-      newSurname: "",
-      newId: "",
-      newSecret: "",
-      isNFA: false,
+      to: "",
     };
   }
 
@@ -64,7 +54,7 @@ class ModifyDescriptionNC extends Component {
       this.setState({ error: undefined })
       this.setState({ result: "" })
       var idxHash;
-      var rgtRaw;
+      let to;
 
       idxHash = window.web3.utils.soliditySha3(
         this.state.type,
@@ -73,43 +63,18 @@ class ModifyDescriptionNC extends Component {
         this.state.serial,
       );
 
-      rgtRaw = window.web3.utils.soliditySha3(
-        this.state.first,
-        this.state.middle,
-        this.state.surname,
-        this.state.id,
-        this.state.secret
-      );
-      var rgtHash = window.web3.utils.soliditySha3(idxHash, rgtRaw);
-
-      var newRgtRaw = window.web3.utils.soliditySha3(
-        this.state.newFirst,
-        this.state.newMiddle,
-        this.state.newSurname,
-        this.state.newId,
-        this.state.newSecret
-      );
-      var newRgtHash = window.web3.utils.soliditySha3(idxHash, newRgtRaw);
-
       console.log("idxHash", idxHash);
-      console.log("New rgtRaw", rgtRaw);
-      console.log("New rgtHash", rgtHash);
       console.log("addr: ", window.addr);
 
       var doesExist = await window.utils.checkAssetExists(idxHash);
-      var infoMatches = await window.utils.checkMatch(idxHash, rgtHash);
 
       if (!doesExist){
         return alert("Asset doesnt exist! Ensure data fields are correct before submission.")
       }
 
-      if (!infoMatches){
-        return alert("Owner data fields do not match data on record. Ensure data fields are correct before submission.")
-      }
-
-      window.contracts.APP.methods
-        .$transferAsset(idxHash, rgtHash, newRgtHash)
-        .send({ from: window.addr, value: window.costs.transferAssetCost })
+      window.contracts.A_TKN.methods
+        .safeTransferFrom(window.addr, to, idxHash)
+        .send({ from: window.addr})
         .on("error", function (_error) {
           // self.setState({ NRerror: _error });
           self.setState({ txHash: Object.values(_error)[0].transactionHash });
@@ -128,19 +93,14 @@ class ModifyDescriptionNC extends Component {
 
     return (
       <div>
-        <Form className="TAform" id='MainForm'>
+        <Form className="TANCform" id='MainForm'>
           {window.addr === undefined && (
             <div className="errorResults">
               <h2>User address unreachable</h2>
               <h3>Please connect web3 provider.</h3>
             </div>
-          )}{window.assetClass === undefined && (
-            <div className="errorResults">
-              <h2>No asset class selected.</h2>
-              <h3>Please select asset class in home page to use forms.</h3>
-            </div>
           )}
-          {window.addr > 0 && window.assetClass > 0 && (
+          {window.addr > 0 && (
             <div>
 
               <h2 className="Headertext">Transfer Asset</h2>
@@ -148,8 +108,6 @@ class ModifyDescriptionNC extends Component {
               <Form.Row>
                 <Form.Group as={Col} controlId="formGridType">
                   <Form.Label className="formFont">Type:</Form.Label>
-
-
 
                   <Form.Control
                     placeholder="Type"
@@ -192,123 +150,18 @@ class ModifyDescriptionNC extends Component {
                   />
                 </Form.Group>
               </Form.Row>
-
               <Form.Row>
-                <Form.Group as={Col} controlId="formGridFirstName">
-                  <Form.Label className="formFont">First Name:</Form.Label>
+              <Form.Group as={Col} controlId="formGridTo">
+                  <Form.Label className="formFont">To:</Form.Label>
                   <Form.Control
-                    placeholder="First Name"
+                    placeholder="Recipient Address"
                     required
-                    onChange={(e) => this.setState({ first: e.target.value })}
-                    size="lg"
-                  />
-                </Form.Group>
-
-                <Form.Group as={Col} controlId="formGridMiddleName">
-                  <Form.Label className="formFont">Middle Name:</Form.Label>
-                  <Form.Control
-                    placeholder="Middle Name"
-                    required
-                    onChange={(e) => this.setState({ middle: e.target.value })}
-                    size="lg"
-                  />
-                </Form.Group>
-
-                <Form.Group as={Col} controlId="formGridLastName">
-                  <Form.Label className="formFont">Last Name:</Form.Label>
-                  <Form.Control
-                    placeholder="Last Name"
-                    required
-                    onChange={(e) => this.setState({ surname: e.target.value })}
+                    onChange={(e) => this.setState({ to: e.target.value })}
                     size="lg"
                   />
                 </Form.Group>
               </Form.Row>
 
-              <Form.Row>
-                <Form.Group as={Col} controlId="formGridIdNumber">
-                  <Form.Label className="formFont">ID Number:</Form.Label>
-                  <Form.Control
-                    placeholder="ID Number"
-                    required
-                    onChange={(e) => this.setState({ id: e.target.value })}
-                    size="lg"
-                  />
-                </Form.Group>
-
-                <Form.Group as={Col} controlId="formGridPassword">
-                  <Form.Label className="formFont">Password:</Form.Label>
-                  <Form.Control
-                    placeholder="Password"
-                    type="password"
-                    required
-                    onChange={(e) => this.setState({ secret: e.target.value })}
-                    size="lg"
-                  />
-                </Form.Group>
-              </Form.Row>
-              <Form.Row>
-                <Form.Group as={Col} controlId="formGridNewFirstName">
-                  <Form.Label className="formFont">New First Name:</Form.Label>
-                  <Form.Control
-                    placeholder="New First Name"
-                    required
-                    onChange={(e) =>
-                      this.setState({ newFirst: e.target.value })
-                    }
-                    size="lg"
-                  />
-                </Form.Group>
-
-                <Form.Group as={Col} controlId="formGridNewMiddleName">
-                  <Form.Label className="formFont">New Middle Name:</Form.Label>
-                  <Form.Control
-                    placeholder="New Middle Name"
-                    required
-                    onChange={(e) =>
-                      this.setState({ newMiddle: e.target.value })
-                    }
-                    size="lg"
-                  />
-                </Form.Group>
-
-                <Form.Group as={Col} controlId="formGridNewLastName">
-                  <Form.Label className="formFont">New Last Name:</Form.Label>
-                  <Form.Control
-                    placeholder="New Last Name"
-                    required
-                    onChange={(e) =>
-                      this.setState({ newSurname: e.target.value })
-                    }
-                    size="lg"
-                  />
-                </Form.Group>
-              </Form.Row>
-
-              <Form.Row>
-                <Form.Group as={Col} controlId="formGridNewIdNumber">
-                  <Form.Label className="formFont">New ID Number:</Form.Label>
-                  <Form.Control
-                    placeholder="New ID Number"
-                    required
-                    onChange={(e) => this.setState({ newId: e.target.value })}
-                    size="lg"
-                  />
-                </Form.Group>
-
-                <Form.Group as={Col} controlId="formGridNewPassword">
-                  <Form.Label className="formFont">New Password:</Form.Label>
-                  <Form.Control
-                    placeholder="New Password"
-                    type="password"
-                    required
-                    onChange={(e) =>
-                      this.setState({ newSecret: e.target.value })
-                    }
-                    size="lg"
-                  />
-                </Form.Group>
-              </Form.Row>
               <Form.Row>
                 <Form.Group className="buttonDisplay">
                   <Button
@@ -319,7 +172,6 @@ class ModifyDescriptionNC extends Component {
                   >
                     Transfer
                   </Button>
-                  <div className="LittleTextTransfer"> Cost in AC {window.assetClass}: {Number(window.costs.transferAssetCost) / 1000000000000000000} ETH</div>
                 </Form.Group>
               </Form.Row>
 
