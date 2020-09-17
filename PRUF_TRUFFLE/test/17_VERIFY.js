@@ -737,223 +737,231 @@ it('Should resolve contract addresses', async () => {
 })
 
 
-it('Should mint a couple of asset root tokens', async () => {
+it('Should mint 2 asset root tokens', async () => {
 
-    console.log("Minting root token 1 -C")
-    return AC_MGR.createAssetClass(account1, 'CUSTODIAL_ROOT', '1', '1', '3', { from: account1 })
+    console.log("Minting root token 1")
+    return AC_MGR.createAssetClass(account1, 'ROOT1', '1', '1', '3', { from: account1 })
 
-        .then(() => {
-            console.log("Minting root token 2 -NC")
-            return AC_MGR.createAssetClass(account1, 'NON-CUSTODIAL_ROOT', '2', '2', '3', { from: account1 })
-        })
-})
-
-
-it("Should Mint 2 cust and 2 non-cust AC tokens in AC_ROOT 1", async () => {
-    
-    console.log("Minting AC 10 -C")
-    return AC_MGR.createAssetClass(account1, "Custodial_AC1", "10", "1", "1", { from: account1 })
-
-        .then(() => {
-            console.log("Minting AC 11 -C")
-            return AC_MGR.createAssetClass(account1, "Custodial_AC2", "11", "1", "1", { from: account1 })
-        })
-        
-        .then(() => {
-            console.log("Minting AC 12 -NC")
-            return AC_MGR.createAssetClass(account1, "Non-Custodial_AC1", "12", "1", "2", { from: account1 })
-        })
-        
-        .then(() => {
-            console.log("Minting AC 13 -NC")
-            return AC_MGR.createAssetClass(account1, "Non-Custodial_AC2", "13", "1", "2", { from: account1 })
-        })
-
-        .then(() => {
-            console.log("Minting AC 16 -NC")
-            return AC_MGR.createAssetClass(account10, "Non_Custodial_AC5", "16", "1", "2", { from: account1 })
-        })
-
-        .then(() => {
-            console.log("Minting AC 17 -VERIFY")
-            return AC_MGR.createAssetClass(account10, "VERIFY_AC1", "17", "1", "4", { from: account1 })
-        })
-})
-
-
-it("Should Mint 2 non-cust AC tokens in AC_ROOT 2", async () => {
-    
-    console.log("Minting AC 14 -NC")
-    return AC_MGR.createAssetClass(account1, "Non-Custodial_AC3", "14", "2", "2", { from: account1 })
-
-        .then(() => {
-            console.log("Minting AC 15 -NC")
-            return AC_MGR.createAssetClass(account10, "Non_Custodial_AC4", "15", "2", "2", { from: account1 })
-        })
-})
-
-
-it('Should authorize APP in all relevant asset classes', async () => {
-    console.log("Authorizing APP")
-    return STOR.enableContractForAC('APP', '10', '1', { from: account1 })
-        
     .then(() => {
-            return STOR.enableContractForAC('APP', '11', '1', { from: account1 })
+        console.log("Minting root token 2")
+        return AC_MGR.createAssetClass(account1, "ROOT2", "2", "2", "3", { from: account1 })
+    })
+})
+
+
+it("Should Mint 2 non cust AC", async () => {
+    
+    console.log("Minting AC 10 -NC")
+    return AC_MGR.createAssetClass(account1, "NonCustodial_AC10", "10", "1", "2", { from: account1 })
+
+        .then(() => {
+            console.log("Minting AC 11 -NC to Account2")
+            return AC_MGR.createAssetClass(account2, "NonCustodial_AC11", "11", "1", "2", { from: account1 })
         })
 })
+
+
+it("Should Mint 4 verify AC tokens", async () => {
+    
+    console.log("Minting AC 12 Verify")
+    return AC_MGR.createAssetClass(account1, "Verify1", "12", "1", "4", { from: account1 })
+
+        .then(() => {
+            console.log("Minting AC 13 Verify")
+            return AC_MGR.createAssetClass(account1, "Verify2", "13", "1", "4", { from: account1 })
+        })
+
+        .then(() => {
+            console.log("Minting AC 14 Verify to Account2")
+            return AC_MGR.createAssetClass(account2, "Verify3", "14", "1", "4", { from: account1 })
+        })
+
+        .then(() => {
+            console.log("Minting AC 15 Verify to Account2")
+            return AC_MGR.createAssetClass(account2, "Verify4", "15", "2", "4", { from: account1 })
+        })
+
+})
+
+
+// it('Should authorize APP in all relevant asset classes', async () => {
+//     console.log("Authorizing APP")
+//     return STOR.enableContractForAC('APP', '10', '1', { from: account1 })
+        
+//     .then(() => {
+//             return STOR.enableContractForAC('APP', '11', '1', { from: account1 })
+//         })
+// })
 
 
 it('Should authorize APP_NC in all relevant asset classes', async () => {
     
     console.log("Authorizing APP_NC")
-    return STOR.enableContractForAC('APP_NC', '12', '2', { from: account1 })
+    return STOR.enableContractForAC('APP_NC', '10', '2', { from: account1 })
         
-    .then(() => {
-            return STOR.enableContractForAC('APP_NC', '13', '2', { from: account1 })
+        .then(() => {
+            return STOR.enableContractForAC('APP_NC', '11', '2', { from: account2 })
         })
         
         .then(() => {
-            return STOR.enableContractForAC('APP_NC', '14', '2', { from: account1 })
+            return STOR.enableContractForAC('APP_NC', '12', '4', { from: account1 })
         })
 
         .then(() => {
-            return STOR.enableContractForAC('APP_NC', '16', '2', { from: account10 })
+            return STOR.enableContractForAC('APP_NC', '13', '4', { from: account1 })
         })
 
         .then(() => {
-            return STOR.enableContractForAC('APP_NC', '17', '4', { from: account1 })
+            return STOR.enableContractForAC('APP_NC', '14', '4', { from: account2 })
         })
+
+        .then(() => {
+            return STOR.enableContractForAC('APP_NC', '15', '4', { from: account2 })
+        })
+
 })
 
 
-it('Should authorize NP in all relevant asset classes', async () => {
+// it('Should authorize NP in all relevant asset classes', async () => {
     
-    console.log("Authorizing NP")
-    return STOR.enableContractForAC('NP', '10', '1', { from: account1 })
+//     console.log("Authorizing NP")
+//     return STOR.enableContractForAC('NP', '10', '1', { from: account1 })
         
-        .then(() => {
-            return STOR.enableContractForAC('NP', '11', '1', { from: account1 })
-        })
-})
+//         .then(() => {
+//             return STOR.enableContractForAC('NP', '11', '1', { from: account1 })
+//         })
+// })
 
 
-it('Should authorize MAL_APP in all relevant asset classes', async () => {
+// it('Should authorize MAL_APP in all relevant asset classes', async () => {
     
-    console.log("Authorizing MAL_APP")
-    return STOR.enableContractForAC('MAL_APP', '10', '1', { from: account1 })
+//     console.log("Authorizing MAL_APP")
+//     return STOR.enableContractForAC('MAL_APP', '10', '1', { from: account1 })
         
-        .then(() => {
-            return STOR.enableContractForAC('MAL_APP', '11', '1', { from: account1 })
-        })
-})
+//         .then(() => {
+//             return STOR.enableContractForAC('MAL_APP', '11', '1', { from: account1 })
+//         })
+// })
 
 
 it('Should authorize NP_NC in all relevant asset classes', async () => {
     
     console.log("Authorizing NP_NC")
-    return STOR.enableContractForAC('NP_NC', '12', '2', { from: account1 })
+    return STOR.enableContractForAC('NP_NC', '10', '2', { from: account1 })
         
         .then(() => {
-            return STOR.enableContractForAC('NP_NC', '13', '2', { from: account1 })
+            return STOR.enableContractForAC('NP_NC', '11', '2', { from: account2 })
         })
 
         .then(() => {
-            return STOR.enableContractForAC('NP_NC', '14', '2', { from: account1 })
+            return STOR.enableContractForAC('NP_NC', '12', '4', { from: account1 })
         })
 
         .then(() => {
-            return STOR.enableContractForAC('NP_NC', '16', '2', { from: account10 })
+            return STOR.enableContractForAC('NP_NC', '13', '4', { from: account1 })
+        })
+
+        .then(() => {
+            return STOR.enableContractForAC('NP_NC', '14', '4', { from: account2 })
+        })
+
+        .then(() => {
+            return STOR.enableContractForAC('NP_NC', '15', '4', { from: account2 })
         })
 })
 
 
-it('Should authorize ECR in all relevant asset classes', async () => {
+// it('Should authorize ECR in all relevant asset classes', async () => {
     
-    console.log("Authorizing ECR")
-    return STOR.enableContractForAC('ECR', '10', '3', { from: account1 })
+//     console.log("Authorizing ECR")
+//     return STOR.enableContractForAC('ECR', '10', '3', { from: account1 })
         
-        .then(() => {
-            return STOR.enableContractForAC('ECR', '11', '3', { from: account1 })
-        })
-})
+//         .then(() => {
+//             return STOR.enableContractForAC('ECR', '11', '3', { from: account1 })
+//         })
+// })
 
 
-it('Should authorize ECR2 in all relevant asset classes', async () => {
+// it('Should authorize ECR2 in all relevant asset classes', async () => {
     
-    console.log("Authorizing ECR2")
-    return STOR.enableContractForAC('ECR2', '10', '3', { from: account1 })
+//     console.log("Authorizing ECR2")
+//     return STOR.enableContractForAC('ECR2', '10', '3', { from: account1 })
         
-        .then(() => {
-            return STOR.enableContractForAC('ECR2', '11', '3', { from: account1 })
-        })
-})
+//         .then(() => {
+//             return STOR.enableContractForAC('ECR2', '11', '3', { from: account1 })
+//         })
+// })
 
 
-it('Should authorize ECR_NC in all relevant asset classes', async () => {
+// it('Should authorize ECR_NC in all relevant asset classes', async () => {
     
-    console.log("Authorizing ECR_NC")
-    return STOR.enableContractForAC('ECR_NC', '12', '3', { from: account1 })
+//     console.log("Authorizing ECR_NC")
+//     return STOR.enableContractForAC('ECR_NC', '12', '3', { from: account1 })
         
-        .then(() => {
-            return STOR.enableContractForAC('ECR_NC', '13', '3', { from: account1 })
-        })
+//         .then(() => {
+//             return STOR.enableContractForAC('ECR_NC', '13', '3', { from: account1 })
+//         })
         
-        .then(() => {
-            return STOR.enableContractForAC('ECR_NC', '14', '3', { from: account1 })
-        })
+//         .then(() => {
+//             return STOR.enableContractForAC('ECR_NC', '14', '3', { from: account1 })
+//         })
 
-        .then(() => {
-            return STOR.enableContractForAC('ECR_NC', '16', '3', { from: account10 })
-        })
-})
+//         .then(() => {
+//             return STOR.enableContractForAC('ECR_NC', '16', '3', { from: account10 })
+//         })
+// })
 
 
-it('Should authorize ECR_MGR in all relevant asset classes', async () => {
+// it('Should authorize ECR_MGR in all relevant asset classes', async () => {
     
-    console.log("Authorizing ECR_MGR")
-    return STOR.enableContractForAC('ECR_MGR', '10', '3', { from: account1 })
+//     console.log("Authorizing ECR_MGR")
+//     return STOR.enableContractForAC('ECR_MGR', '10', '3', { from: account1 })
         
-        .then(() => {
-            return STOR.enableContractForAC('ECR_MGR', '11', '3', { from: account1 })
-        })
+//         .then(() => {
+//             return STOR.enableContractForAC('ECR_MGR', '11', '3', { from: account1 })
+//         })
         
-        .then(() => {
-            return STOR.enableContractForAC('ECR_MGR', '12', '3', { from: account1 })
-        })
+//         .then(() => {
+//             return STOR.enableContractForAC('ECR_MGR', '12', '3', { from: account1 })
+//         })
         
-        .then(() => {
-            return STOR.enableContractForAC('ECR_MGR', '13', '3', { from: account1 })
-        })
+//         .then(() => {
+//             return STOR.enableContractForAC('ECR_MGR', '13', '3', { from: account1 })
+//         })
         
-        .then(() => {
-            return STOR.enableContractForAC('ECR_MGR', '14', '3', { from: account1 })
-        })
+//         .then(() => {
+//             return STOR.enableContractForAC('ECR_MGR', '14', '3', { from: account1 })
+//         })
 
-        .then(() => {
-            return STOR.enableContractForAC('ECR_MGR', '16', '3', { from: account10 })
-        })
-})
+//         .then(() => {
+//             return STOR.enableContractForAC('ECR_MGR', '16', '3', { from: account10 })
+//         })
+// })
 
 
 it('Should authorize AC_TKN in all relevant asset classes', async () => {
     
     console.log("Authorizing AC_TKN")
-    return STOR.enableContractForAC('AC_TKN', '10', '1', { from: account1 })
+    return STOR.enableContractForAC('AC_TKN', '10', '2', { from: account1 })
         
         .then(() => {
-            return STOR.enableContractForAC('AC_TKN', '11', '1', { from: account1 })
+            return STOR.enableContractForAC('AC_TKN', '11', '2', { from: account2 })
         })
         
         .then(() => {
-            return STOR.enableContractForAC('AC_TKN', '12', '2', { from: account1 })
+            return STOR.enableContractForAC('AC_TKN', '12', '4', { from: account1 })
         })
         
         .then(() => {
-            return STOR.enableContractForAC('AC_TKN', '13', '2', { from: account1 })
+            return STOR.enableContractForAC('AC_TKN', '13', '4', { from: account1 })
+        })
+
+        .then(() => {
+            return STOR.enableContractForAC('AC_TKN', '14', '4', { from: account2 })
         })
         
         .then(() => {
-            return STOR.enableContractForAC('AC_TKN', '14', '2', { from: account1 })
+            return STOR.enableContractForAC('AC_TKN', '15', '4', { from: account2 })
         })
 })
 
@@ -961,135 +969,139 @@ it('Should authorize AC_TKN in all relevant asset classes', async () => {
 it('Should authorize A_TKN in all relevant asset classes', async () => {
     
     console.log("Authorizing A_TKN")
-    return STOR.enableContractForAC('A_TKN', '10', '1', { from: account1 })
+    return STOR.enableContractForAC('A_TKN', '10', '2', { from: account1 })
         
         .then(() => {
-            return STOR.enableContractForAC('A_TKN', '11', '1', { from: account1 })
+            return STOR.enableContractForAC('A_TKN', '11', '2', { from: account2 })
         })
         
         .then(() => {
-            return STOR.enableContractForAC('A_TKN', '12', '2', { from: account1 })
+            return STOR.enableContractForAC('A_TKN', '12', '4', { from: account1 })
         })
         
         .then(() => {
-            return STOR.enableContractForAC('A_TKN', '13', '2', { from: account1 })
-        })
-        
-        .then(() => {
-            return STOR.enableContractForAC('A_TKN', '14', '2', { from: account1 })
+            return STOR.enableContractForAC('A_TKN', '13', '4', { from: account1 })
         })
 
         .then(() => {
-            return STOR.enableContractForAC('A_TKN', '15', '2', { from: account10 })
-        })
-
-        .then(() => {
-            return STOR.enableContractForAC('A_TKN', '16', '2', { from: account10 })
+            return STOR.enableContractForAC('A_TKN', '14', '4', { from: account2 })
         })
         
         .then(() => {
-            return STOR.enableContractForAC('A_TKN', '1', '1', { from: account1 })
-        })
-        
-        .then(() => {
-            return STOR.enableContractForAC('A_TKN', '2', '1', { from: account1 })
+            return STOR.enableContractForAC('A_TKN', '15', '4', { from: account2 })
         })
 })
 
 
-it('Should authorize PIP in all relevant asset classes', async () => {
+// it('Should authorize PIP in all relevant asset classes', async () => {
     
-    console.log("Authorizing PIP")
-    return STOR.enableContractForAC('PIP', '10', '1', { from: account1 })
+//     console.log("Authorizing PIP")
+//     return STOR.enableContractForAC('PIP', '10', '1', { from: account1 })
         
-        .then(() => {
-            return STOR.enableContractForAC('PIP', '11', '1', { from: account1 })
-        })
+//         .then(() => {
+//             return STOR.enableContractForAC('PIP', '11', '1', { from: account1 })
+//         })
         
-        .then(() => {
-            return STOR.enableContractForAC('PIP', '12', '2', { from: account1 })
-        })
+//         .then(() => {
+//             return STOR.enableContractForAC('PIP', '12', '2', { from: account1 })
+//         })
         
-        .then(() => {
-            return STOR.enableContractForAC('PIP', '13', '2', { from: account1 })
-        })
+//         .then(() => {
+//             return STOR.enableContractForAC('PIP', '13', '2', { from: account1 })
+//         })
         
-        .then(() => {
-            return STOR.enableContractForAC('PIP', '14', '2', { from: account1 })
-        })
+//         .then(() => {
+//             return STOR.enableContractForAC('PIP', '14', '2', { from: account1 })
+//         })
 
-        .then(() => {
-            return STOR.enableContractForAC('PIP', '15', '2', { from: account10 })
-        })
+//         .then(() => {
+//             return STOR.enableContractForAC('PIP', '15', '2', { from: account10 })
+//         })
 
-        .then(() => {
-            return STOR.enableContractForAC('PIP', '16', '2', { from: account10 })
-        })
+//         .then(() => {
+//             return STOR.enableContractForAC('PIP', '16', '2', { from: account10 })
+//         })
         
-        .then(() => {
-            return STOR.enableContractForAC('PIP', '1', '1', { from: account1 })
-        })
+//         .then(() => {
+//             return STOR.enableContractForAC('PIP', '1', '1', { from: account1 })
+//         })
         
-        .then(() => {
-            return STOR.enableContractForAC('PIP', '2', '1', { from: account1 })
-        })
-})
+//         .then(() => {
+//             return STOR.enableContractForAC('PIP', '2', '1', { from: account1 })
+//         })
+// })
 
 
 it('Should authorize AC_MGR in all relevant asset classes', async () => {
     
     console.log("Authorizing AC_MGR")
-    return STOR.enableContractForAC('AC_MGR', '10', '1', { from: account1 })
+    return STOR.enableContractForAC('AC_MGR', '10', '2', { from: account1 })
         
         .then(() => {
-            return STOR.enableContractForAC('AC_MGR', '11', '1', { from: account1 })
+            return STOR.enableContractForAC('AC_MGR', '11', '2', { from: account2 })
         })
         
         .then(() => {
-            return STOR.enableContractForAC('AC_MGR', '12', '2', { from: account1 })
+            return STOR.enableContractForAC('AC_MGR', '12', '4', { from: account1 })
         })
         
         .then(() => {
-            return STOR.enableContractForAC('AC_MGR', '13', '2', { from: account1 })
+            return STOR.enableContractForAC('AC_MGR', '13', '4', { from: account1 })
+        })
+
+        .then(() => {
+            return STOR.enableContractForAC('AC_MGR', '14', '4', { from: account2 })
         })
         
         .then(() => {
-            return STOR.enableContractForAC('AC_MGR', '14', '2', { from: account1 })
+            return STOR.enableContractForAC('AC_MGR', '15', '4', { from: account2 })
         })
 })
 
 
-it('Should authorize RCLR in all relevant asset classes', async () => {
+// it('Should authorize RCLR in all relevant asset classes', async () => {
     
-    console.log("Authorizing RCLR")
-    return STOR.enableContractForAC('RCLR', '10', '3', { from: account1 })
+//     console.log("Authorizing RCLR")
+//     return STOR.enableContractForAC('RCLR', '10', '3', { from: account1 })
         
-        .then(() => {
-            return STOR.enableContractForAC('RCLR', '11', '3', { from: account1 })
-        })
+//         .then(() => {
+//             return STOR.enableContractForAC('RCLR', '11', '3', { from: account1 })
+//         })
         
-        .then(() => {
-            return STOR.enableContractForAC('RCLR', '12', '3', { from: account1 })
-        })
+//         .then(() => {
+//             return STOR.enableContractForAC('RCLR', '12', '3', { from: account1 })
+//         })
         
-        .then(() => {
-            return STOR.enableContractForAC('RCLR', '13', '3', { from: account1 })
-        })
+//         .then(() => {
+//             return STOR.enableContractForAC('RCLR', '13', '3', { from: account1 })
+//         })
         
-        .then(() => {
-            return STOR.enableContractForAC('RCLR', '14', '3', { from: account1 })
-        })
+//         .then(() => {
+//             return STOR.enableContractForAC('RCLR', '14', '3', { from: account1 })
+//         })
 
-        .then(() => {
-            return STOR.enableContractForAC('RCLR', '16', '3', { from: account10 })
-        })
-})
+//         .then(() => {
+//             return STOR.enableContractForAC('RCLR', '16', '3', { from: account10 })
+//         })
+// })
 
 
 it('Should authorize VERIFY in all relevant asset classes', async () => {
     
     console.log("Authorizing VERIFY")
-    return STOR.enableContractForAC('VERIFY', '17', '4', { from: account1 })
+    return STOR.enableContractForAC('VERIFY', '12', '4', { from: account1 })
+
+    .then(() => {
+        return STOR.enableContractForAC('VERIFY', '13', '4', { from: account1 })
+    })
+
+    .then(() => {
+        return STOR.enableContractForAC('VERIFY', '14', '4', { from: account2 })
+    })
+
+    .then(() => {
+        return STOR.enableContractForAC('VERIFY', '15', '4', { from: account2 })
+    })
 })
 
 
@@ -1155,7 +1167,7 @@ it("Should set costs in minted AC's", async () => {
                 "1",
                 "10000000000000000",
                 account1,
-                { from: account1 })
+                { from: account2 })
             })
 
             .then(() => {
@@ -1164,7 +1176,7 @@ it("Should set costs in minted AC's", async () => {
                     "2",
                     "10000000000000000",
                     account1,
-                    { from: account1 })
+                    { from: account2 })
             })
 
             .then(() => {
@@ -1173,7 +1185,7 @@ it("Should set costs in minted AC's", async () => {
                     "3",
                     "10000000000000000",
                     account1,
-                    { from: account1 })
+                    { from: account2 })
             })
 
             .then(() => {
@@ -1182,7 +1194,7 @@ it("Should set costs in minted AC's", async () => {
                     "4",
                     "10000000000000000",
                     account1,
-                    { from: account1 })
+                    { from: account2 })
             })
 
             .then(() => {
@@ -1191,7 +1203,7 @@ it("Should set costs in minted AC's", async () => {
                     "5",
                     "10000000000000000",
                     account1,
-                    { from: account1 })
+                    { from: account2 })
             })
 
             .then(() => {
@@ -1200,7 +1212,7 @@ it("Should set costs in minted AC's", async () => {
                     "6",
                     "10000000000000000",
                     account1,
-                    { from: account1 })
+                    { from: account2 })
             })
         
         .then(() => {
@@ -1312,199 +1324,198 @@ it("Should set costs in minted AC's", async () => {
                     account1,
                     { from: account1 })
             })
-        
-        .then(() => {
-            console.log("Setting base costs in AC 14")
-            return AC_MGR.ACTH_setCosts(
-                "14",
-                "1",
-                "10000000000000000",
-                account1,
-                { from: account1 })
-            })
 
             .then(() => {
+                console.log("Setting base costs in AC 14")
                 return AC_MGR.ACTH_setCosts(
                     "14",
-                    "2",
+                    "1",
                     "10000000000000000",
                     account1,
-                    { from: account1 })
-            })
-
+                    { from: account2 })
+                })
+    
+                .then(() => {
+                    return AC_MGR.ACTH_setCosts(
+                        "14",
+                        "2",
+                        "10000000000000000",
+                        account1,
+                        { from: account2 })
+                })
+    
+                .then(() => {
+                    return AC_MGR.ACTH_setCosts(
+                        "14",
+                        "3",
+                        "10000000000000000",
+                        account1,
+                        { from: account2 })
+                })
+    
+                .then(() => {
+                    return AC_MGR.ACTH_setCosts(
+                        "14",
+                        "4",
+                        "10000000000000000",
+                        account1,
+                        { from: account2 })
+                })
+    
+                .then(() => {
+                    return AC_MGR.ACTH_setCosts(
+                        "14",
+                        "5",
+                        "10000000000000000",
+                        account1,
+                        { from: account2 })
+                })
+    
+                .then(() => {
+                    return AC_MGR.ACTH_setCosts(
+                        "14",
+                        "6",
+                        "10000000000000000",
+                        account1,
+                        { from: account2 })
+                })
+            
             .then(() => {
-                return AC_MGR.ACTH_setCosts(
-                    "14",
-                    "3",
-                    "10000000000000000",
-                    account1,
-                    { from: account1 })
-            })
-
-            .then(() => {
-                return AC_MGR.ACTH_setCosts(
-                    "14",
-                    "4",
-                    "10000000000000000",
-                    account1,
-                    { from: account1 })
-            })
-
-            .then(() => {
-                return AC_MGR.ACTH_setCosts(
-                    "14",
-                    "5",
-                    "10000000000000000",
-                    account1,
-                    { from: account1 })
-            })
-
-            .then(() => {
-                return AC_MGR.ACTH_setCosts(
-                    "14",
-                    "6",
-                    "10000000000000000",
-                    account1,
-                    { from: account1 })
-            })
-        
-        .then(() => {
-            console.log("Setting base costs in AC 15")
-            return AC_MGR.ACTH_setCosts(
-                "15",
-                "1",
-                "10000000000000000",
-                account1,
-                { from: account10 })
-        })
-
-            .then(() => {
-                return AC_MGR.ACTH_setCosts(
-                    "15",
-                    "2",
-                    "10000000000000000",
-                    account1,
-                    { from: account10 })
-            })
-
-            .then(() => {
+                console.log("Setting base costs in AC 15")
                 return AC_MGR.ACTH_setCosts(
                     "15",
-                    "3",
+                    "1",
                     "10000000000000000",
                     account1,
-                    { from: account10 })
-            })
-
-            .then(() => {
-                return AC_MGR.ACTH_setCosts(
-                    "15",
-                    "4",
-                    "10000000000000000",
-                    account1,
-                    { from: account10 })
-            })
-
-            .then(() => {
-                return AC_MGR.ACTH_setCosts(
-                    "15",
-                    "5",
-                    "10000000000000000",
-                    account1,
-                    { from: account10 })
-            })
-
-            .then(() => {
-                return AC_MGR.ACTH_setCosts(
-                    "15",
-                    "6",
-                    "10000000000000000",
-                    account1,
-                    { from: account10 })
-            })
+                    { from: account2 })
+                })
+    
+                .then(() => {
+                    return AC_MGR.ACTH_setCosts(
+                        "15",
+                        "2",
+                        "10000000000000000",
+                        account1,
+                        { from: account2 })
+                })
+    
+                .then(() => {
+                    return AC_MGR.ACTH_setCosts(
+                        "15",
+                        "3",
+                        "10000000000000000",
+                        account1,
+                        { from: account2 })
+                })
+    
+                .then(() => {
+                    return AC_MGR.ACTH_setCosts(
+                        "15",
+                        "4",
+                        "10000000000000000",
+                        account1,
+                        { from: account2 })
+                })
+    
+                .then(() => {
+                    return AC_MGR.ACTH_setCosts(
+                        "15",
+                        "5",
+                        "10000000000000000",
+                        account1,
+                        { from: account2 })
+                })
+    
+                .then(() => {
+                    return AC_MGR.ACTH_setCosts(
+                        "15",
+                        "6",
+                        "10000000000000000",
+                        account1,
+                        { from: account2 })
+                })
 })
 
 
 it('Should add users to AC 10-14 in AC_Manager', async () => {
 
     console.log("//**************************************END BOOTSTRAP**********************************************/")
-    console.log("Account2 => AC10")
-    return AC_MGR.OO_addUser(account2, '1', '10', { from: account1 })
+    console.log("Account1 => AC10")
+    return AC_MGR.OO_addUser(account1, '1', '10', { from: account1 })
+        
+        .then(() => {
+            console.log("Account1 => AC11")
+            return AC_MGR.OO_addUser(account1, '1', '11', { from: account2 })
+        })
+        
+        .then(() => {
+            console.log("Account1 => AC12")
+            return AC_MGR.OO_addUser(account1, '1', '12', { from: account1 })
+        })
+
+        .then(() => {
+            console.log("Account1 => AC13")
+            return AC_MGR.OO_addUser(account1, '1', '13', { from: account1 })
+        })
+
+        .then(() => {
+            console.log("Account1 => AC14")
+            return AC_MGR.OO_addUser(account1, '1', '14', { from: account2 })
+        })
+
+        .then(() => {
+            console.log("Account1 => AC15")
+            return AC_MGR.OO_addUser(account1, '1', '15', { from: account2 })
+        })
+        
+        .then(() => {
+            console.log("Account2 => AC10")
+            return AC_MGR.OO_addUser(account2, '1', '10', { from: account1 })
+        })
         
         .then(() => {
             console.log("Account2 => AC11")
-            return AC_MGR.OO_addUser(account2, '1', '11', { from: account1 })
-        })
-        
-        .then(() => {
-            console.log("Account3 => AC11")
-            return AC_MGR.OO_addUser(account3, '1', '11', { from: account1 })
+            return AC_MGR.OO_addUser(account2, '1', '11', { from: account2 })
         })
 
         .then(() => {
-            console.log("Account4 => AC10")
-            return AC_MGR.OO_addUser(account4, '1', '10', { from: account1 })
-        })
-        
-        .then(() => {
-            console.log("Account4 => AC12")
-            return AC_MGR.OO_addUser(account4, '1', '12', { from: account1 })
+            console.log("Account2 => AC12")
+            return AC_MGR.OO_addUser(account2, '1', '12', { from: account1 })
         })
 
         .then(() => {
-            console.log("Account4 => AC12")
-            return AC_MGR.OO_addUser(account4, '1', '16', { from: account10 })
-        })
-        
-        .then(() => {
-            console.log("Account5 => AC13")
-            return AC_MGR.OO_addUser(account5, '1', '13', { from: account1 })
-        })
-        
-        .then(() => {
-            console.log("Account6 => AC14")
-            return AC_MGR.OO_addUser(account6, '1', '14', { from: account1 })
-        })
-        
-        .then(() => {
-            console.log("Account7 => AC14 (ROBOT)")
-            return AC_MGR.OO_addUser(account7, '9', '14', { from: account1 })
-        })
-        
-        .then(() => {
-            console.log("Account8 => AC10 (ROBOT)")
-            return AC_MGR.OO_addUser(account8, '9', '10', { from: account1 })
-        })
-        
-        .then(() => {
-            console.log("Account9 => AC11 (ROBOT)")
-            return AC_MGR.OO_addUser(account9, '9', '11', { from: account1 })
-        })
-        
-        .then(() => {
-            console.log("Account10 => AC15 (PIPMINTER)")
-            return AC_MGR.OO_addUser(account10, '10', '15', { from: account10 })
+            console.log("Account2 => AC13")
+            return AC_MGR.OO_addUser(account2, '1', '13', { from: account1 })
         })
 
         .then(() => {
-            console.log("Account10 => AC15 (PIPMINTER)")
-            return AC_MGR.OO_addUser(account10, '10', '16', { from: account10 })
+            console.log("Account2 => AC14")
+            return AC_MGR.OO_addUser(account2, '1', '14', { from: account2 })
         })
 
         .then(() => {
-            console.log("Account10 => AC15 (PIPMINTER)")
-            return AC_MGR.OO_addUser(account10, '1', '10', { from: account1 })
+            console.log("Account2 => AC15")
+            return AC_MGR.OO_addUser(account2, '1', '15', { from: account2 })
         })
 })
 
 
-it('Should mint PRUF_ID token to account2', async () => {
+it('Should mint PRUF_ID token to account1', async () => {
 
     console.log("//**************************************BEGIN VERIFY TEST**********************************************/")
     console.log("//**************************************BEGIN VERIFY SETUP**********************************************/")
     return ID_TKN.mintPRUF_IDToken(
-    account2,
+    account1,
     '1',
+    {from: account1}
+    )
+})
+
+
+it('Should mint PRUF_ID token to account2', async () => {
+    return ID_TKN.mintPRUF_IDToken(
+    account2,
+    '2',
     {from: account1}
     )
 })
@@ -1514,9 +1525,19 @@ it('Should mint asset1', async () => {
     return APP_NC.$newRecord(
     asset1,
     rgt1,
-    '17',
+    '12',
     '100',
     {from: account1, value: 20000000000000000 }
+    )
+})
+
+
+it('Should authorize asset1 as verify wallet', async () => {
+    return VERIFY.authorizeTokenForVerify(
+    asset1,
+    '3',
+    '12',
+    {from: account1}
     )
 })
 
@@ -1525,9 +1546,103 @@ it('Should mint asset2', async () => {
     return APP_NC.$newRecord(
     asset2,
     rgt2,
-    '12',
+    '14',
     '100',
     {from: account2, value: 20000000000000000 }
+    )
+})
+
+
+it('Should authorize asset2 as verify wallet', async () => {
+    return VERIFY.authorizeTokenForVerify(
+    asset2,
+    '3',
+    '14',
+    {from: account2}
+    )
+})
+
+
+it('Should mint asset3', async () => {
+    return APP_NC.$newRecord(
+    asset3,
+    rgt3,
+    '10',
+    '100',
+    {from: account1, value: 20000000000000000 }
+    )
+})
+
+
+it('Should mint asset4', async () => {
+    return APP_NC.$newRecord(
+    asset4,
+    rgt4,
+    '12',
+    '100',
+    {from: account1, value: 20000000000000000 }
+    )
+})
+
+it('Should authorize asset4 as verify wallet', async () => {
+    return VERIFY.authorizeTokenForVerify(
+    asset4,
+    '2',
+    '12',
+    {from: account1}
+    )
+})
+
+
+it('Should mint asset5', async () => {
+    return APP_NC.$newRecord(
+    asset5,
+    rgt5,
+    '11',
+    '100',
+    {from: account2, value: 20000000000000000 }
+    )
+})
+
+
+it('Should mint asset6', async () => {
+    return APP_NC.$newRecord(
+    asset6,
+    rgt6,
+    '15',
+    '100',
+    {from: account2, value: 20000000000000000 }
+    )
+})
+
+
+it('Should authorize asset6 as verify wallet', async () => {
+    return VERIFY.authorizeTokenForVerify(
+    asset6,
+    '2',
+    '15',
+    {from: account2}
+    )
+})
+
+
+it('Should mint asset7', async () => {
+    return APP_NC.$newRecord(
+    asset7,
+    rgt7,
+    '14',
+    '100',
+    {from: account2, value: 20000000000000000 }
+    )
+})
+
+
+it('Should authorize asset7 as verify wallet', async () => {
+    return VERIFY.authorizeTokenForVerify(
+    asset7,
+    '4',
+    '14',
+    {from: account2}
     )
 })
 
@@ -1535,12 +1650,12 @@ it('Should mint asset2', async () => {
 it('Should fail because caller does not hold AC token', async () => {
 
     console.log("//**************************************END VERIFY SETUP**********************************************/")
-    console.log("//**************************************BEGIN VERIFY FAIL BATCH ()**********************************************/")
+    console.log("//**************************************BEGIN VERIFY FAIL BATCH (26)**********************************************/")
     console.log("//**************************************BEGIN authorizeTokenForVerify FAIL BATCH**********************************************/")
     return VERIFY.authorizeTokenForVerify(
-    asset1,
-    '1',
-    '17',
+    asset6,
+    '2',
+    '12',
     {from: account2}
     )
 })
@@ -1548,85 +1663,347 @@ it('Should fail because caller does not hold AC token', async () => {
 //2
 it('Should fail because AC is not VERIFY authorized', async () => {
     return VERIFY.authorizeTokenForVerify(
-    asset1,
+    asset4,
     '2',
     '10',
     {from: account1}
     )
 })
 
-
 //3
-it('Should fail because AC is not VERIFY authorized', async () => {
+it('Should fail because AC of asset token does not match supplied AC', async () => {
     return VERIFY.authorizeTokenForVerify(
-    asset1,
-    '1',
-    '10',
+    asset3,
+    '2',
+    '13',
     {from: account1}
     )
 })
 
 //4
-it('Should fail because token is not VERIFY approved', async () => {
+it('Should fail because caller does not hold verify wallet', async () => {
 
     console.log("//**************************************END authorizeTokenForVerify FAIL BATCH**********************************************/")
     console.log("//**************************************BEGIN safePutIn FAIL BATCH**********************************************/")
     return VERIFY.safePutIn(
-    asset1,
-    '1',
-    '10',
-    {from: account2}
-    )
-})
-
-
-it('Should Authorize asset1 for VERIFY', async () => {
-    return VERIFY.authorizeTokenForVerify(
-    asset1,
-    '1',
-    '17',
+    asset2,
+    string1Hash,
+    '20',
     {from: account1}
     )
 })
 
 //5
-it('Should fail because caller does not hold VERIFY approved token', async () => {
+it('Should fail because asset3 is not verified wallet', async () => {
     return VERIFY.safePutIn(
-    asset1,
-    '1',
-    '10',
+    asset3,
+    string2Hash,
+    '20',
     {from: account1}
     )
 })
 
 
-it('Should put in ', async () => {
-    return VERIFY.authorizeTokenForVerify(
+it('Should put string1 into asset1', async () => {
+    return VERIFY.safePutIn(
     asset1,
-    '1',
-    '17',
+    string1Hash,
+    '20',
     {from: account1}
     )
 })
 
 //6
-it('Should fail because AC is not VERIFY authorized', async () => {
-    return VERIFY.authorizeTokenForVerify(
+it('Should fail because asset is already in Verify wallet', async () => {
+    return VERIFY.safePutIn(
     asset1,
-    '2',
-    '10',
+    string1Hash,
+    '20',
+    {from: account1}
+    )
+})
+
+//7
+it('Should fail because caller does not hold verify wallet', async () => {
+
+    console.log("//**************************************END safePutIn FAIL BATCH**********************************************/")
+    console.log("//**************************************BEGIN putIn FAIL BATCH**********************************************/")
+    return VERIFY.putIn(
+    asset2,
+    string1Hash,
+    {from: account1}
+    )
+})
+
+//8
+it('Should fail because asset3 is not verified wallet', async () => {
+    return VERIFY.putIn(
+    asset3,
+    string2Hash,
+    {from: account1}
+    )
+})
+
+//9
+it('Should fail because string1 already in callers verify wallet', async () => {
+    return VERIFY.putIn(
+    asset1,
+    string1Hash,
+    {from: account1}
+    )
+})
+
+//10
+it('Should fail because caller does not hold verify wallet', async () => {
+
+    console.log("//**************************************END putIn FAIL BATCH**********************************************/")
+    console.log("//**************************************BEGIN takeOut FAIL BATCH**********************************************/")
+    return VERIFY.takeOut(
+    asset2,
+    string2Hash,
+    {from: account1}
+    )
+})
+
+//11
+it('Should fail because asset3 is not verified wallet', async () => {
+    return VERIFY.takeOut(
+    asset3,
+    string3Hash,
+    {from: account1}
+    )
+})
+
+//12
+it('Should fail because caller does not hold item', async () => {
+    return VERIFY.takeOut(
+    asset1,
+    string2Hash,
     {from: account1}
     )
 })
 
 
-//3
-it('Should fail because AC is not VERIFY authorized', async () => {
-    return VERIFY.authorizeTokenForVerify(
+it('Should mark string1 as stolen', async () => {
+    return VERIFY.markItem(
     asset1,
+    string1Hash,
+    '3',
+    '0',
+    {from: account1}
+    )
+})
+
+//13
+it('Should fail because item is marked as stolen', async () => {
+    return VERIFY.takeOut(
+    asset1,
+    string1Hash,
+    {from: account1}
+    )
+})
+
+//14
+it('Should fail because caller does not hold verify wallet', async () => {
+
+    console.log("//**************************************END takeOut FAIL BATCH**********************************************/")
+    console.log("//**************************************BEGIN transfer FAIL BATCH**********************************************/")
+    return VERIFY.transfer(
+    asset2,
+    asset1,
+    string2Hash,
+    {from: account1}
+    )
+})
+
+//15
+it('Should fail because asset3 is not verified wallet', async () => {
+    return VERIFY.transfer(
+    asset3,
+    asset1,
+    string3Hash,
+    {from: account1}
+    )
+})
+
+//16
+it('Should fail because caller does not hold item', async () => {
+    return VERIFY.transfer(
+    asset1,
+    asset4,
+    string2Hash,
+    {from: account1}
+    )
+})
+
+
+it('Should put string2 into asset2', async () => {
+    return VERIFY.safePutIn(
+    asset2,
+    string2Hash,
+    '20',
+    {from: account2}
+    )
+})
+
+//17
+it('Should fail because wallet is not in the same AC', async () => {
+    return VERIFY.transfer(
+    asset2,
+    asset6,
+    string2Hash,
+    {from: account2}
+    )
+})
+
+
+it('Should put in string4 into asset2', async () => {
+    return VERIFY.putIn(
+    asset2,
+    string4Hash,
+    {from: account2}
+    )
+})
+
+
+it('Should mark string1 status 2(Counterfeit)', async () => {
+    return VERIFY.adminMarkCounterfeit(
+    asset2,
+    string4Hash,
+    {from: account2}
+    )
+})
+
+//18
+it('Should fail because item is marked status2(Counterfeit)', async () => {
+    return VERIFY.transfer(
+    asset2,
+    asset7,
+    string4Hash,
+    {from: account2}
+    )
+})
+
+
+it('Should mark string1 status 3(Stolen)', async () => {
+    return VERIFY.markItem(
+    asset2,
+    string2Hash,
+    '3',
+    '0',
+    {from: account2}
+    )
+})
+
+//19
+it('Should fail because item is marked L/S)', async () => {
+    return VERIFY.transfer(
+    asset2,
+    asset7,
+    string2Hash,
+    {from: account2}
+    )
+})
+
+//20
+it('Should fail because caller does not hold verify wallet', async () => {
+
+    console.log("//**************************************END transfer FAIL BATCH**********************************************/")
+    console.log("//**************************************BEGIN adminMarkCounterfeit FAIL BATCH**********************************************/")
+    return VERIFY.adminMarkCounterfeit(
+    asset2,
+    string2Hash,
+    {from: account1}
+    )
+})
+
+//21
+it('Should fail because asset3 is not verified wallet', async () => {
+    return VERIFY.adminMarkCounterfeit(
+    asset3,
+    string3Hash,
+    {from: account1}
+    )
+})
+
+
+it('Should mark string1 to status0', async () => {
+    return VERIFY.markItem(
+    asset2,
+    string2Hash,
+    '0',
+    '0',
+    {from: account2}
+    )
+})
+
+
+it('Should transfer string2 to asset7', async () => {
+    return VERIFY.transfer(
+    asset2,
+    asset7,
+    string2Hash,
+    {from: account2}
+    )
+})
+
+//22
+it('Should fail because caller is not authLevel3 in verify wallet', async () => {
+    return VERIFY.adminMarkCounterfeit(
+    asset7,
+    string2Hash,
+    {from: account2}
+    )
+})
+
+//23
+it('Should fail because caller does not hold verify wallet', async () => {
+
+    console.log("//**************************************END adminMarkCounterfeit FAIL BATCH**********************************************/")
+    console.log("//**************************************BEGIN markItem FAIL BATCH**********************************************/")
+    return VERIFY.markItem(
+    asset2,
+    string2Hash,
     '1',
-    '10',
+    '0',
     {from: account1}
     )
 })
+
+//24
+it('Should fail because asset3 is not verified wallet', async () => {
+    return VERIFY.markItem(
+    asset3,
+    string3Hash,
+    '1',
+    '0',
+    {from: account1}
+    )
+})
+
+//25
+it('Should fail because user not authroized >3 && <0 authLevel', async () => {
+    return VERIFY.markItem(
+    asset7,
+    string2Hash,
+    '1',
+    '0',
+    {from: account2}
+    )
+})
+
+//26
+it('Should fail because caller does not hold item', async () => {
+
+    console.log("//**************************************END VERIFY FAIL BATCH**********************************************/")
+    console.log("//**************************************END VERIFY TEST**********************************************/")
+    return VERIFY.markItem(
+    asset1,
+    string2Hash,
+    '1',
+    '0',
+    {from: account1}
+    )
+})
+
 })

@@ -67,30 +67,25 @@ class UpdateACName extends Component {
 
     return (
       <div>
-        <Form className="ACForm">
+        <Form className="UNForm">
           {window.addr === undefined && (
             <div className="VRresults">
               <h2>User address unreachable</h2>
               Please connect web3 provider.
             </div>
           )}
-
           {window.assetClass === undefined && (
             <div className="errorResults">
               <h2>No asset class selected.</h2>
               <h3>Please select asset class in home page to use forms.</h3>
             </div>
           )}
-
           {window.addr > 0 && window.assetClass > 0 && (
             <div>
               <h2 className="Headertext">Update AC Name</h2>
               <br></br>
-
               <Form.Group as={Col} controlId="formGridContractName">
-                <Form.Label className="formFont">
-                  New AC Name :
-                </Form.Label>
+                <Form.Label className="formFont">New AC Name :</Form.Label>
                 <Form.Control
                   placeholder="AC Name"
                   required
@@ -98,7 +93,6 @@ class UpdateACName extends Component {
                   size="lg"
                 />
               </Form.Group>
-
               <Form.Group className="buttonDisplay">
                 <Button
                   variant="primary"
@@ -106,7 +100,7 @@ class UpdateACName extends Component {
                   size="lg"
                   onClick={updateName}
                 >
-                  update
+                  Update
                 </Button>
               </Form.Group>
             </div>

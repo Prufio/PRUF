@@ -79,16 +79,15 @@ class GetACData extends Component {
       <div>
         <Form className="GACDForm">
           {window.addr === undefined && (
-            <div className="errorResults">
+            <div className="VRresults">
               <h2>User address unreachable</h2>
-              <h3>Please connect web3 provider.</h3>
+              Please connect web3 provider.
             </div>
           )}
           {window.addr > 0 && (
             <div>
               <h2 className="Headertext">Search AC Data</h2>
               <br></br>
-              <Form.Row>
                 <Form.Group as={Col} controlId="formGridType">
                   <Form.Label className="formFont">Asset Class:</Form.Label>
                   <Form.Control
@@ -98,8 +97,6 @@ class GetACData extends Component {
                     size="lg"
                   />
                 </Form.Group>
-              </Form.Row>
-              <Form.Row>
                 <Form.Group className="buttonDisplay">
                   <Button
                     variant="primary"
@@ -110,7 +107,6 @@ class GetACData extends Component {
                     Submit
                   </Button>
                 </Form.Group>
-              </Form.Row>
             </div>
           )}
         </Form>

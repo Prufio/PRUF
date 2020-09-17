@@ -363,7 +363,7 @@ interface A_TKN_Interface {
     /*
      * @dev Reassures user that token is minted in the PRUF system
      */
-    function validateNakedToken(
+    function validatePipToken(
         uint256 tokenId,
         uint32 _assetClass,
         string calldata _authCode

@@ -48,7 +48,7 @@ pragma solidity ^0.6.7;
  *
  *      *Define / document protocol
  *
-*-----------------------------------------------------------------
+- ----------------------------------------------------------------
 
 *-----------------------------------------------------------------
  *Rules for reminting tokens:
@@ -85,7 +85,7 @@ pragma solidity ^0.6.7;
  *                  payment divided between ACroot, ACholder, and recycling address (escrow owner)     
  *                  token sent to new owner (payment sender), status set to 51
  *
-*-----------------------------------------------------------------
+- ----------------------------------------------------------------
 
 *-----------------------------------------------------------------
  * FUTURE FEATURES?
@@ -105,7 +105,7 @@ pragma solidity ^0.6.7;
  *
  *
  *
-*-----------------------------------------------------------------
+- ----------------------------------------------------------------
 
 *-----------------------------------------------------------------
  * NOTES 
@@ -113,7 +113,7 @@ pragma solidity ^0.6.7;
  *      will result in a nonconforming "hidden" asset only findable in its own web interface, and not AC transportable.
  *
  * When upgrading a contract, all authorized asset classes will be linked to the name, not the newly deplyed contract address
-*-----------------------------------------------------------------
+- ----------------------------------------------------------------
 
 *-----------------------------------------------------------------
  * IMPORTANT NOTE : DO NOT REMOVE FROM CODE:
@@ -123,10 +123,12 @@ pragma solidity ^0.6.7;
  * to require an actual, malicious effort to bypass security rather than a little copy-paste. Actual decentralized
  * security is provided with tokenized assets, which do not rely on the coercive trust relationship that creates the
  * incentive for recorders not to engage in malicious practices.
-*-----------------------------------------------------------------
+- -----------------------------------------------------------------
 
-*-----------------------------------------------------------------
- * Crucial orders:
+/*-----------------------------------------------------------------
+ * ----------------------- PRUF StyleGuide ------------------------
+ *-----------------------------------------------------------------
+ *
  * 1: Checks
  * 2: Effects (on local data)
  * 3: Interactions (with other contracts, including returns)
@@ -142,10 +144,7 @@ pragma solidity ^0.6.7;
  * 8: private
  * * - within a group, view and pure are last
  *
-*-----------------------------------------------------------------
-
-*-----------------------------------------------------------------
- * Order of require statements:
+ * ---Order of require statements---:
  * 1: (modifiers)
  * 2: checking custodial status
  * 3: checking the asset existance 
@@ -155,7 +154,7 @@ pragma solidity ^0.6.7;
  * 7: verifying that provided verification data matches required data
  * 8: verifying that message contains any required payment
  *
-*-----------------------------------------------------------------
+- -----------------------------------------------------------------
 
 *-----------------------------------------------------------------
 * Cost indexes:
@@ -165,10 +164,12 @@ pragma solidity ^0.6.7;
 * 4: reMintRecordCost // Extra
 * 5: changeStatusCost // Extra
 * 6: forceModifyCost // Cost to brute-force a record transfer
-*-----------------------------------------------------------------
+- -----------------------------------------------------------------
 
-*-----------------------------------------------------------------
- * Contract Resolution Names -
+/*-----------------------------------------------------------------
+ * ------------------ Contract Resolution Names -------------------
+ *-----------------------------------------------------------------
+ *
  *  A_TKN - 1
  *  AC_TKN - 1
  *  ID_TKN - 10
@@ -186,17 +187,19 @@ pragma solidity ^0.6.7;
  *  AC_MGR - 1
  *  VFY - 1 ????
  *
-*-----------------------------------------------------------------
+- -----------------------------------------------------------------
 
-*-----------------------------------------------------------------
- * CONTRACT Types:  contractAdresses (storage)
+/*-----------------------------------------------------------------
+ * --------- CONTRACT Types:  contractAdresses (storage) ----------
+ *-----------------------------------------------------------------
+ * 
  * -----------------  AC0 is a flag for a contract being a pruf authorized contract, in general
  * 0   --Not Authorized
  * 1   --Authorized Contract for CUSTODIAL assets (contract will create assets with custodial assetStatus 0)
  * 2   --Authorized Contract for NON_CUSTODIAL assets (contract will create assets with custodial assetStatus 51)
  * 3   --Escrow contracts, Recycler (contracts authorized for ECR-MGR management)
  * 10  --Pruf contracts with no specific permissions, but still trusted
-*-----------------------------------------------------------------
+- -----------------------------------------------------------------
 
 *-----------------------------------------------------------------
  * ASSET CLASS Types: AC_data.custodyType (AC_manager)
@@ -205,10 +208,12 @@ pragma solidity ^0.6.7;
  * 2   --Non-Custodial
  * 3   --Root (n/a)
  * 4   --Verify-Non-Custodial
-*-----------------------------------------------------------------
+- -----------------------------------------------------------------
 
-*-----------------------------------------------------------------
- * Authorized User Types, per AC
+/*-----------------------------------------------------------------
+ * ---------------- Authorized User Types, per AC -----------------
+ *-----------------------------------------------------------------
+ * 
  * -----------------  AC0 stores an count on the number of AC's a gicen addressHash is registered in
  * 0 = NO AUTHORIZATIONS
  * 1 - 4 = Standard User types
@@ -219,8 +224,9 @@ pragma solidity ^0.6.7;
  * Other = no internal authorizations, but can be used by external functions
 *-----------------------------------------------------------------
 
-*-----------------------------------------------------------------
- * Record status field key
+/*-----------------------------------------------------------------
+ * --------------------- PRUF ASSET STATUSES ----------------------
+ *-----------------------------------------------------------------
  *
  * 0 = no status, Non transferrable. Default asset creation status
  *       default after FMR, and after status 5 (essentially a FMR) (IN frontend)
@@ -250,10 +256,35 @@ pragma solidity ^0.6.7;
  * 60 = Recyclable (can only be reimported by an ACAdmin) (discarded)
  * 70 = Importable(Exported)
  *
-*-----------------------------------------------------------------
+- -----------------------------------------------------------------
 
-*-----------------------------------------------------------------
- * ----------SETUP PROCEDURES---------- *
+/*-----------------------------------------------------------------
+ * ------------------ PRUF VERIFY ITEM STATUSES -------------------
+ *-----------------------------------------------------------------
+ * only trusted entities can put items "in pouch" 
+ * only trusted entities can take items "out"
+ * only pouchholder + can mark item status, etc
+ * joe public can check only?
+ * statuses:
+ *
+ * 0 = no status; clean
+ * 1 = items with this SN are questionable (found an item that is apparently not real) --settable/clearable by type 2-3 user
+ * 2 = items with this SN are counterfiet (original, authentic item recovered (and held/destroyed), or SN does not officially exist) --settable/clearable by type 3 user
+ * 3 = this item SN was stolen --settable/clearable by type 2-3 user
+ * 4 = this item SN was lost --settable/clearable by type 2-3 user
+ * 5 = this item SN is in process --settable by type 2-3 user - clearable by type 3 user 
+ * 6 =
+ *
+ * usertypes are indicated in idxAuthInVerify[_idxHash] - Auth levels are set when enabling an asset to be a pruf-verify wallet
+ * 0 not authorized
+ * 1 basic auth
+ * 2 priveledged level auth
+ * 3 admin level auth
+ - ---------------------------------------------------------------*/
+
+ /*-----------------------------------------------------------------
+ * ----------------------- SETUP PROCEDURES ------------------------
+ * -----------------------------------------------------------------
  * need at least 3 Eth adressses
  * 1: Deploy Contracts
  * 2: Add contracts @ respective name in storage, use assetclass 0
@@ -268,7 +299,7 @@ pragma solidity ^0.6.7;
  * 10: Set costs / users / types for root && rooted AC token
  * 11: THE WORKS
  *
-*-----------------------------------------------------------------
+- -----------------------------------------------------------------
 
 Round robin test pattern:
 
@@ -301,13 +332,36 @@ end escrow after escrow end block passes (all escrows end at the same time) (cal
 
 
 *---------------------------------------PRuF Protocols-------------------------------------------
+Pip
+        - allows assets to be created with minimal gas costs as token-only assets 
+        - allows registration at a later time for a specified, unuiqe item idxHash
 
-Verify
+Verify 
+        - allows a single asset token to act as a wallet, holding or releasing serialized fungibles to verify the unuiqeness of each one.
+        - If multiple wallets try to hold the same item, a "collision" is recorded for that serial number
+        - held items can be marked as lost, stolen, suspect, counterfiet
 
-trust enabled
-        secure transfer
-        boomerang
-        marketspace
+Private Provenance
+        - securely store proof of ownership with customizable levels of security and privacy
+        - By default, only the owner of an asset can prove that an item is theirs
+                - can be made publicly verifyable by name / id if desired
+        - by default, items are searchable by their model / serial
+                - can be made non-searchable without a unuiqe passphrase (salt)
+
+        - trust enabled
+                - verify the identity of a seller and their ownership of the asset to be sold
+                - verify that an asset is not lost or stolen
+        - secure transfer
+                - verify an asset is set by the owner to a transferrable status
+                - complete transfer on-chain to a new owner
+        - boomerang
+                - assets marked lost or stolen can have rewards set for return
+                - assets can alternatively have a sale price set to enable reregistration by a finder
+                - agents can be incentivised to return lost assets
+        - marketspace
+                - assets can be marked for sale
+                - assets can be sold through escrow contracts to enable delivery service etc
+                - looking up non-for sale assets can trigger a search of other assets registered for sale or deep distrubution vendors (requires external database)
 
 
 
