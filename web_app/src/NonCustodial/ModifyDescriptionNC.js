@@ -5,7 +5,7 @@ import Button from "react-bootstrap/Button";
 import bs58 from "bs58";
 
 
-class AddNoteNC extends Component {
+class ModifyDescriptionNC extends Component {
   constructor(props) {
     super(props);
 
@@ -13,15 +13,16 @@ class AddNoteNC extends Component {
 
     this.state = {
       addr: "",
-      lookup: "",
+      lookupIPFS1: "",
+      lookupIPFS2: "",
+      IPFS: require("ipfs-mini"),
       hashPath: "",
-      ipfsID: "",
-      costArray: [0],
       error: undefined,
-      result: "",
+      NRerror: undefined,
+      result1: "",
+      result2: "",
       assetClass: undefined,
       ipfs1: "",
-      ipfs2: "",
       txHash: "",
       txStatus: false,
       type: "",
@@ -30,16 +31,26 @@ class AddNoteNC extends Component {
       serial: "",
       first: "",
       middle: "",
+      isNFA: false,
       surname: "",
       id: "",
       secret: "",
-      isNFA: false,
-      hashUrl: "",
-      hasError: false,
     };
   }
 
   //component state-change events......................................................................................................
+
+  componentDidMount() {//stuff to do when component mounts in window
+
+  }
+
+  componentDidUpdate() {//stuff to do when state updates
+
+  }
+
+  componentWillUnmount() {//stuff do do when component unmounts from the window
+
+  }
 
   render() {//render continuously produces an up-to-date stateful document  
     const self = this;
@@ -48,71 +59,21 @@ class AddNoteNC extends Component {
       return "0x" + bs58.decode(ipfsListing).slice(2).toString("hex");
     };
 
-    const publishIPFS2Photo = async () => {
-      if (document.getElementById("ipfs2File").files[0] !== undefined) {
-        const self = this;
-        const reader = new FileReader();
-        reader.readAsArrayBuffer(document.getElementById("ipfs2File").files[0])
-        reader.onloadend = async (event) => {
-          const buffer = Buffer(event.target.result);
-          console.log("Uploading file to IPFS...", buffer);
-          await window.ipfs.add(buffer, (error, hash) => {
-            if (error) {
-              console.log("Something went wrong. Unable to upload to ipfs");
-            } else {
-              console.log("uploaded at hash: ", hash);
-            }
-            let _hashUrl = "https://ipfs.io/ipfs/";
-            self.setState({ hashPath: getBytes32FromIpfsHash(hash) });
-            console.log(_hashUrl + hash)
-            self.setState({ hashUrl: _hashUrl + hash })
-          });
+    const publishIPFS1 = async () => {
+      console.log("Uploading file to IPFS...");
+      await window.ipfs.add(this.state.ipfs1, (error, hash) => {
+        if (error) {
+          console.log("Something went wrong. Unable to upload to ipfs");
+        } else {
+          console.log("uploaded at hash: ", hash);
         }
-      }
-      else { alert("No file chosen for upload!") }
+        self.setState({ hashPath: getBytes32FromIpfsHash(hash) });
+      });
     };
 
-    async function checkExists(idxHash) {
-      await window.contracts.STOR.methods
-        .retrieveShortRecord(idxHash)
-        .call({ from: self.state.addr }, function (_error, _result) {
-          if (_error) {
-            self.setState({ error: _error });
-            self.setState({ result: 0 });
-            alert(
-              "WARNING: Record DOES NOT EXIST! Reject in metamask and review asset info fields."
-            );
-          } else {
-            if (Object.values(_result)[8] > 0) {
-              alert("Cannot overwrite existing note! Transaction will fail!");
-            }
-            self.setState({ result: _result });
-          }
-          console.log("check debug, _result, _error: ", _result, _error);
-        });
-    }
-
-    async function checkMatch(idxHash, rgtHash) {
-      await window.contracts.STOR.methods
-        ._verifyRightsHolder(idxHash, rgtHash)
-        .call({ from: self.state.addr }, function (_error, _result) {
-          if (_error) {
-            self.setState({ error: _error });
-          } else if (_result === "0") {
-            self.setState({ result: 0 });
-            alert(
-              "WARNING: Record DOES NOT MATCH supplied owner info! Reject in metamask and review owner fields."
-            );
-          } else {
-            self.setState({ result: _result });
-          }
-          console.log("check debug, _result, _error: ", _result, _error);
-        });
-    }
 
 
-
-    const setIPFS2 = () => {
+    const _updateDescription = async () => {
       this.setState({ txStatus: false });
       this.setState({ txHash: "" });
       this.setState({ error: undefined })
@@ -134,19 +95,28 @@ class AddNoteNC extends Component {
         this.state.id,
         this.state.secret
       );
-
       var rgtHash = window.web3.utils.soliditySha3(idxHash, rgtRaw);
+      var _ipfs1 = this.state.hashPath;
 
       console.log("idxHash", idxHash);
       console.log("New rgtRaw", rgtRaw);
+      console.log("New rgtHash", rgtHash);
       console.log("addr: ", window.addr);
 
-      checkExists(idxHash);
-      checkMatch(idxHash, rgtHash);
+      var doesExist = await window.utils.checkAssetExists(idxHash);
+      var infoMatches = await window.utils.checkMatch(idxHash, rgtHash);
 
-      window.contracts.APP.methods
-        .$addIpfs2Note(idxHash, rgtHash, this.state.hashPath)
-        .send({ from: window.addr, value: window.costs.createNoteCost })
+      if (!doesExist){
+        return alert("Asset doesnt exist! Ensure data fields are correct before submission.")
+      }
+
+      if (!infoMatches){
+        return alert("Owner data fields do not match data on record. Ensure data fields are correct before submission.")
+      }
+
+      window.contracts.NP.methods
+        ._modIpfs1(idxHash, rgtHash, _ipfs1)
+        .send({ from: window.addr })
         .on("error", function (_error) {
           // self.setState({ NRerror: _error });
           self.setState({ txHash: Object.values(_error)[0].transactionHash });
@@ -161,12 +131,13 @@ class AddNoteNC extends Component {
         });
 
       console.log(this.state.txHash);
-      document.getElementById("MainForm").reset();
+      self.setState({ hashPath: ""});
+      return document.getElementById("MainForm").reset();
     };
 
     return (
       <div>
-        <Form className="ANform" id='MainForm'>
+        <Form className="MDform" id='MainForm'>
           {window.addr === undefined && (
             <div className="errorResults">
               <h2>User address unreachable</h2>
@@ -181,15 +152,11 @@ class AddNoteNC extends Component {
           {window.addr > 0 && window.assetClass > 0 && (
             <div>
 
-
-              <h2 className="Headertext">Add Note</h2>
+              <h2 className="Headertext">Modify Description</h2>
               <br></br>
               <Form.Row>
                 <Form.Group as={Col} controlId="formGridType">
                   <Form.Label className="formFont">Type:</Form.Label>
-
-
-
                   <Form.Control
                     placeholder="Type"
                     required
@@ -286,10 +253,17 @@ class AddNoteNC extends Component {
                     size="lg"
                   />
                 </Form.Group>
-              </Form.Row>
-              <Form.Row>
-                <Form.Group as={Col} controlId="formGridIpfs2File">
-                  <Form.File onChange={(e) => this.setState({ hashPath: "" })} size="lg" className="btn2" id="ipfs2File" />
+
+                <Form.Group as={Col} controlId="formGridIpfs1">
+                  <Form.Label className="formFont">
+                    Modify Description:
+                  </Form.Label>
+                  <Form.Control
+                    placeholder="Description"
+                    required
+                    onChange={(e) => this.setState({ ipfs1: e.target.value })}
+                    size="lg"
+                  />
                 </Form.Group>
               </Form.Row>
               {this.state.hashPath !== "" && (
@@ -299,11 +273,10 @@ class AddNoteNC extends Component {
                       variant="primary"
                       type="button"
                       size="lg"
-                      onClick={setIPFS2}
+                      onClick={_updateDescription}
                     >
-                      Add Note
+                      Update Description
                     </Button>
-                    <div className="LittleText"> Cost in AC {window.assetClass}: {Number(window.costs.createNoteCost) / 1000000000000000000} ETH</div>
                   </Form.Group>
                 </Form.Row>
               )}
@@ -314,16 +287,13 @@ class AddNoteNC extends Component {
                       variant="primary"
                       type="button"
                       size="lg"
-                      onClick={publishIPFS2Photo}
+                      onClick={publishIPFS1}
                     >
                       Load to IPFS
                     </Button>
-
                   </Form.Group>
                 </Form.Row>
               )}
-
-              <br></br>
             </div>
           )}
         </Form>
@@ -352,9 +322,6 @@ class AddNoteNC extends Component {
                 >
                   KOVAN Etherscan:{this.state.txHash}
                 </a>
-                <a>
-                  <img src={this.state.hashUrl} alt="" />
-                </a>
               </div>
             )}
           </div>
@@ -364,4 +331,4 @@ class AddNoteNC extends Component {
   }
 }
 
-export default AddNoteNC;
+export default ModifyDescriptionNC;

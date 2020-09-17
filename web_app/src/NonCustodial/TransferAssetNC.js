@@ -4,25 +4,23 @@ import Col from "react-bootstrap/Col";
 import Button from "react-bootstrap/Button";
 
 
-class ForceModifyRecordNC extends Component {
+class ModifyDescriptionNC extends Component {
   constructor(props) {
     super(props);
 
     //State declaration.....................................................................................................
 
-    this.mounted = false;
     this.state = {
       addr: "",
       costArray: [0],
       error: undefined,
       NRerror: undefined,
-      result: "",
+      result1: "",
+      result2: "",
       assetClass: undefined,
-      CountDownStart: "",
       ipfs1: "",
       txHash: "",
       txStatus: false,
-      isNFA: false,
       type: "",
       manufacturer: "",
       model: "",
@@ -37,6 +35,7 @@ class ForceModifyRecordNC extends Component {
       newSurname: "",
       newId: "",
       newSecret: "",
+      isNFA: false,
     };
   }
 
@@ -57,83 +56,15 @@ class ForceModifyRecordNC extends Component {
   render() {//render continuously produces an up-to-date stateful document  
     const self = this;
 
-    async function checkExists(idxHash) {
-      await window.contracts.STOR.methods
-        .retrieveShortRecord(idxHash)
-        .call({ from: self.state.addr }, function (_error, _result) {
-          console.log(_result);
-          if (_error) {
-          } else if (Object.values(_result)[4] === "0") {
-            self.setState({ error: _error });
-            self.setState({ result: 0 });
-            alert(
-              "WARNING: Record DOES NOT EXIST! Reject in metamask and review asset info fields."
-            );
-          } else {
-            self.setState({ result: _result });
-            alert(
-              "WARNING: Modifying a record will permanently delete existing owner data."
-            );
-          }
-          console.log("check debug, _result, _error: ", _result, _error);
-        });
-    }
 
 
-
-    const _importAsset = () => {
-      this.setState({ txStatus: false });
-      this.setState({ txHash: "" });
-      this.setState({ error: undefined })
-      this.setState({ result: "" })
-      var idxHash = window.web3.utils.soliditySha3(
-        this.state.type,
-        this.state.manufacturer,
-        this.state.model,
-        this.state.serial
-      );
-
-      var rgtRaw = window.web3.utils.soliditySha3(
-        this.state.first,
-        this.state.middle,
-        this.state.surname,
-        this.state.id,
-        this.state.secret
-      );
-
-      var rgtHash = window.web3.utils.soliditySha3(idxHash, rgtRaw);
-
-      console.log("idxHash", idxHash);
-      console.log("New rgtHash", rgtHash);
-      console.log("addr: ", window.addr);
-
-      checkExists(idxHash);
-
-      window.contracts.APP.methods
-        .$importAsset(idxHash, rgtHash, this.window.assetClass)
-        .send({ from: window.addr, value: window.costs.importAssetCost })
-        .on("error", function (_error) {
-          // self.setState({ NRerror: _error });
-          self.setState({ txHash: Object.values(_error)[0].transactionHash });
-          self.setState({ txStatus: false });
-          console.log(Object.values(_error)[0].transactionHash);
-        })
-        .on("receipt", (receipt) => {
-          this.setState({ txHash: receipt.transactionHash });
-          this.setState({ txStatus: receipt.status });
-          console.log(receipt.status);
-          //Stuff to do when tx confirms
-        });
-      console.log(this.state.txHash);
-    };
-
-    const _forceModifyRecord = () => {
+    const _transferAsset = async () => {
       this.setState({ txStatus: false });
       this.setState({ txHash: "" });
       this.setState({ error: undefined })
       this.setState({ result: "" })
       var idxHash;
-      var newRgtRaw;
+      var rgtRaw;
 
       idxHash = window.web3.utils.soliditySha3(
         this.state.type,
@@ -142,25 +73,43 @@ class ForceModifyRecordNC extends Component {
         this.state.serial,
       );
 
-      newRgtRaw = window.web3.utils.soliditySha3(
+      rgtRaw = window.web3.utils.soliditySha3(
         this.state.first,
         this.state.middle,
         this.state.surname,
         this.state.id,
         this.state.secret
       );
+      var rgtHash = window.web3.utils.soliditySha3(idxHash, rgtRaw);
+
+      var newRgtRaw = window.web3.utils.soliditySha3(
+        this.state.newFirst,
+        this.state.newMiddle,
+        this.state.newSurname,
+        this.state.newId,
+        this.state.newSecret
+      );
       var newRgtHash = window.web3.utils.soliditySha3(idxHash, newRgtRaw);
 
       console.log("idxHash", idxHash);
-      console.log("New rgtRaw", newRgtRaw);
-      console.log("New rgtHash", newRgtHash);
+      console.log("New rgtRaw", rgtRaw);
+      console.log("New rgtHash", rgtHash);
       console.log("addr: ", window.addr);
 
-      checkExists(idxHash);
+      var doesExist = await window.utils.checkAssetExists(idxHash);
+      var infoMatches = await window.utils.checkMatch(idxHash, rgtHash);
+
+      if (!doesExist){
+        return alert("Asset doesnt exist! Ensure data fields are correct before submission.")
+      }
+
+      if (!infoMatches){
+        return alert("Owner data fields do not match data on record. Ensure data fields are correct before submission.")
+      }
 
       window.contracts.APP.methods
-        .$forceModRecord(idxHash, newRgtHash)
-        .send({ from: window.addr, value: window.costs.forceTransferCost })
+        .$transferAsset(idxHash, rgtHash, newRgtHash)
+        .send({ from: window.addr, value: window.costs.transferAssetCost })
         .on("error", function (_error) {
           // self.setState({ NRerror: _error });
           self.setState({ txHash: Object.values(_error)[0].transactionHash });
@@ -173,14 +122,13 @@ class ForceModifyRecordNC extends Component {
           console.log(receipt.status);
           //Stuff to do when tx confirms
         });
-
       console.log(this.state.txHash);
       document.getElementById("MainForm").reset();
     };
 
     return (
       <div>
-        <Form className="FMRform" id='MainForm'>
+        <Form className="TAform" id='MainForm'>
           {window.addr === undefined && (
             <div className="errorResults">
               <h2>User address unreachable</h2>
@@ -195,7 +143,7 @@ class ForceModifyRecordNC extends Component {
           {window.addr > 0 && window.assetClass > 0 && (
             <div>
 
-              <h2 className="Headertext">Force Modify/Import Asset</h2>
+              <h2 className="Headertext">Transfer Asset</h2>
               <br></br>
               <Form.Row>
                 <Form.Group as={Col} controlId="formGridType">
@@ -223,7 +171,6 @@ class ForceModifyRecordNC extends Component {
                 </Form.Group>
 
               </Form.Row>
-
               <Form.Row>
                 <Form.Group as={Col} controlId="formGridModel">
                   <Form.Label className="formFont">Model:</Form.Label>
@@ -245,13 +192,70 @@ class ForceModifyRecordNC extends Component {
                   />
                 </Form.Group>
               </Form.Row>
+
+              <Form.Row>
+                <Form.Group as={Col} controlId="formGridFirstName">
+                  <Form.Label className="formFont">First Name:</Form.Label>
+                  <Form.Control
+                    placeholder="First Name"
+                    required
+                    onChange={(e) => this.setState({ first: e.target.value })}
+                    size="lg"
+                  />
+                </Form.Group>
+
+                <Form.Group as={Col} controlId="formGridMiddleName">
+                  <Form.Label className="formFont">Middle Name:</Form.Label>
+                  <Form.Control
+                    placeholder="Middle Name"
+                    required
+                    onChange={(e) => this.setState({ middle: e.target.value })}
+                    size="lg"
+                  />
+                </Form.Group>
+
+                <Form.Group as={Col} controlId="formGridLastName">
+                  <Form.Label className="formFont">Last Name:</Form.Label>
+                  <Form.Control
+                    placeholder="Last Name"
+                    required
+                    onChange={(e) => this.setState({ surname: e.target.value })}
+                    size="lg"
+                  />
+                </Form.Group>
+              </Form.Row>
+
+              <Form.Row>
+                <Form.Group as={Col} controlId="formGridIdNumber">
+                  <Form.Label className="formFont">ID Number:</Form.Label>
+                  <Form.Control
+                    placeholder="ID Number"
+                    required
+                    onChange={(e) => this.setState({ id: e.target.value })}
+                    size="lg"
+                  />
+                </Form.Group>
+
+                <Form.Group as={Col} controlId="formGridPassword">
+                  <Form.Label className="formFont">Password:</Form.Label>
+                  <Form.Control
+                    placeholder="Password"
+                    type="password"
+                    required
+                    onChange={(e) => this.setState({ secret: e.target.value })}
+                    size="lg"
+                  />
+                </Form.Group>
+              </Form.Row>
               <Form.Row>
                 <Form.Group as={Col} controlId="formGridNewFirstName">
                   <Form.Label className="formFont">New First Name:</Form.Label>
                   <Form.Control
                     placeholder="New First Name"
                     required
-                    onChange={(e) => this.setState({ first: e.target.value })}
+                    onChange={(e) =>
+                      this.setState({ newFirst: e.target.value })
+                    }
                     size="lg"
                   />
                 </Form.Group>
@@ -261,7 +265,9 @@ class ForceModifyRecordNC extends Component {
                   <Form.Control
                     placeholder="New Middle Name"
                     required
-                    onChange={(e) => this.setState({ middle: e.target.value })}
+                    onChange={(e) =>
+                      this.setState({ newMiddle: e.target.value })
+                    }
                     size="lg"
                   />
                 </Form.Group>
@@ -271,18 +277,21 @@ class ForceModifyRecordNC extends Component {
                   <Form.Control
                     placeholder="New Last Name"
                     required
-                    onChange={(e) => this.setState({ surname: e.target.value })}
+                    onChange={(e) =>
+                      this.setState({ newSurname: e.target.value })
+                    }
                     size="lg"
                   />
                 </Form.Group>
               </Form.Row>
+
               <Form.Row>
                 <Form.Group as={Col} controlId="formGridNewIdNumber">
                   <Form.Label className="formFont">New ID Number:</Form.Label>
                   <Form.Control
                     placeholder="New ID Number"
                     required
-                    onChange={(e) => this.setState({ id: e.target.value })}
+                    onChange={(e) => this.setState({ newId: e.target.value })}
                     size="lg"
                   />
                 </Form.Group>
@@ -293,63 +302,28 @@ class ForceModifyRecordNC extends Component {
                     placeholder="New Password"
                     type="password"
                     required
-                    onChange={(e) => this.setState({ secret: e.target.value })}
+                    onChange={(e) =>
+                      this.setState({ newSecret: e.target.value })
+                    }
                     size="lg"
                   />
                 </Form.Group>
               </Form.Row>
               <Form.Row>
-                <div>
-                  <Form.Group>
-                    <Button
-                      className="ownerButtonDisplay"
-                      variant="danger"
-                      type="button"
-                      size="lg"
-                      onClick={_forceModifyRecord}
-                    >
-                      Force modify
-                  </Button>
-                    <div className="LittleText"> Cost in AC {window.assetClass}: {Number(window.costs.forceTransferCost) / 1000000000000000000} ETH</div>
-                  </Form.Group>
-                  <br></br>
-                </div>
-                <div>
-                  <Form.Group>
-                    <Button
-                      className="ownerButtonDisplay2"
-                      variant="primary"
-                      type="button"
-                      size="lg"
-                      onClick={_importAsset}
-                    >
-                      Import
-                  </Button>
-                    <div className="LittleText"> Cost in AC {window.assetClass}: {Number(window.costs.importAssetCost) / 1000000000000000000} ETH</div>
-                  </Form.Group>
-
-                  <br></br>
-
-
-                </div>
-                {/* <ButtonGroup className="buttonGroupDisplay" aria-label="choices">
-                <Button variant="danger"
+                <Form.Group className="buttonDisplay">
+                  <Button
+                    variant="primary"
                     type="button"
                     size="lg"
-                    onClick={_forceModifyRecord}>
-                      
-                      Force Modify
-                    </Button> 
-
-                    <Button variant="primary"
-                    type="button"
-                    size="lg"
-                    onClick={_reimportAsset}
+                    onClick={_transferAsset}
                   >
-                    Re-import
-                    </Button>
-                </ButtonGroup> */}
+                    Transfer
+                  </Button>
+                  <div className="LittleTextTransfer"> Cost in AC {window.assetClass}: {Number(window.costs.transferAssetCost) / 1000000000000000000} ETH</div>
+                </Form.Group>
               </Form.Row>
+
+              <br></br>
             </div>
           )}
         </Form>
@@ -387,4 +361,4 @@ class ForceModifyRecordNC extends Component {
   }
 }
 
-export default ForceModifyRecordNC;
+export default ModifyDescriptionNC;

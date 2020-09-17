@@ -3,8 +3,7 @@ import Form from "react-bootstrap/Form";
 import Col from "react-bootstrap/Col";
 import Button from "react-bootstrap/Button";
 
-
-class ModifyDescriptionNC extends Component {
+class DecrementCounterNC extends Component {
   constructor(props) {
     super(props);
 
@@ -12,15 +11,12 @@ class ModifyDescriptionNC extends Component {
 
     this.state = {
       addr: "",
-      costArray: [0],
       error: undefined,
       NRerror: undefined,
-      result1: "",
-      result2: "",
+      result: "",
       assetClass: undefined,
-      ipfs1: "",
+      countDown: "",
       txHash: "",
-      txStatus: false,
       type: "",
       manufacturer: "",
       model: "",
@@ -28,13 +24,9 @@ class ModifyDescriptionNC extends Component {
       first: "",
       middle: "",
       surname: "",
+      txStatus: false,
       id: "",
       secret: "",
-      newFirst: "",
-      newMiddle: "",
-      newSurname: "",
-      newId: "",
-      newSecret: "",
       isNFA: false,
     };
   }
@@ -45,11 +37,11 @@ class ModifyDescriptionNC extends Component {
 
   }
 
-  componentWillUnmount() {//stuff do do when component unmounts from the window
+  componentDidUpdate() {//stuff to do when state updates
 
   }
 
-  componentDidUpdate() {//stuff to do when state updates
+  componentWillUnmount() {//stuff do do when component unmounts from the window
 
   }
 
@@ -67,7 +59,7 @@ class ModifyDescriptionNC extends Component {
               "WARNING: Record DOES NOT EXIST! Reject in metamask and review asset info fields."
             );
           } else {
-            self.setState({ result1: _result });
+            self.setState({ result: _result });
           }
           console.log("check debug, _result, _error: ", _result, _error);
         });
@@ -79,29 +71,24 @@ class ModifyDescriptionNC extends Component {
         .call({ from: self.state.addr }, function (_error, _result) {
           if (_error) {
             self.setState({ error: _error });
-            self.setState({ result: 0 });
           } else if (_result === "0") {
             self.setState({ result: 0 });
-            self.setState({ error: undefined });
             alert(
-              "WARNING: Record DOES NOT MATCH supplied owner info! Reject in metamask and review owner fields."
+              "WARNING: Record DOES NOT MATCH supplied owner info! Reject in metamask and review owner info fields."
             );
           } else {
-            self.setState({ result2: _result });
+            self.setState({ result: _result });
           }
           console.log("check debug, _result, _error: ", _result, _error);
         });
     }
 
-
-
-    const _transferAsset = () => {
+    const _decrementCounter = async () => {
       this.setState({ txStatus: false });
       this.setState({ txHash: "" });
       this.setState({ error: undefined })
       this.setState({ result: "" })
       var idxHash;
-      var rgtRaw;
 
       idxHash = window.web3.utils.soliditySha3(
         this.state.type,
@@ -110,35 +97,20 @@ class ModifyDescriptionNC extends Component {
         this.state.serial,
       );
 
-      rgtRaw = window.web3.utils.soliditySha3(
-        this.state.first,
-        this.state.middle,
-        this.state.surname,
-        this.state.id,
-        this.state.secret
-      );
-      var rgtHash = window.web3.utils.soliditySha3(idxHash, rgtRaw);
-
-      var newRgtRaw = window.web3.utils.soliditySha3(
-        this.state.newFirst,
-        this.state.newMiddle,
-        this.state.newSurname,
-        this.state.newId,
-        this.state.newSecret
-      );
-      var newRgtHash = window.web3.utils.soliditySha3(idxHash, newRgtRaw);
-
       console.log("idxHash", idxHash);
-      console.log("New rgtRaw", rgtRaw);
-      console.log("New rgtHash", rgtHash);
       console.log("addr: ", window.addr);
+      console.log("Data: ", this.state.countDown);
 
-      checkExists(idxHash);
-      checkMatch(idxHash, rgtHash);
+      var doesExist = await window.utils.checkAssetExists(idxHash);
+      var noteExists = await window.utils.checkNoteExists(idxHash);
 
-      window.contracts.APP.methods
-        .$transferAsset(idxHash, rgtHash, newRgtHash)
-        .send({ from: window.addr, value: window.costs.transferAssetCost })
+      if (!doesExist){
+        return alert("Asset doesnt exist! Ensure data fields are correct before submission.")
+      }
+
+      window.contracts.NP_NC.methods
+        ._decCounter(idxHash, this.state.countDown)
+        .send({ from: window.addr })
         .on("error", function (_error) {
           // self.setState({ NRerror: _error });
           self.setState({ txHash: Object.values(_error)[0].transactionHash });
@@ -151,13 +123,14 @@ class ModifyDescriptionNC extends Component {
           console.log(receipt.status);
           //Stuff to do when tx confirms
         });
+
       console.log(this.state.txHash);
-      document.getElementById("MainForm").reset();
+      return document.getElementById("MainForm").reset();
     };
 
     return (
       <div>
-        <Form className="TAform" id='MainForm'>
+        <Form className="DCNCform" id='MainForm'>
           {window.addr === undefined && (
             <div className="errorResults">
               <h2>User address unreachable</h2>
@@ -171,15 +144,11 @@ class ModifyDescriptionNC extends Component {
           )}
           {window.addr > 0 && window.assetClass > 0 && (
             <div>
-
-              <h2 className="Headertext">Transfer Asset</h2>
+              <h2 className="Headertext">Decrement Counter</h2>
               <br></br>
               <Form.Row>
                 <Form.Group as={Col} controlId="formGridType">
                   <Form.Label className="formFont">Type:</Form.Label>
-
-
-
                   <Form.Control
                     placeholder="Type"
                     required
@@ -190,7 +159,6 @@ class ModifyDescriptionNC extends Component {
 
                 <Form.Group as={Col} controlId="formGridManufacturer">
                   <Form.Label className="formFont">Manufacturer:</Form.Label>
-
                   <Form.Control
                     placeholder="Manufacturer"
                     required
@@ -221,118 +189,16 @@ class ModifyDescriptionNC extends Component {
                   />
                 </Form.Group>
               </Form.Row>
-
-              <Form.Row>
-                <Form.Group as={Col} controlId="formGridFirstName">
-                  <Form.Label className="formFont">First Name:</Form.Label>
+            <Form.Row>
+                <Form.Group as={Col} controlId="formGridCountdown">
+                  <Form.Label className="formFont">
+                    Countdown Amount:
+                  </Form.Label>
                   <Form.Control
-                    placeholder="First Name"
-                    required
-                    onChange={(e) => this.setState({ first: e.target.value })}
-                    size="lg"
-                  />
-                </Form.Group>
-
-                <Form.Group as={Col} controlId="formGridMiddleName">
-                  <Form.Label className="formFont">Middle Name:</Form.Label>
-                  <Form.Control
-                    placeholder="Middle Name"
-                    required
-                    onChange={(e) => this.setState({ middle: e.target.value })}
-                    size="lg"
-                  />
-                </Form.Group>
-
-                <Form.Group as={Col} controlId="formGridLastName">
-                  <Form.Label className="formFont">Last Name:</Form.Label>
-                  <Form.Control
-                    placeholder="Last Name"
-                    required
-                    onChange={(e) => this.setState({ surname: e.target.value })}
-                    size="lg"
-                  />
-                </Form.Group>
-              </Form.Row>
-
-              <Form.Row>
-                <Form.Group as={Col} controlId="formGridIdNumber">
-                  <Form.Label className="formFont">ID Number:</Form.Label>
-                  <Form.Control
-                    placeholder="ID Number"
-                    required
-                    onChange={(e) => this.setState({ id: e.target.value })}
-                    size="lg"
-                  />
-                </Form.Group>
-
-                <Form.Group as={Col} controlId="formGridPassword">
-                  <Form.Label className="formFont">Password:</Form.Label>
-                  <Form.Control
-                    placeholder="Password"
-                    type="password"
-                    required
-                    onChange={(e) => this.setState({ secret: e.target.value })}
-                    size="lg"
-                  />
-                </Form.Group>
-              </Form.Row>
-              <Form.Row>
-                <Form.Group as={Col} controlId="formGridNewFirstName">
-                  <Form.Label className="formFont">New First Name:</Form.Label>
-                  <Form.Control
-                    placeholder="New First Name"
+                    placeholder="Countdown Amount"
                     required
                     onChange={(e) =>
-                      this.setState({ newFirst: e.target.value })
-                    }
-                    size="lg"
-                  />
-                </Form.Group>
-
-                <Form.Group as={Col} controlId="formGridNewMiddleName">
-                  <Form.Label className="formFont">New Middle Name:</Form.Label>
-                  <Form.Control
-                    placeholder="New Middle Name"
-                    required
-                    onChange={(e) =>
-                      this.setState({ newMiddle: e.target.value })
-                    }
-                    size="lg"
-                  />
-                </Form.Group>
-
-                <Form.Group as={Col} controlId="formGridNewLastName">
-                  <Form.Label className="formFont">New Last Name:</Form.Label>
-                  <Form.Control
-                    placeholder="New Last Name"
-                    required
-                    onChange={(e) =>
-                      this.setState({ newSurname: e.target.value })
-                    }
-                    size="lg"
-                  />
-                </Form.Group>
-              </Form.Row>
-
-              <Form.Row>
-                <Form.Group as={Col} controlId="formGridNewIdNumber">
-                  <Form.Label className="formFont">New ID Number:</Form.Label>
-                  <Form.Control
-                    placeholder="New ID Number"
-                    required
-                    onChange={(e) => this.setState({ newId: e.target.value })}
-                    size="lg"
-                  />
-                </Form.Group>
-
-                <Form.Group as={Col} controlId="formGridNewPassword">
-                  <Form.Label className="formFont">New Password:</Form.Label>
-                  <Form.Control
-                    placeholder="New Password"
-                    type="password"
-                    required
-                    onChange={(e) =>
-                      this.setState({ newSecret: e.target.value })
+                      this.setState({ countDown: e.target.value })
                     }
                     size="lg"
                   />
@@ -344,15 +210,12 @@ class ModifyDescriptionNC extends Component {
                     variant="primary"
                     type="button"
                     size="lg"
-                    onClick={_transferAsset}
+                    onClick={_decrementCounter}
                   >
-                    Transfer
+                    Submit
                   </Button>
-                  <div className="LittleText"> Cost in AC {window.assetClass}: {Number(window.costs.transferAssetCost) / 1000000000000000000} ETH</div>
                 </Form.Group>
               </Form.Row>
-
-              <br></br>
             </div>
           )}
         </Form>
@@ -390,4 +253,4 @@ class ModifyDescriptionNC extends Component {
   }
 }
 
-export default ModifyDescriptionNC;
+export default DecrementCounterNC;

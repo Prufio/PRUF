@@ -7,17 +7,19 @@ import AddUser from "./ACAdmin/AddUser"
 import UpdateACName from "./ACAdmin/UpdateACName"
 import GetACData from "./ACAdmin/GetACData"
 
-import AddNoteNC from "./NonCustodial/AddNote";
-import DecrementCounterNC from "./NonCustodial/DecrementCounter";
-import ForceModifyRecordNC from "./NonCustodial/ForceModifyRecord";
-import ModifyDescriptionNC from "./NonCustodial/ModifyDescription";
-import ModifyRecordStatusNC from "./NonCustodial/ModifyRecordStatus";
-import NewRecordNC from "./NonCustodial/NewRecord";
-import RetrieveRecordNC from "./AllCustodyTypes/RetrieveRecord";
-import TransferAssetNC from "./NonCustodial/TransferAsset";
-import VerifyRightsholderNC from "./AllCustodyTypes/VerifyRightsholder";
-import EscrowManagerNC from "./NonCustodial/EscrowManager";
-import ExportAssetNC from "./NonCustodial/ExportAsset";
+import AddNoteNC from "./NonCustodial/AddNoteNC";
+import DecrementCounterNC from "./NonCustodial/DecrementCounterNC";
+import ForceModifyRecordNC from "./NonCustodial/ForceModifyRecordNC";
+import ModifyDescriptionNC from "./NonCustodial/ModifyDescriptionNC";
+import ModifyRecordStatusNC from "./NonCustodial/ModifyRecordStatusNC";
+import NewRecordNC from "./NonCustodial/NewRecordNC";
+import TransferAssetNC from "./NonCustodial/TransferAssetNC";;
+import EscrowManagerNC from "./NonCustodial/EscrowManagerNC";
+import ExportAssetNC from "./NonCustodial/ExportAssetNC";
+
+import RetrieveRecord from "./AllCustodyTypes/RetrieveRecord";
+import VerifyRightsholder from "./AllCustodyTypes/VerifyRightsholder";
+import VerifyLite from "./AllCustodyTypes/VerifyLite"
 
 import AddNote from "./Custodial/AddNote";
 import DecrementCounter from "./Custodial/DecrementCounter";
@@ -25,12 +27,9 @@ import ForceModifyRecord from "./Custodial/ForceModifyRecord";
 import ModifyDescription from "./Custodial/ModifyDescription";
 import ModifyRecordStatus from "./Custodial/ModifyRecordStatus";
 import NewRecord from "./Custodial/NewRecord";
-import RetrieveRecord from "./AllCustodyTypes/RetrieveRecord";
 import TransferAsset from "./Custodial/TransferAsset";
-import VerifyRightsholder from "./AllCustodyTypes/VerifyRightsholder";
 import EscrowManager from "./Custodial/EscrowManager";
 import ExportAsset from "./Custodial/ExportAsset";
-import VerifyLite from "./Custodial/VerifyLite"
 
 import MintPipAsset from "./Pip/MintPipAsset";
 import ClaimPipAsset from "./Pip/ClaimPipAsset";
@@ -60,7 +59,7 @@ function Router(routeRequest) {
         return (
             <>
                 <Route path="/new-record-NC" component={NewRecordNC} />
-                <Route path="/retrieve-record-NC" component={RetrieveRecordNC} />
+                <Route path="/retrieve-record" component={RetrieveRecord} />
                 <Route path="/force-modify-record-NC" component={ForceModifyRecordNC} />
                 <Route path="/transfer-asset-NC" component={TransferAssetNC} />
                 <Route path="/modify-record-status-NC" component={ModifyRecordStatusNC} />
@@ -68,7 +67,7 @@ function Router(routeRequest) {
                 <Route path="/modify-description-NC" component={ModifyDescriptionNC} />
                 <Route path="/add-note-NC" component={AddNoteNC} />
                 <Route path="/export-asset-NC" component={ExportAssetNC} />
-                <Route path="/verify-rights-holder-NC" component={VerifyRightsholderNC} />
+                <Route path="/verify-rights-holder" component={VerifyRightsholder} />
                 <Route path="/manage-escrow-NC" component={EscrowManagerNC} />
                 <Route path="/mint-pip-asset" component={MintPipAsset} />
                 <Route path="/claim-pip-asset" component={ClaimPipAsset} />

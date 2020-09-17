@@ -2,10 +2,9 @@ import React, { Component } from "react";
 import Form from "react-bootstrap/Form";
 import Col from "react-bootstrap/Col";
 import Button from "react-bootstrap/Button";
-import bs58 from "bs58";
 
 
-class ModifyDescriptionNC extends Component {
+class ModifyRecordStatusNC extends Component {
   constructor(props) {
     super(props);
 
@@ -13,16 +12,13 @@ class ModifyDescriptionNC extends Component {
 
     this.state = {
       addr: "",
-      lookupIPFS1: "",
-      lookupIPFS2: "",
-      IPFS: require("ipfs-mini"),
-      hashPath: "",
       error: undefined,
       NRerror: undefined,
       result1: "",
       result2: "",
       assetClass: undefined,
       ipfs1: "",
+      status: "0",
       txHash: "",
       txStatus: false,
       type: "",
@@ -31,10 +27,10 @@ class ModifyDescriptionNC extends Component {
       serial: "",
       first: "",
       middle: "",
-      isNFA: false,
       surname: "",
       id: "",
       secret: "",
+      isNFA: false,
     };
   }
 
@@ -55,63 +51,9 @@ class ModifyDescriptionNC extends Component {
   render() {//render continuously produces an up-to-date stateful document  
     const self = this;
 
-    const getBytes32FromIpfsHash = (ipfsListing) => {
-      return "0x" + bs58.decode(ipfsListing).slice(2).toString("hex");
-    };
-
-    const publishIPFS1 = async () => {
-      console.log("Uploading file to IPFS...");
-      await window.ipfs.add(this.state.ipfs1, (error, hash) => {
-        if (error) {
-          console.log("Something went wrong. Unable to upload to ipfs");
-        } else {
-          console.log("uploaded at hash: ", hash);
-        }
-        self.setState({ hashPath: getBytes32FromIpfsHash(hash) });
-      });
-    };
-
-    async function checkExists(idxHash) {
-      await window.contracts.STOR.methods
-        .retrieveShortRecord(idxHash)
-        .call({ from: self.state.addr }, function (_error, _result) {
-          if (_error) {
-            self.setState({ error: _error });
-            self.setState({ result: 0 });
-            alert(
-              "WARNING: Record DOES NOT EXIST! Reject in metamask and review asset info fields."
-            );
-          } else {
-            if (Object.values(_result)[7] === self.state.hashPath) {
-              alert("WARNING: Record description matches current submission! Reject in metamask and check description field.")
-            }
-            self.setState({ result1: _result });
-          }
-          console.log("check debug, _result, _error: ", _result, _error);
-        });
-    }
-
-    async function checkMatch(idxHash, rgtHash) {
-      await window.contracts.STOR.methods
-        ._verifyRightsHolder(idxHash, rgtHash)
-        .call({ from: self.state.addr }, function (_error, _result) {
-          if (_error) {
-            self.setState({ error: _error });
-          } else if (_result === "0") {
-            self.setState({ result: 0 });
-            alert(
-              "WARNING: Record DOES NOT MATCH supplied owner info! Reject in metamask and review owner fields."
-            );
-          } else {
-            self.setState({ result2: _result });
-          }
-          console.log("check debug, _result, _error: ", _result, _error);
-        });
-    }
 
 
-
-    const _updateDescription = () => {
+    const _modifyStatus = async () => {
       this.setState({ txStatus: false });
       this.setState({ txHash: "" });
       this.setState({ error: undefined })
@@ -134,40 +76,68 @@ class ModifyDescriptionNC extends Component {
         this.state.secret
       );
       var rgtHash = window.web3.utils.soliditySha3(idxHash, rgtRaw);
-      var _ipfs1 = this.state.hashPath;
 
       console.log("idxHash", idxHash);
       console.log("New rgtRaw", rgtRaw);
       console.log("New rgtHash", rgtHash);
       console.log("addr: ", window.addr);
 
-      checkExists(idxHash);
-      checkMatch(idxHash, rgtHash);
+      var doesExist = await window.utils.checkAssetExists(idxHash);
+      var infoMatches = await window.utils.checkMatch(idxHash, rgtHash);
 
-      window.contracts.NP.methods
-        ._modIpfs1(idxHash, rgtHash, _ipfs1)
-        .send({ from: window.addr })
-        .on("error", function (_error) {
-          // self.setState({ NRerror: _error });
-          self.setState({ txHash: Object.values(_error)[0].transactionHash });
-          self.setState({ txStatus: false });
-          console.log(Object.values(_error)[0].transactionHash);
-        })
-        .on("receipt", (receipt) => {
-          this.setState({ txHash: receipt.transactionHash });
-          this.setState({ txStatus: receipt.status });
-          console.log(receipt.status);
-          //Stuff to do when tx confirms
-        });
+      if (!doesExist){
+        return alert("Asset doesnt exist! Ensure data fields are correct before submission.")
+      }
+
+      if (!infoMatches){
+        return alert("Owner data fields do not match data on record. Ensure data fields are correct before submission.")
+      }
+
+      if (this.state.status !== "3" && this.state.status !== "4" && this.state.status !== "6" && this.state.status !== "9" && this.state.status !== "10"){
+        window.contracts.NP.methods
+          ._modStatus(idxHash, rgtHash, this.state.status)
+          .send({ from: window.addr })
+          .on("error", function (_error) {
+            // self.setState({ NRerror: _error });
+            self.setState({ txHash: Object.values(_error)[0].transactionHash });
+            self.setState({ txStatus: false });
+            console.log(Object.values(_error)[0].transactionHash);
+          })
+          .on("receipt", (receipt) => {
+            this.setState({ txHash: receipt.transactionHash });
+            this.setState({ txStatus: receipt.status });
+            console.log(receipt.status);
+            //Stuff to do when tx confirms
+          });
+      }
+
+      else if (this.state.status === "3" || this.state.status === "4" || this.state.status === "10" || this.state.status === "10") {
+        window.contracts.NP.methods
+          ._setLostOrStolen(idxHash, rgtHash, this.state.status)
+          .send({ from: window.addr })
+          .on("error", function (_error) {
+            // self.setState({ NRerror: _error });
+            self.setState({ txHash: Object.values(_error)[0].transactionHash });
+            self.setState({ txStatus: false });
+            console.log(Object.values(_error)[0].transactionHash);
+          })
+          .on("receipt", (receipt) => {
+            this.setState({ txHash: receipt.transactionHash });
+            this.setState({ txStatus: receipt.status });
+            console.log(receipt.status);
+            //Stuff to do when tx confirms
+          });
+      }
+
+      else { alert("Invalid status input") }
 
       console.log(this.state.txHash);
-      self.setState({ hashPath: "" });
-      document.getElementById("MainForm").reset();
+      return document.getElementById("MainForm").reset();
     };
 
     return (
       <div>
-        <Form className="MDform" id='MainForm'>
+        <Form className="MRform" id='MainForm'>
           {window.addr === undefined && (
             <div className="errorResults">
               <h2>User address unreachable</h2>
@@ -182,7 +152,7 @@ class ModifyDescriptionNC extends Component {
           {window.addr > 0 && window.assetClass > 0 && (
             <div>
 
-              <h2 className="Headertext">Modify Description</h2>
+              <h2 className="Headertext">Change Asset Status</h2>
               <br></br>
               <Form.Row>
                 <Form.Group as={Col} controlId="formGridType">
@@ -287,46 +257,31 @@ class ModifyDescriptionNC extends Component {
                   />
                 </Form.Group>
 
-                <Form.Group as={Col} controlId="formGridIpfs1">
-                  <Form.Label className="formFont">
-                    Modify Description:
-                  </Form.Label>
-                  <Form.Control
-                    placeholder="Description"
-                    required
-                    onChange={(e) => this.setState({ ipfs1: e.target.value })}
-                    size="lg"
-                  />
+                <Form.Group as={Col} controlId="formGridFormat">
+                  <Form.Label className="formFont">New Status:</Form.Label>
+                  <Form.Control as="select" size="lg" onChange={(e) => this.setState({ status: e.target.value })}>
+                    <option value="0">Choose a status</option>
+                    <option value="1">Transferrable</option>
+                    <option value="2">Non-transferrable</option>
+                    <option value="3">Stolen</option>
+                    <option value="4">Lost</option>
+                    <option value="51">Export-ready</option>
+                  </Form.Control>
                 </Form.Group>
               </Form.Row>
-              {this.state.hashPath !== "" && (
-                <Form.Row>
-                  <Form.Group className="buttonDisplay">
-                    <Button
-                      variant="primary"
-                      type="button"
-                      size="lg"
-                      onClick={_updateDescription}
-                    >
-                      Update Description
-                    </Button>
-                  </Form.Group>
-                </Form.Row>
-              )}
-              {this.state.hashPath === "" && (
-                <Form.Row>
-                  <Form.Group className="buttonDisplay">
-                    <Button
-                      variant="primary"
-                      type="button"
-                      size="lg"
-                      onClick={publishIPFS1}
-                    >
-                      Load to IPFS
-                    </Button>
-                  </Form.Group>
-                </Form.Row>
-              )}
+
+              <Form.Row>
+                <Form.Group className="buttonDisplay">
+                  <Button
+                    variant="primary"
+                    type="button"
+                    size="lg"
+                    onClick={_modifyStatus}
+                  >
+                    Submit
+                  </Button>
+                </Form.Group>
+              </Form.Row>
             </div>
           )}
         </Form>
@@ -364,4 +319,4 @@ class ModifyDescriptionNC extends Component {
   }
 }
 
-export default ModifyDescriptionNC;
+export default ModifyRecordStatusNC;

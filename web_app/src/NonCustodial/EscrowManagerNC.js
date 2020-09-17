@@ -2,9 +2,8 @@ import React, { Component } from "react";
 import Form from "react-bootstrap/Form";
 import Col from "react-bootstrap/Col";
 import Button from "react-bootstrap/Button";
-import returnManufacturers from "../Resources/Manufacturers";
 
-class NewRecordNC extends Component {
+class EscrowManagerNC extends Component {
   constructor(props) {
     super(props);
 
@@ -12,26 +11,34 @@ class NewRecordNC extends Component {
 
     this.state = {
       addr: "",
-      lookupIPFS1: "",
-      lookupIPFS2: "",
+      costArray: [0],
       error: undefined,
       NRerror: undefined,
-      result: null,
+      result1: "",
+      result2: "",
       assetClass: undefined,
-      countDownStart: "",
+      CountDownStart: "",
       ipfs1: "",
       txHash: "",
+      txStatus: false,
       type: "",
       manufacturer: "",
       model: "",
       serial: "",
+      isNFA: false,
       first: "",
       middle: "",
       surname: "",
       id: "",
       secret: "",
-      isNFA: false,
-      txStatus: null,
+      newFirst: "",
+      newMiddle: "",
+      newSurname: "",
+      newId: "",
+      newSecret: "",
+      newStatus: "",
+      agent: "",
+      timeFormat: "",
     };
   }
 
@@ -44,52 +51,20 @@ class NewRecordNC extends Component {
   componentWillUnmount() {//stuff do do when component unmounts from the window
 
   }
-  componentDidUpdate() {//stuff to do on a re-render
+
+  componentDidUpdate() {//stuff to do when state updates
 
   }
 
   render() {//render continuously produces an up-to-date stateful document  
     const self = this;
 
-    async function tenThousandHashesOf(varToHash) {
-      var tempHash = varToHash;
-      for (var i = 0; i < 10000; i++) {
-        tempHash = window.web3.utils.soliditySha3(tempHash);
-        console.log(tempHash);
-      }
-      return tempHash;
-    }
-
-    async function checkExists(idxHash) {//check whether record of asset exists in the database
-      window.contracts.STOR.methods
-        .retrieveShortRecord(idxHash)
-        .call({ from: self.state.addr }, function (_error, _result) {
-          if (_error) {
-            console.log("IN ERROR IN ERROR IN ERROR")
-            self.setState({ error: _error.message });
-            self.setState({ result: 0 });
-          } else if (
-            Object.values(_result)[4] ===
-            "0"
-          ) {
-          } else {
-            self.setState({ result: _result });
-            alert(
-              "WARNING: Record already exists! Reject in metamask and change asset info."
-            );
-          }
-          console.log("In checkExists, _result, _error: ", _result, _error);
-        });
-    }
-
-    const _newRecord = () => {//create a new asset record
+    const _setEscrow = async () => {
       this.setState({ txStatus: false });
       this.setState({ txHash: "" });
       this.setState({ error: undefined })
       this.setState({ result: "" })
-      //reset state values before form resubmission
       var idxHash;
-      var rgtRaw;
 
       idxHash = window.web3.utils.soliditySha3(
         this.state.type,
@@ -98,34 +73,16 @@ class NewRecordNC extends Component {
         this.state.serial,
       );
 
-
-      rgtRaw = window.web3.utils.soliditySha3(
-        this.state.first,
-        this.state.middle,
-        this.state.surname,
-        this.state.id,
-        this.state.secret
-      );
-
-      var rgtHash = window.web3.utils.soliditySha3(idxHash, rgtRaw);
-      //rgtHash = tenThousandHashesOf(rgtHash)
-
       console.log("idxHash", idxHash);
-      console.log("New rgtRaw", rgtRaw);
-      console.log("New rgtHash", rgtHash);
       console.log("addr: ", window.addr);
-      console.log(window.assetClass);
+      console.log("time: ", this.state.escrowTime, "format: ", this.state.timeFormat);
 
-      checkExists(idxHash);
+      var isInEscrow = await window.utils.checkEscrowStatus(idxHash);
+      if(isInEscrow){return alert("Asset already in an escrow status. End current escrow to set new escrow conditions")}
 
-      window.contracts.APP_NC.methods
-        .$newRecord(
-          idxHash,
-          rgtHash,
-          window.assetClass,
-          this.state.countDownStart
-        )
-        .send({ from: window.addr, value: window.costs.newRecordCost })
+      window.contracts.ECR.methods
+        .setEscrow(idxHash, window.utils._convertTimeTo(this.state.escrowTime, this.state.timeFormat), this.state.newStatus, window.web3.utils.soliditySha3(this.state.agent))
+        .send({ from: window.addr})
         .on("error", function (_error) {
           // self.setState({ NRerror: _error });
           self.setState({ txHash: Object.values(_error)[0].transactionHash });
@@ -135,14 +92,54 @@ class NewRecordNC extends Component {
         .on("receipt", (receipt) => {
           this.setState({ txHash: receipt.transactionHash });
           this.setState({ txStatus: receipt.status });
+          console.log(receipt.status);
+          //Stuff to do when tx confirms
         });
-
-      document.getElementById("MainForm").reset(); //clear form inputs
+      console.log(this.state.txHash);
+      return document.getElementById("MainForm").reset();
     };
 
-    return (//default render
+    const _endEscrow = async () => {
+      this.setState({ txStatus: false });
+      this.setState({ txHash: "" });
+      this.setState({error: undefined})
+      this.setState({result: ""})
+
+        var idxHash = window.web3.utils.soliditySha3(
+          this.state.type,
+          this.state.manufacturer,
+          this.state.model,
+          this.state.serial
+        );
+  
+        console.log("idxHash", idxHash);
+        console.log("addr: ", window.addr);
+  
+        var isInEscrow = await window.utils.checkEscrowStatus(idxHash);
+        if(isInEscrow){return alert("Asset is not in an escrow status.")}
+  
+        window.contracts.ECR.methods
+          .endEscrow(idxHash)
+          .send({ from: window.addr})
+          .on("error", function (_error) {
+            // self.setState({ NRerror: _error });
+            self.setState({ txHash: Object.values(_error)[0].transactionHash });
+            self.setState({ txStatus: false });
+            console.log(Object.values(_error)[0].transactionHash);
+          })
+          .on("receipt", (receipt) => {
+            this.setState({ txHash: receipt.transactionHash });
+            this.setState({ txStatus: receipt.status });
+            console.log(receipt.status);
+            //Stuff to do when tx confirms
+          });
+        console.log(this.state.txHash);
+        return document.getElementById("MainForm").reset();
+      };
+
+    return (
       <div>
-        <Form className="NRform" id='MainForm'>
+        <Form className="MEform" id='MainForm'>
           {window.addr === undefined && (
             <div className="errorResults">
               <h2>User address unreachable</h2>
@@ -156,7 +153,7 @@ class NewRecordNC extends Component {
           )}
           {window.addr > 0 && window.assetClass > 0 && (
             <div>
-              <h2 className="Headertext">New Record</h2>
+              <h2 className="Headertext">Manage Escrow</h2>
               <br></br>
               <Form.Row>
                 <Form.Group as={Col} controlId="formGridType">
@@ -171,7 +168,6 @@ class NewRecordNC extends Component {
 
                 <Form.Group as={Col} controlId="formGridManufacturer">
                   <Form.Label className="formFont">Manufacturer:</Form.Label>
-
                   <Form.Control
                     placeholder="Manufacturer"
                     required
@@ -205,93 +201,75 @@ class NewRecordNC extends Component {
               </Form.Row>
 
               <Form.Row>
-                <Form.Group as={Col} controlId="formGridFirstName">
-                  <Form.Label className="formFont">First Name:</Form.Label>
+                <Form.Group as={Col} controlId="formGridAgent">
+                  <Form.Label className="formFont">Agent Address:</Form.Label>
                   <Form.Control
-                    placeholder="First Name"
+                    placeholder="agent"
                     required
-                    onChange={(e) => this.setState({ first: e.target.value })}
+                    onChange={(e) => this.setState({ agent: e.target.value })}
                     size="lg"
                   />
                 </Form.Group>
 
-                <Form.Group as={Col} controlId="formGridMiddleName">
-                  <Form.Label className="formFont">Middle Name:</Form.Label>
+                <Form.Group as={Col} controlId="formGridStatus">
+                  <Form.Label className="formFont">Escrow Status:</Form.Label>
                   <Form.Control
-                    placeholder="Middle Name"
+                    placeholder="status"
                     required
-                    onChange={(e) => this.setState({ middle: e.target.value })}
-                    size="lg"
-                  />
-                </Form.Group>
-
-                <Form.Group as={Col} controlId="formGridLastName">
-                  <Form.Label className="formFont">Last Name:</Form.Label>
-                  <Form.Control
-                    placeholder="Last Name"
-                    required
-                    onChange={(e) => this.setState({ surname: e.target.value })}
+                    onChange={(e) => this.setState({ newStatus: e.target.value })}
                     size="lg"
                   />
                 </Form.Group>
               </Form.Row>
 
               <Form.Row>
-                <Form.Group as={Col} controlId="formGridIdNumber">
-                  <Form.Label className="formFont">ID Number:</Form.Label>
+                <Form.Group as={Col} controlId="formGridTime">
+                  <Form.Label className="formFont">Duration:</Form.Label>
                   <Form.Control
-                    placeholder="ID Number"
+                    placeholder="setEscrow duration"
                     required
-                    onChange={(e) => this.setState({ id: e.target.value })}
+                    onChange={(e) => this.setState({ escrowTime: e.target.value })}
                     size="lg"
                   />
                 </Form.Group>
-
-                <Form.Group as={Col} controlId="formGridPassword">
-                  <Form.Label className="formFont">Password:</Form.Label>
-                  <Form.Control
-                    placeholder="Password"
-                    type="password"
-                    required
-                    onChange={(e) => this.setState({ secret: e.target.value })}
-                    size="lg"
-                  />
+                <Form.Group as={Col} controlId="formGridFormat">
+                  <Form.Label className="formFont">Time Unit:</Form.Label>
+                  <Form.Control as="select" size="lg" onChange={(e) => this.setState({ timeFormat: e.target.value })}>
+                    <option value="0">Select a time unit</option>
+                    <option value="seconds">Seconds</option>
+                    <option value="minutes">Minutes</option>
+                    <option value="hours">Hours</option>
+                    <option value="days">Days</option>
+                    <option value="weeks">Weeks</option>
+                  </Form.Control>
                 </Form.Group>
-
               </Form.Row>
-              <Form.Row>
-                <Form.Group as={Col} controlId="formGridLogStartValue">
-                  <Form.Label className="formFont">Log Start Value:</Form.Label>
-                  <Form.Control
-                    placeholder="Log Start Value"
-                    required
-                    onChange={(e) =>
-                      this.setState({ countDownStart: e.target.value })
-                    }
-                    size="lg"
-                  />
-                </Form.Group>
-
-              </Form.Row>
-              <Form.Row>
-                <Form.Group className="buttonDisplay">
+              <div>
+                <Form.Group>
                   <Button
+                    className="ownerButtonDisplay"
                     variant="primary"
                     type="button"
                     size="lg"
-                    onClick={_newRecord}
+                    onClick={_setEscrow}
                   >
-                    New Record
-                    </Button>
-                  <div className="LittleText"> Cost in AC {window.assetClass}: {Number(window.costs.newRecordCost) / 1000000000000000000} ETH</div>
+                    begin escrow
+                  </Button>
                 </Form.Group>
-
-
-              </Form.Row>
-
-              <br></br>
-
-
+              </div>
+              <div>
+                <Form.Group>
+                  <Button
+                    className="ownerButtonDisplay5"
+                    variant="primary"
+                    type="button"
+                    size="lg"
+                    onClick={_endEscrow}
+                  >
+                    end escrow
+                  </Button>
+                </Form.Group>
+              </div>
             </div>
           )}
         </Form>
@@ -329,4 +307,4 @@ class NewRecordNC extends Component {
   }
 }
 
-export default NewRecordNC;
+export default EscrowManagerNC;

@@ -2,10 +2,9 @@ import React, { Component } from "react";
 import Form from "react-bootstrap/Form";
 import Col from "react-bootstrap/Col";
 import Button from "react-bootstrap/Button";
-import returnManufacturers from "./Manufacturers";
-import returnTypes from "./Types";
+import returnManufacturers from "../Resources/Manufacturers";
 
-class VerifyRightHolder extends Component {
+class NewRecordNC extends Component {
   constructor(props) {
     super(props);
 
@@ -13,14 +12,15 @@ class VerifyRightHolder extends Component {
 
     this.state = {
       addr: "",
+      lookupIPFS1: "",
+      lookupIPFS2: "",
       error: undefined,
-      error1: undefined,
-      result: "",
-      result1: "",
+      NRerror: undefined,
+      result: null,
       assetClass: undefined,
+      countDownStart: "",
       ipfs1: "",
       txHash: "",
-      txStatus: false,
       type: "",
       manufacturer: "",
       model: "",
@@ -31,40 +31,42 @@ class VerifyRightHolder extends Component {
       id: "",
       secret: "",
       isNFA: false,
+      txStatus: null,
     };
   }
 
   //component state-change events......................................................................................................
 
   componentDidMount() {//stuff to do when component mounts in window
- 
+
   }
 
   componentWillUnmount() {//stuff do do when component unmounts from the window
 
   }
-
-  componentDidUpdate(){//stuff to do when state updates
+  componentDidUpdate() {//stuff to do on a re-render
 
   }
 
   render() {//render continuously produces an up-to-date stateful document  
     const self = this;
 
-    const _verify = async () => {
+    const _newRecord = async () => {//create a new asset record
       this.setState({ txStatus: false });
       this.setState({ txHash: "" });
-      this.setState({error: undefined})
-      this.setState({result: ""})
+      this.setState({ error: undefined })
+      this.setState({ result: "" })
+      //reset state values before form resubmission
       var idxHash;
       var rgtRaw;
-      
+
       idxHash = window.web3.utils.soliditySha3(
         this.state.type,
         this.state.manufacturer,
         this.state.model,
         this.state.serial,
-    );
+      );
+
 
       rgtRaw = window.web3.utils.soliditySha3(
         this.state.first,
@@ -73,45 +75,46 @@ class VerifyRightHolder extends Component {
         this.state.id,
         this.state.secret
       );
+
       var rgtHash = window.web3.utils.soliditySha3(idxHash, rgtRaw);
+      //rgtHash = tenThousandHashesOf(rgtHash)
 
       console.log("idxHash", idxHash);
+      console.log("New rgtRaw", rgtRaw);
+      console.log("New rgtHash", rgtHash);
       console.log("addr: ", window.addr);
+      console.log(window.assetClass);
 
       var doesExist = await window.utils.checkAssetExists(idxHash);
 
-      if (!doesExist){
-        return alert("Asset doesnt exist! Ensure data fields are correct before submission.")
-      }
-
-      window.contracts.STOR.methods
-        ._verifyRightsHolder(idxHash, rgtHash)
-        .call({ from: window.addr }, function (_error, _result) {
-          if (_error) {
-            self.setState({ error: _error });
-            self.setState({ result: 0 });
-          } else {
-            self.setState({ result: _result });
-            console.log("verify.call result: ", _result);
-            self.setState({ error: undefined });
-          }
-        });
-
-        window.contracts.STOR.methods
-        .blockchainVerifyRightsHolder(idxHash, rgtHash)
-        .send({ from: window.addr })
+      if(!doesExist){
+        window.contracts.APP.methods
+        .$newRecord(
+          idxHash,
+          rgtHash,
+          window.assetClass,
+          this.state.countDownStart
+        )
+        .send({ from: window.addr, value: window.costs.newRecordCost })
+        .on("error", function (_error) {
+          // self.setState({ NRerror: _error });
+          self.setState({ txHash: Object.values(_error)[0].transactionHash });
+          self.setState({ txStatus: false });
+        })
         .on("receipt", (receipt) => {
           this.setState({ txHash: receipt.transactionHash });
-          console.log(this.state.txHash);
+          this.setState({ txStatus: receipt.status });
         });
+      }
+        else{alert("Record already exists! Try again.")}
 
-      console.log(this.state.result);
-      document.getElementById("MainForm").reset();
+        return document.getElementById("MainForm").reset(); //clear form inputs
     };
-    return (
+
+    return (//default render
       <div>
-        <Form className="VRform" id='MainForm'>
-        {window.addr === undefined && (
+        <Form className="NRform" id='MainForm'>
+          {window.addr === undefined && (
             <div className="errorResults">
               <h2>User address unreachable</h2>
               <h3>Please connect web3 provider.</h3>
@@ -122,54 +125,38 @@ class VerifyRightHolder extends Component {
               <h3>Please select asset class in home page to use forms.</h3>
             </div>
           )}
-          {window.addr > 0 && window.assetClass > 0 &&(
+          {window.addr > 0 && window.assetClass > 0 && (
             <div>
-                {window.assetClass === 3 &&(
-                <Form.Group>
-                <Form.Check
-                className = 'checkBox'
-                size = 'lg'
-                onChange={handleCheckBox}
-                id={`NFA Firearm`}
-                label={`NFA Firearm`}
-                />
-                </Form.Group>
-                )}
-              <h2 className="Headertext">Verify Rights Holder</h2>
+              <h2 className="Headertext">New Record</h2>
               <br></br>
               <Form.Row>
                 <Form.Group as={Col} controlId="formGridType">
                   <Form.Label className="formFont">Type:</Form.Label>
 
-                  {returnTypes(window.assetClass, this.state.isNFA) !== '0' &&(<Form.Control as="select" size="lg" onChange={(e) => this.setState({ type: e.target.value })}>
+                  {/* {returnTypes(window.assetClass, this.state.isNFA) !== '0' &&(<Form.Control as="select" size="lg" onChange={(e) => this.setState({ type: e.target.value })}>
                   {returnTypes(window.assetClass, this.state.isNFA)}
                   </Form.Control>
-                  )}
+                  )} */}
 
-                    {returnTypes(window.assetClass, this.state.isNFA) === '0' &&(
-                    <Form.Control
+                  {/* {returnTypes(window.assetClass, this.state.isNFA) === '0' &&( */}
+                  <Form.Control
                     placeholder="Type"
                     required
                     onChange={(e) => this.setState({ type: e.target.value })}
                     size="lg"
-                  />)}
+                  />{/* )} */}
                 </Form.Group>
 
-                  <Form.Group as={Col} controlId="formGridManufacturer">
-                    <Form.Label className="formFont">Manufacturer:</Form.Label>
-                    {returnManufacturers(window.assetClass, this.state.isNFA) !== '0' &&(<Form.Control as="select" size="lg" onChange={(e) => this.setState({ manufacturer: e.target.value })}>
-                  {returnManufacturers(window.assetClass, this.state.isNFA)}
-                  </Form.Control>
-                  )}
+                <Form.Group as={Col} controlId="formGridManufacturer">
+                  <Form.Label className="formFont">Manufacturer:</Form.Label>
 
-                      {returnManufacturers(window.assetClass, this.state.isNFA) === '0' &&(
-                    <Form.Control
+                  <Form.Control
                     placeholder="Manufacturer"
                     required
                     onChange={(e) => this.setState({ manufacturer: e.target.value })}
                     size="lg"
-                  />)}
-                  </Form.Group>
+                  />
+                </Form.Group>
 
               </Form.Row>
 
@@ -248,40 +235,76 @@ class VerifyRightHolder extends Component {
                     size="lg"
                   />
                 </Form.Group>
-              </Form.Row>
 
+              </Form.Row>
+              <Form.Row>
+                <Form.Group as={Col} controlId="formGridLogStartValue">
+                  <Form.Label className="formFont">Log Start Value:</Form.Label>
+                  <Form.Control
+                    placeholder="Log Start Value"
+                    required
+                    onChange={(e) =>
+                      this.setState({ countDownStart: e.target.value })
+                    }
+                    size="lg"
+                  />
+                </Form.Group>
+
+              </Form.Row>
               <Form.Row>
                 <Form.Group className="buttonDisplay">
                   <Button
                     variant="primary"
                     type="button"
                     size="lg"
-                    onClick={_verify}
+                    onClick={_newRecord}
                   >
-                    Submit
-                  </Button>
+                    New Record
+                    </Button>
+                  <div className="LittleTextNewRecord"> Cost in AC {window.assetClass}: {Number(window.costs.newRecordCost) / 1000000000000000000} ETH</div>
                 </Form.Group>
+
+
               </Form.Row>
+
+              <br></br>
+
+
             </div>
           )}
         </Form>
-
         {this.state.txHash > 0 && ( //conditional rendering
-          <div className="VRHresults">
-            {this.state.result === "170"
-              ? "Match Confirmed :"
-              : "Record does not match :"}
-            <a
-              href={" https://kovan.etherscan.io/tx/" + this.state.txHash}
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              KOVAN Etherscan:{this.state.txHash}
-            </a>
+          <div className="Results">
+            {this.state.txStatus === false && (
+              <div>
+                !ERROR! :
+                <a
+                  href={"https://kovan.etherscan.io/tx/" + this.state.txHash}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  KOVAN Etherscan:{this.state.txHash}
+                </a>
+              </div>
+            )}
+            {this.state.txStatus === true && (
+              <div>
+                {" "}
+                No Errors Reported :
+                <a
+                  href={"https://kovan.etherscan.io/tx/" + this.state.txHash}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  KOVAN Etherscan:{this.state.txHash}
+                </a>
+              </div>
+            )}
           </div>
         )}
       </div>
     );
   }
 }
-export default VerifyRightHolder;
+
+export default NewRecordNC;
