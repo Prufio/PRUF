@@ -10,7 +10,7 @@ class ModifyDescription extends Component {
     super(props);
 
     //State declaration.....................................................................................................
-
+    
     this.state = {
       addr: "",
       lookupIPFS1: "",
@@ -35,13 +35,21 @@ class ModifyDescription extends Component {
       surname: "",
       id: "",
       secret: "",
+      idxHash: "",
+      rgtHash: "",
+      elementType: "",
+      elementName: "",
+      elementValue: "",
+      additionalElementArrays: {
+        photo: [],
+        text: [],
+      }
     };
   }
 
   //component state-change events......................................................................................................
 
   componentDidMount() {//stuff to do when component mounts in window
-
   }
 
   componentDidUpdate() {//stuff to do when state updates
@@ -55,13 +63,106 @@ class ModifyDescription extends Component {
   render() {//render continuously produces an up-to-date stateful document  
     const self = this;
 
+
+
     const getBytes32FromIpfsHash = (ipfsListing) => {
       return "0x" + bs58.decode(ipfsListing).slice(2).toString("hex");
     };
 
-    const publishIPFS1 = async () => {
+    const _addToMiscArray = async (type) => {
+      let element = ('"' + this.state.elementName + '": ' + '"' + this.state.elementValue + '",')
+      if (type === "photo") {
+        window.additionalElementArrays.photo.push(element)
+      }
+      else if (type === "text") {
+        window.additionalElementArrays.text.push(element)
+      }
+      else { return alert("Element type not recognized! Please use the dropdown menu to select an element type.") }
+
+      console.log("Added", element, "to element array")
+      console.log("Which now looks like: ", window.additionalElementArrays)
+      return document.getElementById("MainForm").reset();
+    }
+
+    const getIpfsHashFromBytes32 = (bytes32Hex) => {
+
+      // Add our default ipfs values for first 2 bytes:
+      // function:0x12=sha2, size:0x20=256 bits
+      // and cut off leading "0x"
+      const hashHex = "1220" + bytes32Hex.slice(2);
+      const hashBytes = Buffer.from(hashHex, "hex");
+      const hashStr = bs58.encode(hashBytes);
+      return hashStr;
+
+    };
+
+     const publishIPFS1 = async () => {
+      console.log(this.state.oldDescription)
+      let oldRefHash;
+      let oldDescription;
+      let newDescription;
+      let resultingJSONPhotoKeys = [];
+      let resultingJSONPhotoValues = [];
+
+      let resultingJSONTextKeys = [];
+      let resultingJSONTextValues = [];
+
+      console.log("Checking payload...")
+
+      let newDescriptionPhoto = '"photo": {';
+
+      for (let i = 0; i < window.additionalElementArrays.photo.length; i++) {
+        newDescriptionPhoto += (window.additionalElementArrays.photo[i])
+      }
+
+      if (newDescriptionPhoto.charAt(newDescriptionPhoto.length - 1) === ",") { newDescriptionPhoto = newDescriptionPhoto.substring(0, newDescriptionPhoto.length - 1); }
+      newDescriptionPhoto += '}}'
+
+       let newDescriptionText = '"text": {';
+
+      for (let i = 0; i < window.additionalElementArrays.text.length; i++) {
+        newDescriptionText += (window.additionalElementArrays.text[i])
+      }
+
+      if (newDescriptionText.charAt(newDescriptionText.length - 1) === ",") { newDescriptionText = newDescriptionText.substring(0, newDescriptionText.length - 1); }
+      newDescriptionText += "}}"
+
+      console.log("Text...Should look like JSON", newDescriptionText)
+      console.log("Photo...Should look like JSON", newDescriptionPhoto, newDescriptionPhoto.charAt(8))
+
+      newDescriptionPhoto = JSON.parse('{'+newDescriptionPhoto);
+      newDescriptionText = JSON.parse('{'+newDescriptionText);
+
+      console.log("Now they should be objects: ", newDescriptionPhoto, newDescriptionText)
+
+      console.log("comparing to old description elements")
+
+      if (this.state.oldDescription !== undefined) {
+        let oldDescription = JSON.parse(this.state.oldDescription);
+        console.log("Found old description: ", oldDescription.photo, oldDescription.text);
+        console.log("New description: ", newDescriptionPhoto, newDescriptionText)
+        let tempDescription = Object.assign({},newDescriptionPhoto, newDescriptionText)
+        console.log(tempDescription)
+        let newPhoto = {photo: Object.assign({}, oldDescription.photo, tempDescription.photo)}
+        console.log(newPhoto)
+        let newText = {text: Object.assign({}, oldDescription.text, tempDescription.text)}
+        console.log(newText)
+        newDescription = Object.assign({}, newPhoto, newText)
+        console.log("Payload", newDescription);
+      }
+      
+      else if (Number(newDescriptionPhoto+newDescriptionText)===0){
+        return alert("No new data added to payload! Add some data before submission.")
+      }
+
+      else{
+        console.log("No existing description to compare."); 
+        newDescription = Object.assign({}, newDescriptionPhoto, newDescriptionText)
+        console.log("payload: ", newDescription)
+        }
+
       console.log("Uploading file to IPFS...");
-      await window.ipfs.add(this.state.ipfs1, (error, hash) => {
+      await window.ipfs.add(JSON.stringify(newDescription), (error, hash) => {
         if (error) {
           console.log("Something went wrong. Unable to upload to ipfs");
         } else {
@@ -69,53 +170,72 @@ class ModifyDescription extends Component {
         }
         self.setState({ hashPath: getBytes32FromIpfsHash(hash) });
       });
-    };
+    } 
 
+    const _accessAsset = async () => {
+      const self = this;
+      let oldDescription;
 
-
-    const _updateDescription = async () => {
-      this.setState({ txStatus: false });
-      this.setState({ txHash: "" });
-      this.setState({ error: undefined })
-      this.setState({ result: "" })
-      var idxHash;
-      var rgtRaw;
-
-      idxHash = window.web3.utils.soliditySha3(
+      let idxHash = window.web3.utils.soliditySha3(
         this.state.type,
         this.state.manufacturer,
         this.state.model,
         this.state.serial,
       );
+      await window.utils.getDescriptionHash(idxHash)
 
-      rgtRaw = window.web3.utils.soliditySha3(
+      let rgtRaw = window.web3.utils.soliditySha3(
         this.state.first,
         this.state.middle,
         this.state.surname,
         this.state.id,
         this.state.secret
       );
-      var rgtHash = window.web3.utils.soliditySha3(idxHash, rgtRaw);
-      var _ipfs1 = this.state.hashPath;
+      let bytes32refHash = window.descriptionBytes32Hash;
+      let refHash = await getIpfsHashFromBytes32(bytes32refHash)
 
-      console.log("idxHash", idxHash);
-      console.log("New rgtRaw", rgtRaw);
-      console.log("New rgtHash", rgtHash);
-      console.log("addr: ", window.addr);
+      var rgtHash = window.web3.utils.soliditySha3(idxHash, rgtRaw);
+
+      await window.ipfs.cat(refHash, (error, result) => {
+        if (error) {
+          console.log("Something went wrong. Unable to find file on IPFS");
+        } else {
+          console.log("IPFS1 Here's what we found: ", result);
+          self.setState({ oldDescription: result})
+        }
+      });
 
       var doesExist = await window.utils.checkAssetExists(idxHash);
       var infoMatches = await window.utils.checkMatch(idxHash, rgtHash);
 
-      if (!doesExist){
+      if (!doesExist) {
         return alert("Asset doesnt exist! Ensure data fields are correct before submission.")
       }
 
-      if (!infoMatches){
+      if (!infoMatches) {
         return alert("Owner data fields do not match data on record. Ensure data fields are correct before submission.")
       }
 
+      await this.setState({ idxHash: idxHash })
+      await this.setState({ rgtHash: rgtHash })
+      return this.setState({ accessPermitted: true })
+
+    }
+
+    const _updateDescription = async () => {
+      this.setState({ txStatus: false });
+      this.setState({ txHash: "" });
+      this.setState({ error: undefined })
+      this.setState({ result: "" })
+
+      var _ipfs1 = this.state.hashPath;
+
+      console.log("idxHash", this.state.idxHash);
+      console.log("New rgtHash", this.state.rgtHash);
+      console.log("addr: ", window.addr);
+
       window.contracts.NP.methods
-        ._modIpfs1(idxHash, rgtHash, _ipfs1)
+        ._modIpfs1(this.state.idxHash, this.state.rgtHash, _ipfs1)
         .send({ from: window.addr })
         .on("error", function (_error) {
           // self.setState({ NRerror: _error });
@@ -131,7 +251,11 @@ class ModifyDescription extends Component {
         });
 
       console.log(this.state.txHash);
-      self.setState({ hashPath: ""});
+      self.setState({ hashPath: "" });
+      window.additionalElementArrays.photo = [];
+      window.additionalElementArrays.text = [];
+      self.setState({accessPermitted: false});
+      self.setState({ oldDescription: undefined});
       return document.getElementById("MainForm").reset();
     };
 
@@ -154,119 +278,168 @@ class ModifyDescription extends Component {
 
               <h2 className="Headertext">Modify Description</h2>
               <br></br>
-              <Form.Row>
-                <Form.Group as={Col} controlId="formGridType">
-                  <Form.Label className="formFont">Type:</Form.Label>
-                  <Form.Control
-                    placeholder="Type"
-                    required
-                    onChange={(e) => this.setState({ type: e.target.value })}
-                    size="lg"
-                  />
-                </Form.Group>
+              {!this.state.accessPermitted && (
+                <>
+                  <Form.Row>
+                    <Form.Group as={Col} controlId="formGridType">
+                      <Form.Label className="formFont">Type:</Form.Label>
+                      <Form.Control
+                        placeholder="Type"
+                        required
+                        onChange={(e) => this.setState({ type: e.target.value })}
+                        size="lg"
+                      />
+                    </Form.Group>
 
-                <Form.Group as={Col} controlId="formGridManufacturer">
-                  <Form.Label className="formFont">Manufacturer:</Form.Label>
+                    <Form.Group as={Col} controlId="formGridManufacturer">
+                      <Form.Label className="formFont">Manufacturer:</Form.Label>
 
-                  <Form.Control
-                    placeholder="Manufacturer"
-                    required
-                    onChange={(e) => this.setState({ manufacturer: e.target.value })}
-                    size="lg"
-                  />
-                </Form.Group>
+                      <Form.Control
+                        placeholder="Manufacturer"
+                        required
+                        onChange={(e) => this.setState({ manufacturer: e.target.value })}
+                        size="lg"
+                      />
+                    </Form.Group>
 
-              </Form.Row>
+                  </Form.Row>
 
-              <Form.Row>
-                <Form.Group as={Col} controlId="formGridModel">
-                  <Form.Label className="formFont">Model:</Form.Label>
-                  <Form.Control
-                    placeholder="Model"
-                    required
-                    onChange={(e) => this.setState({ model: e.target.value })}
-                    size="lg"
-                  />
-                </Form.Group>
+                  <Form.Row>
+                    <Form.Group as={Col} controlId="formGridModel">
+                      <Form.Label className="formFont">Model:</Form.Label>
+                      <Form.Control
+                        placeholder="Model"
+                        required
+                        onChange={(e) => this.setState({ model: e.target.value })}
+                        size="lg"
+                      />
+                    </Form.Group>
 
-                <Form.Group as={Col} controlId="formGridSerial">
-                  <Form.Label className="formFont">Serial:</Form.Label>
-                  <Form.Control
-                    placeholder="Serial"
-                    required
-                    onChange={(e) => this.setState({ serial: e.target.value })}
-                    size="lg"
-                  />
-                </Form.Group>
-              </Form.Row>
+                    <Form.Group as={Col} controlId="formGridSerial">
+                      <Form.Label className="formFont">Serial:</Form.Label>
+                      <Form.Control
+                        placeholder="Serial"
+                        required
+                        onChange={(e) => this.setState({ serial: e.target.value })}
+                        size="lg"
+                      />
+                    </Form.Group>
+                  </Form.Row>
 
-              <Form.Row>
-                <Form.Group as={Col} controlId="formGridFirstName">
-                  <Form.Label className="formFont">First Name:</Form.Label>
-                  <Form.Control
-                    placeholder="First Name"
-                    required
-                    onChange={(e) => this.setState({ first: e.target.value })}
-                    size="lg"
-                  />
-                </Form.Group>
+                  <Form.Row>
+                    <Form.Group as={Col} controlId="formGridFirstName">
+                      <Form.Label className="formFont">First Name:</Form.Label>
+                      <Form.Control
+                        placeholder="First Name"
+                        required
+                        onChange={(e) => this.setState({ first: e.target.value })}
+                        size="lg"
+                      />
+                    </Form.Group>
 
-                <Form.Group as={Col} controlId="formGridMiddleName">
-                  <Form.Label className="formFont">Middle Name:</Form.Label>
-                  <Form.Control
-                    placeholder="Middle Name"
-                    required
-                    onChange={(e) => this.setState({ middle: e.target.value })}
-                    size="lg"
-                  />
-                </Form.Group>
+                    <Form.Group as={Col} controlId="formGridMiddleName">
+                      <Form.Label className="formFont">Middle Name:</Form.Label>
+                      <Form.Control
+                        placeholder="Middle Name"
+                        required
+                        onChange={(e) => this.setState({ middle: e.target.value })}
+                        size="lg"
+                      />
+                    </Form.Group>
 
-                <Form.Group as={Col} controlId="formGridLastName">
-                  <Form.Label className="formFont">Last Name:</Form.Label>
-                  <Form.Control
-                    placeholder="Last Name"
-                    required
-                    onChange={(e) => this.setState({ surname: e.target.value })}
-                    size="lg"
-                  />
-                </Form.Group>
-              </Form.Row>
+                    <Form.Group as={Col} controlId="formGridLastName">
+                      <Form.Label className="formFont">Last Name:</Form.Label>
+                      <Form.Control
+                        placeholder="Last Name"
+                        required
+                        onChange={(e) => this.setState({ surname: e.target.value })}
+                        size="lg"
+                      />
+                    </Form.Group>
+                  </Form.Row>
 
-              <Form.Row>
-                <Form.Group as={Col} controlId="formGridIdNumber">
-                  <Form.Label className="formFont">ID Number:</Form.Label>
-                  <Form.Control
-                    placeholder="ID Number"
-                    required
-                    onChange={(e) => this.setState({ id: e.target.value })}
-                    size="lg"
-                  />
-                </Form.Group>
+                  <Form.Row>
+                    <Form.Group as={Col} controlId="formGridIdNumber">
+                      <Form.Label className="formFont">ID Number:</Form.Label>
+                      <Form.Control
+                        placeholder="ID Number"
+                        required
+                        onChange={(e) => this.setState({ id: e.target.value })}
+                        size="lg"
+                      />
+                    </Form.Group>
 
-                <Form.Group as={Col} controlId="formGridPassword">
-                  <Form.Label className="formFont">Password:</Form.Label>
-                  <Form.Control
-                    placeholder="Password"
-                    type="password"
-                    required
-                    onChange={(e) => this.setState({ secret: e.target.value })}
-                    size="lg"
-                  />
-                </Form.Group>
+                    <Form.Group as={Col} controlId="formGridPassword">
+                      <Form.Label className="formFont">Password:</Form.Label>
+                      <Form.Control
+                        placeholder="Password"
+                        type="password"
+                        required
+                        onChange={(e) => this.setState({ secret: e.target.value })}
+                        size="lg"
+                      />
+                    </Form.Group>
+                  </Form.Row>
+                </>
+              )}
 
-                <Form.Group as={Col} controlId="formGridIpfs1">
-                  <Form.Label className="formFont">
-                    Modify Description:
-                  </Form.Label>
-                  <Form.Control
-                    placeholder="Description"
-                    required
-                    onChange={(e) => this.setState({ ipfs1: e.target.value })}
-                    size="lg"
-                  />
-                </Form.Group>
-              </Form.Row>
-              {this.state.hashPath !== "" && (
+              {this.state.accessPermitted && (
+                <div>
+                  <Form.Row>
+                    <Form.Group as={Col} controlId="formGridMiscType">
+                      <Form.Label className="formFont">
+                        Element Type:
+                      </Form.Label>
+                      <Form.Control
+                        placeholder="DropDown Here"
+                        onChange={(e) => this.setState({ elementType: e.target.value })}
+                        size="lg"
+                      />
+                    </Form.Group>
+                  </Form.Row><Form.Row>
+                    <Form.Group as={Col} controlId="formGridMiscName">
+                      <Form.Label className="formFont">
+                        Element Name:
+                      </Form.Label>
+                      <Form.Control
+                        placeholder="Element Name"
+                        onChange={(e) => this.setState({ elementName: e.target.value })}
+                        size="lg"
+                      />
+                    </Form.Group>
+                  </Form.Row><Form.Row>
+                    <Form.Group as={Col} controlId="formGridMiscValue">
+                      <Form.Label className="formFont">
+                        Element Value:
+                      </Form.Label>
+                      <Form.Control
+                        placeholder="Element Value"
+                        onChange={(e) => this.setState({ elementValue: e.target.value })}
+                        size="lg"
+                      />
+                    </Form.Group>
+                  </Form.Row>
+                </div>
+              )}
+
+              {!this.state.accessPermitted && (
+                <>
+                  <Form.Row>
+                    <Form.Group className="buttonDisplay">
+                      <Button
+                        variant="primary"
+                        type="button"
+                        size="lg"
+                        onClick={_accessAsset}
+                      >
+                        Check Asset
+                    </Button>
+                    </Form.Group>
+                  </Form.Row>
+                </>
+              )}
+
+              {this.state.hashPath !== "" && this.state.accessPermitted && (
                 <Form.Row>
                   <Form.Group className="buttonDisplay">
                     <Button
@@ -280,7 +453,8 @@ class ModifyDescription extends Component {
                   </Form.Group>
                 </Form.Row>
               )}
-              {this.state.hashPath === "" && (
+
+              {this.state.hashPath === "" && this.state.accessPermitted && (
                 <Form.Row>
                   <Form.Group className="buttonDisplay">
                     <Button
@@ -291,9 +465,34 @@ class ModifyDescription extends Component {
                     >
                       Load to IPFS
                     </Button>
+                    <br></br>
+                    <Button
+                      variant="primary"
+                      type="button"
+                      size="lg"
+                      onClick={() => { _addToMiscArray(this.state.elementType) }}
+                    >
+                      Add Element
+                </Button>
                   </Form.Group>
+                  <br></br>
                 </Form.Row>
+
               )}
+              {/* {this.state.hashPath === "" && this.state.accessPermitted && (
+                <>
+                  <Form.Group className="buttonDisplay">
+                    <Button
+                      variant="primary"
+                      type="button"
+                      size="lg"
+                      onClick={()=>{_addToMiscArray(this.state.elementType)}}
+                    >
+                      Add Element
+                </Button>
+                  </Form.Group>
+                </>
+              )} */}
             </div>
           )}
         </Form>

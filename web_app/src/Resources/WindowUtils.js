@@ -313,6 +313,22 @@ function buildWindowUtils() {
       console.log("Window.contracts object is undefined.")
     }
   }
+const _getDescriptionHash = async (idxHash) => {
+  await window.contracts.STOR.methods
+        .retrieveShortRecord(idxHash)
+        .call({ from: window.addr }, function (_error, _result) {
+          if (_error) {
+            return (console.log("IN ERROR IN ERROR IN ERROR"))
+          } else if (
+            Object.values(_result)[5] === "0"
+          ) {
+          } else {
+            window.descriptionBytes32Hash = Object.values(_result)[5];
+            console.log(window.descriptionBytes32Hash)
+            return(Object.values(_result)[5])
+          }
+        });
+}
 
   const _getContracts = async () => {
 
@@ -388,6 +404,7 @@ function buildWindowUtils() {
     convertTimeTo: _convertTimeTo,
     resolveACFromID: _resolveACFromID,
     checkForAC: _checkForAC,
+    getDescriptionHash: _getDescriptionHash,
 
   }
 

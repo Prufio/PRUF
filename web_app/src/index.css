@@ -289,8 +289,8 @@ h4 {
 }
 
 .MDform {
-  height: 40rem;
-  width: 59rem;
+  height: 47rem;
+  width: 60rem;
   background-color: #005480;
   border-radius: 0.5rem;
   padding: 2rem;
@@ -446,7 +446,7 @@ h4 {
 }
 
 .RRresults {
-  height: 16rem;
+  height: flex;
   width: 59rem;
   color: white;
   background-color: #002a40;

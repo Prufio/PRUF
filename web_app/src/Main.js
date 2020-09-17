@@ -153,6 +153,10 @@ class Main extends Component {
   componentDidMount() {//stuff to do when component mounts in window
     buildWindowUtils()
     if (window.ethereum) {
+      window.additionalElementArrays = {
+        photo: [],
+        text: []
+        }
 
       const ethereum = window.ethereum;
       var _web3 = require("web3");

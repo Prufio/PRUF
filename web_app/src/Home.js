@@ -92,7 +92,7 @@ class Home extends Component {
           <div>
             <br></br>
             <Form.Group as={Col} controlId="formGridAC">
-              <Form.Label className="formFont">Input desired asset class index # or name : </Form.Label>
+              <Form.Label className="formFont">Input desired asset class # or name : </Form.Label>
               <Form.Control
                 placeholder="Asset Class"
                 required
