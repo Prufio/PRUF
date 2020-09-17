@@ -1,25 +1,18 @@
 import React, { Component } from "react";
 import { Route } from "react-router-dom";
 
+import ClaimPipAsset from "./Pip/ClaimPipAsset";
+import MintPipAsset from "./Pip/MintPipAsset";
+
 import SetCosts from "./ACAdmin/SetCosts"
 import EnableContract from "./ACAdmin/EnableContract"
 import AddUser from "./ACAdmin/AddUser"
 import UpdateACName from "./ACAdmin/UpdateACName"
 import GetACData from "./ACAdmin/GetACData"
 
-import AddNoteNC from "./NonCustodial/AddNoteNC";
-import DecrementCounterNC from "./NonCustodial/DecrementCounterNC";
-import ForceModifyRecordNC from "./NonCustodial/ForceModifyRecordNC";
-import ModifyDescriptionNC from "./NonCustodial/ModifyDescriptionNC";
-import ModifyRecordStatusNC from "./NonCustodial/ModifyRecordStatusNC";
-import NewRecordNC from "./NonCustodial/NewRecordNC";
-import TransferAssetNC from "./NonCustodial/TransferAssetNC";;
-import EscrowManagerNC from "./NonCustodial/EscrowManagerNC";
-import ExportAssetNC from "./NonCustodial/ExportAssetNC";
-
 import RetrieveRecord from "./AllCustodyTypes/RetrieveRecord";
-import VerifyRightsholder from "./AllCustodyTypes/VerifyRightsholder";
 import VerifyLite from "./AllCustodyTypes/VerifyLite"
+import VerifyRightsholder from "./AllCustodyTypes/VerifyRightsholder";
 
 import AddNote from "./Custodial/AddNote";
 import DecrementCounter from "./Custodial/DecrementCounter";
@@ -31,8 +24,15 @@ import TransferAsset from "./Custodial/TransferAsset";
 import EscrowManager from "./Custodial/EscrowManager";
 import ExportAsset from "./Custodial/ExportAsset";
 
-import MintPipAsset from "./Pip/MintPipAsset";
-import ClaimPipAsset from "./Pip/ClaimPipAsset";
+import AddNoteNC from "./NonCustodial/AddNoteNC";
+import DecrementCounterNC from "./NonCustodial/DecrementCounterNC";
+import EscrowManagerNC from "./NonCustodial/EscrowManagerNC";
+import ExportAssetNC from "./NonCustodial/ExportAssetNC";
+import ForceModifyRecordNC from "./NonCustodial/ForceModifyRecordNC";
+import ModifyDescriptionNC from "./NonCustodial/ModifyDescriptionNC";
+import ModifyRecordStatusNC from "./NonCustodial/ModifyRecordStatusNC";
+import NewRecordNC from "./NonCustodial/NewRecordNC";
+import TransferAssetNC from "./NonCustodial/TransferAssetNC";;
 
 function Router(routeRequest) {
     if (routeRequest === "authUser") {
@@ -59,6 +59,24 @@ function Router(routeRequest) {
         return (
             <>
                 <Route path="/new-record-NC" component={NewRecordNC} />
+                <Route path="/retrieve-record" component={RetrieveRecord} />
+                <Route path="/force-modify-record-NC" component={ForceModifyRecordNC} />
+                <Route path="/transfer-asset-NC" component={TransferAssetNC} />
+                <Route path="/modify-record-status-NC" component={ModifyRecordStatusNC} />
+                <Route path="/decrement-counter-NC" component={DecrementCounterNC} />
+                <Route path="/modify-description-NC" component={ModifyDescriptionNC} />
+                <Route path="/add-note-NC" component={AddNoteNC} />
+                <Route path="/export-asset-NC" component={ExportAssetNC} />
+                <Route path="/verify-rights-holder" component={VerifyRightsholder} />
+                <Route path="/manage-escrow-NC" component={EscrowManagerNC} />
+                <Route path="/mint-pip-asset" component={MintPipAsset} />
+                <Route path="/claim-pip-asset" component={ClaimPipAsset} />
+            </>)
+    }
+
+    else if (routeRequest === "NCUser") {
+        return (
+            <>
                 <Route path="/retrieve-record" component={RetrieveRecord} />
                 <Route path="/force-modify-record-NC" component={ForceModifyRecordNC} />
                 <Route path="/transfer-asset-NC" component={TransferAssetNC} />

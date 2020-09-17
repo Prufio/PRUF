@@ -59,6 +59,16 @@ class Main extends Component {
         })
       }
 
+      else if (menuChoice === 'NCUser') {
+        this.setState({ routeRequest: "NCUser" });
+        return this.setState({
+          IDtokenHolderBool: true,
+          basicMenuBool: false,
+          assetClassHolderMenuBool: false,
+          authorizedUserMenuBool: false
+        })
+      }
+
       else if (menuChoice === 'authUser') {
         this.setState({ routeRequest: "authUser" });
         return this.setState({
@@ -137,6 +147,7 @@ class Main extends Component {
       contractArray: [],
       isAuthUser: undefined,
       assetHolderBool: false,
+      IDtokenHolderBool: false,
       assetClassHolderBool: false,
       assetHolderMenuBool: false,
       assetClassHolderMenuBool: false,
@@ -266,6 +277,15 @@ class Main extends Component {
                       onClick={() => { this.toggleMenu("NC") }}
                     >
                       NonCustodial Menu
+                    </Button>)}
+
+                    {this.state.assetHolderBool === true && this.state.assetHolderMenuBool === false && (
+                    <Button className="btn3"
+                      variant="primary"
+                      type="button"
+                      onClick={() => { this.toggleMenu("NCUser") }}
+                    >
+                      NonCustodial User Menu
                     </Button>)}
 
                   {this.state.basicMenuBool === false && (

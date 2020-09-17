@@ -1,18 +1,15 @@
 import React, { Component } from "react";
 import { Route, NavLink, HashRouter } from "react-router-dom";
 
-class NonCustodialComponent extends Component {
+class NonCustodialUserComponent extends Component {
     render() {
         return (
             <>
                 <li>
-                    <NavLink to="/new-record-NC">New</NavLink>
-                </li>
-                <li>
                     <NavLink to="/verify-rights-holder">Verify</NavLink>
                 </li>
                 <li>
-                    <NavLink to="/retrieve-record-NC">Search</NavLink>
+                    <NavLink to="/retrieve-record">Search</NavLink>
                 </li>
                 <li>
                     <NavLink to="/transfer-asset-NC">Transfer</NavLink>
@@ -40,4 +37,4 @@ class NonCustodialComponent extends Component {
     }
 }
 
-export default NonCustodialComponent; 
+export default NonCustodialUserComponent; 
