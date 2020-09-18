@@ -230,9 +230,9 @@ contract VERIFY is CORE {
         Record memory newRec = getRecord(_newIdxHash);
 
         require(items[_itemHash] == _idxHash, "VFY:TO:item not held by caller"); //check to see if held by _idxHash
-        require( //must move to same asset class                                CTS: EXAMINE, same root AC? or same AC?
+        require( //must move to same asset class root
             AC_MGR.isSameRootAC(rec.assetClass, newRec.assetClass) == 170,
-            "VFY:TO:Wallet is not in the same asset class"
+            "VFY:TO:Wallet is not in the same asset class root"
         );
         require(
             itemData[_itemHash].status != 2,
@@ -285,14 +285,9 @@ contract VERIFY is CORE {
         uint8 _status,
         uint32 _value
     ) external isAuthorized(_idxHash) returns (uint256) {
-        // require(                                                              CTS: EXAMINE, syntax not right? put in temp req below
-        //     idxAuthInVerify[_idxHash] > 3, //token is auth privelidged+
-        //     "VFY:MI: Caller not authorized as a verified user (>= 3)"
-        // );
-
-        require(
-            idxAuthInVerify[_idxHash] <= 3 && idxAuthInVerify[_idxHash] > 0, //temp req TEST
-            "VFY:MI: Caller not authorized as a verified user (<= 3) && > 0"
+        require(                                                             
+            idxAuthInVerify[_idxHash] > 2, //token is auth privelidged+
+            "VFY:MI: Caller not authorized as a verified user (>= 3)"
         );
 
         require(items[_itemHash] == _idxHash, "VFY:MI:item not held by caller"); //check to see if held by _idxHash
