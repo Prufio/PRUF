@@ -1640,7 +1640,7 @@ it('Should mint asset7', async () => {
 it('Should authorize asset7 as verify wallet', async () => {
     return VERIFY.authorizeTokenForVerify(
     asset7,
-    '4',
+    '2',
     '14',
     {from: account2}
     )
@@ -1982,7 +1982,7 @@ it('Should fail because asset3 is not verified wallet', async () => {
 })
 
 //25
-it('Should fail because user not authroized >3 && <0 authLevel', async () => {
+it('Should fail because user not authroized >2 authLevel', async () => {
     return VERIFY.markItem(
     asset7,
     string2Hash,
