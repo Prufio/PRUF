@@ -304,7 +304,6 @@ class ForceModifyRecord extends Component {
                     >
                       Import
                   </Button>
-                    <div className="LittleTextModify"> Cost in AC {window.assetClass}: {Number(window.costs.importAssetCost) / 1000000000000000000} ETH</div>
                   </Form.Group>
 
                   <br></br>

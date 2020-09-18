@@ -127,7 +127,7 @@ class ModifyDescription extends Component {
 
       console.log("oldDescription after edits: ", oldDescription)
       this.setState({ oldDescription: JSON.stringify(oldDescription) })
-      this.setState({elementType: 0})
+      this.setState({elementType: "0"})
       return document.getElementById("MainForm").reset();
 
     }
@@ -569,7 +569,7 @@ class ModifyDescription extends Component {
                 </Form.Row>
               )}
 
-              {this.state.hashPath === "" && this.state.accessPermitted && this.state.elementType === 0 && (
+              {this.state.hashPath === "" && this.state.accessPermitted && this.state.elementType === "0" && (
                 <Form.Row>
                   <Form.Group className="buttonDisplay">
                     <Button
