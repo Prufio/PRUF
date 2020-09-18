@@ -300,7 +300,7 @@ function buildWindowUtils() {
         transferAssetCost: window.costArray[1],
         createNoteCost: window.costArray[2],
         remintAssetCost: window.costArray[3],
-        importAssetCost: window.costArray[4],
+        changeAssetCost: window.costArray[4],
         forceTransferCost: window.costArray[5],
       }
 
