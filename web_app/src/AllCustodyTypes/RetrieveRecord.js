@@ -94,7 +94,8 @@ class RetrieveRecord extends Component {
     const _seperateKeysAndValues = (obj) => {
       console.log (obj)
       let textPairsArray = [];
-      let photoPairsArray = [];
+      let photoKeyArray = [];
+      let photoValueArray = [];
 
       let photoKeys = Object.keys(obj.photo);
       let photoVals = Object.values(obj.photo);
@@ -102,14 +103,15 @@ class RetrieveRecord extends Component {
       let textVals = Object.values(obj.text);
 
       for(let i = 0; i < photoKeys.length; i++){
-        photoPairsArray.push(photoKeys[i] + ": " + photoVals[i])
+        photoValueArray.push(photoVals[i])
+        photoKeyArray.push(photoKeys[i])
       }
 
       for(let i = 0; i < textKeys.length; i++){
         textPairsArray.push(textKeys[i] + ": " + textVals[i])
       }
 
-      self.setState({descriptionElements: {photo: photoPairsArray, text: textPairsArray}})
+      self.setState({descriptionElements: {photoKeys: photoKeyArray, photoValues:photoValueArray, text: textPairsArray}})
     }
 
     const generateDescription = (obj) => {
@@ -118,9 +120,9 @@ class RetrieveRecord extends Component {
 
     let component = [<><h4>Images Found:</h4> <br></br></>];
 
-      for(let i = 0; i < obj.photo.length; i++){
-        console.log("adding photo", obj.photo[i])
-        component.push (<> {String(obj.photo[i])} <br></br></>);
+      for(let i = 0; i < obj.photoKeys.length; i++){
+        console.log("adding photo", obj.photoKeys[i])
+        component.push (<>{obj.photoKeys[i]}<br></br><img src={String(obj.photoValues[i])}/> <br></br></>);
       }
 
       component.push(<> <br></br> <h4>Text Values Found:</h4> <br></br> </>);

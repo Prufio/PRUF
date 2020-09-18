@@ -169,6 +169,11 @@ class Main extends Component {
         text: []
         }
 
+        window.elementRemovalArrays = {
+          photo: [],
+          text: []
+        }
+
       const ethereum = window.ethereum;
       var _web3 = require("web3");
       _web3 = new Web3(_web3.givenProvider);
