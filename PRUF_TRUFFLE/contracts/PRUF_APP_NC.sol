@@ -36,6 +36,10 @@ contract APP_NC is CORE {
         _;
     }
 
+    function NRTEST_ID_tkn_bal() external returns (address, uint256){
+        return (ID_TKN_Address,ID_TKN.balanceOf(msg.sender));
+    }
+
     //--------------------------------------------External Functions--------------------------
     /*
      * @dev Create a  newRecord
