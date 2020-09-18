@@ -171,19 +171,23 @@ class RetrieveRecord extends Component {
             if (Object.values(_result)[0] === '0') { self.setState({ status: 'No status set' }); }
             else if (Object.values(_result)[0] === '1') { self.setState({ status: 'Transferrable' }); }
             else if (Object.values(_result)[0] === '2') { self.setState({ status: 'Non-transferrable' }); }
-            else if (Object.values(_result)[0] === '3') { self.setState({ status: 'ASSET REPORTED STOLEN' }); }
-            else if (Object.values(_result)[0] === '4') { self.setState({ status: 'ASSET REPRTED LOST' }); }
-            else if (Object.values(_result)[0] === '5') { self.setState({ status: 'Asset in transfer' }); }
+            else if (Object.values(_result)[0] === '3') { self.setState({ status: 'REPORTED STOLEN' }); }
+            else if (Object.values(_result)[0] === '4') { self.setState({ status: 'REPORTED LOST' }); }
+            else if (Object.values(_result)[0] === '5') { self.setState({ status: 'Asset in Transfer' }); }
             else if (Object.values(_result)[0] === '6') { self.setState({ status: 'In escrow (block.number locked)' }); }
-            else if (Object.values(_result)[0] === '7') { self.setState({ status: 'P2P Transferrable' }); }
-            else if (Object.values(_result)[0] === '8') { self.setState({ status: 'P2P Non-transferrable' }); }
-            else if (Object.values(_result)[0] === '9') { self.setState({ status: 'ASSET REPORTED STOLEN (P2P)' }); }
-            else if (Object.values(_result)[0] === '10') { self.setState({ status: 'ASSET REPORTED LOST (P2P)' }); }
-            else if (Object.values(_result)[0] === '11') { self.setState({ status: 'In P2P transfer' }); }
-            else if (Object.values(_result)[0] === '12') { self.setState({ status: 'In escrow (block.time locked)' }); }
-            else if (Object.values(_result)[0] === '20') { self.setState({ status: 'Cusdodial escrow ended' }); }
-            else if (Object.values(_result)[0] === '21') { self.setState({ status: 'P2P escrow ended' }); }
-            else if (Object.values(_result)[0] === '51') { self.setState({ status: 'Transferrable, export eligible' }); }
+            else if (Object.values(_result)[0] === '7') { self.setState({ status: 'Out of supervised escrow' }); }
+            else if (Object.values(_result)[0] === '50') { self.setState({ status: 'In Locked Escrow (block.number locked)' }); }
+            else if (Object.values(_result)[0] === '51') { self.setState({ status: 'Transferable' }); }
+            else if (Object.values(_result)[0] === '52') { self.setState({ status: 'Non-transferrable' }); }
+            else if (Object.values(_result)[0] === '53') { self.setState({ status: 'REPORTED STOLEN' }); }
+            else if (Object.values(_result)[0] === '54') { self.setState({ status: 'REPORTED LOST' }); }
+            else if (Object.values(_result)[0] === '55') { self.setState({ status: 'Asset in Transfer' }); }
+            else if (Object.values(_result)[0] === '56') { self.setState({ status: 'In escrow (block.number locked)' }); }
+            else if (Object.values(_result)[0] === '57') { self.setState({ status: 'Out of supervised escrow' }); }
+            else if (Object.values(_result)[0] === '58') { self.setState({ status: 'Out of locked escrow' }); }
+            else if (Object.values(_result)[0] === '59') { self.setState({ status: 'Discardable' }); }
+            else if (Object.values(_result)[0] === '60') { self.setState({ status: 'Recycleable' }); }
+            else if (Object.values(_result)[0] === '70') { self.setState({ status: 'Importable' }); }
             self.setState({ result: Object.values(_result) })
             self.setState({ error: undefined });
 

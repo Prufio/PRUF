@@ -56,57 +56,6 @@ class ForceModifyRecordNC extends Component {
   render() {//render continuously produces an up-to-date stateful document  
     const self = this;
 
-    const _importAsset = async () => {
-
-      this.setState({ txStatus: false });
-      this.setState({ txHash: "" });
-      this.setState({ error: undefined })
-      this.setState({ result: "" })
-      var idxHash = window.web3.utils.soliditySha3(
-        this.state.type,
-        this.state.manufacturer,
-        this.state.model,
-        this.state.serial
-      );
-
-      var rgtRaw = window.web3.utils.soliditySha3(
-        this.state.first,
-        this.state.middle,
-        this.state.surname,
-        this.state.id,
-        this.state.secret
-      );
-
-      var rgtHash = window.web3.utils.soliditySha3(idxHash, rgtRaw);
-
-      console.log("idxHash", idxHash);
-      console.log("New rgtHash", rgtHash);
-      console.log("addr: ", window.addr);
-
-      var doesExist = await window.utils.checkAssetExists(idxHash);
-      if (!doesExist){
-        return alert("Asset doesnt exist! Ensure data fields are correct before submission.")
-      }
-
-      window.contracts.APP.methods
-        .$importAsset(idxHash, rgtHash, this.window.assetClass)
-        .send({ from: window.addr, value: window.costs.importAssetCost })
-        .on("error", function (_error) {
-          // self.setState({ NRerror: _error });
-          self.setState({ txHash: Object.values(_error)[0].transactionHash });
-          self.setState({ txStatus: false });
-          console.log(Object.values(_error)[0].transactionHash);
-        })
-        .on("receipt", (receipt) => {
-          this.setState({ txHash: receipt.transactionHash });
-          this.setState({ txStatus: receipt.status });
-          console.log(receipt.status);
-          //Stuff to do when tx confirms
-        });
-      console.log(this.state.txHash);
-      return document.getElementById("MainForm").reset();
-    };
-
     const _forceModifyRecord = async () => {
       this.setState({ txStatus: false });
       this.setState({ txHash: "" });
@@ -176,9 +125,9 @@ class ForceModifyRecordNC extends Component {
               <h3>Please select asset class in home page to use forms.</h3>
             </div>
           )}
-          {window.addr > 0 && window.assetClass > 0 && (
+          {window.addr > 0 && window.assetClass !== undefined &&(
             <div>
-              <h2 className="Headertext">Force Modify/Import Asset</h2>
+              <h2 className="Headertext">Force Modify</h2>
               <br></br>
               <Form.Row>
                 <Form.Group as={Col} controlId="formGridType">
@@ -292,24 +241,6 @@ class ForceModifyRecordNC extends Component {
                     <div className="LittleTextModify"> Cost in AC {window.assetClass}: {Number(window.costs.forceTransferCost) / 1000000000000000000} ETH</div>
                   </Form.Group>
                   <br></br>
-                </div>
-                <div>
-                  <Form.Group>
-                    <Button
-                      className="ownerButtonDisplay2"
-                      variant="primary"
-                      type="button"
-                      size="lg"
-                      onClick={_importAsset}
-                    >
-                      Import
-                  </Button>
-                    <div className="LittleTextModify"> Cost in AC {window.assetClass}: {Number(window.costs.importAssetCost) / 1000000000000000000} ETH</div>
-                  </Form.Group>
-
-                  <br></br>
-
-
                 </div>
               </Form.Row>
             </div>

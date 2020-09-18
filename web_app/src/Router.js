@@ -27,6 +27,7 @@ import ExportAsset from "./Custodial/ExportAsset";
 import AddNoteNC from "./NonCustodial/AddNoteNC";
 import DecrementCounterNC from "./NonCustodial/DecrementCounterNC";
 import EscrowManagerNC from "./NonCustodial/EscrowManagerNC";
+import ImportAssetNC from "./NonCustodial/ImportAssetNC";
 import ExportAssetNC from "./NonCustodial/ExportAssetNC";
 import ForceModifyRecordNC from "./NonCustodial/ForceModifyRecordNC";
 import ModifyDescriptionNC from "./NonCustodial/ModifyDescriptionNC";
@@ -66,6 +67,7 @@ function Router(routeRequest) {
                 <Route path="/decrement-counter-NC" component={DecrementCounterNC} />
                 <Route path="/modify-description-NC" component={ModifyDescriptionNC} />
                 <Route path="/add-note-NC" component={AddNoteNC} />
+                <Route path="/import-asset-NC" component={ImportAssetNC} />
                 <Route path="/export-asset-NC" component={ExportAssetNC} />
                 <Route path="/verify-rights-holder" component={VerifyRightsholder} />
                 <Route path="/manage-escrow-NC" component={EscrowManagerNC} />
@@ -84,6 +86,7 @@ function Router(routeRequest) {
                 <Route path="/decrement-counter-NC" component={DecrementCounterNC} />
                 <Route path="/modify-description-NC" component={ModifyDescriptionNC} />
                 <Route path="/add-note-NC" component={AddNoteNC} />
+                <Route path="/import-asset-NC" component={ImportAssetNC} />
                 <Route path="/export-asset-NC" component={ExportAssetNC} />
                 <Route path="/verify-rights-holder" component={VerifyRightsholder} />
                 <Route path="/manage-escrow-NC" component={EscrowManagerNC} />

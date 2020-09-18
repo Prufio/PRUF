@@ -73,7 +73,7 @@ class ModifyDescriptionNC extends Component {
       }
 
       window.contracts.A_TKN.methods
-        .safeTransferFrom(window.addr, to, idxHash)
+        .safeTransferFrom(window.addr, this.state.to, idxHash)
         .send({ from: window.addr})
         .on("error", function (_error) {
           // self.setState({ NRerror: _error });

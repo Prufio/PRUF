@@ -27,6 +27,12 @@ class NonCustodialUserComponent extends Component {
                     <NavLink to="/add-note-NC">Add Note</NavLink>
                 </li>
                 <li>
+                    <NavLink to="/force-modify-record-NC">Modify</NavLink>
+                </li>
+                <li>
+                    <NavLink to="/import-asset-NC">Import</NavLink>
+                </li>
+                <li>
                     <NavLink to="/export-asset-NC">Export</NavLink>
                 </li>
                 <li>

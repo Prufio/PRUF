@@ -243,6 +243,19 @@ h4 {
   opacity: 0.96;
 }
 
+.IAform {
+  height: 25.5rem;
+  width: 59rem;
+  background-color: #005480;
+  border-radius: 0.5rem;
+  padding: 2rem;
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  margin-top: -2rem;
+  opacity: 0.96;
+}
+
 .TAform {
   height: 56rem;
   width: 59rem;
