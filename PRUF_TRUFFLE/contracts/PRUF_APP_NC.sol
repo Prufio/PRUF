@@ -63,6 +63,29 @@ contract APP_NC is CORE {
         //^^^^^^^interactions^^^^^^^^^
     }
 
+
+    /*
+     * @dev Create a  newRecord without auth
+     */
+    function TESTnewRecord(
+        bytes32 _idxHash,
+        bytes32 _rgtHash,
+        uint32 _assetClass,
+        uint32 _countDownStart
+    ) external payable nonReentrant whenNotPaused {
+        // require(
+        //     (ID_TKN.balanceOf(msg.sender) == 1), //msg.sender is token holder
+        //     "ANC:MOD-IA: Caller does not hold a valid PRuF_ID token"
+        // );
+        //^^^^^^^Checks^^^^^^^^^
+
+        createRecord(_idxHash, _rgtHash, _assetClass, _countDownStart);
+
+        deductServiceCosts(_assetClass, 1);
+
+        //^^^^^^^interactions^^^^^^^^^
+    }
+
     /*
      * @dev Import a record into a new asset class
      */
