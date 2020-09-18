@@ -3,29 +3,29 @@ import Form from "react-bootstrap/Form";
 import Col from "react-bootstrap/Col";
 import Button from "react-bootstrap/Button";
 
-
-class ModifyRecordStatusNC extends Component {
+class ImportAssetNC extends Component {
   constructor(props) {
     super(props);
 
     //State declaration.....................................................................................................
 
+    this.mounted = false;
     this.state = {
       addr: "",
+      costArray: [0],
       error: undefined,
       NRerror: undefined,
-      result1: "",
-      result2: "",
+      result: "",
       assetClass: undefined,
+      CountDownStart: "",
       ipfs1: "",
-      status: "0",
       txHash: "",
       txStatus: false,
+      isNFA: false,
       type: "",
       manufacturer: "",
       model: "",
       serial: "",
-      isNFA: false,
     };
   }
 
@@ -35,105 +35,78 @@ class ModifyRecordStatusNC extends Component {
 
   }
 
-  componentDidUpdate() {//stuff to do when state updates
+  componentWillUnmount() {//stuff do do when component unmounts from the window
 
   }
 
-  componentWillUnmount() {//stuff do do when component unmounts from the window
+  componentDidUpdate() {//stuff to do when state updates
 
   }
 
   render() {//render continuously produces an up-to-date stateful document  
     const self = this;
 
+    const _importAsset = async () => {
 
-
-    const _modifyStatus = async () => {
       this.setState({ txStatus: false });
       this.setState({ txHash: "" });
       this.setState({ error: undefined })
       this.setState({ result: "" })
-      var idxHash;
-
-      idxHash = window.web3.utils.soliditySha3(
+      var idxHash = window.web3.utils.soliditySha3(
         this.state.type,
         this.state.manufacturer,
         this.state.model,
-        this.state.serial,
+        this.state.serial
       );
 
       console.log("idxHash", idxHash);
-
       console.log("addr: ", window.addr);
 
       var doesExist = await window.utils.checkAssetExists(idxHash);
-
       if (!doesExist){
         return alert("Asset doesnt exist! Ensure data fields are correct before submission.")
       }
 
-      if (this.state.status !== "53" && this.state.status !== "54" && this.state.status !== "56" && this.state.status !== "59"){
-        window.contracts.NP_NC.methods
-          ._modStatus(idxHash, this.state.status)
-          .send({ from: window.addr })
-          .on("error", function (_error) {
-            // self.setState({ NRerror: _error });
-            self.setState({ txHash: Object.values(_error)[0].transactionHash });
-            self.setState({ txStatus: false });
-            console.log(Object.values(_error)[0].transactionHash);
-          })
-          .on("receipt", (receipt) => {
-            this.setState({ txHash: receipt.transactionHash });
-            this.setState({ txStatus: receipt.status });
-            console.log(receipt.status);
-            //Stuff to do when tx confirms
-          });
-      }
-
-      else if (this.state.status === "53" || this.state.status === "54"){
-        window.contracts.NP_NC.methods
-          ._setLostOrStolen(idxHash, this.state.status)
-          .send({ from: window.addr })
-          .on("error", function (_error) {
-            // self.setState({ NRerror: _error });
-            self.setState({ txHash: Object.values(_error)[0].transactionHash });
-            self.setState({ txStatus: false });
-            console.log(Object.values(_error)[0].transactionHash);
-          })
-          .on("receipt", (receipt) => {
-            this.setState({ txHash: receipt.transactionHash });
-            this.setState({ txStatus: receipt.status });
-            console.log(receipt.status);
-            //Stuff to do when tx confirms
-          });
-      }
-
-      else { alert("Invalid status input") }
-
+      window.contracts.APP_NC.methods
+        .$importAsset(idxHash, this.window.assetClass)
+        .send({ from: window.addr, value: window.costs.newRecordCost })
+        .on("error", function (_error) {
+          // self.setState({ NRerror: _error });
+          self.setState({ txHash: Object.values(_error)[0].transactionHash });
+          self.setState({ txStatus: false });
+          console.log(Object.values(_error)[0].transactionHash);
+        })
+        .on("receipt", (receipt) => {
+          this.setState({ txHash: receipt.transactionHash });
+          this.setState({ txStatus: receipt.status });
+          console.log(receipt.status);
+          //Stuff to do when tx confirms
+        });
       console.log(this.state.txHash);
       return document.getElementById("MainForm").reset();
     };
 
     return (
       <div>
-        <Form className="MRNCform" id='MainForm'>
+        <Form className="IAform" id='MainForm'>
           {window.addr === undefined && (
             <div className="errorResults">
               <h2>User address unreachable</h2>
               <h3>Please connect web3 provider.</h3>
             </div>
+          )}{window.assetClass === undefined && (
+            <div className="errorResults">
+              <h2>No asset class selected.</h2>
+              <h3>Please select asset class in home page to use forms.</h3>
+            </div>
           )}
-          {window.addr > 0 && (
+          {window.addr > 0 && window.assetClass !== undefined && (
             <div>
-
-              <h2 className="Headertext">Change Asset Status</h2>
+              <h2 className="Headertext">Import Asset</h2>
               <br></br>
               <Form.Row>
                 <Form.Group as={Col} controlId="formGridType">
                   <Form.Label className="formFont">Type:</Form.Label>
-
-
-
                   <Form.Control
                     placeholder="Type"
                     required
@@ -144,7 +117,6 @@ class ModifyRecordStatusNC extends Component {
 
                 <Form.Group as={Col} controlId="formGridManufacturer">
                   <Form.Label className="formFont">Manufacturer:</Form.Label>
-
                   <Form.Control
                     placeholder="Manufacturer"
                     required
@@ -177,30 +149,21 @@ class ModifyRecordStatusNC extends Component {
                 </Form.Group>
               </Form.Row>
               <Form.Row>
-                <Form.Group as={Col} controlId="formGridFormat">
-                  <Form.Label className="formFont">New Status:</Form.Label>
-                  <Form.Control as="select" size="lg" onChange={(e) => this.setState({ status: e.target.value })}>
-                    <option value="0">Choose a status</option>
-                    <option value="51">Transferrable</option>
-                    <option value="52">Non-transferrable</option>
-                    <option value="53">Stolen</option>
-                    <option value="54">Lost</option>
-                    <option value="51">Export-ready</option>
-                  </Form.Control>
-                </Form.Group>
-              </Form.Row>
-
-              <Form.Row>
-                <Form.Group className="buttonDisplay">
-                  <Button
-                    variant="primary"
-                    type="button"
-                    size="lg"
-                    onClick={_modifyStatus}
-                  >
-                    Submit
+                <div>
+                  <Form.Group>
+                    <Button
+                      className="ownerButtonDisplay2"
+                      variant="primary"
+                      type="button"
+                      size="lg"
+                      onClick={_importAsset}
+                    >
+                      Import
                   </Button>
-                </Form.Group>
+                    <div className="LittleTextModify"> Cost in AC {window.assetClass}: {Number(window.costs.newRecordCost) / 1000000000000000000} ETH</div>
+                  </Form.Group>
+                  <br></br>
+                </div>
               </Form.Row>
             </div>
           )}
@@ -239,4 +202,4 @@ class ModifyRecordStatusNC extends Component {
   }
 }
 
-export default ModifyRecordStatusNC;
+export default ImportAssetNC;

@@ -2,6 +2,9 @@ import React, { Component } from "react";
 import Form from "react-bootstrap/Form";
 import Col from "react-bootstrap/Col";
 import Button from "react-bootstrap/Button";
+import ButtonGroup from "react-bootstrap/ButtonGroup";
+import DropdownButton from 'react-bootstrap/DropdownButton'
+import Dropdown from 'react-bootstrap/Dropdown'
 import bs58 from "bs58";
 
 
@@ -10,7 +13,7 @@ class ModifyDescription extends Component {
     super(props);
 
     //State declaration.....................................................................................................
-    
+
     this.state = {
       addr: "",
       lookupIPFS1: "",
@@ -37,9 +40,11 @@ class ModifyDescription extends Component {
       secret: "",
       idxHash: "",
       rgtHash: "",
-      elementType: "",
+      elementType: 0,
       elementName: "",
       elementValue: "",
+      removePhotoElement: "",
+      removeTextElement: "",
       additionalElementArrays: {
         photo: [],
         text: [],
@@ -50,6 +55,7 @@ class ModifyDescription extends Component {
   //component state-change events......................................................................................................
 
   componentDidMount() {//stuff to do when component mounts in window
+
   }
 
   componentDidUpdate() {//stuff to do when state updates
@@ -71,17 +77,59 @@ class ModifyDescription extends Component {
 
     const _addToMiscArray = async (type) => {
       let element = ('"' + this.state.elementName + '": ' + '"' + this.state.elementValue + '",')
+      if (this.state.elementName === "" || this.state.elementValue === "") {
+        return alert("All fields are required for submission")
+      }
       if (type === "photo") {
         window.additionalElementArrays.photo.push(element)
       }
       else if (type === "text") {
         window.additionalElementArrays.text.push(element)
       }
-      else { return alert("Element type not recognized! Please use the dropdown menu to select an element type.") }
+      else { return alert("Please use the dropdown menu to select an element type") }
 
       console.log("Added", element, "to element array")
       console.log("Which now looks like: ", window.additionalElementArrays)
+      this.setState({ elementType: "0" })
       return document.getElementById("MainForm").reset();
+    }
+
+    const _removeElement = async (type) => {
+      console.log("Existing description before edits: ", this.state.oldDescription)
+      let element = (this.state.removeElement)
+      let oldDescription = JSON.parse(this.state.oldDescription);
+      let resultDescription;
+      let oldDescriptionPhoto = {photo: oldDescription.photo}
+      let oldDescriptionText = {text: oldDescription.text}
+
+
+      if (this.state.element === "") {
+        return alert("All fields are required for submission")
+      }
+
+      if (type === "removePhoto") {
+        if (oldDescription.photo[element]) {
+          delete oldDescription.photo[element]
+          console.log("Removed", element, "from photo object")
+        }
+        else { alert("Element does not exist in existing photo object") }
+      }
+
+      else if (type === "removeText") {
+        if (oldDescription.text[element]) {
+          delete oldDescription.text[element]
+          console.log("Removed", element, "from text object")
+        }
+        else { alert("Element does not exist in existing text object") }
+      }
+
+      else { return alert("Please use the dropdown menu to select an element type") }
+
+      console.log("oldDescription after edits: ", oldDescription)
+      this.setState({ oldDescription: JSON.stringify(oldDescription) })
+      this.setState({elementType: "0"})
+      return document.getElementById("MainForm").reset();
+
     }
 
     const getIpfsHashFromBytes32 = (bytes32Hex) => {
@@ -96,7 +144,7 @@ class ModifyDescription extends Component {
 
     };
 
-     const publishIPFS1 = async () => {
+    const publishIPFS1 = async () => {
       console.log(this.state.oldDescription)
       let newDescription;
 
@@ -111,7 +159,7 @@ class ModifyDescription extends Component {
       if (newDescriptionPhoto.charAt(newDescriptionPhoto.length - 1) === ",") { newDescriptionPhoto = newDescriptionPhoto.substring(0, newDescriptionPhoto.length - 1); }
       newDescriptionPhoto += '}}'
 
-       let newDescriptionText = '"text": {';
+      let newDescriptionText = '"text": {';
 
       for (let i = 0; i < window.additionalElementArrays.text.length; i++) {
         newDescriptionText += (window.additionalElementArrays.text[i])
@@ -123,8 +171,8 @@ class ModifyDescription extends Component {
       console.log("Text...Should look like JSON", newDescriptionText)
       console.log("Photo...Should look like JSON", newDescriptionPhoto, newDescriptionPhoto.charAt(8))
 
-      newDescriptionPhoto = JSON.parse('{'+newDescriptionPhoto);
-      newDescriptionText = JSON.parse('{'+newDescriptionText);
+      newDescriptionPhoto = JSON.parse('{' + newDescriptionPhoto);
+      newDescriptionText = JSON.parse('{' + newDescriptionText);
 
       console.log("Now they should be objects: ", newDescriptionPhoto, newDescriptionText)
 
@@ -134,25 +182,25 @@ class ModifyDescription extends Component {
         let oldDescription = JSON.parse(this.state.oldDescription);
         console.log("Found old description: ", oldDescription.photo, oldDescription.text);
         console.log("New description: ", newDescriptionPhoto, newDescriptionText)
-        let tempDescription = Object.assign({},newDescriptionPhoto, newDescriptionText)
+        let tempDescription = Object.assign({}, newDescriptionPhoto, newDescriptionText)
         console.log(tempDescription)
-        let newPhoto = {photo: Object.assign({}, oldDescription.photo, tempDescription.photo)}
+        let newPhoto = { photo: Object.assign({}, oldDescription.photo, tempDescription.photo) }
         console.log(newPhoto)
-        let newText = {text: Object.assign({}, oldDescription.text, tempDescription.text)}
+        let newText = { text: Object.assign({}, oldDescription.text, tempDescription.text) }
         console.log(newText)
         newDescription = Object.assign({}, newPhoto, newText)
         console.log("Payload", newDescription);
       }
-      
-      else if (Number(newDescriptionPhoto+newDescriptionText)===0){
+
+      else if (Number(newDescriptionPhoto + newDescriptionText) === 0) {
         return alert("No new data added to payload! Add some data before submission.")
       }
 
-      else{
-        console.log("No existing description to compare."); 
+      else {
+        console.log("No existing description to compare.");
         newDescription = Object.assign({}, newDescriptionPhoto, newDescriptionText)
         console.log("payload: ", newDescription)
-        }
+      }
 
       console.log("Uploading file to IPFS...");
       await window.ipfs.add(JSON.stringify(newDescription), (error, hash) => {
@@ -163,7 +211,7 @@ class ModifyDescription extends Component {
         }
         self.setState({ hashPath: getBytes32FromIpfsHash(hash) });
       });
-    } 
+    }
 
     const _accessAsset = async () => {
       const self = this;
@@ -194,7 +242,7 @@ class ModifyDescription extends Component {
           console.log("Something went wrong. Unable to find file on IPFS");
         } else {
           console.log("IPFS1 Here's what we found: ", result);
-          self.setState({ oldDescription: result})
+          self.setState({ oldDescription: result })
         }
       });
 
@@ -247,8 +295,8 @@ class ModifyDescription extends Component {
       self.setState({ hashPath: "" });
       window.additionalElementArrays.photo = [];
       window.additionalElementArrays.text = [];
-      self.setState({accessPermitted: false});
-      self.setState({ oldDescription: undefined});
+      self.setState({ accessPermitted: false });
+      self.setState({ oldDescription: undefined });
       return document.getElementById("MainForm").reset();
     };
 
@@ -384,34 +432,108 @@ class ModifyDescription extends Component {
                         Element Type:
                       </Form.Label>
                       <Form.Control
-                        placeholder="DropDown Here"
+                        as="select"
+                        size="lg"
                         onChange={(e) => this.setState({ elementType: e.target.value })}
-                        size="lg"
-                      />
-                    </Form.Group>
-                  </Form.Row><Form.Row>
-                    <Form.Group as={Col} controlId="formGridMiscName">
-                      <Form.Label className="formFont">
-                        Element Name:
-                      </Form.Label>
-                      <Form.Control
-                        placeholder="Element Name"
-                        onChange={(e) => this.setState({ elementName: e.target.value })}
-                        size="lg"
-                      />
-                    </Form.Group>
-                  </Form.Row><Form.Row>
-                    <Form.Group as={Col} controlId="formGridMiscValue">
-                      <Form.Label className="formFont">
-                        Element Value:
-                      </Form.Label>
-                      <Form.Control
-                        placeholder="Element Value"
-                        onChange={(e) => this.setState({ elementValue: e.target.value })}
-                        size="lg"
-                      />
+                      >
+                        <option value="0">Select Element Type</option>
+                        <option value="text">Add Custom Text</option>
+                        <option value="photo">Add Image URL</option>
+                        <option value="removeText">Remove Existing Text Element</option>
+                        <option value="removePhoto">Remove Existing Image URL</option>
+
+                      </Form.Control>
                     </Form.Group>
                   </Form.Row>
+                  {this.state.elementType === "text" && (
+                    <>
+                      <Form.Row>
+                        <Form.Group as={Col} controlId="formGridMiscName">
+                          <Form.Label className="formFont">
+                            Submission Title:
+                      </Form.Label>
+                          <Form.Control
+                            placeholder="Name This Text Submission (No Spaces)"
+                            onChange={(e) => this.setState({ elementName: e.target.value })}
+                            size="lg"
+                          />
+                        </Form.Group>
+                      </Form.Row><Form.Row>
+                        <Form.Group as={Col} controlId="formGridMiscValue">
+                          <Form.Label className="formFont">
+                            Text to Submit:
+                      </Form.Label>
+                          <Form.Control
+                            placeholder="Text Submission Goes Here"
+                            onChange={(e) => this.setState({ elementValue: e.target.value })}
+                            size="lg"
+                          />
+                        </Form.Group>
+                      </Form.Row>
+                    </>
+                  )}
+
+                  {this.state.elementType === "removePhoto" && (
+                    <>
+                      <Form.Row>
+                        <Form.Group as={Col} controlId="formGridRemovePhoto">
+                          <Form.Label className="formFont">
+                            Image Name:
+                      </Form.Label>
+                          <Form.Control
+                            placeholder="Name of Image You Wish to Remove"
+                            onChange={(e) => this.setState({ removeElement: e.target.value })}
+                            size="lg"
+                          />
+                        </Form.Group>
+                      </Form.Row>
+                    </>
+                  )}
+
+                  {this.state.elementType === "removeText" && (
+                    <>
+                      <Form.Row>
+                        <Form.Group as={Col} controlId="formGridRemoveText">
+                          <Form.Label className="formFont">
+                            Element Name:
+                      </Form.Label>
+                          <Form.Control
+                            placeholder="Name of Element You Wish to Remove"
+                            onChange={(e) => this.setState({ removeElement: e.target.value })}
+                            size="lg"
+                          />
+                        </Form.Group>
+                      </Form.Row>
+                    </>
+                  )}
+
+                  {this.state.elementType === "photo" && (
+                    <>
+                      <Form.Row>
+                        <Form.Group as={Col} controlId="formGridMiscName">
+                          <Form.Label className="formFont">
+                            Image Title:
+                      </Form.Label>
+                          <Form.Control
+                            placeholder="Name This Image (No Spaces)"
+                            onChange={(e) => this.setState({ elementName: e.target.value })}
+                            size="lg"
+                          />
+                        </Form.Group>
+                      </Form.Row><Form.Row>
+                        <Form.Group as={Col} controlId="formGridMiscValue">
+                          <Form.Label className="formFont">
+                            Source URL:
+                      </Form.Label>
+                          <Form.Control
+                            placeholder="Image URL"
+                            onChange={(e) => this.setState({ elementValue: e.target.value })}
+                            size="lg"
+                          />
+                        </Form.Group>
+                      </Form.Row>
+                    </>
+                  )}
                 </div>
               )}
 
@@ -447,7 +569,7 @@ class ModifyDescription extends Component {
                 </Form.Row>
               )}
 
-              {this.state.hashPath === "" && this.state.accessPermitted && (
+              {this.state.hashPath === "" && this.state.accessPermitted && this.state.elementType === "0" && (
                 <Form.Row>
                   <Form.Group className="buttonDisplay">
                     <Button
@@ -458,7 +580,14 @@ class ModifyDescription extends Component {
                     >
                       Load to IPFS
                     </Button>
-                    <br></br>
+                  </Form.Group>
+                  <br></br>
+                </Form.Row>
+
+              )}
+              {this.state.elementType === "text" && (
+                <Form.Row>
+                  <Form.Group className="buttonDisplay">
                     <Button
                       variant="primary"
                       type="button"
@@ -466,26 +595,58 @@ class ModifyDescription extends Component {
                       onClick={() => { _addToMiscArray(this.state.elementType) }}
                     >
                       Add Element
-                </Button>
+              </Button>
                   </Form.Group>
                   <br></br>
                 </Form.Row>
-
               )}
-              {/* {this.state.hashPath === "" && this.state.accessPermitted && (
-                <>
+              {this.state.elementType === "photo" && (
+                <Form.Row>
                   <Form.Group className="buttonDisplay">
                     <Button
                       variant="primary"
                       type="button"
                       size="lg"
-                      onClick={()=>{_addToMiscArray(this.state.elementType)}}
+                      onClick={() => { _addToMiscArray(this.state.elementType) }}
                     >
                       Add Element
-                </Button>
+              </Button>
                   </Form.Group>
-                </>
-              )} */}
+                  <br></br>
+                </Form.Row>
+              )}
+
+              {this.state.elementType === "removePhoto" && (
+                <Form.Row>
+                  <Form.Group className="buttonDisplay">
+                    <Button
+                      variant="primary"
+                      type="button"
+                      size="lg"
+                      onClick={() => { _removeElement(this.state.elementType) }}
+                    >
+                      Remove Element
+              </Button>
+                  </Form.Group>
+                  <br></br>
+                </Form.Row>
+              )}
+
+              {this.state.elementType === "removeText" && (
+                <Form.Row>
+                  <Form.Group className="buttonDisplay">
+                    <Button
+                      variant="primary"
+                      type="button"
+                      size="lg"
+                      onClick={() => { _removeElement(this.state.elementType) }}
+                    >
+                      Remove Element
+              </Button>
+                  </Form.Group>
+                  <br></br>
+                </Form.Row>
+              )}
             </div>
           )}
         </Form>

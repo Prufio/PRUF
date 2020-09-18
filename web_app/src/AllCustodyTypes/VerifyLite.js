@@ -84,12 +84,10 @@ class VerifyLite extends Component {
       }
 
       if (!infoMatches){
-        return alert("Owner data fields do not match data on record. Ensure data fields are correct before submission.")
+        await this.setState({result: "0"})
       }
 
-      if(infoMatches){return alert("Match confirmed")}
-
-        self.setState({ result: "170" });
+      if(infoMatches){await this.setState({result: "170"});}
 
         return document.getElementById("MainForm").reset();
     };
@@ -105,7 +103,7 @@ class VerifyLite extends Component {
           )}
           {window.addr > 0 &&(
             <div>
-              <h2 className="Headertext">Verify Rights Holder</h2>
+              <h2 className="Headertext">Verify</h2>
               <br></br>
               <Form.Row>
                 <Form.Group as={Col} controlId="formGridType">
@@ -223,18 +221,11 @@ class VerifyLite extends Component {
           )}
         </Form>
 
-        {this.state.txHash > 0 && ( //conditional rendering
+        {this.state.result !== "" && ( //conditional rendering
           <div className="VRHresults">
             {this.state.result === "170"
-              ? "Match Confirmed :"
-              : "Record does not match :"}
-            <a
-              href={" https://kovan.etherscan.io/tx/" + this.state.txHash}
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              KOVAN Etherscan:{this.state.txHash}
-            </a>
+              ? "Match Confirmed"
+              : "No Match Found"}
           </div>
         )}
       </div>

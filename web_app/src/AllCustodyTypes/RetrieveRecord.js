@@ -94,7 +94,8 @@ class RetrieveRecord extends Component {
     const _seperateKeysAndValues = (obj) => {
       console.log (obj)
       let textPairsArray = [];
-      let photoPairsArray = [];
+      let photoKeyArray = [];
+      let photoValueArray = [];
 
       let photoKeys = Object.keys(obj.photo);
       let photoVals = Object.values(obj.photo);
@@ -102,34 +103,35 @@ class RetrieveRecord extends Component {
       let textVals = Object.values(obj.text);
 
       for(let i = 0; i < photoKeys.length; i++){
-        photoPairsArray.push(photoKeys[i] + ": " + photoVals[i])
+        photoValueArray.push(photoVals[i])
+        photoKeyArray.push(photoKeys[i])
       }
 
       for(let i = 0; i < textKeys.length; i++){
         textPairsArray.push(textKeys[i] + ": " + textVals[i])
       }
 
-      self.setState({descriptionElements: {photo: photoPairsArray, text: textPairsArray}})
+      self.setState({descriptionElements: {photoKeys: photoKeyArray, photoValues:photoValueArray, text: textPairsArray}})
     }
 
     const generateDescription = (obj) => {
 
-    console.log(self.state.descriptionElements)
+    //console.log(self.state.descriptionElements)
 
     let component = [<><h4>Images Found:</h4> <br></br></>];
 
-      for(let i = 0; i < obj.photo.length; i++){
-        console.log("adding photo", obj.photo[i])
-        component.push (<> {String(obj.photo[i])} <br></br></>);
+      for(let i = 0; i < obj.photoKeys.length; i++){
+        //console.log("adding photo", obj.photoKeys[i])
+        component.push (<>{obj.photoKeys[i]}<br></br><img src={String(obj.photoValues[i])}/> <br></br></>);
       }
 
       component.push(<> <br></br> <h4>Text Values Found:</h4> <br></br> </>);
       for(let x = 0; x < obj.text.length; x++){
-      console.log("adding text ", obj.text[x])
+      //console.log("adding text ", obj.text[x])
       component.push (<>{String(obj.text[x])} <br></br></>);
       } 
 
-      console.log(component)
+      //console.log(component)
       return component
     }
 
@@ -169,19 +171,23 @@ class RetrieveRecord extends Component {
             if (Object.values(_result)[0] === '0') { self.setState({ status: 'No status set' }); }
             else if (Object.values(_result)[0] === '1') { self.setState({ status: 'Transferrable' }); }
             else if (Object.values(_result)[0] === '2') { self.setState({ status: 'Non-transferrable' }); }
-            else if (Object.values(_result)[0] === '3') { self.setState({ status: 'ASSET REPORTED STOLEN' }); }
-            else if (Object.values(_result)[0] === '4') { self.setState({ status: 'ASSET REPRTED LOST' }); }
-            else if (Object.values(_result)[0] === '5') { self.setState({ status: 'Asset in transfer' }); }
+            else if (Object.values(_result)[0] === '3') { self.setState({ status: 'REPORTED STOLEN' }); }
+            else if (Object.values(_result)[0] === '4') { self.setState({ status: 'REPORTED LOST' }); }
+            else if (Object.values(_result)[0] === '5') { self.setState({ status: 'Asset in Transfer' }); }
             else if (Object.values(_result)[0] === '6') { self.setState({ status: 'In escrow (block.number locked)' }); }
-            else if (Object.values(_result)[0] === '7') { self.setState({ status: 'P2P Transferrable' }); }
-            else if (Object.values(_result)[0] === '8') { self.setState({ status: 'P2P Non-transferrable' }); }
-            else if (Object.values(_result)[0] === '9') { self.setState({ status: 'ASSET REPORTED STOLEN (P2P)' }); }
-            else if (Object.values(_result)[0] === '10') { self.setState({ status: 'ASSET REPORTED LOST (P2P)' }); }
-            else if (Object.values(_result)[0] === '11') { self.setState({ status: 'In P2P transfer' }); }
-            else if (Object.values(_result)[0] === '12') { self.setState({ status: 'In escrow (block.time locked)' }); }
-            else if (Object.values(_result)[0] === '20') { self.setState({ status: 'Cusdodial escrow ended' }); }
-            else if (Object.values(_result)[0] === '21') { self.setState({ status: 'P2P escrow ended' }); }
-            else if (Object.values(_result)[0] === '51') { self.setState({ status: 'Transferrable, export eligible' }); }
+            else if (Object.values(_result)[0] === '7') { self.setState({ status: 'Out of supervised escrow' }); }
+            else if (Object.values(_result)[0] === '50') { self.setState({ status: 'In Locked Escrow (block.number locked)' }); }
+            else if (Object.values(_result)[0] === '51') { self.setState({ status: 'Transferable' }); }
+            else if (Object.values(_result)[0] === '52') { self.setState({ status: 'Non-transferrable' }); }
+            else if (Object.values(_result)[0] === '53') { self.setState({ status: 'REPORTED STOLEN' }); }
+            else if (Object.values(_result)[0] === '54') { self.setState({ status: 'REPORTED LOST' }); }
+            else if (Object.values(_result)[0] === '55') { self.setState({ status: 'Asset in Transfer' }); }
+            else if (Object.values(_result)[0] === '56') { self.setState({ status: 'In escrow (block.number locked)' }); }
+            else if (Object.values(_result)[0] === '57') { self.setState({ status: 'Out of supervised escrow' }); }
+            else if (Object.values(_result)[0] === '58') { self.setState({ status: 'Out of locked escrow' }); }
+            else if (Object.values(_result)[0] === '59') { self.setState({ status: 'Discardable' }); }
+            else if (Object.values(_result)[0] === '60') { self.setState({ status: 'Recycleable' }); }
+            else if (Object.values(_result)[0] === '70') { self.setState({ status: 'Importable' }); }
             self.setState({ result: Object.values(_result) })
             self.setState({ error: undefined });
 
@@ -212,7 +218,7 @@ class RetrieveRecord extends Component {
           )}
           {window.addr > 0 && (
             <div>
-              <h2 className="Headertext">Search Records</h2>
+              <h2 className="Headertext">Search Assets</h2>
               <br></br>
               <Form.Row>
                 <Form.Group as={Col} controlId="formGridType">
@@ -285,14 +291,6 @@ class RetrieveRecord extends Component {
                   >
                    Show Description
                   </Button>
-                  <Button
-                  variant="primary"
-                  type="button"
-                  size="lg"
-                  onClick={_retrieveRecord}
-                >
-                  Submit
-                </Button>
                 </>
                   )}
                   {this.state.showDescription &&(
@@ -305,15 +303,19 @@ class RetrieveRecord extends Component {
                   >
                    Show Statistics
                   </Button>
-                  <Button
-                  variant="primary"
-                  type="button"
-                  size="lg"
-                  onClick={_retrieveRecord}
-                >
-                  Submit
-                </Button>
                 </>
+                  )}
+                  {this.state.type !== undefined && this.state.type !== "" && (
+                    <>
+                    <Button
+                    variant="primary"
+                    type="button"
+                    size="lg"
+                    onClick={_retrieveRecord}
+                  >
+                    Submit
+                  </Button>
+                  </>
                   )}
                   
                 </Form.Group>

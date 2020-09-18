@@ -35,6 +35,7 @@ class Main extends Component {
         return this.setState({
           assetClassHolderMenuBool: true,
           assetHolderMenuBool: false,
+          assetHolderUserMenuBool: false,
           basicMenuBool: false,
           authorizedUserMenuBool: false
         })
@@ -45,6 +46,7 @@ class Main extends Component {
         return this.setState({
           basicMenuBool: true,
           assetHolderMenuBool: false,
+          assetHolderUserMenuBool: false,
           assetClassHolderMenuBool: false,
           authorizedUserMenuBool: false
         })
@@ -55,18 +57,26 @@ class Main extends Component {
           this.setState({
             routeRequest: "NCAdmin"
           })
+          return this.setState({
+            assetHolderMenuBool: true,
+            assetHolderUserMenuBool: false,
+            basicMenuBool: false,
+            assetClassHolderMenuBool: false,
+            authorizedUserMenuBool: false
+          })
         }
         else {
           this.setState({
             routeRequest: "NCUser"
           })
+          return this.setState({
+            assetHolderMenuBool: false,
+            assetHolderUserMenuBool: true,
+            basicMenuBool: false,
+            assetClassHolderMenuBool: false,
+            authorizedUserMenuBool: false
+          })
         }
-        return this.setState({
-          assetHolderMenuBool: true,
-          basicMenuBool: false,
-          assetClassHolderMenuBool: false,
-          authorizedUserMenuBool: false
-        })
       }
 
       else if (menuChoice === 'authUser') {
@@ -74,6 +84,7 @@ class Main extends Component {
         return this.setState({
           authorizedUserMenuBool: true,
           assetHolderMenuBool: false,
+          assetHolderUserMenuBool: false,
           assetClassHolderMenuBool: false,
           basicMenuBool: false
         })
@@ -150,6 +161,7 @@ class Main extends Component {
       assetHolderBool: false,
       assetClassHolderBool: false,
       assetHolderMenuBool: false,
+      assetHolderUserMenuBool: false,
       assetClassHolderMenuBool: false,
       basicMenuBool: true,
       authorizedUserMenuBool: false,
@@ -167,6 +179,11 @@ class Main extends Component {
       window.additionalElementArrays = {
         photo: [],
         text: []
+      }
+
+        window.elementRemovalArrays = {
+          photo: [],
+          text: []
         }
 
       const ethereum = window.ethereum;
@@ -253,6 +270,7 @@ class Main extends Component {
                         <NavLink exact to="/">Home</NavLink>
                       </li>
                       {this.state.assetHolderMenuBool === true && (<NonCustodialComponent />)}
+                      {this.state.assetHolderUserMenuBool === true && (<NonCustodialUserComponent />)}
                       {this.state.assetClassHolderMenuBool === true && (<AdminComponent />)}
                       {this.state.authorizedUserMenuBool === true && (<AuthorizedUserComponent />)}
                       {this.state.basicMenuBool === true && (<BasicComponent />)}
@@ -274,9 +292,17 @@ class Main extends Component {
                       AC Admin Menu
                     </Button>)}
 
-                  {(this.state.IDHolderBool === true && this.state.assetHolderMenuBool === false)
-                    // || (this.state.assetHolderBool === true && this.state.assetHolderMenuBool === false)
-                   && (
+                  {this.state.IDHolderBool === undefined && this.state.assetHolderBool === true && this.state.assetHolderUserMenuBool === false && (
+                      <Button className="btn3"
+                        variant="primary"
+                        type="button"
+                        onClick={() => { this.toggleMenu("NC") }}
+                      >
+                        NonCustodial Menu
+                      </Button>
+                    )}
+
+                  {this.state.IDHolderBool === true && this.state.assetHolderMenuBool === false && (
                     <Button className="btn3"
                       variant="primary"
                       type="button"
@@ -284,7 +310,7 @@ class Main extends Component {
                     >
                       NonCustodial Menu
                     </Button>
-                    )} 
+                  )}
 
                   {this.state.basicMenuBool === false && (
                     <Button className="btn3"
