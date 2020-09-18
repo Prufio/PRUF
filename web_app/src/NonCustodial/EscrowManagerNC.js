@@ -3,7 +3,6 @@ import Form from "react-bootstrap/Form";
 import Col from "react-bootstrap/Col";
 import Button from "react-bootstrap/Button";
 
-
 class EscrowManagerNC extends Component {
   constructor(props) {
     super(props);
@@ -60,60 +59,7 @@ class EscrowManagerNC extends Component {
   render() {//render continuously produces an up-to-date stateful document  
     const self = this;
 
-    async function checkExistsSet(idxHash) {
-      await window.contracts.STOR.methods
-        .retrieveShortRecord(idxHash)
-        .call({ from: self.state.addr }, function (_error, _result) {
-          if (_error) {
-            self.setState({ error: _error });
-            self.setState({ result: 0 });
-            alert(
-              "WARNING: Record DOES NOT EXIST! Reject in metamask and review asset info fields."
-            );
-          } else {
-            if (Object.values(_result)[2] === '6' || Object.values(_result)[2] === '12') {
-              alert("WARNING: Asset already in escrow! Reject in metamask and wait for active escrow status to expire.")
-            }
-            self.setState({ result1: _result });
-          }
-          console.log("check debug, _result, _error: ", _result, _error);
-        });
-    }
-
-    async function checkExistsEnd(idxHash) {
-      await window.contracts.STOR.methods
-        .retrieveShortRecord(idxHash)
-        .call({ from: self.state.addr }, function (_error, _result) {
-          if (_error) {
-            self.setState({ error: _error });
-            self.setState({ result: 0 });
-            alert(
-              "WARNING: Record DOES NOT EXIST! Reject in metamask and review asset info fields."
-            );
-          } else {
-            if (Object.values(_result)[2] !== '6' && Object.values(_result)[2] !== '12') {
-              alert("WARNING: Asset is not in escrow! Reject in metamask and check status in search.")
-            }
-            self.setState({ result1: _result });
-          }
-          console.log("check debug, _result, _error: ", _result, _error);
-        });
-    }
-    const _convertTimeTo = (rawTime, to) => {
-      var time;
-
-      if (to === "seconds") { time = rawTime }
-      else if (to === "minutes") { time = rawTime * 60 }
-      else if (to === "hours") { time = rawTime * 3600 }
-      else if (to === "days") { time = rawTime * 86400 }
-      else if (to === "weeks") { time = rawTime * 604800 }
-      else { alert("Invalid time unit") }
-      return (time);
-    }
-
-
-
-    const _setEscrow = () => {
+    const _setEscrow = async () => {
       this.setState({ txStatus: false });
       this.setState({ txHash: "" });
       this.setState({ error: undefined })
@@ -131,11 +77,12 @@ class EscrowManagerNC extends Component {
       console.log("addr: ", window.addr);
       console.log("time: ", this.state.escrowTime, "format: ", this.state.timeFormat);
 
-      checkExistsSet(idxHash);
+      var isInEscrow = await window.utils.checkEscrowStatus(idxHash);
+      if(isInEscrow){return alert("Asset already in an escrow status. End current escrow to set new escrow conditions")}
 
-      window.contracts.ECR.methods
-        .setEscrow(idxHash, _convertTimeTo(this.state.escrowTime, this.state.timeFormat), this.state.newStatus, window.web3.utils.soliditySha3(this.state.agent))
-        .send({ from: window.addr })
+      window.contracts.ECR_NC.methods
+        .setEscrow(idxHash, this.state.newStatus, window.web3.utils.soliditySha3(this.state.agent), window.utils._convertTimeTo(this.state.escrowTime, this.state.timeFormat), this.state.newStatus)
+        .send({ from: window.addr})
         .on("error", function (_error) {
           // self.setState({ NRerror: _error });
           self.setState({ txHash: Object.values(_error)[0].transactionHash });
@@ -149,44 +96,46 @@ class EscrowManagerNC extends Component {
           //Stuff to do when tx confirms
         });
       console.log(this.state.txHash);
-      document.getElementById("MainForm").reset();
+      return document.getElementById("MainForm").reset();
     };
 
-    const _endEscrow = () => {
+    const _endEscrow = async () => {
       this.setState({ txStatus: false });
       this.setState({ txHash: "" });
-      this.setState({ error: undefined })
-      this.setState({ result: "" })
-      var idxHash = window.web3.utils.soliditySha3(
-        this.state.type,
-        this.state.manufacturer,
-        this.state.model,
-        this.state.serial
-      );
+      this.setState({error: undefined})
+      this.setState({result: ""})
 
-      console.log("idxHash", idxHash);
-      console.log("addr: ", window.addr);
-
-      checkExistsEnd(idxHash);
-
-      window.contracts.ECR.methods
-        .endEscrow(idxHash)
-        .send({ from: window.addr })
-        .on("error", function (_error) {
-          // self.setState({ NRerror: _error });
-          self.setState({ txHash: Object.values(_error)[0].transactionHash });
-          self.setState({ txStatus: false });
-          console.log(Object.values(_error)[0].transactionHash);
-        })
-        .on("receipt", (receipt) => {
-          this.setState({ txHash: receipt.transactionHash });
-          this.setState({ txStatus: receipt.status });
-          console.log(receipt.status);
-          //Stuff to do when tx confirms
-        });
-      console.log(this.state.txHash);
-      document.getElementById("MainForm").reset();
-    };
+        var idxHash = window.web3.utils.soliditySha3(
+          this.state.type,
+          this.state.manufacturer,
+          this.state.model,
+          this.state.serial
+        );
+  
+        console.log("idxHash", idxHash);
+        console.log("addr: ", window.addr);
+  
+        var isInEscrow = await window.utils.checkEscrowStatus(idxHash);
+        if(isInEscrow){return alert("Asset is not in an escrow status.")}
+  
+        window.contracts.ECR_NC.methods
+          .endEscrow(idxHash)
+          .send({ from: window.addr})
+          .on("error", function (_error) {
+            // self.setState({ NRerror: _error });
+            self.setState({ txHash: Object.values(_error)[0].transactionHash });
+            self.setState({ txStatus: false });
+            console.log(Object.values(_error)[0].transactionHash);
+          })
+          .on("receipt", (receipt) => {
+            this.setState({ txHash: receipt.transactionHash });
+            this.setState({ txStatus: receipt.status });
+            console.log(receipt.status);
+            //Stuff to do when tx confirms
+          });
+        console.log(this.state.txHash);
+        return document.getElementById("MainForm").reset();
+      };
 
     return (
       <div>
@@ -196,23 +145,14 @@ class EscrowManagerNC extends Component {
               <h2>User address unreachable</h2>
               <h3>Please connect web3 provider.</h3>
             </div>
-          )}{window.assetClass === undefined && (
-            <div className="errorResults">
-              <h2>No asset class selected.</h2>
-              <h3>Please select asset class in home page to use forms.</h3>
-            </div>
           )}
-          {window.addr > 0 && window.assetClass > 0 && (
+          {window.addr > 0 && (
             <div>
-
               <h2 className="Headertext">Manage Escrow</h2>
               <br></br>
               <Form.Row>
                 <Form.Group as={Col} controlId="formGridType">
                   <Form.Label className="formFont">Type:</Form.Label>
-
-
-
                   <Form.Control
                     placeholder="Type"
                     required
@@ -223,7 +163,6 @@ class EscrowManagerNC extends Component {
 
                 <Form.Group as={Col} controlId="formGridManufacturer">
                   <Form.Label className="formFont">Manufacturer:</Form.Label>
-
                   <Form.Control
                     placeholder="Manufacturer"
                     required
@@ -260,7 +199,7 @@ class EscrowManagerNC extends Component {
                 <Form.Group as={Col} controlId="formGridAgent">
                   <Form.Label className="formFont">Agent Address:</Form.Label>
                   <Form.Control
-                    placeholder="agent"
+                    placeholder="Address"
                     required
                     onChange={(e) => this.setState({ agent: e.target.value })}
                     size="lg"
@@ -316,7 +255,7 @@ class EscrowManagerNC extends Component {
               <div>
                 <Form.Group>
                   <Button
-                    className="ownerButtonDisplay2"
+                    className="ownerButtonDisplay5"
                     variant="primary"
                     type="button"
                     size="lg"

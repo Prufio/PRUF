@@ -32,6 +32,8 @@ class RetrieveRecord extends Component {
       id: "",
       secret: "",
       status: "",
+      ipfsObject: {},
+      showDescription: false,
     };
   }
 
@@ -42,6 +44,7 @@ class RetrieveRecord extends Component {
   }
 
   componentDidUpdate() {//stuff to do when state updates
+
 
   }
 
@@ -76,21 +79,74 @@ class RetrieveRecord extends Component {
     };
 
     const getIPFS1 = async (lookup1) => {
+      console.log(lookup1)
       await window.ipfs.cat(lookup1, (error, result) => {
         if (error) {
           console.log("Something went wrong. Unable to find file on IPFS");
         } else {
           console.log("IPFS1 Here's what we found: ", result);
         }
-        self.setState({ ipfs1: result });
+        console.log(JSON.parse(result));
+        self.setState({ipfsObject: JSON.parse(result)})
       });
     };
 
+    const _seperateKeysAndValues = (obj) => {
+      console.log (obj)
+      let textPairsArray = [];
+      let photoPairsArray = [];
 
+      let photoKeys = Object.keys(obj.photo);
+      let photoVals = Object.values(obj.photo);
+      let textKeys = Object.keys(obj.text);
+      let textVals = Object.values(obj.text);
+
+      for(let i = 0; i < photoKeys.length; i++){
+        photoPairsArray.push(photoKeys[i] + ": " + photoVals[i])
+      }
+
+      for(let i = 0; i < textKeys.length; i++){
+        textPairsArray.push(textKeys[i] + ": " + textVals[i])
+      }
+
+      self.setState({descriptionElements: {photo: photoPairsArray, text: textPairsArray}})
+    }
+
+    const generateDescription = (obj) => {
+
+    console.log(self.state.descriptionElements)
+
+    let component = [<><h4>Images Found:</h4> <br></br></>];
+
+      for(let i = 0; i < obj.photo.length; i++){
+        console.log("adding photo", obj.photo[i])
+        component.push (<> {String(obj.photo[i])} <br></br></>);
+      }
+
+      component.push(<> <br></br> <h4>Text Values Found:</h4> <br></br> </>);
+      for(let x = 0; x < obj.text.length; x++){
+      console.log("adding text ", obj.text[x])
+      component.push (<>{String(obj.text[x])} <br></br></>);
+      } 
+
+      console.log(component)
+      return component
+    }
+
+    const _toggleDisplay = () => {
+      if (self.state.showDescription === false){
+        _seperateKeysAndValues(self.state.ipfsObject);
+        self.setState({showDescription: true})
+      }
+      else{
+      self.setState({showDescription: false})
+      }
+    }
 
     const _retrieveRecord = async () => {
       const self = this;
       var idxHash;
+      var ipfsHash;
 
       idxHash = window.web3.utils.soliditySha3(
         this.state.type,
@@ -102,7 +158,7 @@ class RetrieveRecord extends Component {
       console.log("idxHash", idxHash);
       console.log("addr: ", window.addr);
 
-      window.contracts.STOR.methods
+      await window.contracts.STOR.methods
         .retrieveShortRecord(idxHash)
         .call({ from: window.addr }, function (_error, _result) {
           if (_error) {
@@ -129,8 +185,8 @@ class RetrieveRecord extends Component {
             self.setState({ result: Object.values(_result) })
             self.setState({ error: undefined });
 
-            if (Object.values(_result)[5] > 0) { getIPFS1(getIpfsHashFromBytes32(Object.values(_result)[5])); }
-
+            if (Object.values(_result)[5] > 0) {ipfsHash = getIpfsHashFromBytes32(Object.values(_result)[5]); }
+            console.log("ipfs data in promise", ipfsHash)
             if (Object.values(_result)[6] > 0) {
               console.log("Getting ipfs2 set up...")
               let knownUrl = "https://ipfs.io/ipfs/";
@@ -141,7 +197,9 @@ class RetrieveRecord extends Component {
             }
           }
         });
-    };
+
+        await getIPFS1(ipfsHash); 
+    }
 
     return (
       <div>
@@ -202,16 +260,65 @@ class RetrieveRecord extends Component {
               </Form.Row>
 
               <Form.Row>
-                <Form.Group className="buttonDisplay">
-                  <Button
+                {this.state.status === ""&& (
+                  <Form.Group className="buttonDisplay">
+                    <Button
+                  variant="primary"
+                  type="button"
+                  size="lg"
+                  onClick={_retrieveRecord}
+                >
+                  Submit
+                </Button>
+                </Form.Group>
+                )}
+
+                {this.state.status !== "" && this.state.ipfsObject !== undefined &&(
+                  <Form.Group className="buttonDisplay">
+                  {!this.state.showDescription &&(
+                    <>
+                    <Button
                     variant="primary"
                     type="button"
                     size="lg"
-                    onClick={_retrieveRecord}
+                    onClick={_toggleDisplay}
                   >
-                    Submit
+                   Show Description
                   </Button>
+                  <Button
+                  variant="primary"
+                  type="button"
+                  size="lg"
+                  onClick={_retrieveRecord}
+                >
+                  Submit
+                </Button>
+                </>
+                  )}
+                  {this.state.showDescription &&(
+                    <>
+                    <Button
+                    variant="primary"
+                    type="button"
+                    size="lg"
+                    onClick={_toggleDisplay}
+                  >
+                   Show Statistics
+                  </Button>
+                  <Button
+                  variant="primary"
+                  type="button"
+                  size="lg"
+                  onClick={_retrieveRecord}
+                >
+                  Submit
+                </Button>
+                </>
+                  )}
+                  
                 </Form.Group>
+                )}
+                
               </Form.Row>
             </div>
           )}
@@ -224,19 +331,33 @@ class RetrieveRecord extends Component {
           <div className="RRresults">
             Asset Found!
             <br></br>
-            Status : {this.state.status}
+            {!this.state.showDescription &&(
+            <>
+              Status : {this.state.status}
+              <br></br>
+              Mod Count : {this.state.result[1]}
+              <br></br>
+              Asset Class : {this.state.result[2]}
+              <br></br>
+              Count : {this.state.result[3]} of {this.state.result[4]}
+              <br></br>
+              Number of transfers : {this.state.result[7]}
+              <br></br>
+              </>
+            )} 
+
+            {this.state.ipfs2 !== undefined && this.state.ipfs2 !== "" &&(
+            <>
+            Asset Inscription : {this.state.ipfs2}
             <br></br>
-            Mod Count : {this.state.result[1]}
-            <br></br>
-            Asset Class : {this.state.result[2]}
-            <br></br>
-            Count : {this.state.result[3]} of {this.state.result[4]}
-            <br></br>
-            IPFS Description : {this.state.ipfs1}
-            <br></br>
-            IPFS Note : {this.state.ipfs2}
-            <br></br>
-            Number of transfers : {this.state.result[7]}
+            </>
+            )}
+
+            {this.state.showDescription &&(
+            <>
+            {this.state.descriptionElements !== undefined && (generateDescription(this.state.descriptionElements))}
+            </>
+            )}
           </div>
         )}
       </div>

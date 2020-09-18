@@ -49,8 +49,8 @@ class MintPRUF_IDToken extends Component {
       const self = this;
 
       const newIDTKN = async () => {
-
-        await window.contracts.ID_TKN.methods.mintPRUF_IDToken(
+        await console.log(window.contracts.ID_TKN.methods)
+        await window.contracts.ID_TKN.methods.mint(
             self.state.Recipient,
             self.state.TokenId).send({from: window.addr})
       }

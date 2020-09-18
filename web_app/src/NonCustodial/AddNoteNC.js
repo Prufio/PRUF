@@ -2,9 +2,9 @@ import React, { Component } from "react";
 import Form from "react-bootstrap/Form";
 import Col from "react-bootstrap/Col";
 import Button from "react-bootstrap/Button";
+import bs58 from "bs58";
 
-
-class ModifyDescriptionNC extends Component {
+class AddNoteNC extends Component {
   constructor(props) {
     super(props);
 
@@ -12,13 +12,15 @@ class ModifyDescriptionNC extends Component {
 
     this.state = {
       addr: "",
+      lookup: "",
+      hashPath: "",
+      ipfsID: "",
       costArray: [0],
       error: undefined,
-      NRerror: undefined,
-      result1: "",
-      result2: "",
+      result: "",
       assetClass: undefined,
       ipfs1: "",
+      ipfs2: "",
       txHash: "",
       txStatus: false,
       type: "",
@@ -30,72 +32,47 @@ class ModifyDescriptionNC extends Component {
       surname: "",
       id: "",
       secret: "",
-      newFirst: "",
-      newMiddle: "",
-      newSurname: "",
-      newId: "",
-      newSecret: "",
       isNFA: false,
+      hashUrl: "",
+      hasError: false,
     };
   }
 
   //component state-change events......................................................................................................
 
-  componentDidMount() {//stuff to do when component mounts in window
-
-  }
-
-  componentWillUnmount() {//stuff do do when component unmounts from the window
-
-  }
-
-  componentDidUpdate() {//stuff to do when state updates
-
-  }
-
   render() {//render continuously produces an up-to-date stateful document  
     const self = this;
 
-    async function checkExists(idxHash) {
-      await window.contracts.STOR.methods
-        .retrieveShortRecord(idxHash)
-        .call({ from: self.state.addr }, function (_error, _result) {
-          if (_error) {
-            self.setState({ error: _error });
-            self.setState({ result: 0 });
-            alert(
-              "WARNING: Record DOES NOT EXIST! Reject in metamask and review asset info fields."
-            );
-          } else {
-            self.setState({ result1: _result });
-          }
-          console.log("check debug, _result, _error: ", _result, _error);
-        });
-    }
+    const getBytes32FromIpfsHash = (ipfsListing) => {
+      return "0x" + bs58.decode(ipfsListing).slice(2).toString("hex");
+    };
 
-    async function checkMatch(idxHash, rgtHash) {
-      await window.contracts.STOR.methods
-        ._verifyRightsHolder(idxHash, rgtHash)
-        .call({ from: self.state.addr }, function (_error, _result) {
-          if (_error) {
-            self.setState({ error: _error });
-            self.setState({ result: 0 });
-          } else if (_result === "0") {
-            self.setState({ result: 0 });
-            self.setState({ error: undefined });
-            alert(
-              "WARNING: Record DOES NOT MATCH supplied owner info! Reject in metamask and review owner fields."
-            );
-          } else {
-            self.setState({ result2: _result });
-          }
-          console.log("check debug, _result, _error: ", _result, _error);
-        });
-    }
+    const publishIPFS2Photo = async () => {
+      if (document.getElementById("ipfs2File").files[0] !== undefined) {
+        const self = this;
+        const reader = new FileReader();
+        reader.readAsArrayBuffer(document.getElementById("ipfs2File").files[0])
+        reader.onloadend = async (event) => {
+          const buffer = Buffer(event.target.result);
+          console.log("Uploading file to IPFS...", buffer);
+          await window.ipfs.add(buffer, (error, hash) => {
+            if (error) {
+              console.log("Something went wrong. Unable to upload to ipfs");
+            } else {
+              console.log("uploaded at hash: ", hash);
+            }
+            let _hashUrl = "https://ipfs.io/ipfs/";
+            self.setState({ hashPath: getBytes32FromIpfsHash(hash) });
+            console.log(_hashUrl + hash)
+            self.setState({ hashUrl: _hashUrl + hash })
+          });
+        }
+      }
+      else { alert("No file chosen for upload!") }
+    };
 
+    const setIPFS2 = async () => {
 
-
-    const _transferAsset = () => {
       this.setState({ txStatus: false });
       this.setState({ txHash: "" });
       this.setState({ error: undefined })
@@ -117,28 +94,32 @@ class ModifyDescriptionNC extends Component {
         this.state.id,
         this.state.secret
       );
-      var rgtHash = window.web3.utils.soliditySha3(idxHash, rgtRaw);
 
-      var newRgtRaw = window.web3.utils.soliditySha3(
-        this.state.newFirst,
-        this.state.newMiddle,
-        this.state.newSurname,
-        this.state.newId,
-        this.state.newSecret
-      );
-      var newRgtHash = window.web3.utils.soliditySha3(idxHash, newRgtRaw);
+      var rgtHash = window.web3.utils.soliditySha3(idxHash, rgtRaw);
 
       console.log("idxHash", idxHash);
       console.log("New rgtRaw", rgtRaw);
-      console.log("New rgtHash", rgtHash);
       console.log("addr: ", window.addr);
+      
+      var noteExists = await window.utils.checkNoteExists(idxHash);
+      var doesExist = await window.utils.checkAssetExists(idxHash);
+      var infoMatches = await window.utils.checkMatch(idxHash, rgtHash);
 
-      checkExists(idxHash);
-      checkMatch(idxHash, rgtHash);
+      if (!doesExist){
+        return alert("Asset doesnt exist! Ensure data fields are correct before submission.")
+      }
 
-      window.contracts.APP.methods
-        .$transferAsset(idxHash, rgtHash, newRgtHash)
-        .send({ from: window.addr, value: window.costs.transferAssetCost })
+      if (!infoMatches){
+        return alert("Owner data fields do not match data on record. Ensure data fields are correct before submission.")
+      }
+
+      if (noteExists){
+        return alert("Asset note already exists! Cannot overwrite existing note.")
+      }
+
+        await window.contracts.APP.methods
+        .$addIpfs2Note(idxHash, rgtHash, this.state.hashPath)
+        .send({ from: window.addr, value: window.costs.createNoteCost })
         .on("error", function (_error) {
           // self.setState({ NRerror: _error });
           self.setState({ txHash: Object.values(_error)[0].transactionHash });
@@ -151,13 +132,16 @@ class ModifyDescriptionNC extends Component {
           console.log(receipt.status);
           //Stuff to do when tx confirms
         });
+      
+     
+
       console.log(this.state.txHash);
-      document.getElementById("MainForm").reset();
+      return document.getElementById("MainForm").reset();
     };
 
     return (
       <div>
-        <Form className="TAform" id='MainForm'>
+        <Form className="ANform" id='MainForm'>
           {window.addr === undefined && (
             <div className="errorResults">
               <h2>User address unreachable</h2>
@@ -171,15 +155,11 @@ class ModifyDescriptionNC extends Component {
           )}
           {window.addr > 0 && window.assetClass > 0 && (
             <div>
-
-              <h2 className="Headertext">Transfer Asset</h2>
+              <h2 className="Headertext">Add Note</h2>
               <br></br>
               <Form.Row>
                 <Form.Group as={Col} controlId="formGridType">
                   <Form.Label className="formFont">Type:</Form.Label>
-
-
-
                   <Form.Control
                     placeholder="Type"
                     required
@@ -190,7 +170,6 @@ class ModifyDescriptionNC extends Component {
 
                 <Form.Group as={Col} controlId="formGridManufacturer">
                   <Form.Label className="formFont">Manufacturer:</Form.Label>
-
                   <Form.Control
                     placeholder="Manufacturer"
                     required
@@ -200,6 +179,7 @@ class ModifyDescriptionNC extends Component {
                 </Form.Group>
 
               </Form.Row>
+
               <Form.Row>
                 <Form.Group as={Col} controlId="formGridModel">
                   <Form.Label className="formFont">Model:</Form.Label>
@@ -277,80 +257,40 @@ class ModifyDescriptionNC extends Component {
                 </Form.Group>
               </Form.Row>
               <Form.Row>
-                <Form.Group as={Col} controlId="formGridNewFirstName">
-                  <Form.Label className="formFont">New First Name:</Form.Label>
-                  <Form.Control
-                    placeholder="New First Name"
-                    required
-                    onChange={(e) =>
-                      this.setState({ newFirst: e.target.value })
-                    }
-                    size="lg"
-                  />
-                </Form.Group>
-
-                <Form.Group as={Col} controlId="formGridNewMiddleName">
-                  <Form.Label className="formFont">New Middle Name:</Form.Label>
-                  <Form.Control
-                    placeholder="New Middle Name"
-                    required
-                    onChange={(e) =>
-                      this.setState({ newMiddle: e.target.value })
-                    }
-                    size="lg"
-                  />
-                </Form.Group>
-
-                <Form.Group as={Col} controlId="formGridNewLastName">
-                  <Form.Label className="formFont">New Last Name:</Form.Label>
-                  <Form.Control
-                    placeholder="New Last Name"
-                    required
-                    onChange={(e) =>
-                      this.setState({ newSurname: e.target.value })
-                    }
-                    size="lg"
-                  />
+                <Form.Group as={Col} controlId="formGridIpfs2File">
+                  <Form.File onChange={(e) => this.setState({ hashPath: "" })} size="lg" className="btn2" id="ipfs2File" />
                 </Form.Group>
               </Form.Row>
+              {this.state.hashPath !== "" && (
+                <Form.Row>
+                  <Form.Group className="buttonDisplay">
+                    <Button
+                      variant="primary"
+                      type="button"
+                      size="lg"
+                      onClick={setIPFS2}
+                    >
+                      Add Note
+                    </Button>
+                    <div className="LittleText"> Cost in AC {window.assetClass}: {Number(window.costs.createNoteCost) / 1000000000000000000} ETH</div>
+                  </Form.Group>
+                </Form.Row>
+              )}
+              {this.state.hashPath === "" && (
+                <Form.Row>
+                  <Form.Group className="buttonDisplay">
+                    <Button
+                      variant="primary"
+                      type="button"
+                      size="lg"
+                      onClick={publishIPFS2Photo}
+                    >
+                      Load to IPFS
+                    </Button>
 
-              <Form.Row>
-                <Form.Group as={Col} controlId="formGridNewIdNumber">
-                  <Form.Label className="formFont">New ID Number:</Form.Label>
-                  <Form.Control
-                    placeholder="New ID Number"
-                    required
-                    onChange={(e) => this.setState({ newId: e.target.value })}
-                    size="lg"
-                  />
-                </Form.Group>
-
-                <Form.Group as={Col} controlId="formGridNewPassword">
-                  <Form.Label className="formFont">New Password:</Form.Label>
-                  <Form.Control
-                    placeholder="New Password"
-                    type="password"
-                    required
-                    onChange={(e) =>
-                      this.setState({ newSecret: e.target.value })
-                    }
-                    size="lg"
-                  />
-                </Form.Group>
-              </Form.Row>
-              <Form.Row>
-                <Form.Group className="buttonDisplay">
-                  <Button
-                    variant="primary"
-                    type="button"
-                    size="lg"
-                    onClick={_transferAsset}
-                  >
-                    Transfer
-                  </Button>
-                  <div className="LittleText"> Cost in AC {window.assetClass}: {Number(window.costs.transferAssetCost) / 1000000000000000000} ETH</div>
-                </Form.Group>
-              </Form.Row>
+                  </Form.Group>
+                </Form.Row>
+              )}
 
               <br></br>
             </div>
@@ -381,6 +321,9 @@ class ModifyDescriptionNC extends Component {
                 >
                   KOVAN Etherscan:{this.state.txHash}
                 </a>
+                <a>
+                  <img src={this.state.hashUrl} alt="" />
+                </a>
               </div>
             )}
           </div>
@@ -390,4 +333,4 @@ class ModifyDescriptionNC extends Component {
   }
 }
 
-export default ModifyDescriptionNC;
+export default AddNoteNC;

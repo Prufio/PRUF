@@ -313,6 +313,22 @@ function buildWindowUtils() {
       console.log("Window.contracts object is undefined.")
     }
   }
+const _getDescriptionHash = async (idxHash) => {
+  await window.contracts.STOR.methods
+        .retrieveShortRecord(idxHash)
+        .call({ from: window.addr }, function (_error, _result) {
+          if (_error) {
+            return (console.log("IN ERROR IN ERROR IN ERROR"))
+          } else if (
+            Object.values(_result)[5] === "0"
+          ) {
+          } else {
+            window.descriptionBytes32Hash = Object.values(_result)[5];
+            console.log(window.descriptionBytes32Hash)
+            return(Object.values(_result)[5])
+          }
+        });
+}
 
   const _getContracts = async () => {
 
@@ -343,6 +359,7 @@ function buildWindowUtils() {
     if (window.addr !== undefined) {
       let _assetClassBal;
       let _assetBal;
+      let _IDTokenBal;
       console.log("getting balance info from token contracts...")
       await window.contracts.A_TKN.methods.balanceOf(window.addr).call({ from: window.addr }, (error, result) => {
         if (error) { console.log(error) }
@@ -352,6 +369,11 @@ function buildWindowUtils() {
       await window.contracts.AC_TKN.methods.balanceOf(window.addr).call({ from: window.addr }, (error, result) => {
         if (error) { console.log(error) }
         else { _assetClassBal = result; console.log("assetClassBal", _assetClassBal); }
+      });
+
+      await window.contracts.ID_TKN.methods.balanceOf(window.addr).call({ from: window.addr }, (error, result) => {
+        if (error) { console.log(error) }
+        else { _IDTokenBal = result; console.log("IDTokenBal", _IDTokenBal); }
       });
 
       if (Number(_assetBal) > 0) {
@@ -368,6 +390,14 @@ function buildWindowUtils() {
 
       else if (Number(_assetClassBal === 0 || _assetClassBal === undefined)) {
         window.assetClassHolderBool = false
+      }
+
+      if (Number(_IDTokenBal) > 0) {
+        window.IDHolderBool = true
+      }
+
+      else if (Number(_IDTokenBal === 0 || _IDTokenBal === undefined)) {
+        window.IDHolderBool = false
       }
     }
   }
@@ -388,6 +418,7 @@ function buildWindowUtils() {
     convertTimeTo: _convertTimeTo,
     resolveACFromID: _resolveACFromID,
     checkForAC: _checkForAC,
+    getDescriptionHash: _getDescriptionHash,
 
   }
 

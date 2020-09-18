@@ -3,8 +3,7 @@ import Form from "react-bootstrap/Form";
 import Col from "react-bootstrap/Col";
 import Button from "react-bootstrap/Button";
 
-
-class ModifyRecordStatusNC extends Component {
+class NewRecordNC extends Component {
   constructor(props) {
     super(props);
 
@@ -12,15 +11,15 @@ class ModifyRecordStatusNC extends Component {
 
     this.state = {
       addr: "",
+      lookupIPFS1: "",
+      lookupIPFS2: "",
       error: undefined,
       NRerror: undefined,
-      result1: "",
-      result2: "",
+      result: null,
       assetClass: undefined,
+      countDownStart: "",
       ipfs1: "",
-      status: "0",
       txHash: "",
-      txStatus: false,
       type: "",
       manufacturer: "",
       model: "",
@@ -30,7 +29,7 @@ class ModifyRecordStatusNC extends Component {
       surname: "",
       id: "",
       secret: "",
-      isNFA: false,
+      txStatus: null,
     };
   }
 
@@ -40,59 +39,22 @@ class ModifyRecordStatusNC extends Component {
 
   }
 
-  componentDidUpdate() {//stuff to do when state updates
+  componentWillUnmount() {//stuff do do when component unmounts from the window
 
   }
-
-  componentWillUnmount() {//stuff do do when component unmounts from the window
+  componentDidUpdate() {//stuff to do on a re-render
 
   }
 
   render() {//render continuously produces an up-to-date stateful document  
     const self = this;
 
-    async function checkExists(idxHash) {
-      await window.contracts.STOR.methods
-        .retrieveShortRecord(idxHash)
-        .call({ from: self.state.addr }, function (_error, _result) {
-          if (_error) {
-            self.setState({ error: _error });
-            self.setState({ result: 0 });
-            alert(
-              "WARNING: Record DOES NOT EXIST! Reject in metamask and review asset info fields."
-            );
-          } else {
-            self.setState({ result1: _result });
-          }
-          console.log("check debug, _result, _error: ", _result, _error);
-        });
-    }
-
-    async function checkMatch(idxHash, rgtHash) {
-      await window.contracts.STOR.methods
-        ._verifyRightsHolder(idxHash, rgtHash)
-        .call({ from: self.state.addr }, function (_error, _result) {
-          if (_error) {
-            self.setState({ error: _error });
-          } else if (_result === "0") {
-            self.setState({ result: 0 });
-            alert(
-              "WARNING: Record DOES NOT MATCH supplied owner info! Reject in metamask and review owner fields."
-            );
-          } else {
-            self.setState({ result2: _result });
-          }
-          console.log("check debug, _result, _error: ", _result, _error);
-        });
-    }
-
-
-
-    const _modifyStatus = () => {
+    const _newRecord = async () => {//create a new asset record
       this.setState({ txStatus: false });
       this.setState({ txHash: "" });
       this.setState({ error: undefined })
       this.setState({ result: "" })
+      //reset state values before form resubmission
       var idxHash;
       var rgtRaw;
 
@@ -103,6 +65,7 @@ class ModifyRecordStatusNC extends Component {
         this.state.serial,
       );
 
+
       rgtRaw = window.web3.utils.soliditySha3(
         this.state.first,
         this.state.middle,
@@ -110,61 +73,45 @@ class ModifyRecordStatusNC extends Component {
         this.state.id,
         this.state.secret
       );
+
       var rgtHash = window.web3.utils.soliditySha3(idxHash, rgtRaw);
+      //rgtHash = tenThousandHashesOf(rgtHash)
 
       console.log("idxHash", idxHash);
       console.log("New rgtRaw", rgtRaw);
       console.log("New rgtHash", rgtHash);
       console.log("addr: ", window.addr);
+      console.log(window.assetClass);
 
-      checkExists(idxHash);
-      checkMatch(idxHash, rgtHash);
+      var doesExist = await window.utils.checkAssetExists(idxHash);
 
-      if (this.state.status !== "3" && this.state.status !== "4" && this.state.status !== "6" && this.state.status !== "9" && this.state.status !== "10") {
-        window.contracts.NP.methods
-          ._modStatus(idxHash, rgtHash, this.state.status)
-          .send({ from: window.addr })
-          .on("error", function (_error) {
-            // self.setState({ NRerror: _error });
-            self.setState({ txHash: Object.values(_error)[0].transactionHash });
-            self.setState({ txStatus: false });
-            console.log(Object.values(_error)[0].transactionHash);
-          })
-          .on("receipt", (receipt) => {
-            this.setState({ txHash: receipt.transactionHash });
-            this.setState({ txStatus: receipt.status });
-            console.log(receipt.status);
-            //Stuff to do when tx confirms
-          });
+      if(!doesExist){
+        window.contracts.APP_NC.methods
+        .$newRecord(
+          idxHash,
+          rgtHash,
+          window.assetClass,
+          this.state.countDownStart
+        )
+        .send({ from: window.addr, value: window.costs.newRecordCost })
+        .on("error", function (_error) {
+          // self.setState({ NRerror: _error });
+          self.setState({ txHash: Object.values(_error)[0].transactionHash });
+          self.setState({ txStatus: false });
+        })
+        .on("receipt", (receipt) => {
+          this.setState({ txHash: receipt.transactionHash });
+          this.setState({ txStatus: receipt.status });
+        });
       }
+        else{alert("Record already exists! Try again.")}
 
-      else if (this.state.status === "3" || this.state.status === "4" || this.state.status === "10" || this.state.status === "10") {
-        window.contracts.NP.methods
-          ._setLostOrStolen(idxHash, rgtHash, this.state.status)
-          .send({ from: window.addr })
-          .on("error", function (_error) {
-            // self.setState({ NRerror: _error });
-            self.setState({ txHash: Object.values(_error)[0].transactionHash });
-            self.setState({ txStatus: false });
-            console.log(Object.values(_error)[0].transactionHash);
-          })
-          .on("receipt", (receipt) => {
-            this.setState({ txHash: receipt.transactionHash });
-            this.setState({ txStatus: receipt.status });
-            console.log(receipt.status);
-            //Stuff to do when tx confirms
-          });
-      }
-
-      else { alert("Invalid status input") }
-
-      console.log(this.state.txHash);
-      document.getElementById("MainForm").reset();
+        return document.getElementById("MainForm").reset(); //clear form inputs
     };
 
-    return (
+    return (//default render
       <div>
-        <Form className="MRform" id='MainForm'>
+        <Form className="NRform" id='MainForm'>
           {window.addr === undefined && (
             <div className="errorResults">
               <h2>User address unreachable</h2>
@@ -178,21 +125,24 @@ class ModifyRecordStatusNC extends Component {
           )}
           {window.addr > 0 && window.assetClass > 0 && (
             <div>
-
-              <h2 className="Headertext">Change Asset Status</h2>
+              <h2 className="Headertext">New Record</h2>
               <br></br>
               <Form.Row>
                 <Form.Group as={Col} controlId="formGridType">
                   <Form.Label className="formFont">Type:</Form.Label>
 
+                  {/* {returnTypes(window.assetClass, this.state.isNFA) !== '0' &&(<Form.Control as="select" size="lg" onChange={(e) => this.setState({ type: e.target.value })}>
+                  {returnTypes(window.assetClass, this.state.isNFA)}
+                  </Form.Control>
+                  )} */}
 
-
+                  {/* {returnTypes(window.assetClass, this.state.isNFA) === '0' &&( */}
                   <Form.Control
                     placeholder="Type"
                     required
                     onChange={(e) => this.setState({ type: e.target.value })}
                     size="lg"
-                  />
+                  />{/* )} */}
                 </Form.Group>
 
                 <Form.Group as={Col} controlId="formGridManufacturer">
@@ -284,31 +234,40 @@ class ModifyRecordStatusNC extends Component {
                   />
                 </Form.Group>
 
-                <Form.Group as={Col} controlId="formGridFormat">
-                  <Form.Label className="formFont">New Status:</Form.Label>
-                  <Form.Control as="select" size="lg" onChange={(e) => this.setState({ status: e.target.value })}>
-                    <option value="0">Choose a status</option>
-                    <option value="1">Transferrable</option>
-                    <option value="2">Non-transferrable</option>
-                    <option value="3">Stolen</option>
-                    <option value="4">Lost</option>
-                    <option value="51">Export-ready</option>
-                  </Form.Control>
-                </Form.Group>
               </Form.Row>
+              <Form.Row>
+                <Form.Group as={Col} controlId="formGridLogStartValue">
+                  <Form.Label className="formFont">Log Start Value:</Form.Label>
+                  <Form.Control
+                    placeholder="Log Start Value"
+                    required
+                    onChange={(e) =>
+                      this.setState({ countDownStart: e.target.value })
+                    }
+                    size="lg"
+                  />
+                </Form.Group>
 
+              </Form.Row>
               <Form.Row>
                 <Form.Group className="buttonDisplay">
                   <Button
                     variant="primary"
                     type="button"
                     size="lg"
-                    onClick={_modifyStatus}
+                    onClick={_newRecord}
                   >
-                    Submit
-                  </Button>
+                    New Record
+                    </Button>
+                  <div className="LittleTextNewRecord"> Cost in AC {window.assetClass}: {Number(window.costs.newRecordCost) / 1000000000000000000} ETH</div>
                 </Form.Group>
+
+
               </Form.Row>
+
+              <br></br>
+
+
             </div>
           )}
         </Form>
@@ -346,4 +305,4 @@ class ModifyRecordStatusNC extends Component {
   }
 }
 
-export default ModifyRecordStatusNC;
+export default NewRecordNC;

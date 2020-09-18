@@ -4,8 +4,7 @@ import Col from "react-bootstrap/Col";
 import Button from "react-bootstrap/Button";
 
 
-
-class DecrementCounterNC extends Component {
+class ModifyDescriptionNC extends Component {
   constructor(props) {
     super(props);
 
@@ -13,23 +12,20 @@ class DecrementCounterNC extends Component {
 
     this.state = {
       addr: "",
+      costArray: [0],
       error: undefined,
       NRerror: undefined,
-      result: "",
+      result1: "",
+      result2: "",
       assetClass: undefined,
-      countDown: "",
+      ipfs1: "",
       txHash: "",
+      txStatus: false,
       type: "",
       manufacturer: "",
       model: "",
       serial: "",
-      first: "",
-      middle: "",
-      surname: "",
-      txStatus: false,
-      id: "",
-      secret: "",
-      isNFA: false,
+      to: "",
     };
   }
 
@@ -39,61 +35,26 @@ class DecrementCounterNC extends Component {
 
   }
 
-  componentDidUpdate() {//stuff to do when state updates
+  componentWillUnmount() {//stuff do do when component unmounts from the window
 
   }
 
-  componentWillUnmount() {//stuff do do when component unmounts from the window
+  componentDidUpdate() {//stuff to do when state updates
 
   }
 
   render() {//render continuously produces an up-to-date stateful document  
     const self = this;
 
-    async function checkExists(idxHash) {
-      await window.contracts.STOR.methods
-        .retrieveShortRecord(idxHash)
-        .call({ from: self.state.addr }, function (_error, _result) {
-          if (_error) {
-            self.setState({ error: _error });
-            self.setState({ result: 0 });
-            alert(
-              "WARNING: Record DOES NOT EXIST! Reject in metamask and review asset info fields."
-            );
-          } else {
-            self.setState({ result: _result });
-          }
-          console.log("check debug, _result, _error: ", _result, _error);
-        });
-    }
-
-    async function checkMatch(idxHash, rgtHash) {
-      await window.contracts.STOR.methods
-        ._verifyRightsHolder(idxHash, rgtHash)
-        .call({ from: self.state.addr }, function (_error, _result) {
-          if (_error) {
-            self.setState({ error: _error });
-          } else if (_result === "0") {
-            self.setState({ result: 0 });
-            alert(
-              "WARNING: Record DOES NOT MATCH supplied owner info! Reject in metamask and review owner info fields."
-            );
-          } else {
-            self.setState({ result: _result });
-          }
-          console.log("check debug, _result, _error: ", _result, _error);
-        });
-    }
 
 
-
-    const _decrementCounter = () => {
+    const _transferAsset = async () => {
       this.setState({ txStatus: false });
       this.setState({ txHash: "" });
       this.setState({ error: undefined })
       this.setState({ result: "" })
       var idxHash;
-      var rgtRaw;
+      let to;
 
       idxHash = window.web3.utils.soliditySha3(
         this.state.type,
@@ -102,27 +63,18 @@ class DecrementCounterNC extends Component {
         this.state.serial,
       );
 
-      rgtRaw = window.web3.utils.soliditySha3(
-        this.state.first,
-        this.state.middle,
-        this.state.surname,
-        this.state.id,
-        this.state.secret
-      );
-      var rgtHash = window.web3.utils.soliditySha3(idxHash, rgtRaw);
-
       console.log("idxHash", idxHash);
-      console.log("New rgtRaw", rgtRaw);
-      console.log("New rgtHash", rgtHash);
       console.log("addr: ", window.addr);
-      console.log("Data: ", this.state.countDown);
 
-      checkExists(idxHash);
-      checkMatch(idxHash, rgtHash);
+      var doesExist = await window.utils.checkAssetExists(idxHash);
 
-      window.contracts.NP.methods
-        ._decCounter(idxHash, rgtHash, this.state.countDown)
-        .send({ from: window.addr })
+      if (!doesExist){
+        return alert("Asset doesnt exist! Ensure data fields are correct before submission.")
+      }
+
+      window.contracts.A_TKN.methods
+        .safeTransferFrom(window.addr, to, idxHash)
+        .send({ from: window.addr})
         .on("error", function (_error) {
           // self.setState({ NRerror: _error });
           self.setState({ txHash: Object.values(_error)[0].transactionHash });
@@ -135,35 +87,27 @@ class DecrementCounterNC extends Component {
           console.log(receipt.status);
           //Stuff to do when tx confirms
         });
-
       console.log(this.state.txHash);
       document.getElementById("MainForm").reset();
     };
 
     return (
       <div>
-        <Form className="DCform" id='MainForm'>
+        <Form className="TANCform" id='MainForm'>
           {window.addr === undefined && (
             <div className="errorResults">
               <h2>User address unreachable</h2>
               <h3>Please connect web3 provider.</h3>
             </div>
-          )}{window.assetClass === undefined && (
-            <div className="errorResults">
-              <h2>No asset class selected.</h2>
-              <h3>Please select asset class in home page to use forms.</h3>
-            </div>
           )}
-          {window.addr > 0 && window.assetClass > 0 && (
+          {window.addr > 0 && (
             <div>
 
-              <h2 className="Headertext">Decrement Counter</h2>
+              <h2 className="Headertext">Transfer Asset</h2>
               <br></br>
               <Form.Row>
                 <Form.Group as={Col} controlId="formGridType">
                   <Form.Label className="formFont">Type:</Form.Label>
-
-
 
                   <Form.Control
                     placeholder="Type"
@@ -206,87 +150,32 @@ class DecrementCounterNC extends Component {
                   />
                 </Form.Group>
               </Form.Row>
-
               <Form.Row>
-                <Form.Group as={Col} controlId="formGridFirstName">
-                  <Form.Label className="formFont">First Name:</Form.Label>
+              <Form.Group as={Col} controlId="formGridTo">
+                  <Form.Label className="formFont">To:</Form.Label>
                   <Form.Control
-                    placeholder="First Name"
+                    placeholder="Recipient Address"
                     required
-                    onChange={(e) => this.setState({ first: e.target.value })}
-                    size="lg"
-                  />
-                </Form.Group>
-
-                <Form.Group as={Col} controlId="formGridMiddleName">
-                  <Form.Label className="formFont">Middle Name:</Form.Label>
-                  <Form.Control
-                    placeholder="Middle Name"
-                    required
-                    onChange={(e) => this.setState({ middle: e.target.value })}
-                    size="lg"
-                  />
-                </Form.Group>
-
-                <Form.Group as={Col} controlId="formGridLastName">
-                  <Form.Label className="formFont">Last Name:</Form.Label>
-                  <Form.Control
-                    placeholder="Last Name"
-                    required
-                    onChange={(e) => this.setState({ surname: e.target.value })}
+                    onChange={(e) => this.setState({ to: e.target.value })}
                     size="lg"
                   />
                 </Form.Group>
               </Form.Row>
 
-              <Form.Row>
-                <Form.Group as={Col} controlId="formGridIdNumber">
-                  <Form.Label className="formFont">ID Number:</Form.Label>
-                  <Form.Control
-                    placeholder="ID Number"
-                    required
-                    onChange={(e) => this.setState({ id: e.target.value })}
-                    size="lg"
-                  />
-                </Form.Group>
-
-                <Form.Group as={Col} controlId="formGridPassword">
-                  <Form.Label className="formFont">Password:</Form.Label>
-                  <Form.Control
-                    placeholder="Password"
-                    type="password"
-                    required
-                    onChange={(e) => this.setState({ secret: e.target.value })}
-                    size="lg"
-                  />
-                </Form.Group>
-
-                <Form.Group as={Col} controlId="formGridCountdown">
-                  <Form.Label className="formFont">
-                    Countdown Amount:
-                  </Form.Label>
-                  <Form.Control
-                    placeholder="Countdown Amount"
-                    required
-                    onChange={(e) =>
-                      this.setState({ countDown: e.target.value })
-                    }
-                    size="lg"
-                  />
-                </Form.Group>
-              </Form.Row>
               <Form.Row>
                 <Form.Group className="buttonDisplay">
                   <Button
                     variant="primary"
                     type="button"
                     size="lg"
-                    onClick={_decrementCounter}
+                    onClick={_transferAsset}
                   >
-                    Submit
+                    Transfer
                   </Button>
                 </Form.Group>
               </Form.Row>
+
+              <br></br>
             </div>
           )}
         </Form>
@@ -324,4 +213,4 @@ class DecrementCounterNC extends Component {
   }
 }
 
-export default DecrementCounterNC;
+export default ModifyDescriptionNC;

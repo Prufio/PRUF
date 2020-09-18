@@ -230,7 +230,7 @@ contract VERIFY is CORE {
         Record memory newRec = getRecord(_newIdxHash);
 
         require(items[_itemHash] == _idxHash, "VFY:TO:item not held by caller"); //check to see if held by _idxHash
-        require( //must move to same asset class
+        require( //must move to same asset class                                CTS: EXAMINE, same root AC? or same AC?
             AC_MGR.isSameRootAC(rec.assetClass, newRec.assetClass) == 170,
             "VFY:TO:Wallet is not in the same asset class"
         );
@@ -256,7 +256,7 @@ contract VERIFY is CORE {
      * @dev:Mark an item conterfeit . Admin function, user marks conterfeit regardless of who holds it
      *      the caller must posess Asset token authorized at userlevel 3
      */
-    function AdminMarkCounterfeit(
+    function adminMarkCounterfeit(
         bytes32 _idxHash,
         bytes32 _itemHash
     ) external isAuthorized(_idxHash) returns (uint256) {
@@ -285,9 +285,14 @@ contract VERIFY is CORE {
         uint8 _status,
         uint32 _value
     ) external isAuthorized(_idxHash) returns (uint256) {
+        // require(                                                              CTS: EXAMINE, syntax not right? put in temp req below
+        //     idxAuthInVerify[_idxHash] > 3, //token is auth privelidged+
+        //     "VFY:MI: Caller not authorized as a verified user (>= 3)"
+        // );
+
         require(
-            idxAuthInVerify[_idxHash] > 3, //token is auth privelidged+
-            "VFY:MI: Caller not authorized as a verified user (>= 3)"
+            idxAuthInVerify[_idxHash] <= 3 && idxAuthInVerify[_idxHash] > 0, //temp req TEST
+            "VFY:MI: Caller not authorized as a verified user (<= 3) && > 0"
         );
 
         require(items[_itemHash] == _idxHash, "VFY:MI:item not held by caller"); //check to see if held by _idxHash

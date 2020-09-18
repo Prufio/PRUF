@@ -256,8 +256,34 @@ h4 {
   opacity: 0.96;
 }
 
+.TANCform {
+  height: 33rem;
+  width: 59rem;
+  background-color: #005480;
+  border-radius: 0.5rem;
+  padding: 2rem;
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  margin-top: -2rem;
+  opacity: 0.96;
+}
+
 .MRform {
   height: 40rem;
+  width: 59rem;
+  background-color: #005480;
+  border-radius: 0.5rem;
+  padding: 2rem;
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  margin-top: -2rem;
+  opacity: 0.96;
+}
+
+.MRNCform {
+  height: 33rem;
   width: 59rem;
   background-color: #005480;
   border-radius: 0.5rem;
@@ -282,6 +308,19 @@ h4 {
   opacity: 0.96;
 }
 
+.DCNCform {
+  height: 33rem;
+  width: 59rem;
+  background-color: #005480;
+  border-radius: 0.5rem;
+  padding: 2rem;
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  margin-top: -2rem;
+  opacity: 0.96;
+}
+
 .downSizeLogo{
   /* object-fit: cover; */
   width: 23.5rem;
@@ -289,8 +328,8 @@ h4 {
 }
 
 .MDform {
-  height: 40rem;
-  width: 59rem;
+  height: 47rem;
+  width: 60rem;
   background-color: #005480;
   border-radius: 0.5rem;
   padding: 2rem;
@@ -472,7 +511,7 @@ h4 {
 }
 
 .RRresults {
-  height: 16rem;
+  height: flex;
   width: 59rem;
   color: white;
   background-color: #002a40;

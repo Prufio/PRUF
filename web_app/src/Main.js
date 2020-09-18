@@ -6,6 +6,7 @@ import Home from "./Home";
 import buildContracts from "./Resources/Contracts";
 import buildWindowUtils from "./Resources/WindowUtils";
 import NonCustodialComponent from "./Resources/NonCustodialComponent";
+import NonCustodialUserComponent from "./Resources/NonCustodialUserComponent";
 import AdminComponent from "./Resources/AdminComponent";
 import AuthorizedUserComponent from "./Resources/AuthorizedUserComponent";
 import BasicComponent from "./Resources/BasicComponent";
@@ -50,7 +51,16 @@ class Main extends Component {
       }
 
       else if (menuChoice === 'NC') {
-        this.setState({ routeRequest: "NC" });
+        if (this.state.IDHolderBool) {
+          this.setState({
+            routeRequest: "NCAdmin"
+          })
+        }
+        else {
+          this.setState({
+            routeRequest: "NCUser"
+          })
+        }
         return this.setState({
           assetHolderMenuBool: true,
           basicMenuBool: false,
@@ -102,9 +112,10 @@ class Main extends Component {
       await this.setState({ contracts: window._contracts })
       await window.utils.getContracts()
       await window.utils.determineTokenBalance()
-      console.log("bools...", window.assetHolderBool, window.assetClassHolderBool, window.hasFetchedBalances)
+      console.log("bools...", window.assetHolderBool, window.assetClassHolderBool, window.IDHolderBool, window.hasFetchedBalances)
       this.setState({ assetHolderBool: window.assetHolderBool })
       this.setState({ assetClassHolderBool: window.assetClassHolderBool })
+      this.setState({ IDHolderBool: window.IDHolderBool })
       return this.setState({ hasFetchedBalances: window.hasFetchedBalances })
     }
 
@@ -153,6 +164,10 @@ class Main extends Component {
   componentDidMount() {//stuff to do when component mounts in window
     buildWindowUtils()
     if (window.ethereum) {
+      window.additionalElementArrays = {
+        photo: [],
+        text: []
+        }
 
       const ethereum = window.ethereum;
       var _web3 = require("web3");
@@ -259,14 +274,17 @@ class Main extends Component {
                       AC Admin Menu
                     </Button>)}
 
-                  {this.state.assetHolderBool === true && this.state.assetHolderMenuBool === false && (
+                  {(this.state.IDHolderBool === true && this.state.assetHolderMenuBool === false)
+                    // || (this.state.assetHolderBool === true && this.state.assetHolderMenuBool === false)
+                   && (
                     <Button className="btn3"
                       variant="primary"
                       type="button"
                       onClick={() => { this.toggleMenu("NC") }}
                     >
                       NonCustodial Menu
-                    </Button>)}
+                    </Button>
+                    )} 
 
                   {this.state.basicMenuBool === false && (
                     <Button className="btn3"
