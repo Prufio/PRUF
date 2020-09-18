@@ -132,7 +132,7 @@ class VerifyRightHolder extends Component {
           )}
           {window.addr > 0 && (
             <div>
-              <h2 className="Headertext">Verify Rights Holder</h2>
+              <h2 className="Headertext">Deep Verify</h2>
               <br></br>
               <Form.Row>
                 <Form.Group as={Col} controlId="formGridType">

@@ -116,22 +116,22 @@ class RetrieveRecord extends Component {
 
     const generateDescription = (obj) => {
 
-    console.log(self.state.descriptionElements)
+    //console.log(self.state.descriptionElements)
 
     let component = [<><h4>Images Found:</h4> <br></br></>];
 
       for(let i = 0; i < obj.photoKeys.length; i++){
-        console.log("adding photo", obj.photoKeys[i])
+        //console.log("adding photo", obj.photoKeys[i])
         component.push (<>{obj.photoKeys[i]}<br></br><img src={String(obj.photoValues[i])}/> <br></br></>);
       }
 
       component.push(<> <br></br> <h4>Text Values Found:</h4> <br></br> </>);
       for(let x = 0; x < obj.text.length; x++){
-      console.log("adding text ", obj.text[x])
+      //console.log("adding text ", obj.text[x])
       component.push (<>{String(obj.text[x])} <br></br></>);
       } 
 
-      console.log(component)
+      //console.log(component)
       return component
     }
 
@@ -218,7 +218,7 @@ class RetrieveRecord extends Component {
           )}
           {window.addr > 0 && (
             <div>
-              <h2 className="Headertext">Search Records</h2>
+              <h2 className="Headertext">Search Assets</h2>
               <br></br>
               <Form.Row>
                 <Form.Group as={Col} controlId="formGridType">
@@ -291,14 +291,6 @@ class RetrieveRecord extends Component {
                   >
                    Show Description
                   </Button>
-                  <Button
-                  variant="primary"
-                  type="button"
-                  size="lg"
-                  onClick={_retrieveRecord}
-                >
-                  Submit
-                </Button>
                 </>
                   )}
                   {this.state.showDescription &&(
@@ -311,15 +303,19 @@ class RetrieveRecord extends Component {
                   >
                    Show Statistics
                   </Button>
-                  <Button
-                  variant="primary"
-                  type="button"
-                  size="lg"
-                  onClick={_retrieveRecord}
-                >
-                  Submit
-                </Button>
                 </>
+                  )}
+                  {this.state.type !== undefined && this.state.type !== "" && (
+                    <>
+                    <Button
+                    variant="primary"
+                    type="button"
+                    size="lg"
+                    onClick={_retrieveRecord}
+                  >
+                    Submit
+                  </Button>
+                  </>
                   )}
                   
                 </Form.Group>
