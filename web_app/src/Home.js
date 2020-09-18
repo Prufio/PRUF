@@ -8,6 +8,16 @@ class Home extends Component {
   constructor(props) {
     super(props);
 
+    this.updateAuthLevel = setInterval(() => {
+      if (this.state.assetClass !== window.assetClass) {
+        this.setState({ isAuthUser: window.assetClass })
+        if (this.state.assetClass !== undefined) {
+          window.isACAdmin = undefined;
+          window.isAuthUser = undefined;
+        } 
+      }
+    }, 100)
+
     this.state = {
       addr: undefined,
       web3: null,
@@ -59,7 +69,10 @@ class Home extends Component {
           acDoesExist = await window.utils.checkForAC("id", this.state.assetClass);
           await console.log("Exists?", acDoesExist)
           
-          if(!acDoesExist){return alert("Asset class does not currently exist. Consider minting it yourself!")}
+          if(!acDoesExist && window.confirm("Asset class does not currently exist. Consider minting it yourself! Click ok to route to our website for more information."))
+          {
+            window.location.href='https://www.pruf.io' 
+          }
 
           window.assetClass = this.state.assetClass;
           window.utils.resolveACFromID()
@@ -73,7 +86,10 @@ class Home extends Component {
           acDoesExist = await window.utils.checkForAC("name", this.state.assetClass);
           await console.log("Exists?",acDoesExist)
           
-          if(!acDoesExist){return alert("Asset class does not currently exist. Consider minting it yourself!")}
+          if(!acDoesExist && window.confirm("Asset class does not currently exist. Consider minting it yourself! Click ok to route to our website for more information."))
+          {
+            window.location.href='https://www.pruf.io' 
+          }
 
           window.assetClassName = this.state.assetClass
           await window.utils.resolveAC();

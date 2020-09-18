@@ -27,7 +27,7 @@ class Main extends Component {
       if (this.state.isACAdmin !== window.isACAdmin) {
         this.setState({ isACAdmin: window.isACAdmin })
       }
-    }, 200)
+    }, 100)
 
     this.toggleMenu = (menuChoice) => {
       this.setState({ routeRequest: "ACAdmin" });
@@ -100,6 +100,7 @@ class Main extends Component {
       ethereum.on("accountsChanged", function (accounts) {
         _web3.eth.getAccounts().then((e) => {
           window.addr = e[0];
+          window.assetClass = undefined;
           self.setState({ addr: e[0] })
           self.setupContractEnvironment(window.web3);
         });
@@ -124,9 +125,14 @@ class Main extends Component {
       await window.utils.getContracts()
       await window.utils.determineTokenBalance()
       console.log("bools...", window.assetHolderBool, window.assetClassHolderBool, window.IDHolderBool, window.hasFetchedBalances)
-      this.setState({ assetHolderBool: window.assetHolderBool })
-      this.setState({ assetClassHolderBool: window.assetClassHolderBool })
-      this.setState({ IDHolderBool: window.IDHolderBool })
+      await this.setState({
+        assetClassBalance: window.balances.assetClassBalance,
+        assetBalance: window.balances.assetBalance,
+        IDTokenBalance: window.balances.IDTokenBalance,
+        assetHolderBool: window.assetHolderBool,
+        assetClassHolderBool: window.assetClassHolderBool,
+        IDHolderBool: window.IDHolderBool
+      })
       return this.setState({ hasFetchedBalances: window.hasFetchedBalances })
     }
 
@@ -181,10 +187,10 @@ class Main extends Component {
         text: []
       }
 
-        window.elementRemovalArrays = {
-          photo: [],
-          text: []
-        }
+      window.elementRemovalArrays = {
+        photo: [],
+        text: []
+      }
 
       const ethereum = window.ethereum;
       var _web3 = require("web3");
@@ -277,10 +283,29 @@ class Main extends Component {
                     </nav>
                   )}
                 </ul>
-                <div className="content">
-                  <Route exact path="/" component={Home} />
-                  {Router(this.state.routeRequest)}
+                <div className="userInfoBox">
+                  <div>
+                    AssetClass Token Balance: {this.state.assetClassBalance}
+                  </div>
+                  <br></br>
+                  <div>
+                    Asset Token Balance: {this.state.assetBalance}
+                  </div>
+                  <br></br>
+                    <div>
+                      ID Token Balance : {this.state.IDTokenBalance}
+                    </div>
                 </div>
+                
+                  <div className="content">
+                    <Route exact path="/" component={Home} />
+                    {Router(this.state.routeRequest)}
+                  </div>
+                
+
+
+
+
 
                 <div className="headerButtons">
                   {this.state.isACAdmin === true && this.state.assetClassHolderMenuBool === false && (
@@ -293,14 +318,14 @@ class Main extends Component {
                     </Button>)}
 
                   {this.state.IDHolderBool === undefined && this.state.assetHolderBool === true && this.state.assetHolderUserMenuBool === false && (
-                      <Button className="btn3"
-                        variant="primary"
-                        type="button"
-                        onClick={() => { this.toggleMenu("NC") }}
-                      >
-                        NonCustodial Menu
-                      </Button>
-                    )}
+                    <Button className="btn3"
+                      variant="primary"
+                      type="button"
+                      onClick={() => { this.toggleMenu("NC") }}
+                    >
+                      NonCustodial Menu
+                    </Button>
+                  )}
 
                   {this.state.IDHolderBool === true && this.state.assetHolderMenuBool === false && (
                     <Button className="btn3"

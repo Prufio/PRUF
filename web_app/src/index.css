@@ -124,6 +124,23 @@ h4 {
   font-family: Tahoma, Geneva, sans-serif;
 }
 
+.userInfoBox {
+  height: 15rem;
+  width: 20rem;
+  background-color: #002a40;
+  border-radius: 0rem 0rem 1rem 0rem;
+  color: rgb(255, 255, 255);
+  font-size: 2rem;
+  font-family: Tahoma, Geneva, sans-serif;
+  display: flex;
+  flex-direction: column;
+  justify-content: bottom;
+  margin-right: 130rem;
+  opacity: 0.95;
+  margin-top: -1rem;
+}
+
+
 .banner {
   height: 1rem;
   max-width: 90rem;
@@ -156,12 +173,12 @@ h4 {
   font-weight: bold;
   text-decoration: none;
   font-size: 3rem;
-  padding: 1rem;
+  /* padding: 1rem; */
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  margin-top: -2rem;
+  margin-top: -13rem;
   opacity: 0.96;
 }
 
@@ -174,7 +191,7 @@ h4 {
   display: flex;
   flex-direction: row;
   justify-content: center;
-  margin-top: -2rem;
+  margin-top: -13rem;
   opacity: 0.96;
 }
 
@@ -187,7 +204,7 @@ h4 {
   display: flex;
   flex-direction: row;
   justify-content: center;
-  margin-top: -2rem;
+  margin-top: -13rem;
   opacity: 0.96;
 }
 
@@ -200,7 +217,7 @@ h4 {
   display: flex;
   flex-direction: row;
   justify-content: center;
-  margin-top: -2rem;
+  margin-top: -13rem;
   opacity: 0.96;
 }
 
@@ -213,7 +230,7 @@ h4 {
   display: flex;
   flex-direction: row;
   justify-content: center;
-  margin-top: -2rem;
+  margin-top: -13rem;
   opacity: 0.96;
 }
 
@@ -226,7 +243,7 @@ h4 {
   display: flex;
   flex-direction: row;
   justify-content: center;
-  margin-top: -2rem;
+  margin-top: -13rem;
   opacity: 0.96;
 }
 
@@ -239,7 +256,7 @@ h4 {
   display: flex;
   flex-direction: row;
   justify-content: center;
-  margin-top: -2rem;
+  margin-top: -13rem;
   opacity: 0.96;
 }
 
@@ -252,7 +269,7 @@ h4 {
   display: flex;
   flex-direction: row;
   justify-content: center;
-  margin-top: -2rem;
+  margin-top: -13rem;
   opacity: 0.96;
 }
 
@@ -265,7 +282,7 @@ h4 {
   display: flex;
   flex-direction: row;
   justify-content: center;
-  margin-top: -2rem;
+  margin-top: -13rem;
   opacity: 0.96;
 }
 
@@ -278,7 +295,7 @@ h4 {
   display: flex;
   flex-direction: row;
   justify-content: center;
-  margin-top: -2rem;
+  margin-top: -13rem;
   opacity: 0.96;
 }
 
@@ -291,7 +308,7 @@ h4 {
   display: flex;
   flex-direction: row;
   justify-content: center;
-  margin-top: -2rem;
+  margin-top: -13rem;
   opacity: 0.96;
 }
 
@@ -304,7 +321,7 @@ h4 {
   display: flex;
   flex-direction: row;
   justify-content: center;
-  margin-top: -2rem;
+  margin-top: -13rem;
   opacity: 0.96;
 }
 
@@ -317,7 +334,7 @@ h4 {
   display: flex;
   flex-direction: row;
   justify-content: center;
-  margin-top: -2rem;
+  margin-top: -13rem;
   opacity: 0.96;
 }
 
@@ -330,7 +347,7 @@ h4 {
   display: flex;
   flex-direction: row;
   justify-content: center;
-  margin-top: -2rem;
+  margin-top: -13rem;
   opacity: 0.96;
 }
 
@@ -342,14 +359,14 @@ h4 {
 
 .MDform {
   height: 47rem;
-  width: 60rem;
+  width: 59rem;
   background-color: #005480;
   border-radius: 0.5rem;
   padding: 2rem;
   display: flex;
   flex-direction: row;
   justify-content: center;
-  margin-top: -2rem;
+  margin-top: -13rem;
   opacity: 0.96;
 }
 
@@ -362,7 +379,7 @@ h4 {
   display: flex;
   flex-direction: row;
   justify-content: center;
-  margin-top: -2rem;
+  margin-top: -13rem;
   opacity: 0.96;
 }
 
@@ -375,7 +392,7 @@ h4 {
   display: flex;
   flex-direction: row;
   justify-content: center;
-  margin-top: -2rem;
+  margin-top: -13rem;
   opacity: 0.96;
 }
 
@@ -388,7 +405,7 @@ h4 {
   display: flex;
   flex-direction: row;
   justify-content: center;
-  margin-top: -2rem;
+  margin-top: -13rem;
   opacity: 0.96;
 }
 
@@ -428,7 +445,7 @@ h4 {
   display: flex;
   flex-direction: row;
   justify-content: space-between;
-  margin-top: -2rem;
+  margin-top: -13rem;
   opacity: 0.96;
 }
 
@@ -441,7 +458,7 @@ h4 {
   display: flex;
   flex-direction: row;
   justify-content: space-between;
-  margin-top: -2rem;
+  margin-top: -13rem;
   opacity: 0.96;
 }
 
@@ -454,7 +471,7 @@ h4 {
   display: flex;
   flex-direction: row;
   justify-content: space-between;
-  margin-top: -2rem;
+  margin-top: -13rem;
   opacity: 0.96;
 }
 
@@ -467,7 +484,7 @@ h4 {
   display: flex;
   flex-direction: row;
   justify-content: space-between;
-  margin-top: -2rem;
+  margin-top: -13rem;
   opacity: 0.96;
 }
 
@@ -480,7 +497,7 @@ h4 {
   display: flex;
   flex-direction: row;
   justify-content: space-between;
-  margin-top: -2rem;
+  margin-top: -13rem;
   opacity: 0.96;
 }
 
@@ -493,7 +510,7 @@ h4 {
   display: flex;
   flex-direction: row;
   justify-content: space-between;
-  margin-top: -2rem;
+  margin-top: -13rem;
   opacity: 0.96;
 }
 
@@ -506,7 +523,7 @@ h4 {
   display: flex;
   flex-direction: row;
   justify-content: space-between;
-  margin-top: -2rem;
+  margin-top: -13rem;
   opacity: 0.96;
 }
 
@@ -519,7 +536,7 @@ h4 {
   display: flex;
   flex-direction: center;
   justify-content: space-between;
-  margin-top: -2rem;
+  margin-top: -13rem;
   opacity: 0.96;
 }
 

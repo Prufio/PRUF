@@ -388,7 +388,7 @@ const _getDescriptionHash = async (idxHash) => {
         window.assetClassHolderBool = true
       }
 
-      else if (Number(_assetClassBal === 0 || _assetClassBal === undefined)) {
+      else if (Number(_assetClassBal) === 0 || _assetClassBal === undefined) {
         window.assetClassHolderBool = false
       }
 
@@ -396,8 +396,13 @@ const _getDescriptionHash = async (idxHash) => {
         window.IDHolderBool = true
       }
 
-      else if (Number(_IDTokenBal === 0 || _IDTokenBal === undefined)) {
+      else if (Number(_IDTokenBal) === 0 || _IDTokenBal === undefined) {
         window.IDHolderBool = false
+      }
+      window.balances = {
+        assetClassBalance: _assetClassBal,
+        assetBalance: _assetBal,
+        IDTokenBalance: _IDTokenBal
       }
     }
   }
