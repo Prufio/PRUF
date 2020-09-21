@@ -23,9 +23,10 @@ import "./Imports/access/Ownable.sol";
 import "./Imports/utils/Pausable.sol";
 import "./Imports/utils/ReentrancyGuard.sol";
 import "./Imports/utils/Address.sol";
-import "./Imports/math/Safemath.sol";
+//import "./Imports/math/Safemath.sol";
+import "./Imports/payment/PullPayment.sol";
 
-contract SHARES is ReentrancyGuard, Ownable, Pausable {
+contract SHARES is ReentrancyGuard, Ownable, Pausable, PullPayment {
 
     using Address for address payable;
     using SafeMath for uint256;
@@ -38,19 +39,27 @@ contract SHARES is ReentrancyGuard, Ownable, Pausable {
 
 //    takes eth. at end of period (>= 1 month?) checks balance. 
 
-uint256 private payDay = block.timestamp + 30 days;
+uint256 private maxSupply =  100;  //set max supply (100000?)
+uint256 private payPeriod =  5 minutes;  //set to 30 days
+
+uint256 private nextPayDay = block.timestamp.add(payPeriod);
 uint256 private lastPayDay;
 uint256 private oldBalance;
 uint256 private newBalance;
-uint256 private held;
-uint256 private dividend;
+
+uint256 private newDividend;
+uint256 private oldDividend;
+
+uint256 internal held;
+
+
 
  struct ShareData{
-        uint256 balance;
+        // uint256 balance;
         uint256 date;
         //uint256 dividend;
     }
-mapping(uint256 => ShareData) private tokenData; // Main Data Storage
+mapping(uint256 => uint256) private tokenPaymentDate; // Main Data Storage
 
 
     /*
@@ -86,27 +95,28 @@ mapping(uint256 => ShareData) private tokenData; // Main Data Storage
 
 
     
-    function OnPayDay() external returns(uint256) { 
+    function calculateDividend() external returns(uint256) { 
 
-        uint256 daysUntilPayday;
+        uint256 secUntilPayday;
 
-        (, daysUntilPayday) = days_until_payday();
-        require (daysUntilPayday == 0, "not payday yet");
-            lastPayDay = payDay;
+        (, secUntilPayday) = sec_until_payday();
+        require (secUntilPayday == 0, "not payday yet");
 
-            payDay = block.timestamp.add(30);
+            lastPayDay = nextPayDay; //today is the new most recent PayDay
+            nextPayDay = block.timestamp.add(payPeriod); //set the next payday for the future
 
-            newBalance = (address(this).balance - held).sub(oldBalance);
+            newBalance = address(this).balance.sub(held);  //the new balance is the total balance less the amount held back for payment reservations
 
-            dividend = oldBalance.div(100000);  //calculate the dividend per share of the last time period take
-            held = oldBalance;
-            oldBalance = newBalance;
-            return dividend;
+            oldDividend = newDividend; //update old diviend to the last new dividend
+
+            newDividend = newBalance.div(maxSupply);  //calculate the dividend per share of the last interval's reciepts
+
+            return newDividend;
     }
 
-    function days_until_payday() public view returns (uint256 , uint256) {
-        if (payDay > block.timestamp){
-            return (lastPayDay, (payDay.sub(block.timestamp)));
+    function sec_until_payday() public view returns (uint256 , uint256) {
+        if (nextPayDay > block.timestamp){
+            return (lastPayDay, (nextPayDay.sub(block.timestamp)));
         } else {
             return (lastPayDay, 0);
         }
@@ -115,37 +125,52 @@ mapping(uint256 => ShareData) private tokenData; // Main Data Storage
 
 
 
-    function getPaid (uint256 tokenId) external {
+    function payDay (uint256 tokenId) external {
 
         require(
-            block.timestamp > lastPayDay, "PS:PM:not payday."
+            tokenPaymentDate[tokenId] < lastPayDay, "PS:GP:not payday for this token"
         );
         require(
-            SHAR_TKN.ownerOf(tokenId) == msg.sender, "PS:PM:caller does not hold token"
+            block.timestamp > lastPayDay, "PS:GP:not payday yet"
         );
         require(
-            tokenData[tokenId].date < payDay, "PS:PM:not payday for this token"
+            block.timestamp < nextPayDay, "PS:GP: dividend not yet processed for this period. call calculateDividend "
+        );
+        require(
+            SHAR_TKN.ownerOf(tokenId) == msg.sender, "PS:GP:caller does not hold token"
         );
 
-            tokenData[tokenId].date = payDay;
-            tokenData[tokenId].balance = dividend;
-            held = held.sub(dividend);
+            tokenPaymentDate[tokenId] = nextPayDay;
+            held = held.add(newDividend);
+            _asyncTransfer(msg.sender, newDividend);
 
     }
 
-    function balance (uint256 tokenId) external view returns (uint256) {
-        return tokenData[tokenId].balance;
+    function withdrawFunds(address payable payee) public {
+        held = held.sub(payments(payee));
+        withdrawPayments(payee);
     }
 
-    function withdraw (uint256 tokenId, address payable tokenHolder) external returns (uint256) {
-        require(
-            SHAR_TKN.ownerOf(tokenId) == tokenHolder, "PS:PM:caller does not hold token"
-        );
+
+    // function Balance (uint256 tokenId) external view returns (uint256) {
+    //     return tokenPaymentDate[tokenId].balance;
+    // }
+
+    // function Withdraw (uint256 tokenId, address payable tokenHolder) external returns (uint256) {
+    //     require(
+    //         SHAR_TKN.ownerOf(tokenId) == tokenHolder, "PS:PM:caller does not hold token"
+    //     );
         
-        uint256 toSend = tokenData[tokenId].balance;
-        tokenData[tokenId].balance = 0;
-        tokenHolder.sendValue(toSend);
-        assert (tokenData[tokenId].balance == 0);
-    }
+    //     uint256 toSend = tokenPaymentDate[tokenId].balance;
+    //     assert (toSend <= held); // owed to token cannot be > what is held
+
+    //     tokenPaymentDate[tokenId].balance = 0; //reset token balance to zero
+
+    //     held = held.sub(toSend); // deduct payment from "held"
+
+    //     tokenHolder.sendValue(toSend); //send payment
+
+    //     assert (tokenPaymentDate[tokenId].balance == 0); //token balance must now be zero
+    // }
 
 }
