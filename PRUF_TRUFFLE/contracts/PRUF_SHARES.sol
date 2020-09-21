@@ -23,13 +23,14 @@ import "./Imports/access/Ownable.sol";
 import "./Imports/utils/Pausable.sol";
 import "./Imports/utils/ReentrancyGuard.sol";
 import "./Imports/utils/Address.sol";
+
 import "./Imports/payment/escrow/Escrow.sol";
 
 contract SHARES is ReentrancyGuard, Ownable, Pausable {
 
     Escrow private _escrow;
 
-    constructor () internal {
+    constructor () public {
         _escrow = new Escrow();
     }
 
@@ -68,6 +69,9 @@ mapping(uint256 => uint256) private tokenPaymentDate; // Main Data Storage
         //^^^^^^^checks^^^^^^^^^
 
         STOR = STOR_Interface(_storageAddress);
+        
+        SHAR_TKN_Address = _storageAddress; //testing only - steals storage address for shar_tkn
+        SHAR_TKN = SHAR_TKN_Interface(SHAR_TKN_Address); //testing only
         //^^^^^^^effects^^^^^^^^^
     }
 
@@ -137,7 +141,7 @@ mapping(uint256 => uint256) private tokenPaymentDate; // Main Data Storage
 
             tokenPaymentDate[tokenId] = nextPayDay;
             held = held.add(newDividend);
-            _asyncTransfer(msg.sender, newDividend);
+           // _asyncTransfer(msg.sender, newDividend);
 
     }
 
