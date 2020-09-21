@@ -101,6 +101,8 @@ class Main extends Component {
         _web3.eth.getAccounts().then((e) => {
           window.addr = e[0];
           window.assetClass = undefined;
+          window.isAuthUser = false;
+          window.isACAdmin = false;
           self.setState({ addr: e[0] })
           self.setupContractEnvironment(window.web3);
         });
@@ -110,9 +112,6 @@ class Main extends Component {
     this.setupContractEnvironment = async (_web3) => {
       console.log("Setting up contracts")
       await this.setState({
-        isAuthUser: undefined,
-        assetHolderBool: false,
-        assetClassHolderBool: false,
         assetHolderMenuBool: false,
         assetClassHolderMenuBool: false,
         basicMenuBool: true,
@@ -124,7 +123,7 @@ class Main extends Component {
       await this.setState({ contracts: window._contracts })
       await window.utils.getContracts()
       await window.utils.determineTokenBalance()
-      console.log("bools...", window.assetHolderBool, window.assetClassHolderBool, window.IDHolderBool, window.hasFetchedBalances)
+      console.log("bools...", window.assetHolderBool, window.assetClassHolderBool, window.IDHolderBool)
       await this.setState({
         assetClassBalance: window.balances.assetClassBalance,
         assetBalance: window.balances.assetBalance,
@@ -165,6 +164,7 @@ class Main extends Component {
       contractArray: [],
       isAuthUser: undefined,
       assetHolderBool: false,
+      IDHolderBool: false,
       assetClassHolderBool: false,
       assetHolderMenuBool: false,
       assetHolderUserMenuBool: false,
@@ -183,11 +183,6 @@ class Main extends Component {
     buildWindowUtils()
     if (window.ethereum) {
       window.additionalElementArrays = {
-        photo: [],
-        text: []
-      }
-
-      window.elementRemovalArrays = {
         photo: [],
         text: []
       }
@@ -317,7 +312,7 @@ class Main extends Component {
                       AC Admin Menu
                     </Button>)}
 
-                  {this.state.IDHolderBool === undefined && this.state.assetHolderBool === true && this.state.assetHolderUserMenuBool === false && (
+                  {this.state.IDHolderBool === false && this.state.assetHolderBool === true && this.state.assetHolderUserMenuBool === false && (
                     <Button className="btn3"
                       variant="primary"
                       type="button"

@@ -124,8 +124,8 @@ function buildWindowUtils() {
         });
     }
 
-    window.utils.checkCreds();
-    window.utils.getCosts(6);
+    await window.utils.checkCreds();
+    await window.utils.getCosts(6);
     console.log("User authLevel: ", window.authLevel);
 
   }
@@ -380,7 +380,7 @@ const _getDescriptionHash = async (idxHash) => {
         window.assetHolderBool = true
       }
 
-      else if (Number(_assetBal === 0 || _assetBal === undefined)) {
+      else if (Number(_assetBal) === 0 || _assetBal === undefined) {
         window.assetHolderBool = false
       }
 

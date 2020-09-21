@@ -8,16 +8,6 @@ class Home extends Component {
   constructor(props) {
     super(props);
 
-    this.updateAuthLevel = setInterval(() => {
-      if (this.state.assetClass !== window.assetClass) {
-        this.setState({ isAuthUser: window.assetClass })
-        if (this.state.assetClass !== undefined) {
-          window.isACAdmin = undefined;
-          window.isAuthUser = undefined;
-        } 
-      }
-    }, 100)
-
     this.state = {
       addr: undefined,
       web3: null,
@@ -42,6 +32,7 @@ class Home extends Component {
 
   componentDidMount() {
     window.assetClassName = "unresolved";
+    this.setState({addr: window.addr})
   }
 
   componentDidUpdate() {
@@ -52,7 +43,7 @@ class Home extends Component {
 
     const _setAC = async () => {
       let acDoesExist;
-      if (this.state.assetClass === "0") { window.assetClass = undefined; return this.forceUpdate() }
+      if (this.state.assetClass === "0" || this.state.assetClass === undefined) { window.assetClass = undefined; return this.forceUpdate() }
       else {
         if (
           this.state.assetClass.charAt(0) === "0" ||
@@ -68,10 +59,9 @@ class Home extends Component {
         ) {
           acDoesExist = await window.utils.checkForAC("id", this.state.assetClass);
           await console.log("Exists?", acDoesExist)
-          
-          if(!acDoesExist && window.confirm("Asset class does not currently exist. Consider minting it yourself! Click ok to route to our website for more information."))
-          {
-            window.location.href='https://www.pruf.io' 
+
+          if (!acDoesExist && window.confirm("Asset class does not currently exist. Consider minting it yourself! Click ok to route to our website for more information.")) {
+            window.location.href = 'https://www.pruf.io'
           }
 
           window.assetClass = this.state.assetClass;
@@ -84,11 +74,10 @@ class Home extends Component {
 
         else {
           acDoesExist = await window.utils.checkForAC("name", this.state.assetClass);
-          await console.log("Exists?",acDoesExist)
-          
-          if(!acDoesExist && window.confirm("Asset class does not currently exist. Consider minting it yourself! Click ok to route to our website for more information."))
-          {
-            window.location.href='https://www.pruf.io' 
+          await console.log("Exists?", acDoesExist)
+
+          if (!acDoesExist && window.confirm("Asset class does not currently exist. Consider minting it yourself! Click ok to route to our website for more information.")) {
+            window.location.href = 'https://www.pruf.io'
           }
 
           window.assetClassName = this.state.assetClass
