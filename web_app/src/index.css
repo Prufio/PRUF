@@ -69,10 +69,10 @@ h4 {
 
 .header {
   max-width: none;
-  /* height: 90rem; */
+  /* height: 6rem; */
   background-color: #002a40;
   padding: 0rem;
-  margin-top: 0.2rem;
+  /* margin-top: 0.2rem; */
   align-items: center;
   justify-content: center;
   flex-direction: row;
@@ -91,11 +91,19 @@ h4 {
   font-weight: bold;
   text-decoration: none;
   font-size: 1.6rem;
-  padding: 1.2rem;
+  padding: 1rem;
   display: inline-flex;
   flex-direction: column;
-  justify-content: center;
+  justify-content: space-between;
   align-items: center;
+}
+
+#header-dropdown {
+  background-color: #00a8ff;
+  /* padding: 0px 0px; */
+  margin-top: -0.6rem;
+  margin-bottom: -0.5rem;
+  
 }
 
 .content {
@@ -115,7 +123,7 @@ h4 {
 }
 
 .active {
-  background-color: #5da2e9;
+  background-color: #00a8ff;
 }
 
 .formFont {
@@ -273,6 +281,19 @@ h4 {
   opacity: 0.96;
 }
 
+.IANCform {
+  height: 27.5rem;
+  width: 59rem;
+  background-color: #005480;
+  border-radius: 0.5rem;
+  padding: 2rem;
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  margin-top: -13rem;
+  opacity: 0.96;
+}
+
 .TAform {
   height: 56rem;
   width: 59rem;
@@ -396,6 +417,19 @@ h4 {
   opacity: 0.96;
 }
 
+.FMRNCform {
+  height: 40rem;
+  width: 59rem;
+  background-color: #005480;
+  border-radius: 0.5rem;
+  padding: 2rem;
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  margin-top: -13rem;
+  opacity: 0.96;
+}
+
 .MEform {
   height: 44rem;
   width: 59rem;
@@ -419,7 +453,7 @@ h4 {
 }
 
 .BannerForm {
-  height: 5rem;
+  height: 4.88rem;
   max-width: none;
   background-color: #002a40;
   justify-content: center;
@@ -688,11 +722,11 @@ h4 {
 }
 
 .ownerButtonDisplay {
-  margin-left: 40rem;
+  margin-left: 42rem;
   margin-top: 0.5rem;
 }
 .ownerButtonDisplay2 {
-  margin-left: 40rem;
+  margin-left: 42rem;
   margin-top: -1rem;
 }
 
@@ -706,7 +740,7 @@ h4 {
 }
 
 .ownerButtonDisplay5 {
-  margin-left: 40rem;
+  margin-left: 42rem;
   margin-top: 0rem;
 }
 
@@ -723,6 +757,14 @@ h4 {
   font-size: small;
   font-family: Tahoma, Geneva, sans-serif;
   margin-left: 39rem;
+}
+
+.LittleTextImport {
+  display: flex;
+  color: rgb(255, 255, 255);
+  font-size: small;
+  font-family: Tahoma, Geneva, sans-serif;
+  margin-left: -1.5rem;
 }
 
 

@@ -1,9 +1,15 @@
 import React, { Component } from "react";
 import { NavLink, } from "react-router-dom";
+import Nav from 'react-bootstrap/Nav'
+import "../index.css";
 
 class BasicComponent extends Component {
     render() {
-        return (<>
+        return (
+        <Nav className="header">
+        <li>
+                    <NavLink exact to="/">Home</NavLink>
+                </li>
                 <li>
                     <NavLink to="/verify-lite">Verify</NavLink>
                 </li>
@@ -13,7 +19,7 @@ class BasicComponent extends Component {
                 <li>
                     <NavLink to="/retrieve-record">Search</NavLink>
                 </li>
-                </>
+                </Nav>
         )
     }
 }
