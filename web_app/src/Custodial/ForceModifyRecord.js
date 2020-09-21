@@ -56,94 +56,51 @@ class ForceModifyRecord extends Component {
   render() {//render continuously produces an up-to-date stateful document  
     const self = this;
 
-    const _importAsset = async () => {
+    const _accessAsset = async () => {
+      const self = this;
 
-      this.setState({ txStatus: false });
-      this.setState({ txHash: "" });
-      this.setState({ error: undefined })
-      this.setState({ result: "" })
-      var idxHash = window.web3.utils.soliditySha3(
-        this.state.type,
-        this.state.manufacturer,
-        this.state.model,
-        this.state.serial
-      );
-
-      var rgtRaw = window.web3.utils.soliditySha3(
-        this.state.first,
-        this.state.middle,
-        this.state.surname,
-        this.state.id,
-        this.state.secret
-      );
-
-      var rgtHash = window.web3.utils.soliditySha3(idxHash, rgtRaw);
-
-      console.log("idxHash", idxHash);
-      console.log("New rgtHash", rgtHash);
-      console.log("addr: ", window.addr);
-
-      var doesExist = await window.utils.checkAssetExists(idxHash);
-      if (!doesExist){
-        return alert("Asset doesnt exist! Ensure data fields are correct before submission.")
-      }
-
-      window.contracts.APP.methods
-        .$importAsset(idxHash, rgtHash, this.window.assetClass)
-        .send({ from: window.addr, value: window.costs.importAssetCost })
-        .on("error", function (_error) {
-          // self.setState({ NRerror: _error });
-          self.setState({ txHash: Object.values(_error)[0].transactionHash });
-          self.setState({ txStatus: false });
-          console.log(Object.values(_error)[0].transactionHash);
-        })
-        .on("receipt", (receipt) => {
-          this.setState({ txHash: receipt.transactionHash });
-          this.setState({ txStatus: receipt.status });
-          console.log(receipt.status);
-          //Stuff to do when tx confirms
-        });
-      console.log(this.state.txHash);
-      return document.getElementById("MainForm").reset();
-    };
-
-    const _forceModifyRecord = async () => {
-      this.setState({ txStatus: false });
-      this.setState({ txHash: "" });
-      this.setState({ error: undefined })
-      this.setState({ result: "" })
-      var idxHash;
-      var newRgtRaw;
-
-      idxHash = window.web3.utils.soliditySha3(
+      let idxHash = window.web3.utils.soliditySha3(
         this.state.type,
         this.state.manufacturer,
         this.state.model,
         this.state.serial,
       );
 
-      newRgtRaw = window.web3.utils.soliditySha3(
+      var doesExist = await window.utils.checkAssetExists(idxHash);
+
+      if (!doesExist) {
+        return alert("Asset doesnt exist! Ensure data fields are correct before submission.")
+      }
+
+      return this.setState({
+        idxHash: idxHash,
+        accessPermitted: true
+      })
+
+    }
+
+    const _forceModifyRecord = async () => {
+      this.setState({ txStatus: false });
+      this.setState({ txHash: "" });
+      this.setState({ error: undefined })
+      this.setState({ result: "" })
+      var idxHash = this.state.idxHash;
+      let rgtRaw = window.web3.utils.soliditySha3(
         this.state.first,
         this.state.middle,
         this.state.surname,
         this.state.id,
         this.state.secret
       );
-      var newRgtHash = window.web3.utils.soliditySha3(idxHash, newRgtRaw);
+
+      let rgtHash = window.web3.utils.soliditySha3(idxHash, rgtRaw);
 
       console.log("idxHash", idxHash);
-      console.log("New rgtRaw", newRgtRaw);
-      console.log("New rgtHash", newRgtHash);
+      console.log("New rgtHash", rgtHash);
       console.log("addr: ", window.addr);
 
-      var doesExist = await window.utils.checkAssetExists(idxHash);
-
-      if (!doesExist){
-        return alert("Asset doesnt exist! Ensure data fields are correct before submission.")
-      }
-
       window.contracts.APP.methods
-        .$forceModRecord(idxHash, newRgtHash)
+        .$forceModRecord(idxHash, rgtHash)
         .send({ from: window.addr, value: window.costs.forceTransferCost })
         .on("error", function (_error) {
           // self.setState({ NRerror: _error });
@@ -159,6 +116,12 @@ class ForceModifyRecord extends Component {
         });
 
       console.log(this.state.txHash);
+
+      await this.setState({
+        idxHash: "",
+        accessPermitted: false
+      })
+
       return document.getElementById("MainForm").reset();
     };
 
@@ -178,139 +141,138 @@ class ForceModifyRecord extends Component {
           )}
           {window.addr > 0 && window.assetClass > 0 && (
             <div>
-              <h2 className="Headertext">Force Modify/Import Asset</h2>
+              <h2 className="Headertext">Force Transfer</h2>
               <br></br>
-              <Form.Row>
-                <Form.Group as={Col} controlId="formGridType">
-                  <Form.Label className="formFont">Type:</Form.Label>
-                  <Form.Control
-                    placeholder="Type"
-                    required
-                    onChange={(e) => this.setState({ type: e.target.value })}
-                    size="lg"
-                  />
-                </Form.Group>
+              {!this.state.accessPermitted && (
+                <>
+                  <Form.Row>
+                    <Form.Group as={Col} controlId="formGridType">
+                      <Form.Label className="formFont">Type:</Form.Label>
+                      <Form.Control
+                        placeholder="Type"
+                        required
+                        onChange={(e) => this.setState({ type: e.target.value })}
+                        size="lg"
+                      />
+                    </Form.Group>
 
-                <Form.Group as={Col} controlId="formGridManufacturer">
-                  <Form.Label className="formFont">Manufacturer:</Form.Label>
-                  <Form.Control
-                    placeholder="Manufacturer"
-                    required
-                    onChange={(e) => this.setState({ manufacturer: e.target.value })}
-                    size="lg"
-                  />
-                </Form.Group>
+                    <Form.Group as={Col} controlId="formGridManufacturer">
+                      <Form.Label className="formFont">Manufacturer:</Form.Label>
+                      <Form.Control
+                        placeholder="Manufacturer"
+                        required
+                        onChange={(e) => this.setState({ manufacturer: e.target.value })}
+                        size="lg"
+                      />
+                    </Form.Group>
 
-              </Form.Row>
+                  </Form.Row>
 
-              <Form.Row>
-                <Form.Group as={Col} controlId="formGridModel">
-                  <Form.Label className="formFont">Model:</Form.Label>
-                  <Form.Control
-                    placeholder="Model"
-                    required
-                    onChange={(e) => this.setState({ model: e.target.value })}
-                    size="lg"
-                  />
-                </Form.Group>
+                  <Form.Row>
+                    <Form.Group as={Col} controlId="formGridModel">
+                      <Form.Label className="formFont">Model:</Form.Label>
+                      <Form.Control
+                        placeholder="Model"
+                        required
+                        onChange={(e) => this.setState({ model: e.target.value })}
+                        size="lg"
+                      />
+                    </Form.Group>
 
-                <Form.Group as={Col} controlId="formGridSerial">
-                  <Form.Label className="formFont">Serial:</Form.Label>
-                  <Form.Control
-                    placeholder="Serial"
-                    required
-                    onChange={(e) => this.setState({ serial: e.target.value })}
-                    size="lg"
-                  />
-                </Form.Group>
-              </Form.Row>
-              <Form.Row>
-                <Form.Group as={Col} controlId="formGridNewFirstName">
-                  <Form.Label className="formFont">New First Name:</Form.Label>
-                  <Form.Control
-                    placeholder="New First Name"
-                    required
-                    onChange={(e) => this.setState({ first: e.target.value })}
-                    size="lg"
-                  />
-                </Form.Group>
-
-                <Form.Group as={Col} controlId="formGridNewMiddleName">
-                  <Form.Label className="formFont">New Middle Name:</Form.Label>
-                  <Form.Control
-                    placeholder="New Middle Name"
-                    required
-                    onChange={(e) => this.setState({ middle: e.target.value })}
-                    size="lg"
-                  />
-                </Form.Group>
-
-                <Form.Group as={Col} controlId="formGridNewLastName">
-                  <Form.Label className="formFont">New Last Name:</Form.Label>
-                  <Form.Control
-                    placeholder="New Last Name"
-                    required
-                    onChange={(e) => this.setState({ surname: e.target.value })}
-                    size="lg"
-                  />
-                </Form.Group>
-              </Form.Row>
-              <Form.Row>
-                <Form.Group as={Col} controlId="formGridNewIdNumber">
-                  <Form.Label className="formFont">New ID Number:</Form.Label>
-                  <Form.Control
-                    placeholder="New ID Number"
-                    required
-                    onChange={(e) => this.setState({ id: e.target.value })}
-                    size="lg"
-                  />
-                </Form.Group>
-
-                <Form.Group as={Col} controlId="formGridNewPassword">
-                  <Form.Label className="formFont">New Password:</Form.Label>
-                  <Form.Control
-                    placeholder="New Password"
-                    type="password"
-                    required
-                    onChange={(e) => this.setState({ secret: e.target.value })}
-                    size="lg"
-                  />
-                </Form.Group>
-              </Form.Row>
-              <Form.Row>
-                <div>
-                  <Form.Group>
-                    <Button
-                      className="ownerButtonDisplay"
-                      variant="danger"
-                      type="button"
-                      size="lg"
-                      onClick={_forceModifyRecord}
-                    >
-                      Force modify
+                    <Form.Group as={Col} controlId="formGridSerial">
+                      <Form.Label className="formFont">Serial:</Form.Label>
+                      <Form.Control
+                        placeholder="Serial"
+                        required
+                        onChange={(e) => this.setState({ serial: e.target.value })}
+                        size="lg"
+                      />
+                    </Form.Group>
+                  </Form.Row>
+                  <Form.Row>
+                    <Form.Group className="buttonDisplay">
+                      <Button
+                        variant="primary"
+                        type="button"
+                        size="lg"
+                        onClick={_accessAsset}
+                      >
+                        Access Asset
                   </Button>
-                    <div className="LittleTextModify"> Cost in AC {window.assetClass}: {Number(window.costs.forceTransferCost) / 1000000000000000000} ETH</div>
-                  </Form.Group>
-                  <br></br>
-                </div>
-                <div>
-                  <Form.Group>
-                    <Button
-                      className="ownerButtonDisplay2"
-                      variant="primary"
-                      type="button"
-                      size="lg"
-                      onClick={_importAsset}
-                    >
-                      Import
+                    </Form.Group>
+                  </Form.Row>
+                </>
+              )}
+              {this.state.accessPermitted && (
+                <>
+                  <Form.Row>
+                    <Form.Group as={Col} controlId="formGridNewFirstName">
+                      <Form.Label className="formFont">New First Name:</Form.Label>
+                      <Form.Control
+                        placeholder="New First Name"
+                        required
+                        onChange={(e) => this.setState({ first: e.target.value })}
+                        size="lg"
+                      />
+                    </Form.Group>
+
+                    <Form.Group as={Col} controlId="formGridNewMiddleName">
+                      <Form.Label className="formFont">New Middle Name:</Form.Label>
+                      <Form.Control
+                        placeholder="New Middle Name"
+                        required
+                        onChange={(e) => this.setState({ middle: e.target.value })}
+                        size="lg"
+                      />
+                    </Form.Group>
+
+                    <Form.Group as={Col} controlId="formGridNewLastName">
+                      <Form.Label className="formFont">New Last Name:</Form.Label>
+                      <Form.Control
+                        placeholder="New Last Name"
+                        required
+                        onChange={(e) => this.setState({ surname: e.target.value })}
+                        size="lg"
+                      />
+                    </Form.Group>
+                  </Form.Row>
+                  <Form.Row>
+                    <Form.Group as={Col} controlId="formGridNewIdNumber">
+                      <Form.Label className="formFont">New ID Number:</Form.Label>
+                      <Form.Control
+                        placeholder="New ID Number"
+                        required
+                        onChange={(e) => this.setState({ id: e.target.value })}
+                        size="lg"
+                      />
+                    </Form.Group>
+
+                    <Form.Group as={Col} controlId="formGridNewPassword">
+                      <Form.Label className="formFont">New Password:</Form.Label>
+                      <Form.Control
+                        placeholder="New Password"
+                        type="password"
+                        required
+                        onChange={(e) => this.setState({ secret: e.target.value })}
+                        size="lg"
+                      />
+                    </Form.Group>
+                  </Form.Row>
+                  <Form.Row>
+                    <Form.Group className="buttonDisplay">
+                      <Button
+                        variant="danger"
+                        type="button"
+                        size="lg"
+                        onClick={_forceModifyRecord}
+                      >
+                        Transfer Asset
                   </Button>
-                  </Form.Group>
-
-                  <br></br>
-
-
-                </div>
-              </Form.Row>
+                      <div className="LittleTextModify"> Cost in AC {window.assetClass}: {Number(window.costs.forceTransferCost) / 1000000000000000000} ETH</div>
+                    </Form.Group>
+                  </Form.Row>
+                </>
+              )}
             </div>
           )}
         </Form>

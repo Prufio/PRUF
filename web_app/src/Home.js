@@ -31,7 +31,6 @@ class Home extends Component {
   }
 
   componentDidMount() {
-    window.assetClassName = "unresolved";
     this.setState({addr: window.addr})
   }
 

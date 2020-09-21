@@ -29,9 +29,10 @@ class Main extends Component {
       }
     }, 100)
 
-    this.toggleMenu = (menuChoice) => {
-      this.setState({ routeRequest: "ACAdmin" });
+    this.toggleMenu = async (menuChoice) => {
+      window.location.href = '/#/';
       if (menuChoice === 'ACAdmin') {
+        await this.setState({ routeRequest: "ACAdmin" });
         return this.setState({
           assetClassHolderMenuBool: true,
           assetHolderMenuBool: false,
@@ -42,7 +43,7 @@ class Main extends Component {
       }
 
       else if (menuChoice === 'basic') {
-        this.setState({ routeRequest: "basic" });
+        await this.setState({ routeRequest: "basic" });
         return this.setState({
           basicMenuBool: true,
           assetHolderMenuBool: false,
@@ -54,9 +55,7 @@ class Main extends Component {
 
       else if (menuChoice === 'NC') {
         if (this.state.IDHolderBool) {
-          this.setState({
-            routeRequest: "NCAdmin"
-          })
+          await this.setState({routeRequest: "NCAdmin"})
           return this.setState({
             assetHolderMenuBool: true,
             assetHolderUserMenuBool: false,
@@ -66,9 +65,7 @@ class Main extends Component {
           })
         }
         else {
-          this.setState({
-            routeRequest: "NCUser"
-          })
+          await this.setState({routeRequest: "NCUser"})
           return this.setState({
             assetHolderMenuBool: false,
             assetHolderUserMenuBool: true,
@@ -80,7 +77,7 @@ class Main extends Component {
       }
 
       else if (menuChoice === 'authUser') {
-        this.setState({ routeRequest: "authUser" });
+        await this.setState({ routeRequest: "authUser" });
         return this.setState({
           authorizedUserMenuBool: true,
           assetHolderMenuBool: false,

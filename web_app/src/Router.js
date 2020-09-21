@@ -23,6 +23,7 @@ import NewRecord from "./Custodial/NewRecord";
 import TransferAsset from "./Custodial/TransferAsset";
 import EscrowManager from "./Custodial/EscrowManager";
 import ExportAsset from "./Custodial/ExportAsset";
+import ImportAsset from "./Custodial/ImportAsset";
 
 import AddNoteNC from "./NonCustodial/AddNoteNC";
 import DecrementCounterNC from "./NonCustodial/DecrementCounterNC";
@@ -41,7 +42,8 @@ function Router(routeRequest) {
             <>  
                 <Route path="/new-record" component={NewRecord} />
                 <Route path="/retrieve-record" component={RetrieveRecord} />
-                <Route path="/force-modify-record" component={ForceModifyRecord} />
+                <Route path="/force-transfer-asset" component={ForceModifyRecord} />
+                <Route path="/import-asset" component={ImportAsset} />
                 <Route path="/transfer-asset" component={TransferAsset} />
                 <Route path="/modify-record-status" component={ModifyRecordStatus} />
                 <Route path="/decrement-counter" component={DecrementCounter} />

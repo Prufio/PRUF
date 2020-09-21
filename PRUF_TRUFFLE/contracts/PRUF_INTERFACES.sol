@@ -66,7 +66,7 @@ interface UTIL_TKN_Interface {
      * - the caller must have a balance of at least `amount`.
      */
     function purchaseACtoken(
-        string memory _name,
+        string calldata _name,
         uint32 _assetClassRoot,
         uint8 _custodyType
     ) external returns (uint256);
@@ -254,7 +254,7 @@ interface AC_TKN_Interface {
         address from,
         address to,
         uint256 tokenId,
-        bytes memory _data
+        bytes calldata _data
     ) external;
 
     /**
@@ -421,7 +421,7 @@ interface A_TKN_Interface {
         address from,
         address to,
         uint256 tokenId,
-        bytes memory _data
+        bytes calldata _data
     ) external;
 
     /**
@@ -565,7 +565,7 @@ interface SHAR_TKN_Interface {
         address from,
         address to,
         uint256 tokenId,
-        bytes memory _data
+        bytes calldata _data
     ) external;
 
     /**
@@ -698,7 +698,7 @@ interface ID_TKN_Interface {
         address from,
         address to,
         uint256 tokenId,
-        bytes memory _data
+        bytes calldata _data
     ) external;
 
     /**
