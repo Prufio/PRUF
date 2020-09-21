@@ -57,6 +57,12 @@ uint256 internal held;
 
 mapping(uint256 => uint256) private tokenPaymentDate; // Main Data Storage
 
+    function pay() public payable {
+        require(
+            msg.value > 0, "MOAR ETH!!!!!"
+            );
+    }
+
 
     /*
      * @dev Set adress of STOR contract to interface with
@@ -112,6 +118,7 @@ mapping(uint256 => uint256) private tokenPaymentDate; // Main Data Storage
 
             return newDividend;
     }
+    
 
     function sec_until_payday() public view returns (uint256 , uint256) {
         if (nextPayDay > block.timestamp){
