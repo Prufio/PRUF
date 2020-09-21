@@ -33,7 +33,10 @@ class AuthorizedUserComponent extends Component {
                     <NavLink to="/export-asset">Export</NavLink>
                 </li>
                 <li>
-                    <NavLink to="/force-modify-record">Modify</NavLink>
+                    <NavLink to="/force-transfer-asset">Force Transfer</NavLink>
+                </li>
+                <li>
+                    <NavLink to="/import-asset">Import</NavLink>
                 </li>
                 <li>
                     <NavLink to="/manage-escrow">Escrow</NavLink>
