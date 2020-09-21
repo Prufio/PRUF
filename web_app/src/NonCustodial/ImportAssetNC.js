@@ -88,7 +88,7 @@ class ImportAssetNC extends Component {
 
     return (
       <div>
-        <Form className="IAform" id='MainForm'>
+        <Form className="IANCform" id='MainForm'>
           {window.addr === undefined && (
             <div className="errorResults">
               <h2>User address unreachable</h2>
@@ -149,10 +149,8 @@ class ImportAssetNC extends Component {
                 </Form.Group>
               </Form.Row>
               <Form.Row>
-                <div>
-                  <Form.Group>
+                  <Form.Group className="buttonDisplay">
                     <Button
-                      className="ownerButtonDisplay2"
                       variant="primary"
                       type="button"
                       size="lg"
@@ -160,11 +158,10 @@ class ImportAssetNC extends Component {
                     >
                       Import
                   </Button>
-                    <div className="LittleTextModify"> Cost in AC {window.assetClass}: {Number(window.costs.newRecordCost) / 1000000000000000000} ETH</div>
+                    <div className="LittleTextImport"> Cost in AC {window.assetClass}: {Number(window.costs.newRecordCost) / 1000000000000000000} ETH</div>
                   </Form.Group>
-                  <br></br>
-                </div>
               </Form.Row>
+              <br></br>
             </div>
           )}
         </Form>

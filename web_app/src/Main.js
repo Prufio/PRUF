@@ -265,9 +265,6 @@ class Main extends Component {
                 <ul className="header">
                   {window._contracts !== undefined && (
                     <nav>
-                      <li>
-                        <NavLink exact to="/">Home</NavLink>
-                      </li>
                       {this.state.assetHolderMenuBool === true && (<NonCustodialComponent />)}
                       {this.state.assetHolderUserMenuBool === true && (<NonCustodialUserComponent />)}
                       {this.state.assetClassHolderMenuBool === true && (<AdminComponent />)}

@@ -87,12 +87,12 @@ class RetrieveRecord extends Component {
           console.log("IPFS1 Here's what we found: ", result);
         }
         console.log(JSON.parse(result));
-        self.setState({ipfsObject: JSON.parse(result)})
+        self.setState({ ipfsObject: JSON.parse(result) })
       });
     };
 
     const _seperateKeysAndValues = (obj) => {
-      console.log (obj)
+      console.log(obj)
       let textPairsArray = [];
       let photoKeyArray = [];
       let photoValueArray = [];
@@ -102,46 +102,46 @@ class RetrieveRecord extends Component {
       let textKeys = Object.keys(obj.text);
       let textVals = Object.values(obj.text);
 
-      for(let i = 0; i < photoKeys.length; i++){
+      for (let i = 0; i < photoKeys.length; i++) {
         photoValueArray.push(photoVals[i])
         photoKeyArray.push(photoKeys[i])
       }
 
-      for(let i = 0; i < textKeys.length; i++){
+      for (let i = 0; i < textKeys.length; i++) {
         textPairsArray.push(textKeys[i] + ": " + textVals[i])
       }
 
-      self.setState({descriptionElements: {photoKeys: photoKeyArray, photoValues:photoValueArray, text: textPairsArray}})
+      self.setState({ descriptionElements: { photoKeys: photoKeyArray, photoValues: photoValueArray, text: textPairsArray } })
     }
 
     const generateDescription = (obj) => {
 
-    //console.log(self.state.descriptionElements)
+      //console.log(self.state.descriptionElements)
 
-    let component = [<><h4>Images Found:</h4> <br></br></>];
+      let component = [<><h4>Images Found:</h4> <br></br></>];
 
-      for(let i = 0; i < obj.photoKeys.length; i++){
+      for (let i = 0; i < obj.photoKeys.length; i++) {
         //console.log("adding photo", obj.photoKeys[i])
-        component.push (<>{obj.photoKeys[i]}<br></br><img src={String(obj.photoValues[i])}/> <br></br></>);
+        component.push(<>{obj.photoKeys[i]}<br></br><img src={String(obj.photoValues[i])} /> <br></br></>);
       }
 
       component.push(<> <br></br> <h4>Text Values Found:</h4> <br></br> </>);
-      for(let x = 0; x < obj.text.length; x++){
-      //console.log("adding text ", obj.text[x])
-      component.push (<>{String(obj.text[x])} <br></br></>);
-      } 
+      for (let x = 0; x < obj.text.length; x++) {
+        //console.log("adding text ", obj.text[x])
+        component.push(<>{String(obj.text[x])} <br></br></>);
+      }
 
       //console.log(component)
       return component
     }
 
     const _toggleDisplay = () => {
-      if (self.state.showDescription === false){
+      if (self.state.showDescription === false) {
         _seperateKeysAndValues(self.state.ipfsObject);
-        self.setState({showDescription: true})
+        self.setState({ showDescription: true })
       }
-      else{
-      self.setState({showDescription: false})
+      else {
+        self.setState({ showDescription: false })
       }
     }
 
@@ -191,7 +191,7 @@ class RetrieveRecord extends Component {
             self.setState({ result: Object.values(_result) })
             self.setState({ error: undefined });
 
-            if (Object.values(_result)[5] > 0) {ipfsHash = getIpfsHashFromBytes32(Object.values(_result)[5]); }
+            if (Object.values(_result)[5] > 0) { ipfsHash = getIpfsHashFromBytes32(Object.values(_result)[5]); }
             console.log("ipfs data in promise", ipfsHash)
             if (Object.values(_result)[6] > 0) {
               console.log("Getting ipfs2 set up...")
@@ -204,7 +204,7 @@ class RetrieveRecord extends Component {
           }
         });
 
-        await getIPFS1(ipfsHash); 
+      await getIPFS1(ipfsHash);
     }
 
     return (
@@ -266,61 +266,60 @@ class RetrieveRecord extends Component {
               </Form.Row>
 
               <Form.Row>
-                {this.state.status === ""&& (
+                {this.state.status === "" && (
                   <Form.Group className="buttonDisplay">
                     <Button
-                  variant="primary"
-                  type="button"
-                  size="lg"
-                  onClick={_retrieveRecord}
-                >
-                  Submit
+                      variant="primary"
+                      type="button"
+                      size="lg"
+                      onClick={_retrieveRecord}
+                    >
+                      Submit
                 </Button>
-                </Form.Group>
+                  </Form.Group>
                 )}
 
-                {this.state.status !== "" && this.state.ipfsObject !== undefined &&(
-                  <Form.Group className="buttonDisplay">
-                  {!this.state.showDescription &&(
-                    <>
-                    <Button
-                    variant="primary"
-                    type="button"
-                    size="lg"
-                    onClick={_toggleDisplay}
-                  >
-                   Show Description
-                  </Button>
-                </>
-                  )}
-                  {this.state.showDescription &&(
-                    <>
-                    <Button
-                    variant="primary"
-                    type="button"
-                    size="lg"
-                    onClick={_toggleDisplay}
-                  >
-                   Show Statistics
-                  </Button>
-                </>
-                  )}
-                  {this.state.type !== undefined && this.state.type !== "" && (
-                    <>
-                    <Button
-                    variant="primary"
-                    type="button"
-                    size="lg"
-                    onClick={_retrieveRecord}
-                  >
-                    Submit
-                  </Button>
-                  </>
-                  )}
+                {this.state.status !== "" && this.state.ipfsObject !== undefined && (
                   
-                </Form.Group>
+                  <Form.Group className="buttonDisplay">
+                    {!this.state.showDescription && (
+                        <Button
+                          variant="primary"
+                          type="button"
+                          size="lg"
+                          onClick={_toggleDisplay}
+                        >
+                          Show Description
+                  </Button>
+                    )}
+                    {this.state.showDescription && (
+                      <Form.Group className="buttonDisplay">
+                        <Button
+                          variant="primary"
+                          type="button"
+                          size="lg"
+                          onClick={_toggleDisplay}
+                        >
+                          Show Statistics
+                  </Button>
+                  </Form.Group>
+                    )}
+                    {this.state.type !== undefined && this.state.type !== "" && (
+                        <Form.Group className="buttonDisplay">
+                        <Button
+                          variant="primary"
+                          type="button"
+                          size="lg"
+                          onClick={_retrieveRecord}
+                        >
+                          Submit
+                  </Button>
+                  </Form.Group>
+                    )}
+
+                  </Form.Group>
                 )}
-                
+
               </Form.Row>
             </div>
           )}
@@ -333,32 +332,32 @@ class RetrieveRecord extends Component {
           <div className="RRresults">
             Asset Found!
             <br></br>
-            {!this.state.showDescription &&(
-            <>
-              Status : {this.state.status}
-              <br></br>
+            {!this.state.showDescription && (
+              <>
+                Status : {this.state.status}
+                <br></br>
               Mod Count : {this.state.result[1]}
-              <br></br>
+                <br></br>
               Asset Class : {this.state.result[2]}
-              <br></br>
+                <br></br>
               Count : {this.state.result[3]} of {this.state.result[4]}
-              <br></br>
+                <br></br>
               Number of transfers : {this.state.result[7]}
-              <br></br>
+                <br></br>
               </>
-            )} 
-
-            {this.state.ipfs2 !== undefined && this.state.ipfs2 !== "" &&(
-            <>
-            Asset Inscription : {this.state.ipfs2}
-            <br></br>
-            </>
             )}
 
-            {this.state.showDescription &&(
-            <>
-            {this.state.descriptionElements !== undefined && (generateDescription(this.state.descriptionElements))}
-            </>
+            {this.state.ipfs2 !== undefined && this.state.ipfs2 !== "" && (
+              <>
+                Asset Inscription : {this.state.ipfs2}
+                <br></br>
+              </>
+            )}
+
+            {this.state.showDescription && (
+              <>
+                {this.state.descriptionElements !== undefined && (generateDescription(this.state.descriptionElements))}
+              </>
             )}
           </div>
         )}

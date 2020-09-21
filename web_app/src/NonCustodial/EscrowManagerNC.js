@@ -239,7 +239,7 @@ class EscrowManagerNC extends Component {
                   </Form.Control>
                 </Form.Group>
               </Form.Row>
-              <div>
+              <Form.Row>
                 <Form.Group>
                   <Button
                     className="ownerButtonDisplay"
@@ -251,8 +251,6 @@ class EscrowManagerNC extends Component {
                     begin escrow
                   </Button>
                 </Form.Group>
-              </div>
-              <div>
                 <Form.Group>
                   <Button
                     className="ownerButtonDisplay5"
@@ -264,8 +262,8 @@ class EscrowManagerNC extends Component {
                     end escrow
                   </Button>
                 </Form.Group>
-              </div>
-            </div>
+                </Form.Row>
+                </div>
           )}
         </Form>
         {this.state.txHash > 0 && ( //conditional rendering

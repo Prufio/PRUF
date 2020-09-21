@@ -113,21 +113,16 @@ class ForceModifyRecordNC extends Component {
 
     return (
       <div>
-        <Form className="FMRform" id='MainForm'>
+        <Form className="FMRNCform" id='MainForm'>
           {window.addr === undefined && (
             <div className="errorResults">
               <h2>User address unreachable</h2>
               <h3>Please connect web3 provider.</h3>
             </div>
-          )}{window.assetClass === undefined && (
-            <div className="errorResults">
-              <h2>No asset class selected.</h2>
-              <h3>Please select asset class in home page to use forms.</h3>
-            </div>
           )}
-          {window.addr > 0 && window.assetClass !== undefined &&(
+          {window.addr > 0 &&(
             <div>
-              <h2 className="Headertext">Force Modify</h2>
+              <h2 className="Headertext">Modify Rightsholder</h2>
               <br></br>
               <Form.Row>
                 <Form.Group as={Col} controlId="formGridType">
@@ -227,21 +222,16 @@ class ForceModifyRecordNC extends Component {
                 </Form.Group>
               </Form.Row>
               <Form.Row>
-                <div>
-                  <Form.Group>
+                  <Form.Group className="buttonDisplay">
                     <Button
-                      className="ownerButtonDisplay"
                       variant="danger"
                       type="button"
                       size="lg"
                       onClick={_forceModifyRecord}
                     >
-                      Force modify
+                      Modify
                   </Button>
-                    <div className="LittleTextModify"> Cost in AC {window.assetClass}: {Number(window.costs.forceTransferCost) / 1000000000000000000} ETH</div>
                   </Form.Group>
-                  <br></br>
-                </div>
               </Form.Row>
             </div>
           )}
