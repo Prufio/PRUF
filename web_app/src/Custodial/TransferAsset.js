@@ -56,6 +56,45 @@ class ModifyDescription extends Component {
   render() {//render continuously produces an up-to-date stateful document  
     const self = this;
 
+    const _accessAsset = async () => {
+      const self = this;
+
+      let idxHash = window.web3.utils.soliditySha3(
+        this.state.type,
+        this.state.manufacturer,
+        this.state.model,
+        this.state.serial,
+      );
+
+      let rgtRaw = window.web3.utils.soliditySha3(
+        this.state.first,
+        this.state.middle,
+        this.state.surname,
+        this.state.id,
+        this.state.secret
+      );
+
+      var rgtHash = window.web3.utils.soliditySha3(idxHash, rgtRaw);
+
+      var doesExist = await window.utils.checkAssetExists(idxHash);
+      var infoMatches = await window.utils.checkMatch(idxHash, rgtHash);
+
+      if (!doesExist) {
+        return alert("Asset doesnt exist! Ensure data fields are correct before submission.")
+      }
+
+      if (!infoMatches) {
+        return alert("Owner data fields do not match data on record. Ensure data fields are correct before submission.")
+      }
+
+      return this.setState({ 
+        idxHash: idxHash,
+        rgtHash: rgtHash,
+        accessPermitted: true
+       })
+
+    }
+
 
 
     const _transferAsset = async () => {
@@ -63,24 +102,9 @@ class ModifyDescription extends Component {
       this.setState({ txHash: "" });
       this.setState({ error: undefined })
       this.setState({ result: "" })
-      var idxHash;
-      var rgtRaw;
-
-      idxHash = window.web3.utils.soliditySha3(
-        this.state.type,
-        this.state.manufacturer,
-        this.state.model,
-        this.state.serial,
-      );
-
-      rgtRaw = window.web3.utils.soliditySha3(
-        this.state.first,
-        this.state.middle,
-        this.state.surname,
-        this.state.id,
-        this.state.secret
-      );
-      var rgtHash = window.web3.utils.soliditySha3(idxHash, rgtRaw);
+      
+      var idxHash = this.state.idxHash
+      var rgtHash = this.state.rgtHash
 
       var newRgtRaw = window.web3.utils.soliditySha3(
         this.state.newFirst,
@@ -89,23 +113,12 @@ class ModifyDescription extends Component {
         this.state.newId,
         this.state.newSecret
       );
+
       var newRgtHash = window.web3.utils.soliditySha3(idxHash, newRgtRaw);
 
       console.log("idxHash", idxHash);
-      console.log("New rgtRaw", rgtRaw);
       console.log("New rgtHash", rgtHash);
       console.log("addr: ", window.addr);
-
-      var doesExist = await window.utils.checkAssetExists(idxHash);
-      var infoMatches = await window.utils.checkMatch(idxHash, rgtHash);
-
-      if (!doesExist){
-        return alert("Asset doesnt exist! Ensure data fields are correct before submission.")
-      }
-
-      if (!infoMatches){
-        return alert("Owner data fields do not match data on record. Ensure data fields are correct before submission.")
-      }
 
       window.contracts.APP.methods
         .$transferAsset(idxHash, rgtHash, newRgtHash)
@@ -123,7 +136,12 @@ class ModifyDescription extends Component {
           //Stuff to do when tx confirms
         });
       console.log(this.state.txHash);
-      document.getElementById("MainForm").reset();
+      await this.setState({
+        idxHash: "",
+        rgtHash: "",
+        accessPermitted: false
+      })
+      return document.getElementById("MainForm").reset();
     };
 
     return (
@@ -145,7 +163,9 @@ class ModifyDescription extends Component {
 
               <h2 className="Headertext">Transfer Asset</h2>
               <br></br>
-              <Form.Row>
+              {!this.state.accessPermitted && (
+                <>
+                <Form.Row>
                 <Form.Group as={Col} controlId="formGridType">
                   <Form.Label className="formFont">Type:</Form.Label>
 
@@ -247,7 +267,24 @@ class ModifyDescription extends Component {
                   />
                 </Form.Group>
               </Form.Row>
+
               <Form.Row>
+                <Form.Group className="buttonDisplay">
+                  <Button
+                    variant="primary"
+                    type="button"
+                    size="lg"
+                    onClick={_accessAsset}
+                  >
+                    Access Asset
+                  </Button>
+                </Form.Group>
+              </Form.Row>
+                </>
+              )}
+              {this.state.accessPermitted && (
+                <>
+                <Form.Row>
                 <Form.Group as={Col} controlId="formGridNewFirstName">
                   <Form.Label className="formFont">New First Name:</Form.Label>
                   <Form.Control
@@ -322,6 +359,8 @@ class ModifyDescription extends Component {
                   <div className="LittleTextTransfer"> Cost in AC {window.assetClass}: {Number(window.costs.transferAssetCost) / 1000000000000000000} ETH</div>
                 </Form.Group>
               </Form.Row>
+                </>
+              )}
 
               <br></br>
             </div>

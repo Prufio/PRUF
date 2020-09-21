@@ -43,6 +43,50 @@ class AddNote extends Component {
   render() {//render continuously produces an up-to-date stateful document  
     const self = this;
 
+    const _accessAsset = async () => {
+      const self = this;
+
+      let idxHash = window.web3.utils.soliditySha3(
+        this.state.type,
+        this.state.manufacturer,
+        this.state.model,
+        this.state.serial,
+      );
+
+      let rgtRaw = window.web3.utils.soliditySha3(
+        this.state.first,
+        this.state.middle,
+        this.state.surname,
+        this.state.id,
+        this.state.secret
+      );
+
+      var rgtHash = window.web3.utils.soliditySha3(idxHash, rgtRaw);
+      
+      var noteExists = await window.utils.checkNoteExists(idxHash);
+      var doesExist = await window.utils.checkAssetExists(idxHash);
+      var infoMatches = await window.utils.checkMatch(idxHash, rgtHash);
+
+      if (!doesExist) {
+        return alert("Asset doesnt exist! Ensure data fields are correct before submission.")
+      }
+
+      if (!infoMatches) {
+        return alert("Owner data fields do not match data on record. Ensure data fields are correct before submission.")
+      }
+
+      if (noteExists){
+        return alert("Asset note already exists! Cannot overwrite existing note.")
+      }
+
+      return this.setState({ 
+        idxHash: idxHash,
+        rgtHash: rgtHash,
+        accessPermitted: true
+       })
+
+    }
+
     const getBytes32FromIpfsHash = (ipfsListing) => {
       return "0x" + bs58.decode(ipfsListing).slice(2).toString("hex");
     };
@@ -77,45 +121,13 @@ class AddNote extends Component {
       this.setState({ txHash: "" });
       this.setState({ error: undefined })
       this.setState({ result: "" })
-      var idxHash;
-      var rgtRaw;
-
-      idxHash = window.web3.utils.soliditySha3(
-        this.state.type,
-        this.state.manufacturer,
-        this.state.model,
-        this.state.serial,
-      );
-
-      rgtRaw = window.web3.utils.soliditySha3(
-        this.state.first,
-        this.state.middle,
-        this.state.surname,
-        this.state.id,
-        this.state.secret
-      );
-
-      var rgtHash = window.web3.utils.soliditySha3(idxHash, rgtRaw);
+      var idxHash = this.state.idxHash;
+      var rgtHash = this.state.rgtHash;
 
       console.log("idxHash", idxHash);
-      console.log("New rgtRaw", rgtRaw);
+      console.log("rgtHash", rgtHash);
       console.log("addr: ", window.addr);
       
-      var noteExists = await window.utils.checkNoteExists(idxHash);
-      var doesExist = await window.utils.checkAssetExists(idxHash);
-      var infoMatches = await window.utils.checkMatch(idxHash, rgtHash);
-
-      if (!doesExist){
-        return alert("Asset doesnt exist! Ensure data fields are correct before submission.")
-      }
-
-      if (!infoMatches){
-        return alert("Owner data fields do not match data on record. Ensure data fields are correct before submission.")
-      }
-
-      if (noteExists){
-        return alert("Asset note already exists! Cannot overwrite existing note.")
-      }
 
         await window.contracts.APP.methods
         .$addIpfs2Note(idxHash, rgtHash, this.state.hashPath)
@@ -136,6 +148,14 @@ class AddNote extends Component {
      
 
       console.log(this.state.txHash);
+
+      await this.setState({
+        idxHash: "",
+        rgtHash: "",
+        hashPath: "",
+        accessPermitted: false
+      })
+
       return document.getElementById("MainForm").reset();
     };
 
@@ -157,7 +177,9 @@ class AddNote extends Component {
             <div>
               <h2 className="Headertext">Add Note</h2>
               <br></br>
-              <Form.Row>
+              {!this.state.accessPermitted &&(
+                <>
+                <Form.Row>
                 <Form.Group as={Col} controlId="formGridType">
                   <Form.Label className="formFont">Type:</Form.Label>
                   <Form.Control
@@ -256,12 +278,28 @@ class AddNote extends Component {
                   />
                 </Form.Group>
               </Form.Row>
-              <Form.Row>
+                <Form.Row>
+                  <Form.Group className="buttonDisplay">
+                    <Button
+                      variant="primary"
+                      type="button"
+                      size="lg"
+                      onClick={_accessAsset}
+                    >
+                      Access Asset
+                    </Button>
+                  </Form.Group>
+                </Form.Row>
+                </>
+              )}
+              {this.state.accessPermitted && (
+                <>
+                <Form.Row>
                 <Form.Group as={Col} controlId="formGridIpfs2File">
                   <Form.File onChange={(e) => this.setState({ hashPath: "" })} size="lg" className="btn2" id="ipfs2File" />
                 </Form.Group>
-              </Form.Row>
-              {this.state.hashPath !== "" && (
+                </Form.Row>
+                {this.state.hashPath !== "" && (
                 <Form.Row>
                   <Form.Group className="buttonDisplay">
                     <Button
@@ -272,7 +310,7 @@ class AddNote extends Component {
                     >
                       Add Note
                     </Button>
-                    <div className="LittleText"> Cost in AC {window.assetClass}: {Number(window.costs.createNoteCost) / 1000000000000000000} ETH</div>
+                    <div className="LittleTextTransfer"> Cost in AC {window.assetClass}: {Number(window.costs.createNoteCost) / 1000000000000000000} ETH</div>
                   </Form.Group>
                 </Form.Row>
               )}
@@ -291,6 +329,11 @@ class AddNote extends Component {
                   </Form.Group>
                 </Form.Row>
               )}
+              </>
+              )}
+              
+              
+              
 
               <br></br>
             </div>

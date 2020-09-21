@@ -181,6 +181,7 @@ class Main extends Component {
 
   componentDidMount() {//stuff to do when component mounts in window
     buildWindowUtils()
+    window.location.href = '/#/';
     if (window.ethereum) {
       window.additionalElementArrays = {
         photo: [],
