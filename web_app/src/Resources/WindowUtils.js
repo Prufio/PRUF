@@ -184,6 +184,20 @@ function buildWindowUtils() {
 
   }
 
+  const _getEscrowData = async (idxHash) => {
+    if (window.contracts !== undefined) {
+      await window.contracts.ECR_MGR.methods
+        .retrieveEscrowData(idxHash)
+        .call({ from: window.addr }, (_error, _result) => {
+          if (_error) { console.log(_error) }
+          else {
+            console.log("Got escrow data: ", _result)
+            return Object.values(_result)
+          }
+        });
+    }
+  }
+
   const _getACData = async (ref, ac) => {
     let tempData;
     let tempAC;
@@ -424,6 +438,7 @@ const _getDescriptionHash = async (idxHash) => {
     resolveACFromID: _resolveACFromID,
     checkForAC: _checkForAC,
     getDescriptionHash: _getDescriptionHash,
+    getEscrowData: _getEscrowData,
 
   }
 

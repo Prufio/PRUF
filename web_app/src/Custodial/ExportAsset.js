@@ -46,28 +46,39 @@ class ExportAsset extends Component {
   render() {//render continuously produces an up-to-date stateful document  
     const self = this;
 
-    const _exportAsset = async () => {//create a new asset record
-      this.setState({ txStatus: false });
-      this.setState({ txHash: "" });
-      this.setState({ error: undefined })
-      this.setState({ result: "" })
-      //reset state values before form resubmission
-      var idxHash;
+    const _accessAsset = async () => {
+      const self = this;
 
-      idxHash = window.web3.utils.soliditySha3(
+      let idxHash = window.web3.utils.soliditySha3(
         this.state.type,
         this.state.manufacturer,
         this.state.model,
         this.state.serial,
       );
 
-      console.log("idxHash", idxHash);
-      console.log("addr: ", this.state.agentAddress);
-
       var doesExist = await window.utils.checkAssetExists(idxHash);
-      if (!doesExist){
+
+      if (!doesExist) {
         return alert("Asset doesnt exist! Ensure data fields are correct before submission.")
       }
+
+      return this.setState({ 
+        idxHash: idxHash,
+        accessPermitted: true
+       })
+
+    }
+
+    const _exportAsset = async () => {//create a new asset record
+      this.setState({ txStatus: false });
+      this.setState({ txHash: "" });
+      this.setState({ error: undefined })
+      this.setState({ result: "" })
+      //reset state values before form resubmission
+      var idxHash = this.state.idxHash;
+
+      console.log("idxHash", idxHash);
+      console.log("addr: ", this.state.agentAddress);
 
       window.contracts.NP.methods
         .exportAsset(
@@ -84,6 +95,11 @@ class ExportAsset extends Component {
           this.setState({ txHash: receipt.transactionHash });
           this.setState({ txStatus: receipt.status });
         });
+
+        await this.setState({
+          idxHash: "",
+          accessPermitted: false
+        })
 
         return document.getElementById("MainForm").reset(); //clear form inputs
     };
@@ -106,7 +122,9 @@ class ExportAsset extends Component {
             <div>
               <h2 className="Headertext">Export</h2>
               <br></br>
-              <Form.Row>
+              {!this.state.accessPermitted && (
+                <>
+                <Form.Row>
                 <Form.Group as={Col} controlId="formGridType">
                   <Form.Label className="formFont">Type:</Form.Label>
                   <Form.Control
@@ -151,7 +169,25 @@ class ExportAsset extends Component {
                   />
                 </Form.Group>
               </Form.Row>
+
               <Form.Row>
+                <Form.Group className="buttonDisplay">
+                  <Button
+                    variant="primary"
+                    type="button"
+                    size="lg"
+                    onClick={_accessAsset}
+                  >
+                    Access Asset
+                    </Button>
+                </Form.Group>
+              </Form.Row>
+                </>
+              )}
+              {this.state.accessPermitted && (
+                <>
+                <h2 color="white"fontWeight="bold">Asset staged for export to agent: {window.contracts.APP._address} </h2>
+                <Form.Row>
                 <Form.Group className="buttonDisplay">
                   <Button
                     variant="primary"
@@ -163,6 +199,8 @@ class ExportAsset extends Component {
                     </Button>
                 </Form.Group>
               </Form.Row>
+                </>
+              )}
 
               <br></br>
 

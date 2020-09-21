@@ -51,47 +51,56 @@ class ModifyRecordStatus extends Component {
   render() {//render continuously produces an up-to-date stateful document  
     const self = this;
 
+    const _accessAsset = async () => {
+      const self = this;
 
-
-    const _modifyStatus = async () => {
-      this.setState({ txStatus: false });
-      this.setState({ txHash: "" });
-      this.setState({ error: undefined })
-      this.setState({ result: "" })
-      var idxHash;
-      var rgtRaw;
-
-      idxHash = window.web3.utils.soliditySha3(
+      let idxHash = window.web3.utils.soliditySha3(
         this.state.type,
         this.state.manufacturer,
         this.state.model,
         this.state.serial,
       );
 
-      rgtRaw = window.web3.utils.soliditySha3(
+      let rgtRaw = window.web3.utils.soliditySha3(
         this.state.first,
         this.state.middle,
         this.state.surname,
         this.state.id,
         this.state.secret
       );
-      var rgtHash = window.web3.utils.soliditySha3(idxHash, rgtRaw);
 
-      console.log("idxHash", idxHash);
-      console.log("New rgtRaw", rgtRaw);
-      console.log("New rgtHash", rgtHash);
-      console.log("addr: ", window.addr);
+      var rgtHash = window.web3.utils.soliditySha3(idxHash, rgtRaw);
 
       var doesExist = await window.utils.checkAssetExists(idxHash);
       var infoMatches = await window.utils.checkMatch(idxHash, rgtHash);
 
-      if (!doesExist){
+      if (!doesExist) {
         return alert("Asset doesnt exist! Ensure data fields are correct before submission.")
       }
 
-      if (!infoMatches){
+      if (!infoMatches) {
         return alert("Owner data fields do not match data on record. Ensure data fields are correct before submission.")
       }
+
+      return this.setState({ 
+        idxHash: idxHash,
+        rgtHash: rgtHash,
+        accessPermitted: true
+       })
+
+    }
+
+    const _modifyStatus = async () => {
+      this.setState({ txStatus: false });
+      this.setState({ txHash: "" });
+      this.setState({ error: undefined })
+      this.setState({ result: "" })
+      var idxHash = this.state.idxHash;
+      var rgtHash = this.state.rgtHash;
+
+      console.log("idxHash", idxHash);
+      console.log("rgtHash", rgtHash);
+      console.log("addr: ", window.addr);
 
       if (this.state.status !== "3" && this.state.status !== "4" && this.state.status !== "6" && this.state.status !== "9" && this.state.status !== "10"){
         window.contracts.NP.methods
@@ -132,6 +141,13 @@ class ModifyRecordStatus extends Component {
       else { alert("Invalid status input") }
 
       console.log(this.state.txHash);
+
+      await this.setState({
+        idxHash: "",
+        rgtHash: "",
+        accessPermitted: false
+      })
+
       return document.getElementById("MainForm").reset();
     };
 
@@ -154,7 +170,9 @@ class ModifyRecordStatus extends Component {
 
               <h2 className="Headertext">Change Asset Status</h2>
               <br></br>
-              <Form.Row>
+              {!this.state.accessPermitted && (
+                <>
+                <Form.Row>
                 <Form.Group as={Col} controlId="formGridType">
                   <Form.Label className="formFont">Type:</Form.Label>
 
@@ -256,7 +274,26 @@ class ModifyRecordStatus extends Component {
                     size="lg"
                   />
                 </Form.Group>
+                </Form.Row>
 
+                <Form.Row>
+                <Form.Group className="buttonDisplay">
+                  <Button
+                    variant="primary"
+                    type="button"
+                    size="lg"
+                    onClick={_accessAsset}
+                  >
+                    Access Asset
+                  </Button>
+                </Form.Group>
+              </Form.Row>
+                
+                </>
+              )}
+              {this.state.accessPermitted && (
+              <>
+                <Form.Row>
                 <Form.Group as={Col} controlId="formGridFormat">
                   <Form.Label className="formFont">New Status:</Form.Label>
                   <Form.Control as="select" size="lg" onChange={(e) => this.setState({ status: e.target.value })}>
@@ -278,10 +315,13 @@ class ModifyRecordStatus extends Component {
                     size="lg"
                     onClick={_modifyStatus}
                   >
-                    Submit
+                    Update Status
                   </Button>
                 </Form.Group>
               </Form.Row>
+              </>
+              )}
+              
             </div>
           )}
         </Form>
