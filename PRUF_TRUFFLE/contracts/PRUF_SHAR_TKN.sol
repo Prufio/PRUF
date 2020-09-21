@@ -23,10 +23,13 @@ import "./Imports/access/Ownable.sol";
 import "./PRUF_INTERFACES.sol";
 import "./Imports/utils/ReentrancyGuard.sol";
 
+
 contract SHAR_TKN is Ownable, ERC721 {
     constructor() public ERC721("PRüF ID Token", "PID") {}
 
     event REPORT(string _msg);
+
+    uint256 private maxSupply =  100;  //set max supply (100000?)
 
     modifier isAdmin() {
         require(
@@ -47,7 +50,7 @@ contract SHAR_TKN is Ownable, ERC721 {
         returns (uint256)
     {
         require(
-            totalSupply() <= 100000,
+            totalSupply() <= maxSupply,
             "PIDT:SURI:Cannot mint token. Max 100K SHARE tokens"
         );
         //^^^^^^^checks^^^^^^^^^
