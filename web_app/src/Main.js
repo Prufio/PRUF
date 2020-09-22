@@ -1,5 +1,4 @@
 import React, { Component } from "react";
-import Button from "react-bootstrap/Button";
 import { Route, NavLink, HashRouter } from "react-router-dom";
 import Web3 from "web3";
 import Home from "./Home";
@@ -28,6 +27,9 @@ class Main extends Component {
       }
       if (this.state.isACAdmin !== window.isACAdmin) {
         this.setState({ isACAdmin: window.isACAdmin })
+      }
+      if (this.state.custodyType !== window.custodyType){
+        this.setState({custodyType: window.custodyType})
       }
     }, 100)
 
@@ -133,7 +135,8 @@ class Main extends Component {
           IDTokenBalance: window.balances.IDTokenBalance,
           assetHolderBool: window.assetHolderBool,
           assetClassHolderBool: window.assetClassHolderBool,
-          IDHolderBool: window.IDHolderBool
+          IDHolderBool: window.IDHolderBool,
+          custodyType: window.custodyType,
         })
         return this.setState({ hasFetchedBalances: window.hasFetchedBalances })
       }
@@ -330,7 +333,7 @@ class Main extends Component {
                           AC Admin Menu
                         </Dropdown.Item>)}
 
-                      {this.state.IDHolderBool === false && this.state.assetHolderBool === true && this.state.assetHolderUserMenuBool === false && (
+                      {this.state.custodyType === "Non-Custodial" && this.state.IDHolderBool === false && this.state.assetHolderBool === true && this.state.assetHolderUserMenuBool === false && (
                         <Dropdown.Item
                           as="button"
                           variant="primary"
@@ -340,7 +343,7 @@ class Main extends Component {
                         </Dropdown.Item>
                       )}
 
-                      {this.state.IDHolderBool === true && this.state.assetHolderMenuBool === false && (
+                      {this.state.custodyType === "Non-Custodial" && this.state.IDHolderBool === true && this.state.assetHolderMenuBool === false && (
                         <Dropdown.Item
                           as="button"
                           variant="primary"

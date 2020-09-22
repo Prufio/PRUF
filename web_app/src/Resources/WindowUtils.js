@@ -239,7 +239,7 @@ function buildWindowUtils() {
               else if (_result === "9" && window.isACAdmin === true) { window.authLevel = "Robot/AC Admin"; window.isAuthUser = false; }
               else if (_result === "0" && window.isACAdmin === true) { window.authLevel = "AC Admin"; window.isAuthUser = false; }
               console.log(_result)
-              return (window.authLevel)
+              return (window.custodyType = "Custodial")
             }
           });
       }
@@ -255,7 +255,7 @@ function buildWindowUtils() {
               else if (Number(_result) === 1 && window.isACAdmin === true) { window.authLevel = "Pruf Minter/AC Admin"; window.isAuthUser = false; }
               else if (Number(_result) < 1 && window.isACAdmin === false) { window.authLevel = "Pruf User"; window.isAuthUser = false; }
               console.log(_result)
-              return (window.authLevel)
+              return (window.custodyType = "Non-Custodial")
             }
           });
       }
