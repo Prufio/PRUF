@@ -83,8 +83,11 @@ contract BASIC is ReentrancyGuard, Ownable, IERC721Receiver, Pausable {
     address internal APP_Address;
     APP_Interface internal APP;
 
-    address internal NAKED_Address;
     address internal APP_NC_Address;
+    APP_NC_Interface internal APP_NC;
+
+    address internal SHARES_Address;
+    address internal NAKED_Address;
     address internal NP_Address;
 
     // --------------------------------------REPORTING--------------------------------------------//
