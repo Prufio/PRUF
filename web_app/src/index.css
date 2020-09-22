@@ -133,12 +133,13 @@ h4 {
 }
 
 .userInfoBox {
-  height: 15rem;
+  height: 12rem;
   width: 20rem;
   background-color: #002a40;
   border-radius: 0rem 0rem 1rem 0rem;
   color: rgb(255, 255, 255);
   font-size: 2rem;
+  font-weight: bold;
   font-family: Tahoma, Geneva, sans-serif;
   display: flex;
   flex-direction: column;
@@ -443,13 +444,8 @@ h4 {
   opacity: 0.96;
 }
 
-.headerButtons {
-  margin-left: 1rem;
-  flex-direction: row;
-  justify-content: flex-start;
-  display: flex;
-  max-height: 3rem;
-  margin-top: -21.75rem;
+.headerButton {
+  margin-top: -21.5rem;
 }
 
 .BannerForm {
@@ -705,7 +701,8 @@ h4 {
 
 .buttonDisplay {
   margin-left: 42rem;
-  margin-top: -21.5rem;
+  margin-top: auto;
+  line-height: 3rem;
 }
 
 .buttonGroupDisplay {
