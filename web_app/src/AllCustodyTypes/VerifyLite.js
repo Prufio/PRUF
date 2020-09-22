@@ -46,6 +46,11 @@ class VerifyLite extends Component {
 
   }
 
+  static getDerivedStateFromError(error) {
+    // Update state so the next render will show the fallback UI.
+    return { hasError: true };
+  }
+
   render() {//render continuously produces an up-to-date stateful document  
     const self = this;
 
@@ -54,24 +59,23 @@ class VerifyLite extends Component {
       this.setState({ txHash: "" });
       this.setState({error: undefined})
       this.setState({result: ""})
-      var idxHash;
-      var rgtRaw;
       
-      idxHash = window.web3.utils.soliditySha3(
-        this.state.type,
-        this.state.manufacturer,
-        this.state.model,
-        this.state.serial,
-    );
-
-      rgtRaw = window.web3.utils.soliditySha3(
-        this.state.first,
-        this.state.middle,
-        this.state.surname,
-        this.state.id,
-        this.state.secret
+      let idxHash = window.web3.utils.soliditySha3(
+        String(this.state.type),
+        String(this.state.manufacturer),
+        String(this.state.model),
+        String(this.state.serial),
       );
-      var rgtHash = window.web3.utils.soliditySha3(idxHash, rgtRaw);
+
+      let rgtRaw = window.web3.utils.soliditySha3(
+        String(this.state.first),
+        String(this.state.middle),
+        String(this.state.surname),
+        String(this.state.id),
+        String(this.state.secret)
+      );
+
+      let rgtHash = window.web3.utils.soliditySha3(String(idxHash), String(rgtRaw));
 
       console.log("idxHash", idxHash);
       console.log("addr: ", window.addr);

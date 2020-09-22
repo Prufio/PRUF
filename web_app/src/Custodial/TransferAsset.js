@@ -53,28 +53,43 @@ class ModifyDescription extends Component {
 
   }
 
+  static getDerivedStateFromError(error) {
+    // Update state so the next render will show the fallback UI.
+    return { hasError: true };
+  }
+
   render() {//render continuously produces an up-to-date stateful document  
     const self = this;
 
     const _accessAsset = async () => {
-      const self = this;
+      if (this.state.manufacturer === "" 
+      || this.state.type === "" 
+      || this.state.model === "" 
+      || this.state.serial === "" 
+      || this.state.first === "" 
+      || this.state.middle === "" 
+      || this.state.surname === "" 
+      || this.state.id === "" 
+      || this.state.secret === "") {
+        return alert("Please fill out all fields before submission")
+      }
 
       let idxHash = window.web3.utils.soliditySha3(
-        this.state.type,
-        this.state.manufacturer,
-        this.state.model,
-        this.state.serial,
+        String(this.state.type),
+        String(this.state.manufacturer),
+        String(this.state.model),
+        String(this.state.serial),
       );
 
       let rgtRaw = window.web3.utils.soliditySha3(
-        this.state.first,
-        this.state.middle,
-        this.state.surname,
-        this.state.id,
-        this.state.secret
+        String(this.state.first),
+        String(this.state.middle),
+        String(this.state.surname),
+        String(this.state.id),
+        String(this.state.secret)
       );
 
-      var rgtHash = window.web3.utils.soliditySha3(idxHash, rgtRaw);
+      let rgtHash = window.web3.utils.soliditySha3(String(idxHash), String(rgtRaw));
 
       var doesExist = await window.utils.checkAssetExists(idxHash);
       var infoMatches = await window.utils.checkMatch(idxHash, rgtHash);
