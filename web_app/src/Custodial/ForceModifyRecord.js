@@ -53,17 +53,25 @@ class ForceModifyRecord extends Component {
 
   }
 
+  static getDerivedStateFromError(error) {
+    // Update state so the next render will show the fallback UI.
+    return { hasError: true };
+  }
+
   render() {//render continuously produces an up-to-date stateful document  
     const self = this;
 
     const _accessAsset = async () => {
-      const self = this;
+
+      if (this.state.manufacturer === "" || this.state.type === "" || this.state.model === "" || this.state.serial === "") {
+        return alert("Please fill out all fields before submission")
+      }
 
       let idxHash = window.web3.utils.soliditySha3(
-        this.state.type,
-        this.state.manufacturer,
-        this.state.model,
-        this.state.serial,
+        String(this.state.type),
+        String(this.state.manufacturer),
+        String(this.state.model),
+        String(this.state.serial),
       );
 
       var doesExist = await window.utils.checkAssetExists(idxHash);

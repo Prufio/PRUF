@@ -1,3 +1,6 @@
+import bs58 from "bs58";
+import React from "react";
+
 function buildWindowUtils() {
 
   //UTIL_TKN.methods.currentACtokenInfo
@@ -11,6 +14,17 @@ function buildWindowUtils() {
     return tempHash;
   }
 
+  const _getIpfsHashFromBytes32 = (bytes32Hex) => {
+
+    // Add our default ipfs values for first 2 bytes:
+    // function:0x12=sha2, size:0x20=256 bits
+    // and cut off leading "0x"
+    const hashHex = "1220" + bytes32Hex.slice(2);
+    const hashBytes = Buffer.from(hashHex, "hex");
+    const hashStr = bs58.encode(hashBytes);
+    return hashStr;
+  };
+
   const _convertTimeTo = (rawTime, to) => {
     var time;
     if (to === "seconds") { time = rawTime }
@@ -20,6 +34,59 @@ function buildWindowUtils() {
     else if (to === "weeks") { time = rawTime * 604800 }
     else { alert("Invalid time unit") }
     return (time);
+  }
+
+  const _seperateKeysAndValues = (obj) => {
+    if (obj === {} || obj === undefined) {
+      return (alert("Oops, something went wrong"))
+    }
+
+    console.log(obj)
+
+    let textPairsArray = [];
+    let photoKeyArray = [];
+    let photoValueArray = [];
+
+    if (obj.photo !== undefined && obj.photo !== null) {
+      let photoKeys = Object.keys(obj.photo);
+      let photoVals = Object.values(obj.photo);
+      for (let i = 0; i < photoKeys.length; i++) {
+        photoValueArray.push(photoVals[i])
+        photoKeyArray.push(photoKeys[i])
+      }
+    }
+
+    if (obj.text !== undefined && obj.text !== null) {
+      let textKeys = Object.keys(obj.text);
+      let textVals = Object.values(obj.text);
+      for (let i = 0; i < textKeys.length; i++) {
+        textPairsArray.push(textKeys[i] + ": " + textVals[i])
+      }
+    }
+
+    let newObj = { photoKeys: photoKeyArray, photoValues: photoValueArray, text: textPairsArray }
+    return newObj;
+  }
+
+  const _generateDescription = (obj) => {
+
+    //console.log(self.state.descriptionElements)
+
+    let component = [<><h4>Images Found:</h4> <br></br></>];
+
+    for (let i = 0; i < obj.photoKeys.length; i++) {
+      //console.log("adding photo", obj.photoKeys[i])
+      component.push(<div key={String(i)}>{obj.photoKeys[i]}<br></br><img key={"img" + String(i)} src={String(obj.photoValues[i])} /> <br></br></div>);
+    }
+
+    component.push(<> <br></br> <h4>Text Values Found:</h4> <br></br> </>);
+    for (let x = 0; x < obj.text.length; x++) {
+      //console.log("adding text ", obj.text[x])
+      component.push(<div key={String(x)}>{String(obj.text[x])} <br></br></div>);
+    }
+
+    //console.log(component)
+    return component
   }
 
   const _checkAssetExists = async (idxHash) => {
@@ -38,8 +105,8 @@ function buildWindowUtils() {
         }
 
       });
-      console.log(tempBool);
-      return tempBool;
+    console.log(tempBool);
+    return tempBool;
   }
 
   const _checkMatch = async (idxHash, rgtHash) => {
@@ -56,7 +123,7 @@ function buildWindowUtils() {
         }
         console.log("check debug, _result, _error: ", _result, _error);
       });
-      return tempBool;
+    return tempBool;
   }
 
   const _checkEscrowStatus = async (idxHash) => {
@@ -71,6 +138,8 @@ function buildWindowUtils() {
         }
         else { tempBool = false }
       });
+
+    return tempBool;
   }
 
   const _checkNoteExists = async (idxHash) => {
@@ -89,6 +158,8 @@ function buildWindowUtils() {
         }
 
       });
+
+    return tempBool;
   }
 
   const _resolveAC = async () => {
@@ -104,9 +175,11 @@ function buildWindowUtils() {
         });
     }
 
-    window.utils.checkCreds();
-    window.utils.getCosts(6);
-    console.log("User authLevel: ", window.authLevel);
+    let acData = await window.utils.getACData("id", window.assetClass)
+    await window.utils.checkCreds(acData);
+    await window.utils.getCosts(6);
+    await console.log("User authLevel: ", window.authLevel);
+    return (window.assetClass)
 
   }
 
@@ -119,15 +192,81 @@ function buildWindowUtils() {
           else {
             window.assetClassName = _result
             console.log("resolved AC name ", window.assetClassName, " from AC index ", window.assetClass);
-            return (window.assetClassName)
+
           }
         });
     }
 
-    await window.utils.checkCreds();
+    let acData = await window.utils.getACData("id", window.assetClass)
+    await window.utils.checkCreds(acData);
     await window.utils.getCosts(6);
-    console.log("User authLevel: ", window.authLevel);
+    await console.log("User authLevel: ", window.authLevel);
+    return (window.assetClassName)
 
+  }
+
+  const _checkCreds = async (acData) => {
+    window.isAuthUser = undefined;
+    let custodyType = acData.custodyType
+
+    if (window.contracts !== undefined) {
+
+
+      await window.contracts.AC_TKN.methods
+        .ownerOf(window.assetClass)
+        .call({ from: window.addr }, (_error, _result) => {
+          if (_error) { console.log("Error: ", _error) }
+          else {
+            if (_result === window.addr) {
+              window.isACAdmin = true;
+            }
+            else {
+              window.isACAdmin = false;
+            }
+          }
+        });
+
+      if (custodyType === "Custodial") {
+        await window.contracts.AC_MGR.methods
+          .getUserType(window.web3.utils.soliditySha3(window.addr), window.assetClass)
+          .call({ from: window.addr }, (_error, _result) => {
+            if (_error) { console.log("Error: ", _error) }
+            else {
+              if (_result === "0" && window.isACAdmin === false) { window.authLevel = "Standard User"; window.isAuthUser = false; }
+              else if (_result === "1" && window.isACAdmin === false) { window.authLevel = "Authorized User"; window.isAuthUser = true; }
+              else if (_result === "9" && window.isACAdmin === false) { window.authLevel = "Robot"; window.isAuthUser = false; }
+              else if (_result === "1" && window.isACAdmin === true) { window.authLevel = "Authorized User/AC Admin"; window.isAuthUser = true; }
+              else if (_result === "9" && window.isACAdmin === true) { window.authLevel = "Robot/AC Admin"; window.isAuthUser = false; }
+              else if (_result === "0" && window.isACAdmin === true) { window.authLevel = "AC Admin"; window.isAuthUser = false; }
+              console.log(_result)
+              return (window.authLevel)
+            }
+          });
+      }
+
+      else if (custodyType === "Non-Custodial") {
+        await window.contracts.ID_TKN.methods
+          .balanceOf(window.addr)
+          .call({ from: window.addr }, (_error, _result) => {
+            if (_error) { console.log("Error: ", _error) }
+            else {
+              if (Number(_result) === 1 && window.isACAdmin === false) { window.authLevel = "Pruf Minter"; window.isAuthUser = false; }
+              else if (Number(_result) < 1 && window.isACAdmin === true) { window.authLevel = "Pruf User/AC Admin"; window.isAuthUser = false; }
+              else if (Number(_result) === 1 && window.isACAdmin === true) { window.authLevel = "Pruf Minter/AC Admin"; window.isAuthUser = false; }
+              else if (Number(_result) < 1 && window.isACAdmin === false) { window.authLevel = "Pruf User"; window.isAuthUser = false; }
+              console.log(_result)
+              return (window.authLevel)
+            }
+          });
+      }
+
+
+
+    }
+
+    else {
+      console.log("window.contracts object is undefined.")
+    }
   }
 
   const _checkForAC = async (ref, ac) => {
@@ -177,11 +316,6 @@ function buildWindowUtils() {
           }
         });
     }
-
-    window.utils.checkCreds();
-    window.utils.getCosts(6);
-    console.log("User authLevel: ", window.authLevel);
-
   }
 
   const _getEscrowData = async (idxHash) => {
@@ -218,7 +352,7 @@ function buildWindowUtils() {
 
       }
 
-      else if (ref === "id"){tempAC = ac;}
+      else if (ref === "id") { tempAC = ac; }
 
       await window.contracts.AC_MGR.methods
         .getAC_data(tempAC)
@@ -227,11 +361,11 @@ function buildWindowUtils() {
           else {
             let _custodyType;
 
-            if(Object.values(_result)[1] === "1"){
+            if (Object.values(_result)[1] === "1") {
               _custodyType = "Custodial"
             }
 
-            else{
+            else {
               _custodyType = "Non-Custodial"
             }
 
@@ -245,49 +379,8 @@ function buildWindowUtils() {
           }
         });
       return tempData;
-  }
-
-  }
-
-  const _checkCreds = async () => {
-    window.isAuthUser = undefined;
-    if (window.contracts !== undefined) {
-
-      await window.contracts.AC_TKN.methods
-        .ownerOf(window.assetClass)
-        .call({ from: window.addr }, (_error, _result) => {
-          if (_error) { console.log("Error: ", _error) }
-          else {
-            if (_result === window.addr) {
-              window.isACAdmin = true;
-            }
-            else {
-              window.isACAdmin = false;
-            }
-          }
-        });
-
-      await window.contracts.AC_MGR.methods
-        .getUserType(window.web3.utils.soliditySha3(window.addr), window.assetClass)
-        .call({ from: window.addr }, (_error, _result) => {
-          if (_error) { console.log("Error: ", _error) }
-          else {
-            if (_result === "0" && window.isACAdmin === false) { window.authLevel = "Standard User"; window.isAuthUser = false; }
-            else if (_result === "1" && window.isACAdmin === false) { window.authLevel = "Authorized User"; window.isAuthUser = true; }
-            else if (_result === "9" && window.isACAdmin === false) { window.authLevel = "Robot"; window.isAuthUser = false; }
-            else if (_result === "1" && window.isACAdmin === true) { window.authLevel = "Authorized User/AC Admin"; window.isAuthUser = true; }
-            else if (_result === "9" && window.isACAdmin === true) { window.authLevel = "Robot/AC Admin"; window.isAuthUser = false; }
-            else if (_result === "0" && window.isACAdmin === true) { window.authLevel = "AC Admin"; window.isAuthUser = false; }
-            console.log(_result)
-            return (window.authLevel)
-          }
-        });
-
     }
 
-    else {
-      console.log("window.contracts object is undefined.")
-    }
   }
 
   const _getCosts = async (numOfServices) => {
@@ -318,7 +411,7 @@ function buildWindowUtils() {
         forceTransferCost: window.costArray[5],
       }
 
-      window.utils.checkCreds()
+      //window.utils.checkCreds()
 
       console.log("window costs object: ", window.costs);
       //console.log("this should come last");
@@ -327,22 +420,22 @@ function buildWindowUtils() {
       console.log("Window.contracts object is undefined.")
     }
   }
-const _getDescriptionHash = async (idxHash) => {
-  await window.contracts.STOR.methods
-        .retrieveShortRecord(idxHash)
-        .call({ from: window.addr }, function (_error, _result) {
-          if (_error) {
-            return (console.log("IN ERROR IN ERROR IN ERROR"))
-          } else if (
-            Object.values(_result)[5] === "0"
-          ) {
-          } else {
-            window.descriptionBytes32Hash = Object.values(_result)[5];
-            console.log(window.descriptionBytes32Hash)
-            return(Object.values(_result)[5])
-          }
-        });
-}
+  const _getDescriptionHash = async (idxHash) => {
+    await window.contracts.STOR.methods
+      .retrieveShortRecord(idxHash)
+      .call({ from: window.addr }, function (_error, _result) {
+        if (_error) {
+          return (console.log("IN ERROR IN ERROR IN ERROR"))
+        } else if (
+          Object.values(_result)[5] === "0"
+        ) {
+        } else {
+          window.descriptionBytes32Hash = Object.values(_result)[5];
+          console.log(window.descriptionBytes32Hash)
+          return (Object.values(_result)[5])
+        }
+      });
+  }
 
   const _getContracts = async () => {
 
@@ -421,6 +514,32 @@ const _getDescriptionHash = async (idxHash) => {
     }
   }
 
+  const _getIPFSJSONObject = async (lookup) => {
+    console.log(lookup)
+    await window.ipfs.cat(lookup, (error, result) => {
+      if (error) {
+        console.log("Something went wrong. Unable to find file on IPFS");
+      } else {
+        console.log("Here's what we found for asset description: ", result);
+      }
+      console.log(JSON.parse(result));
+      return JSON.parse(result)
+    });
+  };
+
+  const _getIPFSRaw = async (lookup) => {
+    console.log(lookup)
+    await window.ipfs.cat(lookup, (error, result) => {
+      if (error) {
+        console.log("Something went wrong. Unable to find file on IPFS");
+      } else {
+        console.log("Here's what we found for asset description: ", result);
+      }
+      console.log(result);
+      return result
+    });
+  };
+
   window.utils = {
     checkCreds: _checkCreds,
     getCosts: _getCosts,
@@ -439,7 +558,11 @@ const _getDescriptionHash = async (idxHash) => {
     checkForAC: _checkForAC,
     getDescriptionHash: _getDescriptionHash,
     getEscrowData: _getEscrowData,
-
+    getIpfsHashFromBytes32: _getIpfsHashFromBytes32,
+    getIPFSJSONObject: _getIPFSJSONObject,
+    getIPFSRaw: _getIPFSRaw,
+    generateDescription: _generateDescription,
+    seperateKeysAndValues: _seperateKeysAndValues,
   }
 
   console.log("Setting up window utils")

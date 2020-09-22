@@ -38,6 +38,11 @@ class Home extends Component {
 
   }
 
+  static getDerivedStateFromError(error) {
+    // Update state so the next render will show the fallback UI.
+    return { hasError: true };
+  }
+
   render() {
 
     const _setAC = async () => {
@@ -64,9 +69,9 @@ class Home extends Component {
           }
 
           window.assetClass = this.state.assetClass;
-          window.utils.resolveACFromID()
-          await window.utils.checkCreds();
-          await window.utils.getCosts(6);
+          await window.utils.resolveACFromID()
+          await window.utils.getACData("id", window.assetClass)
+
           console.log(window.authLevel);
           return this.setState({ authLevel: window.authLevel });
         }
@@ -81,6 +86,7 @@ class Home extends Component {
 
           window.assetClassName = this.state.assetClass
           await window.utils.resolveAC();
+          await window.utils.getACData("id", window.assetClass)
           return this.setState({ authLevel: window.authLevel });
         }
       }
