@@ -137,7 +137,7 @@ class ModifyDescriptionNC extends Component {
 
     return (
       <div>
-        <Form className="MDform" id='MainForm'>
+        <Form className="twoRowForm" id='MainForm'>
           {window.addr === undefined && (
             <div className="errorResults">
               <h2>User address unreachable</h2>
@@ -268,8 +268,8 @@ class ModifyDescriptionNC extends Component {
               </Form.Row>
               {this.state.hashPath !== "" && (
                 <Form.Row>
-                  <Form.Group className="buttonDisplay">
-                    <Button
+                  <Form.Group >
+                    <Button className="buttonDisplay"
                       variant="primary"
                       type="button"
                       size="lg"
@@ -282,8 +282,8 @@ class ModifyDescriptionNC extends Component {
               )}
               {this.state.hashPath === "" && (
                 <Form.Row>
-                  <Form.Group className="buttonDisplay">
-                    <Button
+                  <Form.Group >
+                    <Button className="buttonDisplay"
                       variant="primary"
                       type="button"
                       size="lg"

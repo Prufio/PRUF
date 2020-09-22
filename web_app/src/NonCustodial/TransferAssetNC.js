@@ -93,7 +93,7 @@ class ModifyDescriptionNC extends Component {
 
     return (
       <div>
-        <Form className="TANCform" id='MainForm'>
+        <Form className="threeRowForm" id='MainForm'>
           {window.addr === undefined && (
             <div className="errorResults">
               <h2>User address unreachable</h2>
@@ -163,8 +163,8 @@ class ModifyDescriptionNC extends Component {
               </Form.Row>
 
               <Form.Row>
-                <Form.Group className="buttonDisplay">
-                  <Button
+                <Form.Group>
+                  <Button className="buttonDisplay"
                     variant="primary"
                     type="button"
                     size="lg"

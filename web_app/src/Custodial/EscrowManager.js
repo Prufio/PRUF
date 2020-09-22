@@ -173,7 +173,7 @@ class EscrowManager extends Component {
 
     return (
       <div>
-        <Form className="MEform" id='MainForm'>
+        <Form className="threeRowForm" id='MainForm'>
           {window.addr === undefined && (
             <div className="errorResults">
               <h2>User address unreachable</h2>

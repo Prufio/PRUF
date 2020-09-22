@@ -90,7 +90,7 @@ class ExportAssetNC extends Component {
 
     return (//default render
       <div>
-        <Form className="EAform" id='MainForm'>
+        <Form className="twoRowForm" id='MainForm'>
           {window.addr === undefined && (
             <div className="errorResults">
               <h2>User address unreachable</h2>
@@ -147,8 +147,8 @@ class ExportAssetNC extends Component {
                 </Form.Group>
               </Form.Row>
               <Form.Row>
-                <Form.Group className="buttonDisplay">
-                  <Button
+                <Form.Group>
+                  <Button className="buttonDisplay"
                     variant="primary"
                     type="button"
                     size="lg"

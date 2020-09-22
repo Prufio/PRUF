@@ -98,7 +98,7 @@ class VerifyLite extends Component {
 
     return (
       <div>
-        <Form className="VRform" id='MainForm'>
+        <Form className="fourRowForm" id='MainForm'>
         {window.addr === undefined && (
             <div className="errorResults">
               <h2>User address unreachable</h2>
@@ -210,8 +210,8 @@ class VerifyLite extends Component {
               </Form.Row>
 
               <Form.Row>
-                <Form.Group className="buttonDisplay">
-                  <Button
+                <Form.Group>
+                  <Button className="buttonDisplay"
                     variant="primary"
                     type="button"
                     size="lg"

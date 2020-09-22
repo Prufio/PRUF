@@ -113,7 +113,7 @@ class ExportAsset extends Component {
 
     return (//default render
       <div>
-        <Form className="EAform" id='MainForm'>
+        <Form className="twoRowForm" id='MainForm'>
           {window.addr === undefined && (
             <div className="errorResults">
               <h2>User address unreachable</h2>
@@ -178,8 +178,8 @@ class ExportAsset extends Component {
               </Form.Row>
 
               <Form.Row>
-                <Form.Group className="buttonDisplay">
-                  <Button
+                <Form.Group >
+                    <Button className="buttonDisplay"
                     variant="primary"
                     type="button"
                     size="lg"
@@ -195,8 +195,8 @@ class ExportAsset extends Component {
                 <>
                 <h2 color="white"fontWeight="bold">Asset staged for export to agent: {window.contracts.APP._address} </h2>
                 <Form.Row>
-                <Form.Group className="buttonDisplay">
-                  <Button
+                <Form.Group >
+                    <Button className="buttonDisplay"
                     variant="primary"
                     type="button"
                     size="lg"

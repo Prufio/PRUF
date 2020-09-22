@@ -65,7 +65,7 @@ class RetrieveRecord extends Component {
         return alert("Please fill out all fields before submission")
       }
       if (self.state.showDescription === false) {
-        await self.setState({descriptionElements: window.utils.seperateKeysAndValues(self.state.ipfsObject)})
+        await self.setState({ descriptionElements: window.utils.seperateKeysAndValues(self.state.ipfsObject) })
         return self.setState({ showDescription: true })
       }
       else {
@@ -76,6 +76,7 @@ class RetrieveRecord extends Component {
     const _retrieveRecord = async () => {
       const self = this;
       var ipfsHash;
+      var tempResult;
 
       let idxHash = window.web3.utils.soliditySha3(
         String(this.state.type),
@@ -117,7 +118,7 @@ class RetrieveRecord extends Component {
             else if (Object.values(_result)[0] === '70') { self.setState({ status: 'Importable' }); }
             self.setState({ result: Object.values(_result) })
             self.setState({ error: undefined });
-
+            tempResult = Object.values(_result);
             if (Object.values(_result)[5] > 0) { ipfsHash = window.utils.getIpfsHashFromBytes32(Object.values(_result)[5]); }
             console.log("ipfs data in promise", ipfsHash)
             if (Object.values(_result)[6] > 0) {
@@ -131,12 +132,24 @@ class RetrieveRecord extends Component {
           }
         });
 
+      window.assetClass = tempResult[2]
+      window.assetInfo = {
+        assetClass: tempResult[2],
+        status: tempResult[0],
+        idx: idxHash
+      }
+      await window.utils.resolveACFromID()
+      await window.utils.getACData("id", window.assetClass)
+
+      console.log(window.authLevel);
+      return this.setState({ authLevel: window.authLevel })
+
       await this.setState({ ipfsObject: window.utils.getIPFSJSONObject(ipfsHash) });
     }
 
     return (
       <div>
-        <Form className="RRform">
+        <Form className="twoRowForm">
           {window.addr === undefined && (
             <div className="errorResults">
               <h2>User address unreachable</h2>
@@ -194,8 +207,8 @@ class RetrieveRecord extends Component {
 
               <Form.Row>
                 {this.state.status === "" && (
-                  <Form.Group className="buttonDisplay">
-                    <Button
+                  <Form.Group>
+                    <Button className="buttonDisplay"
                       variant="primary"
                       type="button"
                       size="lg"
@@ -207,21 +220,23 @@ class RetrieveRecord extends Component {
                 )}
 
                 {this.state.status !== "" && this.state.ipfsObject !== undefined && (
-
-                  <Form.Group className="buttonDisplay">
+                  
+                  <Form.Group>
                     {!this.state.showDescription && (
-                      <Button
-                        variant="primary"
-                        type="button"
-                        size="lg"
-                        onClick={_toggleDisplay}
-                      >
-                        Show Description
-                      </Button>
+                      <Form.Group>
+                        <Button className="ownerButtonDisplay2"
+                          variant="primary"
+                          type="button"
+                          size="lg"
+                          onClick={_toggleDisplay}
+                        >
+                          Show Description
+                  </Button>
+                  </Form.Group>
                     )}
                     {this.state.showDescription && (
-                      <Form.Group className="buttonDisplay">
-                        <Button
+                      <Form.Group>
+                        <Button className="ownerButtonDisplay2"
                           variant="primary"
                           type="button"
                           size="lg"
@@ -232,8 +247,8 @@ class RetrieveRecord extends Component {
                       </Form.Group>
                     )}
                     {this.state.type !== undefined && this.state.type !== "" && (
-                      <Form.Group className="buttonDisplay">
-                        <Button
+                        <Form.Group>
+                        <Button className="ownerButtonDisplay2"
                           variant="primary"
                           type="button"
                           size="lg"

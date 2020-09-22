@@ -71,7 +71,7 @@ class enableContract extends Component {
 
     return (
       <div>
-        <Form className="ECForm">
+        <Form className="twoRowForm">
           {window.addr === undefined && (
             <div className="VRresults">
               <h2>User address unreachable</h2>
@@ -107,8 +107,8 @@ class enableContract extends Component {
                   size="lg"
                 />
               </Form.Group>
-              <Form.Group className="buttonDisplay">
-                <Button
+              <Form.Group>
+                <Button className="buttonDisplay"
                   variant="primary"
                   type="button"
                   size="lg"

@@ -113,7 +113,7 @@ class ForceModifyRecordNC extends Component {
 
     return (
       <div>
-        <Form className="FMRNCform" id='MainForm'>
+        <Form className="twoRowForm" id='MainForm'>
           {window.addr === undefined && (
             <div className="errorResults">
               <h2>User address unreachable</h2>
@@ -222,8 +222,8 @@ class ForceModifyRecordNC extends Component {
                 </Form.Group>
               </Form.Row>
               <Form.Row>
-                  <Form.Group className="buttonDisplay">
-                    <Button
+                  <Form.Group >
+                    <Button className="buttonDisplay"
                       variant="danger"
                       type="button"
                       size="lg"
