@@ -279,8 +279,8 @@ class AddNote extends Component {
                 </Form.Group>
               </Form.Row>
                 <Form.Row>
-                  <Form.Group className="buttonDisplay">
-                    <Button
+                  <Form.Group >
+                    <Button className="buttonDisplay"
                       variant="primary"
                       type="button"
                       size="lg"
@@ -301,8 +301,8 @@ class AddNote extends Component {
                 </Form.Row>
                 {this.state.hashPath !== "" && (
                 <Form.Row>
-                  <Form.Group className="buttonDisplay">
-                    <Button
+                  <Form.Group >
+                    <Button className="buttonDisplay"
                       variant="primary"
                       type="button"
                       size="lg"
@@ -316,8 +316,8 @@ class AddNote extends Component {
               )}
               {this.state.hashPath === "" && (
                 <Form.Row>
-                  <Form.Group className="buttonDisplay">
-                    <Button
+                  <Form.Group >
+                    <Button className="buttonDisplay"
                       variant="primary"
                       type="button"
                       size="lg"

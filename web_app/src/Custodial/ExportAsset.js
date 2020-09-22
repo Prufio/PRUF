@@ -171,8 +171,8 @@ class ExportAsset extends Component {
               </Form.Row>
 
               <Form.Row>
-                <Form.Group className="buttonDisplay">
-                  <Button
+                <Form.Group >
+                    <Button className="buttonDisplay"
                     variant="primary"
                     type="button"
                     size="lg"
@@ -188,8 +188,8 @@ class ExportAsset extends Component {
                 <>
                 <h2 color="white"fontWeight="bold">Asset staged for export to agent: {window.contracts.APP._address} </h2>
                 <Form.Row>
-                <Form.Group className="buttonDisplay">
-                  <Button
+                <Form.Group >
+                    <Button className="buttonDisplay"
                     variant="primary"
                     type="button"
                     size="lg"

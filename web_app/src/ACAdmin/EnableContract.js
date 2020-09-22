@@ -107,8 +107,8 @@ class enableContract extends Component {
                   size="lg"
                 />
               </Form.Group>
-              <Form.Group className="buttonDisplay">
-                <Button
+              <Form.Group>
+                <Button className="buttonDisplay"
                   variant="primary"
                   type="button"
                   size="lg"

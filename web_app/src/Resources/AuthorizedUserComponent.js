@@ -35,7 +35,7 @@ class AuthorizedUserComponent extends Component {
                     <NavDropdown.Item id="header-dropdown" as={NavLink} to="/decrement-counter">Decrement Counter</NavDropdown.Item>
                     <NavDropdown.Item id="header-dropdown" as={NavLink} to="/modify-description">Modify Description</NavDropdown.Item>
                     <NavDropdown.Item id="header-dropdown" as={NavLink} to="/add-note">Add Note</NavDropdown.Item>
-                    <NavDropdown.Item id="header-dropdown" as={NavLink} to="/force-modify-record">Modify Rightsholder</NavDropdown.Item>
+                    <NavDropdown.Item id="header-dropdown" as={NavLink} to="/force-transfer-asset">Modify Rightsholder</NavDropdown.Item>
                 </NavDropdown>
             </li>
         </Nav>

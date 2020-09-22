@@ -94,9 +94,7 @@ class UpdateACName extends Component {
                 />
               </Form.Group>
               
-              <Form.Group 
-              
-              >
+              <Form.Group>
                 <Button className="buttonDisplay"
                   variant="primary"
                   type="button"
