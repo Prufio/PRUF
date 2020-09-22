@@ -1170,7 +1170,7 @@ interface ECR_MGR_Interface {
 interface RCLR_Interface {
     function discard(bytes32 _idxHash) external;
 
-    function recycle(bytes32 _idxHash) external payable;
+    function recycle(bytes32 _idxHash) external;
 }
 
 
@@ -1182,4 +1182,16 @@ interface RCLR_Interface {
  */
 interface APP_Interface {
     function transferAssetToken(address _to, bytes32 _idxHash) external;
+    function $withdraw() external;
+}
+
+//------------------------------------------------------------------------------------------------
+/*
+ * @dev Interface for APP_NC
+ * INHERIANCE:
+    import "./PRUF_CORE.sol";
+ */
+interface APP_NC_Interface {
+    function transferAssetToken(address _to, bytes32 _idxHash) external;
+    function $withdraw() external;
 }
