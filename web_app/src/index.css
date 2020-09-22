@@ -172,8 +172,9 @@ h4 {
   flex-direction: column;
   justify-content: bottom;
   margin-right: 130rem;
-  opacity: 0.95;
-  margin-top: -1rem;
+  opacity: 0.96;
+  margin-top: 1.5rem;
+  position: fixed;
 }
 
 .VRText {
@@ -220,7 +221,7 @@ h4 {
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  margin-top: -13rem;
+  margin-top: -1.5rem;
   opacity: 0.96;
 }
 
@@ -232,8 +233,8 @@ h4 {
   padding: 2rem;
   display: flex;
   flex-direction: row;
-  justify-content: space-between;
-  margin-top: -13rem;
+  justify-content: center;
+  margin-top: -1.5rem;
   opacity: 0.96;
 }
 
@@ -245,8 +246,8 @@ h4 {
   padding: 2rem;
   display: flex;
   flex-direction: row;
-  justify-content: space-between;
-  margin-top: -13rem;
+  justify-content: center;
+  margin-top: -1.5rem;
   opacity: 0.96;
 }
 
@@ -258,8 +259,8 @@ h4 {
   padding: 2rem;
   display: flex;
   flex-direction: row;
-  justify-content: space-between;
-  margin-top: -13rem;
+  justify-content: center;
+  margin-top: -1.5rem;
   opacity: 0.96;
 }
 
@@ -272,7 +273,7 @@ h4 {
   display: flex;
   flex-direction: row;
   justify-content: center;
-  margin-top: -13rem;
+  margin-top: -1.5rem;
   opacity: 0.96;
 }
 
@@ -285,7 +286,7 @@ h4 {
   display: flex;
   flex-direction: row;
   justify-content: center;
-  margin-top: -13rem;
+  margin-top: -1.5rem;
   opacity: 0.96;
 }
 
@@ -297,8 +298,8 @@ h4 {
   padding: 2rem;
   display: flex;
   flex-direction: row;
-  justify-content: space-between;
-  margin-top: -13rem;
+  justify-content: center;
+  margin-top: -1.5rem;
   opacity: 0.96;
 }
 
@@ -310,8 +311,8 @@ h4 {
   padding: 2rem;
   display: flex;
   flex-direction: row;
-  justify-content: space-between;
-  margin-top: -13rem;
+  justify-content: center;
+  margin-top: -1.5rem;
   opacity: 0.96;
 }
 
@@ -323,8 +324,8 @@ h4 {
   padding: 2rem;
   display: flex;
   flex-direction: row;
-  justify-content: space-between;
-  margin-top: -13rem;
+  justify-content: center;
+  margin-top: -1.5rem;
   opacity: 0.96;
 }
 
@@ -337,7 +338,7 @@ h4 {
   display: flex;
   flex-direction: row;
   justify-content: center;
-  margin-top: -13rem;
+  margin-top: -1.5rem;
   opacity: 0.96;
 }
 
@@ -350,7 +351,7 @@ h4 {
   display: flex;
   flex-direction: row;
   justify-content: center;
-  margin-top: -13rem;
+  margin-top: -1.5rem;
   opacity: 0.96;
 }
 
