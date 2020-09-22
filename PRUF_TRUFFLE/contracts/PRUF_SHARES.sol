@@ -120,6 +120,10 @@ contract SHARES is ReentrancyGuard, Ownable, Pausable {
 
     function claimDividend(uint256 tokenId) external {
         require(
+            SHAR_TKN.ownerOf(tokenId) == msg.sender,
+            "PS:GP:caller does not hold token"
+        );
+        require(
             block.timestamp < nextPayDay,
             "PS:GP:not payday yet"
         );
@@ -128,10 +132,7 @@ contract SHARES is ReentrancyGuard, Ownable, Pausable {
             "PS:GP:not payday for this token"
         );
         require(block.timestamp > lastPayDay, "PS:GP:not payday yet");
-        require(
-            SHAR_TKN.ownerOf(tokenId) == msg.sender,
-            "PS:GP:caller does not hold token"
-        );
+        
         //^^^^^^^checks^^^^^^^^^
 
         tokenPaymentDate[tokenId] = nextPayDay;
@@ -148,14 +149,15 @@ contract SHARES is ReentrancyGuard, Ownable, Pausable {
             newDividendPeriod();
         }
         require(
+            SHAR_TKN.ownerOf(tokenId) == msg.sender,
+            "PS:GP:caller does not hold token"
+        );
+        require(
             tokenPaymentDate[tokenId] < nextPayDay,
             "PS:GP:not payday for this token"
         );
         require(block.timestamp > lastPayDay, "PS:GP:not payday yet");
-        require(
-            SHAR_TKN.ownerOf(tokenId) == msg.sender,
-            "PS:GP:caller does not hold token"
-        );
+        
         //^^^^^^^checks^^^^^^^^^
 
         tokenPaymentDate[tokenId] = nextPayDay;
