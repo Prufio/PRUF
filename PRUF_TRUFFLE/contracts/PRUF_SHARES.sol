@@ -53,7 +53,7 @@ contract SHARES is ReentrancyGuard, Ownable, Pausable {
     uint256 internal heldFunds;
 
     mapping(uint256 => uint256) private tokenPaymentDate; // Main Data Storage
-    mapping(uint256 => uint256) private tokenPaymentStatus; // Main Data Storage
+    //mapping(uint256 => uint256) private tokenPaymentStatus; // Main Data Storage
 
     //-----------------------------------------------Events------------------------------------------------//
     event REPORT(string _msg);
@@ -63,7 +63,6 @@ contract SHARES is ReentrancyGuard, Ownable, Pausable {
     function pay() public payable {
         require(msg.value > 0, "MOAR ETH!!!!!");
     }
-
 
     /*
      * @dev Set adress of STOR contract to interface with
@@ -83,7 +82,6 @@ contract SHARES is ReentrancyGuard, Ownable, Pausable {
         //^^^^^^^effects^^^^^^^^^
     }
 
-
     /*
      * @dev Resolve Contract Addresses from STOR
      */
@@ -94,7 +92,6 @@ contract SHARES is ReentrancyGuard, Ownable, Pausable {
         SHAR_TKN = SHAR_TKN_Interface(SHAR_TKN_Address);
         //^^^^^^^Intercations^^^^^^^^^
     }
-
 
     /**
      * sets a new dividend ending period payPeriod.seconds in the future
@@ -113,15 +110,13 @@ contract SHARES is ReentrancyGuard, Ownable, Pausable {
         dividend = payableFunds.div(maxSupply); //calculate the dividend per share of the last interval's reciepts
         //^^^^^^^effects^^^^^^^^^
 
-        emit REPORT("New Period Started");
+        emit REPORT("New dividend period started");
         //^^^^^^^interactions^^^^^^^^^
-
     }
 
-    function StartNewDividendPeriod () external {
+    function StartNewDividendPeriod() external {
         newDividendPeriod();
     }
-
 
     function claimDividend(uint256 tokenId) external {
         require(
@@ -133,24 +128,29 @@ contract SHARES is ReentrancyGuard, Ownable, Pausable {
             SHAR_TKN.ownerOf(tokenId) == msg.sender,
             "PS:GP:caller does not hold token"
         );
+        //^^^^^^^checks^^^^^^^^^
 
-        if (block.timestamp > nextPayDay) {
-            //if no one has done it yet, start a new dividend period
+        if (block.timestamp > nextPayDay) { //if no one has done it yet, start a new dividend period
             newDividendPeriod();
         }
 
         tokenPaymentDate[tokenId] = nextPayDay;
         heldFunds = heldFunds.add(dividend);
-        _asyncTransfer(msg.sender, dividend);
-    }
+        //^^^^^^^effects^^^^^^^^^
 
+        _asyncTransfer(msg.sender, dividend);
+        //^^^^^^^interactions^^^^^^^^^
+    }
 
     function withdrawFunds(address payable payee) public {
+        //^^^^^^^checks^^^^^^^^^
+
         heldFunds = heldFunds.sub(payments(payee));
+        //^^^^^^^effects^^^^^^^^^
+
         withdrawPayments(payee);
+        //^^^^^^^interactions^^^^^^^^^
     }
-
-
 
     function sec_until_payday() public view returns (uint256, uint256) {
         if (nextPayDay > block.timestamp) {
@@ -158,8 +158,8 @@ contract SHARES is ReentrancyGuard, Ownable, Pausable {
         } else {
             return (lastPayDay, 0);
         }
+        //^^^^^^^interactions^^^^^^^^^
     }
-
 
     function getInfo(uint256 tokenId)
         external
@@ -181,9 +181,10 @@ contract SHARES is ReentrancyGuard, Ownable, Pausable {
             dividend,
             heldFunds
         );
+        //^^^^^^^interactions^^^^^^^^^
     }
 
-//--------------------------------------------------FROM OZ PULLPAYMENT-------------------------------------------------
+    //--------------------------------------------------FROM OZ PULLPAYMENT-------------------------------------------------
     /**
      * @dev Withdraw accumulated payments, forwarding all gas to the recipient.
      *
@@ -202,7 +203,6 @@ contract SHARES is ReentrancyGuard, Ownable, Pausable {
         _escrow.withdraw(payee);
     }
 
-
     /**
      * @dev Returns the payments owed to an address.
      * @param dest The creditor's address.
@@ -210,7 +210,6 @@ contract SHARES is ReentrancyGuard, Ownable, Pausable {
     function payments(address dest) public view returns (uint256) {
         return _escrow.depositsOf(dest);
     }
-
 
     /**
      * @dev Called by the payer to store the sent amount as credit to be pulled.
@@ -223,5 +222,4 @@ contract SHARES is ReentrancyGuard, Ownable, Pausable {
     function _asyncTransfer(address dest, uint256 amount) internal {
         _escrow.deposit{value: amount}(dest);
     }
-
 }
