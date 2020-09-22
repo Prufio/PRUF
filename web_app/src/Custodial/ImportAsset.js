@@ -135,7 +135,7 @@ class ImportAsset extends Component {
 
     return (
       <div>
-        <Form className="FMRform" id='MainForm'>
+        <Form className="twoRowForm" id='MainForm'>
           {window.addr === undefined && (
             <div className="errorResults">
               <h2>User address unreachable</h2>
@@ -198,8 +198,8 @@ class ImportAsset extends Component {
                 </Form.Group>
               </Form.Row>
               <Form.Row>
-                    <Form.Group className="buttonDisplay">
-                      <Button
+                    <Form.Group>
+                      <Button className="buttonDisplay"
                         variant="primary"
                         type="button"
                         size="lg"

@@ -137,7 +137,7 @@ class ModifyDescriptionNC extends Component {
 
     return (
       <div>
-        <Form className="MDform" id='MainForm'>
+        <Form className="twoRowForm" id='MainForm'>
           {window.addr === undefined && (
             <div className="errorResults">
               <h2>User address unreachable</h2>

@@ -116,7 +116,7 @@ class ModifyRecordStatusNC extends Component {
 
     return (
       <div>
-        <Form className="MRNCform" id='MainForm'>
+        <Form className="threeRowForm" id='MainForm'>
           {window.addr === undefined && (
             <div className="errorResults">
               <h2>User address unreachable</h2>

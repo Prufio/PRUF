@@ -67,7 +67,7 @@ class UpdateACName extends Component {
 
     return (
       <div>
-        <Form className="UNForm">
+        <Form className="oneRowForm">
           {window.addr === undefined && (
             <div className="VRresults">
               <h2>User address unreachable</h2>

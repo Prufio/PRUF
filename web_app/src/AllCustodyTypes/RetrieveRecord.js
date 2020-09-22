@@ -136,7 +136,7 @@ class RetrieveRecord extends Component {
 
     return (
       <div>
-        <Form className="RRform">
+        <Form className="twoRowForm">
           {window.addr === undefined && (
             <div className="errorResults">
               <h2>User address unreachable</h2>

@@ -61,7 +61,7 @@ class AddUser extends Component {
 
     return (
       <div>
-        <Form className="AUForm">
+        <Form className="twoRowForm">
           {window.addr === undefined && (
             <div className="VRresults">
               <h2>User address unreachable</h2>

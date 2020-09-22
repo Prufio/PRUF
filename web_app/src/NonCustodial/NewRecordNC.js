@@ -2,6 +2,7 @@ import React, { Component } from "react";
 import Form from "react-bootstrap/Form";
 import Col from "react-bootstrap/Col";
 import Button from "react-bootstrap/Button";
+import FormLabel from "react-bootstrap/FormLabel";
 
 class NewRecordNC extends Component {
   constructor(props) {
@@ -111,7 +112,7 @@ class NewRecordNC extends Component {
 
     return (//default render
       <div>
-        <Form className="NRform" id='MainForm'>
+        <Form className="fiveRowFormWithPrice" id='MainForm'>
           {window.addr === undefined && (
             <div className="errorResults">
               <h2>User address unreachable</h2>
@@ -259,7 +260,7 @@ class NewRecordNC extends Component {
                   >
                     New Record
                     </Button>
-                  <div className="LittleTextNewRecord"> Cost in AC {window.assetClass}: {Number(window.costs.newRecordCost) / 1000000000000000000} ETH</div>
+                  <Form.Label className="LittleTextNewRecord"> Cost in AC {window.assetClass}: {Number(window.costs.newRecordCost) / 1000000000000000000} ETH</Form.Label>
                 </Form.Group>
               </Form.Row>
               <br></br>

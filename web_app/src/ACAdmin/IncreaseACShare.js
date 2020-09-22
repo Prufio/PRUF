@@ -67,7 +67,7 @@ class IncreaseACShare extends Component {
 
     return (
       <div>
-        <Form className="ECForm">
+        <Form className="twoRowForm">
           {window.addr === undefined && (
             <div className="VRresults">
               <h2>User address unreachable</h2>

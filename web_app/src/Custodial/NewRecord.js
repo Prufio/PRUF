@@ -114,7 +114,7 @@ class NewRecord extends Component {
 
     return (//default render
       <div>
-        <Form className="NRform" id='MainForm'>
+        <Form className="fiveRowFormWithPrice" id='MainForm'>
           {window.addr === undefined && (
             <div className="errorResults">
               <h2>User address unreachable</h2>

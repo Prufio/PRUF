@@ -132,6 +132,33 @@ h4 {
   font-family: Tahoma, Geneva, sans-serif;
 }
 
+.downSizeLogo{
+  /* object-fit: cover; */
+  width: 23.5rem;
+  height: 4.7rem;
+}
+
+.headerButton {
+  margin-top: -21.5rem;
+}
+
+.BannerForm {
+  height: 4.88rem;
+  max-width: none;
+  background-color: #002a40;
+  justify-content: center;
+  display: flex;
+  opacity: 0.95;
+}
+
+.imageForm {
+  justify-content: flex-start;
+  margin-right: auto;
+  display: flex;
+  padding-left: 2rem;
+  object-fit: cover;
+}
+
 .userInfoBox {
   height: 12rem;
   width: 20rem;
@@ -149,6 +176,12 @@ h4 {
   margin-top: -1rem;
 }
 
+.VRText {
+  color: white;
+  font-size: 1.4rem;
+  justify-content: center;
+  align-items: center;
+}
 
 .banner {
   height: 1rem;
@@ -191,7 +224,59 @@ h4 {
   opacity: 0.96;
 }
 
-.NRform {
+.oneRowForm {
+  height: 19rem;
+  width: 59rem;
+  background-color: #005480;
+  border-radius: 0.5rem;
+  padding: 2rem;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  margin-top: -13rem;
+  opacity: 0.96;
+}
+
+.twoRowForm {
+  height: 25.5rem;
+  width: 59rem;
+  background-color: #005480;
+  border-radius: 0.5rem;
+  padding: 2rem;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  margin-top: -13rem;
+  opacity: 0.96;
+}
+
+.threeRowForm {
+  height: 32.5rem;
+  width: 59rem;
+  background-color: #005480;
+  border-radius: 0.5rem;
+  padding: 2rem;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  margin-top: -13rem;
+  opacity: 0.96;
+}
+
+.fourRowForm {
+  height: 40rem;
+  width: 59rem;
+  background-color: #005480;
+  border-radius: 0.5rem;
+  padding: 2rem;
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  margin-top: -13rem;
+  opacity: 0.96;
+}
+
+.fiveRowForm {
   height: 49rem;
   width: 59rem;
   background-color: #005480;
@@ -204,282 +289,7 @@ h4 {
   opacity: 0.96;
 }
 
-.MPAform {
-  height: 32.5rem;
-  width: 59rem;
-  background-color: #005480;
-  border-radius: 0.5rem;
-  padding: 2rem;
-  display: flex;
-  flex-direction: row;
-  justify-content: center;
-  margin-top: -13rem;
-  opacity: 0.96;
-}
-
-.CPAform {
-  height: 40rem;
-  width: 59rem;
-  background-color: #005480;
-  border-radius: 0.5rem;
-  padding: 2rem;
-  display: flex;
-  flex-direction: row;
-  justify-content: center;
-  margin-top: -13rem;
-  opacity: 0.96;
-}
-
-.EAform {
-  height: 25.5rem;
-  width: 59rem;
-  background-color: #005480;
-  border-radius: 0.5rem;
-  padding: 2rem;
-  display: flex;
-  flex-direction: row;
-  justify-content: center;
-  margin-top: -13rem;
-  opacity: 0.96;
-}
-
-.VRform {
-  height: 40rem;
-  width: 59rem;
-  background-color: #005480;
-  border-radius: 0.5rem;
-  padding: 2rem;
-  display: flex;
-  flex-direction: row;
-  justify-content: center;
-  margin-top: -13rem;
-  opacity: 0.96;
-}
-
-.RRform {
-  height: 26rem;
-  width: 59rem;
-  background-color: #005480;
-  border-radius: 0.5rem;
-  padding: 2rem;
-  display: flex;
-  flex-direction: row;
-  justify-content: center;
-  margin-top: -13rem;
-  opacity: 0.96;
-}
-
-.IAform {
-  height: 25.5rem;
-  width: 59rem;
-  background-color: #005480;
-  border-radius: 0.5rem;
-  padding: 2rem;
-  display: flex;
-  flex-direction: row;
-  justify-content: center;
-  margin-top: -13rem;
-  opacity: 0.96;
-}
-
-.IANCform {
-  height: 27.5rem;
-  width: 59rem;
-  background-color: #005480;
-  border-radius: 0.5rem;
-  padding: 2rem;
-  display: flex;
-  flex-direction: row;
-  justify-content: center;
-  margin-top: -13rem;
-  opacity: 0.96;
-}
-
-.TAform {
-  height: 56rem;
-  width: 59rem;
-  background-color: #005480;
-  border-radius: 0.5rem;
-  padding: 2rem;
-  display: flex;
-  flex-direction: row;
-  justify-content: center;
-  margin-top: -13rem;
-  opacity: 0.96;
-}
-
-.TANCform {
-  height: 33rem;
-  width: 59rem;
-  background-color: #005480;
-  border-radius: 0.5rem;
-  padding: 2rem;
-  display: flex;
-  flex-direction: row;
-  justify-content: center;
-  margin-top: -13rem;
-  opacity: 0.96;
-}
-
-.MRform {
-  height: 40rem;
-  width: 59rem;
-  background-color: #005480;
-  border-radius: 0.5rem;
-  padding: 2rem;
-  display: flex;
-  flex-direction: row;
-  justify-content: center;
-  margin-top: -13rem;
-  opacity: 0.96;
-}
-
-.MRNCform {
-  height: 33rem;
-  width: 59rem;
-  background-color: #005480;
-  border-radius: 0.5rem;
-  padding: 2rem;
-  display: flex;
-  flex-direction: row;
-  justify-content: center;
-  margin-top: -13rem;
-  opacity: 0.96;
-}
-
-.DCform {
-  height: 40rem;
-  width: 59rem;
-  background-color: #005480;
-  border-radius: 0.5rem;
-  padding: 2rem;
-  display: flex;
-  flex-direction: row;
-  justify-content: center;
-  margin-top: -13rem;
-  opacity: 0.96;
-}
-
-.DCNCform {
-  height: 33rem;
-  width: 59rem;
-  background-color: #005480;
-  border-radius: 0.5rem;
-  padding: 2rem;
-  display: flex;
-  flex-direction: row;
-  justify-content: center;
-  margin-top: -13rem;
-  opacity: 0.96;
-}
-
-.downSizeLogo{
-  /* object-fit: cover; */
-  width: 23.5rem;
-  height: 4.7rem;
-}
-
-.MDform {
-  height: 47rem;
-  width: 59rem;
-  background-color: #005480;
-  border-radius: 0.5rem;
-  padding: 2rem;
-  display: flex;
-  flex-direction: row;
-  justify-content: center;
-  margin-top: -13rem;
-  opacity: 0.96;
-}
-
-.ANform {
-  height: 44.5rem;
-  width: 59rem;
-  background-color: #005480;
-  border-radius: 0.5rem;
-  padding: 2rem;
-  display: flex;
-  flex-direction: row;
-  justify-content: center;
-  margin-top: -13rem;
-  opacity: 0.96;
-}
-
-.FMRform {
-  height: 47.5rem;
-  width: 59rem;
-  background-color: #005480;
-  border-radius: 0.5rem;
-  padding: 2rem;
-  display: flex;
-  flex-direction: row;
-  justify-content: center;
-  margin-top: -13rem;
-  opacity: 0.96;
-}
-
-.FMRNCform {
-  height: 40rem;
-  width: 59rem;
-  background-color: #005480;
-  border-radius: 0.5rem;
-  padding: 2rem;
-  display: flex;
-  flex-direction: row;
-  justify-content: center;
-  margin-top: -13rem;
-  opacity: 0.96;
-}
-
-.MEform {
-  height: 44rem;
-  width: 59rem;
-  background-color: #005480;
-  border-radius: 0.5rem;
-  padding: 2rem;
-  display: flex;
-  flex-direction: row;
-  justify-content: center;
-  margin-top: -13rem;
-  opacity: 0.96;
-}
-
-.headerButton {
-  margin-top: -21.5rem;
-}
-
-.BannerForm {
-  height: 4.88rem;
-  max-width: none;
-  background-color: #002a40;
-  justify-content: center;
-  display: flex;
-  opacity: 0.95;
-}
-
-.imageForm {
-  justify-content: flex-start;
-  margin-right: auto;
-  display: flex;
-  padding-left: 2rem;
-  object-fit: cover;
-}
-
-
-.ACForm{
-  height: 28.5rem;
-  width: 59rem;
-  background-color: #005480;
-  border-radius: 0.5rem;
-  padding: 2rem;
-  display: flex;
-  flex-direction: row;
-  justify-content: space-between;
-  margin-top: -13rem;
-  opacity: 0.96;
-}
-
-.UNForm{
+.oneRowFormWithPrice {
   height: 19rem;
   width: 59rem;
   background-color: #005480;
@@ -492,8 +302,8 @@ h4 {
   opacity: 0.96;
 }
 
-.ECForm{
-  height: 26rem;
+.twoRowFormWithPrice {
+  height: 27rem;
   width: 59rem;
   background-color: #005480;
   border-radius: 0.5rem;
@@ -505,20 +315,7 @@ h4 {
   opacity: 0.96;
 }
 
-.AUForm{
-  height: 26rem;
-  width: 59rem;
-  background-color: #005480;
-  border-radius: 0.5rem;
-  padding: 2rem;
-  display: flex;
-  flex-direction: row;
-  justify-content: space-between;
-  margin-top: -13rem;
-  opacity: 0.96;
-}
-
-.SCForm{
+.threeRowFormWithPrice {
   height: 33.5rem;
   width: 59rem;
   background-color: #005480;
@@ -531,7 +328,7 @@ h4 {
   opacity: 0.96;
 }
 
-.OForm{
+.fourRowFormWithPrice {
   height: 40rem;
   width: 59rem;
   background-color: #005480;
@@ -539,33 +336,20 @@ h4 {
   padding: 2rem;
   display: flex;
   flex-direction: row;
-  justify-content: space-between;
+  justify-content: center;
   margin-top: -13rem;
   opacity: 0.96;
 }
 
-.RFMCForm{
-  height: 30rem;
+.fiveRowFormWithPrice {
+  height: 49rem;
   width: 59rem;
   background-color: #005480;
   border-radius: 0.5rem;
   padding: 2rem;
   display: flex;
   flex-direction: row;
-  justify-content: space-between;
-  margin-top: -13rem;
-  opacity: 0.96;
-}
-
-.GACDForm{
-  height: 19rem;
-  width: 59rem;
-  background-color: #005480;
-  border-radius: 0.5rem;
-  padding: 2rem;
-  display: flex;
-  flex-direction: center;
-  justify-content: space-between;
+  justify-content: center;
   margin-top: -13rem;
   opacity: 0.96;
 }
@@ -657,6 +441,8 @@ h4 {
   align-items: center;
   justify-content: center;
 }
+
+
 
 .TWResults{
   align-items: center;
@@ -759,7 +545,7 @@ h4 {
   color: rgb(255, 255, 255);
   font-size: small;
   font-family: Tahoma, Geneva, sans-serif;
-  margin-left: 39rem;
+  margin-left: 41.4rem;
 }
 
 .LittleTextImport {
@@ -767,7 +553,7 @@ h4 {
   color: rgb(255, 255, 255);
   font-size: small;
   font-family: Tahoma, Geneva, sans-serif;
-  margin-left: -1.5rem;
+  margin-left: 41.5rem;
 }
 
 
@@ -785,7 +571,7 @@ h4 {
   color: rgb(255, 255, 255);
   font-size: small;
   font-family: Tahoma, Geneva, sans-serif;
-  margin-left: -1.5rem;
+  margin-left: 41rem;
 }
 
 
