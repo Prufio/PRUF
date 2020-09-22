@@ -43,8 +43,8 @@ contract SHARES is ReentrancyGuard, Ownable, Pausable {
     address internal STOR_Address;
     STOR_Interface internal STOR;
 
-uint256 private maxSupply =  100;  //set max supply (100000?)
-uint256 private payPeriod =  5 minutes;  //set to 30 days
+uint256 private maxSupply =  10;  //set max supply (100000?)
+uint256 private payPeriod =  2 minutes;  //set to 30 days
 
 uint256 private nextPayDay = block.timestamp.add(payPeriod);
 uint256 private lastPayDay = block.timestamp;
@@ -148,8 +148,19 @@ mapping(uint256 => uint256) private tokenPaymentDate; // Main Data Storage
 
             tokenPaymentDate[tokenId] = nextPayDay;
             held = held.add(newDividend);
-           // _asyncTransfer(msg.sender, newDividend);
+            _asyncTransfer(msg.sender, newDividend);
 
+    }
+    
+    function getInfo (uint256 tokenId) external view returns (uint256, uint256, uint256, uint256, uint256, uint256) {
+
+        return( block.timestamp,
+                lastPayDay,
+                nextPayDay,
+                tokenPaymentDate[tokenId],
+                newDividend,
+                held
+        );
     }
 
     function withdrawFunds(address payable payee) public {

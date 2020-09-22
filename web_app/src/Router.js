@@ -9,6 +9,7 @@ import EnableContract from "./ACAdmin/EnableContract"
 import AddUser from "./ACAdmin/AddUser"
 import UpdateACName from "./ACAdmin/UpdateACName"
 import GetACData from "./ACAdmin/GetACData"
+import IncreaseACShare from "./ACAdmin/IncreaseACShare"
 
 import RetrieveRecord from "./AllCustodyTypes/RetrieveRecord";
 import VerifyLite from "./AllCustodyTypes/VerifyLite"
@@ -107,6 +108,7 @@ function Router(routeRequest) {
                 <Route path="/mint-pip-asset" component={MintPipAsset} />
                 <Route path="/claim-pip-asset" component={ClaimPipAsset} />
                 <Route path="/get-ac-data" component={GetACData} />
+                <Route path="/increase-ac-share" component={IncreaseACShare} />
             </>)
     }
 

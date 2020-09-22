@@ -12,6 +12,8 @@ import AuthorizedUserComponent from "./Resources/AuthorizedUserComponent";
 import BasicComponent from "./Resources/BasicComponent";
 import ParticleBox from './Resources/ParticleBox';
 import Router from "./Router";
+import DropdownButton from 'react-bootstrap/DropdownButton';
+import Dropdown from 'react-bootstrap/Dropdown';
 
 
 
@@ -293,65 +295,84 @@ class Main extends Component {
                   <div>
                     ID Token Balance : {this.state.IDTokenBalance}
                   </div>
-                </div>
+                  <div>
+                    <style type="text/css">
+                      {`
+                        .btn-primary {
+                          background-color: #00a8ff;
+                          color: white;
+                        }
+                        .btn-primary:hover {
+                          background-color: #00a8ff;
+                          color: white;
+                        }
+                        .btn-primary:focus {
+                          background: #00a8ff;
+                        }
+                        .btn-primary:active {
+                          background: #00a8ff;
+                        }
+                     `}
+                    </style>
+                    <DropdownButton
+                      title="Toggle Menu"
+                      className="headerButton"
+                      variant="primary"
+                      drop="up"
+                      flip="false"
+                    >
+                      {this.state.isACAdmin === true && this.state.assetClassHolderMenuBool === false && (
+                        <Dropdown.Item
+                          as="button"
+                          variant="primary"
+                          onClick={() => { this.toggleMenu("ACAdmin") }}
+                        >
+                          AC Admin Menu
+                        </Dropdown.Item>)}
 
+                      {this.state.IDHolderBool === false && this.state.assetHolderBool === true && this.state.assetHolderUserMenuBool === false && (
+                        <Dropdown.Item
+                          as="button"
+                          variant="primary"
+                          onClick={() => { this.toggleMenu("NC") }}
+                        >
+                          NonCustodial Menu
+                        </Dropdown.Item>
+                      )}
+
+                      {this.state.IDHolderBool === true && this.state.assetHolderMenuBool === false && (
+                        <Dropdown.Item
+                          as="button"
+                          variant="primary"
+                          onClick={() => { this.toggleMenu("NC") }}
+                        >
+                          NonCustodial Menu
+                        </Dropdown.Item>
+                      )}
+
+                      {this.state.basicMenuBool === false && (
+                        <Dropdown.Item
+                          as="button"
+                          variant="primary"
+                          onClick={() => { this.toggleMenu("basic") }}
+                        >
+                          Basic Menu
+                        </Dropdown.Item>)}
+
+                      {this.state.isAuthUser === true && this.state.authorizedUserMenuBool === false && (
+                        <Dropdown.Item
+                          as="button"
+                          variant="primary"
+                          onClick={() => { this.toggleMenu("authUser") }}
+                        >
+                          Authorized User Menu
+                        </Dropdown.Item>)}
+                    </DropdownButton>
+                  </div>
+                </div>
                 <div className="content">
                   <Route exact path="/" component={Home} />
                   {Router(this.state.routeRequest)}
-                </div>
-
-
-
-
-
-
-                <div className="headerButtons">
-                  {this.state.isACAdmin === true && this.state.assetClassHolderMenuBool === false && (
-                    <Button className="btn3"
-                      variant="primary"
-                      type="button"
-                      onClick={() => { this.toggleMenu("ACAdmin") }}
-                    >
-                      AC Admin Menu
-                    </Button>)}
-
-                  {this.state.IDHolderBool === false && this.state.assetHolderBool === true && this.state.assetHolderUserMenuBool === false && (
-                    <Button className="btn3"
-                      variant="primary"
-                      type="button"
-                      onClick={() => { this.toggleMenu("NC") }}
-                    >
-                      NonCustodial Menu
-                    </Button>
-                  )}
-
-                  {this.state.IDHolderBool === true && this.state.assetHolderMenuBool === false && (
-                    <Button className="btn3"
-                      variant="primary"
-                      type="button"
-                      onClick={() => { this.toggleMenu("NC") }}
-                    >
-                      NonCustodial Menu
-                    </Button>
-                  )}
-
-                  {this.state.basicMenuBool === false && (
-                    <Button className="btn3"
-                      variant="primary"
-                      type="button"
-                      onClick={() => { this.toggleMenu("basic") }}
-                    >
-                      Basic Menu
-                    </Button>)}
-
-                  {this.state.isAuthUser === true && this.state.authorizedUserMenuBool === false && (
-                    <Button className="btn3"
-                      variant="primary"
-                      type="button"
-                      onClick={() => { this.toggleMenu("authUser") }}
-                    >
-                      Authorized User Menu
-                    </Button>)}
                 </div>
               </div>
             </div>
