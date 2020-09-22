@@ -145,11 +145,6 @@ contract SHARES is ReentrancyGuard, Ownable, Pausable, BASIC {
         //^^^^^^^interactions^^^^^^^^^
     }
 
-    function getPaid() internal {  //collect any payments owed to this contract
-        APP.$withdraw();
-        APP_NC.$withdraw();
-    }
-
     function StartNewDividendPeriod() external {
         newDividendPeriod();
     }
@@ -269,12 +264,13 @@ contract SHARES is ReentrancyGuard, Ownable, Pausable, BASIC {
     }
 
     //--------------------------------------------------Payable functions-------------------------------------------------
-    function payMe() external payable {
+    function sendEth() external payable {
         //this is just the payable function (mainly for testing)
         require(msg.value > 0, "MOAR ETH!!!!!");
     }
 
-    // receive() external payable {  //this is just the payable function
-    //     require(msg.value > 0, "SEND MOAR ETH!!!!!");
-    // }
+    function getPaid() internal {  //collect any payments owed to this contract
+        APP.$withdraw();
+        APP_NC.$withdraw();
+    }
 }
