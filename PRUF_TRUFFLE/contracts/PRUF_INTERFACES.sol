@@ -1170,7 +1170,7 @@ interface ECR_MGR_Interface {
 interface RCLR_Interface {
     function discard(bytes32 _idxHash) external;
 
-    function recycle(bytes32 _idxHash) external payable;
+    function recycle(bytes32 _idxHash) external;
 }
 
 

@@ -78,13 +78,7 @@ contract SHARES is ReentrancyGuard, Ownable, Pausable, BASIC {
 
     //--------------------------------Internal Admin functions / onlyowner or isAdmin---------------------------------//
 
-    function payMe() external payable {  //this is just the payable function
-        require(msg.value > 0, "MOAR ETH!!!!!");
-    }
 
-    receive() external payable {  //this is just the payable function
-        require(msg.value > 0, "SEND MOAR ETH!!!!!");
-    }
 
     /*
      * @dev Set adress of STOR contract to interface with
@@ -265,4 +259,12 @@ contract SHARES is ReentrancyGuard, Ownable, Pausable, BASIC {
     function _asyncTransfer(address dest, uint256 amount) internal {
         _escrow.deposit{value: amount}(dest);
     }
+//--------------------------------------------------Payable functions-------------------------------------------------
+    function payMe() external payable {  //this is just the payable function (mainly for testing)
+        require(msg.value > 0, "MOAR ETH!!!!!");
+    }
+
+    // receive() external payable {  //this is just the payable function
+    //     require(msg.value > 0, "SEND MOAR ETH!!!!!");
+    // }
 }
