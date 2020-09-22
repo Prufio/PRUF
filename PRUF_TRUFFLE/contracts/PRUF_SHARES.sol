@@ -13,7 +13,6 @@ __/\\\\\\\\\\\\\ _____/\\\\\\\\\ _______/\\../\\ ___/\\\\\\\\\\\\\\\
 /*-----------------------------------------------------------------
  *  TO DO
  *
- *   set up to call withdraw from all payable pruf functions.
  *---------------------------------------------------------------*/
 
 // SPDX-License-Identifier: UNLICENSED
@@ -92,10 +91,10 @@ contract SHARES is ReentrancyGuard, Ownable, Pausable, BASIC {
         );
         //^^^^^^^checks^^^^^^^^^
         STOR = STOR_Interface(_storageAddress);
-        //------------------------------------------------- be sure to kill this! -------------------------------------------------
+        //------------------------------------------------- be sure to kill this! ----------------------!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
         SHAR_TKN_Address = _storageAddress; //testing only - steals storage address for shar_tkn
         SHAR_TKN = SHAR_TKN_Interface(SHAR_TKN_Address); //testing only
-        //------------------------------------------------- be sure to kill this! -------------------------------------------------
+        //------------------------------------------------- be sure to kill this! ----------------------!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
         //^^^^^^^effects^^^^^^^^^
     }
 
@@ -115,15 +114,17 @@ contract SHARES is ReentrancyGuard, Ownable, Pausable, BASIC {
         //^^^^^^^effects^^^^^^^^^
     }
 
-    /*
-     * @dev Resolve Contract Addresses from STOR
-     */
-    function OO_resolveContractAddresses() external override onlyOwner {
-        //^^^^^^^checks^^^^^^^^^
-        SHAR_TKN_Address = STOR.resolveContractAddress("SHAR_TKN");
-        SHAR_TKN = SHAR_TKN_Interface(SHAR_TKN_Address);
-        //^^^^^^^Intercations^^^^^^^^^
-    }
+    //-------------------------------------------ADD THIS BACK IN FOR FINAL TESTING----------------------!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+    // /*
+    //  * @dev Resolve Contract Addresses from STOR
+    //  */
+    // function OO_resolveContractAddresses() external override onlyOwner {
+    //     //^^^^^^^checks^^^^^^^^^
+    //     SHAR_TKN_Address = STOR.resolveContractAddress("SHAR_TKN");
+    //     SHAR_TKN = SHAR_TKN_Interface(SHAR_TKN_Address);
+    //     //^^^^^^^Intercations^^^^^^^^^
+    // }
+    //-------------------------------------------ADD THIS BACK IN FOR FINAL TESTING----------------------!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
     /**
      * sets a new dividend ending period payPeriod.seconds in the future
@@ -133,7 +134,11 @@ contract SHARES is ReentrancyGuard, Ownable, Pausable, BASIC {
     function newDividendPeriod() internal {
         require(block.timestamp >= nextPayDay, "PS:SNDP:not payday yet");
         //^^^^^^^checks^^^^^^^^^
-        getPaid();
+
+        //-------------------------------------------ADD THIS BACK IN FOR FINAL TESTING----------------------!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+        //getPaid();
+        //-------------------------------------------ADD THIS BACK IN FOR FINAL TESTING----------------------!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+
         lastPayDay = nextPayDay; //today is the new most recent PayDay
         nextPayDay = block.timestamp.add(payPeriod); //set the next payday for payPeriod.seconds in the future
 
@@ -269,8 +274,10 @@ contract SHARES is ReentrancyGuard, Ownable, Pausable, BASIC {
         require(msg.value > 0, "MOAR ETH!!!!!");
     }
 
-    function getPaid() internal {  //collect any payments owed to this contract
-        APP.$withdraw();
-        APP_NC.$withdraw();
-    }
+    //-------------------------------------------ADD THIS BACK IN FOR FINAL TESTING----------------------!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+    // function getPaid() internal {  //collect any payments owed to this contract
+    //     APP.$withdraw();
+    //     APP_NC.$withdraw();
+    // }
+    //-------------------------------------------ADD THIS BACK IN FOR FINAL TESTING----------------------!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 }
