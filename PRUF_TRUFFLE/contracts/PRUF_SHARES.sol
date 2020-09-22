@@ -67,7 +67,7 @@ contract SHARES is ReentrancyGuard, Ownable, Pausable, BASIC {
     modifier isAuth(uint256 __tokenId) {
         require(
             (msg.sender == SHAR_TKN.ownerOf(__tokenId)) || //msg.sender is token holder or..
-            (msg.sender == authorizedAutomationAddress),  //auth address
+                (msg.sender == authorizedAutomationAddress), //auth address
             "ANC:MOD-IA: Caller does not hold token"
         );
         _;
@@ -78,12 +78,14 @@ contract SHARES is ReentrancyGuard, Ownable, Pausable, BASIC {
 
     //--------------------------------Internal Admin functions / onlyowner or isAdmin---------------------------------//
 
-
-
     /*
      * @dev Set adress of STOR contract to interface with
      */
-    function OO_setStorageContract(address _storageAddress) external override onlyOwner {
+    function OO_setStorageContract(address _storageAddress)
+        external
+        override
+        onlyOwner
+    {
         require(
             _storageAddress != address(0),
             "B:SSC: storage address cannot be zero"
@@ -97,10 +99,13 @@ contract SHARES is ReentrancyGuard, Ownable, Pausable, BASIC {
         //^^^^^^^effects^^^^^^^^^
     }
 
-        /*
+    /*
      * @dev Set adress of STOR contract to interface with
      */
-    function OO_setAutomationAddress(address _automationAddress) external onlyOwner {
+    function OO_setAutomationAddress(address _automationAddress)
+        external
+        onlyOwner
+    {
         require(
             _automationAddress != address(0),
             "B:SSC: storage address cannot be zero"
@@ -128,6 +133,7 @@ contract SHARES is ReentrancyGuard, Ownable, Pausable, BASIC {
     function newDividendPeriod() internal {
         require(block.timestamp >= nextPayDay, "PS:SNDP:not payday yet");
         //^^^^^^^checks^^^^^^^^^
+        getPaid();
         lastPayDay = nextPayDay; //today is the new most recent PayDay
         nextPayDay = block.timestamp.add(payPeriod); //set the next payday for payPeriod.seconds in the future
 
@@ -139,22 +145,23 @@ contract SHARES is ReentrancyGuard, Ownable, Pausable, BASIC {
         //^^^^^^^interactions^^^^^^^^^
     }
 
+    function getPaid() internal {  //collect any payments owed to this contract
+        APP.$withdraw();
+        APP_NC.$withdraw();
+    }
+
     function StartNewDividendPeriod() external {
         newDividendPeriod();
     }
 
     function claimDividend(uint256 _tokenId) external isAuth(_tokenId) {
-
-        require(
-            block.timestamp < nextPayDay,
-            "PS:GP:not payday yet"
-        );
+        require(block.timestamp < nextPayDay, "PS:GP:not payday yet");
         require(
             tokenPaymentDate[_tokenId] < nextPayDay,
             "PS:GP:not payday for this token"
         );
         require(block.timestamp > lastPayDay, "PS:GP:not payday yet");
-        
+
         //^^^^^^^checks^^^^^^^^^
         tokenPaymentDate[_tokenId] = nextPayDay;
         heldFunds = heldFunds.add(dividend);
@@ -164,7 +171,8 @@ contract SHARES is ReentrancyGuard, Ownable, Pausable, BASIC {
     }
 
     function autoClaimDividend(uint256 _tokenId) external isAuth(_tokenId) {
-        if (block.timestamp > nextPayDay) { //if no one has done it yet, start a new dividend period
+        if (block.timestamp > nextPayDay) {
+            //if no one has done it yet, start a new dividend period
             newDividendPeriod();
         }
         require(
@@ -172,7 +180,7 @@ contract SHARES is ReentrancyGuard, Ownable, Pausable, BASIC {
             "PS:GP:not payday for this token"
         );
         require(block.timestamp > lastPayDay, "PS:GP:not payday yet");
-        
+
         //^^^^^^^checks^^^^^^^^^
         tokenPaymentDate[_tokenId] = nextPayDay;
         heldFunds = heldFunds.add(dividend);
@@ -259,8 +267,10 @@ contract SHARES is ReentrancyGuard, Ownable, Pausable, BASIC {
     function _asyncTransfer(address dest, uint256 amount) internal {
         _escrow.deposit{value: amount}(dest);
     }
-//--------------------------------------------------Payable functions-------------------------------------------------
-    function payMe() external payable {  //this is just the payable function (mainly for testing)
+
+    //--------------------------------------------------Payable functions-------------------------------------------------
+    function payMe() external payable {
+        //this is just the payable function (mainly for testing)
         require(msg.value > 0, "MOAR ETH!!!!!");
     }
 
