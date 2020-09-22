@@ -46,69 +46,71 @@ class VerifyRightHolder extends Component {
 
   }
 
+  static getDerivedStateFromError(error) {
+    // Update state so the next render will show the fallback UI.
+    return { hasError: true };
+  }
+
   render() {//render continuously produces an up-to-date stateful document  
     const self = this;
 
-    async function checkExists(idxHash) {
-      await window.contracts.STOR.methods
-        .retrieveShortRecord(idxHash)
-        .call({ from: self.state.addr }, function (_error, _result) {
-          if (_error) {
-            self.setState({ error1: _error });
-            self.setState({ result1: 0 });
-            alert(
-              "WARNING: Record DOES NOT EXIST! Reject in metamask and review asset info fields."
-            );
-          } else {
-            self.setState({ result1: _result });
-          }
-          console.log("check debug, _result, _error: ", _result, _error);
-        });
+    const _accessAsset = async () => {
+
+      if (this.state.manufacturer === "" 
+      || this.state.type === "" 
+      || this.state.model === "" 
+      || this.state.serial === "" 
+      || this.state.first === "" 
+      || this.state.middle === "" 
+      || this.state.surname === "" 
+      || this.state.id === "" 
+      || this.state.secret === "") {
+        return alert("Please fill out all fields before submission")
+      }
+
+      let idxHash = window.web3.utils.soliditySha3(
+        String(this.state.type),
+        String(this.state.manufacturer),
+        String(this.state.model),
+        String(this.state.serial),
+      );
+
+      let rgtRaw = window.web3.utils.soliditySha3(
+        String(this.state.first),
+        String(this.state.middle),
+        String(this.state.surname),
+        String(this.state.id),
+        String(this.state.secret)
+      );
+
+      let rgtHash = window.web3.utils.soliditySha3(String(idxHash), String(rgtRaw));
+
+      let doesExist = await window.utils.checkAssetExists(idxHash);
+
+      if (!doesExist) {
+        return alert("Asset doesnt exist! Ensure data fields are correct before submission.")
+      }
+
+      return this.setState({
+        idxHash: idxHash,
+        rgtHash: rgtHash,
+        accessPermitted: true
+      })
+
     }
 
-
-
-    const _verify = () => {
+    const _verify = async () => {
       this.setState({ txStatus: false });
       this.setState({ txHash: "" });
       this.setState({ error: undefined })
       this.setState({ result: "" })
-      var idxHash;
-      var rgtRaw;
 
-      idxHash = window.web3.utils.soliditySha3(
-        this.state.type,
-        this.state.manufacturer,
-        this.state.model,
-        this.state.serial,
-      );
-
-      rgtRaw = window.web3.utils.soliditySha3(
-        this.state.first,
-        this.state.middle,
-        this.state.surname,
-        this.state.id,
-        this.state.secret
-      );
-      var rgtHash = window.web3.utils.soliditySha3(idxHash, rgtRaw);
+      var idxHash = this.state.idxHash;
+      var rgtHash = this.state.rgtHash;
 
       console.log("idxHash", idxHash);
+      console.log("rgtHash", rgtHash);
       console.log("addr: ", window.addr);
-
-      checkExists(idxHash);
-
-      window.contracts.STOR.methods
-        ._verifyRightsHolder(idxHash, rgtHash)
-        .call({ from: window.addr }, function (_error, _result) {
-          if (_error) {
-            self.setState({ error: _error });
-            self.setState({ result: 0 });
-          } else {
-            self.setState({ result: _result });
-            console.log("verify.call result: ", _result);
-            self.setState({ error: undefined });
-          }
-        });
 
       window.contracts.STOR.methods
         .blockchainVerifyRightsHolder(idxHash, rgtHash)
@@ -119,7 +121,15 @@ class VerifyRightHolder extends Component {
         });
 
       console.log(this.state.result);
+
+      await this.setState({
+        idxHash: "",
+        rgtHash: "",
+        accessPermitted: false
+      })
+
       document.getElementById("MainForm").reset();
+
     };
     return (
       <div>
@@ -134,118 +144,137 @@ class VerifyRightHolder extends Component {
             <div>
               <h2 className="Headertext">Deep Verify</h2>
               <br></br>
-              <Form.Row>
-                <Form.Group as={Col} controlId="formGridType">
-                  <Form.Label className="formFont">Type:</Form.Label>
-                  <Form.Control
-                    placeholder="Type"
-                    required
-                    onChange={(e) => this.setState({ type: e.target.value })}
-                    size="lg"
-                  />
-                </Form.Group>
+              {!this.state.accessPermitted && (
+                <>
+                  <Form.Row>
+                    <Form.Group as={Col} controlId="formGridType">
+                      <Form.Label className="formFont">Type:</Form.Label>
+                      <Form.Control
+                        placeholder="Type"
+                        required
+                        onChange={(e) => this.setState({ type: e.target.value })}
+                        size="lg"
+                      />
+                    </Form.Group>
 
-                <Form.Group as={Col} controlId="formGridManufacturer">
-                  <Form.Label className="formFont">Manufacturer:</Form.Label>
-                  <Form.Control
-                    placeholder="Manufacturer"
-                    required
-                    onChange={(e) => this.setState({ manufacturer: e.target.value })}
-                    size="lg"
-                  />
-                </Form.Group>
+                    <Form.Group as={Col} controlId="formGridManufacturer">
+                      <Form.Label className="formFont">Manufacturer:</Form.Label>
+                      <Form.Control
+                        placeholder="Manufacturer"
+                        required
+                        onChange={(e) => this.setState({ manufacturer: e.target.value })}
+                        size="lg"
+                      />
+                    </Form.Group>
 
-              </Form.Row>
+                  </Form.Row>
 
-              <Form.Row>
-                <Form.Group as={Col} controlId="formGridModel">
-                  <Form.Label className="formFont">Model:</Form.Label>
-                  <Form.Control
-                    placeholder="Model"
-                    required
-                    onChange={(e) => this.setState({ model: e.target.value })}
-                    size="lg"
-                  />
-                </Form.Group>
+                  <Form.Row>
+                    <Form.Group as={Col} controlId="formGridModel">
+                      <Form.Label className="formFont">Model:</Form.Label>
+                      <Form.Control
+                        placeholder="Model"
+                        required
+                        onChange={(e) => this.setState({ model: e.target.value })}
+                        size="lg"
+                      />
+                    </Form.Group>
 
-                <Form.Group as={Col} controlId="formGridSerial">
-                  <Form.Label className="formFont">Serial:</Form.Label>
-                  <Form.Control
-                    placeholder="Serial"
-                    required
-                    onChange={(e) => this.setState({ serial: e.target.value })}
-                    size="lg"
-                  />
-                </Form.Group>
-              </Form.Row>
-
-              <Form.Row>
-                <Form.Group as={Col} controlId="formGridFirstName">
-                  <Form.Label className="formFont">First Name:</Form.Label>
-                  <Form.Control
-                    placeholder="First Name"
-                    required
-                    onChange={(e) => this.setState({ first: e.target.value })}
-                    size="lg"
-                  />
-                </Form.Group>
-
-                <Form.Group as={Col} controlId="formGridMiddleName">
-                  <Form.Label className="formFont">Middle Name:</Form.Label>
-                  <Form.Control
-                    placeholder="Middle Name"
-                    required
-                    onChange={(e) => this.setState({ middle: e.target.value })}
-                    size="lg"
-                  />
-                </Form.Group>
-
-                <Form.Group as={Col} controlId="formGridLastName">
-                  <Form.Label className="formFont">Last Name:</Form.Label>
-                  <Form.Control
-                    placeholder="Last Name"
-                    required
-                    onChange={(e) => this.setState({ surname: e.target.value })}
-                    size="lg"
-                  />
-                </Form.Group>
-              </Form.Row>
-
-              <Form.Row>
-                <Form.Group as={Col} controlId="formGridIdNumber">
-                  <Form.Label className="formFont">ID Number:</Form.Label>
-                  <Form.Control
-                    placeholder="ID Number"
-                    required
-                    onChange={(e) => this.setState({ id: e.target.value })}
-                    size="lg"
-                  />
-                </Form.Group>
-
-                <Form.Group as={Col} controlId="formGridPassword">
-                  <Form.Label className="formFont">Password:</Form.Label>
-                  <Form.Control
-                    placeholder="Password"
-                    type="password"
-                    required
-                    onChange={(e) => this.setState({ secret: e.target.value })}
-                    size="lg"
-                  />
-                </Form.Group>
-              </Form.Row>
-
-              <Form.Row>
-                <Form.Group className="buttonDisplay">
-                  <Button
-                    variant="primary"
-                    type="button"
-                    size="lg"
-                    onClick={_verify}
-                  >
-                    Submit
+                    <Form.Group as={Col} controlId="formGridSerial">
+                      <Form.Label className="formFont">Serial:</Form.Label>
+                      <Form.Control
+                        placeholder="Serial"
+                        required
+                        onChange={(e) => this.setState({ serial: e.target.value })}
+                        size="lg"
+                      />
+                    </Form.Group>
+                  </Form.Row>
+                  <Form.Row>
+                    <Form.Group className="buttonDisplay">
+                      <Button
+                        variant="primary"
+                        type="button"
+                        size="lg"
+                        onClick={_accessAsset}
+                      >
+                        Access Asset
                   </Button>
-                </Form.Group>
-              </Form.Row>
+                    </Form.Group>
+                  </Form.Row>
+                </>
+              )}
+              {this.state.accessPermitted && (
+                <>
+                  <h2>Asset found at idx: {this.state.idxHash}</h2>
+                  <Form.Row>
+                    <Form.Group as={Col} controlId="formGridFirstName">
+                      <Form.Label className="formFont">First Name:</Form.Label>
+                      <Form.Control
+                        placeholder="First Name"
+                        required
+                        onChange={(e) => this.setState({ first: e.target.value })}
+                        size="lg"
+                      />
+                    </Form.Group>
+
+                    <Form.Group as={Col} controlId="formGridMiddleName">
+                      <Form.Label className="formFont">Middle Name:</Form.Label>
+                      <Form.Control
+                        placeholder="Middle Name"
+                        required
+                        onChange={(e) => this.setState({ middle: e.target.value })}
+                        size="lg"
+                      />
+                    </Form.Group>
+
+                    <Form.Group as={Col} controlId="formGridLastName">
+                      <Form.Label className="formFont">Last Name:</Form.Label>
+                      <Form.Control
+                        placeholder="Last Name"
+                        required
+                        onChange={(e) => this.setState({ surname: e.target.value })}
+                        size="lg"
+                      />
+                    </Form.Group>
+                  </Form.Row>
+
+                  <Form.Row>
+                    <Form.Group as={Col} controlId="formGridIdNumber">
+                      <Form.Label className="formFont">ID Number:</Form.Label>
+                      <Form.Control
+                        placeholder="ID Number"
+                        required
+                        onChange={(e) => this.setState({ id: e.target.value })}
+                        size="lg"
+                      />
+                    </Form.Group>
+
+                    <Form.Group as={Col} controlId="formGridPassword">
+                      <Form.Label className="formFont">Password:</Form.Label>
+                      <Form.Control
+                        placeholder="Password"
+                        type="password"
+                        required
+                        onChange={(e) => this.setState({ secret: e.target.value })}
+                        size="lg"
+                      />
+                    </Form.Group>
+                  </Form.Row>
+                  <Form.Row>
+                    <Form.Group className="buttonDisplay">
+                      <Button
+                        variant="primary"
+                        type="button"
+                        size="lg"
+                        onClick={_verify}
+                      >
+                        Verify Match
+                  </Button>
+                    </Form.Group>
+                  </Form.Row>
+                </>
+              )}
             </div>
           )}
         </Form>

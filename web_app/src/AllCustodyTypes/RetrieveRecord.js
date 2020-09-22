@@ -2,7 +2,7 @@ import React, { Component } from "react";
 import Form from "react-bootstrap/Form";
 import Col from "react-bootstrap/Col";
 import Button from "react-bootstrap/Button";
-import bs58 from "bs58";
+
 
 class RetrieveRecord extends Component {
   constructor(props) {
@@ -52,109 +52,36 @@ class RetrieveRecord extends Component {
 
   }
 
+  static getDerivedStateFromError(error) {
+    // Update state so the next render will show the fallback UI.
+    return { hasError: true };
+  }
+
   render() {//render continuously produces an up-to-date stateful document  
     const self = this;
 
-    const getIpfsHashFromBytes32 = (bytes32Hex) => {
-
-      // Add our default ipfs values for first 2 bytes:
-      // function:0x12=sha2, size:0x20=256 bits
-      // and cut off leading "0x"
-      const hashHex = "1220" + bytes32Hex.slice(2);
-      const hashBytes = Buffer.from(hashHex, "hex");
-      const hashStr = bs58.encode(hashBytes);
-      return hashStr;
-    };
-
-    const getIPFS2 = async (lookup2) => {
-      /*  await window.ipfs.cat(lookup2, (error, result) => {
-         if (error) {
-           console.log("Something went wrong. Unable to find file on IPFS");
-         } else {
-           console.log("IPFS2 Here's what we found: ", result);
-         }
-         self.setState({ ipfs2: result });
-       }); */
-      self.setState({ ipfs2: lookup2 });
-    };
-
-    const getIPFS1 = async (lookup1) => {
-      console.log(lookup1)
-      await window.ipfs.cat(lookup1, (error, result) => {
-        if (error) {
-          console.log("Something went wrong. Unable to find file on IPFS");
-        } else {
-          console.log("IPFS1 Here's what we found: ", result);
-        }
-        console.log(JSON.parse(result));
-        self.setState({ ipfsObject: JSON.parse(result) })
-      });
-    };
-
-    const _seperateKeysAndValues = (obj) => {
-      console.log(obj)
-      let textPairsArray = [];
-      let photoKeyArray = [];
-      let photoValueArray = [];
-
-      let photoKeys = Object.keys(obj.photo);
-      let photoVals = Object.values(obj.photo);
-      let textKeys = Object.keys(obj.text);
-      let textVals = Object.values(obj.text);
-
-      for (let i = 0; i < photoKeys.length; i++) {
-        photoValueArray.push(photoVals[i])
-        photoKeyArray.push(photoKeys[i])
+    const _toggleDisplay = async () => {
+      if (this.state.manufacturer === "" || this.state.type === "" || this.state.model === "" || this.state.serial === "") {
+        return alert("Please fill out all fields before submission")
       }
-
-      for (let i = 0; i < textKeys.length; i++) {
-        textPairsArray.push(textKeys[i] + ": " + textVals[i])
-      }
-
-      self.setState({ descriptionElements: { photoKeys: photoKeyArray, photoValues: photoValueArray, text: textPairsArray } })
-    }
-
-    const generateDescription = (obj) => {
-
-      //console.log(self.state.descriptionElements)
-
-      let component = [<><h4>Images Found:</h4> <br></br></>];
-
-      for (let i = 0; i < obj.photoKeys.length; i++) {
-        //console.log("adding photo", obj.photoKeys[i])
-        component.push(<>{obj.photoKeys[i]}<br></br><img src={String(obj.photoValues[i])} /> <br></br></>);
-      }
-
-      component.push(<> <br></br> <h4>Text Values Found:</h4> <br></br> </>);
-      for (let x = 0; x < obj.text.length; x++) {
-        //console.log("adding text ", obj.text[x])
-        component.push(<>{String(obj.text[x])} <br></br></>);
-      }
-
-      //console.log(component)
-      return component
-    }
-
-    const _toggleDisplay = () => {
       if (self.state.showDescription === false) {
-        _seperateKeysAndValues(self.state.ipfsObject);
-        self.setState({ showDescription: true })
+        await self.setState({descriptionElements: window.utils.seperateKeysAndValues(self.state.ipfsObject)})
+        return self.setState({ showDescription: true })
       }
       else {
-        self.setState({ showDescription: false })
+        return self.setState({ showDescription: false })
       }
     }
 
     const _retrieveRecord = async () => {
       const self = this;
-      var idxHash;
       var ipfsHash;
 
-      idxHash = window.web3.utils.soliditySha3(
-        this.state.type,
-        this.state.manufacturer,
-        this.state.model,
-        this.state.serial,
+      let idxHash = window.web3.utils.soliditySha3(
+        String(this.state.type),
+        String(this.state.manufacturer),
+        String(this.state.model),
+        String(this.state.serial),
       );
 
       console.log("idxHash", idxHash);
@@ -191,20 +118,20 @@ class RetrieveRecord extends Component {
             self.setState({ result: Object.values(_result) })
             self.setState({ error: undefined });
 
-            if (Object.values(_result)[5] > 0) { ipfsHash = getIpfsHashFromBytes32(Object.values(_result)[5]); }
+            if (Object.values(_result)[5] > 0) { ipfsHash = window.utils.getIpfsHashFromBytes32(Object.values(_result)[5]); }
             console.log("ipfs data in promise", ipfsHash)
             if (Object.values(_result)[6] > 0) {
               console.log("Getting ipfs2 set up...")
               let knownUrl = "https://ipfs.io/ipfs/";
-              let hash = String(getIpfsHashFromBytes32(Object.values(_result)[6]));
+              let hash = String(window.utils.getIpfsHashFromBytes32(Object.values(_result)[6]));
               let fullUrl = knownUrl + hash;
               console.log(fullUrl);
-              getIPFS2(fullUrl);
+              self.setState({ ipfs2: fullUrl });
             }
           }
         });
 
-      await getIPFS1(ipfsHash);
+      await this.setState({ ipfsObject: window.utils.getIPFSJSONObject(ipfsHash) });
     }
 
     return (
@@ -280,17 +207,17 @@ class RetrieveRecord extends Component {
                 )}
 
                 {this.state.status !== "" && this.state.ipfsObject !== undefined && (
-                  
+
                   <Form.Group className="buttonDisplay">
                     {!this.state.showDescription && (
-                        <Button
-                          variant="primary"
-                          type="button"
-                          size="lg"
-                          onClick={_toggleDisplay}
-                        >
-                          Show Description
-                  </Button>
+                      <Button
+                        variant="primary"
+                        type="button"
+                        size="lg"
+                        onClick={_toggleDisplay}
+                      >
+                        Show Description
+                      </Button>
                     )}
                     {this.state.showDescription && (
                       <Form.Group className="buttonDisplay">
@@ -302,10 +229,10 @@ class RetrieveRecord extends Component {
                         >
                           Show Statistics
                   </Button>
-                  </Form.Group>
+                      </Form.Group>
                     )}
                     {this.state.type !== undefined && this.state.type !== "" && (
-                        <Form.Group className="buttonDisplay">
+                      <Form.Group className="buttonDisplay">
                         <Button
                           variant="primary"
                           type="button"
@@ -314,7 +241,7 @@ class RetrieveRecord extends Component {
                         >
                           Submit
                   </Button>
-                  </Form.Group>
+                      </Form.Group>
                     )}
 
                   </Form.Group>
@@ -356,7 +283,7 @@ class RetrieveRecord extends Component {
 
             {this.state.showDescription && (
               <>
-                {this.state.descriptionElements !== undefined && (generateDescription(this.state.descriptionElements))}
+                {this.state.descriptionElements !== undefined && (<>{window.utils.generateDescription(this.state.descriptionElements)}</>)}
               </>
             )}
           </div>

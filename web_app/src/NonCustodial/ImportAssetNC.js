@@ -46,26 +46,42 @@ class ImportAssetNC extends Component {
   render() {//render continuously produces an up-to-date stateful document  
     const self = this;
 
+    const _accessAsset = async () => {
+      if (this.state.manufacturer === "" || this.state.type === "" || this.state.model === "" || this.state.serial === "") {
+        return alert("Please fill out all fields before submission")
+      }
+
+      let idxHash = window.web3.utils.soliditySha3(
+        String(this.state.type),
+        String(this.state.manufacturer),
+        String(this.state.model),
+        String(this.state.serial),
+      );
+
+      var doesExist = await window.utils.checkAssetExists(idxHash);
+
+      if (!doesExist) {
+        return alert("Asset doesnt exist! Ensure data fields are correct before submission.")
+      }
+
+      return this.setState({ 
+        idxHash: idxHash,
+        accessPermitted: true
+       })
+
+    }
+
     const _importAsset = async () => {
 
       this.setState({ txStatus: false });
       this.setState({ txHash: "" });
       this.setState({ error: undefined })
       this.setState({ result: "" })
-      var idxHash = window.web3.utils.soliditySha3(
-        this.state.type,
-        this.state.manufacturer,
-        this.state.model,
-        this.state.serial
-      );
+
+      var idxHash = this.state.idxHash;
 
       console.log("idxHash", idxHash);
       console.log("addr: ", window.addr);
-
-      var doesExist = await window.utils.checkAssetExists(idxHash);
-      if (!doesExist){
-        return alert("Asset doesnt exist! Ensure data fields are correct before submission.")
-      }
 
       window.contracts.APP_NC.methods
         .$importAsset(idxHash, this.window.assetClass)
@@ -83,6 +99,12 @@ class ImportAssetNC extends Component {
           //Stuff to do when tx confirms
         });
       console.log(this.state.txHash);
+
+      await this.setState({
+        idxHash: "",
+        accessPermitted: false
+      })
+
       return document.getElementById("MainForm").reset();
     };
 
@@ -104,7 +126,9 @@ class ImportAssetNC extends Component {
             <div>
               <h2 className="Headertext">Import Asset</h2>
               <br></br>
-              <Form.Row>
+              {!this.state.accessPermitted && (
+                <>
+                <Form.Row>
                 <Form.Group as={Col} controlId="formGridType">
                   <Form.Label className="formFont">Type:</Form.Label>
                   <Form.Control
@@ -154,13 +178,35 @@ class ImportAssetNC extends Component {
                       variant="primary"
                       type="button"
                       size="lg"
-                      onClick={_importAsset}
+                      onClick={_accessAsset}
                     >
-                      Import
+                      Access Asset
                   </Button>
-                    <div className="LittleTextImport"> Cost in AC {window.assetClass}: {Number(window.costs.newRecordCost) / 1000000000000000000} ETH</div>
+                    <div className="LittleTextImport"> Cost in AC {window.assetClass}: 
+                    {Number(window.costs.newRecordCost) / 1000000000000000000} ETH</div>
                   </Form.Group>
               </Form.Row>
+                </>
+              )}
+              {this.state.accessPermitted && (
+                <>
+                <h2>Asset found at index: {this.state.idxHash}</h2>
+                <Form.Row>
+                  <Form.Group className="buttonDisplay">
+                    <Button
+                      variant="primary"
+                      type="button"
+                      size="lg"
+                      onClick={_importAsset}
+                    >
+                      Import Asset
+                  </Button>
+                    <div className="LittleTextImport"> Cost in AC {window.assetClass}: 
+                    {Number(window.costs.newRecordCost) / 1000000000000000000} ETH</div>
+                  </Form.Group>
+              </Form.Row>
+                </>
+              )}
               <br></br>
             </div>
           )}

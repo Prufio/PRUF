@@ -39,6 +39,11 @@ class GetACData extends Component {
 
   }
 
+  static getDerivedStateFromError(error) {
+    // Update state so the next render will show the fallback UI.
+    return { hasError: true };
+  }
+
   render() {//render continuously produces an up-to-date stateful document  
     const self = this;
 
@@ -97,8 +102,8 @@ class GetACData extends Component {
                     size="lg"
                   />
                 </Form.Group>
-                <Form.Group className="buttonDisplay">
-                  <Button
+                <Form.Group>
+                  <Button className="buttonDisplay"
                     variant="primary"
                     type="button"
                     size="lg"

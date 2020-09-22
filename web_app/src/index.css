@@ -133,12 +133,13 @@ h4 {
 }
 
 .userInfoBox {
-  height: 15rem;
+  height: 12rem;
   width: 20rem;
   background-color: #002a40;
   border-radius: 0rem 0rem 1rem 0rem;
   color: rgb(255, 255, 255);
   font-size: 2rem;
+  font-weight: bold;
   font-family: Tahoma, Geneva, sans-serif;
   display: flex;
   flex-direction: column;
@@ -443,13 +444,8 @@ h4 {
   opacity: 0.96;
 }
 
-.headerButtons {
-  margin-left: 1rem;
-  flex-direction: row;
-  justify-content: flex-start;
-  display: flex;
-  max-height: 3rem;
-  margin-top: -21.75rem;
+.headerButton {
+  margin-top: -21.5rem;
 }
 
 .BannerForm {
@@ -583,6 +579,7 @@ h4 {
   font-size: 1.3rem;
   display: flex;
   padding: 2rem;
+  margin-top: -0.2rem;
   justify-content: center;
   align-items: center;
 }
@@ -596,6 +593,7 @@ h4 {
   font-size: 1.3rem;
   display: flex;
   padding: 2rem;
+  margin-top: -0.2rem;
   justify-content: center;
   align-items: center;
 }
@@ -609,6 +607,7 @@ h4 {
   font-size: 1.4rem;
   display: flex;
   padding: 2rem;
+  margin-top: -0.2rem;
   justify-content: center;
   align-items: center;
 }
@@ -622,6 +621,7 @@ h4 {
   font-size: 2.2rem;
   display: flex;
   padding: 2rem;
+  margin-top: -0.2rem;
   justify-content: center;
   align-items: center;
 }
@@ -639,6 +639,7 @@ h4 {
   justify-content: space-between;
   align-items: normal;
   margin-left: auto;
+  margin-top: -0.2rem;
   margin-right: auto;
   margin-bottom: 10rem;
 }
@@ -652,6 +653,7 @@ h4 {
   font-size: 1.4rem;
   display: flex;
   padding: 2rem;
+  margin-top: -0.2rem;
   align-items: center;
   justify-content: center;
 }
@@ -662,6 +664,7 @@ h4 {
   font-size: 4rem;
   flex-direction: column;
   font-weight: bold;
+  margin-top: -0.2rem;
 }
 
 .btn {
@@ -698,7 +701,8 @@ h4 {
 
 .buttonDisplay {
   margin-left: 42rem;
-  margin-top: -21.5rem;
+  margin-top: auto;
+  line-height: 3rem;
 }
 
 .buttonGroupDisplay {

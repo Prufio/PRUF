@@ -1,5 +1,4 @@
 import React, { Component } from "react";
-import Button from "react-bootstrap/Button";
 import { Route, NavLink, HashRouter } from "react-router-dom";
 import Web3 from "web3";
 import Home from "./Home";
@@ -12,6 +11,8 @@ import AuthorizedUserComponent from "./Resources/AuthorizedUserComponent";
 import BasicComponent from "./Resources/BasicComponent";
 import ParticleBox from './Resources/ParticleBox';
 import Router from "./Router";
+import DropdownButton from 'react-bootstrap/DropdownButton';
+import Dropdown from 'react-bootstrap/Dropdown';
 
 
 
@@ -26,6 +27,9 @@ class Main extends Component {
       }
       if (this.state.isACAdmin !== window.isACAdmin) {
         this.setState({ isACAdmin: window.isACAdmin })
+      }
+      if (this.state.custodyType !== window.custodyType){
+        this.setState({custodyType: window.custodyType})
       }
     }, 100)
 
@@ -55,7 +59,7 @@ class Main extends Component {
 
       else if (menuChoice === 'NC') {
         if (this.state.IDHolderBool) {
-          await this.setState({routeRequest: "NCAdmin"})
+          await this.setState({ routeRequest: "NCAdmin" })
           return this.setState({
             assetHolderMenuBool: true,
             assetHolderUserMenuBool: false,
@@ -65,7 +69,7 @@ class Main extends Component {
           })
         }
         else {
-          await this.setState({routeRequest: "NCUser"})
+          await this.setState({ routeRequest: "NCUser" })
           return this.setState({
             assetHolderMenuBool: false,
             assetHolderUserMenuBool: true,
@@ -108,6 +112,7 @@ class Main extends Component {
 
     this.setupContractEnvironment = async (_web3) => {
       console.log("Setting up contracts")
+
       await this.setState({
         assetHolderMenuBool: false,
         assetClassHolderMenuBool: false,
@@ -116,20 +121,28 @@ class Main extends Component {
         hasFetchedBalances: false,
         routeRequest: "basic"
       })
+
       window._contracts = await buildContracts(_web3)
       await this.setState({ contracts: window._contracts })
       await window.utils.getContracts()
       await window.utils.determineTokenBalance()
       console.log("bools...", window.assetHolderBool, window.assetClassHolderBool, window.IDHolderBool)
-      await this.setState({
-        assetClassBalance: window.balances.assetClassBalance,
-        assetBalance: window.balances.assetBalance,
-        IDTokenBalance: window.balances.IDTokenBalance,
-        assetHolderBool: window.assetHolderBool,
-        assetClassHolderBool: window.assetClassHolderBool,
-        IDHolderBool: window.IDHolderBool
-      })
-      return this.setState({ hasFetchedBalances: window.hasFetchedBalances })
+
+      if(window.balances !== undefined){
+        await this.setState({
+          assetClassBalance: window.balances.assetClassBalance,
+          assetBalance: window.balances.assetBalance,
+          IDTokenBalance: window.balances.IDTokenBalance,
+          assetHolderBool: window.assetHolderBool,
+          assetClassHolderBool: window.assetClassHolderBool,
+          IDHolderBool: window.IDHolderBool,
+          custodyType: window.custodyType,
+        })
+        return this.setState({ hasFetchedBalances: window.hasFetchedBalances })
+      }
+      
+    else{ return console.log("Ethereum not enabled... Will try again on address change.")}
+      
     }
 
     //Component state declaration
@@ -282,68 +295,87 @@ class Main extends Component {
                     Asset Token Balance: {this.state.assetBalance}
                   </div>
                   <br></br>
-                    <div>
-                      ID Token Balance : {this.state.IDTokenBalance}
-                    </div>
-                </div>
-                
-                  <div className="content">
-                    <Route exact path="/" component={Home} />
-                    {Router(this.state.routeRequest)}
+                  <div>
+                    ID Token Balance : {this.state.IDTokenBalance}
                   </div>
-                
-
-
-
-
-
-                <div className="headerButtons">
-                  {this.state.isACAdmin === true && this.state.assetClassHolderMenuBool === false && (
-                    <Button className="btn3"
+                  <div>
+                    <style type="text/css">
+                      {`
+                        .btn-primary {
+                          background-color: #00a8ff;
+                          color: white;
+                        }
+                        .btn-primary:hover {
+                          background-color: #00a8ff;
+                          color: white;
+                        }
+                        .btn-primary:focus {
+                          background: #00a8ff;
+                        }
+                        .btn-primary:active {
+                          background: #00a8ff;
+                        }
+                     `}
+                    </style>
+                    <DropdownButton
+                      title="Toggle Menu"
+                      className="headerButton"
                       variant="primary"
-                      type="button"
-                      onClick={() => { this.toggleMenu("ACAdmin") }}
+                      drop="up"
+                      flip="false"
                     >
-                      AC Admin Menu
-                    </Button>)}
+                      {this.state.isACAdmin === true && this.state.assetClassHolderMenuBool === false && (
+                        <Dropdown.Item
+                          as="button"
+                          variant="primary"
+                          onClick={() => { this.toggleMenu("ACAdmin") }}
+                        >
+                          AC Admin Menu
+                        </Dropdown.Item>)}
 
-                  {this.state.IDHolderBool === false && this.state.assetHolderBool === true && this.state.assetHolderUserMenuBool === false && (
-                    <Button className="btn3"
-                      variant="primary"
-                      type="button"
-                      onClick={() => { this.toggleMenu("NC") }}
-                    >
-                      NonCustodial Menu
-                    </Button>
-                  )}
+                      {this.state.custodyType === "Non-Custodial" && this.state.IDHolderBool === false && this.state.assetHolderBool === true && this.state.assetHolderUserMenuBool === false && (
+                        <Dropdown.Item
+                          as="button"
+                          variant="primary"
+                          onClick={() => { this.toggleMenu("NC") }}
+                        >
+                          NonCustodial Menu
+                        </Dropdown.Item>
+                      )}
 
-                  {this.state.IDHolderBool === true && this.state.assetHolderMenuBool === false && (
-                    <Button className="btn3"
-                      variant="primary"
-                      type="button"
-                      onClick={() => { this.toggleMenu("NC") }}
-                    >
-                      NonCustodial Menu
-                    </Button>
-                  )}
+                      {this.state.custodyType === "Non-Custodial" && this.state.IDHolderBool === true && this.state.assetHolderMenuBool === false && (
+                        <Dropdown.Item
+                          as="button"
+                          variant="primary"
+                          onClick={() => { this.toggleMenu("NC") }}
+                        >
+                          NonCustodial Menu
+                        </Dropdown.Item>
+                      )}
 
-                  {this.state.basicMenuBool === false && (
-                    <Button className="btn3"
-                      variant="primary"
-                      type="button"
-                      onClick={() => { this.toggleMenu("basic") }}
-                    >
-                      Basic Menu
-                    </Button>)}
+                      {this.state.basicMenuBool === false && (
+                        <Dropdown.Item
+                          as="button"
+                          variant="primary"
+                          onClick={() => { this.toggleMenu("basic") }}
+                        >
+                          Basic Menu
+                        </Dropdown.Item>)}
 
-                  {this.state.isAuthUser === true && this.state.authorizedUserMenuBool === false && (
-                    <Button className="btn3"
-                      variant="primary"
-                      type="button"
-                      onClick={() => { this.toggleMenu("authUser") }}
-                    >
-                      Authorized User Menu
-                    </Button>)}
+                      {this.state.isAuthUser === true && this.state.authorizedUserMenuBool === false && (
+                        <Dropdown.Item
+                          as="button"
+                          variant="primary"
+                          onClick={() => { this.toggleMenu("authUser") }}
+                        >
+                          Authorized User Menu
+                        </Dropdown.Item>)}
+                    </DropdownButton>
+                  </div>
+                </div>
+                <div className="content">
+                  <Route exact path="/" component={Home} />
+                  {Router(this.state.routeRequest)}
                 </div>
               </div>
             </div>
