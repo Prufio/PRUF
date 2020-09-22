@@ -43,8 +43,8 @@ contract SHARES is ReentrancyGuard, Ownable, Pausable, BASIC {
     // address internal STOR_Address;
     // STOR_Interface internal STOR;
 
-    uint256 private maxSupply = 10; //set max supply (100000?)
-    uint256 private payPeriod = 2 minutes; //set to 30 days
+    uint256 constant private maxSupply = 10; //set max supply (100000?)
+    uint256 constant private payPeriod = 2 minutes; //set to 30 days
 
     uint256 private nextPayDay = block.timestamp.add(payPeriod);
     uint256 private lastPayDay = block.timestamp;
