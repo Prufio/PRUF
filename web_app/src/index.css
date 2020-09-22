@@ -140,6 +140,7 @@ h4 {
 
 .headerButton {
   margin-top: -21.5rem;
+  margin-left: 2rem;
 }
 
 .BannerForm {
@@ -174,7 +175,8 @@ h4 {
   margin-right: 130rem;
   opacity: 0.96;
   margin-top: 1.5rem;
-  position: fixed;
+  padding-left: 1rem;
+  position: absolute ;
 }
 
 .VRText {
