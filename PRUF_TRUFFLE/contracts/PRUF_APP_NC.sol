@@ -39,6 +39,30 @@ contract APP_NC is CORE {
     
     //--------------------------------------------External Functions--------------------------
     /*
+     * @dev Create a  newRecord with description
+     */
+    function $newRecordWithDescription(
+        bytes32 _idxHash,
+        bytes32 _rgtHash,
+        uint32 _assetClass,
+        uint32 _countDownStart,
+        bytes32 _IpfsHash
+    ) external payable nonReentrant whenNotPaused {
+        require(
+            (ID_TKN.balanceOf(msg.sender) == 1), //msg.sender is token holder
+            "ANC:MOD-IA: Caller does not hold a valid PRuF_ID token"
+        );
+        //^^^^^^^Checks^^^^^^^^^
+        Record memory rec;
+        rec.Ipfs1 = _IpfsHash;
+        createRecord(_idxHash, _rgtHash, _assetClass, _countDownStart);
+        writeRecordIpfs1(_idxHash, rec);
+        deductServiceCosts(_assetClass, 1);
+        //^^^^^^^interactions^^^^^^^^^
+    }
+
+
+    /*
      * @dev Create a  newRecord
      */
     function $newRecord(
