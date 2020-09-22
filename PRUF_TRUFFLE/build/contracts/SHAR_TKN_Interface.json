@@ -1,357 +1,251 @@
 {
-  "contractName": "STOR_Interface",
+  "contractName": "SHAR_TKN_Interface",
   "abi": [
     {
+      "inputs": [
+        {
+          "internalType": "address",
+          "name": "_recipientAddress",
+          "type": "address"
+        },
+        {
+          "internalType": "uint256",
+          "name": "tokenId",
+          "type": "uint256"
+        },
+        {
+          "internalType": "string",
+          "name": "_tokenURI",
+          "type": "string"
+        }
+      ],
+      "name": "mintPRUF_SHARE",
+      "outputs": [
+        {
+          "internalType": "uint256",
+          "name": "",
+          "type": "uint256"
+        }
+      ],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "uint256",
+          "name": "tokenId",
+          "type": "uint256"
+        },
+        {
+          "internalType": "string",
+          "name": "_tokenURI",
+          "type": "string"
+        }
+      ],
+      "name": "setURI",
+      "outputs": [
+        {
+          "internalType": "uint256",
+          "name": "",
+          "type": "uint256"
+        }
+      ],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "uint256",
+          "name": "tokenId",
+          "type": "uint256"
+        }
+      ],
+      "name": "tokenExists",
+      "outputs": [
+        {
+          "internalType": "uint8",
+          "name": "",
+          "type": "uint8"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "address",
+          "name": "from",
+          "type": "address"
+        },
+        {
+          "internalType": "address",
+          "name": "to",
+          "type": "address"
+        },
+        {
+          "internalType": "uint256",
+          "name": "tokenId",
+          "type": "uint256"
+        }
+      ],
+      "name": "transferFrom",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "address",
+          "name": "from",
+          "type": "address"
+        },
+        {
+          "internalType": "address",
+          "name": "to",
+          "type": "address"
+        },
+        {
+          "internalType": "uint256",
+          "name": "tokenId",
+          "type": "uint256"
+        }
+      ],
+      "name": "safeTransferFrom",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "address",
+          "name": "from",
+          "type": "address"
+        },
+        {
+          "internalType": "address",
+          "name": "to",
+          "type": "address"
+        },
+        {
+          "internalType": "uint256",
+          "name": "tokenId",
+          "type": "uint256"
+        },
+        {
+          "internalType": "bytes",
+          "name": "_data",
+          "type": "bytes"
+        }
+      ],
+      "name": "safeTransferFrom",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "uint256",
+          "name": "tokenId",
+          "type": "uint256"
+        }
+      ],
+      "name": "discard",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "uint256",
+          "name": "tokenId",
+          "type": "uint256"
+        }
+      ],
+      "name": "ownerOf",
+      "outputs": [
+        {
+          "internalType": "address",
+          "name": "tokenHolderAdress",
+          "type": "address"
+        }
+      ],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "address",
+          "name": "account",
+          "type": "address"
+        }
+      ],
+      "name": "balanceOf",
+      "outputs": [
+        {
+          "internalType": "uint256",
+          "name": "",
+          "type": "uint256"
+        }
+      ],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
       "inputs": [],
-      "name": "pause",
-      "outputs": [],
+      "name": "name",
+      "outputs": [
+        {
+          "internalType": "string",
+          "name": "tokenName",
+          "type": "string"
+        }
+      ],
       "stateMutability": "nonpayable",
       "type": "function"
     },
     {
       "inputs": [],
-      "name": "unpause",
-      "outputs": [],
-      "stateMutability": "nonpayable",
-      "type": "function"
-    },
-    {
-      "inputs": [
+      "name": "symbol",
+      "outputs": [
         {
           "internalType": "string",
-          "name": "_name",
+          "name": "tokenSymbol",
           "type": "string"
-        },
-        {
-          "internalType": "address",
-          "name": "_addr",
-          "type": "address"
-        },
-        {
-          "internalType": "uint32",
-          "name": "_assetClass",
-          "type": "uint32"
-        },
-        {
-          "internalType": "uint8",
-          "name": "_contractAuthLevel",
-          "type": "uint8"
         }
       ],
-      "name": "OO_addContract",
-      "outputs": [],
       "stateMutability": "nonpayable",
       "type": "function"
     },
     {
       "inputs": [
-        {
-          "internalType": "string",
-          "name": "_name",
-          "type": "string"
-        },
-        {
-          "internalType": "uint32",
-          "name": "_assetClass",
-          "type": "uint32"
-        },
-        {
-          "internalType": "uint8",
-          "name": "_contractAuthLevel",
-          "type": "uint8"
-        }
-      ],
-      "name": "enableContractForAC",
-      "outputs": [],
-      "stateMutability": "nonpayable",
-      "type": "function"
-    },
-    {
-      "inputs": [
-        {
-          "internalType": "bytes32",
-          "name": "_idxHash",
-          "type": "bytes32"
-        },
-        {
-          "internalType": "bytes32",
-          "name": "_rgtHash",
-          "type": "bytes32"
-        },
-        {
-          "internalType": "uint32",
-          "name": "_assetClass",
-          "type": "uint32"
-        },
-        {
-          "internalType": "uint32",
-          "name": "_countDownStart",
-          "type": "uint32"
-        }
-      ],
-      "name": "newRecord",
-      "outputs": [],
-      "stateMutability": "nonpayable",
-      "type": "function"
-    },
-    {
-      "inputs": [
-        {
-          "internalType": "bytes32",
-          "name": "_idxHash",
-          "type": "bytes32"
-        },
-        {
-          "internalType": "bytes32",
-          "name": "_rgtHash",
-          "type": "bytes32"
-        },
-        {
-          "internalType": "uint8",
-          "name": "_newAssetStatus",
-          "type": "uint8"
-        },
-        {
-          "internalType": "uint32",
-          "name": "_countDown",
-          "type": "uint32"
-        },
         {
           "internalType": "uint256",
-          "name": "_incrementForceModCount",
-          "type": "uint256"
-        },
-        {
-          "internalType": "uint256",
-          "name": "_incrementNumberOfTransfers",
+          "name": "tokenId",
           "type": "uint256"
         }
       ],
-      "name": "modifyRecord",
-      "outputs": [],
-      "stateMutability": "nonpayable",
-      "type": "function"
-    },
-    {
-      "inputs": [
-        {
-          "internalType": "bytes32",
-          "name": "_idxHash",
-          "type": "bytes32"
-        },
-        {
-          "internalType": "uint32",
-          "name": "_newAssetClass",
-          "type": "uint32"
-        }
-      ],
-      "name": "changeAC",
-      "outputs": [],
-      "stateMutability": "nonpayable",
-      "type": "function"
-    },
-    {
-      "inputs": [
-        {
-          "internalType": "bytes32",
-          "name": "_idxHash",
-          "type": "bytes32"
-        },
-        {
-          "internalType": "uint8",
-          "name": "_newAssetStatus",
-          "type": "uint8"
-        }
-      ],
-      "name": "setStolenOrLost",
-      "outputs": [],
-      "stateMutability": "nonpayable",
-      "type": "function"
-    },
-    {
-      "inputs": [
-        {
-          "internalType": "bytes32",
-          "name": "_idxHash",
-          "type": "bytes32"
-        },
-        {
-          "internalType": "uint8",
-          "name": "_newAssetStatus",
-          "type": "uint8"
-        }
-      ],
-      "name": "setEscrow",
-      "outputs": [],
-      "stateMutability": "nonpayable",
-      "type": "function"
-    },
-    {
-      "inputs": [
-        {
-          "internalType": "bytes32",
-          "name": "_idxHash",
-          "type": "bytes32"
-        }
-      ],
-      "name": "endEscrow",
-      "outputs": [],
-      "stateMutability": "nonpayable",
-      "type": "function"
-    },
-    {
-      "inputs": [
-        {
-          "internalType": "bytes32",
-          "name": "_idxHash",
-          "type": "bytes32"
-        },
-        {
-          "internalType": "bytes32",
-          "name": "_Ipfs1",
-          "type": "bytes32"
-        }
-      ],
-      "name": "modifyIpfs1",
-      "outputs": [],
-      "stateMutability": "nonpayable",
-      "type": "function"
-    },
-    {
-      "inputs": [
-        {
-          "internalType": "bytes32",
-          "name": "_idxHash",
-          "type": "bytes32"
-        },
-        {
-          "internalType": "bytes32",
-          "name": "_Ipfs2",
-          "type": "bytes32"
-        }
-      ],
-      "name": "modifyIpfs2",
-      "outputs": [],
-      "stateMutability": "nonpayable",
-      "type": "function"
-    },
-    {
-      "inputs": [
-        {
-          "internalType": "bytes32",
-          "name": "_idxHash",
-          "type": "bytes32"
-        }
-      ],
-      "name": "retrieveRecord",
+      "name": "tokenURI",
       "outputs": [
         {
-          "internalType": "bytes32",
-          "name": "",
-          "type": "bytes32"
-        },
-        {
-          "internalType": "uint8",
-          "name": "",
-          "type": "uint8"
-        },
-        {
-          "internalType": "uint32",
-          "name": "",
-          "type": "uint32"
-        },
-        {
-          "internalType": "uint32",
-          "name": "",
-          "type": "uint32"
-        },
-        {
-          "internalType": "uint32",
-          "name": "",
-          "type": "uint32"
-        },
-        {
-          "internalType": "bytes32",
-          "name": "",
-          "type": "bytes32"
-        },
-        {
-          "internalType": "bytes32",
-          "name": "",
-          "type": "bytes32"
+          "internalType": "string",
+          "name": "URI",
+          "type": "string"
         }
       ],
-      "stateMutability": "view",
+      "stateMutability": "nonpayable",
       "type": "function"
     },
     {
-      "inputs": [
-        {
-          "internalType": "bytes32",
-          "name": "_idxHash",
-          "type": "bytes32"
-        }
-      ],
-      "name": "retrieveShortRecord",
-      "outputs": [
-        {
-          "internalType": "uint8",
-          "name": "",
-          "type": "uint8"
-        },
-        {
-          "internalType": "uint8",
-          "name": "",
-          "type": "uint8"
-        },
-        {
-          "internalType": "uint32",
-          "name": "",
-          "type": "uint32"
-        },
-        {
-          "internalType": "uint32",
-          "name": "",
-          "type": "uint32"
-        },
-        {
-          "internalType": "uint32",
-          "name": "",
-          "type": "uint32"
-        },
-        {
-          "internalType": "bytes32",
-          "name": "",
-          "type": "bytes32"
-        },
-        {
-          "internalType": "bytes32",
-          "name": "",
-          "type": "bytes32"
-        },
-        {
-          "internalType": "uint16",
-          "name": "",
-          "type": "uint16"
-        }
-      ],
-      "stateMutability": "view",
-      "type": "function"
-    },
-    {
-      "inputs": [
-        {
-          "internalType": "bytes32",
-          "name": "_idxHash",
-          "type": "bytes32"
-        },
-        {
-          "internalType": "bytes32",
-          "name": "_rgtHash",
-          "type": "bytes32"
-        }
-      ],
-      "name": "_verifyRightsHolder",
+      "inputs": [],
+      "name": "totalSupply",
       "outputs": [
         {
           "internalType": "uint256",
@@ -359,28 +253,28 @@
           "type": "uint256"
         }
       ],
-      "stateMutability": "view",
+      "stateMutability": "nonpayable",
       "type": "function"
     },
     {
       "inputs": [
         {
-          "internalType": "bytes32",
-          "name": "_idxHash",
-          "type": "bytes32"
+          "internalType": "address",
+          "name": "owner",
+          "type": "address"
         },
         {
-          "internalType": "bytes32",
-          "name": "_rgtHash",
-          "type": "bytes32"
+          "internalType": "uint256",
+          "name": "index",
+          "type": "uint256"
         }
       ],
-      "name": "blockchainVerifyRightsHolder",
+      "name": "tokenOfOwnerByIndex",
       "outputs": [
         {
-          "internalType": "uint8",
-          "name": "",
-          "type": "uint8"
+          "internalType": "uint256",
+          "name": "tokenId",
+          "type": "uint256"
         }
       ],
       "stateMutability": "nonpayable",
@@ -389,53 +283,24 @@
     {
       "inputs": [
         {
-          "internalType": "string",
-          "name": "_name",
-          "type": "string"
+          "internalType": "uint256",
+          "name": "index",
+          "type": "uint256"
         }
       ],
-      "name": "resolveContractAddress",
+      "name": "tokenByIndex",
       "outputs": [
         {
-          "internalType": "address",
+          "internalType": "uint256",
           "name": "",
-          "type": "address"
+          "type": "uint256"
         }
       ],
-      "stateMutability": "view",
-      "type": "function"
-    },
-    {
-      "inputs": [
-        {
-          "internalType": "address",
-          "name": "_addr",
-          "type": "address"
-        },
-        {
-          "internalType": "uint32",
-          "name": "_assetClass",
-          "type": "uint32"
-        }
-      ],
-      "name": "ContractInfoHash",
-      "outputs": [
-        {
-          "internalType": "uint8",
-          "name": "",
-          "type": "uint8"
-        },
-        {
-          "internalType": "bytes32",
-          "name": "",
-          "type": "bytes32"
-        }
-      ],
-      "stateMutability": "view",
+      "stateMutability": "nonpayable",
       "type": "function"
     }
   ],
-  "metadata": "{\"compiler\":{\"version\":\"0.6.12+commit.27d51765\"},\"language\":\"Solidity\",\"output\":{\"abi\":[{\"inputs\":[{\"internalType\":\"address\",\"name\":\"_addr\",\"type\":\"address\"},{\"internalType\":\"uint32\",\"name\":\"_assetClass\",\"type\":\"uint32\"}],\"name\":\"ContractInfoHash\",\"outputs\":[{\"internalType\":\"uint8\",\"name\":\"\",\"type\":\"uint8\"},{\"internalType\":\"bytes32\",\"name\":\"\",\"type\":\"bytes32\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"string\",\"name\":\"_name\",\"type\":\"string\"},{\"internalType\":\"address\",\"name\":\"_addr\",\"type\":\"address\"},{\"internalType\":\"uint32\",\"name\":\"_assetClass\",\"type\":\"uint32\"},{\"internalType\":\"uint8\",\"name\":\"_contractAuthLevel\",\"type\":\"uint8\"}],\"name\":\"OO_addContract\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"bytes32\",\"name\":\"_idxHash\",\"type\":\"bytes32\"},{\"internalType\":\"bytes32\",\"name\":\"_rgtHash\",\"type\":\"bytes32\"}],\"name\":\"_verifyRightsHolder\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"bytes32\",\"name\":\"_idxHash\",\"type\":\"bytes32\"},{\"internalType\":\"bytes32\",\"name\":\"_rgtHash\",\"type\":\"bytes32\"}],\"name\":\"blockchainVerifyRightsHolder\",\"outputs\":[{\"internalType\":\"uint8\",\"name\":\"\",\"type\":\"uint8\"}],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"bytes32\",\"name\":\"_idxHash\",\"type\":\"bytes32\"},{\"internalType\":\"uint32\",\"name\":\"_newAssetClass\",\"type\":\"uint32\"}],\"name\":\"changeAC\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"string\",\"name\":\"_name\",\"type\":\"string\"},{\"internalType\":\"uint32\",\"name\":\"_assetClass\",\"type\":\"uint32\"},{\"internalType\":\"uint8\",\"name\":\"_contractAuthLevel\",\"type\":\"uint8\"}],\"name\":\"enableContractForAC\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"bytes32\",\"name\":\"_idxHash\",\"type\":\"bytes32\"}],\"name\":\"endEscrow\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"bytes32\",\"name\":\"_idxHash\",\"type\":\"bytes32\"},{\"internalType\":\"bytes32\",\"name\":\"_Ipfs1\",\"type\":\"bytes32\"}],\"name\":\"modifyIpfs1\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"bytes32\",\"name\":\"_idxHash\",\"type\":\"bytes32\"},{\"internalType\":\"bytes32\",\"name\":\"_Ipfs2\",\"type\":\"bytes32\"}],\"name\":\"modifyIpfs2\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"bytes32\",\"name\":\"_idxHash\",\"type\":\"bytes32\"},{\"internalType\":\"bytes32\",\"name\":\"_rgtHash\",\"type\":\"bytes32\"},{\"internalType\":\"uint8\",\"name\":\"_newAssetStatus\",\"type\":\"uint8\"},{\"internalType\":\"uint32\",\"name\":\"_countDown\",\"type\":\"uint32\"},{\"internalType\":\"uint256\",\"name\":\"_incrementForceModCount\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"_incrementNumberOfTransfers\",\"type\":\"uint256\"}],\"name\":\"modifyRecord\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"bytes32\",\"name\":\"_idxHash\",\"type\":\"bytes32\"},{\"internalType\":\"bytes32\",\"name\":\"_rgtHash\",\"type\":\"bytes32\"},{\"internalType\":\"uint32\",\"name\":\"_assetClass\",\"type\":\"uint32\"},{\"internalType\":\"uint32\",\"name\":\"_countDownStart\",\"type\":\"uint32\"}],\"name\":\"newRecord\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"pause\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"string\",\"name\":\"_name\",\"type\":\"string\"}],\"name\":\"resolveContractAddress\",\"outputs\":[{\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"bytes32\",\"name\":\"_idxHash\",\"type\":\"bytes32\"}],\"name\":\"retrieveRecord\",\"outputs\":[{\"internalType\":\"bytes32\",\"name\":\"\",\"type\":\"bytes32\"},{\"internalType\":\"uint8\",\"name\":\"\",\"type\":\"uint8\"},{\"internalType\":\"uint32\",\"name\":\"\",\"type\":\"uint32\"},{\"internalType\":\"uint32\",\"name\":\"\",\"type\":\"uint32\"},{\"internalType\":\"uint32\",\"name\":\"\",\"type\":\"uint32\"},{\"internalType\":\"bytes32\",\"name\":\"\",\"type\":\"bytes32\"},{\"internalType\":\"bytes32\",\"name\":\"\",\"type\":\"bytes32\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"bytes32\",\"name\":\"_idxHash\",\"type\":\"bytes32\"}],\"name\":\"retrieveShortRecord\",\"outputs\":[{\"internalType\":\"uint8\",\"name\":\"\",\"type\":\"uint8\"},{\"internalType\":\"uint8\",\"name\":\"\",\"type\":\"uint8\"},{\"internalType\":\"uint32\",\"name\":\"\",\"type\":\"uint32\"},{\"internalType\":\"uint32\",\"name\":\"\",\"type\":\"uint32\"},{\"internalType\":\"uint32\",\"name\":\"\",\"type\":\"uint32\"},{\"internalType\":\"bytes32\",\"name\":\"\",\"type\":\"bytes32\"},{\"internalType\":\"bytes32\",\"name\":\"\",\"type\":\"bytes32\"},{\"internalType\":\"uint16\",\"name\":\"\",\"type\":\"uint16\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"bytes32\",\"name\":\"_idxHash\",\"type\":\"bytes32\"},{\"internalType\":\"uint8\",\"name\":\"_newAssetStatus\",\"type\":\"uint8\"}],\"name\":\"setEscrow\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"bytes32\",\"name\":\"_idxHash\",\"type\":\"bytes32\"},{\"internalType\":\"uint8\",\"name\":\"_newAssetStatus\",\"type\":\"uint8\"}],\"name\":\"setStolenOrLost\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"unpause\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"}],\"devdoc\":{\"kind\":\"dev\",\"methods\":{},\"version\":1},\"userdoc\":{\"kind\":\"user\",\"methods\":{},\"version\":1}},\"settings\":{\"compilationTarget\":{\"/Users/cts/dev/PRUF/PRUF_TRUFFLE/contracts/PRUF_INTERFACES.sol\":\"STOR_Interface\"},\"evmVersion\":\"istanbul\",\"libraries\":{},\"metadata\":{\"bytecodeHash\":\"ipfs\"},\"optimizer\":{\"enabled\":true,\"runs\":200},\"remappings\":[]},\"sources\":{\"/Users/cts/dev/PRUF/PRUF_TRUFFLE/contracts/PRUF_INTERFACES.sol\":{\"keccak256\":\"0x70214085c5ef684e4669105054258ab225e01dd167b4baa1fecf2cbd08de4f7e\",\"license\":\"UNLICENSED\",\"urls\":[\"bzz-raw://255fd5d6884418c0fe6179ebb0e583e9ef7dbabdf25c35376333cb40993a4db3\",\"dweb:/ipfs/QmPm48AaSN4w73Fg2bVYB4du6QdDowtwjypsUZvBEZvG8v\"]}},\"version\":1}",
+  "metadata": "{\"compiler\":{\"version\":\"0.6.12+commit.27d51765\"},\"language\":\"Solidity\",\"output\":{\"abi\":[{\"inputs\":[{\"internalType\":\"address\",\"name\":\"account\",\"type\":\"address\"}],\"name\":\"balanceOf\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"tokenId\",\"type\":\"uint256\"}],\"name\":\"discard\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"_recipientAddress\",\"type\":\"address\"},{\"internalType\":\"uint256\",\"name\":\"tokenId\",\"type\":\"uint256\"},{\"internalType\":\"string\",\"name\":\"_tokenURI\",\"type\":\"string\"}],\"name\":\"mintPRUF_SHARE\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"name\",\"outputs\":[{\"internalType\":\"string\",\"name\":\"tokenName\",\"type\":\"string\"}],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"tokenId\",\"type\":\"uint256\"}],\"name\":\"ownerOf\",\"outputs\":[{\"internalType\":\"address\",\"name\":\"tokenHolderAdress\",\"type\":\"address\"}],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"from\",\"type\":\"address\"},{\"internalType\":\"address\",\"name\":\"to\",\"type\":\"address\"},{\"internalType\":\"uint256\",\"name\":\"tokenId\",\"type\":\"uint256\"}],\"name\":\"safeTransferFrom\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"from\",\"type\":\"address\"},{\"internalType\":\"address\",\"name\":\"to\",\"type\":\"address\"},{\"internalType\":\"uint256\",\"name\":\"tokenId\",\"type\":\"uint256\"},{\"internalType\":\"bytes\",\"name\":\"_data\",\"type\":\"bytes\"}],\"name\":\"safeTransferFrom\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"tokenId\",\"type\":\"uint256\"},{\"internalType\":\"string\",\"name\":\"_tokenURI\",\"type\":\"string\"}],\"name\":\"setURI\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"symbol\",\"outputs\":[{\"internalType\":\"string\",\"name\":\"tokenSymbol\",\"type\":\"string\"}],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"index\",\"type\":\"uint256\"}],\"name\":\"tokenByIndex\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"tokenId\",\"type\":\"uint256\"}],\"name\":\"tokenExists\",\"outputs\":[{\"internalType\":\"uint8\",\"name\":\"\",\"type\":\"uint8\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"owner\",\"type\":\"address\"},{\"internalType\":\"uint256\",\"name\":\"index\",\"type\":\"uint256\"}],\"name\":\"tokenOfOwnerByIndex\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"tokenId\",\"type\":\"uint256\"}],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"tokenId\",\"type\":\"uint256\"}],\"name\":\"tokenURI\",\"outputs\":[{\"internalType\":\"string\",\"name\":\"URI\",\"type\":\"string\"}],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"totalSupply\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"from\",\"type\":\"address\"},{\"internalType\":\"address\",\"name\":\"to\",\"type\":\"address\"},{\"internalType\":\"uint256\",\"name\":\"tokenId\",\"type\":\"uint256\"}],\"name\":\"transferFrom\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"}],\"devdoc\":{\"kind\":\"dev\",\"methods\":{\"balanceOf(address)\":{\"details\":\"Returns the amount of tokens owned by `account`.\"},\"discard(uint256)\":{\"details\":\"Safely burns a token and sets the corresponding RGT to zero in storage.\"},\"name()\":{\"details\":\"Returns the name of the token.\"},\"ownerOf(uint256)\":{\"details\":\"Returns the owner of the `tokenId` token. Requirements: - `tokenId` must exist.\"},\"safeTransferFrom(address,address,uint256)\":{\"details\":\"Safely transfers the ownership of a given token ID to another address If the target address is a contract, it must implement {IERC721Receiver-onERC721Received}, which is called upon a safe transfer, and return the magic value `bytes4(keccak256(\\\"onERC721Received(address,address,uint256,bytes)\\\"))`; otherwise, the transfer is reverted. Requires the msg.sender to be the owner, approved, or operator\",\"params\":{\"from\":\"current owner of the token\",\"to\":\"address to receive the ownership of the given token ID\",\"tokenId\":\"uint256 ID of the token to be transferred\"}},\"safeTransferFrom(address,address,uint256,bytes)\":{\"details\":\"Safely transfers the ownership of a given token ID to another address If the target address is a contract, it must implement {IERC721Receiver-onERC721Received}, which is called upon a safe transfer, and return the magic value `bytes4(keccak256(\\\"onERC721Received(address,address,uint256,bytes)\\\"))`; otherwise, the transfer is reverted. Requires the _msgSender() to be the owner, approved, or operator\",\"params\":{\"_data\":\"bytes data to send along with a safe transfer check\",\"from\":\"current owner of the token\",\"to\":\"address to receive the ownership of the given token ID\",\"tokenId\":\"uint256 ID of the token to be transferred\"}},\"symbol()\":{\"details\":\"Returns the token collection symbol.\"},\"tokenByIndex(uint256)\":{\"details\":\"Returns a token ID at a given `index` of all the tokens stored by the contract. Use along with {totalSupply} to enumerate all tokens.\"},\"tokenOfOwnerByIndex(address,uint256)\":{\"details\":\"Returns a token ID owned by `owner` at a given `index` of its token list. Use along with {balanceOf} to enumerate all of ``owner``'s tokens.\"},\"tokenURI(uint256)\":{\"details\":\"Returns the Uniform Resource Identifier (URI) for `tokenId` token.\"},\"totalSupply()\":{\"details\":\"Returns the total amount of tokens stored by the contract.\"},\"transferFrom(address,address,uint256)\":{\"details\":\"Transfers the ownership of a given token ID to another address. Usage of this method is discouraged, use {safeTransferFrom} whenever possible. Requires the msg.sender to be the owner, approved, or operator.\",\"params\":{\"from\":\"current owner of the token\",\"to\":\"address to receive the ownership of the given token ID\",\"tokenId\":\"uint256 ID of the token to be transferred\"}}},\"version\":1},\"userdoc\":{\"kind\":\"user\",\"methods\":{},\"version\":1}},\"settings\":{\"compilationTarget\":{\"/Users/cts/dev/PRUF/PRUF_TRUFFLE/contracts/PRUF_INTERFACES.sol\":\"SHAR_TKN_Interface\"},\"evmVersion\":\"istanbul\",\"libraries\":{},\"metadata\":{\"bytecodeHash\":\"ipfs\"},\"optimizer\":{\"enabled\":true,\"runs\":200},\"remappings\":[]},\"sources\":{\"/Users/cts/dev/PRUF/PRUF_TRUFFLE/contracts/PRUF_INTERFACES.sol\":{\"keccak256\":\"0x70214085c5ef684e4669105054258ab225e01dd167b4baa1fecf2cbd08de4f7e\",\"license\":\"UNLICENSED\",\"urls\":[\"bzz-raw://255fd5d6884418c0fe6179ebb0e583e9ef7dbabdf25c35376333cb40993a4db3\",\"dweb:/ipfs/QmPm48AaSN4w73Fg2bVYB4du6QdDowtwjypsUZvBEZvG8v\"]}},\"version\":1}",
   "bytecode": "0x",
   "deployedBytecode": "0x",
   "immutableReferences": {},
@@ -27185,10 +27050,63 @@
   },
   "networks": {},
   "schemaVersion": "3.2.3",
-  "updatedAt": "2020-09-22T21:30:52.848Z",
+  "updatedAt": "2020-09-22T21:30:52.832Z",
   "devdoc": {
     "kind": "dev",
-    "methods": {},
+    "methods": {
+      "balanceOf(address)": {
+        "details": "Returns the amount of tokens owned by `account`."
+      },
+      "discard(uint256)": {
+        "details": "Safely burns a token and sets the corresponding RGT to zero in storage."
+      },
+      "name()": {
+        "details": "Returns the name of the token."
+      },
+      "ownerOf(uint256)": {
+        "details": "Returns the owner of the `tokenId` token. Requirements: - `tokenId` must exist."
+      },
+      "safeTransferFrom(address,address,uint256)": {
+        "details": "Safely transfers the ownership of a given token ID to another address If the target address is a contract, it must implement {IERC721Receiver-onERC721Received}, which is called upon a safe transfer, and return the magic value `bytes4(keccak256(\"onERC721Received(address,address,uint256,bytes)\"))`; otherwise, the transfer is reverted. Requires the msg.sender to be the owner, approved, or operator",
+        "params": {
+          "from": "current owner of the token",
+          "to": "address to receive the ownership of the given token ID",
+          "tokenId": "uint256 ID of the token to be transferred"
+        }
+      },
+      "safeTransferFrom(address,address,uint256,bytes)": {
+        "details": "Safely transfers the ownership of a given token ID to another address If the target address is a contract, it must implement {IERC721Receiver-onERC721Received}, which is called upon a safe transfer, and return the magic value `bytes4(keccak256(\"onERC721Received(address,address,uint256,bytes)\"))`; otherwise, the transfer is reverted. Requires the _msgSender() to be the owner, approved, or operator",
+        "params": {
+          "_data": "bytes data to send along with a safe transfer check",
+          "from": "current owner of the token",
+          "to": "address to receive the ownership of the given token ID",
+          "tokenId": "uint256 ID of the token to be transferred"
+        }
+      },
+      "symbol()": {
+        "details": "Returns the token collection symbol."
+      },
+      "tokenByIndex(uint256)": {
+        "details": "Returns a token ID at a given `index` of all the tokens stored by the contract. Use along with {totalSupply} to enumerate all tokens."
+      },
+      "tokenOfOwnerByIndex(address,uint256)": {
+        "details": "Returns a token ID owned by `owner` at a given `index` of its token list. Use along with {balanceOf} to enumerate all of ``owner``'s tokens."
+      },
+      "tokenURI(uint256)": {
+        "details": "Returns the Uniform Resource Identifier (URI) for `tokenId` token."
+      },
+      "totalSupply()": {
+        "details": "Returns the total amount of tokens stored by the contract."
+      },
+      "transferFrom(address,address,uint256)": {
+        "details": "Transfers the ownership of a given token ID to another address. Usage of this method is discouraged, use {safeTransferFrom} whenever possible. Requires the msg.sender to be the owner, approved, or operator.",
+        "params": {
+          "from": "current owner of the token",
+          "to": "address to receive the ownership of the given token ID",
+          "tokenId": "uint256 ID of the token to be transferred"
+        }
+      }
+    },
     "version": 1
   },
   "userdoc": {
