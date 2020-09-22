@@ -187,7 +187,7 @@ contract BASIC is ReentrancyGuard, Ownable, IERC721Receiver, Pausable {
     /*
      * @dev Set adress of STOR contract to interface with
      */
-    function OO_setStorageContract(address _storageAddress) external onlyOwner {
+    function OO_setStorageContract(address _storageAddress) external virtual onlyOwner {
         require(
             _storageAddress != address(0),
             "B:SSC: storage address cannot be zero"

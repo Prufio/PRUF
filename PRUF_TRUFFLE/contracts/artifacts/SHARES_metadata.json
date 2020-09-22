@@ -69,8 +69,25 @@
 				"type": "event"
 			},
 			{
+				"stateMutability": "payable",
+				"type": "fallback"
+			},
+			{
 				"inputs": [],
 				"name": "OO_resolveContractAddresses",
+				"outputs": [],
+				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "address",
+						"name": "_automationAddress",
+						"type": "address"
+					}
+				],
+				"name": "OO_setAutomationAddress",
 				"outputs": [],
 				"stateMutability": "nonpayable",
 				"type": "function"
@@ -99,7 +116,7 @@
 				"inputs": [
 					{
 						"internalType": "uint256",
-						"name": "tokenId",
+						"name": "_tokenId",
 						"type": "uint256"
 					}
 				],
@@ -112,7 +129,7 @@
 				"inputs": [
 					{
 						"internalType": "uint256",
-						"name": "tokenId",
+						"name": "_tokenId",
 						"type": "uint256"
 					}
 				],
@@ -125,7 +142,7 @@
 				"inputs": [
 					{
 						"internalType": "uint256",
-						"name": "tokenId",
+						"name": "_tokenId",
 						"type": "uint256"
 					}
 				],
@@ -380,11 +397,11 @@
 			]
 		},
 		"localhost/PRUF/PRUF_TRUFFLE/contracts/PRUF_SHARES.sol": {
-			"keccak256": "0xf6ed975c148dbeea2b905f08aad7105f8e5b622a2c4e5a70208ef897bbee4798",
+			"keccak256": "0x793df113db5dc5fcbeb793e690469d607b6c8c02662848c0be9dae66948fb433",
 			"license": "UNLICENSED",
 			"urls": [
-				"bzz-raw://ad0b164f125b460d30378fd661d04fb964aedd592a838f58b9caecc8d053e5be",
-				"dweb:/ipfs/QmZxQnrv7pHpoiX9WM4E9rjpEvDhZAkghKrq95ZLkK1wMf"
+				"bzz-raw://1a2a29efad9bda6ce06da6876251dccf4b0a0f7fa37df14a5b4ac25001dfea9b",
+				"dweb:/ipfs/QmTE89cd5ZzBKUtikCvhVrPWfhxbWV5jhmxACPHb1P9jYp"
 			]
 		}
 	},
