@@ -27,10 +27,9 @@ import "./Imports/utils/Address.sol";
 import "./Imports/payment/escrow/Escrow.sol";
 
 contract SHARES is ReentrancyGuard, Ownable, Pausable {
-
     Escrow private _escrow;
 
-    constructor () public {
+    constructor() public {
         _escrow = new Escrow();
     }
 
@@ -43,24 +42,26 @@ contract SHARES is ReentrancyGuard, Ownable, Pausable {
     address internal STOR_Address;
     STOR_Interface internal STOR;
 
-uint256 private maxSupply =  10;  //set max supply (100000?)
-uint256 private payPeriod =  2 minutes;  //set to 30 days
+    uint256 private maxSupply = 10; //set max supply (100000?)
+    uint256 private payPeriod = 2 minutes; //set to 30 days
 
-uint256 private nextPayDay = block.timestamp.add(payPeriod);
-uint256 private lastPayDay = block.timestamp;
+    uint256 private nextPayDay = block.timestamp.add(payPeriod);
+    uint256 private lastPayDay = block.timestamp;
 
-uint256 private newBalance;
+    uint256 private dividend;
 
-uint256 private newDividend;
+    uint256 internal heldFunds;
 
-uint256 internal held;
+    mapping(uint256 => uint256) private tokenPaymentDate; // Main Data Storage
+    mapping(uint256 => uint256) private tokenPaymentStatus; // Main Data Storage
 
-mapping(uint256 => uint256) private tokenPaymentDate; // Main Data Storage
+    //-----------------------------------------------Events------------------------------------------------//
+    event REPORT(string _msg);
+
+    //--------------------------------Internal Admin functions / onlyowner or isAdmin---------------------------------//
 
     function pay() public payable {
-        require(
-            msg.value > 0, "MOAR ETH!!!!!"
-            );
+        require(msg.value > 0, "MOAR ETH!!!!!");
     }
 
 
@@ -75,7 +76,8 @@ mapping(uint256 => uint256) private tokenPaymentDate; // Main Data Storage
         //^^^^^^^checks^^^^^^^^^
 
         STOR = STOR_Interface(_storageAddress);
-        
+
+        //------------------------------------------------- be sure to kill this! -------------------------------------------------
         SHAR_TKN_Address = _storageAddress; //testing only - steals storage address for shar_tkn
         SHAR_TKN = SHAR_TKN_Interface(SHAR_TKN_Address); //testing only
         //^^^^^^^effects^^^^^^^^^
@@ -85,10 +87,7 @@ mapping(uint256 => uint256) private tokenPaymentDate; // Main Data Storage
     /*
      * @dev Resolve Contract Addresses from STOR
      */
-    function OO_resolveContractAddresses()
-        external
-        onlyOwner
-    {
+    function OO_resolveContractAddresses() external onlyOwner {
         //^^^^^^^checks^^^^^^^^^
 
         SHAR_TKN_Address = STOR.resolveContractAddress("SHAR_TKN");
@@ -97,79 +96,94 @@ mapping(uint256 => uint256) private tokenPaymentDate; // Main Data Storage
     }
 
 
+    /**
+     * sets a new dividend ending period payPeriod.seconds in the future
+     * takes the contract balance less the heldFunds and divides it by the number of tokens to get a didivend amount
+     * requires old dividend period must have expired
+     */
+    function newDividendPeriod() internal {
+        require(block.timestamp >= nextPayDay, "PS:SNDP:not payday yet");
+        //^^^^^^^checks^^^^^^^^^
 
+        lastPayDay = nextPayDay; //today is the new most recent PayDay
+        nextPayDay = block.timestamp.add(payPeriod); //set the next payday for payPeriod.seconds in the future
 
-    
-    function calculateDividend() external returns(uint256) { 
+        uint256 payableFunds = address(this).balance.sub(heldFunds); //the new balance is the total balance less the amount held back for payment reservations
 
-        uint256 secUntilPayday;
+        dividend = payableFunds.div(maxSupply); //calculate the dividend per share of the last interval's reciepts
+        //^^^^^^^effects^^^^^^^^^
 
-        (, secUntilPayday) = sec_until_payday();
-        require (secUntilPayday == 0, "not payday yet");
+        emit REPORT("New Period Started");
+        //^^^^^^^interactions^^^^^^^^^
 
-            lastPayDay = nextPayDay; //today is the new most recent PayDay
-            nextPayDay = block.timestamp.add(payPeriod); //set the next payday for the future
-
-            newBalance = address(this).balance.sub(held);  //the new balance is the total balance less the amount held back for payment reservations
-
-            //oldDividend = newDividend; //update old diviend to the last new dividend
-
-            newDividend = newBalance.div(maxSupply);  //calculate the dividend per share of the last interval's reciepts
-
-            return newDividend;
     }
-    
 
-    function sec_until_payday() public view returns (uint256 , uint256) {
-        if (nextPayDay > block.timestamp){
+    function StartNewDividendPeriod () external {
+        newDividendPeriod();
+    }
+
+
+    function claimDividend(uint256 tokenId) external {
+        require(
+            tokenPaymentDate[tokenId] < nextPayDay,
+            "PS:GP:not payday for this token"
+        );
+        require(block.timestamp > lastPayDay, "PS:GP:not payday yet");
+        require(
+            SHAR_TKN.ownerOf(tokenId) == msg.sender,
+            "PS:GP:caller does not hold token"
+        );
+
+        if (block.timestamp > nextPayDay) {
+            //if no one has done it yet, start a new dividend period
+            newDividendPeriod();
+        }
+
+        tokenPaymentDate[tokenId] = nextPayDay;
+        heldFunds = heldFunds.add(dividend);
+        _asyncTransfer(msg.sender, dividend);
+    }
+
+
+    function withdrawFunds(address payable payee) public {
+        heldFunds = heldFunds.sub(payments(payee));
+        withdrawPayments(payee);
+    }
+
+
+
+    function sec_until_payday() public view returns (uint256, uint256) {
+        if (nextPayDay > block.timestamp) {
             return (lastPayDay, (nextPayDay.sub(block.timestamp)));
         } else {
             return (lastPayDay, 0);
         }
     }
-        
 
 
-
-    function payDay (uint256 tokenId) external {
-
-        require(
-            tokenPaymentDate[tokenId] < lastPayDay, "PS:GP:not payday for this token"
-        );
-        require(
-            block.timestamp > lastPayDay, "PS:GP:not payday yet"
-        );
-        require(
-            block.timestamp < nextPayDay, "PS:GP: dividend not yet processed for this period. call calculateDividend "
-        );
-        require(
-            SHAR_TKN.ownerOf(tokenId) == msg.sender, "PS:GP:caller does not hold token"
-        );
-
-            tokenPaymentDate[tokenId] = nextPayDay;
-            held = held.add(newDividend);
-            _asyncTransfer(msg.sender, newDividend);
-
-    }
-    
-    function getInfo (uint256 tokenId) external view returns (uint256, uint256, uint256, uint256, uint256, uint256) {
-
-        return( block.timestamp,
-                lastPayDay,
-                nextPayDay,
-                tokenPaymentDate[tokenId],
-                newDividend,
-                held
+    function getInfo(uint256 tokenId)
+        external
+        view
+        returns (
+            uint256,
+            uint256,
+            uint256,
+            uint256,
+            uint256,
+            uint256
+        )
+    {
+        return (
+            block.timestamp,
+            lastPayDay,
+            nextPayDay,
+            tokenPaymentDate[tokenId],
+            dividend,
+            heldFunds
         );
     }
 
-    function withdrawFunds(address payable payee) public {
-
-        held = held.sub(payments(payee));
-        withdrawPayments(payee);
-    }
-
-
+//--------------------------------------------------FROM OZ PULLPAYMENT-------------------------------------------------
     /**
      * @dev Withdraw accumulated payments, forwarding all gas to the recipient.
      *
@@ -188,6 +202,7 @@ mapping(uint256 => uint256) private tokenPaymentDate; // Main Data Storage
         _escrow.withdraw(payee);
     }
 
+
     /**
      * @dev Returns the payments owed to an address.
      * @param dest The creditor's address.
@@ -195,6 +210,7 @@ mapping(uint256 => uint256) private tokenPaymentDate; // Main Data Storage
     function payments(address dest) public view returns (uint256) {
         return _escrow.depositsOf(dest);
     }
+
 
     /**
      * @dev Called by the payer to store the sent amount as credit to be pulled.
@@ -205,7 +221,7 @@ mapping(uint256 => uint256) private tokenPaymentDate; // Main Data Storage
      * @param amount The amount to transfer.
      */
     function _asyncTransfer(address dest, uint256 amount) internal {
-        _escrow.deposit{ value: amount }(dest);
+        _escrow.deposit{value: amount}(dest);
     }
 
 }
