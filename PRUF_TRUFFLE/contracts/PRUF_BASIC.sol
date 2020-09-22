@@ -149,6 +149,8 @@ contract BASIC is ReentrancyGuard, Ownable, IERC721Receiver, Pausable {
 
         APP_NC_Address = STOR.resolveContractAddress("APP_NC");
         NP_Address = STOR.resolveContractAddress("NP");
+
+        SHARES_Address = STOR.resolveContractAddress("SHARES");
         //^^^^^^^effects^^^^^^^^^
     }
 
