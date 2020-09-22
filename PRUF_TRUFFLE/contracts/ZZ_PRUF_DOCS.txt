@@ -48,6 +48,16 @@ pragma solidity ^0.6.7;
  *
  *      *Define / document protocol
  *
+ *      LAUNCH GUI - enumerate my assets, with IPFS descriptions, clickable to manage assets
+ *
+ *      
+ *      
+ *
+ *
+ *
+ *
+ *
+ *
 - ----------------------------------------------------------------
 
 *-----------------------------------------------------------------
