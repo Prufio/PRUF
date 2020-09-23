@@ -75,27 +75,27 @@
       "type": "function"
     }
   ],
-  "metadata": "{\"compiler\":{\"version\":\"0.6.12+commit.27d51765\"},\"language\":\"Solidity\",\"output\":{\"abi\":[{\"inputs\":[],\"name\":\"fail\",\"outputs\":[],\"stateMutability\":\"pure\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"initialize\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"initializeNested\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"_x\",\"type\":\"uint256\"}],\"name\":\"initializeWithX\",\"outputs\":[],\"stateMutability\":\"payable\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"initializerRan\",\"outputs\":[{\"internalType\":\"bool\",\"name\":\"\",\"type\":\"bool\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"_x\",\"type\":\"uint256\"}],\"name\":\"nonInitializable\",\"outputs\":[],\"stateMutability\":\"payable\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"x\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"}],\"devdoc\":{\"details\":\"This contract is a mock to test initializable functionality\",\"kind\":\"dev\",\"methods\":{},\"title\":\"InitializableMock\",\"version\":1},\"userdoc\":{\"kind\":\"user\",\"methods\":{},\"version\":1}},\"settings\":{\"compilationTarget\":{\"/C/Users/drake/onedrive/documents/dev/pruf/PRUF_TRUFFLE/contracts/imports/mocks/InitializableMock.sol\":\"InitializableMock\"},\"evmVersion\":\"istanbul\",\"libraries\":{},\"metadata\":{\"bytecodeHash\":\"ipfs\"},\"optimizer\":{\"enabled\":true,\"runs\":200},\"remappings\":[]},\"sources\":{\"/C/Users/drake/onedrive/documents/dev/pruf/PRUF_TRUFFLE/contracts/imports/mocks/InitializableMock.sol\":{\"keccak256\":\"0x57c7ac02083c8880197b0650403e91e61b6ac8cc93b36bf989c3ecbf51a1ab7d\",\"license\":\"MIT\",\"urls\":[\"bzz-raw://c531ae3f82317a376149ae10d2a413103f0c0e998149b24a6c254e26c31361f1\",\"dweb:/ipfs/Qma4cufP3XmczpXRPMCQMYUDeTLvwfUJHV9wRxetrxmgVu\"]},\"/C/Users/drake/onedrive/documents/dev/pruf/PRUF_TRUFFLE/contracts/imports/proxy/Initializable.sol\":{\"keccak256\":\"0xe3452700a09c576e6b3bade984c6271357a00279cf849f3cbc03d4561de0de9d\",\"license\":\"MIT\",\"urls\":[\"bzz-raw://0fafe61a781418b8614edb1590b6c06f4a4e19f5f1f4a156c9c7df832ced6699\",\"dweb:/ipfs/QmbZNe2tnH7n8s7xUSYBtfLYj4XuECdVH5rtFMh4uik9Jj\"]}},\"version\":1}",
-  "bytecode": "0x608060405234801561001057600080fd5b50610414806100206000396000f3fe60806040526004361061006f5760003560e01c8063a9cc47181161004e578063a9cc4718146100cf578063c3b8ef2a146100e4578063cb3a528d1461010d578063e955c9ec146101225761006f565b806218eaa8146100745780630c55699c146100935780638129fc1c146100ba575b600080fd5b6100916004803603602081101561008a57600080fd5b503561013f565b005b34801561009f57600080fd5b506100a86101e7565b60408051918252519081900360200190f35b3480156100c657600080fd5b506100916101ed565b3480156100db57600080fd5b506100916102a0565b3480156100f057600080fd5b506100f96102ed565b604080519115158252519081900360200190f35b34801561011957600080fd5b506100916102fc565b6100916004803603602081101561013857600080fd5b50356103a5565b600054610100900460ff168061015857506101586103aa565b80610166575060005460ff16155b6101a15760405162461bcd60e51b815260040180806020018281038252602e8152602001806103b1602e913960400191505060405180910390fd5b600054610100900460ff161580156101cc576000805460ff1961ff0019909116610100171660011790555b600182905580156101e3576000805461ff00191690555b5050565b60015481565b600054610100900460ff168061020657506102066103aa565b80610214575060005460ff16155b61024f5760405162461bcd60e51b815260040180806020018281038252602e8152602001806103b1602e913960400191505060405180910390fd5b600054610100900460ff1615801561027a576000805460ff1961ff0019909116610100171660011790555b6000805462ff0000191662010000179055801561029d576000805461ff00191690555b50565b6040805162461bcd60e51b815260206004820181905260248201527f496e697469616c697a61626c654d6f636b20666f72636564206661696c757265604482015290519081900360640190fd5b60005462010000900460ff1681565b600054610100900460ff168061031557506103156103aa565b80610323575060005460ff16155b61035e5760405162461bcd60e51b815260040180806020018281038252602e8152602001806103b1602e913960400191505060405180910390fd5b600054610100900460ff16158015610389576000805460ff1961ff0019909116610100171660011790555b6103916101ed565b801561029d576000805461ff001916905550565b600155565b303b159056fe496e697469616c697a61626c653a20636f6e747261637420697320616c726561647920696e697469616c697a6564a26469706673582212207d4d5be9c4333ba91802cc69d3db5fd19259f53c01fd63143c90bd575b558c0f64736f6c634300060c0033",
-  "deployedBytecode": "0x60806040526004361061006f5760003560e01c8063a9cc47181161004e578063a9cc4718146100cf578063c3b8ef2a146100e4578063cb3a528d1461010d578063e955c9ec146101225761006f565b806218eaa8146100745780630c55699c146100935780638129fc1c146100ba575b600080fd5b6100916004803603602081101561008a57600080fd5b503561013f565b005b34801561009f57600080fd5b506100a86101e7565b60408051918252519081900360200190f35b3480156100c657600080fd5b506100916101ed565b3480156100db57600080fd5b506100916102a0565b3480156100f057600080fd5b506100f96102ed565b604080519115158252519081900360200190f35b34801561011957600080fd5b506100916102fc565b6100916004803603602081101561013857600080fd5b50356103a5565b600054610100900460ff168061015857506101586103aa565b80610166575060005460ff16155b6101a15760405162461bcd60e51b815260040180806020018281038252602e8152602001806103b1602e913960400191505060405180910390fd5b600054610100900460ff161580156101cc576000805460ff1961ff0019909116610100171660011790555b600182905580156101e3576000805461ff00191690555b5050565b60015481565b600054610100900460ff168061020657506102066103aa565b80610214575060005460ff16155b61024f5760405162461bcd60e51b815260040180806020018281038252602e8152602001806103b1602e913960400191505060405180910390fd5b600054610100900460ff1615801561027a576000805460ff1961ff0019909116610100171660011790555b6000805462ff0000191662010000179055801561029d576000805461ff00191690555b50565b6040805162461bcd60e51b815260206004820181905260248201527f496e697469616c697a61626c654d6f636b20666f72636564206661696c757265604482015290519081900360640190fd5b60005462010000900460ff1681565b600054610100900460ff168061031557506103156103aa565b80610323575060005460ff16155b61035e5760405162461bcd60e51b815260040180806020018281038252602e8152602001806103b1602e913960400191505060405180910390fd5b600054610100900460ff16158015610389576000805460ff1961ff0019909116610100171660011790555b6103916101ed565b801561029d576000805461ff001916905550565b600155565b303b159056fe496e697469616c697a61626c653a20636f6e747261637420697320616c726561647920696e697469616c697a6564a26469706673582212207d4d5be9c4333ba91802cc69d3db5fd19259f53c01fd63143c90bd575b558c0f64736f6c634300060c0033",
+  "metadata": "{\"compiler\":{\"version\":\"0.6.12+commit.27d51765\"},\"language\":\"Solidity\",\"output\":{\"abi\":[{\"inputs\":[],\"name\":\"fail\",\"outputs\":[],\"stateMutability\":\"pure\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"initialize\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"initializeNested\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"_x\",\"type\":\"uint256\"}],\"name\":\"initializeWithX\",\"outputs\":[],\"stateMutability\":\"payable\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"initializerRan\",\"outputs\":[{\"internalType\":\"bool\",\"name\":\"\",\"type\":\"bool\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"_x\",\"type\":\"uint256\"}],\"name\":\"nonInitializable\",\"outputs\":[],\"stateMutability\":\"payable\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"x\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"}],\"devdoc\":{\"details\":\"This contract is a mock to test initializable functionality\",\"kind\":\"dev\",\"methods\":{},\"title\":\"InitializableMock\",\"version\":1},\"userdoc\":{\"kind\":\"user\",\"methods\":{},\"version\":1}},\"settings\":{\"compilationTarget\":{\"/Users/cts/dev/PRUF/PRUF_TRUFFLE/contracts/Imports/mocks/InitializableMock.sol\":\"InitializableMock\"},\"evmVersion\":\"istanbul\",\"libraries\":{},\"metadata\":{\"bytecodeHash\":\"ipfs\"},\"optimizer\":{\"enabled\":true,\"runs\":200},\"remappings\":[]},\"sources\":{\"/Users/cts/dev/PRUF/PRUF_TRUFFLE/contracts/Imports/mocks/InitializableMock.sol\":{\"keccak256\":\"0x75e23b2bd0ee52d811db691358f0b43f0eb9bb9c9ef9de92b97433fd83f6eb1b\",\"license\":\"MIT\",\"urls\":[\"bzz-raw://e9b4e710c52a8f6b661e3fd89de62ea539ca17fe67c6d707b844cd9680cc6255\",\"dweb:/ipfs/QmS6oDpziKn4m56dTtRmoF8Q7tUD4wLdznWpc5HMzs9jt1\"]},\"/Users/cts/dev/PRUF/PRUF_TRUFFLE/contracts/Imports/proxy/Initializable.sol\":{\"keccak256\":\"0x8eee8bd8c216a3e437bf7a4c9844348f47a2d990e5b06cd96d250e33ab04c25a\",\"license\":\"MIT\",\"urls\":[\"bzz-raw://c6bb2af880b12be26b148ee99ac3a984168e7fc74721bab9cd44598a0669b038\",\"dweb:/ipfs/QmPfFDaXZbThJgaVim7nvxrw1RuD2xKWCG89K6pznmC8pJ\"]}},\"version\":1}",
+  "bytecode": "0x608060405234801561001057600080fd5b50610414806100206000396000f3fe60806040526004361061006f5760003560e01c8063a9cc47181161004e578063a9cc4718146100cf578063c3b8ef2a146100e4578063cb3a528d1461010d578063e955c9ec146101225761006f565b806218eaa8146100745780630c55699c146100935780638129fc1c146100ba575b600080fd5b6100916004803603602081101561008a57600080fd5b503561013f565b005b34801561009f57600080fd5b506100a86101e7565b60408051918252519081900360200190f35b3480156100c657600080fd5b506100916101ed565b3480156100db57600080fd5b506100916102a0565b3480156100f057600080fd5b506100f96102ed565b604080519115158252519081900360200190f35b34801561011957600080fd5b506100916102fc565b6100916004803603602081101561013857600080fd5b50356103a5565b600054610100900460ff168061015857506101586103aa565b80610166575060005460ff16155b6101a15760405162461bcd60e51b815260040180806020018281038252602e8152602001806103b1602e913960400191505060405180910390fd5b600054610100900460ff161580156101cc576000805460ff1961ff0019909116610100171660011790555b600182905580156101e3576000805461ff00191690555b5050565b60015481565b600054610100900460ff168061020657506102066103aa565b80610214575060005460ff16155b61024f5760405162461bcd60e51b815260040180806020018281038252602e8152602001806103b1602e913960400191505060405180910390fd5b600054610100900460ff1615801561027a576000805460ff1961ff0019909116610100171660011790555b6000805462ff0000191662010000179055801561029d576000805461ff00191690555b50565b6040805162461bcd60e51b815260206004820181905260248201527f496e697469616c697a61626c654d6f636b20666f72636564206661696c757265604482015290519081900360640190fd5b60005462010000900460ff1681565b600054610100900460ff168061031557506103156103aa565b80610323575060005460ff16155b61035e5760405162461bcd60e51b815260040180806020018281038252602e8152602001806103b1602e913960400191505060405180910390fd5b600054610100900460ff16158015610389576000805460ff1961ff0019909116610100171660011790555b6103916101ed565b801561029d576000805461ff001916905550565b600155565b303b159056fe496e697469616c697a61626c653a20636f6e747261637420697320616c726561647920696e697469616c697a6564a2646970667358221220cb7753952e256986eb01e600fba4f63deccd4a2d587e2d431274acb331672fd464736f6c634300060c0033",
+  "deployedBytecode": "0x60806040526004361061006f5760003560e01c8063a9cc47181161004e578063a9cc4718146100cf578063c3b8ef2a146100e4578063cb3a528d1461010d578063e955c9ec146101225761006f565b806218eaa8146100745780630c55699c146100935780638129fc1c146100ba575b600080fd5b6100916004803603602081101561008a57600080fd5b503561013f565b005b34801561009f57600080fd5b506100a86101e7565b60408051918252519081900360200190f35b3480156100c657600080fd5b506100916101ed565b3480156100db57600080fd5b506100916102a0565b3480156100f057600080fd5b506100f96102ed565b604080519115158252519081900360200190f35b34801561011957600080fd5b506100916102fc565b6100916004803603602081101561013857600080fd5b50356103a5565b600054610100900460ff168061015857506101586103aa565b80610166575060005460ff16155b6101a15760405162461bcd60e51b815260040180806020018281038252602e8152602001806103b1602e913960400191505060405180910390fd5b600054610100900460ff161580156101cc576000805460ff1961ff0019909116610100171660011790555b600182905580156101e3576000805461ff00191690555b5050565b60015481565b600054610100900460ff168061020657506102066103aa565b80610214575060005460ff16155b61024f5760405162461bcd60e51b815260040180806020018281038252602e8152602001806103b1602e913960400191505060405180910390fd5b600054610100900460ff1615801561027a576000805460ff1961ff0019909116610100171660011790555b6000805462ff0000191662010000179055801561029d576000805461ff00191690555b50565b6040805162461bcd60e51b815260206004820181905260248201527f496e697469616c697a61626c654d6f636b20666f72636564206661696c757265604482015290519081900360640190fd5b60005462010000900460ff1681565b600054610100900460ff168061031557506103156103aa565b80610323575060005460ff16155b61035e5760405162461bcd60e51b815260040180806020018281038252602e8152602001806103b1602e913960400191505060405180910390fd5b600054610100900460ff16158015610389576000805460ff1961ff0019909116610100171660011790555b6103916101ed565b801561029d576000805461ff001916905550565b600155565b303b159056fe496e697469616c697a61626c653a20636f6e747261637420697320616c726561647920696e697469616c697a6564a2646970667358221220cb7753952e256986eb01e600fba4f63deccd4a2d587e2d431274acb331672fd464736f6c634300060c0033",
   "immutableReferences": {},
-  "sourceMap": "210:527:112:-:0;;;;;;;;;;;;;;;;;;;",
-  "deployedSourceMap": "210:527:112:-:0;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;474:83;;;;;;;;;;;;;;;;-1:-1:-1;474:83:112;;:::i;:::-;;292:16;;;;;;;;;;;;;:::i;:::-;;;;;;;;;;;;;;;;315:75;;;;;;;;;;;;;:::i;641:91::-;;;;;;;;;;;;;:::i;261:26::-;;;;;;;;;;;;;:::i;:::-;;;;;;;;;;;;;;;;;;396:72;;;;;;;;;;;;;:::i;563:::-;;;;;;;;;;;;;;;;-1:-1:-1;563:72:112;;:::i;474:83::-;1459:13:136;;;;;;;;:33;;;1476:16;:14;:16::i;:::-;1459:50;;;-1:-1:-1;1497:12:136;;;;1496:13;1459:50;1451:109;;;;-1:-1:-1;;;1451:109:136;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;1573:19;1596:13;;;;;;1595:14;1620:101;;;;1655:13;:20;;-1:-1:-1;;;;1655:20:136;;;;;1690:19;1671:4;1690:19;;;1620:101;545:1:112::1;:6:::0;;;1747:68:136;;;;1798:5;1782:21;;-1:-1:-1;;1782:21:136;;;1747:68;474:83:112;;:::o;292:16::-;;;;:::o;315:75::-;1459:13:136;;;;;;;;:33;;;1476:16;:14;:16::i;:::-;1459:50;;;-1:-1:-1;1497:12:136;;;;1496:13;1459:50;1451:109;;;;-1:-1:-1;;;1451:109:136;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;1573:19;1596:13;;;;;;1595:14;1620:101;;;;1655:13;:20;;-1:-1:-1;;;;1655:20:136;;;;;1690:19;1671:4;1690:19;;;1620:101;363:14:112::1;:21:::0;;-1:-1:-1;;363:21:112::1;::::0;::::1;::::0;;1747:68:136;;;;1798:5;1782:21;;-1:-1:-1;;1782:21:136;;;1747:68;315:75:112;:::o;641:91::-;676:50;;;-1:-1:-1;;;676:50:112;;;;;;;;;;;;;;;;;;;;;;;;;;;;261:26;;;;;;;;;:::o;396:72::-;1459:13:136;;;;;;;;:33;;;1476:16;:14;:16::i;:::-;1459:50;;;-1:-1:-1;1497:12:136;;;;1496:13;1459:50;1451:109;;;;-1:-1:-1;;;1451:109:136;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;1573:19;1596:13;;;;;;1595:14;1620:101;;;;1655:13;:20;;-1:-1:-1;;;;1655:20:136;;;;;1690:19;1671:4;1690:19;;;1620:101;450:12:112::1;:10;:12::i;:::-;1751:14:136::0;1747:68;;;1798:5;1782:21;;-1:-1:-1;;1782:21:136;;;396:72:112;:::o;563:::-;623:1;:6;563:72::o;1915:604:136:-;2357:4;2468:17;2504:7;1915:604;:::o",
-  "source": "// SPDX-License-Identifier: MIT\r\n\r\npragma solidity ^0.6.0;\r\n\r\nimport \"../proxy/Initializable.sol\";\r\n\r\n/**\r\n * @title InitializableMock\r\n * @dev This contract is a mock to test initializable functionality\r\n */\r\ncontract InitializableMock is Initializable {\r\n\r\n  bool public initializerRan;\r\n  uint256 public x;\r\n\r\n  function initialize() public initializer {\r\n    initializerRan = true;\r\n  }\r\n\r\n  function initializeNested() public initializer {\r\n    initialize();\r\n  }\r\n\r\n  function initializeWithX(uint256 _x) public payable initializer {\r\n    x = _x;\r\n  }\r\n\r\n  function nonInitializable(uint256 _x) public payable {\r\n    x = _x;\r\n  }\r\n\r\n  function fail() public pure {\r\n    require(false, \"InitializableMock forced failure\");\r\n  }\r\n\r\n}\r\n",
-  "sourcePath": "C:\\Users\\drake\\onedrive\\documents\\dev\\pruf\\PRUF_TRUFFLE\\contracts\\imports\\mocks\\InitializableMock.sol",
+  "sourceMap": "200:502:60:-:0;;;;;;;;;;;;;;;;;;;",
+  "deployedSourceMap": "200:502:60:-:0;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;451:81;;;;;;;;;;;;;;;;-1:-1:-1;451:81:60;;:::i;:::-;;279:16;;;;;;;;;;;;;:::i;:::-;;;;;;;;;;;;;;;;300:73;;;;;;;;;;;;;:::i;610:89::-;;;;;;;;;;;;;:::i;249:26::-;;;;;;;;;;;;;:::i;:::-;;;;;;;;;;;;;;;;;;377:70;;;;;;;;;;;;;:::i;536:::-;;;;;;;;;;;;;;;;-1:-1:-1;536:70:60;;:::i;451:81::-;1426:13:84;;;;;;;;:33;;;1443:16;:14;:16::i;:::-;1426:50;;;-1:-1:-1;1464:12:84;;;;1463:13;1426:50;1418:109;;;;-1:-1:-1;;;1418:109:84;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;1538:19;1561:13;;;;;;1560:14;1584:98;;;;1618:13;:20;;-1:-1:-1;;;;1618:20:84;;;;;1652:19;1634:4;1652:19;;;1584:98;521:1:60::1;:6:::0;;;1704:66:84;;;;1754:5;1738:21;;-1:-1:-1;;1738:21:84;;;1704:66;451:81:60;;:::o;279:16::-;;;;:::o;300:73::-;1426:13:84;;;;;;;;:33;;;1443:16;:14;:16::i;:::-;1426:50;;;-1:-1:-1;1464:12:84;;;;1463:13;1426:50;1418:109;;;;-1:-1:-1;;;1418:109:84;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;1538:19;1561:13;;;;;;1560:14;1584:98;;;;1618:13;:20;;-1:-1:-1;;;;1618:20:84;;;;;1652:19;1634:4;1652:19;;;1584:98;347:14:60::1;:21:::0;;-1:-1:-1;;347:21:60::1;::::0;::::1;::::0;;1704:66:84;;;;1754:5;1738:21;;-1:-1:-1;;1738:21:84;;;1704:66;300:73:60;:::o;610:89::-;644:50;;;-1:-1:-1;;;644:50:60;;;;;;;;;;;;;;;;;;;;;;;;;;;;249:26;;;;;;;;;:::o;377:70::-;1426:13:84;;;;;;;;:33;;;1443:16;:14;:16::i;:::-;1426:50;;;-1:-1:-1;1464:12:84;;;;1463:13;1426:50;1418:109;;;;-1:-1:-1;;;1418:109:84;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;1538:19;1561:13;;;;;;1560:14;1584:98;;;;1618:13;:20;;-1:-1:-1;;;;1618:20:84;;;;;1652:19;1634:4;1652:19;;;1584:98;430:12:60::1;:10;:12::i;:::-;1708:14:84::0;1704:66;;;1754:5;1738:21;;-1:-1:-1;;1738:21:84;;;377:70:60;:::o;536:::-;595:1;:6;536:70::o;1866:593:84:-;2302:4;2410:17;2445:7;1866:593;:::o",
+  "source": "// SPDX-License-Identifier: MIT\n\npragma solidity ^0.6.0;\n\nimport \"../proxy/Initializable.sol\";\n\n/**\n * @title InitializableMock\n * @dev This contract is a mock to test initializable functionality\n */\ncontract InitializableMock is Initializable {\n\n  bool public initializerRan;\n  uint256 public x;\n\n  function initialize() public initializer {\n    initializerRan = true;\n  }\n\n  function initializeNested() public initializer {\n    initialize();\n  }\n\n  function initializeWithX(uint256 _x) public payable initializer {\n    x = _x;\n  }\n\n  function nonInitializable(uint256 _x) public payable {\n    x = _x;\n  }\n\n  function fail() public pure {\n    require(false, \"InitializableMock forced failure\");\n  }\n\n}\n",
+  "sourcePath": "/Users/cts/dev/PRUF/PRUF_TRUFFLE/contracts/Imports/mocks/InitializableMock.sol",
   "ast": {
-    "absolutePath": "/C/Users/drake/onedrive/documents/dev/pruf/PRUF_TRUFFLE/contracts/imports/mocks/InitializableMock.sol",
+    "absolutePath": "/Users/cts/dev/PRUF/PRUF_TRUFFLE/contracts/Imports/mocks/InitializableMock.sol",
     "exportedSymbols": {
       "InitializableMock": [
-        22077
+        5923
       ]
     },
-    "id": 22078,
+    "id": 5924,
     "license": "MIT",
     "nodeType": "SourceUnit",
     "nodes": [
       {
-        "id": 22018,
+        "id": 5864,
         "literals": [
           "solidity",
           "^",
@@ -103,16 +103,16 @@
           ".0"
         ],
         "nodeType": "PragmaDirective",
-        "src": "35:23:112"
+        "src": "33:23:60"
       },
       {
-        "absolutePath": "/C/Users/drake/onedrive/documents/dev/pruf/PRUF_TRUFFLE/contracts/imports/proxy/Initializable.sol",
+        "absolutePath": "/Users/cts/dev/PRUF/PRUF_TRUFFLE/contracts/Imports/proxy/Initializable.sol",
         "file": "../proxy/Initializable.sol",
-        "id": 22019,
+        "id": 5865,
         "nodeType": "ImportDirective",
-        "scope": 22078,
-        "sourceUnit": 24640,
-        "src": "62:36:112",
+        "scope": 5924,
+        "sourceUnit": 8486,
+        "src": "58:36:60",
         "symbolAliases": [],
         "unitAlias": ""
       },
@@ -123,36 +123,36 @@
             "arguments": null,
             "baseName": {
               "contractScope": null,
-              "id": 22021,
+              "id": 5867,
               "name": "Initializable",
               "nodeType": "UserDefinedTypeName",
-              "referencedDeclaration": 24639,
-              "src": "240:13:112",
+              "referencedDeclaration": 8485,
+              "src": "230:13:60",
               "typeDescriptions": {
-                "typeIdentifier": "t_contract$_Initializable_$24639",
+                "typeIdentifier": "t_contract$_Initializable_$8485",
                 "typeString": "contract Initializable"
               }
             },
-            "id": 22022,
+            "id": 5868,
             "nodeType": "InheritanceSpecifier",
-            "src": "240:13:112"
+            "src": "230:13:60"
           }
         ],
         "contractDependencies": [
-          24639
+          8485
         ],
         "contractKind": "contract",
         "documentation": {
-          "id": 22020,
+          "id": 5866,
           "nodeType": "StructuredDocumentation",
-          "src": "102:106:112",
+          "src": "96:103:60",
           "text": " @title InitializableMock\n @dev This contract is a mock to test initializable functionality"
         },
         "fullyImplemented": true,
-        "id": 22077,
+        "id": 5923,
         "linearizedBaseContracts": [
-          22077,
-          24639
+          5923,
+          8485
         ],
         "name": "InitializableMock",
         "nodeType": "ContractDefinition",
@@ -160,13 +160,13 @@
           {
             "constant": false,
             "functionSelector": "c3b8ef2a",
-            "id": 22024,
+            "id": 5870,
             "mutability": "mutable",
             "name": "initializerRan",
             "nodeType": "VariableDeclaration",
             "overrides": null,
-            "scope": 22077,
-            "src": "261:26:112",
+            "scope": 5923,
+            "src": "249:26:60",
             "stateVariable": true,
             "storageLocation": "default",
             "typeDescriptions": {
@@ -174,10 +174,10 @@
               "typeString": "bool"
             },
             "typeName": {
-              "id": 22023,
+              "id": 5869,
               "name": "bool",
               "nodeType": "ElementaryTypeName",
-              "src": "261:4:112",
+              "src": "249:4:60",
               "typeDescriptions": {
                 "typeIdentifier": "t_bool",
                 "typeString": "bool"
@@ -189,13 +189,13 @@
           {
             "constant": false,
             "functionSelector": "0c55699c",
-            "id": 22026,
+            "id": 5872,
             "mutability": "mutable",
             "name": "x",
             "nodeType": "VariableDeclaration",
             "overrides": null,
-            "scope": 22077,
-            "src": "292:16:112",
+            "scope": 5923,
+            "src": "279:16:60",
             "stateVariable": true,
             "storageLocation": "default",
             "typeDescriptions": {
@@ -203,10 +203,10 @@
               "typeString": "uint256"
             },
             "typeName": {
-              "id": 22025,
+              "id": 5871,
               "name": "uint256",
               "nodeType": "ElementaryTypeName",
-              "src": "292:7:112",
+              "src": "279:7:60",
               "typeDescriptions": {
                 "typeIdentifier": "t_uint256",
                 "typeString": "uint256"
@@ -217,26 +217,26 @@
           },
           {
             "body": {
-              "id": 22035,
+              "id": 5881,
               "nodeType": "Block",
-              "src": "356:34:112",
+              "src": "341:32:60",
               "statements": [
                 {
                   "expression": {
                     "argumentTypes": null,
-                    "id": 22033,
+                    "id": 5879,
                     "isConstant": false,
                     "isLValue": false,
                     "isPure": false,
                     "lValueRequested": false,
                     "leftHandSide": {
                       "argumentTypes": null,
-                      "id": 22031,
+                      "id": 5877,
                       "name": "initializerRan",
                       "nodeType": "Identifier",
                       "overloadedDeclarations": [],
-                      "referencedDeclaration": 22024,
-                      "src": "363:14:112",
+                      "referencedDeclaration": 5870,
+                      "src": "347:14:60",
                       "typeDescriptions": {
                         "typeIdentifier": "t_bool",
                         "typeString": "bool"
@@ -247,14 +247,14 @@
                     "rightHandSide": {
                       "argumentTypes": null,
                       "hexValue": "74727565",
-                      "id": 22032,
+                      "id": 5878,
                       "isConstant": false,
                       "isLValue": false,
                       "isPure": true,
                       "kind": "bool",
                       "lValueRequested": false,
                       "nodeType": "Literal",
-                      "src": "380:4:112",
+                      "src": "364:4:60",
                       "subdenomination": null,
                       "typeDescriptions": {
                         "typeIdentifier": "t_bool",
@@ -262,70 +262,70 @@
                       },
                       "value": "true"
                     },
-                    "src": "363:21:112",
+                    "src": "347:21:60",
                     "typeDescriptions": {
                       "typeIdentifier": "t_bool",
                       "typeString": "bool"
                     }
                   },
-                  "id": 22034,
+                  "id": 5880,
                   "nodeType": "ExpressionStatement",
-                  "src": "363:21:112"
+                  "src": "347:21:60"
                 }
               ]
             },
             "documentation": null,
             "functionSelector": "8129fc1c",
-            "id": 22036,
+            "id": 5882,
             "implemented": true,
             "kind": "function",
             "modifiers": [
               {
                 "arguments": null,
-                "id": 22029,
+                "id": 5875,
                 "modifierName": {
                   "argumentTypes": null,
-                  "id": 22028,
+                  "id": 5874,
                   "name": "initializer",
                   "nodeType": "Identifier",
                   "overloadedDeclarations": [],
-                  "referencedDeclaration": 24616,
-                  "src": "344:11:112",
+                  "referencedDeclaration": 8462,
+                  "src": "329:11:60",
                   "typeDescriptions": {
                     "typeIdentifier": "t_modifier$__$",
                     "typeString": "modifier ()"
                   }
                 },
                 "nodeType": "ModifierInvocation",
-                "src": "344:11:112"
+                "src": "329:11:60"
               }
             ],
             "name": "initialize",
             "nodeType": "FunctionDefinition",
             "overrides": null,
             "parameters": {
-              "id": 22027,
+              "id": 5873,
               "nodeType": "ParameterList",
               "parameters": [],
-              "src": "334:2:112"
+              "src": "319:2:60"
             },
             "returnParameters": {
-              "id": 22030,
+              "id": 5876,
               "nodeType": "ParameterList",
               "parameters": [],
-              "src": "356:0:112"
+              "src": "341:0:60"
             },
-            "scope": 22077,
-            "src": "315:75:112",
+            "scope": 5923,
+            "src": "300:73:60",
             "stateMutability": "nonpayable",
             "virtual": false,
             "visibility": "public"
           },
           {
             "body": {
-              "id": 22044,
+              "id": 5890,
               "nodeType": "Block",
-              "src": "443:25:112",
+              "src": "424:23:60",
               "statements": [
                 {
                   "expression": {
@@ -333,18 +333,18 @@
                     "arguments": [],
                     "expression": {
                       "argumentTypes": [],
-                      "id": 22041,
+                      "id": 5887,
                       "name": "initialize",
                       "nodeType": "Identifier",
                       "overloadedDeclarations": [],
-                      "referencedDeclaration": 22036,
-                      "src": "450:10:112",
+                      "referencedDeclaration": 5882,
+                      "src": "430:10:60",
                       "typeDescriptions": {
                         "typeIdentifier": "t_function_internal_nonpayable$__$returns$__$",
                         "typeString": "function ()"
                       }
                     },
-                    "id": 22042,
+                    "id": 5888,
                     "isConstant": false,
                     "isLValue": false,
                     "isPure": false,
@@ -352,88 +352,88 @@
                     "lValueRequested": false,
                     "names": [],
                     "nodeType": "FunctionCall",
-                    "src": "450:12:112",
+                    "src": "430:12:60",
                     "tryCall": false,
                     "typeDescriptions": {
                       "typeIdentifier": "t_tuple$__$",
                       "typeString": "tuple()"
                     }
                   },
-                  "id": 22043,
+                  "id": 5889,
                   "nodeType": "ExpressionStatement",
-                  "src": "450:12:112"
+                  "src": "430:12:60"
                 }
               ]
             },
             "documentation": null,
             "functionSelector": "cb3a528d",
-            "id": 22045,
+            "id": 5891,
             "implemented": true,
             "kind": "function",
             "modifiers": [
               {
                 "arguments": null,
-                "id": 22039,
+                "id": 5885,
                 "modifierName": {
                   "argumentTypes": null,
-                  "id": 22038,
+                  "id": 5884,
                   "name": "initializer",
                   "nodeType": "Identifier",
                   "overloadedDeclarations": [],
-                  "referencedDeclaration": 24616,
-                  "src": "431:11:112",
+                  "referencedDeclaration": 8462,
+                  "src": "412:11:60",
                   "typeDescriptions": {
                     "typeIdentifier": "t_modifier$__$",
                     "typeString": "modifier ()"
                   }
                 },
                 "nodeType": "ModifierInvocation",
-                "src": "431:11:112"
+                "src": "412:11:60"
               }
             ],
             "name": "initializeNested",
             "nodeType": "FunctionDefinition",
             "overrides": null,
             "parameters": {
-              "id": 22037,
+              "id": 5883,
               "nodeType": "ParameterList",
               "parameters": [],
-              "src": "421:2:112"
+              "src": "402:2:60"
             },
             "returnParameters": {
-              "id": 22040,
+              "id": 5886,
               "nodeType": "ParameterList",
               "parameters": [],
-              "src": "443:0:112"
+              "src": "424:0:60"
             },
-            "scope": 22077,
-            "src": "396:72:112",
+            "scope": 5923,
+            "src": "377:70:60",
             "stateMutability": "nonpayable",
             "virtual": false,
             "visibility": "public"
           },
           {
             "body": {
-              "id": 22056,
+              "id": 5902,
               "nodeType": "Block",
-              "src": "538:19:112",
+              "src": "515:17:60",
               "statements": [
                 {
                   "expression": {
                     "argumentTypes": null,
-                    "id": 22054,
+                    "id": 5900,
                     "isConstant": false,
                     "isLValue": false,
                     "isPure": false,
                     "lValueRequested": false,
                     "leftHandSide": {
                       "argumentTypes": null,
-                      "id": 22052,
+                      "id": 5898,
                       "name": "x",
                       "nodeType": "Identifier",
                       "overloadedDeclarations": [],
-                      "referencedDeclaration": 22026,
-                      "src": "545:1:112",
+                      "referencedDeclaration": 5872,
+                      "src": "521:1:60",
                       "typeDescriptions": {
                         "typeIdentifier": "t_uint256",
                         "typeString": "uint256"
@@ -443,71 +443,71 @@
                     "operator": "=",
                     "rightHandSide": {
                       "argumentTypes": null,
-                      "id": 22053,
+                      "id": 5899,
                       "name": "_x",
                       "nodeType": "Identifier",
                       "overloadedDeclarations": [],
-                      "referencedDeclaration": 22047,
-                      "src": "549:2:112",
+                      "referencedDeclaration": 5893,
+                      "src": "525:2:60",
                       "typeDescriptions": {
                         "typeIdentifier": "t_uint256",
                         "typeString": "uint256"
                       }
                     },
-                    "src": "545:6:112",
+                    "src": "521:6:60",
                     "typeDescriptions": {
                       "typeIdentifier": "t_uint256",
                       "typeString": "uint256"
                     }
                   },
-                  "id": 22055,
+                  "id": 5901,
                   "nodeType": "ExpressionStatement",
-                  "src": "545:6:112"
+                  "src": "521:6:60"
                 }
               ]
             },
             "documentation": null,
             "functionSelector": "0018eaa8",
-            "id": 22057,
+            "id": 5903,
             "implemented": true,
             "kind": "function",
             "modifiers": [
               {
                 "arguments": null,
-                "id": 22050,
+                "id": 5896,
                 "modifierName": {
                   "argumentTypes": null,
-                  "id": 22049,
+                  "id": 5895,
                   "name": "initializer",
                   "nodeType": "Identifier",
                   "overloadedDeclarations": [],
-                  "referencedDeclaration": 24616,
-                  "src": "526:11:112",
+                  "referencedDeclaration": 8462,
+                  "src": "503:11:60",
                   "typeDescriptions": {
                     "typeIdentifier": "t_modifier$__$",
                     "typeString": "modifier ()"
                   }
                 },
                 "nodeType": "ModifierInvocation",
-                "src": "526:11:112"
+                "src": "503:11:60"
               }
             ],
             "name": "initializeWithX",
             "nodeType": "FunctionDefinition",
             "overrides": null,
             "parameters": {
-              "id": 22048,
+              "id": 5894,
               "nodeType": "ParameterList",
               "parameters": [
                 {
                   "constant": false,
-                  "id": 22047,
+                  "id": 5893,
                   "mutability": "mutable",
                   "name": "_x",
                   "nodeType": "VariableDeclaration",
                   "overrides": null,
-                  "scope": 22057,
-                  "src": "499:10:112",
+                  "scope": 5903,
+                  "src": "476:10:60",
                   "stateVariable": false,
                   "storageLocation": "default",
                   "typeDescriptions": {
@@ -515,10 +515,10 @@
                     "typeString": "uint256"
                   },
                   "typeName": {
-                    "id": 22046,
+                    "id": 5892,
                     "name": "uint256",
                     "nodeType": "ElementaryTypeName",
-                    "src": "499:7:112",
+                    "src": "476:7:60",
                     "typeDescriptions": {
                       "typeIdentifier": "t_uint256",
                       "typeString": "uint256"
@@ -528,42 +528,42 @@
                   "visibility": "internal"
                 }
               ],
-              "src": "498:12:112"
+              "src": "475:12:60"
             },
             "returnParameters": {
-              "id": 22051,
+              "id": 5897,
               "nodeType": "ParameterList",
               "parameters": [],
-              "src": "538:0:112"
+              "src": "515:0:60"
             },
-            "scope": 22077,
-            "src": "474:83:112",
+            "scope": 5923,
+            "src": "451:81:60",
             "stateMutability": "payable",
             "virtual": false,
             "visibility": "public"
           },
           {
             "body": {
-              "id": 22066,
+              "id": 5912,
               "nodeType": "Block",
-              "src": "616:19:112",
+              "src": "589:17:60",
               "statements": [
                 {
                   "expression": {
                     "argumentTypes": null,
-                    "id": 22064,
+                    "id": 5910,
                     "isConstant": false,
                     "isLValue": false,
                     "isPure": false,
                     "lValueRequested": false,
                     "leftHandSide": {
                       "argumentTypes": null,
-                      "id": 22062,
+                      "id": 5908,
                       "name": "x",
                       "nodeType": "Identifier",
                       "overloadedDeclarations": [],
-                      "referencedDeclaration": 22026,
-                      "src": "623:1:112",
+                      "referencedDeclaration": 5872,
+                      "src": "595:1:60",
                       "typeDescriptions": {
                         "typeIdentifier": "t_uint256",
                         "typeString": "uint256"
@@ -573,32 +573,32 @@
                     "operator": "=",
                     "rightHandSide": {
                       "argumentTypes": null,
-                      "id": 22063,
+                      "id": 5909,
                       "name": "_x",
                       "nodeType": "Identifier",
                       "overloadedDeclarations": [],
-                      "referencedDeclaration": 22059,
-                      "src": "627:2:112",
+                      "referencedDeclaration": 5905,
+                      "src": "599:2:60",
                       "typeDescriptions": {
                         "typeIdentifier": "t_uint256",
                         "typeString": "uint256"
                       }
                     },
-                    "src": "623:6:112",
+                    "src": "595:6:60",
                     "typeDescriptions": {
                       "typeIdentifier": "t_uint256",
                       "typeString": "uint256"
                     }
                   },
-                  "id": 22065,
+                  "id": 5911,
                   "nodeType": "ExpressionStatement",
-                  "src": "623:6:112"
+                  "src": "595:6:60"
                 }
               ]
             },
             "documentation": null,
             "functionSelector": "e955c9ec",
-            "id": 22067,
+            "id": 5913,
             "implemented": true,
             "kind": "function",
             "modifiers": [],
@@ -606,18 +606,18 @@
             "nodeType": "FunctionDefinition",
             "overrides": null,
             "parameters": {
-              "id": 22060,
+              "id": 5906,
               "nodeType": "ParameterList",
               "parameters": [
                 {
                   "constant": false,
-                  "id": 22059,
+                  "id": 5905,
                   "mutability": "mutable",
                   "name": "_x",
                   "nodeType": "VariableDeclaration",
                   "overrides": null,
-                  "scope": 22067,
-                  "src": "589:10:112",
+                  "scope": 5913,
+                  "src": "562:10:60",
                   "stateVariable": false,
                   "storageLocation": "default",
                   "typeDescriptions": {
@@ -625,10 +625,10 @@
                     "typeString": "uint256"
                   },
                   "typeName": {
-                    "id": 22058,
+                    "id": 5904,
                     "name": "uint256",
                     "nodeType": "ElementaryTypeName",
-                    "src": "589:7:112",
+                    "src": "562:7:60",
                     "typeDescriptions": {
                       "typeIdentifier": "t_uint256",
                       "typeString": "uint256"
@@ -638,25 +638,25 @@
                   "visibility": "internal"
                 }
               ],
-              "src": "588:12:112"
+              "src": "561:12:60"
             },
             "returnParameters": {
-              "id": 22061,
+              "id": 5907,
               "nodeType": "ParameterList",
               "parameters": [],
-              "src": "616:0:112"
+              "src": "589:0:60"
             },
-            "scope": 22077,
-            "src": "563:72:112",
+            "scope": 5923,
+            "src": "536:70:60",
             "stateMutability": "payable",
             "virtual": false,
             "visibility": "public"
           },
           {
             "body": {
-              "id": 22075,
+              "id": 5921,
               "nodeType": "Block",
-              "src": "669:63:112",
+              "src": "638:61:60",
               "statements": [
                 {
                   "expression": {
@@ -665,14 +665,14 @@
                       {
                         "argumentTypes": null,
                         "hexValue": "66616c7365",
-                        "id": 22071,
+                        "id": 5917,
                         "isConstant": false,
                         "isLValue": false,
                         "isPure": true,
                         "kind": "bool",
                         "lValueRequested": false,
                         "nodeType": "Literal",
-                        "src": "684:5:112",
+                        "src": "652:5:60",
                         "subdenomination": null,
                         "typeDescriptions": {
                           "typeIdentifier": "t_bool",
@@ -683,14 +683,14 @@
                       {
                         "argumentTypes": null,
                         "hexValue": "496e697469616c697a61626c654d6f636b20666f72636564206661696c757265",
-                        "id": 22072,
+                        "id": 5918,
                         "isConstant": false,
                         "isLValue": false,
                         "isPure": true,
                         "kind": "string",
                         "lValueRequested": false,
                         "nodeType": "Literal",
-                        "src": "691:34:112",
+                        "src": "659:34:60",
                         "subdenomination": null,
                         "typeDescriptions": {
                           "typeIdentifier": "t_stringliteral_70458f305ab12a5814a8a6125666b5faf9428e7481e52fe1e943f8addb4009b7",
@@ -710,7 +710,7 @@
                           "typeString": "literal_string \"InitializableMock forced failure\""
                         }
                       ],
-                      "id": 22070,
+                      "id": 5916,
                       "name": "require",
                       "nodeType": "Identifier",
                       "overloadedDeclarations": [
@@ -718,13 +718,13 @@
                         -18
                       ],
                       "referencedDeclaration": -18,
-                      "src": "676:7:112",
+                      "src": "644:7:60",
                       "typeDescriptions": {
                         "typeIdentifier": "t_function_require_pure$_t_bool_$_t_string_memory_ptr_$returns$__$",
                         "typeString": "function (bool,string memory) pure"
                       }
                     },
-                    "id": 22073,
+                    "id": 5919,
                     "isConstant": false,
                     "isLValue": false,
                     "isPure": false,
@@ -732,22 +732,22 @@
                     "lValueRequested": false,
                     "names": [],
                     "nodeType": "FunctionCall",
-                    "src": "676:50:112",
+                    "src": "644:50:60",
                     "tryCall": false,
                     "typeDescriptions": {
                       "typeIdentifier": "t_tuple$__$",
                       "typeString": "tuple()"
                     }
                   },
-                  "id": 22074,
+                  "id": 5920,
                   "nodeType": "ExpressionStatement",
-                  "src": "676:50:112"
+                  "src": "644:50:60"
                 }
               ]
             },
             "documentation": null,
             "functionSelector": "a9cc4718",
-            "id": 22076,
+            "id": 5922,
             "implemented": true,
             "kind": "function",
             "modifiers": [],
@@ -755,43 +755,43 @@
             "nodeType": "FunctionDefinition",
             "overrides": null,
             "parameters": {
-              "id": 22068,
+              "id": 5914,
               "nodeType": "ParameterList",
               "parameters": [],
-              "src": "654:2:112"
+              "src": "623:2:60"
             },
             "returnParameters": {
-              "id": 22069,
+              "id": 5915,
               "nodeType": "ParameterList",
               "parameters": [],
-              "src": "669:0:112"
+              "src": "638:0:60"
             },
-            "scope": 22077,
-            "src": "641:91:112",
+            "scope": 5923,
+            "src": "610:89:60",
             "stateMutability": "pure",
             "virtual": false,
             "visibility": "public"
           }
         ],
-        "scope": 22078,
-        "src": "210:527:112"
+        "scope": 5924,
+        "src": "200:502:60"
       }
     ],
-    "src": "35:704:112"
+    "src": "33:670:60"
   },
   "legacyAST": {
-    "absolutePath": "/C/Users/drake/onedrive/documents/dev/pruf/PRUF_TRUFFLE/contracts/imports/mocks/InitializableMock.sol",
+    "absolutePath": "/Users/cts/dev/PRUF/PRUF_TRUFFLE/contracts/Imports/mocks/InitializableMock.sol",
     "exportedSymbols": {
       "InitializableMock": [
-        22077
+        5923
       ]
     },
-    "id": 22078,
+    "id": 5924,
     "license": "MIT",
     "nodeType": "SourceUnit",
     "nodes": [
       {
-        "id": 22018,
+        "id": 5864,
         "literals": [
           "solidity",
           "^",
@@ -799,16 +799,16 @@
           ".0"
         ],
         "nodeType": "PragmaDirective",
-        "src": "35:23:112"
+        "src": "33:23:60"
       },
       {
-        "absolutePath": "/C/Users/drake/onedrive/documents/dev/pruf/PRUF_TRUFFLE/contracts/imports/proxy/Initializable.sol",
+        "absolutePath": "/Users/cts/dev/PRUF/PRUF_TRUFFLE/contracts/Imports/proxy/Initializable.sol",
         "file": "../proxy/Initializable.sol",
-        "id": 22019,
+        "id": 5865,
         "nodeType": "ImportDirective",
-        "scope": 22078,
-        "sourceUnit": 24640,
-        "src": "62:36:112",
+        "scope": 5924,
+        "sourceUnit": 8486,
+        "src": "58:36:60",
         "symbolAliases": [],
         "unitAlias": ""
       },
@@ -819,36 +819,36 @@
             "arguments": null,
             "baseName": {
               "contractScope": null,
-              "id": 22021,
+              "id": 5867,
               "name": "Initializable",
               "nodeType": "UserDefinedTypeName",
-              "referencedDeclaration": 24639,
-              "src": "240:13:112",
+              "referencedDeclaration": 8485,
+              "src": "230:13:60",
               "typeDescriptions": {
-                "typeIdentifier": "t_contract$_Initializable_$24639",
+                "typeIdentifier": "t_contract$_Initializable_$8485",
                 "typeString": "contract Initializable"
               }
             },
-            "id": 22022,
+            "id": 5868,
             "nodeType": "InheritanceSpecifier",
-            "src": "240:13:112"
+            "src": "230:13:60"
           }
         ],
         "contractDependencies": [
-          24639
+          8485
         ],
         "contractKind": "contract",
         "documentation": {
-          "id": 22020,
+          "id": 5866,
           "nodeType": "StructuredDocumentation",
-          "src": "102:106:112",
+          "src": "96:103:60",
           "text": " @title InitializableMock\n @dev This contract is a mock to test initializable functionality"
         },
         "fullyImplemented": true,
-        "id": 22077,
+        "id": 5923,
         "linearizedBaseContracts": [
-          22077,
-          24639
+          5923,
+          8485
         ],
         "name": "InitializableMock",
         "nodeType": "ContractDefinition",
@@ -856,13 +856,13 @@
           {
             "constant": false,
             "functionSelector": "c3b8ef2a",
-            "id": 22024,
+            "id": 5870,
             "mutability": "mutable",
             "name": "initializerRan",
             "nodeType": "VariableDeclaration",
             "overrides": null,
-            "scope": 22077,
-            "src": "261:26:112",
+            "scope": 5923,
+            "src": "249:26:60",
             "stateVariable": true,
             "storageLocation": "default",
             "typeDescriptions": {
@@ -870,10 +870,10 @@
               "typeString": "bool"
             },
             "typeName": {
-              "id": 22023,
+              "id": 5869,
               "name": "bool",
               "nodeType": "ElementaryTypeName",
-              "src": "261:4:112",
+              "src": "249:4:60",
               "typeDescriptions": {
                 "typeIdentifier": "t_bool",
                 "typeString": "bool"
@@ -885,13 +885,13 @@
           {
             "constant": false,
             "functionSelector": "0c55699c",
-            "id": 22026,
+            "id": 5872,
             "mutability": "mutable",
             "name": "x",
             "nodeType": "VariableDeclaration",
             "overrides": null,
-            "scope": 22077,
-            "src": "292:16:112",
+            "scope": 5923,
+            "src": "279:16:60",
             "stateVariable": true,
             "storageLocation": "default",
             "typeDescriptions": {
@@ -899,10 +899,10 @@
               "typeString": "uint256"
             },
             "typeName": {
-              "id": 22025,
+              "id": 5871,
               "name": "uint256",
               "nodeType": "ElementaryTypeName",
-              "src": "292:7:112",
+              "src": "279:7:60",
               "typeDescriptions": {
                 "typeIdentifier": "t_uint256",
                 "typeString": "uint256"
@@ -913,26 +913,26 @@
           },
           {
             "body": {
-              "id": 22035,
+              "id": 5881,
               "nodeType": "Block",
-              "src": "356:34:112",
+              "src": "341:32:60",
               "statements": [
                 {
                   "expression": {
                     "argumentTypes": null,
-                    "id": 22033,
+                    "id": 5879,
                     "isConstant": false,
                     "isLValue": false,
                     "isPure": false,
                     "lValueRequested": false,
                     "leftHandSide": {
                       "argumentTypes": null,
-                      "id": 22031,
+                      "id": 5877,
                       "name": "initializerRan",
                       "nodeType": "Identifier",
                       "overloadedDeclarations": [],
-                      "referencedDeclaration": 22024,
-                      "src": "363:14:112",
+                      "referencedDeclaration": 5870,
+                      "src": "347:14:60",
                       "typeDescriptions": {
                         "typeIdentifier": "t_bool",
                         "typeString": "bool"
@@ -943,14 +943,14 @@
                     "rightHandSide": {
                       "argumentTypes": null,
                       "hexValue": "74727565",
-                      "id": 22032,
+                      "id": 5878,
                       "isConstant": false,
                       "isLValue": false,
                       "isPure": true,
                       "kind": "bool",
                       "lValueRequested": false,
                       "nodeType": "Literal",
-                      "src": "380:4:112",
+                      "src": "364:4:60",
                       "subdenomination": null,
                       "typeDescriptions": {
                         "typeIdentifier": "t_bool",
@@ -958,70 +958,70 @@
                       },
                       "value": "true"
                     },
-                    "src": "363:21:112",
+                    "src": "347:21:60",
                     "typeDescriptions": {
                       "typeIdentifier": "t_bool",
                       "typeString": "bool"
                     }
                   },
-                  "id": 22034,
+                  "id": 5880,
                   "nodeType": "ExpressionStatement",
-                  "src": "363:21:112"
+                  "src": "347:21:60"
                 }
               ]
             },
             "documentation": null,
             "functionSelector": "8129fc1c",
-            "id": 22036,
+            "id": 5882,
             "implemented": true,
             "kind": "function",
             "modifiers": [
               {
                 "arguments": null,
-                "id": 22029,
+                "id": 5875,
                 "modifierName": {
                   "argumentTypes": null,
-                  "id": 22028,
+                  "id": 5874,
                   "name": "initializer",
                   "nodeType": "Identifier",
                   "overloadedDeclarations": [],
-                  "referencedDeclaration": 24616,
-                  "src": "344:11:112",
+                  "referencedDeclaration": 8462,
+                  "src": "329:11:60",
                   "typeDescriptions": {
                     "typeIdentifier": "t_modifier$__$",
                     "typeString": "modifier ()"
                   }
                 },
                 "nodeType": "ModifierInvocation",
-                "src": "344:11:112"
+                "src": "329:11:60"
               }
             ],
             "name": "initialize",
             "nodeType": "FunctionDefinition",
             "overrides": null,
             "parameters": {
-              "id": 22027,
+              "id": 5873,
               "nodeType": "ParameterList",
               "parameters": [],
-              "src": "334:2:112"
+              "src": "319:2:60"
             },
             "returnParameters": {
-              "id": 22030,
+              "id": 5876,
               "nodeType": "ParameterList",
               "parameters": [],
-              "src": "356:0:112"
+              "src": "341:0:60"
             },
-            "scope": 22077,
-            "src": "315:75:112",
+            "scope": 5923,
+            "src": "300:73:60",
             "stateMutability": "nonpayable",
             "virtual": false,
             "visibility": "public"
           },
           {
             "body": {
-              "id": 22044,
+              "id": 5890,
               "nodeType": "Block",
-              "src": "443:25:112",
+              "src": "424:23:60",
               "statements": [
                 {
                   "expression": {
@@ -1029,18 +1029,18 @@
                     "arguments": [],
                     "expression": {
                       "argumentTypes": [],
-                      "id": 22041,
+                      "id": 5887,
                       "name": "initialize",
                       "nodeType": "Identifier",
                       "overloadedDeclarations": [],
-                      "referencedDeclaration": 22036,
-                      "src": "450:10:112",
+                      "referencedDeclaration": 5882,
+                      "src": "430:10:60",
                       "typeDescriptions": {
                         "typeIdentifier": "t_function_internal_nonpayable$__$returns$__$",
                         "typeString": "function ()"
                       }
                     },
-                    "id": 22042,
+                    "id": 5888,
                     "isConstant": false,
                     "isLValue": false,
                     "isPure": false,
@@ -1048,88 +1048,88 @@
                     "lValueRequested": false,
                     "names": [],
                     "nodeType": "FunctionCall",
-                    "src": "450:12:112",
+                    "src": "430:12:60",
                     "tryCall": false,
                     "typeDescriptions": {
                       "typeIdentifier": "t_tuple$__$",
                       "typeString": "tuple()"
                     }
                   },
-                  "id": 22043,
+                  "id": 5889,
                   "nodeType": "ExpressionStatement",
-                  "src": "450:12:112"
+                  "src": "430:12:60"
                 }
               ]
             },
             "documentation": null,
             "functionSelector": "cb3a528d",
-            "id": 22045,
+            "id": 5891,
             "implemented": true,
             "kind": "function",
             "modifiers": [
               {
                 "arguments": null,
-                "id": 22039,
+                "id": 5885,
                 "modifierName": {
                   "argumentTypes": null,
-                  "id": 22038,
+                  "id": 5884,
                   "name": "initializer",
                   "nodeType": "Identifier",
                   "overloadedDeclarations": [],
-                  "referencedDeclaration": 24616,
-                  "src": "431:11:112",
+                  "referencedDeclaration": 8462,
+                  "src": "412:11:60",
                   "typeDescriptions": {
                     "typeIdentifier": "t_modifier$__$",
                     "typeString": "modifier ()"
                   }
                 },
                 "nodeType": "ModifierInvocation",
-                "src": "431:11:112"
+                "src": "412:11:60"
               }
             ],
             "name": "initializeNested",
             "nodeType": "FunctionDefinition",
             "overrides": null,
             "parameters": {
-              "id": 22037,
+              "id": 5883,
               "nodeType": "ParameterList",
               "parameters": [],
-              "src": "421:2:112"
+              "src": "402:2:60"
             },
             "returnParameters": {
-              "id": 22040,
+              "id": 5886,
               "nodeType": "ParameterList",
               "parameters": [],
-              "src": "443:0:112"
+              "src": "424:0:60"
             },
-            "scope": 22077,
-            "src": "396:72:112",
+            "scope": 5923,
+            "src": "377:70:60",
             "stateMutability": "nonpayable",
             "virtual": false,
             "visibility": "public"
           },
           {
             "body": {
-              "id": 22056,
+              "id": 5902,
               "nodeType": "Block",
-              "src": "538:19:112",
+              "src": "515:17:60",
               "statements": [
                 {
                   "expression": {
                     "argumentTypes": null,
-                    "id": 22054,
+                    "id": 5900,
                     "isConstant": false,
                     "isLValue": false,
                     "isPure": false,
                     "lValueRequested": false,
                     "leftHandSide": {
                       "argumentTypes": null,
-                      "id": 22052,
+                      "id": 5898,
                       "name": "x",
                       "nodeType": "Identifier",
                       "overloadedDeclarations": [],
-                      "referencedDeclaration": 22026,
-                      "src": "545:1:112",
+                      "referencedDeclaration": 5872,
+                      "src": "521:1:60",
                       "typeDescriptions": {
                         "typeIdentifier": "t_uint256",
                         "typeString": "uint256"
@@ -1139,71 +1139,71 @@
                     "operator": "=",
                     "rightHandSide": {
                       "argumentTypes": null,
-                      "id": 22053,
+                      "id": 5899,
                       "name": "_x",
                       "nodeType": "Identifier",
                       "overloadedDeclarations": [],
-                      "referencedDeclaration": 22047,
-                      "src": "549:2:112",
+                      "referencedDeclaration": 5893,
+                      "src": "525:2:60",
                       "typeDescriptions": {
                         "typeIdentifier": "t_uint256",
                         "typeString": "uint256"
                       }
                     },
-                    "src": "545:6:112",
+                    "src": "521:6:60",
                     "typeDescriptions": {
                       "typeIdentifier": "t_uint256",
                       "typeString": "uint256"
                     }
                   },
-                  "id": 22055,
+                  "id": 5901,
                   "nodeType": "ExpressionStatement",
-                  "src": "545:6:112"
+                  "src": "521:6:60"
                 }
               ]
             },
             "documentation": null,
             "functionSelector": "0018eaa8",
-            "id": 22057,
+            "id": 5903,
             "implemented": true,
             "kind": "function",
             "modifiers": [
               {
                 "arguments": null,
-                "id": 22050,
+                "id": 5896,
                 "modifierName": {
                   "argumentTypes": null,
-                  "id": 22049,
+                  "id": 5895,
                   "name": "initializer",
                   "nodeType": "Identifier",
                   "overloadedDeclarations": [],
-                  "referencedDeclaration": 24616,
-                  "src": "526:11:112",
+                  "referencedDeclaration": 8462,
+                  "src": "503:11:60",
                   "typeDescriptions": {
                     "typeIdentifier": "t_modifier$__$",
                     "typeString": "modifier ()"
                   }
                 },
                 "nodeType": "ModifierInvocation",
-                "src": "526:11:112"
+                "src": "503:11:60"
               }
             ],
             "name": "initializeWithX",
             "nodeType": "FunctionDefinition",
             "overrides": null,
             "parameters": {
-              "id": 22048,
+              "id": 5894,
               "nodeType": "ParameterList",
               "parameters": [
                 {
                   "constant": false,
-                  "id": 22047,
+                  "id": 5893,
                   "mutability": "mutable",
                   "name": "_x",
                   "nodeType": "VariableDeclaration",
                   "overrides": null,
-                  "scope": 22057,
-                  "src": "499:10:112",
+                  "scope": 5903,
+                  "src": "476:10:60",
                   "stateVariable": false,
                   "storageLocation": "default",
                   "typeDescriptions": {
@@ -1211,10 +1211,10 @@
                     "typeString": "uint256"
                   },
                   "typeName": {
-                    "id": 22046,
+                    "id": 5892,
                     "name": "uint256",
                     "nodeType": "ElementaryTypeName",
-                    "src": "499:7:112",
+                    "src": "476:7:60",
                     "typeDescriptions": {
                       "typeIdentifier": "t_uint256",
                       "typeString": "uint256"
@@ -1224,42 +1224,42 @@
                   "visibility": "internal"
                 }
               ],
-              "src": "498:12:112"
+              "src": "475:12:60"
             },
             "returnParameters": {
-              "id": 22051,
+              "id": 5897,
               "nodeType": "ParameterList",
               "parameters": [],
-              "src": "538:0:112"
+              "src": "515:0:60"
             },
-            "scope": 22077,
-            "src": "474:83:112",
+            "scope": 5923,
+            "src": "451:81:60",
             "stateMutability": "payable",
             "virtual": false,
             "visibility": "public"
           },
           {
             "body": {
-              "id": 22066,
+              "id": 5912,
               "nodeType": "Block",
-              "src": "616:19:112",
+              "src": "589:17:60",
               "statements": [
                 {
                   "expression": {
                     "argumentTypes": null,
-                    "id": 22064,
+                    "id": 5910,
                     "isConstant": false,
                     "isLValue": false,
                     "isPure": false,
                     "lValueRequested": false,
                     "leftHandSide": {
                       "argumentTypes": null,
-                      "id": 22062,
+                      "id": 5908,
                       "name": "x",
                       "nodeType": "Identifier",
                       "overloadedDeclarations": [],
-                      "referencedDeclaration": 22026,
-                      "src": "623:1:112",
+                      "referencedDeclaration": 5872,
+                      "src": "595:1:60",
                       "typeDescriptions": {
                         "typeIdentifier": "t_uint256",
                         "typeString": "uint256"
@@ -1269,32 +1269,32 @@
                     "operator": "=",
                     "rightHandSide": {
                       "argumentTypes": null,
-                      "id": 22063,
+                      "id": 5909,
                       "name": "_x",
                       "nodeType": "Identifier",
                       "overloadedDeclarations": [],
-                      "referencedDeclaration": 22059,
-                      "src": "627:2:112",
+                      "referencedDeclaration": 5905,
+                      "src": "599:2:60",
                       "typeDescriptions": {
                         "typeIdentifier": "t_uint256",
                         "typeString": "uint256"
                       }
                     },
-                    "src": "623:6:112",
+                    "src": "595:6:60",
                     "typeDescriptions": {
                       "typeIdentifier": "t_uint256",
                       "typeString": "uint256"
                     }
                   },
-                  "id": 22065,
+                  "id": 5911,
                   "nodeType": "ExpressionStatement",
-                  "src": "623:6:112"
+                  "src": "595:6:60"
                 }
               ]
             },
             "documentation": null,
             "functionSelector": "e955c9ec",
-            "id": 22067,
+            "id": 5913,
             "implemented": true,
             "kind": "function",
             "modifiers": [],
@@ -1302,18 +1302,18 @@
             "nodeType": "FunctionDefinition",
             "overrides": null,
             "parameters": {
-              "id": 22060,
+              "id": 5906,
               "nodeType": "ParameterList",
               "parameters": [
                 {
                   "constant": false,
-                  "id": 22059,
+                  "id": 5905,
                   "mutability": "mutable",
                   "name": "_x",
                   "nodeType": "VariableDeclaration",
                   "overrides": null,
-                  "scope": 22067,
-                  "src": "589:10:112",
+                  "scope": 5913,
+                  "src": "562:10:60",
                   "stateVariable": false,
                   "storageLocation": "default",
                   "typeDescriptions": {
@@ -1321,10 +1321,10 @@
                     "typeString": "uint256"
                   },
                   "typeName": {
-                    "id": 22058,
+                    "id": 5904,
                     "name": "uint256",
                     "nodeType": "ElementaryTypeName",
-                    "src": "589:7:112",
+                    "src": "562:7:60",
                     "typeDescriptions": {
                       "typeIdentifier": "t_uint256",
                       "typeString": "uint256"
@@ -1334,25 +1334,25 @@
                   "visibility": "internal"
                 }
               ],
-              "src": "588:12:112"
+              "src": "561:12:60"
             },
             "returnParameters": {
-              "id": 22061,
+              "id": 5907,
               "nodeType": "ParameterList",
               "parameters": [],
-              "src": "616:0:112"
+              "src": "589:0:60"
             },
-            "scope": 22077,
-            "src": "563:72:112",
+            "scope": 5923,
+            "src": "536:70:60",
             "stateMutability": "payable",
             "virtual": false,
             "visibility": "public"
           },
           {
             "body": {
-              "id": 22075,
+              "id": 5921,
               "nodeType": "Block",
-              "src": "669:63:112",
+              "src": "638:61:60",
               "statements": [
                 {
                   "expression": {
@@ -1361,14 +1361,14 @@
                       {
                         "argumentTypes": null,
                         "hexValue": "66616c7365",
-                        "id": 22071,
+                        "id": 5917,
                         "isConstant": false,
                         "isLValue": false,
                         "isPure": true,
                         "kind": "bool",
                         "lValueRequested": false,
                         "nodeType": "Literal",
-                        "src": "684:5:112",
+                        "src": "652:5:60",
                         "subdenomination": null,
                         "typeDescriptions": {
                           "typeIdentifier": "t_bool",
@@ -1379,14 +1379,14 @@
                       {
                         "argumentTypes": null,
                         "hexValue": "496e697469616c697a61626c654d6f636b20666f72636564206661696c757265",
-                        "id": 22072,
+                        "id": 5918,
                         "isConstant": false,
                         "isLValue": false,
                         "isPure": true,
                         "kind": "string",
                         "lValueRequested": false,
                         "nodeType": "Literal",
-                        "src": "691:34:112",
+                        "src": "659:34:60",
                         "subdenomination": null,
                         "typeDescriptions": {
                           "typeIdentifier": "t_stringliteral_70458f305ab12a5814a8a6125666b5faf9428e7481e52fe1e943f8addb4009b7",
@@ -1406,7 +1406,7 @@
                           "typeString": "literal_string \"InitializableMock forced failure\""
                         }
                       ],
-                      "id": 22070,
+                      "id": 5916,
                       "name": "require",
                       "nodeType": "Identifier",
                       "overloadedDeclarations": [
@@ -1414,13 +1414,13 @@
                         -18
                       ],
                       "referencedDeclaration": -18,
-                      "src": "676:7:112",
+                      "src": "644:7:60",
                       "typeDescriptions": {
                         "typeIdentifier": "t_function_require_pure$_t_bool_$_t_string_memory_ptr_$returns$__$",
                         "typeString": "function (bool,string memory) pure"
                       }
                     },
-                    "id": 22073,
+                    "id": 5919,
                     "isConstant": false,
                     "isLValue": false,
                     "isPure": false,
@@ -1428,22 +1428,22 @@
                     "lValueRequested": false,
                     "names": [],
                     "nodeType": "FunctionCall",
-                    "src": "676:50:112",
+                    "src": "644:50:60",
                     "tryCall": false,
                     "typeDescriptions": {
                       "typeIdentifier": "t_tuple$__$",
                       "typeString": "tuple()"
                     }
                   },
-                  "id": 22074,
+                  "id": 5920,
                   "nodeType": "ExpressionStatement",
-                  "src": "676:50:112"
+                  "src": "644:50:60"
                 }
               ]
             },
             "documentation": null,
             "functionSelector": "a9cc4718",
-            "id": 22076,
+            "id": 5922,
             "implemented": true,
             "kind": "function",
             "modifiers": [],
@@ -1451,37 +1451,37 @@
             "nodeType": "FunctionDefinition",
             "overrides": null,
             "parameters": {
-              "id": 22068,
+              "id": 5914,
               "nodeType": "ParameterList",
               "parameters": [],
-              "src": "654:2:112"
+              "src": "623:2:60"
             },
             "returnParameters": {
-              "id": 22069,
+              "id": 5915,
               "nodeType": "ParameterList",
               "parameters": [],
-              "src": "669:0:112"
+              "src": "638:0:60"
             },
-            "scope": 22077,
-            "src": "641:91:112",
+            "scope": 5923,
+            "src": "610:89:60",
             "stateMutability": "pure",
             "virtual": false,
             "visibility": "public"
           }
         ],
-        "scope": 22078,
-        "src": "210:527:112"
+        "scope": 5924,
+        "src": "200:502:60"
       }
     ],
-    "src": "35:704:112"
+    "src": "33:670:60"
   },
   "compiler": {
     "name": "solc",
     "version": "0.6.12+commit.27d51765.Emscripten.clang"
   },
   "networks": {},
-  "schemaVersion": "3.2.2",
-  "updatedAt": "2020-09-16T15:05:08.320Z",
+  "schemaVersion": "3.2.3",
+  "updatedAt": "2020-09-22T21:30:52.052Z",
   "devdoc": {
     "details": "This contract is a mock to test initializable functionality",
     "kind": "dev",

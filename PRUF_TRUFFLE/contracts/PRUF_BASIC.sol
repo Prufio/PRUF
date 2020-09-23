@@ -83,8 +83,11 @@ contract BASIC is ReentrancyGuard, Ownable, IERC721Receiver, Pausable {
     address internal APP_Address;
     APP_Interface internal APP;
 
-    address internal NAKED_Address;
     address internal APP_NC_Address;
+    APP_NC_Interface internal APP_NC;
+
+    //address internal SHARES_Address; // SHARES-TESTING
+    address internal NAKED_Address;
     address internal NP_Address;
 
     // --------------------------------------REPORTING--------------------------------------------//
@@ -146,6 +149,8 @@ contract BASIC is ReentrancyGuard, Ownable, IERC721Receiver, Pausable {
 
         APP_NC_Address = STOR.resolveContractAddress("APP_NC");
         NP_Address = STOR.resolveContractAddress("NP");
+
+        //SHARES_Address = STOR.resolveContractAddress("SHARES"); // SHARES-TESTING
         //^^^^^^^effects^^^^^^^^^
     }
 
@@ -187,7 +192,7 @@ contract BASIC is ReentrancyGuard, Ownable, IERC721Receiver, Pausable {
     /*
      * @dev Set adress of STOR contract to interface with
      */
-    function OO_setStorageContract(address _storageAddress) external onlyOwner {
+    function OO_setStorageContract(address _storageAddress) external virtual onlyOwner {
         require(
             _storageAddress != address(0),
             "B:SSC: storage address cannot be zero"

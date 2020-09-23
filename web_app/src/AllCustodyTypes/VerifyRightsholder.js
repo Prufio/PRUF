@@ -59,12 +59,7 @@ class VerifyRightHolder extends Component {
       if (this.state.manufacturer === "" 
       || this.state.type === "" 
       || this.state.model === "" 
-      || this.state.serial === "" 
-      || this.state.first === "" 
-      || this.state.middle === "" 
-      || this.state.surname === "" 
-      || this.state.id === "" 
-      || this.state.secret === "") {
+      || this.state.serial === "") {
         return alert("Please fill out all fields before submission")
       }
 
@@ -133,7 +128,7 @@ class VerifyRightHolder extends Component {
     };
     return (
       <div>
-        <Form className="VRform" id='MainForm'>
+        <Form className="twoRowForm" id='MainForm'>
           {window.addr === undefined && (
             <div className="errorResults">
               <h2>User address unreachable</h2>
@@ -142,7 +137,7 @@ class VerifyRightHolder extends Component {
           )}
           {window.addr > 0 && (
             <div>
-              <h2 className="Headertext">Deep Verify</h2>
+              <h2 className="Headertext">Deep Verify:</h2>
               <br></br>
               {!this.state.accessPermitted && (
                 <>
@@ -191,8 +186,8 @@ class VerifyRightHolder extends Component {
                     </Form.Group>
                   </Form.Row>
                   <Form.Row>
-                    <Form.Group className="buttonDisplay">
-                      <Button
+                    <Form.Group>
+                      <Button className="buttonDisplay"
                         variant="primary"
                         type="button"
                         size="lg"
@@ -206,7 +201,6 @@ class VerifyRightHolder extends Component {
               )}
               {this.state.accessPermitted && (
                 <>
-                  <h2>Asset found at idx: {this.state.idxHash}</h2>
                   <Form.Row>
                     <Form.Group as={Col} controlId="formGridFirstName">
                       <Form.Label className="formFont">First Name:</Form.Label>
@@ -262,8 +256,8 @@ class VerifyRightHolder extends Component {
                     </Form.Group>
                   </Form.Row>
                   <Form.Row>
-                    <Form.Group className="buttonDisplay">
-                      <Button
+                    <Form.Group>
+                      <Button className="buttonDisplay"
                         variant="primary"
                         type="button"
                         size="lg"

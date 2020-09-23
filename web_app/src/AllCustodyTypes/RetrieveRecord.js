@@ -149,7 +149,7 @@ class RetrieveRecord extends Component {
 
     return (
       <div>
-        <Form className="RRform">
+        <Form className="twoRowForm">
           {window.addr === undefined && (
             <div className="errorResults">
               <h2>User address unreachable</h2>
@@ -207,8 +207,8 @@ class RetrieveRecord extends Component {
 
               <Form.Row>
                 {this.state.status === "" && (
-                  <Form.Group className="buttonDisplay">
-                    <Button
+                  <Form.Group>
+                    <Button className="buttonDisplay"
                       variant="primary"
                       type="button"
                       size="lg"
@@ -220,21 +220,23 @@ class RetrieveRecord extends Component {
                 )}
 
                 {this.state.status !== "" && this.state.ipfsObject !== undefined && (
-
-                  <Form.Group className="buttonDisplay">
+                  
+                  <Form.Group>
                     {!this.state.showDescription && (
-                      <Button
-                        variant="primary"
-                        type="button"
-                        size="lg"
-                        onClick={_toggleDisplay}
-                      >
-                        Show Description
-                      </Button>
+                      <Form.Group>
+                        <Button className="ownerButtonDisplay2"
+                          variant="primary"
+                          type="button"
+                          size="lg"
+                          onClick={_toggleDisplay}
+                        >
+                          Show Description
+                  </Button>
+                  </Form.Group>
                     )}
                     {this.state.showDescription && (
-                      <Form.Group className="buttonDisplay">
-                        <Button
+                      <Form.Group>
+                        <Button className="ownerButtonDisplay2"
                           variant="primary"
                           type="button"
                           size="lg"
@@ -245,8 +247,8 @@ class RetrieveRecord extends Component {
                       </Form.Group>
                     )}
                     {this.state.type !== undefined && this.state.type !== "" && (
-                      <Form.Group className="buttonDisplay">
-                        <Button
+                        <Form.Group>
+                        <Button className="ownerButtonDisplay2"
                           variant="primary"
                           type="button"
                           size="lg"

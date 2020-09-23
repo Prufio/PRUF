@@ -8,7 +8,7 @@ import Dropdown from 'react-bootstrap/Dropdown'
 import bs58 from "bs58";
 
 
-class ModifyDescriptionNC extends Component {
+class ModifyDescription extends Component {
   constructor(props) {
     super(props);
 
@@ -239,6 +239,7 @@ class ModifyDescriptionNC extends Component {
         this.state.model,
         this.state.serial,
       );
+      await window.utils.getDescriptionHash(idxHash)
 
       let refHash = await window.utils.getDescriptionHash(idxHash)
 
@@ -307,7 +308,7 @@ class ModifyDescriptionNC extends Component {
 
     return (
       <div>
-        <Form className="MDform" id='MainForm'>
+        <Form className="twoRowForm" id='MainForm'>
           {window.addr === undefined && (
             <div className="errorResults">
               <h2>User address unreachable</h2>
@@ -524,8 +525,8 @@ class ModifyDescriptionNC extends Component {
 
               {this.state.hashPath !== "" && this.state.accessPermitted && (
                 <Form.Row>
-                  <Form.Group className="buttonDisplay">
-                    <Button
+                  <Form.Group >
+                    <Button className="buttonDisplay"
                       variant="primary"
                       type="button"
                       size="lg"
@@ -539,8 +540,8 @@ class ModifyDescriptionNC extends Component {
 
               {this.state.hashPath === "" && this.state.accessPermitted && this.state.elementType === "0" && (
                 <Form.Row>
-                  <Form.Group className="buttonDisplay">
-                    <Button
+                  <Form.Group >
+                    <Button className="buttonDisplay"
                       variant="primary"
                       type="button"
                       size="lg"
@@ -668,4 +669,4 @@ class ModifyDescriptionNC extends Component {
   }
 }
 
-export default ModifyDescriptionNC;
+export default ModifyDescription;

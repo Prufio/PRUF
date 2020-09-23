@@ -584,8 +584,8 @@ class THEWORKS extends Component {
                 </Form.Row>
                 </div>
                 <Form.Row>
-                  <Form.Group className="buttonDisplay">
-                    <Button
+                  <Form.Group >
+                    <Button className="buttonDisplay"
                       variant="primary"
                       type="button"
                       size="lg"

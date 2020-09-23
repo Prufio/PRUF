@@ -31,11 +31,20 @@ class Main extends Component {
       if (this.state.custodyType !== window.custodyType){
         this.setState({custodyType: window.custodyType})
       }
+      if (this.state.routeRequest !== window.routeRequest){
+        this.setState({
+          basicMenuBool: true,
+          assetHolderMenuBool: false,
+          assetHolderUserMenuBool: false,
+          assetClassHolderMenuBool: false,
+          authorizedUserMenuBool: false})
+      }
     }, 100)
 
     this.toggleMenu = async (menuChoice) => {
       window.location.href = '/#/';
       if (menuChoice === 'ACAdmin') {
+        window.routeRequest = "ACAdmin"
         await this.setState({ routeRequest: "ACAdmin" });
         return this.setState({
           assetClassHolderMenuBool: true,
@@ -47,6 +56,7 @@ class Main extends Component {
       }
 
       else if (menuChoice === 'basic') {
+        window.routeRequest = "basic"
         await this.setState({ routeRequest: "basic" });
         return this.setState({
           basicMenuBool: true,
@@ -58,6 +68,7 @@ class Main extends Component {
       }
 
       else if (menuChoice === 'NC') {
+        window.routeRequest = "NCAdmin"
         if (this.state.IDHolderBool) {
           await this.setState({ routeRequest: "NCAdmin" })
           return this.setState({
@@ -69,6 +80,7 @@ class Main extends Component {
           })
         }
         else {
+          window.routeRequest = "NCUser"
           await this.setState({ routeRequest: "NCUser" })
           return this.setState({
             assetHolderMenuBool: false,
@@ -81,6 +93,7 @@ class Main extends Component {
       }
 
       else if (menuChoice === 'authUser') {
+        window.routeRequest = "authUser"
         await this.setState({ routeRequest: "authUser" });
         return this.setState({
           authorizedUserMenuBool: true,
@@ -375,7 +388,7 @@ class Main extends Component {
                           variant="primary"
                           onClick={() => { this.toggleMenu("NC") }}
                         >
-                          NonCustodial Menu
+                          Token Holder Menu
                         </Dropdown.Item>
                       )}
 
@@ -385,7 +398,7 @@ class Main extends Component {
                           variant="primary"
                           onClick={() => { this.toggleMenu("NC") }}
                         >
-                          NonCustodial Menu
+                          Token Minter Menu
                         </Dropdown.Item>
                       )}
 

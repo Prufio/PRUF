@@ -71,7 +71,7 @@ class SetCosts extends Component {
 
     return (
       <div>
-        <Form className="SCForm">
+        <Form className="threeRowForm">
           {window.addr === undefined && (
             <div className="VRresults">
               <h2>User address unreachable</h2>
@@ -125,8 +125,8 @@ class SetCosts extends Component {
                 />
               </Form.Group>
 
-              <Form.Group className="buttonDisplay">
-                <Button
+              <Form.Group>
+                <Button className="buttonDisplay"
                   variant="primary"
                   type="button"
                   size="lg"
