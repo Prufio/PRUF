@@ -12,6 +12,9 @@ class NonCustodialAdminComponent extends Component {
                     <NavLink exact to="/">Home</NavLink>
                 </li>
                 <li>
+                    <NavLink exact to="checkin">Asset Dashboard</NavLink>
+                </li>
+                <li>
                     <NavLink exact to="new-record-NC">New</NavLink>
                 </li>
                 <li>

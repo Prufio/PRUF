@@ -86,7 +86,7 @@ class Home extends Component {
 
           window.assetClassName = this.state.assetClass
           await window.utils.resolveAC();
-          await window.utils.getACData("id", window.assetClass)
+          
           return this.setState({ authLevel: window.authLevel });
         }
       }

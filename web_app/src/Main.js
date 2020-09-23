@@ -93,6 +93,23 @@ class Main extends Component {
 
     }
 
+    this.getIPFSJSONObject = async (lookup, toSet) => {
+      console.log(lookup)
+      let temp
+      if(lookup === "0"){
+      } else {
+      await window.ipfs.cat(lookup, (error, result) => {
+        if (error) {
+          console.log("Something went wrong. Unable to find file on IPFS");
+        } else {
+          console.log("Here's what we found for asset description: ", result);
+          return toSet.push(JSON.parse(result).name)
+        }
+      });
+    }
+      
+    };
+
     this.acctChanger = async () => {//Handle an address change, update state accordingly
       const ethereum = window.ethereum;
       const self = this;
@@ -111,6 +128,7 @@ class Main extends Component {
     };
 
     this.setupContractEnvironment = async (_web3) => {
+      const self = this;
       console.log("Setting up contracts")
 
       await this.setState({
@@ -126,7 +144,21 @@ class Main extends Component {
       await this.setState({ contracts: window._contracts })
       await window.utils.getContracts()
       await window.utils.determineTokenBalance()
+      await window.utils.getAssetTokenInfo()
+
+      let tempArray = [];
+      
+      for(let i = 0; i < window.aTknIDs.length; i++){
+        if (window.ipfsHashArray[i] === "0"){await tempArray.push(window.ipfsHashArray[i])}
+        else{await this.getIPFSJSONObject(window.ipfsHashArray[i], tempArray)}
+      }
+
+      window.assets.names = tempArray;
+      window.assets.ids = window.aTknIDs;
+      
       console.log("bools...", window.assetHolderBool, window.assetClassHolderBool, window.IDHolderBool)
+
+      console.log("window assets: ", window.assets)
 
       if(window.balances !== undefined){
         await this.setState({
@@ -154,6 +186,8 @@ class Main extends Component {
       isBPNPOwner: undefined,
       addr: undefined,
       web3: null,
+      nameArray: [],
+      notAvailable: "N/A",
       STOROwner: "",
       BPPOwner: "",
       BPNPOwner: "",
@@ -195,8 +229,10 @@ class Main extends Component {
     if (window.ethereum) {
       window.additionalElementArrays = {
         photo: [],
-        text: []
+        text: [],
+        name: ""
       }
+      window.assets = {names: [], ids: []};
 
       const ethereum = window.ethereum;
       var _web3 = require("web3");

@@ -35,7 +35,8 @@ import ForceModifyRecordNC from "./NonCustodial/ForceModifyRecordNC";
 import ModifyDescriptionNC from "./NonCustodial/ModifyDescriptionNC";
 import ModifyRecordStatusNC from "./NonCustodial/ModifyRecordStatusNC";
 import NewRecordNC from "./NonCustodial/NewRecordNC";
-import TransferAssetNC from "./NonCustodial/TransferAssetNC";;
+import TransferAssetNC from "./NonCustodial/TransferAssetNC";
+import AssetCheckIn from "./NonCustodial/AssetCheckIn"
 
 function Router(routeRequest) {
     if (routeRequest === "authUser") {
@@ -76,6 +77,7 @@ function Router(routeRequest) {
                 <Route path="/manage-escrow-NC" component={EscrowManagerNC} />
                 <Route path="/mint-pip-asset" component={MintPipAsset} />
                 <Route path="/claim-pip-asset" component={ClaimPipAsset} />
+                <Route path="/checkin" component={AssetCheckIn} />
             </>)
     }
 
@@ -95,6 +97,7 @@ function Router(routeRequest) {
                 <Route path="/manage-escrow-NC" component={EscrowManagerNC} />
                 <Route path="/mint-pip-asset" component={MintPipAsset} />
                 <Route path="/claim-pip-asset" component={ClaimPipAsset} />
+                <Route path="/checkin" component={AssetCheckIn} />
             </>)
     }
 
