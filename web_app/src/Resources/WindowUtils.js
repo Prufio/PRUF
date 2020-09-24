@@ -489,26 +489,6 @@ function buildWindowUtils() {
   }
 
   const _getContracts = async () => {
-
-    window.contracts = {
-      STOR: window._contracts.content[0],
-      APP: window._contracts.content[1],
-      NP: window._contracts.content[2],
-      AC_MGR: window._contracts.content[3],
-      AC_TKN: window._contracts.content[4],
-      A_TKN: window._contracts.content[5],
-      ECR_MGR: window._contracts.content[6],
-      ECR: window._contracts.content[7],
-      VERIFY: window._contracts.content[8],
-      ECR_NC: window._contracts.content[9],
-      APP_NC: window._contracts.content[10],
-      NP_NC: window._contracts.content[11],
-      RCLR: window._contracts.content[12],
-      PIP: window._contracts.content[13],
-      ID_TKN: window._contracts.content[14],
-      UTIL_TKN: window._contracts.content[15]
-    }
-
     console.log("contracts: ", window.contracts)
   };
 
@@ -569,7 +549,8 @@ function buildWindowUtils() {
     if (Number(window.balances.assetBalance) > 0) {
       let tknIDArray = [];
       let ipfsHashArray = [];
-      let names = [];
+      let statuses = [];
+      let assetClasses = [];
 
       for (let i = 0; i < window.balances.assetBalance; i++) {
         await window.contracts.A_TKN.methods.tokenOfOwnerByIndex(window.addr, i)
@@ -577,6 +558,7 @@ function buildWindowUtils() {
             if (_error) {
               return (console.log("IN ERROR IN ERROR IN ERROR"))
             } else {
+              console.log(window.web3.utils.numberToHex(_result))
               tknIDArray.push(window.web3.utils.numberToHex(_result));
             }
           });
@@ -591,7 +573,11 @@ function buildWindowUtils() {
               if(Object.values(_result)[5] > 0){
                 ipfsHashArray.push(window.utils.getIpfsHashFromBytes32(Object.values(_result)[5]))
               }
-              else{ipfsHashArray.push("0")}
+              else{ipfsHashArray.push("0")
+              }
+              statuses.push(Object.values(_result)[0])
+              assetClasses.push(Object.values(_result)[2])
+
             }
           })
       }
@@ -600,7 +586,12 @@ function buildWindowUtils() {
 
       window.aTknIDs = tknIDArray;
       window.ipfsHashArray = ipfsHashArray;
-    }
+
+      window.assets.assetClasses = assetClasses;
+      window.assets.statuses = statuses;
+
+      }
+
     else { console.log("No assets held by user"); return 0 }
   }
 

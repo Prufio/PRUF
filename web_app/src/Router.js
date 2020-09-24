@@ -123,6 +123,7 @@ function Router(routeRequest) {
                 <Route path="/retrieve-record" component={RetrieveRecord} />
                 <Route path="/mint-pip-asset" component={MintPipAsset} />
                 <Route path="/claim-pip-asset" component={ClaimPipAsset} />
+                <Route path="/checkin" component={AssetCheckIn} />
             </>
         )
     }

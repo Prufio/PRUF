@@ -2,25 +2,29 @@ import React, { Component } from "react";
 import Form from "react-bootstrap/Form";
 import Button from "react-bootstrap/Button";
 import Col from "react-bootstrap/Col";
-import "./../index.css"; 
+import "./../index.css";
 
 class AssetCheckIn extends Component {
   constructor(props) {
     super(props);
 
     this.generateAssets = () => {
+      if (window.assets.names.length > 0) {
         let component = [];
-        console.log(window.assets)
-    
+        //console.log(window.assets)
+
         for (let i = 0; i < window.assets.ids.length; i++) {
-        component.push(<option value={String(window.assets.ids[i])}>Name: {window.assets.names[i]} ID: {window.assets.ids[i]} </option>);
+          component.push(<option value={i}>Name: {window.assets.descriptions[i].name} ID: {window.assets.ids[i]} </option>);
         }
-    
-        console.log(component)
-    
+
+        //console.log(component)
+
         return component
-        
-        }
+      }
+
+      else { return <></> }
+
+    }
 
     this.state = {
       addr: undefined,
@@ -45,7 +49,7 @@ class AssetCheckIn extends Component {
   }
 
   componentDidMount() {
-    this.setState({addr: window.addr})
+    this.setState({ addr: window.addr })
   }
 
   componentDidUpdate() {
@@ -60,46 +64,63 @@ class AssetCheckIn extends Component {
   render() {
 
     const _checkIn = async () => {
-        window.idxHash = this.state.selectedAsset
-        console.log("Changed window idx to: ", window.idxHash) 
-        await window.utils.getACFromIdx(this.state.selectedAsset)
+      window.idxHash = this.state.selectedAsset
+      console.log("Changed window idx to: ", window.idxHash)
+
+      window.assetTokenInfo = {
+        assetClass: window.assets.assetClasses[this.state.selectedAsset],
+        idxHash: window.assets.ids[this.state.selectedAsset],
+        name: window.assets.descriptions[this.state.selectedAsset].name,
+        photos: window.assets.descriptions[this.state.selectedAsset].photo,
+        text: window.assets.descriptions[this.state.selectedAsset].text,
+        status: window.assets.statuses[this.state.selectedAsset],
+      }
     }
 
     return (
       <div className="home">
-        <img src={require("./../Resources/Pruf AR cropped.png")} alt="Pruf Logo AssetCheckIn" />
-        <p> V 1.0.1</p>
+        {window.assets.assetClasses.length > 0 && (
+          <>
+          <h1>Asset Name: {window.assetTokenInfo.name}</h1>
+          <br></br>
+          <h1>Asset Status: {window.assetTokenInfo.status}</h1>
+          <br></br>
+          <h1>Asset Class: {window.assetTokenInfo.assetClass}</h1>
+          </>
 
-        <div> {window.assetClass > 0 && (<div>Operating in asset class {window.assetClass} ({window.assetClassName}) as {window.authLevel}</div>)}</div>
-        {window._contracts !== undefined && (
-          <div>
-            <br></br>
-            <Form.Group as={Col} controlId="formGridAC">
-              <Form.Label className="formFont">Choose an asset to modify : </Form.Label>
-              <Form.Control
-                        as="select"
-                        size="lg"
-                        onChange={(e) => this.setState({ selectedAsset: e.target.value })}
-                      >
-                        <option value="0"> Select an asset </option>
-                        {this.generateAssets()}
-                        
-                      </Form.Control>
-            </Form.Group>
-            <Form.Row>
-              <Button
-                className="buttonDisplayAssetCheckIn"
-                variant="primary"
-                type="button"
-                size="lg"
-                onClick={_checkIn}
-              >
-                Access PRuF
-                  </Button>
-            </Form.Row>
-          </div>
         )}
-        {window._contracts === undefined && (<div> <Form.Row><h1>Connecting to Blockchain Provider...</h1></Form.Row></div>)}
+        
+        {window.assets.assetClasses.length > 0 && (
+          <div>
+          <br></br>
+          <Form.Group as={Col} controlId="formGridAC">
+            <Form.Label className="formFont">Choose an asset to modify : </Form.Label>
+            <Form.Control
+              as="select"
+              size="lg"
+              onChange={(e) => this.setState({ selectedAsset: e.target.value })}
+            >
+              <option value="0"> Select an asset </option>
+              {this.generateAssets()}
+
+            </Form.Control>
+          </Form.Group>
+          <Form.Row>
+            <Button
+              className="buttonDisplayAssetCheckIn"
+              variant="primary"
+              type="button"
+              size="lg"
+              onClick={_checkIn}
+            >
+              Access PRuF
+                </Button>
+          </Form.Row>
+        </div>
+        )}
+
+          
+        {window.assets.assetClasses.length === 0 && (<div> <Form.Row><h1>Loading asset list. This may take a while...</h1></Form.Row></div>)}
       </div>
     );
   }

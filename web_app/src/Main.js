@@ -106,7 +106,7 @@ class Main extends Component {
 
     }
 
-    this.getIPFSJSONObject = async (lookup, toSet) => {
+    this.getIPFSJSONObject = async (lookup, toSetDescriptions, toSetNames) => {
       console.log(lookup)
       let temp
       if(lookup === "0"){
@@ -116,7 +116,8 @@ class Main extends Component {
           console.log("Something went wrong. Unable to find file on IPFS");
         } else {
           console.log("Here's what we found for asset description: ", result);
-          return toSet.push(JSON.parse(result).name)
+          toSetDescriptions.push(JSON.parse(result))
+          toSetNames.push(JSON.parse(result).name)
         }
       });
     }
@@ -159,14 +160,16 @@ class Main extends Component {
       await window.utils.determineTokenBalance()
       await window.utils.getAssetTokenInfo()
 
-      let tempArray = [];
+      let tempDescriptionsArray = [];
+      let tempNamesArray = [];
       
       for(let i = 0; i < window.aTknIDs.length; i++){
-        if (window.ipfsHashArray[i] === "0"){await tempArray.push(window.ipfsHashArray[i])}
-        else{await this.getIPFSJSONObject(window.ipfsHashArray[i], tempArray)}
+        if (window.ipfsHashArray[i] === "0"){await tempDescriptionsArray.push(window.ipfsHashArray[i]); await tempNamesArray.push(window.ipfsHashArray[i])}
+        else{await this.getIPFSJSONObject(window.ipfsHashArray[i], tempDescriptionsArray, tempNamesArray)}
       }
 
-      window.assets.names = tempArray;
+      window.assets.descriptions = tempDescriptionsArray;
+      window.assets.names = tempNamesArray;
       window.assets.ids = window.aTknIDs;
       
       console.log("bools...", window.assetHolderBool, window.assetClassHolderBool, window.IDHolderBool)
@@ -245,7 +248,15 @@ class Main extends Component {
         text: [],
         name: ""
       }
-      window.assets = {names: [], ids: []};
+      window.assetTokenInfo = {
+        assetClass: undefined,
+        idxHash: undefined,
+        name: undefined,
+        photos: undefined,
+        text: undefined, 
+        status: undefined,
+    }
+      window.assets = {descriptions: [], ids: [], assetClasses: [], statuses: [], names: []};
 
       const ethereum = window.ethereum;
       var _web3 = require("web3");
@@ -382,7 +393,7 @@ class Main extends Component {
                           AC Admin Menu
                         </Dropdown.Item>)}
 
-                      {this.state.custodyType === "Non-Custodial" && this.state.IDHolderBool === false && this.state.assetHolderBool === true && this.state.assetHolderUserMenuBool === false && (
+                      {this.state.IDHolderBool === false && this.state.assetHolderBool === true && this.state.assetHolderUserMenuBool === false && (
                         <Dropdown.Item
                           as="button"
                           variant="primary"
@@ -392,7 +403,7 @@ class Main extends Component {
                         </Dropdown.Item>
                       )}
 
-                      {this.state.custodyType === "Non-Custodial" && this.state.IDHolderBool === true && this.state.assetHolderMenuBool === false && (
+                      {this.state.IDHolderBool === true && this.state.assetHolderMenuBool === false && (
                         <Dropdown.Item
                           as="button"
                           variant="primary"

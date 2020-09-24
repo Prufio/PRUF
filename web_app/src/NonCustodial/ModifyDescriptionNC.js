@@ -28,22 +28,13 @@ class ModifyDescription extends Component {
       ipfs1: "",
       txHash: "",
       txStatus: false,
-      type: "",
-      manufacturer: "",
-      model: "",
-      serial: "",
-      first: "",
-      middle: "",
-      isNFA: false,
-      surname: "",
-      id: "",
-      secret: "",
+      accessPermitted: true,
       idxHash: "",
-      rgtHash: "",
       elementType: 0,
       elementName: "",
       elementValue: "",
       nameTag: "",
+
       removePhotoElement: "",
       removeTextElement: "",
       additionalElementArrays: {
@@ -56,6 +47,14 @@ class ModifyDescription extends Component {
   //component state-change events......................................................................................................
 
   componentDidMount() {//stuff to do when component mounts in window
+
+    this.setState({
+      idxHash: window.assetTokenInfo.idxHash,
+      oldDescription: window.assetTokenInfo.description,
+      assetClass: window.assetTokenInfo.assetClass,
+      name: window.assetTokenInfo.name,
+      status: window.assetTokenInfo.status
+    })
 
   }
 
@@ -230,44 +229,6 @@ class ModifyDescription extends Component {
       });
     }
 
-    const _accessAsset = async () => {
-      const self = this;
-
-      let idxHash = window.web3.utils.soliditySha3(
-        this.state.type,
-        this.state.manufacturer,
-        this.state.model,
-        this.state.serial,
-      );
-      await window.utils.getDescriptionHash(idxHash)
-
-      let refHash = await window.utils.getDescriptionHash(idxHash)
-
-      await window.ipfs.cat(refHash, (error, result) => {
-        if (error) {
-          console.log("Something went wrong. Unable to find file on IPFS");
-        } else {
-          console.log("IPFS1 Here's what we found: ", result);
-          self.setState({ oldDescription: result })
-        }
-      });
-
-      var doesExist = await window.utils.checkAssetExists(idxHash);
-      var infoMatches = await window.utils.checkHoldsToken("asset", window.web3.utils.hexToNumberString(idxHash));
-
-      if (!doesExist) {
-        return alert("Asset doesnt exist! Ensure data fields are correct before submission.")
-      }
-
-      if (!infoMatches) {
-        return alert("Caller is not the token holder of asset.")
-      }
-
-      await this.setState({ idxHash: idxHash })
-      return this.setState({ accessPermitted: true })
-
-    }
-
     const _updateDescription = async () => {
       this.setState({ txStatus: false });
       this.setState({ txHash: "" });
@@ -277,7 +238,6 @@ class ModifyDescription extends Component {
       var _ipfs1 = this.state.hashPath;
 
       console.log("idxHash", this.state.idxHash);
-      console.log("New rgtHash", this.state.rgtHash);
       console.log("addr: ", window.addr);
 
       window.contracts.NP_NC.methods
@@ -301,8 +261,8 @@ class ModifyDescription extends Component {
       window.additionalElementArrays.photo = [];
       window.additionalElementArrays.text = [];
       window.additionalElementArrays.name = "";
-      self.setState({ accessPermitted: false });
-      self.setState({ oldDescription: undefined });
+      //self.setState({ accessPermitted: false });
+      //self.setState({ oldDescription: undefined });
       return document.getElementById("MainForm").reset();
     };
 
@@ -314,67 +274,17 @@ class ModifyDescription extends Component {
               <h2>User address unreachable</h2>
               <h3>Please connect web3 provider.</h3>
             </div>
-          )}{window.assetClass === undefined && (
+          )}{this.state.assetClass === undefined && (
             <div className="errorResults">
-              <h2>No asset class selected.</h2>
-              <h3>Please select asset class in home page to use forms.</h3>
+              <h2>No asset selected.</h2>
+              <h3>Please select asset in home page to use forms.</h3>
             </div>
           )}
-          {window.addr > 0 && window.assetClass > 0 && (
+          {window.addr > 0 && this.state.assetClass > 0 && (
             <div>
 
               <h2 className="Headertext">Modify Description</h2>
               <br></br>
-              {!this.state.accessPermitted && (
-                <>
-                  <Form.Row>
-                    <Form.Group as={Col} controlId="formGridType">
-                      <Form.Label className="formFont">Type:</Form.Label>
-                      <Form.Control
-                        placeholder="Type"
-                        required
-                        onChange={(e) => this.setState({ type: e.target.value })}
-                        size="lg"
-                      />
-                    </Form.Group>
-
-                    <Form.Group as={Col} controlId="formGridManufacturer">
-                      <Form.Label className="formFont">Manufacturer:</Form.Label>
-
-                      <Form.Control
-                        placeholder="Manufacturer"
-                        required
-                        onChange={(e) => this.setState({ manufacturer: e.target.value })}
-                        size="lg"
-                      />
-                    </Form.Group>
-
-                  </Form.Row>
-
-                  <Form.Row>
-                    <Form.Group as={Col} controlId="formGridModel">
-                      <Form.Label className="formFont">Model:</Form.Label>
-                      <Form.Control
-                        placeholder="Model"
-                        required
-                        onChange={(e) => this.setState({ model: e.target.value })}
-                        size="lg"
-                      />
-                    </Form.Group>
-
-                    <Form.Group as={Col} controlId="formGridSerial">
-                      <Form.Label className="formFont">Serial:</Form.Label>
-                      <Form.Control
-                        placeholder="Serial"
-                        required
-                        onChange={(e) => this.setState({ serial: e.target.value })}
-                        size="lg"
-                      />
-                    </Form.Group>
-                  </Form.Row>
-                </>
-              )}
-
               {this.state.accessPermitted && (
                 <div>
                   <Form.Row>
@@ -504,23 +414,6 @@ class ModifyDescription extends Component {
                     </>
                   )}
                 </div>
-              )}
-
-              {!this.state.accessPermitted && (
-                <>
-                  <Form.Row>
-                    <Form.Group className="buttonDisplay">
-                      <Button
-                        variant="primary"
-                        type="button"
-                        size="lg"
-                        onClick={_accessAsset}
-                      >
-                        Check Asset
-                    </Button>
-                    </Form.Group>
-                  </Form.Row>
-                </>
               )}
 
               {this.state.hashPath !== "" && this.state.accessPermitted && (
