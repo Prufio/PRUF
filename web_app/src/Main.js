@@ -316,7 +316,7 @@ class Main extends Component {
 
     return (
       <div>
-        <ParticleBox />
+        <ParticleBox/>
         <HashRouter>
 
             <div className="imageForm">

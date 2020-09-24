@@ -7,12 +7,12 @@ body {
   background-image: url(./Resources/BlueBack.png);
   -webkit-backgrount-size: cover;
   background-size: cover;
-  box-sizing: border-box;
+  box-sizing: border-box; 
   background-position: center center fixed;  
-  overflow: hidden;
   /* background-color: rgb(12, 59, 79);
   margin: 0; */
 }
+
 h1,
 h2,
 h3,
