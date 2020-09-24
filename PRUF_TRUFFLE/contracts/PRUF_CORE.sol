@@ -201,16 +201,17 @@ contract CORE is PullPayment, BASIC {
      */
     function deductPayment(Invoice memory pricing) internal whenNotPaused {
         uint256 messageValue = msg.value;
-        uint256 sharesShare = pricing.rootPrice.div(uint256(4));
-        uint256 rootShare = pricing.rootPrice.sub(sharesShare);
-        uint256 total = (sharesShare.add(rootShare)).add(pricing.ACTHprice);
-        //uint256 total = pricing.rootPrice.add(pricing.ACTHprice);    //old pricing 
+        //uint256 sharesShare = pricing.rootPrice.div(uint256(4)); //SHARES-TESTING
+        //uint256 rootShare = pricing.rootPrice.sub(sharesShare); //SHARES-TESTING
+        //uint256 total = (sharesShare.add(rootShare)).add(pricing.ACTHprice); //SHARES-TESTING
+        uint256 total = pricing.rootPrice.add(pricing.ACTHprice);    // PRE SHARES-TESTING 
 
         require(msg.value >= total, "C:DP: TX value too low.");
         //^^^^^^^checks^^^^^^^^^
         uint256 change = messageValue.sub(total);
-        _asyncTransfer(SHARES_Address, sharesShare);
-        _asyncTransfer(pricing.rootAddress, rootShare);
+        //_asyncTransfer(SHARES_Address, sharesShare); //SHARES-TESTING
+        //_asyncTransfer(pricing.rootAddress, rootShare); //SHARES-TESTING
+        _asyncTransfer(pricing.rootAddress, pricing.rootPrice); // PRE SHARES-TESTING
         _asyncTransfer(pricing.ACTHaddress, pricing.ACTHprice);
         _asyncTransfer(msg.sender, change);
         //^^^^^^^interactions^^^^^^^^^

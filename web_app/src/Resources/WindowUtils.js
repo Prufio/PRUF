@@ -126,6 +126,43 @@ function buildWindowUtils() {
     return tempBool;
   }
 
+  const _checkHoldsToken = async (req, id) => {
+    let tempBool;
+    if(req === "asset"){
+      await window.contracts.A_TKN.methods
+      .ownerOf(id)
+      .call({ from: window.addr }, function (_error, _result) {
+        if (_error) {
+          console.log(_error);
+        } else {
+          if(_result === window.addr){
+            tempBool = true
+          }
+          else{ tempBool = false}
+        }
+        console.log("checked in A_TKN");
+      });
+    }
+    else if (req === "AC"){
+      await window.contracts.AC_TKN.methods
+      .ownerOf(id)
+      .call({ from: window.addr }, function (_error, _result) {
+        if (_error) {
+          console.log(_error);
+        } else {
+          if(_result === window.addr){
+            tempBool = true
+          }
+          else{ tempBool = false}
+          
+        }
+        console.log("checked in AC_TKN");
+      });
+    }
+    
+    return tempBool;
+  }
+
   const _checkEscrowStatus = async (idxHash) => {
     let tempBool;
     await window.contracts.STOR.methods
@@ -437,27 +474,21 @@ function buildWindowUtils() {
       });
   }
 
+  const _getACFromIdx = async (idxHash) => {
+    await window.contracts.STOR.methods
+      .retrieveShortRecord(idxHash)
+      .call({ from: window.addr }, function (_error, _result) {
+        if (_error) {
+          return (console.log("IN ERROR IN ERROR IN ERROR"))
+        } else {
+          window.assetClass = Object.values(_result)[2];
+          console.log("Now operating in AC: ", window.assetClass)
+          return (Object.values(_result)[2])
+        }
+      });
+  }
+
   const _getContracts = async () => {
-
-    window.contracts = {
-      STOR: window._contracts.content[0],
-      APP: window._contracts.content[1],
-      NP: window._contracts.content[2],
-      AC_MGR: window._contracts.content[3],
-      AC_TKN: window._contracts.content[4],
-      A_TKN: window._contracts.content[5],
-      ECR_MGR: window._contracts.content[6],
-      ECR: window._contracts.content[7],
-      VERIFY: window._contracts.content[8],
-      ECR_NC: window._contracts.content[9],
-      APP_NC: window._contracts.content[10],
-      NP_NC: window._contracts.content[11],
-      RCLR: window._contracts.content[12],
-      PIP: window._contracts.content[13],
-      ID_TKN: window._contracts.content[14],
-      UTIL_TKN: window._contracts.content[15]
-    }
-
     console.log("contracts: ", window.contracts)
   };
 
@@ -513,34 +544,102 @@ function buildWindowUtils() {
       }
     }
   }
+  const _getAssetTokenInfo = async () => {
+
+    if (Number(window.balances.assetBalance) > 0) {
+      let tknIDArray = [];
+      let ipfsHashArray = [];
+      let statuses = [];
+      let assetClasses = [];
+
+      for (let i = 0; i < window.balances.assetBalance; i++) {
+        await window.contracts.A_TKN.methods.tokenOfOwnerByIndex(window.addr, i)
+          .call({ from: window.addr }, (_error, _result) => {
+            if (_error) {
+              return (console.log("IN ERROR IN ERROR IN ERROR"))
+            } else {
+              console.log(window.web3.utils.numberToHex(_result))
+              tknIDArray.push(window.web3.utils.numberToHex(_result));
+            }
+          });
+      }
+
+      for (let x = 0; x < tknIDArray.length; x++) {
+        await window.contracts.STOR.methods.retrieveShortRecord(tknIDArray[x])
+          .call({ from: window.addr }, (_error, _result) => {
+            if (_error) {
+              console.log("IN ERROR IN ERROR IN ERROR")
+            } else {
+              if(Object.values(_result)[5] > 0){
+                ipfsHashArray.push(window.utils.getIpfsHashFromBytes32(Object.values(_result)[5]))
+              }
+              else{ipfsHashArray.push("0")
+              }
+              statuses.push(Object.values(_result)[0])
+              assetClasses.push(Object.values(_result)[2])
+
+            }
+          })
+      }
+
+      console.log(ipfsHashArray)
+
+      window.aTknIDs = tknIDArray;
+      window.ipfsHashArray = ipfsHashArray;
+
+      window.assets.assetClasses = assetClasses;
+      window.assets.statuses = statuses;
+
+      }
+
+    else { console.log("No assets held by user"); return 0 }
+  }
+
+  const _getAssetTokenName = async (ipfs) => {
+    let temp;
+
+      if(ipfs !== "0"){
+        temp = await window.utils.getIPFSJSONObject(ipfs)
+      }
+
+      else{temp = "N/A"}
+
+      window.assets.names.push(temp);
+  }
+
 
   const _getIPFSJSONObject = async (lookup) => {
     console.log(lookup)
+    let temp
     await window.ipfs.cat(lookup, (error, result) => {
       if (error) {
         console.log("Something went wrong. Unable to find file on IPFS");
       } else {
         console.log("Here's what we found for asset description: ", result);
+        temp = result;
+        return JSON.parse(temp);
       }
-      console.log(JSON.parse(result));
-      return JSON.parse(result)
     });
   };
 
   const _getIPFSRaw = async (lookup) => {
     console.log(lookup)
+    let temp;
     await window.ipfs.cat(lookup, (error, result) => {
       if (error) {
         console.log("Something went wrong. Unable to find file on IPFS");
       } else {
         console.log("Here's what we found for asset description: ", result);
+        temp = result;
       }
-      console.log(result);
-      return result
     });
+    
+    console.log(temp);
+    return temp
   };
 
   window.utils = {
+
     checkCreds: _checkCreds,
     getCosts: _getCosts,
     getContracts: _getContracts,
@@ -563,6 +662,11 @@ function buildWindowUtils() {
     getIPFSRaw: _getIPFSRaw,
     generateDescription: _generateDescription,
     seperateKeysAndValues: _seperateKeysAndValues,
+    getAssetTokenInfo: _getAssetTokenInfo,
+    checkHoldsToken: _checkHoldsToken,
+    getAssetTokenName: _getAssetTokenName,
+    getACFromIdx: _getACFromIdx,
+
   }
 
   console.log("Setting up window utils")

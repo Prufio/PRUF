@@ -40,11 +40,11 @@ contract SHARES is ReentrancyGuard, Ownable, Pausable, BASIC {
     address internal SHAR_TKN_Address;
     SHAR_TKN_Interface internal SHAR_TKN;
 
-    // address internal STOR_Address;
-    // STOR_Interface internal STOR;
+    // address internal STOR_Address;  //SHARES-TESTING
+    // STOR_Interface internal STOR;   //SHARES-TESTING
 
-    uint256 private maxSupply = 10; //set max supply (100000?)
-    uint256 private payPeriod = 2 minutes; //set to 30 days
+    uint256 constant private maxSupply = 10; //set max supply (100000?)
+    uint256 constant private payPeriod = 2 minutes; //set to 30 days
 
     uint256 private nextPayDay = block.timestamp.add(payPeriod);
     uint256 private lastPayDay = block.timestamp;
@@ -91,10 +91,10 @@ contract SHARES is ReentrancyGuard, Ownable, Pausable, BASIC {
         );
         //^^^^^^^checks^^^^^^^^^
         STOR = STOR_Interface(_storageAddress);
-        //------------------------------------------------- be sure to kill this! ----------------------!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+        //------------------------------------------------- be sure to kill this! ----------------------!!!!!!!!!! SHARES-TESTING !!!!!!!!!!
         SHAR_TKN_Address = _storageAddress; //testing only - steals storage address for shar_tkn
         SHAR_TKN = SHAR_TKN_Interface(SHAR_TKN_Address); //testing only
-        //------------------------------------------------- be sure to kill this! ----------------------!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+        //------------------------------------------------- be sure to kill this! ----------------------!!!!!!!!!! SHARES-TESTING !!!!!!!!!!
         //^^^^^^^effects^^^^^^^^^
     }
 
@@ -114,7 +114,7 @@ contract SHARES is ReentrancyGuard, Ownable, Pausable, BASIC {
         //^^^^^^^effects^^^^^^^^^
     }
 
-    //-------------------------------------------ADD THIS BACK IN FOR FINAL TESTING----------------------!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+    //-------------------------------------------ADD THIS BACK IN FOR FINAL TESTING----------------------!!!!!!!!!! SHARES-TESTING !!!!!!!!!!
     // /*
     //  * @dev Resolve Contract Addresses from STOR
     //  */
@@ -124,7 +124,7 @@ contract SHARES is ReentrancyGuard, Ownable, Pausable, BASIC {
     //     SHAR_TKN = SHAR_TKN_Interface(SHAR_TKN_Address);
     //     //^^^^^^^Intercations^^^^^^^^^
     // }
-    //-------------------------------------------ADD THIS BACK IN FOR FINAL TESTING----------------------!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+    //-------------------------------------------ADD THIS BACK IN FOR FINAL TESTING----------------------!!!!!!!!!! SHARES-TESTING !!!!!!!!!!
 
     /**
      * sets a new dividend ending period payPeriod.seconds in the future
@@ -135,9 +135,9 @@ contract SHARES is ReentrancyGuard, Ownable, Pausable, BASIC {
         require(block.timestamp >= nextPayDay, "PS:SNDP:not payday yet");
         //^^^^^^^checks^^^^^^^^^
 
-        //-------------------------------------------ADD THIS BACK IN FOR FINAL TESTING----------------------!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+        //-------------------------------------------ADD THIS BACK IN FOR FINAL TESTING----------------------!!!!!!!!!! SHARES-TESTING !!!!!!!!!!
         //getPaid();
-        //-------------------------------------------ADD THIS BACK IN FOR FINAL TESTING----------------------!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+        //-------------------------------------------ADD THIS BACK IN FOR FINAL TESTING----------------------!!!!!!!!!! SHARES-TESTING !!!!!!!!!!
 
         lastPayDay = nextPayDay; //today is the new most recent PayDay
         nextPayDay = block.timestamp.add(payPeriod); //set the next payday for payPeriod.seconds in the future
@@ -274,10 +274,10 @@ contract SHARES is ReentrancyGuard, Ownable, Pausable, BASIC {
         require(msg.value > 0, "MOAR ETH!!!!!");
     }
 
-    //-------------------------------------------ADD THIS BACK IN FOR FINAL TESTING----------------------!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+    //-------------------------------------------ADD THIS BACK IN FOR FINAL TESTING----------------------!!!!!!!!!! SHARES-TESTING !!!!!!!!!!
     // function getPaid() internal {  //collect any payments owed to this contract
     //     APP.$withdraw();
     //     APP_NC.$withdraw();
     // }
-    //-------------------------------------------ADD THIS BACK IN FOR FINAL TESTING----------------------!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+    //-------------------------------------------ADD THIS BACK IN FOR FINAL TESTING----------------------!!!!!!!!!! SHARES-TESTING !!!!!!!!!!
 }

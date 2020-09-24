@@ -107,6 +107,24 @@ class Main extends Component {
 
     }
 
+    this.getIPFSJSONObject = async (lookup, toSetDescriptions, toSetNames) => {
+      console.log(lookup)
+      let temp
+      if(lookup === "0"){
+      } else {
+      await window.ipfs.cat(lookup, (error, result) => {
+        if (error) {
+          console.log("Something went wrong. Unable to find file on IPFS");
+        } else {
+          console.log("Here's what we found for asset description: ", result);
+          toSetDescriptions.push(JSON.parse(result))
+          toSetNames.push(JSON.parse(result).name)
+        }
+      });
+    }
+      
+    };
+
     this.acctChanger = async () => {//Handle an address change, update state accordingly
       const ethereum = window.ethereum;
       const self = this;
@@ -125,6 +143,7 @@ class Main extends Component {
     };
 
     this.setupContractEnvironment = async (_web3) => {
+      const self = this;
       console.log("Setting up contracts")
 
       await this.setState({
@@ -140,9 +159,25 @@ class Main extends Component {
       await this.setState({ contracts: window._contracts })
       await window.utils.getContracts()
       await window.utils.determineTokenBalance()
+      await window.utils.getAssetTokenInfo()
+
+      let tempDescriptionsArray = [];
+      let tempNamesArray = [];
+      
+      for(let i = 0; i < window.aTknIDs.length; i++){
+        if (window.ipfsHashArray[i] === "0"){await tempDescriptionsArray.push(window.ipfsHashArray[i]); await tempNamesArray.push(window.ipfsHashArray[i])}
+        else{await this.getIPFSJSONObject(window.ipfsHashArray[i], tempDescriptionsArray, tempNamesArray)}
+      }
+
+      window.assets.descriptions = tempDescriptionsArray;
+      window.assets.names = tempNamesArray;
+      window.assets.ids = window.aTknIDs;
+      
       console.log("bools...", window.assetHolderBool, window.assetClassHolderBool, window.IDHolderBool)
 
-      if (window.balances !== undefined) {
+      console.log("window assets: ", window.assets)
+
+      if(window.balances !== undefined){
         await this.setState({
           assetClassBalance: window.balances.assetClassBalance,
           assetBalance: window.balances.assetBalance,
@@ -168,6 +203,8 @@ class Main extends Component {
       isBPNPOwner: undefined,
       addr: undefined,
       web3: null,
+      nameArray: [],
+      notAvailable: "N/A",
       STOROwner: "",
       BPPOwner: "",
       BPNPOwner: "",
@@ -209,8 +246,18 @@ class Main extends Component {
     if (window.ethereum) {
       window.additionalElementArrays = {
         photo: [],
-        text: []
+        text: [],
+        name: ""
       }
+      window.assetTokenInfo = {
+        assetClass: undefined,
+        idxHash: undefined,
+        name: undefined,
+        photos: undefined,
+        text: undefined, 
+        status: undefined,
+    }
+      window.assets = {descriptions: [], ids: [], assetClasses: [], statuses: [], names: []};
 
       const ethereum = window.ethereum;
       var _web3 = require("web3");
@@ -350,25 +397,25 @@ class Main extends Component {
                         AC Admin Menu
                       </Dropdown.Item>)}
 
-                    {this.state.custodyType === "Non-Custodial" && this.state.IDHolderBool === false && this.state.assetHolderBool === true && this.state.assetHolderUserMenuBool === false && (
-                      <Dropdown.Item
-                        as="button"
-                        variant="primary"
-                        onClick={() => { this.toggleMenu("NC") }}
-                      >
-                        Token Holder Menu
-                      </Dropdown.Item>
-                    )}
+                      {this.state.IDHolderBool === false && this.state.assetHolderBool === true && this.state.assetHolderUserMenuBool === false && (
+                        <Dropdown.Item
+                          as="button"
+                          variant="primary"
+                          onClick={() => { this.toggleMenu("NC") }}
+                        >
+                          Token Holder Menu
+                        </Dropdown.Item>
+                      )}
 
-                    {this.state.custodyType === "Non-Custodial" && this.state.IDHolderBool === true && this.state.assetHolderMenuBool === false && (
-                      <Dropdown.Item
-                        as="button"
-                        variant="primary"
-                        onClick={() => { this.toggleMenu("NC") }}
-                      >
-                        Token Minter Menu
-                      </Dropdown.Item>
-                    )}
+                      {this.state.IDHolderBool === true && this.state.assetHolderMenuBool === false && (
+                        <Dropdown.Item
+                          as="button"
+                          variant="primary"
+                          onClick={() => { this.toggleMenu("NC") }}
+                        >
+                          Token Minter Menu
+                        </Dropdown.Item>
+                      )}
 
                     {this.state.basicMenuBool === false && (
                       <Dropdown.Item

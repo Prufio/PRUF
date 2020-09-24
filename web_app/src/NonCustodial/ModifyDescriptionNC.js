@@ -28,21 +28,13 @@ class ModifyDescription extends Component {
       ipfs1: "",
       txHash: "",
       txStatus: false,
-      type: "",
-      manufacturer: "",
-      model: "",
-      serial: "",
-      first: "",
-      middle: "",
-      isNFA: false,
-      surname: "",
-      id: "",
-      secret: "",
+      accessPermitted: true,
       idxHash: "",
-      rgtHash: "",
       elementType: 0,
       elementName: "",
       elementValue: "",
+      nameTag: "",
+
       removePhotoElement: "",
       removeTextElement: "",
       additionalElementArrays: {
@@ -55,6 +47,14 @@ class ModifyDescription extends Component {
   //component state-change events......................................................................................................
 
   componentDidMount() {//stuff to do when component mounts in window
+
+    this.setState({
+      idxHash: window.assetTokenInfo.idxHash,
+      oldDescription: window.assetTokenInfo.description,
+      assetClass: window.assetTokenInfo.assetClass,
+      name: window.assetTokenInfo.name,
+      status: window.assetTokenInfo.status
+    })
 
   }
 
@@ -77,7 +77,7 @@ class ModifyDescription extends Component {
 
     const _addToMiscArray = async (type) => {
       let element = ('"' + this.state.elementName + '": ' + '"' + this.state.elementValue + '",')
-      if (this.state.elementName === "" || this.state.elementValue === "") {
+      if ((this.state.elementName === "" || this.state.elementValue === "")&&this.state.nameTag ==="") {
         return alert("All fields are required for submission")
       }
       if (type === "photo") {
@@ -85,6 +85,10 @@ class ModifyDescription extends Component {
       }
       else if (type === "text") {
         window.additionalElementArrays.text.push(element)
+      }
+
+      else if (type === "nameTag") {
+        window.additionalElementArrays.name = this.state.nameTag
       }
       else { return alert("Please use the dropdown menu to select an element type") }
 
@@ -98,12 +102,12 @@ class ModifyDescription extends Component {
       console.log("Existing description before edits: ", this.state.oldDescription)
       let element = (this.state.removeElement)
       let oldDescription = JSON.parse(this.state.oldDescription);
-      let resultDescription;
-      let oldDescriptionPhoto = {photo: oldDescription.photo}
-      let oldDescriptionText = {text: oldDescription.text}
+      /*       let resultDescription;
+            let oldDescriptionPhoto = {photo: oldDescription.photo}
+            let oldDescriptionText = {text: oldDescription.text} */
 
 
-      if (this.state.element === "") {
+      if (this.state.element === "" && this.state.nameTag === "") {
         return alert("All fields are required for submission")
       }
 
@@ -127,7 +131,7 @@ class ModifyDescription extends Component {
 
       console.log("oldDescription after edits: ", oldDescription)
       this.setState({ oldDescription: JSON.stringify(oldDescription) })
-      this.setState({elementType: "0"})
+      this.setState({ elementType: "0" })
       return document.getElementById("MainForm").reset();
 
     }
@@ -147,6 +151,8 @@ class ModifyDescription extends Component {
     const publishIPFS1 = async () => {
       console.log(this.state.oldDescription)
       let newDescription;
+
+      let newDescriptionName;
 
       console.log("Checking payload...")
 
@@ -174,7 +180,14 @@ class ModifyDescription extends Component {
       newDescriptionPhoto = JSON.parse('{' + newDescriptionPhoto);
       newDescriptionText = JSON.parse('{' + newDescriptionText);
 
-      console.log("Now they should be objects: ", newDescriptionPhoto, newDescriptionText)
+      if (window.additionalElementArrays.name !== "") {
+        newDescriptionName = { name: window.additionalElementArrays.name }
+      }
+      else {
+        newDescriptionName = {}
+      }
+
+      console.log("Now they should be objects: ", newDescriptionPhoto, newDescriptionText, newDescriptionName)
 
       console.log("comparing to old description elements")
 
@@ -182,13 +195,16 @@ class ModifyDescription extends Component {
         let oldDescription = JSON.parse(this.state.oldDescription);
         console.log("Found old description: ", oldDescription.photo, oldDescription.text);
         console.log("New description: ", newDescriptionPhoto, newDescriptionText)
-        let tempDescription = Object.assign({}, newDescriptionPhoto, newDescriptionText)
+        console.log("Old nameTag: ", oldDescription.name)
+        if (oldDescription.name === undefined) { oldDescription.name = {} }
+        let tempDescription = Object.assign({}, newDescriptionPhoto, newDescriptionText, newDescriptionName)
         console.log(tempDescription)
         let newPhoto = { photo: Object.assign({}, oldDescription.photo, tempDescription.photo) }
         console.log(newPhoto)
         let newText = { text: Object.assign({}, oldDescription.text, tempDescription.text) }
         console.log(newText)
-        newDescription = Object.assign({}, newPhoto, newText)
+        let newName = { name: Object.assign({}, oldDescription.name, newDescriptionName) }
+        newDescription = Object.assign({}, newPhoto, newText, newName)
         console.log("Payload", newDescription);
       }
 
@@ -198,7 +214,7 @@ class ModifyDescription extends Component {
 
       else {
         console.log("No existing description to compare.");
-        newDescription = Object.assign({}, newDescriptionPhoto, newDescriptionText)
+        newDescription = Object.assign({}, newDescriptionPhoto, newDescriptionText, newDescriptionName)
         console.log("payload: ", newDescription)
       }
 
@@ -211,41 +227,6 @@ class ModifyDescription extends Component {
         }
         self.setState({ hashPath: getBytes32FromIpfsHash(hash) });
       });
-    }
-
-    const _accessAsset = async () => {
-      const self = this;
-      let oldDescription;
-
-      let idxHash = window.web3.utils.soliditySha3(
-        this.state.type,
-        this.state.manufacturer,
-        this.state.model,
-        this.state.serial,
-      );
-      await window.utils.getDescriptionHash(idxHash)
-
-      let bytes32refHash = window.descriptionBytes32Hash;
-      let refHash = await getIpfsHashFromBytes32(bytes32refHash);
-
-      await window.ipfs.cat(refHash, (error, result) => {
-        if (error) {
-          console.log("Something went wrong. Unable to find file on IPFS");
-        } else {
-          console.log("IPFS1 Here's what we found: ", result);
-          self.setState({ oldDescription: result })
-        }
-      });
-
-      var doesExist = await window.utils.checkAssetExists(idxHash);
-
-      if (!doesExist) {
-        return alert("Asset doesnt exist! Ensure data fields are correct before submission.")
-      }
-
-      await this.setState({ idxHash: idxHash })
-      return this.setState({ accessPermitted: true })
-
     }
 
     const _updateDescription = async () => {
@@ -279,8 +260,9 @@ class ModifyDescription extends Component {
       self.setState({ hashPath: "" });
       window.additionalElementArrays.photo = [];
       window.additionalElementArrays.text = [];
-      self.setState({ accessPermitted: false });
-      self.setState({ oldDescription: undefined });
+      window.additionalElementArrays.name = "";
+      //self.setState({ accessPermitted: false });
+      //self.setState({ oldDescription: undefined });
       return document.getElementById("MainForm").reset();
     };
 
@@ -292,67 +274,17 @@ class ModifyDescription extends Component {
               <h2>User address unreachable</h2>
               <h3>Please connect web3 provider.</h3>
             </div>
-          )}{window.assetClass === undefined && (
+          )}{this.state.assetClass === undefined && (
             <div className="errorResults">
-              <h2>No asset class selected.</h2>
-              <h3>Please select asset class in home page to use forms.</h3>
+              <h2>No asset selected.</h2>
+              <h3>Please select asset in home page to use forms.</h3>
             </div>
           )}
-          {window.addr > 0 && window.assetClass > 0 && (
+          {window.addr > 0 && this.state.assetClass > 0 && (
             <div>
 
               <h2 className="Headertext">Modify Description</h2>
               <br></br>
-              {!this.state.accessPermitted && (
-                <>
-                  <Form.Row>
-                    <Form.Group as={Col} controlId="formGridType">
-                      <Form.Label className="formFont">Type:</Form.Label>
-                      <Form.Control
-                        placeholder="Type"
-                        required
-                        onChange={(e) => this.setState({ type: e.target.value })}
-                        size="lg"
-                      />
-                    </Form.Group>
-
-                    <Form.Group as={Col} controlId="formGridManufacturer">
-                      <Form.Label className="formFont">Manufacturer:</Form.Label>
-
-                      <Form.Control
-                        placeholder="Manufacturer"
-                        required
-                        onChange={(e) => this.setState({ manufacturer: e.target.value })}
-                        size="lg"
-                      />
-                    </Form.Group>
-
-                  </Form.Row>
-
-                  <Form.Row>
-                    <Form.Group as={Col} controlId="formGridModel">
-                      <Form.Label className="formFont">Model:</Form.Label>
-                      <Form.Control
-                        placeholder="Model"
-                        required
-                        onChange={(e) => this.setState({ model: e.target.value })}
-                        size="lg"
-                      />
-                    </Form.Group>
-
-                    <Form.Group as={Col} controlId="formGridSerial">
-                      <Form.Label className="formFont">Serial:</Form.Label>
-                      <Form.Control
-                        placeholder="Serial"
-                        required
-                        onChange={(e) => this.setState({ serial: e.target.value })}
-                        size="lg"
-                      />
-                    </Form.Group>
-                  </Form.Row>
-                </>
-              )}
-
               {this.state.accessPermitted && (
                 <div>
                   <Form.Row>
@@ -368,6 +300,7 @@ class ModifyDescription extends Component {
                         <option value="0">Select Element Type</option>
                         <option value="text">Add Custom Text</option>
                         <option value="photo">Add Image URL</option>
+                        <option value="nameTag"> Edit Name Tag</option>
                         <option value="removeText">Remove Existing Text Element</option>
                         <option value="removePhoto">Remove Existing Image URL</option>
 
@@ -412,6 +345,23 @@ class ModifyDescription extends Component {
                           <Form.Control
                             placeholder="Name of Image You Wish to Remove"
                             onChange={(e) => this.setState({ removeElement: e.target.value })}
+                            size="lg"
+                          />
+                        </Form.Group>
+                      </Form.Row>
+                    </>
+                  )}
+
+                  {this.state.elementType === "nameTag" && (
+                    <>
+                      <Form.Row>
+                        <Form.Group as={Col} controlId="formGridNameTag">
+                          <Form.Label className="formFont">
+                            New Name Tag:
+                      </Form.Label>
+                          <Form.Control
+                            placeholder="Type a New NameTag"
+                            onChange={(e) => this.setState({ nameTag: e.target.value })}
                             size="lg"
                           />
                         </Form.Group>
@@ -466,23 +416,6 @@ class ModifyDescription extends Component {
                 </div>
               )}
 
-              {!this.state.accessPermitted && (
-                <>
-                  <Form.Row>
-                    <Form.Group>
-                      <Button className="buttonDisplay"
-                        variant="primary"
-                        type="button"
-                        size="lg"
-                        onClick={_accessAsset}
-                      >
-                        Check Asset
-                    </Button>
-                    </Form.Group>
-                  </Form.Row>
-                </>
-              )}
-
               {this.state.hashPath !== "" && this.state.accessPermitted && (
                 <Form.Row>
                   <Form.Group >
@@ -516,8 +449,8 @@ class ModifyDescription extends Component {
               )}
               {this.state.elementType === "text" && (
                 <Form.Row>
-                  <Form.Group >
-                    <Button className="buttonDisplay"
+                  <Form.Group className="buttonDisplay">
+                    <Button
                       variant="primary"
                       type="button"
                       size="lg"
@@ -531,8 +464,24 @@ class ModifyDescription extends Component {
               )}
               {this.state.elementType === "photo" && (
                 <Form.Row>
-                  <Form.Group >
-                    <Button className="buttonDisplay"
+                  <Form.Group className="buttonDisplay">
+                    <Button
+                      variant="primary"
+                      type="button"
+                      size="lg"
+                      onClick={() => { _addToMiscArray(this.state.elementType) }}
+                    >
+                      Add Element
+              </Button>
+                  </Form.Group>
+                  <br></br>
+                </Form.Row>
+              )}
+
+              {this.state.elementType === "nameTag" && (
+                <Form.Row>
+                  <Form.Group className="buttonDisplay">
+                    <Button
                       variant="primary"
                       type="button"
                       size="lg"
@@ -547,8 +496,8 @@ class ModifyDescription extends Component {
 
               {this.state.elementType === "removePhoto" && (
                 <Form.Row>
-                  <Form.Group >
-                    <Button className="buttonDisplay"
+                  <Form.Group className="buttonDisplay">
+                    <Button
                       variant="primary"
                       type="button"
                       size="lg"
@@ -563,8 +512,8 @@ class ModifyDescription extends Component {
 
               {this.state.elementType === "removeText" && (
                 <Form.Row>
-                  <Form.Group >
-                    <Button className="buttonDisplay"
+                  <Form.Group className="buttonDisplay">
+                    <Button
                       variant="primary"
                       type="button"
                       size="lg"
