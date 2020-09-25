@@ -23,7 +23,7 @@ class AssetCheckIn extends Component {
 
         for (let i = 0; i < window.assets.ids.length; i++) {
           //console.log(i, "Adding: ", window.assets.descriptions[i], "and ", window.assets.ids[i])
-          component.push(<option key={"asset "+String(i)}value={i}>Name: {window.assets.descriptions[i].name}, ID: {window.assets.ids[i]} </option>);
+          component.push(<option key={"asset " + String(i)} value={i}>Name: {window.assets.descriptions[i].name}, ID: {window.assets.ids[i]} </option>);
         }
 
         return component
@@ -79,7 +79,7 @@ class AssetCheckIn extends Component {
 
     const _refresh = () => {
       window.resetInfo = true;
-      this.setState({assets: undefined})
+      this.setState({ assets: undefined })
     }
 
     const _checkIn = async () => {
@@ -110,11 +110,11 @@ class AssetCheckIn extends Component {
           )}
           {this.state.assets !== undefined && window.addr > 0 && (
             <div>
-              <h2 className="Headertext">Select an asset to modify :</h2>
+              <h2 className="Headertext">Asset Dashboard</h2>
               <br></br>
               <Form.Row>
                 <Form.Group as={Col} controlId="formGridAsset">
-                  <br></br>
+                  <Form.Label className="formFont"> Select an Asset to Modify :</Form.Label>
                   <Form.Control
                     as="select"
                     size="lg"
@@ -125,7 +125,6 @@ class AssetCheckIn extends Component {
                   </Form.Control>
                 </Form.Group>
               </Form.Row>
-
               <Form.Row>
                 <Form.Group as={Col} controlId="formGridStats">
                   <h3 className="assetDashboardContent">Asset Name: {this.state.assetTokenInfo.name} </h3>
@@ -133,8 +132,6 @@ class AssetCheckIn extends Component {
                   <h3 className="assetDashboardContent">Asset Class: {this.state.assetTokenInfo.assetClass} </h3>
                 </Form.Group>
               </Form.Row>
-
-
               <Form.Row>
                 <Button
                   className="buttonDisplay"
