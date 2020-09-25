@@ -112,7 +112,8 @@ class VerifyRightHolder extends Component {
         .send({ from: window.addr })
         .on("receipt", (receipt) => {
           this.setState({ txHash: receipt.transactionHash });
-          console.log(this.state.txHash);
+          console.log(receipt.events.REPORT.returnValues._msg);
+          this.setState({result: receipt.events.REPORT.returnValues._msg})
         });
 
       console.log(this.state.result);
