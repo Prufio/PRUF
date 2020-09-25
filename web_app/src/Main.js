@@ -45,12 +45,12 @@ class Main extends Component {
           authorizedUserMenuBool: false
         })
       }
-      if (window.assets.ids.length > 0 && /* window.assets.descriptions[0][0] !== undefined && */
-        window.assets.names.length === 0 && this.state.buildReady === true) {
+      if(window.assets.ids.length > 0 && /* window.assets.descriptions[0][0] !== undefined && */ 
+        window.assets.names.length === 0 && this.state.buildReady === true){
         this.buildAssets()
       }
-      if (window.resetInfo === true) {
-        this.setState({ buildReady: false })
+      if(window.resetInfo === true){
+        this.setState({buildReady: false})
         window.assets = { descriptions: [], ids: [], assetClasses: [], statuses: [], names: [] };
         window.assetTokenInfo = {
           assetClass: undefined,
@@ -67,6 +67,10 @@ class Main extends Component {
       if (window.aTknIDs !== undefined) {
         if (window.ipfsCounter >= window.aTknIDs.length && this.state.runWatchDog === true) {
           this.setState({ buildReady: true })
+        }
+        else if((this.state.buildReady === true && window.ipfsCounter < window.aTknIDs.length) || 
+        (this.state.buildReady === true && this.state.runWatchDog === false)){
+          this.setState({buildReady: false})
         }
       }
     }, 100)
@@ -336,11 +340,41 @@ class Main extends Component {
     buildWindowUtils()
     window.location.href = '/#/';
 
-    if (window.ethereum) {
-      window.additionalElementArrays = {
-        photo: [],
-        text: [],
-        name: ""
+      if (window.ethereum) {
+        window.additionalElementArrays = {
+          photo: [],
+          text: [],
+          name: ""
+        }
+        window.assetTokenInfo = {
+          assetClass: undefined,
+          idxHash: undefined,
+          name: undefined,
+          photos: undefined,
+          text: undefined,
+          status: undefined,
+        }
+        window.assets = { descriptions: [], ids: [], assetClasses: [], statuses: [], names: [] };
+  
+        const ethereum = window.ethereum;
+        var _web3 = require("web3");
+        _web3 = new Web3(_web3.givenProvider);
+        this.setupContractEnvironment(_web3)
+        this.setState({ web3: _web3 });
+        window.web3 = _web3;
+  
+        ethereum.enable()
+  
+        var _ipfs = new this.state.IPFS({
+          host: "ipfs.infura.io",
+          port: 5001,
+          protocol: "https",
+        });
+        window.ipfs = _ipfs
+  
+        _web3.eth.getAccounts().then((e) => { this.setState({ addr: e[0] }); window.addr = e[0] });
+        window.addEventListener("accountListener", this.acctChanger());
+        //window.addEventListener("authLevelListener", this.updateAuthLevel());
       }
       window.assetTokenInfo = {
         assetClass: undefined,
