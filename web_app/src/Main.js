@@ -554,7 +554,7 @@ class Main extends Component {
             <div className="mediaLink">
               <a className="mediaLinkContent"><GitHub onClick={() => { window.open("https://github.com/vdmprojects/Bulletproof", "_blank") }} /></a>
               <a className="mediaLinkContent"><Mail onClick={() => { window.open("mailto:drake@pruf.io", "_blank") }} /></a>
-              <a className="mediaLinkContent"><Twitter onClick={() => { window.open("https://www.pruf.io", "_blank") }} /></a>
+              <a className="mediaLinkContent"><Twitter onClick={() => { window.open("https://twitter.com/umlautchair", "_blank") }} /></a>
               <a className="mediaLinkContent" ><ExternalLink onClick={() => { window.open("https://www.pruf.io", "_blank")}} /></a>
             </div>
           </div>

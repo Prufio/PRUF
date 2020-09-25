@@ -20,7 +20,7 @@ h3,
 h4,
 ul,
 li {
-  font-family: sans-serif;
+  font-family: Helvetica;
 }
 
 p {
@@ -41,6 +41,7 @@ h2 {
 h3 {
   font-size: 2rem;
   text-align: center;
+  font-family: Helvetica;
 }
 
 h4 {
@@ -50,6 +51,7 @@ h4 {
 
 .formtext {
   font-size: 6rem;
+  font-family: Helvetica;
 }
 
 .page {
@@ -92,6 +94,7 @@ h4 {
 }
 
 .header li a {
+  font-family: Helvetica;
   color: rgb(255, 255, 255);
   font-weight: bold;
   font-size: 1.6rem;
