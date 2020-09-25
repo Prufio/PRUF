@@ -96,7 +96,7 @@ class ModifyDescription extends Component {
 
       console.log("Added", element, "to element array")
       console.log("Which now looks like: ", window.additionalElementArrays)
-      this.setState({ elementType: "0" })
+      this.setState({ elementType: "0", hashPath: "" })
       return document.getElementById("MainForm").reset();
     }
 
@@ -129,7 +129,9 @@ class ModifyDescription extends Component {
       else { return alert("Please use the dropdown menu to select an element type") }
 
       console.log("oldDescription after edits: ", oldDescription)
-      this.setState({ oldDescription: oldDescription })
+      this.setState({ 
+        oldDescription: oldDescription,
+        hashPath: "" })
       this.setState({ elementType: "0" })
       return document.getElementById("MainForm").reset();
 
@@ -220,7 +222,9 @@ class ModifyDescription extends Component {
         } else {
           console.log("uploaded at hash: ", hash);
         }
-        self.setState({ hashPath: getBytes32FromIpfsHash(hash) });
+        self.setState({ 
+          hashPath: getBytes32FromIpfsHash(hash),
+          oldDescription: newDescription});
       });
     }
 

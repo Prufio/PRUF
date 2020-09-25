@@ -141,12 +141,18 @@ class Main extends Component {
       let tempDescriptionsArray = [];
       let tempNamesArray = [];
 
+        if(window.recount === true){
+          window.recount = false
+          await this.setUpTokenVals()
+          return this.setupAssets()
+        }
+
         await window.utils.getAssetTokenInfo()
 
         for (let i = 0; i < window.aTknIDs.length; i++) {
-          console.log(i)
-          console.log(window.aTknIDs[i])
-          console.log(window.ipfsHashArray[i])
+          //console.log(i)
+          //console.log(window.aTknIDs[i])
+          //console.log(window.ipfsHashArray[i])
           //await this.getIPFSJSONObject(window.ipfsHashArray[i], tempDescriptionsArray, tempNamesArray) //FIX DESC OUT OF ORDER
 
           tempDescObj["desc"+i] = [] 
@@ -164,7 +170,7 @@ class Main extends Component {
         window.assets.names = tempNamesArray;
         window.assets.ids = window.aTknIDs;
 
-        console.log(window.assets.ids, " aTkn-> ", window.aTknIDs)
+        //console.log(window.assets.ids, " aTkn-> ", window.aTknIDs)
         
     }
 
@@ -174,7 +180,7 @@ class Main extends Component {
       let emptyDesc = {photo:{}, text:{}, name: ""}
 
       for(let i = 0; i < window.aTknIDs.length; i++){
-        console.log(window.assets.descriptions[i][0])
+        //console.log(window.assets.descriptions[i][0])
         if(window.assets.descriptions[i][0] !== undefined){
          tempDescArray.push(JSON.parse(window.assets.descriptions[i][0]))
         }
@@ -192,6 +198,24 @@ class Main extends Component {
       window.assets.names = tempNameArray;
 
       console.log("Assets after rebuild: ",window.assets)
+    }
+
+    this.setUpTokenVals = async () => {
+
+      await window.utils.determineTokenBalance()
+
+      if (window.balances !== undefined) {
+        this.setState({
+          assetClassBalance: window.balances.assetClassBalance,
+          assetBalance: window.balances.assetBalance,
+          IDTokenBalance: window.balances.IDTokenBalance,
+          assetHolderBool: window.assetHolderBool,
+          assetClassHolderBool: window.assetClassHolderBool,
+          IDHolderBool: window.IDHolderBool,
+          custodyType: window.custodyType,
+        })
+        return this.setState({ hasFetchedBalances: window.hasFetchedBalances })
+      }
     }
 
     this.getIPFSJSONObject = (lookup, descElement) => { 
@@ -232,7 +256,7 @@ class Main extends Component {
     this.setupContractEnvironment = async (_web3) => {
       const self = this;
       console.log("Setting up contracts")
-
+      if(window.ethereum !== undefined){
       await this.setState({
         assetHolderMenuBool: false,
         assetClassHolderMenuBool: false,
@@ -245,30 +269,19 @@ class Main extends Component {
       window._contracts = await buildContracts(_web3)
       await this.setState({ contracts: window._contracts })
       await window.utils.getContracts()
-      await window.utils.determineTokenBalance()
+      await this.setUpTokenVals()
       await this.setupAssets()
+      
 
 
       console.log("bools...", window.assetHolderBool, window.assetClassHolderBool, window.IDHolderBool)
 
       console.log("window assets: ", window.assets)
 
-      if (window.balances !== undefined) {
-        await this.setState({
-          assetClassBalance: window.balances.assetClassBalance,
-          assetBalance: window.balances.assetBalance,
-          IDTokenBalance: window.balances.IDTokenBalance,
-          assetHolderBool: window.assetHolderBool,
-          assetClassHolderBool: window.assetClassHolderBool,
-          IDHolderBool: window.IDHolderBool,
-          custodyType: window.custodyType,
-        })
-        return this.setState({ hasFetchedBalances: window.hasFetchedBalances,
-        runWatchDog: true })
+      return this.setState({ runWatchDog: true })
       }
 
       else { return console.log("Ethereum not enabled... Will try again on address change.") }
-
     }
 
     //Component state declaration
