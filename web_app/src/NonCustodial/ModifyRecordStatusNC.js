@@ -86,6 +86,7 @@ class ModifyRecordStatusNC extends Component {
             this.setState({ txHash: receipt.transactionHash });
             this.setState({ txStatus: receipt.status });
             console.log(receipt.status);
+            window.resetInfo = true;
             //Stuff to do when tx confirms
           });
       }
@@ -104,6 +105,7 @@ class ModifyRecordStatusNC extends Component {
             this.setState({ txHash: receipt.transactionHash });
             this.setState({ txStatus: receipt.status });
             console.log(receipt.status);
+            window.resetInfo = true;
             //Stuff to do when tx confirms
           });
       }

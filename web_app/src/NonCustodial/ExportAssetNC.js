@@ -83,6 +83,7 @@ class ExportAssetNC extends Component {
         .on("receipt", (receipt) => {
           this.setState({ txHash: receipt.transactionHash });
           this.setState({ txStatus: receipt.status });
+          window.resetInfo = true;
         });
 
         return document.getElementById("MainForm").reset(); //clear form inputs

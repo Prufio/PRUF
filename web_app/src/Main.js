@@ -40,6 +40,14 @@ class Main extends Component {
           authorizedUserMenuBool: false
         })
       }
+      if(window.assets.ids.length > 0 && window.assets.descriptions[0][0] !== undefined && window.assets.names.length === 0){
+        this.buildAssets()
+      }
+      if(window.resetInfo === true){
+        window.resetInfo = false
+        window.assets.names = []
+        this.setupAssets()
+      }
     }, 100)
 
     this.toggleMenu = async (menuChoice) => {
@@ -107,7 +115,54 @@ class Main extends Component {
 
     }
 
-    this.getIPFSJSONObject = async (lookup, toSetDescriptions, toSetNames) => { //FIX DESC OUT OF ORDER
+    this.setupAssets = async () => {
+      let tempDescObj = {}
+      let tempNameObj = {}
+      let tempDescriptionsArray = [];
+      let tempNamesArray = [];
+        await window.utils.getAssetTokenInfo()
+
+        for (let i = 0; i < window.aTknIDs.length; i++) {
+          console.log(i)
+          console.log(window.aTknIDs[i])
+          console.log(window.ipfsHashArray[i])
+          //await this.getIPFSJSONObject(window.ipfsHashArray[i], tempDescriptionsArray, tempNamesArray) //FIX DESC OUT OF ORDER
+
+          tempDescObj["desc"+i] = [] 
+          await this.getIPFSJSONObject(window.ipfsHashArray[i], tempDescObj["desc"+i])
+        }
+
+        console.log(tempDescObj)
+        console.log(tempDescObj["desc0"].length)
+
+        for (let x = 0; x < window.aTknIDs.length; x++ ){
+          let tempArray = tempDescObj["desc"+x]
+          console.log(tempArray[0])
+          await tempDescriptionsArray.push(tempArray)
+        }
+
+        window.assets.descriptions = tempDescriptionsArray;
+        window.assets.names = tempNamesArray;
+        window.assets.ids = window.aTknIDs;
+
+        console.log(window.assets.ids, " aTkn-> ", window.aTknIDs)
+    }
+
+    this.getIPFSJSONObject = async (lookup, descElement) => { //FIX DESC OUT OF ORDER
+      //console.log(lookup)
+        await window.ipfs.cat(lookup, async (error, result) => {
+          if (error) {
+            await console.log(lookup, "Something went wrong. Unable to find file on IPFS");
+            await descElement.push("0")
+          } else {
+            await console.log(lookup, "Here's what we found for asset description: ", result);
+            await descElement.push(result)
+          }
+        });
+
+    };
+
+    /* this.getIPFSJSONObject = async (lookup, toSetDescriptions, toSetNames) => { //FIX DESC OUT OF ORDER
       //console.log(lookup)
         await window.ipfs.cat(lookup, async (error, result) => {
           if (error) {
@@ -121,7 +176,7 @@ class Main extends Component {
           }
         });
 
-    };
+    }; */
 
     this.acctChanger = async () => {//Handle an address change, update state accordingly
       const ethereum = window.ethereum;
@@ -140,6 +195,22 @@ class Main extends Component {
       });
     };
 
+    this.buildAssets = async () => {
+      let tempDescArray = [];
+      for(let i = 0; i < window.aTknIDs.length; i++){
+        await tempDescArray.push(JSON.parse(window.assets.descriptions[i][0]))
+      }
+      let tempNameArray = []; 
+      for(let x = 0; x < window.aTknIDs.length; x++){
+        await tempNameArray.push(tempDescArray[x].name)
+      }
+
+      window.assets.descriptions = tempDescArray;
+      window.assets.names = tempNameArray;
+
+      console.log("Assets after rebuild: ",window.assets)
+    }
+
     this.setupContractEnvironment = async (_web3) => {
       const self = this;
       console.log("Setting up contracts")
@@ -157,25 +228,8 @@ class Main extends Component {
       await this.setState({ contracts: window._contracts })
       await window.utils.getContracts()
       await window.utils.determineTokenBalance()
-
-
-      let tempDescriptionsArray = [];
-      let tempNamesArray = [];
       if (window.assetHolderBool === true) {
-        await window.utils.getAssetTokenInfo()
-
-        for (let i = 0; i < window.aTknIDs.length; i++) {
-          console.log(i)
-          console.log(window.aTknIDs[i])
-          console.log(window.ipfsHashArray[i])
-          await this.getIPFSJSONObject(window.ipfsHashArray[i], tempDescriptionsArray, tempNamesArray) //FIX DESC OUT OF ORDER
-        }
-
-        window.assets.descriptions = tempDescriptionsArray;
-        window.assets.names = tempNamesArray;
-        window.assets.ids = window.aTknIDs;
-
-        console.log(window.assets.ids, " aTkn-> ", window.aTknIDs)
+        await this.setupAssets()
       }
 
 
@@ -249,45 +303,47 @@ class Main extends Component {
   componentDidMount() {//stuff to do when component mounts in window
     buildWindowUtils()
     window.location.href = '/#/';
-    if (window.ethereum) {
-      window.additionalElementArrays = {
-        photo: [],
-        text: [],
-        name: ""
+
+      if (window.ethereum) {
+        window.additionalElementArrays = {
+          photo: [],
+          text: [],
+          name: ""
+        }
+        window.assetTokenInfo = {
+          assetClass: undefined,
+          idxHash: undefined,
+          name: undefined,
+          photos: undefined,
+          text: undefined,
+          status: undefined,
+        }
+        window.assets = { descriptions: [], ids: [], assetClasses: [], statuses: [], names: [] };
+  
+        const ethereum = window.ethereum;
+        var _web3 = require("web3");
+        _web3 = new Web3(_web3.givenProvider);
+        this.setupContractEnvironment(_web3)
+        this.setState({ web3: _web3 });
+        window.web3 = _web3;
+  
+        ethereum.enable()
+  
+        var _ipfs = new this.state.IPFS({
+          host: "ipfs.infura.io",
+          port: 5001,
+          protocol: "https",
+        });
+        window.ipfs = _ipfs
+  
+        _web3.eth.getAccounts().then((e) => { this.setState({ addr: e[0] }); window.addr = e[0] });
+        window.addEventListener("accountListener", this.acctChanger());
+        //window.addEventListener("authLevelListener", this.updateAuthLevel());
       }
-      window.assetTokenInfo = {
-        assetClass: undefined,
-        idxHash: undefined,
-        name: undefined,
-        photos: undefined,
-        text: undefined,
-        status: undefined,
+      else {
+        this.setState({ hasError: true })
       }
-      window.assets = { descriptions: [], ids: [], assetClasses: [], statuses: [], names: [] };
-
-      const ethereum = window.ethereum;
-      var _web3 = require("web3");
-      _web3 = new Web3(_web3.givenProvider);
-      this.setupContractEnvironment(_web3);
-      this.setState({ web3: _web3 });
-      window.web3 = _web3;
-
-      ethereum.enable()
-
-      var _ipfs = new this.state.IPFS({
-        host: "ipfs.infura.io",
-        port: 5001,
-        protocol: "https",
-      });
-      window.ipfs = _ipfs
-
-      _web3.eth.getAccounts().then((e) => { this.setState({ addr: e[0] }); window.addr = e[0] });
-      window.addEventListener("accountListener", this.acctChanger());
-      //window.addEventListener("authLevelListener", this.updateAuthLevel());
-    }
-    else {
-      this.setState({ hasError: true })
-    }
+    
   }
 
   componentDidCatch(error, info) {

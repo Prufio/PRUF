@@ -23,7 +23,7 @@ class AssetCheckIn extends Component {
 
         for (let i = 0; i < window.assets.ids.length; i++) {
           //console.log(i, "Adding: ", window.assets.descriptions[i], "and ", window.assets.ids[i])
-          component.push(<option value={i}>Name: {window.assets.descriptions[i].name}, ID: {window.assets.ids[i]} </option>);
+          component.push(<option key={"asset "+String(i)}value={i}>Name: {window.assets.descriptions[i].name}, ID: {window.assets.ids[i]} </option>);
         }
 
         return component

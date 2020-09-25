@@ -129,7 +129,7 @@ class ModifyDescription extends Component {
       else { return alert("Please use the dropdown menu to select an element type") }
 
       console.log("oldDescription after edits: ", oldDescription)
-      this.setState({ oldDescription: JSON.stringify(oldDescription) })
+      this.setState({ oldDescription: oldDescription })
       this.setState({ elementType: "0" })
       return document.getElementById("MainForm").reset();
 
@@ -248,6 +248,7 @@ class ModifyDescription extends Component {
           this.setState({ txHash: receipt.transactionHash });
           this.setState({ txStatus: receipt.status });
           console.log(receipt.status);
+          window.resetInfo = true;
           //Stuff to do when tx confirms
         });
 
