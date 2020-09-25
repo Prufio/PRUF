@@ -256,7 +256,7 @@ div {
 }
 
 .assetDashboard {
-  height: 28rem;
+  height: 32rem;
   width: 59rem;
   background-color: #005480;
   border-radius: 0rem 0rem 0.5rem 0.5rem;
@@ -266,6 +266,12 @@ div {
   justify-content: center;
   align-items: center;
   opacity: 0.96;
+}
+
+.assetDashboardContentHead {
+  color: #002a40;
+  font-size: 1.5rem;
+  font-weight: bold;
 }
 
 .assetDashboardContent {
