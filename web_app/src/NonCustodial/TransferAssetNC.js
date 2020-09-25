@@ -32,6 +32,13 @@ class ModifyDescriptionNC extends Component {
   //component state-change events......................................................................................................
 
   componentDidMount() {//stuff to do when component mounts in window
+    this.setState({
+      idxHash: window.assetTokenInfo.idxHash,
+      oldDescription: window.assetTokenInfo.description,
+      assetClass: window.assetTokenInfo.assetClass,
+      name: window.assetTokenInfo.name,
+      status: window.assetTokenInfo.status
+    })
 
   }
 
@@ -53,24 +60,11 @@ class ModifyDescriptionNC extends Component {
       this.setState({ txHash: "" });
       this.setState({ error: undefined })
       this.setState({ result: "" })
-      var idxHash;
-      let to;
-
-      idxHash = window.web3.utils.soliditySha3(
-        this.state.type,
-        this.state.manufacturer,
-        this.state.model,
-        this.state.serial,
-      );
+      var idxHash = this.state.idxHash;
+      let to = this.state.to;
 
       console.log("idxHash", idxHash);
       console.log("addr: ", window.addr);
-
-      var doesExist = await window.utils.checkAssetExists(idxHash);
-
-      if (!doesExist){
-        return alert("Asset doesnt exist! Ensure data fields are correct before submission.")
-      }
 
       window.contracts.A_TKN.methods
         .safeTransferFrom(window.addr, this.state.to, idxHash)
@@ -86,6 +80,7 @@ class ModifyDescriptionNC extends Component {
           this.setState({ txStatus: receipt.status });
           console.log(receipt.status);
           window.resetInfo = true;
+          window.recount = true;
           //Stuff to do when tx confirms
         });
       console.log(this.state.txHash);
@@ -106,51 +101,6 @@ class ModifyDescriptionNC extends Component {
 
               <h2 className="Headertext">Transfer Asset</h2>
               <br></br>
-              <Form.Row>
-                <Form.Group as={Col} controlId="formGridType">
-                  <Form.Label className="formFont">Type:</Form.Label>
-
-                  <Form.Control
-                    placeholder="Type"
-                    required
-                    onChange={(e) => this.setState({ type: e.target.value })}
-                    size="lg"
-                  />
-                </Form.Group>
-
-                <Form.Group as={Col} controlId="formGridManufacturer">
-                  <Form.Label className="formFont">Manufacturer:</Form.Label>
-
-                  <Form.Control
-                    placeholder="Manufacturer"
-                    required
-                    onChange={(e) => this.setState({ manufacturer: e.target.value })}
-                    size="lg"
-                  />
-                </Form.Group>
-
-              </Form.Row>
-              <Form.Row>
-                <Form.Group as={Col} controlId="formGridModel">
-                  <Form.Label className="formFont">Model:</Form.Label>
-                  <Form.Control
-                    placeholder="Model"
-                    required
-                    onChange={(e) => this.setState({ model: e.target.value })}
-                    size="lg"
-                  />
-                </Form.Group>
-
-                <Form.Group as={Col} controlId="formGridSerial">
-                  <Form.Label className="formFont">Serial:</Form.Label>
-                  <Form.Control
-                    placeholder="Serial"
-                    required
-                    onChange={(e) => this.setState({ serial: e.target.value })}
-                    size="lg"
-                  />
-                </Form.Group>
-              </Form.Row>
               <Form.Row>
               <Form.Group as={Col} controlId="formGridTo">
                   <Form.Label className="formFont">To:</Form.Label>
