@@ -84,6 +84,7 @@ class AssetCheckIn extends Component {
     }
 
     const _checkIn = async () => {
+      if(this.state.selectedAsset === "0"){return}
       console.log("Changed window idx to: ", window.assets.ids[this.state.selectedAsset])
 
       window.assetTokenInfo = {
