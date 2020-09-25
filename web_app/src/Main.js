@@ -45,10 +45,14 @@ class Main extends Component {
           authorizedUserMenuBool: false
         })
       }
-      if(window.assets.ids.length > 0 && /* window.assets.descriptions[0][0] !== undefined && */ 
+      if(window.assets.ids.length > 0 &&  Object.values(window.assets.descriptions).length === window.aTknIDs.length &&  
         window.assets.names.length === 0 && this.state.buildReady === true){
-        this.buildAssets()
+        if(window.resetInfo===false){
+          this.buildAssets()
+        }
+        
       }
+
       if(window.resetInfo === true){
         this.setState({buildReady: false})
         window.assets = { descriptions: [], ids: [], assetClasses: [], statuses: [], names: [] };
@@ -67,6 +71,10 @@ class Main extends Component {
       if(window.aTknIDs !== undefined){
         if(window.ipfsCounter >= window.aTknIDs.length && this.state.runWatchDog === true){
           this.setState({buildReady: true})
+        }
+        else if((this.state.buildReady === true && window.ipfsCounter < window.aTknIDs.length) || 
+        (this.state.buildReady === true && this.state.runWatchDog === false)){
+          this.setState({buildReady: false})
         }
       }
     }, 100)
@@ -351,7 +359,7 @@ class Main extends Component {
           status: undefined,
         }
         window.assets = { descriptions: [], ids: [], assetClasses: [], statuses: [], names: [] };
-  
+        window.resetInfo = false;
         const ethereum = window.ethereum;
         var _web3 = require("web3");
         _web3 = new Web3(_web3.givenProvider);
