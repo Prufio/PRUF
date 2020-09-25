@@ -56,6 +56,8 @@ class ModifyDescription extends Component {
       status: window.assetTokenInfo.status
     })
 
+    console.log(window.assetTokenInfo.description)
+
   }
 
   componentDidUpdate() {//stuff to do when state updates
@@ -69,15 +71,14 @@ class ModifyDescription extends Component {
   render() {//render continuously produces an up-to-date stateful document  
     const self = this;
 
-
-
     const getBytes32FromIpfsHash = (ipfsListing) => {
       return "0x" + bs58.decode(ipfsListing).slice(2).toString("hex");
     };
 
     const _addToMiscArray = async (type) => {
+
       let element = ('"' + this.state.elementName + '": ' + '"' + this.state.elementValue + '",')
-      if ((this.state.elementName === "" || this.state.elementValue === "")&&this.state.nameTag ==="") {
+      if ((this.state.elementName === "" || this.state.elementValue === "") && this.state.nameTag ==="") {
         return alert("All fields are required for submission")
       }
       if (type === "photo") {
@@ -90,6 +91,7 @@ class ModifyDescription extends Component {
       else if (type === "nameTag") {
         window.additionalElementArrays.name = this.state.nameTag
       }
+
       else { return alert("Please use the dropdown menu to select an element type") }
 
       console.log("Added", element, "to element array")
@@ -99,14 +101,11 @@ class ModifyDescription extends Component {
     }
 
     const _removeElement = async (type) => {
+
       console.log("Existing description before edits: ", this.state.oldDescription)
       let element = (this.state.removeElement)
-      let oldDescription = JSON.parse(this.state.oldDescription);
-      /*       let resultDescription;
-            let oldDescriptionPhoto = {photo: oldDescription.photo}
-            let oldDescriptionText = {text: oldDescription.text} */
-
-
+      let oldDescription = this.state.oldDescription;
+    
       if (this.state.element === "" && this.state.nameTag === "") {
         return alert("All fields are required for submission")
       }
@@ -135,18 +134,6 @@ class ModifyDescription extends Component {
       return document.getElementById("MainForm").reset();
 
     }
-
-    const getIpfsHashFromBytes32 = (bytes32Hex) => {
-
-      // Add our default ipfs values for first 2 bytes:
-      // function:0x12=sha2, size:0x20=256 bits
-      // and cut off leading "0x"
-      const hashHex = "1220" + bytes32Hex.slice(2);
-      const hashBytes = Buffer.from(hashHex, "hex");
-      const hashStr = bs58.encode(hashBytes);
-      return hashStr;
-
-    };
 
     const publishIPFS1 = async () => {
       console.log(this.state.oldDescription)
@@ -180,19 +167,23 @@ class ModifyDescription extends Component {
       newDescriptionPhoto = JSON.parse('{' + newDescriptionPhoto);
       newDescriptionText = JSON.parse('{' + newDescriptionText);
 
-      if (window.additionalElementArrays.name !== "") {
-        newDescriptionName = { name: window.additionalElementArrays.name }
-      }
-      else {
+      if (window.additionalElementArrays.name === "") {
         newDescriptionName = {}
+      }
+      /* else if (window.additionalElementArrays.name === "" && this.state.oldDescription.name !== undefined){
+        newDescriptionName = this.state.oldDescription.name
+        console.log(newDescriptionName)
+      } */
+      else {
+        newDescriptionName = { name: window.additionalElementArrays.name }
       }
 
       console.log("Now they should be objects: ", newDescriptionPhoto, newDescriptionText, newDescriptionName)
 
       console.log("comparing to old description elements")
 
-      if (this.state.oldDescription !== undefined) {
-        let oldDescription = JSON.parse(this.state.oldDescription);
+      if (this.state.oldDescription !== undefined && this.state.oldDescription !== "0") {
+        let oldDescription = this.state.oldDescription;
         console.log("Found old description: ", oldDescription.photo, oldDescription.text);
         console.log("New description: ", newDescriptionPhoto, newDescriptionText)
         console.log("Old nameTag: ", oldDescription.name)
@@ -203,7 +194,11 @@ class ModifyDescription extends Component {
         console.log(newPhoto)
         let newText = { text: Object.assign({}, oldDescription.text, tempDescription.text) }
         console.log(newText)
-        let newName = { name: Object.assign({}, oldDescription.name, newDescriptionName) }
+        let test = Object.assign({}, oldDescription, tempDescription)
+        console.log(test)
+        let newName = Object.assign({}, {name: oldDescription.name}, newDescriptionName) 
+
+        console.log(newName)
         newDescription = Object.assign({}, newPhoto, newText, newName)
         console.log("Payload", newDescription);
       }

@@ -28,16 +28,17 @@ class Main extends Component {
       if (this.state.isACAdmin !== window.isACAdmin) {
         this.setState({ isACAdmin: window.isACAdmin })
       }
-      if (this.state.custodyType !== window.custodyType){
-        this.setState({custodyType: window.custodyType})
+      if (this.state.custodyType !== window.custodyType) {
+        this.setState({ custodyType: window.custodyType })
       }
-      if (this.state.routeRequest !== window.routeRequest){
+      if (this.state.routeRequest !== window.routeRequest) {
         this.setState({
           basicMenuBool: true,
           assetHolderMenuBool: false,
           assetHolderUserMenuBool: false,
           assetClassHolderMenuBool: false,
-          authorizedUserMenuBool: false})
+          authorizedUserMenuBool: false
+        })
       }
     }, 100)
 
@@ -106,22 +107,20 @@ class Main extends Component {
 
     }
 
-    this.getIPFSJSONObject = async (lookup, toSetDescriptions, toSetNames) => {
-      console.log(lookup)
-      let temp
-      if(lookup === "0"){
-      } else {
-      await window.ipfs.cat(lookup, (error, result) => {
-        if (error) {
-          console.log("Something went wrong. Unable to find file on IPFS");
-        } else {
-          console.log("Here's what we found for asset description: ", result);
-          toSetDescriptions.push(JSON.parse(result))
-          toSetNames.push(JSON.parse(result).name)
-        }
-      });
-    }
-      
+    this.getIPFSJSONObject = async (lookup, toSetDescriptions, toSetNames) => { //FIX DESC OUT OF ORDER
+      //console.log(lookup)
+        await window.ipfs.cat(lookup, async (error, result) => {
+          if (error) {
+            await console.log(lookup, "Something went wrong. Unable to find file on IPFS");
+            await toSetDescriptions.push("0")
+            await toSetNames.push("0")
+          } else {
+            await console.log(lookup, "Here's what we found for asset description: ", result);
+            await toSetDescriptions.push(JSON.parse(result))
+            await toSetNames.push(JSON.parse(result).name)
+          }
+        });
+
     };
 
     this.acctChanger = async () => {//Handle an address change, update state accordingly
@@ -158,25 +157,33 @@ class Main extends Component {
       await this.setState({ contracts: window._contracts })
       await window.utils.getContracts()
       await window.utils.determineTokenBalance()
-      await window.utils.getAssetTokenInfo()
+
 
       let tempDescriptionsArray = [];
       let tempNamesArray = [];
-      
-      for(let i = 0; i < window.aTknIDs.length; i++){
-        if (window.ipfsHashArray[i] === "0"){await tempDescriptionsArray.push(window.ipfsHashArray[i]); await tempNamesArray.push(window.ipfsHashArray[i])}
-        else{await this.getIPFSJSONObject(window.ipfsHashArray[i], tempDescriptionsArray, tempNamesArray)}
+      if (window.assetHolderBool === true) {
+        await window.utils.getAssetTokenInfo()
+
+        for (let i = 0; i < window.aTknIDs.length; i++) {
+          console.log(i)
+          console.log(window.aTknIDs[i])
+          console.log(window.ipfsHashArray[i])
+          await this.getIPFSJSONObject(window.ipfsHashArray[i], tempDescriptionsArray, tempNamesArray) //FIX DESC OUT OF ORDER
+        }
+
+        window.assets.descriptions = tempDescriptionsArray;
+        window.assets.names = tempNamesArray;
+        window.assets.ids = window.aTknIDs;
+
+        console.log(window.assets.ids, " aTkn-> ", window.aTknIDs)
       }
 
-      window.assets.descriptions = tempDescriptionsArray;
-      window.assets.names = tempNamesArray;
-      window.assets.ids = window.aTknIDs;
-      
+
       console.log("bools...", window.assetHolderBool, window.assetClassHolderBool, window.IDHolderBool)
 
       console.log("window assets: ", window.assets)
 
-      if(window.balances !== undefined){
+      if (window.balances !== undefined) {
         await this.setState({
           assetClassBalance: window.balances.assetClassBalance,
           assetBalance: window.balances.assetBalance,
@@ -188,9 +195,9 @@ class Main extends Component {
         })
         return this.setState({ hasFetchedBalances: window.hasFetchedBalances })
       }
-      
-    else{ return console.log("Ethereum not enabled... Will try again on address change.")}
-      
+
+      else { return console.log("Ethereum not enabled... Will try again on address change.") }
+
     }
 
     //Component state declaration
@@ -253,10 +260,10 @@ class Main extends Component {
         idxHash: undefined,
         name: undefined,
         photos: undefined,
-        text: undefined, 
+        text: undefined,
         status: undefined,
-    }
-      window.assets = {descriptions: [], ids: [], assetClasses: [], statuses: [], names: []};
+      }
+      window.assets = { descriptions: [], ids: [], assetClasses: [], statuses: [], names: [] };
 
       const ethereum = window.ethereum;
       var _web3 = require("web3");

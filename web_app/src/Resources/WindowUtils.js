@@ -22,6 +22,7 @@ function buildWindowUtils() {
     const hashHex = "1220" + bytes32Hex.slice(2);
     const hashBytes = Buffer.from(hashHex, "hex");
     const hashStr = bs58.encode(hashBytes);
+    console.log("got: ",hashStr,"from: ",bytes32Hex)
     return hashStr;
   };
 
@@ -562,6 +563,7 @@ function buildWindowUtils() {
               tknIDArray.push(window.web3.utils.numberToHex(_result));
             }
           });
+          console.log(i)
       }
 
       for (let x = 0; x < tknIDArray.length; x++) {
@@ -570,7 +572,9 @@ function buildWindowUtils() {
             if (_error) {
               console.log("IN ERROR IN ERROR IN ERROR")
             } else {
-              if(Object.values(_result)[5] > 0){
+              console.log(tknIDArray[x])
+              console.log(_result)
+              if(Number(Object.values(_result)[5]) > 0){
                 ipfsHashArray.push(window.utils.getIpfsHashFromBytes32(Object.values(_result)[5]))
               }
               else{ipfsHashArray.push("0")
@@ -580,11 +584,13 @@ function buildWindowUtils() {
 
             }
           })
+          console.log(x)
       }
 
       console.log(ipfsHashArray)
 
       window.aTknIDs = tknIDArray;
+      console.log(window.aTknIDs, " tknID-> ", tknIDArray);
       window.ipfsHashArray = ipfsHashArray;
 
       window.assets.assetClasses = assetClasses;

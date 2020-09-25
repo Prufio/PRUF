@@ -8,16 +8,23 @@ class AssetCheckIn extends Component {
   constructor(props) {
     super(props);
 
+    this.updateAuthLevel = setInterval(() => {
+      if (this.state.assets !== window.assets && this.state.runWatchDog === true) {
+        this.setState({ assets: window.assets })
+      }
+      if (this.state.assetTokenInfo !== window.assetTokenInfo && this.state.runWatchDog === true) {
+        this.setState({ assetTokenInfo: window.assetTokenInfo })
+      } 
+    }, 100)
+
     this.generateAssets = () => {
       if (window.assets.names.length > 0) {
         let component = [];
-        //console.log(window.assets)
 
         for (let i = 0; i < window.assets.ids.length; i++) {
-          component.push(<option value={i}>Name: {window.assets.descriptions[i].name} ID: {window.assets.ids[i]} </option>);
+          //console.log(i, "Adding: ", window.assets.descriptions[i], "and ", window.assets.ids[i])
+          component.push(<option value={i}>Name: {window.assets.descriptions[i].name}, ID: {window.assets.ids[i]} </option>);
         }
-
-        //console.log(component)
 
         return component
       }
@@ -43,13 +50,20 @@ class AssetCheckIn extends Component {
       authLevel: "",
       PIP: "",
       RCLR: "",
-      assetClass: undefined,
+      showDescription: false,
+      descriptionElements: undefined,
+      assets: undefined,
       contractArray: [],
     };
   }
 
   componentDidMount() {
-    this.setState({ addr: window.addr })
+    this.setState({
+      addr: window.addr,
+      runWatchDog: true,
+      assets: undefined,
+      assetTokenInfo: {}
+    })
   }
 
   componentDidUpdate() {
@@ -64,8 +78,7 @@ class AssetCheckIn extends Component {
   render() {
 
     const _checkIn = async () => {
-      window.idxHash = this.state.selectedAsset
-      console.log("Changed window idx to: ", window.idxHash)
+      console.log("Changed window idx to: ", window.assets.ids[this.state.selectedAsset])
 
       window.assetTokenInfo = {
         assetClass: window.assets.assetClasses[this.state.selectedAsset],
@@ -73,55 +86,63 @@ class AssetCheckIn extends Component {
         name: window.assets.descriptions[this.state.selectedAsset].name,
         photos: window.assets.descriptions[this.state.selectedAsset].photo,
         text: window.assets.descriptions[this.state.selectedAsset].text,
+        description: window.assets.descriptions[this.state.selectedAsset],
         status: window.assets.statuses[this.state.selectedAsset],
       }
+
+      /* this.setState({ descriptionElements: window.utils.seperateKeysAndValues(this.state.assetTokenInfo.description) })
+      this.setState({ showDescription: true }) */
     }
 
     return (
-      <div className="home">
-        {window.assets.assetClasses.length > 0 && (
+      <Form className="threeRowForm" id="MainForm">
+        {this.state.assets !== undefined && (
           <>
-          <h1>Asset Name: {window.assetTokenInfo.name}</h1>
-          <br></br>
-          <h1>Asset Status: {window.assetTokenInfo.status}</h1>
-          <br></br>
-          <h1>Asset Class: {window.assetTokenInfo.assetClass}</h1>
-          </>
+            <Form.Row>
+              <Form.Group as={Col} controlId="formGridAsset">
+                <Form.Label className="formFont">Select an asset to modify : </Form.Label>
+                <Form.Control
+                  as="select"
+                  size="lg"
+                  onChange={(e) => this.setState({ selectedAsset: e.target.value })}
+                >
+                  <option value="null"> Select an asset </option>
+                  {this.generateAssets()}
 
-        )}
-        
-        {window.assets.assetClasses.length > 0 && (
-          <div>
-          <br></br>
-          <Form.Group as={Col} controlId="formGridAC">
-            <Form.Label className="formFont">Choose an asset to modify : </Form.Label>
-            <Form.Control
-              as="select"
-              size="lg"
-              onChange={(e) => this.setState({ selectedAsset: e.target.value })}
-            >
-              <option value="0"> Select an asset </option>
-              {this.generateAssets()}
+                </Form.Control>
+              </Form.Group>
+            </Form.Row>
 
-            </Form.Control>
-          </Form.Group>
-          <Form.Row>
-            <Button
-              className="buttonDisplayAssetCheckIn"
-              variant="primary"
-              type="button"
-              size="lg"
-              onClick={_checkIn}
-            >
-              Access PRuF
+            <Form.Row>
+              <Form.Group as={Col} controlId="formGridStats">
+                <Form.Label className="formFont">Asset Name: {this.state.assetTokenInfo.name} </Form.Label>
+                <Form.Label className="formFont">Asset Status: {this.state.assetTokenInfo.status} </Form.Label>
+                <Form.Label className="formFont">Asset Class: {this.state.assetTokenInfo.assetClass} </Form.Label>
+              </Form.Group>
+            </Form.Row>
+
+
+            <Form.Row>
+              <Button
+                className="buttonDisplayAssetCheckIn"
+                variant="primary"
+                type="button"
+                size="lg"
+                onClick={_checkIn}
+              >
+                Access PRuF
                 </Button>
-          </Form.Row>
-        </div>
+            </Form.Row>
+          </>
         )}
 
-          
-        {window.assets.assetClasses.length === 0 && (<div> <Form.Row><h1>Loading asset list. This may take a while...</h1></Form.Row></div>)}
-      </div>
+        {/* {this.state.showDescription && (
+          <>
+            {this.state.descriptionElements !== undefined && (<>{window.utils.generateDescription(this.state.descriptionElements)}</>)}
+          </>
+        )} */}
+        {this.state.assets === undefined && (<div> <Form.Row><h1>Loading asset list. This may take a while...</h1></Form.Row></div>)}
+      </Form>
     );
   }
 }
