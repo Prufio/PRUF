@@ -245,6 +245,25 @@ div {
   
 }
 
+.assetDashboard {
+  height: 24rem;
+  width: 59rem;
+  background-color: #005480;
+  border-radius: 0rem 0rem 0.5rem 0.5rem;
+  padding: 2rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  opacity: 0.96;
+}
+
+.assetDashboardContent {
+  color: white;
+  font-size: 1.5rem;
+  font-weight: bold;
+}
+
 .oneRowForm {
   height: 19rem;
   width: 59rem;
