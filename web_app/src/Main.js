@@ -40,13 +40,23 @@ class Main extends Component {
           authorizedUserMenuBool: false
         })
       }
-      if(window.assets.ids.length > 0 && window.assets.descriptions[0][0] !== undefined && window.assets.names.length === 0){
+      if(window.assets.ids.length > 0 && window.assets.descriptions[0][0] !== undefined && 
+        window.assets.names.length === 0 && this.state.buildReady === true){
         this.buildAssets()
       }
       if(window.resetInfo === true){
-        window.resetInfo = false
-        window.assets.names = []
+        this.setState({buildReady: false})
+        window.assets = { descriptions: [], ids: [], assetClasses: [], statuses: [], names: [] };
+        window.assetTokenInfo = {
+          assetClass: undefined,
+          idxHash: undefined,
+          name: undefined,
+          photos: undefined,
+          text: undefined,
+          status: undefined,
+        }
         this.setupAssets()
+        window.resetInfo = false
       }
     }, 100)
 
@@ -117,9 +127,9 @@ class Main extends Component {
 
     this.setupAssets = async () => {
       let tempDescObj = {}
-      let tempNameObj = {}
       let tempDescriptionsArray = [];
       let tempNamesArray = [];
+
         await window.utils.getAssetTokenInfo()
 
         for (let i = 0; i < window.aTknIDs.length; i++) {
@@ -133,11 +143,9 @@ class Main extends Component {
         }
 
         console.log(tempDescObj)
-        console.log(tempDescObj["desc0"].length)
 
         for (let x = 0; x < window.aTknIDs.length; x++ ){
           let tempArray = tempDescObj["desc"+x]
-          console.log(tempArray[0])
           await tempDescriptionsArray.push(tempArray)
         }
 
@@ -146,37 +154,47 @@ class Main extends Component {
         window.assets.ids = window.aTknIDs;
 
         console.log(window.assets.ids, " aTkn-> ", window.aTknIDs)
+        this.setState({buildReady: true})
     }
 
-    this.getIPFSJSONObject = async (lookup, descElement) => { //FIX DESC OUT OF ORDER
+    this.buildAssets = () => {
+      let tempDescArray = [];
+      let emptyDesc = {photo:{}, text:{}, name: ""}
+
+      for(let i = 0; i < window.aTknIDs.length; i++){
+        console.log(window.assets.descriptions[i][0])
+        if(window.assets.descriptions[i][0] !== undefined){
+         tempDescArray.push(JSON.parse(window.assets.descriptions[i][0]))
+        }
+        else{
+         tempDescArray.push(emptyDesc)
+        }
+      }
+
+      let tempNameArray = []; 
+      for(let x = 0; x < window.aTknIDs.length; x++){
+         tempNameArray.push(tempDescArray[x].name)
+      }
+
+      window.assets.descriptions = tempDescArray;
+      window.assets.names = tempNameArray;
+
+      console.log("Assets after rebuild: ",window.assets)
+    }
+
+    this.getIPFSJSONObject = (lookup, descElement) => { 
       //console.log(lookup)
-        await window.ipfs.cat(lookup, async (error, result) => {
+         window.ipfs.cat(lookup, async (error, result) => {
           if (error) {
-            await console.log(lookup, "Something went wrong. Unable to find file on IPFS");
-            await descElement.push("0")
+             console.log(lookup, "Something went wrong. Unable to find file on IPFS");
+             descElement.push(undefined)
           } else {
-            await console.log(lookup, "Here's what we found for asset description: ", result);
-            await descElement.push(result)
+             console.log(lookup, "Here's what we found for asset description: ", result);
+             descElement.push(result)
           }
         });
 
     };
-
-    /* this.getIPFSJSONObject = async (lookup, toSetDescriptions, toSetNames) => { //FIX DESC OUT OF ORDER
-      //console.log(lookup)
-        await window.ipfs.cat(lookup, async (error, result) => {
-          if (error) {
-            await console.log(lookup, "Something went wrong. Unable to find file on IPFS");
-            await toSetDescriptions.push("0")
-            await toSetNames.push("0")
-          } else {
-            await console.log(lookup, "Here's what we found for asset description: ", result);
-            await toSetDescriptions.push(JSON.parse(result))
-            await toSetNames.push(JSON.parse(result).name)
-          }
-        });
-
-    }; */
 
     this.acctChanger = async () => {//Handle an address change, update state accordingly
       const ethereum = window.ethereum;
@@ -195,21 +213,7 @@ class Main extends Component {
       });
     };
 
-    this.buildAssets = async () => {
-      let tempDescArray = [];
-      for(let i = 0; i < window.aTknIDs.length; i++){
-        await tempDescArray.push(JSON.parse(window.assets.descriptions[i][0]))
-      }
-      let tempNameArray = []; 
-      for(let x = 0; x < window.aTknIDs.length; x++){
-        await tempNameArray.push(tempDescArray[x].name)
-      }
-
-      window.assets.descriptions = tempDescArray;
-      window.assets.names = tempNameArray;
-
-      console.log("Assets after rebuild: ",window.assets)
-    }
+    
 
     this.setupContractEnvironment = async (_web3) => {
       const self = this;
@@ -228,9 +232,7 @@ class Main extends Component {
       await this.setState({ contracts: window._contracts })
       await window.utils.getContracts()
       await window.utils.determineTokenBalance()
-      if (window.assetHolderBool === true) {
-        await this.setupAssets()
-      }
+      await this.setupAssets()
 
 
       console.log("bools...", window.assetHolderBool, window.assetClassHolderBool, window.IDHolderBool)
