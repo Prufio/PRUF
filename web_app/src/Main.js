@@ -45,7 +45,7 @@ class Main extends Component {
           authorizedUserMenuBool: false
         })
       }
-      if(window.assets.ids.length > 0 && window.assets.descriptions[0][0] !== undefined && 
+      if(window.assets.ids.length > 0 && /* window.assets.descriptions[0][0] !== undefined && */ 
         window.assets.names.length === 0 && this.state.buildReady === true){
         this.buildAssets()
       }
@@ -62,6 +62,7 @@ class Main extends Component {
         }
         this.setupAssets()
         window.resetInfo = false
+        this.setState({ runWatchDog: true })
       }
       if(window.aTknIDs !== undefined){
         if(window.ipfsCounter >= window.aTknIDs.length && this.state.runWatchDog === true){
