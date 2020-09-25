@@ -16,7 +16,6 @@ import Dropdown from 'react-bootstrap/Dropdown';
 import { Twitter } from 'react-feather';
 import { GitHub } from 'react-feather';
 import { Mail } from 'react-feather';
-import { Rocket } from 'react-feather';
 import { ExternalLink } from "react-feather";
 
 
@@ -481,12 +480,28 @@ class Main extends Component {
                         .btn-primary:active {
                           background: #00a8ff;
                         }
+
+                        .btn-toggle {
+                          background-color: #00a8ff;
+                          color: white;
+                          width: 20rem;
+                        }
+                        .btn-toggle:hover {
+                          background-color: #00a8ff;
+                          color: white;
+                        }
+                        .btn-toggle:focus {
+                          background: #00a8ff;
+                        }
+                        .btn-toggle:active {
+                          background: #00a8ff;
+                        }
                      `}
                 </style>
                 <DropdownButton
                   title="Toggle Menu"
                   className="headerButton"
-                  variant="primary"
+                  variant="toggle"
                   drop="down"
                   flip="false"
                   size="lg"
