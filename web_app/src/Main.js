@@ -322,9 +322,9 @@ class Main extends Component {
 
     return (
       <div>
-        <ParticleBox />
+        <ParticleBox/>
         <HashRouter>
-          <div>
+
             <div className="imageForm">
               <img className="downSizeLogo" src={require("./Resources/pruf ar long.png")} alt="Pruf Logo" />
               <div className="userData">
@@ -340,8 +340,8 @@ class Main extends Component {
                 )}
               </div>
             </div>
-            <div className="BannerForm">
-              <div className="page">
+            <div>
+              <div className="BannerForm">
                 <ul className="header">
                   {window._contracts !== undefined && (
                     <nav>
@@ -353,21 +353,24 @@ class Main extends Component {
                     </nav>
                   )}
                 </ul>
-                <div className="userInfoBox">
-                  <div>
-                    AssetClass Token Balance: {this.state.assetClassBalance}
-                  </div>
-                  <br></br>
-                  <div>
-                    Asset Token Balance: {this.state.assetBalance}
-                  </div>
-                  <br></br>
-                  <div>
-                    ID Token Balance : {this.state.IDTokenBalance}
-                  </div>
-                  <div>
-                    <style type="text/css">
-                      {`
+              </div>
+            </div>
+            <div className="pageForm">
+              <div className="userInfoBox">
+                <div>
+                  AssetClass Token Balance: {this.state.assetClassBalance}
+                </div>
+                <br></br>
+                <div>
+                  Asset Token Balance: {this.state.assetBalance}
+                </div>
+                <br></br>
+                <div>
+                  ID Token Balance : {this.state.IDTokenBalance}
+                </div>
+                <div>
+                  <style type="text/css">
+                    {`
                         .btn-primary {
                           background-color: #00a8ff;
                           color: white;
@@ -383,22 +386,22 @@ class Main extends Component {
                           background: #00a8ff;
                         }
                      `}
-                    </style>
-                    <DropdownButton
-                      title="Toggle Menu"
-                      className="headerButton"
-                      variant="primary"
-                      drop="up"
-                      flip="false"
-                    >
-                      {this.state.isACAdmin === true && this.state.assetClassHolderMenuBool === false && (
-                        <Dropdown.Item
-                          as="button"
-                          variant="primary"
-                          onClick={() => { this.toggleMenu("ACAdmin") }}
-                        >
-                          AC Admin Menu
-                        </Dropdown.Item>)}
+                  </style>
+                  <DropdownButton
+                    title="Toggle Menu"
+                    className="headerButton"
+                    variant="primary"
+                    drop="up"
+                    flip="false"
+                  >
+                    {this.state.isACAdmin === true && this.state.assetClassHolderMenuBool === false && (
+                      <Dropdown.Item
+                        as="button"
+                        variant="primary"
+                        onClick={() => { this.toggleMenu("ACAdmin") }}
+                      >
+                        AC Admin Menu
+                      </Dropdown.Item>)}
 
                       {this.state.IDHolderBool === false && this.state.assetHolderBool === true && this.state.assetHolderUserMenuBool === false && (
                         <Dropdown.Item
@@ -420,37 +423,37 @@ class Main extends Component {
                         </Dropdown.Item>
                       )}
 
-                      {this.state.basicMenuBool === false && (
-                        <Dropdown.Item
-                          as="button"
-                          variant="primary"
-                          onClick={() => { this.toggleMenu("basic") }}
-                        >
-                          Basic Menu
-                        </Dropdown.Item>)}
+                    {this.state.basicMenuBool === false && (
+                      <Dropdown.Item
+                        as="button"
+                        variant="primary"
+                        onClick={() => { this.toggleMenu("basic") }}
+                      >
+                        Basic Menu
+                      </Dropdown.Item>)}
 
-                      {this.state.isAuthUser === true && this.state.authorizedUserMenuBool === false && (
-                        <Dropdown.Item
-                          as="button"
-                          variant="primary"
-                          onClick={() => { this.toggleMenu("authUser") }}
-                        >
-                          Authorized User Menu
-                        </Dropdown.Item>)}
-                    </DropdownButton>
-                  </div>
+                    {this.state.isAuthUser === true && this.state.authorizedUserMenuBool === false && (
+                      <Dropdown.Item
+                        as="button"
+                        variant="primary"
+                        onClick={() => { this.toggleMenu("authUser") }}
+                      >
+                        Authorized User Menu
+                      </Dropdown.Item>)}
+                  </DropdownButton>
                 </div>
-                <div className="content">
-                  <Route exact path="/" component={Home} />
-                  {Router(this.state.routeRequest)}
-                </div>
+              </div>
+              <div>
+                <Route exact path="/" component={Home} />
+                {Router(this.state.routeRequest)}
               </div>
             </div>
             <NavLink to="/">
             </NavLink>
-          </div>
+
         </HashRouter>
       </div>
+
     );
   }
 }

@@ -2,7 +2,7 @@ import React, { Component } from "react";
 import Form from "react-bootstrap/Form";
 import Button from "react-bootstrap/Button";
 import Col from "react-bootstrap/Col";
-import "./index.css"; 
+import "./index.css";
 
 class Home extends Component {
   constructor(props) {
@@ -31,7 +31,7 @@ class Home extends Component {
   }
 
   componentDidMount() {
-    this.setState({addr: window.addr})
+    this.setState({ addr: window.addr })
   }
 
   componentDidUpdate() {
@@ -49,7 +49,7 @@ class Home extends Component {
       let acDoesExist;
 
       window.routeRequest = "basic"
-      
+
       if (this.state.assetClass === "0" || this.state.assetClass === undefined) { window.assetClass = undefined; return this.forceUpdate() }
       else {
         if (
@@ -96,38 +96,39 @@ class Home extends Component {
     }
 
     return (
-      <div className="home">
-        <img src={require("./Resources/Pruf AR cropped.png")} alt="Pruf Logo Home" />
-        <p> V 1.0.1</p>
-
-        <div> {window.assetClass > 0 && (<div>Operating in asset class {window.assetClass} ({window.assetClassName}) as {window.authLevel}</div>)}</div>
-        {window._contracts !== undefined && (
-          <div>
-            <br></br>
-            <Form.Group as={Col} controlId="formGridAC">
-              <Form.Label className="formFont">Input desired asset class # or name : </Form.Label>
-              <Form.Control
-                placeholder="Asset Class"
-                required
-                type="text"
-                onChange={(e) => this.setState({ assetClass: e.target.value })}
-                size="lg"
-              />
-            </Form.Group>
-            <Form.Row>
-              <Button
-                className="buttonDisplayHome"
-                variant="primary"
-                type="button"
-                size="lg"
-                onClick={_setAC}
-              >
-                Access PRuF
+      <div>
+        <div className="home">
+          <img src={require("./Resources/Pruf AR cropped.png")} alt="Pruf Logo Home" />
+          <br></br>
+          <div> {window.assetClass > 0 && (<div>Operating in asset class {window.assetClass} ({window.assetClassName}) as {window.authLevel}</div>)}</div>
+          <br></br>
+          {window._contracts !== undefined && (
+            <div>
+                <Form.Group as={Col} controlId="formGridAC">
+                  <Form.Label className="formFont">Input desired asset class # or name : </Form.Label>
+                  <Form.Control
+                    placeholder="Asset Class"
+                    required
+                    type="text"
+                    onChange={(e) => this.setState({ assetClass: e.target.value })}
+                    size="lg"
+                  />
+                </Form.Group>
+                <Form.Row>
+                  <Button
+                    className="buttonDisplayHome"
+                    variant="primary"
+                    type="button"
+                    size="lg"
+                    onClick={_setAC}
+                  >
+                    Access PRuF
                   </Button>
-            </Form.Row>
-          </div>
-        )}
-        {window._contracts === undefined && (<div> <Form.Row><h1>Connecting to Blockchain Provider...</h1></Form.Row></div>)}
+                </Form.Row>
+            </div>
+          )}
+          {window._contracts === undefined && (<div> <Form.Row><h1>Connecting to Blockchain Provider...</h1></Form.Row></div>)}
+        </div>
       </div>
     );
   }
