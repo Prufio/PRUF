@@ -23,7 +23,7 @@ class AssetCheckIn extends Component {
 
         for (let i = 0; i < window.assets.ids.length; i++) {
           //console.log(i, "Adding: ", window.assets.descriptions[i], "and ", window.assets.ids[i])
-          component.push(<option value={i}>Name: {window.assets.descriptions[i].name}, ID: {window.assets.ids[i]} </option>);
+          component.push(<option key={"asset "+String(i)}value={i}>Name: {window.assets.descriptions[i].name}, ID: {window.assets.ids[i]} </option>);
         }
 
         return component
@@ -76,6 +76,11 @@ class AssetCheckIn extends Component {
   }
 
   render() {
+
+    const _refresh = () => {
+      window.resetInfo = true;
+      this.setState({assets: undefined})
+    }
 
     const _checkIn = async () => {
       console.log("Changed window idx to: ", window.assets.ids[this.state.selectedAsset])
@@ -139,6 +144,15 @@ class AssetCheckIn extends Component {
                   onClick={_checkIn}
                 >
                   Access PRuF
+                </Button>
+                <Button
+                  className="buttonDisplay"
+                  variant="primary"
+                  type="button"
+                  size="lg"
+                  onClick={_refresh}
+                >
+                  Refresh List
                 </Button>
               </Form.Row>
             </div>

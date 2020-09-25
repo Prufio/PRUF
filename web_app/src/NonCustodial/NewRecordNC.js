@@ -103,6 +103,7 @@ class NewRecordNC extends Component {
         .on("receipt", (receipt) => {
           this.setState({ txHash: receipt.transactionHash });
           this.setState({ txStatus: receipt.status });
+          window.resetInfo = true;
         });
       }
         else{alert("Record already exists! Try again.")}
