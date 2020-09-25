@@ -13,6 +13,10 @@ import ParticleBox from './Resources/ParticleBox';
 import Router from "./Router";
 import DropdownButton from 'react-bootstrap/DropdownButton';
 import Dropdown from 'react-bootstrap/Dropdown';
+import { Twitter } from 'react-feather';
+import { GitHub } from 'react-feather';
+import { Mail } from 'react-feather';
+import Button from "react-bootstrap/Button";
 
 
 
@@ -391,55 +395,64 @@ class Main extends Component {
 
     return (
       <div>
-        <ParticleBox/>
+        <ParticleBox />
         <HashRouter>
 
-            <div className="imageForm">
-              <img className="downSizeLogo" src={require("./Resources/pruf ar long.png")} alt="Pruf Logo" />
-              <div className="userData">
-                {this.state.addr > 0 && (
-                  <div className="banner">
-                    Currently serving :{this.state.addr}
-                  </div>
-                )}
-                {this.state.addr === undefined && (
-                  <div className="banner">
-                    Currently serving: NOBODY! Log into web3 provider!
-                  </div>
-                )}
-              </div>
+          <div className="imageForm">
+            <button
+              class="imageButton"
+              onClick={() => { this.toggleMenu("basic") }}
+            >
+              <img
+                className="downSizeLogo"
+                src={require("./Resources/pruf ar long.png")}
+                alt="Pruf Logo" />
+            </button>
+            <div className="userData">
+              {this.state.addr > 0 && (
+                <div className="banner">
+                  Currently serving :{this.state.addr}
+                </div>
+              )}
+              {this.state.addr === undefined && (
+                <div className="banner">
+                  Currently serving: NOBODY! Log into web3 provider!
+                </div>
+              )}
             </div>
-            <div>
-              <div className="BannerForm">
-                <ul className="header">
-                  {window._contracts !== undefined && (
-                    <nav>
-                      {this.state.assetHolderMenuBool === true && (<NonCustodialComponent />)}
-                      {this.state.assetHolderUserMenuBool === true && (<NonCustodialUserComponent />)}
-                      {this.state.assetClassHolderMenuBool === true && (<AdminComponent />)}
-                      {this.state.authorizedUserMenuBool === true && (<AuthorizedUserComponent />)}
-                      {this.state.basicMenuBool === true && (<BasicComponent />)}
-                    </nav>
-                  )}
-                </ul>
-              </div>
+          </div>
+          <div>
+            <div className="BannerForm">
+              <ul className="header">
+                {window._contracts !== undefined && (
+                  <nav>
+                    {this.state.assetHolderMenuBool === true && (<NonCustodialComponent />)}
+                    {this.state.assetHolderUserMenuBool === true && (<NonCustodialUserComponent />)}
+                    {this.state.assetClassHolderMenuBool === true && (<AdminComponent />)}
+                    {this.state.authorizedUserMenuBool === true && (<AuthorizedUserComponent />)}
+                    {this.state.basicMenuBool === true && (<BasicComponent />)}
+                  </nav>
+                )}
+              </ul>
             </div>
-            <div className="pageForm">
-              <div className="userInfoBox">
-                <div>
-                  AssetClass Token Balance: {this.state.assetClassBalance}
-                </div>
-                <br></br>
-                <div>
-                  Asset Token Balance: {this.state.assetBalance}
-                </div>
-                <br></br>
-                <div>
-                  ID Token Balance : {this.state.IDTokenBalance}
-                </div>
-                <div>
-                  <style type="text/css">
-                    {`
+          </div>
+          <div className="pageForm">
+
+            <div className="userInfoBox">
+              <div>
+                AssetClass Token Balance: {this.state.assetClassBalance}
+              </div>
+              <br></br>
+              <div>
+                Asset Token Balance: {this.state.assetBalance}
+              </div>
+              <br></br>
+              <div>
+                ID Token Balance : {this.state.IDTokenBalance}
+              </div>
+              <div>
+                <style type="text/css">
+                  {`
                         .btn-primary {
                           background-color: #00a8ff;
                           color: white;
@@ -455,74 +468,86 @@ class Main extends Component {
                           background: #00a8ff;
                         }
                      `}
-                  </style>
-                  <DropdownButton
-                    title="Toggle Menu"
-                    className="headerButton"
-                    variant="primary"
-                    drop="up"
-                    flip="false"
-                  >
-                    {this.state.isACAdmin === true && this.state.assetClassHolderMenuBool === false && (
-                      <Dropdown.Item
-                        as="button"
-                        variant="primary"
-                        onClick={() => { this.toggleMenu("ACAdmin") }}
-                      >
-                        AC Admin Menu
-                      </Dropdown.Item>)}
+                </style>
+                <DropdownButton
+                  title="Toggle Menu"
+                  className="headerButton"
+                  variant="primary"
+                  drop="down"
+                  flip="false"
+                  size="lg"
+                >
+                  {this.state.isACAdmin === true && this.state.assetClassHolderMenuBool === false && (
+                    <Dropdown.Item
+                      as="button"
+                      variant="primary"
+                      size="lg"
+                      onClick={() => { this.toggleMenu("ACAdmin") }}
+                    >
+                      AC Admin Menu
+                    </Dropdown.Item>)}
 
-                      {this.state.IDHolderBool === false && this.state.assetHolderBool === true && this.state.assetHolderUserMenuBool === false && (
-                        <Dropdown.Item
-                          as="button"
-                          variant="primary"
-                          onClick={() => { this.toggleMenu("NC") }}
-                        >
-                          Token Holder Menu
-                        </Dropdown.Item>
-                      )}
+                  {this.state.IDHolderBool === false && this.state.assetHolderBool === true && this.state.assetHolderUserMenuBool === false && (
+                    <Dropdown.Item
+                      as="button"
+                      variant="primary"
+                      size="lg"
+                      onClick={() => { this.toggleMenu("NC") }}
+                    >
+                      Token Holder Menu
+                    </Dropdown.Item>
+                  )}
 
-                      {this.state.IDHolderBool === true && this.state.assetHolderMenuBool === false && (
-                        <Dropdown.Item
-                          as="button"
-                          variant="primary"
-                          onClick={() => { this.toggleMenu("NC") }}
-                        >
-                          Token Minter Menu
-                        </Dropdown.Item>
-                      )}
+                  {this.state.IDHolderBool === true && this.state.assetHolderMenuBool === false && (
+                    <Dropdown.Item
+                      as="button"
+                      variant="primary"
+                      size="lg"
+                      onClick={() => { this.toggleMenu("NC") }}
+                    >
+                      Token Minter Menu
+                    </Dropdown.Item>
+                  )}
 
-                    {this.state.basicMenuBool === false && (
-                      <Dropdown.Item
-                        as="button"
-                        variant="primary"
-                        onClick={() => { this.toggleMenu("basic") }}
-                      >
-                        Basic Menu
-                      </Dropdown.Item>)}
+                  {this.state.basicMenuBool === false && (
+                    <Dropdown.Item
+                      as="button"
+                      variant="primary"
+                      size="lg"
+                      onClick={() => { this.toggleMenu("basic") }}
+                    >
+                      Basic Menu
+                    </Dropdown.Item>)}
 
-                    {this.state.isAuthUser === true && this.state.authorizedUserMenuBool === false && (
-                      <Dropdown.Item
-                        as="button"
-                        variant="primary"
-                        onClick={() => { this.toggleMenu("authUser") }}
-                      >
-                        Authorized User Menu
-                      </Dropdown.Item>)}
-                  </DropdownButton>
-                </div>
-              </div>
-              <div>
-                <Route exact path="/" component={Home} />
-                {Router(this.state.routeRequest)}
+                  {this.state.isAuthUser === true && this.state.authorizedUserMenuBool === false && (
+                    <Dropdown.Item
+                      as="button"
+                      variant="primary"
+                      size="lg"
+                      onClick={() => { this.toggleMenu("authUser") }}
+                    >
+                      Authorized User Menu
+                    </Dropdown.Item>)}
+                </DropdownButton>
               </div>
             </div>
-            <NavLink to="/">
-            </NavLink>
+
+            <div>
+              <Route exact path="/" component={Home} />
+              {Router(this.state.routeRequest)}
+            </div>
+            <div className="mediaLink">
+              <a className="mediaLinkContent"><GitHub onClick={() => { window.location.href = "https://www.pruf.io" }} /></a>
+              <a className="mediaLinkContent"><Mail onClick={() => { window.location.href = "https://www.pruf.io" }} /></a>
+              <a className="mediaLinkContent"><Twitter onClick={() => { window.location.href = "https://www.pruf.io" }} /></a>
+            </div>
+          </div>
+          <NavLink to="/">
+          </NavLink>
 
         </HashRouter>
-      </div>
 
+      </div>
     );
   }
 }
