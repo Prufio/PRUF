@@ -58,6 +58,11 @@ class Main extends Component {
         this.setupAssets()
         window.resetInfo = false
       }
+      if(window.aTknIDs !== undefined){
+        if(window.ipfsCounter >= window.aTknIDs.length && this.state.runWatchDog === true){
+          this.setState({buildReady: true})
+        }
+      }
     }, 100)
 
     this.toggleMenu = async (menuChoice) => {
@@ -126,6 +131,7 @@ class Main extends Component {
     }
 
     this.setupAssets = async () => {
+      window.ipfsCounter = 0;
       let tempDescObj = {}
       let tempDescriptionsArray = [];
       let tempNamesArray = [];
@@ -154,8 +160,9 @@ class Main extends Component {
         window.assets.ids = window.aTknIDs;
 
         console.log(window.assets.ids, " aTkn-> ", window.aTknIDs)
-        this.setState({buildReady: true})
+        
     }
+
 
     this.buildAssets = () => {
       let tempDescArray = [];
@@ -188,9 +195,11 @@ class Main extends Component {
           if (error) {
              console.log(lookup, "Something went wrong. Unable to find file on IPFS");
              descElement.push(undefined)
+             window.ipfsCounter++
           } else {
              console.log(lookup, "Here's what we found for asset description: ", result);
              descElement.push(result)
+             window.ipfsCounter++
           }
         });
 
@@ -207,7 +216,7 @@ class Main extends Component {
           window.assetClass = undefined;
           window.isAuthUser = false;
           window.isACAdmin = false;
-          self.setState({ addr: e[0] })
+          self.setState({ addr: e[0], runWatchDog: false })
           self.setupContractEnvironment(window.web3);
         });
       });
@@ -249,7 +258,8 @@ class Main extends Component {
           IDHolderBool: window.IDHolderBool,
           custodyType: window.custodyType,
         })
-        return this.setState({ hasFetchedBalances: window.hasFetchedBalances })
+        return this.setState({ hasFetchedBalances: window.hasFetchedBalances,
+        runWatchDog: true })
       }
 
       else { return console.log("Ethereum not enabled... Will try again on address change.") }
@@ -296,6 +306,7 @@ class Main extends Component {
       authorizedUserMenuBool: false,
       hasFetchedBalances: false,
       isACAdmin: undefined,
+      runWatchDog: false,
       routeRequest: "basic"
     };
   }
