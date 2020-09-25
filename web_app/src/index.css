@@ -9,6 +9,7 @@ body {
   background-size: cover;
   box-sizing: border-box; 
   background-position: center center fixed;  
+  overflow: hidden;
   /* background-color: rgb(12, 59, 79);
   margin: 0; */
 }

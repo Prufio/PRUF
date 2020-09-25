@@ -16,7 +16,8 @@ import Dropdown from 'react-bootstrap/Dropdown';
 import { Twitter } from 'react-feather';
 import { GitHub } from 'react-feather';
 import { Mail } from 'react-feather';
-import Button from "react-bootstrap/Button";
+import { Rocket } from 'react-feather';
+import { ExternalLink } from "react-feather";
 
 
 
@@ -537,9 +538,10 @@ class Main extends Component {
               {Router(this.state.routeRequest)}
             </div>
             <div className="mediaLink">
-              <a className="mediaLinkContent"><GitHub onClick={() => { window.location.href = "https://www.pruf.io" }} /></a>
-              <a className="mediaLinkContent"><Mail onClick={() => { window.location.href = "https://www.pruf.io" }} /></a>
-              <a className="mediaLinkContent"><Twitter onClick={() => { window.location.href = "https://www.pruf.io" }} /></a>
+              <a className="mediaLinkContent"><GitHub onClick={() => { window.open("https://github.com/vdmprojects/Bulletproof", "_blank") }} /></a>
+              <a className="mediaLinkContent"><Mail onClick={() => { window.open("mailto:drake@pruf.io", "_blank") }} /></a>
+              <a className="mediaLinkContent"><Twitter onClick={() => { window.open("https://www.pruf.io", "_blank") }} /></a>
+              <a className="mediaLinkContent" ><ExternalLink onClick={() => { window.open("https://www.pruf.io", "_blank")}} /></a>
             </div>
           </div>
           <NavLink to="/">
