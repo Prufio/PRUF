@@ -17,7 +17,6 @@ import { Twitter } from 'react-feather';
 import { GitHub } from 'react-feather';
 import { Mail } from 'react-feather';
 import { ExternalLink } from "react-feather";
-import ButtonGroup from "react-bootstrap/ButtonGroup";
 
 
 
@@ -64,9 +63,9 @@ class Main extends Component {
         window.resetInfo = false
         this.setState({ runWatchDog: true })
       }
-      if (window.aTknIDs !== undefined) {
-        if (window.ipfsCounter >= window.aTknIDs.length && this.state.runWatchDog === true) {
-          this.setState({ buildReady: true })
+      if(window.aTknIDs !== undefined){
+        if(window.ipfsCounter >= window.aTknIDs.length && this.state.runWatchDog === true){
+          this.setState({buildReady: true})
         }
         else if((this.state.buildReady === true && window.ipfsCounter < window.aTknIDs.length) || 
         (this.state.buildReady === true && this.state.runWatchDog === false)){
@@ -146,63 +145,63 @@ class Main extends Component {
       let tempDescriptionsArray = [];
       let tempNamesArray = [];
 
-      if (window.recount === true) {
-        window.recount = false
-        await this.setUpTokenVals()
-        return this.setupAssets()
-      }
+        if(window.recount === true){
+          window.recount = false
+          await this.setUpTokenVals()
+          return this.setupAssets()
+        }
 
-      await window.utils.getAssetTokenInfo()
+        await window.utils.getAssetTokenInfo()
 
-      for (let i = 0; i < window.aTknIDs.length; i++) {
-        //console.log(i)
-        //console.log(window.aTknIDs[i])
-        //console.log(window.ipfsHashArray[i])
-        //await this.getIPFSJSONObject(window.ipfsHashArray[i], tempDescriptionsArray, tempNamesArray) //FIX DESC OUT OF ORDER
+        for (let i = 0; i < window.aTknIDs.length; i++) {
+          //console.log(i)
+          //console.log(window.aTknIDs[i])
+          //console.log(window.ipfsHashArray[i])
+          //await this.getIPFSJSONObject(window.ipfsHashArray[i], tempDescriptionsArray, tempNamesArray) //FIX DESC OUT OF ORDER
 
-        tempDescObj["desc" + i] = []
-        await this.getIPFSJSONObject(window.ipfsHashArray[i], tempDescObj["desc" + i])
-      }
+          tempDescObj["desc"+i] = [] 
+          await this.getIPFSJSONObject(window.ipfsHashArray[i], tempDescObj["desc"+i])
+        }
 
-      console.log(tempDescObj)
+        console.log(tempDescObj)
 
-      for (let x = 0; x < window.aTknIDs.length; x++) {
-        let tempArray = tempDescObj["desc" + x]
-        await tempDescriptionsArray.push(tempArray)
-      }
+        for (let x = 0; x < window.aTknIDs.length; x++ ){
+          let tempArray = tempDescObj["desc"+x]
+          await tempDescriptionsArray.push(tempArray)
+        }
 
-      window.assets.descriptions = tempDescriptionsArray;
-      window.assets.names = tempNamesArray;
-      window.assets.ids = window.aTknIDs;
+        window.assets.descriptions = tempDescriptionsArray;
+        window.assets.names = tempNamesArray;
+        window.assets.ids = window.aTknIDs;
 
-      //console.log(window.assets.ids, " aTkn-> ", window.aTknIDs)
-
+        //console.log(window.assets.ids, " aTkn-> ", window.aTknIDs)
+        
     }
 
 
     this.buildAssets = () => {
       let tempDescArray = [];
-      let emptyDesc = { photo: {}, text: {}, name: "" }
+      let emptyDesc = {photo:{}, text:{}, name: ""}
 
-      for (let i = 0; i < window.aTknIDs.length; i++) {
+      for(let i = 0; i < window.aTknIDs.length; i++){
         //console.log(window.assets.descriptions[i][0])
-        if (window.assets.descriptions[i][0] !== undefined) {
-          tempDescArray.push(JSON.parse(window.assets.descriptions[i][0]))
+        if(window.assets.descriptions[i][0] !== undefined){
+         tempDescArray.push(JSON.parse(window.assets.descriptions[i][0]))
         }
-        else {
-          tempDescArray.push(emptyDesc)
+        else{
+         tempDescArray.push(emptyDesc)
         }
       }
 
-      let tempNameArray = [];
-      for (let x = 0; x < window.aTknIDs.length; x++) {
-        tempNameArray.push(tempDescArray[x].name)
+      let tempNameArray = []; 
+      for(let x = 0; x < window.aTknIDs.length; x++){
+         tempNameArray.push(tempDescArray[x].name)
       }
 
       window.assets.descriptions = tempDescArray;
       window.assets.names = tempNameArray;
 
-      console.log("Assets after rebuild: ", window.assets)
+      console.log("Assets after rebuild: ",window.assets)
     }
 
     this.setUpTokenVals = async () => {
@@ -223,19 +222,19 @@ class Main extends Component {
       }
     }
 
-    this.getIPFSJSONObject = (lookup, descElement) => {
+    this.getIPFSJSONObject = (lookup, descElement) => { 
       //console.log(lookup)
-      window.ipfs.cat(lookup, async (error, result) => {
-        if (error) {
-          console.log(lookup, "Something went wrong. Unable to find file on IPFS");
-          descElement.push(undefined)
-          window.ipfsCounter++
-        } else {
-          console.log(lookup, "Here's what we found for asset description: ", result);
-          descElement.push(result)
-          window.ipfsCounter++
-        }
-      });
+         window.ipfs.cat(lookup, async (error, result) => {
+          if (error) {
+             console.log(lookup, "Something went wrong. Unable to find file on IPFS");
+             descElement.push(undefined)
+             window.ipfsCounter++
+          } else {
+             console.log(lookup, "Here's what we found for asset description: ", result);
+             descElement.push(result)
+             window.ipfsCounter++
+          }
+        });
 
     };
 
@@ -256,34 +255,34 @@ class Main extends Component {
       });
     };
 
-
+    
 
     this.setupContractEnvironment = async (_web3) => {
       const self = this;
       console.log("Setting up contracts")
-      if (window.ethereum !== undefined) {
-        await this.setState({
-          assetHolderMenuBool: false,
-          assetClassHolderMenuBool: false,
-          basicMenuBool: true,
-          authorizedUserMenuBool: false,
-          hasFetchedBalances: false,
-          routeRequest: "basic"
-        })
+      if(window.ethereum !== undefined){
+      await this.setState({
+        assetHolderMenuBool: false,
+        assetClassHolderMenuBool: false,
+        basicMenuBool: true,
+        authorizedUserMenuBool: false,
+        hasFetchedBalances: false,
+        routeRequest: "basic"
+      })
 
-        window._contracts = await buildContracts(_web3)
-        await this.setState({ contracts: window._contracts })
-        await window.utils.getContracts()
-        await this.setUpTokenVals()
-        await this.setupAssets()
+      window._contracts = await buildContracts(_web3)
+      await this.setState({ contracts: window._contracts })
+      await window.utils.getContracts()
+      await this.setUpTokenVals()
+      await this.setupAssets()
+      
 
 
+      console.log("bools...", window.assetHolderBool, window.assetClassHolderBool, window.IDHolderBool)
 
-        console.log("bools...", window.assetHolderBool, window.assetClassHolderBool, window.IDHolderBool)
+      console.log("window assets: ", window.assets)
 
-        console.log("window assets: ", window.assets)
-
-        return this.setState({ runWatchDog: true })
+      return this.setState({ runWatchDog: true })
       }
 
       else { return console.log("Ethereum not enabled... Will try again on address change.") }
@@ -376,40 +375,10 @@ class Main extends Component {
         window.addEventListener("accountListener", this.acctChanger());
         //window.addEventListener("authLevelListener", this.updateAuthLevel());
       }
-      window.assetTokenInfo = {
-        assetClass: undefined,
-        idxHash: undefined,
-        name: undefined,
-        photos: undefined,
-        text: undefined,
-        status: undefined,
+      else {
+        this.setState({ hasError: true })
       }
-      window.assets = { descriptions: [], ids: [], assetClasses: [], statuses: [], names: [] };
-
-      const ethereum = window.ethereum;
-      var _web3 = require("web3");
-      _web3 = new Web3(_web3.givenProvider);
-      this.setupContractEnvironment(_web3)
-      this.setState({ web3: _web3 });
-      window.web3 = _web3;
-
-      ethereum.enable()
-
-      var _ipfs = new this.state.IPFS({
-        host: "ipfs.infura.io",
-        port: 5001,
-        protocol: "https",
-      });
-      window.ipfs = _ipfs
-
-      _web3.eth.getAccounts().then((e) => { this.setState({ addr: e[0] }); window.addr = e[0] });
-      window.addEventListener("accountListener", this.acctChanger());
-      //window.addEventListener("authLevelListener", this.updateAuthLevel());
-    }
-    else {
-      this.setState({ hasError: true })
-    }
-
+    
   }
 
   componentDidCatch(error, info) {
@@ -507,7 +476,7 @@ class Main extends Component {
                           color: white;
                         }
                         .btn-primary:hover {
-                          background-color: #23b6ff;
+                          background-color: #00a8ff;
                           color: white;
                         }
                         .btn-primary:focus {
@@ -520,15 +489,10 @@ class Main extends Component {
                         .btn-toggle {
                           background-color: #00a8ff;
                           color: white;
-                          height: 4rem;
-                          margin-top: 0.4rem;
-                          margin-left: -0.8rem;
-                          font-weight: bold;
-                          font-size: 2.2rem;
-                          border-radius: 0rem 0rem 0.3rem 0rem;
+                          width: 20rem;
                         }
                         .btn-toggle:hover {
-                          background-color: #23b6ff;
+                          background-color: #00a8ff;
                           color: white;
                         }
                         .btn-toggle:focus {
@@ -537,20 +501,11 @@ class Main extends Component {
                         .btn-toggle:active {
                           background: #00a8ff;
                         }
-                        .dropdown-toggle{
-                          margin-top: 0.4rem;
-                          width: 19.8rem;
-                        }
-                        .dropdown-menu {
-                          width: 19.8rem;
-                          font-size: 1.4rem;
-                          background-color: #00a8ff;
-                          color: white;
-                        }
                      `}
                 </style>
                 <DropdownButton
                   title="Toggle Menu"
+                  className="headerButton"
                   variant="toggle"
                   drop="down"
                   flip="false"
@@ -559,6 +514,7 @@ class Main extends Component {
                   {this.state.isACAdmin === true && this.state.assetClassHolderMenuBool === false && (
                     <Dropdown.Item
                       as="button"
+                      variant="primary"
                       size="lg"
                       onClick={() => { this.toggleMenu("ACAdmin") }}
                     >
@@ -568,6 +524,7 @@ class Main extends Component {
                   {this.state.IDHolderBool === false && this.state.assetHolderBool === true && this.state.assetHolderUserMenuBool === false && (
                     <Dropdown.Item
                       as="button"
+                      variant="primary"
                       size="lg"
                       onClick={() => { this.toggleMenu("NC") }}
                     >
@@ -578,6 +535,7 @@ class Main extends Component {
                   {this.state.IDHolderBool === true && this.state.assetHolderMenuBool === false && (
                     <Dropdown.Item
                       as="button"
+                      variant="primary"
                       size="lg"
                       onClick={() => { this.toggleMenu("NC") }}
                     >
@@ -588,6 +546,7 @@ class Main extends Component {
                   {this.state.basicMenuBool === false && (
                     <Dropdown.Item
                       as="button"
+                      variant="primary"
                       size="lg"
                       onClick={() => { this.toggleMenu("basic") }}
                     >
@@ -597,6 +556,7 @@ class Main extends Component {
                   {this.state.isAuthUser === true && this.state.authorizedUserMenuBool === false && (
                     <Dropdown.Item
                       as="button"
+                      variant="primary"
                       size="lg"
                       onClick={() => { this.toggleMenu("authUser") }}
                     >
@@ -614,7 +574,7 @@ class Main extends Component {
               <a className="mediaLinkContent"><GitHub onClick={() => { window.open("https://github.com/vdmprojects/Bulletproof", "_blank") }} /></a>
               <a className="mediaLinkContent"><Mail onClick={() => { window.open("mailto:drake@pruf.io", "_blank") }} /></a>
               <a className="mediaLinkContent"><Twitter onClick={() => { window.open("https://twitter.com/umlautchair", "_blank") }} /></a>
-              <a className="mediaLinkContent" ><ExternalLink onClick={() => { window.open("https://www.pruf.io", "_blank") }} /></a>
+              <a className="mediaLinkContent" ><ExternalLink onClick={() => { window.open("https://www.pruf.io", "_blank")}} /></a>
             </div>
           </div>
           <NavLink to="/">

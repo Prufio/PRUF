@@ -162,7 +162,6 @@ div {
   margin-left: -1rem;
 }
 
-
 .BannerForm {
   height: 4.88rem;
   max-width: none;
@@ -273,8 +272,15 @@ div {
   color: white;
   font-size: 1.5rem;
   font-weight: bold;
+  margin-left: -45rem;
 }
 
+.assetDashboardContent2 {
+  color: white;
+  font-size: 1.5rem;
+  font-weight: bold;
+  margin-left: -44.5rem;
+}
 
 .oneRowForm {
   height: 19rem;
@@ -665,4 +671,3 @@ div {
   color: #00a8ff;
   cursor: pointer;
 }
-

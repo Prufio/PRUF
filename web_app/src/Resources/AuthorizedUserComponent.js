@@ -33,7 +33,7 @@ class AuthorizedUserComponent extends Component {
                 <NavLink to="/manage-escrow">Escrow</NavLink>
             </li>
             <li>
-                <NavDropdown title="Modify Asset">
+                <NavDropdown title="Modify">
                     <NavDropdown.Item id="header-dropdown" as={NavLink} to="/modify-record-status">Modify Status</NavDropdown.Item>
                     <NavDropdown.Item id="header-dropdown" as={NavLink} to="/decrement-counter">Decrement Counter</NavDropdown.Item>
                     <NavDropdown.Item id="header-dropdown" as={NavLink} to="/modify-description">Modify Description</NavDropdown.Item>
