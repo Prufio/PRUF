@@ -274,13 +274,13 @@ class ModifyDescription extends Component {
               <h2>User address unreachable</h2>
               <h3>Please connect web3 provider.</h3>
             </div>
-          )}{this.state.assetClass === undefined && (
+          )}{this.state.idxHash === undefined && (
             <div className="errorResults">
               <h2>No asset selected.</h2>
-              <h3>Please select asset in home page to use forms.</h3>
+              <h3>Please select asset in the dashboard to use forms.</h3>
             </div>
           )}
-          {window.addr > 0 && this.state.assetClass > 0 && (
+          {window.addr > 0 && this.state.idxHash !== undefined &&(
             <div>
 
               <h2 className="Headertext">Modify Description</h2>

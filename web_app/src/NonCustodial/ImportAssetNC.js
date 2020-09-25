@@ -32,7 +32,7 @@ class ImportAssetNC extends Component {
   //component state-change events......................................................................................................
 
   componentDidMount() {//stuff to do when component mounts in window
-
+    
   }
 
   componentWillUnmount() {//stuff do do when component unmounts from the window
