@@ -129,7 +129,7 @@ class AssetCheckIn extends Component {
               <Form.Row>
                 <Form.Group as={Col} controlId="formGridStats">
                   <h3 className="assetDashboardContent">Asset Name: {this.state.assetTokenInfo.name} </h3>
-                  <h3 className="assetDashboardContent2"> Asset Status: {this.state.assetTokenInfo.status} </h3>
+                  <h3 className="assetDashboardContent"> Asset Status: {this.state.assetTokenInfo.status} </h3>
                   <h3 className="assetDashboardContent">Asset Class: {this.state.assetTokenInfo.assetClass} </h3>
                 </Form.Group>
               </Form.Row>

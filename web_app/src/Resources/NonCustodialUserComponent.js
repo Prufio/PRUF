@@ -33,7 +33,7 @@ class NonCustodialUserComponent extends Component {
                     <NavLink to="/manage-escrow-NC">Escrow</NavLink>
                 </li>
                 <li>
-                    <NavDropdown title="Modify">
+                    <NavDropdown title="Modify Asset">
                         <NavDropdown.Item id="header-dropdown" as={NavLink} to="/modify-record-status-NC">Modify Status</NavDropdown.Item>
                         <NavDropdown.Item id="header-dropdown" as={NavLink} to="/decrement-counter-NC">Decrement Counter</NavDropdown.Item>
                         <NavDropdown.Item id="header-dropdown" as={NavLink} to="/modify-description-NC">Modify Description</NavDropdown.Item>
