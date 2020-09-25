@@ -20,6 +20,7 @@
     "react-dom": "^16.8.1",
     "react-feather": "^2.0.8",
     "react-helmet": "^6.1.0",
+    "react-mailto": "^0.4.0",
     "react-native": "^0.62.2",
     "react-particles-js": "^3.3.0",
     "react-router-dom": "^5.2.0",
