@@ -12,7 +12,7 @@ class NonCustodialUserComponent extends Component {
                     <NavLink exact to="/">Home</NavLink>
                 </li>
                 <li>
-                    <NavLink exact to="checkin">Asset Dashboard</NavLink>
+                    <NavLink exact to="check-in">Asset Dashboard</NavLink>
                 </li>
                 <li>
                     <NavLink to="/verify-rights-holder">Verify</NavLink>

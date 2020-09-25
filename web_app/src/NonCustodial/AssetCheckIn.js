@@ -14,7 +14,7 @@ class AssetCheckIn extends Component {
       }
       if (this.state.assetTokenInfo !== window.assetTokenInfo && this.state.runWatchDog === true) {
         this.setState({ assetTokenInfo: window.assetTokenInfo })
-      } 
+      }
     }, 100)
 
     this.generateAssets = () => {
@@ -95,54 +95,63 @@ class AssetCheckIn extends Component {
     }
 
     return (
-      <Form className="threeRowForm" id="MainForm">
-        {this.state.assets !== undefined && (
-          <>
-            <Form.Row>
-              <Form.Group as={Col} controlId="formGridAsset">
-                <Form.Label className="formFont">Select an asset to modify : </Form.Label>
-                <Form.Control
-                  as="select"
+      <div>
+        <Form className="assetDashboard" id="MainForm">
+          {window.addr === undefined && (
+            <div className="errorResults">
+              <h2>User address unreachable</h2>
+              <h3>Please connect web3 provider.</h3>
+            </div>
+          )}
+          {this.state.assets !== undefined && window.addr > 0 && (
+            <div>
+              <h2 className="Headertext">Select an asset to modify :</h2>
+              <br></br>
+              <Form.Row>
+                <Form.Group as={Col} controlId="formGridAsset">
+                  <br></br>
+                  <Form.Control
+                    as="select"
+                    size="lg"
+                    onChange={(e) => this.setState({ selectedAsset: e.target.value })}
+                  >
+                    <option value="null"> Select an asset </option>
+                    {this.generateAssets()}
+                  </Form.Control>
+                </Form.Group>
+              </Form.Row>
+
+              <Form.Row>
+                <Form.Group as={Col} controlId="formGridStats">
+                  <h3 className="assetDashboardContent">Asset Name: {this.state.assetTokenInfo.name} </h3>
+                  <h3 className="assetDashboardContent">Asset Status: {this.state.assetTokenInfo.status} </h3>
+                  <h3 className="assetDashboardContent">Asset Class: {this.state.assetTokenInfo.assetClass} </h3>
+                </Form.Group>
+              </Form.Row>
+
+
+              <Form.Row>
+                <Button
+                  className="buttonDisplay"
+                  variant="primary"
+                  type="button"
                   size="lg"
-                  onChange={(e) => this.setState({ selectedAsset: e.target.value })}
+                  onClick={_checkIn}
                 >
-                  <option value="null"> Select an asset </option>
-                  {this.generateAssets()}
-
-                </Form.Control>
-              </Form.Group>
-            </Form.Row>
-
-            <Form.Row>
-              <Form.Group as={Col} controlId="formGridStats">
-                <Form.Label className="formFont">Asset Name: {this.state.assetTokenInfo.name} </Form.Label>
-                <Form.Label className="formFont">Asset Status: {this.state.assetTokenInfo.status} </Form.Label>
-                <Form.Label className="formFont">Asset Class: {this.state.assetTokenInfo.assetClass} </Form.Label>
-              </Form.Group>
-            </Form.Row>
-
-
-            <Form.Row>
-              <Button
-                className="buttonDisplayAssetCheckIn"
-                variant="primary"
-                type="button"
-                size="lg"
-                onClick={_checkIn}
-              >
-                Access PRuF
+                  Access PRuF
                 </Button>
-            </Form.Row>
-          </>
-        )}
+              </Form.Row>
+            </div>
+          )}
 
-        {/* {this.state.showDescription && (
+          {/* {this.state.showDescription && (
           <>
             {this.state.descriptionElements !== undefined && (<>{window.utils.generateDescription(this.state.descriptionElements)}</>)}
           </>
         )} */}
-        {this.state.assets === undefined && (<div> <Form.Row><h1>Loading asset list. This may take a while...</h1></Form.Row></div>)}
-      </Form>
+          {this.state.assets === undefined && (<div> <Form.Row><h1>Loading asset list. This may take a while...</h1></Form.Row></div>)}
+        </Form>
+      </div>
     );
   }
 }

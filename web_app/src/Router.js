@@ -77,7 +77,7 @@ function Router(routeRequest) {
                 <Route path="/manage-escrow-NC" component={EscrowManagerNC} />
                 <Route path="/mint-pip-asset" component={MintPipAsset} />
                 <Route path="/claim-pip-asset" component={ClaimPipAsset} />
-                <Route path="/checkin" component={AssetCheckIn} />
+                <Route path="/check-in" component={AssetCheckIn} />
             </>)
     }
 
@@ -97,7 +97,7 @@ function Router(routeRequest) {
                 <Route path="/manage-escrow-NC" component={EscrowManagerNC} />
                 <Route path="/mint-pip-asset" component={MintPipAsset} />
                 <Route path="/claim-pip-asset" component={ClaimPipAsset} />
-                <Route path="/checkin" component={AssetCheckIn} />
+                <Route path="/check-in" component={AssetCheckIn} />
             </>)
     }
 
@@ -123,7 +123,7 @@ function Router(routeRequest) {
                 <Route path="/retrieve-record" component={RetrieveRecord} />
                 <Route path="/mint-pip-asset" component={MintPipAsset} />
                 <Route path="/claim-pip-asset" component={ClaimPipAsset} />
-                <Route path="/checkin" component={AssetCheckIn} />
+                <Route path="/check-in" component={AssetCheckIn} />
             </>
         )
     }
