@@ -95,8 +95,13 @@ class ModifyDescriptionNC extends Component {
               <h2>User address unreachable</h2>
               <h3>Please connect web3 provider.</h3>
             </div>
+          )}{this.state.idxHash === undefined && (
+            <div className="errorResults">
+              <h2>No asset selected.</h2>
+              <h3>Please select asset in the dashboard to use forms.</h3>
+            </div>
           )}
-          {window.addr > 0 && (
+          {window.addr > 0 && this.state.idxHash !== undefined && (
             <div>
 
               <h2 className="Headertext">Transfer Asset</h2>

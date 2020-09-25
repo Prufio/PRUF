@@ -40,6 +40,26 @@ class AddNoteNC extends Component {
 
   //component state-change events......................................................................................................
 
+  componentDidMount() {//stuff to do when component mounts in window
+
+    this.setState({
+      idxHash: window.assetTokenInfo.idxHash,
+      oldDescription: window.assetTokenInfo.description,
+      assetClass: window.assetTokenInfo.assetClass,
+      name: window.assetTokenInfo.name,
+      status: window.assetTokenInfo.status
+    })
+
+  }
+
+  componentDidUpdate() {//stuff to do when state updates
+
+  }
+
+  componentWillUnmount() {//stuff do do when component unmounts from the window
+
+  }
+
   render() {//render continuously produces an up-to-date stateful document  
     const self = this;
 
@@ -77,48 +97,19 @@ class AddNoteNC extends Component {
       this.setState({ txHash: "" });
       this.setState({ error: undefined })
       this.setState({ result: "" })
-      var idxHash;
-      var rgtRaw;
-
-      idxHash = window.web3.utils.soliditySha3(
-        this.state.type,
-        this.state.manufacturer,
-        this.state.model,
-        this.state.serial,
-      );
-
-      rgtRaw = window.web3.utils.soliditySha3(
-        this.state.first,
-        this.state.middle,
-        this.state.surname,
-        this.state.id,
-        this.state.secret
-      );
-
-      var rgtHash = window.web3.utils.soliditySha3(idxHash, rgtRaw);
+      var idxHash = this.state.idxHash;
 
       console.log("idxHash", idxHash);
-      console.log("New rgtRaw", rgtRaw);
       console.log("addr: ", window.addr);
       
       var noteExists = await window.utils.checkNoteExists(idxHash);
-      var doesExist = await window.utils.checkAssetExists(idxHash);
-      var infoMatches = await window.utils.checkMatch(idxHash, rgtHash);
-
-      if (!doesExist){
-        return alert("Asset doesnt exist! Ensure data fields are correct before submission.")
-      }
-
-      if (!infoMatches){
-        return alert("Owner data fields do not match data on record. Ensure data fields are correct before submission.")
-      }
 
       if (noteExists){
         return alert("Asset note already exists! Cannot overwrite existing note.")
       }
 
-        await window.contracts.APP.methods
-        .$addIpfs2Note(idxHash, rgtHash, this.state.hashPath)
+        await window.contracts.APP_NC.methods
+        .$addIpfs2Note(idxHash, this.state.hashPath)
         .send({ from: window.addr, value: window.costs.createNoteCost })
         .on("error", function (_error) {
           // self.setState({ NRerror: _error });
@@ -130,10 +121,9 @@ class AddNoteNC extends Component {
           this.setState({ txHash: receipt.transactionHash });
           this.setState({ txStatus: receipt.status });
           console.log(receipt.status);
+          window.resetInfo = true;
           //Stuff to do when tx confirms
         });
-      
-     
 
       console.log(this.state.txHash);
       return document.getElementById("MainForm").reset();
@@ -147,120 +137,22 @@ class AddNoteNC extends Component {
               <h2>User address unreachable</h2>
               <h3>Please connect web3 provider.</h3>
             </div>
-          )}{window.assetClass === undefined && (
+          )}{this.state.idxHash === undefined && (
             <div className="errorResults">
-              <h2>No asset class selected.</h2>
-              <h3>Please select asset class in home page to use forms.</h3>
+              <h2>No asset selected.</h2>
+              <h3>Please asset in the dashboard to use forms.</h3>
             </div>
           )}
-          {window.addr > 0 && window.assetClass > 0 && (
+          {window.addr > 0 && this.state.idxHash !== undefined &&(
             <div>
               <h2 className="Headertext">Add Note</h2>
               <br></br>
-              <Form.Row>
-                <Form.Group as={Col} controlId="formGridType">
-                  <Form.Label className="formFont">Type:</Form.Label>
-                  <Form.Control
-                    placeholder="Type"
-                    required
-                    onChange={(e) => this.setState({ type: e.target.value })}
-                    size="lg"
-                  />
-                </Form.Group>
-
-                <Form.Group as={Col} controlId="formGridManufacturer">
-                  <Form.Label className="formFont">Manufacturer:</Form.Label>
-                  <Form.Control
-                    placeholder="Manufacturer"
-                    required
-                    onChange={(e) => this.setState({ manufacturer: e.target.value })}
-                    size="lg"
-                  />
-                </Form.Group>
-
-              </Form.Row>
-
-              <Form.Row>
-                <Form.Group as={Col} controlId="formGridModel">
-                  <Form.Label className="formFont">Model:</Form.Label>
-                  <Form.Control
-                    placeholder="Model"
-                    required
-                    onChange={(e) => this.setState({ model: e.target.value })}
-                    size="lg"
-                  />
-                </Form.Group>
-
-                <Form.Group as={Col} controlId="formGridSerial">
-                  <Form.Label className="formFont">Serial:</Form.Label>
-                  <Form.Control
-                    placeholder="Serial"
-                    required
-                    onChange={(e) => this.setState({ serial: e.target.value })}
-                    size="lg"
-                  />
-                </Form.Group>
-              </Form.Row>
-
-              <Form.Row>
-                <Form.Group as={Col} controlId="formGridFirstName">
-                  <Form.Label className="formFont">First Name:</Form.Label>
-                  <Form.Control
-                    placeholder="First Name"
-                    required
-                    onChange={(e) => this.setState({ first: e.target.value })}
-                    size="lg"
-                  />
-                </Form.Group>
-
-                <Form.Group as={Col} controlId="formGridMiddleName">
-                  <Form.Label className="formFont">Middle Name:</Form.Label>
-                  <Form.Control
-                    placeholder="Middle Name"
-                    required
-                    onChange={(e) => this.setState({ middle: e.target.value })}
-                    size="lg"
-                  />
-                </Form.Group>
-
-                <Form.Group as={Col} controlId="formGridLastName">
-                  <Form.Label className="formFont">Last Name:</Form.Label>
-                  <Form.Control
-                    placeholder="Last Name"
-                    required
-                    onChange={(e) => this.setState({ surname: e.target.value })}
-                    size="lg"
-                  />
-                </Form.Group>
-              </Form.Row>
-
-              <Form.Row>
-                <Form.Group as={Col} controlId="formGridIdNumber">
-                  <Form.Label className="formFont">ID Number:</Form.Label>
-                  <Form.Control
-                    placeholder="ID Number"
-                    required
-                    onChange={(e) => this.setState({ id: e.target.value })}
-                    size="lg"
-                  />
-                </Form.Group>
-
-                <Form.Group as={Col} controlId="formGridPassword">
-                  <Form.Label className="formFont">Password:</Form.Label>
-                  <Form.Control
-                    placeholder="Password"
-                    type="password"
-                    required
-                    onChange={(e) => this.setState({ secret: e.target.value })}
-                    size="lg"
-                  />
-                </Form.Group>
-              </Form.Row>
               <Form.Row>
                 <Form.Group as={Col} controlId="formGridIpfs2File">
                   <Form.File onChange={(e) => this.setState({ hashPath: "" })} size="lg" className="btn2" id="ipfs2File" />
                 </Form.Group>
               </Form.Row>
+
               {this.state.hashPath !== "" && (
                 <Form.Row>
                   <Form.Group >
@@ -287,7 +179,6 @@ class AddNoteNC extends Component {
                     >
                       Load to IPFS
                     </Button>
-
                   </Form.Group>
                 </Form.Row>
               )}

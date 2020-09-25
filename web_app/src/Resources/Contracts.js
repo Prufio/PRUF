@@ -226,26 +226,6 @@ async function buildContracts(_web3) {
     }
     );
 
-/*   await _contracts.content.push(STOR);     //0
-  await _contracts.content.push(APP);      //1
-  await _contracts.content.push(NP);       //2
-  await _contracts.content.push(AC_MGR);   //3
-  await _contracts.content.push(AC_TKN);   //4
-  await _contracts.content.push(A_TKN);    //5
-  await _contracts.content.push(ECR_MGR);  //6
-  await _contracts.content.push(ECR);      //7
-  await _contracts.content.push(VERIFY);   //8
-  await _contracts.content.push(ECR_NC);   //9
-  await _contracts.content.push(APP_NC);   //10
-  await _contracts.content.push(NP_NC);    //11
-  await _contracts.content.push(RCLR);     //12
-  await _contracts.content.push(ID_TKN);   //14
-  await _contracts.content.push(UTIL_TKN); //15
-  await _contracts.content.push(PIP);    //16 */
-
-  
-
-  //console.log(_contracts)
   return window.contracts = {
     STOR: STOR,
     APP: APP,

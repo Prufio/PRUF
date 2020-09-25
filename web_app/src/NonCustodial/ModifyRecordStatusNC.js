@@ -32,7 +32,13 @@ class ModifyRecordStatusNC extends Component {
   //component state-change events......................................................................................................
 
   componentDidMount() {//stuff to do when component mounts in window
-
+    this.setState({
+      idxHash: window.assetTokenInfo.idxHash,
+      oldDescription: window.assetTokenInfo.description,
+      assetClass: window.assetTokenInfo.assetClass,
+      name: window.assetTokenInfo.name,
+      status: window.assetTokenInfo.status
+    })
   }
 
   componentDidUpdate() {//stuff to do when state updates
@@ -53,14 +59,7 @@ class ModifyRecordStatusNC extends Component {
       this.setState({ txHash: "" });
       this.setState({ error: undefined })
       this.setState({ result: "" })
-      var idxHash;
-
-      idxHash = window.web3.utils.soliditySha3(
-        this.state.type,
-        this.state.manufacturer,
-        this.state.model,
-        this.state.serial,
-      );
+      var idxHash = this.state.idxHash;
 
       console.log("idxHash", idxHash);
 
@@ -124,60 +123,17 @@ class ModifyRecordStatusNC extends Component {
               <h2>User address unreachable</h2>
               <h3>Please connect web3 provider.</h3>
             </div>
+          )}{this.state.idxHash === undefined && (
+            <div className="errorResults">
+              <h2>No asset selected.</h2>
+              <h3>Please select asset in the dashboard to use forms.</h3>
+            </div>
           )}
-          {window.addr > 0 && (
+          {window.addr > 0 && this.state.idxHash !== undefined &&(
             <div>
 
               <h2 className="Headertext">Change Asset Status</h2>
               <br></br>
-              <Form.Row>
-                <Form.Group as={Col} controlId="formGridType">
-                  <Form.Label className="formFont">Type:</Form.Label>
-
-
-
-                  <Form.Control
-                    placeholder="Type"
-                    required
-                    onChange={(e) => this.setState({ type: e.target.value })}
-                    size="lg"
-                  />
-                </Form.Group>
-
-                <Form.Group as={Col} controlId="formGridManufacturer">
-                  <Form.Label className="formFont">Manufacturer:</Form.Label>
-
-                  <Form.Control
-                    placeholder="Manufacturer"
-                    required
-                    onChange={(e) => this.setState({ manufacturer: e.target.value })}
-                    size="lg"
-                  />
-                </Form.Group>
-
-              </Form.Row>
-
-              <Form.Row>
-                <Form.Group as={Col} controlId="formGridModel">
-                  <Form.Label className="formFont">Model:</Form.Label>
-                  <Form.Control
-                    placeholder="Model"
-                    required
-                    onChange={(e) => this.setState({ model: e.target.value })}
-                    size="lg"
-                  />
-                </Form.Group>
-
-                <Form.Group as={Col} controlId="formGridSerial">
-                  <Form.Label className="formFont">Serial:</Form.Label>
-                  <Form.Control
-                    placeholder="Serial"
-                    required
-                    onChange={(e) => this.setState({ serial: e.target.value })}
-                    size="lg"
-                  />
-                </Form.Group>
-              </Form.Row>
               <Form.Row>
                 <Form.Group as={Col} controlId="formGridFormat">
                   <Form.Label className="formFont">New Status:</Form.Label>

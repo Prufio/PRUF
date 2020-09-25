@@ -35,6 +35,14 @@ class EscrowManagerNC extends Component {
 
   componentDidMount() {//stuff to do when component mounts in window
 
+    this.setState({
+      idxHash: window.assetTokenInfo.idxHash,
+      oldDescription: window.assetTokenInfo.description,
+      assetClass: window.assetTokenInfo.assetClass,
+      name: window.assetTokenInfo.name,
+      status: window.assetTokenInfo.status
+    })
+
   }
 
   componentWillUnmount() {//stuff do do when component unmounts from the window
@@ -50,40 +58,10 @@ class EscrowManagerNC extends Component {
 
     const _accessAsset = async () => {
       const self = this;
-
-      let idxHash = window.web3.utils.soliditySha3(
-        this.state.type,
-        this.state.manufacturer,
-        this.state.model,
-        this.state.serial,
-      );
-
-      var doesExist = await window.utils.checkAssetExists(idxHash);
-
-      if (!doesExist) {
-        return alert("Asset doesnt exist! Ensure data fields are correct before submission.")
-      }
-
-      var isInEscrow = await window.utils.checkEscrowStatus(idxHash);
-
-      if(isInEscrow === "true" && this.state.isSettingEscrow === "true"){
-        return alert("Asset already in an escrow status. End current escrow to set new escrow conditions")
-      }
-      
-      else if (isInEscrow === "false" && this.state.isSettingEscrow === "false"){
-        return alert("Asset is not in an escrow status. Did you mean to set an escrow?")
-      }
-
-      else if (this.state.isSettingEscrow === "0"){
-        return alert("Please select an option in the upper dropdown")
-      }
-
       return this.setState({ 
-        idxHash: idxHash,
         accessPermitted: true,
-        escrowData: window.utils.getEscrowData(idxHash)
+        escrowData: window.utils.getEscrowData(this.state.idxHash)
        })
-
     }
 
     const _setEscrow = async () => {
@@ -148,7 +126,6 @@ class EscrowManagerNC extends Component {
         console.log(this.state.txHash);
 
         await this.setState({
-          idxHash: "",
           accessPermitted: false,
           isSettingEscrow: "0",
           agent: "",
@@ -168,8 +145,13 @@ class EscrowManagerNC extends Component {
               <h2>User address unreachable</h2>
               <h3>Please connect web3 provider.</h3>
             </div>
+          )}{this.state.idxHash === undefined && (
+            <div className="errorResults">
+              <h2>No asset selected.</h2>
+              <h3>Please select asset in the dashboard to use forms.</h3>
+            </div>
           )}
-          {window.addr > 0 && (
+          {window.addr > 0 && this.state.idxHash !== undefined &&(
             <div>
               <h2 className="Headertext">Manage Escrow</h2>
               <br></br>
@@ -185,50 +167,6 @@ class EscrowManagerNC extends Component {
                   </Form.Control>
                 </Form.Group>
                 </Form.Row>
-                <Form.Row>
-                <Form.Group as={Col} controlId="formGridType">
-                  <Form.Label className="formFont">Type:</Form.Label>
-                  <Form.Control
-                    placeholder="Type"
-                    required
-                    onChange={(e) => this.setState({ type: e.target.value })}
-                    size="lg"
-                  />
-                </Form.Group>
-
-                <Form.Group as={Col} controlId="formGridManufacturer">
-                  <Form.Label className="formFont">Manufacturer:</Form.Label>
-                  <Form.Control
-                    placeholder="Manufacturer"
-                    required
-                    onChange={(e) => this.setState({ manufacturer: e.target.value })}
-                    size="lg"
-                  />
-                </Form.Group>
-
-              </Form.Row>
-
-              <Form.Row>
-                <Form.Group as={Col} controlId="formGridModel">
-                  <Form.Label className="formFont">Model:</Form.Label>
-                  <Form.Control
-                    placeholder="Model"
-                    required
-                    onChange={(e) => this.setState({ model: e.target.value })}
-                    size="lg"
-                  />
-                </Form.Group>
-
-                <Form.Group as={Col} controlId="formGridSerial">
-                  <Form.Label className="formFont">Serial:</Form.Label>
-                  <Form.Control
-                    placeholder="Serial"
-                    required
-                    onChange={(e) => this.setState({ serial: e.target.value })}
-                    size="lg"
-                  />
-                </Form.Group>
-              </Form.Row>
               <Form.Row>
                   <Form.Group>
                   <Button
