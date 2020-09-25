@@ -159,7 +159,7 @@ div {
 
 .headerButton {
   margin-top: -21.5rem;
-  margin-left: 2rem;
+  margin-left: -1rem;
 }
 
 .BannerForm {
@@ -226,7 +226,7 @@ div {
   height: 12rem;
   width: 20rem;
   background-color: #002a40;
-  border-radius: 0rem 0rem 1rem 0rem;
+  /* border-radius: 0rem 0rem 1rem 0rem; */
   color: rgb(255, 255, 255);
   font-size: 2rem;
   font-weight: bold;
@@ -272,6 +272,14 @@ div {
   color: white;
   font-size: 1.5rem;
   font-weight: bold;
+  margin-left: -45rem;
+}
+
+.assetDashboardContent2 {
+  color: white;
+  font-size: 1.5rem;
+  font-weight: bold;
+  margin-left: -44.5rem;
 }
 
 .oneRowForm {
@@ -491,8 +499,6 @@ div {
   align-items: center;
   justify-content: center;
 }
-
-
 
 .TWResults{
   align-items: center;
