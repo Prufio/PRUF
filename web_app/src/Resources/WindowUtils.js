@@ -552,7 +552,7 @@ function buildWindowUtils() {
       let ipfsHashArray = [];
       let statuses = [];
       let assetClasses = [];
-
+      
       for (let i = 0; i < window.balances.assetBalance; i++) {
         await window.contracts.A_TKN.methods.tokenOfOwnerByIndex(window.addr, i)
           .call({ from: window.addr }, (_error, _result) => {

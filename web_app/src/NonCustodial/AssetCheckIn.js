@@ -79,6 +79,7 @@ class AssetCheckIn extends Component {
 
     const _refresh = () => {
       window.resetInfo = true;
+      window.recount = true;
       this.setState({ assets: undefined })
     }
 
