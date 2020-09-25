@@ -94,21 +94,27 @@ h4 {
   color: rgb(255, 255, 255);
   font-weight: bold;
   font-size: 1.6rem;
-  /* padding: 0.75rem; */
-  padding-left: 1rem;
-  padding-top: 1.2rem;
-  padding-right: 1rem;
-  padding-bottom: 0.5rem;
+  padding: 1.2rem;
+  padding-left: 1.25rem;
+  padding-right: 1.25rem;
+  padding-top: 1rem;
+  padding-bottom: 1rem;
+  margin-top: 0.25rem;
   display: inline-flex;
   z-index: 5;
 }
 
 #header-dropdown {
+  color: black;
   background-color: #00a8ff;
   /* padding: 0px 0px; */
   margin-top: -0.6rem;
   margin-bottom: -0.5rem;
   z-index: 5;
+}
+
+#header-dropdown:hover {
+  color: white;
 }
 
 div {
@@ -168,7 +174,7 @@ div {
   display: flex;
   padding-left: 2rem;
   object-fit: cover;
-  z-index: 1;
+  z-index: 5;
 }
 
 .VRText {
@@ -629,4 +635,29 @@ div {
 .iframe
 {
     display: none;
+}
+
+.imageButton {
+        border: 0px transparent; 
+        background-color: transparent; 
+        object-fit: cover;
+}
+
+.mediaLink {
+  display: flex;
+  width: fit-content;
+  height: fit-content;
+  margin-left: 85%;
+  position: absolute;
+  margin-top: 1rem;
+}
+
+.mediaLinkContent {
+  padding-left: 3rem;
+  color: #002a40;
+}
+
+.mediaLinkContent:hover {
+  color: #00a8ff;
+  cursor: pointer;
 }
