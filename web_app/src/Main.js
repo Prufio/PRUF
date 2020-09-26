@@ -69,6 +69,10 @@ class Main extends Component {
           this.setState({ buildReady: true })
         }
       }
+      else if((this.state.buildReady === true && window.ipfsCounter < window.aTknIDs.length) ||  
+        (this.state.buildReady === true && this.state.runWatchDog === false)){ 
+          this.setState({buildReady: false}) 
+      }
     }, 100)
 
     this.toggleMenu = async (menuChoice) => {
