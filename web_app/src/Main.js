@@ -17,16 +17,13 @@ import { Twitter } from 'react-feather';
 import { GitHub } from 'react-feather';
 import { Mail } from 'react-feather';
 import { ExternalLink } from "react-feather";
-import ButtonGroup from "react-bootstrap/ButtonGroup";
-
-
 
 
 class Main extends Component {
   constructor(props) {
     super(props);
 
-    this.updateAuthLevel = setInterval(() => {
+    this.updateWatchDog = setInterval(() => {
       if (this.state.isAuthUser !== window.isAuthUser) {
         this.setState({ isAuthUser: window.isAuthUser })
       }
@@ -45,12 +42,16 @@ class Main extends Component {
           authorizedUserMenuBool: false
         })
       }
-      if (window.assets.ids.length > 0 && /* window.assets.descriptions[0][0] !== undefined && */
+      if (window.assets.ids.length > 0 && Object.values(window.assets.descriptions).length === window.aTknIDs.length &&
         window.assets.names.length === 0 && this.state.buildReady === true) {
-        this.buildAssets()
+        if(window.resetInfo === false){
+          console.log("WD: rebuilding assets (Last Step)")
+          this.buildAssets()
+        }
+        
       }
       if (window.resetInfo === true) {
-        this.setState({ buildReady: false })
+        this.setState({ buildReady: false, runWatchDog: false})
         window.assets = { descriptions: [], ids: [], assetClasses: [], statuses: [], names: [] };
         window.assetTokenInfo = {
           assetClass: undefined,
@@ -60,14 +61,20 @@ class Main extends Component {
           text: undefined,
           status: undefined,
         }
+        console.log("WD: setting up assets (Step one)")
         this.setupAssets()
         window.resetInfo = false
-        this.setState({ runWatchDog: true })
       }
-      if (window.aTknIDs !== undefined) {
+      if (window.aTknIDs !== undefined && this.state.buildReady === false) {
         if (window.ipfsCounter >= window.aTknIDs.length && this.state.runWatchDog === true) {
+          console.log("turning on buildready... Window IPFS operation count: ", window.ipfsCounter)
           this.setState({ buildReady: true })
         }
+      }
+      else if((this.state.buildReady === true && window.ipfsCounter < window.aTknIDs.length) ||  
+        (this.state.buildReady === true && this.state.runWatchDog === false)){ 
+          console.log("Setting buildready to false in watchdog")
+          this.setState({buildReady: false}) 
       }
     }, 100)
 
@@ -137,7 +144,10 @@ class Main extends Component {
     }
 
     this.setupAssets = async () => {
+      console.log("SA: In setupAssets")
+
       window.ipfsCounter = 0;
+
       let tempDescObj = {}
       let tempDescriptionsArray = [];
       let tempNamesArray = [];
@@ -160,7 +170,7 @@ class Main extends Component {
         await this.getIPFSJSONObject(window.ipfsHashArray[i], tempDescObj["desc" + i])
       }
 
-      console.log(tempDescObj)
+      console.log("Temp description obj: ", tempDescObj)
 
       for (let x = 0; x < window.aTknIDs.length; x++) {
         let tempArray = tempDescObj["desc" + x]
@@ -171,12 +181,17 @@ class Main extends Component {
       window.assets.names = tempNamesArray;
       window.assets.ids = window.aTknIDs;
 
+      console.log("Asset setup Complete. Turning on watchDog.")
+      this.setState({ runWatchDog: true })
+      console.log("window IPFS operation count: ", window.ipfsCounter)
+      console.log("window assets: ", window.assets)
       //console.log(window.assets.ids, " aTkn-> ", window.aTknIDs)
 
     }
 
 
     this.buildAssets = () => {
+      console.log("BA: In buildAssets. Window IPFS operation count: ", window.ipfsCounter)
       let tempDescArray = [];
       let emptyDesc = { photo: {}, text: {}, name: "" }
 
@@ -198,10 +213,11 @@ class Main extends Component {
       window.assets.descriptions = tempDescArray;
       window.assets.names = tempNameArray;
 
-      console.log("Assets after rebuild: ", window.assets)
+      console.log("BA: Assets after rebuild: ", window.assets)
     }
 
     this.setUpTokenVals = async () => {
+      console.log("STV: Setting up balances")
 
       await window.utils.determineTokenBalance()
 
@@ -226,13 +242,14 @@ class Main extends Component {
           console.log(lookup, "Something went wrong. Unable to find file on IPFS");
           descElement.push(undefined)
           window.ipfsCounter++
+          console.log(window.ipfsCounter)
         } else {
           console.log(lookup, "Here's what we found for asset description: ", result);
           descElement.push(result)
           window.ipfsCounter++
+          console.log(window.ipfsCounter)
         }
       });
-
     };
 
     this.acctChanger = async () => {//Handle an address change, update state accordingly
@@ -242,12 +259,16 @@ class Main extends Component {
       _web3 = new Web3(_web3.givenProvider);
       ethereum.on("accountsChanged", function (accounts) {
         _web3.eth.getAccounts().then((e) => {
+          if(window.addr !== e[0]){
           window.addr = e[0];
           window.assetClass = undefined;
           window.isAuthUser = false;
           window.isACAdmin = false;
           self.setState({ addr: e[0], runWatchDog: false })
           self.setupContractEnvironment(window.web3);
+          console.log("///////in acctChanger////////")
+          }
+          else{console.log("Something bit in the acct listener, but no changes made.")}
         });
       });
     };
@@ -277,7 +298,6 @@ class Main extends Component {
 
         console.log("bools...", window.assetHolderBool, window.assetClassHolderBool, window.IDHolderBool)
 
-        console.log("window assets: ", window.assets)
 
         return this.setState({ runWatchDog: true })
       }
@@ -326,6 +346,7 @@ class Main extends Component {
       hasFetchedBalances: false,
       isACAdmin: undefined,
       runWatchDog: false,
+      buildReady: false,
       routeRequest: "basic"
     };
   }
@@ -351,7 +372,7 @@ class Main extends Component {
         status: undefined,
       }
       window.assets = { descriptions: [], ids: [], assetClasses: [], statuses: [], names: [] };
-
+      window.resetInfo = false; 
       const ethereum = window.ethereum;
       var _web3 = require("web3");
       _web3 = new Web3(_web3.givenProvider);
