@@ -48,6 +48,7 @@ class ForceModifyRecordNC extends Component {
       newSecret: "",
       hasLoadedAssets: false,
       assets: { descriptions: [0], ids: [0], assetClasses: [0], statuses: [0], names: [0] }
+      transaction: undefined,
     };
   }
 
@@ -120,11 +121,13 @@ class ForceModifyRecordNC extends Component {
         .send({ from: window.addr})
         .on("error", function (_error) {
           // self.setState({ NRerror: _error });
+          self.setState({ transaction: false })
           self.setState({ txHash: Object.values(_error)[0].transactionHash });
           self.setState({ txStatus: false });
           console.log(Object.values(_error)[0].transactionHash);
         })
         .on("receipt", (receipt) => {
+          self.setState({ transaction: false })
           this.setState({ txHash: receipt.transactionHash });
           this.setState({ txStatus: receipt.status });
           console.log(receipt.status);
@@ -230,6 +233,27 @@ class ForceModifyRecordNC extends Component {
             </div>
           )}
         </Form>
+        <div className="assetSelectedResults">
+          <Form.Row>
+            <Form.Group>
+              <div className="assetSelectedContentHead">Asset IDX: <span className="assetSelectedContent">{window.assetTokenInfo.idxHash}</span> </div>
+              <div className="assetSelectedContentHead">Asset Name: <span className="assetSelectedContent">{window.assetTokenInfo.name}</span> </div>
+              <div className="assetSelectedContentHead"> Asset Description: <span className="assetSelectedContent">{window.assetTokenInfo.oldDescription}</span> </div>
+              <div className="assetSelectedContentHead">Asset Class: <span className="assetSelectedContent">{window.assetTokenInfo.assetClass}</span> </div>
+              <div className="assetSelectedContentHead">Asset Status: <span className="assetSelectedContent">{window.assetTokenInfo.status}</span> </div>
+            </Form.Group>
+          </Form.Row>
+        </div>
+        {this.state.transaction === true && (
+
+<div className="Results">
+  {/* {this.state.pendingTx === undefined && ( */}
+    <p class="loading">Transaction In Progress, Please Confirm Transaction</p>
+  {/* )} */}
+  {/* {this.state.pendingTx !== undefined && (
+    <p class="loading">Transaction In Progress</p>
+  )} */}
+</div>)}
         {this.state.txHash > 0 && ( //conditional rendering
           <div className="Results">
             {this.state.txStatus === false && (

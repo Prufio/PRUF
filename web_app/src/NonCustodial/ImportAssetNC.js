@@ -26,13 +26,14 @@ class ImportAssetNC extends Component {
       manufacturer: "",
       model: "",
       serial: "",
+      transaction: undefined,
     };
   }
 
   //component state-change events......................................................................................................
 
   componentDidMount() {//stuff to do when component mounts in window
-    
+
   }
 
   componentWillUnmount() {//stuff do do when component unmounts from the window
@@ -64,10 +65,10 @@ class ImportAssetNC extends Component {
         return alert("Asset doesnt exist! Ensure data fields are correct before submission.")
       }
 
-      return this.setState({ 
+      return this.setState({
         idxHash: idxHash,
         accessPermitted: true
-       })
+      })
 
     }
 
@@ -88,11 +89,13 @@ class ImportAssetNC extends Component {
         .send({ from: window.addr, value: window.costs.newRecordCost })
         .on("error", function (_error) {
           // self.setState({ NRerror: _error });
+          self.setState({ transaction: false })
           self.setState({ txHash: Object.values(_error)[0].transactionHash });
           self.setState({ txStatus: false });
           console.log(Object.values(_error)[0].transactionHash);
         })
         .on("receipt", (receipt) => {
+          self.setState({ transaction: false })
           this.setState({ txHash: receipt.transactionHash });
           this.setState({ txStatus: receipt.status });
           console.log(receipt.status);
@@ -129,89 +132,110 @@ class ImportAssetNC extends Component {
               <br></br>
               {!this.state.accessPermitted && (
                 <>
-                <Form.Row>
-                <Form.Group as={Col} controlId="formGridType">
-                  <Form.Label className="formFont">Type:</Form.Label>
-                  <Form.Control
-                    placeholder="Type"
-                    required
-                    onChange={(e) => this.setState({ type: e.target.value })}
-                    size="lg"
-                  />
-                </Form.Group>
+                  <Form.Row>
+                    <Form.Group as={Col} controlId="formGridType">
+                      <Form.Label className="formFont">Type:</Form.Label>
+                      <Form.Control
+                        placeholder="Type"
+                        required
+                        onChange={(e) => this.setState({ type: e.target.value })}
+                        size="lg"
+                      />
+                    </Form.Group>
 
-                <Form.Group as={Col} controlId="formGridManufacturer">
-                  <Form.Label className="formFont">Manufacturer:</Form.Label>
-                  <Form.Control
-                    placeholder="Manufacturer"
-                    required
-                    onChange={(e) => this.setState({ manufacturer: e.target.value })}
-                    size="lg"
-                  />
-                </Form.Group>
+                    <Form.Group as={Col} controlId="formGridManufacturer">
+                      <Form.Label className="formFont">Manufacturer:</Form.Label>
+                      <Form.Control
+                        placeholder="Manufacturer"
+                        required
+                        onChange={(e) => this.setState({ manufacturer: e.target.value })}
+                        size="lg"
+                      />
+                    </Form.Group>
 
-              </Form.Row>
+                  </Form.Row>
 
-              <Form.Row>
-                <Form.Group as={Col} controlId="formGridModel">
-                  <Form.Label className="formFont">Model:</Form.Label>
-                  <Form.Control
-                    placeholder="Model"
-                    required
-                    onChange={(e) => this.setState({ model: e.target.value })}
-                    size="lg"
-                  />
-                </Form.Group>
+                  <Form.Row>
+                    <Form.Group as={Col} controlId="formGridModel">
+                      <Form.Label className="formFont">Model:</Form.Label>
+                      <Form.Control
+                        placeholder="Model"
+                        required
+                        onChange={(e) => this.setState({ model: e.target.value })}
+                        size="lg"
+                      />
+                    </Form.Group>
 
-                <Form.Group as={Col} controlId="formGridSerial">
-                  <Form.Label className="formFont">Serial:</Form.Label>
-                  <Form.Control
-                    placeholder="Serial"
-                    required
-                    onChange={(e) => this.setState({ serial: e.target.value })}
-                    size="lg"
-                  />
-                </Form.Group>
-              </Form.Row>
-              <Form.Row>
-                  <Form.Group>
-                    <Button className="buttonDisplay"
-                      variant="primary"
-                      type="button"
-                      size="lg"
-                      onClick={_accessAsset}
-                    >
-                      Access Asset
+                    <Form.Group as={Col} controlId="formGridSerial">
+                      <Form.Label className="formFont">Serial:</Form.Label>
+                      <Form.Control
+                        placeholder="Serial"
+                        required
+                        onChange={(e) => this.setState({ serial: e.target.value })}
+                        size="lg"
+                      />
+                    </Form.Group>
+                  </Form.Row>
+                  <Form.Row>
+                    <Form.Group>
+                      <Button className="buttonDisplay"
+                        variant="primary"
+                        type="button"
+                        size="lg"
+                        onClick={_accessAsset}
+                      >
+                        Access Asset
                   </Button>
-                    <Form.Label className="LittleTextImport"> Cost in AC {window.assetClass}: 
+                      <Form.Label className="LittleTextImport"> Cost in AC {window.assetClass}:
                     {Number(window.costs.newRecordCost) / 1000000000000000000} ETH</Form.Label>
-                  </Form.Group>
-              </Form.Row>
+                    </Form.Group>
+                  </Form.Row>
                 </>
               )}
               {this.state.accessPermitted && (
                 <>
-                <h2>Asset found at index: {this.state.idxHash}</h2>
-                <Form.Row>
-                  <Form.Group className="buttonDisplay">
-                    <Button
-                      variant="primary"
-                      type="button"
-                      size="lg"
-                      onClick={_importAsset}
-                    >
-                      Import Asset
+                  <h2>Asset found at index: {this.state.idxHash}</h2>
+                  <Form.Row>
+                    <Form.Group className="buttonDisplay">
+                      <Button
+                        variant="primary"
+                        type="button"
+                        size="lg"
+                        onClick={_importAsset}
+                      >
+                        Import Asset
                   </Button>
-                    <div className="LittleTextImport"> Cost in AC {window.assetClass}: 
+                      <div className="LittleTextImport"> Cost in AC {window.assetClass}:
                     {Number(window.costs.newRecordCost) / 1000000000000000000} ETH</div>
-                  </Form.Group>
-              </Form.Row>
+                    </Form.Group>
+                  </Form.Row>
                 </>
               )}
               <br></br>
             </div>
           )}
         </Form>
+        <div className="assetSelectedResults">
+          <Form.Row>
+            <Form.Group>
+              <div className="assetSelectedContentHead">Asset IDX: <span className="assetSelectedContent">{window.assetTokenInfo.idxHash}</span> </div>
+              <div className="assetSelectedContentHead">Asset Name: <span className="assetSelectedContent">{window.assetTokenInfo.name}</span> </div>
+              <div className="assetSelectedContentHead"> Asset Description: <span className="assetSelectedContent">{window.assetTokenInfo.oldDescription}</span> </div>
+              <div className="assetSelectedContentHead">Asset Class: <span className="assetSelectedContent">{window.assetTokenInfo.assetClass}</span> </div>
+              <div className="assetSelectedContentHead">Asset Status: <span className="assetSelectedContent">{window.assetTokenInfo.status}</span> </div>
+            </Form.Group>
+          </Form.Row>
+        </div>
+        {this.state.transaction === true && (
+
+          <div className="Results">
+            {/* {this.state.pendingTx === undefined && ( */}
+            <p class="loading">Transaction In Progress, Please Confirm Transaction</p>
+            {/* )} */}
+            {/* {this.state.pendingTx !== undefined && (
+    <p class="loading">Transaction In Progress</p>
+  )} */}
+          </div>)}
         {this.state.txHash > 0 && ( //conditional rendering
           <div className="Results">
             {this.state.txStatus === false && (

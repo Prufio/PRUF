@@ -109,9 +109,9 @@ class AssetCheckIn extends Component {
               {this.state.assetTokenInfo !== undefined && (
                 <Form.Row>
                 <Form.Group as={Col} controlId="formGridStats">
-                  <h3 className="assetDashboardContentHead">Asset Name: <h3 className="assetDashboardContent">{this.state.assetTokenInfo.name}</h3> </h3>
-                  <h3 className="assetDashboardContentHead"> Asset Status: <h3 className="assetDashboardContent">{this.state.assetTokenInfo.status}</h3> </h3>
-                  <h3 className="assetDashboardContentHead">Asset Class: <h3 className="assetDashboardContent">{this.state.assetTokenInfo.assetClass}</h3> </h3>
+                  <div className="assetDashboardContentHead">Asset Name: <span className="assetDashboardContent">{this.state.assetTokenInfo.name}</span> </div>
+                  <div className="assetDashboardContentHead"> Asset Status: <span className="assetDashboardContent">{this.state.assetTokenInfo.status}</span> </div>
+                  <div className="assetDashboardContentHead">Asset Class: <span className="assetDashboardContent">{this.state.assetTokenInfo.assetClass}</span> </div>
                 </Form.Group>
               </Form.Row>
               )}
