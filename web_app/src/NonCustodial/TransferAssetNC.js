@@ -12,13 +12,13 @@ class ModifyDescriptionNC extends Component {
 
     this.updateAssets = setInterval(() => {
       if (this.state.assets !== window.assets && this.state.runWatchDog === true) {
-        this.setState({ assets: window.assets })
+        this.setState({ assets: window.assets } )
       }
 
-      if(this.state.hasLoadedAssets !== window.hasLoadedAssets){
-        this.setState({hasLoadedAssets: window.hasLoadedAssets})
+      if (this.state.hasLoadedAssets !== window.hasLoadedAssets) {
+        this.setState({ hasLoadedAssets: window.hasLoadedAssets })
       }
-    }, 100)
+    }, 50)
 
     this.state = {
       addr: "",
@@ -60,8 +60,8 @@ class ModifyDescriptionNC extends Component {
     const self = this;
 
     const _checkIn = async (e) => {
-      if(e === "0" || e === undefined){return}
-      else if(e === "reset"){
+      if (e === "0" || e === undefined) { return }
+      else if (e === "reset") {
         return window.resetInfo = true;
       }
       this.setState({ selectedAsset: e })
@@ -132,16 +132,16 @@ class ModifyDescriptionNC extends Component {
                   <Form.Control
                     as="select"
                     size="lg"
-                    onChange={(e) => {_checkIn(e.target.value)}}
+                    onChange={(e) => { _checkIn(e.target.value) }}
                   >
                     {this.state.hasLoadedAssets && (<><option value="null"> Select an asset </option><option value="reset">Refresh Assets</option>{window.utils.generateAssets()}</>)}
                     {!this.state.hasLoadedAssets && (<option value="null"> Loading Assets... </option>)}
-                    
+
                   </Form.Control>
                 </Form.Group>
               </Form.Row>
               <Form.Row>
-              <Form.Group as={Col} controlId="formGridTo">
+                <Form.Group as={Col} controlId="formGridTo">
                   <Form.Label className="formFont">To:</Form.Label>
                   <Form.Control
                     placeholder="Recipient Address"
@@ -169,27 +169,28 @@ class ModifyDescriptionNC extends Component {
         </Form>
         <div className="assetSelectedResults">
           <Form.Row>
-          {this.state.idxHash !== undefined &&(
-                <Form.Group>
+            {this.state.idxHash !== undefined && (
+              <Form.Group>
                 <div className="assetSelectedContentHead">Asset IDX: <span className="assetSelectedContent">{this.state.idxHash}</span> </div>
                 <div className="assetSelectedContentHead">Asset Name: <span className="assetSelectedContent">{this.state.name}</span> </div>
                 {/* <div className="assetSelectedContentHead"> Asset Description: <span className="assetSelectedContent">{this.state.description}</span> </div> */}
                 <div className="assetSelectedContentHead">Asset Class: <span className="assetSelectedContent">{this.state.assetClass}</span> </div>
                 <div className="assetSelectedContentHead">Asset Status: <span className="assetSelectedContent">{this.state.status}</span> </div>
-                </Form.Group>
-              )} 
+              </Form.Group>
+            )}
           </Form.Row>
         </div>
+
         {this.state.transaction === true && (
 
-<div className="Results">
-  {/* {this.state.pendingTx === undefined && ( */}
-    <p class="loading">Transaction In Progress, Please Confirm Transaction</p>
-  {/* )} */}
-  {/* {this.state.pendingTx !== undefined && (
+          <div className="Results">
+            {/* {this.state.pendingTx === undefined && ( */}
+            <p class="loading">Transaction In Progress, Please Confirm Transaction</p>
+            {/* )} */}
+            {/* {this.state.pendingTx !== undefined && (
     <p class="loading">Transaction In Progress</p>
   )} */}
-</div>)}
+          </div>)}
         {this.state.txHash > 0 && ( //conditional rendering
           <div className="Results">
             {this.state.txStatus === false && (

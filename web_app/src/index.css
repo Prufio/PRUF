@@ -274,8 +274,8 @@ div {
 }
 
 .assetDashboard {
-  height: 32rem;
-  width: 59rem;
+  height: flex;
+  width: 70rem;
   background-color: #005480;
   border-radius: 0rem 0rem 0.5rem 0.5rem;
   padding: 2rem;

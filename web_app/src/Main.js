@@ -33,6 +33,10 @@ class Main extends Component {
       if (this.state.custodyType !== window.custodyType) {
         this.setState({ custodyType: window.custodyType })
       }
+
+      if (this.state.ETHBalance !== window.ETHBalance) {
+        this.setState({ ETHBalance: window.ETHBalance })
+      }
       if (this.state.routeRequest !== window.routeRequest) {
         this.setState({
           basicMenuBool: true,
@@ -292,14 +296,12 @@ class Main extends Component {
         
 
         window._contracts = await buildContracts(_web3)
+        await window.utils.getETHBalance();
         await this.setState({ contracts: window._contracts })
         await window.utils.getContracts()
         await this.setUpTokenVals()
         await this.setupAssets()
-        await window.utils.getETHBalance()
-
-
-
+        
         console.log("bools...", window.assetHolderBool, window.assetClassHolderBool, window.IDHolderBool)
         console.log("Wallet balance in ETH: ", window.ETHBalance)
 
