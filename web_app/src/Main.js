@@ -44,15 +44,15 @@ class Main extends Component {
       }
       if (window.assets.ids.length > 0 && Object.values(window.assets.descriptions).length === window.aTknIDs.length &&
         window.assets.names.length === 0 && this.state.buildReady === true) {
-        if(window.resetInfo === false){
+        if (window.resetInfo === false) {
           console.log("WD: rebuilding assets (Last Step)")
           this.buildAssets()
         }
-        
+
       }
       if (window.resetInfo === true) {
         window.hasLoadedAssets = false;
-        this.setState({ buildReady: false, runWatchDog: false})
+        this.setState({ buildReady: false, runWatchDog: false })
         window.assets = { descriptions: [], ids: [], assetClasses: [], statuses: [], names: [] };
         window.assetTokenInfo = {
           assetClass: undefined,
@@ -72,10 +72,10 @@ class Main extends Component {
           this.setState({ buildReady: true })
         }
       }
-      else if((this.state.buildReady === true && window.ipfsCounter < window.aTknIDs.length) ||  
-        (this.state.buildReady === true && this.state.runWatchDog === false)){ 
-          console.log("Setting buildready to false in watchdog")
-          this.setState({buildReady: false}) 
+      else if ((this.state.buildReady === true && window.ipfsCounter < window.aTknIDs.length) ||
+        (this.state.buildReady === true && this.state.runWatchDog === false)) {
+        console.log("Setting buildready to false in watchdog")
+        this.setState({ buildReady: false })
       }
     }, 100)
 
@@ -260,16 +260,16 @@ class Main extends Component {
       _web3 = new Web3(_web3.givenProvider);
       ethereum.on("accountsChanged", function (accounts) {
         _web3.eth.getAccounts().then((e) => {
-          if(window.addr !== e[0]){
-          window.addr = e[0];
-          window.assetClass = undefined;
-          window.isAuthUser = false;
-          window.isACAdmin = false;
-          self.setState({ addr: e[0], runWatchDog: false })
-          self.setupContractEnvironment(window.web3);
-          console.log("///////in acctChanger////////")
+          if (window.addr !== e[0]) {
+            window.addr = e[0];
+            window.assetClass = undefined;
+            window.isAuthUser = false;
+            window.isACAdmin = false;
+            self.setState({ addr: e[0], runWatchDog: false })
+            self.setupContractEnvironment(window.web3);
+            console.log("///////in acctChanger////////")
           }
-          else{console.log("Something bit in the acct listener, but no changes made.")}
+          else { console.log("Something bit in the acct listener, but no changes made.") }
         });
       });
     };
@@ -374,7 +374,7 @@ class Main extends Component {
         status: undefined,
       }
       window.assets = { descriptions: [], ids: [], assetClasses: [], statuses: [], names: [] };
-      window.resetInfo = false; 
+      window.resetInfo = false;
       const ethereum = window.ethereum;
       var _web3 = require("web3");
       _web3 = new Web3(_web3.givenProvider);
@@ -475,19 +475,26 @@ class Main extends Component {
             </div>
           </div>
           <div className="pageForm">
-
-            <div className="userInfoBox">
-              <div>
-                AssetClass Token Balance: {this.state.assetClassBalance}
-              </div>
-              <br></br>
-              <div>
-                Asset Token Balance: {this.state.assetBalance}
-              </div>
-              <br></br>
-              <div>
-                ID Token Balance : {this.state.IDTokenBalance}
-              </div>
+            <div
+              className="tokenBalances"
+            >
+              <DropdownButton
+                title="Token Balances"
+                variant="toggle"
+                size="lg">
+                <Dropdown.Item size="lg">
+                  ETH Balance : {this.state.ETHBalance}
+                </Dropdown.Item>
+                <Dropdown.Item size="lg">
+                  AssetClass Token Balance: {this.state.assetClassBalance}
+                </Dropdown.Item>
+                <Dropdown.Item size="lg">
+                  Asset Token Balance: {this.state.assetBalance}
+                </Dropdown.Item>
+                <Dropdown.Item size="lg">
+                  ID Token Balance : {this.state.IDTokenBalance}
+                </Dropdown.Item>
+              </DropdownButton>
               <div>
                 <style type="text/css">
                   {`
@@ -507,7 +514,7 @@ class Main extends Component {
                         }
 
                         .btn-toggle {
-                          background-color: #00a8ff;
+                          background-color: #005480;
                           color: white;
                           height: 4rem;
                           margin-top: 0.4rem;
@@ -522,19 +529,27 @@ class Main extends Component {
                         }
                         .btn-toggle:focus {
                           background: #00a8ff;
+                          font-size: 1.4rem;
                         }
                         .btn-toggle:active {
                           background: #00a8ff;
+                          font-size: 1.4rem;
                         }
                         .dropdown-toggle{
                           margin-top: 0.4rem;
                           width: 19.8rem;
+                          font-size: 1.4rem;
                         }
                         .dropdown-menu {
                           width: 19.8rem;
                           font-size: 1.4rem;
                           background-color: #00a8ff;
                           color: white;
+                          -webkit-transition: all .25s ease;
+                          -moz-transition: all .25s ease;
+                           -ms-transition: all .25s ease;
+                            -o-transition: all .25s ease;
+                               transition: all .25s ease;
                         }
                      `}
                 </style>

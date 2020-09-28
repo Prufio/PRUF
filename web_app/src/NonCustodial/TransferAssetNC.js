@@ -38,7 +38,7 @@ class ModifyDescriptionNC extends Component {
       to: "",
       hasLoadedAssets: false,
       assets: { descriptions: [0], ids: [0], assetClasses: [0], statuses: [0], names: [0] },
-      location: undefined,
+      transaction: undefined,
     };
   }
 
