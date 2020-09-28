@@ -51,6 +51,7 @@ class Main extends Component {
         
       }
       if (window.resetInfo === true) {
+        window.hasLoadedAssets = false;
         this.setState({ buildReady: false, runWatchDog: false})
         window.assets = { descriptions: [], ids: [], assetClasses: [], statuses: [], names: [] };
         window.assetTokenInfo = {
@@ -212,7 +213,7 @@ class Main extends Component {
 
       window.assets.descriptions = tempDescArray;
       window.assets.names = tempNameArray;
-
+      window.hasLoadedAssets = true;
       console.log("BA: Assets after rebuild: ", window.assets)
     }
 
@@ -355,6 +356,7 @@ class Main extends Component {
 
   componentDidMount() {//stuff to do when component mounts in window
     buildWindowUtils()
+    window.hasLoadedAssets = false;
     window.location.href = '/#/';
 
     if (window.ethereum) {

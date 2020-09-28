@@ -9,6 +9,16 @@ class EscrowManagerNC extends Component {
 
     //State declaration.....................................................................................................
 
+    this.updateAssets = setInterval(() => {
+      if (this.state.assets !== window.assets && this.state.runWatchDog === true) {
+        this.setState({ assets: window.assets })
+      }
+
+      if(this.state.hasLoadedAssets !== window.hasLoadedAssets){
+        this.setState({hasLoadedAssets: window.hasLoadedAssets})
+      }
+    }, 100)
+
     this.state = {
       addr: "",
       costArray: [0],
@@ -28,6 +38,8 @@ class EscrowManagerNC extends Component {
       timeFormat: "",
       isSettingEscrow: "0",
       escrowData: [],
+      hasLoadedAssets: false,
+      assets: { descriptions: [0], ids: [0], assetClasses: [0], statuses: [0], names: [0] }
     };
   }
 
@@ -96,6 +108,25 @@ class EscrowManagerNC extends Component {
       return document.getElementById("MainForm").reset();
     };
 
+    const _checkIn = async (e) => {
+      if(e === "0" || e === undefined){return}
+      else if(e === "reset"){
+        return window.resetInfo = true;
+      }
+      this.setState({ selectedAsset: e })
+      console.log("Changed component idx to: ", window.assets.ids[e])
+
+      this.setState({
+        assetClass: window.assets.assetClasses[e],
+        idxHash: window.assets.ids[e],
+        name: window.assets.descriptions[e].name,
+        photos: window.assets.descriptions[e].photo,
+        text: window.assets.descriptions[e].text,
+        description: window.assets.descriptions[e],
+        status: window.assets.statuses[e],
+      })
+    }
+
     const _endEscrow = async () => {
       this.setState({ txStatus: false });
       this.setState({ txHash: "" });
@@ -145,18 +176,27 @@ class EscrowManagerNC extends Component {
               <h2>User address unreachable</h2>
               <h3>Please connect web3 provider.</h3>
             </div>
-          )}{this.state.idxHash === undefined && (
-            <div className="errorResults">
-              <h2>No asset selected.</h2>
-              <h3>Please select asset in the dashboard to use forms.</h3>
-            </div>
           )}
-          {window.addr > 0 && this.state.idxHash !== undefined &&(
+          {window.addr > 0 && (
             <div>
               <h2 className="Headertext">Manage Escrow</h2>
               <br></br>
               {!this.state.accessPermitted && (
                 <>
+                <Form.Row>
+                <Form.Group as={Col} controlId="formGridAsset">
+                  <Form.Label className="formFont"> Select an Asset to Modify :</Form.Label>
+                  <Form.Control
+                    as="select"
+                    size="lg"
+                    onChange={(e) => {_checkIn(e.target.value)}}
+                  >
+                    {this.state.hasLoadedAssets && (<><option value="null"> Select an asset </option><option value="reset">Refresh Assets</option>{window.utils.generateAssets()}</>)}
+                    {!this.state.hasLoadedAssets && (<option value="null"> Loading Assets... </option>)}
+                    
+                  </Form.Control>
+                </Form.Group>
+              </Form.Row>
                 <Form.Row>
                 <Form.Group as={Col} controlId="formGridFormatSetOrEnd">
                   <Form.Label className="formFont">Set or End?:</Form.Label>

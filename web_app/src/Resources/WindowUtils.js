@@ -69,6 +69,22 @@ function buildWindowUtils() {
     return newObj;
   }
 
+  const _generateAssets = () => {
+    if (window.assets.names.length > 0) {
+      let component = [];
+
+      for (let i = 0; i < window.assets.ids.length; i++) {
+        //console.log(i, "Adding: ", window.assets.descriptions[i], "and ", window.assets.ids[i])
+        component.push(<option key={"asset " + String(i)} value={i}>Name: {window.assets.descriptions[i].name}, ID: {window.assets.ids[i]} </option>);
+      }
+
+      return component
+    }
+
+    else { return <></> }
+
+  }
+
   const _generateDescription = (obj) => {
 
     //console.log(self.state.descriptionElements)
@@ -674,6 +690,7 @@ function buildWindowUtils() {
     checkHoldsToken: _checkHoldsToken,
     getAssetTokenName: _getAssetTokenName,
     getACFromIdx: _getACFromIdx,
+    generateAssets: _generateAssets,
 
   }
 

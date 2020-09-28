@@ -10,6 +10,16 @@ class ModifyRecordStatusNC extends Component {
 
     //State declaration.....................................................................................................
 
+    this.updateAssets = setInterval(() => {
+      if (this.state.assets !== window.assets && this.state.runWatchDog === true) {
+        this.setState({ assets: window.assets })
+      }
+
+      if(this.state.hasLoadedAssets !== window.hasLoadedAssets){
+        this.setState({hasLoadedAssets: window.hasLoadedAssets})
+      }
+    }, 100)
+
     this.state = {
       addr: "",
       error: undefined,
@@ -26,6 +36,8 @@ class ModifyRecordStatusNC extends Component {
       model: "",
       serial: "",
       isNFA: false,
+      hasLoadedAssets: false,
+      assets: { descriptions: [0], ids: [0], assetClasses: [0], statuses: [0], names: [0] }
     };
   }
 
@@ -52,7 +64,24 @@ class ModifyRecordStatusNC extends Component {
   render() {//render continuously produces an up-to-date stateful document  
     const self = this;
 
+    const _checkIn = async (e) => {
+      if(e === "0" || e === undefined){return}
+      else if(e === "reset"){
+        return window.resetInfo = true;
+      }
+      this.setState({ selectedAsset: e })
+      console.log("Changed component idx to: ", window.assets.ids[e])
 
+      this.setState({
+        assetClass: window.assets.assetClasses[e],
+        idxHash: window.assets.ids[e],
+        name: window.assets.descriptions[e].name,
+        photos: window.assets.descriptions[e].photo,
+        text: window.assets.descriptions[e].text,
+        description: window.assets.descriptions[e],
+        status: window.assets.statuses[e],
+      })
+    }
 
     const _modifyStatus = async () => {
       this.setState({ txStatus: false });
@@ -123,17 +152,26 @@ class ModifyRecordStatusNC extends Component {
               <h2>User address unreachable</h2>
               <h3>Please connect web3 provider.</h3>
             </div>
-          )}{this.state.idxHash === undefined && (
-            <div className="errorResults">
-              <h2>No asset selected.</h2>
-              <h3>Please select asset in the dashboard to use forms.</h3>
-            </div>
           )}
-          {window.addr > 0 && this.state.idxHash !== undefined &&(
+          {window.addr > 0 && (
             <div>
 
               <h2 className="Headertext">Change Asset Status</h2>
               <br></br>
+              <Form.Row>
+                <Form.Group as={Col} controlId="formGridAsset">
+                  <Form.Label className="formFont"> Select an Asset to Modify :</Form.Label>
+                  <Form.Control
+                    as="select"
+                    size="lg"
+                    onChange={(e) => {_checkIn(e.target.value)}}
+                  >
+                    {this.state.hasLoadedAssets && (<><option value="null"> Select an asset </option><option value="reset">Refresh Assets</option>{window.utils.generateAssets()}</>)}
+                    {!this.state.hasLoadedAssets && (<option value="null"> Loading Assets... </option>)}
+                    
+                  </Form.Control>
+                </Form.Group>
+              </Form.Row>
               <Form.Row>
                 <Form.Group as={Col} controlId="formGridFormat">
                   <Form.Label className="formFont">New Status:</Form.Label>
