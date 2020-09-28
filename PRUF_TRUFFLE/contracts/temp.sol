@@ -1,6 +1,6 @@
 // SPDX-License-Identifier: MIT
 
-pragma solidity ^0.6.7;
+pragma solidity ^0.6.0;
 
 import "./Imports/access/AccessControl.sol";
 import "./Imports/GSN/Context.sol";
@@ -23,7 +23,7 @@ import "./Imports/token/ERC20/ERC20Snapshot.sol";
  * roles, as well as the default admin role, which will let it grant both minter
  * and pauser roles to other accounts.
  */
-contract SharToken is
+contract ERC20PresetMinterPauser is
     Context,
     AccessControl,
     ERC20Burnable,
@@ -47,8 +47,6 @@ contract SharToken is
         _setupRole(PAUSER_ROLE, _msgSender());
     }
 
-    uint256 private maxSupply =  100;  //set max supply (100000?)
-
     /**
      * @dev Creates `amount` new tokens for `to`.
      *
@@ -61,32 +59,15 @@ contract SharToken is
     function mint(address to, uint256 amount) public virtual {
         require(
             hasRole(MINTER_ROLE, _msgSender()),
-            "SharToken: must have minter role to mint"
+            "ERC20PresetMinterPauser: must have minter role to mint"
         );
-        require(
-            totalSupply() <= maxSupply.add(amount) ,
-            "SharToken: order exceeds max supply"
-        );
-
         _mint(to, amount);
     }
 
-    /**
-     * @dev Returns Max Supply
-     *
-     */
-    function max_Supply() external view returns (uint256) {
-        return maxSupply;
-    }
-
-
-    /*
-     * @dev Take a balance snapshot, returns snapshot ID
-     */
     function takeSnapshot() external returns (uint256) {
         require(
             hasRole(SNAPSHOT_ROLE, _msgSender()),
-            "SharToken: must have snapshot role to take a snapshot"
+            "ERC20PresetMinterPauser: must have snapshot role to take a snapshot"
         );
         return _snapshot();
     }
@@ -103,7 +84,7 @@ contract SharToken is
     function pause() public virtual {
         require(
             hasRole(PAUSER_ROLE, _msgSender()),
-            "SharToken: must have pauser role to pause"
+            "ERC20PresetMinterPauser: must have pauser role to pause"
         );
         _pause();
     }
@@ -120,7 +101,7 @@ contract SharToken is
     function unpause() public virtual {
         require(
             hasRole(PAUSER_ROLE, _msgSender()),
-            "SharToken: must have pauser role to unpause"
+            "ERC20PresetMinterPauser: must have pauser role to unpause"
         );
         _unpause();
     }

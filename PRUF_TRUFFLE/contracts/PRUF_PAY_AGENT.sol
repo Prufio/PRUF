@@ -177,7 +177,7 @@ contract PAY_AGENT is Context, ReentrancyGuard, Ownable, Pausable{
      * @param account The address of the payee to add.
      * @param shares_ The number of shares owned by the payee.
      */
-    function _setPayee(address account, uint256 shares_) private {
+    function _setPayee(address account, uint256 shares_) external onlyOwner {
         require(account != address(0), "PaymentSplitter: account is the zero address");
 
         if (_shares[account].shares > shares_) {
