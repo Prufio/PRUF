@@ -10,6 +10,16 @@ class ExportAssetNC extends Component {
 
     //State declaration.....................................................................................................
 
+    this.updateAssets = setInterval(() => {
+      if (this.state.assets !== window.assets && this.state.runWatchDog === true) {
+        this.setState({ assets: window.assets })
+      }
+
+      if(this.state.hasLoadedAssets !== window.hasLoadedAssets){
+        this.setState({hasLoadedAssets: window.hasLoadedAssets})
+      }
+    }, 100)
+
     this.state = {
       addr: "",
       lookupIPFS1: "",
@@ -27,6 +37,8 @@ class ExportAssetNC extends Component {
       importAgent: "",
       isNFA: false,
       txStatus: null,
+      hasLoadedAssets: false,
+      assets: { descriptions: [0], ids: [0], assetClasses: [0], statuses: [0], names: [0] },
       transaction: undefined,
     };
   }
@@ -34,13 +46,7 @@ class ExportAssetNC extends Component {
   //component state-change events......................................................................................................
 
   componentDidMount() {//stuff to do when component mounts in window
-    this.setState({
-      idxHash: window.assetTokenInfo.idxHash,
-      oldDescription: window.assetTokenInfo.description,
-      assetClass: window.assetTokenInfo.assetClass,
-      name: window.assetTokenInfo.name,
-      status: window.assetTokenInfo.status
-    })
+ 
   }
 
   componentWillUnmount() {//stuff do do when component unmounts from the window
@@ -52,6 +58,25 @@ class ExportAssetNC extends Component {
 
   render() {//render continuously produces an up-to-date stateful document  
     const self = this;
+
+    const _checkIn = async (e) => {
+      if(e === "0" || e === undefined){return}
+      else if(e === "reset"){
+        return window.resetInfo = true;
+      }
+      this.setState({ selectedAsset: e })
+      console.log("Changed component idx to: ", window.assets.ids[e])
+
+      this.setState({
+        assetClass: window.assets.assetClasses[e],
+        idxHash: window.assets.ids[e],
+        name: window.assets.descriptions[e].name,
+        photos: window.assets.descriptions[e].photo,
+        text: window.assets.descriptions[e].text,
+        description: window.assets.descriptions[e],
+        status: window.assets.statuses[e],
+      })
+    }
 
     const _exportAsset = async () => {//create a new asset record
       this.setState({ txStatus: false });
@@ -94,17 +119,25 @@ class ExportAssetNC extends Component {
               <h2>User address unreachable</h2>
               <h3>Please connect web3 provider.</h3>
             </div>
-          )}{this.state.idxHash === undefined && (
-            <div className="errorResults">
-              <h2>No asset selected.</h2>
-              <h3>Please select asset in the dashboard to use forms.</h3>
-            </div>
           )}
-          {window.addr > 0 && this.state.idxHash !== undefined &&(
+          {window.addr > 0 && (
             <div>
               <h2 className="Headertext">Export</h2>
               <br></br>
-
+              <Form.Row>
+                <Form.Group as={Col} controlId="formGridAsset">
+                  <Form.Label className="formFont"> Select an Asset to Modify :</Form.Label>
+                  <Form.Control
+                    as="select"
+                    size="lg"
+                    onChange={(e) => {_checkIn(e.target.value)}}
+                  >
+                    {this.state.hasLoadedAssets && (<><option value="null"> Select an asset </option><option value="reset">Refresh Assets</option>{window.utils.generateAssets()}</>)}
+                    {!this.state.hasLoadedAssets && (<option value="null"> Loading Assets... </option>)}
+                    
+                  </Form.Control>
+                </Form.Group>
+              </Form.Row>
               <Form.Row>
                 <Form.Group>
                   <Button className="buttonDisplay"
@@ -123,13 +156,15 @@ class ExportAssetNC extends Component {
         </Form>
         <div className="assetSelectedResults">
           <Form.Row>
-            <Form.Group>
-              <div className="assetSelectedContentHead">Asset IDX: <span className="assetSelectedContent">{window.assetTokenInfo.idxHash}</span> </div>
-              <div className="assetSelectedContentHead">Asset Name: <span className="assetSelectedContent">{window.assetTokenInfo.name}</span> </div>
-              <div className="assetSelectedContentHead"> Asset Description: <span className="assetSelectedContent">{window.assetTokenInfo.oldDescription}</span> </div>
-              <div className="assetSelectedContentHead">Asset Class: <span className="assetSelectedContent">{window.assetTokenInfo.assetClass}</span> </div>
-              <div className="assetSelectedContentHead">Asset Status: <span className="assetSelectedContent">{window.assetTokenInfo.status}</span> </div>
-            </Form.Group>
+          {this.state.idxHash !== undefined &&(
+                <Form.Group>
+                <div className="assetSelectedContentHead">Asset IDX: <span className="assetSelectedContent">{this.state.idxHash}</span> </div>
+                <div className="assetSelectedContentHead">Asset Name: <span className="assetSelectedContent">{this.state.name}</span> </div>
+                {/* <div className="assetSelectedContentHead"> Asset Description: <span className="assetSelectedContent">{this.state.description}</span> </div> */}
+                <div className="assetSelectedContentHead">Asset Class: <span className="assetSelectedContent">{this.state.assetClass}</span> </div>
+                <div className="assetSelectedContentHead">Asset Status: <span className="assetSelectedContent">{this.state.status}</span> </div>
+                </Form.Group>
+              )} 
           </Form.Row>
         </div>
         {this.state.transaction === true && (

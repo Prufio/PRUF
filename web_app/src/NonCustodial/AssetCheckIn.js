@@ -8,30 +8,11 @@ class AssetCheckIn extends Component {
   constructor(props) {
     super(props);
 
-    this.updateAuthLevel = setInterval(() => {
+    this.updateAssets = setInterval(() => {
       if (this.state.assets !== window.assets && this.state.runWatchDog === true) {
         this.setState({ assets: window.assets })
       }
-      if (this.state.assetTokenInfo !== window.assetTokenInfo && this.state.runWatchDog === true) {
-        this.setState({ assetTokenInfo: window.assetTokenInfo })
-      }
     }, 100)
-
-    this.generateAssets = () => {
-      if (window.assets.names.length > 0) {
-        let component = [];
-
-        for (let i = 0; i < window.assets.ids.length; i++) {
-          //console.log(i, "Adding: ", window.assets.descriptions[i], "and ", window.assets.ids[i])
-          component.push(<option key={"asset " + String(i)} value={i}>Name: {window.assets.descriptions[i].name}, ID: {window.assets.ids[i]} </option>);
-        }
-
-        return component
-      }
-
-      else { return <></> }
-
-    }
 
     this.state = {
       addr: undefined,
@@ -52,7 +33,7 @@ class AssetCheckIn extends Component {
       RCLR: "",
       showDescription: false,
       descriptionElements: undefined,
-      assets: undefined,
+      assets: { descriptions: [0], ids: [0], assetClasses: [0], statuses: [0], names: [0] },
       contractArray: [],
     };
   }
@@ -61,7 +42,6 @@ class AssetCheckIn extends Component {
     this.setState({
       addr: window.addr,
       runWatchDog: true,
-      assets: undefined,
       assetTokenInfo: {}
     })
   }
@@ -80,25 +60,23 @@ class AssetCheckIn extends Component {
     const _refresh = () => {
       window.resetInfo = true;
       window.recount = true;
-      this.setState({ assets: undefined })
+      this.setState({ assets: { descriptions: [], ids: [], assetClasses: [], statuses: [], names: [] } })
     }
 
-    const _checkIn = async () => {
-      if(this.state.selectedAsset === "0"){return}
-      console.log("Changed window idx to: ", window.assets.ids[this.state.selectedAsset])
+    const _checkIn = async (e) => {
+      if(e === "0" || e === undefined){return}
+      this.setState({ selectedAsset: e })
+      console.log("Changed component idx to: ", window.assets.ids[e])
 
-      window.assetTokenInfo = {
-        assetClass: window.assets.assetClasses[this.state.selectedAsset],
-        idxHash: window.assets.ids[this.state.selectedAsset],
-        name: window.assets.descriptions[this.state.selectedAsset].name,
-        photos: window.assets.descriptions[this.state.selectedAsset].photo,
-        text: window.assets.descriptions[this.state.selectedAsset].text,
-        description: window.assets.descriptions[this.state.selectedAsset],
-        status: window.assets.statuses[this.state.selectedAsset],
-      }
-
-      /* this.setState({ descriptionElements: window.utils.seperateKeysAndValues(this.state.assetTokenInfo.description) })
-      this.setState({ showDescription: true }) */
+      this.setState({assetTokenInfo: {
+        assetClass: window.assets.assetClasses[e],
+        idxHash: window.assets.ids[e],
+        name: window.assets.descriptions[e].name,
+        photos: window.assets.descriptions[e].photo,
+        text: window.assets.descriptions[e].text,
+        description: window.assets.descriptions[e],
+        status: window.assets.statuses[e],
+      }})
     }
 
     return (
@@ -120,30 +98,25 @@ class AssetCheckIn extends Component {
                   <Form.Control
                     as="select"
                     size="lg"
-                    onChange={(e) => this.setState({ selectedAsset: e.target.value })}
+                    onChange={(e) => {_checkIn(e.target.value)}}
                   >
-                    <option value="null"> Select an asset </option>
-                    {this.generateAssets()}
+                    {window.hasLoadedAssets && (<option value="null"> Select an asset </option>)}
+                    {!window.hasLoadedAssets && (<option value="null"> Loading Assets... </option>)}
+                    {window.utils.generateAssets()}
                   </Form.Control>
                 </Form.Group>
               </Form.Row>
-              <Form.Row>
+              {this.state.assetTokenInfo !== undefined && (
+                <Form.Row>
                 <Form.Group as={Col} controlId="formGridStats">
                   <div className="assetDashboardContentHead">Asset Name: <span className="assetDashboardContent">{this.state.assetTokenInfo.name}</span> </div>
                   <div className="assetDashboardContentHead"> Asset Status: <span className="assetDashboardContent">{this.state.assetTokenInfo.status}</span> </div>
                   <div className="assetDashboardContentHead">Asset Class: <span className="assetDashboardContent">{this.state.assetTokenInfo.assetClass}</span> </div>
                 </Form.Group>
               </Form.Row>
+              )}
+              
               <Form.Row>
-                <Button
-                  className="buttonDisplay"
-                  variant="primary"
-                  type="button"
-                  size="lg"
-                  onClick={_checkIn}
-                >
-                  Access PRuF
-                </Button>
                 <Button
                   className="buttonDisplay"
                   variant="primary"

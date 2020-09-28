@@ -86,12 +86,17 @@ h4 {
 
 .particles {
   box-sizing: border-box;
-  position: "absolute";
+  position: "fixed";
   top: 0;
   left: 0;
   width: "100%";
   height: "100%";
-  z-index: 20;
+  z-index: -10;
+}
+
+.particles-canvas-el {
+  position: "fixed";
+  z-index: -999;
 }
 
 .header li a {
@@ -223,16 +228,28 @@ div {
   z-index: 2;
 }
 
-.userInfoBox {
+/* .userInfoBox {
   height: 12rem;
   width: 20rem;
   background-color: #002a40;
-  /* border-radius: 0rem 0rem 1rem 0rem; */
   color: rgb(255, 255, 255);
   font-size: 2rem;
   font-weight: bold;
   font-family: Tahoma, Geneva, sans-serif;
   justify-content: bottom;
+  opacity: 0.96;
+  padding-left: 1rem;
+  margin-right: 87%;
+  position: absolute;
+} */
+
+.tokenBalances {
+  height: fit-content;
+  width: fit-content;
+  color: rgb(255, 255, 255);
+  font-size: 2rem;
+  font-weight: bold;
+  font-family: Tahoma, Geneva, sans-serif;
   opacity: 0.96;
   padding-left: 1rem;
   margin-right: 87%;
@@ -257,8 +274,8 @@ div {
 }
 
 .assetDashboard {
-  height: 32rem;
-  width: 59rem;
+  height: flex;
+  width: 70rem;
   background-color: #005480;
   border-radius: 0rem 0rem 0.5rem 0.5rem;
   padding: 2rem;
