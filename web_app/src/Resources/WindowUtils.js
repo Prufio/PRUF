@@ -547,6 +547,8 @@ function buildWindowUtils() {
   }
   const _getAssetTokenInfo = async () => {
 
+    console.log("GATI: In _getAssetTokenInfo")
+
     if (Number(window.balances.assetBalance) > 0) {
       let tknIDArray = [];
       let ipfsHashArray = [];
@@ -563,7 +565,7 @@ function buildWindowUtils() {
               tknIDArray.push(window.web3.utils.numberToHex(_result));
             }
           });
-          console.log(i)
+          //console.log(i)
       }
 
       for (let x = 0; x < tknIDArray.length; x++) {
@@ -572,8 +574,8 @@ function buildWindowUtils() {
             if (_error) {
               console.log("IN ERROR IN ERROR IN ERROR")
             } else {
-              console.log(tknIDArray[x])
-              console.log(_result)
+              //console.log(tknIDArray[x])
+              //console.log(_result)
               if(Number(Object.values(_result)[5]) > 0){
                 ipfsHashArray.push(window.utils.getIpfsHashFromBytes32(Object.values(_result)[5]))
               }
@@ -584,13 +586,13 @@ function buildWindowUtils() {
 
             }
           })
-          console.log(x)
+          //console.log(x)
       }
 
       console.log(ipfsHashArray)
 
       window.aTknIDs = tknIDArray;
-      console.log(window.aTknIDs, " tknID-> ", tknIDArray);
+      //console.log(window.aTknIDs, " tknID-> ", tknIDArray);
       window.ipfsHashArray = ipfsHashArray;
 
       window.assets.assetClasses = assetClasses;
