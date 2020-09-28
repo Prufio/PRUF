@@ -38,7 +38,7 @@ class ExportAssetNC extends Component {
       isNFA: false,
       txStatus: null,
       hasLoadedAssets: false,
-      assets: { descriptions: [0], ids: [0], assetClasses: [0], statuses: [0], names: [0] }
+      assets: { descriptions: [0], ids: [0], assetClasses: [0], statuses: [0], names: [0] },
       transaction: undefined,
     };
   }
@@ -46,13 +46,7 @@ class ExportAssetNC extends Component {
   //component state-change events......................................................................................................
 
   componentDidMount() {//stuff to do when component mounts in window
-    this.setState({
-      idxHash: window.assetTokenInfo.idxHash,
-      oldDescription: window.assetTokenInfo.description,
-      assetClass: window.assetTokenInfo.assetClass,
-      name: window.assetTokenInfo.name,
-      status: window.assetTokenInfo.status
-    })
+ 
   }
 
   componentWillUnmount() {//stuff do do when component unmounts from the window
@@ -162,13 +156,15 @@ class ExportAssetNC extends Component {
         </Form>
         <div className="assetSelectedResults">
           <Form.Row>
-            <Form.Group>
-              <div className="assetSelectedContentHead">Asset IDX: <span className="assetSelectedContent">{window.assetTokenInfo.idxHash}</span> </div>
-              <div className="assetSelectedContentHead">Asset Name: <span className="assetSelectedContent">{window.assetTokenInfo.name}</span> </div>
-              <div className="assetSelectedContentHead"> Asset Description: <span className="assetSelectedContent">{window.assetTokenInfo.oldDescription}</span> </div>
-              <div className="assetSelectedContentHead">Asset Class: <span className="assetSelectedContent">{window.assetTokenInfo.assetClass}</span> </div>
-              <div className="assetSelectedContentHead">Asset Status: <span className="assetSelectedContent">{window.assetTokenInfo.status}</span> </div>
-            </Form.Group>
+          {this.state.idxHash !== undefined &&(
+                <Form.Group>
+                <div className="assetSelectedContentHead">Asset IDX: <span className="assetSelectedContent">{this.state.idxHash}</span> </div>
+                <div className="assetSelectedContentHead">Asset Name: <span className="assetSelectedContent">{this.state.name}</span> </div>
+                <div className="assetSelectedContentHead"> Asset Description: <span className="assetSelectedContent">{this.state.description}</span> </div>
+                <div className="assetSelectedContentHead">Asset Class: <span className="assetSelectedContent">{this.state.assetClass}</span> </div>
+                <div className="assetSelectedContentHead">Asset Status: <span className="assetSelectedContent">{this.state.status}</span> </div>
+                </Form.Group>
+              )} 
           </Form.Row>
         </div>
         {this.state.transaction === true && (
