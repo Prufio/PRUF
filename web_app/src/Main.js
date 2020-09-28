@@ -289,16 +289,19 @@ class Main extends Component {
           routeRequest: "basic"
         })
 
+        
+
         window._contracts = await buildContracts(_web3)
         await this.setState({ contracts: window._contracts })
         await window.utils.getContracts()
         await this.setUpTokenVals()
         await this.setupAssets()
+        await window.utils.getETHBalance()
 
 
 
         console.log("bools...", window.assetHolderBool, window.assetClassHolderBool, window.IDHolderBool)
-
+        console.log("Wallet balance in ETH: ", window.ETHBalance)
 
         return this.setState({ runWatchDog: true })
       }
