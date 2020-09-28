@@ -36,8 +36,6 @@ pragma solidity ^0.6.7;
  *
  *      *what do we do (if anything) with the 128 "free" bits in the storage struct?
  *
- *      *rebrand verify and naked
- *
  *      *Look up AC Data in the web interface
  *
  *      *Pruf token enumerator in web3 for all pruf tokens
@@ -48,12 +46,13 @@ pragma solidity ^0.6.7;
  *
  *      *Define / document protocol
  *
- *      LAUNCH GUI - enumerate my assets, with IPFS descriptions, clickable to manage assets
+ *      *LAUNCH GUI - enumerate my assets, with IPFS descriptions, clickable to manage assets
  *
- *      
- *      
+ *      *make a PRuF fountain contract
  *
+ *      *make security token invisible from the main contracts
  *
+ *      *all idx hashes should be clickable and open the asset display page in a new window   
  *
  *
  *
