@@ -19,7 +19,7 @@ __/\\\\\\\\\\\\\ _____/\\\\\\\\\ _______/\\../\\ ___/\\\\\\\\\\\\\\\
 pragma solidity ^0.6.7;
 
 import "./PRUF_INTERFACES.sol";
-import "./PRUF_BASIC.sol";
+//import "./PRUF_BASIC.sol";
 import "./Imports/access/Ownable.sol";
 import "./Imports/utils/Pausable.sol";
 import "./Imports/utils/ReentrancyGuard.sol";
@@ -27,7 +27,72 @@ import "./Imports/utils/Address.sol";
 
 import "./Imports/payment/escrow/Escrow.sol";
 
-contract SHARES is ReentrancyGuard, Ownable, Pausable, BASIC {
+
+interface PAY_AGENT_Interface {
+    function withdraw() external;
+}
+
+
+interface SHAR_TKN_Interface {
+
+    function mintPRUF_SHARE(
+        address _recipientAddress,
+        uint256 tokenId,
+        string calldata _tokenURI
+    ) external returns (uint256);
+
+    function setURI(uint256 tokenId, string calldata _tokenURI)
+        external
+        returns (uint256);
+
+
+    function tokenExists(uint256 tokenId) external view returns (uint8);
+
+    function transferFrom(
+        address from,
+        address to,
+        uint256 tokenId
+    ) external;
+
+    function safeTransferFrom(
+        address from,
+        address to,
+        uint256 tokenId
+    ) external;
+
+    function safeTransferFrom(
+        address from,
+        address to,
+        uint256 tokenId,
+        bytes calldata _data
+    ) external;
+
+    function discard(uint256 tokenId) external;
+
+
+    function ownerOf(uint256 tokenId)
+        external
+        returns (address tokenHolderAdress);
+
+    function balanceOf(address account) external returns (uint256);
+
+    function name() external returns (string memory tokenName);
+
+    function symbol() external returns (string memory tokenSymbol);
+
+    function tokenURI(uint256 tokenId) external returns (string memory URI);
+
+    function totalSupply() external returns (uint256);
+
+    function tokenOfOwnerByIndex(address owner, uint256 index)
+        external
+        returns (uint256 tokenId);
+
+    function tokenByIndex(uint256 index) external returns (uint256);
+}
+
+
+contract SHARES is ReentrancyGuard, Ownable, Pausable {
     Escrow private _escrow;
 
     constructor() public {
@@ -36,12 +101,6 @@ contract SHARES is ReentrancyGuard, Ownable, Pausable, BASIC {
 
     using Address for address payable;
     using SafeMath for uint256;
-
-    address internal SHAR_TKN_Address;
-    SHAR_TKN_Interface internal SHAR_TKN;
-
-    // address internal STOR_Address;  //SHARES-TESTING
-    // STOR_Interface internal STOR;   //SHARES-TESTING
 
     uint256 constant private maxSupply = 10; //set max supply (100000?)
     uint256 constant private payPeriod = 2 minutes; //set to 30 days
@@ -52,6 +111,12 @@ contract SHARES is ReentrancyGuard, Ownable, Pausable, BASIC {
     uint256 private dividend;
 
     uint256 internal heldFunds;
+
+    address PAY_AGENT_Address;
+    PAY_AGENT_Interface internal PAY_AGENT;
+
+    address internal SHAR_TKN_Address;
+    SHAR_TKN_Interface internal SHAR_TKN;
 
     address authorizedAutomationAddress;
 
@@ -80,21 +145,34 @@ contract SHARES is ReentrancyGuard, Ownable, Pausable, BASIC {
     /*
      * @dev Set adress of STOR contract to interface with
      */
-    function OO_setStorageContract(address _storageAddress)
+    function OO_setPayAgentAdress(address _payAgentAddress)
         external
-        override
         onlyOwner
     {
         require(
-            _storageAddress != address(0),
-            "B:SSC: storage address cannot be zero"
+            _payAgentAddress != address(0)  ,
+            "B:SSC: address cannot be zero"
         );
         //^^^^^^^checks^^^^^^^^^
-        STOR = STOR_Interface(_storageAddress);
-        //------------------------------------------------- be sure to kill this! ----------------------!!!!!!!!!! SHARES-TESTING !!!!!!!!!!
-        SHAR_TKN_Address = _storageAddress; //testing only - steals storage address for shar_tkn
+        PAY_AGENT_Address = _payAgentAddress; //testing only - steals storage address for shar_tkn
+        PAY_AGENT = PAY_AGENT_Interface(PAY_AGENT_Address); //testing only
+        //^^^^^^^effects^^^^^^^^^
+    }
+
+    /*
+     * @dev Set adress of STOR contract to interface with
+     */
+    function OO_setTokenAdress(address _SHAR_TKN_Address)
+        external
+        onlyOwner
+    {
+        require(
+            _SHAR_TKN_Address != address(0),
+            "B:SSC: address cannot be zero"
+        );
+        //^^^^^^^checks^^^^^^^^^
+        SHAR_TKN_Address = _SHAR_TKN_Address; //testing only - steals storage address for shar_tkn
         SHAR_TKN = SHAR_TKN_Interface(SHAR_TKN_Address); //testing only
-        //------------------------------------------------- be sure to kill this! ----------------------!!!!!!!!!! SHARES-TESTING !!!!!!!!!!
         //^^^^^^^effects^^^^^^^^^
     }
 
@@ -113,18 +191,6 @@ contract SHARES is ReentrancyGuard, Ownable, Pausable, BASIC {
         authorizedAutomationAddress = _automationAddress;
         //^^^^^^^effects^^^^^^^^^
     }
-
-    //-------------------------------------------ADD THIS BACK IN FOR FINAL TESTING----------------------!!!!!!!!!! SHARES-TESTING !!!!!!!!!!
-    // /*
-    //  * @dev Resolve Contract Addresses from STOR
-    //  */
-    // function OO_resolveContractAddresses() external override onlyOwner {
-    //     //^^^^^^^checks^^^^^^^^^
-    //     SHAR_TKN_Address = STOR.resolveContractAddress("SHAR_TKN");
-    //     SHAR_TKN = SHAR_TKN_Interface(SHAR_TKN_Address);
-    //     //^^^^^^^Intercations^^^^^^^^^
-    // }
-    //-------------------------------------------ADD THIS BACK IN FOR FINAL TESTING----------------------!!!!!!!!!! SHARES-TESTING !!!!!!!!!!
 
     /**
      * sets a new dividend ending period payPeriod.seconds in the future
@@ -274,10 +340,9 @@ contract SHARES is ReentrancyGuard, Ownable, Pausable, BASIC {
         require(msg.value > 0, "MOAR ETH!!!!!");
     }
 
-    //-------------------------------------------ADD THIS BACK IN FOR FINAL TESTING----------------------!!!!!!!!!! SHARES-TESTING !!!!!!!!!!
-    // function getPaid() internal {  //collect any payments owed to this contract
-    //     APP.$withdraw();
-    //     APP_NC.$withdraw();
-    // }
-    //-------------------------------------------ADD THIS BACK IN FOR FINAL TESTING----------------------!!!!!!!!!! SHARES-TESTING !!!!!!!!!!
+
+    function getPaid() internal {  //collect any payments owed to this contract
+        PAY_AGENT.withdraw();
+    }
+
 }
