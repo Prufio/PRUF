@@ -9,6 +9,11 @@ class NewRecordNC extends Component {
     super(props);
 
     //State declaration.....................................................................................................
+    // this.listenForTx = setInterval(() => {
+    //   if(this.state.pendingTx === undefined && this.state.transaction === true) {
+    //     this.setState({pendingTx: Object.values(window.web3.eth.getPendingTransactions())[0]})
+    //   }
+    // }, 100)
 
     this.state = {
       addr: "",
@@ -31,6 +36,8 @@ class NewRecordNC extends Component {
       id: "",
       secret: "",
       txStatus: null,
+      transaction: undefined,
+      // pendingTx: undefined,
     };
   }
 
@@ -55,6 +62,7 @@ class NewRecordNC extends Component {
       this.setState({ txHash: "" });
       this.setState({ error: undefined })
       this.setState({ result: "" })
+      this.setState({ transaction: true })
       //reset state values before form resubmission
       var idxHash;
       var rgtRaw;
@@ -86,30 +94,35 @@ class NewRecordNC extends Component {
 
       var doesExist = await window.utils.checkAssetExists(idxHash);
 
-      if(!doesExist){
+      if (!doesExist) {
         window.contracts.APP_NC.methods
-        .$newRecord(
-          idxHash,
-          rgtHash,
-          window.assetClass,
-          this.state.countDownStart
-        )
-        .send({ from: window.addr, value: window.costs.newRecordCost })
-        .on("error", function (_error) {
-          // self.setState({ NRerror: _error });
-          self.setState({ txHash: Object.values(_error)[0].transactionHash });
-          self.setState({ txStatus: false });
-        })
-        .on("receipt", (receipt) => {
-          this.setState({ txHash: receipt.transactionHash });
-          this.setState({ txStatus: receipt.status });
-          window.resetInfo = true;
-          window.recount = true;
-        });
-      }
-        else{alert("Record already exists! Try again.")}
+          .$newRecord(
+            idxHash,
+            rgtHash,
+            window.assetClass,
+            this.state.countDownStart
+          )
+          .send({ from: window.addr, value: window.costs.newRecordCost })
+          .on("error", function (_error) {
+            // self.setState({ NRerror: _error });
+            self.setState({ transaction: false })
+            self.setState({ txHash: Object.values(_error)[0].transactionHash });
+            self.setState({ txStatus: false });
 
-        return document.getElementById("MainForm").reset(); //clear form inputs
+          })
+          .on("receipt", (receipt) => {
+            self.setState({ transaction: false })
+            this.setState({ txHash: receipt.transactionHash });
+            this.setState({ txStatus: receipt.status });
+            window.resetInfo = true;
+            window.recount = true;
+          });
+          // console.log(Object.values(window.web3.eth.getPendingTransactions()))
+      }
+      
+      else { alert("Record already exists! Try again.") }
+
+      return document.getElementById("MainForm").reset(); //clear form inputs
     };
 
     return (//default render
@@ -269,7 +282,19 @@ class NewRecordNC extends Component {
             </div>
           )}
         </Form>
+        {this.state.transaction === true && (
+
+          <div className="Results">
+            {/* {this.state.pendingTx === undefined && ( */}
+              <p class="loading">Transaction In Progress, Please Confirm Transaction</p>
+            {/* )} */}
+            {/* {this.state.pendingTx !== undefined && (
+              <p class="loading">Transaction In Progress</p>
+            )} */}
+          </div>)}
+
         {this.state.txHash > 0 && ( //conditional rendering
+
           <div className="Results">
             {this.state.txStatus === false && (
               <div>
@@ -298,6 +323,7 @@ class NewRecordNC extends Component {
             )}
           </div>
         )}
+
       </div>
     );
   }

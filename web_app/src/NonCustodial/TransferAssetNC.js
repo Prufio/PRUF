@@ -26,6 +26,7 @@ class ModifyDescriptionNC extends Component {
       model: "",
       serial: "",
       to: "",
+      location: undefined,
     };
   }
 
@@ -68,14 +69,16 @@ class ModifyDescriptionNC extends Component {
 
       window.contracts.A_TKN.methods
         .safeTransferFrom(window.addr, this.state.to, idxHash)
-        .send({ from: window.addr})
+        .send({ from: window.addr })
         .on("error", function (_error) {
           // self.setState({ NRerror: _error });
+          self.setState({ transaction: false })
           self.setState({ txHash: Object.values(_error)[0].transactionHash });
           self.setState({ txStatus: false });
           console.log(Object.values(_error)[0].transactionHash);
         })
         .on("receipt", (receipt) => {
+          self.setState({ transaction: false })
           this.setState({ txHash: receipt.transactionHash });
           this.setState({ txStatus: receipt.status });
           console.log(receipt.status);
@@ -107,7 +110,7 @@ class ModifyDescriptionNC extends Component {
               <h2 className="Headertext">Transfer Asset</h2>
               <br></br>
               <Form.Row>
-              <Form.Group as={Col} controlId="formGridTo">
+                <Form.Group as={Col} controlId="formGridTo">
                   <Form.Label className="formFont">To:</Form.Label>
                   <Form.Control
                     placeholder="Recipient Address"
@@ -130,11 +133,30 @@ class ModifyDescriptionNC extends Component {
                   </Button>
                 </Form.Group>
               </Form.Row>
-
-              <br></br>
             </div>
           )}
         </Form>
+        <div className="assetSelectedResults">
+          <Form.Row>
+            <Form.Group>
+              <div className="assetSelectedContentHead">Asset IDX: <span className="assetSelectedContent">{window.assetTokenInfo.idxHash}</span> </div>
+              <div className="assetSelectedContentHead">Asset Name: <span className="assetSelectedContent">{window.assetTokenInfo.name}</span> </div>
+              <div className="assetSelectedContentHead"> Asset Description: <span className="assetSelectedContent">{window.assetTokenInfo.oldDescription}</span> </div>
+              <div className="assetSelectedContentHead">Asset Class: <span className="assetSelectedContent">{window.assetTokenInfo.assetClass}</span> </div>
+              <div className="assetSelectedContentHead">Asset Status: <span className="assetSelectedContent">{window.assetTokenInfo.status}</span> </div>
+            </Form.Group>
+          </Form.Row>
+        </div>
+        {this.state.transaction === true && (
+
+<div className="Results">
+  {/* {this.state.pendingTx === undefined && ( */}
+    <p class="loading">Transaction In Progress, Please Confirm Transaction</p>
+  {/* )} */}
+  {/* {this.state.pendingTx !== undefined && (
+    <p class="loading">Transaction In Progress</p>
+  )} */}
+</div>)}
         {this.state.txHash > 0 && ( //conditional rendering
           <div className="Results">
             {this.state.txStatus === false && (

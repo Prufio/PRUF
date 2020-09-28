@@ -15,7 +15,7 @@ class ParticleBox extends Component {
                     top: 0,
                     left: 0,
                     width: "100%",
-                    height: "100%"
+                    height: "100%",
                 }}
             >
                 <Particles
