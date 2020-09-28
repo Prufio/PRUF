@@ -360,7 +360,7 @@ contract SHARES is ReentrancyGuard, Ownable, Pausable {
     }
 
     //--------------------------------------------------Payable functions-------------------------------------------------
-    function sendEth() external payable {
+    function sendMeEth() external payable {
         //this is just the payable function (mainly for testing)
         require(msg.value > 0, "MOAR ETH!!!!!");
     }
