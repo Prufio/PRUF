@@ -37,6 +37,19 @@ function buildWindowUtils() {
     return (time);
   }
 
+  const _getETHBalance = async () => {
+    if(window.addr === undefined){return 0}
+    let addr = window.addr;
+    await window.web3.eth.getBalance(addr, (err, balance) => {
+      if(err){}else{
+        window.ETHBalance = window.web3.utils.fromWei(balance, "ether")
+        console.log("Wallet balance: ", window.ETHBalance)
+        console.log("Wallet balance: ", window.ETHBalance)
+        console.log("Wallet balance: ", window.ETHBalance)
+      }
+    });
+  }
+
   const _seperateKeysAndValues = (obj) => {
     if (obj === {} || obj === undefined) {
       return (alert("Oops, something went wrong"))
@@ -691,6 +704,7 @@ function buildWindowUtils() {
     getAssetTokenName: _getAssetTokenName,
     getACFromIdx: _getACFromIdx,
     generateAssets: _generateAssets,
+    getETHBalance: _getETHBalance,
 
   }
 
