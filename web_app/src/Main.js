@@ -166,11 +166,6 @@ class Main extends Component {
       await window.utils.getAssetTokenInfo()
 
       for (let i = 0; i < window.aTknIDs.length; i++) {
-        //console.log(i)
-        //console.log(window.aTknIDs[i])
-        //console.log(window.ipfsHashArray[i])
-        //await this.getIPFSJSONObject(window.ipfsHashArray[i], tempDescriptionsArray, tempNamesArray) //FIX DESC OUT OF ORDER
-
         tempDescObj["desc" + i] = []
         await this.getIPFSJSONObject(window.ipfsHashArray[i], tempDescObj["desc" + i])
       }
@@ -215,11 +210,22 @@ class Main extends Component {
         tempNameArray.push(tempDescArray[x].name)
       }
 
-      window.assets.descriptions = tempDescArray;
-      window.assets.names = tempNameArray;
-      window.hasLoadedAssets = true;
-      console.log("BA: Assets after rebuild: ", window.assets)
+    let tempDisplayArray = [];
+    for (let j = 0; j < window.aTknIDs.length; j++) {
+      if(tempDescArray[j].photo.displayImage === undefined){
+        tempDisplayArray.push("0")
+      }
+      else{
+        tempDisplayArray.push(tempDescArray[j].photo.displayImage)
+      }
     }
+
+    window.assets.descriptions = tempDescArray;
+    window.assets.names = tempNameArray;
+    window.assets.displayImages = tempDisplayArray;
+    window.hasLoadedAssets = true;
+    console.log("BA: Assets after rebuild: ", window.assets)
+  }
 
     this.setUpTokenVals = async () => {
       console.log("STV: Setting up balances")
@@ -281,6 +287,8 @@ class Main extends Component {
 
 
     this.setupContractEnvironment = async (_web3) => {
+      if(window.isSettingUpContracts){return(console.log("Already in the middle of setup..."))}
+      window.isSettingUpContracts = true;
       const self = this;
       console.log("Setting up contracts")
       if (window.ethereum !== undefined) {
@@ -296,6 +304,7 @@ class Main extends Component {
         
 
         window._contracts = await buildContracts(_web3)
+
         await window.utils.getETHBalance();
         await this.setState({ contracts: window._contracts })
         await window.utils.getContracts()
@@ -304,11 +313,12 @@ class Main extends Component {
         
         console.log("bools...", window.assetHolderBool, window.assetClassHolderBool, window.IDHolderBool)
         console.log("Wallet balance in ETH: ", window.ETHBalance)
-
+        window.isSettingUpContracts = false;
         return this.setState({ runWatchDog: true })
       }
+      
+      else { window.isSettingUpContracts = false; return console.log("Ethereum not enabled... Will try again on address change.") }
 
-      else { return console.log("Ethereum not enabled... Will try again on address change.") }
     }
 
     //Component state declaration
@@ -353,6 +363,7 @@ class Main extends Component {
       isACAdmin: undefined,
       runWatchDog: false,
       buildReady: false,
+      hasMounted: false,
       routeRequest: "basic"
     };
   }
@@ -361,6 +372,7 @@ class Main extends Component {
 
   componentDidMount() {//stuff to do when component mounts in window
     buildWindowUtils()
+    window.isSettingUpContracts = false;
     window.hasLoadedAssets = false;
     window.location.href = '/#/';
 
@@ -378,7 +390,7 @@ class Main extends Component {
         text: undefined,
         status: undefined,
       }
-      window.assets = { descriptions: [], ids: [], assetClasses: [], statuses: [], names: [] };
+      window.assets = { descriptions: [], ids: [], assetClasses: [], statuses: [], names: [], displayImages: [] };
       window.resetInfo = false;
       const ethereum = window.ethereum;
       var _web3 = require("web3");
@@ -399,6 +411,7 @@ class Main extends Component {
       _web3.eth.getAccounts().then((e) => { this.setState({ addr: e[0] }); window.addr = e[0] });
       window.addEventListener("accountListener", this.acctChanger());
       //window.addEventListener("authLevelListener", this.updateAuthLevel());
+      this.setState({hasMounted: true})
     }
     else {
       this.setState({ hasError: true })
