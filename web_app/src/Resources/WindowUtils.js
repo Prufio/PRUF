@@ -1,5 +1,7 @@
 import bs58 from "bs58";
 import React from "react";
+import Button from "react-bootstrap/Button";
+import "./../index.css";
 
 function buildWindowUtils() {
 
@@ -103,15 +105,44 @@ function buildWindowUtils() {
       for (let i = 0; i < window.assets.ids.length; i++) {
         //console.log(i, "Adding: ", window.assets.descriptions[i], "and ", window.assets.ids[i])
         component.push(
-          <div class="card" style={{ width: '100%', height: "12rem" }}>
-            <div class="row no-gutters">
-              <div class="col-auto">
-                <img src={window.assets.displayImages[i]} style={{ width: '120px', height: "120px", background: "black" }} />
-              </div>
-              <div class="col">
-                <div class="card-block px-2">
-                  <h4 class="card-title">{window.assets.names[i]}</h4>
-                  <p class="card-text">Description</p>
+          <div>
+            <style type="text/css"> {`
+
+            .card {
+              width: 100%;
+              max-width: 100%;
+              height: 12rem;
+              max-height: 100%;
+              background-color: #005480;
+              margin-top: 0.3rem;
+              color: white;
+              word-break: break-all;
+            }
+
+          `}
+            </style>
+            <div class="card">
+              <div class="row no-gutters">
+                <div class="col-auto">
+                  <button
+                    class="imageButton"
+                  >
+                    <img src={window.assets.displayImages[i]} style={{ width: '120px', height: "120px", background: "black" }} />
+                  </button>
+                </div>
+                <div>
+                  <p class="card-name">Name : {window.assets.names[i]}</p>
+                  <p class="card-ac">Asset Class : {window.assets.assetClasses[i]}</p>
+                  <p class="card-status">Status : {window.assets.statuses[i]}</p>
+                  <br></br>
+                  <div className="cardDescription"><h4 class="card-description">Description : {window.assets.descriptions[i].text.description}</h4></div>
+                </div>
+                <div className="cardButton">
+                  <Button
+                    variant="primary"
+                  >
+                    More Info
+              </Button>
                 </div>
               </div>
             </div>
