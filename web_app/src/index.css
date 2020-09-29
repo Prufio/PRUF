@@ -293,14 +293,24 @@ div {
   background-size: cover; */
 }
 
+.assetDashboardHeader {
+  height: 4rem;
+  width: 70rem;
+  background-color: #002a40;
+  font-weight: bold;
+  color: rgb(255, 255, 255);
+  font-size: x-large;
+  font-family: Tahoma, Geneva, sans-serif;
+}
 
 .assetDashboard {
   height: flex;
   max-height: 70rem;
   width: 70rem;
-  background-color: #005480;
+  background-color: #002a40;
   border-radius: 0rem 0rem 0.5rem 0.5rem;
   padding: 1rem;
+  margin-top: -1rem;
   display: flex;
   opacity: 0.96;
   flex-direction: column;
