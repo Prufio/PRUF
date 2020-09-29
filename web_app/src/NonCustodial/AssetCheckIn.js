@@ -1,5 +1,6 @@
 import React, { Component } from "react";
 import Form from "react-bootstrap/Form";
+import Card from "react-bootstrap/Card";
 import Button from "react-bootstrap/Button";
 import Col from "react-bootstrap/Col";
 import "./../index.css";
@@ -64,80 +65,135 @@ class AssetCheckIn extends Component {
     }
 
     const _checkIn = async (e) => {
-      if(e === "0" || e === undefined){return}
+      if (e === "0" || e === undefined) { return }
       this.setState({ selectedAsset: e })
       console.log("Changed component idx to: ", window.assets.ids[e])
 
-      this.setState({assetTokenInfo: {
-        assetClass: window.assets.assetClasses[e],
-        idxHash: window.assets.ids[e],
-        name: window.assets.descriptions[e].name,
-        photos: window.assets.descriptions[e].photo,
-        text: window.assets.descriptions[e].text,
-        description: window.assets.descriptions[e],
-        status: window.assets.statuses[e],
-      }})
+      this.setState({
+        assetTokenInfo: {
+          assetClass: window.assets.assetClasses[e],
+          idxHash: window.assets.ids[e],
+          name: window.assets.descriptions[e].name,
+          photos: window.assets.descriptions[e].photo,
+          text: window.assets.descriptions[e].text,
+          description: window.assets.descriptions[e],
+          status: window.assets.statuses[e],
+        }
+      })
     }
 
     return (
-      <div>
-        <Form className="assetDashboard" id="MainForm">
-          {window.addr === undefined && (
-            <div className="errorResults">
-              <h2>User address unreachable</h2>
-              <h3>Please connect web3 provider.</h3>
-            </div>
-          )}
-          {this.state.assets !== undefined && window.addr > 0 && (
-            <div>
-              <h2 className="Headertext">Asset Dashboard</h2>
-              <br></br>
-              <Form.Row>
-                <Form.Group as={Col} controlId="formGridAsset">
-                  <Form.Label className="formFont"> Select an Asset to Modify :</Form.Label>
-                  <Form.Control
-                    as="select"
-                    size="lg"
-                    onChange={(e) => {_checkIn(e.target.value)}}
-                  >
-                    {window.hasLoadedAssets && (<option value="null"> Select an asset </option>)}
-                    {!window.hasLoadedAssets && (<option value="null"> Loading Assets... </option>)}
-                    {window.utils.generateAssets()}
-                  </Form.Control>
-                </Form.Group>
-              </Form.Row>
-              {this.state.assetTokenInfo !== undefined && (
-                <Form.Row>
-                <Form.Group as={Col} controlId="formGridStats">
-                  <div className="assetDashboardContentHead">Asset Name: <span className="assetDashboardContent">{this.state.assetTokenInfo.name}</span> </div>
-                  <div className="assetDashboardContentHead"> Asset Status: <span className="assetDashboardContent">{this.state.assetTokenInfo.status}</span> </div>
-                  <div className="assetDashboardContentHead">Asset Class: <span className="assetDashboardContent">{this.state.assetTokenInfo.assetClass}</span> </div>
-                </Form.Group>
-              </Form.Row>
-              )}
-              
-              <Form.Row>
-                <Button
-                  className="buttonDisplay"
-                  variant="primary"
-                  type="button"
-                  size="lg"
-                  onClick={_refresh}
-                >
-                  Refresh List
-                </Button>
-              </Form.Row>
-            </div>
-          )}
+      <div className="assetDashboard">
+        <div>
+          <h2 className="Headertext">My Assets</h2>
+        </div>
+        <br></br>
 
-          {/* {this.state.showDescription && (
-          <>
-            {this.state.descriptionElements !== undefined && (<>{window.utils.generateDescription(this.state.descriptionElements)}</>)}
-          </>
-        )} */}
-          {this.state.assets === undefined && (<div> <Form.Row><h1>Loading asset list. This may take a while...</h1></Form.Row></div>)}
-        </Form>
-      </div>
+        <div class="card" style={{ width: '100%', height: "12rem", background: "black" }}>
+          <div class="row no-gutters">
+            <div class="col-auto">
+              <img src="https://pruf.io/assets/images/pruf-ar-548x328.png" style={{ width: '120px', height: "120px", background: "cover"}} />
+            </div>
+            <div class="col">
+              <div class="card-block px-2">
+                <h4 class="card-title">Title</h4>
+                <p class="card-text">Description</p>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="card" style={{ width: '100%', height: "12rem" }}>
+          <div class="row no-gutters">
+            <div class="col-auto">
+              <img src="//placehold.it/120" class="img-fluid" alt="" />
+            </div>
+            <div class="col">
+              <div class="card-block px-2">
+                <h4 class="card-title">Title</h4>
+                <p class="card-text">Description</p>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="card" style={{ width: '100%', height: "12rem" }}>
+          <div class="row no-gutters">
+            <div class="col-auto">
+              <img src="//placehold.it/120" class="img-fluid" alt="" />
+            </div>
+            <div class="col">
+              <div class="card-block px-2">
+                <h4 class="card-title">Title</h4>
+                <p class="card-text">Description</p>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="card" style={{ width: '100%', height: "12rem" }}>
+          <div class="row no-gutters">
+            <div class="col-auto">
+              <img src="//placehold.it/120" class="img-fluid" alt="" />
+            </div>
+            <div class="col">
+              <div class="card-block px-2">
+                <h4 class="card-title">Title</h4>
+                <p class="card-text">Description</p>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="card" style={{ width: '100%', height: "12rem" }}>
+          <div class="row no-gutters">
+            <div class="col-auto">
+              <img src="//placehold.it/120" class="img-fluid" alt="" />
+            </div>
+            <div class="col">
+              <div class="card-block px-2">
+                <h4 class="card-title">Title</h4>
+                <p class="card-text">Description</p>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="card" style={{ width: '100%', height: "12rem" }}>
+          <div class="row no-gutters">
+            <div class="col-auto">
+              <img src="//placehold.it/120" class="img-fluid" alt="" />
+            </div>
+            <div class="col">
+              <div class="card-block px-2">
+                <h4 class="card-title">Title</h4>
+                <p class="card-text">Description</p>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="card" style={{ width: '100%', height: "12rem" }}>
+          <div class="row no-gutters">
+            <div class="col-auto">
+              <img src="//placehold.it/120" class="img-fluid" alt="" />
+            </div>
+            <div class="col">
+              <div class="card-block px-2">
+                <h4 class="card-title">Title</h4>
+                <p class="card-text">Description</p>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="card" style={{ width: '100%', height: "12rem" }}>
+          <div class="row no-gutters">
+            <div class="col-auto">
+              <img src="//placehold.it/120" class="img-fluid" alt="" />
+            </div>
+            <div class="col">
+              <div class="card-block px-2">
+                <h4 class="card-title">Title</h4>
+                <p class="card-text">Description</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div >
     );
   }
 }

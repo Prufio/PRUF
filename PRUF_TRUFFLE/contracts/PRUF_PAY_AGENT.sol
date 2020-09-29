@@ -4,11 +4,10 @@ pragma solidity ^0.6.0;
 
 import "./Imports/GSN/Context.sol";
 import "./Imports/Math/SafeMath.sol";
-import "./PRUF_INTERFACES.sol";
+//import "./PRUF_INTERFACES.sol";
 import "./Imports/access/Ownable.sol";
 import "./Imports/utils/Pausable.sol";
 import "./Imports/utils/ReentrancyGuard.sol";
-//import "./PRUF_BASIC.sol";
 
 
 
@@ -46,14 +45,14 @@ contract PAY_AGENT is Context, ReentrancyGuard, Ownable, Pausable{
     mapping(address => uint256) private _released;
     mapping(uint256 => address) private shareHolderById;
 
-    address internal STOR_Address;
-    STOR_Interface internal STOR;
+    //address internal STOR_Address;
+    //STOR_Interface internal STOR;
     
-    address internal APP_Address;
-    APP_Interface internal APP;
+    //address internal APP_Address;
+    //APP_Interface internal APP;
 
-    address internal APP_NC_Address;
-    APP_NC_Interface internal APP_NC;
+    //address internal APP_NC_Address;
+    //APP_NC_Interface internal APP_NC;
 
 
     //----------------------External Admin functions / onlyowner or isAdmin----------------------//
@@ -61,36 +60,36 @@ contract PAY_AGENT is Context, ReentrancyGuard, Ownable, Pausable{
     /*
      * @dev Set adress of STOR contract to interface with
      */
-    function OO_setStorageContract(address _storageAddress) external virtual onlyOwner {
-        require(
-            _storageAddress != address(0),
-            "B:SSC: storage address cannot be zero"
-        );
-        //^^^^^^^checks^^^^^^^^^
+    // function OO_setStorageContract(address _storageAddress) external virtual onlyOwner {
+    //     require(
+    //         _storageAddress != address(0),
+    //         "B:SSC: storage address cannot be zero"
+    //     );
+    //     //^^^^^^^checks^^^^^^^^^
 
-        STOR = STOR_Interface(_storageAddress);
-        //^^^^^^^effects^^^^^^^^^
-    }
+    //     STOR = STOR_Interface(_storageAddress);
+    //     //^^^^^^^effects^^^^^^^^^
+    // }
 
 
     /*
      * @dev Resolve Contract Addresses from STOR
      */
-    function OO_resolveContractAddresses()
-        external
-        nonReentrant
-        onlyOwner
-    {
-        //^^^^^^^checks^^^^^^^^^
+    // function OO_resolveContractAddresses()
+    //     external
+    //     nonReentrant
+    //     onlyOwner
+    // {
+    //     //^^^^^^^checks^^^^^^^^^
 
-        APP_Address = STOR.resolveContractAddress("APP");
-        APP = APP_Interface(APP_Address);
+    //     APP_Address = STOR.resolveContractAddress("APP");
+    //     APP = APP_Interface(APP_Address);
 
-        APP_NC_Address = STOR.resolveContractAddress("APP_NC");
-        APP_NC = APP_NC_Interface(APP_NC_Address);
+    //     APP_NC_Address = STOR.resolveContractAddress("APP_NC");
+    //     APP_NC = APP_NC_Interface(APP_NC_Address);
 
-        //^^^^^^^effects^^^^^^^^^
-    }
+    //     //^^^^^^^effects^^^^^^^^^
+    // }
 
     /**
      * @dev The Ether received will be logged with {PaymentReceived} events. Note that these events are not fully
@@ -177,7 +176,7 @@ contract PAY_AGENT is Context, ReentrancyGuard, Ownable, Pausable{
      * @param account The address of the payee to add.
      * @param shares_ The number of shares owned by the payee.
      */
-    function _setPayee(address account, uint256 shares_) private {
+    function _setPayee(address account, uint256 shares_) external onlyOwner {
         require(account != address(0), "PaymentSplitter: account is the zero address");
 
         if (_shares[account].shares > shares_) {
@@ -198,8 +197,8 @@ contract PAY_AGENT is Context, ReentrancyGuard, Ownable, Pausable{
         emit PayeeSet(account, shares_);
     }
 
-     function getPaid() internal {  //collect any payments owed to this contract
-        APP.$withdraw();
-        APP_NC.$withdraw();
-     }
+    //  function getPaid() internal {  //collect any payments owed to this contract
+    //     APP.$withdraw();
+    //     APP_NC.$withdraw();
+    //  }
 }
