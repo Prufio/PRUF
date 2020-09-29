@@ -114,7 +114,7 @@ function buildWindowUtils() {
               height: 12rem;
               max-height: 100%;
               background-color: #005480;
-              margin-top: 0.3rem;
+              margin-top: 1rem;
               color: white;
               word-break: break-all;
             }
