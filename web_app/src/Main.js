@@ -539,7 +539,7 @@ class Main extends Component {
                           margin-left: -0.8rem;
                           font-weight: bold;
                           font-size: 2.2rem;
-                          border-radius: 0rem 0rem 0.3rem 0rem;
+                          border-radius: 0rem 0rem 0.3rem 0.3rem;
                         }
                         .btn-toggle:hover {
                           background-color: #23b6ff;

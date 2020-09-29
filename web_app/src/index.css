@@ -783,6 +783,23 @@ div {
         object-fit: cover;
 }
 
+.assetImageButton {
+  border: 0px transparent; 
+  background-color: transparent; 
+  object-fit: cover;
+}
+
+.assetImageButton:Hover {
+  background-color: #00a8ff;
+  position:relative;
+  top:-5px;
+  left:-5px;
+  /* width:500px; */
+  height:auto;
+  /* display:block; */
+  z-index:999;
+}
+
 .mediaLink {
   display: flex;
   width: 15rem;
