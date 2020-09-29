@@ -64,7 +64,7 @@ contract SharToken is
             "SharToken: must have minter role to mint"
         );
         require(
-            totalSupply() <= maxSupply.add(amount) ,
+            totalSupply().add(amount) <= maxSupply,
             "SharToken: order exceeds max supply"
         );
 

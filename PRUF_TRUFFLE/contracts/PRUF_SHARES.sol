@@ -100,8 +100,8 @@ contract SHARES is ReentrancyGuard, Ownable, Pausable {
             "B:SSC: address cannot be zero"
         );
         //^^^^^^^checks^^^^^^^^^
-        PAY_AGENT_Address = _payAgentAddress; //testing only - steals storage address for shar_tkn
-        PAY_AGENT = PAY_AGENT_Interface(PAY_AGENT_Address); //testing only
+        PAY_AGENT_Address = _payAgentAddress; 
+        PAY_AGENT = PAY_AGENT_Interface(PAY_AGENT_Address); 
         //^^^^^^^effects^^^^^^^^^
     }
 
@@ -117,8 +117,8 @@ contract SHARES is ReentrancyGuard, Ownable, Pausable {
             "B:SSC: address cannot be zero"
         );
         //^^^^^^^checks^^^^^^^^^
-        SHAR_TKN_Address = _SHAR_TKN_Address; //testing only - steals storage address for shar_tkn
-        SHAR_TKN = SHARE_TKN_Interface(SHAR_TKN_Address); //testing only
+        SHAR_TKN_Address = _SHAR_TKN_Address; 
+        SHAR_TKN = SHARE_TKN_Interface(SHAR_TKN_Address);
         //^^^^^^^effects^^^^^^^^^
     }
 
@@ -373,4 +373,6 @@ contract SHARES is ReentrancyGuard, Ownable, Pausable {
     function balance() external view returns (uint256) {
             return address(this).balance;
     }
+    
+    receive () external payable virtual {}
 }

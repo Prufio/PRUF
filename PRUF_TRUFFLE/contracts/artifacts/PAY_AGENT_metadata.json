@@ -6,9 +6,17 @@
 	"output": {
 		"abi": [
 			{
-				"inputs": [],
-				"stateMutability": "nonpayable",
-				"type": "constructor"
+				"anonymous": false,
+				"inputs": [
+					{
+						"indexed": false,
+						"internalType": "address",
+						"name": "to",
+						"type": "address"
+					}
+				],
+				"name": "NoPaymentDue",
+				"type": "event"
 			},
 			{
 				"anonymous": false,
@@ -47,12 +55,56 @@
 				"inputs": [
 					{
 						"indexed": false,
-						"internalType": "string",
-						"name": "_msg",
-						"type": "string"
+						"internalType": "address",
+						"name": "account",
+						"type": "address"
+					},
+					{
+						"indexed": false,
+						"internalType": "uint256",
+						"name": "shares",
+						"type": "uint256"
 					}
 				],
-				"name": "REPORT",
+				"name": "PayeeSet",
+				"type": "event"
+			},
+			{
+				"anonymous": false,
+				"inputs": [
+					{
+						"indexed": false,
+						"internalType": "address",
+						"name": "from",
+						"type": "address"
+					},
+					{
+						"indexed": false,
+						"internalType": "uint256",
+						"name": "amount",
+						"type": "uint256"
+					}
+				],
+				"name": "PaymentReceived",
+				"type": "event"
+			},
+			{
+				"anonymous": false,
+				"inputs": [
+					{
+						"indexed": false,
+						"internalType": "address",
+						"name": "to",
+						"type": "address"
+					},
+					{
+						"indexed": false,
+						"internalType": "uint256",
+						"name": "amount",
+						"type": "uint256"
+					}
+				],
+				"name": "PaymentReleased",
 				"type": "event"
 			},
 			{
@@ -72,51 +124,16 @@
 				"inputs": [
 					{
 						"internalType": "address",
-						"name": "_automationAddress",
+						"name": "account",
 						"type": "address"
-					}
-				],
-				"name": "OO_setAutomationAddress",
-				"outputs": [],
-				"stateMutability": "nonpayable",
-				"type": "function"
-			},
-			{
-				"inputs": [
+					},
 					{
-						"internalType": "address",
-						"name": "_payAgentAddress",
-						"type": "address"
+						"internalType": "uint256",
+						"name": "shares_",
+						"type": "uint256"
 					}
 				],
-				"name": "OO_setPayAgentAdress",
-				"outputs": [],
-				"stateMutability": "nonpayable",
-				"type": "function"
-			},
-			{
-				"inputs": [
-					{
-						"internalType": "address",
-						"name": "_SHAR_TKN_Address",
-						"type": "address"
-					}
-				],
-				"name": "OO_setShareContractAdress",
-				"outputs": [],
-				"stateMutability": "nonpayable",
-				"type": "function"
-			},
-			{
-				"inputs": [],
-				"name": "StartNewDividendPeriod",
-				"outputs": [],
-				"stateMutability": "nonpayable",
-				"type": "function"
-			},
-			{
-				"inputs": [],
-				"name": "autoClaimDividend",
+				"name": "_setPayee",
 				"outputs": [],
 				"stateMutability": "nonpayable",
 				"type": "function"
@@ -135,86 +152,9 @@
 				"type": "function"
 			},
 			{
-				"inputs": [
-					{
-						"internalType": "uint256",
-						"name": "_dividendPeriod",
-						"type": "uint256"
-					}
-				],
-				"name": "claimDividend",
-				"outputs": [],
-				"stateMutability": "nonpayable",
-				"type": "function"
-			},
-			{
 				"inputs": [],
-				"name": "getCurrentInfo",
+				"name": "numberOfShareHolders",
 				"outputs": [
-					{
-						"internalType": "uint256",
-						"name": "",
-						"type": "uint256"
-					},
-					{
-						"internalType": "uint256",
-						"name": "",
-						"type": "uint256"
-					},
-					{
-						"internalType": "uint256",
-						"name": "",
-						"type": "uint256"
-					},
-					{
-						"internalType": "uint256",
-						"name": "",
-						"type": "uint256"
-					},
-					{
-						"internalType": "uint256",
-						"name": "",
-						"type": "uint256"
-					},
-					{
-						"internalType": "uint256",
-						"name": "",
-						"type": "uint256"
-					},
-					{
-						"internalType": "uint256",
-						"name": "",
-						"type": "uint256"
-					}
-				],
-				"stateMutability": "view",
-				"type": "function"
-			},
-			{
-				"inputs": [
-					{
-						"internalType": "address",
-						"name": "_address",
-						"type": "address"
-					},
-					{
-						"internalType": "uint256",
-						"name": "_dividend_number",
-						"type": "uint256"
-					}
-				],
-				"name": "getInfo",
-				"outputs": [
-					{
-						"internalType": "uint256",
-						"name": "",
-						"type": "uint256"
-					},
-					{
-						"internalType": "uint256",
-						"name": "",
-						"type": "uint256"
-					},
 					{
 						"internalType": "uint256",
 						"name": "",
@@ -253,12 +193,31 @@
 			{
 				"inputs": [
 					{
+						"internalType": "uint256",
+						"name": "index",
+						"type": "uint256"
+					}
+				],
+				"name": "payee",
+				"outputs": [
+					{
 						"internalType": "address",
-						"name": "dest",
+						"name": "",
 						"type": "address"
 					}
 				],
-				"name": "payments",
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "address",
+						"name": "account",
+						"type": "address"
+					}
+				],
+				"name": "released",
 				"outputs": [
 					{
 						"internalType": "uint256",
@@ -278,13 +237,21 @@
 			},
 			{
 				"inputs": [],
-				"name": "sec_until_payday",
-				"outputs": [
+				"name": "sendMeEth",
+				"outputs": [],
+				"stateMutability": "payable",
+				"type": "function"
+			},
+			{
+				"inputs": [
 					{
-						"internalType": "uint256",
-						"name": "",
-						"type": "uint256"
-					},
+						"internalType": "address",
+						"name": "account",
+						"type": "address"
+					}
+				],
+				"name": "shares",
+				"outputs": [
 					{
 						"internalType": "uint256",
 						"name": "",
@@ -296,9 +263,28 @@
 			},
 			{
 				"inputs": [],
-				"name": "sendMeEth",
-				"outputs": [],
-				"stateMutability": "payable",
+				"name": "totalReleased",
+				"outputs": [
+					{
+						"internalType": "uint256",
+						"name": "",
+						"type": "uint256"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [],
+				"name": "totalShares",
+				"outputs": [
+					{
+						"internalType": "uint256",
+						"name": "",
+						"type": "uint256"
+					}
+				],
+				"stateMutability": "view",
 				"type": "function"
 			},
 			{
@@ -318,11 +304,11 @@
 				"inputs": [
 					{
 						"internalType": "address payable",
-						"name": "payee",
+						"name": "account",
 						"type": "address"
 					}
 				],
-				"name": "withdrawFunds",
+				"name": "withdraw",
 				"outputs": [],
 				"stateMutability": "nonpayable",
 				"type": "function"
@@ -333,27 +319,51 @@
 			}
 		],
 		"devdoc": {
+			"details": "This contract allows to split Ether payments among a group of accounts. The sender does not need to be aware that the Ether will be split in this way, since it is handled transparently by the contract. The split can be in equal parts or in any other arbitrary proportion. The way this is specified is by assigning each account to a number of shares. Of all the Ether that this contract receives, each account will then be able to claim an amount proportional to the percentage of total shares they were assigned. `PaymentSplitter` follows a _pull payment_ model. This means that payments are not automatically forwarded to the accounts but kept in this contract, and the actual transfer is triggered as a separate step by calling the {release} function.",
 			"kind": "dev",
 			"methods": {
+				"_setPayee(address,uint256)": {
+					"details": "Add a new payee to the contract.",
+					"params": {
+						"account": "The address of the payee to add.",
+						"shares_": "The number of shares owned by the payee."
+					}
+				},
+				"numberOfShareHolders()": {
+					"details": "Getter for the total number of shareHolders."
+				},
 				"owner()": {
 					"details": "Returns the address of the current owner."
 				},
 				"paused()": {
 					"details": "Returns true if the contract is paused, and false otherwise."
 				},
-				"payments(address)": {
-					"details": "Returns the payments owed to an address.",
-					"params": {
-						"dest": "The creditor's address."
-					}
+				"payee(uint256)": {
+					"details": "Getter for the address of the payee number `index`."
+				},
+				"released(address)": {
+					"details": "Getter for the amount of Ether already released to a payee."
 				},
 				"renounceOwnership()": {
 					"details": "Leaves the contract without owner. It will not be possible to call `onlyOwner` functions anymore. Can only be called by the current owner. NOTE: Renouncing ownership will leave the contract without an owner, thereby removing any functionality that is only available to the owner."
 				},
+				"shares(address)": {
+					"details": "Getter for the amount of shares held by an account."
+				},
+				"totalReleased()": {
+					"details": "Getter for the total amount of Ether already released."
+				},
+				"totalShares()": {
+					"details": "Getter for the total shares held by payees."
+				},
 				"transferOwnership(address)": {
 					"details": "Transfers ownership of the contract to a new account (`newOwner`). Can only be called by the current owner."
+				},
+				"withdraw(address)": {
+					"details": "Triggers a transfer to `account` of the amount of Ether they are owed, according to their percentage of the total shares and their previous withdrawals."
 				}
 			},
+			"title": "PaymentSplitter",
 			"version": 1
 		},
 		"userdoc": {
@@ -364,7 +374,7 @@
 	},
 	"settings": {
 		"compilationTarget": {
-			"localhost/PRUF/PRUF_TRUFFLE/contracts/PRUF_SHARES.sol": "SHARES"
+			"localhost/PRUF/PRUF_TRUFFLE/contracts/PRUF_PAY_AGENT.sol": "PAY_AGENT"
 		},
 		"evmVersion": "istanbul",
 		"libraries": {},
@@ -386,15 +396,7 @@
 				"dweb:/ipfs/QmTLLabn4wcfGro9LEmUXUN2nwKqZSotXMvjDCLXEnLtZP"
 			]
 		},
-		"localhost/PRUF/PRUF_TRUFFLE/contracts/Imports/access/Ownable.sol": {
-			"keccak256": "0x4bd6402ca6b3419008c2b482aff54e66836e8cb4eba2680e42ac5884ae6424fc",
-			"license": "MIT",
-			"urls": [
-				"bzz-raw://8f9f711fb8d0d92aeea1c327e3845d13ca1fa8f142e47f8723cd5b3106fb29a3",
-				"dweb:/ipfs/QmVQUReDW9f4zGqhizwHnyU8EntMs95tbASdqkGncnikba"
-			]
-		},
-		"localhost/PRUF/PRUF_TRUFFLE/contracts/Imports/math/SafeMath.sol": {
+		"localhost/PRUF/PRUF_TRUFFLE/contracts/Imports/Math/SafeMath.sol": {
 			"keccak256": "0x9a9cf02622cd7a64261b10534fc3260449da25c98c9e96d1b4ae8110a20e5806",
 			"license": "MIT",
 			"urls": [
@@ -402,20 +404,12 @@
 				"dweb:/ipfs/QmSkJtcfWo7c42KnL5hho6GFxK6HRNV91XABx1P7xDtfLV"
 			]
 		},
-		"localhost/PRUF/PRUF_TRUFFLE/contracts/Imports/payment/escrow/Escrow.sol": {
-			"keccak256": "0xcb0d72d446c3a90bd38ec5cfedcb7c11d6af0e2b545abb9939b5293f9dfab372",
+		"localhost/PRUF/PRUF_TRUFFLE/contracts/Imports/access/Ownable.sol": {
+			"keccak256": "0x4bd6402ca6b3419008c2b482aff54e66836e8cb4eba2680e42ac5884ae6424fc",
 			"license": "MIT",
 			"urls": [
-				"bzz-raw://5a4fa4094639dff593d07162d7d0196abae8db602b8b5c2754bca0694f678fd5",
-				"dweb:/ipfs/QmfHMiapKeHWTL1kQmmWt4XhzHbF8DtZuhHqdQpjTQpMnA"
-			]
-		},
-		"localhost/PRUF/PRUF_TRUFFLE/contracts/Imports/utils/Address.sol": {
-			"keccak256": "0xf5fa8cbdffa5ef8be49b246b5628facc30b71707e78a45d80d93b64eff3fe390",
-			"license": "MIT",
-			"urls": [
-				"bzz-raw://774e78a9ff32792cc95db4d2ceaf3a7965bb7f0bea5e6cb7cff182b450d44b37",
-				"dweb:/ipfs/QmRRMC4uj7eAcLW7chynA3sNEYULMFazdLwQHKHQPyzAbA"
+				"bzz-raw://8f9f711fb8d0d92aeea1c327e3845d13ca1fa8f142e47f8723cd5b3106fb29a3",
+				"dweb:/ipfs/QmVQUReDW9f4zGqhizwHnyU8EntMs95tbASdqkGncnikba"
 			]
 		},
 		"localhost/PRUF/PRUF_TRUFFLE/contracts/Imports/utils/Pausable.sol": {
@@ -434,20 +428,12 @@
 				"dweb:/ipfs/Qmf6z9KWKCJCfEVokgTBhBVq5yHtE6is31N8AV5BHdMkqQ"
 			]
 		},
-		"localhost/PRUF/PRUF_TRUFFLE/contracts/PRUF_SHARES.sol": {
-			"keccak256": "0x4ffda13c011bfd7954d5266634ed04eccf2dbcc4194c3a97aab8772adf83c53f",
-			"license": "UNLICENSED",
+		"localhost/PRUF/PRUF_TRUFFLE/contracts/PRUF_PAY_AGENT.sol": {
+			"keccak256": "0x51c4e022ab36efcb6386b66d26b92b323cefa03306aa90f5a8747f866865d8a0",
+			"license": "MIT",
 			"urls": [
-				"bzz-raw://8d3cf5e4024a572b83027a7ac8cd59c670f7d6ea226c3177d05949fbd1e40366",
-				"dweb:/ipfs/QmSaf6JsgyPZ63Wx759j1xzM7gTFd9ryxAuLHpLQQ9YurK"
-			]
-		},
-		"localhost/PRUF/PRUF_TRUFFLE/contracts/PRUF_SHAR_INTERFACES.sol": {
-			"keccak256": "0x299347e6d082d155502745be585a6f6ccf1c02fbb52dc1818b78c6db43ff083d",
-			"license": "UNLICENSED",
-			"urls": [
-				"bzz-raw://63325b3f03d36f4c095bc9f45329f1374a82ed8fdf6e9de861de9c46b7f17d6c",
-				"dweb:/ipfs/QmcpUnjTKH9S8En7B8wBnDNmqeS16FqtQvhK89mHptKoe8"
+				"bzz-raw://af483d1b8ed26a8934aac1513dddd2e5dfaf4bf05c8c560003db8352ede3785c",
+				"dweb:/ipfs/QmQFwG7HxujJG9CRTjLvDAYYSfKkFBBDd6hVrfwcKRqiv9"
 			]
 		}
 	},
