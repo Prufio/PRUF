@@ -22,7 +22,7 @@ function buildWindowUtils() {
     const hashHex = "1220" + bytes32Hex.slice(2);
     const hashBytes = Buffer.from(hashHex, "hex");
     const hashStr = bs58.encode(hashBytes);
-    console.log("got: ",hashStr,"from: ",bytes32Hex)
+    console.log("got: ", hashStr, "from: ", bytes32Hex)
     return hashStr;
   };
 
@@ -38,10 +38,10 @@ function buildWindowUtils() {
   }
 
   const _getETHBalance = async () => {
-    if(window.addr === undefined){return 0}
+    if (window.addr === undefined) { return 0 }
     let addr = window.addr;
     await window.web3.eth.getBalance(addr, (err, balance) => {
-      if(err){}else{
+      if (err) { } else {
         window.ETHBalance = window.web3.utils.fromWei(balance, "ether")
         console.log("UTILS: Wallet balance: ", window.ETHBalance)
       }
@@ -87,6 +87,36 @@ function buildWindowUtils() {
       for (let i = 0; i < window.assets.ids.length; i++) {
         //console.log(i, "Adding: ", window.assets.descriptions[i], "and ", window.assets.ids[i])
         component.push(<option key={"asset " + String(i)} value={i}>Name: {window.assets.descriptions[i].name}, ID: {window.assets.ids[i]} </option>);
+      }
+
+      return component
+    }
+
+    else { return <></> }
+
+  }
+
+  const _generateAssetDash = () => {
+    if (window.assets.names.length > 0) {
+      let component = [];
+
+      for (let i = 0; i < window.assets.ids.length; i++) {
+        //console.log(i, "Adding: ", window.assets.descriptions[i], "and ", window.assets.ids[i])
+        component.push(
+          <div class="card" style={{ width: '100%', height: "12rem" }}>
+            <div class="row no-gutters">
+              <div class="col-auto">
+                <img src={window.assets.displayImages[i]} style={{ width: '120px', height: "120px", background: "black" }} />
+              </div>
+              <div class="col">
+                <div class="card-block px-2">
+                  <h4 class="card-title">{window.assets.names[i]}</h4>
+                  <p class="card-text">Description</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        );
       }
 
       return component
@@ -156,38 +186,38 @@ function buildWindowUtils() {
 
   const _checkHoldsToken = async (req, id) => {
     let tempBool;
-    if(req === "asset"){
+    if (req === "asset") {
       await window.contracts.A_TKN.methods
-      .ownerOf(id)
-      .call({ from: window.addr }, function (_error, _result) {
-        if (_error) {
-          console.log(_error);
-        } else {
-          if(_result === window.addr){
-            tempBool = true
+        .ownerOf(id)
+        .call({ from: window.addr }, function (_error, _result) {
+          if (_error) {
+            console.log(_error);
+          } else {
+            if (_result === window.addr) {
+              tempBool = true
+            }
+            else { tempBool = false }
           }
-          else{ tempBool = false}
-        }
-        console.log("checked in A_TKN");
-      });
+          console.log("checked in A_TKN");
+        });
     }
-    else if (req === "AC"){
+    else if (req === "AC") {
       await window.contracts.AC_TKN.methods
-      .ownerOf(id)
-      .call({ from: window.addr }, function (_error, _result) {
-        if (_error) {
-          console.log(_error);
-        } else {
-          if(_result === window.addr){
-            tempBool = true
+        .ownerOf(id)
+        .call({ from: window.addr }, function (_error, _result) {
+          if (_error) {
+            console.log(_error);
+          } else {
+            if (_result === window.addr) {
+              tempBool = true
+            }
+            else { tempBool = false }
+
           }
-          else{ tempBool = false}
-          
-        }
-        console.log("checked in AC_TKN");
-      });
+          console.log("checked in AC_TKN");
+        });
     }
-    
+
     return tempBool;
   }
 
@@ -581,7 +611,7 @@ function buildWindowUtils() {
       let ipfsHashArray = [];
       let statuses = [];
       let assetClasses = [];
-      
+
       for (let i = 0; i < window.balances.assetBalance; i++) {
         await window.contracts.A_TKN.methods.tokenOfOwnerByIndex(window.addr, i)
           .call({ from: window.addr }, (_error, _result) => {
@@ -592,7 +622,7 @@ function buildWindowUtils() {
               tknIDArray.push(window.web3.utils.numberToHex(_result));
             }
           });
-          //console.log(i)
+        //console.log(i)
       }
 
       for (let x = 0; x < tknIDArray.length; x++) {
@@ -603,17 +633,18 @@ function buildWindowUtils() {
             } else {
               //console.log(tknIDArray[x])
               //console.log(_result)
-              if(Number(Object.values(_result)[5]) > 0){
+              if (Number(Object.values(_result)[5]) > 0) {
                 ipfsHashArray.push(window.utils.getIpfsHashFromBytes32(Object.values(_result)[5]))
               }
-              else{ipfsHashArray.push("0")
+              else {
+                ipfsHashArray.push("0")
               }
               statuses.push(Object.values(_result)[0])
               assetClasses.push(Object.values(_result)[2])
 
             }
           })
-          //console.log(x)
+        //console.log(x)
       }
 
       console.log(ipfsHashArray)
@@ -625,7 +656,7 @@ function buildWindowUtils() {
       window.assets.assetClasses = assetClasses;
       window.assets.statuses = statuses;
 
-      }
+    }
 
     else { console.log("No assets held by user"); return 0 }
   }
@@ -633,13 +664,13 @@ function buildWindowUtils() {
   const _getAssetTokenName = async (ipfs) => {
     let temp;
 
-      if(ipfs !== "0"){
-        temp = await window.utils.getIPFSJSONObject(ipfs)
-      }
+    if (ipfs !== "0") {
+      temp = await window.utils.getIPFSJSONObject(ipfs)
+    }
 
-      else{temp = "N/A"}
+    else { temp = "N/A" }
 
-      window.assets.names.push(temp);
+    window.assets.names.push(temp);
   }
 
 
@@ -668,7 +699,7 @@ function buildWindowUtils() {
         temp = result;
       }
     });
-    
+
     console.log(temp);
     return temp
   };
@@ -703,6 +734,7 @@ function buildWindowUtils() {
     getACFromIdx: _getACFromIdx,
     generateAssets: _generateAssets,
     getETHBalance: _getETHBalance,
+    generateAssetDash: _generateAssetDash,
 
   }
 
