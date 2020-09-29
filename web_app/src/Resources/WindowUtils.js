@@ -127,7 +127,7 @@ function buildWindowUtils() {
                   <button
                     class="imageButton"
                   >
-                    <img src={obj.displayImages[i]} style={{ width: '120px', height: "120px", background: "black" }} />
+                    <img src={obj.displayImages[i]} className="assetImage" />
                   </button>
                 </div>
                 <div>

@@ -359,12 +359,19 @@ div {
   font-family: Tahoma, Geneva, sans-serif;
 }
 
+.assetDashboardFooter {
+  display: flex;
+  height: 2rem;
+  width: 70rem;
+  background-color: #002a40;
+  border-radius: 0rem 0rem 0.5rem 0.5rem;
+}
+
 .assetDashboard {
   height: flex;
   max-height: 55rem;
   width: 70rem;
   background-color: #002a40;
-  border-radius: 0rem 0rem 0.5rem 0.5rem;
   padding: 1rem;
   margin-top: -1rem;
   display: flex;
@@ -374,7 +381,36 @@ div {
   word-break: break-all;
 }
 
-.assetDashboardContentHead {
+.assetImage {
+  width: 115px;
+  height: 115px;
+  border-width: 3px;
+  border-color: #002a40;
+  /* background-color: white; */
+}
+
+.assetImage:hover {
+  width: 115px;
+  height: 115px;
+  /* background-color: transparent; */
+
+}
+
+.assetImageBare {
+  width: 115px;
+  height: 115px;
+  border: #002a40;
+  border-style: solid;
+  /* background-color: black; */
+}
+
+/* .assetImageBare:hover {
+  width: 115px;
+  height: 115px;
+  background-color: transparent;
+} */
+
+/* .assetDashboardContentHead {
   color:#00a8ff;
   font-size: 1.5rem;
   font-weight: bold;
@@ -396,7 +432,7 @@ div {
   color: white;
   font-size: 1.2rem;
   font-weight: bold;
-}
+} */
 
 .oneRowForm {
   height: 19rem;
@@ -787,17 +823,20 @@ div {
   border: 0px transparent; 
   background-color: transparent; 
   object-fit: cover;
+  border: #002a40;
+  border-style: solid;
 }
 
 .assetImageButton:Hover {
   background-color: #00a8ff;
   position:relative;
   top:-5px;
-  left:-5px;
+  left:5px;
   /* width:500px; */
   height:auto;
   /* display:block; */
   z-index:999;
+  border-style: dashed;
 }
 
 .mediaLink {

@@ -20,16 +20,16 @@ class AssetCheckIn extends Component {
     }, 100)
 
     this.moreInfo = (e) => {
-      if(e==="back"){return this.setState({assetObj:{}, moreInfo: false})}
-      
+      if (e === "back") { return this.setState({ assetObj: {}, moreInfo: false }) }
+
       this.setState({ assetObj: e, moreInfo: true })
     }
 
     this.generateAssetInfo = (obj) => {
-      return(
+      return (
 
         <div>
-              <style type="text/css"> {`
+          <style type="text/css"> {`
   
               .card {
                 width: 100%;
@@ -43,38 +43,34 @@ class AssetCheckIn extends Component {
               }
   
             `}
-              </style>
-              <div class="card" value="100">
-                <div class="row no-gutters">
-                  <div class="col-auto">
-                    <button
-                      class="assetImageButton"
-                    >
-                      <img src={obj.displayImage} style={{ width: '120px', height: "120px", background: "black" }} />
-                    </button>
-                  </div>
-                  <div>
-                    <p class="card-name">Name : {obj.name}</p>
-                    <p class="card-ac">Asset Class : {obj.assetClass}</p>
-                    <p class="card-status">Status : {obj.status}</p>
-                    <br></br>
-                    <div className="cardDescription"><h4 class="card-description">Description : {obj.description}</h4></div>
-                  </div>
-                  <div className="cardButton">
-                    {this.state.moreInfo &&(
-                      <Button
-                      variant="primary"
-                      onClick={() => { this.moreInfo("back") }}
-                    >
-                      Back to list
-                    </Button>
-                    )}
-                    
-                  </div>
-                </div>
+          </style>
+          <div class="card" value="100">
+            <div class="row no-gutters">
+              <div class="col-auto">
+              <img src={obj.displayImage} className="assetImageBare" />
+              </div>
+              <div>
+                <p class="card-name">Name : {obj.name}</p>
+                <p class="card-ac">Asset Class : {obj.assetClass}</p>
+                <p class="card-status">Status : {obj.status}</p>
+                <br></br>
+                <div className="cardDescription"><h4 class="card-description">Description : {obj.description}</h4></div>
+              </div>
+              <div className="cardButton">
+                {this.state.moreInfo && (
+                  <Button
+                    variant="primary"
+                    onClick={() => { this.moreInfo("back") }}
+                  >
+                    Back to list
+                  </Button>
+                )}
+
               </div>
             </div>
-        
+          </div>
+        </div>
+
       )
     }
 
@@ -85,8 +81,9 @@ class AssetCheckIn extends Component {
         for (let i = 0; i < obj.ids.length; i++) {
           //console.log(i, "Adding: ", window.assets.descriptions[i], "and ", window.assets.ids[i])
           component.push(
-            <div key={"asset"+String(i)}>
-              <style type="text/css"> {`
+            <div>
+              <div key={"asset" + String(i)}>
+                <style type="text/css"> {`
   
               .card {
                 width: 100%;
@@ -99,44 +96,54 @@ class AssetCheckIn extends Component {
                 word-break: break-all;
               }
   
-            `}
-              </style>
-              <div class="card" >
-                <div class="row no-gutters">
-                  <div class="col-auto">
-                    <button
-                      class="assetImageButton"
-                    >
-                      <img src={obj.displayImages[i]} style={{ width: '120px', height: "120px", background: "black" }} />
-                    </button>
-                  </div>
-                  <div>
-                    <p class="card-name">Name : {obj.names[i]}</p>
-                    <p class="card-ac">Asset Class : {obj.assetClasses[i]}</p>
-                    <p class="card-status">Status : {obj.statuses[i]}</p>
-                    <br></br>
-                    <div className="cardDescription"><h4 class="card-description">Description : {obj.descriptions[i].text.description}</h4></div>
-                  </div>
-                  <div className="cardButton">
-                    {!this.state.moreInfo &&(
-                      <Button
-                      variant="primary"
-                      value={
-                        JSON.stringify({
-                          displayImage: obj.displayImages[i],
-                          name: obj.names[i],
-                          assetClass: obj.assetClasses[i],
-                          status: obj.statuses[i],
-                          description: obj.descriptions[i].text.description,
-                          text: obj.descriptions[i].text,
-                          photo: obj.descriptions[i].photo
-                        })}
-                      onClick={(e) => { this.moreInfo(JSON.parse(e.target.value)) }}
-                    >
-                      More Info
-                    </Button>
-                    )}
-                    
+             `}
+                </style>
+                <div class="card" >
+                  <div class="row no-gutters">
+                    <div class="col-auto">
+                        <button
+                          class="assetImageButton"
+                          // value={
+                          //   JSON.stringify()}
+                          onClick={(e) => { this.moreInfo({
+                            displayImage: obj.displayImages[i],
+                            name: obj.names[i],
+                            assetClass: obj.assetClasses[i],
+                            status: obj.statuses[i],
+                            description: obj.descriptions[i].text.description,
+                            text: obj.descriptions[i].text,
+                            photo: obj.descriptions[i].photo
+                          }) 
+                        }}
+                        >
+                          <img src={obj.displayImages[i]} className="assetImage" />
+                        </button>
+                    </div>
+                    <div>
+                      <p class="card-name">Name : {obj.names[i]}</p>
+                      <p class="card-ac">Asset Class : {obj.assetClasses[i]}</p>
+                      <p class="card-status">Status : {obj.statuses[i]}</p>
+                      <br></br>
+                      <div className="cardDescription"><h4 class="card-description">Description : {obj.descriptions[i].text.description}</h4></div>
+                    </div>
+                    <div className="cardButton">
+                        <Button
+                          variant="primary"
+                          value={
+                            JSON.stringify({
+                              displayImage: obj.displayImages[i],
+                              name: obj.names[i],
+                              assetClass: obj.assetClasses[i],
+                              status: obj.statuses[i],
+                              description: obj.descriptions[i].text.description,
+                              text: obj.descriptions[i].text,
+                              photo: obj.descriptions[i].photo
+                            })}
+                          onClick={(e) => { this.moreInfo(JSON.parse(e.target.value)) }}
+                        >
+                          More Info
+                        </Button>
+                    </div>
                   </div>
                 </div>
               </div>
@@ -213,7 +220,8 @@ class AssetCheckIn extends Component {
           {this.state.hasLoadedAssets && this.state.moreInfo && (<>{this.generateAssetInfo(this.state.assetObj)}</>)}
           {!this.state.hasLoadedAssets && (<div className="VRText"><h2 class="loading">Loading Assets</h2></div>)}
         </div>
-
+        <div className="assetDashboardFooter">
+        </div>
       </div >
 
     );
