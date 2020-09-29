@@ -54,13 +54,13 @@ pragma solidity ^0.6.7;
  *
  *      *all idx hashes should be clickable and open the asset display page in a new window   
  *
- *
+ *      !!** remint might get eaten in the dark forest!  check all other functions as well for this issue
  *
  *
 - ----------------------------------------------------------------
 
 *-----------------------------------------------------------------
- *Rules for reminting tokens:
+ *Rules for reminting tokens:      remint might get eaten in the dark forest!!!!!!!!!!!!!!!!!!!!!!!!!!!
  *  must have the plaintext that generates the rgtHash on-chain
  *
  *

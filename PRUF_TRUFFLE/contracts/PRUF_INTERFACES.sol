@@ -82,6 +82,24 @@ interface UTIL_TKN_Interface {
      */
     function mint(address to, uint256 amount) external;
 
+    /*
+     * @dev Take a balance snapshot, returns snapshot ID
+     * - the caller must have the `SNAPSHOT_ROLE`.
+     */
+    function takeSnapshot() external returns (uint256);
+
+    /**
+     * @dev Retrieves the balance of `account` at the time `snapshotId` was created.
+     */
+    function balanceOfAt(address account, uint256 snapshotId)
+        external
+        returns (uint256);
+
+    /**
+     * @dev Retrieves the total supply at the time `snapshotId` was created.
+     */
+    function totalSupplyAt(uint256 snapshotId) external returns (uint256);
+
     /**
      * @dev Pauses all token transfers.
      *
@@ -167,6 +185,7 @@ interface UTIL_TKN_Interface {
         uint256 amount
     ) external returns (bool);
 }
+
 //------------------------------------------------------------------------------------------------
 /*
  * @dev Interface for AC_TKN
@@ -312,8 +331,6 @@ interface AC_TKN_Interface {
      */
     function tokenByIndex(uint256 index) external view returns (uint256);
 }
-
-
 
 //------------------------------------------------------------------------------------------------
 /*
@@ -485,7 +502,6 @@ interface A_TKN_Interface {
     function tokenByIndex(uint256 index) external returns (uint256);
 }
 
-
 //------------------------------------------------------------------------------------------------
 /*
  * @dev Interface for ID_TKN
@@ -573,7 +589,7 @@ interface ID_TKN_Interface {
         view
         returns (address tokenHolderAdress);
 
-     /**
+    /**
      * @dev Returns the amount of tokens owned by `account`.
      */
     function balanceOf(address account) external returns (uint256);
@@ -616,8 +632,6 @@ interface ID_TKN_Interface {
      */
     function tokenByIndex(uint256 index) external view returns (uint256);
 }
-
-
 
 //------------------------------------------------------------------------------------------------
 /*
@@ -738,8 +752,6 @@ interface AC_MGR_Interface {
             uint256
         );
 }
-
-
 
 //------------------------------------------------------------------------------------------------
 /*
@@ -901,8 +913,6 @@ interface STOR_Interface {
         returns (uint8, bytes32);
 }
 
-
-
 //------------------------------------------------------------------------------------------------
 /*
  * @dev Interface for ECR_MGR
@@ -1018,8 +1028,6 @@ interface ECR_MGR_Interface {
         );
 }
 
-
-
 //------------------------------------------------------------------------------------------------
 /*
  * @dev Interface for RCLR
@@ -1033,7 +1041,6 @@ interface RCLR_Interface {
     function recycle(bytes32 _idxHash) external;
 }
 
-
 //------------------------------------------------------------------------------------------------
 /*
  * @dev Interface for APP
@@ -1042,6 +1049,7 @@ interface RCLR_Interface {
  */
 interface APP_Interface {
     function transferAssetToken(address _to, bytes32 _idxHash) external;
+
     function $withdraw() external;
 }
 
@@ -1053,5 +1061,6 @@ interface APP_Interface {
  */
 interface APP_NC_Interface {
     function transferAssetToken(address _to, bytes32 _idxHash) external;
+
     function $withdraw() external;
 }

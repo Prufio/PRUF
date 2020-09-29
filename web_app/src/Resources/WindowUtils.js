@@ -43,9 +43,7 @@ function buildWindowUtils() {
     await window.web3.eth.getBalance(addr, (err, balance) => {
       if(err){}else{
         window.ETHBalance = window.web3.utils.fromWei(balance, "ether")
-        console.log("Wallet balance: ", window.ETHBalance)
-        console.log("Wallet balance: ", window.ETHBalance)
-        console.log("Wallet balance: ", window.ETHBalance)
+        console.log("UTILS: Wallet balance: ", window.ETHBalance)
       }
     });
   }

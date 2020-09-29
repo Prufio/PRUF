@@ -49,6 +49,7 @@ contract UTIL_TKN is
 {
     bytes32 public constant MINTER_ROLE = keccak256("MINTER_ROLE");
     bytes32 public constant PAUSER_ROLE = keccak256("PAUSER_ROLE");
+    bytes32 public constant SNAPSHOT_ROLE = keccak256("SNAPSHOT_ROLE");
 
     address internal AC_MGR_Address;
     AC_MGR_Interface internal AC_MGR;
@@ -69,7 +70,7 @@ contract UTIL_TKN is
      */
     constructor() public ERC20("PRuf_Tkn", "PRuF") {
         _setupRole(DEFAULT_ADMIN_ROLE, _msgSender());
-
+        _setupRole(SNAPSHOT_ROLE, _msgSender());
         _setupRole(MINTER_ROLE, _msgSender());
         _setupRole(PAUSER_ROLE, _msgSender());
     }
@@ -237,6 +238,18 @@ contract UTIL_TKN is
         //^^^^^^^effects/interactions^^^^^^^^^
     }
 
+
+
+    /*
+     * @dev Take a balance snapshot, returns snapshot ID
+     */
+    function takeSnapshot() external returns (uint256) {
+        require(
+            hasRole(SNAPSHOT_ROLE, _msgSender()),
+            "ERC20PresetMinterPauser: must have snapshot role to take a snapshot"
+        );
+        return _snapshot();
+    }
     
 
     /**

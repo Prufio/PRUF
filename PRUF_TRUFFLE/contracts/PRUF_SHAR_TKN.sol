@@ -1,171 +1,135 @@
-/*-----------------------------------------------------------V0.7.0
-__/\\\\\\\\\\\\\ _____/\\\\\\\\\ _______/\\../\\ ___/\\\\\\\\\\\\\\\
- _\/\\\/////////\\\ _/\\\///////\\\ ____\//..\//____\/\\\///////////__
-  _\/\\\.......\/\\\.\/\\\.....\/\\\ ________________\/\\\ ____________
-   _\/\\\\\\\\\\\\\/__\/\\\\\\\\\\\/_____/\\\____/\\\.\/\\\\\\\\\\\ ____
-    _\/\\\/////////____\/\\\//////\\\ ___\/\\\___\/\\\.\/\\\///////______
-     _\/\\\ ____________\/\\\ ___\//\\\ __\/\\\___\/\\\.\/\\\ ____________
-      _\/\\\ ____________\/\\\ ____\//\\\ _\/\\\___\/\\\.\/\\\ ____________
-       _\/\\\ ____________\/\\\ _____\//\\\.\//\\\\\\\\\ _\/\\\ ____________
-        _\/// _____________\/// _______\/// __\///////// __\/// _____________
-         *-------------------------------------------------------------------*/
+// SPDX-License-Identifier: MIT
 
-/*-----------------------------------------------------------------
- *  TO DO
- *
- *---------------------------------------------------------------*/
-
-// SPDX-License-Identifier: UNLICENSED
 pragma solidity ^0.6.7;
 
-import "./Imports/token/ERC721/ERC721.sol";
-import "./Imports/access/Ownable.sol";
-import "./PRUF_INTERFACES.sol";
-import "./Imports/utils/ReentrancyGuard.sol";
+import "./Imports/access/AccessControl.sol";
+import "./Imports/GSN/Context.sol";
+import "./Imports/token/ERC20/ERC20.sol";
+import "./Imports/token/ERC20/ERC20Burnable.sol";
+import "./Imports/token/ERC20/ERC20Pausable.sol";
+import "./Imports/token/ERC20/ERC20Snapshot.sol";
 
+/**
+ * @dev {ERC20} token, including:
+ *
+ *  - ability for holders to burn (destroy) their tokens
+ *  - a minter role that allows for token minting (creation)
+ *  - a pauser role that allows to stop all token transfers
+ *
+ * This contract uses {AccessControl} to lock permissioned functions using the
+ * different roles - head to its documentation for details.
+ *
+ * The account that deploys the contract will be granted the minter and pauser
+ * roles, as well as the default admin role, which will let it grant both minter
+ * and pauser roles to other accounts.
+ */
+contract SharToken is
+    Context,
+    AccessControl,
+    ERC20Burnable,
+    ERC20Pausable,
+    ERC20Snapshot
+{
+    bytes32 public constant MINTER_ROLE = keccak256("MINTER_ROLE");
+    bytes32 public constant PAUSER_ROLE = keccak256("PAUSER_ROLE");
+    bytes32 public constant SNAPSHOT_ROLE = keccak256("SNAPSHOT_ROLE");
 
-contract SHAR_TKN is Ownable, ERC721 {
-    constructor() public ERC721("PRüF ID Token", "PID") {}
-
-    event REPORT(string _msg);
+    /**
+     * @dev Grants `DEFAULT_ADMIN_ROLE`, `MINTER_ROLE` and `PAUSER_ROLE` to the
+     * account that deploys the contract.
+     *
+     * See {ERC20-constructor}.
+     */
+    constructor() public ERC20("PRuF_Share", "PSHR") {
+        _setupRole(DEFAULT_ADMIN_ROLE, _msgSender());
+        _setupRole(SNAPSHOT_ROLE, _msgSender());
+        _setupRole(MINTER_ROLE, _msgSender());
+        _setupRole(PAUSER_ROLE, _msgSender());
+    }
 
     uint256 private maxSupply =  100;  //set max supply (100000?)
 
-    modifier isAdmin() {
-        require(
-            (msg.sender == owner()),
-            "PIDT:MOD-IA:Calling address does not belong to an Admin"
-        );
-        _;
-    }
-
-    //----------------------Internal Admin functions / onlyowner or isAdmin----------------------//
-
-    /*
-     * @dev Mint new PRUF_ID token
+    /**
+     * @dev Creates `amount` new tokens for `to`.
+     *
+     * See {ERC20-_mint}.
+     *
+     * Requirements:
+     *
+     * - the caller must have the `MINTER_ROLE`.
      */
-    function mintPRUF_SHARE(address _recipientAddress, uint256 tokenId)
-        external
-        isAdmin
-        returns (uint256)
-    {
+    function mint(address to, uint256 amount) public virtual {
         require(
-            totalSupply() <= maxSupply,
-            "PIDT:SURI:Cannot mint token. Max 100K SHARE tokens"
+            hasRole(MINTER_ROLE, _msgSender()),
+            "SharToken: must have minter role to mint"
         );
-        //^^^^^^^checks^^^^^^^^^
-
-        //MAKE URI ASSET SPECIFIC- has to incorporate the token ID
-        _safeMint(_recipientAddress, tokenId);
-        _setTokenURI(tokenId, "https://pruf.io/SHARE");
-        return tokenId;
-        //^^^^^^^interactions^^^^^^^^^
-    }
-
-
-    /*
-     * @dev Set new token URI String
-     */
-    function setURI(uint256 tokenId, string calldata _tokenURI)
-        external
-        returns (uint256)
-    {
         require(
-            _isApprovedOrOwner(_msgSender(), tokenId),
-            "PIDT:SURI:caller is not owner nor approved"
+            totalSupply() <= maxSupply.add(amount) ,
+            "SharToken: order exceeds max supply"
         );
-        //^^^^^^^checks^^^^^^^^^
 
-        _setTokenURI(tokenId, _tokenURI);
-        return tokenId;
-        //^^^^^^^interactions^^^^^^^^^
-    }
-
-    /*
-     * @dev See if token exists
-     */
-    function tokenExists(uint256 tokenId) external view returns (uint8) {
-        if (_exists(tokenId)) {
-            return 170;
-        } else {
-            return 0;
-        }
-    }
-
-       /**
-     * @dev Transfers the ownership of a given token ID to another address.
-     * Usage of this method is discouraged, use {safeTransferFrom} whenever possible.
-     * Requires the msg.sender to be the owner, approved, or operator.
-     * @param from current owner of the token
-     * @param to address to receive the ownership of the given token ID
-     * @param tokenId uint256 ID of the token to be transferred
-     */
-    function transferFrom(
-        address from,
-        address to,
-        uint256 tokenId
-    ) public override {
-        
-        require(
-            _isApprovedOrOwner(_msgSender(), tokenId),
-            "AT:TF:transfer caller is not owner nor approved"
-        );
-        //^^^^^^^checks^^^^^^^^^
-
-        _transfer(from, to, tokenId);
-        //^^^^^^^interactions^^^^^^^^^
+        _mint(to, amount);
     }
 
     /**
-     * @dev Safely transfers the ownership of a given token ID to another address
-     * If the target address is a contract, it must implement {IERC721Receiver-onERC721Received},
-     * which is called upon a safe transfer, and return the magic value
-     * `bytes4(keccak256("onERC721Received(address,address,uint256,bytes)"))`; otherwise,
-     * the transfer is reverted.
-     * Requires the msg.sender to be the owner, approved, or operator
-     * @param from current owner of the token
-     * @param to address to receive the ownership of the given token ID
-     * @param tokenId uint256 ID of the token to be transferred
+     * @dev Returns Max Supply
+     *
      */
-    function safeTransferFrom(
-        address from,
-        address to,
-        uint256 tokenId
-    ) public override {
-        //^^^^^^^checks^^^^^^^^^
+    function max_Supply() external view returns (uint256) {
+        return maxSupply;
+    }
 
-        safeTransferFrom(from, to, tokenId, "");
-        //^^^^^^^interactions^^^^^^^^^
+
+    /*
+     * @dev Take a balance snapshot, returns snapshot ID
+     */
+    function takeSnapshot() external returns (uint256) {
+        require(
+            hasRole(SNAPSHOT_ROLE, _msgSender()),
+            "SharToken: must have snapshot role to take a snapshot"
+        );
+        return _snapshot();
     }
 
     /**
-     * @dev Safely transfers the ownership of a given token ID to another address
-     * If the target address is a contract, it must implement {IERC721Receiver-onERC721Received},
-     * which is called upon a safe transfer, and return the magic value
-     * `bytes4(keccak256("onERC721Received(address,address,uint256,bytes)"))`; otherwise,
-     * the transfer is reverted.
-     * Requires the _msgSender() to be the owner, approved, or operator
-     * @param from current owner of the token
-     * @param to address to receive the ownership of the given token ID
-     * @param tokenId uint256 ID of the token to be transferred
-     * @param _data bytes data to send along with a safe transfer check
+     * @dev Pauses all token transfers.
+     *
+     * See {ERC20Pausable} and {Pausable-_pause}.
+     *
+     * Requirements:
+     *
+     * - the caller must have the `PAUSER_ROLE`.
      */
-    function safeTransferFrom(
+    function pause() public virtual {
+        require(
+            hasRole(PAUSER_ROLE, _msgSender()),
+            "SharToken: must have pauser role to pause"
+        );
+        _pause();
+    }
+
+    /**
+     * @dev Unpauses all token transfers.
+     *
+     * See {ERC20Pausable} and {Pausable-_unpause}.
+     *
+     * Requirements:
+     *
+     * - the caller must have the `PAUSER_ROLE`.
+     */
+    function unpause() public virtual {
+        require(
+            hasRole(PAUSER_ROLE, _msgSender()),
+            "SharToken: must have pauser role to unpause"
+        );
+        _unpause();
+    }
+
+    function _beforeTokenTransfer(
         address from,
         address to,
-        uint256 tokenId,
-        bytes memory _data
-    ) public virtual override {
-        require(
-            _isApprovedOrOwner(_msgSender(), tokenId),
-            "AT:STF: transfer caller is not owner nor approved"
-        );
-        require(
-            to != address(0),
-            "AT:STF:Cannot transfer asset to zero address. Use discard."
-        );
-
-        _safeTransfer(from, to, tokenId, _data);
-        //^^^^^^^interactions^^^^^^^^^
+        uint256 amount
+    ) internal virtual override(ERC20, ERC20Pausable, ERC20Snapshot) {
+        super._beforeTokenTransfer(from, to, amount);
     }
 }
