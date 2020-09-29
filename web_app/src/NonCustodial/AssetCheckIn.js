@@ -14,10 +14,142 @@ class AssetCheckIn extends Component {
         this.setState({ assets: window.assets })
       }
 
-      if (this.state.hasLoadedAssets !== window.hasLoadedAssets) {
+      if (this.state.hasLoadedAssets !== window.hasLoadedAssets && this.state.runWatchDog === true) {
         this.setState({ hasLoadedAssets: window.hasLoadedAssets })
       }
     }, 100)
+
+    this.moreInfo = (e) => {
+      if(e==="back"){return this.setState({assetObj:{}, moreInfo: false})}
+      
+      this.setState({ assetObj: e, moreInfo: true })
+    }
+
+    this.generateAssetInfo = (obj) => {
+      return(
+
+        <div>
+              <style type="text/css"> {`
+  
+              .card {
+                width: 100%;
+                max-width: 100%;
+                height: 12rem;
+                max-height: 100%;
+                background-color: #005480;
+                margin-top: 0.3rem;
+                color: white;
+                word-break: break-all;
+              }
+  
+            `}
+              </style>
+              <div class="card" value="100">
+                <div class="row no-gutters">
+                  <div class="col-auto">
+                    <button
+                      class="assetImageButton"
+                    >
+                      <img src={obj.displayImage} style={{ width: '120px', height: "120px", background: "black" }} />
+                    </button>
+                  </div>
+                  <div>
+                    <p class="card-name">Name : {obj.name}</p>
+                    <p class="card-ac">Asset Class : {obj.assetClass}</p>
+                    <p class="card-status">Status : {obj.status}</p>
+                    <br></br>
+                    <div className="cardDescription"><h4 class="card-description">Description : {obj.description}</h4></div>
+                  </div>
+                  <div className="cardButton">
+                    {this.state.moreInfo &&(
+                      <Button
+                      variant="primary"
+                      onClick={() => { this.moreInfo("back") }}
+                    >
+                      Back to list
+                    </Button>
+                    )}
+                    
+                  </div>
+                </div>
+              </div>
+            </div>
+        
+      )
+    }
+
+    this.generateAssetDash = (obj) => {
+      if (obj.names.length > 0) {
+        let component = [];
+
+        for (let i = 0; i < obj.ids.length; i++) {
+          //console.log(i, "Adding: ", window.assets.descriptions[i], "and ", window.assets.ids[i])
+          component.push(
+            <div key={"asset"+String(i)}>
+              <style type="text/css"> {`
+  
+              .card {
+                width: 100%;
+                max-width: 100%;
+                height: 12rem;
+                max-height: 100%;
+                background-color: #005480;
+                margin-top: 0.3rem;
+                color: white;
+                word-break: break-all;
+              }
+  
+            `}
+              </style>
+              <div class="card" >
+                <div class="row no-gutters">
+                  <div class="col-auto">
+                    <button
+                      class="assetImageButton"
+                    >
+                      <img src={obj.displayImages[i]} style={{ width: '120px', height: "120px", background: "black" }} />
+                    </button>
+                  </div>
+                  <div>
+                    <p class="card-name">Name : {obj.names[i]}</p>
+                    <p class="card-ac">Asset Class : {obj.assetClasses[i]}</p>
+                    <p class="card-status">Status : {obj.statuses[i]}</p>
+                    <br></br>
+                    <div className="cardDescription"><h4 class="card-description">Description : {obj.descriptions[i].text.description}</h4></div>
+                  </div>
+                  <div className="cardButton">
+                    {!this.state.moreInfo &&(
+                      <Button
+                      variant="primary"
+                      value={
+                        JSON.stringify({
+                          displayImage: obj.displayImages[i],
+                          name: obj.names[i],
+                          assetClass: obj.assetClasses[i],
+                          status: obj.statuses[i],
+                          description: obj.descriptions[i].text.description,
+                          text: obj.descriptions[i].text,
+                          photo: obj.descriptions[i].photo
+                        })}
+                      onClick={(e) => { this.moreInfo(JSON.parse(e.target.value)) }}
+                    >
+                      More Info
+                    </Button>
+                    )}
+                    
+                  </div>
+                </div>
+              </div>
+            </div>
+          );
+        }
+
+        return component
+      }
+
+      else { return <></> }
+
+    }
 
     this.state = {
       addr: undefined,
@@ -63,28 +195,11 @@ class AssetCheckIn extends Component {
 
   render() {
 
+
     const _refresh = () => {
       window.resetInfo = true;
       window.recount = true;
       this.setState({ assets: { descriptions: [], ids: [], assetClasses: [], statuses: [], names: [] } })
-    }
-
-    const _checkIn = async (e) => {
-      if (e === "0" || e === undefined) { return }
-      this.setState({ selectedAsset: e })
-      console.log("Changed component idx to: ", window.assets.ids[e])
-
-      this.setState({
-        assetTokenInfo: {
-          assetClass: window.assets.assetClasses[e],
-          idxHash: window.assets.ids[e],
-          name: window.assets.descriptions[e].name,
-          photos: window.assets.descriptions[e].photo,
-          text: window.assets.descriptions[e].text,
-          description: window.assets.descriptions[e],
-          status: window.assets.statuses[e],
-        }
-      })
     }
 
     return (
@@ -94,12 +209,13 @@ class AssetCheckIn extends Component {
           <h2 className="assetDashboardHeader">My Assets</h2>
         </div>
         <div className="assetDashboard">
-        {this.state.hasLoadedAssets && (<>{window.utils.generateAssetDash()}</>)}
-        {!this.state.hasLoadedAssets && (<><h2>Loading Asssets...</h2></>)}
+          {this.state.hasLoadedAssets && !this.state.moreInfo && (<>{this.generateAssetDash(window.assets)}</>)}
+          {this.state.hasLoadedAssets && this.state.moreInfo && (<>{this.generateAssetInfo(this.state.assetObj)}</>)}
+          {!this.state.hasLoadedAssets && (<div className="VRText"><h2 class="loading">Loading Assets</h2></div>)}
         </div>
 
       </div >
-      
+
     );
   }
 }

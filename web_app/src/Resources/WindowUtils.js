@@ -98,11 +98,11 @@ function buildWindowUtils() {
 
   }
 
-  const _generateAssetDash = () => {
-    if (window.assets.names.length > 0) {
+  const _generateAssetDash = (obj) => {
+    if (obj.names.length > 0) {
       let component = [];
 
-      for (let i = 0; i < window.assets.ids.length; i++) {
+      for (let i = 0; i < obj.ids.length; i++) {
         //console.log(i, "Adding: ", window.assets.descriptions[i], "and ", window.assets.ids[i])
         component.push(
           <div>
@@ -127,15 +127,15 @@ function buildWindowUtils() {
                   <button
                     class="imageButton"
                   >
-                    <img src={window.assets.displayImages[i]} style={{ width: '120px', height: "120px", background: "black" }} />
+                    <img src={obj.displayImages[i]} style={{ width: '120px', height: "120px", background: "black" }} />
                   </button>
                 </div>
                 <div>
-                  <p class="card-name">Name : {window.assets.names[i]}</p>
-                  <p class="card-ac">Asset Class : {window.assets.assetClasses[i]}</p>
-                  <p class="card-status">Status : {window.assets.statuses[i]}</p>
+                  <p class="card-name">Name : {obj.names[i]}</p>
+                  <p class="card-ac">Asset Class : {obj.assetClasses[i]}</p>
+                  <p class="card-status">Status : {obj.statuses[i]}</p>
                   <br></br>
-                  <div className="cardDescription"><h4 class="card-description">Description : {window.assets.descriptions[i].text.description}</h4></div>
+                  <div className="cardDescription"><h4 class="card-description">Description : {obj.descriptions[i].text.description}</h4></div>
                 </div>
                 <div className="cardButton">
                   <Button
@@ -634,6 +634,8 @@ function buildWindowUtils() {
     }
   }
   const _getAssetTokenInfo = async () => {
+
+    if(window.balances === undefined){return}
 
     console.log("GATI: In _getAssetTokenInfo")
 

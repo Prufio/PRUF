@@ -149,6 +149,8 @@ class Main extends Component {
     }
 
     this.setupAssets = async () => {
+
+      if (window.balances === undefined){return}
       console.log("SA: In setupAssets")
 
       window.ipfsCounter = 0;

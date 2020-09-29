@@ -19,8 +19,8 @@ class ModifyDescription extends Component {
         this.setState({ assets: window.assets })
       }
 
-      if(this.state.hasLoadedAssets !== window.hasLoadedAssets){
-        this.setState({hasLoadedAssets: window.hasLoadedAssets})
+      if (this.state.hasLoadedAssets !== window.hasLoadedAssets) {
+        this.setState({ hasLoadedAssets: window.hasLoadedAssets })
       }
     }, 100)
 
@@ -78,15 +78,31 @@ class ModifyDescription extends Component {
     };
 
     const _addToMiscArray = async (type) => {
+      let element;
+      if (type === "description") {
+        element = ('"description": ' + '"' + this.state.elementValue + '",')
+      }
 
-      let element = ('"' + this.state.elementName + '": ' + '"' + this.state.elementValue + '",')
-      if ((this.state.elementName === "" || this.state.elementValue === "") && this.state.nameTag ==="") {
+      else if(this.state.elementName === ""){
+        element = ('"0x0": ' + '"' + this.state.elementValue + '",')
+      }
+
+      else if(this.state.elementName === ""){
+        element = ('"0x0": ' + '"' + this.state.elementValue + '",')
+      }
+
+      else {
+        element = ('"' + this.state.elementName + '": ' + '"' + this.state.elementValue + '",')
+      }
+
+
+      if (this.state.elementValue === "" && this.state.elementName === "" && this.state.nameTag === "") {
         return alert("All fields are required for submission")
       }
       if (type === "photo") {
         window.additionalElementArrays.photo.push(element)
       }
-      else if (type === "text") {
+      else if (type === "text" || type === "description") {
         window.additionalElementArrays.text.push(element)
       }
 
@@ -107,7 +123,7 @@ class ModifyDescription extends Component {
       console.log("Existing description before edits: ", this.state.oldDescription)
       let element = (this.state.removeElement)
       let oldDescription = this.state.oldDescription;
-    
+
       if (this.state.element === "" && this.state.nameTag === "") {
         return alert("All fields are required for submission")
       }
@@ -131,9 +147,10 @@ class ModifyDescription extends Component {
       else { return alert("Please use the dropdown menu to select an element type") }
 
       console.log("oldDescription after edits: ", oldDescription)
-      this.setState({ 
+      this.setState({
         oldDescription: oldDescription,
-        hashPath: "" })
+        hashPath: ""
+      })
       this.setState({ elementType: "0" })
       return document.getElementById("MainForm").reset();
 
@@ -200,7 +217,7 @@ class ModifyDescription extends Component {
         console.log(newText)
         let test = Object.assign({}, oldDescription, tempDescription)
         console.log(test)
-        let newName = Object.assign({}, {name: oldDescription.name}, newDescriptionName) 
+        let newName = Object.assign({}, { name: oldDescription.name }, newDescriptionName)
 
         console.log(newName)
         newDescription = Object.assign({}, newPhoto, newText, newName)
@@ -224,15 +241,16 @@ class ModifyDescription extends Component {
         } else {
           console.log("uploaded at hash: ", hash);
         }
-        self.setState({ 
+        self.setState({
           hashPath: getBytes32FromIpfsHash(hash),
-          oldDescription: newDescription});
+          oldDescription: newDescription
+        });
       });
     }
 
     const _checkIn = async (e) => {
-      if(e === "0" || e === undefined){return}
-      else if(e === "reset"){
+      if (e === "0" || e === undefined) { return }
+      else if (e === "reset") {
         return window.resetInfo = true;
       }
       this.setState({ selectedAsset: e })
@@ -304,19 +322,19 @@ class ModifyDescription extends Component {
               {this.state.accessPermitted && (
                 <div>
                   <Form.Row>
-                <Form.Group as={Col} controlId="formGridAsset">
-                  <Form.Label className="formFont"> Select an Asset to Modify :</Form.Label>
-                  <Form.Control
-                    as="select"
-                    size="lg"
-                    onChange={(e) => {_checkIn(e.target.value)}}
-                  >
-                    {this.state.hasLoadedAssets && (<><option value="null"> Select an asset </option><option value="reset">Refresh Assets</option>{window.utils.generateAssets()}</>)}
-                    {!this.state.hasLoadedAssets && (<option value="null"> Loading Assets... </option>)}
-                    
-                  </Form.Control>
-                </Form.Group>
-              </Form.Row>
+                    <Form.Group as={Col} controlId="formGridAsset">
+                      <Form.Label className="formFont"> Select an Asset to Modify :</Form.Label>
+                      <Form.Control
+                        as="select"
+                        size="lg"
+                        onChange={(e) => { _checkIn(e.target.value) }}
+                      >
+                        {this.state.hasLoadedAssets && (<><option value="null"> Select an asset </option><option value="reset">Refresh Assets</option>{window.utils.generateAssets()}</>)}
+                        {!this.state.hasLoadedAssets && (<option value="null"> Loading Assets... </option>)}
+
+                      </Form.Control>
+                    </Form.Group>
+                  </Form.Row>
                   <Form.Row>
                     <Form.Group as={Col} controlId="formGridMiscType">
                       <Form.Label className="formFont">
@@ -328,9 +346,10 @@ class ModifyDescription extends Component {
                         onChange={(e) => this.setState({ elementType: e.target.value })}
                       >
                         <option value="0">Select Element Type</option>
+                        <option value="nameTag"> Edit Name Tag</option>
+                        <option value="description">Edit Description</option>
                         <option value="text">Add Custom Text</option>
                         <option value="photo">Add Image URL</option>
-                        <option value="nameTag"> Edit Name Tag</option>
                         <option value="removeText">Remove Existing Text Element</option>
                         <option value="removePhoto">Remove Existing Image URL</option>
 
@@ -354,6 +373,23 @@ class ModifyDescription extends Component {
                         <Form.Group as={Col} controlId="formGridMiscValue">
                           <Form.Label className="formFont">
                             Text to Submit:
+                      </Form.Label>
+                          <Form.Control
+                            placeholder="Text Submission Goes Here"
+                            onChange={(e) => this.setState({ elementValue: e.target.value })}
+                            size="lg"
+                          />
+                        </Form.Group>
+                      </Form.Row>
+                    </>
+                  )}
+
+                  {this.state.elementType === "description" && (
+                    <>
+                      <Form.Row>
+                        <Form.Group as={Col} controlId="formGridMiscValue">
+                          <Form.Label className="formFont">
+                            Description Text:
                       </Form.Label>
                           <Form.Control
                             placeholder="Text Submission Goes Here"
@@ -493,6 +529,22 @@ class ModifyDescription extends Component {
                 </Form.Row>
               )}
               {this.state.elementType === "photo" && (
+                <Form.Row>
+                  <Form.Group className="buttonDisplay">
+                    <Button
+                      variant="primary"
+                      type="button"
+                      size="lg"
+                      onClick={() => { _addToMiscArray(this.state.elementType) }}
+                    >
+                      Add Element
+              </Button>
+                  </Form.Group>
+                  <br></br>
+                </Form.Row>
+              )}
+
+              {this.state.elementType === "description" && (
                 <Form.Row>
                   <Form.Group className="buttonDisplay">
                     <Button
