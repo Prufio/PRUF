@@ -13,6 +13,10 @@ class AssetCheckIn extends Component {
       if (this.state.assets !== window.assets && this.state.runWatchDog === true) {
         this.setState({ assets: window.assets })
       }
+
+      if(this.state.hasLoadedAssets !== window.hasLoadedAssets){
+        this.setState({hasLoadedAssets: window.hasLoadedAssets})
+      }
     }, 100)
 
     this.state = {
@@ -36,6 +40,7 @@ class AssetCheckIn extends Component {
       descriptionElements: undefined,
       assets: { descriptions: [0], ids: [0], assetClasses: [0], statuses: [0], names: [0] },
       contractArray: [],
+      hasLoadedAssets: false,
     };
   }
 
@@ -88,111 +93,8 @@ class AssetCheckIn extends Component {
           <h2 className="Headertext">My Assets</h2>
         </div>
         <br></br>
-
-        <div class="card" style={{ width: '100%', height: "12rem", background: "black" }}>
-          <div class="row no-gutters">
-            <div class="col-auto">
-              <img src="https://pruf.io/assets/images/pruf-ar-548x328.png" style={{ width: '120px', height: "120px", background: "cover"}} />
-            </div>
-            <div class="col">
-              <div class="card-block px-2">
-                <h4 class="card-title">Title</h4>
-                <p class="card-text">Description</p>
-              </div>
-            </div>
-          </div>
-        </div>
-        <div class="card" style={{ width: '100%', height: "12rem" }}>
-          <div class="row no-gutters">
-            <div class="col-auto">
-              <img src="//placehold.it/120" class="img-fluid" alt="" />
-            </div>
-            <div class="col">
-              <div class="card-block px-2">
-                <h4 class="card-title">Title</h4>
-                <p class="card-text">Description</p>
-              </div>
-            </div>
-          </div>
-        </div>
-        <div class="card" style={{ width: '100%', height: "12rem" }}>
-          <div class="row no-gutters">
-            <div class="col-auto">
-              <img src="//placehold.it/120" class="img-fluid" alt="" />
-            </div>
-            <div class="col">
-              <div class="card-block px-2">
-                <h4 class="card-title">Title</h4>
-                <p class="card-text">Description</p>
-              </div>
-            </div>
-          </div>
-        </div>
-        <div class="card" style={{ width: '100%', height: "12rem" }}>
-          <div class="row no-gutters">
-            <div class="col-auto">
-              <img src="//placehold.it/120" class="img-fluid" alt="" />
-            </div>
-            <div class="col">
-              <div class="card-block px-2">
-                <h4 class="card-title">Title</h4>
-                <p class="card-text">Description</p>
-              </div>
-            </div>
-          </div>
-        </div>
-        <div class="card" style={{ width: '100%', height: "12rem" }}>
-          <div class="row no-gutters">
-            <div class="col-auto">
-              <img src="//placehold.it/120" class="img-fluid" alt="" />
-            </div>
-            <div class="col">
-              <div class="card-block px-2">
-                <h4 class="card-title">Title</h4>
-                <p class="card-text">Description</p>
-              </div>
-            </div>
-          </div>
-        </div>
-        <div class="card" style={{ width: '100%', height: "12rem" }}>
-          <div class="row no-gutters">
-            <div class="col-auto">
-              <img src="//placehold.it/120" class="img-fluid" alt="" />
-            </div>
-            <div class="col">
-              <div class="card-block px-2">
-                <h4 class="card-title">Title</h4>
-                <p class="card-text">Description</p>
-              </div>
-            </div>
-          </div>
-        </div>
-        <div class="card" style={{ width: '100%', height: "12rem" }}>
-          <div class="row no-gutters">
-            <div class="col-auto">
-              <img src="//placehold.it/120" class="img-fluid" alt="" />
-            </div>
-            <div class="col">
-              <div class="card-block px-2">
-                <h4 class="card-title">Title</h4>
-                <p class="card-text">Description</p>
-              </div>
-            </div>
-          </div>
-        </div>
-        <div class="card" style={{ width: '100%', height: "12rem" }}>
-          <div class="row no-gutters">
-            <div class="col-auto">
-              <img src="//placehold.it/120" class="img-fluid" alt="" />
-            </div>
-            <div class="col">
-              <div class="card-block px-2">
-                <h4 class="card-title">Title</h4>
-                <p class="card-text">Description</p>
-              </div>
-            </div>
-          </div>
-        </div>
+        {this.state.hasLoadedAssets && (<>{window.utils.generateAssetDash()}</>)}
+        {!this.state.hasLoadedAssets && (<><h2>Loading Asssets...</h2></>)}
       </div >
     );
   }

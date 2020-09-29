@@ -213,7 +213,7 @@ class Main extends Component {
     let tempDisplayArray = [];
     for (let j = 0; j < window.aTknIDs.length; j++) {
       if(tempDescArray[j].photo.displayImage === undefined){
-        tempDisplayArray.push("0")
+        tempDisplayArray.push("https://pruf.io/assets/images/pruf-u-logo-192x255.png")
       }
       else{
         tempDisplayArray.push(tempDescArray[j].photo.displayImage)
