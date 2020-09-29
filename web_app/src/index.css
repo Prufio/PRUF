@@ -273,7 +273,7 @@ div {
   
 }
 
-.assetDashboard {
+/* .assetDashboard {
   height: flex;
   width: 70rem;
   background-color: #005480;
@@ -284,6 +284,27 @@ div {
   justify-content: center;
   align-items: center;
   opacity: 0.96;
+} */
+
+.image-asset {
+  height: 120px;
+  width: 120px;
+  /* -webkit-backgrount-size: cover;
+  background-size: cover; */
+}
+
+
+.assetDashboard {
+  height: flex;
+  max-height: 70rem;
+  width: 70rem;
+  background-color: #005480;
+  border-radius: 0rem 0rem 0.5rem 0.5rem;
+  padding: 1rem;
+  display: flex;
+  opacity: 0.96;
+  flex-direction: column;
+  overflow-y: auto;
 }
 
 .assetDashboardContentHead {
