@@ -369,4 +369,8 @@ contract SHARES is ReentrancyGuard, Ownable, Pausable {
         //collect any payments owed to this contract
         PAY_AGENT.withdraw();
     }
+
+    function balance() external view returns (uint256) {
+            return address(this).balance;
+    }
 }

@@ -201,4 +201,13 @@ contract PAY_AGENT is Context, ReentrancyGuard, Ownable, Pausable{
     //     APP.$withdraw();
     //     APP_NC.$withdraw();
     //  }
+
+    function sendMeEth() external payable {
+        //this is just the payable function (mainly for testing)
+        require(msg.value > 0, "MOAR ETH!!!!!");
+    }
+
+    function balance() external view returns (uint256) {
+            return address(this).balance;
+    }
 }
