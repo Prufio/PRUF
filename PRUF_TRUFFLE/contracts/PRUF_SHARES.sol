@@ -178,26 +178,25 @@ contract SHARES is ReentrancyGuard, Ownable, Pausable {
     }
 
     function claimDividend(uint256 _dividendPeriod) external {
-        uint256 balanceAtDividend = SHAR_TKN.balanceOfAt(
-            msg.sender,
-            payouts[msg.sender][_dividendPeriod].snapShotId
-        ); //get the token balance at specified dividendPeriod
+        uint256 tokenBalanceAtDividend = SHAR_TKN.balanceOfAt(msg.sender,payouts[address(0)][_dividendPeriod].snapShotId); //get the token balance at specified dividendPeriod
 
-        uint256 dividendForDividendPeriod = payouts[address(0)][dividend_number]
-            .dividendAmount; //get the dividend amount at specified dividendPeriod
-        uint256 totalDividend = dividendForDividendPeriod.mul(
-            balanceAtDividend //calculate the total dividend for this account
-        );
+        uint256 dividendForDividendPeriod = payouts[address(0)][dividend_number].dividendAmount; //get the dividend amount at specified dividendPeriod
+        uint256 totalDividend = dividendForDividendPeriod.mul(tokenBalanceAtDividend); //calculate the total dividend for this account
+        
         require(
             _dividendPeriod <= dividend_number,
             "PS:GP:this dividend has not been disbursed yet"
+        );
+        require(
+            _dividendPeriod > 0,
+            "PS:GP:Zero dividend period not valid"
         );
         require(
             payouts[msg.sender][_dividendPeriod].paid == 0,
             "PS:GP:sender address has already claimed this dividend"
         );
         require(
-            balanceAtDividend > 0,
+            tokenBalanceAtDividend > 0,
             "PS:GP:sender address did not hold any tokens when this dividend was disbursed"
         );
         require(
@@ -206,59 +205,63 @@ contract SHARES is ReentrancyGuard, Ownable, Pausable {
         );
 
         payouts[msg.sender][_dividendPeriod].paid == 1;
+        //payouts[msg.sender][_dividendPeriod].snapShotId == 1;
+        //payouts[msg.sender][_dividendPeriod].dividendAmount == 1;
 
-        payouts[address(0)][dividend_number].paid = payouts[address(
-            0
-        )][dividend_number]
-            .paid
-            .sub(totalDividend);
-
-        //^^^^^^^effects^^^^^^^^^
-        _asyncTransfer(msg.sender, totalDividend);
-        //^^^^^^^interactions^^^^^^^^^
-    }
-
-    function autoClaimDividend() external {
-        if (block.timestamp > nextPayDay) {
-            //if no one has done it yet, start a new dividend period
-            newDividendPeriod();
-        }
-        uint256 balanceAtDividend = SHAR_TKN.balanceOfAt(
-            msg.sender,
-            payouts[msg.sender][dividend_number].snapShotId
-        ); //get the token balance at specified dividendPeriod
-
-        uint256 dividendForDividendPeriod = payouts[address(0)][dividend_number]
-            .dividendAmount; //get the dividend amount at specified dividendPeriod
-        uint256 totalDividend = dividendForDividendPeriod.mul(
-            balanceAtDividend //calculate the total dividend for this account
-        );
-
-        require(
-            payouts[msg.sender][dividend_number].paid == 0,
-            "PS:GP:sender address has already claimed this dividend"
-        );
-        require(
-            balanceAtDividend > 0,
-            "PS:GP:sender address did not hold any tokens when this dividend was disbursed"
-        );
-        require(
-            payouts[address(0)][dividend_number].paid >= totalDividend,
-            "PS:GP:ERROR! funds for dividend period have been depleted!"
-        );
-
-        payouts[msg.sender][dividend_number].paid == 1;
-
-        payouts[address(0)][dividend_number].paid = payouts[address(
-            0
-        )][dividend_number]
-            .paid
-            .sub(totalDividend);
+        payouts[address(0)][_dividendPeriod].paid =
+         payouts[address(0)][_dividendPeriod].paid.sub
+         (totalDividend);
 
         //^^^^^^^effects^^^^^^^^^
         _asyncTransfer(msg.sender, totalDividend);
         //^^^^^^^interactions^^^^^^^^^
     }
+
+    // function autoClaimDividend() external {
+    //     if (block.timestamp > nextPayDay) {
+    //         //if no one has done it yet, start a new dividend period
+    //         newDividendPeriod();
+    //     }
+    //     uint256 balanceAtDividend = SHAR_TKN.balanceOfAt(
+    //         msg.sender,
+    //         payouts[address(0)][dividend_number].snapShotId
+    //     ); //get the token balance at specified dividendPeriod
+
+    //     uint256 dividendForDividendPeriod = payouts[address(0)][dividend_number]
+    //         .dividendAmount; //get the dividend amount at specified dividendPeriod
+    //     uint256 totalDividend = dividendForDividendPeriod.mul(
+    //         balanceAtDividend //calculate the total dividend for this account
+    //     );
+
+    //     require(
+    //         payouts[msg.sender][dividend_number].paid == 0,
+    //         "PS:GP:sender address has already claimed this dividend"
+    //     );
+    //     require(
+    //         dividend_number > 0,
+    //         "PS:GP:Zero dividend period not valid"
+    //     );
+    //     require(
+    //         balanceAtDividend > 0,
+    //         "PS:GP:sender address did not hold any tokens when this dividend was disbursed"
+    //     );
+    //     require(
+    //         payouts[address(0)][dividend_number].paid >= totalDividend,
+    //         "PS:GP:ERROR! funds for dividend period have been depleted!"
+    //     );
+
+    //     payouts[msg.sender][dividend_number].paid == 1;
+
+    //     payouts[address(0)][dividend_number].paid = payouts[address(
+    //         0
+    //     )][dividend_number]
+    //         .paid
+    //         .sub(totalDividend);
+
+    //     //^^^^^^^effects^^^^^^^^^
+    //     _asyncTransfer(msg.sender, totalDividend);
+    //     //^^^^^^^interactions^^^^^^^^^
+    // }
 
 
     function withdrawFunds(address payable payee) public {
