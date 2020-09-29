@@ -14,8 +14,8 @@ class AssetCheckIn extends Component {
         this.setState({ assets: window.assets })
       }
 
-      if(this.state.hasLoadedAssets !== window.hasLoadedAssets){
-        this.setState({hasLoadedAssets: window.hasLoadedAssets})
+      if (this.state.hasLoadedAssets !== window.hasLoadedAssets) {
+        this.setState({ hasLoadedAssets: window.hasLoadedAssets })
       }
     }, 100)
 
@@ -88,14 +88,18 @@ class AssetCheckIn extends Component {
     }
 
     return (
-      <div className="assetDashboard">
+
+      <div>
         <div>
-          <h2 className="Headertext">My Assets</h2>
+          <h2 className="assetDashboardHeader">My Assets</h2>
         </div>
-        <br></br>
+        <div className="assetDashboard">
         {this.state.hasLoadedAssets && (<>{window.utils.generateAssetDash()}</>)}
         {!this.state.hasLoadedAssets && (<><h2>Loading Asssets...</h2></>)}
+        </div>
+
       </div >
+      
     );
   }
 }

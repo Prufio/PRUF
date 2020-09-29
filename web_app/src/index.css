@@ -24,7 +24,10 @@ li {
 }
 
 p {
-  text-align: center;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 30ch;
 }
 
 h1 {
@@ -46,8 +49,15 @@ h3 {
 
 h4 {
   font-size: 1rem;
-  text-align: center;
+  word-wrap: normal;
+
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
 }
+
 
 .formtext {
   font-size: 6rem;
@@ -286,6 +296,52 @@ div {
   opacity: 0.96;
 } */
 
+.card {
+  max-width: 100%;
+}
+.card-text {
+  word-wrap: break-word;
+}
+
+.card-name {
+  margin-left: 0.5rem;
+  font-weight: bold;
+  font-size: 1.2rem;
+}
+
+.card-ac {
+  font-size: 1.2rem;
+  font-weight: bold;
+  margin-left: 22rem;
+  margin-top: -2.8rem;
+}
+
+.card-status {
+  font-size: 1.2rem;
+  font-weight: bold;
+  margin-left: 37rem;
+  margin-top: -2.75rem;
+}
+
+.card-description {
+  font-size: 1.2rem;
+  font-weight: bold;
+}
+
+.cardDescription {
+  display: flex;
+  width: 50rem;
+  height: auto;
+  word-wrap: normal;
+  margin-left: 0.5rem;
+}
+
+.cardButton {
+  margin-top: -26rem;
+  margin-left: 52rem;
+  max-height: 4rem;
+}
+
 .image-asset {
   height: 120px;
   width: 120px;
@@ -315,6 +371,7 @@ div {
   opacity: 0.96;
   flex-direction: column;
   overflow-y: auto;
+  word-break: break-all;
 }
 
 .assetDashboardContentHead {
@@ -751,7 +808,6 @@ div {
   transform: rotate(360deg);
 }
 
-/*--------------------------------------------------------------------testing-----------------------*/
 
 .loading:after {
   content: ' .';
