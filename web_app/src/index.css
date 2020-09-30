@@ -385,7 +385,7 @@ div {
 
 .assetDashboard {
   height: flex;
-  max-height: 58rem;
+  max-height: 65rem;
   width: 70rem;
   background-color: #002a40;
   padding: 1rem;
@@ -445,7 +445,7 @@ div {
 
 .assetDashboardSelected {
   height: flex;
-  max-height: 57rem;
+  max-height: 50rem;
   width: 68rem;
   background-color: #002a40;
   /* padding: 1rem; */
@@ -510,27 +510,32 @@ div {
   max-height: 4rem;
 }
 
+.assetSelectedRouter{
+  display: flex;
+  width: 68rem;
+  height: 4rem;
+  margin-top: auto;
+  background-color: #005480;
+  justify-content: space-evenly;
+  border-radius: 0rem 0rem 0.3rem 0.3rem;
+}
+
 .headerSelected li {
   display: inline;
   list-style-type: none;
   align-items: center;
   justify-content: center;
-  flex-direction: column;
+  flex-direction: row;
   margin: auto;
-  z-index: 5;
+  /* z-index: 5; */
 }
 
 .headerSelected {
-  max-width: none;
-  /* height: 6rem; */
   background-color: #002a40;
-  padding: 0rem;
-  /* margin-top: 0.2rem; */
+  margin-top: 11.51rem;
   align-items: center;
-  justify-content: space-between;
   flex-direction: row;
-  opacity: 1;
-  z-index: 5;
+  /* z-index: 5; */
 }
 
 .headerSelected li a {
@@ -538,14 +543,14 @@ div {
   color: rgb(255, 255, 255);
   font-weight: bold;
   font-size: 1.6rem;
-  padding: 0.8rem;
+  /* padding: 0.8rem; */
   /* padding-left: 1.25rem;
   padding-right: 1.25rem;
   padding-top: 1rem;
   padding-bottom: 1rem; */
   /* margin-top: 0.25rem; */
-  display: inline-flex;
-  z-index: 5;
+  /* display: inline-flex; */
+  /* z-index: 5; */
 }
 
 .Form {
@@ -581,13 +586,24 @@ div {
   color: white;
   background-color: #002a40;
   border-radius: 0rem 0rem 1rem 1rem;
-  font-size: 1.3rem;
+  font-size: 1.3rem; 
   display: flex;
   padding: 2rem;
   margin-top: -0.2rem;
   justify-content: flex-start;
   align-items: flex-start;
 }
+
+.assetSelectedContentHead {
+  color: white;
+  font-size: 1.3rem; 
+}
+
+.assetSelectedContent {
+  color: white;
+  font-size: 1.3rem; 
+}
+
 
 .GACDresults {
   height: 13rem;

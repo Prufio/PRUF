@@ -99,6 +99,17 @@ class AssetCheckIn extends Component {
                 color: white;
                 word-break: break-all;
               }
+
+              .btn-selectedImage {
+                background-color: #005480;
+                color: white;
+                height: 4rem;
+                margin-top: -20rem;
+                margin-left: -0.8rem;
+                font-weight: bold;
+                font-size: 2.2rem;
+                border-radius: 0rem 0rem 0.3rem 0.3rem;
+              }
   
             `}
               </style>
@@ -133,26 +144,28 @@ class AssetCheckIn extends Component {
               </div >
             </div >
           </div>
+          <div className="assetSelectedRouter">
           <Nav className="headerSelected">
             <li>
-              <Button  onClick={() => { this.sendPacket(obj.idxHash, "NC", "transfer-asset-NC") }}>Transfer</Button>
+              <Button variant="selectedImage" onClick={() => { this.sendPacket(obj, "NC", "transfer-asset-NC") }}>Transfer</Button>
             </li>
             <li>
-              <Button onClick={() => { this.sendPacket(obj.idxHash, "NC", "export-asset-NC") }}>Export</Button>
+              <Button variant="selectedImage" onClick={() => { this.sendPacket(obj, "NC", "export-asset-NC") }}>Export</Button>
             </li>
             <li>
-              <Button onClick={() => { this.sendPacket(obj.idxHash, "NC", "manage-escrow-NC") }}>Escrow</Button>
+              <Button variant="selectedImage" onClick={() => { this.sendPacket(obj, "NC", "manage-escrow-NC") }}>Escrow</Button>
             </li>
             <li>
-              <DropdownButton title="Modify" drop="up">
-                <Dropdown.Item id="header-dropdown" as={Button} onClick={() => { this.sendPacket(obj.idxHash, "NC", "modify-record-status-NC") }}>Modify Status</Dropdown.Item>
-                <Dropdown.Item id="header-dropdown" as={Button} onClick={() => { this.sendPacket(obj.idxHash, "NC",  "decrement-counter-NC") }}>Decrement Counter</Dropdown.Item>
-                <Dropdown.Item id="header-dropdown" as={Button} onClick={() => { this.sendPacket(obj.idxHash, "NC", "modify-description-NC") }}>Modify Description</Dropdown.Item>
-                <Dropdown.Item id="header-dropdown" as={Button} onClick={() => { this.sendPacket(obj.idxHash, "NC", "add-note-NC") }}>Add Note</Dropdown.Item>
-                <Dropdown.Item id="header-dropdown" as={Button} onClick={() => { this.sendPacket(obj.idxHash, "NC", "force-modify-record-NC") }}>Modify Rightsholder</Dropdown.Item>
+              <DropdownButton title="Modify" drop="up"  variant="selectedImage">
+                <Dropdown.Item id="header-dropdown" as={Button} onClick={() => { this.sendPacket(obj, "NC", "modify-record-status-NC") }}>Modify Status</Dropdown.Item>
+                <Dropdown.Item id="header-dropdown" as={Button} onClick={() => { this.sendPacket(obj, "NC",  "decrement-counter-NC") }}>Decrement Counter</Dropdown.Item>
+                <Dropdown.Item id="header-dropdown" as={Button} onClick={() => { this.sendPacket(obj, "NC", "modify-description-NC") }}>Modify Description</Dropdown.Item>
+                <Dropdown.Item id="header-dropdown" as={Button} onClick={() => { this.sendPacket(obj, "NC", "add-note-NC") }}>Add Note</Dropdown.Item>
+                <Dropdown.Item id="header-dropdown" as={Button} onClick={() => { this.sendPacket(obj, "NC", "force-modify-record-NC") }}>Modify Rightsholder</Dropdown.Item>
               </DropdownButton>
             </li>
           </Nav>
+          </div>
         </div>
 
 

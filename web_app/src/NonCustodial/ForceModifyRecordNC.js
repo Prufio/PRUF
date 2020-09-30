@@ -55,13 +55,14 @@ class ForceModifyRecordNC extends Component {
   //component state-change events......................................................................................................
 
   componentDidMount() {//stuff to do when component mounts in window
-    this.setState({
-      idxHash: window.assetTokenInfo.idxHash,
-      oldDescription: window.assetTokenInfo.description,
-      assetClass: window.assetTokenInfo.assetClass,
-      name: window.assetTokenInfo.name,
-      status: window.assetTokenInfo.status
-    })
+    if (window.sentPacket !== undefined) {
+      this.setState({ name: window.sentPacket.name })
+      this.setState({idxHash: window.sentPacket.idxHash})
+      this.setState({assetClass: window.sentPacket.assetClass})
+      this.setState({status: window.sentPacket.status})
+      window.sentPacket = undefined
+      this.setState({ wasSentPacket: true })
+    }
   }
 
   componentWillUnmount() {//stuff do do when component unmounts from the window
@@ -137,7 +138,145 @@ class ForceModifyRecordNC extends Component {
       console.log(this.state.txHash);
       return document.getElementById("MainForm").reset();
     };
-
+    if (this.state.wasSentPacket){
+      return (
+        <div>
+          <Form className="Form" id='MainForm'>
+            {window.addr === undefined && (
+              <div className="errorResults">
+                <h2>User address unreachable</h2>
+                <h3>Please connect web3 provider.</h3>
+              </div>
+            )}
+            {window.addr > 0 && (
+              <div>
+                <h2 className="Headertext">Modify Rightsholder</h2>
+                <br></br>
+                <Form.Row>
+                  <Form.Group as={Col} controlId="formGridNewFirstName">
+                    <Form.Label className="formFont">New First Name:</Form.Label>
+                    <Form.Control
+                      placeholder="New First Name"
+                      required
+                      onChange={(e) => this.setState({ first: e.target.value })}
+                      size="lg"
+                    />
+                  </Form.Group>
+  
+                  <Form.Group as={Col} controlId="formGridNewMiddleName">
+                    <Form.Label className="formFont">New Middle Name:</Form.Label>
+                    <Form.Control
+                      placeholder="New Middle Name"
+                      required
+                      onChange={(e) => this.setState({ middle: e.target.value })}
+                      size="lg"
+                    />
+                  </Form.Group>
+  
+                  <Form.Group as={Col} controlId="formGridNewLastName">
+                    <Form.Label className="formFont">New Last Name:</Form.Label>
+                    <Form.Control
+                      placeholder="New Last Name"
+                      required
+                      onChange={(e) => this.setState({ surname: e.target.value })}
+                      size="lg"
+                    />
+                  </Form.Group>
+                </Form.Row>
+                <Form.Row>
+                  <Form.Group as={Col} controlId="formGridNewIdNumber">
+                    <Form.Label className="formFont">New ID Number:</Form.Label>
+                    <Form.Control
+                      placeholder="New ID Number"
+                      required
+                      onChange={(e) => this.setState({ id: e.target.value })}
+                      size="lg"
+                    />
+                  </Form.Group>
+  
+                  <Form.Group as={Col} controlId="formGridNewPassword">
+                    <Form.Label className="formFont">New Password:</Form.Label>
+                    <Form.Control
+                      placeholder="New Password"
+                      type="password"
+                      required
+                      onChange={(e) => this.setState({ secret: e.target.value })}
+                      size="lg"
+                    />
+                  </Form.Group>
+                </Form.Row>
+                <Form.Row>
+                    <Form.Group >
+                      <Button className="buttonDisplay"
+                        variant="danger"
+                        type="button"
+                        size="lg"
+                        onClick={_editRgtHash}
+                      >
+                        Modify
+                    </Button>
+                    </Form.Group>
+                </Form.Row>
+              </div>
+            )}
+          </Form>
+          <div className="assetSelectedResults">
+            <Form.Row>
+              
+                {this.state.idxHash !== undefined &&(
+                  <Form.Group>
+                  <div className="assetSelectedContentHead">Asset IDX: <span className="assetSelectedContent">{this.state.idxHash}</span> </div>
+                  <div className="assetSelectedContentHead">Asset Name: <span className="assetSelectedContent">{this.state.name}</span> </div>
+                  {/* <div className="assetSelectedContentHead"> Asset Description: <span className="assetSelectedContent">{this.state.description}</span> </div> */}
+                  <div className="assetSelectedContentHead">Asset Class: <span className="assetSelectedContent">{this.state.assetClass}</span> </div>
+                  <div className="assetSelectedContentHead">Asset Status: <span className="assetSelectedContent">{this.state.status}</span> </div>
+                  </Form.Group>
+                )} 
+              
+            </Form.Row>
+          </div>
+          {this.state.transaction === true && (
+  
+  <div className="Results">
+    {/* {this.state.pendingTx === undefined && ( */}
+      <p class="loading">Transaction In Progress, Please Confirm Transaction</p>
+    {/* )} */}
+    {/* {this.state.pendingTx !== undefined && (
+      <p class="loading">Transaction In Progress</p>
+    )} */}
+  </div>)}
+          {this.state.txHash > 0 && ( //conditional rendering
+            <div className="Results">
+              {this.state.txStatus === false && (
+                <div>
+                  !ERROR! :
+                  <a
+                    href={"https://kovan.etherscan.io/tx/" + this.state.txHash}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                  >
+                    KOVAN Etherscan:{this.state.txHash}
+                  </a>
+                </div>
+              )}
+              {this.state.txStatus === true && (
+                <div>
+                  {" "}
+                  No Errors Reported :
+                  <a
+                    href={"https://kovan.etherscan.io/tx/" + this.state.txHash}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                  >
+                    KOVAN Etherscan:{this.state.txHash}
+                  </a>
+                </div>
+              )}
+            </div>
+          )}
+        </div>
+      );
+    }
     return (
       <div>
         <Form className="Form" id='MainForm'>

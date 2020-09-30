@@ -59,6 +59,14 @@ class ModifyDescription extends Component {
   //component state-change events......................................................................................................
 
   componentDidMount() {//stuff to do when component mounts in window
+    if (window.sentPacket !== undefined) {
+      this.setState({ name: window.sentPacket.name })
+      this.setState({idxHash: window.sentPacket.idxHash})
+      this.setState({assetClass: window.sentPacket.assetClass})
+      this.setState({status: window.sentPacket.status})
+      window.sentPacket = undefined
+      this.setState({ wasSentPacket: true })
+    }
 
   }
 
@@ -301,7 +309,330 @@ class ModifyDescription extends Component {
       //self.setState({ oldDescription: undefined });
       return document.getElementById("MainForm").reset();
     };
-
+    if (this.state.wasSentPacket){
+      return (
+        <div>
+          <Form className="Form" id='MainForm'>
+            {window.addr === undefined && (
+              <div className="errorResults">
+                <h2>User address unreachable</h2>
+                <h3>Please connect web3 provider.</h3>
+              </div>
+            )}
+            {window.addr > 0 && (
+              <div>
+  
+                <h2 className="Headertext">Modify Description</h2>
+                <br></br>
+                {this.state.accessPermitted && (
+                  <div>
+                    <Form.Row>
+                      <Form.Group as={Col} controlId="formGridMiscType">
+                        <Form.Label className="formFont">
+                          Element Type:
+                        </Form.Label>
+                        <Form.Control
+                          as="select"
+                          size="lg"
+                          onChange={(e) => this.setState({ elementType: e.target.value })}
+                        >
+                          <option value="0">Select Element Type</option>
+                          <option value="nameTag"> Edit Name Tag</option>
+                          <option value="description">Edit Description</option>
+                          <option value="text">Add Custom Text</option>
+                          <option value="photo">Add Image URL</option>
+                          <option value="removeText">Remove Existing Text Element</option>
+                          <option value="removePhoto">Remove Existing Image URL</option>
+  
+                        </Form.Control>
+                      </Form.Group>
+                    </Form.Row>
+                    {this.state.elementType === "text" && (
+                      <>
+                        <Form.Row>
+                          <Form.Group as={Col} controlId="formGridMiscName">
+                            <Form.Label className="formFont">
+                              Submission Title:
+                        </Form.Label>
+                            <Form.Control
+                              placeholder="Name This Text Submission (No Spaces)"
+                              onChange={(e) => this.setState({ elementName: e.target.value })}
+                              size="lg"
+                            />
+                          </Form.Group>
+                        </Form.Row><Form.Row>
+                          <Form.Group as={Col} controlId="formGridMiscValue">
+                            <Form.Label className="formFont">
+                              Text to Submit:
+                        </Form.Label>
+                            <Form.Control
+                              placeholder="Text Submission Goes Here"
+                              onChange={(e) => this.setState({ elementValue: e.target.value })}
+                              size="lg"
+                            />
+                          </Form.Group>
+                        </Form.Row>
+                      </>
+                    )}
+  
+                    {this.state.elementType === "description" && (
+                      <>
+                        <Form.Row>
+                          <Form.Group as={Col} controlId="formGridMiscValue">
+                            <Form.Label className="formFont">
+                              Description Text:
+                        </Form.Label>
+                            <Form.Control
+                              placeholder="Text Submission Goes Here"
+                              onChange={(e) => this.setState({ elementValue: e.target.value })}
+                              size="lg"
+                            />
+                          </Form.Group>
+                        </Form.Row>
+                      </>
+                    )}
+  
+                    {this.state.elementType === "removePhoto" && (
+                      <>
+                        <Form.Row>
+                          <Form.Group as={Col} controlId="formGridRemovePhoto">
+                            <Form.Label className="formFont">
+                              Image Name:
+                        </Form.Label>
+                            <Form.Control
+                              placeholder="Name of Image You Wish to Remove"
+                              onChange={(e) => this.setState({ removeElement: e.target.value })}
+                              size="lg"
+                            />
+                          </Form.Group>
+                        </Form.Row>
+                      </>
+                    )}
+  
+                    {this.state.elementType === "nameTag" && (
+                      <>
+                        <Form.Row>
+                          <Form.Group as={Col} controlId="formGridNameTag">
+                            <Form.Label className="formFont">
+                              New Name Tag:
+                        </Form.Label>
+                            <Form.Control
+                              placeholder="Type a New NameTag"
+                              onChange={(e) => this.setState({ nameTag: e.target.value })}
+                              size="lg"
+                            />
+                          </Form.Group>
+                        </Form.Row>
+                      </>
+                    )}
+  
+                    {this.state.elementType === "removeText" && (
+                      <>
+                        <Form.Row>
+                          <Form.Group as={Col} controlId="formGridRemoveText">
+                            <Form.Label className="formFont">
+                              Element Name:
+                        </Form.Label>
+                            <Form.Control
+                              placeholder="Name of Element You Wish to Remove"
+                              onChange={(e) => this.setState({ removeElement: e.target.value })}
+                              size="lg"
+                            />
+                          </Form.Group>
+                        </Form.Row>
+                      </>
+                    )}
+  
+                    {this.state.elementType === "photo" && (
+                      <>
+                        <Form.Row>
+                          <Form.Group as={Col} controlId="formGridMiscName">
+                            <Form.Label className="formFont">
+                              Image Title:
+                        </Form.Label>
+                            <Form.Control
+                              placeholder="Name This Image (No Spaces)"
+                              onChange={(e) => this.setState({ elementName: e.target.value })}
+                              size="lg"
+                            />
+                          </Form.Group>
+                        </Form.Row><Form.Row>
+                          <Form.Group as={Col} controlId="formGridMiscValue">
+                            <Form.Label className="formFont">
+                              Source URL:
+                        </Form.Label>
+                            <Form.Control
+                              placeholder="Image URL"
+                              onChange={(e) => this.setState({ elementValue: e.target.value })}
+                              size="lg"
+                            />
+                          </Form.Group>
+                        </Form.Row>
+                      </>
+                    )}
+                  </div>
+                )}
+  
+                {this.state.hashPath !== "" && this.state.accessPermitted && (
+                  <Form.Row>
+                    <Form.Group >
+                      <Button className="buttonDisplay"
+                        variant="primary"
+                        type="button"
+                        size="lg"
+                        onClick={_updateDescription}
+                      >
+                        Update Description
+                      </Button>
+                    </Form.Group>
+                  </Form.Row>
+                )}
+  
+                {this.state.hashPath === "" && this.state.accessPermitted && this.state.elementType === "0" && (
+                  <Form.Row>
+                    <Form.Group >
+                      <Button className="buttonDisplay"
+                        variant="primary"
+                        type="button"
+                        size="lg"
+                        onClick={publishIPFS1}
+                      >
+                        Load to IPFS
+                      </Button>
+                    </Form.Group>
+                    <br></br>
+                  </Form.Row>
+  
+                )}
+                {this.state.elementType === "text" && (
+                  <Form.Row>
+                    <Form.Group>
+                      <Button className="buttonDisplay"
+                        variant="primary"
+                        type="button"
+                        size="lg"
+                        onClick={() => { _addToMiscArray(this.state.elementType) }}
+                      >
+                        Add Element
+                </Button>
+                    </Form.Group>
+                    <br></br>
+                  </Form.Row>
+                )}
+                {this.state.elementType === "photo" && (
+                  <Form.Row>
+                    <Form.Group>
+                      <Button className="buttonDisplay"
+                        variant="primary"
+                        type="button"
+                        size="lg"
+                        onClick={() => { _addToMiscArray(this.state.elementType) }}
+                      >
+                        Add Element
+                </Button>
+                    </Form.Group>
+                    <br></br>
+                  </Form.Row>
+                )}
+  
+                {this.state.elementType === "description" && (
+                  <Form.Row>
+                    <Form.Group>
+                      <Button className="buttonDisplay"
+                        variant="primary"
+                        type="button"
+                        size="lg"
+                        onClick={() => { _addToMiscArray(this.state.elementType) }}
+                      >
+                        Add Element
+                </Button>
+                    </Form.Group>
+                    <br></br>
+                  </Form.Row>
+                )}
+  
+                {this.state.elementType === "nameTag" && (
+                  <Form.Row>
+                    <Form.Group>
+                      <Button className="buttonDisplay"
+                        variant="primary"
+                        type="button"
+                        size="lg"
+                        onClick={() => { _addToMiscArray(this.state.elementType) }}
+                      >
+                        Add Element
+                </Button>
+                    </Form.Group>
+                    <br></br>
+                  </Form.Row>
+                )}
+  
+                {this.state.elementType === "removePhoto" && (
+                  <Form.Row>
+                    <Form.Group>
+                      <Button className="buttonDisplay"
+                        variant="primary"
+                        type="button"
+                        size="lg"
+                        onClick={() => { _removeElement(this.state.elementType) }}
+                      >
+                        Remove Element
+                </Button>
+                    </Form.Group>
+                    <br></br>
+                  </Form.Row>
+                )}
+  
+                {this.state.elementType === "removeText" && (
+                  <Form.Row>
+                    <Form.Group>
+                      <Button className="buttonDisplay"
+                        variant="primary"
+                        type="button"
+                        size="lg"
+                        onClick={() => { _removeElement(this.state.elementType) }}
+                      >
+                        Remove Element
+                </Button>
+                    </Form.Group>
+                    <br></br>
+                  </Form.Row>
+                )}
+              </div>
+            )}
+          </Form>
+          {this.state.txHash > 0 && ( //conditional rendering
+            <div className="Results">
+              {this.state.txStatus === false && (
+                <div>
+                  !ERROR! :
+                  <a
+                    href={"https://kovan.etherscan.io/tx/" + this.state.txHash}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                  >
+                    KOVAN Etherscan:{this.state.txHash}
+                  </a>
+                </div>
+              )}
+              {this.state.txStatus === true && (
+                <div>
+                  {" "}
+                  No Errors Reported :
+                  <a
+                    href={"https://kovan.etherscan.io/tx/" + this.state.txHash}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                  >
+                    KOVAN Etherscan:{this.state.txHash}
+                  </a>
+                </div>
+              )}
+            </div>
+          )}
+        </div>
+      );
+    }
     return (
       <div>
         <Form className="Form" id='MainForm'>
