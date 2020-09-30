@@ -53,34 +53,34 @@ class AssetCheckIn extends Component {
                 <p class="card-ac-selected">Asset Class : {obj.assetClass}</p>
                 <p class="card-status-selected">Status : {obj.status}</p>
                 <div className="imageSelector">
-                <button class="assetImageButton">
+                <button class="assetImageSelectorButton">
                 <img src={obj.displayImage} className="imageSelectorImage" />
                 </button>
-                <button class="assetImageButton">
+                <button class="assetImageSelectorButton">
                 <img src={obj.displayImage} className="imageSelectorImage" />
                 </button>
-                <button class="assetImageButton">
+                <button class="assetImageSelectorButton">
                 <img src={obj.displayImage} className="imageSelectorImage" />
                 </button>
-                <button class="assetImageButton">
+                <button class="assetImageSelectorButton">
                 <img src={obj.displayImage} className="imageSelectorImage" />
                 </button>
-                <button class="assetImageButton">
+                <button class="assetImageSelectorButton">
                 <img src={obj.displayImage} className="imageSelectorImage" />
                 </button>
-                <button class="assetImageButton">
+                <button class="assetImageSelectorButton">
                 <img src={obj.displayImage} className="imageSelectorImage" />
                 </button>
-                <button class="assetImageButton">
+                <button class="assetImageSelectorButton">
                 <img src={obj.displayImage} className="imageSelectorImage" />
                 </button>
-                <button class="assetImageButton">
+                <button class="assetImageSelectorButton">
                 <img src={obj.displayImage} className="imageSelectorImage" />
                 </button>
-                <button class="assetImageButton">
+                <button class="assetImageSelectorButton">
                 <img src={obj.displayImage} className="imageSelectorImage" />
                 </button>
-                <button class="assetImageButton">
+                <button class="assetImageSelectorButton">
                 <img src={obj.displayImage} className="imageSelectorImage" />
                 </button>
                 </div>
