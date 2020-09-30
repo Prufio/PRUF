@@ -39,15 +39,12 @@ contract SHARES is ReentrancyGuard, Ownable, Pausable {
     using Address for address payable;
     using SafeMath for uint256;
 
-    // uint256 constant private maxSupply = 10; //set max supply (100000?)
     uint256 private constant payPeriod = 2 minutes; //set to 30 days
 
     uint256 private nextPayDay = block.timestamp.add(payPeriod);
     uint256 private lastPayDay = block.timestamp;
 
-    //uint256 private dividend;
     uint256 internal heldFunds;
-    //uint256 private current_snapShot;
     uint256 private dividend_number;
 
     address PAY_AGENT_Address;
@@ -234,11 +231,11 @@ contract SHARES is ReentrancyGuard, Ownable, Pausable {
         //^^^^^^^interactions^^^^^^^^^
     }
 
-    function sec_until_payday() public view returns (uint256, uint256) {
+    function sec_until_payday() public view returns (uint256) {
         if (nextPayDay > block.timestamp) {
-            return (lastPayDay, (nextPayDay.sub(block.timestamp)));
+            return (nextPayDay.sub(block.timestamp));
         } else {
-            return (lastPayDay, 0);
+            return 0;
         }
         //^^^^^^^interactions^^^^^^^^^
     }
@@ -253,18 +250,35 @@ contract SHARES is ReentrancyGuard, Ownable, Pausable {
             uint256,
             uint256,
             uint256,
+            uint256,
             uint256
         )
     {
-        return (
-            block.timestamp,
-            lastPayDay,
-            nextPayDay,
-            dividend_number,
-            paidDividends[dividend_number].snapShotId,
-            paidDividends[dividend_number].dividendAmount,
-            paidDividends[dividend_number].heldForThisDividend
-        );
+        if (nextPayDay > block.timestamp) {
+            return (
+                nextPayDay.sub(block.timestamp),
+                block.timestamp,
+                lastPayDay,
+                nextPayDay,
+                dividend_number,
+                paidDividends[dividend_number].snapShotId,
+                paidDividends[dividend_number].dividendAmount,
+                paidDividends[dividend_number].heldForThisDividend
+                );
+        } else {
+            return (
+                0,
+                block.timestamp,
+                lastPayDay,
+                nextPayDay,
+                dividend_number,
+                paidDividends[dividend_number].snapShotId,
+                paidDividends[dividend_number].dividendAmount,
+                paidDividends[dividend_number].heldForThisDividend
+                );
+        }
+
+        
         //^^^^^^^interactions^^^^^^^^^
     }
 
