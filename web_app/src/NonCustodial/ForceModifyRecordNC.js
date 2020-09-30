@@ -239,7 +239,7 @@ class ForceModifyRecordNC extends Component {
   
   <div className="Results">
     {/* {this.state.pendingTx === undefined && ( */}
-      <p class="loading">Transaction In Progress, Please Confirm Transaction</p>
+      <p class="loading">Transaction In Progress</p>
     {/* )} */}
     {/* {this.state.pendingTx !== undefined && (
       <p class="loading">Transaction In Progress</p>
@@ -391,7 +391,7 @@ class ForceModifyRecordNC extends Component {
 
 <div className="Results">
   {/* {this.state.pendingTx === undefined && ( */}
-    <p class="loading">Transaction In Progress, Please Confirm Transaction</p>
+    <p class="loading">Transaction In Progress</p>
   {/* )} */}
   {/* {this.state.pendingTx !== undefined && (
     <p class="loading">Transaction In Progress</p>
