@@ -84,7 +84,6 @@ class AssetCheckIn extends Component {
                 <img src={obj.displayImage} className="imageSelectorImage" />
                 </button>
                 </div>
-
                 <div className="cardDescription-selected">
                   <h4 class="card-description-selected">Description :{obj.description}</h4>
                   <br />
