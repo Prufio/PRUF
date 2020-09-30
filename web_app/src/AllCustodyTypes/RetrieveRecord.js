@@ -10,6 +10,135 @@ class RetrieveRecord extends Component {
 
     //State declaration.....................................................................................................
 
+    this.generateAssetInfo = (obj) => {
+      let images = Object.values(obj.photo)
+      let text = Object.values(obj.text)
+      let imageNames = Object.keys(obj.photo)
+      let textNames = Object.keys(obj.text)
+
+      const showImage = (e) => {
+        console.log(this.state.selectedImage)
+        console.log(e)
+        this.setState({selectedImage: e})
+      }
+
+      const openPhotoNT = (url) => {
+        const newWindow = window.open(url, '_blank', 'noopener,noreferrer')
+        if (newWindow) {newWindow.opener = null}
+      }
+
+      const generateThumbs = () => {
+        let component = [];
+        
+        for(let i = 0; i < images.length; i++){
+          component.push(
+            <button value={images[i]} class="assetImageButton" onClick={()=>{showImage(images[i])}}>
+            <img src={images[i]} className="imageSelectorImage" />
+            </button>
+          )
+        }
+
+        return component
+
+      }
+
+      const generateTextList = () => {
+        let component = [];
+        
+        for(let i = 0; i < text.length; i++){
+          component.push(
+            <>
+            <h4 class="card-description-selected">{textNames[i]}: {text[i]}</h4>
+            <br />
+            </>
+          )
+        }
+
+        return component
+      }
+
+      return (
+        <div className="assetDashboardSelected">
+          <style type="text/css"> {`
+  
+              .card {
+                width: 100%;
+                max-width: 100%;
+                height: 50rem;
+                max-height: 100%;
+                background-color: #005480;
+                margin-top: 0.3rem;
+                color: white;
+                word-break: break-all;
+              }
+  
+            `}
+          </style>
+          <div class="card" value="100">
+            <div class="row no-gutters">
+              <div className="assetSelecedInfo">
+                <button class="assetImageButton" onClick={()=>{openPhotoNT(this.state.selectedImage)}}>
+                  <img src={this.state.selectedImage} className="assetImageSelected" />
+                </button>
+                <p class="card-name-selected">Name : {obj.name}</p>
+                <p class="card-ac-selected">Asset Class : {obj.assetClass}</p>
+                <p class="card-status-selected">Status : {obj.status}</p>
+                <div className="imageSelector">
+                  {generateThumbs()}
+                </div>
+                <div className="cardDescription-selected">
+                  {generateTextList()}
+                </div>
+              </div>
+              <div className="cardButton-selected">
+                {this.state.moreInfo && (
+                  <Button
+                    variant="primary"
+                    onClick={() => { this.moreInfo("back") }}
+                  >
+                    Back to list
+                  </Button>
+                )}
+
+              </div>
+            </div>
+          </div >
+        </div >
+
+
+      )
+    }
+
+    this.handlePacket = async () => {
+      let idxHash = window.sentPacket;
+      this.setState({ idxHash: window.sentPacket, wasSentPacket: true })
+      window.sentPacket = undefined;
+      let hash;
+      let assetClass;
+      let status;
+
+      await window.contracts.STOR.methods.retrieveShortRecord(idxHash)
+        .call({ from: window.addr }, (_error, _result) => {
+          if (_error) {
+            console.log("IN ERROR IN ERROR IN ERROR")
+          } else {
+            if (Number(Object.values(_result)[5]) > 0) {
+              hash = Object.values(_result)[5]
+
+            }
+            else {
+              return hash = "0"
+            }
+            assetClass = Object.values(_result)[2]
+            status = Object.values(_result)[0]
+          }
+        })
+      
+      let obj = await window.utils.getIPFSJSONObject(window.utils.getIpfsHashFromBytes32(hash))
+
+      return this.setState({assetObj: obj})
+    }
+
     this.state = {
       addr: "",
       lookupIPFS1: "",
@@ -32,6 +161,8 @@ class RetrieveRecord extends Component {
       id: "",
       secret: "",
       status: "",
+      assetObj: undefined,
+      wasSentPacket: false,
       ipfsObject: {},
       showDescription: false,
     };
@@ -40,6 +171,12 @@ class RetrieveRecord extends Component {
   //component state-change events......................................................................................................
 
   componentDidMount() {//stuff to do when component mounts in window
+
+    if (window.sentPacket !== undefined) {
+
+      this.handlePacket()
+    }
+
 
   }
 
@@ -60,10 +197,9 @@ class RetrieveRecord extends Component {
   render() {//render continuously produces an up-to-date stateful document  
     const self = this;
 
+
+
     const _toggleDisplay = async () => {
-      if (this.state.manufacturer === "" || this.state.type === "" || this.state.model === "" || this.state.serial === "") {
-        return alert("Please fill out all fields before submission")
-      }
       if (self.state.showDescription === false) {
         await self.setState({ descriptionElements: window.utils.seperateKeysAndValues(self.state.ipfsObject) })
         return self.setState({ showDescription: true })
@@ -142,169 +278,188 @@ class RetrieveRecord extends Component {
       await window.utils.getACData("id", window.assetClass)
 
       console.log(window.authLevel);
-      return this.setState({ authLevel: window.authLevel })
+      
 
       await this.setState({ ipfsObject: window.utils.getIPFSJSONObject(ipfsHash) });
+      return this.setState({ authLevel: window.authLevel })
     }
 
-    return (
-      <div>
-        <Form className="Form">
-          {window.addr === undefined && (
-            <div className="errorResults">
-              <h2>User address unreachable</h2>
-              <h3>Please connect web3 provider.</h3>
-            </div>
-          )}
-          {window.addr > 0 && (
-            <div>
-              <h2 className="Headertext">Search Assets</h2>
-              <br></br>
-              <Form.Row>
-                <Form.Group as={Col} controlId="formGridType">
-                  <Form.Label className="formFont">Type:</Form.Label>
-                  <Form.Control
-                    placeholder="Type"
-                    required
-                    onChange={(e) => this.setState({ type: e.target.value })}
-                    size="lg"
-                  />
-                </Form.Group>
+    if (this.state.wasSentPacket === true) {
+      return (
+        <div>
+        <div>
+          <h2 className="assetDashboardHeader">My Assets</h2>
+        </div>
+        <div className="assetDashboard">
+          {this.state.assetObj !== undefined && (<>{this.generateAssetInfo(this.state.assetObj)}</>)}
+          {this.state.assetObj === undefined && (<h4 className = "loading">Loading Asset</h4>)}
+        </div>
+        <div className="assetDashboardFooter">
+        </div>
+      </div >
+      )
+    }
 
-                <Form.Group as={Col} controlId="formGridManufacturer">
-                  <Form.Label className="formFont">Manufacturer:</Form.Label>
-                  <Form.Control
-                    placeholder="Manufacturer"
-                    required
-                    onChange={(e) => this.setState({ manufacturer: e.target.value })}
-                    size="lg"
-                  />
-                </Form.Group>
-
-              </Form.Row>
-
-              <Form.Row>
-                <Form.Group as={Col} controlId="formGridModel">
-                  <Form.Label className="formFont">Model:</Form.Label>
-                  <Form.Control
-                    placeholder="Model"
-                    required
-                    onChange={(e) => this.setState({ model: e.target.value })}
-                    size="lg"
-                  />
-                </Form.Group>
-
-                <Form.Group as={Col} controlId="formGridSerial">
-                  <Form.Label className="formFont">Serial:</Form.Label>
-                  <Form.Control
-                    placeholder="Serial"
-                    required
-                    onChange={(e) => this.setState({ serial: e.target.value })}
-                    size="lg"
-                  />
-                </Form.Group>
-              </Form.Row>
-
-              <Form.Row>
-                {this.state.status === "" && (
-                  <Form.Group>
-                    <Button className="buttonDisplay"
-                      variant="primary"
-                      type="button"
+    else {
+      return (
+        <div>
+          <Form className="Form">
+            {window.addr === undefined && (
+              <div className="errorResults">
+                <h2>User address unreachable</h2>
+                <h3>Please connect web3 provider.</h3>
+              </div>
+            )}
+            {window.addr > 0 && (
+              <div>
+                <h2 className="Headertext">Search Assets</h2>
+                <br></br>
+                <Form.Row>
+                  <Form.Group as={Col} controlId="formGridType">
+                    <Form.Label className="formFont">Type:</Form.Label>
+                    <Form.Control
+                      placeholder="Type"
+                      required
+                      onChange={(e) => this.setState({ type: e.target.value })}
                       size="lg"
-                      onClick={_retrieveRecord}
-                    >
-                      Submit
+                    />
+                  </Form.Group>
+
+                  <Form.Group as={Col} controlId="formGridManufacturer">
+                    <Form.Label className="formFont">Manufacturer:</Form.Label>
+                    <Form.Control
+                      placeholder="Manufacturer"
+                      required
+                      onChange={(e) => this.setState({ manufacturer: e.target.value })}
+                      size="lg"
+                    />
+                  </Form.Group>
+
+                </Form.Row>
+
+                <Form.Row>
+                  <Form.Group as={Col} controlId="formGridModel">
+                    <Form.Label className="formFont">Model:</Form.Label>
+                    <Form.Control
+                      placeholder="Model"
+                      required
+                      onChange={(e) => this.setState({ model: e.target.value })}
+                      size="lg"
+                    />
+                  </Form.Group>
+
+                  <Form.Group as={Col} controlId="formGridSerial">
+                    <Form.Label className="formFont">Serial:</Form.Label>
+                    <Form.Control
+                      placeholder="Serial"
+                      required
+                      onChange={(e) => this.setState({ serial: e.target.value })}
+                      size="lg"
+                    />
+                  </Form.Group>
+                </Form.Row>
+
+                <Form.Row>
+                  {this.state.status === "" && (
+                    <Form.Group>
+                      <Button className="buttonDisplay"
+                        variant="primary"
+                        type="button"
+                        size="lg"
+                        onClick={_retrieveRecord}
+                      >
+                        Submit
                 </Button>
-                  </Form.Group>
-                )}
+                    </Form.Group>
+                  )}
 
-                {this.state.status !== "" && this.state.ipfsObject !== undefined && (
-                  
-                  <Form.Group>
-                    {!this.state.showDescription && (
-                      <Form.Group>
-                        <Button className="ownerButtonDisplay2"
-                          variant="primary"
-                          type="button"
-                          size="lg"
-                          onClick={_toggleDisplay}
-                        >
-                          Show Description
-                  </Button>
-                  </Form.Group>
-                    )}
-                    {this.state.showDescription && (
-                      <Form.Group>
-                        <Button className="ownerButtonDisplay2"
-                          variant="primary"
-                          type="button"
-                          size="lg"
-                          onClick={_toggleDisplay}
-                        >
-                          Show Statistics
-                  </Button>
-                      </Form.Group>
-                    )}
-                    {this.state.type !== undefined && this.state.type !== "" && (
+                  {this.state.status !== "" && this.state.ipfsObject !== undefined && (
+
+                    <Form.Group>
+                      {!this.state.showDescription && (
                         <Form.Group>
-                        <Button className="ownerButtonDisplay2"
-                          variant="primary"
-                          type="button"
-                          size="lg"
-                          onClick={_retrieveRecord}
-                        >
-                          Submit
+                          <Button className="ownerButtonDisplay2"
+                            variant="primary"
+                            type="button"
+                            size="lg"
+                            onClick={_toggleDisplay}
+                          >
+                            Show Description
                   </Button>
-                      </Form.Group>
-                    )}
+                        </Form.Group>
+                      )}
+                      {this.state.showDescription && (
+                        <Form.Group>
+                          <Button className="ownerButtonDisplay2"
+                            variant="primary"
+                            type="button"
+                            size="lg"
+                            onClick={_toggleDisplay}
+                          >
+                            Show Statistics
+                  </Button>
+                        </Form.Group>
+                      )}
+                      {this.state.type !== undefined && this.state.type !== "" && (
+                        <Form.Group>
+                          <Button className="ownerButtonDisplay2"
+                            variant="primary"
+                            type="button"
+                            size="lg"
+                            onClick={_retrieveRecord}
+                          >
+                            Submit
+                  </Button>
+                        </Form.Group>
+                      )}
 
-                  </Form.Group>
-                )}
+                    </Form.Group>
+                  )}
 
-              </Form.Row>
+                </Form.Row>
+              </div>
+            )}
+          </Form>
+          {this.state.result[4] === "0" && (
+            <div className="RRresultserr">No Asset Found for Given Data</div>
+          )}
+
+          {this.state.result[4] > 0 && ( //conditional rendering
+            <div className="RRresults">
+              Asset Found!
+              <br></br>
+              {!this.state.showDescription && (
+                <>
+                  Status : {this.state.status}
+                  <br></br>
+              Mod Count : {this.state.result[1]}
+                  <br></br>
+              Asset Class : {this.state.result[2]}
+                  <br></br>
+              Count : {this.state.result[3]} of {this.state.result[4]}
+                  <br></br>
+              Number of transfers : {this.state.result[7]}
+                  <br></br>
+                </>
+              )}
+
+              {this.state.ipfs2 !== undefined && this.state.ipfs2 !== "" && (
+                <>
+                  Asset Inscription : {this.state.ipfs2}
+                  <br></br>
+                </>
+              )}
+
+              {this.state.showDescription && (
+                <>
+                  {this.state.descriptionElements !== undefined && (<>{window.utils.generateDescription(this.state.descriptionElements)}</>)}
+                </>
+              )}
             </div>
           )}
-        </Form>
-        {this.state.result[4] === "0" && (
-          <div className="RRresultserr">No Asset Found for Given Data</div>
-        )}
-
-        {this.state.result[4] > 0 && ( //conditional rendering
-          <div className="RRresults">
-            Asset Found!
-            <br></br>
-            {!this.state.showDescription && (
-              <>
-                Status : {this.state.status}
-                <br></br>
-              Mod Count : {this.state.result[1]}
-                <br></br>
-              Asset Class : {this.state.result[2]}
-                <br></br>
-              Count : {this.state.result[3]} of {this.state.result[4]}
-                <br></br>
-              Number of transfers : {this.state.result[7]}
-                <br></br>
-              </>
-            )}
-
-            {this.state.ipfs2 !== undefined && this.state.ipfs2 !== "" && (
-              <>
-                Asset Inscription : {this.state.ipfs2}
-                <br></br>
-              </>
-            )}
-
-            {this.state.showDescription && (
-              <>
-                {this.state.descriptionElements !== undefined && (<>{window.utils.generateDescription(this.state.descriptionElements)}</>)}
-              </>
-            )}
-          </div>
-        )}
-      </div>
-    );
+        </div>
+      );
+    }
   }
 }
 
