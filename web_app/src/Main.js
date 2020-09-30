@@ -27,9 +27,46 @@ class Main extends Component {
       if (this.state.isAuthUser !== window.isAuthUser) {
         this.setState({ isAuthUser: window.isAuthUser })
       }
+
+      if (window.menuChange !== undefined) {
+        console.log(window.menuChange)
+        this.setState({menuChange: window.menuChange})
+
+      }
+      
+      if (this.state.menuChange !== undefined) {
+        window.menuChange = undefined
+        if (this.state.IDHolderBool === true) {
+          window.routeRequest = "NCAdmin"
+          this.setState({ routeRequest: "NCAdmin"})
+          this.setState({
+            assetHolderMenuBool: true,
+            assetHolderUserMenuBool: false,
+            basicMenuBool: false,
+            assetClassHolderMenuBool: false,
+            authorizedUserMenuBool: false
+          })
+          this.setState({menuChange: undefined});
+        }
+
+        else if (this.state.IDHolderBool === false) {
+          window.routeRequest = "NCUser"
+          this.setState({ routeRequest: "NCUser" })
+          this.setState({
+            assetHolderMenuBool: false,
+            assetHolderUserMenuBool: true,
+            basicMenuBool: false,
+            assetClassHolderMenuBool: false,
+            authorizedUserMenuBool: false
+          })
+          this.setState({menuChange: undefined});
+        }
+      }
+
       if (this.state.isACAdmin !== window.isACAdmin) {
         this.setState({ isACAdmin: window.isACAdmin })
       }
+
       if (this.state.custodyType !== window.custodyType) {
         this.setState({ custodyType: window.custodyType })
       }
@@ -37,7 +74,8 @@ class Main extends Component {
       if (this.state.ETHBalance !== window.ETHBalance) {
         this.setState({ ETHBalance: window.ETHBalance })
       }
-      if (this.state.routeRequest !== window.routeRequest) {
+
+      if (this.state.routeRequest !== window.routeRequest && window.menuChange === undefined) {
         this.setState({
           basicMenuBool: true,
           assetHolderMenuBool: false,
@@ -46,14 +84,15 @@ class Main extends Component {
           authorizedUserMenuBool: false
         })
       }
+
       if (window.assets.ids.length > 0 && Object.values(window.assets.descriptions).length === window.aTknIDs.length &&
         window.assets.names.length === 0 && this.state.buildReady === true) {
         if (window.resetInfo === false) {
           console.log("WD: rebuilding assets (Last Step)")
           this.buildAssets()
         }
-
       }
+
       if (window.resetInfo === true) {
         window.hasLoadedAssets = false;
         this.setState({ buildReady: false, runWatchDog: false })
@@ -84,73 +123,84 @@ class Main extends Component {
     }, 100)
 
     this.toggleMenu = async (menuChoice) => {
-      window.location.href = '/#/';
+      if (window.menuChange === undefined) {
+        window.location.href = '/#/';
+      }
+
+      console.log(menuChoice)
+
       if (menuChoice === 'ACAdmin') {
         window.routeRequest = "ACAdmin"
         await this.setState({ routeRequest: "ACAdmin" });
-        return this.setState({
+        await this.setState({
           assetClassHolderMenuBool: true,
           assetHolderMenuBool: false,
           assetHolderUserMenuBool: false,
           basicMenuBool: false,
           authorizedUserMenuBool: false
         })
+        window.menuChange = undefined;
       }
 
       else if (menuChoice === 'basic') {
         window.routeRequest = "basic"
         await this.setState({ routeRequest: "basic" });
-        return this.setState({
+        await this.setState({
           basicMenuBool: true,
           assetHolderMenuBool: false,
           assetHolderUserMenuBool: false,
           assetClassHolderMenuBool: false,
           authorizedUserMenuBool: false
         })
+        window.menuChange = undefined;
       }
 
       else if (menuChoice === 'NC') {
+        console.log(menuChoice)
         window.routeRequest = "NCAdmin"
-        if (this.state.IDHolderBool) {
-          await this.setState({ routeRequest: "NCAdmin" })
-          return this.setState({
-            assetHolderMenuBool: true,
-            assetHolderUserMenuBool: false,
-            basicMenuBool: false,
-            assetClassHolderMenuBool: false,
-            authorizedUserMenuBool: false
-          })
-        }
-        else {
-          window.routeRequest = "NCUser"
-          await this.setState({ routeRequest: "NCUser" })
-          return this.setState({
-            assetHolderMenuBool: false,
-            assetHolderUserMenuBool: true,
-            basicMenuBool: false,
-            assetClassHolderMenuBool: false,
-            authorizedUserMenuBool: false
-          })
-        }
+        await this.setState({ routeRequest: "NCAdmin" })
+        await this.setState({
+          assetHolderMenuBool: true,
+          assetHolderUserMenuBool: false,
+          basicMenuBool: false,
+          assetClassHolderMenuBool: false,
+          authorizedUserMenuBool: false
+        })
+        window.menuChange = undefined;
+      }
+
+      else if (menuChoice === 'NCUser') {
+        console.log(menuChoice)
+        window.routeRequest = "NCUser"
+        await this.setState({ routeRequest: "NCUser" })
+        await this.setState({
+          assetHolderMenuBool: false,
+          assetHolderUserMenuBool: true,
+          basicMenuBool: false,
+          assetClassHolderMenuBool: false,
+          authorizedUserMenuBool: false
+        })
+        window.menuChange = undefined;
       }
 
       else if (menuChoice === 'authUser') {
         window.routeRequest = "authUser"
         await this.setState({ routeRequest: "authUser" });
-        return this.setState({
+        await this.setState({
           authorizedUserMenuBool: true,
           assetHolderMenuBool: false,
           assetHolderUserMenuBool: false,
           assetClassHolderMenuBool: false,
           basicMenuBool: false
         })
+        window.menuChange = undefined;
       }
 
     }
 
     this.setupAssets = async () => {
 
-      if (window.balances === undefined){return}
+      if (window.balances === undefined) { return }
       console.log("SA: In setupAssets")
 
       window.ipfsCounter = 0;
@@ -212,22 +262,22 @@ class Main extends Component {
         tempNameArray.push(tempDescArray[x].name)
       }
 
-    let tempDisplayArray = [];
-    for (let j = 0; j < window.aTknIDs.length; j++) {
-      if(tempDescArray[j].photo.displayImage === undefined){
-        tempDisplayArray.push("https://pruf.io/assets/images/pruf-u-logo-192x255.png")
+      let tempDisplayArray = [];
+      for (let j = 0; j < window.aTknIDs.length; j++) {
+        if (tempDescArray[j].photo.displayImage === undefined) {
+          tempDisplayArray.push("https://pruf.io/assets/images/pruf-u-logo-192x255.png")
+        }
+        else {
+          tempDisplayArray.push(tempDescArray[j].photo.displayImage)
+        }
       }
-      else{
-        tempDisplayArray.push(tempDescArray[j].photo.displayImage)
-      }
-    }
 
-    window.assets.descriptions = tempDescArray;
-    window.assets.names = tempNameArray;
-    window.assets.displayImages = tempDisplayArray;
-    window.hasLoadedAssets = true;
-    console.log("BA: Assets after rebuild: ", window.assets)
-  }
+      window.assets.descriptions = tempDescArray;
+      window.assets.names = tempNameArray;
+      window.assets.displayImages = tempDisplayArray;
+      window.hasLoadedAssets = true;
+      console.log("BA: Assets after rebuild: ", window.assets)
+    }
 
     this.setUpTokenVals = async () => {
       console.log("STV: Setting up balances")
@@ -273,7 +323,7 @@ class Main extends Component {
       ethereum.on("accountsChanged", function (accounts) {
         _web3.eth.getAccounts().then((e) => {
           if (window.addr !== e[0]) {
-            window.href="/#"
+            window.href = "/#"
             window.addr = e[0];
             window.assetClass = undefined;
             window.isAuthUser = false;
@@ -290,7 +340,7 @@ class Main extends Component {
 
 
     this.setupContractEnvironment = async (_web3) => {
-      if(window.isSettingUpContracts){return(console.log("Already in the middle of setup..."))}
+      if (window.isSettingUpContracts) { return (console.log("Already in the middle of setup...")) }
       window.isSettingUpContracts = true;
       const self = this;
       console.log("Setting up contracts")
@@ -304,7 +354,7 @@ class Main extends Component {
           routeRequest: "basic"
         })
 
-        
+
 
         window._contracts = await buildContracts(_web3)
 
@@ -313,13 +363,13 @@ class Main extends Component {
         await window.utils.getContracts()
         await this.setUpTokenVals()
         await this.setupAssets()
-        
+
         console.log("bools...", window.assetHolderBool, window.assetClassHolderBool, window.IDHolderBool)
         console.log("Wallet balance in ETH: ", window.ETHBalance)
         window.isSettingUpContracts = false;
         return this.setState({ runWatchDog: true })
       }
-      
+
       else { window.isSettingUpContracts = false; return console.log("Ethereum not enabled... Will try again on address change.") }
 
     }
@@ -378,6 +428,8 @@ class Main extends Component {
     window.isSettingUpContracts = false;
     window.hasLoadedAssets = false;
     window.location.href = '/#/';
+    window.menuChange = undefined;
+
 
     if (window.ethereum) {
       window.additionalElementArrays = {
@@ -414,7 +466,7 @@ class Main extends Component {
       _web3.eth.getAccounts().then((e) => { this.setState({ addr: e[0] }); window.addr = e[0] });
       window.addEventListener("accountListener", this.acctChanger());
       //window.addEventListener("authLevelListener", this.updateAuthLevel());
-      this.setState({hasMounted: true})
+      this.setState({ hasMounted: true })
     }
     else {
       this.setState({ hasError: true })
@@ -594,7 +646,7 @@ class Main extends Component {
                     <Dropdown.Item
                       as="button"
                       size="lg"
-                      onClick={() => { this.toggleMenu("NC") }}
+                      onClick={() => { this.toggleMenu("NCUser") }}
                     >
                       Token Holder Menu
                     </Dropdown.Item>

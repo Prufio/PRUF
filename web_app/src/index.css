@@ -95,6 +95,21 @@ h4 {
   z-index: 5;
 }
 
+.header li a {
+  font-family: Helvetica;
+  color: rgb(255, 255, 255);
+  font-weight: bold;
+  font-size: 1.6rem;
+  padding: 1.2rem;
+  padding-left: 1.25rem;
+  padding-right: 1.25rem;
+  padding-top: 1rem;
+  padding-bottom: 1rem;
+  margin-top: 0.25rem;
+  display: inline-flex;
+  z-index: 5;
+}
+
 .particles {
   box-sizing: border-box;
   position: "fixed";
@@ -110,20 +125,7 @@ h4 {
   z-index: -999;
 }
 
-.header li a {
-  font-family: Helvetica;
-  color: rgb(255, 255, 255);
-  font-weight: bold;
-  font-size: 1.6rem;
-  padding: 1.2rem;
-  padding-left: 1.25rem;
-  padding-right: 1.25rem;
-  padding-top: 1rem;
-  padding-bottom: 1rem;
-  margin-top: 0.25rem;
-  display: inline-flex;
-  z-index: 5;
-}
+
 
 #header-dropdown {
   color: black;
@@ -383,7 +385,7 @@ div {
 
 .assetDashboard {
   height: flex;
-  max-height: 55rem;
+  max-height: 58rem;
   width: 70rem;
   background-color: #002a40;
   padding: 1rem;
@@ -425,7 +427,7 @@ div {
   width: flex;
   max-width: 38rem;
   height: 85px;
-  margin-left: 260px;
+  margin-left: 270px;
   margin-top: 4rem;
   overflow-x: auto;
   border: #002a40;
@@ -442,7 +444,8 @@ div {
 }
 
 .assetDashboardSelected {
-  height: 55rem;
+  height: flex;
+  max-height: 57rem;
   width: 68rem;
   background-color: #002a40;
   /* padding: 1rem; */
@@ -505,6 +508,44 @@ div {
   margin-top: -20rem;
   margin-left: 52rem;
   max-height: 4rem;
+}
+
+.headerSelected li {
+  display: inline;
+  list-style-type: none;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  margin: auto;
+  z-index: 5;
+}
+
+.headerSelected {
+  max-width: none;
+  /* height: 6rem; */
+  background-color: #002a40;
+  padding: 0rem;
+  /* margin-top: 0.2rem; */
+  align-items: center;
+  justify-content: space-between;
+  flex-direction: row;
+  opacity: 1;
+  z-index: 5;
+}
+
+.headerSelected li a {
+  font-family: Helvetica;
+  color: rgb(255, 255, 255);
+  font-weight: bold;
+  font-size: 1.6rem;
+  padding: 0.8rem;
+  /* padding-left: 1.25rem;
+  padding-right: 1.25rem;
+  padding-top: 1rem;
+  padding-bottom: 1rem; */
+  /* margin-top: 0.25rem; */
+  display: inline-flex;
+  z-index: 5;
 }
 
 .Form {
@@ -781,6 +822,8 @@ div {
   object-fit: cover;
   border: #002a40;
   border-style: solid;
+  /* margin-top: 0.7rem;
+  margin-left: 0.7rem; */
 }
 
 .assetImageButton:Hover {
@@ -794,6 +837,7 @@ div {
   z-index:999;
   border-style: dashed;
   border-width: 1px;
+
 }
 
 .assetImageSelectorButton {

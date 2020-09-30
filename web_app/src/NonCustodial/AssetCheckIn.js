@@ -4,6 +4,10 @@ import Card from "react-bootstrap/Card";
 import Button from "react-bootstrap/Button";
 import Col from "react-bootstrap/Col";
 import "./../index.css";
+import { NavLink } from "react-router-dom";
+import Dropdown from 'react-bootstrap/Dropdown';
+import Nav from 'react-bootstrap/Nav'
+import DropdownButton from 'react-bootstrap/DropdownButton';
 
 class AssetCheckIn extends Component {
   constructor(props) {
@@ -25,6 +29,13 @@ class AssetCheckIn extends Component {
       this.setState({ assetObj: e, moreInfo: true, selectedImage: e.displayImage })
     }
 
+    this.sendPacket = (obj, menu, link) => {
+      window.sentPacket = obj
+      window.menuChange = menu
+      window.location.href = '/#/' + link
+      // console.log(menu)
+    }
+
     this.generateAssetInfo = (obj) => {
       let images = Object.values(obj.photo)
       let text = Object.values(obj.text)
@@ -34,21 +45,21 @@ class AssetCheckIn extends Component {
       const showImage = (e) => {
         console.log(this.state.selectedImage)
         console.log(e)
-        this.setState({selectedImage: e})
+        this.setState({ selectedImage: e })
       }
 
       const openPhotoNT = (url) => {
         const newWindow = window.open(url, '_blank', 'noopener,noreferrer')
-        if (newWindow) {newWindow.opener = null}
+        if (newWindow) { newWindow.opener = null }
       }
 
       const generateThumbs = () => {
         let component = [];
-        
-        for(let i = 0; i < images.length; i++){
+
+        for (let i = 0; i < images.length; i++) {
           component.push(
-            <button value={images[i]} class="assetImageButton" onClick={()=>{showImage(images[i])}}>
-            <img src={images[i]} className="imageSelectorImage" />
+            <button value={images[i]} class="assetImageSelectorButton" onClick={() => { showImage(images[i]) }}>
+              <img src={images[i]} className="imageSelectorImage" />
             </button>
           )
         }
@@ -59,12 +70,12 @@ class AssetCheckIn extends Component {
 
       const generateTextList = () => {
         let component = [];
-        
-        for(let i = 0; i < text.length; i++){
+
+        for (let i = 0; i < text.length; i++) {
           component.push(
             <>
-            <h4 class="card-description-selected">{textNames[i]}: {text[i]}</h4>
-            <br />
+              <h4 class="card-description-selected">{textNames[i]}: {text[i]}</h4>
+              <br />
             </>
           )
         }
@@ -73,8 +84,10 @@ class AssetCheckIn extends Component {
       }
 
       return (
-        <div className="assetDashboardSelected">
-          <style type="text/css"> {`
+        <div>
+          <div>
+            <div className="assetDashboardSelected">
+              <style type="text/css"> {`
   
               .card {
                 width: 100%;
@@ -88,37 +101,59 @@ class AssetCheckIn extends Component {
               }
   
             `}
-          </style>
-          <div class="card" value="100">
-            <div class="row no-gutters">
-              <div className="assetSelecedInfo">
-                <button class="assetImageButton" onClick={()=>{openPhotoNT(this.state.selectedImage)}}>
-                  <img src={this.state.selectedImage} className="assetImageSelected" />
-                </button>
-                <p class="card-name-selected">Name : {obj.name}</p>
-                <p class="card-ac-selected">Asset Class : {obj.assetClass}</p>
-                <p class="card-status-selected">Status : {obj.status}</p>
-                <div className="imageSelector">
-                  {generateThumbs()}
-                </div>
-                <div className="cardDescription-selected">
-                  {generateTextList()}
-                </div>
-              </div>
-              <div className="cardButton-selected">
-                {this.state.moreInfo && (
-                  <Button
-                    variant="primary"
-                    onClick={() => { this.moreInfo("back") }}
-                  >
-                    Back to list
-                  </Button>
-                )}
+              </style>
+              <div class="card" value="100">
+                <div class="row no-gutters">
+                  <div className="assetSelecedInfo">
+                    <button class="assetImageButton" onClick={() => { openPhotoNT(this.state.selectedImage) }}>
+                      <img src={this.state.selectedImage} className="assetImageSelected" />
+                    </button>
+                    <p class="card-name-selected">Name : {obj.name}</p>
+                    <p class="card-ac-selected">Asset Class : {obj.assetClass}</p>
+                    <p class="card-status-selected">Status : {obj.status}</p>
+                    <div className="imageSelector">
+                      {generateThumbs()}
+                    </div>
+                    <div className="cardDescription-selected">
+                      {generateTextList()}
+                    </div>
+                  </div>
+                  <div className="cardButton-selected">
+                    {this.state.moreInfo && (
+                      <Button
+                        variant="primary"
+                        onClick={() => { this.moreInfo("back") }}
+                      >
+                        Back to list
+                      </Button>
+                    )}
 
-              </div>
-            </div>
-          </div >
-        </div >
+                  </div>
+                </div>
+              </div >
+            </div >
+          </div>
+          <Nav className="headerSelected">
+            <li>
+              <Button  onClick={() => { this.sendPacket(obj.idxHash, "NC", "transfer-asset-NC") }}>Transfer</Button>
+            </li>
+            <li>
+              <Button onClick={() => { this.sendPacket(obj.idxHash, "NC", "export-asset-NC") }}>Export</Button>
+            </li>
+            <li>
+              <Button onClick={() => { this.sendPacket(obj.idxHash, "NC", "manage-escrow-NC") }}>Escrow</Button>
+            </li>
+            <li>
+              <DropdownButton title="Modify" drop="up">
+                <Dropdown.Item id="header-dropdown" as={Button} onClick={() => { this.sendPacket(obj.idxHash, "NC", "modify-record-status-NC") }}>Modify Status</Dropdown.Item>
+                <Dropdown.Item id="header-dropdown" as={Button} onClick={() => { this.sendPacket(obj.idxHash, "NC",  "decrement-counter-NC") }}>Decrement Counter</Dropdown.Item>
+                <Dropdown.Item id="header-dropdown" as={Button} onClick={() => { this.sendPacket(obj.idxHash, "NC", "modify-description-NC") }}>Modify Description</Dropdown.Item>
+                <Dropdown.Item id="header-dropdown" as={Button} onClick={() => { this.sendPacket(obj.idxHash, "NC", "add-note-NC") }}>Add Note</Dropdown.Item>
+                <Dropdown.Item id="header-dropdown" as={Button} onClick={() => { this.sendPacket(obj.idxHash, "NC", "force-modify-record-NC") }}>Modify Rightsholder</Dropdown.Item>
+              </DropdownButton>
+            </li>
+          </Nav>
+        </div>
 
 
       )
@@ -131,9 +166,8 @@ class AssetCheckIn extends Component {
         for (let i = 0; i < obj.ids.length; i++) {
           //console.log(i, "Adding: ", window.assets.descriptions[i], "and ", window.assets.ids[i])
           component.push(
-            <div>
-              <div key={"asset" + String(i)}>
-                <style type="text/css"> {`
+            <div key={"asset" + String(i)}>
+              <style type="text/css"> {`
   
               .card {
                 width: 100%;
@@ -147,58 +181,60 @@ class AssetCheckIn extends Component {
               }
   
              `}
-                </style>
-                <div class="card" >
-                  <div class="row no-gutters">
-                    <div class="col-auto">
-                      <button
-                        class="assetImageButton"
-                        // value={
-                        //   JSON.stringify()}
-                        onClick={(e) => {
-                          this.moreInfo({
-                            displayImage: obj.displayImages[i],
-                            name: obj.names[i],
-                            assetClass: obj.assetClasses[i],
-                            status: obj.statuses[i],
-                            description: obj.descriptions[i].text.description,
-                            text: obj.descriptions[i].text,
-                            photo: obj.descriptions[i].photo
-                          })
-                        }}
-                      >
-                        <img src={obj.displayImages[i]} className="assetImage" />
-                      </button>
-                    </div>
-                    <div>
-                      <p class="card-name">Name : {obj.names[i]}</p>
-                      <p class="card-ac">Asset Class : {obj.assetClasses[i]}</p>
-                      <p class="card-status">Status : {obj.statuses[i]}</p>
-                      <br></br>
-                      <div className="cardDescription"><h4 class="card-description">Description :{obj.descriptions[i].text.description}</h4></div>
-                    </div>
-                    <div className="cardButton">
-                      <Button
-                        variant="primary"
-                        value={
-                          JSON.stringify({
-                            displayImage: obj.displayImages[i],
-                            name: obj.names[i],
-                            assetClass: obj.assetClasses[i],
-                            status: obj.statuses[i],
-                            description: obj.descriptions[i].text.description,
-                            text: obj.descriptions[i].text,
-                            photo: obj.descriptions[i].photo
-                          })}
-                        onClick={(e) => { this.moreInfo(JSON.parse(e.target.value)) }}
-                      >
-                        More Info
+              </style>
+              <div class="card" >
+                <div class="row no-gutters">
+                  <div class="col-auto">
+                    <button
+                      class="assetImageButton"
+                      // value={
+                      //   JSON.stringify()}
+                      onClick={(e) => {
+                        this.moreInfo({
+                          idxHash: obj.ids[i],
+                          displayImage: obj.displayImages[i],
+                          name: obj.names[i],
+                          assetClass: obj.assetClasses[i],
+                          status: obj.statuses[i],
+                          description: obj.descriptions[i].text.description,
+                          text: obj.descriptions[i].text,
+                          photo: obj.descriptions[i].photo
+                        })
+                      }}
+                    >
+                      <img src={obj.displayImages[i]} className="assetImage" />
+                    </button>
+                  </div>
+                  <div>
+                    <p class="card-name">Name : {obj.names[i]}</p>
+                    <p class="card-ac">Asset Class : {obj.assetClasses[i]}</p>
+                    <p class="card-status">Status : {obj.statuses[i]}</p>
+                    <br></br>
+                    <div className="cardDescription"><h4 class="card-description">Description :{obj.descriptions[i].text.description}</h4></div>
+                  </div>
+                  <div className="cardButton">
+                    <Button
+                      variant="primary"
+                      value={
+                        JSON.stringify({
+                          idxHash: obj.ids[i],
+                          displayImage: obj.displayImages[i],
+                          name: obj.names[i],
+                          assetClass: obj.assetClasses[i],
+                          status: obj.statuses[i],
+                          description: obj.descriptions[i].text.description,
+                          text: obj.descriptions[i].text,
+                          photo: obj.descriptions[i].photo
+                        })}
+                      onClick={(e) => { this.moreInfo(JSON.parse(e.target.value)) }}
+                    >
+                      More Info
                         </Button>
-                    </div>
                   </div>
                 </div>
               </div>
             </div>
+
           );
         }
 
