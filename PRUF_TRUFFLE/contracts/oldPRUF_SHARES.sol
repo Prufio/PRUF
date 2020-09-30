@@ -26,7 +26,7 @@ import "./Imports/utils/Address.sol";
 import "./Imports/payment/escrow/Escrow.sol";
 
 interface PAY_AGENT_Interface {
-    function withdraw(address) external;
+    function withdraw() external;
 }
 
 contract SHARES is ReentrancyGuard, Ownable, Pausable {
@@ -58,18 +58,18 @@ contract SHARES is ReentrancyGuard, Ownable, Pausable {
 
     address authorizedAutomationAddress;
 
-    struct paidDividend {
-        uint256 heldForThisDividend;
+    struct Dividends {
+        uint256 paid;
         uint256 snapShotId;
         uint256 dividendAmount;
     }
 
     //mapping(uint256 => uint256) private tokenPaymentDate;
 
-    mapping(uint256 => paidDividend) private paidDividends; //holder address -> dividendNumber ->(paid?,snapShotId,amount)
+    mapping(address => mapping(uint256 => Dividends)) private payouts; //holder address -> dividendNumber ->(paid?,snapShotId,amount)
     //zero address used to hold overall dividend history
 
-    mapping(address => uint256) private lastPaidDividendNumber; //holder address -> last Paid dividend number
+    mapping(address => uint256) private dividendNumber; //holder address -> last Paid dividend number
 
     /*
      * @dev Verify user credentials
@@ -100,8 +100,8 @@ contract SHARES is ReentrancyGuard, Ownable, Pausable {
             "B:SSC: address cannot be zero"
         );
         //^^^^^^^checks^^^^^^^^^
-        PAY_AGENT_Address = _payAgentAddress;
-        PAY_AGENT = PAY_AGENT_Interface(PAY_AGENT_Address);
+        PAY_AGENT_Address = _payAgentAddress; 
+        PAY_AGENT = PAY_AGENT_Interface(PAY_AGENT_Address); 
         //^^^^^^^effects^^^^^^^^^
     }
 
@@ -117,7 +117,7 @@ contract SHARES is ReentrancyGuard, Ownable, Pausable {
             "B:SSC: address cannot be zero"
         );
         //^^^^^^^checks^^^^^^^^^
-        SHAR_TKN_Address = _SHAR_TKN_Address;
+        SHAR_TKN_Address = _SHAR_TKN_Address; 
         SHAR_TKN = SHARE_TKN_Interface(SHAR_TKN_Address);
         //^^^^^^^effects^^^^^^^^^
     }
@@ -156,75 +156,113 @@ contract SHARES is ReentrancyGuard, Ownable, Pausable {
         lastPayDay = nextPayDay; //today is the new most recent PayDay
         nextPayDay = block.timestamp.add(payPeriod); //set the next payday for payPeriod.seconds in the future
 
-        uint256 shareTokenSupply = SHAR_TKN.totalSupply();
+        uint256 supply = SHAR_TKN.totalSupply();
         uint256 payableFunds = address(this).balance.sub(heldFunds); //the new balance is the total balance less the amount held back for payment reservations
-        uint256 dividend = payableFunds.div(shareTokenSupply);
+        uint256 dividend = payableFunds.div(supply);
 
         //dividend = payableFunds.div(SHAR_TKN.max_Supply()); //calculate the dividend per share of the last interval's reciepts
 
         dividend_number++;
 
-        paidDividends[dividend_number].snapShotId = SHAR_TKN.takeSnapshot();
-        paidDividends[dividend_number].dividendAmount = dividend;
-        paidDividends[dividend_number].heldForThisDividend = payableFunds;
+        payouts[address(0)][dividend_number].snapShotId = SHAR_TKN
+            .takeSnapshot();
+        payouts[address(0)][dividend_number].dividendAmount = dividend;
+        payouts[address(0)][dividend_number].paid = payableFunds;
 
         heldFunds = address(this).balance;
-        //paidDividends[address(0)][current_snapShot].heldForThisDividend = ?????;
+        //payouts[address(0)][current_snapShot].paid = ?????;
 
         //^^^^^^^effects^^^^^^^^^
         return dividend_number;
         //^^^^^^^interactions^^^^^^^^^
     }
 
-    function claimDividend() external {
-        if (block.timestamp > nextPayDay) {
-            //if no one has done it yet, start a new dividend period
-            newDividendPeriod();
-        }
+    function claimDividend(uint256 _dividendPeriod) external {
+        uint256 tokenBalanceAtDividend = SHAR_TKN.balanceOfAt(msg.sender,payouts[address(0)][_dividendPeriod].snapShotId); //get the token balance at specified dividendPeriod
 
-        uint256 thisDividend = lastPaidDividendNumber[msg.sender]++;
-
-        uint256 tokenBalanceAtDividend = SHAR_TKN.balanceOfAt(
-            msg.sender,
-            paidDividends[thisDividend].snapShotId
-        ); //get the token balance at specified dividendPeriod
-
-        uint256 dividendForDividendPeriod = paidDividends[thisDividend]
-            .dividendAmount; //get the dividend amount at specified dividendPeriod
-
-        uint256 totalDividend = dividendForDividendPeriod.mul(
-            tokenBalanceAtDividend
-        ); //calculate the total dividend for this account
-
+        uint256 dividendForDividendPeriod = payouts[address(0)][dividend_number].dividendAmount; //get the dividend amount at specified dividendPeriod
+        uint256 totalDividend = dividendForDividendPeriod.mul(tokenBalanceAtDividend); //calculate the total dividend for this account
+        
         require(
-            (dividend_number > 0) && (lastPaidDividendNumber[msg.sender] > 0),
+            _dividendPeriod <= dividend_number,
+            "PS:GP:this dividend has not been disbursed yet"
+        );
+        require(
+            _dividendPeriod > 0,
             "PS:GP:Zero dividend period not valid"
         );
         require(
-            thisDividend <= dividend_number,
-            "PS:GP:sender address has already claimed all dividends"
+            payouts[msg.sender][_dividendPeriod].paid == 0,
+            "PS:GP:sender address has already claimed this dividend"
         );
         require(
             tokenBalanceAtDividend > 0,
             "PS:GP:sender address did not hold any tokens when this dividend was disbursed"
         );
         require(
-            (paidDividends[dividend_number].heldForThisDividend >=
-                totalDividend) || (totalDividend <= address(this).balance),
-            "PS:GP:ERROR! funds depleted! "
+            payouts[address(0)][dividend_number].paid >= totalDividend,
+            "PS:GP:ERROR! funds for dividend period have been depleted!"
         );
 
-        lastPaidDividendNumber[msg.sender] = thisDividend;
+        payouts[msg.sender][_dividendPeriod].paid == 1;
+        //payouts[msg.sender][_dividendPeriod].snapShotId == 1;
+        //payouts[msg.sender][_dividendPeriod].dividendAmount == 1;
 
-        paidDividends[thisDividend]
-            .heldForThisDividend = paidDividends[thisDividend]
-            .heldForThisDividend
-            .sub(totalDividend);
+        payouts[address(0)][_dividendPeriod].paid =
+         payouts[address(0)][_dividendPeriod].paid.sub
+         (totalDividend);
 
         //^^^^^^^effects^^^^^^^^^
         _asyncTransfer(msg.sender, totalDividend);
         //^^^^^^^interactions^^^^^^^^^
     }
+
+    // function autoClaimDividend() external {
+    //     if (block.timestamp > nextPayDay) {
+    //         //if no one has done it yet, start a new dividend period
+    //         newDividendPeriod();
+    //     }
+    //     uint256 balanceAtDividend = SHAR_TKN.balanceOfAt(
+    //         msg.sender,
+    //         payouts[address(0)][dividend_number].snapShotId
+    //     ); //get the token balance at specified dividendPeriod
+
+    //     uint256 dividendForDividendPeriod = payouts[address(0)][dividend_number]
+    //         .dividendAmount; //get the dividend amount at specified dividendPeriod
+    //     uint256 totalDividend = dividendForDividendPeriod.mul(
+    //         balanceAtDividend //calculate the total dividend for this account
+    //     );
+
+    //     require(
+    //         payouts[msg.sender][dividend_number].paid == 0,
+    //         "PS:GP:sender address has already claimed this dividend"
+    //     );
+    //     require(
+    //         dividend_number > 0,
+    //         "PS:GP:Zero dividend period not valid"
+    //     );
+    //     require(
+    //         balanceAtDividend > 0,
+    //         "PS:GP:sender address did not hold any tokens when this dividend was disbursed"
+    //     );
+    //     require(
+    //         payouts[address(0)][dividend_number].paid >= totalDividend,
+    //         "PS:GP:ERROR! funds for dividend period have been depleted!"
+    //     );
+
+    //     payouts[msg.sender][dividend_number].paid == 1;
+
+    //     payouts[address(0)][dividend_number].paid = payouts[address(
+    //         0
+    //     )][dividend_number]
+    //         .paid
+    //         .sub(totalDividend);
+
+    //     //^^^^^^^effects^^^^^^^^^
+    //     _asyncTransfer(msg.sender, totalDividend);
+    //     //^^^^^^^interactions^^^^^^^^^
+    // }
+
 
     function withdrawFunds(address payable payee) public {
         //^^^^^^^checks^^^^^^^^^
@@ -261,14 +299,14 @@ contract SHARES is ReentrancyGuard, Ownable, Pausable {
             lastPayDay,
             nextPayDay,
             dividend_number,
-            paidDividends[dividend_number].snapShotId,
-            paidDividends[dividend_number].dividendAmount,
-            paidDividends[dividend_number].heldForThisDividend
+            payouts[address(0)][dividend_number].snapShotId,
+            payouts[address(0)][dividend_number].dividendAmount,
+            payouts[address(0)][dividend_number].paid
         );
         //^^^^^^^interactions^^^^^^^^^
     }
 
-    function getDividendInfo(uint256 _dividend_number)
+    function getInfo(address _address, uint256 _dividend_number)
         external
         view
         returns (
@@ -278,15 +316,10 @@ contract SHARES is ReentrancyGuard, Ownable, Pausable {
         )
     {
         return (
-            paidDividends[_dividend_number].snapShotId,
-            paidDividends[_dividend_number].dividendAmount,
-            paidDividends[_dividend_number].heldForThisDividend
+            payouts[_address][_dividend_number].snapShotId,
+            payouts[_address][_dividend_number].dividendAmount,
+            payouts[_address][_dividend_number].paid
         );
-        //^^^^^^^interactions^^^^^^^^^
-    }
-
-    function getlastPaidDividend() external view returns (uint256,uint256) {
-        return (lastPaidDividendNumber[msg.sender], dividend_number);
         //^^^^^^^interactions^^^^^^^^^
     }
 
@@ -337,12 +370,12 @@ contract SHARES is ReentrancyGuard, Ownable, Pausable {
 
     function getPaid() internal {
         //collect any payments owed to this contract
-        PAY_AGENT.withdraw(address(this));
+        //PAY_AGENT.withdraw();
     }
 
     function balance() external view returns (uint256) {
-        return address(this).balance;
+            return address(this).balance;
     }
-
-    receive() external payable {}
+    
+    receive () external payable virtual {}
 }
