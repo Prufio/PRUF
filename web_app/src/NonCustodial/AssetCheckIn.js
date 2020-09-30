@@ -101,7 +101,6 @@ class AssetCheckIn extends Component {
                 <div className="imageSelector">
                   {generateThumbs()}
                 </div>
-
                 <div className="cardDescription-selected">
                   {generateTextList()}
                 </div>
