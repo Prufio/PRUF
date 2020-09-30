@@ -46,7 +46,7 @@ class ModifyDescription extends Component {
       nameTag: "",
       hasLoadedAssets: false,
       assets: { descriptions: [0], ids: [0], assetClasses: [0], statuses: [0], names: [0] },
-
+      count: 1,
       removePhotoElement: "",
       removeTextElement: "",
       additionalElementArrays: {
@@ -84,7 +84,8 @@ class ModifyDescription extends Component {
       }
 
       else if(this.state.elementName === ""){
-        element = ('"Image' + (String(Object.values(this.state.oldDescription.photo).length + 1)) +'"' + ':'  + '"' + this.state.elementValue + '",')
+        element = ('"Image' + (String(Object.values(this.state.oldDescription.photo).length + this.state.count)) +'"' + ':'  + '"' + this.state.elementValue + '",')
+        this.setState({count: this.state.count+1})
       }
 
       else {

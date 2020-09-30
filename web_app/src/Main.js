@@ -425,6 +425,7 @@ class Main extends Component {
 
   componentDidMount() {//stuff to do when component mounts in window
     buildWindowUtils()
+    window.sentPacket = undefined;
     window.isSettingUpContracts = false;
     window.hasLoadedAssets = false;
     window.location.href = '/#/';
