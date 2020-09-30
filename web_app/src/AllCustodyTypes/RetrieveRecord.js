@@ -7,8 +7,39 @@ import Button from "react-bootstrap/Button";
 class RetrieveRecord extends Component {
   constructor(props) {
     super(props);
+      
+      this.updateAssets = setInterval(() => {
+        if (this.state.ipfsObject !== undefined && this.state.runWatchDog === true && this.state.assetObj === undefined) {
+          let tempIPFS = this.state.ipfsObject;
+          console.log(tempIPFS)
+          this.setState({
+            assetObj: {
+            idxHash: this.state.idxHash,
+            name: tempIPFS.name,
+            assetClass: window.assetInfo.assetClass,
+            status: window.assetInfo.status,
+            description: tempIPFS.text.description,
+            text: tempIPFS.text,
+            photo: tempIPFS.photo,
+            
+            }, selectedImage: tempIPFS.photo.displayImage, moreInfo: true})
+        }
 
+      }, 100)
     //State declaration.....................................................................................................
+
+    this.getIPFSJSONObject = (lookup) => {
+      //console.log(lookup)
+      window.ipfs.cat(lookup, async (error, result) => {
+        if (error) {
+          console.log(lookup, "Something went wrong. Unable to find file on IPFS");
+          return this.setState({ipfsObject: undefined})
+        } else {
+          console.log(lookup, "Here's what we found for asset description: ", result);
+          return this.setState({ipfsObject: JSON.parse(result)})
+        }
+      });
+    };
 
     this.generateAssetInfo = (obj) => {
       let images = Object.values(obj.photo)
@@ -94,9 +125,9 @@ class RetrieveRecord extends Component {
                 {this.state.moreInfo && (
                   <Button
                     variant="primary"
-                    onClick={() => { this.moreInfo("back") }}
+                    onClick={()=>{this.setState({moreInfo: false, ipfsObject: undefined, assetObj: undefined})}}
                   >
-                    Back to list
+                    New Search
                   </Button>
                 )}
 
@@ -111,7 +142,13 @@ class RetrieveRecord extends Component {
 
     this.handlePacket = async () => {
       let idxHash = window.sentPacket;
-      this.setState({ idxHash: window.sentPacket, wasSentPacket: true })
+
+      this.setState({ 
+        idxHash: window.sentPacket.idxHash, 
+        wasSentPacket: true, 
+        name: window.sentPacket.name, 
+        assetClass: window.sentPacket.assetClass })
+
       window.sentPacket = undefined;
       let hash;
       let assetClass;
@@ -134,9 +171,8 @@ class RetrieveRecord extends Component {
           }
         })
       
-      let obj = await window.utils.getIPFSJSONObject(window.utils.getIpfsHashFromBytes32(hash))
+      return this.getIPFSJSONObject(window.utils.getIpfsHashFromBytes32(hash))
 
-      return this.setState({assetObj: obj})
     }
 
     this.state = {
@@ -163,7 +199,7 @@ class RetrieveRecord extends Component {
       status: "",
       assetObj: undefined,
       wasSentPacket: false,
-      ipfsObject: {},
+      ipfsObject: undefined,
       showDescription: false,
     };
   }
@@ -176,6 +212,8 @@ class RetrieveRecord extends Component {
 
       this.handlePacket()
     }
+
+    this.setState({runWatchDog: true})
 
 
   }
@@ -197,18 +235,6 @@ class RetrieveRecord extends Component {
   render() {//render continuously produces an up-to-date stateful document  
     const self = this;
 
-
-
-    const _toggleDisplay = async () => {
-      if (self.state.showDescription === false) {
-        await self.setState({ descriptionElements: window.utils.seperateKeysAndValues(self.state.ipfsObject) })
-        return self.setState({ showDescription: true })
-      }
-      else {
-        return self.setState({ showDescription: false })
-      }
-    }
-
     const _retrieveRecord = async () => {
       const self = this;
       var ipfsHash;
@@ -220,6 +246,8 @@ class RetrieveRecord extends Component {
         String(this.state.model),
         String(this.state.serial),
       );
+
+      this.setState({idxHash: idxHash})
 
       console.log("idxHash", idxHash);
       console.log("addr: ", window.addr);
@@ -269,6 +297,7 @@ class RetrieveRecord extends Component {
         });
 
       window.assetClass = tempResult[2]
+
       window.assetInfo = {
         assetClass: tempResult[2],
         status: tempResult[0],
@@ -278,9 +307,9 @@ class RetrieveRecord extends Component {
       await window.utils.getACData("id", window.assetClass)
 
       console.log(window.authLevel);
-      
 
-      await this.setState({ ipfsObject: window.utils.getIPFSJSONObject(ipfsHash) });
+      await this.getIPFSJSONObject(ipfsHash);
+      
       return this.setState({ authLevel: window.authLevel })
     }
 
@@ -288,7 +317,7 @@ class RetrieveRecord extends Component {
       return (
         <div>
         <div>
-          <h2 className="assetDashboardHeader">My Assets</h2>
+          <h2 className="assetDashboardHeader">Here's what we found: </h2>
         </div>
         <div className="assetDashboard">
           {this.state.assetObj !== undefined && (<>{this.generateAssetInfo(this.state.assetObj)}</>)}
@@ -302,15 +331,17 @@ class RetrieveRecord extends Component {
 
     else {
       return (
-        <div>
-          <Form className="Form">
+          <>
             {window.addr === undefined && (
+              <Form className="Form">
               <div className="errorResults">
                 <h2>User address unreachable</h2>
                 <h3>Please connect web3 provider.</h3>
               </div>
+              </Form>
             )}
-            {window.addr > 0 && (
+            {window.addr > 0 && !this.state.moreInfo && (
+              <Form className="Form">
               <div>
                 <h2 className="Headertext">Search Assets</h2>
                 <br></br>
@@ -360,7 +391,6 @@ class RetrieveRecord extends Component {
                 </Form.Row>
 
                 <Form.Row>
-                  {this.state.status === "" && (
                     <Form.Group>
                       <Button className="buttonDisplay"
                         variant="primary"
@@ -371,93 +401,29 @@ class RetrieveRecord extends Component {
                         Submit
                 </Button>
                     </Form.Group>
-                  )}
-
-                  {this.state.status !== "" && this.state.ipfsObject !== undefined && (
-
-                    <Form.Group>
-                      {!this.state.showDescription && (
-                        <Form.Group>
-                          <Button className="ownerButtonDisplay2"
-                            variant="primary"
-                            type="button"
-                            size="lg"
-                            onClick={_toggleDisplay}
-                          >
-                            Show Description
-                  </Button>
-                        </Form.Group>
-                      )}
-                      {this.state.showDescription && (
-                        <Form.Group>
-                          <Button className="ownerButtonDisplay2"
-                            variant="primary"
-                            type="button"
-                            size="lg"
-                            onClick={_toggleDisplay}
-                          >
-                            Show Statistics
-                  </Button>
-                        </Form.Group>
-                      )}
-                      {this.state.type !== undefined && this.state.type !== "" && (
-                        <Form.Group>
-                          <Button className="ownerButtonDisplay2"
-                            variant="primary"
-                            type="button"
-                            size="lg"
-                            onClick={_retrieveRecord}
-                          >
-                            Submit
-                  </Button>
-                        </Form.Group>
-                      )}
-
-                    </Form.Group>
-                  )}
-
                 </Form.Row>
               </div>
+              </Form>
             )}
-          </Form>
-          {this.state.result[4] === "0" && (
+          
+          {this.state.result[2] === "0" && (
             <div className="RRresultserr">No Asset Found for Given Data</div>
           )}
 
-          {this.state.result[4] > 0 && ( //conditional rendering
-            <div className="RRresults">
-              Asset Found!
-              <br></br>
-              {!this.state.showDescription && (
-                <>
-                  Status : {this.state.status}
-                  <br></br>
-              Mod Count : {this.state.result[1]}
-                  <br></br>
-              Asset Class : {this.state.result[2]}
-                  <br></br>
-              Count : {this.state.result[3]} of {this.state.result[4]}
-                  <br></br>
-              Number of transfers : {this.state.result[7]}
-                  <br></br>
-                </>
-              )}
-
-              {this.state.ipfs2 !== undefined && this.state.ipfs2 !== "" && (
-                <>
-                  Asset Inscription : {this.state.ipfs2}
-                  <br></br>
-                </>
-              )}
-
-              {this.state.showDescription && (
-                <>
-                  {this.state.descriptionElements !== undefined && (<>{window.utils.generateDescription(this.state.descriptionElements)}</>)}
-                </>
-              )}
+          {this.state.moreInfo && ( //conditional rendering
+            <div>
+            <div>
+              <h2 className="assetDashboardHeader">Here's what we found: </h2>
             </div>
+            <div className="assetDashboard">
+              {this.state.assetObj !== undefined && (<>{this.generateAssetInfo(this.state.assetObj)}</>)}
+              {this.state.assetObj === undefined && (<h4 className = "loading">Loading Asset</h4>)}
+            </div>
+            <div className="assetDashboardFooter">
+            </div>
+            </div >
           )}
-        </div>
+          </>
       );
     }
   }
