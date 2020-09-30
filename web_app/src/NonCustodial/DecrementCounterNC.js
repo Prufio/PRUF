@@ -47,6 +47,14 @@ class DecrementCounterNC extends Component {
   //component state-change events......................................................................................................
 
   componentDidMount() {//stuff to do when component mounts in window
+    if (window.sentPacket !== undefined) {
+      this.setState({ name: window.sentPacket.name })
+      this.setState({idxHash: window.sentPacket.idxHash})
+      this.setState({assetClass: window.sentPacket.assetClass})
+      this.setState({status: window.sentPacket.status})
+      window.sentPacket = undefined
+      this.setState({ wasSentPacket: true })
+    }
  
   }
 
@@ -113,7 +121,105 @@ class DecrementCounterNC extends Component {
       console.log(this.state.txHash);
       return document.getElementById("MainForm").reset();
     };
-
+    if (this.state.wasSentPacket){
+      return (
+        <div>
+          <Form className="Form" id='MainForm'>
+            {window.addr === undefined && (
+              <div className="errorResults">
+                <h2>User address unreachable</h2>
+                <h3>Please connect web3 provider.</h3>
+              </div>
+            )}
+            {window.addr > 0 && (
+              <div>
+                <h2 className="Headertext">Decrement Counter</h2>
+                <br></br>
+              <Form.Row>
+                  <Form.Group as={Col} controlId="formGridCountdown">
+                    <Form.Label className="formFont">
+                      Countdown Amount:
+                    </Form.Label>
+                    <Form.Control
+                      placeholder="Countdown Amount"
+                      required
+                      onChange={(e) =>
+                        this.setState({ countDown: e.target.value })
+                      }
+                      size="lg"
+                    />
+                  </Form.Group>
+                </Form.Row>
+                <Form.Row>
+                  <Form.Group >
+                      <Button className="buttonDisplay"
+                      variant="primary"
+                      type="button"
+                      size="lg"
+                      onClick={_decrementCounter}
+                    >
+                      Submit
+                    </Button>
+                  </Form.Group>
+                </Form.Row>
+              </div>
+            )}
+          </Form>
+          <div className="assetSelectedResults">
+            <Form.Row>
+            {this.state.idxHash !== undefined &&(
+                  <Form.Group>
+                  <div className="assetSelectedContentHead">Asset IDX: <span className="assetSelectedContent">{this.state.idxHash}</span> </div>
+                  <div className="assetSelectedContentHead">Asset Name: <span className="assetSelectedContent">{this.state.name}</span> </div>
+                  {/* <div className="assetSelectedContentHead"> Asset Description: <span className="assetSelectedContent">{this.state.description}</span> </div> */}
+                  <div className="assetSelectedContentHead">Asset Class: <span className="assetSelectedContent">{this.state.assetClass}</span> </div>
+                  <div className="assetSelectedContentHead">Asset Status: <span className="assetSelectedContent">{this.state.status}</span> </div>
+                  </Form.Group>
+                )} 
+            </Form.Row>
+          </div>
+          {this.state.transaction === true && (
+  
+  <div className="Results">
+    {/* {this.state.pendingTx === undefined && ( */}
+      <p class="loading">Transaction In Progress, Please Confirm Transaction</p>
+    {/* )} */}
+    {/* {this.state.pendingTx !== undefined && (
+      <p class="loading">Transaction In Progress</p>
+    )} */}
+  </div>)}
+          {this.state.txHash > 0 && ( //conditional rendering
+            <div className="Results">
+              {this.state.txStatus === false && (
+                <div>
+                  !ERROR! :
+                  <a
+                    href={"https://kovan.etherscan.io/tx/" + this.state.txHash}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                  >
+                    KOVAN Etherscan:{this.state.txHash}
+                  </a>
+                </div>
+              )}
+              {this.state.txStatus === true && (
+                <div>
+                  {" "}
+                  No Errors Reported :
+                  <a
+                    href={"https://kovan.etherscan.io/tx/" + this.state.txHash}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                  >
+                    KOVAN Etherscan:{this.state.txHash}
+                  </a>
+                </div>
+              )}
+            </div>
+          )}
+        </div>
+      );
+    }
     return (
       <div>
         <Form className="Form" id='MainForm'>
