@@ -161,7 +161,7 @@ class ModifyDescription extends Component {
 
     return (
       <div>
-        <Form className="fourRowForm" id='MainForm'>
+        <Form className="Form" id='MainForm'>
           {window.addr === undefined && (
             <div className="errorResults">
               <h2>User address unreachable</h2>

@@ -157,7 +157,7 @@ class AddNoteNC extends Component {
 
     return (
       <div>
-        <Form className="fourRowFormWithPrice" id='MainForm'>
+        <Form className="Form" id='MainForm'>
           {window.addr === undefined && (
             <div className="errorResults">
               <h2>User address unreachable</h2>

@@ -50,14 +50,15 @@ h3 {
 h4 {
   font-size: 1rem;
   word-wrap: normal;
-
-  overflow: hidden;
+  white-space: wrap;
   text-overflow: ellipsis;
-  display: -webkit-box;
+  word-break: initial;
+  overflow-wrap: break-word;
+  /* display: -webkit-box;
   -webkit-line-clamp: 3;
-  -webkit-box-orient: vertical;
+  -webkit-box-orient: vertical; */
+  /* overflow: hidden; */
 }
-
 
 .formtext {
   font-size: 6rem;
@@ -328,6 +329,19 @@ div {
   font-weight: bold;
 }
 
+.cardDescription h4 {
+  font-size: 1rem;
+  word-wrap: normal;
+  white-space: wrap;
+  text-overflow: ellipsis;
+  word-break: initial;
+  overflow-wrap: break-word;
+  overflow: hidden;
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical; 
+}
+
 .cardDescription {
   display: flex;
   width: 50rem;
@@ -378,6 +392,7 @@ div {
   opacity: 0.96;
   flex-direction: column;
   overflow-y: auto;
+  overflow-x: hidden;
   word-break: break-all;
 }
 
@@ -396,163 +411,104 @@ div {
 
 }
 
-.assetImageBare {
-  width: 115px;
-  height: 115px;
+.assetImageSelected {
+  width: 230px;
+  height: 230px;
   border: #002a40;
   border-style: solid;
+  border-radius: 0.3rem 0.3rem 0.3rem 0.3rem;
   /* background-color: black; */
 }
 
-/* .assetImageBare:hover {
-  width: 115px;
-  height: 115px;
-  background-color: transparent;
-} */
+.imageSelector {
+  display: flex;
+  width: flex;
+  max-width: 38rem;
+  height: 85px;
+  margin-left: 260px;
+  margin-top: 4rem;
+  overflow-x: auto;
+  border: #002a40;
+  border-style: solid;
+  border-radius: 0.3rem 0.3rem 0.3rem 0.3rem;
+}
 
-/* .assetDashboardContentHead {
-  color:#00a8ff;
-  font-size: 1.5rem;
+.imageSelectorImage {
+  width: 52px;
+  height: 52px;
+  /* border: #002a40;
+  border-style: solid; */
+  margin-left: 0.3rem;
+}
+
+.assetDashboardSelected {
+  height: 55rem;
+  width: 68rem;
+  background-color: #002a40;
+  /* padding: 1rem; */
+  margin-top: -1rem;
+  display: flex;
+  opacity: 0.96;
+  flex-direction: column;
+  overflow-y: hidden;
+  overflow-x: hidden;
+  word-break: break-all;
+}
+
+.assetSelectedInfo {
+  display: flex;
+  width: 68rem;
+  height: 200px;
+}
+
+.card-name-selected {
+  margin-left: 260px;
   font-weight: bold;
+  margin-top: -230px;
+  font-size: 2rem;
 }
 
-.assetDashboardContent {
-  color: white;
-  font-size: 1.5rem;
+.card-ac-selected {
+  margin-left: 260px;
   font-weight: bold;
+  font-size: 2rem;
 }
 
-.assetSelectedContentHead {
-  color: #00a8ff;
-  font-size: 1.5rem;
+.card-status-selected {
+  margin-left: 260px;
   font-weight: bold;
+  font-size: 2rem;
 }
 
-.assetSelectedContent {
-  color: white;
-  font-size: 1.2rem;
+.card-description-selected {
   font-weight: bold;
-} */
-
-.oneRowForm {
-  height: 19rem;
-  width: 59rem;
-  background-color: #005480;
-  border-radius: 0rem 0rem 0.5rem 0.5rem;
-  padding: 2rem;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  opacity: 0.96;
+  font-size: 1.6rem;
+  margin-top: 0.3rem;
 }
 
-.twoRowForm {
-  height: 25.5rem;
-  width: 59rem;
-  background-color: #005480;
-  border-radius: 0rem 0rem 0.5rem 0.5rem;
-  padding: 2rem;
+.cardDescription-selected {
   display: flex;
+  width: 50rem;
+  height: flex;
+  max-height: 18rem;
+  background-color: #002a40;
+  word-wrap: normal;
+  margin-left: 9rem;
+  margin-top: 2rem;
+  overflow-y: auto;
   flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  opacity: 0.96;
+  border-radius: 0.3rem 0.3rem 0.3rem 0.3rem;
+  padding-left: 0.5rem;
 }
 
-.threeRowForm {
-  height: 32.5rem;
-  width: 59rem;
-  background-color: #005480;
-  border-radius: 0rem 0rem 0.5rem 0.5rem;
-  padding: 2rem;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  opacity: 0.96;
+.cardButton-selected {
+  margin-top: -20rem;
+  margin-left: 52rem;
+  max-height: 4rem;
 }
 
-.fourRowForm {
-  height: 40rem;
-  width: 59rem;
-  background-color: #005480;
-  border-radius: 0rem 0rem 0.5rem 0.5rem;
-  padding: 2rem;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  opacity: 0.96;
-}
-
-.fiveRowForm {
-  height: 49rem;
-  width: 59rem;
-  background-color: #005480;
-  border-radius: 0rem 0rem 0.5rem 0.5rem;
-  padding: 2rem;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  opacity: 0.96;
-}
-
-.oneRowFormWithPrice {
-  height: 19rem;
-  width: 59rem;
-  background-color: #005480;
-  border-radius: 0rem 0rem 0.5rem 0.5rem;
-  padding: 2rem;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  opacity: 0.96;
-}
-
-.twoRowFormWithPrice {
-  height: 27rem;
-  width: 59rem;
-  background-color: #005480;
-  border-radius: 0rem 0rem 0.5rem 0.5rem;
-  padding: 2rem;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  opacity: 0.96;
-}
-
-.threeRowFormWithPrice {
-  height: 33.5rem;
-  width: 59rem;
-  background-color: #005480;
-  border-radius: 0rem 0rem 0.5rem 0.5rem;
-  padding: 2rem;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  opacity: 0.96;
-}
-
-.fourRowFormWithPrice {
-  height: 40rem;
-  width: 59rem;
-  background-color: #005480;
-  border-radius: 0rem 0rem 0.5rem 0.5rem;
-  padding: 2rem;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  opacity: 0.96;
-}
-
-.fiveRowFormWithPrice {
-  height: 49rem;
+.Form {
+  height: flex;
   width: 59rem;
   background-color: #005480;
   border-radius: 0rem 0rem 0.5rem 0.5rem;

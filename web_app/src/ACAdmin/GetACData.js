@@ -82,7 +82,7 @@ class GetACData extends Component {
 
     return (
       <div>
-        <Form className="oneRowForm">
+        <Form className="Form">
           {window.addr === undefined && (
             <div className="VRresults">
               <h2>User address unreachable</h2>

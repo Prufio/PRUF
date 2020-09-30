@@ -307,7 +307,7 @@ class ModifyDescription extends Component {
 
     return (
       <div>
-        <Form className="twoRowForm" id='MainForm'>
+        <Form className="Form" id='MainForm'>
           {window.addr === undefined && (
             <div className="errorResults">
               <h2>User address unreachable</h2>
@@ -515,8 +515,8 @@ class ModifyDescription extends Component {
               )}
               {this.state.elementType === "text" && (
                 <Form.Row>
-                  <Form.Group className="buttonDisplay">
-                    <Button
+                  <Form.Group>
+                    <Button className="buttonDisplay"
                       variant="primary"
                       type="button"
                       size="lg"
@@ -530,8 +530,8 @@ class ModifyDescription extends Component {
               )}
               {this.state.elementType === "photo" && (
                 <Form.Row>
-                  <Form.Group className="buttonDisplay">
-                    <Button
+                  <Form.Group>
+                    <Button className="buttonDisplay"
                       variant="primary"
                       type="button"
                       size="lg"
@@ -546,8 +546,8 @@ class ModifyDescription extends Component {
 
               {this.state.elementType === "description" && (
                 <Form.Row>
-                  <Form.Group className="buttonDisplay">
-                    <Button
+                  <Form.Group>
+                    <Button className="buttonDisplay"
                       variant="primary"
                       type="button"
                       size="lg"
@@ -562,8 +562,8 @@ class ModifyDescription extends Component {
 
               {this.state.elementType === "nameTag" && (
                 <Form.Row>
-                  <Form.Group className="buttonDisplay">
-                    <Button
+                  <Form.Group>
+                    <Button className="buttonDisplay"
                       variant="primary"
                       type="button"
                       size="lg"
@@ -578,8 +578,8 @@ class ModifyDescription extends Component {
 
               {this.state.elementType === "removePhoto" && (
                 <Form.Row>
-                  <Form.Group className="buttonDisplay">
-                    <Button
+                  <Form.Group>
+                    <Button className="buttonDisplay"
                       variant="primary"
                       type="button"
                       size="lg"
@@ -594,8 +594,8 @@ class ModifyDescription extends Component {
 
               {this.state.elementType === "removeText" && (
                 <Form.Row>
-                  <Form.Group className="buttonDisplay">
-                    <Button
+                  <Form.Group>
+                    <Button className="buttonDisplay"
                       variant="primary"
                       type="button"
                       size="lg"

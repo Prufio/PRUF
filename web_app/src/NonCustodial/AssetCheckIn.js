@@ -27,14 +27,13 @@ class AssetCheckIn extends Component {
 
     this.generateAssetInfo = (obj) => {
       return (
-
-        <div>
+        <div className="assetDashboardSelected">
           <style type="text/css"> {`
   
               .card {
                 width: 100%;
                 max-width: 100%;
-                height: 12rem;
+                height: 50rem;
                 max-height: 100%;
                 background-color: #005480;
                 margin-top: 0.3rem;
@@ -46,17 +45,77 @@ class AssetCheckIn extends Component {
           </style>
           <div class="card" value="100">
             <div class="row no-gutters">
-              <div class="col-auto">
-              <img src={obj.displayImage} className="assetImageBare" />
+              <div className="assetSelecedInfo">
+              <button class="assetImageButton">
+                <img src={obj.displayImage} className="assetImageSelected" />
+                </button>
+                <p class="card-name-selected">Name : {obj.name}</p>
+                <p class="card-ac-selected">Asset Class : {obj.assetClass}</p>
+                <p class="card-status-selected">Status : {obj.status}</p>
+                <div className="imageSelector">
+                <button class="assetImageButton">
+                <img src={obj.displayImage} className="imageSelectorImage" />
+                </button>
+                <button class="assetImageButton">
+                <img src={obj.displayImage} className="imageSelectorImage" />
+                </button>
+                <button class="assetImageButton">
+                <img src={obj.displayImage} className="imageSelectorImage" />
+                </button>
+                <button class="assetImageButton">
+                <img src={obj.displayImage} className="imageSelectorImage" />
+                </button>
+                <button class="assetImageButton">
+                <img src={obj.displayImage} className="imageSelectorImage" />
+                </button>
+                <button class="assetImageButton">
+                <img src={obj.displayImage} className="imageSelectorImage" />
+                </button>
+                <button class="assetImageButton">
+                <img src={obj.displayImage} className="imageSelectorImage" />
+                </button>
+                <button class="assetImageButton">
+                <img src={obj.displayImage} className="imageSelectorImage" />
+                </button>
+                <button class="assetImageButton">
+                <img src={obj.displayImage} className="imageSelectorImage" />
+                </button>
+                <button class="assetImageButton">
+                <img src={obj.displayImage} className="imageSelectorImage" />
+                </button>
+                </div>
+
+                <div className="cardDescription-selected">
+                  <h4 class="card-description-selected">Description :{obj.description}</h4>
+                  <br />
+                  <h4 class="card-description-selected">Artist :{obj.description}</h4>
+                  <br />
+                  <h4 class="card-description-selected">Origin :{obj.description}</h4>
+                  <br />
+                  <h4 class="card-description-selected">Price : ${obj.description} USD</h4>
+                  <br />
+                  <h4 class="card-description-selected">Description :{obj.description}</h4>
+                  <br />
+                  <h4 class="card-description-selected">Artist :{obj.description}</h4>
+                  <br />
+                  <h4 class="card-description-selected">Origin :{obj.description}</h4>
+                  <br />
+                  <h4 class="card-description-selected">Description :{obj.description}</h4>
+                  <br />
+                  <h4 class="card-description-selected">Artist :{obj.description}</h4>
+                  <br />
+                  <h4 class="card-description-selected">Origin :{obj.description}</h4>
+                  <br />
+                  <h4 class="card-description-selected">Price : ${obj.description} USD</h4>
+                  <br />
+                  <h4 class="card-description-selected">Description :{obj.description}</h4>
+                  <br />
+                  <h4 class="card-description-selected">Artist :{obj.description}</h4>
+                  <br />
+                  <h4 class="card-description-selected">Origin :{obj.description}</h4>
+                </div>
               </div>
-              <div>
-                <p class="card-name">Name : {obj.name}</p>
-                <p class="card-ac">Asset Class : {obj.assetClass}</p>
-                <p class="card-status">Status : {obj.status}</p>
-                <br></br>
-                <div className="cardDescription"><h4 class="card-description">Description : {obj.description}</h4></div>
-              </div>
-              <div className="cardButton">
+              <div className="cardButton-selected">
                 {this.state.moreInfo && (
                   <Button
                     variant="primary"
@@ -68,8 +127,9 @@ class AssetCheckIn extends Component {
 
               </div>
             </div>
-          </div>
-        </div>
+          </div >
+        </div >
+
 
       )
     }
@@ -101,11 +161,12 @@ class AssetCheckIn extends Component {
                 <div class="card" >
                   <div class="row no-gutters">
                     <div class="col-auto">
-                        <button
-                          class="assetImageButton"
-                          // value={
-                          //   JSON.stringify()}
-                          onClick={(e) => { this.moreInfo({
+                      <button
+                        class="assetImageButton"
+                        // value={
+                        //   JSON.stringify()}
+                        onClick={(e) => {
+                          this.moreInfo({
                             displayImage: obj.displayImages[i],
                             name: obj.names[i],
                             assetClass: obj.assetClasses[i],
@@ -113,35 +174,35 @@ class AssetCheckIn extends Component {
                             description: obj.descriptions[i].text.description,
                             text: obj.descriptions[i].text,
                             photo: obj.descriptions[i].photo
-                          }) 
+                          })
                         }}
-                        >
-                          <img src={obj.displayImages[i]} className="assetImage" />
-                        </button>
+                      >
+                        <img src={obj.displayImages[i]} className="assetImage" />
+                      </button>
                     </div>
                     <div>
                       <p class="card-name">Name : {obj.names[i]}</p>
                       <p class="card-ac">Asset Class : {obj.assetClasses[i]}</p>
                       <p class="card-status">Status : {obj.statuses[i]}</p>
                       <br></br>
-                      <div className="cardDescription"><h4 class="card-description">Description : {obj.descriptions[i].text.description}</h4></div>
+                      <div className="cardDescription"><h4 class="card-description">Description :{obj.descriptions[i].text.description}</h4></div>
                     </div>
                     <div className="cardButton">
-                        <Button
-                          variant="primary"
-                          value={
-                            JSON.stringify({
-                              displayImage: obj.displayImages[i],
-                              name: obj.names[i],
-                              assetClass: obj.assetClasses[i],
-                              status: obj.statuses[i],
-                              description: obj.descriptions[i].text.description,
-                              text: obj.descriptions[i].text,
-                              photo: obj.descriptions[i].photo
-                            })}
-                          onClick={(e) => { this.moreInfo(JSON.parse(e.target.value)) }}
-                        >
-                          More Info
+                      <Button
+                        variant="primary"
+                        value={
+                          JSON.stringify({
+                            displayImage: obj.displayImages[i],
+                            name: obj.names[i],
+                            assetClass: obj.assetClasses[i],
+                            status: obj.statuses[i],
+                            description: obj.descriptions[i].text.description,
+                            text: obj.descriptions[i].text,
+                            photo: obj.descriptions[i].photo
+                          })}
+                        onClick={(e) => { this.moreInfo(JSON.parse(e.target.value)) }}
+                      >
+                        More Info
                         </Button>
                     </div>
                   </div>
