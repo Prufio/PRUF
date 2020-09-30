@@ -273,6 +273,7 @@ class Main extends Component {
       ethereum.on("accountsChanged", function (accounts) {
         _web3.eth.getAccounts().then((e) => {
           if (window.addr !== e[0]) {
+            window.href="/#"
             window.addr = e[0];
             window.assetClass = undefined;
             window.isAuthUser = false;
