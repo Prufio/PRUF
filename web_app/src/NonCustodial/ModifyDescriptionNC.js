@@ -84,11 +84,7 @@ class ModifyDescription extends Component {
       }
 
       else if(this.state.elementName === ""){
-        element = ('"0x0": ' + '"' + this.state.elementValue + '",')
-      }
-
-      else if(this.state.elementName === ""){
-        element = ('"0x0": ' + '"' + this.state.elementValue + '",')
+        element = ('"Image' + (String(Object.values(this.state.oldDescription.photo).length + 1)) +'"' + ':'  + '"' + this.state.elementValue + '",')
       }
 
       else {

@@ -22,10 +22,56 @@ class AssetCheckIn extends Component {
     this.moreInfo = (e) => {
       if (e === "back") { return this.setState({ assetObj: {}, moreInfo: false }) }
 
-      this.setState({ assetObj: e, moreInfo: true })
+      this.setState({ assetObj: e, moreInfo: true, selectedImage: e.displayImage })
     }
 
     this.generateAssetInfo = (obj) => {
+      let images = Object.values(obj.photo)
+      let text = Object.values(obj.text)
+      let imageNames = Object.keys(obj.photo)
+      let textNames = Object.keys(obj.text)
+
+      const showImage = (e) => {
+        console.log(this.state.selectedImage)
+        console.log(e)
+        this.setState({selectedImage: e})
+      }
+
+      const openPhotoNT = (url) => {
+        const newWindow = window.open(url, '_blank', 'noopener,noreferrer')
+        if (newWindow) {newWindow.opener = null}
+      }
+
+      const generateThumbs = () => {
+        let component = [];
+        
+        for(let i = 0; i < images.length; i++){
+          component.push(
+            <button value={images[i]} class="assetImageButton" onClick={()=>{showImage(images[i])}}>
+            <img src={images[i]} className="imageSelectorImage" />
+            </button>
+          )
+        }
+
+        return component
+
+      }
+
+      const generateTextList = () => {
+        let component = [];
+        
+        for(let i = 0; i < text.length; i++){
+          component.push(
+            <>
+            <h4 class="card-description-selected">{textNames[i]}: {text[i]}</h4>
+            <br />
+            </>
+          )
+        }
+
+        return component
+      }
+
       return (
         <div className="assetDashboardSelected">
           <style type="text/css"> {`
@@ -46,73 +92,18 @@ class AssetCheckIn extends Component {
           <div class="card" value="100">
             <div class="row no-gutters">
               <div className="assetSelecedInfo">
-              <button class="assetImageButton">
-                <img src={obj.displayImage} className="assetImageSelected" />
+                <button class="assetImageButton" onClick={()=>{openPhotoNT(this.state.selectedImage)}}>
+                  <img src={this.state.selectedImage} className="assetImageSelected" />
                 </button>
                 <p class="card-name-selected">Name : {obj.name}</p>
                 <p class="card-ac-selected">Asset Class : {obj.assetClass}</p>
                 <p class="card-status-selected">Status : {obj.status}</p>
                 <div className="imageSelector">
-                <button class="assetImageButton">
-                <img src={obj.displayImage} className="imageSelectorImage" />
-                </button>
-                <button class="assetImageButton">
-                <img src={obj.displayImage} className="imageSelectorImage" />
-                </button>
-                <button class="assetImageButton">
-                <img src={obj.displayImage} className="imageSelectorImage" />
-                </button>
-                <button class="assetImageButton">
-                <img src={obj.displayImage} className="imageSelectorImage" />
-                </button>
-                <button class="assetImageButton">
-                <img src={obj.displayImage} className="imageSelectorImage" />
-                </button>
-                <button class="assetImageButton">
-                <img src={obj.displayImage} className="imageSelectorImage" />
-                </button>
-                <button class="assetImageButton">
-                <img src={obj.displayImage} className="imageSelectorImage" />
-                </button>
-                <button class="assetImageButton">
-                <img src={obj.displayImage} className="imageSelectorImage" />
-                </button>
-                <button class="assetImageButton">
-                <img src={obj.displayImage} className="imageSelectorImage" />
-                </button>
-                <button class="assetImageButton">
-                <img src={obj.displayImage} className="imageSelectorImage" />
-                </button>
+                  {generateThumbs()}
                 </div>
 
                 <div className="cardDescription-selected">
-                  <h4 class="card-description-selected">Description :{obj.description}</h4>
-                  <br />
-                  <h4 class="card-description-selected">Artist :{obj.description}</h4>
-                  <br />
-                  <h4 class="card-description-selected">Origin :{obj.description}</h4>
-                  <br />
-                  <h4 class="card-description-selected">Price : ${obj.description} USD</h4>
-                  <br />
-                  <h4 class="card-description-selected">Description :{obj.description}</h4>
-                  <br />
-                  <h4 class="card-description-selected">Artist :{obj.description}</h4>
-                  <br />
-                  <h4 class="card-description-selected">Origin :{obj.description}</h4>
-                  <br />
-                  <h4 class="card-description-selected">Description :{obj.description}</h4>
-                  <br />
-                  <h4 class="card-description-selected">Artist :{obj.description}</h4>
-                  <br />
-                  <h4 class="card-description-selected">Origin :{obj.description}</h4>
-                  <br />
-                  <h4 class="card-description-selected">Price : ${obj.description} USD</h4>
-                  <br />
-                  <h4 class="card-description-selected">Description :{obj.description}</h4>
-                  <br />
-                  <h4 class="card-description-selected">Artist :{obj.description}</h4>
-                  <br />
-                  <h4 class="card-description-selected">Origin :{obj.description}</h4>
+                  {generateTextList()}
                 </div>
               </div>
               <div className="cardButton-selected">
