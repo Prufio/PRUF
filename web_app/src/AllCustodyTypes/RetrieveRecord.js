@@ -265,7 +265,7 @@ class RetrieveRecord extends Component {
 
     const QRReader = async () => {
       if (this.state.QRreader === undefined) {
-        this.setState({ QRreader: true })
+        this.setState({ QRreader: true, result: "" })
       }
       else {
         this.setState({ QRreader: undefined })
