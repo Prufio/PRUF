@@ -612,7 +612,7 @@ contract STOR is Ownable, ReentrancyGuard, Pausable {
      */
     function blockchainVerifyRightsHolder(bytes32 _idxHash, bytes32 _rgtHash)
         external
-        returns (uint8)
+        returns (uint256)
     {
         if (_rgtHash == database[_idxHash].rightsHolder) {
             emit REPORT("Match confirmed", _idxHash);
