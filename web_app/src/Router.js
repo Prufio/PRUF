@@ -14,6 +14,7 @@ import IncreaseACShare from "./ACAdmin/IncreaseACShare"
 import RetrieveRecord from "./AllCustodyTypes/RetrieveRecord";
 import VerifyLite from "./AllCustodyTypes/VerifyLite"
 import VerifyRightsholder from "./AllCustodyTypes/VerifyRightsholder";
+import QRReader from "./AllCustodyTypes/QRReader";
 
 import AddNote from "./Custodial/AddNote";
 import DecrementCounter from "./Custodial/DecrementCounter";
@@ -124,6 +125,7 @@ function Router(routeRequest) {
                 <Route path="/mint-pip-asset" component={MintPipAsset} />
                 <Route path="/claim-pip-asset" component={ClaimPipAsset} />
                 <Route path="/check-in" component={AssetCheckIn} />
+                <Route path="/QR-reader" component={QRReader} />
             </>
         )
     }

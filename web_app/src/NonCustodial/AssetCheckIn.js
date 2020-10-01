@@ -122,6 +122,7 @@ class AssetCheckIn extends Component {
                     <p class="card-name-selected">Name : {obj.name}</p>
                     <p class="card-ac-selected">Asset Class : {obj.assetClass}</p>
                     <p class="card-status-selected">Status : {obj.status}</p>
+                    <p class="card-status-selected">IDX : {obj.idxHash}</p>
                     <div className="imageSelector">
                       {generateThumbs()}
                     </div>
@@ -222,6 +223,7 @@ class AssetCheckIn extends Component {
                     <p class="card-name">Name : {obj.names[i]}</p>
                     <p class="card-ac">Asset Class : {obj.assetClasses[i]}</p>
                     <p class="card-status">Status : {obj.statuses[i]}</p>
+                    <p class="card-idx">IDX : {obj.ids}</p>
                     <br></br>
                     <div className="cardDescription"><h4 class="card-description">Description :{obj.descriptions[i].text.description}</h4></div>
                   </div>

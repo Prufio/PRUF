@@ -331,6 +331,12 @@ div {
   font-weight: bold;
 }
 
+.card-idx {
+  font-size: 1.2rem;
+  font-weight: bold;
+  margin-left: 0.5rem;
+}
+
 .cardDescription h4 {
   font-size: 1rem;
   word-wrap: normal;
