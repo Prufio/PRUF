@@ -12,6 +12,7 @@ import BasicComponent from "./Resources/BasicComponent";
 import ParticleBox from './Resources/ParticleBox';
 import Router from "./Router";
 import DropdownButton from 'react-bootstrap/DropdownButton';
+import Button from 'react-bootstrap/Button';
 import Dropdown from 'react-bootstrap/Dropdown';
 import { Twitter } from 'react-feather';
 import { GitHub } from 'react-feather';
@@ -523,7 +524,7 @@ class Main extends Component {
             <div className="userData">
               {this.state.addr > 0 && (
                 <div className="banner">
-                  Currently serving :{this.state.addr}
+                  Currently serving : <Button variant="etherscan" onClick={() => { window.open("https://kovan.etherscan.io/address/" + this.state.addr) }}>{this.state.addr}</Button>
                 </div>
               )}
               {this.state.addr === undefined && (
@@ -585,6 +586,24 @@ class Main extends Component {
                         }
                         .btn-primary:active {
                           background: #00a8ff;
+                        }
+
+                        .btn-etherscan {
+                          background-color: transparent;
+                          color: white;
+                          margin-top: -1rem;
+                          margin-right: 37rem;
+                          font-size: 2rem;
+                        }
+                        .btn-etherscan:hover {
+                          background-color: #transparent;
+                          color: #00a8ff;
+                        }
+                        .btn-etherscan:focus {
+                          background: #transparent;
+                        }
+                        .btn-etherscan:active {
+                          background: #transparent;
                         }
 
                         .btn-toggle {

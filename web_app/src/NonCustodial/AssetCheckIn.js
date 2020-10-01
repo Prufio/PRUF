@@ -70,7 +70,6 @@ class AssetCheckIn extends Component {
 
       const generateTextList = () => {
         let component = [];
-
         for (let i = 0; i < text.length; i++) {
           component.push(
             <>
@@ -116,15 +115,17 @@ class AssetCheckIn extends Component {
               <div class="card" value="100">
                 <div class="row no-gutters">
                   <div className="assetSelecedInfo">
-                    <button class="assetImageButton" onClick={() => { openPhotoNT(this.state.selectedImage) }}>
+                    <button class="assetImageButtonSelected" onClick={() => { openPhotoNT(this.state.selectedImage) }}>
                       <img src={this.state.selectedImage} className="assetImageSelected" />
                     </button>
                     <p class="card-name-selected">Name : {obj.name}</p>
                     <p class="card-ac-selected">Asset Class : {obj.assetClass}</p>
                     <p class="card-status-selected">Status : {obj.status}</p>
-                    <p class="card-status-selected">IDX : {obj.idxHash}</p>
                     <div className="imageSelector">
                       {generateThumbs()}
+                    </div>
+                    <div className="cardSelectedIdxForm">
+                      <h4 class="card-idx-selected">IDX : {obj.idxHash}</h4>
                     </div>
                     <div className="cardDescription-selected">
                       {generateTextList()}
@@ -145,27 +146,29 @@ class AssetCheckIn extends Component {
               </div >
             </div >
           </div>
-          <div className="assetSelectedRouter">
-          <Nav className="headerSelected">
-            <li>
-              <Button variant="selectedImage" onClick={() => { this.sendPacket(obj, "NC", "transfer-asset-NC") }}>Transfer</Button>
-            </li>
-            <li>
-              <Button variant="selectedImage" onClick={() => { this.sendPacket(obj, "NC", "export-asset-NC") }}>Export</Button>
-            </li>
-            <li>
-              <Button variant="selectedImage" onClick={() => { this.sendPacket(obj, "NC", "manage-escrow-NC") }}>Escrow</Button>
-            </li>
-            <li>
-              <DropdownButton title="Modify" drop="up"  variant="selectedImage">
-                <Dropdown.Item id="header-dropdown" as={Button} onClick={() => { this.sendPacket(obj, "NC", "modify-record-status-NC") }}>Modify Status</Dropdown.Item>
-                <Dropdown.Item id="header-dropdown" as={Button} onClick={() => { this.sendPacket(obj, "NC",  "decrement-counter-NC") }}>Decrement Counter</Dropdown.Item>
-                <Dropdown.Item id="header-dropdown" as={Button} onClick={() => { this.sendPacket(obj, "NC", "modify-description-NC") }}>Modify Description</Dropdown.Item>
-                <Dropdown.Item id="header-dropdown" as={Button} onClick={() => { this.sendPacket(obj, "NC", "add-note-NC") }}>Add Note</Dropdown.Item>
-                <Dropdown.Item id="header-dropdown" as={Button} onClick={() => { this.sendPacket(obj, "NC", "force-modify-record-NC") }}>Modify Rightsholder</Dropdown.Item>
-              </DropdownButton>
-            </li>
-          </Nav>
+          <div
+            className="assetSelectedRouter"
+          >
+            <Nav className="headerSelected">
+              <li>
+                <Button variant="selectedImage" onClick={() => { this.sendPacket(obj, "NC", "transfer-asset-NC") }}>Transfer</Button>
+              </li>
+              <li>
+                <Button variant="selectedImage" onClick={() => { this.sendPacket(obj, "NC", "export-asset-NC") }}>Export</Button>
+              </li>
+              <li>
+                <Button variant="selectedImage" onClick={() => { this.sendPacket(obj, "NC", "manage-escrow-NC") }}>Escrow</Button>
+              </li>
+              <li>
+                <DropdownButton title="Modify" drop="up" variant="selectedImage">
+                  <Dropdown.Item id="header-dropdown" as={Button} onClick={() => { this.sendPacket(obj, "NC", "modify-record-status-NC") }}>Modify Status</Dropdown.Item>
+                  <Dropdown.Item id="header-dropdown" as={Button} onClick={() => { this.sendPacket(obj, "NC", "decrement-counter-NC") }}>Decrement Counter</Dropdown.Item>
+                  <Dropdown.Item id="header-dropdown" as={Button} onClick={() => { this.sendPacket(obj, "NC", "modify-description-NC") }}>Modify Description</Dropdown.Item>
+                  <Dropdown.Item id="header-dropdown" as={Button} onClick={() => { this.sendPacket(obj, "NC", "add-note-NC") }}>Add Note</Dropdown.Item>
+                  <Dropdown.Item id="header-dropdown" as={Button} onClick={() => { this.sendPacket(obj, "NC", "force-modify-record-NC") }}>Modify Rightsholder</Dropdown.Item>
+                </DropdownButton>
+              </li>
+            </Nav>
           </div>
         </div>
 
@@ -223,7 +226,7 @@ class AssetCheckIn extends Component {
                     <p class="card-name">Name : {obj.names[i]}</p>
                     <p class="card-ac">Asset Class : {obj.assetClasses[i]}</p>
                     <p class="card-status">Status : {obj.statuses[i]}</p>
-                    <p class="card-idx">IDX : {obj.ids}</p>
+                    <h4 class="card-idx">IDX : {obj.ids[i]}</h4>
                     <br></br>
                     <div className="cardDescription"><h4 class="card-description">Description :{obj.descriptions[i].text.description}</h4></div>
                   </div>

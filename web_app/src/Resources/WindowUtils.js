@@ -322,7 +322,6 @@ function buildWindowUtils() {
           }
         });
     }
-
     let acData = await window.utils.getACData("id", window.assetClass)
     await window.utils.checkCreds(acData);
     await window.utils.getCosts(6);

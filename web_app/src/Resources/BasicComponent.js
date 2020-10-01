@@ -22,10 +22,6 @@ class BasicComponent extends Component {
                 <li>
                     <NavLink to="/retrieve-record">Search</NavLink>
                 </li>
-
-                <li>
-                    <NavLink to="/QR-reader">QR Scanner</NavLink>
-                </li>
                 </Nav>
         )
     }

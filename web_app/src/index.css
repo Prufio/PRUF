@@ -27,7 +27,7 @@ p {
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
-  max-width: 30ch;
+  max-width: 40ch;
 }
 
 h1 {
@@ -315,14 +315,14 @@ div {
 .card-ac {
   font-size: 1.2rem;
   font-weight: bold;
-  margin-left: 22rem;
+  margin-left: 32rem;
   margin-top: -2.8rem;
 }
 
 .card-status {
   font-size: 1.2rem;
   font-weight: bold;
-  margin-left: 37rem;
+  margin-left: 44rem;
   margin-top: -2.75rem;
 }
 
@@ -332,7 +332,7 @@ div {
 }
 
 .card-idx {
-  font-size: 1.2rem;
+  font-size: 1rem;
   font-weight: bold;
   margin-left: 0.5rem;
 }
@@ -385,6 +385,7 @@ div {
   display: flex;
   height: 2rem;
   width: 70rem;
+  margin-top: -0.2rem;
   background-color: #002a40;
   border-radius: 0rem 0rem 0.5rem 0.5rem;
 }
@@ -439,6 +440,7 @@ div {
   border: #002a40;
   border-style: solid;
   border-radius: 0.3rem 0.3rem 0.3rem 0.3rem;
+  padding: 0.1rem;
 }
 
 .imageSelectorImage {
@@ -474,19 +476,35 @@ div {
   margin-left: 260px;
   font-weight: bold;
   margin-top: -230px;
-  font-size: 2rem;
+  font-size: 1.5rem;
 }
 
 .card-ac-selected {
   margin-left: 260px;
   font-weight: bold;
-  font-size: 2rem;
+  font-size: 1.5rem;
 }
 
 .card-status-selected {
   margin-left: 260px;
   font-weight: bold;
-  font-size: 2rem;
+  font-size: 1.5rem;
+}
+
+.card-idx-selected {
+  font-weight: bold;
+  font-size: 1.2rem;
+  margin-top: 0.3rem;
+  margin-left: 1.7rem;
+}
+
+.cardSelectedIdxForm {
+  display: flex;
+  width: 50rem;
+  border-radius: 0.3rem 0.3rem 0rem 0rem;
+  background-color: #002a40;
+  margin-left: 9rem;
+  margin-top: 4rem;
 }
 
 .card-description-selected {
@@ -499,19 +517,19 @@ div {
   display: flex;
   width: 50rem;
   height: flex;
-  max-height: 18rem;
+  max-height: 16rem;
   background-color: #002a40;
   word-wrap: normal;
   margin-left: 9rem;
-  margin-top: 2rem;
+  /* margin-top: 4rem; */
   overflow-y: auto;
   flex-direction: column;
-  border-radius: 0.3rem 0.3rem 0.3rem 0.3rem;
+  border-radius: 0rem 0rem 0.3rem 0.3rem;
   padding-left: 0.5rem;
 }
 
 .cardButton-selected {
-  margin-top: -20rem;
+  margin-top: -21rem;
   margin-left: 52rem;
   max-height: 4rem;
 }
@@ -519,11 +537,12 @@ div {
 .assetSelectedRouter{
   display: flex;
   width: 68rem;
-  height: 4rem;
-  margin-top: auto;
+  height: 4.1rem;
+  margin-top: -0.15rem;
   background-color: #005480;
   justify-content: space-evenly;
   border-radius: 0rem 0rem 0.3rem 0.3rem;
+  position: absolute;
 }
 
 .headerSelected li {
@@ -544,6 +563,13 @@ div {
   /* z-index: 5; */
 }
 
+/* .headerSelected nav{
+  background-color: #002a40;
+  margin-top: 11.51rem;
+  align-items: center;
+  flex-direction: row;
+} */
+
 .headerSelected li a {
   font-family: Helvetica;
   color: rgb(255, 255, 255);
@@ -558,6 +584,10 @@ div {
   /* display: inline-flex; */
   /* z-index: 5; */
 }
+
+/* .etherscanLinkButton {
+  margin-top: -30rem;
+} */
 
 .Form {
   height: flex;
@@ -574,6 +604,20 @@ div {
 
 .RRresults {
   height: flex;
+  width: 59rem;
+  color: white;
+  background-color: #002a40;
+  border-radius: 0rem 0rem 1rem 1rem;
+  font-size: 1.3rem;
+  display: flex;
+  padding: 2rem;
+  margin-top: -0.2rem;
+  justify-content: center;
+  align-items: center;
+}
+
+.QRresults {
+  height: 10rem;
   width: 59rem;
   color: white;
   background-color: #002a40;
@@ -730,6 +774,19 @@ div {
   margin-left: 42rem;
   margin-top: auto;
 }
+.buttonDisplayQR {
+  margin-left: 42rem;
+  margin-top: -4rem;
+  position: absolute;
+  z-index: 500;
+}
+
+.buttonDisplayQRResults {
+  margin-left: 38rem;
+  margin-top: 5rem;
+  position: absolute;
+  z-index: 500;
+}
 
 .buttonGroupDisplay {
   height: 5rem;
@@ -839,7 +896,7 @@ div {
 }
 
 .assetImageButton {
-  border: 0px transparent; 
+  /* border: 0px transparent;  */
   background-color: transparent; 
   object-fit: cover;
   border: #002a40;
@@ -851,15 +908,23 @@ div {
 .assetImageButton:Hover {
   background-color: rgb(0, 168, 255, 0.25) ;
   position:relative;
-  top:-3px;
-  left:3px;
-  /* width:500px; */
-  height:auto;
-  /* display:block; */
   z-index:999;
-  border-style: dashed;
-  border-width: 1px;
+}
 
+.assetImageButtonSelected {
+  /* border: 0px transparent;  */
+  background-color: transparent; 
+  object-fit: cover;
+  border: #002a40;
+  border-style: solid;
+  margin-top: 0.7rem;
+  margin-left: 0.7rem;
+}
+
+.assetImageButtonSelected:Hover {
+  background-color: rgb(0, 168, 255, 0.25) ;
+  position:relative;
+  z-index:999;
 }
 
 .assetImageSelectorButton {
@@ -868,18 +933,20 @@ div {
   object-fit: cover;
   border: #002a40;
   border-style: solid;
+  border-width: 1px;
 }
 
 .assetImageSelectorButton:Hover {
   background-color: rgb(0, 168, 255, 0.25) ;
   position:relative;
-  top:-2.5px;
-  left:2.5px;
+  top:-2px;
+  left:2px;
   /* width:500px; */
   height:auto;
   /* display:block; */
   z-index:999;
   border-style: dashed;
+  border-width: 1px;
 }
 
 .mediaLink {
