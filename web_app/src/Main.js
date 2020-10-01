@@ -596,14 +596,15 @@ class Main extends Component {
                           font-size: 2rem;
                         }
                         .btn-etherscan:hover {
-                          background-color: #transparent;
+                          background-color: transparent;
                           color: #00a8ff;
                         }
                         .btn-etherscan:focus {
-                          background: #transparent;
+                          background-color: transparent;
                         }
                         .btn-etherscan:active {
-                          background: #transparent;
+                          background-color: transparent;
+                          border: transparent;
                         }
 
                         .btn-toggle {
