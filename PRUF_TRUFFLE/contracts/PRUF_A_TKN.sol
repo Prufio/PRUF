@@ -43,7 +43,7 @@ contract A_TKN is Ownable, ReentrancyGuard, ERC721 {
     address internal NP_Address;
     address internal STOR_Address;
     address internal RCLR_Address;
-    address internal NAKED_Address;
+    address internal PIP_Address;
     STOR_Interface internal STOR; // Set up external contract interface
     RCLR_Interface internal RCLR;
 
@@ -55,7 +55,7 @@ contract A_TKN is Ownable, ReentrancyGuard, ERC721 {
                 (msg.sender == APP_NC_Address) ||
                 (msg.sender == NP_Address) ||
                 (msg.sender == RCLR_Address) ||
-                (msg.sender == NAKED_Address) ||
+                (msg.sender == PIP_Address) ||
                 (msg.sender == owner()),
             "AT:MOD-IA:Calling address does not belong to an Admin"
         );
@@ -87,7 +87,7 @@ contract A_TKN is Ownable, ReentrancyGuard, ERC721 {
         APP_NC_Address = STOR.resolveContractAddress("APP_NC");
         APP_Address = STOR.resolveContractAddress("APP");
         NP_Address = STOR.resolveContractAddress("NP");
-        NAKED_Address = STOR.resolveContractAddress("NAKED");
+        PIP_Address = STOR.resolveContractAddress("PIP");
 
         RCLR_Address = STOR.resolveContractAddress("RCLR");
         RCLR = RCLR_Interface(RCLR_Address);
@@ -154,7 +154,7 @@ contract A_TKN is Ownable, ReentrancyGuard, ERC721 {
     /*
      * @dev Reassures user that token is minted in the PRUF system
      */
-    function validateNakedToken(
+    function validatePipToken(
         uint256 tokenId,
         uint32 _assetClass,
         string calldata _authCode

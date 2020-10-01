@@ -1630,7 +1630,7 @@
     it('Should Fail because caller does not hold token', async () => {
 
         console.log("//**************************************END NP_NC SETUP**********************************************/")
-        console.log("//**************************************BEGIN NP_NC FAIL BATCH (17)**********************************************/")
+        console.log("//**************************************BEGIN NP_NC FAIL BATCH (16)**********************************************/")
         console.log("//**************************************BEGIN _changeRGT FAIL BATCH**********************************************/")
         return NP_NC._changeRgt(
         asset1,
