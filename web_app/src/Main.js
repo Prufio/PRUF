@@ -1,3 +1,4 @@
+//&& set SSL_CRT_FILE=./cert/cert.pem && set SSL_KEY_FILE=./cert/server.key && set PORT=443 
 import React, { Component } from "react";
 import { Route, NavLink, HashRouter } from "react-router-dom";
 import Web3 from "web3";
@@ -214,8 +215,6 @@ class Main extends Component {
 
     this.setupAssets = async () => {
 
-      if (window.aTknIDs === undefined) { return }
-
       if (window.balances === undefined) { return }
       console.log("SA: In setupAssets")
 
@@ -232,6 +231,8 @@ class Main extends Component {
       }
 
       await window.utils.getAssetTokenInfo()
+
+      if(window.aTknIDs === undefined){return}
 
       for (let i = 0; i < window.aTknIDs.length; i++) {
         tempDescObj["desc" + i] = []
