@@ -22,7 +22,7 @@ class ParticleBox extends Component {
                     params={{
                         "particles": {
                             "number": {
-                                "value": 10
+                                "value": 55
                             },
                             "size": {
                                 "value": 4
@@ -35,7 +35,7 @@ class ParticleBox extends Component {
                                     "enable": true,
                                     "mode": "attract"
                                 },
-                                "onclick": { "enable": true, "mode": "push" }
+                                /* "onclick": { "enable": true, "mode": "push" } */
                             }
                         }
                     }} />
