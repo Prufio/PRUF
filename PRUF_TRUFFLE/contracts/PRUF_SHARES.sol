@@ -179,7 +179,7 @@ contract SHARES is ReentrancyGuard, Ownable, Pausable {
             newDividendPeriod();
         }
 
-        uint256 thisDividend = lastPaidDividendNumber[msg.sender]++;
+        uint256 thisDividend = lastPaidDividendNumber[msg.sender].add(1);
 
         uint256 tokenBalanceAtDividend = SHAR_TKN.balanceOfAt(
             msg.sender,
@@ -194,7 +194,7 @@ contract SHARES is ReentrancyGuard, Ownable, Pausable {
         ); //calculate the total dividend for this account
 
         require(
-            (dividend_number > 0) && (lastPaidDividendNumber[msg.sender] > 0),
+            (dividend_number > 0) && (thisDividend > 0),
             "PS:GP:Zero dividend period not valid"
         );
         require(
@@ -351,7 +351,7 @@ contract SHARES is ReentrancyGuard, Ownable, Pausable {
 
     function getPaid() internal {
         //collect any payments owed to this contract
-        PAY_AGENT.withdraw(address(this));
+        //PAY_AGENT.withdraw(address(this));
     }
 
     function balance() external view returns (uint256) {
