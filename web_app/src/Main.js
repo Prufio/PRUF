@@ -8,6 +8,7 @@ import NonCustodialComponent from "./Resources/NonCustodialComponent";
 import NonCustodialUserComponent from "./Resources/NonCustodialUserComponent";
 import AdminComponent from "./Resources/AdminComponent";
 import AuthorizedUserComponent from "./Resources/AuthorizedUserComponent";
+import NoAddressComponent from "./Resources/NoAddressComponent";
 import BasicComponent from "./Resources/BasicComponent";
 import ParticleBox from './Resources/ParticleBox';
 import Router from "./Router";
@@ -45,6 +46,7 @@ class Main extends Component {
             assetHolderUserMenuBool: false,
             basicMenuBool: false,
             assetClassHolderMenuBool: false,
+            noAddrMenuBool: false,
             authorizedUserMenuBool: false
           })
           this.setState({menuChange: undefined});
@@ -58,6 +60,7 @@ class Main extends Component {
             assetHolderUserMenuBool: true,
             basicMenuBool: false,
             assetClassHolderMenuBool: false,
+            noAddrMenuBool: false,
             authorizedUserMenuBool: false
           })
           this.setState({menuChange: undefined});
@@ -76,23 +79,26 @@ class Main extends Component {
         this.setState({ ETHBalance: window.ETHBalance })
       }
 
-      if (this.state.routeRequest !== window.routeRequest && window.menuChange === undefined) {
+      if (this.state.routeRequest !== window.routeRequest && window.menuChange === undefined && window.addr !== undefined) {
         this.setState({
           basicMenuBool: true,
           assetHolderMenuBool: false,
           assetHolderUserMenuBool: false,
           assetClassHolderMenuBool: false,
+          noAddrMenuBool: false,
           authorizedUserMenuBool: false
         })
       }
-
-      if (window.assets.ids.length > 0 && Object.values(window.assets.descriptions).length === window.aTknIDs.length &&
+      if(window.assets !== undefined){
+        if (window.assets.ids.length > 0 && Object.values(window.assets.descriptions).length === window.aTknIDs.length &&
         window.assets.names.length === 0 && this.state.buildReady === true) {
         if (window.resetInfo === false) {
           console.log("WD: rebuilding assets (Last Step)")
           this.buildAssets()
         }
       }
+      }
+      
 
       if (window.resetInfo === true) {
         window.hasLoadedAssets = false;
@@ -138,6 +144,7 @@ class Main extends Component {
           assetHolderMenuBool: false,
           assetHolderUserMenuBool: false,
           basicMenuBool: false,
+          noAddrMenuBool: false,
           authorizedUserMenuBool: false
         })
         window.menuChange = undefined;
@@ -151,6 +158,7 @@ class Main extends Component {
           assetHolderMenuBool: false,
           assetHolderUserMenuBool: false,
           assetClassHolderMenuBool: false,
+          noAddrMenuBool: false,
           authorizedUserMenuBool: false
         })
         window.menuChange = undefined;
@@ -165,6 +173,7 @@ class Main extends Component {
           assetHolderUserMenuBool: false,
           basicMenuBool: false,
           assetClassHolderMenuBool: false,
+          noAddrMenuBool: false,
           authorizedUserMenuBool: false
         })
         window.menuChange = undefined;
@@ -179,6 +188,7 @@ class Main extends Component {
           assetHolderUserMenuBool: true,
           basicMenuBool: false,
           assetClassHolderMenuBool: false,
+          noAddrMenuBool: false,
           authorizedUserMenuBool: false
         })
         window.menuChange = undefined;
@@ -192,6 +202,7 @@ class Main extends Component {
           assetHolderMenuBool: false,
           assetHolderUserMenuBool: false,
           assetClassHolderMenuBool: false,
+          noAddrMenuBool: false,
           basicMenuBool: false
         })
         window.menuChange = undefined;
@@ -346,14 +357,29 @@ class Main extends Component {
       const self = this;
       console.log("Setting up contracts")
       if (window.ethereum !== undefined) {
-        await this.setState({
-          assetHolderMenuBool: false,
-          assetClassHolderMenuBool: false,
-          basicMenuBool: true,
-          authorizedUserMenuBool: false,
-          hasFetchedBalances: false,
-          routeRequest: "basic"
-        })
+        if(window.addr !== undefined){
+          await this.setState({
+            noAddrMenuBool: false,
+            assetHolderMenuBool: false,
+            assetClassHolderMenuBool: false,
+            basicMenuBool: true,
+            authorizedUserMenuBool: false,
+            hasFetchedBalances: false,
+            routeRequest: "basic"
+          })
+        }
+        
+        else if (window.addr === undefined) {
+          await this.setState({
+            noAddrMenuBool: true,
+            assetHolderMenuBool: false,
+            assetClassHolderMenuBool: false,
+            basicMenuBool: false,
+            authorizedUserMenuBool: false,
+            hasFetchedBalances: false,
+            routeRequest: "noAddr"
+          })
+        }
 
 
 
@@ -371,7 +397,14 @@ class Main extends Component {
         return this.setState({ runWatchDog: true })
       }
 
-      else { window.isSettingUpContracts = false; return console.log("Ethereum not enabled... Will try again on address change.") }
+      else { 
+        window.isSettingUpContracts = true; 
+        window._contracts = await buildContracts(_web3)
+        await this.setState({ contracts: window._contracts })
+        await window.utils.getContracts()
+        window.isSettingUpContracts = false;
+        return this.setState({ runWatchDog: true })
+       }
 
     }
 
@@ -411,7 +444,7 @@ class Main extends Component {
       assetHolderMenuBool: false,
       assetHolderUserMenuBool: false,
       assetClassHolderMenuBool: false,
-      basicMenuBool: true,
+      basicMenuBool: false,
       authorizedUserMenuBool: false,
       hasFetchedBalances: false,
       isACAdmin: undefined,
@@ -433,7 +466,7 @@ class Main extends Component {
     window.menuChange = undefined;
 
 
-    if (window.ethereum) {
+    if (window.ethereum !== undefined) {
       window.additionalElementArrays = {
         photo: [],
         text: [],
@@ -463,7 +496,8 @@ class Main extends Component {
         port: 5001,
         protocol: "https",
       });
-      window.ipfs = _ipfs
+
+      window.ipfs = _ipfs;
 
       _web3.eth.getAccounts().then((e) => { this.setState({ addr: e[0] }); window.addr = e[0] });
       window.addEventListener("accountListener", this.acctChanger());
@@ -471,7 +505,22 @@ class Main extends Component {
       this.setState({ hasMounted: true })
     }
     else {
-      this.setState({ hasError: true })
+
+      var _web3 = require("web3");
+      _web3 = new Web3("https://api.infura.io/v1/jsonrpc/kovan");
+      this.setupContractEnvironment(_web3)
+      this.setState({ web3: _web3 });
+      window.web3 = _web3;
+      this.setState({
+        noAddrMenuBool: true,
+        assetHolderMenuBool: false,
+        assetClassHolderMenuBool: false,
+        basicMenuBool: false,
+        authorizedUserMenuBool: false,
+        hasFetchedBalances: false,
+        routeRequest: "noAddr"
+      })
+      this.setState({ hasMounted: true })
     }
 
   }
@@ -513,7 +562,7 @@ class Main extends Component {
 
           <div className="imageForm">
             <button
-              class="imageButton"
+              className="imageButton"
               onClick={() => { this.toggleMenu("basic") }}
             >
               <img
@@ -539,6 +588,7 @@ class Main extends Component {
               <ul className="header">
                 {window._contracts !== undefined && (
                   <nav>
+                    {this.state.noAddrMenuBool === true && (<NoAddressComponent />)}
                     {this.state.assetHolderMenuBool === true && (<NonCustodialComponent />)}
                     {this.state.assetHolderUserMenuBool === true && (<NonCustodialUserComponent />)}
                     {this.state.assetClassHolderMenuBool === true && (<AdminComponent />)}
@@ -550,7 +600,7 @@ class Main extends Component {
             </div>
           </div>
           <div className="pageForm">
-            <div
+            {window.addr !== undefined && (<div
               className="tokenBalances"
             >
               <DropdownButton
@@ -702,7 +752,7 @@ class Main extends Component {
                     </Dropdown.Item>)}
                 </DropdownButton>
               </div>
-            </div>
+            </div>)}
 
             <div>
               <Route exact path="/" component={Home} />

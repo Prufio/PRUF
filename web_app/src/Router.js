@@ -128,6 +128,15 @@ function Router(routeRequest) {
         )
     }
 
+    else if (routeRequest === "noAddr") {
+        return (
+            <>
+                <Route path="/verify-lite" component={VerifyLite} />
+                <Route path="/retrieve-record" component={RetrieveRecord} />
+            </>
+        )
+    }
+
     else {
         return (
             <>

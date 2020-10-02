@@ -31,7 +31,10 @@ class Home extends Component {
   }
 
   componentDidMount() {
-    this.setState({ addr: window.addr })
+    if (window.addr !== undefined){
+      this.setState({ addr: window.addr })
+    }
+    
   }
 
   componentDidUpdate() {
@@ -102,7 +105,7 @@ class Home extends Component {
           <br></br>
           <div> {window.assetClass > 0 && (<div>Operating in asset class {window.assetClass} ({window.assetClassName}) as {window.authLevel}</div>)}</div>
           <br></br>
-          {window._contracts !== undefined && (
+          {window._contracts !== undefined && window.addr !== undefined && (
             <div>
                 <Form.Group as={Col} controlId="formGridAC">
                   <Form.Label className="formFont">Input desired asset class # or name : </Form.Label>
@@ -120,14 +123,16 @@ class Home extends Component {
                     variant="primary"
                     type="button"
                     size="lg"
-                    onClick={_setAC}
+                    onClick={()=>{_setAC()}}
                   >
                     Access PRuF
                   </Button>
                 </Form.Row>
             </div>
           )}
-          {window._contracts === undefined && (<div className="VRText"> <Form.Row><h1 class="loading">Connecting to Blockchain Provider</h1></Form.Row></div>)}
+          {window._contracts === undefined && window.addr !== undefined &&(<div className="VRText"> <Form.Row><h1 className="loading">Connecting to the Blockchain</h1></Form.Row></div>)}
+          {window._contracts === undefined && window.addr === undefined &&(<div className="VRText"> <Form.Row><h1 className="loading">Connecting to the Blockchain</h1></Form.Row></div>)}
+          {window._contracts !== undefined && window.addr === undefined &&(<div className="VRText"> <Form.Row><h1 >Unable to Get User Address</h1></Form.Row></div>)}
         </div>
       </div>
     );

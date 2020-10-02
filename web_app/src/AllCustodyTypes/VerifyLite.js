@@ -127,13 +127,6 @@ class VerifyLite extends Component {
     return (
       <div>
         <Form className="Form" id='MainForm'>
-          {window.addr === undefined && (
-            <div className="errorResults">
-              <h2>User address unreachable</h2>
-              <h3>Please connect web3 provider.</h3>
-            </div>
-          )}
-          {window.addr > 0 && (
             <div>
               <h2 className="Headertext">Deep Verify:</h2>
               <br></br>
@@ -268,7 +261,6 @@ class VerifyLite extends Component {
                 </>
               )}
             </div>
-          )}
         </Form>
 
         {this.state.result !== "" && ( //conditional rendering

@@ -450,15 +450,7 @@ class RetrieveRecord extends Component {
     else {
       return (
         <>
-          {window.addr === undefined && (
-            <Form className="Form">
-              <div className="errorResults">
-                <h2>User address unreachable</h2>
-                <h3>Please connect web3 provider.</h3>
-              </div>
-            </Form>
-          )}
-          {window.addr > 0 && !this.state.moreInfo && this.state.QRreader === undefined && (
+          {!this.state.moreInfo && this.state.QRreader === undefined && (
             <Form className="Form">
               <div>
                 <h2 className="Headertext">Search Assets</h2>

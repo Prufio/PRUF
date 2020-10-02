@@ -19,7 +19,7 @@ class ModifyDescription extends Component {
         this.setState({ assets: window.assets })
       }
 
-      if (this.state.hasLoadedAssets !== window.hasLoadedAssets) {
+      if (this.state.hasLoadedAssets !== window.hasLoadedAssets && this.state.runWatchDog === true) {
         this.setState({ hasLoadedAssets: window.hasLoadedAssets })
       }
     }, 100)
@@ -60,12 +60,16 @@ class ModifyDescription extends Component {
 
   componentDidMount() {//stuff to do when component mounts in window
     if (window.sentPacket !== undefined) {
-      this.setState({ name: window.sentPacket.name })
-      this.setState({idxHash: window.sentPacket.idxHash})
-      this.setState({assetClass: window.sentPacket.assetClass})
-      this.setState({status: window.sentPacket.status})
+      this.setState({ 
+        name: window.sentPacket.name,
+        idxHash: window.sentPacket.idxHash,
+        assetClass: window.sentPacket.assetClass,
+        status: window.sentPacket.status,
+        oldDescription: window.sentPacket.descriptionObj,
+        wasSentPacket: true,
+        runWatchDog: true,
+       })
       window.sentPacket = undefined
-      this.setState({ wasSentPacket: true })
     }
 
   }
@@ -105,9 +109,11 @@ class ModifyDescription extends Component {
         return alert("All fields are required for submission")
       }
       if (type === "photo") {
+        console.log("Pushing photo element: ", element)
         window.additionalElementArrays.photo.push(element)
       }
       else if (type === "text" || type === "description") {
+        console.log("Pushing text element: ", element)
         window.additionalElementArrays.text.push(element)
       }
 
@@ -297,6 +303,7 @@ class ModifyDescription extends Component {
           this.setState({ txStatus: receipt.status });
           console.log(receipt.status);
           window.resetInfo = true;
+          window.location.href = '/#/check-in'
           //Stuff to do when tx confirms
         });
 

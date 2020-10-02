@@ -206,9 +206,10 @@ class AssetCheckIn extends Component {
                       class="assetImageButton"
                       // value={
                       //   JSON.stringify()}
-                      onClick={(e) => {
+                      onClick={() => {
                         this.moreInfo({
                           idxHash: obj.ids[i],
+                          descriptionObj: obj.descriptions[i],
                           displayImage: obj.displayImages[i],
                           name: obj.names[i],
                           assetClass: obj.assetClasses[i],
@@ -236,6 +237,7 @@ class AssetCheckIn extends Component {
                       value={
                         JSON.stringify({
                           idxHash: obj.ids[i],
+                          descriptionObj: obj.descriptions[i],
                           displayImage: obj.displayImages[i],
                           name: obj.names[i],
                           assetClass: obj.assetClasses[i],
