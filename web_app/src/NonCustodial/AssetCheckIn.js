@@ -32,7 +32,7 @@ class AssetCheckIn extends Component {
     }, 100)
 
     this.moreInfo = (e) => {
-      if (e === "back") { return this.setState({ assetObj: {}, moreInfo: false }) }
+      if (e === "back") { return this.setState({ assetObj: {}, moreInfo: false, printQR: undefined}) }
 
       this.setState({ assetObj: e, moreInfo: true, selectedImage: e.displayImage })
     }
