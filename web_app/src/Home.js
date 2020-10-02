@@ -103,7 +103,7 @@ class Home extends Component {
         <div className="home">
           <img src={require("./Resources/Pruf AR cropped.png")} alt="Pruf Logo Home" />
           <br></br>
-          <div> {window.assetClass > 0 && (<div>Operating in asset class {window.assetClass} ({window.assetClassName}) as {window.authLevel}</div>)}</div>
+          <div> {window.addr !== undefined && window.assetClass > 0 && (<div>Operating in asset class {window.assetClass} ({window.assetClassName}) as {window.authLevel}</div>)}</div>
           <br></br>
           {window._contracts !== undefined && window.addr !== undefined && (
             <div>

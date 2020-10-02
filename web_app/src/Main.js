@@ -455,7 +455,8 @@ class Main extends Component {
       runWatchDog: false,
       buildReady: false,
       hasMounted: false,
-      routeRequest: "basic"
+      routeRequest: "basic",
+      openssl: require("openssl-nodejs")
     };
   }
 
@@ -524,6 +525,15 @@ class Main extends Component {
         hasFetchedBalances: false,
         routeRequest: "noAddr"
       })
+
+      var _ipfs = new this.state.IPFS({
+        host: "ipfs.infura.io",
+        port: 5001,
+        protocol: "https",
+      });
+
+      window.ipfs = _ipfs;
+
       this.setState({ hasMounted: true })
     }
 
