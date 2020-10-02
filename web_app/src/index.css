@@ -187,7 +187,7 @@ div {
   background-color: #002a40;
   justify-content: center;
   display: flex;
-  opacity: 0.95;
+  /* opacity: 0.95; */
   z-index: 3;
 }
 
@@ -198,6 +198,8 @@ div {
   padding-left: 2rem;
   object-fit: cover;
   z-index: 5;
+  background-color:#005480;
+  opacity: 0.95;
 }
 
 .VRText {
@@ -525,8 +527,8 @@ div {
 .cardDescription-selected {
   display: flex;
   width: 50rem;
-  height: flex;
-  max-height: 16rem;
+  height: 16rem;
+  /* max-height: 16rem; */
   background-color: #002a40;
   word-wrap: normal;
   margin-left: 9rem;
@@ -915,15 +917,132 @@ div {
   /* padding-left: 3rem; */
   border-radius: 50%;
   color: #002a40;
-  -webkit-transition: -webkit-transform .8s ease-in-out;
-  transition:         transform .8s ease-in-out;
+  -webkit-transition: -webkit-transform .35s ease-in-out;
+  transition:         transform .35s ease-in-out;
+  /* transition-delay: 0.5s; */
 }
 
 .mediaLinkContent:hover {
   color: #00a8ff;
   cursor: pointer;
-  -webkit-transform: rotate(360deg);
-  transform: rotate(360deg);
+  -webkit-transform: rotate(40deg);
+  transform: rotate(40deg);
+}
+
+.mediaLinkAD {
+  display: flex;
+  /* width: 15rem; */
+  height: fit-content;
+  margin-left: 90%;
+  position: absolute;
+  margin-top: -4rem;
+  /* justify-content: space-between; */
+  z-index: 999;
+}
+
+.mediaLinkContentAD {
+  /* padding-left: 3rem; */
+  border-radius: 50%;
+  color: #00a8ff;
+  -webkit-transition: -webkit-transform .5s ease-in-out;
+  transition:         transform .5s ease-in-out;
+}
+
+.mediaLinkContentAD:hover {
+  color: #028ed4;
+  cursor: pointer;
+  -webkit-transform: rotate(150deg);
+  transform: rotate(150deg);
+}
+
+.mediaLinkADS {
+  display: flex;
+  /* width: 15rem; */
+  height: fit-content;
+  margin-left: 63rem;
+  position: absolute;
+  margin-top: 1rem;
+  /* justify-content: space-between; */
+  z-index: 999;
+}
+
+.mediaLinkContentADS {
+  /* padding-left: 3rem; */
+  border-radius: 50%;
+  color: #000000;
+  -webkit-transition: -webkit-transform .5s ease-in-out;
+  transition:         transform .5s ease-in-out;
+}
+
+.mediaLinkContentADS:hover {
+  color: #028ed4;
+  cursor: pointer;
+  -webkit-transform: rotate(10deg);
+  transform: rotate(10deg);
+}
+
+.QR{
+  display: flex;
+  margin-left: 0.5rem;
+}
+
+.QRdisplay {
+  display: flex;
+  width: 17rem;
+  height: 17rem;
+  background-color: #ffffff;
+  position: absolute;
+  z-index: 999;
+  opacity: 0.9;
+  flex-direction: column;
+  border-radius: 1rem 0rem 0rem 1rem;
+  margin-left: 78%;
+  margin-top: 6%;
+  justify-content: center;
+  /* object-fit: fill; */
+}
+
+.QRdisplay-footer {
+  display: flex;
+  height: 3rem;
+  width: 10rem;
+  margin-top: 20.5rem;
+  margin-left: 89.8%;
+  background-color: #ffffff;
+  /* background-color: #005480; */
+  border-radius: 0rem 0rem 1rem 1rem;
+  position: absolute;
+  z-index: 999;
+  /* opacity: 0.9; */
+  /* padding: 0.1rem; */
+  justify-content: center;
+  opacity: 0.9;
+}
+
+.mediaLinkQRdisplay {
+  display: flex;
+  width: 10rem;
+  height: fit-content;
+  /* margin-left: 63rem; */
+  /* position: absolute; */
+  /* margin-top: 1rem; */
+  justify-content: space-evenly;
+  z-index: 999;
+}
+
+.mediaLinkQRdisplayContent {
+  /* padding-left: 3rem; */
+  border-radius: 50%;
+  color:black;
+  -webkit-transition: -webkit-transform .5s ease-in-out;
+  transition:         transform .5s ease-in-out;
+}
+
+.mediaLinkQRdisplayContent:hover {
+  color: #028ed4;
+  cursor: pointer;
+  -webkit-transform: rotate(10deg);
+  transform: rotate(10deg);
 }
 
 

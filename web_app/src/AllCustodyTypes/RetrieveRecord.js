@@ -504,14 +504,13 @@ class RetrieveRecord extends Component {
         </div >
       )
     }
-
     else {
       return (
         <>
           {!this.state.moreInfo && this.state.QRreader === undefined && (
             <Form className="Form">
               <div>
-                <h2 className="Headertext">Search Assets</h2>
+                <h2 className="Headertext">Search Up An Asset</h2>
                 <br></br>
                 <Form.Row>
                   <Form.Group as={Col} controlId="formGridType">

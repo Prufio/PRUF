@@ -8,10 +8,18 @@ import { NavLink } from "react-router-dom";
 import Dropdown from 'react-bootstrap/Dropdown';
 import Nav from 'react-bootstrap/Nav'
 import DropdownButton from 'react-bootstrap/DropdownButton';
+import { Printer, RefreshCw } from "react-feather";
+import { Grid } from "react-feather";
+import { X } from "react-feather";
+import { Save } from "react-feather";
+import { Print } from "react-feather";
+import { QRCode } from 'react-qrcode-logo';
 
 class AssetCheckIn extends Component {
   constructor(props) {
     super(props);
+
+
 
     this.updateAssets = setInterval(() => {
       if (this.state.assets !== window.assets && this.state.runWatchDog === true) {
@@ -24,7 +32,7 @@ class AssetCheckIn extends Component {
     }, 100)
 
     this.moreInfo = (e) => {
-      if (e === "back") { return this.setState({ assetObj: {}, moreInfo: false }) }
+      if (e === "back") { return this.setState({ assetObj: {}, moreInfo: false, printQR: undefined}) }
 
       this.setState({ assetObj: e, moreInfo: true, selectedImage: e.displayImage })
     }
@@ -51,6 +59,18 @@ class AssetCheckIn extends Component {
       const openPhotoNT = (url) => {
         const newWindow = window.open(url, '_blank', 'noopener,noreferrer')
         if (newWindow) { newWindow.opener = null }
+      }
+
+      const _printQR = async () => {
+        // this.state = {
+        //   printQR: undefined,
+        // }
+        if (this.state.printQR === undefined) {
+          this.setState({ printQR: true })
+        }
+        else {
+          this.setState({ printQR: undefined })
+        }
       }
 
       const generateThumbs = () => {
@@ -109,12 +129,44 @@ class AssetCheckIn extends Component {
                 font-size: 2.2rem;
                 border-radius: 0rem 0rem 0.3rem 0.3rem;
               }
+
+              .btn-QR {
+                background-color: #002a40;
+                color: white;
+                height: 2rem;
+                width: 17rem;
+                margin-top: auto;
+                // margin-left: -0.8rem;
+                font-weight: bold;
+                font-size: 1rem;
+                border-radius: 0rem 0rem 0.3rem 0.3rem;
+                justify-content: center;
+              }
   
             `}
               </style>
               <div class="card" value="100">
                 <div class="row no-gutters">
                   <div className="assetSelecedInfo">
+                    <div className="mediaLinkADS">
+                      <a className="mediaLinkContentADS" ><Grid onClick={() => { _printQR() }} /></a>
+                    </div>
+                    {this.state.printQR && (
+                      <div>
+                        <div className="QRdisplay">
+                          <div className="QR">
+                            <QRCode value={obj.idxHash} size="140" />
+                          </div>
+                        </div>
+                        <div className="QRdisplay-footer">
+                          <div className="mediaLinkQRdisplay">
+                            <a className="mediaLinkQRdisplayContent" ><Save onClick={() => { _printQR() }} /></a>
+                            <a className="mediaLinkQRdisplayContent" ><Printer onClick={() => { _printQR() }} /></a>
+                            <a className="mediaLinkQRdisplayContent" ><X onClick={() => { _printQR() }} /></a>
+                          </div>
+                        </div>
+                      </div>
+                    )}
                     <button class="assetImageButtonSelected" onClick={() => { openPhotoNT(this.state.selectedImage) }}>
                       <img src={this.state.selectedImage} className="assetImageSelected" />
                     </button>
@@ -321,6 +373,9 @@ class AssetCheckIn extends Component {
       <div>
         <div>
           <h2 className="assetDashboardHeader">My Assets</h2>
+          <div className="mediaLinkAD">
+            <a className="mediaLinkContentAD" ><RefreshCw onClick={() => { window.resetInfo = true; window.recount = true }} /></a>
+          </div>
         </div>
         <div className="assetDashboard">
           {this.state.hasLoadedAssets && !this.state.moreInfo && (<>{this.generateAssetDash(window.assets)}</>)}

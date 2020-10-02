@@ -12,8 +12,8 @@
     "ipfs-mini": "^1.1.5",
     "jquery": "^3.5.1",
     "js-sha3": "^0.8.0",
-    "openssl-nodejs": "^1.0.5",
     "popper.js": "^1.16.1",
+    "qrcode.react": "^1.0.0",
     "react": "^16.8.1",
     "react-alert": "^7.0.1",
     "react-alert-template-basic": "^1.0.0",
@@ -25,6 +25,7 @@
     "react-native": "^0.62.2",
     "react-particles-js": "^3.3.0",
     "react-qr-reader": "^2.2.1",
+    "react-qrcode-logo": "^2.2.1",
     "react-router-dom": "^5.2.0",
     "react-scripts": "^3.4.3",
     "web3": "^1.2.7"
