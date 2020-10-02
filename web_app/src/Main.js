@@ -31,15 +31,15 @@ class Main extends Component {
 
       if (window.menuChange !== undefined) {
         console.log(window.menuChange)
-        this.setState({menuChange: window.menuChange})
+        this.setState({ menuChange: window.menuChange })
 
       }
-      
+
       if (this.state.menuChange !== undefined) {
         window.menuChange = undefined
         if (this.state.IDHolderBool === true) {
           window.routeRequest = "NCAdmin"
-          this.setState({ routeRequest: "NCAdmin"})
+          this.setState({ routeRequest: "NCAdmin" })
           this.setState({
             assetHolderMenuBool: true,
             assetHolderUserMenuBool: false,
@@ -47,7 +47,7 @@ class Main extends Component {
             assetClassHolderMenuBool: false,
             authorizedUserMenuBool: false
           })
-          this.setState({menuChange: undefined});
+          this.setState({ menuChange: undefined });
         }
 
         else if (this.state.IDHolderBool === false) {
@@ -60,7 +60,7 @@ class Main extends Component {
             assetClassHolderMenuBool: false,
             authorizedUserMenuBool: false
           })
-          this.setState({menuChange: undefined});
+          this.setState({ menuChange: undefined });
         }
       }
 
@@ -363,11 +363,11 @@ class Main extends Component {
         await this.setState({ contracts: window._contracts })
         await window.utils.getContracts()
 
-        if(window.addr !== undefined){
+        if (window.addr !== undefined) {
           await this.setUpTokenVals()
           await this.setupAssets()
         }
-        
+
 
         console.log("bools...", window.assetHolderBool, window.assetClassHolderBool, window.IDHolderBool)
         console.log("Wallet balance in ETH: ", window.ETHBalance)
@@ -562,16 +562,44 @@ class Main extends Component {
                 variant="toggle"
                 size="lg">
                 <Dropdown.Item size="lg">
-                  ETH Balance : {this.state.ETHBalance}
+                  ETH Balance : {this.state.ETHBalance === undefined && (
+                    <h4>
+                      Please Log In
+                    </h4>
+                  )}
+                  {this.state.ETHBalance && (
+                    this.state.ETHBalance
+                  )}
                 </Dropdown.Item>
                 <Dropdown.Item size="lg">
-                  AssetClass Token Balance: {this.state.assetClassBalance}
+                  AssetClass Token Balance: {this.state.assetClassBalance === undefined && (
+                    <h4>
+                      Please Log In
+                    </h4>
+                  )}
+                  {this.state.assetClassBalance && (
+                    this.state.assetClassBalance
+                  )}
                 </Dropdown.Item>
                 <Dropdown.Item size="lg">
-                  Asset Token Balance: {this.state.assetBalance}
+                  Asset Token Balance: {this.state.assetBalance === undefined && (
+                    <h4>
+                      Please Log In
+                    </h4>
+                  )}
+                  {this.state.assetBalance && (
+                    this.state.assetBalance
+                  )}
                 </Dropdown.Item>
                 <Dropdown.Item size="lg">
-                  ID Token Balance : {this.state.IDTokenBalance}
+                  ID Token Balance : {this.state.IDTokenBalance === undefined && (
+                    <h4>
+                      Please Log In
+                    </h4>
+                  )}
+                  {this.state.IDTokenBalance && (
+                    this.state.IDTokenBalance
+                  )}
                 </Dropdown.Item>
               </DropdownButton>
               <div>
