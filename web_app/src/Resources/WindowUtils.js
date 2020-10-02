@@ -180,9 +180,13 @@ function buildWindowUtils() {
 
   const _checkAssetExists = async (idxHash) => {
     let tempBool;
+    console.log(idxHash.substring(0,2))
+      if(idxHash.substring(0,2) !== "0x") {
+        return(false)
+      }
     await window.contracts.STOR.methods
       .retrieveShortRecord(idxHash)
-      .call({ from: window.addr }, function (_error, _result) {
+      .call( function (_error, _result) {
         if (_error) {
           return (console.log("IN ERROR IN ERROR IN ERROR"))
         } else if (
@@ -202,7 +206,7 @@ function buildWindowUtils() {
     let tempBool;
     await window.contracts.STOR.methods
       ._verifyRightsHolder(idxHash, rgtHash)
-      .call({ from: window.addr }, function (_error, _result) {
+      .call( function (_error, _result) {
         if (_error) {
           console.log(_error);
         } else if (_result === "0") {
@@ -220,7 +224,7 @@ function buildWindowUtils() {
     if (req === "asset") {
       await window.contracts.A_TKN.methods
         .ownerOf(id)
-        .call({ from: window.addr }, function (_error, _result) {
+        .call( function (_error, _result) {
           if (_error) {
             console.log(_error);
           } else {
@@ -235,7 +239,7 @@ function buildWindowUtils() {
     else if (req === "AC") {
       await window.contracts.AC_TKN.methods
         .ownerOf(id)
-        .call({ from: window.addr }, function (_error, _result) {
+        .call( function (_error, _result) {
           if (_error) {
             console.log(_error);
           } else {
@@ -256,7 +260,7 @@ function buildWindowUtils() {
     let tempBool;
     await window.contracts.STOR.methods
       .retrieveShortRecord(idxHash)
-      .call({ from: window.addr }, function (_error, _result) {
+      .call( function (_error, _result) {
         if (_error) {
           console.log(_error);
         } else if (Object.values(_result)[2] === '6' || Object.values(_result)[2] === '12') {
@@ -272,7 +276,7 @@ function buildWindowUtils() {
     let tempBool;
     await window.contracts.STOR.methods
       .retrieveShortRecord(idxHash)
-      .call({ from: window.addr }, function (_error, _result) {
+      .call( function (_error, _result) {
         if (_error) {
           return (console.log("IN ERROR IN ERROR IN ERROR"))
         } else if (
@@ -292,7 +296,7 @@ function buildWindowUtils() {
     if (window.contracts !== undefined) {
       await window.contracts.AC_MGR.methods
         .resolveAssetClass(window.assetClassName)
-        .call({ from: window.addr }, (_error, _result) => {
+        .call( (_error, _result) => {
           if (_error) { console.log("Error: ", _error) }
           else {
             window.assetClass = _result
@@ -313,7 +317,7 @@ function buildWindowUtils() {
     if (window.contracts !== undefined) {
       await window.contracts.AC_MGR.methods
         .getAC_name(window.assetClass)
-        .call({ from: window.addr }, (_error, _result) => {
+        .call( (_error, _result) => {
           if (_error) { console.log("Error: ", _error) }
           else {
             window.assetClassName = _result
@@ -323,8 +327,11 @@ function buildWindowUtils() {
         });
     }
     let acData = await window.utils.getACData("id", window.assetClass)
-    await window.utils.checkCreds(acData);
-    await window.utils.getCosts(6);
+    if(window.addr !== undefined){
+      await window.utils.checkCreds(acData);
+      await window.utils.getCosts(6);
+    }
+    
     await console.log("User authLevel: ", window.authLevel);
     return (window.assetClassName)
 
@@ -339,7 +346,7 @@ function buildWindowUtils() {
 
       await window.contracts.AC_TKN.methods
         .ownerOf(window.assetClass)
-        .call({ from: window.addr }, (_error, _result) => {
+        .call( (_error, _result) => {
           if (_error) { console.log("Error: ", _error) }
           else {
             if (_result === window.addr) {
@@ -354,7 +361,7 @@ function buildWindowUtils() {
       if (custodyType === "Custodial") {
         await window.contracts.AC_MGR.methods
           .getUserType(window.web3.utils.soliditySha3(window.addr), window.assetClass)
-          .call({ from: window.addr }, (_error, _result) => {
+          .call( (_error, _result) => {
             if (_error) { console.log("Error: ", _error) }
             else {
               if (_result === "0" && window.isACAdmin === false) { window.authLevel = "Standard User"; window.isAuthUser = false; }
@@ -372,7 +379,7 @@ function buildWindowUtils() {
       else if (custodyType === "Non-Custodial") {
         await window.contracts.ID_TKN.methods
           .balanceOf(window.addr)
-          .call({ from: window.addr }, (_error, _result) => {
+          .call( (_error, _result) => {
             if (_error) { console.log("Error: ", _error) }
             else {
               if (Number(_result) === 1 && window.isACAdmin === false) { window.authLevel = "Pruf Minter"; window.isAuthUser = false; }
@@ -401,7 +408,7 @@ function buildWindowUtils() {
         console.log("Using id ref")
         await window.contracts.AC_MGR.methods
           .getAC_name(ac)
-          .call({ from: window.addr }, (_error, _result) => {
+          .call( (_error, _result) => {
             if (_error) { console.log("Error: ", _error) }
             else {
               if (_result !== "") { tempBool = true }
@@ -414,7 +421,7 @@ function buildWindowUtils() {
         console.log("Using name ref")
         await window.contracts.AC_MGR.methods
           .resolveAssetClass(ac)
-          .call({ from: window.addr }, (_error, _result) => {
+          .call( (_error, _result) => {
             if (_error) { console.log("Error: ", _error) }
             else {
               if (Number(_result) > 0) { tempBool = true }
@@ -432,7 +439,7 @@ function buildWindowUtils() {
     if (window.contracts !== undefined) {
       await window.contracts.AC_MGR.methods
         .resolveAssetClass(name)
-        .call({ from: window.addr }, (_error, _result) => {
+        .call( (_error, _result) => {
           if (_error) { console.log(_error) }
           else {
             console.log("resolved successfully to AC: ", _result)
@@ -447,7 +454,7 @@ function buildWindowUtils() {
     if (window.contracts !== undefined) {
       await window.contracts.ECR_MGR.methods
         .retrieveEscrowData(idxHash)
-        .call({ from: window.addr }, (_error, _result) => {
+        .call( (_error, _result) => {
           if (_error) { console.log(_error) }
           else {
             console.log("Got escrow data: ", _result)
@@ -467,7 +474,7 @@ function buildWindowUtils() {
         console.log("Using name ref")
         await window.contracts.AC_MGR.methods
           .resolveAssetClass(ac)
-          .call({ from: window.addr }, (_error, _result) => {
+          .call( (_error, _result) => {
             if (_error) { console.log("Error: ", _error) }
             else {
               if (Number(_result) > 0) { tempAC = Number(_result) }
@@ -481,7 +488,7 @@ function buildWindowUtils() {
 
       await window.contracts.AC_MGR.methods
         .getAC_data(tempAC)
-        .call({ from: window.addr }, (_error, _result) => {
+        .call( (_error, _result) => {
           if (_error) { console.log("Error: ", _error) }
           else {
             let _custodyType;
@@ -516,7 +523,7 @@ function buildWindowUtils() {
       for (var i = 1; i <= numOfServices; i++) {
         await window.contracts.AC_MGR.methods
           .getServiceCosts(window.assetClass, i)
-          .call({ from: window.addr }, (_error, _result) => {
+          .call( (_error, _result) => {
             if (_error) { console.log("Error: ", _error) }
             else {
               //console.log("result in getCosts: ", Object.values(_result));
@@ -548,7 +555,7 @@ function buildWindowUtils() {
   const _getDescriptionHash = async (idxHash) => {
     await window.contracts.STOR.methods
       .retrieveShortRecord(idxHash)
-      .call({ from: window.addr }, function (_error, _result) {
+      .call( function (_error, _result) {
         if (_error) {
           return (console.log("IN ERROR IN ERROR IN ERROR"))
         } else if (
@@ -565,7 +572,7 @@ function buildWindowUtils() {
   const _getACFromIdx = async (idxHash) => {
     await window.contracts.STOR.methods
       .retrieveShortRecord(idxHash)
-      .call({ from: window.addr }, function (_error, _result) {
+      .call( function (_error, _result) {
         if (_error) {
           return (console.log("IN ERROR IN ERROR IN ERROR"))
         } else {
@@ -587,17 +594,17 @@ function buildWindowUtils() {
       let _assetBal;
       let _IDTokenBal;
       console.log("getting balance info from token contracts...")
-      await window.contracts.A_TKN.methods.balanceOf(window.addr).call({ from: window.addr }, (error, result) => {
+      await window.contracts.A_TKN.methods.balanceOf(window.addr).call( (error, result) => {
         if (error) { console.log(error) }
         else { _assetBal = result; console.log("assetBal: ", _assetBal); }
       });
 
-      await window.contracts.AC_TKN.methods.balanceOf(window.addr).call({ from: window.addr }, (error, result) => {
+      await window.contracts.AC_TKN.methods.balanceOf(window.addr).call( (error, result) => {
         if (error) { console.log(error) }
         else { _assetClassBal = result; console.log("assetClassBal", _assetClassBal); }
       });
 
-      await window.contracts.ID_TKN.methods.balanceOf(window.addr).call({ from: window.addr }, (error, result) => {
+      await window.contracts.ID_TKN.methods.balanceOf(window.addr).call( (error, result) => {
         if (error) { console.log(error) }
         else { _IDTokenBal = result; console.log("IDTokenBal", _IDTokenBal); }
       });
@@ -646,7 +653,7 @@ function buildWindowUtils() {
 
       for (let i = 0; i < window.balances.assetBalance; i++) {
         await window.contracts.A_TKN.methods.tokenOfOwnerByIndex(window.addr, i)
-          .call({ from: window.addr }, (_error, _result) => {
+          .call( (_error, _result) => {
             if (_error) {
               return (console.log("IN ERROR IN ERROR IN ERROR"))
             } else {
@@ -659,7 +666,7 @@ function buildWindowUtils() {
 
       for (let x = 0; x < tknIDArray.length; x++) {
         await window.contracts.STOR.methods.retrieveShortRecord(tknIDArray[x])
-          .call({ from: window.addr }, (_error, _result) => {
+          .call( (_error, _result) => {
             if (_error) {
               console.log("IN ERROR IN ERROR IN ERROR")
             } else {

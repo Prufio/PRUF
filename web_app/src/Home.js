@@ -127,7 +127,7 @@ class Home extends Component {
                 </Form.Row>
             </div>
           )}
-          {window._contracts === undefined && (<div className="VRText"> <Form.Row><h1 class="loading">Connecting to Blockchain Provider</h1></Form.Row></div>)}
+          {/* {window._contracts === undefined && (<div className="VRText"> <Form.Row><h1 class="loading">Connecting to Blockchain Provider</h1></Form.Row></div>)} */}
         </div>
       </div>
     );

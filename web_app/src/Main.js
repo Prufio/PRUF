@@ -362,8 +362,12 @@ class Main extends Component {
         await window.utils.getETHBalance();
         await this.setState({ contracts: window._contracts })
         await window.utils.getContracts()
-        await this.setUpTokenVals()
-        await this.setupAssets()
+
+        if(window.addr !== undefined){
+          await this.setUpTokenVals()
+          await this.setupAssets()
+        }
+        
 
         console.log("bools...", window.assetHolderBool, window.assetClassHolderBool, window.IDHolderBool)
         console.log("Wallet balance in ETH: ", window.ETHBalance)
