@@ -284,35 +284,37 @@ class ForceModifyRecord extends Component {
             </div>
           )}
         </Form>
-        {this.state.txHash > 0 && ( //conditional rendering
-          <div className="Results">
-            {this.state.txStatus === false && (
-              <div>
-                !ERROR! :
-                <a
-                  href={"https://kovan.etherscan.io/tx/" + this.state.txHash}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                >
-                  KOVAN Etherscan:{this.state.txHash}
-                </a>
-              </div>
-            )}
-            {this.state.txStatus === true && (
-              <div>
-                {" "}
+        <div className="Results">
+          {this.state.txHash > 0 && ( //conditional rendering
+            <Form.Row>
+              {this.state.txStatus === false && (
+                <div>
+                  !ERROR! :
+                  <a
+                    href={"https://kovan.etherscan.io/tx/" + this.state.txHash}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                  >
+                    KOVAN Etherscan:{this.state.txHash}
+                  </a>
+                </div>
+              )}
+              {this.state.txStatus === true && (
+                <div>
+                  {" "}
                 No Errors Reported :
-                <a
-                  href={"https://kovan.etherscan.io/tx/" + this.state.txHash}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                >
-                  KOVAN Etherscan:{this.state.txHash}
-                </a>
-              </div>
-            )}
-          </div>
-        )}
+                  <a
+                    href={"https://kovan.etherscan.io/tx/" + this.state.txHash}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                  >
+                    KOVAN Etherscan:{this.state.txHash}
+                  </a>
+                </div>
+              )}
+            </Form.Row>
+          )}
+        </div>
       </div>
     );
   }

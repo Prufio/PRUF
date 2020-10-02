@@ -35,14 +35,14 @@ class VerifyLite extends Component {
   //component state-change events......................................................................................................
 
   componentDidMount() {//stuff to do when component mounts in window
- 
+
   }
 
   componentWillUnmount() {//stuff do do when component unmounts from the window
 
   }
 
-  componentDidUpdate(){//stuff to do when state updates
+  componentDidUpdate() {//stuff to do when state updates
 
   }
 
@@ -90,10 +90,10 @@ class VerifyLite extends Component {
     const _verify = async () => {
       this.setState({ txStatus: false });
       this.setState({ txHash: "" });
-      this.setState({error: undefined})
-      this.setState({result: ""})
+      this.setState({ error: undefined })
+      this.setState({ result: "" })
       var idxHash = this.state.idxHash;
-      
+
       let rgtRaw = window.web3.utils.soliditySha3(
         String(this.state.first),
         String(this.state.middle),
@@ -111,165 +111,170 @@ class VerifyLite extends Component {
       var doesExist = await window.utils.checkAssetExists(idxHash);
       var infoMatches = await window.utils.checkMatch(idxHash, rgtHash);
 
-      if (!doesExist){
+      if (!doesExist) {
         return alert("Asset doesnt exist! Ensure data fields are correct before submission.")
       }
 
-      if (!infoMatches){
-        await this.setState({result: "0"})
+      if (!infoMatches) {
+        await this.setState({ result: "0" })
       }
 
-      if(infoMatches){await this.setState({result: "170"});}
+      if (infoMatches) { await this.setState({ result: "170" }); }
 
-        return document.getElementById("MainForm").reset();
+      return document.getElementById("MainForm").reset();
     };
 
     return (
       <div>
         <Form className="Form" id='MainForm'>
-            <div>
-              <h2 className="Headertext">Deep Verify:</h2>
-              <br></br>
-              {!this.state.accessPermitted && (
-                <>
-                  <Form.Row>
-                    <Form.Group as={Col} controlId="formGridType">
-                      <Form.Label className="formFont">Type:</Form.Label>
-                      <Form.Control
-                        placeholder="Type"
-                        required
-                        onChange={(e) => this.setState({ type: e.target.value })}
-                        size="lg"
-                      />
-                    </Form.Group>
+          <div>
+            <h2 className="Headertext">Deep Verify:</h2>
+            <br></br>
+            {!this.state.accessPermitted && (
+              <>
+                <Form.Row>
+                  <Form.Group as={Col} controlId="formGridType">
+                    <Form.Label className="formFont">Type:</Form.Label>
+                    <Form.Control
+                      placeholder="Type"
+                      required
+                      onChange={(e) => this.setState({ type: e.target.value })}
+                      size="lg"
+                    />
+                  </Form.Group>
 
-                    <Form.Group as={Col} controlId="formGridManufacturer">
-                      <Form.Label className="formFont">Manufacturer:</Form.Label>
-                      <Form.Control
-                        placeholder="Manufacturer"
-                        required
-                        onChange={(e) => this.setState({ manufacturer: e.target.value })}
-                        size="lg"
-                      />
-                    </Form.Group>
+                  <Form.Group as={Col} controlId="formGridManufacturer">
+                    <Form.Label className="formFont">Manufacturer:</Form.Label>
+                    <Form.Control
+                      placeholder="Manufacturer"
+                      required
+                      onChange={(e) => this.setState({ manufacturer: e.target.value })}
+                      size="lg"
+                    />
+                  </Form.Group>
 
-                  </Form.Row>
+                </Form.Row>
 
-                  <Form.Row>
-                    <Form.Group as={Col} controlId="formGridModel">
-                      <Form.Label className="formFont">Model:</Form.Label>
-                      <Form.Control
-                        placeholder="Model"
-                        required
-                        onChange={(e) => this.setState({ model: e.target.value })}
-                        size="lg"
-                      />
-                    </Form.Group>
+                <Form.Row>
+                  <Form.Group as={Col} controlId="formGridModel">
+                    <Form.Label className="formFont">Model:</Form.Label>
+                    <Form.Control
+                      placeholder="Model"
+                      required
+                      onChange={(e) => this.setState({ model: e.target.value })}
+                      size="lg"
+                    />
+                  </Form.Group>
 
-                    <Form.Group as={Col} controlId="formGridSerial">
-                      <Form.Label className="formFont">Serial:</Form.Label>
-                      <Form.Control
-                        placeholder="Serial"
-                        required
-                        onChange={(e) => this.setState({ serial: e.target.value })}
-                        size="lg"
-                      />
-                    </Form.Group>
-                  </Form.Row>
-                  <Form.Row>
-                    <Form.Group>
-                      <Button className="buttonDisplay"
-                        variant="primary"
-                        type="button"
-                        size="lg"
-                        onClick={_accessAsset}
-                      >
-                        Access Asset
+                  <Form.Group as={Col} controlId="formGridSerial">
+                    <Form.Label className="formFont">Serial:</Form.Label>
+                    <Form.Control
+                      placeholder="Serial"
+                      required
+                      onChange={(e) => this.setState({ serial: e.target.value })}
+                      size="lg"
+                    />
+                  </Form.Group>
+                </Form.Row>
+                <Form.Row>
+                  <Form.Group>
+                    <Button className="buttonDisplay"
+                      variant="primary"
+                      type="button"
+                      size="lg"
+                      onClick={_accessAsset}
+                    >
+                      Access Asset
                   </Button>
-                    </Form.Group>
-                  </Form.Row>
-                </>
-              )}
-              {this.state.accessPermitted && (
-                <>
-                  <Form.Row>
-                    <Form.Group as={Col} controlId="formGridFirstName">
-                      <Form.Label className="formFont">First Name:</Form.Label>
-                      <Form.Control
-                        placeholder="First Name"
-                        required
-                        onChange={(e) => this.setState({ first: e.target.value })}
-                        size="lg"
-                      />
-                    </Form.Group>
+                  </Form.Group>
+                </Form.Row>
+              </>
+            )}
+            {this.state.accessPermitted && (
+              <>
+                <Form.Row>
+                  <Form.Group as={Col} controlId="formGridFirstName">
+                    <Form.Label className="formFont">First Name:</Form.Label>
+                    <Form.Control
+                      placeholder="First Name"
+                      required
+                      onChange={(e) => this.setState({ first: e.target.value })}
+                      size="lg"
+                    />
+                  </Form.Group>
 
-                    <Form.Group as={Col} controlId="formGridMiddleName">
-                      <Form.Label className="formFont">Middle Name:</Form.Label>
-                      <Form.Control
-                        placeholder="Middle Name"
-                        required
-                        onChange={(e) => this.setState({ middle: e.target.value })}
-                        size="lg"
-                      />
-                    </Form.Group>
+                  <Form.Group as={Col} controlId="formGridMiddleName">
+                    <Form.Label className="formFont">Middle Name:</Form.Label>
+                    <Form.Control
+                      placeholder="Middle Name"
+                      required
+                      onChange={(e) => this.setState({ middle: e.target.value })}
+                      size="lg"
+                    />
+                  </Form.Group>
 
-                    <Form.Group as={Col} controlId="formGridLastName">
-                      <Form.Label className="formFont">Last Name:</Form.Label>
-                      <Form.Control
-                        placeholder="Last Name"
-                        required
-                        onChange={(e) => this.setState({ surname: e.target.value })}
-                        size="lg"
-                      />
-                    </Form.Group>
-                  </Form.Row>
+                  <Form.Group as={Col} controlId="formGridLastName">
+                    <Form.Label className="formFont">Last Name:</Form.Label>
+                    <Form.Control
+                      placeholder="Last Name"
+                      required
+                      onChange={(e) => this.setState({ surname: e.target.value })}
+                      size="lg"
+                    />
+                  </Form.Group>
+                </Form.Row>
 
-                  <Form.Row>
-                    <Form.Group as={Col} controlId="formGridIdNumber">
-                      <Form.Label className="formFont">ID Number:</Form.Label>
-                      <Form.Control
-                        placeholder="ID Number"
-                        required
-                        onChange={(e) => this.setState({ id: e.target.value })}
-                        size="lg"
-                      />
-                    </Form.Group>
+                <Form.Row>
+                  <Form.Group as={Col} controlId="formGridIdNumber">
+                    <Form.Label className="formFont">ID Number:</Form.Label>
+                    <Form.Control
+                      placeholder="ID Number"
+                      required
+                      onChange={(e) => this.setState({ id: e.target.value })}
+                      size="lg"
+                    />
+                  </Form.Group>
 
-                    <Form.Group as={Col} controlId="formGridPassword">
-                      <Form.Label className="formFont">Password:</Form.Label>
-                      <Form.Control
-                        placeholder="Password"
-                        type="password"
-                        required
-                        onChange={(e) => this.setState({ secret: e.target.value })}
-                        size="lg"
-                      />
-                    </Form.Group>
-                  </Form.Row>
-                  <Form.Row>
-                    <Form.Group>
-                      <Button className="buttonDisplay"
-                        variant="primary"
-                        type="button"
-                        size="lg"
-                        onClick={_verify}
-                      >
-                        Verify Match
+                  <Form.Group as={Col} controlId="formGridPassword">
+                    <Form.Label className="formFont">Password:</Form.Label>
+                    <Form.Control
+                      placeholder="Password"
+                      type="password"
+                      required
+                      onChange={(e) => this.setState({ secret: e.target.value })}
+                      size="lg"
+                    />
+                  </Form.Group>
+                </Form.Row>
+                <Form.Row>
+                  <Form.Group>
+                    <Button className="buttonDisplay"
+                      variant="primary"
+                      type="button"
+                      size="lg"
+                      onClick={_verify}
+                    >
+                      Verify Match
                   </Button>
-                    </Form.Group>
-                  </Form.Row>
-                </>
-              )}
-            </div>
-        </Form>
-
-        {this.state.result !== "" && ( //conditional rendering
-          <div className="VRHresults">
-            {this.state.result === "170"
-              ? "Match Confirmed"
-              : "No Match Found"}
+                  </Form.Group>
+                </Form.Row>
+              </>
+            )}
           </div>
-        )}
+        </Form>
+        <div className="Results">
+
+          {this.state.result !== "" && ( //conditional rendering
+            <Form.Row>
+              {
+                this.state.result === "170"
+                  ? "Match Confirmed"
+                  : "No Match Found"
+              }
+            </Form.Row>
+          )}
+
+        </div>
       </div>
     );
   }

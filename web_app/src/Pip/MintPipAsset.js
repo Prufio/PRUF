@@ -127,7 +127,7 @@ class MintPipAsset extends Component {
             <div>
                 <Form className="MPAform" id='MainForm'>
                     {window.addr === undefined && (
-                        <div className="errorResults">
+                        <div className="Results">
                             <h2>User address unreachable</h2>
                             <h3>Please connect web3 provider.</h3>
                         </div>

@@ -167,7 +167,7 @@ class AddNoteNC extends Component {
         <div>
           <Form className="Form" id='MainForm'>
             {window.addr === undefined && (
-              <div className="errorResults">
+              <div className="Results">
                 <h2>User address unreachable</h2>
                 <h3>Please connect web3 provider.</h3>
               </div>
@@ -276,7 +276,7 @@ class AddNoteNC extends Component {
       <div>
         <Form className="Form" id='MainForm'>
           {window.addr === undefined && (
-            <div className="errorResults">
+            <div className="Results">
               <h2>User address unreachable</h2>
               <h3>Please connect web3 provider.</h3>
             </div>

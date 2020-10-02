@@ -148,7 +148,7 @@ class VerifyRightHolder extends Component {
       <div>
         <Form className="Form" id='MainForm'>
           {window.addr === undefined && (
-            <div className="errorResults">
+            <div className="Results">
               <h2>User address unreachable</h2>
               <h3>Please connect web3 provider.</h3>
             </div>
@@ -290,9 +290,9 @@ class VerifyRightHolder extends Component {
             </div>
           )}
         </Form>
-
+        <div className="Results">
         {this.state.txHash > 0 && ( //conditional rendering
-          <div className="VRHresults">
+          <Form.Row>
             {this.state.result === "Match confirmed"
               ? "Match Confirmed"
               : "No Match Found"}
@@ -303,8 +303,9 @@ class VerifyRightHolder extends Component {
             >
               KOVAN Etherscan:{this.state.txHash}
             </a>
-          </div>
+          </Form.Row>
         )}
+        </div>
       </div>
     );
   }

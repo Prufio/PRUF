@@ -75,7 +75,7 @@ class UpdateACName extends Component {
             </div>
           )}
           {window.assetClass === undefined && (
-            <div className="errorResults">
+            <div className="Results">
               <h2>No asset class selected.</h2>
               <h3>Please select asset class in home page to use forms.</h3>
             </div>

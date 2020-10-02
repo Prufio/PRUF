@@ -626,34 +626,6 @@ div {
   opacity: 0.96;
 }
 
-.RRresults {
-  height: flex;
-  width: 59rem;
-  color: white;
-  background-color: #002a40;
-  border-radius: 0rem 0rem 1rem 1rem;
-  font-size: 1.3rem;
-  display: flex;
-  padding: 2rem;
-  margin-top: -0.2rem;
-  justify-content: center;
-  align-items: center;
-}
-
-.QRresults {
-  height: 10rem;
-  width: 59rem;
-  color: white;
-  background-color: #002a40;
-  border-radius: 0rem 0rem 1rem 1rem;
-  font-size: 1.3rem;
-  display: flex;
-  padding: 2rem;
-  margin-top: -0.2rem;
-  justify-content: center;
-  align-items: center;
-}
-
 .assetSelectedResults {
   height: flex;
   width: 59rem;
@@ -678,37 +650,8 @@ div {
   font-size: 1.3rem; 
 }
 
-
-.GACDresults {
-  height: 13rem;
-  width: 59rem;
-  color: white;
-  background-color: #002a40;
-  border-radius: 0rem 0rem 1rem 1rem;
-  font-size: 1.3rem;
-  display: flex;
-  padding: 2rem;
-  margin-top: -0.2rem;
-  justify-content: center;
-  align-items: center;
-}
-
-.RRresultserr {
-  height: 3rem;
-  width: 59rem;
-  color: white;
-  background-color: #002a40;
-  border-radius: 0rem 0rem 1rem 1rem;
-  font-size: 1.4rem;
-  display: flex;
-  padding: 2rem;
-  margin-top: -0.2rem;
-  justify-content: center;
-  align-items: center;
-}
-
 .Results {
-  height: 5rem;
+  height: flex;
   width: 59rem;
   color: white;
   background-color: #002a40;
@@ -737,29 +680,6 @@ div {
   margin-top: -0.2rem;
   margin-right: auto;
   margin-bottom: 10rem;
-}
-
-.VRHresults {
-  height: 5rem;
-  width: 59rem;
-  color: white;
-  background-color: #002a40;
-  border-radius: 0rem 0rem 1rem 1rem;
-  font-size: 1.4rem;
-  display: flex;
-  padding: 2rem;
-  margin-top: -0.2rem;
-  align-items: center;
-  justify-content: center;
-}
-
-.TWResults{
-  align-items: center;
-  justify-content: center;
-  font-size: 4rem;
-  flex-direction: column;
-  font-weight: bold;
-  margin-top: -0.2rem;
 }
 
 .btn {
@@ -911,6 +831,14 @@ div {
 .iframe
 {
     display: none;
+}
+
+.prufARCroppedForm {
+  /* display: flex; */
+  width: 320px;
+  height: 149px;
+  /* object-fit: cover; */
+
 }
 
 .imageButton {

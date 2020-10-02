@@ -525,12 +525,12 @@ class THEWORKS extends Component {
     return (
       <div>
           {window.addr === undefined && (
-            <div className="errorResults">
+            <div className="Results">
               <h2>User address unreachable</h2>
               <h3>Please connect web3 provider.</h3>
             </div>
           )}{window.assetClass === undefined && (
-            <div className="errorResults">
+            <div className="Results">
               <h2>No asset class selected.</h2>
               <h3>Please select asset class in home page to use forms.</h3>
             </div>
@@ -541,7 +541,7 @@ class THEWORKS extends Component {
             <Form className="TWform">
                 
 
-                <div className="TWResults">
+                <div className="Results">
                 <Form.Row>
                 <Form.Group as={Col} controlId="formGridType">
                     {this.state.NRstats}
@@ -600,11 +600,11 @@ class THEWORKS extends Component {
         </div>)}
 
         {this.state.RRresult[4] === "0" && (
-          <div className="RRresultserr">No Asset Found for Given Data</div>
+          <div className="Results">No Asset Found for Given Data</div>
         )}
 
         {this.state.RRresult[4] > 0 && ( //conditional rendering
-          <div className="RRresults">
+          <div className="Results">
             Asset Found!
             <br></br>
             Status:{this.state.status}

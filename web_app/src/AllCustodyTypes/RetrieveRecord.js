@@ -602,7 +602,7 @@ class RetrieveRecord extends Component {
                 </Button>
               </div>
               {this.state.result !== undefined && (
-                <div className="QRresults">
+                <div className="Results">
                   {this.state.assetFound}
                 </div>
               )}
@@ -610,7 +610,7 @@ class RetrieveRecord extends Component {
           )}
 
           {this.state.result[2] === "0" && (
-            <div className="RRresultserr">No Asset Found for Given Data</div>
+            <div className="Results">No Asset Found for Given Data</div>
           )}
 
           {this.state.moreInfo && ( //conditional rendering
