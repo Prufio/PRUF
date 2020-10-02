@@ -187,7 +187,7 @@ div {
   background-color: #002a40;
   justify-content: center;
   display: flex;
-  opacity: 0.95;
+  /* opacity: 0.95; */
   z-index: 3;
 }
 
@@ -198,6 +198,8 @@ div {
   padding-left: 2rem;
   object-fit: cover;
   z-index: 5;
+  background-color:#005480;
+  opacity: 0.95;
 }
 
 .VRText {

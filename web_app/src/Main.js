@@ -89,18 +89,18 @@ class Main extends Component {
           authorizedUserMenuBool: false,
           routeRequest: "basic"
         })
-        
+
       }
-      if(window.assets !== undefined){
+      if (window.assets !== undefined) {
         if (window.assets.ids.length > 0 && Object.values(window.assets.descriptions).length === window.aTknIDs.length &&
-        window.assets.names.length === 0 && this.state.buildReady === true) {
-        if (window.resetInfo === false) {
-          console.log("WD: rebuilding assets (Last Step)")
-          this.buildAssets()
+          window.assets.names.length === 0 && this.state.buildReady === true) {
+          if (window.resetInfo === false) {
+            console.log("WD: rebuilding assets (Last Step)")
+            this.buildAssets()
+          }
         }
       }
-      }
-      
+
 
       if (window.resetInfo === true) {
         window.hasLoadedAssets = false;
@@ -360,7 +360,7 @@ class Main extends Component {
       const self = this;
       console.log("Setting up contracts")
       if (window.ethereum !== undefined) {
-        if(window.addr !== undefined){
+        if (window.addr !== undefined) {
           await this.setState({
             noAddrMenuBool: false,
             assetHolderMenuBool: false,
@@ -371,7 +371,7 @@ class Main extends Component {
             routeRequest: "basic"
           })
         }
-        
+
         else if (window.addr === undefined) {
           await this.setState({
             noAddrMenuBool: true,
@@ -404,14 +404,14 @@ class Main extends Component {
         return this.setState({ runWatchDog: true })
       }
 
-      else { 
-        window.isSettingUpContracts = true; 
+      else {
+        window.isSettingUpContracts = true;
         window._contracts = await buildContracts(_web3)
         await this.setState({ contracts: window._contracts })
         await window.utils.getContracts()
         window.isSettingUpContracts = false;
         return this.setState({ runWatchDog: true })
-       }
+      }
 
     }
 
