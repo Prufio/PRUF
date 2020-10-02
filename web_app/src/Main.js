@@ -214,8 +214,6 @@ class Main extends Component {
 
     this.setupAssets = async () => {
 
-      if (window.aTknIDs === undefined) { return }
-
       if (window.balances === undefined) { return }
       console.log("SA: In setupAssets")
 
@@ -232,6 +230,7 @@ class Main extends Component {
       }
 
       await window.utils.getAssetTokenInfo()
+      if (window.aTknIDs === undefined) { return }
 
       for (let i = 0; i < window.aTknIDs.length; i++) {
         tempDescObj["desc" + i] = []
@@ -460,7 +459,6 @@ class Main extends Component {
       buildReady: false,
       hasMounted: false,
       routeRequest: "basic",
-      openssl: require("openssl-nodejs")
     };
   }
 
