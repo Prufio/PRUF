@@ -381,8 +381,9 @@ class ModifyDescription extends Component {
             </div>
           )}
         </Form>
+        <div className="Results">
         {this.state.txHash > 0 && ( //conditional rendering
-          <div className="Results">
+          <Form.Row>
             {this.state.txStatus === false && (
               <div>
                 !ERROR! :
@@ -408,8 +409,9 @@ class ModifyDescription extends Component {
                 </a>
               </div>
             )}
-          </div>
+          </Form.Row>
         )}
+        </div>
       </div>
     );
   }

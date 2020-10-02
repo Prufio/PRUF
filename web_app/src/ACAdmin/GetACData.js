@@ -116,7 +116,7 @@ class GetACData extends Component {
           )}
         </Form>
         {this.state.ACData !== undefined && ( //conditional rendering
-          <div className="GACDresults">
+          <div className="Results">
             Asset Class Found!
             <br></br>
             AC : {this.state.ACData.AC}

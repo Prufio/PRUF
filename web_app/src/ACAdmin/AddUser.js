@@ -63,7 +63,7 @@ class AddUser extends Component {
       <div>
         <Form className="Form">
           {window.addr === undefined && (
-            <div className="VRresults">
+            <div className="errorResults">
               <h2>User address unreachable</h2>
               Please connect web3 provider.
             </div>

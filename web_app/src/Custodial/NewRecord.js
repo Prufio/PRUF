@@ -88,28 +88,28 @@ class NewRecord extends Component {
 
       var doesExist = await window.utils.checkAssetExists(idxHash);
 
-      if(!doesExist){
+      if (!doesExist) {
         window.contracts.APP.methods
-        .$newRecord(
-          idxHash,
-          rgtHash,
-          window.assetClass,
-          this.state.countDownStart
-        )
-        .send({ from: window.addr, value: window.costs.newRecordCost })
-        .on("error", function (_error) {
-          // self.setState({ NRerror: _error });
-          self.setState({ txHash: Object.values(_error)[0].transactionHash });
-          self.setState({ txStatus: false });
-        })
-        .on("receipt", (receipt) => {
-          this.setState({ txHash: receipt.transactionHash });
-          this.setState({ txStatus: receipt.status });
-        });
+          .$newRecord(
+            idxHash,
+            rgtHash,
+            window.assetClass,
+            this.state.countDownStart
+          )
+          .send({ from: window.addr, value: window.costs.newRecordCost })
+          .on("error", function (_error) {
+            // self.setState({ NRerror: _error });
+            self.setState({ txHash: Object.values(_error)[0].transactionHash });
+            self.setState({ txStatus: false });
+          })
+          .on("receipt", (receipt) => {
+            this.setState({ txHash: receipt.transactionHash });
+            this.setState({ txStatus: receipt.status });
+          });
       }
-        else{alert("Record already exists! Try again.")}
+      else { alert("Record already exists! Try again.") }
 
-        return document.getElementById("MainForm").reset(); //clear form inputs
+      return document.getElementById("MainForm").reset(); //clear form inputs
     };
 
     return (//default render
@@ -254,7 +254,7 @@ class NewRecord extends Component {
               </Form.Row>
               <Form.Row>
                 <Form.Group >
-                    <Button className="buttonDisplay"
+                  <Button className="buttonDisplay"
                     variant="primary"
                     type="button"
                     size="lg"
@@ -274,8 +274,9 @@ class NewRecord extends Component {
             </div>
           )}
         </Form>
+        <div className="Results">
         {this.state.txHash > 0 && ( //conditional rendering
-          <div className="Results">
+          <Form.Row>
             {this.state.txStatus === false && (
               <div>
                 !ERROR! :
@@ -301,8 +302,9 @@ class NewRecord extends Component {
                 </a>
               </div>
             )}
-          </div>
+          </Form.Row>
         )}
+        </div>
       </div>
     );
   }

@@ -292,10 +292,11 @@ class NewRecordNC extends Component {
               <p class="loading">Transaction In Progress</p>
             )} */}
           </div>)}
-
+          <div className="Results">
         {this.state.txHash > 0 && ( //conditional rendering
 
-          <div className="Results">
+          
+            <Form.Row>
             {this.state.txStatus === false && (
               <div>
                 !ERROR! :
@@ -321,9 +322,10 @@ class NewRecordNC extends Component {
                 </a>
               </div>
             )}
-          </div>
+            </Form.Row>
+          
         )}
-
+        </div>
       </div>
     );
   }

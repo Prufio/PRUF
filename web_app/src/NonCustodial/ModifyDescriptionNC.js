@@ -644,7 +644,7 @@ class ModifyDescription extends Component {
       <div>
         <Form className="Form" id='MainForm'>
           {window.addr === undefined && (
-            <div className="errorResults">
+            <div className="Results">
               <h2>User address unreachable</h2>
               <h3>Please connect web3 provider.</h3>
             </div>
@@ -656,7 +656,6 @@ class ModifyDescription extends Component {
               <br></br>
               {this.state.accessPermitted && (
                 <div>
-                  <Form.Row>
                     <Form.Group as={Col} controlId="formGridAsset">
                       <Form.Label className="formFont"> Select an Asset to Modify :</Form.Label>
                       <Form.Control
@@ -669,8 +668,6 @@ class ModifyDescription extends Component {
 
                       </Form.Control>
                     </Form.Group>
-                  </Form.Row>
-                  <Form.Row>
                     <Form.Group as={Col} controlId="formGridMiscType">
                       <Form.Label className="formFont">
                         Element Type:
@@ -690,10 +687,8 @@ class ModifyDescription extends Component {
 
                       </Form.Control>
                     </Form.Group>
-                  </Form.Row>
                   {this.state.elementType === "text" && (
                     <>
-                      <Form.Row>
                         <Form.Group as={Col} controlId="formGridMiscName">
                           <Form.Label className="formFont">
                             Submission Title:
@@ -704,7 +699,6 @@ class ModifyDescription extends Component {
                             size="lg"
                           />
                         </Form.Group>
-                      </Form.Row><Form.Row>
                         <Form.Group as={Col} controlId="formGridMiscValue">
                           <Form.Label className="formFont">
                             Text to Submit:
@@ -715,13 +709,11 @@ class ModifyDescription extends Component {
                             size="lg"
                           />
                         </Form.Group>
-                      </Form.Row>
                     </>
                   )}
 
                   {this.state.elementType === "description" && (
                     <>
-                      <Form.Row>
                         <Form.Group as={Col} controlId="formGridMiscValue">
                           <Form.Label className="formFont">
                             Description Text:
@@ -732,13 +724,11 @@ class ModifyDescription extends Component {
                             size="lg"
                           />
                         </Form.Group>
-                      </Form.Row>
                     </>
                   )}
 
                   {this.state.elementType === "removePhoto" && (
                     <>
-                      <Form.Row>
                         <Form.Group as={Col} controlId="formGridRemovePhoto">
                           <Form.Label className="formFont">
                             Image Name:
@@ -749,13 +739,11 @@ class ModifyDescription extends Component {
                             size="lg"
                           />
                         </Form.Group>
-                      </Form.Row>
                     </>
                   )}
 
                   {this.state.elementType === "nameTag" && (
                     <>
-                      <Form.Row>
                         <Form.Group as={Col} controlId="formGridNameTag">
                           <Form.Label className="formFont">
                             New Name Tag:
@@ -766,13 +754,11 @@ class ModifyDescription extends Component {
                             size="lg"
                           />
                         </Form.Group>
-                      </Form.Row>
                     </>
                   )}
 
                   {this.state.elementType === "removeText" && (
                     <>
-                      <Form.Row>
                         <Form.Group as={Col} controlId="formGridRemoveText">
                           <Form.Label className="formFont">
                             Element Name:
@@ -783,13 +769,11 @@ class ModifyDescription extends Component {
                             size="lg"
                           />
                         </Form.Group>
-                      </Form.Row>
                     </>
                   )}
 
                   {this.state.elementType === "photo" && (
                     <>
-                      <Form.Row>
                         <Form.Group as={Col} controlId="formGridMiscName">
                           <Form.Label className="formFont">
                             Image Title:
@@ -800,7 +784,6 @@ class ModifyDescription extends Component {
                             size="lg"
                           />
                         </Form.Group>
-                      </Form.Row><Form.Row>
                         <Form.Group as={Col} controlId="formGridMiscValue">
                           <Form.Label className="formFont">
                             Source URL:
@@ -811,14 +794,12 @@ class ModifyDescription extends Component {
                             size="lg"
                           />
                         </Form.Group>
-                      </Form.Row>
                     </>
                   )}
                 </div>
               )}
 
               {this.state.hashPath !== "" && this.state.accessPermitted && (
-                <Form.Row>
                   <Form.Group >
                     <Button className="buttonDisplay"
                       variant="primary"
@@ -829,11 +810,9 @@ class ModifyDescription extends Component {
                       Update Description
                     </Button>
                   </Form.Group>
-                </Form.Row>
               )}
 
               {this.state.hashPath === "" && this.state.accessPermitted && this.state.elementType === "0" && (
-                <Form.Row>
                   <Form.Group >
                     <Button className="buttonDisplay"
                       variant="primary"
@@ -844,12 +823,9 @@ class ModifyDescription extends Component {
                       Load to IPFS
                     </Button>
                   </Form.Group>
-                  <br></br>
-                </Form.Row>
 
               )}
               {this.state.elementType === "text" && (
-                <Form.Row>
                   <Form.Group>
                     <Button className="buttonDisplay"
                       variant="primary"
@@ -860,11 +836,8 @@ class ModifyDescription extends Component {
                       Add Element
               </Button>
                   </Form.Group>
-                  <br></br>
-                </Form.Row>
               )}
               {this.state.elementType === "photo" && (
-                <Form.Row>
                   <Form.Group>
                     <Button className="buttonDisplay"
                       variant="primary"
@@ -875,12 +848,9 @@ class ModifyDescription extends Component {
                       Add Element
               </Button>
                   </Form.Group>
-                  <br></br>
-                </Form.Row>
               )}
 
               {this.state.elementType === "description" && (
-                <Form.Row>
                   <Form.Group>
                     <Button className="buttonDisplay"
                       variant="primary"
@@ -891,12 +861,9 @@ class ModifyDescription extends Component {
                       Add Element
               </Button>
                   </Form.Group>
-                  <br></br>
-                </Form.Row>
               )}
 
               {this.state.elementType === "nameTag" && (
-                <Form.Row>
                   <Form.Group>
                     <Button className="buttonDisplay"
                       variant="primary"
@@ -907,12 +874,9 @@ class ModifyDescription extends Component {
                       Add Element
               </Button>
                   </Form.Group>
-                  <br></br>
-                </Form.Row>
               )}
 
               {this.state.elementType === "removePhoto" && (
-                <Form.Row>
                   <Form.Group>
                     <Button className="buttonDisplay"
                       variant="primary"
@@ -923,12 +887,9 @@ class ModifyDescription extends Component {
                       Remove Element
               </Button>
                   </Form.Group>
-                  <br></br>
-                </Form.Row>
               )}
 
               {this.state.elementType === "removeText" && (
-                <Form.Row>
                   <Form.Group>
                     <Button className="buttonDisplay"
                       variant="primary"
@@ -939,14 +900,13 @@ class ModifyDescription extends Component {
                       Remove Element
               </Button>
                   </Form.Group>
-                  <br></br>
-                </Form.Row>
               )}
             </div>
           )}
         </Form>
+        <div className="Results">
         {this.state.txHash > 0 && ( //conditional rendering
-          <div className="Results">
+          <Form.Row>
             {this.state.txStatus === false && (
               <div>
                 !ERROR! :
@@ -972,8 +932,9 @@ class ModifyDescription extends Component {
                 </a>
               </div>
             )}
-          </div>
+          </Form.Row>
         )}
+        </div>
       </div>
     );
   }

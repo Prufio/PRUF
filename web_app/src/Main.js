@@ -86,8 +86,10 @@ class Main extends Component {
           assetHolderUserMenuBool: false,
           assetClassHolderMenuBool: false,
           noAddrMenuBool: false,
-          authorizedUserMenuBool: false
+          authorizedUserMenuBool: false,
+          routeRequest: "basic"
         })
+        
       }
       if(window.assets !== undefined){
         if (window.assets.ids.length > 0 && Object.values(window.assets.descriptions).length === window.aTknIDs.length &&
