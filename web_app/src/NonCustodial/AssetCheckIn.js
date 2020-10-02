@@ -365,7 +365,7 @@ class AssetCheckIn extends Component {
     const _refresh = () => {
       window.resetInfo = true;
       window.recount = true;
-      this.setState({ assets: { descriptions: [], ids: [], assetClasses: [], statuses: [], names: [] } })
+      this.setState({ moreInfo: false, assets: { descriptions: [], ids: [], assetClasses: [], statuses: [], names: [] } })
     }
 
     return (
@@ -374,7 +374,7 @@ class AssetCheckIn extends Component {
         <div>
           <h2 className="assetDashboardHeader">My Assets</h2>
           <div className="mediaLinkAD">
-            <a className="mediaLinkContentAD" ><RefreshCw onClick={() => { window.resetInfo = true; window.recount = true }} /></a>
+            <a className="mediaLinkContentAD" ><RefreshCw onClick={() => {_refresh()}} /></a>
           </div>
         </div>
         <div className="assetDashboard">
