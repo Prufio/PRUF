@@ -1,6 +1,6 @@
 {
-  "name": "BulletProof_Web_App",
-  "version": "0.1.0",
+  "name": "Pruf",
+  "version": "0.8.3",
   "private": true,
   "dependencies": {
     "@testing-library/jest-dom": "^4.2.4",
@@ -12,6 +12,7 @@
     "ipfs-mini": "^1.1.5",
     "jquery": "^3.5.1",
     "js-sha3": "^0.8.0",
+    "openssl-nodejs": "^1.0.5",
     "popper.js": "^1.16.1",
     "qrcode.react": "^1.0.0",
     "react": "^16.8.1",
