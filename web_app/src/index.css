@@ -507,6 +507,15 @@ div {
   margin-top: 4rem;
 }
 
+.cardSearchIdxForm {
+  display: flex;
+  width: 50rem;
+  border-radius: 0.3rem 0.3rem 0rem 0rem;
+  background-color: #002a40;
+  margin-left: 9rem;
+  margin-top: 4rem;
+}
+
 .card-description-selected {
   font-weight: bold;
   font-size: 1.6rem;
@@ -514,6 +523,21 @@ div {
 }
 
 .cardDescription-selected {
+  display: flex;
+  width: 50rem;
+  height: flex;
+  max-height: 16rem;
+  background-color: #002a40;
+  word-wrap: normal;
+  margin-left: 9rem;
+  /* margin-top: 4rem; */
+  overflow-y: auto;
+  flex-direction: column;
+  border-radius: 0rem 0rem 0.3rem 0.3rem;
+  padding-left: 0.5rem;
+}
+
+.cardDescription-search {
   display: flex;
   width: 50rem;
   height: flex;
