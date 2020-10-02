@@ -214,6 +214,8 @@ class Main extends Component {
 
     this.setupAssets = async () => {
 
+      if (window.aTknIDs === undefined) { return }
+
       if (window.balances === undefined) { return }
       console.log("SA: In setupAssets")
 
@@ -513,6 +515,7 @@ class Main extends Component {
     }
     else {
 
+      window.ipfsCounter = 0;
       var _web3 = require("web3");
       _web3 = new Web3("https://api.infura.io/v1/jsonrpc/kovan");
       this.setupContractEnvironment(_web3)
