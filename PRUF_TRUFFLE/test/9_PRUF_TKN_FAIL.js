@@ -1477,7 +1477,7 @@ it('Should fail because senders balanceOf < amount sent', async () => {
 })
 
 //6
-it('Should fail because amount sent < 100', async () => {
+it('Should fail because amount sent < 200', async () => {
     return UTIL_TKN.increaseShare(
     '10',
     '80',

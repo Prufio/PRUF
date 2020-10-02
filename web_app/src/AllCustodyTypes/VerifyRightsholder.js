@@ -56,10 +56,10 @@ class VerifyRightHolder extends Component {
 
     const _accessAsset = async () => {
 
-      if (this.state.manufacturer === "" 
-      || this.state.type === "" 
-      || this.state.model === "" 
-      || this.state.serial === "") {
+      if (this.state.manufacturer === ""
+        || this.state.type === ""
+        || this.state.model === ""
+        || this.state.serial === "") {
         return alert("Please fill out all fields before submission")
       }
 
@@ -70,15 +70,18 @@ class VerifyRightHolder extends Component {
         String(this.state.serial),
       );
 
-      let rgtRaw = window.web3.utils.soliditySha3(
-        String(this.state.first),
-        String(this.state.middle),
-        String(this.state.surname),
-        String(this.state.id),
-        String(this.state.secret)
-      );
+      // let rgtRaw = window.web3.utils.soliditySha3(
+      //   String(this.state.first),
+      //   String(this.state.middle),
+      //   String(this.state.surname),
+      //   String(this.state.id),
+      //   String(this.state.secret)
+      // );
 
-      let rgtHash = window.web3.utils.soliditySha3(String(idxHash), String(rgtRaw));
+      // console.log("idxHash", idxHash);
+      // console.log("rgtHash", rgtHash);
+
+      // let rgtHash = window.web3.utils.soliditySha3(String(idxHash), String(rgtRaw));
 
       let doesExist = await window.utils.checkAssetExists(idxHash);
 
@@ -86,9 +89,12 @@ class VerifyRightHolder extends Component {
         return alert("Asset doesnt exist! Ensure data fields are correct before submission.")
       }
 
+      console.log("idxHash", idxHash);
+      // console.log("rgtHash", rgtHash);
+
       return this.setState({
         idxHash: idxHash,
-        rgtHash: rgtHash,
+        // rgtHash: rgtHash,
         accessPermitted: true
       })
 
@@ -99,9 +105,20 @@ class VerifyRightHolder extends Component {
       this.setState({ txHash: "" });
       this.setState({ error: undefined })
       this.setState({ result: "" })
-
       var idxHash = this.state.idxHash;
-      var rgtHash = this.state.rgtHash;
+
+
+      let rgtRaw = window.web3.utils.soliditySha3(
+        String(this.state.first),
+        String(this.state.middle),
+        String(this.state.surname),
+        String(this.state.id),
+        String(this.state.secret)
+      );
+      let rgtHash = window.web3.utils.soliditySha3(String(idxHash), String(rgtRaw));
+
+
+      // var rgtHash = this.state.rgtHash;
 
       console.log("idxHash", idxHash);
       console.log("rgtHash", rgtHash);
@@ -113,7 +130,7 @@ class VerifyRightHolder extends Component {
         .on("receipt", (receipt) => {
           this.setState({ txHash: receipt.transactionHash });
           console.log(receipt.events.REPORT.returnValues._msg);
-          this.setState({result: receipt.events.REPORT.returnValues._msg})
+          this.setState({ result: receipt.events.REPORT.returnValues._msg })
         });
 
       console.log(this.state.result);
@@ -276,9 +293,9 @@ class VerifyRightHolder extends Component {
 
         {this.state.txHash > 0 && ( //conditional rendering
           <div className="VRHresults">
-            {this.state.result === "170"
-              ? "Match Confirmed :"
-              : "Record does not match :"}
+            {this.state.result === "Match confirmed"
+              ? "Match Confirmed"
+              : "No Match Found"}
             <a
               href={" https://kovan.etherscan.io/tx/" + this.state.txHash}
               target="_blank"

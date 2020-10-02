@@ -1460,7 +1460,7 @@
     it('Should fail because caller does not hold AC token', async () => {
 
         console.log("//**************************************BEGIN AC_MGR TEST**********************************************/")
-        console.log("//**************************************BEGIN AC_MGR FAIL BATCH (11)**********************************************/")
+        console.log("//**************************************BEGIN AC_MGR FAIL BATCH (12)**********************************************/")
         console.log("//**************************************BEGIN OO_addUser FAIL BATCH**********************************************/")
         return AC_MGR.OO_addUser(
         account2, 
