@@ -969,7 +969,7 @@ div {
 .mediaLinkContentADS {
   /* padding-left: 3rem; */
   border-radius: 50%;
-  color: #000000;
+  color: #002a40;
   -webkit-transition: -webkit-transform .5s ease-in-out;
   transition:         transform .5s ease-in-out;
 }
@@ -1033,7 +1033,7 @@ div {
 .mediaLinkQRdisplayContent {
   /* padding-left: 3rem; */
   border-radius: 50%;
-  color:black;
+  color:#002a40;
   -webkit-transition: -webkit-transform .5s ease-in-out;
   transition:         transform .5s ease-in-out;
 }
