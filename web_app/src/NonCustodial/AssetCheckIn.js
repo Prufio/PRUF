@@ -155,7 +155,7 @@ class AssetCheckIn extends Component {
                       <div>
                         <div className="QRdisplay">
                           <div className="QR">
-                            <QRCode value={obj.idxHash} size="140" />
+                            <QRCode value={obj.idxHash} size="140" qrStyle="dots" fgColor="#002a40"/>
                           </div>
                         </div>
                         <div className="QRdisplay-footer">
