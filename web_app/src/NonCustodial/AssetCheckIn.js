@@ -29,6 +29,10 @@ class AssetCheckIn extends Component {
       if (this.state.hasLoadedAssets !== window.hasLoadedAssets && this.state.runWatchDog === true) {
         this.setState({ hasLoadedAssets: window.hasLoadedAssets })
       }
+
+      if(this.state.hasNoAssets !== window.hasNoAssets){
+        this.setState({hasNoAssets: window.hasNoAssets})
+      }
     }, 100)
 
     this.moreInfo = (e) => {
@@ -41,7 +45,6 @@ class AssetCheckIn extends Component {
       window.sentPacket = obj
       window.menuChange = menu
       window.location.href = '/#/' + link
-      // console.log(menu)
     }
 
     this.generateAssetInfo = (obj) => {
@@ -336,7 +339,7 @@ class AssetCheckIn extends Component {
       RCLR: "",
       showDescription: false,
       descriptionElements: undefined,
-      assets: { descriptions: [0], ids: [0], assetClasses: [0], statuses: [0], names: [0] },
+      assets: { descriptions: [], ids: [], assetClasses: [], statuses: [], names: [] },
       contractArray: [],
       hasLoadedAssets: false,
     };
@@ -378,9 +381,10 @@ class AssetCheckIn extends Component {
           </div>
         </div>
         <div className="assetDashboard">
-          {this.state.hasLoadedAssets && !this.state.moreInfo && (<>{this.generateAssetDash(window.assets)}</>)}
-          {this.state.hasLoadedAssets && this.state.moreInfo && (<>{this.generateAssetInfo(this.state.assetObj)}</>)}
-          {!this.state.hasLoadedAssets && (<div className="VRText"><h2 class="loading">Loading Assets</h2></div>)}
+          {!this.state.hasNoAssets && this.state.hasLoadedAssets && !this.state.moreInfo && (<>{this.generateAssetDash(this.state.assets)}</>)}
+          {!this.state.hasNoAssets && this.state.hasLoadedAssets && this.state.moreInfo && (<>{this.generateAssetInfo(this.state.assetObj)}</>)}
+          {!this.state.hasNoAssets && !this.state.hasLoadedAssets && (<div className="VRText"><h2 class="loading">Loading Assets</h2></div>)}
+          {this.state.hasNoAssets && (<div className="VRText"><h2>No Assets Held by User</h2></div>)}
         </div>
         <div className="assetDashboardFooter">
         </div>

@@ -94,8 +94,8 @@ class Main extends Component {
       }
       if (window.assets !== undefined) {
         if (window.assets.ids.length > 0 && Object.values(window.assets.descriptions).length === window.aTknIDs.length &&
-          window.assets.names.length === 0 && this.state.buildReady === true) {
-          if (window.resetInfo === false) {
+          window.assets.names.length === 0 && this.state.buildReady === true && window.aTknIDs.length > 0) {
+          if (window.ipfsCounter >= window.aTknIDs.length && window.resetInfo === false) {
             console.log("WD: rebuilding assets (Last Step)")
             this.buildAssets()
           }
@@ -106,21 +106,13 @@ class Main extends Component {
       if (window.resetInfo === true) {
         window.hasLoadedAssets = false;
         this.setState({ buildReady: false, runWatchDog: false })
-        window.assets = { descriptions: [], ids: [], assetClasses: [], statuses: [], names: [] };
-        window.assetTokenInfo = {
-          assetClass: undefined,
-          idxHash: undefined,
-          name: undefined,
-          photos: undefined,
-          text: undefined,
-          status: undefined,
-        }
         console.log("WD: setting up assets (Step one)")
         this.setupAssets()
         window.resetInfo = false
       }
+
       if (window.aTknIDs !== undefined && this.state.buildReady === false) {
-        if (window.ipfsCounter >= window.aTknIDs.length && this.state.runWatchDog === true) {
+        if (window.ipfsCounter >= window.aTknIDs.length && this.state.runWatchDog === true && window.aTknIDs.length > 0) {
           console.log("turning on buildready... Window IPFS operation count: ", window.ipfsCounter)
           this.setState({ buildReady: true })
         }
@@ -214,24 +206,36 @@ class Main extends Component {
     }
 
     this.setupAssets = async () => {
+      window.hasNoAssets = false;
+      window.ipfsCounter = 0;
+      window.ipfsHashArray = [];
+        window.assets = { descriptions: [], ids: [], assetClasses: [], statuses: [], names: [] };
+        window.assetTokenInfo = {
+          assetClass: undefined,
+          idxHash: undefined,
+          name: undefined,
+          photos: undefined,
+          text: undefined,
+          status: undefined,
+        }
+        
 
       if (window.balances === undefined) { return }
       console.log("SA: In setupAssets")
-
-      window.ipfsCounter = 0;
 
       let tempDescObj = {}
       let tempDescriptionsArray = [];
       let tempNamesArray = [];
 
       if (window.recount === true) {
+        window.aTknIDs = [];
+        window.assetBalance = undefined;
         window.recount = false
         await this.setUpTokenVals()
         return this.setupAssets()
       }
 
       await window.utils.getAssetTokenInfo()
-      if (window.aTknIDs === undefined) { return }
 
       if(window.aTknIDs === undefined){return}
 
@@ -341,14 +345,16 @@ class Main extends Component {
       ethereum.on("accountsChanged", function (accounts) {
         _web3.eth.getAccounts().then((e) => {
           if (window.addr !== e[0]) {
-            window.href = "/#"
+            window.href = "/#";
             window.addr = e[0];
             window.assetClass = undefined;
             window.isAuthUser = false;
             window.isACAdmin = false;
-            self.setState({ addr: e[0], runWatchDog: false })
-            self.setupContractEnvironment(window.web3);
-            console.log("///////in acctChanger////////")
+            self.setState({ addr: e[0]});
+            window.recount = true;
+            window.resetInfo = true;
+            //self.setupContractEnvironment(window.web3);
+            console.log("///////in acctChanger////////");
           }
           else { console.log("Something bit in the acct listener, but no changes made.") }
         });
