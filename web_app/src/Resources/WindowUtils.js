@@ -697,7 +697,7 @@ function buildWindowUtils() {
 
     }
 
-    else { console.log("No assets held by user"); return 0 }
+    else { console.log("No assets held by user"); return window.hasNoAssets = true }
   }
 
   const _getAssetTokenName = async (ipfs) => {
