@@ -19,7 +19,10 @@ import Dropdown from 'react-bootstrap/Dropdown';
 import { Twitter } from 'react-feather';
 import { GitHub } from 'react-feather';
 import { Mail } from 'react-feather';
-import { ExternalLink } from "react-feather";
+import { Video } from "react-feather";
+import { Menu } from 'react-feather';
+import { User } from 'react-feather';
+import { Settings } from 'react-feather';
 
 
 class Main extends Component {
@@ -233,7 +236,7 @@ class Main extends Component {
       await window.utils.getAssetTokenInfo()
       if (window.aTknIDs === undefined) { return }
 
-      if(window.aTknIDs === undefined){return}
+      if (window.aTknIDs === undefined) { return }
 
       for (let i = 0; i < window.aTknIDs.length; i++) {
         tempDescObj["desc" + i] = []
@@ -543,6 +546,39 @@ class Main extends Component {
       this.setState({ hasMounted: true })
     }
 
+    this.hamburgerMenu = async () => {
+      if (this.state.hamburgerMenu === undefined) {
+        this.setState({ hamburgerMenu: true })
+      }
+      else {
+        this.setState({ hamburgerMenu: undefined })
+      }
+    }
+
+    this.userMenu = async () => {
+      if (this.state.userMenu === undefined) {
+        this.setState({
+          userMenu: true,
+          settingsMenu: undefined
+        })
+      }
+      else {
+        this.setState({ userMenu: undefined })
+      }
+    }
+
+    this.settingsMenu = async () => {
+      if (this.state.settingsMenu === undefined) {
+        this.setState({
+          settingsMenu: true,
+          userMenu: undefined
+        })
+      }
+      else {
+        this.setState({ settingsMenu: undefined })
+      }
+    }
+
   }
 
   componentDidCatch(error, info) {
@@ -569,7 +605,9 @@ class Main extends Component {
     //window.removeEventListener("ownerGetter", this.getOwner());
   }
 
-  render() {//render continuously produces an up-to-date stateful webpage  
+  render(
+
+  ) {//render continuously produces an up-to-date stateful webpage  
 
     if (this.state.hasError === true) {
       return (<div><h1>)-:</h1><h2> An error occoured. Ensure you are connected to metamask and reload the page. Mobile support coming soon.</h2></div>)
@@ -583,6 +621,7 @@ class Main extends Component {
           <div className="imageForm">
             <button
               className="imageButton"
+              title="Back to Home!"
               onClick={() => { this.toggleMenu("basic") }}
             >
               <img
@@ -590,21 +629,179 @@ class Main extends Component {
                 src={require("./Resources/pruf ar long.png")}
                 alt="Pruf Logo" />
             </button>
-            <div className="userData">
-              {this.state.addr > 0 && (
-                <div className="banner">
-                  Currently serving : <Button variant="etherscan" onClick={() => { window.open("https://kovan.etherscan.io/address/" + this.state.addr) }}>{this.state.addr}</Button>
-                </div>
-              )}
-              {this.state.addr === undefined && (
-                <div className="banner">
-                  Currently serving: NOBODY! Log into web3 provider!
-                </div>
-              )}
-            </div>
           </div>
           <div>
             <div className="BannerForm">
+              <div className="currentMenuOption">
+                <div>
+                  {this.state.noAddrMenuBool === true && (<div className="currentMenuOptionContent"> No Address Menu</div>)}
+                  {this.state.assetHolderMenuBool === true && (<div className="currentMenuOptionContent">Token Minter Menu</div>)}
+                  {this.state.assetHolderUserMenuBool === true && (<div className="currentMenuOptionContent">Token Holder Menu</div>)}
+                  {this.state.assetClassHolderMenuBool === true && (<div className="currentMenuOptionContent">AC Admin Menu</div>)}
+                  {this.state.authorizedUserMenuBool === true && (<div className="currentMenuOptionContent">Asset Minter Menu</div>)}
+                  {this.state.basicMenuBool === true && (<div className="currentMenuOptionContent">Basic Menu</div>)}
+                </div>
+              </div>
+              <div className="hamburgerMenu">
+                <a className="hamburgerMenu-content" ><Menu size={35} onClick={() => { this.hamburgerMenu() }} /></a>
+              </div>
+              {this.state.hamburgerMenu !== undefined && (
+                <div className="hamburgerDropdown">
+                  <button
+                    className="imageButtonU"
+                    onClick={() => { window.open("https://www.pruf.io", "_blank") }}
+                  >
+                    <img
+                      className="imageFormU"
+                      title="Find out More!"
+                      src={require("./Resources/favicon pruf no bg.png")}
+                      alt="Pruf U" />
+                  </button>
+                  <div className="siteInfoBox">
+                    <h3 className="siteInfoBoxContent">
+                      Website last updated:
+                    </h3>
+                    <h3 className="siteInfoBoxContent">
+                      October 3, 2020
+                    </h3>
+                  </div>
+                  <div className="hamburgerMenuLink">
+                    <a className="hamburgerMenuLink-content-user" ><User size={48} onClick={() => { this.userMenu() }} /></a>
+                  </div>
+                  <div className="hamburgerMenuLink">
+                    <a className="hamburgerMenuLink-content-settings" ><Settings size={35} onClick={() => { this.settingsMenu() }} /></a>
+                  </div>
+                  <div>
+                    {this.state.settingsMenu !== undefined && (
+                      <div>
+                        <div className="hamburgerDropdownSettings">
+                          {this.state.isACAdmin === true && this.state.assetClassHolderMenuBool === false && (
+                            <Button
+                              size="lg"
+                              variant="toggle"
+                              onClick={() => { this.toggleMenu("ACAdmin") }}
+                            >
+                              AC Admin Menu
+                            </Button>)}
+
+                          {this.state.IDHolderBool === false && this.state.assetHolderBool === true && this.state.assetHolderUserMenuBool === false && (
+                            <Button
+                              size="lg"
+                              variant="toggle"
+                              onClick={() => { this.toggleMenu("NCUser") }}
+                            >
+                              Token Holder Menu
+                            </Button>
+                          )}
+
+                          {this.state.IDHolderBool === true && this.state.assetHolderMenuBool === false && (
+                            <Button
+                              size="lg"
+                              variant="toggle"
+                              onClick={() => { this.toggleMenu("NC") }}
+                            >
+                              Token Minter Menu
+                            </Button>
+                          )}
+
+                          {this.state.basicMenuBool === false && (
+                            <Button
+                              size="lg"
+                              variant="toggle"
+                              onClick={() => { this.toggleMenu("basic") }}
+                            >
+                              Basic Menu
+                            </Button>)}
+
+                          {this.state.isAuthUser === true && this.state.authorizedUserMenuBool === false && (
+                            <Button
+                              size="lg"
+                              variant="toggle"
+                              onClick={() => { this.toggleMenu("authUser") }}
+                            >
+                              Asset Minter Menu
+                            </Button>)}
+                        </div>
+                      </div>
+                    )}
+                  </div>
+                  <div>
+                    {this.state.userMenu !== undefined && (
+                      <div>
+                        <div className="hamburgerDropdownUserInfoAddr">
+                          {this.state.addr > 0 && (
+                            <div className="hamburgerDropdownUserInfoAddrContent">
+                              Currently serving :
+                              <Button variant="etherscan" title="Check it out on Etherscan!" onClick={() => { window.open("https://kovan.etherscan.io/address/" + this.state.addr) }}>{this.state.addr}</Button>
+                              <br></br>
+                            </div>
+
+                          )}
+                          {this.state.addr === undefined && (
+                            <div className="hamburgerDropdownUserInfoAddrContent">
+                              Currently serving: NOBODY! Log into web3 provider!
+                              <br></br>
+                            </div>
+                          )}
+                        </div>
+                        <div className="hamburgerDropdownUserInfoBox">
+                          <div className="hamburgerDropdownUserInfo">
+                            {this.state.ETHBalance === undefined && (
+                              <h4>
+                                ETH Balance : Please Log In
+                              </h4>
+                            )}
+                            {this.state.ETHBalance && (
+                              <h4>
+                                ETH Balance : {this.state.ETHBalance}
+                              </h4>
+                            )}
+                            <br></br>
+                            {this.state.assetClassBalance === undefined && (
+                              <h4>
+                                AssetClass Token Balance: Please Log In
+                                <br></br>
+                              </h4>
+                            )}
+                            {this.state.assetClassBalance && (
+                              <h4>
+                                AssetClass Token Balance: {this.state.assetClassBalance}
+                              </h4>
+
+                            )}
+                            <br></br>
+                            {this.state.assetBalance === undefined && (
+                              <h4>
+                                Asset Token Balance: Please Log In
+                                <br></br>
+                              </h4>
+                            )}
+                            {this.state.assetBalance && (
+                              <h4>
+                                Asset Token Balance: {this.state.assetBalance}
+                              </h4>
+                            )}
+                            <br></br>
+                            {this.state.IDTokenBalance === undefined && (
+                              <h4>
+                                ID Token Balance : Please Log In
+                                <br></br>
+                              </h4>
+                            )}
+
+                            {this.state.IDTokenBalance && (
+                              <h4>
+                                ID Token Balance : {this.state.IDTokenBalance}
+                              </h4>
+                            )}
+                            <br></br>
+                          </div>
+                        </div>
+                      </div>
+                    )}
+                  </div>
+                </div>
+              )}
               <ul className="header">
                 {window._contracts !== undefined && (
                   <nav>
@@ -620,57 +817,8 @@ class Main extends Component {
             </div>
           </div>
           <div className="pageForm">
-            {window.addr !== undefined && (<div
-              className="tokenBalances"
-            >
-              <DropdownButton
-                title="Token Balances"
-                variant="toggle"
-                size="lg">
-                <Dropdown.Item size="lg">
-                  ETH Balance : {this.state.ETHBalance === undefined && (
-                    <h4>
-                      Please Log In
-                    </h4>
-                  )}
-                  {this.state.ETHBalance && (
-                    this.state.ETHBalance
-                  )}
-                </Dropdown.Item>
-                <Dropdown.Item size="lg">
-                  AssetClass Token Balance: {this.state.assetClassBalance === undefined && (
-                    <h4>
-                      Please Log In
-                    </h4>
-                  )}
-                  {this.state.assetClassBalance && (
-                    this.state.assetClassBalance
-                  )}
-                </Dropdown.Item>
-                <Dropdown.Item size="lg">
-                  Asset Token Balance: {this.state.assetBalance === undefined && (
-                    <h4>
-                      Please Log In
-                    </h4>
-                  )}
-                  {this.state.assetBalance && (
-                    this.state.assetBalance
-                  )}
-                </Dropdown.Item>
-                <Dropdown.Item size="lg">
-                  ID Token Balance : {this.state.IDTokenBalance === undefined && (
-                    <h4>
-                      Please Log In
-                    </h4>
-                  )}
-                  {this.state.IDTokenBalance && (
-                    this.state.IDTokenBalance
-                  )}
-                </Dropdown.Item>
-              </DropdownButton>
-              <div>
-                <style type="text/css">
-                  {`
+            <style type="text/css">
+              {`
                         .btn-primary {
                           background-color: #00a8ff;
                           color: white;
@@ -689,9 +837,9 @@ class Main extends Component {
                         .btn-etherscan {
                           background-color: transparent;
                           color: white;
-                          margin-top: -1rem;
-                          margin-right: 37rem;
-                          font-size: 2rem;
+                          margin-top: -0.5rem;
+                          // margin-right: 37rem;
+                          font-size: 1.6rem;
                         }
                         .btn-etherscan:hover {
                           background-color: transparent;
@@ -705,112 +853,43 @@ class Main extends Component {
                           border: transparent;
                         }
 
-                        .btn-toggle {
-                          background-color: #005480;
+                        .btn {
                           color: white;
-                          height: 4rem;
-                          margin-top: 0.4rem;
-                          margin-left: -0.8rem;
-                          font-weight: bold;
-                          font-size: 2.2rem;
-                          border-radius: 0rem 0rem 0.3rem 0.3rem;
                         }
-                        .btn-toggle:hover {
-                          background-color: #23b6ff;
-                          color: white;
+
+                        .btn-toggle {
+                          background: #002a40;
+                          color: #fff;
+                          height: 3rem;
+                          width: 17.3rem;
+                          margin-top: -0.2rem;
+                          border-radius: 0;
+                          font-weight: bold;
+                          font-size: 1.4rem;
+                        }
+                        btn-toggle:hover {
+                          background: #23b6ff;
+                          color: #fff;
                         }
                         .btn-toggle:focus {
-                          background: #00a8ff;
-                          font-size: 1.4rem;
+                          background: #23b6ff;
+                          color: #fff;
                         }
                         .btn-toggle:active {
-                          background: #00a8ff;
-                          font-size: 1.4rem;
-                        }
-                        .dropdown-toggle{
-                          margin-top: 0.4rem;
-                          width: 19.8rem;
-                          font-size: 1.4rem;
-                        }
-                        .dropdown-menu {
-                          width: 19.8rem;
-                          font-size: 1.4rem;
-                          background-color: #00a8ff;
-                          color: white;
-                          -webkit-transition: all .25s ease;
-                          -moz-transition: all .25s ease;
-                           -ms-transition: all .25s ease;
-                            -o-transition: all .25s ease;
-                               transition: all .25s ease;
+                          background: #23b6ff;
+                          color: #fff;
                         }
                      `}
-                </style>
-                <DropdownButton
-                  title="Toggle Menu"
-                  variant="toggle"
-                  drop="down"
-                  flip="false"
-                  size="lg"
-                >
-                  {this.state.isACAdmin === true && this.state.assetClassHolderMenuBool === false && (
-                    <Dropdown.Item
-                      as="button"
-                      size="lg"
-                      onClick={() => { this.toggleMenu("ACAdmin") }}
-                    >
-                      AC Admin Menu
-                    </Dropdown.Item>)}
-
-                  {this.state.IDHolderBool === false && this.state.assetHolderBool === true && this.state.assetHolderUserMenuBool === false && (
-                    <Dropdown.Item
-                      as="button"
-                      size="lg"
-                      onClick={() => { this.toggleMenu("NCUser") }}
-                    >
-                      Token Holder Menu
-                    </Dropdown.Item>
-                  )}
-
-                  {this.state.IDHolderBool === true && this.state.assetHolderMenuBool === false && (
-                    <Dropdown.Item
-                      as="button"
-                      size="lg"
-                      onClick={() => { this.toggleMenu("NC") }}
-                    >
-                      Token Minter Menu
-                    </Dropdown.Item>
-                  )}
-
-                  {this.state.basicMenuBool === false && (
-                    <Dropdown.Item
-                      as="button"
-                      size="lg"
-                      onClick={() => { this.toggleMenu("basic") }}
-                    >
-                      Basic Menu
-                    </Dropdown.Item>)}
-
-                  {this.state.isAuthUser === true && this.state.authorizedUserMenuBool === false && (
-                    <Dropdown.Item
-                      as="button"
-                      size="lg"
-                      onClick={() => { this.toggleMenu("authUser") }}
-                    >
-                      Authorized User Menu
-                    </Dropdown.Item>)}
-                </DropdownButton>
-              </div>
-            </div>)}
-
+            </style>
             <div>
               <Route exact path="/" component={Home} />
               {Router(this.state.routeRequest)}
             </div>
             <div className="mediaLink">
-              <a className="mediaLinkContent"><GitHub onClick={() => { window.open("https://github.com/vdmprojects/Bulletproof", "_blank") }} /></a>
-              <a className="mediaLinkContent"><Mail onClick={() => { window.open("mailto:drake@pruf.io", "_blank") }} /></a>
-              <a className="mediaLinkContent"><Twitter onClick={() => { window.open("https://twitter.com/umlautchair", "_blank") }} /></a>
-              <a className="mediaLinkContent" ><ExternalLink onClick={() => { window.open("https://www.pruf.io", "_blank") }} /></a>
+              <a className="mediaLinkContent"><GitHub size={35} onClick={() => { window.open("https://github.com/vdmprojects/Bulletproof", "_blank") }} /></a>
+              <a className="mediaLinkContent"><Mail size={35} onClick={() => { window.open("mailto:drake@pruf.io", "_blank") }} /></a>
+              <a className="mediaLinkContent"><Twitter size={35} onClick={() => { window.open("https://twitter.com/umlautchair", "_blank") }} /></a>
+              <a className="mediaLinkContent" ><Video size={35} onClick={() => { window.open("https://www.youtube.com/channel/UC9HzR9-dAzHtPKOqlVqwOuw", "_blank") }} /></a>
             </div>
           </div>
           <NavLink to="/">

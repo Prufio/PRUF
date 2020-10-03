@@ -62,9 +62,6 @@ class AssetCheckIn extends Component {
       }
 
       const _printQR = async () => {
-        // this.state = {
-        //   printQR: undefined,
-        // }
         if (this.state.printQR === undefined) {
           this.setState({ printQR: true })
         }

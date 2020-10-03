@@ -202,6 +202,20 @@ div {
   opacity: 0.95;
 }
 
+.imageFormU {
+  justify-content: flex-start;
+  margin-right: auto;
+  display: flex;
+  width: 45px;
+  height: 45px;
+  /* padding-left: 2rem; */
+  object-fit: cover;
+  z-index: 5;
+  background-color:#002a40;
+  /* border-radius: 50%; */
+  /* opacity: 0.95; */
+}
+
 .VRText {
   color: white;
   font-size: 1.4rem;
@@ -236,7 +250,7 @@ div {
   display: flex;
   flex: 100%;
   max-width: none;
-  height: 50rem;
+  /* height: 50rem; */
   flex-direction: row;
   justify-content: center;
   overflow: visible;
@@ -394,7 +408,7 @@ div {
 
 .assetDashboard {
   height: flex;
-  max-height: 65rem;
+  max-height: 55rem;
   width: 70rem;
   background-color: #002a40;
   padding: 1rem;
@@ -849,6 +863,24 @@ div {
         object-fit: cover;
 }
 
+.imageButtonU {
+  border: 0px transparent; 
+  border-radius: 50%;
+  background-color: transparent; 
+  object-fit: cover;
+  width: fit-content;
+  height: fit-content;
+  position: absolute;
+  margin-top: 68rem;
+  -webkit-transition: -webkit-transform .5s ease-in-out;
+  transition:         transform .5s ease-in-out;
+}
+
+.imageButtonU:hover {
+  -webkit-transform: translateY(-5px);
+  transform: translateY(-5px);
+}
+
 .assetImageButton {
   /* border: 0px transparent;  */
   background-color: transparent; 
@@ -905,28 +937,25 @@ div {
 
 .mediaLink {
   display: flex;
-  width: 15rem;
+  width: 20rem;
   height: fit-content;
-  margin-left: 85%;
   position: absolute;
-  margin-top: 1rem;
+  margin-top: 48%;
   justify-content: space-between;
 }
 
 .mediaLinkContent {
-  /* padding-left: 3rem; */
   border-radius: 50%;
   color: #002a40;
   -webkit-transition: -webkit-transform .35s ease-in-out;
   transition:         transform .35s ease-in-out;
-  /* transition-delay: 0.5s; */
 }
 
 .mediaLinkContent:hover {
   color: #00a8ff;
   cursor: pointer;
-  -webkit-transform: rotate(40deg);
-  transform: rotate(40deg);
+  -webkit-transform: translateY(-5px);
+  transform: translateY(-5px);
 }
 
 .mediaLinkAD {
@@ -1043,6 +1072,183 @@ div {
   cursor: pointer;
   -webkit-transform: rotate(10deg);
   transform: rotate(10deg);
+}
+
+.hamburgerMenu {
+  display: flex;
+  position: absolute;
+  background-color: transparent;
+  z-index: 1000;
+  margin-right: 94%;
+  margin-top: 0.7rem;
+}
+
+.hamburgerMenu-content {
+  color: white;
+  border-radius: 50%;
+  -webkit-transition: -webkit-transform .5s ease-in-out;
+  transition:         transform .5s ease-in-out;
+}
+
+.hamburgerMenu-content:hover {
+  color: #028ed4;
+  cursor: pointer;
+  -webkit-transform: translateY(3px);
+  transform: translateY(3px);
+}
+
+.hamburgerDropdown {
+  display: flex;
+  height: 80rem;
+  width: 10rem;
+  position: absolute;
+  background-color:#002a40;
+  justify-content: center;
+  flex-direction: row;
+  z-index: 1000;
+  margin-right: 94%;
+  margin-top: 4.8rem;
+  opacity: 0.9;
+
+}
+
+.hamburgerMenuLink {
+  display: flex;
+  position: fixed;
+  background-color: transparent;
+  flex-direction: column;
+  justify-content: center;
+  z-index: 1000;
+  margin-top: 2rem;
+}
+
+.hamburgerMenuLink-content-user {
+  color: white;
+  border-radius: 50%;
+  -webkit-transition: -webkit-transform .5s ease-in-out;
+  transition:         transform .5s ease-in-out;
+}
+
+.hamburgerMenuLink-content-user:hover {
+  color: #028ed4;
+  cursor: pointer;
+  -webkit-transform: translateX(5px);
+  transform: translateX(5px);
+}
+
+.hamburgerMenuLink-content-settings {
+  color: white;
+  border-radius: 50%;
+  -webkit-transition: -webkit-transform .5s ease-in-out;
+  transition:         transform .5s ease-in-out;
+  margin-top: 18rem;
+  margin-left: -1.7rem;
+  position: absolute;
+}
+
+.hamburgerMenuLink-content-settings:hover {
+  color: #028ed4;
+  cursor: pointer;
+  -webkit-transform: translateX(5px);
+  transform: translateX(5px);
+}
+
+.hamburgerDropdownUserInfoBox {
+  display: flex;
+  position: absolute;
+  flex-direction: column;
+  /* opacity: 0.9; */
+  margin-left: 4rem;
+  padding-left: 1rem;
+  margin-top: 5.4rem;
+  font-size: 2rem;
+}
+
+.hamburgerDropdownUserInfoAddr {
+  display: flex;
+  width: 55rem;
+  position: absolute;
+  background-color: #002a40;
+  color:white;
+  justify-content: flex-start;
+  flex-direction: row;
+  /* opacity: 0.9; */
+  z-index: 1000;
+  font-size: 1.2rem;
+  margin-left: 5rem;
+  padding-left: 1rem;
+  margin-top: 3rem;
+  /* justify-content: center; */
+  border-radius: 0rem 1rem 1rem 0rem;
+}
+
+.hamburgerDropdownUserInfoAddrContent {
+  font-size: 1.6rem;
+}
+
+.hamburgerDropdownUserInfo {
+  display: flex;
+  width: 30rem;
+  height: 18rem;
+  color:white;
+  background-color: #002a40;
+  flex-direction: column;
+  justify-content: flex-start;
+  /* opacity: 0.9; */
+  z-index: 1000;
+  font-size: 1.2rem;
+  padding-top: 2rem;
+  padding-left: 1rem;
+  border-radius: 0rem 0rem 1rem 0rem;
+}
+
+.hamburgerDropdownSettings {
+  display: flex;
+  width: 18rem;
+  /* height: 20rem; */
+  color:white;
+  background-color: #002a40;
+  flex-direction: column;
+  justify-content: flex-start;
+  /* padding: 0.5rem; */
+  padding-top: 1rem;
+  /* opacity: 0.9; */
+  z-index: 1000;
+  font-size: 1.2rem;
+  margin-top: 10rem;
+  margin-left: 28rem;
+  border-radius: 0rem 1rem 1rem 0rem;
+}
+
+.currentMenuOption {
+  display: flex;
+  position: fixed;
+  margin-right: 79%;
+  margin-top: 1rem;
+}
+
+.currentMenuOptionContent {
+  font-size: 1.8rem;
+  font-weight: bold;
+  color: white;
+}
+
+.siteInfoBox {
+  padding: 0.2rem;
+  display: flex;
+  width: 10rem;
+  flex-direction: column;
+  font-size: 0.73rem;
+  color: white;
+  position: absolute;
+  /* justify-content: center; */
+  align-items: center;
+  /* margin-left: 1rem; */
+  margin-top: 75rem;
+}
+
+.siteInfoBox h3 {
+  font-size: 0.73rem;
 }
 
 
