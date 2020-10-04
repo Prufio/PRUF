@@ -3,7 +3,7 @@ import Form from "react-bootstrap/Form";
 import Button from "react-bootstrap/Button";
 import Col from "react-bootstrap/Col";
 import "./index.css";
-
+import { CgArrowLongRightC } from 'css.gg'
 class Home extends Component {
   constructor(props) {
     super(props);
@@ -118,15 +118,15 @@ class Home extends Component {
                   />
                 </Form.Group>
                 <Form.Row>
-                  <Button
-                    className="buttonDisplayHome"
-                    variant="primary"
-                    type="button"
-                    size="lg"
+                  <CgArrowLongRightC
+                    // className="buttonDisplayHome"
+                    // variant="primary"
+                    // type="button"
+                    // size="lg"
                     onClick={()=>{_setAC()}}
                   >
                     Access PRuF
-                  </Button>
+                  </CgArrowLongRightC>
                 </Form.Row>
             </div>
           )}

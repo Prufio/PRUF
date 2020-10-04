@@ -1252,6 +1252,29 @@ div {
 }
 
 
+.submitButton {
+  display: flex;
+  position: absolute;
+  background-color: transparent;
+  z-index: 1000;
+  margin-right: 94%;
+  margin-top: 0.7rem;
+}
+
+.submitButton-content {
+  color: white;
+  border-radius: 50%;
+  -webkit-transition: -webkit-transform .5s ease-in-out;
+  transition:         transform .5s ease-in-out;
+}
+
+.submitButton-content:hover {
+  color: #028ed4;
+  cursor: pointer;
+  -webkit-transform: translateY(3px);
+  transform: translateY(3px);
+}
+
 .loading:after {
   content: ' .';
   animation: dots 1s steps(5, end) infinite;
