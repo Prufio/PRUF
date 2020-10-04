@@ -2,6 +2,7 @@ import React, { Component } from "react";
 import Form from "react-bootstrap/Form";
 import Col from "react-bootstrap/Col";
 import Button from "react-bootstrap/Button";
+import { ArrowRightCircle } from 'react-feather'
 
 
 class ModifyDescriptionNC extends Component {
@@ -123,6 +124,7 @@ class ModifyDescriptionNC extends Component {
     if (this.state.wasSentPacket){
       return (
         <div>
+                    <h2 className="FormHeader"> Transfer Asset </h2>
           <Form className="Form" id='MainForm'>
             {window.addr === undefined && (
               <div className="Results">
@@ -132,9 +134,6 @@ class ModifyDescriptionNC extends Component {
             )}
             {window.addr > 0 && (
               <div>
-  
-                <h2 className="Headertext">Transfer Asset</h2>
-                <br></br>
                 <Form.Row>
                   <Form.Group as={Col} controlId="formGridTo">
                     <Form.Label className="formFont">To:</Form.Label>
@@ -220,6 +219,7 @@ class ModifyDescriptionNC extends Component {
     }
     return (
       <div>
+        <h2 className="FormHeader"> Transfer Asset </h2>
         <Form className="Form" id='MainForm'>
           {window.addr === undefined && (
             <div className="Results">
@@ -229,9 +229,6 @@ class ModifyDescriptionNC extends Component {
           )}
           {window.addr > 0 && (
             <div>
-
-              <h2 className="Headertext">Transfer Asset</h2>
-              <br></br>
               <Form.Row>
                 <Form.Group as={Col} controlId="formGridAsset">
                   <Form.Label className="formFont"> Select an Asset to Modify :</Form.Label>
@@ -260,14 +257,13 @@ class ModifyDescriptionNC extends Component {
 
               <Form.Row>
                 <Form.Group>
-                  <Button className="buttonDisplay"
-                    variant="primary"
-                    type="button"
-                    size="lg"
-                    onClick={_transferAsset}
-                  >
-                    Transfer
-                  </Button>
+                <div className="submitButtonTA">
+                    <div className="submitButtonTA-content">
+                      <ArrowRightCircle
+                        onClick={() => { _transferAsset() }}
+                      />
+                    </div>
+                  </div>
                 </Form.Group>
               </Form.Row>
             </div>

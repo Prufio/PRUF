@@ -2,6 +2,8 @@ import React, { Component } from "react";
 import Form from "react-bootstrap/Form";
 import Col from "react-bootstrap/Col";
 import Button from "react-bootstrap/Button";
+import { ArrowRightCircle } from 'react-feather'
+import { CheckCircle } from 'react-feather'
 
 class ImportAssetNC extends Component {
   constructor(props) {
@@ -114,6 +116,7 @@ class ImportAssetNC extends Component {
 
     return (
       <div>
+        <h2 className="FormHeader"> Import Asset </h2>
         <Form className="Form" id='MainForm'>
           {window.addr === undefined && (
             <div className="errorResults">
@@ -128,8 +131,6 @@ class ImportAssetNC extends Component {
           )}
           {window.addr > 0 && window.assetClass !== undefined && (
             <div>
-              <h2 className="Headertext">Import Asset</h2>
-              <br></br>
               {!this.state.accessPermitted && (
                 <>
                   <Form.Row>
@@ -177,37 +178,27 @@ class ImportAssetNC extends Component {
                     </Form.Group>
                   </Form.Row>
                   <Form.Row>
-                    <Form.Group>
-                      <Button className="buttonDisplay"
-                        variant="primary"
-                        type="button"
-                        size="lg"
-                        onClick={_accessAsset}
-                      >
-                        Access Asset
-                  </Button>
-                      <Form.Label className="LittleTextImport"> Cost in AC {window.assetClass}:
-                    {Number(window.costs.newRecordCost) / 1000000000000000000} ETH</Form.Label>
-                    </Form.Group>
+                  <div className="submitButtonAA">
+                    <div className="submitButtonAA-content">
+                      <ArrowRightCircle
+                        onClick={() => { _accessAsset() }}
+                      />
+                    </div>
+                  </div>
                   </Form.Row>
                 </>
               )}
               {this.state.accessPermitted && (
                 <>
-                  <h2>Asset found at index: {this.state.idxHash}</h2>
                   <Form.Row>
-                    <Form.Group className="buttonDisplay">
-                      <Button
-                        variant="primary"
-                        type="button"
-                        size="lg"
-                        onClick={_importAsset}
-                      >
-                        Import Asset
-                  </Button>
-                      <div className="LittleTextImport"> Cost in AC {window.assetClass}:
-                    {Number(window.costs.newRecordCost) / 1000000000000000000} ETH</div>
-                    </Form.Group>
+                  <div className="submitButtonIA">
+                    <div className="submitButtonIA-content">
+                      <CheckCircle
+                        onClick={() => { _importAsset() }}
+                      />
+                    </div>
+                    <Form.Label className="LittleTextNewRecord"> Cost in AC {window.assetClass}: {Number(window.costs.newRecordCost) / 1000000000000000000} ETH</Form.Label>
+                  </div>
                   </Form.Row>
                 </>
               )}

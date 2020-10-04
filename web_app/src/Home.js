@@ -3,7 +3,7 @@ import Form from "react-bootstrap/Form";
 import Button from "react-bootstrap/Button";
 import Col from "react-bootstrap/Col";
 import "./index.css";
-import { CgArrowLongRightC } from 'css.gg'
+import { ArrowRightCircle } from 'react-feather'
 class Home extends Component {
   constructor(props) {
     super(props);
@@ -31,10 +31,10 @@ class Home extends Component {
   }
 
   componentDidMount() {
-    if (window.addr !== undefined){
+    if (window.addr !== undefined) {
       this.setState({ addr: window.addr })
     }
-    
+
   }
 
   componentDidUpdate() {
@@ -92,7 +92,7 @@ class Home extends Component {
 
           window.assetClassName = this.state.assetClass
           await window.utils.resolveAC();
-          
+
           return this.setState({ authLevel: window.authLevel });
         }
       }
@@ -107,32 +107,30 @@ class Home extends Component {
           <br></br>
           {window._contracts !== undefined && window.addr !== undefined && (
             <div>
-                <Form.Group as={Col} controlId="formGridAC">
-                  <Form.Label className="formFont">Input desired asset class # or name : </Form.Label>
-                  <Form.Control
-                    placeholder="Asset Class"
-                    required
-                    type="text"
-                    onChange={(e) => this.setState({ assetClass: e.target.value })}
-                    size="lg"
-                  />
-                </Form.Group>
-                <Form.Row>
-                  <CgArrowLongRightC
-                    // className="buttonDisplayHome"
-                    // variant="primary"
-                    // type="button"
-                    // size="lg"
-                    onClick={()=>{_setAC()}}
-                  >
-                    Access PRuF
-                  </CgArrowLongRightC>
-                </Form.Row>
+              <Form.Group as={Col} controlId="formGridAC">
+                <Form.Label className="formFont">Input desired asset class # or name : </Form.Label>
+                <Form.Control
+                  placeholder="Asset Class"
+                  required
+                  type="text"
+                  onChange={(e) => this.setState({ assetClass: e.target.value })}
+                  size="lg"
+                />
+              </Form.Group>
+              <Form.Row>
+                <div className="submitButton">
+                  <div className="submitButton-content">
+                    <ArrowRightCircle
+                      onClick={() => { _setAC() }}
+                    />
+                  </div>
+                </div>
+              </Form.Row>
             </div>
           )}
-          {window._contracts === undefined && window.addr !== undefined &&(<div className="VRText"> <Form.Row><h1 className="loading">Connecting to the Blockchain</h1></Form.Row></div>)}
-          {window._contracts === undefined && window.addr === undefined &&(<div className="VRText"> <Form.Row><h1 className="loading">Connecting to the Blockchain</h1></Form.Row></div>)}
-          {window._contracts !== undefined && window.addr === undefined &&(<div className="VRText"> <Form.Row><h1 >Unable to Get User Address</h1></Form.Row></div>)}
+          {window._contracts === undefined && window.addr !== undefined && (<div className="VRText"> <Form.Row><h1 className="loading">Connecting to the Blockchain</h1></Form.Row></div>)}
+          {window._contracts === undefined && window.addr === undefined && (<div className="VRText"> <Form.Row><h1 className="loading">Connecting to the Blockchain</h1></Form.Row></div>)}
+          {window._contracts !== undefined && window.addr === undefined && (<div className="VRText"> <Form.Row><h1 >Unable to Get User Address</h1></Form.Row></div>)}
         </div>
       </div>
     );

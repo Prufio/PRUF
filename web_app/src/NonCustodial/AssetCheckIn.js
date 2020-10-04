@@ -12,8 +12,10 @@ import { Printer, RefreshCw } from "react-feather";
 import { Grid } from "react-feather";
 import { X } from "react-feather";
 import { Save } from "react-feather";
+import { ChevronRight } from "react-feather";
 import { Print } from "react-feather";
 import { QRCode } from 'react-qrcode-logo';
+import { CornerDownLeft } from "react-feather";
 
 class AssetCheckIn extends Component {
   constructor(props) {
@@ -30,13 +32,13 @@ class AssetCheckIn extends Component {
         this.setState({ hasLoadedAssets: window.hasLoadedAssets })
       }
 
-      if(this.state.hasNoAssets !== window.hasNoAssets){
-        this.setState({hasNoAssets: window.hasNoAssets})
+      if (this.state.hasNoAssets !== window.hasNoAssets) {
+        this.setState({ hasNoAssets: window.hasNoAssets })
       }
     }, 100)
 
     this.moreInfo = (e) => {
-      if (e === "back") { return this.setState({ assetObj: {}, moreInfo: false, printQR: undefined}) }
+      if (e === "back") { return this.setState({ assetObj: {}, moreInfo: false, printQR: undefined }) }
 
       this.setState({ assetObj: e, moreInfo: true, selectedImage: e.displayImage })
     }
@@ -155,7 +157,7 @@ class AssetCheckIn extends Component {
                       <div>
                         <div className="QRdisplay">
                           <div className="QR">
-                            <QRCode value={obj.idxHash} size="140" qrStyle="dots" fgColor="#002a40"/>
+                            <QRCode value={obj.idxHash} size="140" qrStyle="dots" fgColor="#002a40" />
                           </div>
                         </div>
                         <div className="QRdisplay-footer">
@@ -183,17 +185,17 @@ class AssetCheckIn extends Component {
                       {generateTextList()}
                     </div>
                   </div>
-                  <div className="cardButton-selected">
                     {this.state.moreInfo && (
-                      <Button
-                        variant="primary"
-                        onClick={() => { this.moreInfo("back") }}
-                      >
-                        Back to list
-                      </Button>
+                      <div className="cardButton2">
+                        <div className="cardButton2-content">
+                          <CornerDownLeft
+                          size={35}
+                            onClick={() => { this.moreInfo("back") }}
+                          />
+                        </div>
+                      </div>
                     )}
 
-                  </div>
                 </div>
               </div >
             </div >
@@ -284,24 +286,24 @@ class AssetCheckIn extends Component {
                     <div className="cardDescription"><h4 class="card-description">Description :{obj.descriptions[i].text.description}</h4></div>
                   </div>
                   <div className="cardButton">
-                    <Button
-                      variant="primary"
-                      value={
-                        JSON.stringify({
-                          idxHash: obj.ids[i],
-                          descriptionObj: obj.descriptions[i],
-                          displayImage: obj.displayImages[i],
-                          name: obj.names[i],
-                          assetClass: obj.assetClasses[i],
-                          status: obj.statuses[i],
-                          description: obj.descriptions[i].text.description,
-                          text: obj.descriptions[i].text,
-                          photo: obj.descriptions[i].photo
-                        })}
-                      onClick={(e) => { this.moreInfo(JSON.parse(e.target.value)) }}
-                    >
-                      More Info
-                        </Button>
+                    <div className="cardButton-content">
+                      <ChevronRight
+                        onClick={() => {
+                          this.moreInfo({
+                            idxHash: obj.ids[i],
+                            descriptionObj: obj.descriptions[i],
+                            displayImage: obj.displayImages[i],
+                            name: obj.names[i],
+                            assetClass: obj.assetClasses[i],
+                            status: obj.statuses[i],
+                            description: obj.descriptions[i].text.description,
+                            text: obj.descriptions[i].text,
+                            photo: obj.descriptions[i].photo
+                          })
+                        }}
+                        size={35}
+                      />
+                    </div>
                   </div>
                 </div>
               </div>
@@ -374,7 +376,7 @@ class AssetCheckIn extends Component {
         <div>
           <h2 className="assetDashboardHeader">My Assets</h2>
           <div className="mediaLinkAD">
-            <a className="mediaLinkContentAD" ><RefreshCw onClick={() => {_refresh()}} /></a>
+            <a className="mediaLinkContentAD" ><RefreshCw onClick={() => { _refresh() }} /></a>
           </div>
         </div>
         <div className="assetDashboard">

@@ -2,6 +2,7 @@ import React, { Component } from "react";
 import Form from "react-bootstrap/Form";
 import Col from "react-bootstrap/Col";
 import Button from "react-bootstrap/Button";
+import { ArrowRightCircle } from 'react-feather'
 
 class EscrowManagerNC extends Component {
   constructor(props) {
@@ -14,8 +15,8 @@ class EscrowManagerNC extends Component {
         this.setState({ assets: window.assets })
       }
 
-      if(this.state.hasLoadedAssets !== window.hasLoadedAssets){
-        this.setState({hasLoadedAssets: window.hasLoadedAssets})
+      if (this.state.hasLoadedAssets !== window.hasLoadedAssets) {
+        this.setState({ hasLoadedAssets: window.hasLoadedAssets })
       }
     }, 100)
 
@@ -48,9 +49,9 @@ class EscrowManagerNC extends Component {
   componentDidMount() {//stuff to do when component mounts in window
     if (window.sentPacket !== undefined) {
       this.setState({ name: window.sentPacket.name })
-      this.setState({idxHash: window.sentPacket.idxHash})
-      this.setState({assetClass: window.sentPacket.assetClass})
-      this.setState({status: window.sentPacket.status})
+      this.setState({ idxHash: window.sentPacket.idxHash })
+      this.setState({ assetClass: window.sentPacket.assetClass })
+      this.setState({ status: window.sentPacket.status })
       window.sentPacket = undefined
       this.setState({ wasSentPacket: true })
     }
@@ -70,10 +71,10 @@ class EscrowManagerNC extends Component {
 
     const _accessAsset = async () => {
       const self = this;
-      return this.setState({ 
+      return this.setState({
         accessPermitted: true,
         escrowData: window.utils.getEscrowData(this.state.idxHash)
-       })
+      })
     }
 
     const _setEscrow = async () => {
@@ -90,7 +91,7 @@ class EscrowManagerNC extends Component {
 
       window.contracts.ECR_NC.methods
         .setEscrow(idxHash, window.web3.utils.soliditySha3(this.state.agent), window.utils.convertTimeTo(this.state.escrowTime, this.state.timeFormat), this.state.newStatus)
-        .send({ from: window.addr})
+        .send({ from: window.addr })
         .on("error", function (_error) {
           // self.setState({ NRerror: _error });
           self.setState({ txHash: Object.values(_error)[0].transactionHash });
@@ -109,8 +110,8 @@ class EscrowManagerNC extends Component {
     };
 
     const _checkIn = async (e) => {
-      if(e === "0" || e === undefined){return}
-      else if(e === "reset"){
+      if (e === "0" || e === undefined) { return }
+      else if (e === "reset") {
         return window.resetInfo = true;
       }
       this.setState({ selectedAsset: e })
@@ -130,62 +131,248 @@ class EscrowManagerNC extends Component {
     const _endEscrow = async () => {
       this.setState({ txStatus: false });
       this.setState({ txHash: "" });
-      this.setState({error: undefined})
-      this.setState({result: ""})
+      this.setState({ error: undefined })
+      this.setState({ result: "" })
 
-        var idxHash = this.state.idxHash;
-  
-        console.log("idxHash", idxHash);
-        console.log("addr: ", window.addr);
-  
-        window.contracts.ECR_NC.methods
-          .endEscrow(idxHash)
-          .send({ from: window.addr})
-          .on("error", function (_error) {
-            // self.setState({ NRerror: _error });
-            self.setState({ transaction: false })
-            self.setState({ txHash: Object.values(_error)[0].transactionHash });
-            self.setState({ txStatus: false });
-            console.log(Object.values(_error)[0].transactionHash);
-          })
-          .on("receipt", (receipt) => {
-            self.setState({ transaction: false })
-            this.setState({ txHash: receipt.transactionHash });
-            this.setState({ txStatus: receipt.status });
-            console.log(receipt.status);
-            window.resetInfo = true;
-            //Stuff to do when tx confirms
-          });
-        console.log(this.state.txHash);
+      var idxHash = this.state.idxHash;
 
-        await this.setState({
-          accessPermitted: false,
-          isSettingEscrow: "0",
-          agent: "",
-          newStatus: "",
-          escrowTime: "",
-          timeFormat: ""
+      console.log("idxHash", idxHash);
+      console.log("addr: ", window.addr);
+
+      window.contracts.ECR_NC.methods
+        .endEscrow(idxHash)
+        .send({ from: window.addr })
+        .on("error", function (_error) {
+          // self.setState({ NRerror: _error });
+          self.setState({ transaction: false })
+          self.setState({ txHash: Object.values(_error)[0].transactionHash });
+          self.setState({ txStatus: false });
+          console.log(Object.values(_error)[0].transactionHash);
         })
+        .on("receipt", (receipt) => {
+          self.setState({ transaction: false })
+          this.setState({ txHash: receipt.transactionHash });
+          this.setState({ txStatus: receipt.status });
+          console.log(receipt.status);
+          window.resetInfo = true;
+          //Stuff to do when tx confirms
+        });
+      console.log(this.state.txHash);
 
-        return document.getElementById("MainForm").reset();
-      };
-      if (this.state.wasSentPacket){
-        return (
-          <div>
-            <Form className="Form" id='MainForm'>
-              {window.addr === undefined && (
-                <div className="Results">
-                  <h2>User address unreachable</h2>
-                  <h3>Please connect web3 provider.</h3>
+      await this.setState({
+        accessPermitted: false,
+        isSettingEscrow: "0",
+        agent: "",
+        newStatus: "",
+        escrowTime: "",
+        timeFormat: ""
+      })
+
+      return document.getElementById("MainForm").reset();
+    };
+    if (this.state.wasSentPacket) {
+      return (
+        <div>
+          <h2 className="FormHeader"> Manage Escrow </h2>
+          <Form className="Form" id='MainForm'>
+            {window.addr === undefined && (
+              <div className="Results">
+                <h2>User address unreachable</h2>
+                <h3>Please connect web3 provider.</h3>
+              </div>
+            )}
+            {window.addr > 0 && (
+              <div>
+                {!this.state.accessPermitted && (
+                  <>
+                    <Form.Row>
+                      <Form.Group as={Col} controlId="formGridFormatSetOrEnd">
+                        <Form.Label className="formFont">Set or End?:</Form.Label>
+                        <Form.Control as="select" size="lg" onChange={(e) => this.setState({ isSettingEscrow: e.target.value })}>
+                          <option value="0">Select an Action</option>
+                          <option value="true">Set Escrow</option>
+                          <option value="false">End Escrow</option>
+                        </Form.Control>
+                      </Form.Group>
+                    </Form.Row>
+                    <Form.Row>
+                    <Form.Group>
+                    <div className="submitButtonAAME">
+                    <div className="submitButtonAAME-content">
+                      <ArrowRightCircle
+                        onClick={() => { _accessAsset() }}
+                      />
+                    </div>
+                  </div>
+                  </Form.Group>
+                    </Form.Row>
+                  </>
+                )}
+                {this.state.accessPermitted && this.state.isSettingEscrow === "true" && (
+                  <>
+                    <Form.Row>
+                      <Form.Group as={Col} controlId="formGridAgent">
+                        <Form.Label className="formFont">Agent Address:</Form.Label>
+                        <Form.Control
+                          placeholder="agent"
+                          required
+                          onChange={(e) => this.setState({ agent: e.target.value })}
+                          size="lg"
+                        />
+                      </Form.Group>
+
+                      <Form.Group as={Col} controlId="formGridStatus">
+                        <Form.Label className="formFont">Escrow Status:</Form.Label>
+                        <Form.Control as="select" size="lg" onChange={(e) => this.setState({ newStatus: e.target.value })}>
+                          <option value="0">Select an Escrow Status</option>
+                          <option value="6">Supervised Escrow</option>
+                          <option value="50">Locked Escrow</option>
+                        </Form.Control>
+                      </Form.Group>
+                    </Form.Row>
+
+                    <Form.Row>
+                      <Form.Group as={Col} controlId="formGridTime">
+                        <Form.Label className="formFont">Duration:</Form.Label>
+                        <Form.Control
+                          placeholder="setEscrow duration"
+                          required
+                          onChange={(e) => this.setState({ escrowTime: e.target.value })}
+                          size="lg"
+                        />
+                      </Form.Group>
+                      <Form.Group as={Col} controlId="formGridFormat">
+                        <Form.Label className="formFont">Time Unit:</Form.Label>
+                        <Form.Control as="select" size="lg" onChange={(e) => this.setState({ timeFormat: e.target.value })}>
+                          <option value="0">Select a time unit</option>
+                          <option value="seconds">Seconds</option>
+                          <option value="minutes">Minutes</option>
+                          <option value="hours">Hours</option>
+                          <option value="days">Days</option>
+                          <option value="weeks">Weeks</option>
+                        </Form.Control>
+                      </Form.Group>
+                    </Form.Row>
+                    <Form.Row>
+                      <Form.Group>
+                        <Button
+                          className="ownerButtonDisplay"
+                          variant="primary"
+                          type="button"
+                          size="lg"
+                          onClick={_setEscrow}
+                        >
+                          Set Escrow
+                      </Button>
+                      </Form.Group>
+                    </Form.Row>
+                  </>
+                )}
+                {this.state.accessPermitted && this.state.isSettingEscrow === "false" && (
+                  <Form.Row>
+                    <h2 fontWeight="bold" color="white">Escrow Agent: {this.state.escrowData[1]}
+                      <br></br> Escrow TimeLock: {this.state.escrowData[2]}<br></br></h2>
+                    <Form.Group>
+                      <Button
+                        className="ownerButtonDisplay5"
+                        variant="primary"
+                        type="button"
+                        size="lg"
+                        onClick={_endEscrow}
+                      >
+                        End Escrow
+                      </Button>
+                    </Form.Group>
+                  </Form.Row>
+                )}
+              </div>
+            )}
+          </Form>
+          <div className="assetSelectedResults">
+            <Form.Row>
+              {this.state.idxHash !== undefined && (
+                <Form.Group>
+                  <div className="assetSelectedContentHead">Asset IDX: <span className="assetSelectedContent">{this.state.idxHash}</span> </div>
+                  <div className="assetSelectedContentHead">Asset Name: <span className="assetSelectedContent">{this.state.name}</span> </div>
+                  {/* <div className="assetSelectedContentHead"> Asset Description: <span className="assetSelectedContent">{this.state.description}</span> </div> */}
+                  <div className="assetSelectedContentHead">Asset Class: <span className="assetSelectedContent">{this.state.assetClass}</span> </div>
+                  <div className="assetSelectedContentHead">Asset Status: <span className="assetSelectedContent">{this.state.status}</span> </div>
+                </Form.Group>
+              )}
+            </Form.Row>
+          </div>
+          {this.state.transaction === true && (
+
+            <div className="Results">
+              {/* {this.state.pendingTx === undefined && ( */}
+              <p class="loading">Transaction In Progress</p>
+              {/* )} */}
+              {/* {this.state.pendingTx !== undefined && (
+        <p class="loading">Transaction In Progress</p>
+      )} */}
+            </div>)}
+          {this.state.txHash > 0 && ( //conditional rendering
+            <div className="Results">
+              {this.state.txStatus === false && (
+                <div>
+                  !ERROR! :
+                  <a
+                    href={"https://kovan.etherscan.io/tx/" + this.state.txHash}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                  >
+                    KOVAN Etherscan:{this.state.txHash}
+                  </a>
                 </div>
               )}
-              {window.addr > 0 && (
+              {this.state.txStatus === true && (
                 <div>
-                  <h2 className="Headertext">Manage Escrow</h2>
-                  <br></br>
-                  {!this.state.accessPermitted && (
-                    <>
-                    <Form.Row>
+                  {" "}
+                    No Errors Reported :
+                  <a
+                    href={"https://kovan.etherscan.io/tx/" + this.state.txHash}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                  >
+                    KOVAN Etherscan:{this.state.txHash}
+                  </a>
+                </div>
+              )}
+            </div>
+          )}
+        </div>
+      );
+    }
+
+    return (
+      <div>
+        <h2 className="FormHeader"> Manage Escrow </h2>
+        <Form className="Form" id='MainForm'>
+          {window.addr === undefined && (
+            <div className="Results">
+              <h2>User address unreachable</h2>
+              <h3>Please connect web3 provider.</h3>
+            </div>
+          )}
+          {window.addr > 0 && (
+            <div>
+              {!this.state.accessPermitted && (
+                <>
+                  <Form.Row>
+                    <Form.Group as={Col} controlId="formGridAsset">
+                      <Form.Label className="formFont"> Select an Asset to Modify :</Form.Label>
+                      <Form.Control
+                        as="select"
+                        size="lg"
+                        onChange={(e) => { _checkIn(e.target.value) }}
+                      >
+                        {this.state.hasLoadedAssets && (<><option value="null"> Select an asset </option><option value="reset">Refresh Assets</option>{window.utils.generateAssets()}</>)}
+                        {!this.state.hasLoadedAssets && (<option value="null"> Loading Assets... </option>)}
+
+                      </Form.Control>
+                    </Form.Group>
+                  </Form.Row>
+                  <Form.Row>
                     <Form.Group as={Col} controlId="formGridFormatSetOrEnd">
                       <Form.Label className="formFont">Set or End?:</Form.Label>
                       <Form.Control as="select" size="lg" onChange={(e) => this.setState({ isSettingEscrow: e.target.value })}>
@@ -194,25 +381,21 @@ class EscrowManagerNC extends Component {
                         <option value="false">End Escrow</option>
                       </Form.Control>
                     </Form.Group>
-                    </Form.Row>
+                  </Form.Row>
                   <Form.Row>
-                      <Form.Group>
-                      <Button
-                        className="ownerButtonDisplay5"
-                        variant="primary"
-                        type="button"
-                        size="lg"
-                        onClick={_accessAsset}
-                      >
-                        Access Asset
-                      </Button>
-                    </Form.Group>
-                    </Form.Row>
-                    </>
-                  )} 
-                  {this.state.accessPermitted && this.state.isSettingEscrow ==="true" && (
-                    <>
-                    <Form.Row>
+                  <div className="submitButtonAAME">
+                    <div className="submitButtonAAME-content">
+                      <ArrowRightCircle
+                        onClick={() => { _accessAsset() }}
+                      />
+                    </div>
+                  </div>
+                  </Form.Row>
+                </>
+              )}
+              {this.state.accessPermitted && this.state.isSettingEscrow === "true" && (
+                <>
+                  <Form.Row>
                     <Form.Group as={Col} controlId="formGridAgent">
                       <Form.Label className="formFont">Agent Address:</Form.Label>
                       <Form.Control
@@ -222,7 +405,7 @@ class EscrowManagerNC extends Component {
                         size="lg"
                       />
                     </Form.Group>
-    
+
                     <Form.Group as={Col} controlId="formGridStatus">
                       <Form.Label className="formFont">Escrow Status:</Form.Label>
                       <Form.Control as="select" size="lg" onChange={(e) => this.setState({ newStatus: e.target.value })}>
@@ -232,7 +415,7 @@ class EscrowManagerNC extends Component {
                       </Form.Control>
                     </Form.Group>
                   </Form.Row>
-    
+
                   <Form.Row>
                     <Form.Group as={Col} controlId="formGridTime">
                       <Form.Label className="formFont">Duration:</Form.Label>
@@ -255,8 +438,8 @@ class EscrowManagerNC extends Component {
                       </Form.Control>
                     </Form.Group>
                   </Form.Row>
-                    <Form.Row>
-                      <Form.Group>
+                  <Form.Row>
+                    <Form.Group>
                       <Button
                         className="ownerButtonDisplay"
                         variant="primary"
@@ -265,216 +448,26 @@ class EscrowManagerNC extends Component {
                         onClick={_setEscrow}
                       >
                         Set Escrow
-                      </Button>
-                    </Form.Group>
-                    </Form.Row>
-                    </>
-                  )}
-                  {this.state.accessPermitted && this.state.isSettingEscrow === "false" && (
-                    <Form.Row>
-                      <h2 fontWeight="bold" color="white">Escrow Agent: {this.state.escrowData[1]} 
-                      <br></br> Escrow TimeLock: {this.state.escrowData[2]}<br></br></h2>
-                      <Form.Group>
-                      <Button
-                        className="ownerButtonDisplay5"
-                        variant="primary"
-                        type="button"
-                        size="lg"
-                        onClick={_endEscrow}
-                      >
-                        End Escrow
-                      </Button>
-                    </Form.Group>
-                    </Form.Row>
-                  )}
-                </div>
-              )}
-            </Form>
-            <div className="assetSelectedResults">
-              <Form.Row>
-              {this.state.idxHash !== undefined &&(
-                    <Form.Group>
-                    <div className="assetSelectedContentHead">Asset IDX: <span className="assetSelectedContent">{this.state.idxHash}</span> </div>
-                    <div className="assetSelectedContentHead">Asset Name: <span className="assetSelectedContent">{this.state.name}</span> </div>
-                    {/* <div className="assetSelectedContentHead"> Asset Description: <span className="assetSelectedContent">{this.state.description}</span> </div> */}
-                    <div className="assetSelectedContentHead">Asset Class: <span className="assetSelectedContent">{this.state.assetClass}</span> </div>
-                    <div className="assetSelectedContentHead">Asset Status: <span className="assetSelectedContent">{this.state.status}</span> </div>
-                    </Form.Group>
-                  )} 
-              </Form.Row>
-            </div>
-            {this.state.transaction === true && (
-    
-    <div className="Results">
-      {/* {this.state.pendingTx === undefined && ( */}
-        <p class="loading">Transaction In Progress</p>
-      {/* )} */}
-      {/* {this.state.pendingTx !== undefined && (
-        <p class="loading">Transaction In Progress</p>
-      )} */}
-    </div>)}
-            {this.state.txHash > 0 && ( //conditional rendering
-              <div className="Results">
-                {this.state.txStatus === false && (
-                  <div>
-                    !ERROR! :
-                    <a
-                      href={"https://kovan.etherscan.io/tx/" + this.state.txHash}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                    >
-                      KOVAN Etherscan:{this.state.txHash}
-                    </a>
-                  </div>
-                )}
-                {this.state.txStatus === true && (
-                  <div>
-                    {" "}
-                    No Errors Reported :
-                    <a
-                      href={"https://kovan.etherscan.io/tx/" + this.state.txHash}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                    >
-                      KOVAN Etherscan:{this.state.txHash}
-                    </a>
-                  </div>
-                )}
-              </div>
-            )}
-          </div>
-        );
-      }
-
-    return (
-      <div>
-        <Form className="Form" id='MainForm'>
-          {window.addr === undefined && (
-            <div className="Results">
-              <h2>User address unreachable</h2>
-              <h3>Please connect web3 provider.</h3>
-            </div>
-          )}
-          {window.addr > 0 && (
-            <div>
-              <h2 className="Headertext">Manage Escrow</h2>
-              <br></br>
-              {!this.state.accessPermitted && (
-                <>
-                <Form.Row>
-                <Form.Group as={Col} controlId="formGridAsset">
-                  <Form.Label className="formFont"> Select an Asset to Modify :</Form.Label>
-                  <Form.Control
-                    as="select"
-                    size="lg"
-                    onChange={(e) => {_checkIn(e.target.value)}}
-                  >
-                    {this.state.hasLoadedAssets && (<><option value="null"> Select an asset </option><option value="reset">Refresh Assets</option>{window.utils.generateAssets()}</>)}
-                    {!this.state.hasLoadedAssets && (<option value="null"> Loading Assets... </option>)}
-                    
-                  </Form.Control>
-                </Form.Group>
-              </Form.Row>
-                <Form.Row>
-                <Form.Group as={Col} controlId="formGridFormatSetOrEnd">
-                  <Form.Label className="formFont">Set or End?:</Form.Label>
-                  <Form.Control as="select" size="lg" onChange={(e) => this.setState({ isSettingEscrow: e.target.value })}>
-                    <option value="0">Select an Action</option>
-                    <option value="true">Set Escrow</option>
-                    <option value="false">End Escrow</option>
-                  </Form.Control>
-                </Form.Group>
-                </Form.Row>
-              <Form.Row>
-                  <Form.Group>
-                  <Button
-                    className="ownerButtonDisplay5"
-                    variant="primary"
-                    type="button"
-                    size="lg"
-                    onClick={_accessAsset}
-                  >
-                    Access Asset
                   </Button>
-                </Form.Group>
-                </Form.Row>
-                </>
-              )} 
-              {this.state.accessPermitted && this.state.isSettingEscrow ==="true" && (
-                <>
-                <Form.Row>
-                <Form.Group as={Col} controlId="formGridAgent">
-                  <Form.Label className="formFont">Agent Address:</Form.Label>
-                  <Form.Control
-                    placeholder="agent"
-                    required
-                    onChange={(e) => this.setState({ agent: e.target.value })}
-                    size="lg"
-                  />
-                </Form.Group>
-
-                <Form.Group as={Col} controlId="formGridStatus">
-                  <Form.Label className="formFont">Escrow Status:</Form.Label>
-                  <Form.Control as="select" size="lg" onChange={(e) => this.setState({ newStatus: e.target.value })}>
-                    <option value="0">Select an Escrow Status</option>
-                    <option value="6">Supervised Escrow</option>
-                    <option value="50">Locked Escrow</option>
-                  </Form.Control>
-                </Form.Group>
-              </Form.Row>
-
-              <Form.Row>
-                <Form.Group as={Col} controlId="formGridTime">
-                  <Form.Label className="formFont">Duration:</Form.Label>
-                  <Form.Control
-                    placeholder="setEscrow duration"
-                    required
-                    onChange={(e) => this.setState({ escrowTime: e.target.value })}
-                    size="lg"
-                  />
-                </Form.Group>
-                <Form.Group as={Col} controlId="formGridFormat">
-                  <Form.Label className="formFont">Time Unit:</Form.Label>
-                  <Form.Control as="select" size="lg" onChange={(e) => this.setState({ timeFormat: e.target.value })}>
-                    <option value="0">Select a time unit</option>
-                    <option value="seconds">Seconds</option>
-                    <option value="minutes">Minutes</option>
-                    <option value="hours">Hours</option>
-                    <option value="days">Days</option>
-                    <option value="weeks">Weeks</option>
-                  </Form.Control>
-                </Form.Group>
-              </Form.Row>
-                <Form.Row>
-                  <Form.Group>
-                  <Button
-                    className="ownerButtonDisplay"
-                    variant="primary"
-                    type="button"
-                    size="lg"
-                    onClick={_setEscrow}
-                  >
-                    Set Escrow
-                  </Button>
-                </Form.Group>
-                </Form.Row>
+                    </Form.Group>
+                  </Form.Row>
                 </>
               )}
               {this.state.accessPermitted && this.state.isSettingEscrow === "false" && (
                 <Form.Row>
-                  <h2 fontWeight="bold" color="white">Escrow Agent: {this.state.escrowData[1]} 
-                  <br></br> Escrow TimeLock: {this.state.escrowData[2]}<br></br></h2>
+                  <h2 fontWeight="bold" color="white">Escrow Agent: {this.state.escrowData[1]}
+                    <br></br> Escrow TimeLock: {this.state.escrowData[2]}<br></br></h2>
                   <Form.Group>
-                  <Button
-                    className="ownerButtonDisplay5"
-                    variant="primary"
-                    type="button"
-                    size="lg"
-                    onClick={_endEscrow}
-                  >
-                    End Escrow
+                    <Button
+                      className="ownerButtonDisplay5"
+                      variant="primary"
+                      type="button"
+                      size="lg"
+                      onClick={_endEscrow}
+                    >
+                      End Escrow
                   </Button>
-                </Form.Group>
+                  </Form.Group>
                 </Form.Row>
               )}
             </div>
@@ -482,27 +475,27 @@ class EscrowManagerNC extends Component {
         </Form>
         <div className="assetSelectedResults">
           <Form.Row>
-          {this.state.idxHash !== undefined &&(
-                <Form.Group>
+            {this.state.idxHash !== undefined && (
+              <Form.Group>
                 <div className="assetSelectedContentHead">Asset IDX: <span className="assetSelectedContent">{this.state.idxHash}</span> </div>
                 <div className="assetSelectedContentHead">Asset Name: <span className="assetSelectedContent">{this.state.name}</span> </div>
                 {/* <div className="assetSelectedContentHead"> Asset Description: <span className="assetSelectedContent">{this.state.description}</span> </div> */}
                 <div className="assetSelectedContentHead">Asset Class: <span className="assetSelectedContent">{this.state.assetClass}</span> </div>
                 <div className="assetSelectedContentHead">Asset Status: <span className="assetSelectedContent">{this.state.status}</span> </div>
-                </Form.Group>
-              )} 
+              </Form.Group>
+            )}
           </Form.Row>
         </div>
         {this.state.transaction === true && (
 
-<div className="Results">
-  {/* {this.state.pendingTx === undefined && ( */}
-    <p class="loading">Transaction In Progress</p>
-  {/* )} */}
-  {/* {this.state.pendingTx !== undefined && (
+          <div className="Results">
+            {/* {this.state.pendingTx === undefined && ( */}
+            <p class="loading">Transaction In Progress</p>
+            {/* )} */}
+            {/* {this.state.pendingTx !== undefined && (
     <p class="loading">Transaction In Progress</p>
   )} */}
-</div>)}
+          </div>)}
         {this.state.txHash > 0 && ( //conditional rendering
           <div className="Results">
             {this.state.txStatus === false && (

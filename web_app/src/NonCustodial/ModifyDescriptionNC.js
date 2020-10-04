@@ -319,6 +319,7 @@ class ModifyDescription extends Component {
     if (this.state.wasSentPacket){
       return (
         <div>
+          <h2 className="FormHeader"> Modify Description </h2>
           <Form className="Form" id='MainForm'>
             {window.addr === undefined && (
               <div className="errorResults">
@@ -328,9 +329,6 @@ class ModifyDescription extends Component {
             )}
             {window.addr > 0 && (
               <div>
-  
-                <h2 className="Headertext">Modify Description</h2>
-                <br></br>
                 {this.state.accessPermitted && (
                   <div>
                     <Form.Row>
@@ -642,6 +640,7 @@ class ModifyDescription extends Component {
     }
     return (
       <div>
+        <h2 className="FormHeader"> Modify Description </h2>
         <Form className="Form" id='MainForm'>
           {window.addr === undefined && (
             <div className="Results">
@@ -651,9 +650,6 @@ class ModifyDescription extends Component {
           )}
           {window.addr > 0 && (
             <div>
-
-              <h2 className="Headertext">Modify Description</h2>
-              <br></br>
               {this.state.accessPermitted && (
                 <div>
                     <Form.Group as={Col} controlId="formGridAsset">

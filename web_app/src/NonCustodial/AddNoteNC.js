@@ -165,6 +165,7 @@ class AddNoteNC extends Component {
     if (this.state.wasSentPacket){
       return (
         <div>
+        <h2 className="FormHeader"> Add Note </h2>
           <Form className="Form" id='MainForm'>
             {window.addr === undefined && (
               <div className="Results">
@@ -174,8 +175,6 @@ class AddNoteNC extends Component {
             )}
             {window.addr > 0 && (
               <div>
-                <h2 className="Headertext">Add Note</h2>
-                <br></br>
                 <Form.Row>
                   <Form.Group as={Col} controlId="formGridIpfs2File">
                     <Form.File onChange={(e) => this.setState({ hashPath: "" })} size="lg" className="btn2" id="ipfs2File" />
@@ -274,6 +273,7 @@ class AddNoteNC extends Component {
     }
     return (
       <div>
+        <h2 className="FormHeader"> Add Note </h2>
         <Form className="Form" id='MainForm'>
           {window.addr === undefined && (
             <div className="Results">
@@ -283,8 +283,6 @@ class AddNoteNC extends Component {
           )}
           {window.addr > 0 && (
             <div>
-              <h2 className="Headertext">Add Note</h2>
-              <br></br>
               <Form.Row>
                 <Form.Group as={Col} controlId="formGridAsset">
                   <Form.Label className="formFont"> Select an Asset to Modify :</Form.Label>

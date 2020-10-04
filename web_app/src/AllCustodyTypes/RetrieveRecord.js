@@ -3,6 +3,9 @@ import Form from "react-bootstrap/Form";
 import Col from "react-bootstrap/Col";
 import Button from "react-bootstrap/Button";
 import QrReader from 'react-qr-reader'
+import { ArrowRightCircle } from 'react-feather'
+import { Grid } from "react-feather";
+import { CornerDownLeft } from "react-feather";
 
 
 class RetrieveRecord extends Component {
@@ -120,25 +123,23 @@ class RetrieveRecord extends Component {
                   {generateThumbs()}
                 </div>
                 <div className="cardSearchIdxForm">
-                      <h4 class="card-idx-selected">IDX : {obj.idxHash}</h4>
-                    </div>
+                  <h4 class="card-idx-selected">IDX : {obj.idxHash}</h4>
+                </div>
                 <div className="cardDescription-search">
                   {generateTextList()}
                 </div>
               </div>
-              <div className="cardButton-selected">
-                {this.state.moreInfo && (
-                  <Button
-                    variant="primary"
-                    type="button"
-                    size="lg"
-                    onClick={() => { this.setState({ moreInfo: false, ipfsObject: undefined, assetObj: undefined }) }}
-                  >
-                    New Search
-                  </Button>
-                )}
+              {this.state.moreInfo && (
+                <div className="submitButtonRRQR3">
+                  <div className="submitButtonRRQR3-content">
+                    <CornerDownLeft
+                      size={35}
+                      onClick={() => { this.setState({ moreInfo: false, ipfsObject: undefined, assetObj: undefined }) }}
+                    />
+                  </div>
+                </div>
+              )}
 
-              </div>
             </div>
           </div >
         </div >
@@ -163,7 +164,7 @@ class RetrieveRecord extends Component {
       let status;
 
       await window.contracts.STOR.methods.retrieveShortRecord(idxHash)
-        .call( (_error, _result) => {
+        .call((_error, _result) => {
           if (_error) {
             console.log("IN ERROR IN ERROR IN ERROR")
           } else {
@@ -198,47 +199,47 @@ class RetrieveRecord extends Component {
         .retrieveShortRecord(idxHash)
         .call(
           // { from: window.addr },
-           function (_error, _result) {
-          if (_error) {
-            console.log(_error)
-            self.setState({ error: _error });
-            self.setState({ result: 0 });
-          } else {
-            if (Object.values(_result)[0] === '0') { self.setState({ status: 'No status set' }); }
-            else if (Object.values(_result)[0] === '1') { self.setState({ status: 'Transferrable' }); }
-            else if (Object.values(_result)[0] === '2') { self.setState({ status: 'Non-transferrable' }); }
-            else if (Object.values(_result)[0] === '3') { self.setState({ status: 'REPORTED STOLEN' }); }
-            else if (Object.values(_result)[0] === '4') { self.setState({ status: 'REPORTED LOST' }); }
-            else if (Object.values(_result)[0] === '5') { self.setState({ status: 'Asset in Transfer' }); }
-            else if (Object.values(_result)[0] === '6') { self.setState({ status: 'In escrow (block.number locked)' }); }
-            else if (Object.values(_result)[0] === '7') { self.setState({ status: 'Out of supervised escrow' }); }
-            else if (Object.values(_result)[0] === '50') { self.setState({ status: 'In Locked Escrow (block.number locked)' }); }
-            else if (Object.values(_result)[0] === '51') { self.setState({ status: 'Transferable' }); }
-            else if (Object.values(_result)[0] === '52') { self.setState({ status: 'Non-transferrable' }); }
-            else if (Object.values(_result)[0] === '53') { self.setState({ status: 'REPORTED STOLEN' }); }
-            else if (Object.values(_result)[0] === '54') { self.setState({ status: 'REPORTED LOST' }); }
-            else if (Object.values(_result)[0] === '55') { self.setState({ status: 'Asset in Transfer' }); }
-            else if (Object.values(_result)[0] === '56') { self.setState({ status: 'In escrow (block.number locked)' }); }
-            else if (Object.values(_result)[0] === '57') { self.setState({ status: 'Out of supervised escrow' }); }
-            else if (Object.values(_result)[0] === '58') { self.setState({ status: 'Out of locked escrow' }); }
-            else if (Object.values(_result)[0] === '59') { self.setState({ status: 'Discardable' }); }
-            else if (Object.values(_result)[0] === '60') { self.setState({ status: 'Recycleable' }); }
-            else if (Object.values(_result)[0] === '70') { self.setState({ status: 'Importable' }); }
-            self.setState({ result: Object.values(_result) })
-            self.setState({ error: undefined });
-            tempResult = Object.values(_result);
-            if (Object.values(_result)[5] > 0) { ipfsHash = window.utils.getIpfsHashFromBytes32(Object.values(_result)[5]); }
-            console.log("ipfs data in promise", ipfsHash)
-            if (Object.values(_result)[6] > 0) {
-              console.log("Getting ipfs2 set up...")
-              let knownUrl = "https://ipfs.io/ipfs/";
-              let hash = String(window.utils.getIpfsHashFromBytes32(Object.values(_result)[6]));
-              let fullUrl = knownUrl + hash;
-              console.log(fullUrl);
-              self.setState({ ipfs2: fullUrl });
+          function (_error, _result) {
+            if (_error) {
+              console.log(_error)
+              self.setState({ error: _error });
+              self.setState({ result: 0 });
+            } else {
+              if (Object.values(_result)[0] === '0') { self.setState({ status: 'No status set' }); }
+              else if (Object.values(_result)[0] === '1') { self.setState({ status: 'Transferrable' }); }
+              else if (Object.values(_result)[0] === '2') { self.setState({ status: 'Non-transferrable' }); }
+              else if (Object.values(_result)[0] === '3') { self.setState({ status: 'REPORTED STOLEN' }); }
+              else if (Object.values(_result)[0] === '4') { self.setState({ status: 'REPORTED LOST' }); }
+              else if (Object.values(_result)[0] === '5') { self.setState({ status: 'Asset in Transfer' }); }
+              else if (Object.values(_result)[0] === '6') { self.setState({ status: 'In escrow (block.number locked)' }); }
+              else if (Object.values(_result)[0] === '7') { self.setState({ status: 'Out of supervised escrow' }); }
+              else if (Object.values(_result)[0] === '50') { self.setState({ status: 'In Locked Escrow (block.number locked)' }); }
+              else if (Object.values(_result)[0] === '51') { self.setState({ status: 'Transferable' }); }
+              else if (Object.values(_result)[0] === '52') { self.setState({ status: 'Non-transferrable' }); }
+              else if (Object.values(_result)[0] === '53') { self.setState({ status: 'REPORTED STOLEN' }); }
+              else if (Object.values(_result)[0] === '54') { self.setState({ status: 'REPORTED LOST' }); }
+              else if (Object.values(_result)[0] === '55') { self.setState({ status: 'Asset in Transfer' }); }
+              else if (Object.values(_result)[0] === '56') { self.setState({ status: 'In escrow (block.number locked)' }); }
+              else if (Object.values(_result)[0] === '57') { self.setState({ status: 'Out of supervised escrow' }); }
+              else if (Object.values(_result)[0] === '58') { self.setState({ status: 'Out of locked escrow' }); }
+              else if (Object.values(_result)[0] === '59') { self.setState({ status: 'Discardable' }); }
+              else if (Object.values(_result)[0] === '60') { self.setState({ status: 'Recycleable' }); }
+              else if (Object.values(_result)[0] === '70') { self.setState({ status: 'Importable' }); }
+              self.setState({ result: Object.values(_result) })
+              self.setState({ error: undefined });
+              tempResult = Object.values(_result);
+              if (Object.values(_result)[5] > 0) { ipfsHash = window.utils.getIpfsHashFromBytes32(Object.values(_result)[5]); }
+              console.log("ipfs data in promise", ipfsHash)
+              if (Object.values(_result)[6] > 0) {
+                console.log("Getting ipfs2 set up...")
+                let knownUrl = "https://ipfs.io/ipfs/";
+                let hash = String(window.utils.getIpfsHashFromBytes32(Object.values(_result)[6]));
+                let fullUrl = knownUrl + hash;
+                console.log(fullUrl);
+                self.setState({ ipfs2: fullUrl });
+              }
             }
-          }
-        });
+          });
 
       window.assetClass = tempResult[2]
 
@@ -263,40 +264,40 @@ class RetrieveRecord extends Component {
     this.getACData = async (ref, ac) => {
       let tempData;
       let tempAC;
-  
+
       if (window.contracts !== undefined) {
-  
+
         if (ref === "name") {
           console.log("Using name ref")
           await window.contracts.AC_MGR.methods
             .resolveAssetClass(ac)
-            .call( (_error, _result) => {
+            .call((_error, _result) => {
               if (_error) { console.log("Error: ", _error) }
               else {
                 if (Number(_result) > 0) { tempAC = Number(_result) }
                 else { return 0 }
               }
             });
-  
+
         }
-  
+
         else if (ref === "id") { tempAC = ac; }
-  
+
         await window.contracts.AC_MGR.methods
           .getAC_data(tempAC)
-          .call( (_error, _result) => {
+          .call((_error, _result) => {
             if (_error) { console.log("Error: ", _error) }
             else {
               let _custodyType;
-  
+
               if (Object.values(_result)[1] === "1") {
                 _custodyType = "Custodial"
               }
-  
+
               else {
                 _custodyType = "Non-Custodial"
               }
-  
+
               tempData = {
                 root: Object.values(_result)[0],
                 custodyType: _custodyType,
@@ -308,7 +309,7 @@ class RetrieveRecord extends Component {
           });
         return tempData;
       }
-  
+
     }
 
     this.state = {
@@ -376,7 +377,7 @@ class RetrieveRecord extends Component {
   handleScan = async (data) => {
     if (data) {
       let tempBool = await window.utils.checkAssetExists(data)
-      if(tempBool === true) {
+      if (tempBool === true) {
         this.setState({
           result: data,
           QRRR: true,
@@ -385,7 +386,7 @@ class RetrieveRecord extends Component {
         console.log(data)
         this._retrieveRecordQR()
       }
-      else{
+      else {
         this.setState({
           assetFound: "Asset Not Found",
         })
@@ -409,7 +410,7 @@ class RetrieveRecord extends Component {
       }
     }
 
-    
+
 
     const _retrieveRecord = async () => {
       const self = this;
@@ -430,7 +431,7 @@ class RetrieveRecord extends Component {
 
       await window.contracts.STOR.methods
         .retrieveShortRecord(idxHash)
-        .call( function (_error, _result) {
+        .call(function (_error, _result) {
           if (_error) {
             console.log(_error)
             self.setState({ error: _error });
@@ -506,12 +507,12 @@ class RetrieveRecord extends Component {
     }
     else {
       return (
-        <>
+        <div>
           {!this.state.moreInfo && this.state.QRreader === undefined && (
+            <div>
+                    <h2 className="FormHeader"> Search Database </h2>
             <Form className="Form">
               <div>
-                <h2 className="Headertext">Search Up An Asset</h2>
-                <br></br>
                 <Form.Row>
                   <Form.Group as={Col} controlId="formGridType">
                     <Form.Label className="formFont">Type:</Form.Label>
@@ -559,52 +560,52 @@ class RetrieveRecord extends Component {
 
                 <Form.Row>
                   <Form.Group>
-                    <Button className="buttonDisplay"
-                      variant="primary"
-                      type="button"
-                      size="lg"
-                      onClick={_retrieveRecord}
-                    >
-                      Submit
-                </Button>
-                    <Button className="buttonDisplay"
-                      variant="primary"
-                      type="button"
-                      size="lg"
-                      onClick={QRReader}
-                    >
-                      Scan QR
-                </Button>
+                    <div className="submitButtonRR">
+                      <div className="submitButtonRR-content">
+                        <ArrowRightCircle
+                          onClick={() => { _retrieveRecord() }}
+                        />
+                      </div>
+                    </div>
+                    <div className="submitButtonRRQR">
+                      <div className="submitButtonRRQR-content">
+                        <Grid
+                          onClick={() => { QRReader() }}
+                        />
+                      </div>
+                    </div>
                   </Form.Group>
 
                 </Form.Row>
               </div>
             </Form>
+            </div>
           )}
+          
 
           {this.state.QRreader === true && (
             <div>
+            <h2 className="FormHeader"> Search Database </h2>
+            <div className="QRreader">
               <QrReader
                 delay={300}
                 onError={this.handleError}
                 onScan={this.handleScan}
                 style={{ width: '100%' }}
               />
-              <div>
-                <Button className="buttonDisplayQR"
-                  variant="primary"
-                  type="button"
-                  size="lg"
-                  onClick={QRReader}
-                >
-                  Return
-                </Button>
+              <div className="submitButtonRRQR2">
+                <div className="submitButtonRRQR2-content">
+                  <CornerDownLeft
+                    onClick={() => { QRReader() }}
+                  />
+                </div>
               </div>
               {this.state.result !== undefined && (
                 <div className="Results">
                   {this.state.assetFound}
                 </div>
               )}
+              </div>
             </div>
           )}
 
@@ -625,7 +626,7 @@ class RetrieveRecord extends Component {
               </div>
             </div >
           )}
-        </>
+        </div>
       );
     }
   }

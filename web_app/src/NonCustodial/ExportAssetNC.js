@@ -3,6 +3,8 @@ import Form from "react-bootstrap/Form";
 import Col from "react-bootstrap/Col";
 import Button from "react-bootstrap/Button";
 import returnManufacturers from "../Resources/Manufacturers";
+import { ArrowRightCircle } from 'react-feather'
+
 
 class ExportAssetNC extends Component {
   constructor(props) {
@@ -121,6 +123,7 @@ class ExportAssetNC extends Component {
     if (this.state.wasSentPacket){
       return (//default render
         <div>
+          <h2 className="FormHeader"> Export Asset </h2>
           <Form className="Form" id='MainForm'>
             {window.addr === undefined && (
               <div className="Results">
@@ -130,8 +133,6 @@ class ExportAssetNC extends Component {
             )}
             {window.addr > 0 && (
               <div>
-                <h2 className="Headertext">Export</h2>
-                <br></br>
                 <Form.Row>
                   <Form.Group>
                     <Button className="buttonDisplay"
@@ -205,6 +206,7 @@ class ExportAssetNC extends Component {
     }
     return (//default render
       <div>
+        <h2 className="FormHeader"> Export Asset </h2>
         <Form className="Form" id='MainForm'>
           {window.addr === undefined && (
             <div className="Results">
@@ -214,8 +216,6 @@ class ExportAssetNC extends Component {
           )}
           {window.addr > 0 && (
             <div>
-              <h2 className="Headertext">Export</h2>
-              <br></br>
               <Form.Row>
                 <Form.Group as={Col} controlId="formGridAsset">
                   <Form.Label className="formFont"> Select an Asset to Modify :</Form.Label>
@@ -231,15 +231,14 @@ class ExportAssetNC extends Component {
                 </Form.Group>
               </Form.Row>
               <Form.Row>
-                <Form.Group>
-                  <Button className="buttonDisplay"
-                    variant="primary"
-                    type="button"
-                    size="lg"
-                    onClick={_exportAsset}
-                  >
-                    Export Asset
-                    </Button>
+              <Form.Group>
+                <div className="submitButtonTA">
+                    <div className="submitButtonTA-content">
+                      <ArrowRightCircle
+                        onClick={() => { _exportAsset() }}
+                      />
+                    </div>
+                  </div>
                 </Form.Group>
               </Form.Row>
 

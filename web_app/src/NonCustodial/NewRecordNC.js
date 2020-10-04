@@ -3,6 +3,7 @@ import Form from "react-bootstrap/Form";
 import Col from "react-bootstrap/Col";
 import Button from "react-bootstrap/Button";
 import FormLabel from "react-bootstrap/FormLabel";
+import { ArrowRightCircle } from 'react-feather'
 
 class NewRecordNC extends Component {
   constructor(props) {
@@ -127,6 +128,7 @@ class NewRecordNC extends Component {
 
     return (//default render
       <div>
+        <h2 className="FormHeader"> New Record </h2>
         <Form className="Form" id='MainForm'>
           {window.addr === undefined && (
             <div className="errorResults">
@@ -141,11 +143,9 @@ class NewRecordNC extends Component {
           )}
           {window.addr > 0 && window.assetClass > 0 && (
             <div>
-              <h2 className="Headertext">New Record</h2>
-              <br></br>
               <Form.Row>
                 <Form.Group as={Col} controlId="formGridType">
-                  <Form.Label className="formFont">Type:</Form.Label>
+                <Form.Label className="formFont">Type:</Form.Label>
 
                   {/* {returnTypes(window.assetClass, this.state.isNFA) !== '0' &&(<Form.Control as="select" size="lg" onChange={(e) => this.setState({ type: e.target.value })}>
                   {returnTypes(window.assetClass, this.state.isNFA)}
@@ -266,17 +266,14 @@ class NewRecordNC extends Component {
 
               </Form.Row>
               <Form.Row>
-                <Form.Group>
-                  <Button className="buttonDisplay"
-                    variant="primary"
-                    type="button"
-                    size="lg"
-                    onClick={_newRecord}
-                  >
-                    New Record
-                    </Button>
-                  <Form.Label className="LittleTextNewRecord"> Cost in AC {window.assetClass}: {Number(window.costs.newRecordCost) / 1000000000000000000} ETH</Form.Label>
-                </Form.Group>
+                <div className="submitButtonNR">
+                    <div className="submitButtonNR-content">
+                      <ArrowRightCircle
+                        onClick={() => { _newRecord() }}
+                      />
+                    </div>
+                    <Form.Label className="LittleTextNewRecord"> Cost in AC {window.assetClass}: {Number(window.costs.newRecordCost) / 1000000000000000000} ETH</Form.Label>
+                  </div>
               </Form.Row>
               <br></br>
             </div>

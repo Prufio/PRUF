@@ -2,6 +2,7 @@ import React, { Component } from "react";
 import Form from "react-bootstrap/Form";
 import Col from "react-bootstrap/Col";
 import Button from "react-bootstrap/Button";
+import { ArrowRightCircle } from 'react-feather'
 
 class VerifyRightHolder extends Component {
   constructor(props) {
@@ -146,6 +147,9 @@ class VerifyRightHolder extends Component {
     };
     return (
       <div>
+        <div>
+        <h2 className="FormHeader"> Deep Verify </h2>
+        </div>
         <Form className="Form" id='MainForm'>
           {window.addr === undefined && (
             <div className="Results">
@@ -155,8 +159,6 @@ class VerifyRightHolder extends Component {
           )}
           {window.addr > 0 && (
             <div>
-              <h2 className="Headertext">Deep Verify:</h2>
-              <br></br>
               {!this.state.accessPermitted && (
                 <>
                   <Form.Row>
@@ -204,16 +206,13 @@ class VerifyRightHolder extends Component {
                     </Form.Group>
                   </Form.Row>
                   <Form.Row>
-                    <Form.Group>
-                      <Button className="buttonDisplay"
-                        variant="primary"
-                        type="button"
-                        size="lg"
-                        onClick={_accessAsset}
-                      >
-                        Access Asset
-                  </Button>
-                    </Form.Group>
+                    <div className="submitButtonVRH">
+                      <div className="submitButtonVRH-content">
+                        <ArrowRightCircle
+                          onClick={() => { _accessAsset() }}
+                        />
+                      </div>
+                    </div>
                   </Form.Row>
                 </>
               )}
@@ -274,16 +273,13 @@ class VerifyRightHolder extends Component {
                     </Form.Group>
                   </Form.Row>
                   <Form.Row>
-                    <Form.Group>
-                      <Button className="buttonDisplay"
-                        variant="primary"
-                        type="button"
-                        size="lg"
-                        onClick={_verify}
-                      >
-                        Verify Match
-                  </Button>
-                    </Form.Group>
+                    <div className="submitButtonVRH2">
+                      <div className="submitButtonVRH2-content">
+                        <ArrowRightCircle
+                          onClick={() => { _verify() }}
+                        />
+                      </div>
+                    </div>
                   </Form.Row>
                 </>
               )}
@@ -291,20 +287,20 @@ class VerifyRightHolder extends Component {
           )}
         </Form>
         <div className="Results">
-        {this.state.txHash > 0 && ( //conditional rendering
-          <Form.Row>
-            {this.state.result === "Match confirmed"
-              ? "Match Confirmed"
-              : "No Match Found"}
-            <a
-              href={" https://kovan.etherscan.io/tx/" + this.state.txHash}
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              KOVAN Etherscan:{this.state.txHash}
-            </a>
-          </Form.Row>
-        )}
+          {this.state.txHash > 0 && ( //conditional rendering
+            <Form.Row>
+              {this.state.result === "Match confirmed"
+                ? "Match Confirmed"
+                : "No Match Found"}
+              <a
+                href={" https://kovan.etherscan.io/tx/" + this.state.txHash}
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                KOVAN Etherscan:{this.state.txHash}
+              </a>
+            </Form.Row>
+          )}
         </div>
       </div>
     );

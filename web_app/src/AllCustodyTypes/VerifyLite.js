@@ -2,6 +2,7 @@ import React, { Component } from "react";
 import Form from "react-bootstrap/Form";
 import Col from "react-bootstrap/Col";
 import Button from "react-bootstrap/Button";
+import { ArrowRightCircle } from 'react-feather'
 
 class VerifyLite extends Component {
   constructor(props) {
@@ -126,10 +127,9 @@ class VerifyLite extends Component {
 
     return (
       <div>
+        <h2 className="FormHeader"> Verify Light </h2>
         <Form className="Form" id='MainForm'>
           <div>
-            <h2 className="Headertext">Deep Verify:</h2>
-            <br></br>
             {!this.state.accessPermitted && (
               <>
                 <Form.Row>
@@ -177,16 +177,13 @@ class VerifyLite extends Component {
                   </Form.Group>
                 </Form.Row>
                 <Form.Row>
-                  <Form.Group>
-                    <Button className="buttonDisplay"
-                      variant="primary"
-                      type="button"
-                      size="lg"
-                      onClick={_accessAsset}
-                    >
-                      Access Asset
-                  </Button>
-                  </Form.Group>
+                  <div className="submitButtonVRH">
+                    <div className="submitButtonVRH-content">
+                      <ArrowRightCircle
+                        onClick={() => { _accessAsset() }}
+                      />
+                    </div>
+                  </div>
                 </Form.Row>
               </>
             )}
@@ -247,16 +244,13 @@ class VerifyLite extends Component {
                   </Form.Group>
                 </Form.Row>
                 <Form.Row>
-                  <Form.Group>
-                    <Button className="buttonDisplay"
-                      variant="primary"
-                      type="button"
-                      size="lg"
-                      onClick={_verify}
-                    >
-                      Verify Match
-                  </Button>
-                  </Form.Group>
+                  <div className="submitButtonVRH2">
+                    <div className="submitButtonVRH2-content">
+                      <ArrowRightCircle
+                        onClick={() => { _verify() }}
+                      />
+                    </div>
+                  </div>
                 </Form.Row>
               </>
             )}

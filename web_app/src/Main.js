@@ -143,7 +143,8 @@ class Main extends Component {
           assetHolderUserMenuBool: false,
           basicMenuBool: false,
           noAddrMenuBool: false,
-          authorizedUserMenuBool: false
+          authorizedUserMenuBool: false,
+          settingsMenu: undefined
         })
         window.menuChange = undefined;
       }
@@ -157,7 +158,8 @@ class Main extends Component {
           assetHolderUserMenuBool: false,
           assetClassHolderMenuBool: false,
           noAddrMenuBool: false,
-          authorizedUserMenuBool: false
+          authorizedUserMenuBool: false,
+          settingsMenu: undefined
         })
         window.menuChange = undefined;
       }
@@ -172,7 +174,8 @@ class Main extends Component {
           basicMenuBool: false,
           assetClassHolderMenuBool: false,
           noAddrMenuBool: false,
-          authorizedUserMenuBool: false
+          authorizedUserMenuBool: false,
+          settingsMenu: undefined
         })
         window.menuChange = undefined;
       }
@@ -187,7 +190,8 @@ class Main extends Component {
           basicMenuBool: false,
           assetClassHolderMenuBool: false,
           noAddrMenuBool: false,
-          authorizedUserMenuBool: false
+          authorizedUserMenuBool: false,
+          settingsMenu: undefined
         })
         window.menuChange = undefined;
       }
@@ -201,7 +205,8 @@ class Main extends Component {
           assetHolderUserMenuBool: false,
           assetClassHolderMenuBool: false,
           noAddrMenuBool: false,
-          basicMenuBool: false
+          basicMenuBool: false,
+          settingsMenu: undefined
         })
         window.menuChange = undefined;
       }

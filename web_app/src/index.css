@@ -374,12 +374,6 @@ div {
   margin-left: 0.5rem;
 }
 
-.cardButton {
-  margin-top: -26rem;
-  margin-left: 52rem;
-  max-height: 4rem;
-}
-
 .image-asset {
   height: 120px;
   width: 120px;
@@ -629,6 +623,20 @@ div {
   margin-top: -30rem;
 } */
 
+.FormHeader {
+  height: 4rem;
+  width: 59rem;
+  background-color: #002a40;
+  color: white;
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  opacity: 0.96;
+  font-weight: bold;
+  font-size: x-largef;
+}
+
 .Form {
   height: flex;
   width: 59rem;
@@ -640,6 +648,7 @@ div {
   justify-content: center;
   align-items: center;
   opacity: 0.96;
+  margin-top: -0.5rem;
 }
 
 .assetSelectedResults {
@@ -827,9 +836,11 @@ div {
 .LittleTextNewRecord {
   display: flex;
   color: rgb(255, 255, 255);
+  font-weight: bold;
   font-size: small;
   font-family: Tahoma, Geneva, sans-serif;
-  margin-left: 41rem;
+  margin-left: -20rem;
+  margin-top: 0.3rem;
 }
 
 
@@ -857,6 +868,10 @@ div {
 
 }
 
+
+.QRreader {
+  margin-top: -0.5rem;
+}
 .imageButton {
         border: 0px transparent; 
         background-color: transparent; 
@@ -998,7 +1013,7 @@ div {
 .mediaLinkContentADS {
   /* padding-left: 3rem; */
   border-radius: 50%;
-  color: #002a40;
+  color: white;
   -webkit-transition: -webkit-transform .5s ease-in-out;
   transition:         transform .5s ease-in-out;
 }
@@ -1257,8 +1272,8 @@ div {
   position: absolute;
   background-color: transparent;
   z-index: 1000;
-  margin-right: 94%;
-  margin-top: 0.7rem;
+  margin-left: 38rem;
+  margin-top: -3.7rem;
 }
 
 .submitButton-content {
@@ -1271,8 +1286,307 @@ div {
 .submitButton-content:hover {
   color: #028ed4;
   cursor: pointer;
-  -webkit-transform: translateY(3px);
-  transform: translateY(3px);
+  -webkit-transform: translateX(3px);
+  transform: translateX(3px);
+}
+
+.submitButtonTA {
+  display: flex;
+  position: absolute;
+  background-color: transparent;
+  z-index: 1000;
+  margin-left: 50rem;
+  /* margin-top: -3.7rem; */
+}
+
+.submitButtonTA-content {
+  color: white;
+  border-radius: 50%;
+  -webkit-transition: -webkit-transform .5s ease-in-out;
+  transition:         transform .5s ease-in-out;
+}
+
+.submitButtonTA-content:hover {
+  color: #028ed4;
+  cursor: pointer;
+  -webkit-transform: translateX(3px);
+  transform: translateX(3px);
+}
+
+.submitButtonIA {
+  display: flex;
+  position: absolute;
+  background-color: transparent;
+  z-index: 1000;
+  margin-left: 8rem;
+  margin-top: -1rem;
+}
+
+.submitButtonIA-content {
+  color: white;
+  border-radius: 50%;
+  -webkit-transition: -webkit-transform .5s ease-in-out;
+  transition:         transform .5s ease-in-out;
+}
+
+.submitButtonIA-content:hover {
+  color: #028ed4;
+  cursor: pointer;
+  -webkit-transform: translateX(3px);
+  transform: translateX(3px);
+}
+
+.submitButtonAAME {
+  display: flex;
+  position: absolute;
+  background-color: transparent;
+  z-index: 1000;
+  margin-left: 50rem;
+  margin-top: -0.7rem;
+}
+
+.submitButtonAAME-content {
+  color: white;
+  border-radius: 50%;
+  -webkit-transition: -webkit-transform .5s ease-in-out;
+  transition:         transform .5s ease-in-out;
+}
+
+.submitButtonAAME-content:hover {
+  color: #028ed4;
+  cursor: pointer;
+  -webkit-transform: translateX(3px);
+  transform: translateX(3px);
+}
+
+.submitButtonAA {
+  display: flex;
+  position: absolute;
+  background-color: transparent;
+  z-index: 1000;
+  margin-left: 38rem;
+  margin-top: -3.7rem;
+}
+
+.submitButtonAA-content {
+  color: white;
+  border-radius: 50%;
+  -webkit-transition: -webkit-transform .5s ease-in-out;
+  transition:         transform .5s ease-in-out;
+}
+
+.submitButtonAA-content:hover {
+  color: #028ed4;
+  cursor: pointer;
+  -webkit-transform: translateX(3px);
+  transform: translateX(3px);
+}
+
+.submitButtonNR {
+  display: flex;
+  position: absolute;
+  background-color: transparent;
+  z-index: 1000;
+  margin-left: 50rem;
+  margin-top: -0.3rem;
+}
+
+.submitButtonNR-content {
+  color: white;
+  border-radius: 50%;
+  -webkit-transition: -webkit-transform .5s ease-in-out;
+  transition:         transform .5s ease-in-out;
+}
+
+.submitButtonNR-content:hover {
+  color: #028ed4;
+  cursor: pointer;
+  -webkit-transform: translateX(3px);
+  transform: translateX(3px);
+}
+
+.submitButtonVRH {
+  display: flex;
+  position: absolute;
+  background-color: transparent;
+  z-index: 1000;
+  margin-left: 38rem;
+  margin-top: -3.7rem;
+}
+
+.submitButtonVRH-content {
+  color: white;
+  border-radius: 50%;
+  -webkit-transition: -webkit-transform .5s ease-in-out;
+  transition:         transform .5s ease-in-out;
+}
+
+.submitButtonVRH-content:hover {
+  color: #028ed4;
+  cursor: pointer;
+  -webkit-transform: translateX(3px);
+  transform: translateX(3px);
+}
+
+.submitButtonVRH2 {
+  display: flex;
+  position: absolute;
+  background-color: transparent;
+  z-index: 1000;
+  margin-left: 53rem;
+  margin-top: -0.9rem;
+}
+
+.submitButtonVRH2-content {
+  color: white;
+  border-radius: 50%;
+  -webkit-transition: -webkit-transform .5s ease-in-out;
+  transition:         transform .5s ease-in-out;
+}
+
+.submitButtonVRH2-content:hover {
+  color: #028ed4;
+  cursor: pointer;
+  -webkit-transform: translateX(3px);
+  transform: translateX(3px);
+}
+
+.submitButtonRR {
+  display: flex;
+  position: absolute;
+  background-color: transparent;
+  z-index: 1000;
+  margin-left: 38rem;
+  margin-top: -3.7rem;
+}
+
+.submitButtonRR-content {
+  color: white;
+  border-radius: 50%;
+  -webkit-transition: -webkit-transform .5s ease-in-out;
+  transition:         transform .5s ease-in-out;
+}
+
+.submitButtonRR-content:hover {
+  color: #028ed4;
+  cursor: pointer;
+  -webkit-transform: translateX(3px);
+  transform: translateX(3px);
+}
+
+.submitButtonRRQR {
+  display: flex;
+  position: absolute;
+  background-color: transparent;
+  z-index: 1000;
+  margin-left: 41rem;
+  margin-top: -3.7rem;
+}
+
+.submitButtonRRQR-content {
+  color: white;
+  border-radius: 50%;
+  -webkit-transition: -webkit-transform .5s ease-in-out;
+  transition:         transform .5s ease-in-out;
+}
+
+.submitButtonRRQR-content:hover {
+  color: #028ed4;
+  cursor: pointer;
+  -webkit-transform: translateX(3px);
+  transform: translateX(3px);
+}
+
+.submitButtonRRQR2 {
+  display: flex;
+  position: absolute;
+  background-color: transparent;
+  z-index: 1000;
+  margin-left: 51rem;
+  margin-top: -3.7rem;
+}
+
+.submitButtonRRQR2-content {
+  color: white;
+  border-radius: 50%;
+  -webkit-transition: -webkit-transform .5s ease-in-out;
+  transition:         transform .5s ease-in-out;
+}
+
+.submitButtonRRQR2-content:hover {
+  color: #028ed4;
+  cursor: pointer;
+  -webkit-transform: translateX(3px);
+  transform: translateX(3px);
+}
+
+.submitButtonRRQR3 {
+  display: flex;
+  position: absolute;
+  background-color: transparent;
+  z-index: 1000;
+  margin-left: 61rem;
+  margin-top: 43rem;
+}
+
+.submitButtonRRQR3-content {
+  color: white;
+  border-radius: 50%;
+  -webkit-transition: -webkit-transform .5s ease-in-out;
+  transition:         transform .5s ease-in-out;
+}
+
+.submitButtonRRQR3-content:hover {
+  color: #028ed4;
+  cursor: pointer;
+  -webkit-transform: translateX(3px);
+  transform: translateX(3px);
+}
+
+.cardButton {
+  display: flex;
+  position: absolute;
+  background-color: transparent;
+  z-index: 1000;
+  margin-left: 62rem;
+  margin-top: 7rem;
+}
+
+.cardButton-content {
+  color: white;
+  border-radius: 50%;
+  -webkit-transition: -webkit-transform .5s ease-in-out;
+  transition:         transform .5s ease-in-out;
+}
+
+.cardButton-content:hover {
+  color: #028ed4;
+  cursor: pointer;
+  -webkit-transform: translateX(3px);
+  transform: translateX(3px);
+}
+
+.cardButton2 {
+  display: flex;
+  position: absolute;
+  background-color: transparent;
+  z-index: 1000;
+  margin-left: 62rem;
+  margin-top: 45rem;
+}
+
+.cardButton2-content {
+  color: white;
+  border-radius: 50%;
+  -webkit-transition: -webkit-transform .5s ease-in-out;
+  transition:         transform .5s ease-in-out;
+}
+
+.cardButton2-content:hover {
+  color: #028ed4;
+  cursor: pointer;
+  -webkit-transform: translateX(3px);
+  transform: translateX(3px);
 }
 
 .loading:after {

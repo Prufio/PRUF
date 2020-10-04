@@ -153,6 +153,7 @@ class ModifyRecordStatusNC extends Component {
     if (this.state.wasSentPacket){
       return (
         <div>
+          <h2 className="FormHeader"> Change Asset Status </h2>
           <Form className="Form" id='MainForm'>
             {window.addr === undefined && (
               <div className="Results">
@@ -162,8 +163,6 @@ class ModifyRecordStatusNC extends Component {
             )}
             {window.addr > 0 && (
               <div>
-                <h2 className="Headertext">Change Asset Status</h2>
-                <br></br>
                 <Form.Row>
                   <Form.Group as={Col} controlId="formGridFormat">
                     <Form.Label className="formFont">New Status:</Form.Label>
@@ -250,6 +249,7 @@ class ModifyRecordStatusNC extends Component {
     }
     return (
       <div>
+                  <h2 className="FormHeader"> Change Asset Status </h2>
         <Form className="Form" id='MainForm'>
           {window.addr === undefined && (
             <div className="Results">
@@ -259,9 +259,6 @@ class ModifyRecordStatusNC extends Component {
           )}
           {window.addr > 0 && (
             <div>
-
-              <h2 className="Headertext">Change Asset Status</h2>
-              <br></br>
               <Form.Row>
                 <Form.Group as={Col} controlId="formGridAsset">
                   <Form.Label className="formFont"> Select an Asset to Modify :</Form.Label>

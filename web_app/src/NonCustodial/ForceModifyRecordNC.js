@@ -14,8 +14,8 @@ class ForceModifyRecordNC extends Component {
         this.setState({ assets: window.assets })
       }
 
-      if(this.state.hasLoadedAssets !== window.hasLoadedAssets){
-        this.setState({hasLoadedAssets: window.hasLoadedAssets})
+      if (this.state.hasLoadedAssets !== window.hasLoadedAssets) {
+        this.setState({ hasLoadedAssets: window.hasLoadedAssets })
       }
     }, 100)
 
@@ -57,9 +57,9 @@ class ForceModifyRecordNC extends Component {
   componentDidMount() {//stuff to do when component mounts in window
     if (window.sentPacket !== undefined) {
       this.setState({ name: window.sentPacket.name })
-      this.setState({idxHash: window.sentPacket.idxHash})
-      this.setState({assetClass: window.sentPacket.assetClass})
-      this.setState({status: window.sentPacket.status})
+      this.setState({ idxHash: window.sentPacket.idxHash })
+      this.setState({ assetClass: window.sentPacket.assetClass })
+      this.setState({ status: window.sentPacket.status })
       window.sentPacket = undefined
       this.setState({ wasSentPacket: true })
     }
@@ -77,8 +77,8 @@ class ForceModifyRecordNC extends Component {
     const self = this;
 
     const _checkIn = async (e) => {
-      if(e === "0" || e === undefined){return}
-      else if(e === "reset"){
+      if (e === "0" || e === undefined) { return }
+      else if (e === "reset") {
         return window.resetInfo = true;
       }
       this.setState({ selectedAsset: e })
@@ -119,7 +119,7 @@ class ForceModifyRecordNC extends Component {
 
       window.contracts.NP_NC.methods
         ._changeRgt(idxHash, newRgtHash)
-        .send({ from: window.addr})
+        .send({ from: window.addr })
         .on("error", function (_error) {
           // self.setState({ NRerror: _error });
           self.setState({ transaction: false })
@@ -138,9 +138,10 @@ class ForceModifyRecordNC extends Component {
       console.log(this.state.txHash);
       return document.getElementById("MainForm").reset();
     };
-    if (this.state.wasSentPacket){
+    if (this.state.wasSentPacket) {
       return (
         <div>
+          <h2 className="FormHeader"> Modify Rightsholder </h2>
           <Form className="Form" id='MainForm'>
             {window.addr === undefined && (
               <div className="Results">
@@ -150,8 +151,6 @@ class ForceModifyRecordNC extends Component {
             )}
             {window.addr > 0 && (
               <div>
-                <h2 className="Headertext">Modify Rightsholder</h2>
-                <br></br>
                 <Form.Row>
                   <Form.Group as={Col} controlId="formGridNewFirstName">
                     <Form.Label className="formFont">New First Name:</Form.Label>
@@ -162,7 +161,7 @@ class ForceModifyRecordNC extends Component {
                       size="lg"
                     />
                   </Form.Group>
-  
+
                   <Form.Group as={Col} controlId="formGridNewMiddleName">
                     <Form.Label className="formFont">New Middle Name:</Form.Label>
                     <Form.Control
@@ -172,7 +171,7 @@ class ForceModifyRecordNC extends Component {
                       size="lg"
                     />
                   </Form.Group>
-  
+
                   <Form.Group as={Col} controlId="formGridNewLastName">
                     <Form.Label className="formFont">New Last Name:</Form.Label>
                     <Form.Control
@@ -193,7 +192,7 @@ class ForceModifyRecordNC extends Component {
                       size="lg"
                     />
                   </Form.Group>
-  
+
                   <Form.Group as={Col} controlId="formGridNewPassword">
                     <Form.Label className="formFont">New Password:</Form.Label>
                     <Form.Control
@@ -206,45 +205,45 @@ class ForceModifyRecordNC extends Component {
                   </Form.Group>
                 </Form.Row>
                 <Form.Row>
-                    <Form.Group >
-                      <Button className="buttonDisplay"
-                        variant="danger"
-                        type="button"
-                        size="lg"
-                        onClick={_editRgtHash}
-                      >
-                        Modify
+                  <Form.Group >
+                    <Button className="buttonDisplay"
+                      variant="danger"
+                      type="button"
+                      size="lg"
+                      onClick={_editRgtHash}
+                    >
+                      Modify
                     </Button>
-                    </Form.Group>
+                  </Form.Group>
                 </Form.Row>
               </div>
             )}
           </Form>
           <div className="assetSelectedResults">
             <Form.Row>
-              
-                {this.state.idxHash !== undefined &&(
-                  <Form.Group>
+
+              {this.state.idxHash !== undefined && (
+                <Form.Group>
                   <div className="assetSelectedContentHead">Asset IDX: <span className="assetSelectedContent">{this.state.idxHash}</span> </div>
                   <div className="assetSelectedContentHead">Asset Name: <span className="assetSelectedContent">{this.state.name}</span> </div>
                   {/* <div className="assetSelectedContentHead"> Asset Description: <span className="assetSelectedContent">{this.state.description}</span> </div> */}
                   <div className="assetSelectedContentHead">Asset Class: <span className="assetSelectedContent">{this.state.assetClass}</span> </div>
                   <div className="assetSelectedContentHead">Asset Status: <span className="assetSelectedContent">{this.state.status}</span> </div>
-                  </Form.Group>
-                )} 
-              
+                </Form.Group>
+              )}
+
             </Form.Row>
           </div>
           {this.state.transaction === true && (
-  
-  <div className="Results">
-    {/* {this.state.pendingTx === undefined && ( */}
-      <p class="loading">Transaction In Progress</p>
-    {/* )} */}
-    {/* {this.state.pendingTx !== undefined && (
+
+            <div className="Results">
+              {/* {this.state.pendingTx === undefined && ( */}
+              <p class="loading">Transaction In Progress</p>
+              {/* )} */}
+              {/* {this.state.pendingTx !== undefined && (
       <p class="loading">Transaction In Progress</p>
     )} */}
-  </div>)}
+            </div>)}
           {this.state.txHash > 0 && ( //conditional rendering
             <div className="Results">
               {this.state.txStatus === false && (
@@ -279,6 +278,7 @@ class ForceModifyRecordNC extends Component {
     }
     return (
       <div>
+        <h2 className="FormHeader"> Modify Rightsholder </h2>
         <Form className="Form" id='MainForm'>
           {window.addr === undefined && (
             <div className="Results">
@@ -288,19 +288,17 @@ class ForceModifyRecordNC extends Component {
           )}
           {window.addr > 0 && (
             <div>
-              <h2 className="Headertext">Modify Rightsholder</h2>
-              <br></br>
               <Form.Row>
                 <Form.Group as={Col} controlId="formGridAsset">
                   <Form.Label className="formFont"> Select an Asset to Modify :</Form.Label>
                   <Form.Control
                     as="select"
                     size="lg"
-                    onChange={(e) => {_checkIn(e.target.value)}}
+                    onChange={(e) => { _checkIn(e.target.value) }}
                   >
                     {this.state.hasLoadedAssets && (<><option value="null"> Select an asset </option><option value="reset">Refresh Assets</option>{window.utils.generateAssets()}</>)}
                     {!this.state.hasLoadedAssets && (<option value="null"> Loading Assets... </option>)}
-                    
+
                   </Form.Control>
                 </Form.Group>
               </Form.Row>
@@ -358,45 +356,45 @@ class ForceModifyRecordNC extends Component {
                 </Form.Group>
               </Form.Row>
               <Form.Row>
-                  <Form.Group >
-                    <Button className="buttonDisplay"
-                      variant="danger"
-                      type="button"
-                      size="lg"
-                      onClick={_editRgtHash}
-                    >
-                      Modify
+                <Form.Group >
+                  <Button className="buttonDisplay"
+                    variant="danger"
+                    type="button"
+                    size="lg"
+                    onClick={_editRgtHash}
+                  >
+                    Modify
                   </Button>
-                  </Form.Group>
+                </Form.Group>
               </Form.Row>
             </div>
           )}
         </Form>
         <div className="assetSelectedResults">
           <Form.Row>
-            
-              {this.state.idxHash !== undefined &&(
-                <Form.Group>
+
+            {this.state.idxHash !== undefined && (
+              <Form.Group>
                 <div className="assetSelectedContentHead">Asset IDX: <span className="assetSelectedContent">{this.state.idxHash}</span> </div>
                 <div className="assetSelectedContentHead">Asset Name: <span className="assetSelectedContent">{this.state.name}</span> </div>
                 {/* <div className="assetSelectedContentHead"> Asset Description: <span className="assetSelectedContent">{this.state.description}</span> </div> */}
                 <div className="assetSelectedContentHead">Asset Class: <span className="assetSelectedContent">{this.state.assetClass}</span> </div>
                 <div className="assetSelectedContentHead">Asset Status: <span className="assetSelectedContent">{this.state.status}</span> </div>
-                </Form.Group>
-              )} 
-            
+              </Form.Group>
+            )}
+
           </Form.Row>
         </div>
         {this.state.transaction === true && (
 
-<div className="Results">
-  {/* {this.state.pendingTx === undefined && ( */}
-    <p class="loading">Transaction In Progress</p>
-  {/* )} */}
-  {/* {this.state.pendingTx !== undefined && (
+          <div className="Results">
+            {/* {this.state.pendingTx === undefined && ( */}
+            <p class="loading">Transaction In Progress</p>
+            {/* )} */}
+            {/* {this.state.pendingTx !== undefined && (
     <p class="loading">Transaction In Progress</p>
   )} */}
-</div>)}
+          </div>)}
         {this.state.txHash > 0 && ( //conditional rendering
           <div className="Results">
             {this.state.txStatus === false && (
