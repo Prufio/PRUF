@@ -554,7 +554,12 @@ class Main extends Component {
 
     this.hamburgerMenu = async () => {
       if (this.state.hamburgerMenu === undefined) {
-        this.setState({ hamburgerMenu: true })
+        this.setState({ 
+          hamburgerMenu: true,
+          userMenu: undefined,
+          settingsMenu: undefined 
+
+        })
       }
       else {
         this.setState({ hamburgerMenu: undefined })

@@ -79,7 +79,7 @@ class AssetCheckIn extends Component {
         for (let i = 0; i < images.length; i++) {
           component.push(
             <button value={images[i]} class="assetImageSelectorButton" onClick={() => { showImage(images[i]) }}>
-              <img src={images[i]} className="imageSelectorImage" />
+              <img title="View Image" src={images[i]} className="imageSelectorImage" />
             </button>
           )
         }
@@ -168,7 +168,7 @@ class AssetCheckIn extends Component {
                       </div>
                     )}
                     <button class="assetImageButtonSelected" onClick={() => { openPhotoNT(this.state.selectedImage) }}>
-                      <img src={this.state.selectedImage} className="assetImageSelected" />
+                      <img title="View Image" src={this.state.selectedImage} className="assetImageSelected" />
                     </button>
                     <p class="card-name-selected">Name : {obj.name}</p>
                     <p class="card-ac-selected">Asset Class : {obj.assetClass}</p>
@@ -272,7 +272,7 @@ class AssetCheckIn extends Component {
                         })
                       }}
                     >
-                      <img src={obj.displayImages[i]} className="assetImage" />
+                      <img title="View Asset" src={obj.displayImages[i]} className="assetImage" />
                     </button>
                   </div>
                   <div>
