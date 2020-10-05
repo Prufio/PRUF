@@ -1,4 +1,3 @@
-//&& set SSL_CRT_FILE=./cert/cert.pem && set SSL_KEY_FILE=./cert/server.key && set PORT=443 
 import React, { Component } from "react";
 import { Route, NavLink, HashRouter } from "react-router-dom";
 import Web3 from "web3";
@@ -784,7 +783,7 @@ class Main extends Component {
                           {this.state.addr > 0 && (
                             <div className="hamburgerDropdownUserInfoAddrContent">
                               Currently serving :
-                              <Button variant="etherscan" title="Check it out on Etherscan!" onClick={() => { window.open("https://kovan.etherscan.io/address/" + this.state.addr) }}>{this.state.addr}</Button>
+                              <Button variant="etherscan" title="Check it out on Etherscan!" onClick={() => { window.open("https://kovan.etherscan.io/address/" + this.state.addr )}}>{this.state.addr.substring(0,6) + "..." + this.state.addr.substring(36, 42)}</Button>
                               <br></br>
                             </div>
 

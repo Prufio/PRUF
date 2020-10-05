@@ -64,11 +64,13 @@ class ModifyDescription extends Component {
         status: window.sentPacket.status,
         oldDescription: window.sentPacket.descriptionObj,
         wasSentPacket: true,
-        runWatchDog: true,
+        
       })
       window.sentPacket = undefined
     }
 
+
+    this.setState({runWatchDog: true})
   }
 
   componentDidUpdate() {//stuff to do when state updates
