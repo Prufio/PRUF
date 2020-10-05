@@ -78,7 +78,6 @@ h4 {
   align-items: center;
   justify-content: center;
   flex-direction: column;
-  margin: auto;
   z-index: 5;
 }
 
@@ -162,6 +161,7 @@ div {
 
 .active {
   background-color: #00a8ff;
+  border-radius: 2rem;
 }
 
 .formFont {
@@ -1281,7 +1281,7 @@ div {
   /* opacity: 0.9; */
   margin-left: 4rem;
   padding-left: 1rem;
-  margin-top: 5.4rem;
+  margin-top: 4rem;
   font-size: 2rem;
 }
 
@@ -1309,8 +1309,8 @@ div {
 
 .hamburgerDropdownUserInfo {
   display: flex;
-  width: 30rem;
-  height: 18rem;
+  width: 27rem;
+  height: 22rem;
   color:white;
   background-color: #002a40;
   flex-direction: column;
@@ -1318,9 +1318,10 @@ div {
   /* opacity: 0.9; */
   z-index: 1000;
   font-size: 1.2rem;
-  padding-top: 2rem;
+  padding-top: 1rem;
   padding-left: 1rem;
   border-radius: 0rem 0rem 1rem 0rem;
+  margin-left: 37rem;
 }
 
 .hamburgerDropdownSettings {

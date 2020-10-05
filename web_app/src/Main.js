@@ -784,12 +784,16 @@ class Main extends Component {
                   </div>
                   <div>
                     {this.state.userMenu !== undefined && (
-                      <div className="hamburgerDropdownUserInfoBox">
-                        <div className="hamburgerDropdownUserInfo">
+                      <div className="hamburgerDropdownUserInfo">
                         {this.state.addr > 0 && (
                           <h4>
                             Currently serving :
-                            <Button variant="etherscan" title="Check it out on Etherscan!" onClick={() => { window.open("https://kovan.etherscan.io/address/" + this.state.addr )}}>{this.state.addr.substring(0,6) + "..." + this.state.addr.substring(37, 42)}</Button> 
+                            <Button
+                              variant="etherscan"
+                              title="Check it out on Etherscan!"
+                              onClick={() => { window.open("https://kovan.etherscan.io/address/" + this.state.addr) }}>
+                              {this.state.addr.substring(0, 6) + "..." + this.state.addr.substring(37, 42)}
+                            </Button>
                           </h4>
                         )}
                         {this.state.addr === undefined && (
@@ -797,78 +801,79 @@ class Main extends Component {
                             Currently serving: NOBODY! Log into web3 provider!
                           </h4>
                         )}
-                          {this.state.ETHBalance === undefined && (
-                            <h4>
-                              ETH Balance : Please Log In
-                            </h4>
-                          )}
-                          {this.state.ETHBalance && (
-                            <h4>
-                              ETH Balance : {this.state.ETHBalance}
-                            </h4>
-                          )}
-                          <br></br>
-                          {this.state.assetClassBalance === undefined && (
-                            <h4>
-                              AssetClass Token Balance: Please Log In
-                              <br></br>
-                            </h4>
-                          )}
-                          {this.state.assetClassBalance && (
-                            <h4>
-                              AssetClass Token Balance: {this.state.assetClassBalance}
-                            </h4>
-
-                          )}
-                          <br></br>
-                          {this.state.assetBalance === undefined && (
-                            <h4>
-                              Asset Token Balance: Please Log In
-                              <br></br>
-                            </h4>
-                          )}
-                          {this.state.assetBalance && (
-                            <h4>
-                              Asset Token Balance: {this.state.assetBalance}
-                            </h4>
-                          )}
-                          <br></br>
-                          {this.state.IDTokenBalance === undefined && (
-                            <h4>
-                              ID Token Balance : Please Log In
-                              <br></br>
-                            </h4>
-                          )}
-
-                          {this.state.IDTokenBalance && (
-                            <h4>
-                              ID Token Balance : {this.state.IDTokenBalance}
-                            </h4>
-                          )}
-                          <br></br>
-                        </div>
+                        <br></br>
+                        {this.state.ETHBalance === undefined && (
+                          <h4>
+                            ETH Balance : Please Log In
+                          </h4>
+                        )}
+                        {this.state.ETHBalance && (
+                          <h4>
+                            ETH Balance : {this.state.ETHBalance.substring(0, 6) + " ..."}
+                          </h4>
+                        )}
+                        <br></br>
+                        {this.state.assetClassBalance === undefined && (
+                          <h4>
+                            AssetClass Token Balance: Please Log In
+                          </h4>
+                        )}
+                        {this.state.assetClassBalance && (
+                          <h4>
+                            AssetClass Token Balance: {this.state.assetClassBalance}
+                          </h4>
+                        )}
+                        <br></br>
+                        {this.state.assetBalance === undefined && (
+                          <h4>
+                            Asset Token Balance: Please Log In
+                          </h4>
+                        )}
+                        {this.state.assetBalance && (
+                          <h4>
+                            Asset Token Balance: 
+                            <Button
+                              variant="assetDashboard"
+                              title="Asset Dashboard"
+                              onClick={() => { window.location.href = '/#/asset-dashboard' }}>
+                              {this.state.assetBalance}
+                            </Button>
+                          </h4>
+                        )}
+                        <br></br>
+                        {this.state.IDTokenBalance === undefined && (
+                          <h4>
+                            ID Token Balance : Please Log In
+                          </h4>
+                        )}
+                        {this.state.IDTokenBalance && (
+                          <h4>
+                            ID Token Balance : {this.state.IDTokenBalance}
+                          </h4>
+                        )}
+                        <br></br>
                       </div>
                     )}
-                </div>
+                  </div>
                 </div>
               )}
               <ul className="header">
-              {window._contracts !== undefined && (
-                <nav>
-                  {this.state.noAddrMenuBool === true && (<NoAddressComponent />)}
-                  {this.state.assetHolderMenuBool === true && (<NonCustodialComponent />)}
-                  {this.state.assetHolderUserMenuBool === true && (<NonCustodialUserComponent />)}
-                  {this.state.assetClassHolderMenuBool === true && (<AdminComponent />)}
-                  {this.state.authorizedUserMenuBool === true && (<AuthorizedUserComponent />)}
-                  {this.state.basicMenuBool === true && (<BasicComponent />)}
-                </nav>
-              )}
-            </ul>
+                {window._contracts !== undefined && (
+                  <nav>
+                    {this.state.noAddrMenuBool === true && (<NoAddressComponent />)}
+                    {this.state.assetHolderMenuBool === true && (<NonCustodialComponent />)}
+                    {this.state.assetHolderUserMenuBool === true && (<NonCustodialUserComponent />)}
+                    {this.state.assetClassHolderMenuBool === true && (<AdminComponent />)}
+                    {this.state.authorizedUserMenuBool === true && (<AuthorizedUserComponent />)}
+                    {this.state.basicMenuBool === true && (<BasicComponent />)}
+                  </nav>
+                )}
+              </ul>
+            </div>
           </div>
-          </div>
-        <div className="pageForm">
-          <style type="text/css">
-            {`
+          <div className="pageForm">
+            <style type="text/css">
+              {`
                         .btn-primary {
                           background-color: #00a8ff;
                           color: white;
@@ -903,6 +908,26 @@ class Main extends Component {
                           border: transparent;
                         }
 
+                        .btn-assetDashboard {
+                          background-color: transparent;
+                          color: white;
+                          margin-top: -0.5rem;
+                          // margin-right: 37rem;
+                          font-size: 1.6rem;
+                          width: 5rem;
+                        }
+                        .btn-assetDashboard:hover {
+                          background-color: transparent;
+                          color: #00a8ff;
+                        }
+                        .btn-assetDashboard:focus {
+                          background-color: transparent;
+                        }
+                        .btn-assetDashboard:active {
+                          background-color: transparent;
+                          border: transparent;
+                        }
+
                         .btn {
                           color: white;
                         }
@@ -930,20 +955,20 @@ class Main extends Component {
                           color: #fff;
                         }
                      `}
-          </style>
-          <div>
-            <Route exact path="/" component={Home} />
-            {Router(this.state.routeRequest)}
+            </style>
+            <div>
+              <Route exact path="/" component={Home} />
+              {Router(this.state.routeRequest)}
+            </div>
+            <div className="mediaLink">
+              <a className="mediaLinkContent"><GitHub size={35} onClick={() => { window.open("https://github.com/vdmprojects/Bulletproof", "_blank") }} /></a>
+              <a className="mediaLinkContent"><Mail size={35} onClick={() => { window.open("mailto:drake@pruf.io", "_blank") }} /></a>
+              <a className="mediaLinkContent"><Twitter size={35} onClick={() => { window.open("https://twitter.com/umlautchair", "_blank") }} /></a>
+              <a className="mediaLinkContent" ><Video size={35} onClick={() => { window.open("https://www.youtube.com/channel/UC9HzR9-dAzHtPKOqlVqwOuw", "_blank") }} /></a>
+            </div>
           </div>
-          <div className="mediaLink">
-            <a className="mediaLinkContent"><GitHub size={35} onClick={() => { window.open("https://github.com/vdmprojects/Bulletproof", "_blank") }} /></a>
-            <a className="mediaLinkContent"><Mail size={35} onClick={() => { window.open("mailto:drake@pruf.io", "_blank") }} /></a>
-            <a className="mediaLinkContent"><Twitter size={35} onClick={() => { window.open("https://twitter.com/umlautchair", "_blank") }} /></a>
-            <a className="mediaLinkContent" ><Video size={35} onClick={() => { window.open("https://www.youtube.com/channel/UC9HzR9-dAzHtPKOqlVqwOuw", "_blank") }} /></a>
-          </div>
-        </div>
-        <NavLink to="/">
-        </NavLink>
+          <NavLink to="/">
+          </NavLink>
 
         </HashRouter>
 
