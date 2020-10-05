@@ -8,7 +8,7 @@ import { NavLink } from "react-router-dom";
 import Dropdown from 'react-bootstrap/Dropdown';
 import Nav from 'react-bootstrap/Nav'
 import DropdownButton from 'react-bootstrap/DropdownButton';
-import { Printer, RefreshCw, Grid, X, Save, ChevronRight, Print, CornerUpLeft, Home} from "react-feather";
+import { Printer, RefreshCw, Grid, X, Save, ChevronRight, CornerUpLeft, Home} from "react-feather";
 import { QRCode } from 'react-qrcode-logo';
 
 class AssetCheckIn extends Component {

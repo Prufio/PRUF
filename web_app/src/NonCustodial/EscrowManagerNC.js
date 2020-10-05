@@ -2,7 +2,7 @@ import React, { Component } from "react";
 import Form from "react-bootstrap/Form";
 import Col from "react-bootstrap/Col";
 import Button from "react-bootstrap/Button";
-import { ArrowRightCircle, Home, XSquare } from 'react-feather'
+import { ArrowRightCircle, Home, TrendingUp, XSquare } from 'react-feather'
 
 class EscrowManagerNC extends Component {
   constructor(props) {
@@ -53,7 +53,7 @@ class EscrowManagerNC extends Component {
       this.setState({ assetClass: window.sentPacket.assetClass })
       this.setState({ status: window.sentPacket.status })
       window.sentPacket = undefined
-      this.setState({ wasSentPacket: true })
+      this.setState({ wasSentPacket: TrendingUp })
     }
 
   }
@@ -70,7 +70,9 @@ class EscrowManagerNC extends Component {
     const self = this;
 
     const _accessAsset = async () => {
-      const self = this;
+      if(this.state.isSettingEscrow === undefined || this.state.isSettingEscrow === "null") {
+        return alert("Please Select an Action From the Dropdown")
+      }
       return this.setState({
         accessPermitted: true,
         escrowData: window.utils.getEscrowData(this.state.idxHash)
@@ -79,7 +81,7 @@ class EscrowManagerNC extends Component {
 
     const clearForm = async () => {
       document.getElementById("MainForm").reset();
-      this.setState({ idxHash: undefined, txStatus: undefined, txHash: "0" })
+      this.setState({ idxHash: undefined, txStatus: undefined, txHash: "0", accessPermitted: undefined, wasSentPacket: undefined })
     }
 
     const _setEscrow = async () => {
@@ -196,32 +198,28 @@ class EscrowManagerNC extends Component {
             )}
             {window.addr > 0 && (
               <div>
-                {!this.state.accessPermitted && (
-                  <>
-                    <Form.Row>
-                      <Form.Group as={Col} controlId="formGridFormatSetOrEnd">
-                        <Form.Label className="formFont">Set or End?:</Form.Label>
-                        <Form.Control as="select" size="lg" onChange={(e) => this.setState({ isSettingEscrow: e.target.value })}>
-                          <option value="0">Select an Action</option>
-                          <option value="true">Set Escrow</option>
-                          <option value="false">End Escrow</option>
-                        </Form.Control>
-                      </Form.Group>
-                    </Form.Row>
-                    <Form.Row>
-                      <Form.Group>
-                        <div className="submitButtonME">
-                          <div className="submitButtonME-content">
-                            <ArrowRightCircle
-                              onClick={() => { _accessAsset() }}
-                            />
-                          </div>
-                        </div>
-                      </Form.Group>
-                    </Form.Row>
-                  </>
-                )}
-                {this.state.accessPermitted && this.state.isSettingEscrow === "true" && (
+                              {!this.state.accessPermitted && (
+                <>
+                  <Form.Row>
+                      <Form.Label className="formFont">Set or End?:</Form.Label>
+                      <Form.Control as="select" size="lg" onChange={(e) => this.setState({ isSettingEscrow: e.target.value })}>
+                        <option value="null">Select an Action</option>
+                        <option value="true">Set Escrow</option>
+                        <option value="false">End Escrow</option>
+                      </Form.Control>
+                  </Form.Row>
+                  <Form.Row>
+                    <div className="submitButtonME2">
+                      <div className="submitButtonME2-content">
+                        <ArrowRightCircle
+                          onClick={() => { _accessAsset() }}
+                        />
+                      </div>
+                    </div>
+                  </Form.Row>
+                </>
+              )}
+                {this.state.accessPermitted === true && this.state.isSettingEscrow === "true" && (
                   <>
                     <Form.Row>
                       <Form.Group as={Col} controlId="formGridAgent">
@@ -277,18 +275,24 @@ class EscrowManagerNC extends Component {
                     </Form.Row>
                   </>
                 )}
-                {this.state.accessPermitted && this.state.isSettingEscrow === "false" && (
-                  <Form.Row>
-                    <h2 className="headerText">Escrow Agent: {this.state.escrowData[1]}
-                      <br></br> Escrow TimeLock: {this.state.escrowData[2]}<br></br></h2>
-                    <div className="submitButtonAAME">
-                      <div className="submitButtonAAME-content">
-                        <ArrowRightCircle
-                          onClick={() => { _endEscrow() }}
-                        />
+                {this.state.accessPermitted === true && this.state.isSettingEscrow === "false" && (
+                  <>
+                    <Form.Row>
+                      <h2 className="escrowDetails">Escrow Agent: {this.state.escrowData[1]}</h2>
+                    </Form.Row>
+                    <Form.Row>
+                      <h2 className="escrowDetails"> Escrow TimeLock: {this.state.escrowData[2]}</h2>
+                    </Form.Row>
+                    <Form.Row>
+                      <div className="submitButtonEM">
+                        <div className="submitButtonEM-content">
+                          <ArrowRightCircle
+                            onClick={() => { _endEscrow() }}
+                          />
+                        </div>
                       </div>
-                    </div>
-                  </Form.Row>
+                    </Form.Row>
+                  </>
                 )}
               </div>
             )}
@@ -396,8 +400,8 @@ class EscrowManagerNC extends Component {
                     </Form.Group>
                   </Form.Row>
                   <Form.Row>
-                    <div className="submitButtonAAME">
-                      <div className="submitButtonAAME-content">
+                    <div className="submitButtonME">
+                      <div className="submitButtonME-content">
                         <ArrowRightCircle
                           onClick={() => { _accessAsset() }}
                         />
@@ -463,7 +467,7 @@ class EscrowManagerNC extends Component {
                 </>
               )}
               {this.state.accessPermitted && this.state.isSettingEscrow === "false" && (
-                <Form>
+                <>
                   <Form.Row>
                     <h2 className="escrowDetails">Escrow Agent: {this.state.escrowData[1]}</h2>
                   </Form.Row>
@@ -479,7 +483,7 @@ class EscrowManagerNC extends Component {
                       </div>
                     </div>
                   </Form.Row>
-                </Form>
+                </>
               )}
             </div>
           )}

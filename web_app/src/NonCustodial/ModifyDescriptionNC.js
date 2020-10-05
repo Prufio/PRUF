@@ -490,8 +490,8 @@ class ModifyDescription extends Component {
 
                 {this.state.hashPath !== "" && this.state.accessPermitted && (
                   <Form.Row>
-                    <div className="submitButton">
-                      <div className="submitButton-content">
+                    <div className="submitButtonMD">
+                      <div className="submitButtonMD-content">
                         <ArrowRightCircle
                           onClick={() => { _updateDescription() }}
                         />
@@ -502,8 +502,8 @@ class ModifyDescription extends Component {
 
                 {this.state.hashPath === "" && this.state.accessPermitted && this.state.elementType === "0" && (
                   <Form.Row>
-                    <div className="submitButton">
-                      <div className="submitButton-content">
+                    <div className="submitButtonMD">
+                      <div className="submitButtonMD-content">
                         <ArrowRightCircle
                           onClick={() => { publishIPFS1() }}
                         />
@@ -514,8 +514,8 @@ class ModifyDescription extends Component {
                 )}
                 {this.state.elementType === "text" && (
                   <Form.Row>
-                    <div className="submitButton">
-                      <div className="submitButton-content">
+                    <div className="submitButtonMD">
+                      <div className="submitButtonMD-content">
                         <ArrowRightCircle
                           onClick={() => { _addToMiscArray(this.state.elementType) }}
                         />
@@ -525,8 +525,8 @@ class ModifyDescription extends Component {
                 )}
                 {this.state.elementType === "photo" && (
                   <Form.Row>
-                    <div className="submitButton">
-                      <div className="submitButton-content">
+                    <div className="submitButtonMD">
+                      <div className="submitButtonMD-content">
                         <ArrowRightCircle
                           onClick={() => { _addToMiscArray(this.state.elementType) }}
                         />
@@ -537,8 +537,8 @@ class ModifyDescription extends Component {
 
                 {this.state.elementType === "description" && (
                   <Form.Row>
-                    <div className="submitButton">
-                      <div className="submitButton-content">
+                    <div className="submitButtonMD">
+                      <div className="submitButtonMD-content">
                         <ArrowRightCircle
                           onClick={() => { _addToMiscArray(this.state.elementType) }}
                         />
@@ -549,8 +549,8 @@ class ModifyDescription extends Component {
 
                 {this.state.elementType === "nameTag" && (
                   <Form.Row>
-                    <div className="submitButton">
-                      <div className="submitButton-content">
+                    <div className="submitButtonMD">
+                      <div className="submitButtonMD-content">
                         <ArrowRightCircle
                           onClick={() => { _addToMiscArray(this.state.elementType) }}
                         />
@@ -561,8 +561,8 @@ class ModifyDescription extends Component {
 
                 {this.state.elementType === "removePhoto" && (
                   <Form.Row>
-                    <div className="submitButton">
-                      <div className="submitButton-content">
+                    <div className="submitButtonMD">
+                      <div className="submitButtonMD-content">
                         <ArrowRightCircle
                           onClick={() => { _removeElement(this.state.elementType) }}
                         />
@@ -573,8 +573,8 @@ class ModifyDescription extends Component {
 
                 {this.state.elementType === "removeText" && (
                   <Form.Row>
-                    <div className="submitButton">
-                      <div className="submitButton-content">
+                    <div className="submitButtonMD">
+                      <div className="submitButtonMD-content">
                         <ArrowRightCircle
                           onClick={() => { _removeElement(this.state.elementType) }}
                         />
@@ -796,8 +796,8 @@ class ModifyDescription extends Component {
               )}
 
               {this.state.hashPath !== "" && this.state.accessPermitted && (
-                <div className="submitButton">
-                  <div className="submitButton-content">
+                <div className="submitButtonMD">
+                  <div className="submitButtonMD-content">
                     <ArrowRightCircle
                       onClick={() => { _updateDescription() }}
                     />
@@ -806,8 +806,8 @@ class ModifyDescription extends Component {
               )}
 
               {this.state.hashPath === "" && this.state.accessPermitted && this.state.elementType === "0" && (
-                <div className="submitButton">
-                  <div className="submitButton-content">
+                <div className="submitButtonMD">
+                  <div className="submitButtonMD-content">
                     <ArrowRightCircle
                       onClick={() => { publishIPFS1() }}
                     />
@@ -816,8 +816,8 @@ class ModifyDescription extends Component {
 
               )}
               {this.state.elementType === "text" && (
-                <div className="submitButton">
-                  <div className="submitButton-content">
+                <div className="submitButtonMD">
+                  <div className="submitButtonMD-content">
                     <ArrowRightCircle
                       onClick={() => { _addToMiscArray(this.state.elementType) }}
                     />
@@ -825,8 +825,8 @@ class ModifyDescription extends Component {
                 </div>
               )}
               {this.state.elementType === "photo" && (
-                <div className="submitButton">
-                  <div className="submitButton-content">
+                <div className="submitButtonMD">
+                  <div className="submitButtonMD-content">
                     <ArrowRightCircle
                       onClick={() => { _addToMiscArray(this.state.elementType) }}
                     />
@@ -835,8 +835,8 @@ class ModifyDescription extends Component {
               )}
 
               {this.state.elementType === "description" && (
-                <div className="submitButton">
-                  <div className="submitButton-content">
+                <div className="submitButtonMD">
+                  <div className="submitButtonMD-content">
                     <ArrowRightCircle
                       onClick={() => { _addToMiscArray(this.state.elementType) }}
                     />
@@ -845,8 +845,8 @@ class ModifyDescription extends Component {
               )}
 
               {this.state.elementType === "nameTag" && (
-                <div className="submitButton">
-                  <div className="submitButton-content">
+                <div className="submitButtonMD">
+                  <div className="submitButtonMD-content">
                     <ArrowRightCircle
                       onClick={() => { _addToMiscArray(this.state.elementType) }}
                     />
@@ -855,8 +855,8 @@ class ModifyDescription extends Component {
               )}
 
               {this.state.elementType === "removePhoto" && (
-                <div className="submitButton">
-                  <div className="submitButton-content">
+                <div className="submitButtonMD">
+                  <div className="submitButtonMD-content">
                     <ArrowRightCircle
                       onClick={() => { _removeElement(this.state.elementType) }}
                     />
@@ -865,8 +865,8 @@ class ModifyDescription extends Component {
               )}
 
               {this.state.elementType === "removeText" && (
-                <div className="submitButton">
-                  <div className="submitButton-content">
+                <div className="submitButtonMD">
+                  <div className="submitButtonMD-content">
                     <ArrowRightCircle
                       onClick={() => { _removeElement(this.state.elementType) }}
                     />
