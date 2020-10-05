@@ -30,6 +30,7 @@ class Main extends Component {
     super(props);
 
     this.updateWatchDog = setInterval(() => {
+
       if (this.state.isAuthUser !== window.isAuthUser) {
         this.setState({ isAuthUser: window.isAuthUser })
       }
@@ -42,7 +43,7 @@ class Main extends Component {
 
       if (this.state.menuChange !== undefined) {
         window.menuChange = undefined
-        if (this.state.IDHolderBool === true) {
+        if (this.state.IDHolderBool && window.assetClassInfo.custodyType === "Non-Custodial" && this.state.IDTokenBalance < 2) {
           window.routeRequest = "NCAdmin"
           this.setState({ routeRequest: "NCAdmin" })
           this.setState({
@@ -56,7 +57,7 @@ class Main extends Component {
           this.setState({ menuChange: undefined });
         }
 
-        else if (this.state.IDHolderBool === false) {
+        else if (!this.state.IDHolderBool && this.state.assetHolderBool && window.assetClassInfo.custodyType === "Non-Custodial") {
           window.routeRequest = "NCUser"
           this.setState({ routeRequest: "NCUser" })
           this.setState({
@@ -66,6 +67,48 @@ class Main extends Component {
             assetClassHolderMenuBool: false,
             noAddrMenuBool: false,
             authorizedUserMenuBool: false
+          })
+          this.setState({ menuChange: undefined });
+        }
+
+        else if (this.state.isAuthUser && window.assetClassInfo.custodyType === "Custodial") {
+          window.routeRequest = "authUser"
+          this.setState({ routeRequest: "authUser" })
+          this.setState({
+            assetHolderMenuBool: false,
+            assetHolderUserMenuBool: false,
+            basicMenuBool: false,
+            assetClassHolderMenuBool: false,
+            noAddrMenuBool: false,
+            authorizedUserMenuBool: true,
+          })
+          this.setState({ menuChange: undefined });
+        }
+
+        else if (this.state.menuChange === "basic") {
+          window.routeRequest = "basic"
+          this.setState({ routeRequest: "basic" })
+          this.setState({
+            assetHolderMenuBool: false,
+            assetHolderUserMenuBool: false,
+            basicMenuBool: true,
+            assetClassHolderMenuBool: false,
+            noAddrMenuBool: false,
+            authorizedUserMenuBool: false,
+          })
+          this.setState({ menuChange: undefined });
+        }
+
+        else if (!this.state.isAuthUser && !this.state.isACAdmin && !this.state.assetHolderBool && !this.state.IDHolderBool) {
+          window.routeRequest = "basic"
+          this.setState({ routeRequest: "basic" })
+          this.setState({
+            assetHolderMenuBool: false,
+            assetHolderUserMenuBool: false,
+            basicMenuBool: true,
+            assetClassHolderMenuBool: false,
+            noAddrMenuBool: false,
+            authorizedUserMenuBool: false,
           })
           this.setState({ menuChange: undefined });
         }
@@ -483,6 +526,17 @@ class Main extends Component {
 
   componentDidMount() {//stuff to do when component mounts in window
     buildWindowUtils()
+
+    window.assetClassInfo = {}
+
+    window.menuSwitch = {
+      bm: true,
+      ahm: false,
+      ahum: false,
+      achm: false,
+      nam: false,
+      aum: false,
+    }
     window.sentPacket = undefined;
     window.isSettingUpContracts = false;
     window.hasLoadedAssets = false;
@@ -512,6 +566,8 @@ class Main extends Component {
       this.setupContractEnvironment(_web3)
       this.setState({ web3: _web3 });
       window.web3 = _web3;
+
+      window.routeRequest = "basic"
 
       ethereum.enable()
 
@@ -545,6 +601,8 @@ class Main extends Component {
         hasFetchedBalances: false,
         routeRequest: "noAddr"
       })
+
+      window.routeRequest = "noAddr"
 
       var _ipfs = new this.state.IPFS({
         host: "ipfs.infura.io",
