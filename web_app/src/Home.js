@@ -8,56 +8,6 @@ class Home extends Component {
   constructor(props) {
     super(props);
 
-    this.updateWatchDog = setInterval(async () => {
-
-      if (this.state.hasInfo && !this.state.hasChangedMenu){
-        if (Object.values(this.state.assetClassInfo) !== Object.values(window.assetClassInfo)) {
-          await this.setState({ assetClassInfo: window.assetClassInfo })
-          console.log("window AC info" , window.assetClassInfo)
-        }
-        
-        if(this.state.assetClassInfo === window.assetClassInfo && this.state.hasInfo && !this.state.hasChangedMenu){
-  
-          console.log("Now checking conditions")
-    
-          if (this.state.assetClassInfo.custodyType === "Custodial" && window.isAuthUser) {
-              window.menuChange = "authUser"
-              this.setState({hasChangedMenu: true})
-              console.log("autoSwitch to authUser")
-          }
-  
-          else if (
-            (this.state.assetClassInfo.custodyType === "Custodial" && !window.isAuthUser) ||
-            (this.state.assetClassInfo.custodyType === "Non-Custodial" && !window.IDHolderBool && !window.assetHolderBool)){
-            window.menuChange = "basic"
-            this.setState({hasChangedMenu: true})
-            console.log("autoSwitch to basic")
-          }
-  
-          else if (
-            this.state.assetClassInfo.custodyType === "Non-Custodial" && window.IDHolderBool && window.balances.IDTokenBalance < 2)  {
-              window.menuChange = "NCAdmin"
-              this.setState({hasChangedMenu: true})
-              console.log("autoSwitch to NCAdmin")
-          }
-    
-          else if (
-            this.state.assetClassInfo.custodyType === "Non-Custodial"  && !window.IDHolderBool && window.assetHolderBool) {
-              window.menuChange = "NCUser"
-              this.setState({hasChangedMenu: true})
-              console.log("autoSwitch to NCUser")
-          }
-    
-          else  {
-            window.menuChange = "basic"
-            this.setState({hasChangedMenu: true})
-            console.log("autoSwitch to basic")
-          }
-        }
-      }
-      
-    }, 50)
-
     this.state = {
       addr: undefined,
       web3: null,
@@ -75,11 +25,8 @@ class Home extends Component {
       authLevel: "",
       PIP: "",
       RCLR: "",
-      assetClassInfo: {},
       assetClass: undefined,
       contractArray: [],
-      hasChangedMenu: true,
-      hasInfo: false
     };
   }
 
@@ -88,7 +35,6 @@ class Home extends Component {
       this.setState({ addr: window.addr })
     }
 
-    this.setState({hasChangedMenu: true, hasInfo: false})
   }
 
   componentDidUpdate() {
@@ -103,8 +49,9 @@ class Home extends Component {
   render() {
 
     const _setAC = async () => {
-      this.setState({hasChangedMenu: false, hasInfo: false})
       let acDoesExist;
+
+      window.routeRequest = "basic"
 
       if (this.state.assetClass === "0" || this.state.assetClass === undefined) { window.assetClass = undefined; return this.forceUpdate() }
       else {
@@ -132,7 +79,7 @@ class Home extends Component {
           await window.utils.getACData("id", window.assetClass)
 
           console.log(window.authLevel);
-          return this.setState({ authLevel: window.authLevel, hasInfo: true });
+          return this.setState({ authLevel: window.authLevel });
         }
 
         else {
@@ -146,7 +93,7 @@ class Home extends Component {
           window.assetClassName = this.state.assetClass
           await window.utils.resolveAC();
 
-          return this.setState({ authLevel: window.authLevel, hasInfo: true });
+          return this.setState({ authLevel: window.authLevel });
         }
       }
     }

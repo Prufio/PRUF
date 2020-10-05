@@ -74,7 +74,7 @@ class AssetCheckIn extends Component {
 
         for (let i = 0; i < images.length; i++) {
           component.push(
-            <button value={images[i]} className="assetImageSelectorButton" onClick={() => { showImage(images[i]) }}>
+            <button value={images[i]} class="assetImageSelectorButton" onClick={() => { showImage(images[i]) }}>
               <img title="View Image" src={images[i]} className="imageSelectorImage" />
             </button>
           )
@@ -89,7 +89,7 @@ class AssetCheckIn extends Component {
         for (let i = 0; i < text.length; i++) {
           component.push(
             <>
-              <h4 className="card-description-selected">{textNames[i]}: {text[i]}</h4>
+              <h4 class="card-description-selected">{textNames[i]}: {text[i]}</h4>
               <br />
             </>
           )
@@ -141,8 +141,8 @@ class AssetCheckIn extends Component {
   
             `}
               </style>
-              <div className="card" value="100">
-                <div className="row no-gutters">
+              <div class="card" value="100">
+                <div class="row no-gutters">
                   <div className="assetSelecedInfo">
                     <div className="mediaLinkADS">
                       <a className="mediaLinkContentADS" ><Grid onClick={() => { _printQR() }} /></a>
@@ -163,17 +163,17 @@ class AssetCheckIn extends Component {
                         </div>
                       </div>
                     )}
-                    <button className="assetImageButtonSelected" onClick={() => { openPhotoNT(this.state.selectedImage) }}>
+                    <button class="assetImageButtonSelected" onClick={() => { openPhotoNT(this.state.selectedImage) }}>
                       <img title="View Image" src={this.state.selectedImage} className="assetImageSelected" />
                     </button>
-                    <p className="card-name-selected">Name : {obj.name}</p>
-                    <p className="card-ac-selected">Asset Class : {obj.assetClass}</p>
-                    <p className="card-status-selected">Status : {obj.status}</p>
+                    <p class="card-name-selected">Name : {obj.name}</p>
+                    <p class="card-ac-selected">Asset Class : {obj.assetClass}</p>
+                    <p class="card-status-selected">Status : {obj.status}</p>
                     <div className="imageSelector">
                       {generateThumbs()}
                     </div>
                     <div className="cardSelectedIdxForm">
-                      <h4 className="card-idx-selected">IDX : {obj.idxHash}</h4>
+                      <h4 class="card-idx-selected">IDX : {obj.idxHash}</h4>
                     </div>
                     <div className="cardDescription-selected">
                       {generateTextList()}
@@ -247,11 +247,11 @@ class AssetCheckIn extends Component {
   
              `}
               </style>
-              <div className="card" >
-                <div className="row no-gutters">
-                  <div className="col-auto">
+              <div class="card" >
+                <div class="row no-gutters">
+                  <div class="col-auto">
                     <button
-                      className="assetImageButton"
+                      class="assetImageButton"
                       // value={
                       //   JSON.stringify()}
                       onClick={() => {
@@ -272,12 +272,12 @@ class AssetCheckIn extends Component {
                     </button>
                   </div>
                   <div>
-                    <p className="card-name">Name : {obj.names[i]}</p>
-                    <p className="card-ac">Asset Class : {obj.assetClasses[i]}</p>
-                    <p className="card-status">Status : {obj.statuses[i]}</p>
-                    <h4 className="card-idx">IDX : {obj.ids[i]}</h4>
+                    <p class="card-name">Name : {obj.names[i]}</p>
+                    <p class="card-ac">Asset Class : {obj.assetClasses[i]}</p>
+                    <p class="card-status">Status : {obj.statuses[i]}</p>
+                    <h4 class="card-idx">IDX : {obj.ids[i]}</h4>
                     <br></br>
-                    <div className="cardDescription"><h4 className="card-description">Description :{obj.descriptions[i].text.description}</h4></div>
+                    <div className="cardDescription"><h4 class="card-description">Description :{obj.descriptions[i].text.description}</h4></div>
                   </div>
                   <div className="cardButton">
                     <div className="cardButton-content">
@@ -379,7 +379,7 @@ class AssetCheckIn extends Component {
         <div className="assetDashboard">
           {!this.state.hasNoAssets && this.state.hasLoadedAssets && !this.state.moreInfo && (<>{this.generateAssetDash(this.state.assets)}</>)}
           {!this.state.hasNoAssets && this.state.hasLoadedAssets && this.state.moreInfo && (<>{this.generateAssetInfo(this.state.assetObj)}</>)}
-          {!this.state.hasNoAssets && !this.state.hasLoadedAssets && (<div className="VRText"><h2 className="loading">Loading Assets</h2></div>)}
+          {!this.state.hasNoAssets && !this.state.hasLoadedAssets && (<div className="VRText"><h2 class="loading">Loading Assets</h2></div>)}
           {this.state.hasNoAssets && (<div className="VRText"><h2>No Assets Held by User</h2></div>)}
         </div>
         <div className="assetDashboardFooter">

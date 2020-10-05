@@ -30,7 +30,6 @@ class Main extends Component {
     super(props);
 
     this.updateWatchDog = setInterval(() => {
-
       if (this.state.isAuthUser !== window.isAuthUser) {
         this.setState({ isAuthUser: window.isAuthUser })
       }
@@ -43,7 +42,7 @@ class Main extends Component {
 
       if (this.state.menuChange !== undefined) {
         window.menuChange = undefined
-        if (this.state.IDHolderBool && window.assetClassInfo.custodyType === "Non-Custodial" && this.state.IDTokenBalance < 2) {
+        if (this.state.IDHolderBool === true) {
           window.routeRequest = "NCAdmin"
           this.setState({ routeRequest: "NCAdmin" })
           this.setState({
@@ -57,7 +56,7 @@ class Main extends Component {
           this.setState({ menuChange: undefined });
         }
 
-        else if (!this.state.IDHolderBool && this.state.assetHolderBool && window.assetClassInfo.custodyType === "Non-Custodial") {
+        else if (this.state.IDHolderBool === false) {
           window.routeRequest = "NCUser"
           this.setState({ routeRequest: "NCUser" })
           this.setState({
@@ -67,48 +66,6 @@ class Main extends Component {
             assetClassHolderMenuBool: false,
             noAddrMenuBool: false,
             authorizedUserMenuBool: false
-          })
-          this.setState({ menuChange: undefined });
-        }
-
-        else if (this.state.isAuthUser && window.assetClassInfo.custodyType === "Custodial") {
-          window.routeRequest = "authUser"
-          this.setState({ routeRequest: "authUser" })
-          this.setState({
-            assetHolderMenuBool: false,
-            assetHolderUserMenuBool: false,
-            basicMenuBool: false,
-            assetClassHolderMenuBool: false,
-            noAddrMenuBool: false,
-            authorizedUserMenuBool: true,
-          })
-          this.setState({ menuChange: undefined });
-        }
-
-        else if (this.state.menuChange === "basic") {
-          window.routeRequest = "basic"
-          this.setState({ routeRequest: "basic" })
-          this.setState({
-            assetHolderMenuBool: false,
-            assetHolderUserMenuBool: false,
-            basicMenuBool: true,
-            assetClassHolderMenuBool: false,
-            noAddrMenuBool: false,
-            authorizedUserMenuBool: false,
-          })
-          this.setState({ menuChange: undefined });
-        }
-
-        else if (!this.state.isAuthUser && !this.state.isACAdmin && !this.state.assetHolderBool && !this.state.IDHolderBool) {
-          window.routeRequest = "basic"
-          this.setState({ routeRequest: "basic" })
-          this.setState({
-            assetHolderMenuBool: false,
-            assetHolderUserMenuBool: false,
-            basicMenuBool: true,
-            assetClassHolderMenuBool: false,
-            noAddrMenuBool: false,
-            authorizedUserMenuBool: false,
           })
           this.setState({ menuChange: undefined });
         }
@@ -310,6 +267,7 @@ class Main extends Component {
       this.setState({ runWatchDog: true })
       console.log("window IPFS operation count: ", window.ipfsCounter)
       console.log("window assets: ", window.assets)
+      console.log("Bools...", this.state.assetHolderBool, this.state.assetClassHolderBool, this.state.IDHolderBool)
       //console.log(window.assets.ids, " aTkn-> ", window.aTknIDs)
 
     }
@@ -397,6 +355,7 @@ class Main extends Component {
         _web3.eth.getAccounts().then((e) => {
           if (window.addr !== e[0]) {
             window.href = "/#";
+            window.menuChange = "basic"
             window.addr = e[0];
             window.assetClass = undefined;
             window.isAuthUser = false;
@@ -404,6 +363,7 @@ class Main extends Component {
             self.setState({ addr: e[0]});
             window.recount = true;
             window.resetInfo = true;
+            
             //self.setupContractEnvironment(window.web3);
             console.log("///////in acctChanger////////");
           }
@@ -448,11 +408,12 @@ class Main extends Component {
 
         window._contracts = await buildContracts(_web3)
 
-        await window.utils.getETHBalance();
+        
         await this.setState({ contracts: window._contracts })
         await window.utils.getContracts()
 
         if (window.addr !== undefined) {
+          await window.utils.getETHBalance();
           await this.setUpTokenVals()
           await this.setupAssets()
         }
@@ -526,17 +487,6 @@ class Main extends Component {
 
   componentDidMount() {//stuff to do when component mounts in window
     buildWindowUtils()
-
-    window.assetClassInfo = {}
-
-    window.menuSwitch = {
-      bm: true,
-      ahm: false,
-      ahum: false,
-      achm: false,
-      nam: false,
-      aum: false,
-    }
     window.sentPacket = undefined;
     window.isSettingUpContracts = false;
     window.hasLoadedAssets = false;
@@ -566,8 +516,6 @@ class Main extends Component {
       this.setupContractEnvironment(_web3)
       this.setState({ web3: _web3 });
       window.web3 = _web3;
-
-      window.routeRequest = "basic"
 
       ethereum.enable()
 
@@ -601,8 +549,6 @@ class Main extends Component {
         hasFetchedBalances: false,
         routeRequest: "noAddr"
       })
-
-      window.routeRequest = "noAddr"
 
       var _ipfs = new this.state.IPFS({
         host: "ipfs.infura.io",
