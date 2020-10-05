@@ -33,23 +33,23 @@ class Main extends Component {
         this.setState({ isAuthUser: window.isAuthUser })
       }
 
-      if(window.balances !== undefined){
-        if(
-          Object.values(window.balances) !== 
-          Object.values({assetClass: this.state.assetClassBalance, asset: this.state.assetBalance, ID: this.state.IDTokenBalance})){
-            this.setState({
-              assetClassBalance: window.balances.assetClassBalance,
-              assetBalance: window.balances.assetBalance,
-              IDTokenBalance: window.balances.IDTokenBalance,
-              assetHolderBool: window.assetHolderBool,
-              assetClassHolderBool: window.assetClassHolderBool,
-              IDHolderBool: window.IDHolderBool,
-              custodyType: window.custodyType,
-              hasFetchedBalances: window.hasFetchedBalances
-            })
-          }
+      if (window.balances !== undefined) {
+        if (
+          Object.values(window.balances) !==
+          Object.values({ assetClass: this.state.assetClassBalance, asset: this.state.assetBalance, ID: this.state.IDTokenBalance })) {
+          this.setState({
+            assetClassBalance: window.balances.assetClassBalance,
+            assetBalance: window.balances.assetBalance,
+            IDTokenBalance: window.balances.IDTokenBalance,
+            assetHolderBool: window.assetHolderBool,
+            assetClassHolderBool: window.assetClassHolderBool,
+            IDHolderBool: window.IDHolderBool,
+            custodyType: window.custodyType,
+            hasFetchedBalances: window.hasFetchedBalances
+          })
+        }
       }
-      
+
 
       if (window.menuChange !== undefined) {
         console.log(window.menuChange)
@@ -234,31 +234,31 @@ class Main extends Component {
       window.hasNoAssets = false;
       window.ipfsCounter = 0;
       window.ipfsHashArray = [];
-        window.assets = { descriptions: [], ids: [], assetClasses: [], statuses: [], names: [] };
-        
-        window.assetTokenInfo = {
-          assetClass: undefined,
-          idxHash: undefined,
-          name: undefined,
-          photos: undefined,
-          text: undefined,
-          status: undefined,
-        }
-        
-        if (window.balances !== undefined) {
-          this.setState({
-            assetClassBalance: window.balances.assetClassBalance,
-            assetBalance: window.balances.assetBalance,
-            IDTokenBalance: window.balances.IDTokenBalance,
-            assetHolderBool: window.assetHolderBool,
-            assetClassHolderBool: window.assetClassHolderBool,
-            IDHolderBool: window.IDHolderBool,
-            custodyType: window.custodyType,
-            hasFetchedBalances: window.hasFetchedBalances
-          })
-        }
+      window.assets = { descriptions: [], ids: [], assetClasses: [], statuses: [], names: [] };
 
-      if (window.balances === undefined) { return console.log("balances undefined")}
+      window.assetTokenInfo = {
+        assetClass: undefined,
+        idxHash: undefined,
+        name: undefined,
+        photos: undefined,
+        text: undefined,
+        status: undefined,
+      }
+
+      if (window.balances !== undefined) {
+        this.setState({
+          assetClassBalance: window.balances.assetClassBalance,
+          assetBalance: window.balances.assetBalance,
+          IDTokenBalance: window.balances.IDTokenBalance,
+          assetHolderBool: window.assetHolderBool,
+          assetClassHolderBool: window.assetClassHolderBool,
+          IDHolderBool: window.IDHolderBool,
+          custodyType: window.custodyType,
+          hasFetchedBalances: window.hasFetchedBalances
+        })
+      }
+
+      if (window.balances === undefined) { return console.log("balances undefined") }
       console.log("SA: In setupAssets")
 
       let tempDescObj = {}
@@ -377,23 +377,23 @@ class Main extends Component {
             window.routeRequest = "basic"
             self.setState({ routeRequest: "basic" });
             self.setState({
-            basicMenuBool: true,
-            assetHolderMenuBool: false,
-            assetHolderUserMenuBool: false,
-            assetClassHolderMenuBool: false,
-            noAddrMenuBool: false,
-            authorizedUserMenuBool: false,
-            settingsMenu: undefined
+              basicMenuBool: true,
+              assetHolderMenuBool: false,
+              assetHolderUserMenuBool: false,
+              assetClassHolderMenuBool: false,
+              noAddrMenuBool: false,
+              authorizedUserMenuBool: false,
+              settingsMenu: undefined
             })
             window.href = "/#";
             window.addr = e[0];
             window.assetClass = undefined;
             window.isAuthUser = false;
             window.isACAdmin = false;
-            self.setState({ addr: e[0]});
+            self.setState({ addr: e[0] });
             window.recount = true;
             window.resetInfo = true;
-            
+
             //self.setupContractEnvironment(window.web3);
             console.log("///////in acctChanger////////");
           }
@@ -438,7 +438,7 @@ class Main extends Component {
 
         window._contracts = await buildContracts(_web3)
 
-        
+
         await this.setState({ contracts: window._contracts })
         await window.utils.getContracts()
 
@@ -594,10 +594,10 @@ class Main extends Component {
 
     this.hamburgerMenu = async () => {
       if (this.state.hamburgerMenu === undefined) {
-        this.setState({ 
+        this.setState({
           hamburgerMenu: true,
           userMenu: undefined,
-          settingsMenu: undefined 
+          settingsMenu: undefined
 
         })
       }
@@ -778,98 +778,91 @@ class Main extends Component {
                   </div>
                   <div>
                     {this.state.userMenu !== undefined && (
-                      <div>
-                        <div className="hamburgerDropdownUserInfoAddr">
-                          {this.state.addr > 0 && (
-                            <div className="hamburgerDropdownUserInfoAddrContent">
-                              Currently serving :
-                              <Button variant="etherscan" title="Check it out on Etherscan!" onClick={() => { window.open("https://kovan.etherscan.io/address/" + this.state.addr )}}>{this.state.addr.substring(0,6) + "..." + this.state.addr.substring(36, 42)}</Button>
+                      <div className="hamburgerDropdownUserInfoBox">
+                        <div className="hamburgerDropdownUserInfo">
+                        {this.state.addr > 0 && (
+                          <h4>
+                            Currently serving :
+                            <Button variant="etherscan" title="Check it out on Etherscan!" onClick={() => { window.open("https://kovan.etherscan.io/address/" + this.state.addr) }}>{this.state.addr}</Button>
+                          </h4>
+                        )}
+                        {this.state.addr === undefined && (
+                          <h4>
+                            Currently serving: NOBODY! Log into web3 provider!
+                          </h4>
+                        )}
+                          {this.state.ETHBalance === undefined && (
+                            <h4>
+                              ETH Balance : Please Log In
+                            </h4>
+                          )}
+                          {this.state.ETHBalance && (
+                            <h4>
+                              ETH Balance : {this.state.ETHBalance}
+                            </h4>
+                          )}
+                          <br></br>
+                          {this.state.assetClassBalance === undefined && (
+                            <h4>
+                              AssetClass Token Balance: Please Log In
                               <br></br>
-                            </div>
+                            </h4>
+                          )}
+                          {this.state.assetClassBalance && (
+                            <h4>
+                              AssetClass Token Balance: {this.state.assetClassBalance}
+                            </h4>
 
                           )}
-                          {this.state.addr === undefined && (
-                            <div className="hamburgerDropdownUserInfoAddrContent">
-                              Currently serving: NOBODY! Log into web3 provider!
+                          <br></br>
+                          {this.state.assetBalance === undefined && (
+                            <h4>
+                              Asset Token Balance: Please Log In
                               <br></br>
-                            </div>
+                            </h4>
                           )}
-                        </div>
-                        <div className="hamburgerDropdownUserInfoBox">
-                          <div className="hamburgerDropdownUserInfo">
-                            {this.state.ETHBalance === undefined && (
-                              <h4>
-                                ETH Balance : Please Log In
-                              </h4>
-                            )}
-                            {this.state.ETHBalance && (
-                              <h4>
-                                ETH Balance : {this.state.ETHBalance}
-                              </h4>
-                            )}
-                            <br></br>
-                            {this.state.assetClassBalance === undefined && (
-                              <h4>
-                                AssetClass Token Balance: Please Log In
-                                <br></br>
-                              </h4>
-                            )}
-                            {this.state.assetClassBalance && (
-                              <h4>
-                                AssetClass Token Balance: {this.state.assetClassBalance}
-                              </h4>
+                          {this.state.assetBalance && (
+                            <h4>
+                              Asset Token Balance: {this.state.assetBalance}
+                            </h4>
+                          )}
+                          <br></br>
+                          {this.state.IDTokenBalance === undefined && (
+                            <h4>
+                              ID Token Balance : Please Log In
+                              <br></br>
+                            </h4>
+                          )}
 
-                            )}
-                            <br></br>
-                            {this.state.assetBalance === undefined && (
-                              <h4>
-                                Asset Token Balance: Please Log In
-                                <br></br>
-                              </h4>
-                            )}
-                            {this.state.assetBalance && (
-                              <h4>
-                                Asset Token Balance: {this.state.assetBalance}
-                              </h4>
-                            )}
-                            <br></br>
-                            {this.state.IDTokenBalance === undefined && (
-                              <h4>
-                                ID Token Balance : Please Log In
-                                <br></br>
-                              </h4>
-                            )}
-
-                            {this.state.IDTokenBalance && (
-                              <h4>
-                                ID Token Balance : {this.state.IDTokenBalance}
-                              </h4>
-                            )}
-                            <br></br>
-                          </div>
+                          {this.state.IDTokenBalance && (
+                            <h4>
+                              ID Token Balance : {this.state.IDTokenBalance}
+                            </h4>
+                          )}
+                          <br></br>
                         </div>
                       </div>
                     )}
-                  </div>
+                </div>
                 </div>
               )}
               <ul className="header">
-                {window._contracts !== undefined && (
-                  <nav>
-                    {this.state.noAddrMenuBool === true && (<NoAddressComponent />)}
-                    {this.state.assetHolderMenuBool === true && (<NonCustodialComponent />)}
-                    {this.state.assetHolderUserMenuBool === true && (<NonCustodialUserComponent />)}
-                    {this.state.assetClassHolderMenuBool === true && (<AdminComponent />)}
-                    {this.state.authorizedUserMenuBool === true && (<AuthorizedUserComponent />)}
-                    {this.state.basicMenuBool === true && (<BasicComponent />)}
-                  </nav>
-                )}
-              </ul>
-            </div>
+              {window._contracts !== undefined && (
+                <nav>
+                  {this.state.noAddrMenuBool === true && (<NoAddressComponent />)}
+                  {this.state.assetHolderMenuBool === true && (<NonCustodialComponent />)}
+                  {this.state.assetHolderUserMenuBool === true && (<NonCustodialUserComponent />)}
+                  {this.state.assetClassHolderMenuBool === true && (<AdminComponent />)}
+                  {this.state.authorizedUserMenuBool === true && (<AuthorizedUserComponent />)}
+                  {this.state.basicMenuBool === true && (<BasicComponent />)}
+                </nav>
+              )}
+            </ul>
           </div>
-          <div className="pageForm">
-            <style type="text/css">
-              {`
+          </div>
+        <div className="pageForm">
+          <style type="text/css">
+            {`
                         .btn-primary {
                           background-color: #00a8ff;
                           color: white;
@@ -931,24 +924,24 @@ class Main extends Component {
                           color: #fff;
                         }
                      `}
-            </style>
-            <div>
-              <Route exact path="/" component={Home} />
-              {Router(this.state.routeRequest)}
-            </div>
-            <div className="mediaLink">
-              <a className="mediaLinkContent"><GitHub size={35} onClick={() => { window.open("https://github.com/vdmprojects/Bulletproof", "_blank") }} /></a>
-              <a className="mediaLinkContent"><Mail size={35} onClick={() => { window.open("mailto:drake@pruf.io", "_blank") }} /></a>
-              <a className="mediaLinkContent"><Twitter size={35} onClick={() => { window.open("https://twitter.com/umlautchair", "_blank") }} /></a>
-              <a className="mediaLinkContent" ><Video size={35} onClick={() => { window.open("https://www.youtube.com/channel/UC9HzR9-dAzHtPKOqlVqwOuw", "_blank") }} /></a>
-            </div>
+          </style>
+          <div>
+            <Route exact path="/" component={Home} />
+            {Router(this.state.routeRequest)}
           </div>
-          <NavLink to="/">
-          </NavLink>
+          <div className="mediaLink">
+            <a className="mediaLinkContent"><GitHub size={35} onClick={() => { window.open("https://github.com/vdmprojects/Bulletproof", "_blank") }} /></a>
+            <a className="mediaLinkContent"><Mail size={35} onClick={() => { window.open("mailto:drake@pruf.io", "_blank") }} /></a>
+            <a className="mediaLinkContent"><Twitter size={35} onClick={() => { window.open("https://twitter.com/umlautchair", "_blank") }} /></a>
+            <a className="mediaLinkContent" ><Video size={35} onClick={() => { window.open("https://www.youtube.com/channel/UC9HzR9-dAzHtPKOqlVqwOuw", "_blank") }} /></a>
+          </div>
+        </div>
+        <NavLink to="/">
+        </NavLink>
 
         </HashRouter>
 
-      </div>
+      </div >
     );
   }
 }
