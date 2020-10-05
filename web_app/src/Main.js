@@ -783,7 +783,7 @@ class Main extends Component {
                         {this.state.addr > 0 && (
                           <h4>
                             Currently serving :
-                            <Button variant="etherscan" title="Check it out on Etherscan!" onClick={() => { window.open("https://kovan.etherscan.io/address/" + this.state.addr) }}>{this.state.addr}</Button>
+                            <Button variant="etherscan" title="Check it out on Etherscan!" onClick={() => { window.open("https://kovan.etherscan.io/address/" + this.state.addr )}}>{this.state.addr.substring(0,6) + "..." + this.state.addr.substring(37, 42)}</Button> 
                           </h4>
                         )}
                         {this.state.addr === undefined && (
