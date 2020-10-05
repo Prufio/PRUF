@@ -151,7 +151,7 @@ class AssetDashboard extends Component {
                       <div>
                         <div className="QRdisplay">
                           <div className="QR">
-                            <QRCode value={obj.idxHash} size="140" qrStyle="dots" fgColor="#002a40"  logoWidth="60" logoHeight="60" logoOpacity="0.6" logoImage="https://raw.githubusercontent.com/vdmprojects/Bulletproof/master/web_app/src/Resources/U%20CIRCLE%20QR.png?token=AKTATQGAQQI7WQ4PC4XF3T27PNCCC"/>
+                            <QRCode value={obj.idxHash} size="140" fgColor="#002a40"  logoWidth="60" logoHeight="60" logoOpacity="0.85" logoImage="favicon.png"/>
                           </div>
                         </div>
                         <div className="QRdisplay-footer">
