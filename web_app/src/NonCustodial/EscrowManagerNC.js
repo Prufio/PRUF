@@ -15,7 +15,7 @@ class EscrowManagerNC extends Component {
         this.setState({ assets: window.assets })
       }
 
-      if (this.state.hasLoadedAssets !== window.hasLoadedAssets) {
+      if (this.state.hasLoadedAssets !== window.hasLoadedAssets && this.state.runWatchDog === true) {
         this.setState({ hasLoadedAssets: window.hasLoadedAssets })
       }
     }, 100)
@@ -55,6 +55,8 @@ class EscrowManagerNC extends Component {
       window.sentPacket = undefined
       this.setState({ wasSentPacket: TrendingUp })
     }
+
+    this.setState({runWatchDog: true})
 
   }
 

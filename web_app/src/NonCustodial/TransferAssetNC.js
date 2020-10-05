@@ -15,7 +15,7 @@ class ModifyDescriptionNC extends Component {
         this.setState({ assets: window.assets })
       }
 
-      if (this.state.hasLoadedAssets !== window.hasLoadedAssets) {
+      if (this.state.hasLoadedAssets !== window.hasLoadedAssets && this.state.runWatchDog === true) {
         this.setState({ hasLoadedAssets: window.hasLoadedAssets })
       }
     }, 50)
@@ -54,6 +54,8 @@ class ModifyDescriptionNC extends Component {
       this.setState({ wasSentPacket: true })
     }
 
+    this.setState({runWatchDog: true})
+    
   }
 
   componentWillUnmount() {//stuff do do when component unmounts from the window

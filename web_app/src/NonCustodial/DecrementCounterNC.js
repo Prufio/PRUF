@@ -15,7 +15,7 @@ class DecrementCounterNC extends Component {
         this.setState({ assets: window.assets })
       }
 
-      if (this.state.hasLoadedAssets !== window.hasLoadedAssets) {
+      if (this.state.hasLoadedAssets !== window.hasLoadedAssets && this.state.runWatchDog === true) {
         this.setState({ hasLoadedAssets: window.hasLoadedAssets })
       }
     }, 100)
@@ -56,6 +56,8 @@ class DecrementCounterNC extends Component {
       window.sentPacket = undefined
       this.setState({ wasSentPacket: true })
     }
+
+    this.setState({runWatchDog: true})
 
   }
 
