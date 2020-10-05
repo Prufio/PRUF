@@ -391,7 +391,7 @@ class Main extends Component {
               authorizedUserMenuBool: false,
               settingsMenu: undefined
             })
-            window.href = "/#";
+            if(window.location.href !== "/#/asset-dashboard"){window.location.href = "/#"}
             window.addr = e[0];
             window.assetClass = undefined;
             window.isAuthUser = false;

@@ -56,7 +56,7 @@ class EscrowManagerNC extends Component {
       this.setState({ wasSentPacket: TrendingUp })
     }
 
-    this.setState({runWatchDog: true})
+    this.setState({ runWatchDog: true })
 
   }
 
@@ -72,7 +72,7 @@ class EscrowManagerNC extends Component {
     const self = this;
 
     const _accessAsset = async () => {
-      if(this.state.isSettingEscrow === undefined || this.state.isSettingEscrow === "null") {
+      if (this.state.isSettingEscrow === undefined || this.state.isSettingEscrow === "null") {
         return alert("Please Select an Action From the Dropdown")
       }
       return this.setState({
@@ -122,6 +122,9 @@ class EscrowManagerNC extends Component {
       if (e === "0" || e === undefined) { return }
       else if (e === "reset") {
         return window.resetInfo = true;
+      }
+      else if (e === "assetDash"){
+        return window.location.href = "/#/asset-dashboard"
       }
       this.setState({ selectedAsset: e })
       console.log("Changed component idx to: ", window.assets.ids[e])
@@ -200,27 +203,27 @@ class EscrowManagerNC extends Component {
             )}
             {window.addr > 0 && (
               <div>
-                              {!this.state.accessPermitted && (
-                <>
-                  <Form.Row>
+                {!this.state.accessPermitted && (
+                  <>
+                    <Form.Row>
                       <Form.Label className="formFont">Set or End?:</Form.Label>
                       <Form.Control as="select" size="lg" onChange={(e) => this.setState({ isSettingEscrow: e.target.value })}>
                         <option value="null">Select an Action</option>
                         <option value="true">Set Escrow</option>
                         <option value="false">End Escrow</option>
                       </Form.Control>
-                  </Form.Row>
-                  <Form.Row>
-                    <div className="submitButtonME2">
-                      <div className="submitButtonME2-content">
-                        <ArrowRightCircle
-                          onClick={() => { _accessAsset() }}
-                        />
+                    </Form.Row>
+                    <Form.Row>
+                      <div className="submitButtonME2">
+                        <div className="submitButtonME2-content">
+                          <ArrowRightCircle
+                            onClick={() => { _accessAsset() }}
+                          />
+                        </div>
                       </div>
-                    </div>
-                  </Form.Row>
-                </>
-              )}
+                    </Form.Row>
+                  </>
+                )}
                 {this.state.accessPermitted === true && this.state.isSettingEscrow === "true" && (
                   <>
                     <Form.Row>
@@ -385,8 +388,14 @@ class EscrowManagerNC extends Component {
                         size="lg"
                         onChange={(e) => { _checkIn(e.target.value) }}
                       >
-                        {this.state.hasLoadedAssets && (<optgroup className="optgroup"><option value="null"> Select an asset </option><option value="reset">Refresh Assets</option>{window.utils.generateAssets()}</optgroup>)}
-                    {!this.state.hasLoadedAssets && (<optgroup className="optgroup"><option value="null"> Loading Assets... </option></optgroup>)}
+                        {this.state.hasLoadedAssets && (
+                          <optgroup className="optgroup">
+                            <option value="null"> Select an asset </option>
+                            <option value="assetDash">View Assets in Dashboard</option>
+                            <option value="reset">Refresh Assets</option>
+                            {window.utils.generateAssets()}
+                          </optgroup>)}
+                        {!this.state.hasLoadedAssets && (<optgroup ><option value="null"> Loading Assets... </option></optgroup>)}
 
                       </Form.Control>
                     </Form.Group>

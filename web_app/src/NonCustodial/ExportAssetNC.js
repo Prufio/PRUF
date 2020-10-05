@@ -76,6 +76,9 @@ class ExportAssetNC extends Component {
       else if (e === "reset") {
         return window.resetInfo = true;
       }
+      else if (e === "assetDash"){
+        return window.location.href = "/#/asset-dashboard"
+      }
       this.setState({ selectedAsset: e })
       console.log("Changed component idx to: ", window.assets.ids[e])
 
@@ -245,8 +248,14 @@ class ExportAssetNC extends Component {
                     size="lg"
                     onChange={(e) => { _checkIn(e.target.value) }}
                   >
-                    {this.state.hasLoadedAssets && (<optgroup className="optgroup"><option value="null"> Select an asset </option><option value="reset">Refresh Assets</option>{window.utils.generateAssets()}</optgroup>)}
-                    {!this.state.hasLoadedAssets && (<optgroup className="optgroup"><option value="null"> Loading Assets... </option></optgroup>)}
+                    {this.state.hasLoadedAssets && (
+                    <optgroup className="optgroup">
+                    <option value="null"> Select an asset </option>
+                    <option value="assetDash">View Assets in Dashboard</option>
+                    <option value="reset">Refresh Assets</option>
+                    {window.utils.generateAssets()}
+                    </optgroup>)}
+                    {!this.state.hasLoadedAssets && (<optgroup ><option value="null"> Loading Assets... </option></optgroup>)}
                   </Form.Control>
                 </Form.Group>
               </Form.Row>
