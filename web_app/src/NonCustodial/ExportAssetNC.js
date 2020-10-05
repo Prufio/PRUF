@@ -3,7 +3,7 @@ import Form from "react-bootstrap/Form";
 import Col from "react-bootstrap/Col";
 import Button from "react-bootstrap/Button";
 import returnManufacturers from "../Resources/Manufacturers";
-import { ArrowRightCircle } from 'react-feather'
+import { ArrowRightCircle, Home, XSquare } from 'react-feather'
 
 
 class ExportAssetNC extends Component {
@@ -17,8 +17,8 @@ class ExportAssetNC extends Component {
         this.setState({ assets: window.assets })
       }
 
-      if(this.state.hasLoadedAssets !== window.hasLoadedAssets){
-        this.setState({hasLoadedAssets: window.hasLoadedAssets})
+      if (this.state.hasLoadedAssets !== window.hasLoadedAssets) {
+        this.setState({ hasLoadedAssets: window.hasLoadedAssets })
       }
     }, 100)
 
@@ -50,13 +50,13 @@ class ExportAssetNC extends Component {
   componentDidMount() {//stuff to do when component mounts in window
     if (window.sentPacket !== undefined) {
       this.setState({ name: window.sentPacket.name })
-      this.setState({idxHash: window.sentPacket.idxHash})
-      this.setState({assetClass: window.sentPacket.assetClass})
-      this.setState({status: window.sentPacket.status})
+      this.setState({ idxHash: window.sentPacket.idxHash })
+      this.setState({ assetClass: window.sentPacket.assetClass })
+      this.setState({ status: window.sentPacket.status })
       window.sentPacket = undefined
       this.setState({ wasSentPacket: true })
     }
- 
+
   }
 
   componentWillUnmount() {//stuff do do when component unmounts from the window
@@ -70,8 +70,8 @@ class ExportAssetNC extends Component {
     const self = this;
 
     const _checkIn = async (e) => {
-      if(e === "0" || e === undefined){return}
-      else if(e === "reset"){
+      if (e === "0" || e === undefined) { return }
+      else if (e === "reset") {
         return window.resetInfo = true;
       }
       this.setState({ selectedAsset: e })
@@ -86,6 +86,11 @@ class ExportAssetNC extends Component {
         description: window.assets.descriptions[e],
         status: window.assets.statuses[e],
       })
+    }
+
+    const clearForm = async () => {
+      document.getElementById("MainForm").reset();
+      this.setState({ idxHash: undefined, txStatus: undefined, txHash: "0", wasSentPacket: undefined })
     }
 
     const _exportAsset = async () => {//create a new asset record
@@ -118,12 +123,20 @@ class ExportAssetNC extends Component {
           window.resetInfo = true;
         });
 
-        return document.getElementById("MainForm").reset(); //clear form inputs
+      return document.getElementById("MainForm").reset(); //clear form inputs
     };
-    if (this.state.wasSentPacket){
+    if (this.state.wasSentPacket) {
       return (//default render
         <div>
-          <h2 className="FormHeader"> Export Asset </h2>
+          <div>
+            <div className="mediaLinkAD-home">
+              <a className="mediaLinkContentAD-home" ><Home onClick={() => { window.location.href = '/#/' }} /></a>
+            </div>
+            <h2 className="FormHeader">Export Asset</h2>
+            <div className="mediaLink-clearForm">
+              <a className="mediaLinkContent-clearForm" ><XSquare onClick={() => { clearForm() }} /></a>
+            </div>
+          </div>
           <Form className="Form" id='MainForm'>
             {window.addr === undefined && (
               <div className="Results">
@@ -135,43 +148,41 @@ class ExportAssetNC extends Component {
               <div>
                 <Form.Row>
                   <Form.Group>
-                    <Button className="buttonDisplay"
-                      variant="primary"
-                      type="button"
-                      size="lg"
-                      onClick={_exportAsset}
-                    >
-                      Export Asset
-                      </Button>
+                    <div className="submitButtonEA2">
+                      <div className="submitButtonEA2-content">
+                        <ArrowRightCircle
+                          onClick={() => { _exportAsset() }}
+                        />
+                      </div>
+                    </div>
                   </Form.Group>
                 </Form.Row>
-  
               </div>
             )}
           </Form>
           <div className="assetSelectedResults">
             <Form.Row>
-            {this.state.idxHash !== undefined &&(
-                  <Form.Group>
+              {this.state.idxHash !== undefined && (
+                <Form.Group>
                   <div className="assetSelectedContentHead">Asset IDX: <span className="assetSelectedContent">{this.state.idxHash}</span> </div>
                   <div className="assetSelectedContentHead">Asset Name: <span className="assetSelectedContent">{this.state.name}</span> </div>
                   {/* <div className="assetSelectedContentHead"> Asset Description: <span className="assetSelectedContent">{this.state.description}</span> </div> */}
                   <div className="assetSelectedContentHead">Asset Class: <span className="assetSelectedContent">{this.state.assetClass}</span> </div>
                   <div className="assetSelectedContentHead">Asset Status: <span className="assetSelectedContent">{this.state.status}</span> </div>
-                  </Form.Group>
-                )} 
+                </Form.Group>
+              )}
             </Form.Row>
           </div>
           {this.state.transaction === true && (
-  
-  <div className="Results">
-    {/* {this.state.pendingTx === undefined && ( */}
-      <p class="loading">Transaction In Progress</p>
-    {/* )} */}
-    {/* {this.state.pendingTx !== undefined && (
+
+            <div className="Results">
+              {/* {this.state.pendingTx === undefined && ( */}
+              <p class="loading">Transaction In Progress</p>
+              {/* )} */}
+              {/* {this.state.pendingTx !== undefined && (
       <p class="loading">Transaction In Progress</p>
     )} */}
-  </div>)}
+            </div>)}
           {this.state.txHash > 0 && ( //conditional rendering
             <div className="Results">
               {this.state.txStatus === false && (
@@ -206,7 +217,15 @@ class ExportAssetNC extends Component {
     }
     return (//default render
       <div>
-        <h2 className="FormHeader"> Export Asset </h2>
+        <div>
+          <div className="mediaLinkAD-home">
+            <a className="mediaLinkContentAD-home" ><Home onClick={() => { window.location.href = '/#/' }} /></a>
+          </div>
+          <h2 className="FormHeader">Export Asset</h2>
+          <div className="mediaLink-clearForm">
+            <a className="mediaLinkContent-clearForm" ><XSquare onClick={() => { clearForm() }} /></a>
+          </div>
+        </div>
         <Form className="Form" id='MainForm'>
           {window.addr === undefined && (
             <div className="Results">
@@ -222,18 +241,18 @@ class ExportAssetNC extends Component {
                   <Form.Control
                     as="select"
                     size="lg"
-                    onChange={(e) => {_checkIn(e.target.value)}}
+                    onChange={(e) => { _checkIn(e.target.value) }}
                   >
                     {this.state.hasLoadedAssets && (<><option value="null"> Select an asset </option><option value="reset">Refresh Assets</option>{window.utils.generateAssets()}</>)}
                     {!this.state.hasLoadedAssets && (<option value="null"> Loading Assets... </option>)}
-                    
+
                   </Form.Control>
                 </Form.Group>
               </Form.Row>
               <Form.Row>
-              <Form.Group>
-                <div className="submitButtonTA">
-                    <div className="submitButtonTA-content">
+                <Form.Group>
+                  <div className="submitButtonEA">
+                    <div className="submitButtonEA-content">
                       <ArrowRightCircle
                         onClick={() => { _exportAsset() }}
                       />
@@ -247,27 +266,27 @@ class ExportAssetNC extends Component {
         </Form>
         <div className="assetSelectedResults">
           <Form.Row>
-          {this.state.idxHash !== undefined &&(
-                <Form.Group>
+            {this.state.idxHash !== undefined && (
+              <Form.Group>
                 <div className="assetSelectedContentHead">Asset IDX: <span className="assetSelectedContent">{this.state.idxHash}</span> </div>
                 <div className="assetSelectedContentHead">Asset Name: <span className="assetSelectedContent">{this.state.name}</span> </div>
                 {/* <div className="assetSelectedContentHead"> Asset Description: <span className="assetSelectedContent">{this.state.description}</span> </div> */}
                 <div className="assetSelectedContentHead">Asset Class: <span className="assetSelectedContent">{this.state.assetClass}</span> </div>
                 <div className="assetSelectedContentHead">Asset Status: <span className="assetSelectedContent">{this.state.status}</span> </div>
-                </Form.Group>
-              )} 
+              </Form.Group>
+            )}
           </Form.Row>
         </div>
         {this.state.transaction === true && (
 
-<div className="Results">
-  {/* {this.state.pendingTx === undefined && ( */}
-    <p class="loading">Transaction In Progress</p>
-  {/* )} */}
-  {/* {this.state.pendingTx !== undefined && (
+          <div className="Results">
+            {/* {this.state.pendingTx === undefined && ( */}
+            <p class="loading">Transaction In Progress</p>
+            {/* )} */}
+            {/* {this.state.pendingTx !== undefined && (
     <p class="loading">Transaction In Progress</p>
   )} */}
-</div>)}
+          </div>)}
         {this.state.txHash > 0 && ( //conditional rendering
           <div className="Results">
             {this.state.txStatus === false && (

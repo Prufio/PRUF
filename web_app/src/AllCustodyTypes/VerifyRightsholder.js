@@ -1,8 +1,7 @@
 import React, { Component } from "react";
 import Form from "react-bootstrap/Form";
 import Col from "react-bootstrap/Col";
-import Button from "react-bootstrap/Button";
-import { ArrowRightCircle } from 'react-feather'
+import { ArrowRightCircle, Home, XSquare } from 'react-feather'
 
 class VerifyRightHolder extends Component {
   constructor(props) {
@@ -101,6 +100,11 @@ class VerifyRightHolder extends Component {
 
     }
 
+    const clearForm = async () => {
+      document.getElementById("MainForm").reset();
+      this.setState ({ result: "" })
+    }
+
     const _verify = async () => {
       this.setState({ txStatus: false });
       this.setState({ txHash: "" });
@@ -148,7 +152,13 @@ class VerifyRightHolder extends Component {
     return (
       <div>
         <div>
-        <h2 className="FormHeader"> Deep Verify </h2>
+          <div className="mediaLinkAD-home">
+            <a className="mediaLinkContentAD-home" ><Home onClick={() => { window.location.href = '/#/' }} /></a>
+          </div>
+          <h2 className="FormHeader">Deep Verify</h2>
+          <div className="mediaLink-clearForm">
+            <a className="mediaLinkContent-clearForm" ><XSquare onClick={() => { clearForm() }} /></a>
+          </div>
         </div>
         <Form className="Form" id='MainForm'>
           {window.addr === undefined && (

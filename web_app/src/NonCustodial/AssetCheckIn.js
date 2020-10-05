@@ -8,14 +8,8 @@ import { NavLink } from "react-router-dom";
 import Dropdown from 'react-bootstrap/Dropdown';
 import Nav from 'react-bootstrap/Nav'
 import DropdownButton from 'react-bootstrap/DropdownButton';
-import { Printer, RefreshCw } from "react-feather";
-import { Grid } from "react-feather";
-import { X } from "react-feather";
-import { Save } from "react-feather";
-import { ChevronRight } from "react-feather";
-import { Print } from "react-feather";
+import { Printer, RefreshCw, Grid, X, Save, ChevronRight, Print, CornerUpLeft, Home} from "react-feather";
 import { QRCode } from 'react-qrcode-logo';
-import { CornerDownLeft } from "react-feather";
 
 class AssetCheckIn extends Component {
   constructor(props) {
@@ -157,7 +151,7 @@ class AssetCheckIn extends Component {
                       <div>
                         <div className="QRdisplay">
                           <div className="QR">
-                            <QRCode value={obj.idxHash} size="140" qrStyle="dots" fgColor="#002a40" />
+                            <QRCode value={obj.idxHash} size="140" qrStyle="dots" fgColor="#002a40"  logoWidth="60" logoHeight="60" logoOpacity="0.6" logoImage="https://raw.githubusercontent.com/vdmprojects/Bulletproof/master/web_app/src/Resources/U%20CIRCLE%20QR.png?token=AKTATQGAQQI7WQ4PC4XF3T27PNCCC"/>
                           </div>
                         </div>
                         <div className="QRdisplay-footer">
@@ -185,16 +179,16 @@ class AssetCheckIn extends Component {
                       {generateTextList()}
                     </div>
                   </div>
-                    {this.state.moreInfo && (
-                      <div className="cardButton2">
-                        <div className="cardButton2-content">
-                          <CornerDownLeft
+                  {this.state.moreInfo && (
+                    <div className="cardButton2">
+                      <div className="cardButton2-content">
+                        <CornerUpLeft
                           size={35}
-                            onClick={() => { this.moreInfo("back") }}
-                          />
-                        </div>
+                          onClick={() => { this.moreInfo("back") }}
+                        />
                       </div>
-                    )}
+                    </div>
+                  )}
 
                 </div>
               </div >
@@ -374,9 +368,12 @@ class AssetCheckIn extends Component {
 
       <div>
         <div>
+          <div className="mediaLinkAD-home">
+            <a className="mediaLinkContentAD-home" ><Home onClick={() => { window.location.href = '/#/' }} /></a>
+          </div>
           <h2 className="assetDashboardHeader">My Assets</h2>
-          <div className="mediaLinkAD">
-            <a className="mediaLinkContentAD" ><RefreshCw onClick={() => { _refresh() }} /></a>
+          <div className="mediaLinkAD-refresh">
+            <a className="mediaLinkContentAD-refresh" ><RefreshCw onClick={() => { _refresh() }} /></a>
           </div>
         </div>
         <div className="assetDashboard">

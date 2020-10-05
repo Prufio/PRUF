@@ -2,6 +2,7 @@ import React, { Component } from "react";
 import Form from "react-bootstrap/Form";
 import Col from "react-bootstrap/Col";
 import Button from "react-bootstrap/Button";
+import { ArrowRightCircle, Home, XSquare } from 'react-feather'
 
 class DecrementCounterNC extends Component {
   constructor(props) {
@@ -69,6 +70,11 @@ class DecrementCounterNC extends Component {
   render() {//render continuously produces an up-to-date stateful document  
     const self = this;
 
+    const clearForm = async () => {
+      document.getElementById("MainForm").reset();
+      this.setState({ idxHash: undefined, txStatus: undefined, txHash: "0" })
+    }
+
     const _checkIn = async (e) => {
       if (e === "0" || e === undefined) { return }
       else if (e === "reset") {
@@ -124,7 +130,15 @@ class DecrementCounterNC extends Component {
     if (this.state.wasSentPacket) {
       return (
         <div>
-          <h2 className="FormHeader"> Decrement Counter </h2>
+          <div>
+            <div className="mediaLinkAD-home">
+              <a className="mediaLinkContentAD-home" ><Home onClick={() => { window.location.href = '/#/' }} /></a>
+            </div>
+            <h2 className="FormHeader">Decrement Counter</h2>
+            <div className="mediaLink-clearForm">
+              <a className="mediaLinkContent-clearForm" ><XSquare onClick={() => { clearForm() }} /></a>
+            </div>
+          </div>
           <Form className="Form" id='MainForm'>
             {window.addr === undefined && (
               <div className="Results">
@@ -150,16 +164,13 @@ class DecrementCounterNC extends Component {
                   </Form.Group>
                 </Form.Row>
                 <Form.Row>
-                  <Form.Group >
-                    <Button className="buttonDisplay"
-                      variant="primary"
-                      type="button"
-                      size="lg"
-                      onClick={_decrementCounter}
-                    >
-                      Submit
-                    </Button>
-                  </Form.Group>
+                  <div className="submitButtonMRS">
+                    <div className="submitButtonMRS-content">
+                      <ArrowRightCircle
+                        onClick={() => { _decrementCounter() }}
+                      />
+                    </div>
+                  </div>
                 </Form.Row>
               </div>
             )}
@@ -221,7 +232,15 @@ class DecrementCounterNC extends Component {
     }
     return (
       <div>
-        <h2 className="FormHeader"> Decrement Counter </h2>
+        <div>
+          <div className="mediaLinkAD-home">
+            <a className="mediaLinkContentAD-home" ><Home onClick={() => { window.location.href = '/#/' }} /></a>
+          </div>
+          <h2 className="FormHeader">Decrement Counter</h2>
+          <div className="mediaLink-clearForm">
+            <a className="mediaLinkContent-clearForm" ><XSquare onClick={() => { clearForm() }} /></a>
+          </div>
+        </div>
         <Form className="Form" id='MainForm'>
           {window.addr === undefined && (
             <div className="Results">
@@ -261,16 +280,13 @@ class DecrementCounterNC extends Component {
                 </Form.Group>
               </Form.Row>
               <Form.Row>
-                <Form.Group >
-                  <Button className="buttonDisplay"
-                    variant="primary"
-                    type="button"
-                    size="lg"
-                    onClick={_decrementCounter}
-                  >
-                    Submit
-                  </Button>
-                </Form.Group>
+                <div className="submitButtonMRS">
+                  <div className="submitButtonMRS-content">
+                    <ArrowRightCircle
+                      onClick={() => { _decrementCounter() }}
+                    />
+                  </div>
+                </div>
               </Form.Row>
             </div>
           )}

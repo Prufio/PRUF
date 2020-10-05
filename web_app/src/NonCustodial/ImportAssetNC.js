@@ -1,9 +1,7 @@
 import React, { Component } from "react";
 import Form from "react-bootstrap/Form";
 import Col from "react-bootstrap/Col";
-import Button from "react-bootstrap/Button";
-import { ArrowRightCircle } from 'react-feather'
-import { CheckCircle } from 'react-feather'
+import { CheckCircle, Home, XSquare, ArrowRightCircle } from 'react-feather'
 
 class ImportAssetNC extends Component {
   constructor(props) {
@@ -74,6 +72,11 @@ class ImportAssetNC extends Component {
 
     }
 
+    const clearForm = async () => {
+      document.getElementById("MainForm").reset();
+      this.setState({ idxHash: undefined, txStatus: undefined, txHash: "0" })
+    }
+
     const _importAsset = async () => {
 
       this.setState({ txStatus: false });
@@ -116,7 +119,15 @@ class ImportAssetNC extends Component {
 
     return (
       <div>
-        <h2 className="FormHeader"> Import Asset </h2>
+        <div>
+          <div className="mediaLinkAD-home">
+            <a className="mediaLinkContentAD-home" ><Home onClick={() => { window.location.href = '/#/' }} /></a>
+          </div>
+          <h2 className="FormHeader">Import Asset</h2>
+          <div className="mediaLink-clearForm">
+            <a className="mediaLinkContent-clearForm" ><XSquare onClick={() => { clearForm() }} /></a>
+          </div>
+        </div>
         <Form className="Form" id='MainForm'>
           {window.addr === undefined && (
             <div className="errorResults">
@@ -178,27 +189,27 @@ class ImportAssetNC extends Component {
                     </Form.Group>
                   </Form.Row>
                   <Form.Row>
-                  <div className="submitButtonAA">
-                    <div className="submitButtonAA-content">
-                      <ArrowRightCircle
-                        onClick={() => { _accessAsset() }}
-                      />
+                    <div className="submitButtonAA">
+                      <div className="submitButtonAA-content">
+                        <ArrowRightCircle
+                          onClick={() => { _accessAsset() }}
+                        />
+                      </div>
                     </div>
-                  </div>
                   </Form.Row>
                 </>
               )}
               {this.state.accessPermitted && (
                 <>
                   <Form.Row>
-                  <div className="submitButtonIA">
-                    <div className="submitButtonIA-content">
-                      <CheckCircle
-                        onClick={() => { _importAsset() }}
-                      />
+                    <div className="submitButtonIA">
+                      <div className="submitButtonIA-content">
+                        <CheckCircle
+                          onClick={() => { _importAsset() }}
+                        />
+                      </div>
+                      <Form.Label className="LittleTextNewRecord"> Cost in AC {window.assetClass}: {Number(window.costs.newRecordCost) / 1000000000000000000} ETH</Form.Label>
                     </div>
-                    <Form.Label className="LittleTextNewRecord"> Cost in AC {window.assetClass}: {Number(window.costs.newRecordCost) / 1000000000000000000} ETH</Form.Label>
-                  </div>
                   </Form.Row>
                 </>
               )}

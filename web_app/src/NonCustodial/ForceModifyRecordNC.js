@@ -2,6 +2,7 @@ import React, { Component } from "react";
 import Form from "react-bootstrap/Form";
 import Col from "react-bootstrap/Col";
 import Button from "react-bootstrap/Button";
+import { ArrowRightCircle, Home, XSquare } from 'react-feather'
 
 class ForceModifyRecordNC extends Component {
   constructor(props) {
@@ -76,6 +77,11 @@ class ForceModifyRecordNC extends Component {
   render() {//render continuously produces an up-to-date stateful document  
     const self = this;
 
+    const clearForm = async () => {
+      document.getElementById("MainForm").reset();
+      this.setState({ idxHash: undefined, txStatus: undefined, txHash: "0" })
+    }
+
     const _checkIn = async (e) => {
       if (e === "0" || e === undefined) { return }
       else if (e === "reset") {
@@ -141,7 +147,15 @@ class ForceModifyRecordNC extends Component {
     if (this.state.wasSentPacket) {
       return (
         <div>
-          <h2 className="FormHeader"> Modify Rightsholder </h2>
+          <div>
+            <div className="mediaLinkAD-home">
+              <a className="mediaLinkContentAD-home" ><Home onClick={() => { window.location.href = '/#/' }} /></a>
+            </div>
+            <h2 className="FormHeader">modify Rightsholder</h2>
+            <div className="mediaLink-clearForm">
+              <a className="mediaLinkContent-clearForm" ><XSquare onClick={() => { clearForm() }} /></a>
+            </div>
+          </div>
           <Form className="Form" id='MainForm'>
             {window.addr === undefined && (
               <div className="Results">
@@ -206,14 +220,13 @@ class ForceModifyRecordNC extends Component {
                 </Form.Row>
                 <Form.Row>
                   <Form.Group >
-                    <Button className="buttonDisplay"
-                      variant="danger"
-                      type="button"
-                      size="lg"
-                      onClick={_editRgtHash}
-                    >
-                      Modify
-                    </Button>
+                    <div className="submitButtonFMR">
+                      <div className="submitButtonFMR-content">
+                        <ArrowRightCircle
+                          onClick={() => { _editRgtHash() }}
+                        />
+                      </div>
+                    </div>
                   </Form.Group>
                 </Form.Row>
               </div>
@@ -278,7 +291,15 @@ class ForceModifyRecordNC extends Component {
     }
     return (
       <div>
-        <h2 className="FormHeader"> Modify Rightsholder </h2>
+        <div>
+          <div className="mediaLinkAD-home">
+            <a className="mediaLinkContentAD-home" ><Home onClick={() => { window.location.href = '/#/' }} /></a>
+          </div>
+          <h2 className="FormHeader">modify Rightsholder</h2>
+          <div className="mediaLink-clearForm">
+            <a className="mediaLinkContent-clearForm" ><XSquare onClick={() => { clearForm() }} /></a>
+          </div>
+        </div>
         <Form className="Form" id='MainForm'>
           {window.addr === undefined && (
             <div className="Results">
@@ -357,14 +378,13 @@ class ForceModifyRecordNC extends Component {
               </Form.Row>
               <Form.Row>
                 <Form.Group >
-                  <Button className="buttonDisplay"
-                    variant="danger"
-                    type="button"
-                    size="lg"
-                    onClick={_editRgtHash}
-                  >
-                    Modify
-                  </Button>
+                  <div className="submitButtonFMR">
+                    <div className="submitButtonFMR-content">
+                      <ArrowRightCircle
+                        onClick={() => { _editRgtHash() }}
+                      />
+                    </div>
+                  </div>
                 </Form.Group>
               </Form.Row>
             </div>

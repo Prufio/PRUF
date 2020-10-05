@@ -1,11 +1,8 @@
 import React, { Component } from "react";
 import Form from "react-bootstrap/Form";
 import Col from "react-bootstrap/Col";
-import Button from "react-bootstrap/Button";
 import QrReader from 'react-qr-reader'
-import { ArrowRightCircle } from 'react-feather'
-import { Grid } from "react-feather";
-import { CornerDownLeft } from "react-feather";
+import { CornerUpLeft, Home, XSquare, Grid, ArrowRightCircle } from "react-feather";
 
 
 class RetrieveRecord extends Component {
@@ -132,7 +129,7 @@ class RetrieveRecord extends Component {
               {this.state.moreInfo && (
                 <div className="submitButtonRRQR3">
                   <div className="submitButtonRRQR3-content">
-                    <CornerDownLeft
+                    <CornerUpLeft
                       size={35}
                       onClick={() => { this.setState({ moreInfo: false, ipfsObject: undefined, assetObj: undefined }) }}
                     />
@@ -494,7 +491,15 @@ class RetrieveRecord extends Component {
       return (
         <div>
           <div>
-            <h2 className="assetDashboardHeader">Here's what we found: </h2>
+          <div>
+          <div className="mediaLinkAD-home">
+            <a className="mediaLinkContentAD-home" ><Home onClick={() => { window.location.href = '/#/' }} /></a>
+          </div>
+          <h2 className="AssetDashboardHeader">Here's What We Found :</h2>
+          <div className="mediaLink-clearForm">
+            <a className="mediaLinkContent-clearForm" ><XSquare onClick={() => { document.getElementById("MainForm").reset() }} /></a>
+          </div>
+        </div>
           </div>
           <div className="assetDashboard">
             {this.state.assetObj !== undefined && (<>{this.generateAssetInfo(this.state.assetObj)}</>)}
@@ -510,8 +515,16 @@ class RetrieveRecord extends Component {
         <div>
           {!this.state.moreInfo && this.state.QRreader === undefined && (
             <div>
-                    <h2 className="FormHeader"> Search Database </h2>
-            <Form className="Form">
+                            <div>
+          <div className="mediaLinkAD-home">
+            <a className="mediaLinkContentAD-home" ><Home onClick={() => { window.location.href = '/#/' }} /></a>
+          </div>
+          <h2 className="FormHeader">Search Database</h2>
+          <div className="mediaLink-clearForm">
+            <a className="mediaLinkContent-clearForm" ><XSquare onClick={() => { document.getElementById("MainForm").reset() }} /></a>
+          </div>
+        </div>
+            <Form className="Form" id="MainForm">
               <div>
                 <Form.Row>
                   <Form.Group as={Col} controlId="formGridType">
@@ -585,7 +598,15 @@ class RetrieveRecord extends Component {
 
           {this.state.QRreader === true && (
             <div>
-            <h2 className="FormHeader"> Search Database </h2>
+                    <div>
+          <div className="mediaLinkAD-home">
+            <a className="mediaLinkContentAD-home" ><Home onClick={() => { window.location.href = '/#/' }} /></a>
+          </div>
+          <h2 className="FormHeader">Search Database</h2>
+          <div className="mediaLink-back">
+            <a className="mediaLinkContent-back" ><CornerUpLeft onClick={() => { QRReader() }} /></a>
+          </div>
+        </div>
             <div className="QRreader">
               <QrReader
                 delay={300}
@@ -593,13 +614,6 @@ class RetrieveRecord extends Component {
                 onScan={this.handleScan}
                 style={{ width: '100%' }}
               />
-              <div className="submitButtonRRQR2">
-                <div className="submitButtonRRQR2-content">
-                  <CornerDownLeft
-                    onClick={() => { QRReader() }}
-                  />
-                </div>
-              </div>
               {this.state.result !== undefined && (
                 <div className="Results">
                   {this.state.assetFound}

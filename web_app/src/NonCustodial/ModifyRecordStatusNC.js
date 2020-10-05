@@ -2,7 +2,7 @@ import React, { Component } from "react";
 import Form from "react-bootstrap/Form";
 import Col from "react-bootstrap/Col";
 import Button from "react-bootstrap/Button";
-
+import { ArrowRightCircle, Home, XSquare } from 'react-feather'
 
 class ModifyRecordStatusNC extends Component {
   constructor(props) {
@@ -15,8 +15,8 @@ class ModifyRecordStatusNC extends Component {
         this.setState({ assets: window.assets })
       }
 
-      if(this.state.hasLoadedAssets !== window.hasLoadedAssets){
-        this.setState({hasLoadedAssets: window.hasLoadedAssets})
+      if (this.state.hasLoadedAssets !== window.hasLoadedAssets) {
+        this.setState({ hasLoadedAssets: window.hasLoadedAssets })
       }
     }, 100)
 
@@ -47,15 +47,15 @@ class ModifyRecordStatusNC extends Component {
   componentDidMount() {//stuff to do when component mounts in window
     if (window.sentPacket !== undefined) {
       this.setState({ name: window.sentPacket.name })
-      this.setState({idxHash: window.sentPacket.idxHash})
-      this.setState({assetClass: window.sentPacket.assetClass})
-      this.setState({status: window.sentPacket.status})
+      this.setState({ idxHash: window.sentPacket.idxHash })
+      this.setState({ assetClass: window.sentPacket.assetClass })
+      this.setState({ status: window.sentPacket.status })
       window.sentPacket = undefined
       this.setState({ wasSentPacket: true })
     }
   }
 
-  
+
 
   componentDidUpdate() {//stuff to do when state updates
 
@@ -68,9 +68,14 @@ class ModifyRecordStatusNC extends Component {
   render() {//render continuously produces an up-to-date stateful document  
     const self = this;
 
+    const clearForm = async () => {
+      document.getElementById("MainForm").reset();
+      this.setState({ idxHash: undefined, txStatus: undefined, txHash: "0" })
+    }
+
     const _checkIn = async (e) => {
-      if(e === "0" || e === undefined){return}
-      else if(e === "reset"){
+      if (e === "0" || e === undefined) { return }
+      else if (e === "reset") {
         return window.resetInfo = true;
       }
       this.setState({ selectedAsset: e })
@@ -100,11 +105,11 @@ class ModifyRecordStatusNC extends Component {
 
       var doesExist = await window.utils.checkAssetExists(idxHash);
 
-      if (!doesExist){
+      if (!doesExist) {
         return alert("Asset doesnt exist! Ensure data fields are correct before submission.")
       }
 
-      if (this.state.status !== "53" && this.state.status !== "54" && this.state.status !== "56" && this.state.status !== "59"){
+      if (this.state.status !== "53" && this.state.status !== "54" && this.state.status !== "56" && this.state.status !== "59") {
         window.contracts.NP_NC.methods
           ._modStatus(idxHash, this.state.status)
           .send({ from: window.addr })
@@ -123,7 +128,7 @@ class ModifyRecordStatusNC extends Component {
           });
       }
 
-      else if (this.state.status === "53" || this.state.status === "54"){
+      else if (this.state.status === "53" || this.state.status === "54") {
         window.contracts.NP_NC.methods
           ._setLostOrStolen(idxHash, this.state.status)
           .send({ from: window.addr })
@@ -149,11 +154,19 @@ class ModifyRecordStatusNC extends Component {
       console.log(this.state.txHash);
       return document.getElementById("MainForm").reset();
     };
-    
-    if (this.state.wasSentPacket){
+
+    if (this.state.wasSentPacket) {
       return (
         <div>
-          <h2 className="FormHeader"> Change Asset Status </h2>
+          <div>
+            <div className="mediaLinkAD-home">
+              <a className="mediaLinkContentAD-home" ><Home onClick={() => { window.location.href = '/#/' }} /></a>
+            </div>
+            <h2 className="FormHeader">Modify Asset Status</h2>
+            <div className="mediaLink-clearForm">
+              <a className="mediaLinkContent-clearForm" ><XSquare onClick={() => { clearForm() }} /></a>
+            </div>
+          </div>
           <Form className="Form" id='MainForm'>
             {window.addr === undefined && (
               <div className="Results">
@@ -176,45 +189,42 @@ class ModifyRecordStatusNC extends Component {
                     </Form.Control>
                   </Form.Group>
                 </Form.Row>
-  
+
                 <Form.Row>
-                  <Form.Group >
-                      <Button className="buttonDisplay"
-                      variant="primary"
-                      type="button"
-                      size="lg"
-                      onClick={_modifyStatus}
-                    >
-                      Submit
-                    </Button>
-                  </Form.Group>
+                  <div className="submitButtonMRS2">
+                    <div className="submitButtonMRS2-content">
+                      <ArrowRightCircle
+                        onClick={() => { _modifyStatus() }}
+                      />
+                    </div>
+                  </div>
                 </Form.Row>
               </div>
             )}
           </Form>
           <div className="assetSelectedResults">
             <Form.Row>
-            {this.state.idxHash !== undefined &&(
-                  <Form.Group>
+              {this.state.idxHash !== undefined && (
+                <Form.Group>
                   <div className="assetSelectedContentHead">Asset IDX: <span className="assetSelectedContent">{this.state.idxHash}</span> </div>
                   <div className="assetSelectedContentHead">Asset Name: <span className="assetSelectedContent">{this.state.name}</span> </div>
                   {/* <div className="assetSelectedContentHead"> Asset Description: <span className="assetSelectedContent">{this.state.description}</span> </div> */}
                   <div className="assetSelectedContentHead">Asset Class: <span className="assetSelectedContent">{this.state.assetClass}</span> </div>
                   <div className="assetSelectedContentHead">Asset Status: <span className="assetSelectedContent">{this.state.status}</span> </div>
-                  </Form.Group>
-                )} 
+                </Form.Group>
+              )}
             </Form.Row>
           </div>
           {this.state.transaction === true && (
-  
-  <div className="Results">
-    {/* {this.state.pendingTx === undefined && ( */}
-      <p class="loading">Transaction In Progress</p>
-    {/* )} */}
-    {/* {this.state.pendingTx !== undefined && (
+
+            <div className="Results">
+              {/* {this.state.pendingTx === undefined && ( */}
+              <p class="loading">Transaction In Progress</p>
+              {/* )} */}
+              {/* {this.state.pendingTx !== undefined && (
       <p class="loading">Transaction In Progress</p>
     )} */}
-  </div>)}
+            </div>)}
           {this.state.txHash > 0 && ( //conditional rendering
             <div className="Results">
               {this.state.txStatus === false && (
@@ -249,7 +259,15 @@ class ModifyRecordStatusNC extends Component {
     }
     return (
       <div>
-                  <h2 className="FormHeader"> Change Asset Status </h2>
+        <div>
+          <div className="mediaLinkAD-home">
+            <a className="mediaLinkContentAD-home" ><Home onClick={() => { window.location.href = '/#/' }} /></a>
+          </div>
+          <h2 className="FormHeader">Modify Asset Status</h2>
+          <div className="mediaLink-clearForm">
+            <a className="mediaLinkContent-clearForm" ><XSquare onClick={() => { clearForm() }} /></a>
+          </div>
+        </div>
         <Form className="Form" id='MainForm'>
           {window.addr === undefined && (
             <div className="Results">
@@ -265,11 +283,11 @@ class ModifyRecordStatusNC extends Component {
                   <Form.Control
                     as="select"
                     size="lg"
-                    onChange={(e) => {_checkIn(e.target.value)}}
+                    onChange={(e) => { _checkIn(e.target.value) }}
                   >
                     {this.state.hasLoadedAssets && (<><option value="null"> Select an asset </option><option value="reset">Refresh Assets</option>{window.utils.generateAssets()}</>)}
                     {!this.state.hasLoadedAssets && (<option value="null"> Loading Assets... </option>)}
-                    
+
                   </Form.Control>
                 </Form.Group>
               </Form.Row>
@@ -288,43 +306,40 @@ class ModifyRecordStatusNC extends Component {
               </Form.Row>
 
               <Form.Row>
-                <Form.Group >
-                    <Button className="buttonDisplay"
-                    variant="primary"
-                    type="button"
-                    size="lg"
-                    onClick={_modifyStatus}
-                  >
-                    Submit
-                  </Button>
-                </Form.Group>
+                <div className="submitButtonMRS">
+                  <div className="submitButtonMRS-content">
+                    <ArrowRightCircle
+                      onClick={() => { _modifyStatus() }}
+                    />
+                  </div>
+                </div>
               </Form.Row>
             </div>
           )}
         </Form>
         <div className="assetSelectedResults">
           <Form.Row>
-          {this.state.idxHash !== undefined &&(
-                <Form.Group>
+            {this.state.idxHash !== undefined && (
+              <Form.Group>
                 <div className="assetSelectedContentHead">Asset IDX: <span className="assetSelectedContent">{this.state.idxHash}</span> </div>
                 <div className="assetSelectedContentHead">Asset Name: <span className="assetSelectedContent">{this.state.name}</span> </div>
                 {/* <div className="assetSelectedContentHead"> Asset Description: <span className="assetSelectedContent">{this.state.description}</span> </div> */}
                 <div className="assetSelectedContentHead">Asset Class: <span className="assetSelectedContent">{this.state.assetClass}</span> </div>
                 <div className="assetSelectedContentHead">Asset Status: <span className="assetSelectedContent">{this.state.status}</span> </div>
-                </Form.Group>
-              )} 
+              </Form.Group>
+            )}
           </Form.Row>
         </div>
         {this.state.transaction === true && (
 
-<div className="Results">
-  {/* {this.state.pendingTx === undefined && ( */}
-    <p class="loading">Transaction In Progress</p>
-  {/* )} */}
-  {/* {this.state.pendingTx !== undefined && (
+          <div className="Results">
+            {/* {this.state.pendingTx === undefined && ( */}
+            <p class="loading">Transaction In Progress</p>
+            {/* )} */}
+            {/* {this.state.pendingTx !== undefined && (
     <p class="loading">Transaction In Progress</p>
   )} */}
-</div>)}
+          </div>)}
         {this.state.txHash > 0 && ( //conditional rendering
           <div className="Results">
             {this.state.txStatus === false && (
