@@ -585,6 +585,19 @@ class ModifyDescription extends Component {
               </div>
             )}
           </Form>
+          <div className="assetSelectedResults">
+          <Form.Row>
+            {this.state.idxHash !== undefined && (
+              <Form.Group>
+                <div className="assetSelectedContentHead">Asset IDX: <span className="assetSelectedContent">{this.state.idxHash}</span> </div>
+                <div className="assetSelectedContentHead">Asset Name: <span className="assetSelectedContent">{this.state.name}</span> </div>
+                {/* <div className="assetSelectedContentHead"> Asset Description: <span className="assetSelectedContent">{this.state.description}</span> </div> */}
+                <div className="assetSelectedContentHead">Asset Class: <span className="assetSelectedContent">{this.state.assetClass}</span> </div>
+                <div className="assetSelectedContentHead">Asset Status: <span className="assetSelectedContent">{this.state.status}</span> </div>
+              </Form.Group>
+            )}
+          </Form.Row>
+        </div>
           {this.state.txHash > 0 && ( //conditional rendering
             <div className="Results">
               {this.state.txStatus === false && (
@@ -863,6 +876,19 @@ class ModifyDescription extends Component {
             </div>
           )}
         </Form>
+        <div className="assetSelectedResults">
+          <Form.Row>
+            {this.state.idxHash !== undefined && (
+              <Form.Group>
+                <div className="assetSelectedContentHead">Asset IDX: <span className="assetSelectedContent">{this.state.idxHash}</span> </div>
+                <div className="assetSelectedContentHead">Asset Name: <span className="assetSelectedContent">{this.state.name}</span> </div>
+                {/* <div className="assetSelectedContentHead"> Asset Description: <span className="assetSelectedContent">{this.state.description}</span> </div> */}
+                <div className="assetSelectedContentHead">Asset Class: <span className="assetSelectedContent">{this.state.assetClass}</span> </div>
+                <div className="assetSelectedContentHead">Asset Status: <span className="assetSelectedContent">{this.state.status}</span> </div>
+              </Form.Group>
+            )}
+          </Form.Row>
+        </div>
         <div className="Results">
           {this.state.txHash > 0 && ( //conditional rendering
             <Form.Row>
