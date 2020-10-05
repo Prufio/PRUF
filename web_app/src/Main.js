@@ -321,7 +321,13 @@ class Main extends Component {
 
       let tempNameArray = [];
       for (let x = 0; x < window.aTknIDs.length; x++) {
-        tempNameArray.push(tempDescArray[x].name)
+        if(tempDescArray[x].name === "" || tempDescArray[x].name === undefined){
+          tempNameArray.push("Not Available")
+        }
+        else{
+          tempNameArray.push(tempDescArray[x].name)
+        }
+        
       }
 
       let tempDisplayArray = [];

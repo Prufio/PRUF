@@ -423,6 +423,12 @@ div {
   /* background-color: white; */
 }
 
+.assetImageSm {
+  width: 40px;
+  height: 40px;
+  /* background-color: white; */
+}
+
 .assetImage:hover {
   width: 115px;
   height: 115px;
@@ -875,6 +881,16 @@ div {
 
 }
 
+.formSelect {
+  height: 3rem;
+  width: 15rem;
+  max-height: 5rem;
+}
+
+.optgroup {
+  max-height: 100px !important;
+  font-size: 18px;
+}
 
 .QRreader {
   margin-top: -0.5rem;
@@ -883,6 +899,12 @@ div {
         border: 0px transparent; 
         background-color: transparent; 
         object-fit: cover;
+}
+
+.imageButtonSm {
+  border: 0px transparent; 
+  background-color: transparent; 
+  object-fit: cover;
 }
 
 .imageButtonU {

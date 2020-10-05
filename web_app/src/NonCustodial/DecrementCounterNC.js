@@ -260,8 +260,8 @@ class DecrementCounterNC extends Component {
                     size="lg"
                     onChange={(e) => { _checkIn(e.target.value) }}
                   >
-                    {this.state.hasLoadedAssets && (<><option value="null"> Select an asset </option><option value="reset">Refresh Assets</option>{window.utils.generateAssets()}</>)}
-                    {!this.state.hasLoadedAssets && (<option value="null"> Loading Assets... </option>)}
+                    {this.state.hasLoadedAssets && (<optgroup className="optgroup"><option value="null"> Select an asset </option><option value="reset">Refresh Assets</option>{window.utils.generateAssets()}</optgroup>)}
+                    {!this.state.hasLoadedAssets && (<optgroup className="optgroup"><option value="null"> Loading Assets... </option></optgroup>)}
 
                   </Form.Control>
                 </Form.Group>

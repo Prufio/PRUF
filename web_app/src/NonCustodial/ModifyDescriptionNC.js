@@ -64,13 +64,13 @@ class ModifyDescription extends Component {
         status: window.sentPacket.status,
         oldDescription: window.sentPacket.descriptionObj,
         wasSentPacket: true,
-        
+
       })
       window.sentPacket = undefined
     }
 
 
-    this.setState({runWatchDog: true})
+    this.setState({ runWatchDog: true })
   }
 
   componentDidUpdate() {//stuff to do when state updates
@@ -588,18 +588,18 @@ class ModifyDescription extends Component {
             )}
           </Form>
           <div className="assetSelectedResults">
-          <Form.Row>
-            {this.state.idxHash !== undefined && (
-              <Form.Group>
-                <div className="assetSelectedContentHead">Asset IDX: <span className="assetSelectedContent">{this.state.idxHash}</span> </div>
-                <div className="assetSelectedContentHead">Asset Name: <span className="assetSelectedContent">{this.state.name}</span> </div>
-                {/* <div className="assetSelectedContentHead"> Asset Description: <span className="assetSelectedContent">{this.state.description}</span> </div> */}
-                <div className="assetSelectedContentHead">Asset Class: <span className="assetSelectedContent">{this.state.assetClass}</span> </div>
-                <div className="assetSelectedContentHead">Asset Status: <span className="assetSelectedContent">{this.state.status}</span> </div>
-              </Form.Group>
-            )}
-          </Form.Row>
-        </div>
+            <Form.Row>
+              {this.state.idxHash !== undefined && (
+                <Form.Group>
+                  <div className="assetSelectedContentHead">Asset IDX: <span className="assetSelectedContent">{this.state.idxHash}</span> </div>
+                  <div className="assetSelectedContentHead">Asset Name: <span className="assetSelectedContent">{this.state.name}</span> </div>
+                  {/* <div className="assetSelectedContentHead"> Asset Description: <span className="assetSelectedContent">{this.state.description}</span> </div> */}
+                  <div className="assetSelectedContentHead">Asset Class: <span className="assetSelectedContent">{this.state.assetClass}</span> </div>
+                  <div className="assetSelectedContentHead">Asset Status: <span className="assetSelectedContent">{this.state.status}</span> </div>
+                </Form.Group>
+              )}
+            </Form.Row>
+          </div>
           {this.state.txHash > 0 && ( //conditional rendering
             <div className="Results">
               {this.state.txStatus === false && (
@@ -661,8 +661,8 @@ class ModifyDescription extends Component {
                       size="lg"
                       onChange={(e) => { _checkIn(e.target.value) }}
                     >
-                      {this.state.hasLoadedAssets && (<><option value="null"> Select an asset </option><option value="reset">Refresh Assets</option>{window.utils.generateAssets()}</>)}
-                      {!this.state.hasLoadedAssets && (<option value="null"> Loading Assets... </option>)}
+                      {this.state.hasLoadedAssets && (<optgroup className="optgroup"><option value="null"> Select an asset </option><option value="reset">Refresh Assets</option>{window.utils.generateAssets()}</optgroup>)}
+                      {!this.state.hasLoadedAssets && (<optgroup className="optgroup"><option value="null"> Loading Assets... </option></optgroup>)}
 
                     </Form.Control>
                   </Form.Group>
