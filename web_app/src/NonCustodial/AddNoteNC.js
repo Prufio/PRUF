@@ -81,7 +81,7 @@ class AddNoteNC extends Component {
 
     const clearForm = async () => {
       document.getElementById("MainForm").reset();
-      this.setState({ idxHash: undefined, txStatus: undefined, txHash: "0" })
+      this.setState({ idxHash: undefined, txStatus: undefined, txHash: "0", wasSentPacket: undefined })
     }
 
     const getBytes32FromIpfsHash = (ipfsListing) => {
@@ -215,8 +215,8 @@ class AddNoteNC extends Component {
                 {this.state.hashPath === "" && (
                   <Form.Row>
                     <Form.Group >
-                      <div className="submitButtonTA">
-                        <div className="submitButtonTA-content">
+                      <div className="submitButtonAN2">
+                        <div className="submitButtonAN2-content">
                           <ArrowRightCircle
                             onClick={() => { publishIPFS2Photo() }}
                           />
@@ -344,8 +344,8 @@ class AddNoteNC extends Component {
               {this.state.hashPath === "" && (
                 <Form.Row>
                   <Form.Group >
-                    <div className="submitButtonTA">
-                      <div className="submitButtonTA-content">
+                    <div className="submitButtonAN">
+                      <div className="submitButtonAN-content">
                         <ArrowRightCircle
                           onClick={() => { publishIPFS2Photo() }}
                         />

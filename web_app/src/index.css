@@ -1374,6 +1374,29 @@ div {
   transform: translateX(3px);
 }
 
+.submitButtonMD {
+  display: flex;
+  position: absolute;
+  background-color: transparent;
+  z-index: 1000;
+  margin-left: 25rem;
+  margin-top: -3.7rem;
+}
+
+.submitButtonMD-content {
+  color: white;
+  border-radius: 50%;
+  -webkit-transition: -webkit-transform .5s ease-in-out;
+  transition:         transform .5s ease-in-out;
+}
+
+.submitButtonMD-content:hover {
+  color: #028ed4;
+  cursor: pointer;
+  -webkit-transform: translateX(3px);
+  transform: translateX(3px);
+}
+
 .submitButtonMRS {
   display: flex;
   position: absolute;
@@ -1549,6 +1572,52 @@ div {
   transform: translateX(3px);
 }
 
+.submitButtonAN {
+  display: flex;
+  position: absolute;
+  background-color: transparent;
+  z-index: 1000;
+  margin-left: 50rem;
+  margin-top: -3.7rem;
+}
+
+.submitButtonAN-content {
+  color: white;
+  border-radius: 50%;
+  -webkit-transition: -webkit-transform .5s ease-in-out;
+  transition:         transform .5s ease-in-out;
+}
+
+.submitButtonAN-content:hover {
+  color: #028ed4;
+  cursor: pointer;
+  -webkit-transform: translateX(3px);
+  transform: translateX(3px);
+}
+
+.submitButtonAN2 {
+  display: flex;
+  position: absolute;
+  background-color: transparent;
+  z-index: 1000;
+  margin-left: 21rem;
+  margin-top: -3.7rem;
+}
+
+.submitButtonAN2-content {
+  color: white;
+  border-radius: 50%;
+  -webkit-transition: -webkit-transform .5s ease-in-out;
+  transition:         transform .5s ease-in-out;
+}
+
+.submitButtonAN2-content:hover {
+  color: #028ed4;
+  cursor: pointer;
+  -webkit-transform: translateX(3px);
+  transform: translateX(3px);
+}
+
 .submitButtonEA {
   display: flex;
   position: absolute;
@@ -1623,8 +1692,8 @@ div {
   position: absolute;
   background-color: transparent;
   z-index: 1000;
-  margin-left: 17rem;
-  margin-top: -3.7rem;
+  margin-left: 50rem;
+  margin-top: -0.7rem;
 }
 
 .submitButtonME-content {
@@ -1635,6 +1704,29 @@ div {
 }
 
 .submitButtonME-content:hover {
+  color: #028ed4;
+  cursor: pointer;
+  -webkit-transform: translateX(3px);
+  transform: translateX(3px);
+}
+
+.submitButtonME2 {
+  display: flex;
+  position: absolute;
+  background-color: transparent;
+  z-index: 1000;
+  margin-left: 25rem;
+  margin-top: -2.7rem;
+}
+
+.submitButtonME2-content {
+  color: white;
+  border-radius: 50%;
+  -webkit-transition: -webkit-transform .5s ease-in-out;
+  transition:         transform .5s ease-in-out;
+}
+
+.submitButtonME2-content:hover {
   color: #028ed4;
   cursor: pointer;
   -webkit-transform: translateX(3px);

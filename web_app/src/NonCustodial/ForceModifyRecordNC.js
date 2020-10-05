@@ -81,7 +81,7 @@ class ForceModifyRecordNC extends Component {
 
     const clearForm = async () => {
       document.getElementById("MainForm").reset();
-      this.setState({ idxHash: undefined, txStatus: undefined, txHash: "0" })
+      this.setState({ idxHash: undefined, txStatus: undefined, txHash: "0", wasSentPacket: undefined })
     }
 
     const _checkIn = async (e) => {
@@ -153,7 +153,7 @@ class ForceModifyRecordNC extends Component {
             <div className="mediaLinkAD-home">
               <a className="mediaLinkContentAD-home" ><Home onClick={() => { window.location.href = '/#/' }} /></a>
             </div>
-            <h2 className="FormHeader">modify Rightsholder</h2>
+            <h2 className="FormHeader">Modify Rightsholder</h2>
             <div className="mediaLink-clearForm">
               <a className="mediaLinkContent-clearForm" ><XSquare onClick={() => { clearForm() }} /></a>
             </div>
@@ -297,7 +297,7 @@ class ForceModifyRecordNC extends Component {
           <div className="mediaLinkAD-home">
             <a className="mediaLinkContentAD-home" ><Home onClick={() => { window.location.href = '/#/' }} /></a>
           </div>
-          <h2 className="FormHeader">modify Rightsholder</h2>
+          <h2 className="FormHeader">Modify Rightsholder</h2>
           <div className="mediaLink-clearForm">
             <a className="mediaLinkContent-clearForm" ><XSquare onClick={() => { clearForm() }} /></a>
           </div>
