@@ -3,7 +3,7 @@ import Form from "react-bootstrap/Form";
 import Col from "react-bootstrap/Col";
 import Button from "react-bootstrap/Button";
 import FormLabel from "react-bootstrap/FormLabel";
-import { ArrowRightCircle } from 'react-feather'
+import { ArrowRightCircle, Home, XSquare } from 'react-feather'
 
 class NewRecordNC extends Component {
   constructor(props) {
@@ -118,9 +118,9 @@ class NewRecordNC extends Component {
             window.resetInfo = true;
             window.recount = true;
           });
-          // console.log(Object.values(window.web3.eth.getPendingTransactions()))
+        // console.log(Object.values(window.web3.eth.getPendingTransactions()))
       }
-      
+
       else { alert("Record already exists! Try again.") }
 
       return document.getElementById("MainForm").reset(); //clear form inputs
@@ -128,7 +128,15 @@ class NewRecordNC extends Component {
 
     return (//default render
       <div>
-        <h2 className="FormHeader"> New Record </h2>
+        <div>
+          <div className="mediaLinkAD-home">
+            <a className="mediaLinkContentAD-home" ><Home onClick={() => { window.location.href = '/#/' }} /></a>
+          </div>
+          <h2 className="FormHeader">New Record</h2>
+          <div className="mediaLink-clearForm">
+            <a className="mediaLinkContent-clearForm" ><XSquare onClick={() => { document.getElementById("MainForm").reset() }} /></a>
+          </div>
+        </div>
         <Form className="Form" id='MainForm'>
           {window.addr === undefined && (
             <div className="errorResults">
@@ -145,7 +153,7 @@ class NewRecordNC extends Component {
             <div>
               <Form.Row>
                 <Form.Group as={Col} controlId="formGridType">
-                <Form.Label className="formFont">Type:</Form.Label>
+                  <Form.Label className="formFont">Type:</Form.Label>
 
                   {/* {returnTypes(window.assetClass, this.state.isNFA) !== '0' &&(<Form.Control as="select" size="lg" onChange={(e) => this.setState({ type: e.target.value })}>
                   {returnTypes(window.assetClass, this.state.isNFA)}
@@ -267,13 +275,13 @@ class NewRecordNC extends Component {
               </Form.Row>
               <Form.Row>
                 <div className="submitButtonNR">
-                    <div className="submitButtonNR-content">
-                      <ArrowRightCircle
-                        onClick={() => { _newRecord() }}
-                      />
-                    </div>
-                    <Form.Label className="LittleTextNewRecord"> Cost in AC {window.assetClass}: {Number(window.costs.newRecordCost) / 1000000000000000000} ETH</Form.Label>
+                  <div className="submitButtonNR-content">
+                    <ArrowRightCircle
+                      onClick={() => { _newRecord() }}
+                    />
                   </div>
+                  <Form.Label className="LittleTextNewRecord"> Cost in AC {window.assetClass}: {Number(window.costs.newRecordCost) / 1000000000000000000} ETH</Form.Label>
+                </div>
               </Form.Row>
               <br></br>
             </div>
@@ -283,45 +291,45 @@ class NewRecordNC extends Component {
 
           <div className="Results">
             {/* {this.state.pendingTx === undefined && ( */}
-              <p class="loading">Transaction In Progress</p>
+            <p class="loading">Transaction In Progress</p>
             {/* )} */}
             {/* {this.state.pendingTx !== undefined && (
               <p class="loading">Transaction In Progress</p>
             )} */}
           </div>)}
-          <div className="Results">
-        {this.state.txHash > 0 && ( //conditional rendering
+        <div className="Results">
+          {this.state.txHash > 0 && ( //conditional rendering
 
-          
+
             <Form.Row>
-            {this.state.txStatus === false && (
-              <div>
-                !ERROR! :
-                <a
-                  href={"https://kovan.etherscan.io/tx/" + this.state.txHash}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                >
-                  KOVAN Etherscan:{this.state.txHash}
-                </a>
-              </div>
-            )}
-            {this.state.txStatus === true && (
-              <div>
-                {" "}
+              {this.state.txStatus === false && (
+                <div>
+                  !ERROR! :
+                  <a
+                    href={"https://kovan.etherscan.io/tx/" + this.state.txHash}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                  >
+                    KOVAN Etherscan:{this.state.txHash}
+                  </a>
+                </div>
+              )}
+              {this.state.txStatus === true && (
+                <div>
+                  {" "}
                 No Errors Reported :
-                <a
-                  href={"https://kovan.etherscan.io/tx/" + this.state.txHash}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                >
-                  KOVAN Etherscan:{this.state.txHash}
-                </a>
-              </div>
-            )}
+                  <a
+                    href={"https://kovan.etherscan.io/tx/" + this.state.txHash}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                  >
+                    KOVAN Etherscan:{this.state.txHash}
+                  </a>
+                </div>
+              )}
             </Form.Row>
-          
-        )}
+
+          )}
         </div>
       </div>
     );

@@ -807,6 +807,13 @@ div {
   font-family: Tahoma, Geneva, sans-serif;
 }
 
+.escrowDetails {
+  font-weight: bold;
+  color: rgb(255, 255, 255);
+  font-size: large;
+  font-family: Tahoma, Geneva, sans-serif;
+}
+
 .LittleTextModify {
   display: flex;
   color: rgb(255, 255, 255);
@@ -973,7 +980,32 @@ div {
   transform: translateY(-5px);
 }
 
-.mediaLinkAD {
+.mediaLinkAD-home {
+  display: flex;
+  /* width: 15rem; */
+  height: fit-content;
+  position: absolute;
+  margin-top: 0.7rem;
+  margin-left: 5%;
+  z-index: 999;
+}
+
+.mediaLinkContentAD-home {
+  /* padding-left: 3rem; */
+  border-radius: 50%;
+  color: #00a8ff;
+  -webkit-transition: -webkit-transform .35s ease-in-out;
+  transition:         transform .35s ease-in-out;
+}
+
+.mediaLinkContentAD-home:hover {
+  color: #028ed4;
+  cursor: pointer;
+  -webkit-transform: translatex(-5px);
+  transform: translatex(-5px);
+}
+
+.mediaLinkAD-refresh {
   display: flex;
   /* width: 15rem; */
   height: fit-content;
@@ -984,7 +1016,7 @@ div {
   z-index: 999;
 }
 
-.mediaLinkContentAD {
+.mediaLinkContentAD-refresh {
   /* padding-left: 3rem; */
   border-radius: 50%;
   color: #00a8ff;
@@ -992,11 +1024,63 @@ div {
   transition:         transform .5s ease-in-out;
 }
 
-.mediaLinkContentAD:hover {
+.mediaLinkContentAD-refresh:hover {
   color: #028ed4;
   cursor: pointer;
   -webkit-transform: rotate(150deg);
   transform: rotate(150deg);
+}
+
+.mediaLink-back {
+  display: flex;
+  /* width: 15rem; */
+  height: fit-content;
+  margin-left: 93%;
+  position: absolute;
+  margin-top: -3.7rem;
+  /* justify-content: space-between; */
+  z-index: 999;
+}
+
+.mediaLinkContent-back {
+  /* padding-left: 3rem; */
+  border-radius: 50%;
+  color: #00a8ff;
+  -webkit-transition: -webkit-transform .5s ease-in-out;
+  transition:         transform .5s ease-in-out;
+}
+
+.mediaLinkContent-back:hover {
+  color: #028ed4;
+  cursor: pointer;
+  -webkit-transform: translateX(-5px);
+  transform: translateX(-5px);
+}
+
+.mediaLink-clearForm {
+  display: flex;
+  /* width: 15rem; */
+  height: fit-content;
+  margin-left: 93%;
+  position: absolute;
+  margin-top: -3.7rem;
+  /* justify-content: space-between; */
+  z-index: 999;
+}
+
+.mediaLinkContent-clearForm {
+  /* padding-left: 3rem; */
+  border-radius: 50%;
+  color: #00a8ff;
+  -webkit-transition: -webkit-transform .5s ease-in-out;
+  transition:         transform .5s ease-in-out;
+}
+
+.mediaLinkContent-clearForm:hover {
+  color: #028ed4;
+  cursor: pointer;
+  -webkit-transform: translateY(3px);
+  transform: translateY(3px);
 }
 
 .mediaLinkADS {
@@ -1290,6 +1374,89 @@ div {
   transform: translateX(3px);
 }
 
+.submitButtonMRS {
+  display: flex;
+  position: absolute;
+  background-color: transparent;
+  z-index: 1000;
+  margin-left: 50rem;
+  margin-top: -0.7rem;
+}
+
+.submitButtonMRS-content {
+  color: white;
+  border-radius: 50%;
+  -webkit-transition: -webkit-transform .5s ease-in-out;
+  transition:         transform .5s ease-in-out;
+}
+
+.submitButtonMRS-content:hover {
+  color: #028ed4;
+  cursor: pointer;
+  -webkit-transform: translateX(3px);
+  transform: translateX(3px);
+}
+
+.submitButtonMRS2 {
+  display: flex;
+  position: absolute;
+  background-color: transparent;
+  z-index: 1000;
+  margin-left: 17rem;
+  margin-top: -3.7rem;
+}
+
+.submitButtonMRS2-content {
+  color: white;
+  border-radius: 50%;
+  -webkit-transition: -webkit-transform .5s ease-in-out;
+  transition:         transform .5s ease-in-out;
+}
+
+.submitButtonMRS2-content:hover {
+  color: #028ed4;
+  cursor: pointer;
+  -webkit-transform: translateX(3px);
+  transform: translateX(3px);
+}
+
+.submitButtonEM-content {
+  color: white;
+  border-radius: 50%;
+  -webkit-transition: -webkit-transform .5s ease-in-out;
+  transition:         transform .5s ease-in-out;
+}
+
+.submitButtonEM-content:hover {
+  color: #028ed4;
+  cursor: pointer;
+  -webkit-transform: translateX(3px);
+  transform: translateX(3px);
+}
+
+.submitButtonFMR {
+  display: flex;
+  position: absolute;
+  background-color: transparent;
+  z-index: 1000;
+  margin-left: 50rem;
+  /* margin-top: -3.7rem; */
+}
+
+.submitButtonFMR-content {
+  color: rgb(214, 0, 0);
+  border-radius: 50%;
+  -webkit-transition: -webkit-transform .5s ease-in-out;
+  transition:         transform .5s ease-in-out;
+}
+
+.submitButtonFMR-content:hover {
+  color: #028ed4;
+  cursor: pointer;
+  -webkit-transform: translateX(3px);
+  transform: translateX(3px);
+}
+
 .submitButtonTA {
   display: flex;
   position: absolute;
@@ -1307,6 +1474,75 @@ div {
 }
 
 .submitButtonTA-content:hover {
+  color: #028ed4;
+  cursor: pointer;
+  -webkit-transform: translateX(3px);
+  transform: translateX(3px);
+}
+
+.submitButtonTA2 {
+  display: flex;
+  position: absolute;
+  background-color: transparent;
+  z-index: 1000;
+  margin-left: 21rem;
+  margin-top: -3.7rem;
+}
+
+.submitButtonTA2-content {
+  color: white;
+  border-radius: 50%;
+  -webkit-transition: -webkit-transform .5s ease-in-out;
+  transition:         transform .5s ease-in-out;
+}
+
+.submitButtonTA2-content:hover {
+  color: #028ed4;
+  cursor: pointer;
+  -webkit-transform: translateX(3px);
+  transform: translateX(3px);
+}
+
+.submitButtonEA {
+  display: flex;
+  position: absolute;
+  background-color: transparent;
+  z-index: 1000;
+  margin-left: 50rem;
+  /* margin-top: -3.7rem; */
+}
+
+.submitButtonEA-content {
+  color: white;
+  border-radius: 50%;
+  -webkit-transition: -webkit-transform .5s ease-in-out;
+  transition:         transform .5s ease-in-out;
+}
+
+.submitButtonEA-content:hover {
+  color: #028ed4;
+  cursor: pointer;
+  -webkit-transform: translateX(3px);
+  transform: translateX(3px);
+}
+
+.submitButtonEA2 {
+  display: flex;
+  position: absolute;
+  background-color: transparent;
+  z-index: 1000;
+  /* margin-left: 21rem; */
+  margin-top: -0.7rem;
+}
+
+.submitButtonEA2-content {
+  color: white;
+  border-radius: 50%;
+  -webkit-transition: -webkit-transform .5s ease-in-out;
+  transition:         transform .5s ease-in-out;
+}
+
+.submitButtonEA2-content:hover {
   color: #028ed4;
   cursor: pointer;
   -webkit-transform: translateX(3px);
@@ -1336,23 +1572,23 @@ div {
   transform: translateX(3px);
 }
 
-.submitButtonAAME {
+.submitButtonME {
   display: flex;
   position: absolute;
   background-color: transparent;
   z-index: 1000;
-  margin-left: 50rem;
-  margin-top: -0.7rem;
+  margin-left: 17rem;
+  margin-top: -3.7rem;
 }
 
-.submitButtonAAME-content {
+.submitButtonME-content {
   color: white;
   border-radius: 50%;
   -webkit-transition: -webkit-transform .5s ease-in-out;
   transition:         transform .5s ease-in-out;
 }
 
-.submitButtonAAME-content:hover {
+.submitButtonME-content:hover {
   color: #028ed4;
   cursor: pointer;
   -webkit-transform: translateX(3px);
@@ -1502,8 +1738,8 @@ div {
   position: absolute;
   background-color: transparent;
   z-index: 1000;
-  margin-left: 51rem;
-  margin-top: -3.7rem;
+  margin-left: 54.5rem;
+  margin-top: -4.7rem;
 }
 
 .submitButtonRRQR2-content {
@@ -1516,8 +1752,8 @@ div {
 .submitButtonRRQR2-content:hover {
   color: #028ed4;
   cursor: pointer;
-  -webkit-transform: translateX(3px);
-  transform: translateX(3px);
+  -webkit-transform: translateX(-3px);
+  transform: translateX(-3px);
 }
 
 .submitButtonRRQR3 {
@@ -1539,8 +1775,8 @@ div {
 .submitButtonRRQR3-content:hover {
   color: #028ed4;
   cursor: pointer;
-  -webkit-transform: translateX(3px);
-  transform: translateX(3px);
+  -webkit-transform: translateX(-3px);
+  transform: translateX(-3px);
 }
 
 .cardButton {
@@ -1585,8 +1821,8 @@ div {
 .cardButton2-content:hover {
   color: #028ed4;
   cursor: pointer;
-  -webkit-transform: translateX(3px);
-  transform: translateX(3px);
+  -webkit-transform: translateX(-3px);
+  transform: translateX(-3px);
 }
 
 .loading:after {

@@ -3,6 +3,8 @@ import Form from "react-bootstrap/Form";
 import Col from "react-bootstrap/Col";
 import Button from "react-bootstrap/Button";
 import bs58 from "bs58";
+import { ArrowRightCircle, Home, XSquare } from 'react-feather'
+
 
 class AddNoteNC extends Component {
   constructor(props) {
@@ -15,8 +17,8 @@ class AddNoteNC extends Component {
         this.setState({ assets: window.assets })
       }
 
-      if(this.state.hasLoadedAssets !== window.hasLoadedAssets){
-        this.setState({hasLoadedAssets: window.hasLoadedAssets})
+      if (this.state.hasLoadedAssets !== window.hasLoadedAssets) {
+        this.setState({ hasLoadedAssets: window.hasLoadedAssets })
       }
     }, 100)
 
@@ -56,9 +58,9 @@ class AddNoteNC extends Component {
   componentDidMount() {//stuff to do when component mounts in window
     if (window.sentPacket !== undefined) {
       this.setState({ name: window.sentPacket.name })
-      this.setState({idxHash: window.sentPacket.idxHash})
-      this.setState({assetClass: window.sentPacket.assetClass})
-      this.setState({status: window.sentPacket.status})
+      this.setState({ idxHash: window.sentPacket.idxHash })
+      this.setState({ assetClass: window.sentPacket.assetClass })
+      this.setState({ status: window.sentPacket.status })
       window.sentPacket = undefined
       this.setState({ wasSentPacket: true })
     }
@@ -75,6 +77,11 @@ class AddNoteNC extends Component {
 
   render() {//render continuously produces an up-to-date stateful document  
     const self = this;
+
+    const clearForm = async () => {
+      document.getElementById("MainForm").reset();
+      this.setState({ idxHash: undefined, txStatus: undefined, txHash: "0" })
+    }
 
     const getBytes32FromIpfsHash = (ipfsListing) => {
       return "0x" + bs58.decode(ipfsListing).slice(2).toString("hex");
@@ -105,8 +112,8 @@ class AddNoteNC extends Component {
     };
 
     const _checkIn = async (e) => {
-      if(e === "0" || e === undefined){return}
-      else if(e === "reset"){
+      if (e === "0" || e === undefined) { return }
+      else if (e === "reset") {
         return window.resetInfo = true;
       }
       this.setState({ selectedAsset: e })
@@ -133,14 +140,14 @@ class AddNoteNC extends Component {
 
       console.log("idxHash", idxHash);
       console.log("addr: ", window.addr);
-      
+
       var noteExists = await window.utils.checkNoteExists(idxHash);
 
-      if (noteExists){
+      if (noteExists) {
         return alert("Asset note already exists! Cannot overwrite existing note.")
       }
 
-        await window.contracts.APP_NC.methods
+      await window.contracts.APP_NC.methods
         .$addIpfs2Note(idxHash, this.state.hashPath)
         .send({ from: window.addr, value: window.costs.createNoteCost })
         .on("error", function (_error) {
@@ -162,10 +169,18 @@ class AddNoteNC extends Component {
       console.log(this.state.txHash);
       return document.getElementById("MainForm").reset();
     };
-    if (this.state.wasSentPacket){
+    if (this.state.wasSentPacket) {
       return (
         <div>
-        <h2 className="FormHeader"> Add Note </h2>
+          <div>
+            <div className="mediaLinkAD-home">
+              <a className="mediaLinkContentAD-home" ><Home onClick={() => { window.location.href = '/#/' }} /></a>
+            </div>
+            <h2 className="FormHeader">Add Note</h2>
+            <div className="mediaLink-clearForm">
+              <a className="mediaLinkContent-clearForm" ><XSquare onClick={() => { clearForm() }} /></a>
+            </div>
+          </div>
           <Form className="Form" id='MainForm'>
             {window.addr === undefined && (
               <div className="Results">
@@ -180,7 +195,7 @@ class AddNoteNC extends Component {
                     <Form.File onChange={(e) => this.setState({ hashPath: "" })} size="lg" className="btn2" id="ipfs2File" />
                   </Form.Group>
                 </Form.Row>
-  
+
                 {this.state.hashPath !== "" && (
                   <Form.Row>
                     <Form.Group >
@@ -199,14 +214,13 @@ class AddNoteNC extends Component {
                 {this.state.hashPath === "" && (
                   <Form.Row>
                     <Form.Group >
-                      <Button className="buttonDisplay"
-                        variant="primary"
-                        type="button"
-                        size="lg"
-                        onClick={publishIPFS2Photo}
-                      >
-                        Load to IPFS
-                      </Button>
+                      <div className="submitButtonTA">
+                        <div className="submitButtonTA-content">
+                          <ArrowRightCircle
+                            onClick={() => { publishIPFS2Photo() }}
+                          />
+                        </div>
+                      </div>
                     </Form.Group>
                   </Form.Row>
                 )}
@@ -215,27 +229,27 @@ class AddNoteNC extends Component {
           </Form>
           <div className="assetSelectedResults">
             <Form.Row>
-            {this.state.idxHash !== undefined &&(
-                  <Form.Group>
+              {this.state.idxHash !== undefined && (
+                <Form.Group>
                   <div className="assetSelectedContentHead">Asset IDX: <span className="assetSelectedContent">{this.state.idxHash}</span> </div>
                   <div className="assetSelectedContentHead">Asset Name: <span className="assetSelectedContent">{this.state.name}</span> </div>
                   {/* <div className="assetSelectedContentHead"> Asset Description: <span className="assetSelectedContent">{this.state.description}</span> </div> */}
                   <div className="assetSelectedContentHead">Asset Class: <span className="assetSelectedContent">{this.state.assetClass}</span> </div>
                   <div className="assetSelectedContentHead">Asset Status: <span className="assetSelectedContent">{this.state.status}</span> </div>
-                  </Form.Group>
-                )} 
+                </Form.Group>
+              )}
             </Form.Row>
           </div>
           {this.state.transaction === true && (
-  
-  <div className="Results">
-    {/* {this.state.pendingTx === undefined && ( */}
-      <p class="loading">Transaction In Progress</p>
-    {/* )} */}
-    {/* {this.state.pendingTx !== undefined && (
+
+            <div className="Results">
+              {/* {this.state.pendingTx === undefined && ( */}
+              <p class="loading">Transaction In Progress</p>
+              {/* )} */}
+              {/* {this.state.pendingTx !== undefined && (
       <p class="loading">Transaction In Progress</p>
     )} */}
-  </div>)}
+            </div>)}
           {this.state.txHash > 0 && ( //conditional rendering
             <div className="Results">
               {this.state.txStatus === false && (
@@ -273,7 +287,15 @@ class AddNoteNC extends Component {
     }
     return (
       <div>
-        <h2 className="FormHeader"> Add Note </h2>
+        <div>
+          <div className="mediaLinkAD-home">
+            <a className="mediaLinkContentAD-home" ><Home onClick={() => { window.location.href = '/#/' }} /></a>
+          </div>
+          <h2 className="FormHeader">Add Note</h2>
+          <div className="mediaLink-clearForm">
+            <a className="mediaLinkContent-clearForm" ><XSquare onClick={() => { clearForm() }} /></a>
+          </div>
+        </div>
         <Form className="Form" id='MainForm'>
           {window.addr === undefined && (
             <div className="Results">
@@ -289,11 +311,11 @@ class AddNoteNC extends Component {
                   <Form.Control
                     as="select"
                     size="lg"
-                    onChange={(e) => {_checkIn(e.target.value)}}
+                    onChange={(e) => { _checkIn(e.target.value) }}
                   >
                     {this.state.hasLoadedAssets && (<><option value="null"> Select an asset </option><option value="reset">Refresh Assets</option>{window.utils.generateAssets()}</>)}
                     {!this.state.hasLoadedAssets && (<option value="null"> Loading Assets... </option>)}
-                    
+
                   </Form.Control>
                 </Form.Group>
               </Form.Row>
@@ -321,14 +343,13 @@ class AddNoteNC extends Component {
               {this.state.hashPath === "" && (
                 <Form.Row>
                   <Form.Group >
-                    <Button className="buttonDisplay"
-                      variant="primary"
-                      type="button"
-                      size="lg"
-                      onClick={publishIPFS2Photo}
-                    >
-                      Load to IPFS
-                    </Button>
+                    <div className="submitButtonTA">
+                      <div className="submitButtonTA-content">
+                        <ArrowRightCircle
+                          onClick={() => { publishIPFS2Photo() }}
+                        />
+                      </div>
+                    </div>
                   </Form.Group>
                 </Form.Row>
               )}
@@ -337,27 +358,27 @@ class AddNoteNC extends Component {
         </Form>
         <div className="assetSelectedResults">
           <Form.Row>
-          {this.state.idxHash !== undefined &&(
-                <Form.Group>
+            {this.state.idxHash !== undefined && (
+              <Form.Group>
                 <div className="assetSelectedContentHead">Asset IDX: <span className="assetSelectedContent">{this.state.idxHash}</span> </div>
                 <div className="assetSelectedContentHead">Asset Name: <span className="assetSelectedContent">{this.state.name}</span> </div>
                 {/* <div className="assetSelectedContentHead"> Asset Description: <span className="assetSelectedContent">{this.state.description}</span> </div> */}
                 <div className="assetSelectedContentHead">Asset Class: <span className="assetSelectedContent">{this.state.assetClass}</span> </div>
                 <div className="assetSelectedContentHead">Asset Status: <span className="assetSelectedContent">{this.state.status}</span> </div>
-                </Form.Group>
-              )} 
+              </Form.Group>
+            )}
           </Form.Row>
         </div>
         {this.state.transaction === true && (
 
-<div className="Results">
-  {/* {this.state.pendingTx === undefined && ( */}
-    <p class="loading">Transaction In Progress</p>
-  {/* )} */}
-  {/* {this.state.pendingTx !== undefined && (
+          <div className="Results">
+            {/* {this.state.pendingTx === undefined && ( */}
+            <p class="loading">Transaction In Progress</p>
+            {/* )} */}
+            {/* {this.state.pendingTx !== undefined && (
     <p class="loading">Transaction In Progress</p>
   )} */}
-</div>)}
+          </div>)}
         {this.state.txHash > 0 && ( //conditional rendering
           <div className="Results">
             {this.state.txStatus === false && (

@@ -1,8 +1,7 @@
 import React, { Component } from "react";
 import Form from "react-bootstrap/Form";
 import Col from "react-bootstrap/Col";
-import Button from "react-bootstrap/Button";
-import { ArrowRightCircle } from 'react-feather'
+import { Home, XSquare, ArrowRightCircle } from "react-feather";
 
 class VerifyLite extends Component {
   constructor(props) {
@@ -88,6 +87,11 @@ class VerifyLite extends Component {
 
     }
 
+    const clearForm = async () => {
+      document.getElementById("MainForm").reset();
+      this.setState ({ result: "" })
+    }
+
     const _verify = async () => {
       this.setState({ txStatus: false });
       this.setState({ txHash: "" });
@@ -127,7 +131,15 @@ class VerifyLite extends Component {
 
     return (
       <div>
-        <h2 className="FormHeader"> Verify Light </h2>
+        <div>
+          <div className="mediaLinkAD-home">
+            <a className="mediaLinkContentAD-home" ><Home onClick={() => { window.location.href = '/#/' }} /></a>
+          </div>
+          <h2 className="FormHeader">Verify Lite</h2>
+          <div className="mediaLink-clearForm">
+            <a className="mediaLinkContent-clearForm" ><XSquare onClick={() => { clearForm() }} /></a>
+          </div>
+        </div>
         <Form className="Form" id='MainForm'>
           <div>
             {!this.state.accessPermitted && (

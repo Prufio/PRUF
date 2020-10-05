@@ -1,8 +1,7 @@
 import React, { Component } from "react";
 import Form from "react-bootstrap/Form";
 import Col from "react-bootstrap/Col";
-import Button from "react-bootstrap/Button";
-import { ArrowRightCircle } from 'react-feather'
+import { ArrowRightCircle, Home, XSquare } from 'react-feather'
 
 
 class ModifyDescriptionNC extends Component {
@@ -48,9 +47,9 @@ class ModifyDescriptionNC extends Component {
   componentDidMount() {//stuff to do when component mounts in window
     if (window.sentPacket !== undefined) {
       this.setState({ name: window.sentPacket.name })
-      this.setState({idxHash: window.sentPacket.idxHash})
-      this.setState({assetClass: window.sentPacket.assetClass})
-      this.setState({status: window.sentPacket.status})
+      this.setState({ idxHash: window.sentPacket.idxHash })
+      this.setState({ assetClass: window.sentPacket.assetClass })
+      this.setState({ status: window.sentPacket.status })
       window.sentPacket = undefined
       this.setState({ wasSentPacket: true })
     }
@@ -68,24 +67,29 @@ class ModifyDescriptionNC extends Component {
   render() {//render continuously produces an up-to-date stateful document  
     const self = this;
 
-      const _checkIn = async (e) => {
-        if (e === "0" || e === undefined) { return }
-        else if (e === "reset") {
-          return window.resetInfo = true;
-        }
-        this.setState({ selectedAsset: e })
-        console.log("Changed component idx to: ", window.assets.ids[e])
-
-        return this.setState({
-          assetClass: window.assets.assetClasses[e],
-          idxHash: window.assets.ids[e],
-          name: window.assets.descriptions[e].name,
-          photos: window.assets.descriptions[e].photo,
-          text: window.assets.descriptions[e].text,
-          description: window.assets.descriptions[e],
-          status: window.assets.statuses[e],
-        })
+    const _checkIn = async (e) => {
+      if (e === "0" || e === undefined) { return }
+      else if (e === "reset") {
+        return window.resetInfo = true;
       }
+      this.setState({ selectedAsset: e })
+      console.log("Changed component idx to: ", window.assets.ids[e])
+
+      return this.setState({
+        assetClass: window.assets.assetClasses[e],
+        idxHash: window.assets.ids[e],
+        name: window.assets.descriptions[e].name,
+        photos: window.assets.descriptions[e].photo,
+        text: window.assets.descriptions[e].text,
+        description: window.assets.descriptions[e],
+        status: window.assets.statuses[e],
+      })
+    }
+
+    const clearForm = async () => {
+      document.getElementById("MainForm").reset();
+      this.setState ({ idxHash: undefined, txStatus: undefined, txHash: "0", wasSentPacket: undefined})
+    }
 
     const _transferAsset = async () => {
       this.setState({ txStatus: false });
@@ -121,10 +125,18 @@ class ModifyDescriptionNC extends Component {
       document.getElementById("MainForm").reset();
     };
 
-    if (this.state.wasSentPacket){
+    if (this.state.wasSentPacket) {
       return (
         <div>
-                    <h2 className="FormHeader"> Transfer Asset </h2>
+          <div>
+            <div className="mediaLinkAD-home">
+              <a className="mediaLinkContentAD-home" ><Home onClick={() => { window.location.href = '/#/' }} /></a>
+            </div>
+            <h2 className="FormHeader">Transfer Asset</h2>
+            <div className="mediaLink-clearForm">
+              <a className="mediaLinkContent-clearForm" ><XSquare onClick={() => { clearForm() }} /></a>
+            </div>
+          </div>
           <Form className="Form" id='MainForm'>
             {window.addr === undefined && (
               <div className="Results">
@@ -145,17 +157,16 @@ class ModifyDescriptionNC extends Component {
                     />
                   </Form.Group>
                 </Form.Row>
-  
+
                 <Form.Row>
                   <Form.Group>
-                    <Button className="buttonDisplay"
-                      variant="primary"
-                      type="button"
-                      size="lg"
-                      onClick={_transferAsset}
-                    >
-                      Transfer
-                    </Button>
+                    <div className="submitButtonTA2">
+                      <div className="submitButtonTA2-content">
+                        <ArrowRightCircle
+                          onClick={() => { _transferAsset() }}
+                        />
+                      </div>
+                    </div>
                   </Form.Group>
                 </Form.Row>
               </div>
@@ -174,9 +185,9 @@ class ModifyDescriptionNC extends Component {
               )}
             </Form.Row>
           </div>
-  
+
           {this.state.transaction === true && (
-  
+
             <div className="Results">
               {/* {this.state.pendingTx === undefined && ( */}
               <p class="loading">Transaction In Progress</p>
@@ -219,7 +230,15 @@ class ModifyDescriptionNC extends Component {
     }
     return (
       <div>
-        <h2 className="FormHeader"> Transfer Asset </h2>
+        <div>
+          <div className="mediaLinkAD-home">
+            <a className="mediaLinkContentAD-home" ><Home onClick={() => { window.location.href = '/#/' }} /></a>
+          </div>
+          <h2 className="FormHeader">Transfer Asset</h2>
+          <div className="mediaLink-clearForm">
+            <a className="mediaLinkContent-clearForm" ><XSquare onClick={() => { clearForm() }} /></a>
+          </div>
+        </div>
         <Form className="Form" id='MainForm'>
           {window.addr === undefined && (
             <div className="Results">
@@ -257,7 +276,7 @@ class ModifyDescriptionNC extends Component {
 
               <Form.Row>
                 <Form.Group>
-                <div className="submitButtonTA">
+                  <div className="submitButtonTA">
                     <div className="submitButtonTA-content">
                       <ArrowRightCircle
                         onClick={() => { _transferAsset() }}
@@ -269,7 +288,7 @@ class ModifyDescriptionNC extends Component {
             </div>
           )}
         </Form>
-        <div className="assetSelectedResults">
+        <div className="assetSelectedResults" id="MainForm">
           <Form.Row>
             {this.state.idxHash !== undefined && (
               <Form.Group>
