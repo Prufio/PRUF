@@ -267,6 +267,7 @@ class Main extends Component {
       this.setState({ runWatchDog: true })
       console.log("window IPFS operation count: ", window.ipfsCounter)
       console.log("window assets: ", window.assets)
+      console.log("Bools...", this.state.assetHolderBool, this.state.assetClassHolderBool, this.state.IDHolderBool)
       //console.log(window.assets.ids, " aTkn-> ", window.aTknIDs)
 
     }
@@ -354,6 +355,7 @@ class Main extends Component {
         _web3.eth.getAccounts().then((e) => {
           if (window.addr !== e[0]) {
             window.href = "/#";
+            window.menuChange = "basic"
             window.addr = e[0];
             window.assetClass = undefined;
             window.isAuthUser = false;
@@ -361,6 +363,7 @@ class Main extends Component {
             self.setState({ addr: e[0]});
             window.recount = true;
             window.resetInfo = true;
+            
             //self.setupContractEnvironment(window.web3);
             console.log("///////in acctChanger////////");
           }
@@ -405,11 +408,12 @@ class Main extends Component {
 
         window._contracts = await buildContracts(_web3)
 
-        await window.utils.getETHBalance();
+        
         await this.setState({ contracts: window._contracts })
         await window.utils.getContracts()
 
         if (window.addr !== undefined) {
+          await window.utils.getETHBalance();
           await this.setUpTokenVals()
           await this.setupAssets()
         }
