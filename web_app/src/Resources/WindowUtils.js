@@ -383,9 +383,9 @@ function buildWindowUtils() {
             if (_error) { console.log("Error: ", _error) }
             else {
               if (Number(_result) === 1 && window.isACAdmin === false) { window.authLevel = "Pruf Minter"; window.isAuthUser = false; }
-              else if (Number(_result) < 1 && window.isACAdmin === true) { window.authLevel = "Pruf User/AC Admin"; window.isAuthUser = false; }
+              else if (Number(_result) !== 1 && window.isACAdmin === true) { window.authLevel = "Pruf User/AC Admin"; window.isAuthUser = false; }
               else if (Number(_result) === 1 && window.isACAdmin === true) { window.authLevel = "Pruf Minter/AC Admin"; window.isAuthUser = false; }
-              else if (Number(_result) < 1 && window.isACAdmin === false) { window.authLevel = "Pruf User"; window.isAuthUser = false; }
+              else if (Number(_result) !== 1 && window.isACAdmin === false) { window.authLevel = "Pruf User"; window.isAuthUser = false; }
               console.log(_result)
               return (window.custodyType = "Non-Custodial")
             }
@@ -625,11 +625,11 @@ function buildWindowUtils() {
         window.assetClassHolderBool = false
       }
 
-      if (Number(_IDTokenBal) > 0) {
+      if (Number(_IDTokenBal) > 0 && Number(_IDTokenBal) < 2) {
         window.IDHolderBool = true
       }
 
-      else if (Number(_IDTokenBal) === 0 || _IDTokenBal === undefined) {
+      else if (Number(_IDTokenBal) === 0 || _IDTokenBal === undefined || _IDTokenBal > 1) {
         window.IDHolderBool = false
       }
       window.balances = {

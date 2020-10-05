@@ -34,6 +34,24 @@ class Main extends Component {
         this.setState({ isAuthUser: window.isAuthUser })
       }
 
+      if(window.balances !== undefined){
+        if(
+          Object.values(window.balances) !== 
+          Object.values({assetClass: this.state.assetClassBalance, asset: this.state.assetBalance, ID: this.state.IDTokenBalance})){
+            this.setState({
+              assetClassBalance: window.balances.assetClassBalance,
+              assetBalance: window.balances.assetBalance,
+              IDTokenBalance: window.balances.IDTokenBalance,
+              assetHolderBool: window.assetHolderBool,
+              assetClassHolderBool: window.assetClassHolderBool,
+              IDHolderBool: window.IDHolderBool,
+              custodyType: window.custodyType,
+              hasFetchedBalances: window.hasFetchedBalances
+            })
+          }
+      }
+      
+
       if (window.menuChange !== undefined) {
         console.log(window.menuChange)
         this.setState({ menuChange: window.menuChange })
@@ -218,6 +236,7 @@ class Main extends Component {
       window.ipfsCounter = 0;
       window.ipfsHashArray = [];
         window.assets = { descriptions: [], ids: [], assetClasses: [], statuses: [], names: [] };
+        
         window.assetTokenInfo = {
           assetClass: undefined,
           idxHash: undefined,
@@ -227,8 +246,20 @@ class Main extends Component {
           status: undefined,
         }
         
+        if (window.balances !== undefined) {
+          this.setState({
+            assetClassBalance: window.balances.assetClassBalance,
+            assetBalance: window.balances.assetBalance,
+            IDTokenBalance: window.balances.IDTokenBalance,
+            assetHolderBool: window.assetHolderBool,
+            assetClassHolderBool: window.assetClassHolderBool,
+            IDHolderBool: window.IDHolderBool,
+            custodyType: window.custodyType,
+            hasFetchedBalances: window.hasFetchedBalances
+          })
+        }
 
-      if (window.balances === undefined) { return }
+      if (window.balances === undefined) { return console.log("balances undefined")}
       console.log("SA: In setupAssets")
 
       let tempDescObj = {}
@@ -239,6 +270,7 @@ class Main extends Component {
         window.aTknIDs = [];
         window.assetBalance = undefined;
         window.recount = false
+        await window.utils.getETHBalance();
         await this.setUpTokenVals()
         return this.setupAssets()
       }
@@ -311,22 +343,11 @@ class Main extends Component {
     }
 
     this.setUpTokenVals = async () => {
+      window.balances = undefined
       console.log("STV: Setting up balances")
 
       await window.utils.determineTokenBalance()
-
-      if (window.balances !== undefined) {
-        this.setState({
-          assetClassBalance: window.balances.assetClassBalance,
-          assetBalance: window.balances.assetBalance,
-          IDTokenBalance: window.balances.IDTokenBalance,
-          assetHolderBool: window.assetHolderBool,
-          assetClassHolderBool: window.assetClassHolderBool,
-          IDHolderBool: window.IDHolderBool,
-          custodyType: window.custodyType,
-        })
-        return this.setState({ hasFetchedBalances: window.hasFetchedBalances })
-      }
+      return window.balances
     }
 
     this.getIPFSJSONObject = (lookup, descElement) => {
@@ -354,8 +375,18 @@ class Main extends Component {
       ethereum.on("accountsChanged", function (accounts) {
         _web3.eth.getAccounts().then((e) => {
           if (window.addr !== e[0]) {
+            window.routeRequest = "basic"
+            self.setState({ routeRequest: "basic" });
+            self.setState({
+            basicMenuBool: true,
+            assetHolderMenuBool: false,
+            assetHolderUserMenuBool: false,
+            assetClassHolderMenuBool: false,
+            noAddrMenuBool: false,
+            authorizedUserMenuBool: false,
+            settingsMenu: undefined
+            })
             window.href = "/#";
-            window.menuChange = "basic"
             window.addr = e[0];
             window.assetClass = undefined;
             window.isAuthUser = false;
@@ -540,6 +571,7 @@ class Main extends Component {
       this.setupContractEnvironment(_web3)
       this.setState({ web3: _web3 });
       window.web3 = _web3;
+
       this.setState({
         noAddrMenuBool: true,
         assetHolderMenuBool: false,
