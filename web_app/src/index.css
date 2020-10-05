@@ -1420,6 +1420,52 @@ div {
   transform: translateX(3px);
 }
 
+.submitButtonDC {
+  display: flex;
+  position: absolute;
+  background-color: transparent;
+  z-index: 1000;
+  margin-left: 50rem;
+  margin-top: -0.7rem;
+}
+
+.submitButtonDC-content {
+  color: white;
+  border-radius: 50%;
+  -webkit-transition: -webkit-transform .5s ease-in-out;
+  transition:         transform .5s ease-in-out;
+}
+
+.submitButtonDC-content:hover {
+  color: #028ed4;
+  cursor: pointer;
+  -webkit-transform: translateX(3px);
+  transform: translateX(3px);
+}
+
+.submitButtonDC2 {
+  display: flex;
+  position: absolute;
+  background-color: transparent;
+  z-index: 1000;
+  margin-left: 20rem;
+  margin-top: -3.7rem;
+}
+
+.submitButtonDC2-content {
+  color: white;
+  border-radius: 50%;
+  -webkit-transition: -webkit-transform .5s ease-in-out;
+  transition:         transform .5s ease-in-out;
+}
+
+.submitButtonDC2-content:hover {
+  color: #028ed4;
+  cursor: pointer;
+  -webkit-transform: translateX(3px);
+  transform: translateX(3px);
+}
+
 .submitButtonEM-content {
   color: white;
   border-radius: 50%;

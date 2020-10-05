@@ -164,8 +164,8 @@ class DecrementCounterNC extends Component {
                   </Form.Group>
                 </Form.Row>
                 <Form.Row>
-                  <div className="submitButtonMRS">
-                    <div className="submitButtonMRS-content">
+                  <div className="submitButtonDC2">
+                    <div className="submitButtonDC2-content">
                       <ArrowRightCircle
                         onClick={() => { _decrementCounter() }}
                       />
@@ -280,8 +280,8 @@ class DecrementCounterNC extends Component {
                 </Form.Group>
               </Form.Row>
               <Form.Row>
-                <div className="submitButtonMRS">
-                  <div className="submitButtonMRS-content">
+                <div className="submitButtonDC">
+                  <div className="submitButtonDC-content">
                     <ArrowRightCircle
                       onClick={() => { _decrementCounter() }}
                     />
