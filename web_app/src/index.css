@@ -78,7 +78,6 @@ h4 {
   align-items: center;
   justify-content: center;
   flex-direction: column;
-  margin: auto;
   z-index: 5;
 }
 
@@ -162,6 +161,7 @@ div {
 
 .active {
   background-color: #00a8ff;
+  border-radius: 2rem;
 }
 
 .formFont {
