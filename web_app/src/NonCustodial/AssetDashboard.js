@@ -32,8 +32,11 @@ class AssetDashboard extends Component {
     }, 100)
 
     this.moreInfo = (e) => {
+      window.scrollTo({
+        top: 0,
+        behavior: "smooth"
+      });
       if (e === "back") { return this.setState({ assetObj: {}, moreInfo: false, printQR: undefined }) }
-
       this.setState({ assetObj: e, moreInfo: true, selectedImage: e.displayImage })
     }
 

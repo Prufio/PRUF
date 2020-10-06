@@ -161,7 +161,6 @@ div {
 
 .active {
   background-color: #00a8ff;
-  border-radius: 2rem;
 }
 
 .formFont {
@@ -1402,7 +1401,7 @@ div {
   position: absolute;
   background-color: transparent;
   z-index: 1000;
-  margin-left: 25rem;
+  margin-left: 50rem;
   margin-top: -3.7rem;
 }
 
