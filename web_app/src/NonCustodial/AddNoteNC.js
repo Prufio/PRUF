@@ -211,7 +211,9 @@ class AddNoteNC extends Component {
                       >
                         Add Note
                       </Button>
-                      <div className="LittleText"> Cost in AC {window.assetClass}: {Number(window.costs.createNoteCost) / 1000000000000000000} ETH</div>
+                      {this.state.idxHash !== "" && (
+                      <Form.Label className="LittleText"> Cost in AC {window.assetClass}: {Number(window.costs.createNoteCost) / 1000000000000000000} ETH</Form.Label >
+                      )}
                     </Form.Group>
                   </Form.Row>
                 )}
@@ -346,7 +348,9 @@ class AddNoteNC extends Component {
                     >
                       Add Note
                     </Button>
-                    <div className="LittleText"> Cost in AC {window.assetClass}: {Number(window.costs.createNoteCost) / 1000000000000000000} ETH</div>
+                    {this.state.idxHash !== "" && (
+                      <Form.Label className="LittleText"> Cost in AC {window.assetClass}: {Number(window.costs.createNoteCost) / 1000000000000000000} ETH</Form.Label >
+                      )}
                   </Form.Group>
                 </Form.Row>
               )}
@@ -359,6 +363,9 @@ class AddNoteNC extends Component {
                           onClick={() => { publishIPFS2Photo() }}
                         />
                       </div>
+                      {this.state.idxHash !== "" && (
+                      <Form.Label className="LittleText"> Cost in AC {window.assetClass}: {Number(window.costs.createNoteCost) / 1000000000000000000} ETH</Form.Label >
+                      )}
                     </div>
                   </Form.Group>
                 </Form.Row>

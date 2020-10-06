@@ -36,7 +36,7 @@ class ModifyDescription extends Component {
       txHash: "",
       txStatus: false,
       accessPermitted: true,
-      idxHash: "",
+      idxHash: undefined,
       elementType: 0,
       elementName: "",
       elementValue: "",
@@ -86,7 +86,7 @@ class ModifyDescription extends Component {
 
     const clearForm = async () => {
       document.getElementById("MainForm").reset();
-      this.setState({ idxHash: undefined, txStatus: undefined, txHash: "0" })
+      this.setState({ idxHash: undefined, txStatus: undefined, txHash: "0", elementType: 0 })
     }
 
     const getBytes32FromIpfsHash = (ipfsListing) => {
@@ -889,7 +889,7 @@ class ModifyDescription extends Component {
         </Form>
         <div className="assetSelectedResults">
           <Form.Row>
-            {this.state.idxHash !== undefined && (
+            {this.state.idxHash !== undefined && this.state.txHash === 0 &&(
               <Form.Group>
                 <div className="assetSelectedContentHead">Asset IDX: <span className="assetSelectedContent">{this.state.idxHash}</span> </div>
                 <div className="assetSelectedContentHead">Asset Name: <span className="assetSelectedContent">{this.state.name}</span> </div>
@@ -900,8 +900,9 @@ class ModifyDescription extends Component {
             )}
           </Form.Row>
         </div>
-        <div className="Results">
+        
           {this.state.txHash > 0 && ( //conditional rendering
+          <div className="Results">
             <Form.Row>
               {this.state.txStatus === false && (
                 <div>
@@ -929,8 +930,9 @@ class ModifyDescription extends Component {
                 </div>
               )}
             </Form.Row>
+            </div>
           )}
-        </div>
+        
       </div>
     );
   }
