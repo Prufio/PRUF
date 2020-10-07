@@ -252,7 +252,7 @@ pragma solidity ^0.6.7;
  * 7 = out of Supervised escrow (user < 5)
  *
  * 50 Locked escrow
- * 51 = transferrable, automation set/unset (secret confirmed)(ACAdmin can unset)
+ * 51 = transferrable, exportable, automation set/unset (secret confirmed)(ACAdmin can unset)
  * 52 = non-transferrable, automation set/unset (secret confirmed)(ACAdmin can unset)
  * 53 = stolen (automation set)(ONLY ACAdmin can unset)
  * 54 = lost (automation set/unset)(ACAdmin can unset)             

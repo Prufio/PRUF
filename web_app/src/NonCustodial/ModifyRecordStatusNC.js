@@ -28,7 +28,7 @@ class ModifyRecordStatusNC extends Component {
       result2: "",
       assetClass: undefined,
       ipfs1: "",
-      status: "0",
+      newStatus: "0",
       txHash: "",
       txStatus: false,
       type: "",
@@ -36,6 +36,7 @@ class ModifyRecordStatusNC extends Component {
       model: "",
       serial: "",
       isNFA: false,
+      status: "",
       hasLoadedAssets: false,
       assets: { descriptions: [0], ids: [0], assetClasses: [0], statuses: [0], names: [0] },
       transaction: undefined,
@@ -94,6 +95,7 @@ class ModifyRecordStatusNC extends Component {
         text: window.assets.descriptions[e].text,
         description: window.assets.descriptions[e],
         status: window.assets.statuses[e],
+        note: window.assets.notes[e]
       })
     }
 
@@ -114,9 +116,16 @@ class ModifyRecordStatusNC extends Component {
         return alert("Asset doesnt exist! Ensure data fields are correct before submission.")
       }
 
-      if (this.state.status !== "53" && this.state.status !== "54" && this.state.status !== "56" && this.state.status !== "59") {
+      if (
+        this.state.newStatus !== "53" && 
+        this.state.newStatus !== "54" && 
+        this.state.newStatus !== "56" && 
+        this.state.newStatus !== "59" && 
+        Number(this.state.newStatus) < 100 && 
+        Number(this.state.newStatus) > 49) {
+
         window.contracts.NP_NC.methods
-          ._modStatus(idxHash, this.state.status)
+          ._modStatus(idxHash, this.state.newStatus)
           .send({ from: window.addr })
           .on("error", function (_error) {
             // self.setState({ NRerror: _error });
@@ -133,9 +142,9 @@ class ModifyRecordStatusNC extends Component {
           });
       }
 
-      else if (this.state.status === "53" || this.state.status === "54") {
+      else if (this.state.newStatus === "53" || this.state.newStatus === "54") {
         window.contracts.NP_NC.methods
-          ._setLostOrStolen(idxHash, this.state.status)
+          ._setLostOrStolen(idxHash, this.state.newStatus)
           .send({ from: window.addr })
           .on("error", function (_error) {
             // self.setState({ NRerror: _error });
@@ -184,7 +193,7 @@ class ModifyRecordStatusNC extends Component {
                 <Form.Row>
                   <Form.Group as={Col} controlId="formGridFormat">
                     <Form.Label className="formFont">New Status:</Form.Label>
-                    <Form.Control as="select" size="lg" onChange={(e) => this.setState({ status: e.target.value })}>
+                    <Form.Control as="select" size="lg" onChange={(e) => this.setState({ newStatus: e.target.value })}>
                       <option value="0">Choose a status</option>
                       <option value="51">Transferrable</option>
                       <option value="52">Non-transferrable</option>
@@ -305,7 +314,7 @@ class ModifyRecordStatusNC extends Component {
               <Form.Row>
                 <Form.Group as={Col} controlId="formGridFormat">
                   <Form.Label className="formFont">New Status:</Form.Label>
-                  <Form.Control as="select" size="lg" onChange={(e) => this.setState({ status: e.target.value })}>
+                  <Form.Control as="select" size="lg" onChange={(e) => this.setState({ newStatus: e.target.value })}>
                     <option value="0">Choose a status</option>
                     <option value="51">Transferrable</option>
                     <option value="52">Non-transferrable</option>

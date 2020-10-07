@@ -4,7 +4,7 @@ import Col from "react-bootstrap/Col";
 import Button from "react-bootstrap/Button";
 import { ArrowRightCircle, Home, XSquare } from 'react-feather'
 
-class ForceModifyRecordNC extends Component {
+class ModifyRightsHolder extends Component {
   constructor(props) {
     super(props);
 
@@ -92,6 +92,7 @@ class ForceModifyRecordNC extends Component {
       else if (e === "assetDash"){
         return window.location.href = "/#/asset-dashboard"
       }
+      if(window.assets.statuses[e] === "53" || window.assets.statuses[e] === "54"){return alert("Asset cannot be modified while in lost or stolen status")}
       this.setState({ selectedAsset: e })
       console.log("Changed component idx to: ", window.assets.ids[e])
 
@@ -103,6 +104,7 @@ class ForceModifyRecordNC extends Component {
         text: window.assets.descriptions[e].text,
         description: window.assets.descriptions[e],
         status: window.assets.statuses[e],
+        note: window.assets.notes[e]
       })
     }
 
@@ -459,4 +461,4 @@ class ForceModifyRecordNC extends Component {
   }
 }
 
-export default ForceModifyRecordNC;
+export default ModifyRightsHolder;

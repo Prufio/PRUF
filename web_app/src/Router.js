@@ -35,7 +35,7 @@ import DecrementCounterNC from "./NonCustodial/DecrementCounterNC";
 import EscrowManagerNC from "./NonCustodial/EscrowManagerNC";
 import ImportAssetNC from "./NonCustodial/ImportAssetNC";
 import ExportAssetNC from "./NonCustodial/ExportAssetNC";
-import ForceModifyRecordNC from "./NonCustodial/ForceModifyRecordNC";
+import ModifyRightsHolder from "./NonCustodial/ModifyRightsHolder";
 import ModifyDescriptionNC from "./NonCustodial/ModifyDescriptionNC";
 import ModifyRecordStatusNC from "./NonCustodial/ModifyRecordStatusNC";
 import NewRecordNC from "./NonCustodial/NewRecordNC";
@@ -69,7 +69,7 @@ function Router(routeRequest) {
             <>
                 <Route path="/new-record-NC" component={NewRecordNC} />
                 <Route path="/retrieve-record" component={RetrieveRecord} />
-                <Route path="/force-modify-record-NC" component={ForceModifyRecordNC} />
+                <Route path="/force-modify-record-NC" component={ModifyRightsHolder} />
                 <Route path="/transfer-asset-NC" component={TransferAssetNC} />
                 <Route path="/modify-record-status-NC" component={ModifyRecordStatusNC} />
                 <Route path="/decrement-counter-NC" component={DecrementCounterNC} />
@@ -89,7 +89,7 @@ function Router(routeRequest) {
         return (
             <>
                 <Route path="/retrieve-record" component={RetrieveRecord} />
-                <Route path="/force-modify-record-NC" component={ForceModifyRecordNC} />
+                <Route path="/force-modify-record-NC" component={ModifyRightsHolder} />
                 <Route path="/transfer-asset-NC" component={TransferAssetNC} />
                 <Route path="/modify-record-status-NC" component={ModifyRecordStatusNC} />
                 <Route path="/decrement-counter-NC" component={DecrementCounterNC} />

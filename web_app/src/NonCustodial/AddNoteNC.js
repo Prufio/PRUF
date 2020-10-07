@@ -120,6 +120,10 @@ class AddNoteNC extends Component {
       else if (e === "assetDash"){
         return window.location.href = "/#/asset-dashboard"
       }
+      if (await window.utils.checkNoteExists(window.assets.ids[e])) {
+        return alert("Asset note already exists! Cannot overwrite existing note.")
+      }
+
       this.setState({ selectedAsset: e })
       console.log("Changed component idx to: ", window.assets.ids[e])
 
@@ -131,6 +135,7 @@ class AddNoteNC extends Component {
         text: window.assets.descriptions[e].text,
         description: window.assets.descriptions[e],
         status: window.assets.statuses[e],
+        note: window.assets.notes[e]
       })
     }
 
@@ -144,12 +149,6 @@ class AddNoteNC extends Component {
 
       console.log("idxHash", idxHash);
       console.log("addr: ", window.addr);
-
-      var noteExists = await window.utils.checkNoteExists(idxHash);
-
-      if (noteExists) {
-        return alert("Asset note already exists! Cannot overwrite existing note.")
-      }
 
       await window.contracts.APP_NC.methods
         .$addIpfs2Note(idxHash, this.state.hashPath)

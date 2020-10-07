@@ -279,6 +279,7 @@ class ModifyDescription extends Component {
         text: window.assets.descriptions[e].text,
         oldDescription: window.assets.descriptions[e],
         status: window.assets.statuses[e],
+        note: window.assets.notes[e]
       })
     }
 

@@ -208,6 +208,52 @@ const _checkAssetExists = async (idxHash) => {
   return tempBool;
 }
 
+const _checkAssetExportable = async (idxHash) => {
+  let tempBool;
+  if (idxHash.substring(0, 2) !== "0x") {
+    return (false)
+  }
+  await window.contracts.STOR.methods
+    .retrieveShortRecord(idxHash)
+    .call(function (_error, _result) {
+      if (_error) {
+        return (console.log("IN ERROR IN ERROR IN ERROR"))
+      } else if (
+        Object.values(_result)[0] === "51"
+      ) {
+        tempBool = true;
+      } else {
+        tempBool = false;
+      }
+
+    });
+  console.log(tempBool);
+  return tempBool;
+}
+
+const _checkAssetRootMatch = async (AC, idxHash) => {
+  let tempBool;
+  if (idxHash.substring(0, 2) !== "0x") {
+    return (false)
+  }
+  await window.contracts.STOR.methods
+    .retrieveShortRecord(idxHash)
+    .call(function (_error, _result) {
+      if (_error) {
+        return (console.log("IN ERROR IN ERROR IN ERROR"))
+      } else if (
+        Object.values(_result)[2] === AC
+      ) {
+        tempBool = true;
+      } else {
+        tempBool = false;
+      }
+
+    });
+  console.log(tempBool);
+  return tempBool;
+}
+
 const _checkMatch = async (idxHash, rgtHash) => {
   let tempBool;
   await window.contracts.STOR.methods
@@ -516,6 +562,7 @@ const _getACData = async (ref, ac) => {
           }
         }
       });
+    window.tempACData = tempData;
     return tempData;
   }
 
@@ -654,6 +701,7 @@ const _getAssetTokenInfo = async () => {
   if (Number(window.balances.assetBalance) > 0) {
     let tknIDArray = [];
     let ipfsHashArray = [];
+    let noteArray = []
     let statuses = [];
     let assetClasses = [];
 
@@ -684,6 +732,13 @@ const _getAssetTokenInfo = async () => {
             else {
               ipfsHashArray.push("0")
             }
+            if(Number(Object.values(_result)[6]) > 0){
+              noteArray.push("https://ipfs.io/ipfs/" + String(window.utils.getIpfsHashFromBytes32(Object.values(_result)[6])))
+            }
+            else {
+              noteArray.push("0")
+            }
+            
             statuses.push(Object.values(_result)[0])
             assetClasses.push(Object.values(_result)[2])
 
@@ -691,6 +746,7 @@ const _getAssetTokenInfo = async () => {
         })
       //console.log(x)
     }
+    
 
     console.log(ipfsHashArray)
 
@@ -700,6 +756,7 @@ const _getAssetTokenInfo = async () => {
 
     window.assets.assetClasses = assetClasses;
     window.assets.statuses = statuses;
+    window.assets.notes = noteArray;
 
   }
 
@@ -770,6 +827,8 @@ window.utils = {
   resolveAC: _resolveAC,
   checkACName: _checkACName,
   checkAssetExists: _checkAssetExists,
+  checkAssetExportable: _checkAssetExportable,
+  checkAssetRootMatch: _checkAssetRootMatch,
   checkNoteExists: _checkNoteExists,
   checkMatch: _checkMatch,
   checkEscrowStatus: _checkEscrowStatus,

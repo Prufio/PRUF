@@ -77,6 +77,8 @@ class ModifyDescriptionNC extends Component {
       else if (e === "assetDash"){
         return window.location.href = "/#/asset-dashboard"
       }
+
+      if (window.assets.statuses[e] !== "1"){return alert("Asset not in transferrable status")}
       this.setState({ selectedAsset: e })
       console.log("Changed component idx to: ", window.assets.ids[e])
 
@@ -88,6 +90,7 @@ class ModifyDescriptionNC extends Component {
         text: window.assets.descriptions[e].text,
         description: window.assets.descriptions[e],
         status: window.assets.statuses[e],
+        note: window.assets.notes[e]
       })
     }
 

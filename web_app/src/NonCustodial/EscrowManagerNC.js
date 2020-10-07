@@ -40,7 +40,7 @@ class EscrowManagerNC extends Component {
       isSettingEscrow: "0",
       escrowData: [],
       hasLoadedAssets: false,
-      assets: { descriptions: [0], ids: [0], assetClasses: [0], statuses: [0], names: [0] },
+      assets: { descriptions: [0], notes: [0], ids: [0], assetClasses: [0], statuses: [0], names: [0] },
     };
   }
 
@@ -48,12 +48,14 @@ class EscrowManagerNC extends Component {
 
   componentDidMount() {//stuff to do when component mounts in window
     if (window.sentPacket !== undefined) {
-      this.setState({ name: window.sentPacket.name })
-      this.setState({ idxHash: window.sentPacket.idxHash })
-      this.setState({ assetClass: window.sentPacket.assetClass })
-      this.setState({ status: window.sentPacket.status })
+      this.setState({ 
+        name: window.sentPacket.name,
+        idxHash: window.sentPacket.idxHash,
+        assetClass: window.sentPacket.assetClass,
+        status: window.sentPacket.status,
+        wasSentPacket: true
+       })
       window.sentPacket = undefined
-      this.setState({ wasSentPacket: TrendingUp })
     }
 
     this.setState({ runWatchDog: true })
@@ -98,11 +100,14 @@ class EscrowManagerNC extends Component {
       console.log("addr: ", window.addr);
       console.log("time: ", this.state.escrowTime, "format: ", this.state.timeFormat);
 
+      if(this.state.newStatus <= 49){return alert("Cannot set status under 50 in non-custodial AC")}
+      if(this.state.agent.substring(0,2) !== "0x"){return alert("Agent address invalid")}
+      
+
       window.contracts.ECR_NC.methods
         .setEscrow(idxHash, window.web3.utils.soliditySha3(this.state.agent), window.utils.convertTimeTo(this.state.escrowTime, this.state.timeFormat), this.state.newStatus)
         .send({ from: window.addr })
         .on("error", function (_error) {
-          // self.setState({ NRerror: _error });
           self.setState({ txHash: Object.values(_error)[0].transactionHash });
           self.setState({ txStatus: false });
           console.log(Object.values(_error)[0].transactionHash);
@@ -129,6 +134,13 @@ class EscrowManagerNC extends Component {
       this.setState({ selectedAsset: e })
       console.log("Changed component idx to: ", window.assets.ids[e])
 
+      if(window.assets.statuses[e] === 6 || window.assets.statuses[e] === 50){
+        this.setState({isSettingEscrow: false})
+      }
+      else if(window.assets.statuses[e] !== 6 && window.assets.statuses[e] !== 50 && window.assets.statuses[e] !== 56){
+        this.setState({isSettingEscrow: true})
+      }
+
       this.setState({
         assetClass: window.assets.assetClasses[e],
         idxHash: window.assets.ids[e],
@@ -137,6 +149,7 @@ class EscrowManagerNC extends Component {
         text: window.assets.descriptions[e].text,
         description: window.assets.descriptions[e],
         status: window.assets.statuses[e],
+        note: window.assets.notes[e]
       })
     }
 
@@ -201,6 +214,7 @@ class EscrowManagerNC extends Component {
                 <h3>Please connect web3 provider.</h3>
               </div>
             )}
+
             {window.addr > 0 && (
               <div>
                 {!this.state.accessPermitted && (
@@ -208,9 +222,12 @@ class EscrowManagerNC extends Component {
                     <Form.Row>
                       <Form.Label className="formFont">Set or End?:</Form.Label>
                       <Form.Control as="select" size="lg" onChange={(e) => this.setState({ isSettingEscrow: e.target.value })}>
+
                         <option value="null">Select an Action</option>
-                        <option value="true">Set Escrow</option>
-                        <option value="false">End Escrow</option>
+                        
+                          <option value="true">Set Escrow</option>
+                          <option value="false">End Escrow</option>
+                        
                       </Form.Control>
                     </Form.Row>
                     <Form.Row>

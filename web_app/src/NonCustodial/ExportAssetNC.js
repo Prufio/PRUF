@@ -79,6 +79,7 @@ class ExportAssetNC extends Component {
       else if (e === "assetDash"){
         return window.location.href = "/#/asset-dashboard"
       }
+      if (window.assets.statuses[e] !== "51"){return alert("Cannot export asset in non-transferrable status")}
       this.setState({ selectedAsset: e })
       console.log("Changed component idx to: ", window.assets.ids[e])
 
@@ -90,6 +91,7 @@ class ExportAssetNC extends Component {
         text: window.assets.descriptions[e].text,
         description: window.assets.descriptions[e],
         status: window.assets.statuses[e],
+        note: window.assets.notes[e]
       })
     }
 
