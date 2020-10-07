@@ -54,7 +54,6 @@ class Main extends Component {
       if (window.menuChange !== undefined) {
         console.log(window.menuChange)
         this.setState({ menuChange: window.menuChange })
-
       }
 
       if (this.state.menuChange !== undefined) {
@@ -110,8 +109,8 @@ class Main extends Component {
           authorizedUserMenuBool: false,
           routeRequest: "basic"
         })
-
       }
+
       if (window.assets !== undefined) {
         if (window.assets.ids.length > 0 && Object.values(window.assets.descriptions).length === window.aTknIDs.length &&
           window.assets.names.length === 0 && this.state.buildReady === true && window.aTknIDs.length > 0) {
@@ -137,6 +136,7 @@ class Main extends Component {
           this.setState({ buildReady: true })
         }
       }
+
       else if ((this.state.buildReady === true && window.ipfsCounter < window.aTknIDs.length) ||
         (this.state.buildReady === true && this.state.runWatchDog === false)) {
         console.log("Setting buildready to false in watchdog")
@@ -391,7 +391,9 @@ class Main extends Component {
               authorizedUserMenuBool: false,
               settingsMenu: undefined
             })
+
             if(window.location.href !== "/#/asset-dashboard"){window.location.href = "/#"}
+
             window.addr = e[0];
             window.assetClass = undefined;
             window.isAuthUser = false;
@@ -531,6 +533,7 @@ class Main extends Component {
 
 
     if (window.ethereum !== undefined) {
+      window.costs = {}
       window.additionalElementArrays = {
         photo: [],
         text: [],

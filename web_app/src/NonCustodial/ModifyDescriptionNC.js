@@ -57,6 +57,7 @@ class ModifyDescription extends Component {
 
   componentDidMount() {//stuff to do when component mounts in window
     if (window.sentPacket !== undefined) {
+      
       this.setState({
         name: window.sentPacket.name,
         idxHash: window.sentPacket.idxHash,
@@ -64,8 +65,8 @@ class ModifyDescription extends Component {
         status: window.sentPacket.status,
         oldDescription: window.sentPacket.descriptionObj,
         wasSentPacket: true,
-
       })
+
       window.sentPacket = undefined
     }
 
@@ -253,7 +254,7 @@ class ModifyDescription extends Component {
           console.log("uploaded at hash: ", hash);
         }
         self.setState({
-          hashPath: window.utils.getBytes32FromIpfsHash(hash),
+          hashPath: window.utils.getBytes32FromIPFSHash(hash),
           oldDescription: newDescription
         });
       });
@@ -306,7 +307,10 @@ class ModifyDescription extends Component {
           this.setState({ txStatus: receipt.status });
           console.log(receipt.status);
           window.resetInfo = true;
-          window.location.href = '/#/check-in'
+          if (this.state.wasSentPacket){
+            window.location.href = '/#/asset-dashboard'
+          }
+          
           //Stuff to do when tx confirms
         });
 

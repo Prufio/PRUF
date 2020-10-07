@@ -42,7 +42,6 @@ class NewRecordNC extends Component {
       rawIPFSHash: "",
       idxSubmitted: false,
       transaction: undefined,
-      // pendingTx: undefined,
     };
   }
 
@@ -137,7 +136,7 @@ class NewRecordNC extends Component {
 
       if (!doesExist) { 
       this.setState({ idxHash: idxHash, idxSubmitted: true }); 
-      return this.setState({rawIPFSHash: window.utils.addIPFSJSONObject(ipfsObj)}) 
+      await window.utils.addIPFSJSONObject(ipfsObj) 
       }
 
       else { return alert("Record already exists! Try again. (Note: nameTag can contain whatever you want, and cannot cause hash collisions)") }
@@ -147,12 +146,13 @@ class NewRecordNC extends Component {
     const _newRecord = async () => {//create a new asset record
       this.setState({ txStatus: false });
       this.setState({ txHash: "" });
-      this.setState({ error: undefined })
-      this.setState({ result: "" })
-      this.setState({ transaction: true })
+      this.setState({ error: undefined });
+      this.setState({ result: "" });
+      this.setState({ transaction: true });
+      
       //reset state values before form resubmission
       var idxHash = this.state.idxHash;
-      var ipfsHash = window.utils.getBytes32FromIPFSHash(String(window.rawIpfsHashTemp));
+      var ipfsHash = window.utils.getBytes32FromIPFSHash(String(window.rawIPFSHashTemp));
       var rgtRaw;
 
       rgtRaw = window.web3.utils.soliditySha3(
@@ -164,38 +164,21 @@ class NewRecordNC extends Component {
       );
 
       var rgtHash = window.web3.utils.soliditySha3(idxHash, rgtRaw);
-      var ipfsHash = window.web3.utils.soliditySha3(this.state.assetName);
       //rgtHash = tenThousandHashesOf(rgtHash)
 
       console.log("idxHash", idxHash);
       console.log("New rgtRaw", rgtRaw);
       console.log("New rgtHash", rgtHash);
       console.log("addr: ", window.addr);
-      console.log(window.assetClass);
-
-
-      if (!doesExist) {
-        window.contracts.APP_NC.methods
-          .$newRecordWithDescription(
-            idxHash,
-            rgtHash,
-            window.assetClass,
-            this.state.countDownStart,
-            ipfsHash
-          )
-          .send({ from: window.addr, value: window.costs.newRecordCost })
-          .on("error", function (_error) {
-            // self.setState({ NRerror: _error });
-            self.setState({ transaction: false })
-            self.setState({ txHash: Object.values(_error)[0].transactionHash });
-            self.setState({ txStatus: false });
-
+      console.log("AC: ", this.state.assetClass);
+      console.log("IPFS bs58: ", window.rawIPFSHashTemp)
+      console.log("IPFS bytes32: ", ipfsHash)  
 
       await window.contracts.APP_NC.methods
         .$newRecordWithDescription(
           idxHash,
           rgtHash,
-          window.assetClass,
+          this.state.assetClass,
           this.state.countDownStart,
           ipfsHash
         )
@@ -216,8 +199,8 @@ class NewRecordNC extends Component {
         });
       // console.log(Object.values(window.web3.eth.getPendingTransactions()))
 
-      return document.getElementById("MainForm").reset(); //clear form inputs
-    };
+      this.setState({assetClassSelected: false, idxSubmitted: false}) //clear form inputs
+}
 
     return (//default render
       <div>
@@ -261,18 +244,6 @@ class NewRecordNC extends Component {
           
           {window.addr > 0 && this.state.assetClassSelected && (
             <div>
-              <Form.Row>
-                <Form.Label className="formFont">Asset Name:</Form.Label>
-                <Form.Control
-                    placeholder="Asset Name"
-                    required
-                    onChange={(e) => this.setState({ assetName: e.target.value })}
-                    size="lg"
-                  />
-              </Form.Row>
-              <Form.Row>
-                <Form.Group as={Col} controlId="formGridType">
-                  <Form.Label className="formFont">Type:</Form.Label>
 
               {!this.state.idxSubmitted && (
                 <>
@@ -479,7 +450,7 @@ class NewRecordNC extends Component {
           )}
         </div>
       </div>
-    );
+    )
   }
 }
 
