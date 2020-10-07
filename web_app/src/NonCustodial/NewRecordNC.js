@@ -27,6 +27,7 @@ class NewRecordNC extends Component {
       countDownStart: "",
       ipfs1: "",
       txHash: "",
+      assetName: "",
       type: "",
       manufacturer: "",
       model: "",
@@ -85,6 +86,7 @@ class NewRecordNC extends Component {
       );
 
       var rgtHash = window.web3.utils.soliditySha3(idxHash, rgtRaw);
+      var ipfsHash = window.web3.utils.soliditySha3(this.state.assetName);
       //rgtHash = tenThousandHashesOf(rgtHash)
 
       console.log("idxHash", idxHash);
@@ -97,11 +99,12 @@ class NewRecordNC extends Component {
 
       if (!doesExist) {
         window.contracts.APP_NC.methods
-          .$newRecord(
+          .$newRecordWithDescription(
             idxHash,
             rgtHash,
             window.assetClass,
-            this.state.countDownStart
+            this.state.countDownStart,
+            ipfsHash
           )
           .send({ from: window.addr, value: window.costs.newRecordCost })
           .on("error", function (_error) {
@@ -151,6 +154,15 @@ class NewRecordNC extends Component {
           )}
           {window.addr > 0 && window.assetClass > 0 && (
             <div>
+              <Form.Row>
+                <Form.Label className="formFont">Asset Name:</Form.Label>
+                <Form.Control
+                    placeholder="Asset Name"
+                    required
+                    onChange={(e) => this.setState({ assetName: e.target.value })}
+                    size="lg"
+                  />
+              </Form.Row>
               <Form.Row>
                 <Form.Group as={Col} controlId="formGridType">
                   <Form.Label className="formFont">Type:</Form.Label>
@@ -287,7 +299,7 @@ class NewRecordNC extends Component {
             </div>
           )}
         </Form>
-        {this.state.transaction === true && (
+        {this.state.transaction === true && this.state.txStatus === undefined && (
 
           <div className="Results">
             {/* {this.state.pendingTx === undefined && ( */}
@@ -302,7 +314,7 @@ class NewRecordNC extends Component {
 
 
             <Form.Row>
-              {this.state.txStatus === false && (
+              {this.state.txStatus === false && this.state.transaction === undefined && (
                 <div>
                   !ERROR! :
                   <a
@@ -314,7 +326,7 @@ class NewRecordNC extends Component {
                   </a>
                 </div>
               )}
-              {this.state.txStatus === true && (
+              {this.state.txStatus === true && this.state.transaction === undefined &&(
                 <div>
                   {" "}
                 No Errors Reported :
