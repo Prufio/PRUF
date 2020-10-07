@@ -95,24 +95,6 @@
 						"type": "bytes32"
 					},
 					{
-						"internalType": "uint32",
-						"name": "_newAssetClass",
-						"type": "uint32"
-					}
-				],
-				"name": "$importAsset",
-				"outputs": [],
-				"stateMutability": "payable",
-				"type": "function"
-			},
-			{
-				"inputs": [
-					{
-						"internalType": "bytes32",
-						"name": "_idxHash",
-						"type": "bytes32"
-					},
-					{
 						"internalType": "bytes32",
 						"name": "_rgtHash",
 						"type": "bytes32"
@@ -130,83 +112,6 @@
 				],
 				"name": "$newRecord",
 				"outputs": [],
-				"stateMutability": "payable",
-				"type": "function"
-			},
-			{
-				"inputs": [
-					{
-						"internalType": "bytes32",
-						"name": "_idxHash",
-						"type": "bytes32"
-					},
-					{
-						"internalType": "bytes32",
-						"name": "_rgtHash",
-						"type": "bytes32"
-					},
-					{
-						"internalType": "uint32",
-						"name": "_assetClass",
-						"type": "uint32"
-					},
-					{
-						"internalType": "uint32",
-						"name": "_countDownStart",
-						"type": "uint32"
-					},
-					{
-						"internalType": "bytes32",
-						"name": "_IpfsHash",
-						"type": "bytes32"
-					}
-				],
-				"name": "$newRecordWithDescription",
-				"outputs": [],
-				"stateMutability": "payable",
-				"type": "function"
-			},
-			{
-				"inputs": [
-					{
-						"internalType": "bytes32",
-						"name": "_idxHash",
-						"type": "bytes32"
-					},
-					{
-						"internalType": "string",
-						"name": "first",
-						"type": "string"
-					},
-					{
-						"internalType": "string",
-						"name": "middle",
-						"type": "string"
-					},
-					{
-						"internalType": "string",
-						"name": "last",
-						"type": "string"
-					},
-					{
-						"internalType": "string",
-						"name": "id",
-						"type": "string"
-					},
-					{
-						"internalType": "string",
-						"name": "secret",
-						"type": "string"
-					}
-				],
-				"name": "$reMintToken",
-				"outputs": [
-					{
-						"internalType": "uint256",
-						"name": "",
-						"type": "uint256"
-					}
-				],
 				"stateMutability": "payable",
 				"type": "function"
 			},
@@ -265,6 +170,165 @@
 			{
 				"inputs": [],
 				"name": "OO_unpause",
+				"outputs": [],
+				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "bytes32",
+						"name": "_idxHash",
+						"type": "bytes32"
+					},
+					{
+						"internalType": "uint32",
+						"name": "_decAmount",
+						"type": "uint32"
+					}
+				],
+				"name": "_decCounter",
+				"outputs": [
+					{
+						"internalType": "uint32",
+						"name": "",
+						"type": "uint32"
+					}
+				],
+				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "bytes32",
+						"name": "_idxHash",
+						"type": "bytes32"
+					},
+					{
+						"internalType": "bytes32",
+						"name": "_IpfsHash",
+						"type": "bytes32"
+					}
+				],
+				"name": "_modIpfs1",
+				"outputs": [
+					{
+						"internalType": "bytes32",
+						"name": "",
+						"type": "bytes32"
+					}
+				],
+				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "bytes32",
+						"name": "_idxHash",
+						"type": "bytes32"
+					},
+					{
+						"internalType": "uint8",
+						"name": "_newAssetStatus",
+						"type": "uint8"
+					}
+				],
+				"name": "_modStatus",
+				"outputs": [
+					{
+						"internalType": "uint8",
+						"name": "",
+						"type": "uint8"
+					}
+				],
+				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "bytes32",
+						"name": "_idxHash",
+						"type": "bytes32"
+					},
+					{
+						"internalType": "uint8",
+						"name": "_newAssetStatus",
+						"type": "uint8"
+					}
+				],
+				"name": "_setLostOrStolen",
+				"outputs": [
+					{
+						"internalType": "uint8",
+						"name": "",
+						"type": "uint8"
+					}
+				],
+				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "bytes32",
+						"name": "_idxHash",
+						"type": "bytes32"
+					},
+					{
+						"internalType": "uint32",
+						"name": "newAssetClass",
+						"type": "uint32"
+					}
+				],
+				"name": "changeAC",
+				"outputs": [
+					{
+						"internalType": "uint8",
+						"name": "",
+						"type": "uint8"
+					}
+				],
+				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "uint256",
+						"name": "tokenId",
+						"type": "uint256"
+					}
+				],
+				"name": "discard",
+				"outputs": [],
+				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "bytes32",
+						"name": "_idxHash",
+						"type": "bytes32"
+					}
+				],
+				"name": "endEscrow",
+				"outputs": [],
+				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "bytes32",
+						"name": "_idxHash",
+						"type": "bytes32"
+					}
+				],
+				"name": "endEscrowStor",
 				"outputs": [],
 				"stateMutability": "nonpayable",
 				"type": "function"
@@ -358,6 +422,65 @@
 			{
 				"inputs": [
 					{
+						"internalType": "bytes32",
+						"name": "_idxHash",
+						"type": "bytes32"
+					}
+				],
+				"name": "retrieveRecordStor",
+				"outputs": [],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "bytes32",
+						"name": "_idxHash",
+						"type": "bytes32"
+					},
+					{
+						"internalType": "bytes32",
+						"name": "_escrowOwnerHash",
+						"type": "bytes32"
+					},
+					{
+						"internalType": "uint256",
+						"name": "_escrowTime",
+						"type": "uint256"
+					},
+					{
+						"internalType": "uint8",
+						"name": "_escrowStatus",
+						"type": "uint8"
+					}
+				],
+				"name": "setEscrow",
+				"outputs": [],
+				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "bytes32",
+						"name": "_idxHash",
+						"type": "bytes32"
+					},
+					{
+						"internalType": "uint8",
+						"name": "_escrowStatus",
+						"type": "uint8"
+					}
+				],
+				"name": "setEscrowStor",
+				"outputs": [],
+				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
 						"internalType": "address",
 						"name": "_to",
 						"type": "address"
@@ -409,6 +532,9 @@
 				"OO_unpause()": {
 					"details": "Returns to normal state. (pausable)"
 				},
+				"discard(uint256)": {
+					"details": "Safely burns a token and sets the corresponding RGT to zero in storage."
+				},
 				"owner()": {
 					"details": "Returns the address of the current owner."
 				},
@@ -444,7 +570,7 @@
 	},
 	"settings": {
 		"compilationTarget": {
-			"localhost/PRUF_APP_NC.sol": "APP_NC"
+			"localhost/PRUF_MAL_APP.sol": "MAL_APP"
 		},
 		"evmVersion": "istanbul",
 		"libraries": {},
@@ -530,14 +656,6 @@
 				"dweb:/ipfs/QmcNH8K75n1zUU39DLAGgRPwVf8WbtTuys1fNhVrfmNK3L"
 			]
 		},
-		"localhost/PRUF_APP_NC.sol": {
-			"keccak256": "0x8114055932be2a3381a1740d064224f8adadf610e769ecc5b0b8bebe3f297096",
-			"license": "UNLICENSED",
-			"urls": [
-				"bzz-raw://6523853eb81f3055ac937ca3bf0c8ee473511cba26e2e212c0fbf864914aa9cd",
-				"dweb:/ipfs/QmT5CC7WDdhAHHazg8yB5rPZZSXsiLqKvNpmbBad8tjuBX"
-			]
-		},
 		"localhost/PRUF_BASIC.sol": {
 			"keccak256": "0x4f2c2fe08743fba3719c6617f0c4b65e986d5775929e5777a9a5095609af23e4",
 			"license": "UNLICENSED",
@@ -546,12 +664,12 @@
 				"dweb:/ipfs/QmU3xLdAR79mShhJ6KwhbdfUT7spiJsqzztxViseJS2ie5"
 			]
 		},
-		"localhost/PRUF_CORE.sol": {
-			"keccak256": "0x23a8e5072866bf6138adb5611b983806f720ccc2aa860c0aa2b1609a28b7b234",
+		"localhost/PRUF_CORE_MAL.sol": {
+			"keccak256": "0x99f3ea88aa5c8d0ca64d997567b5a1ff0d8ffa4c3556591eb62d806501e00d07",
 			"license": "UNLICENSED",
 			"urls": [
-				"bzz-raw://475369cc6230757a279230d9bc78f4cf7a68bb28da16e04378b847fa6f112d1d",
-				"dweb:/ipfs/QmTKM4kvxUrfK1RGwizM6k6E2jomFLiMjuXK6xX2CgSNjE"
+				"bzz-raw://94e41be36a1c63188635ca127a9418a86b88e62bd60868f978466fd5bf3b9878",
+				"dweb:/ipfs/QmVspB1Fe768gjqyd54ZUuTCd5GdyT8ZDFmrPZaCtZRgnw"
 			]
 		},
 		"localhost/PRUF_INTERFACES.sol": {
@@ -560,6 +678,14 @@
 			"urls": [
 				"bzz-raw://dc85f44d00c135e1c43b380871b31785dd2cbea3c79a45d74adecd531a019938",
 				"dweb:/ipfs/QmPvPtCY4yDg247G8CUJs825NvSzCJan74UbStagNouQXa"
+			]
+		},
+		"localhost/PRUF_MAL_APP.sol": {
+			"keccak256": "0xf7ceb2228db8922e61cfaadb862cd10e81e0dca93b97a9d6228efc841c4be4d4",
+			"license": "UNLICENSED",
+			"urls": [
+				"bzz-raw://8e43f9cfaf118c44103b627cf06eafa932a0ce6ef932f7254639c48d4071e25b",
+				"dweb:/ipfs/QmTTzuWSDhYuDpp9derpCg8WqoiyZECKfWFGQHw5C5y7p2"
 			]
 		}
 	},

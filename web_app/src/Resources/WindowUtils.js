@@ -16,6 +16,10 @@ function buildWindowUtils() {
     return tempHash;
   }
 
+  const _getBytes32FromIPFSHash = (hash) => {
+    return "0x" + bs58.decode(hash).slice(2).toString("hex");
+  };
+
   const _getIpfsHashFromBytes32 = (bytes32Hex) => {
 
     // Add our default ipfs values for first 2 bytes:
@@ -294,15 +298,15 @@ const _checkNoteExists = async (idxHash) => {
   return tempBool;
 }
 
-const _resolveAC = async () => {
+const _resolveAC = async (AC) => {
   if (window.contracts !== undefined) {
     await window.contracts.AC_MGR.methods
-      .resolveAssetClass(window.assetClassName)
+      .resolveAssetClass(AC)
       .call((_error, _result) => {
         if (_error) { console.log("Error: ", _error) }
         else {
           window.assetClass = _result
-          console.log("resolved AC name ", window.assetClassName, " as: ", window.assetClass);
+          console.log("resolved AC name ", AC, " as: ", window.assetClass);
         }
       });
   }
@@ -315,23 +319,23 @@ const _resolveAC = async () => {
 
 }
 
-const _resolveACFromID = async () => {
+const _resolveACFromID = async (AC) => {
   if (window.contracts !== undefined) {
     await window.contracts.AC_MGR.methods
-      .getAC_name(window.assetClass)
+      .getAC_name(AC)
       .call((_error, _result) => {
         if (_error) { console.log("Error: ", _error) }
         else {
           window.assetClassName = _result
-          console.log("resolved AC name ", window.assetClassName, " from AC index ", window.assetClass);
+          console.log("resolved AC name ", window.assetClassName, " from AC index ", AC);
 
         }
       });
   }
-  let acData = await window.utils.getACData("id", window.assetClass)
+  let acData = await window.utils.getACData("id", AC)
   if (window.addr !== undefined) {
-    await window.utils.checkCreds(acData);
-    await window.utils.getCosts(6);
+    await window.utils.checkCreds(acData, AC);
+    await window.utils.getCosts(6, AC);
   }
 
   await console.log("User authLevel: ", window.authLevel);
@@ -339,7 +343,7 @@ const _resolveACFromID = async () => {
 
 }
 
-const _checkCreds = async (acData) => {
+const _checkCreds = async (acData, AC) => {
   window.isAuthUser = undefined;
   let custodyType = acData.custodyType
 
@@ -347,7 +351,7 @@ const _checkCreds = async (acData) => {
 
 
     await window.contracts.AC_TKN.methods
-      .ownerOf(window.assetClass)
+      .ownerOf(AC)
       .call((_error, _result) => {
         if (_error) { console.log("Error: ", _error) }
         else {
@@ -517,14 +521,14 @@ const _getACData = async (ref, ac) => {
 
 }
 
-const _getCosts = async (numOfServices) => {
+const _getCosts = async (numOfServices, AC) => {
   window.costArray = [];
   if (window.contracts !== undefined) {
     //console.log("Getting cost array");
 
     for (var i = 1; i <= numOfServices; i++) {
       await window.contracts.AC_MGR.methods
-        .getServiceCosts(window.assetClass, i)
+        .getServiceCosts(AC, i)
         .call((_error, _result) => {
           if (_error) { console.log("Error: ", _error) }
           else {
@@ -714,6 +718,17 @@ const _getAssetTokenName = async (ipfs) => {
   window.assets.names.push(temp);
 }
 
+const _addIPFSJSONObject = async (payload) => {
+  console.log("Uploading file to IPFS...");
+      await window.ipfs.add(JSON.stringify(payload), (error, hash) => {
+        if (error) {
+          console.log("Something went wrong. Unable to upload to ipfs");
+        } else {
+          console.log("uploaded at hash: ", hash);
+          return window.rawIPFSHashTemp = hash;
+        }
+      });
+} 
 
 const _getIPFSJSONObject = async (lookup) => {
   console.log(lookup)
@@ -764,6 +779,7 @@ window.utils = {
   checkForAC: _checkForAC,
   getDescriptionHash: _getDescriptionHash,
   getEscrowData: _getEscrowData,
+  getBytes32FromIPFSHash: _getBytes32FromIPFSHash,
   getIpfsHashFromBytes32: _getIpfsHashFromBytes32,
   getIPFSJSONObject: _getIPFSJSONObject,
   getIPFSRaw: _getIPFSRaw,
@@ -776,6 +792,7 @@ window.utils = {
   generateAssets: _generateAssets,
   getETHBalance: _getETHBalance,
   generateAssetDash: _generateAssetDash,
+  addIPFSJSONObject: _addIPFSJSONObject,
 
 }
 

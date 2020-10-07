@@ -118,6 +118,26 @@
 				"type": "event"
 			},
 			{
+				"inputs": [],
+				"name": "OO_resolveContractAddresses",
+				"outputs": [],
+				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "address",
+						"name": "_storageAddress",
+						"type": "address"
+					}
+				],
+				"name": "OO_setStorageContract",
+				"outputs": [],
+				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
 				"inputs": [
 					{
 						"internalType": "address",
@@ -221,9 +241,14 @@
 						"internalType": "uint256",
 						"name": "tokenId",
 						"type": "uint256"
+					},
+					{
+						"internalType": "string",
+						"name": "_tokenURI",
+						"type": "string"
 					}
 				],
-				"name": "mintPRUF_IDToken",
+				"name": "mintACToken",
 				"outputs": [
 					{
 						"internalType": "uint256",
@@ -290,9 +315,14 @@
 						"internalType": "uint256",
 						"name": "tokenId",
 						"type": "uint256"
+					},
+					{
+						"internalType": "string",
+						"name": "_tokenURI",
+						"type": "string"
 					}
 				],
-				"name": "reMintPRUF_IDToken",
+				"name": "reMintACToken",
 				"outputs": [
 					{
 						"internalType": "uint256",
@@ -382,30 +412,6 @@
 			{
 				"inputs": [
 					{
-						"internalType": "uint256",
-						"name": "tokenId",
-						"type": "uint256"
-					},
-					{
-						"internalType": "string",
-						"name": "_tokenURI",
-						"type": "string"
-					}
-				],
-				"name": "setURI",
-				"outputs": [
-					{
-						"internalType": "uint256",
-						"name": "",
-						"type": "uint256"
-					}
-				],
-				"stateMutability": "nonpayable",
-				"type": "function"
-			},
-			{
-				"inputs": [
-					{
 						"internalType": "bytes4",
 						"name": "interfaceId",
 						"type": "bytes4"
@@ -449,25 +455,6 @@
 						"internalType": "uint256",
 						"name": "",
 						"type": "uint256"
-					}
-				],
-				"stateMutability": "view",
-				"type": "function"
-			},
-			{
-				"inputs": [
-					{
-						"internalType": "uint256",
-						"name": "tokenId",
-						"type": "uint256"
-					}
-				],
-				"name": "tokenExists",
-				"outputs": [
-					{
-						"internalType": "uint8",
-						"name": "",
-						"type": "uint8"
 					}
 				],
 				"stateMutability": "view",
@@ -597,10 +584,15 @@
 					"details": "Leaves the contract without owner. It will not be possible to call `onlyOwner` functions anymore. Can only be called by the current owner. NOTE: Renouncing ownership will leave the contract without an owner, thereby removing any functionality that is only available to the owner."
 				},
 				"safeTransferFrom(address,address,uint256)": {
-					"details": "Safely blocks the transfer of a given token ID to another address If the target address is a contract, it must implement {IERC721Receiver-onERC721Received}, which is called upon a safe transfer, and return the magic value `bytes4(keccak256(\"onERC721Received(address,address,uint256,bytes)\"))`; otherwise, the transfer is reverted. Requires the msg.sender to be the owner, approved, or operator"
+					"details": "Safely transfers the ownership of a given token ID to another address If the target address is a contract, it must implement {IERC721Receiver-onERC721Received}, which is called upon a safe transfer, and return the magic value `bytes4(keccak256(\"onERC721Received(address,address,uint256,bytes)\"))`; otherwise, the transfer is reverted. Requires the msg.sender to be the owner, approved, or operator",
+					"params": {
+						"from": "current owner of the token",
+						"to": "address to receive the ownership of the given token ID",
+						"tokenId": "uint256 ID of the token to be transferred"
+					}
 				},
 				"safeTransferFrom(address,address,uint256,bytes)": {
-					"details": "Safely blocks the transfer of a given token ID to another address If the target address is a contract, it must implement {IERC721Receiver-onERC721Received}, which is called upon a safe transfer, and return the magic value `bytes4(keccak256(\"onERC721Received(address,address,uint256,bytes)\"))`; otherwise, the transfer is reverted. Requires the _msgSender() to be the owner, approved, or operator",
+					"details": "Safely transfers the ownership of a given token ID to another address If the target address is a contract, it must implement {IERC721Receiver-onERC721Received}, which is called upon a safe transfer, and return the magic value `bytes4(keccak256(\"onERC721Received(address,address,uint256,bytes)\"))`; otherwise, the transfer is reverted. Requires the _msgSender() to be the owner, approved, or operator",
 					"params": {
 						"_data": "bytes data to send along with a safe transfer check",
 						"from": "current owner of the token",
@@ -630,7 +622,12 @@
 					"details": "See {IERC721Enumerable-totalSupply}."
 				},
 				"transferFrom(address,address,uint256)": {
-					"details": "@dev Blocks the transfer of a given token ID to another address Usage of this method is discouraged, use {safeTransferFrom} whenever possible. Requires the msg.sender to be the owner, approved, or operator."
+					"details": "Transfers the ownership of a given token ID to another address. Usage of this method is discouraged, use {safeTransferFrom} whenever possible. Requires the msg.sender to be the owner, approved, or operator.",
+					"params": {
+						"from": "current owner of the token",
+						"to": "address to receive the ownership of the given token ID",
+						"tokenId": "uint256 ID of the token to be transferred"
+					}
 				},
 				"transferOwnership(address)": {
 					"details": "Transfers ownership of the contract to a new account (`newOwner`). Can only be called by the current owner."
@@ -646,7 +643,7 @@
 	},
 	"settings": {
 		"compilationTarget": {
-			"localhost/PRUF_ID_TKN.sol": "ID_TKN"
+			"localhost/PRUF_AC_TKN.sol": "AC_TKN"
 		},
 		"evmVersion": "istanbul",
 		"libraries": {},
@@ -780,12 +777,12 @@
 				"dweb:/ipfs/QmTqZPafYrMrSfdt9nuVxrz46jreK5aVRvhbrB6K5rBKN7"
 			]
 		},
-		"localhost/PRUF_ID_TKN.sol": {
-			"keccak256": "0xad5210f27b93cf4e49e07e3fc5ac790abad4ef3a2cb8fa8d322a1782b8eee75e",
+		"localhost/PRUF_AC_TKN.sol": {
+			"keccak256": "0x3a92ff81aeaeac0b34894420fa40fa98f2c6ecb29be7f275ebb5f19ced50eed1",
 			"license": "UNLICENSED",
 			"urls": [
-				"bzz-raw://3f7081dfc5dcf9d2eefd0d891da54d48dbf7daa6e5cead8c3b3a3112ff6daa69",
-				"dweb:/ipfs/QmYBGsYdWocSxYgFyBBE9ub2bJ73ezij4JDhTv5kejbKhC"
+				"bzz-raw://0f15e481f8cb34513f0592ddb402b6a8147be8e82ec7263e4b88858111d497f6",
+				"dweb:/ipfs/QmZbaTYTFLrimRXYAmz1dTWZzP9uoWmr9JqJ88mnrSgGYH"
 			]
 		},
 		"localhost/PRUF_INTERFACES.sol": {

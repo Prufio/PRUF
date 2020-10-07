@@ -89,10 +89,6 @@ class ModifyDescription extends Component {
       this.setState({ idxHash: undefined, txStatus: undefined, txHash: "0", elementType: 0 })
     }
 
-    const getBytes32FromIpfsHash = (ipfsListing) => {
-      return "0x" + bs58.decode(ipfsListing).slice(2).toString("hex");
-    };
-
     const _addToMiscArray = async (type) => {
       let element;
       if (type === "description") {
@@ -257,7 +253,7 @@ class ModifyDescription extends Component {
           console.log("uploaded at hash: ", hash);
         }
         self.setState({
-          hashPath: getBytes32FromIpfsHash(hash),
+          hashPath: window.utils.getBytes32FromIpfsHash(hash),
           oldDescription: newDescription
         });
       });

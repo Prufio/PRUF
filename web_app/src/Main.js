@@ -472,7 +472,7 @@ class Main extends Component {
         window.hasLoadedAssets = false;
         this.setState({ buildReady: false, runWatchDog: false })
         console.log("WD: setting up assets (Step one)")
-        this.setupAssets()
+        this.setUpAssets()
         window.resetInfo = false
       }
 
@@ -575,7 +575,7 @@ class Main extends Component {
 
     }
 
-    this.setupAssets = async () => {
+    this.setUpAssets = async () => {
       window.hasNoAssets = false;
       window.ipfsCounter = 0;
       window.ipfsHashArray = [];
@@ -603,8 +603,8 @@ class Main extends Component {
         })
       }
 
-      if (window.balances === undefined) { return console.log("balances undefined") }
-      console.log("SA: In setupAssets")
+      if (window.balances === undefined) {  console.log("balances undefined, trying to get them..."); return this.setUpTokenVals(); }
+      console.log("SA: In setUpAssets")
 
       let tempDescObj = {}
       let tempDescriptionsArray = [];
@@ -616,7 +616,7 @@ class Main extends Component {
         window.recount = false
         await window.utils.getETHBalance();
         await this.setUpTokenVals()
-        return this.setupAssets()
+        return this.setUpAssets()
       }
 
       await window.utils.getAssetTokenInfo()
@@ -639,7 +639,7 @@ class Main extends Component {
       window.assets.names = tempNamesArray;
       window.assets.ids = window.aTknIDs;
 
-      console.log("Asset setup Complete. Turning on watchDog.")
+      console.log("Asset setUp Complete. Turning on watchDog.")
       this.setState({ runWatchDog: true })
       console.log("window IPFS operation count: ", window.ipfsCounter)
       console.log("window assets: ", window.assets)
@@ -745,7 +745,7 @@ class Main extends Component {
             window.recount = true;
             window.resetInfo = true;
 
-            //self.setupContractEnvironment(window.web3);
+            //self.setUpContractEnvironment(window.web3);
             console.log("///////in acctChanger////////");
           }
           else { console.log("Something bit in the acct listener, but no changes made.") }
@@ -755,8 +755,8 @@ class Main extends Component {
 
 
 
-    this.setupContractEnvironment = async (_web3) => {
-      if (window.isSettingUpContracts) { return (console.log("Already in the middle of setup...")) }
+    this.setUpContractEnvironment = async (_web3) => {
+      if (window.isSettingUpContracts) { return (console.log("Already in the middle of setUp...")) }
       window.isSettingUpContracts = true;
       const self = this;
       console.log("Setting up contracts")
@@ -796,7 +796,7 @@ class Main extends Component {
         if (window.addr !== undefined) {
           await window.utils.getETHBalance();
           await this.setUpTokenVals()
-          await this.setupAssets()
+          await this.setUpAssets()
         }
 
 
@@ -894,7 +894,7 @@ class Main extends Component {
       const ethereum = window.ethereum;
       var _web3 = require("web3");
       _web3 = new Web3(_web3.givenProvider);
-      this.setupContractEnvironment(_web3)
+      this.setUpContractEnvironment(_web3)
       this.setState({ web3: _web3 });
       window.web3 = _web3;
 
@@ -918,7 +918,7 @@ class Main extends Component {
       window.ipfsCounter = 0;
       var _web3 = require("web3");
       _web3 = new Web3("https://api.infura.io/v1/jsonrpc/kovan");
-      this.setupContractEnvironment(_web3)
+      this.setUpContractEnvironment(_web3)
       this.setState({ web3: _web3 });
       window.web3 = _web3;
 
@@ -994,7 +994,7 @@ class Main extends Component {
 
   componentDidUpdate() {//stuff to do when state updates
     if (window.addr !== undefined && !this.state.hasFetchedBalances && window.contracts > 0) {
-      this.setupContractEnvironment(window.web3);
+      this.setUpContractEnvironment(window.web3);
     }
 
 
