@@ -245,7 +245,7 @@ class RetrieveRecord extends Component {
         status: tempResult[0],
         idx: idxHash
       }
-      await window.utils.resolveACFromID()
+      await window.utils.resolveACFromID(tempResult[2])
       await this.getACData("id", window.assetClass)
 
       console.log(window.authLevel);
@@ -477,7 +477,7 @@ class RetrieveRecord extends Component {
         status: tempResult[0],
         idx: idxHash
       }
-      await window.utils.resolveACFromID()
+      await window.utils.resolveACFromID(tempResult[2])
       await this.getACData("id", window.assetClass)
 
       console.log(window.authLevel);

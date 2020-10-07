@@ -776,7 +776,6 @@ div {
   height: flex;
   width: 360px;
   background-color: #005480;
-  border-radius: 0rem 0rem 0.5rem 0.5rem;
   padding: 2rem;
   display: flex;
   flex-direction: column;
@@ -1018,6 +1017,7 @@ div {
 
 .prufARCroppedFormMobile {
   /* display: flex; */
+  margin-top: 60px;
   width: 280px;
   height: 130px;
   /* object-fit: cover; */
@@ -1153,9 +1153,10 @@ div {
 
 .mediaLinkMobile {
   display: flex;
-  width: 340px;
+  width: 250px;
   height: fit-content;
-  margin-bottom: 4px;
+  margin-bottom: 20px;
+  margin-top: -50px;
   justify-content: space-between;
 }
 

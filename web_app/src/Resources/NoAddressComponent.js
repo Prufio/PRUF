@@ -17,7 +17,7 @@ class NoAddressComponent extends Component {
             return (
                 <Nav className="header">
                     <li>
-                        <NavLink exact to="/mobile">Home</NavLink>
+                        <NavLink exact to="/">Home</NavLink>
                     </li>
                     <li>
                         <NavLink to="/retrieve-record-mobile">Search</NavLink>

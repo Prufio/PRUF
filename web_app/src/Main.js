@@ -40,13 +40,6 @@ class Main extends Component {
           <div>
             <ParticleBox />
             <HashRouter>
-
-              <div className="imageForm">
-                <img
-                  className="downSizeLogo"
-                  src={require("./Resources/pruf ar long.png")}
-                  alt="Pruf Logo" />
-              </div>
               <div>
                 <div className="BannerForm">
                   <ul className="header">
@@ -63,6 +56,8 @@ class Main extends Component {
                   {Router(this.state.routeRequest)}
                 </div>
               </div>
+              <NavLink to="/#/mobile">
+            </NavLink>
             </HashRouter>
           </div >
         );
