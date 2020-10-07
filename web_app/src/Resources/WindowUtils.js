@@ -127,21 +127,21 @@ const _generateAssetDash = (obj) => {
 
           `}
           </style>
-          <div class="card">
-            <div class="row no-gutters">
-              <div class="col-auto">
+          <div className="card">
+            <div className="row no-gutters">
+              <div className="col-auto">
                 <button
-                  class="imageButton"
+                  className="imageButton"
                 >
                   <img src={obj.displayImages[i]} className="assetImage" />
                 </button>
               </div>
               <div>
-                <p class="card-name">Name : {obj.names[i]}</p>
-                <p class="card-ac">Asset Class : {obj.assetClasses[i]}</p>
-                <p class="card-status">Status : {obj.statuses[i]}</p>
+                <p className="card-name">Name : {obj.names[i]}</p>
+                <p className="card-ac">Asset Class : {obj.assetClasses[i]}</p>
+                <p className="card-status">Status : {obj.statuses[i]}</p>
                 <br></br>
-                <div className="cardDescription"><h4 class="card-description">Description : {obj.descriptions[i].text.description}</h4></div>
+                <div className="cardDescription"><h4 className="card-description">Description : {obj.descriptions[i].text.description}</h4></div>
               </div>
               <div className="cardButton">
                 <Button

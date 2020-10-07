@@ -38,7 +38,6 @@ class Main extends Component {
       if (isMobile) {
         return (
           <div>
-            <ParticleBox />
             <HashRouter>
               <div>
                 <div className="BannerForm">
@@ -53,18 +52,16 @@ class Main extends Component {
               </div>
               <div className="pageForm">
                 <div>
+                  <Route path="/" component={HomeMobile} />
                   {Router(this.state.routeRequest)}
                 </div>
               </div>
-              <NavLink to="/#/mobile">
-            </NavLink>
             </HashRouter>
           </div >
         );
       }
       return (
         <div>
-          <ParticleBox />
           <HashRouter>
 
             <div className="imageForm">
@@ -83,7 +80,7 @@ class Main extends Component {
               <div className="BannerForm">
                 <div className="currentMenuOption">
                   <div>
-                    {this.state.noAddrMenuBool === true && (<div className="currentMenuOptionContent"> No Address Menu</div>)}
+                    {this.state.noAddrMenuBool === true && (<div className="currentMenuOptionContent"> Read Only Access</div>)}
                     {this.state.assetHolderMenuBool === true && (<div className="currentMenuOptionContent">Token Minter Menu</div>)}
                     {this.state.assetHolderUserMenuBool === true && (<div className="currentMenuOptionContent">Token Holder Menu</div>)}
                     {this.state.assetClassHolderMenuBool === true && (<div className="currentMenuOptionContent">AC Admin Menu</div>)}

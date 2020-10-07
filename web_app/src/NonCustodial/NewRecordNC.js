@@ -409,10 +409,10 @@ class NewRecordNC extends Component {
 
           <div className="Results">
             {/* {this.state.pendingTx === undefined && ( */}
-            <p class="loading">Transaction In Progress</p>
+            <p className="loading">Transaction In Progress</p>
             {/* )} */}
             {/* {this.state.pendingTx !== undefined && (
-              <p class="loading">Transaction In Progress</p>
+              <p className="loading">Transaction In Progress</p>
             )} */}
           </div>)}
         <div className="Results">

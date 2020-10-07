@@ -65,7 +65,7 @@ class RetrieveRecord extends Component {
 
         for (let i = 0; i < images.length; i++) {
           component.push(
-            <button value={images[i]} class="assetImageSelectorButton" onClick={() => { showImage(images[i]) }}>
+            <button key={"thumb"+String(i)} value={images[i]} className="assetImageSelectorButton" onClick={() => { showImage(images[i]) }}>
               <img src={images[i]} className="imageSelectorImage" />
             </button>
           )
@@ -81,7 +81,7 @@ class RetrieveRecord extends Component {
         for (let i = 0; i < text.length; i++) {
           component.push(
             <>
-              <h4 class="card-description-selected">{textNames[i]}: {text[i]}</h4>
+              <h4 key={"text" + String(i)}className="card-description-selected">{textNames[i]}: {text[i]}</h4>
               <br />
             </>
           )
@@ -107,20 +107,20 @@ class RetrieveRecord extends Component {
   
             `}
           </style>
-          <div class="card" value="100">
-            <div class="row no-gutters">
+          <div className="card" value="100">
+            <div className="row no-gutters">
               <div className="assetSelecedInfo">
-                <button class="assetImageButton" onClick={() => { openPhotoNT(this.state.selectedImage) }}>
+                <button className="assetImageButton" onClick={() => { openPhotoNT(this.state.selectedImage) }}>
                   <img src={this.state.selectedImage} className="assetImageSelected" />
                 </button>
-                <p class="card-name-selected">Name : {obj.name}</p>
-                <p class="card-ac-selected">Asset Class : {obj.assetClass}</p>
-                <p class="card-status-selected">Status : {obj.status}</p>
+                <p className="card-name-selected">Name : {obj.name}</p>
+                <p className="card-ac-selected">Asset Class : {obj.assetClass}</p>
+                <p className="card-status-selected">Status : {obj.status}</p>
                 <div className="imageSelector">
                   {generateThumbs()}
                 </div>
                 <div className="cardSearchIdxForm">
-                  <h4 class="card-idx-selected">IDX : {obj.idxHash}</h4>
+                  <h4 className="card-idx-selected">IDX : {obj.idxHash}</h4>
                 </div>
                 <div className="cardDescription-search">
                   {generateTextList()}
@@ -355,7 +355,7 @@ class RetrieveRecord extends Component {
 
 
   }
-
+  
   componentDidUpdate() {//stuff to do when state updates
 
 
@@ -389,6 +389,10 @@ class RetrieveRecord extends Component {
         })
       }
     }
+  }
+
+  handleError = err => {
+    console.error(err)
   }
 
 
