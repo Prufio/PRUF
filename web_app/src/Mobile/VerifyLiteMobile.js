@@ -89,7 +89,7 @@ class VerifyLiteMobile extends Component {
 
     const clearForm = async () => {
       document.getElementById("MainForm").reset();
-      this.setState({ result: "", accessPermitted: undefined})
+      this.setState({ result: "", accessPermitted: false})
     }
 
     const _verify = async () => {

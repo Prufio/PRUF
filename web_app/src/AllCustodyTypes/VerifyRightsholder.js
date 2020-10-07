@@ -102,7 +102,7 @@ class VerifyRightHolder extends Component {
 
     const clearForm = async () => {
       document.getElementById("MainForm").reset();
-      this.setState ({ result: "" })
+      this.setState ({ result: "", accessPermitted: false})
     }
 
     const _verify = async () => {
