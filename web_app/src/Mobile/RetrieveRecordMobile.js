@@ -98,13 +98,13 @@ class RetrieveRecordMobile extends Component {
       return (
         <Card style={{ width: '360px', overflowY: "auto", overflowX: "hidden", backgroundColor: "#005480", color: "white" }}>
           <div className="submitButtonRRQR3Mobile">
-          <div classname="submitButtonRRQR3-mobile">
-          <CornerUpLeft
-          color={"#028ed4"}
-            size={35}
-            onClick={() => { this.setState({ moreInfo: false, ipfsObject: undefined, assetObj: undefined }) }}
-          />
-          </div>
+            <div classname="submitButtonRRQR3-mobile">
+              <CornerUpLeft
+                color={"#028ed4"}
+                size={35}
+                onClick={() => { this.setState({ moreInfo: false, ipfsObject: undefined, assetObj: undefined }) }}
+              />
+            </div>
           </div>
           <Card.Img style={{ width: '360px', height: "360px" }} variant="top" src={this.state.selectedImage} />
           <Card.Body>
@@ -116,67 +116,8 @@ class RetrieveRecordMobile extends Component {
             <Card.Title>Asset Status : {obj.status}</Card.Title>
             <Card.Title>ID : {obj.idxHash}</Card.Title>
             <Card.Title>Asset Information : <br></br>{generateTextList()}</Card.Title>
-            {/* <ListGroup>
-              <ListGroupItem>{obj.assetClass}</ListGroupItem>
-              <ListGroupItem>{obj.status}</ListGroupItem>
-              <ListGroupItem>{obj.idxHash}</ListGroupItem>
-            </ListGroup> */}
-            {/* <Card.Text>
-              {generateTextList()}
-            </Card.Text> */}
           </Card.Body>
         </Card>
-        // <div className="assetDashboardSelected">
-        //   <style type="text/css"> {`
-
-        //       .card {
-        //         width: 100%;
-        //         max-width: 100%;
-        //         height: 50rem;
-        //         max-height: 100%;
-        //         background-color: #005480;
-        //         margin-top: 0.3rem;
-        //         color: white;
-        //         word-break: break-all;
-        //       }
-
-        //     `}
-        //   </style>
-        //   <div class="card" value="100">
-        //     <div class="row no-gutters">
-        //       <div className="assetSelecedInfo">
-        //         <button class="assetImageButton" onClick={() => { openPhotoNT(this.state.selectedImage) }}>
-        //           <img src={this.state.selectedImage} className="assetImageSelected" />
-        //         </button>
-        //         <p class="card-name-selected">Name : {obj.name}</p>
-        //         <p class="card-ac-selected">Asset Class : {obj.assetClass}</p>
-        //         <p class="card-status-selected">Status : {obj.status}</p>
-        //         <div className="imageSelector">
-        //           {generateThumbs()}
-        //         </div>
-        //         <div className="cardSearchIdxForm">
-        //           <h4 class="card-idx-selected">IDX : {obj.idxHash}</h4>
-        //         </div>
-        //         <div className="cardDescription-search">
-        //           {generateTextList()}
-        //         </div>
-        //       </div>
-        //       {this.state.moreInfo && (
-        //         <div className="submitButtonRRQR3">
-        //           <div className="submitButtonRRQR3-content">
-        //             <CornerUpLeft
-        //               size={35}
-        //               onClick={() => { this.setState({ moreInfo: false, ipfsObject: undefined, assetObj: undefined }) }}
-        //             />
-        //           </div>
-        //         </div>
-        //       )}
-
-        //     </div>
-        //   </div >
-        // </div >
-
-
       )
     }
 
@@ -616,6 +557,7 @@ class RetrieveRecordMobile extends Component {
                 </Form.Row>
               </div>
             </Form>
+            <div className="assetDashboardFooterMobile"></div>
           </div>
         )}
 

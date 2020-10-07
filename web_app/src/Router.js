@@ -137,7 +137,7 @@ function Router(routeRequest) {
             <>
                 <Route path="/verify-lite" component={VerifyLite} />
                 <Route path="/retrieve-record" component={RetrieveRecord} />
-                <Route path="/mobile" component={HomeMobile} />
+                <Route path="/" component={HomeMobile} />
                 <Route path="/verify-lite-mobile" component={VerifyLiteMobile} />
                 <Route path="/retrieve-record-mobile" component={RetrieveRecordMobile} />
             </>

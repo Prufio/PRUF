@@ -53,14 +53,14 @@ class HomeMobile extends Component {
           <img className="prufARCroppedFormMobile" src={require("../Resources/Pruf AR (2).png")} />
           <br></br>
           <br></br>
+          {window._contracts === undefined && window.addr !== undefined && (<div className="VRText"> <Form.Row><h1 className="loading">Connecting to the Blockchain</h1></Form.Row></div>)}
+          {window._contracts === undefined && window.addr === undefined && (<div className="VRText"> <Form.Row><h1 className="loading">Connecting to the Blockchain</h1></Form.Row></div>)}
           <div className="mediaLinkMobile">
             <a className="mediaLinkContent"><GitHub size={35} onClick={() => { window.open("https://github.com/vdmprojects/Bulletproof", "_blank") }} /></a>
             <a className="mediaLinkContent"><Mail size={35} onClick={() => { window.open("mailto:drake@pruf.io", "_blank") }} /></a>
             <a className="mediaLinkContent"><Twitter size={35} onClick={() => { window.open("https://twitter.com/umlautchair", "_blank") }} /></a>
             <a className="mediaLinkContent" ><Video size={35} onClick={() => { window.open("https://www.youtube.com/channel/UC9HzR9-dAzHtPKOqlVqwOuw", "_blank") }} /></a>
           </div>
-          {window._contracts === undefined && window.addr !== undefined && (<div className="VRText"> <Form.Row><h1 className="loading">Connecting to the Blockchain</h1></Form.Row></div>)}
-          {window._contracts === undefined && window.addr === undefined && (<div className="VRText"> <Form.Row><h1 className="loading">Connecting to the Blockchain</h1></Form.Row></div>)}
         </div>
       </div>
     );
