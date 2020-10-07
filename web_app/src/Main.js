@@ -2,6 +2,7 @@ import React, { Component } from "react";
 import { Route, NavLink, HashRouter } from "react-router-dom";
 import Web3 from "web3";
 import Home from "./Home";
+import HomeMobile from "./Mobile/HomeMobile";
 import buildContracts from "./Resources/Contracts";
 import buildWindowUtils from "./Resources/WindowUtils";
 import NonCustodialComponent from "./Resources/NonCustodialComponent";
@@ -22,11 +23,355 @@ import { Video } from "react-feather";
 import { Menu } from 'react-feather';
 import { User } from 'react-feather';
 import { Settings } from 'react-feather';
-
+import {
+  BrowserView,
+  MobileView,
+  isBrowser,
+  isMobile
+} from "react-device-detect";
 
 class Main extends Component {
   constructor(props) {
     super(props);
+
+    this.renderContent = () => {
+      if (isMobile) {
+        return (
+          <div>
+            <ParticleBox />
+            <HashRouter>
+
+              <div className="imageForm">
+                <img
+                  className="downSizeLogo"
+                  src={require("./Resources/pruf ar long.png")}
+                  alt="Pruf Logo" />
+              </div>
+              <div>
+                <div className="BannerForm">
+                  <ul className="header">
+                    {window._contracts !== undefined && (
+                      <nav>
+                        {this.state.noAddrMenuBool === true && (<NoAddressComponent />)}
+                      </nav>
+                    )}
+                  </ul>
+                </div>
+              </div>
+              <div className="pageForm">
+                <div>
+                  {Router(this.state.routeRequest)}
+                </div>
+              </div>
+            </HashRouter>
+          </div >
+        );
+      }
+      return (
+        <div>
+          <ParticleBox />
+          <HashRouter>
+
+            <div className="imageForm">
+              <button
+                className="imageButton"
+                title="Back to Home!"
+                onClick={() => { this.toggleMenu("basic") }}
+              >
+                <img
+                  className="downSizeLogo"
+                  src={require("./Resources/pruf ar long.png")}
+                  alt="Pruf Logo" />
+              </button>
+            </div>
+            <div>
+              <div className="BannerForm">
+                <div className="currentMenuOption">
+                  <div>
+                    {this.state.noAddrMenuBool === true && (<div className="currentMenuOptionContent"> No Address Menu</div>)}
+                    {this.state.assetHolderMenuBool === true && (<div className="currentMenuOptionContent">Token Minter Menu</div>)}
+                    {this.state.assetHolderUserMenuBool === true && (<div className="currentMenuOptionContent">Token Holder Menu</div>)}
+                    {this.state.assetClassHolderMenuBool === true && (<div className="currentMenuOptionContent">AC Admin Menu</div>)}
+                    {this.state.authorizedUserMenuBool === true && (<div className="currentMenuOptionContent">Asset Minter Menu</div>)}
+                    {this.state.basicMenuBool === true && (<div className="currentMenuOptionContent">Basic Menu</div>)}
+                  </div>
+                </div>
+                <div className="hamburgerMenu">
+                  <a className="hamburgerMenu-content" ><Menu size={35} onClick={() => { this.hamburgerMenu() }} /></a>
+                </div>
+                {this.state.hamburgerMenu !== undefined && (
+                  <div className="hamburgerDropdown">
+                    <button
+                      className="imageButtonU"
+                      onClick={() => { window.open("https://www.pruf.io", "_blank") }}
+                    >
+                      <img
+                        className="imageFormU"
+                        title="Find out More!"
+                        src={require("./Resources/favicon pruf no bg.png")}
+                        alt="Pruf U" />
+                    </button>
+                    <div className="siteInfoBox">
+                      <h3 className="siteInfoBoxContent">
+                        Website last updated:
+                  </h3>
+                      <h3 className="siteInfoBoxContent">
+                        October 3, 2020
+                  </h3>
+                    </div>
+                    <div className="hamburgerMenuLink">
+                      <a className="hamburgerMenuLink-content-user" ><User size={48} onClick={() => { this.userMenu() }} /></a>
+                    </div>
+                    <div className="hamburgerMenuLink">
+                      <a className="hamburgerMenuLink-content-settings" ><Settings size={35} onClick={() => { this.settingsMenu() }} /></a>
+                    </div>
+                    <div>
+                      {this.state.settingsMenu !== undefined && (
+                        <div>
+                          <div className="hamburgerDropdownSettings">
+                            {this.state.isACAdmin === true && this.state.assetClassHolderMenuBool === false && (
+                              <Button
+                                size="lg"
+                                variant="toggle"
+                                onClick={() => { this.toggleMenu("ACAdmin") }}
+                              >
+                                AC Admin Menu
+                              </Button>)}
+
+                            {this.state.IDHolderBool === false && this.state.assetHolderBool === true && this.state.assetHolderUserMenuBool === false && (
+                              <Button
+                                size="lg"
+                                variant="toggle"
+                                onClick={() => { this.toggleMenu("NCUser") }}
+                              >
+                                Token Holder Menu
+                              </Button>
+                            )}
+
+                            {this.state.IDHolderBool === true && this.state.assetHolderMenuBool === false && (
+                              <Button
+                                size="lg"
+                                variant="toggle"
+                                onClick={() => { this.toggleMenu("NC") }}
+                              >
+                                Token Minter Menu
+                              </Button>
+                            )}
+
+                            {this.state.basicMenuBool === false && (
+                              <Button
+                                size="lg"
+                                variant="toggle"
+                                onClick={() => { this.toggleMenu("basic") }}
+                              >
+                                Basic Menu
+                              </Button>)}
+
+                            {this.state.isAuthUser === true && this.state.authorizedUserMenuBool === false && (
+                              <Button
+                                size="lg"
+                                variant="toggle"
+                                onClick={() => { this.toggleMenu("authUser") }}
+                              >
+                                Asset Minter Menu
+                              </Button>)}
+                          </div>
+                        </div>
+                      )}
+                    </div>
+                    <div>
+                      {this.state.userMenu !== undefined && (
+                        <div className="hamburgerDropdownUserInfo">
+                          {this.state.addr > 0 && (
+                            <h4>
+                              Currently serving :
+                              <Button
+                                variant="etherscan"
+                                title="Check it out on Etherscan!"
+                                onClick={() => { window.open("https://kovan.etherscan.io/address/" + this.state.addr) }}>
+                                {this.state.addr.substring(0, 6) + "..." + this.state.addr.substring(37, 42)}
+                              </Button>
+                            </h4>
+                          )}
+                          {this.state.addr === undefined && (
+                            <h4>
+                              Currently serving: NOBODY! Log into web3 provider!
+                            </h4>
+                          )}
+                          <br></br>
+                          {this.state.ETHBalance === undefined && (
+                            <h4>
+                              ETH Balance : Please Log In
+                            </h4>
+                          )}
+                          {this.state.ETHBalance && (
+                            <h4>
+                              ETH Balance : {this.state.ETHBalance.substring(0, 6) + " ..."}
+                            </h4>
+                          )}
+                          <br></br>
+                          {this.state.assetClassBalance === undefined && (
+                            <h4>
+                              AssetClass Token Balance: Please Log In
+                            </h4>
+                          )}
+                          {this.state.assetClassBalance && (
+                            <h4>
+                              AssetClass Token Balance: {this.state.assetClassBalance}
+                            </h4>
+                          )}
+                          <br></br>
+                          {this.state.assetBalance === undefined && (
+                            <h4>
+                              Asset Token Balance: Please Log In
+                            </h4>
+                          )}
+                          {this.state.assetBalance && (
+                            <h4>
+                              Asset Token Balance:
+                              <Button
+                                variant="assetDashboard"
+                                title="Asset Dashboard"
+                                onClick={() => { window.location.href = '/#/asset-dashboard' }}>
+                                {this.state.assetBalance}
+                              </Button>
+                            </h4>
+                          )}
+                          <br></br>
+                          {this.state.IDTokenBalance === undefined && (
+                            <h4>
+                              ID Token Balance : Please Log In
+                            </h4>
+                          )}
+                          {this.state.IDTokenBalance && (
+                            <h4>
+                              ID Token Balance : {this.state.IDTokenBalance}
+                            </h4>
+                          )}
+                          <br></br>
+                        </div>
+                      )}
+                    </div>
+                  </div>
+                )}
+                <ul className="header">
+                  {window._contracts !== undefined && (
+                    <nav>
+                      {this.state.noAddrMenuBool === true && (<NoAddressComponent />)}
+                      {this.state.assetHolderMenuBool === true && (<NonCustodialComponent />)}
+                      {this.state.assetHolderUserMenuBool === true && (<NonCustodialUserComponent />)}
+                      {this.state.assetClassHolderMenuBool === true && (<AdminComponent />)}
+                      {this.state.authorizedUserMenuBool === true && (<AuthorizedUserComponent />)}
+                      {this.state.basicMenuBool === true && (<BasicComponent />)}
+                    </nav>
+                  )}
+                </ul>
+              </div>
+            </div>
+            <div className="pageForm">
+              <style type="text/css">
+                {`
+                      .btn-primary {
+                        background-color: #00a8ff;
+                        color: white;
+                      }
+                      .btn-primary:hover {
+                        background-color: #23b6ff;
+                        color: white;
+                      }
+                      .btn-primary:focus {
+                        background: #00a8ff;
+                      }
+                      .btn-primary:active {
+                        background: #00a8ff;
+                      }
+
+                      .btn-etherscan {
+                        background-color: transparent;
+                        color: white;
+                        margin-top: -0.5rem;
+                        // margin-right: 37rem;
+                        font-size: 1.6rem;
+                      }
+                      .btn-etherscan:hover {
+                        background-color: transparent;
+                        color: #00a8ff;
+                      }
+                      .btn-etherscan:focus {
+                        background-color: transparent;
+                      }
+                      .btn-etherscan:active {
+                        background-color: transparent;
+                        border: transparent;
+                      }
+
+                      .btn-assetDashboard {
+                        background-color: transparent;
+                        color: white;
+                        margin-top: -0.5rem;
+                        // margin-right: 37rem;
+                        font-size: 1.6rem;
+                        width: 5rem;
+                      }
+                      .btn-assetDashboard:hover {
+                        background-color: transparent;
+                        color: #00a8ff;
+                      }
+                      .btn-assetDashboard:focus {
+                        background-color: transparent;
+                      }
+                      .btn-assetDashboard:active {
+                        background-color: transparent;
+                        border: transparent;
+                      }
+
+                      .btn {
+                        color: white;
+                      }
+
+                      .btn-toggle {
+                        background: #002a40;
+                        color: #fff;
+                        height: 3rem;
+                        width: 17.3rem;
+                        margin-top: -0.2rem;
+                        border-radius: 0;
+                        font-weight: bold;
+                        font-size: 1.4rem;
+                      }
+                      btn-toggle:hover {
+                        background: #23b6ff;
+                        color: #fff;
+                      }
+                      .btn-toggle:focus {
+                        background: #23b6ff;
+                        color: #fff;
+                      }
+                      .btn-toggle:active {
+                        background: #23b6ff;
+                        color: #fff;
+                      }
+                   `}
+              </style>
+              <div>
+                <Route exact path="/" component={Home} />
+                {Router(this.state.routeRequest)}
+              </div>
+              <div className="mediaLink">
+                <a className="mediaLinkContent"><GitHub size={35} onClick={() => { window.open("https://github.com/vdmprojects/Bulletproof", "_blank") }} /></a>
+                <a className="mediaLinkContent"><Mail size={35} onClick={() => { window.open("mailto:drake@pruf.io", "_blank") }} /></a>
+                <a className="mediaLinkContent"><Twitter size={35} onClick={() => { window.open("https://twitter.com/umlautchair", "_blank") }} /></a>
+                <a className="mediaLinkContent" ><Video size={35} onClick={() => { window.open("https://www.youtube.com/channel/UC9HzR9-dAzHtPKOqlVqwOuw", "_blank") }} /></a>
+              </div>
+            </div>
+            <NavLink to="/">
+            </NavLink>
+
+          </HashRouter>
+
+        </div >
+      );
+    }
 
     this.updateWatchDog = setInterval(() => {
       if (this.state.isAuthUser !== window.isAuthUser) {
@@ -321,13 +666,13 @@ class Main extends Component {
 
       let tempNameArray = [];
       for (let x = 0; x < window.aTknIDs.length; x++) {
-        if(tempDescArray[x].name === "" || tempDescArray[x].name === undefined){
+        if (tempDescArray[x].name === "" || tempDescArray[x].name === undefined) {
           tempNameArray.push("Not Available")
         }
-        else{
+        else {
           tempNameArray.push(tempDescArray[x].name)
         }
-        
+
       }
 
       let tempDisplayArray = [];
@@ -391,7 +736,7 @@ class Main extends Component {
               authorizedUserMenuBool: false,
               settingsMenu: undefined
             })
-            if(window.location.href !== "/#/asset-dashboard"){window.location.href = "/#"}
+            if (window.location.href !== "/#/asset-dashboard") { window.location.href = "/#" }
             window.addr = e[0];
             window.assetClass = undefined;
             window.isAuthUser = false;
@@ -670,310 +1015,7 @@ class Main extends Component {
       return (<div><h1>)-:</h1><h2> An error occoured. Ensure you are connected to metamask and reload the page. Mobile support coming soon.</h2></div>)
     }
 
-    return (
-      <div>
-        <ParticleBox />
-        <HashRouter>
-
-          <div className="imageForm">
-            <button
-              className="imageButton"
-              title="Back to Home!"
-              onClick={() => { this.toggleMenu("basic") }}
-            >
-              <img
-                className="downSizeLogo"
-                src={require("./Resources/pruf ar long.png")}
-                alt="Pruf Logo" />
-            </button>
-          </div>
-          <div>
-            <div className="BannerForm">
-              <div className="currentMenuOption">
-                <div>
-                  {this.state.noAddrMenuBool === true && (<div className="currentMenuOptionContent"> No Address Menu</div>)}
-                  {this.state.assetHolderMenuBool === true && (<div className="currentMenuOptionContent">Token Minter Menu</div>)}
-                  {this.state.assetHolderUserMenuBool === true && (<div className="currentMenuOptionContent">Token Holder Menu</div>)}
-                  {this.state.assetClassHolderMenuBool === true && (<div className="currentMenuOptionContent">AC Admin Menu</div>)}
-                  {this.state.authorizedUserMenuBool === true && (<div className="currentMenuOptionContent">Asset Minter Menu</div>)}
-                  {this.state.basicMenuBool === true && (<div className="currentMenuOptionContent">Basic Menu</div>)}
-                </div>
-              </div>
-              <div className="hamburgerMenu">
-                <a className="hamburgerMenu-content" ><Menu size={35} onClick={() => { this.hamburgerMenu() }} /></a>
-              </div>
-              {this.state.hamburgerMenu !== undefined && (
-                <div className="hamburgerDropdown">
-                  <button
-                    className="imageButtonU"
-                    onClick={() => { window.open("https://www.pruf.io", "_blank") }}
-                  >
-                    <img
-                      className="imageFormU"
-                      title="Find out More!"
-                      src={require("./Resources/favicon pruf no bg.png")}
-                      alt="Pruf U" />
-                  </button>
-                  <div className="siteInfoBox">
-                    <h3 className="siteInfoBoxContent">
-                      Website last updated:
-                    </h3>
-                    <h3 className="siteInfoBoxContent">
-                      October 3, 2020
-                    </h3>
-                  </div>
-                  <div className="hamburgerMenuLink">
-                    <a className="hamburgerMenuLink-content-user" ><User size={48} onClick={() => { this.userMenu() }} /></a>
-                  </div>
-                  <div className="hamburgerMenuLink">
-                    <a className="hamburgerMenuLink-content-settings" ><Settings size={35} onClick={() => { this.settingsMenu() }} /></a>
-                  </div>
-                  <div>
-                    {this.state.settingsMenu !== undefined && (
-                      <div>
-                        <div className="hamburgerDropdownSettings">
-                          {this.state.isACAdmin === true && this.state.assetClassHolderMenuBool === false && (
-                            <Button
-                              size="lg"
-                              variant="toggle"
-                              onClick={() => { this.toggleMenu("ACAdmin") }}
-                            >
-                              AC Admin Menu
-                            </Button>)}
-
-                          {this.state.IDHolderBool === false && this.state.assetHolderBool === true && this.state.assetHolderUserMenuBool === false && (
-                            <Button
-                              size="lg"
-                              variant="toggle"
-                              onClick={() => { this.toggleMenu("NCUser") }}
-                            >
-                              Token Holder Menu
-                            </Button>
-                          )}
-
-                          {this.state.IDHolderBool === true && this.state.assetHolderMenuBool === false && (
-                            <Button
-                              size="lg"
-                              variant="toggle"
-                              onClick={() => { this.toggleMenu("NC") }}
-                            >
-                              Token Minter Menu
-                            </Button>
-                          )}
-
-                          {this.state.basicMenuBool === false && (
-                            <Button
-                              size="lg"
-                              variant="toggle"
-                              onClick={() => { this.toggleMenu("basic") }}
-                            >
-                              Basic Menu
-                            </Button>)}
-
-                          {this.state.isAuthUser === true && this.state.authorizedUserMenuBool === false && (
-                            <Button
-                              size="lg"
-                              variant="toggle"
-                              onClick={() => { this.toggleMenu("authUser") }}
-                            >
-                              Asset Minter Menu
-                            </Button>)}
-                        </div>
-                      </div>
-                    )}
-                  </div>
-                  <div>
-                    {this.state.userMenu !== undefined && (
-                      <div className="hamburgerDropdownUserInfo">
-                        {this.state.addr > 0 && (
-                          <h4>
-                            Currently serving :
-                            <Button
-                              variant="etherscan"
-                              title="Check it out on Etherscan!"
-                              onClick={() => { window.open("https://kovan.etherscan.io/address/" + this.state.addr) }}>
-                              {this.state.addr.substring(0, 6) + "..." + this.state.addr.substring(37, 42)}
-                            </Button>
-                          </h4>
-                        )}
-                        {this.state.addr === undefined && (
-                          <h4>
-                            Currently serving: NOBODY! Log into web3 provider!
-                          </h4>
-                        )}
-                        <br></br>
-                        {this.state.ETHBalance === undefined && (
-                          <h4>
-                            ETH Balance : Please Log In
-                          </h4>
-                        )}
-                        {this.state.ETHBalance && (
-                          <h4>
-                            ETH Balance : {this.state.ETHBalance.substring(0, 6) + " ..."}
-                          </h4>
-                        )}
-                        <br></br>
-                        {this.state.assetClassBalance === undefined && (
-                          <h4>
-                            AssetClass Token Balance: Please Log In
-                          </h4>
-                        )}
-                        {this.state.assetClassBalance && (
-                          <h4>
-                            AssetClass Token Balance: {this.state.assetClassBalance}
-                          </h4>
-                        )}
-                        <br></br>
-                        {this.state.assetBalance === undefined && (
-                          <h4>
-                            Asset Token Balance: Please Log In
-                          </h4>
-                        )}
-                        {this.state.assetBalance && (
-                          <h4>
-                            Asset Token Balance: 
-                            <Button
-                              variant="assetDashboard"
-                              title="Asset Dashboard"
-                              onClick={() => { window.location.href = '/#/asset-dashboard' }}>
-                              {this.state.assetBalance}
-                            </Button>
-                          </h4>
-                        )}
-                        <br></br>
-                        {this.state.IDTokenBalance === undefined && (
-                          <h4>
-                            ID Token Balance : Please Log In
-                          </h4>
-                        )}
-                        {this.state.IDTokenBalance && (
-                          <h4>
-                            ID Token Balance : {this.state.IDTokenBalance}
-                          </h4>
-                        )}
-                        <br></br>
-                      </div>
-                    )}
-                  </div>
-                </div>
-              )}
-              <ul className="header">
-                {window._contracts !== undefined && (
-                  <nav>
-                    {this.state.noAddrMenuBool === true && (<NoAddressComponent />)}
-                    {this.state.assetHolderMenuBool === true && (<NonCustodialComponent />)}
-                    {this.state.assetHolderUserMenuBool === true && (<NonCustodialUserComponent />)}
-                    {this.state.assetClassHolderMenuBool === true && (<AdminComponent />)}
-                    {this.state.authorizedUserMenuBool === true && (<AuthorizedUserComponent />)}
-                    {this.state.basicMenuBool === true && (<BasicComponent />)}
-                  </nav>
-                )}
-              </ul>
-            </div>
-          </div>
-          <div className="pageForm">
-            <style type="text/css">
-              {`
-                        .btn-primary {
-                          background-color: #00a8ff;
-                          color: white;
-                        }
-                        .btn-primary:hover {
-                          background-color: #23b6ff;
-                          color: white;
-                        }
-                        .btn-primary:focus {
-                          background: #00a8ff;
-                        }
-                        .btn-primary:active {
-                          background: #00a8ff;
-                        }
-
-                        .btn-etherscan {
-                          background-color: transparent;
-                          color: white;
-                          margin-top: -0.5rem;
-                          // margin-right: 37rem;
-                          font-size: 1.6rem;
-                        }
-                        .btn-etherscan:hover {
-                          background-color: transparent;
-                          color: #00a8ff;
-                        }
-                        .btn-etherscan:focus {
-                          background-color: transparent;
-                        }
-                        .btn-etherscan:active {
-                          background-color: transparent;
-                          border: transparent;
-                        }
-
-                        .btn-assetDashboard {
-                          background-color: transparent;
-                          color: white;
-                          margin-top: -0.5rem;
-                          // margin-right: 37rem;
-                          font-size: 1.6rem;
-                          width: 5rem;
-                        }
-                        .btn-assetDashboard:hover {
-                          background-color: transparent;
-                          color: #00a8ff;
-                        }
-                        .btn-assetDashboard:focus {
-                          background-color: transparent;
-                        }
-                        .btn-assetDashboard:active {
-                          background-color: transparent;
-                          border: transparent;
-                        }
-
-                        .btn {
-                          color: white;
-                        }
-
-                        .btn-toggle {
-                          background: #002a40;
-                          color: #fff;
-                          height: 3rem;
-                          width: 17.3rem;
-                          margin-top: -0.2rem;
-                          border-radius: 0;
-                          font-weight: bold;
-                          font-size: 1.4rem;
-                        }
-                        btn-toggle:hover {
-                          background: #23b6ff;
-                          color: #fff;
-                        }
-                        .btn-toggle:focus {
-                          background: #23b6ff;
-                          color: #fff;
-                        }
-                        .btn-toggle:active {
-                          background: #23b6ff;
-                          color: #fff;
-                        }
-                     `}
-            </style>
-            <div>
-              <Route exact path="/" component={Home} />
-              {Router(this.state.routeRequest)}
-            </div>
-            <div className="mediaLink">
-              <a className="mediaLinkContent"><GitHub size={35} onClick={() => { window.open("https://github.com/vdmprojects/Bulletproof", "_blank") }} /></a>
-              <a className="mediaLinkContent"><Mail size={35} onClick={() => { window.open("mailto:drake@pruf.io", "_blank") }} /></a>
-              <a className="mediaLinkContent"><Twitter size={35} onClick={() => { window.open("https://twitter.com/umlautchair", "_blank") }} /></a>
-              <a className="mediaLinkContent" ><Video size={35} onClick={() => { window.open("https://www.youtube.com/channel/UC9HzR9-dAzHtPKOqlVqwOuw", "_blank") }} /></a>
-            </div>
-          </div>
-          <NavLink to="/">
-          </NavLink>
-
-        </HashRouter>
-
-      </div >
-    );
+    return this.renderContent();
   }
 }
 

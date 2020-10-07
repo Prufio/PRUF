@@ -26,6 +26,10 @@ import EscrowManager from "./Custodial/EscrowManager";
 import ExportAsset from "./Custodial/ExportAsset";
 import ImportAsset from "./Custodial/ImportAsset";
 
+import HomeMobile from "./Mobile/HomeMobile";
+import RetrieveRecordMobile from "./Mobile/RetrieveRecordMobile";
+import VerifyLiteMobile from "./Mobile/VerifyLiteMobile";
+
 import AddNoteNC from "./NonCustodial/AddNoteNC";
 import DecrementCounterNC from "./NonCustodial/DecrementCounterNC";
 import EscrowManagerNC from "./NonCustodial/EscrowManagerNC";
@@ -133,6 +137,9 @@ function Router(routeRequest) {
             <>
                 <Route path="/verify-lite" component={VerifyLite} />
                 <Route path="/retrieve-record" component={RetrieveRecord} />
+                <Route path="/mobile" component={HomeMobile} />
+                <Route path="/verify-lite-mobile" component={VerifyLiteMobile} />
+                <Route path="/retrieve-record-mobile" component={RetrieveRecordMobile} />
             </>
         )
     }
