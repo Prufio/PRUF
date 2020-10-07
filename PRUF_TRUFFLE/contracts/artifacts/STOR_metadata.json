@@ -575,7 +575,7 @@
 	},
 	"settings": {
 		"compilationTarget": {
-			"localhost/PRUF_TRUFFLE/contracts/PRUF_STOR.sol": "STOR"
+			"localhost/PRUF_STOR.sol": "STOR"
 		},
 		"evmVersion": "istanbul",
 		"libraries": {},
@@ -589,7 +589,7 @@
 		"remappings": []
 	},
 	"sources": {
-		"localhost/PRUF_TRUFFLE/contracts/Imports/GSN/Context.sol": {
+		"localhost/Imports/GSN/Context.sol": {
 			"keccak256": "0xd9e1cdbea4cf7c51ac26f5782db0fb3d78c1b37e090547e83aef497a727a18f5",
 			"license": "MIT",
 			"urls": [
@@ -597,7 +597,7 @@
 				"dweb:/ipfs/QmNb8Q8C6WLgtWqCE7iL5T1UN52Q6QsE7ZtVc6ppcvViXe"
 			]
 		},
-		"localhost/PRUF_TRUFFLE/contracts/Imports/access/Ownable.sol": {
+		"localhost/Imports/access/Ownable.sol": {
 			"keccak256": "0x78d7d9211513b60f81db3089fffbc1ce5c3d87d021d54c9c41a909000ba8bbc4",
 			"license": "MIT",
 			"urls": [
@@ -605,7 +605,7 @@
 				"dweb:/ipfs/QmdHm68MUvSaVCbJkDpxyyeMJoG6upDMjBKgt91HZHW71G"
 			]
 		},
-		"localhost/PRUF_TRUFFLE/contracts/Imports/math/Safemath.sol": {
+		"localhost/Imports/math/Safemath.sol": {
 			"keccak256": "0x8d890f7a794b66b8b3ab54779603c254f85ee0d436dd4a17b3543c6629b726f8",
 			"license": "MIT",
 			"urls": [
@@ -613,7 +613,7 @@
 				"dweb:/ipfs/QmbC56SFqW7UCx26RfPFWPiEXnQTJXSBA5r4SrojRMHqeM"
 			]
 		},
-		"localhost/PRUF_TRUFFLE/contracts/Imports/utils/Pausable.sol": {
+		"localhost/Imports/utils/Pausable.sol": {
 			"keccak256": "0xc3d606cfb7d9b7250ed2dd614e1ab1511ed8cdcc7a7c423c3a5b993e00ea0543",
 			"license": "MIT",
 			"urls": [
@@ -621,7 +621,7 @@
 				"dweb:/ipfs/Qmapwh2SdVRpuHVftsvyvf9GQGn4sBUa8jP3hSSBpnJxNR"
 			]
 		},
-		"localhost/PRUF_TRUFFLE/contracts/Imports/utils/ReentrancyGuard.sol": {
+		"localhost/Imports/utils/ReentrancyGuard.sol": {
 			"keccak256": "0x2b2f3b136883f1de3b4de564209927bf1d3773d8fba53f4964ec30d9d035371b",
 			"license": "MIT",
 			"urls": [
@@ -629,7 +629,7 @@
 				"dweb:/ipfs/QmcNH8K75n1zUU39DLAGgRPwVf8WbtTuys1fNhVrfmNK3L"
 			]
 		},
-		"localhost/PRUF_TRUFFLE/contracts/PRUF_INTERFACES.sol": {
+		"localhost/PRUF_INTERFACES.sol": {
 			"keccak256": "0x30a8b5e5168071b7ba402942c1410988093a642208f843464ef13dd9a7cb1348",
 			"license": "UNLICENSED",
 			"urls": [
@@ -637,7 +637,7 @@
 				"dweb:/ipfs/QmPvPtCY4yDg247G8CUJs825NvSzCJan74UbStagNouQXa"
 			]
 		},
-		"localhost/PRUF_TRUFFLE/contracts/PRUF_STOR.sol": {
+		"localhost/PRUF_STOR.sol": {
 			"keccak256": "0xc34b71efff8974ed3e985e7ba65d0e2bf6310cbb8b53871d4c2e389ca1257564",
 			"license": "UNLICENSED",
 			"urls": [

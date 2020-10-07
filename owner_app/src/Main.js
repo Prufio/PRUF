@@ -20,32 +20,9 @@ class Main extends Component {
       console.log("Setting up contracts");
       window._contracts = await buildContracts(_web3);
       await this.setState({ contracts: window._contracts });
-      return this.getContracts();
     };
 
     //State declaration....................................................................................................
-    this.getContracts = async () => {
-      window.contracts = {
-        STOR: window._contracts.content[0],
-        APP: window._contracts.content[1],
-        NP: window._contracts.content[2],
-        AC_MGR: window._contracts.content[3],
-        AC_TKN: window._contracts.content[4],
-        A_TKN: window._contracts.content[5],
-        ECR_MGR: window._contracts.content[6],
-        ECR: window._contracts.content[7],
-        VERIFY: window._contracts.content[8],
-        ECR_NC: window._contracts.content[9],
-        APP_NC: window._contracts.content[10],
-        NP_NC: window._contracts.content[11],
-        RCLR: window._contracts.content[12],
-        PIP: window._contracts.content[13],
-        ID_TKN: window._contracts.content[14],
-        UTIL_TKN: window._contracts.content[15]
-      }
-
-      return console.log("contracts: ", window.contracts);
-    };
 
     this.acctChanger = async () => {
       //Handle an address change, update state accordingly

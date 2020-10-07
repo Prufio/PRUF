@@ -48,7 +48,7 @@ class Home extends Component {
 
   render() {
 
-    const _setAC = async () => {
+    const _setWindowAC = async () => {
       let acDoesExist;
 
       window.routeRequest = "basic"
@@ -75,7 +75,7 @@ class Home extends Component {
           }
 
           window.assetClass = this.state.assetClass;
-          await window.utils.resolveACFromID()
+          await window.utils.resolveACFromID(window.assetClass)
           await window.utils.getACData("id", window.assetClass)
 
           console.log(window.authLevel);
@@ -91,7 +91,7 @@ class Home extends Component {
           }
 
           window.assetClassName = this.state.assetClass
-          await window.utils.resolveAC();
+          await window.utils.resolveAC(this.state.assetClass);
 
           return this.setState({ authLevel: window.authLevel });
         }
@@ -121,7 +121,7 @@ class Home extends Component {
                 <div className="submitButton">
                   <div className="submitButton-content">
                     <ArrowRightCircle
-                      onClick={() => { _setAC() }}
+                      onClick={() => { _setWindowAC() }}
                     />
                   </div>
                 </div>

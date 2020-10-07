@@ -66,155 +66,52 @@
 			{
 				"inputs": [
 					{
-						"internalType": "bytes32",
-						"name": "_idxHash",
-						"type": "bytes32"
-					},
-					{
-						"internalType": "bytes32",
-						"name": "_IpfsHash",
-						"type": "bytes32"
-					}
-				],
-				"name": "$addIpfs2Note",
-				"outputs": [
-					{
-						"internalType": "bytes32",
-						"name": "",
-						"type": "bytes32"
-					}
-				],
-				"stateMutability": "payable",
-				"type": "function"
-			},
-			{
-				"inputs": [
-					{
-						"internalType": "bytes32",
-						"name": "_idxHash",
-						"type": "bytes32"
-					},
-					{
-						"internalType": "uint32",
-						"name": "_newAssetClass",
-						"type": "uint32"
-					}
-				],
-				"name": "$importAsset",
-				"outputs": [],
-				"stateMutability": "payable",
-				"type": "function"
-			},
-			{
-				"inputs": [
-					{
-						"internalType": "bytes32",
-						"name": "_idxHash",
-						"type": "bytes32"
-					},
-					{
-						"internalType": "bytes32",
-						"name": "_rgtHash",
-						"type": "bytes32"
-					},
-					{
 						"internalType": "uint32",
 						"name": "_assetClass",
 						"type": "uint32"
 					},
 					{
-						"internalType": "uint32",
-						"name": "_countDownStart",
-						"type": "uint32"
-					}
-				],
-				"name": "$newRecord",
-				"outputs": [],
-				"stateMutability": "payable",
-				"type": "function"
-			},
-			{
-				"inputs": [
-					{
-						"internalType": "bytes32",
-						"name": "_idxHash",
-						"type": "bytes32"
+						"internalType": "uint16",
+						"name": "_service",
+						"type": "uint16"
 					},
-					{
-						"internalType": "bytes32",
-						"name": "_rgtHash",
-						"type": "bytes32"
-					},
-					{
-						"internalType": "uint32",
-						"name": "_assetClass",
-						"type": "uint32"
-					},
-					{
-						"internalType": "uint32",
-						"name": "_countDownStart",
-						"type": "uint32"
-					},
-					{
-						"internalType": "bytes32",
-						"name": "_IpfsHash",
-						"type": "bytes32"
-					}
-				],
-				"name": "$newRecordWithDescription",
-				"outputs": [],
-				"stateMutability": "payable",
-				"type": "function"
-			},
-			{
-				"inputs": [
-					{
-						"internalType": "bytes32",
-						"name": "_idxHash",
-						"type": "bytes32"
-					},
-					{
-						"internalType": "string",
-						"name": "first",
-						"type": "string"
-					},
-					{
-						"internalType": "string",
-						"name": "middle",
-						"type": "string"
-					},
-					{
-						"internalType": "string",
-						"name": "last",
-						"type": "string"
-					},
-					{
-						"internalType": "string",
-						"name": "id",
-						"type": "string"
-					},
-					{
-						"internalType": "string",
-						"name": "secret",
-						"type": "string"
-					}
-				],
-				"name": "$reMintToken",
-				"outputs": [
 					{
 						"internalType": "uint256",
-						"name": "",
+						"name": "_serviceCost",
 						"type": "uint256"
+					},
+					{
+						"internalType": "address",
+						"name": "_paymentAddress",
+						"type": "address"
 					}
 				],
-				"stateMutability": "payable",
+				"name": "ACTH_setCosts",
+				"outputs": [],
+				"stateMutability": "nonpayable",
 				"type": "function"
 			},
 			{
-				"inputs": [],
-				"name": "$withdraw",
+				"inputs": [
+					{
+						"internalType": "address",
+						"name": "_authAddr",
+						"type": "address"
+					},
+					{
+						"internalType": "uint8",
+						"name": "_userType",
+						"type": "uint8"
+					},
+					{
+						"internalType": "uint32",
+						"name": "_assetClass",
+						"type": "uint32"
+					}
+				],
+				"name": "OO_addUser",
 				"outputs": [],
-				"stateMutability": "payable",
+				"stateMutability": "nonpayable",
 				"type": "function"
 			},
 			{
@@ -267,6 +164,216 @@
 				"name": "OO_unpause",
 				"outputs": [],
 				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "address",
+						"name": "_recipientAddress",
+						"type": "address"
+					},
+					{
+						"internalType": "string",
+						"name": "_name",
+						"type": "string"
+					},
+					{
+						"internalType": "uint32",
+						"name": "_assetClass",
+						"type": "uint32"
+					},
+					{
+						"internalType": "uint32",
+						"name": "_assetClassRoot",
+						"type": "uint32"
+					},
+					{
+						"internalType": "uint8",
+						"name": "_custodyType",
+						"type": "uint8"
+					}
+				],
+				"name": "createAssetClass",
+				"outputs": [],
+				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "uint32",
+						"name": "_assetClass",
+						"type": "uint32"
+					}
+				],
+				"name": "getAC_data",
+				"outputs": [
+					{
+						"internalType": "uint32",
+						"name": "",
+						"type": "uint32"
+					},
+					{
+						"internalType": "uint8",
+						"name": "",
+						"type": "uint8"
+					},
+					{
+						"internalType": "uint32",
+						"name": "",
+						"type": "uint32"
+					},
+					{
+						"internalType": "uint32",
+						"name": "",
+						"type": "uint32"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "uint32",
+						"name": "_assetClass",
+						"type": "uint32"
+					}
+				],
+				"name": "getAC_discount",
+				"outputs": [
+					{
+						"internalType": "uint32",
+						"name": "",
+						"type": "uint32"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "uint32",
+						"name": "_tokenId",
+						"type": "uint32"
+					}
+				],
+				"name": "getAC_name",
+				"outputs": [
+					{
+						"internalType": "string",
+						"name": "",
+						"type": "string"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "uint32",
+						"name": "_assetClass",
+						"type": "uint32"
+					},
+					{
+						"internalType": "uint16",
+						"name": "_service",
+						"type": "uint16"
+					}
+				],
+				"name": "getServiceCosts",
+				"outputs": [
+					{
+						"internalType": "address",
+						"name": "",
+						"type": "address"
+					},
+					{
+						"internalType": "uint256",
+						"name": "",
+						"type": "uint256"
+					},
+					{
+						"internalType": "address",
+						"name": "",
+						"type": "address"
+					},
+					{
+						"internalType": "uint256",
+						"name": "",
+						"type": "uint256"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "bytes32",
+						"name": "_userHash",
+						"type": "bytes32"
+					},
+					{
+						"internalType": "uint32",
+						"name": "_assetClass",
+						"type": "uint32"
+					}
+				],
+				"name": "getUserType",
+				"outputs": [
+					{
+						"internalType": "uint8",
+						"name": "",
+						"type": "uint8"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "uint32",
+						"name": "_assetClass",
+						"type": "uint32"
+					},
+					{
+						"internalType": "uint256",
+						"name": "_increaseAmount",
+						"type": "uint256"
+					}
+				],
+				"name": "increasePriceShare",
+				"outputs": [],
+				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "uint32",
+						"name": "_assetClass1",
+						"type": "uint32"
+					},
+					{
+						"internalType": "uint32",
+						"name": "_assetClass2",
+						"type": "uint32"
+					}
+				],
+				"name": "isSameRootAC",
+				"outputs": [
+					{
+						"internalType": "uint8",
+						"name": "",
+						"type": "uint8"
+					}
+				],
+				"stateMutability": "view",
 				"type": "function"
 			},
 			{
@@ -330,29 +437,29 @@
 				"type": "function"
 			},
 			{
-				"inputs": [
-					{
-						"internalType": "address",
-						"name": "dest",
-						"type": "address"
-					}
-				],
-				"name": "payments",
-				"outputs": [
-					{
-						"internalType": "uint256",
-						"name": "",
-						"type": "uint256"
-					}
-				],
-				"stateMutability": "view",
-				"type": "function"
-			},
-			{
 				"inputs": [],
 				"name": "renounceOwnership",
 				"outputs": [],
 				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "string",
+						"name": "_name",
+						"type": "string"
+					}
+				],
+				"name": "resolveAssetClass",
+				"outputs": [
+					{
+						"internalType": "uint32",
+						"name": "",
+						"type": "uint32"
+					}
+				],
+				"stateMutability": "view",
 				"type": "function"
 			},
 			{
@@ -389,12 +496,17 @@
 			{
 				"inputs": [
 					{
-						"internalType": "address payable",
-						"name": "payee",
-						"type": "address"
+						"internalType": "string",
+						"name": "_name",
+						"type": "string"
+					},
+					{
+						"internalType": "uint32",
+						"name": "_assetClass",
+						"type": "uint32"
 					}
 				],
-				"name": "withdrawPayments",
+				"name": "updateACname",
 				"outputs": [],
 				"stateMutability": "nonpayable",
 				"type": "function"
@@ -415,23 +527,11 @@
 				"paused()": {
 					"details": "Returns true if the contract is paused, and false otherwise."
 				},
-				"payments(address)": {
-					"details": "Returns the payments owed to an address.",
-					"params": {
-						"dest": "The creditor's address."
-					}
-				},
 				"renounceOwnership()": {
 					"details": "Leaves the contract without owner. It will not be possible to call `onlyOwner` functions anymore. Can only be called by the current owner. NOTE: Renouncing ownership will leave the contract without an owner, thereby removing any functionality that is only available to the owner."
 				},
 				"transferOwnership(address)": {
 					"details": "Transfers ownership of the contract to a new account (`newOwner`). Can only be called by the current owner."
-				},
-				"withdrawPayments(address)": {
-					"details": "Withdraw accumulated payments, forwarding all gas to the recipient. Note that _any_ account can call this function, not just the `payee`. This means that contracts unaware of the `PullPayment` protocol can still receive funds this way, by having a separate account call {withdrawPayments}. WARNING: Forwarding all gas opens the door to reentrancy vulnerabilities. Make sure you trust the recipient, or are either following the checks-effects-interactions pattern or using {ReentrancyGuard}.",
-					"params": {
-						"payee": "Whose payments will be withdrawn."
-					}
 				}
 			},
 			"version": 1
@@ -444,7 +544,7 @@
 	},
 	"settings": {
 		"compilationTarget": {
-			"localhost/PRUF_APP_NC.sol": "APP_NC"
+			"localhost/PRUF_AC_MGR.sol": "AC_MGR"
 		},
 		"evmVersion": "istanbul",
 		"libraries": {},
@@ -474,28 +574,12 @@
 				"dweb:/ipfs/QmdHm68MUvSaVCbJkDpxyyeMJoG6upDMjBKgt91HZHW71G"
 			]
 		},
-		"localhost/Imports/math/SafeMath.sol": {
+		"localhost/Imports/math/Safemath.sol": {
 			"keccak256": "0x8d890f7a794b66b8b3ab54779603c254f85ee0d436dd4a17b3543c6629b726f8",
 			"license": "MIT",
 			"urls": [
 				"bzz-raw://887bb68104c8f862a66939b192a85e79564bed9bbe72cda6240fd89bbea642fd",
 				"dweb:/ipfs/QmbC56SFqW7UCx26RfPFWPiEXnQTJXSBA5r4SrojRMHqeM"
-			]
-		},
-		"localhost/Imports/payment/PullPayment.sol": {
-			"keccak256": "0x9826b0a2e571f6b04031b587b171820fdbd6b7401fde6c29e8c5ef39e077fa27",
-			"license": "MIT",
-			"urls": [
-				"bzz-raw://e231e931cf7ccc0385656ebfc92919b67f70b837c6f656a6760b2e2600a42849",
-				"dweb:/ipfs/Qmbhe9zHeZqayduST6LPj3jTPLoiv1aJeGX2ELMCrjoyMU"
-			]
-		},
-		"localhost/Imports/payment/escrow/Escrow.sol": {
-			"keccak256": "0x24017fb93b5a5f2b902778861c418718374c54b3c2cc4c3d3c091c1145a04512",
-			"license": "MIT",
-			"urls": [
-				"bzz-raw://e478bbbfc92aaad5789ad31c73b7758aa5c0fae024fd3a68db210e2bb311356c",
-				"dweb:/ipfs/QmaEWtdscssqwocuFYqMCTFB1n6AaWKn6ovx57hQeanrVo"
 			]
 		},
 		"localhost/Imports/token/ERC721/IERC721Receiver.sol": {
@@ -504,14 +588,6 @@
 			"urls": [
 				"bzz-raw://b3518cea454999f659b0fd63f810ab61a7d568fe8ad974d84ab15febd321a0a5",
 				"dweb:/ipfs/QmSvS87R4H68JuokmA4oZMELAB49uJfSxeLGfZuXB7dowZ"
-			]
-		},
-		"localhost/Imports/utils/Address.sol": {
-			"keccak256": "0xb45dc9b431fd17029e917725b523f7302f31d3501c11f9bf4f985d2b088d36d3",
-			"license": "MIT",
-			"urls": [
-				"bzz-raw://5e276244483cce4d0765d5cd229141a3aa98761e0034736dcd7887e5235acb29",
-				"dweb:/ipfs/QmTrizLJ2MCYuaG8YPwg9umQ3XvCd3xjrwkzjcjqvSxYH4"
 			]
 		},
 		"localhost/Imports/utils/Pausable.sol": {
@@ -530,12 +606,12 @@
 				"dweb:/ipfs/QmcNH8K75n1zUU39DLAGgRPwVf8WbtTuys1fNhVrfmNK3L"
 			]
 		},
-		"localhost/PRUF_APP_NC.sol": {
-			"keccak256": "0x8114055932be2a3381a1740d064224f8adadf610e769ecc5b0b8bebe3f297096",
+		"localhost/PRUF_AC_MGR.sol": {
+			"keccak256": "0x80b63cc10228f980d6ef9d02bbe1392d70a8f8db068422f6a166d109e7cd57f9",
 			"license": "UNLICENSED",
 			"urls": [
-				"bzz-raw://6523853eb81f3055ac937ca3bf0c8ee473511cba26e2e212c0fbf864914aa9cd",
-				"dweb:/ipfs/QmT5CC7WDdhAHHazg8yB5rPZZSXsiLqKvNpmbBad8tjuBX"
+				"bzz-raw://d41217183b1656318a0bada56ffd09f644b0993ad3abc73496222f4f9a3c360d",
+				"dweb:/ipfs/QmXTdpbjBYgtfe8nDXrv9sdQpcyLV7dhA2hyDG1aaEsbqD"
 			]
 		},
 		"localhost/PRUF_BASIC.sol": {
@@ -544,14 +620,6 @@
 			"urls": [
 				"bzz-raw://87ed1ac23dc365a818d1a272ead16e9a52dd0c5cd17df6bc4570d0b5feac6d38",
 				"dweb:/ipfs/QmU3xLdAR79mShhJ6KwhbdfUT7spiJsqzztxViseJS2ie5"
-			]
-		},
-		"localhost/PRUF_CORE.sol": {
-			"keccak256": "0x23a8e5072866bf6138adb5611b983806f720ccc2aa860c0aa2b1609a28b7b234",
-			"license": "UNLICENSED",
-			"urls": [
-				"bzz-raw://475369cc6230757a279230d9bc78f4cf7a68bb28da16e04378b847fa6f112d1d",
-				"dweb:/ipfs/QmTKM4kvxUrfK1RGwizM6k6E2jomFLiMjuXK6xX2CgSNjE"
 			]
 		},
 		"localhost/PRUF_INTERFACES.sol": {

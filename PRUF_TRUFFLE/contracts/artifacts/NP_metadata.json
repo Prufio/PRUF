@@ -64,153 +64,6 @@
 				"type": "event"
 			},
 			{
-				"inputs": [
-					{
-						"internalType": "bytes32",
-						"name": "_idxHash",
-						"type": "bytes32"
-					},
-					{
-						"internalType": "bytes32",
-						"name": "_IpfsHash",
-						"type": "bytes32"
-					}
-				],
-				"name": "$addIpfs2Note",
-				"outputs": [
-					{
-						"internalType": "bytes32",
-						"name": "",
-						"type": "bytes32"
-					}
-				],
-				"stateMutability": "payable",
-				"type": "function"
-			},
-			{
-				"inputs": [
-					{
-						"internalType": "bytes32",
-						"name": "_idxHash",
-						"type": "bytes32"
-					},
-					{
-						"internalType": "uint32",
-						"name": "_newAssetClass",
-						"type": "uint32"
-					}
-				],
-				"name": "$importAsset",
-				"outputs": [],
-				"stateMutability": "payable",
-				"type": "function"
-			},
-			{
-				"inputs": [
-					{
-						"internalType": "bytes32",
-						"name": "_idxHash",
-						"type": "bytes32"
-					},
-					{
-						"internalType": "bytes32",
-						"name": "_rgtHash",
-						"type": "bytes32"
-					},
-					{
-						"internalType": "uint32",
-						"name": "_assetClass",
-						"type": "uint32"
-					},
-					{
-						"internalType": "uint32",
-						"name": "_countDownStart",
-						"type": "uint32"
-					}
-				],
-				"name": "$newRecord",
-				"outputs": [],
-				"stateMutability": "payable",
-				"type": "function"
-			},
-			{
-				"inputs": [
-					{
-						"internalType": "bytes32",
-						"name": "_idxHash",
-						"type": "bytes32"
-					},
-					{
-						"internalType": "bytes32",
-						"name": "_rgtHash",
-						"type": "bytes32"
-					},
-					{
-						"internalType": "uint32",
-						"name": "_assetClass",
-						"type": "uint32"
-					},
-					{
-						"internalType": "uint32",
-						"name": "_countDownStart",
-						"type": "uint32"
-					},
-					{
-						"internalType": "bytes32",
-						"name": "_IpfsHash",
-						"type": "bytes32"
-					}
-				],
-				"name": "$newRecordWithDescription",
-				"outputs": [],
-				"stateMutability": "payable",
-				"type": "function"
-			},
-			{
-				"inputs": [
-					{
-						"internalType": "bytes32",
-						"name": "_idxHash",
-						"type": "bytes32"
-					},
-					{
-						"internalType": "string",
-						"name": "first",
-						"type": "string"
-					},
-					{
-						"internalType": "string",
-						"name": "middle",
-						"type": "string"
-					},
-					{
-						"internalType": "string",
-						"name": "last",
-						"type": "string"
-					},
-					{
-						"internalType": "string",
-						"name": "id",
-						"type": "string"
-					},
-					{
-						"internalType": "string",
-						"name": "secret",
-						"type": "string"
-					}
-				],
-				"name": "$reMintToken",
-				"outputs": [
-					{
-						"internalType": "uint256",
-						"name": "",
-						"type": "uint256"
-					}
-				],
-				"stateMutability": "payable",
-				"type": "function"
-			},
-			{
 				"inputs": [],
 				"name": "$withdraw",
 				"outputs": [],
@@ -266,6 +119,146 @@
 				"inputs": [],
 				"name": "OO_unpause",
 				"outputs": [],
+				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "bytes32",
+						"name": "_idxHash",
+						"type": "bytes32"
+					},
+					{
+						"internalType": "bytes32",
+						"name": "_rgtHash",
+						"type": "bytes32"
+					},
+					{
+						"internalType": "uint32",
+						"name": "_decAmount",
+						"type": "uint32"
+					}
+				],
+				"name": "_decCounter",
+				"outputs": [
+					{
+						"internalType": "uint32",
+						"name": "",
+						"type": "uint32"
+					}
+				],
+				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "bytes32",
+						"name": "_idxHash",
+						"type": "bytes32"
+					},
+					{
+						"internalType": "bytes32",
+						"name": "_rgtHash",
+						"type": "bytes32"
+					},
+					{
+						"internalType": "bytes32",
+						"name": "_IpfsHash",
+						"type": "bytes32"
+					}
+				],
+				"name": "_modIpfs1",
+				"outputs": [
+					{
+						"internalType": "bytes32",
+						"name": "",
+						"type": "bytes32"
+					}
+				],
+				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "bytes32",
+						"name": "_idxHash",
+						"type": "bytes32"
+					},
+					{
+						"internalType": "bytes32",
+						"name": "_rgtHash",
+						"type": "bytes32"
+					},
+					{
+						"internalType": "uint8",
+						"name": "_newAssetStatus",
+						"type": "uint8"
+					}
+				],
+				"name": "_modStatus",
+				"outputs": [
+					{
+						"internalType": "uint8",
+						"name": "",
+						"type": "uint8"
+					}
+				],
+				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "bytes32",
+						"name": "_idxHash",
+						"type": "bytes32"
+					},
+					{
+						"internalType": "bytes32",
+						"name": "_rgtHash",
+						"type": "bytes32"
+					},
+					{
+						"internalType": "uint8",
+						"name": "_newAssetStatus",
+						"type": "uint8"
+					}
+				],
+				"name": "_setLostOrStolen",
+				"outputs": [
+					{
+						"internalType": "uint8",
+						"name": "",
+						"type": "uint8"
+					}
+				],
+				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "bytes32",
+						"name": "_idxHash",
+						"type": "bytes32"
+					},
+					{
+						"internalType": "address",
+						"name": "_addr",
+						"type": "address"
+					}
+				],
+				"name": "exportAsset",
+				"outputs": [
+					{
+						"internalType": "uint8",
+						"name": "",
+						"type": "uint8"
+					}
+				],
 				"stateMutability": "nonpayable",
 				"type": "function"
 			},
@@ -444,7 +437,7 @@
 	},
 	"settings": {
 		"compilationTarget": {
-			"localhost/PRUF_APP_NC.sol": "APP_NC"
+			"localhost/PRUF_NP.sol": "NP"
 		},
 		"evmVersion": "istanbul",
 		"libraries": {},
@@ -530,14 +523,6 @@
 				"dweb:/ipfs/QmcNH8K75n1zUU39DLAGgRPwVf8WbtTuys1fNhVrfmNK3L"
 			]
 		},
-		"localhost/PRUF_APP_NC.sol": {
-			"keccak256": "0x8114055932be2a3381a1740d064224f8adadf610e769ecc5b0b8bebe3f297096",
-			"license": "UNLICENSED",
-			"urls": [
-				"bzz-raw://6523853eb81f3055ac937ca3bf0c8ee473511cba26e2e212c0fbf864914aa9cd",
-				"dweb:/ipfs/QmT5CC7WDdhAHHazg8yB5rPZZSXsiLqKvNpmbBad8tjuBX"
-			]
-		},
 		"localhost/PRUF_BASIC.sol": {
 			"keccak256": "0x4f2c2fe08743fba3719c6617f0c4b65e986d5775929e5777a9a5095609af23e4",
 			"license": "UNLICENSED",
@@ -560,6 +545,14 @@
 			"urls": [
 				"bzz-raw://dc85f44d00c135e1c43b380871b31785dd2cbea3c79a45d74adecd531a019938",
 				"dweb:/ipfs/QmPvPtCY4yDg247G8CUJs825NvSzCJan74UbStagNouQXa"
+			]
+		},
+		"localhost/PRUF_NP.sol": {
+			"keccak256": "0x1385f47a65cfa115ead56e79e09d63feb728006cabcf93b959e2ba06d76156fd",
+			"license": "UNLICENSED",
+			"urls": [
+				"bzz-raw://42e785f8bfda90ab1253bcc1b04a702de49bd183b046043b5cbf4e293a0b2958",
+				"dweb:/ipfs/QmXKKn2z6GfZPS1DspmAZqbjXsbM96qxgFVXKG7Vg42CXR"
 			]
 		}
 	},

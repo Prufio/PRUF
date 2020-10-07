@@ -226,26 +226,24 @@ async function buildContracts(_web3) {
     }
     );
 
-  _contracts.content.push(STOR);     //0
-  _contracts.content.push(APP);      //1
-  _contracts.content.push(NP);       //2
-  _contracts.content.push(AC_MGR);   //3
-  _contracts.content.push(AC_TKN);   //4
-  _contracts.content.push(A_TKN);    //5
-  _contracts.content.push(ECR_MGR);  //6
-  _contracts.content.push(ECR);      //7
-  _contracts.content.push(VERIFY);   //8
-  _contracts.content.push(ECR_NC);   //9
-  _contracts.content.push(APP_NC);   //10
-  _contracts.content.push(NP_NC);    //11
-  _contracts.content.push(RCLR);     //12
-  _contracts.content.push(ID_TKN);   //14
-  _contracts.content.push(UTIL_TKN); //15
-  _contracts.content.push(PIP);    //13
-
-  //console.log(_contracts)
-  return _contracts;
-
+  return window.contracts = {
+    STOR: STOR,
+    APP: APP,
+    NP: NP,
+    AC_MGR: AC_MGR,
+    AC_TKN: AC_TKN,
+    A_TKN: A_TKN,
+    ECR_MGR: ECR_MGR,
+    ECR: ECR,
+    VERIFY: VERIFY,
+    ECR_NC: ECR_NC,
+    APP_NC: APP_NC,
+    NP_NC: NP_NC,
+    RCLR: RCLR,
+    PIP: PIP,
+    ID_TKN: ID_TKN,
+    UTIL_TKN: UTIL_TKN
+  }
 }
 
 export default buildContracts;
