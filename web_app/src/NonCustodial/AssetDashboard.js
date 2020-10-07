@@ -77,14 +77,13 @@ class AssetDashboard extends Component {
 
         for (let i = 0; i < images.length; i++) {
           component.push(
-            <button value={images[i]} className="assetImageSelectorButton" onClick={() => { showImage(images[i]) }}>
+            <button key={"thumb"+String(i)} value={images[i]} className="assetImageSelectorButton" onClick={() => { showImage(images[i]) }}>
               <img title="View Image" src={images[i]} className="imageSelectorImage" />
             </button>
           )
         }
 
         return component
-
       }
 
       const generateTextList = () => {
@@ -92,7 +91,7 @@ class AssetDashboard extends Component {
         for (let i = 0; i < text.length; i++) {
           component.push(
             <>
-              <h4 className="card-description-selected">{textNames[i]}: {text[i]}</h4>
+              <h4 key={"TextElement"+String(i)} className="card-description-selected">{textNames[i]}: {text[i]}</h4>
               <br />
             </>
           )
@@ -102,7 +101,7 @@ class AssetDashboard extends Component {
       }
 
       return (
-        <div>
+        <div key="selectedAsset">
           <div>
             <div className="assetDashboardSelected">
               <style type="text/css"> {`
