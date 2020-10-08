@@ -85,14 +85,16 @@ class ModifyRightsHolder extends Component {
     }
 
     const _checkIn = async (e) => {
-      if (e === "0" || e === undefined) { return }
+      if (e === "null" || e === undefined) { 
+        return clearForm()
+      }
       else if (e === "reset") {
         return window.resetInfo = true;
       }
       else if (e === "assetDash"){
         return window.location.href = "/#/asset-dashboard"
       }
-      if(window.assets.statuses[e] === "53" || window.assets.statuses[e] === "54"){return alert("Asset cannot be modified while in lost or stolen status")}
+      if(window.assets.statuses[e] === "53" || window.assets.statuses[e] === "54"){alert("Asset cannot be modified while in lost or stolen status"); return clearForm()}
       this.setState({ selectedAsset: e })
       console.log("Changed component idx to: ", window.assets.ids[e])
 
@@ -326,9 +328,7 @@ class ModifyRightsHolder extends Component {
                   >
                     {this.state.hasLoadedAssets && (
                     <optgroup className="optgroup">
-                    <option value="null"> Select an asset </option>
-                    <option value="assetDash">View Assets in Dashboard</option>
-                    <option value="reset">Refresh Assets</option>
+
                     {window.utils.generateAssets()}
                     </optgroup>)}
                     {!this.state.hasLoadedAssets && (<optgroup ><option value="null"> Loading Assets... </option></optgroup>)}

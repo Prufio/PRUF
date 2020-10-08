@@ -78,7 +78,9 @@ class DecrementCounterNC extends Component {
     }
 
     const _checkIn = async (e) => {
-      if (e === "0" || e === undefined) { return }
+      if (e === "null" || e === undefined) { 
+        return clearForm()
+      }
       else if (e === "reset") {
         return window.resetInfo = true;
       }
@@ -265,9 +267,7 @@ class DecrementCounterNC extends Component {
                   >
                     {this.state.hasLoadedAssets && (
                     <optgroup className="optgroup">
-                    <option value="null"> Select an asset </option>
-                    <option value="assetDash">View Assets in Dashboard</option>
-                    <option value="reset">Refresh Assets</option>
+
                     {window.utils.generateAssets()}
                     </optgroup>)}
                     {!this.state.hasLoadedAssets && (<optgroup ><option value="null"> Loading Assets... </option></optgroup>)}

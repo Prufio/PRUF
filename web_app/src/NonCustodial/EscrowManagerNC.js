@@ -124,7 +124,9 @@ class EscrowManagerNC extends Component {
     };
 
     const _checkIn = async (e) => {
-      if (e === "0" || e === undefined) { return }
+      if (e === "null" || e === undefined) { 
+        return clearForm()
+      }
       else if (e === "reset") {
         return window.resetInfo = true;
       }
