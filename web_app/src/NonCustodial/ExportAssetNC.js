@@ -72,7 +72,7 @@ class ExportAssetNC extends Component {
     const self = this;
 
     const _checkIn = async (e) => {
-      if (e === "0" || e === undefined) { return }
+      if (e === "null" || e === undefined) { return }
       else if (e === "reset") {
         return window.resetInfo = true;
       }

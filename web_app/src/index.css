@@ -232,6 +232,14 @@ div {
   align-items: center;
 }
 
+.VRTextMobile {
+  color: white;
+  font-size: 1.4rem;
+  margin-bottom: 100px;
+  /* justify-content: center;
+  align-items: center; */
+}
+
 .banner {
   height: 1rem;
   max-width: 90rem;
@@ -1998,8 +2006,8 @@ div {
   position: absolute;
   background-color: transparent;
   z-index: 1000;
-  margin-left: 290px;
-  margin-top: -0.7rem;
+  margin-left: 315px;
+  margin-top: -2.7rem;
 }
 
 .submitButtonVRH-content {
@@ -2054,7 +2062,7 @@ div {
   background-color: transparent;
   z-index: 1000;
   margin-left: 280px;
-  /* margin-top: -3.7rem; */
+  margin-top: 0.2rem;
 }
 
 .submitButtonRR-content {
@@ -2086,7 +2094,7 @@ div {
   background-color: transparent;
   z-index: 1000;
   margin-left: 310px;
-  /* margin-top: -3.7rem; */
+  margin-top: 0.2rem;
 }
 
 .submitButtonRRQR-content {

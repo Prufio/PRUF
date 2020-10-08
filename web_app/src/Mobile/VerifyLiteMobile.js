@@ -89,7 +89,7 @@ class VerifyLiteMobile extends Component {
 
     const clearForm = async () => {
       document.getElementById("MainForm").reset();
-      this.setState({ result: "", accessPermitted: false})
+      this.setState({ result: "", accessPermitted: false })
     }
 
     const _verify = async () => {
@@ -133,7 +133,7 @@ class VerifyLiteMobile extends Component {
       <div>
         <div>
           <div className="mediaLinkAD-home">
-            <a className="mediaLinkContentAD-home" ><Home onClick={() => { window.location.href = '/#/' }} /></a>
+            <a className="mediaLinkContentAD-home" ><Home onClick={() => { window.location.href = '/' }} /></a>
           </div>
           <h2 className="FormHeaderMobile">Verify Lite</h2>
           <div className="mediaLink-clearForm">
@@ -145,41 +145,41 @@ class VerifyLiteMobile extends Component {
             {!this.state.accessPermitted && (
               <>
                 <Form.Row>
-                    <Form.Label className="formFont">Type:</Form.Label>
-                    <Form.Control
-                      placeholder="Type"
-                      required
-                      onChange={(e) => this.setState({ type: e.target.value })}
-                      size="lg"
-                    />
+                  <Form.Label className="formFont">Type:</Form.Label>
+                  <Form.Control
+                    placeholder="Type"
+                    required
+                    onChange={(e) => this.setState({ type: e.target.value })}
+                    size="lg"
+                  />
                 </Form.Row>
                 <Form.Row>
-                    <Form.Label className="formFont">Manufacturer:</Form.Label>
-                    <Form.Control
-                      placeholder="Manufacturer"
-                      required
-                      onChange={(e) => this.setState({ manufacturer: e.target.value })}
-                      size="lg"
-                    />
+                  <Form.Label className="formFont">Manufacturer:</Form.Label>
+                  <Form.Control
+                    placeholder="Manufacturer"
+                    required
+                    onChange={(e) => this.setState({ manufacturer: e.target.value })}
+                    size="lg"
+                  />
                 </Form.Row>
 
                 <Form.Row>
-                    <Form.Label className="formFont">Model:</Form.Label>
-                    <Form.Control
-                      placeholder="Model"
-                      required
-                      onChange={(e) => this.setState({ model: e.target.value })}
-                      size="lg"
-                    />
+                  <Form.Label className="formFont">Model:</Form.Label>
+                  <Form.Control
+                    placeholder="Model"
+                    required
+                    onChange={(e) => this.setState({ model: e.target.value })}
+                    size="lg"
+                  />
                 </Form.Row>
                 <Form.Row>
-                    <Form.Label className="formFont">Serial:</Form.Label>
-                    <Form.Control
-                      placeholder="Serial"
-                      required
-                      onChange={(e) => this.setState({ serial: e.target.value })}
-                      size="lg"
-                    />
+                  <Form.Label className="formFont">Serial:</Form.Label>
+                  <Form.Control
+                    placeholder="Serial"
+                    required
+                    onChange={(e) => this.setState({ serial: e.target.value })}
+                    size="lg"
+                  />
                 </Form.Row>
                 <Form.Row>
                   <div className="submitButtonVRHMobile">
@@ -195,51 +195,51 @@ class VerifyLiteMobile extends Component {
             {this.state.accessPermitted && (
               <>
                 <Form.Row>
-                    <Form.Label className="formFont">First Name:</Form.Label>
-                    <Form.Control
-                      placeholder="First Name"
-                      required
-                      onChange={(e) => this.setState({ first: e.target.value })}
-                      size="lg"
-                    />
+                  <Form.Label className="formFont">First Name:</Form.Label>
+                  <Form.Control
+                    placeholder="First Name"
+                    required
+                    onChange={(e) => this.setState({ first: e.target.value })}
+                    size="lg"
+                  />
                 </Form.Row>
                 <Form.Row>
-                    <Form.Label className="formFont">Middle Name:</Form.Label>
-                    <Form.Control
-                      placeholder="Middle Name"
-                      required
-                      onChange={(e) => this.setState({ middle: e.target.value })}
-                      size="lg"
-                    />
+                  <Form.Label className="formFont">Middle Name:</Form.Label>
+                  <Form.Control
+                    placeholder="Middle Name"
+                    required
+                    onChange={(e) => this.setState({ middle: e.target.value })}
+                    size="lg"
+                  />
                 </Form.Row>
                 <Form.Row>
-                    <Form.Label className="formFont">Last Name:</Form.Label>
-                    <Form.Control
-                      placeholder="Last Name"
-                      required
-                      onChange={(e) => this.setState({ surname: e.target.value })}
-                      size="lg"
-                    />
+                  <Form.Label className="formFont">Last Name:</Form.Label>
+                  <Form.Control
+                    placeholder="Last Name"
+                    required
+                    onChange={(e) => this.setState({ surname: e.target.value })}
+                    size="lg"
+                  />
                 </Form.Row>
 
                 <Form.Row>
-                    <Form.Label className="formFont">ID Number:</Form.Label>
-                    <Form.Control
-                      placeholder="ID Number"
-                      required
-                      onChange={(e) => this.setState({ id: e.target.value })}
-                      size="lg"
-                    />
+                  <Form.Label className="formFont">ID Number:</Form.Label>
+                  <Form.Control
+                    placeholder="ID Number"
+                    required
+                    onChange={(e) => this.setState({ id: e.target.value })}
+                    size="lg"
+                  />
                 </Form.Row>
                 <Form.Row>
-                    <Form.Label className="formFont">Password:</Form.Label>
-                    <Form.Control
-                      placeholder="Password"
-                      type="password"
-                      required
-                      onChange={(e) => this.setState({ secret: e.target.value })}
-                      size="lg"
-                    />
+                  <Form.Label className="formFont">Password:</Form.Label>
+                  <Form.Control
+                    placeholder="Password"
+                    type="password"
+                    required
+                    onChange={(e) => this.setState({ secret: e.target.value })}
+                    size="lg"
+                  />
                 </Form.Row>
                 <Form.Row>
                   <div className="submitButtonVRHMobile">

@@ -2,9 +2,10 @@ import React, { Component } from "react";
 import Form from "react-bootstrap/Form";
 import Col from "react-bootstrap/Col";
 import Button from "react-bootstrap/Button";
-import { ArrowRightCircle, Home, XSquare } from 'react-feather'
+import returnManufacturers from "../Resources/Manufacturers";
+import { Trash2, Home, XSquare } from 'react-feather'
 
-class ModifyRecordStatusNC extends Component {
+class DiscardAssetNC extends Component {
   constructor(props) {
     super(props);
 
@@ -22,21 +23,21 @@ class ModifyRecordStatusNC extends Component {
 
     this.state = {
       addr: "",
+      lookupIPFS1: "",
+      lookupIPFS2: "",
       error: undefined,
       NRerror: undefined,
-      result1: "",
-      result2: "",
+      result: null,
       assetClass: undefined,
       ipfs1: "",
-      newStatus: "0",
       txHash: "",
-      txStatus: false,
       type: "",
       manufacturer: "",
       model: "",
       serial: "",
+      importAgent: "",
       isNFA: false,
-      status: "",
+      txStatus: null,
       hasLoadedAssets: false,
       assets: { descriptions: [0], ids: [0], assetClasses: [0], statuses: [0], names: [0] },
       transaction: undefined,
@@ -56,25 +57,18 @@ class ModifyRecordStatusNC extends Component {
     }
 
     this.setState({runWatchDog: true})
-  }
-
-
-
-  componentDidUpdate() {//stuff to do when state updates
 
   }
 
   componentWillUnmount() {//stuff do do when component unmounts from the window
 
   }
+  componentDidUpdate() {//stuff to do on a re-render
+
+  }
 
   render() {//render continuously produces an up-to-date stateful document  
     const self = this;
-
-    const clearForm = async () => {
-      document.getElementById("MainForm").reset();
-      this.setState({ idxHash: undefined, txStatus: undefined, txHash: "0" })
-    }
 
     const _checkIn = async (e) => {
       if (e === "null" || e === undefined) { return }
@@ -84,6 +78,7 @@ class ModifyRecordStatusNC extends Component {
       else if (e === "assetDash"){
         return window.location.href = "/#/asset-dashboard"
       }
+      if (window.assets.statuses[e] !== "59"){return alert("Asset not in discardable status(59)")}
       this.setState({ selectedAsset: e })
       console.log("Changed component idx to: ", window.assets.ids[e])
 
@@ -99,83 +94,51 @@ class ModifyRecordStatusNC extends Component {
       })
     }
 
-    const _modifyStatus = async () => {
+    const clearForm = async () => {
+      document.getElementById("MainForm").reset();
+      this.setState({ idxHash: undefined, txStatus: undefined, txHash: "0", wasSentPacket: undefined })
+    }
+
+    const _discardAsset = async () => {//create a new asset record
       this.setState({ txStatus: false });
       this.setState({ txHash: "" });
       this.setState({ error: undefined })
       this.setState({ result: "" })
+      //reset state values before form resubmission
       var idxHash = this.state.idxHash;
 
       console.log("idxHash", idxHash);
-      console.log("addr: ", window.addr);
+      console.log("addr: ", this.state.agentAddress);
 
-      var doesExist = await window.utils.checkAssetExists(idxHash);
+      window.contracts.A_TKN.methods
+        .discard(
+          idxHash
+        )
+        .send({ from: window.addr })
+        .on("error", function (_error) {
+          // self.setState({ NRerror: _error });
+          self.setState({ transaction: false })
+          self.setState({ txHash: Object.values(_error)[0].transactionHash });
+          self.setState({ txStatus: false });
+          console.log(Object.values(_error)[0].transactionHash);
+        })
+        .on("receipt", (receipt) => {
+          self.setState({ transaction: false })
+          this.setState({ txHash: receipt.transactionHash });
+          this.setState({ txStatus: receipt.status });
+          window.resetInfo = true;
+        });
 
-      if (!doesExist) {
-        return alert("Asset doesnt exist! Ensure data fields are correct before submission.")
-      }
-
-      if (
-        this.state.newStatus !== "53" && 
-        this.state.newStatus !== "54" && 
-        this.state.newStatus !== "57" && 
-        this.state.newStatus !== "58" &&   
-        Number(this.state.newStatus) < 100 && 
-        Number(this.state.newStatus) > 49) {
-
-        window.contracts.NP_NC.methods
-          ._modStatus(idxHash, this.state.newStatus)
-          .send({ from: window.addr })
-          .on("error", function (_error) {
-            // self.setState({ NRerror: _error });
-            self.setState({ txHash: Object.values(_error)[0].transactionHash });
-            self.setState({ txStatus: false });
-            console.log(Object.values(_error)[0].transactionHash);
-          })
-          .on("receipt", (receipt) => {
-            this.setState({ txHash: receipt.transactionHash });
-            this.setState({ txStatus: receipt.status });
-            console.log(receipt.status);
-            window.resetInfo = true;
-            //Stuff to do when tx confirms
-          });
-      }
-
-      else if (this.state.newStatus === "53" || this.state.newStatus === "54") {
-        window.contracts.NP_NC.methods
-          ._setLostOrStolen(idxHash, this.state.newStatus)
-          .send({ from: window.addr })
-          .on("error", function (_error) {
-            // self.setState({ NRerror: _error });
-            self.setState({ transaction: false })
-            self.setState({ txHash: Object.values(_error)[0].transactionHash });
-            self.setState({ txStatus: false });
-            console.log(Object.values(_error)[0].transactionHash);
-          })
-          .on("receipt", (receipt) => {
-            self.setState({ transaction: false })
-            this.setState({ txHash: receipt.transactionHash });
-            this.setState({ txStatus: receipt.status });
-            console.log(receipt.status);
-            window.resetInfo = true;
-            //Stuff to do when tx confirms
-          });
-      }
-
-      else { alert("Invalid status input") }
-
-      console.log(this.state.txHash);
-      return document.getElementById("MainForm").reset();
+      return document.getElementById("MainForm").reset(); //clear form inputs
     };
-
     if (this.state.wasSentPacket) {
-      return (
+      return (//default render
         <div>
           <div>
             <div className="mediaLinkAD-home">
               <a className="mediaLinkContentAD-home" ><Home onClick={() => { window.location.href = '/#/' }} /></a>
             </div>
-            <h2 className="FormHeader">Modify Asset Status</h2>
+            <h2 className="FormHeader">Export Asset</h2>
             <div className="mediaLink-clearForm">
               <a className="mediaLinkContent-clearForm" ><XSquare onClick={() => { clearForm() }} /></a>
             </div>
@@ -190,28 +153,15 @@ class ModifyRecordStatusNC extends Component {
             {window.addr > 0 && (
               <div>
                 <Form.Row>
-                  <Form.Group as={Col} controlId="formGridFormat">
-                    <Form.Label className="formFont">New Status:</Form.Label>
-                    <Form.Control as="select" size="lg" onChange={(e) => this.setState({ newStatus: e.target.value })}>
-                      <option value="0">Choose a status</option>
-                      <option value="51">Transferrable</option>
-                      <option value="52">Non-transferrable</option>
-                      <option value="53">Stolen</option>
-                      <option value="54">Lost</option>
-                      <option value="59">Discardable</option>
-                      <option value="51">Export-ready</option>
-                    </Form.Control>
-                  </Form.Group>
-                </Form.Row>
-
-                <Form.Row>
-                  <div className="submitButtonMRS2">
-                    <div className="submitButtonMRS2-content">
-                      <ArrowRightCircle
-                        onClick={() => { _modifyStatus() }}
-                      />
+                  <Form.Group>
+                    <div className="submitButtonEA2">
+                      <div className="submitButtonEA2-content">
+                        <Trash2
+                          onClick={() => { _discardAsset() }}
+                        />
+                      </div>
                     </div>
-                  </div>
+                  </Form.Group>
                 </Form.Row>
               </div>
             )}
@@ -271,13 +221,13 @@ class ModifyRecordStatusNC extends Component {
         </div>
       );
     }
-    return (
+    return (//default render
       <div>
         <div>
           <div className="mediaLinkAD-home">
             <a className="mediaLinkContentAD-home" ><Home onClick={() => { window.location.href = '/#/' }} /></a>
           </div>
-          <h2 className="FormHeader">Modify Asset Status</h2>
+          <h2 className="FormHeader">Discard Asset</h2>
           <div className="mediaLink-clearForm">
             <a className="mediaLinkContent-clearForm" ><XSquare onClick={() => { clearForm() }} /></a>
           </div>
@@ -293,7 +243,7 @@ class ModifyRecordStatusNC extends Component {
             <div>
               <Form.Row>
                 <Form.Group as={Col} controlId="formGridAsset">
-                  <Form.Label className="formFont"> Select an Asset to Modify :</Form.Label>
+                  <Form.Label className="formFont"> Select an Asset to Discard :</Form.Label>
                   <Form.Control
                     as="select"
                     size="lg"
@@ -307,34 +257,21 @@ class ModifyRecordStatusNC extends Component {
                     {window.utils.generateAssets()}
                     </optgroup>)}
                     {!this.state.hasLoadedAssets && (<optgroup ><option value="null"> Loading Assets... </option></optgroup>)}
-
                   </Form.Control>
                 </Form.Group>
               </Form.Row>
               <Form.Row>
-                <Form.Group as={Col} controlId="formGridFormat">
-                  <Form.Label className="formFont">New Status:</Form.Label>
-                  <Form.Control as="select" size="lg" onChange={(e) => this.setState({ newStatus: e.target.value })}>
-                    <option value="0">Choose a status</option>
-                    <option value="51">Transferrable</option>
-                    <option value="52">Non-transferrable</option>
-                    <option value="53">Stolen</option>
-                    <option value="54">Lost</option>
-                    <option value="59">Discardable</option>
-                    <option value="51">Export-ready</option>
-                  </Form.Control>
-                </Form.Group>
-              </Form.Row>
-
-              <Form.Row>
-                <div className="submitButtonMRS">
-                  <div className="submitButtonMRS-content">
-                    <ArrowRightCircle
-                      onClick={() => { _modifyStatus() }}
-                    />
+                <Form.Group>
+                  <div className="submitButtonEA">
+                    <div className="submitButtonEA-content">
+                      <Trash2
+                        onClick={() => { _discardAsset() }}
+                      />
+                    </div>
                   </div>
-                </div>
+                </Form.Group>
               </Form.Row>
+
             </div>
           )}
         </Form>
@@ -351,7 +288,7 @@ class ModifyRecordStatusNC extends Component {
             )}
           </Form.Row>
         </div>
-        {this.state.transaction === true && this.state.txStatus === undefined &&(
+        {this.state.transaction === true && (
 
           <div className="Results">
             {/* {this.state.pendingTx === undefined && ( */}
@@ -395,4 +332,4 @@ class ModifyRecordStatusNC extends Component {
   }
 }
 
-export default ModifyRecordStatusNC;
+export default DiscardAssetNC;

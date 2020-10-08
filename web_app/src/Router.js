@@ -41,6 +41,8 @@ import ModifyRecordStatusNC from "./NonCustodial/ModifyRecordStatusNC";
 import NewRecordNC from "./NonCustodial/NewRecordNC";
 import TransferAssetNC from "./NonCustodial/TransferAssetNC";
 import AssetDashboard from "./NonCustodial/AssetDashboard"
+import RecycleAssetNC from "./NonCustodial/RecycleAssetNC";
+import DiscardAssetNC from "./NonCustodial/DiscardAssetNC"
 
 function Router(routeRequest) {
     if (routeRequest === "authUser") {
@@ -82,6 +84,8 @@ function Router(routeRequest) {
                 <Route path="/mint-pip-asset" component={MintPipAsset} />
                 <Route path="/claim-pip-asset" component={ClaimPipAsset} />
                 <Route path="/asset-dashboard" component={AssetDashboard} />
+                <Route path="/recycle-asset-NC" component={RecycleAssetNC} />
+                <Route path="/discard-asset-NC" component={DiscardAssetNC} />
             </>)
     }
 
@@ -102,6 +106,8 @@ function Router(routeRequest) {
                 <Route path="/mint-pip-asset" component={MintPipAsset} />
                 <Route path="/claim-pip-asset" component={ClaimPipAsset} />
                 <Route path="/asset-dashboard" component={AssetDashboard} />
+                <Route path="/recycle-asset-NC" component={RecycleAssetNC} />
+                <Route path="/discard-asset-NC" component={DiscardAssetNC} />
             </>)
     }
 

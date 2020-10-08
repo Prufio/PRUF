@@ -596,6 +596,7 @@ class RetrieveRecord extends Component {
                 </Form.Row>
               </div>
             </Form>
+            <div className="Results"></div>
             </div>
           )}
           
