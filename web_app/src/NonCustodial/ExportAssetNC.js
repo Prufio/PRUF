@@ -72,14 +72,16 @@ class ExportAssetNC extends Component {
     const self = this;
 
     const _checkIn = async (e) => {
-      if (e === "null" || e === undefined) { return }
+      if (e === "null" || e === undefined) { 
+        return clearForm()
+      }
       else if (e === "reset") {
         return window.resetInfo = true;
       }
       else if (e === "assetDash"){
         return window.location.href = "/#/asset-dashboard"
       }
-      if (window.assets.statuses[e] !== "51"){return alert("Cannot export asset in non-transferrable status")}
+      if (window.assets.statuses[e] !== "51"){alert("Cannot export asset in non-transferrable status"); return clearForm()}
       this.setState({ selectedAsset: e })
       console.log("Changed component idx to: ", window.assets.ids[e])
 
@@ -252,9 +254,7 @@ class ExportAssetNC extends Component {
                   >
                     {this.state.hasLoadedAssets && (
                     <optgroup className="optgroup">
-                    <option value="null"> Select an asset </option>
-                    <option value="assetDash">View Assets in Dashboard</option>
-                    <option value="reset">Refresh Assets</option>
+
                     {window.utils.generateAssets()}
                     </optgroup>)}
                     {!this.state.hasLoadedAssets && (<optgroup ><option value="null"> Loading Assets... </option></optgroup>)}

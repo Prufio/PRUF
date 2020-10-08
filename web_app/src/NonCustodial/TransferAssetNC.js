@@ -70,15 +70,20 @@ class ModifyDescriptionNC extends Component {
     const self = this;
 
     const _checkIn = async (e) => {
-      if (e === "0" || e === undefined) { return }
+
+      console.log("Checking in with id: ", e)
+      if (e === "null" || e === undefined) { 
+        return clearForm()
+      }
       else if (e === "reset") {
         return window.resetInfo = true;
       }
       else if (e === "assetDash"){
+        console.log("heading over to dashboard")
         return window.location.href = "/#/asset-dashboard"
       }
 
-      if (window.assets.statuses[e] !== "1"){return alert("Asset not in transferrable status")}
+      if (window.assets.statuses[e] !== "1"){alert("Asset not in transferrable status"); return clearForm()}
       this.setState({ selectedAsset: e })
       console.log("Changed component idx to: ", window.assets.ids[e])
 
@@ -267,9 +272,7 @@ class ModifyDescriptionNC extends Component {
                   >
                     {this.state.hasLoadedAssets && (
                     <optgroup className="optgroup">
-                    <option value="null"> Select an asset </option>
-                    <option value="assetDash">View Assets in Dashboard</option>
-                    <option value="reset">Refresh Assets</option>
+
                     {window.utils.generateAssets()}
                     </optgroup>)}
                     {!this.state.hasLoadedAssets && (<optgroup ><option value="null"> Loading Assets... </option></optgroup>)}

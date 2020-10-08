@@ -113,7 +113,9 @@ class AddNoteNC extends Component {
     };
 
     const _checkIn = async (e) => {
-      if (e === "0" || e === undefined) { return }
+      if (e === "null" || e === undefined) { 
+        return clearForm()
+      }
       else if (e === "reset") {
         return window.resetInfo = true;
       }
@@ -121,7 +123,7 @@ class AddNoteNC extends Component {
         return window.location.href = "/#/asset-dashboard"
       }
       if (await window.utils.checkNoteExists(window.assets.ids[e])) {
-        return alert("Asset note already exists! Cannot overwrite existing note.")
+        alert("Asset note already exists! Cannot overwrite existing note."); return clearForm()
       }
 
       this.setState({ selectedAsset: e })
@@ -320,9 +322,6 @@ class AddNoteNC extends Component {
                   >
                     {this.state.hasLoadedAssets && (
                     <optgroup className="optgroup">
-                    <option value="null"> Select an asset </option>
-                    <option value="assetDash">View Assets in Dashboard</option>
-                    <option value="reset">Refresh Assets</option>
                     {window.utils.generateAssets()}
                     </optgroup>)}
                     {!this.state.hasLoadedAssets && (<optgroup ><option value="null"> Loading Assets... </option></optgroup>)}

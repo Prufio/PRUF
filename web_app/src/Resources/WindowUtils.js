@@ -88,7 +88,10 @@ function buildWindowUtils() {
 
   const _generateAssets = () => {
     if (window.assets.names.length > 0) {
-      let component = [];
+      let component = [
+      <option key="noselect" value="null"> Select an asset </option>,
+      <option key="assetDashLink" value="assetDash">View Assets in Dashboard</option>,
+      <option key="resetList" value="reset">Refresh Assets</option>];
 
       for (let i = 0; i < window.assets.ids.length; i++) {
         component.push(<option size="lg" key={"asset " + String(i)} value={i}> 
