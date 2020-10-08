@@ -48,6 +48,30 @@ class RetrieveRecord extends Component {
       let text = Object.values(obj.text)
       let imageNames = Object.keys(obj.photo)
       let textNames = Object.keys(obj.text)
+      let status = "";
+
+      if (obj.status === "50") { status="In Locked Escrow" }
+      else if (obj.status === "51") { status="Transferrable" }
+      else if (obj.status === "52") { status="Non-Transferrable" }
+      else if (obj.status === "53") { status="MARKED STOLEN" }
+      else if (obj.status === "54") { status="MARKED LOST" }
+      else if (obj.status === "55") { status="Transferred/Unclaimed" }
+      else if (obj.status === "56") { status="In Escrow" }
+      else if (obj.status === "57") { status="Escrow Ended" }
+      else if (obj.status === "58") { status="Locked Escrow Ended" }
+      else if (obj.status === "59") { status="Discardable" }
+      else if (obj.status === "60") { status="Recyclable" }
+      else if (obj.status === "70") { status="Exported" }
+      else if (obj.status === "0") { status="No Status Set" }
+      else if (obj.status === "1") { status="Transferrable" }
+      else if (obj.status === "2") { status="Non-Transferrable" }
+      else if (obj.status === "3") { status="MARKED STOLEN" }
+      else if (obj.status === "4") { status="MARKED LOST" }
+      else if (obj.status === "5") { status="Transferred/Unclaimed" }
+      else if (obj.status === "6") { status="In Escrow" }
+      else if (obj.status === "7") { status="Escrow Ended" }
+
+      else{status = "Invalid Status Retrieved"}
 
       const showImage = (e) => {
         console.log(this.state.selectedImage)
@@ -65,7 +89,7 @@ class RetrieveRecord extends Component {
 
         for (let i = 0; i < images.length; i++) {
           component.push(
-            <button key={"thumb"+String(i)} value={images[i]} className="assetImageSelectorButton" onClick={() => { showImage(images[i]) }}>
+            <button key={"thumb" + String(i)} value={images[i]} className="assetImageSelectorButton" onClick={() => { showImage(images[i]) }}>
               <img src={images[i]} className="imageSelectorImage" />
             </button>
           )
@@ -81,7 +105,7 @@ class RetrieveRecord extends Component {
         for (let i = 0; i < text.length; i++) {
           component.push(
             <>
-              <h4 key={"text" + String(i)}className="card-description-selected">{textNames[i]}: {text[i]}</h4>
+              <h4 key={"text" + String(i)} className="card-description-selected">{textNames[i]}: {text[i]}</h4>
               <br />
             </>
           )
@@ -115,7 +139,7 @@ class RetrieveRecord extends Component {
                 </button>
                 <p className="card-name-selected">Name : {obj.name}</p>
                 <p className="card-ac-selected">Asset Class : {obj.assetClass}</p>
-                <p className="card-status-selected">Status : {obj.status}</p>
+                <p className="card-status-selected">Status : {status}</p>
                 <div className="imageSelector">
                   {generateThumbs()}
                 </div>
@@ -202,26 +226,6 @@ class RetrieveRecord extends Component {
               self.setState({ error: _error });
               self.setState({ result: 0 });
             } else {
-              if (Object.values(_result)[0] === '0') { self.setState({ status: 'No status set' }); }
-              else if (Object.values(_result)[0] === '1') { self.setState({ status: 'Transferrable' }); }
-              else if (Object.values(_result)[0] === '2') { self.setState({ status: 'Non-transferrable' }); }
-              else if (Object.values(_result)[0] === '3') { self.setState({ status: 'REPORTED STOLEN' }); }
-              else if (Object.values(_result)[0] === '4') { self.setState({ status: 'REPORTED LOST' }); }
-              else if (Object.values(_result)[0] === '5') { self.setState({ status: 'Asset in Transfer' }); }
-              else if (Object.values(_result)[0] === '6') { self.setState({ status: 'In escrow (block.number locked)' }); }
-              else if (Object.values(_result)[0] === '7') { self.setState({ status: 'Out of supervised escrow' }); }
-              else if (Object.values(_result)[0] === '50') { self.setState({ status: 'In Locked Escrow (block.number locked)' }); }
-              else if (Object.values(_result)[0] === '51') { self.setState({ status: 'Transferable' }); }
-              else if (Object.values(_result)[0] === '52') { self.setState({ status: 'Non-transferrable' }); }
-              else if (Object.values(_result)[0] === '53') { self.setState({ status: 'REPORTED STOLEN' }); }
-              else if (Object.values(_result)[0] === '54') { self.setState({ status: 'REPORTED LOST' }); }
-              else if (Object.values(_result)[0] === '55') { self.setState({ status: 'Asset in Transfer' }); }
-              else if (Object.values(_result)[0] === '56') { self.setState({ status: 'In escrow (block.number locked)' }); }
-              else if (Object.values(_result)[0] === '57') { self.setState({ status: 'Out of supervised escrow' }); }
-              else if (Object.values(_result)[0] === '58') { self.setState({ status: 'Out of locked escrow' }); }
-              else if (Object.values(_result)[0] === '59') { self.setState({ status: 'Discardable' }); }
-              else if (Object.values(_result)[0] === '60') { self.setState({ status: 'Recycleable' }); }
-              else if (Object.values(_result)[0] === '70') { self.setState({ status: 'Importable' }); }
               self.setState({ result: Object.values(_result) })
               self.setState({ error: undefined });
               tempResult = Object.values(_result);
@@ -355,7 +359,7 @@ class RetrieveRecord extends Component {
 
 
   }
-  
+
   componentDidUpdate() {//stuff to do when state updates
 
 
@@ -438,26 +442,6 @@ class RetrieveRecord extends Component {
             self.setState({ error: _error });
             self.setState({ result: 0 });
           } else {
-            if (Object.values(_result)[0] === '0') { self.setState({ status: 'No status set' }); }
-            else if (Object.values(_result)[0] === '1') { self.setState({ status: 'Transferrable' }); }
-            else if (Object.values(_result)[0] === '2') { self.setState({ status: 'Non-transferrable' }); }
-            else if (Object.values(_result)[0] === '3') { self.setState({ status: 'REPORTED STOLEN' }); }
-            else if (Object.values(_result)[0] === '4') { self.setState({ status: 'REPORTED LOST' }); }
-            else if (Object.values(_result)[0] === '5') { self.setState({ status: 'Asset in Transfer' }); }
-            else if (Object.values(_result)[0] === '6') { self.setState({ status: 'In escrow (block.number locked)' }); }
-            else if (Object.values(_result)[0] === '7') { self.setState({ status: 'Out of supervised escrow' }); }
-            else if (Object.values(_result)[0] === '50') { self.setState({ status: 'In Locked Escrow (block.number locked)' }); }
-            else if (Object.values(_result)[0] === '51') { self.setState({ status: 'Transferable' }); }
-            else if (Object.values(_result)[0] === '52') { self.setState({ status: 'Non-transferrable' }); }
-            else if (Object.values(_result)[0] === '53') { self.setState({ status: 'REPORTED STOLEN' }); }
-            else if (Object.values(_result)[0] === '54') { self.setState({ status: 'REPORTED LOST' }); }
-            else if (Object.values(_result)[0] === '55') { self.setState({ status: 'Asset in Transfer' }); }
-            else if (Object.values(_result)[0] === '56') { self.setState({ status: 'In escrow (block.number locked)' }); }
-            else if (Object.values(_result)[0] === '57') { self.setState({ status: 'Out of supervised escrow' }); }
-            else if (Object.values(_result)[0] === '58') { self.setState({ status: 'Out of locked escrow' }); }
-            else if (Object.values(_result)[0] === '59') { self.setState({ status: 'Discardable' }); }
-            else if (Object.values(_result)[0] === '60') { self.setState({ status: 'Recycleable' }); }
-            else if (Object.values(_result)[0] === '70') { self.setState({ status: 'Importable' }); }
             self.setState({ result: Object.values(_result) })
             self.setState({ error: undefined });
             tempResult = Object.values(_result);
@@ -495,15 +479,15 @@ class RetrieveRecord extends Component {
       return (
         <div>
           <div>
-          <div>
-          <div className="mediaLinkAD-home">
-            <a className="mediaLinkContentAD-home" ><Home onClick={() => { window.location.href = '/#/' }} /></a>
-          </div>
-          <h2 className="AssetDashboardHeader">Here's What We Found :</h2>
-          <div className="mediaLink-clearForm">
-            <a className="mediaLinkContent-clearForm" ><XSquare onClick={() => { document.getElementById("MainForm").reset() }} /></a>
-          </div>
-        </div>
+            <div>
+              <div className="mediaLinkAD-home">
+                <a className="mediaLinkContentAD-home" ><Home onClick={() => { window.location.href = '/#/' }} /></a>
+              </div>
+              <h2 className="AssetDashboardHeader">Here's What We Found :</h2>
+              <div className="mediaLink-clearForm">
+                <a className="mediaLinkContent-clearForm" ><XSquare onClick={() => { document.getElementById("MainForm").reset() }} /></a>
+              </div>
+            </div>
           </div>
           <div className="assetDashboard">
             {this.state.assetObj !== undefined && (<>{this.generateAssetInfo(this.state.assetObj)}</>)}
@@ -519,111 +503,111 @@ class RetrieveRecord extends Component {
         <div>
           {!this.state.moreInfo && this.state.QRreader === undefined && (
             <div>
-                            <div>
-          <div className="mediaLinkAD-home">
-            <a className="mediaLinkContentAD-home" ><Home onClick={() => { window.location.href = '/#/' }} /></a>
-          </div>
-          <h2 className="FormHeader">Search Database</h2>
-          <div className="mediaLink-clearForm">
-            <a className="mediaLinkContent-clearForm" ><XSquare onClick={() => { document.getElementById("MainForm").reset() }} /></a>
-          </div>
-        </div>
-            <Form className="Form" id="MainForm">
               <div>
-                <Form.Row>
-                  <Form.Group as={Col} controlId="formGridType">
-                    <Form.Label className="formFont">Type:</Form.Label>
-                    <Form.Control
-                      placeholder="Type"
-                      required
-                      onChange={(e) => this.setState({ type: e.target.value })}
-                      size="lg"
-                    />
-                  </Form.Group>
-
-                  <Form.Group as={Col} controlId="formGridManufacturer">
-                    <Form.Label className="formFont">Manufacturer:</Form.Label>
-                    <Form.Control
-                      placeholder="Manufacturer"
-                      required
-                      onChange={(e) => this.setState({ manufacturer: e.target.value })}
-                      size="lg"
-                    />
-                  </Form.Group>
-
-                </Form.Row>
-
-                <Form.Row>
-                  <Form.Group as={Col} controlId="formGridModel">
-                    <Form.Label className="formFont">Model:</Form.Label>
-                    <Form.Control
-                      placeholder="Model"
-                      required
-                      onChange={(e) => this.setState({ model: e.target.value })}
-                      size="lg"
-                    />
-                  </Form.Group>
-
-                  <Form.Group as={Col} controlId="formGridSerial">
-                    <Form.Label className="formFont">Serial:</Form.Label>
-                    <Form.Control
-                      placeholder="Serial"
-                      required
-                      onChange={(e) => this.setState({ serial: e.target.value })}
-                      size="lg"
-                    />
-                  </Form.Group>
-                </Form.Row>
-
-                <Form.Row>
-                  <Form.Group>
-                    <div className="submitButtonRR">
-                      <div className="submitButtonRR-content">
-                        <ArrowRightCircle
-                          onClick={() => { _retrieveRecord() }}
-                        />
-                      </div>
-                    </div>
-                    <div className="submitButtonRRQR">
-                      <div className="submitButtonRRQR-content">
-                        <Grid
-                          onClick={() => { QRReader() }}
-                        />
-                      </div>
-                    </div>
-                  </Form.Group>
-
-                </Form.Row>
+                <div className="mediaLinkAD-home">
+                  <a className="mediaLinkContentAD-home" ><Home onClick={() => { window.location.href = '/#/' }} /></a>
+                </div>
+                <h2 className="FormHeader">Search Database</h2>
+                <div className="mediaLink-clearForm">
+                  <a className="mediaLinkContent-clearForm" ><XSquare onClick={() => { document.getElementById("MainForm").reset() }} /></a>
+                </div>
               </div>
-            </Form>
-            <div className="Results"></div>
+              <Form className="Form" id="MainForm">
+                <div>
+                  <Form.Row>
+                    <Form.Group as={Col} controlId="formGridType">
+                      <Form.Label className="formFont">Type:</Form.Label>
+                      <Form.Control
+                        placeholder="Type"
+                        required
+                        onChange={(e) => this.setState({ type: e.target.value })}
+                        size="lg"
+                      />
+                    </Form.Group>
+
+                    <Form.Group as={Col} controlId="formGridManufacturer">
+                      <Form.Label className="formFont">Manufacturer:</Form.Label>
+                      <Form.Control
+                        placeholder="Manufacturer"
+                        required
+                        onChange={(e) => this.setState({ manufacturer: e.target.value })}
+                        size="lg"
+                      />
+                    </Form.Group>
+
+                  </Form.Row>
+
+                  <Form.Row>
+                    <Form.Group as={Col} controlId="formGridModel">
+                      <Form.Label className="formFont">Model:</Form.Label>
+                      <Form.Control
+                        placeholder="Model"
+                        required
+                        onChange={(e) => this.setState({ model: e.target.value })}
+                        size="lg"
+                      />
+                    </Form.Group>
+
+                    <Form.Group as={Col} controlId="formGridSerial">
+                      <Form.Label className="formFont">Serial:</Form.Label>
+                      <Form.Control
+                        placeholder="Serial"
+                        required
+                        onChange={(e) => this.setState({ serial: e.target.value })}
+                        size="lg"
+                      />
+                    </Form.Group>
+                  </Form.Row>
+
+                  <Form.Row>
+                    <Form.Group>
+                      <div className="submitButtonRR">
+                        <div className="submitButtonRR-content">
+                          <ArrowRightCircle
+                            onClick={() => { _retrieveRecord() }}
+                          />
+                        </div>
+                      </div>
+                      <div className="submitButtonRRQR">
+                        <div className="submitButtonRRQR-content">
+                          <Grid
+                            onClick={() => { QRReader() }}
+                          />
+                        </div>
+                      </div>
+                    </Form.Group>
+
+                  </Form.Row>
+                </div>
+              </Form>
+              <div className="Results"></div>
             </div>
           )}
-          
+
 
           {this.state.QRreader === true && (
             <div>
-                    <div>
-          <div className="mediaLinkAD-home">
-            <a className="mediaLinkContentAD-home" ><Home onClick={() => { window.location.href = '/#/' }} /></a>
-          </div>
-          <h2 className="FormHeader">Search Database</h2>
-          <div className="mediaLink-back">
-            <a className="mediaLinkContent-back" ><CornerUpLeft onClick={() => { QRReader() }} /></a>
-          </div>
-        </div>
-            <div className="QRreader">
-              <QrReader
-                delay={300}
-                onError={this.handleError}
-                onScan={this.handleScan}
-                style={{ width: '100%' }}
-              />
-              {this.state.result !== undefined && (
-                <div className="Results">
-                  {this.state.assetFound}
+              <div>
+                <div className="mediaLinkAD-home">
+                  <a className="mediaLinkContentAD-home" ><Home onClick={() => { window.location.href = '/#/' }} /></a>
                 </div>
-              )}
+                <h2 className="FormHeader">Search Database</h2>
+                <div className="mediaLink-back">
+                  <a className="mediaLinkContent-back" ><CornerUpLeft onClick={() => { QRReader() }} /></a>
+                </div>
+              </div>
+              <div className="QRreader">
+                <QrReader
+                  delay={300}
+                  onError={this.handleError}
+                  onScan={this.handleScan}
+                  style={{ width: '100%' }}
+                />
+                {this.state.result !== undefined && (
+                  <div className="Results">
+                    {this.state.assetFound}
+                  </div>
+                )}
               </div>
             </div>
           )}

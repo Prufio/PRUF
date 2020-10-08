@@ -764,8 +764,19 @@ const _getAssetTokenInfo = async () => {
             else {
               noteArray.push("0")
             }
-            
-            statuses.push(Object.values(_result)[0])
+
+            if(_result[0] === "50") {statuses.push("In Locked Escrow")}
+            else if(_result[0] === "51") {statuses.push("Transferrable")}
+            else if(_result[0] === "52") {statuses.push("Non-Transferrable")}
+            else if(_result[0] === "53") {statuses.push("MARKED STOLEN")}
+            else if(_result[0] === "54") {statuses.push("MARKED LOST")}
+            else if(_result[0] === "55") {statuses.push("Transferred/Unclaimed")}
+            else if(_result[0] === "56") {statuses.push("In Escrow")}
+            else if(_result[0] === "57") {statuses.push("Escrow Ended")}
+            else if(_result[0] === "58") {statuses.push("Locked Escrow Ended")}
+            else if(_result[0] === "59") {statuses.push("Discardable")}
+            else if(_result[0] === "60") {statuses.push("Recyclable")}
+            else if(_result[0] === "70") {statuses.push("Exported")}
             assetClasses.push(Object.values(_result)[2])
 
           }
