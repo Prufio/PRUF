@@ -415,6 +415,7 @@ class NewRecordNC extends Component {
               <p className="loading">Transaction In Progress</p>
             )} */}
           </div>)}
+          {this.state.transaction === false && (
         <div className="Results">
           {this.state.txHash > 0 && ( //conditional rendering
 
@@ -449,6 +450,7 @@ class NewRecordNC extends Component {
 
           )}
         </div>
+          )}
       </div>
     )
   }

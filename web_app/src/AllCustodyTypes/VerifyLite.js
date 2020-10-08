@@ -1,20 +1,62 @@
 import React, { Component } from "react";
 import Form from "react-bootstrap/Form";
 import Col from "react-bootstrap/Col";
-import { Home, XSquare, ArrowRightCircle } from "react-feather";
+import { Home, XSquare, ArrowRightCircle, Grid, CornerUpLeft } from "react-feather";
+import QrReader from 'react-qr-reader'
 
 class VerifyLite extends Component {
   constructor(props) {
     super(props);
 
+
     //State declaration.....................................................................................................
+
+
+    this.accessAsset = async () => {
+      let idxHash;
+      if (this.state.QRreader === false) {
+        if (this.state.manufacturer === ""
+          || this.state.type === ""
+          || this.state.model === ""
+          || this.state.serial === "") {
+          return alert("Please fill out all fields before submission")
+        }
+
+
+        idxHash = window.web3.utils.soliditySha3(
+          String(this.state.type),
+          String(this.state.manufacturer),
+          String(this.state.model),
+          String(this.state.serial),
+        );
+      }
+      else {
+        idxHash = this.state.result
+      }
+
+      let doesExist = await window.utils.checkAssetExists(idxHash);
+
+      if (!doesExist) {
+        return alert("Asset doesnt exist! Ensure data fields are correct before submission.")
+      }
+
+      console.log("idxHash", idxHash);
+      // console.log("rgtHash", rgtHash);
+
+      return this.setState({
+        idxHash: idxHash,
+        QRreader: false,
+        accessPermitted: true
+      })
+
+    }
 
     this.state = {
       addr: "",
       error: undefined,
       error1: undefined,
+      VLresult: "",
       result: "",
-      result1: "",
       assetClass: undefined,
       ipfs1: "",
       txHash: "",
@@ -28,6 +70,7 @@ class VerifyLite extends Component {
       surname: "",
       id: "",
       secret: "",
+      QRreader: false,
       isNFA: false,
     };
   }
@@ -51,52 +94,52 @@ class VerifyLite extends Component {
     return { hasError: true };
   }
 
+  handleScan = async (data) => {
+    if (data) {
+      let tempBool = await window.utils.checkAssetExists(data)
+      if (tempBool === true) {
+        this.setState({
+          result: data,
+          QRRR: true,
+          assetFound: "Asset Found!"
+        })
+        console.log(data)
+        this.accessAsset()
+      }
+      else {
+        this.setState({
+          assetFound: "Asset Not Found",
+        })
+      }
+    }
+  }
+
+  handleError = err => {
+    console.error(err)
+  }
+
   render() {//render continuously produces an up-to-date stateful document  
     const self = this;
 
-    const _accessAsset = async () => {
-
-      if (this.state.manufacturer === ""
-        || this.state.type === ""
-        || this.state.model === ""
-        || this.state.serial === "") {
-        return alert("Please fill out all fields before submission")
+    const QRReader = async () => {
+      if (this.state.QRreader === false) {
+        this.setState({ QRreader: true, assetFound: "" })
       }
-
-      let idxHash = window.web3.utils.soliditySha3(
-        String(this.state.type),
-        String(this.state.manufacturer),
-        String(this.state.model),
-        String(this.state.serial),
-      );
-
-      let doesExist = await window.utils.checkAssetExists(idxHash);
-
-      if (!doesExist) {
-        return alert("Asset doesnt exist! Ensure data fields are correct before submission.")
+      else {
+        this.setState({ QRreader: false })
       }
-
-      console.log("idxHash", idxHash);
-      // console.log("rgtHash", rgtHash);
-
-      return this.setState({
-        idxHash: idxHash,
-        // rgtHash: rgtHash,
-        accessPermitted: true
-      })
-
     }
 
     const clearForm = async () => {
       document.getElementById("MainForm").reset();
-      this.setState ({ result: "", accessPermitted: false })
+      this.setState({ VLresult: "", accessPermitted: false })
     }
 
     const _verify = async () => {
       this.setState({ txStatus: false });
       this.setState({ txHash: "" });
       this.setState({ error: undefined })
-      this.setState({ result: "" })
+      this.setState({ VLresult: "" })
       var idxHash = this.state.idxHash;
 
       let rgtRaw = window.web3.utils.soliditySha3(
@@ -121,28 +164,30 @@ class VerifyLite extends Component {
       }
 
       if (!infoMatches) {
-        await this.setState({ result: "0" })
+        await this.setState({ VLresult: "0" })
       }
 
-      if (infoMatches) { await this.setState({ result: "170" }); }
+      if (infoMatches) { await this.setState({ VLresult: "170" }); }
 
       return document.getElementById("MainForm").reset();
     };
 
     return (
       <div>
-        <div>
-          <div className="mediaLinkAD-home">
-            <a className="mediaLinkContentAD-home" ><Home onClick={() => { window.location.href = '/#/' }} /></a>
+        {this.state.QRreader === false && (
+          <div>
+            <div className="mediaLinkAD-home">
+              <a className="mediaLinkContentAD-home" ><Home onClick={() => { window.location.href = '/#/' }} /></a>
+            </div>
+            <h2 className="FormHeader">Verify Lite</h2>
+            <div className="mediaLink-clearForm">
+              <a className="mediaLinkContent-clearForm" ><XSquare onClick={() => { clearForm() }} /></a>
+            </div>
           </div>
-          <h2 className="FormHeader">Verify Lite</h2>
-          <div className="mediaLink-clearForm">
-            <a className="mediaLinkContent-clearForm" ><XSquare onClick={() => { clearForm() }} /></a>
-          </div>
-        </div>
+        )}
         <Form className="Form" id='MainForm'>
           <div>
-            {!this.state.accessPermitted && (
+            {!this.state.accessPermitted && this.state.QRreader === false && (
               <>
                 <Form.Row>
                   <Form.Group as={Col} controlId="formGridType">
@@ -192,12 +237,45 @@ class VerifyLite extends Component {
                   <div className="submitButtonVRH">
                     <div className="submitButtonVRH-content">
                       <ArrowRightCircle
-                        onClick={() => { _accessAsset() }}
+                        onClick={() => { this.accessAsset() }}
+                      />
+                    </div>
+                  </div>
+                  <div className="submitButtonRRQR">
+                    <div className="submitButtonRRQR-content">
+                      <Grid
+                        onClick={() => { QRReader() }}
                       />
                     </div>
                   </div>
                 </Form.Row>
               </>
+            )}
+            {this.state.QRreader === true && (
+              <div>
+                <div>
+                  <div className="mediaLinkAD-home">
+                    <a className="mediaLinkContentAD-home" ><Home onClick={() => { window.location.href = '/#/' }} /></a>
+                  </div>
+                  <h2 className="FormHeader">Scan QR</h2>
+                  <div className="mediaLink-back">
+                    <a className="mediaLinkContent-back" ><CornerUpLeft onClick={() => { QRReader() }} /></a>
+                  </div>
+                </div>
+                <div className="QRreader">
+                  <QrReader
+                    delay={300}
+                    onError={this.handleError}
+                    onScan={this.handleScan}
+                    style={{ width: '100%' }}
+                  />
+                  {this.state.result !== undefined && (
+                    <div className="Results">
+                      {this.state.assetFound}
+                    </div>
+                  )}
+                </div>
+              </div>
             )}
             {this.state.accessPermitted && (
               <>
@@ -268,19 +346,21 @@ class VerifyLite extends Component {
             )}
           </div>
         </Form>
-        <div className="Results">
+        {this.state.QRreader === false && (
+          <div className="Results">
 
-          {this.state.result !== "" && ( //conditional rendering
-            <Form.Row>
-              {
-                this.state.result === "170"
-                  ? "Match Confirmed"
-                  : "No Match Found"
-              }
-            </Form.Row>
-          )}
+            {this.state.VLresult !== "" && ( //conditional rendering 7
+              <Form.Row>
+                {
+                  this.state.VLresult === "170"
+                    ? "Match Confirmed"
+                    : "No Match Found"
+                }
+              </Form.Row>
+            )}
 
-        </div>
+          </div>
+        )}
       </div>
     );
   }
