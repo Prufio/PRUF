@@ -405,7 +405,7 @@ class NewRecordNC extends Component {
             </div>
           )}
         </Form>
-        {this.state.transaction === true && this.state.txStatus === undefined && (
+        {this.state.transaction === true && (
 
           <div className="Results">
             {/* {this.state.pendingTx === undefined && ( */}
