@@ -65,7 +65,7 @@ class RetrieveRecord extends Component {
 
         for (let i = 0; i < images.length; i++) {
           component.push(
-            <button key={"thumb"+String(i)} value={images[i]} className="assetImageSelectorButton" onClick={() => { showImage(images[i]) }}>
+            <button key={"thumb" + String(i)} value={images[i]} className="assetImageSelectorButton" onClick={() => { showImage(images[i]) }}>
               <img src={images[i]} className="imageSelectorImage" />
             </button>
           )
@@ -81,7 +81,7 @@ class RetrieveRecord extends Component {
         for (let i = 0; i < text.length; i++) {
           component.push(
             <>
-              <h4 key={"text" + String(i)}className="card-description-selected">{textNames[i]}: {text[i]}</h4>
+              <h4 key={"text" + String(i)} className="card-description-selected">{textNames[i]}: {text[i]}</h4>
               <br />
             </>
           )
@@ -355,7 +355,7 @@ class RetrieveRecord extends Component {
 
 
   }
-  
+
   componentDidUpdate() {//stuff to do when state updates
 
 
@@ -495,15 +495,15 @@ class RetrieveRecord extends Component {
       return (
         <div>
           <div>
-          <div>
-          <div className="mediaLinkAD-home">
-            <a className="mediaLinkContentAD-home" ><Home onClick={() => { window.location.href = '/#/' }} /></a>
-          </div>
-          <h2 className="AssetDashboardHeader">Here's What We Found :</h2>
-          <div className="mediaLink-clearForm">
-            <a className="mediaLinkContent-clearForm" ><XSquare onClick={() => { document.getElementById("MainForm").reset() }} /></a>
-          </div>
-        </div>
+            <div>
+              <div className="mediaLinkAD-home">
+                <a className="mediaLinkContentAD-home" ><Home onClick={() => { window.location.href = '/#/' }} /></a>
+              </div>
+              <h2 className="AssetDashboardHeader">Here's What We Found :</h2>
+              <div className="mediaLink-clearForm">
+                <a className="mediaLinkContent-clearForm" ><XSquare onClick={() => { document.getElementById("MainForm").reset() }} /></a>
+              </div>
+            </div>
           </div>
           <div className="assetDashboard">
             {this.state.assetObj !== undefined && (<>{this.generateAssetInfo(this.state.assetObj)}</>)}
@@ -519,111 +519,111 @@ class RetrieveRecord extends Component {
         <div>
           {!this.state.moreInfo && this.state.QRreader === undefined && (
             <div>
-                            <div>
-          <div className="mediaLinkAD-home">
-            <a className="mediaLinkContentAD-home" ><Home onClick={() => { window.location.href = '/#/' }} /></a>
-          </div>
-          <h2 className="FormHeader">Search Database</h2>
-          <div className="mediaLink-clearForm">
-            <a className="mediaLinkContent-clearForm" ><XSquare onClick={() => { document.getElementById("MainForm").reset() }} /></a>
-          </div>
-        </div>
-            <Form className="Form" id="MainForm">
               <div>
-                <Form.Row>
-                  <Form.Group as={Col} controlId="formGridType">
-                    <Form.Label className="formFont">Type:</Form.Label>
-                    <Form.Control
-                      placeholder="Type"
-                      required
-                      onChange={(e) => this.setState({ type: e.target.value })}
-                      size="lg"
-                    />
-                  </Form.Group>
-
-                  <Form.Group as={Col} controlId="formGridManufacturer">
-                    <Form.Label className="formFont">Manufacturer:</Form.Label>
-                    <Form.Control
-                      placeholder="Manufacturer"
-                      required
-                      onChange={(e) => this.setState({ manufacturer: e.target.value })}
-                      size="lg"
-                    />
-                  </Form.Group>
-
-                </Form.Row>
-
-                <Form.Row>
-                  <Form.Group as={Col} controlId="formGridModel">
-                    <Form.Label className="formFont">Model:</Form.Label>
-                    <Form.Control
-                      placeholder="Model"
-                      required
-                      onChange={(e) => this.setState({ model: e.target.value })}
-                      size="lg"
-                    />
-                  </Form.Group>
-
-                  <Form.Group as={Col} controlId="formGridSerial">
-                    <Form.Label className="formFont">Serial:</Form.Label>
-                    <Form.Control
-                      placeholder="Serial"
-                      required
-                      onChange={(e) => this.setState({ serial: e.target.value })}
-                      size="lg"
-                    />
-                  </Form.Group>
-                </Form.Row>
-
-                <Form.Row>
-                  <Form.Group>
-                    <div className="submitButtonRR">
-                      <div className="submitButtonRR-content">
-                        <ArrowRightCircle
-                          onClick={() => { _retrieveRecord() }}
-                        />
-                      </div>
-                    </div>
-                    <div className="submitButtonRRQR">
-                      <div className="submitButtonRRQR-content">
-                        <Grid
-                          onClick={() => { QRReader() }}
-                        />
-                      </div>
-                    </div>
-                  </Form.Group>
-
-                </Form.Row>
+                <div className="mediaLinkAD-home">
+                  <a className="mediaLinkContentAD-home" ><Home onClick={() => { window.location.href = '/#/' }} /></a>
+                </div>
+                <h2 className="FormHeader">Search Database</h2>
+                <div className="mediaLink-clearForm">
+                  <a className="mediaLinkContent-clearForm" ><XSquare onClick={() => { document.getElementById("MainForm").reset() }} /></a>
+                </div>
               </div>
-            </Form>
-            <div className="Results"></div>
+              <Form className="Form" id="MainForm">
+                <div>
+                  <Form.Row>
+                    <Form.Group as={Col} controlId="formGridType">
+                      <Form.Label className="formFont">Type:</Form.Label>
+                      <Form.Control
+                        placeholder="Type"
+                        required
+                        onChange={(e) => this.setState({ type: e.target.value })}
+                        size="lg"
+                      />
+                    </Form.Group>
+
+                    <Form.Group as={Col} controlId="formGridManufacturer">
+                      <Form.Label className="formFont">Manufacturer:</Form.Label>
+                      <Form.Control
+                        placeholder="Manufacturer"
+                        required
+                        onChange={(e) => this.setState({ manufacturer: e.target.value })}
+                        size="lg"
+                      />
+                    </Form.Group>
+
+                  </Form.Row>
+
+                  <Form.Row>
+                    <Form.Group as={Col} controlId="formGridModel">
+                      <Form.Label className="formFont">Model:</Form.Label>
+                      <Form.Control
+                        placeholder="Model"
+                        required
+                        onChange={(e) => this.setState({ model: e.target.value })}
+                        size="lg"
+                      />
+                    </Form.Group>
+
+                    <Form.Group as={Col} controlId="formGridSerial">
+                      <Form.Label className="formFont">Serial:</Form.Label>
+                      <Form.Control
+                        placeholder="Serial"
+                        required
+                        onChange={(e) => this.setState({ serial: e.target.value })}
+                        size="lg"
+                      />
+                    </Form.Group>
+                  </Form.Row>
+
+                  <Form.Row>
+                    <Form.Group>
+                      <div className="submitButtonRR">
+                        <div className="submitButtonRR-content">
+                          <ArrowRightCircle
+                            onClick={() => { _retrieveRecord() }}
+                          />
+                        </div>
+                      </div>
+                      <div className="submitButtonRRQR">
+                        <div className="submitButtonRRQR-content">
+                          <Grid
+                            onClick={() => { QRReader() }}
+                          />
+                        </div>
+                      </div>
+                    </Form.Group>
+
+                  </Form.Row>
+                </div>
+              </Form>
+              <div className="Results"></div>
             </div>
           )}
-          
+
 
           {this.state.QRreader === true && (
             <div>
-                    <div>
-          <div className="mediaLinkAD-home">
-            <a className="mediaLinkContentAD-home" ><Home onClick={() => { window.location.href = '/#/' }} /></a>
-          </div>
-          <h2 className="FormHeader">Search Database</h2>
-          <div className="mediaLink-back">
-            <a className="mediaLinkContent-back" ><CornerUpLeft onClick={() => { QRReader() }} /></a>
-          </div>
-        </div>
-            <div className="QRreader">
-              <QrReader
-                delay={300}
-                onError={this.handleError}
-                onScan={this.handleScan}
-                style={{ width: '100%' }}
-              />
-              {this.state.result !== undefined && (
-                <div className="Results">
-                  {this.state.assetFound}
+              <div>
+                <div className="mediaLinkAD-home">
+                  <a className="mediaLinkContentAD-home" ><Home onClick={() => { window.location.href = '/#/' }} /></a>
                 </div>
-              )}
+                <h2 className="FormHeader">Search Database</h2>
+                <div className="mediaLink-back">
+                  <a className="mediaLinkContent-back" ><CornerUpLeft onClick={() => { QRReader() }} /></a>
+                </div>
+              </div>
+              <div className="QRreader">
+                <QrReader
+                  delay={300}
+                  onError={this.handleError}
+                  onScan={this.handleScan}
+                  style={{ width: '100%' }}
+                />
+                {this.state.result !== undefined && (
+                  <div className="Results">
+                    {this.state.assetFound}
+                  </div>
+                )}
               </div>
             </div>
           )}

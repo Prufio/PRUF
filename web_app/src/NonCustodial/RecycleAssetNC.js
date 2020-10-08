@@ -1,13 +1,72 @@
 import React, { Component } from "react";
 import Form from "react-bootstrap/Form";
 import Col from "react-bootstrap/Col";
-import { Repeat, Home, XSquare, ArrowRightCircle } from 'react-feather'
+import { Home, XSquare, ArrowRightCircle, Grid, CornerUpLeft, Repeat } from "react-feather";
+import QrReader from 'react-qr-reader'
 
 class RecycleAssetNC extends Component {
   constructor(props) {
     super(props);
 
     //State declaration.....................................................................................................
+
+    this.accessAsset = async () => {
+      let idxHash;
+      if (this.state.QRreader === false) {
+        if (this.state.manufacturer === ""
+          || this.state.type === ""
+          || this.state.model === ""
+          || this.state.serial === "") {
+          return alert("Please fill out all fields before submission")
+        }
+
+
+        idxHash = window.web3.utils.soliditySha3(
+          String(this.state.type),
+          String(this.state.manufacturer),
+          String(this.state.model),
+          String(this.state.serial),
+        );
+      }
+      else {
+        idxHash = this.state.result
+      }
+
+      let doesExist = await window.utils.checkAssetExists(idxHash);
+      let isDiscarded = await window.utils.checkAssetDiscarded(idxHash);
+      let isSameRoot = await window.utils.checkAssetRootMatch(this.state.assetClass, idxHash);
+
+      if (!doesExist) {
+        this.setState({
+          QRreader: false,
+        })
+        return alert("Asset doesnt exist! Ensure data fields are correct before submission.")
+      }
+
+      if (!isDiscarded) {
+        this.setState({
+          QRreader: false,
+        })
+        return alert("Asset is not Discarded!")
+      }
+
+      if (!isSameRoot) {
+        this.setState({
+          QRreader: false,
+        })
+        return alert("Import destination AC must have same root as previous AC")
+      }
+
+      console.log("idxHash", idxHash);
+      // console.log("rgtHash", rgtHash);
+
+      return this.setState({
+        idxHash: idxHash,
+        QRreader: false,
+        accessPermitted: true
+      })
+
+    }
 
     this.mounted = false;
     this.state = {
@@ -16,6 +75,7 @@ class RecycleAssetNC extends Component {
       error: undefined,
       NRerror: undefined,
       result: "",
+      resultRA: "",
       assetClass: undefined,
       CountDownStart: "",
       ipfs1: "",
@@ -27,6 +87,7 @@ class RecycleAssetNC extends Component {
       model: "",
       serial: "",
       transaction: undefined,
+      QRreader: false,
     };
   }
 
@@ -50,8 +111,49 @@ class RecycleAssetNC extends Component {
 
   }
 
+  handleScan = async (data) => {
+    if (data) {
+      let tempBool = await window.utils.checkAssetExists(data)
+      let doesExist = await window.utils.checkAssetExists(data);
+      if (tempBool === true) {
+        this.setState({
+          result: data,
+          QRRR: true,
+          assetFound: "Asset Found!"
+        })
+        console.log(data)
+        this.accessAsset()
+      }
+      else {
+        this.setState({
+          assetFound: "Asset Not Found",
+          QRreader: false,
+        })
+        if (!doesExist) {
+          this.setState({
+            QRreader: false,
+          })
+          return alert("Asset doesnt exist!")
+        }
+      }
+    }
+  }
+
+  handleError = err => {
+    console.error(err)
+  }
+
   render() {//render continuously produces an up-to-date stateful document  
     const self = this;
+
+    const QRReader = async () => {
+      if (this.state.QRreader === false) {
+        this.setState({ QRreader: true, assetFound: "" })
+      }
+      else {
+        this.setState({ QRreader: false })
+      }
+    }
 
     const _setAC = async () => {
       let acDoesExist;
@@ -101,41 +203,6 @@ class RecycleAssetNC extends Component {
       }
     }
 
-    const _accessAsset = async () => {
-      if (this.state.manufacturer === "" || this.state.type === "" || this.state.model === "" || this.state.serial === "") {
-        return alert("Please fill out all fields before submission")
-      }
-
-      let idxHash = window.web3.utils.soliditySha3(
-        String(this.state.type),
-        String(this.state.manufacturer),
-        String(this.state.model),
-        String(this.state.serial),
-      );
-
-      let doesExist = await window.utils.checkAssetExists(idxHash);
-      let isDiscarded = await window.utils.checkAssetDiscarded(idxHash);
-      let isSameRoot = await window.utils.checkAssetRootMatch(this.state.assetClass, idxHash);
-      
-      if (!doesExist) {
-        return alert("Asset doesnt exist! Ensure data fields are correct before submission.")
-      }
-
-      if(!isDiscarded) {
-        return alert("Asset is not exported!")
-      }
-
-      if (!isSameRoot) {
-        return alert("Import destination AC must have same root as previous AC")
-      }
-
-      return this.setState({
-        idxHash: idxHash,
-        accessPermitted: true
-      })
-
-    }
-
     const clearForm = async () => {
       document.getElementById("MainForm").reset();
       this.setState({ idxHash: undefined, txStatus: undefined, txHash: "0" })
@@ -146,7 +213,7 @@ class RecycleAssetNC extends Component {
       this.setState({ txStatus: false });
       this.setState({ txHash: "" });
       this.setState({ error: undefined })
-      this.setState({ result: "" })
+      this.setState({ resultRA: "" })
 
       var idxHash = this.state.idxHash;
       var rgtRaw;
@@ -195,6 +262,7 @@ class RecycleAssetNC extends Component {
 
     return (
       <div>
+        {this.state.QRreader === false && (
         <div>
           <div className="mediaLinkAD-home">
             <a className="mediaLinkContentAD-home" ><Home onClick={() => { window.location.href = '/#/' }} /></a>
@@ -204,6 +272,7 @@ class RecycleAssetNC extends Component {
             <a className="mediaLinkContent-clearForm" ><XSquare onClick={() => { clearForm() }} /></a>
           </div>
         </div>
+        )}
         <Form className="Form" id='MainForm'>
           {window.addr === undefined && (
             <div className="errorResults">
@@ -211,7 +280,7 @@ class RecycleAssetNC extends Component {
               <h3>Please connect web3 provider.</h3>
             </div>
           )}
-          {window.addr > 0 && !this.state.assetClassSelected && (
+          {window.addr > 0 && !this.state.assetClassSelected && this.state.QRreader === false && (
             <>
             <Form.Row>
             <Form.Group as={Col} controlId="formGridAC">
@@ -234,7 +303,7 @@ class RecycleAssetNC extends Component {
           )}
           {window.addr > 0 && this.state.assetClassSelected && (
             <div>
-              {!this.state.accessPermitted && (
+              {!this.state.accessPermitted &&  this.state.QRreader === false &&(
                 <>
                   <Form.Row>
                     <Form.Group as={Col} controlId="formGridType">
@@ -284,12 +353,45 @@ class RecycleAssetNC extends Component {
                     <div className="submitButtonAA">
                       <div className="submitButtonAA-content">
                         <ArrowRightCircle
-                          onClick={() => { _accessAsset() }}
+                          onClick={() => { this.accessAsset() }}
+                        />
+                      </div>
+                    </div>
+                    <div className="submitButtonRRQR">
+                      <div className="submitButtonRRQR-content">
+                        <Grid
+                          onClick={() => { QRReader() }}
                         />
                       </div>
                     </div>
                   </Form.Row>
                 </>
+              )}
+              {this.state.QRreader === true && (
+                <div>
+                  <div>
+                    <div className="mediaLinkAD-home">
+                      <a className="mediaLinkContentAD-home" ><Home onClick={() => { window.location.href = '/#/' }} /></a>
+                    </div>
+                    <h2 className="FormHeader">Scan QR</h2>
+                    <div className="mediaLink-back">
+                      <a className="mediaLinkContent-back" ><CornerUpLeft onClick={() => { QRReader() }} /></a>
+                    </div>
+                  </div>
+                  <div className="QRreader">
+                    <QrReader
+                      delay={300}
+                      onError={this.handleError}
+                      onScan={this.handleScan}
+                      style={{ width: '100%' }}
+                    />
+                    {this.state.resultIA !== undefined && (
+                      <div className="Results">
+                        {this.state.assetFound}
+                      </div>
+                    )}
+                  </div>
+                </div>
               )}
               {this.state.accessPermitted && (
                 <>
@@ -364,6 +466,7 @@ class RecycleAssetNC extends Component {
             </div>
           )}
         </Form>
+        { this.state.QRreader === false && (
         <div className="assetSelectedResults">
           <Form.Row>
             {this.state.idxHash !== undefined && this.state.txHash === 0 && (
@@ -377,7 +480,8 @@ class RecycleAssetNC extends Component {
             )}
           </Form.Row>
         </div>
-        {this.state.transaction === true && (
+        )}
+        {this.state.transaction === true && this.state.QRreader === false && (
 
           <div className="Results">
             {/* {this.state.pendingTx === undefined && ( */}
@@ -387,7 +491,7 @@ class RecycleAssetNC extends Component {
     <p class="loading">Transaction In Progress</p>
   )} */}
           </div>)}
-        {this.state.txHash > 0 && ( //conditional rendering
+        {this.state.txHash > 0 && this.state.QRreader === false && ( //conditional rendering
           <div className="Results">
             {this.state.txStatus === false && (
               <div>
@@ -401,7 +505,7 @@ class RecycleAssetNC extends Component {
                 </a>
               </div>
             )}
-            {this.state.txStatus === true && (
+            {this.state.txStatus === true && this.state.QRreader === false && (
               <div>
                 {" "}
                 No Errors Reported :
