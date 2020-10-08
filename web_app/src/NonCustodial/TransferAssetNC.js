@@ -83,7 +83,7 @@ class ModifyDescriptionNC extends Component {
         return window.location.href = "/#/asset-dashboard"
       }
 
-      if (window.assets.statuses[e] !== "1"){alert("Asset not in transferrable status"); return clearForm()}
+      if (window.assets.statuses[e] !== "51"){alert("Asset not in transferrable status"); return clearForm()}
       this.setState({ selectedAsset: e })
       console.log("Changed component idx to: ", window.assets.ids[e])
 

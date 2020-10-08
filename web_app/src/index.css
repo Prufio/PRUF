@@ -37,7 +37,7 @@ p {
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
-  max-width: 40ch;
+  max-width: 32ch;
 }
 
 h1 {
@@ -365,14 +365,14 @@ div {
 .card-ac {
   font-size: 1.2rem;
   font-weight: bold;
-  margin-left: 32rem;
+  margin-left: 23rem;
   margin-top: -2.8rem;
 }
 
 .card-status {
   font-size: 1.2rem;
   font-weight: bold;
-  margin-left: 44rem;
+  margin-left: 37rem;
   margin-top: -2.75rem;
 }
 
