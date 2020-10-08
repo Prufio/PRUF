@@ -52,10 +52,12 @@ class Main extends Component {
               </div>
               <div className="pageForm">
                 <div>
-                  <Route path="/" component={HomeMobile} />
+                <Route exact path="/" component={HomeMobile} />
                   {Router(this.state.routeRequest)}
                 </div>
               </div>
+              <NavLink to="/">
+              </NavLink>
             </HashRouter>
           </div >
         );
@@ -595,7 +597,7 @@ class Main extends Component {
         })
       }
 
-      if (window.balances === undefined) {  console.log("balances undefined, trying to get them..."); return this.setUpTokenVals(); }
+      if (window.balances === undefined) { console.log("balances undefined, trying to get them..."); return this.setUpTokenVals(); }
       console.log("SA: In setUpAssets")
 
       let tempDescObj = {}
@@ -729,7 +731,7 @@ class Main extends Component {
               settingsMenu: undefined
             })
 
-            if(window.location.href !== "/#/asset-dashboard"){window.location.href = "/#"}
+            if (window.location.href !== "/#/asset-dashboard") { window.location.href = "/#" }
 
             window.addr = e[0];
             window.assetClass = undefined;

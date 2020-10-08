@@ -45,7 +45,7 @@ import AssetDashboard from "./NonCustodial/AssetDashboard"
 function Router(routeRequest) {
     if (routeRequest === "authUser") {
         return (
-            <>  
+            <>
                 <Route path="/new-record" component={NewRecord} />
                 <Route path="/retrieve-record" component={RetrieveRecord} />
                 <Route path="/force-transfer-asset" component={ForceModifyRecord} />
