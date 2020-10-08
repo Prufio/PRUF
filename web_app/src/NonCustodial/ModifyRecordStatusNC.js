@@ -109,7 +109,6 @@ class ModifyRecordStatusNC extends Component {
       var idxHash = this.state.idxHash;
 
       console.log("idxHash", idxHash);
-
       console.log("addr: ", window.addr);
 
       var doesExist = await window.utils.checkAssetExists(idxHash);
@@ -121,8 +120,8 @@ class ModifyRecordStatusNC extends Component {
       if (
         this.state.newStatus !== "53" && 
         this.state.newStatus !== "54" && 
-        this.state.newStatus !== "56" && 
-        this.state.newStatus !== "59" && 
+        this.state.newStatus !== "57" && 
+        this.state.newStatus !== "58" &&   
         Number(this.state.newStatus) < 100 && 
         Number(this.state.newStatus) > 49) {
 
@@ -201,6 +200,7 @@ class ModifyRecordStatusNC extends Component {
                       <option value="52">Non-transferrable</option>
                       <option value="53">Stolen</option>
                       <option value="54">Lost</option>
+                      <option value="59">Discardable</option>
                       <option value="51">Export-ready</option>
                     </Form.Control>
                   </Form.Group>
@@ -220,7 +220,7 @@ class ModifyRecordStatusNC extends Component {
           </Form>
           <div className="assetSelectedResults">
             <Form.Row>
-              {this.state.idxHash !== undefined && (
+              {this.state.idxHash !== undefined && this.state.txHash === 0 && (
                 <Form.Group>
                   <div className="assetSelectedContentHead">Asset IDX: <span className="assetSelectedContent">{this.state.idxHash}</span> </div>
                   <div className="assetSelectedContentHead">Asset Name: <span className="assetSelectedContent">{this.state.name}</span> </div>
@@ -320,6 +320,7 @@ class ModifyRecordStatusNC extends Component {
                     <option value="52">Non-transferrable</option>
                     <option value="53">Stolen</option>
                     <option value="54">Lost</option>
+                    <option value="59">Discardable</option>
                     <option value="51">Export-ready</option>
                   </Form.Control>
                 </Form.Group>
@@ -339,7 +340,7 @@ class ModifyRecordStatusNC extends Component {
         </Form>
         <div className="assetSelectedResults">
           <Form.Row>
-            {this.state.idxHash !== undefined && (
+            {this.state.idxHash !== undefined && this.state.txHash === 0 && (
               <Form.Group>
                 <div className="assetSelectedContentHead">Asset IDX: <span className="assetSelectedContent">{this.state.idxHash}</span> </div>
                 <div className="assetSelectedContentHead">Asset Name: <span className="assetSelectedContent">{this.state.name}</span> </div>
@@ -350,7 +351,7 @@ class ModifyRecordStatusNC extends Component {
             )}
           </Form.Row>
         </div>
-        {this.state.transaction === true && (
+        {this.state.transaction === true && this.state.txStatus === undefined &&(
 
           <div className="Results">
             {/* {this.state.pendingTx === undefined && ( */}

@@ -52,7 +52,7 @@ class Main extends Component {
               </div>
               <div className="pageForm">
                 <div>
-                <Route exact path="/" component={HomeMobile} />
+                  <Route exact path="/" component={HomeMobile} />
                   {Router(this.state.routeRequest)}
                 </div>
               </div>
@@ -285,7 +285,7 @@ class Main extends Component {
                         color: white;
                         margin-top: -0.5rem;
                         // margin-right: 37rem;
-                        font-size: 1.6rem;
+                        font-size: 1.5rem;
                       }
                       .btn-etherscan:hover {
                         background-color: transparent;

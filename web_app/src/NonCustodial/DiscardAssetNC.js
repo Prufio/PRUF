@@ -2,9 +2,10 @@ import React, { Component } from "react";
 import Form from "react-bootstrap/Form";
 import Col from "react-bootstrap/Col";
 import Button from "react-bootstrap/Button";
-import { ArrowRightCircle, Home, XSquare } from 'react-feather'
+import returnManufacturers from "../Resources/Manufacturers";
+import { Trash2, Home, XSquare } from 'react-feather'
 
-class ModifyRightsHolder extends Component {
+class DiscardAssetNC extends Component {
   constructor(props) {
     super(props);
 
@@ -20,33 +21,23 @@ class ModifyRightsHolder extends Component {
       }
     }, 100)
 
-    this.mounted = false;
     this.state = {
       addr: "",
-      costArray: [0],
+      lookupIPFS1: "",
+      lookupIPFS2: "",
       error: undefined,
       NRerror: undefined,
-      result: "",
+      result: null,
       assetClass: undefined,
-      CountDownStart: "",
       ipfs1: "",
       txHash: "",
-      txStatus: false,
-      isNFA: false,
       type: "",
       manufacturer: "",
       model: "",
       serial: "",
-      first: "",
-      middle: "",
-      surname: "",
-      id: "",
-      secret: "",
-      newFirst: "",
-      newMiddle: "",
-      newSurname: "",
-      newId: "",
-      newSecret: "",
+      importAgent: "",
+      isNFA: false,
+      txStatus: null,
       hasLoadedAssets: false,
       assets: { descriptions: [0], ids: [0], assetClasses: [0], statuses: [0], names: [0] },
       transaction: undefined,
@@ -66,35 +57,28 @@ class ModifyRightsHolder extends Component {
     }
 
     this.setState({runWatchDog: true})
+
   }
 
   componentWillUnmount() {//stuff do do when component unmounts from the window
 
   }
-
-  componentDidUpdate() {//stuff to do when state updates
+  componentDidUpdate() {//stuff to do on a re-render
 
   }
 
   render() {//render continuously produces an up-to-date stateful document  
     const self = this;
 
-    const clearForm = async () => {
-      document.getElementById("MainForm").reset();
-      this.setState({ idxHash: undefined, txStatus: undefined, txHash: "0", wasSentPacket: undefined })
-    }
-
     const _checkIn = async (e) => {
-      if (e === "null" || e === undefined) { 
-        return clearForm()
-      }
+      if (e === "null" || e === undefined) { return }
       else if (e === "reset") {
         return window.resetInfo = true;
       }
       else if (e === "assetDash"){
         return window.location.href = "/#/asset-dashboard"
       }
-      if(window.assets.statuses[e] === "53" || window.assets.statuses[e] === "54"){alert("Asset cannot be modified while in lost or stolen status"); return clearForm()}
+      if (window.assets.statuses[e] !== "59"){return alert("Asset not in discardable status(59)")}
       this.setState({ selectedAsset: e })
       console.log("Changed component idx to: ", window.assets.ids[e])
 
@@ -110,30 +94,26 @@ class ModifyRightsHolder extends Component {
       })
     }
 
-    const _editRgtHash = async () => {
+    const clearForm = async () => {
+      document.getElementById("MainForm").reset();
+      this.setState({ idxHash: undefined, txStatus: undefined, txHash: "0", wasSentPacket: undefined })
+    }
+
+    const _discardAsset = async () => {//create a new asset record
       this.setState({ txStatus: false });
       this.setState({ txHash: "" });
       this.setState({ error: undefined })
       this.setState({ result: "" })
+      //reset state values before form resubmission
       var idxHash = this.state.idxHash;
-      var newRgtRaw;
-
-      newRgtRaw = window.web3.utils.soliditySha3(
-        this.state.first,
-        this.state.middle,
-        this.state.surname,
-        this.state.id,
-        this.state.secret
-      );
-
-      var newRgtHash = window.web3.utils.soliditySha3(idxHash, newRgtRaw);
 
       console.log("idxHash", idxHash);
-      console.log("New rgtHash", newRgtHash);
-      console.log("addr: ", window.addr);
+      console.log("addr: ", this.state.agentAddress);
 
-      window.contracts.NP_NC.methods
-        ._changeRgt(idxHash, newRgtHash)
+      window.contracts.A_TKN.methods
+        .discard(
+          idxHash
+        )
         .send({ from: window.addr })
         .on("error", function (_error) {
           // self.setState({ NRerror: _error });
@@ -146,21 +126,19 @@ class ModifyRightsHolder extends Component {
           self.setState({ transaction: false })
           this.setState({ txHash: receipt.transactionHash });
           this.setState({ txStatus: receipt.status });
-          console.log(receipt.status);
-          //Stuff to do when tx confirms
+          window.resetInfo = true;
         });
 
-      console.log(this.state.txHash);
-      return document.getElementById("MainForm").reset();
+      return document.getElementById("MainForm").reset(); //clear form inputs
     };
     if (this.state.wasSentPacket) {
-      return (
+      return (//default render
         <div>
           <div>
             <div className="mediaLinkAD-home">
               <a className="mediaLinkContentAD-home" ><Home onClick={() => { window.location.href = '/#/' }} /></a>
             </div>
-            <h2 className="FormHeader">Modify Rightsholder</h2>
+            <h2 className="FormHeader">Export Asset</h2>
             <div className="mediaLink-clearForm">
               <a className="mediaLinkContent-clearForm" ><XSquare onClick={() => { clearForm() }} /></a>
             </div>
@@ -175,64 +153,11 @@ class ModifyRightsHolder extends Component {
             {window.addr > 0 && (
               <div>
                 <Form.Row>
-                  <Form.Group as={Col} controlId="formGridNewFirstName">
-                    <Form.Label className="formFont">New First Name:</Form.Label>
-                    <Form.Control
-                      placeholder="New First Name"
-                      required
-                      onChange={(e) => this.setState({ first: e.target.value })}
-                      size="lg"
-                    />
-                  </Form.Group>
-
-                  <Form.Group as={Col} controlId="formGridNewMiddleName">
-                    <Form.Label className="formFont">New Middle Name:</Form.Label>
-                    <Form.Control
-                      placeholder="New Middle Name"
-                      required
-                      onChange={(e) => this.setState({ middle: e.target.value })}
-                      size="lg"
-                    />
-                  </Form.Group>
-
-                  <Form.Group as={Col} controlId="formGridNewLastName">
-                    <Form.Label className="formFont">New Last Name:</Form.Label>
-                    <Form.Control
-                      placeholder="New Last Name"
-                      required
-                      onChange={(e) => this.setState({ surname: e.target.value })}
-                      size="lg"
-                    />
-                  </Form.Group>
-                </Form.Row>
-                <Form.Row>
-                  <Form.Group as={Col} controlId="formGridNewIdNumber">
-                    <Form.Label className="formFont">New ID Number:</Form.Label>
-                    <Form.Control
-                      placeholder="New ID Number"
-                      required
-                      onChange={(e) => this.setState({ id: e.target.value })}
-                      size="lg"
-                    />
-                  </Form.Group>
-
-                  <Form.Group as={Col} controlId="formGridNewPassword">
-                    <Form.Label className="formFont">New Password:</Form.Label>
-                    <Form.Control
-                      placeholder="New Password"
-                      type="password"
-                      required
-                      onChange={(e) => this.setState({ secret: e.target.value })}
-                      size="lg"
-                    />
-                  </Form.Group>
-                </Form.Row>
-                <Form.Row>
-                  <Form.Group >
-                    <div className="submitButtonFMR">
-                      <div className="submitButtonFMR-content">
-                        <ArrowRightCircle
-                          onClick={() => { _editRgtHash() }}
+                  <Form.Group>
+                    <div className="submitButtonEA2">
+                      <div className="submitButtonEA2-content">
+                        <Trash2
+                          onClick={() => { _discardAsset() }}
                         />
                       </div>
                     </div>
@@ -243,7 +168,6 @@ class ModifyRightsHolder extends Component {
           </Form>
           <div className="assetSelectedResults">
             <Form.Row>
-
               {this.state.idxHash !== undefined && this.state.txHash === 0 && (
                 <Form.Group>
                   <div className="assetSelectedContentHead">Asset IDX: <span className="assetSelectedContent">{this.state.idxHash}</span> </div>
@@ -253,7 +177,6 @@ class ModifyRightsHolder extends Component {
                   <div className="assetSelectedContentHead">Asset Status: <span className="assetSelectedContent">{this.state.status}</span> </div>
                 </Form.Group>
               )}
-
             </Form.Row>
           </div>
           {this.state.transaction === true && (
@@ -298,13 +221,13 @@ class ModifyRightsHolder extends Component {
         </div>
       );
     }
-    return (
+    return (//default render
       <div>
         <div>
           <div className="mediaLinkAD-home">
             <a className="mediaLinkContentAD-home" ><Home onClick={() => { window.location.href = '/#/' }} /></a>
           </div>
-          <h2 className="FormHeader">Modify Rightsholder</h2>
+          <h2 className="FormHeader">Discard Asset</h2>
           <div className="mediaLink-clearForm">
             <a className="mediaLinkContent-clearForm" ><XSquare onClick={() => { clearForm() }} /></a>
           </div>
@@ -320,7 +243,7 @@ class ModifyRightsHolder extends Component {
             <div>
               <Form.Row>
                 <Form.Group as={Col} controlId="formGridAsset">
-                  <Form.Label className="formFont"> Select an Asset to Modify :</Form.Label>
+                  <Form.Label className="formFont"> Select an Asset to Discard :</Form.Label>
                   <Form.Control
                     as="select"
                     size="lg"
@@ -328,7 +251,9 @@ class ModifyRightsHolder extends Component {
                   >
                     {this.state.hasLoadedAssets && (
                     <optgroup className="optgroup">
-
+                    <option value="null"> Select an asset </option>
+                    <option value="assetDash">View Assets in Dashboard</option>
+                    <option value="reset">Refresh Assets</option>
                     {window.utils.generateAssets()}
                     </optgroup>)}
                     {!this.state.hasLoadedAssets && (<optgroup ><option value="null"> Loading Assets... </option></optgroup>)}
@@ -336,75 +261,22 @@ class ModifyRightsHolder extends Component {
                 </Form.Group>
               </Form.Row>
               <Form.Row>
-                <Form.Group as={Col} controlId="formGridNewFirstName">
-                  <Form.Label className="formFont">New First Name:</Form.Label>
-                  <Form.Control
-                    placeholder="New First Name"
-                    required
-                    onChange={(e) => this.setState({ first: e.target.value })}
-                    size="lg"
-                  />
-                </Form.Group>
-
-                <Form.Group as={Col} controlId="formGridNewMiddleName">
-                  <Form.Label className="formFont">New Middle Name:</Form.Label>
-                  <Form.Control
-                    placeholder="New Middle Name"
-                    required
-                    onChange={(e) => this.setState({ middle: e.target.value })}
-                    size="lg"
-                  />
-                </Form.Group>
-
-                <Form.Group as={Col} controlId="formGridNewLastName">
-                  <Form.Label className="formFont">New Last Name:</Form.Label>
-                  <Form.Control
-                    placeholder="New Last Name"
-                    required
-                    onChange={(e) => this.setState({ surname: e.target.value })}
-                    size="lg"
-                  />
-                </Form.Group>
-              </Form.Row>
-              <Form.Row>
-                <Form.Group as={Col} controlId="formGridNewIdNumber">
-                  <Form.Label className="formFont">New ID Number:</Form.Label>
-                  <Form.Control
-                    placeholder="New ID Number"
-                    required
-                    onChange={(e) => this.setState({ id: e.target.value })}
-                    size="lg"
-                  />
-                </Form.Group>
-
-                <Form.Group as={Col} controlId="formGridNewPassword">
-                  <Form.Label className="formFont">New Password:</Form.Label>
-                  <Form.Control
-                    placeholder="New Password"
-                    type="password"
-                    required
-                    onChange={(e) => this.setState({ secret: e.target.value })}
-                    size="lg"
-                  />
-                </Form.Group>
-              </Form.Row>
-              <Form.Row>
-                <Form.Group >
-                  <div className="submitButtonFMR">
-                    <div className="submitButtonFMR-content">
-                      <ArrowRightCircle
-                        onClick={() => { _editRgtHash() }}
+                <Form.Group>
+                  <div className="submitButtonEA">
+                    <div className="submitButtonEA-content">
+                      <Trash2
+                        onClick={() => { _discardAsset() }}
                       />
                     </div>
                   </div>
                 </Form.Group>
               </Form.Row>
+
             </div>
           )}
         </Form>
         <div className="assetSelectedResults">
           <Form.Row>
-
             {this.state.idxHash !== undefined && this.state.txHash === 0 && (
               <Form.Group>
                 <div className="assetSelectedContentHead">Asset IDX: <span className="assetSelectedContent">{this.state.idxHash}</span> </div>
@@ -414,7 +286,6 @@ class ModifyRightsHolder extends Component {
                 <div className="assetSelectedContentHead">Asset Status: <span className="assetSelectedContent">{this.state.status}</span> </div>
               </Form.Group>
             )}
-
           </Form.Row>
         </div>
         {this.state.transaction === true && (
@@ -461,4 +332,4 @@ class ModifyRightsHolder extends Component {
   }
 }
 
-export default ModifyRightsHolder;
+export default DiscardAssetNC;

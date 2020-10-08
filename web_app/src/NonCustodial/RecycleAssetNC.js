@@ -1,46 +1,31 @@
 import React, { Component } from "react";
 import Form from "react-bootstrap/Form";
 import Col from "react-bootstrap/Col";
-import Button from "react-bootstrap/Button";
-import FormLabel from "react-bootstrap/FormLabel";
-import { ArrowRightCircle, Home, XSquare } from 'react-feather'
+import { Repeat, Home, XSquare, ArrowRightCircle } from 'react-feather'
 
-class NewRecordNC extends Component {
+class RecycleAssetNC extends Component {
   constructor(props) {
     super(props);
 
     //State declaration.....................................................................................................
-    // this.listenForTx = setInterval(() => {
-    //   if(this.state.pendingTx === undefined && this.state.transaction === true) {
-    //     this.setState({pendingTx: Object.values(window.web3.eth.getPendingTransactions())[0]})
-    //   }
-    // }, 100)
 
+    this.mounted = false;
     this.state = {
       addr: "",
-      lookupIPFS1: "",
-      lookupIPFS2: "",
+      costArray: [0],
       error: undefined,
       NRerror: undefined,
-      result: null,
+      result: "",
       assetClass: undefined,
-      countDownStart: "",
+      CountDownStart: "",
       ipfs1: "",
       txHash: "",
-      assetName: "",
+      txStatus: false,
+      isNFA: false,
       type: "",
       manufacturer: "",
       model: "",
       serial: "",
-      first: "",
-      middle: "",
-      surname: "",
-      id: "",
-      secret: "",
-      txStatus: null,
-      nameTag: "",
-      rawIPFSHash: "",
-      idxSubmitted: false,
       transaction: undefined,
     };
   }
@@ -48,7 +33,6 @@ class NewRecordNC extends Component {
   //component state-change events......................................................................................................
 
   componentDidMount() {//stuff to do when component mounts in window
-
     if (window.assetClass > 0){
       this.setState({ assetClass: window.assetClass, assetClassSelected: true })
     }
@@ -56,13 +40,13 @@ class NewRecordNC extends Component {
     else{
       this.setState({assetClassSelected: false})
     }
-
   }
 
   componentWillUnmount() {//stuff do do when component unmounts from the window
 
   }
-  componentDidUpdate() {//stuff to do on a re-render
+
+  componentDidUpdate() {//stuff to do when state updates
 
   }
 
@@ -113,46 +97,58 @@ class NewRecordNC extends Component {
           await this.setState({ assetClass: window.assetClass });
         }
 
-        return this.setState({assetClassSelected: true})
+        return this.setState({assetClassSelected: true, acData: window.tempACData})
       }
     }
 
-    const checkAsset = async () => {
-
-      let ipfsObj = { photo: {}, text: {}, name: "" }
-
-      if (this.state.nameTag !== "" && this.state.nameTag !== undefined){
-        ipfsObj = { photo: {}, text: {}, name: String(this.state.nameTag) }
+    const _accessAsset = async () => {
+      if (this.state.manufacturer === "" || this.state.type === "" || this.state.model === "" || this.state.serial === "") {
+        return alert("Please fill out all fields before submission")
       }
 
       let idxHash = window.web3.utils.soliditySha3(
-        this.state.type,
-        this.state.manufacturer,
-        this.state.model,
-        this.state.serial,
+        String(this.state.type),
+        String(this.state.manufacturer),
+        String(this.state.model),
+        String(this.state.serial),
       );
 
       let doesExist = await window.utils.checkAssetExists(idxHash);
-
-      if (!doesExist) { 
-      this.setState({ idxHash: idxHash, idxSubmitted: true }); 
-      await window.utils.addIPFSJSONObject(ipfsObj) 
+      let isDiscarded = await window.utils.checkAssetDiscarded(idxHash);
+      let isSameRoot = await window.utils.checkAssetRootMatch(this.state.assetClass, idxHash);
+      
+      if (!doesExist) {
+        return alert("Asset doesnt exist! Ensure data fields are correct before submission.")
       }
 
-      else { return alert("Record already exists! Try again. (Note: nameTag can contain whatever you want, and cannot cause hash collisions)") }
+      if(!isDiscarded) {
+        return alert("Asset is not exported!")
+      }
+
+      if (!isSameRoot) {
+        return alert("Import destination AC must have same root as previous AC")
+      }
+
+      return this.setState({
+        idxHash: idxHash,
+        accessPermitted: true
+      })
 
     }
 
-    const _newRecord = async () => {//create a new asset record
+    const clearForm = async () => {
+      document.getElementById("MainForm").reset();
+      this.setState({ idxHash: undefined, txStatus: undefined, txHash: "0" })
+    }
+
+    const _recycleAsset = async () => {
+
       this.setState({ txStatus: false });
       this.setState({ txHash: "" });
-      this.setState({ error: undefined });
-      this.setState({ result: "" });
-      this.setState({ transaction: true });
-      
-      //reset state values before form resubmission
+      this.setState({ error: undefined })
+      this.setState({ result: "" })
+
       var idxHash = this.state.idxHash;
-      var ipfsHash = window.utils.getBytes32FromIPFSHash(String(window.rawIPFSHashTemp));
       var rgtRaw;
 
       rgtRaw = window.web3.utils.soliditySha3(
@@ -164,53 +160,48 @@ class NewRecordNC extends Component {
       );
 
       var rgtHash = window.web3.utils.soliditySha3(idxHash, rgtRaw);
-      //rgtHash = tenThousandHashesOf(rgtHash)
 
+      console.log("rgtHash", rgtHash);
       console.log("idxHash", idxHash);
-      console.log("New rgtRaw", rgtRaw);
-      console.log("New rgtHash", rgtHash);
       console.log("addr: ", window.addr);
-      console.log("AC: ", this.state.assetClass);
-      console.log("IPFS bs58: ", window.rawIPFSHashTemp)
-      console.log("IPFS bytes32: ", ipfsHash)  
 
-      await window.contracts.APP_NC.methods
-        .$newRecordWithDescription(
-          idxHash,
-          rgtHash,
-          this.state.assetClass,
-          this.state.countDownStart,
-          ipfsHash
-        )
+      window.contracts.RCLR.methods
+        .$recycle(idxHash, rgtHash, this.state.selectedAssetClass)
         .send({ from: window.addr, value: window.costs.newRecordCost })
         .on("error", function (_error) {
           // self.setState({ NRerror: _error });
           self.setState({ transaction: false })
           self.setState({ txHash: Object.values(_error)[0].transactionHash });
           self.setState({ txStatus: false });
-
+          console.log(Object.values(_error)[0].transactionHash);
         })
         .on("receipt", (receipt) => {
           self.setState({ transaction: false })
           this.setState({ txHash: receipt.transactionHash });
           this.setState({ txStatus: receipt.status });
+          console.log(receipt.status);
           window.resetInfo = true;
-          window.recount = true;
+          //Stuff to do when tx confirms
         });
-      // console.log(Object.values(window.web3.eth.getPendingTransactions()))
+      console.log(this.state.txHash);
 
-      this.setState({assetClassSelected: false, idxSubmitted: false}) //clear form inputs
-}
+      await this.setState({
+        idxHash: "",
+        accessPermitted: false
+      })
 
-    return (//default render
+      return document.getElementById("MainForm").reset();
+    };
+
+    return (
       <div>
         <div>
           <div className="mediaLinkAD-home">
             <a className="mediaLinkContentAD-home" ><Home onClick={() => { window.location.href = '/#/' }} /></a>
           </div>
-          <h2 className="FormHeader">New Record</h2>
+          <h2 className="FormHeader">Recycle Asset</h2>
           <div className="mediaLink-clearForm">
-            <a className="mediaLinkContent-clearForm" ><XSquare onClick={() => { document.getElementById("MainForm").reset() }} /></a>
+            <a className="mediaLinkContent-clearForm" ><XSquare onClick={() => { clearForm() }} /></a>
           </div>
         </div>
         <Form className="Form" id='MainForm'>
@@ -241,22 +232,10 @@ class NewRecordNC extends Component {
           </div>
           </>
           )}
-          
           {window.addr > 0 && this.state.assetClassSelected && (
             <div>
-
-              {!this.state.idxSubmitted && (
+              {!this.state.accessPermitted && (
                 <>
-                  <Form.Row>
-                  <Form.Group as={Col} controlId="formGridNameTag">
-                      <Form.Label className="formFont">Name Tag:</Form.Label>
-                      <Form.Control
-                        placeholder="Put a nametag on this asset (optional)"
-                        onChange={(e) => this.setState({ nameTag: e.target.value })}
-                        size="lg"
-                      />
-                    </Form.Group>
-                  </Form.Row>
                   <Form.Row>
                     <Form.Group as={Col} controlId="formGridType">
                       <Form.Label className="formFont">Type:</Form.Label>
@@ -270,7 +249,6 @@ class NewRecordNC extends Component {
 
                     <Form.Group as={Col} controlId="formGridManufacturer">
                       <Form.Label className="formFont">Manufacturer:</Form.Label>
-
                       <Form.Control
                         placeholder="Manufacturer"
                         required
@@ -302,22 +280,20 @@ class NewRecordNC extends Component {
                       />
                     </Form.Group>
                   </Form.Row>
-
-                  <div className="submitButtonNR">
-                      <div className="submitButtonNR-content">
+                  <Form.Row>
+                    <div className="submitButtonAA">
+                      <div className="submitButtonAA-content">
                         <ArrowRightCircle
-                          onClick={() => { checkAsset() }}
+                          onClick={() => { _accessAsset() }}
                         />
                       </div>
                     </div>
-                  
+                  </Form.Row>
                 </>
               )}
-
-              {this.state.idxSubmitted && (
+              {this.state.accessPermitted && (
                 <>
-
-                  <Form.Row>
+                <Form.Row>
                     <Form.Group as={Col} controlId="formGridFirstName">
                       <Form.Label className="formFont">First Name:</Form.Label>
                       <Form.Control
@@ -373,38 +349,34 @@ class NewRecordNC extends Component {
 
                   </Form.Row>
                   <Form.Row>
-                    <Form.Group as={Col} controlId="formGridLogStartValue">
-                      <Form.Label className="formFont">Log Start Value:</Form.Label>
-                      <Form.Control
-                        placeholder="Log Start Value"
-                        required
-                        onChange={(e) =>
-                          this.setState({ countDownStart: e.target.value })
-                        }
-                        size="lg"
-                      />
-                    </Form.Group>
-
-                  </Form.Row>
-                  <Form.Row>
-                    <div className="submitButtonNR">
-                      <div className="submitButtonNR-content">
-                        <ArrowRightCircle
-                          onClick={() => { _newRecord() }}
+                    <div className="submitButtonIA">
+                      <div className="submitButtonIA-content">
+                        <Repeat
+                          onClick={() => { _recycleAsset() }}
                         />
                       </div>
-                      <Form.Label className="LittleTextNewRecord"> Cost in AC {this.state.assetClass}: {Number(window.costs.newRecordCost) / 1000000000000000000} ETH</Form.Label>
+                      <Form.Label className="LittleTextNewRecord"> Cost in AC {window.assetClass}: {Number(window.costs.newRecordCost) / 1000000000000000000} ETH</Form.Label>
                     </div>
                   </Form.Row>
-                  <br></br>
-
                 </>
               )}
-
-
+              <br></br>
             </div>
           )}
         </Form>
+        <div className="assetSelectedResults">
+          <Form.Row>
+            {this.state.idxHash !== undefined && this.state.txHash === 0 && (
+              <Form.Group>
+                <div className="assetSelectedContentHead">Asset IDX: <span className="assetSelectedContent">{this.state.idxHash}</span> </div>
+                <div className="assetSelectedContentHead">Asset Name: <span className="assetSelectedContent">{this.state.name}</span> </div>
+                {/* <div className="assetSelectedContentHead"> Asset Description: <span className="assetSelectedContent">{this.state.description}</span> </div> */}
+                <div className="assetSelectedContentHead">Asset Class: <span className="assetSelectedContent">{this.state.assetClass}</span> </div>
+                <div className="assetSelectedContentHead">Asset Status: <span className="assetSelectedContent">{this.state.status}</span> </div>
+              </Form.Group>
+            )}
+          </Form.Row>
+        </div>
         {this.state.transaction === true && (
 
           <div className="Results">
@@ -412,46 +384,41 @@ class NewRecordNC extends Component {
             <p className="loading">Transaction In Progress</p>
             {/* )} */}
             {/* {this.state.pendingTx !== undefined && (
-              <p className="loading">Transaction In Progress</p>
-            )} */}
+    <p class="loading">Transaction In Progress</p>
+  )} */}
           </div>)}
-        <div className="Results">
-          {this.state.txHash > 0 && ( //conditional rendering
-
-
-            <Form.Row>
-              {this.state.txStatus === false && this.state.transaction === undefined && (
-                <div>
-                  !ERROR! :
-                  <a
-                    href={"https://kovan.etherscan.io/tx/" + this.state.txHash}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                  >
-                    KOVAN Etherscan:{this.state.txHash}
-                  </a>
-                </div>
-              )}
-              {this.state.txStatus === true && this.state.transaction === undefined &&(
-                <div>
-                  {" "}
+        {this.state.txHash > 0 && ( //conditional rendering
+          <div className="Results">
+            {this.state.txStatus === false && (
+              <div>
+                !ERROR! :
+                <a
+                  href={"https://kovan.etherscan.io/tx/" + this.state.txHash}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  KOVAN Etherscan:{this.state.txHash}
+                </a>
+              </div>
+            )}
+            {this.state.txStatus === true && (
+              <div>
+                {" "}
                 No Errors Reported :
-                  <a
-                    href={"https://kovan.etherscan.io/tx/" + this.state.txHash}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                  >
-                    KOVAN Etherscan:{this.state.txHash}
-                  </a>
-                </div>
-              )}
-            </Form.Row>
-
-          )}
-        </div>
+                <a
+                  href={"https://kovan.etherscan.io/tx/" + this.state.txHash}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  KOVAN Etherscan:{this.state.txHash}
+                </a>
+              </div>
+            )}
+          </div>
+        )}
       </div>
-    )
+    );
   }
 }
 
-export default NewRecordNC;
+export default RecycleAssetNC;

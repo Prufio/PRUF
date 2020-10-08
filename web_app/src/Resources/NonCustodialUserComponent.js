@@ -24,13 +24,19 @@ class NonCustodialUserComponent extends Component {
                     <NavLink to="/transfer-asset-NC">Transfer</NavLink>
                 </li>
                 <li>
-                    <NavLink to="/import-asset-NC">Import</NavLink>
-                </li>
-                <li>
-                    <NavLink to="/export-asset-NC">Export</NavLink>
-                </li>
-                <li>
                     <NavLink to="/manage-escrow-NC">Escrow</NavLink>
+                </li>
+                <li>
+                    <NavDropdown title="Import">
+                        <NavDropdown.Item id="header-dropdown" as={NavLink} to="/import-asset-NC">Import Asset</NavDropdown.Item>
+                        <NavDropdown.Item id="header-dropdown" as={NavLink} to="/recycle-asset-NC">Recycle Asset</NavDropdown.Item>
+                    </NavDropdown>
+                </li>
+                <li>
+                    <NavDropdown title="Export">
+                        <NavDropdown.Item id="header-dropdown" as={NavLink} to="/export-asset-NC">Export Asset</NavDropdown.Item>
+                        <NavDropdown.Item id="header-dropdown" as={NavLink} to="/discard-asset-NC">Discard Asset</NavDropdown.Item>
+                    </NavDropdown>
                 </li>
                 <li>
                     <NavDropdown title="Modify">

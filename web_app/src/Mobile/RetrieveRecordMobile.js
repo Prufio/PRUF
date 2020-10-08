@@ -469,7 +469,7 @@ class RetrieveRecordMobile extends Component {
           <div>
             <div>
               <div className="mediaLinkAD-home">
-                <a className="mediaLinkContentAD-home" ><Home onClick={() => { window.location.href = '/#/' }} /></a>
+                <a className="mediaLinkContentAD-home" ><Home onClick={() => { window.location.href = '/' }} /></a>
               </div>
               <h2 className="AssetDashboardHeader">Here's What We Found :</h2>
               <div className="mediaLink-clearForm">
@@ -492,7 +492,7 @@ class RetrieveRecordMobile extends Component {
           <div>
             <div>
               <div className="mediaLinkAD-home">
-                <a className="mediaLinkContentAD-home" ><Home onClick={() => { window.location.href = '/#/' }} /></a>
+                <a className="mediaLinkContentAD-home" ><Home onClick={() => { window.location.href = '/' }} /></a>
               </div>
               <h2 className="FormHeaderMobile">Search Database</h2>
               <div className="mediaLink-clearForm">
@@ -566,7 +566,7 @@ class RetrieveRecordMobile extends Component {
           <div>
             <div>
               <div className="mediaLinkAD-home">
-                <a className="mediaLinkContentAD-home" ><Home onClick={() => { window.location.href = '/#/' }} /></a>
+                <a className="mediaLinkContentAD-home" ><Home onClick={() => { window.location.href = '/' }} /></a>
               </div>
               <h2 className="FormHeaderMobile">Search Database</h2>
               <div className="mediaLink-back">

@@ -299,7 +299,7 @@ class ImportAssetNC extends Component {
         </Form>
         <div className="assetSelectedResults">
           <Form.Row>
-            {this.state.idxHash !== undefined && (
+            {this.state.idxHash !== undefined && this.state.txHash === 0 && (
               <Form.Group>
                 <div className="assetSelectedContentHead">Asset IDX: <span className="assetSelectedContent">{this.state.idxHash}</span> </div>
                 <div className="assetSelectedContentHead">Asset Name: <span className="assetSelectedContent">{this.state.name}</span> </div>

@@ -234,6 +234,29 @@ const _checkAssetExportable = async (idxHash) => {
   return tempBool;
 }
 
+const _checkAssetDiscarded = async (idxHash) => {
+  let tempBool;
+  if (idxHash.substring(0, 2) !== "0x") {
+    return (false)
+  }
+  await window.contracts.STOR.methods
+    .retrieveShortRecord(idxHash)
+    .call(function (_error, _result) {
+      if (_error) {
+        return (console.log("IN ERROR IN ERROR IN ERROR"))
+      } else if (
+        Object.values(_result)[0] === "60"
+      ) {
+        tempBool = true;
+      } else {
+        tempBool = false;
+      }
+
+    });
+  console.log(tempBool);
+  return tempBool;
+}
+
 const _checkAssetRootMatch = async (AC, idxHash) => {
   let tempBool;
   if (idxHash.substring(0, 2) !== "0x") {
@@ -831,6 +854,7 @@ window.utils = {
   checkACName: _checkACName,
   checkAssetExists: _checkAssetExists,
   checkAssetExportable: _checkAssetExportable,
+  checkAssetDiscarded: _checkAssetDiscarded,
   checkAssetRootMatch: _checkAssetRootMatch,
   checkNoteExists: _checkNoteExists,
   checkMatch: _checkMatch,
