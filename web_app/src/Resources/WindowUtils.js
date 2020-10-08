@@ -294,10 +294,10 @@ const _checkAssetRootMatch = async (AC, idxHash) => {
         Object.values(_result)[2] === AC
       ) {
         tempBool = true;
+        window.fetchAC = Object.values(_result)[2];
       } else {
         tempBool = false;
       }
-
     });
   console.log(tempBool);
   return tempBool;
@@ -680,9 +680,11 @@ const _getACFromIdx = async (idxHash) => {
       } else {
         window.assetClass = Object.values(_result)[2];
         console.log("Now operating in AC: ", window.assetClass)
-        return (Object.values(_result)[2])
       }
     });
+  
+  await window.utils.getCosts(6, window.assetClass)
+  
 }
 
 const _getContracts = async () => {
@@ -796,7 +798,7 @@ const _getAssetTokenInfo = async () => {
             else if(_result[0] === "55") {statuses.push("Transferred/Unclaimed")}
             else if(_result[0] === "56") {statuses.push("In Escrow")}
             else if(_result[0] === "57") {statuses.push("Escrow Ended")}
-            else if(_result[0] === "58") {statuses.push("Locked Escrow Ended")}
+            else if(_result[0] === "58") {statuses.push("Imported")}
             else if(_result[0] === "59") {statuses.push("Discardable")}
             else if(_result[0] === "60") {statuses.push("Recyclable")}
             else if(_result[0] === "70") {statuses.push("Exported")}

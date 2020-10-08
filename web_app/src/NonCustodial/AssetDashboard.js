@@ -38,6 +38,55 @@ class AssetDashboard extends Component {
       });
       if (e === "back") { return this.setState({ assetObj: {}, moreInfo: false, printQR: undefined }) }
       this.setState({ assetObj: e, moreInfo: true, selectedImage: e.displayImage })
+      this.setAC(e.assetClass)
+    }
+
+    this.setAC = async (AC) => {
+      let acDoesExist;
+
+      if (AC === "0" || AC === undefined) { return alert("Selected AC Cannot be Zero") }
+      else {
+        if (
+          AC.charAt(0) === "0" ||
+          AC.charAt(0) === "1" ||
+          AC.charAt(0) === "2" ||
+          AC.charAt(0) === "3" ||
+          AC.charAt(0) === "4" ||
+          AC.charAt(0) === "5" ||
+          AC.charAt(0) === "6" ||
+          AC.charAt(0) === "7" ||
+          AC.charAt(0) === "8" ||
+          AC.charAt(0) === "9"
+        ) {
+          acDoesExist = await window.utils.checkForAC("id", AC);
+          await console.log("Exists?", acDoesExist)
+
+          if (!acDoesExist && window.confirm("Asset class does not currently exist. Consider minting it yourself! Click ok to route to our website for more information.")) {
+            window.open('https://www.pruf.io')
+          }
+
+          this.setState({ assetClass: AC });
+          await window.utils.resolveACFromID(AC)
+          await window.utils.getACData("id", AC)
+
+          await this.setState({ ACname: window.assetClassName });
+        }
+
+        else {
+          acDoesExist = await window.utils.checkForAC("name", AC);
+          await console.log("Exists?", acDoesExist)
+
+          if (!acDoesExist && window.confirm("Asset class does not currently exist. Consider minting it yourself! Click ok to route to our website for more information.")) {
+            window.open('https://www.pruf.io')
+          }
+
+          this.setState({ ACname: AC });
+          await window.utils.resolveAC(AC);
+          await this.setState({ assetClass: window.assetClass });
+        }
+
+        return this.setState({ assetClassSelected: true, acData: window.tempACData })
+      }
     }
 
     this.sendPacket = (obj, menu, link) => {
@@ -51,6 +100,8 @@ class AssetDashboard extends Component {
       let text = Object.values(obj.text)
       let imageNames = Object.keys(obj.photo)
       let textNames = Object.keys(obj.text)
+      
+      
 
       const showImage = (e) => {
         console.log(this.state.selectedImage)
@@ -204,7 +255,10 @@ class AssetDashboard extends Component {
                 <Button variant="selectedImage" onClick={() => { this.sendPacket(obj, "NC", "transfer-asset-NC") }}>Transfer</Button>
               </li>
               <li>
-                <Button variant="selectedImage" onClick={() => { this.sendPacket(obj, "NC", "export-asset-NC") }}>Export</Button>
+              <DropdownButton title="Export" drop="up" variant="selectedImage">
+                <Dropdown.Item id="header-dropdown" as={Button} onClick={() => { this.sendPacket(obj, "NC", "export-asset-NC") }}>Export</Dropdown.Item>
+                <Dropdown.Item id="header-dropdown" as={Button} onClick={() => { this.sendPacket(obj, "NC", "discard-asset-NC") }}>Discard</Dropdown.Item>
+              </DropdownButton>
               </li>
               <li>
                 <Button variant="selectedImage" onClick={() => { this.sendPacket(obj, "NC", "manage-escrow-NC") }}>Escrow</Button>

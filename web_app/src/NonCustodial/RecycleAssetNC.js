@@ -9,6 +9,57 @@ class RecycleAssetNC extends Component {
     super(props);
 
     //State declaration.....................................................................................................
+    this.setAC = async () => {
+      let acDoesExist;
+
+      const AC = window.assetClass
+
+      console.log(AC)
+
+      if (AC === "0" || AC === undefined) { return alert("Selected AC Cannot be Zero") }
+      else {
+        if (
+          AC.charAt(0) === "0" ||
+          AC.charAt(0) === "1" ||
+          AC.charAt(0) === "2" ||
+          AC.charAt(0) === "3" ||
+          AC.charAt(0) === "4" ||
+          AC.charAt(0) === "5" ||
+          AC.charAt(0) === "6" ||
+          AC.charAt(0) === "7" ||
+          AC.charAt(0) === "8" ||
+          AC.charAt(0) === "9"
+        ) {
+          acDoesExist = await window.utils.checkForAC("id", AC);
+          await console.log("Exists?", acDoesExist)
+
+          if (!acDoesExist && window.confirm("Asset class does not currently exist. Consider minting it yourself! Click ok to route to our website for more information.")) {
+            window.open('https://www.pruf.io')
+          }
+
+          this.setState({ assetClass: AC });
+          await window.utils.resolveACFromID(AC)
+          await window.utils.getACData("id", AC)
+
+          await this.setState({ ACname: window.assetClassName });
+        }
+
+        else {
+          acDoesExist = await window.utils.checkForAC("name", AC);
+          await console.log("Exists?", acDoesExist)
+
+          if (!acDoesExist && window.confirm("Asset class does not currently exist. Consider minting it yourself! Click ok to route to our website for more information.")) {
+            window.open('https://www.pruf.io')
+          }
+
+          this.setState({ ACname: AC });
+          await window.utils.resolveAC(AC);
+          await this.setState({ assetClass: window.assetClass });
+        }
+
+        return this.setState({ assetClassSelected: true, acData: window.tempACData })
+      }
+    }
 
     this.accessAsset = async () => {
       let idxHash;
@@ -28,13 +79,14 @@ class RecycleAssetNC extends Component {
           String(this.state.serial),
         );
       }
+
       else {
         idxHash = this.state.result
       }
 
       let doesExist = await window.utils.checkAssetExists(idxHash);
       let isDiscarded = await window.utils.checkAssetDiscarded(idxHash);
-      let isSameRoot = await window.utils.checkAssetRootMatch(this.state.assetClass, idxHash);
+      await window.utils.getACFromIdx(idxHash)
 
       if (!doesExist) {
         this.setState({
@@ -50,20 +102,13 @@ class RecycleAssetNC extends Component {
         return alert("Asset is not Discarded!")
       }
 
-      if (!isSameRoot) {
-        this.setState({
-          QRreader: false,
-        })
-        return alert("Import destination AC must have same root as previous AC")
-      }
-
       console.log("idxHash", idxHash);
       // console.log("rgtHash", rgtHash);
 
-      return this.setState({
+      await this.setState({
         idxHash: idxHash,
         QRreader: false,
-        accessPermitted: true
+        accessPermitted: true,
       })
 
     }
@@ -155,60 +200,20 @@ class RecycleAssetNC extends Component {
       }
     }
 
-    const _setAC = async () => {
-      let acDoesExist;
-
-      if (this.state.selectedAssetClass === "0" || this.state.selectedAssetClass === undefined) { return alert("Selected AC Cannot be Zero") }
-      else {
-        if (
-          this.state.selectedAssetClass.charAt(0) === "0" ||
-          this.state.selectedAssetClass.charAt(0) === "1" ||
-          this.state.selectedAssetClass.charAt(0) === "2" ||
-          this.state.selectedAssetClass.charAt(0) === "3" ||
-          this.state.selectedAssetClass.charAt(0) === "4" ||
-          this.state.selectedAssetClass.charAt(0) === "5" ||
-          this.state.selectedAssetClass.charAt(0) === "6" ||
-          this.state.selectedAssetClass.charAt(0) === "7" ||
-          this.state.selectedAssetClass.charAt(0) === "8" ||
-          this.state.selectedAssetClass.charAt(0) === "9"
-        ) {
-          acDoesExist = await window.utils.checkForAC("id", this.state.selectedAssetClass);
-          await console.log("Exists?", acDoesExist)
-
-          if (!acDoesExist && window.confirm("Asset class does not currently exist. Consider minting it yourself! Click ok to route to our website for more information.")) {
-            window.open('https://www.pruf.io')
-          }
-
-          this.setState({assetClass: this.state.selectedAssetClass});
-          await window.utils.resolveACFromID(this.state.selectedAssetClass)
-          await window.utils.getACData("id", this.state.selectedAssetClass)
-
-          await this.setState({ ACname: window.assetClassName });
-        }
-
-        else {
-          acDoesExist = await window.utils.checkForAC("name", this.state.selectedAssetClass);
-          await console.log("Exists?", acDoesExist)
-
-          if (!acDoesExist && window.confirm("Asset class does not currently exist. Consider minting it yourself! Click ok to route to our website for more information.")) {
-            window.open('https://www.pruf.io')
-          }
-
-          this.setState({ACname: this.state.selectedAssetClass});
-          await window.utils.resolveAC(this.state.selectedAssetClass);
-          await this.setState({ assetClass: window.assetClass });
-        }
-
-        return this.setState({assetClassSelected: true, acData: window.tempACData})
-      }
-    }
-
     const clearForm = async () => {
       document.getElementById("MainForm").reset();
       this.setState({ idxHash: undefined, txStatus: undefined, txHash: "0" })
     }
 
     const _recycleAsset = async () => {
+
+      if(
+        this.state.first === "" ||
+        this.state.middle === "" ||
+        this.state.surname === "" ||
+        this.state.id === "" ||
+        this.state.secret === ""
+      ) {return alert ("Please fill out all forms")}
 
       this.setState({ txStatus: false });
       this.setState({ txHash: "" });
@@ -226,6 +231,17 @@ class RecycleAssetNC extends Component {
         this.state.secret
       );
 
+      console.log(this.state.assetClass)
+
+      let isSameRoot = await window.utils.checkAssetRootMatch(window.assetClass, idxHash);
+
+      if (!isSameRoot) {
+        this.setState({
+          QRreader: false,
+        })
+        return alert("Import destination AC must have same root as previous AC")
+      }
+
       var rgtHash = window.web3.utils.soliditySha3(idxHash, rgtRaw);
 
       console.log("rgtHash", rgtHash);
@@ -233,7 +249,7 @@ class RecycleAssetNC extends Component {
       console.log("addr: ", window.addr);
 
       window.contracts.RCLR.methods
-        .$recycle(idxHash, rgtHash, this.state.selectedAssetClass)
+        .$recycle(idxHash, rgtHash, window.assetClass)
         .send({ from: window.addr, value: window.costs.newRecordCost })
         .on("error", function (_error) {
           // self.setState({ NRerror: _error });
@@ -247,7 +263,9 @@ class RecycleAssetNC extends Component {
           this.setState({ txHash: receipt.transactionHash });
           this.setState({ txStatus: receipt.status });
           console.log(receipt.status);
+          window.recount = true;
           window.resetInfo = true;
+          
           //Stuff to do when tx confirms
         });
       console.log(this.state.txHash);
@@ -280,28 +298,8 @@ class RecycleAssetNC extends Component {
               <h3>Please connect web3 provider.</h3>
             </div>
           )}
-          {window.addr > 0 && !this.state.assetClassSelected && this.state.QRreader === false && (
-            <>
-            <Form.Row>
-            <Form.Group as={Col} controlId="formGridAC">
-                <Form.Label className="formFont">Asset Class:</Form.Label>
-                <Form.Control
-                  placeholder="Submit an asset class name or #"
-                  onChange={(e) => this.setState({ selectedAssetClass: e.target.value })}
-                  size="lg"
-                />
-              </Form.Group>
-            </Form.Row>
-            <div className="submitButtonNR">
-            <div className="submitButtonNR-content">
-              <ArrowRightCircle
-                onClick={() => { _setAC() }}
-              />
-            </div>
-          </div>
-          </>
-          )}
-          {window.addr > 0 && this.state.assetClassSelected && (
+        
+          {window.addr > 0 && (
             <div>
               {!this.state.accessPermitted &&  this.state.QRreader === false &&(
                 <>
@@ -469,7 +467,7 @@ class RecycleAssetNC extends Component {
         { this.state.QRreader === false && (
         <div className="assetSelectedResults">
           <Form.Row>
-            {this.state.idxHash !== undefined && this.state.txHash === 0 && (
+            {this.state.idxHash !== undefined && this.state.txHash === "" && (
               <Form.Group>
                 <div className="assetSelectedContentHead">Asset IDX: <span className="assetSelectedContent">{this.state.idxHash}</span> </div>
                 <div className="assetSelectedContentHead">Asset Name: <span className="assetSelectedContent">{this.state.name}</span> </div>
