@@ -9,7 +9,74 @@ class ImportAssetNC extends Component {
 
     //State declaration.....................................................................................................
 
-    this.accessAsset = async () => {
+    this.updateAssets = setInterval(() => {
+      if (this.state.assets !== window.assets && this.state.runWatchDog === true) {
+        this.setState({ assets: window.assets })
+      }
+
+      if (this.state.hasLoadedAssets !== window.hasLoadedAssets && this.state.runWatchDog === true) {
+        this.setState({ hasLoadedAssets: window.hasLoadedAssets })
+      }
+    }, 50)
+
+    this.mounted = false;
+    this.state = {
+      addr: "",
+      costArray: [0],
+      error: undefined,
+      NRerror: undefined,
+      result: "",
+      resultIA: "",
+      assetClass: undefined,
+      CountDownStart: "",
+      ipfs1: "",
+      txHash: "",
+      txStatus: false,
+      isNFA: false,
+      type: "",
+      manufacturer: "",
+      model: "",
+      serial: "",
+      transaction: undefined,
+      assets: { descriptions: [0], ids: [0], assetClasses: [0], statuses: [0], names: [0] },
+      hasLoadedAssets: false,
+    };
+  }
+
+  //component state-change events......................................................................................................
+
+  componentDidMount() {//stuff to do when component mounts in window
+    if (window.assetClass > 0) {
+      this.setState({ assetClass: window.assetClass, assetClassSelected: true })
+    }
+
+    else {
+      this.setState({ assetClassSelected: false })
+    }
+      if (window.sentPacket !== undefined) {
+        this.setState({ name: window.sentPacket.name })
+        this.setState({ idxHash: window.sentPacket.idxHash })
+        this.setState({ assetClass: window.sentPacket.assetClass })
+        this.setState({ status: window.sentPacket.status })
+        window.sentPacket = undefined
+        this.setState({ wasSentPacket: true })
+      }
+  
+      this.setState({runWatchDog: true})
+  }
+
+  componentWillUnmount() {//stuff do do when component unmounts from the window
+
+  }
+
+  componentDidUpdate() {//stuff to do when state updates
+
+  }
+
+  render() {//render continuously produces an up-to-date stateful document  
+    const self = this;
+
+    const accessAsset = async () => {
       let idxHash;
       if (this.state.QRreader === false) {
         if (this.state.manufacturer === ""
@@ -67,93 +134,6 @@ class ImportAssetNC extends Component {
 
     }
 
-    this.mounted = false;
-    this.state = {
-      addr: "",
-      costArray: [0],
-      error: undefined,
-      NRerror: undefined,
-      result: "",
-      resultIA: "",
-      assetClass: undefined,
-      CountDownStart: "",
-      ipfs1: "",
-      txHash: "",
-      txStatus: false,
-      isNFA: false,
-      type: "",
-      manufacturer: "",
-      model: "",
-      serial: "",
-      transaction: undefined,
-      QRreader: false,
-    };
-  }
-
-  //component state-change events......................................................................................................
-
-  componentDidMount() {//stuff to do when component mounts in window
-    if (window.assetClass > 0) {
-      this.setState({ assetClass: window.assetClass, assetClassSelected: true })
-    }
-
-    else {
-      this.setState({ assetClassSelected: false })
-    }
-  }
-
-  componentWillUnmount() {//stuff do do when component unmounts from the window
-
-  }
-
-  componentDidUpdate() {//stuff to do when state updates
-
-  }
-
-  handleScan = async (data) => {
-    if (data) {
-      let tempBool = await window.utils.checkAssetExists(data)
-      let doesExist = await window.utils.checkAssetExists(data);
-      if (tempBool === true) {
-        this.setState({
-          result: data,
-          QRRR: true,
-          assetFound: "Asset Found!"
-        })
-        console.log(data)
-        this.accessAsset()
-      }
-      else {
-        this.setState({
-          assetFound: "Asset Not Found",
-          QRreader: false,
-        })
-        if (!doesExist) {
-          this.setState({
-            QRreader: false,
-          })
-          return alert("Asset doesnt exist!")
-        }
-      }
-    }
-  }
-
-  handleError = err => {
-    console.error(err)
-  }
-
-  render() {//render continuously produces an up-to-date stateful document  
-    const self = this;
-
-    const QRReader = async () => {
-      if (this.state.QRreader === false) {
-        this.setState({ QRreader: true, assetFound: "" })
-      }
-      else {
-        this.setState({ QRreader: false })
-      }
-    }
-
     const _setAC = async () => {
       let acDoesExist;
 
@@ -204,7 +184,37 @@ class ImportAssetNC extends Component {
 
     const clearForm = async () => {
       document.getElementById("MainForm").reset();
-      this.setState({ idxHash: undefined, txStatus: undefined, txHash: "0" })
+      this.setState({ idxHash: undefined, txStatus: undefined, txHash: "0", wasSentPacket: undefined, assetClassSelected: false })
+    }
+
+    const _checkIn = async (e) => {
+
+      console.log("Checking in with id: ", e)
+      if (e === "null" || e === undefined) { 
+        return clearForm()
+      }
+      else if (e === "reset") {
+        return window.resetInfo = true;
+      }
+      else if (e === "assetDash"){
+        console.log("heading over to dashboard")
+        return window.location.href = "/#/asset-dashboard"
+      }
+
+      if (window.assets.statuses[e] !== "70"){alert("Asset not in importable status"); return clearForm()}
+      this.setState({ selectedAsset: e })
+      console.log("Changed component idx to: ", window.assets.ids[e])
+
+      return this.setState({
+        assetClass: window.assets.assetClasses[e],
+        idxHash: window.assets.ids[e],
+        name: window.assets.descriptions[e].name,
+        photos: window.assets.descriptions[e].photo,
+        text: window.assets.descriptions[e].text,
+        description: window.assets.descriptions[e],
+        status: window.assets.statuses[e],
+        note: window.assets.notes[e]
+      })
     }
 
     const _importAsset = async () => {
@@ -246,10 +256,9 @@ class ImportAssetNC extends Component {
 
       return document.getElementById("MainForm").reset();
     };
-
-    return (
-      <div>
-        {this.state.QRreader === false && (
+    if (this.state.wasSentPacket && this.state.assetClassSelected) {
+      return (
+        <div>
           <div>
             <div className="mediaLinkAD-home">
               <a className="mediaLinkContentAD-home" ><Home onClick={() => { window.location.href = '/#/' }} /></a>
@@ -259,7 +268,96 @@ class ImportAssetNC extends Component {
               <a className="mediaLinkContent-clearForm" ><XSquare onClick={() => { clearForm() }} /></a>
             </div>
           </div>
-        )}
+          <Form className="Form" id='MainForm'>
+            {window.addr === undefined && (
+              <div className="Results">
+                <h2>User address unreachable</h2>
+                <h3>Please connect web3 provider.</h3>
+              </div>
+            )}
+            {window.addr > 0 && (
+              <div>
+                <Form.Row>
+                  <Form.Group>
+                    <div className="submitButtonTA2">
+                      <div className="submitButtonTA2-content">
+                        <ArrowRightCircle
+                          onClick={() => { _importAsset() }}
+                        />
+                      </div>
+                    </div>
+                  </Form.Group>
+                </Form.Row>
+              </div>
+            )}
+          </Form>
+          <div className="assetSelectedResults">
+            <Form.Row>
+              {this.state.idxHash !== undefined && this.state.txHash === "" && (
+                <Form.Group>
+                  <div className="assetSelectedContentHead">Asset IDX: <span className="assetSelectedContent">{this.state.idxHash}</span> </div>
+                  <div className="assetSelectedContentHead">Asset Name: <span className="assetSelectedContent">{this.state.name}</span> </div>
+                  {/* <div className="assetSelectedContentHead"> Asset Description: <span className="assetSelectedContent">{this.state.description}</span> </div> */}
+                  <div className="assetSelectedContentHead">Asset Class: <span className="assetSelectedContent">{this.state.assetClass}</span> </div>
+                  <div className="assetSelectedContentHead">Asset Status: <span className="assetSelectedContent">{this.state.status}</span> </div>
+                </Form.Group>
+              )}
+            </Form.Row>
+          </div>
+
+          {this.state.transaction === true && (
+
+            <div className="Results">
+              {/* {this.state.pendingTx === undefined && ( */}
+              <p className="loading">Transaction In Progress</p>
+              {/* )} */}
+              {/* {this.state.pendingTx !== undefined && (
+              <p class="loading">Transaction In Progress</p>
+            )} */}
+            </div>)}
+          {this.state.txHash > 0 && ( //conditional rendering
+            <div className="Results">
+              {this.state.txStatus === false && (
+                <div>
+                  !ERROR! :
+                  <a
+                    href={"https://kovan.etherscan.io/tx/" + this.state.txHash}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                  >
+                    KOVAN Etherscan:{this.state.txHash}
+                  </a>
+                </div>
+              )}
+              {this.state.txStatus === true && (
+                <div>
+                  {" "}
+                  No Errors Reported :
+                  <a
+                    href={"https://kovan.etherscan.io/tx/" + this.state.txHash}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                  >
+                    KOVAN Etherscan:{this.state.txHash}
+                  </a>
+                </div>
+              )}
+            </div>
+          )}
+        </div>
+      );
+    }
+    return (
+      <div>
+          <div>
+            <div className="mediaLinkAD-home">
+              <a className="mediaLinkContentAD-home" ><Home onClick={() => { window.location.href = '/#/' }} /></a>
+            </div>
+            <h2 className="FormHeader">Import Asset</h2>
+            <div className="mediaLink-clearForm">
+              <a className="mediaLinkContent-clearForm" ><XSquare onClick={() => { clearForm() }} /></a>
+            </div>
+          </div>
         <Form className="Form" id='MainForm'>
           {window.addr === undefined && (
             <div className="errorResults">
@@ -267,7 +365,7 @@ class ImportAssetNC extends Component {
               <h3>Please connect web3 provider.</h3>
             </div>
           )}
-          {window.addr > 0 && !this.state.assetClassSelected && this.state.QRreader === false && (
+          {window.addr > 0 && !this.state.assetClassSelected && (
             <>
               <Form.Row>
                 <Form.Group as={Col} controlId="formGridAC">
@@ -290,95 +388,36 @@ class ImportAssetNC extends Component {
           )}
           {window.addr > 0 && this.state.assetClassSelected && (
             <div>
-              {!this.state.accessPermitted && this.state.QRreader === false && (
+              {!this.state.accessPermitted && (
                 <>
-                  <Form.Row>
-                    <Form.Group as={Col} controlId="formGridType">
-                      <Form.Label className="formFont">Type:</Form.Label>
-                      <Form.Control
-                        placeholder="Type"
-                        required
-                        onChange={(e) => this.setState({ type: e.target.value })}
-                        size="lg"
-                      />
-                    </Form.Group>
+                <Form.Row>
+                <Form.Group as={Col} controlId="formGridAsset">
+                  <Form.Label className="formFont"> Select an Asset to Modify :</Form.Label>
+                  <Form.Control
+                    as="select"
+                    className="formSelect"
+                    size="lg"
+                    onChange={(e) => { _checkIn(e.target.value) }}
+                  >
+                    {this.state.hasLoadedAssets && (
+                    <optgroup className="optgroup">
+                    {window.utils.generateAssets()}
+                    </optgroup>)}
+                    {!this.state.hasLoadedAssets && (<optgroup ><option value="null"> Loading Assets... </option></optgroup>)}
 
-                    <Form.Group as={Col} controlId="formGridManufacturer">
-                      <Form.Label className="formFont">Manufacturer:</Form.Label>
-                      <Form.Control
-                        placeholder="Manufacturer"
-                        required
-                        onChange={(e) => this.setState({ manufacturer: e.target.value })}
-                        size="lg"
-                      />
-                    </Form.Group>
-
-                  </Form.Row>
-
-                  <Form.Row>
-                    <Form.Group as={Col} controlId="formGridModel">
-                      <Form.Label className="formFont">Model:</Form.Label>
-                      <Form.Control
-                        placeholder="Model"
-                        required
-                        onChange={(e) => this.setState({ model: e.target.value })}
-                        size="lg"
-                      />
-                    </Form.Group>
-
-                    <Form.Group as={Col} controlId="formGridSerial">
-                      <Form.Label className="formFont">Serial:</Form.Label>
-                      <Form.Control
-                        placeholder="Serial"
-                        required
-                        onChange={(e) => this.setState({ serial: e.target.value })}
-                        size="lg"
-                      />
-                    </Form.Group>
-                  </Form.Row>
+                  </Form.Control>
+                </Form.Group>
+              </Form.Row>
                   <Form.Row>
                     <div className="submitButtonAA">
                       <div className="submitButtonAA-content">
                         <ArrowRightCircle
-                          onClick={() => { this.accessAsset() }}
-                        />
-                      </div>
-                    </div>
-                    <div className="submitButtonRRQR">
-                      <div className="submitButtonRRQR-content">
-                        <Grid
-                          onClick={() => { QRReader() }}
+                          onClick={() => { accessAsset() }}
                         />
                       </div>
                     </div>
                   </Form.Row>
                 </>
-              )}
-              {this.state.QRreader === true && (
-                <div>
-                  <div>
-                    <div className="mediaLinkAD-home">
-                      <a className="mediaLinkContentAD-home" ><Home onClick={() => { window.location.href = '/#/' }} /></a>
-                    </div>
-                    <h2 className="FormHeader">Scan QR</h2>
-                    <div className="mediaLink-back">
-                      <a className="mediaLinkContent-back" ><CornerUpLeft onClick={() => { QRReader() }} /></a>
-                    </div>
-                  </div>
-                  <div className="QRreader">
-                    <QrReader
-                      delay={300}
-                      onError={this.handleError}
-                      onScan={this.handleScan}
-                      style={{ width: '100%' }}
-                    />
-                    {this.state.resultIA !== undefined && (
-                      <div className="Results">
-                        {this.state.assetFound}
-                      </div>
-                    )}
-                  </div>
-                </div>
               )}
               {this.state.accessPermitted && (
                 <>
@@ -398,7 +437,6 @@ class ImportAssetNC extends Component {
             </div>
           )}
         </Form>
-        { this.state.QRreader === false && (
           <div className="assetSelectedResults">
             <Form.Row>
               {this.state.idxHash !== undefined && this.state.txHash === "" && (
@@ -412,7 +450,6 @@ class ImportAssetNC extends Component {
               )}
             </Form.Row>
           </div>
-        )}
         {this.state.transaction === true && this.state.QRreader === false && (
 
           <div className="Results">
@@ -423,7 +460,7 @@ class ImportAssetNC extends Component {
     <p class="loading">Transaction In Progress</p>
   )} */}
           </div>)}
-        {this.state.txHash > 0 && this.state.QRreader === false && ( //conditional rendering
+        {this.state.txHash > 0 && ( //conditional rendering
           <div className="Results">
             {this.state.txStatus === false && (
               <div>
@@ -437,7 +474,7 @@ class ImportAssetNC extends Component {
                 </a>
               </div>
             )}
-            {this.state.txStatus === true && this.state.QRreader === false && (
+            {this.state.txStatus === true && (
               <div>
                 {" "}
                 No Errors Reported :

@@ -99,7 +99,7 @@ class RecycleAssetNC extends Component {
         this.setState({
           QRreader: false,
         })
-        return alert("Asset is not Discarded!")
+        return alert("Asset is not Discarded! Ensure data fields are correct before submission.")
       }
 
       console.log("idxHash", idxHash);
