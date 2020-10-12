@@ -118,7 +118,7 @@ class Home extends Component {
                 />
               </Form.Group>
               <Form.Row>
-                <div className="submitButton">
+                <div className="submitButtonHome">
                   <div className="submitButton-content">
                     <ArrowRightCircle
                       onClick={() => { _setWindowAC() }}

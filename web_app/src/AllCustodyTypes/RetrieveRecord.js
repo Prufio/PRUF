@@ -537,7 +537,6 @@ class RetrieveRecord extends Component {
                   </Form.Row>
 
                   <Form.Row>
-                    <Form.Group>
                       <div className="submitButtonRR">
                         <div className="submitButtonRR-content">
                           <ArrowRightCircle
@@ -552,15 +551,12 @@ class RetrieveRecord extends Component {
                           />
                         </div>
                       </div>
-                    </Form.Group>
-
                   </Form.Row>
                 </div>
               </Form>
               <div className="Results"></div>
             </div>
           )}
-
 
           {this.state.QRreader === true && (
             <div>

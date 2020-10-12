@@ -1,6 +1,7 @@
 import React, { Component } from "react";
 import Form from "react-bootstrap/Form";
 import Col from "react-bootstrap/Col";
+import Row from "react-bootstrap/Row";
 import { Home, XSquare, ArrowRightCircle, Grid, CornerUpLeft, CheckCircle } from "react-feather";
 import QrReader from 'react-qr-reader'
 class ImportAssetNC extends Component {
@@ -365,22 +366,25 @@ class ImportAssetNC extends Component {
           {window.addr > 0 && !this.state.assetClassSelected && (
             <>
               <Form.Row>
-                <Form.Group as={Col} controlId="formGridAC">
-                  <Form.Label className="formFont">Asset Class:</Form.Label>
+                <Form.Label className="formFontRow">Asset Class:</Form.Label>
+                <Form.Group as={Row} controlId="formGridAC">
+
                   <Form.Control
+                    className="singleFormRow"
                     placeholder="Submit an asset class name or #"
                     onChange={(e) => this.setState({ selectedAssetClass: e.target.value })}
                     size="lg"
                   />
                 </Form.Group>
-              </Form.Row>
-              <div className="submitButtonNR">
-                <div className="submitButtonNR-content">
-                  <ArrowRightCircle
-                    onClick={() => { _setAC() }}
-                  />
+
+                <div className="submitButtonNRAC">
+                  <div className="submitButtonNR-content">
+                    <ArrowRightCircle
+                      onClick={() => { _setAC() }}
+                    />
+                  </div>
                 </div>
-              </div>
+              </Form.Row>
             </>
           )}
           {window.addr > 0 && this.state.assetClassSelected && (

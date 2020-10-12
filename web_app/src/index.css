@@ -1077,6 +1077,10 @@ div {
   margin-top: -0.5rem;
 }
 
+.QRreader2 {
+  margin-top: -4rem;
+}
+
 .imageButton {
         border: 0px transparent; 
         background-color: transparent; 
@@ -1581,6 +1585,15 @@ div {
 
 .submitButton {
   display: flex;
+  /* position: absolute; */
+  background-color: transparent;
+  z-index: 1000;
+  margin-left: 50rem;
+  margin-top: 1rem;
+}
+
+.submitButtonHome {
+  display: flex;
   position: absolute;
   background-color: transparent;
   z-index: 1000;
@@ -1717,6 +1730,15 @@ div {
   transform: translateX(3px);
 }
 
+.submitButtonEM {
+  display: flex;
+  /* position: absolute; */
+  background-color: transparent;
+  z-index: 1000;
+  margin-left: 20rem;
+  margin-top: -3.7rem;
+}
+
 .submitButtonEM-content {
   color: white;
   border-radius: 50%;
@@ -1756,11 +1778,11 @@ div {
 
 .submitButtonTA {
   display: flex;
-  position: absolute;
+  /* position: absolute; */
   background-color: transparent;
   z-index: 1000;
   margin-left: 50rem;
-  /* margin-top: -3.7rem; */
+  margin-top: 1rem;
 }
 
 .submitButtonTA-content {
@@ -1779,11 +1801,11 @@ div {
 
 .submitButtonTA2 {
   display: flex;
-  position: absolute;
+  /* position: absolute; */
   background-color: transparent;
   z-index: 1000;
-  margin-left: 21rem;
-  margin-top: -3.7rem;
+  margin-left: 50rem;
+  margin-top: 1rem;
 }
 
 .submitButtonTA2-content {
@@ -1894,7 +1916,7 @@ div {
 
 .submitButtonIA {
   display: flex;
-  position: absolute;
+  /* position: absolute; */
   background-color: transparent;
   z-index: 1000;
   margin-left: 8rem;
@@ -1917,11 +1939,11 @@ div {
 
 .submitButtonME {
   display: flex;
-  position: absolute;
+  /* position: absolute; */
   background-color: transparent;
   z-index: 1000;
   margin-left: 50rem;
-  margin-top: -0.7rem;
+  margin-top: 1rem;
 }
 
 .submitButtonME-content {
@@ -1940,11 +1962,11 @@ div {
 
 .submitButtonME2 {
   display: flex;
-  position: absolute;
+  /* position: absolute; */
   background-color: transparent;
   z-index: 1000;
-  margin-left: 25rem;
-  margin-top: -2.7rem;
+  margin-left: 50rem;
+  margin-top: 1rem;
 }
 
 .submitButtonME2-content {
@@ -1963,11 +1985,11 @@ div {
 
 .submitButtonAA {
   display: flex;
-  position: absolute;
+  /* position: absolute; */
   background-color: transparent;
   z-index: 1000;
-  margin-left: 38rem;
-  margin-top: -3.7rem;
+  margin-left: 50rem;
+  margin-top: 1rem;
 }
 
 .submitButtonAA-content {
@@ -1986,7 +2008,7 @@ div {
 
 .submitButtonNR {
   display: flex;
-  position: absolute;
+  /* position: absolute; */
   background-color: transparent;
   z-index: 1000;
   margin-left: 50rem;
@@ -2059,11 +2081,11 @@ div {
 
 .submitButtonVRH2 {
   display: flex;
-  position: absolute;
+  /* position: absolute; */
   background-color: transparent;
   z-index: 1000;
   margin-left: 53rem;
-  margin-top: -0.9rem;
+  /* margin-top: -0.9rem; */
 }
 
 .submitButtonVRH2-content {
