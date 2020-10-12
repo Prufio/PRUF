@@ -148,6 +148,9 @@ class ModifyDescription extends Component {
 
     const _addToMiscArray = async (type) => {
       let element;
+      let elementName = this.state.elementName;
+      let elementValue = this.state.elementValue;
+
       if (type === "description") {
         element = ('"description": ' + '"' + this.state.elementValue + '",')
       }
@@ -156,18 +159,37 @@ class ModifyDescription extends Component {
         element = ('"displayImage": ' + '"' + this.state.elementValue + '",')
       }
 
-      else if (this.state.elementName === "" && type === "photo") {
+      else if (elementName === "" && type === "photo") {
         element = ('"Image' + (String(Object.values(this.state.oldDescription.photo).length + this.state.count)) + '"' + ':' + '"' + this.state.elementValue + '",')
         this.setState({ count: this.state.count + 1 })
       }
 
-      else if (this.state.elementName === "" && type === "text") {
+      else if (elementName === "" && type === "text") {
         element = ('"Text' + (String(Object.values(this.state.oldDescription.text).length + this.state.count)) + '"' + ':' + '"' + this.state.elementValue + '",')
         this.setState({ count: this.state.count + 1 })
       }
 
       else {
-        element = ('"' + this.state.elementName + '": ' + '"' + this.state.elementValue + '",')
+        elementName.replace(" ", "_");
+        for (let i = 0; i < elementName.length; i++){
+          if(elementName.charAt(i) === "'"){
+            return alert(" Use of character: ' "+ elementName.charAt(i)+ " ' not allowed!")
+          }
+
+          if(elementName.charAt(i) === '"'){
+            return alert(" Use of character: ' "+ elementName.charAt(i)+ " ' not allowed!")
+          }
+        }
+        for (let i = 0; i < elementName.length; i++){
+          if(elementValue.charAt(i) === "'"){
+            return alert(" Use of character: ' "+ elementValue.charAt(i)+ "at position" + String(i) + " ' not allowed!")
+          }
+          
+          if(elementValue.charAt(i) === '"'){
+            return alert(" Use of character: ' "+ elementValue.charAt(i)+ "at position" + String(i) + " ' not allowed!")
+          }
+        }
+        element = ('"' + elementName + '": ' + '"' + this.state.elementValue + '",')
       }
 
 
@@ -431,7 +453,8 @@ class ModifyDescription extends Component {
                               Submission Title:
                         </Form.Label>
                             <Form.Control
-                              placeholder="Name This Text Submission (No Spaces)"
+                              pattern={'"., ' + "'"}
+                              placeholder="Name This Text Submission"
                               onChange={(e) => this.setState({ elementName: e.target.value })}
                               size="lg"
                             />

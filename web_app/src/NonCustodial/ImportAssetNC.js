@@ -107,24 +107,27 @@ class ImportAssetNC extends Component {
         this.setState({
           QRreader: false,
         })
-        return alert("Asset doesnt exist! Ensure data fields are correct before submission.")
+        alert("Asset doesnt exist! Ensure data fields are correct before submission.")
+        return window.location.href = "/#/asset-dashboard"
       }
 
       if (Number(resArray[0]) !== 70) {
         this.setState({
           QRreader: false,
         })
-        return alert("Asset is not exported! Owner must export the assset in order to import.")
+        alert("Asset is not exported! Owner must export the assset in order to import.")
+        return window.location.href = "/#/asset-dashboard"
       }
 
       let destinationACData = await window.utils.getACData("id", this.state.assetClass);
-      let originACData = await window.utils.getACData("id", resArray[1])
+      let originACRoot = resArray[1]
 
-      if (originACData.root !== destinationACData.root) {
+      if (originACRoot !== destinationACData.root) {
         this.setState({
           QRreader: false,
         })
-        return alert("Import destination AC must have same root as origin!")
+        alert("Import destination AC must have same root as origin!")
+        return window.location.href = "/#/asset-dashboard"
       }
 
       console.log("idxHash", idxHash);
@@ -184,9 +187,9 @@ class ImportAssetNC extends Component {
           await window.utils.resolveAC(this.state.selectedAssetClass);
           await this.setState({ assetClass: window.assetClass });
         }
-
-        let resArray = await window.utils.checkStats(this.state.idxHash, [0, 2])
-        console.log(resArray)
+        if(this.state.wasSentPacket){
+          let resArray = await window.utils.checkStats(this.state.idxHash, [0, 2])
+          console.log(resArray)
 
         if (Number(resArray[0]) !== 70) {
           alert("Asset is not exported! Owner must export the assset in order to import.");
@@ -200,6 +203,7 @@ class ImportAssetNC extends Component {
           alert("Import destination AC must have same root as origin!");
           window.sentpacket = undefined;
           return window.location.href = "/#/asset-dashboard"
+        }
         }
 
         return this.setState({ assetClassSelected: true, acData: window.tempACData })
