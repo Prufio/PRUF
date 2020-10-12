@@ -382,6 +382,26 @@ const _checkHoldsToken = async (req, id) => {
   return tempBool;
 }
 
+const _checkStats = async (idxHash, posArr) => {
+  let tempArr = [];
+  for (let i = 0; i < posArr.length; i++){
+  await window.contracts.STOR.methods
+    .retrieveShortRecord(idxHash)
+    .call(function (_error, _result) {
+      if (_error) {
+        console.log(_error);
+      }
+
+      else { 
+        tempArr.push(Object.values(_result)[posArr[i]]) 
+      }
+    });
+  }
+
+  console.log(tempArr)
+  return tempArr;
+}
+
 const _checkEscrowStatus = async (idxHash) => {
   let tempBool;
   await window.contracts.STOR.methods
@@ -914,6 +934,7 @@ window.utils = {
   resolveAC: _resolveAC,
   checkACName: _checkACName,
   checkAssetExists: _checkAssetExists,
+  checkStats: _checkStats,
   checkAssetExportable: _checkAssetExportable,
   checkAssetExported: _checkAssetExported,
   checkAssetDiscarded: _checkAssetDiscarded,

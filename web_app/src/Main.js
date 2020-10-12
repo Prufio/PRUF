@@ -597,7 +597,10 @@ class Main extends Component {
         })
       }
 
-      if (window.balances === undefined) { console.log("balances undefined, trying to get them..."); return this.setUpTokenVals(); }
+      if (window.balances === undefined) { 
+        console.log("balances undefined, trying to get them..."); 
+        if(window.addr === undefined){return this.forceUpdate}
+        return this.setUpTokenVals(true); }
       console.log("SA: In setUpAssets")
 
       let tempDescObj = {}
@@ -686,12 +689,15 @@ class Main extends Component {
       console.log("BA: Assets after rebuild: ", window.assets)
     }
 
-    this.setUpTokenVals = async () => {
+    this.setUpTokenVals = async (willSetup) => {
       window.balances = undefined
       console.log("STV: Setting up balances")
 
       await window.utils.determineTokenBalance()
-      return window.balances
+      await console.log(window.balances)
+      if(willSetup){
+        return this.setUpAssets()
+      }
     }
 
     this.getIPFSJSONObject = (lookup, descElement) => {

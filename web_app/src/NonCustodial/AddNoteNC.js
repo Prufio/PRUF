@@ -170,8 +170,13 @@ class AddNoteNC extends Component {
       else if (e === "assetDash"){
         return window.location.href = "/#/asset-dashboard"
       }
-      if (await window.utils.checkNoteExists(window.assets.ids[e])) {
-        alert("Asset note already exists! Cannot overwrite existing note."); return clearForm()
+
+      let resArray = await window.utils.checkStats(window.assets.ids[e], [6])
+
+      console.log(resArray)
+
+      if (Number(resArray[0]) > 0) {
+        alert("Note already enscribed on this asset! Cannot overwrite existing note."); return clearForm()
       }
 
       this.setState({ selectedAsset: e })
