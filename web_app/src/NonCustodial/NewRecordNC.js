@@ -171,6 +171,10 @@ class NewRecordNC extends Component {
         this.state.secret
       );
 
+      if(idxHash%2 !== 0){
+        return (alert("Something went wrong..."))
+      }
+
       var rgtHash = window.web3.utils.soliditySha3(idxHash, rgtRaw);
       //rgtHash = tenThousandHashesOf(rgtHash)
 
