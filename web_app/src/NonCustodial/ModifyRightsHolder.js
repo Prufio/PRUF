@@ -260,8 +260,8 @@ class ModifyRightsHolder extends Component {
                 </Form.Row>
                 <Form.Row>
                   <Form.Group >
-                    <div className="submitButtonFMR">
-                      <div className="submitButtonFMR-content">
+                    <div className="submitButton">
+                      <div className="submitButtonVRH-content">
                         <AlertTriangle
                           onClick={() => { _editRgtHash() }}
                         />
@@ -421,8 +421,8 @@ class ModifyRightsHolder extends Component {
               </Form.Row>
               <Form.Row>
                 <Form.Group >
-                  <div className="submitButtonFMR">
-                    <div className="submitButtonFMR-content">
+                  <div className="submitButton">
+                    <div className="submitButtonVRH-content">
                       <AlertTriangle
                         onClick={() => { _editRgtHash() }}
                       />

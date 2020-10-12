@@ -231,8 +231,8 @@ class ModifyRecordStatusNC extends Component {
                 </Form.Row>
 
                 <Form.Row>
-                  <div className="submitButtonMRS2">
-                    <div className="submitButtonMRS2-content">
+                  <div className="submitButton">
+                    <div className="submitButton-content">
                       <CheckCircle
                         onClick={() => { this.modifyStatus() }}
                       />
@@ -355,8 +355,8 @@ class ModifyRecordStatusNC extends Component {
               </Form.Row>
 
               <Form.Row>
-                <div className="submitButtonMRS">
-                  <div className="submitButtonMRS-content">
+                <div className="submitButton">
+                  <div className="submitButton-content">
                     <CheckCircle
                       onClick={() => { this.modifyStatus() }}
                     />

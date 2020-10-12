@@ -288,8 +288,8 @@ class AddNoteNC extends Component {
                 {this.state.hashPath === "" && (
                   <Form.Row>
                     <Form.Group >
-                      <div className="submitButtonAN2">
-                        <div className="submitButtonAN2-content">
+                      <div className="submitButton">
+                        <div className="submitButton-content">
                           <CheckCircle
                             onClick={() => { publishIPFS2Photo() }}
                           />
@@ -422,8 +422,8 @@ class AddNoteNC extends Component {
               {this.state.hashPath === "" && (
                   <Form.Row>
                   <Form.Group >
-                    <div className="submitButtonAN2">
-                      <div className="submitButtonAN2-content">
+                    <div className="submitButton">
+                      <div className="submitButton-content">
                         <CheckCircle
                           onClick={() => { publishIPFS2Photo() }}
                         />

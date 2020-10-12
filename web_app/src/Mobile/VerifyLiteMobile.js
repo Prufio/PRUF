@@ -183,7 +183,7 @@ class VerifyLiteMobile extends Component {
                 </Form.Row>
                 <Form.Row>
                   <div className="submitButtonVRHMobile">
-                    <div className="submitButtonVRH-content">
+                    <div className="submitButton-content">
                       <ArrowRightCircle
                         onClick={() => { _accessAsset() }}
                       />
@@ -243,7 +243,7 @@ class VerifyLiteMobile extends Component {
                 </Form.Row>
                 <Form.Row>
                   <div className="submitButtonVRHMobile">
-                    <div className="submitButtonVRH-content">
+                    <div className="submitButton-content">
                       <ArrowRightCircle
                         onClick={() => { _verify() }}
                       />

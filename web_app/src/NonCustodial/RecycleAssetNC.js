@@ -356,15 +356,15 @@ class RecycleAssetNC extends Component {
                     </Form.Group>
                   </Form.Row>
                   <Form.Row>
-                    <div className="submitButtonAA">
-                      <div className="submitButtonAA-content">
+                    <div className="submitButton">
+                      <div className="submitButton-content">
                         <ArrowRightCircle
                           onClick={() => { this.accessAsset() }}
                         />
                       </div>
                     </div>
-                    <div className="submitButtonRRQR">
-                      <div className="submitButtonRRQR-content">
+                    <div className="submitButton">
+                      <div className="submitButton-content">
                         <Grid
                           onClick={() => { QRReader() }}
                         />
@@ -457,8 +457,8 @@ class RecycleAssetNC extends Component {
 
                   </Form.Row>
                   <Form.Row>
-                    <div className="submitButtonIA">
-                      <div className="submitButtonIA-content">
+                    <div className="submitButton">
+                      <div className="submitButton-content">
                         <Repeat
                           onClick={() => { _recycleAsset() }}
                         />

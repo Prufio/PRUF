@@ -96,10 +96,10 @@ class Main extends Component {
                 {this.state.hamburgerMenu !== undefined && (
                   <div className="hamburgerDropdown">
                     <div className="mediaLink">
-                      <a className="mediaLinkContent"><GitHub size={35} onClick={() => { window.open("https://github.com/vdmprojects/Bulletproof", "_blank") }} /></a>
-                      <a className="mediaLinkContent"><Mail size={35} onClick={() => { window.open("mailto:drake@pruf.io", "_blank") }} /></a>
-                      <a className="mediaLinkContent"><Twitter size={35} onClick={() => { window.open("https://twitter.com/umlautchair", "_blank") }} /></a>
-                      <a className="mediaLinkContent" ><Video size={35} onClick={() => { window.open("https://www.youtube.com/channel/UC9HzR9-dAzHtPKOqlVqwOuw", "_blank") }} /></a>
+                      <a className="mediaLinkContent"><GitHub size={20} onClick={() => { window.open("https://github.com/vdmprojects/Bulletproof", "_blank") }} /></a>
+                      <a className="mediaLinkContent"><Mail size={20} onClick={() => { window.open("mailto:drake@pruf.io", "_blank") }} /></a>
+                      <a className="mediaLinkContent"><Twitter size={20} onClick={() => { window.open("https://www.twitter.com/prufteam", "_blank") }} /></a>
+                      <a className="mediaLinkContent" ><Video size={20} onClick={() => { window.open("https://www.youtube.com/channel/UC9HzR9-dAzHtPKOqlVqwOuw", "_blank") }} /></a>
                     </div>
                     <button
                       className="imageButtonU"

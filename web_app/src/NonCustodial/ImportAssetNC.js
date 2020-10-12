@@ -277,8 +277,8 @@ class ImportAssetNC extends Component {
               <div>
                 <Form.Row>
                   <Form.Group>
-                    <div className="submitButtonTA2">
-                      <div className="submitButtonTA2-content">
+                    <div className="submitButton">
+                      <div className="submitButton-content">
                         <ArrowRightCircle
                           onClick={() => { _importAsset() }}
                         />
@@ -411,8 +411,8 @@ class ImportAssetNC extends Component {
                 </Form.Row>
 
                 <Form.Row>
-                  <div className="submitButtonIA">
-                    <div className="submitButtonIA-content">
+                  <div className="submitButton">
+                    <div className="submitButton-content">
                       <CheckCircle
                         onClick={() => { _importAsset() }}
                       />

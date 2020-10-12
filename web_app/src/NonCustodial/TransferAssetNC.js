@@ -192,8 +192,8 @@ class ModifyDescriptionNC extends Component {
 
                 <Form.Row>
                   <Form.Group>
-                    <div className="submitButtonTA2">
-                      <div className="submitButtonTA2-content">
+                    <div className="submitButton">
+                      <div className="submitButton-content">
                         <CheckCircle
                           onClick={() => { _transferAsset() }}
                         />
@@ -315,8 +315,8 @@ class ModifyDescriptionNC extends Component {
 
               <Form.Row>
                 <Form.Group>
-                  <div className="submitButtonTA">
-                    <div className="submitButtonTA-content">
+                  <div className="submitButton">
+                    <div className="submitButton-content">
                       <CheckCircle
                         onClick={() => { _transferAsset() }}
                       />

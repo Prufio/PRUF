@@ -280,8 +280,8 @@ class ExportAssetNC extends Component {
               </Form.Row>
               <Form.Row>
                 <Form.Group>
-                  <div className="submitButtonEA">
-                    <div className="submitButtonEA-content">
+                  <div className="submitButton">
+                    <div className="submitButton-content">
                       <CheckCircle
                         onClick={() => { _exportAsset() }}
                       />
