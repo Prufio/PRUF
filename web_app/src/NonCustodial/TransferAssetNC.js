@@ -83,7 +83,19 @@ class ModifyDescriptionNC extends Component {
         return window.location.href = "/#/asset-dashboard"
       }
 
-      if (window.assets.statuses[e] !== "51"){alert("Asset not in transferrable status"); return clearForm()}
+      let resArray = await window.utils.checkStats(window.assets.ids[e], [0,2])
+
+      console.log(resArray)
+
+      
+      if (Number(resArray[1]) === 0) {
+        alert("Asset does not exist at given IDX"); return clearForm()
+      }
+
+      if (Number(resArray[0]) !== 51) {
+        alert("Asset not in transferrable status"); return clearForm()
+      }
+
       this.setState({ selectedAsset: e })
       console.log("Changed component idx to: ", window.assets.ids[e])
 
@@ -101,7 +113,7 @@ class ModifyDescriptionNC extends Component {
 
     const clearForm = async () => {
       document.getElementById("MainForm").reset();
-      this.setState ({ idxHash: undefined, txStatus: undefined, txHash: "0", wasSentPacket: undefined})
+      this.setState ({ idxHash: undefined, txStatus: "", txHash: "", wasSentPacket: undefined})
     }
 
     const _transferAsset = async () => {

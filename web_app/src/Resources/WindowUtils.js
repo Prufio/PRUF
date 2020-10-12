@@ -962,6 +962,7 @@ const _getAssetTokenInfo = async () => {
             else if(_result[0] === "59") {statuses.push("Discardable")}
             else if(_result[0] === "60") {statuses.push("Recyclable")}
             else if(_result[0] === "70") {statuses.push("Exported")}
+            else if(_result[0] === "0") {statuses.push("Status Not Set")}
             assetClasses.push(Object.values(_result)[2])
 
           }

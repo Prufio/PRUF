@@ -84,22 +84,17 @@ class RecycleAssetNC extends Component {
         idxHash = this.state.result
       }
 
-      let doesExist = await window.utils.checkAssetExists(idxHash);
-      let isDiscarded = await window.utils.checkAssetDiscarded(idxHash);
-      await window.utils.getACFromIdx(idxHash)
+      let resArray = await window.utils.checkStats(idxHash, [0,2])
 
-      if (!doesExist) {
-        this.setState({
-          QRreader: false,
-        })
-        return alert("Asset doesnt exist! Ensure data fields are correct before submission.")
+      console.log(resArray)
+
+      
+      if (Number(resArray[1]) === 0) {
+        alert("Asset does not exist at given IDX");
       }
 
-      if (!isDiscarded) {
-        this.setState({
-          QRreader: false,
-        })
-        return alert("Asset is not Discarded! Ensure data fields are correct before submission.")
+      if (Number(resArray[0]) !== 60) {
+        alert("Asset not in recyclable status");
       }
 
       console.log("idxHash", idxHash);

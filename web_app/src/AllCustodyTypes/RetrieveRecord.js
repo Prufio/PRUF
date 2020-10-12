@@ -48,30 +48,7 @@ class RetrieveRecord extends Component {
       let text = Object.values(obj.text)
       let imageNames = Object.keys(obj.photo)
       let textNames = Object.keys(obj.text)
-      let status = "";
-
-      if (obj.status === "50") { status="In Locked Escrow" }
-      else if (obj.status === "51") { status="Transferrable" }
-      else if (obj.status === "52") { status="Non-Transferrable" }
-      else if (obj.status === "53") { status="MARKED STOLEN" }
-      else if (obj.status === "54") { status="MARKED LOST" }
-      else if (obj.status === "55") { status="Transferred/Unclaimed" }
-      else if (obj.status === "56") { status="In Escrow" }
-      else if (obj.status === "57") { status="Escrow Ended" }
-      else if (obj.status === "58") { status="Locked Escrow Ended" }
-      else if (obj.status === "59") { status="Discardable" }
-      else if (obj.status === "60") { status="Recyclable" }
-      else if (obj.status === "70") { status="Exported" }
-      else if (obj.status === "0") { status="No Status Set" }
-      else if (obj.status === "1") { status="Transferrable" }
-      else if (obj.status === "2") { status="Non-Transferrable" }
-      else if (obj.status === "3") { status="MARKED STOLEN" }
-      else if (obj.status === "4") { status="MARKED LOST" }
-      else if (obj.status === "5") { status="Transferred/Unclaimed" }
-      else if (obj.status === "6") { status="In Escrow" }
-      else if (obj.status === "7") { status="Escrow Ended" }
-
-      else{status = "Invalid Status Retrieved"}
+      let status = window.utils.getStatusString(obj.status);
 
       const showImage = (e) => {
         console.log(this.state.selectedImage)
