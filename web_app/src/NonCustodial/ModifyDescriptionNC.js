@@ -2,7 +2,7 @@ import React, { Component } from "react";
 import Form from "react-bootstrap/Form";
 import Col from "react-bootstrap/Col";
 import bs58 from "bs58";
-import { ArrowRightCircle, Home, XSquare } from 'react-feather'
+import { ArrowRightCircle, Home, XSquare, CheckCircle, UploadCloud, Trash2 } from 'react-feather'
 
 
 class ModifyDescription extends Component {
@@ -33,6 +33,7 @@ class ModifyDescription extends Component {
       this.setState({ txHash: "" });
       this.setState({ error: undefined })
       this.setState({ result: "" })
+      this.setState({ transaction: true })
       window.isInTx = true;
 
       var _ipfs1 = this.state.hashPath;
@@ -47,6 +48,7 @@ class ModifyDescription extends Component {
           // self.setState({ NRerror: _error });
           self.setState({ txHash: Object.values(_error)[0].transactionHash });
           self.setState({ txStatus: false });
+          self.setState({ transaction: false });
           console.log(Object.values(_error)[0].transactionHash);
           window.isInTx = false
 
@@ -57,6 +59,7 @@ class ModifyDescription extends Component {
         .on("receipt", (receipt) => {
           this.setState({ txHash: receipt.transactionHash });
           this.setState({ txStatus: receipt.status });
+          self.setState({ transaction: false });
           console.log(receipt.status);
           window.resetInfo = true;
           window.isInTx = false
@@ -102,6 +105,7 @@ class ModifyDescription extends Component {
       imageCount: 1,
       textCount: 1,
       count: 1,
+      transaction: undefined,
       removePhotoElement: "",
       removeTextElement: "",
       additionalElementArrays: {
@@ -155,7 +159,7 @@ class ModifyDescription extends Component {
 
     const clearForm = async () => {
       document.getElementById("MainForm").reset();
-      this.setState({ idxHash: undefined, txStatus: undefined, txHash: "0", elementType: 0 })
+      this.setState({ idxHash: undefined, txStatus: undefined, txHash: "0", elementType: 0, wasSentPacket: false, transaction: undefined })
     }
 
     const _addToMiscArray = async (type) => {
@@ -594,11 +598,11 @@ class ModifyDescription extends Component {
                   </div>
                 )}
 
-                {this.state.hashPath === "" && this.state.accessPermitted && this.state.elementType === "0" && (
+                {this.state.hashPath === "" && this.state.accessPermitted && (
                   <Form.Row>
-                    <div className="submitButtonMD">
-                      <div className="submitButtonMD-content">
-                        <ArrowRightCircle
+                    <div className="submitButton">
+                      <div className="submitButton-content">
+                        <CheckCircle
                           onClick={() => { publishIPFS1() }}
                         />
                       </div>
@@ -609,9 +613,9 @@ class ModifyDescription extends Component {
 
                 {this.state.elementType === "text" && (
                   <Form.Row>
-                    <div className="submitButtonMD">
-                      <div className="submitButtonMD-content">
-                        <ArrowRightCircle
+                    <div className="submitButton">
+                      <div className="submitButton-content">
+                        <UploadCloud
                           onClick={() => { _addToMiscArray(this.state.elementType) }}
                         />
                       </div>
@@ -621,9 +625,9 @@ class ModifyDescription extends Component {
 
                 {this.state.elementType === "photo" && (
                   <Form.Row>
-                    <div className="submitButtonMD">
-                      <div className="submitButtonMD-content">
-                        <ArrowRightCircle
+                    <div className="submitButton">
+                      <div className="submitButton-content">
+                        <UploadCloud
                           onClick={() => { _addToMiscArray(this.state.elementType) }}
                         />
                       </div>
@@ -633,9 +637,9 @@ class ModifyDescription extends Component {
 
                 {this.state.elementType === "description" && (
                   <Form.Row>
-                    <div className="submitButtonMD">
-                      <div className="submitButtonMD-content">
-                        <ArrowRightCircle
+                    <div className="submitButton">
+                      <div className="submitButton-content">
+                        <UploadCloud
                           onClick={() => { _addToMiscArray(this.state.elementType) }}
                         />
                       </div>
@@ -645,9 +649,9 @@ class ModifyDescription extends Component {
 
                 {this.state.elementType === "nameTag" && (
                   <Form.Row>
-                    <div className="submitButtonMD">
-                      <div className="submitButtonMD-content">
-                        <ArrowRightCircle
+                    <div className="submitButton">
+                      <div className="submitButton-content">
+                        <UploadCloud
                           onClick={() => { _addToMiscArray(this.state.elementType) }}
                         />
                       </div>
@@ -657,9 +661,9 @@ class ModifyDescription extends Component {
 
                 {this.state.elementType === "displayImage" && (
                   <Form.Row>
-                    <div className="submitButtonMD">
-                      <div className="submitButtonMD-content">
-                        <ArrowRightCircle
+                    <div className="submitButton">
+                      <div className="submitButton-content">
+                        <UploadCloud
                           onClick={() => { _addToMiscArray(this.state.elementType) }}
                         />
                       </div>
@@ -669,9 +673,9 @@ class ModifyDescription extends Component {
 
                 {this.state.elementType === "removePhoto" && (
                   <Form.Row>
-                    <div className="submitButtonMD">
-                      <div className="submitButtonMD-content">
-                        <ArrowRightCircle
+                    <div className="submitButton">
+                      <div className="submitButton-content">
+                        <Trash2
                           onClick={() => { _removeElement(this.state.elementType) }}
                         />
                       </div>
@@ -681,9 +685,9 @@ class ModifyDescription extends Component {
 
                 {this.state.elementType === "removeText" && (
                   <Form.Row>
-                    <div className="submitButtonMD">
-                      <div className="submitButtonMD-content">
-                        <ArrowRightCircle
+                    <div className="submitButton">
+                      <div className="submitButton-content">
+                        <Trash2
                           onClick={() => { _removeElement(this.state.elementType) }}
                         />
                       </div>
@@ -693,6 +697,7 @@ class ModifyDescription extends Component {
               </div>
             )}
           </Form>
+          {this.state.transaction === undefined && (
           <div className="assetSelectedResults">
             <Form.Row>
               {this.state.idxHash !== undefined && this.state.txHash === "" && (
@@ -809,6 +814,9 @@ class ModifyDescription extends Component {
 
                     </Form.Control>
                   </Form.Group>
+                  {this.state.elementType === "0" && (
+                    <></>
+                  )}
                   {this.state.elementType === "text" && (
                     <>
                       <Form.Group as={Col} controlId="formGridMiscName">
@@ -921,29 +929,28 @@ class ModifyDescription extends Component {
                 </div>
               )}
 
-              {this.state.hashPath === "" && this.state.accessPermitted && this.state.elementType === "0" && (
-                <div className="submitButtonMD">
-                  <div className="submitButtonMD-content">
-                    <ArrowRightCircle
+              {this.state.hashPath === "" && this.state.accessPermitted && (
+                <div className="submitButton">
+                  <div className="submitButton-content">
+                    <CheckCircle
                       onClick={() => { publishIPFS1() }}
                     />
                   </div>
                 </div>
-
               )}
               {this.state.elementType === "text" && (
-                <div className="submitButtonMD">
-                  <div className="submitButtonMD-content">
-                    <ArrowRightCircle
+                <div className="submitButton">
+                  <div className="submitButton-content">
+                    <UploadCloud
                       onClick={() => { _addToMiscArray(this.state.elementType) }}
                     />
                   </div>
                 </div>
               )}
               {this.state.elementType === "photo" && (
-                <div className="submitButtonMD">
-                  <div className="submitButtonMD-content">
-                    <ArrowRightCircle
+                <div className="submitButton">
+                  <div className="submitButton-content">
+                    <UploadCloud
                       onClick={() => { _addToMiscArray(this.state.elementType) }}
                     />
                   </div>
@@ -951,9 +958,9 @@ class ModifyDescription extends Component {
               )}
 
               {this.state.elementType === "description" && (
-                <div className="submitButtonMD">
-                  <div className="submitButtonMD-content">
-                    <ArrowRightCircle
+                <div className="submitButton">
+                  <div className="submitButton-content">
+                    <UploadCloud
                       onClick={() => { _addToMiscArray(this.state.elementType) }}
                     />
                   </div>
@@ -961,9 +968,9 @@ class ModifyDescription extends Component {
               )}
 
               {this.state.elementType === "nameTag" && (
-                <div className="submitButtonMD">
-                  <div className="submitButtonMD-content">
-                    <ArrowRightCircle
+                <div className="submitButton">
+                  <div className="submitButton-content">
+                    <UploadCloud
                       onClick={() => { _addToMiscArray(this.state.elementType) }}
                     />
                   </div>
@@ -971,9 +978,9 @@ class ModifyDescription extends Component {
               )}
 
               {this.state.elementType === "removePhoto" && (
-                <div className="submitButtonMD">
-                  <div className="submitButtonMD-content">
-                    <ArrowRightCircle
+                <div className="submitButton">
+                  <div className="submitButton-content">
+                    <Trash2
                       onClick={() => { _removeElement(this.state.elementType) }}
                     />
                   </div>
@@ -981,9 +988,9 @@ class ModifyDescription extends Component {
               )}
 
               {this.state.elementType === "removeText" && (
-                <div className="submitButtonMD">
-                  <div className="submitButtonMD-content">
-                    <ArrowRightCircle
+                <div className="submitButton">
+                  <div className="submitButton-content">
+                    <Trash2
                       onClick={() => { _removeElement(this.state.elementType) }}
                     />
                   </div>
@@ -992,6 +999,7 @@ class ModifyDescription extends Component {
             </div>
           )}
         </Form>
+        {this.state.transaction === undefined && (
         <div className="assetSelectedResults">
           <Form.Row>
             {this.state.idxHash !== undefined && this.state.txHash === "" && (

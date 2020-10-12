@@ -3,7 +3,6 @@ import Form from "react-bootstrap/Form";
 import Col from "react-bootstrap/Col";
 import Row from "react-bootstrap/Row";
 import { Home, XSquare, ArrowRightCircle, Grid, CornerUpLeft, CheckCircle } from "react-feather";
-import QrReader from 'react-qr-reader'
 class ImportAssetNC extends Component {
   constructor(props) {
     super(props);
@@ -130,23 +129,23 @@ class ImportAssetNC extends Component {
           await window.utils.resolveAC(this.state.selectedAssetClass);
           await this.setState({ assetClass: window.assetClass });
         }
-        if(this.state.wasSentPacket){
+        if (this.state.wasSentPacket) {
           let resArray = await window.utils.checkStats(this.state.idxHash, [0, 2])
           console.log(resArray)
 
-        if (Number(resArray[0]) !== 70) {
-          alert("Asset is not exported! Owner must export the assset in order to import.");
-          window.sentpacket = undefined;
-          return window.location.href = "/#/asset-dashboard"
-        }
+          if (Number(resArray[0]) !== 70) {
+            alert("Asset is not exported! Owner must export the assset in order to import.");
+            window.sentpacket = undefined;
+            return window.location.href = "/#/asset-dashboard"
+          }
 
-        console.log(destinationACData.root)
+          console.log(destinationACData.root)
 
-        if (resArray[1] !== destinationACData.root) {
-          alert("Import destination AC must have same root as origin!");
-          window.sentpacket = undefined;
-          return window.location.href = "/#/asset-dashboard"
-        }
+          if (resArray[1] !== destinationACData.root) {
+            alert("Import destination AC must have same root as origin!");
+            window.sentpacket = undefined;
+            return window.location.href = "/#/asset-dashboard"
+          }
         }
 
         return this.setState({ assetClassSelected: true, acData: window.tempACData })
@@ -155,7 +154,7 @@ class ImportAssetNC extends Component {
 
     const clearForm = async () => {
       document.getElementById("MainForm").reset();
-      this.setState({ idxHash: undefined, txStatus: undefined, txHash: "0", wasSentPacket: undefined, assetClassSelected: false })
+      this.setState({ idxHash: undefined, txStatus: undefined, txHash: "", wasSentPacket: undefined, assetClassSelected: false, transaction: undefined })
     }
 
     const _checkIn = async (e) => {
@@ -204,7 +203,7 @@ class ImportAssetNC extends Component {
       console.log("Changed component idx to: ", window.assets.ids[e])
 
       return this.setState({
-        assetClass: window.assets.assetClasses[e],
+        currentAssetClass: window.assets.assetClasses[e],
         idxHash: window.assets.ids[e],
         name: window.assets.descriptions[e].name,
         photos: window.assets.descriptions[e].photo,
@@ -221,6 +220,7 @@ class ImportAssetNC extends Component {
       this.setState({ txHash: "" });
       this.setState({ error: undefined })
       this.setState({ resultIA: "" })
+      this.setState({ transaction: true })
 
       var idxHash = this.state.idxHash;
 
@@ -228,7 +228,7 @@ class ImportAssetNC extends Component {
       console.log("addr: ", window.addr);
 
       window.contracts.APP_NC.methods
-        .$importAsset(idxHash, this.state.assetClass)
+        .$importAsset(idxHash, this.state.selectedAssetClass)
         .send({ from: window.addr, value: window.costs.newRecordCost })
         .on("error", function (_error) {
           // self.setState({ NRerror: _error });
@@ -283,8 +283,8 @@ class ImportAssetNC extends Component {
               <div>
                 <Form.Row>
                   <Form.Group>
-                    <div className="submitButtonTA2">
-                      <div className="submitButtonTA2-content">
+                    <div className="submitButton">
+                      <div className="submitButton-content">
                         <ArrowRightCircle
                           onClick={() => { _importAsset() }}
                         />
@@ -295,6 +295,7 @@ class ImportAssetNC extends Component {
               </div>
             )}
           </Form>
+          {this.state.transaction === undefined && (
           <div className="assetSelectedResults">
             <Form.Row>
               {this.state.idxHash !== undefined && this.state.txHash === "" && (
@@ -308,6 +309,7 @@ class ImportAssetNC extends Component {
               )}
             </Form.Row>
           </div>
+          )}
 
           {this.state.transaction === true && (
 
@@ -395,43 +397,40 @@ class ImportAssetNC extends Component {
           )}
           {window.addr > 0 && this.state.assetClassSelected && (
             <div>
-              {!this.state.accessPermitted && (
-                <>
-                  <Form.Row>
-                    <Form.Group as={Col} controlId="formGridAsset">
-                      <Form.Label className="formFont"> Select an Asset to Modify :</Form.Label>
-                      <Form.Control
-                        as="select"
-                        className="formSelect"
-                        size="lg"
-                        onChange={(e) => { _checkIn(e.target.value) }}
-                      >
-                        {this.state.hasLoadedAssets && (
-                          <optgroup className="optgroup">
-                            {window.utils.generateAssets()}
-                          </optgroup>)}
-                        {!this.state.hasLoadedAssets && (<optgroup ><option value="null"> Loading Assets... </option></optgroup>)}
+              <>
+                <Form.Row>
+                  <Form.Group as={Col} controlId="formGridAsset">
+                    <Form.Label className="formFont"> Select an Asset to Modify :</Form.Label>
+                    <Form.Control
+                      as="select"
+                      className="formSelect"
+                      size="lg"
+                      onChange={(e) => { _checkIn(e.target.value) }}
+                    >
+                      {this.state.hasLoadedAssets && (
+                        <optgroup className="optgroup">
+                          {window.utils.generateAssets()}
+                        </optgroup>)}
+                      {!this.state.hasLoadedAssets && (<optgroup ><option value="null"> Loading Assets... </option></optgroup>)}
+                    </Form.Control>
+                  </Form.Group>
+                </Form.Row>
 
-                      </Form.Control>
-                    </Form.Group>
-                  </Form.Row>
-                
-                  <Form.Row>
-                    <div className="submitButtonIA">
-                      <div className="submitButtonIA-content">
-                        <CheckCircle
-                          onClick={() => { _importAsset() }}
-                        />
-                      </div>
-                      <Form.Label className="LittleTextNewRecord"> Cost in AC {window.assetClass}: {Number(window.costs.newRecordCost) / 1000000000000000000} ETH</Form.Label>
+                <Form.Row>
+                  <div className="submitButton">
+                    <div className="submitButton-content">
+                      <CheckCircle
+                        onClick={() => { _importAsset() }}
+                      />
                     </div>
-                  </Form.Row>
-                  </>
-              )}
-              <br></br>
+                    <Form.Label className="LittleTextNewRecord"> Cost in AC {window.assetClass}: {Number(window.costs.newRecordCost) / 1000000000000000000} ETH</Form.Label>
+                  </div>
+                </Form.Row>
+              </>
             </div>
           )}
         </Form>
+        {this.state.transaction === undefined && (
         <div className="assetSelectedResults">
           <Form.Row>
             {this.state.idxHash !== undefined && this.state.txHash === "" && (
@@ -439,13 +438,14 @@ class ImportAssetNC extends Component {
                 <div className="assetSelectedContentHead">Asset IDX: <span className="assetSelectedContent">{this.state.idxHash}</span> </div>
                 <div className="assetSelectedContentHead">Asset Name: <span className="assetSelectedContent">{this.state.name}</span> </div>
                 {/* <div className="assetSelectedContentHead"> Asset Description: <span className="assetSelectedContent">{this.state.description}</span> </div> */}
-                <div className="assetSelectedContentHead">Asset Class: <span className="assetSelectedContent">{this.state.assetClass}</span> </div>
+                <div className="assetSelectedContentHead">Asset Class: <span className="assetSelectedContent">{this.state.currentAssetClass}</span> </div>
                 <div className="assetSelectedContentHead">Asset Status: <span className="assetSelectedContent">{this.state.status}</span> </div>
               </Form.Group>
             )}
           </Form.Row>
         </div>
-        {this.state.transaction === true && this.state.QRreader === false && (
+        )}
+        {this.state.transaction === true && (
 
           <div className="Results">
             {/* {this.state.pendingTx === undefined && ( */}

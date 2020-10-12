@@ -135,7 +135,7 @@ class RecycleAssetNC extends Component {
 
   componentDidMount() {//stuff to do when component mounts in window
     if (window.assetClass > 0){
-      this.setState({ assetClass: window.assetClass, assetClassSelected: true })
+      this.setState({ assetClass: window.assetClass, assetClassSelected: true, accessPermitted: false })
     }
 
     else{
@@ -197,7 +197,7 @@ class RecycleAssetNC extends Component {
 
     const clearForm = async () => {
       document.getElementById("MainForm").reset();
-      this.setState({ idxHash: undefined, txStatus: undefined, txHash: "0" })
+      this.setState({ idxHash: undefined, txStatus: undefined, txHash: "0", accessPermitted: false, transaction: undefined})
     }
 
     const _recycleAsset = async () => {
@@ -214,6 +214,7 @@ class RecycleAssetNC extends Component {
       this.setState({ txHash: "" });
       this.setState({ error: undefined })
       this.setState({ resultRA: "" })
+      this.setState({ transaction: true })
 
       var idxHash = this.state.result;
       var rgtRaw;
@@ -355,15 +356,15 @@ class RecycleAssetNC extends Component {
                     </Form.Group>
                   </Form.Row>
                   <Form.Row>
-                    <div className="submitButtonAA">
-                      <div className="submitButtonAA-content">
+                    <div className="submitButton">
+                      <div className="submitButton-content">
                         <ArrowRightCircle
                           onClick={() => { this.accessAsset() }}
                         />
                       </div>
                     </div>
-                    <div className="submitButtonRRQR">
-                      <div className="submitButtonRRQR-content">
+                    <div className="submitButton">
+                      <div className="submitButton-content">
                         <Grid
                           onClick={() => { QRReader() }}
                         />
@@ -456,8 +457,8 @@ class RecycleAssetNC extends Component {
 
                   </Form.Row>
                   <Form.Row>
-                    <div className="submitButtonIA">
-                      <div className="submitButtonIA-content">
+                    <div className="submitButton">
+                      <div className="submitButton-content">
                         <Repeat
                           onClick={() => { _recycleAsset() }}
                         />
@@ -471,7 +472,7 @@ class RecycleAssetNC extends Component {
             </div>
           )}
         </Form>
-        { this.state.QRreader === false && (
+        { this.state.QRreader === false && this.state.transaction === undefined && (
         <div className="assetSelectedResults">
           <Form.Row>
             {this.state.idxHash !== undefined && this.state.txHash === "" && (

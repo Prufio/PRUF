@@ -234,15 +234,15 @@ class VerifyLite extends Component {
                   </Form.Group>
                 </Form.Row>
                 <Form.Row>
-                  <div className="submitButtonVRH">
-                    <div className="submitButtonVRH-content">
+                  <div className="submitButton">
+                    <div className="submitButton-content">
                       <ArrowRightCircle
                         onClick={() => { this.accessAsset() }}
                       />
                     </div>
                   </div>
-                  <div className="submitButtonRRQR">
-                    <div className="submitButtonRRQR-content">
+                  <div className="submitButton">
+                    <div className="submitButton-content">
                       <Grid
                         onClick={() => { QRReader() }}
                       />

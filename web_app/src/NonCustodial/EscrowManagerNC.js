@@ -260,8 +260,8 @@ class EscrowManagerNC extends Component {
                       </Form.Control>
                     </Form.Row>
                     <Form.Row>
-                      <div className="submitButtonME2">
-                        <div className="submitButtonME2-content">
+                      <div className="submitButton">
+                        <div className="submitButton-content">
                           <ArrowRightCircle
                             onClick={() => { _accessAsset() }}
                           />
@@ -460,8 +460,8 @@ class EscrowManagerNC extends Component {
                     </Form.Group>
                   </Form.Row>
                   <Form.Row>
-                    <div className="submitButtonME">
-                      <div className="submitButtonME-content">
+                    <div className="submitButton">
+                      <div className="submitButton-content">
                         <ArrowRightCircle
                           onClick={() => { _accessAsset() }}
                         />

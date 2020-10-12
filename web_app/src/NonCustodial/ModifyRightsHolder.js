@@ -2,7 +2,7 @@ import React, { Component } from "react";
 import Form from "react-bootstrap/Form";
 import Col from "react-bootstrap/Col";
 import Button from "react-bootstrap/Button";
-import { ArrowRightCircle, Home, XSquare } from 'react-feather'
+import { ArrowRightCircle, Home, XSquare, AlertTriangle } from 'react-feather'
 
 class ModifyRightsHolder extends Component {
   constructor(props) {
@@ -92,7 +92,7 @@ class ModifyRightsHolder extends Component {
 
     const clearForm = async () => {
       document.getElementById("MainForm").reset();
-      this.setState({ idxHash: undefined, txStatus: undefined, txHash: "0", wasSentPacket: undefined })
+      this.setState({ idxHash: undefined, txStatus: undefined, txHash: "0", wasSentPacket: undefined, transaction: undefined })
     }
 
     const _checkIn = async (e) => {
@@ -142,6 +142,7 @@ class ModifyRightsHolder extends Component {
       this.setState({ txHash: "" });
       this.setState({ error: undefined })
       this.setState({ result: "" })
+      this.setState({ transaction: true })
       var idxHash = this.state.idxHash;
       var newRgtRaw;
 
@@ -262,9 +263,9 @@ class ModifyRightsHolder extends Component {
                 </Form.Row>
                 <Form.Row>
                   <Form.Group >
-                    <div className="submitButtonFMR">
-                      <div className="submitButtonFMR-content">
-                        <ArrowRightCircle
+                    <div className="submitButton">
+                      <div className="submitButtonVRH-content">
+                        <AlertTriangle
                           onClick={() => { _editRgtHash() }}
                         />
                       </div>
@@ -274,9 +275,9 @@ class ModifyRightsHolder extends Component {
               </div>
             )}
           </Form>
+          {this.state.transaction === undefined && (
           <div className="assetSelectedResults">
             <Form.Row>
-
               {this.state.idxHash !== undefined && this.state.txHash === "" && (
                 <Form.Group>
                   <div className="assetSelectedContentHead">Asset IDX: <span className="assetSelectedContent">{this.state.idxHash}</span> </div>
@@ -286,9 +287,9 @@ class ModifyRightsHolder extends Component {
                   <div className="assetSelectedContentHead">Asset Status: <span className="assetSelectedContent">{this.state.status}</span> </div>
                 </Form.Group>
               )}
-
             </Form.Row>
           </div>
+          )}
           {this.state.transaction === true && (
 
             <div className="Results">
@@ -423,9 +424,9 @@ class ModifyRightsHolder extends Component {
               </Form.Row>
               <Form.Row>
                 <Form.Group >
-                  <div className="submitButtonFMR">
-                    <div className="submitButtonFMR-content">
-                      <ArrowRightCircle
+                  <div className="submitButton">
+                    <div className="submitButtonVRH-content">
+                      <AlertTriangle
                         onClick={() => { _editRgtHash() }}
                       />
                     </div>
@@ -435,9 +436,9 @@ class ModifyRightsHolder extends Component {
             </div>
           )}
         </Form>
+        {this.state.transaction === undefined && (
         <div className="assetSelectedResults">
           <Form.Row>
-
             {this.state.idxHash !== undefined && this.state.txHash === "" && (
               <Form.Group>
                 <div className="assetSelectedContentHead">Asset IDX: <span className="assetSelectedContent">{this.state.idxHash}</span> </div>
@@ -447,9 +448,9 @@ class ModifyRightsHolder extends Component {
                 <div className="assetSelectedContentHead">Asset Status: <span className="assetSelectedContent">{this.state.status}</span> </div>
               </Form.Group>
             )}
-
           </Form.Row>
         </div>
+        )}
         {this.state.transaction === true && (
 
           <div className="Results">

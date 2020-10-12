@@ -124,7 +124,7 @@ class ModifyDescriptionNC extends Component {
 
     const clearForm = async () => {
       document.getElementById("MainForm").reset();
-      this.setState({ idxHash: undefined, txStatus: "", txHash: "", wasSentPacket: undefined })
+      this.setState({ idxHash: undefined, txStatus: false, txHash: "", wasSentPacket: undefined })
     }
 
     const _transferAsset = async () => {
@@ -203,8 +203,8 @@ class ModifyDescriptionNC extends Component {
 
                 <Form.Row>
                   <Form.Group>
-                    <div className="submitButtonTA2">
-                      <div className="submitButtonTA2-content">
+                    <div className="submitButton">
+                      <div className="submitButton-content">
                         <CheckCircle
                           onClick={() => { _transferAsset() }}
                         />
@@ -326,8 +326,8 @@ class ModifyDescriptionNC extends Component {
 
               <Form.Row>
                 <Form.Group>
-                  <div className="submitButtonTA">
-                    <div className="submitButtonTA-content">
+                  <div className="submitButton">
+                    <div className="submitButton-content">
                       <CheckCircle
                         onClick={() => { _transferAsset() }}
                       />

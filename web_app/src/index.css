@@ -773,7 +773,6 @@ div {
   height: flex;
   width: 59rem;
   background-color: #005480;
-  border-radius: 0rem 0rem 0.5rem 0.5rem;
   padding: 2rem;
   display: flex;
   flex-direction: column;
@@ -1179,11 +1178,11 @@ div {
 .mediaLink {
   display: flex;
   width: fit-content;
-  height: 20rem;
+  height: 10rem;
   position: absolute;
   flex-direction: column;
   z-index: 999;
-  margin-top: 30rem;
+  margin-top: 40rem;
   /* margin-left: rem; */
   justify-content: space-between;
 }
@@ -1429,7 +1428,7 @@ div {
 
 .hamburgerDropdown {
   display: flex;
-  height: 80rem;
+  height: 67rem;
   width: 10rem;
   position: absolute;
   background-color:#002a40;
@@ -1438,6 +1437,7 @@ div {
   z-index: 1000;
   margin-right: 94%;
   margin-top: 4.8rem;
+  border-radius: 0rem 0rem 1rem 0rem;
   opacity: 0.9;
 
 }
@@ -1585,7 +1585,6 @@ div {
 
 .submitButton {
   display: flex;
-  /* position: absolute; */
   background-color: transparent;
   z-index: 1000;
   margin-left: 50rem;
@@ -1615,121 +1614,6 @@ div {
   transform: translateX(3px);
 }
 
-.submitButtonMD {
-  display: flex;
-  position: absolute;
-  background-color: transparent;
-  z-index: 1000;
-  margin-left: 50rem;
-  margin-top: -3.7rem;
-}
-
-.submitButtonMD-content {
-  color: white;
-  border-radius: 50%;
-  -webkit-transition: -webkit-transform .5s ease-in-out;
-  transition:         transform .5s ease-in-out;
-}
-
-.submitButtonMD-content:hover {
-  color: #028ed4;
-  cursor: pointer;
-  -webkit-transform: translateX(3px);
-  transform: translateX(3px);
-}
-
-.submitButtonMRS {
-  display: flex;
-  position: absolute;
-  background-color: transparent;
-  z-index: 1000;
-  margin-left: 50rem;
-  margin-top: -0.7rem;
-}
-
-.submitButtonMRS-content {
-  color: white;
-  border-radius: 50%;
-  -webkit-transition: -webkit-transform .5s ease-in-out;
-  transition:         transform .5s ease-in-out;
-}
-
-.submitButtonMRS-content:hover {
-  color: #028ed4;
-  cursor: pointer;
-  -webkit-transform: translateX(3px);
-  transform: translateX(3px);
-}
-
-.submitButtonMRS2 {
-  display: flex;
-  position: absolute;
-  background-color: transparent;
-  z-index: 1000;
-  margin-left: 17rem;
-  margin-top: -3.7rem;
-}
-
-.submitButtonMRS2-content {
-  color: white;
-  border-radius: 50%;
-  -webkit-transition: -webkit-transform .5s ease-in-out;
-  transition:         transform .5s ease-in-out;
-}
-
-.submitButtonMRS2-content:hover {
-  color: #028ed4;
-  cursor: pointer;
-  -webkit-transform: translateX(3px);
-  transform: translateX(3px);
-}
-
-.submitButtonDC {
-  display: flex;
-  position: absolute;
-  background-color: transparent;
-  z-index: 1000;
-  margin-left: 50rem;
-  margin-top: -0.7rem;
-}
-
-.submitButtonDC-content {
-  color: white;
-  border-radius: 50%;
-  -webkit-transition: -webkit-transform .5s ease-in-out;
-  transition:         transform .5s ease-in-out;
-}
-
-.submitButtonDC-content:hover {
-  color: #028ed4;
-  cursor: pointer;
-  -webkit-transform: translateX(3px);
-  transform: translateX(3px);
-}
-
-.submitButtonDC2 {
-  display: flex;
-  position: absolute;
-  background-color: transparent;
-  z-index: 1000;
-  margin-left: 20rem;
-  margin-top: -3.7rem;
-}
-
-.submitButtonDC2-content {
-  color: white;
-  border-radius: 50%;
-  -webkit-transition: -webkit-transform .5s ease-in-out;
-  transition:         transform .5s ease-in-out;
-}
-
-.submitButtonDC2-content:hover {
-  color: #028ed4;
-  cursor: pointer;
-  -webkit-transform: translateX(3px);
-  transform: translateX(3px);
-}
-
 .submitButtonEM {
   display: flex;
   /* position: absolute; */
@@ -1753,15 +1637,6 @@ div {
   transform: translateX(3px);
 }
 
-.submitButtonFMR {
-  display: flex;
-  position: absolute;
-  background-color: transparent;
-  z-index: 1000;
-  margin-left: 50rem;
-  /* margin-top: -3.7rem; */
-}
-
 .submitButtonFMR-content {
   color: rgb(214, 0, 0);
   border-radius: 50%;
@@ -1776,128 +1651,13 @@ div {
   transform: translateX(3px);
 }
 
-.submitButtonTA {
-  display: flex;
-  /* position: absolute; */
-  background-color: transparent;
-  z-index: 1000;
-  margin-left: 50rem;
-  margin-top: 1rem;
-}
-
-.submitButtonTA-content {
-  color: white;
-  border-radius: 50%;
-  -webkit-transition: -webkit-transform .5s ease-in-out;
-  transition:         transform .5s ease-in-out;
-}
-
-.submitButtonTA-content:hover {
-  color: #028ed4;
-  cursor: pointer;
-  -webkit-transform: translateX(3px);
-  transform: translateX(3px);
-}
-
-.submitButtonTA2 {
-  display: flex;
-  /* position: absolute; */
-  background-color: transparent;
-  z-index: 1000;
-  margin-left: 50rem;
-  margin-top: 1rem;
-}
-
-.submitButtonTA2-content {
-  color: white;
-  border-radius: 50%;
-  -webkit-transition: -webkit-transform .5s ease-in-out;
-  transition:         transform .5s ease-in-out;
-}
-
-.submitButtonTA2-content:hover {
-  color: #028ed4;
-  cursor: pointer;
-  -webkit-transform: translateX(3px);
-  transform: translateX(3px);
-}
-
-.submitButtonAN {
-  display: flex;
-  position: absolute;
-  background-color: transparent;
-  z-index: 1000;
-  margin-left: 50rem;
-  margin-top: -3.7rem;
-}
-
-.submitButtonAN-content {
-  color: white;
-  border-radius: 50%;
-  -webkit-transition: -webkit-transform .5s ease-in-out;
-  transition:         transform .5s ease-in-out;
-}
-
-.submitButtonAN-content:hover {
-  color: #028ed4;
-  cursor: pointer;
-  -webkit-transform: translateX(3px);
-  transform: translateX(3px);
-}
-
-.submitButtonAN2 {
-  display: flex;
-  position: absolute;
-  background-color: transparent;
-  z-index: 1000;
-  margin-left: 21rem;
-  margin-top: -3.7rem;
-}
-
-.submitButtonAN2-content {
-  color: white;
-  border-radius: 50%;
-  -webkit-transition: -webkit-transform .5s ease-in-out;
-  transition:         transform .5s ease-in-out;
-}
-
-.submitButtonAN2-content:hover {
-  color: #028ed4;
-  cursor: pointer;
-  -webkit-transform: translateX(3px);
-  transform: translateX(3px);
-}
-
-.submitButtonEA {
-  display: flex;
-  position: absolute;
-  background-color: transparent;
-  z-index: 1000;
-  margin-left: 50rem;
-  /* margin-top: -3.7rem; */
-}
-
-.submitButtonEA-content {
-  color: white;
-  border-radius: 50%;
-  -webkit-transition: -webkit-transform .5s ease-in-out;
-  transition:         transform .5s ease-in-out;
-}
-
-.submitButtonEA-content:hover {
-  color: #028ed4;
-  cursor: pointer;
-  -webkit-transform: translateX(3px);
-  transform: translateX(3px);
-}
-
 .submitButtonEA2 {
   display: flex;
-  position: absolute;
+  /* position: absolute; */
   background-color: transparent;
   z-index: 1000;
-  /* margin-left: 21rem; */
-  margin-top: -0.7rem;
+  /* margin-left: rem; */
+  margin-top: 1rem;
 }
 
 .submitButtonEA2-content {
@@ -1908,98 +1668,6 @@ div {
 }
 
 .submitButtonEA2-content:hover {
-  color: #028ed4;
-  cursor: pointer;
-  -webkit-transform: translateX(3px);
-  transform: translateX(3px);
-}
-
-.submitButtonIA {
-  display: flex;
-  /* position: absolute; */
-  background-color: transparent;
-  z-index: 1000;
-  margin-left: 8rem;
-  margin-top: -1rem;
-}
-
-.submitButtonIA-content {
-  color: white;
-  border-radius: 50%;
-  -webkit-transition: -webkit-transform .5s ease-in-out;
-  transition:         transform .5s ease-in-out;
-}
-
-.submitButtonIA-content:hover {
-  color: #028ed4;
-  cursor: pointer;
-  -webkit-transform: translateX(3px);
-  transform: translateX(3px);
-}
-
-.submitButtonME {
-  display: flex;
-  /* position: absolute; */
-  background-color: transparent;
-  z-index: 1000;
-  margin-left: 50rem;
-  margin-top: 1rem;
-}
-
-.submitButtonME-content {
-  color: white;
-  border-radius: 50%;
-  -webkit-transition: -webkit-transform .5s ease-in-out;
-  transition:         transform .5s ease-in-out;
-}
-
-.submitButtonME-content:hover {
-  color: #028ed4;
-  cursor: pointer;
-  -webkit-transform: translateX(3px);
-  transform: translateX(3px);
-}
-
-.submitButtonME2 {
-  display: flex;
-  /* position: absolute; */
-  background-color: transparent;
-  z-index: 1000;
-  margin-left: 50rem;
-  margin-top: 1rem;
-}
-
-.submitButtonME2-content {
-  color: white;
-  border-radius: 50%;
-  -webkit-transition: -webkit-transform .5s ease-in-out;
-  transition:         transform .5s ease-in-out;
-}
-
-.submitButtonME2-content:hover {
-  color: #028ed4;
-  cursor: pointer;
-  -webkit-transform: translateX(3px);
-  transform: translateX(3px);
-}
-
-.submitButtonAA {
-  display: flex;
-  /* position: absolute; */
-  background-color: transparent;
-  z-index: 1000;
-  margin-left: 50rem;
-  margin-top: 1rem;
-}
-
-.submitButtonAA-content {
-  color: white;
-  border-radius: 50%;
-  -webkit-transition: -webkit-transform .5s ease-in-out;
-  transition:         transform .5s ease-in-out;
-}
-
-.submitButtonAA-content:hover {
   color: #028ed4;
   cursor: pointer;
   -webkit-transform: translateX(3px);
@@ -2047,15 +1715,6 @@ div {
   transform: translateX(3px);
 }
 
-.submitButtonVRH {
-  display: flex;
-  position: absolute;
-  background-color: transparent;
-  z-index: 1000;
-  margin-left: 38rem;
-  margin-top: -3.7rem;
-}
-
 .submitButtonVRHMobile {
   display: flex;
   position: absolute;
@@ -2066,7 +1725,7 @@ div {
 }
 
 .submitButtonVRH-content {
-  color: white;
+  color: rgb(255, 0, 0);
   border-radius: 50%;
   -webkit-transition: -webkit-transform .5s ease-in-out;
   transition:         transform .5s ease-in-out;
@@ -2102,15 +1761,6 @@ div {
   transform: translateX(3px);
 }
 
-.submitButtonRR {
-  display: flex;
-  position: absolute;
-  background-color: transparent;
-  z-index: 1000;
-  margin-left: 38rem;
-  margin-top: -3.7rem;
-}
-
 .submitButtonRRMobile {
   display: flex;
   position: absolute;
@@ -2132,15 +1782,6 @@ div {
   cursor: pointer;
   -webkit-transform: translateX(3px);
   transform: translateX(3px);
-}
-
-.submitButtonRRQR {
-  display: flex;
-  position: absolute;
-  background-color: transparent;
-  z-index: 1000;
-  margin-left: 41rem;
-  margin-top: -3.7rem;
 }
 
 .submitButtonRRQRMobile {

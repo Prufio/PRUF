@@ -537,15 +537,15 @@ class RetrieveRecord extends Component {
                   </Form.Row>
 
                   <Form.Row>
-                      <div className="submitButtonRR">
-                        <div className="submitButtonRR-content">
+                      <div className="submitButton">
+                        <div className="submitButton-content">
                           <ArrowRightCircle
                             onClick={() => { _retrieveRecord() }}
                           />
                         </div>
                       </div>
-                      <div className="submitButtonRRQR">
-                        <div className="submitButtonRRQR-content">
+                      <div className="submitButton">
+                        <div className="submitButton-content">
                           <Grid
                             onClick={() => { QRReader() }}
                           />

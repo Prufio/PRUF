@@ -2,7 +2,7 @@ import React, { Component } from "react";
 import Form from "react-bootstrap/Form";
 import Col from "react-bootstrap/Col";
 import Button from "react-bootstrap/Button";
-import { ArrowRightCircle, Home, XSquare } from 'react-feather'
+import { ArrowRightCircle, Home, XSquare, CheckCircle } from 'react-feather'
 
 class DecrementCounterNC extends Component {
   constructor(props) {
@@ -85,7 +85,7 @@ class DecrementCounterNC extends Component {
 
     const clearForm = async () => {
       document.getElementById("MainForm").reset();
-      this.setState({ idxHash: undefined, txStatus: undefined, txHash: "0" })
+      this.setState({ idxHash: undefined, txStatus: undefined, txHash: "0", transaction: undefined, wasSentPacket: false })
     }
 
     const _checkIn = async (e) => {
@@ -130,6 +130,7 @@ class DecrementCounterNC extends Component {
       this.setState({ txHash: "" });
       this.setState({ error: undefined })
       this.setState({ result: "" })
+      this.setState({ transaction: true })
       var idxHash = this.state.idxHash;
 
       console.log("idxHash", idxHash);
@@ -201,9 +202,9 @@ class DecrementCounterNC extends Component {
                   </Form.Group>
                 </Form.Row>
                 <Form.Row>
-                  <div className="submitButtonDC2">
-                    <div className="submitButtonDC2-content">
-                      <ArrowRightCircle
+                  <div className="submitButton">
+                    <div className="submitButton-content">
+                      <CheckCircle
                         onClick={() => { _decrementCounter() }}
                       />
                     </div>
@@ -212,19 +213,20 @@ class DecrementCounterNC extends Component {
               </div>
             )}
           </Form>
+          {this.state.transaction === undefined && (
           <div className="assetSelectedResults">
             <Form.Row>
               {this.state.idxHash !== undefined && this.state.txHash === "" && (
                 <Form.Group>
                   <div className="assetSelectedContentHead">Asset IDX: <span className="assetSelectedContent">{this.state.idxHash}</span> </div>
                   <div className="assetSelectedContentHead">Asset Name: <span className="assetSelectedContent">{this.state.name}</span> </div>
-                  {/* <div className="assetSelectedContentHead"> Asset Description: <span className="assetSelectedContent">{this.state.description}</span> </div> */}
                   <div className="assetSelectedContentHead">Asset Class: <span className="assetSelectedContent">{this.state.assetClass}</span> </div>
                   <div className="assetSelectedContentHead">Asset Status: <span className="assetSelectedContent">{this.state.status}</span> </div>
                 </Form.Group>
               )}
             </Form.Row>
           </div>
+          )}
           {this.state.transaction === true && (
 
             <div className="Results">
@@ -321,9 +323,9 @@ class DecrementCounterNC extends Component {
                 </Form.Group>
               </Form.Row>
               <Form.Row>
-                <div className="submitButtonDC">
-                  <div className="submitButtonDC-content">
-                    <ArrowRightCircle
+                <div className="submitButton">
+                  <div className="submitButton-content">
+                    <CheckCircle
                       onClick={() => { _decrementCounter() }}
                     />
                   </div>
@@ -332,6 +334,7 @@ class DecrementCounterNC extends Component {
             </div>
           )}
         </Form>
+        {this.state.transaction === undefined && (
         <div className="assetSelectedResults">
           <Form.Row>
             {this.state.idxHash !== undefined && this.state.txHash === "" && (
@@ -345,6 +348,7 @@ class DecrementCounterNC extends Component {
             )}
           </Form.Row>
         </div>
+        )}
         {this.state.transaction === true && (
 
           <div className="Results">
