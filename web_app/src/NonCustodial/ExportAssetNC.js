@@ -3,7 +3,7 @@ import Form from "react-bootstrap/Form";
 import Col from "react-bootstrap/Col";
 import Button from "react-bootstrap/Button";
 import returnManufacturers from "../Resources/Manufacturers";
-import { ArrowRightCircle, Home, XSquare } from 'react-feather'
+import { ArrowRightCircle, Home, XSquare, CheckCircle } from 'react-feather'
 
 
 class ExportAssetNC extends Component {
@@ -107,7 +107,7 @@ class ExportAssetNC extends Component {
 
     const clearForm = async () => {
       document.getElementById("MainForm").reset();
-      this.setState({ idxHash: undefined, txStatus: undefined, txHash: "0", wasSentPacket: undefined })
+      this.setState({ idxHash: undefined, txStatus: undefined, txHash: "0", wasSentPacket: undefined, transaction: undefined })
     }
 
     const _exportAsset = async () => {//create a new asset record
@@ -115,6 +115,7 @@ class ExportAssetNC extends Component {
       this.setState({ txHash: "" });
       this.setState({ error: undefined })
       this.setState({ result: "" })
+      this.setState({ transaction: true })
       //reset state values before form resubmission
       var idxHash = this.state.idxHash;
 
@@ -167,7 +168,7 @@ class ExportAssetNC extends Component {
                   <Form.Group>
                     <div className="submitButtonEA2">
                       <div className="submitButtonEA2-content">
-                        <ArrowRightCircle
+                        <CheckCircle
                           onClick={() => { _exportAsset() }}
                         />
                       </div>
@@ -177,6 +178,7 @@ class ExportAssetNC extends Component {
               </div>
             )}
           </Form>
+          {this.state.transaction === undefined && (
           <div className="assetSelectedResults">
             <Form.Row>
               {this.state.idxHash !== undefined && this.state.txHash === "" && (
@@ -190,6 +192,7 @@ class ExportAssetNC extends Component {
               )}
             </Form.Row>
           </div>
+          )}
           {this.state.transaction === true && (
 
             <div className="Results">
@@ -273,7 +276,7 @@ class ExportAssetNC extends Component {
                 <Form.Group>
                   <div className="submitButtonEA">
                     <div className="submitButtonEA-content">
-                      <ArrowRightCircle
+                      <CheckCircle
                         onClick={() => { _exportAsset() }}
                       />
                     </div>
@@ -284,6 +287,7 @@ class ExportAssetNC extends Component {
             </div>
           )}
         </Form>
+        {this.state.transaction === undefined && (
         <div className="assetSelectedResults">
           <Form.Row>
             {this.state.idxHash !== undefined && this.state.txHash === "" && (
@@ -297,6 +301,7 @@ class ExportAssetNC extends Component {
             )}
           </Form.Row>
         </div>
+        )}
         {this.state.transaction === true && (
 
           <div className="Results">

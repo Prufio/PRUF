@@ -104,7 +104,7 @@ class DiscardAssetNC extends Component {
 
     const clearForm = async () => {
       document.getElementById("MainForm").reset();
-      this.setState({ idxHash: undefined, txStatus: undefined, txHash: "0", wasSentPacket: undefined })
+      this.setState({ idxHash: undefined, txStatus: undefined, txHash: "0", wasSentPacket: false })
     }
 
     const _discardAsset = async () => {//create a new asset record
@@ -146,7 +146,7 @@ class DiscardAssetNC extends Component {
             <div className="mediaLinkAD-home">
               <a className="mediaLinkContentAD-home" ><Home onClick={() => { window.location.href = '/#/' }} /></a>
             </div>
-            <h2 className="FormHeader">Export Asset</h2>
+            <h2 className="FormHeader">Discard Asset</h2>
             <div className="mediaLink-clearForm">
               <a className="mediaLinkContent-clearForm" ><XSquare onClick={() => { clearForm() }} /></a>
             </div>

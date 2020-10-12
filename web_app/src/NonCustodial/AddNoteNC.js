@@ -3,7 +3,7 @@ import Form from "react-bootstrap/Form";
 import Col from "react-bootstrap/Col";
 import Button from "react-bootstrap/Button";
 import bs58 from "bs58";
-import { ArrowRightCircle, Home, XSquare } from 'react-feather'
+import { ArrowRightCircle, CheckCircle, Home, XSquare } from 'react-feather'
 
 
 class AddNoteNC extends Component {
@@ -129,7 +129,7 @@ class AddNoteNC extends Component {
 
     const clearForm = async () => {
       document.getElementById("MainForm").reset();
-      this.setState({ idxHash: undefined, txStatus: undefined, txHash: "0", wasSentPacket: undefined })
+      this.setState({ idxHash: undefined, txStatus: undefined, txHash: "0", wasSentPacket: undefined, transaction: undefined })
     }
 
     const getBytes32FromIpfsHash = (ipfsListing) => {
@@ -210,6 +210,7 @@ class AddNoteNC extends Component {
       this.setState({ txHash: "" });
       this.setState({ error: undefined })
       this.setState({ result: "" })
+      this.setState({ transaction: true })
       var idxHash = this.state.idxHash;
 
       console.log("idxHash", idxHash);
@@ -275,9 +276,6 @@ class AddNoteNC extends Component {
                       >
                         Add Note
                       </Button>
-                      {this.state.idxHash !== "" && (
-                      <Form.Label className="LittleText"> Cost in AC {window.assetClass}: {Number(window.costs.createNoteCost) / 1000000000000000000} ETH</Form.Label >
-                      )}
                     </Form.Group>
                   </Form.Row>
                 )}
@@ -286,10 +284,11 @@ class AddNoteNC extends Component {
                     <Form.Group >
                       <div className="submitButtonAN2">
                         <div className="submitButtonAN2-content">
-                          <ArrowRightCircle
+                          <CheckCircle
                             onClick={() => { publishIPFS2Photo() }}
                           />
                         </div>
+                        <Form.Label className="LittleTextNewRecord"> Cost in AC {window.assetClass}: {Number(window.costs.createNoteCost) / 1000000000000000000} ETH</Form.Label >
                       </div>
                     </Form.Group>
                   </Form.Row>
@@ -297,6 +296,7 @@ class AddNoteNC extends Component {
               </div>
             )}
           </Form>
+          {this.state.transaction === undefined && (
           <div className="assetSelectedResults">
             <Form.Row>
               {this.state.idxHash !== undefined && this.state.txHash === "" && (
@@ -310,6 +310,7 @@ class AddNoteNC extends Component {
               )}
             </Form.Row>
           </div>
+          )}
           {this.state.transaction === true && (
 
             <div className="Results">
@@ -409,24 +410,19 @@ class AddNoteNC extends Component {
                     >
                       Add Note
                     </Button>
-                    {this.state.idxHash !== "" && (
-                      <Form.Label className="LittleText"> Cost in AC {window.assetClass}: {Number(window.costs.createNoteCost) / 1000000000000000000} ETH</Form.Label >
-                      )}
                   </Form.Group>
                 </Form.Row>
               )}
               {this.state.hashPath === "" && (
-                <Form.Row>
+                  <Form.Row>
                   <Form.Group >
-                    <div className="submitButtonAN">
-                      <div className="submitButtonAN-content">
-                        <ArrowRightCircle
+                    <div className="submitButtonAN2">
+                      <div className="submitButtonAN2-content">
+                        <CheckCircle
                           onClick={() => { publishIPFS2Photo() }}
                         />
                       </div>
-                      {this.state.idxHash !== "" && (
-                      <Form.Label className="LittleText"> Cost in AC {window.assetClass}: {Number(window.costs.createNoteCost) / 1000000000000000000} ETH</Form.Label >
-                      )}
+                      <Form.Label className="LittleTextNewRecord"> Cost in AC {window.assetClass}: {Number(window.costs.createNoteCost) / 1000000000000000000} ETH</Form.Label >
                     </div>
                   </Form.Group>
                 </Form.Row>
@@ -434,6 +430,7 @@ class AddNoteNC extends Component {
             </div>
           )}
         </Form>
+        {this.state.transaction === undefined && (
         <div className="assetSelectedResults">
           <Form.Row>
             {this.state.idxHash !== undefined && this.state.txHash === "" && (
@@ -447,6 +444,7 @@ class AddNoteNC extends Component {
             )}
           </Form.Row>
         </div>
+        )}
         {this.state.transaction === true && (
 
           <div className="Results">

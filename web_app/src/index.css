@@ -773,7 +773,6 @@ div {
   height: flex;
   width: 59rem;
   background-color: #005480;
-  border-radius: 0rem 0rem 0.5rem 0.5rem;
   padding: 2rem;
   display: flex;
   flex-direction: column;
@@ -1617,11 +1616,11 @@ div {
 
 .submitButtonMD {
   display: flex;
-  position: absolute;
+  /* position: absolute; */
   background-color: transparent;
   z-index: 1000;
   margin-left: 50rem;
-  margin-top: -3.7rem;
+  margin-top: 1rem;
 }
 
 .submitButtonMD-content {
@@ -1640,11 +1639,11 @@ div {
 
 .submitButtonMRS {
   display: flex;
-  position: absolute;
+  /* position: absolute; */
   background-color: transparent;
   z-index: 1000;
   margin-left: 50rem;
-  margin-top: -0.7rem;
+  margin-top: 1rem;
 }
 
 .submitButtonMRS-content {
@@ -1663,11 +1662,11 @@ div {
 
 .submitButtonMRS2 {
   display: flex;
-  position: absolute;
+  /* position: absolute; */
   background-color: transparent;
   z-index: 1000;
-  margin-left: 17rem;
-  margin-top: -3.7rem;
+  margin-left: 50rem;
+  margin-top: 1rem;
 }
 
 .submitButtonMRS2-content {
@@ -1686,11 +1685,11 @@ div {
 
 .submitButtonDC {
   display: flex;
-  position: absolute;
+  /* position: absolute; */
   background-color: transparent;
   z-index: 1000;
   margin-left: 50rem;
-  margin-top: -0.7rem;
+  margin-top: 1rem;
 }
 
 .submitButtonDC-content {
@@ -1709,11 +1708,11 @@ div {
 
 .submitButtonDC2 {
   display: flex;
-  position: absolute;
+  /* position: absolute; */
   background-color: transparent;
   z-index: 1000;
-  margin-left: 20rem;
-  margin-top: -3.7rem;
+  margin-left: 50rem;
+  margin-top: 1rem;
 }
 
 .submitButtonDC2-content {
@@ -1755,11 +1754,11 @@ div {
 
 .submitButtonFMR {
   display: flex;
-  position: absolute;
+  /* position: absolute; */
   background-color: transparent;
   z-index: 1000;
   margin-left: 50rem;
-  /* margin-top: -3.7rem; */
+  margin-top: 1rem;
 }
 
 .submitButtonFMR-content {
@@ -1824,11 +1823,11 @@ div {
 
 .submitButtonAN {
   display: flex;
-  position: absolute;
+  /* position: absolute; */
   background-color: transparent;
   z-index: 1000;
   margin-left: 50rem;
-  margin-top: -3.7rem;
+  margin-top: 1rem;
 }
 
 .submitButtonAN-content {
@@ -1847,11 +1846,11 @@ div {
 
 .submitButtonAN2 {
   display: flex;
-  position: absolute;
+  /* position: absolute; */
   background-color: transparent;
   z-index: 1000;
-  margin-left: 21rem;
-  margin-top: -3.7rem;
+  margin-left: 50rem;
+  margin-top: 1rem;
 }
 
 .submitButtonAN2-content {
@@ -1870,11 +1869,11 @@ div {
 
 .submitButtonEA {
   display: flex;
-  position: absolute;
+  /* position: absolute; */
   background-color: transparent;
   z-index: 1000;
   margin-left: 50rem;
-  /* margin-top: -3.7rem; */
+  margin-top: 1rem;
 }
 
 .submitButtonEA-content {
@@ -1893,11 +1892,11 @@ div {
 
 .submitButtonEA2 {
   display: flex;
-  position: absolute;
+  /* position: absolute; */
   background-color: transparent;
   z-index: 1000;
-  /* margin-left: 21rem; */
-  margin-top: -0.7rem;
+  /* margin-left: rem; */
+  margin-top: 1rem;
 }
 
 .submitButtonEA2-content {
@@ -1919,8 +1918,8 @@ div {
   /* position: absolute; */
   background-color: transparent;
   z-index: 1000;
-  margin-left: 8rem;
-  margin-top: -1rem;
+  margin-left: 50rem;
+  margin-top: 1rem;
 }
 
 .submitButtonIA-content {
@@ -2049,11 +2048,11 @@ div {
 
 .submitButtonVRH {
   display: flex;
-  position: absolute;
+  /* position: absolute; */
   background-color: transparent;
   z-index: 1000;
-  margin-left: 38rem;
-  margin-top: -3.7rem;
+  margin-left: 50rem;
+  margin-top: 1rem;
 }
 
 .submitButtonVRHMobile {
@@ -2104,11 +2103,11 @@ div {
 
 .submitButtonRR {
   display: flex;
-  position: absolute;
+  /* position: absolute; */
   background-color: transparent;
   z-index: 1000;
-  margin-left: 38rem;
-  margin-top: -3.7rem;
+  margin-left: 50rem;
+  margin-top: 1rem;
 }
 
 .submitButtonRRMobile {
@@ -2136,11 +2135,11 @@ div {
 
 .submitButtonRRQR {
   display: flex;
-  position: absolute;
+  /* position: absolute; */
   background-color: transparent;
   z-index: 1000;
-  margin-left: 41rem;
-  margin-top: -3.7rem;
+  margin-left: 50rem;
+  margin-top: 1rem;
 }
 
 .submitButtonRRQRMobile {

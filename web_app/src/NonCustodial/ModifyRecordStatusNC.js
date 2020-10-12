@@ -2,13 +2,87 @@ import React, { Component } from "react";
 import Form from "react-bootstrap/Form";
 import Col from "react-bootstrap/Col";
 import Button from "react-bootstrap/Button";
-import { ArrowRightCircle, Home, XSquare } from 'react-feather'
+import { ArrowRightCircle, Home, XSquare, CheckCircle } from 'react-feather'
 
 class ModifyRecordStatusNC extends Component {
   constructor(props) {
     super(props);
 
     //State declaration.....................................................................................................
+
+    this.modifyStatus = async () => {
+      const self = this;
+
+      this.setState({ txStatus: false });
+      this.setState({ txHash: "" });
+      this.setState({ error: undefined })
+      this.setState({ result: "" })
+      this.setState({ transaction: true })
+      var idxHash = this.state.idxHash;
+
+      console.log("idxHash", idxHash);
+      console.log("addr: ", window.addr);
+
+      var doesExist = await window.utils.checkAssetExists(idxHash);
+
+      if (!doesExist) {
+        return alert("Asset doesnt exist! Ensure data fields are correct before submission.")
+      }
+
+      if (
+        this.state.newStatus !== "53" &&
+        this.state.newStatus !== "54" &&
+        this.state.newStatus !== "57" &&
+        this.state.newStatus !== "58" &&
+        Number(this.state.newStatus) < 100 &&
+        Number(this.state.newStatus) > 49) {
+
+        window.contracts.NP_NC.methods
+          ._modStatus(idxHash, this.state.newStatus)
+          .send({ from: window.addr })
+          .on("error", function (_error) {
+            // self.setState({ NRerror: _error });
+            self.setState({ txHash: Object.values(_error)[0].transactionHash });
+            self.setState({ txStatus: false });
+            self.setState({ transaction: false });
+            console.log(Object.values(_error)[0].transactionHash);
+          })
+          .on("receipt", (receipt) => {
+            self.setState({ transaction: false });
+            self.setState({ txHash: receipt.transactionHash });
+            self.setState({ txStatus: receipt.status });
+            console.log(receipt.status);
+            window.resetInfo = true;
+            //Stuff to do when tx confirms
+          });
+      }
+
+      else if (this.state.newStatus === "53" || this.state.newStatus === "54") {
+        window.contracts.NP_NC.methods
+          ._setLostOrStolen(idxHash, this.state.newStatus)
+          .send({ from: window.addr })
+          .on("error", function (_error) {
+            // self.setState({ NRerror: _error });
+            self.setState({ transaction: false })
+            self.setState({ txHash: Object.values(_error)[0].transactionHash });
+            self.setState({ txStatus: false });
+            console.log(Object.values(_error)[0].transactionHash);
+          })
+          .on("receipt", (receipt) => {
+            self.setState({ transaction: false })
+            this.setState({ txHash: receipt.transactionHash });
+            this.setState({ txStatus: receipt.status });
+            console.log(receipt.status);
+            window.resetInfo = true;
+            //Stuff to do when tx confirms
+          });
+      }
+
+      else { alert("Invalid status input") }
+
+      console.log(this.state.txHash);
+      return document.getElementById("MainForm").reset();
+    };
 
     this.updateAssets = setInterval(() => {
       if (this.state.assets !== window.assets && this.state.runWatchDog === true) {
@@ -55,7 +129,7 @@ class ModifyRecordStatusNC extends Component {
       this.setState({ wasSentPacket: true })
     }
 
-    this.setState({runWatchDog: true})
+    this.setState({ runWatchDog: true })
   }
 
 
@@ -73,29 +147,29 @@ class ModifyRecordStatusNC extends Component {
 
     const clearForm = async () => {
       document.getElementById("MainForm").reset();
-      this.setState({ idxHash: undefined, txStatus: undefined, txHash: "0" })
+      this.setState({ idxHash: undefined, txStatus: undefined, txHash: "0", transaction: undefined, wasSentPacket: false })
     }
 
     const _checkIn = async (e) => {
-      if (e === "null" || e === undefined) { 
+      if (e === "null" || e === undefined) {
         return clearForm()
       }
       else if (e === "reset") {
         return window.resetInfo = true;
       }
-      else if (e === "assetDash"){
+      else if (e === "assetDash") {
         return window.location.href = "/#/asset-dashboard"
       }
 
-      let resArray = await window.utils.checkStats(window.assets.ids[e], [0,2])
+      let resArray = await window.utils.checkStats(window.assets.ids[e], [0, 2])
 
       console.log(resArray)
 
-      
+
       if (Number(resArray[1]) === 0) {
         alert("Asset does not exist at given IDX");
       }
-      
+
       if (Number(resArray[0]) === 50) {
         alert("Asset not modifyable in locked escrow status"); return clearForm()
       }
@@ -118,75 +192,6 @@ class ModifyRecordStatusNC extends Component {
         note: window.assets.notes[e]
       })
     }
-
-    const _modifyStatus = async () => {
-      this.setState({ txStatus: false });
-      this.setState({ txHash: "" });
-      this.setState({ error: undefined })
-      this.setState({ result: "" })
-      var idxHash = this.state.idxHash;
-
-      console.log("idxHash", idxHash);
-      console.log("addr: ", window.addr);
-
-      var doesExist = await window.utils.checkAssetExists(idxHash);
-
-      if (!doesExist) {
-        return alert("Asset doesnt exist! Ensure data fields are correct before submission.")
-      }
-
-      if (
-        this.state.newStatus !== "53" && 
-        this.state.newStatus !== "54" && 
-        this.state.newStatus !== "57" && 
-        this.state.newStatus !== "58" &&   
-        Number(this.state.newStatus) < 100 && 
-        Number(this.state.newStatus) > 49) {
-
-        window.contracts.NP_NC.methods
-          ._modStatus(idxHash, this.state.newStatus)
-          .send({ from: window.addr })
-          .on("error", function (_error) {
-            // self.setState({ NRerror: _error });
-            self.setState({ txHash: Object.values(_error)[0].transactionHash });
-            self.setState({ txStatus: false });
-            console.log(Object.values(_error)[0].transactionHash);
-          })
-          .on("receipt", (receipt) => {
-            this.setState({ txHash: receipt.transactionHash });
-            this.setState({ txStatus: receipt.status });
-            console.log(receipt.status);
-            window.resetInfo = true;
-            //Stuff to do when tx confirms
-          });
-      }
-
-      else if (this.state.newStatus === "53" || this.state.newStatus === "54") {
-        window.contracts.NP_NC.methods
-          ._setLostOrStolen(idxHash, this.state.newStatus)
-          .send({ from: window.addr })
-          .on("error", function (_error) {
-            // self.setState({ NRerror: _error });
-            self.setState({ transaction: false })
-            self.setState({ txHash: Object.values(_error)[0].transactionHash });
-            self.setState({ txStatus: false });
-            console.log(Object.values(_error)[0].transactionHash);
-          })
-          .on("receipt", (receipt) => {
-            self.setState({ transaction: false })
-            this.setState({ txHash: receipt.transactionHash });
-            this.setState({ txStatus: receipt.status });
-            console.log(receipt.status);
-            window.resetInfo = true;
-            //Stuff to do when tx confirms
-          });
-      }
-
-      else { alert("Invalid status input") }
-
-      console.log(this.state.txHash);
-      return document.getElementById("MainForm").reset();
-    };
 
     if (this.state.wasSentPacket) {
       return (
@@ -213,14 +218,14 @@ class ModifyRecordStatusNC extends Component {
                   <Form.Group as={Col} controlId="formGridFormat">
                     <Form.Label className="formFont">New Status:</Form.Label>
                     <Form.Control as="select" size="lg" onChange={(e) => this.setState({ newStatus: e.target.value })}>
-                    <optgroup className="optgroup">
-                      <option value="0">Choose a status</option>
-                      <option value="51">Transferrable</option>
-                      <option value="52">Non-transferrable</option>
-                      <option value="53">Stolen</option>
-                      <option value="54">Lost</option>
-                      <option value="59">Discardable</option>
-                    </optgroup>
+                      <optgroup className="optgroup">
+                        <option value="0">Choose a status</option>
+                        <option value="51">Transferrable</option>
+                        <option value="52">Non-transferrable</option>
+                        <option value="53">Stolen</option>
+                        <option value="54">Lost</option>
+                        <option value="59">Discardable</option>
+                      </optgroup>
                     </Form.Control>
                   </Form.Group>
                 </Form.Row>
@@ -228,8 +233,8 @@ class ModifyRecordStatusNC extends Component {
                 <Form.Row>
                   <div className="submitButtonMRS2">
                     <div className="submitButtonMRS2-content">
-                      <ArrowRightCircle
-                        onClick={() => { _modifyStatus() }}
+                      <CheckCircle
+                        onClick={() => { this.modifyStatus() }}
                       />
                     </div>
                   </div>
@@ -237,19 +242,21 @@ class ModifyRecordStatusNC extends Component {
               </div>
             )}
           </Form>
-          <div className="assetSelectedResults">
-            <Form.Row>
-              {this.state.idxHash !== undefined && this.state.txHash === "" && (
-                <Form.Group>
-                  <div className="assetSelectedContentHead">Asset IDX: <span className="assetSelectedContent">{this.state.idxHash}</span> </div>
-                  <div className="assetSelectedContentHead">Asset Name: <span className="assetSelectedContent">{this.state.name}</span> </div>
-                  {/* <div className="assetSelectedContentHead"> Asset Description: <span className="assetSelectedContent">{this.state.description}</span> </div> */}
-                  <div className="assetSelectedContentHead">Asset Class: <span className="assetSelectedContent">{this.state.assetClass}</span> </div>
-                  <div className="assetSelectedContentHead">Asset Status: <span className="assetSelectedContent">{this.state.status}</span> </div>
-                </Form.Group>
-              )}
-            </Form.Row>
-          </div>
+          {this.state.transaction === undefined && (
+            <div className="assetSelectedResults">
+              <Form.Row>
+                {this.state.idxHash !== undefined && this.state.txHash === "" && (
+                  <Form.Group>
+                    <div className="assetSelectedContentHead">Asset IDX: <span className="assetSelectedContent">{this.state.idxHash}</span> </div>
+                    <div className="assetSelectedContentHead">Asset Name: <span className="assetSelectedContent">{this.state.name}</span> </div>
+                    {/* <div className="assetSelectedContentHead"> Asset Description: <span className="assetSelectedContent">{this.state.description}</span> </div> */}
+                    <div className="assetSelectedContentHead">Asset Class: <span className="assetSelectedContent">{this.state.assetClass}</span> </div>
+                    <div className="assetSelectedContentHead">Asset Status: <span className="assetSelectedContent">{this.state.status}</span> </div>
+                  </Form.Group>
+                )}
+              </Form.Row>
+            </div>
+          )}
           {this.state.transaction === true && (
 
             <div className="Results">
@@ -257,8 +264,8 @@ class ModifyRecordStatusNC extends Component {
               <p className="loading">Transaction In Progress</p>
               {/* )} */}
               {/* {this.state.pendingTx !== undefined && (
-      <p class="loading">Transaction In Progress</p>
-    )} */}
+            <p class="loading">Transaction In Progress</p>
+          )} */}
             </div>)}
           {this.state.txHash > 0 && ( //conditional rendering
             <div className="Results">
@@ -321,10 +328,10 @@ class ModifyRecordStatusNC extends Component {
                     onChange={(e) => { _checkIn(e.target.value) }}
                   >
                     {this.state.hasLoadedAssets && (
-                    <optgroup className="optgroup">
+                      <optgroup className="optgroup">
 
-                    {window.utils.generateAssets()}
-                    </optgroup>)}
+                        {window.utils.generateAssets()}
+                      </optgroup>)}
                     {!this.state.hasLoadedAssets && (<optgroup ><option value="null"> Loading Assets... </option></optgroup>)}
 
                   </Form.Control>
@@ -334,15 +341,15 @@ class ModifyRecordStatusNC extends Component {
                 <Form.Group as={Col} controlId="formGridFormat">
                   <Form.Label className="formFont">New Status:</Form.Label>
                   <Form.Control as="select" size="lg" onChange={(e) => this.setState({ newStatus: e.target.value })}>
-                  <optgroup className="optgroup">
-                    <option value="0">Choose a status</option>
-                    <option value="51">Transferrable</option>
-                    <option value="52">Non-transferrable</option>
-                    <option value="53">Stolen</option>
-                    <option value="54">Lost</option>
-                    <option value="59">Discardable</option>
-                    <option value="51">Export-ready</option>
-                  </optgroup>
+                    <optgroup className="optgroup">
+                      <option value="0">Choose a status</option>
+                      <option value="51">Transferrable</option>
+                      <option value="52">Non-transferrable</option>
+                      <option value="53">Stolen</option>
+                      <option value="54">Lost</option>
+                      <option value="59">Discardable</option>
+                      <option value="51">Export-ready</option>
+                    </optgroup>
                   </Form.Control>
                 </Form.Group>
               </Form.Row>
@@ -350,8 +357,8 @@ class ModifyRecordStatusNC extends Component {
               <Form.Row>
                 <div className="submitButtonMRS">
                   <div className="submitButtonMRS-content">
-                    <ArrowRightCircle
-                      onClick={() => { _modifyStatus() }}
+                    <CheckCircle
+                      onClick={() => { this.modifyStatus() }}
                     />
                   </div>
                 </div>
@@ -359,28 +366,24 @@ class ModifyRecordStatusNC extends Component {
             </div>
           )}
         </Form>
-        <div className="assetSelectedResults">
-          <Form.Row>
-            {this.state.idxHash !== undefined && this.state.txHash === "" && (
-              <Form.Group>
-                <div className="assetSelectedContentHead">Asset IDX: <span className="assetSelectedContent">{this.state.idxHash}</span> </div>
-                <div className="assetSelectedContentHead">Asset Name: <span className="assetSelectedContent">{this.state.name}</span> </div>
-                {/* <div className="assetSelectedContentHead"> Asset Description: <span className="assetSelectedContent">{this.state.description}</span> </div> */}
-                <div className="assetSelectedContentHead">Asset Class: <span className="assetSelectedContent">{this.state.assetClass}</span> </div>
-                <div className="assetSelectedContentHead">Asset Status: <span className="assetSelectedContent">{this.state.status}</span> </div>
-              </Form.Group>
-            )}
-          </Form.Row>
-        </div>
-        {this.state.transaction === true && this.state.txStatus === undefined &&(
+        {this.state.transaction === undefined && (
+          <div className="assetSelectedResults">
+            <Form.Row>
+              {this.state.idxHash !== undefined && this.state.txHash === "" && (
+                <Form.Group>
+                  <div className="assetSelectedContentHead">Asset IDX: <span className="assetSelectedContent">{this.state.idxHash}</span> </div>
+                  <div className="assetSelectedContentHead">Asset Name: <span className="assetSelectedContent">{this.state.name}</span> </div>
+                  <div className="assetSelectedContentHead">Asset Class: <span className="assetSelectedContent">{this.state.assetClass}</span> </div>
+                  <div className="assetSelectedContentHead">Asset Status: <span className="assetSelectedContent">{this.state.status}</span> </div>
+                </Form.Group>
+              )}
+            </Form.Row>
+          </div>
+        )}
+        {this.state.transaction === true && this.state.txStatus === undefined && (
 
           <div className="Results">
-            {/* {this.state.pendingTx === undefined && ( */}
             <p className="loading">Transaction In Progress</p>
-            {/* )} */}
-            {/* {this.state.pendingTx !== undefined && (
-    <p class="loading">Transaction In Progress</p>
-  )} */}
           </div>)}
         {this.state.txHash > 0 && ( //conditional rendering
           <div className="Results">

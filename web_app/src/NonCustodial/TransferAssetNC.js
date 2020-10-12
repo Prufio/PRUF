@@ -113,7 +113,7 @@ class ModifyDescriptionNC extends Component {
 
     const clearForm = async () => {
       document.getElementById("MainForm").reset();
-      this.setState({ idxHash: undefined, txStatus: "", txHash: "", wasSentPacket: undefined })
+      this.setState({ idxHash: undefined, txStatus: false, txHash: "", wasSentPacket: undefined })
     }
 
     const _transferAsset = async () => {
