@@ -94,7 +94,31 @@ class ModifyRightsHolder extends Component {
       else if (e === "assetDash"){
         return window.location.href = "/#/asset-dashboard"
       }
-      if(window.assets.statuses[e] === "53" || window.assets.statuses[e] === "54"){alert("Asset cannot be modified while in lost or stolen status"); return clearForm()}
+
+      let resArray = await window.utils.checkStats(window.assets.ids[e], [0,2])
+
+      console.log(resArray)
+
+      if (Number(resArray[1]) === 0) {
+        alert("Asset does not exist at given IDX");
+      }
+
+      if (Number(resArray[0]) === 53) {
+        alert("Asset not modifyable in stolen status"); return clearForm()
+      }
+
+      if (Number(resArray[0]) === 54) {
+        alert("Asset not modifyable in lost status"); return clearForm()
+      }
+
+      if (Number(resArray[0]) === 50) {
+        alert("Asset not modifyable in locked escrow status"); return clearForm()
+      }
+
+      if (Number(resArray[0]) === 56) {
+        alert("Asset not modifyable in supervized escrow status"); return clearForm()
+      }
+
       this.setState({ selectedAsset: e })
       console.log("Changed component idx to: ", window.assets.ids[e])
 
