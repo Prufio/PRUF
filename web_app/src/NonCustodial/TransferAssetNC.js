@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import Form from "react-bootstrap/Form";
 import Col from "react-bootstrap/Col";
-import { ArrowRightCircle, Home, XSquare } from 'react-feather'
+import { ArrowRightCircle, Home, XSquare, CheckCircle } from 'react-feather'
 
 
 class ModifyDescriptionNC extends Component {
@@ -54,7 +54,7 @@ class ModifyDescriptionNC extends Component {
       this.setState({ wasSentPacket: true })
     }
 
-    this.setState({runWatchDog: true})
+    this.setState({ runWatchDog: true })
 
   }
 
@@ -72,22 +72,22 @@ class ModifyDescriptionNC extends Component {
     const _checkIn = async (e) => {
 
       console.log("Checking in with id: ", e)
-      if (e === "null" || e === undefined) { 
+      if (e === "null" || e === undefined) {
         return clearForm()
       }
       else if (e === "reset") {
         return window.resetInfo = true;
       }
-      else if (e === "assetDash"){
+      else if (e === "assetDash") {
         console.log("heading over to dashboard")
         return window.location.href = "/#/asset-dashboard"
       }
 
-      let resArray = await window.utils.checkStats(window.assets.ids[e], [0,2])
+      let resArray = await window.utils.checkStats(window.assets.ids[e], [0, 2])
 
       console.log(resArray)
 
-      
+
       if (Number(resArray[1]) === 0) {
         alert("Asset does not exist at given IDX"); return clearForm()
       }
@@ -113,7 +113,7 @@ class ModifyDescriptionNC extends Component {
 
     const clearForm = async () => {
       document.getElementById("MainForm").reset();
-      this.setState ({ idxHash: undefined, txStatus: "", txHash: "", wasSentPacket: undefined})
+      this.setState({ idxHash: undefined, txStatus: "", txHash: "", wasSentPacket: undefined })
     }
 
     const _transferAsset = async () => {
@@ -121,6 +121,7 @@ class ModifyDescriptionNC extends Component {
       this.setState({ txHash: "" });
       this.setState({ error: undefined })
       this.setState({ result: "" })
+      this.setState({ transaction: true });
       var idxHash = this.state.idxHash;
       let to = this.state.to;
 
@@ -187,7 +188,7 @@ class ModifyDescriptionNC extends Component {
                   <Form.Group>
                     <div className="submitButtonTA2">
                       <div className="submitButtonTA2-content">
-                        <ArrowRightCircle
+                        <CheckCircle
                           onClick={() => { _transferAsset() }}
                         />
                       </div>
@@ -197,6 +198,7 @@ class ModifyDescriptionNC extends Component {
               </div>
             )}
           </Form>
+          {this.state.transaction === undefined && this.state.txStatus === false && (
           <div className="assetSelectedResults">
             <Form.Row>
               {this.state.idxHash !== undefined && this.state.txHash === "" && (
@@ -210,6 +212,7 @@ class ModifyDescriptionNC extends Component {
               )}
             </Form.Row>
           </div>
+          )}
 
           {this.state.transaction === true && (
 
@@ -283,10 +286,10 @@ class ModifyDescriptionNC extends Component {
                     onChange={(e) => { _checkIn(e.target.value) }}
                   >
                     {this.state.hasLoadedAssets && (
-                    <optgroup className="optgroup">
+                      <optgroup className="optgroup">
 
-                    {window.utils.generateAssets()}
-                    </optgroup>)}
+                        {window.utils.generateAssets()}
+                      </optgroup>)}
                     {!this.state.hasLoadedAssets && (<optgroup ><option value="null"> Loading Assets... </option></optgroup>)}
 
                   </Form.Control>
@@ -308,7 +311,7 @@ class ModifyDescriptionNC extends Component {
                 <Form.Group>
                   <div className="submitButtonTA">
                     <div className="submitButtonTA-content">
-                      <ArrowRightCircle
+                      <CheckCircle
                         onClick={() => { _transferAsset() }}
                       />
                     </div>
@@ -318,19 +321,21 @@ class ModifyDescriptionNC extends Component {
             </div>
           )}
         </Form>
-        <div className="assetSelectedResults" id="MainForm">
-          <Form.Row>
-            {this.state.idxHash !== undefined && this.state.txHash === "" && (
-              <Form.Group>
-                <div className="assetSelectedContentHead">Asset IDX: <span className="assetSelectedContent">{this.state.idxHash}</span> </div>
-                <div className="assetSelectedContentHead">Asset Name: <span className="assetSelectedContent">{this.state.name}</span> </div>
-                {/* <div className="assetSelectedContentHead"> Asset Description: <span className="assetSelectedContent">{this.state.description}</span> </div> */}
-                <div className="assetSelectedContentHead">Asset Class: <span className="assetSelectedContent">{this.state.assetClass}</span> </div>
-                <div className="assetSelectedContentHead">Asset Status: <span className="assetSelectedContent">{this.state.status}</span> </div>
-              </Form.Group>
-            )}
-          </Form.Row>
-        </div>
+        {this.state.transaction === undefined && this.state.txStatus === false && (
+          <div className="assetSelectedResults" id="MainForm">
+            <Form.Row>
+              {this.state.idxHash !== undefined && this.state.txHash === "" && (
+                <Form.Group>
+                  <div className="assetSelectedContentHead">Asset IDX: <span className="assetSelectedContent">{this.state.idxHash}</span> </div>
+                  <div className="assetSelectedContentHead">Asset Name: <span className="assetSelectedContent">{this.state.name}</span> </div>
+                  {/* <div className="assetSelectedContentHead"> Asset Description: <span className="assetSelectedContent">{this.state.description}</span> </div> */}
+                  <div className="assetSelectedContentHead">Asset Class: <span className="assetSelectedContent">{this.state.assetClass}</span> </div>
+                  <div className="assetSelectedContentHead">Asset Status: <span className="assetSelectedContent">{this.state.status}</span> </div>
+                </Form.Group>
+              )}
+            </Form.Row>
+          </div>
+        )}
 
         {this.state.transaction === true && (
 
@@ -342,31 +347,35 @@ class ModifyDescriptionNC extends Component {
     <p class="loading">Transaction In Progress</p>
   )} */}
           </div>)}
-        {this.state.txHash > 0 && ( //conditional rendering
-          <div className="Results">
-            {this.state.txStatus === false && (
-              <div>
-                !ERROR! :
-                <a
-                  href={"https://kovan.etherscan.io/tx/" + this.state.txHash}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                >
-                  KOVAN Etherscan:{this.state.txHash}
-                </a>
-              </div>
-            )}
-            {this.state.txStatus === true && (
-              <div>
-                {" "}
+        {this.state.transaction === false && (
+          <div>
+            {this.state.txHash > 0 && ( //conditional rendering
+              <div className="Results">
+                {this.state.txStatus === false && (
+                  <div>
+                    !ERROR! :
+                    <a
+                      href={"https://kovan.etherscan.io/tx/" + this.state.txHash}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                    >
+                      KOVAN Etherscan:{this.state.txHash}
+                    </a>
+                  </div>
+                )}
+                {this.state.txStatus === true && (
+                  <div>
+                    {" "}
                 No Errors Reported :
-                <a
-                  href={"https://kovan.etherscan.io/tx/" + this.state.txHash}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                >
-                  KOVAN Etherscan:{this.state.txHash}
-                </a>
+                    <a
+                      href={"https://kovan.etherscan.io/tx/" + this.state.txHash}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                    >
+                      KOVAN Etherscan:{this.state.txHash}
+                    </a>
+                  </div>
+                )}
               </div>
             )}
           </div>

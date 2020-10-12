@@ -2,7 +2,7 @@ import React, { Component } from "react";
 import Form from "react-bootstrap/Form";
 import Col from "react-bootstrap/Col";
 import Button from "react-bootstrap/Button";
-import { ArrowRightCircle, Home, TrendingUp, XSquare } from 'react-feather'
+import { ArrowRightCircle, Home, TrendingUp, XSquare, CheckCircle } from 'react-feather'
 
 class EscrowManagerNC extends Component {
   constructor(props) {
@@ -41,6 +41,7 @@ class EscrowManagerNC extends Component {
       escrowData: [],
       hasLoadedAssets: false,
       assets: { descriptions: [0], notes: [0], ids: [0], assetClasses: [0], statuses: [0], names: [0] },
+      transaction: undefined,
     };
   }
 
@@ -48,13 +49,13 @@ class EscrowManagerNC extends Component {
 
   componentDidMount() {//stuff to do when component mounts in window
     if (window.sentPacket !== undefined) {
-      this.setState({ 
+      this.setState({
         name: window.sentPacket.name,
         idxHash: window.sentPacket.idxHash,
         assetClass: window.sentPacket.assetClass,
         status: window.sentPacket.status,
         wasSentPacket: true
-       })
+      })
       window.sentPacket = undefined
     }
 
@@ -93,6 +94,7 @@ class EscrowManagerNC extends Component {
       this.setState({ txHash: "" });
       this.setState({ error: undefined })
       this.setState({ result: "" })
+      this.setState({ transaction: true })
 
       var idxHash = this.state.idxHash;
 
@@ -100,19 +102,21 @@ class EscrowManagerNC extends Component {
       console.log("addr: ", window.addr);
       console.log("time: ", this.state.escrowTime, "format: ", this.state.timeFormat);
 
-      if(this.state.newStatus <= 49){return alert("Cannot set status under 50 in non-custodial AC")}
-      if(this.state.agent.substring(0,2) !== "0x"){return alert("Agent address invalid")}
-      
+      if (this.state.newStatus <= 49) { return alert("Cannot set status under 50 in non-custodial AC") }
+      if (this.state.agent.substring(0, 2) !== "0x") { return alert("Agent address invalid") }
+
 
       window.contracts.ECR_NC.methods
         .setEscrow(idxHash, window.web3.utils.soliditySha3(this.state.agent), window.utils.convertTimeTo(this.state.escrowTime, this.state.timeFormat), this.state.newStatus)
         .send({ from: window.addr })
         .on("error", function (_error) {
+          self.setState({ transaction: false })
           self.setState({ txHash: Object.values(_error)[0].transactionHash });
           self.setState({ txStatus: false });
           console.log(Object.values(_error)[0].transactionHash);
         })
         .on("receipt", (receipt) => {
+          self.setState({ transaction: false })
           this.setState({ txHash: receipt.transactionHash });
           this.setState({ txStatus: receipt.status });
           console.log(receipt.status);
@@ -124,31 +128,31 @@ class EscrowManagerNC extends Component {
     };
 
     const _checkIn = async (e) => {
-      if (e === "null" || e === undefined) { 
+      if (e === "null" || e === undefined) {
         return clearForm()
       }
       else if (e === "reset") {
         return window.resetInfo = true;
       }
-      else if (e === "assetDash"){
+      else if (e === "assetDash") {
         return window.location.href = "/#/asset-dashboard"
       }
-      
-      
+
+
       let resArray = await window.utils.checkStats(window.assets.ids[e], [0])
 
       console.log(resArray)
 
-      if(Number(resArray[0]) === 3 || Number(resArray[0]) === 4 || Number(resArray[0]) === 53 || Number(resArray[0]) === 54){
+      if (Number(resArray[0]) === 3 || Number(resArray[0]) === 4 || Number(resArray[0]) === 53 || Number(resArray[0]) === 54) {
         alert("Cannot edit asset in lost or stolen status"); return clearForm()
       }
 
-      else if(Number(resArray[0]) === 6 && Number(resArray[0]) === 50){
-        this.setState({isSettingEscrow: false})
+      else if (Number(resArray[0]) === 6 || Number(resArray[0]) === 50) {
+        this.setState({ isSettingEscrow: false })
       }
-      
-      else if(Number(resArray[0]) !== 6 && Number(resArray[0]) !== 50 && Number(resArray[0]) !== 56){
-        this.setState({isSettingEscrow: true})
+
+      else if (Number(resArray[0]) !== 6 && Number(resArray[0]) !== 50 && Number(resArray[0]) !== 56) {
+        this.setState({ isSettingEscrow: true })
       }
 
       this.setState({ selectedAsset: e })
@@ -171,6 +175,7 @@ class EscrowManagerNC extends Component {
       this.setState({ txHash: "" });
       this.setState({ error: undefined })
       this.setState({ result: "" })
+      this.setState({ transaction: true })
 
       var idxHash = this.state.idxHash;
 
@@ -237,10 +242,10 @@ class EscrowManagerNC extends Component {
                       <Form.Control as="select" size="lg" onChange={(e) => this.setState({ isSettingEscrow: e.target.value })}>
 
                         <option value="null">Select an Action</option>
-                        
-                          <option value="true">Set Escrow</option>
-                          <option value="false">End Escrow</option>
-                        
+
+                        <option value="true">Set Escrow</option>
+                        <option value="false">End Escrow</option>
+
                       </Form.Control>
                     </Form.Row>
                     <Form.Row>
@@ -302,7 +307,7 @@ class EscrowManagerNC extends Component {
                     <Form.Row>
                       <div className="submitButton">
                         <div className="submitButton-content">
-                          <ArrowRightCircle
+                          <CheckCircle
                             onClick={() => { _setEscrow() }}
                           />
                         </div>
@@ -321,7 +326,7 @@ class EscrowManagerNC extends Component {
                     <Form.Row>
                       <div className="submitButtonEM">
                         <div className="submitButtonEM-content">
-                          <ArrowRightCircle
+                          <CheckCircle
                             onClick={() => { _endEscrow() }}
                           />
                         </div>
@@ -332,19 +337,21 @@ class EscrowManagerNC extends Component {
               </div>
             )}
           </Form>
-          <div className="assetSelectedResults">
-            <Form.Row>
-              {this.state.idxHash !== undefined && this.state.txHash === "" && (
-                <Form.Group>
-                  <div className="assetSelectedContentHead">Asset IDX: <span className="assetSelectedContent">{this.state.idxHash}</span> </div>
-                  <div className="assetSelectedContentHead">Asset Name: <span className="assetSelectedContent">{this.state.name}</span> </div>
-                  {/* <div className="assetSelectedContentHead"> Asset Description: <span className="assetSelectedContent">{this.state.description}</span> </div> */}
-                  <div className="assetSelectedContentHead">Asset Class: <span className="assetSelectedContent">{this.state.assetClass}</span> </div>
-                  <div className="assetSelectedContentHead">Asset Status: <span className="assetSelectedContent">{this.state.status}</span> </div>
-                </Form.Group>
-              )}
-            </Form.Row>
-          </div>
+          {this.state.transaction === undefined && this.state.txStatus === false && (
+            <div className="assetSelectedResults">
+              <Form.Row>
+                {this.state.idxHash !== undefined && this.state.txHash === "" && (
+                  <Form.Group>
+                    <div className="assetSelectedContentHead">Asset IDX: <span className="assetSelectedContent">{this.state.idxHash}</span> </div>
+                    <div className="assetSelectedContentHead">Asset Name: <span className="assetSelectedContent">{this.state.name}</span> </div>
+                    {/* <div className="assetSelectedContentHead"> Asset Description: <span className="assetSelectedContent">{this.state.description}</span> </div> */}
+                    <div className="assetSelectedContentHead">Asset Class: <span className="assetSelectedContent">{this.state.assetClass}</span> </div>
+                    <div className="assetSelectedContentHead">Asset Status: <span className="assetSelectedContent">{this.state.status}</span> </div>
+                  </Form.Group>
+                )}
+              </Form.Row>
+            </div>
+          )}
           {this.state.transaction === true && (
 
             <div className="Results">
@@ -355,31 +362,35 @@ class EscrowManagerNC extends Component {
         <p class="loading">Transaction In Progress</p>
       )} */}
             </div>)}
-          {this.state.txHash > 0 && ( //conditional rendering
-            <div className="Results">
-              {this.state.txStatus === false && (
-                <div>
-                  !ERROR! :
-                  <a
-                    href={"https://kovan.etherscan.io/tx/" + this.state.txHash}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                  >
-                    KOVAN Etherscan:{this.state.txHash}
-                  </a>
-                </div>
-              )}
-              {this.state.txStatus === true && (
-                <div>
-                  {" "}
+          {this.state.transaction === false && (
+            <div>
+              {this.state.txHash > 0 && ( //conditional rendering
+                <div className="Results">
+                  {this.state.txStatus === false && (
+                    <div>
+                      !ERROR! :
+                      <a
+                        href={"https://kovan.etherscan.io/tx/" + this.state.txHash}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                      >
+                        KOVAN Etherscan:{this.state.txHash}
+                      </a>
+                    </div>
+                  )}
+                  {this.state.txStatus === true && (
+                    <div>
+                      {" "}
                     No Errors Reported :
-                  <a
-                    href={"https://kovan.etherscan.io/tx/" + this.state.txHash}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                  >
-                    KOVAN Etherscan:{this.state.txHash}
-                  </a>
+                      <a
+                        href={"https://kovan.etherscan.io/tx/" + this.state.txHash}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                      >
+                        KOVAN Etherscan:{this.state.txHash}
+                      </a>
+                    </div>
+                  )}
                 </div>
               )}
             </div>
@@ -420,9 +431,6 @@ class EscrowManagerNC extends Component {
                       >
                         {this.state.hasLoadedAssets && (
                           <optgroup className="optgroup">
-                            <option value="null"> Select an asset </option>
-                            <option value="assetDash">View Assets in Dashboard</option>
-                            <option value="reset">Refresh Assets</option>
                             {window.utils.generateAssets()}
                           </optgroup>)}
                         {!this.state.hasLoadedAssets && (<optgroup ><option value="null"> Loading Assets... </option></optgroup>)}
@@ -499,7 +507,7 @@ class EscrowManagerNC extends Component {
                   <Form.Row>
                     <div className="submitButton">
                       <div className="submitButton-content">
-                        <ArrowRightCircle
+                        <CheckCircle
                           onClick={() => { _setEscrow() }}
                         />
                       </div>
@@ -518,7 +526,7 @@ class EscrowManagerNC extends Component {
                   <Form.Row>
                     <div className="submitButtonEM">
                       <div className="submitButtonEM-content">
-                        <ArrowRightCircle
+                        <CheckCircle
                           onClick={() => { _endEscrow() }}
                         />
                       </div>
@@ -529,19 +537,21 @@ class EscrowManagerNC extends Component {
             </div>
           )}
         </Form>
-        <div className="assetSelectedResults">
-          <Form.Row>
-            {this.state.idxHash !== undefined && this.state.txHash === "" && (
-              <Form.Group>
-                <div className="assetSelectedContentHead">Asset IDX: <span className="assetSelectedContent">{this.state.idxHash}</span> </div>
-                <div className="assetSelectedContentHead">Asset Name: <span className="assetSelectedContent">{this.state.name}</span> </div>
-                {/* <div className="assetSelectedContentHead"> Asset Description: <span className="assetSelectedContent">{this.state.description}</span> </div> */}
-                <div className="assetSelectedContentHead">Asset Class: <span className="assetSelectedContent">{this.state.assetClass}</span> </div>
-                <div className="assetSelectedContentHead">Asset Status: <span className="assetSelectedContent">{this.state.status}</span> </div>
-              </Form.Group>
-            )}
-          </Form.Row>
-        </div>
+        {this.state.transaction === undefined && this.state.txStatus === false && (
+          <div className="assetSelectedResults">
+            <Form.Row>
+              {this.state.idxHash !== undefined && this.state.txHash === "" && (
+                <Form.Group>
+                  <div className="assetSelectedContentHead">Asset IDX: <span className="assetSelectedContent">{this.state.idxHash}</span> </div>
+                  <div className="assetSelectedContentHead">Asset Name: <span className="assetSelectedContent">{this.state.name}</span> </div>
+                  {/* <div className="assetSelectedContentHead"> Asset Description: <span className="assetSelectedContent">{this.state.description}</span> </div> */}
+                  <div className="assetSelectedContentHead">Asset Class: <span className="assetSelectedContent">{this.state.assetClass}</span> </div>
+                  <div className="assetSelectedContentHead">Asset Status: <span className="assetSelectedContent">{this.state.status}</span> </div>
+                </Form.Group>
+              )}
+            </Form.Row>
+          </div>
+        )}
         {this.state.transaction === true && (
 
           <div className="Results">
@@ -552,31 +562,35 @@ class EscrowManagerNC extends Component {
     <p class="loading">Transaction In Progress</p>
   )} */}
           </div>)}
-        {this.state.txHash > 0 && ( //conditional rendering
-          <div className="Results">
-            {this.state.txStatus === false && (
-              <div>
-                !ERROR! :
-                <a
-                  href={"https://kovan.etherscan.io/tx/" + this.state.txHash}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                >
-                  KOVAN Etherscan:{this.state.txHash}
-                </a>
-              </div>
-            )}
-            {this.state.txStatus === true && (
-              <div>
-                {" "}
+        {this.state.transaction === false && (
+          <div>
+            {this.state.txHash > 0 && ( //conditional rendering
+              <div className="Results">
+                {this.state.txStatus === false && (
+                  <div>
+                    !ERROR! :
+                    <a
+                      href={"https://kovan.etherscan.io/tx/" + this.state.txHash}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                    >
+                      KOVAN Etherscan:{this.state.txHash}
+                    </a>
+                  </div>
+                )}
+                {this.state.txStatus === true && (
+                  <div>
+                    {" "}
                 No Errors Reported :
-                <a
-                  href={"https://kovan.etherscan.io/tx/" + this.state.txHash}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                >
-                  KOVAN Etherscan:{this.state.txHash}
-                </a>
+                    <a
+                      href={"https://kovan.etherscan.io/tx/" + this.state.txHash}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                    >
+                      KOVAN Etherscan:{this.state.txHash}
+                    </a>
+                  </div>
+                )}
               </div>
             )}
           </div>

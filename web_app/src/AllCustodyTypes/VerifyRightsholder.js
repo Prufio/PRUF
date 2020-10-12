@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import Form from "react-bootstrap/Form";
 import Col from "react-bootstrap/Col";
-import { Home, XSquare, ArrowRightCircle, Grid, CornerUpLeft } from "react-feather";
+import { Home, XSquare, ArrowRightCircle, Grid, CornerUpLeft, CheckCircle } from "react-feather";
 import QrReader from 'react-qr-reader'
 class VerifyRightHolder extends Component {
   constructor(props) {
@@ -280,7 +280,7 @@ class VerifyRightHolder extends Component {
                       delay={300}
                       onError={this.handleError}
                       onScan={this.handleScan}
-                      style={{ width: '100%' }}
+                      style={{ width: '100%', height: "100%" }}
                     />
                     {this.state.result !== undefined && (
                       <div className="Results">
@@ -349,7 +349,7 @@ class VerifyRightHolder extends Component {
                   <Form.Row>
                     <div className="submitButtonVRH2">
                       <div className="submitButtonVRH2-content">
-                        <ArrowRightCircle
+                        <CheckCircle
                           onClick={() => { _verify() }}
                         />
                       </div>
