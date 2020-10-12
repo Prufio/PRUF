@@ -255,6 +255,9 @@ class AssetDashboard extends Component {
                 <Button variant="selectedImage" onClick={() => { this.sendPacket(obj, "NC", "transfer-asset-NC") }}>Transfer</Button>
               </li>
               <li>
+                <Button variant="selectedImage" onClick={() => { this.sendPacket(obj, "NC", "import-asset-NC") }}>Import</Button>
+              </li>
+              <li>
               <DropdownButton title="Export" drop="up" variant="selectedImage">
                 <Dropdown.Item id="header-dropdown" as={Button} onClick={() => { this.sendPacket(obj, "NC", "export-asset-NC") }}>Export</Dropdown.Item>
                 <Dropdown.Item id="header-dropdown" as={Button} onClick={() => { this.sendPacket(obj, "NC", "discard-asset-NC") }}>Discard</Dropdown.Item>
