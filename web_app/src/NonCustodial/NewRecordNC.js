@@ -1,9 +1,10 @@
 import React, { Component } from "react";
 import Form from "react-bootstrap/Form";
 import Col from "react-bootstrap/Col";
+import Row from "react-bootstrap/Row";
 import Button from "react-bootstrap/Button";
 import FormLabel from "react-bootstrap/FormLabel";
-import { ArrowRightCircle, Home, XSquare } from 'react-feather'
+import { ArrowRightCircle, Home, XSquare, CheckCircle } from 'react-feather'
 
 class NewRecordNC extends Component {
   constructor(props) {
@@ -49,12 +50,12 @@ class NewRecordNC extends Component {
 
   componentDidMount() {//stuff to do when component mounts in window
 
-    if (window.assetClass > 0){
+    if (window.assetClass > 0) {
       this.setState({ assetClass: window.assetClass, assetClassSelected: true })
     }
 
-    else{
-      this.setState({assetClassSelected: false})
+    else {
+      this.setState({ assetClassSelected: false })
     }
 
   }
@@ -68,6 +69,13 @@ class NewRecordNC extends Component {
 
   render() {//render continuously produces an up-to-date stateful document  
     const self = this;
+
+    const clearForm = async () => {
+      document.getElementById("MainForm").reset()
+      this.setState({
+        txStatus: null
+      })
+    }
 
     const _setAC = async () => {
       let acDoesExist;
@@ -93,7 +101,7 @@ class NewRecordNC extends Component {
             window.open('https://www.pruf.io')
           }
 
-          this.setState({assetClass: this.state.selectedAssetClass});
+          this.setState({ assetClass: this.state.selectedAssetClass });
           await window.utils.resolveACFromID(this.state.selectedAssetClass)
           await window.utils.getACData("id", this.state.selectedAssetClass)
 
@@ -108,12 +116,12 @@ class NewRecordNC extends Component {
             window.open('https://www.pruf.io')
           }
 
-          this.setState({ACname: this.state.selectedAssetClass});
+          this.setState({ ACname: this.state.selectedAssetClass });
           await window.utils.resolveAC(this.state.selectedAssetClass);
           await this.setState({ assetClass: window.assetClass });
         }
 
-        return this.setState({assetClassSelected: true})
+        return this.setState({ assetClassSelected: true })
       }
     }
 
@@ -121,7 +129,7 @@ class NewRecordNC extends Component {
 
       let ipfsObj = { photo: {}, text: {}, name: "" }
 
-      if (this.state.nameTag !== "" && this.state.nameTag !== undefined){
+      if (this.state.nameTag !== "" && this.state.nameTag !== undefined) {
         ipfsObj = { photo: {}, text: {}, name: String(this.state.nameTag) }
       }
 
@@ -134,9 +142,9 @@ class NewRecordNC extends Component {
 
       let doesExist = await window.utils.checkAssetExists(idxHash);
 
-      if (!doesExist) { 
-      this.setState({ idxHash: idxHash, idxSubmitted: true }); 
-      await window.utils.addIPFSJSONObject(ipfsObj) 
+      if (!doesExist) {
+        this.setState({ idxHash: idxHash, idxSubmitted: true });
+        await window.utils.addIPFSJSONObject(ipfsObj)
       }
 
       else { return alert("Record already exists! Try again. (Note: nameTag can contain whatever you want, and cannot cause hash collisions)") }
@@ -149,7 +157,7 @@ class NewRecordNC extends Component {
       this.setState({ error: undefined });
       this.setState({ result: "" });
       this.setState({ transaction: true });
-      
+
       //reset state values before form resubmission
       var idxHash = this.state.idxHash;
       var ipfsHash = window.utils.getBytes32FromIPFSHash(String(window.rawIPFSHashTemp));
@@ -172,7 +180,7 @@ class NewRecordNC extends Component {
       console.log("addr: ", window.addr);
       console.log("AC: ", this.state.assetClass);
       console.log("IPFS bs58: ", window.rawIPFSHashTemp)
-      console.log("IPFS bytes32: ", ipfsHash)  
+      console.log("IPFS bytes32: ", ipfsHash)
 
       await window.contracts.APP_NC.methods
         .$newRecordWithDescription(
@@ -199,8 +207,8 @@ class NewRecordNC extends Component {
         });
       // console.log(Object.values(window.web3.eth.getPendingTransactions()))
 
-      this.setState({assetClassSelected: false, idxSubmitted: false}) //clear form inputs
-}
+      this.setState({ assetClassSelected: false, idxSubmitted: false }) //clear form inputs
+    }
 
     return (//default render
       <div>
@@ -210,7 +218,7 @@ class NewRecordNC extends Component {
           </div>
           <h2 className="FormHeader">New Record</h2>
           <div className="mediaLink-clearForm">
-            <a className="mediaLinkContent-clearForm" ><XSquare onClick={() => { document.getElementById("MainForm").reset() }} /></a>
+            <a className="mediaLinkContent-clearForm" ><XSquare onClick={() => { clearForm() }} /></a>
           </div>
         </div>
         <Form className="Form" id='MainForm'>
@@ -222,33 +230,36 @@ class NewRecordNC extends Component {
           )}
           {window.addr > 0 && !this.state.assetClassSelected && (
             <>
-            <Form.Row>
-            <Form.Group as={Col} controlId="formGridAC">
-                <Form.Label className="formFont">Asset Class:</Form.Label>
-                <Form.Control
-                  placeholder="Submit an asset class name or #"
-                  onChange={(e) => this.setState({ selectedAssetClass: e.target.value })}
-                  size="lg"
-                />
-              </Form.Group>
-            </Form.Row>
-            <div className="submitButtonNR">
-            <div className="submitButtonNR-content">
-              <ArrowRightCircle
-                onClick={() => { _setAC() }}
-              />
-            </div>
-          </div>
-          </>
+              <Form.Row>
+                <Form.Label className="formFontRow">Asset Class:</Form.Label>
+                <Form.Group as={Row} controlId="formGridAC">
+
+                  <Form.Control
+                    className="singleFormRow"
+                    placeholder="Submit an asset class name or #"
+                    onChange={(e) => this.setState({ selectedAssetClass: e.target.value })}
+                    size="lg"
+                  />
+                </Form.Group>
+
+                <div className="submitButtonNRAC">
+                  <div className="submitButtonNR-content">
+                    <ArrowRightCircle
+                      onClick={() => { _setAC() }}
+                    />
+                  </div>
+                </div>
+              </Form.Row>
+            </>
           )}
-          
+
           {window.addr > 0 && this.state.assetClassSelected && (
             <div>
 
               {!this.state.idxSubmitted && (
                 <>
                   <Form.Row>
-                  <Form.Group as={Col} controlId="formGridNameTag">
+                    <Form.Group as={Col} controlId="formGridNameTag">
                       <Form.Label className="formFont">Name Tag:</Form.Label>
                       <Form.Control
                         placeholder="Put a nametag on this asset (optional)"
@@ -303,20 +314,18 @@ class NewRecordNC extends Component {
                     </Form.Group>
                   </Form.Row>
 
-                  <div className="submitButtonNR">
-                      <div className="submitButtonNR-content">
-                        <ArrowRightCircle
-                          onClick={() => { checkAsset() }}
-                        />
-                      </div>
+                  <div className="submitButtonNRCA">
+                    <div className="submitButtonNR-content">
+                      <ArrowRightCircle
+                        onClick={() => { checkAsset() }}
+                      />
                     </div>
-                  
+                  </div>
+
                 </>
               )}
-
               {this.state.idxSubmitted && (
                 <>
-
                   <Form.Row>
                     <Form.Group as={Col} controlId="formGridFirstName">
                       <Form.Label className="formFont">First Name:</Form.Label>
@@ -389,7 +398,7 @@ class NewRecordNC extends Component {
                   <Form.Row>
                     <div className="submitButtonNR">
                       <div className="submitButtonNR-content">
-                        <ArrowRightCircle
+                        <CheckCircle
                           onClick={() => { _newRecord() }}
                         />
                       </div>
@@ -405,6 +414,9 @@ class NewRecordNC extends Component {
             </div>
           )}
         </Form>
+        {this.state.transaction === undefined && this.state.txStatus === null && (
+          <div className="assetSelectedResults"></div>
+        )}
         {this.state.transaction === true && (
 
           <div className="Results">
@@ -415,42 +427,39 @@ class NewRecordNC extends Component {
               <p className="loading">Transaction In Progress</p>
             )} */}
           </div>)}
-          {this.state.transaction === false && (
-        <div className="Results">
-          {this.state.txHash > 0 && ( //conditional rendering
-
-
-            <Form.Row>
-              {this.state.txStatus === false && this.state.transaction === undefined && (
-                <div>
-                  !ERROR! :
-                  <a
-                    href={"https://kovan.etherscan.io/tx/" + this.state.txHash}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                  >
-                    KOVAN Etherscan:{this.state.txHash}
-                  </a>
-                </div>
-              )}
-              {this.state.txStatus === true && this.state.transaction === undefined &&(
-                <div>
-                  {" "}
+        {this.state.transaction === false && (
+          <div className="Results">
+            {this.state.txHash > 0 && ( //conditional rendering
+              <Form.Row>
+                {this.state.txStatus === false && (
+                  <div>
+                    !ERROR! :
+                    <a
+                      href={"https://kovan.etherscan.io/tx/" + this.state.txHash}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                    >
+                      KOVAN Etherscan:{this.state.txHash}
+                    </a>
+                  </div>
+                )}
+                {this.state.txStatus === true && (
+                  <div>
+                    {" "}
                 No Errors Reported :
-                  <a
-                    href={"https://kovan.etherscan.io/tx/" + this.state.txHash}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                  >
-                    KOVAN Etherscan:{this.state.txHash}
-                  </a>
-                </div>
-              )}
-            </Form.Row>
-
-          )}
-        </div>
-          )}
+                    <a
+                      href={"https://kovan.etherscan.io/tx/" + this.state.txHash}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                    >
+                      KOVAN Etherscan:{this.state.txHash}
+                    </a>
+                  </div>
+                )}
+              </Form.Row>
+            )}
+          </div>
+        )}
       </div>
     )
   }

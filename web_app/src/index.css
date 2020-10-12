@@ -179,6 +179,13 @@ div {
   font-family: Tahoma, Geneva, sans-serif;
 }
 
+.formFontRow {
+  font-size: large;
+  color: rgb(255, 255, 255);
+  font-family: Tahoma, Geneva, sans-serif;
+  margin-right: 2rem;
+}
+
 .downSizeLogo{
   /* object-fit: cover; */
   width: 23.5rem;
@@ -776,6 +783,11 @@ div {
   margin-top: -0.5rem;
 }
 
+/* .singleFormRow {
+ margin
+ width: 30;
+} */
+
 .FormHeaderMobile {
   height: 4rem;
   width: 360px;
@@ -1085,7 +1097,7 @@ div {
   width: fit-content;
   height: fit-content;
   position: absolute;
-  margin-top: 68rem;
+  margin-top: 53rem;
   -webkit-transition: -webkit-transform .5s ease-in-out;
   transition:         transform .5s ease-in-out;
 }
@@ -1162,10 +1174,13 @@ div {
 
 .mediaLink {
   display: flex;
-  width: 20rem;
-  height: fit-content;
+  width: fit-content;
+  height: 20rem;
   position: absolute;
-  margin-top: 48%;
+  flex-direction: column;
+  z-index: 999;
+  margin-top: 30rem;
+  /* margin-left: rem; */
   justify-content: space-between;
 }
 
@@ -1180,7 +1195,7 @@ div {
 
 .mediaLinkContent {
   border-radius: 50%;
-  color: #00a8ff;
+  color: #ffffff;
   -webkit-transition: -webkit-transform .35s ease-in-out;
   transition:         transform .35s ease-in-out;
 }
@@ -1556,7 +1571,7 @@ div {
   /* justify-content: center; */
   align-items: center;
   /* margin-left: 1rem; */
-  margin-top: 75rem;
+  margin-top: 60rem;
 }
 
 .siteInfoBox h3 {
@@ -1975,7 +1990,25 @@ div {
   background-color: transparent;
   z-index: 1000;
   margin-left: 50rem;
-  margin-top: -0.3rem;
+  margin-top: -0.4rem;
+}
+
+.submitButtonNRCA {
+  display: flex;
+  position: absolute;
+  background-color: transparent;
+  z-index: 1000;
+  margin-left: 40rem;
+  margin-top: -3.7rem;
+}
+
+.submitButtonNRAC {
+  display: flex;
+  position: absolute;
+  background-color: transparent;
+  z-index: 1000;
+  margin-left: 30rem;
+  margin-top: 0.3rem;
 }
 
 .submitButtonNR-content {

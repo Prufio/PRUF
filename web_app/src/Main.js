@@ -95,6 +95,12 @@ class Main extends Component {
                 </div>
                 {this.state.hamburgerMenu !== undefined && (
                   <div className="hamburgerDropdown">
+                    <div className="mediaLink">
+                      <a className="mediaLinkContent"><GitHub size={35} onClick={() => { window.open("https://github.com/vdmprojects/Bulletproof", "_blank") }} /></a>
+                      <a className="mediaLinkContent"><Mail size={35} onClick={() => { window.open("mailto:drake@pruf.io", "_blank") }} /></a>
+                      <a className="mediaLinkContent"><Twitter size={35} onClick={() => { window.open("https://twitter.com/umlautchair", "_blank") }} /></a>
+                      <a className="mediaLinkContent" ><Video size={35} onClick={() => { window.open("https://www.youtube.com/channel/UC9HzR9-dAzHtPKOqlVqwOuw", "_blank") }} /></a>
+                    </div>
                     <button
                       className="imageButtonU"
                       onClick={() => { window.open("https://www.pruf.io", "_blank") }}
@@ -351,12 +357,6 @@ class Main extends Component {
                 <Route exact path="/" component={Home} />
                 {Router(this.state.routeRequest)}
               </div>
-              <div className="mediaLink">
-                <a className="mediaLinkContent"><GitHub size={35} onClick={() => { window.open("https://github.com/vdmprojects/Bulletproof", "_blank") }} /></a>
-                <a className="mediaLinkContent"><Mail size={35} onClick={() => { window.open("mailto:drake@pruf.io", "_blank") }} /></a>
-                <a className="mediaLinkContent"><Twitter size={35} onClick={() => { window.open("https://twitter.com/umlautchair", "_blank") }} /></a>
-                <a className="mediaLinkContent" ><Video size={35} onClick={() => { window.open("https://www.youtube.com/channel/UC9HzR9-dAzHtPKOqlVqwOuw", "_blank") }} /></a>
-              </div>
             </div>
             <NavLink to="/">
             </NavLink>
@@ -597,10 +597,11 @@ class Main extends Component {
         })
       }
 
-      if (window.balances === undefined) { 
-        console.log("balances undefined, trying to get them..."); 
-        if(window.addr === undefined){return this.forceUpdate}
-        return this.setUpTokenVals(true); }
+      if (window.balances === undefined) {
+        console.log("balances undefined, trying to get them...");
+        if (window.addr === undefined) { return this.forceUpdate }
+        return this.setUpTokenVals(true);
+      }
       console.log("SA: In setUpAssets")
 
       let tempDescObj = {}
@@ -695,7 +696,7 @@ class Main extends Component {
 
       await window.utils.determineTokenBalance()
       await console.log(window.balances)
-      if(willSetup){
+      if (willSetup) {
         return this.setUpAssets()
       }
     }
