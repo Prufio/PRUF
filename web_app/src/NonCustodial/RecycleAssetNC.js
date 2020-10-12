@@ -220,7 +220,7 @@ class RecycleAssetNC extends Component {
       this.setState({ error: undefined })
       this.setState({ resultRA: "" })
 
-      var idxHash = this.state.idxHash;
+      var idxHash = this.state.result;
       var rgtRaw;
 
       rgtRaw = window.web3.utils.soliditySha3(
@@ -231,18 +231,30 @@ class RecycleAssetNC extends Component {
         this.state.secret
       );
 
-      console.log(this.state.assetClass)
+      //console.log(this.state.assetClass)
 
       let isSameRoot = await window.utils.checkAssetRootMatch(window.assetClass, idxHash);
 
       if (!isSameRoot) {
         this.setState({
-          QRreader: false,
+          QRreader: false
         })
         return alert("Import destination AC must have same root as previous AC")
       }
 
-      var rgtHash = window.web3.utils.soliditySha3(idxHash, rgtRaw);
+      let rgtHash;
+
+      console.log(rgtRaw, idxHash)
+
+      if(idxHash.length % 2 !== 0){
+        rgtHash = window.web3.utils.soliditySha3((idxHash+"0"), rgtRaw);
+      }
+
+      else{
+        rgtHash = window.web3.utils.soliditySha3(idxHash, rgtRaw);
+      }
+
+      
 
       console.log("rgtHash", rgtHash);
       console.log("idxHash", idxHash);
