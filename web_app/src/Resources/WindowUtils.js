@@ -408,6 +408,15 @@ const _getStatusString = async (status) => {
     console.log("Asset in :", tempBool, "status.")
   }
 
+  else if (status === "") {
+    tempBool = "Undefined"
+    console.log("Asset in :", tempBool, "status.")
+  }
+
+  else {
+    console.log("Asset in unauthorized status (Does not exist)")
+  }
+
   return(tempBool)
 }
 
