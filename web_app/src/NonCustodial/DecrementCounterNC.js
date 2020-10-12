@@ -87,6 +87,19 @@ class DecrementCounterNC extends Component {
       else if (e === "assetDash"){
         return window.location.href = "/#/asset-dashboard"
       }
+
+      let resArray = await window.utils.checkStats(window.assets.ids[e], [0])
+
+      console.log(resArray)
+
+      if(Number(resArray[0]) === 3 || Number(resArray[0]) === 4 || Number(resArray[0]) === 53 || Number(resArray[0]) === 54){
+        alert("Cannot edit asset in lost or stolen status"); return clearForm()
+      }
+
+      if(Number(resArray[0]) === 50 || Number(resArray[0]) === 56){
+        alert("Cannot edit asset in escrow! Please wait until asset has met escrow conditions"); return clearForm()
+      }
+
       this.setState({ selectedAsset: e })
       console.log("Changed component idx to: ", window.assets.ids[e])
 

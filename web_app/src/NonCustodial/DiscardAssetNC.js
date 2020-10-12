@@ -78,7 +78,15 @@ class DiscardAssetNC extends Component {
       else if (e === "assetDash"){
         return window.location.href = "/#/asset-dashboard"
       }
-      if (window.assets.statuses[e] !== "59"){return alert("Asset not in discardable status(59)")}
+
+      let resArray = await window.utils.checkStats(window.assets.ids[e], [0])
+
+      console.log(resArray)
+
+      if(Number(resArray[0]) !== "59"){
+        alert("Asset not in discardable status"); return clearForm()
+      }
+
       this.setState({ selectedAsset: e })
       console.log("Changed component idx to: ", window.assets.ids[e])
 

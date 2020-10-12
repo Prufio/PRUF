@@ -171,12 +171,20 @@ class AddNoteNC extends Component {
         return window.location.href = "/#/asset-dashboard"
       }
 
-      let resArray = await window.utils.checkStats(window.assets.ids[e], [6])
+      let resArray = await window.utils.checkStats(window.assets.ids[e], [6,0])
 
       console.log(resArray)
 
+      if(Number(resArray[1]) === 3 || Number(resArray[1]) === 4 || Number(resArray[1]) === 53 || Number(resArray[1]) === 54){
+        alert("Cannot edit asset in lost or stolen status"); return clearForm()
+      }
+
       if (Number(resArray[0]) > 0) {
         alert("Note already enscribed on this asset! Cannot overwrite existing note."); return clearForm()
+      }
+
+      if(Number(resArray[1]) === 50 || Number(resArray[1]) === 56){
+        alert("Cannot edit asset in escrow! Please wait until asset has met escrow conditions")
       }
 
       this.setState({ selectedAsset: e })

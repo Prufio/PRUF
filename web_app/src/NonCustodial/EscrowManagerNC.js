@@ -133,15 +133,26 @@ class EscrowManagerNC extends Component {
       else if (e === "assetDash"){
         return window.location.href = "/#/asset-dashboard"
       }
-      this.setState({ selectedAsset: e })
-      console.log("Changed component idx to: ", window.assets.ids[e])
+      
+      
+      let resArray = await window.utils.checkStats(window.assets.ids[e], [0])
 
-      if(window.assets.statuses[e] === 6 || window.assets.statuses[e] === 50){
+      console.log(resArray)
+
+      if(Number(resArray[0]) === 3 || Number(resArray[0]) === 4 || Number(resArray[0]) === 53 || Number(resArray[0]) === 54){
+        alert("Cannot edit asset in lost or stolen status"); return clearForm()
+      }
+
+      else if(Number(resArray[0]) === 6 && Number(resArray[0]) === 50){
         this.setState({isSettingEscrow: false})
       }
-      else if(window.assets.statuses[e] !== 6 && window.assets.statuses[e] !== 50 && window.assets.statuses[e] !== 56){
+      
+      else if(Number(resArray[0]) !== 6 && Number(resArray[0]) !== 50 && Number(resArray[0]) !== 56){
         this.setState({isSettingEscrow: true})
       }
+
+      this.setState({ selectedAsset: e })
+      console.log("Changed component idx to: ", window.assets.ids[e])
 
       this.setState({
         assetClass: window.assets.assetClasses[e],

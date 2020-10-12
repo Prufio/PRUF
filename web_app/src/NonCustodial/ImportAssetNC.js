@@ -53,16 +53,17 @@ class ImportAssetNC extends Component {
     else {
       this.setState({ assetClassSelected: false })
     }
-      if (window.sentPacket !== undefined) {
-        this.setState({ name: window.sentPacket.name })
-        this.setState({ idxHash: window.sentPacket.idxHash })
-        this.setState({ assetClass: window.sentPacket.assetClass })
-        this.setState({ status: window.sentPacket.status })
-        window.sentPacket = undefined
-        this.setState({ wasSentPacket: true })
-      }
-  
-      this.setState({runWatchDog: true})
+    if (window.sentPacket !== undefined) {
+      this.setState({ name: window.sentPacket.name })
+      this.setState({ idxHash: window.sentPacket.idxHash })
+      this.setState({ packetAssetClass: window.sentPacket.assetClass })
+      this.setState({ status: window.sentPacket.status })
+
+      window.sentPacket = undefined
+      this.setState({ wasSentPacket: true })
+    }
+
+    this.setState({ runWatchDog: true })
   }
 
   componentWillUnmount() {//stuff do do when component unmounts from the window
@@ -98,29 +99,31 @@ class ImportAssetNC extends Component {
         idxHash = this.state.result
       }
 
-      let doesExist = await window.utils.checkAssetExists(idxHash);
-      let isExported = await window.utils.checkAssetExported(idxHash);
-      let isSameRoot = await window.utils.checkAssetRootMatch(this.state.assetClass, idxHash);
+      let resArray = await window.utils.checkStats(idxHash, [0, 2])
+      console.log(resArray)
 
-      if (!doesExist) {
+      if (Number(resArray[1]) === 0) {
         this.setState({
           QRreader: false,
         })
         return alert("Asset doesnt exist! Ensure data fields are correct before submission.")
       }
 
-      if (!isExported) {
+      if (Number(resArray[0]) !== 70) {
         this.setState({
           QRreader: false,
         })
-        return alert("Asset is not exported!")
+        return alert("Asset is not exported! Owner must export the assset in order to import.")
       }
 
-      if (!isSameRoot) {
+      let destinationACData = await window.utils.getACData("id", this.state.assetClass);
+      let originACData = await window.utils.getACData("id", resArray[1])
+
+      if (originACData.root !== destinationACData.root) {
         this.setState({
           QRreader: false,
         })
-        return alert("Import destination AC must have same root as previous AC")
+        return alert("Import destination AC must have same root as origin!")
       }
 
       console.log("idxHash", idxHash);
@@ -136,6 +139,7 @@ class ImportAssetNC extends Component {
 
     const _setAC = async () => {
       let acDoesExist;
+      let destinationACData;
 
       if (this.state.selectedAssetClass === "0" || this.state.selectedAssetClass === undefined) { return alert("Selected AC Cannot be Zero") }
       else {
@@ -152,6 +156,7 @@ class ImportAssetNC extends Component {
           this.state.selectedAssetClass.charAt(0) === "9"
         ) {
           acDoesExist = await window.utils.checkForAC("id", this.state.selectedAssetClass);
+          destinationACData = await window.utils.getACData("id", this.state.selectedAssetClass);
           await console.log("Exists?", acDoesExist)
 
           if (!acDoesExist && window.confirm("Asset class does not currently exist. Consider minting it yourself! Click ok to route to our website for more information.")) {
@@ -167,6 +172,7 @@ class ImportAssetNC extends Component {
 
         else {
           acDoesExist = await window.utils.checkForAC("name", this.state.selectedAssetClass);
+          destinationACData = await window.utils.getACData("name", this.state.selectedAssetClass);
           await console.log("Exists?", acDoesExist)
 
           if (!acDoesExist && window.confirm("Asset class does not currently exist. Consider minting it yourself! Click ok to route to our website for more information.")) {
@@ -176,6 +182,23 @@ class ImportAssetNC extends Component {
           this.setState({ ACname: this.state.selectedAssetClass });
           await window.utils.resolveAC(this.state.selectedAssetClass);
           await this.setState({ assetClass: window.assetClass });
+        }
+
+        let resArray = await window.utils.checkStats(this.state.idxHash, [0, 2])
+        console.log(resArray)
+
+        if (Number(resArray[0]) !== 70) {
+          alert("Asset is not exported! Owner must export the assset in order to import.");
+          window.sentpacket = undefined;
+          return window.location.href = "/#/asset-dashboard"
+        }
+
+        console.log(destinationACData.root)
+
+        if (resArray[1] !== destinationACData.root) {
+          alert("Import destination AC must have same root as origin!");
+          window.sentpacket = undefined;
+          return window.location.href = "/#/asset-dashboard"
         }
 
         return this.setState({ assetClassSelected: true, acData: window.tempACData })
@@ -190,18 +213,45 @@ class ImportAssetNC extends Component {
     const _checkIn = async (e) => {
 
       console.log("Checking in with id: ", e)
-      if (e === "null" || e === undefined) { 
+      if (e === "null" || e === undefined) {
         return clearForm()
       }
       else if (e === "reset") {
         return window.resetInfo = true;
       }
-      else if (e === "assetDash"){
+      else if (e === "assetDash") {
         console.log("heading over to dashboard")
         return window.location.href = "/#/asset-dashboard"
       }
 
-      if (window.assets.statuses[e] !== "70"){alert("Asset not in importable status"); return clearForm()}
+      let resArray = await window.utils.checkStats(window.assets.ids[e], [0, 2])
+      console.log(resArray)
+
+      if (Number(resArray[1]) === 0) {
+        this.setState({
+          QRreader: false,
+        })
+        return alert("Asset does not exist! Ensure data fields are correct before submission.")
+      }
+
+      if (Number(resArray[0]) !== 70) {
+        this.setState({
+          QRreader: false,
+        })
+        return alert("Asset is not exported! Owner must export the assset in order to import.")
+      }
+
+      let destinationACData = await window.utils.getACData("id", this.state.assetClass);
+      let originACRoot = window.assets.assetClasses[e]
+
+      console.log(destinationACData.root)
+      if (originACRoot !== destinationACData.root) {
+        this.setState({
+          QRreader: false,
+        })
+        return alert("Import destination AC must have same root as origin!")
+      }
+
       this.setState({ selectedAsset: e })
       console.log("Changed component idx to: ", window.assets.ids[e])
 
@@ -298,7 +348,7 @@ class ImportAssetNC extends Component {
                   <div className="assetSelectedContentHead">Asset IDX: <span className="assetSelectedContent">{this.state.idxHash}</span> </div>
                   <div className="assetSelectedContentHead">Asset Name: <span className="assetSelectedContent">{this.state.name}</span> </div>
                   {/* <div className="assetSelectedContentHead"> Asset Description: <span className="assetSelectedContent">{this.state.description}</span> </div> */}
-                  <div className="assetSelectedContentHead">Asset Class: <span className="assetSelectedContent">{this.state.assetClass}</span> </div>
+                  <div className="assetSelectedContentHead">Asset Class: <span className="assetSelectedContent">{this.state.packetAssetClass}</span> </div>
                   <div className="assetSelectedContentHead">Asset Status: <span className="assetSelectedContent">{this.state.status}</span> </div>
                 </Form.Group>
               )}
@@ -349,15 +399,15 @@ class ImportAssetNC extends Component {
     }
     return (
       <div>
-          <div>
-            <div className="mediaLinkAD-home">
-              <a className="mediaLinkContentAD-home" ><Home onClick={() => { window.location.href = '/#/' }} /></a>
-            </div>
-            <h2 className="FormHeader">Import Asset</h2>
-            <div className="mediaLink-clearForm">
-              <a className="mediaLinkContent-clearForm" ><XSquare onClick={() => { clearForm() }} /></a>
-            </div>
+        <div>
+          <div className="mediaLinkAD-home">
+            <a className="mediaLinkContentAD-home" ><Home onClick={() => { window.location.href = '/#/' }} /></a>
           </div>
+          <h2 className="FormHeader">Import Asset</h2>
+          <div className="mediaLink-clearForm">
+            <a className="mediaLinkContent-clearForm" ><XSquare onClick={() => { clearForm() }} /></a>
+          </div>
+        </div>
         <Form className="Form" id='MainForm'>
           {window.addr === undefined && (
             <div className="errorResults">
@@ -390,24 +440,24 @@ class ImportAssetNC extends Component {
             <div>
               {!this.state.accessPermitted && (
                 <>
-                <Form.Row>
-                <Form.Group as={Col} controlId="formGridAsset">
-                  <Form.Label className="formFont"> Select an Asset to Modify :</Form.Label>
-                  <Form.Control
-                    as="select"
-                    className="formSelect"
-                    size="lg"
-                    onChange={(e) => { _checkIn(e.target.value) }}
-                  >
-                    {this.state.hasLoadedAssets && (
-                    <optgroup className="optgroup">
-                    {window.utils.generateAssets()}
-                    </optgroup>)}
-                    {!this.state.hasLoadedAssets && (<optgroup ><option value="null"> Loading Assets... </option></optgroup>)}
+                  <Form.Row>
+                    <Form.Group as={Col} controlId="formGridAsset">
+                      <Form.Label className="formFont"> Select an Asset to Modify :</Form.Label>
+                      <Form.Control
+                        as="select"
+                        className="formSelect"
+                        size="lg"
+                        onChange={(e) => { _checkIn(e.target.value) }}
+                      >
+                        {this.state.hasLoadedAssets && (
+                          <optgroup className="optgroup">
+                            {window.utils.generateAssets()}
+                          </optgroup>)}
+                        {!this.state.hasLoadedAssets && (<optgroup ><option value="null"> Loading Assets... </option></optgroup>)}
 
-                  </Form.Control>
-                </Form.Group>
-              </Form.Row>
+                      </Form.Control>
+                    </Form.Group>
+                  </Form.Row>
                   <Form.Row>
                     <div className="submitButtonAA">
                       <div className="submitButtonAA-content">
@@ -437,19 +487,19 @@ class ImportAssetNC extends Component {
             </div>
           )}
         </Form>
-          <div className="assetSelectedResults">
-            <Form.Row>
-              {this.state.idxHash !== undefined && this.state.txHash === "" && (
-                <Form.Group>
-                  <div className="assetSelectedContentHead">Asset IDX: <span className="assetSelectedContent">{this.state.idxHash}</span> </div>
-                  <div className="assetSelectedContentHead">Asset Name: <span className="assetSelectedContent">{this.state.name}</span> </div>
-                  {/* <div className="assetSelectedContentHead"> Asset Description: <span className="assetSelectedContent">{this.state.description}</span> </div> */}
-                  <div className="assetSelectedContentHead">Asset Class: <span className="assetSelectedContent">{this.state.assetClass}</span> </div>
-                  <div className="assetSelectedContentHead">Asset Status: <span className="assetSelectedContent">{this.state.status}</span> </div>
-                </Form.Group>
-              )}
-            </Form.Row>
-          </div>
+        <div className="assetSelectedResults">
+          <Form.Row>
+            {this.state.idxHash !== undefined && this.state.txHash === "" && (
+              <Form.Group>
+                <div className="assetSelectedContentHead">Asset IDX: <span className="assetSelectedContent">{this.state.idxHash}</span> </div>
+                <div className="assetSelectedContentHead">Asset Name: <span className="assetSelectedContent">{this.state.name}</span> </div>
+                {/* <div className="assetSelectedContentHead"> Asset Description: <span className="assetSelectedContent">{this.state.description}</span> </div> */}
+                <div className="assetSelectedContentHead">Asset Class: <span className="assetSelectedContent">{this.state.assetClass}</span> </div>
+                <div className="assetSelectedContentHead">Asset Status: <span className="assetSelectedContent">{this.state.status}</span> </div>
+              </Form.Group>
+            )}
+          </Form.Row>
+        </div>
         {this.state.transaction === true && this.state.QRreader === false && (
 
           <div className="Results">
