@@ -52,6 +52,11 @@ class DiscardAssetNC extends Component {
       this.setState({ idxHash: window.sentPacket.idxHash })
       this.setState({ assetClass: window.sentPacket.assetClass })
       this.setState({ status: window.sentPacket.status })
+      if (Number(window.sentPacket.status) !== 59) {
+        alert("Asset is not discardable! Owner must set status to discardable.");
+        window.sentpacket = undefined;
+        return window.location.href = "/#/asset-dashboard"
+      }
       window.sentPacket = undefined
       this.setState({ wasSentPacket: true })
     }

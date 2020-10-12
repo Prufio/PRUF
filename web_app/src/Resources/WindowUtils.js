@@ -166,6 +166,27 @@ const _generateAssetDash = (obj) => {
 
 }
 
+const _generateNewElementsPreview = (obj) => {
+  let component = [<><h4>New Image Elements:</h4> <br></br></>];
+  let photoVals = obj.photo;
+  let textVals = obj.text;
+  let name = obj.name;
+  for (let i = 0; i < photoVals.length; i++){
+    component.push(<><div key={"newPhoto" + String(i)}> {"Image" + String(i) + ": "} {photoVals[i]} </div> <br></br></>)
+  }
+
+  component.push(<><h4>New Text Elements:</h4> <br></br></>)
+
+  for (let x = 0; x < textVals.length; x++){
+    component.push(<><div key={"newText"+String(x)}> {"Text" + String(x) + ": "} {textVals[x]} </div> <br></br></>)
+  }
+
+  component.push(<div key={"newName"}> {"Name: " + name} </div>)
+
+  return component;
+
+}
+
 const _generateDescription = (obj) => {
 
   //console.log(self.state.descriptionElements)
@@ -1070,6 +1091,7 @@ window.utils = {
   getIpfsHashFromBytes32: _getIpfsHashFromBytes32,
   getIPFSJSONObject: _getIPFSJSONObject,
   getIPFSRaw: _getIPFSRaw,
+  generateNewElementsPreview: _generateNewElementsPreview,
   generateDescription: _generateDescription,
   seperateKeysAndValues: _seperateKeysAndValues,
   getAssetTokenInfo: _getAssetTokenInfo,

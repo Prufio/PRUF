@@ -61,6 +61,17 @@ class ModifyRightsHolder extends Component {
       this.setState({ idxHash: window.sentPacket.idxHash })
       this.setState({ assetClass: window.sentPacket.assetClass })
       this.setState({ status: window.sentPacket.status })
+      if(Number(window.sentPacket.status) === 3 || Number(window.sentPacket.status) === 4 || Number(window.sentPacket.status) === 53 || Number(window.sentPacket.status) === 54){
+        alert("Cannot edit asset in lost or stolen status");
+        window.sentpacket = undefined;
+        return window.location.href = "/#/asset-dashboard"
+      }
+
+      if(Number(window.sentPacket.status) === 50 || Number(window.sentPacket.status) === 56){
+        alert("Cannot edit asset in escrow! Please wait until asset has met escrow conditions");
+        window.sentpacket = undefined;
+        return window.location.href = "/#/asset-dashboard"
+      }
       window.sentPacket = undefined
       this.setState({ wasSentPacket: true })
     }
@@ -103,20 +114,12 @@ class ModifyRightsHolder extends Component {
         alert("Asset does not exist at given IDX");
       }
 
-      if (Number(resArray[0]) === 53) {
-        alert("Asset not modifyable in stolen status"); return clearForm()
+      if(Number(resArray[0]) === 3 || Number(resArray[0]) === 4 || Number(resArray[0]) === 53 || Number(resArray[0]) === 54){
+        alert("Cannot edit asset in lost or stolen status"); return clearForm()
       }
 
-      if (Number(resArray[0]) === 54) {
-        alert("Asset not modifyable in lost status"); return clearForm()
-      }
-
-      if (Number(resArray[0]) === 50) {
-        alert("Asset not modifyable in locked escrow status"); return clearForm()
-      }
-
-      if (Number(resArray[0]) === 56) {
-        alert("Asset not modifyable in supervized escrow status"); return clearForm()
+      if(Number(resArray[0]) === 50 || Number(resArray[0]) === 56){
+        alert("Cannot edit asset in escrow! Please wait until asset has met escrow conditions"); return clearForm()
       }
 
       this.setState({ selectedAsset: e })

@@ -14,7 +14,7 @@ class BasicComponent extends Component {
                     <NavLink exact to="asset-dashboard">Asset Dashboard</NavLink>
                 </li>
                 <li>
-                    <NavLink to="/verify-lite">Verify</NavLink>
+                    <NavLink to="/verify-lite">Verify Lite</NavLink>
                 </li>
                 <li>
                     <NavLink to="/verify-rights-holder">Deep Verify</NavLink>

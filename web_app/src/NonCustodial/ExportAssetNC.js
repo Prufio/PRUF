@@ -53,6 +53,11 @@ class ExportAssetNC extends Component {
       this.setState({ idxHash: window.sentPacket.idxHash })
       this.setState({ assetClass: window.sentPacket.assetClass })
       this.setState({ status: window.sentPacket.status })
+      if (Number(window.sentPacket.status) !== 51) {
+        alert("Asset is not set to transferrable! Owner must set the status to transferrable before export.");
+        window.sentpacket = undefined;
+        return window.location.href = "/#/asset-dashboard"
+      }
       window.sentPacket = undefined
       this.setState({ wasSentPacket: true })
     }

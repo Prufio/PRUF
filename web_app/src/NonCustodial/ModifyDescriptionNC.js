@@ -68,7 +68,7 @@ class ModifyDescription extends Component {
         });
 
       console.log(this.state.txHash);
-      self.setState({ hashPath: "" });
+      self.setState({ hashPath: "" , count: 1, textCount: 1, imageCount: 1});
       window.additionalElementArrays.photo = [];
       window.additionalElementArrays.text = [];
       window.additionalElementArrays.name = "";
@@ -99,6 +99,8 @@ class ModifyDescription extends Component {
       nameTag: "",
       hasLoadedAssets: false,
       assets: { descriptions: [0], ids: [0], assetClasses: [0], statuses: [0], names: [0] },
+      imageCount: 1,
+      textCount: 1,
       count: 1,
       removePhotoElement: "",
       removeTextElement: "",
@@ -113,7 +115,17 @@ class ModifyDescription extends Component {
 
   componentDidMount() {//stuff to do when component mounts in window
     if (window.sentPacket !== undefined) {
+      if(Number(window.sentPacket.status) === 3 || Number(window.sentPacket.status) === 4 || Number(window.sentPacket.status) === 53 || Number(window.sentPacket.status) === 54){
+        alert("Cannot edit asset in lost or stolen status");
+        window.sentpacket = undefined;
+        return window.location.href = "/#/asset-dashboard"
+      }
 
+      if(Number(window.sentPacket.status) === 50 || Number(window.sentPacket.status) === 56){
+        alert("Cannot edit asset in escrow! Please wait until asset has met escrow conditions");
+        window.sentpacket = undefined;
+        return window.location.href = "/#/asset-dashboard"
+      }
       this.setState({
         name: window.sentPacket.name,
         idxHash: window.sentPacket.idxHash,
@@ -153,20 +165,22 @@ class ModifyDescription extends Component {
 
       if (type === "description") {
         element = ('"description": ' + '"' + this.state.elementValue + '",')
+        this.setState({ textCount: this.state.textCount + 1, count: this.state.count + 1  })
       }
 
       else if (type === "displayImage") {
         element = ('"displayImage": ' + '"' + this.state.elementValue + '",')
+        this.setState({ imageCount: this.state.imageCount + 1, count: this.state.count + 1  })
       }
 
       else if (elementName === "" && type === "photo") {
         element = ('"Image' + (String(Object.values(this.state.oldDescription.photo).length + this.state.count)) + '"' + ':' + '"' + this.state.elementValue + '",')
-        this.setState({ count: this.state.count + 1 })
+        this.setState({ imageCount: this.state.imageCount + 1, count: this.state.count + 1  })
       }
 
       else if (elementName === "" && type === "text") {
         element = ('"Text' + (String(Object.values(this.state.oldDescription.text).length + this.state.count)) + '"' + ':' + '"' + this.state.elementValue + '",')
-        this.setState({ count: this.state.count + 1 })
+        this.setState({ textCount: this.state.textCount + 1, count: this.state.count + 1 })
       }
 
       else {
@@ -367,20 +381,12 @@ class ModifyDescription extends Component {
         alert("Asset does not exist at given IDX");
       }
 
-      if (Number(resArray[0]) === 53) {
-        alert("Asset not modifyable in stolen status"); return clearForm()
+      if (Number(resArray[0]) === 54 || Number(resArray[0]) === 53) {
+        alert("Cannot edit asset in lost or stolen status"); return clearForm()
       }
 
-      if (Number(resArray[0]) === 54) {
-        alert("Asset not modifyable in lost status"); return clearForm()
-      }
-
-      if (Number(resArray[0]) === 50) {
-        alert("Asset not modifyable in locked escrow status"); return clearForm()
-      }
-
-      if (Number(resArray[0]) === 56) {
-        alert("Asset not modifyable in supervized escrow status"); return clearForm()
+      if (Number(resArray[0]) === 50 || Number(resArray[0]) === 56) {
+        alert("Cannot edit asset in escrow! Please wait until asset has met escrow conditions"); return clearForm()
       }
 
       this.setState({ selectedAsset: e })
@@ -453,7 +459,6 @@ class ModifyDescription extends Component {
                               Submission Title:
                         </Form.Label>
                             <Form.Control
-                              pattern={'"., ' + "'"}
                               placeholder="Name This Text Submission"
                               onChange={(e) => this.setState({ elementName: e.target.value })}
                               size="lg"
@@ -701,6 +706,17 @@ class ModifyDescription extends Component {
               )}
             </Form.Row>
           </div>
+
+          <div className="assetSelectedResults">
+            <Form.Row>
+              {this.state.count > 1 && (
+                <Form.Group>
+                  {window.utils.generateNewElementsPreview(window.additionalElementArrays)}
+                </Form.Group>
+              )}
+            </Form.Row>
+          </div>
+
           {this.state.txHash > 0 && ( //conditional rendering
             <div className="Results">
               {this.state.txStatus === false && (
@@ -784,6 +800,7 @@ class ModifyDescription extends Component {
                         <option value="0">Select Element Type</option>
                         <option value="nameTag"> Edit Name Tag</option>
                         <option value="description">Edit Description</option>
+                        <option value="displayImage">Edit Profile Image</option>
                         <option value="text">Add Custom Text</option>
                         <option value="photo">Add Image URL</option>
                         <option value="removeText">Remove Existing Text Element</option>
@@ -988,6 +1005,16 @@ class ModifyDescription extends Component {
             )}
           </Form.Row>
         </div>
+
+        <div className="assetSelectedResults">
+            <Form.Row>
+              {this.state.count > 1 && (
+                <Form.Group>
+                  {window.utils.generateNewElementsPreview(window.additionalElementArrays)}
+                </Form.Group>
+              )}
+            </Form.Row>
+          </div>
 
         {this.state.txHash > 0 && ( //conditional rendering
           <div className="Results">

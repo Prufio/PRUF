@@ -60,6 +60,12 @@ class ImportAssetNC extends Component {
       this.setState({ packetAssetClass: window.sentPacket.assetClass })
       this.setState({ status: window.sentPacket.status })
 
+      if (Number(window.sentPacket.status) !== 70) {
+        alert("Asset is not exported! Owner must export the assset in order to import.");
+        window.sentpacket = undefined;
+        return window.location.href = "/#/asset-dashboard"
+      }
+
       window.sentPacket = undefined
       this.setState({ wasSentPacket: true })
     }

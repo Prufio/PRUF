@@ -49,6 +49,11 @@ class EscrowManagerNC extends Component {
 
   componentDidMount() {//stuff to do when component mounts in window
     if (window.sentPacket !== undefined) {
+      if(Number(window.sentPacket.status) === 3 || Number(window.sentPacket.status) === 4 || Number(window.sentPacket.status) === 53 || Number(window.sentPacket.status) === 54){
+        alert("Cannot edit asset in lost or stolen status");
+        window.sentpacket = undefined;
+        return window.location.href = "/#/asset-dashboard"
+      }
       this.setState({
         name: window.sentPacket.name,
         idxHash: window.sentPacket.idxHash,

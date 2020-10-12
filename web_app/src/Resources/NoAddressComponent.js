@@ -23,7 +23,7 @@ class NoAddressComponent extends Component {
                         <NavLink to="/retrieve-record-mobile">Search</NavLink>
                     </li>
                     <li>
-                        <NavLink to="/verify-lite-mobile">Verify</NavLink>
+                        <NavLink to="/verify-lite-mobile">Verify Lite</NavLink>
                     </li>
                 </Nav>
             )
@@ -38,7 +38,7 @@ class NoAddressComponent extends Component {
                         <NavLink to="/retrieve-record">Search</NavLink>
                     </li>
                     <li>
-                        <NavLink to="/verify-lite">Verify</NavLink>
+                        <NavLink to="/verify-lite">Verify Lite</NavLink>
                     </li>
                 </Nav>
             )
