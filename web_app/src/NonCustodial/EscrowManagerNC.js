@@ -146,7 +146,7 @@ class EscrowManagerNC extends Component {
       else if(Number(resArray[0]) === 6 && Number(resArray[0]) === 50){
         this.setState({isSettingEscrow: false})
       }
-      
+
       else if(Number(resArray[0]) !== 6 && Number(resArray[0]) !== 50 && Number(resArray[0]) !== 56){
         this.setState({isSettingEscrow: true})
       }
@@ -186,6 +186,9 @@ class EscrowManagerNC extends Component {
           self.setState({ txHash: Object.values(_error)[0].transactionHash });
           self.setState({ txStatus: false });
           console.log(Object.values(_error)[0].transactionHash);
+          if (this.state.wasSentPacket) {
+            return window.location.href = '/#/asset-dashboard'
+          }
         })
         .on("receipt", (receipt) => {
           self.setState({ transaction: false })
@@ -193,6 +196,9 @@ class EscrowManagerNC extends Component {
           this.setState({ txStatus: receipt.status });
           console.log(receipt.status);
           window.resetInfo = true;
+          if (this.state.wasSentPacket) {
+            return window.location.href = '/#/asset-dashboard'
+          }
           //Stuff to do when tx confirms
         });
       console.log(this.state.txHash);

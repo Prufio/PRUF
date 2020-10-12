@@ -224,6 +224,9 @@ class AddNoteNC extends Component {
           self.setState({ txHash: Object.values(_error)[0].transactionHash });
           self.setState({ txStatus: false });
           console.log(Object.values(_error)[0].transactionHash);
+          if (this.state.wasSentPacket) {
+            return window.location.href = '/#/asset-dashboard'
+          }
         })
         .on("receipt", (receipt) => {
           self.setState({ transaction: false })
@@ -231,6 +234,9 @@ class AddNoteNC extends Component {
           this.setState({ txStatus: receipt.status });
           console.log(receipt.status);
           window.resetInfo = true;
+          if (this.state.wasSentPacket) {
+            return window.location.href = '/#/asset-dashboard'
+          }
           //Stuff to do when tx confirms
         });
 

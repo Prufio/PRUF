@@ -77,69 +77,6 @@ class ImportAssetNC extends Component {
   render() {//render continuously produces an up-to-date stateful document  
     const self = this;
 
-    const accessAsset = async () => {
-      let idxHash;
-      if (this.state.QRreader === false) {
-        if (this.state.manufacturer === ""
-          || this.state.type === ""
-          || this.state.model === ""
-          || this.state.serial === "") {
-          return alert("Please fill out all fields before submission")
-        }
-
-
-        idxHash = window.web3.utils.soliditySha3(
-          String(this.state.type),
-          String(this.state.manufacturer),
-          String(this.state.model),
-          String(this.state.serial),
-        );
-      }
-      else {
-        idxHash = this.state.result
-      }
-
-      let resArray = await window.utils.checkStats(idxHash, [0, 2])
-      console.log(resArray)
-
-      if (Number(resArray[1]) === 0) {
-        this.setState({
-          QRreader: false,
-        })
-        alert("Asset doesnt exist! Ensure data fields are correct before submission.")
-        return window.location.href = "/#/asset-dashboard"
-      }
-
-      if (Number(resArray[0]) !== 70) {
-        this.setState({
-          QRreader: false,
-        })
-        alert("Asset is not exported! Owner must export the assset in order to import.")
-        return window.location.href = "/#/asset-dashboard"
-      }
-
-      let destinationACData = await window.utils.getACData("id", this.state.assetClass);
-      let originACRoot = resArray[1]
-
-      if (originACRoot !== destinationACData.root) {
-        this.setState({
-          QRreader: false,
-        })
-        alert("Import destination AC must have same root as origin!")
-        return window.location.href = "/#/asset-dashboard"
-      }
-
-      console.log("idxHash", idxHash);
-      // console.log("rgtHash", rgtHash);
-
-      return this.setState({
-        idxHash: idxHash,
-        QRreader: false,
-        accessPermitted: true
-      })
-
-    }
-
     const _setAC = async () => {
       let acDoesExist;
       let destinationACData;
@@ -292,6 +229,9 @@ class ImportAssetNC extends Component {
           self.setState({ txHash: Object.values(_error)[0].transactionHash });
           self.setState({ txStatus: false });
           console.log(Object.values(_error)[0].transactionHash);
+          if (this.state.wasSentPacket) {
+            return window.location.href = '/#/asset-dashboard'
+          }
         })
         .on("receipt", (receipt) => {
           self.setState({ transaction: false })
@@ -299,6 +239,9 @@ class ImportAssetNC extends Component {
           this.setState({ txStatus: receipt.status });
           console.log(receipt.status);
           window.resetInfo = true;
+          if (this.state.wasSentPacket) {
+            return window.location.href = '/#/asset-dashboard'
+          }
           //Stuff to do when tx confirms
         });
       console.log(this.state.txHash);
@@ -462,19 +405,7 @@ class ImportAssetNC extends Component {
                       </Form.Control>
                     </Form.Group>
                   </Form.Row>
-                  <Form.Row>
-                    <div className="submitButtonAA">
-                      <div className="submitButtonAA-content">
-                        <ArrowRightCircle
-                          onClick={() => { accessAsset() }}
-                        />
-                      </div>
-                    </div>
-                  </Form.Row>
-                </>
-              )}
-              {this.state.accessPermitted && (
-                <>
+                
                   <Form.Row>
                     <div className="submitButtonIA">
                       <div className="submitButtonIA-content">
@@ -485,7 +416,7 @@ class ImportAssetNC extends Component {
                       <Form.Label className="LittleTextNewRecord"> Cost in AC {window.assetClass}: {Number(window.costs.newRecordCost) / 1000000000000000000} ETH</Form.Label>
                     </div>
                   </Form.Row>
-                </>
+                  </>
               )}
               <br></br>
             </div>

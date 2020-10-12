@@ -165,12 +165,18 @@ class ModifyRightsHolder extends Component {
           self.setState({ txHash: Object.values(_error)[0].transactionHash });
           self.setState({ txStatus: false });
           console.log(Object.values(_error)[0].transactionHash);
+          if (this.state.wasSentPacket) {
+            return window.location.href = '/#/asset-dashboard'
+          }
         })
         .on("receipt", (receipt) => {
           self.setState({ transaction: false })
           this.setState({ txHash: receipt.transactionHash });
           this.setState({ txStatus: receipt.status });
           console.log(receipt.status);
+          if (this.state.wasSentPacket) {
+            return window.location.href = '/#/asset-dashboard'
+          }
           //Stuff to do when tx confirms
         });
 

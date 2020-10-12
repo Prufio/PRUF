@@ -51,7 +51,7 @@ class ModifyDescription extends Component {
           window.isInTx = false
 
           if (this.state.wasSentPacket) {
-            window.location.href = '/#/asset-dashboard'
+            return window.location.href = '/#/asset-dashboard'
           }
         })
         .on("receipt", (receipt) => {
@@ -61,7 +61,7 @@ class ModifyDescription extends Component {
           window.resetInfo = true;
           window.isInTx = false
           if (this.state.wasSentPacket) {
-            window.location.href = '/#/asset-dashboard'
+            return window.location.href = '/#/asset-dashboard'
           }
 
           //Stuff to do when tx confirms
@@ -184,7 +184,7 @@ class ModifyDescription extends Component {
           if(elementValue.charAt(i) === "'"){
             return alert(" Use of character: ' "+ elementValue.charAt(i)+ "at position" + String(i) + " ' not allowed!")
           }
-          
+
           if(elementValue.charAt(i) === '"'){
             return alert(" Use of character: ' "+ elementValue.charAt(i)+ "at position" + String(i) + " ' not allowed!")
           }
