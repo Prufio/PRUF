@@ -213,13 +213,14 @@ class ModifyRecordStatusNC extends Component {
                   <Form.Group as={Col} controlId="formGridFormat">
                     <Form.Label className="formFont">New Status:</Form.Label>
                     <Form.Control as="select" size="lg" onChange={(e) => this.setState({ newStatus: e.target.value })}>
+                    <optgroup className="optgroup">
                       <option value="0">Choose a status</option>
                       <option value="51">Transferrable</option>
                       <option value="52">Non-transferrable</option>
                       <option value="53">Stolen</option>
                       <option value="54">Lost</option>
                       <option value="59">Discardable</option>
-                      <option value="51">Export-ready</option>
+                    </optgroup>
                     </Form.Control>
                   </Form.Group>
                 </Form.Row>
@@ -333,6 +334,7 @@ class ModifyRecordStatusNC extends Component {
                 <Form.Group as={Col} controlId="formGridFormat">
                   <Form.Label className="formFont">New Status:</Form.Label>
                   <Form.Control as="select" size="lg" onChange={(e) => this.setState({ newStatus: e.target.value })}>
+                  <optgroup className="optgroup">
                     <option value="0">Choose a status</option>
                     <option value="51">Transferrable</option>
                     <option value="52">Non-transferrable</option>
@@ -340,6 +342,7 @@ class ModifyRecordStatusNC extends Component {
                     <option value="54">Lost</option>
                     <option value="59">Discardable</option>
                     <option value="51">Export-ready</option>
+                  </optgroup>
                   </Form.Control>
                 </Form.Group>
               </Form.Row>

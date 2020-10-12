@@ -19,7 +19,63 @@ class ModifyDescription extends Component {
       if (this.state.hasLoadedAssets !== window.hasLoadedAssets && this.state.runWatchDog === true) {
         this.setState({ hasLoadedAssets: window.hasLoadedAssets })
       }
+
+      if (this.state.hashPath !== "" && this.state.runWatchDog === true && window.isInTx !== true) {
+        this.updateDescription()
+      }
+
     }, 100)
+
+    this.updateDescription = async () => {
+      const self = this
+
+      this.setState({ txStatus: false });
+      this.setState({ txHash: "" });
+      this.setState({ error: undefined })
+      this.setState({ result: "" })
+      window.isInTx = true;
+
+      var _ipfs1 = this.state.hashPath;
+
+      console.log("idxHash", this.state.idxHash);
+      console.log("addr: ", window.addr);
+
+      window.contracts.NP_NC.methods
+        ._modIpfs1(this.state.idxHash, _ipfs1)
+        .send({ from: window.addr })
+        .on("error", function (_error) {
+          // self.setState({ NRerror: _error });
+          self.setState({ txHash: Object.values(_error)[0].transactionHash });
+          self.setState({ txStatus: false });
+          console.log(Object.values(_error)[0].transactionHash);
+          window.isInTx = false
+
+          if (this.state.wasSentPacket) {
+            window.location.href = '/#/asset-dashboard'
+          }
+        })
+        .on("receipt", (receipt) => {
+          this.setState({ txHash: receipt.transactionHash });
+          this.setState({ txStatus: receipt.status });
+          console.log(receipt.status);
+          window.resetInfo = true;
+          window.isInTx = false
+          if (this.state.wasSentPacket) {
+            window.location.href = '/#/asset-dashboard'
+          }
+
+          //Stuff to do when tx confirms
+        });
+
+      console.log(this.state.txHash);
+      self.setState({ hashPath: "" });
+      window.additionalElementArrays.photo = [];
+      window.additionalElementArrays.text = [];
+      window.additionalElementArrays.name = "";
+      //self.setState({ accessPermitted: false });
+      //self.setState({ oldDescription: undefined });
+      return document.getElementById("MainForm").reset();
+    };
 
     this.state = {
       addr: "",
@@ -57,7 +113,7 @@ class ModifyDescription extends Component {
 
   componentDidMount() {//stuff to do when component mounts in window
     if (window.sentPacket !== undefined) {
-      
+
       this.setState({
         name: window.sentPacket.name,
         idxHash: window.sentPacket.idxHash,
@@ -96,8 +152,17 @@ class ModifyDescription extends Component {
         element = ('"description": ' + '"' + this.state.elementValue + '",')
       }
 
-      else if (this.state.elementName === "") {
+      else if (type === "displayImage") {
+        element = ('"displayImage": ' + '"' + this.state.elementValue + '",')
+      }
+
+      else if (this.state.elementName === "" && type === "photo") {
         element = ('"Image' + (String(Object.values(this.state.oldDescription.photo).length + this.state.count)) + '"' + ':' + '"' + this.state.elementValue + '",')
+        this.setState({ count: this.state.count + 1 })
+      }
+
+      else if (this.state.elementName === "" && type === "text") {
+        element = ('"Text' + (String(Object.values(this.state.oldDescription.text).length + this.state.count)) + '"' + ':' + '"' + this.state.elementValue + '",')
         this.setState({ count: this.state.count + 1 })
       }
 
@@ -109,7 +174,7 @@ class ModifyDescription extends Component {
       if (this.state.elementValue === "" && this.state.elementName === "" && this.state.nameTag === "") {
         return alert("All fields are required for submission")
       }
-      if (type === "photo") {
+      if (type === "photo" || type === "displayImage") {
         console.log("Pushing photo element: ", element)
         window.additionalElementArrays.photo.push(element)
       }
@@ -261,13 +326,13 @@ class ModifyDescription extends Component {
     }
 
     const _checkIn = async (e) => {
-      if (e === "null" || e === undefined) { 
+      if (e === "null" || e === undefined) {
         return clearForm()
       }
       else if (e === "reset") {
         return window.resetInfo = true;
       }
-      else if (e === "assetDash"){
+      else if (e === "assetDash") {
         return window.location.href = "/#/asset-dashboard"
       }
 
@@ -311,47 +376,6 @@ class ModifyDescription extends Component {
       })
     }
 
-    const _updateDescription = async () => {
-      this.setState({ txStatus: false });
-      this.setState({ txHash: "" });
-      this.setState({ error: undefined })
-      this.setState({ result: "" })
-
-      var _ipfs1 = this.state.hashPath;
-
-      console.log("idxHash", this.state.idxHash);
-      console.log("addr: ", window.addr);
-
-      window.contracts.NP_NC.methods
-        ._modIpfs1(this.state.idxHash, _ipfs1)
-        .send({ from: window.addr })
-        .on("error", function (_error) {
-          // self.setState({ NRerror: _error });
-          self.setState({ txHash: Object.values(_error)[0].transactionHash });
-          self.setState({ txStatus: false });
-          console.log(Object.values(_error)[0].transactionHash);
-        })
-        .on("receipt", (receipt) => {
-          this.setState({ txHash: receipt.transactionHash });
-          this.setState({ txStatus: receipt.status });
-          console.log(receipt.status);
-          window.resetInfo = true;
-          if (this.state.wasSentPacket){
-            window.location.href = '/#/asset-dashboard'
-          }
-          
-          //Stuff to do when tx confirms
-        });
-
-      console.log(this.state.txHash);
-      self.setState({ hashPath: "" });
-      window.additionalElementArrays.photo = [];
-      window.additionalElementArrays.text = [];
-      window.additionalElementArrays.name = "";
-      //self.setState({ accessPermitted: false });
-      //self.setState({ oldDescription: undefined });
-      return document.getElementById("MainForm").reset();
-    };
     if (this.state.wasSentPacket) {
       return (
         <div>
@@ -385,13 +409,16 @@ class ModifyDescription extends Component {
                           size="lg"
                           onChange={(e) => this.setState({ elementType: e.target.value })}
                         >
-                          <option value="0">Select Element Type</option>
-                          <option value="nameTag"> Edit Name Tag</option>
-                          <option value="description">Edit Description</option>
-                          <option value="text">Add Custom Text</option>
-                          <option value="photo">Add Image URL</option>
-                          <option value="removeText">Remove Existing Text Element</option>
-                          <option value="removePhoto">Remove Existing Image URL</option>
+                          <optgroup className="optgroup">
+                            <option value="0">Select Element Type</option>
+                            <option value="nameTag"> Edit Name Tag</option>
+                            <option value="description">Edit Description</option>
+                            <option value="displayImage">Edit Profile Image</option>
+                            <option value="text">Add Custom Text</option>
+                            <option value="photo">Add Custom Image URL</option>
+                            <option value="removeText">Remove Existing Text Element</option>
+                            <option value="removePhoto">Remove Existing Image Element</option>
+                          </optgroup>
 
                         </Form.Control>
                       </Form.Group>
@@ -519,19 +546,24 @@ class ModifyDescription extends Component {
                         </Form.Row>
                       </>
                     )}
-                  </div>
-                )}
 
-                {this.state.hashPath !== "" && this.state.accessPermitted && (
-                  <Form.Row>
-                    <div className="submitButtonMD">
-                      <div className="submitButtonMD-content">
-                        <ArrowRightCircle
-                          onClick={() => { _updateDescription() }}
-                        />
-                      </div>
-                    </div>
-                  </Form.Row>
+                    {this.state.elementType === "displayImage" && (
+                      <>
+                        <Form.Row>
+                          <Form.Group as={Col} controlId="formGridMiscValue">
+                            <Form.Label className="formFont">
+                              Image Source URL:
+                        </Form.Label>
+                            <Form.Control
+                              placeholder="Image URL"
+                              onChange={(e) => this.setState({ elementValue: e.target.value })}
+                              size="lg"
+                            />
+                          </Form.Group>
+                        </Form.Row>
+                      </>
+                    )}
+                  </div>
                 )}
 
                 {this.state.hashPath === "" && this.state.accessPermitted && this.state.elementType === "0" && (
@@ -546,6 +578,7 @@ class ModifyDescription extends Component {
                   </Form.Row>
 
                 )}
+
                 {this.state.elementType === "text" && (
                   <Form.Row>
                     <div className="submitButtonMD">
@@ -557,6 +590,7 @@ class ModifyDescription extends Component {
                     </div>
                   </Form.Row>
                 )}
+
                 {this.state.elementType === "photo" && (
                   <Form.Row>
                     <div className="submitButtonMD">
@@ -582,6 +616,18 @@ class ModifyDescription extends Component {
                 )}
 
                 {this.state.elementType === "nameTag" && (
+                  <Form.Row>
+                    <div className="submitButtonMD">
+                      <div className="submitButtonMD-content">
+                        <ArrowRightCircle
+                          onClick={() => { _addToMiscArray(this.state.elementType) }}
+                        />
+                      </div>
+                    </div>
+                  </Form.Row>
+                )}
+
+                {this.state.elementType === "displayImage" && (
                   <Form.Row>
                     <div className="submitButtonMD">
                       <div className="submitButtonMD-content">
@@ -694,11 +740,11 @@ class ModifyDescription extends Component {
                       onChange={(e) => { _checkIn(e.target.value) }}
                     >
                       {this.state.hasLoadedAssets && (
-                    <optgroup className="optgroup">
+                        <optgroup className="optgroup">
 
-                    {window.utils.generateAssets()}
-                    </optgroup>)}
-                    {!this.state.hasLoadedAssets && (<optgroup ><option value="null"> Loading Assets... </option></optgroup>)}
+                          {window.utils.generateAssets()}
+                        </optgroup>)}
+                      {!this.state.hasLoadedAssets && (<optgroup ><option value="null"> Loading Assets... </option></optgroup>)}
 
                     </Form.Control>
                   </Form.Group>
@@ -711,13 +757,15 @@ class ModifyDescription extends Component {
                       size="lg"
                       onChange={(e) => this.setState({ elementType: e.target.value })}
                     >
-                      <option value="0">Select Element Type</option>
-                      <option value="nameTag"> Edit Name Tag</option>
-                      <option value="description">Edit Description</option>
-                      <option value="text">Add Custom Text</option>
-                      <option value="photo">Add Image URL</option>
-                      <option value="removeText">Remove Existing Text Element</option>
-                      <option value="removePhoto">Remove Existing Image URL</option>
+                      <optgroup className="optgroup">
+                        <option value="0">Select Element Type</option>
+                        <option value="nameTag"> Edit Name Tag</option>
+                        <option value="description">Edit Description</option>
+                        <option value="text">Add Custom Text</option>
+                        <option value="photo">Add Image URL</option>
+                        <option value="removeText">Remove Existing Text Element</option>
+                        <option value="removePhoto">Remove Existing Image URL</option>
+                      </optgroup>
 
                     </Form.Control>
                   </Form.Group>
@@ -833,16 +881,6 @@ class ModifyDescription extends Component {
                 </div>
               )}
 
-              {this.state.hashPath !== "" && this.state.accessPermitted && (
-                <div className="submitButtonMD">
-                  <div className="submitButtonMD-content">
-                    <ArrowRightCircle
-                      onClick={() => { _updateDescription() }}
-                    />
-                  </div>
-                </div>
-              )}
-
               {this.state.hashPath === "" && this.state.accessPermitted && this.state.elementType === "0" && (
                 <div className="submitButtonMD">
                   <div className="submitButtonMD-content">
@@ -927,8 +965,8 @@ class ModifyDescription extends Component {
             )}
           </Form.Row>
         </div>
-        
-          {this.state.txHash > 0 && ( //conditional rendering
+
+        {this.state.txHash > 0 && ( //conditional rendering
           <div className="Results">
             <Form.Row>
               {this.state.txStatus === false && (
@@ -957,9 +995,9 @@ class ModifyDescription extends Component {
                 </div>
               )}
             </Form.Row>
-            </div>
-          )}
-        
+          </div>
+        )}
+
       </div>
     );
   }

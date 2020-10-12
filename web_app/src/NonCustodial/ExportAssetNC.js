@@ -81,7 +81,15 @@ class ExportAssetNC extends Component {
       else if (e === "assetDash"){
         return window.location.href = "/#/asset-dashboard"
       }
-      if (window.assets.statuses[e] !== "51"){alert("Cannot export asset in non-transferrable status"); return clearForm()}
+
+      let resArray = await window.utils.checkStats(window.assets.ids[e], [0])
+
+      console.log(resArray)
+
+      if(Number(resArray[0]) !== 51){
+        alert("Cannot export asset in non-transferrable status"); return clearForm()
+      }
+
       this.setState({ selectedAsset: e })
       console.log("Changed component idx to: ", window.assets.ids[e])
 
@@ -114,7 +122,7 @@ class ExportAssetNC extends Component {
       console.log("addr: ", this.state.agentAddress);
 
       window.contracts.NP_NC.methods
-        .exportAsset(
+        ._exportNC(
           idxHash
         )
         .send({ from: window.addr })
