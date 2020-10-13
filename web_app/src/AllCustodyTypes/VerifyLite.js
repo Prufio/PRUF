@@ -169,7 +169,7 @@ class VerifyLite extends Component {
 
       if (infoMatches) { await this.setState({ VLresult: "170" }); }
 
-      return document.getElementById("MainForm").reset();
+      return this.setState({ accessPermitted: false });
     };
 
     return (

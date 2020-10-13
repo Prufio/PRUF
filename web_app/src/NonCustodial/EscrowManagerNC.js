@@ -38,10 +38,11 @@ class EscrowManagerNC extends Component {
       agent: "",
       timeFormat: "",
       isSettingEscrow: "0",
+      isSettingEscrowAble: undefined,
       escrowData: [],
       hasLoadedAssets: false,
       assets: { descriptions: [0], notes: [0], ids: [0], assetClasses: [0], statuses: [0], names: [0] },
-      transaction: undefined,
+      transaction: false,
     };
   }
 
@@ -49,7 +50,7 @@ class EscrowManagerNC extends Component {
 
   componentDidMount() {//stuff to do when component mounts in window
     if (window.sentPacket !== undefined) {
-      if(Number(window.sentPacket.status) === 3 || Number(window.sentPacket.status) === 4 || Number(window.sentPacket.status) === 53 || Number(window.sentPacket.status) === 54){
+      if (Number(window.sentPacket.status) === 3 || Number(window.sentPacket.status) === 4 || Number(window.sentPacket.status) === 53 || Number(window.sentPacket.status) === 54) {
         alert("Cannot edit asset in lost or stolen status");
         window.sentpacket = undefined;
         return window.location.href = "/#/asset-dashboard"
@@ -80,18 +81,26 @@ class EscrowManagerNC extends Component {
     const self = this;
 
     const _accessAsset = async () => {
-      if (this.state.isSettingEscrow === undefined || this.state.isSettingEscrow === "null") {
+      if (this.state.idxHash === "") {
+        return alert("Please Select an Asset From the Dropdown")
+      }
+      if (this.state.isSettingEscrow === "0" || this.state.isSettingEscrowAble === undefined) {
         return alert("Please Select an Action From the Dropdown")
       }
-      return this.setState({
-        accessPermitted: true,
-        escrowData: window.utils.getEscrowData(this.state.idxHash)
-      })
+      else {
+        let tempArray = window.utils.getEscrowData(this.state.idxHash)
+        console.log("tempArray", tempArray)
+        this.setState({
+          accessPermitted: true,
+          // escrowData: tempArray,
+        })
+        // console.log("escrowData", this.state.escrowData[1])
+      }
     }
 
     const clearForm = async () => {
       document.getElementById("MainForm").reset();
-      this.setState({ idxHash: undefined, txStatus: undefined, txHash: "0", accessPermitted: undefined, wasSentPacket: undefined })
+      this.setState({ idxHash: undefined, txStatus: false, txHash: "", accessPermitted: false, wasSentPacket: false, isSettingEscrow: "0" })
     }
 
     const _setEscrow = async () => {
@@ -107,8 +116,8 @@ class EscrowManagerNC extends Component {
       console.log("addr: ", window.addr);
       console.log("time: ", this.state.escrowTime, "format: ", this.state.timeFormat);
 
-      if (this.state.newStatus <= 49) { return alert("Cannot set status under 50 in non-custodial AC") }
-      if (this.state.agent.substring(0, 2) !== "0x") { return alert("Agent address invalid") }
+      if (this.state.newStatus <= 49) { return alert("Cannot set status under 50 in non-custodial AC"), clearForm() }
+      if (this.state.agent.substring(0, 2) !== "0x") { return alert("Agent address invalid"), clearForm() }
 
 
       window.contracts.ECR_NC.methods
@@ -129,7 +138,7 @@ class EscrowManagerNC extends Component {
           //Stuff to do when tx confirms
         });
       console.log(this.state.txHash);
-      return document.getElementById("MainForm").reset();
+      return clearForm();
     };
 
     const _checkIn = async (e) => {
@@ -146,23 +155,23 @@ class EscrowManagerNC extends Component {
 
       let resArray = await window.utils.checkStats(window.assets.ids[e], [0])
 
-      console.log(resArray)
+      console.log("resArray", resArray)
 
       if (Number(resArray[0]) === 3 || Number(resArray[0]) === 4 || Number(resArray[0]) === 53 || Number(resArray[0]) === 54) {
         alert("Cannot edit asset in lost or stolen status"); return clearForm()
       }
 
-      else if (Number(resArray[0]) === 6 || Number(resArray[0]) === 50) {
-        this.setState({ isSettingEscrow: false })
+      else if (Number(resArray[0]) === 56 || Number(resArray[0]) === 50) {
+        this.setState({ isSettingEscrowAble: false })
       }
 
-      else if (Number(resArray[0]) !== 6 && Number(resArray[0]) !== 50 && Number(resArray[0]) !== 56) {
-        this.setState({ isSettingEscrow: true })
+      else if (Number(resArray[0]) !== 50 && Number(resArray[0]) !== 56) {
+        this.setState({ isSettingEscrowAble: true })
       }
 
       this.setState({ selectedAsset: e })
       console.log("Changed component idx to: ", window.assets.ids[e])
-
+      console.log(this.state.isSettingEscrow)
       this.setState({
         assetClass: window.assets.assetClasses[e],
         idxHash: window.assets.ids[e],
@@ -222,7 +231,7 @@ class EscrowManagerNC extends Component {
         timeFormat: ""
       })
 
-      return document.getElementById("MainForm").reset();
+      return clearForm();
     };
     if (this.state.wasSentPacket) {
       return (
@@ -253,7 +262,6 @@ class EscrowManagerNC extends Component {
                       <Form.Control as="select" size="lg" onChange={(e) => this.setState({ isSettingEscrow: e.target.value })}>
 
                         <option value="null">Select an Action</option>
-
                         <option value="true">Set Escrow</option>
                         <option value="false">End Escrow</option>
 
@@ -287,7 +295,7 @@ class EscrowManagerNC extends Component {
                         <Form.Label className="formFont">Escrow Status:</Form.Label>
                         <Form.Control as="select" size="lg" onChange={(e) => this.setState({ newStatus: e.target.value })}>
                           <option value="0">Select an Escrow Status</option>
-                          <option value="6">Supervised Escrow</option>
+                          <option value="56">Supervised Escrow</option>
                           <option value="50">Locked Escrow</option>
                         </Form.Control>
                       </Form.Group>
@@ -315,6 +323,7 @@ class EscrowManagerNC extends Component {
                         </Form.Control>
                       </Form.Group>
                     </Form.Row>
+                    {this.state.transaction === false && (
                     <Form.Row>
                       <div className="submitButton">
                         <div className="submitButton-content">
@@ -324,6 +333,7 @@ class EscrowManagerNC extends Component {
                         </div>
                       </div>
                     </Form.Row>
+                    )}
                   </>
                 )}
                 {this.state.accessPermitted === true && this.state.isSettingEscrow === "false" && (
@@ -334,6 +344,7 @@ class EscrowManagerNC extends Component {
                     <Form.Row>
                       <h2 className="escrowDetails"> Escrow TimeLock: {this.state.escrowData[2]}</h2>
                     </Form.Row>
+                    {this.state.transaction === false && (
                     <Form.Row>
                       <div className="submitButtonEM">
                         <div className="submitButtonEM-content">
@@ -343,12 +354,13 @@ class EscrowManagerNC extends Component {
                         </div>
                       </div>
                     </Form.Row>
+                    )}
                   </>
                 )}
               </div>
             )}
           </Form>
-          {this.state.transaction === undefined && this.state.txStatus === false && (
+          {this.state.transaction === false && this.state.txStatus === false && (
             <div className="assetSelectedResults">
               <Form.Row>
                 {this.state.idxHash !== undefined && this.state.txHash === "" && (
@@ -454,8 +466,12 @@ class EscrowManagerNC extends Component {
                       <Form.Label className="formFont">Set or End?:</Form.Label>
                       <Form.Control as="select" size="lg" onChange={(e) => this.setState({ isSettingEscrow: e.target.value })}>
                         <option value="0">Select an Action</option>
-                        <option value="true">Set Escrow</option>
-                        <option value="false">End Escrow</option>
+                        {this.state.isSettingEscrowAble === true && (
+                          <option value="true">Set Escrow</option>
+                        )}
+                        {this.state.isSettingEscrowAble === false && (
+                          <option value="false">End Escrow</option>
+                        )}
                       </Form.Control>
                     </Form.Group>
                   </Form.Row>
@@ -487,7 +503,7 @@ class EscrowManagerNC extends Component {
                       <Form.Label className="formFont">Escrow Status:</Form.Label>
                       <Form.Control as="select" size="lg" onChange={(e) => this.setState({ newStatus: e.target.value })}>
                         <option value="0">Select an Escrow Status</option>
-                        <option value="6">Supervised Escrow</option>
+                        <option value="56">Supervised Escrow</option>
                         <option value="50">Locked Escrow</option>
                       </Form.Control>
                     </Form.Group>
@@ -515,6 +531,7 @@ class EscrowManagerNC extends Component {
                       </Form.Control>
                     </Form.Group>
                   </Form.Row>
+                  {this.state.transaction === false && (
                   <Form.Row>
                     <div className="submitButton">
                       <div className="submitButton-content">
@@ -524,6 +541,7 @@ class EscrowManagerNC extends Component {
                       </div>
                     </div>
                   </Form.Row>
+                  )}
                 </>
               )}
               {this.state.accessPermitted && this.state.isSettingEscrow === "false" && (
@@ -534,6 +552,7 @@ class EscrowManagerNC extends Component {
                   <Form.Row>
                     <h2 className="escrowDetails"> Escrow TimeLock: {this.state.escrowData[2]}</h2>
                   </Form.Row>
+                  {this.state.transaction === false && (
                   <Form.Row>
                     <div className="submitButtonEM">
                       <div className="submitButtonEM-content">
@@ -543,12 +562,13 @@ class EscrowManagerNC extends Component {
                       </div>
                     </div>
                   </Form.Row>
+                  )}
                 </>
               )}
             </div>
           )}
         </Form>
-        {this.state.transaction === undefined && this.state.txStatus === false && (
+        {this.state.transaction === false && this.state.txStatus === false && (
           <div className="assetSelectedResults">
             <Form.Row>
               {this.state.idxHash !== undefined && this.state.txHash === "" && (

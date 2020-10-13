@@ -69,6 +69,7 @@ class VerifyRightHolder extends Component {
       secret: "",
       QRreader: false,
       isNFA: false,
+      transaction: false,
     };
   }
 
@@ -131,7 +132,7 @@ class VerifyRightHolder extends Component {
 
     const clearForm = async () => {
       document.getElementById("MainForm").reset();
-      this.setState({ DVresult: "", accessPermitted: false })
+      this.setState({ DVresult: "", accessPermitted: false, transaction: false, txHash: ""})
     }
 
     const _verify = async () => {
@@ -139,6 +140,7 @@ class VerifyRightHolder extends Component {
       this.setState({ txHash: "" });
       this.setState({ error: undefined })
       this.setState({ DVresult: "" })
+      this.setState({ transaction: true })
       var idxHash = this.state.idxHash;
 
 
@@ -163,6 +165,7 @@ class VerifyRightHolder extends Component {
         .send({ from: window.addr })
         .on("receipt", (receipt) => {
           this.setState({ txHash: receipt.transactionHash });
+          this.setState({ transaction: false })
           console.log(receipt.events.REPORT.returnValues._msg);
           this.setState({ DVresult: receipt.events.REPORT.returnValues._msg })
         });
@@ -246,6 +249,7 @@ class VerifyRightHolder extends Component {
                       />
                     </Form.Group>
                   </Form.Row>
+                  {this.state.transaction === false && (
                   <Form.Row>
                     <div className="submitButton">
                       <div className="submitButton-content">
@@ -262,6 +266,7 @@ class VerifyRightHolder extends Component {
                       </div>
                     </div>
                   </Form.Row>
+                  )}
                 </>
               )}
               {this.state.QRreader === true && (
@@ -346,6 +351,7 @@ class VerifyRightHolder extends Component {
                       />
                     </Form.Group>
                   </Form.Row>
+                  {this.state.transaction === false && (
                   <Form.Row>
                     <div className="submitButtonVRH2">
                       <div className="submitButtonVRH2-content">
@@ -355,19 +361,26 @@ class VerifyRightHolder extends Component {
                       </div>
                     </div>
                   </Form.Row>
+                  )}
                 </>
               )}
             </div>
           )}
         </Form>
-        {this.state.QRreader === false && (
+        {this.state.transaction === true && (
+            <div className="Results">
+              <p className="loading">Transaction In Progress</p>
+            </div>
+          )}
+        {this.state.QRreader === false && this.state.transaction === false && (
           <div className="Results">
             {this.state.txHash > 0 && ( //conditional rendering
               <Form.Row>
                 {this.state.DVresult === "Match confirmed"
-                  ? "Match Confirmed"
-                  : "No Match Found"}
+                  ? "Match Confirmed :"
+                  : "No Match Found :"}
                 <a
+                className="ResultLink"
                   href={" https://kovan.etherscan.io/tx/" + this.state.txHash}
                   target="_blank"
                   rel="noopener noreferrer"

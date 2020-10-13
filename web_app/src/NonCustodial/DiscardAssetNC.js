@@ -40,7 +40,7 @@ class DiscardAssetNC extends Component {
       txStatus: null,
       hasLoadedAssets: false,
       assets: { descriptions: [0], ids: [0], assetClasses: [0], statuses: [0], names: [0] },
-      transaction: undefined,
+      transaction: false,
     };
   }
 
@@ -52,7 +52,8 @@ class DiscardAssetNC extends Component {
       this.setState({ idxHash: window.sentPacket.idxHash })
       this.setState({ assetClass: window.sentPacket.assetClass })
       this.setState({ status: window.sentPacket.status })
-      if (Number(window.sentPacket.status) !== 59) {
+      console.log("Stat", window.sentPacket.status)
+      if (window.sentPacket.status !== "Discardable") {
         alert("Asset is not discardable! Owner must set status to discardable.");
         window.sentpacket = undefined;
         return window.location.href = "/#/asset-dashboard"
@@ -88,7 +89,7 @@ class DiscardAssetNC extends Component {
 
       console.log(resArray)
 
-      if(Number(resArray[0]) !== "59"){
+      if(Number(resArray[0]) !== 59){
         alert("Asset not in discardable status"); return clearForm()
       }
 
@@ -109,7 +110,7 @@ class DiscardAssetNC extends Component {
 
     const clearForm = async () => {
       document.getElementById("MainForm").reset();
-      this.setState({ idxHash: undefined, txStatus: undefined, txHash: "0", wasSentPacket: false })
+      this.setState({ idxHash: undefined, txStatus: undefined, txHash: "", wasSentPacket: false })
     }
 
     const _discardAsset = async () => {//create a new asset record
@@ -117,6 +118,7 @@ class DiscardAssetNC extends Component {
       this.setState({ txHash: "" });
       this.setState({ error: undefined })
       this.setState({ result: "" })
+      this.setState({ transaction: true })
       //reset state values before form resubmission
       var idxHash = this.state.idxHash;
 
@@ -148,7 +150,7 @@ class DiscardAssetNC extends Component {
           }
         });
 
-      return document.getElementById("MainForm").reset(); //clear form inputs
+      return clearForm(); //clear form inputs
     };
     if (this.state.wasSentPacket) {
       return (//default render
@@ -169,11 +171,11 @@ class DiscardAssetNC extends Component {
                 <h3>Please connect web3 provider.</h3>
               </div>
             )}
-            {window.addr > 0 && (
-              <div>
+            {window.addr > 0 && this.state.transaction === false && (
                 <Form.Row>
                   <Form.Group>
                     <div className="submitButtonEA2">
+                    <Form.Label className="formFont"> Discard Asset? </Form.Label>
                       <div className="submitButtonEA2-content">
                         <Trash2
                           onClick={() => { _discardAsset() }}
@@ -182,22 +184,22 @@ class DiscardAssetNC extends Component {
                     </div>
                   </Form.Group>
                 </Form.Row>
-              </div>
             )}
           </Form>
+          {this.state.transaction === false && (
           <div className="assetSelectedResults">
             <Form.Row>
               {this.state.idxHash !== undefined && this.state.txHash === "" && (
                 <Form.Group>
                   <div className="assetSelectedContentHead">Asset IDX: <span className="assetSelectedContent">{this.state.idxHash}</span> </div>
                   <div className="assetSelectedContentHead">Asset Name: <span className="assetSelectedContent">{this.state.name}</span> </div>
-                  {/* <div className="assetSelectedContentHead"> Asset Description: <span className="assetSelectedContent">{this.state.description}</span> </div> */}
                   <div className="assetSelectedContentHead">Asset Class: <span className="assetSelectedContent">{this.state.assetClass}</span> </div>
                   <div className="assetSelectedContentHead">Asset Status: <span className="assetSelectedContent">{this.state.status}</span> </div>
                 </Form.Group>
               )}
             </Form.Row>
           </div>
+          )}
           {this.state.transaction === true && (
 
             <div className="Results">
@@ -279,6 +281,7 @@ class DiscardAssetNC extends Component {
                   </Form.Control>
                 </Form.Group>
               </Form.Row>
+              {this.state.transaction === false && (
               <Form.Row>
                 <Form.Group>
                   <div className="submitButton">
@@ -290,32 +293,28 @@ class DiscardAssetNC extends Component {
                   </div>
                 </Form.Group>
               </Form.Row>
-
+              )}
             </div>
           )}
         </Form>
+        {this.state.transaction === false && this.state.txHash === "" &&(
         <div className="assetSelectedResults">
           <Form.Row>
             {this.state.idxHash !== undefined && this.state.txHash === "" && (
               <Form.Group>
                 <div className="assetSelectedContentHead">Asset IDX: <span className="assetSelectedContent">{this.state.idxHash}</span> </div>
                 <div className="assetSelectedContentHead">Asset Name: <span className="assetSelectedContent">{this.state.name}</span> </div>
-                {/* <div className="assetSelectedContentHead"> Asset Description: <span className="assetSelectedContent">{this.state.description}</span> </div> */}
                 <div className="assetSelectedContentHead">Asset Class: <span className="assetSelectedContent">{this.state.assetClass}</span> </div>
                 <div className="assetSelectedContentHead">Asset Status: <span className="assetSelectedContent">{this.state.status}</span> </div>
               </Form.Group>
             )}
           </Form.Row>
         </div>
+        )}
         {this.state.transaction === true && (
 
           <div className="Results">
-            {/* {this.state.pendingTx === undefined && ( */}
             <p className="loading">Transaction In Progress</p>
-            {/* )} */}
-            {/* {this.state.pendingTx !== undefined && (
-    <p class="loading">Transaction In Progress</p>
-  )} */}
           </div>)}
         {this.state.txHash > 0 && ( //conditional rendering
           <div className="Results">

@@ -1,6 +1,7 @@
 import React, { Component } from "react";
 import Form from "react-bootstrap/Form";
 import Col from "react-bootstrap/Col";
+import Row from "react-bootstrap/Row";
 import { Home, XSquare, ArrowRightCircle, Grid, CornerUpLeft, Repeat } from "react-feather";
 import QrReader from 'react-qr-reader'
 
@@ -9,57 +10,6 @@ class RecycleAssetNC extends Component {
     super(props);
 
     //State declaration.....................................................................................................
-    this.setAC = async () => {
-      let acDoesExist;
-
-      const AC = window.assetClass
-
-      console.log(AC)
-
-      if (AC === "0" || AC === undefined) { return alert("Selected AC Cannot be Zero") }
-      else {
-        if (
-          AC.charAt(0) === "0" ||
-          AC.charAt(0) === "1" ||
-          AC.charAt(0) === "2" ||
-          AC.charAt(0) === "3" ||
-          AC.charAt(0) === "4" ||
-          AC.charAt(0) === "5" ||
-          AC.charAt(0) === "6" ||
-          AC.charAt(0) === "7" ||
-          AC.charAt(0) === "8" ||
-          AC.charAt(0) === "9"
-        ) {
-          acDoesExist = await window.utils.checkForAC("id", AC);
-          await console.log("Exists?", acDoesExist)
-
-          if (!acDoesExist && window.confirm("Asset class does not currently exist. Consider minting it yourself! Click ok to route to our website for more information.")) {
-            window.open('https://www.pruf.io')
-          }
-
-          this.setState({ assetClass: AC });
-          await window.utils.resolveACFromID(AC)
-          await window.utils.getACData("id", AC)
-
-          await this.setState({ ACname: window.assetClassName });
-        }
-
-        else {
-          acDoesExist = await window.utils.checkForAC("name", AC);
-          await console.log("Exists?", acDoesExist)
-
-          if (!acDoesExist && window.confirm("Asset class does not currently exist. Consider minting it yourself! Click ok to route to our website for more information.")) {
-            window.open('https://www.pruf.io')
-          }
-
-          this.setState({ ACname: AC });
-          await window.utils.resolveAC(AC);
-          await this.setState({ assetClass: window.assetClass });
-        }
-
-        return this.setState({ assetClassSelected: true, acData: window.tempACData })
-      }
-    }
 
     this.accessAsset = async () => {
       let idxHash;
@@ -84,17 +34,23 @@ class RecycleAssetNC extends Component {
         idxHash = this.state.result
       }
 
-      let resArray = await window.utils.checkStats(idxHash, [0,2])
+      let resArray = await window.utils.checkStats(idxHash, [0, 2])
 
       console.log(resArray)
 
-      
+
       if (Number(resArray[1]) === 0) {
         alert("Asset does not exist at given IDX");
+        this.setState({
+          idxHash: undefined, txStatus: undefined, txHash: "", accessPermitted: false, transaction: false
+        })
       }
 
       if (Number(resArray[0]) !== 60) {
         alert("Asset not in recyclable status");
+        this.setState({
+          idxHash: undefined, txStatus: undefined, txHash: "", accessPermitted: false, transaction: false
+        })
       }
 
       console.log("idxHash", idxHash);
@@ -117,6 +73,8 @@ class RecycleAssetNC extends Component {
       result: "",
       resultRA: "",
       assetClass: undefined,
+      selectedAssetClass: "",
+      assetClassSelected: false,
       CountDownStart: "",
       ipfs1: "",
       txHash: "",
@@ -126,7 +84,7 @@ class RecycleAssetNC extends Component {
       manufacturer: "",
       model: "",
       serial: "",
-      transaction: undefined,
+      transaction: false,
       QRreader: false,
     };
   }
@@ -134,12 +92,12 @@ class RecycleAssetNC extends Component {
   //component state-change events......................................................................................................
 
   componentDidMount() {//stuff to do when component mounts in window
-    if (window.assetClass > 0){
-      this.setState({ assetClass: window.assetClass, assetClassSelected: true, accessPermitted: false })
+    if (window.assetClass > 0) {
+      this.setState({ assetClass: window.assetClass, assetClassSelected: true })
     }
 
-    else{
-      this.setState({assetClassSelected: false})
+    else {
+      this.setState({ assetClassSelected: false })
     }
   }
 
@@ -186,6 +144,75 @@ class RecycleAssetNC extends Component {
   render() {//render continuously produces an up-to-date stateful document  
     const self = this;
 
+    const _setAC = async () => {
+      let acDoesExist;
+      let destinationACData;
+
+      if (this.state.selectedAssetClass === "0" || this.state.selectedAssetClass === undefined) { return alert("Selected AC Cannot be Zero") }
+      else {
+        if (
+          this.state.selectedAssetClass.charAt(0) === "0" ||
+          this.state.selectedAssetClass.charAt(0) === "1" ||
+          this.state.selectedAssetClass.charAt(0) === "2" ||
+          this.state.selectedAssetClass.charAt(0) === "3" ||
+          this.state.selectedAssetClass.charAt(0) === "4" ||
+          this.state.selectedAssetClass.charAt(0) === "5" ||
+          this.state.selectedAssetClass.charAt(0) === "6" ||
+          this.state.selectedAssetClass.charAt(0) === "7" ||
+          this.state.selectedAssetClass.charAt(0) === "8" ||
+          this.state.selectedAssetClass.charAt(0) === "9"
+        ) {
+          acDoesExist = await window.utils.checkForAC("id", this.state.selectedAssetClass);
+          destinationACData = await window.utils.getACData("id", this.state.selectedAssetClass);
+          await console.log("Exists?", acDoesExist)
+
+          if (!acDoesExist && window.confirm("Asset class does not currently exist. Consider minting it yourself! Click ok to route to our website for more information.")) {
+            window.open('https://www.pruf.io')
+          }
+
+          this.setState({ assetClass: this.state.selectedAssetClass });
+          await window.utils.resolveACFromID(this.state.selectedAssetClass)
+          await window.utils.getACData("id", this.state.selectedAssetClass)
+
+          await this.setState({ ACname: window.assetClassName });
+        }
+
+        else {
+          acDoesExist = await window.utils.checkForAC("name", this.state.selectedAssetClass);
+          destinationACData = await window.utils.getACData("name", this.state.selectedAssetClass);
+          await console.log("Exists?", acDoesExist)
+
+          if (!acDoesExist && window.confirm("Asset class does not currently exist. Consider minting it yourself! Click ok to route to our website for more information.")) {
+            window.open('https://www.pruf.io')
+          }
+
+          this.setState({ ACname: this.state.selectedAssetClass });
+          await window.utils.resolveAC(this.state.selectedAssetClass);
+          await this.setState({ assetClass: window.assetClass });
+        }
+        if (this.state.wasSentPacket) {
+          let resArray = await window.utils.checkStats(this.state.idxHash, [0, 2])
+          console.log(resArray)
+
+          if (Number(resArray[0]) !== 70) {
+            alert("Asset is not exported! Owner must export the assset in order to import.");
+            window.sentpacket = undefined;
+            return window.location.href = "/#/asset-dashboard"
+          }
+
+          console.log(destinationACData.root)
+
+          if (resArray[1] !== destinationACData.root) {
+            alert("Import destination AC must have same root as origin!");
+            window.sentpacket = undefined;
+            return window.location.href = "/#/asset-dashboard"
+          }
+        }
+
+        return this.setState({ assetClassSelected: true, acData: window.tempACData, txHash: "" })
+      }
+    }
+
     const QRReader = async () => {
       if (this.state.QRreader === false) {
         this.setState({ QRreader: true, assetFound: "" })
@@ -197,26 +224,35 @@ class RecycleAssetNC extends Component {
 
     const clearForm = async () => {
       document.getElementById("MainForm").reset();
-      this.setState({ idxHash: undefined, txStatus: undefined, txHash: "0", accessPermitted: false, transaction: undefined})
+      this.setState({ idxHash: undefined, txStatus: false, txHash: "", accessPermitted: false, assetClassSelected: false })
     }
 
     const _recycleAsset = async () => {
 
-      if(
+      if (
         this.state.first === "" ||
         this.state.middle === "" ||
         this.state.surname === "" ||
         this.state.id === "" ||
         this.state.secret === ""
-      ) {return alert ("Please fill out all forms")}
+      ) { return alert("Please fill out all forms") }
 
       this.setState({ txStatus: false });
       this.setState({ txHash: "" });
       this.setState({ error: undefined })
       this.setState({ resultRA: "" })
       this.setState({ transaction: true })
-
+if (this.state.result !== "") {
       var idxHash = this.state.result;
+    }
+    else{
+      var idxHash = window.web3.utils.soliditySha3(
+        String(this.state.type),
+        String(this.state.manufacturer),
+        String(this.state.model),
+        String(this.state.serial),
+      );
+    }
       var rgtRaw;
 
       rgtRaw = window.web3.utils.soliditySha3(
@@ -227,37 +263,37 @@ class RecycleAssetNC extends Component {
         this.state.secret
       );
 
-      //console.log(this.state.assetClass)
-
-      let isSameRoot = await window.utils.checkAssetRootMatch(window.assetClass, idxHash);
-
+      console.log(idxHash)
+      console.log(this.state.selectedAssetClassW)
+      let isSameRoot = await window.utils.checkAssetRootMatch(this.state.selectedAssetClass, this.state.idxHash);
+        console.log(isSameRoot)
       if (!isSameRoot) {
         this.setState({
           QRreader: false
         })
-        return alert("Import destination AC must have same root as previous AC")
+        return alert("Import destination AC must have same root as previous AC"), clearForm()
       }
 
       let rgtHash;
 
       console.log(rgtRaw, idxHash)
 
-      if(idxHash.length % 2 !== 0){
-        rgtHash = window.web3.utils.soliditySha3((idxHash+"0"), rgtRaw);
+      if (idxHash.length % 2 !== 0) {
+        rgtHash = window.web3.utils.soliditySha3((idxHash + "0"), rgtRaw);
       }
 
-      else{
+      else {
         rgtHash = window.web3.utils.soliditySha3(idxHash, rgtRaw);
       }
 
-      
+
 
       console.log("rgtHash", rgtHash);
       console.log("idxHash", idxHash);
       console.log("addr: ", window.addr);
 
       window.contracts.RCLR.methods
-        .$recycle(idxHash, rgtHash, window.assetClass)
+        .$recycle(idxHash, rgtHash, this.state.selectedAssetClass)
         .send({ from: window.addr, value: window.costs.newRecordCost })
         .on("error", function (_error) {
           // self.setState({ NRerror: _error });
@@ -273,7 +309,7 @@ class RecycleAssetNC extends Component {
           console.log(receipt.status);
           window.recount = true;
           window.resetInfo = true;
-          
+
           //Stuff to do when tx confirms
         });
       console.log(this.state.txHash);
@@ -283,21 +319,21 @@ class RecycleAssetNC extends Component {
         accessPermitted: false
       })
 
-      return document.getElementById("MainForm").reset();
+      return clearForm();
     };
 
     return (
       <div>
         {this.state.QRreader === false && (
-        <div>
-          <div className="mediaLinkAD-home">
-            <a className="mediaLinkContentAD-home" ><Home onClick={() => { window.location.href = '/#/' }} /></a>
+          <div>
+            <div className="mediaLinkAD-home">
+              <a className="mediaLinkContentAD-home" ><Home onClick={() => { window.location.href = '/#/' }} /></a>
+            </div>
+            <h2 className="FormHeader">Recycle Asset</h2>
+            <div className="mediaLink-clearForm">
+              <a className="mediaLinkContent-clearForm" ><XSquare onClick={() => { clearForm() }} /></a>
+            </div>
           </div>
-          <h2 className="FormHeader">Recycle Asset</h2>
-          <div className="mediaLink-clearForm">
-            <a className="mediaLinkContent-clearForm" ><XSquare onClick={() => { clearForm() }} /></a>
-          </div>
-        </div>
         )}
         <Form className="Form" id='MainForm'>
           {window.addr === undefined && (
@@ -306,10 +342,33 @@ class RecycleAssetNC extends Component {
               <h3>Please connect web3 provider.</h3>
             </div>
           )}
-        
+          {window.addr > 0 && !this.state.assetClassSelected && this.state.QRreader === false && (
+            <>
+              <Form.Row>
+                <Form.Label className="formFontRow">Asset Class:</Form.Label>
+                <Form.Group as={Row} controlId="formGridAC">
+
+                  <Form.Control
+                    className="singleFormRow"
+                    placeholder="Submit an asset class name or #"
+                    onChange={(e) => this.setState({ selectedAssetClass: e.target.value })}
+                    size="lg"
+                  />
+                </Form.Group>
+
+                <div className="submitButtonNRAC">
+                  <div className="submitButtonNR-content">
+                    <ArrowRightCircle
+                      onClick={() => { _setAC() }}
+                    />
+                  </div>
+                </div>
+              </Form.Row>
+            </>
+          )}
           {window.addr > 0 && (
             <div>
-              {!this.state.accessPermitted &&  this.state.QRreader === false &&(
+              {!this.state.accessPermitted && this.state.QRreader === false && this.state.assetClassSelected === true && (
                 <>
                   <Form.Row>
                     <Form.Group as={Col} controlId="formGridType">
@@ -401,7 +460,7 @@ class RecycleAssetNC extends Component {
               )}
               {this.state.accessPermitted && (
                 <>
-                <Form.Row>
+                  <Form.Row>
                     <Form.Group as={Col} controlId="formGridFirstName">
                       <Form.Label className="formFont">First Name:</Form.Label>
                       <Form.Control
@@ -463,7 +522,7 @@ class RecycleAssetNC extends Component {
                           onClick={() => { _recycleAsset() }}
                         />
                       </div>
-                      <Form.Label className="LittleTextNewRecord"> Cost in AC {window.assetClass}: {Number(window.costs.newRecordCost) / 1000000000000000000} ETH</Form.Label>
+                      <Form.Label className="LittleTextRecycle"> Cost To Recycle Asset in AC {this.state.selectedAssetClass}: {Number(window.costs.newRecordCost) / 1000000000000000000} ETH</Form.Label>
                     </div>
                   </Form.Row>
                 </>
@@ -472,30 +531,23 @@ class RecycleAssetNC extends Component {
             </div>
           )}
         </Form>
-        { this.state.QRreader === false && this.state.transaction === undefined && (
-        <div className="assetSelectedResults">
-          <Form.Row>
-            {this.state.idxHash !== undefined && this.state.txHash === "" && (
-              <Form.Group>
-                <div className="assetSelectedContentHead">Asset IDX: <span className="assetSelectedContent">{this.state.idxHash}</span> </div>
-                <div className="assetSelectedContentHead">Asset Name: <span className="assetSelectedContent">{this.state.name}</span> </div>
-                {/* <div className="assetSelectedContentHead"> Asset Description: <span className="assetSelectedContent">{this.state.description}</span> </div> */}
-                <div className="assetSelectedContentHead">Asset Class: <span className="assetSelectedContent">{this.state.assetClass}</span> </div>
-                <div className="assetSelectedContentHead">Asset Status: <span className="assetSelectedContent">{this.state.status}</span> </div>
-              </Form.Group>
-            )}
-          </Form.Row>
-        </div>
+        { this.state.QRreader === false && this.state.transaction === false && this.state.txHash === "" && (
+          <div className="assetSelectedResults">
+            <Form.Row>
+              {this.state.idxHash !== undefined && this.state.txHash === "" && (
+                <Form.Group>
+                  <div className="assetSelectedContentHead">Asset IDX: <span className="assetSelectedContent">{this.state.idxHash}</span> </div>
+                  {/* <div className="assetSelectedContentHead">Asset Name: <span className="assetSelectedContent">{this.state.name}</span> </div> */}
+                  <div className="assetSelectedContentHead">Being Recycled Into Asset Class: <span className="assetSelectedContent">{this.state.selectedAssetClass}</span> </div>
+                  {/* <div className="assetSelectedContentHead">Asset Status: <span className="assetSelectedContent">{this.state.status}</span> </div> */}
+                </Form.Group>
+              )}
+            </Form.Row>
+          </div>
         )}
         {this.state.transaction === true && this.state.QRreader === false && (
-
           <div className="Results">
-            {/* {this.state.pendingTx === undefined && ( */}
             <p className="loading">Transaction In Progress</p>
-            {/* )} */}
-            {/* {this.state.pendingTx !== undefined && (
-    <p class="loading">Transaction In Progress</p>
-  )} */}
           </div>)}
         {this.state.txHash > 0 && this.state.QRreader === false && ( //conditional rendering
           <div className="Results">
