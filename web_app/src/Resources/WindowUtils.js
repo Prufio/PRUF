@@ -389,118 +389,118 @@ function buildWindowUtils() {
   }
 
   const _getStatusString = async (status) => {
-    let tempBool;
+    let tempStat;
     console.log(status)
     if (status === "0") {
-      tempBool = "No Status"
-      console.log("Asset in :", tempBool, "status.")
+      tempStat = "No Status"
+      console.log("Asset in :", tempStat, "status.")
     }
 
     else if (status === "1") {
-      tempBool = "Transferrable"
-      console.log("Asset in :", tempBool, "status.")
+      tempStat = "Transferrable"
+      console.log("Asset in :", tempStat, "status.")
     }
 
     else if (status === "2") {
-      tempBool = "Non-Transferable"
-      console.log("Asset in :", tempBool, "status.")
+      tempStat = "Non-Transferable"
+      console.log("Asset in :", tempStat, "status.")
     }
 
     else if (status === "3") {
-      tempBool = "Stolen"
-      console.log("Asset in :", tempBool, "status.")
+      tempStat = "Stolen"
+      console.log("Asset in :", tempStat, "status.")
     }
 
     else if (status === "4") {
-      tempBool = "Lost"
-      console.log("Asset in :", tempBool, "status.")
+      tempStat = "Lost"
+      console.log("Asset in :", tempStat, "status.")
     }
 
     else if (status === "5") {
-      tempBool = "Transfered"
-      console.log("Asset in :", tempBool, "status.")
+      tempStat = "Transfered"
+      console.log("Asset in :", tempStat, "status.")
     }
 
     else if (status === "6") {
-      tempBool = "Supervised Escrow"
-      console.log("Asset in :", tempBool, "status.")
+      tempStat = "Supervised Escrow"
+      console.log("Asset in :", tempStat, "status.")
     }
 
     else if (status === "7") {
-      tempBool = "Out of Supervised Escrow"
-      console.log("Asset in :", tempBool, "status.")
+      tempStat = "Out of Supervised Escrow"
+      console.log("Asset in :", tempStat, "status.")
     }
 
     else if (status === "50") {
-      tempBool = "Locked Escrow"
-      console.log("Asset in :", tempBool, "status.")
+      tempStat = "Locked Escrow"
+      console.log("Asset in :", tempStat, "status.")
     }
 
     else if (status === "51") {
-      tempBool = "Transferrable"
-      console.log("Asset in :", tempBool, "status.")
+      tempStat = "Transferrable"
+      console.log("Asset in :", tempStat, "status.")
     }
 
     else if (status === "52") {
-      tempBool = "Non-Transferable"
-      console.log("Asset in :", tempBool, "status.")
+      tempStat = "Non-Transferable"
+      console.log("Asset in :", tempStat, "status.")
     }
 
     else if (status === "53") {
-      tempBool = "Stolen"
-      console.log("Asset in :", tempBool, "status.")
+      tempStat = "Stolen"
+      console.log("Asset in :", tempStat, "status.")
     }
 
     else if (status === "54") {
-      tempBool = "Lost"
-      console.log("Asset in :", tempBool, "status.")
+      tempStat = "Lost"
+      console.log("Asset in :", tempStat, "status.")
     }
 
     else if (status === "55") {
-      tempBool = "Transfered"
-      console.log("Asset in :", tempBool, "status.")
+      tempStat = "Transfered"
+      console.log("Asset in :", tempStat, "status.")
     }
 
     else if (status === "56") {
-      tempBool = "Supervised Escrow"
-      console.log("Asset in :", tempBool, "status.")
+      tempStat = "Supervised Escrow"
+      console.log("Asset in :", tempStat, "status.")
     }
 
     else if (status === "57") {
-      tempBool = "Out of Supervised Escrow"
-      console.log("Asset in :", tempBool, "status.")
+      tempStat = "Out of Supervised Escrow"
+      console.log("Asset in :", tempStat, "status.")
     }
 
     else if (status === "58") {
-      tempBool = "Out of Locked Escrow"
-      console.log("Asset in :", tempBool, "status.")
+      tempStat = "Out of Locked Escrow"
+      console.log("Asset in :", tempStat, "status.")
     }
 
     else if (status === "59") {
-      tempBool = "Discardable"
-      console.log("Asset in :", tempBool, "status.")
+      tempStat = "Discardable"
+      console.log("Asset in :", tempStat, "status.")
     }
 
     else if (status === "60") {
-      tempBool = "Discarded"
-      console.log("Asset in :", tempBool, "status.")
+      tempStat = "Discarded"
+      console.log("Asset in :", tempStat, "status.")
     }
 
     else if (status === "70") {
-      tempBool = "importable"
-      console.log("Asset in :", tempBool, "status.")
+      tempStat = "importable"
+      console.log("Asset in :", tempStat, "status.")
     }
 
     else if (status === "") {
-      tempBool = "Undefined"
-      console.log("Asset in :", tempBool, "status.")
+      tempStat = "Undefined"
+      console.log("Asset in :", tempStat, "status.")
     }
 
     else {
       console.log("Asset in unauthorized status (Does not exist)")
     }
 
-    return (tempBool)
+    return (tempStat)
   }
 
   const _checkAssetRootMatch = async (AC, idxHash) => {

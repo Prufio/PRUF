@@ -23,8 +23,15 @@ class RetrieveRecord extends Component {
             text: tempIPFS.text,
             photo: tempIPFS.photo,
 
-          }, selectedImage: tempIPFS.photo.displayImage, moreInfo: true
+          }, moreInfo: true
         })
+        if (tempIPFS.photo.displayImage !== undefined && tempIPFS.photo.displayImage !== ""){
+          this.setState({selectedImage: tempIPFS.photo.displayImage})
+        }
+        else {
+          this.setState({selectedImage: Object.values(tempIPFS.photo)[0]})
+        }
+        
       }
 
     }, 100)
@@ -48,7 +55,7 @@ class RetrieveRecord extends Component {
       let text = Object.values(obj.text)
       let imageNames = Object.keys(obj.photo)
       let textNames = Object.keys(obj.text)
-      let status = window.utils.getStatusString(obj.status);
+      let status = obj.status;
 
       const showImage = (e) => {
         console.log(this.state.selectedImage)
@@ -139,10 +146,8 @@ class RetrieveRecord extends Component {
               )}
 
             </div>
-          </div >
-        </div >
-
-
+          </div>
+        </div>
       )
     }
 
@@ -439,7 +444,7 @@ class RetrieveRecord extends Component {
 
       window.assetInfo = {
         assetClass: tempResult[2],
-        status: tempResult[0],
+        status: await window.utils.getStatusString(String(tempResult[0])),
         idx: idxHash
       }
       await window.utils.resolveACFromID(tempResult[2])

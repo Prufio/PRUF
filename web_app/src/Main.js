@@ -675,8 +675,11 @@ class Main extends Component {
 
       let tempDisplayArray = [];
       for (let j = 0; j < window.aTknIDs.length; j++) {
-        if (tempDescArray[j].photo.displayImage === undefined) {
+        if (tempDescArray[j].photo.displayImage === undefined && Object.values(tempDescArray[j].photo).length === 0) {
           tempDisplayArray.push("https://pruf.io/assets/images/pruf-u-logo-192x255.png")
+        }
+        else if(tempDescArray[j].photo.displayImage === undefined && Object.values(tempDescArray[j].photo).length > 0){
+          tempDisplayArray.push(Object.values(tempDescArray[j].photo)[0])
         }
         else {
           tempDisplayArray.push(tempDescArray[j].photo.displayImage)

@@ -37,7 +37,14 @@ class AssetDashboard extends Component {
         behavior: "smooth"
       });
       if (e === "back") { return this.setState({ assetObj: {}, moreInfo: false, printQR: undefined }) }
-      this.setState({ assetObj: e, moreInfo: true, selectedImage: e.displayImage })
+
+      if (e.displayImage !== undefined && e.displayImage !== ""){
+        this.setState({selectedImage: e.displayImage})
+      }
+      else {
+        this.setState({selectedImage: Object.values(e.photo)[0]})
+      }
+      this.setState({ assetObj: e, moreInfo: true})
       this.setAC(e.assetClass)
     }
 
@@ -334,7 +341,7 @@ class AssetDashboard extends Component {
                           photo: obj.descriptions[i].photo
                         })
                       }}
-                    >
+                    > 
                       <img title="View Asset" src={obj.displayImages[i]} className="assetImage" />
                     </button>
                   </div>
