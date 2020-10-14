@@ -189,12 +189,12 @@ class ModifyDescription extends Component {
       let elementValue = this.state.elementValue;
 
       if (type === "description") {
-        element = ('"description": ' + '"' + this.state.elementValue + '",')
+        element = ('"Description": ' + '"' + this.state.elementValue + '",')
         this.setState({ textCount: this.state.textCount + 1, count: this.state.count + 1 })
       }
 
       else if (type === "displayImage") {
-        element = ('"displayImage": ' + '"' + this.state.elementValue + '",')
+        element = ('"DisplayImage": ' + '"' + this.state.elementValue + '",')
         this.setState({ imageCount: this.state.imageCount + 1, count: this.state.count + 1 })
       }
 

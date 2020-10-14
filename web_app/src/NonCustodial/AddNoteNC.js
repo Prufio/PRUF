@@ -113,7 +113,7 @@ class AddNoteNC extends Component {
       this.setState({ wasSentPacket: true })
     }
 
-    this.setState({runWatchDog: true})
+    this.setState({ runWatchDog: true })
   }
 
   componentDidUpdate() {//stuff to do when state updates
@@ -129,7 +129,7 @@ class AddNoteNC extends Component {
 
     const clearForm = async () => {
       document.getElementById("MainForm").reset();
-      this.setState({ idxHash: undefined, txStatus: false, txHash: "", wasSentPacket: false })
+      this.setState({ idxHash: undefined, txStatus: false, txHash: "", wasSentPacket: false, assetClass: undefined })
     }
 
     const getBytes32FromIpfsHash = (ipfsListing) => {
@@ -161,21 +161,21 @@ class AddNoteNC extends Component {
     };
 
     const _checkIn = async (e) => {
-      if (e === "null" || e === undefined) { 
+      if (e === "null" || e === undefined) {
         return clearForm()
       }
       else if (e === "reset") {
         return window.resetInfo = true;
       }
-      else if (e === "assetDash"){
+      else if (e === "assetDash") {
         return window.location.href = "/#/asset-dashboard"
       }
 
-      let resArray = await window.utils.checkStats(window.assets.ids[e], [6,0])
+      let resArray = await window.utils.checkStats(window.assets.ids[e], [6, 0])
 
       console.log(resArray)
 
-      if(Number(resArray[1]) === 3 || Number(resArray[1]) === 4 || Number(resArray[1]) === 53 || Number(resArray[1]) === 54){
+      if (Number(resArray[1]) === 3 || Number(resArray[1]) === 4 || Number(resArray[1]) === 53 || Number(resArray[1]) === 54) {
         alert("Cannot edit asset in lost or stolen status"); return clearForm()
       }
 
@@ -183,7 +183,7 @@ class AddNoteNC extends Component {
         alert("Note already enscribed on this asset! Cannot overwrite existing note."); return clearForm()
       }
 
-      if(Number(resArray[1]) === 50 || Number(resArray[1]) === 56){
+      if (Number(resArray[1]) === 50 || Number(resArray[1]) === 56) {
         alert("Cannot edit asset in escrow! Please wait until asset has met escrow conditions")
       }
 
@@ -294,7 +294,9 @@ class AddNoteNC extends Component {
                             onClick={() => { publishIPFS2Photo() }}
                           />
                         </div>
-                        <Form.Label className="LittleTextNewRecord"> Cost To Add Note in AC {window.assetClass}: {Number(window.costs.createNoteCost) / 1000000000000000000} ETH</Form.Label >
+                        {this.state.assetClass !== undefined && (
+                          <Form.Label className="LittleTextNewRecord"> Cost To Add Note in AC {this.state.assetClass}: {Number(window.costs.createNoteCost) / 1000000000000000000} ETH</Form.Label >
+                        )}
                       </div>
                     </Form.Group>
                   </Form.Row>
@@ -303,18 +305,18 @@ class AddNoteNC extends Component {
             )}
           </Form>
           {this.state.transaction === false && this.state.transaction === false && (
-          <div className="assetSelectedResults">
-            <Form.Row>
-              {this.state.idxHash !== undefined && this.state.txHash === "" && (
-                <Form.Group>
-                  <div className="assetSelectedContentHead">Asset IDX: <span className="assetSelectedContent">{this.state.idxHash}</span> </div>
-                  <div className="assetSelectedContentHead">Asset Name: <span className="assetSelectedContent">{this.state.name}</span> </div>
-                  <div className="assetSelectedContentHead">Asset Class: <span className="assetSelectedContent">{this.state.assetClass}</span> </div>
-                  <div className="assetSelectedContentHead">Asset Status: <span className="assetSelectedContent">{this.state.status}</span> </div>
-                </Form.Group>
-              )}
-            </Form.Row>
-          </div>
+            <div className="assetSelectedResults">
+              <Form.Row>
+                {this.state.idxHash !== undefined && this.state.txHash === "" && (
+                  <Form.Group>
+                    <div className="assetSelectedContentHead">Asset IDX: <span className="assetSelectedContent">{this.state.idxHash}</span> </div>
+                    <div className="assetSelectedContentHead">Asset Name: <span className="assetSelectedContent">{this.state.name}</span> </div>
+                    <div className="assetSelectedContentHead">Asset Class: <span className="assetSelectedContent">{this.state.assetClass}</span> </div>
+                    <div className="assetSelectedContentHead">Asset Status: <span className="assetSelectedContent">{this.state.status}</span> </div>
+                  </Form.Group>
+                )}
+              </Form.Row>
+            </div>
           )}
           {this.state.transaction === true && (
 
@@ -385,9 +387,9 @@ class AddNoteNC extends Component {
                     onChange={(e) => { _checkIn(e.target.value) }}
                   >
                     {this.state.hasLoadedAssets && (
-                    <optgroup className="optgroup">
-                    {window.utils.generateAssets()}
-                    </optgroup>)}
+                      <optgroup className="optgroup">
+                        {window.utils.generateAssets()}
+                      </optgroup>)}
                     {!this.state.hasLoadedAssets && (<optgroup ><option value="null"> Loading Assets... </option></optgroup>)}
 
                   </Form.Control>
@@ -414,7 +416,7 @@ class AddNoteNC extends Component {
                 </Form.Row>
               )}
               {this.state.hashPath === "" && this.state.transaction === false && (
-                  <Form.Row>
+                <Form.Row>
                   <Form.Group >
                     <div className="submitButton">
                       <div className="submitButton-content">
@@ -422,7 +424,9 @@ class AddNoteNC extends Component {
                           onClick={() => { publishIPFS2Photo() }}
                         />
                       </div>
-                      <Form.Label className="LittleTextNewRecord"> Cost To Add Note in AC {window.assetClass}: {Number(window.costs.createNoteCost) / 1000000000000000000} ETH</Form.Label >
+                      {this.state.assetClass !== undefined && (
+                        <Form.Label className="LittleTextNewRecord"> Cost To Add Note in AC {this.state.assetClass}: {Number(window.costs.createNoteCost) / 1000000000000000000} ETH</Form.Label >
+                      )}
                     </div>
                   </Form.Group>
                 </Form.Row>
@@ -431,18 +435,18 @@ class AddNoteNC extends Component {
           )}
         </Form>
         {this.state.transaction === false && this.state.txHash === "" && (
-        <div className="assetSelectedResults">
-          <Form.Row>
-            {this.state.idxHash !== undefined && this.state.txHash === "" && (
-              <Form.Group>
-                <div className="assetSelectedContentHead">Asset IDX: <span className="assetSelectedContent">{this.state.idxHash}</span> </div>
-                <div className="assetSelectedContentHead">Asset Name: <span className="assetSelectedContent">{this.state.name}</span> </div>
-                <div className="assetSelectedContentHead">Asset Class: <span className="assetSelectedContent">{this.state.assetClass}</span> </div>
-                <div className="assetSelectedContentHead">Asset Status: <span className="assetSelectedContent">{this.state.status}</span> </div>
-              </Form.Group>
-            )}
-          </Form.Row>
-        </div>
+          <div className="assetSelectedResults">
+            <Form.Row>
+              {this.state.idxHash !== undefined && this.state.txHash === "" && (
+                <Form.Group>
+                  <div className="assetSelectedContentHead">Asset IDX: <span className="assetSelectedContent">{this.state.idxHash}</span> </div>
+                  <div className="assetSelectedContentHead">Asset Name: <span className="assetSelectedContent">{this.state.name}</span> </div>
+                  <div className="assetSelectedContentHead">Asset Class: <span className="assetSelectedContent">{this.state.assetClass}</span> </div>
+                  <div className="assetSelectedContentHead">Asset Status: <span className="assetSelectedContent">{this.state.status}</span> </div>
+                </Form.Group>
+              )}
+            </Form.Row>
+          </div>
         )}
         {this.state.transaction === true && (
           <div className="Results">
