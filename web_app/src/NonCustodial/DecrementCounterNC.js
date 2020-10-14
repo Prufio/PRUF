@@ -49,12 +49,16 @@ class DecrementCounterNC extends Component {
 
   componentDidMount() {//stuff to do when component mounts in window
     if (window.sentPacket !== undefined) {
-      this.setState({ name: window.sentPacket.name })
-      this.setState({ idxHash: window.sentPacket.idxHash })
-      this.setState({ countDownStart: window.sentPacket.countDownStart })
-      this.setState({ count: window.sentPacket.count })
-      this.setState({ assetClass: window.sentPacket.assetClass })
-      this.setState({ status: window.sentPacket.status })
+
+      this.setState({ 
+        name: window.sentPacket.name,
+        idxHash: window.sentPacket.idxHash,
+        countDownStart: window.sentPacket.countPair[1],
+        count: window.sentPacket.countPair[0],
+        assetClass: window.sentPacket.assetClass,
+        status: window.sentPacket.status,
+       })
+
       if (Number(window.sentPacket.status) === 53 || Number(window.sentPacket.status) === 54) {
         alert("Cannot edit asset in lost or stolen status");
         window.sentpacket = undefined;
@@ -66,6 +70,7 @@ class DecrementCounterNC extends Component {
         window.sentpacket = undefined;
         return window.location.href = "/#/asset-dashboard"
       }
+
       window.sentPacket = undefined
       this.setState({ wasSentPacket: true })
     }
@@ -243,8 +248,7 @@ class DecrementCounterNC extends Component {
                     <div className="assetSelectedContentHead">Asset Name: <span className="assetSelectedContent">{this.state.name}</span> </div>
                     <div className="assetSelectedContentHead">Asset Class: <span className="assetSelectedContent">{this.state.assetClass}</span> </div>
                     <div className="assetSelectedContentHead">Asset Status: <span className="assetSelectedContent">{this.state.status}</span> </div>
-                    <div className="assetSelectedContentHead">Countdown Start: <span className="assetSelectedContent">{this.state.countDownStart}</span> </div>
-                    <div className="assetSelectedContentHead">Count: <span className="assetSelectedContent">{this.state.count}</span> </div>
+                    <div className="assetSelectedContentHead">Count: <span className="assetSelectedContent">{this.state.count} / {this.state.countDownStart}</span> </div>
                   </Form.Group>
                 )}
               </Form.Row>
@@ -363,8 +367,7 @@ class DecrementCounterNC extends Component {
                   <div className="assetSelectedContentHead">Asset Name: <span className="assetSelectedContent">{this.state.name}</span> </div>
                   <div className="assetSelectedContentHead">Asset Class: <span className="assetSelectedContent">{this.state.assetClass}</span> </div>
                   <div className="assetSelectedContentHead">Asset Status: <span className="assetSelectedContent">{this.state.status}</span> </div>
-                  <div className="assetSelectedContentHead">Countdown Start: <span className="assetSelectedContent">{this.state.countDownStart}</span> </div>
-                  <div className="assetSelectedContentHead">Count: <span className="assetSelectedContent">{this.state.count}</span> </div>
+                  <div className="assetSelectedContentHead">Count: <span className="assetSelectedContent">{this.state.count} / {this.state.countDownStart}</span> </div>
                 </Form.Group>
               )}
             </Form.Row>

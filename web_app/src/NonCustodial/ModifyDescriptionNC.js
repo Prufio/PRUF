@@ -74,9 +74,9 @@ class ModifyDescription extends Component {
       //self.setState({ accessPermitted: false });
       //self.setState({ oldDescription: undefined });
       return document.getElementById("MainForm").reset(),
-      this.setState({
-        idxHash: undefined, txStatus: undefined, txHash: "", elementType: 0, wasSentPacket: false
-      });
+        this.setState({
+          idxHash: undefined, txStatus: undefined, txHash: "", elementType: 0, wasSentPacket: false
+        });
     };
 
     this.state = {
@@ -103,14 +103,21 @@ class ModifyDescription extends Component {
       assets: { descriptions: [0], ids: [0], assetClasses: [0], statuses: [0], names: [0] },
       imageCount: 1,
       textCount: 1,
+      remCount: 1,
       count: 1,
       transaction: false,
       removePhotoElement: "",
       removeTextElement: "",
+      imageArray: [],
+      textArray: [],
+      removedElements: {
+        images: [],
+        text: [],
+      },
       additionalElementArrays: {
         photo: [],
         text: [],
-      }
+      },
     };
   }
 
@@ -118,6 +125,10 @@ class ModifyDescription extends Component {
 
   componentDidMount() {//stuff to do when component mounts in window
     if (window.sentPacket !== undefined) {
+
+      let tempImageArray = [];
+      let tempTextArray = [];
+
       if (Number(window.sentPacket.status) === 3 || Number(window.sentPacket.status) === 4 || Number(window.sentPacket.status) === 53 || Number(window.sentPacket.status) === 54) {
         alert("Cannot edit asset in lost or stolen status");
         window.sentpacket = undefined;
@@ -129,6 +140,15 @@ class ModifyDescription extends Component {
         window.sentpacket = undefined;
         return window.location.href = "/#/asset-dashboard"
       }
+
+      for (let i = 0; i < Object.values(window.sentPacket.descriptionObj.photo).length; i++) {
+        tempImageArray.push({ val: Object.values(window.sentPacket.descriptionObj.photo)[i], key: Object.keys(window.sentPacket.descriptionObj.photo)[i] })
+      }
+
+      for (let i = 0; i < Object.values(window.sentPacket.descriptionObj.text).length; i++) {
+        tempTextArray.push({ val: Object.values(window.sentPacket.descriptionObj.text)[i], key: Object.keys(window.sentPacket.descriptionObj.text)[i] })
+      }
+
       this.setState({
         name: window.sentPacket.name,
         idxHash: window.sentPacket.idxHash,
@@ -136,6 +156,8 @@ class ModifyDescription extends Component {
         status: window.sentPacket.status,
         oldDescription: window.sentPacket.descriptionObj,
         wasSentPacket: true,
+        textArray: tempTextArray,
+        imageArray: tempImageArray,
       })
 
       window.sentPacket = undefined
@@ -224,6 +246,7 @@ class ModifyDescription extends Component {
 
       else if (type === "nameTag") {
         window.additionalElementArrays.name = this.state.nameTag
+        this.setState({ count: this.state.count + 1 })
       }
 
       else { return alert("Please use the dropdown menu to select an element type") }
@@ -234,9 +257,11 @@ class ModifyDescription extends Component {
       return document.getElementById("MainForm").reset();
     }
 
-    const _removeElement = async (type) => {
+    const _removeElement = (type) => {
 
       console.log("Existing description before edits: ", this.state.oldDescription)
+      let text = this.state.removedElements.text;
+      let images = this.state.removedElements.images;
       let element = (this.state.removeElement)
       let oldDescription = this.state.oldDescription;
 
@@ -248,6 +273,8 @@ class ModifyDescription extends Component {
         if (oldDescription.photo[element]) {
           delete oldDescription.photo[element]
           console.log("Removed", element, "from photo object")
+          console.log("oldDescription after edits: ", oldDescription)
+          images.push(element)
         }
         else { alert("Element does not exist in existing photo object") }
       }
@@ -256,16 +283,23 @@ class ModifyDescription extends Component {
         if (oldDescription.text[element]) {
           delete oldDescription.text[element]
           console.log("Removed", element, "from text object")
+          console.log("oldDescription after edits: ", oldDescription)
+          text.push(element)
         }
         else { alert("Element does not exist in existing text object") }
       }
 
       else { return alert("Please use the dropdown menu to select an element type") }
 
-      console.log("oldDescription after edits: ", oldDescription)
+
       this.setState({
         oldDescription: oldDescription,
-        hashPath: ""
+        hashPath: "",
+        removedElements: {
+          images: images,
+          text: text
+        },
+        remCount: this.state.remCount + 1,
       })
       this.setState({ elementType: "0" })
       return document.getElementById("MainForm").reset();
@@ -369,6 +403,7 @@ class ModifyDescription extends Component {
         txStatus: false,
         txHash: ""
       })
+
       if (e === "null" || e === undefined) {
         return clearForm()
       }
@@ -380,6 +415,8 @@ class ModifyDescription extends Component {
       }
 
       let resArray = await window.utils.checkStats(window.assets.ids[e], [0, 2])
+      let tempImageArray = [];
+      let tempTextArray = [];
 
       console.log(resArray)
 
@@ -397,6 +434,16 @@ class ModifyDescription extends Component {
 
       this.setState({ selectedAsset: e })
       console.log("Changed component idx to: ", window.assets.ids[e])
+      console.log("About to edit: ", window.assets.descriptions[e])
+
+
+      for (let i = 0; i < Object.values(window.assets.descriptions[e].photo).length; i++) {
+        tempImageArray.push({ val: Object.values(window.assets.descriptions[e].photo)[i], key: Object.keys(window.assets.descriptions[e].photo)[i] })
+      }
+
+      for (let i = 0; i < Object.values(window.assets.descriptions[e].text).length; i++) {
+        tempTextArray.push({ val: Object.values(window.assets.descriptions[e].text)[i], key: Object.keys(window.assets.descriptions[e].text)[i] })
+      }
 
       this.setState({
         assetClass: window.assets.assetClasses[e],
@@ -406,7 +453,9 @@ class ModifyDescription extends Component {
         text: window.assets.descriptions[e].text,
         oldDescription: window.assets.descriptions[e],
         status: window.assets.statuses[e],
-        note: window.assets.notes[e]
+        note: window.assets.notes[e],
+        textArray: tempTextArray,
+        imageArray: tempImageArray,
       })
     }
 
@@ -702,29 +751,46 @@ class ModifyDescription extends Component {
                   </Form.Row>
                 )}
 
-                {this.state.elementType === "removePhoto" && (
-                  <Form.Row>
-                    <div className="submitButton">
-                      <div className="submitButton-content">
-                        <Trash2
-                          onClick={() => { _removeElement(this.state.elementType) }}
-                        />
-                      </div>
-                    </div>
-                  </Form.Row>
+                {this.state.elementType === "removeText" && (
+                  <>
+                    <Form.Group as={Col} controlId="formGridMiscType">
+                      <Form.Label className="formFont">
+                        Text Elements:
+                        </Form.Label>
+                      <Form.Control
+                        as="select"
+                        size="lg"
+                        onChange={(e) => this.setState({ removeElement: e.target.value })}
+                      >
+                        <optgroup className="optgroup">
+                          {window.utils.generateRemoveElements(this.state.textArray)}
+                        </optgroup>
+
+                      </Form.Control>
+                    </Form.Group>
+                  </>
                 )}
 
-                {this.state.elementType === "removeText" && (
-                  <Form.Row>
-                    <div className="submitButton">
-                      <div className="submitButton-content">
-                        <Trash2
-                          onClick={() => { _removeElement(this.state.elementType) }}
-                        />
-                      </div>
-                    </div>
-                  </Form.Row>
+                {this.state.elementType === "removePhoto" && (
+                  <>
+                    <Form.Group as={Col} controlId="formGridMiscType">
+                      <Form.Label className="formFont">
+                        Image Elements:
+                      </Form.Label>
+                      <Form.Control
+                        as="select"
+                        size="lg"
+                        onChange={(e) => this.setState({ removeElement: e.target.value })}
+                      >
+                        <optgroup className="optgroup">
+                          {window.utils.generateRemoveElements(this.state.photoArray)}
+                        </optgroup>
+
+                      </Form.Control>
+                    </Form.Group>
+                  </>
                 )}
+
               </div>
             )}
           </Form>
@@ -740,6 +806,11 @@ class ModifyDescription extends Component {
                     {this.state.count > 1 && (
                       <div>
                         {window.utils.generateNewElementsPreview(window.additionalElementArrays)}
+                      </div>
+                    )}
+                    {this.state.remCount > 1 && (
+                      <div>
+                        {window.utils.generateRemElementsPreview(this.state.removedElements)}
                       </div>
                     )}
                   </Form.Group>
@@ -941,21 +1012,6 @@ class ModifyDescription extends Component {
                     </>
                   )}
 
-                  {this.state.elementType === "removePhoto" && (
-                    <>
-                      <Form.Group as={Col} controlId="formGridRemovePhoto">
-                        <Form.Label className="formFont">
-                          Image Name:
-                      </Form.Label>
-                        <Form.Control
-                          placeholder="Name of Image You Wish to Remove"
-                          onChange={(e) => this.setState({ removeElement: e.target.value })}
-                          size="lg"
-                        />
-                      </Form.Group>
-                    </>
-                  )}
-
                   {this.state.elementType === "nameTag" && (
                     <>
                       <Form.Group as={Col} controlId="formGridNameTag">
@@ -973,15 +1029,40 @@ class ModifyDescription extends Component {
 
                   {this.state.elementType === "removeText" && (
                     <>
-                      <Form.Group as={Col} controlId="formGridRemoveText">
+                      <Form.Group as={Col} controlId="formGridMiscType">
                         <Form.Label className="formFont">
-                          Element Name:
+                          Text Elements:
+                        </Form.Label>
+                        <Form.Control
+                          as="select"
+                          size="lg"
+                          onChange={(e) => this.setState({ removeElement: e.target.value })}
+                        >
+                          <optgroup className="optgroup">
+                            {window.utils.generateRemoveElements(this.state.textArray)}
+                          </optgroup>
+
+                        </Form.Control>
+                      </Form.Group>
+                    </>
+                  )}
+
+                  {this.state.elementType === "removePhoto" && (
+                    <>
+                      <Form.Group as={Col} controlId="formGridMiscType">
+                        <Form.Label className="formFont">
+                          Image Elements:
                       </Form.Label>
                         <Form.Control
-                          placeholder="Name of Element You Wish to Remove"
-                          onChange={(e) => this.setState({ removeElement: e.target.value })}
+                          as="select"
                           size="lg"
-                        />
+                          onChange={(e) => this.setState({ removeElement: e.target.value })}
+                        >
+                          <optgroup className="optgroup">
+                            {window.utils.generateRemoveElements(this.state.photoArray)}
+                          </optgroup>
+
+                        </Form.Control>
                       </Form.Group>
                     </>
                   )}
@@ -1010,8 +1091,28 @@ class ModifyDescription extends Component {
                       </Form.Group>
                     </>
                   )}
+
+                  {this.state.elementType === "displayImage" && (
+                    <>
+                      <Form.Row>
+                        <Form.Group as={Col} controlId="formGridMiscValue">
+                          <Form.Label className="formFont">
+                            Image Source URL:
+                        </Form.Label>
+                          <Form.Control
+                            placeholder="Image URL"
+                            onChange={(e) => this.setState({ elementValue: e.target.value })}
+                            size="lg"
+                          />
+                        </Form.Group>
+                      </Form.Row>
+                    </>
+                  )}
+
                 </div>
               )}
+
+
 
               {this.state.hashPath === "" && this.state.accessPermitted && this.state.transaction === false && (
                 <div className="submitButton">
@@ -1034,6 +1135,16 @@ class ModifyDescription extends Component {
               )}
 
               {this.state.elementType === "photo" && (
+                <div className="submitButton">
+                  <div className="submitButton-content">
+                    <UploadCloud
+                      onClick={() => { _addToMiscArray(this.state.elementType) }}
+                    />
+                  </div>
+                </div>
+              )}
+
+              {this.state.elementType === "displayImage" && (
                 <div className="submitButton">
                   <div className="submitButton-content">
                     <UploadCloud
@@ -1095,10 +1206,15 @@ class ModifyDescription extends Component {
                   <div className="assetSelectedContentHead">Asset Class: <span className="assetSelectedContent">{this.state.assetClass}</span> </div>
                   <div className="assetSelectedContentHead">Asset Status: <span className="assetSelectedContent">{this.state.status}</span> </div>
                   {this.state.count > 1 && (
-                    <div>
-                      {window.utils.generateNewElementsPreview(window.additionalElementArrays)}
-                    </div>
-                  )}
+                      <div>
+                        {window.utils.generateNewElementsPreview(window.additionalElementArrays)}
+                      </div>
+                    )}
+                    {this.state.remCount > 1 && (
+                      <div>
+                        {window.utils.generateRemElementsPreview(this.state.removedElements)}
+                      </div>
+                    )}
                 </Form.Group>
               )}
             </Form.Row>
