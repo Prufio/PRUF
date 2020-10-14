@@ -997,7 +997,7 @@ div {
 .escrowDetails {
   font-weight: bold;
   color: rgb(255, 255, 255);
-  font-size: 0.8rem;
+  font-size: 1rem;
   font-family: Tahoma, Geneva, sans-serif;
 }
 
@@ -1627,29 +1627,6 @@ div {
 }
 
 .submitButton-content:hover {
-  color: #028ed4;
-  cursor: pointer;
-  -webkit-transform: translateX(3px);
-  transform: translateX(3px);
-}
-
-.submitButtonEM {
-  display: flex;
-  /* position: absolute; */
-  background-color: transparent;
-  z-index: 1000;
-  margin-left: 20rem;
-  margin-top: -3.7rem;
-}
-
-.submitButtonEM-content {
-  color: white;
-  border-radius: 50%;
-  -webkit-transition: -webkit-transform .5s ease-in-out;
-  transition:         transform .5s ease-in-out;
-}
-
-.submitButtonEM-content:hover {
   color: #028ed4;
   cursor: pointer;
   -webkit-transform: translateX(3px);

@@ -796,6 +796,8 @@ function buildWindowUtils() {
   }
 
   const _getEscrowData = async (idxHash) => {
+    let tempArray = [];
+
     if (window.contracts !== undefined) {
       await window.contracts.ECR_MGR.methods
         .retrieveEscrowData(idxHash)
@@ -803,9 +805,11 @@ function buildWindowUtils() {
           if (_error) { console.log(_error) }
           else {
             console.log("Got escrow data: ", _result)
-            return Object.values(_result)
+            tempArray = Object.values(_result)
+            console.log("tempArray: ", tempArray)
           }
         });
+        return tempArray;
     }
   }
 
