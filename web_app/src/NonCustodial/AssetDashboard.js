@@ -330,6 +330,7 @@ class AssetDashboard extends Component {
                       //   JSON.stringify()}
                       onClick={() => {
                         this.moreInfo({
+                          countPair: obj.countPairs[i],
                           idxHash: obj.ids[i],
                           descriptionObj: obj.descriptions[i],
                           displayImage: obj.displayImages[i],
@@ -358,6 +359,7 @@ class AssetDashboard extends Component {
                       <ChevronRight
                         onClick={() => {
                           this.moreInfo({
+                            countPair: obj.countPairs[i],
                             idxHash: obj.ids[i],
                             descriptionObj: obj.descriptions[i],
                             displayImage: obj.displayImages[i],

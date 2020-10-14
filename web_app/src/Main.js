@@ -896,7 +896,7 @@ class Main extends Component {
         text: undefined,
         status: undefined,
       }
-      window.assets = { descriptions: [], ids: [], assetClasses: [], statuses: [], names: [], displayImages: [] };
+      window.assets = { descriptions: [], ids: [], assetClasses: [], countPairs: [], statuses: [], names: [], displayImages: [] };
       window.resetInfo = false;
       const ethereum = window.ethereum;
       var _web3 = require("web3");

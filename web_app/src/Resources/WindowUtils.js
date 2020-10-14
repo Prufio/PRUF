@@ -1002,6 +1002,7 @@ function buildWindowUtils() {
       let ipfsHashArray = [];
       let noteArray = []
       let statuses = [];
+      let countPairs = [];
       let assetClasses = [];
 
       for (let i = 0; i < window.balances.assetBalance; i++) {
@@ -1052,6 +1053,7 @@ function buildWindowUtils() {
               else if (_result[0] === "70") { statuses.push("Exported") }
               else if (_result[0] === "0") { statuses.push("Status Not Set") }
               assetClasses.push(Object.values(_result)[2])
+              countPairs.push([Object.values(_result)[3], Object.values(_result)[4]])
 
             }
           })
@@ -1065,6 +1067,7 @@ function buildWindowUtils() {
       //console.log(window.aTknIDs, " tknID-> ", tknIDArray);
       window.ipfsHashArray = ipfsHashArray;
 
+      window.assets.countPairs = countPairs;
       window.assets.assetClasses = assetClasses;
       window.assets.statuses = statuses;
       window.assets.notes = noteArray;
