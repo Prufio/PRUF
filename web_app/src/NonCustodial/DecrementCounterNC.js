@@ -48,14 +48,11 @@ class DecrementCounterNC extends Component {
   //component state-change events......................................................................................................
 
   componentDidMount() {//stuff to do when component mounts in window
-    // let countDownStart = window.utils.checkAssetCounterStart(window.sentPacket.idxHash)
-    // let count = window.utils.checkAssetCount(window.sentPacket.idxHash)
-
     if (window.sentPacket !== undefined) {
       this.setState({ name: window.sentPacket.name })
       this.setState({ idxHash: window.sentPacket.idxHash })
-      // this.setState({ countDownStart: countDownStart })
-      // this.setState({ count: count })
+      this.setState({ countDownStart: window.sentPacket.countDownStart })
+      this.setState({ count: window.sentPacket.count })
       this.setState({ assetClass: window.sentPacket.assetClass })
       this.setState({ status: window.sentPacket.status })
       if (Number(window.sentPacket.status) === 53 || Number(window.sentPacket.status) === 54) {
@@ -153,10 +150,10 @@ class DecrementCounterNC extends Component {
 
       if (this.state.countDown > this.state.count) {
         return alert("Countdown is greater than count reserve! Please ensure data fields are correct before submission."),
-        clearForm(),
-        this.setState({
-          transaction: false
-        })
+          clearForm(),
+          this.setState({
+            transaction: false
+          })
       }
 
       window.contracts.NP_NC.methods
@@ -246,8 +243,8 @@ class DecrementCounterNC extends Component {
                     <div className="assetSelectedContentHead">Asset Name: <span className="assetSelectedContent">{this.state.name}</span> </div>
                     <div className="assetSelectedContentHead">Asset Class: <span className="assetSelectedContent">{this.state.assetClass}</span> </div>
                     <div className="assetSelectedContentHead">Asset Status: <span className="assetSelectedContent">{this.state.status}</span> </div>
-                    {/* <div className="assetSelectedContentHead">Countdown Start: <span className="assetSelectedContent">{this.state.countDownStart}</span> </div>
-                  <div className="assetSelectedContentHead">Count: <span className="assetSelectedContent">{this.state.count}</span> </div> */}
+                    <div className="assetSelectedContentHead">Countdown Start: <span className="assetSelectedContent">{this.state.countDownStart}</span> </div>
+                    <div className="assetSelectedContentHead">Count: <span className="assetSelectedContent">{this.state.count}</span> </div>
                   </Form.Group>
                 )}
               </Form.Row>
@@ -256,12 +253,7 @@ class DecrementCounterNC extends Component {
           {this.state.transaction === true && (
 
             <div className="Results">
-              {/* {this.state.pendingTx === undefined && ( */}
               <p class="loading">Transaction In Progress</p>
-              {/* )} */}
-              {/* {this.state.pendingTx !== undefined && (
-      <p class="loading">Transaction In Progress</p>
-    )} */}
             </div>)}
           {this.state.txHash > 0 && ( //conditional rendering
             <div className="Results">
