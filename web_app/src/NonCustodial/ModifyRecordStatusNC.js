@@ -22,11 +22,27 @@ class ModifyRecordStatusNC extends Component {
 
       console.log("idxHash", idxHash);
       console.log("addr: ", window.addr);
+      var NewStatusString = await window.utils.getStatusString(this.state.newStatus)
+      console.log("new stat string", NewStatusString);
+      console.log("old stat: ", this.state.status);
 
       var doesExist = await window.utils.checkAssetExists(idxHash);
 
       if (!doesExist) {
-        return alert("Asset doesnt exist! Ensure data fields are correct before submission.")
+        return alert("Asset doesnt exist! Ensure data fields are correct before submission."),
+        document.getElementById("MainForm").reset(),
+        this.setState({
+          idxHash: undefined, txStatus: false, txHash: "", wasSentPacket: false, transaction: false  
+        })
+
+      }
+
+      if (NewStatusString === this.state.status) {
+        return alert("Asset already in selected Status! Ensure data fields are correct before submission."),
+        document.getElementById("MainForm").reset(),
+        this.setState({
+          idxHash: undefined, txStatus: false, txHash: "", wasSentPacket: false, transaction: false 
+        })
       }
 
       if (
@@ -81,7 +97,10 @@ class ModifyRecordStatusNC extends Component {
       else { alert("Invalid status input") }
 
       console.log(this.state.txHash);
-      return document.getElementById("MainForm").reset();
+      return document.getElementById("MainForm").reset(),
+      this.setState({
+        idxHash: undefined, txStatus: false, txHash: "", wasSentPacket: false 
+      });
     };
 
     this.updateAssets = setInterval(() => {
@@ -113,7 +132,7 @@ class ModifyRecordStatusNC extends Component {
       status: "",
       hasLoadedAssets: false,
       assets: { descriptions: [0], ids: [0], assetClasses: [0], statuses: [0], names: [0] },
-      transaction: undefined,
+      transaction: false,
     };
   }
 
@@ -152,10 +171,14 @@ class ModifyRecordStatusNC extends Component {
 
     const clearForm = async () => {
       document.getElementById("MainForm").reset();
-      this.setState({ idxHash: undefined, txStatus: undefined, txHash: "0", transaction: undefined, wasSentPacket: false })
+      this.setState({ idxHash: undefined, txStatus: false, txHash: "", wasSentPacket: false })
     }
 
     const _checkIn = async (e) => {
+      this.setState({
+        txStatus: false,
+        txHash: ""
+      })
       if (e === "null" || e === undefined) {
         return clearForm()
       }
@@ -230,7 +253,7 @@ class ModifyRecordStatusNC extends Component {
                     </Form.Control>
                   </Form.Group>
                 </Form.Row>
-
+                {this.state.transaction === false && (
                 <Form.Row>
                   <div className="submitButton">
                     <div className="submitButton-content">
@@ -240,17 +263,17 @@ class ModifyRecordStatusNC extends Component {
                     </div>
                   </div>
                 </Form.Row>
+                )}
               </div>
             )}
           </Form>
-          {this.state.transaction === undefined && (
+          {this.state.transaction === false && this.state.txHash === "" && (
             <div className="assetSelectedResults">
               <Form.Row>
                 {this.state.idxHash !== undefined && this.state.txHash === "" && (
                   <Form.Group>
                     <div className="assetSelectedContentHead">Asset IDX: <span className="assetSelectedContent">{this.state.idxHash}</span> </div>
                     <div className="assetSelectedContentHead">Asset Name: <span className="assetSelectedContent">{this.state.name}</span> </div>
-                    {/* <div className="assetSelectedContentHead"> Asset Description: <span className="assetSelectedContent">{this.state.description}</span> </div> */}
                     <div className="assetSelectedContentHead">Asset Class: <span className="assetSelectedContent">{this.state.assetClass}</span> </div>
                     <div className="assetSelectedContentHead">Asset Status: <span className="assetSelectedContent">{this.state.status}</span> </div>
                   </Form.Group>
@@ -261,12 +284,7 @@ class ModifyRecordStatusNC extends Component {
           {this.state.transaction === true && (
 
             <div className="Results">
-              {/* {this.state.pendingTx === undefined && ( */}
               <p className="loading">Transaction In Progress</p>
-              {/* )} */}
-              {/* {this.state.pendingTx !== undefined && (
-            <p class="loading">Transaction In Progress</p>
-          )} */}
             </div>)}
           {this.state.txHash > 0 && ( //conditional rendering
             <div className="Results">
@@ -354,7 +372,7 @@ class ModifyRecordStatusNC extends Component {
                   </Form.Control>
                 </Form.Group>
               </Form.Row>
-
+              {this.state.transaction === false && (
               <Form.Row>
                 <div className="submitButton">
                   <div className="submitButton-content">
@@ -364,10 +382,11 @@ class ModifyRecordStatusNC extends Component {
                   </div>
                 </div>
               </Form.Row>
+          )}
             </div>
           )}
         </Form>
-        {this.state.transaction === undefined && (
+        {this.state.transaction === false && this.state.txHash === "" && (
           <div className="assetSelectedResults">
             <Form.Row>
               {this.state.idxHash !== undefined && this.state.txHash === "" && (
@@ -381,8 +400,7 @@ class ModifyRecordStatusNC extends Component {
             </Form.Row>
           </div>
         )}
-        {this.state.transaction === true && this.state.txStatus === undefined && (
-
+        {this.state.transaction === true && this.state.txStatus === false && (
           <div className="Results">
             <p className="loading">Transaction In Progress</p>
           </div>)}

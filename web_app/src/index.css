@@ -831,11 +831,15 @@ div {
 .assetSelectedContentHead {
   color: white;
   font-size: 1.3rem; 
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 75ch;
 }
 
 .assetSelectedContent {
   color: white;
-  font-size: 1.3rem; 
+  font-size: 1.3rem;
 }
 
 .Results {
@@ -850,6 +854,12 @@ div {
   margin-top: -0.2rem;
   justify-content: center;
   align-items: center;
+}
+
+.ResultLink {
+  margin-top: 0.5rem;
+  margin-left: 0.5rem;
+  font-size: 1rem;
 }
 
 .ResultsMobile {
@@ -987,7 +997,7 @@ div {
 .escrowDetails {
   font-weight: bold;
   color: rgb(255, 255, 255);
-  font-size: large;
+  font-size: 0.8rem;
   font-family: Tahoma, Geneva, sans-serif;
 }
 
@@ -1023,10 +1033,19 @@ div {
   font-weight: bold;
   font-size: small;
   font-family: Tahoma, Geneva, sans-serif;
-  margin-left: -20rem;
+  margin-left: -27rem;
   margin-top: 0.3rem;
 }
 
+.LittleTextRecycle {
+  display: flex;
+  color: rgb(255, 255, 255);
+  font-weight: bold;
+  font-size: small;
+  font-family: Tahoma, Geneva, sans-serif;
+  margin-left: -31rem;
+  margin-top: 0.3rem;
+}
 
 .userData {
   display: flex;
@@ -1656,7 +1675,6 @@ div {
   /* position: absolute; */
   background-color: transparent;
   z-index: 1000;
-  /* margin-left: rem; */
   margin-top: 1rem;
 }
 
@@ -1923,7 +1941,7 @@ div {
 }
 
 .loading:after {
-  content: ' .';
+  content: '  .';
   animation: dots 1s steps(5, end) infinite;
 }
 

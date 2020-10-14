@@ -41,7 +41,7 @@ class ExportAssetNC extends Component {
       txStatus: null,
       hasLoadedAssets: false,
       assets: { descriptions: [0], ids: [0], assetClasses: [0], statuses: [0], names: [0] },
-      transaction: undefined,
+      transaction: false,
     };
   }
 
@@ -53,7 +53,8 @@ class ExportAssetNC extends Component {
       this.setState({ idxHash: window.sentPacket.idxHash })
       this.setState({ assetClass: window.sentPacket.assetClass })
       this.setState({ status: window.sentPacket.status })
-      if (Number(window.sentPacket.status) !== 51) {
+      console.log("stat", window.sentPacket.status)
+      if (window.sentPacket.status !== "Transferrable") {
         alert("Asset is not set to transferrable! Owner must set the status to transferrable before export.");
         window.sentpacket = undefined;
         return window.location.href = "/#/asset-dashboard"
@@ -112,7 +113,7 @@ class ExportAssetNC extends Component {
 
     const clearForm = async () => {
       document.getElementById("MainForm").reset();
-      this.setState({ idxHash: undefined, txStatus: undefined, txHash: "0", wasSentPacket: undefined, transaction: undefined })
+      this.setState({ idxHash: undefined, txStatus: undefined, txHash: "", wasSentPacket: undefined})
     }
 
     const _exportAsset = async () => {//create a new asset record
@@ -152,7 +153,7 @@ class ExportAssetNC extends Component {
           }
         });
 
-      return document.getElementById("MainForm").reset(); //clear form inputs
+      return clearForm(); //clear form inputs
     };
     if (this.state.wasSentPacket) {
       return (//default render
@@ -173,11 +174,11 @@ class ExportAssetNC extends Component {
                 <h3>Please connect web3 provider.</h3>
               </div>
             )}
-            {window.addr > 0 && (
-              <div>
+            {window.addr > 0 && this.state.transaction === false && (
                 <Form.Row>
                   <Form.Group>
                     <div className="submitButtonEA2">
+                    <Form.Label className="formFont"> Export Asset? </Form.Label>
                       <div className="submitButtonEA2-content">
                         <CheckCircle
                           onClick={() => { _exportAsset() }}
@@ -186,10 +187,9 @@ class ExportAssetNC extends Component {
                     </div>
                   </Form.Group>
                 </Form.Row>
-              </div>
             )}
           </Form>
-          {this.state.transaction === undefined && (
+          {this.state.transaction === false && (
           <div className="assetSelectedResults">
             <Form.Row>
               {this.state.idxHash !== undefined && this.state.txHash === "" && (
@@ -283,6 +283,7 @@ class ExportAssetNC extends Component {
                   </Form.Control>
                 </Form.Group>
               </Form.Row>
+              {this.state.transaction === false && (
               <Form.Row>
                 <Form.Group>
                   <div className="submitButton">
@@ -294,11 +295,12 @@ class ExportAssetNC extends Component {
                   </div>
                 </Form.Group>
               </Form.Row>
+              )}
 
             </div>
           )}
         </Form>
-        {this.state.transaction === undefined && (
+        {this.state.transaction === false && this.state.txHash === "" && (
         <div className="assetSelectedResults">
           <Form.Row>
             {this.state.idxHash !== undefined && this.state.txHash === "" && (
@@ -314,14 +316,8 @@ class ExportAssetNC extends Component {
         </div>
         )}
         {this.state.transaction === true && (
-
           <div className="Results">
-            {/* {this.state.pendingTx === undefined && ( */}
             <p className="loading">Transaction In Progress</p>
-            {/* )} */}
-            {/* {this.state.pendingTx !== undefined && (
-    <p class="loading">Transaction In Progress</p>
-  )} */}
           </div>)}
         {this.state.txHash > 0 && ( //conditional rendering
           <div className="Results">

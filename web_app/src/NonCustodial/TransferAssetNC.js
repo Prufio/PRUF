@@ -38,7 +38,7 @@ class ModifyDescriptionNC extends Component {
       to: "",
       hasLoadedAssets: false,
       assets: { descriptions: [0], ids: [0], assetClasses: [0], statuses: [0], names: [0] },
-      transaction: undefined,
+      transaction: false,
     };
   }
 
@@ -159,13 +159,15 @@ class ModifyDescriptionNC extends Component {
           console.log(receipt.status);
           window.resetInfo = true;
           window.recount = true;
-          if (this.state.wasSentPacket) {
-            return window.location.href = '/#/asset-dashboard'
-          }
+          // if (this.state.wasSentPacket) {
+          //   return window.location.href = '/#/asset-dashboard'
+          // }
           //Stuff to do when tx confirms
         });
       console.log(this.state.txHash);
-      document.getElementById("MainForm").reset();
+      this.setState({
+        wasSentPacket: false
+      });
     };
 
     if (this.state.wasSentPacket) {
@@ -200,7 +202,7 @@ class ModifyDescriptionNC extends Component {
                     />
                   </Form.Group>
                 </Form.Row>
-
+                {this.state.transaction === false && (
                 <Form.Row>
                   <Form.Group>
                     <div className="submitButton">
@@ -212,10 +214,11 @@ class ModifyDescriptionNC extends Component {
                     </div>
                   </Form.Group>
                 </Form.Row>
+                )}
               </div>
             )}
           </Form>
-          {this.state.transaction === undefined && this.state.txStatus === false && (
+          {this.state.transaction === false && this.state.txStatus === false && (
           <div className="assetSelectedResults">
             <Form.Row>
               {this.state.idxHash !== undefined && this.state.txHash === "" && (
@@ -323,7 +326,7 @@ class ModifyDescriptionNC extends Component {
                   />
                 </Form.Group>
               </Form.Row>
-
+              {this.state.transaction === false && (
               <Form.Row>
                 <Form.Group>
                   <div className="submitButton">
@@ -335,10 +338,11 @@ class ModifyDescriptionNC extends Component {
                   </div>
                 </Form.Group>
               </Form.Row>
+              )}
             </div>
           )}
         </Form>
-        {this.state.transaction === undefined && this.state.txStatus === false && (
+        {this.state.transaction === false && this.state.txStatus === false && (
           <div className="assetSelectedResults" id="MainForm">
             <Form.Row>
               {this.state.idxHash !== undefined && this.state.txHash === "" && (

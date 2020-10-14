@@ -49,7 +49,7 @@ class ModifyRightsHolder extends Component {
       newSecret: "",
       hasLoadedAssets: false,
       assets: { descriptions: [0], ids: [0], assetClasses: [0], statuses: [0], names: [0] },
-      transaction: undefined,
+      transaction: false,
     };
   }
 
@@ -92,7 +92,7 @@ class ModifyRightsHolder extends Component {
 
     const clearForm = async () => {
       document.getElementById("MainForm").reset();
-      this.setState({ idxHash: undefined, txStatus: undefined, txHash: "0", wasSentPacket: undefined, transaction: undefined })
+      this.setState({ idxHash: undefined, txStatus: false, txHash: "", wasSentPacket: false })
     }
 
     const _checkIn = async (e) => {
@@ -169,24 +169,19 @@ class ModifyRightsHolder extends Component {
           self.setState({ txHash: Object.values(_error)[0].transactionHash });
           self.setState({ txStatus: false });
           console.log(Object.values(_error)[0].transactionHash);
-          if (this.state.wasSentPacket) {
-            return window.location.href = '/#/asset-dashboard'
-          }
         })
         .on("receipt", (receipt) => {
           self.setState({ transaction: false })
           this.setState({ txHash: receipt.transactionHash });
           this.setState({ txStatus: receipt.status });
           console.log(receipt.status);
-          if (this.state.wasSentPacket) {
-            return window.location.href = '/#/asset-dashboard'
-          }
           //Stuff to do when tx confirms
         });
 
       console.log(this.state.txHash);
-      return document.getElementById("MainForm").reset();
+      return clearForm();
     };
+    
     if (this.state.wasSentPacket) {
       return (
         <div>
@@ -261,6 +256,7 @@ class ModifyRightsHolder extends Component {
                     />
                   </Form.Group>
                 </Form.Row>
+                {this.state.transaction === false && (
                 <Form.Row>
                   <Form.Group >
                     <div className="submitButton">
@@ -272,17 +268,17 @@ class ModifyRightsHolder extends Component {
                     </div>
                   </Form.Group>
                 </Form.Row>
+                )}
               </div>
             )}
           </Form>
-          {this.state.transaction === undefined && (
+          {this.state.transaction === false && this.state.txHash === "" && (
           <div className="assetSelectedResults">
             <Form.Row>
               {this.state.idxHash !== undefined && this.state.txHash === "" && (
                 <Form.Group>
                   <div className="assetSelectedContentHead">Asset IDX: <span className="assetSelectedContent">{this.state.idxHash}</span> </div>
                   <div className="assetSelectedContentHead">Asset Name: <span className="assetSelectedContent">{this.state.name}</span> </div>
-                  {/* <div className="assetSelectedContentHead"> Asset Description: <span className="assetSelectedContent">{this.state.description}</span> </div> */}
                   <div className="assetSelectedContentHead">Asset Class: <span className="assetSelectedContent">{this.state.assetClass}</span> </div>
                   <div className="assetSelectedContentHead">Asset Status: <span className="assetSelectedContent">{this.state.status}</span> </div>
                 </Form.Group>
@@ -291,14 +287,8 @@ class ModifyRightsHolder extends Component {
           </div>
           )}
           {this.state.transaction === true && (
-
             <div className="Results">
-              {/* {this.state.pendingTx === undefined && ( */}
               <p className="loading">Transaction In Progress</p>
-              {/* )} */}
-              {/* {this.state.pendingTx !== undefined && (
-      <p class="loading">Transaction In Progress</p>
-    )} */}
             </div>)}
           {this.state.txHash > 0 && ( //conditional rendering
             <div className="Results">
@@ -422,6 +412,7 @@ class ModifyRightsHolder extends Component {
                   />
                 </Form.Group>
               </Form.Row>
+              {this.state.transaction === false && (
               <Form.Row>
                 <Form.Group >
                   <div className="submitButton">
@@ -433,17 +424,17 @@ class ModifyRightsHolder extends Component {
                   </div>
                 </Form.Group>
               </Form.Row>
+              )}
             </div>
           )}
         </Form>
-        {this.state.transaction === undefined && (
+        {this.state.transaction === false && this.state.txHash === "" && (
         <div className="assetSelectedResults">
           <Form.Row>
             {this.state.idxHash !== undefined && this.state.txHash === "" && (
               <Form.Group>
                 <div className="assetSelectedContentHead">Asset IDX: <span className="assetSelectedContent">{this.state.idxHash}</span> </div>
                 <div className="assetSelectedContentHead">Asset Name: <span className="assetSelectedContent">{this.state.name}</span> </div>
-                {/* <div className="assetSelectedContentHead"> Asset Description: <span className="assetSelectedContent">{this.state.description}</span> </div> */}
                 <div className="assetSelectedContentHead">Asset Class: <span className="assetSelectedContent">{this.state.assetClass}</span> </div>
                 <div className="assetSelectedContentHead">Asset Status: <span className="assetSelectedContent">{this.state.status}</span> </div>
               </Form.Group>
@@ -452,14 +443,8 @@ class ModifyRightsHolder extends Component {
         </div>
         )}
         {this.state.transaction === true && (
-
           <div className="Results">
-            {/* {this.state.pendingTx === undefined && ( */}
             <p className="loading">Transaction In Progress</p>
-            {/* )} */}
-            {/* {this.state.pendingTx !== undefined && (
-    <p class="loading">Transaction In Progress</p>
-  )} */}
           </div>)}
         {this.state.txHash > 0 && ( //conditional rendering
           <div className="Results">

@@ -63,21 +63,20 @@ class ModifyDescription extends Component {
           console.log(receipt.status);
           window.resetInfo = true;
           window.isInTx = false
-          if (this.state.wasSentPacket) {
-            return window.location.href = '/#/asset-dashboard'
-          }
-
           //Stuff to do when tx confirms
         });
 
       console.log(this.state.txHash);
-      self.setState({ hashPath: "" , count: 1, textCount: 1, imageCount: 1});
+      self.setState({ hashPath: "", count: 1, textCount: 1, imageCount: 1 });
       window.additionalElementArrays.photo = [];
       window.additionalElementArrays.text = [];
       window.additionalElementArrays.name = "";
       //self.setState({ accessPermitted: false });
       //self.setState({ oldDescription: undefined });
-      return document.getElementById("MainForm").reset();
+      return document.getElementById("MainForm").reset(),
+      this.setState({
+        idxHash: undefined, txStatus: undefined, txHash: "", elementType: 0, wasSentPacket: false
+      });
     };
 
     this.state = {
@@ -105,7 +104,7 @@ class ModifyDescription extends Component {
       imageCount: 1,
       textCount: 1,
       count: 1,
-      transaction: undefined,
+      transaction: false,
       removePhotoElement: "",
       removeTextElement: "",
       additionalElementArrays: {
@@ -119,13 +118,13 @@ class ModifyDescription extends Component {
 
   componentDidMount() {//stuff to do when component mounts in window
     if (window.sentPacket !== undefined) {
-      if(Number(window.sentPacket.status) === 3 || Number(window.sentPacket.status) === 4 || Number(window.sentPacket.status) === 53 || Number(window.sentPacket.status) === 54){
+      if (Number(window.sentPacket.status) === 3 || Number(window.sentPacket.status) === 4 || Number(window.sentPacket.status) === 53 || Number(window.sentPacket.status) === 54) {
         alert("Cannot edit asset in lost or stolen status");
         window.sentpacket = undefined;
         return window.location.href = "/#/asset-dashboard"
       }
 
-      if(Number(window.sentPacket.status) === 50 || Number(window.sentPacket.status) === 56){
+      if (Number(window.sentPacket.status) === 50 || Number(window.sentPacket.status) === 56) {
         alert("Cannot edit asset in escrow! Please wait until asset has met escrow conditions");
         window.sentpacket = undefined;
         return window.location.href = "/#/asset-dashboard"
@@ -159,7 +158,7 @@ class ModifyDescription extends Component {
 
     const clearForm = async () => {
       document.getElementById("MainForm").reset();
-      this.setState({ idxHash: undefined, txStatus: undefined, txHash: "0", elementType: 0, wasSentPacket: false, transaction: undefined })
+      this.setState({ idxHash: undefined, txStatus: undefined, txHash: "", elementType: 0, wasSentPacket: false })
     }
 
     const _addToMiscArray = async (type) => {
@@ -169,17 +168,17 @@ class ModifyDescription extends Component {
 
       if (type === "description") {
         element = ('"description": ' + '"' + this.state.elementValue + '",')
-        this.setState({ textCount: this.state.textCount + 1, count: this.state.count + 1  })
+        this.setState({ textCount: this.state.textCount + 1, count: this.state.count + 1 })
       }
 
       else if (type === "displayImage") {
         element = ('"displayImage": ' + '"' + this.state.elementValue + '",')
-        this.setState({ imageCount: this.state.imageCount + 1, count: this.state.count + 1  })
+        this.setState({ imageCount: this.state.imageCount + 1, count: this.state.count + 1 })
       }
 
       else if (elementName === "" && type === "photo") {
         element = ('"Image' + (String(Object.values(this.state.oldDescription.photo).length + this.state.count)) + '"' + ':' + '"' + this.state.elementValue + '",')
-        this.setState({ imageCount: this.state.imageCount + 1, count: this.state.count + 1  })
+        this.setState({ imageCount: this.state.imageCount + 1, count: this.state.count + 1 })
       }
 
       else if (elementName === "" && type === "text") {
@@ -189,22 +188,22 @@ class ModifyDescription extends Component {
 
       else {
         elementName.replace(" ", "_");
-        for (let i = 0; i < elementName.length; i++){
-          if(elementName.charAt(i) === "'"){
-            return alert(" Use of character: ' "+ elementName.charAt(i)+ " ' not allowed!")
+        for (let i = 0; i < elementName.length; i++) {
+          if (elementName.charAt(i) === "'") {
+            return alert(" Use of character: ' " + elementName.charAt(i) + " ' not allowed!")
           }
 
-          if(elementName.charAt(i) === '"'){
-            return alert(" Use of character: ' "+ elementName.charAt(i)+ " ' not allowed!")
+          if (elementName.charAt(i) === '"') {
+            return alert(" Use of character: ' " + elementName.charAt(i) + " ' not allowed!")
           }
         }
-        for (let i = 0; i < elementName.length; i++){
-          if(elementValue.charAt(i) === "'"){
-            return alert(" Use of character: ' "+ elementValue.charAt(i)+ "at position" + String(i) + " ' not allowed!")
+        for (let i = 0; i < elementName.length; i++) {
+          if (elementValue.charAt(i) === "'") {
+            return alert(" Use of character: ' " + elementValue.charAt(i) + "at position" + String(i) + " ' not allowed!")
           }
 
-          if(elementValue.charAt(i) === '"'){
-            return alert(" Use of character: ' "+ elementValue.charAt(i)+ "at position" + String(i) + " ' not allowed!")
+          if (elementValue.charAt(i) === '"') {
+            return alert(" Use of character: ' " + elementValue.charAt(i) + "at position" + String(i) + " ' not allowed!")
           }
         }
         element = ('"' + elementName + '": ' + '"' + this.state.elementValue + '",')
@@ -366,6 +365,10 @@ class ModifyDescription extends Component {
     }
 
     const _checkIn = async (e) => {
+      this.setState({
+        txStatus: false,
+        txHash: ""
+      })
       if (e === "null" || e === undefined) {
         return clearForm()
       }
@@ -376,11 +379,10 @@ class ModifyDescription extends Component {
         return window.location.href = "/#/asset-dashboard"
       }
 
-      let resArray = await window.utils.checkStats(window.assets.ids[e], [0,2])
+      let resArray = await window.utils.checkStats(window.assets.ids[e], [0, 2])
 
       console.log(resArray)
 
-      
       if (Number(resArray[1]) === 0) {
         alert("Asset does not exist at given IDX");
       }
@@ -431,30 +433,59 @@ class ModifyDescription extends Component {
               <div>
                 {this.state.accessPermitted && (
                   <div>
-                    <Form.Row>
-                      <Form.Group as={Col} controlId="formGridMiscType">
-                        <Form.Label className="formFont">
-                          Element Type:
+                    {this.state.transaction === false && (
+                      <Form.Row>
+                        <Form.Group as={Col} controlId="formGridMiscType">
+                          <Form.Label className="formFont">
+                            Element Type:
                         </Form.Label>
-                        <Form.Control
-                          as="select"
-                          size="lg"
-                          onChange={(e) => this.setState({ elementType: e.target.value })}
-                        >
-                          <optgroup className="optgroup">
-                            <option value="0">Select Element Type</option>
-                            <option value="nameTag"> Edit Name Tag</option>
-                            <option value="description">Edit Description</option>
-                            <option value="displayImage">Edit Profile Image</option>
-                            <option value="text">Add Custom Text</option>
-                            <option value="photo">Add Custom Image URL</option>
-                            <option value="removeText">Remove Existing Text Element</option>
-                            <option value="removePhoto">Remove Existing Image Element</option>
-                          </optgroup>
+                          <Form.Control
+                            as="select"
+                            size="lg"
+                            onChange={(e) => this.setState({ elementType: e.target.value })}
+                          >
+                            <optgroup className="optgroup">
+                              <option value="0">Select Element Type</option>
+                              <option value="nameTag"> Edit Name Tag</option>
+                              <option value="description">Edit Description</option>
+                              <option value="displayImage">Edit Profile Image</option>
+                              <option value="text">Add Custom Text</option>
+                              <option value="photo">Add Custom Image URL</option>
+                              <option value="removeText">Remove Existing Text Element</option>
+                              <option value="removePhoto">Remove Existing Image Element</option>
+                            </optgroup>
 
-                        </Form.Control>
-                      </Form.Group>
-                    </Form.Row>
+                          </Form.Control>
+                        </Form.Group>
+                      </Form.Row>
+                    )}
+                    {this.state.transaction === true && (
+                      <Form.Row>
+                        <Form.Group as={Col} controlId="formGridMiscType">
+                          <Form.Label className="formFont">
+                            Element Type:
+                        </Form.Label>
+                          <Form.Control
+                            as="select"
+                            size="lg"
+                            onChange={(e) => this.setState({ elementType: e.target.value })}
+                            disabled
+                          >
+                            <optgroup className="optgroup">
+                              <option value="0">Select Element Type</option>
+                              <option value="nameTag"> Edit Name Tag</option>
+                              <option value="description">Edit Description</option>
+                              <option value="displayImage">Edit Profile Image</option>
+                              <option value="text">Add Custom Text</option>
+                              <option value="photo">Add Custom Image URL</option>
+                              <option value="removeText">Remove Existing Text Element</option>
+                              <option value="removePhoto">Remove Existing Image Element</option>
+                            </optgroup>
+
+                          </Form.Control>
+                        </Form.Group>
+                      </Form.Row>
+                    )}
                     {this.state.elementType === "text" && (
                       <>
                         <Form.Row>
@@ -598,7 +629,7 @@ class ModifyDescription extends Component {
                   </div>
                 )}
 
-                {this.state.hashPath === "" && this.state.accessPermitted && (
+                {this.state.hashPath === "" && this.state.accessPermitted && this.state.transaction === false && (
                   <Form.Row>
                     <div className="submitButton">
                       <div className="submitButton-content">
@@ -697,31 +728,30 @@ class ModifyDescription extends Component {
               </div>
             )}
           </Form>
-          {this.state.transaction === undefined && (<>
-          <div className="assetSelectedResults">
-            <Form.Row>
-              {this.state.idxHash !== undefined && this.state.txHash === "" && (
-                <Form.Group>
-                  <div className="assetSelectedContentHead">Asset IDX: <span className="assetSelectedContent">{this.state.idxHash}</span> </div>
-                  <div className="assetSelectedContentHead">Asset Name: <span className="assetSelectedContent">{this.state.name}</span> </div>
-                  {/* <div className="assetSelectedContentHead"> Asset Description: <span className="assetSelectedContent">{this.state.description}</span> </div> */}
-                  <div className="assetSelectedContentHead">Asset Class: <span className="assetSelectedContent">{this.state.assetClass}</span> </div>
-                  <div className="assetSelectedContentHead">Asset Status: <span className="assetSelectedContent">{this.state.status}</span> </div>
-                </Form.Group>
-              )}
-            </Form.Row>
-          </div>
-
-          <div className="assetSelectedResults">
-            <Form.Row>
-              {this.state.count > 1 && (
-                <Form.Group>
-                  {window.utils.generateNewElementsPreview(window.additionalElementArrays)}
-                </Form.Group>
-              )}
-            </Form.Row>
-          </div></>)}
-
+          {this.state.transaction === false && this.state.txHash === "" && (
+            <div className="assetSelectedResults">
+              <Form.Row>
+                {this.state.idxHash !== undefined && this.state.txHash === "" && (
+                  <Form.Group>
+                    <div className="assetSelectedContentHead">Asset IDX: <span className="assetSelectedContent">{this.state.idxHash}</span> </div>
+                    <div className="assetSelectedContentHead">Asset Name: <span className="assetSelectedContent">{this.state.name}</span> </div>
+                    <div className="assetSelectedContentHead">Asset Class: <span className="assetSelectedContent">{this.state.assetClass}</span> </div>
+                    <div className="assetSelectedContentHead">Asset Status: <span className="assetSelectedContent">{this.state.status}</span> </div>
+                    {this.state.count > 1 && (
+                      <div>
+                        {window.utils.generateNewElementsPreview(window.additionalElementArrays)}
+                      </div>
+                    )}
+                  </Form.Group>
+                )}
+              </Form.Row>
+            </div>
+          )}
+          {this.state.transaction === true && (
+            <div className="Results">
+              <p className="loading">Transaction In Progress</p>
+            </div>
+          )}
           {this.state.txHash > 0 && ( //conditional rendering
             <div className="Results">
               {this.state.txStatus === false && (
@@ -776,44 +806,98 @@ class ModifyDescription extends Component {
             <div>
               {this.state.accessPermitted && (
                 <div>
-                  <Form.Group as={Col} controlId="formGridAsset">
-                    <Form.Label className="formFont"> Select an Asset to Modify :</Form.Label>
-                    <Form.Control
-                      as="select"
-                      size="lg"
-                      onChange={(e) => { _checkIn(e.target.value) }}
-                    >
-                      {this.state.hasLoadedAssets && (
-                        <optgroup className="optgroup">
+                  {this.state.transaction === false && (
+                    <Form.Row>
+                      <Form.Group as={Col} controlId="formGridAsset">
+                        <Form.Label className="formFont"> Select an Asset to Modify :</Form.Label>
+                        <Form.Control
+                          as="select"
+                          size="lg"
+                          onChange={(e) => { _checkIn(e.target.value) }}
+                        >
+                          {this.state.hasLoadedAssets && (
+                            <optgroup className="optgroup">
 
-                          {window.utils.generateAssets()}
-                        </optgroup>)}
-                      {!this.state.hasLoadedAssets && (<optgroup ><option value="null"> Loading Assets... </option></optgroup>)}
+                              {window.utils.generateAssets()}
+                            </optgroup>)}
+                          {!this.state.hasLoadedAssets && (<optgroup ><option value="null"> Loading Assets... </option></optgroup>)}
+                        </Form.Control>
+                      </Form.Group>
+                    </Form.Row>
+                  )}
+                  {this.state.transaction === true && (
+                    <Form.Row>
+                      <Form.Group as={Col} controlId="formGridAsset">
+                        <Form.Label className="formFont"> Select an Asset to Modify :</Form.Label>
+                        <Form.Control
+                          as="select"
+                          size="lg"
+                          onChange={(e) => { _checkIn(e.target.value) }}
+                          disabled
+                        >
+                          {this.state.hasLoadedAssets && (
+                            <optgroup className="optgroup">
 
-                    </Form.Control>
-                  </Form.Group>
-                  <Form.Group as={Col} controlId="formGridMiscType">
-                    <Form.Label className="formFont">
-                      Element Type:
-                      </Form.Label>
-                    <Form.Control
-                      as="select"
-                      size="lg"
-                      onChange={(e) => this.setState({ elementType: e.target.value })}
-                    >
-                      <optgroup className="optgroup">
-                        <option value="0">Select Element Type</option>
-                        <option value="nameTag"> Edit Name Tag</option>
-                        <option value="description">Edit Description</option>
-                        <option value="displayImage">Edit Profile Image</option>
-                        <option value="text">Add Custom Text</option>
-                        <option value="photo">Add Image URL</option>
-                        <option value="removeText">Remove Existing Text Element</option>
-                        <option value="removePhoto">Remove Existing Image URL</option>
-                      </optgroup>
+                              {window.utils.generateAssets()}
+                            </optgroup>)}
+                          {!this.state.hasLoadedAssets && (<optgroup ><option value="null"> Loading Assets... </option></optgroup>)}
+                        </Form.Control>
+                      </Form.Group>
+                    </Form.Row>
+                  )}
+                  {this.state.transaction === false && (
+                    <Form.Row>
+                      <Form.Group as={Col} controlId="formGridMiscType">
+                        <Form.Label className="formFont">
+                          Element Type:
+                        </Form.Label>
+                        <Form.Control
+                          as="select"
+                          size="lg"
+                          onChange={(e) => this.setState({ elementType: e.target.value })}
+                        >
+                          <optgroup className="optgroup">
+                            <option value="0">Select Element Type</option>
+                            <option value="nameTag"> Edit Name Tag</option>
+                            <option value="description">Edit Description</option>
+                            <option value="displayImage">Edit Profile Image</option>
+                            <option value="text">Add Custom Text</option>
+                            <option value="photo">Add Custom Image URL</option>
+                            <option value="removeText">Remove Existing Text Element</option>
+                            <option value="removePhoto">Remove Existing Image Element</option>
+                          </optgroup>
 
-                    </Form.Control>
-                  </Form.Group>
+                        </Form.Control>
+                      </Form.Group>
+                    </Form.Row>
+                  )}
+                  {this.state.transaction === true && (
+                    <Form.Row>
+                      <Form.Group as={Col} controlId="formGridMiscType">
+                        <Form.Label className="formFont">
+                          Element Type:
+                        </Form.Label>
+                        <Form.Control
+                          as="select"
+                          size="lg"
+                          onChange={(e) => this.setState({ elementType: e.target.value })}
+                          disabled
+                        >
+                          <optgroup className="optgroup">
+                            <option value="0">Select Element Type</option>
+                            <option value="nameTag"> Edit Name Tag</option>
+                            <option value="description">Edit Description</option>
+                            <option value="displayImage">Edit Profile Image</option>
+                            <option value="text">Add Custom Text</option>
+                            <option value="photo">Add Custom Image URL</option>
+                            <option value="removeText">Remove Existing Text Element</option>
+                            <option value="removePhoto">Remove Existing Image Element</option>
+                          </optgroup>
+
+                        </Form.Control>
+                      </Form.Group>
+                    </Form.Row>
+                  )}
                   {this.state.elementType === "0" && (
                     <></>
                   )}
@@ -929,7 +1013,7 @@ class ModifyDescription extends Component {
                 </div>
               )}
 
-              {this.state.hashPath === "" && this.state.accessPermitted && (
+              {this.state.hashPath === "" && this.state.accessPermitted && this.state.transaction === false && (
                 <div className="submitButton">
                   <div className="submitButton-content">
                     <CheckCircle
@@ -938,6 +1022,7 @@ class ModifyDescription extends Component {
                   </div>
                 </div>
               )}
+
               {this.state.elementType === "text" && (
                 <div className="submitButton">
                   <div className="submitButton-content">
@@ -947,6 +1032,7 @@ class ModifyDescription extends Component {
                   </div>
                 </div>
               )}
+
               {this.state.elementType === "photo" && (
                 <div className="submitButton">
                   <div className="submitButton-content">
@@ -999,31 +1085,30 @@ class ModifyDescription extends Component {
             </div>
           )}
         </Form>
-        {this.state.transaction === undefined && (<>
-        <div className="assetSelectedResults">
-          <Form.Row>
-            {this.state.idxHash !== undefined && this.state.txHash === "" && (
-              <Form.Group>
-                <div className="assetSelectedContentHead">Asset IDX: <span className="assetSelectedContent">{this.state.idxHash}</span> </div>
-                <div className="assetSelectedContentHead">Asset Name: <span className="assetSelectedContent">{this.state.name}</span> </div>
-                {/* <div className="assetSelectedContentHead"> Asset Description: <span className="assetSelectedContent">{this.state.description}</span> </div> */}
-                <div className="assetSelectedContentHead">Asset Class: <span className="assetSelectedContent">{this.state.assetClass}</span> </div>
-                <div className="assetSelectedContentHead">Asset Status: <span className="assetSelectedContent">{this.state.status}</span> </div>
-              </Form.Group>
-            )}
-          </Form.Row>
-        </div>
-
-        <div className="assetSelectedResults">
+        {this.state.transaction === false && this.state.txHash === "" && (
+          <div className="assetSelectedResults">
             <Form.Row>
-              {this.state.count > 1 && (
+              {this.state.idxHash !== undefined && this.state.txHash === "" && (
                 <Form.Group>
-                  {window.utils.generateNewElementsPreview(window.additionalElementArrays)}
+                  <div className="assetSelectedContentHead">Asset IDX: <span className="assetSelectedContent">{this.state.idxHash}</span> </div>
+                  <div className="assetSelectedContentHead">Asset Name: <span className="assetSelectedContent">{this.state.name}</span> </div>
+                  <div className="assetSelectedContentHead">Asset Class: <span className="assetSelectedContent">{this.state.assetClass}</span> </div>
+                  <div className="assetSelectedContentHead">Asset Status: <span className="assetSelectedContent">{this.state.status}</span> </div>
+                  {this.state.count > 1 && (
+                    <div>
+                      {window.utils.generateNewElementsPreview(window.additionalElementArrays)}
+                    </div>
+                  )}
                 </Form.Group>
               )}
             </Form.Row>
-          </div></>)}
-
+          </div>
+        )}
+        {this.state.transaction === true && (
+          <div className="Results">
+            <p className="loading">Transaction In Progress</p>
+          </div>
+        )}
         {this.state.txHash > 0 && ( //conditional rendering
           <div className="Results">
             <Form.Row>

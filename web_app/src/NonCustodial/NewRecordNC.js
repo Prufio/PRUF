@@ -42,7 +42,7 @@ class NewRecordNC extends Component {
       nameTag: "",
       rawIPFSHash: "",
       idxSubmitted: false,
-      transaction: undefined,
+      transaction: false,
     };
   }
 
@@ -171,7 +171,7 @@ class NewRecordNC extends Component {
         this.state.secret
       );
 
-      if(idxHash%2 !== 0){
+      if (idxHash % 2 !== 0) {
         return (alert("Something went wrong..."))
       }
 
@@ -399,6 +399,7 @@ class NewRecordNC extends Component {
                     </Form.Group>
 
                   </Form.Row>
+                  {this.state.transaction === false && (
                   <Form.Row>
                     <div className="submitButtonNR">
                       <div className="submitButtonNR-content">
@@ -409,6 +410,7 @@ class NewRecordNC extends Component {
                       <Form.Label className="LittleTextNewRecord"> Cost in AC {this.state.assetClass}: {Number(window.costs.newRecordCost) / 1000000000000000000} ETH</Form.Label>
                     </div>
                   </Form.Row>
+                  )}
                   <br></br>
 
                 </>
@@ -418,23 +420,14 @@ class NewRecordNC extends Component {
             </div>
           )}
         </Form>
-        {this.state.transaction === undefined && this.state.txStatus === null && (
-          <div className="assetSelectedResults"></div>
-        )}
         {this.state.transaction === true && (
-
           <div className="Results">
-            {/* {this.state.pendingTx === undefined && ( */}
             <p className="loading">Transaction In Progress</p>
-            {/* )} */}
-            {/* {this.state.pendingTx !== undefined && (
-              <p className="loading">Transaction In Progress</p>
-            )} */}
           </div>)}
         {this.state.transaction === false && (
           <div className="Results">
             {this.state.txHash > 0 && ( //conditional rendering
-              <Form.Row>
+              <div>
                 {this.state.txStatus === false && (
                   <div>
                     !ERROR! :
@@ -450,7 +443,7 @@ class NewRecordNC extends Component {
                 {this.state.txStatus === true && (
                   <div>
                     {" "}
-                No Errors Reported :
+                    No Errors Reported :
                     <a
                       href={"https://kovan.etherscan.io/tx/" + this.state.txHash}
                       target="_blank"
@@ -460,7 +453,7 @@ class NewRecordNC extends Component {
                     </a>
                   </div>
                 )}
-              </Form.Row>
+              </div>
             )}
           </div>
         )}
