@@ -12,6 +12,53 @@ class AddNoteNC extends Component {
 
     //State declaration.....................................................................................................
 
+    this.setInscription = async () => {
+      const self = this;
+      window.isInTx = true;
+
+      this.setState({ txStatus: false });
+      this.setState({ txHash: "" });
+      this.setState({ error: undefined })
+      this.setState({ result: "" })
+      this.setState({ transaction: true })
+      var idxHash = this.state.idxHash;
+
+      console.log("idxHash", idxHash);
+      console.log("addr: ", window.addr);
+
+      await window.contracts.APP_NC.methods
+        .$addIpfs2Note(idxHash, this.state.hashPath)
+        .send({ from: window.addr, value: window.costs.createNoteCost })
+        .on("error", function (_error) {
+          // self.setState({ NRerror: _error });
+          self.setState({ transaction: false })
+          self.setState({ txHash: Object.values(_error)[0].transactionHash });
+          self.setState({ txStatus: false });
+          console.log(Object.values(_error)[0].transactionHash);
+          window.isInTx = false;
+          if (this.state.wasSentPacket) {
+            return window.location.href = '/#/asset-dashboard'
+          }
+        })
+        .on("receipt", (receipt) => {
+          self.setState({ transaction: false })
+          this.setState({ txHash: receipt.transactionHash });
+          this.setState({ txStatus: receipt.status });
+          console.log(receipt.status);
+          window.resetInfo = true;
+          window.isInTx = false;
+          if (this.state.wasSentPacket) {
+            return window.location.href = '/#/asset-dashboard'
+          }
+          //Stuff to do when tx confirms
+        });
+
+      this.setState({hashPath: ""})
+
+      console.log(this.state.txHash);
+      return document.getElementById("MainForm").reset();
+    }
+
     this.updateAssets = setInterval(() => {
       if (this.state.assets !== window.assets && this.state.runWatchDog === true) {
         this.setState({ assets: window.assets })
@@ -19,6 +66,10 @@ class AddNoteNC extends Component {
 
       if (this.state.hasLoadedAssets !== window.hasLoadedAssets && this.state.runWatchDog === true) {
         this.setState({ hasLoadedAssets: window.hasLoadedAssets })
+      }
+
+      if (this.state.hashPath !== "" && this.state.runWatchDog === true && window.isInTx !== true) {
+        this.setInscription()
       }
     }, 100)
 
@@ -204,46 +255,7 @@ class AddNoteNC extends Component {
       this.setAC(window.assets.assetClasses[e])
     }
 
-    const setIPFS2 = async () => {
 
-      this.setState({ txStatus: false });
-      this.setState({ txHash: "" });
-      this.setState({ error: undefined })
-      this.setState({ result: "" })
-      this.setState({ transaction: true })
-      var idxHash = this.state.idxHash;
-
-      console.log("idxHash", idxHash);
-      console.log("addr: ", window.addr);
-
-      await window.contracts.APP_NC.methods
-        .$addIpfs2Note(idxHash, this.state.hashPath)
-        .send({ from: window.addr, value: window.costs.createNoteCost })
-        .on("error", function (_error) {
-          // self.setState({ NRerror: _error });
-          self.setState({ transaction: false })
-          self.setState({ txHash: Object.values(_error)[0].transactionHash });
-          self.setState({ txStatus: false });
-          console.log(Object.values(_error)[0].transactionHash);
-          if (this.state.wasSentPacket) {
-            return window.location.href = '/#/asset-dashboard'
-          }
-        })
-        .on("receipt", (receipt) => {
-          self.setState({ transaction: false })
-          this.setState({ txHash: receipt.transactionHash });
-          this.setState({ txStatus: receipt.status });
-          console.log(receipt.status);
-          window.resetInfo = true;
-          if (this.state.wasSentPacket) {
-            return window.location.href = '/#/asset-dashboard'
-          }
-          //Stuff to do when tx confirms
-        });
-
-      console.log(this.state.txHash);
-      return document.getElementById("MainForm").reset();
-    };
     if (this.state.wasSentPacket) {
       return (
         <div>
@@ -271,20 +283,6 @@ class AddNoteNC extends Component {
                   </Form.Group>
                 </Form.Row>
 
-                {this.state.hashPath !== "" && this.state.transaction === false && (
-                  <Form.Row>
-                    <Form.Group >
-                      <Button className="buttonDisplay"
-                        variant="primary"
-                        type="button"
-                        size="lg"
-                        onClick={setIPFS2}
-                      >
-                        Add Note
-                      </Button>
-                    </Form.Group>
-                  </Form.Row>
-                )}
                 {this.state.hashPath === "" && this.state.transaction === false && (
                   <Form.Row>
                     <Form.Group >
@@ -399,20 +397,6 @@ class AddNoteNC extends Component {
                 </Form.Group>
               </Form.Row>
 
-              {this.state.hashPath !== "" && this.state.transaction === false && (
-                <Form.Row>
-                  <Form.Group >
-                    <Button className="buttonDisplay"
-                      variant="primary"
-                      type="button"
-                      size="lg"
-                      onClick={setIPFS2}
-                    >
-                      Add Note
-                    </Button>
-                  </Form.Group>
-                </Form.Row>
-              )}
               {this.state.hashPath === "" && this.state.transaction === false && (
                   <Form.Row>
                   <Form.Group >
