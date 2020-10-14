@@ -697,7 +697,7 @@ class ModifyDescription extends Component {
               </div>
             )}
           </Form>
-          {this.state.transaction === undefined && (
+          {this.state.transaction === undefined && (<>
           <div className="assetSelectedResults">
             <Form.Row>
               {this.state.idxHash !== undefined && this.state.txHash === "" && (
@@ -720,7 +720,7 @@ class ModifyDescription extends Component {
                 </Form.Group>
               )}
             </Form.Row>
-          </div>
+          </div></>)}
 
           {this.state.txHash > 0 && ( //conditional rendering
             <div className="Results">
@@ -999,7 +999,7 @@ class ModifyDescription extends Component {
             </div>
           )}
         </Form>
-        {this.state.transaction === undefined && (
+        {this.state.transaction === undefined && (<>
         <div className="assetSelectedResults">
           <Form.Row>
             {this.state.idxHash !== undefined && this.state.txHash === "" && (
@@ -1022,7 +1022,7 @@ class ModifyDescription extends Component {
                 </Form.Group>
               )}
             </Form.Row>
-          </div>
+          </div></>)}
 
         {this.state.txHash > 0 && ( //conditional rendering
           <div className="Results">
