@@ -107,6 +107,28 @@ function buildWindowUtils() {
 
   }
 
+  const _generateRemoveElements = (arr) => {
+    let component = [
+      <option size="lg" key={"selectElement "} value={null}>
+        Select Element to Remove
+      </option>
+    ];
+
+    for (let i = 0; i < arr.length; i++) {
+      // console.log(arr[i].key)
+      // console.log(arr[i].val)
+      component.push(
+        <option size="lg" key={"element " + String(i)} value={arr[i].key}>
+          Element Name: {arr[i].key.substring(0, 20) + "..."},
+          Element Value: {arr[i].val.substring(0, 25) + "..."}
+        </option>
+      );
+    }
+
+    return component
+
+  }
+
   const _generateAssetDash = (obj) => {
     if (obj.names.length > 0) {
       let component = [];
@@ -165,18 +187,70 @@ function buildWindowUtils() {
     else { return <></> }
 
   }
+  const _generateRemElementsPreview = (removedObj) => {
+    let component = [];
+    let text = removedObj.text;
+    let images = removedObj.images;
+
+    component.push(
+      <>
+        <br></br>
+        <div className="assetSelectedContentHead">
+          Removed Text Elements:
+    </div>
+      </>)
+    for (let y = 0; y < text.length; y++) {
+      component.push(
+        <div key={"remText" + String(y)}>
+          <div className="assetSelectedContentHead">
+            {"--Removed Text " + String(y) + ": "}
+            <span className="assetSelectedContent">
+              {text[y]}
+            </span>
+          </div>
+        </div>)
+    }
+    component.push(
+      <>
+        <div className="assetSelectedContentHead">
+          Removed Image Elements:
+    </div>
+      </>)
+    for (let z = 0; z < images.length; z++) {
+      component.push(
+        <div key={"remImage" + String(z)}>
+          <div className="assetSelectedContentHead">
+            {"--Removed Image " + String(z) + ": "}
+            <span className="assetSelectedContent">
+              {images[z]}
+            </span>
+          </div>
+        </div>)
+    }
+
+    return component;
+
+  }
 
   const _generateNewElementsPreview = (obj) => {
-    let component = [<div className="assetSelectedContentHead">New Image Elements:</div>];
+    let component = [];
     let photoVals = obj.photo;
     let textVals = obj.text;
     let name = obj.name;
-    
+
+    component.push(
+      <>
+        <br></br>
+        <div className="assetSelectedContentHead">
+          New Image Elements:
+        </div>
+      </>
+    )
     for (let i = 0; i < photoVals.length; i++) {
       component.push(
         <div key={"newPhoto" + String(i)}>
           <div className="assetSelectedContentHead">
-            {"Image" + String(i) + ": "}
+            {"--Image " + String(i) + ": "}
             <span className="assetSelectedContent">
               {photoVals[i]}
             </span>
@@ -185,15 +259,18 @@ function buildWindowUtils() {
     }
 
     component.push(
-      <div className="assetSelectedContentHead">
-        New Text Elements:
-    </div>)
+      <>
+        <div className="assetSelectedContentHead">
+          New Text Elements:
+        </div>
+      </>
+    )
 
     for (let x = 0; x < textVals.length; x++) {
       component.push(
         <div key={"newText" + String(x)}>
           <div className="assetSelectedContentHead">
-            {"Text" + String(x) + ": "}
+            {"--Text " + String(x) + ": "}
             <span className="assetSelectedContent">
               {textVals[x]}
             </span>
@@ -201,11 +278,15 @@ function buildWindowUtils() {
         </div>)
     }
 
-    component.push(<div key={"newName"}>
-      <div className="assetSelectedContentHead">
-        {"Name: " + name}
-      </div>
-    </div>)
+    component.push(
+      <>
+        <div key={"newName"}>
+          <div className="assetSelectedContentHead">
+            {"New Name: " + name}
+          </div>
+        </div>
+      </>
+    )
 
     return component;
 
@@ -335,7 +416,7 @@ function buildWindowUtils() {
       .call(function (_error, _result) {
         if (_error) {
           return (console.log("IN ERROR IN ERROR IN ERROR"))
-        } 
+        }
         else {
           tempAmount = Object.values(_result)[3]
         }
@@ -354,7 +435,7 @@ function buildWindowUtils() {
       .call(function (_error, _result) {
         if (_error) {
           return (console.log("IN ERROR IN ERROR IN ERROR"))
-        } 
+        }
         else {
           tempAmount = Object.values(_result)[4]
         }
@@ -809,7 +890,7 @@ function buildWindowUtils() {
             console.log("tempArray: ", tempArray)
           }
         });
-        return tempArray;
+      return tempArray;
     }
   }
 
@@ -1171,6 +1252,8 @@ function buildWindowUtils() {
     getAssetTokenName: _getAssetTokenName,
     getACFromIdx: _getACFromIdx,
     generateAssets: _generateAssets,
+    generateRemoveElements: _generateRemoveElements,
+    generateRemElementsPreview: _generateRemElementsPreview,
     getETHBalance: _getETHBalance,
     generateAssetDash: _generateAssetDash,
     addIPFSJSONObject: _addIPFSJSONObject,
