@@ -1037,6 +1037,16 @@ div {
   margin-top: 0.3rem;
 }
 
+.LittleTextAddNote {
+  display: flex;
+  color: rgb(255, 255, 255);
+  font-weight: bold;
+  font-size: small;
+  font-family: Tahoma, Geneva, sans-serif;
+  margin-left: -28rem;
+  margin-top: 0.3rem;
+}
+
 .LittleTextRecycle {
   display: flex;
   color: rgb(255, 255, 255);
