@@ -573,8 +573,8 @@ class Main extends Component {
       window.hasNoAssets = false;
       window.ipfsCounter = 0;
       window.ipfsHashArray = [];
-      window.assets = { descriptions: [], ids: [], assetClasses: [], statuses: [], names: [] };
-
+      window.assets = { descriptions: [], ids: [], assetClassNames: [], assetClasses: [], countPairs: [], statuses: [], names: [], displayImages: [] };
+                        
       window.assetTokenInfo = {
         assetClass: undefined,
         idxHash: undefined,
@@ -675,14 +675,14 @@ class Main extends Component {
 
       let tempDisplayArray = [];
       for (let j = 0; j < window.aTknIDs.length; j++) {
-        if (tempDescArray[j].photo.displayImage === undefined && Object.values(tempDescArray[j].photo).length === 0) {
+        if (tempDescArray[j].photo.DisplayImage === undefined && Object.values(tempDescArray[j].photo).length === 0) {
           tempDisplayArray.push("https://pruf.io/assets/images/pruf-u-logo-192x255.png")
         }
-        else if(tempDescArray[j].photo.displayImage === undefined && Object.values(tempDescArray[j].photo).length > 0){
+        else if(tempDescArray[j].photo.DisplayImage === undefined && Object.values(tempDescArray[j].photo).length > 0){
           tempDisplayArray.push(Object.values(tempDescArray[j].photo)[0])
         }
         else {
-          tempDisplayArray.push(tempDescArray[j].photo.displayImage)
+          tempDisplayArray.push(tempDescArray[j].photo.DisplayImage)
         }
       }
 
@@ -896,7 +896,7 @@ class Main extends Component {
         text: undefined,
         status: undefined,
       }
-      window.assets = { descriptions: [], ids: [], assetClasses: [], countPairs: [], statuses: [], names: [], displayImages: [] };
+      window.assets = { descriptions: [], ids: [], assetClassNames: [], assetClasses: [], countPairs: [], statuses: [], names: [], displayImages: [] };
       window.resetInfo = false;
       const ethereum = window.ethereum;
       var _web3 = require("web3");

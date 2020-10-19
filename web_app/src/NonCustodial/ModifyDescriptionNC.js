@@ -51,18 +51,17 @@ class ModifyDescription extends Component {
           self.setState({ transaction: false });
           console.log(Object.values(_error)[0].transactionHash);
           window.isInTx = false
-
-          if (this.state.wasSentPacket) {
-            return window.location.href = '/#/asset-dashboard'
-          }
         })
         .on("receipt", (receipt) => {
-          this.setState({ txHash: receipt.transactionHash });
-          this.setState({ txStatus: receipt.status });
+          self.setState({ txHash: receipt.transactionHash });
+          self.setState({ txStatus: receipt.status });
           self.setState({ transaction: false });
           console.log(receipt.status);
           window.resetInfo = true;
           window.isInTx = false
+          if (self.state.wasSentPacket) {
+            return window.location.href = '/#/asset-dashboard'
+          }
           //Stuff to do when tx confirms
         });
 
@@ -74,8 +73,8 @@ class ModifyDescription extends Component {
       //self.setState({ accessPermitted: false });
       //self.setState({ oldDescription: undefined });
       return document.getElementById("MainForm").reset(),
-        this.setState({
-          idxHash: undefined, txStatus: undefined, txHash: "", elementType: 0, wasSentPacket: false
+        self.setState({
+          idxHash: undefined, txStatus: undefined, txHash: "", elementType: 0
         });
     };
 
@@ -584,9 +583,6 @@ class ModifyDescription extends Component {
                       <>
                         <Form.Row>
                           <Form.Group as={Col} controlId="formGridRemovePhoto">
-                            <Form.Label className="formFont">
-                              Image Name:
-                        </Form.Label>
                             <Form.Control
                               placeholder="Name of Image You Wish to Remove"
                               onChange={(e) => this.setState({ removeElement: e.target.value })}
@@ -618,9 +614,6 @@ class ModifyDescription extends Component {
                       <>
                         <Form.Row>
                           <Form.Group as={Col} controlId="formGridRemoveText">
-                            <Form.Label className="formFont">
-                              Element Name:
-                        </Form.Label>
                             <Form.Control
                               placeholder="Name of Element You Wish to Remove"
                               onChange={(e) => this.setState({ removeElement: e.target.value })}
@@ -678,24 +671,11 @@ class ModifyDescription extends Component {
                   </div>
                 )}
 
-                {this.state.hashPath === "" && this.state.accessPermitted && this.state.transaction === false && (
-                  <Form.Row>
-                    <div className="submitButton">
-                      <div className="submitButton-content">
-                        <CheckCircle
-                          onClick={() => { publishIPFS1() }}
-                        />
-                      </div>
-                    </div>
-                  </Form.Row>
-
-                )}
-
                 {this.state.elementType === "text" && (
                   <Form.Row>
                     <div className="submitButton">
                       <div className="submitButton-content">
-                        <UploadCloud
+                        <CheckCircle
                           onClick={() => { _addToMiscArray(this.state.elementType) }}
                         />
                       </div>
@@ -707,7 +687,7 @@ class ModifyDescription extends Component {
                   <Form.Row>
                     <div className="submitButton">
                       <div className="submitButton-content">
-                        <UploadCloud
+                        <CheckCircle
                           onClick={() => { _addToMiscArray(this.state.elementType) }}
                         />
                       </div>
@@ -719,7 +699,7 @@ class ModifyDescription extends Component {
                   <Form.Row>
                     <div className="submitButton">
                       <div className="submitButton-content">
-                        <UploadCloud
+                        <CheckCircle
                           onClick={() => { _addToMiscArray(this.state.elementType) }}
                         />
                       </div>
@@ -731,7 +711,7 @@ class ModifyDescription extends Component {
                   <Form.Row>
                     <div className="submitButton">
                       <div className="submitButton-content">
-                        <UploadCloud
+                        <CheckCircle
                           onClick={() => { _addToMiscArray(this.state.elementType) }}
                         />
                       </div>
@@ -743,7 +723,7 @@ class ModifyDescription extends Component {
                   <Form.Row>
                     <div className="submitButton">
                       <div className="submitButton-content">
-                        <UploadCloud
+                        <CheckCircle
                           onClick={() => { _addToMiscArray(this.state.elementType) }}
                         />
                       </div>
@@ -768,6 +748,15 @@ class ModifyDescription extends Component {
 
                       </Form.Control>
                     </Form.Group>
+                    <Form.Row>
+                      <div className="submitButton">
+                        <div className="submitButton-content">
+                          <Trash2
+                            onClick={() => { _removeElement(this.state.elementType) }}
+                          />
+                        </div>
+                      </div>
+                    </Form.Row>
                   </>
                 )}
 
@@ -783,12 +772,34 @@ class ModifyDescription extends Component {
                         onChange={(e) => this.setState({ removeElement: e.target.value })}
                       >
                         <optgroup className="optgroup">
-                          {window.utils.generateRemoveElements(this.state.photoArray)}
+                          {window.utils.generateRemoveElements(this.state.imageArray)}
                         </optgroup>
 
                       </Form.Control>
                     </Form.Group>
+                    <Form.Row>
+                      <div className="submitButton">
+                        <div className="submitButton-content">
+                          <Trash2
+                            onClick={() => { _removeElement(this.state.elementType) }}
+                          />
+                        </div>
+                      </div>
+                    </Form.Row>
                   </>
+                )}
+
+                {this.state.hashPath === "" && this.state.accessPermitted && this.state.transaction === false && (
+                  <Form.Row>
+                    <div className="submitButton">
+                      <div className="submitButton-content">
+                        <UploadCloud
+                          onClick={() => { publishIPFS1() }}
+                        />
+                      </div>
+                    </div>
+                  </Form.Row>
+
                 )}
 
               </div>
@@ -1044,6 +1055,16 @@ class ModifyDescription extends Component {
 
                         </Form.Control>
                       </Form.Group>
+
+                      <Form.Row>
+                        <div className="submitButton">
+                          <div className="submitButton-content">
+                            <Trash2
+                              onClick={() => { _removeElement(this.state.elementType) }}
+                            />
+                          </div>
+                        </div>
+                      </Form.Row>
                     </>
                   )}
 
@@ -1059,11 +1080,21 @@ class ModifyDescription extends Component {
                           onChange={(e) => this.setState({ removeElement: e.target.value })}
                         >
                           <optgroup className="optgroup">
-                            {window.utils.generateRemoveElements(this.state.photoArray)}
+                            {window.utils.generateRemoveElements(this.state.imageArray)}
                           </optgroup>
 
                         </Form.Control>
                       </Form.Group>
+
+                      <Form.Row>
+                        <div className="submitButton">
+                          <div className="submitButton-content">
+                            <Trash2
+                              onClick={() => { _removeElement(this.state.elementType) }}
+                            />
+                          </div>
+                        </div>
+                      </Form.Row>
                     </>
                   )}
 
@@ -1112,22 +1143,10 @@ class ModifyDescription extends Component {
                 </div>
               )}
 
-
-
-              {this.state.hashPath === "" && this.state.accessPermitted && this.state.transaction === false && (
-                <div className="submitButton">
-                  <div className="submitButton-content">
-                    <CheckCircle
-                      onClick={() => { publishIPFS1() }}
-                    />
-                  </div>
-                </div>
-              )}
-
               {this.state.elementType === "text" && (
                 <div className="submitButton">
                   <div className="submitButton-content">
-                    <UploadCloud
+                    <CheckCircle
                       onClick={() => { _addToMiscArray(this.state.elementType) }}
                     />
                   </div>
@@ -1137,7 +1156,7 @@ class ModifyDescription extends Component {
               {this.state.elementType === "photo" && (
                 <div className="submitButton">
                   <div className="submitButton-content">
-                    <UploadCloud
+                    <CheckCircle
                       onClick={() => { _addToMiscArray(this.state.elementType) }}
                     />
                   </div>
@@ -1147,7 +1166,7 @@ class ModifyDescription extends Component {
               {this.state.elementType === "displayImage" && (
                 <div className="submitButton">
                   <div className="submitButton-content">
-                    <UploadCloud
+                    <CheckCircle
                       onClick={() => { _addToMiscArray(this.state.elementType) }}
                     />
                   </div>
@@ -1157,7 +1176,7 @@ class ModifyDescription extends Component {
               {this.state.elementType === "description" && (
                 <div className="submitButton">
                   <div className="submitButton-content">
-                    <UploadCloud
+                    <CheckCircle
                       onClick={() => { _addToMiscArray(this.state.elementType) }}
                     />
                   </div>
@@ -1167,7 +1186,7 @@ class ModifyDescription extends Component {
               {this.state.elementType === "nameTag" && (
                 <div className="submitButton">
                   <div className="submitButton-content">
-                    <UploadCloud
+                    <CheckCircle
                       onClick={() => { _addToMiscArray(this.state.elementType) }}
                     />
                   </div>
@@ -1193,6 +1212,16 @@ class ModifyDescription extends Component {
                   </div>
                 </div>
               )}
+
+              {this.state.hashPath === "" && this.state.accessPermitted && this.state.transaction === false && (
+                <div className="submitButton">
+                  <div className="submitButton-content">
+                    <UploadCloud
+                      onClick={() => { publishIPFS1() }}
+                    />
+                  </div>
+                </div>
+              )}
             </div>
           )}
         </Form>
@@ -1206,15 +1235,15 @@ class ModifyDescription extends Component {
                   <div className="assetSelectedContentHead">Asset Class: <span className="assetSelectedContent">{this.state.assetClass}</span> </div>
                   <div className="assetSelectedContentHead">Asset Status: <span className="assetSelectedContent">{this.state.status}</span> </div>
                   {this.state.count > 1 && (
-                      <div>
-                        {window.utils.generateNewElementsPreview(window.additionalElementArrays)}
-                      </div>
-                    )}
-                    {this.state.remCount > 1 && (
-                      <div>
-                        {window.utils.generateRemElementsPreview(this.state.removedElements)}
-                      </div>
-                    )}
+                    <div>
+                      {window.utils.generateNewElementsPreview(window.additionalElementArrays)}
+                    </div>
+                  )}
+                  {this.state.remCount > 1 && (
+                    <div>
+                      {window.utils.generateRemElementsPreview(this.state.removedElements)}
+                    </div>
+                  )}
                 </Form.Group>
               )}
             </Form.Row>

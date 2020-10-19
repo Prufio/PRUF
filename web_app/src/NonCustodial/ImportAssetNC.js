@@ -216,7 +216,7 @@ class ImportAssetNC extends Component {
     }
 
     const _importAsset = async () => {
-      if (this.state.selectedAsset === undefined) {
+      if (this.state.selectedAsset === undefined && !this.state.wasSentPacket) {
         return alert("Please select an asset before submission."), clearForm()
       }
       this.setState({ txStatus: false });
@@ -230,7 +230,7 @@ class ImportAssetNC extends Component {
       console.log("idxHash", idxHash);
       console.log("addr: ", window.addr);
 
-      window.contracts.APP_NC.methods
+      await window.contracts.APP_NC.methods
         .$importAsset(idxHash, this.state.selectedAssetClass)
         .send({ from: window.addr, value: window.costs.newRecordCost })
         .on("error", function (_error) {
@@ -239,17 +239,14 @@ class ImportAssetNC extends Component {
           self.setState({ txHash: Object.values(_error)[0].transactionHash });
           self.setState({ txStatus: false });
           console.log(Object.values(_error)[0].transactionHash);
-          if (this.state.wasSentPacket) {
-            return window.location.href = '/#/asset-dashboard'
-          }
         })
         .on("receipt", (receipt) => {
           self.setState({ transaction: false })
-          this.setState({ txHash: receipt.transactionHash });
-          this.setState({ txStatus: receipt.status });
+          self.setState({ txHash: receipt.transactionHash });
+          self.setState({ txStatus: receipt.status });
           console.log(receipt.status);
           window.resetInfo = true;
-          if (this.state.wasSentPacket) {
+          if (self.state.wasSentPacket) {
             return window.location.href = '/#/asset-dashboard'
           }
           //Stuff to do when tx confirms

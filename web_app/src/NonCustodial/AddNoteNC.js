@@ -36,18 +36,15 @@ class AddNoteNC extends Component {
           self.setState({ txStatus: false });
           console.log(Object.values(_error)[0].transactionHash);
           window.isInTx = false;
-          if (this.state.wasSentPacket) {
-            return window.location.href = '/#/asset-dashboard'
-          }
         })
         .on("receipt", (receipt) => {
           self.setState({ transaction: false })
-          this.setState({ txHash: receipt.transactionHash });
-          this.setState({ txStatus: receipt.status });
+          self.setState({ txHash: receipt.transactionHash });
+          self.setState({ txStatus: receipt.status });
           console.log(receipt.status);
           window.resetInfo = true;
           window.isInTx = false;
-          if (this.state.wasSentPacket) {
+          if (self.state.wasSentPacket) {
             return window.location.href = '/#/asset-dashboard'
           }
           //Stuff to do when tx confirms

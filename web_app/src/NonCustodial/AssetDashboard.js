@@ -68,8 +68,8 @@ class AssetDashboard extends React.Component {
       });
       if (e === "back") { return this.setState({ assetObj: {}, moreInfo: false, printQR: undefined }) }
 
-      if (e.displayImage !== undefined && e.displayImage !== "") {
-        this.setState({ selectedImage: e.displayImage })
+      if (e.DisplayImage !== undefined && e.DisplayImage !== ""){
+        this.setState({selectedImage: e.DisplayImage})
       }
       else {
         this.setState({ selectedImage: Object.values(e.photo)[0] })
@@ -137,7 +137,6 @@ class AssetDashboard extends React.Component {
     this.generateAssetInfo = (obj) => {
       let images = Object.values(obj.photo)
       let text = Object.values(obj.text)
-      let imageNames = Object.keys(obj.photo)
       let textNames = Object.keys(obj.text)
 
 
@@ -301,14 +300,14 @@ class AssetDashboard extends React.Component {
                     <button className="assetImageButtonSelected" onClick={() => { openPhotoNT(this.state.selectedImage) }}>
                       <img title="View Image" src={this.state.selectedImage} className="assetImageSelected" />
                     </button>
-                    <p className="card-name-selected">Name : {obj.name}</p>
-                    <p className="card-ac-selected">Asset Class : {obj.assetClass}</p>
-                    <p className="card-status-selected">Status : {obj.status}</p>
+                    <p className="card-name-selected">Name: {obj.name}</p>
+                    <p className="card-ac-selected">Asset Class: {obj.assetClassName}</p>
+                    <p className="card-status-selected">Status: {obj.status}</p>
                     <div className="imageSelector">
                       {generateThumbs()}
                     </div>
                     <div className="cardSelectedIdxForm">
-                      <h4 className="card-idx-selected">IDX : {obj.idxHash}</h4>
+                      <h4 className="card-idx-selected">IDX: {obj.idxHash}</h4>
                     </div>
                     <div className="cardDescription-selected">
                       {generateTextList()}
@@ -400,11 +399,12 @@ class AssetDashboard extends React.Component {
                           countPair: obj.countPairs[i],
                           idxHash: obj.ids[i],
                           descriptionObj: obj.descriptions[i],
-                          displayImage: obj.displayImages[i],
+                          DisplayImage: obj.displayImages[i],
                           name: obj.names[i],
                           assetClass: obj.assetClasses[i],
+                          assetClassName: obj.assetClassNames[i],
                           status: obj.statuses[i],
-                          description: obj.descriptions[i].text.description,
+                          Description: obj.descriptions[i].text.Description,
                           text: obj.descriptions[i].text,
                           photo: obj.descriptions[i].photo
                         })
@@ -414,12 +414,12 @@ class AssetDashboard extends React.Component {
                     </button>
                   </div>
                   <div>
-                    <p className="card-name">Name : {obj.names[i]}</p>
-                    <p className="card-ac">Asset Class : {obj.assetClasses[i]}</p>
-                    <p className="card-status">Status : {obj.statuses[i]}</p>
-                    <h4 className="card-idx">IDX : {obj.ids[i]}</h4>
+                    <p className="card-name">Name: {obj.names[i]}</p>
+                    <p className="card-ac">Asset Class: {obj.assetClassNames[i]}</p>
+                    <p className="card-status">Status: {obj.statuses[i]}</p>
+                    <h4 className="card-idx">IDX: {obj.ids[i]}</h4>
                     <br></br>
-                    <div className="cardDescription"><h4 className="card-description">Description :{obj.descriptions[i].text.description}</h4></div>
+                    <div className="cardDescription"><h4 className="card-description">Description: {obj.descriptions[i].text.Description}</h4></div>
                   </div>
                   <div className="cardButton">
                     <div className="cardButton-content">
@@ -429,11 +429,12 @@ class AssetDashboard extends React.Component {
                             countPair: obj.countPairs[i],
                             idxHash: obj.ids[i],
                             descriptionObj: obj.descriptions[i],
-                            displayImage: obj.displayImages[i],
+                            DisplayImage: obj.displayImages[i],
                             name: obj.names[i],
                             assetClass: obj.assetClasses[i],
+                            assetClassName: obj.assetClassNames[i],
                             status: obj.statuses[i],
-                            description: obj.descriptions[i].text.description,
+                            description: obj.descriptions[i].text.Description,
                             text: obj.descriptions[i].text,
                             photo: obj.descriptions[i].photo
                           })
