@@ -41,7 +41,7 @@ class ModifyRecordStatusNC extends Component {
         return alert("Asset already in selected Status! Ensure data fields are correct before submission."),
         document.getElementById("MainForm").reset(),
         this.setState({
-          idxHash: undefined, txStatus: false, txHash: "", wasSentPacket: false, transaction: false 
+          txStatus: false, txHash: "", transaction: false 
         })
       }
 
@@ -53,7 +53,7 @@ class ModifyRecordStatusNC extends Component {
         Number(this.state.newStatus) < 100 &&
         Number(this.state.newStatus) > 49) {
 
-        window.contracts.NP_NC.methods
+        await window.contracts.NP_NC.methods
           ._modStatus(idxHash, this.state.newStatus)
           .send({ from: window.addr })
           .on("error", function (_error) {
@@ -69,12 +69,15 @@ class ModifyRecordStatusNC extends Component {
             self.setState({ txStatus: receipt.status });
             console.log(receipt.status);
             window.resetInfo = true;
+            if (self.state.wasSentPacket) {
+              return window.location.href = '/#/asset-dashboard'
+            }
             //Stuff to do when tx confirms
           });
       }
 
       else if (this.state.newStatus === "53" || this.state.newStatus === "54") {
-        window.contracts.NP_NC.methods
+        await window.contracts.NP_NC.methods
           ._setLostOrStolen(idxHash, this.state.newStatus)
           .send({ from: window.addr })
           .on("error", function (_error) {
@@ -86,10 +89,13 @@ class ModifyRecordStatusNC extends Component {
           })
           .on("receipt", (receipt) => {
             self.setState({ transaction: false })
-            this.setState({ txHash: receipt.transactionHash });
-            this.setState({ txStatus: receipt.status });
+            self.setState({ txHash: receipt.transactionHash });
+            self.setState({ txStatus: receipt.status });
             console.log(receipt.status);
             window.resetInfo = true;
+            if (self.state.wasSentPacket) {
+              return window.location.href = '/#/asset-dashboard'
+            }
             //Stuff to do when tx confirms
           });
       }
@@ -99,8 +105,7 @@ class ModifyRecordStatusNC extends Component {
       console.log(this.state.txHash);
       return document.getElementById("MainForm").reset(),
       this.setState({
-        idxHash: undefined, txStatus: false, txHash: "", wasSentPacket: false 
-      });
+        idxHash: undefined, txStatus: false, txHash: ""});
     };
 
     this.updateAssets = setInterval(() => {

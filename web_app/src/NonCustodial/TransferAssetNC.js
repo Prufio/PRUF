@@ -51,13 +51,25 @@ class ModifyDescriptionNC extends Component {
       this.setState({ assetClass: window.sentPacket.assetClass })
       this.setState({ status: window.sentPacket.status })
       if(Number(window.sentPacket.status) === 3 || Number(window.sentPacket.status) === 4 || Number(window.sentPacket.status) === 53 || Number(window.sentPacket.status) === 54){
-        alert("Cannot transfer asset in lost or stolen status!");
+        alert("Cannot transfer asset in lost or stolen status! Please change to transferrable status");
         window.sentpacket = undefined;
         return window.location.href = "/#/asset-dashboard"
       }
 
       if(Number(window.sentPacket.status) === 50 || Number(window.sentPacket.status) === 56){
         alert("Cannot transfer asset in escrow! Please wait until asset has met escrow conditions");
+        window.sentpacket = undefined;
+        return window.location.href = "/#/asset-dashboard"
+      }
+
+      if(Number(window.sentPacket.status) === 58){
+        alert("Cannot transfer asset in imported status! please change to transferrable status");
+        window.sentpacket = undefined;
+        return window.location.href = "/#/asset-dashboard"
+      }
+
+      if(Number(window.sentPacket.status) === 70){
+        alert("Cannot transfer asset in exported status! please import asset and change to transferrable status");
         window.sentpacket = undefined;
         return window.location.href = "/#/asset-dashboard"
       }
@@ -148,26 +160,19 @@ class ModifyDescriptionNC extends Component {
           self.setState({ txHash: Object.values(_error)[0].transactionHash });
           self.setState({ txStatus: false });
           console.log(Object.values(_error)[0].transactionHash);
-          if (this.state.wasSentPacket) {
-            return window.location.href = '/#/asset-dashboard'
-          }
         })
         .on("receipt", (receipt) => {
           self.setState({ transaction: false })
-          this.setState({ txHash: receipt.transactionHash });
-          this.setState({ txStatus: receipt.status });
+          self.setState({ txHash: receipt.transactionHash });
+          self.setState({ txStatus: receipt.status });
           console.log(receipt.status);
           window.resetInfo = true;
           window.recount = true;
-          // if (this.state.wasSentPacket) {
-          //   return window.location.href = '/#/asset-dashboard'
-          // }
-          //Stuff to do when tx confirms
+          if (self.state.wasSentPacket) {
+            return window.location.href = '/#/asset-dashboard'
+          }
         });
       console.log(this.state.txHash);
-      this.setState({
-        wasSentPacket: false
-      });
     };
 
     if (this.state.wasSentPacket) {

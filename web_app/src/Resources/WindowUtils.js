@@ -134,7 +134,6 @@ function buildWindowUtils() {
       let component = [];
 
       for (let i = 0; i < obj.ids.length; i++) {
-        //console.log(i, "Adding: ", window.assets.descriptions[i], "and ", window.assets.ids[i])
         component.push(
           <div>
             <style type="text/css"> {`
@@ -739,14 +738,38 @@ function buildWindowUtils() {
 
   }
 
+  const _getACNames = async (assetClasses) => {
+
+    if (window.contracts !== undefined) {
+      let tempArr = [];
+
+      for (let i = 0; i < assetClasses.length; i++) {
+        await window.contracts.AC_MGR.methods
+          .getAC_name(assetClasses[i])
+          .call((_error, _result) => {
+            if (_error) { console.log("Error: ", _error) }
+            else {
+              console.log("resolved AC name ", _result, " from AC index ", assetClasses[i]);
+              tempArr.push(_result)
+            }
+          });
+      }
+
+      return window.assets.assetClassNames = tempArr;
+    }
+
+
+  }
+
   const _resolveACFromID = async (AC) => {
+    let temp;
     if (window.contracts !== undefined) {
       await window.contracts.AC_MGR.methods
         .getAC_name(AC)
         .call((_error, _result) => {
           if (_error) { console.log("Error: ", _error) }
           else {
-            window.assetClassName = _result
+            temp = _result
             console.log("resolved AC name ", window.assetClassName, " from AC index ", AC);
 
           }
@@ -759,7 +782,8 @@ function buildWindowUtils() {
     }
 
     await console.log("User authLevel: ", window.authLevel);
-    return (window.assetClassName)
+    window.assetClassName = temp; //DEV REMOVE ALL window. REFS
+    return (temp)
 
   }
 
@@ -1085,6 +1109,7 @@ function buildWindowUtils() {
       let statuses = [];
       let countPairs = [];
       let assetClasses = [];
+      let ACNames = [];
 
       for (let i = 0; i < window.balances.assetBalance; i++) {
         await window.contracts.A_TKN.methods.tokenOfOwnerByIndex(window.addr, i)
@@ -1133,14 +1158,15 @@ function buildWindowUtils() {
               else if (_result[0] === "60") { statuses.push("Recyclable") }
               else if (_result[0] === "70") { statuses.push("Exported") }
               else if (_result[0] === "0") { statuses.push("Status Not Set") }
-              assetClasses.push(Object.values(_result)[2])
-              countPairs.push([Object.values(_result)[3], Object.values(_result)[4]])
+              assetClasses.push(Object.values(_result)[2]);
+              countPairs.push([Object.values(_result)[3], Object.values(_result)[4]]);
 
             }
           })
         //console.log(x)
       }
 
+      await window.utils.getACNames(assetClasses)
 
       console.log(ipfsHashArray)
 
@@ -1149,6 +1175,7 @@ function buildWindowUtils() {
       window.ipfsHashArray = ipfsHashArray;
 
       window.assets.countPairs = countPairs;
+
       window.assets.assetClasses = assetClasses;
       window.assets.statuses = statuses;
       window.assets.notes = noteArray;
@@ -1250,6 +1277,7 @@ function buildWindowUtils() {
     getAssetTokenInfo: _getAssetTokenInfo,
     checkHoldsToken: _checkHoldsToken,
     getAssetTokenName: _getAssetTokenName,
+    getACNames: _getACNames,
     getACFromIdx: _getACFromIdx,
     generateAssets: _generateAssets,
     generateRemoveElements: _generateRemoveElements,
