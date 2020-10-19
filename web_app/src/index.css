@@ -20,8 +20,6 @@ body {
   background-size: cover;
   box-sizing: border-box; 
   background-position: center center fixed;  
-  /* background-color: rgb(12, 59, 79);
-  margin: 0; */
 }
 
 h1,
@@ -64,10 +62,6 @@ h4 {
   text-overflow: ellipsis;
   word-break: initial;
   overflow-wrap: break-word;
-  /* display: -webkit-box;
-  -webkit-line-clamp: 3;
-  -webkit-box-orient: vertical; */
-  /* overflow: hidden; */
 }
 
 .formtext {
@@ -93,10 +87,8 @@ h4 {
 
 .header {
   max-width: none;
-  /* height: 6rem; */
   background-color: #002a40;
   padding: 0rem;
-  /* margin-top: 0.2rem; */
   align-items: center;
   justify-content: space-between;
   flex-direction: row;
@@ -139,7 +131,6 @@ h4 {
 #header-dropdown {
   color: black;
   background-color: #00a8ff;
-  /* padding: 0px 0px; */
   margin-top: -0.6rem;
   margin-bottom: -0.5rem;
   z-index: 5;
@@ -187,7 +178,6 @@ div {
 }
 
 .downSizeLogo{
-  /* object-fit: cover; */
   width: 23.5rem;
   height: 4.7rem;
 }
@@ -203,7 +193,6 @@ div {
   background-color: #002a40;
   justify-content: center;
   display: flex;
-  /* opacity: 0.95; */
   z-index: 3;
 }
 
@@ -224,12 +213,9 @@ div {
   display: flex;
   width: 45px;
   height: 45px;
-  /* padding-left: 2rem; */
   object-fit: cover;
   z-index: 5;
   background-color:#002a40;
-  /* border-radius: 50%; */
-  /* opacity: 0.95; */
 }
 
 .VRText {
@@ -243,8 +229,6 @@ div {
   color: white;
   font-size: 1.4rem;
   margin-bottom: 100px;
-  /* justify-content: center;
-  align-items: center; */
 }
 
 .banner {
@@ -274,27 +258,11 @@ div {
   display: flex;
   flex: 100%;
   max-width: none;
-  /* height: 50rem; */
   flex-direction: row;
   justify-content: center;
   overflow: visible;
   z-index: 2;
 }
-
-/* .userInfoBox {
-  height: 12rem;
-  width: 20rem;
-  background-color: #002a40;
-  color: rgb(255, 255, 255);
-  font-size: 2rem;
-  font-weight: bold;
-  font-family: Tahoma, Geneva, sans-serif;
-  justify-content: bottom;
-  opacity: 0.96;
-  padding-left: 1rem;
-  margin-right: 87%;
-  position: absolute;
-} */
 
 .tokenBalances {
   height: fit-content;
@@ -343,19 +311,6 @@ div {
   
 }
 
-/* .assetDashboard {
-  height: flex;
-  width: 70rem;
-  background-color: #005480;
-  border-radius: 0rem 0rem 0.5rem 0.5rem;
-  padding: 2rem;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  opacity: 0.96;
-} */
-
 .card {
   max-width: 100%;
 }
@@ -376,6 +331,7 @@ div {
   margin-top: -2.8rem;
 }
 
+
 .card-status {
   font-size: 1.2rem;
   font-weight: bold;
@@ -393,6 +349,8 @@ div {
   font-weight: bold;
   margin-left: 0.5rem;
 }
+
+
 
 .cardDescription h4 {
   font-size: 1rem;
@@ -418,8 +376,6 @@ div {
 .image-asset {
   height: 120px;
   width: 120px;
-  /* -webkit-backgrount-size: cover;
-  background-size: cover; */
 }
 
 .assetDashboardHeader {
@@ -495,7 +451,6 @@ div {
   height: 115px;
   border-width: 3px;
   border-color: #002a40;
-  /* background-color: white; */
 }
 
 .assetImageMobile {
@@ -508,29 +463,22 @@ div {
   height: 115px;
   border-width: 3px;
   border-color: #002a40;
-  /* background-color: white; */
 }
 
 .assetImageSm {
   width: 40px;
   height: 40px;
-  /* background-color: white; */
 }
 
 .assetImage:hover {
   width: 115px;
   height: 115px;
-  /* background-color: transparent; */
-
 }
 
 .assetImageSelected {
   width: 230px;
   height: 230px;
   border: #002a40;
-  /* border-style: solid;
-  border-radius: 0.3rem 0.3rem 0.3rem 0.3rem; */
-  /* background-color: black; */
 }
 
 .imageSelector {
@@ -551,8 +499,6 @@ div {
 .imageSelectorImage {
   width: 52px;
   height: 52px;
-  /* border: #002a40;
-  border-style: solid; */
   margin-left: 0.3rem;
 }
 
@@ -561,8 +507,6 @@ div {
   width: flex;
   max-width: 340px;
   height: 85px;
-  /* margin-left: 270px; */
-  /* margin-top: 4rem; */
   overflow-x: auto;
   border: #002a40;
   border-style: solid;
@@ -573,8 +517,6 @@ div {
 .imageSelectorImageMobile {
   width: 52px;
   height: 52px;
-  /* border: #002a40;
-  border-style: solid; */
   margin-left: 0.3rem;
 }
 
@@ -583,7 +525,6 @@ div {
   max-height: 50rem;
   width: 68rem;
   background-color: #002a40;
-  /* padding: 1rem; */
   margin-top: -1rem;
   display: flex;
   opacity: 0.96;
@@ -653,11 +594,9 @@ div {
   display: flex;
   width: 50rem;
   height: 16rem;
-  /* max-height: 16rem; */
   background-color: #002a40;
   word-wrap: normal;
   margin-left: 9rem;
-  /* margin-top: 4rem; */
   overflow-y: auto;
   flex-direction: column;
   border-radius: 0rem 0rem 0.3rem 0.3rem;
@@ -671,12 +610,9 @@ div {
   max-height: 16rem;
   background-color: #002a40;
   word-wrap: normal;
-  /* margin-left: 9rem; */
-  /* margin-top: 4rem; */
   overflow-y: auto;
   flex-direction: column;
   border-radius: 0rem 0rem 0.3rem 0.3rem;
-  /* padding-left: 0.5rem; */
 }
 
 .cardDescription-search {
@@ -687,7 +623,6 @@ div {
   background-color: #002a40;
   word-wrap: normal;
   margin-left: 9rem;
-  /* margin-top: 4rem; */
   overflow-y: auto;
   flex-direction: column;
   border-radius: 0rem 0rem 0.3rem 0.3rem;
@@ -718,7 +653,6 @@ div {
   justify-content: center;
   flex-direction: row;
   margin: auto;
-  /* z-index: 5; */
 }
 
 .headerSelected {
@@ -726,34 +660,14 @@ div {
   margin-top: 11.51rem;
   align-items: center;
   flex-direction: row;
-  /* z-index: 5; */
 }
-
-/* .headerSelected nav{
-  background-color: #002a40;
-  margin-top: 11.51rem;
-  align-items: center;
-  flex-direction: row;
-} */
 
 .headerSelected li a {
   font-family: Helvetica;
   color: rgb(255, 255, 255);
   font-weight: bold;
   font-size: 1.6rem;
-  /* padding: 0.8rem; */
-  /* padding-left: 1.25rem;
-  padding-right: 1.25rem;
-  padding-top: 1rem;
-  padding-bottom: 1rem; */
-  /* margin-top: 0.25rem; */
-  /* display: inline-flex; */
-  /* z-index: 5; */
 }
-
-/* .etherscanLinkButton {
-  margin-top: -30rem;
-} */
 
 .FormHeader {
   height: 4rem;
@@ -781,11 +695,6 @@ div {
   opacity: 0.96;
   margin-top: -0.5rem;
 }
-
-/* .singleFormRow {
- margin
- width: 30;
-} */
 
 .FormHeaderMobile {
   height: 4rem;
@@ -1017,7 +926,6 @@ div {
   margin-left: 41.5rem;
 }
 
-
 .LittleTextTransfer {
   display: flex;
   color: rgb(255, 255, 255);
@@ -1025,7 +933,6 @@ div {
   font-family: Tahoma, Geneva, sans-serif;
   margin-left: -1.5rem;
 }
-
 
 .LittleTextNewRecord {
   display: flex;
@@ -1074,20 +981,14 @@ div {
 }
 
 .prufARCroppedFormMobile {
-  /* display: flex; */
   margin-top: 60px;
   width: 280px;
   height: 130px;
-  /* object-fit: cover; */
-
 }
 
 .prufARCroppedForm {
-  /* display: flex; */
   width: 320px;
   height: 149px;
-  /* object-fit: cover; */
-
 }
 
 .formSelect {
@@ -1140,13 +1041,10 @@ div {
 }
 
 .assetImageButton {
-  /* border: 0px transparent;  */
   background-color: transparent; 
   object-fit: cover;
   border: #002a40;
   border-style: solid;
-  /* margin-top: 0.7rem;
-  margin-left: 0.7rem; */
 }
 
 
@@ -1158,7 +1056,6 @@ div {
 }
 
 .assetImageButtonSelected {
-  /* border: 0px transparent;  */
   background-color: transparent; 
   object-fit: cover;
   border: #002a40;
@@ -1375,15 +1272,15 @@ div {
 
 .QRdisplay {
   display: flex;
-  width: 17rem;
-  height: 17rem;
+  width: 17.5rem;
+  height: 17.5rem;
   background-color: #ffffff;
   position: absolute;
   z-index: 999;
   opacity: 0.9;
   flex-direction: column;
   border-radius: 1rem 0rem 0rem 1rem;
-  margin-left: 78%;
+  margin-left: 77.2%;
   margin-top: 6%;
   justify-content: center;
   /* object-fit: fill; */
@@ -1393,8 +1290,8 @@ div {
   display: flex;
   height: 3rem;
   width: 10rem;
-  margin-top: 20.5rem;
-  margin-left: 89.8%;
+  margin-top: 21rem;
+  margin-left: 89.9%;
   background-color: #ffffff;
   /* background-color: #005480; */
   border-radius: 0rem 0rem 1rem 1rem;
@@ -1951,3 +1848,58 @@ div {
     text-shadow:
       .25em 0 0 white,
       .5em 0 0 white;}}
+
+
+      /* ---------------------------------------------test------------------------------------------------ */
+
+.PrintForm {
+  display: flex;
+  width: 1500px;
+  height: 500px;
+  background-color: #002a40;
+  border-radius: 1rem;
+}
+
+.PrintFormContent {
+  display: flex;
+  width: 960px;
+  height: 420px;
+  background-color: #028ed4;
+  border-radius: 1rem;
+  margin-top: 4rem;
+  margin-left: 4rem;
+  opacity: 0.9;
+  justify-content: flex-start;
+  flex-direction: column;
+  padding: 2rem;
+}
+
+
+.QRPrint{
+  display: flex;
+  margin-left: 4rem;
+  margin-top: 4rem;
+}
+
+.card-idx-print {
+  font-size: 2.3rem;
+  font-weight: bold;
+  margin-top: 14rem;
+  color: white;
+  z-index: 999;
+}
+      
+.card-name-print {
+  font-weight: bold;
+  font-size: 2.5rem;
+  color: white;
+  z-index: 999;
+}
+
+.card-ac-print {
+  font-size: 2.5rem;
+  font-weight: bold;
+  margin-top: 12rem;
+  color: white;
+  z-index: 999;
+}

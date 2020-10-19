@@ -204,7 +204,6 @@ class ModifyDescriptionNC extends Component {
                 </Form.Row>
                 {this.state.transaction === false && (
                 <Form.Row>
-                  <Form.Group>
                     <div className="submitButton">
                       <div className="submitButton-content">
                         <CheckCircle
@@ -212,7 +211,6 @@ class ModifyDescriptionNC extends Component {
                         />
                       </div>
                     </div>
-                  </Form.Group>
                 </Form.Row>
                 )}
               </div>
@@ -328,7 +326,6 @@ class ModifyDescriptionNC extends Component {
               </Form.Row>
               {this.state.transaction === false && (
               <Form.Row>
-                <Form.Group>
                   <div className="submitButton">
                     <div className="submitButton-content">
                       <CheckCircle
@@ -336,7 +333,6 @@ class ModifyDescriptionNC extends Component {
                       />
                     </div>
                   </div>
-                </Form.Group>
               </Form.Row>
               )}
             </div>
@@ -357,16 +353,9 @@ class ModifyDescriptionNC extends Component {
             </Form.Row>
           </div>
         )}
-
         {this.state.transaction === true && (
-
           <div className="Results">
-            {/* {this.state.pendingTx === undefined && ( */}
             <p className="loading">Transaction In Progress</p>
-            {/* )} */}
-            {/* {this.state.pendingTx !== undefined && (
-    <p class="loading">Transaction In Progress</p>
-  )} */}
           </div>)}
         {this.state.transaction === false && (
           <div>

@@ -116,7 +116,7 @@ class Main extends Component {
                         Website last updated:
                   </h3>
                       <h3 className="siteInfoBoxContent">
-                        October 3, 2020
+                        October 19, 2020
                   </h3>
                     </div>
                     <div className="hamburgerMenuLink">

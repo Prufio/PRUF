@@ -285,7 +285,6 @@ class ImportAssetNC extends Component {
             {window.addr > 0 && this.state.transaction === false && (
               <div>
                 <Form.Row>
-                  <Form.Group>
                     <div className="submitButton">
                       <div className="submitButton-content">
                         <CheckCircle
@@ -296,7 +295,6 @@ class ImportAssetNC extends Component {
                         Cost to import into AC {this.state.selectedAssetClass}: {Number(window.costs.newRecordCost) / 1000000000000000000} ETH
                       </Form.Label>
                     </div>
-                  </Form.Group>
                 </Form.Row>
               </div>
             )}
@@ -308,7 +306,6 @@ class ImportAssetNC extends Component {
                   <Form.Group>
                     <div className="assetSelectedContentHead">Asset IDX: <span className="assetSelectedContent">{this.state.idxHash}</span> </div>
                     <div className="assetSelectedContentHead">Asset Name: <span className="assetSelectedContent">{this.state.name}</span> </div>
-                    {/* <div className="assetSelectedContentHead"> Asset Description: <span className="assetSelectedContent">{this.state.description}</span> </div> */}
                     <div className="assetSelectedContentHead">Asset Class: <span className="assetSelectedContent">{this.state.packetAssetClass}</span> </div>
                     <div className="assetSelectedContentHead">Asset Status: <span className="assetSelectedContent">{this.state.status}</span> </div>
                     {this.state.assetClassSelected === true && (
@@ -323,12 +320,7 @@ class ImportAssetNC extends Component {
           {this.state.transaction === true && (
 
             <div className="Results">
-              {/* {this.state.pendingTx === undefined && ( */}
               <p className="loading">Transaction In Progress</p>
-              {/* )} */}
-              {/* {this.state.pendingTx !== undefined && (
-              <p class="loading">Transaction In Progress</p>
-            )} */}
             </div>)}
           {this.state.txHash > 0 && ( //conditional rendering
             <div className="Results">
@@ -427,7 +419,6 @@ class ImportAssetNC extends Component {
                 {this.state.transaction === false && (
                   <div>
                     <Form.Row>
-                      <Form.Group>
                         <div className="submitButton">
                           <div className="submitButton-content">
                             <CheckCircle
@@ -438,7 +429,6 @@ class ImportAssetNC extends Component {
                             Cost to import into AC {this.state.selectedAssetClass}: {Number(window.costs.newRecordCost) / 1000000000000000000} ETH
                           </Form.Label>
                         </div>
-                      </Form.Group>
                     </Form.Row>
                   </div>
                 )}
@@ -453,7 +443,6 @@ class ImportAssetNC extends Component {
                 <Form.Group>
                   <div className="assetSelectedContentHead">Asset IDX: <span className="assetSelectedContent">{this.state.idxHash}</span> </div>
                   <div className="assetSelectedContentHead">Asset Name: <span className="assetSelectedContent">{this.state.name}</span> </div>
-                  {/* <div className="assetSelectedContentHead"> Asset Description: <span className="assetSelectedContent">{this.state.description}</span> </div> */}
                   <div className="assetSelectedContentHead">Asset Class: <span className="assetSelectedContent">{this.state.currentAssetClass}</span> </div>
                   <div className="assetSelectedContentHead">Asset Status: <span className="assetSelectedContent">{this.state.status}</span> </div>
                   {this.state.assetClassSelected === true && (

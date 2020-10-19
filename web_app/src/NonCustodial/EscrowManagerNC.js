@@ -394,12 +394,7 @@ class EscrowManagerNC extends Component {
           {this.state.transaction === true && (
 
             <div className="Results">
-              {/* {this.state.pendingTx === undefined && ( */}
               <p className="loading">Transaction In Progress</p>
-              {/* )} */}
-              {/* {this.state.pendingTx !== undefined && (
-        <p class="loading">Transaction In Progress</p>
-      )} */}
             </div>)}
           {this.state.transaction === false && (
             <div>
@@ -593,7 +588,6 @@ class EscrowManagerNC extends Component {
                 <Form.Group>
                   <div className="assetSelectedContentHead">Asset IDX: <span className="assetSelectedContent">{this.state.idxHash}</span> </div>
                   <div className="assetSelectedContentHead">Asset Name: <span className="assetSelectedContent">{this.state.name}</span> </div>
-                  {/* <div className="assetSelectedContentHead"> Asset Description: <span className="assetSelectedContent">{this.state.description}</span> </div> */}
                   <div className="assetSelectedContentHead">Asset Class: <span className="assetSelectedContent">{this.state.assetClass}</span> </div>
                   <div className="assetSelectedContentHead">Asset Status: <span className="assetSelectedContent">{this.state.status}</span> </div>
                 </Form.Group>
@@ -604,12 +598,7 @@ class EscrowManagerNC extends Component {
         {this.state.transaction === true && (
 
           <div className="Results">
-            {/* {this.state.pendingTx === undefined && ( */}
             <p className="loading">Transaction In Progress</p>
-            {/* )} */}
-            {/* {this.state.pendingTx !== undefined && (
-    <p class="loading">Transaction In Progress</p>
-  )} */}
           </div>)}
         {this.state.transaction === false && (
           <div>

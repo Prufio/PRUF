@@ -527,7 +527,6 @@ if (this.state.result !== "") {
                   </Form.Row>
                 </>
               )}
-              <br></br>
             </div>
           )}
         </Form>
@@ -537,9 +536,7 @@ if (this.state.result !== "") {
               {this.state.idxHash !== undefined && this.state.txHash === "" && (
                 <Form.Group>
                   <div className="assetSelectedContentHead">Asset IDX: <span className="assetSelectedContent">{this.state.idxHash}</span> </div>
-                  {/* <div className="assetSelectedContentHead">Asset Name: <span className="assetSelectedContent">{this.state.name}</span> </div> */}
                   <div className="assetSelectedContentHead">Being Recycled Into Asset Class: <span className="assetSelectedContent">{this.state.selectedAssetClass}</span> </div>
-                  {/* <div className="assetSelectedContentHead">Asset Status: <span className="assetSelectedContent">{this.state.status}</span> </div> */}
                 </Form.Group>
               )}
             </Form.Row>

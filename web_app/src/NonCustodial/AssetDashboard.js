@@ -8,15 +8,45 @@ import { NavLink } from "react-router-dom";
 import Dropdown from 'react-bootstrap/Dropdown';
 import Nav from 'react-bootstrap/Nav'
 import DropdownButton from 'react-bootstrap/DropdownButton';
-import { Printer, RefreshCw, Grid, X, Save, ChevronRight, CornerUpLeft, Home} from "react-feather";
+import { Printer, RefreshCw, Grid, X, Save, ChevronRight, CornerUpLeft, Home } from "react-feather";
 import { QRCode } from 'react-qrcode-logo';
+import ReactToPrint, { PrintContextConsumer } from 'react-to-print';
 
-class AssetDashboard extends Component {
+// class ComponentToPrint extends React.Component {
+//   render() {
+//     const ComponentToPrint = (obj) => {
+//       let component = [];
+//       component.push(
+//         <div className="PrintForm">
+//           <div className="QRPrint">
+//             <QRCode
+//               value={obj.idxHash}
+//               qrStyle="dots"
+//               size="400"
+//               fgColor="#002a40"
+//               logoWidth="80"
+//               logoHeight="80"
+//               logoImage="https://pruf.io/assets/images/pruf-u-logo-192x255.png"
+//             />
+//           </div>
+//           <div className="PrintFormContent">
+//             <p className="card-name-print">Name : {obj.name}</p>
+//             <p className="card-ac-print">Asset Class : {obj.assetClass}</p>
+//             <h4 className="card-idx-print">IDX : {obj.idxHash}</h4>
+//           </div>
+//         </div >
+//       );
+
+//       return component;
+//     }
+//   }
+// }
+
+class AssetDashboard extends React.Component {
   constructor(props) {
     super(props);
 
-
-
+    
     this.updateAssets = setInterval(() => {
       if (this.state.assets !== window.assets && this.state.runWatchDog === true) {
         this.setState({ assets: window.assets })
@@ -38,13 +68,13 @@ class AssetDashboard extends Component {
       });
       if (e === "back") { return this.setState({ assetObj: {}, moreInfo: false, printQR: undefined }) }
 
-      if (e.displayImage !== undefined && e.displayImage !== ""){
-        this.setState({selectedImage: e.displayImage})
+      if (e.displayImage !== undefined && e.displayImage !== "") {
+        this.setState({ selectedImage: e.displayImage })
       }
       else {
-        this.setState({selectedImage: Object.values(e.photo)[0]})
+        this.setState({ selectedImage: Object.values(e.photo)[0] })
       }
-      this.setState({ assetObj: e, moreInfo: true})
+      this.setState({ assetObj: e, moreInfo: true })
       this.setAC(e.assetClass)
     }
 
@@ -96,6 +126,8 @@ class AssetDashboard extends Component {
       }
     }
 
+
+
     this.sendPacket = (obj, menu, link) => {
       window.sentPacket = obj
       window.menuChange = menu
@@ -107,8 +139,8 @@ class AssetDashboard extends Component {
       let text = Object.values(obj.text)
       let imageNames = Object.keys(obj.photo)
       let textNames = Object.keys(obj.text)
-      
-      
+
+
 
       const showImage = (e) => {
         console.log(this.state.selectedImage)
@@ -135,7 +167,7 @@ class AssetDashboard extends Component {
 
         for (let i = 0; i < images.length; i++) {
           component.push(
-            <button key={"thumb"+String(i)} value={images[i]} className="assetImageSelectorButton" onClick={() => { showImage(images[i]) }}>
+            <button key={"thumb" + String(i)} value={images[i]} className="assetImageSelectorButton" onClick={() => { showImage(images[i]) }}>
               <img title="View Image" src={images[i]} className="imageSelectorImage" />
             </button>
           )
@@ -144,12 +176,38 @@ class AssetDashboard extends Component {
         return component
       }
 
+      // const ComponentToPrint = (obj) => {
+      //   let component = [];
+      //   component.push(
+      //     <div className="PrintForm">
+      //       <div className="QRPrint">
+      //         <QRCode
+      //           value={obj.idxHash}
+      //           qrStyle="dots"
+      //           size="400"
+      //           fgColor="#002a40"
+      //           logoWidth="80"
+      //           logoHeight="80"
+      //           logoImage="https://pruf.io/assets/images/pruf-u-logo-192x255.png"
+      //         />
+      //       </div>
+      //       <div className="PrintFormContent">
+      //         <p className="card-name-print">Name : {obj.name}</p>
+      //         <p className="card-ac-print">Asset Class : {obj.assetClass}</p>
+      //         <h4 className="card-idx-print">IDX : {obj.idxHash}</h4>
+      //       </div>
+      //     </div >
+      //   );
+  
+      //   return component;
+      // }
+
       const generateTextList = () => {
         let component = [];
         for (let i = 0; i < text.length; i++) {
           component.push(
             <>
-              <h4 key={"TextElement"+String(i)} className="card-description-selected">{textNames[i]}: {text[i]}</h4>
+              <h4 key={"TextElement" + String(i)} className="card-description-selected">{textNames[i]}: {text[i]}</h4>
               <br />
             </>
           )
@@ -211,14 +269,14 @@ class AssetDashboard extends Component {
                       <div>
                         <div className="QRdisplay">
                           <div className="QR">
-                            <QRCode 
-                            value={obj.idxHash} 
-                            qrStyle="dots" 
-                            size="140" 
-                            fgColor="#002a40" 
-                            logoWidth="50" 
-                            logoHeight="50" 
-                            logoImage="https://raw.githubusercontent.com/vdmprojects/Bulletproof/master/web_app/src/Resources/U%20CIRCLE%20QR.png?token=AKTATQECZ7M5MSSU5OKFEDK7QRVTW"
+                            <QRCode
+                              value={obj.idxHash}
+                              qrStyle="dots"
+                              size="150"
+                              fgColor="#002a40"
+                              logoWidth="35"
+                              logoHeight="46"
+                              logoImage="https://pruf.io/assets/images/pruf-u-logo-with-border-323x429.png"
                             />
                           </div>
                         </div>
@@ -226,6 +284,15 @@ class AssetDashboard extends Component {
                           <div className="mediaLinkQRdisplay">
                             <a className="mediaLinkQRdisplayContent" ><Save onClick={() => { _printQR() }} /></a>
                             <a className="mediaLinkQRdisplayContent" ><Printer onClick={() => { _printQR() }} /></a>
+                            {/* <div>
+                              <ReactToPrint content={() => ComponentToPrint(obj)}>
+                                <PrintContextConsumer>
+                                  {({ handlePrint }) => (
+                                    <button onClick={handlePrint}>Print this out!</button>
+                                  )}
+                                </PrintContextConsumer>
+                              </ReactToPrint>
+                            </div> */}
                             <a className="mediaLinkQRdisplayContent" ><X onClick={() => { _printQR() }} /></a>
                           </div>
                         </div>
@@ -273,10 +340,10 @@ class AssetDashboard extends Component {
                 <Button variant="selectedImage" onClick={() => { this.sendPacket(obj, "NC", "import-asset-NC") }}>Import</Button>
               </li>
               <li>
-              <DropdownButton title="Export" drop="up" variant="selectedImage">
-                <Dropdown.Item id="header-dropdown" as={Button} onClick={() => { this.sendPacket(obj, "NC", "export-asset-NC") }}>Export</Dropdown.Item>
-                <Dropdown.Item id="header-dropdown" as={Button} onClick={() => { this.sendPacket(obj, "NC", "discard-asset-NC") }}>Discard</Dropdown.Item>
-              </DropdownButton>
+                <DropdownButton title="Export" drop="up" variant="selectedImage">
+                  <Dropdown.Item id="header-dropdown" as={Button} onClick={() => { this.sendPacket(obj, "NC", "export-asset-NC") }}>Export</Dropdown.Item>
+                  <Dropdown.Item id="header-dropdown" as={Button} onClick={() => { this.sendPacket(obj, "NC", "discard-asset-NC") }}>Discard</Dropdown.Item>
+                </DropdownButton>
               </li>
               <li>
                 <Button variant="selectedImage" onClick={() => { this.sendPacket(obj, "NC", "manage-escrow-NC") }}>Escrow</Button>
@@ -342,7 +409,7 @@ class AssetDashboard extends Component {
                           photo: obj.descriptions[i].photo
                         })
                       }}
-                    > 
+                    >
                       <img title="View Asset" src={obj.displayImages[i]} className="assetImage" />
                     </button>
                   </div>

@@ -44,6 +44,8 @@ import AssetDashboard from "./NonCustodial/AssetDashboard"
 import RecycleAssetNC from "./NonCustodial/RecycleAssetNC";
 import DiscardAssetNC from "./NonCustodial/DiscardAssetNC"
 
+// import Print from "./Test/Print"
+
 function Router(routeRequest) {
     if (routeRequest === "authUser") {
         return (
@@ -134,6 +136,7 @@ function Router(routeRequest) {
                 <Route path="/mint-pip-asset" component={MintPipAsset} />
                 <Route path="/claim-pip-asset" component={ClaimPipAsset} />
                 <Route path="/asset-dashboard" component={AssetDashboard} />
+                {/* <Route path="/print" component={Print} /> */}
             </>
         )
     }

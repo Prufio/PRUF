@@ -22,6 +22,9 @@ class BasicComponent extends Component {
                 <li>
                     <NavLink to="/retrieve-record">Search</NavLink>
                 </li>
+                {/* <li>
+                    <NavLink to="/print">Print(Test)</NavLink>
+                </li> */}
                 </Nav>
         )
     }
