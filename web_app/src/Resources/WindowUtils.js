@@ -1,7 +1,8 @@
 import bs58 from "bs58";
-import React from "react";
 import Button from "react-bootstrap/Button";
 import { QRCode } from 'react-qrcode-logo';
+import React, { useRef } from 'react';
+import { useReactToPrint } from 'react-to-print';
 import "./../index.css";
 
 function buildWindowUtils() {
@@ -1240,30 +1241,28 @@ function buildWindowUtils() {
     return temp
   };
 
-  // const _generateCardPrint = (obj) => {
-  //   if (obj.names.length > 0) {
-  //       <div className="PrintForm">
-  //         <div className="QRPrint">
-  //           <QRCode
-  //             value={obj.idxHash}
-  //             qrStyle="dots"
-  //             size="400"
-  //             fgColor="#002a40"
-  //             logoWidth="80"
-  //             logoHeight="80"
-  //             logoImage="https://pruf.io/assets/images/pruf-u-logo-192x255.png"
-  //           />
-  //         </div>
-  //         <div className="PrintFormContent">
-  //           <p className="card-name-print">Name : {obj.name}</p>
-  //           <p className="card-ac-print">Asset Class : {obj.assetClass}</p>
-  //           <h4 className="card-idx-print">IDX : {obj.idxHash}</h4>
-  //         </div>
-  //       </div >
-  //     return
-  //   }
-  //   else { return <></> }
-  // }
+  const _generateCardPrint = () => {
+      return (
+        <div className="PrintForm">
+          <div className="QRPrint">
+            <QRCode
+              value={window.printObj.idxHash}
+              qrStyle="dots"
+              size="400"
+              fgColor="#002a40"
+              logoWidth="80"
+              logoHeight="80"
+              logoImage="https://pruf.io/assets/images/pruf-u-logo-192x255.png"
+            />
+          </div>
+          <div className="PrintFormContent">
+            <p className="card-name-print">Name : {window.printObj.name}</p>
+            <p className="card-ac-print">Asset Class : {window.printObj.assetClass}</p>
+            <h4 className="card-idx-print">IDX : {window.printObj.idxHash}</h4>
+          </div>
+        </div >
+      )
+  }
 
   window.utils = {
 
@@ -1311,7 +1310,7 @@ function buildWindowUtils() {
     getETHBalance: _getETHBalance,
     generateAssetDash: _generateAssetDash,
     addIPFSJSONObject: _addIPFSJSONObject,
-    // generateCardPrint: _generateCardPrint,
+    generateCardPrint: _generateCardPrint,
 
   }
 
