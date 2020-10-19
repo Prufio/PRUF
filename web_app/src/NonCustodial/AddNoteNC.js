@@ -290,7 +290,7 @@ class AddNoteNC extends Component {
                           />
                         </div>
                         {this.state.assetClass !== undefined && (
-                          <Form.Label className="LittleTextNewRecord"> Cost To Add Note in AC {this.state.assetClass}: {Number(window.costs.createNoteCost) / 1000000000000000000} ETH</Form.Label >
+                          <Form.Label className="LittleTextAddNote"> Cost To Add Note in AC {this.state.assetClass}: {Number(window.costs.createNoteCost) / 1000000000000000000} ETH</Form.Label >
                         )}
                       </div>
                     </Form.Group>
@@ -406,7 +406,7 @@ class AddNoteNC extends Component {
                         />
                       </div>
                       {this.state.assetClass !== undefined && (
-                        <Form.Label className="LittleTextNewRecord"> Cost To Add Note in AC {this.state.assetClass}: {Number(window.costs.createNoteCost) / 1000000000000000000} ETH</Form.Label >
+                        <Form.Label className="LittleTextAddNote"> Cost To Add Note in AC {this.state.assetClass}: {Number(window.costs.createNoteCost) / 1000000000000000000} ETH</Form.Label >
                       )}
                     </div>
                   </Form.Group>
