@@ -474,7 +474,7 @@ contract MAL_APP is CORE_MAL {
         bytes32 _IpfsHash
     )
         external
-        payable
+        
         // nonReentrant
         // whenNotPaused
         // isAuthorized(_idxHash)
