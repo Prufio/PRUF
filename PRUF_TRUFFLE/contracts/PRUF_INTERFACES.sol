@@ -698,13 +698,6 @@ interface AC_MGR_Interface {
     function updateACname(string calldata _name, uint32 _assetClass) external;
 
     /*
-     * @dev Increases priceShare in an assetClass
-     *
-     */
-    function increasePriceShare(uint32 _assetClass, uint256 _increaseAmount)
-        external;
-
-    /*
      * @dev Set function costs and payment address per asset class, in Wei
      */
     function ACTH_setCosts(
