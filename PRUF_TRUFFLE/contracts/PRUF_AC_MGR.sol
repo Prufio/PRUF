@@ -20,6 +20,7 @@ __/\\\\\\\\\\\\\ _____/\\\\\\\\\ _______/\\../\\ ___/\\\\\\\\\\\\\\\
 pragma solidity ^0.6.7;
 
 import "./PRUF_BASIC.sol";
+
 //import "./Imports/math/Safemath.sol";
 
 contract AC_MGR is BASIC {
@@ -30,6 +31,8 @@ contract AC_MGR is BASIC {
         address paymentAddress; // 2nd-party fee beneficiary address
     }
 
+    uint256 private ACtokenIndex = 1000000; //asset tokens created in sequence starting at at 1,000,000
+    uint256 private currentACtokenPrice = 10000;
 
     //mapping(uint32 => Costs) private cost; // Cost per function by asset class
     mapping(uint32 => mapping(uint16 => Costs)) private cost; // Cost per function by asset class => Cost Type
@@ -104,6 +107,62 @@ contract AC_MGR is BASIC {
         //^^^^^^^interactions^^^^^^^^^
     }
 
+    /**
+     * @dev Burns (amout) tokens and mints a new asset class token to the caller address
+     *
+     * Requirements:
+     * - the caller must have a balance of at least `amount`.
+     */
+    function purchaseACtoken(
+        string calldata _name,
+        uint32 _assetClassRoot,
+        uint8 _custodyType
+    ) public returns (uint256) {
+        require( //Impossible to test??
+            ACtokenIndex < 4294000000,
+            "PRuf:IS:Only 4294000000 AC tokens allowed"
+        );
+        //^^^^^^^checks^^^^^^^^^
+
+        if (ACtokenIndex < 4294000000) ACtokenIndex++; //increment ACtokenIndex up to last one
+
+        uint256 newACtokenPrice;
+        uint256 numberOfTokensSold = ACtokenIndex.sub(uint256(1000000));
+
+        if (numberOfTokensSold >= 4000) {
+            newACtokenPrice = 100000;
+        } else if (numberOfTokensSold >= 2000) {
+            newACtokenPrice = 75937;
+        } else if (numberOfTokensSold >= 1000) {
+            newACtokenPrice = 50625;
+        } else if (numberOfTokensSold >= 500) {
+            newACtokenPrice = 33750;
+        } else if (numberOfTokensSold >= 250) {
+            newACtokenPrice = 22500;
+        } else if (numberOfTokensSold >= 125) {
+            newACtokenPrice = 15000;
+        } else {
+            newACtokenPrice = 10000;
+        }
+        //^^^^^^^effects^^^^^^^^^
+
+        //mint an asset class token to msg.sender, at tokenID ACtokenIndex, with URI = root asset Class #
+        _createAssetClass(
+            msg.sender,
+            _name,
+            uint32(ACtokenIndex), //safe because ACtokenIndex <  4294000000 required
+            _assetClassRoot,
+            _custodyType
+        );
+
+        UTIL_TKN.trustedAgentburn(msg.sender, currentACtokenPrice);
+
+        currentACtokenPrice = newACtokenPrice;
+
+        return ACtokenIndex; //returns asset class # of minted token
+        //^^^^^^^effects/interactions^^^^^^^^^
+    }
+
     /*
      * @dev Mints asset class token and creates an assetClass. Mints to @address
      * Requires that:
@@ -117,7 +176,25 @@ contract AC_MGR is BASIC {
         uint32 _assetClass,
         uint32 _assetClassRoot,
         uint8 _custodyType
-    ) external isAdmin {
+    ) external onlyOwner {
+        //^^^^^^^checks^^^^^^^^^
+        _createAssetClass(
+            _recipientAddress,
+            _name,
+            _assetClass,
+            _assetClassRoot,
+            _custodyType
+        );
+        //^^^^^^^effects^^^^^^^^^
+    }
+
+    function _createAssetClass(
+        address _recipientAddress,
+        string calldata _name,
+        uint32 _assetClass,
+        uint32 _assetClassRoot,
+        uint8 _custodyType
+    ) private {
         AC memory _ac = AC_data[_assetClassRoot];
         uint256 tokenId = uint256(_assetClass);
 
@@ -180,12 +257,8 @@ contract AC_MGR is BASIC {
      *
      */
     function increasePriceShare(uint32 _assetClass, uint256 _increaseAmount)
-        external
+        private
     {
-        require( //require caller is UTIL_TKN
-            (msg.sender == UTIL_TKN_Address),
-            "ACM:IPS: Caller is not UTIL_TKN contract"
-        );
         uint256 discount = AC_data[_assetClass].discount;
         //^^^^^^^checks^^^^^^^^^
 
@@ -194,6 +267,38 @@ contract AC_MGR is BASIC {
 
         AC_data[_assetClass].discount = uint32(discount); //type conversion safe because discount always <= 10000
         //^^^^^^^effects^^^^^^^^^
+    }
+
+        /**
+     * @dev See {IERC20-transfer}. Increase payment share of an asset class
+     *
+     * Requirements:
+     * - `recipient` cannot be the zero address.
+     * - the caller must have a balance of at least `amount`.
+     */
+    function increaseShare(uint32 _assetClass, uint256 _amount)
+        public
+        returns (bool)
+    {
+        require(
+            _amount > 199,
+            "PRuf:IS:amount < 200 will not increase price share"
+        );
+
+        //^^^^^^^checks^^^^^^^^^
+
+        uint256 oldShare = uint256(AC_MGR.getAC_discount(_assetClass));
+
+        uint256 maxPayment = (uint256(9000).sub(oldShare)).mul(uint256(2)); //max payment percentage never goes over 90%
+
+        address rootPaymentAdress = cost[AC_data[_assetClass].assetClassRoot][1].paymentAddress ;
+
+        if (_amount > maxPayment) _amount = maxPayment;
+        UTIL_TKN.trustedAgentTransfer(_msgSender(), rootPaymentAdress, _amount);
+
+        increasePriceShare(_assetClass, _amount.div(uint256(2)));
+        return true;
+        //^^^^^^^effects/interactions^^^^^^^^^
     }
 
     /*
@@ -300,13 +405,25 @@ contract AC_MGR is BASIC {
         //^^^^^^^interactions^^^^^^^^^
     }
 
+    /*
+     * @dev return current AC token index pointer
+     */
+    function currentACtokenInfo() external view returns (uint256, uint256) {
+        //^^^^^^^checks^^^^^^^^^
+
+        uint256 numberOfTokensSold = ACtokenIndex.sub(uint256(1000000));
+        return (numberOfTokensSold, currentACtokenPrice);
+        //^^^^^^^effects/interactions^^^^^^^^^
+    }
+
     //-------------------------------------------functions for payment calculations----------------------------------------------
 
     /*
      * @dev Retrieve function costs per asset class, per service type, in Wei
      */
     function getServiceCosts(uint32 _assetClass, uint16 _service)
-        external view
+        external
+        view
         returns (
             address,
             uint256,
