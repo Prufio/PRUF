@@ -628,6 +628,19 @@
 				"type": "function"
 			},
 			{
+				"inputs": [],
+				"name": "max_Supply",
+				"outputs": [
+					{
+						"internalType": "uint256",
+						"name": "",
+						"type": "uint256"
+					}
+				],
+				"stateMutability": "pure",
+				"type": "function"
+			},
+			{
 				"inputs": [
 					{
 						"internalType": "address",
@@ -947,6 +960,9 @@
 				"increaseShare(uint32,uint256)": {
 					"details": "See {IERC20-transfer}. Increase payment share of an asset class Requirements: - `recipient` cannot be the zero address. - the caller must have a balance of at least `amount`."
 				},
+				"max_Supply()": {
+					"details": "Returns Max Supply"
+				},
 				"mint(address,uint256)": {
 					"details": "Creates `amount` new tokens for `to`. See {ERC20-_mint}. Requirements: - the caller must have the `MINTER_ROLE`."
 				},
@@ -1132,11 +1148,11 @@
 			]
 		},
 		"localhost/PRUF_TKN.sol": {
-			"keccak256": "0x557bd6c605a595baac15c04b3c7cf886331f2bf996e155b0f6905cd449bcb944",
+			"keccak256": "0xfff6869c20fa8549d7318be521b76cea8f47b3ba2cfcd54bc9c7a42ce2831a93",
 			"license": "MIT",
 			"urls": [
-				"bzz-raw://6b4a6718f545bf26f6aaae38d984f7bd93ca75fbb71bf7e3876ef5fa6e6778bb",
-				"dweb:/ipfs/QmXmyCNd8FzYWJh8Apzpf2hsrJQ3YrreXjrkq3p83e6sgV"
+				"bzz-raw://f7d4ae7f1ce9b11fe49c3961dd9a38414c6ae4125ed4e74b1b71eea16607cad6",
+				"dweb:/ipfs/QmSaTtdZUbXYpPvcRfkcwmdM3CZHd1HSsCyPy2p5gEhvfF"
 			]
 		}
 	},

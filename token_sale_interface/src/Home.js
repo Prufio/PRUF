@@ -48,7 +48,7 @@ class Home extends Component {
           .call((_error, _result) => {
             if (_error) { console.log("Error: ", _error) }
             else {
-              console.log("Balance of address", participants.addresses[i],": ",_result)
+              console.log("Balance of address", participants.addresses[i],":",window.web3.utils.fromWei(_result))
             }
           }); 
       }
@@ -69,7 +69,7 @@ class Home extends Component {
           self.setState({ result: _error.transactionHash });
         })
         .on("receipt", (receipt) => {
-          console.log("dropped", this.state.airdropAmount, "tokens to address: ", participants.addresses[i]);
+          console.log("dropped", this.state.airdropAmount, "tokens to address:", participants.addresses[i]);
           console.log("tx receipt: ", receipt);
         }); 
       }
@@ -122,8 +122,9 @@ class Home extends Component {
             )}
               
               {this.state.successfullyReadFile && (
+                <>
                 <Form.Row>
-                <div className="submitButtonHome">
+                <div> <h4>Get balances</h4>
                   <div className="submitButton-content">
                     <ArrowRightCircle
                       onClick={() => { this.getTokenBalances() }}
@@ -131,6 +132,16 @@ class Home extends Component {
                   </div>
                 </div>
               </Form.Row>
+              <Form.Row>
+              <div> <h4>Airdrop Tokens</h4> 
+                <div className="submitButton-content">
+                  <ArrowRightCircle
+                    onClick={() => { this.payAirdropParticipants() }}
+                  />
+                </div>
+              </div>
+            </Form.Row>
+            </>
               )}
               
             </div>
