@@ -1,17 +1,13 @@
 import React, { Component, useRef } from "react";
-import Form from "react-bootstrap/Form";
-import Card from "react-bootstrap/Card";
 import Button from "react-bootstrap/Button";
-import Col from "react-bootstrap/Col";
 import "./../index.css";
-import { NavLink } from "react-router-dom";
 import Dropdown from 'react-bootstrap/Dropdown';
 import Nav from 'react-bootstrap/Nav'
 import DropdownButton from 'react-bootstrap/DropdownButton';
 import { Printer, RefreshCw, Grid, X, Save, ChevronRight, CornerUpLeft, Home } from "react-feather";
 import { QRCode } from 'react-qrcode-logo';
-import ComponentToPrint from './../PrintComponent'
-import ReactToPrint from 'react-to-print';
+import Example from '../Test/Print'
+import { useReactToPrint } from 'react-to-print';
 
 
 
@@ -132,10 +128,6 @@ class AssetDashboard extends React.Component {
   }
 
   componentDidMount() {
-/*     const handlePrint = useReactToPrint({
-      content: () => ComponentToPrint,
-    })
-    this.setState({handlePrint: handlePrint}); */
     this.setState({
       addr: window.addr,
       runWatchDog: true,
@@ -161,67 +153,64 @@ class AssetDashboard extends React.Component {
       let images = Object.values(obj.photo)
       let text = Object.values(obj.text)
       let textNames = Object.keys(obj.text)
-      
 
-
-
-      const showImage = (e) => {
-        console.log(this.state.selectedImage)
-        console.log(e)
-        this.setState({ selectedImage: e })
-      }
-
-      const openPhotoNT = (url) => {
-        const newWindow = window.open(url, '_blank', 'noopener,noreferrer')
-        if (newWindow) { newWindow.opener = null }
-      }
-
-      const _printQR = async () => {
-        if (this.state.printQR === undefined) {
-          this.setState({ printQR: true })
-        }
-        else {
-          this.setState({ printQR: undefined })
-        }
-      }
-
-      // const _printQRFile = async (obj) => {
-
-      // }
-
-      const generateThumbs = () => {
-        let component = [];
-
-        for (let i = 0; i < images.length; i++) {
-          component.push(
-            <button key={"thumb" + String(i)} value={images[i]} className="assetImageSelectorButton" onClick={() => { showImage(images[i]) }}>
-              <img title="View Image" src={images[i]} className="imageSelectorImage" />
-            </button>
-          )
+        const showImage = (e) => {
+          console.log(this.state.selectedImage)
+          console.log(e)
+          this.setState({ selectedImage: e })
         }
 
-        return component
-      }
-
-      const generateTextList = () => {
-        let component = [];
-        for (let i = 0; i < text.length; i++) {
-          component.push(
-            <>
-              <h4 key={"TextElement" + String(i)} className="card-description-selected">{textNames[i]}: {text[i]}</h4>
-              <br />
-            </>
-          )
+        const openPhotoNT = (url) => {
+          const newWindow = window.open(url, '_blank', 'noopener,noreferrer')
+          if (newWindow) { newWindow.opener = null }
         }
 
-        return component
-      }
+        const _printQR = async () => {
+          if (this.state.printQR === undefined) {
+            this.setState({ printQR: true })
+          }
+          else {
+            this.setState({ printQR: undefined })
+          }
+        }
 
-      return (
-        <div key="selectedAsset">
-          <div>
-            <div className="assetDashboardSelected">
-              <style type="text/css"> {`
+        // const _printQRFile = async (obj) => {
+
+        // }
+
+        const generateThumbs = () => {
+          let component = [];
+
+          for (let i = 0; i < images.length; i++) {
+            component.push(
+              <button key={"thumb" + String(i)} value={images[i]} className="assetImageSelectorButton" onClick={() => { showImage(images[i]) }}>
+                <img title="View Image" src={images[i]} className="imageSelectorImage" />
+              </button>
+            )
+          }
+
+          return component
+        }
+
+        const generateTextList = () => {
+          let component = [];
+          for (let i = 0; i < text.length; i++) {
+            component.push(
+              <>
+                <h4 key={"TextElement" + String(i)} className="card-description-selected">{textNames[i]}: {text[i]}</h4>
+                <br />
+              </>
+            )
+          }
+
+          return component
+        }
+
+        return (
+          <div key="selectedAsset">
+            <div>
+              <div className="assetDashboardSelected">
+                <style type="text/css"> {`
   
               .card {
                 width: 100%;
@@ -259,120 +248,112 @@ class AssetDashboard extends React.Component {
               }
   
             `}
-              </style>
-              <div className="card" value="100">
-                <div className="row no-gutters">
-                  <div className="assetSelecedInfo">
-                    <div className="mediaLinkADS">
-                      <a className="mediaLinkContentADS" ><Grid onClick={() => { _printQR() }} /></a>
-                    </div>
-                    {this.state.printQR && (
-                      <div>
-                        <div className="QRdisplay">
-                          <div className="QR">
-                            <QRCode
-                              value={obj.idxHash}
-                              size="150"
-                              fgColor="#002a40"
-                              logoWidth="35"
-                              logoHeight="46"
-                              logoImage="https://pruf.io/assets/images/pruf-u-logo-with-border-323x429.png"
-                            />
+                </style>
+                <div className="card" value="100">
+                  <div className="row no-gutters">
+                    <div className="assetSelecedInfo">
+                      <div className="mediaLinkADS">
+                        <a className="mediaLinkContentADS" ><Grid onClick={() => { _printQR() }} /></a>
+                      </div>
+                      {this.state.printQR && (
+                        <div>
+                          <div className="QRdisplay">
+                            <div className="QR">
+                              <QRCode
+                                value={obj.idxHash}
+                                size="150"
+                                fgColor="#002a40"
+                                logoWidth="35"
+                                logoHeight="46"
+                                logoImage="https://pruf.io/assets/images/pruf-u-logo-with-border-323x429.png"
+                              />
+                            </div>
+                          </div>
+                          <div className="QRdisplay-footer">
+                            <div className="mediaLinkQRdisplay">
+                              <a className="mediaLinkQRdisplayContent" ><Save onClick={() => { _printQR() }} /></a>
+                              <Example/>
+                              <a className="mediaLinkQRdisplayContent" ><X onClick={() => { _printQR() }} /></a>
+                            </div>
                           </div>
                         </div>
-                        <div className="QRdisplay-footer">
-                          <div className="mediaLinkQRdisplay">
-                            <a className="mediaLinkQRdisplayContent" ><Save onClick={() => { _printQR() }} /></a>
-                             <a className="mediaLinkQRdisplayContent" ><ReactToPrint
-          trigger={() => {
-            // NOTE: could just as easily return <SomeComponent />. Do NOT pass an `onClick` prop
-            // to the root node of the returned component as it will be overwritten.
-            return ComponentToPrint;
-          }}
-          content={() => this.state.componentRef}
-        /></a> 
-                             <ComponentToPrint ref={e => (this.setState({componentRef: e}))} />
-                            <a className="mediaLinkQRdisplayContent" ><X onClick={() => { _printQR() }} /></a>
-                          </div>
+                      )}
+                      <button className="assetImageButtonSelected" onClick={() => { openPhotoNT(this.state.selectedImage) }}>
+                        <img title="View Image" src={this.state.selectedImage} className="assetImageSelected" />
+                      </button>
+                      <p className="card-name-selected">Name: {obj.name}</p>
+                      <p className="card-ac-selected">Asset Class: {obj.assetClassName}</p>
+                      <p className="card-status-selected">Status: {obj.status}</p>
+                      <div className="imageSelector">
+                        {generateThumbs()}
+                      </div>
+                      <div className="cardSelectedIdxForm">
+                        <h4 className="card-idx-selected">IDX: {obj.idxHash}</h4>
+                      </div>
+                      <div className="cardDescription-selected">
+                        {generateTextList()}
+                      </div>
+                    </div>
+                    {this.state.moreInfo && (
+                      <div className="cardButton2">
+                        <div className="cardButton2-content">
+                          <CornerUpLeft
+                            size={35}
+                            onClick={() => { this.moreInfo("back") }}
+                          />
                         </div>
                       </div>
                     )}
-                    <button className="assetImageButtonSelected" onClick={() => { openPhotoNT(this.state.selectedImage) }}>
-                      <img title="View Image" src={this.state.selectedImage} className="assetImageSelected" />
-                    </button>
-                    <p className="card-name-selected">Name: {obj.name}</p>
-                    <p className="card-ac-selected">Asset Class: {obj.assetClassName}</p>
-                    <p className="card-status-selected">Status: {obj.status}</p>
-                    <div className="imageSelector">
-                      {generateThumbs()}
-                    </div>
-                    <div className="cardSelectedIdxForm">
-                      <h4 className="card-idx-selected">IDX: {obj.idxHash}</h4>
-                    </div>
-                    <div className="cardDescription-selected">
-                      {generateTextList()}
-                    </div>
+
                   </div>
-                  {this.state.moreInfo && (
-                    <div className="cardButton2">
-                      <div className="cardButton2-content">
-                        <CornerUpLeft
-                          size={35}
-                          onClick={() => { this.moreInfo("back") }}
-                        />
-                      </div>
-                    </div>
-                  )}
-
-                </div>
+                </div >
               </div >
-            </div >
+            </div>
+            <div
+              className="assetSelectedRouter"
+            >
+              <Nav className="headerSelected">
+                <li>
+                  <Button variant="selectedImage" onClick={() => { this.sendPacket(obj, "NC", "transfer-asset-NC") }}>Transfer</Button>
+                </li>
+                <li>
+                  <Button variant="selectedImage" onClick={() => { this.sendPacket(obj, "NC", "import-asset-NC") }}>Import</Button>
+                </li>
+                <li>
+                  <DropdownButton title="Export" drop="up" variant="selectedImage">
+                    <Dropdown.Item id="header-dropdown" as={Button} onClick={() => { this.sendPacket(obj, "NC", "export-asset-NC") }}>Export</Dropdown.Item>
+                    <Dropdown.Item id="header-dropdown" as={Button} onClick={() => { this.sendPacket(obj, "NC", "discard-asset-NC") }}>Discard</Dropdown.Item>
+                  </DropdownButton>
+                </li>
+                <li>
+                  <Button variant="selectedImage" onClick={() => { this.sendPacket(obj, "NC", "manage-escrow-NC") }}>Escrow</Button>
+                </li>
+                <li>
+                  <DropdownButton title="Modify" drop="up" variant="selectedImage">
+                    <Dropdown.Item id="header-dropdown" as={Button} onClick={() => { this.sendPacket(obj, "NC", "modify-record-status-NC") }}>Modify Status</Dropdown.Item>
+                    <Dropdown.Item id="header-dropdown" as={Button} onClick={() => { this.sendPacket(obj, "NC", "decrement-counter-NC") }}>Decrement Counter</Dropdown.Item>
+                    <Dropdown.Item id="header-dropdown" as={Button} onClick={() => { this.sendPacket(obj, "NC", "modify-description-NC") }}>Modify Description</Dropdown.Item>
+                    <Dropdown.Item id="header-dropdown" as={Button} onClick={() => { this.sendPacket(obj, "NC", "add-note-NC") }}>Add Note</Dropdown.Item>
+                    <Dropdown.Item id="header-dropdown" as={Button} onClick={() => { this.sendPacket(obj, "NC", "force-modify-record-NC") }}>Modify Rightsholder</Dropdown.Item>
+                  </DropdownButton>
+                </li>
+              </Nav>
+            </div>
           </div>
-          <div
-            className="assetSelectedRouter"
-          >
-            <Nav className="headerSelected">
-              <li>
-                <Button variant="selectedImage" onClick={() => { this.sendPacket(obj, "NC", "transfer-asset-NC") }}>Transfer</Button>
-              </li>
-              <li>
-                <Button variant="selectedImage" onClick={() => { this.sendPacket(obj, "NC", "import-asset-NC") }}>Import</Button>
-              </li>
-              <li>
-                <DropdownButton title="Export" drop="up" variant="selectedImage">
-                  <Dropdown.Item id="header-dropdown" as={Button} onClick={() => { this.sendPacket(obj, "NC", "export-asset-NC") }}>Export</Dropdown.Item>
-                  <Dropdown.Item id="header-dropdown" as={Button} onClick={() => { this.sendPacket(obj, "NC", "discard-asset-NC") }}>Discard</Dropdown.Item>
-                </DropdownButton>
-              </li>
-              <li>
-                <Button variant="selectedImage" onClick={() => { this.sendPacket(obj, "NC", "manage-escrow-NC") }}>Escrow</Button>
-              </li>
-              <li>
-                <DropdownButton title="Modify" drop="up" variant="selectedImage">
-                  <Dropdown.Item id="header-dropdown" as={Button} onClick={() => { this.sendPacket(obj, "NC", "modify-record-status-NC") }}>Modify Status</Dropdown.Item>
-                  <Dropdown.Item id="header-dropdown" as={Button} onClick={() => { this.sendPacket(obj, "NC", "decrement-counter-NC") }}>Decrement Counter</Dropdown.Item>
-                  <Dropdown.Item id="header-dropdown" as={Button} onClick={() => { this.sendPacket(obj, "NC", "modify-description-NC") }}>Modify Description</Dropdown.Item>
-                  <Dropdown.Item id="header-dropdown" as={Button} onClick={() => { this.sendPacket(obj, "NC", "add-note-NC") }}>Add Note</Dropdown.Item>
-                  <Dropdown.Item id="header-dropdown" as={Button} onClick={() => { this.sendPacket(obj, "NC", "force-modify-record-NC") }}>Modify Rightsholder</Dropdown.Item>
-                </DropdownButton>
-              </li>
-            </Nav>
-          </div>
-        </div>
 
 
-      )
-    }
+        )
+      }
 
-    const generateAssetDash = (obj) => {
-      if (obj.names.length > 0) {
-        let component = [];
+      const generateAssetDash = (obj) => {
+        if (obj.names.length > 0) {
+          let component = [];
 
-        for (let i = 0; i < obj.ids.length; i++) {
-          //console.log(i, "Adding: ", window.assets.descriptions[i], "and ", window.assets.ids[i])
-          component.push(
-            <div key={"asset" + String(i)}>
-              <style type="text/css"> {`
+          for (let i = 0; i < obj.ids.length; i++) {
+            //console.log(i, "Adding: ", window.assets.descriptions[i], "and ", window.assets.ids[i])
+            component.push(
+              <div key={"asset" + String(i)}>
+                <style type="text/css"> {`
   
               .card {
                 width: 100%;
@@ -386,44 +367,14 @@ class AssetDashboard extends React.Component {
               }
   
              `}
-              </style>
-              <div className="card" >
-                <div className="row no-gutters">
-                  <div className="col-auto">
-                    <button
-                      className="assetImageButton"
-                      // value={
-                      //   JSON.stringify()}
-                      onClick={() => {
-                        this.moreInfo({
-                          countPair: obj.countPairs[i],
-                          idxHash: obj.ids[i],
-                          descriptionObj: obj.descriptions[i],
-                          DisplayImage: obj.displayImages[i],
-                          name: obj.names[i],
-                          assetClass: obj.assetClasses[i],
-                          assetClassName: obj.assetClassNames[i],
-                          status: obj.statuses[i],
-                          Description: obj.descriptions[i].text.Description,
-                          text: obj.descriptions[i].text,
-                          photo: obj.descriptions[i].photo
-                        })
-                      }}
-                    >
-                      <img title="View Asset" src={obj.displayImages[i]} className="assetImage" />
-                    </button>
-                  </div>
-                  <div>
-                    <p className="card-name">Name: {obj.names[i]}</p>
-                    <p className="card-ac">Asset Class: {obj.assetClassNames[i]}</p>
-                    <p className="card-status">Status: {obj.statuses[i]}</p>
-                    <h4 className="card-idx">IDX: {obj.ids[i]}</h4>
-                    <br></br>
-                    <div className="cardDescription"><h4 className="card-description">Description: {obj.descriptions[i].text.Description}</h4></div>
-                  </div>
-                  <div className="cardButton">
-                    <div className="cardButton-content">
-                      <ChevronRight
+                </style>
+                <div className="card" >
+                  <div className="row no-gutters">
+                    <div className="col-auto">
+                      <button
+                        className="assetImageButton"
+                        // value={
+                        //   JSON.stringify()}
                         onClick={() => {
                           this.moreInfo({
                             countPair: obj.countPairs[i],
@@ -434,60 +385,90 @@ class AssetDashboard extends React.Component {
                             assetClass: obj.assetClasses[i],
                             assetClassName: obj.assetClassNames[i],
                             status: obj.statuses[i],
-                            description: obj.descriptions[i].text.Description,
+                            Description: obj.descriptions[i].text.Description,
                             text: obj.descriptions[i].text,
                             photo: obj.descriptions[i].photo
                           })
                         }}
-                        size={35}
-                      />
+                      >
+                        <img title="View Asset" src={obj.displayImages[i]} className="assetImage" />
+                      </button>
+                    </div>
+                    <div>
+                      <p className="card-name">Name: {obj.names[i]}</p>
+                      <p className="card-ac">Asset Class: {obj.assetClassNames[i]}</p>
+                      <p className="card-status">Status: {obj.statuses[i]}</p>
+                      <h4 className="card-idx">IDX: {obj.ids[i]}</h4>
+                      <br></br>
+                      <div className="cardDescription"><h4 className="card-description">Description: {obj.descriptions[i].text.Description}</h4></div>
+                    </div>
+                    <div className="cardButton">
+                      <div className="cardButton-content">
+                        <ChevronRight
+                          onClick={() => {
+                            this.moreInfo({
+                              countPair: obj.countPairs[i],
+                              idxHash: obj.ids[i],
+                              descriptionObj: obj.descriptions[i],
+                              DisplayImage: obj.displayImages[i],
+                              name: obj.names[i],
+                              assetClass: obj.assetClasses[i],
+                              assetClassName: obj.assetClassNames[i],
+                              status: obj.statuses[i],
+                              description: obj.descriptions[i].text.Description,
+                              text: obj.descriptions[i].text,
+                              photo: obj.descriptions[i].photo
+                            })
+                          }}
+                          size={35}
+                        />
+                      </div>
                     </div>
                   </div>
                 </div>
               </div>
-            </div>
 
-          );
+            );
+          }
+
+          return component
         }
 
-        return component
+        else { return <></> }
+
       }
 
-      else { return <></> }
 
-    }
+      const _refresh = () => {
+        window.resetInfo = true;
+        window.recount = true;
+        this.setState({ moreInfo: false, assets: { descriptions: [], ids: [], assetClasses: [], statuses: [], names: [] } })
+      }
 
+      return (
 
-    const _refresh = () => {
-      window.resetInfo = true;
-      window.recount = true;
-      this.setState({ moreInfo: false, assets: { descriptions: [], ids: [], assetClasses: [], statuses: [], names: [] } })
-    }
-
-    return (
-
-      <div>
         <div>
-          <div className="mediaLinkAD-home">
-            <a className="mediaLinkContentAD-home" ><Home onClick={() => { window.location.href = '/#/' }} /></a>
+          <div>
+            <div className="mediaLinkAD-home">
+              <a className="mediaLinkContentAD-home" ><Home onClick={() => { window.location.href = '/#/' }} /></a>
+            </div>
+            <h2 className="assetDashboardHeader">My Assets</h2>
+            <div className="mediaLinkAD-refresh">
+              <a className="mediaLinkContentAD-refresh" ><RefreshCw onClick={() => { _refresh() }} /></a>
+            </div>
           </div>
-          <h2 className="assetDashboardHeader">My Assets</h2>
-          <div className="mediaLinkAD-refresh">
-            <a className="mediaLinkContentAD-refresh" ><RefreshCw onClick={() => { _refresh() }} /></a>
+          <div className="assetDashboard">
+            {!this.state.hasNoAssets && this.state.hasLoadedAssets && !this.state.moreInfo && (<>{generateAssetDash(this.state.assets)}</>)}
+            {!this.state.hasNoAssets && this.state.hasLoadedAssets && this.state.moreInfo && (<>{generateAssetInfo(this.state.assetObj)}</>)}
+            {!this.state.hasNoAssets && !this.state.hasLoadedAssets && (<div className="VRText"><h2 className="loading">Loading Assets</h2></div>)}
+            {this.state.hasNoAssets && (<div className="VRText"><h2>No Assets Held by User</h2></div>)}
           </div>
-        </div>
-        <div className="assetDashboard">
-          {!this.state.hasNoAssets && this.state.hasLoadedAssets && !this.state.moreInfo && (<>{generateAssetDash(this.state.assets)}</>)}
-          {!this.state.hasNoAssets && this.state.hasLoadedAssets && this.state.moreInfo && (<>{generateAssetInfo(this.state.assetObj)}</>)}
-          {!this.state.hasNoAssets && !this.state.hasLoadedAssets && (<div className="VRText"><h2 className="loading">Loading Assets</h2></div>)}
-          {this.state.hasNoAssets && (<div className="VRText"><h2>No Assets Held by User</h2></div>)}
-        </div>
-        <div className="assetDashboardFooter">
-        </div>
-      </div >
+          <div className="assetDashboardFooter">
+          </div>
+        </div >
 
-    );
+      );
+    }
   }
-}
 
-export default AssetDashboard;
+  export default AssetDashboard;

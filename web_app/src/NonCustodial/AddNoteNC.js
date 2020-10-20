@@ -50,7 +50,7 @@ class AddNoteNC extends Component {
           //Stuff to do when tx confirms
         });
 
-      this.setState({hashPath: ""})
+      this.setState({ hashPath: "" })
 
       console.log(this.state.txHash);
       return document.getElementById("MainForm").reset();
@@ -252,107 +252,6 @@ class AddNoteNC extends Component {
       this.setAC(window.assets.assetClasses[e])
     }
 
-
-    if (this.state.wasSentPacket) {
-      return (
-        <div>
-          <div>
-            <div className="mediaLinkAD-home">
-              <a className="mediaLinkContentAD-home" ><Home onClick={() => { window.location.href = '/#/' }} /></a>
-            </div>
-            <h2 className="FormHeader">Add Note</h2>
-            <div className="mediaLink-clearForm">
-              <a className="mediaLinkContent-clearForm" ><XSquare onClick={() => { clearForm() }} /></a>
-            </div>
-          </div>
-          <Form className="Form" id='MainForm'>
-            {window.addr === undefined && (
-              <div className="Results">
-                <h2>User address unreachable</h2>
-                <h3>Please connect web3 provider.</h3>
-              </div>
-            )}
-            {window.addr > 0 && (
-              <div>
-                <Form.Row>
-                  <Form.Group as={Col} controlId="formGridIpfs2File">
-                    <Form.File onChange={(e) => this.setState({ hashPath: "" })} size="lg" className="btn2" id="ipfs2File" />
-                  </Form.Group>
-                </Form.Row>
-
-                {this.state.hashPath === "" && this.state.transaction === false && (
-                  <Form.Row>
-                    <Form.Group >
-                      <div className="submitButton">
-                        <div className="submitButton-content">
-                          <CheckCircle
-                            onClick={() => { publishIPFS2Photo() }}
-                          />
-                        </div>
-                        {this.state.assetClass !== undefined && (
-                          <Form.Label className="LittleTextAddNote"> Cost To Add Note in AC {this.state.assetClass}: {Number(window.costs.createNoteCost) / 1000000000000000000} ETH</Form.Label >
-                        )}
-                      </div>
-                    </Form.Group>
-                  </Form.Row>
-                )}
-              </div>
-            )}
-          </Form>
-          {this.state.transaction === false && this.state.transaction === false && (
-            <div className="assetSelectedResults">
-              <Form.Row>
-                {this.state.idxHash !== undefined && this.state.txHash === "" && (
-                  <Form.Group>
-                    <div className="assetSelectedContentHead">Asset IDX: <span className="assetSelectedContent">{this.state.idxHash}</span> </div>
-                    <div className="assetSelectedContentHead">Asset Name: <span className="assetSelectedContent">{this.state.name}</span> </div>
-                    <div className="assetSelectedContentHead">Asset Class: <span className="assetSelectedContent">{this.state.assetClass}</span> </div>
-                    <div className="assetSelectedContentHead">Asset Status: <span className="assetSelectedContent">{this.state.status}</span> </div>
-                  </Form.Group>
-                )}
-              </Form.Row>
-            </div>
-          )}
-          {this.state.transaction === true && (
-
-            <div className="Results">
-              <p className="loading">Transaction In Progress</p>
-            </div>)}
-          {this.state.txHash > 0 && ( //conditional rendering
-            <div className="Results">
-              {this.state.txStatus === false && (
-                <div>
-                  !ERROR! :
-                  <a
-                    href={"https://kovan.etherscan.io/tx/" + this.state.txHash}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                  >
-                    KOVAN Etherscan:{this.state.txHash}
-                  </a>
-                </div>
-              )}
-              {this.state.txStatus === true && (
-                <div>
-                  {" "}
-                  No Errors Reported :
-                  <a
-                    href={"https://kovan.etherscan.io/tx/" + this.state.txHash}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                  >
-                    KOVAN Etherscan:{this.state.txHash}
-                  </a>
-                  <a>
-                    <img src={this.state.hashUrl} alt="" />
-                  </a>
-                </div>
-              )}
-            </div>
-          )}
-        </div>
-      );
-    }
     return (
       <div>
         <div>
@@ -376,18 +275,39 @@ class AddNoteNC extends Component {
               <Form.Row>
                 <Form.Group as={Col} controlId="formGridAsset">
                   <Form.Label className="formFont"> Select an Asset to Modify :</Form.Label>
-                  <Form.Control
-                    as="select"
-                    size="lg"
-                    onChange={(e) => { _checkIn(e.target.value) }}
-                  >
-                    {this.state.hasLoadedAssets && (
-                      <optgroup className="optgroup">
-                        {window.utils.generateAssets()}
-                      </optgroup>)}
-                    {!this.state.hasLoadedAssets && (<optgroup ><option value="null"> Loading Assets... </option></optgroup>)}
+                  {!this.state.wasSentPacket && (
+                    <Form.Control
+                      as="select"
+                      size="lg"
+                      onChange={(e) => { _checkIn(e.target.value) }}
 
-                  </Form.Control>
+                    >
+                      {this.state.hasLoadedAssets && (
+                        <optgroup className="optgroup">
+                          {window.utils.generateAssets()}
+                        </optgroup>)}
+                      {!this.state.hasLoadedAssets && (
+                        <optgroup>
+                          <option value="null">
+                            Loading Assets...
+                           </option>
+                        </optgroup>)}
+                    </Form.Control>
+                  )}
+                  {this.state.wasSentPacket && (
+                    <Form.Control
+                      as="select"
+                      size="lg"
+                      onChange={(e) => { _checkIn(e.target.value) }}
+                      disabled
+                    >
+                      <optgroup>
+                        <option value="null">
+                          "{this.state.name}" Please Clear Form to Select Different Asset
+                           </option>
+                      </optgroup>
+                    </Form.Control>
+                  )}
                 </Form.Group>
               </Form.Row>
               <Form.Row>

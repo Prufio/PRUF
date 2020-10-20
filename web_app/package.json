@@ -31,6 +31,7 @@
     "react-router-dom": "^5.2.0",
     "react-scripts": "^3.4.3",
     "react-to-print": "^2.10.3",
+    "react-toast-notifications": "^2.4.0",
     "web3": "^1.2.7"
   },
   "scripts": {

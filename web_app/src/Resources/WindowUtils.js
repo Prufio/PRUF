@@ -1242,26 +1242,40 @@ function buildWindowUtils() {
   };
 
   const _generateCardPrint = () => {
-      return (
-        <div className="PrintForm">
-          <div className="QRPrint">
+    return (
+      <div className="PrintForm">
+        <div className="QRPrint">
+          <QRCode
+            value={window.printObj.idxHash}
+            size="256"
+            fgColor="#002a40"
+            logoWidth="48.8"
+            logoHeight="64"
+            logoImage="https://pruf.io/assets/images/pruf-u-logo-with-border-323x429.png"
+          />
+        </div>
+        <div className="card-href">https://pruf.io</div>
+        <div className="PrintFormContent">
+          <img
+            className="PrintImageBackgroundForm"
+            src={require("../Resources/PrufPrintBackground.png")}
+            alt="Pruf Print Background" />
+          <div className="QRPrint2">
             <QRCode
               value={window.printObj.idxHash}
-              qrStyle="dots"
-              size="400"
+              size="160"
               fgColor="#002a40"
-              logoWidth="80"
-              logoHeight="80"
-              logoImage="https://pruf.io/assets/images/pruf-u-logo-192x255.png"
+              logoWidth="32"
+              logoHeight="41.6"
+              logoImage="https://pruf.io/assets/images/pruf-u-logo-with-border-323x429.png"
             />
           </div>
-          <div className="PrintFormContent">
-            <p className="card-name-print">Name : {window.printObj.name}</p>
-            <p className="card-ac-print">Asset Class : {window.printObj.assetClass}</p>
-            <h4 className="card-idx-print">IDX : {window.printObj.idxHash}</h4>
-          </div>
-        </div >
-      )
+          <p className="card-name-print">Name : {window.printObj.name}</p>
+          <p className="card-ac-print">Asset Class : {window.printObj.assetClass}</p>
+          <h4 className="card-idx-print">IDX : {window.printObj.idxHash}</h4>
+        </div>
+      </div >
+    )
   }
 
   window.utils = {

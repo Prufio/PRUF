@@ -1,8 +1,8 @@
 import React, { Component } from "react";
 import Form from "react-bootstrap/Form";
 import Col from "react-bootstrap/Col";
-import Button from "react-bootstrap/Button";
-import { ArrowRightCircle, Home, XSquare, CheckCircle } from 'react-feather'
+import { Home, XSquare, CheckCircle } from 'react-feather'
+// import { ToastProvider, useToasts } from 'react-toast-notifications'
 
 class ModifyRecordStatusNC extends Component {
   constructor(props) {
@@ -30,19 +30,19 @@ class ModifyRecordStatusNC extends Component {
 
       if (!doesExist) {
         return alert("Asset doesnt exist! Ensure data fields are correct before submission."),
-        document.getElementById("MainForm").reset(),
-        this.setState({
-          idxHash: undefined, txStatus: false, txHash: "", wasSentPacket: false, transaction: false  
-        })
+          document.getElementById("MainForm").reset(),
+          this.setState({
+            idxHash: undefined, txStatus: false, txHash: "", wasSentPacket: false, transaction: false
+          })
 
       }
 
       if (NewStatusString === this.state.status) {
         return alert("Asset already in selected Status! Ensure data fields are correct before submission."),
-        document.getElementById("MainForm").reset(),
-        this.setState({
-          txStatus: false, txHash: "", transaction: false 
-        })
+          document.getElementById("MainForm").reset(),
+          this.setState({
+            txStatus: false, txHash: "", transaction: false
+          })
       }
 
       if (
@@ -104,8 +104,9 @@ class ModifyRecordStatusNC extends Component {
 
       console.log(this.state.txHash);
       return document.getElementById("MainForm").reset(),
-      this.setState({
-        idxHash: undefined, txStatus: false, txHash: ""});
+        this.setState({
+          idxHash: undefined, txStatus: false, txHash: ""
+        });
     };
 
     this.updateAssets = setInterval(() => {
@@ -149,7 +150,7 @@ class ModifyRecordStatusNC extends Component {
       this.setState({ idxHash: window.sentPacket.idxHash })
       this.setState({ assetClass: window.sentPacket.assetClass })
       this.setState({ status: window.sentPacket.status })
-      if(Number(window.sentPacket.status) === 50 || Number(window.sentPacket.status) === 56){
+      if (Number(window.sentPacket.status) === 50 || Number(window.sentPacket.status) === 56) {
         alert("Cannot edit asset in escrow! Please wait until asset has met escrow conditions");
         window.sentpacket = undefined;
         return window.location.href = "/#/asset-dashboard"
@@ -161,8 +162,6 @@ class ModifyRecordStatusNC extends Component {
     this.setState({ runWatchDog: true })
   }
 
-
-
   componentDidUpdate() {//stuff to do when state updates
 
   }
@@ -173,6 +172,22 @@ class ModifyRecordStatusNC extends Component {
 
   render() {//render continuously produces an up-to-date stateful document  
     const self = this;
+
+    // const FormWithToasts = () => {
+    //   const { addToast } = useToasts()
+
+    //   const onSubmit = async value => {
+    //     const { error } = await dataPersistenceLayer(value)
+
+    //     if (error) {
+    //       addToast(error.message, { appearance: 'error' })
+    //     } else {
+    //       addToast('Saved Successfully', { appearance: 'success' })
+    //     }
+    //   }
+
+    //   return <form onSubmit={onSubmit}>...</form>
+    // }
 
     const clearForm = async () => {
       document.getElementById("MainForm").reset();
@@ -198,12 +213,11 @@ class ModifyRecordStatusNC extends Component {
 
       console.log(resArray)
 
-
       if (Number(resArray[1]) === 0) {
         alert("Asset does not exist at given IDX");
       }
 
-      if(Number(resArray[0]) === 50 || Number(resArray[0]) === 56){
+      if (Number(resArray[0]) === 50 || Number(resArray[0]) === 56) {
         alert("Cannot edit asset in escrow! Please wait until asset has met escrow conditions"); return clearForm()
       }
 
@@ -222,107 +236,6 @@ class ModifyRecordStatusNC extends Component {
       })
     }
 
-    if (this.state.wasSentPacket) {
-      return (
-        <div>
-          <div>
-            <div className="mediaLinkAD-home">
-              <a className="mediaLinkContentAD-home" ><Home onClick={() => { window.location.href = '/#/' }} /></a>
-            </div>
-            <h2 className="FormHeader">Modify Asset Status</h2>
-            <div className="mediaLink-clearForm">
-              <a className="mediaLinkContent-clearForm" ><XSquare onClick={() => { clearForm() }} /></a>
-            </div>
-          </div>
-          <Form className="Form" id='MainForm'>
-            {window.addr === undefined && (
-              <div className="Results">
-                <h2>User address unreachable</h2>
-                <h3>Please connect web3 provider.</h3>
-              </div>
-            )}
-            {window.addr > 0 && (
-              <div>
-                <Form.Row>
-                  <Form.Group as={Col} controlId="formGridFormat">
-                    <Form.Label className="formFont">New Status:</Form.Label>
-                    <Form.Control as="select" size="lg" onChange={(e) => this.setState({ newStatus: e.target.value })}>
-                      <optgroup className="optgroup">
-                        <option value="0">Choose a status</option>
-                        <option value="51">Transferrable</option>
-                        <option value="52">Non-transferrable</option>
-                        <option value="53">Stolen</option>
-                        <option value="54">Lost</option>
-                        <option value="59">Discardable</option>
-                      </optgroup>
-                    </Form.Control>
-                  </Form.Group>
-                </Form.Row>
-                {this.state.transaction === false && (
-                <Form.Row>
-                  <div className="submitButton">
-                    <div className="submitButton-content">
-                      <CheckCircle
-                        onClick={() => { this.modifyStatus() }}
-                      />
-                    </div>
-                  </div>
-                </Form.Row>
-                )}
-              </div>
-            )}
-          </Form>
-          {this.state.transaction === false && this.state.txHash === "" && (
-            <div className="assetSelectedResults">
-              <Form.Row>
-                {this.state.idxHash !== undefined && this.state.txHash === "" && (
-                  <Form.Group>
-                    <div className="assetSelectedContentHead">Asset IDX: <span className="assetSelectedContent">{this.state.idxHash}</span> </div>
-                    <div className="assetSelectedContentHead">Asset Name: <span className="assetSelectedContent">{this.state.name}</span> </div>
-                    <div className="assetSelectedContentHead">Asset Class: <span className="assetSelectedContent">{this.state.assetClass}</span> </div>
-                    <div className="assetSelectedContentHead">Asset Status: <span className="assetSelectedContent">{this.state.status}</span> </div>
-                  </Form.Group>
-                )}
-              </Form.Row>
-            </div>
-          )}
-          {this.state.transaction === true && (
-
-            <div className="Results">
-              <p className="loading">Transaction In Progress</p>
-            </div>)}
-          {this.state.txHash > 0 && ( //conditional rendering
-            <div className="Results">
-              {this.state.txStatus === false && (
-                <div>
-                  !ERROR! :
-                  <a
-                    href={"https://kovan.etherscan.io/tx/" + this.state.txHash}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                  >
-                    KOVAN Etherscan:{this.state.txHash}
-                  </a>
-                </div>
-              )}
-              {this.state.txStatus === true && (
-                <div>
-                  {" "}
-                  No Errors Reported :
-                  <a
-                    href={"https://kovan.etherscan.io/tx/" + this.state.txHash}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                  >
-                    KOVAN Etherscan:{this.state.txHash}
-                  </a>
-                </div>
-              )}
-            </div>
-          )}
-        </div>
-      );
-    }
     return (
       <div>
         <div>
@@ -346,19 +259,39 @@ class ModifyRecordStatusNC extends Component {
               <Form.Row>
                 <Form.Group as={Col} controlId="formGridAsset">
                   <Form.Label className="formFont"> Select an Asset to Modify :</Form.Label>
-                  <Form.Control
-                    as="select"
-                    size="lg"
-                    onChange={(e) => { _checkIn(e.target.value) }}
-                  >
-                    {this.state.hasLoadedAssets && (
-                      <optgroup className="optgroup">
+                  {!this.state.wasSentPacket && (
+                    <Form.Control
+                      as="select"
+                      size="lg"
+                      onChange={(e) => { _checkIn(e.target.value) }}
 
-                        {window.utils.generateAssets()}
-                      </optgroup>)}
-                    {!this.state.hasLoadedAssets && (<optgroup ><option value="null"> Loading Assets... </option></optgroup>)}
-
-                  </Form.Control>
+                    >
+                      {this.state.hasLoadedAssets && (
+                        <optgroup className="optgroup">
+                          {window.utils.generateAssets()}
+                        </optgroup>)}
+                      {!this.state.hasLoadedAssets && (
+                        <optgroup>
+                          <option value="null">
+                            Loading Assets...
+                           </option>
+                        </optgroup>)}
+                    </Form.Control>
+                  )}
+                  {this.state.wasSentPacket && (
+                    <Form.Control
+                      as="select"
+                      size="lg"
+                      onChange={(e) => { _checkIn(e.target.value) }}
+                      disabled
+                    >
+                      <optgroup>
+                        <option value="null">
+                          "{this.state.name}" Please Clear Form to Select Different Asset
+                           </option>
+                      </optgroup>
+                    </Form.Control>
+                  )}
                 </Form.Group>
               </Form.Row>
               <Form.Row>
@@ -378,16 +311,16 @@ class ModifyRecordStatusNC extends Component {
                 </Form.Group>
               </Form.Row>
               {this.state.transaction === false && (
-              <Form.Row>
-                <div className="submitButton">
-                  <div className="submitButton-content">
-                    <CheckCircle
-                      onClick={() => { this.modifyStatus() }}
-                    />
+                <Form.Row>
+                  <div className="submitButton">
+                    <div className="submitButton-content">
+                      <CheckCircle
+                        onClick={() => { this.modifyStatus() }}
+                      />
+                    </div>
                   </div>
-                </div>
-              </Form.Row>
-          )}
+                </Form.Row>
+              )}
             </div>
           )}
         </Form>
