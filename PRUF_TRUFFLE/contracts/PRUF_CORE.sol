@@ -21,11 +21,11 @@ __/\\\\\\\\\\\\\ _____/\\\\\\\\\ _______/\\../\\ ___/\\\\\\\\\\\\\\\
 pragma solidity ^0.6.7;
 
 import "./PRUF_INTERFACES.sol";
-import "./Imports/payment/PullPayment.sol";
+//import "./Imports/math/safeMath.sol";
 import "./Imports/utils/ReentrancyGuard.sol";
 import "./PRUF_BASIC.sol";
 
-contract CORE is PullPayment, BASIC {
+contract CORE is BASIC {
     using SafeMath for uint256;
 
     struct Costs {
@@ -186,14 +186,14 @@ contract CORE is PullPayment, BASIC {
 
     //--------------------------------------------------------------PAYMENT FUNCTIONS
 
-    /*
-     * @dev Withdraws user's credit balance from contract
-     */
-    function $withdraw() external virtual payable nonReentrant {
-        //^^^^^^^checks^^^^^^^^^
-        withdrawPayments(msg.sender);
-        //^^^^^^^interactions^^^^^^^^^
-    }
+    // /*
+    //  * @dev Withdraws user's credit balance from contract
+    //  */
+    // function $withdraw() external virtual payable nonReentrant {
+    //     //^^^^^^^checks^^^^^^^^^
+    //     withdrawPayments(msg.sender);
+    //     //^^^^^^^interactions^^^^^^^^^
+    // }
 
     /*
      * @dev Deducts payment from transaction

@@ -19,8 +19,10 @@ __/\\\\\\\\\\\\\ _____/\\\\\\\\\ _______/\\../\\ ___/\\\\\\\\\\\\\\\
 pragma solidity ^0.6.7;
 
 import "./PRUF_ECR_CORE.sol";
+import "./Imports/math/safeMath.sol";
 
 contract ECR is ECR_CORE {
+    using SafeMath for uint256;
     /*
      * @dev Verify user credentials
      * Originating Address:

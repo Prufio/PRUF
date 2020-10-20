@@ -347,6 +347,14 @@ contract UTIL_TKN is
     }
 
     /**
+     * @dev Returns Max Supply
+     *
+     */
+    function max_Supply() external pure returns (uint256) {
+        return maxSupply;
+    }
+
+    /**
      * @dev Pauses all token transfers.
      *
      * See {ERC20Pausable} and {Pausable-_pause}.

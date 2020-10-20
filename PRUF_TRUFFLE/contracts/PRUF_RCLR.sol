@@ -66,7 +66,7 @@ contract RCLR is ECR_CORE, CORE {
         bytes32 _idxHash,
         bytes32 _rgtHash,
         uint32 _assetClass
-    ) external payable nonReentrant whenNotPaused {
+    ) external nonReentrant whenNotPaused {
 
         uint256 tokenId = uint256(_idxHash);
         escrowDataExtLight memory escrowDataLight = getEscrowDataLight(_idxHash);

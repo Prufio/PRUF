@@ -42,7 +42,7 @@ contract MAL_APP is CORE_MAL {
         bytes32 _rgtHash,
         uint32 _assetClass,
         uint32 _countDownStart
-    ) external payable 
+    ) external 
     // nonReentrant whenNotPaused 
     {
         Record memory rec = getRecord(_idxHash);
