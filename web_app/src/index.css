@@ -1321,7 +1321,7 @@ div {
 }
 
 .mediaLinkQRdisplayContent:hover {
-  color: #028ed4;
+  color:#002a40;
   cursor: pointer;
   -webkit-transform: rotate(10deg);
   transform: rotate(10deg);
@@ -1907,15 +1907,16 @@ div {
 }
 
 .PrintImageBackgroundForm {
-  margin-top: 6rem;
+  margin-top: 3rem;
+  margin-left: 4rem;
   justify-content: flex-start;
   display: flex;
-  width: 400px;
-  height: 139px;
+  width: 550px;
+  height: 191px;
   object-fit: cover;
   z-index: 1;
   position: absolute;
-  opacity: 0.3;
+  opacity: 0.2;
 
 }
 
@@ -1930,6 +1931,7 @@ div {
   margin-left: 42.5rem;
   margin-top: 0.4rem;
   position: absolute;
+  z-index: 999;
 }
 
 .card-idx-print {
@@ -1959,7 +1961,7 @@ div {
   font-size: 2rem;
   font-weight: bold;
   margin-top: 30rem;
-  margin-left: 9rem;
+  margin-left: 9.5rem;
   color: white;
   z-index: 999;
   position: absolute;
