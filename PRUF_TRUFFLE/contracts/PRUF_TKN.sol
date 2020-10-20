@@ -58,6 +58,8 @@ contract UTIL_TKN is
     bytes32 public constant SNAPSHOT_ROLE = keccak256("SNAPSHOT_ROLE");
     bytes32 public constant PAYABLE_ROLE = keccak256("PAYABLE_ROLE");
 
+    uint256 public constant maxSupply = 4000000000; //4billion max supply
+
     address private AC_MGR_Address;
     AC_MGR_Interface private AC_MGR;
 
@@ -333,6 +335,10 @@ contract UTIL_TKN is
         require(
             hasRole(MINTER_ROLE, _msgSender()),
             "PRuF:M: must have minter role to mint"
+        );
+        require(
+            amount.add(totalSupply()) <= maxSupply,
+            "PRuF:M: mint request exceeds max supply"
         );
         //^^^^^^^checks^^^^^^^^^
 
