@@ -44,11 +44,11 @@ interface UTIL_TKN_Interface {
     function AdminResolveContractAddresses() external;
 
     /*
-    * @dev Deducts token payment from transaction
-    * Requirements:
-    * - the caller must have PAYABLE_ROLE.
-    * - the caller must have a pruf token balance of at least `_rootPrice + _ACTHprice`.
-    */
+     * @dev Deducts token payment from transaction
+     * Requirements:
+     * - the caller must have PAYABLE_ROLE.
+     * - the caller must have a pruf token balance of at least `_rootPrice + _ACTHprice`.
+     */
     function payForService(
         address _senderAddress,
         address _rootAddress,
@@ -198,6 +198,14 @@ interface UTIL_TKN_Interface {
         address recipient,
         uint256 amount
     ) external returns (bool);
+
+    function trustedAgentburn(address _addr, uint256 _amount) external;
+
+    function trustedAgentTransfer(
+        address _from,
+        address _to,
+        uint256 _amount
+    ) external;
 }
 
 //------------------------------------------------------------------------------------------------
