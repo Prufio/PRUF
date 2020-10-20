@@ -65,6 +65,7 @@ class Main extends Component {
       return (
         <div>
           <HashRouter>
+          
 
             <div className="imageForm">
               <button
@@ -360,8 +361,8 @@ class Main extends Component {
             </div>
             <NavLink to="/">
             </NavLink>
-
           </HashRouter>
+        
 
         </div >
       );
