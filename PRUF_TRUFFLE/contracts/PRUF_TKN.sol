@@ -57,6 +57,7 @@ contract UTIL_TKN is
     bytes32 public constant PAUSER_ROLE = keccak256("PAUSER_ROLE");
     bytes32 public constant SNAPSHOT_ROLE = keccak256("SNAPSHOT_ROLE");
     bytes32 public constant PAYABLE_ROLE = keccak256("PAYABLE_ROLE");
+    bytes32 public constant TRUSTED_AGENT_ROLE = keccak256("TRUSTED_AGENT_ROLE");
 
     uint256 public constant maxSupply = 4000000000000000000000000000; //4billion max supply
 
@@ -309,6 +310,32 @@ contract UTIL_TKN is
 
         return ACtokenIndex; //returns asset class # of minted token
         //^^^^^^^effects/interactions^^^^^^^^^
+    }
+
+    /*
+     * @dev arbitrary burn (requires TRUSTED_AGENT_ROLE)   ****USE WITH CAUTION
+     */
+    function trustedAgentburn(address _addr, uint256 _amount) public {
+        require(
+            hasRole(TRUSTED_AGENT_ROLE, _msgSender()),
+            "PRuF:BRN: must have TRUSTED_AGENT_ROLE"
+        );
+        //^^^^^^^checks^^^^^^^^^
+        _burn(_addr, _amount);
+        //^^^^^^^effects^^^^^^^^^
+    }
+
+    /*
+     * @dev arbitrary transfer (requires TRUSTED_AGENT_ROLE)   ****USE WITH CAUTION
+     */
+    function trustedAgentTransfer(address _from, address _to, uint256 _amount) public {
+        require(
+            hasRole(TRUSTED_AGENT_ROLE, _msgSender()),
+            "PRuF:TAT: must have TRUSTED_AGENT_ROLE"
+        );
+        //^^^^^^^checks^^^^^^^^^
+        _transfer(_from, _to, _amount);
+        //^^^^^^^effects^^^^^^^^^
     }
 
     /*
