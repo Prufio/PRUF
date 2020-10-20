@@ -1,4 +1,4 @@
-/*-----------------------------------------------------------V0.7.0
+/*--------------------------------------------------------PRuF0.7.1
 __/\\\\\\\\\\\\\ _____/\\\\\\\\\ _______/\\../\\ ___/\\\\\\\\\\\\\\\
  _\/\\\/////////\\\ _/\\\///////\\\ ____\//..\//____\/\\\///////////__
   _\/\\\.......\/\\\.\/\\\.....\/\\\ ________________\/\\\ ____________
@@ -19,11 +19,11 @@ __/\\\\\\\\\\\\\ _____/\\\\\\\\\ _______/\\../\\ ___/\\\\\\\\\\\\\\\
 pragma solidity ^0.6.7;
 
 import "./PRUF_INTERFACES.sol";
-import "./Imports/payment/PullPayment.sol";
+//import "./Imports/payment/PullPayment.sol";
 import "./Imports/utils/ReentrancyGuard.sol";
 import "./PRUF_BASIC.sol";
 
-contract CORE_MAL is PullPayment, BASIC {
+contract CORE_MAL is  BASIC {
     using SafeMath for uint256;
 
     struct Costs {
@@ -161,29 +161,18 @@ contract CORE_MAL is PullPayment, BASIC {
     
 
     //--------------------------------------------------------------PAYMENT FUNCTIONS
-    /*
-     * @dev Withdraws user's credit balance from contract
-     */
-    function $withdraw() external virtual payable nonReentrant {
-        //^^^^^^^checks^^^^^^^^^
-        withdrawPayments(msg.sender);
-        //^^^^^^^interactions^^^^^^^^^
-    }
 
     /*
      * @dev Deducts payment from transaction
      */
     function deductPayment(Invoice memory pricing) internal whenNotPaused {
-        uint256 messageValue = msg.value;
-        uint256 change;
-        uint256 total = pricing.rootPrice.add(pricing.ACTHprice);
-        require(msg.value >= total, "C:DP: TX value too low.");
-        //^^^^^^^checks^^^^^^^^^
-        change = messageValue.sub(total);
-        _asyncTransfer(pricing.rootAddress, pricing.rootPrice);
-        _asyncTransfer(pricing.ACTHaddress, pricing.ACTHprice);
-        _asyncTransfer(msg.sender, change);
-        //^^^^^^^interactions^^^^^^^^^
+        UTIL_TKN.payForService(
+            msg.sender,
+            pricing.rootAddress,
+            pricing.rootPrice,
+            pricing.ACTHaddress,
+            pricing.ACTHprice
+        );
     }
 
 //--------------------------------------------------------------------------------------status test internal functions

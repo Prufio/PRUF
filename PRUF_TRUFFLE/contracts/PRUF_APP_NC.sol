@@ -1,4 +1,4 @@
-/*-----------------------------------------------------------V0.7.0
+/*--------------------------------------------------------PRuF0.7.1
 __/\\\\\\\\\\\\\ _____/\\\\\\\\\ _______/\\../\\ ___/\\\\\\\\\\\\\\\
  _\/\\\/////////\\\ _/\\\///////\\\ ____\//..\//____\/\\\///////////__
   _\/\\\.......\/\\\.\/\\\.....\/\\\ ________________\/\\\ ____________
@@ -47,7 +47,7 @@ contract APP_NC is CORE {
         uint32 _assetClass,
         uint32 _countDownStart,
         bytes32 _IpfsHash
-    ) external payable nonReentrant whenNotPaused {
+    ) external nonReentrant whenNotPaused {
         require(
             (ID_TKN.balanceOf(msg.sender) == 1), //msg.sender is token holder
             "ANC:MOD-IA: Caller does not hold a valid PRuF_ID token"
@@ -70,7 +70,7 @@ contract APP_NC is CORE {
         bytes32 _rgtHash,
         uint32 _assetClass,
         uint32 _countDownStart
-    ) external payable nonReentrant whenNotPaused {
+    ) external nonReentrant whenNotPaused {
         require(
             (ID_TKN.balanceOf(msg.sender) == 1), //msg.sender is token holder
             "ANC:MOD-IA: Caller does not hold a valid PRuF_ID token"
@@ -123,7 +123,7 @@ contract APP_NC is CORE {
         string calldata last,
         string calldata id,
         string calldata secret
-    ) external payable nonReentrant whenNotPaused returns (uint256) {
+    ) external nonReentrant whenNotPaused returns (uint256) {
         Record memory rec = getRecord(_idxHash);
         ContractDataHash memory contractInfo = getContractInfo(
             address(this),

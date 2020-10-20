@@ -1,4 +1,4 @@
-/*-----------------------------------------------------------V0.7.0
+/*--------------------------------------------------------PRuF0.7.1
 __/\\\\\\\\\\\\\ _____/\\\\\\\\\ _______/\\../\\ ___/\\\\\\\\\\\\\\\
  _\/\\\/////////\\\ _/\\\///////\\\ ____\//..\//____\/\\\///////////__
   _\/\\\.......\/\\\.\/\\\.....\/\\\ ________________\/\\\ ____________
@@ -26,6 +26,7 @@ import "./Imports/access/Ownable.sol";
 import "./Imports/utils/Pausable.sol";
 import "./Imports/utils/ReentrancyGuard.sol";
 import "./Imports/token/ERC721/IERC721Receiver.sol";
+import "./Imports/math/safeMath.sol";
 
 contract BASIC is ReentrancyGuard, Ownable, IERC721Receiver, Pausable {
     struct Record {

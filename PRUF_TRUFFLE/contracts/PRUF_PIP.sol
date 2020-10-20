@@ -1,4 +1,4 @@
-/*-----------------------------------------------------------V0.7.0
+/*--------------------------------------------------------PRuF0.7.1
 __/\\\\\\\\\\\\\ _____/\\\\\\\\\ _______/\\../\\ ___/\\\\\\\\\\\\\\\
  _\/\\\/////////\\\ _/\\\///////\\\ ____\//..\//____\/\\\///////////__
   _\/\\\.......\/\\\.\/\\\.....\/\\\ ________________\/\\\ ____________
@@ -73,7 +73,7 @@ contract PIP is CORE {
         uint32 _newAssetClass,
         bytes32 _rgtHash,
         uint32 _countDownStart
-    ) external payable nonReentrant whenNotPaused {
+    ) external nonReentrant whenNotPaused {
         uint256 tokenId = uint256(_idxHash);
         // Record memory rec = getRecord(_idxHash);
         // ContractDataHash memory contractInfo = getContractInfo(

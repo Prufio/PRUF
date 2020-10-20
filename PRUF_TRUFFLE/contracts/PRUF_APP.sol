@@ -1,4 +1,4 @@
-/*-----------------------------------------------------------V0.7.0
+/*--------------------------------------------------------PRuF0.7.1
 __/\\\\\\\\\\\\\ _____/\\\\\\\\\ _______/\\../\\ ___/\\\\\\\\\\\\\\\
  _\/\\\/////////\\\ _/\\\///////\\\ ____\//..\//____\/\\\///////////__
   _\/\\\.......\/\\\.\/\\\.....\/\\\ ________________\/\\\ ____________
@@ -41,7 +41,7 @@ contract APP is CORE {
         bytes32 _rgtHash,
         uint32 _assetClass,
         uint32 _countDownStart
-    ) external payable nonReentrant whenNotPaused {
+    ) external nonReentrant whenNotPaused {
         Record memory rec = getRecord(_idxHash);
         uint8 userType = getCallingUserType(_assetClass);
         AC memory AC_info = getACinfo(_assetClass);

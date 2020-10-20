@@ -1,4 +1,4 @@
-/*-----------------------------------------------------------V0.7.0
+/*--------------------------------------------------------PRuF0.7.1
 __/\\\\\\\\\\\\\ _____/\\\\\\\\\ _______/\\../\\ ___/\\\\\\\\\\\\\\\
  _\/\\\/////////\\\ _/\\\///////\\\ ____\//..\//____\/\\\///////////__
   _\/\\\.......\/\\\.\/\\\.....\/\\\ ________________\/\\\ ____________
@@ -344,7 +344,7 @@ contract SHARES is ReentrancyGuard, Ownable, Pausable {
     }
 
     //--------------------------------------------------Payable functions-------------------------------------------------
-    function sendMeEth() external payable {
+    function sendMeEth() external {
         //this is just the payable function (mainly for testing)
         require(msg.value > 0, "MOAR ETH!!!!!");
     }
@@ -358,5 +358,5 @@ contract SHARES is ReentrancyGuard, Ownable, Pausable {
         return address(this).balance;
     }
 
-    receive() external payable {}
+    receive() external {}
 }

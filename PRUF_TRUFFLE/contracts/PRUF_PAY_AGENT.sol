@@ -100,7 +100,7 @@ contract PAY_AGENT is Context, ReentrancyGuard, Ownable, Pausable{
      * https://solidity.readthedocs.io/en/latest/contracts.html#fallback-function[fallback
      * functions].
      */
-    receive () external payable virtual {
+    receive () external virtual {
         emit PaymentReceived(_msgSender(), msg.value);
     }
 
@@ -202,7 +202,7 @@ contract PAY_AGENT is Context, ReentrancyGuard, Ownable, Pausable{
     //     APP_NC.$withdraw();
     //  }
 
-    function sendMeEth() external payable {
+    function sendMeEth() external {
         //this is just the payable function (mainly for testing)
         require(msg.value > 0, "MOAR ETH!!!!!");
     }

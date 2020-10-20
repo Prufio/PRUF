@@ -263,7 +263,7 @@ class NewRecordNC extends Component {
               {!this.state.idxSubmitted && (
                 <>
                   <Form.Row>
-                    <Form.Group as={Col} controlId="formGridNameTag">
+                    <Form.Group as={Col} controlId="formGridNewAssetName">
                       <Form.Label className="formFont">Name Tag:</Form.Label>
                       <Form.Control
                         placeholder="Put a nametag on this asset (optional)"
