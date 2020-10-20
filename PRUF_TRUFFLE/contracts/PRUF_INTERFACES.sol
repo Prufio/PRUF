@@ -44,6 +44,20 @@ interface UTIL_TKN_Interface {
     function AdminResolveContractAddresses() external;
 
     /*
+    * @dev Deducts token payment from transaction
+    * Requirements:
+    * - the caller must have PAYABLE_ROLE.
+    * - the caller must have a pruf token balance of at least `_rootPrice + _ACTHprice`.
+    */
+    function payForService(
+        address _senderAddress,
+        address _rootAddress,
+        uint256 _rootPrice,
+        address _ACTHaddress,
+        uint256 _ACTHprice
+    ) external;
+
+    /*
      * @dev return current AC token index pointer
      */
     function currentACtokenInfo() external view returns (uint256, uint256);

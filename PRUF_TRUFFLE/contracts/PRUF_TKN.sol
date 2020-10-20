@@ -12,7 +12,13 @@ __/\\\\\\\\\\\\\ _____/\\\\\\\\\ _______/\\../\\ ___/\\\\\\\\\\\\\\\
 
 /*-----------------------------------------------------------------
  *  TO DO
- *
+ *  factor out as much code as possible to calling contracts
+ *  increase share -- ACMGR
+ *  buyACtoken -- ACMGR
+ *  AdminSetStorageContract
+ *  AdminResolveContractAddresses
+ *  AdminSetPaymentAddress
+ *  currentACtokenInfo  -- ACMGR
  *---------------------------------------------------------------*/
 
 // SPDX-License-Identifier: MIT
@@ -50,17 +56,27 @@ contract UTIL_TKN is
     bytes32 public constant MINTER_ROLE = keccak256("MINTER_ROLE");
     bytes32 public constant PAUSER_ROLE = keccak256("PAUSER_ROLE");
     bytes32 public constant SNAPSHOT_ROLE = keccak256("SNAPSHOT_ROLE");
+    bytes32 public constant PAYABLE_ROLE = keccak256("PAYABLE_ROLE");
 
-    address internal AC_MGR_Address;
-    AC_MGR_Interface internal AC_MGR;
+    address private AC_MGR_Address;
+    AC_MGR_Interface private AC_MGR;
 
-    address internal STOR_Address;
-    STOR_Interface internal STOR;
+    address private STOR_Address;
+    STOR_Interface private STOR;
 
-    address internal paymentAddress;
+    address private paymentAddress;
+    address private sharesAddress = address(0);
 
-    uint256 internal ACtokenIndex = 1000000; //asset tokens created in sequence starting at at 1,000,000
-    uint256 internal currentACtokenPrice = 10000;
+    uint256 private ACtokenIndex = 1000000; //asset tokens created in sequence starting at at 1,000,000
+    uint256 private currentACtokenPrice = 10000;
+
+    struct Invoice {
+        //invoice struct to facilitate payment messaging in-contract
+        address rootAddress;
+        uint256 rootPrice;
+        address ACTHaddress;
+        uint256 ACTHprice;
+    }
 
     /**
      * @dev Grants `DEFAULT_ADMIN_ROLE`, `MINTER_ROLE` and `PAUSER_ROLE` to the
@@ -73,6 +89,26 @@ contract UTIL_TKN is
         _setupRole(SNAPSHOT_ROLE, _msgSender());
         _setupRole(MINTER_ROLE, _msgSender());
         _setupRole(PAUSER_ROLE, _msgSender());
+        _setupRole(PAYABLE_ROLE, _msgSender());
+    }
+
+    /*
+     * @dev Set adress of SHARES payment contract. by default contract will use root adress instead if set to zero.
+     */
+    function AdminSetSharesAddress(address _paymentAddress) external {
+        require(
+            _paymentAddress != address(0),
+            "PRuF:SSA: payment address cannot be zero"
+        );
+
+        require(
+            hasRole(DEFAULT_ADMIN_ROLE, _msgSender()),
+            "PRuF:SSA: must have DEFAULT_ADMIN_ROLE"
+        );
+        //^^^^^^^checks^^^^^^^^^
+
+        sharesAddress = _paymentAddress;
+        //^^^^^^^effects^^^^^^^^^
     }
 
     /*
@@ -114,6 +150,7 @@ contract UTIL_TKN is
     }
 
 
+
     /*
      * @dev Resolve Contract Addresses from STOR
      */
@@ -130,7 +167,6 @@ contract UTIL_TKN is
         //^^^^^^^effects/interactions^^^^^^^^^
     }
 
-
     /*
      * @dev return current AC token index pointer
      */
@@ -142,6 +178,42 @@ contract UTIL_TKN is
         //^^^^^^^effects/interactions^^^^^^^^^
     }
 
+    /*
+    * @dev Deducts token payment from transaction
+    */
+    function payForService(
+        address _senderAddress,
+        address _rootAddress,
+        uint256 _rootPrice,
+        address _ACTHaddress,
+        uint256 _ACTHprice
+    ) external {
+        require(
+            hasRole(PAYABLE_ROLE, _msgSender()),
+            "PRuF:PPS: must have PAYABLE_ROLE"
+        );
+        require(  //redundant? throws on transfer?
+            balanceOf(_senderAddress) >= _rootPrice.add(_ACTHprice),
+            "PRuF:PPS: insufficient balance"
+        );
+        //^^^^^^^checks^^^^^^^^^
+        address _sharesAddress = sharesAddress;
+
+        if (sharesAddress == address(0)){
+            _sharesAddress = _rootAddress;
+        } 
+
+        uint256 sharesShare = _rootPrice.div(uint256(4)); //SHARES
+        uint256 rootShare = _rootPrice.sub(sharesShare); //SHARES
+
+        _transfer(_senderAddress, _rootAddress, rootShare);
+        _transfer(_senderAddress, _sharesAddress, sharesShare);
+        _transfer(_senderAddress, _ACTHaddress, _ACTHprice);
+
+        //^^^^^^^effects^^^^^^^^^
+        //^^^^^^^interactions^^^^^^^^^
+    }
+
 
     /**
      * @dev See {IERC20-transfer}. Increase payment share of an asset class
@@ -150,10 +222,10 @@ contract UTIL_TKN is
      * - `recipient` cannot be the zero address.
      * - the caller must have a balance of at least `amount`.
      */
-    function increaseShare(
-        uint32 _assetClass,
-        uint256 _amount
-    ) public returns (bool) {
+    function increaseShare(uint32 _assetClass, uint256 _amount)
+        public
+        returns (bool)
+    {
         require(
             balanceOf(msg.sender) >= _amount,
             "PRuf:IS:Insufficient PRuF token Balance for transaction"
@@ -188,12 +260,11 @@ contract UTIL_TKN is
         uint32 _assetClassRoot,
         uint8 _custodyType
     ) public returns (uint256) {
-
         require(
             balanceOf(msg.sender) >= currentACtokenPrice,
             "PRuf:IS:Insufficient PRuF token Balance for transaction"
         );
-        require(               //Impossible to test??
+        require( //Impossible to test??
             ACtokenIndex < 4294000000,
             "PRuf:IS:Only 4294000000 AC tokens allowed"
         );
@@ -234,11 +305,9 @@ contract UTIL_TKN is
 
         currentACtokenPrice = newACtokenPrice;
 
-        return ACtokenIndex;  //returns asset class # of minted token
+        return ACtokenIndex; //returns asset class # of minted token
         //^^^^^^^effects/interactions^^^^^^^^^
     }
-
-
 
     /*
      * @dev Take a balance snapshot, returns snapshot ID
@@ -250,7 +319,6 @@ contract UTIL_TKN is
         );
         return _snapshot();
     }
-    
 
     /**
      * @dev Creates `amount` new tokens for `to`.
@@ -266,7 +334,7 @@ contract UTIL_TKN is
             hasRole(MINTER_ROLE, _msgSender()),
             "PRuF:M: must have minter role to mint"
         );
-         //^^^^^^^checks^^^^^^^^^
+        //^^^^^^^checks^^^^^^^^^
 
         _mint(to, amount);
         //^^^^^^^interactions^^^^^^^^^
@@ -317,5 +385,4 @@ contract UTIL_TKN is
     ) internal virtual override(ERC20, ERC20Pausable, ERC20Snapshot) {
         super._beforeTokenTransfer(from, to, amount);
     }
-    
 }
