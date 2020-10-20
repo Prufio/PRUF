@@ -48,7 +48,7 @@ class Home extends Component {
           .call((_error, _result) => {
             if (_error) { console.log("Error: ", _error) }
             else {
-              console.log("Balance of address", participants.addresses[i],": ",window.web3.utils.fromWei(_result))
+              console.log("Balance of address", participants.addresses[i],":",window.web3.utils.fromWei(_result))
             }
           }); 
       }
@@ -69,7 +69,7 @@ class Home extends Component {
           self.setState({ result: _error.transactionHash });
         })
         .on("receipt", (receipt) => {
-          console.log("dropped", this.state.airdropAmount, "tokens to address: ", participants.addresses[i]);
+          console.log("dropped", this.state.airdropAmount, "tokens to address:", participants.addresses[i]);
           console.log("tx receipt: ", receipt);
         }); 
       }
