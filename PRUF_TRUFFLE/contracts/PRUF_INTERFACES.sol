@@ -1,4 +1,4 @@
-/*-----------------------------------------------------------V0.7.0
+/*--------------------------------------------------------PRuF0.7.1
 __/\\\\\\\\\\\\\ _____/\\\\\\\\\ _______/\\../\\ ___/\\\\\\\\\\\\\\\
  _\/\\\/////////\\\ _/\\\///////\\\ ____\//..\//____\/\\\///////////__
   _\/\\\.......\/\\\.\/\\\.....\/\\\ ________________\/\\\ ____________
@@ -42,6 +42,20 @@ interface UTIL_TKN_Interface {
      * @dev Resolve Contract Addresses from STOR
      */
     function AdminResolveContractAddresses() external;
+
+    /*
+    * @dev Deducts token payment from transaction
+    * Requirements:
+    * - the caller must have PAYABLE_ROLE.
+    * - the caller must have a pruf token balance of at least `_rootPrice + _ACTHprice`.
+    */
+    function payForService(
+        address _senderAddress,
+        address _rootAddress,
+        uint256 _rootPrice,
+        address _ACTHaddress,
+        uint256 _ACTHprice
+    ) external;
 
     /*
      * @dev return current AC token index pointer

@@ -38,7 +38,7 @@ class Print extends React.Component {
                         )}
                     </PrintContextConsumer>
                 </ReactToPrint>
-                <ComponentToPrint ref={el => (this.componentRef = el)} />
+                <div style={{ display: "none" }}><ComponentToPrint ref={this.componentRef} /></div>
             </div>
         );
     }

@@ -1,4 +1,4 @@
-import React, { Component } from "react";
+import React, { Component, useRef } from "react";
 import Form from "react-bootstrap/Form";
 import Card from "react-bootstrap/Card";
 import Button from "react-bootstrap/Button";
@@ -10,43 +10,16 @@ import Nav from 'react-bootstrap/Nav'
 import DropdownButton from 'react-bootstrap/DropdownButton';
 import { Printer, RefreshCw, Grid, X, Save, ChevronRight, CornerUpLeft, Home } from "react-feather";
 import { QRCode } from 'react-qrcode-logo';
-import ReactToPrint, { PrintContextConsumer } from 'react-to-print';
+import ComponentToPrint from './../PrintComponent'
+import ReactToPrint from 'react-to-print';
 
-// class ComponentToPrint extends React.Component {
-//   render() {
-//     const ComponentToPrint = (obj) => {
-//       let component = [];
-//       component.push(
-//         <div className="PrintForm">
-//           <div className="QRPrint">
-//             <QRCode
-//               value={obj.idxHash}
-//               qrStyle="dots"
-//               size="400"
-//               fgColor="#002a40"
-//               logoWidth="80"
-//               logoHeight="80"
-//               logoImage="https://pruf.io/assets/images/pruf-u-logo-192x255.png"
-//             />
-//           </div>
-//           <div className="PrintFormContent">
-//             <p className="card-name-print">Name : {obj.name}</p>
-//             <p className="card-ac-print">Asset Class : {obj.assetClass}</p>
-//             <h4 className="card-idx-print">IDX : {obj.idxHash}</h4>
-//           </div>
-//         </div >
-//       );
 
-//       return component;
-//     }
-//   }
-// }
 
 class AssetDashboard extends React.Component {
   constructor(props) {
     super(props);
 
-    
+
     this.updateAssets = setInterval(() => {
       if (this.state.assets !== window.assets && this.state.runWatchDog === true) {
         this.setState({ assets: window.assets })
@@ -62,19 +35,16 @@ class AssetDashboard extends React.Component {
     }, 100)
 
     this.moreInfo = (e) => {
-      window.scrollTo({
-        top: 0,
-        behavior: "smooth"
-      });
       if (e === "back") { return this.setState({ assetObj: {}, moreInfo: false, printQR: undefined }) }
 
-      if (e.DisplayImage !== undefined && e.DisplayImage !== ""){
-        this.setState({selectedImage: e.DisplayImage})
+      if (e.DisplayImage !== undefined && e.DisplayImage !== "") {
+        this.setState({ selectedImage: e.DisplayImage })
       }
       else {
         this.setState({ selectedImage: Object.values(e.photo)[0] })
       }
       this.setState({ assetObj: e, moreInfo: true })
+      window.printObj = e;
       this.setAC(e.assetClass)
     }
 
@@ -134,10 +104,64 @@ class AssetDashboard extends React.Component {
       window.location.href = '/#/' + link
     }
 
-    this.generateAssetInfo = (obj) => {
+
+
+    this.state = {
+      addr: undefined,
+      web3: null,
+      APP: "",
+      NP: "",
+      STOR: "",
+      AC_MGR: "",
+      ECR_NC: "",
+      ECR_MGR: "",
+      AC_TKN: "",
+      A_TKN: "",
+      APP_NC: "",
+      NP_NC: "",
+      ECR2: "",
+      authLevel: "",
+      PIP: "",
+      RCLR: "",
+      showDescription: false,
+      descriptionElements: undefined,
+      assets: { descriptions: [], ids: [], assetClasses: [], statuses: [], names: [] },
+      contractArray: [],
+      hasLoadedAssets: false,
+    };
+  }
+
+  componentDidMount() {
+/*     const handlePrint = useReactToPrint({
+      content: () => ComponentToPrint,
+    })
+    this.setState({handlePrint: handlePrint}); */
+    this.setState({
+      addr: window.addr,
+      runWatchDog: true,
+      assetTokenInfo: {}
+    })
+  }
+
+  componentDidUpdate() {
+
+    if (this.componentRef !== window.componentRef) {
+      window.componentRef = this.componentRef
+    }
+  }
+
+  static getDerivedStateFromError(error) {
+    // Update state so the next render will show the fallback UI.
+    return { hasError: true };
+  }
+
+  render() {
+
+    const generateAssetInfo = (obj) => {
       let images = Object.values(obj.photo)
       let text = Object.values(obj.text)
       let textNames = Object.keys(obj.text)
+      
 
 
 
@@ -161,6 +185,10 @@ class AssetDashboard extends React.Component {
         }
       }
 
+      // const _printQRFile = async (obj) => {
+
+      // }
+
       const generateThumbs = () => {
         let component = [];
 
@@ -174,32 +202,6 @@ class AssetDashboard extends React.Component {
 
         return component
       }
-
-      // const ComponentToPrint = (obj) => {
-      //   let component = [];
-      //   component.push(
-      //     <div className="PrintForm">
-      //       <div className="QRPrint">
-      //         <QRCode
-      //           value={obj.idxHash}
-      //           qrStyle="dots"
-      //           size="400"
-      //           fgColor="#002a40"
-      //           logoWidth="80"
-      //           logoHeight="80"
-      //           logoImage="https://pruf.io/assets/images/pruf-u-logo-192x255.png"
-      //         />
-      //       </div>
-      //       <div className="PrintFormContent">
-      //         <p className="card-name-print">Name : {obj.name}</p>
-      //         <p className="card-ac-print">Asset Class : {obj.assetClass}</p>
-      //         <h4 className="card-idx-print">IDX : {obj.idxHash}</h4>
-      //       </div>
-      //     </div >
-      //   );
-  
-      //   return component;
-      // }
 
       const generateTextList = () => {
         let component = [];
@@ -270,7 +272,6 @@ class AssetDashboard extends React.Component {
                           <div className="QR">
                             <QRCode
                               value={obj.idxHash}
-                              qrStyle="dots"
                               size="150"
                               fgColor="#002a40"
                               logoWidth="35"
@@ -282,16 +283,15 @@ class AssetDashboard extends React.Component {
                         <div className="QRdisplay-footer">
                           <div className="mediaLinkQRdisplay">
                             <a className="mediaLinkQRdisplayContent" ><Save onClick={() => { _printQR() }} /></a>
-                            <a className="mediaLinkQRdisplayContent" ><Printer onClick={() => { _printQR() }} /></a>
-                            {/* <div>
-                              <ReactToPrint content={() => ComponentToPrint(obj)}>
-                                <PrintContextConsumer>
-                                  {({ handlePrint }) => (
-                                    <button onClick={handlePrint}>Print this out!</button>
-                                  )}
-                                </PrintContextConsumer>
-                              </ReactToPrint>
-                            </div> */}
+                             <a className="mediaLinkQRdisplayContent" ><ReactToPrint
+          trigger={() => {
+            // NOTE: could just as easily return <SomeComponent />. Do NOT pass an `onClick` prop
+            // to the root node of the returned component as it will be overwritten.
+            return ComponentToPrint;
+          }}
+          content={() => this.state.componentRef}
+        /></a> 
+                             <ComponentToPrint ref={e => (this.setState({componentRef: e}))} />
                             <a className="mediaLinkQRdisplayContent" ><X onClick={() => { _printQR() }} /></a>
                           </div>
                         </div>
@@ -364,7 +364,7 @@ class AssetDashboard extends React.Component {
       )
     }
 
-    this.generateAssetDash = (obj) => {
+    const generateAssetDash = (obj) => {
       if (obj.names.length > 0) {
         let component = [];
 
@@ -457,50 +457,6 @@ class AssetDashboard extends React.Component {
 
     }
 
-    this.state = {
-      addr: undefined,
-      web3: null,
-      APP: "",
-      NP: "",
-      STOR: "",
-      AC_MGR: "",
-      ECR_NC: "",
-      ECR_MGR: "",
-      AC_TKN: "",
-      A_TKN: "",
-      APP_NC: "",
-      NP_NC: "",
-      ECR2: "",
-      authLevel: "",
-      PIP: "",
-      RCLR: "",
-      showDescription: false,
-      descriptionElements: undefined,
-      assets: { descriptions: [], ids: [], assetClasses: [], statuses: [], names: [] },
-      contractArray: [],
-      hasLoadedAssets: false,
-    };
-  }
-
-  componentDidMount() {
-    this.setState({
-      addr: window.addr,
-      runWatchDog: true,
-      assetTokenInfo: {}
-    })
-  }
-
-  componentDidUpdate() {
-
-  }
-
-  static getDerivedStateFromError(error) {
-    // Update state so the next render will show the fallback UI.
-    return { hasError: true };
-  }
-
-  render() {
-
 
     const _refresh = () => {
       window.resetInfo = true;
@@ -521,8 +477,8 @@ class AssetDashboard extends React.Component {
           </div>
         </div>
         <div className="assetDashboard">
-          {!this.state.hasNoAssets && this.state.hasLoadedAssets && !this.state.moreInfo && (<>{this.generateAssetDash(this.state.assets)}</>)}
-          {!this.state.hasNoAssets && this.state.hasLoadedAssets && this.state.moreInfo && (<>{this.generateAssetInfo(this.state.assetObj)}</>)}
+          {!this.state.hasNoAssets && this.state.hasLoadedAssets && !this.state.moreInfo && (<>{generateAssetDash(this.state.assets)}</>)}
+          {!this.state.hasNoAssets && this.state.hasLoadedAssets && this.state.moreInfo && (<>{generateAssetInfo(this.state.assetObj)}</>)}
           {!this.state.hasNoAssets && !this.state.hasLoadedAssets && (<div className="VRText"><h2 className="loading">Loading Assets</h2></div>)}
           {this.state.hasNoAssets && (<div className="VRText"><h2>No Assets Held by User</h2></div>)}
         </div>
