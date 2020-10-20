@@ -249,192 +249,6 @@ class EscrowManagerNC extends Component {
 
       return clearForm();
     };
-    if (this.state.wasSentPacket) {
-      return (
-        <div>
-          <div>
-            <div className="mediaLinkAD-home">
-              <a className="mediaLinkContentAD-home" ><Home onClick={() => { window.location.href = '/#/' }} /></a>
-            </div>
-            <h2 className="FormHeader">Manage Escrow</h2>
-            <div className="mediaLink-clearForm">
-              <a className="mediaLinkContent-clearForm" ><XSquare onClick={() => { clearForm() }} /></a>
-            </div>
-          </div>
-          <Form className="Form" id='MainForm'>
-            {window.addr === undefined && (
-              <div className="Results">
-                <h2>User address unreachable</h2>
-                <h3>Please connect web3 provider.</h3>
-              </div>
-            )}
-
-            {window.addr > 0 && (
-              <div>
-                {!this.state.accessPermitted && (
-                  <>
-                    <Form.Row>
-                      <Form.Label className="formFont">Set or End?:</Form.Label>
-                      <Form.Control as="select" size="lg" onChange={(e) => this.setState({ isSettingEscrow: e.target.value })}>
-                        <option value="null">Select an Action</option>
-                        {this.state.isSettingEscrowAble === true && (
-                          <option value="true">Set Escrow</option>
-                        )}
-                        {this.state.isSettingEscrowAble === false && (
-                          <option value="false">End Escrow</option>
-                        )}
-                      </Form.Control>
-                    </Form.Row>
-                    {this.state.transaction === false && (
-                      <Form.Row>
-                        <div className="submitButton">
-                          <div className="submitButton-content">
-                            <ArrowRightCircle
-                              onClick={() => { _accessAsset() }}
-                            />
-                          </div>
-                        </div>
-                      </Form.Row>
-                    )}
-                  </>
-                )}
-                {this.state.accessPermitted === true && this.state.isSettingEscrow === "true" && (
-                  <>
-                    <Form.Row>
-                      <Form.Group as={Col} controlId="formGridAgent">
-                        <Form.Label className="formFont">Agent Address:</Form.Label>
-                        <Form.Control
-                          placeholder="agent"
-                          required
-                          onChange={(e) => this.setState({ agent: e.target.value })}
-                          size="lg"
-                        />
-                      </Form.Group>
-
-                      <Form.Group as={Col} controlId="formGridStatus">
-                        <Form.Label className="formFont">Escrow Status:</Form.Label>
-                        <Form.Control as="select" size="lg" onChange={(e) => this.setState({ newStatus: e.target.value })}>
-                          <option value="0">Select an Escrow Status</option>
-                          <option value="56">Supervised Escrow</option>
-                          <option value="50">Locked Escrow</option>
-                        </Form.Control>
-                      </Form.Group>
-                    </Form.Row>
-
-                    <Form.Row>
-                      <Form.Group as={Col} controlId="formGridTime">
-                        <Form.Label className="formFont">Duration:</Form.Label>
-                        <Form.Control
-                          placeholder="setEscrow duration"
-                          required
-                          onChange={(e) => this.setState({ escrowTime: e.target.value })}
-                          size="lg"
-                        />
-                      </Form.Group>
-                      <Form.Group as={Col} controlId="formGridFormat">
-                        <Form.Label className="formFont">Time Unit:</Form.Label>
-                        <Form.Control as="select" size="lg" onChange={(e) => this.setState({ timeFormat: e.target.value })}>
-                          <option value="0">Select a time unit</option>
-                          <option value="seconds">Seconds</option>
-                          <option value="minutes">Minutes</option>
-                          <option value="hours">Hours</option>
-                          <option value="days">Days</option>
-                          <option value="weeks">Weeks</option>
-                        </Form.Control>
-                      </Form.Group>
-                    </Form.Row>
-                    {this.state.transaction === false && (
-                      <Form.Row>
-                        <div className="submitButton">
-                          <div className="submitButton-content">
-                            <CheckCircle
-                              onClick={() => { _setEscrow() }}
-                            />
-                          </div>
-                        </div>
-                      </Form.Row>
-                    )}
-                  </>
-                )}
-                {this.state.accessPermitted === true && this.state.isSettingEscrow === "false" && (
-                  <>
-                    <Form.Row>
-                      <h2 className="escrowDetails">Escrow Agent: {this.state.escrowData[1]}</h2>
-                    </Form.Row>
-                    <Form.Row>
-                      <h2 className="escrowDetails"> Escrow TimeLock: {this.state.escrowData[2]}</h2>
-                    </Form.Row>
-                    {this.state.transaction === false && (
-                      <Form.Row>
-                        <div className="submitButton">
-                          <div className="submitButton-content">
-                            <CheckCircle
-                              onClick={() => { _endEscrow() }}
-                            />
-                          </div>
-                        </div>
-                      </Form.Row>
-                    )}
-                  </>
-                )}
-              </div>
-            )}
-          </Form>
-          {this.state.transaction === false && this.state.txStatus === false && (
-            <div className="assetSelectedResults">
-              <Form.Row>
-                {this.state.idxHash !== undefined && this.state.txHash === "" && (
-                  <Form.Group>
-                    <div className="assetSelectedContentHead">Asset IDX: <span className="assetSelectedContent">{this.state.idxHash}</span> </div>
-                    <div className="assetSelectedContentHead">Asset Name: <span className="assetSelectedContent">{this.state.name}</span> </div>
-                    <div className="assetSelectedContentHead">Asset Class: <span className="assetSelectedContent">{this.state.assetClass}</span> </div>
-                    <div className="assetSelectedContentHead">Asset Status: <span className="assetSelectedContent">{this.state.status}</span> </div>
-                  </Form.Group>
-                )}
-              </Form.Row>
-            </div>
-          )}
-          {this.state.transaction === true && (
-
-            <div className="Results">
-              <p className="loading">Transaction In Progress</p>
-            </div>)}
-          {this.state.transaction === false && (
-            <div>
-              {this.state.txHash > 0 && ( //conditional rendering
-                <div className="Results">
-                  {this.state.txStatus === false && (
-                    <div>
-                      !ERROR! :
-                      <a
-                        href={"https://kovan.etherscan.io/tx/" + this.state.txHash}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                      >
-                        KOVAN Etherscan:{this.state.txHash}
-                      </a>
-                    </div>
-                  )}
-                  {this.state.txStatus === true && (
-                    <div>
-                      {" "}
-                    No Errors Reported :
-                      <a
-                        href={"https://kovan.etherscan.io/tx/" + this.state.txHash}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                      >
-                        KOVAN Etherscan:{this.state.txHash}
-                      </a>
-                    </div>
-                  )}
-                </div>
-              )}
-            </div>
-          )}
-        </div>
-      );
-    }
 
     return (
       <div>
@@ -461,18 +275,39 @@ class EscrowManagerNC extends Component {
                   <Form.Row>
                     <Form.Group as={Col} controlId="formGridAsset">
                       <Form.Label className="formFont"> Select an Asset to Modify :</Form.Label>
-                      <Form.Control
-                        as="select"
-                        size="lg"
-                        onChange={(e) => { _checkIn(e.target.value) }}
-                      >
-                        {this.state.hasLoadedAssets && (
-                          <optgroup className="optgroup">
-                            {window.utils.generateAssets()}
-                          </optgroup>)}
-                        {!this.state.hasLoadedAssets && (<optgroup ><option value="null"> Loading Assets... </option></optgroup>)}
+                      {!this.state.wasSentPacket && (
+                        <Form.Control
+                          as="select"
+                          size="lg"
+                          onChange={(e) => { _checkIn(e.target.value) }}
 
-                      </Form.Control>
+                        >
+                          {this.state.hasLoadedAssets && (
+                            <optgroup className="optgroup">
+                              {window.utils.generateAssets()}
+                            </optgroup>)}
+                          {!this.state.hasLoadedAssets && (
+                            <optgroup>
+                              <option value="null">
+                                Loading Assets...
+                           </option>
+                            </optgroup>)}
+                        </Form.Control>
+                      )}
+                      {this.state.wasSentPacket && (
+                        <Form.Control
+                          as="select"
+                          size="lg"
+                          onChange={(e) => { _checkIn(e.target.value) }}
+                          disabled
+                        >
+                          <optgroup>
+                            <option value="null">
+                              "{this.state.name}" Please Clear Form to Select Different Asset
+                           </option>
+                          </optgroup>
+                        </Form.Control>
+                      )}
                     </Form.Group>
                   </Form.Row>
                   <Form.Row>

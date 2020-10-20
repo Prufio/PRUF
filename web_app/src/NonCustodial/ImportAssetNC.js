@@ -2,7 +2,7 @@ import React, { Component } from "react";
 import Form from "react-bootstrap/Form";
 import Col from "react-bootstrap/Col";
 import Row from "react-bootstrap/Row";
-import { Home, XSquare, ArrowRightCircle, Grid, CornerUpLeft, CheckCircle } from "react-feather";
+import { Home, XSquare, ArrowRightCircle, CheckCircle } from "react-feather";
 class ImportAssetNC extends Component {
   constructor(props) {
     super(props);
@@ -113,7 +113,6 @@ class ImportAssetNC extends Component {
           this.setState({ assetClass: this.state.selectedAssetClass });
           await window.utils.resolveACFromID(this.state.selectedAssetClass)
           await window.utils.getACData("id", this.state.selectedAssetClass)
-
           await this.setState({ ACname: window.assetClassName });
         }
 
@@ -234,7 +233,6 @@ class ImportAssetNC extends Component {
         .$importAsset(idxHash, this.state.selectedAssetClass)
         .send({ from: window.addr, value: window.costs.newRecordCost })
         .on("error", function (_error) {
-          // self.setState({ NRerror: _error });
           self.setState({ transaction: false })
           self.setState({ txHash: Object.values(_error)[0].transactionHash });
           self.setState({ txStatus: false });
@@ -260,97 +258,7 @@ class ImportAssetNC extends Component {
 
       return clearForm();
     };
-    if (this.state.wasSentPacket && this.state.assetClassSelected) {
-      return (
-        <div>
-          <div>
-            <div className="mediaLinkAD-home">
-              <a className="mediaLinkContentAD-home" ><Home onClick={() => { window.location.href = '/#/' }} /></a>
-            </div>
-            <h2 className="FormHeader">Import Asset</h2>
-            <div className="mediaLink-clearForm">
-              <a className="mediaLinkContent-clearForm" ><XSquare onClick={() => { clearForm() }} /></a>
-            </div>
-          </div>
-          <Form className="Form" id='MainForm'>
-            {window.addr === undefined && (
-              <div className="Results">
-                <h2>User address unreachable</h2>
-                <h3>Please connect web3 provider.</h3>
-              </div>
-            )}
-            {window.addr > 0 && this.state.transaction === false && (
-              <div>
-                <Form.Row>
-                    <div className="submitButton">
-                      <div className="submitButton-content">
-                        <CheckCircle
-                          onClick={() => { _importAsset() }}
-                        />
-                      </div>
-                      <Form.Label className="LittleTextNewRecord">
-                        Cost to import into AC {this.state.selectedAssetClass}: {Number(window.costs.newRecordCost) / 1000000000000000000} ETH
-                      </Form.Label>
-                    </div>
-                </Form.Row>
-              </div>
-            )}
-          </Form>
-          {this.state.transaction === false && (
-            <div className="assetSelectedResults">
-              <Form.Row>
-                {this.state.idxHash !== undefined && this.state.txHash === "" && (
-                  <Form.Group>
-                    <div className="assetSelectedContentHead">Asset IDX: <span className="assetSelectedContent">{this.state.idxHash}</span> </div>
-                    <div className="assetSelectedContentHead">Asset Name: <span className="assetSelectedContent">{this.state.name}</span> </div>
-                    <div className="assetSelectedContentHead">Asset Class: <span className="assetSelectedContent">{this.state.packetAssetClass}</span> </div>
-                    <div className="assetSelectedContentHead">Asset Status: <span className="assetSelectedContent">{this.state.status}</span> </div>
-                    {this.state.assetClassSelected === true && (
-                      <div className="assetSelectedContentHead">Importing Asset Class: <span className="assetSelectedContent">{this.state.selectedAssetClass}</span> </div>
-                    )}
-                  </Form.Group>
-                )}
-              </Form.Row>
-            </div>
-          )}
 
-          {this.state.transaction === true && (
-
-            <div className="Results">
-              <p className="loading">Transaction In Progress</p>
-            </div>)}
-          {this.state.txHash > 0 && ( //conditional rendering
-            <div className="Results">
-              {this.state.txStatus === false && (
-                <div>
-                  !ERROR! :
-                  <a
-                    href={"https://kovan.etherscan.io/tx/" + this.state.txHash}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                  >
-                    KOVAN Etherscan:{this.state.txHash}
-                  </a>
-                </div>
-              )}
-              {this.state.txStatus === true && (
-                <div>
-                  {" "}
-                  No Errors Reported :
-                  <a
-                    href={"https://kovan.etherscan.io/tx/" + this.state.txHash}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                  >
-                    KOVAN Etherscan:{this.state.txHash}
-                  </a>
-                </div>
-              )}
-            </div>
-          )}
-        </div>
-      );
-    }
     return (
       <div>
         <div>
@@ -396,23 +304,44 @@ class ImportAssetNC extends Component {
           {window.addr > 0 && this.state.assetClassSelected && (
             <div>
               <>
-                <Form.Row>
-                  <Form.Group as={Col} controlId="formGridAsset">
-                    <Form.Label className="formFont"> Select an Asset to Modify :</Form.Label>
+              <Form.Row>
+                <Form.Group as={Col} controlId="formGridAsset">
+                  <Form.Label className="formFont"> Select an Asset to Modify :</Form.Label>
+                  {!this.state.wasSentPacket && (
                     <Form.Control
                       as="select"
-                      className="formSelect"
                       size="lg"
                       onChange={(e) => { _checkIn(e.target.value) }}
+
                     >
                       {this.state.hasLoadedAssets && (
                         <optgroup className="optgroup">
                           {window.utils.generateAssets()}
                         </optgroup>)}
-                      {!this.state.hasLoadedAssets && (<optgroup ><option value="null"> Loading Assets... </option></optgroup>)}
+                      {!this.state.hasLoadedAssets && (
+                        <optgroup>
+                          <option value="null">
+                            Loading Assets...
+                           </option>
+                        </optgroup>)}
                     </Form.Control>
-                  </Form.Group>
-                </Form.Row>
+                  )}
+                  {this.state.wasSentPacket && (
+                    <Form.Control
+                      as="select"
+                      size="lg"
+                      onChange={(e) => { _checkIn(e.target.value) }}
+                      disabled
+                    >
+                      <optgroup>
+                        <option value="null">
+                          "{this.state.name}" Please Clear Form to Select Different Asset
+                           </option>
+                      </optgroup>
+                    </Form.Control>
+                  )}
+                </Form.Group>
+              </Form.Row>
                 {this.state.transaction === false && (
                   <div>
                     <Form.Row>

@@ -186,108 +186,6 @@ class DecrementCounterNC extends Component {
       return clearForm();
     };
 
-    if (this.state.wasSentPacket) {
-      return (
-        <div>
-          <div>
-            <div className="mediaLinkAD-home">
-              <a className="mediaLinkContentAD-home" ><Home onClick={() => { window.location.href = '/#/' }} /></a>
-            </div>
-            <h2 className="FormHeader">Decrement Counter</h2>
-            <div className="mediaLink-clearForm">
-              <a className="mediaLinkContent-clearForm" ><XSquare onClick={() => { clearForm() }} /></a>
-            </div>
-          </div>
-          <Form className="Form" id='MainForm'>
-            {window.addr === undefined && (
-              <div className="Results">
-                <h2>User address unreachable</h2>
-                <h3>Please connect web3 provider.</h3>
-              </div>
-            )}
-            {window.addr > 0 && (
-              <div>
-                <Form.Row>
-                  <Form.Group as={Col} controlId="formGridCountdown">
-                    <Form.Label className="formFont">
-                      Countdown Amount:
-                    </Form.Label>
-                    <Form.Control
-                      placeholder="Countdown Amount"
-                      required
-                      onChange={(e) =>
-                        this.setState({ countDown: e.target.value })
-                      }
-                      size="lg"
-                    />
-                  </Form.Group>
-                </Form.Row>
-                {this.state.transaction === false && (
-                  <Form.Row>
-                    <div className="submitButton">
-                      <div className="submitButton-content">
-                        <CheckCircle
-                          onClick={() => { _decrementCounter() }}
-                        />
-                      </div>
-                    </div>
-                  </Form.Row>
-                )}
-              </div>
-            )}
-          </Form>
-          {this.state.transaction === false && (
-            <div className="assetSelectedResults">
-              <Form.Row>
-                {this.state.idxHash !== undefined && this.state.txHash === "" && (
-                  <Form.Group>
-                    <div className="assetSelectedContentHead">Asset IDX: <span className="assetSelectedContent">{this.state.idxHash}</span> </div>
-                    <div className="assetSelectedContentHead">Asset Name: <span className="assetSelectedContent">{this.state.name}</span> </div>
-                    <div className="assetSelectedContentHead">Asset Class: <span className="assetSelectedContent">{this.state.assetClass}</span> </div>
-                    <div className="assetSelectedContentHead">Asset Status: <span className="assetSelectedContent">{this.state.status}</span> </div>
-                    <div className="assetSelectedContentHead">Count: <span className="assetSelectedContent">{this.state.count} / {this.state.countDownStart}</span> </div>
-                  </Form.Group>
-                )}
-              </Form.Row>
-            </div>
-          )}
-          {this.state.transaction === true && (
-
-            <div className="Results">
-              <p class="loading">Transaction In Progress</p>
-            </div>)}
-          {this.state.txHash > 0 && ( //conditional rendering
-            <div className="Results">
-              {this.state.txStatus === false && (
-                <div>
-                  !ERROR! :
-                  <a
-                    href={"https://kovan.etherscan.io/tx/" + this.state.txHash}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                  >
-                    KOVAN Etherscan:{this.state.txHash}
-                  </a>
-                </div>
-              )}
-              {this.state.txStatus === true && (
-                <div>
-                  {" "}
-                  No Errors Reported :
-                  <a
-                    href={"https://kovan.etherscan.io/tx/" + this.state.txHash}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                  >
-                    KOVAN Etherscan:{this.state.txHash}
-                  </a>
-                </div>
-              )}
-            </div>
-          )}
-        </div>
-      );
-    }
     return (
       <div>
         <div>
@@ -308,22 +206,42 @@ class DecrementCounterNC extends Component {
           )}
           {window.addr > 0 && (
             <div>
-              <Form.Row>
+                                          <Form.Row>
                 <Form.Group as={Col} controlId="formGridAsset">
                   <Form.Label className="formFont"> Select an Asset to Modify :</Form.Label>
-                  <Form.Control
-                    as="select"
-                    size="lg"
-                    onChange={(e) => { _checkIn(e.target.value) }}
-                  >
-                    {this.state.hasLoadedAssets && (
-                      <optgroup className="optgroup">
+                  {!this.state.wasSentPacket && (
+                    <Form.Control
+                      as="select"
+                      size="lg"
+                      onChange={(e) => { _checkIn(e.target.value) }}
 
-                        {window.utils.generateAssets()}
-                      </optgroup>)}
-                    {!this.state.hasLoadedAssets && (<optgroup ><option value="null"> Loading Assets... </option></optgroup>)}
-
-                  </Form.Control>
+                    >
+                      {this.state.hasLoadedAssets && (
+                        <optgroup className="optgroup">
+                          {window.utils.generateAssets()}
+                        </optgroup>)}
+                      {!this.state.hasLoadedAssets && (
+                        <optgroup>
+                          <option value="null">
+                            Loading Assets...
+                           </option>
+                        </optgroup>)}
+                    </Form.Control>
+                  )}
+                  {this.state.wasSentPacket && (
+                    <Form.Control
+                      as="select"
+                      size="lg"
+                      onChange={(e) => { _checkIn(e.target.value) }}
+                      disabled
+                    >
+                      <optgroup>
+                        <option value="null">
+                          "{this.state.name}" Please Clear Form to Select Different Asset
+                           </option>
+                      </optgroup>
+                    </Form.Control>
+                  )}
                 </Form.Group>
               </Form.Row>
               <Form.Row>

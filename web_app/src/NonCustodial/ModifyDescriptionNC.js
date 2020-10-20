@@ -458,414 +458,6 @@ class ModifyDescription extends Component {
       })
     }
 
-    if (this.state.wasSentPacket) {
-      return (
-        <div>
-          <div>
-            <div className="mediaLinkAD-home">
-              <a className="mediaLinkContentAD-home" ><Home onClick={() => { window.location.href = '/#/' }} /></a>
-            </div>
-            <h2 className="FormHeader">Modify Description</h2>
-            <div className="mediaLink-clearForm">
-              <a className="mediaLinkContent-clearForm" ><XSquare onClick={() => { clearForm() }} /></a>
-            </div>
-          </div>
-          <Form className="Form" id='MainForm'>
-            {window.addr === undefined && (
-              <div className="errorResults">
-                <h2>User address unreachable</h2>
-                <h3>Please connect web3 provider.</h3>
-              </div>
-            )}
-            {window.addr > 0 && (
-              <div>
-                {this.state.accessPermitted && (
-                  <div>
-                    {this.state.transaction === false && (
-                      <Form.Row>
-                        <Form.Group as={Col} controlId="formGridMiscType">
-                          <Form.Label className="formFont">
-                            Element Type:
-                        </Form.Label>
-                          <Form.Control
-                            as="select"
-                            size="lg"
-                            onChange={(e) => this.setState({ elementType: e.target.value })}
-                          >
-                            <optgroup className="optgroup">
-                              <option value="0">Select Element Type</option>
-                              <option value="nameTag"> Edit Name Tag</option>
-                              <option value="description">Edit Description</option>
-                              <option value="displayImage">Edit Profile Image</option>
-                              <option value="text">Add Custom Text</option>
-                              <option value="photo">Add Custom Image URL</option>
-                              <option value="removeText">Remove Existing Text Element</option>
-                              <option value="removePhoto">Remove Existing Image Element</option>
-                            </optgroup>
-
-                          </Form.Control>
-                        </Form.Group>
-                      </Form.Row>
-                    )}
-                    {this.state.transaction === true && (
-                      <Form.Row>
-                        <Form.Group as={Col} controlId="formGridMiscType">
-                          <Form.Label className="formFont">
-                            Element Type:
-                        </Form.Label>
-                          <Form.Control
-                            as="select"
-                            size="lg"
-                            onChange={(e) => this.setState({ elementType: e.target.value })}
-                            disabled
-                          >
-                            <optgroup className="optgroup">
-                              <option value="0">Select Element Type</option>
-                              <option value="nameTag"> Edit Name Tag</option>
-                              <option value="description">Edit Description</option>
-                              <option value="displayImage">Edit Profile Image</option>
-                              <option value="text">Add Custom Text</option>
-                              <option value="photo">Add Custom Image URL</option>
-                              <option value="removeText">Remove Existing Text Element</option>
-                              <option value="removePhoto">Remove Existing Image Element</option>
-                            </optgroup>
-
-                          </Form.Control>
-                        </Form.Group>
-                      </Form.Row>
-                    )}
-                    {this.state.elementType === "text" && (
-                      <>
-                        <Form.Row>
-                          <Form.Group as={Col} controlId="formGridMiscName">
-                            <Form.Label className="formFont">
-                              Submission Title:
-                        </Form.Label>
-                            <Form.Control
-                              placeholder="Name This Text Submission"
-                              onChange={(e) => this.setState({ elementName: e.target.value })}
-                              size="lg"
-                            />
-                          </Form.Group>
-                        </Form.Row><Form.Row>
-                          <Form.Group as={Col} controlId="formGridMiscValue">
-                            <Form.Label className="formFont">
-                              Text to Submit:
-                        </Form.Label>
-                            <Form.Control
-                              placeholder="Text Submission Goes Here"
-                              onChange={(e) => this.setState({ elementValue: e.target.value })}
-                              size="lg"
-                            />
-                          </Form.Group>
-                        </Form.Row>
-                      </>
-                    )}
-
-                    {this.state.elementType === "description" && (
-                      <>
-                        <Form.Row>
-                          <Form.Group as={Col} controlId="formGridMiscValue">
-                            <Form.Label className="formFont">
-                              Description Text:
-                        </Form.Label>
-                            <Form.Control
-                              placeholder="Text Submission Goes Here"
-                              onChange={(e) => this.setState({ elementValue: e.target.value })}
-                              size="lg"
-                            />
-                          </Form.Group>
-                        </Form.Row>
-                      </>
-                    )}
-
-                    {this.state.elementType === "removePhoto" && (
-                      <>
-                        <Form.Row>
-                          <Form.Group as={Col} controlId="formGridRemovePhoto">
-                            <Form.Control
-                              placeholder="Name of Image You Wish to Remove"
-                              onChange={(e) => this.setState({ removeElement: e.target.value })}
-                              size="lg"
-                            />
-                          </Form.Group>
-                        </Form.Row>
-                      </>
-                    )}
-
-                    {this.state.elementType === "nameTag" && (
-                      <>
-                        <Form.Row>
-                          <Form.Group as={Col} controlId="formGridNameTag">
-                            <Form.Label className="formFont">
-                              New Name Tag:
-                        </Form.Label>
-                            <Form.Control
-                              placeholder="Type a New NameTag"
-                              onChange={(e) => this.setState({ nameTag: e.target.value })}
-                              size="lg"
-                            />
-                          </Form.Group>
-                        </Form.Row>
-                      </>
-                    )}
-
-                    {this.state.elementType === "removeText" && (
-                      <>
-                        <Form.Row>
-                          <Form.Group as={Col} controlId="formGridRemoveText">
-                            <Form.Control
-                              placeholder="Name of Element You Wish to Remove"
-                              onChange={(e) => this.setState({ removeElement: e.target.value })}
-                              size="lg"
-                            />
-                          </Form.Group>
-                        </Form.Row>
-                      </>
-                    )}
-
-                    {this.state.elementType === "photo" && (
-                      <>
-                        <Form.Row>
-                          <Form.Group as={Col} controlId="formGridMiscName">
-                            <Form.Label className="formFont">
-                              Image Title:
-                        </Form.Label>
-                            <Form.Control
-                              placeholder="Name This Image (No Spaces)"
-                              onChange={(e) => this.setState({ elementName: e.target.value })}
-                              size="lg"
-                            />
-                          </Form.Group>
-                        </Form.Row><Form.Row>
-                          <Form.Group as={Col} controlId="formGridMiscValue">
-                            <Form.Label className="formFont">
-                              Source URL:
-                        </Form.Label>
-                            <Form.Control
-                              placeholder="Image URL"
-                              onChange={(e) => this.setState({ elementValue: e.target.value })}
-                              size="lg"
-                            />
-                          </Form.Group>
-                        </Form.Row>
-                      </>
-                    )}
-
-                    {this.state.elementType === "displayImage" && (
-                      <>
-                        <Form.Row>
-                          <Form.Group as={Col} controlId="formGridMiscValue">
-                            <Form.Label className="formFont">
-                              Image Source URL:
-                        </Form.Label>
-                            <Form.Control
-                              placeholder="Image URL"
-                              onChange={(e) => this.setState({ elementValue: e.target.value })}
-                              size="lg"
-                            />
-                          </Form.Group>
-                        </Form.Row>
-                      </>
-                    )}
-                  </div>
-                )}
-
-                {this.state.elementType === "text" && (
-                  <Form.Row>
-                    <div className="submitButton">
-                      <div className="submitButton-content">
-                        <CheckCircle
-                          onClick={() => { _addToMiscArray(this.state.elementType) }}
-                        />
-                      </div>
-                    </div>
-                  </Form.Row>
-                )}
-
-                {this.state.elementType === "photo" && (
-                  <Form.Row>
-                    <div className="submitButton">
-                      <div className="submitButton-content">
-                        <CheckCircle
-                          onClick={() => { _addToMiscArray(this.state.elementType) }}
-                        />
-                      </div>
-                    </div>
-                  </Form.Row>
-                )}
-
-                {this.state.elementType === "description" && (
-                  <Form.Row>
-                    <div className="submitButton">
-                      <div className="submitButton-content">
-                        <CheckCircle
-                          onClick={() => { _addToMiscArray(this.state.elementType) }}
-                        />
-                      </div>
-                    </div>
-                  </Form.Row>
-                )}
-
-                {this.state.elementType === "nameTag" && (
-                  <Form.Row>
-                    <div className="submitButton">
-                      <div className="submitButton-content">
-                        <CheckCircle
-                          onClick={() => { _addToMiscArray(this.state.elementType) }}
-                        />
-                      </div>
-                    </div>
-                  </Form.Row>
-                )}
-
-                {this.state.elementType === "displayImage" && (
-                  <Form.Row>
-                    <div className="submitButton">
-                      <div className="submitButton-content">
-                        <CheckCircle
-                          onClick={() => { _addToMiscArray(this.state.elementType) }}
-                        />
-                      </div>
-                    </div>
-                  </Form.Row>
-                )}
-
-                {this.state.elementType === "removeText" && (
-                  <>
-                    <Form.Group as={Col} controlId="formGridMiscType">
-                      <Form.Label className="formFont">
-                        Text Elements:
-                        </Form.Label>
-                      <Form.Control
-                        as="select"
-                        size="lg"
-                        onChange={(e) => this.setState({ removeElement: e.target.value })}
-                      >
-                        <optgroup className="optgroup">
-                          {window.utils.generateRemoveElements(this.state.textArray)}
-                        </optgroup>
-
-                      </Form.Control>
-                    </Form.Group>
-                    <Form.Row>
-                      <div className="submitButton">
-                        <div className="submitButton-content">
-                          <Trash2
-                            onClick={() => { _removeElement(this.state.elementType) }}
-                          />
-                        </div>
-                      </div>
-                    </Form.Row>
-                  </>
-                )}
-
-                {this.state.elementType === "removePhoto" && (
-                  <>
-                    <Form.Group as={Col} controlId="formGridMiscType">
-                      <Form.Label className="formFont">
-                        Image Elements:
-                      </Form.Label>
-                      <Form.Control
-                        as="select"
-                        size="lg"
-                        onChange={(e) => this.setState({ removeElement: e.target.value })}
-                      >
-                        <optgroup className="optgroup">
-                          {window.utils.generateRemoveElements(this.state.imageArray)}
-                        </optgroup>
-
-                      </Form.Control>
-                    </Form.Group>
-                    <Form.Row>
-                      <div className="submitButton">
-                        <div className="submitButton-content">
-                          <Trash2
-                            onClick={() => { _removeElement(this.state.elementType) }}
-                          />
-                        </div>
-                      </div>
-                    </Form.Row>
-                  </>
-                )}
-
-                {this.state.hashPath === "" && this.state.accessPermitted && this.state.transaction === false && (
-                  <Form.Row>
-                    <div className="submitButton">
-                      <div className="submitButton-content">
-                        <UploadCloud
-                          onClick={() => { publishIPFS1() }}
-                        />
-                      </div>
-                    </div>
-                  </Form.Row>
-
-                )}
-
-              </div>
-            )}
-          </Form>
-          {this.state.transaction === false && this.state.txHash === "" && (
-            <div className="assetSelectedResults">
-              <Form.Row>
-                {this.state.idxHash !== undefined && this.state.txHash === "" && (
-                  <Form.Group>
-                    <div className="assetSelectedContentHead">Asset IDX: <span className="assetSelectedContent">{this.state.idxHash}</span> </div>
-                    <div className="assetSelectedContentHead">Asset Name: <span className="assetSelectedContent">{this.state.name}</span> </div>
-                    <div className="assetSelectedContentHead">Asset Class: <span className="assetSelectedContent">{this.state.assetClass}</span> </div>
-                    <div className="assetSelectedContentHead">Asset Status: <span className="assetSelectedContent">{this.state.status}</span> </div>
-                    {this.state.count > 1 && (
-                      <div>
-                        {window.utils.generateNewElementsPreview(window.additionalElementArrays)}
-                      </div>
-                    )}
-                    {this.state.remCount > 1 && (
-                      <div>
-                        {window.utils.generateRemElementsPreview(this.state.removedElements)}
-                      </div>
-                    )}
-                  </Form.Group>
-                )}
-              </Form.Row>
-            </div>
-          )}
-          {this.state.transaction === true && (
-            <div className="Results">
-              <p className="loading">Transaction In Progress</p>
-            </div>
-          )}
-          {this.state.txHash > 0 && ( //conditional rendering
-            <div className="Results">
-              {this.state.txStatus === false && (
-                <div>
-                  !ERROR! :
-                  <a
-                    href={"https://kovan.etherscan.io/tx/" + this.state.txHash}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                  >
-                    KOVAN Etherscan:{this.state.txHash}
-                  </a>
-                </div>
-              )}
-              {this.state.txStatus === true && (
-                <div>
-                  {" "}
-                  No Errors Reported :
-                  <a
-                    href={"https://kovan.etherscan.io/tx/" + this.state.txHash}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                  >
-                    KOVAN Etherscan:{this.state.txHash}
-                  </a>
-                </div>
-              )}
-            </div>
-          )}
-        </div>
-      );
-    }
     return (
       <div>
         <div>
@@ -892,18 +484,39 @@ class ModifyDescription extends Component {
                     <Form.Row>
                       <Form.Group as={Col} controlId="formGridAsset">
                         <Form.Label className="formFont"> Select an Asset to Modify :</Form.Label>
-                        <Form.Control
-                          as="select"
-                          size="lg"
-                          onChange={(e) => { _checkIn(e.target.value) }}
-                        >
-                          {this.state.hasLoadedAssets && (
-                            <optgroup className="optgroup">
+                        {!this.state.wasSentPacket && (
+                          <Form.Control
+                            as="select"
+                            size="lg"
+                            onChange={(e) => { _checkIn(e.target.value) }}
 
-                              {window.utils.generateAssets()}
-                            </optgroup>)}
-                          {!this.state.hasLoadedAssets && (<optgroup ><option value="null"> Loading Assets... </option></optgroup>)}
-                        </Form.Control>
+                          >
+                            {this.state.hasLoadedAssets && (
+                              <optgroup className="optgroup">
+                                {window.utils.generateAssets()}
+                              </optgroup>)}
+                            {!this.state.hasLoadedAssets && (
+                              <optgroup>
+                                <option value="null">
+                                  Loading Assets...
+                                                           </option>
+                              </optgroup>)}
+                          </Form.Control>
+                        )}
+                        {this.state.wasSentPacket && (
+                          <Form.Control
+                            as="select"
+                            size="lg"
+                            onChange={(e) => { _checkIn(e.target.value) }}
+                            disabled
+                          >
+                            <optgroup>
+                              <option value="null">
+                                "{this.state.name}" Please Clear Form to Select Different Asset
+                                                           </option>
+                            </optgroup>
+                          </Form.Control>
+                        )}
                       </Form.Group>
                     </Form.Row>
                   )}
