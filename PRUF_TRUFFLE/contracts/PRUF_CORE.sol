@@ -136,9 +136,8 @@ contract CORE is PullPayment, BASIC {
     {
         //^^^^^^^checks^^^^^^^^^
         Invoice memory pricing;
-        uint256 ACTHnetPercent = uint256(AC_MGR.getAC_discount(_assetClass)).div(
-            uint256(100)
-        );
+        uint256 ACTHnetPercent = uint256(AC_MGR.getAC_discount(_assetClass))
+            .div(uint256(100));
         require( //IMPOSSIBLE TO REACH
             (ACTHnetPercent >= 10) && (ACTHnetPercent <= 100),
             "PC:DSC:invalid discount value for price calculation"
@@ -200,22 +199,32 @@ contract CORE is PullPayment, BASIC {
      * @dev Deducts payment from transaction
      */
     function deductPayment(Invoice memory pricing) internal whenNotPaused {
-        uint256 messageValue = msg.value;
-        //uint256 sharesShare = pricing.rootPrice.div(uint256(4)); //SHARES-TESTING
-        //uint256 rootShare = pricing.rootPrice.sub(sharesShare); //SHARES-TESTING
-        //uint256 total = (sharesShare.add(rootShare)).add(pricing.ACTHprice); //SHARES-TESTING
-        uint256 total = pricing.rootPrice.add(pricing.ACTHprice);    // PRE SHARES-TESTING 
-
-        require(msg.value >= total, "C:DP: TX value too low.");
-        //^^^^^^^checks^^^^^^^^^
-        uint256 change = messageValue.sub(total);
-        //_asyncTransfer(SHARES_Address, sharesShare); //SHARES-TESTING
-        //_asyncTransfer(pricing.rootAddress, rootShare); //SHARES-TESTING
-        _asyncTransfer(pricing.rootAddress, pricing.rootPrice); // PRE SHARES-TESTING
-        _asyncTransfer(pricing.ACTHaddress, pricing.ACTHprice);
-        _asyncTransfer(msg.sender, change);
-        //^^^^^^^interactions^^^^^^^^^
+        UTIL_TKN.payForService(
+            msg.sender,
+            pricing.rootAddress,
+            pricing.rootPrice,
+            pricing.ACTHaddress,
+            pricing.ACTHprice
+        );
     }
+
+    // function deductPayment(Invoice memory pricing) internal whenNotPaused {
+    //     uint256 messageValue = msg.value;
+    //     //uint256 sharesShare = pricing.rootPrice.div(uint256(4)); //SHARES-TESTING
+    //     //uint256 rootShare = pricing.rootPrice.sub(sharesShare); //SHARES-TESTING
+    //     //uint256 total = (sharesShare.add(rootShare)).add(pricing.ACTHprice); //SHARES-TESTING
+    //     uint256 total = pricing.rootPrice.add(pricing.ACTHprice);    // PRE SHARES-TESTING
+
+    //     require(msg.value >= total, "C:DP: TX value too low.");
+    //     //^^^^^^^checks^^^^^^^^^
+    //     uint256 change = messageValue.sub(total);
+    //     //_asyncTransfer(SHARES_Address, sharesShare); //SHARES-TESTING
+    //     //_asyncTransfer(pricing.rootAddress, rootShare); //SHARES-TESTING
+    //     _asyncTransfer(pricing.rootAddress, pricing.rootPrice); // PRE SHARES-TESTING
+    //     _asyncTransfer(pricing.ACTHaddress, pricing.ACTHprice);
+    //     _asyncTransfer(msg.sender, change);
+    //     //^^^^^^^interactions^^^^^^^^^
+    // }
 
     //----------------------------------------------------------------------STATUS CHECKS
 
