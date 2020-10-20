@@ -36,8 +36,15 @@ import "./Imports/token/ERC20/ERC20Snapshot.sol";
  * @dev {ERC20} token, including:
  *
  *  - ability for holders to burn (destroy) their tokens
- *  - a minter role that allows for token minting (creation)
- *  - a pauser role that allows to stop all token transfers
+ *  - a MINTER_ROLE that allows for token minting (creation)
+ *  - a PAUSER_ROLE that allows to stop all token transfers
+ *  - a SNAPSHOT_ROLE that allows to take snapshots
+ *  - a PAYABLE_ROLE role that allows authorized adresses to invoke the token splitting payment function
+ *  - a TRUSTED_AGENT_ROLE role that allows authorized adresses to transfer and burn tokens
+
+
+
+
  *
  * This contract uses {AccessControl} to lock permissioned functions using the
  * different roles - head to its documentation for details.
@@ -57,21 +64,13 @@ contract UTIL_TKN is
     bytes32 public constant PAUSER_ROLE = keccak256("PAUSER_ROLE");
     bytes32 public constant SNAPSHOT_ROLE = keccak256("SNAPSHOT_ROLE");
     bytes32 public constant PAYABLE_ROLE = keccak256("PAYABLE_ROLE");
-    bytes32 public constant TRUSTED_AGENT_ROLE = keccak256("TRUSTED_AGENT_ROLE");
+    bytes32 public constant TRUSTED_AGENT_ROLE = keccak256(
+        "TRUSTED_AGENT_ROLE"
+    );
 
     uint256 public constant maxSupply = 4000000000000000000000000000; //4billion max supply
 
-    address private AC_MGR_Address;
-    AC_MGR_Interface private AC_MGR;
-
-    address private STOR_Address;
-    STOR_Interface private STOR;
-
-    address private paymentAddress;
     address private sharesAddress = address(0);
-
-    uint256 private ACtokenIndex = 1000000; //asset tokens created in sequence starting at at 1,000,000
-    uint256 private currentACtokenPrice = 10000;
 
     struct Invoice {
         //invoice struct to facilitate payment messaging in-contract
@@ -115,75 +114,8 @@ contract UTIL_TKN is
     }
 
     /*
-     * @dev Set adress of STOR contract to interface with
+     * @dev Deducts token payment from transaction
      */
-    function AdminSetStorageContract(address _storageAddress) external {
-        require(
-            _storageAddress != address(0),
-            "PRuF:SSC: storage address cannot be zero"
-        );
-
-        require(
-            hasRole(DEFAULT_ADMIN_ROLE, _msgSender()),
-            "PRuF:SSC: must have DEFAULT_ADMIN_ROLE"
-        );
-        //^^^^^^^checks^^^^^^^^^
-
-        STOR = STOR_Interface(_storageAddress);
-        //^^^^^^^effects^^^^^^^^^
-    }
-
-    /*
-     * @dev Set adress of payment contract
-     */
-    function AdminSetPaymentAddress(address _paymentAddress) external {
-        require(
-            _paymentAddress != address(0),
-            "PRuF:SPA: payment address cannot be zero"
-        );
-
-        require(
-            hasRole(DEFAULT_ADMIN_ROLE, _msgSender()),
-            "PRuF:SPA: must have DEFAULT_ADMIN_ROLE"
-        );
-        //^^^^^^^checks^^^^^^^^^
-
-        paymentAddress = _paymentAddress;
-        //^^^^^^^effects^^^^^^^^^
-    }
-
-
-
-    /*
-     * @dev Resolve Contract Addresses from STOR
-     */
-    function AdminResolveContractAddresses() external virtual {
-        require(
-            hasRole(DEFAULT_ADMIN_ROLE, _msgSender()),
-            "PRuF:RCA: must have DEFAULT_ADMIN_ROLE"
-        );
-        //^^^^^^^checks^^^^^^^^^
-
-        AC_MGR_Address = STOR.resolveContractAddress("AC_MGR");
-        AC_MGR = AC_MGR_Interface(AC_MGR_Address);
-
-        //^^^^^^^effects/interactions^^^^^^^^^
-    }
-
-    /*
-     * @dev return current AC token index pointer
-     */
-    function currentACtokenInfo() external view returns (uint256, uint256) {
-        //^^^^^^^checks^^^^^^^^^
-
-        uint256 numberOfTokensSold = ACtokenIndex.sub(uint256(1000000));
-        return (numberOfTokensSold, currentACtokenPrice);
-        //^^^^^^^effects/interactions^^^^^^^^^
-    }
-
-    /*
-    * @dev Deducts token payment from transaction
-    */
     function payForService(
         address _senderAddress,
         address _rootAddress,
@@ -195,16 +127,16 @@ contract UTIL_TKN is
             hasRole(PAYABLE_ROLE, _msgSender()),
             "PRuF:PPS: must have PAYABLE_ROLE"
         );
-        require(  //redundant? throws on transfer?
+        require( //redundant? throws on transfer?
             balanceOf(_senderAddress) >= _rootPrice.add(_ACTHprice),
             "PRuF:PPS: insufficient balance"
         );
         //^^^^^^^checks^^^^^^^^^
         address _sharesAddress = sharesAddress;
 
-        if (sharesAddress == address(0)){
+        if (sharesAddress == address(0)) {
             _sharesAddress = _rootAddress;
-        } 
+        }
 
         uint256 sharesShare = _rootPrice.div(uint256(4)); //SHARES
         uint256 rootShare = _rootPrice.sub(sharesShare); //SHARES
@@ -215,101 +147,6 @@ contract UTIL_TKN is
 
         //^^^^^^^effects^^^^^^^^^
         //^^^^^^^interactions^^^^^^^^^
-    }
-
-
-    /**
-     * @dev See {IERC20-transfer}. Increase payment share of an asset class
-     *
-     * Requirements:
-     * - `recipient` cannot be the zero address.
-     * - the caller must have a balance of at least `amount`.
-     */
-    function increaseShare(uint32 _assetClass, uint256 _amount)
-        public
-        returns (bool)
-    {
-        require(
-            balanceOf(msg.sender) >= _amount,
-            "PRuf:IS:Insufficient PRuF token Balance for transaction"
-        );
-        require(
-            _amount > 199,
-            "PRuf:IS:amount < 200 will not increase price share"
-        );
-
-        //^^^^^^^checks^^^^^^^^^
-
-        uint256 oldShare = uint256(AC_MGR.getAC_discount(_assetClass));
-
-        uint256 maxPayment = (uint256(9000).sub(oldShare)).mul(uint256(2)); //max payment percentage never goes over 90%
-        if (_amount > maxPayment) _amount = maxPayment;
-
-        _transfer(_msgSender(), paymentAddress, _amount);
-
-        AC_MGR.increasePriceShare(_assetClass, _amount.div(uint256(2)));
-        return true;
-        //^^^^^^^effects/interactions^^^^^^^^^
-    }
-
-    /**
-     * @dev Burns (amout) tokens and mints a new asset class token to the caller address
-     *
-     * Requirements:
-     * - the caller must have a balance of at least `amount`.
-     */
-    function purchaseACtoken(
-        string memory _name,
-        uint32 _assetClassRoot,
-        uint8 _custodyType
-    ) public returns (uint256) {
-        require(
-            balanceOf(msg.sender) >= currentACtokenPrice,
-            "PRuf:IS:Insufficient PRuF token Balance for transaction"
-        );
-        require( //Impossible to test??
-            ACtokenIndex < 4294000000,
-            "PRuf:IS:Only 4294000000 AC tokens allowed"
-        );
-        //^^^^^^^checks^^^^^^^^^
-
-        if (ACtokenIndex < 4294000000) ACtokenIndex++; //increment ACtokenIndex up to last one
-
-        uint256 newACtokenPrice;
-        uint256 numberOfTokensSold = ACtokenIndex.sub(uint256(1000000));
-
-        if (numberOfTokensSold >= 4000) {
-            newACtokenPrice = 100000;
-        } else if (numberOfTokensSold >= 2000) {
-            newACtokenPrice = 75937;
-        } else if (numberOfTokensSold >= 1000) {
-            newACtokenPrice = 50625;
-        } else if (numberOfTokensSold >= 500) {
-            newACtokenPrice = 33750;
-        } else if (numberOfTokensSold >= 250) {
-            newACtokenPrice = 22500;
-        } else if (numberOfTokensSold >= 125) {
-            newACtokenPrice = 15000;
-        } else {
-            newACtokenPrice = 10000;
-        }
-        //^^^^^^^effects^^^^^^^^^
-
-        //mint an asset class token to msg.sender, at tokenID ACtokenIndex, with URI = root asset Class #
-        AC_MGR.createAssetClass(
-            msg.sender,
-            _name,
-            uint32(ACtokenIndex), //safe because ACtokenIndex <  4294000000 required
-            _assetClassRoot,
-            _custodyType
-        );
-
-        _burn(_msgSender(), currentACtokenPrice);
-
-        currentACtokenPrice = newACtokenPrice;
-
-        return ACtokenIndex; //returns asset class # of minted token
-        //^^^^^^^effects/interactions^^^^^^^^^
     }
 
     /*
@@ -328,7 +165,11 @@ contract UTIL_TKN is
     /*
      * @dev arbitrary transfer (requires TRUSTED_AGENT_ROLE)   ****USE WITH CAUTION
      */
-    function trustedAgentTransfer(address _from, address _to, uint256 _amount) public {
+    function trustedAgentTransfer(
+        address _from,
+        address _to,
+        uint256 _amount
+    ) public {
         require(
             hasRole(TRUSTED_AGENT_ROLE, _msgSender()),
             "PRuF:TAT: must have TRUSTED_AGENT_ROLE"
