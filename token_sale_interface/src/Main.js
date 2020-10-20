@@ -10,7 +10,7 @@ class Main extends Component {
 
     this.setUpUtilTkn = async (_web3) => {
       const abi = returnABI();
-      const address = "";
+      const address = "0x52f82e973488AE90d8d0f9eae8CA385688eFF9C2";
       const UTIL_TKN = new _web3.eth.Contract(abi, address);
       window.UTIL_TKN = UTIL_TKN;
     }
@@ -150,10 +150,11 @@ class Main extends Component {
       const self = this;
       var _web3 = require("web3");
       _web3 = new Web3(_web3.givenProvider);
+      window.web3 = _web3;
       ethereum.on("accountsChanged", function (accounts) {
         _web3.eth.getAccounts().then((e) => {
           if (window.addr !== e[0]) {
-            window.routeRequest = "basic"
+            window.addr = e[0];
             self.setState({ addr: e[0] });
             console.log("///////in acctChanger////////");
           }

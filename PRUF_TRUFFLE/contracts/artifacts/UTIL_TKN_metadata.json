@@ -198,6 +198,19 @@
 				"inputs": [
 					{
 						"internalType": "address",
+						"name": "_paymentAddress",
+						"type": "address"
+					}
+				],
+				"name": "AdminSetSharesAddress",
+				"outputs": [],
+				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "address",
 						"name": "_storageAddress",
 						"type": "address"
 					}
@@ -236,6 +249,19 @@
 			{
 				"inputs": [],
 				"name": "PAUSER_ROLE",
+				"outputs": [
+					{
+						"internalType": "bytes32",
+						"name": "",
+						"type": "bytes32"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [],
+				"name": "PAYABLE_ROLE",
 				"outputs": [
 					{
 						"internalType": "bytes32",
@@ -589,6 +615,19 @@
 				"type": "function"
 			},
 			{
+				"inputs": [],
+				"name": "maxSupply",
+				"outputs": [
+					{
+						"internalType": "uint256",
+						"name": "",
+						"type": "uint256"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
 				"inputs": [
 					{
 						"internalType": "address",
@@ -637,6 +676,39 @@
 					}
 				],
 				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "address",
+						"name": "_senderAddress",
+						"type": "address"
+					},
+					{
+						"internalType": "address",
+						"name": "_rootAddress",
+						"type": "address"
+					},
+					{
+						"internalType": "uint256",
+						"name": "_rootPrice",
+						"type": "uint256"
+					},
+					{
+						"internalType": "address",
+						"name": "_ACTHaddress",
+						"type": "address"
+					},
+					{
+						"internalType": "uint256",
+						"name": "_ACTHprice",
+						"type": "uint256"
+					}
+				],
+				"name": "payForService",
+				"outputs": [],
+				"stateMutability": "nonpayable",
 				"type": "function"
 			},
 			{
@@ -933,7 +1005,7 @@
 			"bytecodeHash": "ipfs"
 		},
 		"optimizer": {
-			"enabled": false,
+			"enabled": true,
 			"runs": 200
 		},
 		"remappings": []
@@ -1052,19 +1124,19 @@
 			]
 		},
 		"localhost/PRUF_INTERFACES.sol": {
-			"keccak256": "0x30a8b5e5168071b7ba402942c1410988093a642208f843464ef13dd9a7cb1348",
+			"keccak256": "0x32dfe2d3a2c870b4342f2d0ae637b4929e6fc480d3b1c9d4714974dc4c534147",
 			"license": "UNLICENSED",
 			"urls": [
-				"bzz-raw://dc85f44d00c135e1c43b380871b31785dd2cbea3c79a45d74adecd531a019938",
-				"dweb:/ipfs/QmPvPtCY4yDg247G8CUJs825NvSzCJan74UbStagNouQXa"
+				"bzz-raw://6a05a819e9cb43b71ff6e1f430ed01117835f76f33762373b7b2411cc78f6a98",
+				"dweb:/ipfs/QmNdY5KTj6ArSrqqHvd43AdduGwoTMxxeFFQ8LAKo1pBUE"
 			]
 		},
 		"localhost/PRUF_TKN.sol": {
-			"keccak256": "0x1b626546e162ef6acedbda25c683ca75a0126b6457a34e78b5f0572499b6b896",
+			"keccak256": "0x557bd6c605a595baac15c04b3c7cf886331f2bf996e155b0f6905cd449bcb944",
 			"license": "MIT",
 			"urls": [
-				"bzz-raw://8905bcd5e3503c6f8ffac6470080ae6f988daab866a3a7fa0d3b4f92026656f7",
-				"dweb:/ipfs/QmQYykeZvFm8LbVqYGG5CLfSXmHVTzP8dc9DpoX12ZJVmk"
+				"bzz-raw://6b4a6718f545bf26f6aaae38d984f7bd93ca75fbb71bf7e3876ef5fa6e6778bb",
+				"dweb:/ipfs/QmXmyCNd8FzYWJh8Apzpf2hsrJQ3YrreXjrkq3p83e6sgV"
 			]
 		}
 	},

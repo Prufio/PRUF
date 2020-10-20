@@ -38,23 +38,40 @@ class Home extends Component {
         
     }
 
+    this.getTokenBalances = async () => {
+      const self = this;
+      const participants = this.state.participants;
+      for(let i = 0; i < participants.addresses.length; i++){
+        //console.log("Sent address ", participants.addresses[i], this.state.airdropAmount, " tokens.")
+        await window.UTIL_TKN.methods
+        .balanceOf(participants.addresses[i])
+          .call((_error, _result) => {
+            if (_error) { console.log("Error: ", _error) }
+            else {
+              console.log("Balance of address", participants.addresses[i],": ",_result)
+            }
+          }); 
+      }
+    }
+
     this.payAirdropParticipants = async () => {
       const self = this;
       const participants = this.state.participants;
 
       for(let i = 0; i < participants.addresses.length; i++){
-        console.log("Sent address ", participants.addresses[i], this.state.airdropAmount, " tokens.")
-        /* await window.UTIL_TKN.methods
-        .payAirdropParticipants(participants.addresses[i], this.state.airdropAmount)
-        .send({ from: this.state.addr })
+        console.log(window.web3.utils.toWei(String(this.state.airdropAmount), 'ether'))
+        //console.log("Sent address ", participants.addresses[i], this.state.airdropAmount, " tokens.")
+        await window.UTIL_TKN.methods
+        .mint(participants.addresses[i], window.web3.utils.toWei(String(this.state.airdropAmount), 'ether'))
+        .send({ from: window.addr })
         .on("error", function (_error) {
           self.setState({ error: _error });
           self.setState({ result: _error.transactionHash });
         })
         .on("receipt", (receipt) => {
-          console.log("dropped tokens to address: ", participants.addresses[i]);
+          console.log("dropped", this.state.airdropAmount, "tokens to address: ", participants.addresses[i]);
           console.log("tx receipt: ", receipt);
-        }); */
+        }); 
       }
       
     }
@@ -109,7 +126,7 @@ class Home extends Component {
                 <div className="submitButtonHome">
                   <div className="submitButton-content">
                     <ArrowRightCircle
-                      onClick={() => { this.payAirdropParticipants() }}
+                      onClick={() => { this.getTokenBalances() }}
                     />
                   </div>
                 </div>

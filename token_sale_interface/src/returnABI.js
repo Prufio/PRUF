@@ -27,6 +27,19 @@ function returnABI() {
 			"inputs": [
 				{
 					"internalType": "address",
+					"name": "_paymentAddress",
+					"type": "address"
+				}
+			],
+			"name": "AdminSetSharesAddress",
+			"outputs": [],
+			"stateMutability": "nonpayable",
+			"type": "function"
+		},
+		{
+			"inputs": [
+				{
+					"internalType": "address",
 					"name": "_storageAddress",
 					"type": "address"
 				}
@@ -35,36 +48,6 @@ function returnABI() {
 			"outputs": [],
 			"stateMutability": "nonpayable",
 			"type": "function"
-		},
-		{
-			"inputs": [],
-			"stateMutability": "nonpayable",
-			"type": "constructor"
-		},
-		{
-			"anonymous": false,
-			"inputs": [
-				{
-					"indexed": true,
-					"internalType": "address",
-					"name": "owner",
-					"type": "address"
-				},
-				{
-					"indexed": true,
-					"internalType": "address",
-					"name": "spender",
-					"type": "address"
-				},
-				{
-					"indexed": false,
-					"internalType": "uint256",
-					"name": "value",
-					"type": "uint256"
-				}
-			],
-			"name": "Approval",
-			"type": "event"
 		},
 		{
 			"inputs": [
@@ -99,24 +82,6 @@ function returnABI() {
 				}
 			],
 			"name": "burn",
-			"outputs": [],
-			"stateMutability": "nonpayable",
-			"type": "function"
-		},
-		{
-			"inputs": [
-				{
-					"internalType": "address",
-					"name": "account",
-					"type": "address"
-				},
-				{
-					"internalType": "uint256",
-					"name": "amount",
-					"type": "uint256"
-				}
-			],
-			"name": "burnFrom",
 			"outputs": [],
 			"stateMutability": "nonpayable",
 			"type": "function"
@@ -188,6 +153,90 @@ function returnABI() {
 			"type": "function"
 		},
 		{
+			"inputs": [],
+			"name": "pause",
+			"outputs": [],
+			"stateMutability": "nonpayable",
+			"type": "function"
+		},
+		{
+			"inputs": [
+				{
+					"internalType": "string",
+					"name": "_name",
+					"type": "string"
+				},
+				{
+					"internalType": "uint32",
+					"name": "_assetClassRoot",
+					"type": "uint32"
+				},
+				{
+					"internalType": "uint8",
+					"name": "_custodyType",
+					"type": "uint8"
+				}
+			],
+			"name": "purchaseACtoken",
+			"outputs": [
+				{
+					"internalType": "uint256",
+					"name": "",
+					"type": "uint256"
+				}
+			],
+			"stateMutability": "nonpayable",
+			"type": "function"
+		},
+		{
+			"inputs": [],
+			"stateMutability": "nonpayable",
+			"type": "constructor"
+		},
+		{
+			"anonymous": false,
+			"inputs": [
+				{
+					"indexed": true,
+					"internalType": "address",
+					"name": "owner",
+					"type": "address"
+				},
+				{
+					"indexed": true,
+					"internalType": "address",
+					"name": "spender",
+					"type": "address"
+				},
+				{
+					"indexed": false,
+					"internalType": "uint256",
+					"name": "value",
+					"type": "uint256"
+				}
+			],
+			"name": "Approval",
+			"type": "event"
+		},
+		{
+			"inputs": [
+				{
+					"internalType": "address",
+					"name": "account",
+					"type": "address"
+				},
+				{
+					"internalType": "uint256",
+					"name": "amount",
+					"type": "uint256"
+				}
+			],
+			"name": "burnFrom",
+			"outputs": [],
+			"stateMutability": "nonpayable",
+			"type": "function"
+		},
+		{
 			"inputs": [
 				{
 					"internalType": "uint32",
@@ -230,13 +279,6 @@ function returnABI() {
 			"type": "function"
 		},
 		{
-			"inputs": [],
-			"name": "pause",
-			"outputs": [],
-			"stateMutability": "nonpayable",
-			"type": "function"
-		},
-		{
 			"anonymous": false,
 			"inputs": [
 				{
@@ -252,29 +294,33 @@ function returnABI() {
 		{
 			"inputs": [
 				{
-					"internalType": "string",
-					"name": "_name",
-					"type": "string"
+					"internalType": "address",
+					"name": "_senderAddress",
+					"type": "address"
 				},
 				{
-					"internalType": "uint32",
-					"name": "_assetClassRoot",
-					"type": "uint32"
+					"internalType": "address",
+					"name": "_rootAddress",
+					"type": "address"
 				},
-				{
-					"internalType": "uint8",
-					"name": "_custodyType",
-					"type": "uint8"
-				}
-			],
-			"name": "purchaseACtoken",
-			"outputs": [
 				{
 					"internalType": "uint256",
-					"name": "",
+					"name": "_rootPrice",
+					"type": "uint256"
+				},
+				{
+					"internalType": "address",
+					"name": "_ACTHaddress",
+					"type": "address"
+				},
+				{
+					"internalType": "uint256",
+					"name": "_ACTHprice",
 					"type": "uint256"
 				}
 			],
+			"name": "payForService",
+			"outputs": [],
 			"stateMutability": "nonpayable",
 			"type": "function"
 		},
@@ -401,6 +447,19 @@ function returnABI() {
 			],
 			"name": "Snapshot",
 			"type": "event"
+		},
+		{
+			"inputs": [],
+			"name": "takeSnapshot",
+			"outputs": [
+				{
+					"internalType": "uint256",
+					"name": "",
+					"type": "uint256"
+				}
+			],
+			"stateMutability": "nonpayable",
+			"type": "function"
 		},
 		{
 			"inputs": [
@@ -699,6 +758,19 @@ function returnABI() {
 		},
 		{
 			"inputs": [],
+			"name": "maxSupply",
+			"outputs": [
+				{
+					"internalType": "uint256",
+					"name": "",
+					"type": "uint256"
+				}
+			],
+			"stateMutability": "view",
+			"type": "function"
+		},
+		{
+			"inputs": [],
 			"name": "MINTER_ROLE",
 			"outputs": [
 				{
@@ -739,6 +811,32 @@ function returnABI() {
 		{
 			"inputs": [],
 			"name": "PAUSER_ROLE",
+			"outputs": [
+				{
+					"internalType": "bytes32",
+					"name": "",
+					"type": "bytes32"
+				}
+			],
+			"stateMutability": "view",
+			"type": "function"
+		},
+		{
+			"inputs": [],
+			"name": "PAYABLE_ROLE",
+			"outputs": [
+				{
+					"internalType": "bytes32",
+					"name": "",
+					"type": "bytes32"
+				}
+			],
+			"stateMutability": "view",
+			"type": "function"
+		},
+		{
+			"inputs": [],
+			"name": "SNAPSHOT_ROLE",
 			"outputs": [
 				{
 					"internalType": "bytes32",
