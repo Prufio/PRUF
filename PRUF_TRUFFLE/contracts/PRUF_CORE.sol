@@ -151,12 +151,16 @@ contract CORE is BASIC {
 
         //^^^^^^^effects^^^^^^^^^
 
+
         uint256 percent = pricing.ACTHprice.div(uint256(100)); //calculate 1% of listed ACTH price
 
-        pricing.ACTHprice = ACTHnetPercent.mul(percent);
+        uint256 _ACTHprice = ACTHnetPercent.mul(percent); //calculate the share proprotrion% * 1%
 
-        uint256 prufShare = (uint256(100).sub(ACTHnetPercent));
-        pricing.rootPrice = pricing.rootPrice.add(prufShare.mul(percent));
+        uint256 prufShare = pricing.ACTHprice.sub(_ACTHprice);
+
+        pricing.ACTHprice = _ACTHprice;
+        pricing.rootPrice = pricing.rootPrice.add(prufShare);
+        
 
         deductPayment(pricing);
         //^^^^^^^interactions^^^^^^^^^
