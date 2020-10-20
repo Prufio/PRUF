@@ -100,7 +100,7 @@ contract PAY_AGENT is Context, ReentrancyGuard, Ownable, Pausable{
      * https://solidity.readthedocs.io/en/latest/contracts.html#fallback-function[fallback
      * functions].
      */
-    receive () external virtual {
+    receive () external payable virtual {
         emit PaymentReceived(_msgSender(), msg.value);
     }
 
@@ -151,7 +151,7 @@ contract PAY_AGENT is Context, ReentrancyGuard, Ownable, Pausable{
      * @dev Triggers a transfer to `account` of the amount of Ether they are owed, according to their percentage of the
      * total shares and their previous withdrawals.
      */
-    function withdraw(address payable account) public virtual {
+    function withdraw(address payable account) public payable virtual {
         require(_shares[account].shares > 0, "PAY_AGENT: account has no shares");
 
         uint256 totalReceived = address(this).balance.add(_totalReleased);
@@ -202,7 +202,7 @@ contract PAY_AGENT is Context, ReentrancyGuard, Ownable, Pausable{
     //     APP_NC.$withdraw();
     //  }
 
-    function sendMeEth() external {
+    function sendMeEth() external payable{
         //this is just the payable function (mainly for testing)
         require(msg.value > 0, "MOAR ETH!!!!!");
     }

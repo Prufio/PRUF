@@ -90,7 +90,6 @@ contract APP_NC is CORE {
      */
     function $importAsset(bytes32 _idxHash, uint32 _newAssetClass)
         external
-        payable
         nonReentrant
         whenNotPaused
         isAuthorized(_idxHash)
@@ -170,7 +169,6 @@ contract APP_NC is CORE {
      */
     function $addIpfs2Note(bytes32 _idxHash, bytes32 _IpfsHash)
         external
-        payable
         nonReentrant
         whenNotPaused
         isAuthorized(_idxHash)

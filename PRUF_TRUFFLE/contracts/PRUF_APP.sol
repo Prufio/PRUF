@@ -74,7 +74,7 @@ contract APP is CORE {
         uint32 _newAssetClass
     )
         external
-        payable
+        
         nonReentrant
         whenNotPaused
         isAuthorized(_idxHash) //contract holds token (user sent to contract)
@@ -113,7 +113,6 @@ contract APP is CORE {
      */
     function $forceModRecord(bytes32 _idxHash, bytes32 _rgtHash)
         external
-        payable
         nonReentrant
         whenNotPaused
         isAuthorized(_idxHash)
@@ -158,7 +157,7 @@ contract APP is CORE {
         bytes32 _newrgtHash
     )
         external
-        payable
+        
         nonReentrant
         whenNotPaused
         isAuthorized(_idxHash)
@@ -210,7 +209,7 @@ contract APP is CORE {
         bytes32 _IpfsHash
     )
         external
-        payable
+        
         nonReentrant
         whenNotPaused
         isAuthorized(_idxHash)
