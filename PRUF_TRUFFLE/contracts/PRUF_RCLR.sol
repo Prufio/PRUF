@@ -46,16 +46,14 @@ contract RCLR is ECR_CORE, CORE {
         escrowDataLight.addr_1 = msg.sender;
         //^^^^^^^effects^^^^^^^^^
 
-       _setEscrowData(
+        _setEscrowData(
             _idxHash,
             60, //recycled status
             escrowOwnerHash,
             escrowTime
         );
 
-        _setEscrowDataLight(
-            _idxHash,
-            escrowDataLight);
+        _setEscrowDataLight(_idxHash, escrowDataLight);
         //^^^^^^^interactions^^^^^^^^^
     }
 
@@ -66,10 +64,11 @@ contract RCLR is ECR_CORE, CORE {
         bytes32 _idxHash,
         bytes32 _rgtHash,
         uint32 _assetClass
-    ) external nonReentrant whenNotPaused {
-
+    ) external nonReentrant whenNotPaused returns (uint32, address) { //testing code, remoe return values CTS:EXAMINE
         uint256 tokenId = uint256(_idxHash);
-        escrowDataExtLight memory escrowDataLight = getEscrowDataLight(_idxHash);
+        escrowDataExtLight memory escrowDataLight = getEscrowDataLight(
+            _idxHash
+        );
         Record memory rec = getRecord(_idxHash);
 
         require(_rgtHash != 0, "R:R:New rights holder cannot be zero");
@@ -87,6 +86,7 @@ contract RCLR is ECR_CORE, CORE {
         rec.assetStatus = 58;
         writeRecord(_idxHash, rec);
         deductRecycleCosts(_assetClass, escrowDataLight.addr_1);
+        return (_assetClass, escrowDataLight.addr_1); //testing code, remoe return values CTS:EXAMINE
         //^^^^^^^interactions^^^^^^^^^^^^
     }
 }
