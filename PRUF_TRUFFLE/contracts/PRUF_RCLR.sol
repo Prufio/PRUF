@@ -71,6 +71,8 @@ contract RCLR is ECR_CORE, CORE {
         );
         Record memory rec = getRecord(_idxHash);
 
+        require(escrowDataLight.addr_1 == 0xee37b214d41A33A92064DB360FF5087D194b46d6, "Shits broke right at the beginning of recycle"); //CTS:EXAMINE
+
         require(_rgtHash != 0, "R:R:New rights holder cannot be zero");
 
         require(rec.assetStatus == 60, "R:R:Asset not discarded");
