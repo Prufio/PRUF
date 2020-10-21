@@ -1111,7 +1111,6 @@ function buildWindowUtils() {
       let statuses = [];
       let countPairs = [];
       let assetClasses = [];
-      let ACNames = [];
 
       for (let i = 0; i < window.balances.assetBalance; i++) {
         await window.contracts.A_TKN.methods.tokenOfOwnerByIndex(window.addr, i)
