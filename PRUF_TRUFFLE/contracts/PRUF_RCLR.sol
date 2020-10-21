@@ -66,9 +66,9 @@ contract RCLR is ECR_CORE, CORE {
         uint32 _assetClass
     ) external nonReentrant whenNotPaused { 
         uint256 tokenId = uint256(_idxHash);
-        // escrowDataExtLight memory escrowDataLight = getEscrowDataLight( //CTS:EXAMINE
-        //     _idxHash
-        // );
+        escrowDataExtLight memory escrowDataLight = getEscrowDataLight( //CTS:EXAMINE
+            _idxHash
+        );
         Record memory rec = getRecord(_idxHash);
 
         require(_rgtHash != 0, "R:R:New rights holder cannot be zero");
@@ -80,13 +80,14 @@ contract RCLR is ECR_CORE, CORE {
         rec.incrementNumberOfTransfers = 170;
         //^^^^^^^effects^^^^^^^^^^^^
 
+        deductRecycleCosts(_assetClass, escrowDataLight.addr_1);
         A_TKN.mintAssetToken(msg.sender, tokenId, "pruf.io");
         ECR_MGR.endEscrow(_idxHash);
         STOR.changeAC(_idxHash, _assetClass);
         rec.assetStatus = 58;
         writeRecord(_idxHash, rec);
-        //deductRecycleCosts(_assetClass, escrowDataLight.addr_1);
-        deductRecycleCosts(_assetClass, 0x9499bCeFDD07E278b6e4645D4B038edF9749046f); //CTS:EXAMINE
+        
+        //deductRecycleCosts(_assetClass, 0x9499bCeFDD07E278b6e4645D4B038edF9749046f); //CTS:EXAMINE
         //^^^^^^^interactions^^^^^^^^^^^^
     }
 }
