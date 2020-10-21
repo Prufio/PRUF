@@ -2453,28 +2453,28 @@ contract('THE WORKS NC', accounts => {
     })
 
 
-    it('Should $recycle asset13', async () => {
-        return RCLR.$recycle(
-            asset13,
-            rgt13,
-            '12',
-            { from: account3 }
-        )
-    })
-
-
-    // it("Should $recycle asset13 and return (_assetClass, escrowDataLight.addr_1", async () => {
-    //     var Record = [];
-
-    //     return await RCLR.$recycle((asset13, rgt13, '12', { from: account3 }), function (_err, _result) {
-    //         if (_err) { }
-    //         else {
-    //             Record = Object.values(_result)
-    //             console.log(Record)
-    //         }
-    //     }
+    // it('Should $recycle asset13', async () => {
+    //     return RCLR.$recycle(
+    //         asset13,
+    //         rgt13,
+    //         '12',
+    //         { from: account3 }
     //     )
     // })
+
+
+    it("Should $recycle asset13 and return (_assetClass, escrowDataLight.addr_1", async () => {
+        var Record = [];
+
+        return await RCLR.$recycle(asset13, rgt13, '12', { from: account3 }, {function (_err, _result) {
+            if (_err) { }
+            else {
+                Record = Object.values(_result)
+                console.log(Record)
+            }
+        }}
+        )
+    })
 
 
     it("Should retrieve UTIL_TKN balance for account4  (999840000000000000000)", async () => {
