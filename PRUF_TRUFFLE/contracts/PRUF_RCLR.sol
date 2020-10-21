@@ -29,7 +29,7 @@ contract RCLR is ECR_CORE, CORE {
     /*
      * @dev //gets item out of recycled status -- caller is assetToken contract
      */
-    function discard(bytes32 _idxHash) external nonReentrant whenNotPaused {
+    function discard(bytes32 _idxHash, address _sender) external nonReentrant whenNotPaused {
         Record memory rec = getRecord(_idxHash);
 
         require(
@@ -43,7 +43,7 @@ contract RCLR is ECR_CORE, CORE {
         bytes32 escrowOwnerHash = keccak256(abi.encodePacked(msg.sender));
         escrowDataExtLight memory escrowDataLight;
         escrowDataLight.escrowData = 255;
-        escrowDataLight.addr_1 = msg.sender;
+        escrowDataLight.addr_1 = _sender;
         //^^^^^^^effects^^^^^^^^^
 
         _setEscrowData(

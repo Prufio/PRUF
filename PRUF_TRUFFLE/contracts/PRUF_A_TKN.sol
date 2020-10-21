@@ -199,7 +199,7 @@ contract A_TKN is Ownable, ReentrancyGuard, ERC721 {
     ) public override nonReentrant {
         bytes32 _idxHash = bytes32(tokenId);
         Record memory rec = getRecord(_idxHash);
-        
+
         require(
             _isApprovedOrOwner(_msgSender(), tokenId),
             "AT:TF:transfer caller is not owner nor approved"
@@ -208,7 +208,7 @@ contract A_TKN is Ownable, ReentrancyGuard, ERC721 {
             rec.assetStatus == 51,
             "AT:TF:Asset not in transferrable status"
         );
-        
+
         //^^^^^^^checks^^^^^^^^
 
         rec.incrementNumberOfTransfers = 170;
@@ -310,18 +310,19 @@ contract A_TKN is Ownable, ReentrancyGuard, ERC721 {
     function discard(uint256 tokenId) external nonReentrant {
         bytes32 _idxHash = bytes32(tokenId);
         //Record memory rec = getRecord(_idxHash);
-        
-        // require(                 //REDUNDANT---will throw in RCLR.discard()
-        //     _isApprovedOrOwner(_msgSender(), tokenId),
-        //     "AT:D:transfer caller is not owner nor approved"
-        // );
-        // require(
+
+        require(
+            _isApprovedOrOwner(_msgSender(), tokenId),
+            "AT:D:transfer caller is not owner nor approved"
+        );
+
+        // require(  //REDUNDANT---will throw in RCLR.discard()
         //     (rec.assetStatus == 59),
         //     "AT:D:Asset must be in status 59 (discardable) to be discarded"
         // );
 
         //^^^^^^^checks^^^^^^^^^
-        RCLR.discard(_idxHash);
+        RCLR.discard(_idxHash, msg.sender);
         _burn(tokenId);
         //^^^^^^^interactions^^^^^^^^^
     }

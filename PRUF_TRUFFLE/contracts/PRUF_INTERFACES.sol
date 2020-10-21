@@ -1051,7 +1051,7 @@ interface ECR_MGR_Interface {
     import "./PRUF_CORE.sol";
  */
 interface RCLR_Interface {
-    function discard(bytes32 _idxHash) external;
+    function discard(bytes32 _idxHash, address _sender) external;
 
     function recycle(bytes32 _idxHash) external;
 }
