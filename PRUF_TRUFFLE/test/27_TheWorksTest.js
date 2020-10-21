@@ -2555,16 +2555,16 @@ contract('THE WORKS NC', accounts => {
     })
 
 
-    it("Should retrieve UTIL_TKN balance for A_Tkn (10000000000000000)", async () => {
-        var Record = [];
+//     it("Should retrieve UTIL_TKN balance for A_Tkn (10000000000000000)", async () => {
+//         var Record = [];
 
-        return await UTIL_TKN.balanceOf(A_TKN.address, { from: account10 }, function (_err, _result) {
-            if (_err) { }
-            else {
-                Record = Object.values(_result)
-                console.log(Record)
-            }
-        })
-    })
+//         return await UTIL_TKN.balanceOf(A_TKN.address, { from: account10 }, function (_err, _result) {
+//             if (_err) { }
+//             else {
+//                 Record = Object.values(_result)
+//                 console.log(Record)
+//             }
+//         })
+//     })
 
 });
