@@ -71,8 +71,6 @@ contract RCLR is ECR_CORE, CORE {
         );
         Record memory rec = getRecord(_idxHash);
 
-        require(escrowDataLight.addr_1 == 0xee37b214d41A33A92064DB360FF5087D194b46d6, "Shits broke right at the beginning of recycle"); //CTS:EXAMINE
-
         require(_rgtHash != 0, "R:R:New rights holder cannot be zero");
 
         require(rec.assetStatus == 60, "R:R:Asset not discarded");
@@ -81,15 +79,13 @@ contract RCLR is ECR_CORE, CORE {
         rec.rightsHolder = _rgtHash;
         rec.incrementNumberOfTransfers = 170;
         //^^^^^^^effects^^^^^^^^^^^^
-
-        deductRecycleCosts(_assetClass, escrowDataLight.addr_1);
+        
         A_TKN.mintAssetToken(msg.sender, tokenId, "pruf.io");
         ECR_MGR.endEscrow(_idxHash);
         STOR.changeAC(_idxHash, _assetClass);
+        deductRecycleCosts(_assetClass, escrowDataLight.addr_1);
         rec.assetStatus = 58;
         writeRecord(_idxHash, rec);
-        
-        //deductRecycleCosts(_assetClass, 0x9499bCeFDD07E278b6e4645D4B038edF9749046f); //CTS:EXAMINE
         //^^^^^^^interactions^^^^^^^^^^^^
     }
 }
