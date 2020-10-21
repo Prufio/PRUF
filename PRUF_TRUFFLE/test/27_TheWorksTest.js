@@ -2477,10 +2477,10 @@ contract('THE WORKS NC', accounts => {
     // })
 
 
-    it("Should retrieve UTIL_TKN balance for account4  (999860000000000000000)", async () => {
+    it("Should retrieve UTIL_TKN balance for account3  (999980000000000000000)", async () => {
         var Record = [];
 
-        return await UTIL_TKN.balanceOf(account4, { from: account4 }, function (_err, _result) {
+        return await UTIL_TKN.balanceOf(account3, { from: account3 }, function (_err, _result) {
             if (_err) { }
             else {
                 Record = Object.values(_result)
@@ -2529,7 +2529,7 @@ contract('THE WORKS NC', accounts => {
     })
 
 
-    it("Should retrieve UTIL_TKN balance for account4  (999850000000000000000)", async () => {
+    it("Should retrieve UTIL_TKN balance for account4  (999870000000000000000)", async () => {
         var Record = [];
 
         return await UTIL_TKN.balanceOf(account4, { from: account4 }, function (_err, _result) {
