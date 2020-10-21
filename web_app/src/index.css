@@ -667,6 +667,21 @@ div {
   font-size: 1.6rem;
 }
 
+.FormHeaderQR {
+  height: 4rem;
+  width: 59rem;
+  background-color: #002a40;
+  color: white;
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  opacity: 0.96;
+  font-weight: bold;
+  font-size: x-largef;
+  margin-top: -1.5rem;
+}
+
 .FormHeader {
   height: 4rem;
   width: 59rem;
@@ -762,6 +777,20 @@ div {
   justify-content: center;
   align-items: center;
 }
+
+/* .ResultsQR {
+  height: flex;
+  width: 59rem;
+  color: white;
+  background-color: #002a40;
+  border-radius: 0rem 0rem 1rem 1rem;
+  font-size: 2.2rem;
+  display: flex;
+  padding: 2rem;
+  margin-top: 80rem;
+  justify-content: center;
+  align-items: center;
+} */
 
 .ResultLink {
   margin-top: 0.5rem;
@@ -1007,6 +1036,10 @@ div {
 .QRreader2 {
   margin-top: -4rem;
 }
+
+/* .QRreaderVRH {
+  margin-top: -60rem;
+} */
 
 .imageButton {
         border: 0px transparent; 
@@ -1847,9 +1880,6 @@ div {
       .25em 0 0 white,
       .5em 0 0 white;}}
 
-
-      /* ---------------------------------------------test------------------------------------------------ */
-
 .PrintForm {
   display: flex;
   width: 1000px;
@@ -1965,4 +1995,24 @@ div {
   color: white;
   z-index: 999;
   position: absolute;
+}
+
+
+      /* ---------------------------------------------test------------------------------------------------ */
+
+
+.CheckBox {
+  /* position: absolute; */
+  color: white;
+  font-size: 2rem;
+  margin-top: -2rem;
+}
+
+.CheckBoxformFont {
+  position: absolute;
+  font-size: 1.5rem;
+  color: rgb(255, 255, 255);
+  font-family: Tahoma, Geneva, sans-serif;
+  margin-top: -2.6rem;
+  margin-left: 2.5rem;
 }

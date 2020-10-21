@@ -661,10 +661,10 @@ contract('THE WORKS NC', accounts => {
                 return RCLR.OO_setStorageContract(STOR.address, { from: account1 })
             })
 
-            // .then(() => {
-            //     console.log("Adding in UTIL_TKN")
-            //     return UTIL_TKN.AdminSetStorageContract(STOR.address, { from: account1 })
-            // })
+        // .then(() => {
+        //     console.log("Adding in UTIL_TKN")
+        //     return UTIL_TKN.AdminSetStorageContract(STOR.address, { from: account1 })
+        // })
     })
 
 
@@ -738,10 +738,10 @@ contract('THE WORKS NC', accounts => {
                 return RCLR.OO_resolveContractAddresses({ from: account1 })
             })
 
-            // .then(() => {
-            //     console.log("Resolving in UTIL_TKN")
-            //     return UTIL_TKN.AdminResolveContractAddresses({ from: account1 })
-            // })
+        // .then(() => {
+        //     console.log("Resolving in UTIL_TKN")
+        //     return UTIL_TKN.AdminResolveContractAddresses({ from: account1 })
+        // })
     })
 
 
@@ -2461,6 +2461,20 @@ contract('THE WORKS NC', accounts => {
             { from: account3 }
         )
     })
+
+
+    // it("Should $recycle asset13 and return (_assetClass, escrowDataLight.addr_1", async () => {
+    //     var Record = [];
+
+    //     return await RCLR.$recycle((asset13, rgt13, '12', { from: account3 }), function (_err, _result) {
+    //         if (_err) { }
+    //         else {
+    //             Record = Object.values(_result)
+    //             console.log(Record)
+    //         }
+    //     }
+    //     )
+    // })
 
 
     it("Should retrieve UTIL_TKN balance for account4  (999840000000000000000)", async () => {
