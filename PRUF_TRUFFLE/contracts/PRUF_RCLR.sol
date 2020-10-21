@@ -64,11 +64,11 @@ contract RCLR is ECR_CORE, CORE {
         bytes32 _idxHash,
         bytes32 _rgtHash,
         uint32 _assetClass
-    ) external nonReentrant whenNotPaused returns (uint32, address) { //testing code, remoe return values CTS:EXAMINE
+    ) external nonReentrant whenNotPaused { 
         uint256 tokenId = uint256(_idxHash);
-        escrowDataExtLight memory escrowDataLight = getEscrowDataLight(
-            _idxHash
-        );
+        // escrowDataExtLight memory escrowDataLight = getEscrowDataLight( //CTS:EXAMINE
+        //     _idxHash
+        // );
         Record memory rec = getRecord(_idxHash);
 
         require(_rgtHash != 0, "R:R:New rights holder cannot be zero");
@@ -85,8 +85,8 @@ contract RCLR is ECR_CORE, CORE {
         STOR.changeAC(_idxHash, _assetClass);
         rec.assetStatus = 58;
         writeRecord(_idxHash, rec);
-        deductRecycleCosts(_assetClass, escrowDataLight.addr_1);
-        return (_assetClass, escrowDataLight.addr_1); //testing code, remoe return values CTS:EXAMINE
+        //deductRecycleCosts(_assetClass, escrowDataLight.addr_1);
+        deductRecycleCosts(_assetClass, 0x9499bCeFDD07E278b6e4645D4B038edF9749046f); //CTS:EXAMINE
         //^^^^^^^interactions^^^^^^^^^^^^
     }
 }
