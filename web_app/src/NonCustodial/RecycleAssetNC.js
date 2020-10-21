@@ -13,7 +13,7 @@ class RecycleAssetNC extends Component {
 
     this.accessAsset = async () => {
       let idxHash;
-      if (this.state.QRreader === false) {
+      if (this.state.QRreader === false && this.state.Checkbox === false) {
         if (this.state.manufacturer === ""
           || this.state.type === ""
           || this.state.model === ""
@@ -21,17 +21,21 @@ class RecycleAssetNC extends Component {
           return alert("Please fill out all fields before submission")
         }
 
+        else if (!this.state.Checkbox) {
+          idxHash = window.web3.utils.soliditySha3(
+            String(this.state.type),
+            String(this.state.manufacturer),
+            String(this.state.model),
+            String(this.state.serial),
+          );
+        }
 
-        idxHash = window.web3.utils.soliditySha3(
-          String(this.state.type),
-          String(this.state.manufacturer),
-          String(this.state.model),
-          String(this.state.serial),
-        );
+        else {
+          idxHash = this.state.result
+        }
       }
-
-      else {
-        idxHash = this.state.result
+      if (this.state.Checkbox) {
+        idxHash = this.state.idxHash
       }
 
       let resArray = await window.utils.checkStats(idxHash, [0, 2])
@@ -86,6 +90,7 @@ class RecycleAssetNC extends Component {
       serial: "",
       transaction: false,
       QRreader: false,
+      Checkbox: false,
     };
   }
 
@@ -222,9 +227,19 @@ class RecycleAssetNC extends Component {
       }
     }
 
+
+    const Checkbox = async () => {
+      if (this.state.Checkbox === false) {
+        this.setState({ Checkbox: true })
+      }
+      else {
+        this.setState({ Checkbox: false })
+      }
+    }
+
     const clearForm = async () => {
       document.getElementById("MainForm").reset();
-      this.setState({ idxHash: undefined, txStatus: false, txHash: "", accessPermitted: false, assetClassSelected: false })
+      this.setState({ idxHash: undefined, txStatus: false, txHash: "", accessPermitted: false, assetClassSelected: false, Checkbox: false })
     }
 
     const _recycleAsset = async () => {
@@ -242,17 +257,17 @@ class RecycleAssetNC extends Component {
       this.setState({ error: undefined })
       this.setState({ resultRA: "" })
       this.setState({ transaction: true })
-if (this.state.result !== "") {
-      var idxHash = this.state.result;
-    }
-    else{
-      var idxHash = window.web3.utils.soliditySha3(
-        String(this.state.type),
-        String(this.state.manufacturer),
-        String(this.state.model),
-        String(this.state.serial),
-      );
-    }
+      if (this.state.result !== "") {
+        var idxHash = this.state.result;
+      }
+      else {
+        var idxHash = window.web3.utils.soliditySha3(
+          String(this.state.type),
+          String(this.state.manufacturer),
+          String(this.state.model),
+          String(this.state.serial),
+        );
+      }
       var rgtRaw;
 
       rgtRaw = window.web3.utils.soliditySha3(
@@ -266,7 +281,7 @@ if (this.state.result !== "") {
       console.log(idxHash)
       console.log(this.state.selectedAssetClassW)
       let isSameRoot = await window.utils.checkAssetRootMatch(this.state.selectedAssetClass, this.state.idxHash);
-        console.log(isSameRoot)
+      console.log(isSameRoot)
       if (!isSameRoot) {
         this.setState({
           QRreader: false
@@ -343,95 +358,120 @@ if (this.state.result !== "") {
             </div>
           )}
           {window.addr > 0 && !this.state.assetClassSelected && this.state.QRreader === false && (
-            <>
-              <Form.Row>
-                <Form.Label className="formFontRow">Asset Class:</Form.Label>
-                <Form.Group as={Row} controlId="formGridAC">
+            <Form.Row>
+              <Form.Label className="formFontRow">Asset Class:</Form.Label>
+              <Form.Group as={Row} controlId="formGridAC">
 
-                  <Form.Control
-                    className="singleFormRow"
-                    placeholder="Submit an asset class name or #"
-                    onChange={(e) => this.setState({ selectedAssetClass: e.target.value })}
-                    size="lg"
+                <Form.Control
+                  className="singleFormRow"
+                  placeholder="Submit an asset class name or #"
+                  onChange={(e) => this.setState({ selectedAssetClass: e.target.value })}
+                  size="lg"
+                />
+              </Form.Group>
+
+              <div className="submitButtonNRAC">
+                <div className="submitButtonNR-content">
+                  <ArrowRightCircle
+                    onClick={() => { _setAC() }}
                   />
-                </Form.Group>
-
-                <div className="submitButtonNRAC">
-                  <div className="submitButtonNR-content">
-                    <ArrowRightCircle
-                      onClick={() => { _setAC() }}
-                    />
-                  </div>
                 </div>
-              </Form.Row>
-            </>
+              </div>
+            </Form.Row>
           )}
           {window.addr > 0 && (
             <div>
               {!this.state.accessPermitted && this.state.QRreader === false && this.state.assetClassSelected === true && (
                 <>
-                  <Form.Row>
-                    <Form.Group as={Col} controlId="formGridType">
-                      <Form.Label className="formFont">Type:</Form.Label>
-                      <Form.Control
-                        placeholder="Type"
-                        required
-                        onChange={(e) => this.setState({ type: e.target.value })}
-                        size="lg"
-                      />
-                    </Form.Group>
-
-                    <Form.Group as={Col} controlId="formGridManufacturer">
-                      <Form.Label className="formFont">Manufacturer:</Form.Label>
-                      <Form.Control
-                        placeholder="Manufacturer"
-                        required
-                        onChange={(e) => this.setState({ manufacturer: e.target.value })}
-                        size="lg"
-                      />
-                    </Form.Group>
-
-                  </Form.Row>
-
-                  <Form.Row>
-                    <Form.Group as={Col} controlId="formGridModel">
-                      <Form.Label className="formFont">Model:</Form.Label>
-                      <Form.Control
-                        placeholder="Model"
-                        required
-                        onChange={(e) => this.setState({ model: e.target.value })}
-                        size="lg"
-                      />
-                    </Form.Group>
-
-                    <Form.Group as={Col} controlId="formGridSerial">
-                      <Form.Label className="formFont">Serial:</Form.Label>
-                      <Form.Control
-                        placeholder="Serial"
-                        required
-                        onChange={(e) => this.setState({ serial: e.target.value })}
-                        size="lg"
-                      />
-                    </Form.Group>
-                  </Form.Row>
-                  <Form.Row>
-                    <div className="submitButton">
-                      <div className="submitButton-content">
-                        <ArrowRightCircle
-                          onClick={() => { this.accessAsset() }}
+                  <div>
+                    <Form.Check
+                      type="checkbox"
+                      className="CheckBox2"
+                      id="inlineFormCheck"
+                      onChange={() => { Checkbox() }}
+                    />
+                    <Form.Label className="CheckBoxformFont">Input Raw Idx Hash</Form.Label>
+                    {this.state.Checkbox === true && (
+                      <Form.Row>
+                        <Form.Label className="formFont">Idx Hash:</Form.Label>
+                        <Form.Control
+                          placeholder="Idx Hash"
+                          required
+                          onChange={(e) => this.setState({ idxHash: e.target.value })}
+                          size="lg"
                         />
-                      </div>
-                    </div>
-                    <div className="submitButton">
-                      <div className="submitButton-content">
-                        <Grid
-                          onClick={() => { QRReader() }}
-                        />
-                      </div>
-                    </div>
-                  </Form.Row>
+                      </Form.Row>
+                    )}
+                  </div>
+                  {this.state.Checkbox === false && (
+                    <>
+                      <Form.Row>
+                        <Form.Group as={Col} controlId="formGridType">
+                          <Form.Label className="formFont">Type:</Form.Label>
+                          <Form.Control
+                            placeholder="Type"
+                            required
+                            onChange={(e) => this.setState({ type: e.target.value })}
+                            size="lg"
+                          />
+                        </Form.Group>
+
+                        <Form.Group as={Col} controlId="formGridManufacturer">
+                          <Form.Label className="formFont">Manufacturer:</Form.Label>
+                          <Form.Control
+                            placeholder="Manufacturer"
+                            required
+                            onChange={(e) => this.setState({ manufacturer: e.target.value })}
+                            size="lg"
+                          />
+                        </Form.Group>
+
+                      </Form.Row>
+
+                      <Form.Row>
+                        <Form.Group as={Col} controlId="formGridModel">
+                          <Form.Label className="formFont">Model:</Form.Label>
+                          <Form.Control
+                            placeholder="Model"
+                            required
+                            onChange={(e) => this.setState({ model: e.target.value })}
+                            size="lg"
+                          />
+                        </Form.Group>
+
+                        <Form.Group as={Col} controlId="formGridSerial">
+                          <Form.Label className="formFont">Serial:</Form.Label>
+                          <Form.Control
+                            placeholder="Serial"
+                            required
+                            onChange={(e) => this.setState({ serial: e.target.value })}
+                            size="lg"
+                          />
+                        </Form.Group>
+                      </Form.Row>
+                    </>
+                  )}
                 </>
               )}
+              {this.state.QRreader === false && !this.state.accessPermitted && this.state.assetClassSelected === true && (
+                <Form.Row>
+                  <div className="submitButton">
+                    <div className="submitButton-content">
+                      <ArrowRightCircle
+                        onClick={() => { this.accessAsset() }}
+                      />
+                    </div>
+                  </div>
+                  <div className="submitButton">
+                    <div className="submitButton-content">
+                      <Grid
+                        onClick={() => { QRReader() }}
+                      />
+                    </div>
+                  </div>
+                </Form.Row>
+              )}
+
               {this.state.QRreader === true && (
                 <div>
                   <div>

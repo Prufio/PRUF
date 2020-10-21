@@ -2008,6 +2008,14 @@ div {
   margin-top: -2rem;
 }
 
+.CheckBox2 {
+  /* position: absolute; */
+  color: white;
+  font-size: 2rem;
+  margin-top: -2rem;
+  margin-right: 54rem;
+}
+
 .CheckBoxformFont {
   position: absolute;
   font-size: 1.5rem;
