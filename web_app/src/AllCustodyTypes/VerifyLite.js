@@ -1,7 +1,6 @@
 import React, { Component } from "react";
 import Form from "react-bootstrap/Form";
 import Col from "react-bootstrap/Col";
-// import Checkbox from "react-bootstrap/Checkbox";
 import { Home, XSquare, ArrowRightCircle, Grid, CornerUpLeft, CheckCircle } from "react-feather";
 import QrReader from 'react-qr-reader'
 
@@ -15,7 +14,7 @@ class VerifyLite extends Component {
 
     this.accessAsset = async () => {
       let idxHash;
-      if (this.state.QRreader === false) {
+      if (this.state.QRreader === false && this.state.Checkbox === false) {
         if (this.state.manufacturer === ""
           || this.state.type === ""
           || this.state.model === ""
@@ -32,15 +31,13 @@ class VerifyLite extends Component {
           );
         }
 
-        else if (this.state.Checkbox) {
+        else {
+          idxHash = this.state.result
+        }
+      }
+        if (this.state.Checkbox) {
           idxHash = this.state.idxHash
         }
-
-      }
-      else {
-        idxHash = this.state.result
-      }
-
       let doesExist = await window.utils.checkAssetExists(idxHash);
 
       if (!doesExist) {
@@ -149,7 +146,7 @@ class VerifyLite extends Component {
 
     const clearForm = async () => {
       document.getElementById("MainForm").reset();
-      this.setState({ VLresult: "", accessPermitted: false })
+      this.setState({ VLresult: "", accessPermitted: false, Checkbox: false })
     }
 
     const _verify = async () => {
@@ -186,7 +183,7 @@ class VerifyLite extends Component {
 
       if (infoMatches) { await this.setState({ VLresult: "170" }); }
 
-      return this.setState({ accessPermitted: false });
+      return this.setState({ accessPermitted: false, Checkbox: false });
     };
 
     return (
@@ -204,7 +201,7 @@ class VerifyLite extends Component {
         )}
         <Form className="Form" id='MainForm'>
           <div>
-            {this.state.QRreader === false && (
+            {this.state.QRreader === false && !this.state.accessPermitted && (
               <div>
                 <Form.Check
                   type="checkbox"
@@ -213,7 +210,7 @@ class VerifyLite extends Component {
                   onChange={() => { Checkbox() }}
                 />
                 <Form.Label className="CheckBoxformFont">Input Raw Idx Hash</Form.Label>
-                {this.state.Checkbox && (
+                {this.state.Checkbox === true && (
                   <Form.Row>
                     <Form.Label className="formFont">Idx Hash:</Form.Label>
                     <Form.Control
@@ -275,7 +272,7 @@ class VerifyLite extends Component {
                 </Form.Row>
               </>
             )}
-            {this.state.QRreader === false && (
+            {this.state.QRreader === false && !this.state.accessPermitted && (
               <Form.Row>
                 <div className="submitButton">
                   <div className="submitButton-content">

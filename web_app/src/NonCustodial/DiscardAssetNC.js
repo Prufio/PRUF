@@ -110,7 +110,7 @@ class DiscardAssetNC extends Component {
 
     const clearForm = async () => {
       document.getElementById("MainForm").reset();
-      this.setState({ idxHash: undefined, txStatus: undefined, txHash: "", wasSentPacket: false })
+      this.setState({ idxHash: undefined, txStatus: undefined, txHash: ""})
     }
 
     const _discardAsset = async () => {//create a new asset record

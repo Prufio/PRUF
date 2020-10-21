@@ -611,7 +611,7 @@ class Main extends Component {
 
       if (window.recount === true) {
         window.aTknIDs = [];
-        window.assetBalance = undefined;
+        window.balances.assetBalance = undefined;
         window.recount = false
         await window.utils.getETHBalance();
         await this.setUpTokenVals()
