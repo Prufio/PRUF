@@ -1,6 +1,7 @@
 import React, { Component } from "react";
 import Form from "react-bootstrap/Form";
 import Col from "react-bootstrap/Col";
+// import Checkbox from "react-bootstrap/Checkbox";
 import { Home, XSquare, ArrowRightCircle, Grid, CornerUpLeft, CheckCircle } from "react-feather";
 import QrReader from 'react-qr-reader'
 
@@ -22,13 +23,19 @@ class VerifyLite extends Component {
           return alert("Please fill out all fields before submission")
         }
 
+        else if (!this.state.Checkbox) {
+          idxHash = window.web3.utils.soliditySha3(
+            String(this.state.type),
+            String(this.state.manufacturer),
+            String(this.state.model),
+            String(this.state.serial),
+          );
+        }
 
-        idxHash = window.web3.utils.soliditySha3(
-          String(this.state.type),
-          String(this.state.manufacturer),
-          String(this.state.model),
-          String(this.state.serial),
-        );
+        else if (this.state.Checkbox) {
+          idxHash = this.state.idxHash
+        }
+
       }
       else {
         idxHash = this.state.result
@@ -72,6 +79,7 @@ class VerifyLite extends Component {
       secret: "",
       QRreader: false,
       isNFA: false,
+      Checkbox: false,
     };
   }
 
@@ -123,10 +131,19 @@ class VerifyLite extends Component {
 
     const QRReader = async () => {
       if (this.state.QRreader === false) {
-        this.setState({ QRreader: true, assetFound: "" })
+        this.setState({ QRreader: true, assetFound: "", Checkbox: false })
       }
       else {
         this.setState({ QRreader: false })
+      }
+    }
+
+    const Checkbox = async () => {
+      if (this.state.Checkbox === false) {
+        this.setState({ Checkbox: true })
+      }
+      else {
+        this.setState({ Checkbox: false })
       }
     }
 
@@ -187,7 +204,30 @@ class VerifyLite extends Component {
         )}
         <Form className="Form" id='MainForm'>
           <div>
-            {!this.state.accessPermitted && this.state.QRreader === false && (
+            {this.state.QRreader === false && (
+              <div>
+                <Form.Check
+                  type="checkbox"
+                  className="CheckBox"
+                  id="inlineFormCheck"
+                  onChange={() => { Checkbox() }}
+                />
+                <Form.Label className="CheckBoxformFont">Input Raw Idx Hash</Form.Label>
+                {this.state.Checkbox && (
+                  <Form.Row>
+                    <Form.Label className="formFont">Idx Hash:</Form.Label>
+                    <Form.Control
+                      placeholder="Idx Hash"
+                      required
+                      onChange={(e) => this.setState({ idxHash: e.target.value })}
+                      size="lg"
+                    />
+                  </Form.Row>
+                )}
+              </div>
+            )}
+
+            {!this.state.accessPermitted && this.state.QRreader === false && this.state.Checkbox === false && (
               <>
                 <Form.Row>
                   <Form.Group as={Col} controlId="formGridType">
@@ -233,31 +273,41 @@ class VerifyLite extends Component {
                     />
                   </Form.Group>
                 </Form.Row>
-                <Form.Row>
-                  <div className="submitButton">
-                    <div className="submitButton-content">
-                      <ArrowRightCircle
-                        onClick={() => { this.accessAsset() }}
-                      />
-                    </div>
-                  </div>
-                  <div className="submitButton">
-                    <div className="submitButton-content">
-                      <Grid
-                        onClick={() => { QRReader() }}
-                      />
-                    </div>
-                  </div>
-                </Form.Row>
               </>
             )}
+            {this.state.QRreader === false && (
+              <Form.Row>
+                <div className="submitButton">
+                  <div className="submitButton-content">
+                    <ArrowRightCircle
+                      onClick={() => { this.accessAsset() }}
+                    />
+                  </div>
+                </div>
+                <div className="submitButton">
+                  <div className="submitButton-content">
+                    <Grid
+                      onClick={() => { QRReader() }}
+                    />
+                  </div>
+                </div>
+              </Form.Row>
+            )}
+
             {this.state.QRreader === true && (
               <div>
+                <style type="text/css">
+                  {`
+                .Form {
+                  background: none !important;
+                }
+                   `}
+                </style>
                 <div>
                   <div className="mediaLinkAD-home">
                     <a className="mediaLinkContentAD-home" ><Home onClick={() => { window.location.href = '/#/' }} /></a>
                   </div>
-                  <h2 className="FormHeader">Scan QR</h2>
+                  <h2 className="FormHeaderQR">Scan QR</h2>
                   <div className="mediaLink-back">
                     <a className="mediaLinkContent-back" ><CornerUpLeft onClick={() => { QRReader() }} /></a>
                   </div>

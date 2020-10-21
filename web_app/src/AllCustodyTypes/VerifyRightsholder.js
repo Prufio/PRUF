@@ -132,7 +132,7 @@ class VerifyRightHolder extends Component {
 
     const clearForm = async () => {
       document.getElementById("MainForm").reset();
-      this.setState({ DVresult: "", accessPermitted: false, transaction: false, txHash: ""})
+      this.setState({ DVresult: "", accessPermitted: false, transaction: false, txHash: "" })
     }
 
     const _verify = async () => {
@@ -250,32 +250,39 @@ class VerifyRightHolder extends Component {
                     </Form.Group>
                   </Form.Row>
                   {this.state.transaction === false && (
-                  <Form.Row>
-                    <div className="submitButton">
-                      <div className="submitButton-content">
-                        <ArrowRightCircle
-                          onClick={() => { this.accessAsset() }}
-                        />
+                    <Form.Row>
+                      <div className="submitButton">
+                        <div className="submitButton-content">
+                          <ArrowRightCircle
+                            onClick={() => { this.accessAsset() }}
+                          />
+                        </div>
                       </div>
-                    </div>
-                    <div className="submitButton">
-                      <div className="submitButton-content">
-                        <Grid
-                          onClick={() => { QRReader() }}
-                        />
+                      <div className="submitButton">
+                        <div className="submitButton-content">
+                          <Grid
+                            onClick={() => { QRReader() }}
+                          />
+                        </div>
                       </div>
-                    </div>
-                  </Form.Row>
+                    </Form.Row>
                   )}
                 </>
               )}
               {this.state.QRreader === true && (
                 <div>
+                  <style type="text/css">
+                    {`
+                .Form {
+                  background: none !important;
+                }
+                   `}
+                  </style>
                   <div>
                     <div className="mediaLinkAD-home">
                       <a className="mediaLinkContentAD-home" ><Home onClick={() => { window.location.href = '/#/' }} /></a>
                     </div>
-                    <h2 className="FormHeader">Scan QR</h2>
+                    <h2 className="FormHeaderQR">Scan QR</h2>
                     <div className="mediaLink-back">
                       <a className="mediaLinkContent-back" ><CornerUpLeft onClick={() => { QRReader() }} /></a>
                     </div>
@@ -352,15 +359,15 @@ class VerifyRightHolder extends Component {
                     </Form.Group>
                   </Form.Row>
                   {this.state.transaction === false && (
-                  <Form.Row>
-                    <div className="submitButtonVRH2">
-                      <div className="submitButtonVRH2-content">
-                        <CheckCircle
-                          onClick={() => { _verify() }}
-                        />
+                    <Form.Row>
+                      <div className="submitButtonVRH2">
+                        <div className="submitButtonVRH2-content">
+                          <CheckCircle
+                            onClick={() => { _verify() }}
+                          />
+                        </div>
                       </div>
-                    </div>
-                  </Form.Row>
+                    </Form.Row>
                   )}
                 </>
               )}
@@ -368,10 +375,10 @@ class VerifyRightHolder extends Component {
           )}
         </Form>
         {this.state.transaction === true && (
-            <div className="Results">
-              <p className="loading">Transaction In Progress</p>
-            </div>
-          )}
+          <div className="Results">
+            <p className="loading">Transaction In Progress</p>
+          </div>
+        )}
         {this.state.QRreader === false && this.state.transaction === false && (
           <div className="Results">
             {this.state.txHash > 0 && ( //conditional rendering
@@ -380,7 +387,7 @@ class VerifyRightHolder extends Component {
                   ? "Match Confirmed :"
                   : "No Match Found :"}
                 <a
-                className="ResultLink"
+                  className="ResultLink"
                   href={" https://kovan.etherscan.io/tx/" + this.state.txHash}
                   target="_blank"
                   rel="noopener noreferrer"
