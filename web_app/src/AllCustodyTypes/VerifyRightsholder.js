@@ -11,7 +11,7 @@ class VerifyRightHolder extends Component {
 
     this.accessAsset = async () => {
       let idxHash;
-      if (this.state.QRreader === false) {
+      if (this.state.QRreader === false && this.state.Checkbox === false) {
         if (this.state.manufacturer === ""
           || this.state.type === ""
           || this.state.model === ""
@@ -19,18 +19,22 @@ class VerifyRightHolder extends Component {
           return alert("Please fill out all fields before submission")
         }
 
+        else if (!this.state.Checkbox) {
+          idxHash = window.web3.utils.soliditySha3(
+            String(this.state.type),
+            String(this.state.manufacturer),
+            String(this.state.model),
+            String(this.state.serial),
+          );
+        }
 
-        idxHash = window.web3.utils.soliditySha3(
-          String(this.state.type),
-          String(this.state.manufacturer),
-          String(this.state.model),
-          String(this.state.serial),
-        );
+        else {
+          idxHash = this.state.result
+        }
       }
-      else {
-        idxHash = this.state.result
+      if (this.state.Checkbox) {
+        idxHash = this.state.idxHash
       }
-
       let doesExist = await window.utils.checkAssetExists(idxHash);
 
       if (!doesExist) {
@@ -70,6 +74,7 @@ class VerifyRightHolder extends Component {
       QRreader: false,
       isNFA: false,
       transaction: false,
+      Checkbox: false,
     };
   }
 
@@ -130,9 +135,19 @@ class VerifyRightHolder extends Component {
     }
 
 
+    const Checkbox = async () => {
+      if (this.state.Checkbox === false) {
+        this.setState({ Checkbox: true })
+      }
+      else {
+        this.setState({ Checkbox: false })
+      }
+    }
+
+
     const clearForm = async () => {
       document.getElementById("MainForm").reset();
-      this.setState({ DVresult: "", accessPermitted: false, transaction: false, txHash: ""})
+      this.setState({ DVresult: "", accessPermitted: false, transaction: false, txHash: "", Checkbox: false })
     }
 
     const _verify = async () => {
@@ -175,7 +190,8 @@ class VerifyRightHolder extends Component {
       await this.setState({
         idxHash: "",
         rgtHash: "",
-        accessPermitted: false
+        accessPermitted: false,
+        Checkbox: false,
       })
 
       document.getElementById("MainForm").reset();
@@ -203,7 +219,31 @@ class VerifyRightHolder extends Component {
           )}
           {window.addr > 0 && (
             <div>
-              {!this.state.accessPermitted && this.state.QRreader === false && (
+
+              {this.state.QRreader === false && !this.state.accessPermitted && (
+                <div>
+                  <Form.Check
+                    type="checkbox"
+                    className="CheckBox"
+                    id="inlineFormCheck"
+                    onChange={() => { Checkbox() }}
+                  />
+                  <Form.Label className="CheckBoxformFont">Input Raw Idx Hash</Form.Label>
+                  {this.state.Checkbox === true && (
+                    <Form.Row>
+                      <Form.Label className="formFont">Idx Hash:</Form.Label>
+                      <Form.Control
+                        placeholder="Idx Hash"
+                        required
+                        onChange={(e) => this.setState({ idxHash: e.target.value })}
+                        size="lg"
+                      />
+                    </Form.Row>
+                  )}
+                </div>
+              )}
+
+              {!this.state.accessPermitted && this.state.QRreader === false && this.state.Checkbox === false && (
                 <>
                   <Form.Row>
                     <Form.Group as={Col} controlId="formGridType">
@@ -249,33 +289,41 @@ class VerifyRightHolder extends Component {
                       />
                     </Form.Group>
                   </Form.Row>
-                  {this.state.transaction === false && (
-                  <Form.Row>
-                    <div className="submitButton">
-                      <div className="submitButton-content">
-                        <ArrowRightCircle
-                          onClick={() => { this.accessAsset() }}
-                        />
-                      </div>
-                    </div>
-                    <div className="submitButton">
-                      <div className="submitButton-content">
-                        <Grid
-                          onClick={() => { QRReader() }}
-                        />
-                      </div>
-                    </div>
-                  </Form.Row>
-                  )}
                 </>
               )}
+              {this.state.transaction === false && this.state.QRreader === false && !this.state.accessPermitted && (
+                <Form.Row>
+                  <div className="submitButton">
+                    <div className="submitButton-content">
+                      <ArrowRightCircle
+                        onClick={() => { this.accessAsset() }}
+                      />
+                    </div>
+                  </div>
+                  <div className="submitButton">
+                    <div className="submitButton-content">
+                      <Grid
+                        onClick={() => { QRReader() }}
+                      />
+                    </div>
+                  </div>
+                </Form.Row>
+              )}
+
               {this.state.QRreader === true && (
                 <div>
+                  <style type="text/css">
+                    {`
+                .Form {
+                  background: none !important;
+                }
+                   `}
+                  </style>
                   <div>
                     <div className="mediaLinkAD-home">
                       <a className="mediaLinkContentAD-home" ><Home onClick={() => { window.location.href = '/#/' }} /></a>
                     </div>
-                    <h2 className="FormHeader">Scan QR</h2>
+                    <h2 className="FormHeaderQR">Scan QR</h2>
                     <div className="mediaLink-back">
                       <a className="mediaLinkContent-back" ><CornerUpLeft onClick={() => { QRReader() }} /></a>
                     </div>
@@ -352,15 +400,15 @@ class VerifyRightHolder extends Component {
                     </Form.Group>
                   </Form.Row>
                   {this.state.transaction === false && (
-                  <Form.Row>
-                    <div className="submitButtonVRH2">
-                      <div className="submitButtonVRH2-content">
-                        <CheckCircle
-                          onClick={() => { _verify() }}
-                        />
+                    <Form.Row>
+                      <div className="submitButtonVRH2">
+                        <div className="submitButtonVRH2-content">
+                          <CheckCircle
+                            onClick={() => { _verify() }}
+                          />
+                        </div>
                       </div>
-                    </div>
-                  </Form.Row>
+                    </Form.Row>
                   )}
                 </>
               )}
@@ -368,10 +416,10 @@ class VerifyRightHolder extends Component {
           )}
         </Form>
         {this.state.transaction === true && (
-            <div className="Results">
-              <p className="loading">Transaction In Progress</p>
-            </div>
-          )}
+          <div className="Results">
+            <p className="loading">Transaction In Progress</p>
+          </div>
+        )}
         {this.state.QRreader === false && this.state.transaction === false && (
           <div className="Results">
             {this.state.txHash > 0 && ( //conditional rendering
@@ -380,7 +428,7 @@ class VerifyRightHolder extends Component {
                   ? "Match Confirmed :"
                   : "No Match Found :"}
                 <a
-                className="ResultLink"
+                  className="ResultLink"
                   href={" https://kovan.etherscan.io/tx/" + this.state.txHash}
                   target="_blank"
                   rel="noopener noreferrer"
