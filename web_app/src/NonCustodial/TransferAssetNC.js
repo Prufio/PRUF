@@ -52,25 +52,25 @@ class ModifyDescriptionNC extends Component {
       this.setState({ status: window.sentPacket.status })
       if (Number(window.sentPacket.status) === 3 || Number(window.sentPacket.status) === 4 || Number(window.sentPacket.status) === 53 || Number(window.sentPacket.status) === 54) {
         alert("Cannot transfer asset in lost or stolen status! Please change to transferrable status");
-        window.sentpacket = undefined;
+         window.sentPacket = undefined;
         return window.location.href = "/#/asset-dashboard"
       }
 
       if (Number(window.sentPacket.status) === 50 || Number(window.sentPacket.status) === 56) {
         alert("Cannot transfer asset in escrow! Please wait until asset has met escrow conditions");
-        window.sentpacket = undefined;
+         window.sentPacket = undefined;
         return window.location.href = "/#/asset-dashboard"
       }
 
       if (Number(window.sentPacket.status) === 58) {
         alert("Cannot transfer asset in imported status! please change to transferrable status");
-        window.sentpacket = undefined;
+         window.sentPacket = undefined;
         return window.location.href = "/#/asset-dashboard"
       }
 
       if (Number(window.sentPacket.status) === 70) {
         alert("Cannot transfer asset in exported status! please import asset and change to transferrable status");
-        window.sentpacket = undefined;
+         window.sentPacket = undefined;
         return window.location.href = "/#/asset-dashboard"
       }
       window.sentPacket = undefined
@@ -203,7 +203,6 @@ class ModifyDescriptionNC extends Component {
                       as="select"
                       size="lg"
                       onChange={(e) => { _checkIn(e.target.value) }}
-
                     >
                       {this.state.hasLoadedAssets && (
                         <optgroup className="optgroup">

@@ -201,7 +201,7 @@ class RecycleAssetNC extends Component {
 
           if (Number(resArray[0]) !== 70) {
             alert("Asset is not exported! Owner must export the assset in order to import.");
-            window.sentpacket = undefined;
+             window.sentPacket = undefined;
             return window.location.href = "/#/asset-dashboard"
           }
 
@@ -209,7 +209,7 @@ class RecycleAssetNC extends Component {
 
           if (resArray[1] !== destinationACData.root) {
             alert("Import destination AC must have same root as origin!");
-            window.sentpacket = undefined;
+             window.sentPacket = undefined;
             return window.location.href = "/#/asset-dashboard"
           }
         }
