@@ -592,7 +592,7 @@
 				"dweb:/ipfs/QmdHm68MUvSaVCbJkDpxyyeMJoG6upDMjBKgt91HZHW71G"
 			]
 		},
-		"localhost/Imports/math/Safemath.sol": {
+		"localhost/Imports/math/safeMath.sol": {
 			"keccak256": "0x8d890f7a794b66b8b3ab54779603c254f85ee0d436dd4a17b3543c6629b726f8",
 			"license": "MIT",
 			"urls": [
@@ -625,27 +625,27 @@
 			]
 		},
 		"localhost/PRUF_BASIC.sol": {
-			"keccak256": "0x4f2c2fe08743fba3719c6617f0c4b65e986d5775929e5777a9a5095609af23e4",
+			"keccak256": "0xb418374aba9029270bde595d29a1ad12fe33f096b45e8aad88e74138fa92adb7",
 			"license": "UNLICENSED",
 			"urls": [
-				"bzz-raw://87ed1ac23dc365a818d1a272ead16e9a52dd0c5cd17df6bc4570d0b5feac6d38",
-				"dweb:/ipfs/QmU3xLdAR79mShhJ6KwhbdfUT7spiJsqzztxViseJS2ie5"
+				"bzz-raw://c15103d85c632dd220fd9f029f9628f10e1cce02d0d7287e3f3506b7d5c128d9",
+				"dweb:/ipfs/QmXt5KqzmSMt1Tb2xYSeBBiham2D6xnBFBrZD7nSFANbrc"
 			]
 		},
 		"localhost/PRUF_ECR_MGR.sol": {
-			"keccak256": "0x4d10861ab1114a26f3ba7c70c9b74b627306180c063de5600101dd8d5c974ada",
+			"keccak256": "0x68272f6a857e4646be6971b2a8f88c477a14a46a4f94f02f191edb423a07188f",
 			"license": "UNLICENSED",
 			"urls": [
-				"bzz-raw://824258ac3d116006d881388cf576fa9637a150cf34d8d03576b1997c636ae7f9",
-				"dweb:/ipfs/QmfYgnwFy35basFF9gP6LG9vkK75ooaitFZCun9Qsamj3K"
+				"bzz-raw://79dd9d4c2246228b8cd4740619f373fd6a58fd0fdf385e8acbb6c8c543e9b69e",
+				"dweb:/ipfs/QmZ6E22my26p8baHrRxrBAaT3NpmXCCjcfGommD7huzWB1"
 			]
 		},
 		"localhost/PRUF_INTERFACES.sol": {
-			"keccak256": "0x30a8b5e5168071b7ba402942c1410988093a642208f843464ef13dd9a7cb1348",
+			"keccak256": "0x3f5200bbd6a05ec68f15d3b552e07e594452b55333872f517ec645cf78a33a8f",
 			"license": "UNLICENSED",
 			"urls": [
-				"bzz-raw://dc85f44d00c135e1c43b380871b31785dd2cbea3c79a45d74adecd531a019938",
-				"dweb:/ipfs/QmPvPtCY4yDg247G8CUJs825NvSzCJan74UbStagNouQXa"
+				"bzz-raw://28e241f4fd3901426d5c0c3952a16a2e555940c5ca46d8a23a8c987fea2005d8",
+				"dweb:/ipfs/Qme7e4vBNcoT4gkW3c2gfbL9zPEtoXDGmwFW1LsSKagqy8"
 			]
 		}
 	},

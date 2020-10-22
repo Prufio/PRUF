@@ -3,6 +3,7 @@ import Form from "react-bootstrap/Form";
 import Col from "react-bootstrap/Col";
 import "./index.css";
 import { ArrowRightCircle } from 'react-feather'
+
 class Home extends Component {
   constructor(props) {
     super(props);
@@ -13,7 +14,7 @@ class Home extends Component {
 
         file.preventDefault()
 
-        const reader = new FileReader()
+        const reader = new FileReader(  )
 
         reader.onload = async (file) => { 
           const text = (file.target.result)
@@ -50,7 +51,7 @@ class Home extends Component {
             else {
               console.log("Balance of address", participants.addresses[i],":",window.web3.utils.fromWei(_result))
             }
-          }); 
+        }); 
       }
     }
 

@@ -585,6 +585,14 @@ class Main extends Component {
         status: undefined,
       }
 
+      if (window.recount === true) {
+        window.aTknIDs = [];
+        window.balances.assetBalance = undefined;
+        window.recount = false
+        await window.utils.getETHBalance();
+        return this.setUpTokenVals(true)
+      }
+
       if (window.balances !== undefined) {
         this.setState({
           assetClassBalance: window.balances.assetClassBalance,
@@ -608,15 +616,6 @@ class Main extends Component {
       let tempDescObj = {}
       let tempDescriptionsArray = [];
       let tempNamesArray = [];
-
-      if (window.recount === true) {
-        window.aTknIDs = [];
-        window.balances.assetBalance = undefined;
-        window.recount = false
-        await window.utils.getETHBalance();
-        await this.setUpTokenVals()
-        return this.setUpAssets()
-      }
 
       await window.utils.getAssetTokenInfo()
 

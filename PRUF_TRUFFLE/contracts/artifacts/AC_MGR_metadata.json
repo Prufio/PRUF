@@ -200,6 +200,24 @@
 				"type": "function"
 			},
 			{
+				"inputs": [],
+				"name": "currentACtokenInfo",
+				"outputs": [
+					{
+						"internalType": "uint256",
+						"name": "",
+						"type": "uint256"
+					},
+					{
+						"internalType": "uint256",
+						"name": "",
+						"type": "uint256"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
 				"inputs": [
 					{
 						"internalType": "uint32",
@@ -343,12 +361,18 @@
 					},
 					{
 						"internalType": "uint256",
-						"name": "_increaseAmount",
+						"name": "_amount",
 						"type": "uint256"
 					}
 				],
-				"name": "increasePriceShare",
-				"outputs": [],
+				"name": "increaseShare",
+				"outputs": [
+					{
+						"internalType": "bool",
+						"name": "",
+						"type": "bool"
+					}
+				],
 				"stateMutability": "nonpayable",
 				"type": "function"
 			},
@@ -437,6 +461,35 @@
 				"type": "function"
 			},
 			{
+				"inputs": [
+					{
+						"internalType": "string",
+						"name": "_name",
+						"type": "string"
+					},
+					{
+						"internalType": "uint32",
+						"name": "_assetClassRoot",
+						"type": "uint32"
+					},
+					{
+						"internalType": "uint8",
+						"name": "_custodyType",
+						"type": "uint8"
+					}
+				],
+				"name": "purchaseACtoken",
+				"outputs": [
+					{
+						"internalType": "uint256",
+						"name": "",
+						"type": "uint256"
+					}
+				],
+				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
 				"inputs": [],
 				"name": "renounceOwnership",
 				"outputs": [],
@@ -521,11 +574,17 @@
 				"OO_unpause()": {
 					"details": "Returns to normal state. (pausable)"
 				},
+				"increaseShare(uint32,uint256)": {
+					"details": "See {IERC20-transfer}. Increase payment share of an asset class Requirements: - `recipient` cannot be the zero address. - the caller must have a balance of at least `amount`."
+				},
 				"owner()": {
 					"details": "Returns the address of the current owner."
 				},
 				"paused()": {
 					"details": "Returns true if the contract is paused, and false otherwise."
+				},
+				"purchaseACtoken(string,uint32,uint8)": {
+					"details": "Burns (amout) tokens and mints a new asset class token to the caller address Requirements: - the caller must have a balance of at least `amount`."
 				},
 				"renounceOwnership()": {
 					"details": "Leaves the contract without owner. It will not be possible to call `onlyOwner` functions anymore. Can only be called by the current owner. NOTE: Renouncing ownership will leave the contract without an owner, thereby removing any functionality that is only available to the owner."
@@ -574,7 +633,7 @@
 				"dweb:/ipfs/QmdHm68MUvSaVCbJkDpxyyeMJoG6upDMjBKgt91HZHW71G"
 			]
 		},
-		"localhost/Imports/math/Safemath.sol": {
+		"localhost/Imports/math/safeMath.sol": {
 			"keccak256": "0x8d890f7a794b66b8b3ab54779603c254f85ee0d436dd4a17b3543c6629b726f8",
 			"license": "MIT",
 			"urls": [
@@ -607,27 +666,27 @@
 			]
 		},
 		"localhost/PRUF_AC_MGR.sol": {
-			"keccak256": "0x80b63cc10228f980d6ef9d02bbe1392d70a8f8db068422f6a166d109e7cd57f9",
+			"keccak256": "0xeb7593a5c509a3da711f05792ca784b92b25dce3b4fd90a8fe81811cf5f55fde",
 			"license": "UNLICENSED",
 			"urls": [
-				"bzz-raw://d41217183b1656318a0bada56ffd09f644b0993ad3abc73496222f4f9a3c360d",
-				"dweb:/ipfs/QmXTdpbjBYgtfe8nDXrv9sdQpcyLV7dhA2hyDG1aaEsbqD"
+				"bzz-raw://cba7becf03ff1219285707f014e4dcd32446ac7ddc06317ec232350c2e080ea2",
+				"dweb:/ipfs/QmdSAVjZTitnecwn9HimRE84VtacugJaLQuRTkHebj8FbQ"
 			]
 		},
 		"localhost/PRUF_BASIC.sol": {
-			"keccak256": "0x4f2c2fe08743fba3719c6617f0c4b65e986d5775929e5777a9a5095609af23e4",
+			"keccak256": "0xb418374aba9029270bde595d29a1ad12fe33f096b45e8aad88e74138fa92adb7",
 			"license": "UNLICENSED",
 			"urls": [
-				"bzz-raw://87ed1ac23dc365a818d1a272ead16e9a52dd0c5cd17df6bc4570d0b5feac6d38",
-				"dweb:/ipfs/QmU3xLdAR79mShhJ6KwhbdfUT7spiJsqzztxViseJS2ie5"
+				"bzz-raw://c15103d85c632dd220fd9f029f9628f10e1cce02d0d7287e3f3506b7d5c128d9",
+				"dweb:/ipfs/QmXt5KqzmSMt1Tb2xYSeBBiham2D6xnBFBrZD7nSFANbrc"
 			]
 		},
 		"localhost/PRUF_INTERFACES.sol": {
-			"keccak256": "0x30a8b5e5168071b7ba402942c1410988093a642208f843464ef13dd9a7cb1348",
+			"keccak256": "0x3f5200bbd6a05ec68f15d3b552e07e594452b55333872f517ec645cf78a33a8f",
 			"license": "UNLICENSED",
 			"urls": [
-				"bzz-raw://dc85f44d00c135e1c43b380871b31785dd2cbea3c79a45d74adecd531a019938",
-				"dweb:/ipfs/QmPvPtCY4yDg247G8CUJs825NvSzCJan74UbStagNouQXa"
+				"bzz-raw://28e241f4fd3901426d5c0c3952a16a2e555940c5ca46d8a23a8c987fea2005d8",
+				"dweb:/ipfs/Qme7e4vBNcoT4gkW3c2gfbL9zPEtoXDGmwFW1LsSKagqy8"
 			]
 		}
 	},

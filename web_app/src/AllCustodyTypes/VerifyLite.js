@@ -14,7 +14,7 @@ class VerifyLite extends Component {
 
     this.accessAsset = async () => {
       let idxHash;
-      if (this.state.QRreader === false && this.state.Checkbox === false) {
+      if (this.state.QRreader === false && !this.state.Checkbox) {
         if (this.state.manufacturer === ""
           || this.state.type === ""
           || this.state.model === ""
@@ -38,6 +38,7 @@ class VerifyLite extends Component {
         if (this.state.Checkbox) {
           idxHash = this.state.idxHash
         }
+        
       let doesExist = await window.utils.checkAssetExists(idxHash);
 
       if (!doesExist) {

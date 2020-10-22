@@ -118,19 +118,6 @@
 			{
 				"inputs": [
 					{
-						"internalType": "bytes32",
-						"name": "_idxHash",
-						"type": "bytes32"
-					}
-				],
-				"name": "endEscrow",
-				"outputs": [],
-				"stateMutability": "nonpayable",
-				"type": "function"
-			},
-			{
-				"inputs": [
-					{
 						"internalType": "address",
 						"name": "",
 						"type": "address"
@@ -191,62 +178,6 @@
 			{
 				"inputs": [],
 				"name": "renounceOwnership",
-				"outputs": [],
-				"stateMutability": "nonpayable",
-				"type": "function"
-			},
-			{
-				"inputs": [
-					{
-						"internalType": "bytes32",
-						"name": "_idxHash",
-						"type": "bytes32"
-					},
-					{
-						"internalType": "bytes32",
-						"name": "_escrowOwnerHash",
-						"type": "bytes32"
-					},
-					{
-						"internalType": "uint256",
-						"name": "_escrowTime",
-						"type": "uint256"
-					},
-					{
-						"internalType": "uint8",
-						"name": "_escrowStatus",
-						"type": "uint8"
-					}
-				],
-				"name": "setEscrow",
-				"outputs": [],
-				"stateMutability": "nonpayable",
-				"type": "function"
-			},
-			{
-				"inputs": [
-					{
-						"internalType": "bytes32",
-						"name": "_idxHash",
-						"type": "bytes32"
-					},
-					{
-						"internalType": "bytes32",
-						"name": "_escrowOwnerHash",
-						"type": "bytes32"
-					},
-					{
-						"internalType": "uint256",
-						"name": "_escrowTime",
-						"type": "uint256"
-					},
-					{
-						"internalType": "uint8",
-						"name": "_escrowStatus",
-						"type": "uint8"
-					}
-				],
-				"name": "setEscrowExtendedData",
 				"outputs": [],
 				"stateMutability": "nonpayable",
 				"type": "function"
@@ -315,7 +246,7 @@
 	},
 	"settings": {
 		"compilationTarget": {
-			"localhost/PRUF_ECR.sol": "ECR"
+			"localhost/PRUF_ECR_CORE.sol": "ECR_CORE"
 		},
 		"evmVersion": "istanbul",
 		"libraries": {},
@@ -383,14 +314,6 @@
 			"urls": [
 				"bzz-raw://c15103d85c632dd220fd9f029f9628f10e1cce02d0d7287e3f3506b7d5c128d9",
 				"dweb:/ipfs/QmXt5KqzmSMt1Tb2xYSeBBiham2D6xnBFBrZD7nSFANbrc"
-			]
-		},
-		"localhost/PRUF_ECR.sol": {
-			"keccak256": "0xfe8c29c2f347d8931d762eb0d9a96f12ca5b2fa79cc5ceb03920cb4a67f49cfa",
-			"license": "UNLICENSED",
-			"urls": [
-				"bzz-raw://f9286d43d36e34ec5a161997d0c715b351ce734cc883fe35b4412ef6a34bbbb2",
-				"dweb:/ipfs/QmVHtsMjJJt4sqpKZgTDqnsEb3DGbdsc7isAKKuKAYXq1q"
 			]
 		},
 		"localhost/PRUF_ECR_CORE.sol": {

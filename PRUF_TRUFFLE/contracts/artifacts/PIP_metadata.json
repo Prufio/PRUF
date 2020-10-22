@@ -64,6 +64,39 @@
 				"type": "event"
 			},
 			{
+				"inputs": [
+					{
+						"internalType": "bytes32",
+						"name": "_idxHash",
+						"type": "bytes32"
+					},
+					{
+						"internalType": "string",
+						"name": "_authCode",
+						"type": "string"
+					},
+					{
+						"internalType": "uint32",
+						"name": "_newAssetClass",
+						"type": "uint32"
+					},
+					{
+						"internalType": "bytes32",
+						"name": "_rgtHash",
+						"type": "bytes32"
+					},
+					{
+						"internalType": "uint32",
+						"name": "_countDownStart",
+						"type": "uint32"
+					}
+				],
+				"name": "$claimPipAsset",
+				"outputs": [],
+				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
 				"inputs": [],
 				"name": "OO_pause",
 				"outputs": [],
@@ -121,9 +154,19 @@
 						"internalType": "bytes32",
 						"name": "_idxHash",
 						"type": "bytes32"
+					},
+					{
+						"internalType": "bytes32",
+						"name": "_hashedAuthCode",
+						"type": "bytes32"
+					},
+					{
+						"internalType": "uint32",
+						"name": "_assetClass",
+						"type": "uint32"
 					}
 				],
-				"name": "endEscrow",
+				"name": "mintPipAsset",
 				"outputs": [],
 				"stateMutability": "nonpayable",
 				"type": "function"
@@ -198,55 +241,12 @@
 			{
 				"inputs": [
 					{
-						"internalType": "bytes32",
-						"name": "_idxHash",
-						"type": "bytes32"
-					},
-					{
-						"internalType": "bytes32",
-						"name": "_escrowOwnerHash",
-						"type": "bytes32"
-					},
-					{
 						"internalType": "uint256",
-						"name": "_escrowTime",
+						"name": "_importDiscount",
 						"type": "uint256"
-					},
-					{
-						"internalType": "uint8",
-						"name": "_escrowStatus",
-						"type": "uint8"
 					}
 				],
-				"name": "setEscrow",
-				"outputs": [],
-				"stateMutability": "nonpayable",
-				"type": "function"
-			},
-			{
-				"inputs": [
-					{
-						"internalType": "bytes32",
-						"name": "_idxHash",
-						"type": "bytes32"
-					},
-					{
-						"internalType": "bytes32",
-						"name": "_escrowOwnerHash",
-						"type": "bytes32"
-					},
-					{
-						"internalType": "uint256",
-						"name": "_escrowTime",
-						"type": "uint256"
-					},
-					{
-						"internalType": "uint8",
-						"name": "_escrowStatus",
-						"type": "uint8"
-					}
-				],
-				"name": "setEscrowExtendedData",
+				"name": "setImportDiscount",
 				"outputs": [],
 				"stateMutability": "nonpayable",
 				"type": "function"
@@ -280,6 +280,25 @@
 				"name": "transferOwnership",
 				"outputs": [],
 				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "uint256",
+						"name": "number",
+						"type": "uint256"
+					}
+				],
+				"name": "uint256toString",
+				"outputs": [
+					{
+						"internalType": "string",
+						"name": "",
+						"type": "string"
+					}
+				],
+				"stateMutability": "pure",
 				"type": "function"
 			}
 		],
@@ -315,7 +334,7 @@
 	},
 	"settings": {
 		"compilationTarget": {
-			"localhost/PRUF_ECR.sol": "ECR"
+			"localhost/PRUF_PIP.sol": "PIP"
 		},
 		"evmVersion": "istanbul",
 		"libraries": {},
@@ -385,20 +404,12 @@
 				"dweb:/ipfs/QmXt5KqzmSMt1Tb2xYSeBBiham2D6xnBFBrZD7nSFANbrc"
 			]
 		},
-		"localhost/PRUF_ECR.sol": {
-			"keccak256": "0xfe8c29c2f347d8931d762eb0d9a96f12ca5b2fa79cc5ceb03920cb4a67f49cfa",
+		"localhost/PRUF_CORE.sol": {
+			"keccak256": "0x4737e5ea5f6ce40e1287962de32a790c34755100c7ce50fd86a98f4aa1a3c4eb",
 			"license": "UNLICENSED",
 			"urls": [
-				"bzz-raw://f9286d43d36e34ec5a161997d0c715b351ce734cc883fe35b4412ef6a34bbbb2",
-				"dweb:/ipfs/QmVHtsMjJJt4sqpKZgTDqnsEb3DGbdsc7isAKKuKAYXq1q"
-			]
-		},
-		"localhost/PRUF_ECR_CORE.sol": {
-			"keccak256": "0x49684401135e7e51d8f131c3028b7af703b044f2e0e0ccf5f828608c8fa5890d",
-			"license": "UNLICENSED",
-			"urls": [
-				"bzz-raw://d1d7f9b1f735b71f6b8539ecc1a9a83f3a73702384f4a55694b77cd286d888fb",
-				"dweb:/ipfs/QmbWcLnxuo2S93Zpv5mS2wqopzbZZGQAv1ty8TEYTyj3kc"
+				"bzz-raw://86007e653ecf2e9e2a81ba0d9b7f9672f4ba5482cbcc906981e1e836dd0e86f5",
+				"dweb:/ipfs/Qmcf3d9Mwu3rqY5h7Dc8KTQAMLcxx4SnZ2dT6hYNLSf2Uv"
 			]
 		},
 		"localhost/PRUF_INTERFACES.sol": {
@@ -407,6 +418,14 @@
 			"urls": [
 				"bzz-raw://28e241f4fd3901426d5c0c3952a16a2e555940c5ca46d8a23a8c987fea2005d8",
 				"dweb:/ipfs/Qme7e4vBNcoT4gkW3c2gfbL9zPEtoXDGmwFW1LsSKagqy8"
+			]
+		},
+		"localhost/PRUF_PIP.sol": {
+			"keccak256": "0xeae2c7d6d65d916a9dc3ebee320c0e583b7f59b48f37394803482a6c3600c753",
+			"license": "UNLICENSED",
+			"urls": [
+				"bzz-raw://281df1f528b2eece6e268162c5bcb5b00370dd704d5aaf758f45c79a0b84c842",
+				"dweb:/ipfs/QmSiFEug8WP1zEUSYevpoFtVcDTQcvD6XgmuXQBzots3ow"
 			]
 		}
 	},

@@ -778,19 +778,19 @@
 			]
 		},
 		"localhost/PRUF_AC_TKN.sol": {
-			"keccak256": "0x3a92ff81aeaeac0b34894420fa40fa98f2c6ecb29be7f275ebb5f19ced50eed1",
+			"keccak256": "0xb9232f1124b53fb5d848449d0838bb306d62843a08e3fd74108239359b294b76",
 			"license": "UNLICENSED",
 			"urls": [
-				"bzz-raw://0f15e481f8cb34513f0592ddb402b6a8147be8e82ec7263e4b88858111d497f6",
-				"dweb:/ipfs/QmZbaTYTFLrimRXYAmz1dTWZzP9uoWmr9JqJ88mnrSgGYH"
+				"bzz-raw://ae191b9772d4258b8948dd126c8905ca499f2ab97983dcb582a0026c8413f5a2",
+				"dweb:/ipfs/QmVwoHTabPv3uhdybVpjZE19YSJ46BmrW72XfwqrJZSBZa"
 			]
 		},
 		"localhost/PRUF_INTERFACES.sol": {
-			"keccak256": "0x30a8b5e5168071b7ba402942c1410988093a642208f843464ef13dd9a7cb1348",
+			"keccak256": "0x3f5200bbd6a05ec68f15d3b552e07e594452b55333872f517ec645cf78a33a8f",
 			"license": "UNLICENSED",
 			"urls": [
-				"bzz-raw://dc85f44d00c135e1c43b380871b31785dd2cbea3c79a45d74adecd531a019938",
-				"dweb:/ipfs/QmPvPtCY4yDg247G8CUJs825NvSzCJan74UbStagNouQXa"
+				"bzz-raw://28e241f4fd3901426d5c0c3952a16a2e555940c5ca46d8a23a8c987fea2005d8",
+				"dweb:/ipfs/Qme7e4vBNcoT4gkW3c2gfbL9zPEtoXDGmwFW1LsSKagqy8"
 			]
 		}
 	},

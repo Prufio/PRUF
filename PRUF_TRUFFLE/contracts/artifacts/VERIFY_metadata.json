@@ -45,12 +45,6 @@
 						"internalType": "string",
 						"name": "_msg",
 						"type": "string"
-					},
-					{
-						"indexed": false,
-						"internalType": "bytes32",
-						"name": "b32",
-						"type": "bytes32"
 					}
 				],
 				"name": "REPORT",
@@ -70,11 +64,92 @@
 				"type": "event"
 			},
 			{
+				"inputs": [],
+				"name": "OO_pause",
+				"outputs": [],
+				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
+				"inputs": [],
+				"name": "OO_resolveContractAddresses",
+				"outputs": [],
+				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
 				"inputs": [
 					{
 						"internalType": "address",
-						"name": "_addr",
+						"name": "_storageAddress",
 						"type": "address"
+					}
+				],
+				"name": "OO_setStorageContract",
+				"outputs": [],
+				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "address",
+						"name": "_to",
+						"type": "address"
+					},
+					{
+						"internalType": "bytes32",
+						"name": "_idxHash",
+						"type": "bytes32"
+					}
+				],
+				"name": "OO_transferACToken",
+				"outputs": [],
+				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
+				"inputs": [],
+				"name": "OO_unpause",
+				"outputs": [],
+				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "bytes32",
+						"name": "_idxHash",
+						"type": "bytes32"
+					},
+					{
+						"internalType": "bytes32",
+						"name": "_itemHash",
+						"type": "bytes32"
+					}
+				],
+				"name": "adminMarkCounterfeit",
+				"outputs": [
+					{
+						"internalType": "uint256",
+						"name": "",
+						"type": "uint256"
+					}
+				],
+				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "bytes32",
+						"name": "_idxHash",
+						"type": "bytes32"
+					},
+					{
+						"internalType": "uint8",
+						"name": "_verified",
+						"type": "uint8"
 					},
 					{
 						"internalType": "uint32",
@@ -82,17 +157,40 @@
 						"type": "uint32"
 					}
 				],
-				"name": "ContractInfoHash",
+				"name": "authorizeTokenForVerify",
+				"outputs": [],
+				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "bytes32",
+						"name": "_itemHash",
+						"type": "bytes32"
+					}
+				],
+				"name": "getItemData",
 				"outputs": [
+					{
+						"internalType": "bytes32",
+						"name": "",
+						"type": "bytes32"
+					},
 					{
 						"internalType": "uint8",
 						"name": "",
 						"type": "uint8"
 					},
 					{
-						"internalType": "bytes32",
+						"internalType": "uint32",
 						"name": "",
-						"type": "bytes32"
+						"type": "uint32"
+					},
+					{
+						"internalType": "uint32",
+						"name": "",
+						"type": "uint32"
 					}
 				],
 				"stateMutability": "view",
@@ -101,232 +199,68 @@
 			{
 				"inputs": [
 					{
-						"internalType": "string",
-						"name": "_name",
-						"type": "string"
+						"internalType": "bytes32",
+						"name": "_idxHash",
+						"type": "bytes32"
 					},
 					{
+						"internalType": "bytes32",
+						"name": "_itemHash",
+						"type": "bytes32"
+					},
+					{
+						"internalType": "uint8",
+						"name": "_status",
+						"type": "uint8"
+					},
+					{
+						"internalType": "uint32",
+						"name": "_value",
+						"type": "uint32"
+					}
+				],
+				"name": "markItem",
+				"outputs": [
+					{
+						"internalType": "uint256",
+						"name": "",
+						"type": "uint256"
+					}
+				],
+				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
 						"internalType": "address",
-						"name": "_addr",
+						"name": "",
 						"type": "address"
 					},
 					{
-						"internalType": "uint32",
-						"name": "_assetClass",
-						"type": "uint32"
+						"internalType": "address",
+						"name": "",
+						"type": "address"
 					},
-					{
-						"internalType": "uint8",
-						"name": "_contractAuthLevel",
-						"type": "uint8"
-					}
-				],
-				"name": "OO_addContract",
-				"outputs": [],
-				"stateMutability": "nonpayable",
-				"type": "function"
-			},
-			{
-				"inputs": [
-					{
-						"internalType": "bytes32",
-						"name": "_idxHash",
-						"type": "bytes32"
-					},
-					{
-						"internalType": "bytes32",
-						"name": "_rgtHash",
-						"type": "bytes32"
-					}
-				],
-				"name": "_verifyRightsHolder",
-				"outputs": [
 					{
 						"internalType": "uint256",
 						"name": "",
 						"type": "uint256"
-					}
-				],
-				"stateMutability": "view",
-				"type": "function"
-			},
-			{
-				"inputs": [
-					{
-						"internalType": "bytes32",
-						"name": "_idxHash",
-						"type": "bytes32"
 					},
 					{
-						"internalType": "bytes32",
-						"name": "_rgtHash",
-						"type": "bytes32"
+						"internalType": "bytes",
+						"name": "",
+						"type": "bytes"
 					}
 				],
-				"name": "blockchainVerifyRightsHolder",
+				"name": "onERC721Received",
 				"outputs": [
 					{
-						"internalType": "uint256",
+						"internalType": "bytes4",
 						"name": "",
-						"type": "uint256"
+						"type": "bytes4"
 					}
 				],
-				"stateMutability": "nonpayable",
-				"type": "function"
-			},
-			{
-				"inputs": [
-					{
-						"internalType": "bytes32",
-						"name": "_idxHash",
-						"type": "bytes32"
-					},
-					{
-						"internalType": "uint32",
-						"name": "_newAssetClass",
-						"type": "uint32"
-					}
-				],
-				"name": "changeAC",
-				"outputs": [],
-				"stateMutability": "nonpayable",
-				"type": "function"
-			},
-			{
-				"inputs": [
-					{
-						"internalType": "string",
-						"name": "_name",
-						"type": "string"
-					},
-					{
-						"internalType": "uint32",
-						"name": "_assetClass",
-						"type": "uint32"
-					},
-					{
-						"internalType": "uint8",
-						"name": "_contractAuthLevel",
-						"type": "uint8"
-					}
-				],
-				"name": "enableContractForAC",
-				"outputs": [],
-				"stateMutability": "nonpayable",
-				"type": "function"
-			},
-			{
-				"inputs": [
-					{
-						"internalType": "bytes32",
-						"name": "_idxHash",
-						"type": "bytes32"
-					}
-				],
-				"name": "endEscrow",
-				"outputs": [],
-				"stateMutability": "nonpayable",
-				"type": "function"
-			},
-			{
-				"inputs": [
-					{
-						"internalType": "bytes32",
-						"name": "_idxHash",
-						"type": "bytes32"
-					},
-					{
-						"internalType": "bytes32",
-						"name": "_Ipfs1",
-						"type": "bytes32"
-					}
-				],
-				"name": "modifyIpfs1",
-				"outputs": [],
-				"stateMutability": "nonpayable",
-				"type": "function"
-			},
-			{
-				"inputs": [
-					{
-						"internalType": "bytes32",
-						"name": "_idxHash",
-						"type": "bytes32"
-					},
-					{
-						"internalType": "bytes32",
-						"name": "_Ipfs2",
-						"type": "bytes32"
-					}
-				],
-				"name": "modifyIpfs2",
-				"outputs": [],
-				"stateMutability": "nonpayable",
-				"type": "function"
-			},
-			{
-				"inputs": [
-					{
-						"internalType": "bytes32",
-						"name": "_idxHash",
-						"type": "bytes32"
-					},
-					{
-						"internalType": "bytes32",
-						"name": "_rgtHash",
-						"type": "bytes32"
-					},
-					{
-						"internalType": "uint8",
-						"name": "_newAssetStatus",
-						"type": "uint8"
-					},
-					{
-						"internalType": "uint32",
-						"name": "_countDown",
-						"type": "uint32"
-					},
-					{
-						"internalType": "uint256",
-						"name": "_incrementForceModCount",
-						"type": "uint256"
-					},
-					{
-						"internalType": "uint256",
-						"name": "_incrementNumberOfTransfers",
-						"type": "uint256"
-					}
-				],
-				"name": "modifyRecord",
-				"outputs": [],
-				"stateMutability": "nonpayable",
-				"type": "function"
-			},
-			{
-				"inputs": [
-					{
-						"internalType": "bytes32",
-						"name": "_idxHash",
-						"type": "bytes32"
-					},
-					{
-						"internalType": "bytes32",
-						"name": "_rgtHash",
-						"type": "bytes32"
-					},
-					{
-						"internalType": "uint32",
-						"name": "_assetClass",
-						"type": "uint32"
-					},
-					{
-						"internalType": "uint32",
-						"name": "_countDownStart",
-						"type": "uint32"
-					}
-				],
-				"name": "newRecord",
-				"outputs": [],
 				"stateMutability": "nonpayable",
 				"type": "function"
 			},
@@ -345,13 +279,6 @@
 			},
 			{
 				"inputs": [],
-				"name": "pause",
-				"outputs": [],
-				"stateMutability": "nonpayable",
-				"type": "function"
-			},
-			{
-				"inputs": [],
 				"name": "paused",
 				"outputs": [
 					{
@@ -364,6 +291,30 @@
 				"type": "function"
 			},
 			{
+				"inputs": [
+					{
+						"internalType": "bytes32",
+						"name": "_idxHash",
+						"type": "bytes32"
+					},
+					{
+						"internalType": "bytes32",
+						"name": "_itemHash",
+						"type": "bytes32"
+					}
+				],
+				"name": "putIn",
+				"outputs": [
+					{
+						"internalType": "uint256",
+						"name": "",
+						"type": "uint256"
+					}
+				],
+				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
 				"inputs": [],
 				"name": "renounceOwnership",
 				"outputs": [],
@@ -373,140 +324,29 @@
 			{
 				"inputs": [
 					{
-						"internalType": "string",
-						"name": "_name",
-						"type": "string"
-					}
-				],
-				"name": "resolveContractAddress",
-				"outputs": [
-					{
-						"internalType": "address",
-						"name": "",
-						"type": "address"
-					}
-				],
-				"stateMutability": "view",
-				"type": "function"
-			},
-			{
-				"inputs": [
-					{
-						"internalType": "bytes32",
-						"name": "_idxHash",
-						"type": "bytes32"
-					}
-				],
-				"name": "retrieveRecord",
-				"outputs": [
-					{
-						"internalType": "bytes32",
-						"name": "",
-						"type": "bytes32"
-					},
-					{
-						"internalType": "uint8",
-						"name": "",
-						"type": "uint8"
-					},
-					{
-						"internalType": "uint32",
-						"name": "",
-						"type": "uint32"
-					},
-					{
-						"internalType": "uint32",
-						"name": "",
-						"type": "uint32"
-					},
-					{
-						"internalType": "uint32",
-						"name": "",
-						"type": "uint32"
-					},
-					{
-						"internalType": "bytes32",
-						"name": "",
-						"type": "bytes32"
-					},
-					{
-						"internalType": "bytes32",
-						"name": "",
-						"type": "bytes32"
-					}
-				],
-				"stateMutability": "view",
-				"type": "function"
-			},
-			{
-				"inputs": [
-					{
-						"internalType": "bytes32",
-						"name": "_idxHash",
-						"type": "bytes32"
-					}
-				],
-				"name": "retrieveShortRecord",
-				"outputs": [
-					{
-						"internalType": "uint8",
-						"name": "",
-						"type": "uint8"
-					},
-					{
-						"internalType": "uint8",
-						"name": "",
-						"type": "uint8"
-					},
-					{
-						"internalType": "uint32",
-						"name": "",
-						"type": "uint32"
-					},
-					{
-						"internalType": "uint32",
-						"name": "",
-						"type": "uint32"
-					},
-					{
-						"internalType": "uint32",
-						"name": "",
-						"type": "uint32"
-					},
-					{
-						"internalType": "bytes32",
-						"name": "",
-						"type": "bytes32"
-					},
-					{
-						"internalType": "bytes32",
-						"name": "",
-						"type": "bytes32"
-					},
-					{
-						"internalType": "uint16",
-						"name": "",
-						"type": "uint16"
-					}
-				],
-				"stateMutability": "view",
-				"type": "function"
-			},
-			{
-				"inputs": [
-					{
 						"internalType": "bytes32",
 						"name": "_idxHash",
 						"type": "bytes32"
 					},
 					{
-						"internalType": "uint8",
-						"name": "_newAssetStatus",
-						"type": "uint8"
+						"internalType": "bytes32",
+						"name": "_itemHash",
+						"type": "bytes32"
+					},
+					{
+						"internalType": "uint32",
+						"name": "maxCollisions",
+						"type": "uint32"
 					}
 				],
-				"name": "setEscrow",
-				"outputs": [],
+				"name": "safePutIn",
+				"outputs": [
+					{
+						"internalType": "uint256",
+						"name": "",
+						"type": "uint256"
+					}
+				],
 				"stateMutability": "nonpayable",
 				"type": "function"
 			},
@@ -518,12 +358,65 @@
 						"type": "bytes32"
 					},
 					{
-						"internalType": "uint8",
-						"name": "_newAssetStatus",
-						"type": "uint8"
+						"internalType": "bytes32",
+						"name": "_itemHash",
+						"type": "bytes32"
 					}
 				],
-				"name": "setStolenOrLost",
+				"name": "takeOut",
+				"outputs": [
+					{
+						"internalType": "uint256",
+						"name": "",
+						"type": "uint256"
+					}
+				],
+				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "bytes32",
+						"name": "_idxHash",
+						"type": "bytes32"
+					},
+					{
+						"internalType": "bytes32",
+						"name": "_newIdxHash",
+						"type": "bytes32"
+					},
+					{
+						"internalType": "bytes32",
+						"name": "_itemHash",
+						"type": "bytes32"
+					}
+				],
+				"name": "transfer",
+				"outputs": [
+					{
+						"internalType": "uint256",
+						"name": "",
+						"type": "uint256"
+					}
+				],
+				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "address",
+						"name": "_to",
+						"type": "address"
+					},
+					{
+						"internalType": "bytes32",
+						"name": "_idxHash",
+						"type": "bytes32"
+					}
+				],
+				"name": "transferAssetToken",
 				"outputs": [],
 				"stateMutability": "nonpayable",
 				"type": "function"
@@ -540,18 +433,17 @@
 				"outputs": [],
 				"stateMutability": "nonpayable",
 				"type": "function"
-			},
-			{
-				"inputs": [],
-				"name": "unpause",
-				"outputs": [],
-				"stateMutability": "nonpayable",
-				"type": "function"
 			}
 		],
 		"devdoc": {
 			"kind": "dev",
 			"methods": {
+				"OO_pause()": {
+					"details": "Triggers stopped state. (pausable)"
+				},
+				"OO_unpause()": {
+					"details": "Returns to normal state. (pausable)"
+				},
 				"owner()": {
 					"details": "Returns the address of the current owner."
 				},
@@ -575,7 +467,7 @@
 	},
 	"settings": {
 		"compilationTarget": {
-			"localhost/PRUF_STOR.sol": "STOR"
+			"localhost/PRUF_VERIFY.sol": "VERIFY"
 		},
 		"evmVersion": "istanbul",
 		"libraries": {},
@@ -605,12 +497,20 @@
 				"dweb:/ipfs/QmdHm68MUvSaVCbJkDpxyyeMJoG6upDMjBKgt91HZHW71G"
 			]
 		},
-		"localhost/Imports/math/Safemath.sol": {
+		"localhost/Imports/math/safeMath.sol": {
 			"keccak256": "0x8d890f7a794b66b8b3ab54779603c254f85ee0d436dd4a17b3543c6629b726f8",
 			"license": "MIT",
 			"urls": [
 				"bzz-raw://887bb68104c8f862a66939b192a85e79564bed9bbe72cda6240fd89bbea642fd",
 				"dweb:/ipfs/QmbC56SFqW7UCx26RfPFWPiEXnQTJXSBA5r4SrojRMHqeM"
+			]
+		},
+		"localhost/Imports/token/ERC721/IERC721Receiver.sol": {
+			"keccak256": "0x90dea29aecfa0bc55f3ba86bd24d87b19726e2affa86292f4ba8052e85cc4d56",
+			"license": "MIT",
+			"urls": [
+				"bzz-raw://b3518cea454999f659b0fd63f810ab61a7d568fe8ad974d84ab15febd321a0a5",
+				"dweb:/ipfs/QmSvS87R4H68JuokmA4oZMELAB49uJfSxeLGfZuXB7dowZ"
 			]
 		},
 		"localhost/Imports/utils/Pausable.sol": {
@@ -629,6 +529,22 @@
 				"dweb:/ipfs/QmcNH8K75n1zUU39DLAGgRPwVf8WbtTuys1fNhVrfmNK3L"
 			]
 		},
+		"localhost/PRUF_BASIC.sol": {
+			"keccak256": "0xb418374aba9029270bde595d29a1ad12fe33f096b45e8aad88e74138fa92adb7",
+			"license": "UNLICENSED",
+			"urls": [
+				"bzz-raw://c15103d85c632dd220fd9f029f9628f10e1cce02d0d7287e3f3506b7d5c128d9",
+				"dweb:/ipfs/QmXt5KqzmSMt1Tb2xYSeBBiham2D6xnBFBrZD7nSFANbrc"
+			]
+		},
+		"localhost/PRUF_CORE.sol": {
+			"keccak256": "0x4737e5ea5f6ce40e1287962de32a790c34755100c7ce50fd86a98f4aa1a3c4eb",
+			"license": "UNLICENSED",
+			"urls": [
+				"bzz-raw://86007e653ecf2e9e2a81ba0d9b7f9672f4ba5482cbcc906981e1e836dd0e86f5",
+				"dweb:/ipfs/Qmcf3d9Mwu3rqY5h7Dc8KTQAMLcxx4SnZ2dT6hYNLSf2Uv"
+			]
+		},
 		"localhost/PRUF_INTERFACES.sol": {
 			"keccak256": "0x3f5200bbd6a05ec68f15d3b552e07e594452b55333872f517ec645cf78a33a8f",
 			"license": "UNLICENSED",
@@ -637,12 +553,12 @@
 				"dweb:/ipfs/Qme7e4vBNcoT4gkW3c2gfbL9zPEtoXDGmwFW1LsSKagqy8"
 			]
 		},
-		"localhost/PRUF_STOR.sol": {
-			"keccak256": "0x0bd282593ecc7c3149a982feda1bbd4ffebb9b9eb07ff21907f868edcb41d053",
+		"localhost/PRUF_VERIFY.sol": {
+			"keccak256": "0x22faf47d752f3c2602da0d05a7ba9e5aadd9556b0f896381cbafbb5414837cdd",
 			"license": "UNLICENSED",
 			"urls": [
-				"bzz-raw://50378ca6851ae1745d96a3e1068701945d668cdefac08a581ab759b148ca8e97",
-				"dweb:/ipfs/QmQ2w96bnogPyFiJf8NhHMJuMbY9vbhn3uc4P37MuCdeHE"
+				"bzz-raw://09cf1c0f8721697c0fbfae971d6ba8dbf2b4e5e25b5f671db31d4994c28c571e",
+				"dweb:/ipfs/QmTwpjGSFZqRVfjHJ2vDkkT3a87g5T6V5NHfh88azv4dJp"
 			]
 		}
 	},

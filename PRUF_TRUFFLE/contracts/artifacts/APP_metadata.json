@@ -89,7 +89,7 @@
 						"type": "bytes32"
 					}
 				],
-				"stateMutability": "payable",
+				"stateMutability": "nonpayable",
 				"type": "function"
 			},
 			{
@@ -113,7 +113,7 @@
 						"type": "uint8"
 					}
 				],
-				"stateMutability": "payable",
+				"stateMutability": "nonpayable",
 				"type": "function"
 			},
 			{
@@ -142,7 +142,7 @@
 						"type": "uint8"
 					}
 				],
-				"stateMutability": "payable",
+				"stateMutability": "nonpayable",
 				"type": "function"
 			},
 			{
@@ -170,7 +170,7 @@
 				],
 				"name": "$newRecord",
 				"outputs": [],
-				"stateMutability": "payable",
+				"stateMutability": "nonpayable",
 				"type": "function"
 			},
 			{
@@ -199,14 +199,7 @@
 						"type": "uint8"
 					}
 				],
-				"stateMutability": "payable",
-				"type": "function"
-			},
-			{
-				"inputs": [],
-				"name": "$withdraw",
-				"outputs": [],
-				"stateMutability": "payable",
+				"stateMutability": "nonpayable",
 				"type": "function"
 			},
 			{
@@ -322,25 +315,6 @@
 				"type": "function"
 			},
 			{
-				"inputs": [
-					{
-						"internalType": "address",
-						"name": "dest",
-						"type": "address"
-					}
-				],
-				"name": "payments",
-				"outputs": [
-					{
-						"internalType": "uint256",
-						"name": "",
-						"type": "uint256"
-					}
-				],
-				"stateMutability": "view",
-				"type": "function"
-			},
-			{
 				"inputs": [],
 				"name": "renounceOwnership",
 				"outputs": [],
@@ -377,19 +351,6 @@
 				"outputs": [],
 				"stateMutability": "nonpayable",
 				"type": "function"
-			},
-			{
-				"inputs": [
-					{
-						"internalType": "address payable",
-						"name": "payee",
-						"type": "address"
-					}
-				],
-				"name": "withdrawPayments",
-				"outputs": [],
-				"stateMutability": "nonpayable",
-				"type": "function"
 			}
 		],
 		"devdoc": {
@@ -407,23 +368,11 @@
 				"paused()": {
 					"details": "Returns true if the contract is paused, and false otherwise."
 				},
-				"payments(address)": {
-					"details": "Returns the payments owed to an address.",
-					"params": {
-						"dest": "The creditor's address."
-					}
-				},
 				"renounceOwnership()": {
 					"details": "Leaves the contract without owner. It will not be possible to call `onlyOwner` functions anymore. Can only be called by the current owner. NOTE: Renouncing ownership will leave the contract without an owner, thereby removing any functionality that is only available to the owner."
 				},
 				"transferOwnership(address)": {
 					"details": "Transfers ownership of the contract to a new account (`newOwner`). Can only be called by the current owner."
-				},
-				"withdrawPayments(address)": {
-					"details": "Withdraw accumulated payments, forwarding all gas to the recipient. Note that _any_ account can call this function, not just the `payee`. This means that contracts unaware of the `PullPayment` protocol can still receive funds this way, by having a separate account call {withdrawPayments}. WARNING: Forwarding all gas opens the door to reentrancy vulnerabilities. Make sure you trust the recipient, or are either following the checks-effects-interactions pattern or using {ReentrancyGuard}.",
-					"params": {
-						"payee": "Whose payments will be withdrawn."
-					}
 				}
 			},
 			"version": 1
@@ -466,28 +415,12 @@
 				"dweb:/ipfs/QmdHm68MUvSaVCbJkDpxyyeMJoG6upDMjBKgt91HZHW71G"
 			]
 		},
-		"localhost/Imports/math/SafeMath.sol": {
+		"localhost/Imports/math/safeMath.sol": {
 			"keccak256": "0x8d890f7a794b66b8b3ab54779603c254f85ee0d436dd4a17b3543c6629b726f8",
 			"license": "MIT",
 			"urls": [
 				"bzz-raw://887bb68104c8f862a66939b192a85e79564bed9bbe72cda6240fd89bbea642fd",
 				"dweb:/ipfs/QmbC56SFqW7UCx26RfPFWPiEXnQTJXSBA5r4SrojRMHqeM"
-			]
-		},
-		"localhost/Imports/payment/PullPayment.sol": {
-			"keccak256": "0x9826b0a2e571f6b04031b587b171820fdbd6b7401fde6c29e8c5ef39e077fa27",
-			"license": "MIT",
-			"urls": [
-				"bzz-raw://e231e931cf7ccc0385656ebfc92919b67f70b837c6f656a6760b2e2600a42849",
-				"dweb:/ipfs/Qmbhe9zHeZqayduST6LPj3jTPLoiv1aJeGX2ELMCrjoyMU"
-			]
-		},
-		"localhost/Imports/payment/escrow/Escrow.sol": {
-			"keccak256": "0x24017fb93b5a5f2b902778861c418718374c54b3c2cc4c3d3c091c1145a04512",
-			"license": "MIT",
-			"urls": [
-				"bzz-raw://e478bbbfc92aaad5789ad31c73b7758aa5c0fae024fd3a68db210e2bb311356c",
-				"dweb:/ipfs/QmaEWtdscssqwocuFYqMCTFB1n6AaWKn6ovx57hQeanrVo"
 			]
 		},
 		"localhost/Imports/token/ERC721/IERC721Receiver.sol": {
@@ -496,14 +429,6 @@
 			"urls": [
 				"bzz-raw://b3518cea454999f659b0fd63f810ab61a7d568fe8ad974d84ab15febd321a0a5",
 				"dweb:/ipfs/QmSvS87R4H68JuokmA4oZMELAB49uJfSxeLGfZuXB7dowZ"
-			]
-		},
-		"localhost/Imports/utils/Address.sol": {
-			"keccak256": "0xb45dc9b431fd17029e917725b523f7302f31d3501c11f9bf4f985d2b088d36d3",
-			"license": "MIT",
-			"urls": [
-				"bzz-raw://5e276244483cce4d0765d5cd229141a3aa98761e0034736dcd7887e5235acb29",
-				"dweb:/ipfs/QmTrizLJ2MCYuaG8YPwg9umQ3XvCd3xjrwkzjcjqvSxYH4"
 			]
 		},
 		"localhost/Imports/utils/Pausable.sol": {
@@ -523,35 +448,35 @@
 			]
 		},
 		"localhost/PRUF_APP.sol": {
-			"keccak256": "0x0e2aca13cfaf04e101e32864c6f3e1c7ebdf63bb14cdffb9684c710a61afb542",
+			"keccak256": "0x9611cd713aad061117b9a995d80d7addece5283df2bf8cedbc34c7ecfc639ba1",
 			"license": "UNLICENSED",
 			"urls": [
-				"bzz-raw://7b943288503e1fbb6302d8365b95cb1af89ed1b940b63ef6075c119f147a18f1",
-				"dweb:/ipfs/QmXHHxYfP8GY74JLJKsQFgVVQzznhkyEuG1UWpZTx45svN"
+				"bzz-raw://b50d31a96590a0f8288280f1aa8e097cce38cdeab5612cd1912af0b44a5c59fb",
+				"dweb:/ipfs/QmYAyu9k5dgeKb3U12zXKS1THXEUcqkbjhtfHMpmMtKLK8"
 			]
 		},
 		"localhost/PRUF_BASIC.sol": {
-			"keccak256": "0x4f2c2fe08743fba3719c6617f0c4b65e986d5775929e5777a9a5095609af23e4",
+			"keccak256": "0xb418374aba9029270bde595d29a1ad12fe33f096b45e8aad88e74138fa92adb7",
 			"license": "UNLICENSED",
 			"urls": [
-				"bzz-raw://87ed1ac23dc365a818d1a272ead16e9a52dd0c5cd17df6bc4570d0b5feac6d38",
-				"dweb:/ipfs/QmU3xLdAR79mShhJ6KwhbdfUT7spiJsqzztxViseJS2ie5"
+				"bzz-raw://c15103d85c632dd220fd9f029f9628f10e1cce02d0d7287e3f3506b7d5c128d9",
+				"dweb:/ipfs/QmXt5KqzmSMt1Tb2xYSeBBiham2D6xnBFBrZD7nSFANbrc"
 			]
 		},
 		"localhost/PRUF_CORE.sol": {
-			"keccak256": "0x23a8e5072866bf6138adb5611b983806f720ccc2aa860c0aa2b1609a28b7b234",
+			"keccak256": "0x4737e5ea5f6ce40e1287962de32a790c34755100c7ce50fd86a98f4aa1a3c4eb",
 			"license": "UNLICENSED",
 			"urls": [
-				"bzz-raw://475369cc6230757a279230d9bc78f4cf7a68bb28da16e04378b847fa6f112d1d",
-				"dweb:/ipfs/QmTKM4kvxUrfK1RGwizM6k6E2jomFLiMjuXK6xX2CgSNjE"
+				"bzz-raw://86007e653ecf2e9e2a81ba0d9b7f9672f4ba5482cbcc906981e1e836dd0e86f5",
+				"dweb:/ipfs/Qmcf3d9Mwu3rqY5h7Dc8KTQAMLcxx4SnZ2dT6hYNLSf2Uv"
 			]
 		},
 		"localhost/PRUF_INTERFACES.sol": {
-			"keccak256": "0x30a8b5e5168071b7ba402942c1410988093a642208f843464ef13dd9a7cb1348",
+			"keccak256": "0x3f5200bbd6a05ec68f15d3b552e07e594452b55333872f517ec645cf78a33a8f",
 			"license": "UNLICENSED",
 			"urls": [
-				"bzz-raw://dc85f44d00c135e1c43b380871b31785dd2cbea3c79a45d74adecd531a019938",
-				"dweb:/ipfs/QmPvPtCY4yDg247G8CUJs825NvSzCJan74UbStagNouQXa"
+				"bzz-raw://28e241f4fd3901426d5c0c3952a16a2e555940c5ca46d8a23a8c987fea2005d8",
+				"dweb:/ipfs/Qme7e4vBNcoT4gkW3c2gfbL9zPEtoXDGmwFW1LsSKagqy8"
 			]
 		}
 	},

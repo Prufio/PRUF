@@ -1,24 +1,5 @@
 function returnABIs() {
 
-	let abis = {
-		STOR: "",
-		APP: "",
-		NP: "",
-		ECR: "",
-		AC_MGR: "",
-		AC_TKN: "",
-		A_TKN: "",
-		PIP: "",
-		APP_NC: "",
-		NP_NC: "",
-		RCLR: "",
-		ECR_NC: "",
-		VERIFY: "",
-		ECR_MGR: "",
-		ID_TKN: "",
-		UTIL_TKN: "",
-	};
-
 	const STOR = [
 		{
 			"anonymous": false,
@@ -181,9 +162,9 @@ function returnABIs() {
 			"name": "blockchainVerifyRightsHolder",
 			"outputs": [
 				{
-					"internalType": "uint8",
+					"internalType": "uint256",
 					"name": "",
-					"type": "uint8"
+					"type": "uint256"
 				}
 			],
 			"stateMutability": "nonpayable",
@@ -563,8 +544,7 @@ function returnABIs() {
 			"stateMutability": "nonpayable",
 			"type": "function"
 		}
-	]
-
+	];
 	//............................................................................................................................................
 
 	const APP = [
@@ -652,7 +632,7 @@ function returnABIs() {
 					"type": "bytes32"
 				}
 			],
-			"stateMutability": "payable",
+			"stateMutability": "nonpayable",
 			"type": "function"
 		},
 		{
@@ -676,7 +656,7 @@ function returnABIs() {
 					"type": "uint8"
 				}
 			],
-			"stateMutability": "payable",
+			"stateMutability": "nonpayable",
 			"type": "function"
 		},
 		{
@@ -705,7 +685,7 @@ function returnABIs() {
 					"type": "uint8"
 				}
 			],
-			"stateMutability": "payable",
+			"stateMutability": "nonpayable",
 			"type": "function"
 		},
 		{
@@ -733,7 +713,7 @@ function returnABIs() {
 			],
 			"name": "$newRecord",
 			"outputs": [],
-			"stateMutability": "payable",
+			"stateMutability": "nonpayable",
 			"type": "function"
 		},
 		{
@@ -762,14 +742,7 @@ function returnABIs() {
 					"type": "uint8"
 				}
 			],
-			"stateMutability": "payable",
-			"type": "function"
-		},
-		{
-			"inputs": [],
-			"name": "$withdraw",
-			"outputs": [],
-			"stateMutability": "payable",
+			"stateMutability": "nonpayable",
 			"type": "function"
 		},
 		{
@@ -885,25 +858,6 @@ function returnABIs() {
 			"type": "function"
 		},
 		{
-			"inputs": [
-				{
-					"internalType": "address",
-					"name": "dest",
-					"type": "address"
-				}
-			],
-			"name": "payments",
-			"outputs": [
-				{
-					"internalType": "uint256",
-					"name": "",
-					"type": "uint256"
-				}
-			],
-			"stateMutability": "view",
-			"type": "function"
-		},
-		{
 			"inputs": [],
 			"name": "renounceOwnership",
 			"outputs": [],
@@ -940,21 +894,8 @@ function returnABIs() {
 			"outputs": [],
 			"stateMutability": "nonpayable",
 			"type": "function"
-		},
-		{
-			"inputs": [
-				{
-					"internalType": "address payable",
-					"name": "payee",
-					"type": "address"
-				}
-			],
-			"name": "withdrawPayments",
-			"outputs": [],
-			"stateMutability": "nonpayable",
-			"type": "function"
 		}
-	]
+	];
 
 	//............................................................................................................................................
 
@@ -1016,13 +957,6 @@ function returnABIs() {
 			],
 			"name": "Unpaused",
 			"type": "event"
-		},
-		{
-			"inputs": [],
-			"name": "$withdraw",
-			"outputs": [],
-			"stateMutability": "payable",
-			"type": "function"
 		},
 		{
 			"inputs": [],
@@ -1277,25 +1211,6 @@ function returnABIs() {
 			"type": "function"
 		},
 		{
-			"inputs": [
-				{
-					"internalType": "address",
-					"name": "dest",
-					"type": "address"
-				}
-			],
-			"name": "payments",
-			"outputs": [
-				{
-					"internalType": "uint256",
-					"name": "",
-					"type": "uint256"
-				}
-			],
-			"stateMutability": "view",
-			"type": "function"
-		},
-		{
 			"inputs": [],
 			"name": "renounceOwnership",
 			"outputs": [],
@@ -1332,21 +1247,8 @@ function returnABIs() {
 			"outputs": [],
 			"stateMutability": "nonpayable",
 			"type": "function"
-		},
-		{
-			"inputs": [
-				{
-					"internalType": "address payable",
-					"name": "payee",
-					"type": "address"
-				}
-			],
-			"name": "withdrawPayments",
-			"outputs": [],
-			"stateMutability": "nonpayable",
-			"type": "function"
 		}
-	]
+	];
 
 	//............................................................................................................................................
 
@@ -1628,7 +1530,7 @@ function returnABIs() {
 			"stateMutability": "nonpayable",
 			"type": "function"
 		}
-	]
+	];
 
 	//............................................................................................................................................
 
@@ -1828,6 +1730,24 @@ function returnABIs() {
 			"type": "function"
 		},
 		{
+			"inputs": [],
+			"name": "currentACtokenInfo",
+			"outputs": [
+				{
+					"internalType": "uint256",
+					"name": "",
+					"type": "uint256"
+				},
+				{
+					"internalType": "uint256",
+					"name": "",
+					"type": "uint256"
+				}
+			],
+			"stateMutability": "view",
+			"type": "function"
+		},
+		{
 			"inputs": [
 				{
 					"internalType": "uint32",
@@ -1971,12 +1891,18 @@ function returnABIs() {
 				},
 				{
 					"internalType": "uint256",
-					"name": "_increaseAmount",
+					"name": "_amount",
 					"type": "uint256"
 				}
 			],
-			"name": "increasePriceShare",
-			"outputs": [],
+			"name": "increaseShare",
+			"outputs": [
+				{
+					"internalType": "bool",
+					"name": "",
+					"type": "bool"
+				}
+			],
 			"stateMutability": "nonpayable",
 			"type": "function"
 		},
@@ -2062,6 +1988,35 @@ function returnABIs() {
 				}
 			],
 			"stateMutability": "view",
+			"type": "function"
+		},
+		{
+			"inputs": [
+				{
+					"internalType": "string",
+					"name": "_name",
+					"type": "string"
+				},
+				{
+					"internalType": "uint32",
+					"name": "_assetClassRoot",
+					"type": "uint32"
+				},
+				{
+					"internalType": "uint8",
+					"name": "_custodyType",
+					"type": "uint8"
+				}
+			],
+			"name": "purchaseACtoken",
+			"outputs": [
+				{
+					"internalType": "uint256",
+					"name": "",
+					"type": "uint256"
+				}
+			],
+			"stateMutability": "nonpayable",
 			"type": "function"
 		},
 		{
@@ -3429,26 +3384,19 @@ function returnABIs() {
 			],
 			"name": "$claimPipAsset",
 			"outputs": [],
-			"stateMutability": "payable",
-			"type": "function"
-		},
-		{
-			"inputs": [],
-			"name": "$withdraw",
-			"outputs": [],
-			"stateMutability": "payable",
-			"type": "function"
-		},
-		{
-			"inputs": [],
-			"name": "OO_resolveContractAddresses",
-			"outputs": [],
 			"stateMutability": "nonpayable",
 			"type": "function"
 		},
 		{
 			"inputs": [],
 			"name": "OO_pause",
+			"outputs": [],
+			"stateMutability": "nonpayable",
+			"type": "function"
+		},
+		{
+			"inputs": [],
+			"name": "OO_resolveContractAddresses",
 			"outputs": [],
 			"stateMutability": "nonpayable",
 			"type": "function"
@@ -3575,25 +3523,6 @@ function returnABIs() {
 			"type": "function"
 		},
 		{
-			"inputs": [
-				{
-					"internalType": "address",
-					"name": "dest",
-					"type": "address"
-				}
-			],
-			"name": "payments",
-			"outputs": [
-				{
-					"internalType": "uint256",
-					"name": "",
-					"type": "uint256"
-				}
-			],
-			"stateMutability": "view",
-			"type": "function"
-		},
-		{
 			"inputs": [],
 			"name": "renounceOwnership",
 			"outputs": [],
@@ -3662,25 +3591,70 @@ function returnABIs() {
 			],
 			"stateMutability": "pure",
 			"type": "function"
-		},
-		{
-			"inputs": [
-				{
-					"internalType": "address payable",
-					"name": "payee",
-					"type": "address"
-				}
-			],
-			"name": "withdrawPayments",
-			"outputs": [],
-			"stateMutability": "nonpayable",
-			"type": "function"
 		}
 	];
 
 	//............................................................................................................................................
 
 	const APP_NC = [
+		{
+			"anonymous": false,
+			"inputs": [
+				{
+					"indexed": true,
+					"internalType": "address",
+					"name": "previousOwner",
+					"type": "address"
+				},
+				{
+					"indexed": true,
+					"internalType": "address",
+					"name": "newOwner",
+					"type": "address"
+				}
+			],
+			"name": "OwnershipTransferred",
+			"type": "event"
+		},
+		{
+			"anonymous": false,
+			"inputs": [
+				{
+					"indexed": false,
+					"internalType": "address",
+					"name": "account",
+					"type": "address"
+				}
+			],
+			"name": "Paused",
+			"type": "event"
+		},
+		{
+			"anonymous": false,
+			"inputs": [
+				{
+					"indexed": false,
+					"internalType": "string",
+					"name": "_msg",
+					"type": "string"
+				}
+			],
+			"name": "REPORT",
+			"type": "event"
+		},
+		{
+			"anonymous": false,
+			"inputs": [
+				{
+					"indexed": false,
+					"internalType": "address",
+					"name": "account",
+					"type": "address"
+				}
+			],
+			"name": "Unpaused",
+			"type": "event"
+		},
 		{
 			"inputs": [
 				{
@@ -3702,7 +3676,7 @@ function returnABIs() {
 					"type": "bytes32"
 				}
 			],
-			"stateMutability": "payable",
+			"stateMutability": "nonpayable",
 			"type": "function"
 		},
 		{
@@ -3720,7 +3694,7 @@ function returnABIs() {
 			],
 			"name": "$importAsset",
 			"outputs": [],
-			"stateMutability": "payable",
+			"stateMutability": "nonpayable",
 			"type": "function"
 		},
 		{
@@ -3748,7 +3722,7 @@ function returnABIs() {
 			],
 			"name": "$newRecord",
 			"outputs": [],
-			"stateMutability": "payable",
+			"stateMutability": "nonpayable",
 			"type": "function"
 		},
 		{
@@ -3781,7 +3755,7 @@ function returnABIs() {
 			],
 			"name": "$newRecordWithDescription",
 			"outputs": [],
-			"stateMutability": "payable",
+			"stateMutability": "nonpayable",
 			"type": "function"
 		},
 		{
@@ -3823,47 +3797,6 @@ function returnABIs() {
 					"internalType": "uint256",
 					"name": "",
 					"type": "uint256"
-				}
-			],
-			"stateMutability": "payable",
-			"type": "function"
-		},
-		{
-			"inputs": [],
-			"name": "$withdraw",
-			"outputs": [],
-			"stateMutability": "payable",
-			"type": "function"
-		},
-		{
-			"inputs": [
-				{
-					"internalType": "address",
-					"name": "",
-					"type": "address"
-				},
-				{
-					"internalType": "address",
-					"name": "",
-					"type": "address"
-				},
-				{
-					"internalType": "uint256",
-					"name": "",
-					"type": "uint256"
-				},
-				{
-					"internalType": "bytes",
-					"name": "",
-					"type": "bytes"
-				}
-			],
-			"name": "onERC721Received",
-			"outputs": [
-				{
-					"internalType": "bytes4",
-					"name": "",
-					"type": "bytes4"
 				}
 			],
 			"stateMutability": "nonpayable",
@@ -3922,111 +3855,36 @@ function returnABIs() {
 			"type": "function"
 		},
 		{
-			"anonymous": false,
 			"inputs": [
 				{
-					"indexed": true,
 					"internalType": "address",
-					"name": "previousOwner",
+					"name": "",
 					"type": "address"
 				},
 				{
-					"indexed": true,
 					"internalType": "address",
-					"name": "newOwner",
-					"type": "address"
-				}
-			],
-			"name": "OwnershipTransferred",
-			"type": "event"
-		},
-		{
-			"anonymous": false,
-			"inputs": [
-				{
-					"indexed": false,
-					"internalType": "address",
-					"name": "account",
-					"type": "address"
-				}
-			],
-			"name": "Paused",
-			"type": "event"
-		},
-		{
-			"inputs": [],
-			"name": "renounceOwnership",
-			"outputs": [],
-			"stateMutability": "nonpayable",
-			"type": "function"
-		},
-		{
-			"anonymous": false,
-			"inputs": [
-				{
-					"indexed": false,
-					"internalType": "string",
-					"name": "_msg",
-					"type": "string"
-				}
-			],
-			"name": "REPORT",
-			"type": "event"
-		},
-		{
-			"inputs": [
-				{
-					"internalType": "address",
-					"name": "_to",
+					"name": "",
 					"type": "address"
 				},
 				{
-					"internalType": "bytes32",
-					"name": "_idxHash",
-					"type": "bytes32"
-				}
-			],
-			"name": "transferAssetToken",
-			"outputs": [],
-			"stateMutability": "nonpayable",
-			"type": "function"
-		},
-		{
-			"inputs": [
+					"internalType": "uint256",
+					"name": "",
+					"type": "uint256"
+				},
 				{
-					"internalType": "address",
-					"name": "newOwner",
-					"type": "address"
+					"internalType": "bytes",
+					"name": "",
+					"type": "bytes"
 				}
 			],
-			"name": "transferOwnership",
-			"outputs": [],
-			"stateMutability": "nonpayable",
-			"type": "function"
-		},
-		{
-			"anonymous": false,
-			"inputs": [
+			"name": "onERC721Received",
+			"outputs": [
 				{
-					"indexed": false,
-					"internalType": "address",
-					"name": "account",
-					"type": "address"
+					"internalType": "bytes4",
+					"name": "",
+					"type": "bytes4"
 				}
 			],
-			"name": "Unpaused",
-			"type": "event"
-		},
-		{
-			"inputs": [
-				{
-					"internalType": "address payable",
-					"name": "payee",
-					"type": "address"
-				}
-			],
-			"name": "withdrawPayments",
-			"outputs": [],
 			"stateMutability": "nonpayable",
 			"type": "function"
 		},
@@ -4057,22 +3915,41 @@ function returnABIs() {
 			"type": "function"
 		},
 		{
+			"inputs": [],
+			"name": "renounceOwnership",
+			"outputs": [],
+			"stateMutability": "nonpayable",
+			"type": "function"
+		},
+		{
 			"inputs": [
 				{
 					"internalType": "address",
-					"name": "dest",
+					"name": "_to",
+					"type": "address"
+				},
+				{
+					"internalType": "bytes32",
+					"name": "_idxHash",
+					"type": "bytes32"
+				}
+			],
+			"name": "transferAssetToken",
+			"outputs": [],
+			"stateMutability": "nonpayable",
+			"type": "function"
+		},
+		{
+			"inputs": [
+				{
+					"internalType": "address",
+					"name": "newOwner",
 					"type": "address"
 				}
 			],
-			"name": "payments",
-			"outputs": [
-				{
-					"internalType": "uint256",
-					"name": "",
-					"type": "uint256"
-				}
-			],
-			"stateMutability": "view",
+			"name": "transferOwnership",
+			"outputs": [],
+			"stateMutability": "nonpayable",
 			"type": "function"
 		}
 	];
@@ -4137,13 +4014,6 @@ function returnABIs() {
 			],
 			"name": "Unpaused",
 			"type": "event"
-		},
-		{
-			"inputs": [],
-			"name": "$withdraw",
-			"outputs": [],
-			"stateMutability": "payable",
-			"type": "function"
 		},
 		{
 			"inputs": [],
@@ -4391,25 +4261,6 @@ function returnABIs() {
 			"type": "function"
 		},
 		{
-			"inputs": [
-				{
-					"internalType": "address",
-					"name": "dest",
-					"type": "address"
-				}
-			],
-			"name": "payments",
-			"outputs": [
-				{
-					"internalType": "uint256",
-					"name": "",
-					"type": "uint256"
-				}
-			],
-			"stateMutability": "view",
-			"type": "function"
-		},
-		{
 			"inputs": [],
 			"name": "renounceOwnership",
 			"outputs": [],
@@ -4443,19 +4294,6 @@ function returnABIs() {
 				}
 			],
 			"name": "transferOwnership",
-			"outputs": [],
-			"stateMutability": "nonpayable",
-			"type": "function"
-		},
-		{
-			"inputs": [
-				{
-					"internalType": "address payable",
-					"name": "payee",
-					"type": "address"
-				}
-			],
-			"name": "withdrawPayments",
 			"outputs": [],
 			"stateMutability": "nonpayable",
 			"type": "function"
@@ -4543,14 +4381,7 @@ function returnABIs() {
 			],
 			"name": "$recycle",
 			"outputs": [],
-			"stateMutability": "payable",
-			"type": "function"
-		},
-		{
-			"inputs": [],
-			"name": "$withdraw",
-			"outputs": [],
-			"stateMutability": "payable",
+			"stateMutability": "nonpayable",
 			"type": "function"
 		},
 		{
@@ -4679,25 +4510,6 @@ function returnABIs() {
 			"type": "function"
 		},
 		{
-			"inputs": [
-				{
-					"internalType": "address",
-					"name": "dest",
-					"type": "address"
-				}
-			],
-			"name": "payments",
-			"outputs": [
-				{
-					"internalType": "uint256",
-					"name": "",
-					"type": "uint256"
-				}
-			],
-			"stateMutability": "view",
-			"type": "function"
-		},
-		{
 			"inputs": [],
 			"name": "renounceOwnership",
 			"outputs": [],
@@ -4731,19 +4543,6 @@ function returnABIs() {
 				}
 			],
 			"name": "transferOwnership",
-			"outputs": [],
-			"stateMutability": "nonpayable",
-			"type": "function"
-		},
-		{
-			"inputs": [
-				{
-					"internalType": "address payable",
-					"name": "payee",
-					"type": "address"
-				}
-			],
-			"name": "withdrawPayments",
 			"outputs": [],
 			"stateMutability": "nonpayable",
 			"type": "function"
@@ -5008,73 +4807,62 @@ function returnABIs() {
 
 	const VERIFY = [
 		{
-			"inputs": [],
-			"name": "$withdraw",
-			"outputs": [],
-			"stateMutability": "payable",
-			"type": "function"
-		},
-		{
+			"anonymous": false,
 			"inputs": [
 				{
-					"internalType": "bytes32",
-					"name": "_idxHash",
-					"type": "bytes32"
-				},
-				{
-					"internalType": "bytes32",
-					"name": "_itemHash",
-					"type": "bytes32"
-				},
-				{
-					"internalType": "uint8",
-					"name": "_status",
-					"type": "uint8"
-				},
-				{
-					"internalType": "uint32",
-					"name": "_value",
-					"type": "uint32"
-				}
-			],
-			"name": "markItem",
-			"outputs": [],
-			"stateMutability": "nonpayable",
-			"type": "function"
-		},
-		{
-			"inputs": [
-				{
+					"indexed": true,
 					"internalType": "address",
-					"name": "",
+					"name": "previousOwner",
 					"type": "address"
 				},
 				{
+					"indexed": true,
 					"internalType": "address",
-					"name": "",
+					"name": "newOwner",
 					"type": "address"
-				},
-				{
-					"internalType": "uint256",
-					"name": "",
-					"type": "uint256"
-				},
-				{
-					"internalType": "bytes",
-					"name": "",
-					"type": "bytes"
 				}
 			],
-			"name": "onERC721Received",
-			"outputs": [
+			"name": "OwnershipTransferred",
+			"type": "event"
+		},
+		{
+			"anonymous": false,
+			"inputs": [
 				{
-					"internalType": "bytes4",
-					"name": "",
-					"type": "bytes4"
+					"indexed": false,
+					"internalType": "address",
+					"name": "account",
+					"type": "address"
 				}
 			],
-			"stateMutability": "nonpayable",
-			"type": "function"
+			"name": "Paused",
+			"type": "event"
+		},
+		{
+			"anonymous": false,
+			"inputs": [
+				{
+					"indexed": false,
+					"internalType": "string",
+					"name": "_msg",
+					"type": "string"
+				}
+			],
+			"name": "REPORT",
+			"type": "event"
+		},
+		{
+			"anonymous": false,
+			"inputs": [
+				{
+					"indexed": false,
+					"internalType": "address",
+					"name": "account",
+					"type": "address"
+				}
+			],
+			"name": "Unpaused",
+			"type": "event"
 		},
 		{
 			"inputs": [],
@@ -5129,38 +4917,6 @@ function returnABIs() {
 			"type": "function"
 		},
 		{
-			"anonymous": false,
-			"inputs": [
-				{
-					"indexed": true,
-					"internalType": "address",
-					"name": "previousOwner",
-					"type": "address"
-				},
-				{
-					"indexed": true,
-					"internalType": "address",
-					"name": "newOwner",
-					"type": "address"
-				}
-			],
-			"name": "OwnershipTransferred",
-			"type": "event"
-		},
-		{
-			"anonymous": false,
-			"inputs": [
-				{
-					"indexed": false,
-					"internalType": "address",
-					"name": "account",
-					"type": "address"
-				}
-			],
-			"name": "Paused",
-			"type": "event"
-		},
-		{
 			"inputs": [
 				{
 					"internalType": "bytes32",
@@ -5173,7 +4929,7 @@ function returnABIs() {
 					"type": "bytes32"
 				}
 			],
-			"name": "putIn",
+			"name": "adminMarkCounterfeit",
 			"outputs": [
 				{
 					"internalType": "uint256",
@@ -5185,26 +4941,6 @@ function returnABIs() {
 			"type": "function"
 		},
 		{
-			"inputs": [],
-			"name": "renounceOwnership",
-			"outputs": [],
-			"stateMutability": "nonpayable",
-			"type": "function"
-		},
-		{
-			"anonymous": false,
-			"inputs": [
-				{
-					"indexed": false,
-					"internalType": "string",
-					"name": "_msg",
-					"type": "string"
-				}
-			],
-			"name": "REPORT",
-			"type": "event"
-		},
-		{
 			"inputs": [
 				{
 					"internalType": "bytes32",
@@ -5212,92 +4948,17 @@ function returnABIs() {
 					"type": "bytes32"
 				},
 				{
-					"internalType": "bytes32",
-					"name": "_itemHash",
-					"type": "bytes32"
-				}
-			],
-			"name": "takeOut",
-			"outputs": [],
-			"stateMutability": "nonpayable",
-			"type": "function"
-		},
-		{
-			"inputs": [
-				{
-					"internalType": "bytes32",
-					"name": "_idxHash",
-					"type": "bytes32"
+					"internalType": "uint8",
+					"name": "_verified",
+					"type": "uint8"
 				},
 				{
-					"internalType": "bytes32",
-					"name": "_newIdxHash",
-					"type": "bytes32"
-				},
-				{
-					"internalType": "bytes32",
-					"name": "_itemHash",
-					"type": "bytes32"
+					"internalType": "uint32",
+					"name": "_assetClass",
+					"type": "uint32"
 				}
 			],
-			"name": "transfer",
-			"outputs": [],
-			"stateMutability": "nonpayable",
-			"type": "function"
-		},
-		{
-			"inputs": [
-				{
-					"internalType": "address",
-					"name": "_to",
-					"type": "address"
-				},
-				{
-					"internalType": "bytes32",
-					"name": "_idxHash",
-					"type": "bytes32"
-				}
-			],
-			"name": "transferAssetToken",
-			"outputs": [],
-			"stateMutability": "nonpayable",
-			"type": "function"
-		},
-		{
-			"inputs": [
-				{
-					"internalType": "address",
-					"name": "newOwner",
-					"type": "address"
-				}
-			],
-			"name": "transferOwnership",
-			"outputs": [],
-			"stateMutability": "nonpayable",
-			"type": "function"
-		},
-		{
-			"anonymous": false,
-			"inputs": [
-				{
-					"indexed": false,
-					"internalType": "address",
-					"name": "account",
-					"type": "address"
-				}
-			],
-			"name": "Unpaused",
-			"type": "event"
-		},
-		{
-			"inputs": [
-				{
-					"internalType": "address payable",
-					"name": "payee",
-					"type": "address"
-				}
-			],
-			"name": "withdrawPayments",
+			"name": "authorizeTokenForVerify",
 			"outputs": [],
 			"stateMutability": "nonpayable",
 			"type": "function"
@@ -5337,6 +4998,74 @@ function returnABIs() {
 			"type": "function"
 		},
 		{
+			"inputs": [
+				{
+					"internalType": "bytes32",
+					"name": "_idxHash",
+					"type": "bytes32"
+				},
+				{
+					"internalType": "bytes32",
+					"name": "_itemHash",
+					"type": "bytes32"
+				},
+				{
+					"internalType": "uint8",
+					"name": "_status",
+					"type": "uint8"
+				},
+				{
+					"internalType": "uint32",
+					"name": "_value",
+					"type": "uint32"
+				}
+			],
+			"name": "markItem",
+			"outputs": [
+				{
+					"internalType": "uint256",
+					"name": "",
+					"type": "uint256"
+				}
+			],
+			"stateMutability": "nonpayable",
+			"type": "function"
+		},
+		{
+			"inputs": [
+				{
+					"internalType": "address",
+					"name": "",
+					"type": "address"
+				},
+				{
+					"internalType": "address",
+					"name": "",
+					"type": "address"
+				},
+				{
+					"internalType": "uint256",
+					"name": "",
+					"type": "uint256"
+				},
+				{
+					"internalType": "bytes",
+					"name": "",
+					"type": "bytes"
+				}
+			],
+			"name": "onERC721Received",
+			"outputs": [
+				{
+					"internalType": "bytes4",
+					"name": "",
+					"type": "bytes4"
+				}
+			],
+			"stateMutability": "nonpayable",
+			"type": "function"
+		},
+		{
 			"inputs": [],
 			"name": "owner",
 			"outputs": [
@@ -5365,12 +5094,17 @@ function returnABIs() {
 		{
 			"inputs": [
 				{
-					"internalType": "address",
-					"name": "dest",
-					"type": "address"
+					"internalType": "bytes32",
+					"name": "_idxHash",
+					"type": "bytes32"
+				},
+				{
+					"internalType": "bytes32",
+					"name": "_itemHash",
+					"type": "bytes32"
 				}
 			],
-			"name": "payments",
+			"name": "putIn",
 			"outputs": [
 				{
 					"internalType": "uint256",
@@ -5378,7 +5112,127 @@ function returnABIs() {
 					"type": "uint256"
 				}
 			],
-			"stateMutability": "view",
+			"stateMutability": "nonpayable",
+			"type": "function"
+		},
+		{
+			"inputs": [],
+			"name": "renounceOwnership",
+			"outputs": [],
+			"stateMutability": "nonpayable",
+			"type": "function"
+		},
+		{
+			"inputs": [
+				{
+					"internalType": "bytes32",
+					"name": "_idxHash",
+					"type": "bytes32"
+				},
+				{
+					"internalType": "bytes32",
+					"name": "_itemHash",
+					"type": "bytes32"
+				},
+				{
+					"internalType": "uint32",
+					"name": "maxCollisions",
+					"type": "uint32"
+				}
+			],
+			"name": "safePutIn",
+			"outputs": [
+				{
+					"internalType": "uint256",
+					"name": "",
+					"type": "uint256"
+				}
+			],
+			"stateMutability": "nonpayable",
+			"type": "function"
+		},
+		{
+			"inputs": [
+				{
+					"internalType": "bytes32",
+					"name": "_idxHash",
+					"type": "bytes32"
+				},
+				{
+					"internalType": "bytes32",
+					"name": "_itemHash",
+					"type": "bytes32"
+				}
+			],
+			"name": "takeOut",
+			"outputs": [
+				{
+					"internalType": "uint256",
+					"name": "",
+					"type": "uint256"
+				}
+			],
+			"stateMutability": "nonpayable",
+			"type": "function"
+		},
+		{
+			"inputs": [
+				{
+					"internalType": "bytes32",
+					"name": "_idxHash",
+					"type": "bytes32"
+				},
+				{
+					"internalType": "bytes32",
+					"name": "_newIdxHash",
+					"type": "bytes32"
+				},
+				{
+					"internalType": "bytes32",
+					"name": "_itemHash",
+					"type": "bytes32"
+				}
+			],
+			"name": "transfer",
+			"outputs": [
+				{
+					"internalType": "uint256",
+					"name": "",
+					"type": "uint256"
+				}
+			],
+			"stateMutability": "nonpayable",
+			"type": "function"
+		},
+		{
+			"inputs": [
+				{
+					"internalType": "address",
+					"name": "_to",
+					"type": "address"
+				},
+				{
+					"internalType": "bytes32",
+					"name": "_idxHash",
+					"type": "bytes32"
+				}
+			],
+			"name": "transferAssetToken",
+			"outputs": [],
+			"stateMutability": "nonpayable",
+			"type": "function"
+		},
+		{
+			"inputs": [
+				{
+					"internalType": "address",
+					"name": "newOwner",
+					"type": "address"
+				}
+			],
+			"name": "transferOwnership",
+			"outputs": [],
+			"stateMutability": "nonpayable",
 			"type": "function"
 		}
 	];
@@ -6481,39 +6335,6 @@ function returnABIs() {
 	const UTIL_TKN = [
 		{
 			"inputs": [],
-			"name": "AdminResolveContractAddresses",
-			"outputs": [],
-			"stateMutability": "nonpayable",
-			"type": "function"
-		},
-		{
-			"inputs": [
-				{
-					"internalType": "address",
-					"name": "_paymentAddress",
-					"type": "address"
-				}
-			],
-			"name": "AdminSetPaymentAddress",
-			"outputs": [],
-			"stateMutability": "nonpayable",
-			"type": "function"
-		},
-		{
-			"inputs": [
-				{
-					"internalType": "address",
-					"name": "_storageAddress",
-					"type": "address"
-				}
-			],
-			"name": "AdminSetStorageContract",
-			"outputs": [],
-			"stateMutability": "nonpayable",
-			"type": "function"
-		},
-		{
-			"inputs": [],
 			"stateMutability": "nonpayable",
 			"type": "constructor"
 		},
@@ -6543,176 +6364,6 @@ function returnABIs() {
 			"type": "event"
 		},
 		{
-			"inputs": [
-				{
-					"internalType": "address",
-					"name": "spender",
-					"type": "address"
-				},
-				{
-					"internalType": "uint256",
-					"name": "amount",
-					"type": "uint256"
-				}
-			],
-			"name": "approve",
-			"outputs": [
-				{
-					"internalType": "bool",
-					"name": "",
-					"type": "bool"
-				}
-			],
-			"stateMutability": "nonpayable",
-			"type": "function"
-		},
-		{
-			"inputs": [
-				{
-					"internalType": "uint256",
-					"name": "amount",
-					"type": "uint256"
-				}
-			],
-			"name": "burn",
-			"outputs": [],
-			"stateMutability": "nonpayable",
-			"type": "function"
-		},
-		{
-			"inputs": [
-				{
-					"internalType": "address",
-					"name": "account",
-					"type": "address"
-				},
-				{
-					"internalType": "uint256",
-					"name": "amount",
-					"type": "uint256"
-				}
-			],
-			"name": "burnFrom",
-			"outputs": [],
-			"stateMutability": "nonpayable",
-			"type": "function"
-		},
-		{
-			"inputs": [
-				{
-					"internalType": "address",
-					"name": "spender",
-					"type": "address"
-				},
-				{
-					"internalType": "uint256",
-					"name": "subtractedValue",
-					"type": "uint256"
-				}
-			],
-			"name": "decreaseAllowance",
-			"outputs": [
-				{
-					"internalType": "bool",
-					"name": "",
-					"type": "bool"
-				}
-			],
-			"stateMutability": "nonpayable",
-			"type": "function"
-		},
-		{
-			"inputs": [
-				{
-					"internalType": "bytes32",
-					"name": "role",
-					"type": "bytes32"
-				},
-				{
-					"internalType": "address",
-					"name": "account",
-					"type": "address"
-				}
-			],
-			"name": "grantRole",
-			"outputs": [],
-			"stateMutability": "nonpayable",
-			"type": "function"
-		},
-		{
-			"inputs": [
-				{
-					"internalType": "address",
-					"name": "spender",
-					"type": "address"
-				},
-				{
-					"internalType": "uint256",
-					"name": "addedValue",
-					"type": "uint256"
-				}
-			],
-			"name": "increaseAllowance",
-			"outputs": [
-				{
-					"internalType": "bool",
-					"name": "",
-					"type": "bool"
-				}
-			],
-			"stateMutability": "nonpayable",
-			"type": "function"
-		},
-		{
-			"inputs": [
-				{
-					"internalType": "uint32",
-					"name": "_assetClass",
-					"type": "uint32"
-				},
-				{
-					"internalType": "uint256",
-					"name": "_amount",
-					"type": "uint256"
-				}
-			],
-			"name": "increaseShare",
-			"outputs": [
-				{
-					"internalType": "bool",
-					"name": "",
-					"type": "bool"
-				}
-			],
-			"stateMutability": "nonpayable",
-			"type": "function"
-		},
-		{
-			"inputs": [
-				{
-					"internalType": "address",
-					"name": "to",
-					"type": "address"
-				},
-				{
-					"internalType": "uint256",
-					"name": "amount",
-					"type": "uint256"
-				}
-			],
-			"name": "mint",
-			"outputs": [],
-			"stateMutability": "nonpayable",
-			"type": "function"
-		},
-		{
-			"inputs": [],
-			"name": "pause",
-			"outputs": [],
-			"stateMutability": "nonpayable",
-			"type": "function"
-		},
-		{
 			"anonymous": false,
 			"inputs": [
 				{
@@ -6724,71 +6375,6 @@ function returnABIs() {
 			],
 			"name": "Paused",
 			"type": "event"
-		},
-		{
-			"inputs": [
-				{
-					"internalType": "string",
-					"name": "_name",
-					"type": "string"
-				},
-				{
-					"internalType": "uint32",
-					"name": "_assetClassRoot",
-					"type": "uint32"
-				},
-				{
-					"internalType": "uint8",
-					"name": "_custodyType",
-					"type": "uint8"
-				}
-			],
-			"name": "purchaseACtoken",
-			"outputs": [
-				{
-					"internalType": "uint256",
-					"name": "",
-					"type": "uint256"
-				}
-			],
-			"stateMutability": "nonpayable",
-			"type": "function"
-		},
-		{
-			"inputs": [
-				{
-					"internalType": "bytes32",
-					"name": "role",
-					"type": "bytes32"
-				},
-				{
-					"internalType": "address",
-					"name": "account",
-					"type": "address"
-				}
-			],
-			"name": "renounceRole",
-			"outputs": [],
-			"stateMutability": "nonpayable",
-			"type": "function"
-		},
-		{
-			"inputs": [
-				{
-					"internalType": "bytes32",
-					"name": "role",
-					"type": "bytes32"
-				},
-				{
-					"internalType": "address",
-					"name": "account",
-					"type": "address"
-				}
-			],
-			"name": "revokeRole",
-			"outputs": [],
-			"stateMutability": "nonpayable",
-			"type": "function"
 		},
 		{
 			"anonymous": false,
@@ -6879,30 +6465,6 @@ function returnABIs() {
 			"type": "event"
 		},
 		{
-			"inputs": [
-				{
-					"internalType": "address",
-					"name": "recipient",
-					"type": "address"
-				},
-				{
-					"internalType": "uint256",
-					"name": "amount",
-					"type": "uint256"
-				}
-			],
-			"name": "transfer",
-			"outputs": [
-				{
-					"internalType": "bool",
-					"name": "",
-					"type": "bool"
-				}
-			],
-			"stateMutability": "nonpayable",
-			"type": "function"
-		},
-		{
 			"anonymous": false,
 			"inputs": [
 				{
@@ -6928,42 +6490,6 @@ function returnABIs() {
 			"type": "event"
 		},
 		{
-			"inputs": [
-				{
-					"internalType": "address",
-					"name": "sender",
-					"type": "address"
-				},
-				{
-					"internalType": "address",
-					"name": "recipient",
-					"type": "address"
-				},
-				{
-					"internalType": "uint256",
-					"name": "amount",
-					"type": "uint256"
-				}
-			],
-			"name": "transferFrom",
-			"outputs": [
-				{
-					"internalType": "bool",
-					"name": "",
-					"type": "bool"
-				}
-			],
-			"stateMutability": "nonpayable",
-			"type": "function"
-		},
-		{
-			"inputs": [],
-			"name": "unpause",
-			"outputs": [],
-			"stateMutability": "nonpayable",
-			"type": "function"
-		},
-		{
 			"anonymous": false,
 			"inputs": [
 				{
@@ -6975,6 +6501,97 @@ function returnABIs() {
 			],
 			"name": "Unpaused",
 			"type": "event"
+		},
+		{
+			"inputs": [
+				{
+					"internalType": "address",
+					"name": "_paymentAddress",
+					"type": "address"
+				}
+			],
+			"name": "AdminSetSharesAddress",
+			"outputs": [],
+			"stateMutability": "nonpayable",
+			"type": "function"
+		},
+		{
+			"inputs": [],
+			"name": "DEFAULT_ADMIN_ROLE",
+			"outputs": [
+				{
+					"internalType": "bytes32",
+					"name": "",
+					"type": "bytes32"
+				}
+			],
+			"stateMutability": "view",
+			"type": "function"
+		},
+		{
+			"inputs": [],
+			"name": "MINTER_ROLE",
+			"outputs": [
+				{
+					"internalType": "bytes32",
+					"name": "",
+					"type": "bytes32"
+				}
+			],
+			"stateMutability": "view",
+			"type": "function"
+		},
+		{
+			"inputs": [],
+			"name": "PAUSER_ROLE",
+			"outputs": [
+				{
+					"internalType": "bytes32",
+					"name": "",
+					"type": "bytes32"
+				}
+			],
+			"stateMutability": "view",
+			"type": "function"
+		},
+		{
+			"inputs": [],
+			"name": "PAYABLE_ROLE",
+			"outputs": [
+				{
+					"internalType": "bytes32",
+					"name": "",
+					"type": "bytes32"
+				}
+			],
+			"stateMutability": "view",
+			"type": "function"
+		},
+		{
+			"inputs": [],
+			"name": "SNAPSHOT_ROLE",
+			"outputs": [
+				{
+					"internalType": "bytes32",
+					"name": "",
+					"type": "bytes32"
+				}
+			],
+			"stateMutability": "view",
+			"type": "function"
+		},
+		{
+			"inputs": [],
+			"name": "TRUSTED_AGENT_ROLE",
+			"outputs": [
+				{
+					"internalType": "bytes32",
+					"name": "",
+					"type": "bytes32"
+				}
+			],
+			"stateMutability": "view",
+			"type": "function"
 		},
 		{
 			"inputs": [
@@ -6998,6 +6615,30 @@ function returnABIs() {
 				}
 			],
 			"stateMutability": "view",
+			"type": "function"
+		},
+		{
+			"inputs": [
+				{
+					"internalType": "address",
+					"name": "spender",
+					"type": "address"
+				},
+				{
+					"internalType": "uint256",
+					"name": "amount",
+					"type": "uint256"
+				}
+			],
+			"name": "approve",
+			"outputs": [
+				{
+					"internalType": "bool",
+					"name": "",
+					"type": "bool"
+				}
+			],
+			"stateMutability": "nonpayable",
 			"type": "function"
 		},
 		{
@@ -7044,21 +6685,34 @@ function returnABIs() {
 			"type": "function"
 		},
 		{
-			"inputs": [],
-			"name": "currentACtokenInfo",
-			"outputs": [
+			"inputs": [
 				{
 					"internalType": "uint256",
-					"name": "",
-					"type": "uint256"
-				},
-				{
-					"internalType": "uint256",
-					"name": "",
+					"name": "amount",
 					"type": "uint256"
 				}
 			],
-			"stateMutability": "view",
+			"name": "burn",
+			"outputs": [],
+			"stateMutability": "nonpayable",
+			"type": "function"
+		},
+		{
+			"inputs": [
+				{
+					"internalType": "address",
+					"name": "account",
+					"type": "address"
+				},
+				{
+					"internalType": "uint256",
+					"name": "amount",
+					"type": "uint256"
+				}
+			],
+			"name": "burnFrom",
+			"outputs": [],
+			"stateMutability": "nonpayable",
 			"type": "function"
 		},
 		{
@@ -7075,16 +6729,27 @@ function returnABIs() {
 			"type": "function"
 		},
 		{
-			"inputs": [],
-			"name": "DEFAULT_ADMIN_ROLE",
-			"outputs": [
+			"inputs": [
 				{
-					"internalType": "bytes32",
-					"name": "",
-					"type": "bytes32"
+					"internalType": "address",
+					"name": "spender",
+					"type": "address"
+				},
+				{
+					"internalType": "uint256",
+					"name": "subtractedValue",
+					"type": "uint256"
 				}
 			],
-			"stateMutability": "view",
+			"name": "decreaseAllowance",
+			"outputs": [
+				{
+					"internalType": "bool",
+					"name": "",
+					"type": "bool"
+				}
+			],
+			"stateMutability": "nonpayable",
 			"type": "function"
 		},
 		{
@@ -7162,6 +6827,24 @@ function returnABIs() {
 					"type": "address"
 				}
 			],
+			"name": "grantRole",
+			"outputs": [],
+			"stateMutability": "nonpayable",
+			"type": "function"
+		},
+		{
+			"inputs": [
+				{
+					"internalType": "bytes32",
+					"name": "role",
+					"type": "bytes32"
+				},
+				{
+					"internalType": "address",
+					"name": "account",
+					"type": "address"
+				}
+			],
 			"name": "hasRole",
 			"outputs": [
 				{
@@ -7174,16 +6857,71 @@ function returnABIs() {
 			"type": "function"
 		},
 		{
-			"inputs": [],
-			"name": "MINTER_ROLE",
+			"inputs": [
+				{
+					"internalType": "address",
+					"name": "spender",
+					"type": "address"
+				},
+				{
+					"internalType": "uint256",
+					"name": "addedValue",
+					"type": "uint256"
+				}
+			],
+			"name": "increaseAllowance",
 			"outputs": [
 				{
-					"internalType": "bytes32",
+					"internalType": "bool",
 					"name": "",
-					"type": "bytes32"
+					"type": "bool"
+				}
+			],
+			"stateMutability": "nonpayable",
+			"type": "function"
+		},
+		{
+			"inputs": [],
+			"name": "maxSupply",
+			"outputs": [
+				{
+					"internalType": "uint256",
+					"name": "",
+					"type": "uint256"
 				}
 			],
 			"stateMutability": "view",
+			"type": "function"
+		},
+		{
+			"inputs": [],
+			"name": "max_Supply",
+			"outputs": [
+				{
+					"internalType": "uint256",
+					"name": "",
+					"type": "uint256"
+				}
+			],
+			"stateMutability": "pure",
+			"type": "function"
+		},
+		{
+			"inputs": [
+				{
+					"internalType": "address",
+					"name": "to",
+					"type": "address"
+				},
+				{
+					"internalType": "uint256",
+					"name": "amount",
+					"type": "uint256"
+				}
+			],
+			"name": "mint",
+			"outputs": [],
+			"stateMutability": "nonpayable",
 			"type": "function"
 		},
 		{
@@ -7201,6 +6939,13 @@ function returnABIs() {
 		},
 		{
 			"inputs": [],
+			"name": "pause",
+			"outputs": [],
+			"stateMutability": "nonpayable",
+			"type": "function"
+		},
+		{
+			"inputs": [],
 			"name": "paused",
 			"outputs": [
 				{
@@ -7213,16 +6958,72 @@ function returnABIs() {
 			"type": "function"
 		},
 		{
-			"inputs": [],
-			"name": "PAUSER_ROLE",
-			"outputs": [
+			"inputs": [
 				{
-					"internalType": "bytes32",
-					"name": "",
-					"type": "bytes32"
+					"internalType": "address",
+					"name": "_senderAddress",
+					"type": "address"
+				},
+				{
+					"internalType": "address",
+					"name": "_rootAddress",
+					"type": "address"
+				},
+				{
+					"internalType": "uint256",
+					"name": "_rootPrice",
+					"type": "uint256"
+				},
+				{
+					"internalType": "address",
+					"name": "_ACTHaddress",
+					"type": "address"
+				},
+				{
+					"internalType": "uint256",
+					"name": "_ACTHprice",
+					"type": "uint256"
 				}
 			],
-			"stateMutability": "view",
+			"name": "payForService",
+			"outputs": [],
+			"stateMutability": "nonpayable",
+			"type": "function"
+		},
+		{
+			"inputs": [
+				{
+					"internalType": "bytes32",
+					"name": "role",
+					"type": "bytes32"
+				},
+				{
+					"internalType": "address",
+					"name": "account",
+					"type": "address"
+				}
+			],
+			"name": "renounceRole",
+			"outputs": [],
+			"stateMutability": "nonpayable",
+			"type": "function"
+		},
+		{
+			"inputs": [
+				{
+					"internalType": "bytes32",
+					"name": "role",
+					"type": "bytes32"
+				},
+				{
+					"internalType": "address",
+					"name": "account",
+					"type": "address"
+				}
+			],
+			"name": "revokeRole",
+			"outputs": [],
+			"stateMutability": "nonpayable",
 			"type": "function"
 		},
 		{
@@ -7236,6 +7037,19 @@ function returnABIs() {
 				}
 			],
 			"stateMutability": "view",
+			"type": "function"
+		},
+		{
+			"inputs": [],
+			"name": "takeSnapshot",
+			"outputs": [
+				{
+					"internalType": "uint256",
+					"name": "",
+					"type": "uint256"
+				}
+			],
+			"stateMutability": "nonpayable",
 			"type": "function"
 		},
 		{
@@ -7269,26 +7083,130 @@ function returnABIs() {
 			],
 			"stateMutability": "view",
 			"type": "function"
+		},
+		{
+			"inputs": [
+				{
+					"internalType": "address",
+					"name": "recipient",
+					"type": "address"
+				},
+				{
+					"internalType": "uint256",
+					"name": "amount",
+					"type": "uint256"
+				}
+			],
+			"name": "transfer",
+			"outputs": [
+				{
+					"internalType": "bool",
+					"name": "",
+					"type": "bool"
+				}
+			],
+			"stateMutability": "nonpayable",
+			"type": "function"
+		},
+		{
+			"inputs": [
+				{
+					"internalType": "address",
+					"name": "sender",
+					"type": "address"
+				},
+				{
+					"internalType": "address",
+					"name": "recipient",
+					"type": "address"
+				},
+				{
+					"internalType": "uint256",
+					"name": "amount",
+					"type": "uint256"
+				}
+			],
+			"name": "transferFrom",
+			"outputs": [
+				{
+					"internalType": "bool",
+					"name": "",
+					"type": "bool"
+				}
+			],
+			"stateMutability": "nonpayable",
+			"type": "function"
+		},
+		{
+			"inputs": [
+				{
+					"internalType": "address",
+					"name": "_from",
+					"type": "address"
+				},
+				{
+					"internalType": "address",
+					"name": "_to",
+					"type": "address"
+				},
+				{
+					"internalType": "uint256",
+					"name": "_amount",
+					"type": "uint256"
+				}
+			],
+			"name": "trustedAgentTransfer",
+			"outputs": [],
+			"stateMutability": "nonpayable",
+			"type": "function"
+		},
+		{
+			"inputs": [
+				{
+					"internalType": "address",
+					"name": "_addr",
+					"type": "address"
+				},
+				{
+					"internalType": "uint256",
+					"name": "_amount",
+					"type": "uint256"
+				}
+			],
+			"name": "trustedAgentburn",
+			"outputs": [],
+			"stateMutability": "nonpayable",
+			"type": "function"
+		},
+		{
+			"inputs": [],
+			"name": "unpause",
+			"outputs": [],
+			"stateMutability": "nonpayable",
+			"type": "function"
 		}
-	]
+	];
+
+	const abis = {
+		STOR: STOR,
+		APP: APP,
+		NP: NP,
+		ECR: ECR,
+		AC_MGR: AC_MGR,
+		AC_TKN: AC_TKN,
+		A_TKN: A_TKN,
+		PIP: PIP,
+		APP_NC: APP_NC,
+		NP_NC: NP_NC,
+		RCLR: RCLR,
+		ECR_NC: ECR_NC,
+		VERIFY: VERIFY,
+		ECR_MGR: ECR_MGR,
+		ID_TKN: ID_TKN,
+		UTIL_TKN: UTIL_TKN,
+	};
 
 	//............................................................................................................................................
-	abis.ID_TKN = ID_TKN;
-	abis.AC_MGR = AC_MGR;
-	abis.NP_NC = NP_NC;
-	abis.A_TKN = A_TKN;
-	abis.AC_TKN = AC_TKN;
-	abis.APP_NC = APP_NC;
-	abis.PIP = PIP;
-	abis.VERIFY = VERIFY;
-	abis.RCLR = RCLR;
-	abis.STOR = STOR;
-	abis.APP = APP;
-	abis.NP = NP;
-	abis.ECR = ECR;
-	abis.ECR_NC = ECR_NC;
-	abis.ECR_MGR = ECR_MGR;
-	abis.UTIL_TKN = UTIL_TKN;
 
 	return (abis);
 
