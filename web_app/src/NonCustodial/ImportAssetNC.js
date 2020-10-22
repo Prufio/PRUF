@@ -231,7 +231,7 @@ class ImportAssetNC extends Component {
 
       await window.contracts.APP_NC.methods
         .$importAsset(idxHash, this.state.selectedAssetClass)
-        .send({ from: window.addr, value: window.costs.newRecordCost })
+        .send({ from: window.addr })
         .on("error", function (_error) {
           self.setState({ transaction: false })
           self.setState({ txHash: Object.values(_error)[0].transactionHash });

@@ -10,25 +10,25 @@ class Home extends Component {
 
     this.getParticipants = async (file) => {
         const self = this;
-        let participants = {addresses: [], numberOf: 0};
+        let participants = {addresses: [], numberOf: 0, referrals: {}};
 
         file.preventDefault()
 
         const reader = new FileReader(  )
 
         reader.onload = async (file) => { 
-          const text = (file.target.result)
-          const participantsRaw = JSON.parse(text)
-          for(let i = 0; i < Object.values(participantsRaw).length; i++){
-            participants.numberOf++;
-            participants.addresses.push(Object.values(participantsRaw)[i])
-          }
-          console.log(text)
-          console.log(participantsRaw)
-          console.log("Participants: ", participants.addresses, " totaling at ", participants.numberOf, "participants.")
-          const airdropAmount = this.state.roundBalance/participants.numberOf;
-          console.log("Each will recieve ", airdropAmount, " tokens")
-          this.setState({airdropAmount: airdropAmount, participants: participants, successfullyReadFile: true})
+          const text = (file.target.result);
+          const participantsRaw = JSON.parse(text);
+
+          participants = participantsRaw;
+          participants.numberOf = participants.addresses.length;
+
+          console.log(text);
+          console.log(participantsRaw);
+          console.log("Participants: ", participants.addresses, " totaling at ", participants.numberOf, "participants.");
+          console.log("Referrals: ", participants.referrals)
+          console.log("Each will recieve ", this.state.airdropAmount, " tokens");
+          this.setState({participants: participants, successfullyReadFile: true});
         };
 
         if(file.target.files[0] !== undefined){
@@ -51,26 +51,33 @@ class Home extends Component {
             else {
               console.log("Balance of address", participants.addresses[i],":",window.web3.utils.fromWei(_result))
             }
-        }); 
+        });
       }
     }
 
     this.payAirdropParticipants = async () => {
+
       const self = this;
       const participants = this.state.participants;
 
       for(let i = 0; i < participants.addresses.length; i++){
-        console.log(window.web3.utils.toWei(String(this.state.airdropAmount), 'ether'))
+        let airdropAmount;
+        let referral = participants.referrals[participants.addresses[i]]
+
+        if(referral > 0){airdropAmount = (this.state.airdropAmount + (1000*referral))}
+        else{airdropAmount = this.state.airdropAmount}
+
+        console.log(window.web3.utils.toWei(String(airdropAmount), 'ether'))
         //console.log("Sent address ", participants.addresses[i], this.state.airdropAmount, " tokens.")
         await window.UTIL_TKN.methods
-        .mint(participants.addresses[i], window.web3.utils.toWei(String(this.state.airdropAmount), 'ether'))
+        .mint(participants.addresses[i], window.web3.utils.toWei(String(airdropAmount), 'ether'))
         .send({ from: window.addr })
         .on("error", function (_error) {
-          self.setState({ error: _error });
-          self.setState({ result: _error.transactionHash });
+        console.log(_error)
         })
         .on("receipt", (receipt) => {
-          console.log("dropped", this.state.airdropAmount, "tokens to address:", participants.addresses[i]);
+          console.log("dropped", airdropAmount, "tokens to address:", participants.addresses[i]);
+          console.log("Which had",referral,"referrals");
           console.log("tx receipt: ", receipt);
         }); 
       }
@@ -78,21 +85,22 @@ class Home extends Component {
     }
     
     this.state = {
-      roundBalance: 20000000,
+
+      roundBalance: 0,
       participants: {},
       authAddr: undefined,
       addr: undefined,
-      airdropAmount: 0,
+      airdropAmount: 20000,
       successfullyReadFile: false
+
     };
   }
 
   componentDidMount() {
+
     if (window.addr !== undefined) {
       this.setState({ addr: window.addr })
     }
-    
-    
 
   }
 

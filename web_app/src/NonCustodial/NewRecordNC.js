@@ -194,7 +194,7 @@ class NewRecordNC extends Component {
           this.state.countDownStart,
           ipfsHash
         )
-        .send({ from: window.addr, value: window.costs.newRecordCost })
+        .send({ from: window.addr })
         .on("error", function (_error) {
           // self.setState({ NRerror: _error });
           self.setState({ transaction: false })
@@ -208,6 +208,9 @@ class NewRecordNC extends Component {
           this.setState({ txStatus: receipt.status });
           window.resetInfo = true;
           window.recount = true;
+          if (self.state.wasSentPacket) {
+            return window.location.href = '/#/asset-dashboard'
+          }
         });
       // console.log(Object.values(window.web3.eth.getPendingTransactions()))
 
@@ -407,7 +410,7 @@ class NewRecordNC extends Component {
                           onClick={() => { _newRecord() }}
                         />
                       </div>
-                      <Form.Label className="LittleTextNewRecord"> Cost in AC {this.state.assetClass}: {Number(window.costs.newRecordCost) / 1000000000000000000} ETH</Form.Label>
+                      <Form.Label className="LittleTextNewRecord"> Cost in AC {this.state.assetClass}: {window.web3.utils.fromWei(String(window.costs.newRecordCost))} PRuF</Form.Label>
                     </div>
                   </Form.Row>
                   )}

@@ -131,7 +131,7 @@ class AddNote extends Component {
 
         await window.contracts.APP.methods
         .$addIpfs2Note(idxHash, rgtHash, this.state.hashPath)
-        .send({ from: window.addr, value: window.costs.createNoteCost })
+        .send({ from: window.addr })
         .on("error", function (_error) {
           // self.setState({ NRerror: _error });
           self.setState({ txHash: Object.values(_error)[0].transactionHash });

@@ -38,7 +38,7 @@
 	},
 	"settings": {
 		"compilationTarget": {
-			"localhost/PRUF/PRUF_TRUFFLE/contracts/PRUF_helper.sol": "erc721_tokenInterface"
+			"localhost/PRUF_helper.sol": "erc721_tokenInterface"
 		},
 		"evmVersion": "istanbul",
 		"libraries": {},
@@ -52,36 +52,36 @@
 		"remappings": []
 	},
 	"sources": {
-		"localhost/PRUF/PRUF_TRUFFLE/contracts/Imports/GSN/Context.sol": {
-			"keccak256": "0xdb26cbf4d028490f49831a7865c2fe1b28db44b535ca8d343785a3b768aae183",
+		"localhost/Imports/GSN/Context.sol": {
+			"keccak256": "0xd9e1cdbea4cf7c51ac26f5782db0fb3d78c1b37e090547e83aef497a727a18f5",
 			"license": "MIT",
 			"urls": [
-				"bzz-raw://840b14ce0315c47d49ba328f1f9fa7654ded1c9e1559e6c5e777a7b2dc28bf0a",
-				"dweb:/ipfs/QmTLLabn4wcfGro9LEmUXUN2nwKqZSotXMvjDCLXEnLtZP"
+				"bzz-raw://5017e004334d7579774232e18f739ee9eb39438d03c49a9451a35e315c28761b",
+				"dweb:/ipfs/QmNb8Q8C6WLgtWqCE7iL5T1UN52Q6QsE7ZtVc6ppcvViXe"
 			]
 		},
-		"localhost/PRUF/PRUF_TRUFFLE/contracts/Imports/access/Ownable.sol": {
-			"keccak256": "0x4bd6402ca6b3419008c2b482aff54e66836e8cb4eba2680e42ac5884ae6424fc",
+		"localhost/Imports/access/Ownable.sol": {
+			"keccak256": "0x78d7d9211513b60f81db3089fffbc1ce5c3d87d021d54c9c41a909000ba8bbc4",
 			"license": "MIT",
 			"urls": [
-				"bzz-raw://8f9f711fb8d0d92aeea1c327e3845d13ca1fa8f142e47f8723cd5b3106fb29a3",
-				"dweb:/ipfs/QmVQUReDW9f4zGqhizwHnyU8EntMs95tbASdqkGncnikba"
+				"bzz-raw://6c0471235adc538bfe1054546ff5136cf463a0c139b6c38e6aafeeb4a2a00c58",
+				"dweb:/ipfs/QmdHm68MUvSaVCbJkDpxyyeMJoG6upDMjBKgt91HZHW71G"
 			]
 		},
-		"localhost/PRUF/PRUF_TRUFFLE/contracts/Imports/math/Safemath.sol": {
-			"keccak256": "0x9a9cf02622cd7a64261b10534fc3260449da25c98c9e96d1b4ae8110a20e5806",
+		"localhost/Imports/math/Safemath.sol": {
+			"keccak256": "0x8d890f7a794b66b8b3ab54779603c254f85ee0d436dd4a17b3543c6629b726f8",
 			"license": "MIT",
 			"urls": [
-				"bzz-raw://2df142592d1dc267d9549049ee3317fa190d2f87eaa565f86ab05ec83f7ab8f5",
-				"dweb:/ipfs/QmSkJtcfWo7c42KnL5hho6GFxK6HRNV91XABx1P7xDtfLV"
+				"bzz-raw://887bb68104c8f862a66939b192a85e79564bed9bbe72cda6240fd89bbea642fd",
+				"dweb:/ipfs/QmbC56SFqW7UCx26RfPFWPiEXnQTJXSBA5r4SrojRMHqeM"
 			]
 		},
-		"localhost/PRUF/PRUF_TRUFFLE/contracts/PRUF_helper.sol": {
-			"keccak256": "0xb0dcaafed6f17de2600fa4ea8ea4356a1abbfa352143980c9424f3a6e1bdd502",
+		"localhost/PRUF_helper.sol": {
+			"keccak256": "0x7f85e8f302bf780557fb163969de154fc7856325c92f0c9d0491af71cfccbfcd",
 			"license": "UNLICENSED",
 			"urls": [
-				"bzz-raw://05ff28817cda48ed7ad9294de5955f17d7a8cd969dc3984797ba8ca4a071b1eb",
-				"dweb:/ipfs/QmPnUQDNxKXnqGMieGDZD8c2fPNi1fnQf6dnqTu7J4Vndb"
+				"bzz-raw://2fea2eadf0088fb94816f34a0132ca55000f5784107ce327bd0ccfa10a6551fe",
+				"dweb:/ipfs/QmWJRohivX9HzSQkLoJmC53oz7svo8kDoBWhbZ7QTYRdWP"
 			]
 		}
 	},

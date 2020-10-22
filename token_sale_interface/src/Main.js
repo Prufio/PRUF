@@ -10,7 +10,7 @@ class Main extends Component {
 
     this.setUpUtilTkn = async (_web3) => {
       const abi = returnABI();
-      const address = "0x9ae83dA5698AEdFe99751C257152e6CF192AF7b9";
+      const address = "0xbFd6B74D48BA9E7038eF7AC0DCf01F57fd38D65B";
       const UTIL_TKN = new _web3.eth.Contract(abi, address);
       window.UTIL_TKN = UTIL_TKN;
     }

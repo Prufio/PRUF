@@ -480,11 +480,11 @@
 			]
 		},
 		"localhost/PRUF_INTERFACES.sol": {
-			"keccak256": "0x3f5200bbd6a05ec68f15d3b552e07e594452b55333872f517ec645cf78a33a8f",
+			"keccak256": "0xd075077959e701de21a76fb37922e8a837e616dda927cdb11cb489b9879d298c",
 			"license": "UNLICENSED",
 			"urls": [
-				"bzz-raw://28e241f4fd3901426d5c0c3952a16a2e555940c5ca46d8a23a8c987fea2005d8",
-				"dweb:/ipfs/Qme7e4vBNcoT4gkW3c2gfbL9zPEtoXDGmwFW1LsSKagqy8"
+				"bzz-raw://a6a5195c9606303bc346a6c699bf3fad150c295d7eef16e3ac4bba7007474939",
+				"dweb:/ipfs/QmeGJwLfY2CQ4jdjroM26PKztRrrkftuUjaKB6ajyfFrDM"
 			]
 		}
 	},

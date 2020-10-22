@@ -28,7 +28,7 @@ class AddNoteNC extends Component {
 
       await window.contracts.APP_NC.methods
         .$addIpfs2Note(idxHash, this.state.hashPath)
-        .send({ from: window.addr, value: window.costs.createNoteCost })
+        .send({ from: window.addr })
         .on("error", function (_error) {
           // self.setState({ NRerror: _error });
           self.setState({ transaction: false })

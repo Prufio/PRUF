@@ -109,7 +109,7 @@ class ForceModifyRecord extends Component {
 
       window.contracts.APP.methods
         .$forceModRecord(idxHash, rgtHash)
-        .send({ from: window.addr, value: window.costs.forceTransferCost })
+        .send({ from: window.addr })
         .on("error", function (_error) {
           // self.setState({ NRerror: _error });
           self.setState({ txHash: Object.values(_error)[0].transactionHash });

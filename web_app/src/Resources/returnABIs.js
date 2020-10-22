@@ -4442,6 +4442,11 @@ function returnABIs() {
 					"internalType": "bytes32",
 					"name": "_idxHash",
 					"type": "bytes32"
+				},
+				{
+					"internalType": "address",
+					"name": "_sender",
+					"type": "address"
 				}
 			],
 			"name": "discard",

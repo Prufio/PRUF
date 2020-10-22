@@ -110,7 +110,7 @@ class ImportAsset extends Component {
 
       window.contracts.APP.methods
         .$importAsset(idxHash, rgtHash, this.window.assetClass)
-        .send({ from: window.addr, value: window.costs.newRecordCost })
+        .send({ from: window.addr })
         .on("error", function (_error) {
           // self.setState({ NRerror: _error });
           self.setState({ txHash: Object.values(_error)[0].transactionHash });

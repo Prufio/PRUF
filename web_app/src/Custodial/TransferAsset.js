@@ -137,7 +137,7 @@ class ModifyDescription extends Component {
 
       window.contracts.APP.methods
         .$transferAsset(idxHash, rgtHash, newRgtHash)
-        .send({ from: window.addr, value: window.costs.transferAssetCost })
+        .send({ from: window.addr })
         .on("error", function (_error) {
           // self.setState({ NRerror: _error });
           self.setState({ txHash: Object.values(_error)[0].transactionHash });

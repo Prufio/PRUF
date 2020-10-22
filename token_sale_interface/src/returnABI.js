@@ -5,191 +5,6 @@ function returnABI() {
 	const UTIL_TKN = [
 		{
 			"inputs": [],
-			"name": "AdminResolveContractAddresses",
-			"outputs": [],
-			"stateMutability": "nonpayable",
-			"type": "function"
-		},
-		{
-			"inputs": [
-				{
-					"internalType": "address",
-					"name": "_paymentAddress",
-					"type": "address"
-				}
-			],
-			"name": "AdminSetPaymentAddress",
-			"outputs": [],
-			"stateMutability": "nonpayable",
-			"type": "function"
-		},
-		{
-			"inputs": [
-				{
-					"internalType": "address",
-					"name": "_paymentAddress",
-					"type": "address"
-				}
-			],
-			"name": "AdminSetSharesAddress",
-			"outputs": [],
-			"stateMutability": "nonpayable",
-			"type": "function"
-		},
-		{
-			"inputs": [
-				{
-					"internalType": "address",
-					"name": "_storageAddress",
-					"type": "address"
-				}
-			],
-			"name": "AdminSetStorageContract",
-			"outputs": [],
-			"stateMutability": "nonpayable",
-			"type": "function"
-		},
-		{
-			"inputs": [
-				{
-					"internalType": "address",
-					"name": "spender",
-					"type": "address"
-				},
-				{
-					"internalType": "uint256",
-					"name": "amount",
-					"type": "uint256"
-				}
-			],
-			"name": "approve",
-			"outputs": [
-				{
-					"internalType": "bool",
-					"name": "",
-					"type": "bool"
-				}
-			],
-			"stateMutability": "nonpayable",
-			"type": "function"
-		},
-		{
-			"inputs": [
-				{
-					"internalType": "uint256",
-					"name": "amount",
-					"type": "uint256"
-				}
-			],
-			"name": "burn",
-			"outputs": [],
-			"stateMutability": "nonpayable",
-			"type": "function"
-		},
-		{
-			"inputs": [
-				{
-					"internalType": "address",
-					"name": "spender",
-					"type": "address"
-				},
-				{
-					"internalType": "uint256",
-					"name": "subtractedValue",
-					"type": "uint256"
-				}
-			],
-			"name": "decreaseAllowance",
-			"outputs": [
-				{
-					"internalType": "bool",
-					"name": "",
-					"type": "bool"
-				}
-			],
-			"stateMutability": "nonpayable",
-			"type": "function"
-		},
-		{
-			"inputs": [
-				{
-					"internalType": "bytes32",
-					"name": "role",
-					"type": "bytes32"
-				},
-				{
-					"internalType": "address",
-					"name": "account",
-					"type": "address"
-				}
-			],
-			"name": "grantRole",
-			"outputs": [],
-			"stateMutability": "nonpayable",
-			"type": "function"
-		},
-		{
-			"inputs": [
-				{
-					"internalType": "address",
-					"name": "spender",
-					"type": "address"
-				},
-				{
-					"internalType": "uint256",
-					"name": "addedValue",
-					"type": "uint256"
-				}
-			],
-			"name": "increaseAllowance",
-			"outputs": [
-				{
-					"internalType": "bool",
-					"name": "",
-					"type": "bool"
-				}
-			],
-			"stateMutability": "nonpayable",
-			"type": "function"
-		},
-		{
-			"inputs": [],
-			"name": "pause",
-			"outputs": [],
-			"stateMutability": "nonpayable",
-			"type": "function"
-		},
-		{
-			"inputs": [
-				{
-					"internalType": "string",
-					"name": "_name",
-					"type": "string"
-				},
-				{
-					"internalType": "uint32",
-					"name": "_assetClassRoot",
-					"type": "uint32"
-				},
-				{
-					"internalType": "uint8",
-					"name": "_custodyType",
-					"type": "uint8"
-				}
-			],
-			"name": "purchaseACtoken",
-			"outputs": [
-				{
-					"internalType": "uint256",
-					"name": "",
-					"type": "uint256"
-				}
-			],
-			"stateMutability": "nonpayable",
-			"type": "function"
-		},
-		{
-			"inputs": [],
 			"stateMutability": "nonpayable",
 			"type": "constructor"
 		},
@@ -219,66 +34,6 @@ function returnABI() {
 			"type": "event"
 		},
 		{
-			"inputs": [
-				{
-					"internalType": "address",
-					"name": "account",
-					"type": "address"
-				},
-				{
-					"internalType": "uint256",
-					"name": "amount",
-					"type": "uint256"
-				}
-			],
-			"name": "burnFrom",
-			"outputs": [],
-			"stateMutability": "nonpayable",
-			"type": "function"
-		},
-		{
-			"inputs": [
-				{
-					"internalType": "uint32",
-					"name": "_assetClass",
-					"type": "uint32"
-				},
-				{
-					"internalType": "uint256",
-					"name": "_amount",
-					"type": "uint256"
-				}
-			],
-			"name": "increaseShare",
-			"outputs": [
-				{
-					"internalType": "bool",
-					"name": "",
-					"type": "bool"
-				}
-			],
-			"stateMutability": "nonpayable",
-			"type": "function"
-		},
-		{
-			"inputs": [
-				{
-					"internalType": "address",
-					"name": "to",
-					"type": "address"
-				},
-				{
-					"internalType": "uint256",
-					"name": "amount",
-					"type": "uint256"
-				}
-			],
-			"name": "mint",
-			"outputs": [],
-			"stateMutability": "nonpayable",
-			"type": "function"
-		},
-		{
 			"anonymous": false,
 			"inputs": [
 				{
@@ -290,75 +45,6 @@ function returnABI() {
 			],
 			"name": "Paused",
 			"type": "event"
-		},
-		{
-			"inputs": [
-				{
-					"internalType": "address",
-					"name": "_senderAddress",
-					"type": "address"
-				},
-				{
-					"internalType": "address",
-					"name": "_rootAddress",
-					"type": "address"
-				},
-				{
-					"internalType": "uint256",
-					"name": "_rootPrice",
-					"type": "uint256"
-				},
-				{
-					"internalType": "address",
-					"name": "_ACTHaddress",
-					"type": "address"
-				},
-				{
-					"internalType": "uint256",
-					"name": "_ACTHprice",
-					"type": "uint256"
-				}
-			],
-			"name": "payForService",
-			"outputs": [],
-			"stateMutability": "nonpayable",
-			"type": "function"
-		},
-		{
-			"inputs": [
-				{
-					"internalType": "bytes32",
-					"name": "role",
-					"type": "bytes32"
-				},
-				{
-					"internalType": "address",
-					"name": "account",
-					"type": "address"
-				}
-			],
-			"name": "renounceRole",
-			"outputs": [],
-			"stateMutability": "nonpayable",
-			"type": "function"
-		},
-		{
-			"inputs": [
-				{
-					"internalType": "bytes32",
-					"name": "role",
-					"type": "bytes32"
-				},
-				{
-					"internalType": "address",
-					"name": "account",
-					"type": "address"
-				}
-			],
-			"name": "revokeRole",
-			"outputs": [],
-			"stateMutability": "nonpayable",
-			"type": "function"
 		},
 		{
 			"anonymous": false,
@@ -449,43 +135,6 @@ function returnABI() {
 			"type": "event"
 		},
 		{
-			"inputs": [],
-			"name": "takeSnapshot",
-			"outputs": [
-				{
-					"internalType": "uint256",
-					"name": "",
-					"type": "uint256"
-				}
-			],
-			"stateMutability": "nonpayable",
-			"type": "function"
-		},
-		{
-			"inputs": [
-				{
-					"internalType": "address",
-					"name": "recipient",
-					"type": "address"
-				},
-				{
-					"internalType": "uint256",
-					"name": "amount",
-					"type": "uint256"
-				}
-			],
-			"name": "transfer",
-			"outputs": [
-				{
-					"internalType": "bool",
-					"name": "",
-					"type": "bool"
-				}
-			],
-			"stateMutability": "nonpayable",
-			"type": "function"
-		},
-		{
 			"anonymous": false,
 			"inputs": [
 				{
@@ -511,42 +160,6 @@ function returnABI() {
 			"type": "event"
 		},
 		{
-			"inputs": [
-				{
-					"internalType": "address",
-					"name": "sender",
-					"type": "address"
-				},
-				{
-					"internalType": "address",
-					"name": "recipient",
-					"type": "address"
-				},
-				{
-					"internalType": "uint256",
-					"name": "amount",
-					"type": "uint256"
-				}
-			],
-			"name": "transferFrom",
-			"outputs": [
-				{
-					"internalType": "bool",
-					"name": "",
-					"type": "bool"
-				}
-			],
-			"stateMutability": "nonpayable",
-			"type": "function"
-		},
-		{
-			"inputs": [],
-			"name": "unpause",
-			"outputs": [],
-			"stateMutability": "nonpayable",
-			"type": "function"
-		},
-		{
 			"anonymous": false,
 			"inputs": [
 				{
@@ -558,6 +171,97 @@ function returnABI() {
 			],
 			"name": "Unpaused",
 			"type": "event"
+		},
+		{
+			"inputs": [
+				{
+					"internalType": "address",
+					"name": "_paymentAddress",
+					"type": "address"
+				}
+			],
+			"name": "AdminSetSharesAddress",
+			"outputs": [],
+			"stateMutability": "nonpayable",
+			"type": "function"
+		},
+		{
+			"inputs": [],
+			"name": "DEFAULT_ADMIN_ROLE",
+			"outputs": [
+				{
+					"internalType": "bytes32",
+					"name": "",
+					"type": "bytes32"
+				}
+			],
+			"stateMutability": "view",
+			"type": "function"
+		},
+		{
+			"inputs": [],
+			"name": "MINTER_ROLE",
+			"outputs": [
+				{
+					"internalType": "bytes32",
+					"name": "",
+					"type": "bytes32"
+				}
+			],
+			"stateMutability": "view",
+			"type": "function"
+		},
+		{
+			"inputs": [],
+			"name": "PAUSER_ROLE",
+			"outputs": [
+				{
+					"internalType": "bytes32",
+					"name": "",
+					"type": "bytes32"
+				}
+			],
+			"stateMutability": "view",
+			"type": "function"
+		},
+		{
+			"inputs": [],
+			"name": "PAYABLE_ROLE",
+			"outputs": [
+				{
+					"internalType": "bytes32",
+					"name": "",
+					"type": "bytes32"
+				}
+			],
+			"stateMutability": "view",
+			"type": "function"
+		},
+		{
+			"inputs": [],
+			"name": "SNAPSHOT_ROLE",
+			"outputs": [
+				{
+					"internalType": "bytes32",
+					"name": "",
+					"type": "bytes32"
+				}
+			],
+			"stateMutability": "view",
+			"type": "function"
+		},
+		{
+			"inputs": [],
+			"name": "TRUSTED_AGENT_ROLE",
+			"outputs": [
+				{
+					"internalType": "bytes32",
+					"name": "",
+					"type": "bytes32"
+				}
+			],
+			"stateMutability": "view",
+			"type": "function"
 		},
 		{
 			"inputs": [
@@ -581,6 +285,30 @@ function returnABI() {
 				}
 			],
 			"stateMutability": "view",
+			"type": "function"
+		},
+		{
+			"inputs": [
+				{
+					"internalType": "address",
+					"name": "spender",
+					"type": "address"
+				},
+				{
+					"internalType": "uint256",
+					"name": "amount",
+					"type": "uint256"
+				}
+			],
+			"name": "approve",
+			"outputs": [
+				{
+					"internalType": "bool",
+					"name": "",
+					"type": "bool"
+				}
+			],
+			"stateMutability": "nonpayable",
 			"type": "function"
 		},
 		{
@@ -627,21 +355,34 @@ function returnABI() {
 			"type": "function"
 		},
 		{
-			"inputs": [],
-			"name": "currentACtokenInfo",
-			"outputs": [
+			"inputs": [
 				{
 					"internalType": "uint256",
-					"name": "",
-					"type": "uint256"
-				},
-				{
-					"internalType": "uint256",
-					"name": "",
+					"name": "amount",
 					"type": "uint256"
 				}
 			],
-			"stateMutability": "view",
+			"name": "burn",
+			"outputs": [],
+			"stateMutability": "nonpayable",
+			"type": "function"
+		},
+		{
+			"inputs": [
+				{
+					"internalType": "address",
+					"name": "account",
+					"type": "address"
+				},
+				{
+					"internalType": "uint256",
+					"name": "amount",
+					"type": "uint256"
+				}
+			],
+			"name": "burnFrom",
+			"outputs": [],
+			"stateMutability": "nonpayable",
 			"type": "function"
 		},
 		{
@@ -658,16 +399,27 @@ function returnABI() {
 			"type": "function"
 		},
 		{
-			"inputs": [],
-			"name": "DEFAULT_ADMIN_ROLE",
-			"outputs": [
+			"inputs": [
 				{
-					"internalType": "bytes32",
-					"name": "",
-					"type": "bytes32"
+					"internalType": "address",
+					"name": "spender",
+					"type": "address"
+				},
+				{
+					"internalType": "uint256",
+					"name": "subtractedValue",
+					"type": "uint256"
 				}
 			],
-			"stateMutability": "view",
+			"name": "decreaseAllowance",
+			"outputs": [
+				{
+					"internalType": "bool",
+					"name": "",
+					"type": "bool"
+				}
+			],
+			"stateMutability": "nonpayable",
 			"type": "function"
 		},
 		{
@@ -745,6 +497,24 @@ function returnABI() {
 					"type": "address"
 				}
 			],
+			"name": "grantRole",
+			"outputs": [],
+			"stateMutability": "nonpayable",
+			"type": "function"
+		},
+		{
+			"inputs": [
+				{
+					"internalType": "bytes32",
+					"name": "role",
+					"type": "bytes32"
+				},
+				{
+					"internalType": "address",
+					"name": "account",
+					"type": "address"
+				}
+			],
 			"name": "hasRole",
 			"outputs": [
 				{
@@ -754,6 +524,30 @@ function returnABI() {
 				}
 			],
 			"stateMutability": "view",
+			"type": "function"
+		},
+		{
+			"inputs": [
+				{
+					"internalType": "address",
+					"name": "spender",
+					"type": "address"
+				},
+				{
+					"internalType": "uint256",
+					"name": "addedValue",
+					"type": "uint256"
+				}
+			],
+			"name": "increaseAllowance",
+			"outputs": [
+				{
+					"internalType": "bool",
+					"name": "",
+					"type": "bool"
+				}
+			],
+			"stateMutability": "nonpayable",
 			"type": "function"
 		},
 		{
@@ -771,15 +565,33 @@ function returnABI() {
 		},
 		{
 			"inputs": [],
-			"name": "MINTER_ROLE",
+			"name": "max_Supply",
 			"outputs": [
 				{
-					"internalType": "bytes32",
+					"internalType": "uint256",
 					"name": "",
-					"type": "bytes32"
+					"type": "uint256"
 				}
 			],
-			"stateMutability": "view",
+			"stateMutability": "pure",
+			"type": "function"
+		},
+		{
+			"inputs": [
+				{
+					"internalType": "address",
+					"name": "to",
+					"type": "address"
+				},
+				{
+					"internalType": "uint256",
+					"name": "amount",
+					"type": "uint256"
+				}
+			],
+			"name": "mint",
+			"outputs": [],
+			"stateMutability": "nonpayable",
 			"type": "function"
 		},
 		{
@@ -797,6 +609,13 @@ function returnABI() {
 		},
 		{
 			"inputs": [],
+			"name": "pause",
+			"outputs": [],
+			"stateMutability": "nonpayable",
+			"type": "function"
+		},
+		{
+			"inputs": [],
 			"name": "paused",
 			"outputs": [
 				{
@@ -809,42 +628,72 @@ function returnABI() {
 			"type": "function"
 		},
 		{
-			"inputs": [],
-			"name": "PAUSER_ROLE",
-			"outputs": [
+			"inputs": [
 				{
-					"internalType": "bytes32",
-					"name": "",
-					"type": "bytes32"
+					"internalType": "address",
+					"name": "_senderAddress",
+					"type": "address"
+				},
+				{
+					"internalType": "address",
+					"name": "_rootAddress",
+					"type": "address"
+				},
+				{
+					"internalType": "uint256",
+					"name": "_rootPrice",
+					"type": "uint256"
+				},
+				{
+					"internalType": "address",
+					"name": "_ACTHaddress",
+					"type": "address"
+				},
+				{
+					"internalType": "uint256",
+					"name": "_ACTHprice",
+					"type": "uint256"
 				}
 			],
-			"stateMutability": "view",
+			"name": "payForService",
+			"outputs": [],
+			"stateMutability": "nonpayable",
 			"type": "function"
 		},
 		{
-			"inputs": [],
-			"name": "PAYABLE_ROLE",
-			"outputs": [
+			"inputs": [
 				{
 					"internalType": "bytes32",
-					"name": "",
+					"name": "role",
 					"type": "bytes32"
+				},
+				{
+					"internalType": "address",
+					"name": "account",
+					"type": "address"
 				}
 			],
-			"stateMutability": "view",
+			"name": "renounceRole",
+			"outputs": [],
+			"stateMutability": "nonpayable",
 			"type": "function"
 		},
 		{
-			"inputs": [],
-			"name": "SNAPSHOT_ROLE",
-			"outputs": [
+			"inputs": [
 				{
 					"internalType": "bytes32",
-					"name": "",
+					"name": "role",
 					"type": "bytes32"
+				},
+				{
+					"internalType": "address",
+					"name": "account",
+					"type": "address"
 				}
 			],
-			"stateMutability": "view",
+			"name": "revokeRole",
+			"outputs": [],
+			"stateMutability": "nonpayable",
 			"type": "function"
 		},
 		{
@@ -858,6 +707,19 @@ function returnABI() {
 				}
 			],
 			"stateMutability": "view",
+			"type": "function"
+		},
+		{
+			"inputs": [],
+			"name": "takeSnapshot",
+			"outputs": [
+				{
+					"internalType": "uint256",
+					"name": "",
+					"type": "uint256"
+				}
+			],
+			"stateMutability": "nonpayable",
 			"type": "function"
 		},
 		{
@@ -890,6 +752,107 @@ function returnABI() {
 				}
 			],
 			"stateMutability": "view",
+			"type": "function"
+		},
+		{
+			"inputs": [
+				{
+					"internalType": "address",
+					"name": "recipient",
+					"type": "address"
+				},
+				{
+					"internalType": "uint256",
+					"name": "amount",
+					"type": "uint256"
+				}
+			],
+			"name": "transfer",
+			"outputs": [
+				{
+					"internalType": "bool",
+					"name": "",
+					"type": "bool"
+				}
+			],
+			"stateMutability": "nonpayable",
+			"type": "function"
+		},
+		{
+			"inputs": [
+				{
+					"internalType": "address",
+					"name": "sender",
+					"type": "address"
+				},
+				{
+					"internalType": "address",
+					"name": "recipient",
+					"type": "address"
+				},
+				{
+					"internalType": "uint256",
+					"name": "amount",
+					"type": "uint256"
+				}
+			],
+			"name": "transferFrom",
+			"outputs": [
+				{
+					"internalType": "bool",
+					"name": "",
+					"type": "bool"
+				}
+			],
+			"stateMutability": "nonpayable",
+			"type": "function"
+		},
+		{
+			"inputs": [
+				{
+					"internalType": "address",
+					"name": "_from",
+					"type": "address"
+				},
+				{
+					"internalType": "address",
+					"name": "_to",
+					"type": "address"
+				},
+				{
+					"internalType": "uint256",
+					"name": "_amount",
+					"type": "uint256"
+				}
+			],
+			"name": "trustedAgentTransfer",
+			"outputs": [],
+			"stateMutability": "nonpayable",
+			"type": "function"
+		},
+		{
+			"inputs": [
+				{
+					"internalType": "address",
+					"name": "_addr",
+					"type": "address"
+				},
+				{
+					"internalType": "uint256",
+					"name": "_amount",
+					"type": "uint256"
+				}
+			],
+			"name": "trustedAgentburn",
+			"outputs": [],
+			"stateMutability": "nonpayable",
+			"type": "function"
+		},
+		{
+			"inputs": [],
+			"name": "unpause",
+			"outputs": [],
+			"stateMutability": "nonpayable",
 			"type": "function"
 		}
 	]
