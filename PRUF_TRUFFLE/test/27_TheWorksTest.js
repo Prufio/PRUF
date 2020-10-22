@@ -2453,34 +2453,34 @@ contract('THE WORKS NC', accounts => {
     })
 
 
-    // it('Should $recycle asset13', async () => {
-    //     return RCLR.$recycle(
-    //         asset13,
-    //         rgt13,
-    //         '12',
-    //         { from: account3 }
-    //     )
-    // })
-
-
-    it("Should $recycle asset13 and return (_assetClass, escrowDataLight.addr_1", async () => {
-        var Record = [];
-
-        return await RCLR.$recycle(asset13, rgt13, '12', { from: account3 }, {function (_err, _result) {
-            if (_err) { }
-            else {
-                Record = Object.values(_result)
-                console.log(Record)
-            }
-        }}
+    it('Should $recycle asset13', async () => {
+        return RCLR.$recycle(
+            asset13,
+            rgt13,
+            '12',
+            { from: account3 }
         )
     })
 
 
-    it("Should retrieve UTIL_TKN balance for account4  (999840000000000000000)", async () => {
+    // it("Should $recycle asset13 and return (_assetClass, escrowDataLight.addr_1", async () => {
+    //     var Record = [];
+
+    //     return await RCLR.$recycle(asset13, rgt13, '12', { from: account3 }, {function (_err, _result) {
+    //         if (_err) { }
+    //         else {
+    //             Record = Object.values(_result)
+    //             console.log(Record)
+    //         }
+    //     }}
+    //     )
+    // })
+
+
+    it("Should retrieve UTIL_TKN balance for account3  (999980000000000000000)", async () => {
         var Record = [];
 
-        return await UTIL_TKN.balanceOf(account4, { from: account4 }, function (_err, _result) {
+        return await UTIL_TKN.balanceOf(account3, { from: account3 }, function (_err, _result) {
             if (_err) { }
             else {
                 Record = Object.values(_result)
@@ -2515,6 +2515,7 @@ contract('THE WORKS NC', accounts => {
         })
     })
 
+
     it("Should retrieve UTIL_TKN balance for account1 (???)", async () => {
         var Record = [];
 
@@ -2527,7 +2528,8 @@ contract('THE WORKS NC', accounts => {
         })
     })
 
-    it("Should retrieve UTIL_TKN balance for account4  (999840000000000000000)", async () => {
+
+    it("Should retrieve UTIL_TKN balance for account4  (999870000000000000000)", async () => {
         var Record = [];
 
         return await UTIL_TKN.balanceOf(account4, { from: account4 }, function (_err, _result) {
@@ -2539,7 +2541,8 @@ contract('THE WORKS NC', accounts => {
         })
     })
 
-    it("Should retrieve UTIL_TKN balance for account3  (999990000000000000000)", async () => {
+
+    it("Should retrieve UTIL_TKN balance for account3  (999980000000000000000)", async () => {
         var Record = [];
 
         return await UTIL_TKN.balanceOf(account3, { from: account3 }, function (_err, _result) {
@@ -2550,5 +2553,18 @@ contract('THE WORKS NC', accounts => {
             }
         })
     })
+
+
+//     it("Should retrieve UTIL_TKN balance for A_Tkn (10000000000000000)", async () => {
+//         var Record = [];
+
+//         return await UTIL_TKN.balanceOf(A_TKN.address, { from: account10 }, function (_err, _result) {
+//             if (_err) { }
+//             else {
+//                 Record = Object.values(_result)
+//                 console.log(Record)
+//             }
+//         })
+//     })
 
 });

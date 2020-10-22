@@ -822,17 +822,17 @@ contract MAL_APP is CORE_MAL {
         bytes32 _idxHash = bytes32(tokenId);
         //Record memory rec = getRecord(_idxHash);
         
-        // require(                 //REDUNDANT---will throw in RCLR.discard()
+        // require(                 
         //     _isApprovedOrOwner(_msgSender(), tokenId),
         //     "AT:D:transfer caller is not owner nor approved"
         // );
-        // require(
+        // require(//REDUNDANT---will throw in RCLR.discard()
         //     (rec.assetStatus == 59),
         //     "AT:D:Asset must be in status 59 (discardable) to be discarded"
         // );
 
         //^^^^^^^checks^^^^^^^^^
-        RCLR.discard(_idxHash);
+        RCLR.discard(_idxHash, msg.sender);
         //^^^^^^^interactions^^^^^^^^^
     }
     

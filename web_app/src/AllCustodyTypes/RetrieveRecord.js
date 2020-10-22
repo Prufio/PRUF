@@ -25,13 +25,13 @@ class RetrieveRecord extends Component {
 
           }, moreInfo: true
         })
-        if (tempIPFS.photo.displayImage !== undefined && tempIPFS.photo.displayImage !== ""){
-          this.setState({selectedImage: tempIPFS.photo.displayImage})
+        if (tempIPFS.photo.displayImage !== undefined && tempIPFS.photo.displayImage !== "") {
+          this.setState({ selectedImage: tempIPFS.photo.displayImage })
         }
         else {
-          this.setState({selectedImage: Object.values(tempIPFS.photo)[0]})
+          this.setState({ selectedImage: Object.values(tempIPFS.photo)[0] })
         }
-        
+
       }
 
     }, 100)
@@ -139,7 +139,7 @@ class RetrieveRecord extends Component {
                   <div className="submitButtonRRQR3-content">
                     <CornerUpLeft
                       size={35}
-                      onClick={() => { this.setState({ moreInfo: false, ipfsObject: undefined, assetObj: undefined }) }}
+                      onClick={() => { this.setState({ moreInfo: false, ipfsObject: undefined, assetObj: undefined, Checkbox: false }) }}
                     />
                   </div>
                 </div>
@@ -240,7 +240,7 @@ class RetrieveRecord extends Component {
 
       return this.setState({
         authLevel: window.authLevel,
-        QRreader: undefined
+        QRreader: false
       })
     }
 
@@ -321,10 +321,11 @@ class RetrieveRecord extends Component {
       wasSentPacket: false,
       ipfsObject: undefined,
       showDescription: false,
-      QRreader: undefined,
+      QRreader: false,
       result: 'No result',
       QRRR: undefined,
-      assetFound: undefined
+      assetFound: undefined,
+      Checkbox: false,
     };
   }
 
@@ -385,36 +386,52 @@ class RetrieveRecord extends Component {
   render() {//render continuously produces an up-to-date stateful document  
     const self = this;
 
-
-
+    const clearForm = async () => {
+      document.getElementById("MainForm").reset();
+      this.setState({ Checkbox: false })
+    }
 
     const QRReader = async () => {
-      if (this.state.QRreader === undefined) {
-        this.setState({ QRreader: true, assetFound: "" })
+      if (this.state.QRreader === false) {
+        this.setState({ QRreader: true, assetFound: ""})
       }
       else {
-        this.setState({ QRreader: undefined })
+        this.setState({ QRreader: false })
       }
     }
 
-
+    const Checkbox = async () => {
+      if (this.state.Checkbox === false) {
+        this.setState({ Checkbox: true })
+      }
+      else {
+        this.setState({ Checkbox: false })
+      }
+    }
 
     const _retrieveRecord = async () => {
       const self = this;
       var ipfsHash;
       var tempResult;
+      let idxHash
 
-      let idxHash = window.web3.utils.soliditySha3(
-        String(this.state.type),
-        String(this.state.manufacturer),
-        String(this.state.model),
-        String(this.state.serial),
-      );
+      if (this.state.Checkbox === false) {
+        idxHash = window.web3.utils.soliditySha3(
+          String(this.state.type),
+          String(this.state.manufacturer),
+          String(this.state.model),
+          String(this.state.serial),
+        );
+        this.setState({ idxHash: idxHash })
+        console.log("idxHash", idxHash);
+        console.log("addr: ", window.addr);
+      }
 
-      this.setState({ idxHash: idxHash })
-
-      console.log("idxHash", idxHash);
-      console.log("addr: ", window.addr);
+      if (this.state.Checkbox === true) {
+        idxHash = this.state.idxHashRaw;
+        console.log("idxHash", idxHash);
+        console.log("addr: ", window.addr);
+      }
 
       await window.contracts.STOR.methods
         .retrieveShortRecord(idxHash)
@@ -467,7 +484,7 @@ class RetrieveRecord extends Component {
               </div>
               <h2 className="AssetDashboardHeader">Here's What We Found :</h2>
               <div className="mediaLink-clearForm">
-                <a className="mediaLinkContent-clearForm" ><XSquare onClick={() => { document.getElementById("MainForm").reset() }} /></a>
+                <a className="mediaLinkContent-clearForm" ><XSquare onClick={() => { clearForm() }} /></a>
               </div>
             </div>
           </div>
@@ -483,7 +500,7 @@ class RetrieveRecord extends Component {
     else {
       return (
         <div>
-          {!this.state.moreInfo && this.state.QRreader === undefined && (
+          {!this.state.moreInfo && this.state.QRreader === false && (
             <div>
               <div>
                 <div className="mediaLinkAD-home">
@@ -491,57 +508,85 @@ class RetrieveRecord extends Component {
                 </div>
                 <h2 className="FormHeader">Search Database</h2>
                 <div className="mediaLink-clearForm">
-                  <a className="mediaLinkContent-clearForm" ><XSquare onClick={() => { document.getElementById("MainForm").reset() }} /></a>
+                  <a className="mediaLinkContent-clearForm" ><XSquare onClick={() => { clearForm() }} /></a>
                 </div>
               </div>
               <Form className="Form" id="MainForm">
                 <div>
+                  {this.state.QRreader === false && (
+                    <div>
+                      <Form.Check
+                        type="checkbox"
+                        className="CheckBox"
+                        id="inlineFormCheck"
+                        onChange={() => { Checkbox() }}
+                      />
+                      <Form.Label className="CheckBoxformFont">Input Raw Idx Hash</Form.Label>
+                      {this.state.Checkbox === true && (
+                        <Form.Row>
+                          <Form.Label className="formFont">Idx Hash:</Form.Label>
+                          <Form.Control
+                            placeholder="Idx Hash"
+                            required
+                            onChange={(e) => this.setState({ idxHashRaw: e.target.value })}
+                            size="lg"
+                          />
+                        </Form.Row>
+                      )}
+                    </div>
+                  )}
+
+                  {this.state.Checkbox === false && (
+                    <>
+                      <Form.Row>
+                        <Form.Group as={Col} controlId="formGridType">
+                          <Form.Label className="formFont">Type:</Form.Label>
+                          <Form.Control
+                            placeholder="Type"
+                            required
+                            onChange={(e) => this.setState({ type: e.target.value })}
+                            size="lg"
+                          />
+                        </Form.Group>
+
+                        <Form.Group as={Col} controlId="formGridManufacturer">
+                          <Form.Label className="formFont">Manufacturer:</Form.Label>
+                          <Form.Control
+                            placeholder="Manufacturer"
+                            required
+                            onChange={(e) => this.setState({ manufacturer: e.target.value })}
+                            size="lg"
+                          />
+                        </Form.Group>
+
+                      </Form.Row>
+
+                      <Form.Row>
+                        <Form.Group as={Col} controlId="formGridModel">
+                          <Form.Label className="formFont">Model:</Form.Label>
+                          <Form.Control
+                            placeholder="Model"
+                            required
+                            onChange={(e) => this.setState({ model: e.target.value })}
+                            size="lg"
+                          />
+                        </Form.Group>
+
+                        <Form.Group as={Col} controlId="formGridSerial">
+                          <Form.Label className="formFont">Serial:</Form.Label>
+                          <Form.Control
+                            placeholder="Serial"
+                            required
+                            onChange={(e) => this.setState({ serial: e.target.value })}
+                            size="lg"
+                          />
+                        </Form.Group>
+                      </Form.Row>
+                    </>
+                  )}
+
                   <Form.Row>
-                    <Form.Group as={Col} controlId="formGridType">
-                      <Form.Label className="formFont">Type:</Form.Label>
-                      <Form.Control
-                        placeholder="Type"
-                        required
-                        onChange={(e) => this.setState({ type: e.target.value })}
-                        size="lg"
-                      />
-                    </Form.Group>
-
-                    <Form.Group as={Col} controlId="formGridManufacturer">
-                      <Form.Label className="formFont">Manufacturer:</Form.Label>
-                      <Form.Control
-                        placeholder="Manufacturer"
-                        required
-                        onChange={(e) => this.setState({ manufacturer: e.target.value })}
-                        size="lg"
-                      />
-                    </Form.Group>
-
-                  </Form.Row>
-
-                  <Form.Row>
-                    <Form.Group as={Col} controlId="formGridModel">
-                      <Form.Label className="formFont">Model:</Form.Label>
-                      <Form.Control
-                        placeholder="Model"
-                        required
-                        onChange={(e) => this.setState({ model: e.target.value })}
-                        size="lg"
-                      />
-                    </Form.Group>
-
-                    <Form.Group as={Col} controlId="formGridSerial">
-                      <Form.Label className="formFont">Serial:</Form.Label>
-                      <Form.Control
-                        placeholder="Serial"
-                        required
-                        onChange={(e) => this.setState({ serial: e.target.value })}
-                        size="lg"
-                      />
-                    </Form.Group>
-                  </Form.Row>
-
-                  <Form.Row>
+                    {this.state.Checkbox === false && (
                       <div className="submitButton">
                         <div className="submitButton-content">
                           <ArrowRightCircle
@@ -549,13 +594,23 @@ class RetrieveRecord extends Component {
                           />
                         </div>
                       </div>
+                    )}
+                    {this.state.Checkbox === true && (
                       <div className="submitButton">
                         <div className="submitButton-content">
-                          <Grid
-                            onClick={() => { QRReader() }}
+                          <ArrowRightCircle
+                            onClick={() => { _retrieveRecord() }}
                           />
                         </div>
                       </div>
+                    )}
+                    <div className="submitButton">
+                      <div className="submitButton-content">
+                        <Grid
+                          onClick={() => { QRReader() }}
+                        />
+                      </div>
+                    </div>
                   </Form.Row>
                 </div>
               </Form>

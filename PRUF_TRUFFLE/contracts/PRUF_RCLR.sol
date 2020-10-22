@@ -29,7 +29,7 @@ contract RCLR is ECR_CORE, CORE {
     /*
      * @dev //gets item out of recycled status -- caller is assetToken contract
      */
-    function discard(bytes32 _idxHash) external nonReentrant whenNotPaused {
+    function discard(bytes32 _idxHash, address _sender) external nonReentrant whenNotPaused {
         Record memory rec = getRecord(_idxHash);
 
         require(
@@ -43,7 +43,7 @@ contract RCLR is ECR_CORE, CORE {
         bytes32 escrowOwnerHash = keccak256(abi.encodePacked(msg.sender));
         escrowDataExtLight memory escrowDataLight;
         escrowDataLight.escrowData = 255;
-        escrowDataLight.addr_1 = msg.sender;
+        escrowDataLight.addr_1 = _sender;
         //^^^^^^^effects^^^^^^^^^
 
         _setEscrowData(
@@ -66,9 +66,9 @@ contract RCLR is ECR_CORE, CORE {
         uint32 _assetClass
     ) external nonReentrant whenNotPaused { 
         uint256 tokenId = uint256(_idxHash);
-        // escrowDataExtLight memory escrowDataLight = getEscrowDataLight( //CTS:EXAMINE
-        //     _idxHash
-        // );
+        escrowDataExtLight memory escrowDataLight = getEscrowDataLight( //CTS:EXAMINE
+            _idxHash
+        );
         Record memory rec = getRecord(_idxHash);
 
         require(_rgtHash != 0, "R:R:New rights holder cannot be zero");
@@ -79,14 +79,13 @@ contract RCLR is ECR_CORE, CORE {
         rec.rightsHolder = _rgtHash;
         rec.incrementNumberOfTransfers = 170;
         //^^^^^^^effects^^^^^^^^^^^^
-
+        
         A_TKN.mintAssetToken(msg.sender, tokenId, "pruf.io");
         ECR_MGR.endEscrow(_idxHash);
         STOR.changeAC(_idxHash, _assetClass);
+        deductRecycleCosts(_assetClass, escrowDataLight.addr_1);
         rec.assetStatus = 58;
         writeRecord(_idxHash, rec);
-        //deductRecycleCosts(_assetClass, escrowDataLight.addr_1);
-        deductRecycleCosts(_assetClass, 0x9499bCeFDD07E278b6e4645D4B038edF9749046f); //CTS:EXAMINE
         //^^^^^^^interactions^^^^^^^^^^^^
     }
 }
