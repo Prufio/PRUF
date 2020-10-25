@@ -7,13 +7,22 @@ import "bootstrap/dist/css/bootstrap.min.css";
 import 'bootstrap';
 import 'bootstrap/dist/css/bootstrap.css';
 import 'bootstrap/dist/js/bootstrap.js';
-import $ from 'jquery';
-import Popper from 'popper.js';
+import {createStore} from 'redux'
+import allReducers from './reducers'
+import {Provider} from 'react-redux';
+
+const store = createStore(
+  allReducers,
+  window.__REDUX_DEVTOOLS_EXTENSION__ && window.__REDUX_DEVTOOLS_EXTENSION__()
+  )
+
 
 ReactDOM.render(
-  <React.StrictMode>
+  <Provider store = {store}>
+  <React.StrictMode>   
     <Main />
-  </React.StrictMode>,
+  </React.StrictMode>
+  </Provider>,
   document.getElementById("root")
 );
 

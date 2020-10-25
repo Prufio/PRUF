@@ -3,6 +3,8 @@ import { Route, NavLink, HashRouter } from "react-router-dom";
 import Web3 from "web3";
 import Home from "./Home";
 import returnABI from "./returnABI";
+import { connect } from 'react-redux';
+import {setGlobalAddr, setGlobalWeb3} from './actions'
 
 class Main extends Component {
   constructor(props) {
@@ -39,11 +41,6 @@ class Main extends Component {
                   </div>
                 </div>
                 <ul className="header">
-                  {window._contracts !== undefined && (
-                    <nav>
-
-                    </nav>
-                  )}
                 </ul>
               </div>
             </div>
@@ -150,13 +147,13 @@ class Main extends Component {
       const self = this;
       var _web3 = require("web3");
       _web3 = new Web3(_web3.givenProvider);
-      window.web3 = _web3;
+      this.props.setGlobalWeb3(_web3);
       ethereum.on("accountsChanged", function (accounts) {
         _web3.eth.getAccounts().then((e) => {
-          if (window.addr !== e[0]) {
-            window.addr = e[0];
-            self.setState({ addr: e[0] });
+          if (self.props.addr !== e[0]) {
+            self.props.setGlobalAddr(e[0]);
             console.log("///////in acctChanger////////");
+            console.log("Changed active account to :", e[0])
           }
           else { console.log("Something bit in the acct listener, but no changes made.") }
         });
@@ -180,7 +177,7 @@ class Main extends Component {
       this.setUpUtilTkn(_web3)
       ethereum.enable();
 
-      _web3.eth.getAccounts().then((e) => { this.setState({ addr: e[0] }); window.addr = e[0] });
+      _web3.eth.getAccounts().then((e) => { this.props.setGlobalAddr(e[0]) });
       window.addEventListener("accountListener", this.acctChanger());
   }
 
@@ -216,4 +213,22 @@ class Main extends Component {
   }
 }
 
-export default Main;
+const mapStateToProps = (state) => {
+
+  return{
+    globalAddr: state.globalAddr,
+    web3: state.web3
+  }
+
+}
+
+const mapDispatchToProps = () => {
+  return {
+    setGlobalAddr,
+    setGlobalWeb3,
+  }
+}
+
+
+
+export default connect(mapStateToProps, mapDispatchToProps())(Main);

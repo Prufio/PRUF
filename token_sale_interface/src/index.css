@@ -277,6 +277,23 @@ div {
   position: absolute;
 }
 
+.testComponent {
+  height: 60rem;
+  width: 75rem;
+  color: white;
+  display: flex;
+  background-color: #002a40;
+  border-radius: 0rem 0rem 1rem 1rem;
+  font-weight: bold;
+  font-size: 3rem;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  opacity: 0.96;
+  z-index: 2;
+  
+}
+
 .home {
   height: 40rem;
   width: 75rem;
