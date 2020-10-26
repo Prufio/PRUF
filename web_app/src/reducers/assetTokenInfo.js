@@ -1,6 +1,6 @@
 const assetTokenInfoReducer = (state = {}, action) => {
     switch(action.type){
-        case 'SET': return action.payload.assetTokenInfo;
+        case 'SET_ASSET_TOKEN_INFO': return action.payload.assetTokenInfo;
         default : return state;
     }
 }

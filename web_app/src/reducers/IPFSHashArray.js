@@ -1,6 +1,6 @@
 const IPFSHashArrayReducer = (state = [], action) => {
     switch(action.type){
-        case 'SET': return action.payload.IPFSHashArray;
+        case 'SET_IPFS_HASH_ARRAY': return action.payload.IPFSHashArray;
         default : return state;
     }
 }

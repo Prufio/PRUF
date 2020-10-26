@@ -1,6 +1,6 @@
 const isACAdminReducer = (state = false, action) => {
     switch(action.type){
-        case 'SET': return action.payload.isACAdmin;
+        case 'SET_IS_AC_ADMIN': return action.payload.isACAdmin;
         default : return state;
     }
 }

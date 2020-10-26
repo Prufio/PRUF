@@ -1,6 +1,6 @@
 const assetTokenIDsReducer = (state = [], action) => {
     switch(action.type){
-        case 'SET': return action.payload.assetTokenIDs;
+        case 'SET_ASSET_TOKEN_IDS': return action.payload.assetTokenIDs;
         default : return state;
     }
 }

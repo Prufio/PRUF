@@ -1,6 +1,6 @@
 const hasFetchedBalancesReducer = (state = false, action) => {
     switch(action.type){
-        case 'SET': return action.payload.hasFetchedBalances;
+        case 'SET_HAS_FETCHED_BALANCES': return action.payload.hasFetchedBalances;
         default : return state;
     }
 }

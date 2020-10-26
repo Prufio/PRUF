@@ -1,6 +1,6 @@
 const IPFSReducer = (state = {}, action) => {
     switch(action.type){
-        case 'SET': return action.payload.IPFS;
+        case 'SET_IPFS': return action.payload.IPFS;
         default : return state;
     }
 }
