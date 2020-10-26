@@ -1044,7 +1044,7 @@ function buildWindowUtils() {
 
   }
 
-  const _determineTokenBalance = async () => {
+  const _determineTokenBalance = async (addr, contracts) => {
 
     if (addr !== undefined) {
       let _assetClassBal;
