@@ -10,6 +10,13 @@ class ModifyDescription extends Component {
   constructor(props) {
     super(props);
 
+    let additionalElementArrays = {
+      photo: [],
+      text: [],
+      name: ""
+    }
+    
+
     //State declaration.....................................................................................................
 
     this.updateAssets = setInterval(() => {
@@ -68,9 +75,9 @@ class ModifyDescription extends Component {
 
       console.log(this.state.txHash);
       self.setState({ hashPath: "", count: 1, textCount: 1, imageCount: 1 });
-      window.additionalElementArrays.photo = [];
-      window.additionalElementArrays.text = [];
-      window.additionalElementArrays.name = "";
+      additionalElementArrays.photo = [];
+      additionalElementArrays.text = [];
+      additionalElementArrays.name = "";
       //self.setState({ accessPermitted: false });
       //self.setState({ oldDescription: undefined });
       return document.getElementById("MainForm").reset(),
@@ -237,22 +244,22 @@ class ModifyDescription extends Component {
       }
       if (type === "photo" || type === "displayImage") {
         console.log("Pushing photo element: ", element)
-        window.additionalElementArrays.photo.push(element)
+        additionalElementArrays.photo.push(element)
       }
       else if (type === "text" || type === "description") {
         console.log("Pushing text element: ", element)
-        window.additionalElementArrays.text.push(element)
+        additionalElementArrays.text.push(element)
       }
 
       else if (type === "nameTag") {
-        window.additionalElementArrays.name = this.state.nameTag
+        additionalElementArrays.name = this.state.nameTag
         this.setState({ count: this.state.count + 1 })
       }
 
       else { return alert("Please use the dropdown menu to select an element type") }
 
       console.log("Added", element, "to element array")
-      console.log("Which now looks like: ", window.additionalElementArrays)
+      console.log("Which now looks like: ", additionalElementArrays)
       this.setState({ elementType: "0", hashPath: "" })
       return document.getElementById("MainForm").reset();
     }
@@ -316,8 +323,8 @@ class ModifyDescription extends Component {
 
       let newDescriptionPhoto = '"photo": {';
 
-      for (let i = 0; i < window.additionalElementArrays.photo.length; i++) {
-        newDescriptionPhoto += (window.additionalElementArrays.photo[i])
+      for (let i = 0; i < additionalElementArrays.photo.length; i++) {
+        newDescriptionPhoto += (additionalElementArrays.photo[i])
       }
 
       if (newDescriptionPhoto.charAt(newDescriptionPhoto.length - 1) === ",") { newDescriptionPhoto = newDescriptionPhoto.substring(0, newDescriptionPhoto.length - 1); }
@@ -325,8 +332,8 @@ class ModifyDescription extends Component {
 
       let newDescriptionText = '"text": {';
 
-      for (let i = 0; i < window.additionalElementArrays.text.length; i++) {
-        newDescriptionText += (window.additionalElementArrays.text[i])
+      for (let i = 0; i < additionalElementArrays.text.length; i++) {
+        newDescriptionText += (additionalElementArrays.text[i])
       }
 
       if (newDescriptionText.charAt(newDescriptionText.length - 1) === ",") { newDescriptionText = newDescriptionText.substring(0, newDescriptionText.length - 1); }
@@ -338,15 +345,15 @@ class ModifyDescription extends Component {
       newDescriptionPhoto = JSON.parse('{' + newDescriptionPhoto);
       newDescriptionText = JSON.parse('{' + newDescriptionText);
 
-      if (window.additionalElementArrays.name === "") {
+      if (additionalElementArrays.name === "") {
         newDescriptionName = {}
       }
-      /* else if (window.additionalElementArrays.name === "" && this.state.oldDescription.name !== undefined){
+      /* else if (additionalElementArrays.name === "" && this.state.oldDescription.name !== undefined){
         newDescriptionName = this.state.oldDescription.name
         console.log(newDescriptionName)
       } */
       else {
-        newDescriptionName = { name: window.additionalElementArrays.name }
+        newDescriptionName = { name: additionalElementArrays.name }
       }
 
       console.log("Now they should be objects: ", newDescriptionPhoto, newDescriptionText, newDescriptionName)
@@ -850,7 +857,7 @@ class ModifyDescription extends Component {
                   <div className="assetSelectedContentHead">Asset Status: <span className="assetSelectedContent">{this.state.status}</span> </div>
                   {this.state.count > 1 && (
                     <div>
-                      {window.utils.generateNewElementsPreview(window.additionalElementArrays)}
+                      {window.utils.generateNewElementsPreview(additionalElementArrays)}
                     </div>
                   )}
                   {this.state.remCount > 1 && (

@@ -51,7 +51,7 @@ import {
   setAssetTokenInfo,
   setIsAuthUser,
   setCosts
-} from './Actions'
+} from './actions'
 
 class Main extends Component {
   constructor(props) {
@@ -395,41 +395,11 @@ class Main extends Component {
 
     this.updateWatchDog = setInterval(() => {
 
-      if (this.state.menuChange !== undefined) {
-        window.menuChange = undefined
-        if (this.state.IDHolderBool === true) {
-          window.routeRequest = "NCAdmin"
-          this.setState({ routeRequest: "NCAdmin" })
-          this.setState({
-            assetHolderMenuBool: true,
-            assetHolderUserMenuBool: false,
-            MenuBool: false,
-            assetClassHolderMenuBool: false,
-            noAddrMenuBool: false,
-            authorizedUserMenuBool: false
-          })
-          this.setState({ menuChange: undefined });
-        }
 
-        else if (this.state.IDHolderBool === false) {
-          window.routeRequest = "NCUser"
-          this.setState({ routeRequest: "NCUser" })
-          this.setState({
-            assetHolderMenuBool: false,
-            assetHolderUserMenuBool: true,
-            basicMenuBool: false,
-            assetClassHolderMenuBool: false,
-            noAddrMenuBool: false,
-            authorizedUserMenuBool: false
-          })
-          this.setState({ menuChange: undefined });
-        }
-      }
-
-      if (window.assets !== undefined) {
-        if (window.assets.ids.length > 0 && Object.values(window.assets.descriptions).length === window.aTknIDs.length &&
-          window.assets.names.length === 0 && this.state.buildReady === true && window.aTknIDs.length > 0) {
-          if (ipfsCounter >= window.aTknIDs.length && window.resetInfo === false) {
+      if (this.props.assets !== undefined) {
+        if (this.props.assets.ids.length > 0 && Object.values(this.props.assets.descriptions).length === this.props.assetTokenIds.length &&
+          this.props.assets.names.length === 0 && this.state.buildReady === true && this.props.assetTokenIds.length > 0) {
+          if (ipfsCounter >= this.props.assetTokenIds.length && window.resetInfo === false) {
             console.log("WD: rebuilding assets (Last Step)")
             this.buildAssets()
           }
@@ -438,21 +408,21 @@ class Main extends Component {
 
 
       if (window.resetInfo === true) {
-        window.hasLoadedAssets = false;
+        this.props.setHasLoadedAssets(false);
         this.setState({ buildReady: false, runWatchDog: false })
         console.log("WD: setting up assets (Step one)")
         this.setUpAssets()
         window.resetInfo = false
       }
 
-      if (window.aTknIDs !== undefined && this.state.buildReady === false) {
-        if (ipfsCounter >= window.aTknIDs.length && this.state.runWatchDog === true && window.aTknIDs.length > 0) {
+      if (this.props.assetTokenIds !== undefined && this.state.buildReady === false) {
+        if (ipfsCounter >= this.props.assetTokenIds.length && this.state.runWatchDog === true && this.props.assetTokenIds.length > 0) {
           console.log("turning on buildready... Window IPFS operation count: ", ipfsCounter)
           this.setState({ buildReady: true })
         }
       }
 
-      else if ((this.state.buildReady === true && ipfsCounter < window.aTknIDs.length) ||
+      else if ((this.state.buildReady === true && ipfsCounter < this.props.assetTokenIds.length) ||
         (this.state.buildReady === true && this.state.runWatchDog === false)) {
         console.log("Setting buildready to false in watchdog")
         this.setState({ buildReady: false })
@@ -485,7 +455,7 @@ class Main extends Component {
         this.setState({
           assetClassBalance: this.props.globalBalances.assetClassBalance,
           assetBalance: this.props.globalBalances.assetBalance,
-          IDTokenBalance: window.balances.IDTokenBalance,
+          IDTokenBalance: this.props.globalBalances.IDTokenBalance,
           assetHolderBool: this.props.assetHolderBool,
           assetClassHolderBool: this.props.assetClassHolderBool,
           IDHolderBool: this.props.IDHolderBool,
@@ -507,18 +477,18 @@ class Main extends Component {
       let tempDescriptionsArray = [];
       let tempNamesArray = [];
 
-      await this.setState({additionalTokenInfo: window.utils.getAssetTokenInfo()}) 
+      await this.setState({additionalTokenInfo: window.utils.getAssetTokenInfo(this.props.globalBalances.assetBalance)}) 
 
-      if (window.aTknIDs === undefined) { return }
+      if (this.props.assetTokenIds === undefined) { return }
 
-      for (let i = 0; i < window.aTknIDs.length; i++) {
+      for (let i = 0; i < this.props.assetTokenIds.length; i++) {
         tempDescObj["desc" + i] = []
-        await this.getIPFSJSONObject(window.ipfsHashArray[i], tempDescObj["desc" + i])
+        await this.getIPFSJSONObject(this.props.ipfsHashArray[i], tempDescObj["desc" + i])
       }
 
       console.log("Temp description obj: ", tempDescObj)
 
-      for (let x = 0; x < window.aTknIDs.length; x++) {
+      for (let x = 0; x < this.props.assetTokenIds.length; x++) {
         let tempArray = tempDescObj["desc" + x]
         await tempDescriptionsArray.push(tempArray)
       }
@@ -526,18 +496,13 @@ class Main extends Component {
       this.setState({
         descriptions: tempDescriptionsArray,
         names: tempNamesArray,
-        ids: window.aTknIDs
+        ids: this.props.assetTokenIds
       })
-
-      window.assets.descriptions = tempDescriptionsArray;
-      window.assets.names = tempNamesArray;
-      window.assets.ids = window.aTknIDs;
 
       console.log("Asset setUp Complete. Turning on watchDog.")
       this.setState({ runWatchDog: true })
       console.log("window IPFS operation count: ", ipfsCounter)
-      console.log("window assets to be added: ", window.assets)
-      console.log("Bools...", this.state.assetHolderBool, this.state.assetClassHolderBool, this.state.IDHolderBool)
+      console.log("Bools...", this.props.holderBools.assetHolderBool, this.props.holderBools.assetClassHolderBool, this.props.holderBools.IDHolderBool)
 
     }
 
@@ -548,7 +513,6 @@ class Main extends Component {
       let emptyDesc = { photo: {}, text: {}, name: "" }
 
       for (let i = 0; i < this.state.aTknIDs.length; i++) {
-        //console.log(window.assets.descriptions[i][0])
         if (this.state.descriptions[i][0] !== undefined) {
           tempDescArray.push(JSON.parse(this.state.descriptions[i][0]))
         }
@@ -602,7 +566,7 @@ class Main extends Component {
 
       console.log("STV: Setting up balances")
 
-      await this.props.setBalances(window.utils.determineTokenBalance())
+      await this.props.setBalances(window.utils.determineTokenBalance(this.props.globalAddr))
 
       if (willSetup) {
         return this.setUpAssets()
@@ -612,7 +576,7 @@ class Main extends Component {
 
     this.getIPFSJSONObject = (lookup, descElement) => {
       //console.log(lookup)
-      window.ipfs.cat(lookup, async (error, result) => {
+      this.props.ipfs.cat(lookup, async (error, result) => {
         if (error) {
           console.log(lookup, "Something went wrong. Unable to find file on IPFS");
           descElement.push(undefined)
@@ -656,7 +620,6 @@ class Main extends Component {
             window.recount = true;
             window.resetInfo = true;
 
-            //self.setUpContractEnvironment(window.web3);
             console.log("///////in acctChanger////////");
           }
           else { console.log("Something bit in the acct listener, but no changes made.") }
@@ -675,53 +638,44 @@ class Main extends Component {
 
       if (window.ethereum !== undefined) {
         if (this.props.globalAddr !== undefined) {
-          await this.setState({
+          await this.params.setMenuInfo({bools: {
             noAddrMenuBool: false,
             assetHolderMenuBool: false,
             assetClassHolderMenuBool: false,
             basicMenuBool: true,
             authorizedUserMenuBool: false,
             hasFetchedBalances: false,
-            routeRequest: "basic"
-          })
+          }, route: 'basic'})
         }
 
         else if (this.props.globalAddr === undefined) {
-          await this.setState({
+          await this.params.setMenuInfo({bools: {
             noAddrMenuBool: true,
             assetHolderMenuBool: false,
             assetClassHolderMenuBool: false,
             basicMenuBool: false,
             authorizedUserMenuBool: false,
             hasFetchedBalances: false,
-            routeRequest: "noAddr"
-          })
+          }, route: 'noAddr'})
         }
 
         await this.props.setContracts(buildContracts(_web3))
 
-
-        await this.setState({ contracts: window._contracts })
-        await window.utils.getContracts()
-
-        if (window.addr !== undefined) {
-          await window.utils.getETHBalance();
+        if (this.props.globalAddr !== undefined) {
+          await this.props.setEthBalance(window.utils.getETHBalance(this.props.globalAddr));
           await this.setUpTokenVals()
           await this.setUpAssets()
         }
 
 
-        console.log("bools...", window.assetHolderBool, window.assetClassHolderBool, window.IDHolderBool)
-        console.log("Wallet balance in ETH: ", window.ETHBalance)
+        console.log("bools...", this.props.holderBools.assetHolderBool, this.props.holderBools.assetClassHolderBool, this.props.holderBools.IDHolderBool)
         window.isSettingUpContracts = false;
         return this.setState({ runWatchDog: true })
       }
 
       else {
         window.isSettingUpContracts = true;
-        window._contracts = await buildContracts(_web3)
-        await this.setState({ contracts: window._contracts })
-        await window.utils.getContracts()
+        await this.props.setContracts(buildContracts(_web3))
         window.isSettingUpContracts = false;
         return this.setState({ runWatchDog: true })
       }
@@ -732,29 +686,10 @@ class Main extends Component {
 
     this.state = {
       IPFS: require("ipfs-mini"),
-      isSTOROwner: undefined,
-      isBPPOwner: undefined,
-      isBPNPOwner: undefined,
       addr: undefined,
       web3: null,
       nameArray: [],
       notAvailable: "N/A",
-      STOROwner: "",
-      BPPOwner: "",
-      BPNPOwner: "",
-      APP: "",
-      NP: "",
-      STOR: "",
-      AC_MGR: "",
-      ECR_NC: "",
-      ECR_MGR: "",
-      AC_TKN: "",
-      A_TKN: "",
-      APP_NC: "",
-      NP_NC: "",
-      ECR2: "",
-      PIP: "",
-      RCLR: "",
       assetClass: undefined,
       contractArray: [],
       isAuthUser: undefined,
@@ -779,36 +714,27 @@ class Main extends Component {
 
   componentDidMount() {//stuff to do when component mounts in window
     buildWindowUtils()
-    window.sentPacket = undefined;
     window.isSettingUpContracts = false;
     window.hasLoadedAssets = false;
     window.location.href = '/#/';
-    window.menuChange = undefined;
-
 
     if (window.ethereum !== undefined) {
-      window.additionalElementArrays = {
-        photo: [],
-        text: [],
-        name: ""
-      }
       
-      window.assetTokenInfo = {
+      this.props.setAssetTokenInfo({
         assetClass: undefined,
         idxHash: undefined,
         name: undefined,
         photos: undefined,
         text: undefined,
-        status
-        : undefined,
-      }
+        status: undefined,
+      })
       
       const ethereum = window.ethereum;
       var _web3 = require("web3");
       _web3 = new Web3(_web3.givenProvider);
       this.setUpContractEnvironment(_web3)
       this.setState({ web3: _web3 });
-      window.web3 = _web3;
+      this.props.setGlobalWeb3(_web3);
 
       ethereum.enable()
 
@@ -818,16 +744,14 @@ class Main extends Component {
         protocol: "https",
       });
 
-      window.ipfs = _ipfs;
+      this.props.setIPFS(_ipfs);
 
-      _web3.eth.getAccounts().then((e) => { this.setState({ addr: e[0] }); window.addr = e[0] });
+      _web3.eth.getAccounts().then((e) => { this.setState({ addr: e[0] }); this.props.setGlobalAddr(e[0]) });
       window.addEventListener("accountListener", this.acctChanger());
-      //window.addEventListener("authLevelListener", this.updateAuthLevel());
       this.setState({ hasMounted: true })
     }
     else {
 
-      ipfsCounter = 0;
       var _web3 = require("web3");
       _web3 = new Web3("https://api.infura.io/v1/jsonrpc/kovan");
       this.setUpContractEnvironment(_web3)
@@ -903,7 +827,7 @@ class Main extends Component {
   }
 
   componentDidUpdate() {//stuff to do when state updates
-    if (window.addr !== undefined && !this.state.hasFetchedBalances && this.props.contracts > 0) {
+    if (this.props.globalAddr !== undefined && !this.state.hasFetchedBalances && this.props.contracts > 0) {
       this.setUpContractEnvironment(this.props.web3);
     }
 
@@ -913,8 +837,6 @@ class Main extends Component {
   componentWillUnmount() {//stuff do do when component unmounts from the window
     console.log("unmounting component");
     window.removeEventListener("accountListener", this.acctChanger());
-    //window.removeEventListener("authLevelListener", this.updateAuthLevel());
-    //window.removeEventListener("ownerGetter", this.getOwner());
   }
 
   render(
