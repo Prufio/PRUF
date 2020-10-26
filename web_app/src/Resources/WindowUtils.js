@@ -1044,11 +1044,7 @@ function buildWindowUtils() {
 
   }
 
-  const _getContracts = async () => {
-    console.log("contracts: ", window.contracts)
-  };
-
-  const _determineTokenBalance = async (addr, contracts) => {
+  const _determineTokenBalance = async () => {
 
     if (addr !== undefined) {
       let _assetClassBal;
@@ -1288,7 +1284,6 @@ function buildWindowUtils() {
 
     checkCreds: _checkCreds,
     getCosts: _getCosts,
-    getContracts: _getContracts,
     determineTokenBalance: _determineTokenBalance,
     getACData: _getACData,
     resolveAC: _resolveAC,
