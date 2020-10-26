@@ -1,6 +1,6 @@
 const contractsReducer = (state = '', action) => {
     switch(action.type){
-        case 'SET': return action.payload.contracts;
+        case 'SET_CONTRACTS': return action.payload.contracts;
         default : return state;
     }
 }

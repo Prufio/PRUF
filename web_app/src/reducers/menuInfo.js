@@ -10,7 +10,7 @@ const menuInfoReducer = (state =
     settingsMenu: undefined
   },route: "basic" }, action) => {
     switch(action.type){
-        case 'SET': return {bools: action.payload.bools, route: action.payload.route};
+        case 'SET_MENU_INFO': return {bools: action.payload.bools, route: action.payload.route};
         default : return state;
     }
 }

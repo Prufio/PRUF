@@ -1,6 +1,6 @@
 const custodyTypeReducer = (state = '', action) => {
     switch(action.type){
-        case 'SET': return action.payload.custodyType;
+        case 'SET_CUSTODY_TYPE': return action.payload.custodyType;
         default : return state;
     }
 }

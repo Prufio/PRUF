@@ -1,6 +1,6 @@
 const assetClassReducer = (state = '', action) => {
     switch(action.type){
-        case 'SET': return action.payload.assetClass;
+        case 'SET_ASSET_CLASS': return action.payload.assetClass;
         default : return state;
     }
 }

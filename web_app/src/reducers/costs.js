@@ -1,6 +1,6 @@
 const costsReducer = (state = {}, action) => {
     switch(action.type){
-        case 'SET': return action.payload.costs;
+        case 'SET_COSTS': return action.payload.costs;
         default : return state;
     }
 }

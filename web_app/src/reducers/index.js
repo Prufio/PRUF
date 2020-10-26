@@ -1,4 +1,4 @@
-import globalAddrReducer from './setAddr'
+import globalAddrReducer from './addr'
 import globalWeb3Reducer from './web3'
 import assetClassReducer from './assetClass'
 import assetsReducer from './assets'

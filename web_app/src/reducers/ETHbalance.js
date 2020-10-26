@@ -1,6 +1,6 @@
 const ETHBalanceReducer = (state = '', action) => {
     switch(action.type){
-        case 'SET': return action.payload.ETHbalance;
+        case 'SET_ETH_BALANCE': return action.payload.ETHBalance;
         default : return state;
     }
 }
