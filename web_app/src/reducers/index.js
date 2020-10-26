@@ -15,6 +15,7 @@ import IPFSHashArrayReducer from './IPFSHashArray'
 import isACAdminReducer from './isACAdmin'
 import isAuthUserReducer from './isAuthUser'
 import sentPacketReducer from './sentPacket'
+import assetClassNameReducer from './assetClassName'
 import { combineReducers } from 'redux'
 
 const allReducers = combineReducers({
@@ -35,6 +36,7 @@ const allReducers = combineReducers({
     isACAdmin: isACAdminReducer,
     isAuthUser: isAuthUserReducer,
     globalSentPacket: sentPacketReducer,
+    globalAssetClassName: assetClassNameReducer,
 
 })
 

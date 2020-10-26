@@ -5,7 +5,7 @@ import Col from "react-bootstrap/Col";
 import "./index.css";
 import { ArrowRightCircle } from 'react-feather'
 import { connect } from 'react-redux';
-import {setGlobalAddr, setGlobalWeb3, setGlobalAssetClass } from './Actions'
+import {setGlobalAddr, setGlobalWeb3, setGlobalAssetClass, setGlobalAssetClassName, setMenuBasic } from './Actions'
 
 class Home extends Component {
   constructor(props) {
@@ -34,8 +34,8 @@ class Home extends Component {
   }
 
   componentDidMount() {
-    if (window.addr !== undefined) {
-      this.setState({ addr: window.addr })
+    if (this.props.globalAddr !== undefined) {
+      this.setState({ addr: this.props.globalAddr })
     }
 
   }
@@ -54,9 +54,9 @@ class Home extends Component {
     const _setWindowAC = async () => {
       let acDoesExist;
 
-      window.routeRequest = "basic"
+      this.props.setMenuBasic()
 
-      if (this.state.assetClass === "0" || this.state.assetClass === undefined) { window.assetClass = undefined; return this.forceUpdate() }
+      if (this.state.assetClass === "0" || this.state.assetClass === undefined) { this.props.setGlobalAssetClass(undefined); return this.forceUpdate() }
       else {
         if (
           this.state.assetClass.charAt(0) === "0" ||
@@ -77,9 +77,9 @@ class Home extends Component {
             window.location.href = 'https://www.pruf.io'
           }
 
-          window.assetClass = this.state.assetClass;
-          await window.utils.resolveACFromID(window.assetClass)
-          await window.utils.getACData("id", window.assetClass)
+          this.props.setGlobalAssetClass(this.state.assetClass);
+          await window.utils.resolveACFromID(this.state.assetClass)
+          await window.utils.getACData("id", this.state.assetClass)
 
           console.log(window.authLevel);
           return this.setState({ authLevel: window.authLevel });
@@ -89,11 +89,11 @@ class Home extends Component {
           acDoesExist = await window.utils.checkForAC("name", this.state.assetClass);
           await console.log("Exists?", acDoesExist)
 
-          if (!acDoesExist && window.confirm("Asset class does not currently exist. Consider minting it yourself! Click ok to route to our website for more information.")) {
+          if (!acDoesExist && window.confirm("Asset class does not currently exist. Consider minting it yourself! Click OK to route to our website for more information.")) {
             window.location.href = 'https://www.pruf.io'
           }
 
-          window.assetClassName = this.state.assetClass
+          this.props.setGlobalAssetClassName(this.state.assetClass);
           await window.utils.resolveAC(this.state.assetClass);
 
           return this.setState({ authLevel: window.authLevel });
@@ -106,9 +106,9 @@ class Home extends Component {
         <div className="home">
           <img className="prufARCroppedForm" src={require("./Resources/Pruf AR (2).png")} alt="Pruf Logo Home" />
           <br></br>
-          <div> {window.addr !== undefined && window.assetClass > 0 && (<div>Operating in asset class {window.assetClass} ({window.assetClassName}) as {window.authLevel}</div>)}</div>
+          <div> {this.props.globalAddr !== undefined && this.state.assetClass > 0 && (<div>Operating in asset class {this.state.assetClass} ({this.state.assetClass}) as {window.authLevel}</div>)}</div>
           <br></br>
-          {window._contracts !== undefined && window.addr !== undefined && (
+          {this.props.globalContracts !== undefined && this.props.globalAddr !== undefined && (
             <div>
               <Form.Group as={Col} controlId="formGridAC">
                 <Form.Label className="formFont">Input desired asset class # or name : </Form.Label>
@@ -131,9 +131,9 @@ class Home extends Component {
               </Form.Row>
             </div>
           )}
-          {window._contracts === undefined && window.addr !== undefined && (<div className="VRText"> <Form.Row><h1 className="loading">Connecting to the Blockchain</h1></Form.Row></div>)}
-          {window._contracts === undefined && window.addr === undefined && (<div className="VRText"> <Form.Row><h1 className="loading">Connecting to the Blockchain</h1></Form.Row></div>)}
-          {window._contracts !== undefined && window.addr === undefined && (<div className="VRText"> <Form.Row><h1 >Unable to Get User Address</h1></Form.Row></div>)}
+          {this.props.globalContracts === undefined && this.props.globalAddr !== undefined && (<div className="VRText"> <Form.Row><h1 className="loading">Connecting to the Blockchain</h1></Form.Row></div>)}
+          {this.props.globalContracts === undefined && this.props.globalAddr === undefined && (<div className="VRText"> <Form.Row><h1 className="loading">Connecting to the Blockchain</h1></Form.Row></div>)}
+          {this.props.globalContracts !== undefined && this.props.globalAddr === undefined && (<div className="VRText"> <Form.Row><h1 >Unable to Get User Address</h1></Form.Row></div>)}
         </div>
       </div>
     );
@@ -144,7 +144,10 @@ const mapStateToProps = (state) => {
 
   return{
     globalAddr: state.globalAddr,
-    web3: state.web3
+    web3: state.web3,
+    globalAssetClass: state.globalAssetClass,
+    globalAssetClassName: state.globalAssetClassName,
+    globalContracts: state.globalContracts,
   }
 
 }
@@ -153,6 +156,9 @@ const mapDispatchToProps = () => {
   return {
     setGlobalAddr,
     setGlobalWeb3,
+    setGlobalAssetClass,
+    setGlobalAssetClassName,
+    setMenuBasic,
   }
 }
 
