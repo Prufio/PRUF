@@ -30,7 +30,28 @@ import {
   isMobile
 } from "react-device-detect";
 import { connect } from 'react-redux';
-import {setGlobalAddr, setGlobalWeb3} from './actions'
+import {
+  setGlobalAddr, 
+  setGlobalWeb3,
+  setIPFS,
+  setContracts,
+  setIsAdmin,
+  setBalances,
+  setMenuInfo,
+  setIsACAdmin,
+  setCustodyType,
+  setEthBalance,
+  setAssets,
+  setAssetsToDefault,
+  setAssetTokenIds,
+  setIPFSHashArray,
+  setHasAssets,
+  setHasFetchedBals,
+  setGlobalAssetClass,
+  setGlobalAC,
+  setAssetTokenInfo,
+  setCosts
+} from './actions'
 
 class Main extends Component {
   constructor(props) {
@@ -486,7 +507,7 @@ class Main extends Component {
       }
     }, 100)
 
-    this.toggleMenu = async (menuChoice) => {
+/*     this.toggleMenu = async (menuChoice) => {
       if (window.menuChange === undefined) {
         window.location.href = '/#/';
       }
@@ -570,56 +591,57 @@ class Main extends Component {
         window.menuChange = undefined;
       }
 
-    }
+    } */
 
     this.setUpAssets = async () => {
-      window.hasNoAssets = false;
+
+      this.props.setHasAssets(true);
       window.ipfsCounter = 0;
-      window.ipfsHashArray = [];
-      window.assets = { descriptions: [], ids: [], assetClassNames: [], assetClasses: [], countPairs: [], statuses: [], names: [], displayImages: [] };
-                        
-      window.assetTokenInfo = {
+      this.props.setIPFSHashArray([]);
+      this.props.setAssetsToDefault();         
+      this.props.setAssetTokenInfo({
         assetClass: undefined,
         idxHash: undefined,
         name: undefined,
         photos: undefined,
         text: undefined,
         status: undefined,
-      }
+      })
 
       if (window.recount === true) {
-        window.aTknIDs = [];
-        window.balances.assetBalance = undefined;
-        window.recount = false
-        await window.utils.getETHBalance();
+        this.props.setBalances({})
+        this.props.setEthBalance(window.utils.getETHBalance(this.props.globalAddr));
         return this.setUpTokenVals(true)
       }
 
-      if (window.balances !== undefined) {
+      if (this.props.balances !== undefined) {
+
         this.setState({
-          assetClassBalance: window.balances.assetClassBalance,
-          assetBalance: window.balances.assetBalance,
+          assetClassBalance: this.props.balances.assetClassBalance,
+          assetBalance: this.props.balances.assetBalance,
           IDTokenBalance: window.balances.IDTokenBalance,
-          assetHolderBool: window.assetHolderBool,
-          assetClassHolderBool: window.assetClassHolderBool,
-          IDHolderBool: window.IDHolderBool,
-          custodyType: window.custodyType,
-          hasFetchedBalances: window.hasFetchedBalances
+          assetHolderBool: this.props.assetHolderBool,
+          assetClassHolderBool: this.props.assetClassHolderBool,
+          IDHolderBool: this.props.IDHolderBool,
+          custodyType: this.props.custodyType,
+          hasFetchedBalances: this.props.hasFetchedBalances
         })
+
       }
 
-      if (window.balances === undefined) {
+      if (this.props.balances === undefined) {
         console.log("balances undefined, trying to get them...");
-        if (window.addr === undefined) { return this.forceUpdate }
+        if (this.props.globalAddr === undefined) { return this.forceUpdate }
         return this.setUpTokenVals(true);
       }
+
       console.log("SA: In setUpAssets")
 
       let tempDescObj = {}
       let tempDescriptionsArray = [];
       let tempNamesArray = [];
 
-      await window.utils.getAssetTokenInfo()
+      await this.setState({additionalTokenInfo: window.utils.getAssetTokenInfo()}) 
 
       if (window.aTknIDs === undefined) { return }
 
@@ -642,9 +664,8 @@ class Main extends Component {
       console.log("Asset setUp Complete. Turning on watchDog.")
       this.setState({ runWatchDog: true })
       console.log("window IPFS operation count: ", window.ipfsCounter)
-      console.log("window assets: ", window.assets)
+      console.log("window assets to be added: ", window.assets)
       console.log("Bools...", this.state.assetHolderBool, this.state.assetClassHolderBool, this.state.IDHolderBool)
-      //console.log(window.assets.ids, " aTkn-> ", window.aTknIDs)
 
     }
 
@@ -688,22 +709,33 @@ class Main extends Component {
         }
       }
 
-      window.assets.descriptions = tempDescArray;
-      window.assets.names = tempNameArray;
-      window.assets.displayImages = tempDisplayArray;
+      let assetInfo = this.state.additionalTokenInfo;
+
       window.hasLoadedAssets = true;
-      console.log("BA: Assets after rebuild: ", window.assets)
+
+      this.props.setAssets({
+        descriptions: tempDescArray, 
+        names: tempNameArray, 
+        displayImages: tempDisplayArray, 
+        statuses: assetInfo.statuses,
+        countPairs: assetInfo.countPairs,
+        assetClasses: assetInfo.assetClasses,
+        ids: assetInfo.ids,
+        assetClassNames: assetInfo.ACNames
+      });
+
     }
 
     this.setUpTokenVals = async (willSetup) => {
-      window.balances = undefined
+
       console.log("STV: Setting up balances")
 
-      await window.utils.determineTokenBalance()
-      await console.log(window.balances)
+      await this.props.setBalances(window.utils.determineTokenBalance())
+
       if (willSetup) {
         return this.setUpAssets()
       }
+
     }
 
     this.getIPFSJSONObject = (lookup, descElement) => {
@@ -1041,6 +1073,25 @@ const mapDispatchToProps = () => {
   return {
     setGlobalAddr,
     setGlobalWeb3,
+    setIPFS,
+    setContracts,
+    setIsAdmin,
+    setBalances,
+    setMenuInfo,
+    setIsACAdmin,
+    setCustodyType,
+    setEthBalance,
+    setAssets,
+    setAssetsToDefault,
+    setAssetTokenIds,
+    setIPFSHashArray,
+    setHasAssets,
+    setHasFetchedBals,
+    setIPFS,
+    setGlobalAssetClass,
+    setGlobalAC,
+    setAssetTokenInfo,
+    setCosts
   }
 }
 
