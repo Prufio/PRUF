@@ -45,15 +45,17 @@ function buildWindowUtils() {
     return (time);
   }
 
-  const _getETHBalance = async () => {
-    if (window.addr === undefined) { return 0 }
-    let addr = window.addr;
+  const _getETHBalance = async (addr) => {
+    if (addr === undefined) { return 0 }
+    let tempETHBalance;
     await window.web3.eth.getBalance(addr, (err, balance) => {
       if (err) { } else {
-        window.ETHBalance = window.web3.utils.fromWei(balance, "ether")
+        tempETHBalance = window.web3.utils.fromWei(balance, "ether")
         console.log("UTILS: Wallet balance: ", window.ETHBalance)
       }
     });
+
+    return tempETHBalance;
   }
 
   const _seperateKeysAndValues = (obj) => {
@@ -757,7 +759,7 @@ function buildWindowUtils() {
           });
       }
 
-      return window.assets.assetClassNames = tempArr;
+      return tempArr;
     }
 
 
@@ -1098,13 +1100,14 @@ function buildWindowUtils() {
       }
     }
   }
-  const _getAssetTokenInfo = async () => {
+  const _getAssetTokenInfo = async (assetBalance) => {
 
     if (window.balances === undefined) { return }
 
     console.log("GATI: In _getAssetTokenInfo")
 
-    if (Number(window.balances.assetBalance) > 0) {
+    if (Number(assetBalance) > 0) {
+
       let tknIDArray = [];
       let ipfsHashArray = [];
       let noteArray = []
@@ -1167,19 +1170,23 @@ function buildWindowUtils() {
         //console.log(x)
       }
 
-      await window.utils.getACNames(assetClasses)
+      let ACNames = await window.utils.getACNames(assetClasses)
 
       console.log(ipfsHashArray)
 
-      window.aTknIDs = tknIDArray;
       //console.log(window.aTknIDs, " tknID-> ", tknIDArray);
-      window.ipfsHashArray = ipfsHashArray;
 
-      window.assets.countPairs = countPairs;
+      let assetInfo = {
+        statuses,
+        countPairs,
+        assetClasses,
+        notes: noteArray,
+        ids: tknIDArray,
+        ipfsHashArray, 
+        ACNames
+      }
 
-      window.assets.assetClasses = assetClasses;
-      window.assets.statuses = statuses;
-      window.assets.notes = noteArray;
+      return assetInfo;
 
     }
 
