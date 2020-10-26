@@ -5,7 +5,7 @@ import Col from "react-bootstrap/Col";
 import "./index.css";
 import { ArrowRightCircle } from 'react-feather'
 import { connect } from 'react-redux';
-import {setGlobalAddr, setGlobalWeb3 } from './Actions'
+import {setGlobalAddr, setGlobalWeb3, setGlobalAssetClass } from './Actions'
 
 class Home extends Component {
   constructor(props) {

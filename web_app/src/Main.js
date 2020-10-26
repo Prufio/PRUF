@@ -51,7 +51,7 @@ import {
   setGlobalAC,
   setAssetTokenInfo,
   setCosts
-} from './actions'
+} from './Actions'
 
 class Main extends Component {
   constructor(props) {
