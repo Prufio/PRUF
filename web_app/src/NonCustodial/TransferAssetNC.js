@@ -75,6 +75,7 @@ class TransferAssetNC extends Component {
          window.sentPacket = undefined;
         return window.location.href = "/#/asset-dashboard"
       }
+      
       window.sentPacket = undefined
       this.setState({ wasSentPacket: true })
     }
