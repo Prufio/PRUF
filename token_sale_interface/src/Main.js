@@ -150,7 +150,7 @@ class Main extends Component {
       this.props.setGlobalWeb3(_web3);
       ethereum.on("accountsChanged", function (accounts) {
         _web3.eth.getAccounts().then((e) => {
-          if (self.props.addr !== e[0]) {
+          if (self.props.globalAddr !== e[0]) {
             self.props.setGlobalAddr(e[0]);
             console.log("///////in acctChanger////////");
             console.log("Changed active account to :", e[0])
