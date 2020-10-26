@@ -9,10 +9,10 @@ function buildWindowUtils() {
 
   //UTIL_TKN.methods.currentACtokenInfo
 
-  const _tenThousandHashesOf = (varToHash) => {
+  const _tenThousandHashesOf = (varToHash, web3) => {
     var tempHash = varToHash;
     for (var i = 0; i < 10000; i++) {
-      tempHash = window.web3.utils.soliditySha3(tempHash);
+      tempHash = web3.utils.soliditySha3(tempHash);
       console.log(tempHash);
     }
     return tempHash;
@@ -45,12 +45,12 @@ function buildWindowUtils() {
     return (time);
   }
 
-  const _getETHBalance = async (addr) => {
+  const _getETHBalance = async (addr, web3) => {
     if (addr === undefined) { return 0 }
     let tempETHBalance;
-    await window.web3.eth.getBalance(addr, (err, balance) => {
+    await web3.eth.getBalance(addr, (err, balance) => {
       if (err) { } else {
-        tempETHBalance = window.web3.utils.fromWei(balance, "ether")
+        tempETHBalance = web3.utils.fromWei(balance, "ether")
         console.log("UTILS: Wallet balance: ", window.ETHBalance)
       }
     });
@@ -90,18 +90,18 @@ function buildWindowUtils() {
     return newObj;
   }
 
-  const _generateAssets = () => {
-    if (window.assets.names.length > 0) {
+  const _generateAssets = (assets) => {
+    if (assets.names.length > 0) {
       let component = [
         <option key="noselect" value="null"> Select an asset </option>,
         <option key="assetDashLink" value="assetDash">View Assets in Dashboard</option>,
         <option key="resetList" value="reset">Refresh Assets</option>];
 
-      for (let i = 0; i < window.assets.ids.length; i++) {
+      for (let i = 0; i < assets.ids.length; i++) {
         component.push(<option size="lg" key={"asset " + String(i)} value={i}>
           {i + 1}:
-          Name: {window.assets.names[i]},
-          ID: {window.assets.ids[i].substring(0, 10) + "..." + window.assets.ids[i].substring(58, 68)} </option>);
+          Name: {assets.names[i]},
+          ID: {assets.ids[i].substring(0, 10) + "..." + assets.ids[i].substring(58, 68)} </option>);
       }
 
       return component
@@ -316,13 +316,13 @@ function buildWindowUtils() {
     return component
   }
 
-  const _checkAssetExists = async (idxHash) => {
+  const _checkAssetExists = async (idxHash, contracts) => {
     let tempBool;
     console.log(idxHash.substring(0, 2))
     if (idxHash.substring(0, 2) !== "0x") {
       return (false)
     }
-    await window.contracts.STOR.methods
+    await contracts.STOR.methods
       .retrieveShortRecord(idxHash)
       .call(function (_error, _result) {
         if (_error) {
@@ -340,12 +340,12 @@ function buildWindowUtils() {
     return tempBool;
   }
 
-  const _checkAssetExportable = async (idxHash) => {
+  const _checkAssetExportable = async (idxHash, contracts) => {
     let tempBool;
     if (idxHash.substring(0, 2) !== "0x") {
       return (false)
     }
-    await window.contracts.STOR.methods
+    await contracts.STOR.methods
       .retrieveShortRecord(idxHash)
       .call(function (_error, _result) {
         if (_error) {
@@ -363,12 +363,12 @@ function buildWindowUtils() {
     return tempBool;
   }
 
-  const _checkAssetExported = async (idxHash) => {
+  const _checkAssetExported = async (idxHash, contracts) => {
     let tempBool;
     if (idxHash.substring(0, 2) !== "0x") {
       return (false)
     }
-    await window.contracts.STOR.methods
+    await contracts.STOR.methods
       .retrieveShortRecord(idxHash)
       .call(function (_error, _result) {
         if (_error) {
@@ -386,12 +386,12 @@ function buildWindowUtils() {
     return tempBool;
   }
 
-  const _checkAssetDiscarded = async (idxHash) => {
+  const _checkAssetDiscarded = async (idxHash, contracts) => {
     let tempBool;
     if (idxHash.substring(0, 2) !== "0x") {
       return (false)
     }
-    await window.contracts.STOR.methods
+    await contracts.STOR.methods
       .retrieveShortRecord(idxHash)
       .call(function (_error, _result) {
         if (_error) {
@@ -409,12 +409,12 @@ function buildWindowUtils() {
     return tempBool;
   }
 
-  const _checkAssetCount = async (idxHash) => {
+  const _checkAssetCount = async (idxHash, contracts) => {
     let tempAmount;
     if (idxHash.substring(0, 2) !== "0x") {
       return (false)
     }
-    await window.contracts.STOR.methods
+    await contracts.STOR.methods
       .retrieveShortRecord(idxHash)
       .call(function (_error, _result) {
         if (_error) {
@@ -428,12 +428,12 @@ function buildWindowUtils() {
     return tempAmount;
   }
 
-  const _checkAssetCounterStart = async (idxHash) => {
+  const _checkAssetCounterStart = async (idxHash, contracts) => {
     let tempAmount;
     if (idxHash.substring(0, 2) !== "0x") {
       return (false)
     }
-    await window.contracts.STOR.methods
+    await contracts.STOR.methods
       .retrieveShortRecord(idxHash)
       .call(function (_error, _result) {
         if (_error) {
@@ -447,13 +447,13 @@ function buildWindowUtils() {
     return tempAmount;
   }
 
-  const _checkAssetTransferable = async (idxHash) => {
+  const _checkAssetTransferable = async (idxHash, contracts) => {
     let tempBool;
     console.log(idxHash)
     if (idxHash.substring(0, 2) !== "0x") {
       return (false)
     }
-    await window.contracts.STOR.methods
+    await contracts.STOR.methods
       .retrieveShortRecord(idxHash)
       .call(function (_error, _result) {
         if (_error) {
@@ -587,12 +587,12 @@ function buildWindowUtils() {
     return (tempStat)
   }
 
-  const _checkAssetRootMatch = async (AC, idxHash) => {
+  const _checkAssetRootMatch = async (AC, idxHash, contracts) => {
     let tempBool;
     if (idxHash.substring(0, 2) !== "0x") {
       return (false)
     }
-    await window.contracts.STOR.methods
+    await contracts.STOR.methods
       .retrieveShortRecord(idxHash)
       .call(function (_error, _result) {
         if (_error) {
@@ -611,9 +611,9 @@ function buildWindowUtils() {
     return tempBool;
   }
 
-  const _checkMatch = async (idxHash, rgtHash) => {
+  const _checkMatch = async (idxHash, rgtHash, contracts) => {
     let tempBool;
-    await window.contracts.STOR.methods
+    await contracts.STOR.methods
       ._verifyRightsHolder(idxHash, rgtHash)
       .call(function (_error, _result) {
         if (_error) {
@@ -628,16 +628,16 @@ function buildWindowUtils() {
     return tempBool;
   }
 
-  const _checkHoldsToken = async (req, id) => {
+  const _checkHoldsToken = async (req, id, contracts, addr) => {
     let tempBool;
     if (req === "asset") {
-      await window.contracts.A_TKN.methods
+      await contracts.A_TKN.methods
         .ownerOf(id)
         .call(function (_error, _result) {
           if (_error) {
             console.log(_error);
           } else {
-            if (_result === window.addr) {
+            if (_result === addr) {
               tempBool = true
             }
             else { tempBool = false }
@@ -646,13 +646,13 @@ function buildWindowUtils() {
         });
     }
     else if (req === "AC") {
-      await window.contracts.AC_TKN.methods
+      await contracts.AC_TKN.methods
         .ownerOf(id)
         .call(function (_error, _result) {
           if (_error) {
             console.log(_error);
           } else {
-            if (_result === window.addr) {
+            if (_result === addr) {
               tempBool = true
             }
             else { tempBool = false }
@@ -665,10 +665,10 @@ function buildWindowUtils() {
     return tempBool;
   }
 
-  const _checkStats = async (idxHash, posArr) => {
+  const _checkStats = async (idxHash, posArr, contracts) => {
     let tempArr = [];
     for (let i = 0; i < posArr.length; i++) {
-      await window.contracts.STOR.methods
+      await contracts.STOR.methods
         .retrieveShortRecord(idxHash)
         .call(function (_error, _result) {
           if (_error) {
@@ -685,9 +685,9 @@ function buildWindowUtils() {
     return tempArr;
   }
 
-  const _checkEscrowStatus = async (idxHash) => {
+  const _checkEscrowStatus = async (idxHash, contracts) => {
     let tempBool;
-    await window.contracts.STOR.methods
+    await contracts.STOR.methods
       .retrieveShortRecord(idxHash)
       .call(function (_error, _result) {
         if (_error) {
@@ -701,9 +701,9 @@ function buildWindowUtils() {
     return tempBool;
   }
 
-  const _checkNoteExists = async (idxHash) => {
+  const _checkNoteExists = async (idxHash, contracts) => {
     let tempBool;
-    await window.contracts.STOR.methods
+    await contracts.STOR.methods
       .retrieveShortRecord(idxHash)
       .call(function (_error, _result) {
         if (_error) {
@@ -721,34 +721,34 @@ function buildWindowUtils() {
     return tempBool;
   }
 
-  const _resolveAC = async (AC) => {
-    if (window.contracts !== undefined) {
-      await window.contracts.AC_MGR.methods
+  const _resolveAC = async (AC, contracts, assetClass) => {
+    if (contracts !== undefined) {
+      await contracts.AC_MGR.methods
         .resolveAssetClass(AC)
         .call((_error, _result) => {
           if (_error) { console.log("Error: ", _error) }
           else {
-            window.assetClass = _result
-            console.log("resolved AC name ", AC, " as: ", window.assetClass);
+            assetClass = _result
+            console.log("resolved AC name ", AC, " as: ", assetClass);
           }
         });
     }
 
-    let acData = await window.utils.getACData("id", window.assetClass)
+    let acData = await window.utils.getACData("id", assetClass)
     await window.utils.checkCreds(acData);
     await window.utils.getCosts(6);
     await console.log("User authLevel: ", window.authLevel);
-    return (window.assetClass)
+    return (assetClass)
 
   }
 
-  const _getACNames = async (assetClasses) => {
+  const _getACNames = async (assetClasses, contracts) => {
 
-    if (window.contracts !== undefined) {
+    if (contracts !== undefined) {
       let tempArr = [];
 
       for (let i = 0; i < assetClasses.length; i++) {
-        await window.contracts.AC_MGR.methods
+        await contracts.AC_MGR.methods
           .getAC_name(assetClasses[i])
           .call((_error, _result) => {
             if (_error) { console.log("Error: ", _error) }
@@ -765,10 +765,10 @@ function buildWindowUtils() {
 
   }
 
-  const _resolveACFromID = async (AC) => {
+  const _resolveACFromID = async (AC, contracts, addr) => {
     let temp;
-    if (window.contracts !== undefined) {
-      await window.contracts.AC_MGR.methods
+    if (contracts !== undefined) {
+      await contracts.AC_MGR.methods
         .getAC_name(AC)
         .call((_error, _result) => {
           if (_error) { console.log("Error: ", _error) }
@@ -780,7 +780,7 @@ function buildWindowUtils() {
         });
     }
     let acData = await window.utils.getACData("id", AC)
-    if (window.addr !== undefined) {
+    if (addr !== undefined) {
       await window.utils.checkCreds(acData, AC);
       await window.utils.getCosts(6, AC);
     }
@@ -791,19 +791,19 @@ function buildWindowUtils() {
 
   }
 
-  const _checkCreds = async (acData, AC) => {
+  const _checkCreds = async (acData, AC, contracts, addr, assetClass) => {
     window.isAuthUser = undefined;
     let custodyType = acData.custodyType
 
-    if (window.contracts !== undefined) {
+    if (contracts !== undefined) {
 
 
-      await window.contracts.AC_TKN.methods
+      await contracts.AC_TKN.methods
         .ownerOf(AC)
         .call((_error, _result) => {
           if (_error) { console.log("Error: ", _error) }
           else {
-            if (_result === window.addr) {
+            if (_result === addr) {
               window.isACAdmin = true;
             }
             else {
@@ -813,8 +813,8 @@ function buildWindowUtils() {
         });
 
       if (custodyType === "Custodial") {
-        await window.contracts.AC_MGR.methods
-          .getUserType(window.web3.utils.soliditySha3(window.addr), window.assetClass)
+        await contracts.AC_MGR.methods
+          .getUserType(window.web3.utils.soliditySha3(addr), assetClass)
           .call((_error, _result) => {
             if (_error) { console.log("Error: ", _error) }
             else {
@@ -831,8 +831,8 @@ function buildWindowUtils() {
       }
 
       else if (custodyType === "Non-Custodial") {
-        await window.contracts.ID_TKN.methods
-          .balanceOf(window.addr)
+        await contracts.ID_TKN.methods
+          .balanceOf(addr)
           .call((_error, _result) => {
             if (_error) { console.log("Error: ", _error) }
             else {
@@ -855,12 +855,12 @@ function buildWindowUtils() {
     }
   }
 
-  const _checkForAC = async (ref, ac) => {
+  const _checkForAC = async (ref, ac, contracts) => {
     let tempBool;
-    if (window.contracts !== undefined) {
+    if (contracts !== undefined) {
       if (ref === "id") {
         console.log("Using id ref")
-        await window.contracts.AC_MGR.methods
+        await contracts.AC_MGR.methods
           .getAC_name(ac)
           .call((_error, _result) => {
             if (_error) { console.log("Error: ", _error) }
@@ -873,7 +873,7 @@ function buildWindowUtils() {
 
       else if (ref === "name") {
         console.log("Using name ref")
-        await window.contracts.AC_MGR.methods
+        await contracts.AC_MGR.methods
           .resolveAssetClass(ac)
           .call((_error, _result) => {
             if (_error) { console.log("Error: ", _error) }
@@ -889,9 +889,9 @@ function buildWindowUtils() {
 
   }
 
-  const _checkACName = async (name) => {
-    if (window.contracts !== undefined) {
-      await window.contracts.AC_MGR.methods
+  const _checkACName = async (name, contracts) => {
+    if (contracts !== undefined) {
+      await contracts.AC_MGR.methods
         .resolveAssetClass(name)
         .call((_error, _result) => {
           if (_error) { console.log(_error) }
@@ -904,11 +904,11 @@ function buildWindowUtils() {
     }
   }
 
-  const _getEscrowData = async (idxHash) => {
+  const _getEscrowData = async (idxHash, contracts) => {
     let tempArray = [];
 
-    if (window.contracts !== undefined) {
-      await window.contracts.ECR_MGR.methods
+    if (contracts !== undefined) {
+      await contracts.ECR_MGR.methods
         .retrieveEscrowData(idxHash)
         .call((_error, _result) => {
           if (_error) { console.log(_error) }
@@ -922,15 +922,15 @@ function buildWindowUtils() {
     }
   }
 
-  const _getACData = async (ref, ac) => {
+  const _getACData = async (ref, ac, contracts) => {
     let tempData;
     let tempAC;
 
-    if (window.contracts !== undefined) {
+    if (contracts !== undefined) {
 
       if (ref === "name") {
         console.log("Using name ref")
-        await window.contracts.AC_MGR.methods
+        await contracts.AC_MGR.methods
           .resolveAssetClass(ac)
           .call((_error, _result) => {
             if (_error) { console.log("Error: ", _error) }
@@ -944,7 +944,7 @@ function buildWindowUtils() {
 
       else if (ref === "id") { tempAC = ac; }
 
-      await window.contracts.AC_MGR.methods
+      await contracts.AC_MGR.methods
         .getAC_data(tempAC)
         .call((_error, _result) => {
           if (_error) { console.log("Error: ", _error) }
@@ -974,13 +974,13 @@ function buildWindowUtils() {
 
   }
 
-  const _getCosts = async (numOfServices, AC) => {
+  const _getCosts = async (numOfServices, AC, contracts) => {
     window.costArray = [];
-    if (window.contracts !== undefined) {
+    if (contracts !== undefined) {
       //console.log("Getting cost array");
 
       for (var i = 1; i <= numOfServices; i++) {
-        await window.contracts.AC_MGR.methods
+        await contracts.AC_MGR.methods
           .getServiceCosts(AC, i)
           .call((_error, _result) => {
             if (_error) { console.log("Error: ", _error) }
@@ -1011,8 +1011,8 @@ function buildWindowUtils() {
       console.log("Window.contracts object is undefined.")
     }
   }
-  const _getDescriptionHash = async (idxHash) => {
-    await window.contracts.STOR.methods
+  const _getDescriptionHash = async (idxHash, contracts) => {
+    await contracts.STOR.methods
       .retrieveShortRecord(idxHash)
       .call(function (_error, _result) {
         if (_error) {
@@ -1028,8 +1028,8 @@ function buildWindowUtils() {
       });
   }
 
-  const _getACFromIdx = async (idxHash) => {
-    await window.contracts.STOR.methods
+  const _getACFromIdx = async (idxHash, contracts) => {
+    await contracts.STOR.methods
       .retrieveShortRecord(idxHash)
       .call(function (_error, _result) {
         if (_error) {
@@ -1048,24 +1048,24 @@ function buildWindowUtils() {
     console.log("contracts: ", window.contracts)
   };
 
-  const _determineTokenBalance = async () => {
+  const _determineTokenBalance = async (addr, contracts) => {
 
-    if (window.addr !== undefined) {
+    if (addr !== undefined) {
       let _assetClassBal;
       let _assetBal;
       let _IDTokenBal;
       console.log("getting balance info from token contracts...")
-      await window.contracts.A_TKN.methods.balanceOf(window.addr).call((error, result) => {
+      await contracts.A_TKN.methods.balanceOf(addr).call((error, result) => {
         if (error) { console.log(error) }
         else { _assetBal = result; console.log("assetBal: ", _assetBal); }
       });
 
-      await window.contracts.AC_TKN.methods.balanceOf(window.addr).call((error, result) => {
+      await contracts.AC_TKN.methods.balanceOf(addr).call((error, result) => {
         if (error) { console.log(error) }
         else { _assetClassBal = result; console.log("assetClassBal", _assetClassBal); }
       });
 
-      await window.contracts.ID_TKN.methods.balanceOf(window.addr).call((error, result) => {
+      await contracts.ID_TKN.methods.balanceOf(addr).call((error, result) => {
         if (error) { console.log(error) }
         else { _IDTokenBal = result; console.log("IDTokenBal", _IDTokenBal); }
       });
@@ -1100,7 +1100,7 @@ function buildWindowUtils() {
       }
     }
   }
-  const _getAssetTokenInfo = async (assetBalance) => {
+  const _getAssetTokenInfo = async (assetBalance, contracts, addr, web3) => {
 
     if (window.balances === undefined) { return }
 
@@ -1116,20 +1116,20 @@ function buildWindowUtils() {
       let assetClasses = [];
 
       for (let i = 0; i < window.balances.assetBalance; i++) {
-        await window.contracts.A_TKN.methods.tokenOfOwnerByIndex(window.addr, i)
+        await contracts.A_TKN.methods.tokenOfOwnerByIndex(addr, i)
           .call((_error, _result) => {
             if (_error) {
               return (console.log("IN ERROR IN ERROR IN ERROR"))
             } else {
-              console.log(window.web3.utils.numberToHex(_result))
-              tknIDArray.push(window.web3.utils.numberToHex(_result));
+              console.log(web3.utils.numberToHex(_result))
+              tknIDArray.push(web3.utils.numberToHex(_result));
             }
           });
         //console.log(i)
       }
 
       for (let x = 0; x < tknIDArray.length; x++) {
-        await window.contracts.STOR.methods.retrieveShortRecord(tknIDArray[x])
+        await contracts.STOR.methods.retrieveShortRecord(tknIDArray[x])
           .call((_error, _result) => {
             if (_error) {
               console.log("IN ERROR IN ERROR IN ERROR")
@@ -1193,7 +1193,7 @@ function buildWindowUtils() {
     else { console.log("No assets held by user"); return window.hasNoAssets = true }
   }
 
-  const _getAssetTokenName = async (ipfs) => {
+  const _getAssetTokenName = async (ipfs, assets) => {
     let temp;
 
     if (ipfs !== "0") {
@@ -1202,7 +1202,7 @@ function buildWindowUtils() {
 
     else { temp = "N/A" }
 
-    window.assets.names.push(temp);
+    assets.names.push(temp);
   }
 
   const _addIPFSJSONObject = async (payload) => {

@@ -58,7 +58,7 @@ export const setMenuBasic = () => {
             noAddrMenuBool: false,
             authorizedUserMenuBool: false,
             settingsMenu: undefined
-          },route: "basic" }
+          }, route: "basic" }
     }
 }
 
