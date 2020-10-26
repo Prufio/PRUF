@@ -51,7 +51,7 @@ import {
   setAssetTokenInfo,
   setIsAuthUser,
   setCosts
-} from './actions'
+} from './Actions'
 
 class Main extends Component {
   constructor(props) {
@@ -718,6 +718,12 @@ class Main extends Component {
     window.hasLoadedAssets = false;
     window.location.href = '/#/';
 
+    window.additionalElementArrays = {
+      photo: [],
+      text: [],
+      name: ""
+    }
+
     if (window.ethereum !== undefined) {
       
       this.props.setAssetTokenInfo({
@@ -854,8 +860,25 @@ class Main extends Component {
 const mapStateToProps = (state) => {
 
   return{
-    globalAddr: state.globalAddr,
-    web3: state.web3
+    globalAddr,
+    web3,
+    globalAssetClass,
+    globalAssets,
+    globalAssetTokenIDs,
+    globalAssetTokenInfo,
+    globalBalances,
+    globalContracts,
+    globalCosts,
+    globalCustodyType,
+    globalETHBalance,
+    hasFetchedBalances,
+    globalIPFS,
+    globalIPFSHashArray,
+    isACAdmin,
+    isAuthUser,
+    globalSentPacket,
+    globalAssetClassName,
+    menuInfo,
   }
 
 }
