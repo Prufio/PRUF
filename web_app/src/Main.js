@@ -48,8 +48,8 @@ import {
   setHasAssets,
   setHasFetchedBals,
   setGlobalAssetClass,
-  setGlobalAC,
   setAssetTokenInfo,
+  setIsAuthUser,
   setCosts
 } from './actions'
 
@@ -65,7 +65,7 @@ class Main extends Component {
               <div>
                 <div className="BannerForm">
                   <ul className="header">
-                    {window._contracts !== undefined && (
+                    {this.props.contracts !== undefined && (
                       <nav>
                         {this.state.noAddrMenuBool === true && (<NoAddressComponent />)}
                       </nav>
@@ -76,7 +76,7 @@ class Main extends Component {
               <div className="pageForm">
                 <div>
                   <Route exact path="/" component={HomeMobile} />
-                  {Router(this.state.routeRequest)}
+                  {Router(this.props.menuInfo.route)}
                 </div>
               </div>
               <NavLink to="/">
@@ -153,7 +153,7 @@ class Main extends Component {
                       {this.state.settingsMenu !== undefined && (
                         <div>
                           <div className="hamburgerDropdownSettings">
-                            {this.state.isACAdmin === true && this.state.assetClassHolderMenuBool === false && (
+                            {this.props.isACAdmin === true && this.props.menuInfo.bools.assetClassHolderMenuBool === false && (
                               <Button
                                 size="lg"
                                 variant="toggle"
@@ -162,7 +162,7 @@ class Main extends Component {
                                 AC Admin Menu
                               </Button>)}
 
-                            {this.state.IDHolderBool === false && this.state.assetHolderBool === true && this.state.assetHolderUserMenuBool === false && (
+                            {this.props.IDHolderBool === false && this.props.assetHolderBool === true && this.props.menuInfo.bools.assetHolderUserMenuBool === false && (
                               <Button
                                 size="lg"
                                 variant="toggle"
@@ -172,7 +172,7 @@ class Main extends Component {
                               </Button>
                             )}
 
-                            {this.state.IDHolderBool === true && this.state.assetHolderMenuBool === false && (
+                            {this.props.IDHolderBool === true && this.props.menuInfo.bools.assetHolderMenuBool === false && (
                               <Button
                                 size="lg"
                                 variant="toggle"
@@ -182,7 +182,7 @@ class Main extends Component {
                               </Button>
                             )}
 
-                            {this.state.basicMenuBool === false && (
+                            {this.props.menuInfo.bools.basicMenuBool === false && (
                               <Button
                                 size="lg"
                                 variant="toggle"
@@ -191,7 +191,7 @@ class Main extends Component {
                                 Basic Menu
                               </Button>)}
 
-                            {this.state.isAuthUser === true && this.state.authorizedUserMenuBool === false && (
+                            {this.props.isAuthUser === true && this.props.menuInfo.bools.authorizedUserMenuBool === false && (
                               <Button
                                 size="lg"
                                 variant="toggle"
@@ -212,64 +212,64 @@ class Main extends Component {
                               <Button
                                 variant="etherscan"
                                 title="Check it out on Etherscan!"
-                                onClick={() => { window.open("https://kovan.etherscan.io/address/" + this.state.addr) }}>
+                                onClick={() => { window.open("https://kovan.etherscan.io/address/" + this.props.globalAddr) }}>
                                 {this.state.addr.substring(0, 6) + "..." + this.state.addr.substring(37, 42)}
                               </Button>
                             </h4>
                           )}
-                          {this.state.addr === undefined && (
+                          {this.props.globalAddr === undefined && (
                             <h4>
                               Currently serving: NOBODY! Log into web3 provider!
                             </h4>
                           )}
                           <br></br>
-                          {this.state.ETHBalance === undefined && (
+                          {this.props.ETHBalance === undefined && (
                             <h4>
                               ETH Balance : Please Log In
                             </h4>
                           )}
-                          {this.state.ETHBalance && (
+                          {this.props.ETHBalance && (
                             <h4>
                               ETH Balance : {this.state.ETHBalance.substring(0, 6) + " ..."}
                             </h4>
                           )}
                           <br></br>
-                          {this.state.assetClassBalance === undefined && (
+                          {this.props.globalBalances.assetClassBalance === undefined && (
                             <h4>
                               AssetClass Token Balance: Please Log In
                             </h4>
                           )}
-                          {this.state.assetClassBalance && (
+                          {this.props.globalBalances.assetClassBalance && (
                             <h4>
-                              AssetClass Token Balance: {this.state.assetClassBalance}
+                              AssetClass Token Balance: {this.props.globalBalances.assetClassBalance}
                             </h4>
                           )}
                           <br></br>
-                          {this.state.assetBalance === undefined && (
+                          {this.props.globalBalances.assetBalance === undefined && (
                             <h4>
                               Asset Token Balance: Please Log In
                             </h4>
                           )}
-                          {this.state.assetBalance && (
+                          {this.props.globalBalances.assetBalance && (
                             <h4>
                               Asset Token Balance:
                               <Button
                                 variant="assetDashboard"
                                 title="Asset Dashboard"
                                 onClick={() => { window.location.href = '/#/asset-dashboard' }}>
-                                {this.state.assetBalance}
+                                {this.props.globalBalances.assetBalance}
                               </Button>
                             </h4>
                           )}
                           <br></br>
-                          {this.state.IDTokenBalance === undefined && (
+                          {this.props.globalBalances.IDTokenBalance === undefined && (
                             <h4>
                               ID Token Balance : Please Log In
                             </h4>
                           )}
-                          {this.state.IDTokenBalance && (
+                          {this.props.globalBalances.IDTokenBalance && (
                             <h4>
-                              ID Token Balance : {this.state.IDTokenBalance}
+                              ID Token Balance : {this.props.globalBalances.IDTokenBalance}
                             </h4>
                           )}
                           <br></br>
@@ -279,7 +279,7 @@ class Main extends Component {
                   </div>
                 )}
                 <ul className="header">
-                  {window._contracts !== undefined && (
+                  {this.props.contracts !== undefined && (
                     <nav>
                       {this.state.noAddrMenuBool === true && (<NoAddressComponent />)}
                       {this.state.assetHolderMenuBool === true && (<NonCustodialComponent />)}
@@ -379,7 +379,7 @@ class Main extends Component {
               </style>
               <div>
                 <Route exact path="/" component={Home} />
-                {Router(this.state.routeRequest)}
+                {Router(this.props.menuInfo.route)}
               </div>
             </div>
             <NavLink to="/">
@@ -391,33 +391,9 @@ class Main extends Component {
       );
     }
 
+    let ipfsCounter = 0;
+
     this.updateWatchDog = setInterval(() => {
-      if (this.state.isAuthUser !== window.isAuthUser) {
-        this.setState({ isAuthUser: window.isAuthUser })
-      }
-
-      if (window.balances !== undefined) {
-        if (
-          Object.values(window.balances) !==
-          Object.values({ assetClass: this.state.assetClassBalance, asset: this.state.assetBalance, ID: this.state.IDTokenBalance })) {
-          this.setState({
-            assetClassBalance: window.balances.assetClassBalance,
-            assetBalance: window.balances.assetBalance,
-            IDTokenBalance: window.balances.IDTokenBalance,
-            assetHolderBool: window.assetHolderBool,
-            assetClassHolderBool: window.assetClassHolderBool,
-            IDHolderBool: window.IDHolderBool,
-            custodyType: window.custodyType,
-            hasFetchedBalances: window.hasFetchedBalances
-          })
-        }
-      }
-
-
-      if (window.menuChange !== undefined) {
-        console.log(window.menuChange)
-        this.setState({ menuChange: window.menuChange })
-      }
 
       if (this.state.menuChange !== undefined) {
         window.menuChange = undefined
@@ -427,7 +403,7 @@ class Main extends Component {
           this.setState({
             assetHolderMenuBool: true,
             assetHolderUserMenuBool: false,
-            basicMenuBool: false,
+            MenuBool: false,
             assetClassHolderMenuBool: false,
             noAddrMenuBool: false,
             authorizedUserMenuBool: false
@@ -450,34 +426,10 @@ class Main extends Component {
         }
       }
 
-      if (this.state.isACAdmin !== window.isACAdmin) {
-        this.setState({ isACAdmin: window.isACAdmin })
-      }
-
-      if (this.state.custodyType !== window.custodyType) {
-        this.setState({ custodyType: window.custodyType })
-      }
-
-      if (this.state.ETHBalance !== window.ETHBalance) {
-        this.setState({ ETHBalance: window.ETHBalance })
-      }
-
-      if (this.state.routeRequest !== window.routeRequest && window.menuChange === undefined && window.addr !== undefined) {
-        this.setState({
-          basicMenuBool: true,
-          assetHolderMenuBool: false,
-          assetHolderUserMenuBool: false,
-          assetClassHolderMenuBool: false,
-          noAddrMenuBool: false,
-          authorizedUserMenuBool: false,
-          routeRequest: "basic"
-        })
-      }
-
       if (window.assets !== undefined) {
         if (window.assets.ids.length > 0 && Object.values(window.assets.descriptions).length === window.aTknIDs.length &&
           window.assets.names.length === 0 && this.state.buildReady === true && window.aTknIDs.length > 0) {
-          if (window.ipfsCounter >= window.aTknIDs.length && window.resetInfo === false) {
+          if (ipfsCounter >= window.aTknIDs.length && window.resetInfo === false) {
             console.log("WD: rebuilding assets (Last Step)")
             this.buildAssets()
           }
@@ -494,109 +446,23 @@ class Main extends Component {
       }
 
       if (window.aTknIDs !== undefined && this.state.buildReady === false) {
-        if (window.ipfsCounter >= window.aTknIDs.length && this.state.runWatchDog === true && window.aTknIDs.length > 0) {
-          console.log("turning on buildready... Window IPFS operation count: ", window.ipfsCounter)
+        if (ipfsCounter >= window.aTknIDs.length && this.state.runWatchDog === true && window.aTknIDs.length > 0) {
+          console.log("turning on buildready... Window IPFS operation count: ", ipfsCounter)
           this.setState({ buildReady: true })
         }
       }
 
-      else if ((this.state.buildReady === true && window.ipfsCounter < window.aTknIDs.length) ||
+      else if ((this.state.buildReady === true && ipfsCounter < window.aTknIDs.length) ||
         (this.state.buildReady === true && this.state.runWatchDog === false)) {
         console.log("Setting buildready to false in watchdog")
         this.setState({ buildReady: false })
       }
     }, 100)
 
-/*     this.toggleMenu = async (menuChoice) => {
-      if (window.menuChange === undefined) {
-        window.location.href = '/#/';
-      }
-
-      console.log(menuChoice)
-
-      if (menuChoice === 'ACAdmin') {
-        window.routeRequest = "ACAdmin"
-        await this.setState({ routeRequest: "ACAdmin" });
-        await this.setState({
-          assetClassHolderMenuBool: true,
-          assetHolderMenuBool: false,
-          assetHolderUserMenuBool: false,
-          basicMenuBool: false,
-          noAddrMenuBool: false,
-          authorizedUserMenuBool: false,
-          settingsMenu: undefined
-        })
-        window.menuChange = undefined;
-      }
-
-      else if (menuChoice === 'basic') {
-        window.routeRequest = "basic"
-        await this.setState({ routeRequest: "basic" });
-        await this.setState({
-          basicMenuBool: true,
-          assetHolderMenuBool: false,
-          assetHolderUserMenuBool: false,
-          assetClassHolderMenuBool: false,
-          noAddrMenuBool: false,
-          authorizedUserMenuBool: false,
-          settingsMenu: undefined
-        })
-        window.menuChange = undefined;
-      }
-
-      else if (menuChoice === 'NC') {
-        console.log(menuChoice)
-        window.routeRequest = "NCAdmin"
-        await this.setState({ routeRequest: "NCAdmin" })
-        await this.setState({
-          assetHolderMenuBool: true,
-          assetHolderUserMenuBool: false,
-          basicMenuBool: false,
-          assetClassHolderMenuBool: false,
-          noAddrMenuBool: false,
-          authorizedUserMenuBool: false,
-          settingsMenu: undefined
-        })
-        window.menuChange = undefined;
-      }
-
-      else if (menuChoice === 'NCUser') {
-        console.log(menuChoice)
-        window.routeRequest = "NCUser"
-        await this.setState({ routeRequest: "NCUser" })
-        await this.setState({
-          assetHolderMenuBool: false,
-          assetHolderUserMenuBool: true,
-          basicMenuBool: false,
-          assetClassHolderMenuBool: false,
-          noAddrMenuBool: false,
-          authorizedUserMenuBool: false,
-          settingsMenu: undefined
-        })
-        window.menuChange = undefined;
-      }
-
-      else if (menuChoice === 'authUser') {
-        window.routeRequest = "authUser"
-        await this.setState({ routeRequest: "authUser" });
-        await this.setState({
-          authorizedUserMenuBool: true,
-          assetHolderMenuBool: false,
-          assetHolderUserMenuBool: false,
-          assetClassHolderMenuBool: false,
-          noAddrMenuBool: false,
-          basicMenuBool: false,
-          settingsMenu: undefined
-        })
-        window.menuChange = undefined;
-      }
-
-    } */
-
     this.setUpAssets = async () => {
 
       this.props.setHasAssets(true);
-      window.ipfsCounter = 0;
+      ipfsCounter = 0;
       this.props.setIPFSHashArray([]);
       this.props.setAssetsToDefault();         
       this.props.setAssetTokenInfo({
@@ -614,11 +480,11 @@ class Main extends Component {
         return this.setUpTokenVals(true)
       }
 
-      if (this.props.balances !== undefined) {
+      if (this.props.globalBalances !== undefined) {
 
         this.setState({
-          assetClassBalance: this.props.balances.assetClassBalance,
-          assetBalance: this.props.balances.assetBalance,
+          assetClassBalance: this.props.globalBalances.assetClassBalance,
+          assetBalance: this.props.globalBalances.assetBalance,
           IDTokenBalance: window.balances.IDTokenBalance,
           assetHolderBool: this.props.assetHolderBool,
           assetClassHolderBool: this.props.assetClassHolderBool,
@@ -629,7 +495,7 @@ class Main extends Component {
 
       }
 
-      if (this.props.balances === undefined) {
+      if (this.props.globalBalances === undefined) {
         console.log("balances undefined, trying to get them...");
         if (this.props.globalAddr === undefined) { return this.forceUpdate }
         return this.setUpTokenVals(true);
@@ -657,13 +523,19 @@ class Main extends Component {
         await tempDescriptionsArray.push(tempArray)
       }
 
+      this.setState({
+        descriptions: tempDescriptionsArray,
+        names: tempNamesArray,
+        ids: window.aTknIDs
+      })
+
       window.assets.descriptions = tempDescriptionsArray;
       window.assets.names = tempNamesArray;
       window.assets.ids = window.aTknIDs;
 
       console.log("Asset setUp Complete. Turning on watchDog.")
       this.setState({ runWatchDog: true })
-      console.log("window IPFS operation count: ", window.ipfsCounter)
+      console.log("window IPFS operation count: ", ipfsCounter)
       console.log("window assets to be added: ", window.assets)
       console.log("Bools...", this.state.assetHolderBool, this.state.assetClassHolderBool, this.state.IDHolderBool)
 
@@ -671,14 +543,14 @@ class Main extends Component {
 
 
     this.buildAssets = () => {
-      console.log("BA: In buildAssets. Window IPFS operation count: ", window.ipfsCounter)
+      console.log("BA: In buildAssets. Window IPFS operation count: ", ipfsCounter)
       let tempDescArray = [];
       let emptyDesc = { photo: {}, text: {}, name: "" }
 
-      for (let i = 0; i < window.aTknIDs.length; i++) {
+      for (let i = 0; i < this.state.aTknIDs.length; i++) {
         //console.log(window.assets.descriptions[i][0])
-        if (window.assets.descriptions[i][0] !== undefined) {
-          tempDescArray.push(JSON.parse(window.assets.descriptions[i][0]))
+        if (this.state.descriptions[i][0] !== undefined) {
+          tempDescArray.push(JSON.parse(this.state.descriptions[i][0]))
         }
         else {
           tempDescArray.push(emptyDesc)
@@ -686,7 +558,7 @@ class Main extends Component {
       }
 
       let tempNameArray = [];
-      for (let x = 0; x < window.aTknIDs.length; x++) {
+      for (let x = 0; x < this.state.aTknIDs.length; x++) {
         if (tempDescArray[x].name === "" || tempDescArray[x].name === undefined) {
           tempNameArray.push("Not Available")
         }
@@ -697,7 +569,7 @@ class Main extends Component {
       }
 
       let tempDisplayArray = [];
-      for (let j = 0; j < window.aTknIDs.length; j++) {
+      for (let j = 0; j < this.state.aTknIDs.length; j++) {
         if (tempDescArray[j].photo.DisplayImage === undefined && Object.values(tempDescArray[j].photo).length === 0) {
           tempDisplayArray.push("https://pruf.io/assets/images/pruf-u-logo-192x255.png")
         }
@@ -744,13 +616,13 @@ class Main extends Component {
         if (error) {
           console.log(lookup, "Something went wrong. Unable to find file on IPFS");
           descElement.push(undefined)
-          window.ipfsCounter++
-          console.log(window.ipfsCounter)
+          ipfsCounter++
+          console.log(ipfsCounter)
         } else {
           console.log(lookup, "Here's what we found for asset description: ", result);
           descElement.push(result)
-          window.ipfsCounter++
-          console.log(window.ipfsCounter)
+          ipfsCounter++
+          console.log(ipfsCounter)
         }
       });
     };
@@ -762,10 +634,9 @@ class Main extends Component {
       _web3 = new Web3(_web3.givenProvider);
       ethereum.on("accountsChanged", function (accounts) {
         _web3.eth.getAccounts().then((e) => {
-          if (window.addr !== e[0]) {
-            window.routeRequest = "basic"
-            self.setState({ routeRequest: "basic" });
-            self.setState({
+          if (this.props.globalAddr !== e[0]) {
+
+            self.props.setMenuInfo({
               basicMenuBool: true,
               assetHolderMenuBool: false,
               assetHolderUserMenuBool: false,
@@ -773,14 +644,14 @@ class Main extends Component {
               noAddrMenuBool: false,
               authorizedUserMenuBool: false,
               settingsMenu: undefined
-            })
+            },"basic");
 
             if (window.location.href !== "/#/asset-dashboard") { window.location.href = "/#" }
 
-            window.addr = e[0];
-            window.assetClass = undefined;
-            window.isAuthUser = false;
-            window.isACAdmin = false;
+            this.props.setGlobalAddr(e[0]);
+            this.props.setGlobalAssetClass(undefined);
+            this.props.setIsAuthUser(false);
+            this.props.setIsACAdmin(false);
             self.setState({ addr: e[0] });
             window.recount = true;
             window.resetInfo = true;
@@ -799,9 +670,11 @@ class Main extends Component {
       if (window.isSettingUpContracts) { return (console.log("Already in the middle of setUp...")) }
       window.isSettingUpContracts = true;
       const self = this;
+
       console.log("Setting up contracts")
+
       if (window.ethereum !== undefined) {
-        if (window.addr !== undefined) {
+        if (this.props.globalAddr !== undefined) {
           await this.setState({
             noAddrMenuBool: false,
             assetHolderMenuBool: false,
@@ -813,7 +686,7 @@ class Main extends Component {
           })
         }
 
-        else if (window.addr === undefined) {
+        else if (this.props.globalAddr === undefined) {
           await this.setState({
             noAddrMenuBool: true,
             assetHolderMenuBool: false,
@@ -825,9 +698,7 @@ class Main extends Component {
           })
         }
 
-
-
-        window._contracts = await buildContracts(_web3)
+        await this.props.setContracts(buildContracts(_web3))
 
 
         await this.setState({ contracts: window._contracts })
@@ -916,22 +787,22 @@ class Main extends Component {
 
 
     if (window.ethereum !== undefined) {
-      window.costs = {}
       window.additionalElementArrays = {
         photo: [],
         text: [],
         name: ""
       }
+      
       window.assetTokenInfo = {
         assetClass: undefined,
         idxHash: undefined,
         name: undefined,
         photos: undefined,
         text: undefined,
-        status: undefined,
+        status
+        : undefined,
       }
-      window.assets = { descriptions: [], ids: [], assetClassNames: [], assetClasses: [], countPairs: [], statuses: [], names: [], displayImages: [] };
-      window.resetInfo = false;
+      
       const ethereum = window.ethereum;
       var _web3 = require("web3");
       _web3 = new Web3(_web3.givenProvider);
@@ -956,22 +827,20 @@ class Main extends Component {
     }
     else {
 
-      window.ipfsCounter = 0;
+      ipfsCounter = 0;
       var _web3 = require("web3");
       _web3 = new Web3("https://api.infura.io/v1/jsonrpc/kovan");
       this.setUpContractEnvironment(_web3)
-      this.setState({ web3: _web3 });
-      window.web3 = _web3;
+      this.props.setGlobalWeb3(_web3);
 
-      this.setState({
+      this.props.setMenuInfo({
         noAddrMenuBool: true,
         assetHolderMenuBool: false,
         assetClassHolderMenuBool: false,
         basicMenuBool: false,
         authorizedUserMenuBool: false,
         hasFetchedBalances: false,
-        routeRequest: "noAddr"
-      })
+      }, "noAddr")
 
       var _ipfs = new this.state.IPFS({
         host: "ipfs.infura.io",
@@ -979,7 +848,7 @@ class Main extends Component {
         protocol: "https",
       });
 
-      window.ipfs = _ipfs;
+      this.props.setIPFS(_ipfs);
 
       this.setState({ hasMounted: true })
     }
@@ -1034,8 +903,8 @@ class Main extends Component {
   }
 
   componentDidUpdate() {//stuff to do when state updates
-    if (window.addr !== undefined && !this.state.hasFetchedBalances && window.contracts > 0) {
-      this.setUpContractEnvironment(window.web3);
+    if (window.addr !== undefined && !this.state.hasFetchedBalances && this.props.contracts > 0) {
+      this.setUpContractEnvironment(this.props.web3);
     }
 
 
@@ -1089,8 +958,8 @@ const mapDispatchToProps = () => {
     setHasFetchedBals,
     setIPFS,
     setGlobalAssetClass,
-    setGlobalAC,
     setAssetTokenInfo,
+    setIsAuthUser,
     setCosts
   }
 }

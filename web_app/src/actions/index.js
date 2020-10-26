@@ -33,6 +33,13 @@ export const setBalances = (bals) => {
     }
 }
 
+export const setIsAuthUser = (authBool) => {
+    return {
+        type: 'SET',
+        payload: { authBool }
+    }
+}
+
 export const setMenuInfo = (bools, route) => {
     return {
         type: 'SET',
