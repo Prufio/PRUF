@@ -3,6 +3,8 @@ import Form from "react-bootstrap/Form";
 import Col from "react-bootstrap/Col";
 import Button from "react-bootstrap/Button";
 import { ArrowRightCircle, Home, XSquare, AlertTriangle } from 'react-feather'
+import { connect } from 'react-redux';
+import {setGlobalAddr, setGlobalWeb3} from '../Actions'
 
 class ModifyRightsHolder extends Component {
   constructor(props) {
@@ -364,4 +366,23 @@ class ModifyRightsHolder extends Component {
   }
 }
 
-export default ModifyRightsHolder;
+
+const mapStateToProps = (state) => {
+
+  return{
+    globalAddr: state.globalAddr,
+    web3: state.web3
+  }
+
+}
+
+const mapDispatchToProps = () => {
+  return {
+    setGlobalAddr,
+    setGlobalWeb3,
+  }
+}
+
+
+
+export default connect(mapStateToProps, mapDispatchToProps())(ModifyRightsHolder);

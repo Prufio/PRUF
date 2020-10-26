@@ -4,6 +4,8 @@ import Col from "react-bootstrap/Col";
 import Button from "react-bootstrap/Button";
 import returnManufacturers from "../Resources/Manufacturers";
 import { Trash2, Home, XSquare } from 'react-feather'
+import { connect } from 'react-redux';
+import {setGlobalAddr, setGlobalWeb3} from '../Actions'
 
 class DiscardAssetNC extends Component {
   constructor(props) {
@@ -277,4 +279,23 @@ class DiscardAssetNC extends Component {
   }
 }
 
-export default DiscardAssetNC;
+
+const mapStateToProps = (state) => {
+
+  return{
+    globalAddr: state.globalAddr,
+    web3: state.web3
+  }
+
+}
+
+const mapDispatchToProps = () => {
+  return {
+    setGlobalAddr,
+    setGlobalWeb3,
+  }
+}
+
+
+
+export default connect(mapStateToProps, mapDispatchToProps())(DiscardAssetNC);

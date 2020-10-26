@@ -9,7 +9,7 @@ import { QRCode } from 'react-qrcode-logo';
 import Example from '../Test/Print'
 import { useReactToPrint } from 'react-to-print';
 import { connect } from 'react-redux';
-import {setGlobalAddr, setGlobalWeb3} from '../actions'
+import {setGlobalAddr, setGlobalWeb3} from '../Actions'
 
 
 

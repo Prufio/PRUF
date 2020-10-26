@@ -1,8 +1,9 @@
 import React, { Component } from "react";
 import Form from "react-bootstrap/Form";
 import Col from "react-bootstrap/Col";
-import Button from "react-bootstrap/Button";
 import { ArrowRightCircle, Home, TrendingUp, XSquare, CheckCircle } from 'react-feather'
+import { connect } from 'react-redux';
+import {setGlobalAddr, setGlobalWeb3} from '../Actions'
 
 class EscrowManagerNC extends Component {
   constructor(props) {
@@ -476,4 +477,23 @@ class EscrowManagerNC extends Component {
   }
 }
 
-export default EscrowManagerNC;
+
+const mapStateToProps = (state) => {
+
+  return{
+    globalAddr: state.globalAddr,
+    web3: state.web3
+  }
+
+}
+
+const mapDispatchToProps = () => {
+  return {
+    setGlobalAddr,
+    setGlobalWeb3,
+  }
+}
+
+
+
+export default connect(mapStateToProps, mapDispatchToProps())(EscrowManagerNC);

@@ -1,8 +1,9 @@
 import React, { Component } from "react";
 import Form from "react-bootstrap/Form";
 import Col from "react-bootstrap/Col";
-import bs58 from "bs58";
-import { ArrowRightCircle, Home, XSquare, CheckCircle, UploadCloud, Trash2 } from 'react-feather'
+import { Home, XSquare, CheckCircle, UploadCloud, Trash2 } from 'react-feather'
+import { connect } from 'react-redux';
+import {setGlobalAddr, setGlobalWeb3} from '../Actions'
 
 
 class ModifyDescription extends Component {
@@ -904,4 +905,23 @@ class ModifyDescription extends Component {
   }
 }
 
-export default ModifyDescription;
+
+const mapStateToProps = (state) => {
+
+  return{
+    globalAddr: state.globalAddr,
+    web3: state.web3
+  }
+
+}
+
+const mapDispatchToProps = () => {
+  return {
+    setGlobalAddr,
+    setGlobalWeb3,
+  }
+}
+
+
+
+export default connect(mapStateToProps, mapDispatchToProps())(ModifyDescription);

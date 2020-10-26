@@ -2,7 +2,9 @@ import React, { Component } from "react";
 import Form from "react-bootstrap/Form";
 import Col from "react-bootstrap/Col";
 import Button from "react-bootstrap/Button";
-import { ArrowRightCircle, Home, XSquare, CheckCircle } from 'react-feather'
+import { Home, XSquare, CheckCircle } from 'react-feather'
+import { connect } from 'react-redux';
+import {setGlobalAddr, setGlobalWeb3} from '../Actions'
 
 class DecrementCounterNC extends Component {
   constructor(props) {
@@ -326,4 +328,22 @@ class DecrementCounterNC extends Component {
   }
 }
 
-export default DecrementCounterNC;
+const mapStateToProps = (state) => {
+
+  return{
+    globalAddr: state.globalAddr,
+    web3: state.web3
+  }
+
+}
+
+const mapDispatchToProps = () => {
+  return {
+    setGlobalAddr,
+    setGlobalWeb3,
+  }
+}
+
+
+
+export default connect(mapStateToProps, mapDispatchToProps())(DecrementCounterNC);

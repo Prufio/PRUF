@@ -4,7 +4,7 @@ import Col from "react-bootstrap/Col";
 import QrReader from 'react-qr-reader'
 import { CornerUpLeft, Home, XSquare, Grid, ArrowRightCircle } from "react-feather";
 import { connect } from 'react-redux';
-import {setGlobalAddr, setGlobalWeb3} from '../actions'
+import {setGlobalAddr, setGlobalWeb3} from '../Actions'
 
 
 class RetrieveRecord extends Component {
