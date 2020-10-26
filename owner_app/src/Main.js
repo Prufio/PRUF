@@ -11,6 +11,7 @@ import ReMintPRUF_IDToken from "./ReMintPRUF_ID";
 import SetupAndResolveContracts from "./SetupAndResolveContracts";
 import buildContracts from "./Contracts";
 import ParticleBox from "./ParticleBox";
+import test from './test'
 
 class Main extends Component {
   constructor(props) {
@@ -188,6 +189,9 @@ class Main extends Component {
                       <li>
                         <NavLink to="/the-works">THE WORKS</NavLink>
                       </li>
+                      <li>
+                        <NavLink to="/test">test</NavLink>
+                      </li>
                     </nav>
                   )}
                 </ul>
@@ -200,6 +204,7 @@ class Main extends Component {
                   <Route path="/mint-ID_TKN" component={MintPRUF_IDToken}/>
                   <Route path="/reMint-ID_TKN" component={ReMintPRUF_IDToken}/>
                   <Route path="/the-works" component={THEWORKS} />
+                  <Route path="/test" component={test} />
                 </div>
               </div>
             </div>

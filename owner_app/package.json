@@ -21,6 +21,8 @@
     "react-particles-js": "^3.3.0",
     "react-router-dom": "^5.2.0",
     "react-scripts": "^3.4.3",
+    "react-toast-notifications": "^2.4.0",
+    "react-toastify": "^6.0.9",
     "web3": "^1.2.7"
   },
   "scripts": {
