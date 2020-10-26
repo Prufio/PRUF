@@ -3,6 +3,8 @@ import Form from "react-bootstrap/Form";
 import Col from "react-bootstrap/Col";
 import { Home, XSquare, ArrowRightCircle, Grid, CornerUpLeft, CheckCircle } from "react-feather";
 import QrReader from 'react-qr-reader'
+import { connect } from 'react-redux';
+import {setGlobalAddr, setGlobalWeb3} from '../actions'
 
 class VerifyLite extends Component {
   constructor(props) {
@@ -413,4 +415,23 @@ class VerifyLite extends Component {
     );
   }
 }
-export default VerifyLite;
+
+const mapStateToProps = (state) => {
+
+  return{
+    globalAddr: state.globalAddr,
+    web3: state.web3
+  }
+
+}
+
+const mapDispatchToProps = () => {
+  return {
+    setGlobalAddr,
+    setGlobalWeb3,
+  }
+}
+
+
+
+export default connect(mapStateToProps, mapDispatchToProps())(VerifyLite);

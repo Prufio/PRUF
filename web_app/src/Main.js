@@ -29,6 +29,8 @@ import {
   isBrowser,
   isMobile
 } from "react-device-detect";
+import { connect } from 'react-redux';
+import {setGlobalAddr, setGlobalWeb3} from './actions'
 
 class Main extends Component {
   constructor(props) {
@@ -1026,4 +1028,22 @@ class Main extends Component {
   }
 }
 
-export default Main;
+const mapStateToProps = (state) => {
+
+  return{
+    globalAddr: state.globalAddr,
+    web3: state.web3
+  }
+
+}
+
+const mapDispatchToProps = () => {
+  return {
+    setGlobalAddr,
+    setGlobalWeb3,
+  }
+}
+
+
+
+export default connect(mapStateToProps, mapDispatchToProps())(Main);

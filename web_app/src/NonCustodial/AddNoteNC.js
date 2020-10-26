@@ -1,9 +1,10 @@
 import React, { Component } from "react";
 import Form from "react-bootstrap/Form";
 import Col from "react-bootstrap/Col";
-import Button from "react-bootstrap/Button";
 import bs58 from "bs58";
-import { ArrowRightCircle, CheckCircle, Home, XSquare } from 'react-feather'
+import { CheckCircle, Home, XSquare } from 'react-feather'
+import { connect } from 'react-redux';
+import {setGlobalAddr, setGlobalWeb3} from '../actions'
 
 
 class AddNoteNC extends Component {
@@ -390,4 +391,23 @@ class AddNoteNC extends Component {
   }
 }
 
-export default AddNoteNC;
+
+const mapStateToProps = (state) => {
+
+  return{
+    globalAddr: state.globalAddr,
+    web3: state.web3
+  }
+
+}
+
+const mapDispatchToProps = () => {
+  return {
+    setGlobalAddr,
+    setGlobalWeb3,
+  }
+}
+
+
+
+export default connect(mapStateToProps, mapDispatchToProps())(AddNoteNC);

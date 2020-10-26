@@ -3,6 +3,8 @@ import Form from "react-bootstrap/Form";
 import Col from "react-bootstrap/Col";
 import QrReader from 'react-qr-reader'
 import { CornerUpLeft, Home, XSquare, Grid, ArrowRightCircle } from "react-feather";
+import { connect } from 'react-redux';
+import {setGlobalAddr, setGlobalWeb3} from '../actions'
 
 
 class RetrieveRecord extends Component {
@@ -668,4 +670,22 @@ class RetrieveRecord extends Component {
   }
 }
 
-export default RetrieveRecord;
+const mapStateToProps = (state) => {
+
+  return{
+    globalAddr: state.globalAddr,
+    web3: state.web3
+  }
+
+}
+
+const mapDispatchToProps = () => {
+  return {
+    setGlobalAddr,
+    setGlobalWeb3,
+  }
+}
+
+
+
+export default connect(mapStateToProps, mapDispatchToProps())(RetrieveRecord);

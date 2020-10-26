@@ -8,6 +8,8 @@ import { Printer, RefreshCw, Grid, X, Save, ChevronRight, CornerUpLeft, Home } f
 import { QRCode } from 'react-qrcode-logo';
 import Example from '../Test/Print'
 import { useReactToPrint } from 'react-to-print';
+import { connect } from 'react-redux';
+import {setGlobalAddr, setGlobalWeb3} from '../actions'
 
 
 
@@ -471,4 +473,23 @@ class AssetDashboard extends React.Component {
     }
   }
 
-  export default AssetDashboard;
+  
+  const mapStateToProps = (state) => {
+
+    return{
+      globalAddr: state.globalAddr,
+      web3: state.web3
+    }
+  
+  }
+  
+  const mapDispatchToProps = () => {
+    return {
+      setGlobalAddr,
+      setGlobalWeb3,
+    }
+  }
+  
+  
+  
+  export default connect(mapStateToProps, mapDispatchToProps())(AssetDashboard);
