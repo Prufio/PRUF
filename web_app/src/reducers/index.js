@@ -17,6 +17,8 @@ import isAuthUserReducer from './isAuthUser'
 import sentPacketReducer from './sentPacket'
 import assetClassNameReducer from './assetClassName'
 import menuInfoReducer from './menuInfo'
+import holderBoolsReducer from './holderBools'
+import hasLoadedAssetsReducer from './hasLoadedAssets'
 import { combineReducers } from 'redux'
 
 const allReducers = combineReducers({
@@ -39,6 +41,8 @@ const allReducers = combineReducers({
     globalSentPacket: sentPacketReducer,
     globalAssetClassName: assetClassNameReducer,
     menuInfo: menuInfoReducer,
+    holderBools: holderBoolsReducer,
+    hasLoadedAssets: hasLoadedAssetsReducer
 
 })
 

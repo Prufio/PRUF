@@ -7,10 +7,9 @@ const menuInfoReducer = (state =
     assetClassHolderMenuBool: false,
     noAddrMenuBool: false,
     authorizedUserMenuBool: false,
-    settingsMenu: undefined
-  },route: "basic" }, action) => {
+  }, route: "basic" }, action) => {
     switch(action.type){
-        case 'SET_MENU_INFO': return {bools: action.payload.bools, route: action.payload.route};
+        case 'SET_MENU_INFO': return Object.assign({}, state, action.payload);
         default : return state;
     }
 }

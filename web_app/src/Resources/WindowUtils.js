@@ -46,12 +46,12 @@ function buildWindowUtils() {
   }
 
   const _getETHBalance = async (addr, web3) => {
-    if (addr === undefined) { return 0 }
+    if (addr === "") { return 0 }
     let tempETHBalance;
     await web3.eth.getBalance(addr, (err, balance) => {
       if (err) { } else {
         tempETHBalance = web3.utils.fromWei(balance, "ether")
-        console.log("UTILS: Wallet balance: ", window.ETHBalance)
+        console.log("UTILS: Wallet balance: ", tempETHBalance)
       }
     });
 
@@ -1050,7 +1050,12 @@ function buildWindowUtils() {
       let _assetClassBal;
       let _assetBal;
       let _IDTokenBal;
-      console.log("getting balance info from token contracts...")
+
+      let assetHolderBool;
+      let assetClassHolderBool;
+      let IDHolderBool;
+
+      console.log("getting balance info from token contracts...", contracts)
       await contracts.A_TKN.methods.balanceOf(addr).call((error, result) => {
         if (error) { console.log(error) }
         else { _assetBal = result; console.log("assetBal: ", _assetBal); }
@@ -1067,42 +1072,47 @@ function buildWindowUtils() {
       });
 
       if (Number(_assetBal) > 0) {
-        window.assetHolderBool = true
+        assetHolderBool = true
       }
 
       else if (Number(_assetBal) === 0 || _assetBal === undefined) {
-        window.assetHolderBool = false
+        assetHolderBool = false
       }
 
       if (Number(_assetClassBal) > 0) {
-        window.assetClassHolderBool = true
+        assetClassHolderBool = true
       }
 
       else if (Number(_assetClassBal) === 0 || _assetClassBal === undefined) {
-        window.assetClassHolderBool = false
+        assetClassHolderBool = false
       }
 
       if (Number(_IDTokenBal) > 0 && Number(_IDTokenBal) < 2) {
-        window.IDHolderBool = true
+        IDHolderBool = true
       }
 
       else if (Number(_IDTokenBal) === 0 || _IDTokenBal === undefined || _IDTokenBal > 1) {
-        window.IDHolderBool = false
+        IDHolderBool = false
       }
-      window.balances = {
-        assetClassBalance: _assetClassBal,
-        assetBalance: _assetBal,
-        IDTokenBalance: _IDTokenBal
+      return {
+        bools:{
+          assetHolderBool, 
+          assetClassHolderBool, 
+          IDHolderBool}, 
+        bals:{
+          assetClassBalance: _assetClassBal,
+          assetBalance: _assetBal,
+          IDTokenBalance: _IDTokenBal}
       }
     }
   }
   const _getAssetTokenInfo = async (assetBalance, contracts, addr, web3) => {
 
-    if (window.balances === undefined) { return }
+    if (assetBalance === 0) { return }
 
     console.log("GATI: In _getAssetTokenInfo")
 
-    if (Number(assetBalance) > 0) {
+    if (assetBalance > 0) {
 
       let tknIDArray = [];
       let ipfsHashArray = [];
@@ -1111,7 +1121,7 @@ function buildWindowUtils() {
       let countPairs = [];
       let assetClasses = [];
 
-      for (let i = 0; i < window.balances.assetBalance; i++) {
+      for (let i = 0; i < assetBalance; i++) {
         await contracts.A_TKN.methods.tokenOfOwnerByIndex(addr, i)
           .call((_error, _result) => {
             if (_error) {
@@ -1124,7 +1134,7 @@ function buildWindowUtils() {
         //console.log(i)
       }
 
-      for (let x = 0; x < tknIDArray.length; x++) {
+      for (let x = 0; x < assetBalance; x++) {
         await contracts.STOR.methods.retrieveShortRecord(tknIDArray[x])
           .call((_error, _result) => {
             if (_error) {
@@ -1172,7 +1182,7 @@ function buildWindowUtils() {
 
       //console.log(window.aTknIDs, " tknID-> ", tknIDArray);
 
-      let assetInfo = {
+      return {
         statuses,
         countPairs,
         assetClasses,
@@ -1181,8 +1191,6 @@ function buildWindowUtils() {
         ipfsHashArray, 
         ACNames
       }
-
-      return assetInfo;
 
     }
 

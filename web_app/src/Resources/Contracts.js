@@ -42,10 +42,6 @@ async function buildContracts(_web3) {
   let ID_TKN = null;
   let UTIL_TKN = null;
 
-  var _contracts = {
-    content: []
-  };
-
   await STOR.methods
     .resolveContractAddress("NP")
     .call(function (_error, _result) {
@@ -226,7 +222,7 @@ async function buildContracts(_web3) {
     }
     );
 
-  let contracts = {
+  return {
     STOR: STOR,
     APP: APP,
     NP: NP,
@@ -245,7 +241,7 @@ async function buildContracts(_web3) {
     UTIL_TKN: UTIL_TKN
   }
 
-  return contracts
+  
 }
 
 export default buildContracts;

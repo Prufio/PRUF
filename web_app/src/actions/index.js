@@ -5,6 +5,13 @@ export const setGlobalAddr = (addr) => {
     }
 }
 
+export const setHolderBools = (holderBools) => {
+    return {
+        type: 'SET_HOLDER_BOOLS',
+        payload: { holderBools }
+    }
+}
+
 export const setGlobalWeb3 = (web3) => {
     return {
         type: 'SET_WEB3',
@@ -26,10 +33,10 @@ export const setIsAdmin = (adminBool) => {
     }
 }
 
-export const setBalances = (bals) => {
+export const setBalances = (balances) => {
     return {
         type: 'SET_BALANCES',
-        payload: { bals }
+        payload: { balances }
     }
 }
 
@@ -62,10 +69,10 @@ export const setMenuBasic = () => {
     }
 }
 
-export const setIsACAdmin = (bool) => {
+export const setIsACAdmin = (adminBool) => {
     return {
         type: 'SET_IS_AC_ADMIN',
-        payload: { bool }
+        payload: { adminBool }
     }
 }
 
@@ -104,10 +111,10 @@ export const setAssetsToDefault = () => {
     }
 }
 
-export const setAssetTokenIds = (AssetTokenIds) => {
+export const setAssetTokenIds = (assetTokenIDs) => {
     return {
         type: 'SET_ASSET_TOKEN_IDS',
-        payload: { AssetTokenIds }
+        payload: { assetTokenIDs }
     }
 }
 
@@ -115,6 +122,13 @@ export const setIPFSHashArray = (IPFSHashes) => {
     return {
         type: 'SET_IPFS_HASH_ARRAY',
         payload: { IPFSHashes }
+    }
+}
+
+export const setHasLoadedAssets = (hasLoaded) => {
+    return {
+        type: 'SET_HAS_LOADED_ASSETS',
+        payload: { hasLoaded }
     }
 }
 
