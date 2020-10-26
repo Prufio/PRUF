@@ -1999,10 +1999,6 @@ div {
   position: absolute;
 }
 
-
-      /* ---------------------------------------------test------------------------------------------------ */
-
-
 .CheckBox {
   /* position: absolute; */
   color: white;
@@ -2025,4 +2021,12 @@ div {
   font-family: Tahoma, Geneva, sans-serif;
   margin-top: -2.6rem;
   margin-left: 2.5rem;
+}
+
+      /* ---------------------------------------------test------------------------------------------------ */
+
+.toastButton {
+  position: absolute;
+  z-index: 10000;
+  color: white;
 }

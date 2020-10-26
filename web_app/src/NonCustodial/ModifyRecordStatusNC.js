@@ -2,13 +2,36 @@ import React, { Component } from "react";
 import Form from "react-bootstrap/Form";
 import Col from "react-bootstrap/Col";
 import { Home, XSquare, CheckCircle } from 'react-feather'
-// import { ToastProvider, useToasts } from 'react-toast-notifications'
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 class ModifyRecordStatusNC extends Component {
   constructor(props) {
     super(props);
 
     //State declaration.....................................................................................................
+
+
+    
+    // this.toastTest = async () => {
+    //   const notify = () => toast("Wow so easy !");
+    //   return (
+    //     <div>
+    //     <button className="toastButton" onClick={notify}>Notify !</button>
+    //     <ToastContainer
+    //     position="bottom-right"
+    //     autoClose={5000}
+    //     hideProgressBar={false}
+    //     newestOnTop={false}
+    //     closeOnClick
+    //     rtl={false}
+    //     pauseOnFocusLoss
+    //     draggable
+    //     pauseOnHover
+    //     />
+    //     </div>
+    //   );
+    // }
 
     this.modifyStatus = async () => {
       const self = this;
@@ -93,7 +116,7 @@ class ModifyRecordStatusNC extends Component {
             self.setState({ txStatus: receipt.status });
             console.log(receipt.status);
             window.resetInfo = true;
-            if (self.state.wasSentPacket) {
+            if (self.state.wasSentPacket === true) {
               return window.location.href = '/#/asset-dashboard'
             }
             //Stuff to do when tx confirms
@@ -105,7 +128,7 @@ class ModifyRecordStatusNC extends Component {
       console.log(this.state.txHash);
       return document.getElementById("MainForm").reset(),
         this.setState({
-          idxHash: undefined, txStatus: false, txHash: ""
+          idxHash: undefined
         });
     };
 
@@ -173,21 +196,6 @@ class ModifyRecordStatusNC extends Component {
   render() {//render continuously produces an up-to-date stateful document  
     const self = this;
 
-    // const FormWithToasts = () => {
-    //   const { addToast } = useToasts()
-
-    //   const onSubmit = async value => {
-    //     const { error } = await dataPersistenceLayer(value)
-
-    //     if (error) {
-    //       addToast(error.message, { appearance: 'error' })
-    //     } else {
-    //       addToast('Saved Successfully', { appearance: 'success' })
-    //     }
-    //   }
-
-    //   return <form onSubmit={onSubmit}>...</form>
-    // }
 
     const clearForm = async () => {
       document.getElementById("MainForm").reset();
@@ -354,6 +362,7 @@ class ModifyRecordStatusNC extends Component {
                 >
                   KOVAN Etherscan:{this.state.txHash}
                 </a>
+                {/* {this.toastTest} */}
               </div>
             )}
             {this.state.txStatus === true && (
