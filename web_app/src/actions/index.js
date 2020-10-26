@@ -14,42 +14,42 @@ export const setGlobalWeb3 = (web3) => {
 
 export const setContracts = (contracts) => {
     return {
-        type: 'SET',
+        type: 'SET_CONTRACTS',
         payload: { contracts }
     }
 }
 
 export const setIsAdmin = (adminBool) => {
     return {
-        type: 'SET',
+        type: 'SET_IS_ADMIN',
         payload: { adminBool }
     }
 }
 
 export const setBalances = (bals) => {
     return {
-        type: 'SET',
+        type: 'SET_BALANCES',
         payload: { bals }
     }
 }
 
 export const setIsAuthUser = (authBool) => {
     return {
-        type: 'SET',
+        type: 'SET_IS_AUTH_USER',
         payload: { authBool }
     }
 }
 
 export const setMenuInfo = (bools, route) => {
     return {
-        type: 'SET',
+        type: 'SET_MENU_INFO',
         payload: { bools, route }
     }
 }
 
 export const setMenuBasic = () => {
     return {
-        type: 'SET',
+        type: 'SET_MENU_BASIC',
         payload: { bools: {
             assetHolderMenuBool: false,
             assetHolderUserMenuBool: false,
@@ -64,105 +64,105 @@ export const setMenuBasic = () => {
 
 export const setIsACAdmin = (bool) => {
     return {
-        type: 'SET',
+        type: 'SET_IS_AC_ADMIN',
         payload: { bool }
     }
 }
 
 export const setCustodyType = (custodyType) => {
     return {
-        type: 'SET',
+        type: 'SET_CUSTODY_TYPE',
         payload: { custodyType }
     }
 }
 
 export const setEthBalance = (ethBal) => {
     return {
-        type: 'SET',
+        type: 'SET_ETH_BALANCE',
         payload: { ethBal }
     }
 }
 
 export const setAssets = (assets) => {
     return {
-        type: 'SET',
+        type: 'SET_ASSETS',
         payload: { assets }
     }
 }
 
 export const setAssetTokenInfo = (asset) => {
     return {
-        type: 'SET',
+        type: 'SET_ASSET_TOKEN_INFO',
         payload: { asset }
     }
 }
 
 export const setAssetsToDefault = () => {
     return {
-        type: 'DEFAULT',
+        type: 'SET_ASSETS_TO_DEFAULT',
         payload: {defaultObj:{ descriptions: [], ids: [], assetClassNames: [], assetClasses: [], countPairs: [], statuses: [], names: [], displayImages: [] }}
     }
 }
 
 export const setAssetTokenIds = (AssetTokenIds) => {
     return {
-        type: 'SET',
+        type: 'SET_ASSET_TOKEN_IDS',
         payload: { AssetTokenIds }
     }
 }
 
 export const setIPFSHashArray = (IPFSHashes) => {
     return {
-        type: 'SET',
+        type: 'SET_IPFS_HASH_ARRAY',
         payload: { IPFSHashes }
     }
 }
 
 export const setHasAssets = (hasAssetsBool) => {
     return {
-        type: 'SET',
+        type: 'SET_HAS_ASSETS',
         payload: { hasAssetsBool }
     }
 }
 
 export const setHasFetchedBals = (balBool) => {
     return {
-        type: 'SET',
+        type: 'SET_HAS_FETCHED_BALS',
         payload: { balBool }
     }
 }
 
 export const setIPFS = (ipfs) => {
     return {
-        type: 'SET',
+        type: 'SET_IPFS',
         payload: { ipfs }
     }
 }
 
 export const setGlobalAssetClass = (assetClass) => {
     return {
-        type: 'SET',
+        type: 'SET_ASSET_CLASS',
         payload: { assetClass }
     }
 }
 
 export const setGlobalAssetClassName = (assetClassName) => {
     return {
-        type: 'SET',
+        type: 'SET_ASSET_CLASS_NAME',
         payload: { assetClassName }
     }
 }
 
 export const setGlobalAC = (sentPacket) => {
     return {
-        type: 'SET',
+        type: 'SET_GLOBAL_AC',
         payload: { sentPacket }
     }
 }
 
 export const setCosts = (costs) => {
     return {
-        type: 'SET',
+        type: 'SET_COSTS',
         payload: { costs }
     }
 }

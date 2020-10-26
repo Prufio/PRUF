@@ -226,7 +226,7 @@ async function buildContracts(_web3) {
     }
     );
 
-  return window.contracts = {
+  let contracts = {
     STOR: STOR,
     APP: APP,
     NP: NP,
@@ -244,6 +244,8 @@ async function buildContracts(_web3) {
     ID_TKN: ID_TKN,
     UTIL_TKN: UTIL_TKN
   }
+
+  return contracts
 }
 
 export default buildContracts;

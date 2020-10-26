@@ -446,7 +446,7 @@ class Main extends Component {
 
       if (window.recount === true) {
         this.props.setBalances({})
-        this.props.setEthBalance(window.utils.getETHBalance(this.props.globalAddr));
+        this.props.setEthBalance(window.utils.getETHBalance(this.props.globalAddr, this.props.web3));
         return this.setUpTokenVals(true)
       }
 
@@ -566,7 +566,7 @@ class Main extends Component {
 
       console.log("STV: Setting up balances")
 
-      await this.props.setBalances(window.utils.determineTokenBalance(this.props.globalAddr))
+      await this.props.setBalances(window.utils.determineTokenBalance(this.props.globalAddr, this.props.contracts))
 
       if (willSetup) {
         return this.setUpAssets()
@@ -638,7 +638,7 @@ class Main extends Component {
 
       if (window.ethereum !== undefined) {
         if (this.props.globalAddr !== undefined) {
-          await this.params.setMenuInfo({bools: {
+          await this.props.setMenuInfo({bools: {
             noAddrMenuBool: false,
             assetHolderMenuBool: false,
             assetClassHolderMenuBool: false,
@@ -662,7 +662,7 @@ class Main extends Component {
         await this.props.setContracts(buildContracts(_web3))
 
         if (this.props.globalAddr !== undefined) {
-          await this.props.setEthBalance(window.utils.getETHBalance(this.props.globalAddr));
+          await this.props.setEthBalance(window.utils.getETHBalance(this.props.globalAddr, this.props.web3));
           await this.setUpTokenVals()
           await this.setUpAssets()
         }
@@ -727,12 +727,12 @@ class Main extends Component {
     if (window.ethereum !== undefined) {
       
       this.props.setAssetTokenInfo({
-        assetClass: undefined,
-        idxHash: undefined,
-        name: undefined,
-        photos: undefined,
-        text: undefined,
-        status: undefined,
+        assetClass: null,
+        idxHash: null,
+        name: null,
+        photos: null,
+        text: null,
+        status: null,
       })
       
       const ethereum = window.ethereum;
