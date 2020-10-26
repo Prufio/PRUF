@@ -4,6 +4,8 @@ import Col from "react-bootstrap/Col";
 import Row from "react-bootstrap/Row";
 import { Home, XSquare, ArrowRightCircle, Grid, CornerUpLeft, Repeat } from "react-feather";
 import QrReader from 'react-qr-reader'
+import { connect } from 'react-redux';
+import {setGlobalAddr, setGlobalWeb3} from '../actions'
 
 class RecycleAssetNC extends Component {
   constructor(props) {
@@ -620,4 +622,23 @@ class RecycleAssetNC extends Component {
   }
 }
 
-export default RecycleAssetNC;
+
+const mapStateToProps = (state) => {
+
+  return{
+    globalAddr: state.globalAddr,
+    web3: state.web3
+  }
+
+}
+
+const mapDispatchToProps = () => {
+  return {
+    setGlobalAddr,
+    setGlobalWeb3,
+  }
+}
+
+
+
+export default connect(mapStateToProps, mapDispatchToProps())(RecycleAssetNC);

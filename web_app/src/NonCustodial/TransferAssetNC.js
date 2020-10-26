@@ -1,10 +1,12 @@
 import React, { Component } from "react";
 import Form from "react-bootstrap/Form";
 import Col from "react-bootstrap/Col";
-import { ArrowRightCircle, Home, XSquare, CheckCircle } from 'react-feather'
+import { Home, XSquare, CheckCircle } from 'react-feather'
+import { connect } from 'react-redux';
+import {setGlobalAddr, setGlobalWeb3} from '../actions'
 
 
-class ModifyDescriptionNC extends Component {
+class TransferAssetNC extends Component {
   constructor(props) {
     super(props);
 
@@ -314,4 +316,23 @@ class ModifyDescriptionNC extends Component {
   }
 }
 
-export default ModifyDescriptionNC;
+
+const mapStateToProps = (state) => {
+
+  return{
+    globalAddr: state.globalAddr,
+    web3: state.web3
+  }
+
+}
+
+const mapDispatchToProps = () => {
+  return {
+    setGlobalAddr,
+    setGlobalWeb3,
+  }
+}
+
+
+
+export default connect(mapStateToProps, mapDispatchToProps())(TransferAssetNC);

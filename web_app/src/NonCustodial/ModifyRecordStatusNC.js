@@ -2,7 +2,8 @@ import React, { Component } from "react";
 import Form from "react-bootstrap/Form";
 import Col from "react-bootstrap/Col";
 import { Home, XSquare, CheckCircle } from 'react-feather'
-// import { ToastProvider, useToasts } from 'react-toast-notifications'
+import { connect } from 'react-redux';
+import {setGlobalAddr, setGlobalWeb3} from '../actions'
 
 class ModifyRecordStatusNC extends Component {
   constructor(props) {
@@ -376,4 +377,23 @@ class ModifyRecordStatusNC extends Component {
   }
 }
 
-export default ModifyRecordStatusNC;
+
+const mapStateToProps = (state) => {
+
+  return{
+    globalAddr: state.globalAddr,
+    web3: state.web3
+  }
+
+}
+
+const mapDispatchToProps = () => {
+  return {
+    setGlobalAddr,
+    setGlobalWeb3,
+  }
+}
+
+
+
+export default connect(mapStateToProps, mapDispatchToProps())(ModifyRecordStatusNC);

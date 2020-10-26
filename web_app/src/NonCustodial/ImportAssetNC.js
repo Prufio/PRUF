@@ -3,6 +3,9 @@ import Form from "react-bootstrap/Form";
 import Col from "react-bootstrap/Col";
 import Row from "react-bootstrap/Row";
 import { Home, XSquare, ArrowRightCircle, CheckCircle } from "react-feather";
+import { connect } from 'react-redux';
+import {setGlobalAddr, setGlobalWeb3} from '../actions'
+
 class ImportAssetNC extends Component {
   constructor(props) {
     super(props);
@@ -418,4 +421,23 @@ class ImportAssetNC extends Component {
   }
 }
 
-export default ImportAssetNC;
+
+const mapStateToProps = (state) => {
+
+  return{
+    globalAddr: state.globalAddr,
+    web3: state.web3
+  }
+
+}
+
+const mapDispatchToProps = () => {
+  return {
+    setGlobalAddr,
+    setGlobalWeb3,
+  }
+}
+
+
+
+export default connect(mapStateToProps, mapDispatchToProps())(ImportAssetNC);
