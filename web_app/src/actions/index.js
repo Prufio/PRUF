@@ -146,6 +146,13 @@ export const setGlobalAssetClass = (assetClass) => {
     }
 }
 
+export const setGlobalAssetClassName = (assetClassName) => {
+    return {
+        type: 'SET',
+        payload: { assetClassName }
+    }
+}
+
 export const setGlobalAC = (sentPacket) => {
     return {
         type: 'SET',
