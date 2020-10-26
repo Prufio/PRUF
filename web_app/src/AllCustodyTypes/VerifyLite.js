@@ -4,7 +4,7 @@ import Col from "react-bootstrap/Col";
 import { Home, XSquare, ArrowRightCircle, Grid, CornerUpLeft, CheckCircle } from "react-feather";
 import QrReader from 'react-qr-reader'
 import { connect } from 'react-redux';
-import {setGlobalAddr, setGlobalWeb3} from '../actions'
+import {setGlobalAddr, setGlobalWeb3} from '../Actions'
 
 class VerifyLite extends Component {
   constructor(props) {

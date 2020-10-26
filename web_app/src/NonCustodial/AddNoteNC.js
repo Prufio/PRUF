@@ -4,7 +4,7 @@ import Col from "react-bootstrap/Col";
 import bs58 from "bs58";
 import { CheckCircle, Home, XSquare } from 'react-feather'
 import { connect } from 'react-redux';
-import {setGlobalAddr, setGlobalWeb3} from '../actions'
+import {setGlobalAddr, setGlobalWeb3} from '../Actions'
 
 
 class AddNoteNC extends Component {

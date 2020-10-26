@@ -4,6 +4,9 @@ import Button from "react-bootstrap/Button";
 import Col from "react-bootstrap/Col";
 import "./index.css";
 import { ArrowRightCircle } from 'react-feather'
+import { connect } from 'react-redux';
+import {setGlobalAddr, setGlobalWeb3 } from './Actions'
+
 class Home extends Component {
   constructor(props) {
     super(props);
@@ -137,4 +140,22 @@ class Home extends Component {
   }
 }
 
-export default Home;
+const mapStateToProps = (state) => {
+
+  return{
+    globalAddr: state.globalAddr,
+    web3: state.web3
+  }
+
+}
+
+const mapDispatchToProps = () => {
+  return {
+    setGlobalAddr,
+    setGlobalWeb3,
+  }
+}
+
+
+
+export default connect(mapStateToProps, mapDispatchToProps())(Home);

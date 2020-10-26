@@ -4,7 +4,7 @@ import Col from "react-bootstrap/Col";
 import Row from "react-bootstrap/Row";
 import { Home, XSquare, ArrowRightCircle, CheckCircle } from "react-feather";
 import { connect } from 'react-redux';
-import {setGlobalAddr, setGlobalWeb3} from '../actions'
+import {setGlobalAddr, setGlobalWeb3} from '../Actions'
 
 class ImportAssetNC extends Component {
   constructor(props) {

@@ -3,7 +3,7 @@ import Form from "react-bootstrap/Form";
 import Col from "react-bootstrap/Col";
 import { ArrowRightCircle, Home, TrendingUp, XSquare, CheckCircle } from 'react-feather'
 import { connect } from 'react-redux';
-import {setGlobalAddr, setGlobalWeb3} from '../actions'
+import {setGlobalAddr, setGlobalWeb3} from '../Actions'
 
 class EscrowManagerNC extends Component {
   constructor(props) {

@@ -5,7 +5,7 @@ import Button from "react-bootstrap/Button";
 import returnManufacturers from "../Resources/Manufacturers";
 import { Trash2, Home, XSquare } from 'react-feather'
 import { connect } from 'react-redux';
-import {setGlobalAddr, setGlobalWeb3} from '../actions'
+import {setGlobalAddr, setGlobalWeb3} from '../Actions'
 
 class DiscardAssetNC extends Component {
   constructor(props) {

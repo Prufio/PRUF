@@ -4,7 +4,7 @@ import Col from "react-bootstrap/Col";
 import Button from "react-bootstrap/Button";
 import { ArrowRightCircle, Home, XSquare, AlertTriangle } from 'react-feather'
 import { connect } from 'react-redux';
-import {setGlobalAddr, setGlobalWeb3} from '../actions'
+import {setGlobalAddr, setGlobalWeb3} from '../Actions'
 
 class ModifyRightsHolder extends Component {
   constructor(props) {

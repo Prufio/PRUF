@@ -5,7 +5,7 @@ import Row from "react-bootstrap/Row";
 import { Home, XSquare, ArrowRightCircle, Grid, CornerUpLeft, Repeat } from "react-feather";
 import QrReader from 'react-qr-reader'
 import { connect } from 'react-redux';
-import {setGlobalAddr, setGlobalWeb3} from '../actions'
+import {setGlobalAddr, setGlobalWeb3} from '../Actions'
 
 class RecycleAssetNC extends Component {
   constructor(props) {
