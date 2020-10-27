@@ -70,16 +70,16 @@ class Main extends Component {
                   <ul className="header">
                     {this.props.contracts !== undefined && (
                       <nav>
-                        {this.props.menuInfo.bools.noAddrMenuBool === true && (<NoAddressComponent />)}
+                        {this.state.menuInfo.bools.noAddrMenuBool === true && (<NoAddressComponent />)}
                       </nav>
                     )}
                   </ul>
                 </div>
               </div>
               <div className="pageForm">
-                <div key={this.props.menuInfo.route}>
+                <div key={this.state.menuInfo.route}>
                   <Route exact path="/" component={HomeMobile} />
-                  {Router(this.props.menuInfo.route)}
+                  {Router(this.state.menuInfo.route)}
                 </div>
               </div>
               <NavLink to="/">
@@ -109,12 +109,12 @@ class Main extends Component {
               <div className="BannerForm">
                 <div className="currentMenuOption">
                   <div>
-                    {this.props.menuInfo.bools.noAddrMenuBool === true && (<div className="currentMenuOptionContent"> Read Only Access</div>)}
-                    {this.props.menuInfo.bools.assetHolderMenuBool === true && (<div className="currentMenuOptionContent">Token Minter Menu</div>)}
-                    {this.props.menuInfo.bools.assetHolderUserMenuBool === true && (<div className="currentMenuOptionContent">Token Holder Menu</div>)}
-                    {this.props.menuInfo.bools.assetClassHolderMenuBool === true && (<div className="currentMenuOptionContent">AC Admin Menu</div>)}
-                    {this.props.menuInfo.bools.authorizedUserMenuBool === true && (<div className="currentMenuOptionContent">Asset Minter Menu</div>)}
-                    {this.props.menuInfo.bools.basicMenuBool === true && (<div className="currentMenuOptionContent">Basic Menu</div>)}
+                    {this.state.menuInfo.bools.noAddrMenuBool === true && (<div className="currentMenuOptionContent"> Read Only Access</div>)}
+                    {this.state.menuInfo.bools.assetHolderMenuBool === true && (<div className="currentMenuOptionContent">Token Minter Menu</div>)}
+                    {this.state.menuInfo.bools.assetHolderUserMenuBool === true && (<div className="currentMenuOptionContent">Token Holder Menu</div>)}
+                    {this.state.menuInfo.bools.assetClassHolderMenuBool === true && (<div className="currentMenuOptionContent">AC Admin Menu</div>)}
+                    {this.state.menuInfo.bools.authorizedUserMenuBool === true && (<div className="currentMenuOptionContent">Asset Minter Menu</div>)}
+                    {this.state.menuInfo.bools.basicMenuBool === true && (<div className="currentMenuOptionContent">Basic Menu</div>)}
                   </div>
                 </div>
                 <div className="hamburgerMenu">
@@ -156,7 +156,7 @@ class Main extends Component {
                       {this.state.settingsMenu !== undefined && (
                         <div>
                           <div className="hamburgerDropdownSettings">
-                            {this.props.holderBools.assetClassHolderBool === true && this.props.menuInfo.bools.assetClassHolderMenuBool === false && (
+                            {this.state.holderBools.assetClassHolderBool === true && this.state.menuInfo.bools.assetClassHolderMenuBool === false && (
                               <Button
                                 size="lg"
                                 variant="toggle"
@@ -165,7 +165,7 @@ class Main extends Component {
                                 AC Admin Menu
                               </Button>)}
 
-                            {this.props.holderBools.IDHolderBool === false && this.props.holderBools.assetHolderBool === true && this.props.menuInfo.bools.assetHolderUserMenuBool === false && (
+                            {this.state.holderBools.IDHolderBool === false && this.state.holderBools.assetHolderBool === true && this.state.menuInfo.bools.assetHolderUserMenuBool === false && (
                               <Button
                                 size="lg"
                                 variant="toggle"
@@ -175,7 +175,7 @@ class Main extends Component {
                               </Button>
                             )}
 
-                            {this.props.holderBools.IDHolderBool === true && this.props.menuInfo.bools.assetHolderMenuBool === false && (
+                            {this.state.holderBools.IDHolderBool === true && this.state.menuInfo.bools.assetHolderMenuBool === false && (
                               <Button
                                 size="lg"
                                 variant="toggle"
@@ -185,7 +185,7 @@ class Main extends Component {
                               </Button>
                             )}
 
-                            {this.props.menuInfo.bools.basicMenuBool === false && (
+                            {this.state.menuInfo.bools.basicMenuBool === false && (
                               <Button
                                 size="lg"
                                 variant="toggle"
@@ -194,7 +194,7 @@ class Main extends Component {
                                 Basic Menu
                               </Button>)}
 
-                            {this.props.isAuthUser === true && this.props.menuInfo.bools.authorizedUserMenuBool === false && (
+                            {this.props.isAuthUser === true && this.state.menuInfo.bools.authorizedUserMenuBool === false && (
                               <Button
                                 size="lg"
                                 variant="toggle"
@@ -281,14 +281,14 @@ class Main extends Component {
                     </div>
                   </div>
                 )}
-                <ul key = {this.props.menuInfo.bools + "_renderNav"} className="header">
+                <ul key = {this.state.menuInfo.bools + "_renderNav"} className="header">
                     <nav>
-                      {this.props.menuInfo.bools.noAddrMenuBool === true && (<NoAddressComponent />)}
-                      {this.props.menuInfo.bools.assetHolderMenuBool === true && (<NonCustodialComponent />)}
-                      {this.props.menuInfo.bools.assetHolderUserMenuBool === true && (<NonCustodialUserComponent />)}
-                      {this.props.menuInfo.bools.assetClassHolderMenuBool === true && (<AdminComponent />)}
-                      {this.props.menuInfo.bools.authorizedUserMenuBool === true && (<AuthorizedUserComponent />)}
-                      {this.props.menuInfo.bools.basicMenuBool === true && (<BasicComponent />)}
+                      {this.state.menuInfo.bools.noAddrMenuBool === true && (<NoAddressComponent />)}
+                      {this.state.menuInfo.bools.assetHolderMenuBool === true && (<NonCustodialComponent />)}
+                      {this.state.menuInfo.bools.assetHolderUserMenuBool === true && (<NonCustodialUserComponent />)}
+                      {this.state.menuInfo.bools.assetClassHolderMenuBool === true && (<AdminComponent />)}
+                      {this.state.menuInfo.bools.authorizedUserMenuBool === true && (<AuthorizedUserComponent />)}
+                      {this.state.menuInfo.bools.basicMenuBool === true && (<BasicComponent />)}
                     </nav>
                 </ul>
               </div>
@@ -378,9 +378,9 @@ class Main extends Component {
                       }
                    `}
               </style>
-              <div key={this.props.menuInfo.route + "_desktop"}>
+              <div key={this.state.menuInfo.route + "_desktop"}>
                 <Route exact path="/" component={Home} />
-                {Router(this.props.menuInfo.route)}
+                {Router(this.state.menuInfo.route)}
               </div>
             </div>
             <NavLink to="/">
@@ -395,62 +395,62 @@ class Main extends Component {
       switch(menuChoice){
 
         case 'ACAdmin' : {
-          this.props.setMenuInfo({bools:{
+          this.props.setMenuInfo({
             assetClassHolderMenuBool: true,
             assetHolderMenuBool: false,
             assetHolderUserMenuBool: false,
             basicMenuBool: false,
             noAddrMenuBool: false,
             authorizedUserMenuBool: false,      
-          }, route: "ACAdmin"})
+          }, "ACAdmin")
           return this.setState({ settingsMenu: undefined });
         }
   
         case 'basic' : {
-          this.props.setMenuInfo({bools:{
+          this.props.setMenuInfo({
             assetClassHolderMenuBool: false,
             assetHolderMenuBool: false,
             assetHolderUserMenuBool: false,
             basicMenuBool: true,
             noAddrMenuBool: false,
             authorizedUserMenuBool: false,      
-          }, route: "basic"})
+          }, "basic")
            return this.setState({ settingsMenu: undefined });
         }
   
         case 'NC' : {
-          this.props.setMenuInfo({bools:{
+          this.props.setMenuInfo({
             assetClassHolderMenuBool: false,
             assetHolderMenuBool: true,
             assetHolderUserMenuBool: false,
             basicMenuBool: false,
             noAddrMenuBool: false,
             authorizedUserMenuBool: false,      
-          }, route: "NCAdmin"})
+          }, "NCAdmin")
           return this.setState({ settingsMenu: undefined });
         }
   
         case 'NCUser' : {
-          this.props.setMenuInfo({bools:{
+          this.props.setMenuInfo({
             assetClassHolderMenuBool: false,
             assetHolderMenuBool: false,
             assetHolderUserMenuBool: true,
             basicMenuBool: false,
             noAddrMenuBool: false,
             authorizedUserMenuBool: false,      
-          }, route: "NCUser"})
+          }, "NCUser")
           return this.setState({ settingsMenu: undefined });
         }
   
         case 'authUser' : {
-          this.props.setMenuInfo({bools:{
+          this.props.setMenuInfo({
             assetClassHolderMenuBool: false,
             assetHolderMenuBool: false,
             assetHolderUserMenuBool: false,
             basicMenuBool: false,
             noAddrMenuBool: false,
             authorizedUserMenuBool: true,      
-          }, route: "authUser"})
+          }, "authUser")
           return this.setState({ settingsMenu: undefined });
         }
   
@@ -735,25 +735,25 @@ class Main extends Component {
 
       if (window.ethereum !== undefined) {
         if (this.props.globalAddr !== undefined) {
-          await this.props.setMenuInfo({bools: {
+          await this.props.setMenuInfo({
             noAddrMenuBool: false,
             assetHolderMenuBool: false,
             assetClassHolderMenuBool: false,
             basicMenuBool: true,
             authorizedUserMenuBool: false,
             hasFetchedBalances: false,
-          }, route: 'basic'})
+          }, 'basic')
         }
 
         else if (this.props.globalAddr === "") {
-          await this.params.setMenuInfo({bools: {
+          await this.params.setMenuInfo({
             noAddrMenuBool: true,
             assetHolderMenuBool: false,
             assetClassHolderMenuBool: false,
             basicMenuBool: false,
             authorizedUserMenuBool: false,
             hasFetchedBalances: false,
-          }, route: 'noAddr'})
+          }, 'noAddr')
         }
 
         let tempContracts = await buildContracts(_web3)
@@ -786,6 +786,15 @@ class Main extends Component {
       IPFS: require("ipfs-mini"),
       addr: undefined,
       web3: null,
+      menuInfo: { bools: {
+        assetHolderMenuBool: false,
+        assetHolderUserMenuBool: false,
+        basicMenuBool: true,
+        assetClassHolderMenuBool: false,
+        noAddrMenuBool: false,
+        authorizedUserMenuBool: false,
+      }, route: "basic" },
+      holderBools: {},
       nameArray: [],
       notAvailable: "N/A",
       assetClass: undefined,
@@ -936,6 +945,9 @@ class Main extends Component {
 
   componentDidUpdate() {//stuff to do when state updates
 
+    if (this.state.menuInfo !== this.props.menuInfo || this.state.holderBools !== this.props.holderBools) { 
+      this.setState({ menuInfo: this.props.menuInfo, holderBools: this.props.holderBools})
+    } 
 
   }
 

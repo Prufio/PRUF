@@ -50,7 +50,7 @@ export const setIsAuthUser = (authBool) => {
 export const setMenuInfo = (bools, route) => {
     return {
         type: 'SET_MENU_INFO',
-        payload: { bools, route }
+        payload: { bools: bools, route: route }
     }
 }
 

@@ -9,7 +9,7 @@ const menuInfoReducer = (state =
     authorizedUserMenuBool: false,
   }, route: "basic" }, action) => {
     switch(action.type){
-        case 'SET_MENU_INFO': return Object.assign({}, state, action.payload);
+        case 'SET_MENU_INFO': return action.payload;
         default : return state;
     }
 }
