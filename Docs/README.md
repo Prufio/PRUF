@@ -1,4 +1,4 @@
-# PRuF
+# PRüF
 Blockchain powered decentralized asset registry
 0.7.0
 
