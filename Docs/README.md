@@ -29,7 +29,7 @@ You could, of course, also choose to do nothing, discard the item, or mark it as
 Even in cases of theft where the item has been located, the possessor is usually assumed to be the owner unless additional proof is available.
 PRüF private-provenance allows a rights holder to prove the legitimacy of their claim, tracing the possession of the item back to a specific point in time or the original sale, irrefutably. 
 
-**Tokenized Real-world Assets
+**Tokenized Real-World Assets
 
 Acting as a “title” to everyday goods, PRüF enabled tokenized assets allow the protections of title to extend to all of your personal valuables. PRüF private-provenance allows rights holders to securely hold, transfer, sell, and collateralize their possessions without opening their lives to scrutiny.  
 In addition to everyday items, collectibles, heirlooms, and capital goods under personal ownership, PRüF enabled tokenized assets open up a multitude of options for discreet and protected asset ownership. In this model, major assets would be held and managed by a holding company. The executive advantages of ownership, without risk exposure, could be controlled by the token. This could range from real properties, boats, aircraft, and vehicles, to fixed fungible assets, such as a safe deposit box of gold coins. 
