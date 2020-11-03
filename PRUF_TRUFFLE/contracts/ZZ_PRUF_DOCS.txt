@@ -26,7 +26,6 @@ pragma solidity ^0.6.7;
 /*-----------------------------------------------------------------
  *TO DO :
  *
- *      *Design Json templates for IPFS1 and IPFS2
  *
  *      *Above 65k segregation (probably by ACinfo custodial type) (just need to add a wild west contract?)
  *
@@ -36,25 +35,35 @@ pragma solidity ^0.6.7;
  *
  *      *what do we do (if anything) with the 128 "free" bits in the storage struct?
  *
- *      *Look up AC Data in the web interface
- *
- *      *Pruf token enumerator in web3 for all pruf tokens
- *
  *      *find any recursive calls
  *
  *      *Security token
  *
  *      *Define / document protocol
  *
- *      *LAUNCH GUI - enumerate my assets, with IPFS descriptions, clickable to manage assets
- *
  *      *make a PRuF fountain contract
  *
- *      *make security token invisible from the main contracts
- *
- *      *all idx hashes should be clickable and open the asset display page in a new window   
+ *      *make security token invisible from the main contracts 
  *
  *      !!** remint might get eaten in the dark forest!  check all other functions as well for this issue
+ *
+ *
+- ----------------------------------------------------------------
+
+/*-----------------------------------------------------------------
+ *DOCS to write:
+ *
+ *      *Value proposition - general
+ *
+ *      *Value proposition - AC token / AC operator
+ *
+ *      *Value proposition - B.Pruf 
+ *
+ *      *Webapp tutorial
+ *
+ *      *Medium article on PRUF general
+ *
+ *      
  *
  *
 - ----------------------------------------------------------------
