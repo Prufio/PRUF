@@ -27,6 +27,8 @@ pragma solidity ^0.6.7;
  *TO DO :
  *
  *
+ *      *hand off an array to set pricing rather than one by one (gas cost) ????
+ *
  *      *Above 65k segregation (probably by ACinfo custodial type) (just need to add a wild west contract?)
  *
  *      *find a way to find and react to assets being in a dead asset class (future, API verified, works w/ AC0)
