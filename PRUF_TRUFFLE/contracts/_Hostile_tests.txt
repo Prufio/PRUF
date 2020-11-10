@@ -124,7 +124,7 @@ From A, payForService(B,A,25,C,25) (Succeed)
 
 A=70 B=75 C=55
 
-From A, payForService(B,A,25,C,25) (FAIL -Insuf)
+From A, payForService(B,A,70,C,10) (FAIL -Insuf)
 
 From MAIN-ADDRESS revokeRole A - PAYABLE_ROLE (succeed)
 
