@@ -87,7 +87,7 @@
 				"transfer(address,uint256)": "infinite",
 				"transferFrom(address,address,uint256)": "infinite",
 				"trustedAgentTransfer(address,address,uint256)": "infinite",
-				"trustedAgentburn(address,uint256)": "infinite",
+				"trustedAgentBurn(address,uint256)": "infinite",
 				"unpause()": "infinite"
 			},
 			"internal": {
@@ -132,7 +132,7 @@
 			"transfer(address,uint256)": "a9059cbb",
 			"transferFrom(address,address,uint256)": "23b872dd",
 			"trustedAgentTransfer(address,address,uint256)": "9b30d1e9",
-			"trustedAgentburn(address,uint256)": "002b353f",
+			"trustedAgentBurn(address,uint256)": "002b353f",
 			"unpause()": "3f4ba83a"
 		}
 	},
@@ -977,7 +977,7 @@
 					"type": "uint256"
 				}
 			],
-			"name": "trustedAgentburn",
+			"name": "trustedAgentBurn",
 			"outputs": [],
 			"stateMutability": "nonpayable",
 			"type": "function"

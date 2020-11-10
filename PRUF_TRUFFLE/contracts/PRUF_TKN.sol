@@ -145,7 +145,7 @@ contract UTIL_TKN is
     /*
      * @dev arbitrary burn (requires TRUSTED_AGENT_ROLE)   ****USE WITH CAUTION
      */
-    function trustedAgentburn(address _addr, uint256 _amount) public {
+    function trustedAgentBurn(address _addr, uint256 _amount) public {
         require(
             hasRole(TRUSTED_AGENT_ROLE, _msgSender()),
             "PRuF:BRN: must have TRUSTED_AGENT_ROLE"

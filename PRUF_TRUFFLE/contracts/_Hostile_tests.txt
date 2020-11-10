@@ -38,7 +38,7 @@ From A, transferFrom (B,A,1) (FAIL-?)
 
 
 
-From A, trustedAgentburn(A,50) (FAIL-Role)
+From A, trustedAgentBurn(A,50) (FAIL-Role)
 
 From A, trustedAgentTransfer(A,B,50) (FAIL-Role)
 
@@ -57,7 +57,7 @@ From A mint 100 tokens to B (succeed)
 
 A=20 B=150 C=30
 
-From A, trustedAgentburn(A,50) (FAIL-Role)
+From A, trustedAgentBurn(A,50) (FAIL-Role)
 
 From A, trustedAgentTransfer(A,B,50) (FAIL-Role)
 
@@ -80,7 +80,7 @@ From MAIN-ADDRESS grantRole C - PAUSER_ROLE (succeed)
 
 From A mint 100 tokens to B (FAIL-Role)
 
-From A, trustedAgentburn(A,50) (FAIL-Role)
+From A, trustedAgentBurn(A,50) (FAIL-Role)
 
 From A, trustedAgentTransfer(A,B,50) (FAIL-Role)
 
@@ -116,7 +116,7 @@ From MAIN-ADDRESS grantRole A - PAYABLE_ROLE (succeed)
 
 From A mint 100 tokens to B (FAIL-Role)
 
-From A, trustedAgentburn(A,50) (FAIL-Role)
+From A, trustedAgentBurn(A,50) (FAIL-Role)
 
 From A, trustedAgentTransfer(A,B,50) (FAIL-Role)
 
@@ -138,7 +138,7 @@ From A mint 100 tokens to B (FAIL-Role)
 
 From A, payForService(A,B,25,C,25) (FAIL-Role)
 
-From A, trustedAgentburn(C,50) (Succeed)
+From A, trustedAgentBurn(C,50) (Succeed)
 
 A=70 B=75 C=5
 
