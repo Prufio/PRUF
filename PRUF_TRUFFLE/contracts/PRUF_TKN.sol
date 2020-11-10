@@ -12,13 +12,6 @@ __/\\\\\\\\\\\\\ _____/\\\\\\\\\ _______/\\../\\ ___/\\\\\\\\\\\\\\\
 
 /*-----------------------------------------------------------------
  *  TO DO
- *  factor out as much code as possible to calling contracts
- *  increase share -- ACMGR
- *  buyACtoken -- ACMGR
- *  AdminSetStorageContract
- *  AdminResolveContractAddresses
- *  AdminSetPaymentAddress
- *  currentACtokenInfo  -- ACMGR
  *---------------------------------------------------------------*/
 
 // SPDX-License-Identifier: MIT
@@ -39,8 +32,8 @@ import "./Imports/token/ERC20/ERC20Snapshot.sol";
  *  - a MINTER_ROLE that allows for token minting (creation)
  *  - a PAUSER_ROLE that allows to stop all token transfers
  *  - a SNAPSHOT_ROLE that allows to take snapshots
- *  - a PAYABLE_ROLE role that allows authorized adresses to invoke the token splitting payment function
- *  - a TRUSTED_AGENT_ROLE role that allows authorized adresses to transfer and burn tokens
+ *  - a PAYABLE_ROLE role that allows authorized adresses to invoke the token splitting payment function (all paybale contracts)
+ *  - a TRUSTED_AGENT_ROLE role that allows authorized adresses to transfer and burn tokens (AC_MGR)
 
 
 
