@@ -155,7 +155,7 @@ contract AC_MGR is BASIC {
             _custodyType
         );
 
-        UTIL_TKN.trustedAgentburn(msg.sender, currentACtokenPrice);
+        UTIL_TKN.trustedAgentBurn(msg.sender, currentACtokenPrice);
 
         currentACtokenPrice = newACtokenPrice;
 

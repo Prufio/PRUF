@@ -199,7 +199,7 @@ interface UTIL_TKN_Interface {
         uint256 amount
     ) external returns (bool);
 
-    function trustedAgentburn(address _addr, uint256 _amount) external;
+    function trustedAgentBurn(address _addr, uint256 _amount) external;
 
     function trustedAgentTransfer(
         address _from,
