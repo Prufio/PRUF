@@ -152,6 +152,18 @@ From MAIN-ADDRESS revokeRole A - TRUSTED_AGENT_ROLE (succeed)
 
 From A, trustedAgentTransfer(A,C,10) (FAIL-Role)
 
+From A transfer(C,75) (succeed)
+
+A=0 B=75 C=75
+
+From B transfer(C,75) (succeed)
+
+A=0 B=0 C=150
+
+From C transfer(A,151) (FAIL-INSUF)
+
+A=0 B=0 C=150
+
 --------------------Tests against PRUF_TKN
 
 
