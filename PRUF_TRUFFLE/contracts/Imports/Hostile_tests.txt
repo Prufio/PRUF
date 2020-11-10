@@ -1,168 +1,168 @@
 --------------------Tests against PRUF_TKN
 
-Launch
+Launch//
 
-Get max_Supply() (4000000000000000000000000000)
+Get max_Supply() (4000000000000000000000000000)//
 
 // Set minterRole for MAIN-ADDRESS
 
-Mint tokens 100 tokens to address A (100 000000000000000000)
+Mint tokens 100 tokens to address A (100 000000000000000000)//
 
-A=100 B=0 C=0
+A=100 B=0 C=0//
 
-Mint 4 000 000 000 000000000000000000 to B (FAIL) 
+Mint 4 000 000 000 000000000000000000 to B (FAIL)//
 
-From A, transfer(B,101) (FAIL)
+From A, transfer(B,101) (FAIL)//
 
-From A, transfer(B,100) (succeed)
+From A, transfer(B,100) (succeed)//
 
-A=0 B=100 C=0
+A=0 B=100 C=0//
 
-From B, transferFrom (A,B,amount) (FAIL)
+From B, transferFrom (A,B,10) (FAIL)//
 
-From B, transferFrom (A,C,amount) (FAIL)
+From B, transferFrom (B,C,10) (FAIL)//
 
-From B approve (A,50) (succeed)
+From B approve (A,50) (succeed)//
 
-From C, transferFrom (B,A,50) (FAIL)
+From C, transferFrom (B,A,50) (FAIL)//
 
-From A, transferFrom (B,C,30) (succeed)
+From A, transferFrom (B,C,30) (succeed)//
 
-A=0 B=70 C=30
+A=0 B=70 C=30//
 
-From A, transferFrom (B,A,20) (succeed) (terminate approval amount)
+From A, transferFrom (B,A,20) (succeed) (terminate approval amount)//
 
-A=20 B=50 C=30
+A=20 B=50 C=30//
 
-From A, transferFrom (B,A,1) (FAIL-?)
+From A, transferFrom (B,A,1) (FAIL-?)//
 
 
 
-From A, trustedAgentburn(A,50) (FAIL-Role)
+From A, trustedAgentburn(A,50) (FAIL-Role)//
 
-From A, trustedAgentTransfer(A,B,50) (FAIL-Role)
+From A, trustedAgentTransfer(A,B,50) (FAIL-Role)//
 
-From A, payForService(A,B,25,C,25) (FAIL-Role)
+From A, payForService(A,B,25,C,25) (FAIL-Role)//
 
-From A, pause() (FAIL-Role)
+From A, pause() (FAIL-Role)//
 
-From A, unPause() (FAIL-Role)
+From A, unPause() (FAIL-Role)//
 
 
-From A mint 100 tokens to B (FAIL-Role)
+From A mint 100 tokens to B (FAIL-Role)//
 
-From MAIN-ADDRESS grantRole A - MINTER_ROLE
+From MAIN-ADDRESS grantRole A - MINTER_ROLE//
 
-From A mint 100 tokens to B (succeed)
+From A mint 100 tokens to B (succeed)//
 
-A=20 B=150 C=30
+A=20 B=150 C=30//
 
-From A, trustedAgentburn(A,50) (FAIL-Role)
+From A, trustedAgentburn(A,50) (FAIL-Role)//
 
-From A, trustedAgentTransfer(A,B,50) (FAIL-Role)
+From A, trustedAgentTransfer(A,B,50) (FAIL-Role)//
 
-From A, payForService(A,B,25,C,25) (FAIL-Role)
+From A, payForService(A,B,25,C,25) (FAIL-Role)//
 
-From A, pause() (FAIL-Role)
+From A, pause() (FAIL-Role)//
 
-From A, unPause() (FAIL-Role)
+From A, unPause() (FAIL-Role)//
 
-From MAIN-ADDRESS revokeRole A - MINTER_ROLE (succeed)
+From MAIN-ADDRESS revokeRole A - MINTER_ROLE (succeed)//
 
-From A mint 100 tokens to B (FAIL-Role)
+From A mint 100 tokens to B (FAIL-Role)//
 
 
 
 
-From MAIN-ADDRESS grantRole A - PAUSER_ROLE (succeed)
+From MAIN-ADDRESS grantRole A - PAUSER_ROLE (succeed)//
 
-From MAIN-ADDRESS grantRole C - PAUSER_ROLE (succeed)
+From MAIN-ADDRESS grantRole C - PAUSER_ROLE (succeed)//
 
-From A mint 100 tokens to B (FAIL-Role)
+From A mint 100 tokens to B (FAIL-Role)//
 
-From A, trustedAgentburn(A,50) (FAIL-Role)
+From A, trustedAgentburn(A,50) (FAIL-Role)//
 
-From A, trustedAgentTransfer(A,B,50) (FAIL-Role)
+From A, trustedAgentTransfer(A,B,50) (FAIL-Role)//
 
-From A, payForService(A,B,25,C,25) (FAIL-Role)
+From A, payForService(A,B,25,C,25) (FAIL-Role)//
 
-From A, pause() (succeed)
+From A, pause() (succeed)//
 
-From C, pause() (succeed)
+From C, pause() (succeed)//
 
-From A, transfer (B,25) (Fail - paused)
+From A, transfer (B,25) (Fail - paused)//
 
-From B, transfer (A,25) (Fail - paused)
+From B, transfer (A,25) (Fail - paused)//
 
-From B, unPause() (FAIL-Role)
+From B, unPause() (FAIL-Role)//
 
-From A, unPause() (succeed)
+From A, unPause() (succeed)//
 
-From B, transfer (A,25) (succeed)
+From B, transfer (A,25) (succeed)//
 
-A=45 B=125 C=30
+A=45 B=125 C=30//
 
-From C renounceRole C - PAUSER_ROLE (succeed)
+From C renounceRole C - PAUSER_ROLE (succeed)//
 
-From C, pause() (FAIL-Role)
+From C, pause() (FAIL-Role)//
 
-From MAIN-ADDRESS revokeRole A - PAUSER_ROLE (succeed)
+From MAIN-ADDRESS revokeRole A - PAUSER_ROLE (succeed)//
 
-From A, pause() (FAIL-Role)
+From A, pause() (FAIL-Role)//
 
 
 
-From MAIN-ADDRESS grantRole A - PAYABLE_ROLE (succeed)
+From MAIN-ADDRESS grantRole A - PAYABLE_ROLE (succeed)//
 
-From A mint 100 tokens to B (FAIL-Role)
+From A mint 100 tokens to B (FAIL-Role)//
 
-From A, trustedAgentburn(A,50) (FAIL-Role)
+From A, trustedAgentburn(A,50) (FAIL-Role)//
 
-From A, trustedAgentTransfer(A,B,50) (FAIL-Role)
+From A, trustedAgentTransfer(A,B,50) (FAIL-Role)//
 
-From A, payForService(B,A,25,C,25) (Succeed)
+From A, payForService(B,A,25,C,25) (Succeed)//
 
-A=70 B=75 C=55
+A=70 B=75 C=55//
 
-From A, payForService(B,A,25,C,25) (FAIL -Insuf)
+From A, payForService(B,A,25,C,25) (FAIL -Insuf)//
 
-From MAIN-ADDRESS revokeRole A - PAYABLE_ROLE (succeed)
+From MAIN-ADDRESS revokeRole A - PAYABLE_ROLE (succeed)//
 
-From A, payForService(A,B,25,C,25) (FAIL-Role)
+From A, payForService(A,B,25,C,25) (FAIL-Role)//
 
 
 
-From MAIN-ADDRESS grantRole A - TRUSTED_AGENT_ROLE (succeed)
+From MAIN-ADDRESS grantRole A - TRUSTED_AGENT_ROLE (succeed)//
 
-From A mint 100 tokens to B (FAIL-Role)
+From A mint 100 tokens to B (FAIL-Role)//
 
-From A, payForService(A,B,25,C,25) (FAIL-Role)
+From A, payForService(A,B,25,C,25) (FAIL-Role)//
 
-From A, trustedAgentburn(C,50) (Succeed)
+From A, trustedAgentburn(C,50) (Succeed)//
 
-A=70 B=75 C=5
+A=70 B=75 C=5//
 
-From A, trustedAgentTransfer(C,A,10) (FAIL)
+From A, trustedAgentTransfer(C,A,10) (FAIL)//
 
-From A, trustedAgentTransfer(C,A,5) (succeed)
+From A, trustedAgentTransfer(C,A,5) (succeed)//
 
-A=75 B=75 C=0
+A=75 B=75 C=0//
 
-From MAIN-ADDRESS revokeRole A - TRUSTED_AGENT_ROLE (succeed)
+From MAIN-ADDRESS revokeRole A - TRUSTED_AGENT_ROLE (succeed)//
 
-From A, trustedAgentTransfer(A,C,10) (FAIL-Role)
+From A, trustedAgentTransfer(A,C,10) (FAIL-Role)//
 
-From A transfer(C,75) (succeed)
+From A transfer(C,75) (succeed)//
 
-A=0 B=75 C=75
+A=0 B=75 C=75//
 
-From B transfer(C,75) (succeed)
+From B transfer(C,75) (succeed)//
 
-A=0 B=0 C=150
+A=0 B=0 C=150//
 
-From C transfer(A,151) (FAIL-INSUF)
+From C transfer(A,151) (FAIL-INSUF)//
 
-A=0 B=0 C=150
+A=0 B=0 C=150//
 
 --------------------Tests against PRUF_TKN
 
