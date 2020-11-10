@@ -31,6 +31,8 @@ pragma solidity ^0.6.7;
  *
  *      *!! make it possible to modify ext data in AC manger
  *
+ *      *Automate contract authorization 
+ *
  *      *Above 65k segregation (probably by ACinfo custodial type) (just need to add a wild west contract?)
  *
  *      *find a way to find and react to assets being in a dead asset class (future, API verified, works w/ AC0)
