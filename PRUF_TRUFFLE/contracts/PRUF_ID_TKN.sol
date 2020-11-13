@@ -55,6 +55,24 @@ contract ID_TKN is Ownable, ERC721 {
         //^^^^^^^interactions^^^^^^^^^
     }
 
+    /* !!IMPORTANT!!
+     * @dev Mint new PRUF_ID token TESTNET PHASE ONLY
+     * !!!!!DELETE FOR MAINNET!!!!!
+     * NO PERMISSIONS
+     */
+    function mintPRUF_IDTokenTESTNET(address _recipientAddress, uint256 tokenId)
+        external
+        // isAdmin
+        returns (uint256)
+    {
+        //^^^^^^^checks^^^^^^^^^
+        //MAKE URI ASSET SPECIFIC- has to incorporate the token ID
+        _safeMint(_recipientAddress, tokenId);
+        _setTokenURI(tokenId, "https://pruf.io/ID");
+        return tokenId;
+        //^^^^^^^interactions^^^^^^^^^
+    }
+
     /*
      * @dev remint Asset Token
      * must set a new and unuiqe rgtHash
@@ -106,7 +124,7 @@ contract ID_TKN is Ownable, ERC721 {
     }
 
     /**
-     * @dev @dev Blocks the transfer of a given token ID to another address
+     * @dev Blocks the transfer of a given token ID to another address
      * Usage of this method is discouraged, use {safeTransferFrom} whenever possible.
      * Requires the msg.sender to be the owner, approved, or operator.
      */
