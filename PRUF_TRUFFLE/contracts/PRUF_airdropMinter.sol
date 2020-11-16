@@ -29,8 +29,6 @@ import "./Imports/token/ERC721/IERC721Receiver.sol";
 import "./Imports/math/safeMath.sol";
 
 contract AIR_MINTER is ReentrancyGuard, Ownable, IERC721Receiver, Pausable {
-    address internal STOR_Address;
-    STOR_Interface internal STOR;
 
     address internal UTIL_TKN_Address;
     UTIL_TKN_Interface internal UTIL_TKN;
@@ -38,42 +36,29 @@ contract AIR_MINTER is ReentrancyGuard, Ownable, IERC721Receiver, Pausable {
     uint256 amount;
 
     //----------------------External Admin functions / onlyowner ---------------------//
-    /*
-     * @dev Resolve Contract Addresses from STOR
-     */
-    function OO_resolveContractAddresses()
-        external
-        virtual
-        nonReentrant
-        onlyOwner
-    {
-        //^^^^^^^checks^^^^^^^^^
-        UTIL_TKN_Address = STOR.resolveContractAddress("UTIL_TKN");
-        UTIL_TKN = UTIL_TKN_Interface(UTIL_TKN_Address);
-
-        //^^^^^^^effects^^^^^^^^^
-    }
+    
 
     /*
      * @dev Set adress of STOR contract to interface with
      */
-    function OO_setStorageContract(address _storageAddress)
+    function OO_setTokenContract(address _address)
         external
         virtual
         onlyOwner
     {
         require(
-            _storageAddress != address(0),
-            "AM:SSC: storage address cannot be zero"
+            _address != address(0),
+            "AM:SSC: token address cannot be zero"
         );
         //^^^^^^^checks^^^^^^^^^
 
-        STOR = STOR_Interface(_storageAddress);
+        UTIL_TKN_Address = _address;
+        UTIL_TKN = UTIL_TKN_Interface(UTIL_TKN_Address);
         //^^^^^^^effects^^^^^^^^^
     }
 
     /*
-     * @dev Set adress of STOR contract to interface with
+     * @dev Set airdrop amount
      */
     function OO_setAirdropAmount(uint256 _amount) external onlyOwner {
         require(_amount != 0, "AM:SAA: airdrop amount cannot be zero");

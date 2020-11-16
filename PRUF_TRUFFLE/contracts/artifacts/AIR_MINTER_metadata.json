@@ -1,0 +1,509 @@
+{
+	"compiler": {
+		"version": "0.6.12+commit.27d51765"
+	},
+	"language": "Solidity",
+	"output": {
+		"abi": [
+			{
+				"anonymous": false,
+				"inputs": [
+					{
+						"indexed": true,
+						"internalType": "address",
+						"name": "previousOwner",
+						"type": "address"
+					},
+					{
+						"indexed": true,
+						"internalType": "address",
+						"name": "newOwner",
+						"type": "address"
+					}
+				],
+				"name": "OwnershipTransferred",
+				"type": "event"
+			},
+			{
+				"anonymous": false,
+				"inputs": [
+					{
+						"indexed": false,
+						"internalType": "address",
+						"name": "account",
+						"type": "address"
+					}
+				],
+				"name": "Paused",
+				"type": "event"
+			},
+			{
+				"anonymous": false,
+				"inputs": [
+					{
+						"indexed": false,
+						"internalType": "address",
+						"name": "account",
+						"type": "address"
+					}
+				],
+				"name": "Unpaused",
+				"type": "event"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "address",
+						"name": "_a",
+						"type": "address"
+					}
+				],
+				"name": "OO_bulkMint1",
+				"outputs": [],
+				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "address",
+						"name": "_a",
+						"type": "address"
+					},
+					{
+						"internalType": "address",
+						"name": "_b",
+						"type": "address"
+					},
+					{
+						"internalType": "address",
+						"name": "_c",
+						"type": "address"
+					},
+					{
+						"internalType": "address",
+						"name": "_d",
+						"type": "address"
+					},
+					{
+						"internalType": "address",
+						"name": "_e",
+						"type": "address"
+					},
+					{
+						"internalType": "address",
+						"name": "_f",
+						"type": "address"
+					},
+					{
+						"internalType": "address",
+						"name": "_g",
+						"type": "address"
+					},
+					{
+						"internalType": "address",
+						"name": "_h",
+						"type": "address"
+					},
+					{
+						"internalType": "address",
+						"name": "_i",
+						"type": "address"
+					},
+					{
+						"internalType": "address",
+						"name": "_j",
+						"type": "address"
+					}
+				],
+				"name": "OO_bulkMint10",
+				"outputs": [],
+				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "address",
+						"name": "_a",
+						"type": "address"
+					},
+					{
+						"internalType": "address",
+						"name": "_b",
+						"type": "address"
+					},
+					{
+						"internalType": "address",
+						"name": "_c",
+						"type": "address"
+					},
+					{
+						"internalType": "address",
+						"name": "_d",
+						"type": "address"
+					},
+					{
+						"internalType": "address",
+						"name": "_e",
+						"type": "address"
+					},
+					{
+						"internalType": "address",
+						"name": "_f",
+						"type": "address"
+					},
+					{
+						"internalType": "address",
+						"name": "_g",
+						"type": "address"
+					},
+					{
+						"internalType": "address",
+						"name": "_h",
+						"type": "address"
+					},
+					{
+						"internalType": "address",
+						"name": "_i",
+						"type": "address"
+					},
+					{
+						"internalType": "address",
+						"name": "_j",
+						"type": "address"
+					},
+					{
+						"internalType": "address",
+						"name": "_k",
+						"type": "address"
+					},
+					{
+						"internalType": "address",
+						"name": "_l",
+						"type": "address"
+					},
+					{
+						"internalType": "address",
+						"name": "_m",
+						"type": "address"
+					},
+					{
+						"internalType": "address",
+						"name": "_n",
+						"type": "address"
+					}
+				],
+				"name": "OO_bulkMint14",
+				"outputs": [],
+				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "address",
+						"name": "_a",
+						"type": "address"
+					},
+					{
+						"internalType": "address",
+						"name": "_b",
+						"type": "address"
+					}
+				],
+				"name": "OO_bulkMint2",
+				"outputs": [],
+				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "address",
+						"name": "_a",
+						"type": "address"
+					},
+					{
+						"internalType": "address",
+						"name": "_b",
+						"type": "address"
+					},
+					{
+						"internalType": "address",
+						"name": "_c",
+						"type": "address"
+					}
+				],
+				"name": "OO_bulkMint3",
+				"outputs": [],
+				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "address",
+						"name": "_a",
+						"type": "address"
+					},
+					{
+						"internalType": "address",
+						"name": "_b",
+						"type": "address"
+					},
+					{
+						"internalType": "address",
+						"name": "_c",
+						"type": "address"
+					},
+					{
+						"internalType": "address",
+						"name": "_d",
+						"type": "address"
+					},
+					{
+						"internalType": "address",
+						"name": "_e",
+						"type": "address"
+					}
+				],
+				"name": "OO_bulkMint5",
+				"outputs": [],
+				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
+				"inputs": [],
+				"name": "OO_pause",
+				"outputs": [],
+				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "uint256",
+						"name": "_amount",
+						"type": "uint256"
+					}
+				],
+				"name": "OO_setAirdropAmount",
+				"outputs": [],
+				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "address",
+						"name": "_address",
+						"type": "address"
+					}
+				],
+				"name": "OO_setTokenContract",
+				"outputs": [],
+				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
+				"inputs": [],
+				"name": "OO_unpause",
+				"outputs": [],
+				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "address",
+						"name": "",
+						"type": "address"
+					},
+					{
+						"internalType": "address",
+						"name": "",
+						"type": "address"
+					},
+					{
+						"internalType": "uint256",
+						"name": "",
+						"type": "uint256"
+					},
+					{
+						"internalType": "bytes",
+						"name": "",
+						"type": "bytes"
+					}
+				],
+				"name": "onERC721Received",
+				"outputs": [
+					{
+						"internalType": "bytes4",
+						"name": "",
+						"type": "bytes4"
+					}
+				],
+				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
+				"inputs": [],
+				"name": "owner",
+				"outputs": [
+					{
+						"internalType": "address",
+						"name": "",
+						"type": "address"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [],
+				"name": "paused",
+				"outputs": [
+					{
+						"internalType": "bool",
+						"name": "",
+						"type": "bool"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [],
+				"name": "renounceOwnership",
+				"outputs": [],
+				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "address",
+						"name": "newOwner",
+						"type": "address"
+					}
+				],
+				"name": "transferOwnership",
+				"outputs": [],
+				"stateMutability": "nonpayable",
+				"type": "function"
+			}
+		],
+		"devdoc": {
+			"kind": "dev",
+			"methods": {
+				"OO_pause()": {
+					"details": "Triggers stopped state. (pausable)"
+				},
+				"OO_unpause()": {
+					"details": "Returns to normal state. (pausable)"
+				},
+				"owner()": {
+					"details": "Returns the address of the current owner."
+				},
+				"paused()": {
+					"details": "Returns true if the contract is paused, and false otherwise."
+				},
+				"renounceOwnership()": {
+					"details": "Leaves the contract without owner. It will not be possible to call `onlyOwner` functions anymore. Can only be called by the current owner. NOTE: Renouncing ownership will leave the contract without an owner, thereby removing any functionality that is only available to the owner."
+				},
+				"transferOwnership(address)": {
+					"details": "Transfers ownership of the contract to a new account (`newOwner`). Can only be called by the current owner."
+				}
+			},
+			"version": 1
+		},
+		"userdoc": {
+			"kind": "user",
+			"methods": {},
+			"version": 1
+		}
+	},
+	"settings": {
+		"compilationTarget": {
+			"localhost/PRUF/PRUF_TRUFFLE/contracts/PRUF_airdropMinter.sol": "AIR_MINTER"
+		},
+		"evmVersion": "istanbul",
+		"libraries": {},
+		"metadata": {
+			"bytecodeHash": "ipfs"
+		},
+		"optimizer": {
+			"enabled": false,
+			"runs": 200
+		},
+		"remappings": []
+	},
+	"sources": {
+		"localhost/PRUF/PRUF_TRUFFLE/contracts/Imports/GSN/Context.sol": {
+			"keccak256": "0xdb26cbf4d028490f49831a7865c2fe1b28db44b535ca8d343785a3b768aae183",
+			"license": "MIT",
+			"urls": [
+				"bzz-raw://840b14ce0315c47d49ba328f1f9fa7654ded1c9e1559e6c5e777a7b2dc28bf0a",
+				"dweb:/ipfs/QmTLLabn4wcfGro9LEmUXUN2nwKqZSotXMvjDCLXEnLtZP"
+			]
+		},
+		"localhost/PRUF/PRUF_TRUFFLE/contracts/Imports/access/Ownable.sol": {
+			"keccak256": "0x4bd6402ca6b3419008c2b482aff54e66836e8cb4eba2680e42ac5884ae6424fc",
+			"license": "MIT",
+			"urls": [
+				"bzz-raw://8f9f711fb8d0d92aeea1c327e3845d13ca1fa8f142e47f8723cd5b3106fb29a3",
+				"dweb:/ipfs/QmVQUReDW9f4zGqhizwHnyU8EntMs95tbASdqkGncnikba"
+			]
+		},
+		"localhost/PRUF/PRUF_TRUFFLE/contracts/Imports/math/safeMath.sol": {
+			"keccak256": "0x9a9cf02622cd7a64261b10534fc3260449da25c98c9e96d1b4ae8110a20e5806",
+			"license": "MIT",
+			"urls": [
+				"bzz-raw://2df142592d1dc267d9549049ee3317fa190d2f87eaa565f86ab05ec83f7ab8f5",
+				"dweb:/ipfs/QmSkJtcfWo7c42KnL5hho6GFxK6HRNV91XABx1P7xDtfLV"
+			]
+		},
+		"localhost/PRUF/PRUF_TRUFFLE/contracts/Imports/token/ERC721/IERC721Receiver.sol": {
+			"keccak256": "0x42139300eda7e7fb232ab96972cda1abfd1dce2f013937a188f11fd813aeab27",
+			"license": "MIT",
+			"urls": [
+				"bzz-raw://2042e1d443d327a245a101409ed079e3e207b2cf833cfda4a05483ac090ab9aa",
+				"dweb:/ipfs/QmTC5FVjhMGpzoD9uSGvy1aVmwC2r6mS8mn2tAGXG9AdgT"
+			]
+		},
+		"localhost/PRUF/PRUF_TRUFFLE/contracts/Imports/utils/Pausable.sol": {
+			"keccak256": "0x5d1b1dcbc0396f44c1c8d554857f71e3187503bf1e54062bf9ec6782e21f3a08",
+			"license": "MIT",
+			"urls": [
+				"bzz-raw://9aa7fa580393aab7ca3d9f606f5ab7434d51e1c0f3632a593fca82c80ef8cc4c",
+				"dweb:/ipfs/QmRy84N7QfkwBM2AeR7UB5G1PPHdRLi6s1iyzAwCzevcHe"
+			]
+		},
+		"localhost/PRUF/PRUF_TRUFFLE/contracts/Imports/utils/ReentrancyGuard.sol": {
+			"keccak256": "0x7ff0067f2d7df4187eaa1cb4800949b929602c9d9cb20fcaee6922a7613ef2fb",
+			"license": "MIT",
+			"urls": [
+				"bzz-raw://78aa63fd7fbb8df2942b6c6e7bd89349507e306edbd5909ee8d9575c31be57e5",
+				"dweb:/ipfs/Qmf6z9KWKCJCfEVokgTBhBVq5yHtE6is31N8AV5BHdMkqQ"
+			]
+		},
+		"localhost/PRUF/PRUF_TRUFFLE/contracts/PRUF_INTERFACES.sol": {
+			"keccak256": "0x86c05067dccd36325bac1e266656b46afcd58628cc19901f4cfc9fd4cb9f7967",
+			"license": "UNLICENSED",
+			"urls": [
+				"bzz-raw://455360b56a50bb897238ec95a65721d2244fba275051f5a859ae53fdce3da629",
+				"dweb:/ipfs/QmcoN5iNaUayuC2NuDmuKgCw945Atr3ND8RnFFiLvkCra9"
+			]
+		},
+		"localhost/PRUF/PRUF_TRUFFLE/contracts/PRUF_airdropMinter.sol": {
+			"keccak256": "0x2afbbfd8410a2fccf475bab5681cbc023111e015f7083d6b6fca6a39ac72abe7",
+			"license": "UNLICENSED",
+			"urls": [
+				"bzz-raw://8e0722426a14b41bc6d1201b88d5452b1b6b064b71356e94a80e3c13365bc03f",
+				"dweb:/ipfs/QmSrgXqKG6sbShudb3zWtu6WntNxzY7bdBnCKHnhJc8aFc"
+			]
+		}
+	},
+	"version": 1
+}
