@@ -66,7 +66,9 @@ contract CORE is BASIC {
         );
 
         require( //-------------------------------------------------------DS:TEST
-            (AC_info.custodyType == 1) || (AC_info.custodyType == 2) || (AC_info.custodyType == 4),
+            (AC_info.custodyType == 1) ||
+                (AC_info.custodyType == 2) ||
+                (AC_info.custodyType == 4),
             "C:CR:Cannot create asset - contract not authorized for asset class custody type"
         );
 
@@ -85,7 +87,8 @@ contract CORE is BASIC {
      * @dev Write a Record to Storage @ idxHash (SETTER)
      */
     function writeRecord(bytes32 _idxHash, Record memory _rec)
-        internal virtual
+        internal
+        virtual
         whenNotPaused
     //isAuthorized(_idxHash)
     {
@@ -106,7 +109,8 @@ contract CORE is BASIC {
      * @dev Write an Ipfs Record to Storage @ idxHash  (SETTER)
      */
     function writeRecordIpfs1(bytes32 _idxHash, Record memory _rec)
-        internal virtual
+        internal
+        virtual
         whenNotPaused
     {
         //^^^^^^^Checks^^^^^^^^^
@@ -119,7 +123,8 @@ contract CORE is BASIC {
      * @dev Write an Ipfs Record to Storage @ idxHash  (SETTER)
      */
     function writeRecordIpfs2(bytes32 _idxHash, Record memory _rec)
-        internal virtual
+        internal
+        virtual
         whenNotPaused
     //isAuthorized(_idxHash)
     {
@@ -156,7 +161,6 @@ contract CORE is BASIC {
 
         //^^^^^^^effects^^^^^^^^^
 
-
         uint256 percent = pricing.ACTHprice.div(uint256(100)); //calculate 1% of listed ACTH price
 
         uint256 _ACTHprice = ACTHnetPercent.mul(percent); //calculate the share proprotrion% * 1%
@@ -165,7 +169,6 @@ contract CORE is BASIC {
 
         pricing.ACTHprice = _ACTHprice;
         pricing.rootPrice = pricing.rootPrice.add(prufShare);
-        
 
         deductPayment(pricing);
         //^^^^^^^interactions^^^^^^^^^
@@ -195,11 +198,14 @@ contract CORE is BASIC {
 
     //--------------------------------------------------------------PAYMENT FUNCTIONS
 
-
     /*
      * @dev Deducts payment from transaction
      */
-    function deductPayment(Invoice memory pricing) internal virtual whenNotPaused {
+    function deductPayment(Invoice memory pricing)
+        internal
+        virtual
+        whenNotPaused
+    {
         UTIL_TKN.payForService(
             msg.sender,
             pricing.rootAddress,
