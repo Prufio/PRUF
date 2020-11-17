@@ -1674,7 +1674,7 @@ contract('CORE', accounts => {
         '16',
         rgt14,
         '100',
-        {from: account4, value: 20000000000000000}
+        {from: account4}
         )
     })
 
@@ -1734,7 +1734,7 @@ contract('CORE', accounts => {
         return APP_NC.$addIpfs2Note(
         asset14,
         asset14,
-        {from: account4, value: 20000000000000000}
+        {from: account4}
         )
     })
 
@@ -1778,7 +1778,7 @@ contract('CORE', accounts => {
         'a',
         'a',
         'a',
-        {from: account4, value: 20000000000000000}
+        {from: account4}
         )
     })
 
@@ -1940,7 +1940,7 @@ contract('CORE', accounts => {
         asset14,
         rgt14,
         '10',
-        {from: account4, value: 20000000000000000}
+        {from: account4}
         )
     })
 
@@ -2107,7 +2107,7 @@ contract('CORE', accounts => {
         asset14, 
         rgt14,
         rgt2,
-        {from: account4, value: 20000000000000000}
+        {from: account4}
         )
     })
 
@@ -2127,7 +2127,7 @@ contract('CORE', accounts => {
         return APP.$forceModRecord(
         asset14, 
         rgt14,
-        {from: account4, value: 20000000000000000}
+        {from: account4}
         )
     })
 
@@ -2188,7 +2188,7 @@ contract('CORE', accounts => {
         return APP_NC.$importAsset(
         asset14,
         '12',
-        {from: account4, value: 20000000000000000}
+        {from: account4}
         )
     })
 
@@ -2268,7 +2268,7 @@ contract('CORE', accounts => {
         asset14,
         rgt14,
         '12',
-        {from: account4, value: 20000000000000000}
+        {from: account4}
         )
     })
 

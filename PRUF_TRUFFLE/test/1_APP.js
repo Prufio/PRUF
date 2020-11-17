@@ -1653,7 +1653,7 @@ contract('CORE', accounts => {
                 rgt1,
                 '10',
                 '5000',
-                { from: account2, value: 20000000000000000 }
+                { from: account2 }
             )
         })
 
@@ -1664,7 +1664,7 @@ contract('CORE', accounts => {
                 rgt2,
                 '10',
                 '5000',
-                { from: account2, value: 20000000000000000 }
+                { from: account2 }
             )
         })
 
@@ -1713,7 +1713,7 @@ contract('CORE', accounts => {
                 rgt3,
                 '12',
                 '5000',
-                { from: account4, value: 20000000000000000 }
+                { from: account4 }
             )
         })
 
@@ -1724,7 +1724,7 @@ contract('CORE', accounts => {
                 rgt4,
                 '10',
                 '5000',
-                { from: account2, value: 20000000000000000 }
+                { from: account2 }
             )
         })
 
@@ -1745,7 +1745,7 @@ contract('CORE', accounts => {
                 rgt5,
                 '10',
                 '5000',
-                { from: account2, value: 20000000000000000 }
+                { from: account2 }
             )
         })
 
@@ -1766,7 +1766,7 @@ contract('CORE', accounts => {
                 rgt6,
                 '10',
                 '5000',
-                { from: account2, value: 20000000000000000 }
+                { from: account2 }
             )
         })
 
@@ -1781,7 +1781,7 @@ contract('CORE', accounts => {
                 rgt1,
                 '10',
                 '5000',
-                {from: account5, value: 20000000000000000}
+                {from: account5}
             )
         })
 
@@ -1792,7 +1792,7 @@ contract('CORE', accounts => {
                 rgt1,
                 '11',
                 '5000',
-                {from: account9, value: 20000000000000000}
+                {from: account9}
             )
         })
 
@@ -1805,7 +1805,7 @@ contract('CORE', accounts => {
                 asset3,
                 rgt3,
                 '12',
-                {from: account4, value: 20000000000000000}
+                {from: account4}
             )
         })
 
@@ -1820,7 +1820,7 @@ contract('CORE', accounts => {
                 asset2,
                 rgt2,
                 '10',
-                {from: account9, value: 20000000000000000}
+                {from: account9}
             )
         })
 
@@ -1835,7 +1835,7 @@ contract('CORE', accounts => {
                 asset2,
                 rgt2,
                 '10',
-                {from: account5, value: 20000000000000000}
+                {from: account5}
             )
         })
 
@@ -1850,7 +1850,7 @@ contract('CORE', accounts => {
                 asset2,
                 rgt2,
                 '14',
-                {from: account6, value: 20000000000000000}
+                {from: account6}
             )
         })
 
@@ -1865,7 +1865,7 @@ contract('CORE', accounts => {
                 asset1,
                 rgt1,
                 '10',
-                {from: account2, value: 20000000000000000}
+                {from: account2}
             )
         })
 
@@ -1877,7 +1877,7 @@ contract('CORE', accounts => {
             return APP.$forceModRecord(
                 asset3,
                 rgt2,
-                { from: account4, value: 20000000000000000 }
+                { from: account4 }
             )
         })
 
@@ -1886,7 +1886,7 @@ contract('CORE', accounts => {
             return APP.$forceModRecord(
                 asset1,
                 rgt2,
-                {from: account5, value: 20000000000000000}
+                {from: account5}
             )
         })
 
@@ -1895,7 +1895,7 @@ contract('CORE', accounts => {
             return APP.$forceModRecord(
                 asset1,
                 rgt000,
-                {from: account2, value: 20000000000000000}
+                {from: account2}
             )
         })
 
@@ -1904,7 +1904,7 @@ contract('CORE', accounts => {
             return APP.$forceModRecord(
                 asset4,
                 rgt3,
-                {from: account2, value: 20000000000000000}
+                {from: account2}
             )
         })
 
@@ -1913,7 +1913,7 @@ contract('CORE', accounts => {
             return APP.$forceModRecord(
                 asset5,
                 rgt4,
-                {from: account2, value: 20000000000000000}
+                {from: account2}
             )
         })
 
@@ -1931,7 +1931,7 @@ contract('CORE', accounts => {
                 asset3,
                 rgt3,
                 rgt2,
-                { from: account4, value: 20000000000000000 }
+                { from: account4 }
             )
         })
 
@@ -1941,7 +1941,7 @@ contract('CORE', accounts => {
                 asset1,
                 rgt1,
                 rgt2,
-                {from: account2, value: 20000000000000000}
+                {from: account2}
             )
         })
 
@@ -1961,7 +1961,7 @@ contract('CORE', accounts => {
                 asset1,
                 rgt1,
                 rgt2,
-                {from: account9, value: 20000000000000000}
+                {from: account9}
             )
         })
 
@@ -1986,7 +1986,7 @@ contract('CORE', accounts => {
                 asset1,
                 rgt1,
                 rgt2,
-                {from: account2, value: 20000000000000000}
+                {from: account2}
             )
         })
 
@@ -2006,7 +2006,7 @@ contract('CORE', accounts => {
                 asset1,
                 rgt2,
                 rgt1,
-                {from: account2, value: 20000000000000000}
+                {from: account2}
             )
         })
 
@@ -2019,7 +2019,7 @@ contract('CORE', accounts => {
                 asset3,
                 rgt3,
                 rgt2,
-                { from: account4, value: 20000000000000000 }
+                { from: account4 }
             )
         })
 
@@ -2029,7 +2029,7 @@ contract('CORE', accounts => {
                 asset6,
                 rgt5,
                 rgt5,
-                {from: account2, value: 20000000000000000}
+                {from: account2}
             )
         })
 
@@ -2045,7 +2045,7 @@ contract('CORE', accounts => {
             rgt12,
             '10',
             '100',
-            {from: account2, value: 20000000000000000}
+            {from: account2}
             )
         })
     
@@ -2065,7 +2065,7 @@ contract('CORE', accounts => {
             asset12, 
             rgt12,
             rgt2,
-            {from: account2, value: 20000000000000000}
+            {from: account2}
             )
         })
     
@@ -2074,7 +2074,7 @@ contract('CORE', accounts => {
             return APP.$forceModRecord(
             asset12, 
             rgt12,
-            {from: account2, value: 20000000000000000}
+            {from: account2}
             )
         })
     
@@ -2122,7 +2122,7 @@ contract('CORE', accounts => {
             return APP_NC.$importAsset(
             asset12,
             '12',
-            {from: account2, value: 20000000000000000}
+            {from: account2}
             )
         })
     
@@ -2135,7 +2135,7 @@ contract('CORE', accounts => {
             'a',
             'a',
             'a',
-            {from: account2, value: 20000000000000000}
+            {from: account2}
             )
         })
     
@@ -2144,7 +2144,7 @@ contract('CORE', accounts => {
             return APP_NC.$addIpfs2Note(
             asset12,
             asset12,
-            {from: account2, value: 20000000000000000}
+            {from: account2}
             )
         })
     
@@ -2234,7 +2234,7 @@ contract('CORE', accounts => {
             asset12,
             rgt12,
             '11',
-            {from: account2, value: 20000000000000000}
+            {from: account2}
             )
         })
     

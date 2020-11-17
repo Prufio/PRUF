@@ -1688,7 +1688,7 @@ contract('TheWorksNonCustodial', accounts => {
         rgt13,
         '12',
         '100',
-        {from: account4, value: 20000000000000000}
+        {from: account4}
         )
     })
 
@@ -1748,7 +1748,7 @@ contract('TheWorksNonCustodial', accounts => {
         return APP_NC.$addIpfs2Note(
         asset13,
         asset13,
-        {from: account4, value: 20000000000000000}
+        {from: account4}
         )
     })
 
@@ -1772,7 +1772,7 @@ contract('TheWorksNonCustodial', accounts => {
         'a',
         'a',
         'a',
-        {from: account4, value: 20000000000000000}
+        {from: account4}
         )
     })
 
@@ -1954,7 +1954,7 @@ contract('TheWorksNonCustodial', accounts => {
         asset13,
         rgt13,
         '10',
-        {from: account4, value: 20000000000000000}
+        {from: account4}
         )
     })
 
@@ -2121,7 +2121,7 @@ contract('TheWorksNonCustodial', accounts => {
         asset13, 
         rgt13,
         rgt2,
-        {from: account4, value: 20000000000000000}
+        {from: account4}
         )
     })
 
@@ -2141,7 +2141,7 @@ contract('TheWorksNonCustodial', accounts => {
         return APP.$forceModRecord(
         asset13, 
         rgt13,
-        {from: account4, value: 20000000000000000}
+        {from: account4}
         )
     })
 
@@ -2202,7 +2202,7 @@ contract('TheWorksNonCustodial', accounts => {
         return APP_NC.$importAsset(
         asset13,
         '12',
-        {from: account4, value: 20000000000000000}
+        {from: account4}
         )
     })
 
@@ -2282,7 +2282,7 @@ contract('TheWorksNonCustodial', accounts => {
         asset13,
         rgt13,
         '12',
-        {from: account4, value: 20000000000000000}
+        {from: account4}
         )
     })
 
