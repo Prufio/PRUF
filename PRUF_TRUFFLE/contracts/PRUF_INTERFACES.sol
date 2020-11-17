@@ -82,7 +82,8 @@ interface UTIL_TKN_Interface {
     function purchaseACtoken(
         string calldata _name,
         uint32 _assetClassRoot,
-        uint8 _custodyType
+        uint8 _custodyType,
+        bytes32 _IPFS
     ) external returns (uint256);
 
     /**
@@ -685,7 +686,8 @@ interface AC_MGR_Interface {
         string calldata _name,
         uint32 _assetClass,
         uint32 _assetClassRoot,
-        uint8 _custodyType
+        uint8 _custodyType,
+        bytes32 _IPFS
     ) external;
 
     /*
@@ -725,7 +727,8 @@ interface AC_MGR_Interface {
             uint32,
             uint8,
             uint32,
-            uint32
+            uint32,
+            bytes32
         );
 
     /*

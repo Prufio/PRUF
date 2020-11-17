@@ -51,7 +51,7 @@ contract CORE is BASIC {
         bytes32 _rgtHash,
         uint32 _assetClass,
         uint32 _countDownStart
-    ) internal {
+    ) internal virtual {
         uint256 tokenId = uint256(_idxHash);
         AC memory AC_info = getACinfo(_assetClass);
 
@@ -63,6 +63,11 @@ contract CORE is BASIC {
         require(
             AC_info.custodyType != 3,
             "C:CR:Cannot create asset in a root asset class"
+        );
+
+        require( //-------------------------------------------------------DS:TEST
+            (AC_info.custodyType == 1) || (AC_info.custodyType == 2) || (AC_info.custodyType == 4),
+            "C:CR:Cannot create asset - contract not authorized for asset class custody type"
         );
 
         if (AC_info.custodyType == 1) {
@@ -80,7 +85,7 @@ contract CORE is BASIC {
      * @dev Write a Record to Storage @ idxHash (SETTER)
      */
     function writeRecord(bytes32 _idxHash, Record memory _rec)
-        internal
+        internal virtual
         whenNotPaused
     //isAuthorized(_idxHash)
     {
@@ -101,7 +106,7 @@ contract CORE is BASIC {
      * @dev Write an Ipfs Record to Storage @ idxHash  (SETTER)
      */
     function writeRecordIpfs1(bytes32 _idxHash, Record memory _rec)
-        internal
+        internal virtual
         whenNotPaused
     {
         //^^^^^^^Checks^^^^^^^^^
@@ -114,7 +119,7 @@ contract CORE is BASIC {
      * @dev Write an Ipfs Record to Storage @ idxHash  (SETTER)
      */
     function writeRecordIpfs2(bytes32 _idxHash, Record memory _rec)
-        internal
+        internal virtual
         whenNotPaused
     //isAuthorized(_idxHash)
     {
@@ -194,7 +199,7 @@ contract CORE is BASIC {
     /*
      * @dev Deducts payment from transaction
      */
-    function deductPayment(Invoice memory pricing) internal whenNotPaused {
+    function deductPayment(Invoice memory pricing) internal virtual whenNotPaused {
         UTIL_TKN.payForService(
             msg.sender,
             pricing.rootAddress,

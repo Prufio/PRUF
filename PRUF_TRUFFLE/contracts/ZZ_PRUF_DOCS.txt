@@ -233,6 +233,8 @@ pragma solidity ^0.6.7;
  * 2   --Non-Custodial
  * 3   --Root (n/a)
  * 4   --Verify-Non-Custodial
+ * 11  -- Free Custodial (no contract yet made, must ovveride createRecord in core to allow custody type 11)
+ * 12  -- Free Non-Custodial (no contract yet made, must ovveride createRecord in core to allow custody type 12)
 - -----------------------------------------------------------------
 
 /*-----------------------------------------------------------------

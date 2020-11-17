@@ -113,10 +113,11 @@ contract AC_MGR is BASIC {
      * Requirements:
      * - the caller must have a balance of at least `amount`.
      */
-    function purchaseACtoken(
+    function purchaseACtoken( //-------------------------------------------------------DS:TEST -- modified with new IPFS parameter
         string calldata _name,
         uint32 _assetClassRoot,
-        uint8 _custodyType
+        uint8 _custodyType,
+        bytes32 _IPFS
     ) public returns (uint256) {
         require( //Impossible to test??
             ACtokenIndex < 4294000000,
@@ -152,7 +153,8 @@ contract AC_MGR is BASIC {
             _name,
             uint32(ACtokenIndex), //safe because ACtokenIndex <  4294000000 required
             _assetClassRoot,
-            _custodyType
+            _custodyType,
+            _IPFS
         );
 
         UTIL_TKN.trustedAgentBurn(msg.sender, currentACtokenPrice);
@@ -170,12 +172,13 @@ contract AC_MGR is BASIC {
      *  AC is not provisioned with a root (proxy for not yet registered)
      *  that ACtoken does not exist
      */
-    function createAssetClass(
+    function createAssetClass(  //-------------------------------------------------------DS:TEST -- modified with new IPFS parameter
         address _recipientAddress,
         string calldata _name,
         uint32 _assetClass,
         uint32 _assetClassRoot,
-        uint8 _custodyType
+        uint8 _custodyType,
+        bytes32 _IPFS
     ) external onlyOwner {
         //^^^^^^^checks^^^^^^^^^
         _createAssetClass(
@@ -183,17 +186,19 @@ contract AC_MGR is BASIC {
             _name,
             _assetClass,
             _assetClassRoot,
-            _custodyType
+            _custodyType,
+            _IPFS
         );
         //^^^^^^^effects^^^^^^^^^
     }
 
-    function _createAssetClass(
+    function _createAssetClass(  //-------------------------------------------------------DS:TEST -- modified with new IPFS parameter
         address _recipientAddress,
         string calldata _name,
         uint32 _assetClass,
         uint32 _assetClassRoot,
-        uint8 _custodyType
+        uint8 _custodyType,
+        bytes32 _IPFS
     ) private {
         AC memory _ac = AC_data[_assetClassRoot];
         uint256 tokenId = uint256(_assetClass);
@@ -216,6 +221,7 @@ contract AC_MGR is BASIC {
         AC_data[_assetClass].assetClassRoot = _assetClassRoot;
         AC_data[_assetClass].discount = 3000; //basic discount, 30% (70% to PRUF)
         AC_data[_assetClass].custodyType = _custodyType;
+        AC_data[_assetClass].IPFS = _IPFS;
         //^^^^^^^effects^^^^^^^^^
 
         AC_TKN.mintACToken(
@@ -333,14 +339,15 @@ contract AC_MGR is BASIC {
     /*
      * @dev Retrieve AC_data @ _assetClass
      */
-    function getAC_data(uint32 _assetClass)
+    function getAC_data(uint32 _assetClass) //-------------------------------------------------------DS:TEST -- modified with new IPFS parameter
         external
         view
         returns (
             uint32,
             uint8,
             uint32,
-            uint32
+            uint32,
+            bytes32
         )
     {
         //^^^^^^^checks^^^^^^^^^
@@ -348,7 +355,8 @@ contract AC_MGR is BASIC {
             AC_data[_assetClass].assetClassRoot,
             AC_data[_assetClass].custodyType,
             AC_data[_assetClass].discount,
-            AC_data[_assetClass].extendedData
+            AC_data[_assetClass].extendedData,
+            AC_data[_assetClass].IPFS
         );
         //^^^^^^^interactions^^^^^^^^^
     }

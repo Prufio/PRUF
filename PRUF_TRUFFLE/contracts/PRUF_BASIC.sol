@@ -49,6 +49,7 @@ contract BASIC is ReentrancyGuard, Ownable, IERC721Receiver, Pausable {
         uint8 custodyType; // custodial or noncustodial
         uint32 discount;
         uint32 extendedData; // Future Use
+        bytes32 IPFS; //IPFS data for defining idxHash creation attribute fields
     }
 
     struct ContractDataHash {
@@ -257,7 +258,7 @@ contract BASIC is ReentrancyGuard, Ownable, IERC721Receiver, Pausable {
     /*
      * @dev Get asset class information from AC_manager and return an AC Struct
      */
-    function getACinfo(uint32 _assetClass)
+    function getACinfo(uint32 _assetClass) //-------------------------------------------------------DS:TEST -- modified with new IPFS parameter
         internal
         virtual
         view
@@ -271,7 +272,8 @@ contract BASIC is ReentrancyGuard, Ownable, IERC721Receiver, Pausable {
             AC_info.assetClassRoot,
             AC_info.custodyType,
             AC_info.discount,
-            AC_info.extendedData
+            AC_info.extendedData,
+            AC_info.IPFS
         ) = AC_MGR.getAC_data(_assetClass);
         return AC_info;
         //^^^^^^^interactions^^^^^^^^^
