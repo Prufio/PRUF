@@ -1450,7 +1450,7 @@ it('Should write asset1 in AC 10', async () => {
     rgt1,
     '10',
     '100',
-    {from: account2, value: 200000000000000000}
+    {from: account2}
     )
 })
 
@@ -1461,7 +1461,7 @@ it('Should write asset2 in AC 13', async () => {
     rgt2,
     '13',
     '100',
-    {from: account2, value: 600000000000000000}
+    {from: account2}
     )
 })
 
@@ -1472,7 +1472,7 @@ it('Should write asset3 in AC 11', async () => {
     rgt3,
     '11',
     '100',
-    {from: account2, value: 300000000000000000}
+    {from: account2}
     )
 })
 
