@@ -25,7 +25,7 @@ import "./PRUF_INTERFACES.sol";
 import "./Imports/utils/ReentrancyGuard.sol";
 
 contract AC_TKN is Ownable, ReentrancyGuard, ERC721 {
-    constructor() public ERC721("PRüF Asset Class Token", "PAC") {}
+    constructor() public ERC721("PRüF Asset Class Node Token", "PRFN") {}
 
     address internal AC_MGR_Address; //isAdmin
     address internal STOR_Address;

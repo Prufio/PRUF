@@ -24,7 +24,7 @@ import "./PRUF_INTERFACES.sol";
 import "./Imports/utils/ReentrancyGuard.sol";
 
 contract ID_TKN is Ownable, ERC721 {
-    constructor() public ERC721("PRüF ID Token", "PID") {}
+    constructor() public ERC721("PRüF ID Token", "PRID") {}
 
     event REPORT(string _msg);
 
