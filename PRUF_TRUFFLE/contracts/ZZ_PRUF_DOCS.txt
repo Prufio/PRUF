@@ -341,14 +341,16 @@ pragma solidity ^0.6.7;
  * 2: Add contracts @ respective name in storage, use assetclass 0
  * 3: Resolve token contract addresses
  * 4: Set storage contract in each contract
- * 5: Mint 2 root asset tokens. (home, foreign) !(CustodyType 3)!
- * 6: Mint 2 cust and 2 non-custodial assetclasses in the home assetclass
- * 7: Mint 1 cust and 1 non-custodial assetclasses in the foreign assetclass 
- * 8: Authorize contracts @ respective names in storage using existing assetclasses 
+ * 5a: set MINTER_ROLE in PRUF_A_TKN for APP_NC, APP, NP, PIP (ALL CONTRACTS THAT MINT ASSET TOKENS)
+ * 5b: set PAYABLE_ROLE in PRUF_TKN for APP, APP_NC, RCLR (ALL PAYABLE CONTRACTS)
+ * 6: Mint 2 root asset tokens. (home, foreign) !(CustodyType 3)!
+ * 7: Mint 2 cust and 2 non-custodial assetclasses in the home assetclass
+ * 8: Mint 1 cust and 1 non-custodial assetclasses in the foreign assetclass 
+ * 9: Authorize contracts @ respective names in storage using existing assetclasses 
  *      -- type 1 for custodial, type 2 for non-custodial. Authorize asset token contract as type 1 in all root asset classes.
- * 9: Resolve Contract Addresses
- * 10: Set costs / users / types for root && rooted AC token
- * 11: THE WORKS
+ * 10: Resolve Contract Addresses
+ * 11: Set costs / users / types for root && rooted AC token
+ * 12: THE WORKS
  *
 - -----------------------------------------------------------------
 

@@ -266,7 +266,7 @@ contract AC_MGR is BASIC {
      * Requires that:
      *  caller holds ACtoken
      */
-    function updateACipfs(bytes32 _IPFS, uint32 _assetClass)
+    function updateACipfs(bytes32 _IPFS, uint32 _assetClass) //-------------------------------------------------------DS:TEST -- modified with new IPFS parameter
         external
         isACtokenHolderOfClass(_assetClass)
     {
