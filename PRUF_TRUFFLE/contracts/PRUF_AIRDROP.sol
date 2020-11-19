@@ -14,8 +14,7 @@ __/\\\\\\\\\\\\\ _____/\\\\\\\\\ _______/\\../\\ ___/\\\\\\\\\\\\\\\
  *  TO DO
  *
  *-----------------------------------------------------------------
- *PRUF basic provides core data structures and functionality to PRUF contracts.
- *Features include contract name resolution, and getters for records, users, and asset class information.
+ *
  *---------------------------------------------------------------*/
 
 // SPDX-License-Identifier: UNLICENSED
@@ -25,10 +24,9 @@ import "./PRUF_INTERFACES.sol";
 import "./Imports/access/Ownable.sol";
 import "./Imports/utils/Pausable.sol";
 import "./Imports/utils/ReentrancyGuard.sol";
-import "./Imports/token/ERC721/IERC721Receiver.sol";
 import "./Imports/math/safeMath.sol";
 
-contract AIR_MINTER is ReentrancyGuard, Ownable, IERC721Receiver, Pausable {
+contract AIR_MINTER is ReentrancyGuard, Ownable, Pausable {
 
     address internal UTIL_TKN_Address;
     UTIL_TKN_Interface internal UTIL_TKN;
@@ -88,7 +86,7 @@ contract AIR_MINTER is ReentrancyGuard, Ownable, IERC721Receiver, Pausable {
         address _l,
         address _m,
         address _n
-    ) external onlyOwner {
+    ) external onlyOwner nonReentrant whenNotPaused {
         require(amount != 0, "AM:BM: airdrop amount cannot be zero");
         //^^^^^^^checks^^^^^^^^^
 
@@ -123,7 +121,7 @@ contract AIR_MINTER is ReentrancyGuard, Ownable, IERC721Receiver, Pausable {
         address _h,
         address _i,
         address _j
-    ) external onlyOwner {
+    ) external onlyOwner nonReentrant whenNotPaused {
         require(amount != 0, "AM:BM: airdrop amount cannot be zero");
         //^^^^^^^checks^^^^^^^^^
 
@@ -149,7 +147,7 @@ contract AIR_MINTER is ReentrancyGuard, Ownable, IERC721Receiver, Pausable {
         address _c,
         address _d,
         address _e
-    ) external onlyOwner {
+    ) external onlyOwner nonReentrant whenNotPaused {
         require(amount != 0, "AM:BM: airdrop amount cannot be zero");
         //^^^^^^^checks^^^^^^^^^
 
@@ -168,7 +166,7 @@ contract AIR_MINTER is ReentrancyGuard, Ownable, IERC721Receiver, Pausable {
         address _a,
         address _b,
         address _c
-    ) external onlyOwner {
+    ) external onlyOwner nonReentrant whenNotPaused {
         require(amount != 0, "AM:BM: airdrop amount cannot be zero");
         //^^^^^^^checks^^^^^^^^^
 
@@ -181,7 +179,7 @@ contract AIR_MINTER is ReentrancyGuard, Ownable, IERC721Receiver, Pausable {
     /*
      * @dev Mint a set amount to a list of addresses
      */
-    function OO_bulkMint2(address _a, address _b) external onlyOwner {
+    function OO_bulkMint2(address _a, address _b) external onlyOwner nonReentrant whenNotPaused {
         require(amount != 0, "AM:BM: airdrop amount cannot be zero");
         //^^^^^^^checks^^^^^^^^^
 
@@ -193,7 +191,7 @@ contract AIR_MINTER is ReentrancyGuard, Ownable, IERC721Receiver, Pausable {
     /*
      * @dev Mint a set amount to a list of addresses
      */
-    function OO_bulkMint1(address _a) external onlyOwner {
+    function OO_bulkMint1(address _a) external onlyOwner nonReentrant whenNotPaused {
         require(amount != 0, "AM:BM: airdrop amount cannot be zero");
         //^^^^^^^checks^^^^^^^^^
 
