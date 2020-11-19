@@ -336,9 +336,10 @@ pragma solidity ^0.6.7;
  * 5: ROLES:
  *      a: set MINTER_ROLE in PRUF_A_TKN for APP_NC, APP, NP, PIP (ALL CONTRACTS THAT MINT ASSET TOKENS)
  *      b: set PAYABLE_ROLE in PRUF_TKN for APP, APP_NC, RCLR (ALL PAYABLE CONTRACTS)
- *      c: set MINTER_ROLE in AC_TKN for AC_MGR (ALL CONTRACTS THAT MINT AC TOKENS)
- *      d: set MINTER_ROLE in PRUF_TKN for TESTNET_MINTER (ALL CONTRACTS THAT MINT PRUF TOKENS)
- *      e: set MINTER_ROLE in PRUF_A_TKN for TESTNET_MINTER (ALL CONTRACTS THAT MINT ID TOKENS)
+ *      c: set TRUSTED_AGENT_ROLE in PRUF_TKN for AC_MGR
+ *      d: set MINTER_ROLE in AC_TKN for AC_MGR (ALL CONTRACTS THAT MINT AC TOKENS)
+ *      e: set MINTER_ROLE in PRUF_TKN for TESTNET_MINTER (ALL CONTRACTS THAT MINT PRUF TOKENS)
+ *      f: set MINTER_ROLE in PRUF_A_TKN for TESTNET_MINTER (ALL CONTRACTS THAT MINT ID TOKENS)
  * 6: Mint 2 root asset tokens. (home, foreign) !(CustodyType 3)!
  * 7: Mint 2 cust and 2 non-custodial assetclasses in the home assetclass
  * 8: Mint 1 cust and 1 non-custodial assetclasses in the foreign assetclass 
