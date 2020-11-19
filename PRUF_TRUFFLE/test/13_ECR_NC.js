@@ -15,7 +15,7 @@ const PRUF_RCLR = artifacts.require('RCLR');
 const PRUF_PIP = artifacts.require('PIP');
 const PRUF_HELPER = artifacts.require('Helper');
 const PRUF_MAL_APP = artifacts.require('MAL_APP');
-const PRUF_TKN = artifacts.require('UTIL_TKN');
+const PRUF_UTIL_TKN = artifacts.require('UTIL_TKN');
 
 let STOR;
 let APP;
@@ -84,6 +84,7 @@ let nakedAuthCode3;
 let nakedAuthCode7;
 
 let payableRoleB32;
+let minterRoleB32;
 
 contract('ECR_NC', accounts => {
 
@@ -238,10 +239,10 @@ contract('ECR_NC', accounts => {
 
 
     it('Should deploy UTIL_TKN', async () => {
-        const PRUF_TKN_TEST = await PRUF_TKN.deployed({ from: account1 });
-        console.log(PRUF_TKN_TEST.address);
-        assert(PRUF_TKN_TEST.address !== '')
-        UTIL_TKN = PRUF_TKN_TEST;
+        const PRUF_UTIL_TKN_TEST = await PRUF_UTIL_TKN.deployed({ from: account1 });
+        console.log(PRUF_UTIL_TKN_TEST.address);
+        assert(PRUF_UTIL_TKN_TEST.address !== '')
+        UTIL_TKN = PRUF_UTIL_TKN_TEST;
     })
 
 
@@ -506,6 +507,10 @@ contract('ECR_NC', accounts => {
         payableRoleB32 = await Helper.getStringHash(
             'PAYABLE_ROLE'
         )
+
+        minterRoleB32 = await Helper.getStringHash(
+            'MINTER_ROLE'
+        )
     })
 
 
@@ -748,11 +753,11 @@ contract('ECR_NC', accounts => {
     it('Should mint a couple of asset root tokens', async () => {
 
         console.log("Minting root token 1 -C")
-        return AC_MGR.createAssetClass(account1, 'CUSTODIAL_ROOT', '1', '1', '3', { from: account1 })
+        return AC_MGR.createAssetClass(account1, 'CUSTODIAL_ROOT', '1', '1', '3', rgt000, { from: account1 })
 
             .then(() => {
                 console.log("Minting root token 2 -NC")
-                return AC_MGR.createAssetClass(account1, 'NON-CUSTODIAL_ROOT', '2', '2', '3', { from: account1 })
+                return AC_MGR.createAssetClass(account1, 'NON-CUSTODIAL_ROOT', '2', '2', '3', rgt000, { from: account1 })
             })
     })
 
@@ -760,26 +765,26 @@ contract('ECR_NC', accounts => {
     it("Should Mint 2 cust and 2 non-cust AC tokens in AC_ROOT 1", async () => {
 
         console.log("Minting AC 10 -C")
-        return AC_MGR.createAssetClass(account1, "Custodial_AC1", "10", "1", "1", { from: account1 })
+        return AC_MGR.createAssetClass(account1, "Custodial_AC1", "10", "1", "1", rgt000, { from: account1 })
 
             .then(() => {
                 console.log("Minting AC 11 -C")
-                return AC_MGR.createAssetClass(account1, "Custodial_AC2", "11", "1", "1", { from: account1 })
+                return AC_MGR.createAssetClass(account1, "Custodial_AC2", "11", "1", "1", rgt000, { from: account1 })
             })
 
             .then(() => {
                 console.log("Minting AC 12 -NC")
-                return AC_MGR.createAssetClass(account1, "Non-Custodial_AC1", "12", "1", "2", { from: account1 })
+                return AC_MGR.createAssetClass(account1, "Non-Custodial_AC1", "12", "1", "2", rgt000, { from: account1 })
             })
 
             .then(() => {
                 console.log("Minting AC 13 -NC")
-                return AC_MGR.createAssetClass(account1, "Non-Custodial_AC2", "13", "1", "2", { from: account1 })
+                return AC_MGR.createAssetClass(account1, "Non-Custodial_AC2", "13", "1", "2", rgt000, { from: account1 })
             })
 
             .then(() => {
                 console.log("Minting AC 16 -NC")
-                return AC_MGR.createAssetClass(account10, "Non_Custodial_AC5", "16", "1", "2", { from: account1 })
+                return AC_MGR.createAssetClass(account10, "Non_Custodial_AC5", "16", "1", "2", rgt000, { from: account1 })
             })
     })
 
@@ -787,11 +792,11 @@ contract('ECR_NC', accounts => {
     it("Should Mint 2 non-cust AC tokens in AC_ROOT 2", async () => {
 
         console.log("Minting AC 14 -NC")
-        return AC_MGR.createAssetClass(account1, "Non-Custodial_AC3", "14", "2", "2", { from: account1 })
+        return AC_MGR.createAssetClass(account1, "Non-Custodial_AC3", "14", "2", "2", rgt000, { from: account1 })
 
             .then(() => {
                 console.log("Minting AC 15 -NC")
-                return AC_MGR.createAssetClass(account10, "Non_Custodial_AC4", "15", "2", "2", { from: account1 })
+                return AC_MGR.createAssetClass(account10, "Non_Custodial_AC4", "15", "2", "2", rgt000, { from: account1 })
             })
     })
 
@@ -1103,11 +1108,27 @@ contract('ECR_NC', accounts => {
                 console.log("Authorizing RCLR")
                 return UTIL_TKN.grantRole(payableRoleB32, RCLR.address, { from: account1 })
             })
+    })
+
+    it('Should authorize all minter contracts for minting A_TKN(s)', async () => {
+
+        console.log("Authorizing NP")
+        return A_TKN.grantRole(minterRoleB32, NP.address, { from: account1 })
 
             .then(() => {
-                console.log("Authorizing STOR")
-                return UTIL_TKN.grantRole(payableRoleB32, STOR.address, { from: account1 })
+                console.log("Authorizing APP_NC")
+                return A_TKN.grantRole(minterRoleB32, APP_NC.address, { from: account1 })
             })
+
+            .then(() => {
+                console.log("Authorizing APP")
+                return A_TKN.grantRole(minterRoleB32, APP.address, { from: account1 })
+            })
+    })
+
+    it('Should authorize all minter contracts for minting AC_TKN(s)', async () => {
+        console.log("Authorizing AC_MGR")
+        return AC_TKN.grantRole(minterRoleB32, AC_MGR.address, { from: account1 })
     })
 
 

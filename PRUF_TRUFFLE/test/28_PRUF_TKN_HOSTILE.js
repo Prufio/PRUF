@@ -1,4 +1,4 @@
-const PRUF_TKN = artifacts.require('UTIL_TKN');
+const PRUF_UTIL_TKN = artifacts.require('UTIL_TKN');
 const PRUF_HELPER = artifacts.require('Helper');
 
 let UTIL_TKN;
@@ -21,10 +21,10 @@ contract('UTIL_TKN', accounts => {
 
 
     it('Should deploy UTIL_TKN', async () => {
-        const PRUF_TKN_TEST = await PRUF_TKN.deployed({ from: MAIN });
-        console.log(PRUF_TKN_TEST.address);
-        assert(PRUF_TKN_TEST.address !== '')
-        UTIL_TKN = PRUF_TKN_TEST;
+        const PRUF_UTIL_TKN_TEST = await PRUF_UTIL_TKN.deployed({ from: MAIN });
+        console.log(PRUF_UTIL_TKN_TEST.address);
+        assert(PRUF_UTIL_TKN_TEST.address !== '')
+        UTIL_TKN = PRUF_UTIL_TKN_TEST;
     })
 
 

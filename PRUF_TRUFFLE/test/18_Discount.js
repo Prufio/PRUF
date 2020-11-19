@@ -15,7 +15,7 @@ const PRUF_RCLR = artifacts.require('RCLR');
 const PRUF_PIP = artifacts.require('PIP');
 const PRUF_HELPER = artifacts.require('Helper');
 const PRUF_MAL_APP = artifacts.require('MAL_APP');
-const PRUF_TKN = artifacts.require('UTIL_TKN');
+const PRUF_UTIL_TKN = artifacts.require('UTIL_TKN');
 
 let STOR;
 let APP;
@@ -236,10 +236,10 @@ it('Should deploy PRUF_MAL_APP', async () => {
 
 
 it('Should deploy UTIL_TKN', async () => {
-    const PRUF_TKN_TEST = await PRUF_TKN.deployed({ from: account1 });
-    console.log(PRUF_TKN_TEST.address);
-    assert(PRUF_TKN_TEST.address !== '')
-    UTIL_TKN = PRUF_TKN_TEST;
+    const PRUF_UTIL_TKN_TEST = await PRUF_UTIL_TKN.deployed({ from: account1 });
+    console.log(PRUF_UTIL_TKN_TEST.address);
+    assert(PRUF_UTIL_TKN_TEST.address !== '')
+    UTIL_TKN = PRUF_UTIL_TKN_TEST;
 })
 
 
@@ -982,6 +982,53 @@ it('Should authorize RCLR in all relevant asset classes', async () => {
         .then(() => {
             return STOR.enableContractForAC('RCLR', '14', '3', { from: account1 })
         })
+})
+
+it('Should authorize all payable contracts for transactions', async () => {
+
+    console.log("Authorizing AC_MGR")
+    return UTIL_TKN.grantRole(payableRoleB32, AC_MGR.address, { from: account1 })
+
+        .then(() => {
+            console.log("Authorizing APP_NC")
+            return UTIL_TKN.grantRole(payableRoleB32, APP_NC.address, { from: account1 })
+        })
+
+        .then(() => {
+            console.log("Authorizing APP")
+            return UTIL_TKN.grantRole(payableRoleB32, APP.address, { from: account1 })
+        })
+
+        .then(() => {
+            console.log("Authorizing RCLR")
+            return UTIL_TKN.grantRole(payableRoleB32, RCLR.address, { from: account1 })
+        })
+})
+
+it('Should authorize all minter contracts for minting A_TKN(s)', async () => {
+
+    console.log("Authorizing NP")
+    return A_TKN.grantRole(minterRoleB32, NP.address, { from: account1 })
+
+        .then(() => {
+            console.log("Authorizing APP_NC")
+            return A_TKN.grantRole(minterRoleB32, APP_NC.address, { from: account1 })
+        })
+
+        .then(() => {
+            console.log("Authorizing APP")
+            return A_TKN.grantRole(minterRoleB32, APP.address, { from: account1 })
+        })
+
+        .then(() => {
+            console.log("Authorizing PIP")
+            return A_TKN.grantRole(minterRoleB32, PIP.address, { from: account1 })
+        })
+})
+
+it('Should authorize all minter contracts for minting AC_TKN(s)', async () => {
+    console.log("Authorizing AC_MGR")
+    return AC_TKN.grantRole(minterRoleB32, AC_MGR.address, { from: account1 })
 })
 
 
