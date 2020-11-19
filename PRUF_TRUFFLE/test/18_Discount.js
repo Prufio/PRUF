@@ -736,6 +736,11 @@ it('Should resolve contract addresses', async () => {
         })
 })
 
+it('Should authorize all minter contracts for minting AC_TKN(s)', async () => {
+    console.log("Authorizing AC_MGR")
+    return AC_TKN.grantRole(minterRoleB32, AC_MGR.address, { from: account1 })
+})
+
 
 it('Should mint a couple of asset root tokens', async () => {
 
@@ -1024,11 +1029,6 @@ it('Should authorize all minter contracts for minting A_TKN(s)', async () => {
             console.log("Authorizing PIP")
             return A_TKN.grantRole(minterRoleB32, PIP.address, { from: account1 })
         })
-})
-
-it('Should authorize all minter contracts for minting AC_TKN(s)', async () => {
-    console.log("Authorizing AC_MGR")
-    return AC_TKN.grantRole(minterRoleB32, AC_MGR.address, { from: account1 })
 })
 
 
