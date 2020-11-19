@@ -54,6 +54,8 @@ contract AC_MGR is BASIC {
     //address AC_minterAddress;
     uint256 private priceThreshold; //threshold of price where fractional pricing is implemented
 
+    uint256 constant  private upgradeMultiplier = 3; // multplier to determine the amount of pruf required to fully upgrade an AC node token
+    uint32 constant  private startingDiscount = 5100; // Nodes start with 51% profit share
     /*
      * @dev Verify user credentials
      * Originating Address:
@@ -219,7 +221,7 @@ contract AC_MGR is BASIC {
         AC_number[_name] = _assetClass;
         AC_data[_assetClass].name = _name;
         AC_data[_assetClass].assetClassRoot = _assetClassRoot;
-        AC_data[_assetClass].discount = 3000; //basic discount, 30% (70% to PRUF)
+        AC_data[_assetClass].discount = startingDiscount; //basic discount (% to PRUF Foundation)
         AC_data[_assetClass].custodyType = _custodyType;
         AC_data[_assetClass].IPFS = _IPFS;
         //^^^^^^^effects^^^^^^^^^
@@ -255,6 +257,21 @@ contract AC_MGR is BASIC {
 
         AC_number[_name] = _assetClass;
         AC_data[_assetClass].name = _name;
+        //^^^^^^^effects^^^^^^^^^
+    }
+
+    /*
+     * @dev Modifies an assetClass
+     * Sets a new AC IPFS Address. Asset Classes cannot be moved to a new root or custody type.
+     * Requires that:
+     *  caller holds ACtoken
+     */
+    function updateACipfs(bytes32 _IPFS, uint32 _assetClass)
+        external
+        isACtokenHolderOfClass(_assetClass)
+    {
+        //^^^^^^^checks^^^^^^^^^
+        AC_data[_assetClass].IPFS = _IPFS;
         //^^^^^^^effects^^^^^^^^^
     }
 
@@ -295,14 +312,14 @@ contract AC_MGR is BASIC {
 
         uint256 oldShare = uint256(AC_MGR.getAC_discount(_assetClass));
 
-        uint256 maxPayment = (uint256(9000).sub(oldShare)).mul(uint256(2)); //max payment percentage never goes over 90%
+        uint256 maxPayment = (uint256(9000).sub(oldShare)).mul(upgradeMultiplier); //max payment percentage never goes over 90%
 
-        address rootPaymentAdress = cost[AC_data[_assetClass].assetClassRoot][1].paymentAddress ;
+        address rootPaymentAdress = cost[AC_data[_assetClass].assetClassRoot][1].paymentAddress ; //payment for upgrade goes to root AC payment adress specified for service (1)
 
         if (_amount > maxPayment) _amount = maxPayment;
         UTIL_TKN.trustedAgentTransfer(_msgSender(), rootPaymentAdress, _amount);
 
-        increasePriceShare(_assetClass, _amount.div(uint256(2)));
+        increasePriceShare(_assetClass, _amount.div(upgradeMultiplier));
         return true;
         //^^^^^^^effects/interactions^^^^^^^^^
     }

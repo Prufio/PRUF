@@ -22,20 +22,48 @@ __/\\\\\\\\\\\\\ _____/\\\\\\\\\ _______/\\../\\ ___/\\\\\\\\\\\\\\\
 // SPDX-License-Identifier: UNLICENSED
 
 pragma solidity ^0.6.7;
+/*-----------------------------------------------------------------
+ *TESTNET TO DO :
+ *
+ *      * Faucet - 0.1 KETH per 5000 PRUF?
+ *
+ *      * ID token 1 per adreess
+ *
+ *      * token limit 40,000,000,000 instead of 4
+ *
+ *      * Webapp - mint pruf, mint ID tokens
+ *
+ *      *
+ *
+ *      *
+ *
+ *      *
+ *
+ *
+- ----------------------------------------------------------------
 
 /*-----------------------------------------------------------------
  *TO DO :
  *
+ *      * rework A_TKN, AC_TKN, ID_TKN with boilerplate versions, roles instead of contract names
+ *
+ *      *  
+ *
+ *      *
+ *
+ *      *
+ *
+ *      *
+ *
+ *      *
+ *
+ *      *
  *
  *      *hand off an array to set pricing rather than one by one (gas cost) ????
  *
- *      *!! make it possible to modify ext data in AC manger
+ *      *!! make it possible to modify ext data in AC manager
  *
  *      *Automate contract authorization 
- *
- *      *Above 65k segregation (probably by ACinfo custodial type) (just need to add a wild west contract?)
- *
- *      *find a way to find and react to assets being in a dead asset class (future, API verified, works w/ AC0)
  *
  *      *Eventually flatten contracts and factor interface file
  *
@@ -46,8 +74,6 @@ pragma solidity ^0.6.7;
  *      *Security token
  *
  *      *Define / document protocol
- *
- *      *make a PRuF fountain contract
  *
  *      *make security token invisible from the main contracts 
  *
@@ -68,8 +94,6 @@ pragma solidity ^0.6.7;
  *      *Webapp tutorial
  *
  *      *Medium article on PRUF general
- *
- *      
  *
  *
 - ----------------------------------------------------------------

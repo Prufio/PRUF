@@ -700,6 +700,14 @@ interface AC_MGR_Interface {
     function updateACname(string calldata _name, uint32 _assetClass) external;
 
     /*
+     * @dev Modifies an assetClass
+     * Sets a new AC IPFS Address. Asset Classes cannot be moved to a new root or custody type.
+     * Requires that:
+     *  caller holds ACtoken
+     */
+    function updateACipfs(bytes32 _IPFS, uint32 _assetClass) external;
+
+    /*
      * @dev Set function costs and payment address per asset class, in Wei
      */
     function ACTH_setCosts(
