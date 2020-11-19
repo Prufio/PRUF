@@ -54,7 +54,7 @@ contract AC_TKN is ReentrancyGuard, Context, AccessControl, ERC721Burnable, ERC7
 
     constructor() public ERC721("PRüF Asset Class Node Token", "PRFN") {
         _setupRole(DEFAULT_ADMIN_ROLE, _msgSender());
-        _setupRole(MINTER_ROLE, _msgSender()); //ALL CONTRACTS THAT MINT ASSET TOKENS
+        _setupRole(MINTER_ROLE, _msgSender()); //ALL CONTRACTS THAT MINT ASSET NODE TOKENS
         _setupRole(PAUSER_ROLE, _msgSender());
 
         //_setBaseURI("pruf.io");
