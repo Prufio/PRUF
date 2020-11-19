@@ -199,20 +199,6 @@ contract AIR_MINTER is ReentrancyGuard, Ownable, Pausable {
         //^^^^^^^effects^^^^^^^^^
     }
 
-    /*
-     * @dev Compliance for erc721 reciever
-     */
-    function onERC721Received(
-        address,
-        address,
-        uint256,
-        bytes calldata
-    ) external virtual override returns (bytes4) {
-        //^^^^^^^checks^^^^^^^^^
-        return this.onERC721Received.selector;
-        //^^^^^^^interactions^^^^^^^^^
-    }
-
     /**
      * @dev Triggers stopped state. (pausable)
      *
