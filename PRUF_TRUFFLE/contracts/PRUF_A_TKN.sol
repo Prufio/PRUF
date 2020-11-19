@@ -52,7 +52,6 @@ contract A_TKN is ReentrancyGuard, Context, AccessControl, ERC721Burnable, ERC72
 
     bytes32 public constant MINTER_ROLE = keccak256("MINTER_ROLE");
     bytes32 public constant PAUSER_ROLE = keccak256("PAUSER_ROLE");
-    bytes32 public constant TRUSTED_CONTRACT_ROLE = keccak256("TRUSTED_CONTRACT_ROLE");
 
     Counters.Counter private _tokenIdTracker;
 
@@ -77,13 +76,10 @@ contract A_TKN is ReentrancyGuard, Context, AccessControl, ERC721Burnable, ERC72
     }
 
 
-
-
-
-     address internal STOR_Address;
-     address internal RCLR_Address;
-     STOR_Interface internal STOR;
-     RCLR_Interface internal RCLR;
+    address internal STOR_Address;
+    address internal RCLR_Address;
+    STOR_Interface internal STOR;
+    RCLR_Interface internal RCLR;
 
     event REPORT(string _msg);
 
@@ -121,7 +117,7 @@ contract A_TKN is ReentrancyGuard, Context, AccessControl, ERC721Burnable, ERC72
     /*
      * @dev Address Setters
      */
-    function OO_resolveContractAddresses() external nonReentrant isAdmin {
+    function OO_resolveContractAddresses() external isAdmin {
         //^^^^^^^checks^^^^^^^^^
 
         RCLR_Address = STOR.resolveContractAddress("RCLR");
@@ -136,7 +132,7 @@ contract A_TKN is ReentrancyGuard, Context, AccessControl, ERC721Burnable, ERC72
         address _recipientAddress,
         uint256 tokenId,
         string calldata _tokenURI
-    ) external isMinter returns (uint256) {
+    ) external isMinter nonReentrant returns (uint256) {
         //^^^^^^^checks^^^^^^^^^
 
         //MAKE URI ASSET SPECIFIC- has to incorporate the token ID
@@ -231,7 +227,7 @@ contract A_TKN is ReentrancyGuard, Context, AccessControl, ERC721Burnable, ERC72
         address from,
         address to,
         uint256 tokenId
-    ) public override nonReentrant {
+    ) public override nonReentrant whenNotPaused {
         bytes32 _idxHash = bytes32(tokenId);
         Record memory rec = getRecord(_idxHash);
 
@@ -295,7 +291,7 @@ contract A_TKN is ReentrancyGuard, Context, AccessControl, ERC721Burnable, ERC72
         address to,
         uint256 tokenId,
         bytes memory _data
-    ) public virtual override nonReentrant {
+    ) public virtual override nonReentrant whenNotPaused {
         bytes32 _idxHash = bytes32(tokenId);
         Record memory rec = getRecord(_idxHash);
         (uint8 isAuth, ) = STOR.ContractInfoHash(to, 0); // trailing comma because does not use the returned hash
@@ -332,7 +328,7 @@ contract A_TKN is ReentrancyGuard, Context, AccessControl, ERC721Burnable, ERC72
     /**
      * @dev Safely burns a token and sets the corresponding RGT to zero in storage.
      */
-    function discard(uint256 tokenId) external nonReentrant {
+    function discard(uint256 tokenId) external nonReentrant whenNotPaused {
         bytes32 _idxHash = bytes32(tokenId);
         //Record memory rec = getRecord(_idxHash);
 
@@ -351,7 +347,7 @@ contract A_TKN is ReentrancyGuard, Context, AccessControl, ERC721Burnable, ERC72
     /*
      * @dev Write a Record to Storage @ idxHash
      */
-    function writeRecord(bytes32 _idxHash, Record memory _rec) private {
+    function writeRecord(bytes32 _idxHash, Record memory _rec) private whenNotPaused {
         //^^^^^^^checks^^^^^^^^^
         //^^^^^^^effects^^^^^^^^^
         STOR.modifyRecord(
@@ -375,9 +371,7 @@ contract A_TKN is ReentrancyGuard, Context, AccessControl, ERC721Burnable, ERC72
         {
             //Start of scope limit for stack depth
             (
-                //bytes32 _recorder,
                 bytes32 _rightsHolder,
-                //bytes32 _lastRecorder,
                 uint8 _assetStatus,
                 uint32 _assetClass,
                 uint32 _countDown,
@@ -427,7 +421,7 @@ contract A_TKN is ReentrancyGuard, Context, AccessControl, ERC721Burnable, ERC72
         return string(buffer);
     }
 
-        /**
+    /**
      * @dev Pauses all token transfers.
      *
      * See {ERC721Pausable} and {Pausable-_pause}.
