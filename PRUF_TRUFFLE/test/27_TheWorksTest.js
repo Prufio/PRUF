@@ -15,7 +15,7 @@ const PRUF_RCLR = artifacts.require('RCLR');
 const PRUF_PIP = artifacts.require('PIP');
 const PRUF_HELPER = artifacts.require('Helper');
 const PRUF_MAL_APP = artifacts.require('MAL_APP');
-const PRUF_TKN = artifacts.require('UTIL_TKN');
+const PRUF_UTIL_TKN = artifacts.require('UTIL_TKN');
 
 let STOR;
 let APP;
@@ -84,8 +84,9 @@ let nakedAuthCode3;
 let nakedAuthCode7;
 
 let payableRoleB32;
+let minterRoleB32;
 
-contract('THE WORKS NC', accounts => {
+contract('THEWORKS_TEST', accounts => {
 
     console.log('//**************************BEGIN BOOTSTRAP**************************//')
 
@@ -238,10 +239,10 @@ contract('THE WORKS NC', accounts => {
 
 
     it('Should deploy UTIL_TKN', async () => {
-        const PRUF_TKN_TEST = await PRUF_TKN.deployed({ from: account1 });
-        console.log(PRUF_TKN_TEST.address);
-        assert(PRUF_TKN_TEST.address !== '')
-        UTIL_TKN = PRUF_TKN_TEST;
+        const PRUF_UTIL_TKN_TEST = await PRUF_UTIL_TKN.deployed({ from: account1 });
+        console.log(PRUF_UTIL_TKN_TEST.address);
+        assert(PRUF_UTIL_TKN_TEST.address !== '')
+        UTIL_TKN = PRUF_UTIL_TKN_TEST;
     })
 
 
@@ -506,6 +507,10 @@ contract('THE WORKS NC', accounts => {
         payableRoleB32 = await Helper.getStringHash(
             'PAYABLE_ROLE'
         )
+
+        minterRoleB32 = await Helper.getStringHash(
+            'MINTER_ROLE'
+        )
     })
 
 
@@ -748,11 +753,11 @@ contract('THE WORKS NC', accounts => {
     it('Should mint a couple of asset root tokens', async () => {
 
         console.log("Minting root token 1 -C")
-        return AC_MGR.createAssetClass(account1, 'CUSTODIAL_ROOT', '1', '1', '3', { from: account1 })
+        return AC_MGR.createAssetClass(account1, 'CUSTODIAL_ROOT', '1', '1', '3', rgt000, { from: account1 })
 
             .then(() => {
                 console.log("Minting root token 2 -NC")
-                return AC_MGR.createAssetClass(account1, 'NON-CUSTODIAL_ROOT', '2', '2', '3', { from: account1 })
+                return AC_MGR.createAssetClass(account1, 'NON-CUSTODIAL_ROOT', '2', '2', '3', rgt000, { from: account1 })
             })
     })
 
@@ -760,26 +765,26 @@ contract('THE WORKS NC', accounts => {
     it("Should Mint 2 cust and 2 non-cust AC tokens in AC_ROOT 1", async () => {
 
         console.log("Minting AC 10 -C")
-        return AC_MGR.createAssetClass(account2, "Custodial_AC1", "10", "1", "1", { from: account1 })
+        return AC_MGR.createAssetClass(account1, "Custodial_AC1", "10", "1", "1", rgt000, { from: account1 })
 
             .then(() => {
                 console.log("Minting AC 11 -C")
-                return AC_MGR.createAssetClass(account2, "Custodial_AC2", "11", "1", "1", { from: account1 })
+                return AC_MGR.createAssetClass(account1, "Custodial_AC2", "11", "1", "1", rgt000, { from: account1 })
             })
 
             .then(() => {
                 console.log("Minting AC 12 -NC")
-                return AC_MGR.createAssetClass(account2, "Non-Custodial_AC1", "12", "1", "2", { from: account1 })
+                return AC_MGR.createAssetClass(account1, "Non-Custodial_AC1", "12", "1", "2", rgt000, { from: account1 })
             })
 
             .then(() => {
                 console.log("Minting AC 13 -NC")
-                return AC_MGR.createAssetClass(account2, "Non-Custodial_AC2", "13", "1", "2", { from: account1 })
+                return AC_MGR.createAssetClass(account1, "Non-Custodial_AC2", "13", "1", "2", rgt000, { from: account1 })
             })
 
             .then(() => {
                 console.log("Minting AC 16 -NC")
-                return AC_MGR.createAssetClass(account2, "Non_Custodial_AC5", "16", "1", "2", { from: account1 })
+                return AC_MGR.createAssetClass(account10, "Non_Custodial_AC5", "16", "1", "2", rgt000, { from: account1 })
             })
     })
 
@@ -787,21 +792,21 @@ contract('THE WORKS NC', accounts => {
     it("Should Mint 2 non-cust AC tokens in AC_ROOT 2", async () => {
 
         console.log("Minting AC 14 -NC")
-        return AC_MGR.createAssetClass(account2, "Non-Custodial_AC3", "14", "2", "2", { from: account1 })
+        return AC_MGR.createAssetClass(account1, "Non-Custodial_AC3", "14", "2", "2", rgt000, { from: account1 })
 
             .then(() => {
                 console.log("Minting AC 15 -NC")
-                return AC_MGR.createAssetClass(account2, "Non_Custodial_AC4", "15", "2", "2", { from: account1 })
+                return AC_MGR.createAssetClass(account10, "Non_Custodial_AC4", "15", "2", "2", rgt000, { from: account1 })
             })
     })
 
 
     it('Should authorize APP in all relevant asset classes', async () => {
         console.log("Authorizing APP")
-        return STOR.enableContractForAC('APP', '10', '1', { from: account2 })
+        return STOR.enableContractForAC('APP', '10', '1', { from: account1 })
 
             .then(() => {
-                return STOR.enableContractForAC('APP', '11', '1', { from: account2 })
+                return STOR.enableContractForAC('APP', '11', '1', { from: account1 })
             })
     })
 
@@ -809,18 +814,18 @@ contract('THE WORKS NC', accounts => {
     it('Should authorize APP_NC in all relevant asset classes', async () => {
 
         console.log("Authorizing APP_NC")
-        return STOR.enableContractForAC('APP_NC', '12', '2', { from: account2 })
+        return STOR.enableContractForAC('APP_NC', '12', '2', { from: account1 })
 
             .then(() => {
-                return STOR.enableContractForAC('APP_NC', '13', '2', { from: account2 })
+                return STOR.enableContractForAC('APP_NC', '13', '2', { from: account1 })
             })
 
             .then(() => {
-                return STOR.enableContractForAC('APP_NC', '14', '2', { from: account2 })
+                return STOR.enableContractForAC('APP_NC', '14', '2', { from: account1 })
             })
 
             .then(() => {
-                return STOR.enableContractForAC('APP_NC', '16', '2', { from: account2 })
+                return STOR.enableContractForAC('APP_NC', '16', '2', { from: account10 })
             })
     })
 
@@ -828,10 +833,10 @@ contract('THE WORKS NC', accounts => {
     it('Should authorize NP in all relevant asset classes', async () => {
 
         console.log("Authorizing NP")
-        return STOR.enableContractForAC('NP', '10', '1', { from: account2 })
+        return STOR.enableContractForAC('NP', '10', '1', { from: account1 })
 
             .then(() => {
-                return STOR.enableContractForAC('NP', '11', '1', { from: account2 })
+                return STOR.enableContractForAC('NP', '11', '1', { from: account1 })
             })
     })
 
@@ -839,10 +844,10 @@ contract('THE WORKS NC', accounts => {
     it('Should authorize MAL_APP in all relevant asset classes', async () => {
 
         console.log("Authorizing MAL_APP")
-        return STOR.enableContractForAC('MAL_APP', '10', '1', { from: account2 })
+        return STOR.enableContractForAC('MAL_APP', '10', '1', { from: account1 })
 
             .then(() => {
-                return STOR.enableContractForAC('MAL_APP', '11', '1', { from: account2 })
+                return STOR.enableContractForAC('MAL_APP', '11', '1', { from: account1 })
             })
     })
 
@@ -850,30 +855,29 @@ contract('THE WORKS NC', accounts => {
     it('Should authorize NP_NC in all relevant asset classes', async () => {
 
         console.log("Authorizing NP_NC")
-        return STOR.enableContractForAC('NP_NC', '12', '2', { from: account2 })
+        return STOR.enableContractForAC('NP_NC', '12', '2', { from: account1 })
 
             .then(() => {
-                return STOR.enableContractForAC('NP_NC', '13', '2', { from: account2 })
+                return STOR.enableContractForAC('NP_NC', '13', '2', { from: account1 })
             })
 
             .then(() => {
-                return STOR.enableContractForAC('NP_NC', '14', '2', { from: account2 })
+                return STOR.enableContractForAC('NP_NC', '14', '2', { from: account1 })
             })
 
             .then(() => {
-                return STOR.enableContractForAC('NP_NC', '16', '2', { from: account2 })
+                return STOR.enableContractForAC('NP_NC', '16', '2', { from: account10 })
             })
-
     })
 
 
     it('Should authorize ECR in all relevant asset classes', async () => {
 
         console.log("Authorizing ECR")
-        return STOR.enableContractForAC('ECR', '10', '3', { from: account2 })
+        return STOR.enableContractForAC('ECR', '10', '3', { from: account1 })
 
             .then(() => {
-                return STOR.enableContractForAC('ECR', '11', '3', { from: account2 })
+                return STOR.enableContractForAC('ECR', '11', '3', { from: account1 })
             })
     })
 
@@ -881,10 +885,10 @@ contract('THE WORKS NC', accounts => {
     it('Should authorize ECR2 in all relevant asset classes', async () => {
 
         console.log("Authorizing ECR2")
-        return STOR.enableContractForAC('ECR2', '10', '3', { from: account2 })
+        return STOR.enableContractForAC('ECR2', '10', '3', { from: account1 })
 
             .then(() => {
-                return STOR.enableContractForAC('ECR2', '11', '3', { from: account2 })
+                return STOR.enableContractForAC('ECR2', '11', '3', { from: account1 })
             })
     })
 
@@ -892,44 +896,45 @@ contract('THE WORKS NC', accounts => {
     it('Should authorize ECR_NC in all relevant asset classes', async () => {
 
         console.log("Authorizing ECR_NC")
-        return STOR.enableContractForAC('ECR_NC', '12', '3', { from: account2 })
+        return STOR.enableContractForAC('ECR_NC', '12', '3', { from: account1 })
 
             .then(() => {
-                return STOR.enableContractForAC('ECR_NC', '13', '3', { from: account2 })
+                return STOR.enableContractForAC('ECR_NC', '13', '3', { from: account1 })
             })
 
             .then(() => {
-                return STOR.enableContractForAC('ECR_NC', '14', '3', { from: account2 })
+                return STOR.enableContractForAC('ECR_NC', '14', '3', { from: account1 })
             })
 
             .then(() => {
-                return STOR.enableContractForAC('ECR_NC', '16', '3', { from: account2 })
+                return STOR.enableContractForAC('ECR_NC', '16', '3', { from: account10 })
             })
     })
+
 
     it('Should authorize ECR_MGR in all relevant asset classes', async () => {
 
         console.log("Authorizing ECR_MGR")
-        return STOR.enableContractForAC('ECR_MGR', '10', '3', { from: account2 })
+        return STOR.enableContractForAC('ECR_MGR', '10', '3', { from: account1 })
 
             .then(() => {
-                return STOR.enableContractForAC('ECR_MGR', '11', '3', { from: account2 })
+                return STOR.enableContractForAC('ECR_MGR', '11', '3', { from: account1 })
             })
 
             .then(() => {
-                return STOR.enableContractForAC('ECR_MGR', '12', '3', { from: account2 })
+                return STOR.enableContractForAC('ECR_MGR', '12', '3', { from: account1 })
             })
 
             .then(() => {
-                return STOR.enableContractForAC('ECR_MGR', '13', '3', { from: account2 })
+                return STOR.enableContractForAC('ECR_MGR', '13', '3', { from: account1 })
             })
 
             .then(() => {
-                return STOR.enableContractForAC('ECR_MGR', '14', '3', { from: account2 })
+                return STOR.enableContractForAC('ECR_MGR', '14', '3', { from: account1 })
             })
 
             .then(() => {
-                return STOR.enableContractForAC('ECR_MGR', '16', '3', { from: account2 })
+                return STOR.enableContractForAC('ECR_MGR', '16', '3', { from: account10 })
             })
     })
 
@@ -937,22 +942,22 @@ contract('THE WORKS NC', accounts => {
     it('Should authorize AC_TKN in all relevant asset classes', async () => {
 
         console.log("Authorizing AC_TKN")
-        return STOR.enableContractForAC('AC_TKN', '10', '1', { from: account2 })
+        return STOR.enableContractForAC('AC_TKN', '10', '1', { from: account1 })
 
             .then(() => {
-                return STOR.enableContractForAC('AC_TKN', '11', '1', { from: account2 })
+                return STOR.enableContractForAC('AC_TKN', '11', '1', { from: account1 })
             })
 
             .then(() => {
-                return STOR.enableContractForAC('AC_TKN', '12', '2', { from: account2 })
+                return STOR.enableContractForAC('AC_TKN', '12', '2', { from: account1 })
             })
 
             .then(() => {
-                return STOR.enableContractForAC('AC_TKN', '13', '2', { from: account2 })
+                return STOR.enableContractForAC('AC_TKN', '13', '2', { from: account1 })
             })
 
             .then(() => {
-                return STOR.enableContractForAC('AC_TKN', '14', '2', { from: account2 })
+                return STOR.enableContractForAC('AC_TKN', '14', '2', { from: account1 })
             })
     })
 
@@ -960,30 +965,30 @@ contract('THE WORKS NC', accounts => {
     it('Should authorize A_TKN in all relevant asset classes', async () => {
 
         console.log("Authorizing A_TKN")
-        return STOR.enableContractForAC('A_TKN', '10', '1', { from: account2 })
+        return STOR.enableContractForAC('A_TKN', '10', '1', { from: account1 })
 
             .then(() => {
-                return STOR.enableContractForAC('A_TKN', '11', '1', { from: account2 })
+                return STOR.enableContractForAC('A_TKN', '11', '1', { from: account1 })
             })
 
             .then(() => {
-                return STOR.enableContractForAC('A_TKN', '12', '2', { from: account2 })
+                return STOR.enableContractForAC('A_TKN', '12', '2', { from: account1 })
             })
 
             .then(() => {
-                return STOR.enableContractForAC('A_TKN', '13', '2', { from: account2 })
+                return STOR.enableContractForAC('A_TKN', '13', '2', { from: account1 })
             })
 
             .then(() => {
-                return STOR.enableContractForAC('A_TKN', '14', '2', { from: account2 })
+                return STOR.enableContractForAC('A_TKN', '14', '2', { from: account1 })
             })
 
             .then(() => {
-                return STOR.enableContractForAC('A_TKN', '15', '2', { from: account2 })
+                return STOR.enableContractForAC('A_TKN', '15', '2', { from: account10 })
             })
 
             .then(() => {
-                return STOR.enableContractForAC('A_TKN', '16', '2', { from: account2 })
+                return STOR.enableContractForAC('A_TKN', '16', '2', { from: account10 })
             })
 
             .then(() => {
@@ -999,30 +1004,30 @@ contract('THE WORKS NC', accounts => {
     it('Should authorize PIP in all relevant asset classes', async () => {
 
         console.log("Authorizing PIP")
-        return STOR.enableContractForAC('PIP', '10', '1', { from: account2 })
+        return STOR.enableContractForAC('PIP', '10', '1', { from: account1 })
 
             .then(() => {
-                return STOR.enableContractForAC('PIP', '11', '1', { from: account2 })
+                return STOR.enableContractForAC('PIP', '11', '1', { from: account1 })
             })
 
             .then(() => {
-                return STOR.enableContractForAC('PIP', '12', '2', { from: account2 })
+                return STOR.enableContractForAC('PIP', '12', '2', { from: account1 })
             })
 
             .then(() => {
-                return STOR.enableContractForAC('PIP', '13', '2', { from: account2 })
+                return STOR.enableContractForAC('PIP', '13', '2', { from: account1 })
             })
 
             .then(() => {
-                return STOR.enableContractForAC('PIP', '14', '2', { from: account2 })
+                return STOR.enableContractForAC('PIP', '14', '2', { from: account1 })
             })
 
             .then(() => {
-                return STOR.enableContractForAC('PIP', '15', '2', { from: account2 })
+                return STOR.enableContractForAC('PIP', '15', '2', { from: account10 })
             })
 
             .then(() => {
-                return STOR.enableContractForAC('PIP', '16', '2', { from: account2 })
+                return STOR.enableContractForAC('PIP', '16', '2', { from: account10 })
             })
 
             .then(() => {
@@ -1038,22 +1043,22 @@ contract('THE WORKS NC', accounts => {
     it('Should authorize AC_MGR in all relevant asset classes', async () => {
 
         console.log("Authorizing AC_MGR")
-        return STOR.enableContractForAC('AC_MGR', '10', '1', { from: account2 })
+        return STOR.enableContractForAC('AC_MGR', '10', '1', { from: account1 })
 
             .then(() => {
-                return STOR.enableContractForAC('AC_MGR', '11', '1', { from: account2 })
+                return STOR.enableContractForAC('AC_MGR', '11', '1', { from: account1 })
             })
 
             .then(() => {
-                return STOR.enableContractForAC('AC_MGR', '12', '2', { from: account2 })
+                return STOR.enableContractForAC('AC_MGR', '12', '2', { from: account1 })
             })
 
             .then(() => {
-                return STOR.enableContractForAC('AC_MGR', '13', '2', { from: account2 })
+                return STOR.enableContractForAC('AC_MGR', '13', '2', { from: account1 })
             })
 
             .then(() => {
-                return STOR.enableContractForAC('AC_MGR', '14', '2', { from: account2 })
+                return STOR.enableContractForAC('AC_MGR', '14', '2', { from: account1 })
             })
     })
 
@@ -1061,26 +1066,26 @@ contract('THE WORKS NC', accounts => {
     it('Should authorize RCLR in all relevant asset classes', async () => {
 
         console.log("Authorizing RCLR")
-        return STOR.enableContractForAC('RCLR', '10', '3', { from: account2 })
+        return STOR.enableContractForAC('RCLR', '10', '3', { from: account1 })
 
             .then(() => {
-                return STOR.enableContractForAC('RCLR', '11', '3', { from: account2 })
+                return STOR.enableContractForAC('RCLR', '11', '3', { from: account1 })
             })
 
             .then(() => {
-                return STOR.enableContractForAC('RCLR', '12', '3', { from: account2 })
+                return STOR.enableContractForAC('RCLR', '12', '3', { from: account1 })
             })
 
             .then(() => {
-                return STOR.enableContractForAC('RCLR', '13', '3', { from: account2 })
+                return STOR.enableContractForAC('RCLR', '13', '3', { from: account1 })
             })
 
             .then(() => {
-                return STOR.enableContractForAC('RCLR', '14', '3', { from: account2 })
+                return STOR.enableContractForAC('RCLR', '14', '3', { from: account1 })
             })
 
             .then(() => {
-                return STOR.enableContractForAC('RCLR', '16', '3', { from: account2 })
+                return STOR.enableContractForAC('RCLR', '16', '3', { from: account10 })
             })
     })
 
@@ -1103,31 +1108,163 @@ contract('THE WORKS NC', accounts => {
                 console.log("Authorizing RCLR")
                 return UTIL_TKN.grantRole(payableRoleB32, RCLR.address, { from: account1 })
             })
+    })
+
+    it('Should authorize all minter contracts for minting A_TKN(s)', async () => {
+
+        console.log("Authorizing NP")
+        return A_TKN.grantRole(minterRoleB32, NP.address, { from: account1 })
 
             .then(() => {
-                console.log("Authorizing STOR")
-                return UTIL_TKN.grantRole(payableRoleB32, STOR.address, { from: account1 })
+                console.log("Authorizing APP_NC")
+                return A_TKN.grantRole(minterRoleB32, APP_NC.address, { from: account1 })
             })
+
+            .then(() => {
+                console.log("Authorizing APP")
+                return A_TKN.grantRole(minterRoleB32, APP.address, { from: account1 })
+            })
+
+            .then(() => {
+                console.log("Authorizing PIP")
+                return A_TKN.grantRole(minterRoleB32, PIP.address, { from: account1 })
+            })
+    })
+
+    it('Should authorize all minter contracts for minting AC_TKN(s)', async () => {
+        console.log("Authorizing AC_MGR")
+        return AC_TKN.grantRole(minterRoleB32, AC_MGR.address, { from: account1 })
     })
 
 
     it("Should set costs in minted AC's", async () => {
 
-        console.log("Setting costs in AC 10")
+        console.log("Setting costs in AC 1")
+
         return AC_MGR.ACTH_setCosts(
-            "10",
+            "1",
             "1",
             "10000000000000000",
-            account2,
-            { from: account2 })
+            account1,
+            { from: account1 })
+
+
+            .then(() => {
+                return AC_MGR.ACTH_setCosts(
+                    "1",
+                    "2",
+                    "10000000000000000",
+                    account1,
+                    { from: account1 })
+            })
+
+            .then(() => {
+                return AC_MGR.ACTH_setCosts(
+                    "1",
+                    "3",
+                    "10000000000000000",
+                    account1,
+                    { from: account1 })
+            })
+
+            .then(() => {
+                return AC_MGR.ACTH_setCosts(
+                    "1",
+                    "4",
+                    "10000000000000000",
+                    account1,
+                    { from: account1 })
+            })
+
+            .then(() => {
+                return AC_MGR.ACTH_setCosts(
+                    "1",
+                    "5",
+                    "10000000000000000",
+                    account1,
+                    { from: account1 })
+            })
+
+            .then(() => {
+                return AC_MGR.ACTH_setCosts(
+                    "1",
+                    "6",
+                    "10000000000000000",
+                    account1,
+                    { from: account1 })
+            })
+
+            .then(() => {
+                console.log("Setting base costs in AC 2")
+                return AC_MGR.ACTH_setCosts(
+                    "2",
+                    "1",
+                    "10000000000000000",
+                    account1,
+                    { from: account1 })
+            })
+
+            .then(() => {
+                return AC_MGR.ACTH_setCosts(
+                    "2",
+                    "2",
+                    "10000000000000000",
+                    account1,
+                    { from: account1 })
+            })
+
+            .then(() => {
+                return AC_MGR.ACTH_setCosts(
+                    "2",
+                    "3",
+                    "10000000000000000",
+                    account1,
+                    { from: account1 })
+            })
+
+            .then(() => {
+                return AC_MGR.ACTH_setCosts(
+                    "2",
+                    "4",
+                    "10000000000000000",
+                    account1,
+                    { from: account1 })
+            })
+
+            .then(() => {
+                return AC_MGR.ACTH_setCosts(
+                    "2",
+                    "5",
+                    "10000000000000000",
+                    account1,
+                    { from: account1 })
+            })
+
+            .then(() => {
+                return AC_MGR.ACTH_setCosts(
+                    "2",
+                    "6",
+                    "10000000000000000",
+                    account1,
+                    { from: account1 })
+            })
+            .then(() => {
+                console.log("Setting base costs in AC 10")
+                return AC_MGR.ACTH_setCosts(
+                    "10",
+                    "1",
+                    "10000000000000000",
+                    account1,
+                    { from: account1 })
+            })
 
             .then(() => {
                 return AC_MGR.ACTH_setCosts(
                     "10",
                     "2",
                     "10000000000000000",
-                    account2,
-                    { from: account2 })
+                    account1,
+                    { from: account1 })
             })
 
             .then(() => {
@@ -1135,8 +1272,8 @@ contract('THE WORKS NC', accounts => {
                     "10",
                     "3",
                     "10000000000000000",
-                    account2,
-                    { from: account2 })
+                    account1,
+                    { from: account1 })
             })
 
             .then(() => {
@@ -1144,8 +1281,8 @@ contract('THE WORKS NC', accounts => {
                     "10",
                     "4",
                     "10000000000000000",
-                    account2,
-                    { from: account2 })
+                    account1,
+                    { from: account1 })
             })
 
             .then(() => {
@@ -1153,8 +1290,8 @@ contract('THE WORKS NC', accounts => {
                     "10",
                     "5",
                     "10000000000000000",
-                    account2,
-                    { from: account2 })
+                    account1,
+                    { from: account1 })
             })
 
             .then(() => {
@@ -1162,8 +1299,8 @@ contract('THE WORKS NC', accounts => {
                     "10",
                     "6",
                     "10000000000000000",
-                    account2,
-                    { from: account2 })
+                    account1,
+                    { from: account1 })
             })
 
             .then(() => {
@@ -1172,8 +1309,8 @@ contract('THE WORKS NC', accounts => {
                     "11",
                     "1",
                     "10000000000000000",
-                    account2,
-                    { from: account2 })
+                    account1,
+                    { from: account1 })
             })
 
             .then(() => {
@@ -1181,8 +1318,8 @@ contract('THE WORKS NC', accounts => {
                     "11",
                     "2",
                     "10000000000000000",
-                    account2,
-                    { from: account2 })
+                    account1,
+                    { from: account1 })
             })
 
             .then(() => {
@@ -1190,8 +1327,8 @@ contract('THE WORKS NC', accounts => {
                     "11",
                     "3",
                     "10000000000000000",
-                    account2,
-                    { from: account2 })
+                    account1,
+                    { from: account1 })
             })
 
             .then(() => {
@@ -1199,8 +1336,8 @@ contract('THE WORKS NC', accounts => {
                     "11",
                     "4",
                     "10000000000000000",
-                    account2,
-                    { from: account2 })
+                    account1,
+                    { from: account1 })
             })
 
             .then(() => {
@@ -1208,8 +1345,8 @@ contract('THE WORKS NC', accounts => {
                     "11",
                     "5",
                     "10000000000000000",
-                    account2,
-                    { from: account2 })
+                    account1,
+                    { from: account1 })
             })
 
             .then(() => {
@@ -1217,8 +1354,8 @@ contract('THE WORKS NC', accounts => {
                     "11",
                     "6",
                     "10000000000000000",
-                    account2,
-                    { from: account2 })
+                    account1,
+                    { from: account1 })
             })
 
             .then(() => {
@@ -1227,8 +1364,8 @@ contract('THE WORKS NC', accounts => {
                     "12",
                     "1",
                     "10000000000000000",
-                    account2,
-                    { from: account2 })
+                    account1,
+                    { from: account1 })
             })
 
             .then(() => {
@@ -1236,8 +1373,8 @@ contract('THE WORKS NC', accounts => {
                     "12",
                     "2",
                     "10000000000000000",
-                    account2,
-                    { from: account2 })
+                    account1,
+                    { from: account1 })
             })
 
             .then(() => {
@@ -1245,8 +1382,8 @@ contract('THE WORKS NC', accounts => {
                     "12",
                     "3",
                     "10000000000000000",
-                    account2,
-                    { from: account2 })
+                    account1,
+                    { from: account1 })
             })
 
             .then(() => {
@@ -1254,8 +1391,8 @@ contract('THE WORKS NC', accounts => {
                     "12",
                     "4",
                     "10000000000000000",
-                    account2,
-                    { from: account2 })
+                    account1,
+                    { from: account1 })
             })
 
             .then(() => {
@@ -1263,8 +1400,8 @@ contract('THE WORKS NC', accounts => {
                     "12",
                     "5",
                     "10000000000000000",
-                    account2,
-                    { from: account2 })
+                    account1,
+                    { from: account1 })
             })
 
             .then(() => {
@@ -1272,8 +1409,8 @@ contract('THE WORKS NC', accounts => {
                     "12",
                     "6",
                     "10000000000000000",
-                    account2,
-                    { from: account2 })
+                    account1,
+                    { from: account1 })
             })
 
             .then(() => {
@@ -1282,8 +1419,8 @@ contract('THE WORKS NC', accounts => {
                     "13",
                     "1",
                     "10000000000000000",
-                    account2,
-                    { from: account2 })
+                    account1,
+                    { from: account1 })
             })
 
             .then(() => {
@@ -1291,8 +1428,8 @@ contract('THE WORKS NC', accounts => {
                     "13",
                     "2",
                     "10000000000000000",
-                    account2,
-                    { from: account2 })
+                    account1,
+                    { from: account1 })
             })
 
             .then(() => {
@@ -1300,8 +1437,8 @@ contract('THE WORKS NC', accounts => {
                     "13",
                     "3",
                     "10000000000000000",
-                    account2,
-                    { from: account2 })
+                    account1,
+                    { from: account1 })
             })
 
             .then(() => {
@@ -1309,8 +1446,8 @@ contract('THE WORKS NC', accounts => {
                     "13",
                     "4",
                     "10000000000000000",
-                    account2,
-                    { from: account2 })
+                    account1,
+                    { from: account1 })
             })
 
             .then(() => {
@@ -1318,8 +1455,8 @@ contract('THE WORKS NC', accounts => {
                     "13",
                     "5",
                     "10000000000000000",
-                    account2,
-                    { from: account2 })
+                    account1,
+                    { from: account1 })
             })
 
             .then(() => {
@@ -1327,8 +1464,8 @@ contract('THE WORKS NC', accounts => {
                     "13",
                     "6",
                     "10000000000000000",
-                    account2,
-                    { from: account2 })
+                    account1,
+                    { from: account1 })
             })
 
             .then(() => {
@@ -1337,8 +1474,8 @@ contract('THE WORKS NC', accounts => {
                     "14",
                     "1",
                     "10000000000000000",
-                    account2,
-                    { from: account2 })
+                    account1,
+                    { from: account1 })
             })
 
             .then(() => {
@@ -1346,8 +1483,8 @@ contract('THE WORKS NC', accounts => {
                     "14",
                     "2",
                     "10000000000000000",
-                    account2,
-                    { from: account2 })
+                    account1,
+                    { from: account1 })
             })
 
             .then(() => {
@@ -1355,8 +1492,8 @@ contract('THE WORKS NC', accounts => {
                     "14",
                     "3",
                     "10000000000000000",
-                    account2,
-                    { from: account2 })
+                    account1,
+                    { from: account1 })
             })
 
             .then(() => {
@@ -1364,8 +1501,8 @@ contract('THE WORKS NC', accounts => {
                     "14",
                     "4",
                     "10000000000000000",
-                    account2,
-                    { from: account2 })
+                    account1,
+                    { from: account1 })
             })
 
             .then(() => {
@@ -1373,8 +1510,8 @@ contract('THE WORKS NC', accounts => {
                     "14",
                     "5",
                     "10000000000000000",
-                    account2,
-                    { from: account2 })
+                    account1,
+                    { from: account1 })
             })
 
             .then(() => {
@@ -1382,8 +1519,8 @@ contract('THE WORKS NC', accounts => {
                     "14",
                     "6",
                     "10000000000000000",
-                    account2,
-                    { from: account2 })
+                    account1,
+                    { from: account1 })
             })
 
             .then(() => {
@@ -1392,8 +1529,8 @@ contract('THE WORKS NC', accounts => {
                     "15",
                     "1",
                     "10000000000000000",
-                    account2,
-                    { from: account2 })
+                    account1,
+                    { from: account10 })
             })
 
             .then(() => {
@@ -1401,8 +1538,8 @@ contract('THE WORKS NC', accounts => {
                     "15",
                     "2",
                     "10000000000000000",
-                    account2,
-                    { from: account2 })
+                    account1,
+                    { from: account10 })
             })
 
             .then(() => {
@@ -1410,8 +1547,8 @@ contract('THE WORKS NC', accounts => {
                     "15",
                     "3",
                     "10000000000000000",
-                    account2,
-                    { from: account2 })
+                    account1,
+                    { from: account10 })
             })
 
             .then(() => {
@@ -1419,8 +1556,8 @@ contract('THE WORKS NC', accounts => {
                     "15",
                     "4",
                     "10000000000000000",
-                    account2,
-                    { from: account2 })
+                    account1,
+                    { from: account10 })
             })
 
             .then(() => {
@@ -1428,8 +1565,8 @@ contract('THE WORKS NC', accounts => {
                     "15",
                     "5",
                     "10000000000000000",
-                    account2,
-                    { from: account2 })
+                    account1,
+                    { from: account10 })
             })
 
             .then(() => {
@@ -1437,118 +1574,8 @@ contract('THE WORKS NC', accounts => {
                     "15",
                     "6",
                     "10000000000000000",
-                    account2,
-                    { from: account2 })
-            })
-
-            .then(() => {
-                console.log("Setting base costs in Root AC 1")
-                return AC_MGR.ACTH_setCosts(
-                    "1",
-                    "1",
-                    "10000000000000000",
                     account1,
-                    { from: account1 })
-            })
-
-            .then(() => {
-                return AC_MGR.ACTH_setCosts(
-                    "1",
-                    "2",
-                    "10000000000000000",
-                    account1,
-                    { from: account1 })
-            })
-
-            .then(() => {
-                return AC_MGR.ACTH_setCosts(
-                    "1",
-                    "3",
-                    "10000000000000000",
-                    account1,
-                    { from: account1 })
-            })
-
-            .then(() => {
-                return AC_MGR.ACTH_setCosts(
-                    "1",
-                    "4",
-                    "10000000000000000",
-                    account1,
-                    { from: account1 })
-            })
-
-            .then(() => {
-                return AC_MGR.ACTH_setCosts(
-                    "1",
-                    "5",
-                    "10000000000000000",
-                    account1,
-                    { from: account1 })
-            })
-
-            .then(() => {
-                return AC_MGR.ACTH_setCosts(
-                    "1",
-                    "6",
-                    "10000000000000000",
-                    account1,
-                    { from: account1 })
-            })
-
-            .then(() => {
-                console.log("Setting base costs Root in AC 2")
-                return AC_MGR.ACTH_setCosts(
-                    "2",
-                    "1",
-                    "10000000000000000",
-                    account1,
-                    { from: account1 })
-            })
-
-            .then(() => {
-                return AC_MGR.ACTH_setCosts(
-                    "2",
-                    "2",
-                    "10000000000000000",
-                    account1,
-                    { from: account1 })
-            })
-
-            .then(() => {
-                return AC_MGR.ACTH_setCosts(
-                    "2",
-                    "3",
-                    "10000000000000000",
-                    account1,
-                    { from: account1 })
-            })
-
-            .then(() => {
-                return AC_MGR.ACTH_setCosts(
-                    "2",
-                    "4",
-                    "10000000000000000",
-                    account1,
-                    { from: account1 })
-            })
-
-            .then(() => {
-                return AC_MGR.ACTH_setCosts(
-                    "2",
-                    "5",
-                    "10000000000000000",
-                    account1,
-                    { from: account1 })
-            })
-
-            .then(() => {
-                return AC_MGR.ACTH_setCosts(
-                    "2",
-                    "6",
-                    "10000000000000000",
-                    account1,
-                    { from: account1 })
+                    { from: account10 })
             })
     })
 
@@ -1557,83 +1584,73 @@ contract('THE WORKS NC', accounts => {
 
         console.log("//**************************************END BOOTSTRAP**********************************************/")
         console.log("Account2 => AC10")
-        return AC_MGR.OO_addUser(account2, '1', '10', { from: account2 })
+        return AC_MGR.OO_addUser(account2, '1', '10', { from: account1 })
 
             .then(() => {
                 console.log("Account2 => AC11")
-                return AC_MGR.OO_addUser(account2, '1', '11', { from: account2 })
+                return AC_MGR.OO_addUser(account2, '1', '11', { from: account1 })
             })
 
             .then(() => {
                 console.log("Account3 => AC11")
-                return AC_MGR.OO_addUser(account3, '1', '11', { from: account2 })
+                return AC_MGR.OO_addUser(account3, '1', '11', { from: account1 })
             })
 
             .then(() => {
                 console.log("Account4 => AC10")
-                return AC_MGR.OO_addUser(account4, '1', '10', { from: account2 })
+                return AC_MGR.OO_addUser(account4, '1', '10', { from: account1 })
             })
 
             .then(() => {
                 console.log("Account4 => AC12")
-                return AC_MGR.OO_addUser(account4, '1', '12', { from: account2 })
+                return AC_MGR.OO_addUser(account4, '1', '12', { from: account1 })
             })
 
             .then(() => {
                 console.log("Account4 => AC12")
-                return AC_MGR.OO_addUser(account4, '1', '16', { from: account2 })
+                return AC_MGR.OO_addUser(account4, '1', '16', { from: account10 })
             })
 
             .then(() => {
                 console.log("Account5 => AC13")
-                return AC_MGR.OO_addUser(account5, '1', '13', { from: account2 })
+                return AC_MGR.OO_addUser(account5, '1', '13', { from: account1 })
             })
 
             .then(() => {
                 console.log("Account6 => AC14")
-                return AC_MGR.OO_addUser(account6, '1', '14', { from: account2 })
+                return AC_MGR.OO_addUser(account6, '1', '14', { from: account1 })
             })
 
             .then(() => {
                 console.log("Account7 => AC14 (ROBOT)")
-                return AC_MGR.OO_addUser(account7, '9', '14', { from: account2 })
+                return AC_MGR.OO_addUser(account7, '9', '14', { from: account1 })
             })
 
             .then(() => {
                 console.log("Account8 => AC10 (ROBOT)")
-                return AC_MGR.OO_addUser(account8, '9', '10', { from: account2 })
+                return AC_MGR.OO_addUser(account8, '9', '10', { from: account1 })
             })
 
             .then(() => {
                 console.log("Account9 => AC11 (ROBOT)")
-                return AC_MGR.OO_addUser(account9, '9', '11', { from: account2 })
+                return AC_MGR.OO_addUser(account9, '9', '11', { from: account1 })
             })
 
             .then(() => {
                 console.log("Account10 => AC15 (PIPMINTER)")
-                return AC_MGR.OO_addUser(account10, '10', '15', { from: account2 })
+                return AC_MGR.OO_addUser(account10, '10', '15', { from: account10 })
             })
 
             .then(() => {
                 console.log("Account10 => AC15 (PIPMINTER)")
-                return AC_MGR.OO_addUser(account10, '10', '16', { from: account2 })
+                return AC_MGR.OO_addUser(account10, '10', '16', { from: account10 })
             })
 
             .then(() => {
                 console.log("Account10 => AC15 (PIPMINTER)")
-                return AC_MGR.OO_addUser(account10, '1', '10', { from: account2 })
+                return AC_MGR.OO_addUser(account10, '1', '10', { from: account1 })
             })
     })
-
-
-    // it('Should set payment address to account1', async () => {
-
-    //     console.log("//**************************************BEGIN THE WORKS NON CUSTODIAL**********************************************/")
-    //     return UTIL_TKN.AdminSetPaymentAddress(
-    //         account1,
-    //         { from: account1 }
-    //     )
-    // })
 
 
     it('Should mint 1000 UTIL_TKNs to account4', async () => {
