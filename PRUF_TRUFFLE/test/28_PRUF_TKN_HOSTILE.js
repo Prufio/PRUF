@@ -344,7 +344,7 @@ contract('UTIL_TKN', accounts => {
     //7
     it('Should fail to burn 50 Pruf tokens from A because A is not an Authorized Agent', async () => {
 
-        return UTIL_TKN.trustedAgentburn(
+        return UTIL_TKN.trustedAgentBurn(
             A,
             "50000000000000000000",
             { from: A }
@@ -463,7 +463,7 @@ contract('UTIL_TKN', accounts => {
     //13
     it('Should fail to burn 50 Pruf tokens from A because A is not an Authorized Agent', async () => {
 
-        return UTIL_TKN.trustedAgentburn(
+        return UTIL_TKN.trustedAgentBurn(
             A,
             "50000000000000000000",
             { from: A }
@@ -563,7 +563,7 @@ contract('UTIL_TKN', accounts => {
     //20
     it('Should fail to burn 50 Pruf tokens from A because A is not an Authorized Agent', async () => {
 
-        return UTIL_TKN.trustedAgentburn(
+        return UTIL_TKN.trustedAgentBurn(
             A,
             "50000000000000000000",
             { from: A }
@@ -754,7 +754,7 @@ contract('UTIL_TKN', accounts => {
     //29
     it('Should fail to burn 50 Pruf tokens from A because A is not an Authorized Agent', async () => {
 
-        return UTIL_TKN.trustedAgentburn(
+        return UTIL_TKN.trustedAgentBurn(
             A,
             "50000000000000000000",
             { from: A }
@@ -896,7 +896,7 @@ contract('UTIL_TKN', accounts => {
 
     it('Should burn 50 Pruf tokens from C', async () => {
 
-        return UTIL_TKN.trustedAgentburn(
+        return UTIL_TKN.trustedAgentBurn(
             C,
             "50000000000000000000",
             { from: A }

@@ -2323,6 +2323,7 @@ contract('THEWORKS_CUSTODIAL', accounts => {
         )
     })
 
+
     it("Should retrieve asset12 @newStaus(59)", async () =>{ 
         var Record = [];
         
@@ -2334,43 +2335,43 @@ contract('THEWORKS_CUSTODIAL', accounts => {
     })
 
 
-    it('Should discard asset12', async () => {
-        return A_TKN.discard(
-        asset12,
-        {from: account2}
-        )
-    })
+    // it('Should discard asset12', async () => {
+    //     return A_TKN.discard(
+    //     asset12,
+    //     {from: account2}
+    //     )
+    // })
 
 
-    it("Should retrieve asset12 @newStaus((60)discarded)", async () =>{ 
-        var Record = [];
+    // it("Should retrieve asset12 @newStaus((60)discarded)", async () =>{ 
+    //     var Record = [];
         
-        return await STOR.retrieveShortRecord(asset12, {from: account2}, function (_err, _result) {
-            if(_err){} 
-            else{Record = Object.values(_result)
-        console.log(Record)}
-        })
-    })
+    //     return await STOR.retrieveShortRecord(asset12, {from: account2}, function (_err, _result) {
+    //         if(_err){} 
+    //         else{Record = Object.values(_result)
+    //     console.log(Record)}
+    //     })
+    // })
 
 
-    it('Should $recycle asset12', async () => {
-        return RCLR.$recycle(
-        asset12,
-        rgt12,
-        '10',
-        {from: account2}
-        )
-    })
+    // it('Should $recycle asset12', async () => {
+    //     return RCLR.$recycle(
+    //     asset12,
+    //     rgt12,
+    //     '10',
+    //     {from: account2}
+    //     )
+    // })
 
 
-    it("Should retrieve asset12  @newRgt(12) && @newAC(10) && +1 N.O.T && @newStatus(58)", async () =>{ 
-        var Record = [];
+    // it("Should retrieve asset12  @newRgt(12) && @newAC(10) && +1 N.O.T && @newStatus(58)", async () =>{ 
+    //     var Record = [];
         
-        return await STOR.retrieveShortRecord(asset12, {from: account2}, function (_err, _result) {
-            if(_err){} 
-            else{Record = Object.values(_result)
-        console.log(Record)}
-        })
-    })
+    //     return await STOR.retrieveShortRecord(asset12, {from: account2}, function (_err, _result) {
+    //         if(_err){} 
+    //         else{Record = Object.values(_result)
+    //     console.log(Record)}
+    //     })
+    // })
 
 });

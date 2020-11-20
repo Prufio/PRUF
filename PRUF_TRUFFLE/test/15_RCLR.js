@@ -1134,6 +1134,11 @@ contract('RCLR', accounts => {
                 console.log("Authorizing PIP")
                 return A_TKN.grantRole(minterRoleB32, PIP.address, { from: account1 })
             })
+
+            .then(() => {
+                console.log("Authorizing RCLR")
+                return A_TKN.grantRole(minterRoleB32, RCLR.address, { from: account1 })
+            })
     })
 
 

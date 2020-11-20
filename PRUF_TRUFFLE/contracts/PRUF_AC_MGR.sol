@@ -316,8 +316,8 @@ contract AC_MGR is BASIC {
 
         address rootPaymentAdress = cost[AC_data[_assetClass].assetClassRoot][1].paymentAddress ; //payment for upgrade goes to root AC payment adress specified for service (1)
 
-        if (_amount > maxPayment) _amount = maxPayment;
-        UTIL_TKN.trustedAgentTransfer(_msgSender(), rootPaymentAdress, _amount);
+        if (_amount > maxPayment) _amount = maxPayment;                            
+        UTIL_TKN.trustedAgentTransfer(_msgSender(), rootPaymentAdress, _amount);       //CTS:EXAMINE msg.sender would then need trusted agent permissions..
 
         increasePriceShare(_assetClass, _amount.div(upgradeMultiplier));
         return true;

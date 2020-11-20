@@ -1134,6 +1134,11 @@ contract('THEWORKS_TEST', accounts => {
                 console.log("Authorizing PIP")
                 return A_TKN.grantRole(minterRoleB32, PIP.address, { from: account1 })
             })
+
+            .then(() => {
+                console.log("Authorizing RCLR")
+                return A_TKN.grantRole(minterRoleB32, RCLR.address, { from: account1 })
+            })
     })
 
 
@@ -1717,13 +1722,13 @@ contract('THEWORKS_TEST', accounts => {
     })
 
 
-    it('Should setURI for ID_TKN(1)', async () => {
-        return ID_TKN.setURI(
-            '1',
-            'pruf.io',
-            { from: account4 }
-        )
-    })
+    // it('Should setURI for ID_TKN(1)', async () => {
+    //     return ID_TKN.setURI(
+    //         '1',
+    //         'pruf.io',
+    //         { from: account4 }
+    //     )
+    // })
 
 
     it('Should write asset13 in AC 12', async () => {

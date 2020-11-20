@@ -1113,7 +1113,13 @@ contract('THEWORKS_NAKED', accounts => {
                 console.log("Authorizing RCLR")
                 return UTIL_TKN.grantRole(payableRoleB32, RCLR.address, { from: account1 })
             })
+
+            .then(() => {
+                console.log("Authorizing PIP")
+                return UTIL_TKN.grantRole(payableRoleB32, PIP.address, { from: account1 })
+            })
     })
+
 
     it('Should authorize all minter contracts for minting A_TKN(s)', async () => {
 
@@ -1133,6 +1139,11 @@ contract('THEWORKS_NAKED', accounts => {
             .then(() => {
                 console.log("Authorizing PIP")
                 return A_TKN.grantRole(minterRoleB32, PIP.address, { from: account1 })
+            })
+
+            .then(() => {
+                console.log("Authorizing RCLR")
+                return A_TKN.grantRole(minterRoleB32, RCLR.address, { from: account1 })
             })
     })
 
@@ -1577,6 +1588,61 @@ contract('THEWORKS_NAKED', accounts => {
                     account1,
                     { from: account10 })
             })
+
+            .then(() => {
+                console.log("Setting base costs in AC 16")
+                return AC_MGR.ACTH_setCosts(
+                    "16",
+                    "1",
+                    "10000000000000000",
+                    account1,
+                    { from: account10 })
+            })
+
+            .then(() => {
+                return AC_MGR.ACTH_setCosts(
+                    "16",
+                    "2",
+                    "10000000000000000",
+                    account1,
+                    { from: account10 })
+            })
+
+            .then(() => {
+                return AC_MGR.ACTH_setCosts(
+                    "16",
+                    "3",
+                    "10000000000000000",
+                    account1,
+                    { from: account10 })
+            })
+
+            .then(() => {
+                return AC_MGR.ACTH_setCosts(
+                    "16",
+                    "4",
+                    "10000000000000000",
+                    account1,
+                    { from: account10 })
+            })
+
+            .then(() => {
+                return AC_MGR.ACTH_setCosts(
+                    "16",
+                    "5",
+                    "10000000000000000",
+                    account1,
+                    { from: account10 })
+            })
+
+            .then(() => {
+                return AC_MGR.ACTH_setCosts(
+                    "16",
+                    "6",
+                    "10000000000000000",
+                    account1,
+                    { from: account10 })
+            })
     })
 
 
@@ -1666,6 +1732,15 @@ contract('THEWORKS_NAKED', accounts => {
     it('Should mint 30000 tokens to account2', async () => {
         return UTIL_TKN.mint(
             account2,
+            '30000000000000000000000',
+            { from: account1 }
+        )
+    })
+
+
+    it('Should mint 30000 tokens to account4', async () => {
+        return UTIL_TKN.mint(
+            account4,
             '30000000000000000000000',
             { from: account1 }
         )
