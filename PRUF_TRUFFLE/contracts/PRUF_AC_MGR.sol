@@ -54,7 +54,7 @@ contract AC_MGR is BASIC {
     //address AC_minterAddress;
     uint256 private priceThreshold; //threshold of price where fractional pricing is implemented
 
-    uint256 constant  private upgradeMultiplier = 3; // multplier to determine the amount of pruf required to fully upgrade an AC node token
+    uint256 private upgradeMultiplier = 3; // multplier to determine the amount of pruf required to fully upgrade an AC node token
     uint32 constant  private startingDiscount = 5100; // Nodes start with 51% profit share
     /*
      * @dev Verify user credentials
@@ -82,10 +82,27 @@ contract AC_MGR is BASIC {
 
     //--------------------------------------------External Functions--------------------------
     /*
-     * @dev Authorize / Deauthorize / Authorize users for an address be permitted to make record modifications
-     * ----------------INSECURE -- keccak256 of address must be generated clientside in release.
+     * @dev Set upgrade price multiplier (default 3)
      */
-    function OO_addUser(
+    function OO_upgradeMultiplier(uint256 _newValue) external onlyOwner {  //DPS:EXAMINE  -- NEW FUNCTIONALITY
+        require(
+            _newValue < 10001,
+            "multiplier > 10 thousand!"
+        );
+        //^^^^^^^checks^^^^^^^^^
+
+        upgradeMultiplier = _newValue;
+        //^^^^^^^effects^^^^^^^^^
+
+        emit REPORT("Upgrade Multiplier Changed!"); //report access to internal parameter
+        //^^^^^^^interactions^^^^^^^^^
+    }
+
+    /*
+     * @dev Authorize / Deauthorize / Authorize users for an address be permitted to make record modifications
+     * ----------------INSECURE -- Remove this overload for production. keccak256 of address must be generated in the web client! in release.
+     */
+    function OO_addUser(  //DPS:EXAMINE - this will be depreciated. The overloaded function OO_addUser below should be used instead, and this function that takes raw addresses deleted.
         address _authAddr,
         uint8 _userType,
         uint32 _assetClass
@@ -102,6 +119,31 @@ contract AC_MGR is BASIC {
 
         if ((_userType == 0) && (registeredUsers[addrHash][0] > 0)) {
             registeredUsers[addrHash][0]--;
+        }
+
+        //^^^^^^^effects^^^^^^^^^
+        emit REPORT("Internal user database access!"); //report access to the internal user database
+        //^^^^^^^interactions^^^^^^^^^
+    }
+
+    /*
+     * @dev Authorize / Deauthorize / Authorize users for an address be permitted to make record modifications
+     */
+    function OO_addUser(
+        bytes32 _addrHash,
+        uint8 _userType,
+        uint32 _assetClass
+    ) external whenNotPaused isACtokenHolderOfClass(_assetClass) {
+        //^^^^^^^checks^^^^^^^^^
+
+        registeredUsers[_addrHash][_assetClass] = _userType;
+
+        if ((_userType != 0) && (registeredUsers[_addrHash][0] < 255)) {
+            registeredUsers[_addrHash][0]++;
+        }
+
+        if ((_userType == 0) && (registeredUsers[_addrHash][0] > 0)) {
+            registeredUsers[_addrHash][0]--;
         }
 
         //^^^^^^^effects^^^^^^^^^

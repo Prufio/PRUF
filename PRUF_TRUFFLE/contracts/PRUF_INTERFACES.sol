@@ -666,10 +666,9 @@ interface ID_TKN_Interface {
 interface AC_MGR_Interface {
     /*
      * @dev Authorize / Deauthorize / Authorize users for an address be permitted to make record modifications
-     * ----------------INSECURE -- keccak256 of address must be generated clientside in release.
      */
     function OO_addUser(
-        address _authAddr,
+        bytes32 _addrHash,
         uint8 _userType,
         uint32 _assetClass
     ) external;
