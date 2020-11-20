@@ -616,10 +616,10 @@ contract('A_TKN', accounts => {
                 return AC_MGR.OO_setStorageContract(STOR.address, { from: account1 })
             })
 
-            .then(() => {
-                console.log("Adding in AC_TKN")
-                return AC_TKN.OO_setStorageContract(STOR.address, { from: account1 })
-            })
+            // .then(() => {
+            //     console.log("Adding in AC_TKN")
+            //     return AC_TKN.OO_setStorageContract(STOR.address, { from: account1 })
+            // })
 
             .then(() => {
                 console.log("Adding in A_TKN")
@@ -693,10 +693,10 @@ contract('A_TKN', accounts => {
                 return AC_MGR.OO_resolveContractAddresses({ from: account1 })
             })
 
-            .then(() => {
-                console.log("Resolving in AC_TKN")
-                return AC_TKN.OO_resolveContractAddresses({ from: account1 })
-            })
+            // .then(() => {
+            //     console.log("Resolving in AC_TKN")
+            //     return AC_TKN.OO_resolveContractAddresses({ from: account1 })
+            // })
 
             .then(() => {
                 console.log("Resolving in A_TKN")
@@ -747,6 +747,11 @@ contract('A_TKN', accounts => {
         //     console.log("Resolving in UTIL_TKN")
         //     return UTIL_TKN.AdminResolveContractAddresses({ from: account1 })
         // })
+    })
+
+    it('Should authorize all minter contracts for minting AC_TKN(s)', async () => {
+        console.log("Authorizing AC_MGR")
+        return AC_TKN.grantRole(minterRoleB32, AC_MGR.address, { from: account1 })
     })
 
 
@@ -1124,11 +1129,11 @@ contract('A_TKN', accounts => {
                 console.log("Authorizing APP")
                 return A_TKN.grantRole(minterRoleB32, APP.address, { from: account1 })
             })
-    })
 
-    it('Should authorize all minter contracts for minting AC_TKN(s)', async () => {
-        console.log("Authorizing AC_MGR")
-        return AC_TKN.grantRole(minterRoleB32, AC_MGR.address, { from: account1 })
+            .then(() => {
+                console.log("Authorizing PIP")
+                return A_TKN.grantRole(minterRoleB32, PIP.address, { from: account1 })
+            })
     })
 
 
@@ -1662,6 +1667,15 @@ contract('A_TKN', accounts => {
     it('Should mint 30000 tokens to account2', async () => {
         return UTIL_TKN.mint(
             account2,
+            '30000000000000000000000',
+            { from: account1 }
+        )
+    })
+
+
+    it('Should mint 30000 tokens to account4', async () => {
+        return UTIL_TKN.mint(
+            account4,
             '30000000000000000000000',
             { from: account1 }
         )

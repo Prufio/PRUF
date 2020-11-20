@@ -616,10 +616,10 @@ contract('AC_MGR', accounts => {
                 return AC_MGR.OO_setStorageContract(STOR.address, { from: account1 })
             })
 
-            .then(() => {
-                console.log("Adding in AC_TKN")
-                return AC_TKN.OO_setStorageContract(STOR.address, { from: account1 })
-            })
+            // .then(() => {
+            //     console.log("Adding in AC_TKN")
+            //     return AC_TKN.OO_setStorageContract(STOR.address, { from: account1 })
+            // })
 
             .then(() => {
                 console.log("Adding in A_TKN")
@@ -693,10 +693,10 @@ contract('AC_MGR', accounts => {
                 return AC_MGR.OO_resolveContractAddresses({ from: account1 })
             })
 
-            .then(() => {
-                console.log("Resolving in AC_TKN")
-                return AC_TKN.OO_resolveContractAddresses({ from: account1 })
-            })
+            // .then(() => {
+            //     console.log("Resolving in AC_TKN")
+            //     return AC_TKN.OO_resolveContractAddresses({ from: account1 })
+            // })
 
             .then(() => {
                 console.log("Resolving in A_TKN")
@@ -747,6 +747,11 @@ contract('AC_MGR', accounts => {
         //     console.log("Resolving in UTIL_TKN")
         //     return UTIL_TKN.AdminResolveContractAddresses({ from: account1 })
         // })
+    })
+
+    it('Should authorize all minter contracts for minting AC_TKN(s)', async () => {
+        console.log("Authorizing AC_MGR")
+        return AC_TKN.grantRole(minterRoleB32, AC_MGR.address, { from: account1 })
     })
 
 
@@ -1124,11 +1129,6 @@ contract('AC_MGR', accounts => {
                 console.log("Authorizing APP")
                 return A_TKN.grantRole(minterRoleB32, APP.address, { from: account1 })
             })
-    })
-
-    it('Should authorize all minter contracts for minting AC_TKN(s)', async () => {
-        console.log("Authorizing AC_MGR")
-        return AC_TKN.grantRole(minterRoleB32, AC_MGR.address, { from: account1 })
     })
 
 
@@ -1701,6 +1701,7 @@ contract('AC_MGR', accounts => {
         '20',
         '1',
         '1',
+        rgt000,
         {from: account2}
         )
     })
@@ -1713,6 +1714,7 @@ contract('AC_MGR', accounts => {
         '0',
         '1',
         '1',
+        rgt000,
         {from: account1}
         )
     })
@@ -1725,6 +1727,7 @@ contract('AC_MGR', accounts => {
         '20',
         '30',
         '1',
+        rgt000,
         {from: account1}
         )
     })
@@ -1738,6 +1741,7 @@ contract('AC_MGR', accounts => {
         '20',
         '1',
         '1',
+        rgt000,
         {from: account1}
         )
     })
@@ -1751,6 +1755,7 @@ contract('AC_MGR', accounts => {
         '10',
         '1',
         '1',
+        rgt000,
         {from: account1}
         )
     })

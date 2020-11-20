@@ -616,10 +616,10 @@ contract('NP_NC', accounts => {
                 return AC_MGR.OO_setStorageContract(STOR.address, { from: account1 })
             })
 
-            .then(() => {
-                console.log("Adding in AC_TKN")
-                return AC_TKN.OO_setStorageContract(STOR.address, { from: account1 })
-            })
+            // .then(() => {
+            //     console.log("Adding in AC_TKN")
+            //     return AC_TKN.OO_setStorageContract(STOR.address, { from: account1 })
+            // })
 
             .then(() => {
                 console.log("Adding in A_TKN")
@@ -693,10 +693,10 @@ contract('NP_NC', accounts => {
                 return AC_MGR.OO_resolveContractAddresses({ from: account1 })
             })
 
-            .then(() => {
-                console.log("Resolving in AC_TKN")
-                return AC_TKN.OO_resolveContractAddresses({ from: account1 })
-            })
+            // .then(() => {
+            //     console.log("Resolving in AC_TKN")
+            //     return AC_TKN.OO_resolveContractAddresses({ from: account1 })
+            // })
 
             .then(() => {
                 console.log("Resolving in A_TKN")
@@ -747,6 +747,11 @@ contract('NP_NC', accounts => {
         //     console.log("Resolving in UTIL_TKN")
         //     return UTIL_TKN.AdminResolveContractAddresses({ from: account1 })
         // })
+    })
+
+    it('Should authorize all minter contracts for minting AC_TKN(s)', async () => {
+        console.log("Authorizing AC_MGR")
+        return AC_TKN.grantRole(minterRoleB32, AC_MGR.address, { from: account1 })
     })
 
 
@@ -1124,11 +1129,6 @@ contract('NP_NC', accounts => {
                 console.log("Authorizing APP")
                 return A_TKN.grantRole(minterRoleB32, APP.address, { from: account1 })
             })
-    })
-
-    it('Should authorize all minter contracts for minting AC_TKN(s)', async () => {
-        console.log("Authorizing AC_MGR")
-        return AC_TKN.grantRole(minterRoleB32, AC_MGR.address, { from: account1 })
     })
 
 
@@ -1677,7 +1677,16 @@ contract('NP_NC', accounts => {
     })
 
 
-    it('Should mint ID_TKN(1) to address4', async () => {
+    it('Should mint 30000 tokens to account5', async () => {
+        return UTIL_TKN.mint(
+            account5,
+            '30000000000000000000000',
+            { from: account1 }
+        )
+    })
+
+
+    it('Should mint ID_TKN(1) to account4', async () => {
         return ID_TKN.mintPRUF_IDToken(
         account4, 
         '1',
@@ -1686,7 +1695,7 @@ contract('NP_NC', accounts => {
     })
 
 
-    it('Should mint ID_TKN(2) to address5', async () => {
+    it('Should mint ID_TKN(2) to account5', async () => {
         return ID_TKN.mintPRUF_IDToken(
             account5, 
             '2',
@@ -1701,7 +1710,7 @@ contract('NP_NC', accounts => {
         rgt1,
         '12',
         '100',
-        {from: account4, value: 20000000000000000}
+        {from: account4}
         )
     })
 
@@ -1712,7 +1721,7 @@ contract('NP_NC', accounts => {
         rgt2,
         '13',
         '100',
-        {from: account5, value: 20000000000000000}
+        {from: account5}
         )
     })
 
@@ -1723,7 +1732,7 @@ contract('NP_NC', accounts => {
         rgt3,
         '12',
         '100',
-        {from: account4, value: 20000000000000000}
+        {from: account4}
         )
     })
 
@@ -1734,7 +1743,7 @@ contract('NP_NC', accounts => {
         rgt4,
         '12',
         '100',
-        {from: account4, value: 20000000000000000}
+        {from: account4}
         )
     })
 
@@ -1745,7 +1754,7 @@ contract('NP_NC', accounts => {
         rgt5,
         '10',
         '100',
-        {from: account2, value: 20000000000000000}
+        {from: account2}
         )
     })
 
@@ -1809,7 +1818,7 @@ contract('NP_NC', accounts => {
         rgt6,
         '12',
         '100',
-        {from: account4, value: 20000000000000000}
+        {from: account4}
         )
     })
 
@@ -1820,7 +1829,7 @@ contract('NP_NC', accounts => {
         rgt7,
         '12',
         '100',
-        {from: account4, value: 20000000000000000}
+        {from: account4}
         )
     })
 
@@ -2026,7 +2035,7 @@ contract('NP_NC', accounts => {
         rgt12,
         '10',
         '100',
-        {from: account2, value: 20000000000000000}
+        {from: account2}
         )
     })
 
@@ -2046,7 +2055,7 @@ contract('NP_NC', accounts => {
         asset12, 
         rgt12,
         rgt2,
-        {from: account2, value: 20000000000000000}
+        {from: account2}
         )
     })
 
@@ -2055,7 +2064,7 @@ contract('NP_NC', accounts => {
         return APP.$forceModRecord(
         asset12, 
         rgt12,
-        {from: account2, value: 20000000000000000}
+        {from: account2}
         )
     })
 
@@ -2103,7 +2112,7 @@ contract('NP_NC', accounts => {
         return APP_NC.$importAsset(
         asset12,
         '12',
-        {from: account2, value: 20000000000000000}
+        {from: account2}
         )
     })
 
@@ -2116,7 +2125,7 @@ contract('NP_NC', accounts => {
         'a',
         'a',
         'a',
-        {from: account2, value: 20000000000000000}
+        {from: account2}
         )
     })
 
@@ -2125,7 +2134,7 @@ contract('NP_NC', accounts => {
         return APP_NC.$addIpfs2Note(
         asset12,
         asset12,
-        {from: account2, value: 20000000000000000}
+        {from: account2}
         )
     })
 
@@ -2215,7 +2224,7 @@ contract('NP_NC', accounts => {
         asset12,
         rgt12,
         '11',
-        {from: account2, value: 20000000000000000}
+        {from: account2}
         )
     })
 

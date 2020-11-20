@@ -83,6 +83,10 @@ let nakedAuthCode1;
 let nakedAuthCode3;
 let nakedAuthCode7;
 
+let payableRoleB32;
+let minterRoleB32;
+let trustedAgentRoleB32;
+
 contract('UTIL_TKN', accounts => {
 
     console.log('//**************************BEGIN BOOTSTRAP**************************//')
@@ -499,6 +503,19 @@ contract('UTIL_TKN', accounts => {
         ECR_MGRHASH = await Helper.getStringHash(
             'ECR_MGR'
         )
+
+
+        payableRoleB32 = await Helper.getStringHash(
+            'PAYABLE_ROLE'
+        )
+
+        minterRoleB32 = await Helper.getStringHash(
+            'MINTER_ROLE'
+        )
+
+        trustedAgentRoleB32 = await Helper.getStringHash(
+            'TRUSTED_AGENT_ROLE'
+        )
     })
 
 
@@ -604,10 +621,10 @@ contract('UTIL_TKN', accounts => {
                 return AC_MGR.OO_setStorageContract(STOR.address, { from: account1 })
             })
 
-            .then(() => {
-                console.log("Adding in AC_TKN")
-                return AC_TKN.OO_setStorageContract(STOR.address, { from: account1 })
-            })
+            // .then(() => {
+            //     console.log("Adding in AC_TKN")
+            //     return AC_TKN.OO_setStorageContract(STOR.address, { from: account1 })
+            // })
 
             .then(() => {
                 console.log("Adding in A_TKN")
@@ -654,10 +671,10 @@ contract('UTIL_TKN', accounts => {
                 return RCLR.OO_setStorageContract(STOR.address, { from: account1 })
             })
 
-            .then(() => {
-                console.log("Adding in UTIL_TKN")
-                return UTIL_TKN.AdminSetStorageContract(STOR.address, { from: account1 })
-            })
+            // .then(() => {
+            //     console.log("Adding in UTIL_TKN")
+            //     return UTIL_TKN.AdminSetStorageContract(STOR.address, { from: account1 })
+            // })
     })
 
 
@@ -681,10 +698,10 @@ contract('UTIL_TKN', accounts => {
                 return AC_MGR.OO_resolveContractAddresses({ from: account1 })
             })
 
-            .then(() => {
-                console.log("Resolving in AC_TKN")
-                return AC_TKN.OO_resolveContractAddresses({ from: account1 })
-            })
+            // .then(() => {
+            //     console.log("Resolving in AC_TKN")
+            //     return AC_TKN.OO_resolveContractAddresses({ from: account1 })
+            // })
 
             .then(() => {
                 console.log("Resolving in A_TKN")
@@ -731,21 +748,26 @@ contract('UTIL_TKN', accounts => {
                 return RCLR.OO_resolveContractAddresses({ from: account1 })
             })
 
-            .then(() => {
-                console.log("Resolving in UTIL_TKN")
-                return UTIL_TKN.AdminResolveContractAddresses({ from: account1 })
-            })
+            // .then(() => {
+            //     console.log("Resolving in UTIL_TKN")
+            //     return UTIL_TKN.AdminResolveContractAddresses({ from: account1 })
+            // })
+    })
+
+    it('Should authorize all minter contracts for minting AC_TKN(s)', async () => {
+        console.log("Authorizing AC_MGR")
+        return AC_TKN.grantRole(minterRoleB32, AC_MGR.address, { from: account1 })
     })
 
 
     it('Should mint a couple of asset root tokens', async () => {
 
         console.log("Minting root token 1 -C")
-        return AC_MGR.createAssetClass(account1, 'ROOT1', '1', '1', '3', { from: account1 })
+        return AC_MGR.createAssetClass(account1, 'ROOT1', '1', '1', '3', "0x0000000000000000000000000000000000000000000000000000000000000000", { from: account1 })
 
             .then(() => {
                 console.log("Minting root token 2 -NC")
-                return AC_MGR.createAssetClass(account1, 'ROOT2', '2', '2', '3', { from: account1 })
+                return AC_MGR.createAssetClass(account1, 'ROOT2', '2', '2', '3', "0x0000000000000000000000000000000000000000000000000000000000000000", { from: account1 })
             })
     })
 
@@ -753,26 +775,26 @@ contract('UTIL_TKN', accounts => {
     it("Should Mint 3 cust AC tokens in AC_ROOT1, and 2 in AC_ROOT2", async () => {
 
         console.log("Minting AC 10")
-        return AC_MGR.createAssetClass(account1, "Custodial_AC10", "10", "1", "1", { from: account1 })
+        return AC_MGR.createAssetClass(account1, "Custodial_AC10", "10", "1", "1", "0x0000000000000000000000000000000000000000000000000000000000000000", { from: account1 })
 
             .then(() => {
                 console.log("Minting AC 11")
-                return AC_MGR.createAssetClass(account1, "Custodial_AC11", "11", "1", "1", { from: account1 })
+                return AC_MGR.createAssetClass(account1, "Custodial_AC11", "11", "1", "1", "0x0000000000000000000000000000000000000000000000000000000000000000", { from: account1 })
             })
 
             .then(() => {
                 console.log("Minting AC 12")
-                return AC_MGR.createAssetClass(account1, "Custodial_AC12", "12", "1", "1", { from: account1 })
+                return AC_MGR.createAssetClass(account1, "Custodial_AC12", "12", "1", "1", "0x0000000000000000000000000000000000000000000000000000000000000000", { from: account1 })
             })
 
             .then(() => {
                 console.log("Minting AC 13")
-                return AC_MGR.createAssetClass(account1, "Custodial_AC13", "13", "2", "1", { from: account1 })
+                return AC_MGR.createAssetClass(account1, "Custodial_AC13", "13", "2", "1", "0x0000000000000000000000000000000000000000000000000000000000000000", { from: account1 })
             })
 
             .then(() => {
                 console.log("Minting AC 14")
-                return AC_MGR.createAssetClass(account1, "Custodial_AC14", "14", "2", "1", { from: account1 })
+                return AC_MGR.createAssetClass(account1, "Custodial_AC14", "14", "2", "1", "0x0000000000000000000000000000000000000000000000000000000000000000", { from: account1 })
             })
     })
 
@@ -1006,6 +1028,7 @@ contract('UTIL_TKN', accounts => {
             })
     })
 
+
     it('Should authorize all minter contracts for minting A_TKN(s)', async () => {
 
         console.log("Authorizing NP")
@@ -1025,11 +1048,15 @@ contract('UTIL_TKN', accounts => {
                 console.log("Authorizing PIP")
                 return A_TKN.grantRole(minterRoleB32, PIP.address, { from: account1 })
             })
-    })
+    })    
+    
+    
+    it('Should authorize AC_MGR as trusted agent', async () => {
 
-    it('Should authorize all minter contracts for minting AC_TKN(s)', async () => {
         console.log("Authorizing AC_MGR")
-        return AC_TKN.grantRole(minterRoleB32, AC_MGR.address, { from: account1 })
+        return UTIL_TKN.grantRole(trustedAgentRoleB32, AC_MGR.address, { from: account1 })
+
+
     })
 
 
@@ -1452,17 +1479,18 @@ contract('UTIL_TKN', accounts => {
     })
 
 
-    it('Should set PaymentAddress', async () => {
+    // it('Should set PaymentAddress', async () => {
 
-        console.log("//**************************************BEGIN UTIL_TKN**********************************************/")
-        return UTIL_TKN.AdminSetPaymentAddress(
-            account8,
-            { from: account1 }
-        )
-    })
+
+    //     return UTIL_TKN.AdminSetPaymentAddress(
+    //         account8,
+    //         { from: account1 }
+    //     )
+    // })
 
 
     it('Should mint 30000 tokens to account1', async () => {
+             console.log("//**************************************BEGIN UTIL_TKN**********************************************/")
         return UTIL_TKN.mint(
             account1,
             '30000',
@@ -1485,7 +1513,7 @@ contract('UTIL_TKN', accounts => {
 
 
     it('Should increaseShare to 45/55 split @AC13', async () => {
-        return UTIL_TKN.increaseShare(
+        return AC_MGR.increaseShare(
             '13',
             '3000',
             { from: account1 }
@@ -1531,7 +1559,7 @@ contract('UTIL_TKN', accounts => {
     it("Should retrieve cost of ACtoken", async () => {
         var ACSaleInfo = [];
 
-        return await UTIL_TKN.currentACtokenInfo({ from: account2 }, function (_err, _result) {
+        return await AC_MGR.currentACtokenInfo({ from: account2 }, function (_err, _result) {
             if (_err) { }
             else {
                 ACSaleInfo = Object.values(_result)
@@ -1542,10 +1570,11 @@ contract('UTIL_TKN', accounts => {
 
 
     it('Should purchace ACtoken to account2', async () => {
-        return UTIL_TKN.purchaseACtoken(
+        return AC_MGR.purchaseACtoken(
             'account2FTW',
             '1',
             '1',
+            "0x0000000000000000000000000000000000000000000000000000000000000000", 
             { from: account2 }
         )
     })
@@ -1602,7 +1631,7 @@ contract('UTIL_TKN', accounts => {
     it("Should retrieve cost of ACtoken", async () => {
         var ACSaleInfo = [];
 
-        return await UTIL_TKN.currentACtokenInfo({ from: account2 }, function (_err, _result) {
+        return await AC_MGR.currentACtokenInfo({ from: account2 }, function (_err, _result) {
             if (_err) { }
             else {
                 ACSaleInfo = Object.values(_result)
@@ -1613,10 +1642,11 @@ contract('UTIL_TKN', accounts => {
 
 
     it('Should purchace ACtoken to account3', async () => {
-        return UTIL_TKN.purchaseACtoken(
+        return AC_MGR.purchaseACtoken(
             'account3FTW',
             '1',
             '1',
+            "0x0000000000000000000000000000000000000000000000000000000000000000", 
             { from: account3 }
         )
     })
@@ -1635,17 +1665,17 @@ contract('UTIL_TKN', accounts => {
     })
 
 
-    it("Should make sure account3 is owner of AC1000002", async () => {
-        var ACnumber = [];
+    // it("Should make sure account3 is owner of AC12", async () => {
+    //     var ACnumber = [];
 
-        return await AC_TKN.tokenOfOwnerByIndex(account3, '0', { from: account3 }, function (_err, _result) {
-            if (_err) { }
-            else {
-                ACnumber = Object.values(_result)
-                console.log(ACnumber)
-            }
-        })
-    })
+    //     return await AC_TKN.tokenOfOwnerByIndex(account3, '12', { from: account3 }, function (_err, _result) {
+    //         if (_err) { }
+    //         else {
+    //             ACnumber = Object.values(_result)
+    //             console.log(ACnumber)
+    //         }
+    //     })
+    // })
 
 
     it("Should retrieve 30000 - cost of purchaseACtoken", async () => {
@@ -1675,17 +1705,17 @@ contract('UTIL_TKN', accounts => {
     })
 
 
-    it("Should retrieve balanceOf Pruf tokens @account8", async () => {
+    // it("Should retrieve balanceOf Pruf tokens @account8", async () => {
 
-        console.log("//**************************************END Discount TEST**********************************************/")
-        var Balance = [];
+    //     console.log("//**************************************END Discount TEST**********************************************/")
+    //     var Balance = [];
 
-        return await UTIL_TKN.balanceOf(account8, { from: account8 }, function (_err, _result) {
-            if (_err) { }
-            else {
-                Balance = Object.values(_result)
-                console.log(Balance)
-            }
-        })
-    })
+    //     return await UTIL_TKN.balanceOf(account8, { from: account8 }, function (_err, _result) {
+    //         if (_err) { }
+    //         else {
+    //             Balance = Object.values(_result)
+    //             console.log(Balance)
+    //         }
+    //     })
+    // })
 })
