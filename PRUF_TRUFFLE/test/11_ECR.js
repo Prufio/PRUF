@@ -1683,7 +1683,7 @@ contract('ECR', accounts => {
         rgt1,
         '10',
         '100',
-        {from: account2, value: 20000000000000000}
+        {from: account2}
         )
     })
 
@@ -1694,7 +1694,7 @@ contract('ECR', accounts => {
         rgt2,
         '10',
         '100',
-        {from: account2, value: 20000000000000000}
+        {from: account2}
         )
     })
 
@@ -1705,7 +1705,7 @@ contract('ECR', accounts => {
         rgt3,
         '10',
         '100',
-        {from: account2, value: 20000000000000000}
+        {from: account2}
         )
     })
 
@@ -1736,7 +1736,7 @@ contract('ECR', accounts => {
         rgt4,
         '10',
         '100',
-        {from: account2, value: 20000000000000000}
+        {from: account2}
         )
     })
 
@@ -1767,7 +1767,7 @@ contract('ECR', accounts => {
         rgt5,
         '10',
         '100',
-        {from: account2, value: 20000000000000000}
+        {from: account2}
         )
     })
 
@@ -1787,7 +1787,7 @@ contract('ECR', accounts => {
         asset5, 
         rgt5,
         rgt000,
-        {from: account2, value: 20000000000000000}
+        {from: account2}
         )
     })
 
@@ -1807,7 +1807,7 @@ contract('ECR', accounts => {
         rgt6,
         '12',
         '100',
-        {from: account4, value: 20000000000000000}
+        {from: account4}
         )
     })
 
@@ -2109,7 +2109,7 @@ contract('ECR', accounts => {
         rgt12,
         '10',
         '100',
-        {from: account2, value: 20000000000000000}
+        {from: account2}
         )
     })
 
@@ -2129,7 +2129,7 @@ contract('ECR', accounts => {
         asset12, 
         rgt12,
         rgt2,
-        {from: account2, value: 20000000000000000}
+        {from: account2}
         )
     })
 
@@ -2138,7 +2138,7 @@ contract('ECR', accounts => {
         return APP.$forceModRecord(
         asset12, 
         rgt12,
-        {from: account2, value: 20000000000000000}
+        {from: account2}
         )
     })
 
@@ -2186,7 +2186,7 @@ contract('ECR', accounts => {
         return APP_NC.$importAsset(
         asset12,
         '12',
-        {from: account2, value: 20000000000000000}
+        {from: account2}
         )
     })
 
@@ -2199,7 +2199,7 @@ contract('ECR', accounts => {
         'a',
         'a',
         'a',
-        {from: account2, value: 20000000000000000}
+        {from: account2}
         )
     })
 
@@ -2208,7 +2208,7 @@ contract('ECR', accounts => {
         return APP_NC.$addIpfs2Note(
         asset12,
         asset12,
-        {from: account2, value: 20000000000000000}
+        {from: account2}
         )
     })
 
@@ -2298,7 +2298,7 @@ contract('ECR', accounts => {
         asset12,
         rgt12,
         '11',
-        {from: account2, value: 20000000000000000}
+        {from: account2}
         )
     })
 

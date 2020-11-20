@@ -1682,21 +1682,28 @@ contract('CORE', accounts => {
         )
     })
 
+
+    it('Should mint ID_TKN(1) to account4', async () => {
+        return ID_TKN.mintPRUF_IDToken(
+            account2,
+            '1',
+            { from: account1}
+        )
+    })
+
     //1
     it('Should fail because assetToken already exists', async () => {
 
         console.log("//**************************************END CORE SETUP**********************************************/")
         console.log("//**************************************BEGIN CORE FAIL BATCH (3)**********************************************/")
         console.log("//**************************************BEGIN createRecord FAIL BATCH**********************************************/")
-        it('Should write asset13 in AC 12', async () => {
             return APP_NC.$newRecord(
-                asset13,
+                asset1,
                 rgt13,
                 '10',
                 '100',
                 { from: account2 }
             )
-        })
     })
 
     it('should authorize account2 in root AC 1', async () => {

@@ -1113,6 +1113,11 @@ contract('STOR', accounts => {
                 console.log("Authorizing RCLR")
                 return UTIL_TKN.grantRole(payableRoleB32, RCLR.address, { from: account1 })
             })
+
+            .then(() => {
+                console.log("Authorizing MAL_APP")
+                return UTIL_TKN.grantRole(payableRoleB32, MAL_APP.address, { from: account1 })
+            })
     })
 
     it('Should authorize all minter contracts for minting A_TKN(s)', async () => {

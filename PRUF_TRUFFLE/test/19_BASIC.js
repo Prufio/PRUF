@@ -1653,20 +1653,10 @@ contract('BASIC', accounts => {
     })
 
 
-    it('Should write asset1 in AC 10', async () => {
+    it('Should set SharesAddress', async () => {
 
         console.log("//**************************************BEGIN BASIC TEST**********************************************/")
         console.log("//**************************************BEGIN BASIC SETUP**********************************************/")
-        return APP.$newRecord(
-        asset1, 
-        rgt1,
-        '10',
-        '100',
-        {from: account2}
-        )
-    })
-
-    it('Should set SharesAddress', async () => {
         return UTIL_TKN.AdminSetSharesAddress(
             account1,
             { from: account1 }
@@ -1679,6 +1669,17 @@ contract('BASIC', accounts => {
             account2,
             '30000000000000000000000',
             { from: account1 }
+        )
+    })
+
+
+    it('Should write asset1 in AC 10', async () => {
+        return APP.$newRecord(
+        asset1, 
+        rgt1,
+        '10',
+        '100',
+        {from: account2}
         )
     })
 
