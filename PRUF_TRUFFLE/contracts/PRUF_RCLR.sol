@@ -66,7 +66,7 @@ contract RCLR is ECR_CORE, CORE {
         uint32 _assetClass
     ) external nonReentrant whenNotPaused { 
         uint256 tokenId = uint256(_idxHash);
-        escrowDataExtLight memory escrowDataLight = getEscrowDataLight( //CTS:EXAMINE
+        escrowDataExtLight memory escrowDataLight = getEscrowDataLight(
             _idxHash
         );
         Record memory rec = getRecord(_idxHash);

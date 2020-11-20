@@ -122,7 +122,7 @@ contract ID_TKN is ReentrancyGuard, Context, AccessControl, ERC721Burnable, ERC7
      * @dev Set new token URI String -- string should eventually be a B32 hash of ID info in a standardized format - verifyable against provided ID
      */
     function setURI(uint256 tokenId, string calldata _tokenURI)
-        external isMinter nonReentrant whenNotPaused //CTS:EXAMINE uhhhhh, minter role???
+        external isMinter nonReentrant whenNotPaused
         returns (uint256)
     {
         
