@@ -115,7 +115,7 @@ contract AC_MGR is BASIC {
      * Requirements:
      * - the caller must have a balance of at least `amount`.
      */
-    function purchaseACtoken( //-------------------------------------------------------DS:TEST -- modified with new IPFS parameter
+    function purchaseACtoken( //-------------------------------------------------------CTS:EXAMINE pruf balance check?
         string calldata _name,
         uint32 _assetClassRoot,
         uint8 _custodyType,

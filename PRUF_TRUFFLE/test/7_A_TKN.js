@@ -1734,7 +1734,7 @@ contract('A_TKN', accounts => {
     it('Should fail because caller is not owner', async () => {
 
         console.log("//**************************************END A_TKN TEST SETUP**********************************************/")
-        console.log("//**************************************BEGIN A_TKN FAIL BATCH (14)**********************************************/")
+        console.log("//**************************************BEGIN A_TKN FAIL BATCH (17)**********************************************/")
         console.log("//**************************************BEGIN OO_setStorageContract FAIL BATCH**********************************************/")
         return A_TKN.OO_setStorageContract(
         STOR.address,
@@ -1761,7 +1761,7 @@ contract('A_TKN', accounts => {
     })
 
     //4
-    it('Should fail because caller is not owner or approved', async () => {
+    it('Should fail because caller is not minter', async () => {
 
         console.log("//**************************************END OO_resolveContractAddresses FAIL BATCH**********************************************/")
         console.log("//**************************************BEGIN mintAssetToken FAIL BATCH**********************************************/")
@@ -1774,7 +1774,7 @@ contract('A_TKN', accounts => {
     })
 
     //5
-    it('Should fail because caller is not owner or approved', async () => {
+    it('Should fail because caller is not minter', async () => {
 
         console.log("//**************************************END mintAssetToken FAIL BATCH**********************************************/")
         console.log("//**************************************BEGIN reMintAssetToken FAIL BATCH**********************************************/")
@@ -1784,13 +1784,32 @@ contract('A_TKN', accounts => {
         {from: account2}
         )
     })
+    
+
+    it('Should authorize account1 as a minter', async () => {
+        return A_TKN.grantRole(
+            minterRoleB32,
+            account2,
+            { from: account1 }
+        )
+    })
 
     //6
-    it('Should fail because attempting to remint non-existant token', async () => {
-        return A_TKN.reMintAssetToken(
-        account1,
-        asset8,
-        {from: account1}
+    it('Should fail because token doesnt exist', async () => {
+        return A_TKN.reMintACToken(
+            account1,
+            '30',
+            'Pruf.io',
+            { from: account2 }
+        )
+    })
+    
+
+    it('Should unauthorize account1 as a minter', async () => {
+        return A_TKN.revokeRole(
+            minterRoleB32,
+            account2,
+            { from: account1 }
         )
     })
 
@@ -1929,9 +1948,40 @@ contract('A_TKN', accounts => {
         )
     })
 
+    //15
+    it('Should fail because caller not owner or approved', async () => {
+
+        console.log("//**************************************END safeTransferFrom FAIL BATCH**********************************************/")
+        console.log("//**************************************BEGIN discard FAIL BATCH**********************************************/")
+        return A_TKN.discard(
+            asset1,
+            {from: account5}
+            )
+    })
+
+    //16
+    it('Should fail because caller is not pauser', async () => {
+
+        console.log("//*********************************END discard FAIL BATCH*****************************************/")
+        console.log("//********************************BEGIN pause FAIL BATCH****************************************/")
+        return A_TKN.pause(
+            { from: account2 }
+        )
+    })
+
+    //17
+    it('Should fail because caller is not pauser', async () => {
+
+        console.log("//*********************************END pause FAIL BATCH*****************************************/")
+        console.log("//********************************BEGIN unpause FAIL BATCH****************************************/")
+        return A_TKN.unpause(
+            { from: account2 }
+        )
+    })
+
 
     it('Should write record in AC 10 @ IDX&RGT(1)', async () => {
-        console.log("//**************************************END safeTransferFrom FAIL BATCH**********************************************/")
+        console.log("//**************************************END unpause FAIL BATCH**********************************************/")
         console.log("//**************************************END A_TKN FAIL BATCH**********************************************/")
         console.log("//**************************************END A_TKN TEST**********************************************/")
         console.log("//**************************************BEGIN THE WORKS**********************************************/")

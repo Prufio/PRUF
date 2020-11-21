@@ -1,3 +1,15 @@
+/*--------------------------------------------------------PRuF0.7.1
+__/\\\\\\\\\\\\\ _____/\\\\\\\\\ _______/\\../\\ ___/\\\\\\\\\\\\\\\
+ _\/\\\/////////\\\ _/\\\///////\\\ ____\//..\//____\/\\\///////////__
+  _\/\\\.......\/\\\.\/\\\.....\/\\\ ________________\/\\\ ____________
+   _\/\\\\\\\\\\\\\/__\/\\\\\\\\\\\/_____/\\\____/\\\.\/\\\\\\\\\\\ ____
+    _\/\\\/////////____\/\\\//////\\\ ___\/\\\___\/\\\.\/\\\///////______
+     _\/\\\ ____________\/\\\ ___\//\\\ __\/\\\___\/\\\.\/\\\ ____________
+      _\/\\\ ____________\/\\\ ____\//\\\ _\/\\\___\/\\\.\/\\\ ____________
+       _\/\\\ ____________\/\\\ _____\//\\\.\//\\\\\\\\\ _\/\\\ ____________
+        _\/// _____________\/// _______\/// __\///////// __\/// _____________
+         *-------------------------------------------------------------------*/
+
 const PRUF_STOR = artifacts.require('STOR');
 const PRUF_APP = artifacts.require('APP');
 const PRUF_NP = artifacts.require('NP');
@@ -1676,11 +1688,20 @@ contract('AC_MGR', accounts => {
         )
     })
 
+
+    it('Should mint 30000 tokens to account1', async () => {
+        return UTIL_TKN.mint(
+            account1,
+            '30000000000000000000000',
+            { from: account1 }
+        )
+    })
+
     //1
     it('Should fail because caller does not hold AC token', async () => {
 
         console.log("//**************************************END AC_MGR SETUP**********************************************/")
-        console.log("//**************************************BEGIN AC_MGR FAIL BATCH (12)**********************************************/")
+        console.log("//**************************************BEGIN AC_MGR FAIL BATCH (13)**********************************************/")
         console.log("//**************************************BEGIN OO_addUser FAIL BATCH**********************************************/")
         return AC_MGR.OO_addUser(
         account2, 
@@ -1690,7 +1711,7 @@ contract('AC_MGR', accounts => {
         )
     })
 
-    //3
+    //2
     it('Should fail because caller is not Owner', async () => {
 
         console.log("//**************************************END OO_addUser FAIL BATCH**********************************************/")
@@ -1706,7 +1727,7 @@ contract('AC_MGR', accounts => {
         )
     })
 
-    //4
+    //3
     it('Should fail because AC_TKN ID != 0', async () => {
         return AC_MGR.createAssetClass(
         account2,
@@ -1719,7 +1740,7 @@ contract('AC_MGR', accounts => {
         )
     })
 
-    //5
+    //4
     it('Should fail because RootAC doesnt exist', async () => {
         return AC_MGR.createAssetClass( 
         account2,
@@ -1733,7 +1754,7 @@ contract('AC_MGR', accounts => {
     })
 
 
-    //6
+    //5
     it('Should fail because ACname is already in use', async () => {
         return AC_MGR.createAssetClass( 
         account2,
@@ -1747,7 +1768,7 @@ contract('AC_MGR', accounts => {
     })
 
 
-    //7
+    //6
     it('Should fail because AC already exists', async () => {
         return AC_MGR.createAssetClass( 
         account2,
@@ -1760,7 +1781,7 @@ contract('AC_MGR', accounts => {
         )
     })
 
-    //8
+    //7
     it('Should fail because caller does not hold AC token', async () => {
 
         console.log("//**************************************END createAssetClass FAIL BATCH**********************************************/")
@@ -1772,7 +1793,7 @@ contract('AC_MGR', accounts => {
         )
     })
 
-    //9
+    //8
     it('Should fail because used name being signed to different AC', async () => {
         return AC_MGR.updateACname( 
         'Custodial_AC1',
@@ -1781,14 +1802,26 @@ contract('AC_MGR', accounts => {
         )
     })
 
-    //10
-    it('Should fail because caller is not UTIL_TKN', async () => {
+    //9
+    it('Should fail because caller is not ACTH', async () => {
 
-        console.log("//**************************************END updateACname FAIL BATCH**********************************************/")
-        console.log("//**************************************BEGIN increasePriceShare FAIL BATCH**********************************************/")
-        return AC_MGR.increasePriceShare(
-        '10', 
+        console.log("//**************************************END updateACipfs FAIL BATCH**********************************************/")
+        console.log("//**************************************BEGIN updateACipfs FAIL BATCH**********************************************/")
+        return AC_MGR.updateACipfs(
+        rgt000, 
         '1',
+        {from: account2}
+        )
+    })
+
+    //10
+    it('Should fail because amount != < 200', async () => {
+
+        console.log("//**************************************END updateACipfs FAIL BATCH**********************************************/")
+        console.log("//**************************************BEGIN increaseShare FAIL BATCH**********************************************/")
+        return AC_MGR.increaseShare(
+        '10', 
+        '199',
         {from: account1}
         )
     })
@@ -1796,7 +1829,7 @@ contract('AC_MGR', accounts => {
     //11
     it('Should fail because caller does not hold AC token', async () => {
 
-        console.log("//**************************************END increasePriceShare FAIL BATCH**********************************************/")
+        console.log("//**************************************END increaseShare FAIL BATCH**********************************************/")
         console.log("//**************************************BEGIN ACTH_setCosts FAIL BATCH**********************************************/")
         return AC_MGR.ACTH_setCosts(
         '10',

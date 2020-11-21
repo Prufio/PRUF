@@ -1,3 +1,15 @@
+/*--------------------------------------------------------PRuF0.7.1
+__/\\\\\\\\\\\\\ _____/\\\\\\\\\ _______/\\../\\ ___/\\\\\\\\\\\\\\\
+ _\/\\\/////////\\\ _/\\\///////\\\ ____\//..\//____\/\\\///////////__
+  _\/\\\.......\/\\\.\/\\\.....\/\\\ ________________\/\\\ ____________
+   _\/\\\\\\\\\\\\\/__\/\\\\\\\\\\\/_____/\\\____/\\\.\/\\\\\\\\\\\ ____
+    _\/\\\/////////____\/\\\//////\\\ ___\/\\\___\/\\\.\/\\\///////______
+     _\/\\\ ____________\/\\\ ___\//\\\ __\/\\\___\/\\\.\/\\\ ____________
+      _\/\\\ ____________\/\\\ ____\//\\\ _\/\\\___\/\\\.\/\\\ ____________
+       _\/\\\ ____________\/\\\ _____\//\\\.\//\\\\\\\\\ _\/\\\ ____________
+        _\/// _____________\/// _______\/// __\///////// __\/// _____________
+         *-------------------------------------------------------------------*/
+
 const PRUF_STOR = artifacts.require('STOR');
 const PRUF_APP = artifacts.require('APP');
 const PRUF_NP = artifacts.require('NP');
@@ -1805,7 +1817,7 @@ contract('APP', accounts => {
         it('Should fail because user not auth in AC', async () => {
 
             console.log("//************************************************************END APP SETUP**********************************************************//")
-            console.log('//**************************BEGIN APP FAIL BATCH (19)**************************//')
+            console.log('//**************************BEGIN APP FAIL BATCH (18)**************************//')
             console.log('//**************************BEGIN $newRecord FAIL BATCH**************************//')
             return APP.$newRecord(
                 asset10,
@@ -1871,26 +1883,26 @@ contract('APP', accounts => {
         })
 
 
-        it('Should authorize APP in AC 14', async () => {
-            return STOR.enableContractForAC('APP', '14', '1', { from: account1 })
-        })
+        // it('Should authorize APP in AC 14', async () => {
+        //     return STOR.enableContractForAC('APP', '14', '1', { from: account1 })
+        // })
+
+        // //6
+        // it('Should fail becasue you cannot change AC to new root', async () => {
+        //     return APP.$importAsset(
+        //         asset2,
+        //         rgt2,
+        //         '14',
+        //         {from: account6}
+        //     )
+        // })
+
+
+        // it('Should unauthorize APP in AC 14', async () => {
+        //     return STOR.enableContractForAC('APP', '14', '0', { from: account1 })
+        // })
 
         //6
-        it('Should fail becasue you cannot change AC to new root', async () => {
-            return APP.$importAsset(
-                asset2,
-                rgt2,
-                '14',
-                {from: account6}
-            )
-        })
-
-
-        it('Should unauthorize APP in AC 14', async () => {
-            return STOR.enableContractForAC('APP', '14', '0', { from: account1 })
-        })
-
-        //7
         it('Should fail becasue asset isnt transfered or exported', async () => {
             return APP.$importAsset(
                 asset1,
@@ -1900,7 +1912,7 @@ contract('APP', accounts => {
             )
         })
 
-        //8
+        //7
         it('Should fail because contract does not hold token', async () => {
             
             console.log("//************************************************************END $importAsset FAIL BATCH**********************************************************//")
@@ -1912,7 +1924,7 @@ contract('APP', accounts => {
             )
         })
 
-        //9
+        //8
         it('Should fail becasue user not auth in AC', async () => {
             return APP.$forceModRecord(
                 asset1,
@@ -1921,16 +1933,16 @@ contract('APP', accounts => {
             )
         })
 
-        //10
-        it('Should fail becasue rgt = 0', async () => {
-            return APP.$forceModRecord(
-                asset1,
-                rgt000,
-                {from: account2}
-            )
-        })
+        // //10
+        // it('Should fail becasue rgt = 0', async () => {
+        //     return APP.$forceModRecord(
+        //         asset1,
+        //         rgt000,
+        //         {from: account2}
+        //     )
+        // })
 
-        //11
+        //9
         it('Should fail becasue asset in stolen status', async () => {
             return APP.$forceModRecord(
                 asset4,
@@ -1939,7 +1951,7 @@ contract('APP', accounts => {
             )
         })
 
-        //12
+        //10
         it('Should fail becasue asset in lost status', async () => {
             return APP.$forceModRecord(
                 asset5,
@@ -1956,7 +1968,7 @@ contract('APP', accounts => {
             return AC_MGR.OO_addUser(account2, '11', '10', { from: account1 })
         })
 
-        //13
+        //11
         it('Should fail because contract does not hold token', async () => {
             return APP.$transferAsset(
                 asset3,
@@ -1966,7 +1978,7 @@ contract('APP', accounts => {
             )
         })
 
-        //14
+        //12
         it('Should fail becasue user not auth for AC', async () => {
             return APP.$transferAsset(
                 asset1,
@@ -1986,7 +1998,7 @@ contract('APP', accounts => {
             return AC_MGR.OO_addUser(account9, '9', '10', { from: account1 })
         })
 
-        //15
+        //13
         it('Should fail becasue userType trying to manipulate status < 50', async () => {
             return APP.$transferAsset(
                 asset1,
@@ -2011,7 +2023,7 @@ contract('APP', accounts => {
             )
         })
 
-        //16
+        //14
         it('Should fail becasue status is not transferable', async () => {
             return APP.$transferAsset(
                 asset1,
@@ -2031,7 +2043,7 @@ contract('APP', accounts => {
             )
         })
 
-        //17
+        //15
         it('Should fail becasue rgt does not match record', async () => {
             return APP.$transferAsset(
                 asset1,
@@ -2041,7 +2053,7 @@ contract('APP', accounts => {
             )
         })
 
-        //18
+        //16
         it('Should fail because contract does not hold token', async () => {
             
             console.log("//************************************************************END $transferAsset FAIL BATCH**********************************************************//")
@@ -2054,7 +2066,17 @@ contract('APP', accounts => {
             )
         })
 
-        //19
+        //17
+        it('Should fail becasue user not auth for AC', async () => {
+            return APP.$addIpfs2Note(
+                asset1,
+                rgt1,
+                rgt5,
+                {from: account6}
+            )
+        })
+
+        //18
         it('Should fail becasue rgt does not match record data', async () => {
             return APP.$addIpfs2Note(
                 asset6,
