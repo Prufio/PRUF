@@ -1796,7 +1796,7 @@ contract('A_TKN', accounts => {
 
     //6
     it('Should fail because token doesnt exist', async () => {
-        return A_TKN.reMintACToken(
+        return A_TKN.reMintAssetToken(
             account1,
             '30',
             'Pruf.io',
