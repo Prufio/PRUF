@@ -192,6 +192,10 @@ contract AC_MGR is BASIC {
         //^^^^^^^effects^^^^^^^^^
 
         //mint an asset class token to msg.sender, at tokenID ACtokenIndex, with URI = root asset Class #
+
+        UTIL_TKN.trustedAgentBurn(msg.sender, currentACtokenPrice);
+        currentACtokenPrice = newACtokenPrice;
+
         _createAssetClass(
             msg.sender,
             _name,
@@ -201,9 +205,6 @@ contract AC_MGR is BASIC {
             _IPFS
         );
 
-        UTIL_TKN.trustedAgentBurn(msg.sender, currentACtokenPrice);
-
-        currentACtokenPrice = newACtokenPrice;
 
         return ACtokenIndex; //returns asset class # of minted token
         //^^^^^^^effects/interactions^^^^^^^^^
