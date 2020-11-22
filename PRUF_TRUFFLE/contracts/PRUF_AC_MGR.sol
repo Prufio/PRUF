@@ -126,30 +126,30 @@ contract AC_MGR is BASIC {
         //^^^^^^^interactions^^^^^^^^^
     }
 
-    /*
-     * @dev Authorize / Deauthorize / Authorize users for an address be permitted to make record modifications
-     */
-    function OO_addUser(
-        bytes32 _addrHash,
-        uint8 _userType,
-        uint32 _assetClass
-    ) external whenNotPaused isACtokenHolderOfClass(_assetClass) {
-        //^^^^^^^checks^^^^^^^^^
+    // /*
+    //  * @dev Authorize / Deauthorize / Authorize users for an address be permitted to make record modifications
+    //  */
+    // function OO_addUser(
+    //     bytes32 _addrHash,
+    //     uint8 _userType,
+    //     uint32 _assetClass
+    // ) external whenNotPaused isACtokenHolderOfClass(_assetClass) {
+    //     //^^^^^^^checks^^^^^^^^^
 
-        registeredUsers[_addrHash][_assetClass] = _userType;
+    //     registeredUsers[_addrHash][_assetClass] = _userType;
 
-        if ((_userType != 0) && (registeredUsers[_addrHash][0] < 255)) {
-            registeredUsers[_addrHash][0]++;
-        }
+    //     if ((_userType != 0) && (registeredUsers[_addrHash][0] < 255)) {
+    //         registeredUsers[_addrHash][0]++;
+    //     }
 
-        if ((_userType == 0) && (registeredUsers[_addrHash][0] > 0)) {
-            registeredUsers[_addrHash][0]--;
-        }
+    //     if ((_userType == 0) && (registeredUsers[_addrHash][0] > 0)) {
+    //         registeredUsers[_addrHash][0]--;
+    //     }
 
-        //^^^^^^^effects^^^^^^^^^
-        emit REPORT("Internal user database access!"); //report access to the internal user database
-        //^^^^^^^interactions^^^^^^^^^
-    }
+    //     //^^^^^^^effects^^^^^^^^^
+    //     emit REPORT("Internal user database access!"); //report access to the internal user database
+    //     //^^^^^^^interactions^^^^^^^^^
+    // }
 
     /**
      * @dev Burns (amout) tokens and mints a new asset class token to the caller address
