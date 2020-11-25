@@ -25,7 +25,7 @@ pragma solidity ^0.6.7;
  *
  *      * Webapp - mint pruf, mint ID tokens
  *
- *      *
+ *      * 
  *
  *      *
  *
@@ -37,7 +37,10 @@ pragma solidity ^0.6.7;
 /*-----------------------------------------------------------------
  *TO DO :
  *
- *      * rework A_TKN, AC_TKN, ID_TKN with boilerplate versions, roles instead of contract names
+ *      * destructive verify(idxHash, greenRgtHash, newRgtHash)
+ *           rgthash is rawRgt#idx -> is green rgtHash# -> is rgtHash
+ *          takes greenRgtHash and hashes on chain to compare with rgtHash. 
+ *          Enforces new rgtHash to eliminate replay
  *
  *      *  
  *
