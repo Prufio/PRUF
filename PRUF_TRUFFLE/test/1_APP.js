@@ -772,6 +772,50 @@ contract('APP', accounts => {
         return AC_TKN.grantRole(minterRoleB32, AC_MGR.address, { from: account1 })
     })
 
+    it('Should authorize all payable contracts for transactions', async () => {
+
+        console.log("Authorizing AC_MGR")
+        return UTIL_TKN.grantRole(payableRoleB32, AC_MGR.address, { from: account1 })
+
+            .then(() => {
+                console.log("Authorizing APP_NC")
+                return UTIL_TKN.grantRole(payableRoleB32, APP_NC.address, { from: account1 })
+            })
+
+            .then(() => {
+                console.log("Authorizing APP")
+                return UTIL_TKN.grantRole(payableRoleB32, APP.address, { from: account1 })
+            })
+
+            .then(() => {
+                console.log("Authorizing RCLR")
+                return UTIL_TKN.grantRole(payableRoleB32, RCLR.address, { from: account1 })
+            })
+    })
+
+    it('Should authorize all minter contracts for minting A_TKN(s)', async () => {
+
+        console.log("Authorizing NP")
+        return A_TKN.grantRole(minterRoleB32, NP.address, { from: account1 })
+
+            .then(() => {
+                console.log("Authorizing APP_NC")
+                return A_TKN.grantRole(minterRoleB32, APP_NC.address, { from: account1 })
+            })
+
+            .then(() => {
+                console.log("Authorizing APP")
+                return A_TKN.grantRole(minterRoleB32, APP.address, { from: account1 })
+            })
+    })
+
+
+    it('Should authorize AC_MGR as trusted agent in AC_TKN', async () => {
+    
+        console.log("Authorizing AC_MGR")
+        return AC_TKN.grantRole(trustedAgentRoleB32, AC_MGR.address, { from: account1 })
+    })
+
 
     it('Should mint a couple of asset root tokens', async () => {
 
@@ -1110,50 +1154,6 @@ contract('APP', accounts => {
             .then(() => {
                 return STOR.enableContractForAC('RCLR', '16', '3', { from: account10 })
             })
-    })
-
-    it('Should authorize all payable contracts for transactions', async () => {
-
-        console.log("Authorizing AC_MGR")
-        return UTIL_TKN.grantRole(payableRoleB32, AC_MGR.address, { from: account1 })
-
-            .then(() => {
-                console.log("Authorizing APP_NC")
-                return UTIL_TKN.grantRole(payableRoleB32, APP_NC.address, { from: account1 })
-            })
-
-            .then(() => {
-                console.log("Authorizing APP")
-                return UTIL_TKN.grantRole(payableRoleB32, APP.address, { from: account1 })
-            })
-
-            .then(() => {
-                console.log("Authorizing RCLR")
-                return UTIL_TKN.grantRole(payableRoleB32, RCLR.address, { from: account1 })
-            })
-    })
-
-    it('Should authorize all minter contracts for minting A_TKN(s)', async () => {
-
-        console.log("Authorizing NP")
-        return A_TKN.grantRole(minterRoleB32, NP.address, { from: account1 })
-
-            .then(() => {
-                console.log("Authorizing APP_NC")
-                return A_TKN.grantRole(minterRoleB32, APP_NC.address, { from: account1 })
-            })
-
-            .then(() => {
-                console.log("Authorizing APP")
-                return A_TKN.grantRole(minterRoleB32, APP.address, { from: account1 })
-            })
-    })
-
-
-    it('Should authorize AC_MGR as trusted agent in AC_TKN', async () => {
-    
-        console.log("Authorizing AC_MGR")
-        return AC_TKN.grantRole(trustedAgentRoleB32, AC_MGR.address, { from: account1 })
     })
 
 
