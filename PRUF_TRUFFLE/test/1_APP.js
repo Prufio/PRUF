@@ -97,6 +97,7 @@ let nakedAuthCode7;
 
 let payableRoleB32;
 let minterRoleB32;
+let trustedAgentRoleB32;
 
 contract('APP', accounts => {
 
@@ -522,6 +523,10 @@ contract('APP', accounts => {
 
         minterRoleB32 = await Helper.getStringHash(
             'MINTER_ROLE'
+        )
+
+        trustedAgentRoleB32 = await Helper.getStringHash(
+            'TRUSTED_AGENT_ROLE'
         )
     })
 
@@ -1142,6 +1147,13 @@ contract('APP', accounts => {
                 console.log("Authorizing APP")
                 return A_TKN.grantRole(minterRoleB32, APP.address, { from: account1 })
             })
+    })
+
+
+    it('Should authorize AC_MGR as trusted agent in AC_TKN', async () => {
+    
+        console.log("Authorizing AC_MGR")
+        return AC_TKN.grantRole(trustedAgentRoleB32, AC_MGR.address, { from: account1 })
     })
 
 

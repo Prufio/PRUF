@@ -416,3 +416,111 @@ Private Provenance
 
 
 */
+
+
+/*-----------------------------------------------------------------
+ * ---------------- PRUF SETUP PROTOCOL -----------------
+ *-----------------------------------------------------------------
+ * 
+ * ----------------- DEPLOY CONTRACTS -----------------
+ * 1 - STOR
+ * 2 - APP
+ * 3 - NP
+ * 4 - AC_MGR
+ * 5 - AC_TKN
+ * 6 - A_TKN
+ * 7 - ECR_MGR
+ * 8 - ECR
+ * 9 - APP_NC
+ * 10 - NP_NC
+ * 11 - ECR_NC
+ * 12 - RCLR
+ * 13 - ID_TKN
+ * 14 - UTIL_TKN
+ * 
+ * ----------------- ADD CONTRACTS TO STORAGE (STOR.OO_addContract)-----------------
+ * 1 - APP ("APP", APP.address, '0', '1')
+ * 2 - NP ("NP", NP.address, '0', '1')
+ * 3 - AC_MGR ("AC_MGR", AC_MGR.address, '0', '1')
+ * 4 - AC_TKN ("AC_TKN", AC_TKN.address, '0', '1')
+ * 5 - A_TKN ("A_TKN", A_TKN.address, '0', '1')
+ * 6 - ECR_MGR ("ECR_MGR", ECR_MGR.address, '0', '1')
+ * 7 - ECR ("ECR", ECR.address, '0', '3')
+ * 8 - APP_NC ("APP_NC", APP_NC.address, '0', '2')
+ * 9 - NP_NC ("NP_NC", NP_NC.address, '0', '2')
+ * 10 - ECR_NC ("ECR_NC", ECR_NC.address, '0', '3')
+ * 11 - RCLR ("RCLR", RCLR.address, '0', '3')
+ * 12 - ID_TKN ("ID_TKN", ID_TKN.address, '0', '1')
+ * 13 - UTIL_TKN ("UTIL_TKN", UTIL_TKN.address, '0', '1')
+ * 
+ * ----------------- ADD STORAGE TO CONTRACTS (CONTRACT.OO_setStorageContract) -----------------
+ * 1 - APP (STOR.address)
+ * 2 - NP (STOR.address)
+ * 3 - AC_MGR (STOR.address)
+ * 4 - A_TKN (STOR.address)
+ * 5 - ECR_MGR (STOR.address)
+ * 6 - ECR (STOR.address)
+ * 7 - APP_NC (STOR.address)
+ * 8 - NP_NC (STOR.address)
+ * 9 - ECR_NC (STOR.address)
+ * 10 - RCLR (STOR.address)
+ * 
+ * ----------------- RESOLVE CONTRACT ADDRESSES (CONTRACT.OO_resolveContractAddresses) -----------------
+ * 1 - APP
+ * 2 - NP
+ * 3 - AC_MGR
+ * 4 - A_TKN
+ * 5 - ECR_MGR
+ * 6 - ECR
+ * 7 - APP_NC
+ * 8 - NP_NC
+ * 9 - ECR_NC
+ * 10 - RCLR
+ * 
+ * ----------------- DIVY UP ROLES (CONTRACT.grantRole) (B32'S) -----------------
+ * 1 -
+ * 2 - AC_TKN (MINTER_ROLEB32, AC_MGR.address), (TRUSTED_AGENT_ROLEB32, AC_MGR.address)
+ * 3 - UTIL_TKN (PAYABLE_ROLEB32, AC_MGR.address), (PAYABLE_ROLEB32, APP_NC.address), (PAYABLE_ROLEB32, APP.address), (PAYABLE_ROLEB32, RCLR.address)
+ * 4 - A_TKN (MINTER_ROLEB32, NP.address), (MINTER_ROLEB32, APP_NC.address), (MINTER_ROLEB32, APP.address)
+ * 
+ * ----------------- MINT TOKENS (AC_MGR.createAssetClass)-----------------
+ * 1 - ROOT1 (1) (address, 'CUSTODIAL_ROOT', '1', '1', '3', 0x000...(b32))
+ * 2 - ROOT2 (2) (address, 'NON_CUSTODIAL_ROOT', '2', '2', '3', 0x000...(b32))
+ * 3 - CUST1 (ROOT1) (11) (address, 'CUSTODIAL_11', '11', '1', '1', 0x000...(b32))
+ * 4 - NONCUST1 (ROOT1) (12) (address, 'NON_CUSTODIAL_12', '12', '1', '2', 0x000...(b32))
+ * 5 - CUST2 (ROOT2) (13) (address, 'CUSTODIAL_13', '13', '2', '1', 0x000...(b32))
+ * 6 - NONCUST2 (ROOT2) (14) (address, 'NON_CUSTODIAL_14', '14', '2', '2', 0x000...(b32))
+ * 
+ * ----------------- AUTHORIZE CONTRACTS IN AC'S (STOR.enableContractForAC)-----------------
+ * 1 - APP ('APP', '11', '1'), ('APP', '13', '1')
+ * 2 - NP ('NP', '11', '1'), ('NP', '13', '1')
+ * 3 - AC_MGR ('AC_MGR', '12', '2'), ('AC_MGR', '14', '2'), ('AC_MGR', '11', '1'), ('AC_MGR', '13', '1')
+ * 4 - AC_TKN ('AC_TKN', '12', '2'), ('AC_TKN', '14', '2'), ('AC_TKN', '11', '1'), ('AC_TKN', '13', '1')
+ * 5 - A_TKN ('A_TKN', '12', '2'), ('A_TKN', '14', '2'), ('A_TKN', '11', '1'), ('A_TKN', '13', '1'), ('A_TKN', '2', '1'), ('A_TKN', '1', '1')
+ * 6 - ECR_MGR ('ECR_MGR', '12', '3'), ('ECR_MGR', '14', '3'), ('ECR_MGR', '11', '3'), ('ECR_MGR', '13', '3')
+ * 7 - ECR ('ECR', '11', '3'), ('ECR', '13', '3')
+ * 8 - APP_NC ('APP_NC', '12', '2'), ('APP_NC', '14', '2')
+ * 9 - NP_NC ('NP_NC', '12', '2'), ('NP_NC', '14', '2')
+ * 10 - ECR_NC ('ECR_NC', '12', '3'), ('ECR_NC', '14', '3')
+ * 11 - RCLR ('RCLR', '12', '3'), ('RCLR', '14', '3'), ('RCLR', '11', '3'), ('RCLR', '13', '3')
+ *
+ * ----------------- SET COSTS IN AC'S (AC_MGR.ACTH_setCosts)-----------------
+ * 1 - (AC1) ('1', '1', PRUF+(0*18), PAYEE.address) ('1', '2', PRUF+(0*18), PAYEE.address) ('1', '3', PRUF+(0*18), PAYEE.address) ('1', '4', PRUF+(0*18), PAYEE.address) ('1', '5', PRUF+(0*18), PAYEE.address) ('1', '6', PRUF+(0*18), PAYEE.address)
+ * 2 - (AC2) ('2', '1', PRUF+(0*18), PAYEE.address) ('2', '2', PRUF+(0*18), PAYEE.address) ('2', '3', PRUF+(0*18), PAYEE.address) ('2', '4', PRUF+(0*18), PAYEE.address) ('2', '5', PRUF+(0*18), PAYEE.address) ('2', '6', PRUF+(0*18), PAYEE.address)
+ * 3 - (AC11) ('11', '1', PRUF+(0*18), PAYEE.address) ('11', '2', PRUF+(0*18), PAYEE.address) ('11', '3', PRUF+(0*18), PAYEE.address) ('11', '4', PRUF+(0*18), PAYEE.address) ('11', '5', PRUF+(0*18), PAYEE.address) ('11', '6', PRUF+(0*18), PAYEE.address)
+ * 4 - (AC12) ('12', '1', PRUF+(0*18), PAYEE.address) ('12', '2', PRUF+(0*18), PAYEE.address) ('12', '3', PRUF+(0*18), PAYEE.address) ('12', '4', PRUF+(0*18), PAYEE.address) ('12', '5', PRUF+(0*18), PAYEE.address) ('12', '6', PRUF+(0*18), PAYEE.address)
+ * 5 - (AC13) ('13', '1', PRUF+(0*18), PAYEE.address) ('13', '2', PRUF+(0*18), PAYEE.address) ('13', '3', PRUF+(0*18), PAYEE.address) ('13', '4', PRUF+(0*18), PAYEE.address) ('13', '5', PRUF+(0*18), PAYEE.address) ('13', '6', PRUF+(0*18), PAYEE.address)
+ * 6 - (AC14) ('14', '1', PRUF+(0*18), PAYEE.address) ('14', '2', PRUF+(0*18), PAYEE.address) ('14', '3', PRUF+(0*18), PAYEE.address) ('14', '4', PRUF+(0*18), PAYEE.address) ('14', '5', PRUF+(0*18), PAYEE.address) ('14', '6', PRUF+(0*18), PAYEE.address)
+ *
+ * ----------------- AUTHORIZE USERS FOR AC'S (AC_MGR.OO_addUser) -----------------
+ * 1 - USER1 (USER1.address, 1, 11) (USER1.address, 1, 12)
+ * 2 - USER2 (USER2.address, 1, 13) (USER2.address, 1, 14)
+ * 
+ * ----------------- SET SHARES ADDRESS (UTIL_TKN.AdminSetSharesAddress) -----------------
+ * 1 - OWNER (OWNER.address)
+ *  
+ * ----------------- MINT PRUF TO USERS (UTIL_TKN.mint) -----------------
+ * 1 - USER1 (USER1.address, PRUF+(0*18))
+ * 2 - USER2 (USER2.address, PRUF+(0*18))
+ * 
+*-----------------------------------------------------------------
