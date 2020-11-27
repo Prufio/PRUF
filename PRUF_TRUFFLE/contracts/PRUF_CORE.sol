@@ -184,6 +184,7 @@ contract CORE is BASIC {
     {
         //^^^^^^^checks^^^^^^^^^
         Invoice memory pricing;
+        uint256 half;
         //^^^^^^^effects^^^^^^^^^
         (
             pricing.rootAddress,
@@ -191,7 +192,12 @@ contract CORE is BASIC {
             pricing.ACTHaddress,
             pricing.ACTHprice
         ) = AC_MGR.getServiceCosts(_assetClass, 1);
-        pricing.ACTHaddress = _oldOwner;
+        pricing.rootAddress = _oldOwner;
+
+        half = pricing.ACTHprice.div(2);
+        pricing.rootPrice = pricing.rootPrice.add(half);
+        pricing.ACTHprice = pricing.ACTHprice.sub(half);
+
         deductPayment(pricing);
         //^^^^^^^interactions^^^^^^^^^
     }
