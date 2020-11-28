@@ -74,6 +74,8 @@ contract UTIL_TKN is
         address ACTHaddress;
         uint256 ACTHprice;
     }
+
+    uint256 trustedAgentEnabled = 1;
     
     mapping (address => uint256) private coldWallet;
 
@@ -89,6 +91,20 @@ contract UTIL_TKN is
         _setupRole(MINTER_ROLE, _msgSender());
         _setupRole(PAUSER_ROLE, _msgSender());
         _setupRole(PAYABLE_ROLE, _msgSender());
+    }
+
+    /*
+     * @dev PERMENANTLY !!!  Kill trusted agent and payable functions
+     */
+    function killTrustedAgent(uint256 _key) external {  //---------------------------------------------------DPS:TEST : NEW
+        require(
+            hasRole(DEFAULT_ADMIN_ROLE, _msgSender()),
+            "PRuF:SSA: must have DEFAULT_ADMIN_ROLE"
+        );
+
+        if (_key == 170){ 
+            trustedAgentEnabled = 0;  //--------------------------------------------------THIS IS A PERMANENT ACTION AND CANNOT BE UNDONE
+        }
     }
 
     /*
@@ -146,8 +162,12 @@ contract UTIL_TKN is
             "PRuF:PPS: must have PAYABLE_ROLE"
         );
         require( //---------------------------------------------------DPS:TEST : NEW
+            trustedAgentEnabled == 0,
+            "PRuF:PPS: Function permanently disabled - use allowance / transferFrom pattern"
+        );
+        require( //---------------------------------------------------DPS:TEST : NEW
             coldWallet[_senderAddress] == 0,
-            "PRuF:PPS: Cold Wallet - not permissioned for PAYABLE transaction"
+            "PRuF:PPS: Cold Wallet - Trusted functions prohibited"
         );
         require( //redundant? throws on transfer?
             balanceOf(_senderAddress) >= _rootPrice.add(_ACTHprice),
@@ -180,9 +200,13 @@ contract UTIL_TKN is
             hasRole(TRUSTED_AGENT_ROLE, _msgSender()),
             "PRuF:BRN: must have TRUSTED_AGENT_ROLE"
         );
+        require( //---------------------------------------------------DPS:TEST : NEW
+            trustedAgentEnabled == 0,
+            "PRuF:BRN: Function permanently disabled - use allowance / transferFrom pattern"
+        );
         require(//---------------------------------------------------DPS:TEST : NEW
             coldWallet[_addr] == 0,
-            "PRuF:PPS: Cold Wallet - not permissioned for TA - Burn"
+            "PRuF:BRN: Cold Wallet - Trusted functions prohibited"
         );
         //^^^^^^^checks^^^^^^^^^
         _burn(_addr, _amount);
@@ -201,9 +225,13 @@ contract UTIL_TKN is
             hasRole(TRUSTED_AGENT_ROLE, _msgSender()),
             "PRuF:TAT: must have TRUSTED_AGENT_ROLE"
         );
+        require( //---------------------------------------------------DPS:TEST : NEW
+            trustedAgentEnabled == 0,
+            "PRuF:TAT: Function permanently disabled - use allowance / transferFrom pattern"
+        );
         require(//---------------------------------------------------DPS:TEST : NEW
             coldWallet[_from] == 0,
-            "PRuF:PPS: Cold Wallet - not permissioned for TA - Transfer"
+            "PRuF:TAT: Cold Wallet - Trusted functions prohibited"
         );
         //^^^^^^^checks^^^^^^^^^
         _transfer(_from, _to, _amount);
