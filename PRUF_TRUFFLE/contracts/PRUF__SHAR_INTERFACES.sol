@@ -87,7 +87,7 @@ interface SHARE_TKN_Interface {
     /**
      * @dev Returns the maximum amount of tokens that can exist.
      */
-    function max_Supply() external view returns (uint256);
+    function maxSupply() external view returns (uint256);
 
     /**
      * @dev Returns the amount of tokens owned by `account`.

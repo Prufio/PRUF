@@ -28,20 +28,28 @@ pragma solidity ^0.6.7;
     import "./Imports/token/ERC20/ERC20Snapshot.sol";
  */
 interface UTIL_TKN_Interface {
+
     /*
-     * @dev Set adress of STOR contract to interface with
+     * @dev Set calling wallet to a "cold Wallet" that cannot be manipulated by TRUSTED_AGENT or PAYABLE permissioned functions
      */
-    function AdminSetStorageContract(address _storageAddress) external;
+    function setColdWallet() external;
+
+    /*
+     * @dev un-set calling wallet to a "cold Wallet", enabling manipulation by TRUSTED_AGENT and PAYABLE permissioned functions
+     */
+    function unSetColdWallet() external;
+
+    /*
+     * @dev return an adresses "cold wallet" status
+     */
+    function isColdWallet (address _addr) external returns (uint256);
+   
 
     /*
      * @dev Set adress of payment contract
      */
-    function AdminSetPaymentAddress(address _paymentAddress) external;
+    function AdminSetSharesAddress(address _paymentAddress) external;
 
-    /*
-     * @dev Resolve Contract Addresses from STOR
-     */
-    function AdminResolveContractAddresses() external;
 
     /*
      * @dev Deducts token payment from transaction
@@ -55,6 +63,20 @@ interface UTIL_TKN_Interface {
         uint256 _rootPrice,
         address _ACTHaddress,
         uint256 _ACTHprice
+    ) external;
+
+    /*
+     * @dev arbitrary burn (requires TRUSTED_AGENT_ROLE)   ****USE WITH CAUTION
+     */
+    function trustedAgentBurn(address _addr, uint256 _amount) external;
+
+    /*
+     * @dev arbitrary transfer (requires TRUSTED_AGENT_ROLE)   ****USE WITH CAUTION
+     */
+    function trustedAgentTransfer(
+        address _from,
+        address _to,
+        uint256 _amount
     ) external;
 
     /*
@@ -96,6 +118,12 @@ interface UTIL_TKN_Interface {
      * - the caller must have the `MINTER_ROLE`.
      */
     function mint(address to, uint256 amount) external;
+
+    /**
+     * @dev Returns Max Supply
+     *
+     */
+    function maxSupply() external pure returns (uint256);
 
     /*
      * @dev Take a balance snapshot, returns snapshot ID
@@ -200,13 +228,7 @@ interface UTIL_TKN_Interface {
         uint256 amount
     ) external returns (bool);
 
-    function trustedAgentBurn(address _addr, uint256 _amount) external;
 
-    function trustedAgentTransfer(
-        address _from,
-        address _to,
-        uint256 _amount
-    ) external;
 }
 
 //------------------------------------------------------------------------------------------------

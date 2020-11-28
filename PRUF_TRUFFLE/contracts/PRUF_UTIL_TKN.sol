@@ -63,7 +63,7 @@ contract UTIL_TKN is
         "TRUSTED_AGENT_ROLE"
     );
 
-    uint256 private constant maxSupply = 4000000000000000000000000000; //4billion max supply
+    uint256 public constant maxSupply = 4000000000000000000000000000; //4billion max supply
 
     address private sharesAddress = address(0);
 
@@ -74,6 +74,8 @@ contract UTIL_TKN is
         address ACTHaddress;
         uint256 ACTHprice;
     }
+    
+    mapping (address => uint256) private coldWallet;
 
     /**
      * @dev Grants `DEFAULT_ADMIN_ROLE`, `MINTER_ROLE` and `PAUSER_ROLE` to the
@@ -87,6 +89,27 @@ contract UTIL_TKN is
         _setupRole(MINTER_ROLE, _msgSender());
         _setupRole(PAUSER_ROLE, _msgSender());
         _setupRole(PAYABLE_ROLE, _msgSender());
+    }
+
+    /*
+     * @dev Set calling wallet to a "cold Wallet" that cannot be manipulated by TRUSTED_AGENT or PAYABLE permissioned functions
+     */
+    function setColdWallet() external {  //---------------------------------------------------DPS:TEST : NEW
+        coldWallet[msg.sender] = 170;
+    }
+
+    /*
+     * @dev un-set calling wallet to a "cold Wallet", enabling manipulation by TRUSTED_AGENT and PAYABLE permissioned functions
+     */
+    function unSetColdWallet() external {  //---------------------------------------------------DPS:TEST : NEW
+        coldWallet[msg.sender] = 0;
+    }
+
+    /*
+     * @dev return an adresses "cold wallet" status
+     */
+    function isColdWallet (address _addr) external view returns (uint256){
+        return coldWallet[_addr];
     }
 
     /*
@@ -122,11 +145,16 @@ contract UTIL_TKN is
             hasRole(PAYABLE_ROLE, _msgSender()),
             "PRuF:PPS: must have PAYABLE_ROLE"
         );
+        require( //---------------------------------------------------DPS:TEST : NEW
+            coldWallet[_senderAddress] == 0,
+            "PRuF:PPS: Cold Wallet - not permissioned for PAYABLE transaction"
+        );
         require( //redundant? throws on transfer?
             balanceOf(_senderAddress) >= _rootPrice.add(_ACTHprice),
             "PRuF:PPS: insufficient balance"
         );
         //^^^^^^^checks^^^^^^^^^
+        //-------------------------------------------------------------SHARES specific code
         address _sharesAddress = sharesAddress;
 
         if (sharesAddress == address(0)) {
@@ -140,8 +168,8 @@ contract UTIL_TKN is
         _transfer(_senderAddress, _sharesAddress, sharesShare);
         _transfer(_senderAddress, _ACTHaddress, _ACTHprice);
 
-        //^^^^^^^effects^^^^^^^^^
-        //^^^^^^^interactions^^^^^^^^^
+        //-------------------------------------------------------------SHARES specific code
+        //^^^^^^^effects / interactions^^^^^^^^^
     }
 
     /*
@@ -151,6 +179,10 @@ contract UTIL_TKN is
         require(
             hasRole(TRUSTED_AGENT_ROLE, _msgSender()),
             "PRuF:BRN: must have TRUSTED_AGENT_ROLE"
+        );
+        require(//---------------------------------------------------DPS:TEST : NEW
+            coldWallet[_addr] == 0,
+            "PRuF:PPS: Cold Wallet - not permissioned for TA - Burn"
         );
         //^^^^^^^checks^^^^^^^^^
         _burn(_addr, _amount);
@@ -168,6 +200,10 @@ contract UTIL_TKN is
         require(
             hasRole(TRUSTED_AGENT_ROLE, _msgSender()),
             "PRuF:TAT: must have TRUSTED_AGENT_ROLE"
+        );
+        require(//---------------------------------------------------DPS:TEST : NEW
+            coldWallet[_from] == 0,
+            "PRuF:PPS: Cold Wallet - not permissioned for TA - Transfer"
         );
         //^^^^^^^checks^^^^^^^^^
         _transfer(_from, _to, _amount);
@@ -207,14 +243,6 @@ contract UTIL_TKN is
 
         _mint(to, amount);
         //^^^^^^^interactions^^^^^^^^^
-    }
-
-    /**
-     * @dev Returns Max Supply
-     *
-     */
-    function max_Supply() external pure returns (uint256) {
-        return maxSupply;
     }
 
     /**

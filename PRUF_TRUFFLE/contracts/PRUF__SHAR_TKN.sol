@@ -47,7 +47,7 @@ contract SharToken is
         _setupRole(PAUSER_ROLE, _msgSender());
     }
 
-    uint256 private maxSupply =  100;  //set max supply (100000?)
+    uint256 public maxSupply =  100;  //set max supply (100000?)
 
     /**
      * @dev Creates `amount` new tokens for `to`.
@@ -69,14 +69,6 @@ contract SharToken is
         );
 
         _mint(to, amount);
-    }
-
-    /**
-     * @dev Returns Max Supply
-     *
-     */
-    function max_Supply() external view returns (uint256) {
-        return maxSupply;
     }
 
 

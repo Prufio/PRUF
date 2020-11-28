@@ -157,7 +157,7 @@ contract SHARES is ReentrancyGuard, Ownable, Pausable {
         uint256 payableFunds = address(this).balance.sub(heldFunds); //the new balance is the total balance less the amount held back for payment reservations
         uint256 dividend = payableFunds.div(shareTokenSupply);
 
-        //dividend = payableFunds.div(SHAR_TKN.max_Supply()); //calculate the dividend per share of the last interval's reciepts
+        //dividend = payableFunds.div(SHAR_TKN.maxSupply()); //calculate the dividend per share of the last interval's reciepts
 
         dividend_number++;
 
