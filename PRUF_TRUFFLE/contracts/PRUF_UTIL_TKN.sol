@@ -20,9 +20,10 @@ pragma solidity ^0.6.7;
 
 import "./PRUF_INTERFACES.sol";
 import "./Imports/access/AccessControl.sol";
-import "./Imports/token/ERC20/ERC20.sol";
+//import "./Imports/token/ERC20/ERC20.sol";
 import "./Imports/token/ERC20/ERC20Burnable.sol";
-import "./Imports/token/ERC20/ERC20Pausable.sol";
+//import "./Imports/token/ERC20/ERC20Pausable.sol";
+import "./Imports/utils/Pausable.sol";
 import "./Imports/token/ERC20/ERC20Snapshot.sol";
 
 /**
@@ -50,7 +51,8 @@ contract UTIL_TKN is
     Context,
     AccessControl,
     ERC20Burnable,
-    ERC20Pausable,
+    //   ERC20Pausable,
+    Pausable,
     ERC20Snapshot
 {
     bytes32 public constant MINTER_ROLE = keccak256("MINTER_ROLE");
@@ -61,7 +63,7 @@ contract UTIL_TKN is
         "TRUSTED_AGENT_ROLE"
     );
 
-    uint256 public constant maxSupply = 4000000000000000000000000000; //4billion max supply
+    uint256 private constant maxSupply = 4000000000000000000000000000; //4billion max supply
 
     address private sharesAddress = address(0);
 
@@ -257,7 +259,12 @@ contract UTIL_TKN is
         address from,
         address to,
         uint256 amount
-    ) internal virtual override(ERC20, ERC20Pausable, ERC20Snapshot) {
+    ) internal virtual override(ERC20, ERC20Snapshot) {
         super._beforeTokenTransfer(from, to, amount);
+
+        require(
+            (!paused()) || hasRole(PAUSER_ROLE, _msgSender()),
+            "ERC20Pausable: token transfer while paused"
+        );
     }
 }
