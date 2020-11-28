@@ -30,6 +30,11 @@ pragma solidity ^0.6.7;
 interface UTIL_TKN_Interface {
 
     /*
+     * @dev PERMENANTLY !!!  Kill trusted agent and payable
+     */
+    function killTrustedAgent(uint256 _key) external;
+
+    /*
      * @dev Set calling wallet to a "cold Wallet" that cannot be manipulated by TRUSTED_AGENT or PAYABLE permissioned functions
      */
     function setColdWallet() external;
