@@ -14,7 +14,7 @@ __/\\\\\\\\\\\\\ _____/\\\\\\\\\ _______/\\../\\ ___/\\\\\\\\\\\\\\\
  *  TO DO
  *
  *-----------------------------------------------------------------
- *
+ * PRESALE CONTRACT
  *---------------------------------------------------------------*/
 
 // SPDX-License-Identifier: UNLICENSED
@@ -26,14 +26,11 @@ import "./Imports/utils/Pausable.sol";
 import "./Imports/utils/ReentrancyGuard.sol";
 import "./Imports/math/safeMath.sol";
 
-contract AIR_MINTER is ReentrancyGuard, Ownable, Pausable {
+contract PRESALE is ReentrancyGuard, Ownable, Pausable {
     using SafeMath for uint256;
 
     address internal UTIL_TKN_Address;
     UTIL_TKN_Interface internal UTIL_TKN;
-
-    address internal ID_TKN_Address;
-    ID_TKN_Interface internal ID_TKN;
 
     address payable payment_address;
 
@@ -48,18 +45,6 @@ contract AIR_MINTER is ReentrancyGuard, Ownable, Pausable {
 
         UTIL_TKN_Address = _address;
         UTIL_TKN = UTIL_TKN_Interface(UTIL_TKN_Address);
-        //^^^^^^^effects^^^^^^^^^
-    }
-
-    /*
-     * @dev Set address of ID_TKN contract to interface with
-     */
-    function OO_setID_TKN(address _address) external onlyOwner {
-        require(_address != address(0), "PTM:SIT: token address cannot be zero");
-        //^^^^^^^checks^^^^^^^^^
-
-        ID_TKN_Address = _address;
-        ID_TKN = ID_TKN_Interface(ID_TKN_Address);
         //^^^^^^^effects^^^^^^^^^
     }
 
