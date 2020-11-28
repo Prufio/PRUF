@@ -553,8 +553,14 @@
 				"type": "function"
 			},
 			{
-				"inputs": [],
-				"name": "maxSupply",
+				"inputs": [
+					{
+						"internalType": "address",
+						"name": "_addr",
+						"type": "address"
+					}
+				],
+				"name": "isColdWallet",
 				"outputs": [
 					{
 						"internalType": "uint256",
@@ -566,8 +572,21 @@
 				"type": "function"
 			},
 			{
+				"inputs": [
+					{
+						"internalType": "uint256",
+						"name": "_key",
+						"type": "uint256"
+					}
+				],
+				"name": "killTrustedAgent",
+				"outputs": [],
+				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
 				"inputs": [],
-				"name": "max_Supply",
+				"name": "maxSupply",
 				"outputs": [
 					{
 						"internalType": "uint256",
@@ -575,7 +594,7 @@
 						"type": "uint256"
 					}
 				],
-				"stateMutability": "pure",
+				"stateMutability": "view",
 				"type": "function"
 			},
 			{
@@ -694,6 +713,13 @@
 					}
 				],
 				"name": "revokeRole",
+				"outputs": [],
+				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
+				"inputs": [],
+				"name": "setColdWallet",
 				"outputs": [],
 				"stateMutability": "nonpayable",
 				"type": "function"
@@ -852,6 +878,13 @@
 			},
 			{
 				"inputs": [],
+				"name": "unSetColdWallet",
+				"outputs": [],
+				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
+				"inputs": [],
 				"name": "unpause",
 				"outputs": [],
 				"stateMutability": "nonpayable",
@@ -906,9 +939,6 @@
 				},
 				"increaseAllowance(address,uint256)": {
 					"details": "Atomically increases the allowance granted to `spender` by the caller. This is an alternative to {approve} that can be used as a mitigation for problems described in {IERC20-approve}. Emits an {Approval} event indicating the updated allowance. Requirements: - `spender` cannot be the zero address."
-				},
-				"max_Supply()": {
-					"details": "Returns Max Supply"
 				},
 				"mint(address,uint256)": {
 					"details": "Creates `amount` new tokens for `to`. See {ERC20-_mint}. Requirements: - the caller must have the `MINTER_ROLE`."
@@ -1076,19 +1106,19 @@
 			]
 		},
 		"localhost/PRUF/PRUF_TRUFFLE/contracts/PRUF_INTERFACES.sol": {
-			"keccak256": "0x5009ede9f660c1afd6bc81a3460f927b0dd83b398278651087cb086a0fb9314e",
+			"keccak256": "0x6201ee4c3345f3411148db0c68f9235b80e26675cfd00e39a1582c8404a677a1",
 			"license": "UNLICENSED",
 			"urls": [
-				"bzz-raw://c178ad00b071337fbb4031ada97bd6152848bf1303cce1d227b6a846573a733e",
-				"dweb:/ipfs/QmUnTz73pAeQz7BXzeRA9ymJaVEZ4gHz9vrh9rpiUf1a1b"
+				"bzz-raw://31c38b015073bc3b7d23041694078557de422732742bc12925a57a4a30a3df76",
+				"dweb:/ipfs/QmRgpREMff6fKyNV8yLjst4jnT74FstUB8QNgxdHGWj8FX"
 			]
 		},
 		"localhost/PRUF/PRUF_TRUFFLE/contracts/PRUF_UTIL_TKN.sol": {
-			"keccak256": "0x91830f16912860adab0998ae4d6b775c3cd8df4e744a79896a483d0b40adae7a",
+			"keccak256": "0xe880ec1ff5e8ab78ee9b547db2d1304330f1cb077381e3368a8f34a713c6f198",
 			"license": "MIT",
 			"urls": [
-				"bzz-raw://3b87f9a851c4c09f0ca49cf8209198153cc114d787f1715db36d403b2de85f1f",
-				"dweb:/ipfs/Qmeqco2crz1KvxzPxyYyEhY8fQHStxY9G4XqpWbWyDXcMj"
+				"bzz-raw://44fc52a910f7244732d9618d9ff00b4f10b6118258621d71036c5d111963848f",
+				"dweb:/ipfs/QmcumVESwoj3vpzLFcyFf1tGBTjP7utbiQBr768RhP13qY"
 			]
 		}
 	},
