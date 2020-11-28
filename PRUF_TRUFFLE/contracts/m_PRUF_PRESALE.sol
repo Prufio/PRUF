@@ -81,29 +81,23 @@ contract PRESALE is ReentrancyGuard, Ownable, Pausable {
     }
 
     /*
-     * @dev Mint a single ID Token to an addresses
-     */
-    function mintID_Token(address _recipientAddress, uint256 _tokenId)
-        external
-    {
-        require( 
-            ID_TKN.balanceOf(_recipientAddress) == 0,
-            "PTM:MIT: Calling address already holds an ID token"
-        );
-        ID_TKN.mintPRUF_IDToken(_recipientAddress, _tokenId);
-    }
-
-    /*
      * @dev Mint PRUF to an addresses at the rate of 5000 * ETH recieved
      */
     function mintPRUF() external payable nonReentrant {
                     UTIL_TKN.mint(msg.sender, msg.value.mul(5000));
     }
 
+    /*
+     * @dev withdraw to specified payment address
+     */
     function withdraw() external {
             payment_address.transfer(address(this).balance);
     }
 
+
+    /*
+     * @dev return balance of contract
+     */
     function balance() external view returns (uint256) {
             return address(this).balance;
     }
