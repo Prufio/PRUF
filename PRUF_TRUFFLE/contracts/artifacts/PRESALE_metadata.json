@@ -27,6 +27,25 @@
 				"anonymous": false,
 				"inputs": [
 					{
+						"indexed": false,
+						"internalType": "address",
+						"name": "addr",
+						"type": "address"
+					},
+					{
+						"indexed": false,
+						"internalType": "uint256",
+						"name": "amount",
+						"type": "uint256"
+					}
+				],
+				"name": "REPORT",
+				"type": "event"
+			},
+			{
+				"anonymous": false,
+				"inputs": [
+					{
 						"indexed": true,
 						"internalType": "bytes32",
 						"name": "role",
@@ -114,12 +133,30 @@
 			{
 				"inputs": [
 					{
+						"internalType": "address",
+						"name": "_addr",
+						"type": "address"
+					},
+					{
 						"internalType": "uint256",
 						"name": "_amount",
 						"type": "uint256"
 					}
 				],
-				"name": "ADMIN_setAirdropAmount",
+				"name": "ADMIN_MintPRUF",
+				"outputs": [],
+				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "address payable",
+						"name": "_address",
+						"type": "address"
+					}
+				],
+				"name": "ADMIN_setPaymentAddress",
 				"outputs": [],
 				"stateMutability": "nonpayable",
 				"type": "function"
@@ -164,229 +201,6 @@
 				"type": "function"
 			},
 			{
-				"inputs": [
-					{
-						"internalType": "address",
-						"name": "_a",
-						"type": "address"
-					}
-				],
-				"name": "MNTR_Mint1",
-				"outputs": [],
-				"stateMutability": "nonpayable",
-				"type": "function"
-			},
-			{
-				"inputs": [
-					{
-						"internalType": "address",
-						"name": "_a",
-						"type": "address"
-					},
-					{
-						"internalType": "address",
-						"name": "_b",
-						"type": "address"
-					},
-					{
-						"internalType": "address",
-						"name": "_c",
-						"type": "address"
-					},
-					{
-						"internalType": "address",
-						"name": "_d",
-						"type": "address"
-					},
-					{
-						"internalType": "address",
-						"name": "_e",
-						"type": "address"
-					},
-					{
-						"internalType": "address",
-						"name": "_f",
-						"type": "address"
-					},
-					{
-						"internalType": "address",
-						"name": "_g",
-						"type": "address"
-					},
-					{
-						"internalType": "address",
-						"name": "_h",
-						"type": "address"
-					},
-					{
-						"internalType": "address",
-						"name": "_i",
-						"type": "address"
-					},
-					{
-						"internalType": "address",
-						"name": "_j",
-						"type": "address"
-					}
-				],
-				"name": "MNTR_bulkMint10",
-				"outputs": [],
-				"stateMutability": "nonpayable",
-				"type": "function"
-			},
-			{
-				"inputs": [
-					{
-						"internalType": "address",
-						"name": "_a",
-						"type": "address"
-					},
-					{
-						"internalType": "address",
-						"name": "_b",
-						"type": "address"
-					},
-					{
-						"internalType": "address",
-						"name": "_c",
-						"type": "address"
-					},
-					{
-						"internalType": "address",
-						"name": "_d",
-						"type": "address"
-					},
-					{
-						"internalType": "address",
-						"name": "_e",
-						"type": "address"
-					},
-					{
-						"internalType": "address",
-						"name": "_f",
-						"type": "address"
-					},
-					{
-						"internalType": "address",
-						"name": "_g",
-						"type": "address"
-					},
-					{
-						"internalType": "address",
-						"name": "_h",
-						"type": "address"
-					},
-					{
-						"internalType": "address",
-						"name": "_i",
-						"type": "address"
-					},
-					{
-						"internalType": "address",
-						"name": "_j",
-						"type": "address"
-					},
-					{
-						"internalType": "address",
-						"name": "_k",
-						"type": "address"
-					},
-					{
-						"internalType": "address",
-						"name": "_l",
-						"type": "address"
-					},
-					{
-						"internalType": "address",
-						"name": "_m",
-						"type": "address"
-					},
-					{
-						"internalType": "address",
-						"name": "_n",
-						"type": "address"
-					}
-				],
-				"name": "MNTR_bulkMint14",
-				"outputs": [],
-				"stateMutability": "nonpayable",
-				"type": "function"
-			},
-			{
-				"inputs": [
-					{
-						"internalType": "address",
-						"name": "_a",
-						"type": "address"
-					},
-					{
-						"internalType": "address",
-						"name": "_b",
-						"type": "address"
-					}
-				],
-				"name": "MNTR_bulkMint2",
-				"outputs": [],
-				"stateMutability": "nonpayable",
-				"type": "function"
-			},
-			{
-				"inputs": [
-					{
-						"internalType": "address",
-						"name": "_a",
-						"type": "address"
-					},
-					{
-						"internalType": "address",
-						"name": "_b",
-						"type": "address"
-					},
-					{
-						"internalType": "address",
-						"name": "_c",
-						"type": "address"
-					}
-				],
-				"name": "MNTR_bulkMint3",
-				"outputs": [],
-				"stateMutability": "nonpayable",
-				"type": "function"
-			},
-			{
-				"inputs": [
-					{
-						"internalType": "address",
-						"name": "_a",
-						"type": "address"
-					},
-					{
-						"internalType": "address",
-						"name": "_b",
-						"type": "address"
-					},
-					{
-						"internalType": "address",
-						"name": "_c",
-						"type": "address"
-					},
-					{
-						"internalType": "address",
-						"name": "_d",
-						"type": "address"
-					},
-					{
-						"internalType": "address",
-						"name": "_e",
-						"type": "address"
-					}
-				],
-				"name": "MNTR_bulkMint5",
-				"outputs": [],
-				"stateMutability": "nonpayable",
-				"type": "function"
-			},
-			{
 				"inputs": [],
 				"name": "OO_pause",
 				"outputs": [],
@@ -408,6 +222,66 @@
 						"internalType": "bytes32",
 						"name": "",
 						"type": "bytes32"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [],
+				"name": "WHITELIST_ROLE",
+				"outputs": [
+					{
+						"internalType": "bytes32",
+						"name": "",
+						"type": "bytes32"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [],
+				"name": "balance",
+				"outputs": [
+					{
+						"internalType": "uint256",
+						"name": "",
+						"type": "uint256"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "address",
+						"name": "_addr",
+						"type": "address"
+					}
+				],
+				"name": "checkWhitelist",
+				"outputs": [
+					{
+						"internalType": "uint256",
+						"name": "",
+						"type": "uint256"
+					},
+					{
+						"internalType": "uint256",
+						"name": "",
+						"type": "uint256"
+					},
+					{
+						"internalType": "uint256",
+						"name": "",
+						"type": "uint256"
+					},
+					{
+						"internalType": "uint256",
+						"name": "",
+						"type": "uint256"
 					}
 				],
 				"stateMutability": "view",
@@ -519,6 +393,13 @@
 			},
 			{
 				"inputs": [],
+				"name": "mintPRUF",
+				"outputs": [],
+				"stateMutability": "payable",
+				"type": "function"
+			},
+			{
+				"inputs": [],
 				"name": "paused",
 				"outputs": [
 					{
@@ -562,6 +443,41 @@
 					}
 				],
 				"name": "revokeRole",
+				"outputs": [],
+				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "address",
+						"name": "_addr",
+						"type": "address"
+					},
+					{
+						"internalType": "uint32",
+						"name": "_tokensPerEth",
+						"type": "uint32"
+					},
+					{
+						"internalType": "uint32",
+						"name": "_minTokens",
+						"type": "uint32"
+					},
+					{
+						"internalType": "uint32",
+						"name": "_maxTokens",
+						"type": "uint32"
+					}
+				],
+				"name": "whitelist",
+				"outputs": [],
+				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
+				"inputs": [],
+				"name": "withdraw",
 				"outputs": [],
 				"stateMutability": "nonpayable",
 				"type": "function"
@@ -611,7 +527,7 @@
 	},
 	"settings": {
 		"compilationTarget": {
-			"localhost/PRUF/PRUF_TRUFFLE/contracts/m_PRUF_AIRDROP.sol": "AIR_MINTER"
+			"localhost/PRUF/PRUF_TRUFFLE/contracts/m_PRUF_PRESALE.sol": "PRESALE"
 		},
 		"evmVersion": "istanbul",
 		"libraries": {},
@@ -689,12 +605,12 @@
 				"dweb:/ipfs/QmRgpREMff6fKyNV8yLjst4jnT74FstUB8QNgxdHGWj8FX"
 			]
 		},
-		"localhost/PRUF/PRUF_TRUFFLE/contracts/m_PRUF_AIRDROP.sol": {
-			"keccak256": "0xb64cfc3b73023dc6b6f2bbc30bc2967a4a3e4e1dacd37999420747d02d68ddcd",
+		"localhost/PRUF/PRUF_TRUFFLE/contracts/m_PRUF_PRESALE.sol": {
+			"keccak256": "0xcfc293bebaad5715fd2b7f29cefbe0be26a2bd3dab84d38438836c38f5eef218",
 			"license": "UNLICENSED",
 			"urls": [
-				"bzz-raw://34fbc1500501802860645715f12aca2c7e9cf4eb0c97a4a8a66acc2b5c892bce",
-				"dweb:/ipfs/QmZuth6aWDKqhAa5msjpeYtZTExhpNRqT2Bd5TicbkyPBu"
+				"bzz-raw://7d90995e5f3dc94690e223e10d3bb94a6c6d18d0084387b447509b185fe676cc",
+				"dweb:/ipfs/QmdpiUUqw3HLEbR2o1d8pj71aZefkYeSHmZ2L3Ai3mx8Qh"
 			]
 		}
 	},
