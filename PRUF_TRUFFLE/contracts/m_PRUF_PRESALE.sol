@@ -53,7 +53,7 @@ contract PRESALE is ReentrancyGuard, Pausable, AccessControl {
 
     mapping(address => whiteListedAddress) private whiteList;
 
-    constructor() internal {
+    constructor() public {
         _setupRole(DEFAULT_ADMIN_ROLE, _msgSender());
         _setupRole(PAUSER_ROLE, _msgSender());
         _setupRole(MINTER_ROLE, _msgSender());
@@ -260,14 +260,14 @@ contract PRESALE is ReentrancyGuard, Pausable, AccessControl {
      * @dev Triggers stopped state. (pausable)
      *
      */
-    function OO_pause() external isPauser {
+    function pause() external isPauser {
         _pause();
     }
 
     /**
      * @dev Returns to normal state. (pausable)
      */
-    function OO_unpause() external isPauser {
+    function unpause() external isPauser {
         _unpause();
     }
 

@@ -37,7 +37,7 @@ contract AIR_MINTER is ReentrancyGuard, AccessControl, Pausable {
 
     uint256 amount;
 
-    constructor() internal {
+    constructor() public {
         _setupRole(DEFAULT_ADMIN_ROLE, _msgSender());
         _setupRole(PAUSER_ROLE, _msgSender());
         _setupRole(MINTER_ROLE, _msgSender());
@@ -90,7 +90,7 @@ contract AIR_MINTER is ReentrancyGuard, AccessControl, Pausable {
     /*
      * @dev Set adress of STOR contract to interface with
      */
-    function OO_setTokenContract(address _address)
+    function ADMIN_setTokenContract(address _address)
         external
         virtual
         isAdmin
@@ -110,7 +110,7 @@ contract AIR_MINTER is ReentrancyGuard, AccessControl, Pausable {
     /*
      * @dev Set airdrop amount
      */
-    function OO_setAirdropAmount(uint256 _amount) external isAdmin {
+    function ADMIN_setAirdropAmount(uint256 _amount) external isAdmin {
         require(_amount != 0, "AM:SAA: airdrop amount cannot be zero");
         //^^^^^^^checks^^^^^^^^^
 
@@ -123,7 +123,7 @@ contract AIR_MINTER is ReentrancyGuard, AccessControl, Pausable {
     /*
      * @dev Mint a set amount to a list of addresses
      */
-    function OO_bulkMint14(
+    function MNTR_bulkMint14(
         address _a,
         address _b,
         address _c,
@@ -162,7 +162,7 @@ contract AIR_MINTER is ReentrancyGuard, AccessControl, Pausable {
     /*
      * @dev Mint a set amount to a list of addresses
      */
-    function OO_bulkMint10(
+    function MNTR_bulkMint10(
         address _a,
         address _b,
         address _c,
@@ -193,7 +193,7 @@ contract AIR_MINTER is ReentrancyGuard, AccessControl, Pausable {
     /*
      * @dev Mint a set amount to a list of addresses
      */
-    function OO_bulkMint5(
+    function MNTR_bulkMint5(
         address _a,
         address _b,
         address _c,
@@ -214,7 +214,7 @@ contract AIR_MINTER is ReentrancyGuard, AccessControl, Pausable {
     /*
      * @dev Mint a set amount to a list of addresses
      */
-    function OO_bulkMint3(
+    function MNTR_bulkMint3(
         address _a,
         address _b,
         address _c
@@ -231,7 +231,7 @@ contract AIR_MINTER is ReentrancyGuard, AccessControl, Pausable {
     /*
      * @dev Mint a set amount to a list of addresses
      */
-    function OO_bulkMint2(address _a, address _b) external isMinter nonReentrant whenNotPaused {
+    function MNTR_bulkMint2(address _a, address _b) external isMinter nonReentrant whenNotPaused {
         require(amount != 0, "AM:BM: airdrop amount cannot be zero");
         //^^^^^^^checks^^^^^^^^^
 
@@ -243,7 +243,7 @@ contract AIR_MINTER is ReentrancyGuard, AccessControl, Pausable {
     /*
      * @dev Mint a set amount to a list of addresses
      */
-    function OO_bulkMint1(address _a) external isMinter nonReentrant whenNotPaused {
+    function MNTR_Mint1(address _a) external isMinter nonReentrant whenNotPaused {
         require(amount != 0, "AM:BM: airdrop amount cannot be zero");
         //^^^^^^^checks^^^^^^^^^
 
@@ -255,14 +255,14 @@ contract AIR_MINTER is ReentrancyGuard, AccessControl, Pausable {
      * @dev Triggers stopped state. (pausable)
      *
      */
-    function OO_pause() external isPauser {
+    function pause() external isPauser {
         _pause();
     }
 
     /**
      * @dev Returns to normal state. (pausable)
      */
-    function OO_unpause() external isPauser {
+    function unpause() external isPauser {
         _unpause();
     }
 
