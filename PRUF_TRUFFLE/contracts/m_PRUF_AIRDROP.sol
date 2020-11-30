@@ -21,19 +21,70 @@ __/\\\\\\\\\\\\\ _____/\\\\\\\\\ _______/\\../\\ ___/\\\\\\\\\\\\\\\
 pragma solidity ^0.6.7;
 
 import "./PRUF_INTERFACES.sol";
-import "./Imports/access/Ownable.sol";
+import "./Imports/access/AccessControl.sol";
 import "./Imports/utils/Pausable.sol";
 import "./Imports/utils/ReentrancyGuard.sol";
 import "./Imports/math/safeMath.sol";
 
-contract AIR_MINTER is ReentrancyGuard, Ownable, Pausable {
+contract AIR_MINTER is ReentrancyGuard, AccessControl, Pausable {
+
+    //DEFINE ROLES
+    bytes32 public constant PAUSER_ROLE = keccak256("PAUSER_ROLE");
+    bytes32 public constant MINTER_ROLE = keccak256("MINTER_ROLE");
 
     address internal UTIL_TKN_Address;
     UTIL_TKN_Interface internal UTIL_TKN;
 
     uint256 amount;
 
-    //----------------------External Admin functions / onlyowner ---------------------//
+    constructor() internal {
+        _setupRole(DEFAULT_ADMIN_ROLE, _msgSender());
+        _setupRole(PAUSER_ROLE, _msgSender());
+        _setupRole(MINTER_ROLE, _msgSender());
+    }
+
+    //------------------------------------------------------------------------MODIFIERS
+    
+    /*
+     * @dev Verify user credentials
+     * Originating Address:
+     *      is Admin
+     */
+    modifier isAdmin() {
+        require(
+            hasRole(DEFAULT_ADMIN_ROLE, _msgSender()),
+            "PRuF:SSA: must have DEFAULT_ADMIN_ROLE"
+        );
+        _;
+    }
+
+    /*
+     * @dev Verify user credentials
+     * Originating Address:
+     *      is Minter
+     */
+    modifier isMinter() {
+        require(
+            hasRole(MINTER_ROLE, _msgSender()),
+            "PRuF:SSA: must have MINTER_ROLE"
+        );
+        _;
+    }
+
+    /*
+     * @dev Verify user credentials
+     * Originating Address:
+     *      is Pauser
+     */
+    modifier isPauser() {
+        require(
+            hasRole(PAUSER_ROLE, _msgSender()),
+            "PRuF:SSA: must have PAUSER_ROLE"
+        );
+        _;
+    }
+
+    //----------------------External Admin functions / isAdmin ---------------------//
     
 
     /*
@@ -42,7 +93,8 @@ contract AIR_MINTER is ReentrancyGuard, Ownable, Pausable {
     function OO_setTokenContract(address _address)
         external
         virtual
-        onlyOwner
+        isAdmin
+
     {
         require(
             _address != address(0),
@@ -58,7 +110,7 @@ contract AIR_MINTER is ReentrancyGuard, Ownable, Pausable {
     /*
      * @dev Set airdrop amount
      */
-    function OO_setAirdropAmount(uint256 _amount) external onlyOwner {
+    function OO_setAirdropAmount(uint256 _amount) external isAdmin {
         require(_amount != 0, "AM:SAA: airdrop amount cannot be zero");
         //^^^^^^^checks^^^^^^^^^
 
@@ -86,7 +138,7 @@ contract AIR_MINTER is ReentrancyGuard, Ownable, Pausable {
         address _l,
         address _m,
         address _n
-    ) external onlyOwner nonReentrant whenNotPaused {
+    ) external isMinter nonReentrant whenNotPaused {
         require(amount != 0, "AM:BM: airdrop amount cannot be zero");
         //^^^^^^^checks^^^^^^^^^
 
@@ -121,7 +173,7 @@ contract AIR_MINTER is ReentrancyGuard, Ownable, Pausable {
         address _h,
         address _i,
         address _j
-    ) external onlyOwner nonReentrant whenNotPaused {
+    ) external isMinter nonReentrant whenNotPaused {
         require(amount != 0, "AM:BM: airdrop amount cannot be zero");
         //^^^^^^^checks^^^^^^^^^
 
@@ -147,7 +199,7 @@ contract AIR_MINTER is ReentrancyGuard, Ownable, Pausable {
         address _c,
         address _d,
         address _e
-    ) external onlyOwner nonReentrant whenNotPaused {
+    ) external isAdmin nonReentrant whenNotPaused {
         require(amount != 0, "AM:BM: airdrop amount cannot be zero");
         //^^^^^^^checks^^^^^^^^^
 
@@ -166,7 +218,7 @@ contract AIR_MINTER is ReentrancyGuard, Ownable, Pausable {
         address _a,
         address _b,
         address _c
-    ) external onlyOwner nonReentrant whenNotPaused {
+    ) external isMinter nonReentrant whenNotPaused {
         require(amount != 0, "AM:BM: airdrop amount cannot be zero");
         //^^^^^^^checks^^^^^^^^^
 
@@ -179,7 +231,7 @@ contract AIR_MINTER is ReentrancyGuard, Ownable, Pausable {
     /*
      * @dev Mint a set amount to a list of addresses
      */
-    function OO_bulkMint2(address _a, address _b) external onlyOwner nonReentrant whenNotPaused {
+    function OO_bulkMint2(address _a, address _b) external isMinter nonReentrant whenNotPaused {
         require(amount != 0, "AM:BM: airdrop amount cannot be zero");
         //^^^^^^^checks^^^^^^^^^
 
@@ -191,7 +243,7 @@ contract AIR_MINTER is ReentrancyGuard, Ownable, Pausable {
     /*
      * @dev Mint a set amount to a list of addresses
      */
-    function OO_bulkMint1(address _a) external onlyOwner nonReentrant whenNotPaused {
+    function OO_bulkMint1(address _a) external isMinter nonReentrant whenNotPaused {
         require(amount != 0, "AM:BM: airdrop amount cannot be zero");
         //^^^^^^^checks^^^^^^^^^
 
@@ -203,14 +255,14 @@ contract AIR_MINTER is ReentrancyGuard, Ownable, Pausable {
      * @dev Triggers stopped state. (pausable)
      *
      */
-    function OO_pause() external onlyOwner {
+    function OO_pause() external isPauser {
         _pause();
     }
 
     /**
      * @dev Returns to normal state. (pausable)
      */
-    function OO_unpause() external onlyOwner {
+    function OO_unpause() external isPauser {
         _unpause();
     }
 
