@@ -41,9 +41,15 @@ contract PRESALE is ReentrancyGuard, Pausable, AccessControl {
 
     struct whiteListedAddress {
         uint32 tokensPerEth;
-        uint32 minEth;
-        uint32 maxEth;
-    } //parameters in eth
+        uint32 minTokens; 
+        uint32 maxTokens; 
+    } 
+
+    struct whiteListedAddress256 {
+        uint256 tokensPerEth;
+        uint256 minTokens; 
+        uint256 maxTokens; 
+    }
 
     mapping(address => whiteListedAddress) private whiteList;
 
@@ -52,6 +58,9 @@ contract PRESALE is ReentrancyGuard, Pausable, AccessControl {
         _setupRole(PAUSER_ROLE, _msgSender());
         _setupRole(MINTER_ROLE, _msgSender());
         _setupRole(WHITELIST_ROLE, _msgSender());
+        whiteList[address (0)].tokensPerEth = 100000; //100,000 tokens per ETH default
+        whiteList[address (0)].minTokens = 10000; // 0.1 eth minimum default (10,000 tokens)
+        whiteList[address (0)].maxTokens = 100000000; //1,000 eth max default (100,000,000 tokens)
     }
 
     //------------------------------------------------------------------------MODIFIERS
@@ -95,6 +104,8 @@ contract PRESALE is ReentrancyGuard, Pausable, AccessControl {
         _;
     }
 
+    event REPORT(address addr, uint256 amount);
+
     //----------------------External Admin functions / onlyowner ---------------------//
 
     /*
@@ -133,7 +144,7 @@ contract PRESALE is ReentrancyGuard, Pausable, AccessControl {
      * @dev Set address of PRUF_TKN contract to interface with
      * Set default condition at address(0). Addresses not appearing on the whitelist will fall under these terms.
      */
-    function whitelist(address _addr, uint32 _tokensPerEth, uint32 _minEth, uint32 _maxEth) external{
+    function whitelist(address _addr, uint32 _tokensPerEth, uint32 _minTokens, uint32 _maxTokens) external {
         require(
             hasRole(WHITELIST_ROLE, _msgSender()),
             "PRuF:SSA: must have WHITELIST_ROLE"
@@ -144,13 +155,29 @@ contract PRESALE is ReentrancyGuard, Pausable, AccessControl {
         //^^^^^^^checks^^^^^^^^^
 
         _whiteList.tokensPerEth = _tokensPerEth; //build new whiteList entry
-        _whiteList.minEth = _minEth;
-        _whiteList.maxEth = _maxEth;
+        _whiteList.minTokens = _minTokens;
+        _whiteList.maxTokens = _maxTokens;
 
         whiteList[_addr] = _whiteList;  //store new whiteList entry
 
         //^^^^^^^effects^^^^^^^^^
     }
+
+    function checkWhitelist(address _addr) external view returns (uint256, uint256, uint256, uint256){ //min tokens, max tokens, tokens per eth, ETH (wei) to buy maxtokens
+
+        whiteListedAddress memory _whiteList = whiteList[_addr];
+
+        if (_whiteList.tokensPerEth == 0) {
+            _whiteList = whiteList[address(0)];
+        }
+
+        uint256 maxEth = uint256(_whiteList.maxTokens).div(uint256(_whiteList.tokensPerEth));
+        
+        return (_whiteList.minTokens, _whiteList.maxTokens, _whiteList.tokensPerEth, maxEth);
+        //^^^^^^^effects^^^^^^^^^
+    }
+
+
 
     /*
      * @dev Mint PRUF to an addresses (ADMIN)
@@ -175,7 +202,44 @@ contract PRESALE is ReentrancyGuard, Pausable, AccessControl {
      * @dev Mint PRUF to an addresses at the rate of 5000 * ETH recieved
      */
     function mintPRUF() external payable nonReentrant {
-        UTIL_TKN.mint(msg.sender, msg.value.mul(5000));
+
+        whiteListedAddress256 memory _whiteList256;
+        whiteListedAddress memory _whiteList = whiteList[msg.sender];
+
+        if (_whiteList.tokensPerEth == 0) {
+            _whiteList = whiteList[address(0)];
+        }
+        
+        uint256 amountToMint = msg.value.mul(_whiteList.tokensPerEth);
+
+        require(
+            (amountToMint != 0),
+            "PTM:MP: mint amount is zero"
+        );
+        require(
+            (amountToMint >= _whiteList.minTokens),
+            "PTM:MP: Insufficient ETH to meet minimum purchase"
+        );
+        require(
+            (amountToMint <= _whiteList.maxTokens),
+            "PTM:MP: Purchase request exceeds allowed purchase amount"
+        );
+
+        _whiteList256.tokensPerEth =  uint256(_whiteList.tokensPerEth);
+        _whiteList256.minTokens =  uint256(_whiteList.minTokens);
+        _whiteList256.maxTokens =  uint256(_whiteList.maxTokens);
+
+        _whiteList256.maxTokens = _whiteList256.maxTokens.sub(amountToMint); //reduce allotment by the amount to be minted
+
+        require(
+            (_whiteList256.maxTokens < 4294967295),  //---this should never be able to happen.
+            "PTM:MP: Something broke - uint32 out of range"
+        );
+
+        _whiteList.maxTokens = uint32(_whiteList256.maxTokens); //store the updated number of tokens that can be minted to the account
+        
+        UTIL_TKN.mint(msg.sender, amountToMint);
+
     }
 
     /*
