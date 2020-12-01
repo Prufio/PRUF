@@ -16,7 +16,7 @@ __/\\\\\\\\\\\\\ _____/\\\\\\\\\ _______/\\../\\ ___/\\\\\\\\\\\\\\\
  * UTILITY TOKEN CONTRACT
  *---------------------------------------------------------------*/
 
-// SPDX-License-Identifier: MIT              //CTS:EXAMINE MIT?
+// SPDX-License-Identifier: UNLICENSED
 
 pragma solidity ^0.6.7;
 
