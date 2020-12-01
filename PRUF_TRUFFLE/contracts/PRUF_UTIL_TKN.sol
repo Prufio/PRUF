@@ -164,8 +164,14 @@ contract UTIL_TKN is
     }
 
     /*
-     * @dev PERMANANTLY !!!  Kill trusted agent and payable functions
-     * this will break functionality of current payment mechanisms.
+     * @dev ----------------------------------------PERMANANTLY !!!  Kills trusted agent and payable functions
+     * this will break the functionality of current payment mechanisms.
+     *
+     * The workaround for this is to create an allowance for pruf contracts for a single or multiple payments, 
+     * either ahead of time "loading up your PRUF account" or on demand with an operation. On demand will use quite a bit more gas.
+     * "preloading" should be pretty gas efficient, but will add an extra step to the workflow, requiring users to have sufficient 
+     * PRuF "banked" in an allowance for use in the system.
+     *
      */
     function adminKillTrustedAgent(uint256 _key) external isAdmin {
         //---------------------------------------------------DPS:TEST : NEW
@@ -176,7 +182,8 @@ contract UTIL_TKN is
 
     /*
      * @dev Set calling wallet to a "cold Wallet" that cannot be manipulated by TRUSTED_AGENT or PAYABLE permissioned functions
-     * WALLET ADDRESSES SET TO "Cold" DO NOT WORK WITH TRUSTED_AGENT FUNCTIONS
+     * WALLET ADDRESSES SET TO "Cold" DO NOT WORK WITH TRUSTED_AGENT FUNCTIONS and must be unset from cold before it can interact with
+     * contract functions.
      */
     function setColdWallet() external {
         //---------------------------------------------------DPS:TEST : NEW
@@ -185,7 +192,8 @@ contract UTIL_TKN is
 
     /*
      * @dev un-set calling wallet to a "cold Wallet", enabling manipulation by TRUSTED_AGENT and PAYABLE permissioned functions
-     * WALLET ADDRESSES SET TO "Cold" DO NOT WORK WITH TRUSTED_AGENT FUNCTIONS
+     * WALLET ADDRESSES SET TO "Cold" DO NOT WORK WITH TRUSTED_AGENT FUNCTIONS and must be unset from cold before it can interact with
+     * contract functions.
      */
     function unSetColdWallet() external {
         //---------------------------------------------------DPS:TEST : NEW
