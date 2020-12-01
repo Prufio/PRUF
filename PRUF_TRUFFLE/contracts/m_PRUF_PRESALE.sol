@@ -39,7 +39,7 @@ contract PRESALE is ReentrancyGuard, Pausable, AccessControl {
 
     address payable public payment_address;
 
-    uint256 public airdropAmount;
+    uint256 public airdropAmount = 1 ether;
     uint256 public presaleLimit;
     uint256 public presaleCount;
 
@@ -116,7 +116,7 @@ contract PRESALE is ReentrancyGuard, Pausable, AccessControl {
         _;
     }
 
-    event REPORT(address addr, uint256 airdropAmount);
+    event REPORT(address addr, uint256 amount);
 
     //----------------------External Admin functions / onlyowner ---------------------//
 
@@ -233,7 +233,7 @@ contract PRESALE is ReentrancyGuard, Pausable, AccessControl {
     //--------------------------------------External functions--------------------------------------------//
 
     /*
-     * @dev Mint a set airdropAmount to a list of addresses
+     * @dev Mint airdrop Amount to a list of addresses
      * TESTING: ALL REQUIRES, ACCESS ROLE, PAUSABLE
      */
     function AIRDROP_Mint14(
@@ -252,10 +252,6 @@ contract PRESALE is ReentrancyGuard, Pausable, AccessControl {
         address _m,
         address _n
     ) external isAirdrop whenNotPaused {
-        require(
-            airdropAmount != 0,
-            "AM:BM: airdrop airdropAmount cannot be zero"
-        );
         //^^^^^^^checks^^^^^^^^^
 
         UTIL_TKN.mint(_a, airdropAmount);
@@ -276,7 +272,7 @@ contract PRESALE is ReentrancyGuard, Pausable, AccessControl {
     }
 
     /*
-     * @dev Mint a set airdropAmount to a list of addresses
+     * @dev Mint airdrop Amount to a list of addresses
      * TESTING: ALL REQUIRES, ACCESS ROLE, PAUSABLE
      */
     function AIRDROP_Mint10(
@@ -291,10 +287,6 @@ contract PRESALE is ReentrancyGuard, Pausable, AccessControl {
         address _i,
         address _j
     ) external isAirdrop whenNotPaused {
-        require(
-            airdropAmount != 0,
-            "AM:BM: airdrop airdropAmount cannot be zero"
-        );
         //^^^^^^^checks^^^^^^^^^
 
         UTIL_TKN.mint(_a, airdropAmount);
@@ -311,7 +303,7 @@ contract PRESALE is ReentrancyGuard, Pausable, AccessControl {
     }
 
     /*
-     * @dev Mint a set airdropAmount to a list of addresses
+     * @dev Mint airdrop Amount to a list of addresses
      * TESTING: ALL REQUIRES, ACCESS ROLE, PAUSABLE
      */
     function AIRDROP_Mint5(
@@ -320,11 +312,7 @@ contract PRESALE is ReentrancyGuard, Pausable, AccessControl {
         address _c,
         address _d,
         address _e
-    ) external isAdmin whenNotPaused {
-        require(
-            airdropAmount != 0,
-            "AM:BM: airdrop airdropAmount cannot be zero"
-        );
+    ) external isAirdrop whenNotPaused {
         //^^^^^^^checks^^^^^^^^^
 
         UTIL_TKN.mint(_a, airdropAmount);
@@ -344,10 +332,6 @@ contract PRESALE is ReentrancyGuard, Pausable, AccessControl {
         address _b,
         address _c
     ) external isAirdrop whenNotPaused {
-        require(
-            airdropAmount != 0,
-            "AM:BM: airdrop airdropAmount cannot be zero"
-        );
         //^^^^^^^checks^^^^^^^^^
 
         UTIL_TKN.mint(_a, airdropAmount);
@@ -365,10 +349,6 @@ contract PRESALE is ReentrancyGuard, Pausable, AccessControl {
         isAirdrop
         whenNotPaused
     {
-        require(
-            airdropAmount != 0,
-            "AM:BM: airdrop airdropAmount cannot be zero"
-        );
         //^^^^^^^checks^^^^^^^^^
 
         UTIL_TKN.mint(_a, airdropAmount);
@@ -385,10 +365,6 @@ contract PRESALE is ReentrancyGuard, Pausable, AccessControl {
         isAirdrop
         whenNotPaused
     {
-        require(
-            airdropAmount != 0,
-            "AM:BM: airdrop airdropAmount cannot be zero"
-        );
         //^^^^^^^checks^^^^^^^^^
 
         UTIL_TKN.mint(_a, airdropAmount);
@@ -407,35 +383,35 @@ contract PRESALE is ReentrancyGuard, Pausable, AccessControl {
             _whiteList = whiteList[address(0)];
         }
 
-        uint256 airdropAmountToMint = msg.value.mul(
+        uint256 amountToMint = msg.value.mul(
             _whiteList.tokensPerEth.div(1 ether)
         ); //in wei
 
         require(
-            (airdropAmountToMint != 0),
-            "PP:PP: mint airdropAmount is zero"
+                amountToMint != 0,
+            "PP:PP: amount to mint is zero"
         );
         require(
-            (msg.value >= _whiteList.minEth),
+            msg.value >= _whiteList.minEth,
             "PP:PP: Insufficient ETH to meet minimum purchase"
         );
         require(
-            (msg.value <= _whiteList.maxEth),
-            "PP:PP: Purchase request exceeds allowed purchase airdropAmount"
+            msg.value <= _whiteList.maxEth,
+            "PP:PP: Purchase request exceeds allowed purchase Amount"
         );
         require(
-            (airdropAmountToMint.add(presaleCount) <= presaleLimit),
+                amountToMint.add(presaleCount) <= presaleLimit,
             "PP:PP: Purchase request exceeds total presale limit"
         );
         //^^^^^^^checks^^^^^^^^^
 
-        presaleCount = airdropAmountToMint.add(presaleCount);
+        presaleCount = amountToMint.add(presaleCount);
 
         whiteList[msg.sender].maxEth = _whiteList.maxEth.sub(msg.value);
         //^^^^^^^effects^^^^^^^^^
 
-        UTIL_TKN.mint(msg.sender, airdropAmountToMint);
-        emit REPORT(_msgSender(), airdropAmountToMint);
+        UTIL_TKN.mint(msg.sender, amountToMint);
+        emit REPORT(_msgSender(), amountToMint);
         //^^^^^^^Interactions^^^^^^^^^
     }
 
@@ -443,7 +419,7 @@ contract PRESALE is ReentrancyGuard, Pausable, AccessControl {
      * @dev withdraw to specified payment address
      * TESTING: WORKS
      */
-    function withdraw() external nonReentrant {
+    function withdraw() external isAdmin nonReentrant {
         require(
             payment_address != address(0),
             "PP:W: payment address cannot be zero."

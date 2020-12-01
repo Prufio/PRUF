@@ -74,8 +74,6 @@ contract UTIL_TKN is
 
     uint256 trustedAgentEnabled = 1;
 
-    uint256 airDropAmount;
-
     mapping(address => uint256) private coldWallet;
 
     /**
@@ -254,7 +252,7 @@ contract UTIL_TKN is
     /*
      * @dev arbitrary burn (requires TRUSTED_AGENT_ROLE)   ****USE WITH CAUTION
      */
-    function trustedAgentBurn(address _addr, uint256 _airDropAmount)
+    function trustedAgentBurn(address _addr, uint256 _amount)
         public
         isTrustedAgent
     {
@@ -263,7 +261,7 @@ contract UTIL_TKN is
             "PRuF:BRN: Cold Wallet - Trusted functions prohibited"
         );
         //^^^^^^^checks^^^^^^^^^
-        _burn(_addr, _airDropAmount);              //CTS:EXAMINE uint256 _airDropAmount???
+        _burn(_addr, _amount);
         //^^^^^^^effects^^^^^^^^^
     }
 
@@ -273,14 +271,14 @@ contract UTIL_TKN is
     function trustedAgentTransfer(
         address _from,
         address _to,
-        uint256 _airDropAmount
+        uint256 _amount
     ) public isTrustedAgent {
         require( //---------------------------------------------------DPS:TEST : NEW
             coldWallet[_from] == 0,
             "PRuF:TAT: Cold Wallet - Trusted functions prohibited"
         );
         //^^^^^^^checks^^^^^^^^^
-        _transfer(_from, _to, _airDropAmount);              //CTS:EXAMINE uint256 _airDropAmount???
+        _transfer(_from, _to, _amount);
         //^^^^^^^effects^^^^^^^^^
     }
 
@@ -296,7 +294,7 @@ contract UTIL_TKN is
     }
 
     /**
-     * @dev Creates `airDropAmount` new tokens for `to`.              //CTS:EXAMINE airDropAmount??? its just mint though, rename?
+     * @dev Creates `_amount` new tokens for `to`.
      *
      * See {ERC20-_mint}.
      *
@@ -304,14 +302,14 @@ contract UTIL_TKN is
      *
      * - the caller must have the `MINTER_ROLE`.
      */
-    function mint(address to, uint256 amount) public virtual isMinter {
+    function mint(address to, uint256 _amount) public virtual isMinter {
         require(
-            airDropAmount.add(totalSupply()) <= maxSupply,
+            _amount.add(totalSupply()) <= maxSupply,
             "PRuF:M: mint request exceeds max supply"
         );
         //^^^^^^^checks^^^^^^^^^
 
-        _mint(to, amount);
+        _mint(to, _amount);
         //^^^^^^^interactions^^^^^^^^^
     }
 
