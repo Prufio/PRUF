@@ -57,9 +57,9 @@ contract PRESALE is ReentrancyGuard, Pausable, AccessControl {
         _setupRole(WHITELIST_ROLE, _msgSender());
         _setupRole(AIRDROP_ROLE, _msgSender());
 
-        whiteList[address(0)].tokensPerEth = 100000 ether; //100,000 tokens per ETH default
+        whiteList[address(0)].tokensPerEth = 100000 ether; //100,000 tokens per ETH default     //CTS:EXAMINE ether?
         whiteList[address(0)].minEth = 100000000000000000; // 0.1 eth minimum default (10,000 tokens)
-        whiteList[address(0)].maxEth = 10 ether; // 10 eth maximum default (1,000,000 tokens)              //CTS:EXAMINE >10 deal?
+        whiteList[address(0)].maxEth = 10 ether; // 10 eth maximum default (1,000,000 tokens)              
     }
 
     //------------------------------------------------------------------------MODIFIERS
