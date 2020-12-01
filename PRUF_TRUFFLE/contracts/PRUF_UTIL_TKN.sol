@@ -98,7 +98,7 @@ contract UTIL_TKN is
     modifier isAdmin() {
         require(
             hasRole(DEFAULT_ADMIN_ROLE, _msgSender()),
-            "PRUF:MOD: must have DEFAULT_ADMIN_ROLE"
+            "PRuF:MOD: must have DEFAULT_ADMIN_ROLE"
         );
         _;
     }
@@ -111,7 +111,7 @@ contract UTIL_TKN is
     modifier isPauser() {
         require(
             hasRole(PAUSER_ROLE, _msgSender()),
-            "PRUF:MOD: must have PAUSER_ROLE"
+            "PRuF:MOD: must have PAUSER_ROLE"
         );
         _;
     }
@@ -124,7 +124,7 @@ contract UTIL_TKN is
     modifier isMinter() {
         require(
             hasRole(MINTER_ROLE, _msgSender()),
-            "PRUF:MOD: must have MINTER_ROLE"
+            "PRuF:MOD: must have MINTER_ROLE"
         );
         _;
     }
@@ -132,16 +132,16 @@ contract UTIL_TKN is
     /*
      * @dev Verify user credentials
      * Originating Address:
-     *      is Payable in pruf
+     *      is Payable in PRuF
      */
     modifier isPayable() {
         require(
             hasRole(PAYABLE_ROLE, _msgSender()),
-            "PRUF:MOD: must have PAYABLE_ROLE"
+            "PRuF:MOD: must have PAYABLE_ROLE"
         );
         require( //---------------------------------------------------DPS:TEST : NEW
             trustedAgentEnabled == 1,
-            "PRUF:MOD: Trusted Payable Function permanently disabled - use allowance / transferFrom pattern"
+            "PRuF:MOD: Trusted Payable Function permanently disabled - use allowance / transferFrom pattern"
         );
         _;
     }
@@ -154,11 +154,11 @@ contract UTIL_TKN is
     modifier isTrustedAgent() {
         require(
             hasRole(TRUSTED_AGENT_ROLE, _msgSender()),
-            "PRUF:MOD: must have TRUSTED_AGENT_ROLE"
+            "PRuF:MOD: must have TRUSTED_AGENT_ROLE"
         );
         require( //---------------------------------------------------DPS:TEST : NEW
             trustedAgentEnabled == 1,
-            "PRUF:MOD: Trusted Agent function permanently disabled - use allowance / transferFrom pattern"
+            "PRuF:MOD: Trusted Agent function permanently disabled - use allowance / transferFrom pattern"
         );
         _;
     }
