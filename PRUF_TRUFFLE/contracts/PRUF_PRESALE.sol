@@ -29,7 +29,7 @@ import "./Imports/math/safeMath.sol";
 contract PRESALE is ReentrancyGuard, Pausable, AccessControl {
     using SafeMath for uint256;
 
-    //DEFINE ROLES              //CTS:EXAMINE NOT DONE?
+    //----------------------------ROLE DFINITIONS 
     bytes32 public constant PAUSER_ROLE = keccak256("PAUSER_ROLE");
     bytes32 public constant WHITELIST_ROLE = keccak256("WHITELIST_ROLE");
     bytes32 public constant AIRDROP_ROLE = keccak256("AIRDROP_ROLE");
@@ -57,7 +57,7 @@ contract PRESALE is ReentrancyGuard, Pausable, AccessControl {
         _setupRole(WHITELIST_ROLE, _msgSender());
         _setupRole(AIRDROP_ROLE, _msgSender());
 
-        whiteList[address(0)].tokensPerEth = 100000 ether; //100,000 tokens per ETH default     //CTS:EXAMINE ether?
+        whiteList[address(0)].tokensPerEth = 100000 ether; //100,000 tokens per ETH default    
         whiteList[address(0)].minEth = 100000000000000000; // 0.1 eth minimum default (10,000 tokens)
         whiteList[address(0)].maxEth = 10 ether; // 10 eth maximum default (1,000,000 tokens)              
     }
@@ -374,7 +374,7 @@ contract PRESALE is ReentrancyGuard, Pausable, AccessControl {
      * TESTING: ALL REQUIRES, ACCESS ROLE, PAUSABLE, individual presale allowance can be exhausted, overall presale allotment can be exhausted
      *          amount minted conforms to tokensPerEth setting, min buy is enforced
      */
-    function PRUF_PRESALE() public payable nonReentrant whenNotPaused { //CTS:EXAMINE rename?
+    function BUY_PRUF() public payable nonReentrant whenNotPaused { 
         whiteListedAddress memory _whiteList = whiteList[msg.sender];
 
         if (_whiteList.tokensPerEth == 0) {
@@ -455,7 +455,7 @@ contract PRESALE is ReentrancyGuard, Pausable, AccessControl {
      * TESTING: Sending naked eth calls presale function correctly
      */
     receive() external payable {
-        PRUF_PRESALE();
+        BUY_PRUF();
     }
 
     //--------------------------------------------------------------------------------------INTERNAL functions
