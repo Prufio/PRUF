@@ -844,7 +844,7 @@
 					},
 					{
 						"internalType": "uint256",
-						"name": "_amount",
+						"name": "_airDropAmount",
 						"type": "uint256"
 					}
 				],
@@ -867,7 +867,7 @@
 					},
 					{
 						"internalType": "uint256",
-						"name": "_amount",
+						"name": "_airDropAmount",
 						"type": "uint256"
 					}
 				],
@@ -941,7 +941,7 @@
 					"details": "Atomically increases the allowance granted to `spender` by the caller. This is an alternative to {approve} that can be used as a mitigation for problems described in {IERC20-approve}. Emits an {Approval} event indicating the updated allowance. Requirements: - `spender` cannot be the zero address."
 				},
 				"mint(address,uint256)": {
-					"details": "Creates `amount` new tokens for `to`. See {ERC20-_mint}. Requirements: - the caller must have the `MINTER_ROLE`."
+					"details": "Creates `airDropAmount` new tokens for `to`. See {ERC20-_mint}. Requirements: - the caller must have the `MINTER_ROLE`."
 				},
 				"name()": {
 					"details": "Returns the name of the token."
@@ -1114,11 +1114,11 @@
 			]
 		},
 		"localhost/PRUF/PRUF_TRUFFLE/contracts/PRUF_UTIL_TKN.sol": {
-			"keccak256": "0xe880ec1ff5e8ab78ee9b547db2d1304330f1cb077381e3368a8f34a713c6f198",
+			"keccak256": "0x6504c3e06d990b7d67f574e5de056bd6056d1c33c176262e583e28ff5c9ee8c8",
 			"license": "MIT",
 			"urls": [
-				"bzz-raw://44fc52a910f7244732d9618d9ff00b4f10b6118258621d71036c5d111963848f",
-				"dweb:/ipfs/QmcumVESwoj3vpzLFcyFf1tGBTjP7utbiQBr768RhP13qY"
+				"bzz-raw://ac06ddab4747cf725a8dd7845254a403216f29f086225fb39ab02b2545686c4f",
+				"dweb:/ipfs/QmQH6dt8eKoSZ53ysFQJ1Vg8uAHLqRzZmKy5JMFiXFk7sV"
 			]
 		}
 	},

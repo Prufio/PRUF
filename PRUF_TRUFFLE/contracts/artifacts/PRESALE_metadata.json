@@ -35,7 +35,7 @@
 					{
 						"indexed": false,
 						"internalType": "uint256",
-						"name": "amount",
+						"name": "airdropAmount",
 						"type": "uint256"
 					}
 				],
@@ -133,17 +133,12 @@
 			{
 				"inputs": [
 					{
-						"internalType": "address",
-						"name": "_addr",
-						"type": "address"
-					},
-					{
 						"internalType": "uint256",
-						"name": "_amount",
+						"name": "_airdropAmount",
 						"type": "uint256"
 					}
 				],
-				"name": "ADMIN_MintPRUF",
+				"name": "ADMIN_setAirDropAmount",
 				"outputs": [],
 				"stateMutability": "nonpayable",
 				"type": "function"
@@ -164,12 +159,261 @@
 			{
 				"inputs": [
 					{
+						"internalType": "uint256",
+						"name": "_presaleLimit",
+						"type": "uint256"
+					}
+				],
+				"name": "ADMIN_setPresaleLimit",
+				"outputs": [],
+				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
 						"internalType": "address",
 						"name": "_address",
 						"type": "address"
 					}
 				],
 				"name": "ADMIN_setTokenContract",
+				"outputs": [],
+				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "address",
+						"name": "_a",
+						"type": "address"
+					}
+				],
+				"name": "AIRDROP_Mint1",
+				"outputs": [],
+				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
+				"inputs": [],
+				"name": "AIRDROP_ROLE",
+				"outputs": [
+					{
+						"internalType": "bytes32",
+						"name": "",
+						"type": "bytes32"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "address",
+						"name": "_a",
+						"type": "address"
+					},
+					{
+						"internalType": "address",
+						"name": "_b",
+						"type": "address"
+					},
+					{
+						"internalType": "address",
+						"name": "_c",
+						"type": "address"
+					},
+					{
+						"internalType": "address",
+						"name": "_d",
+						"type": "address"
+					},
+					{
+						"internalType": "address",
+						"name": "_e",
+						"type": "address"
+					},
+					{
+						"internalType": "address",
+						"name": "_f",
+						"type": "address"
+					},
+					{
+						"internalType": "address",
+						"name": "_g",
+						"type": "address"
+					},
+					{
+						"internalType": "address",
+						"name": "_h",
+						"type": "address"
+					},
+					{
+						"internalType": "address",
+						"name": "_i",
+						"type": "address"
+					},
+					{
+						"internalType": "address",
+						"name": "_j",
+						"type": "address"
+					}
+				],
+				"name": "AIRDROP_bulkMint10",
+				"outputs": [],
+				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "address",
+						"name": "_a",
+						"type": "address"
+					},
+					{
+						"internalType": "address",
+						"name": "_b",
+						"type": "address"
+					},
+					{
+						"internalType": "address",
+						"name": "_c",
+						"type": "address"
+					},
+					{
+						"internalType": "address",
+						"name": "_d",
+						"type": "address"
+					},
+					{
+						"internalType": "address",
+						"name": "_e",
+						"type": "address"
+					},
+					{
+						"internalType": "address",
+						"name": "_f",
+						"type": "address"
+					},
+					{
+						"internalType": "address",
+						"name": "_g",
+						"type": "address"
+					},
+					{
+						"internalType": "address",
+						"name": "_h",
+						"type": "address"
+					},
+					{
+						"internalType": "address",
+						"name": "_i",
+						"type": "address"
+					},
+					{
+						"internalType": "address",
+						"name": "_j",
+						"type": "address"
+					},
+					{
+						"internalType": "address",
+						"name": "_k",
+						"type": "address"
+					},
+					{
+						"internalType": "address",
+						"name": "_l",
+						"type": "address"
+					},
+					{
+						"internalType": "address",
+						"name": "_m",
+						"type": "address"
+					},
+					{
+						"internalType": "address",
+						"name": "_n",
+						"type": "address"
+					}
+				],
+				"name": "AIRDROP_bulkMint14",
+				"outputs": [],
+				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "address",
+						"name": "_a",
+						"type": "address"
+					},
+					{
+						"internalType": "address",
+						"name": "_b",
+						"type": "address"
+					}
+				],
+				"name": "AIRDROP_bulkMint2",
+				"outputs": [],
+				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "address",
+						"name": "_a",
+						"type": "address"
+					},
+					{
+						"internalType": "address",
+						"name": "_b",
+						"type": "address"
+					},
+					{
+						"internalType": "address",
+						"name": "_c",
+						"type": "address"
+					}
+				],
+				"name": "AIRDROP_bulkMint3",
+				"outputs": [],
+				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "address",
+						"name": "_a",
+						"type": "address"
+					},
+					{
+						"internalType": "address",
+						"name": "_b",
+						"type": "address"
+					},
+					{
+						"internalType": "address",
+						"name": "_c",
+						"type": "address"
+					},
+					{
+						"internalType": "address",
+						"name": "_d",
+						"type": "address"
+					},
+					{
+						"internalType": "address",
+						"name": "_e",
+						"type": "address"
+					}
+				],
+				"name": "AIRDROP_bulkMint5",
 				"outputs": [],
 				"stateMutability": "nonpayable",
 				"type": "function"
@@ -189,33 +433,6 @@
 			},
 			{
 				"inputs": [],
-				"name": "MINTER_ROLE",
-				"outputs": [
-					{
-						"internalType": "bytes32",
-						"name": "",
-						"type": "bytes32"
-					}
-				],
-				"stateMutability": "view",
-				"type": "function"
-			},
-			{
-				"inputs": [],
-				"name": "OO_pause",
-				"outputs": [],
-				"stateMutability": "nonpayable",
-				"type": "function"
-			},
-			{
-				"inputs": [],
-				"name": "OO_unpause",
-				"outputs": [],
-				"stateMutability": "nonpayable",
-				"type": "function"
-			},
-			{
-				"inputs": [],
 				"name": "PAUSER_ROLE",
 				"outputs": [
 					{
@@ -225,6 +442,13 @@
 					}
 				],
 				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [],
+				"name": "PRUF_PRESALE",
+				"outputs": [],
+				"stateMutability": "payable",
 				"type": "function"
 			},
 			{
@@ -263,11 +487,6 @@
 				],
 				"name": "checkWhitelist",
 				"outputs": [
-					{
-						"internalType": "uint256",
-						"name": "",
-						"type": "uint256"
-					},
 					{
 						"internalType": "uint256",
 						"name": "",
@@ -393,9 +612,9 @@
 			},
 			{
 				"inputs": [],
-				"name": "mintPRUF",
+				"name": "pause",
 				"outputs": [],
-				"stateMutability": "payable",
+				"stateMutability": "nonpayable",
 				"type": "function"
 			},
 			{
@@ -448,6 +667,13 @@
 				"type": "function"
 			},
 			{
+				"inputs": [],
+				"name": "unpause",
+				"outputs": [],
+				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
 				"inputs": [
 					{
 						"internalType": "address",
@@ -455,19 +681,19 @@
 						"type": "address"
 					},
 					{
-						"internalType": "uint32",
+						"internalType": "uint256",
 						"name": "_tokensPerEth",
-						"type": "uint32"
+						"type": "uint256"
 					},
 					{
-						"internalType": "uint32",
-						"name": "_minTokens",
-						"type": "uint32"
+						"internalType": "uint256",
+						"name": "_minEth",
+						"type": "uint256"
 					},
 					{
-						"internalType": "uint32",
-						"name": "_maxTokens",
-						"type": "uint32"
+						"internalType": "uint256",
+						"name": "_maxEth",
+						"type": "uint256"
 					}
 				],
 				"name": "whitelist",
@@ -481,17 +707,15 @@
 				"outputs": [],
 				"stateMutability": "nonpayable",
 				"type": "function"
+			},
+			{
+				"stateMutability": "payable",
+				"type": "receive"
 			}
 		],
 		"devdoc": {
 			"kind": "dev",
 			"methods": {
-				"OO_pause()": {
-					"details": "Triggers stopped state. (pausable)"
-				},
-				"OO_unpause()": {
-					"details": "Returns to normal state. (pausable)"
-				},
 				"getRoleAdmin(bytes32)": {
 					"details": "Returns the admin role that controls `role`. See {grantRole} and {revokeRole}. To change a role's admin, use {_setRoleAdmin}."
 				},
@@ -507,6 +731,9 @@
 				"hasRole(bytes32,address)": {
 					"details": "Returns `true` if `account` has been granted `role`."
 				},
+				"pause()": {
+					"details": "Triggers stopped state. (pausable)"
+				},
 				"paused()": {
 					"details": "Returns true if the contract is paused, and false otherwise."
 				},
@@ -515,6 +742,9 @@
 				},
 				"revokeRole(bytes32,address)": {
 					"details": "Revokes `role` from `account`. If `account` had been granted `role`, emits a {RoleRevoked} event. Requirements: - the caller must have ``role``'s admin role."
+				},
+				"unpause()": {
+					"details": "Returns to normal state. (pausable)"
 				}
 			},
 			"version": 1
@@ -606,11 +836,11 @@
 			]
 		},
 		"localhost/PRUF/PRUF_TRUFFLE/contracts/m_PRUF_PRESALE.sol": {
-			"keccak256": "0xcfc293bebaad5715fd2b7f29cefbe0be26a2bd3dab84d38438836c38f5eef218",
+			"keccak256": "0xace51b1c1d5aeb79434a24bee42162d5afa64be2ee98332e706cb7475c3e24a2",
 			"license": "UNLICENSED",
 			"urls": [
-				"bzz-raw://7d90995e5f3dc94690e223e10d3bb94a6c6d18d0084387b447509b185fe676cc",
-				"dweb:/ipfs/QmdpiUUqw3HLEbR2o1d8pj71aZefkYeSHmZ2L3Ai3mx8Qh"
+				"bzz-raw://f12c5b00accf73438cc973a1ce74e867f38c01e147131ecc3325ef1be0019897",
+				"dweb:/ipfs/QmPE8UJhS1xqbKqQNAm25wCgQZ7WvH7xL3avoYn5TFudn3"
 			]
 		}
 	},

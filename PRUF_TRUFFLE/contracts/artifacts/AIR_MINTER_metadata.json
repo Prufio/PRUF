@@ -388,20 +388,6 @@
 			},
 			{
 				"inputs": [],
-				"name": "OO_pause",
-				"outputs": [],
-				"stateMutability": "nonpayable",
-				"type": "function"
-			},
-			{
-				"inputs": [],
-				"name": "OO_unpause",
-				"outputs": [],
-				"stateMutability": "nonpayable",
-				"type": "function"
-			},
-			{
-				"inputs": [],
 				"name": "PAUSER_ROLE",
 				"outputs": [
 					{
@@ -519,6 +505,13 @@
 			},
 			{
 				"inputs": [],
+				"name": "pause",
+				"outputs": [],
+				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
+				"inputs": [],
 				"name": "paused",
 				"outputs": [
 					{
@@ -565,17 +558,18 @@
 				"outputs": [],
 				"stateMutability": "nonpayable",
 				"type": "function"
+			},
+			{
+				"inputs": [],
+				"name": "unpause",
+				"outputs": [],
+				"stateMutability": "nonpayable",
+				"type": "function"
 			}
 		],
 		"devdoc": {
 			"kind": "dev",
 			"methods": {
-				"OO_pause()": {
-					"details": "Triggers stopped state. (pausable)"
-				},
-				"OO_unpause()": {
-					"details": "Returns to normal state. (pausable)"
-				},
 				"getRoleAdmin(bytes32)": {
 					"details": "Returns the admin role that controls `role`. See {grantRole} and {revokeRole}. To change a role's admin, use {_setRoleAdmin}."
 				},
@@ -591,6 +585,9 @@
 				"hasRole(bytes32,address)": {
 					"details": "Returns `true` if `account` has been granted `role`."
 				},
+				"pause()": {
+					"details": "Triggers stopped state. (pausable)"
+				},
 				"paused()": {
 					"details": "Returns true if the contract is paused, and false otherwise."
 				},
@@ -599,6 +596,9 @@
 				},
 				"revokeRole(bytes32,address)": {
 					"details": "Revokes `role` from `account`. If `account` had been granted `role`, emits a {RoleRevoked} event. Requirements: - the caller must have ``role``'s admin role."
+				},
+				"unpause()": {
+					"details": "Returns to normal state. (pausable)"
 				}
 			},
 			"version": 1
@@ -690,11 +690,11 @@
 			]
 		},
 		"localhost/PRUF/PRUF_TRUFFLE/contracts/m_PRUF_AIRDROP.sol": {
-			"keccak256": "0xb64cfc3b73023dc6b6f2bbc30bc2967a4a3e4e1dacd37999420747d02d68ddcd",
+			"keccak256": "0x6ddc54d44497b58043925bc24517789cf627de5b04dfc119558e3907392119c0",
 			"license": "UNLICENSED",
 			"urls": [
-				"bzz-raw://34fbc1500501802860645715f12aca2c7e9cf4eb0c97a4a8a66acc2b5c892bce",
-				"dweb:/ipfs/QmZuth6aWDKqhAa5msjpeYtZTExhpNRqT2Bd5TicbkyPBu"
+				"bzz-raw://78e34a981b9cc8367138c2187ed2486b8681656edb98311620e70a07976412f0",
+				"dweb:/ipfs/QmeSRNDud4Tw3a5Nz3JVjFZWpF159D7MTB8CtaqxyzEqiZ"
 			]
 		}
 	},
