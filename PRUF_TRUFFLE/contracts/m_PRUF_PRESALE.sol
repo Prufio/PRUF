@@ -31,24 +31,22 @@ contract PRESALE is ReentrancyGuard, Pausable, AccessControl {
 
     //DEFINE ROLES
     bytes32 public constant PAUSER_ROLE = keccak256("PAUSER_ROLE");
-    bytes32 public constant MINTER_ROLE = keccak256("MINTER_ROLE");
     bytes32 public constant WHITELIST_ROLE = keccak256("WHITELIST_ROLE");
+    bytes32 public constant AIRDROP_ROLE = keccak256("AIRDROP_ROLE");
 
     address internal UTIL_TKN_Address;
     UTIL_TKN_Interface internal UTIL_TKN;
 
-    address payable payment_address;
+    address payable public payment_address;
+
+    uint256 public airdropAmount;
+    uint256 public presaleLimit;
+    uint256 public presaleCount;
 
     struct whiteListedAddress {
-        uint32 tokensPerEth;
-        uint32 minTokens; 
-        uint32 maxTokens; 
-    } 
-
-    struct whiteListedAddress256 {
         uint256 tokensPerEth;
-        uint256 minTokens; 
-        uint256 maxTokens; 
+        uint256 minEth;
+        uint256 maxEth;
     }
 
     mapping(address => whiteListedAddress) private whiteList;
@@ -56,15 +54,16 @@ contract PRESALE is ReentrancyGuard, Pausable, AccessControl {
     constructor() public {
         _setupRole(DEFAULT_ADMIN_ROLE, _msgSender());
         _setupRole(PAUSER_ROLE, _msgSender());
-        _setupRole(MINTER_ROLE, _msgSender());
         _setupRole(WHITELIST_ROLE, _msgSender());
-        whiteList[address (0)].tokensPerEth = 100000; //100,000 tokens per ETH default
-        whiteList[address (0)].minTokens = 10000; // 0.1 eth minimum default (10,000 tokens)
-        whiteList[address (0)].maxTokens = 100000000; //1,000 eth max default (100,000,000 tokens)
+        _setupRole(AIRDROP_ROLE, _msgSender());
+
+        whiteList[address(0)].tokensPerEth = 100000 ether; //100,000 tokens per ETH default
+        whiteList[address(0)].minEth = 100000000000000000; // 0.1 eth minimum default (10,000 tokens)
+        whiteList[address(0)].maxEth = 10 ether; // 10 eth maximum default (1,000,000 tokens)
     }
 
     //------------------------------------------------------------------------MODIFIERS
-    
+
     /*
      * @dev Verify user credentials
      * Originating Address:
@@ -73,7 +72,7 @@ contract PRESALE is ReentrancyGuard, Pausable, AccessControl {
     modifier isAdmin() {
         require(
             hasRole(DEFAULT_ADMIN_ROLE, _msgSender()),
-            "PRuF:SSA: must have DEFAULT_ADMIN_ROLE"
+            "PP:MOD: must have DEFAULT_ADMIN_ROLE"
         );
         _;
     }
@@ -81,40 +80,54 @@ contract PRESALE is ReentrancyGuard, Pausable, AccessControl {
     /*
      * @dev Verify user credentials
      * Originating Address:
-     *      is Minter
-     */
-    modifier isMinter() {
-        require(
-            hasRole(MINTER_ROLE, _msgSender()),
-            "PRuF:SSA: must have MINTER_ROLE"
-        );
-        _;
-    }
-
-    /*
-     * @dev Verify user credentials
-     * Originating Address:
-     *      is Minter
+     *      is Pauser
      */
     modifier isPauser() {
         require(
             hasRole(PAUSER_ROLE, _msgSender()),
-            "PRuF:SSA: must have PAUSER_ROLE"
+            "PP:MOD: must have PAUSER_ROLE"
         );
         _;
     }
 
-    event REPORT(address addr, uint256 amount);
+    /*
+     * @dev Verify user credentials
+     * Originating Address:
+     *      is Airdrop
+     */
+    modifier isAirdrop() {
+        require(
+            hasRole(AIRDROP_ROLE, _msgSender()),
+            "PP:MOD: must have AIRDROP_ROLE"
+        );
+        _;
+    }
+
+    /*
+     * @dev Verify user credentials
+     * Originating Address:
+     *      is Whitelist
+     */
+    modifier isWhitelist() {
+        require(
+            hasRole(WHITELIST_ROLE, _msgSender()),
+            "PP:MOD: must have WHITELIST_ROLE"
+        );
+        _;
+    }
+
+    event REPORT(address addr, uint256 airdropAmount);
 
     //----------------------External Admin functions / onlyowner ---------------------//
 
     /*
      * @dev Set address of PRUF_TKN contract to interface with
+     * TESTING: ALL REQUIRES, ACCESS ROLE
      */
     function ADMIN_setTokenContract(address _address) external isAdmin {
         require(
             _address != address(0),
-            "PTM:SPT: token address cannot be zero"
+            "PP:STC: token contract address cannot be zero"
         );
         //^^^^^^^checks^^^^^^^^^
 
@@ -125,11 +138,15 @@ contract PRESALE is ReentrancyGuard, Pausable, AccessControl {
 
     /*
      * @dev Set Payment addrress to send eth to
+     * TESTING: ALL REQUIRES, ACCESS ROLE
      */
-    function ADMIN_setPaymentAddress(address payable _address) external isAdmin {
+    function ADMIN_setPaymentAddress(address payable _address)
+        external
+        isAdmin
+    {
         require(
             _address != address(0),
-            "PTM:SPA: token address cannot be zero"
+            "PP:ASPA: payment address cannot be zero"
         );
         //^^^^^^^checks^^^^^^^^^
 
@@ -143,27 +160,43 @@ contract PRESALE is ReentrancyGuard, Pausable, AccessControl {
     /*
      * @dev Set address of PRUF_TKN contract to interface with
      * Set default condition at address(0). Addresses not appearing on the whitelist will fall under these terms.
+     * TESTING:  ACCESS ROLE , Also test that setting params for 0 address sets default behavior for non-whitelisted addresses
      */
-    function whitelist(address _addr, uint32 _tokensPerEth, uint32 _minTokens, uint32 _maxTokens) external {
-        require(
-            hasRole(WHITELIST_ROLE, _msgSender()),
-            "PRuF:SSA: must have WHITELIST_ROLE"
-        );
-
+    function whitelist(
+        address _addr,
+        uint256 _tokensPerEth,
+        uint256 _minEth,
+        uint256 _maxEth
+    ) external isWhitelist {
         whiteListedAddress memory _whiteList;
-        
+
         //^^^^^^^checks^^^^^^^^^
 
         _whiteList.tokensPerEth = _tokensPerEth; //build new whiteList entry
-        _whiteList.minTokens = _minTokens;
-        _whiteList.maxTokens = _maxTokens;
+        _whiteList.minEth = _minEth;
+        _whiteList.maxEth = _maxEth;
 
-        whiteList[_addr] = _whiteList;  //store new whiteList entry
+        whiteList[_addr] = _whiteList; //store new whiteList entry
 
         //^^^^^^^effects^^^^^^^^^
     }
 
-    function checkWhitelist(address _addr) external view returns (uint256, uint256, uint256, uint256){ //min tokens, max tokens, tokens per eth, ETH (wei) to buy maxtokens
+    /*
+     * @dev checks airdrop state for an address
+     * TESTING: Returns both instantiated and default (uninstantiated adresses) Uninstantiated addresses should return default (0 address) values
+     *
+     */
+    function checkWhitelist(address _addr)
+        external
+        virtual
+        view
+        returns (
+            uint256,
+            uint256,
+            uint256
+        )
+    {
+        //min tokens, max tokens, tokens per eth, ETH (wei) to buy maxEth
 
         whiteListedAddress memory _whiteList = whiteList[_addr];
 
@@ -171,86 +204,256 @@ contract PRESALE is ReentrancyGuard, Pausable, AccessControl {
             _whiteList = whiteList[address(0)];
         }
 
-        uint256 maxEth = uint256(_whiteList.maxTokens).div(uint256(_whiteList.tokensPerEth));
-        
-        return (_whiteList.minTokens, _whiteList.maxTokens, _whiteList.tokensPerEth, maxEth);
+        return (_whiteList.minEth, _whiteList.maxEth, _whiteList.tokensPerEth);
         //^^^^^^^effects^^^^^^^^^
     }
 
-
+    /*
+     * @dev Set airdrop Amount
+     * TESTING: ALL REQUIRES, ACCESS ROLE, sets airdrop amount for all airdrop functions
+     */
+    function ADMIN_setAirDropAmount(uint256 _airdropAmount) external isAdmin {
+        require(_airdropAmount != 0, "AM:SAA: airdrop Amount cannot be zero");
+        //^^^^^^^checks^^^^^^^^^
+        airdropAmount = _airdropAmount;
+        //^^^^^^^effects^^^^^^^^^
+    }
 
     /*
-     * @dev Mint PRUF to an addresses (ADMIN)
+     * @dev Set presale limit, reset presale counter
+     * TESTING: ALL REQUIRES, ACCESS ROLE, presale limit works, presale limit can be reset for new presale
      */
-    function ADMIN_MintPRUF(address _addr, uint256 _amount)
-        external
-        isAdmin
-        nonReentrant
-        whenNotPaused
-    {
+    function ADMIN_setPresaleLimit(uint256 _presaleLimit) external isAdmin {
+        //^^^^^^^checks^^^^^^^^^
+        presaleLimit = _presaleLimit;
+        presaleCount = 0;
+        //^^^^^^^effects^^^^^^^^^
+    }
+
+    //--------------------------------------External functions--------------------------------------------//
+
+    /*
+     * @dev Mint a set airdropAmount to a list of addresses
+     * TESTING: ALL REQUIRES, ACCESS ROLE, PAUSABLE
+     */
+    function AIRDROP_Mint14(
+        address _a,
+        address _b,
+        address _c,
+        address _d,
+        address _e,
+        address _f,
+        address _g,
+        address _h,
+        address _i,
+        address _j,
+        address _k,
+        address _l,
+        address _m,
+        address _n
+    ) external isAirdrop whenNotPaused {
         require(
-            (_amount != 0) && (_addr != address(0)),
-            "PTM:MP: mint amount or address is zero"
+            airdropAmount != 0,
+            "AM:BM: airdrop airdropAmount cannot be zero"
         );
         //^^^^^^^checks^^^^^^^^^
 
-        UTIL_TKN.mint(_addr, _amount);
-        //^^^^^^^effects^^^^^^^^^
+        UTIL_TKN.mint(_a, airdropAmount);
+        UTIL_TKN.mint(_b, airdropAmount);
+        UTIL_TKN.mint(_c, airdropAmount);
+        UTIL_TKN.mint(_d, airdropAmount);
+        UTIL_TKN.mint(_e, airdropAmount);
+        UTIL_TKN.mint(_f, airdropAmount);
+        UTIL_TKN.mint(_g, airdropAmount);
+        UTIL_TKN.mint(_h, airdropAmount);
+        UTIL_TKN.mint(_i, airdropAmount);
+        UTIL_TKN.mint(_j, airdropAmount);
+        UTIL_TKN.mint(_k, airdropAmount);
+        UTIL_TKN.mint(_l, airdropAmount);
+        UTIL_TKN.mint(_m, airdropAmount);
+        UTIL_TKN.mint(_n, airdropAmount);
+        //^^^^^^^Interactions^^^^^^^^^
     }
 
     /*
-     * @dev Mint PRUF to an addresses at the rate of 5000 * ETH recieved
+     * @dev Mint a set airdropAmount to a list of addresses
+     * TESTING: ALL REQUIRES, ACCESS ROLE, PAUSABLE
      */
-    function mintPRUF() external payable nonReentrant {
+    function AIRDROP_Mint10(
+        address _a,
+        address _b,
+        address _c,
+        address _d,
+        address _e,
+        address _f,
+        address _g,
+        address _h,
+        address _i,
+        address _j
+    ) external isAirdrop whenNotPaused {
+        require(
+            airdropAmount != 0,
+            "AM:BM: airdrop airdropAmount cannot be zero"
+        );
+        //^^^^^^^checks^^^^^^^^^
 
-        whiteListedAddress256 memory _whiteList256;
+        UTIL_TKN.mint(_a, airdropAmount);
+        UTIL_TKN.mint(_b, airdropAmount);
+        UTIL_TKN.mint(_c, airdropAmount);
+        UTIL_TKN.mint(_d, airdropAmount);
+        UTIL_TKN.mint(_e, airdropAmount);
+        UTIL_TKN.mint(_f, airdropAmount);
+        UTIL_TKN.mint(_g, airdropAmount);
+        UTIL_TKN.mint(_h, airdropAmount);
+        UTIL_TKN.mint(_i, airdropAmount);
+        UTIL_TKN.mint(_j, airdropAmount);
+        //^^^^^^^Interactions^^^^^^^^^
+    }
+
+    /*
+     * @dev Mint a set airdropAmount to a list of addresses
+     * TESTING: ALL REQUIRES, ACCESS ROLE, PAUSABLE
+     */
+    function AIRDROP_Mint5(
+        address _a,
+        address _b,
+        address _c,
+        address _d,
+        address _e
+    ) external isAdmin whenNotPaused {
+        require(
+            airdropAmount != 0,
+            "AM:BM: airdrop airdropAmount cannot be zero"
+        );
+        //^^^^^^^checks^^^^^^^^^
+
+        UTIL_TKN.mint(_a, airdropAmount);
+        UTIL_TKN.mint(_b, airdropAmount);
+        UTIL_TKN.mint(_c, airdropAmount);
+        UTIL_TKN.mint(_d, airdropAmount);
+        UTIL_TKN.mint(_e, airdropAmount);
+        //^^^^^^^Interactions^^^^^^^^^
+    }
+
+    /*
+     * @dev Mint a set airdropAmount to a list of addresses
+     * TESTING: ALL REQUIRES, ACCESS ROLE, PAUSABLE
+     */
+    function AIRDROP_Mint3(
+        address _a,
+        address _b,
+        address _c
+    ) external isAirdrop whenNotPaused {
+        require(
+            airdropAmount != 0,
+            "AM:BM: airdrop airdropAmount cannot be zero"
+        );
+        //^^^^^^^checks^^^^^^^^^
+
+        UTIL_TKN.mint(_a, airdropAmount);
+        UTIL_TKN.mint(_b, airdropAmount);
+        UTIL_TKN.mint(_c, airdropAmount);
+        //^^^^^^^Interactions^^^^^^^^^
+    }
+
+    /*
+     * @dev Mint a set airdropAmount to a list of addresses
+     * TESTING: ALL REQUIRES, ACCESS ROLE, PAUSABLE
+     */
+    function AIRDROP_Mint2(address _a, address _b)
+        external
+        isAirdrop
+        whenNotPaused
+    {
+        require(
+            airdropAmount != 0,
+            "AM:BM: airdrop airdropAmount cannot be zero"
+        );
+        //^^^^^^^checks^^^^^^^^^
+
+        UTIL_TKN.mint(_a, airdropAmount);
+        UTIL_TKN.mint(_b, airdropAmount);
+        //^^^^^^^Interactions^^^^^^^^^
+    }
+
+    /*
+     * @dev Mint a set airdropAmount to an address
+     * TESTING: ALL REQUIRES, ACCESS ROLE, PAUSABLE
+     */
+    function AIRDROP_Mint1(address _a)
+        external
+        isAirdrop
+        whenNotPaused
+    {
+        require(
+            airdropAmount != 0,
+            "AM:BM: airdrop airdropAmount cannot be zero"
+        );
+        //^^^^^^^checks^^^^^^^^^
+
+        UTIL_TKN.mint(_a, airdropAmount);
+        //^^^^^^^Interactions^^^^^^^^^
+    }
+
+    /*
+     * @dev Mint PRUF to an addresses as caller.tokensPerEth * ETH recieved
+     * TESTING: ALL REQUIRES, ACCESS ROLE, PAUSABLE, individual presale allowance can be exhausted, overall presale allotment can be exhausted
+     *          amount minted conforms to tokensPerEth setting, min buy is enforced
+     */
+    function PRUF_PRESALE() public payable nonReentrant whenNotPaused {
         whiteListedAddress memory _whiteList = whiteList[msg.sender];
 
         if (_whiteList.tokensPerEth == 0) {
             _whiteList = whiteList[address(0)];
         }
-        
-        uint256 amountToMint = msg.value.mul(_whiteList.tokensPerEth);
+
+        uint256 airdropAmountToMint = msg.value.mul(
+            _whiteList.tokensPerEth.div(1 ether)
+        ); //in wei
 
         require(
-            (amountToMint != 0),
-            "PTM:MP: mint amount is zero"
+            (airdropAmountToMint != 0),
+            "PP:PP: mint airdropAmount is zero"
         );
         require(
-            (amountToMint >= _whiteList.minTokens),
-            "PTM:MP: Insufficient ETH to meet minimum purchase"
+            (msg.value >= _whiteList.minEth),
+            "PP:PP: Insufficient ETH to meet minimum purchase"
         );
         require(
-            (amountToMint <= _whiteList.maxTokens),
-            "PTM:MP: Purchase request exceeds allowed purchase amount"
+            (msg.value <= _whiteList.maxEth),
+            "PP:PP: Purchase request exceeds allowed purchase airdropAmount"
         );
-
-        _whiteList256.tokensPerEth =  uint256(_whiteList.tokensPerEth);
-        _whiteList256.minTokens =  uint256(_whiteList.minTokens);
-        _whiteList256.maxTokens =  uint256(_whiteList.maxTokens);
-
-        _whiteList256.maxTokens = _whiteList256.maxTokens.sub(amountToMint); //reduce allotment by the amount to be minted
-
         require(
-            (_whiteList256.maxTokens < 4294967295),  //---this should never be able to happen.
-            "PTM:MP: Something broke - uint32 out of range"
+            (airdropAmountToMint.add(presaleCount) <= presaleLimit),
+            "PP:PP: Purchase request exceeds total presale limit"
         );
+        //^^^^^^^checks^^^^^^^^^
 
-        _whiteList.maxTokens = uint32(_whiteList256.maxTokens); //store the updated number of tokens that can be minted to the account
-        
-        UTIL_TKN.mint(msg.sender, amountToMint);
+        presaleCount = airdropAmountToMint.add(presaleCount);
 
+        whiteList[msg.sender].maxEth = _whiteList.maxEth.sub(msg.value);
+        //^^^^^^^effects^^^^^^^^^
+
+        UTIL_TKN.mint(msg.sender, airdropAmountToMint);
+        emit REPORT(_msgSender(), airdropAmountToMint);
+        //^^^^^^^Interactions^^^^^^^^^
     }
 
     /*
      * @dev withdraw to specified payment address
+     * TESTING: WORKS
      */
-    function withdraw() external {
+    function withdraw() external nonReentrant {
+        require(
+            payment_address != address(0),
+            "PP:W: payment address cannot be zero."
+        );
         payment_address.transfer(address(this).balance);
     }
 
     /*
      * @dev return balance of contract
+     * TESTING: WORKS
      */
     function balance() external view returns (uint256) {
         return address(this).balance;
@@ -258,7 +461,7 @@ contract PRESALE is ReentrancyGuard, Pausable, AccessControl {
 
     /**
      * @dev Triggers stopped state. (pausable)
-     *
+     * * TESTING: ACCESS ROLE
      */
     function pause() external isPauser {
         _pause();
@@ -266,9 +469,18 @@ contract PRESALE is ReentrancyGuard, Pausable, AccessControl {
 
     /**
      * @dev Returns to normal state. (pausable)
+     * TESTING: ACCESS ROLE
      */
     function unpause() external isPauser {
         _unpause();
+    }
+
+    /**
+     * @dev Ether received will initiate the mintPRUF function
+     * TESTING: Sending naked eth calls presale function correctly
+     */
+    receive() external payable {
+        PRUF_PRESALE();
     }
 
     //--------------------------------------------------------------------------------------INTERNAL functions
