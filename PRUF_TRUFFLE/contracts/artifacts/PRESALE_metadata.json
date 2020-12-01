@@ -35,7 +35,7 @@
 					{
 						"indexed": false,
 						"internalType": "uint256",
-						"name": "airdropAmount",
+						"name": "amount",
 						"type": "uint256"
 					}
 				],
@@ -196,19 +196,6 @@
 				"type": "function"
 			},
 			{
-				"inputs": [],
-				"name": "AIRDROP_ROLE",
-				"outputs": [
-					{
-						"internalType": "bytes32",
-						"name": "",
-						"type": "bytes32"
-					}
-				],
-				"stateMutability": "view",
-				"type": "function"
-			},
-			{
 				"inputs": [
 					{
 						"internalType": "address",
@@ -261,7 +248,7 @@
 						"type": "address"
 					}
 				],
-				"name": "AIRDROP_bulkMint10",
+				"name": "AIRDROP_Mint10",
 				"outputs": [],
 				"stateMutability": "nonpayable",
 				"type": "function"
@@ -339,7 +326,7 @@
 						"type": "address"
 					}
 				],
-				"name": "AIRDROP_bulkMint14",
+				"name": "AIRDROP_Mint14",
 				"outputs": [],
 				"stateMutability": "nonpayable",
 				"type": "function"
@@ -357,7 +344,7 @@
 						"type": "address"
 					}
 				],
-				"name": "AIRDROP_bulkMint2",
+				"name": "AIRDROP_Mint2",
 				"outputs": [],
 				"stateMutability": "nonpayable",
 				"type": "function"
@@ -380,7 +367,7 @@
 						"type": "address"
 					}
 				],
-				"name": "AIRDROP_bulkMint3",
+				"name": "AIRDROP_Mint3",
 				"outputs": [],
 				"stateMutability": "nonpayable",
 				"type": "function"
@@ -413,9 +400,22 @@
 						"type": "address"
 					}
 				],
-				"name": "AIRDROP_bulkMint5",
+				"name": "AIRDROP_Mint5",
 				"outputs": [],
 				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
+				"inputs": [],
+				"name": "AIRDROP_ROLE",
+				"outputs": [
+					{
+						"internalType": "bytes32",
+						"name": "",
+						"type": "bytes32"
+					}
+				],
+				"stateMutability": "view",
 				"type": "function"
 			},
 			{
@@ -459,6 +459,19 @@
 						"internalType": "bytes32",
 						"name": "",
 						"type": "bytes32"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [],
+				"name": "airdropAmount",
+				"outputs": [
+					{
+						"internalType": "uint256",
+						"name": "",
+						"type": "uint256"
 					}
 				],
 				"stateMutability": "view",
@@ -631,6 +644,45 @@
 				"type": "function"
 			},
 			{
+				"inputs": [],
+				"name": "payment_address",
+				"outputs": [
+					{
+						"internalType": "address payable",
+						"name": "",
+						"type": "address"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [],
+				"name": "presaleCount",
+				"outputs": [
+					{
+						"internalType": "uint256",
+						"name": "",
+						"type": "uint256"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [],
+				"name": "presaleLimit",
+				"outputs": [
+					{
+						"internalType": "uint256",
+						"name": "",
+						"type": "uint256"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
 				"inputs": [
 					{
 						"internalType": "bytes32",
@@ -732,7 +784,7 @@
 					"details": "Returns `true` if `account` has been granted `role`."
 				},
 				"pause()": {
-					"details": "Triggers stopped state. (pausable)"
+					"details": "Triggers stopped state. (pausable) * TESTING: ACCESS ROLE"
 				},
 				"paused()": {
 					"details": "Returns true if the contract is paused, and false otherwise."
@@ -744,7 +796,7 @@
 					"details": "Revokes `role` from `account`. If `account` had been granted `role`, emits a {RoleRevoked} event. Requirements: - the caller must have ``role``'s admin role."
 				},
 				"unpause()": {
-					"details": "Returns to normal state. (pausable)"
+					"details": "Returns to normal state. (pausable) TESTING: ACCESS ROLE"
 				}
 			},
 			"version": 1
@@ -757,7 +809,7 @@
 	},
 	"settings": {
 		"compilationTarget": {
-			"localhost/PRUF/PRUF_TRUFFLE/contracts/m_PRUF_PRESALE.sol": "PRESALE"
+			"localhost/PRUF/PRUF_TRUFFLE/contracts/PRUF_PRESALE.sol": "PRESALE"
 		},
 		"evmVersion": "istanbul",
 		"libraries": {},
@@ -835,12 +887,12 @@
 				"dweb:/ipfs/QmRgpREMff6fKyNV8yLjst4jnT74FstUB8QNgxdHGWj8FX"
 			]
 		},
-		"localhost/PRUF/PRUF_TRUFFLE/contracts/m_PRUF_PRESALE.sol": {
-			"keccak256": "0xace51b1c1d5aeb79434a24bee42162d5afa64be2ee98332e706cb7475c3e24a2",
+		"localhost/PRUF/PRUF_TRUFFLE/contracts/PRUF_PRESALE.sol": {
+			"keccak256": "0xd93820bb00baa25ff2784f018219e8befe42e8cb2b35bfb42ad35f969790c051",
 			"license": "UNLICENSED",
 			"urls": [
-				"bzz-raw://f12c5b00accf73438cc973a1ce74e867f38c01e147131ecc3325ef1be0019897",
-				"dweb:/ipfs/QmPE8UJhS1xqbKqQNAm25wCgQZ7WvH7xL3avoYn5TFudn3"
+				"bzz-raw://159778406914efe440e260b1baafbe1460dfb23977e1ff71d3c21079fef1e2a1",
+				"dweb:/ipfs/QmPeKqGWi8p5D3Rr3SD5bBdYaUDAY9L7r9Wtwyxs1TYGhR"
 			]
 		}
 	},
