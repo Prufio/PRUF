@@ -268,6 +268,19 @@
 			{
 				"inputs": [
 					{
+						"internalType": "uint256",
+						"name": "_key",
+						"type": "uint256"
+					}
+				],
+				"name": "adminKillTrustedAgent",
+				"outputs": [],
+				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
 						"internalType": "address",
 						"name": "owner",
 						"type": "address"
@@ -572,19 +585,6 @@
 				"type": "function"
 			},
 			{
-				"inputs": [
-					{
-						"internalType": "uint256",
-						"name": "_key",
-						"type": "uint256"
-					}
-				],
-				"name": "killTrustedAgent",
-				"outputs": [],
-				"stateMutability": "nonpayable",
-				"type": "function"
-			},
-			{
 				"inputs": [],
 				"name": "maxSupply",
 				"outputs": [
@@ -606,7 +606,7 @@
 					},
 					{
 						"internalType": "uint256",
-						"name": "amount",
+						"name": "_amount",
 						"type": "uint256"
 					}
 				],
@@ -844,7 +844,7 @@
 					},
 					{
 						"internalType": "uint256",
-						"name": "_airDropAmount",
+						"name": "_amount",
 						"type": "uint256"
 					}
 				],
@@ -867,7 +867,7 @@
 					},
 					{
 						"internalType": "uint256",
-						"name": "_airDropAmount",
+						"name": "_amount",
 						"type": "uint256"
 					}
 				],
@@ -892,7 +892,7 @@
 			}
 		],
 		"devdoc": {
-			"details": "{ERC20} token, including:  - ability for holders to burn (destroy) their tokens  - a MINTER_ROLE that allows for token minting (creation)  - a PAUSER_ROLE that allows to stop all token transfers  - a SNAPSHOT_ROLE that allows to take snapshots  - a PAYABLE_ROLE role that allows authorized adresses to invoke the token splitting payment function (all paybale contracts)  - a TRUSTED_AGENT_ROLE role that allows authorized adresses to transfer and burn tokens (AC_MGR) This contract uses {AccessControl} to lock permissioned functions using the different roles - head to its documentation for details. The account that deploys the contract will be granted the minter and pauser roles, as well as the default admin role, which will let it grant both minter and pauser roles to other accounts.",
+			"details": "{ERC20} token, including:  - ability for holders to burn (destroy) their tokens  - a MINTER_ROLE that allows for token minting (creation)  - a PAUSER_ROLE that allows to stop all token transfers  - a SNAPSHOT_ROLE that allows to take snapshots  - a PAYABLE_ROLE role that allows authorized addresses to invoke the token splitting payment function (all paybale contracts)  - a TRUSTED_AGENT_ROLE role that allows authorized addresses to transfer and burn tokens (AC_MGR) This contract uses {AccessControl} to lock permissioned functions using the different roles - head to its documentation for details. The account that deploys the contract will be granted the minter and pauser roles, as well as the default admin role, which will let it grant both minter and pauser roles to other accounts.",
 			"kind": "dev",
 			"methods": {
 				"allowance(address,address)": {
@@ -941,7 +941,7 @@
 					"details": "Atomically increases the allowance granted to `spender` by the caller. This is an alternative to {approve} that can be used as a mitigation for problems described in {IERC20-approve}. Emits an {Approval} event indicating the updated allowance. Requirements: - `spender` cannot be the zero address."
 				},
 				"mint(address,uint256)": {
-					"details": "Creates `airDropAmount` new tokens for `to`. See {ERC20-_mint}. Requirements: - the caller must have the `MINTER_ROLE`."
+					"details": "Creates `_amount` new tokens for `to`. See {ERC20-_mint}. Requirements: - the caller must have the `MINTER_ROLE`."
 				},
 				"name()": {
 					"details": "Returns the name of the token."
@@ -1114,11 +1114,11 @@
 			]
 		},
 		"localhost/PRUF/PRUF_TRUFFLE/contracts/PRUF_UTIL_TKN.sol": {
-			"keccak256": "0x6504c3e06d990b7d67f574e5de056bd6056d1c33c176262e583e28ff5c9ee8c8",
-			"license": "MIT",
+			"keccak256": "0x0c00c4d56bcd1c8d8bd9a6974cfc7782083f7d603e6c17ca639a4a01da790f96",
+			"license": "UNLICENSED",
 			"urls": [
-				"bzz-raw://ac06ddab4747cf725a8dd7845254a403216f29f086225fb39ab02b2545686c4f",
-				"dweb:/ipfs/QmQH6dt8eKoSZ53ysFQJ1Vg8uAHLqRzZmKy5JMFiXFk7sV"
+				"bzz-raw://464af2a500534fb836820d28744973768ec1a595bdd4b833a2755d8bc56181b1",
+				"dweb:/ipfs/Qmd1GB3Gs8dk7o2synAEKmzLr3dSVUhka8BKkZKyfbu8Dm"
 			]
 		}
 	},

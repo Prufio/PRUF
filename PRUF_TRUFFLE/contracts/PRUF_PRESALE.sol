@@ -393,7 +393,7 @@ contract PRESALE is ReentrancyGuard, Pausable, AccessControl {
         );
         require(
             msg.value >= _whiteList.minEth,
-            "PP:PP: Insufficient ETH to meet minimum purchase"
+            "PP:PP: Insufficient ETH sent to meet minimum purchase requirement"
         );
         require(
             msg.value <= _whiteList.maxEth,
@@ -407,7 +407,8 @@ contract PRESALE is ReentrancyGuard, Pausable, AccessControl {
 
         presaleCount = amountToMint.add(presaleCount);
 
-        whiteList[msg.sender].maxEth = _whiteList.maxEth.sub(msg.value);
+        whiteList[msg.sender].maxEth = _whiteList.maxEth.sub(msg.value); //reduce max purchasable by purchased amount
+        whiteList[msg.sender].maxEth = 0; //Remove minimum , as minimum buy is already met.
         //^^^^^^^effects^^^^^^^^^
 
         UTIL_TKN.mint(msg.sender, amountToMint);
