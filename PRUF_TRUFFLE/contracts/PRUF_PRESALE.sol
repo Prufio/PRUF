@@ -155,7 +155,27 @@ contract PRESALE is ReentrancyGuard, Pausable, AccessControl {
         //^^^^^^^effects^^^^^^^^^
     }
 
-    //--------------------------------------External functions--------------------------------------------//
+    /*
+     * @dev Set airdropAmount
+     * TESTING: ALL REQUIRES, ACCESS ROLE, sets airdrop amount for all airdrop functions
+     */
+    function ADMIN_setAirDropAmount(uint256 _airdropAmount) external isAdmin {
+        require(_airdropAmount != 0, "PP:SAA: airdrop amount cannot be zero");
+        //^^^^^^^checks^^^^^^^^^
+        airdropAmount = _airdropAmount;
+        //^^^^^^^effects^^^^^^^^^
+    }
+
+    /*
+     * @dev Set presale limit, reset presale counter
+     * TESTING: ALL REQUIRES, ACCESS ROLE, presale limit works, presale limit can be reset for new presale
+     */
+    function ADMIN_setPresaleLimit(uint256 _presaleLimit) external isAdmin {
+        //^^^^^^^checks^^^^^^^^^
+        presaleLimit = _presaleLimit;
+        presaleCount = 0;
+        //^^^^^^^effects^^^^^^^^^
+    }
 
     /*
      * @dev Set address of PRUF_TKN contract to interface with
@@ -205,28 +225,6 @@ contract PRESALE is ReentrancyGuard, Pausable, AccessControl {
         }
 
         return (_whiteList.minEth, _whiteList.maxEth, _whiteList.tokensPerEth);
-        //^^^^^^^effects^^^^^^^^^
-    }
-
-    /*
-     * @dev Set airdropAmount
-     * TESTING: ALL REQUIRES, ACCESS ROLE, sets airdrop amount for all airdrop functions
-     */
-    function ADMIN_setAirDropAmount(uint256 _airdropAmount) external isAdmin {
-        require(_airdropAmount != 0, "PP:SAA: airdrop amount cannot be zero");
-        //^^^^^^^checks^^^^^^^^^
-        airdropAmount = _airdropAmount;
-        //^^^^^^^effects^^^^^^^^^
-    }
-
-    /*
-     * @dev Set presale limit, reset presale counter
-     * TESTING: ALL REQUIRES, ACCESS ROLE, presale limit works, presale limit can be reset for new presale
-     */
-    function ADMIN_setPresaleLimit(uint256 _presaleLimit) external isAdmin {
-        //^^^^^^^checks^^^^^^^^^
-        presaleLimit = _presaleLimit;
-        presaleCount = 0;
         //^^^^^^^effects^^^^^^^^^
     }
 
