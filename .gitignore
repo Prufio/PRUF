@@ -56,6 +56,9 @@ typings/
 # JSON FILES
 .json
 
+# DS_Store
+.DS_Store
+
 # Optional eslint cache
 .eslintcache
 

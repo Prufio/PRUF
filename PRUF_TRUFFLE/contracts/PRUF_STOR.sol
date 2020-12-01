@@ -335,7 +335,7 @@ contract STOR is Ownable, ReentrancyGuard, Pausable {
         whenNotPaused
         exists(_idxHash) //asset must exist in 'database'
         notEscrow(_idxHash) // asset must not be held in escrow status
-        isAuthorized(0) //is an authorized contract, generically
+        isAuthorized(0) //is an authorized contract, Asset class nonspecific
     {
         Record memory rec = database[_idxHash];
 
@@ -410,7 +410,7 @@ contract STOR is Ownable, ReentrancyGuard, Pausable {
         //^^^^^^^checks^^^^^^^^^
 
         if (_newAssetStatus == 60) {
-            //if setting to "discarded" status, set rgt to 0xFFF... (to prevent reminting)
+            //if setting to "escrow" status, set rgt to 0xFFF... (to prevent reminting)
             rec
                 .rightsHolder = 0xFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF;
         }
@@ -515,7 +515,7 @@ contract STOR is Ownable, ReentrancyGuard, Pausable {
     function retrieveRecord(bytes32 _idxHash)
         external
         view
-        isAuthorized(0) //calling contract must be authorized, generically
+        isAuthorized(0) //is an authorized contract, Asset class nonspecific
         returns (
             bytes32,
             uint8,
