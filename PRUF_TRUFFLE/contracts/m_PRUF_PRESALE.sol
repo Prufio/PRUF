@@ -29,7 +29,7 @@ import "./Imports/math/safeMath.sol";
 contract PRESALE is ReentrancyGuard, Pausable, AccessControl {
     using SafeMath for uint256;
 
-    //DEFINE ROLES
+    //DEFINE ROLES              //CTS:EXAMINE NOT DONE?
     bytes32 public constant PAUSER_ROLE = keccak256("PAUSER_ROLE");
     bytes32 public constant WHITELIST_ROLE = keccak256("WHITELIST_ROLE");
     bytes32 public constant AIRDROP_ROLE = keccak256("AIRDROP_ROLE");
@@ -59,7 +59,7 @@ contract PRESALE is ReentrancyGuard, Pausable, AccessControl {
 
         whiteList[address(0)].tokensPerEth = 100000 ether; //100,000 tokens per ETH default
         whiteList[address(0)].minEth = 100000000000000000; // 0.1 eth minimum default (10,000 tokens)
-        whiteList[address(0)].maxEth = 10 ether; // 10 eth maximum default (1,000,000 tokens)
+        whiteList[address(0)].maxEth = 10 ether; // 10 eth maximum default (1,000,000 tokens)              //CTS:EXAMINE >10 deal?
     }
 
     //------------------------------------------------------------------------MODIFIERS
@@ -137,7 +137,7 @@ contract PRESALE is ReentrancyGuard, Pausable, AccessControl {
     }
 
     /*
-     * @dev Set Payment addrress to send eth to
+     * @dev Set Payment address to send eth to
      * TESTING: ALL REQUIRES, ACCESS ROLE
      */
     function ADMIN_setPaymentAddress(address payable _address)
@@ -160,7 +160,7 @@ contract PRESALE is ReentrancyGuard, Pausable, AccessControl {
     /*
      * @dev Set address of PRUF_TKN contract to interface with
      * Set default condition at address(0). Addresses not appearing on the whitelist will fall under these terms.
-     * TESTING:  ACCESS ROLE , Also test that setting params for 0 address sets default behavior for non-whitelisted addresses
+     * TESTING: ACCESS ROLE, Also test that setting params for 0 address sets default behavior for non-whitelisted addresses
      */
     function whitelist(
         address _addr,
@@ -183,7 +183,7 @@ contract PRESALE is ReentrancyGuard, Pausable, AccessControl {
 
     /*
      * @dev checks airdrop state for an address
-     * TESTING: Returns both instantiated and default (uninstantiated adresses) Uninstantiated addresses should return default (0 address) values
+     * TESTING: Returns both instantiated and default (uninstantiated addresses) Uninstantiated addresses should return default (0 address) values
      *
      */
     function checkWhitelist(address _addr)
