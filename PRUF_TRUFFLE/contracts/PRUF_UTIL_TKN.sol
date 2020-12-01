@@ -12,9 +12,11 @@ __/\\\\\\\\\\\\\ _____/\\\\\\\\\ _______/\\../\\ ___/\\\\\\\\\\\\\\\
 
 /*-----------------------------------------------------------------
  *  TO DO
+ *-----------------------------------------------------------------
+ * UTILITY TOKEN CONTRACT
  *---------------------------------------------------------------*/
 
-// SPDX-License-Identifier: MIT
+// SPDX-License-Identifier: MIT              //CTS:EXAMINE MIT?
 
 pragma solidity ^0.6.7;
 
@@ -31,8 +33,8 @@ import "./Imports/token/ERC20/ERC20Snapshot.sol";
  *  - a MINTER_ROLE that allows for token minting (creation)
  *  - a PAUSER_ROLE that allows to stop all token transfers
  *  - a SNAPSHOT_ROLE that allows to take snapshots
- *  - a PAYABLE_ROLE role that allows authorized adresses to invoke the token splitting payment function (all paybale contracts)
- *  - a TRUSTED_AGENT_ROLE role that allows authorized adresses to transfer and burn tokens (AC_MGR)
+ *  - a PAYABLE_ROLE role that allows authorized addresses to invoke the token splitting payment function (all paybale contracts)
+ *  - a TRUSTED_AGENT_ROLE role that allows authorized addresses to transfer and burn tokens (AC_MGR)
 
 
 
@@ -56,9 +58,7 @@ contract UTIL_TKN is
     bytes32 public constant PAUSER_ROLE = keccak256("PAUSER_ROLE");
     bytes32 public constant SNAPSHOT_ROLE = keccak256("SNAPSHOT_ROLE");
     bytes32 public constant PAYABLE_ROLE = keccak256("PAYABLE_ROLE");
-    bytes32 public constant TRUSTED_AGENT_ROLE = keccak256(
-        "TRUSTED_AGENT_ROLE"
-    );
+    bytes32 public constant TRUSTED_AGENT_ROLE = keccak256("TRUSTED_AGENT_ROLE");
 
     uint256 public constant maxSupply = 4000000000000000000000000000; //4billion max supply
 
@@ -178,7 +178,7 @@ contract UTIL_TKN is
 
     /*
      * @dev Set calling wallet to a "cold Wallet" that cannot be manipulated by TRUSTED_AGENT or PAYABLE permissioned functions
-     * WALLET ADRESSES SET TO "Cold" DO NOT WORK WITH TRUSTED_AGENT FUNCTIONS
+     * WALLET ADDRESSES SET TO "Cold" DO NOT WORK WITH TRUSTED_AGENT FUNCTIONS
      */
     function setColdWallet() external {
         //---------------------------------------------------DPS:TEST : NEW
@@ -187,7 +187,7 @@ contract UTIL_TKN is
 
     /*
      * @dev un-set calling wallet to a "cold Wallet", enabling manipulation by TRUSTED_AGENT and PAYABLE permissioned functions
-     * WALLET ADRESSES SET TO "Cold" DO NOT WORK WITH TRUSTED_AGENT FUNCTIONS
+     * WALLET ADDRESSES SET TO "Cold" DO NOT WORK WITH TRUSTED_AGENT FUNCTIONS
      */
     function unSetColdWallet() external {
         //---------------------------------------------------DPS:TEST : NEW
@@ -196,14 +196,14 @@ contract UTIL_TKN is
 
     /*
      * @dev return an adresses "cold wallet" status
-     * WALLET ADRESSES SET TO "Cold" DO NOT WORK WITH TRUSTED_AGENT FUNCTIONS
+     * WALLET ADDRESSES SET TO "Cold" DO NOT WORK WITH TRUSTED_AGENT FUNCTIONS
      */
     function isColdWallet(address _addr) external view returns (uint256) {
         return coldWallet[_addr];
     }
 
     /*
-     * @dev Set adress of SHARES payment contract. by default contract will use root adress instead if set to zero.
+     * @dev Set address of SHARES payment contract. by default contract will use root address instead if set to zero.
      */
     function AdminSetSharesAddress(address _paymentAddress) external isAdmin {
         require(
@@ -229,11 +229,11 @@ contract UTIL_TKN is
     ) external isPayable {
         require( //---------------------------------------------------DPS:TEST : NEW
             coldWallet[_senderAddress] == 0,
-            "PRuF:PPS: Cold Wallet - Trusted payable functions prohibited"
+            "PRuF:PFS: Cold Wallet - Trusted payable functions prohibited"
         );
         require( //redundant? throws on transfer?
             balanceOf(_senderAddress) >= _rootPrice.add(_ACTHprice),
-            "PRuF:PPS: insufficient balance"
+            "PRuF:PFS: insufficient balance"
         );
         //^^^^^^^checks^^^^^^^^^
 
@@ -263,7 +263,7 @@ contract UTIL_TKN is
             "PRuF:BRN: Cold Wallet - Trusted functions prohibited"
         );
         //^^^^^^^checks^^^^^^^^^
-        _burn(_addr, _airDropAmount);
+        _burn(_addr, _airDropAmount);              //CTS:EXAMINE uint256 _airDropAmount???
         //^^^^^^^effects^^^^^^^^^
     }
 
@@ -280,7 +280,7 @@ contract UTIL_TKN is
             "PRuF:TAT: Cold Wallet - Trusted functions prohibited"
         );
         //^^^^^^^checks^^^^^^^^^
-        _transfer(_from, _to, _airDropAmount);
+        _transfer(_from, _to, _airDropAmount);              //CTS:EXAMINE uint256 _airDropAmount???
         //^^^^^^^effects^^^^^^^^^
     }
 
@@ -296,7 +296,7 @@ contract UTIL_TKN is
     }
 
     /**
-     * @dev Creates `airDropAmount` new tokens for `to`.
+     * @dev Creates `airDropAmount` new tokens for `to`.              //CTS:EXAMINE airDropAmount??? its just mint though, rename?
      *
      * See {ERC20-_mint}.
      *
