@@ -53,6 +53,9 @@ typings/
 # Optional npm cache directory
 .npm
 
+# JSON FILES
+.json
+
 # Optional eslint cache
 .eslintcache
 
