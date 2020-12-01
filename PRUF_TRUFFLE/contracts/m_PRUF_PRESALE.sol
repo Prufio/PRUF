@@ -209,11 +209,11 @@ contract PRESALE is ReentrancyGuard, Pausable, AccessControl {
     }
 
     /*
-     * @dev Set airdrop Amount
+     * @dev Set airdropAmount
      * TESTING: ALL REQUIRES, ACCESS ROLE, sets airdrop amount for all airdrop functions
      */
     function ADMIN_setAirDropAmount(uint256 _airdropAmount) external isAdmin {
-        require(_airdropAmount != 0, "AM:SAA: airdrop Amount cannot be zero");
+        require(_airdropAmount != 0, "PP:SAA: airdrop amount cannot be zero");
         //^^^^^^^checks^^^^^^^^^
         airdropAmount = _airdropAmount;
         //^^^^^^^effects^^^^^^^^^
@@ -233,7 +233,7 @@ contract PRESALE is ReentrancyGuard, Pausable, AccessControl {
     //--------------------------------------External functions--------------------------------------------//
 
     /*
-     * @dev Mint airdrop Amount to a list of addresses
+     * @dev Mint airdropAmount to a list of addresses
      * TESTING: ALL REQUIRES, ACCESS ROLE, PAUSABLE
      */
     function AIRDROP_Mint14(
@@ -272,7 +272,7 @@ contract PRESALE is ReentrancyGuard, Pausable, AccessControl {
     }
 
     /*
-     * @dev Mint airdrop Amount to a list of addresses
+     * @dev Mint airdropAmount to a list of addresses
      * TESTING: ALL REQUIRES, ACCESS ROLE, PAUSABLE
      */
     function AIRDROP_Mint10(
@@ -303,7 +303,7 @@ contract PRESALE is ReentrancyGuard, Pausable, AccessControl {
     }
 
     /*
-     * @dev Mint airdrop Amount to a list of addresses
+     * @dev Mint airdropAmount to a list of addresses
      * TESTING: ALL REQUIRES, ACCESS ROLE, PAUSABLE
      */
     function AIRDROP_Mint5(
@@ -376,7 +376,7 @@ contract PRESALE is ReentrancyGuard, Pausable, AccessControl {
      * TESTING: ALL REQUIRES, ACCESS ROLE, PAUSABLE, individual presale allowance can be exhausted, overall presale allotment can be exhausted
      *          amount minted conforms to tokensPerEth setting, min buy is enforced
      */
-    function PRUF_PRESALE() public payable nonReentrant whenNotPaused {
+    function PRUF_PRESALE() public payable nonReentrant whenNotPaused { //CTS:EXAMINE rename?
         whiteListedAddress memory _whiteList = whiteList[msg.sender];
 
         if (_whiteList.tokensPerEth == 0) {
@@ -389,7 +389,7 @@ contract PRESALE is ReentrancyGuard, Pausable, AccessControl {
 
         require(
                 amountToMint != 0,
-            "PP:PP: amount to mint is zero"
+            "PP:PP: Amount to mint is zero"
         );
         require(
             msg.value >= _whiteList.minEth,
