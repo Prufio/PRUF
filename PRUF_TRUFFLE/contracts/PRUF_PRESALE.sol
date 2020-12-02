@@ -269,36 +269,7 @@ contract PRESALE is ReentrancyGuard, Pausable, AccessControl {
         //^^^^^^^Interactions^^^^^^^^^
     }
 
-    /*
-     * @dev Mint airdropAmount to a list of addresses
-     * TESTING: ALL REQUIRES, ACCESS ROLE, PAUSABLE
-     */
-    function AIRDROP_Mint10(
-        address _a,
-        address _b,
-        address _c,
-        address _d,
-        address _e,
-        address _f,
-        address _g,
-        address _h,
-        address _i,
-        address _j
-    ) external isAirdrop whenNotPaused {
-        //^^^^^^^checks^^^^^^^^^
-
-        UTIL_TKN.mint(_a, airdropAmount);
-        UTIL_TKN.mint(_b, airdropAmount);
-        UTIL_TKN.mint(_c, airdropAmount);
-        UTIL_TKN.mint(_d, airdropAmount);
-        UTIL_TKN.mint(_e, airdropAmount);
-        UTIL_TKN.mint(_f, airdropAmount);
-        UTIL_TKN.mint(_g, airdropAmount);
-        UTIL_TKN.mint(_h, airdropAmount);
-        UTIL_TKN.mint(_i, airdropAmount);
-        UTIL_TKN.mint(_j, airdropAmount);
-        //^^^^^^^Interactions^^^^^^^^^
-    }
+    
 
     /*
      * @dev Mint airdropAmount to a list of addresses
@@ -321,38 +292,6 @@ contract PRESALE is ReentrancyGuard, Pausable, AccessControl {
         //^^^^^^^Interactions^^^^^^^^^
     }
 
-    /*
-     * @dev Mint a set airdropAmount to a list of addresses
-     * TESTING: ALL REQUIRES, ACCESS ROLE, PAUSABLE
-     */
-    function AIRDROP_Mint3(
-        address _a,
-        address _b,
-        address _c
-    ) external isAirdrop whenNotPaused {
-        //^^^^^^^checks^^^^^^^^^
-
-        UTIL_TKN.mint(_a, airdropAmount);
-        UTIL_TKN.mint(_b, airdropAmount);
-        UTIL_TKN.mint(_c, airdropAmount);
-        //^^^^^^^Interactions^^^^^^^^^
-    }
-
-    /*
-     * @dev Mint a set airdropAmount to a list of addresses
-     * TESTING: ALL REQUIRES, ACCESS ROLE, PAUSABLE
-     */
-    function AIRDROP_Mint2(address _a, address _b)
-        external
-        isAirdrop
-        whenNotPaused
-    {
-        //^^^^^^^checks^^^^^^^^^
-
-        UTIL_TKN.mint(_a, airdropAmount);
-        UTIL_TKN.mint(_b, airdropAmount);
-        //^^^^^^^Interactions^^^^^^^^^
-    }
 
     /*
      * @dev Mint a set airdropAmount to an address
@@ -375,10 +314,12 @@ contract PRESALE is ReentrancyGuard, Pausable, AccessControl {
      *          amount minted conforms to tokensPerEth setting, min buy is enforced
      */
     function BUY_PRUF() public payable nonReentrant whenNotPaused { 
+
         whiteListedAddress memory _whiteList = whiteList[msg.sender];
 
-        if (_whiteList.tokensPerEth == 0) {
-            _whiteList = whiteList[address(0)];
+        if (_whiteList.tokensPerEth == 0) {  //loads the default (addr 0) info into the address if address is not specificly whitelisted
+            whiteList[msg.sender] = whiteList[address(0)];
+            _whiteList = whiteList[msg.sender];
         }
 
         uint256 amountToMint = msg.value.mul(
