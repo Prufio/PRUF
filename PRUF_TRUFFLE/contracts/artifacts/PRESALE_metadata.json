@@ -246,64 +246,6 @@
 						"internalType": "address",
 						"name": "_j",
 						"type": "address"
-					}
-				],
-				"name": "AIRDROP_Mint10",
-				"outputs": [],
-				"stateMutability": "nonpayable",
-				"type": "function"
-			},
-			{
-				"inputs": [
-					{
-						"internalType": "address",
-						"name": "_a",
-						"type": "address"
-					},
-					{
-						"internalType": "address",
-						"name": "_b",
-						"type": "address"
-					},
-					{
-						"internalType": "address",
-						"name": "_c",
-						"type": "address"
-					},
-					{
-						"internalType": "address",
-						"name": "_d",
-						"type": "address"
-					},
-					{
-						"internalType": "address",
-						"name": "_e",
-						"type": "address"
-					},
-					{
-						"internalType": "address",
-						"name": "_f",
-						"type": "address"
-					},
-					{
-						"internalType": "address",
-						"name": "_g",
-						"type": "address"
-					},
-					{
-						"internalType": "address",
-						"name": "_h",
-						"type": "address"
-					},
-					{
-						"internalType": "address",
-						"name": "_i",
-						"type": "address"
-					},
-					{
-						"internalType": "address",
-						"name": "_j",
-						"type": "address"
 					},
 					{
 						"internalType": "address",
@@ -327,47 +269,6 @@
 					}
 				],
 				"name": "AIRDROP_Mint14",
-				"outputs": [],
-				"stateMutability": "nonpayable",
-				"type": "function"
-			},
-			{
-				"inputs": [
-					{
-						"internalType": "address",
-						"name": "_a",
-						"type": "address"
-					},
-					{
-						"internalType": "address",
-						"name": "_b",
-						"type": "address"
-					}
-				],
-				"name": "AIRDROP_Mint2",
-				"outputs": [],
-				"stateMutability": "nonpayable",
-				"type": "function"
-			},
-			{
-				"inputs": [
-					{
-						"internalType": "address",
-						"name": "_a",
-						"type": "address"
-					},
-					{
-						"internalType": "address",
-						"name": "_b",
-						"type": "address"
-					},
-					{
-						"internalType": "address",
-						"name": "_c",
-						"type": "address"
-					}
-				],
-				"name": "AIRDROP_Mint3",
 				"outputs": [],
 				"stateMutability": "nonpayable",
 				"type": "function"
@@ -420,6 +321,13 @@
 			},
 			{
 				"inputs": [],
+				"name": "BUY_PRUF",
+				"outputs": [],
+				"stateMutability": "payable",
+				"type": "function"
+			},
+			{
+				"inputs": [],
 				"name": "DEFAULT_ADMIN_ROLE",
 				"outputs": [
 					{
@@ -442,13 +350,6 @@
 					}
 				],
 				"stateMutability": "view",
-				"type": "function"
-			},
-			{
-				"inputs": [],
-				"name": "PRUF_PRESALE",
-				"outputs": [],
-				"stateMutability": "payable",
 				"type": "function"
 			},
 			{
@@ -888,11 +789,11 @@
 			]
 		},
 		"localhost/PRUF/PRUF_TRUFFLE/contracts/PRUF_PRESALE.sol": {
-			"keccak256": "0xd93820bb00baa25ff2784f018219e8befe42e8cb2b35bfb42ad35f969790c051",
+			"keccak256": "0x936feee4421acd2f7ccbd611f610d31ea6a645987f4ceeff5884ac0665282bd4",
 			"license": "UNLICENSED",
 			"urls": [
-				"bzz-raw://159778406914efe440e260b1baafbe1460dfb23977e1ff71d3c21079fef1e2a1",
-				"dweb:/ipfs/QmPeKqGWi8p5D3Rr3SD5bBdYaUDAY9L7r9Wtwyxs1TYGhR"
+				"bzz-raw://9ca73e1f25c842ae0ce7d59d8a8ef54c1ce3f1097c0b0ecda2dcc7893072cda3",
+				"dweb:/ipfs/QmRXUgqs9pq8cjG4kS67U2Q4mXeTMSdbUhWzAigrjFLUip"
 			]
 		}
 	},
