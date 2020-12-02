@@ -187,7 +187,7 @@ contract UTIL_TKN is
      */
     function setColdWallet() external {
         //---------------------------------------------------DPS:TEST : NEW
-        coldWallet[msg.sender] = 170;
+        coldWallet[_msgSender()] = 170;
     }
 
     /*
@@ -197,7 +197,7 @@ contract UTIL_TKN is
      */
     function unSetColdWallet() external {
         //---------------------------------------------------DPS:TEST : NEW
-        coldWallet[msg.sender] = 0;
+        coldWallet[_msgSender()] = 0;
     }
 
     /*
@@ -360,7 +360,7 @@ contract UTIL_TKN is
 
         require(
             (!paused()) || hasRole(PAUSER_ROLE, _msgSender()),
-            "ERC20Pausable: token transfer while paused"
+            "ERC20Pausable: function unavailble while contract is paused"
         );
     }
 }
