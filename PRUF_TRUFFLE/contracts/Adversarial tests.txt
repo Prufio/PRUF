@@ -1,0 +1,205 @@
+ADVERSARIAL TEST TO WRITE:
+ACCOUNT A - contract creator
+ACCOUNT B - NONPERMISSIONED
+ACCOUNT C - NONPERMISSIONED
+
+A: Launch UTIL_TKN and PRESALE
+A: set airdrop amount to 10p
+A: set presale limit to 11p
+
+A: airdrop B 10p
+--- A:0 B:10 C:0
+
+A: whitelist C for 1 eth max, .1 eth min 10p/eth
+B: buy 0.1 eth of pruf -- FAIL EXCEEDS PRESALE
+C: buy 0.1 eth of pruf -- SUCCEEDS
+--- A:0 B:10 C:1
+
+B: buy 0.01 eth of pruf -- FAIL below minimum
+C: buy 0.01 eth of pruf -- SUCCEEDS
+--- A:0 B:10 C:1.1
+
+C: buy 0.09 eth of pruf -- SUCCEEDS
+--- A:0 B:10 C:2
+
+C: buy .9 eth of pruf -- FAIL exceeds allotment
+C: buy .8 eth of pruf -- SUCCEEDS
+--- A:0 B:10 C:10
+
+C: buy 0.01 eth of pruf -- FAIL exceeds allotment
+A: whitelist C for 2 eth max, .1 eth min 10p/eth
+C: buy 0.01 eth of pruf -- SUCCEEDS
+--- A:0 B:10 C:10.1
+
+C: buy 0.1 eth of pruf -- FAIL EXCEEDS PRESALE
+C: buy 0.09 eth of pruf -- SUCCEEDS
+--- A:0 B:10 C:11
+
+C: buy 0.01 eth of pruf -- FAIL EXCEEDS PRESALE 
+A: set presale limit to 1p
+C: buy 0.01 eth of pruf -- SUCCEEDS
+--- A:0 B:10 C:11.1
+
+A: whitelist B for 1 eth max, .1 eth min 10p/eth
+B: buy 0.01 eth of pruf -- SUCCEEDS
+--- A:0 B:10.1 C:11.1
+
+B: buy 0.1 eth of pruf -- FAIL EXCEEDS PRESALE
+C: buy 0.1 eth of pruf -- FAIL EXCEEDS PRESALE
+B: buy 0.04 eth of pruf -- SUCCEEDS  
+--- A:0 B:10.5 C:11.1
+
+C: buy 0.04 eth of pruf -- SUCCEEDS
+--- A:0 B:10.5 C:11.5
+
+B: buy 0.01 eth of pruf -- FAIL EXCEEDS PRESALE
+C: buy 0.01 eth of pruf -- FAIL EXCEEDS PRESALE
+A: set presale limit to 1p
+
+B: buy 0.05 eth of pruf -- SUCCEEDS  
+--- A:0 B:11 C:11.1
+B: buy 0.01 eth of pruf -- FAIL exceeds allotment
+
+In UTIL_TKN:
+
+A: attempt burnFrom, transfer, transferFrom with B's account as the "from" target (FAIL)
+
+A: give TRUSTED_AGENT_ROLE to C
+
+A: payForService(
+       address B,
+       address A,
+       uint256 0.05p,
+       address C,
+       uint256 0.05p
+   ) -- FAIL must have TRUSTED_AGENT_ROLE
+
+C: payForService(
+       address B,
+       address A,
+       uint256 0.05p,
+       address C,
+       uint256 0.05p
+   ) -- SUCCEEDS
+--- A:.05 B:11 C:11.15
+
+B: trustedAgentBurn(
+       address C,
+       uint256 1p,
+   ) -- FAIL must have TRUSTED_AGENT_ROLE
+
+C: trustedAgentBurn(
+       address B,
+       uint256 1p,
+   ) -- SUCCEEDS
+--- A:.05 B:10 C:11.15
+
+A: trustedAgentTransfer(
+       address _from C,
+       address _to A,
+       uint256 .15p
+   ) -- FAIL must have TRUSTED_AGENT_ROLE
+
+C: trustedAgentTransfer(
+       address _from B,
+       address _to A,
+       uint256 .95p
+   ) -- SUCCEEDS
+   --- A:1 B:9.05 C:11.15
+
+A: REVOKE TRUSTED_AGENT_ROLE from C
+
+C: trustedAgentTransfer(
+       address _from B,
+       address _to A,
+       uint256 .95p
+   ) -- FAIL must have TRUSTED_AGENT_ROLE
+
+A: give TRUSTED_AGENT_ROLE to B:
+
+B: trustedAgentTransfer(
+       address _from C,
+       address _to A,
+       uint256 .15p
+   ) -- SUCCEEDS
+   --- A:1.15 B:9.05 C:11
+
+B: trustedAgentTransfer(
+       address _from B,
+       address _to A,
+       uint256 .05p
+   ) -- SUCCEEDS
+   --- A:1.2 B:9 C:11
+
+C: setColdWallet()
+
+B: trustedAgentTransfer(
+       address _from C,
+       address _to A,
+       uint256 1p
+   ) -- FAIL Cold Wallet
+
+B: trustedAgentBurn(
+       address C,
+       uint256 1p,
+   ) -- FAIL Cold Wallet
+
+B: payForService(
+       address C,
+       address A,
+       uint256 1p,
+       address B,
+       uint256 1p
+   ) -- FAIL Cold Wallet
+
+C: unSetColdWallet()
+
+B: trustedAgentTransfer(
+       address _from C,
+       address _to A,
+       uint256 1p
+   ) -- SUCCEEDS
+--- A:2.2 B:9 C:10
+
+B: trustedAgentBurn(
+       address C,
+       uint256 1p,
+   ) -- SUCCEEDS
+--- A:2.2 B:9 C:9
+
+B: payForService(
+       address C,
+       address A,
+       uint256 1p,
+       address B,
+       uint256 1p
+   ) -- SUCCEEDS
+--- A:3.2 B:10 C:7
+
+B: adminKillTrustedAgent FAIL must have DEFAULT_ADMIN_ROLE
+
+A: adminKillTrustedAgent -- SUCCEEDS
+
+B: trustedAgentTransfer(
+       address _from C,
+       address _to A,
+       uint256 1p
+   ) -- FAIL Trusted Agent function permanently disabled
+
+B: trustedAgentBurn(
+       address C,
+       uint256 1p,
+   ) -- FAIL Trusted Agent function permanently disabled
+
+B: payForService(
+       address C,
+       address A,
+       uint256 1p,
+       address B,
+       uint256 1p
+   ) -- FAIL Trusted Agent function permanently disabled
+
+
+
+
+ 

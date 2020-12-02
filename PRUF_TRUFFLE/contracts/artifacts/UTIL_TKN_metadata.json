@@ -1114,11 +1114,11 @@
 			]
 		},
 		"localhost/PRUF/PRUF_TRUFFLE/contracts/PRUF_UTIL_TKN.sol": {
-			"keccak256": "0x0c00c4d56bcd1c8d8bd9a6974cfc7782083f7d603e6c17ca639a4a01da790f96",
+			"keccak256": "0x47afb6c6b3ae38055822baaa6e2358b3b4b734ec03af040157727f51524439e4",
 			"license": "UNLICENSED",
 			"urls": [
-				"bzz-raw://464af2a500534fb836820d28744973768ec1a595bdd4b833a2755d8bc56181b1",
-				"dweb:/ipfs/Qmd1GB3Gs8dk7o2synAEKmzLr3dSVUhka8BKkZKyfbu8Dm"
+				"bzz-raw://435b740ee1a1c94223b77483c8311782e49019a0c05472acbda1af7819ce1b08",
+				"dweb:/ipfs/QmV5HC5LyHnDKnzDmq1SuYrbSPTTWYCXksHSTmRaMuPnNL"
 			]
 		}
 	},

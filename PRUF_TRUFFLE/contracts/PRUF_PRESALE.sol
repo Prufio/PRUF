@@ -347,7 +347,7 @@ contract PRESALE is ReentrancyGuard, Pausable, AccessControl {
         presaleCount = amountToMint.add(presaleCount);
 
         whiteList[msg.sender].maxEth = _whiteList.maxEth.sub(msg.value); //reduce max purchasable by purchased amount
-        whiteList[msg.sender].maxEth = 0; //Remove minimum , as minimum buy is already met.
+        whiteList[msg.sender].minEth = 0; //Remove minimum , as minimum buy is already met.
         //^^^^^^^effects^^^^^^^^^
 
         UTIL_TKN.mint(msg.sender, amountToMint);
