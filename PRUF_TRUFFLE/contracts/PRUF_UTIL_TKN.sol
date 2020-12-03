@@ -314,7 +314,11 @@ contract UTIL_TKN is
      *
      * - the caller must have the `MINTER_ROLE`.
      */
-    function mint(address to, uint256 _amount) public virtual isMinter {
+    function mint(address to, uint256 _amount) public virtual {
+        require(
+            hasRole(MINTER_ROLE, _msgSender()),
+            "PRuF:MOD: must have MINTER_ROLE"
+        );
         //^^^^^^^checks^^^^^^^^^
 
         _mint(to, _amount);

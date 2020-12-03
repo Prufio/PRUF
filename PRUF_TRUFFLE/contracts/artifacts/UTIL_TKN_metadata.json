@@ -402,6 +402,19 @@
 			},
 			{
 				"inputs": [],
+				"name": "cap",
+				"outputs": [
+					{
+						"internalType": "uint256",
+						"name": "",
+						"type": "uint256"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [],
 				"name": "decimals",
 				"outputs": [
 					{
@@ -574,19 +587,6 @@
 					}
 				],
 				"name": "isColdWallet",
-				"outputs": [
-					{
-						"internalType": "uint256",
-						"name": "",
-						"type": "uint256"
-					}
-				],
-				"stateMutability": "view",
-				"type": "function"
-			},
-			{
-				"inputs": [],
-				"name": "maxSupply",
 				"outputs": [
 					{
 						"internalType": "uint256",
@@ -913,6 +913,9 @@
 				"burnFrom(address,uint256)": {
 					"details": "Destroys `amount` tokens from `account`, deducting from the caller's allowance. See {ERC20-_burn} and {ERC20-allowance}. Requirements: - the caller must have allowance for ``accounts``'s tokens of at least `amount`."
 				},
+				"cap()": {
+					"details": "Returns the cap on the token's total supply."
+				},
 				"constructor": {
 					"details": "Grants `DEFAULT_ADMIN_ROLE`, `MINTER_ROLE` and `PAUSER_ROLE` to the account that deploys the contract. See {ERC20-constructor}."
 				},
@@ -1034,11 +1037,11 @@
 			]
 		},
 		"localhost/PRUF/PRUF_TRUFFLE/contracts/Imports/token/ERC20/ERC20.sol": {
-			"keccak256": "0x2e0756aca614c75bd49788139ebb5a0251300ecba3a589e129e91a22d433a432",
+			"keccak256": "0xc50b08e3831a9e38502c2a3374790fb04fc2e38cfa50a70062a01492ea817bee",
 			"license": "MIT",
 			"urls": [
-				"bzz-raw://e441b2f45bb0313c8bf5f890764d94ae99f54ce7443e6ebad42e4440addd1d3f",
-				"dweb:/ipfs/Qmf7SrraeAhkbWGbzjvQoE3GLdHPyX3JMhGScBPo8qXNWb"
+				"bzz-raw://c12a35c570332ddb41156935ae7215d9817f2380af4ca7ceaa64218df35ff4ce",
+				"dweb:/ipfs/QmXkh3RNvrgrMcrjku3k9eNmWtN7NzaS832r8VyzMCJPU2"
 			]
 		},
 		"localhost/PRUF/PRUF_TRUFFLE/contracts/Imports/token/ERC20/ERC20Burnable.sol": {
@@ -1106,19 +1109,19 @@
 			]
 		},
 		"localhost/PRUF/PRUF_TRUFFLE/contracts/PRUF_INTERFACES.sol": {
-			"keccak256": "0x6201ee4c3345f3411148db0c68f9235b80e26675cfd00e39a1582c8404a677a1",
+			"keccak256": "0xd4d96ff673b6b0662c8f805f7dac573126e84d9bb8b0fd8a939887c3d5d3a635",
 			"license": "UNLICENSED",
 			"urls": [
-				"bzz-raw://31c38b015073bc3b7d23041694078557de422732742bc12925a57a4a30a3df76",
-				"dweb:/ipfs/QmRgpREMff6fKyNV8yLjst4jnT74FstUB8QNgxdHGWj8FX"
+				"bzz-raw://625c90f31d1518c897091f5b28723cd162bf3caf821e5cbff01df52bc853df5e",
+				"dweb:/ipfs/QmXuDDfefPqyrHf6JmkpYo2Gyieuh9fncM7LVRSoR7ZFp1"
 			]
 		},
 		"localhost/PRUF/PRUF_TRUFFLE/contracts/PRUF_UTIL_TKN.sol": {
-			"keccak256": "0x47afb6c6b3ae38055822baaa6e2358b3b4b734ec03af040157727f51524439e4",
+			"keccak256": "0x125a56b25b371bc403b494f2d0264f301743b3b9ed1d8b6bc8eecfe8de0dab07",
 			"license": "UNLICENSED",
 			"urls": [
-				"bzz-raw://435b740ee1a1c94223b77483c8311782e49019a0c05472acbda1af7819ce1b08",
-				"dweb:/ipfs/QmV5HC5LyHnDKnzDmq1SuYrbSPTTWYCXksHSTmRaMuPnNL"
+				"bzz-raw://bb277ea6ed3530ae46f7de45a74969155e803abf12d0d08a89d7b60d2c727588",
+				"dweb:/ipfs/QmUsFCDq3Dh3zwF17LnCEr2q5U6dNy994134iYnkgXA9fq"
 			]
 		}
 	},

@@ -781,11 +781,11 @@
 			]
 		},
 		"localhost/PRUF/PRUF_TRUFFLE/contracts/PRUF_INTERFACES.sol": {
-			"keccak256": "0x6201ee4c3345f3411148db0c68f9235b80e26675cfd00e39a1582c8404a677a1",
+			"keccak256": "0xd4d96ff673b6b0662c8f805f7dac573126e84d9bb8b0fd8a939887c3d5d3a635",
 			"license": "UNLICENSED",
 			"urls": [
-				"bzz-raw://31c38b015073bc3b7d23041694078557de422732742bc12925a57a4a30a3df76",
-				"dweb:/ipfs/QmRgpREMff6fKyNV8yLjst4jnT74FstUB8QNgxdHGWj8FX"
+				"bzz-raw://625c90f31d1518c897091f5b28723cd162bf3caf821e5cbff01df52bc853df5e",
+				"dweb:/ipfs/QmXuDDfefPqyrHf6JmkpYo2Gyieuh9fncM7LVRSoR7ZFp1"
 			]
 		},
 		"localhost/PRUF/PRUF_TRUFFLE/contracts/PRUF_PRESALE.sol": {

@@ -44,7 +44,6 @@ A: whitelist B for 0.1 ETH max, .01 eth min 10p/eth
 B: buy 0.01 eth of pruf -- SUCCEEDS
 --- A:0 B:10.1 C:11.1
 
-B: buy 0.1 eth of pruf -- FAIL EXCEEDS PRESALE
 C: buy 0.1 eth of pruf -- FAIL EXCEEDS PRESALE
 B: buy 0.04 eth of pruf -- SUCCEEDS  
 --- A:0 B:10.5 C:11.1
