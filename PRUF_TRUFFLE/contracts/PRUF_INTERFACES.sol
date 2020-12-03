@@ -85,33 +85,10 @@ interface UTIL_TKN_Interface {
     ) external;
 
     /*
-     * @dev return current AC token index pointer
+     * @dev Take a balance snapshot, returns snapshot ID
+     * - the caller must have the `SNAPSHOT_ROLE`.
      */
-    function currentACtokenInfo() external view returns (uint256, uint256);
-
-    /**
-     * @dev See {IERC20-transfer}. Increase payment share of an asset class
-     *
-     * Requirements:
-     * - `recipient` cannot be the zero address.
-     * - the caller must have a balance of at least `amount`.
-     */
-    function increaseShare(uint32 _assetClass, uint256 _amount)
-        external
-        returns (bool);
-
-    /**
-     * @dev Burns (amout) tokens and mints a new asset class token to the caller address
-     *
-     * Requirements:
-     * - the caller must have a balance of at least `amount`.
-     */
-    function purchaseACtoken(
-        string calldata _name,
-        uint32 _assetClassRoot,
-        uint8 _custodyType,
-        bytes32 _IPFS
-    ) external returns (uint256);
+    function takeSnapshot() external returns (uint256);
 
     /**
      * @dev Creates `amount` new tokens for `to`.
@@ -123,30 +100,6 @@ interface UTIL_TKN_Interface {
      * - the caller must have the `MINTER_ROLE`.
      */
     function mint(address to, uint256 amount) external;
-
-    /**
-     * @dev Returns Max Supply
-     *
-     */
-    function maxSupply() external pure returns (uint256);
-
-    /*
-     * @dev Take a balance snapshot, returns snapshot ID
-     * - the caller must have the `SNAPSHOT_ROLE`.
-     */
-    function takeSnapshot() external returns (uint256);
-
-    /**
-     * @dev Retrieves the balance of `account` at the time `snapshotId` was created.
-     */
-    function balanceOfAt(address account, uint256 snapshotId)
-        external
-        returns (uint256);
-
-    /**
-     * @dev Retrieves the total supply at the time `snapshotId` was created.
-     */
-    function totalSupplyAt(uint256 snapshotId) external returns (uint256);
 
     /**
      * @dev Pauses all token transfers.
@@ -169,6 +122,20 @@ interface UTIL_TKN_Interface {
      * - the caller must have the `PAUSER_ROLE`.
      */
     function unpause() external;
+
+    /**
+     * @dev Retrieves the balance of `account` at the time `snapshotId` was created.
+     */
+    function balanceOfAt(address account, uint256 snapshotId)
+        external
+        returns (uint256);
+
+    /**
+     * @dev Retrieves the total supply at the time `snapshotId` was created.
+     */
+    function totalSupplyAt(uint256 snapshotId) external returns (uint256);
+
+   
 
     /**
      * @dev Returns the amount of tokens in existence.
@@ -233,7 +200,134 @@ interface UTIL_TKN_Interface {
         uint256 amount
     ) external returns (bool);
 
+    /**
+     * @dev Atomically increases the allowance granted to `spender` by the caller.
+     *
+     * This is an alternative to {approve} that can be used as a mitigation for
+     * problems described in {IERC20-approve}.
+     *
+     * Emits an {Approval} event indicating the updated allowance.
+     *
+     * Requirements:
+     *
+     * - `spender` cannot be the zero address.
+     */
+    function increaseAllowance(address spender, uint256 addedValue) external returns (bool); 
+    
 
+    /**
+     * @dev Atomically decreases the allowance granted to `spender` by the caller.
+     *
+     * This is an alternative to {approve} that can be used as a mitigation for
+     * problems described in {IERC20-approve}.
+     *
+     * Emits an {Approval} event indicating the updated allowance.
+     *
+     * Requirements:
+     *
+     * - `spender` cannot be the zero address.
+     * - `spender` must have allowance for the caller of at least
+     * `subtractedValue`.
+     */
+    function decreaseAllowance(address spender, uint256 subtractedValue) external returns (bool);
+
+    /**
+     * @dev Destroys `amount` tokens from the caller.
+     *
+     * See {ERC20-_burn}.
+     */
+    function burn(uint256 amount) external; 
+
+    /**
+     * @dev Destroys `amount` tokens from `account`, deducting from the caller's
+     * allowance.
+     *
+     * See {ERC20-_burn} and {ERC20-allowance}.
+     *
+     * Requirements:
+     *
+     * - the caller must have allowance for ``accounts``'s tokens of at least
+     * `amount`.
+     */
+    function burnFrom(address account, uint256 amount) external;
+
+    /**
+     * @dev Returns the cap on the token's total supply.
+     */
+    function cap() external returns (uint256);
+
+        /**
+     * @dev Returns `true` if `account` has been granted `role`.
+     */
+    function hasRole(bytes32 role, address account) external returns (bool);
+
+    /**
+     * @dev Returns the number of accounts that have `role`. Can be used
+     * together with {getRoleMember} to enumerate all bearers of a role.
+     */
+    function getRoleMemberCount(bytes32 role) external returns (uint256);
+
+    /**
+     * @dev Returns one of the accounts that have `role`. `index` must be a
+     * value between 0 and {getRoleMemberCount}, non-inclusive.
+     *
+     * Role bearers are not sorted in any particular way, and their ordering may
+     * change at any point.
+     *
+     * WARNING: When using {getRoleMember} and {getRoleMemberCount}, make sure
+     * you perform all queries on the same block. See the following
+     * https://forum.openzeppelin.com/t/iterating-over-elements-on-enumerableset-in-openzeppelin-contracts/2296[forum post]
+     * for more information.
+     */
+    function getRoleMember(bytes32 role, uint256 index) external returns (address);
+
+    /**
+     * @dev Returns the admin role that controls `role`. See {grantRole} and
+     * {revokeRole}.
+     *
+     * To change a role's admin, use {_setRoleAdmin}.
+     */
+    function getRoleAdmin(bytes32 role) external returns (bytes32);
+
+    /**
+     * @dev Grants `role` to `account`.
+     *
+     * If `account` had not been already granted `role`, emits a {RoleGranted}
+     * event.
+     *
+     * Requirements:
+     *
+     * - the caller must have ``role``'s admin role.
+     */
+    function grantRole(bytes32 role, address account) external;
+
+    /**
+     * @dev Revokes `role` from `account`.
+     *
+     * If `account` had been granted `role`, emits a {RoleRevoked} event.
+     *
+     * Requirements:
+     *
+     * - the caller must have ``role``'s admin role.
+     */
+    function revokeRole(bytes32 role, address account) external;
+
+    /**
+     * @dev Revokes `role` from the calling account.
+     *
+     * Roles are often managed via {grantRole} and {revokeRole}: this function's
+     * purpose is to provide a mechanism for accounts to lose their privileges
+     * if they are compromised (such as when a trusted device is misplaced).
+     *
+     * If the calling account had been granted `role`, emits a {RoleRevoked}
+     * event.
+     *
+     * Requirements:
+     *
+     * - the caller must be `account`.
+     */
+    function renounceRole(bytes32 role, address account) external;
+       
 }
 
 //------------------------------------------------------------------------------------------------

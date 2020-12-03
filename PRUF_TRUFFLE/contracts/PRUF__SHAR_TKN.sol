@@ -47,7 +47,7 @@ contract SharToken is
         _setupRole(PAUSER_ROLE, _msgSender());
     }
 
-    uint256 public maxSupply =  100;  //set max supply (100000?)
+    uint256 public cap =  100;  //set max supply (100000?)
 
     /**
      * @dev Creates `amount` new tokens for `to`.
@@ -64,7 +64,7 @@ contract SharToken is
             "SharToken: must have minter role to mint"
         );
         require(
-            totalSupply().add(amount) <= maxSupply,
+            totalSupply().add(amount) <= cap,
             "SharToken: order exceeds max supply"
         );
 

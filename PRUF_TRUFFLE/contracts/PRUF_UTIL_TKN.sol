@@ -58,9 +58,11 @@ contract UTIL_TKN is
     bytes32 public constant PAUSER_ROLE = keccak256("PAUSER_ROLE");
     bytes32 public constant SNAPSHOT_ROLE = keccak256("SNAPSHOT_ROLE");
     bytes32 public constant PAYABLE_ROLE = keccak256("PAYABLE_ROLE");
-    bytes32 public constant TRUSTED_AGENT_ROLE = keccak256("TRUSTED_AGENT_ROLE");
+    bytes32 public constant TRUSTED_AGENT_ROLE = keccak256(
+        "TRUSTED_AGENT_ROLE"
+    );
 
-    uint256 public constant maxSupply = 4000000000000000000000000000; //4billion max supply
+    uint256 private _cap = 4000000000000000000000000000; //4billion max supply
 
     address private sharesAddress = address(0);
 
@@ -167,9 +169,9 @@ contract UTIL_TKN is
      * @dev ----------------------------------------PERMANANTLY !!!  Kills trusted agent and payable functions
      * this will break the functionality of current payment mechanisms.
      *
-     * The workaround for this is to create an allowance for pruf contracts for a single or multiple payments, 
+     * The workaround for this is to create an allowance for pruf contracts for a single or multiple payments,
      * either ahead of time "loading up your PRUF account" or on demand with an operation. On demand will use quite a bit more gas.
-     * "preloading" should be pretty gas efficient, but will add an extra step to the workflow, requiring users to have sufficient 
+     * "preloading" should be pretty gas efficient, but will add an extra step to the workflow, requiring users to have sufficient
      * PRuF "banked" in an allowance for use in the system.
      *
      */
@@ -243,10 +245,12 @@ contract UTIL_TKN is
         );
         //^^^^^^^checks^^^^^^^^^
 
-        if (sharesAddress == address(0)) { //IF SHARES ADDRESS IS NOT SET
+        if (sharesAddress == address(0)) {
+            //IF SHARES ADDRESS IS NOT SET
             _transfer(_senderAddress, _rootAddress, _rootPrice);
             _transfer(_senderAddress, _ACTHaddress, _ACTHprice);
-        } else { //IF SHARES ADDRESS IS SET
+        } else {
+            //IF SHARES ADDRESS IS SET
             uint256 sharesShare = _rootPrice.div(uint256(4)); // sharesShare is 0.25 share of root costs
             uint256 rootShare = _rootPrice.sub(sharesShare); // adjust root price to be root price - 0.25 share
 
@@ -311,10 +315,6 @@ contract UTIL_TKN is
      * - the caller must have the `MINTER_ROLE`.
      */
     function mint(address to, uint256 _amount) public virtual isMinter {
-        require(
-            _amount.add(totalSupply()) <= maxSupply,
-            "PRuF:M: mint request exceeds max supply"
-        );
         //^^^^^^^checks^^^^^^^^^
 
         _mint(to, _amount);
@@ -351,7 +351,17 @@ contract UTIL_TKN is
         //^^^^^^^effects^^^^^^^^
     }
 
-    function _beforeTokenTransfer( //all paused functions are blocked here, unless caller has "pauser" role
+    /**
+     * @dev Returns the cap on the token's total supply.
+     */
+    function cap() public view returns (uint256) {
+        return _cap;
+    }
+
+    /**
+     * @dev all paused functions are blocked here, unless caller has "pauser" role
+     */
+    function _beforeTokenTransfer(
         address from,
         address to,
         uint256 amount
@@ -362,5 +372,12 @@ contract UTIL_TKN is
             (!paused()) || hasRole(PAUSER_ROLE, _msgSender()),
             "ERC20Pausable: function unavailble while contract is paused"
         );
+        if (from == address(0)) {
+            // When minting tokens
+            require(
+                totalSupply().add(amount) <= _cap,
+                "ERC20Capped: cap exceeded"
+            );
+        }
     }
 }
