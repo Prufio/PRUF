@@ -1,0 +1,1399 @@
+const PRUF_HELPER = artifacts.require('Helper');
+const PRUF_UTIL_TKN = artifacts.require('UTIL_TKN');
+const BUY_PRUF = artifacts.require('PRESALE');
+
+let PRESALE;
+let UTIL_TKN;
+let Helper;
+
+let account000 = '0x0000000000000000000000000000000000000000'
+
+let airdropRoleB32;
+let minterRoleB32;
+let payableRoleB32;
+let trustedAgentRoleB32;
+
+contract('PRESALE', accounts => {
+
+    console.log('//**************************BEGIN BOOTSTRAP**************************//')
+
+    const A = accounts[0];
+    const B = accounts[1];
+    const C = accounts[2];
+    const account4 = accounts[3];
+    const account5 = accounts[4];
+    const account6 = accounts[5];
+    const account7 = accounts[6];
+    const account8 = accounts[7];
+    const account9 = accounts[8];
+    const A0 = accounts[9];
+
+
+    it('Should deploy PRUF_HELPER', async () => {
+        const PRUF_HELPER_TEST = await PRUF_HELPER.deployed({ from: A });
+        console.log(PRUF_HELPER_TEST.address);
+        assert(PRUF_HELPER_TEST.address !== '')
+        Helper = PRUF_HELPER_TEST;
+    })
+
+
+    it('Should deploy UTIL_TKN', async () => {
+        const PRUF_UTIL_TKN_TEST = await PRUF_UTIL_TKN.deployed({ from: A });
+        console.log(PRUF_UTIL_TKN_TEST.address);
+        assert(PRUF_UTIL_TKN_TEST.address !== '')
+        UTIL_TKN = PRUF_UTIL_TKN_TEST;
+    })
+
+
+    it('Should deploy PRESALE', async () => {
+        const BUY_PRUF_TEST = await BUY_PRUF.deployed({ from: A });
+        console.log(BUY_PRUF_TEST.address);
+        assert(BUY_PRUF_TEST.address !== '');
+        PRESALE = BUY_PRUF_TEST;
+    })
+
+    
+    it('Should build all variables with Helper', async () => {
+
+        airdropRoleB32 = await Helper.getStringHash(
+        'AIRDROP_ROLE'
+    )
+    
+        minterRoleB32 = await Helper.getStringHash(
+        'MINTER_ROLE'
+    )
+    
+        payableRoleB32 = await Helper.getStringHash(
+        'PAYABLE_ROLE'
+    )
+    
+        trustedAgentRoleB32 = await Helper.getStringHash(
+        'TRUSTED_AGENT_ROLE'
+    )
+
+    })
+
+
+    it('Should give PRESALE MINTER_ROLE', async () => {
+        return UTIL_TKN.grantRole(
+            minterRoleB32,
+            PRESALE.address,
+            { from: A })
+    })
+
+    //1
+    it('Should fail because caller is not admin', async () => {
+        console.log('//**************************END BOOTSTRAP**************************//')
+        console.log('//**************************BEGIN PRESALE_MAL (26)**************************//')
+
+        return PRESALE.ADMIN_setTokenContract(
+            UTIL_TKN.address,
+            { from: B })
+    })
+
+
+    it('Should set ADMIN_setTokenContract to UTIL_TKN', async () => {
+        return PRESALE.ADMIN_setTokenContract(
+            UTIL_TKN.address,
+            { from: A })
+    })
+
+
+    it('Should set payment address', async () => {
+        return PRESALE.ADMIN_setPaymentAddress(
+            account9,
+            { from: A })
+    })
+
+
+    it('Should set airdropAmount to 10', async () => {
+        return PRESALE.ADMIN_setAirDropAmount(
+            "10000000000000000000",
+            { from: A })
+    })
+
+
+    it('Should set PresaleLimit to 11', async () => {
+        return PRESALE.ADMIN_setPresaleLimit(
+            "11000000000000000000",
+            { from: A })
+    })
+
+
+    it('Should airdrop 10 PRuF to B', async () => {
+        return PRESALE.AIRDROP_Mint1(
+            B,
+            { from: A })
+    })
+
+
+    it("Should check balanceOf A (0)", async () => {
+        
+
+        var Balance = [];
+
+        return await UTIL_TKN.balanceOf(A, { from: A }, function (_err, _result) {
+            if (_err) { }
+            else {
+                Balance = Object.values(_result)
+                console.log(Balance)
+            }
+        })
+    })
+
+
+    it("Should check balanceOf B (10)", async () => {
+        
+
+        var Balance = [];
+
+        return await UTIL_TKN.balanceOf(B, { from: A }, function (_err, _result) {
+            if (_err) { }
+            else {
+                Balance = Object.values(_result)
+                console.log(Balance)
+            }
+        })
+    })
+
+
+    it("Should check balanceOf C (0)", async () => {
+        var Balance = [];
+
+        return await UTIL_TKN.balanceOf(C, { from: A }, function (_err, _result) {
+            if (_err) { }
+            else {
+                Balance = Object.values(_result)
+                console.log(Balance)
+            }
+        })
+    })
+
+
+    it('Should whitelist C', async () => {
+        return PRESALE.whitelist(
+            C,
+            "10000000000000000000",
+            "100000000000000000",
+            "1000000000000000000",
+            { from: A })
+    })
+
+    //2
+    it('Should fail because exceeds presale limit', async () => {
+        return PRESALE.BUY_PRUF(
+            { from: B, value: 100000000000000000})
+    })
+
+
+    it('Should purchase 1 to C', async () => {
+        return PRESALE.BUY_PRUF(
+            { from: C, value: 100000000000000000})
+    })
+
+
+    it("Should check balanceOf A (0)", async () => {
+        
+
+        var Balance = [];
+
+        return await UTIL_TKN.balanceOf(A, { from: A }, function (_err, _result) {
+            if (_err) { }
+            else {
+                Balance = Object.values(_result)
+                console.log(Balance)
+            }
+        })
+    })
+
+
+    it("Should check balanceOf B (10)", async () => {
+        
+
+        var Balance = [];
+
+        return await UTIL_TKN.balanceOf(B, { from: A }, function (_err, _result) {
+            if (_err) { }
+            else {
+                Balance = Object.values(_result)
+                console.log(Balance)
+            }
+        })
+    })
+
+
+    it("Should check balanceOf C (1)", async () => {
+        0
+
+        var Balance = [];
+
+        return await UTIL_TKN.balanceOf(C, { from: A }, function (_err, _result) {
+            if (_err) { }
+            else {
+                Balance = Object.values(_result)
+                console.log(Balance)
+            }
+        })
+    })
+
+    //3
+    it('Should fail because under min limit', async () => {
+        return PRESALE.BUY_PRUF(
+            { from: B, value: 10000000000000000})
+    })
+
+
+    it('Should purchase 0.1 to C', async () => {
+        return PRESALE.BUY_PRUF(
+            { from: C, value: 10000000000000000})
+    })
+
+
+    it("Should check balanceOf A (0)", async () => {
+        
+
+        var Balance = [];
+
+        return await UTIL_TKN.balanceOf(A, { from: A }, function (_err, _result) {
+            if (_err) { }
+            else {
+                Balance = Object.values(_result)
+                console.log(Balance)
+            }
+        })
+    })
+
+
+    it("Should check balanceOf B (10)", async () => {
+        
+
+        var Balance = [];
+
+        return await UTIL_TKN.balanceOf(B, { from: A }, function (_err, _result) {
+            if (_err) { }
+            else {
+                Balance = Object.values(_result)
+                console.log(Balance)
+            }
+        })
+    })
+
+
+    it("Should check balanceOf C (1.1)", async () => {
+        0
+
+        var Balance = [];
+
+        return await UTIL_TKN.balanceOf(C, { from: A }, function (_err, _result) {
+            if (_err) { }
+            else {
+                Balance = Object.values(_result)
+                console.log(Balance)
+            }
+        })
+    })
+
+
+    it('Should purchase 0.9 to C', async () => {
+        return PRESALE.BUY_PRUF(
+            { from: C, value: 90000000000000000})
+    })
+
+
+    it("Should check balanceOf A (0)", async () => {
+        
+
+        var Balance = [];
+
+        return await UTIL_TKN.balanceOf(A, { from: A }, function (_err, _result) {
+            if (_err) { }
+            else {
+                Balance = Object.values(_result)
+                console.log(Balance)
+            }
+        })
+    })
+
+
+    it("Should check balanceOf B (10)", async () => {
+        
+
+        var Balance = [];
+
+        return await UTIL_TKN.balanceOf(B, { from: A }, function (_err, _result) {
+            if (_err) { }
+            else {
+                Balance = Object.values(_result)
+                console.log(Balance)
+            }
+        })
+    })
+
+
+    it("Should check balanceOf C (2)", async () => {
+        0
+
+        var Balance = [];
+
+        return await UTIL_TKN.balanceOf(C, { from: A }, function (_err, _result) {
+            if (_err) { }
+            else {
+                Balance = Object.values(_result)
+                console.log(Balance)
+            }
+        })
+    })
+
+    //4
+    it('Should fail because exceeds allotment', async () => {
+        return PRESALE.BUY_PRUF(
+            { from: C, value: 900000000000000000})
+    })
+
+
+    it('Should buy 8 to C', async () => {
+        return PRESALE.BUY_PRUF(
+            { from: C, value: 800000000000000000})
+    })
+
+
+    it("Should check balanceOf A (0)", async () => {
+        
+
+        var Balance = [];
+
+        return await UTIL_TKN.balanceOf(A, { from: A }, function (_err, _result) {
+            if (_err) { }
+            else {
+                Balance = Object.values(_result)
+                console.log(Balance)
+            }
+        })
+    })
+
+
+    it("Should check balanceOf B (10)", async () => {
+        
+
+        var Balance = [];
+
+        return await UTIL_TKN.balanceOf(B, { from: A }, function (_err, _result) {
+            if (_err) { }
+            else {
+                Balance = Object.values(_result)
+                console.log(Balance)
+            }
+        })
+    })
+
+
+    it("Should check balanceOf C (10)", async () => {
+        0
+
+        var Balance = [];
+
+        return await UTIL_TKN.balanceOf(C, { from: A }, function (_err, _result) {
+            if (_err) { }
+            else {
+                Balance = Object.values(_result)
+                console.log(Balance)
+            }
+        })
+    })
+
+    //5
+    it('Should fail because exceeds allotment', async () => {
+        return PRESALE.BUY_PRUF(
+            { from: C, value: 10000000000000000})
+    })
+
+
+    it('Should whitelist C', async () => {
+        return PRESALE.whitelist(
+            C,
+            "10000000000000000000",
+            "10000000000000000",
+            "2000000000000000000",
+            { from: A })
+    })
+
+
+    it('Should buy 0.1 to C', async () => {
+        return PRESALE.BUY_PRUF(
+            { from: C, value: 10000000000000000})
+    })
+
+
+    it("Should check balanceOf A (0)", async () => {
+        
+
+        var Balance = [];
+
+        return await UTIL_TKN.balanceOf(A, { from: A }, function (_err, _result) {
+            if (_err) { }
+            else {
+                Balance = Object.values(_result)
+                console.log(Balance)
+            }
+        })
+    })
+
+
+    it("Should check balanceOf B (10)", async () => {
+        
+
+        var Balance = [];
+
+        return await UTIL_TKN.balanceOf(B, { from: A }, function (_err, _result) {
+            if (_err) { }
+            else {
+                Balance = Object.values(_result)
+                console.log(Balance)
+            }
+        })
+    })
+
+
+    it("Should check balanceOf C (10.1)", async () => {
+        var Balance = [];
+
+        return await UTIL_TKN.balanceOf(C, { from: A }, function (_err, _result) {
+            if (_err) { }
+            else {
+                Balance = Object.values(_result)
+                console.log(Balance)
+            }
+        })
+    })
+
+    //6
+    it('Should fail because exceeds presale limit', async () => {
+        return PRESALE.BUY_PRUF(
+            { from: C, value: 100000000000000000})
+    })
+
+
+    it('Should buy 0.9 to C', async () => {
+        return PRESALE.BUY_PRUF(
+            { from: C, value: 90000000000000000})
+    })
+
+
+    it("Should check balanceOf A (0)", async () => {
+
+        return await UTIL_TKN.balanceOf(A, { from: A }, function (_err, _result) {
+            if (_err) { }
+            else {
+                Balance = Object.values(_result)
+                console.log(Balance)
+            }
+        })
+    })
+
+
+    it("Should check balanceOf B (10)", async () => {
+        var Balance = [];
+
+        return await UTIL_TKN.balanceOf(B, { from: A }, function (_err, _result) {
+            if (_err) { }
+            else {
+                Balance = Object.values(_result)
+                console.log(Balance)
+            }
+        })
+    })
+
+
+    it("Should check balanceOf C (11)", async () => {
+        var Balance = [];
+
+        return await UTIL_TKN.balanceOf(C, { from: A }, function (_err, _result) {
+            if (_err) { }
+            else {
+                Balance = Object.values(_result)
+                console.log(Balance)
+            }
+        })
+    })
+
+    //7
+    it('Should fail because exceeds presale limit', async () => {
+        return PRESALE.BUY_PRUF(
+            { from: C, value: 100000000000000000})
+    })
+
+
+    it('Should set PresaleLimit to 1', async () => {
+        return PRESALE.ADMIN_setPresaleLimit(
+            "1000000000000000000",
+            { from: A })
+    })
+
+
+    it('Should buy 0.1 to C', async () => {
+        return PRESALE.BUY_PRUF(
+            { from: C, value: 10000000000000000})
+    })
+
+
+    it("Should check balanceOf A (0)", async () => {
+        var Balance = [];
+
+        return await UTIL_TKN.balanceOf(A, { from: A }, function (_err, _result) {
+            if (_err) { }
+            else {
+                Balance = Object.values(_result)
+                console.log(Balance)
+            }
+        })
+    })
+
+
+    it("Should check balanceOf B (10)", async () => {
+        var Balance = [];
+
+        return await UTIL_TKN.balanceOf(B, { from: A }, function (_err, _result) {
+            if (_err) { }
+            else {
+                Balance = Object.values(_result)
+                console.log(Balance)
+            }
+        })
+    })
+
+
+    it("Should check balanceOf C (11.1)", async () => {
+        var Balance = [];
+
+        return await UTIL_TKN.balanceOf(C, { from: A }, function (_err, _result) {
+            if (_err) { }
+            else {
+                Balance = Object.values(_result)
+                console.log(Balance)
+            }
+        })
+    })
+
+
+    it('Should whitelist B', async () => {
+        return PRESALE.whitelist(
+            B,
+            "10000000000000000000",
+            "10000000000000000",
+            "100000000000000000",
+            { from: A })
+    })
+
+
+    it('Should buy 0.1 to B', async () => {
+        return PRESALE.BUY_PRUF(
+            { from: B, value: 10000000000000000})
+    })
+
+
+    it("Should check balanceOf A (0)", async () => {
+        var Balance = [];
+
+        return await UTIL_TKN.balanceOf(A, { from: A }, function (_err, _result) {
+            if (_err) { }
+            else {
+                Balance = Object.values(_result)
+                console.log(Balance)
+            }
+        })
+    })
+
+
+    it("Should check balanceOf B (10.1)", async () => {
+        var Balance = [];
+
+        return await UTIL_TKN.balanceOf(B, { from: A }, function (_err, _result) {
+            if (_err) { }
+            else {
+                Balance = Object.values(_result)
+                console.log(Balance)
+            }
+        })
+    })
+
+
+    it("Should check balanceOf C (11.1)", async () => {
+        var Balance = [];
+
+        return await UTIL_TKN.balanceOf(C, { from: A }, function (_err, _result) {
+            if (_err) { }
+            else {
+                Balance = Object.values(_result)
+                console.log(Balance)
+            }
+        })
+    })
+
+    //8
+    it('Should fail because exceeds presale limit', async () => {
+        return PRESALE.BUY_PRUF(
+            { from: C, value: 100000000000000000})
+    })
+
+
+    it('Should buy 0.4 to B', async () => {
+        return PRESALE.BUY_PRUF(
+            { from: B, value: 40000000000000000})
+    })
+
+
+    it("Should check balanceOf A (0)", async () => {
+        var Balance = [];
+
+        return await UTIL_TKN.balanceOf(A, { from: A }, function (_err, _result) {
+            if (_err) { }
+            else {
+                Balance = Object.values(_result)
+                console.log(Balance)
+            }
+        })
+    })
+
+
+    it("Should check balanceOf B (10.5)", async () => {
+        var Balance = [];
+
+        return await UTIL_TKN.balanceOf(B, { from: A }, function (_err, _result) {
+            if (_err) { }
+            else {
+                Balance = Object.values(_result)
+                console.log(Balance)
+            }
+        })
+    })
+
+
+    it("Should check balanceOf C (11.1)", async () => {
+        var Balance = [];
+
+        return await UTIL_TKN.balanceOf(C, { from: A }, function (_err, _result) {
+            if (_err) { }
+            else {
+                Balance = Object.values(_result)
+                console.log(Balance)
+            }
+        })
+    })
+
+
+    it('Should buy 0.4 to C', async () => {
+        return PRESALE.BUY_PRUF(
+            { from: C, value: 40000000000000000})
+    })
+
+
+    it("Should check balanceOf A (0)", async () => {
+        var Balance = [];
+
+        return await UTIL_TKN.balanceOf(A, { from: A }, function (_err, _result) {
+            if (_err) { }
+            else {
+                Balance = Object.values(_result)
+                console.log(Balance)
+            }
+        })
+    })
+
+
+    it("Should check balanceOf B (10.5)", async () => {
+        var Balance = [];
+
+        return await UTIL_TKN.balanceOf(B, { from: A }, function (_err, _result) {
+            if (_err) { }
+            else {
+                Balance = Object.values(_result)
+                console.log(Balance)
+            }
+        })
+    })
+
+
+    it("Should check balanceOf C (11.5)", async () => {
+        0
+        var Balance = [];
+
+        return await UTIL_TKN.balanceOf(C, { from: A }, function (_err, _result) {
+            if (_err) { }
+            else {
+                Balance = Object.values(_result)
+                console.log(Balance)
+            }
+        })
+    })
+
+    //9
+    it('Should fail because exceeds presale limit', async () => {
+        return PRESALE.BUY_PRUF(
+            { from: B, value: 10000000000000000})
+    })
+
+    //10
+    it('Should fail because exceeds presale limit', async () => {
+        return PRESALE.BUY_PRUF(
+            { from: C, value: 10000000000000000})
+    })
+
+
+    it('Should set PresaleLimit to 1', async () => {
+        return PRESALE.ADMIN_setPresaleLimit(
+            "1000000000000000000",
+            { from: A })
+    })
+
+
+    it('Should buy 0.5 to B', async () => {
+        return PRESALE.BUY_PRUF(
+            { from: B, value: 50000000000000000})
+    })
+
+
+    it("Should check balanceOf A (0)", async () => {
+        var Balance = [];
+
+        return await UTIL_TKN.balanceOf(A, { from: A }, function (_err, _result) {
+            if (_err) { }
+            else {
+                Balance = Object.values(_result)
+                console.log(Balance)
+            }
+        })
+    })
+
+
+    it("Should check balanceOf B (11)", async () => {
+        
+
+        var Balance = [];
+
+        return await UTIL_TKN.balanceOf(B, { from: A }, function (_err, _result) {
+            if (_err) { }
+            else {
+                Balance = Object.values(_result)
+                console.log(Balance)
+            }
+        })
+    })
+
+
+    it("Should check balanceOf C (11.5)", async () => {
+
+        var Balance = [];
+
+        return await UTIL_TKN.balanceOf(C, { from: A }, function (_err, _result) {
+            if (_err) { }
+            else {
+                Balance = Object.values(_result)
+                console.log(Balance)
+            }
+        })
+    })
+
+    //11
+    it('Should fail because exceeds allotment', async () => {
+        return PRESALE.BUY_PRUF(
+            { from: B, value: 10000000000000000})
+    })
+
+
+    //12
+    it('Should fail because exceeds allowance', async () => {
+        return UTIL_TKN.burnFrom(
+            B,
+            "10000000000000000",
+            { from: A }
+        )
+    })
+
+    //13
+    it('Should fail because exceeds allowance', async () => {
+        return UTIL_TKN.transfer(
+            B,
+            "10000000000000000",
+            { from: A }
+        )
+    })
+
+    //14
+    it('Should fail because exceeds allowance', async () => {
+        return UTIL_TKN.transferFrom(
+            B,
+            A,
+            "10000000000000000",
+            { from: A }
+        )
+    })
+
+
+    it('Should grant C trusted agent role', async () => {
+        return UTIL_TKN.grantRole(
+            trustedAgentRoleB32,
+            C,
+            { from: A }
+        )
+    })
+
+
+    it('Should give C PAYABLE_ROLE', async () => {
+        return UTIL_TKN.grantRole(
+            payableRoleB32,
+            C,
+            { from: A })
+    })
+
+    //15
+    it('Should fail because not payable agent', async () => {
+        return UTIL_TKN.payForService(
+            B,
+            A,
+            "50000000000000000",
+            C,
+            "50000000000000000",
+            { from: A }
+        )
+    })
+
+
+    it('Should pay for service and distribute', async () => {
+        return UTIL_TKN.payForService(
+            B,
+            A,
+            "50000000000000000",
+            C,
+            "50000000000000000",
+            { from: C }
+        )
+    })
+
+
+    it("Should retrieve balanceOf(.05) Pruf tokens @A", async () => {
+        var Balance = [];
+
+        return await UTIL_TKN.balanceOf(A, { from: A }, function (_err, _result) {
+            if (_err) { }
+            else {
+                Balance = Object.values(_result)
+                console.log(Balance)
+            }
+        })
+    })
+
+
+    it("Should retrieve balanceOf(11) Pruf tokens @B", async () => {
+        var Balance = [];
+
+        return await UTIL_TKN.balanceOf(B, { from: A }, function (_err, _result) {
+            if (_err) { }
+            else {
+                Balance = Object.values(_result)
+                console.log(Balance)
+            }
+        })
+    })
+
+
+    it("Should retrieve balanceOf(11.15) Pruf tokens @C", async () => {
+        var Balance = [];
+
+        return await UTIL_TKN.balanceOf(C, { from: A }, function (_err, _result) {
+            if (_err) { }
+            else {
+                Balance = Object.values(_result)
+                console.log(Balance)
+            }
+        })
+    })
+
+    //16
+    it('Should fail because not trusted agent', async () => {
+        return UTIL_TKN.trustedAgentBurn(
+            C,
+            "1000000000000000000",
+            { from: B }
+        )
+    })
+
+
+    it('Should burn 1 from B', async () => {
+        return UTIL_TKN.trustedAgentBurn(
+            B,
+            "1000000000000000000",
+            { from: C }
+        )
+    })
+
+
+    it("Should retrieve balanceOf(.05) Pruf tokens @A", async () => {
+        var Balance = [];
+
+        return await UTIL_TKN.balanceOf(A, { from: A }, function (_err, _result) {
+            if (_err) { }
+            else {
+                Balance = Object.values(_result)
+                console.log(Balance)
+            }
+        })
+    })
+
+
+    it("Should retrieve balanceOf(9.9) Pruf tokens @B", async () => {
+        var Balance = [];
+
+        return await UTIL_TKN.balanceOf(B, { from: A }, function (_err, _result) {
+            if (_err) { }
+            else {
+                Balance = Object.values(_result)
+                console.log(Balance)
+            }
+        })
+    })
+
+
+    it("Should retrieve balanceOf(11.55) Pruf tokens @C", async () => {
+        var Balance = [];
+
+        return await UTIL_TKN.balanceOf(C, { from: A }, function (_err, _result) {
+            if (_err) { }
+            else {
+                Balance = Object.values(_result)
+                console.log(Balance)
+            }
+        })
+    })
+
+    //17
+    it('Should fail because not trusted agent', async () => {
+        return UTIL_TKN.trustedAgentTransfer(
+            C,
+            A,
+            "150000000000000000",
+            { from: B }
+        )
+    })
+
+
+    it('Should transfer 0.9 from B to A', async () => {
+        return UTIL_TKN.trustedAgentTransfer(
+            B,
+            A,
+            "900000000000000000",
+            { from: C }
+        )
+    })
+
+
+    it("Should retrieve balanceOf(.95) Pruf tokens @A", async () => {
+        var Balance = [];
+
+        return await UTIL_TKN.balanceOf(A, { from: A }, function (_err, _result) {
+            if (_err) { }
+            else {
+                Balance = Object.values(_result)
+                console.log(Balance)
+            }
+        })
+    })
+
+
+    it("Should retrieve balanceOf(9) Pruf tokens @B", async () => {
+        var Balance = [];
+
+        return await UTIL_TKN.balanceOf(B, { from: A }, function (_err, _result) {
+            if (_err) { }
+            else {
+                Balance = Object.values(_result)
+                console.log(Balance)
+            }
+        })
+    })
+
+
+    it("Should retrieve balanceOf(11.55) Pruf tokens @C", async () => {
+        var Balance = [];
+
+        return await UTIL_TKN.balanceOf(C, { from: A }, function (_err, _result) {
+            if (_err) { }
+            else {
+                Balance = Object.values(_result)
+                console.log(Balance)
+            }
+        })
+    })
+
+
+    it('Should revoke trusted agent role from C', async () => {
+        return UTIL_TKN.revokeRole(
+            trustedAgentRoleB32,
+            C,
+            { from: A }
+        )
+    })
+
+    //18
+    it('Should fail because not trusted agent', async () => {
+        return UTIL_TKN.trustedAgentTransfer(
+            B,
+            A,
+            "900000000000000000",
+            { from: C }
+        )
+    })
+
+
+    it('Should grant B trusted agent role', async () => {
+        return UTIL_TKN.grantRole(
+            trustedAgentRoleB32,
+            B,
+            { from: A }
+        )
+    })
+
+
+    it('Should transfer 0.15 from C to A', async () => {
+        return UTIL_TKN.trustedAgentTransfer(
+            C,
+            A,
+            "150000000000000000",
+            { from: B }
+        )
+    })
+
+
+    it("Should retrieve balanceOf(1.1) Pruf tokens @A", async () => {
+        var Balance = [];
+
+        return await UTIL_TKN.balanceOf(A, { from: A }, function (_err, _result) {
+            if (_err) { }
+            else {
+                Balance = Object.values(_result)
+                console.log(Balance)
+            }
+        })
+    })
+
+
+    it("Should retrieve balanceOf(9) Pruf tokens @B", async () => {
+        var Balance = [];
+
+        return await UTIL_TKN.balanceOf(B, { from: A }, function (_err, _result) {
+            if (_err) { }
+            else {
+                Balance = Object.values(_result)
+                console.log(Balance)
+            }
+        })
+    })
+
+
+    it("Should retrieve balanceOf(11.4) Pruf tokens @C", async () => {
+        var Balance = [];
+
+        return await UTIL_TKN.balanceOf(C, { from: A }, function (_err, _result) {
+            if (_err) { }
+            else {
+                Balance = Object.values(_result)
+                console.log(Balance)
+            }
+        })
+    })
+
+
+    it('Should transfer 1 from B to A', async () => {
+        return UTIL_TKN.trustedAgentTransfer(
+            B,
+            A,
+            "1000000000000000000",
+            { from: B }
+        )
+    })
+
+
+    it("Should retrieve balanceOf(2.1) Pruf tokens @A", async () => {
+        var Balance = [];
+
+        return await UTIL_TKN.balanceOf(A, { from: A }, function (_err, _result) {
+            if (_err) { }
+            else {
+                Balance = Object.values(_result)
+                console.log(Balance)
+            }
+        })
+    })
+
+
+    it("Should retrieve balanceOf(8) Pruf tokens @B", async () => {
+        var Balance = [];
+
+        return await UTIL_TKN.balanceOf(B, { from: A }, function (_err, _result) {
+            if (_err) { }
+            else {
+                Balance = Object.values(_result)
+                console.log(Balance)
+            }
+        })
+    })
+
+
+    it("Should retrieve balanceOf(11.4) Pruf tokens @C", async () => {
+        var Balance = [];
+
+        return await UTIL_TKN.balanceOf(C, { from: A }, function (_err, _result) {
+            if (_err) { }
+            else {
+                Balance = Object.values(_result)
+                console.log(Balance)
+            }
+        })
+    })
+
+
+    it('Should set C as coldWallet', async () => {
+        return UTIL_TKN.setColdWallet(
+            { from: C })
+    })
+
+    //19
+    it('Should fail because C is cold wallet', async () => {
+        return UTIL_TKN.trustedAgentTransfer(
+            C,
+            A,
+            "1000000000000000000",
+            { from: B }
+        )
+    })
+
+    //20
+    it('Should fail because C is cold wallet', async () => {
+        return UTIL_TKN.trustedAgentBurn(
+            C,
+            "1000000000000000000",
+            { from: B }
+        )
+    })
+
+    
+    it('Should give B PAYABLE_ROLE', async () => {
+        return UTIL_TKN.grantRole(
+            payableRoleB32,
+            B,
+            { from: A })
+    })
+
+    //21
+    it('Should fail because C is cold wallet', async () => {
+        return UTIL_TKN.payForService(
+            C,
+            A,
+            "1000000000000000000",
+            B,
+            "1000000000000000000",
+            { from: B }
+        )
+    })
+
+
+    it('Should unset C as coldWallet', async () => {
+        return UTIL_TKN.unSetColdWallet(
+            { from: C })
+    })
+
+
+    it('Should transfer 1 from C to A', async () => {
+        return UTIL_TKN.trustedAgentTransfer(
+            C,
+            A,
+            "1000000000000000000",
+            { from: B }
+        )
+    })
+
+
+    it("Should retrieve balanceOf(3.1) Pruf tokens @A", async () => {
+        var Balance = [];
+
+        return await UTIL_TKN.balanceOf(A, { from: A }, function (_err, _result) {
+            if (_err) { }
+            else {
+                Balance = Object.values(_result)
+                console.log(Balance)
+            }
+        })
+    })
+
+
+    it("Should retrieve balanceOf(8) Pruf tokens @B", async () => {
+        var Balance = [];
+
+        return await UTIL_TKN.balanceOf(B, { from: A }, function (_err, _result) {
+            if (_err) { }
+            else {
+                Balance = Object.values(_result)
+                console.log(Balance)
+            }
+        })
+    })
+
+
+    it("Should retrieve balanceOf(10.4) Pruf tokens @C", async () => {
+        var Balance = [];
+
+        return await UTIL_TKN.balanceOf(C, { from: A }, function (_err, _result) {
+            if (_err) { }
+            else {
+                Balance = Object.values(_result)
+                console.log(Balance)
+            }
+        })
+    })
+
+
+    it('Should burn 1 from C', async () => {
+        return UTIL_TKN.trustedAgentBurn(
+            C,
+            "1000000000000000000",
+            { from: B }
+        )
+    })
+
+
+    it("Should retrieve balanceOf(3.1) Pruf tokens @A", async () => {
+        var Balance = [];
+
+        return await UTIL_TKN.balanceOf(A, { from: A }, function (_err, _result) {
+            if (_err) { }
+            else {
+                Balance = Object.values(_result)
+                console.log(Balance)
+            }
+        })
+    })
+
+
+    it("Should retrieve balanceOf(8) Pruf tokens @B", async () => {
+        var Balance = [];
+
+        return await UTIL_TKN.balanceOf(B, { from: A }, function (_err, _result) {
+            if (_err) { }
+            else {
+                Balance = Object.values(_result)
+                console.log(Balance)
+            }
+        })
+    })
+
+
+    it("Should retrieve balanceOf(9.4) Pruf tokens @C", async () => {
+        var Balance = [];
+
+        return await UTIL_TKN.balanceOf(C, { from: A }, function (_err, _result) {
+            if (_err) { }
+            else {
+                Balance = Object.values(_result)
+                console.log(Balance)
+            }
+        })
+    })
+
+
+    it('Should payForService and distribute', async () => {
+        return UTIL_TKN.payForService(
+            C,
+            A,
+            "1000000000000000000",
+            B,
+            "1000000000000000000",
+            { from: B }
+        )
+    })
+
+
+    it("Should retrieve balanceOf(4.1) Pruf tokens @A", async () => {
+        var Balance = [];
+
+        return await UTIL_TKN.balanceOf(A, { from: A }, function (_err, _result) {
+            if (_err) { }
+            else {
+                Balance = Object.values(_result)
+                console.log(Balance)
+            }
+        })
+    })
+
+
+    it("Should retrieve balanceOf(9) Pruf tokens @B", async () => {
+        var Balance = [];
+
+        return await UTIL_TKN.balanceOf(B, { from: A }, function (_err, _result) {
+            if (_err) { }
+            else {
+                Balance = Object.values(_result)
+                console.log(Balance)
+            }
+        })
+    })
+
+
+    it("Should retrieve balanceOf(7.4) Pruf tokens @C", async () => {
+        var Balance = [];
+
+        return await UTIL_TKN.balanceOf(C, { from: A }, function (_err, _result) {
+            if (_err) { }
+            else {
+                Balance = Object.values(_result)
+                console.log(Balance)
+            }
+        })
+    })
+
+    //22
+    it('Should fail because not default admin', async () => {
+        return UTIL_TKN.adminKillTrustedAgent(
+            "170",
+            { from: B }
+        )
+    })
+
+
+    it('Should kill all trusted agent functionality', async () => {
+        return UTIL_TKN.adminKillTrustedAgent(
+            "170",
+            { from: A }
+        )
+    })
+
+    //23
+    it('Should fail because trusted agent function permanently disabled', async () => {
+        return UTIL_TKN.trustedAgentTransfer(
+            C,
+            A,
+            "1000000000000000000",
+            { from: B }
+        )
+    })
+
+    //24
+    it('Should fail because trusted agent function permanently disabled', async () => {
+        return UTIL_TKN.trustedAgentBurn(
+            C,
+            "1000000000000000000",
+            { from: B }
+        )
+    })
+
+    //25
+    it('Should fail because trusted agent function permanently disabled', async () => {
+        return UTIL_TKN.payForService(
+            C,
+            A,
+            "1000000000000000000",
+            B,
+            "1000000000000000000",
+            { from: B }
+        )
+    })
+
+})
