@@ -27,7 +27,7 @@ C: buy .8 eth of pruf -- SUCCEEDS
 --- A:0 B:10 C:10
 
 C: buy 0.01 eth of pruf -- FAIL exceeds allotment
-A: whitelist C for 2 eth max, .1 eth min 10p/eth
+A: whitelist C for 2 eth max, .01 eth min 10p/eth
 C: buy 0.01 eth of pruf -- SUCCEEDS
 --- A:0 B:10 C:10.1
 
