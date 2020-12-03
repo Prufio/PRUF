@@ -7,7 +7,7 @@ A: Launch UTIL_TKN and PRESALE
 A: set airdrop amount to 10p
 A: set presale limit to 11p
 
-A: airdrop B 10p
+A: airdrop B
 --- A:0 B:10 C:0
 
 A: whitelist C for 1 eth max, .1 eth min 10p/eth
@@ -36,11 +36,11 @@ C: buy 0.09 eth of pruf -- SUCCEEDS
 --- A:0 B:10 C:11
 
 C: buy 0.01 eth of pruf -- FAIL EXCEEDS PRESALE 
-A: set presale limit to 1p
+A: set presale limit to 1 ETH------------------PS:1
 C: buy 0.01 eth of pruf -- SUCCEEDS
 --- A:0 B:10 C:11.1
 
-A: whitelist B for 1 eth max, .1 eth min 10p/eth
+A: whitelist B for 0.1 ETH max, .01 eth min 10p/eth
 B: buy 0.01 eth of pruf -- SUCCEEDS
 --- A:0 B:10.1 C:11.1
 
@@ -54,10 +54,10 @@ C: buy 0.04 eth of pruf -- SUCCEEDS
 
 B: buy 0.01 eth of pruf -- FAIL EXCEEDS PRESALE
 C: buy 0.01 eth of pruf -- FAIL EXCEEDS PRESALE
-A: set presale limit to 1p
+A: set presale limit to 1 ETH
 
 B: buy 0.05 eth of pruf -- SUCCEEDS  
---- A:0 B:11 C:11.1
+--- A:0 B:11 C:11.5
 B: buy 0.01 eth of pruf -- FAIL exceeds allotment
 
 In UTIL_TKN:
@@ -65,23 +65,26 @@ In UTIL_TKN:
 A: attempt burnFrom, transfer, transferFrom with B's account as the "from" target (FAIL)
 
 A: give TRUSTED_AGENT_ROLE to C
+A: give PAYABLE_ROLE to C
 
-A: payForService(
+
+A: payForService(  
        address B,
        address A,
        uint256 0.05p,
        address C,
        uint256 0.05p
-   ) -- FAIL must have TRUSTED_AGENT_ROLE
+   ) -- FAIL must have PAYBALE_ROLE
+--- A:0 B:11 C:11.5
 
-C: payForService(
+C: payForService(  
        address B,
        address A,
        uint256 0.05p,
        address C,
        uint256 0.05p
    ) -- SUCCEEDS
---- A:.05 B:11 C:11.15
+--- A:.05 B:10.9 C:11.55
 
 B: trustedAgentBurn(
        address C,
@@ -92,7 +95,7 @@ C: trustedAgentBurn(
        address B,
        uint256 1p,
    ) -- SUCCEEDS
---- A:.05 B:10 C:11.15
+--- A:.05 B:9.9 C:11.15
 
 A: trustedAgentTransfer(
        address _from C,
@@ -103,9 +106,9 @@ A: trustedAgentTransfer(
 C: trustedAgentTransfer(
        address _from B,
        address _to A,
-       uint256 .95p
+       uint256 .9p
    ) -- SUCCEEDS
-   --- A:1 B:9.05 C:11.15
+   --- A:.95 B:9 C:11.15
 
 A: REVOKE TRUSTED_AGENT_ROLE from C
 
@@ -122,14 +125,14 @@ B: trustedAgentTransfer(
        address _to A,
        uint256 .15p
    ) -- SUCCEEDS
-   --- A:1.15 B:9.05 C:11
+   --- A:1.1 B:9 C:11
 
 B: trustedAgentTransfer(
        address _from B,
        address _to A,
-       uint256 .05p
+       uint256 1p
    ) -- SUCCEEDS
-   --- A:1.2 B:9 C:11
+   --- A:2.1 B:8 C:11
 
 C: setColdWallet()
 
@@ -159,13 +162,13 @@ B: trustedAgentTransfer(
        address _to A,
        uint256 1p
    ) -- SUCCEEDS
---- A:2.2 B:9 C:10
+--- A:3.1 B:9 C:10
 
 B: trustedAgentBurn(
        address C,
        uint256 1p,
    ) -- SUCCEEDS
---- A:2.2 B:9 C:9
+--- A:3.1 B:9 C:9
 
 B: payForService(
        address C,
@@ -174,7 +177,7 @@ B: payForService(
        address B,
        uint256 1p
    ) -- SUCCEEDS
---- A:3.2 B:10 C:7
+--- A:4.1 B:10 C:7
 
 B: adminKillTrustedAgent FAIL must have DEFAULT_ADMIN_ROLE
 
