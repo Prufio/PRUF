@@ -75,7 +75,7 @@ A: payForService(
        address C,
        uint256 0.05p
    ) -- FAIL must have PAYBALE_ROLE
---- A:0 B:11 C:11.5
+--- A:0 B:11 C:11.5 -- 22.5
 
 C: payForService(  
        address B,
@@ -84,7 +84,7 @@ C: payForService(
        address C,
        uint256 0.05p
    ) -- SUCCEEDS
---- A:.05 B:10.9 C:11.55
+--- A:.05 B:10.9 C:11.55 -- 22.5
 
 B: trustedAgentBurn(
        address C,
@@ -95,7 +95,7 @@ C: trustedAgentBurn(
        address B,
        uint256 1p,
    ) -- SUCCEEDS
---- A:.05 B:9.9 C:11.15
+--- A:.05 B:9.9 C:11.55  -- 21.5
 
 A: trustedAgentTransfer(
        address _from C,
@@ -108,7 +108,7 @@ C: trustedAgentTransfer(
        address _to A,
        uint256 .9p
    ) -- SUCCEEDS
-   --- A:.95 B:9 C:11.15
+   --- A:.95 B:9 C:11.55 -- 21.5
 
 A: REVOKE TRUSTED_AGENT_ROLE from C
 
@@ -119,20 +119,21 @@ C: trustedAgentTransfer(
    ) -- FAIL must have TRUSTED_AGENT_ROLE
 
 A: give TRUSTED_AGENT_ROLE to B:
+A: give PAYABLE_ROLE to B:
 
 B: trustedAgentTransfer(
        address _from C,
        address _to A,
        uint256 .15p
    ) -- SUCCEEDS
-   --- A:1.1 B:9 C:11
+   --- A:1.1 B:9 C:11.4 -- 
 
 B: trustedAgentTransfer(
        address _from B,
        address _to A,
        uint256 1p
    ) -- SUCCEEDS
-   --- A:2.1 B:8 C:11
+   --- A:2.1 B:8 C:11.4  -- 21.5
 
 C: setColdWallet()
 
@@ -162,13 +163,13 @@ B: trustedAgentTransfer(
        address _to A,
        uint256 1p
    ) -- SUCCEEDS
---- A:3.1 B:9 C:10
+--- A:3.1 B:8 C:10.4 -- 21.5
 
 B: trustedAgentBurn(
        address C,
        uint256 1p,
    ) -- SUCCEEDS
---- A:3.1 B:9 C:9
+--- A:3.1 B:8 C:9.4  -- 20.5
 
 B: payForService(
        address C,
@@ -177,7 +178,7 @@ B: payForService(
        address B,
        uint256 1p
    ) -- SUCCEEDS
---- A:4.1 B:10 C:7
+--- A:4.1 B:9 C:7.4 -- 20.5
 
 B: adminKillTrustedAgent FAIL must have DEFAULT_ADMIN_ROLE
 
