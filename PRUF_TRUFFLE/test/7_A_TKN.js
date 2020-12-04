@@ -1799,7 +1799,6 @@ contract('A_TKN', accounts => {
         return A_TKN.reMintAssetToken(
             account1,
             '30',
-            'Pruf.io',
             { from: account2 }
         )
     })

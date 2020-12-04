@@ -56,21 +56,8 @@ contract('UTIL_TKN', accounts => {
     })
 
 
-    it("Should retrieve maxSupply(4000000000000000000000000000)", async () => {
-        console.log('//**************************END BOOTSTRAP**************************//')
-        var Balance = [];
-
-        return await UTIL_TKN.max_Supply({ from: MAIN }, function (_err, _result) {
-            if (_err) { }
-            else {
-                Balance = Object.values(_result)
-                console.log(Balance)
-            }
-        })
-    })
-
-
     it('Should mint 100 to A', async () => {
+        console.log('//**************************END BOOTSTRAP**************************//')
 
         return UTIL_TKN.mint(
             A,

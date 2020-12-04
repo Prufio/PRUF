@@ -1503,6 +1503,15 @@ it('Should mint 30000 tkns to account2', async () => {
 })
 
 
+it('Should grant AC_MGR with trustedAgentRole', async () => {
+    return UTIL_TKN.grantRole(
+    trustedAgentRoleB32,
+    AC_MGR.address,
+    {from: account1}
+    )
+})
+
+
 it('Should increaseShare to 45/55 split @AC13', async () => {
     return AC_MGR.increaseShare(
     '13',
