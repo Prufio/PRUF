@@ -86,7 +86,7 @@ contract UTIL_TKN is
      *
      * See {ERC20-constructor}.
      */
-    constructor() public ERC20("PRuF_TKN", "PRuF") {
+    constructor() public ERC20("PRüF Network", "PRUF") {
         _setupRole(DEFAULT_ADMIN_ROLE, _msgSender());
         _setupRole(MINTER_ROLE, _msgSender());
         _setupRole(PAUSER_ROLE, _msgSender());
