@@ -1,6 +1,6 @@
 const PRUF_HELPER = artifacts.require('Helper');
 const PRUF_UTIL_TKN = artifacts.require('UTIL_TKN');
-const PRUF_PRESALE = artifacts.require('PRESALE');
+const BUY_PRUF = artifacts.require('PRESALE');
 
 let PRESALE;
 let UTIL_TKN;
@@ -44,10 +44,10 @@ contract('PRESALE', accounts => {
 
 
     it('Should deploy PRESALE', async () => {
-        const PRUF_PRESALE_TEST = await PRUF_PRESALE.deployed({ from: account1 });
-        console.log(PRUF_PRESALE_TEST.address);
-        assert(PRUF_PRESALE_TEST.address !== '');
-        PRESALE = PRUF_PRESALE_TEST;
+        const BUY_PRUF_TEST = await BUY_PRUF.deployed({ from: account1 });
+        console.log(BUY_PRUF_TEST.address);
+        assert(BUY_PRUF_TEST.address !== '');
+        PRESALE = BUY_PRUF_TEST;
     })
 
     
@@ -285,66 +285,7 @@ contract('PRESALE', accounts => {
         })
     })
 
-    //11
-    it('Should fail because caller is not airdrop authorized', async () => {
-        console.log('//**************************BEGIN AIRDROP_Mint10 FAIL BATCH**************************//')
-        return PRESALE.AIRDROP_Mint10(
-            account2,
-            account2,
-            account2,
-            account2,
-            account2,
-            account2,
-            account2,
-            account2,
-            account2,
-            account2,
-            { from: account2 })
-    })
-
-
-    it('Should pause PRESALE', async () => {
-        return PRESALE.pause(
-            { from: account1 })
-    })
-
-    //12
-    it('Should fail because PRESALE is paused', async () => {
-        return PRESALE.AIRDROP_Mint10(
-            account2,
-            account2,
-            account2,
-            account2,
-            account2,
-            account2,
-            account2,
-            account2,
-            account2,
-            account2,
-            { from: account1 })
-    })
-
-
-    it('Should unpause PRESALE', async () => {
-        return PRESALE.unpause(
-            { from: account1 })
-    })
-
-
-    it('Should airdrop 200000 PRuF to account3', async () => {
-        return PRESALE.AIRDROP_Mint10(
-            account3,
-            account3,
-            account3,
-            account3,
-            account3,
-            account3,
-            account3,
-            account3,
-            account3,
-            account3,
-            { from: account1 })
-    })
+    
 
 
     it("Should check balanceOf account3 (480000)", async () => {
@@ -422,113 +363,6 @@ contract('PRESALE', accounts => {
         })
     })
 
-    //15
-    it('Should fail because caller is not airdrop authorized', async () => {
-        console.log('//**************************BEGIN AIRDROP_Mint3 FAIL BATCH**************************//')
-        return PRESALE.AIRDROP_Mint3(
-            account2,
-            account2,
-            account2,
-            { from: account2 })
-    })
-
-
-    it('Should pause PRESALE', async () => {
-        return PRESALE.pause(
-            { from: account1 })
-    })
-
-    //16
-    it('Should fail because PRESALE is paused', async () => {
-        return PRESALE.AIRDROP_Mint3(
-            account2,
-            account2,
-            account2,
-            { from: account1 })
-    })
-
-
-    it('Should unpause PRESALE', async () => {
-        return PRESALE.unpause(
-            { from: account1 })
-    })
-
-
-    it('Should airdrop 60000 PRuF to account3', async () => {
-        return PRESALE.AIRDROP_Mint3(
-            account3,
-            account3,
-            account3,
-            { from: account1 })
-    })
-
-
-    it("Should check balanceOf account3 (640000)", async () => {
-        
-        console.log('//**************************END AIRDROP_Mint3 FAIL BATCH**************************//')
-        var Balance = [];
-
-        return await UTIL_TKN.balanceOf(account3, { from: account1 }, function (_err, _result) {
-            if (_err) { }
-            else {
-                Balance = Object.values(_result)
-                console.log(Balance)
-            }
-        })
-    })
-
-    //17
-    it('Should fail because caller is not airdrop authorized', async () => {
-        console.log('//**************************BEGIN AIRDROP_Mint2 FAIL BATCH**************************//')
-        return PRESALE.AIRDROP_Mint2(
-            account2,
-            account2,
-            { from: account2 })
-    })
-
-
-    it('Should pause PRESALE', async () => {
-        return PRESALE.pause(
-            { from: account1 })
-    })
-
-    //18
-    it('Should fail because PRESALE is paused', async () => {
-        return PRESALE.AIRDROP_Mint2(
-            account2,
-            account2,
-            { from: account1 })
-    })
-
-
-    it('Should unpause PRESALE', async () => {
-        return PRESALE.unpause(
-            { from: account1 })
-    })
-
-
-    it('Should airdrop 40000 PRuF to account3', async () => {
-        return PRESALE.AIRDROP_Mint2(
-            account3,
-            account3,
-            { from: account1 })
-    })
-
-
-    it("Should check balanceOf account3 (680000)", async () => {
-        
-        console.log('//**************************END AIRDROP_Mint2 FAIL BATCH**************************//')
-        var Balance = [];
-
-        return await UTIL_TKN.balanceOf(account3, { from: account1 }, function (_err, _result) {
-            if (_err) { }
-            else {
-                Balance = Object.values(_result)
-                console.log(Balance)
-            }
-        })
-    })
-
     //19
     it('Should fail because caller is not airdrop authorized', async () => {
         console.log('//**************************BEGIN AIRDROP_Mint1 FAIL BATCH**************************//')
@@ -581,14 +415,14 @@ contract('PRESALE', accounts => {
 
     it('Should pause PRESALE', async () => {
         
-        console.log('//**************************BEGIN PRUF_PRESALE FAIL BATCH**************************//')
+        console.log('//**************************BEGIN BUY_PRUF FAIL BATCH**************************//')
         return PRESALE.pause(
             { from: account1 })
     })
 
     //21
     it('Should fail because PRESALE is paused', async () => {
-        return PRESALE.PRUF_PRESALE(
+        return PRESALE.BUY_PRUF(
             { from: account1 })
     })
 
@@ -600,38 +434,38 @@ contract('PRESALE', accounts => {
 
     //22
     it('Should fail because amountToMint = 0', async () => {
-        return PRESALE.PRUF_PRESALE(
+        return PRESALE.BUY_PRUF(
             { from: account2 })
     })
 
     //23
     it('Should fail because minEth req was not met', async () => {
-        return PRESALE.PRUF_PRESALE(
+        return PRESALE.BUY_PRUF(
             { from: account2, value: 90000000000000000 })
     })
 
     //24
     it('Should fail because maxEth req was not met', async () => {
-        return PRESALE.PRUF_PRESALE(
+        return PRESALE.BUY_PRUF(
             { from: account2, value: "1000100000000000000000" })
     })
 
     //25
     it('Should fail because purchase request exceeds total presale limit', async () => {
-        return PRESALE.PRUF_PRESALE(
+        return PRESALE.BUY_PRUF(
             { from: account4, value: "16000000000000000000001" })
     })
 
 
     it('Should purchase 100000 PRuF to account3', async () => {
-        return PRESALE.PRUF_PRESALE(
+        return PRESALE.BUY_PRUF(
             { from: account3, value: 1000000000000000000})
     })
 
 
     it("Should check balanceOf account3 (800000)", async () => {
         
-        console.log('//**************************END PRUF_PRESALE FAIL BATCH**************************//')
+        console.log('//**************************END BUY_PRUF FAIL BATCH**************************//')
         var Balance = [];
 
         return await UTIL_TKN.balanceOf(account3, { from: account1 }, function (_err, _result) {
@@ -666,7 +500,7 @@ contract('PRESALE', accounts => {
 
     it("Should check balanceOf PRESALE (1ETH)", async () => {
         
-        console.log('//**************************END PRUF_PRESALE FAIL BATCH**************************//')
+        console.log('//**************************END BUY_PRUF FAIL BATCH**************************//')
         var Balance = [];
 
         return await PRESALE.balance({ from: account1 }, function (_err, _result) {
