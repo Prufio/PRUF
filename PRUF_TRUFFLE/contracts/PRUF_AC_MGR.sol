@@ -343,7 +343,7 @@ contract AC_MGR is BASIC {
      * - `recipient` cannot be the zero address.
      * - the caller must have a balance of at least `amount`.
      */
-    function increaseShare(uint32 _assetClass, uint256 _amount)
+    function increaseShare(uint32 _assetClass, uint256 _amount) //in whole pruf tokens, not 18 decimals
         public
         returns (bool)
     {
