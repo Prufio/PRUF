@@ -63,7 +63,7 @@ contract AC_MGR is BASIC {
      */
     modifier isAdmin() {
         require(
-            (msg.sender == owner()) || (msg.sender == UTIL_TKN_Address),
+        msg.sender == owner(),
             "ACM:MOD-IA:Calling address does not belong to an Admin"
         );
         _;
@@ -353,7 +353,7 @@ contract AC_MGR is BASIC {
 
         //^^^^^^^checks^^^^^^^^^
 
-        uint256 oldShare = uint256(AC_MGR.getAC_discount(_assetClass));
+        uint256 oldShare = uint256(getAC_discount(_assetClass));
 
         uint256 maxPayment = (uint256(9000).sub(oldShare)).mul(upgradeMultiplier); //max payment percentage never goes over 90%
 
@@ -425,7 +425,7 @@ contract AC_MGR is BASIC {
     /*
      * @dev Retrieve AC_discount @ _assetClass, in percent ACTH share, * 100 (9000 = 90%)
      */
-    function getAC_discount(uint32 _assetClass) external view returns (uint32) {
+    function getAC_discount(uint32 _assetClass) public view returns (uint32) {
         //^^^^^^^checks^^^^^^^^^
         return (AC_data[_assetClass].discount);
         //^^^^^^^interactions^^^^^^^^^
