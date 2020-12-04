@@ -232,7 +232,7 @@ contract ERC20 is Context, IERC20 {
 
         _totalSupply = _totalSupply.add(amount);
         _balances[account] = _balances[account].add(amount);
-        //emit Transfer(address(0), account, amount);  // --------------------------------NONSTANDARD to remove for gas costs
+        emit Transfer(address(0), account, amount);
     }
 
     /**
