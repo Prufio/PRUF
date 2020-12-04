@@ -12,7 +12,7 @@ __/\\\\\\\\\\\\\ _____/\\\\\\\\\ _______/\\../\\ ___/\\\\\\\\\\\\\\\
 
 /*-----------------------------------------------------------------
  *  TO DO
- *
+ * REWORK TO TAKE ALL INPUTS FOR TOKEN MANIPULATION IN wei notation (18 zeros)
  *-----------------------------------------------------------------
  */
 
@@ -32,7 +32,7 @@ contract AC_MGR is BASIC {
     }
 
     uint256 private ACtokenIndex = 1000000; //asset tokens created in sequence starting at at 1,000,000
-    uint256 private currentACtokenPrice = 10000;
+    uint256 private currentACtokenPrice = 10000 ether;
 
     //mapping(uint32 => Costs) private cost; // Cost per function by asset class
     mapping(uint32 => mapping(uint16 => Costs)) private cost; // Cost per function by asset class => Cost Type
@@ -175,25 +175,25 @@ contract AC_MGR is BASIC {
         uint256 numberOfTokensSold = ACtokenIndex.sub(uint256(1000000));
 
         if (numberOfTokensSold >= 4000) {
-            newACtokenPrice = 100000;
+            newACtokenPrice = 100000 ether;
         } else if (numberOfTokensSold >= 2000) {
-            newACtokenPrice = 75937;
+            newACtokenPrice = 75937 ether;
         } else if (numberOfTokensSold >= 1000) {
-            newACtokenPrice = 50625;
+            newACtokenPrice = 50625 ether;
         } else if (numberOfTokensSold >= 500) {
-            newACtokenPrice = 33750;
+            newACtokenPrice = 33750 ether;
         } else if (numberOfTokensSold >= 250) {
-            newACtokenPrice = 22500;
+            newACtokenPrice = 22500 ether;
         } else if (numberOfTokensSold >= 125) {
-            newACtokenPrice = 15000;
+            newACtokenPrice = 15000 ether;
         } else {
-            newACtokenPrice = 10000;
+            newACtokenPrice = 10000 ether;
         }
         //^^^^^^^effects^^^^^^^^^
 
         //mint an asset class token to msg.sender, at tokenID ACtokenIndex, with URI = root asset Class #
 
-        UTIL_TKN.trustedAgentBurn(msg.sender, currentACtokenPrice.mul(1 ether));
+        UTIL_TKN.trustedAgentBurn(msg.sender, currentACtokenPrice);
         currentACtokenPrice = newACtokenPrice;
 
         _createAssetClass(
@@ -343,7 +343,7 @@ contract AC_MGR is BASIC {
      * - `recipient` cannot be the zero address.
      * - the caller must have a balance of at least `amount`.
      */
-    function increaseShare(uint32 _assetClass, uint256 _amount)
+    function increaseShare(uint32 _assetClass, uint256 _amount) //in whole pruf tokens, not 18 decimals
         public
         returns (bool)
     {
@@ -368,7 +368,7 @@ contract AC_MGR is BASIC {
         UTIL_TKN.trustedAgentTransfer(
             msg.sender,
             rootPaymentAdress,
-            _amount.mul(1 ether)
+            _amount.mul(1 ether) //adds 18 zeros to work in full tokens
         );
 
         increasePriceShare(_assetClass, _amount.div(upgradeMultiplier));
