@@ -1037,11 +1037,11 @@
 			]
 		},
 		"localhost/PRUF/PRUF_TRUFFLE/contracts/Imports/token/ERC20/ERC20.sol": {
-			"keccak256": "0xc50b08e3831a9e38502c2a3374790fb04fc2e38cfa50a70062a01492ea817bee",
+			"keccak256": "0x2e0756aca614c75bd49788139ebb5a0251300ecba3a589e129e91a22d433a432",
 			"license": "MIT",
 			"urls": [
-				"bzz-raw://c12a35c570332ddb41156935ae7215d9817f2380af4ca7ceaa64218df35ff4ce",
-				"dweb:/ipfs/QmXkh3RNvrgrMcrjku3k9eNmWtN7NzaS832r8VyzMCJPU2"
+				"bzz-raw://e441b2f45bb0313c8bf5f890764d94ae99f54ce7443e6ebad42e4440addd1d3f",
+				"dweb:/ipfs/Qmf7SrraeAhkbWGbzjvQoE3GLdHPyX3JMhGScBPo8qXNWb"
 			]
 		},
 		"localhost/PRUF/PRUF_TRUFFLE/contracts/Imports/token/ERC20/ERC20Burnable.sol": {
@@ -1117,11 +1117,11 @@
 			]
 		},
 		"localhost/PRUF/PRUF_TRUFFLE/contracts/PRUF_UTIL_TKN.sol": {
-			"keccak256": "0x125a56b25b371bc403b494f2d0264f301743b3b9ed1d8b6bc8eecfe8de0dab07",
+			"keccak256": "0xa33cfb21d0e3660fbfa757f0dbe4ab6e07ff048e11665271ac00763d9d842525",
 			"license": "UNLICENSED",
 			"urls": [
-				"bzz-raw://bb277ea6ed3530ae46f7de45a74969155e803abf12d0d08a89d7b60d2c727588",
-				"dweb:/ipfs/QmUsFCDq3Dh3zwF17LnCEr2q5U6dNy994134iYnkgXA9fq"
+				"bzz-raw://9fee42ea05de994b91817208c390c93a9c18b030ed82ccb333910dd73b4c0a39",
+				"dweb:/ipfs/QmZWzi5joG7tcbpzAxpRncwVHaXm7yqdWB7eryiYCMhtB1"
 			]
 		}
 	},

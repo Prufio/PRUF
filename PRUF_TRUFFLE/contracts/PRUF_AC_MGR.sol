@@ -55,7 +55,7 @@ contract AC_MGR is BASIC {
     uint256 private priceThreshold; //threshold of price where fractional pricing is implemented
 
     uint256 private upgradeMultiplier = 3; // multplier to determine the amount of pruf required to fully upgrade an AC node token
-    uint32 constant  private startingDiscount = 5100; // Nodes start with 51% profit share
+    uint32 private constant startingDiscount = 5100; // Nodes start with 51% profit share
     /*
      * @dev Verify user credentials
      * Originating Address:
@@ -63,7 +63,7 @@ contract AC_MGR is BASIC {
      */
     modifier isAdmin() {
         require(
-        msg.sender == owner(),
+            msg.sender == owner(),
             "ACM:MOD-IA:Calling address does not belong to an Admin"
         );
         _;
@@ -84,11 +84,9 @@ contract AC_MGR is BASIC {
     /*
      * @dev Set upgrade price multiplier (default 3)
      */
-    function OO_upgradeMultiplier(uint256 _newValue) external onlyOwner {  //DPS:EXAMINE  -- NEW FUNCTIONALITY
-        require(
-            _newValue < 10001,
-            "multiplier > 10 thousand!"
-        );
+    function OO_upgradeMultiplier(uint256 _newValue) external onlyOwner {
+        //DPS:EXAMINE  -- NEW FUNCTIONALITY
+        require(_newValue < 10001, "multiplier > 10 thousand!");
         //^^^^^^^checks^^^^^^^^^
 
         upgradeMultiplier = _newValue;
@@ -102,7 +100,8 @@ contract AC_MGR is BASIC {
      * @dev Authorize / Deauthorize / Authorize users for an address be permitted to make record modifications
      * ----------------INSECURE -- Remove this overload for production. keccak256 of address must be generated in the web client! in release.
      */
-    function OO_addUser(  //DPS:EXAMINE - this will be depreciated. The overloaded function OO_addUser below should be used instead, and this function that takes raw addresses deleted.
+    function OO_addUser(
+        //DPS:EXAMINE - this will be depreciated. The overloaded function OO_addUser below should be used instead, and this function that takes raw addresses deleted.
         address _authAddr,
         uint8 _userType,
         uint32 _assetClass
@@ -157,7 +156,8 @@ contract AC_MGR is BASIC {
      * Requirements:
      * - the caller must have a balance of at least `amount`.
      */
-    function purchaseACtoken( //-------------------------------------------------------CTS:EXAMINE pruf balance check?
+    function purchaseACtoken(
+        //-------------------------------------------------------CTS:EXAMINE pruf balance check?
         string calldata _name,
         uint32 _assetClassRoot,
         uint8 _custodyType,
@@ -193,7 +193,7 @@ contract AC_MGR is BASIC {
 
         //mint an asset class token to msg.sender, at tokenID ACtokenIndex, with URI = root asset Class #
 
-        UTIL_TKN.trustedAgentBurn(msg.sender, currentACtokenPrice);
+        UTIL_TKN.trustedAgentBurn(msg.sender, currentACtokenPrice.mul(1 ether));
         currentACtokenPrice = newACtokenPrice;
 
         _createAssetClass(
@@ -204,7 +204,6 @@ contract AC_MGR is BASIC {
             _custodyType,
             _IPFS
         );
-
 
         return ACtokenIndex; //returns asset class # of minted token
         //^^^^^^^effects/interactions^^^^^^^^^
@@ -217,7 +216,8 @@ contract AC_MGR is BASIC {
      *  AC is not provisioned with a root (proxy for not yet registered)
      *  that ACtoken does not exist
      */
-    function createAssetClass(  //-------------------------------------------------------DS:TEST -- modified with new IPFS parameter
+    function createAssetClass(
+        //-------------------------------------------------------DS:TEST -- modified with new IPFS parameter
         address _recipientAddress,
         string calldata _name,
         uint32 _assetClass,
@@ -237,7 +237,8 @@ contract AC_MGR is BASIC {
         //^^^^^^^effects^^^^^^^^^
     }
 
-    function _createAssetClass(  //-------------------------------------------------------DS:TEST -- modified with new IPFS parameter
+    function _createAssetClass(
+        //-------------------------------------------------------DS:TEST -- modified with new IPFS parameter
         address _recipientAddress,
         string calldata _name,
         uint32 _assetClass,
@@ -309,10 +310,10 @@ contract AC_MGR is BASIC {
      * Requires that:
      *  caller holds ACtoken
      */
-    function updateACipfs(bytes32 _IPFS, uint32 _assetClass) //-------------------------------------------------------DS:TEST -- modified with new IPFS parameter
-        external
-        isACtokenHolderOfClass(_assetClass)
-    {
+    function updateACipfs(
+        bytes32 _IPFS,
+        uint32 _assetClass //-------------------------------------------------------DS:TEST -- modified with new IPFS parameter
+    ) external isACtokenHolderOfClass(_assetClass) {
         //^^^^^^^checks^^^^^^^^^
         AC_data[_assetClass].IPFS = _IPFS;
         //^^^^^^^effects^^^^^^^^^
@@ -335,7 +336,7 @@ contract AC_MGR is BASIC {
         //^^^^^^^effects^^^^^^^^^
     }
 
-        /**
+    /**
      * @dev See {IERC20-transfer}. Increase payment share of an asset class
      *
      * Requirements:
@@ -355,13 +356,20 @@ contract AC_MGR is BASIC {
 
         uint256 oldShare = uint256(getAC_discount(_assetClass));
 
-        uint256 maxPayment = (uint256(9000).sub(oldShare)).mul(upgradeMultiplier); //max payment percentage never goes over 90%
+        uint256 maxPayment = (uint256(9000).sub(oldShare)).mul(
+            upgradeMultiplier
+        ); //max payment percentage never goes over 90%
 
-        address rootPaymentAdress = cost[AC_data[_assetClass].assetClassRoot][1].paymentAddress ; //payment for upgrade goes to root AC payment adress specified for service (1)
+        address rootPaymentAdress = cost[AC_data[_assetClass].assetClassRoot][1]
+            .paymentAddress; //payment for upgrade goes to root AC payment adress specified for service (1)
 
         if (_amount > maxPayment) _amount = maxPayment;
 
-        UTIL_TKN.trustedAgentTransfer(msg.sender, rootPaymentAdress, _amount);  
+        UTIL_TKN.trustedAgentTransfer(
+            msg.sender,
+            rootPaymentAdress,
+            _amount.mul(1 ether)
+        );
 
         increasePriceShare(_assetClass, _amount.div(upgradeMultiplier));
         return true;
@@ -400,7 +408,9 @@ contract AC_MGR is BASIC {
     /*
      * @dev Retrieve AC_data @ _assetClass
      */
-    function getAC_data(uint32 _assetClass) //-------------------------------------------------------DS:TEST -- modified with new IPFS parameter
+    function getAC_data(
+        uint32 _assetClass //-------------------------------------------------------DS:TEST -- modified with new IPFS parameter
+    )
         external
         view
         returns (

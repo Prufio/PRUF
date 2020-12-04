@@ -39,9 +39,9 @@ contract PRESALE is ReentrancyGuard, Pausable, AccessControl {
 
     address payable public payment_address;
 
-    uint256 public airdropAmount = 1 ether;
-    uint256 public presaleLimit;
-    uint256 public presaleCount;
+    uint256 public airdropAmount = 1 ether; // in tokens
+    uint256 public presaleLimit; //in eth
+    uint256 public presaleCount; //in eth
 
     struct whiteListedAddress {
         uint256 tokensPerEth;

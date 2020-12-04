@@ -62,6 +62,8 @@ contract UTIL_TKN is
         "TRUSTED_AGENT_ROLE"
     );
 
+    using SafeMath for uint256;
+
     uint256 private _cap = 4000000000000000000000000000; //4billion max supply
 
     address private sharesAddress = address(0);
