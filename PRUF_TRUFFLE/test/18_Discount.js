@@ -1475,16 +1475,6 @@ it('Should add users to AC 10-14 in AC_Manager', async () => {
 })
 
 
-// it('Should set PaymentAddress', async () => {
-
-//     console.log("//**************************************BEGIN Discount SETUP**********************************************/")
-//     return UTIL_TKN.AdminSetPaymentAddress(
-//     account8,
-//     {from: account1}
-//     )
-// })
-
-
 it('Should mint 30000 tkns to account1', async () => {
     return UTIL_TKN.mint(
     account1,
@@ -1503,6 +1493,32 @@ it('Should mint 30000 tkns to account2', async () => {
 })
 
 
+it("Should retrieve balanceOf(30000) Pruf tokens @account1", async () => {
+    var Balance = [];
+
+    return await UTIL_TKN.balanceOf(account1, { from: account1 }, function (_err, _result) {
+        if (_err) { }
+        else {
+            Balance = Object.values(_result)
+            console.log(Balance)
+        }
+    })
+})
+
+
+it("Should retrieve balanceOf(30000) Pruf tokens @account2", async () => {
+    var Balance = [];
+
+    return await UTIL_TKN.balanceOf(account2, { from: account1 }, function (_err, _result) {
+        if (_err) { }
+        else {
+            Balance = Object.values(_result)
+            console.log(Balance)
+        }
+    })
+})
+
+
 it('Should grant AC_MGR with trustedAgentRole', async () => {
     return UTIL_TKN.grantRole(
     trustedAgentRoleB32,
@@ -1512,21 +1528,71 @@ it('Should grant AC_MGR with trustedAgentRole', async () => {
 })
 
 
-it('Should increaseShare to 45/55 split @AC13', async () => {
+it('Should increaseShare to 66/36 split @AC13', async () => {
     return AC_MGR.increaseShare(
     '13',
-    '3000000000000000000000',
+    '4500',
     {from: account1}
     )
+})
+
+
+it("Should retrieve balanceOf(25500) Pruf tokens @account1", async () => {
+    var Balance = [];
+
+    return await UTIL_TKN.balanceOf(account1, { from: account1 }, function (_err, _result) {
+        if (_err) { }
+        else {
+            Balance = Object.values(_result)
+            console.log(Balance)
+        }
+    })
 })
 
 
 it('Should increaseShare to 90/10 split @AC11', async () => {
     return AC_MGR.increaseShare(
     '11',
-    '12000000000000000000000',
+    '11700',
     {from: account1}
     )
+})
+
+
+it("Should retrieve balanceOf(13800) Pruf tokens @account1", async () => {
+    var Balance = [];
+
+    return await UTIL_TKN.balanceOf(account1, { from: account1 }, function (_err, _result) {
+        if (_err) { }
+        else {
+            Balance = Object.values(_result)
+            console.log(Balance)
+        }
+    })
+})
+
+
+it('Should buy asset class 20', async () => {
+    return AC_MGR.purchaseACtoken(
+    'AC20',
+    '1',
+    '1',
+    rgt000,
+    {from: account1}
+    )
+})
+
+
+it("Should retrieve balanceOf(3800) Pruf tokens @account1", async () => {
+    var Balance = [];
+
+    return await UTIL_TKN.balanceOf(account1, { from: account1 }, function (_err, _result) {
+        if (_err) { }
+        else {
+            Balance = Object.values(_result)
+            console.log(Balance)
+        }
+    })
 })
 
 
@@ -1544,6 +1610,32 @@ it('Should write asset1 in AC 10', async () => {
 })
 
 
+it("Should retrieve balanceOf(11700.051) Pruf tokens account6", async () => {
+    var Balance = [];
+
+    return await UTIL_TKN.balanceOf(account6, { from: account1 }, function (_err, _result) {
+        if (_err) { }
+        else {
+            Balance = Object.values(_result)
+            console.log(Balance)
+        }
+    })
+})
+
+
+it("Should retrieve balanceOf(0.149) Pruf tokens account4", async () => {
+    var Balance = [];
+
+    return await UTIL_TKN.balanceOf(account4, { from: account1 }, function (_err, _result) {
+        if (_err) { }
+        else {
+            Balance = Object.values(_result)
+            console.log(Balance)
+        }
+    })
+})
+
+
 it('Should write asset2 in AC 13', async () => {
     return APP.$newRecord(
     asset2, 
@@ -1552,6 +1644,32 @@ it('Should write asset2 in AC 13', async () => {
     '100',
     {from: account2}
     )
+})
+
+
+it("Should retrieve balanceOf(0.264) Pruf tokens account7", async () => {
+    var Balance = [];
+
+    return await UTIL_TKN.balanceOf(account7, { from: account1 }, function (_err, _result) {
+        if (_err) { }
+        else {
+            Balance = Object.values(_result)
+            console.log(Balance)
+        }
+    })
+})
+
+
+it("Should retrieve balanceOf(4500.336) Pruf tokens account5", async () => {
+    var Balance = [];
+
+    return await UTIL_TKN.balanceOf(account5, { from: account1 }, function (_err, _result) {
+        if (_err) { }
+        else {
+            Balance = Object.values(_result)
+            console.log(Balance)
+        }
+    })
 })
 
 
@@ -1566,40 +1684,49 @@ it('Should write asset3 in AC 11', async () => {
 })
 
 
-// it('Should withdraw from APP @ACC4', async () => {
-//     return APP.$withdraw(
-//     {from: account4}
-//     )
-// })
+it("Should retrieve balanceOf(0.231) Pruf tokens account6", async () => {
+    var Balance = [];
+
+    return await UTIL_TKN.balanceOf(account6, { from: account1 }, function (_err, _result) {
+        if (_err) { }
+        else {
+            Balance = Object.values(_result)
+            console.log(Balance)
+        }
+    })
+})
 
 
-// it('Should withdraw from APP @ACC5', async () => {
-//     return APP.$withdraw(
-//     {from: account5}
-//     )
-// })
+it("Should retrieve balanceOf(11700.269) Pruf tokens account4", async () => {
+    var Balance = [];
+
+    return await UTIL_TKN.balanceOf(account4, { from: account1 }, function (_err, _result) {
+        if (_err) { }
+        else {
+            Balance = Object.values(_result)
+            console.log(Balance)
+        }
+    })
+})
 
 
-// it('Should withdraw from APP @ACC6', async () => {
-//     return APP.$withdraw(
-//     {from: account6}
-//     )
-// })
+it("Should getAC_Data for AC 11", async () =>{
+    var Balance = [];
+    
+    return await AC_MGR.getAC_data("11", {from: account8}, function (_err, _result) {
+        if(_err){} 
+        else{Balance = Object.values(_result)
+    console.log(Balance)}
+    })
+})
 
 
-// it('Should withdraw from APP @ACC7', async () => {
-//     return APP.$withdraw(
-//     {from: account7}
-//     )
-// })
-
-
-it("Should retrieve balanceOf Pruf tokens @account8", async () =>{ 
+it("Should getAC_Data for AC 13", async () =>{ 
 
     console.log("//**************************************END Discount TEST**********************************************/")
     var Balance = [];
     
-    return await UTIL_TKN.balanceOf(account8, {from: account8}, function (_err, _result) {
+    return await AC_MGR.getAC_data("13", {from: account8}, function (_err, _result) {
         if(_err){} 
         else{Balance = Object.values(_result)
     console.log(Balance)}

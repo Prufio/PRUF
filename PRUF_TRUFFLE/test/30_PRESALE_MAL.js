@@ -12,6 +12,7 @@ let airdropRoleB32;
 let minterRoleB32;
 let payableRoleB32;
 let trustedAgentRoleB32;
+let snapshotRoleB32;
 
 contract('PRESALE', accounts => {
 
@@ -70,6 +71,10 @@ contract('PRESALE', accounts => {
         trustedAgentRoleB32 = await Helper.getStringHash(
         'TRUSTED_AGENT_ROLE'
     )
+    
+        snapshotRoleB32 = await Helper.getStringHash(
+        'SNAPSHOT_ROLE'
+    )
 
     })
 
@@ -78,6 +83,14 @@ contract('PRESALE', accounts => {
         return UTIL_TKN.grantRole(
             minterRoleB32,
             PRESALE.address,
+            { from: A })
+    })
+
+
+    it('Should give A SNAPSHOT_ROLE', async () => {
+        return UTIL_TKN.grantRole(
+            snapshotRoleB32,
+            A,
             { from: A })
     })
 
@@ -331,7 +344,7 @@ contract('PRESALE', accounts => {
 
 
     it("Should check balanceOf C (2)", async () => {
-        0
+        
 
         var Balance = [];
 
@@ -342,6 +355,13 @@ contract('PRESALE', accounts => {
                 console.log(Balance)
             }
         })
+    })
+
+
+    it('Should snapshot (1)', async () => {
+        return UTIL_TKN.takeSnapshot(
+            { from: A }
+            )
     })
 
     //4
@@ -627,6 +647,13 @@ contract('PRESALE', accounts => {
                 console.log(Balance)
             }
         })
+    })
+
+
+    it('Should snapshot (2)', async () => {
+        return UTIL_TKN.takeSnapshot(
+            { from: A }
+            )
     })
 
     //8
@@ -1025,6 +1052,13 @@ contract('PRESALE', accounts => {
     })
 
 
+    it('Should snapshot (3)', async () => {
+        return UTIL_TKN.takeSnapshot(
+            { from: A }
+            )
+    })
+
+
     it('Should revoke trusted agent role from C', async () => {
         return UTIL_TKN.revokeRole(
             trustedAgentRoleB32,
@@ -1394,6 +1428,123 @@ contract('PRESALE', accounts => {
             "1000000000000000000",
             { from: B }
         )
+    })
+
+
+    it("Should retrieve balanceOf(0) @ snapshot 1 @A", async () => {
+        var Balance = [];
+
+        return await UTIL_TKN.balanceOfAt(A, "1", { from: A }, function (_err, _result) {
+            if (_err) { }
+            else {
+                Balance = Object.values(_result)
+                console.log(Balance)
+            }
+        })
+    })
+
+
+    it("Should retrieve balanceOf(10) @ snapshot 1 @B", async () => {
+        var Balance = [];
+
+        return await UTIL_TKN.balanceOfAt(B, "1", { from: A }, function (_err, _result) {
+            if (_err) { }
+            else {
+                Balance = Object.values(_result)
+                console.log(Balance)
+            }
+        })
+    })
+
+
+    it("Should retrieve balanceOf(2) @ snapshot 1 @C", async () => {
+        var Balance = [];
+
+        return await UTIL_TKN.balanceOfAt(C, "1", { from: A }, function (_err, _result) {
+            if (_err) { }
+            else {
+                Balance = Object.values(_result)
+                console.log(Balance)
+            }
+        })
+    })
+
+
+    it("Should retrieve balanceOf(0) @ snapshot 2 @A", async () => {
+        var Balance = [];
+
+        return await UTIL_TKN.balanceOfAt(A, "2", { from: A }, function (_err, _result) {
+            if (_err) { }
+            else {
+                Balance = Object.values(_result)
+                console.log(Balance)
+            }
+        })
+    })
+
+
+    it("Should retrieve balanceOf(10.1) @ snapshot 2 @B", async () => {
+        var Balance = [];
+
+        return await UTIL_TKN.balanceOfAt(B, "2", { from: A }, function (_err, _result) {
+            if (_err) { }
+            else {
+                Balance = Object.values(_result)
+                console.log(Balance)
+            }
+        })
+    })
+
+
+    it("Should retrieve balanceOf(11.1) @ snapshot 2 @C", async () => {
+        var Balance = [];
+
+        return await UTIL_TKN.balanceOfAt(C, "2", { from: A }, function (_err, _result) {
+            if (_err) { }
+            else {
+                Balance = Object.values(_result)
+                console.log(Balance)
+            }
+        })
+    })
+
+
+    it("Should retrieve balanceOf(0.95) @ snapshot 3 @A", async () => {
+        var Balance = [];
+
+        return await UTIL_TKN.balanceOfAt(A, "3", { from: A }, function (_err, _result) {
+            if (_err) { }
+            else {
+                Balance = Object.values(_result)
+                console.log(Balance)
+            }
+        })
+    })
+
+
+    it("Should retrieve balanceOf(9) @ snapshot 3 @B", async () => {
+        var Balance = [];
+
+        return await UTIL_TKN.balanceOfAt(B, "3", { from: A }, function (_err, _result) {
+            if (_err) { }
+            else {
+                Balance = Object.values(_result)
+                console.log(Balance)
+            }
+        })
+    })
+
+
+    it("Should retrieve balanceOf(11.55) @ snapshot 3 @C", async () => {
+        var Balance = [];
+
+        return await UTIL_TKN.balanceOfAt(C, "3", { from: A }, function (_err, _result) {
+            if (_err) { }
+            else {
+                Balance = Object.values(_result)
+                console.log(Balance)
+            }
+        })
     })
 
 })
