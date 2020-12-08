@@ -142,27 +142,27 @@ contract A_TKN is ReentrancyGuard, Context, AccessControl, ERC721Burnable, ERC72
         //^^^^^^^interactions^^^^^^^^^
     }
 
-    /*
-     * @dev remint Asset Token
-     * must set a new and unuiqe rgtHash
-     * burns old token
-     * Sends new token to original Caller
-     */
-    function reMintAssetToken(address _recipientAddress, uint256 tokenId)
-        external
-        isMinter
-        nonReentrant
-        returns (uint256)
-    {
-        require(_exists(tokenId), "AT:RM:Cannot Remint nonexistant token");
-        //^^^^^^^checks^^^^^^^^^
-        string memory tokenURI = tokenURI(tokenId);
-        _burn(tokenId);
-        _safeMint(_recipientAddress, tokenId);
-        _setTokenURI(tokenId, tokenURI);
-        return tokenId;
-        //^^^^^^^interactions^^^^^^^^^
-    }
+    // /*
+    //  * @dev remint Asset Token
+    //  * must set a new and unuiqe rgtHash
+    //  * burns old token
+    //  * Sends new token to original Caller
+    //  */
+    // function reMintAssetToken(address _recipientAddress, uint256 tokenId)
+    //     external
+    //     isMinter
+    //     nonReentrant
+    //     returns (uint256)
+    // {
+    //     require(_exists(tokenId), "AT:RM:Cannot Remint nonexistant token");
+    //     //^^^^^^^checks^^^^^^^^^
+    //     string memory tokenURI = tokenURI(tokenId);
+    //     _burn(tokenId);
+    //     _safeMint(_recipientAddress, tokenId);
+    //     _setTokenURI(tokenId, tokenURI);
+    //     return tokenId;
+    //     //^^^^^^^interactions^^^^^^^^^
+    // }
 
     /*
      * @dev Set new token URI String

@@ -42,9 +42,7 @@ pragma solidity ^0.6.7;
  *          takes greenRgtHash and hashes on chain to compare with rgtHash. 
  *          Enforces new rgtHash to eliminate replay
  *
- *      *  
- *
- *      *
+ *      * Payable everything!
  *
  *      *
  *
@@ -72,7 +70,7 @@ pragma solidity ^0.6.7;
  *
  *      *make security token invisible from the main contracts 
  *
- *      !!** remint might get eaten in the dark forest!  check all other functions as well for this issue
+ *      !!** remint might get eaten in the dark forest!  check all other functions as well for this issue !!IS DEAD!
  *
  *
 - ----------------------------------------------------------------

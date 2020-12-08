@@ -111,58 +111,58 @@ contract APP_NC is CORE {
         //^^^^^^^interactions / effects^^^^^^^^^^^^
     }
 
-    /*
-     * @dev remint token with confirmation of posession of RAWTEXT hash inputs
-     * must Match rgtHash using raw data fields ---------------------------security risk--------REVIEW!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-     */
-    function $reMintToken(
-        bytes32 _idxHash,
-        string calldata first,
-        string calldata middle,
-        string calldata last,
-        string calldata id,
-        string calldata secret
-    ) external nonReentrant whenNotPaused returns (uint256) {
-        Record memory rec = getRecord(_idxHash);
-        ContractDataHash memory contractInfo = getContractInfo(
-            address(this),
-            rec.assetClass
-        );
-        uint256 tokenId = uint256(_idxHash);
-        bytes32 rawHash = keccak256(
-            abi.encodePacked(first, middle, last, id, secret)
-        );
+    // /*
+    //  * @dev remint token with confirmation of posession of RAWTEXT hash inputs
+    //  * must Match rgtHash using raw data fields ---------------------------security risk--------REVIEW!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+    //  */
+    // function $reMintToken(
+    //     bytes32 _idxHash,
+    //     string calldata first,
+    //     string calldata middle,
+    //     string calldata last,
+    //     string calldata id,
+    //     string calldata secret
+    // ) external nonReentrant whenNotPaused returns (uint256) {
+    //     Record memory rec = getRecord(_idxHash);
+    //     ContractDataHash memory contractInfo = getContractInfo(
+    //         address(this),
+    //         rec.assetClass
+    //     );
+    //     uint256 tokenId = uint256(_idxHash);
+    //     bytes32 rawHash = keccak256(
+    //         abi.encodePacked(first, middle, last, id, secret)
+    //     );
 
-        require(
-            contractInfo.contractType > 0,
-            "ANC:RMT: contract not auth for AC"
-        );
-        require(
-            rec.rightsHolder !=
-                0xFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF,
-            "ANC:RMT:Record not remintable"
-        );
-        require(
-            isEscrow(rec.assetStatus) == 0,
-            "ANC:RMT:Cannot modify asset in Escrow"
-        );
-        require(                                          //STATE UNREACHABLE
-            needsImport(rec.assetStatus) == 0,
-            "ANC:RMT:Record In Transferred-unregistered or discarded status"
-        );
-        require(
-            rec.rightsHolder == keccak256(abi.encodePacked(_idxHash, rawHash)),
-            "ANC:RMT:Rightsholder does not match hash from data"
-        );
-        //^^^^^^^checks^^^^^^^^^
+    //     require(
+    //         contractInfo.contractType > 0,
+    //         "ANC:RMT: contract not auth for AC"
+    //     );
+    //     require(
+    //         rec.rightsHolder !=
+    //             0xFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF,
+    //         "ANC:RMT:Record not remintable"
+    //     );
+    //     require(
+    //         isEscrow(rec.assetStatus) == 0,
+    //         "ANC:RMT:Cannot modify asset in Escrow"
+    //     );
+    //     require(                                          //STATE UNREACHABLE
+    //         needsImport(rec.assetStatus) == 0,
+    //         "ANC:RMT:Record In Transferred-unregistered or discarded status"
+    //     );
+    //     require(
+    //         rec.rightsHolder == keccak256(abi.encodePacked(_idxHash, rawHash)),
+    //         "ANC:RMT:Rightsholder does not match hash from data"
+    //     );
+    //     //^^^^^^^checks^^^^^^^^^
 
-        deductServiceCosts(rec.assetClass, 1);
+    //     deductServiceCosts(rec.assetClass, 1);
 
-        tokenId = A_TKN.reMintAssetToken(msg.sender, tokenId);
+    //     tokenId = A_TKN.reMintAssetToken(msg.sender, tokenId);
 
-        return tokenId;
-        //^^^^^^^interactions^^^^^^^^^
-    }
+    //     return tokenId;
+    //     //^^^^^^^interactions^^^^^^^^^
+    // }
 
     /*
      * @dev Modify **Record**.Ipfs2 with confirmation

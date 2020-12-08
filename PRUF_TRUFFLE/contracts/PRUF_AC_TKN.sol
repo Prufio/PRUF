@@ -44,7 +44,13 @@ import "./Imports/utils/ReentrancyGuard.sol";
  * and pauser roles to other accounts.
  */
 
-contract AC_TKN is ReentrancyGuard, Context, AccessControl, ERC721Burnable, ERC721Pausable {
+contract AC_TKN is
+    ReentrancyGuard,
+    Context,
+    AccessControl,
+    ERC721Burnable,
+    ERC721Pausable
+{
     using Counters for Counters.Counter;
 
     bytes32 public constant MINTER_ROLE = keccak256("MINTER_ROLE");
@@ -63,14 +69,16 @@ contract AC_TKN is ReentrancyGuard, Context, AccessControl, ERC721Burnable, ERC7
     event REPORT(string _msg);
 
     modifier isAdmin() {
-        require (hasRole(DEFAULT_ADMIN_ROLE, _msgSender()),
+        require(
+            hasRole(DEFAULT_ADMIN_ROLE, _msgSender()),
             "AT:MOD-IA:Calling address does not belong to an admin"
         );
         _;
     }
 
     modifier isMinter() {
-        require (hasRole(MINTER_ROLE, _msgSender()),
+        require(
+            hasRole(MINTER_ROLE, _msgSender()),
             "AT:MOD-IA:Calling address does not belong to a minter"
         );
         _;
@@ -95,11 +103,10 @@ contract AC_TKN is ReentrancyGuard, Context, AccessControl, ERC721Burnable, ERC7
     }
 
     /*
-     * Authorizations?
-     * @dev remint Asset Token
-     * must set a new and unuiqe rgtHash
+     * Authorizations
+     * @dev remint Asset Class Token
      * burns old token
-     * Sends new token to original Caller
+     * Sends new token to specified address
      */
     function reMintACToken(
         address _recipientAddress,
@@ -107,11 +114,16 @@ contract AC_TKN is ReentrancyGuard, Context, AccessControl, ERC721Burnable, ERC7
         string calldata _tokenURI
     ) external isMinter nonReentrant returns (uint256) {
         require(_exists(tokenId), "ACT:RM:Cannot Remint nonexistant token");
+        require(
+            keccak256(abi.encodePacked(_tokenURI)) ==
+                keccak256(abi.encodePacked(tokenURI(tokenId))),
+            "ACT:RM:OLD URI MUST MATCH PROVIDED URI"
+        );
         //^^^^^^^checks^^^^^^^^^
 
         _burn(tokenId);
         _safeMint(_recipientAddress, tokenId);
-        _setTokenURI(tokenId, _tokenURI);
+        _setTokenURI(tokenId, tokenURI(tokenId));
         return tokenId;
         //^^^^^^^interactions^^^^^^^^^
     }
@@ -199,7 +211,10 @@ contract AC_TKN is ReentrancyGuard, Context, AccessControl, ERC721Burnable, ERC7
      * - the caller must have the `PAUSER_ROLE`.
      */
     function pause() public virtual {
-        require(hasRole(PAUSER_ROLE, _msgSender()), "ERC721PresetMinterPauserAutoId: must have pauser role to pause");
+        require(
+            hasRole(PAUSER_ROLE, _msgSender()),
+            "ERC721PresetMinterPauserAutoId: must have pauser role to pause"
+        );
         _pause();
     }
 
@@ -213,11 +228,18 @@ contract AC_TKN is ReentrancyGuard, Context, AccessControl, ERC721Burnable, ERC7
      * - the caller must have the `PAUSER_ROLE`.
      */
     function unpause() public virtual {
-        require(hasRole(PAUSER_ROLE, _msgSender()), "ERC721PresetMinterPauserAutoId: must have pauser role to unpause");
+        require(
+            hasRole(PAUSER_ROLE, _msgSender()),
+            "ERC721PresetMinterPauserAutoId: must have pauser role to unpause"
+        );
         _unpause();
     }
 
-    function _beforeTokenTransfer(address from, address to, uint256 tokenId) internal virtual override(ERC721, ERC721Pausable) {
+    function _beforeTokenTransfer(
+        address from,
+        address to,
+        uint256 tokenId
+    ) internal virtual override(ERC721, ERC721Pausable) {
         super._beforeTokenTransfer(from, to, tokenId);
     }
 }
