@@ -21,10 +21,10 @@ __/\\\\\\\\\\\\\ _____/\\\\\\\\\ _______/\\../\\ ___/\\\\\\\\\\\\\\\
 pragma solidity ^0.6.7;
 
 import "./PRUF_INTERFACES.sol";
-import "./Imports/access/AccessControl.sol";
-import "./Imports/utils/Pausable.sol";
-import "./Imports/utils/ReentrancyGuard.sol";
-import "./Imports/math/SafeMath.sol";
+import "./AccessControl.sol";
+import "./Pausable.sol";
+import "./ReentrancyGuard.sol";
+import "./SafeMath.sol";
 
 contract PRESALE is ReentrancyGuard, Pausable, AccessControl {
     using SafeMath for uint256;

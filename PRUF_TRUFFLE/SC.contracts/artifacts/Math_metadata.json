@@ -1,0 +1,46 @@
+{
+	"compiler": {
+		"version": "0.6.12+commit.27d51765"
+	},
+	"language": "Solidity",
+	"output": {
+		"abi": [],
+		"devdoc": {
+			"details": "Standard math utilities missing in the Solidity language.",
+			"kind": "dev",
+			"methods": {},
+			"version": 1
+		},
+		"userdoc": {
+			"kind": "user",
+			"methods": {},
+			"version": 1
+		}
+	},
+	"settings": {
+		"compilationTarget": {
+			"localhost/PRUF/PRUF_TRUFFLE/SC.contracts/Math.sol": "Math"
+		},
+		"evmVersion": "istanbul",
+		"libraries": {},
+		"metadata": {
+			"bytecodeHash": "ipfs"
+		},
+		"optimizer": {
+			"enabled": true,
+			"runs": 1000000
+		},
+		"remappings": []
+	},
+	"sources": {
+		"localhost/PRUF/PRUF_TRUFFLE/SC.contracts/Math.sol": {
+			"keccak256": "0x6c234834003dfb86e2c23d12dfdde7cc01e78013d71b52162cb308b4873562cb",
+			"license": "MIT",
+			"urls": [
+				"bzz-raw://f0e3f39b2ec26694a42c89a5d9e489d5228f1880fcf5e375c5c975ba816e5ffe",
+				"dweb:/ipfs/QmUErheHopnbBUSLDQAtWsmw6HsEvqTNp1QiBEuSJhmhHn"
+			]
+		}
+	},
+	"version": 1
+}
