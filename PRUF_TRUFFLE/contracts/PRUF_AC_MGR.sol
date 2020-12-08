@@ -32,7 +32,16 @@ contract AC_MGR is BASIC {
     }
 
     uint256 private ACtokenIndex = 1000000; //asset tokens created in sequence starting at at 1,000,000
-    uint256 private currentACtokenPrice = 10000 ether;
+
+    uint256 private acPrice_L1 = 10000000000000000000000;
+    uint256 private acPrice_L2 = 15000000000000000000000;
+    uint256 private acPrice_L3 = 22500000000000000000000;
+    uint256 private acPrice_L4 = 33750000000000000000000;
+    uint256 private acPrice_L5 = 50625000000000000000000;
+    uint256 private acPrice_L6 = 75937000000000000000000;
+    uint256 private acPrice_L7 = 100000000000000000000000;
+
+    uint256 private currentACtokenPrice = acPrice_L1;
 
     //mapping(uint32 => Costs) private cost; // Cost per function by asset class
     mapping(uint32 => mapping(uint16 => Costs)) private cost; // Cost per function by asset class => Cost Type
@@ -82,13 +91,29 @@ contract AC_MGR is BASIC {
 
     //--------------------------------------------External Functions--------------------------
     /*
-     * @dev Set upgrade price multiplier (default 3)
+     * @dev Set upgrade price multiplier (default 3)----------------------DPB:TEST ---- NEW functionality
      */
-    function OO_upgradeMultiplier(uint256 _newValue) external onlyOwner {
+    function OO_SetPricing(
+        uint256 _newValue,
+        uint256 _L1,
+        uint256 _L2,
+        uint256 _L3,
+        uint256 _L4,
+        uint256 _L5,
+        uint256 _L6,
+        uint256 _L7
+    ) external onlyOwner {
         //DPS:EXAMINE  -- NEW FUNCTIONALITY
         require(_newValue < 10001, "multiplier > 10 thousand!");
         //^^^^^^^checks^^^^^^^^^
 
+        acPrice_L1 = _L1;
+        acPrice_L2 = _L2;
+        acPrice_L3 = _L3;
+        acPrice_L4 = _L4;
+        acPrice_L5 = _L5;
+        acPrice_L6 = _L6;
+        acPrice_L7 = _L7;
         upgradeMultiplier = _newValue;
         //^^^^^^^effects^^^^^^^^^
 
@@ -96,59 +121,60 @@ contract AC_MGR is BASIC {
         //^^^^^^^interactions^^^^^^^^^
     }
 
-    /*
-     * @dev Authorize / Deauthorize / Authorize users for an address be permitted to make record modifications
-     * ----------------INSECURE -- Remove this overload for production. keccak256 of address must be generated in the web client! in release.
-     */
-    function OO_addUser(
-        //DPS:EXAMINE - this will be depreciated. The overloaded function OO_addUser below should be used instead, and this function that takes raw addresses deleted.
-        address _authAddr,
-        uint8 _userType,
-        uint32 _assetClass
-    ) external whenNotPaused isACtokenHolderOfClass(_assetClass) {
-        //^^^^^^^checks^^^^^^^^^
-
-        bytes32 addrHash = keccak256(abi.encodePacked(_authAddr));
-
-        registeredUsers[addrHash][_assetClass] = _userType;
-
-        if ((_userType != 0) && (registeredUsers[addrHash][0] < 255)) {
-            registeredUsers[addrHash][0]++;
-        }
-
-        if ((_userType == 0) && (registeredUsers[addrHash][0] > 0)) {
-            registeredUsers[addrHash][0]--;
-        }
-
-        //^^^^^^^effects^^^^^^^^^
-        emit REPORT("Internal user database access!"); //report access to the internal user database
-        //^^^^^^^interactions^^^^^^^^^
-    }
-
     // /*
     //  * @dev Authorize / Deauthorize / Authorize users for an address be permitted to make record modifications
+    //  * ----------------INSECURE -- Remove this overload for production. keccak256 of address must be generated in the web client! in release.
     //  */
     // function OO_addUser(
-    //     bytes32 _addrHash,
+    //     //DPS:EXAMINE - this will be depreciated. The overloaded function OO_addUser below should be used instead, and this function that takes raw addresses deleted.
+    //     address _authAddr,
     //     uint8 _userType,
     //     uint32 _assetClass
     // ) external whenNotPaused isACtokenHolderOfClass(_assetClass) {
     //     //^^^^^^^checks^^^^^^^^^
 
-    //     registeredUsers[_addrHash][_assetClass] = _userType;
+    //     bytes32 addrHash = keccak256(abi.encodePacked(_authAddr));
 
-    //     if ((_userType != 0) && (registeredUsers[_addrHash][0] < 255)) {
-    //         registeredUsers[_addrHash][0]++;
+    //     registeredUsers[addrHash][_assetClass] = _userType;
+
+    //     if ((_userType != 0) && (registeredUsers[addrHash][0] < 255)) {
+    //         registeredUsers[addrHash][0]++;
     //     }
 
-    //     if ((_userType == 0) && (registeredUsers[_addrHash][0] > 0)) {
-    //         registeredUsers[_addrHash][0]--;
+    //     if ((_userType == 0) && (registeredUsers[addrHash][0] > 0)) {
+    //         registeredUsers[addrHash][0]--;
     //     }
 
     //     //^^^^^^^effects^^^^^^^^^
     //     emit REPORT("Internal user database access!"); //report access to the internal user database
     //     //^^^^^^^interactions^^^^^^^^^
     // }
+
+    /*
+     * @dev Authorize / Deauthorize / Authorize users for an address be permitted to make record modifications
+     */
+    function addUser(
+        //add the K256HASH of the address, not the address. ----------------------DPB:TEST ---- NEW REQUIREMENT
+        bytes32 _addrHash,
+        uint8 _userType,
+        uint32 _assetClass
+    ) external whenNotPaused isACtokenHolderOfClass(_assetClass) {
+        //^^^^^^^checks^^^^^^^^^
+
+        registeredUsers[_addrHash][_assetClass] = _userType;
+
+        if ((_userType != 0) && (registeredUsers[_addrHash][0] < 255)) {
+            registeredUsers[_addrHash][0]++;
+        }
+
+        if ((_userType == 0) && (registeredUsers[_addrHash][0] > 0)) {
+            registeredUsers[_addrHash][0]--;
+        }
+
+        //^^^^^^^effects^^^^^^^^^
+        emit REPORT("Internal user database access!"); //report access to the internal user database
+        //^^^^^^^interactions^^^^^^^^^
+    }
 
     /**
      * @dev Burns (amout) tokens and mints a new asset class token to the caller address
@@ -175,19 +201,19 @@ contract AC_MGR is BASIC {
         uint256 numberOfTokensSold = ACtokenIndex.sub(uint256(1000000));
 
         if (numberOfTokensSold >= 4000) {
-            newACtokenPrice = 100000 ether;
+            newACtokenPrice = acPrice_L7;
         } else if (numberOfTokensSold >= 2000) {
-            newACtokenPrice = 75937 ether;
+            newACtokenPrice = acPrice_L6;
         } else if (numberOfTokensSold >= 1000) {
-            newACtokenPrice = 50625 ether;
+            newACtokenPrice = acPrice_L5;
         } else if (numberOfTokensSold >= 500) {
-            newACtokenPrice = 33750 ether;
+            newACtokenPrice = acPrice_L4;
         } else if (numberOfTokensSold >= 250) {
-            newACtokenPrice = 22500 ether;
+            newACtokenPrice = acPrice_L3;
         } else if (numberOfTokensSold >= 125) {
-            newACtokenPrice = 15000 ether;
+            newACtokenPrice = acPrice_L2;
         } else {
-            newACtokenPrice = 10000 ether;
+            newACtokenPrice = acPrice_L1;
         }
         //^^^^^^^effects^^^^^^^^^
 
@@ -343,10 +369,10 @@ contract AC_MGR is BASIC {
      * - `recipient` cannot be the zero address.
      * - the caller must have a balance of at least `amount`.
      */
-    function increaseShare(uint32 _assetClass, uint256 _amount) //in whole pruf tokens, not 18 decimals
-        public
-        returns (bool)
-    {
+    function increaseShare(
+        uint32 _assetClass,
+        uint256 _amount //in whole pruf tokens, not 18 decimals
+    ) public returns (bool) {
         require(
             _amount > 199,
             "PRuf:IS:amount < 200 will not increase price share"
@@ -487,11 +513,35 @@ contract AC_MGR is BASIC {
     /*
      * @dev return current AC token index pointer
      */
-    function currentACtokenInfo() external view returns (uint256, uint256) {
+    function currentACpricingInfo()
+        external
+        view
+        returns (
+            uint256,
+            uint256,
+            uint256,
+            uint256,
+            uint256,
+            uint256,
+            uint256,
+            uint256,
+            uint256
+        )
+    {
         //^^^^^^^checks^^^^^^^^^
 
         uint256 numberOfTokensSold = ACtokenIndex.sub(uint256(1000000));
-        return (numberOfTokensSold, currentACtokenPrice);
+        return (
+            numberOfTokensSold,
+            currentACtokenPrice,
+            acPrice_L1,
+            acPrice_L2,
+            acPrice_L3,
+            acPrice_L4,
+            acPrice_L5,
+            acPrice_L6,
+            acPrice_L7
+        );
         //^^^^^^^effects/interactions^^^^^^^^^
     }
 

@@ -358,17 +358,16 @@ interface AC_TKN_Interface {
         string calldata _tokenURI
     ) external returns (uint256);
 
-    /*
-     * @dev remint Asset Token
-     * must set a new and unuiqe rgtHash
-     * burns old token
-     * Sends new token to original Caller
-     */
-    function reMintACToken(
-        address _recipientAddress,
-        uint256 tokenId,
-        string calldata _tokenURI
-    ) external returns (uint256);
+    // /*
+    //  * @dev remint AC Token
+    //  * burns old token
+    //  * Sends new token to _recipientAddreass
+    //  */
+    // function reMintACToken(
+    //     address _recipientAddress,
+    //     uint256 tokenId,
+    //     string calldata _tokenURI
+    // ) external returns (uint256);
 
     /**
      * @dev Transfers the ownership of a given token ID to another address.
@@ -504,15 +503,15 @@ interface A_TKN_Interface {
         string calldata _tokenURI
     ) external returns (uint256);
 
-    /*
-     * @dev remint Asset Token
-     * must set a new and unuiqe rgtHash
-     * burns old token
-     * Sends new token to original Caller
-     */
-    function reMintAssetToken(address _recipientAddress, uint256 tokenId)
-        external
-        returns (uint256);
+    // /*
+    //  * @dev remint Asset Token
+    //  * must set a new and unuiqe rgtHash
+    //  * burns old token
+    //  * Sends new token to original Caller
+    //  */
+    // function reMintAssetToken(address _recipientAddress, uint256 tokenId)
+    //     external
+    //     returns (uint256);
 
     /*
      * @dev Set new token URI String
@@ -895,6 +894,23 @@ interface AC_MGR_Interface {
             address,
             uint256,
             address,
+            uint256
+        );
+    
+    /*
+     * @dev return current AC token index pointer
+     */
+    function currentACpricingInfo()
+        external
+        returns (
+            uint256,
+            uint256,
+            uint256,
+            uint256,
+            uint256,
+            uint256,
+            uint256,
+            uint256,
             uint256
         );
 }
