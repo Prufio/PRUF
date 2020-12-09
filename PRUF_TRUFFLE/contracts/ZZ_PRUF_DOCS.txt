@@ -13,6 +13,15 @@ __/\\\\\\\\\\\\\ _____/\\\\\\\\\ _______/\\../\\ ___/\\\\\\\\\\\\\\\
 
 // SPDX-License-Identifier: UNLICENSED
 
+/*--------------- COMMIT RULES FOR CHANGE TRACKING ----------------
+ *
+ *      *Each Commit:
+ *              Commit 1 functional change (or less) at a time. 
+ *              Describe the change in the title
+ *              Describe any interface changes in the description
+ *              Stop being a bunch of frikken savages
+- ----------------------------------------------------------------
+
 pragma solidity ^0.6.7;
 /*-----------------------------------------------------------------
  *TESTNET TO DO :
@@ -20,8 +29,6 @@ pragma solidity ^0.6.7;
  *      * Faucet - 0.1 KETH per 5000 PRUF?
  *
  *      * ID token 1 per adreess
- *
- *      * token limit 40,000,000,000 instead of 4
  *
  *      * Webapp - mint pruf, mint ID tokens
  *
@@ -44,7 +51,7 @@ pragma solidity ^0.6.7;
  *
  *      * Payable everything!
  *
- *      *
+ *      * 
  *
  *      *
  *
