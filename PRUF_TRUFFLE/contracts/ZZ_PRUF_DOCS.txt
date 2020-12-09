@@ -44,16 +44,12 @@ pragma solidity ^0.6.7;
 /*-----------------------------------------------------------------
  *TO DO :
  *
- *      * destructive verify(idxHash, greenRgtHash, newRgtHash)
- *           rgthash is rawRgt#idx -> is green rgtHash# -> is rgtHash
- *          takes greenRgtHash and hashes on chain to compare with rgtHash. 
- *          Enforces new rgtHash to eliminate replay
- *
  *      * Payable everything!
  *
- *      * 
+ *      * All core stateful contracts should have ROLES defined for future distributed governance contracts.
+ *          EX PRICE_SETTER_ROLE or something similar to enable future decentralized gov.
  *
- *      *
+ *      * add a 100% share function accessible only to DEFI nodes? 
  *
  *      *
  *
@@ -95,12 +91,14 @@ pragma solidity ^0.6.7;
  *
  *      *Medium article on PRUF general
  *
+ *      *SIMPLE pruf description of nodes etc / decentralized operation
+ *
+ *
+ *
  *
 - ----------------------------------------------------------------
 
 *-----------------------------------------------------------------
- *Rules for reminting tokens:      remint might get eaten in the dark forest!!!!!!!!!!!!!!!!!!!!!!!!!!!
- *  must have the plaintext that generates the rgtHash on-chain
  *
  *
  *Rules for burning records: 
