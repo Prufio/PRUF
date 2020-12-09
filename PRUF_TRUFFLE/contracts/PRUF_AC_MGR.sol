@@ -374,8 +374,8 @@ contract AC_MGR is BASIC {
         uint256 _amount //in whole pruf tokens, not 18 decimals
     ) public returns (bool) {
         require(
-            _amount > 199,
-            "PRuf:IS:amount < 200 will not increase price share"
+            _amount >= (upgradeMultiplier.mul(100)),
+            "PRuf:IS:amount too low to increase price share"
         );
 
         //^^^^^^^checks^^^^^^^^^
