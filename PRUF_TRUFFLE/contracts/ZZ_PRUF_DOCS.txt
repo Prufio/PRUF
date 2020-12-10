@@ -48,32 +48,25 @@ pragma solidity ^0.6.7;
  *
  *      * All core stateful contracts should have ROLES defined for future distributed governance contracts.
  *          EX PRICE_SETTER_ROLE or something similar to enable future decentralized gov.
- *
- *      * add a 100% share function accessible only to DEFI nodes? 
- *
  *      *
  *
  *      *
  *
- *      *hand off an array to set pricing rather than one by one (gas cost) ????
+ *      * hand off an array to set pricing rather than one by one (gas cost) ????
  *
- *      *!! make it possible to modify ext data in AC manager
+ *      * Automate contract authorization 
  *
- *      *Automate contract authorization 
+ *      * Eventually flatten contracts and factor interface file
  *
- *      *Eventually flatten contracts and factor interface file
+ *      * what do we do (if anything) with the 128 "free" bits in the storage struct?
  *
- *      *what do we do (if anything) with the 128 "free" bits in the storage struct?
+ *      * find any recursive calls
  *
- *      *find any recursive calls
+ *      * Security token
  *
- *      *Security token
+ *      * Define / document protocol
  *
- *      *Define / document protocol
- *
- *      *make security token invisible from the main contracts 
- *
- *      !!** remint might get eaten in the dark forest!  check all other functions as well for this issue !!IS DEAD!
+ *      * make security token invisible from the main contracts 
  *
  *
 - ----------------------------------------------------------------
