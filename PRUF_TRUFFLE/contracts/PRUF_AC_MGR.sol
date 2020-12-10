@@ -28,7 +28,7 @@ import "./Imports/utils/ReentrancyGuard.sol";
 
 //import "./Imports/math/Safemath.sol";
 
-contract AC_MGR is BASIC, AccessControl{
+contract AC_MGR is BASIC, AccessControl {
     using SafeMath for uint256;
 
     //using Counters for Counters.Counter;
@@ -78,8 +78,8 @@ contract AC_MGR is BASIC, AccessControl{
 
     constructor() public {
         _setupRole(DEFAULT_ADMIN_ROLE, _msgSender());
-        _setupRole(NODE_MINTER_ROLE, _msgSender());  
-        _setupRole(PAUSER_ROLE, _msgSender());     
+        _setupRole(NODE_MINTER_ROLE, _msgSender());
+        _setupRole(PAUSER_ROLE, _msgSender());
     }
 
     /*
@@ -243,6 +243,7 @@ contract AC_MGR is BASIC, AccessControl{
      *  name is unuiqe
      *  AC is not provisioned with a root (proxy for not yet registered)
      *  that ACtoken does not exist
+     *  _discount 10000 = 100 percent price share , cannot exceed
      */
     function createAssetClass(
         //-------------------------------------------------------DS:TEST -- modified with new IPFS parameter
@@ -253,7 +254,7 @@ contract AC_MGR is BASIC, AccessControl{
         uint8 _custodyType,
         bytes32 _IPFS,
         uint32 _discount
-    ) external isNodeMinter whenNotPaused nonReentrant{
+    ) external isNodeMinter whenNotPaused nonReentrant {
         //^^^^^^^checks^^^^^^^^^
         _createAssetClass(
             _recipientAddress,
@@ -267,48 +268,6 @@ contract AC_MGR is BASIC, AccessControl{
         //^^^^^^^effects^^^^^^^^^
     }
 
-    function _createAssetClass(
-        //-------------------------------------------------------DS:TEST -- modified with new IPFS parameter
-        address _recipientAddress,
-        string calldata _name,
-        uint32 _assetClass,
-        uint32 _assetClassRoot,
-        uint8 _custodyType,
-        bytes32 _IPFS,
-        uint32 _discount
-    ) private whenNotPaused {
-        AC memory _ac = AC_data[_assetClassRoot];
-        uint256 tokenId = uint256(_assetClass);
-
-        require((tokenId != 0), "ACM:CAC: AC cannot be 0"); //sanity check inputs
-        require( //has valid root
-            (_ac.custodyType != 0) || (_assetClassRoot == _assetClass),
-            "ACM:CAC:Root asset class does not exist"
-        );
-
-        require(AC_number[_name] == 0, "ACM:CAC:AC name already in use");
-        require(
-            (AC_data[_assetClass].assetClassRoot == 0),
-            "ACM:CAC:AC already in use"
-        );
-        //^^^^^^^checks^^^^^^^^^
-
-        AC_number[_name] = _assetClass;
-        AC_data[_assetClass].name = _name;
-        AC_data[_assetClass].assetClassRoot = _assetClassRoot;
-        AC_data[_assetClass].discount = _discount;
-        AC_data[_assetClass].custodyType = _custodyType;
-        AC_data[_assetClass].IPFS = _IPFS;
-        //^^^^^^^effects^^^^^^^^^
-
-        AC_TKN.mintACToken(
-            _recipientAddress,
-            tokenId,
-            "pruf.io/assetClassToken"
-        );
-        //^^^^^^^interactions^^^^^^^^^
-    }
-
     /*
      * @dev Modifies an assetClass
      * Sets a new AC name. Asset Classes cannot be moved to a new root or custody type.
@@ -317,7 +276,8 @@ contract AC_MGR is BASIC, AccessControl{
      *  name is unuiqe or same as old name
      */
     function updateACname(string calldata _name, uint32 _assetClass)
-        external whenNotPaused 
+        external
+        whenNotPaused
         isACtokenHolderOfClass(_assetClass)
     {
         require( //should pass if name is same as old name or name is unassigned. Should fail if name is assigned to other AC
@@ -356,30 +316,12 @@ contract AC_MGR is BASIC, AccessControl{
      * Requires that:
      *  caller holds ACtoken
      */
-    function updateACextendedData(uint32 _extData, uint32 _assetClass) external isACtokenHolderOfClass(_assetClass) whenNotPaused {
-         //^^^^^^^checks^^^^^^^^^
-        AC_data[_assetClass].extendedData = _extData;
-        //^^^^^^^effects^^^^^^^^^
-    }
-
-    /*
-     * @dev Increases priceShare in an assetClass
-     *
-     */
-    function increasePriceShare(uint32 _assetClass, uint256 _increaseAmount)
-        private whenNotPaused
-    {
-        require(
-            AC_data[_assetClass].discount <= 8999, 
-            "PRuf:IPS:price share already max"
-        );
-        uint256 discount = AC_data[_assetClass].discount;
+    function updateACextendedData(
+        uint32 _extData,
+        uint32 _assetClass //-------------------------------------------------------DS:TEST
+    ) external isACtokenHolderOfClass(_assetClass) whenNotPaused {
         //^^^^^^^checks^^^^^^^^^
-
-        discount = discount.add(_increaseAmount);
-        if (discount > 9000) discount = 9000;
-
-        AC_data[_assetClass].discount = uint32(discount); //type conversion safe because discount always <= 10000
+        AC_data[_assetClass].extendedData = _extData;
         //^^^^^^^effects^^^^^^^^^
     }
 
@@ -393,13 +335,19 @@ contract AC_MGR is BASIC, AccessControl{
     function increaseShare(
         uint32 _assetClass,
         uint256 _amount //in whole pruf tokens, not 18 decimals
-    ) public whenNotPaused nonReentrant returns (bool) {
-        require(
+    )
+        public
+        whenNotPaused
+        nonReentrant
+        isACtokenHolderOfClass(_assetClass)
+        returns (bool)
+    {
+        require( //-------------------------------------------------------DS:TEST
             _amount >= (upgradeMultiplier.mul(100)),
             "PRuf:IS:amount too low to increase price share"
         );
-        require(
-            AC_data[_assetClass].discount <= 8999, 
+        require( //-------------------------------------------------------DS:TEST
+            AC_data[_assetClass].discount <= 8999,
             "PRuf:IS:price share already maxed out"
         );
 
@@ -419,7 +367,7 @@ contract AC_MGR is BASIC, AccessControl{
         //^^^^^^^effects^^^^^^^^^
 
         increasePriceShare(_assetClass, _amount.div(upgradeMultiplier));
-        
+
         UTIL_TKN.trustedAgentTransfer(
             msg.sender,
             rootPaymentAdress,
@@ -441,6 +389,79 @@ contract AC_MGR is BASIC, AccessControl{
         cost[_assetClass][_service].serviceCost = _serviceCost;
         cost[_assetClass][_service].paymentAddress = _paymentAddress;
         //^^^^^^^effects^^^^^^^^^
+    }
+
+     /*
+     * @dev Increases priceShare in an assetClass
+     *
+     */
+    function increasePriceShare(uint32 _assetClass, uint256 _increaseAmount)
+        private
+        whenNotPaused
+    {
+        require( //-------------------------------------------------------DS:TEST
+            AC_data[_assetClass].discount <= 8999,
+            "PRuf:IPS:price share already max"
+        );
+        uint256 discount = AC_data[_assetClass].discount;
+        //^^^^^^^checks^^^^^^^^^
+
+        discount = discount.add(_increaseAmount);
+        if (discount > 9000) discount = 9000;
+
+        AC_data[_assetClass].discount = uint32(discount); //type conversion safe because discount always <= 10000
+        //^^^^^^^effects^^^^^^^^^
+    }
+
+    /*
+     * @dev creates an assetClass
+     * makes ACdata record with new name, mints token
+     *
+     */
+    function _createAssetClass(
+        //-------------------------------------------------------DS:TEST -- modified with new IPFS parameter
+        address _recipientAddress,
+        string calldata _name,
+        uint32 _assetClass,
+        uint32 _assetClassRoot,
+        uint8 _custodyType,
+        bytes32 _IPFS,
+        uint32 _discount
+    ) private whenNotPaused {
+        AC memory _ac = AC_data[_assetClassRoot];
+        uint256 tokenId = uint256(_assetClass);
+
+        require((tokenId != 0), "ACM:CAC: AC cannot be 0"); //sanity check inputs
+        require(
+            _discount <= 10000,
+            "ACM:CAC: discount cannot exceed 100% (10000)"
+        ); //sanity check inputs //-------------------------------------------------------DS:TEST
+        require( //has valid root
+            (_ac.custodyType != 0) || (_assetClassRoot == _assetClass),
+            "ACM:CAC:Root asset class does not exist"
+        );
+
+        require(AC_number[_name] == 0, "ACM:CAC:AC name already in use");
+        require(
+            (AC_data[_assetClass].assetClassRoot == 0),
+            "ACM:CAC:AC already in use"
+        );
+        //^^^^^^^checks^^^^^^^^^
+
+        AC_number[_name] = _assetClass;
+        AC_data[_assetClass].name = _name;
+        AC_data[_assetClass].assetClassRoot = _assetClassRoot;
+        AC_data[_assetClass].discount = _discount;
+        AC_data[_assetClass].custodyType = _custodyType;
+        AC_data[_assetClass].IPFS = _IPFS;
+        //^^^^^^^effects^^^^^^^^^
+
+        AC_TKN.mintACToken(
+            _recipientAddress,
+            tokenId,
+            "pruf.io/assetClassToken"
+        );
+        //^^^^^^^interactions^^^^^^^^^
     }
 
     //-------------------------------------------functions for information retrieval----------------------------------------------
