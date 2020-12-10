@@ -26,7 +26,7 @@ import "./Imports/utils/Pausable.sol";
 import "./Imports/utils/ReentrancyGuard.sol";
 import "./Imports/math/SafeMath.sol";
 
-contract PRESALE is ReentrancyGuard, Pausable, AccessControl {
+contract FAUCET is ReentrancyGuard, Pausable, AccessControl {
     using SafeMath for uint256;
 
     //----------------------------ROLE DFINITIONS 
