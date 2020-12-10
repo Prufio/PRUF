@@ -14,6 +14,8 @@ __/\\\\\\\\\\\\\ _____/\\\\\\\\\ _______/\\../\\ ___/\\\\\\\\\\\\\\\
  *  TO DO
  * REWORK TO TAKE ALL INPUTS FOR TOKEN MANIPULATION IN wei notation (18 zeros)
  * ADD ROLES! (need role for ACNODE MINTER)
+ * all 18 dec math for price share
+ * 100% price share option to hook into dNodes
  *-----------------------------------------------------------------
  */
 
@@ -21,11 +23,18 @@ __/\\\\\\\\\\\\\ _____/\\\\\\\\\ _______/\\../\\ ___/\\\\\\\\\\\\\\\
 pragma solidity ^0.6.7;
 
 import "./PRUF_BASIC.sol";
+import "./Imports/access/AccessControl.sol";
+import "./Imports/utils/ReentrancyGuard.sol";
 
 //import "./Imports/math/Safemath.sol";
 
-contract AC_MGR is BASIC {
+contract AC_MGR is BASIC, AccessControl{
     using SafeMath for uint256;
+
+    //using Counters for Counters.Counter;
+
+    bytes32 public constant NODE_MINTER_ROLE = keccak256("NODE_MINTER_ROLE");
+    bytes32 public constant PAUSER_ROLE = keccak256("PAUSER_ROLE");
 
     struct Costs {
         uint256 serviceCost; // Cost in the given item category
@@ -66,15 +75,35 @@ contract AC_MGR is BASIC {
 
     uint256 private upgradeMultiplier = 3; // multplier to determine the amount of pruf required to fully upgrade an AC node token
     uint32 private constant startingDiscount = 5100; // Nodes start with 51% profit share
+
+    constructor() public {
+        _setupRole(DEFAULT_ADMIN_ROLE, _msgSender());
+        _setupRole(NODE_MINTER_ROLE, _msgSender());  
+        _setupRole(PAUSER_ROLE, _msgSender());     
+    }
+
     /*
      * @dev Verify user credentials
      * Originating Address:
-     *      is owner
+     *      is admin
      */
     modifier isAdmin() {
         require(
-            msg.sender == owner(),
-            "ACM:MOD-IA:Calling address does not belong to an Admin"
+            hasRole(DEFAULT_ADMIN_ROLE, _msgSender()),
+            "PAM:MOD: must have DEFAULT_ADMIN_ROLE"
+        );
+        _;
+    }
+
+    /*
+     * @dev Verify user credentials
+     * Originating Address:
+     *      is admin
+     */
+    modifier isNodeMinter() {
+        require(
+            hasRole(NODE_MINTER_ROLE, _msgSender()),
+            "PAM:MOD: must have NODE_MINTER_ROLE"
         );
         _;
     }
@@ -103,7 +132,7 @@ contract AC_MGR is BASIC {
         uint256 _L5,
         uint256 _L6,
         uint256 _L7
-    ) external onlyOwner {
+    ) external isAdmin {
         //DPS:EXAMINE  -- NEW FUNCTIONALITY
         require(_newValue < 10001, "multiplier > 10 thousand!");
         //^^^^^^^checks^^^^^^^^^
@@ -121,35 +150,6 @@ contract AC_MGR is BASIC {
         emit REPORT("Upgrade Multiplier Changed!"); //report access to internal parameter
         //^^^^^^^interactions^^^^^^^^^
     }
-
-    // /*
-    //  * @dev Authorize / Deauthorize / Authorize users for an address be permitted to make record modifications
-    //  * ----------------INSECURE -- Remove this overload for production. keccak256 of address must be generated in the web client! in release.
-    //  */
-    // function OO_addUser(
-    //     //DPS:EXAMINE - this will be depreciated. The overloaded function OO_addUser below should be used instead, and this function that takes raw addresses deleted.
-    //     address _authAddr,
-    //     uint8 _userType,
-    //     uint32 _assetClass
-    // ) external whenNotPaused isACtokenHolderOfClass(_assetClass) {
-    //     //^^^^^^^checks^^^^^^^^^
-
-    //     bytes32 addrHash = keccak256(abi.encodePacked(_authAddr));
-
-    //     registeredUsers[addrHash][_assetClass] = _userType;
-
-    //     if ((_userType != 0) && (registeredUsers[addrHash][0] < 255)) {
-    //         registeredUsers[addrHash][0]++;
-    //     }
-
-    //     if ((_userType == 0) && (registeredUsers[addrHash][0] > 0)) {
-    //         registeredUsers[addrHash][0]--;
-    //     }
-
-    //     //^^^^^^^effects^^^^^^^^^
-    //     emit REPORT("Internal user database access!"); //report access to the internal user database
-    //     //^^^^^^^interactions^^^^^^^^^
-    // }
 
     /*
      * @dev Authorize / Deauthorize / Authorize users for an address be permitted to make record modifications
@@ -183,13 +183,13 @@ contract AC_MGR is BASIC {
      * Requirements:
      * - the caller must have a balance of at least `amount`.
      */
-    function purchaseACtoken(
+    function purchaseACnode(
         //-------------------------------------------------------CTS:EXAMINE pruf balance check?
         string calldata _name,
         uint32 _assetClassRoot,
         uint8 _custodyType,
         bytes32 _IPFS
-    ) public returns (uint256) {
+    ) public whenNotPaused nonReentrant returns (uint256) {
         require( //Impossible to test??
             ACtokenIndex < 4294000000,
             "PRuf:IS:Only 4294000000 AC tokens allowed"
@@ -229,7 +229,8 @@ contract AC_MGR is BASIC {
             uint32(ACtokenIndex), //safe because ACtokenIndex <  4294000000 required
             _assetClassRoot,
             _custodyType,
-            _IPFS
+            _IPFS,
+            startingDiscount
         );
 
         return ACtokenIndex; //returns asset class # of minted token
@@ -250,8 +251,9 @@ contract AC_MGR is BASIC {
         uint32 _assetClass,
         uint32 _assetClassRoot,
         uint8 _custodyType,
-        bytes32 _IPFS
-    ) external onlyOwner {
+        bytes32 _IPFS,
+        uint32 _discount
+    ) external isNodeMinter whenNotPaused nonReentrant{
         //^^^^^^^checks^^^^^^^^^
         _createAssetClass(
             _recipientAddress,
@@ -259,7 +261,8 @@ contract AC_MGR is BASIC {
             _assetClass,
             _assetClassRoot,
             _custodyType,
-            _IPFS
+            _IPFS,
+            _discount
         );
         //^^^^^^^effects^^^^^^^^^
     }
@@ -271,8 +274,9 @@ contract AC_MGR is BASIC {
         uint32 _assetClass,
         uint32 _assetClassRoot,
         uint8 _custodyType,
-        bytes32 _IPFS
-    ) private {
+        bytes32 _IPFS,
+        uint32 _discount
+    ) private whenNotPaused {
         AC memory _ac = AC_data[_assetClassRoot];
         uint256 tokenId = uint256(_assetClass);
 
@@ -292,7 +296,7 @@ contract AC_MGR is BASIC {
         AC_number[_name] = _assetClass;
         AC_data[_assetClass].name = _name;
         AC_data[_assetClass].assetClassRoot = _assetClassRoot;
-        AC_data[_assetClass].discount = startingDiscount; //basic discount (% to PRUF Foundation)
+        AC_data[_assetClass].discount = _discount;
         AC_data[_assetClass].custodyType = _custodyType;
         AC_data[_assetClass].IPFS = _IPFS;
         //^^^^^^^effects^^^^^^^^^
@@ -313,7 +317,7 @@ contract AC_MGR is BASIC {
      *  name is unuiqe or same as old name
      */
     function updateACname(string calldata _name, uint32 _assetClass)
-        external
+        external whenNotPaused 
         isACtokenHolderOfClass(_assetClass)
     {
         require( //should pass if name is same as old name or name is unassigned. Should fail if name is assigned to other AC
@@ -340,9 +344,21 @@ contract AC_MGR is BASIC {
     function updateACipfs(
         bytes32 _IPFS,
         uint32 _assetClass //-------------------------------------------------------DS:TEST -- modified with new IPFS parameter
-    ) external isACtokenHolderOfClass(_assetClass) {
+    ) external isACtokenHolderOfClass(_assetClass) whenNotPaused {
         //^^^^^^^checks^^^^^^^^^
         AC_data[_assetClass].IPFS = _IPFS;
+        //^^^^^^^effects^^^^^^^^^
+    }
+
+    /*
+     * @dev Modifies an assetClass
+     * Sets a new AC EXT Data uint32
+     * Requires that:
+     *  caller holds ACtoken
+     */
+    function updateACextendedData(uint32 _extData, uint32 _assetClass) external isACtokenHolderOfClass(_assetClass) whenNotPaused {
+         //^^^^^^^checks^^^^^^^^^
+        AC_data[_assetClass].extendedData = _extData;
         //^^^^^^^effects^^^^^^^^^
     }
 
@@ -351,8 +367,12 @@ contract AC_MGR is BASIC {
      *
      */
     function increasePriceShare(uint32 _assetClass, uint256 _increaseAmount)
-        private
+        private whenNotPaused
     {
+        require(
+            AC_data[_assetClass].discount <= 8999, 
+            "PRuf:IPS:price share already max"
+        );
         uint256 discount = AC_data[_assetClass].discount;
         //^^^^^^^checks^^^^^^^^^
 
@@ -373,10 +393,14 @@ contract AC_MGR is BASIC {
     function increaseShare(
         uint32 _assetClass,
         uint256 _amount //in whole pruf tokens, not 18 decimals
-    ) public returns (bool) {
+    ) public whenNotPaused nonReentrant returns (bool) {
         require(
             _amount >= (upgradeMultiplier.mul(100)),
             "PRuf:IS:amount too low to increase price share"
+        );
+        require(
+            AC_data[_assetClass].discount <= 8999, 
+            "PRuf:IS:price share already maxed out"
         );
 
         //^^^^^^^checks^^^^^^^^^
@@ -392,15 +416,16 @@ contract AC_MGR is BASIC {
 
         if (_amount > maxPayment) _amount = maxPayment;
 
+        //^^^^^^^effects^^^^^^^^^
+
+        increasePriceShare(_assetClass, _amount.div(upgradeMultiplier));
+        
         UTIL_TKN.trustedAgentTransfer(
             msg.sender,
             rootPaymentAdress,
             _amount.mul(1 ether) //adds 18 zeros to work in full tokens
         );
-
-        increasePriceShare(_assetClass, _amount.div(upgradeMultiplier));
-        return true;
-        //^^^^^^^effects/interactions^^^^^^^^^
+        //^^^^^^^interactions^^^^^^^^^
     }
 
     /*
