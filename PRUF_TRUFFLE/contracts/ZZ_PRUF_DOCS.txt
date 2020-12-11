@@ -48,7 +48,7 @@ pragma solidity ^0.6.7;
  *
  *      * All core stateful contracts should have ROLES defined for future distributed governance contracts.
  *          EX PRICE_SETTER_ROLE or something similar to enable future decentralized gov.
- *      *
+ *      * !! FIND ALL GOD KEY Issues, give them roles or other solutions that can be hooked to governance or disabled
  *
  *      *
  *
