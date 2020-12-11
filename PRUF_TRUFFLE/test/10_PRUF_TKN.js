@@ -73,9 +73,16 @@ let rgt14;
 let rgt000 = "0x00000000000000000000000000000000000000000000000000000000000000000000";
 let rgtFFF = "0xFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF";
 
+let account1Hash;
 let account2Hash;
+let account3Hash;
 let account4Hash;
+let account5Hash;
 let account6Hash;
+let account7Hash;
+let account8Hash;
+let account9Hash;
+let account10Hash;
 
 let account000 = '0x0000000000000000000000000000000000000000'
 
@@ -445,18 +452,46 @@ contract('UTIL_TKN', accounts => {
             'a',
             'a'
         )
-
+        
+        
+        account1Hash = await Helper.getAddrHash(
+            account1
+        )
 
         account2Hash = await Helper.getAddrHash(
             account2
+        )
+
+        account3Hash = await Helper.getAddrHash(
+            account3
         )
 
         account4Hash = await Helper.getAddrHash(
             account4
         )
 
+        account5Hash = await Helper.getAddrHash(
+            account5
+        )
+
         account6Hash = await Helper.getAddrHash(
             account6
+        )
+
+        account7Hash = await Helper.getAddrHash(
+            account7
+        )
+
+        account8Hash = await Helper.getAddrHash(
+            account8
+        )
+
+        account9Hash = await Helper.getAddrHash(
+            account9
+        )
+
+        account10Hash = await Helper.getAddrHash(
+            account10
         )
 
 
@@ -1455,26 +1490,26 @@ contract('UTIL_TKN', accounts => {
 
         console.log("//**************************************END BOOTSTRAP**********************************************/")
         console.log("Account2 => AC10")
-        return AC_MGR.OO_addUser(account2, '1', '10', { from: account1 })
+        return AC_MGR.addUser(account2Hash, '1', '10', { from: account1 })
 
             .then(() => {
                 console.log("Account2 => AC11")
-                return AC_MGR.OO_addUser(account2, '1', '11', { from: account1 })
+                return AC_MGR.addUser(account2Hash, '1', '11', { from: account1 })
             })
 
             .then(() => {
                 console.log("Account2 => AC12")
-                return AC_MGR.OO_addUser(account2, '1', '12', { from: account1 })
+                return AC_MGR.addUser(account2Hash, '1', '12', { from: account1 })
             })
 
             .then(() => {
                 console.log("Account2 => AC13")
-                return AC_MGR.OO_addUser(account2, '1', '13', { from: account1 })
+                return AC_MGR.addUser(account2Hash, '1', '13', { from: account1 })
             })
 
             .then(() => {
                 console.log("Account2 => AC14")
-                return AC_MGR.OO_addUser(account2, '1', '14', { from: account1 })
+                return AC_MGR.addUser(account2Hash, '1', '14', { from: account1 })
             })
     })
 
@@ -1493,7 +1528,7 @@ contract('UTIL_TKN', accounts => {
              console.log("//**************************************BEGIN UTIL_TKN**********************************************/")
         return UTIL_TKN.mint(
             account1,
-            '30000',
+            '30000000000000000000000',
             { from: account1 }
         )
     })
@@ -1537,7 +1572,7 @@ contract('UTIL_TKN', accounts => {
     it('Should mint 30000 tokens to account2', async () => {
         return UTIL_TKN.mint(
             account2,
-            '30000',
+            '30000000000000000000000',
             { from: account1 }
         )
     })
@@ -1559,7 +1594,7 @@ contract('UTIL_TKN', accounts => {
     it("Should retrieve cost of ACtoken", async () => {
         var ACSaleInfo = [];
 
-        return await AC_MGR.currentACtokenInfo({ from: account2 }, function (_err, _result) {
+        return await AC_MGR.currentACpricingInfo({ from: account2 }, function (_err, _result) {
             if (_err) { }
             else {
                 ACSaleInfo = Object.values(_result)
@@ -1609,7 +1644,7 @@ contract('UTIL_TKN', accounts => {
     it('Should mint 30000 tokens to account3', async () => {
         return UTIL_TKN.mint(
             account3,
-            '30000',
+            '30000000000000000000000',
             { from: account1 }
         )
     })
@@ -1631,7 +1666,7 @@ contract('UTIL_TKN', accounts => {
     it("Should retrieve cost of ACtoken", async () => {
         var ACSaleInfo = [];
 
-        return await AC_MGR.currentACtokenInfo({ from: account2 }, function (_err, _result) {
+        return await AC_MGR.currentACpricingInfo({ from: account2 }, function (_err, _result) {
             if (_err) { }
             else {
                 ACSaleInfo = Object.values(_result)

@@ -85,9 +85,16 @@ let rgt14;
 let rgt000 = "0x0000000000000000000000000000000000000000000000000000000000000000";
 let rgtFFF = "0xFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF";
 
+let account1Hash;
 let account2Hash;
+let account3Hash;
 let account4Hash;
+let account5Hash;
 let account6Hash;
+let account7Hash;
+let account8Hash;
+let account9Hash;
+let account10Hash;
 
 let account000 = '0x0000000000000000000000000000000000000000'
 
@@ -459,16 +466,44 @@ contract('APP', accounts => {
         )
 
 
+        account1Hash = await Helper.getAddrHash(
+            account1
+        )
+
         account2Hash = await Helper.getAddrHash(
             account2
+        )
+
+        account3Hash = await Helper.getAddrHash(
+            account3
         )
 
         account4Hash = await Helper.getAddrHash(
             account4
         )
 
+        account5Hash = await Helper.getAddrHash(
+            account5
+        )
+
         account6Hash = await Helper.getAddrHash(
             account6
+        )
+
+        account7Hash = await Helper.getAddrHash(
+            account7
+        )
+
+        account8Hash = await Helper.getAddrHash(
+            account8
+        )
+
+        account9Hash = await Helper.getAddrHash(
+            account9
+        )
+
+        account10Hash = await Helper.getAddrHash(
+            account10
         )
 
 
@@ -1604,71 +1639,71 @@ contract('APP', accounts => {
 
         console.log("//**************************************END BOOTSTRAP**********************************************/")
         console.log("Account2 => AC10")
-        return AC_MGR.OO_addUser(account2, '1', '10', { from: account1 })
+        return AC_MGR.addUser(account2Hash, '1', '10', { from: account1 })
 
             .then(() => {
                 console.log("Account2 => AC11")
-                return AC_MGR.OO_addUser(account2, '1', '11', { from: account1 })
+                return AC_MGR.addUser(account2Hash, '1', '11', { from: account1 })
             })
 
             .then(() => {
                 console.log("Account3 => AC11")
-                return AC_MGR.OO_addUser(account3, '1', '11', { from: account1 })
+                return AC_MGR.addUser(account3Hash, '1', '11', { from: account1 })
             })
 
             .then(() => {
                 console.log("Account4 => AC10")
-                return AC_MGR.OO_addUser(account4, '1', '10', { from: account1 })
+                return AC_MGR.addUser(account4Hash, '1', '10', { from: account1 })
             })
 
             .then(() => {
                 console.log("Account4 => AC12")
-                return AC_MGR.OO_addUser(account4, '1', '12', { from: account1 })
+                return AC_MGR.addUser(account4Hash, '1', '12', { from: account1 })
             })
 
             .then(() => {
                 console.log("Account4 => AC12")
-                return AC_MGR.OO_addUser(account4, '1', '16', { from: account10 })
+                return AC_MGR.addUser(account4Hash, '1', '16', { from: account10 })
             })
 
             .then(() => {
                 console.log("Account5 => AC13")
-                return AC_MGR.OO_addUser(account5, '1', '13', { from: account1 })
+                return AC_MGR.addUser(account5Hash, '1', '13', { from: account1 })
             })
 
             .then(() => {
                 console.log("Account6 => AC14")
-                return AC_MGR.OO_addUser(account6, '1', '14', { from: account1 })
+                return AC_MGR.addUser(account6Hash, '1', '14', { from: account1 })
             })
 
             .then(() => {
                 console.log("Account7 => AC14 (ROBOT)")
-                return AC_MGR.OO_addUser(account7, '9', '14', { from: account1 })
+                return AC_MGR.addUser(account7Hash, '9', '14', { from: account1 })
             })
 
             .then(() => {
                 console.log("Account8 => AC10 (ROBOT)")
-                return AC_MGR.OO_addUser(account8, '9', '10', { from: account1 })
+                return AC_MGR.addUser(account8Hash, '9', '10', { from: account1 })
             })
 
             .then(() => {
                 console.log("Account9 => AC11 (ROBOT)")
-                return AC_MGR.OO_addUser(account9, '9', '11', { from: account1 })
+                return AC_MGR.addUser(account9Hash, '9', '11', { from: account1 })
             })
 
             .then(() => {
                 console.log("Account10 => AC15 (PIPMINTER)")
-                return AC_MGR.OO_addUser(account10, '10', '15', { from: account10 })
+                return AC_MGR.addUser(account10Hash, '10', '15', { from: account10 })
             })
 
             .then(() => {
                 console.log("Account10 => AC15 (PIPMINTER)")
-                return AC_MGR.OO_addUser(account10, '10', '16', { from: account10 })
+                return AC_MGR.addUser(account10Hash, '10', '16', { from: account10 })
             })
 
             .then(() => {
                 console.log("Account10 => AC15 (PIPMINTER)")
-                return AC_MGR.OO_addUser(account10, '1', '10', { from: account1 })
+                return AC_MGR.addUser(account10Hash, '1', '10', { from: account1 })
             })
     })
 
@@ -1866,7 +1901,7 @@ contract('APP', accounts => {
 
 
         it('Should authorize account9 in AC10', async () => {
-            return AC_MGR.OO_addUser(account9, '9', '10', { from: account1 })
+            return AC_MGR.addUser(account9Hash, '9', '10', { from: account1 })
         })
 
         //4
@@ -1881,7 +1916,7 @@ contract('APP', accounts => {
 
 
         it('Should unauthorize account9 in AC10', async () => {
-            return AC_MGR.OO_addUser(account9, '0', '10', { from: account1 })
+            return AC_MGR.addUser(account9Hash, '0', '10', { from: account1 })
         })
 
         //5
@@ -1977,7 +2012,7 @@ contract('APP', accounts => {
 
             console.log("//************************************************************END $forceModRecord FAIL BATCH**********************************************************//")
             console.log('//**************************BEGIN $transferAsset FAIL BATCH**************************//')
-            return AC_MGR.OO_addUser(account2, '11', '10', { from: account1 })
+            return AC_MGR.addUser(account2Hash, '11', '10', { from: account1 })
         })
 
         //11
@@ -2002,12 +2037,12 @@ contract('APP', accounts => {
 
 
         it('Should add account2 to AC 10 @userType(1)', async () => {
-            return AC_MGR.OO_addUser(account2, '1', '10', { from: account1 })
+            return AC_MGR.addUser(account2Hash, '1', '10', { from: account1 })
         })
 
 
         it('Should add account9 to AC 10', async () => {
-            return AC_MGR.OO_addUser(account9, '9', '10', { from: account1 })
+            return AC_MGR.addUser(account9Hash, '9', '10', { from: account1 })
         })
 
         //13
@@ -2022,7 +2057,7 @@ contract('APP', accounts => {
 
 
         it('Should remove account9 from AC 10', async () => {
-            return AC_MGR.OO_addUser(account9, '0', '10', { from: account1 })
+            return AC_MGR.addUser(account9Hash, '0', '10', { from: account1 })
         })
 
 
@@ -2192,17 +2227,17 @@ contract('APP', accounts => {
         })
     
     
-        it('Should re-mint asset12 token to account2', async () => {
-            return APP_NC.$reMintToken(
-            asset12,
-            'a',
-            'a',
-            'a',
-            'a',
-            'a',
-            {from: account2}
-            )
-        })
+        // it('Should re-mint asset12 token to account2', async () => {
+        //     return APP_NC.$reMintToken(
+        //     asset12,
+        //     'a',
+        //     'a',
+        //     'a',
+        //     'a',
+        //     'a',
+        //     {from: account2}
+        //     )
+        // })
     
     
         it('Should set Ipfs2 note to IDX(1)', async () => {
