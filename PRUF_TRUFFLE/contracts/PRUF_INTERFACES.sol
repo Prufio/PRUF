@@ -798,7 +798,8 @@ interface AC_MGR_Interface {
      * Requires that:
      *  name is unuiqe
      *  AC is not provisioned with a root (proxy for not yet registered)
-     *  that ACtoken does not exist
+     *  that ACtoken does not exist 
+     * must have NODE_MINTER_ROLE
      */
     function createAssetClass(
         address _recipientAddress,
@@ -806,7 +807,8 @@ interface AC_MGR_Interface {
         uint32 _assetClass,
         uint32 _assetClassRoot,
         uint8 _custodyType,
-        bytes32 _IPFS
+        bytes32 _IPFS,
+        uint32 _discount
     ) external;
 
     /*
@@ -825,6 +827,14 @@ interface AC_MGR_Interface {
      *  caller holds ACtoken
      */
     function updateACipfs(bytes32 _IPFS, uint32 _assetClass) external;
+
+    /*
+     * @dev Modifies an assetClass
+     * Sets a new AC EXT Data uint32
+     * Requires that:
+     *  caller holds ACtoken
+     */
+    function updateACextendedData(uint32 _extData, uint32 _assetClass) external;
 
     /*
      * @dev Set function costs and payment address per asset class, in Wei
