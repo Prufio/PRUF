@@ -148,8 +148,8 @@ contract CORE is BASIC {
         Invoice memory pricing;
         uint256 ACTHnetPercent = uint256(AC_MGR.getAC_discount(_assetClass))
             .div(uint256(100));
-        require( //IMPOSSIBLE TO REACH
-            (ACTHnetPercent >= 10) && (ACTHnetPercent <= 100),
+        require( //IMPOSSIBLE TO REACH unless stuff is really broken, still ensures sanity
+            (ACTHnetPercent >= 0) && (ACTHnetPercent <= 100),
             "PC:DSC:invalid discount value for price calculation"
         );
         (
