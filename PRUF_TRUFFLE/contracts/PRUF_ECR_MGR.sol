@@ -21,18 +21,19 @@ __/\\\\\\\\\\\\\ _____/\\\\\\\\\ _______/\\../\\ ___/\\\\\\\\\\\\\\\
 pragma solidity ^0.6.7;
 
 import "./PRUF_BASIC.sol";
-//import "./Imports/math/Safemath.sol";
 
 contract ECR_MGR is BASIC {
     using SafeMath for uint256;
 
-    struct escrowData { //3 slots
+    struct escrowData {
+        //3 slots
         bytes32 controllingContractNameHash; //hash of the name of the controlling escrow contract
         bytes32 escrowOwnerAddressHash; //hash of an address designated as an executor for the escrow contract
         uint256 timelock;
     }
 
-    struct escrowDataExtLight {  //1 slot
+    struct escrowDataExtLight {
+        //1 slot
         uint8 escrowData;
         uint8 u8_1;
         uint8 u8_2;
@@ -43,10 +44,11 @@ contract ECR_MGR is BASIC {
         address addr_1;
     }
 
-    struct escrowDataExtHeavy { // 5 slots
-        uint32  u32_2;
-        uint32  u32_3;
-        uint32  u32_4;
+    struct escrowDataExtHeavy {
+        // 5 slots
+        uint32 u32_2;
+        uint32 u32_3;
+        uint32 u32_4;
         address addr_2;
         bytes32 b32_1;
         bytes32 b32_2;
@@ -160,9 +162,8 @@ contract ECR_MGR is BASIC {
         uint16 _u16_1,
         uint16 _u16_2,
         uint32 _u32_1,
-        address _addr_1) 
-        external nonReentrant whenNotPaused {
-
+        address _addr_1
+    ) external nonReentrant whenNotPaused {
         Record memory rec = getRecord(_idxHash);
         ContractDataHash memory contractInfo = getContractInfo(
             msg.sender,
@@ -195,7 +196,6 @@ contract ECR_MGR is BASIC {
         //^^^^^^^effects^^^^^^^^^
     }
 
-
     /*
      * @dev Set data in EDL mapping
      * Must be setter contract
@@ -210,9 +210,8 @@ contract ECR_MGR is BASIC {
         bytes32 _b32_1,
         bytes32 _b32_2,
         uint256 _u256_1,
-        uint256 _u256_2) 
-        external nonReentrant whenNotPaused {
-
+        uint256 _u256_2
+    ) external nonReentrant whenNotPaused {
         Record memory rec = getRecord(_idxHash);
         ContractDataHash memory contractInfo = getContractInfo(
             msg.sender,
@@ -231,20 +230,18 @@ contract ECR_MGR is BASIC {
         //^^^^^^^checks^^^^^^^^^
 
         escrowDataExtHeavy memory escrowDataHeavy;
-            escrowDataHeavy.u32_2 = _u32_2;
-            escrowDataHeavy.u32_3 = _u32_3;
-            escrowDataHeavy.u32_4 = _u32_4;
-            escrowDataHeavy.addr_2 = _addr_2;
-            escrowDataHeavy.b32_1 = _b32_1;
-            escrowDataHeavy.b32_2 = _b32_2;
-            escrowDataHeavy.u256_1 = _u256_1;
-            escrowDataHeavy.u256_2 = _u256_2;
+        escrowDataHeavy.u32_2 = _u32_2;
+        escrowDataHeavy.u32_3 = _u32_3;
+        escrowDataHeavy.u32_4 = _u32_4;
+        escrowDataHeavy.addr_2 = _addr_2;
+        escrowDataHeavy.b32_1 = _b32_1;
+        escrowDataHeavy.b32_2 = _b32_2;
+        escrowDataHeavy.u256_1 = _u256_1;
+        escrowDataHeavy.u256_2 = _u256_2;
 
         EscrowDataHeavy[_idxHash] = escrowDataHeavy; //set in EDL map
         //^^^^^^^effects^^^^^^^^^
     }
-
-
 
     /*
      * @dev Permissive removal of asset from escrow status after time-out
@@ -319,7 +316,7 @@ contract ECR_MGR is BASIC {
             uint16,
             uint32,
             address
-            )
+        )
     {
         escrowDataExtLight memory escrowDataLight = EscrowDataLight[_idxHash];
 
@@ -351,7 +348,7 @@ contract ECR_MGR is BASIC {
             bytes32,
             uint256,
             uint256
-            )
+        )
     {
         escrowDataExtHeavy memory escrowDataHeavy = EscrowDataHeavy[_idxHash];
         return (

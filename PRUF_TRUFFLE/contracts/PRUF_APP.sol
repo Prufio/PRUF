@@ -21,8 +21,8 @@ pragma solidity ^0.6.7;
 import "./PRUF_CORE.sol";
 
 contract APP is CORE {
-
-    bytes32 public constant B320xF_ =0xFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF;
+    bytes32
+        public constant B320xF_ = 0xFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF;
 
     modifier isAuthorized(bytes32 _idxHash) override {
         //require that user is authorized and token is held by contract
@@ -77,7 +77,6 @@ contract APP is CORE {
         uint32 _newAssetClass
     )
         external
-        
         nonReentrant
         whenNotPaused
         isAuthorized(_idxHash) //contract holds token (user sent to contract)
@@ -106,7 +105,6 @@ contract APP is CORE {
         writeRecord(_idxHash, rec);
         deductServiceCosts(_newAssetClass, 1);
 
-
         return rec.assetStatus;
         //^^^^^^^interactions^^^^^^^^^
     }
@@ -123,7 +121,7 @@ contract APP is CORE {
     {
         Record memory rec = getRecord(_idxHash);
         uint8 userType = getCallingUserType(rec.assetClass);
-        
+
         require(userType == 1, "A:FMR: User not auth in AC");
         require(
             isLostOrStolen(rec.assetStatus) == 0,
@@ -160,7 +158,6 @@ contract APP is CORE {
         bytes32 _newrgtHash
     )
         external
-        
         nonReentrant
         whenNotPaused
         isAuthorized(_idxHash)
@@ -212,7 +209,6 @@ contract APP is CORE {
         bytes32 _IpfsHash
     )
         external
-        
         nonReentrant
         whenNotPaused
         isAuthorized(_idxHash)
