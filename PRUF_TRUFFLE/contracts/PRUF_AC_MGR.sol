@@ -23,18 +23,13 @@ __/\\\\\\\\\\\\\ _____/\\\\\\\\\ _______/\\../\\ ___/\\\\\\\\\\\\\\\
 pragma solidity ^0.6.7;
 
 import "./PRUF_BASIC.sol";
-import "./Imports/access/AccessControl.sol";
+//Import "./Imports/access/AccessControl.sol";
 import "./Imports/utils/ReentrancyGuard.sol";
 
-//import "./Imports/math/Safemath.sol";
-
-contract AC_MGR is BASIC, AccessControl {
+contract AC_MGR is BASIC {
     using SafeMath for uint256;
 
-    //using Counters for Counters.Counter;
-
     bytes32 public constant NODE_MINTER_ROLE = keccak256("NODE_MINTER_ROLE");
-    bytes32 public constant PAUSER_ROLE = keccak256("PAUSER_ROLE");
 
     struct Costs {
         uint256 serviceCost; // Cost in the given item category
@@ -77,23 +72,21 @@ contract AC_MGR is BASIC, AccessControl {
     uint32 private constant startingDiscount = 5100; // Nodes start with 51% profit share
 
     constructor() public {
-        _setupRole(DEFAULT_ADMIN_ROLE, _msgSender());
         _setupRole(NODE_MINTER_ROLE, _msgSender());
-        _setupRole(PAUSER_ROLE, _msgSender());
     }
 
-    /*
-     * @dev Verify user credentials
-     * Originating Address:
-     *      is admin
-     */
-    modifier isAdmin() {
-        require(
-            hasRole(DEFAULT_ADMIN_ROLE, _msgSender()),
-            "PAM:MOD: must have DEFAULT_ADMIN_ROLE"
-        );
-        _;
-    }
+    // /*
+    //  * @dev Verify user credentials
+    //  * Originating Address:
+    //  *      is admin
+    //  */
+    // modifier isAdmin() {
+    //     require(
+    //         hasRole(DEFAULT_ADMIN_ROLE, _msgSender()),
+    //         "PAM:MOD: must have DEFAULT_ADMIN_ROLE"
+    //     );
+    //     _;
+    // }
 
     /*
      * @dev Verify user credentials

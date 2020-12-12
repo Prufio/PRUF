@@ -118,7 +118,7 @@ contract PRESALE is ReentrancyGuard, Pausable, AccessControl {
 
     event REPORT(address addr, uint256 amount);
 
-    //----------------------External Admin functions / onlyowner ---------------------//
+    //----------------------External Admin functions---------------------//
 
     /*
      * @dev Set address of PRUF_TKN contract to interface with

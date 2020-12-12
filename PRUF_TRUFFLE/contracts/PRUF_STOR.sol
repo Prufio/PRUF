@@ -34,12 +34,16 @@ __/\\\\\\\\\\\\\ _____/\\\\\\\\\ _______/\\../\\ ___/\\\\\\\\\\\\\\\
 pragma solidity ^0.6.7;
 
 import "./PRUF_INTERFACES.sol";
-import "./Imports/access/Ownable.sol";
+// import "./Imports/access/Ownable.sol";
+import "./Imports/access/AccessControl.sol";
 import "./Imports/utils/Pausable.sol";
 import "./Imports/math/Safemath.sol";
 import "./Imports/utils/ReentrancyGuard.sol";
 
-contract STOR is Ownable, ReentrancyGuard, Pausable {
+contract STOR is AccessControl, ReentrancyGuard, Pausable {
+
+    bytes32 public constant PAUSER_ROLE = keccak256("PAUSER_ROLE");
+
     struct Record {
         // Still have room for a free bytes(16) or a uint 128 !!!
         uint8 assetStatus; // Status - Transferrable, locked, in transfer, stolen, lost, etc.
@@ -65,7 +69,38 @@ contract STOR is Ownable, ReentrancyGuard, Pausable {
     address internal AC_MGR_Address;
     AC_MGR_Interface internal AC_MGR; // Set up external contract interface for AC_MGR
 
+    constructor() public {
+        _setupRole(DEFAULT_ADMIN_ROLE, _msgSender());
+        _setupRole(PAUSER_ROLE, _msgSender());
+    }
+
     //----------------------------------------------Modifiers----------------------------------------------//
+
+    /*
+     * @dev Verify user credentials
+     * Originating Address:
+     *      is admin
+     */
+    modifier isAdmin() {
+        require(
+            hasRole(DEFAULT_ADMIN_ROLE, _msgSender()),
+            "PAM:MOD: must have DEFAULT_ADMIN_ROLE"
+        );
+        _;
+    }
+
+    /*
+     * @dev Verify user credentials
+     * Originating Address:
+     *      is Pauser
+     */
+    modifier isPauser() {
+        require(
+            hasRole(PAUSER_ROLE, _msgSender()),
+            "PAM:MOD: must have PAUSER_ROLE"
+        );
+        _;
+    }
 
     /*
      * @dev Verify user credentials
@@ -162,19 +197,19 @@ contract STOR is Ownable, ReentrancyGuard, Pausable {
 
     event REPORT(string _msg, bytes32 b32);
 
-    //--------------------------------Internal Admin functions / onlyowner or isAdmin---------------------------------//
+    //--------------------------------Internal Admin functions / isAdmin---------------------------------//
 
     /*
      * @dev Triggers stopped state. (pausable)
      */
-    function pause() external onlyOwner {
+    function pause() external isPauser {
         _pause();
     }
 
     /*
      * @dev Returns to normal state. (pausable)
      */
-    function unpause() external onlyOwner {
+    function unpause() external isPauser {
         _unpause();
     }
 
@@ -187,7 +222,7 @@ contract STOR is Ownable, ReentrancyGuard, Pausable {
         address _addr,
         uint32 _assetClass,
         uint8 _contractAuthLevel
-    ) external onlyOwner {
+    ) external isAdmin {
         require(_assetClass == 0, "S:AC: AC not 0");
         //require(_contractAuthLevel <= 10, "S:AC: Invalid auth lv");
         //^^^^^^^checks^^^^^^^^^
