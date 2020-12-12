@@ -70,7 +70,7 @@ let rgt8;
 let rgt12;
 let rgt13;
 let rgt14;
-let rgt000 = "0x00000000000000000000000000000000000000000000000000000000000000000000";
+let rgt000 = "0x0000000000000000000000000000000000000000000000000000000000000000";
 let rgtFFF = "0xFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF";
 
 let account1Hash;
@@ -798,11 +798,11 @@ contract('UTIL_TKN', accounts => {
     it('Should mint a couple of asset root tokens', async () => {
 
         console.log("Minting root token 1 -C")
-        return AC_MGR.createAssetClass(account1, 'ROOT1', '1', '1', '3', "0x0000000000000000000000000000000000000000000000000000000000000000", { from: account1 })
+        return AC_MGR.createAssetClass(account1, 'ROOT1', '1', '1', '3', rgt000, "0", { from: account1 })
 
             .then(() => {
                 console.log("Minting root token 2 -NC")
-                return AC_MGR.createAssetClass(account1, 'ROOT2', '2', '2', '3', "0x0000000000000000000000000000000000000000000000000000000000000000", { from: account1 })
+                return AC_MGR.createAssetClass(account1, 'ROOT2', '2', '2', '3', rgt000, "0", { from: account1 })
             })
     })
 
@@ -810,26 +810,26 @@ contract('UTIL_TKN', accounts => {
     it("Should Mint 3 cust AC tokens in AC_ROOT1, and 2 in AC_ROOT2", async () => {
 
         console.log("Minting AC 10")
-        return AC_MGR.createAssetClass(account1, "Custodial_AC10", "10", "1", "1", "0x0000000000000000000000000000000000000000000000000000000000000000", { from: account1 })
+        return AC_MGR.createAssetClass(account1, "Custodial_AC10", "10", "1", "1", rgt000, "0", { from: account1 })
 
             .then(() => {
                 console.log("Minting AC 11")
-                return AC_MGR.createAssetClass(account1, "Custodial_AC11", "11", "1", "1", "0x0000000000000000000000000000000000000000000000000000000000000000", { from: account1 })
+                return AC_MGR.createAssetClass(account1, "Custodial_AC11", "11", "1", "1", rgt000, "0", { from: account1 })
             })
 
             .then(() => {
                 console.log("Minting AC 12")
-                return AC_MGR.createAssetClass(account1, "Custodial_AC12", "12", "1", "1", "0x0000000000000000000000000000000000000000000000000000000000000000", { from: account1 })
+                return AC_MGR.createAssetClass(account1, "Custodial_AC12", "12", "1", "1", rgt000, "0", { from: account1 })
             })
 
             .then(() => {
                 console.log("Minting AC 13")
-                return AC_MGR.createAssetClass(account1, "Custodial_AC13", "13", "2", "1", "0x0000000000000000000000000000000000000000000000000000000000000000", { from: account1 })
+                return AC_MGR.createAssetClass(account1, "Custodial_AC13", "13", "2", "1", rgt000, "0", { from: account1 })
             })
 
             .then(() => {
                 console.log("Minting AC 14")
-                return AC_MGR.createAssetClass(account1, "Custodial_AC14", "14", "2", "1", "0x0000000000000000000000000000000000000000000000000000000000000000", { from: account1 })
+                return AC_MGR.createAssetClass(account1, "Custodial_AC14", "14", "2", "1", rgt000, "0", { from: account1 })
             })
     })
 
@@ -1605,17 +1605,17 @@ contract('UTIL_TKN', accounts => {
 
 
     it('Should purchace ACtoken to account2', async () => {
-        return AC_MGR.purchaseACtoken(
+        return AC_MGR.purchaseACnode(
             'account2FTW',
             '1',
             '1',
-            "0x0000000000000000000000000000000000000000000000000000000000000000", 
+            rgt000, 
             { from: account2 }
         )
     })
 
 
-    it("Should retrieve 30000 - cost of purchaseACtoken", async () => {
+    it("Should retrieve 30000 - cost of purchaseACnode", async () => {
         var Balance = [];
 
         return await UTIL_TKN.balanceOf(account2, { from: account2 }, function (_err, _result) {
@@ -1677,11 +1677,11 @@ contract('UTIL_TKN', accounts => {
 
 
     it('Should purchace ACtoken to account3', async () => {
-        return AC_MGR.purchaseACtoken(
+        return AC_MGR.purchaseACnode(
             'account3FTW',
             '1',
             '1',
-            "0x0000000000000000000000000000000000000000000000000000000000000000", 
+            rgt000, 
             { from: account3 }
         )
     })
@@ -1713,7 +1713,7 @@ contract('UTIL_TKN', accounts => {
     // })
 
 
-    it("Should retrieve 30000 - cost of purchaseACtoken", async () => {
+    it("Should retrieve 30000 - cost of purchaseACnode", async () => {
         var Balance = [];
 
         return await UTIL_TKN.balanceOf(account3, { from: account3 }, function (_err, _result) {

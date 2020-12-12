@@ -860,11 +860,11 @@ __/\\\\\\\\\\\\\ _____/\\\\\\\\\ _______/\\../\\ ___/\\\\\\\\\\\\\\\
             it('Should mint a couple of asset root tokens', async () => {
         
                 console.log("Minting root token 1 -C")
-                return AC_MGR.createAssetClass(account1, 'CUSTODIAL_ROOT', '1', '1', '3', rgt000, { from: account1 })
+                return AC_MGR.createAssetClass(account1, 'CUSTODIAL_ROOT', '1', '1', '3', rgt000, "0", { from: account1 })
         
                     .then(() => {
                         console.log("Minting root token 2 -NC")
-                        return AC_MGR.createAssetClass(account1, 'NON-CUSTODIAL_ROOT', '2', '2', '3', rgt000, { from: account1 })
+                        return AC_MGR.createAssetClass(account1, 'NON-CUSTODIAL_ROOT', '2', '2', '3', rgt000, "0", { from: account1 })
                     })
             })
         
@@ -872,26 +872,26 @@ __/\\\\\\\\\\\\\ _____/\\\\\\\\\ _______/\\../\\ ___/\\\\\\\\\\\\\\\
             it("Should Mint 2 cust and 2 non-cust AC tokens in AC_ROOT 1", async () => {
         
                 console.log("Minting AC 10 -C")
-                return AC_MGR.createAssetClass(account1, "Custodial_AC1", "10", "1", "1", rgt000, { from: account1 })
+                return AC_MGR.createAssetClass(account1, "Custodial_AC1", "10", "1", "1", rgt000, "0", { from: account1 })
         
                     .then(() => {
                         console.log("Minting AC 11 -C")
-                        return AC_MGR.createAssetClass(account1, "Custodial_AC2", "11", "1", "1", rgt000, { from: account1 })
+                        return AC_MGR.createAssetClass(account1, "Custodial_AC2", "11", "1", "1", rgt000, "0", { from: account1 })
                     })
         
                     .then(() => {
                         console.log("Minting AC 12 -NC")
-                        return AC_MGR.createAssetClass(account1, "Non-Custodial_AC1", "12", "1", "2", rgt000, { from: account1 })
+                        return AC_MGR.createAssetClass(account1, "Non-Custodial_AC1", "12", "1", "2", rgt000, "0", { from: account1 })
                     })
         
                     .then(() => {
                         console.log("Minting AC 13 -NC")
-                        return AC_MGR.createAssetClass(account1, "Non-Custodial_AC2", "13", "1", "2", rgt000, { from: account1 })
+                        return AC_MGR.createAssetClass(account1, "Non-Custodial_AC2", "13", "1", "2", rgt000, "0", { from: account1 })
                     })
         
                     .then(() => {
                         console.log("Minting AC 16 -NC")
-                        return AC_MGR.createAssetClass(account10, "Non_Custodial_AC5", "16", "1", "2", rgt000, { from: account1 })
+                        return AC_MGR.createAssetClass(account10, "Non_Custodial_AC5", "16", "1", "2", rgt000, "0", { from: account1 })
                     })
             })
         
@@ -899,11 +899,11 @@ __/\\\\\\\\\\\\\ _____/\\\\\\\\\ _______/\\../\\ ___/\\\\\\\\\\\\\\\
             it("Should Mint 2 non-cust AC tokens in AC_ROOT 2", async () => {
         
                 console.log("Minting AC 14 -NC")
-                return AC_MGR.createAssetClass(account1, "Non-Custodial_AC3", "14", "2", "2", rgt000, { from: account1 })
+                return AC_MGR.createAssetClass(account1, "Non-Custodial_AC3", "14", "2", "2", rgt000, "0", { from: account1 })
         
                     .then(() => {
                         console.log("Minting AC 15 -NC")
-                        return AC_MGR.createAssetClass(account10, "Non_Custodial_AC4", "15", "2", "2", rgt000, { from: account1 })
+                        return AC_MGR.createAssetClass(account10, "Non_Custodial_AC4", "15", "2", "2", rgt000, "0", { from: account1 })
                     })
             })
         
@@ -1794,7 +1794,7 @@ __/\\\\\\\\\\\\\ _____/\\\\\\\\\ _______/\\../\\ ___/\\\\\\\\\\\\\\\
     it('Should fail because caller is not owner', async () => {
 
         console.log("//**************************************END A_TKN TEST SETUP**********************************************/")
-        console.log("//**************************************BEGIN A_TKN FAIL BATCH (17)**********************************************/")
+        console.log("//**************************************BEGIN A_TKN FAIL BATCH (14)**********************************************/")
         console.log("//**************************************BEGIN OO_setStorageContract FAIL BATCH**********************************************/")
         return A_TKN.OO_setStorageContract(
         STOR.address,
