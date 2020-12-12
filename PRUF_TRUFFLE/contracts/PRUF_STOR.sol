@@ -44,6 +44,8 @@ contract STOR is AccessControl, ReentrancyGuard, Pausable {
 
     bytes32 public constant PAUSER_ROLE = keccak256("PAUSER_ROLE");
 
+    bytes32 public constant B320xF_ =0xFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF;
+
     struct Record {
         // Still have room for a free bytes(16) or a uint 128 !!!
         uint8 assetStatus; // Status - Transferrable, locked, in transfer, stolen, lost, etc.
@@ -445,9 +447,9 @@ contract STOR is AccessControl, ReentrancyGuard, Pausable {
         //^^^^^^^checks^^^^^^^^^
 
         if (_newAssetStatus == 60) {
-            //if setting to "escrow" status, set rgt to 0xFFF... (to prevent reminting)
+            //if setting to "escrow" status, set rgt to 0xFFF_
             rec
-                .rightsHolder = 0xFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF;
+                .rightsHolder = B320xF_;
         }
 
         rec.assetStatus = _newAssetStatus;
