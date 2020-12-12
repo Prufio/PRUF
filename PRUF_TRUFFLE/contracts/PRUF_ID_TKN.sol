@@ -12,7 +12,8 @@ __/\\\\\\\\\\\\\ _____/\\\\\\\\\ _______/\\../\\ ___/\\\\\\\\\\\\\\\
 
 /*-----------------------------------------------------------------
  *  TO DO
- *
+ *-----------------------------------------------------------------
+ * PRUF USER ID NFT CONTRACT
  *---------------------------------------------------------------*/
 
 // SPDX-License-Identifier: UNLICENSED
@@ -76,7 +77,7 @@ contract ID_TKN is ReentrancyGuard, Context, AccessControl, ERC721Burnable, ERC7
         _;
     }
 
-    //----------------------Internal Admin functions / isAdmin----------------------//
+    //----------------------Admin functions / isAdmin----------------------//
 
     /*
      * @dev Mint new PRUF_ID token
@@ -229,7 +230,9 @@ contract ID_TKN is ReentrancyGuard, Context, AccessControl, ERC721Burnable, ERC7
      */
     function pause() public virtual {
         require(hasRole(PAUSER_ROLE, _msgSender()), "ERC721PresetMinterPauserAutoId: must have pauser role to pause");
+        //^^^^^^^checks^^^^^^^^
         _pause();
+        //^^^^^^^interactions^^^^^^^^^
     }
 
     /**
@@ -243,7 +246,9 @@ contract ID_TKN is ReentrancyGuard, Context, AccessControl, ERC721Burnable, ERC7
      */
     function unpause() public virtual {
         require(hasRole(PAUSER_ROLE, _msgSender()), "ERC721PresetMinterPauserAutoId: must have pauser role to unpause");
+        //^^^^^^^checks^^^^^^^^
         _unpause();
+        //^^^^^^^interactions^^^^^^^^^
     }
 
     function _beforeTokenTransfer(address from, address to, uint256 tokenId) internal virtual override(ERC721, ERC721Pausable) {

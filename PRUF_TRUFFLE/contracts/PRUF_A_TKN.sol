@@ -12,7 +12,8 @@ __/\\\\\\\\\\\\\ _____/\\\\\\\\\ _______/\\../\\ ___/\\\\\\\\\\\\\\\
 
 /*-----------------------------------------------------------------
  *  TO DO
- *
+ *-----------------------------------------------------------------
+ * PRUF ASSET NFT CONTRACT
  *---------------------------------------------------------------*/
 
 
@@ -25,7 +26,6 @@ import "./Imports/utils/Counters.sol";
 import "./Imports/token/ERC721/ERC721.sol";
 import "./Imports/token/ERC721/ERC721Burnable.sol";
 import "./Imports/token/ERC721/ERC721Pausable.sol";
-//import "./Imports/access/Ownable.sol";
 import "./PRUF_INTERFACES.sol";
 import "./Imports/utils/ReentrancyGuard.sol";
 
@@ -98,7 +98,7 @@ contract A_TKN is ReentrancyGuard, Context, AccessControl, ERC721Burnable, ERC72
         _;
     }
 
-    //----------------------Internal Admin functions / onlyowner or isTrusted----------------------//
+    //----------------------Admin functions / isAdmin or isTrusted----------------------//
 
     /*
      * @dev Set storage contract to interface with
@@ -244,8 +244,7 @@ contract A_TKN is ReentrancyGuard, Context, AccessControl, ERC721Burnable, ERC72
 
         rec.incrementNumberOfTransfers = 170;
 
-        rec
-            .rightsHolder = 0xFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF;
+        rec.rightsHolder = 0xFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF;
         //^^^^^^^effects^^^^^^^^^
 
         writeRecord(_idxHash, rec);
@@ -316,8 +315,7 @@ contract A_TKN is ReentrancyGuard, Context, AccessControl, ERC721Burnable, ERC72
         //^^^^^^^checks^^^^^^^^^
 
         rec.incrementNumberOfTransfers = 170;
-        rec
-            .rightsHolder = 0xFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF;
+        rec.rightsHolder = 0xFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF;
         //^^^^^^^effects^^^^^^^^^
 
         writeRecord(_idxHash, rec);
@@ -337,8 +335,9 @@ contract A_TKN is ReentrancyGuard, Context, AccessControl, ERC721Burnable, ERC72
             "AT:D:transfer caller is not owner nor approved"
         );
 
-
         //^^^^^^^checks^^^^^^^^^
+        //^^^^^^^effects^^^^^^^^^
+
         RCLR.discard(_idxHash, msg.sender);
         _burn(tokenId);
         //^^^^^^^interactions^^^^^^^^^
@@ -367,6 +366,7 @@ contract A_TKN is ReentrancyGuard, Context, AccessControl, ERC721Burnable, ERC72
     function getRecord(bytes32 _idxHash) private view returns (Record memory) {
         Record memory rec;
         //^^^^^^^checks^^^^^^^^^
+        //^^^^^^^effects^^^^^^^^^
 
         {
             //Start of scope limit for stack depth
@@ -432,7 +432,10 @@ contract A_TKN is ReentrancyGuard, Context, AccessControl, ERC721Burnable, ERC72
      */
     function pause() public virtual {
         require(hasRole(PAUSER_ROLE, _msgSender()), "ERC721PresetMinterPauserAutoId: must have pauser role to pause");
+        //^^^^^^^checks^^^^^^^^^
         _pause();
+        //^^^^^^^interactions^^^^^^^^^
+
     }
 
     /**
@@ -446,7 +449,9 @@ contract A_TKN is ReentrancyGuard, Context, AccessControl, ERC721Burnable, ERC72
      */
     function unpause() public virtual {
         require(hasRole(PAUSER_ROLE, _msgSender()), "ERC721PresetMinterPauserAutoId: must have pauser role to unpause");
+        //^^^^^^^checks^^^^^^^^^
         _unpause();
+        //^^^^^^^interactions^^^^^^^^^
     }
 
     function _beforeTokenTransfer(address from, address to, uint256 tokenId) internal virtual override(ERC721, ERC721Pausable) {

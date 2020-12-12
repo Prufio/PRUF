@@ -12,7 +12,8 @@ __/\\\\\\\\\\\\\ _____/\\\\\\\\\ _______/\\../\\ ___/\\\\\\\\\\\\\\\
 
 /*-----------------------------------------------------------------
  *  TO DO
- *
+ *-----------------------------------------------------------------
+ * PRUF ASSET CLASS NODE NFT CONTRACT
  *-----------------------------------------------------------------*/
 
 // SPDX-License-Identifier: UNLICENSED
@@ -24,7 +25,6 @@ import "./Imports/utils/Counters.sol";
 import "./Imports/token/ERC721/ERC721.sol";
 import "./Imports/token/ERC721/ERC721Burnable.sol";
 import "./Imports/token/ERC721/ERC721Pausable.sol";
-//import "./Imports/access/Ownable.sol";
 import "./PRUF_INTERFACES.sol";
 import "./Imports/utils/ReentrancyGuard.sol";
 
@@ -84,11 +84,14 @@ contract AC_TKN is
         _;
     }
 
+<<<<<<< HEAD
     //----------------------Internal Admin functions / isAdmin or isMinter----------------------//
+=======
+    //----------------------Admin functions / isAdmin or isMinter----------------------//
+>>>>>>> roles_implementation
 
     /*
      * @dev Mints assetClass token, must be isMinter
-
      */
     function mintACToken(
         address _recipientAddress,
@@ -215,7 +218,9 @@ contract AC_TKN is
             hasRole(PAUSER_ROLE, _msgSender()),
             "ERC721PresetMinterPauserAutoId: must have pauser role to pause"
         );
+        //^^^^^^^checks^^^^^^^^^
         _pause();
+        //^^^^^^^interactions^^^^^^^^^
     }
 
     /**
@@ -232,7 +237,9 @@ contract AC_TKN is
             hasRole(PAUSER_ROLE, _msgSender()),
             "ERC721PresetMinterPauserAutoId: must have pauser role to unpause"
         );
+        //^^^^^^^checks^^^^^^^^^
         _unpause();
+        //^^^^^^^interactions^^^^^^^^^
     }
 
     function _beforeTokenTransfer(
