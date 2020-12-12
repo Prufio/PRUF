@@ -1933,7 +1933,7 @@ __/\\\\\\\\\\\\\ _____/\\\\\\\\\ _______/\\../\\ ___/\\\\\\\\\\\\\\\
         it('Should fail because user does not hold ID_TKN', async () => {
 
             console.log("//**************************************************END APP_NC SETUP***************************************************//")
-            console.log("//**************************************************BEGIN APP_NC FAIL BATCH (6)***************************************************//")
+            console.log("//**************************************************BEGIN APP_NC FAIL BATCH (5)***************************************************//")
             console.log("//**************************************************BEGIN $newRecord FAIL BATCH***************************************************//")
             return APP_NC.$newRecord(
                 asset8,
@@ -1945,23 +1945,9 @@ __/\\\\\\\\\\\\\ _____/\\\\\\\\\ _______/\\../\\ ___/\\\\\\\\\\\\\\\
         })
 
         //2
-        it('Should fail because user does not hold ID_TKN', async () => {
-            console.log("//**************************************************END $newRecord FAIL BATCH***************************************************//")
-            console.log("//**************************************************BEGIN $newRecordWithDescription FAIL BATCH***************************************************//")
-            return APP_NC.$newRecordWithDescription(
-                asset8,
-                rgt8,
-                '13',
-                '5000',
-                rgt000,
-                { from: account8 }
-            )
-        })
-
-        //3
         it('Should fail because caller does not hold token', async () => {
 
-            console.log("//**************************************************END $newRecordWithDescription FAIL BATCH***************************************************//")
+            console.log("//**************************************************END $newRecord FAIL BATCH***************************************************//")
             console.log("//**************************************************BEGIN $importAsset FAIL BATCH***************************************************//")
             return APP_NC.$importAsset(
                 asset2,
@@ -1970,7 +1956,7 @@ __/\\\\\\\\\\\\\ _____/\\\\\\\\\ _______/\\../\\ ___/\\\\\\\\\\\\\\\
             )
         })
 
-        //4
+        //3
         it('Should fail becasue asset not exported', async () => {
             return APP_NC.$importAsset(
                 asset2,
@@ -1979,7 +1965,7 @@ __/\\\\\\\\\\\\\ _____/\\\\\\\\\ _______/\\../\\ ___/\\\\\\\\\\\\\\\
             )
         })
 
-        //5
+        //4
         it('Should fail you cannot import into new root AC', async () => {
             return APP_NC.$importAsset(
                 asset3,
@@ -2060,7 +2046,7 @@ __/\\\\\\\\\\\\\ _____/\\\\\\\\\ _______/\\../\\ ___/\\\\\\\\\\\\\\\
         //     )
         // })
 
-        //6
+        //9
         it('Should fail because caller not holder of token', async () => {
 
             console.log("//**************************************************END $importAsset FAIL BATCH***************************************************//")

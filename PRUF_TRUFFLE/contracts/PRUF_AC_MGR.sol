@@ -399,7 +399,7 @@ contract AC_MGR is BASIC, AccessControl {
         private
         whenNotPaused
     {
-        require( //-------------------------------------------------------CTS:EXAMINE redundant? check increaseShare
+        require( //-------------------------------------------------------DS:TEST
             AC_data[_assetClass].discount <= 8999,
             "PRuf:IPS:price share already max"
         );

@@ -1746,43 +1746,10 @@ __/\\\\\\\\\\\\\ _____/\\\\\\\\\ _______/\\../\\ ___/\\\\\\\\\\\\\\\
     })
 
     //1
-    it('Should fail because caller is not admin', async () => {
-
-        console.log("//**************************************END AC_MGR SETUP**********************************************/")
-        console.log("//**************************************BEGIN AC_MGR FAIL BATCH (18)**********************************************/")
-        console.log("//**************************************BEGIN OO_SetPricing FAIL BATCH**********************************************/")
-        return AC_MGR.OO_SetPricing(
-        "10000",
-        "10", 
-        '10',
-        '10',
-        "10", 
-        '10',
-        '10',
-        '10',
-        {from: account2}
-        )
-    })
-
-    //2
-    it('Should fail because multiplier > 10k', async () => {
-        return AC_MGR.OO_SetPricing(
-        "10001",
-        "10", 
-        '10',
-        '10',
-        "10", 
-        '10',
-        '10',
-        '10',
-        {from: account1}
-        )
-    })
-
-    //3
     it('Should fail because caller does not hold AC token', async () => {
 
-        console.log("//**************************************END OO_SetPricing FAIL BATCH**********************************************/")
+        console.log("//**************************************END AC_MGR SETUP**********************************************/")
+        console.log("//**************************************BEGIN AC_MGR FAIL BATCH (13)**********************************************/")
         console.log("//**************************************BEGIN addUser FAIL BATCH**********************************************/")
         return AC_MGR.addUser(
         account2Hash, 
@@ -1792,8 +1759,8 @@ __/\\\\\\\\\\\\\ _____/\\\\\\\\\ _______/\\../\\ ___/\\\\\\\\\\\\\\\
         )
     })
 
-    //4
-    it('Should fail because caller is not Node Minter', async () => {
+    //2
+    it('Should fail because caller is not Owner', async () => {
 
         console.log("//**************************************END addUser FAIL BATCH**********************************************/")
         console.log("//**************************************BEGIN createAssetClass FAIL BATCH**********************************************/")
@@ -1809,7 +1776,7 @@ __/\\\\\\\\\\\\\ _____/\\\\\\\\\ _______/\\../\\ ___/\\\\\\\\\\\\\\\
         )
     })
 
-    //5
+    //3
     it('Should fail because AC_TKN ID != 0', async () => {
         return AC_MGR.createAssetClass(
         account2,
@@ -1823,7 +1790,7 @@ __/\\\\\\\\\\\\\ _____/\\\\\\\\\ _______/\\../\\ ___/\\\\\\\\\\\\\\\
         )
     })
 
-    //6
+    //4
     it('Should fail because RootAC doesnt exist', async () => {
         return AC_MGR.createAssetClass( 
         account2,
@@ -1838,7 +1805,7 @@ __/\\\\\\\\\\\\\ _____/\\\\\\\\\ _______/\\../\\ ___/\\\\\\\\\\\\\\\
     })
 
 
-    //7
+    //5
     it('Should fail because ACname is already in use', async () => {
         return AC_MGR.createAssetClass( 
         account2,
@@ -1853,7 +1820,7 @@ __/\\\\\\\\\\\\\ _____/\\\\\\\\\ _______/\\../\\ ___/\\\\\\\\\\\\\\\
     })
 
 
-    //8
+    //6
     it('Should fail because AC already exists', async () => {
         return AC_MGR.createAssetClass( 
         account2,
@@ -1867,7 +1834,7 @@ __/\\\\\\\\\\\\\ _____/\\\\\\\\\ _______/\\../\\ ___/\\\\\\\\\\\\\\\
         )
     })
 
-    //9
+    //7
     it('Should fail because caller does not hold AC token', async () => {
 
         console.log("//**************************************END createAssetClass FAIL BATCH**********************************************/")
@@ -1879,7 +1846,7 @@ __/\\\\\\\\\\\\\ _____/\\\\\\\\\ _______/\\../\\ ___/\\\\\\\\\\\\\\\
         )
     })
 
-    //10
+    //8
     it('Should fail because used name being signed to different AC', async () => {
         return AC_MGR.updateACname( 
         'Custodial_AC1',
@@ -1888,10 +1855,10 @@ __/\\\\\\\\\\\\\ _____/\\\\\\\\\ _______/\\../\\ ___/\\\\\\\\\\\\\\\
         )
     })
 
-    //11
+    //9
     it('Should fail because caller is not ACTH', async () => {
 
-        console.log("//**************************************END updateACname FAIL BATCH**********************************************/")
+        console.log("//**************************************END updateACipfs FAIL BATCH**********************************************/")
         console.log("//**************************************BEGIN updateACipfs FAIL BATCH**********************************************/")
         return AC_MGR.updateACipfs(
         rgt000, 
@@ -1900,58 +1867,19 @@ __/\\\\\\\\\\\\\ _____/\\\\\\\\\ _______/\\../\\ ___/\\\\\\\\\\\\\\\
         )
     })
 
-    //12
-    it('Should fail because caller is not ACTH', async () => {
+    //10
+    it('Should fail because amount != < 200', async () => {
 
         console.log("//**************************************END updateACipfs FAIL BATCH**********************************************/")
-        console.log("//**************************************BEGIN updateACextendedData FAIL BATCH**********************************************/")
-        return AC_MGR.updateACextendedData(
-        "abcdefg", 
-        '1',
-        {from: account2}
-        )
-    })
-
-    //13
-    it('Should fail because caller is not ACTH', async () => {
-
-        console.log("//**************************************END updateACextendedData FAIL BATCH**********************************************/")
         console.log("//**************************************BEGIN increaseShare FAIL BATCH**********************************************/")
         return AC_MGR.increaseShare(
         '10', 
-        '400',
-        {from: account2}
-        )
-    })
-
-    //14
-    it('Should fail because amount != < 300', async () => {
-        return AC_MGR.increaseShare(
-        '10', 
-        '299',
+        '199',
         {from: account1}
         )
     })
 
-
-    it('Should increase amount 50 90/10', async () => {
-        return AC_MGR.increaseShare(
-        '10', 
-        '11700',
-        {from: account1}
-        )
-    })
-
-    //15
-    it('Should fail because discount amount is maxed out', async () => {
-        return AC_MGR.increaseShare(
-        '10', 
-        '11700',
-        {from: account1}
-        )
-    })
-
-    //16
+    //11
     it('Should fail because caller does not hold AC token', async () => {
 
         console.log("//**************************************END increaseShare FAIL BATCH**********************************************/")
@@ -1965,7 +1893,7 @@ __/\\\\\\\\\\\\\ _____/\\\\\\\\\ _______/\\../\\ ___/\\\\\\\\\\\\\\\
         )
     })
 
-    //17
+    //12
     it('Should fail because AC not yet populated', async () => {
 
         console.log("//**************************************END ACTH_setCosts FAIL BATCH**********************************************/")
@@ -1978,7 +1906,7 @@ __/\\\\\\\\\\\\\ _____/\\\\\\\\\ _______/\\../\\ ___/\\\\\\\\\\\\\\\
     })
 
 
-    //18
+    //13
     it('Should fail because service 0 is not valid', async () => {
         return AC_MGR.getServiceCosts(
         '10',
