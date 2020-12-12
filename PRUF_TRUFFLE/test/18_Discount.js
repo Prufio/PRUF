@@ -797,11 +797,11 @@ it('Should authorize all minter contracts for minting AC_TKN(s)', async () => {
 it('Should mint a couple of asset root tokens', async () => {
 
     console.log("Minting root token 1 -C")
-    return AC_MGR.createAssetClass(account1, 'ROOT1', '1', '1', '3', "0x0000000000000000000000000000000000000000000000000000000000000000", { from: account1 })
+    return AC_MGR.createAssetClass(account1, 'ROOT1', '1', '1', '3', rgt000, "5100", { from: account1 })
 
         .then(() => {
             console.log("Minting root token 2 -NC")
-            return AC_MGR.createAssetClass(account1, 'ROOT2', '2', '2', '3', "0x0000000000000000000000000000000000000000000000000000000000000000", { from: account1 })
+            return AC_MGR.createAssetClass(account1, 'ROOT2', '2', '2', '3', rgt000, "5100", { from: account1 })
         })
 })
 
@@ -809,26 +809,26 @@ it('Should mint a couple of asset root tokens', async () => {
 it("Should Mint 3 cust AC tokens in AC_ROOT1, and 2 in AC_ROOT2", async () => {
     
     console.log("Minting AC 10")
-    return AC_MGR.createAssetClass(account1, "Custodial_AC10", "10", "1", "1", "0x0000000000000000000000000000000000000000000000000000000000000000", { from: account1 })
+    return AC_MGR.createAssetClass(account1, "Custodial_AC10", "10", "1", "1", rgt000, "5100", { from: account1 })
 
         .then(() => {
             console.log("Minting AC 11")
-            return AC_MGR.createAssetClass(account1, "Custodial_AC11", "11", "1", "1", "0x0000000000000000000000000000000000000000000000000000000000000000", { from: account1 })
+            return AC_MGR.createAssetClass(account1, "Custodial_AC11", "11", "1", "1", rgt000, "5100", { from: account1 })
         })
         
         .then(() => {
             console.log("Minting AC 12")
-            return AC_MGR.createAssetClass(account1, "Custodial_AC12", "12", "1", "1", "0x0000000000000000000000000000000000000000000000000000000000000000", { from: account1 })
+            return AC_MGR.createAssetClass(account1, "Custodial_AC12", "12", "1", "1",  rgt000, "5100", { from: account1 })
         })
         
         .then(() => {
             console.log("Minting AC 13")
-            return AC_MGR.createAssetClass(account1, "Custodial_AC13", "13", "2", "1", "0x0000000000000000000000000000000000000000000000000000000000000000", { from: account1 })
+            return AC_MGR.createAssetClass(account1, "Custodial_AC13", "13", "2", "1",  rgt000, "5100", { from: account1 })
         })
 
         .then(() => {
             console.log("Minting AC 14")
-            return AC_MGR.createAssetClass(account1, "Custodial_AC14", "14", "2", "1", "0x0000000000000000000000000000000000000000000000000000000000000000", { from: account1 })
+            return AC_MGR.createAssetClass(account1, "Custodial_AC14", "14", "2", "1", rgt000, "5100", { from: account1 })
         })
 })
 
@@ -1608,7 +1608,7 @@ it("Should retrieve balanceOf(13800) Pruf tokens @account1", async () => {
 
 
 it('Should buy asset class 20', async () => {
-    return AC_MGR.purchaseACtoken(
+    return AC_MGR.purchaseACnode(
     'AC20',
     '1',
     '1',
