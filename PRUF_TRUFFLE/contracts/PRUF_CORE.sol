@@ -21,7 +21,6 @@ __/\\\\\\\\\\\\\ _____/\\\\\\\\\ _______/\\../\\ ___/\\\\\\\\\\\\\\\
 pragma solidity ^0.6.7;
 
 import "./PRUF_INTERFACES.sol";
-//import "./Imports/math/safeMath.sol";
 import "./Imports/utils/ReentrancyGuard.sol";
 import "./PRUF_BASIC.sol";
 
@@ -177,11 +176,10 @@ contract CORE is BASIC {
     /*
      * @dev Send payment to appropriate pullPayment adresses for payable function
      */
-    function deductRecycleCosts(uint32 _assetClass, address _oldOwner) //DBS:CHECK --------------- Payment now pays 1/2 ACTHcost + root to discarder, 1/2 to ACTH
-        internal
-        virtual
-        whenNotPaused
-    {
+    function deductRecycleCosts(
+        uint32 _assetClass,
+        address _oldOwner //DBS:CHECK --------------- Payment now pays 1/2 ACTHcost + root to discarder, 1/2 to ACTH
+    ) internal virtual whenNotPaused {
         //^^^^^^^checks^^^^^^^^^
         Invoice memory pricing;
         uint256 half;

@@ -369,7 +369,7 @@ contract AC_MGR is BASIC {
         //^^^^^^^effects^^^^^^^^^
     }
 
-     /*
+    /*
      * @dev Increases priceShare in an assetClass
      *
      */
