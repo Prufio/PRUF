@@ -1740,7 +1740,7 @@ __/\\\\\\\\\\\\\ _____/\\\\\\\\\ _______/\\../\\ ___/\\\\\\\\\\\\\\\
     it('Should fail because is not minter', async () => {
 
         console.log("//**************************************END AC_TKN SETUP**********************************************/")
-        console.log("//**************************************BEGIN AC_TKN FAIL BATCH(7)**********************************************/")
+        console.log("//**************************************BEGIN AC_TKN FAIL BATCH(8)**********************************************/")
         console.log("//********************************BEGIN mintACToken FAIL BATCH****************************************/")
         return AC_TKN.mintACToken(
             account1,
@@ -1790,8 +1790,18 @@ __/\\\\\\\\\\\\\ _____/\\\\\\\\\ _______/\\../\\ ___/\\\\\\\\\\\\\\\
             { from: account1 }
         )
     })
-
+    
     //4
+    it('Should fail because URI does not match', async () => {
+        return AC_TKN.reMintACToken(
+            account1,
+            '10',
+            'Pruf',
+            { from: account1 }
+        )
+    })
+
+    //5
     it('Should fail because caller is not owner of token or approved', async () => {
 
         console.log("//*********************************END reMintACToken FAIL BATCH*****************************************/")
@@ -1804,7 +1814,7 @@ __/\\\\\\\\\\\\\ _____/\\\\\\\\\ _______/\\../\\ ___/\\\\\\\\\\\\\\\
         )
     })
 
-    //5
+    //6
     it('Should fail because caller is not owner of token or approved', async () => {
 
         console.log("//*********************************END transferFrom FAIL BATCH*****************************************/")
@@ -1817,7 +1827,7 @@ __/\\\\\\\\\\\\\ _____/\\\\\\\\\ _______/\\../\\ ___/\\\\\\\\\\\\\\\
         )
     })
 
-    //6
+    //7
     it('Should fail because caller is not pauser', async () => {
 
         console.log("//*********************************END safeTransferFrom FAIL BATCH*****************************************/")
@@ -1827,7 +1837,7 @@ __/\\\\\\\\\\\\\ _____/\\\\\\\\\ _______/\\../\\ ___/\\\\\\\\\\\\\\\
         )
     })
 
-    //7
+    //8
     it('Should fail because caller is not pauser', async () => {
 
         console.log("//*********************************END pause FAIL BATCH*****************************************/")
