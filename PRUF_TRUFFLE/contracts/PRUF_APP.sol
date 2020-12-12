@@ -21,6 +21,9 @@ pragma solidity ^0.6.7;
 import "./PRUF_CORE.sol";
 
 contract APP is CORE {
+
+    bytes32 public constant B320xF_ =0xFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF;
+
     modifier isAuthorized(bytes32 _idxHash) override {
         //require that user is authorized and token is held by contract
         uint256 tokenId = uint256(_idxHash);
@@ -186,7 +189,7 @@ contract APP is CORE {
         if (_newrgtHash == 0x0) {
             //set to transferred status
             rec.assetStatus = 5;
-            _newrgtHash = 0xFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF;
+            _newrgtHash = B320xF_;
         }
 
         rec.rightsHolder = _newrgtHash;
