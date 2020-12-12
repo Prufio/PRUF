@@ -84,11 +84,7 @@ contract AC_TKN is
         _;
     }
 
-<<<<<<< HEAD
-    //----------------------Internal Admin functions / isAdmin or isMinter----------------------//
-=======
     //----------------------Admin functions / isAdmin or isMinter----------------------//
->>>>>>> roles_implementation
 
     /*
      * @dev Mints assetClass token, must be isMinter

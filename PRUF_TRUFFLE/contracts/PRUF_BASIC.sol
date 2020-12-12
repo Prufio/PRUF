@@ -22,7 +22,6 @@ __/\\\\\\\\\\\\\ _____/\\\\\\\\\ _______/\\../\\ ___/\\\\\\\\\\\\\\\
 pragma solidity ^0.6.7;
 
 import "./PRUF_INTERFACES.sol";
-//import "./Imports/access/Ownable.sol";
 import "./Imports/access/AccessControl.sol";
 import "./Imports/utils/Pausable.sol";
 import "./Imports/utils/ReentrancyGuard.sol";
@@ -30,9 +29,7 @@ import "./Imports/token/ERC721/IERC721Receiver.sol";
 import "./Imports/math/safeMath.sol";
 
 contract BASIC is ReentrancyGuard, AccessControl, IERC721Receiver, Pausable {
-
     bytes32 public constant PAUSER_ROLE = keccak256("PAUSER_ROLE");
-
 
     struct Record {
         //struct for holding and manipulating record data
@@ -195,7 +192,8 @@ contract BASIC is ReentrancyGuard, AccessControl, IERC721Receiver, Pausable {
     //^^^^^^^checks^^^^^^^^^
     {
         require(
-            hasRole(DEFAULT_ADMIN_ROLE, _msgSender()) || (msg.sender == NP_Address),
+            hasRole(DEFAULT_ADMIN_ROLE, _msgSender()) ||
+                (msg.sender == NP_Address),
             "B:TX:Invalid caller for transfer token"
         );
         uint256 tokenId = uint256(_idxHash);
@@ -223,7 +221,11 @@ contract BASIC is ReentrancyGuard, AccessControl, IERC721Receiver, Pausable {
     /*
      * @dev Set adress of STOR contract to interface with
      */
-    function OO_setStorageContract(address _storageAddress) external virtual isAdmin {
+    function OO_setStorageContract(address _storageAddress)
+        external
+        virtual
+        isAdmin
+    {
         require(
             _storageAddress != address(0),
             "B:SSC: storage address cannot be zero"
@@ -289,12 +291,9 @@ contract BASIC is ReentrancyGuard, AccessControl, IERC721Receiver, Pausable {
     /*
      * @dev Get asset class information from AC_manager and return an AC Struct
      */
-    function getACinfo(uint32 _assetClass) //-------------------------------------------------------DS:TEST -- modified with new IPFS parameter
-        internal
-        virtual
-        view
-        returns (AC memory)
-    {
+    function getACinfo(
+        uint32 _assetClass //-------------------------------------------------------DS:TEST -- modified with new IPFS parameter
+    ) internal virtual view returns (AC memory) {
         //^^^^^^^checks^^^^^^^^^
 
         AC memory AC_info;

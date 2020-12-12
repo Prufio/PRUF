@@ -23,7 +23,6 @@ __/\\\\\\\\\\\\\ _____/\\\\\\\\\ _______/\\../\\ ___/\\\\\\\\\\\\\\\
 pragma solidity ^0.6.7;
 
 import "./PRUF_BASIC.sol";
-//Import "./Imports/access/AccessControl.sol";
 import "./Imports/utils/ReentrancyGuard.sol";
 
 contract AC_MGR is BASIC {
@@ -48,7 +47,6 @@ contract AC_MGR is BASIC {
 
     uint256 private currentACtokenPrice = acPrice_L1;
 
-    //mapping(uint32 => Costs) private cost; // Cost per function by asset class
     mapping(uint32 => mapping(uint16 => Costs)) private cost; // Cost per function by asset class => Cost Type
     /*
         Cost indexes
@@ -74,19 +72,6 @@ contract AC_MGR is BASIC {
     constructor() public {
         _setupRole(NODE_MINTER_ROLE, _msgSender());
     }
-
-    // /*
-    //  * @dev Verify user credentials
-    //  * Originating Address:
-    //  *      is admin
-    //  */
-    // modifier isAdmin() {
-    //     require(
-    //         hasRole(DEFAULT_ADMIN_ROLE, _msgSender()),
-    //         "PAM:MOD: must have DEFAULT_ADMIN_ROLE"
-    //     );
-    //     _;
-    // }
 
     /*
      * @dev Verify user credentials
@@ -182,7 +167,7 @@ contract AC_MGR is BASIC {
         uint32 _assetClassRoot,
         uint8 _custodyType,
         bytes32 _IPFS
-    ) public whenNotPaused nonReentrant returns (uint256) {
+    ) external whenNotPaused nonReentrant returns (uint256) {
         require( //Impossible to test??
             ACtokenIndex < 4294000000,
             "PRuf:IS:Only 4294000000 AC tokens allowed"
@@ -329,7 +314,7 @@ contract AC_MGR is BASIC {
         uint32 _assetClass,
         uint256 _amount //in whole pruf tokens, not 18 decimals
     )
-        public
+        external
         whenNotPaused
         nonReentrant
         isACtokenHolderOfClass(_assetClass)
@@ -384,7 +369,7 @@ contract AC_MGR is BASIC {
         //^^^^^^^effects^^^^^^^^^
     }
 
-     /*
+    /*
      * @dev Increases priceShare in an assetClass
      *
      */
@@ -499,15 +484,6 @@ contract AC_MGR is BASIC {
     }
 
     /*
-     * @dev Retrieve AC_discount @ _assetClass, in percent ACTH share, * 100 (9000 = 90%)
-     */
-    function getAC_discount(uint32 _assetClass) public view returns (uint32) {
-        //^^^^^^^checks^^^^^^^^^
-        return (AC_data[_assetClass].discount);
-        //^^^^^^^interactions^^^^^^^^^
-    }
-
-    /*
      * @dev compare the root of two asset classes
      */
     function isSameRootAC(uint32 _assetClass1, uint32 _assetClass2)
@@ -616,6 +592,15 @@ contract AC_MGR is BASIC {
             costs.paymentAddress,
             costs.serviceCost
         );
+        //^^^^^^^interactions^^^^^^^^^
+    }
+
+    /*
+     * @dev Retrieve AC_discount @ _assetClass, in percent ACTH share, * 100 (9000 = 90%)
+     */
+    function getAC_discount(uint32 _assetClass) public view returns (uint32) {
+        //^^^^^^^checks^^^^^^^^^
+        return (AC_data[_assetClass].discount);
         //^^^^^^^interactions^^^^^^^^^
     }
 }
