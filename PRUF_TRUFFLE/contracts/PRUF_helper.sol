@@ -21,8 +21,6 @@ pragma solidity ^0.6.7;
 import "./Imports/access/Ownable.sol";
 import "./Imports/math/Safemath.sol";
 
-
-
 interface erc721_tokenInterface {
     function ownerOf(uint256) external view returns (address);
 }
@@ -114,7 +112,7 @@ contract Helper is Ownable {
         string memory _idx_mfg,
         string memory _idx_mod,
         string memory _idx_ser
-    ) public pure returns (bytes32) {
+    ) external pure returns (bytes32) {
         bytes32 idxHash;
         idxHash = keccak256(
             abi.encodePacked(_idx_type, _idx_mfg, _idx_mod, _idx_ser)
@@ -129,7 +127,7 @@ contract Helper is Ownable {
         string memory _rgt_last,
         string memory _rgt_ID,
         string memory _rgt_secret
-    ) public pure returns (bytes32, bytes32) {
+    ) external pure returns (bytes32, bytes32) {
         bytes32 rawRgtHash;
 
         rawRgtHash = keccak256(
@@ -151,7 +149,7 @@ contract Helper is Ownable {
         string memory _rgt_last,
         string memory _rgt_ID,
         string memory _rgt_secret
-    ) public pure returns (bytes32) {
+    ) external pure returns (bytes32) {
         bytes32 rawRgtHash;
 
         rawRgtHash = keccak256(
@@ -173,7 +171,7 @@ contract Helper is Ownable {
         string memory _rgt_last,
         string memory _rgt_ID,
         string memory _rgt_secret
-    ) public pure returns (bytes32) {
+    ) external pure returns (bytes32) {
         bytes32 rawRgtHash;
 
         rawRgtHash = keccak256(
@@ -189,12 +187,15 @@ contract Helper is Ownable {
         return rawRgtHash;
     }
 
-    function getURIfromAuthcode(
-        uint32 _assetClass,
-        string calldata _authCode
-    ) external pure returns (string memory){
+    function getURIfromAuthcode(uint32 _assetClass, string calldata _authCode)
+        external
+        pure
+        returns (string memory)
+    {
         bytes32 _hashedAuthCode = keccak256(abi.encodePacked(_authCode));
-        bytes32 b32URI = keccak256(abi.encodePacked(_hashedAuthCode, _assetClass));
+        bytes32 b32URI = keccak256(
+            abi.encodePacked(_hashedAuthCode, _assetClass)
+        );
         string memory authString = uint256toString(uint256(b32URI));
 
         return authString;
@@ -203,9 +204,11 @@ contract Helper is Ownable {
     function getURIb32fromAuthcode(
         uint32 _assetClass,
         string calldata _authCode
-    ) external pure returns (bytes32){
+    ) external pure returns (bytes32) {
         bytes32 _hashedAuthCode = keccak256(abi.encodePacked(_authCode));
-        bytes32 b32URI = keccak256(abi.encodePacked(_hashedAuthCode, _assetClass));
+        bytes32 b32URI = keccak256(
+            abi.encodePacked(_hashedAuthCode, _assetClass)
+        );
 
         return b32URI;
     }
@@ -237,38 +240,7 @@ contract Helper is Ownable {
         return string(buffer);
     }
 
-    function purchaseACtoken() public { //returns (uint256, uint256) {
-
-        ACtokenIndex = ACtokenIndex.add(uint256(50)); //increment ACtokenIndex up to last one
-
-        require(
-            ACtokenIndex < 4294000000,
-            "PRuf:IS:Only 4294000000 AC tokens allowed"
-        );
-
-        uint256 newACtokenPrice;
-
-        uint256 numberOfTokensSold = ACtokenIndex.sub(uint256(10000));
-        if (numberOfTokensSold >= 4000) {
-            newACtokenPrice = 100000;
-        } else if (numberOfTokensSold >= 2000) {
-            newACtokenPrice = 75937;
-        } else if (numberOfTokensSold >= 1000) {
-            newACtokenPrice = 50625;
-        } else if (numberOfTokensSold >= 500) {
-            newACtokenPrice = 33750;
-        } else if (numberOfTokensSold >= 250) {
-            newACtokenPrice = 22500;
-        } else if (numberOfTokensSold >= 125) {
-            newACtokenPrice = 15000;
-        } else {
-            newACtokenPrice = 10000;
-        }
-        
-        currentACtokenPrice = newACtokenPrice;
-    }
-
-    function _Getprice() public view returns (uint256,uint256) {
+    function _Getprice() public view returns (uint256, uint256) {
         return (currentACtokenPrice, ACtokenIndex);
     }
 }
