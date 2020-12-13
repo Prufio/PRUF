@@ -64,7 +64,7 @@ contract Helper is Ownable {
         view
         returns (string memory)
     {
-        if (erc721_tokenContract.ownerOf(tokenId) == msg.sender) {
+        if (erc721_tokenContract.ownerOf(tokenId) == _msgSender()) {
             return "token confirmed at sender address";
         } else {
             return "token not at sender address";

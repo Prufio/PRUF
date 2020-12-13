@@ -372,7 +372,7 @@ interface AC_TKN_Interface {
     /**
      * @dev Transfers the ownership of a given token ID to another address.
      * Usage of this method is discouraged, use {safeTransferFrom} whenever possible.
-     * Requires the msg.sender to be the owner, approved, or operator.
+     * Requires the _msgSender() to be the owner, approved, or operator.
      * @param from current owner of the token
      * @param to address to receive the ownership of the given token ID
      * @param tokenId uint256 ID of the token to be transferred
@@ -389,7 +389,7 @@ interface AC_TKN_Interface {
      * which is called upon a safe transfer, and return the magic value
      * `bytes4(keccak256("onERC721Received(address,address,uint256,bytes)"))`; otherwise,
      * the transfer is reverted.
-     * Requires the msg.sender to be the owner, approved, or operator
+     * Requires the _msgSender() to be the owner, approved, or operator
      * @param from current owner of the token
      * @param to address to receive the ownership of the given token ID
      * @param tokenId uint256 ID of the token to be transferred
@@ -537,7 +537,7 @@ interface A_TKN_Interface {
     /**
      * @dev Transfers the ownership of a given token ID to another address.
      * Usage of this method is discouraged, use {safeTransferFrom} whenever possible.
-     * Requires the msg.sender to be the owner, approved, or operator.
+     * Requires the _msgSender() to be the owner, approved, or operator.
      * @param from current owner of the token
      * @param to address to receive the ownership of the given token ID
      * @param tokenId uint256 ID of the token to be transferred
@@ -554,7 +554,7 @@ interface A_TKN_Interface {
      * which is called upon a safe transfer, and return the magic value
      * `bytes4(keccak256("onERC721Received(address,address,uint256,bytes)"))`; otherwise,
      * the transfer is reverted.
-     * Requires the msg.sender to be the owner, approved, or operator
+     * Requires the _msgSender() to be the owner, approved, or operator
      * @param from current owner of the token
      * @param to address to receive the ownership of the given token ID
      * @param tokenId uint256 ID of the token to be transferred
@@ -679,7 +679,7 @@ interface ID_TKN_Interface {
     /**
      * @dev @dev Blocks the transfer of a given token ID to another address
      * Usage of this method is discouraged, use {safeTransferFrom} whenever possible.
-     * Requires the msg.sender to be the owner, approved, or operator.
+     * Requires the _msgSender() to be the owner, approved, or operator.
      */
     function transferFrom(
         address from,
@@ -693,7 +693,7 @@ interface ID_TKN_Interface {
      * which is called upon a safe transfer, and return the magic value
      * `bytes4(keccak256("onERC721Received(address,address,uint256,bytes)"))`; otherwise,
      * the transfer is reverted.
-     * Requires the msg.sender to be the owner, approved, or operator
+     * Requires the _msgSender() to be the owner, approved, or operator
      */
     function safeTransferFrom(
         address from,

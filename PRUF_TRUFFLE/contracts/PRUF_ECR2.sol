@@ -109,7 +109,7 @@ contract ECR2 is ECR_CORE {
         //^^^^^^^^interactions^^^^^^^^^
     }
 
-    /* 
+    /*
      * @dev takes asset out of excrow status if time period has resolved || is escrow issuer
      */
     function endEscrow(bytes32 _idxHash)
@@ -148,7 +148,7 @@ contract ECR2 is ECR_CORE {
         );
         require(
             (escrow.timelock < block.timestamp) ||
-                (keccak256(abi.encodePacked(msg.sender)) == ownerHash),
+                (keccak256(abi.encodePacked(_msgSender())) == ownerHash),
             "E:EE: Escrow period not ended and caller is not escrow owner"
         );
         //^^^^^^^checks^^^^^^^^^

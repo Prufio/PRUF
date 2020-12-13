@@ -32,7 +32,7 @@ contract ECR_NC is ECR_CORE {
     modifier isAuthorized(bytes32 _idxHash) override {
         uint256 tokenId = uint256(_idxHash);
         require(
-            (A_TKN.ownerOf(tokenId) == msg.sender), //msg.sender is token holder
+            (A_TKN.ownerOf(tokenId) == _msgSender()), //_msgSender() is token holder
             "ENC:MOD-IA: Caller does not hold token"
         );
         _;
@@ -105,7 +105,7 @@ contract ECR_NC is ECR_CORE {
         );
         require(
             (escrow.timelock < block.timestamp) ||
-                (keccak256(abi.encodePacked(msg.sender)) == ownerHash),
+                (keccak256(abi.encodePacked(_msgSender())) == ownerHash),
             "ENC:EE: Escrow period not ended and caller is not escrow owner"
         );
         //^^^^^^^checks^^^^^^^^^

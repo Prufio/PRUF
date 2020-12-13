@@ -91,8 +91,8 @@ contract AC_MGR is BASIC {
      */
     modifier isACtokenHolderOfClass(uint32 _assetClass) {
         require(
-            (AC_TKN.ownerOf(_assetClass) == msg.sender),
-            "ACM:MOD-IACTHoC:msg.sender not authorized in asset class"
+            (AC_TKN.ownerOf(_assetClass) == _msgSender()),
+            "ACM:MOD-IACTHoC:_msgSender() not authorized in asset class"
         );
         _;
     }
@@ -196,13 +196,13 @@ contract AC_MGR is BASIC {
         }
         //^^^^^^^effects^^^^^^^^^
 
-        //mint an asset class token to msg.sender, at tokenID ACtokenIndex, with URI = root asset Class #
+        //mint an asset class token to _msgSender(), at tokenID ACtokenIndex, with URI = root asset Class #
 
-        UTIL_TKN.trustedAgentBurn(msg.sender, currentACtokenPrice);
+        UTIL_TKN.trustedAgentBurn(_msgSender(), currentACtokenPrice);
         currentACtokenPrice = newACtokenPrice;
 
         _createAssetClass(
-            msg.sender,
+            _msgSender(),
             _name,
             uint32(ACtokenIndex), //safe because ACtokenIndex <  4294000000 required
             _assetClassRoot,
@@ -347,7 +347,7 @@ contract AC_MGR is BASIC {
         increasePriceShare(_assetClass, _amount.div(upgradeMultiplier));
 
         UTIL_TKN.trustedAgentTransfer(
-            msg.sender,
+            _msgSender(),
             rootPaymentAdress,
             _amount.mul(1 ether) //adds 18 zeros to work in full tokens
         );

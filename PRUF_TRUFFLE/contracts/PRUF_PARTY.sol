@@ -247,7 +247,7 @@ contract FAUCET is ReentrancyGuard, Pausable, AccessControl {
         //^^^^^^^checks^^^^^^^^^
         //^^^^^^^effects^^^^^^^^^
         tokenId++;
-        ID_TKN.mintPRUF_IDToken(msg.sender, tokenId);
+        ID_TKN.mintPRUF_IDToken(_msgSender(), tokenId);
         //^^^^^^^Interactions^^^^^^^^^
     }
 
@@ -301,12 +301,12 @@ contract FAUCET is ReentrancyGuard, Pausable, AccessControl {
      *          amount minted conforms to tokensPerEth setting, min buy is enforced
      */
     function BUY_PRUF() public payable nonReentrant whenNotPaused {
-        whiteListedAddress memory _whiteList = whiteList[msg.sender];
+        whiteListedAddress memory _whiteList = whiteList[_msgSender()];
 
         if (_whiteList.tokensPerEth == 0) {
             //loads the default (addr 0) info into the address if address is not specificly whitelisted
-            whiteList[msg.sender] = whiteList[address(0)];
-            _whiteList = whiteList[msg.sender];
+            whiteList[_msgSender()] = whiteList[address(0)];
+            _whiteList = whiteList[_msgSender()];
         }
 
         uint256 amountToMint = msg.value.mul(
@@ -330,11 +330,11 @@ contract FAUCET is ReentrancyGuard, Pausable, AccessControl {
 
         presaleCount = amountToMint.add(presaleCount);
 
-        whiteList[msg.sender].maxEth = _whiteList.maxEth.sub(msg.value); //reduce max purchasable by purchased amount
-        whiteList[msg.sender].minEth = 0; //Remove minimum , as minimum buy is already met.
+        whiteList[_msgSender()].maxEth = _whiteList.maxEth.sub(msg.value); //reduce max purchasable by purchased amount
+        whiteList[_msgSender()].minEth = 0; //Remove minimum , as minimum buy is already met.
         //^^^^^^^effects^^^^^^^^^
 
-        UTIL_TKN.mint(msg.sender, amountToMint);
+        UTIL_TKN.mint(_msgSender(), amountToMint);
         emit REPORT(_msgSender(), amountToMint);
         //^^^^^^^Interactions^^^^^^^^^
     }

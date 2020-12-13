@@ -76,7 +76,7 @@ contract CORE is BASIC {
         }
 
         if ((AC_info.custodyType == 2) || (AC_info.custodyType == 4)) {
-            A_TKN.mintAssetToken(msg.sender, tokenId, "pruf.io");
+            A_TKN.mintAssetToken(_msgSender(), tokenId, "pruf.io");
         }
 
         STOR.newRecord(_idxHash, _rgtHash, _assetClass, _countDownStart);
@@ -211,7 +211,7 @@ contract CORE is BASIC {
         whenNotPaused
     {
         UTIL_TKN.payForService(
-            msg.sender,
+            _msgSender(),
             pricing.rootAddress,
             pricing.rootPrice,
             pricing.ACTHaddress,

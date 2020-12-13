@@ -66,7 +66,7 @@ contract MAL_APP is CORE_MAL {
         // require(_rgtHash != 0, "A:NR: rights holder cannot be zero");
         //^^^^^^^checks^^^^^^^^^
 
-        //bytes32 userHash = keccak256(abi.encodePacked(msg.sender));
+        //bytes32 userHash = keccak256(abi.encodePacked(_msgSender()));
         //^^^^^^^effects^^^^^^^^^
 
         if (AC_info.assetClassRoot == oldAC_info.assetClassRoot) {
@@ -752,7 +752,7 @@ contract MAL_APP is CORE_MAL {
         // );
         // require(
         //     (escrow.timelock < block.timestamp) ||
-        //         (keccak256(abi.encodePacked(msg.sender)) == ownerHash),
+        //         (keccak256(abi.encodePacked(_msgSender())) == ownerHash),
         //     "E:EE: Escrow period not ended and caller is not escrow owner"
         // );
         //^^^^^^^checks^^^^^^^^^
@@ -798,7 +798,7 @@ contract MAL_APP is CORE_MAL {
         // );
         // require(
         //     (escrow.timelock < block.timestamp) ||
-        //         (keccak256(abi.encodePacked(msg.sender)) == ownerHash),
+        //         (keccak256(abi.encodePacked(_msgSender())) == ownerHash),
         //     "E:EE: Escrow period not ended and caller is not escrow owner"
         // );
         //^^^^^^^checks^^^^^^^^^
@@ -832,7 +832,7 @@ contract MAL_APP is CORE_MAL {
         // );
 
         //^^^^^^^checks^^^^^^^^^
-        RCLR.discard(_idxHash, msg.sender);
+        RCLR.discard(_idxHash, _msgSender());
         //^^^^^^^interactions^^^^^^^^^
     }
     

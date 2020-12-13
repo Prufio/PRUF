@@ -30,6 +30,7 @@ import "./Imports/math/safeMath.sol";
 
 contract BASIC is ReentrancyGuard, AccessControl, IERC721Receiver, Pausable {
     bytes32 public constant PAUSER_ROLE = keccak256("PAUSER_ROLE");
+    bytes32 public constant ASSET_TXFR_ROLE = keccak256("ASSET_TXFR_ROLE");
 
     struct Record {
         //struct for holding and manipulating record data
@@ -192,9 +193,8 @@ contract BASIC is ReentrancyGuard, AccessControl, IERC721Receiver, Pausable {
     //^^^^^^^checks^^^^^^^^^
     {
         require(
-            hasRole(DEFAULT_ADMIN_ROLE, _msgSender()) ||
-                (msg.sender == NP_Address),
-            "B:TX:Invalid caller for transfer token"
+            hasRole(ASSET_TXFR_ROLE, _msgSender()),
+            "B:TX:Must have ASSET_TXFR_ROLE"
         );
         uint256 tokenId = uint256(_idxHash);
         //^^^^^^^effects^^^^^^^^^
@@ -269,7 +269,7 @@ contract BASIC is ReentrancyGuard, AccessControl, IERC721Receiver, Pausable {
     //--------------------------------------------------------------------------------------INTERNAL functions
 
     /*
-     * @dev Get a User type Record from AC_manager for msg.sender, by assetClass
+     * @dev Get a User type Record from AC_manager for _msgSender(), by assetClass
      */
     function getCallingUserType(uint32 _assetClass)
         internal
@@ -280,7 +280,7 @@ contract BASIC is ReentrancyGuard, AccessControl, IERC721Receiver, Pausable {
         //^^^^^^^checks^^^^^^^^^
 
         uint8 userTypeInAssetClass = AC_MGR.getUserType(
-            keccak256(abi.encodePacked(msg.sender)),
+            keccak256(abi.encodePacked(_msgSender())),
             _assetClass
         );
 

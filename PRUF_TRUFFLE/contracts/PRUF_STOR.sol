@@ -146,7 +146,7 @@ contract STOR is AccessControl, ReentrancyGuard, Pausable {
      */
     modifier isEscrowManager() {
         require(
-            msg.sender == contractNameToAddress["ECR_MGR"],
+            _msgSender() == contractNameToAddress["ECR_MGR"],
             "S:MOD-IEM:Caller not ECR_MGR"
         );
         _;
@@ -251,7 +251,7 @@ contract STOR is AccessControl, ReentrancyGuard, Pausable {
         uint8 _contractAuthLevel
     ) external {
         require(
-            AC_TKN.ownerOf(_assetClass) == msg.sender,
+            AC_TKN.ownerOf(_assetClass) == _msgSender(),
             "S:ECFAC:Caller not ACtokenHolder"
         );
 
@@ -291,7 +291,7 @@ contract STOR is AccessControl, ReentrancyGuard, Pausable {
 
         Record memory rec;
 
-        if (contractInfo[contractAddressToName[msg.sender]][_assetClass] == 1) {
+        if (contractInfo[contractAddressToName[_msgSender()]][_assetClass] == 1) {
             rec.assetStatus = 0;
         } else {
             rec.assetStatus = 51;
@@ -688,6 +688,4 @@ contract STOR is AccessControl, ReentrancyGuard, Pausable {
         );
         //^^^^^^^interactions^^^^^^^^^
     }
-
-    //-----------------------------------------------Private functions------------------------------------------------//
 }

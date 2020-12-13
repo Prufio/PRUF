@@ -28,8 +28,8 @@ contract APP is CORE {
         //require that user is authorized and token is held by contract
         uint256 tokenId = uint256(_idxHash);
         require(
-            (A_TKN.ownerOf(tokenId) == APP_Address),
-            "A:MOD-IA: Custodial contract does not hold token"
+            (A_TKN.ownerOf(tokenId) == address(this)),
+            "A:MOD-IA: APP contract does not hold token"
         );
         _;
     }
@@ -54,7 +54,7 @@ contract APP is CORE {
         require(userType < 5, "A:NR: User not authorized to create records");
         //^^^^^^^checks^^^^^^^^^
 
-        //bytes32 userHash = keccak256(abi.encodePacked(msg.sender));
+        //bytes32 userHash = keccak256(abi.encodePacked(_msgSender()));
         //^^^^^^^effects^^^^^^^^^
 
         if (AC_info.assetClassRoot == oldAC_info.assetClassRoot) {

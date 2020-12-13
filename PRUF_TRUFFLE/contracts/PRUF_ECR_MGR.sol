@@ -97,7 +97,7 @@ contract ECR_MGR is BASIC {
     ) external nonReentrant whenNotPaused {
         Record memory rec = getRecord(_idxHash);
         ContractDataHash memory contractInfo = getContractInfo(
-            msg.sender,
+            _msgSender(),
             rec.assetClass
         );
         bytes32 controllingContractNameHash = contractInfo.nameHash;
@@ -125,7 +125,7 @@ contract ECR_MGR is BASIC {
     function endEscrow(bytes32 _idxHash) external nonReentrant whenNotPaused {
         Record memory rec = getRecord(_idxHash);
         ContractDataHash memory contractInfo = getContractInfo(
-            msg.sender,
+            _msgSender(),
             rec.assetClass
         );
 
@@ -166,7 +166,7 @@ contract ECR_MGR is BASIC {
     ) external nonReentrant whenNotPaused {
         Record memory rec = getRecord(_idxHash);
         ContractDataHash memory contractInfo = getContractInfo(
-            msg.sender,
+            _msgSender(),
             rec.assetClass
         );
 
@@ -214,7 +214,7 @@ contract ECR_MGR is BASIC {
     ) external nonReentrant whenNotPaused {
         Record memory rec = getRecord(_idxHash);
         ContractDataHash memory contractInfo = getContractInfo(
-            msg.sender,
+            _msgSender(),
             rec.assetClass
         );
 

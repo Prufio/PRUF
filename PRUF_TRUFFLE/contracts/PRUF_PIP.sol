@@ -27,11 +27,13 @@ contract PIP is CORE {
      * @dev Sets import discount for this contract
      */
     function setImportDiscount(uint256 _importDiscount) external isAdmin {
+        //^^^^^^^checks^^^^^^^^^
         if (_importDiscount < 1) {
             importDiscount = 1;
         } else {
             importDiscount = _importDiscount;
         }
+        //^^^^^^^effects^^^^^^^^^^^^
     }
 
     function mintPipAsset(
@@ -44,7 +46,7 @@ contract PIP is CORE {
         uint8 userType = getCallingUserType(_assetClass);
 
         require(
-            (AC_TKN.ownerOf(_assetClass) == msg.sender), //msg.sender is AC token holder
+            (AC_TKN.ownerOf(_assetClass) == _msgSender()), //_msgSender() is AC token holder
             "N:MNA:Caller does not hold AC token"
         );
         require(userType == 10, "N:MNA:user not authorized to mint PIP assets");
@@ -58,10 +60,11 @@ contract PIP is CORE {
             abi.encodePacked(_hashedAuthCode, _assetClass)
         );
         tokenURI = uint256toString(uint256(b32URI));
+        //^^^^^^^effects^^^^^^^^^^^^
 
         A_TKN.mintAssetToken(address(this), tokenId, tokenURI); //mint a PIP token
 
-        //^^^^^^^interactions / effects^^^^^^^^^^^^
+        //^^^^^^^interactions^^^^^^^^^^^^
     }
 
     /*
@@ -75,11 +78,6 @@ contract PIP is CORE {
         uint32 _countDownStart
     ) external nonReentrant whenNotPaused {
         uint256 tokenId = uint256(_idxHash);
-        // Record memory rec = getRecord(_idxHash);
-        // ContractDataHash memory contractInfo = getContractInfo(
-        //     address(this),
-        //     rec.assetClass
-        // );
 
         require(
             A_TKN.ownerOf(tokenId) == address(this),
@@ -93,7 +91,7 @@ contract PIP is CORE {
 
         A_TKN.setURI(tokenId, "pruf.io"); // set URI
 
-        A_TKN.safeTransferFrom(address(this), msg.sender, tokenId); // sends token from this holding contract to caller wallet
+        A_TKN.safeTransferFrom(address(this), _msgSender(), tokenId); // sends token from this holding contract to caller wallet
 
         deductImportRecordCosts(_newAssetClass);
 
@@ -133,8 +131,8 @@ contract PIP is CORE {
         whenNotPaused
     {
         //^^^^^^^checks^^^^^^^^^
+
         Invoice memory pricing;
-        //^^^^^^^effects^^^^^^^^^
         (
             pricing.rootAddress,
             pricing.rootPrice,
@@ -144,6 +142,7 @@ contract PIP is CORE {
 
         pricing.rootPrice = pricing.rootPrice.div(importDiscount);
         pricing.ACTHprice = pricing.ACTHprice.div(importDiscount);
+        //^^^^^^^effects^^^^^^^^^
 
         deductPayment(pricing);
         //^^^^^^^interactions^^^^^^^^^

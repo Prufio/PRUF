@@ -87,7 +87,7 @@ contract CORE_MAL is  BASIC {
         }
 
         if (AC_info.custodyType == 2) {
-            A_TKN.mintAssetToken(msg.sender, tokenId, "pruf.io");
+            A_TKN.mintAssetToken(_msgSender(), tokenId, "pruf.io");
         }
 
         STOR.newRecord(_idxHash, _rgtHash, _assetClass, _countDownStart);
@@ -167,7 +167,7 @@ contract CORE_MAL is  BASIC {
      */
     function deductPayment(Invoice memory pricing) internal whenNotPaused {
         UTIL_TKN.payForService(
-            msg.sender,
+            _msgSender(),
             pricing.rootAddress,
             pricing.rootPrice,
             pricing.ACTHaddress,

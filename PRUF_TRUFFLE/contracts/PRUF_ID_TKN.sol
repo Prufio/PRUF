@@ -160,7 +160,7 @@ contract ID_TKN is
     /**
      * @dev Blocks the transfer of a given token ID to another address
      * Usage of this method is discouraged, use {safeTransferFrom} whenever possible.
-     * Requires the msg.sender to be the owner, approved, or operator.
+     * Requires the _msgSender() to be the owner, approved, or operator.
      */
     function transferFrom(
         address from,
@@ -187,7 +187,7 @@ contract ID_TKN is
      * which is called upon a safe transfer, and return the magic value
      * `bytes4(keccak256("onERC721Received(address,address,uint256,bytes)"))`; otherwise,
      * the transfer is reverted.
-     * Requires the msg.sender to be the owner, approved, or operator
+     * Requires the _msgSender() to be the owner, approved, or operator
      */
     function safeTransferFrom(
         address from,

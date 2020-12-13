@@ -30,7 +30,7 @@ contract APP_NC is CORE {
     modifier isAuthorized(bytes32 _idxHash) override {
         uint256 tokenId = uint256(_idxHash);
         require(
-            (A_TKN.ownerOf(tokenId) == msg.sender), //msg.sender is token holder
+            (A_TKN.ownerOf(tokenId) == _msgSender()), //_msgSender() is token holder
             "ANC:MOD-IA: Caller does not hold token"
         );
         _;
@@ -48,7 +48,7 @@ contract APP_NC is CORE {
         bytes32 _IpfsHash
     ) external nonReentrant whenNotPaused {
         require(
-            (ID_TKN.balanceOf(msg.sender) == 1), //msg.sender is token holder
+            (ID_TKN.balanceOf(_msgSender()) == 1), //_msgSender() is token holder
             "ANC:MOD-IA: Caller does not hold a valid PRuF_ID token"
         );
         //^^^^^^^Checks^^^^^^^^^
@@ -70,7 +70,7 @@ contract APP_NC is CORE {
         uint32 _countDownStart
     ) external nonReentrant whenNotPaused {
         require(
-            (ID_TKN.balanceOf(msg.sender) == 1), //msg.sender is token holder
+            (ID_TKN.balanceOf(_msgSender()) == 1), //_msgSender() is token holder
             "ANC:MOD-IA: Caller does not hold a valid PRuF_ID token"
         );
         //^^^^^^^Checks^^^^^^^^^
