@@ -1756,7 +1756,7 @@ __/\\\\\\\\\\\\\ _____/\\\\\\\\\ _______/\\../\\ ___/\\\\\\\\\\\\\\\
     it('Should mint 30000 tokens to account2', async () => {
         return UTIL_TKN.mint(
             account2,
-            '30000000000000000000000',
+            '300000000000000000000000',
             { from: account1 }
         )
     })
@@ -1765,7 +1765,7 @@ __/\\\\\\\\\\\\\ _____/\\\\\\\\\ _______/\\../\\ ___/\\\\\\\\\\\\\\\
     it('Should mint 30000 tokens to account4', async () => {
         return UTIL_TKN.mint(
             account4,
-            '30000000000000000000000',
+            '300000000000000000000000',
             { from: account1 }
         )
     })
@@ -1774,9 +1774,38 @@ __/\\\\\\\\\\\\\ _____/\\\\\\\\\ _______/\\../\\ ___/\\\\\\\\\\\\\\\
     it('Should mint 30000 tokens to account1', async () => {
         return UTIL_TKN.mint(
             account1,
-            '30000000000000000000000',
+            '300000000000000000000000',
             { from: account1 }
         )
+    })
+
+
+    it('Should update IPFS of AC 10 to rgt1', async () => {
+        return AC_MGR.updateACipfs(
+            rgt1,
+            '10',
+            { from: account1 }
+        )
+    })
+
+
+    it('Should update extendedData of AC 10 to "1000"', async () => {
+        return AC_MGR.updateACextendedData(
+            "1000",
+            '10',
+            { from: account1 }
+        )
+    })
+
+
+    it("Should retrieve AC10", async () =>{ 
+        var Record = [];
+        
+        return await AC_MGR.getAC_data("10", {from: account2}, function (_err, _result) {
+            if(_err){} 
+            else{Record = Object.values(_result)
+        console.log(Record)}
+        })
     })
 
     //1
@@ -1784,9 +1813,8 @@ __/\\\\\\\\\\\\\ _____/\\\\\\\\\ _______/\\../\\ ___/\\\\\\\\\\\\\\\
 
         console.log("//**************************************END AC_MGR SETUP**********************************************/")
         console.log("//**************************************BEGIN AC_MGR FAIL BATCH (17)**********************************************/")
-        console.log("//**************************************BEGIN OO_SetPricing FAIL BATCH**********************************************/")
-        return AC_MGR.OO_SetPricing(
-        "10000", 
+        console.log("//**************************************BEGIN OO_SetACpricing FAIL BATCH**********************************************/")
+        return AC_MGR.OO_SetACpricing(
         '10',
         '10',
         '10',
@@ -1799,24 +1827,9 @@ __/\\\\\\\\\\\\\ _____/\\\\\\\\\ _______/\\../\\ ___/\\\\\\\\\\\\\\\
     })
 
     //2
-    it('Should fail because multiplier > 10k', async () => {
-        return AC_MGR.OO_SetPricing(
-        "10001", 
-        '10',
-        '10',
-        '10',
-        '10',
-        '10',
-        '10',
-        '10',
-        {from: account1}
-        )
-    })
-
-    //3
     it('Should fail because caller does not hold AC token', async () => {
 
-        console.log("//**************************************END OO_SetPricing FAIL BATCH**********************************************/")
+        console.log("//**************************************END OO_SetACpricing FAIL BATCH**********************************************/")
         console.log("//**************************************BEGIN addUser FAIL BATCH**********************************************/")
         return AC_MGR.addUser(
         account2Hash, 
@@ -1826,7 +1839,7 @@ __/\\\\\\\\\\\\\ _____/\\\\\\\\\ _______/\\../\\ ___/\\\\\\\\\\\\\\\
         )
     })
 
-    //4
+    //3
     it('Should fail because caller is not node minter', async () => {
 
         console.log("//**************************************END addUser FAIL BATCH**********************************************/")
@@ -1843,7 +1856,7 @@ __/\\\\\\\\\\\\\ _____/\\\\\\\\\ _______/\\../\\ ___/\\\\\\\\\\\\\\\
         )
     })
 
-    //5
+    //4
     it('Should fail because AC_TKN ID != 0', async () => {
         return AC_MGR.createAssetClass(
         account2,
@@ -1857,7 +1870,7 @@ __/\\\\\\\\\\\\\ _____/\\\\\\\\\ _______/\\../\\ ___/\\\\\\\\\\\\\\\
         )
     })
 
-    //6
+    //5
     it('Should fail because RootAC doesnt exist', async () => {
         return AC_MGR.createAssetClass( 
         account2,
@@ -1872,7 +1885,7 @@ __/\\\\\\\\\\\\\ _____/\\\\\\\\\ _______/\\../\\ ___/\\\\\\\\\\\\\\\
     })
 
 
-    //7
+    //6
     it('Should fail because ACname is already in use', async () => {
         return AC_MGR.createAssetClass( 
         account2,
@@ -1887,7 +1900,7 @@ __/\\\\\\\\\\\\\ _____/\\\\\\\\\ _______/\\../\\ ___/\\\\\\\\\\\\\\\
     })
 
 
-    //8
+    //7
     it('Should fail because AC already exists', async () => {
         return AC_MGR.createAssetClass( 
         account2,
@@ -1897,6 +1910,21 @@ __/\\\\\\\\\\\\\ _____/\\\\\\\\\ _______/\\../\\ ___/\\\\\\\\\\\\\\\
         '1',
         rgt000,
         "0",
+        {from: account1}
+        )
+    })
+
+
+    //8
+    it('Should fail because AC discount > 10000', async () => {
+        return AC_MGR.createAssetClass( 
+        account2,
+        'AC20',
+        '10',
+        '1',
+        '1',
+        rgt000,
+        "10001",
         {from: account1}
         )
     })
@@ -1953,7 +1981,7 @@ __/\\\\\\\\\\\\\ _____/\\\\\\\\\ _______/\\../\\ ___/\\\\\\\\\\\\\\\
         console.log("//**************************************BEGIN increaseShare FAIL BATCH**********************************************/")
         return AC_MGR.increaseShare(
         '10', 
-        '299',
+        '9000000000000000000',
         {from: account1}
         )
     })
@@ -1962,7 +1990,7 @@ __/\\\\\\\\\\\\\ _____/\\\\\\\\\ _______/\\../\\ ___/\\\\\\\\\\\\\\\
     it('Should increase share to 90/10 split', async () => {
         return AC_MGR.increaseShare(
         '10', 
-        '11700',
+        '100000000000000000000000',
         {from: account1}
         )
     })
@@ -1971,9 +1999,20 @@ __/\\\\\\\\\\\\\ _____/\\\\\\\\\ _______/\\../\\ ___/\\\\\\\\\\\\\\\
     it('Should fail becasue price share maxed out', async () => {
         return AC_MGR.increaseShare(
         '10', 
-        '11700',
+        '44000000000000000000000',
         {from: account1}
         )
+    })
+
+
+    it("Should retrieve AC10", async () =>{ 
+        var Record = [];
+        
+        return await AC_MGR.getAC_data("10", {from: account2}, function (_err, _result) {
+            if(_err){} 
+            else{Record = Object.values(_result)
+        console.log(Record)}
+        })
     })
 
     //15
@@ -2001,7 +2040,6 @@ __/\\\\\\\\\\\\\ _____/\\\\\\\\\ _______/\\../\\ ___/\\\\\\\\\\\\\\\
         {from: account2}
         )
     })
-
 
     //17
     it('Should fail because service 0 is not valid', async () => {

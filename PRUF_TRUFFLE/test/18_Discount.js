@@ -1566,7 +1566,7 @@ it('Should grant AC_MGR with trustedAgentRole', async () => {
 it('Should increaseShare to 66/36 split @AC13', async () => {
     return AC_MGR.increaseShare(
     '13',
-    '4500',
+    '4500000000000000000000',
     {from: account1}
     )
 })
@@ -1588,7 +1588,7 @@ it("Should retrieve balanceOf(25500) Pruf tokens @account1", async () => {
 it('Should increaseShare to 90/10 split @AC11', async () => {
     return AC_MGR.increaseShare(
     '11',
-    '11700',
+    '11700000000000000000000',
     {from: account1}
     )
 })

@@ -295,7 +295,7 @@ contract BASIC is ReentrancyGuard, AccessControl, IERC721Receiver, Pausable {
      * @dev Get asset class information from AC_manager and return an AC Struct
      */
     function getACinfo(
-        uint32 _assetClass //-------------------------------------------------------DS:TEST -- modified with new IPFS parameter
+        uint32 _assetClass
     ) internal virtual view returns (AC memory) {
         //^^^^^^^checks^^^^^^^^^
 

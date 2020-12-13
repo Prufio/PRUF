@@ -1580,7 +1580,7 @@ __/\\\\\\\\\\\\\ _____/\\\\\\\\\ _______/\\../\\ ___/\\\\\\\\\\\\\\\
     it('Should increaseShare to 45/55 split @AC13', async () => {
         return AC_MGR.increaseShare(
             '13',
-            '3000',
+            '3000000000000000000000',
             { from: account1 }
         )
     })
