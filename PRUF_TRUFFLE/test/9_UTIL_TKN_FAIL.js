@@ -11,7 +11,7 @@ let minterRoleB32;
 let trustedAgentRoleB32;
 let payableRoleB32;
 
-contract('UTIL_TKN', accounts => {
+contract('UTIL_TKN_FAIL', accounts => {
 
     console.log('//**************************BEGIN BOOTSTRAP**************************//')
 
