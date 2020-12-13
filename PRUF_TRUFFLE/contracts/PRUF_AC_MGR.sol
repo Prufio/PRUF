@@ -335,7 +335,7 @@ contract AC_MGR is BASIC {
     }
 
     /**
-     * @dev See {IERC20-transfer}. Increase payment share of an asset class
+     * @dev Increase payment share of an asset class
      *
      * Requirements:
      * - `recipient` cannot be the zero address.
