@@ -39,9 +39,9 @@ import "./Imports/utils/ReentrancyGuard.sol";
  * This contract uses {AccessControl} to lock permissioned functions using the
  * different roles - head to its documentation for details.
  *
- * The account that deploys the contract will be granted the minter and pauser
- * roles, as well as the default admin role, which will let it grant both minter
- * and pauser roles to other accounts.
+ * The account that deploys the contract will be granted the minter, pauser, and contract admin
+ * roles, as well as the default admin role, which will let it grant minter, pauser, and admin
+ * roles to other accounts.
  */
 
 contract AC_TKN is
@@ -53,6 +53,9 @@ contract AC_TKN is
 {
     using Counters for Counters.Counter;
 
+    bytes32 public constant CONTRACT_ADMIN_ROLE = keccak256(
+        "CONTRACT_ADMIN_ROLE"
+    );
     bytes32 public constant MINTER_ROLE = keccak256("MINTER_ROLE");
     bytes32 public constant PAUSER_ROLE = keccak256("PAUSER_ROLE");
 
@@ -60,7 +63,8 @@ contract AC_TKN is
 
     constructor() public ERC721("PRüF Asset Class Node Token", "PRFN") {
         _setupRole(DEFAULT_ADMIN_ROLE, _msgSender());
-        _setupRole(MINTER_ROLE, _msgSender()); //ALL CONTRACTS THAT MINT ASSET NODE TOKENS
+        _setupRole(CONTRACT_ADMIN_ROLE, _msgSender());
+        _setupRole(MINTER_ROLE, _msgSender());
         _setupRole(PAUSER_ROLE, _msgSender());
 
         //_setBaseURI("pruf.io");
@@ -70,8 +74,8 @@ contract AC_TKN is
 
     modifier isAdmin() {
         require(
-            hasRole(DEFAULT_ADMIN_ROLE, _msgSender()),
-            "AT:MOD-IA:Calling address does not belong to an admin"
+            hasRole(CONTRACT_ADMIN_ROLE, _msgSender()),
+            "AT:MOD-IA:Calling address does not belong to a contract admin"
         );
         _;
     }

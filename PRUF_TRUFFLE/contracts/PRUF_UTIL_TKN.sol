@@ -54,6 +54,7 @@ contract UTIL_TKN is
     Pausable,
     ERC20Snapshot
 {
+    bytes32 public constant CONTRACT_ADMIN_ROLE = keccak256("CONTRACT_ADMIN_ROLE");
     bytes32 public constant MINTER_ROLE = keccak256("MINTER_ROLE");
     bytes32 public constant PAUSER_ROLE = keccak256("PAUSER_ROLE");
     bytes32 public constant SNAPSHOT_ROLE = keccak256("SNAPSHOT_ROLE");
@@ -81,13 +82,14 @@ contract UTIL_TKN is
     mapping(address => uint256) private coldWallet;
 
     /**
-     * @dev Grants `DEFAULT_ADMIN_ROLE`, `MINTER_ROLE` and `PAUSER_ROLE` to the
+     * @dev Grants `DEFAULT_ADMIN_ROLE`, `CONTRACT_ADMIN_ROLE`, `MINTER_ROLE` and `PAUSER_ROLE` to the
      * account that deploys the contract.
      *
      * See {ERC20-constructor}.
      */
     constructor() public ERC20("PRüF Network", "PRUF") {
         _setupRole(DEFAULT_ADMIN_ROLE, _msgSender());
+        _setupRole(CONTRACT_ADMIN_ROLE, _msgSender());
         _setupRole(MINTER_ROLE, _msgSender());
         _setupRole(PAUSER_ROLE, _msgSender());
     }
@@ -101,8 +103,8 @@ contract UTIL_TKN is
      */
     modifier isAdmin() {
         require(
-            hasRole(DEFAULT_ADMIN_ROLE, _msgSender()),
-            "PRuF:MOD: must have DEFAULT_ADMIN_ROLE"
+            hasRole(CONTRACT_ADMIN_ROLE, _msgSender()),
+            "PRuF:MOD: must have CONTRACT_ADMIN_ROLE"
         );
         _;
     }
