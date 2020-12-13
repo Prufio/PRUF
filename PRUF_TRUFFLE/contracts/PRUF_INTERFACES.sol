@@ -784,13 +784,42 @@ interface ID_TKN_Interface {
     import "./Imports/math/Safemath.sol";
  */
 interface AC_MGR_Interface {
+
+    /*
+     * @dev Set pricing (isAdmin)
+     */
+    function OO_SetACpricing(
+        uint256 _L1,
+        uint256 _L2,
+        uint256 _L3,
+        uint256 _L4,
+        uint256 _L5,
+        uint256 _L6,
+        uint256 _L7
+    ) external;
+
+
     /*
      * @dev Authorize / Deauthorize / Authorize users for an address be permitted to make record modifications
      */
-    function OO_addUser(
+    function addUser(
         bytes32 _addrHash,
         uint8 _userType,
         uint32 _assetClass
+    ) external;
+
+    /**
+     * @dev Burns (amount) tokens and mints a new asset class token to the caller address
+     *
+     * Requirements:
+     * - the caller must have a balance of at least `amount`.
+     */
+    function purchaseACnode(
+        //--------------will fail in burn if insufficient tokens
+        string calldata _name,
+        uint32 _assetClassRoot,
+        uint8 _custodyType,
+        bytes32 _IPFS
     ) external;
 
     /*
@@ -798,8 +827,8 @@ interface AC_MGR_Interface {
      * Requires that:
      *  name is unuiqe
      *  AC is not provisioned with a root (proxy for not yet registered)
-     *  that ACtoken does not exist 
-     * must have NODE_MINTER_ROLE
+     *  that ACtoken does not exist
+     *  _discount 10000 = 100 percent price share , cannot exceed
      */
     function createAssetClass(
         address _recipientAddress,
@@ -844,6 +873,18 @@ interface AC_MGR_Interface {
         uint16 _service,
         uint256 _serviceCost,
         address _paymentAddress
+    ) external;
+
+     /**
+     * @dev Increase payment share of an asset class
+     *
+     * Requirements:
+     * - `recipient` cannot be the zero address.
+     * - the caller must have a balance of at least `amount`.
+     */
+    function increaseShare(
+        uint32 _assetClass,
+        uint256 _amount // in wei format (18d) DPS:TEST -- this is new. The amount is now in 18d format.
     ) external;
 
     /*
