@@ -5,23 +5,23 @@
   "bytecode": "0x6080604052348015600f57600080fd5b50603f80601d6000396000f3fe6080604052600080fdfea264697066735822122022e1223ad284e3c2d0cc161096694a55a27656ea2496f85fe60073b6b8378ee164736f6c634300060c0033",
   "deployedBytecode": "0x6080604052600080fdfea264697066735822122022e1223ad284e3c2d0cc161096694a55a27656ea2496f85fe60073b6b8378ee164736f6c634300060c0033",
   "immutableReferences": {},
-  "sourceMap": "58:31:37:-:0;;;;;;;;;;;;;;;;;;;",
-  "deployedSourceMap": "58:31:37:-:0;;;;;",
+  "sourceMap": "58:31:40:-:0;;;;;;;;;;;;;;;;;;;",
+  "deployedSourceMap": "58:31:40:-:0;;;;;",
   "source": "// SPDX-License-Identifier: MIT\n\npragma solidity ^0.6.0;\n\ncontract ERC165NotSupported { }\n",
   "sourcePath": "/Users/cts/dev/PRUF/PRUF_TRUFFLE/contracts/Imports/mocks/ERC165/ERC165NotSupported.sol",
   "ast": {
     "absolutePath": "/Users/cts/dev/PRUF/PRUF_TRUFFLE/contracts/Imports/mocks/ERC165/ERC165NotSupported.sol",
     "exportedSymbols": {
       "ERC165NotSupported": [
-        4241
+        5460
       ]
     },
-    "id": 4242,
+    "id": 5461,
     "license": "MIT",
     "nodeType": "SourceUnit",
     "nodes": [
       {
-        "id": 4240,
+        "id": 5459,
         "literals": [
           "solidity",
           "^",
@@ -29,7 +29,7 @@
           ".0"
         ],
         "nodeType": "PragmaDirective",
-        "src": "33:23:37"
+        "src": "33:23:40"
       },
       {
         "abstract": false,
@@ -38,32 +38,32 @@
         "contractKind": "contract",
         "documentation": null,
         "fullyImplemented": true,
-        "id": 4241,
+        "id": 5460,
         "linearizedBaseContracts": [
-          4241
+          5460
         ],
         "name": "ERC165NotSupported",
         "nodeType": "ContractDefinition",
         "nodes": [],
-        "scope": 4242,
-        "src": "58:31:37"
+        "scope": 5461,
+        "src": "58:31:40"
       }
     ],
-    "src": "33:57:37"
+    "src": "33:57:40"
   },
   "legacyAST": {
     "absolutePath": "/Users/cts/dev/PRUF/PRUF_TRUFFLE/contracts/Imports/mocks/ERC165/ERC165NotSupported.sol",
     "exportedSymbols": {
       "ERC165NotSupported": [
-        4241
+        5460
       ]
     },
-    "id": 4242,
+    "id": 5461,
     "license": "MIT",
     "nodeType": "SourceUnit",
     "nodes": [
       {
-        "id": 4240,
+        "id": 5459,
         "literals": [
           "solidity",
           "^",
@@ -71,7 +71,7 @@
           ".0"
         ],
         "nodeType": "PragmaDirective",
-        "src": "33:23:37"
+        "src": "33:23:40"
       },
       {
         "abstract": false,
@@ -80,18 +80,18 @@
         "contractKind": "contract",
         "documentation": null,
         "fullyImplemented": true,
-        "id": 4241,
+        "id": 5460,
         "linearizedBaseContracts": [
-          4241
+          5460
         ],
         "name": "ERC165NotSupported",
         "nodeType": "ContractDefinition",
         "nodes": [],
-        "scope": 4242,
-        "src": "58:31:37"
+        "scope": 5461,
+        "src": "58:31:40"
       }
     ],
-    "src": "33:57:37"
+    "src": "33:57:40"
   },
   "compiler": {
     "name": "solc",
@@ -99,7 +99,7 @@
   },
   "networks": {},
   "schemaVersion": "3.2.3",
-  "updatedAt": "2020-09-22T21:30:51.964Z",
+  "updatedAt": "2020-12-13T01:45:40.057Z",
   "devdoc": {
     "kind": "dev",
     "methods": {},

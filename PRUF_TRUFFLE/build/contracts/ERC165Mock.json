@@ -38,23 +38,23 @@
   "bytecode": "0x608060405234801561001057600080fd5b506100216301ffc9a760e01b610026565b6100aa565b6001600160e01b03198082161415610085576040805162461bcd60e51b815260206004820152601c60248201527f4552433136353a20696e76616c696420696e7465726661636520696400000000604482015290519081900360640190fd5b6001600160e01b0319166000908152602081905260409020805460ff19166001179055565b610184806100b96000396000f3fe608060405234801561001057600080fd5b50600436106100365760003560e01c806301ffc9a71461003b578063214cdb8014610076575b600080fd5b6100626004803603602081101561005157600080fd5b50356001600160e01b03191661009f565b604080519115158252519081900360200190f35b61009d6004803603602081101561008c57600080fd5b50356001600160e01b0319166100be565b005b6001600160e01b03191660009081526020819052604090205460ff1690565b6100c7816100ca565b50565b6001600160e01b03198082161415610129576040805162461bcd60e51b815260206004820152601c60248201527f4552433136353a20696e76616c696420696e7465726661636520696400000000604482015290519081900360640190fd5b6001600160e01b0319166000908152602081905260409020805460ff1916600117905556fea26469706673582212204d535e92aef7bf426d040e2a26d6014f8bd8058b73c4a89a98a4a74addf8552a64736f6c634300060c0033",
   "deployedBytecode": "0x608060405234801561001057600080fd5b50600436106100365760003560e01c806301ffc9a71461003b578063214cdb8014610076575b600080fd5b6100626004803603602081101561005157600080fd5b50356001600160e01b03191661009f565b604080519115158252519081900360200190f35b61009d6004803603602081101561008c57600080fd5b50356001600160e01b0319166100be565b005b6001600160e01b03191660009081526020819052604090205460ff1690565b6100c7816100ca565b50565b6001600160e01b03198082161415610129576040805162461bcd60e51b815260206004820152601c60248201527f4552433136353a20696e76616c696420696e7465726661636520696400000000604482015290519081900360640190fd5b6001600160e01b0319166000908152602081905260409020805460ff1916600117905556fea26469706673582212204d535e92aef7bf426d040e2a26d6014f8bd8058b73c4a89a98a4a74addf8552a64736f6c634300060c0033",
   "immutableReferences": {},
-  "sourceMap": "97:140:39:-:0;;;;;;;;;;;;-1:-1:-1;751:40:11;-1:-1:-1;;;751:18:11;:40::i;:::-;97:140:39;;1482:198:11;-1:-1:-1;;;;;;1565:25:11;;;;;1557:66;;;;;-1:-1:-1;;;1557:66:11;;;;;;;;;;;;;;;;;;;;;;;;;;;;-1:-1:-1;;;;;;1633:33:11;:20;:33;;;;;;;;;;:40;;-1:-1:-1;;1633:40:11;1669:4;1633:40;;;1482:198::o;97:140:39:-;;;;;;;",
-  "deployedSourceMap": "97:140:39:-:0;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;948::11;;;;;;;;;;;;;;;;-1:-1:-1;948:140:11;-1:-1:-1;;;;;;948:140:11;;:::i;:::-;;;;;;;;;;;;;;;;;;133:102:39;;;;;;;;;;;;;;;;-1:-1:-1;133:102:39;-1:-1:-1;;;;;;133:102:39;;:::i;:::-;;948:140:11;-1:-1:-1;;;;;;1048:33:11;1025:4;1048:33;;;;;;;;;;;;;;948:140::o;133:102:39:-;197:31;216:11;197:18;:31::i;:::-;133:102;:::o;1482:198:11:-;-1:-1:-1;;;;;;1565:25:11;;;;;1557:66;;;;;-1:-1:-1;;;1557:66:11;;;;;;;;;;;;;;;;;;;;;;;;;;;;-1:-1:-1;;;;;;1633:33:11;:20;:33;;;;;;;;;;:40;;-1:-1:-1;;1633:40:11;1669:4;1633:40;;;1482:198::o",
+  "sourceMap": "97:140:42:-:0;;;;;;;;;;;;-1:-1:-1;751:40:13;-1:-1:-1;;;751:18:13;:40::i;:::-;97:140:42;;1482:198:13;-1:-1:-1;;;;;;1565:25:13;;;;;1557:66;;;;;-1:-1:-1;;;1557:66:13;;;;;;;;;;;;;;;;;;;;;;;;;;;;-1:-1:-1;;;;;;1633:33:13;:20;:33;;;;;;;;;;:40;;-1:-1:-1;;1633:40:13;1669:4;1633:40;;;1482:198::o;97:140:42:-;;;;;;;",
+  "deployedSourceMap": "97:140:42:-:0;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;948::13;;;;;;;;;;;;;;;;-1:-1:-1;948:140:13;-1:-1:-1;;;;;;948:140:13;;:::i;:::-;;;;;;;;;;;;;;;;;;133:102:42;;;;;;;;;;;;;;;;-1:-1:-1;133:102:42;-1:-1:-1;;;;;;133:102:42;;:::i;:::-;;948:140:13;-1:-1:-1;;;;;;1048:33:13;1025:4;1048:33;;;;;;;;;;;;;;948:140::o;133:102:42:-;197:31;216:11;197:18;:31::i;:::-;133:102;:::o;1482:198:13:-;-1:-1:-1;;;;;;1565:25:13;;;;;1557:66;;;;;-1:-1:-1;;;1557:66:13;;;;;;;;;;;;;;;;;;;;;;;;;;;;-1:-1:-1;;;;;;1633:33:13;:20;:33;;;;;;;;;;:40;;-1:-1:-1;;1633:40:13;1669:4;1633:40;;;1482:198::o",
   "source": "// SPDX-License-Identifier: MIT\n\npragma solidity ^0.6.0;\n\nimport \"../introspection/ERC165.sol\";\n\ncontract ERC165Mock is ERC165 {\n    function registerInterface(bytes4 interfaceId) public {\n        _registerInterface(interfaceId);\n    }\n}\n",
   "sourcePath": "/Users/cts/dev/PRUF/PRUF_TRUFFLE/contracts/Imports/mocks/ERC165Mock.sol",
   "ast": {
     "absolutePath": "/Users/cts/dev/PRUF/PRUF_TRUFFLE/contracts/Imports/mocks/ERC165Mock.sol",
     "exportedSymbols": {
       "ERC165Mock": [
-        4307
+        5526
       ]
     },
-    "id": 4308,
+    "id": 5527,
     "license": "MIT",
     "nodeType": "SourceUnit",
     "nodes": [
       {
-        "id": 4293,
+        "id": 5512,
         "literals": [
           "solidity",
           "^",
@@ -62,16 +62,16 @@
           ".0"
         ],
         "nodeType": "PragmaDirective",
-        "src": "33:23:39"
+        "src": "33:23:42"
       },
       {
         "absolutePath": "/Users/cts/dev/PRUF/PRUF_TRUFFLE/contracts/Imports/introspection/ERC165.sol",
         "file": "../introspection/ERC165.sol",
-        "id": 4294,
+        "id": 5513,
         "nodeType": "ImportDirective",
-        "scope": 4308,
-        "sourceUnit": 2181,
-        "src": "58:37:39",
+        "scope": 5527,
+        "sourceUnit": 3128,
+        "src": "58:37:42",
         "symbolAliases": [],
         "unitAlias": ""
       },
@@ -82,42 +82,42 @@
             "arguments": null,
             "baseName": {
               "contractScope": null,
-              "id": 4295,
+              "id": 5514,
               "name": "ERC165",
               "nodeType": "UserDefinedTypeName",
-              "referencedDeclaration": 2180,
-              "src": "120:6:39",
+              "referencedDeclaration": 3127,
+              "src": "120:6:42",
               "typeDescriptions": {
-                "typeIdentifier": "t_contract$_ERC165_$2180",
+                "typeIdentifier": "t_contract$_ERC165_$3127",
                 "typeString": "contract ERC165"
               }
             },
-            "id": 4296,
+            "id": 5515,
             "nodeType": "InheritanceSpecifier",
-            "src": "120:6:39"
+            "src": "120:6:42"
           }
         ],
         "contractDependencies": [
-          2180,
-          2426
+          3127,
+          3373
         ],
         "contractKind": "contract",
         "documentation": null,
         "fullyImplemented": true,
-        "id": 4307,
+        "id": 5526,
         "linearizedBaseContracts": [
-          4307,
-          2180,
-          2426
+          5526,
+          3127,
+          3373
         ],
         "name": "ERC165Mock",
         "nodeType": "ContractDefinition",
         "nodes": [
           {
             "body": {
-              "id": 4305,
+              "id": 5524,
               "nodeType": "Block",
-              "src": "187:48:39",
+              "src": "187:48:42",
               "statements": [
                 {
                   "expression": {
@@ -125,12 +125,12 @@
                     "arguments": [
                       {
                         "argumentTypes": null,
-                        "id": 4302,
+                        "id": 5521,
                         "name": "interfaceId",
                         "nodeType": "Identifier",
                         "overloadedDeclarations": [],
-                        "referencedDeclaration": 4298,
-                        "src": "216:11:39",
+                        "referencedDeclaration": 5517,
+                        "src": "216:11:42",
                         "typeDescriptions": {
                           "typeIdentifier": "t_bytes4",
                           "typeString": "bytes4"
@@ -144,18 +144,18 @@
                           "typeString": "bytes4"
                         }
                       ],
-                      "id": 4301,
+                      "id": 5520,
                       "name": "_registerInterface",
                       "nodeType": "Identifier",
                       "overloadedDeclarations": [],
-                      "referencedDeclaration": 2179,
-                      "src": "197:18:39",
+                      "referencedDeclaration": 3126,
+                      "src": "197:18:42",
                       "typeDescriptions": {
                         "typeIdentifier": "t_function_internal_nonpayable$_t_bytes4_$returns$__$",
                         "typeString": "function (bytes4)"
                       }
                     },
-                    "id": 4303,
+                    "id": 5522,
                     "isConstant": false,
                     "isLValue": false,
                     "isPure": false,
@@ -163,22 +163,22 @@
                     "lValueRequested": false,
                     "names": [],
                     "nodeType": "FunctionCall",
-                    "src": "197:31:39",
+                    "src": "197:31:42",
                     "tryCall": false,
                     "typeDescriptions": {
                       "typeIdentifier": "t_tuple$__$",
                       "typeString": "tuple()"
                     }
                   },
-                  "id": 4304,
+                  "id": 5523,
                   "nodeType": "ExpressionStatement",
-                  "src": "197:31:39"
+                  "src": "197:31:42"
                 }
               ]
             },
             "documentation": null,
             "functionSelector": "214cdb80",
-            "id": 4306,
+            "id": 5525,
             "implemented": true,
             "kind": "function",
             "modifiers": [],
@@ -186,18 +186,18 @@
             "nodeType": "FunctionDefinition",
             "overrides": null,
             "parameters": {
-              "id": 4299,
+              "id": 5518,
               "nodeType": "ParameterList",
               "parameters": [
                 {
                   "constant": false,
-                  "id": 4298,
+                  "id": 5517,
                   "mutability": "mutable",
                   "name": "interfaceId",
                   "nodeType": "VariableDeclaration",
                   "overrides": null,
-                  "scope": 4306,
-                  "src": "160:18:39",
+                  "scope": 5525,
+                  "src": "160:18:42",
                   "stateVariable": false,
                   "storageLocation": "default",
                   "typeDescriptions": {
@@ -205,10 +205,10 @@
                     "typeString": "bytes4"
                   },
                   "typeName": {
-                    "id": 4297,
+                    "id": 5516,
                     "name": "bytes4",
                     "nodeType": "ElementaryTypeName",
-                    "src": "160:6:39",
+                    "src": "160:6:42",
                     "typeDescriptions": {
                       "typeIdentifier": "t_bytes4",
                       "typeString": "bytes4"
@@ -218,40 +218,40 @@
                   "visibility": "internal"
                 }
               ],
-              "src": "159:20:39"
+              "src": "159:20:42"
             },
             "returnParameters": {
-              "id": 4300,
+              "id": 5519,
               "nodeType": "ParameterList",
               "parameters": [],
-              "src": "187:0:39"
+              "src": "187:0:42"
             },
-            "scope": 4307,
-            "src": "133:102:39",
+            "scope": 5526,
+            "src": "133:102:42",
             "stateMutability": "nonpayable",
             "virtual": false,
             "visibility": "public"
           }
         ],
-        "scope": 4308,
-        "src": "97:140:39"
+        "scope": 5527,
+        "src": "97:140:42"
       }
     ],
-    "src": "33:205:39"
+    "src": "33:205:42"
   },
   "legacyAST": {
     "absolutePath": "/Users/cts/dev/PRUF/PRUF_TRUFFLE/contracts/Imports/mocks/ERC165Mock.sol",
     "exportedSymbols": {
       "ERC165Mock": [
-        4307
+        5526
       ]
     },
-    "id": 4308,
+    "id": 5527,
     "license": "MIT",
     "nodeType": "SourceUnit",
     "nodes": [
       {
-        "id": 4293,
+        "id": 5512,
         "literals": [
           "solidity",
           "^",
@@ -259,16 +259,16 @@
           ".0"
         ],
         "nodeType": "PragmaDirective",
-        "src": "33:23:39"
+        "src": "33:23:42"
       },
       {
         "absolutePath": "/Users/cts/dev/PRUF/PRUF_TRUFFLE/contracts/Imports/introspection/ERC165.sol",
         "file": "../introspection/ERC165.sol",
-        "id": 4294,
+        "id": 5513,
         "nodeType": "ImportDirective",
-        "scope": 4308,
-        "sourceUnit": 2181,
-        "src": "58:37:39",
+        "scope": 5527,
+        "sourceUnit": 3128,
+        "src": "58:37:42",
         "symbolAliases": [],
         "unitAlias": ""
       },
@@ -279,42 +279,42 @@
             "arguments": null,
             "baseName": {
               "contractScope": null,
-              "id": 4295,
+              "id": 5514,
               "name": "ERC165",
               "nodeType": "UserDefinedTypeName",
-              "referencedDeclaration": 2180,
-              "src": "120:6:39",
+              "referencedDeclaration": 3127,
+              "src": "120:6:42",
               "typeDescriptions": {
-                "typeIdentifier": "t_contract$_ERC165_$2180",
+                "typeIdentifier": "t_contract$_ERC165_$3127",
                 "typeString": "contract ERC165"
               }
             },
-            "id": 4296,
+            "id": 5515,
             "nodeType": "InheritanceSpecifier",
-            "src": "120:6:39"
+            "src": "120:6:42"
           }
         ],
         "contractDependencies": [
-          2180,
-          2426
+          3127,
+          3373
         ],
         "contractKind": "contract",
         "documentation": null,
         "fullyImplemented": true,
-        "id": 4307,
+        "id": 5526,
         "linearizedBaseContracts": [
-          4307,
-          2180,
-          2426
+          5526,
+          3127,
+          3373
         ],
         "name": "ERC165Mock",
         "nodeType": "ContractDefinition",
         "nodes": [
           {
             "body": {
-              "id": 4305,
+              "id": 5524,
               "nodeType": "Block",
-              "src": "187:48:39",
+              "src": "187:48:42",
               "statements": [
                 {
                   "expression": {
@@ -322,12 +322,12 @@
                     "arguments": [
                       {
                         "argumentTypes": null,
-                        "id": 4302,
+                        "id": 5521,
                         "name": "interfaceId",
                         "nodeType": "Identifier",
                         "overloadedDeclarations": [],
-                        "referencedDeclaration": 4298,
-                        "src": "216:11:39",
+                        "referencedDeclaration": 5517,
+                        "src": "216:11:42",
                         "typeDescriptions": {
                           "typeIdentifier": "t_bytes4",
                           "typeString": "bytes4"
@@ -341,18 +341,18 @@
                           "typeString": "bytes4"
                         }
                       ],
-                      "id": 4301,
+                      "id": 5520,
                       "name": "_registerInterface",
                       "nodeType": "Identifier",
                       "overloadedDeclarations": [],
-                      "referencedDeclaration": 2179,
-                      "src": "197:18:39",
+                      "referencedDeclaration": 3126,
+                      "src": "197:18:42",
                       "typeDescriptions": {
                         "typeIdentifier": "t_function_internal_nonpayable$_t_bytes4_$returns$__$",
                         "typeString": "function (bytes4)"
                       }
                     },
-                    "id": 4303,
+                    "id": 5522,
                     "isConstant": false,
                     "isLValue": false,
                     "isPure": false,
@@ -360,22 +360,22 @@
                     "lValueRequested": false,
                     "names": [],
                     "nodeType": "FunctionCall",
-                    "src": "197:31:39",
+                    "src": "197:31:42",
                     "tryCall": false,
                     "typeDescriptions": {
                       "typeIdentifier": "t_tuple$__$",
                       "typeString": "tuple()"
                     }
                   },
-                  "id": 4304,
+                  "id": 5523,
                   "nodeType": "ExpressionStatement",
-                  "src": "197:31:39"
+                  "src": "197:31:42"
                 }
               ]
             },
             "documentation": null,
             "functionSelector": "214cdb80",
-            "id": 4306,
+            "id": 5525,
             "implemented": true,
             "kind": "function",
             "modifiers": [],
@@ -383,18 +383,18 @@
             "nodeType": "FunctionDefinition",
             "overrides": null,
             "parameters": {
-              "id": 4299,
+              "id": 5518,
               "nodeType": "ParameterList",
               "parameters": [
                 {
                   "constant": false,
-                  "id": 4298,
+                  "id": 5517,
                   "mutability": "mutable",
                   "name": "interfaceId",
                   "nodeType": "VariableDeclaration",
                   "overrides": null,
-                  "scope": 4306,
-                  "src": "160:18:39",
+                  "scope": 5525,
+                  "src": "160:18:42",
                   "stateVariable": false,
                   "storageLocation": "default",
                   "typeDescriptions": {
@@ -402,10 +402,10 @@
                     "typeString": "bytes4"
                   },
                   "typeName": {
-                    "id": 4297,
+                    "id": 5516,
                     "name": "bytes4",
                     "nodeType": "ElementaryTypeName",
-                    "src": "160:6:39",
+                    "src": "160:6:42",
                     "typeDescriptions": {
                       "typeIdentifier": "t_bytes4",
                       "typeString": "bytes4"
@@ -415,26 +415,26 @@
                   "visibility": "internal"
                 }
               ],
-              "src": "159:20:39"
+              "src": "159:20:42"
             },
             "returnParameters": {
-              "id": 4300,
+              "id": 5519,
               "nodeType": "ParameterList",
               "parameters": [],
-              "src": "187:0:39"
+              "src": "187:0:42"
             },
-            "scope": 4307,
-            "src": "133:102:39",
+            "scope": 5526,
+            "src": "133:102:42",
             "stateMutability": "nonpayable",
             "virtual": false,
             "visibility": "public"
           }
         ],
-        "scope": 4308,
-        "src": "97:140:39"
+        "scope": 5527,
+        "src": "97:140:42"
       }
     ],
-    "src": "33:205:39"
+    "src": "33:205:42"
   },
   "compiler": {
     "name": "solc",
@@ -442,7 +442,7 @@
   },
   "networks": {},
   "schemaVersion": "3.2.3",
-  "updatedAt": "2020-09-22T21:30:51.966Z",
+  "updatedAt": "2020-12-13T01:45:40.061Z",
   "devdoc": {
     "kind": "dev",
     "methods": {
