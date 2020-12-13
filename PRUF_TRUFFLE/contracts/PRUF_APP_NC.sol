@@ -120,7 +120,7 @@ contract APP_NC is CORE {
         returns (bytes32)
     {
         Record memory rec = getRecord(_idxHash);
-        require( //STATE UNREACHABLE
+        require(    //STATE UNREACHABLE
             needsImport(rec.assetStatus) == 0,
             "ANC:I2:Record In Transferred, exported, or discarded status"
         );

@@ -1791,10 +1791,10 @@ __/\\\\\\\\\\\\\ _____/\\\\\\\\\ _______/\\../\\ ___/\\\\\\\\\\\\\\\
     })
 
     //1
-    it('Should fail because caller is not owner', async () => {
+    it('Should fail because caller is not admin', async () => {
 
         console.log("//**************************************END A_TKN TEST SETUP**********************************************/")
-        console.log("//**************************************BEGIN A_TKN FAIL BATCH (14)**********************************************/")
+        console.log("//**************************************BEGIN A_TKN FAIL BATCH (15)**********************************************/")
         console.log("//**************************************BEGIN OO_setStorageContract FAIL BATCH**********************************************/")
         return A_TKN.OO_setStorageContract(
         STOR.address,
@@ -1811,7 +1811,7 @@ __/\\\\\\\\\\\\\ _____/\\\\\\\\\ _______/\\../\\ ___/\\\\\\\\\\\\\\\
     })
 
     //3
-    it('Should fail because caller is not owner', async () => {
+    it('Should fail because caller is not admin', async () => {
 
         console.log("//**************************************END OO_setStorageContract FAIL BATCH**********************************************/")
         console.log("//**************************************BEGIN OO_resolveContractAddresses FAIL BATCH**********************************************/")
@@ -1820,18 +1820,18 @@ __/\\\\\\\\\\\\\ _____/\\\\\\\\\ _______/\\../\\ ___/\\\\\\\\\\\\\\\
         )
     })
 
-    // //4
-    // it('Should fail because caller is not minter', async () => {
+    //4
+    it('Should fail because caller is not minter', async () => {
 
-    //     console.log("//**************************************END OO_resolveContractAddresses FAIL BATCH**********************************************/")
-    //     console.log("//**************************************BEGIN mintAssetToken FAIL BATCH**********************************************/")
-    //     return A_TKN.mintAssetToken(
-    //     account1,
-    //     asset8,
-    //     'Pruf.io',
-    //     {from: account2}
-    //     )
-    // })
+        console.log("//**************************************END OO_resolveContractAddresses FAIL BATCH**********************************************/")
+        console.log("//**************************************BEGIN mintAssetToken FAIL BATCH**********************************************/")
+        return A_TKN.mintAssetToken(
+        account1,
+        asset8,
+        'Pruf.io',
+        {from: account2}
+        )
+    })
 
     // //5
     // it('Should fail because caller is not minter', async () => {
@@ -1872,7 +1872,7 @@ __/\\\\\\\\\\\\\ _____/\\\\\\\\\ _______/\\../\\ ___/\\\\\\\\\\\\\\\
     //     )
     // })
 
-    //7
+    //5
     it('Should fail because caller != approved || owner', async () => {
 
         console.log("//**************************************END OO_resolveContractAddresses FAIL BATCH**********************************************/")
@@ -1884,7 +1884,7 @@ __/\\\\\\\\\\\\\ _____/\\\\\\\\\ _______/\\../\\ ___/\\\\\\\\\\\\\\\
         )
     })
 
-    //8
+    //6
     it('Should fail because authCode != (AC+URI)Hash', async () => {
 
         console.log("//**************************************END setURI FAIL BATCH**********************************************/")
@@ -1897,7 +1897,7 @@ __/\\\\\\\\\\\\\ _____/\\\\\\\\\ _______/\\../\\ ___/\\\\\\\\\\\\\\\
         )
     })
 
-    //9
+    //7
     it('Should fail because caller is not owner or approved', async () => {
 
         console.log("//**************************************END validatePipToken FAIL BATCH**********************************************/")
@@ -1919,7 +1919,7 @@ __/\\\\\\\\\\\\\ _____/\\\\\\\\\ _______/\\../\\ ___/\\\\\\\\\\\\\\\
         )
     })
 
-    //10
+    //8
     it('Should fail because asset not in transferable status', async () => {
         return A_TKN.transferFrom(
         account4,
@@ -1929,7 +1929,7 @@ __/\\\\\\\\\\\\\ _____/\\\\\\\\\ _______/\\../\\ ___/\\\\\\\\\\\\\\\
         )
     })
 
-    //11
+    //9
     it('Should fail because caller not owner or approved', async () => {
 
         console.log("//**************************************END transferFrom FAIL BATCH**********************************************/")
@@ -1959,7 +1959,7 @@ __/\\\\\\\\\\\\\ _____/\\\\\\\\\ _______/\\../\\ ___/\\\\\\\\\\\\\\\
         )
     })
 
-    //12
+    //10
     it('Should fail because asset2 is in status 70, and not being sent to an authorized addr(contract)', async () => {
         return A_TKN.safeTransferFrom(
         account4,
@@ -1978,7 +1978,7 @@ __/\\\\\\\\\\\\\ _____/\\\\\\\\\ _______/\\../\\ ___/\\\\\\\\\\\\\\\
         )
     })
 
-    //13
+    //11
     it('Should fail because asset2 is not in a transferable status', async () => {
         return A_TKN.safeTransferFrom(
         account4,
@@ -1997,7 +1997,7 @@ __/\\\\\\\\\\\\\ _____/\\\\\\\\\ _______/\\../\\ ___/\\\\\\\\\\\\\\\
         )
     })
 
-    //14
+    //12
     it('Should fail because you cannot transfer to 0 addr', async () => {
         return A_TKN.safeTransferFrom(
         account4,
@@ -2007,7 +2007,7 @@ __/\\\\\\\\\\\\\ _____/\\\\\\\\\ _______/\\../\\ ___/\\\\\\\\\\\\\\\
         )
     })
 
-    //15
+    //13
     it('Should fail because caller not owner or approved', async () => {
 
         console.log("//**************************************END safeTransferFrom FAIL BATCH**********************************************/")
@@ -2018,7 +2018,7 @@ __/\\\\\\\\\\\\\ _____/\\\\\\\\\ _______/\\../\\ ___/\\\\\\\\\\\\\\\
             )
     })
 
-    //16
+    //14
     it('Should fail because caller is not pauser', async () => {
 
         console.log("//*********************************END discard FAIL BATCH*****************************************/")
@@ -2028,7 +2028,7 @@ __/\\\\\\\\\\\\\ _____/\\\\\\\\\ _______/\\../\\ ___/\\\\\\\\\\\\\\\
         )
     })
 
-    //17
+    //15
     it('Should fail because caller is not pauser', async () => {
 
         console.log("//*********************************END pause FAIL BATCH*****************************************/")

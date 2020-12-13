@@ -1816,7 +1816,7 @@ __/\\\\\\\\\\\\\ _____/\\\\\\\\\ _______/\\../\\ ___/\\\\\\\\\\\\\\\
     })
 
     //2
-    it('Should fail because status must be 59', async () => { 
+    it('Should fail because status must be 59(recyclable)', async () => { 
         return A_TKN.discard(
             asset2,
             { from: account4}

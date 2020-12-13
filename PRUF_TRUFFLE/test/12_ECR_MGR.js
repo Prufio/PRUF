@@ -1851,7 +1851,7 @@ __/\\\\\\\\\\\\\ _____/\\\\\\\\\ _______/\\../\\ ___/\\\\\\\\\\\\\\\
     it('Should make ECR unatuhorized', async () => {
 
         console.log("//**************************************END ECR_MGR SETUP**********************************************/")
-        console.log("//**************************************BEGIN ECR_MGR FAIL BATCH (7)**********************************************/")
+        console.log("//**************************************BEGIN ECR_MGR FAIL BATCH (8)**********************************************/")
         console.log("//**************************************BEGIN setEscrow FAIL BATCH**********************************************/")
         
             console.log("unAuthorizing ECR")
@@ -1895,11 +1895,19 @@ __/\\\\\\\\\\\\\ _____/\\\\\\\\\ _______/\\../\\ ___/\\\\\\\\\\\\\\\
                 
     })
 
-
-    it('Should put asset1 into escrow', async () => {
+    //2
+    it('Should fail because asset is not in escrow', async () => {
 
         console.log("//**************************************END setEscrow FAIL BATCH**********************************************/")
         console.log("//**************************************BEGIN endEscrow FAIL BATCH**********************************************/")
+        return ECR.endEscrow(
+        asset1, 
+        {from: account2}
+        )
+    })
+
+
+    it('Should put asset1 into escrow', async () => {
         return ECR.setEscrow(
             asset1, 
             account2Hash,
@@ -1909,7 +1917,7 @@ __/\\\\\\\\\\\\\ _____/\\\\\\\\\ _______/\\../\\ ___/\\\\\\\\\\\\\\\
             )
     })
 
-    //2
+    //3
     it('Should fail because contract is not the same as the setter contract', async () => {
         return ECR2.endEscrow(
         asset1, 
@@ -1935,7 +1943,7 @@ __/\\\\\\\\\\\\\ _____/\\\\\\\\\ _______/\\../\\ ___/\\\\\\\\\\\\\\\
         )
     })
 
-    //3
+    //4
     it('Should fail because asset is not in escrow', async () => {
 
         console.log("//**************************************END endEscrow FAIL BATCH**********************************************/")
@@ -1965,7 +1973,7 @@ __/\\\\\\\\\\\\\ _____/\\\\\\\\\ _______/\\../\\ ___/\\\\\\\\\\\\\\\
         )
     })
 
-    //4
+    //5
     it('Should fail because contract not same as setter', async () => {
         return ECR2._setEscrowDataLight(
         asset1,
@@ -1999,7 +2007,7 @@ __/\\\\\\\\\\\\\ _____/\\\\\\\\\ _______/\\../\\ ___/\\\\\\\\\\\\\\\
         )
     })
 
-    //5
+    //6
     it('Should fail because asset is not in escrow', async () => {
 
         console.log("//**************************************END setEscrowDataLight FAIL BATCH**********************************************/")
@@ -2029,7 +2037,7 @@ __/\\\\\\\\\\\\\ _____/\\\\\\\\\ _______/\\../\\ ___/\\\\\\\\\\\\\\\
         )
     })
 
-    //6
+    //7
     it('Should fail because contract not same as setter', async () => {
         return ECR2._setEscrowDataHeavy(
             asset1,
@@ -2077,7 +2085,7 @@ __/\\\\\\\\\\\\\ _____/\\\\\\\\\ _______/\\../\\ ___/\\\\\\\\\\\\\\\
         )
     })
 
-    //7
+    //8
     it('Should fail because record escrow is not expired', async () => {
         return ECR_MGR.permissiveEndEscrow(
         asset1,

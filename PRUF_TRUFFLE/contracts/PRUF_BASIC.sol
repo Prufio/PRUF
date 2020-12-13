@@ -255,14 +255,14 @@ contract BASIC is ReentrancyGuard, AccessControl, IERC721Receiver, Pausable {
      * @dev Triggers stopped state. (pausable)
      *
      */
-    function OO_pause() external isPauser {
+    function pause() external isPauser {
         _pause();
     }
 
     /**
      * @dev Returns to normal state. (pausable)
      */
-    function OO_unpause() external isPauser {
+    function unpause() external isPauser {
         _unpause();
     }
 

@@ -1733,7 +1733,7 @@ __/\\\\\\\\\\\\\ _____/\\\\\\\\\ _______/\\../\\ ___/\\\\\\\\\\\\\\\
     })
 
     //1
-    it('Should Fail because caller is not Admin(owner)', async () => {
+    it('Should Fail because caller is not Minter', async () => {
 
         console.log("//**************************************END ID_TKN SETUP**********************************************/")
         console.log("//**************************************BEGIN ID_TKN FAIL BATCH (8)**********************************************/")
@@ -1746,7 +1746,7 @@ __/\\\\\\\\\\\\\ _____/\\\\\\\\\ _______/\\../\\ ___/\\\\\\\\\\\\\\\
     })
 
     //2
-    it('Should Fail because caller is not Admin(owner)', async () => {
+    it('Should Fail because caller is not Minter', async () => {
 
         console.log("//**************************************END mintPRUF_IDToken FAIL BATCH**********************************************/")
         console.log("//**************************************BEGIN reMintPRUF_IDToken FAIL BATCH**********************************************/")
@@ -1782,7 +1782,7 @@ __/\\\\\\\\\\\\\ _____/\\\\\\\\\ _______/\\../\\ ___/\\\\\\\\\\\\\\\
 
 
     //4
-    it('Should Fail because caller is not ownerOrApproved', async () => {
+    it('Should Fail because caller is not Minter', async () => {
         return ID_TKN.setURI(
         asset1, 
         'Pruf.io',

@@ -638,7 +638,7 @@ __/\\\\\\\\\\\\\ _____/\\\\\\\\\ _______/\\../\\ ___/\\\\\\\\\\\\\\\
         
                     .then(() => {
                         console.log("Adding MAL_APP to storage for use in AC 0")
-                        return STOR.OO_addContract("MAL_APP", MAL_APP.address, '0', '1', { from: account1 })
+                        return STOR.OO_addContract("MAL_APP", MAL_APP.address, '0', '3', { from: account1 })
                     })
         
                     .then(() => {
@@ -1808,19 +1808,16 @@ __/\\\\\\\\\\\\\ _____/\\\\\\\\\ _______/\\../\\ ___/\\\\\\\\\\\\\\\
         return STOR.enableContractForAC('APP', '1', '0', { from: account1 })
     })
 
-    // //3
-    // it('Should fail becasue transaction too low', async () => {
-
-    //     console.log("//**************************************END createRecord FAIL BATCH**********************************************/")
-    //     console.log("//**************************************BEGIN deductPayment FAIL BATCH**********************************************/")
-    //     return APP.$newRecord(
-    //     asset2, 
-    //     rgt2,
-    //     '10',
-    //     '100',
-    //     {from: account2}
-    //     )
-    // })
+    //3
+    it('Should fail because contract is not correct custody type', async () => {
+        return MAL_APP.$newRecord(
+            asset2,
+            rgt2,
+            '10',
+            '100',
+            { from: account2 }
+        )
+    })
 
 
     it('Should write record in AC 10 @ IDX&RGT(1)', async () => {

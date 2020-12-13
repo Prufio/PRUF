@@ -1980,15 +1980,6 @@ contract('APP', accounts => {
             )
         })
 
-        // //10
-        // it('Should fail becasue rgt = 0', async () => {
-        //     return APP.$forceModRecord(
-        //         asset1,
-        //         rgt000,
-        //         {from: account2}
-        //     )
-        // })
-
         //9
         it('Should fail becasue asset in stolen status', async () => {
             return APP.$forceModRecord(

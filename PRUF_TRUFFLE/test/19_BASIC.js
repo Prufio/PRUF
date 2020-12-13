@@ -1754,10 +1754,10 @@ __/\\\\\\\\\\\\\ _____/\\\\\\\\\ _______/\\../\\ ___/\\\\\\\\\\\\\\\
     })
 
     //1
-    it('Should fail becasue caller != owner', async () => {
+    it('Should fail becasue caller != admin', async () => {
 
         console.log("//**************************************END BASIC SETUP**********************************************/")
-        console.log("//**************************************BEGIN BASIC FAIL BATCH (5)**********************************************/")
+        console.log("//**************************************BEGIN BASIC FAIL BATCH (7)**********************************************/")
         console.log("//**************************************BEGIN OO_resolveContractAddresses FAIL BATCH**********************************************/")
         return APP.OO_resolveContractAddresses(
         {from: account2}
@@ -1765,7 +1765,7 @@ __/\\\\\\\\\\\\\ _____/\\\\\\\\\ _______/\\../\\ ___/\\\\\\\\\\\\\\\
     })
 
     //2
-    it('Should fail becasue caller != owneroftkn or NP contract', async () => {
+    it('Should fail becasue caller not ATH or NP', async () => {
 
         console.log("//**************************************END OO_resolveContractAddresses FAIL BATCH**********************************************/")
         console.log("//**************************************BEGIN transferAssetToken FAIL BATCH**********************************************/")
@@ -1777,7 +1777,7 @@ __/\\\\\\\\\\\\\ _____/\\\\\\\\\ _______/\\../\\ ___/\\\\\\\\\\\\\\\
     })
 
     //3
-    it('Should fail becasue caller != owner', async () => {
+    it('Should fail becasue caller != admin', async () => {
 
         console.log("//**************************************END transferAssetToken SETUP**********************************************/")
         console.log("//**************************************BEGIN OO_transferACToken FAIL BATCH**********************************************/")
@@ -1789,7 +1789,7 @@ __/\\\\\\\\\\\\\ _____/\\\\\\\\\ _______/\\../\\ ___/\\\\\\\\\\\\\\\
     })
 
     //4
-    it('Should fail because caller is not owner', async () => {
+    it('Should fail because caller is not admin', async () => {
 
         console.log("//**************************************END OO_transferACToken FAIL BATCH**********************************************/")
         console.log("//**************************************BEGIN OO_setStorageContract FAIL BATCH**********************************************/")
@@ -1807,10 +1807,30 @@ __/\\\\\\\\\\\\\ _____/\\\\\\\\\ _______/\\../\\ ___/\\\\\\\\\\\\\\\
         )
     })
 
+    //6
+    it('Should fail because caller is not pauser', async () => {
+
+        console.log("//**************************************END OO_setStorageContract FAIL BATCH**********************************************/")
+        console.log("//**************************************BEGIN pause FAIL BATCH**********************************************/")
+        return APP.pause(
+        {from: account2}
+        )
+    })
+
+    //7
+    it('Should fail because caller is not pauser', async () => {
+
+        console.log("//**************************************END pause FAIL BATCH**********************************************/")
+        console.log("//**************************************BEGIN unpause FAIL BATCH**********************************************/")
+        return APP.unpause(
+        {from: account2}
+        )
+    })
+
 
     it('Should write record in AC 10 @ IDX&RGT(1)', async () => {
 
-        console.log("//**************************************END OO_setStorageContract FAIL BATCH**********************************************/")
+        console.log("//**************************************END unpause FAIL BATCH**********************************************/")
         console.log("//**************************************END BASIC FAIL BATCH**********************************************/")
         console.log("//**************************************END BASIC TEST**********************************************/")
         console.log("//**************************************BEGIN THE WORKS**********************************************/")
