@@ -178,7 +178,7 @@ contract ECR2 is ECR_CORE {
             _u32_1,
             _addr_1
         );
-        //^^^^^^^effects^^^^^^^^^
+        //^^^^^^^interactions^^^^^^^^^
     }
 
     function _setEscrowDataHeavy(
@@ -203,6 +203,6 @@ contract ECR2 is ECR_CORE {
             _u256_1,
             _u256_2
         );
-        //^^^^^^^effects^^^^^^^^^
+        //^^^^^^^interactions^^^^^^^^^
     }
 }
