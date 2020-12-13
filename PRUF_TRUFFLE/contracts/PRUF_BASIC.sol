@@ -192,7 +192,7 @@ contract BASIC is ReentrancyGuard, AccessControl, IERC721Receiver, Pausable {
     //^^^^^^^checks^^^^^^^^^
     {
         require(
-            hasRole(DEFAULT_ADMIN_ROLE, _msgSender()) ||
+            hasRole(DEFAULT_ADMIN_ROLE, _msgSender()) ||   //CTS:EXAMINE should be ATH || NP_Address???
                 (msg.sender == NP_Address),
             "B:TX:Invalid caller for transfer token"
         );
@@ -255,14 +255,14 @@ contract BASIC is ReentrancyGuard, AccessControl, IERC721Receiver, Pausable {
      * @dev Triggers stopped state. (pausable)
      *
      */
-    function OO_pause() external isPauser {
+    function pause() external isPauser {
         _pause();
     }
 
     /**
      * @dev Returns to normal state. (pausable)
      */
-    function OO_unpause() external isPauser {
+    function unpause() external isPauser {
         _unpause();
     }
 

@@ -1790,10 +1790,21 @@ __/\\\\\\\\\\\\\ _____/\\\\\\\\\ _______/\\../\\ ___/\\\\\\\\\\\\\\\
     })
 
     //1
-    it('Should fail becasue caller does not hold AC token', async () => {
+    it('Should fail becasue caller is not admin', async () => {
 
         console.log("//**************************************END PIP SETUP**********************************************/")
-        console.log("//**************************************BEGIN PIP FAIL BATCH (4)**********************************************/")
+        console.log("//**************************************BEGIN PIP FAIL BATCH (5)**********************************************/")
+        console.log("//**************************************BEGIN setImportDiscount FAIL BATCH**********************************************/")
+        return PIP.setImportDiscount(
+        "100", 
+        {from: account9}
+        )
+    })
+
+    //2
+    it('Should fail becasue caller does not hold AC token', async () => {
+
+        console.log("//**************************************END setImportDiscount FAIL BATCH**********************************************/")
         console.log("//**************************************BEGIN mintPipAsset FAIL BATCH**********************************************/")
         return PIP.mintPipAsset(
         asset1, 
@@ -1808,7 +1819,7 @@ __/\\\\\\\\\\\\\ _____/\\\\\\\\\ _______/\\../\\ ___/\\\\\\\\\\\\\\\
             return AC_MGR.addUser(account10Hash, '1', '15', { from: account10 })
     })
 
-    //2
+    //3
     it('Should fail becasue caller not authrorized to mintPipAssets', async () => {
         return PIP.mintPipAsset(
         asset1, 
@@ -1833,7 +1844,7 @@ __/\\\\\\\\\\\\\ _____/\\\\\\\\\ _______/\\../\\ ___/\\\\\\\\\\\\\\\
         )
     })
 
-    //3
+    //4
     it('Should fail becasue asset2 already recorded', async () => {
         return PIP.mintPipAsset(
         asset2, 
@@ -1843,7 +1854,7 @@ __/\\\\\\\\\\\\\ _____/\\\\\\\\\ _______/\\../\\ ___/\\\\\\\\\\\\\\\
         )
     })
 
-    //4
+    //5
     it('Should fail becasue token not found in PIP', async () => {
 
         console.log("//**************************************END mintPipAsset FAIL BATCH**********************************************/")

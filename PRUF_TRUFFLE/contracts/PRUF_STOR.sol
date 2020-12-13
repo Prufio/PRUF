@@ -44,7 +44,7 @@ contract STOR is AccessControl, ReentrancyGuard, Pausable {
 
     bytes32 public constant PAUSER_ROLE = keccak256("PAUSER_ROLE");
 
-    bytes32 public constant B320xF_ =0xFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF;
+    bytes32 public constant B320xF_ = 0xFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF;
 
     struct Record {
         // Still have room for a free bytes(16) or a uint 128 !!!
@@ -252,7 +252,7 @@ contract STOR is AccessControl, ReentrancyGuard, Pausable {
     ) external {
         require(
             AC_TKN.ownerOf(_assetClass) == msg.sender,
-            "S:ECFAC:Caller not ACtokenHolder"
+            "S:ECFAC:Caller not ACTH"
         );
 
         //^^^^^^^checks^^^^^^^^^
@@ -282,7 +282,7 @@ contract STOR is AccessControl, ReentrancyGuard, Pausable {
     {
         require(
             database[_idxHash].assetStatus != 60,
-            "S:NR:Asset is rcycl. Use PRUF_APP_NC rcycl"
+            "S:NR:Asset discarded use APP_NC rcycl"
         );
         require(database[_idxHash].assetClass == 0, "S:NR:Rec already exists");
         require(_rgtHash != 0, "S:NR:RGT = 0");
@@ -504,7 +504,7 @@ contract STOR is AccessControl, ReentrancyGuard, Pausable {
         notEscrow(_idxHash) // asset must not be held in escrow status
     {
         Record memory rec = database[_idxHash];
-        require((isTransferred(rec.assetStatus) == 0), "S:MI2: Txfrd asset"); //asset cannot be in transferred status
+        require((isTransferred(rec.assetStatus) == 0), "S:MI2: Txfrd asset"); //STAT UNREACHABLE
 
         require((rec.Ipfs1 != _Ipfs1), "S:MI1: New value = old");
         //^^^^^^^checks^^^^^^^^^
