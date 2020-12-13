@@ -105,8 +105,10 @@ __/\\\\\\\\\\\\\ _____/\\\\\\\\\ _______/\\../\\ ___/\\\\\\\\\\\\\\\
         let payableRoleB32;
         let minterRoleB32;
         let trustedAgentRoleB32;
+        let assetTransferRoleB32;
+        let discardRoleB32;
         
-        contract('TheWorksNaked', accounts => {
+        contract('TheWorksPIP', accounts => {
         
             console.log('//**************************BEGIN BOOTSTRAP**************************//')
         
@@ -551,7 +553,6 @@ __/\\\\\\\\\\\\\ _____/\\\\\\\\\ _______/\\../\\ ___/\\\\\\\\\\\\\\\
                     'ECR_MGR'
                 )
         
-        
                 payableRoleB32 = await Helper.getStringHash(
                     'PAYABLE_ROLE'
                 )
@@ -562,6 +563,14 @@ __/\\\\\\\\\\\\\ _____/\\\\\\\\\ _______/\\../\\ ___/\\\\\\\\\\\\\\\
         
                 trustedAgentRoleB32 = await Helper.getStringHash(
                     'TRUSTED_AGENT_ROLE'
+                )
+        
+                assetTransferRoleB32 = await Helper.getStringHash(
+                    'ASSET_TXFR_ROLE'
+                )
+        
+                discardRoleB32 = await Helper.getStringHash(
+                    'DISCARD_ROLE'
                 )
             })
         
@@ -801,43 +810,6 @@ __/\\\\\\\\\\\\\ _____/\\\\\\\\\ _______/\\../\\ ___/\\\\\\\\\\\\\\\
                 // })
             })
         
-        
-            it('Should authorize all minter contracts for minting AC_TKN(s)', async () => {
-                console.log("Authorizing AC_MGR")
-                return AC_TKN.grantRole(minterRoleB32, AC_MGR.address, { from: account1 })
-            })
-        
-            it('Should authorize all payable contracts for transactions', async () => {
-        
-                console.log("Authorizing AC_MGR")
-                return UTIL_TKN.grantRole(payableRoleB32, AC_MGR.address, { from: account1 })
-        
-                    .then(() => {
-                        console.log("Authorizing APP_NC")
-                        return UTIL_TKN.grantRole(payableRoleB32, APP_NC.address, { from: account1 })
-                    })
-        
-                    .then(() => {
-                        console.log("Authorizing APP")
-                        return UTIL_TKN.grantRole(payableRoleB32, APP.address, { from: account1 })
-                    })
-        
-                    .then(() => {
-                        console.log("Authorizing RCLR")
-                        return UTIL_TKN.grantRole(payableRoleB32, RCLR.address, { from: account1 })
-                    })
-        
-                    .then(() => {
-                        console.log("Authorizing MAL_APP")
-                        return UTIL_TKN.grantRole(payableRoleB32, MAL_APP.address, { from: account1 })
-                    })
-        
-                    .then(() => {
-                        console.log("Authorizing PIP")
-                        return UTIL_TKN.grantRole(payableRoleB32, PIP.address, { from: account1 })
-                    })
-            })
-        
             it('Should authorize all minter contracts for minting A_TKN(s)', async () => {
         
                 console.log("Authorizing NP")
@@ -864,11 +836,53 @@ __/\\\\\\\\\\\\\ _____/\\\\\\\\\ _______/\\../\\ ___/\\\\\\\\\\\\\\\
                     })
             })
         
+            it('Should authorize all payable contracts for transactions', async () => {
         
-            it('Should authorize AC_MGR as trusted agent in AC_TKN', async () => {
-            
                 console.log("Authorizing AC_MGR")
-                return AC_TKN.grantRole(trustedAgentRoleB32, AC_MGR.address, { from: account1 })
+                return UTIL_TKN.grantRole(payableRoleB32, AC_MGR.address, { from: account1 })
+        
+                    .then(() => {
+                        console.log("Authorizing APP_NC")
+                        return UTIL_TKN.grantRole(payableRoleB32, APP_NC.address, { from: account1 })
+                    })
+        
+                    .then(() => {
+                        console.log("Authorizing APP")
+                        return UTIL_TKN.grantRole(payableRoleB32, APP.address, { from: account1 })
+                    })
+        
+                    .then(() => {
+                        console.log("Authorizing RCLR")
+                        return UTIL_TKN.grantRole(payableRoleB32, RCLR.address, { from: account1 })
+                    })
+        
+                    .then(() => {
+                        console.log("Authorizing PIP")
+                        return UTIL_TKN.grantRole(payableRoleB32, RCLR.address, { from: account1 })
+                    })
+        
+                    .then(() => {
+                        console.log("Authorizing AC_MGR")
+                return UTIL_TKN.grantRole(trustedAgentRoleB32, AC_MGR.address, { from: account1 })
+                    })
+            })
+        
+        
+            it('Should authorize all minter contracts for minting AC_TKN(s)', async () => {
+                console.log("Authorizing AC_MGR")
+                return AC_TKN.grantRole(minterRoleB32, AC_MGR.address, { from: account1 })
+            })
+        
+        
+            it('Should authorize all minter contracts for minting AC_TKN(s)', async () => {
+                console.log("Authorizing AC_MGR")
+                return APP.grantRole(assetTransferRoleB32, NP.address, { from: account1 })
+            })
+        
+        
+            it('Should authorize all minter contracts for minting AC_TKN(s)', async () => {
+                console.log("Authorizing AC_MGR")
+                return RCLR.grantRole(discardRoleB32, A_TKN.address, { from: account1 })
             })
         
         
@@ -1652,61 +1666,6 @@ __/\\\\\\\\\\\\\ _____/\\\\\\\\\ _______/\\../\\ ___/\\\\\\\\\\\\\\\
                             account1,
                             { from: account10 })
                     })
-                    
-                    .then(() => {
-                        console.log("Setting base costs in AC 16")
-                        return AC_MGR.ACTH_setCosts(
-                            "16",
-                            "1",
-                            "10000000000000000",
-                            account1,
-                            { from: account10 })
-                    })
-        
-                    .then(() => {
-                        return AC_MGR.ACTH_setCosts(
-                            "16",
-                            "2",
-                            "10000000000000000",
-                            account1,
-                            { from: account10 })
-                    })
-        
-                    .then(() => {
-                        return AC_MGR.ACTH_setCosts(
-                            "16",
-                            "3",
-                            "10000000000000000",
-                            account1,
-                            { from: account10 })
-                    })
-        
-                    .then(() => {
-                        return AC_MGR.ACTH_setCosts(
-                            "16",
-                            "4",
-                            "10000000000000000",
-                            account1,
-                            { from: account10 })
-                    })
-        
-                    .then(() => {
-                        return AC_MGR.ACTH_setCosts(
-                            "16",
-                            "5",
-                            "10000000000000000",
-                            account1,
-                            { from: account10 })
-                    })
-        
-                    .then(() => {
-                        return AC_MGR.ACTH_setCosts(
-                            "16",
-                            "6",
-                            "10000000000000000",
-                            account1,
-                            { from: account10 })
-                    })
             })
         
         
@@ -1781,6 +1740,7 @@ __/\\\\\\\\\\\\\ _____/\\\\\\\\\ _______/\\../\\ ___/\\\\\\\\\\\\\\\
                         return AC_MGR.addUser(account10Hash, '1', '10', { from: account1 })
                     })
             })
+
 
     it('Should set SharesAddress', async () => {
 
