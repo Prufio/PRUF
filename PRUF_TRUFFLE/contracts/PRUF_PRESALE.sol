@@ -29,7 +29,7 @@ import "./Imports/math/SafeMath.sol";
 contract PRESALE is ReentrancyGuard, Pausable, AccessControl {
     using SafeMath for uint256;
 
-    //----------------------------ROLE DFINITIONS 
+    //----------------------------ROLE DFINITIONS
     bytes32 public constant PAUSER_ROLE = keccak256("PAUSER_ROLE");
     bytes32 public constant WHITELIST_ROLE = keccak256("WHITELIST_ROLE");
     bytes32 public constant AIRDROP_ROLE = keccak256("AIRDROP_ROLE");
@@ -57,9 +57,9 @@ contract PRESALE is ReentrancyGuard, Pausable, AccessControl {
         _setupRole(WHITELIST_ROLE, _msgSender());
         _setupRole(AIRDROP_ROLE, _msgSender());
 
-        whiteList[address(0)].tokensPerEth = 100000 ether; //100,000 tokens per ETH default    
+        whiteList[address(0)].tokensPerEth = 100000 ether; //100,000 tokens per ETH default
         whiteList[address(0)].minEth = 100000000000000000; // 0.1 eth minimum default (10,000 tokens)
-        whiteList[address(0)].maxEth = 10 ether; // 10 eth maximum default (1,000,000 tokens)              
+        whiteList[address(0)].maxEth = 10 ether; // 10 eth maximum default (1,000,000 tokens)
     }
 
     //------------------------------------------------------------------------MODIFIERS
@@ -269,8 +269,6 @@ contract PRESALE is ReentrancyGuard, Pausable, AccessControl {
         //^^^^^^^Interactions^^^^^^^^^
     }
 
-    
-
     /*
      * @dev Mint airdropAmount to a list of addresses
      * TESTING: ALL REQUIRES, ACCESS ROLE, PAUSABLE
@@ -292,66 +290,14 @@ contract PRESALE is ReentrancyGuard, Pausable, AccessControl {
         //^^^^^^^Interactions^^^^^^^^^
     }
 
-
     /*
      * @dev Mint a set airdropAmount to an address
      * TESTING: ALL REQUIRES, ACCESS ROLE, PAUSABLE
      */
-    function AIRDROP_Mint1(address _a)
-        external
-        isAirdrop
-        whenNotPaused
-    {
+    function AIRDROP_Mint1(address _a) external isAirdrop whenNotPaused {
         //^^^^^^^checks^^^^^^^^^
 
         UTIL_TKN.mint(_a, airdropAmount);
-        //^^^^^^^Interactions^^^^^^^^^
-    }
-
-    /*
-     * @dev Mint PRUF to an addresses as caller.tokensPerEth * ETH recieved
-     * TESTING: ALL REQUIRES, ACCESS ROLE, PAUSABLE, individual presale allowance can be exhausted, overall presale allotment can be exhausted
-     *          amount minted conforms to tokensPerEth setting, min buy is enforced
-     */
-    function BUY_PRUF() public payable nonReentrant whenNotPaused { 
-
-        whiteListedAddress memory _whiteList = whiteList[msg.sender];
-
-        if (_whiteList.tokensPerEth == 0) {  //loads the default (addr 0) info into the address if address is not specificly whitelisted
-            whiteList[msg.sender] = whiteList[address(0)];
-            _whiteList = whiteList[msg.sender];
-        }
-
-        uint256 amountToMint = msg.value.mul(
-            _whiteList.tokensPerEth.div(1 ether)
-        ); //in wei
-
-        require(
-                amountToMint != 0,
-            "PP:PP: Amount to mint is zero"
-        );
-        require(
-            msg.value >= _whiteList.minEth,
-            "PP:PP: Insufficient ETH sent to meet minimum purchase requirement"
-        );
-        require(
-            msg.value <= _whiteList.maxEth,
-            "PP:PP: Purchase request exceeds allowed purchase Amount"
-        );
-        require(
-                amountToMint.add(presaleCount) <= presaleLimit,
-            "PP:PP: Purchase request exceeds total presale limit"
-        );
-        //^^^^^^^checks^^^^^^^^^
-
-        presaleCount = amountToMint.add(presaleCount);
-
-        whiteList[msg.sender].maxEth = _whiteList.maxEth.sub(msg.value); //reduce max purchasable by purchased amount
-        whiteList[msg.sender].minEth = 0; //Remove minimum , as minimum buy is already met.
-        //^^^^^^^effects^^^^^^^^^
-
-        UTIL_TKN.mint(msg.sender, amountToMint);
-        emit REPORT(_msgSender(), amountToMint);
         //^^^^^^^Interactions^^^^^^^^^
     }
 
@@ -397,6 +343,50 @@ contract PRESALE is ReentrancyGuard, Pausable, AccessControl {
      */
     receive() external payable {
         BUY_PRUF();
+    }
+
+    /*
+     * @dev Mint PRUF to an addresses as caller.tokensPerEth * ETH recieved
+     * TESTING: ALL REQUIRES, ACCESS ROLE, PAUSABLE, individual presale allowance can be exhausted, overall presale allotment can be exhausted
+     *          amount minted conforms to tokensPerEth setting, min buy is enforced
+     */
+    function BUY_PRUF() public payable nonReentrant whenNotPaused {
+        whiteListedAddress memory _whiteList = whiteList[_msgSender()];
+
+        if (_whiteList.tokensPerEth == 0) {
+            //loads the default (addr 0) info into the address if address is not specificly whitelisted
+            whiteList[_msgSender()] = whiteList[address(0)];
+            _whiteList = whiteList[_msgSender()];
+        }
+
+        uint256 amountToMint = msg.value.mul(
+            _whiteList.tokensPerEth.div(1 ether)
+        ); //in wei
+
+        require(amountToMint != 0, "PP:PP: Amount to mint is zero");
+        require(
+            msg.value >= _whiteList.minEth,
+            "PP:PP: Insufficient ETH sent to meet minimum purchase requirement"
+        );
+        require(
+            msg.value <= _whiteList.maxEth,
+            "PP:PP: Purchase request exceeds allowed purchase Amount"
+        );
+        require(
+            amountToMint.add(presaleCount) <= presaleLimit,
+            "PP:PP: Purchase request exceeds total presale limit"
+        );
+        //^^^^^^^checks^^^^^^^^^
+
+        presaleCount = amountToMint.add(presaleCount);
+
+        whiteList[_msgSender()].maxEth = _whiteList.maxEth.sub(msg.value); //reduce max purchasable by purchased amount
+        whiteList[_msgSender()].minEth = 0; //Remove minimum , as minimum buy is already met.
+        //^^^^^^^effects^^^^^^^^^
+
+        UTIL_TKN.mint(_msgSender(), amountToMint);
+        emit REPORT(_msgSender(), amountToMint);
+        //^^^^^^^Interactions^^^^^^^^^
     }
 
     //--------------------------------------------------------------------------------------INTERNAL functions
