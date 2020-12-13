@@ -95,7 +95,7 @@ contract PIP is CORE {
 
         deductImportRecordCosts(_newAssetClass);
 
-        //^^^^^^^interactions / effects^^^^^^^^^^^^
+        //^^^^^^^interactions^^^^^^^^
     }
 
     function uint256toString(uint256 number)
