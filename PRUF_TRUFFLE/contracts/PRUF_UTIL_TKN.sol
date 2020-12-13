@@ -267,7 +267,7 @@ contract UTIL_TKN is
      * @dev arbitrary burn (requires TRUSTED_AGENT_ROLE)   ****USE WITH CAUTION
      */
     function trustedAgentBurn(address _addr, uint256 _amount)
-        public
+        external
         isTrustedAgent
     {
         require( //---------------------------------------------------DPS:TEST : NEW
@@ -286,7 +286,7 @@ contract UTIL_TKN is
         address _from,
         address _to,
         uint256 _amount
-    ) public isTrustedAgent {
+    ) external isTrustedAgent {
         require( //---------------------------------------------------DPS:TEST : NEW
             coldWallet[_from] == 0,
             "PRuF:TAT: Cold Wallet - Trusted functions prohibited"
