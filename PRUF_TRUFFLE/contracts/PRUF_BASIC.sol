@@ -26,7 +26,7 @@ import "./Imports/access/AccessControl.sol";
 import "./Imports/utils/Pausable.sol";
 import "./Imports/utils/ReentrancyGuard.sol";
 import "./Imports/token/ERC721/IERC721Receiver.sol";
-import "./Imports/math/safeMath.sol";
+import "./Imports/math/SafeMath.sol";
 
 contract BASIC is ReentrancyGuard, AccessControl, IERC721Receiver, Pausable {
     bytes32 public constant PAUSER_ROLE = keccak256("PAUSER_ROLE");
