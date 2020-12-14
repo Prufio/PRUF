@@ -6,6 +6,11 @@
 	"output": {
 		"abi": [
 			{
+				"inputs": [],
+				"stateMutability": "nonpayable",
+				"type": "constructor"
+			},
+			{
 				"anonymous": false,
 				"inputs": [
 					{
@@ -23,9 +28,15 @@
 				"inputs": [
 					{
 						"indexed": false,
-						"internalType": "string",
-						"name": "_msg",
-						"type": "string"
+						"internalType": "address",
+						"name": "addr",
+						"type": "address"
+					},
+					{
+						"indexed": false,
+						"internalType": "uint256",
+						"name": "amount",
+						"type": "uint256"
 					}
 				],
 				"name": "REPORT",
@@ -122,29 +133,71 @@
 			{
 				"inputs": [
 					{
-						"internalType": "bytes32",
-						"name": "_idxHash",
-						"type": "bytes32"
-					},
-					{
-						"internalType": "bytes32",
-						"name": "_rgtHash",
-						"type": "bytes32"
-					},
-					{
-						"internalType": "uint32",
-						"name": "_assetClass",
-						"type": "uint32"
+						"internalType": "uint256",
+						"name": "_airdropAmount",
+						"type": "uint256"
 					}
 				],
-				"name": "$recycle",
+				"name": "ADMIN_setAirDropAmount",
+				"outputs": [],
+				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "address payable",
+						"name": "_address",
+						"type": "address"
+					}
+				],
+				"name": "ADMIN_setPaymentAddress",
+				"outputs": [],
+				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "uint256",
+						"name": "_presaleLimit",
+						"type": "uint256"
+					}
+				],
+				"name": "ADMIN_setPresaleLimit",
+				"outputs": [],
+				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "address",
+						"name": "_address",
+						"type": "address"
+					}
+				],
+				"name": "ADMIN_set_Id_TokenContract",
+				"outputs": [],
+				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "address",
+						"name": "_address",
+						"type": "address"
+					}
+				],
+				"name": "ADMIN_set_Util_TokenContract",
 				"outputs": [],
 				"stateMutability": "nonpayable",
 				"type": "function"
 			},
 			{
 				"inputs": [],
-				"name": "ASSET_TXFR_ROLE",
+				"name": "AIRDROP_ROLE",
 				"outputs": [
 					{
 						"internalType": "bytes32",
@@ -157,15 +210,9 @@
 			},
 			{
 				"inputs": [],
-				"name": "CONTRACT_ADMIN_ROLE",
-				"outputs": [
-					{
-						"internalType": "bytes32",
-						"name": "",
-						"type": "bytes32"
-					}
-				],
-				"stateMutability": "view",
+				"name": "BUY_PRUF",
+				"outputs": [],
+				"stateMutability": "payable",
 				"type": "function"
 			},
 			{
@@ -183,51 +230,7 @@
 			},
 			{
 				"inputs": [],
-				"name": "DISCARD_ROLE",
-				"outputs": [
-					{
-						"internalType": "bytes32",
-						"name": "",
-						"type": "bytes32"
-					}
-				],
-				"stateMutability": "view",
-				"type": "function"
-			},
-			{
-				"inputs": [],
-				"name": "OO_resolveContractAddresses",
-				"outputs": [],
-				"stateMutability": "nonpayable",
-				"type": "function"
-			},
-			{
-				"inputs": [
-					{
-						"internalType": "address",
-						"name": "_storageAddress",
-						"type": "address"
-					}
-				],
-				"name": "OO_setStorageContract",
-				"outputs": [],
-				"stateMutability": "nonpayable",
-				"type": "function"
-			},
-			{
-				"inputs": [
-					{
-						"internalType": "address",
-						"name": "_to",
-						"type": "address"
-					},
-					{
-						"internalType": "uint256",
-						"name": "_tokenID",
-						"type": "uint256"
-					}
-				],
-				"name": "OO_transferACToken",
+				"name": "GET_ID",
 				"outputs": [],
 				"stateMutability": "nonpayable",
 				"type": "function"
@@ -246,21 +249,71 @@
 				"type": "function"
 			},
 			{
-				"inputs": [
+				"inputs": [],
+				"name": "WHITELIST_ROLE",
+				"outputs": [
 					{
 						"internalType": "bytes32",
-						"name": "_idxHash",
+						"name": "",
 						"type": "bytes32"
-					},
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [],
+				"name": "airdropAmount",
+				"outputs": [
+					{
+						"internalType": "uint256",
+						"name": "",
+						"type": "uint256"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [],
+				"name": "balance",
+				"outputs": [
+					{
+						"internalType": "uint256",
+						"name": "",
+						"type": "uint256"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [
 					{
 						"internalType": "address",
-						"name": "_sender",
+						"name": "_addr",
 						"type": "address"
 					}
 				],
-				"name": "discard",
-				"outputs": [],
-				"stateMutability": "nonpayable",
+				"name": "checkWhitelist",
+				"outputs": [
+					{
+						"internalType": "uint256",
+						"name": "",
+						"type": "uint256"
+					},
+					{
+						"internalType": "uint256",
+						"name": "",
+						"type": "uint256"
+					},
+					{
+						"internalType": "uint256",
+						"name": "",
+						"type": "uint256"
+					}
+				],
+				"stateMutability": "view",
 				"type": "function"
 			},
 			{
@@ -368,40 +421,6 @@
 				"type": "function"
 			},
 			{
-				"inputs": [
-					{
-						"internalType": "address",
-						"name": "",
-						"type": "address"
-					},
-					{
-						"internalType": "address",
-						"name": "",
-						"type": "address"
-					},
-					{
-						"internalType": "uint256",
-						"name": "",
-						"type": "uint256"
-					},
-					{
-						"internalType": "bytes",
-						"name": "",
-						"type": "bytes"
-					}
-				],
-				"name": "onERC721Received",
-				"outputs": [
-					{
-						"internalType": "bytes4",
-						"name": "",
-						"type": "bytes4"
-					}
-				],
-				"stateMutability": "nonpayable",
-				"type": "function"
-			},
-			{
 				"inputs": [],
 				"name": "pause",
 				"outputs": [],
@@ -416,6 +435,45 @@
 						"internalType": "bool",
 						"name": "",
 						"type": "bool"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [],
+				"name": "payment_address",
+				"outputs": [
+					{
+						"internalType": "address payable",
+						"name": "",
+						"type": "address"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [],
+				"name": "presaleCount",
+				"outputs": [
+					{
+						"internalType": "uint256",
+						"name": "",
+						"type": "uint256"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [],
+				"name": "presaleLimit",
+				"outputs": [
+					{
+						"internalType": "uint256",
+						"name": "",
+						"type": "uint256"
 					}
 				],
 				"stateMutability": "view",
@@ -458,21 +516,16 @@
 				"type": "function"
 			},
 			{
-				"inputs": [
+				"inputs": [],
+				"name": "tokenId",
+				"outputs": [
 					{
-						"internalType": "address",
-						"name": "_to",
-						"type": "address"
-					},
-					{
-						"internalType": "bytes32",
-						"name": "_idxHash",
-						"type": "bytes32"
+						"internalType": "uint256",
+						"name": "",
+						"type": "uint256"
 					}
 				],
-				"name": "transferAssetToken",
-				"outputs": [],
-				"stateMutability": "nonpayable",
+				"stateMutability": "view",
 				"type": "function"
 			},
 			{
@@ -481,6 +534,45 @@
 				"outputs": [],
 				"stateMutability": "nonpayable",
 				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "address",
+						"name": "_addr",
+						"type": "address"
+					},
+					{
+						"internalType": "uint256",
+						"name": "_tokensPerEth",
+						"type": "uint256"
+					},
+					{
+						"internalType": "uint256",
+						"name": "_minEth",
+						"type": "uint256"
+					},
+					{
+						"internalType": "uint256",
+						"name": "_maxEth",
+						"type": "uint256"
+					}
+				],
+				"name": "whitelist",
+				"outputs": [],
+				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
+				"inputs": [],
+				"name": "withdraw",
+				"outputs": [],
+				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
+				"stateMutability": "payable",
+				"type": "receive"
 			}
 		],
 		"devdoc": {
@@ -502,7 +594,7 @@
 					"details": "Returns `true` if `account` has been granted `role`."
 				},
 				"pause()": {
-					"details": "Triggers stopped state. (pausable)"
+					"details": "Triggers stopped state. (pausable) * TESTING: ACCESS ROLE"
 				},
 				"paused()": {
 					"details": "Returns true if the contract is paused, and false otherwise."
@@ -514,7 +606,7 @@
 					"details": "Revokes `role` from `account`. If `account` had been granted `role`, emits a {RoleRevoked} event. Requirements: - the caller must have ``role``'s admin role."
 				},
 				"unpause()": {
-					"details": "Returns to normal state. (pausable)"
+					"details": "Returns to normal state. (pausable) TESTING: ACCESS ROLE"
 				}
 			},
 			"version": 1
@@ -527,7 +619,7 @@
 	},
 	"settings": {
 		"compilationTarget": {
-			"localhost/PRUF/PRUF_TRUFFLE/contracts/PRUF_RCLR.sol": "RCLR"
+			"localhost/PRUF/PRUF_TRUFFLE/contracts/PRUF_PARTY.sol": "FAUCET"
 		},
 		"evmVersion": "istanbul",
 		"libraries": {},
@@ -565,14 +657,6 @@
 				"dweb:/ipfs/QmSkJtcfWo7c42KnL5hho6GFxK6HRNV91XABx1P7xDtfLV"
 			]
 		},
-		"localhost/PRUF/PRUF_TRUFFLE/contracts/Imports/token/ERC721/IERC721Receiver.sol": {
-			"keccak256": "0x42139300eda7e7fb232ab96972cda1abfd1dce2f013937a188f11fd813aeab27",
-			"license": "MIT",
-			"urls": [
-				"bzz-raw://2042e1d443d327a245a101409ed079e3e207b2cf833cfda4a05483ac090ab9aa",
-				"dweb:/ipfs/QmTC5FVjhMGpzoD9uSGvy1aVmwC2r6mS8mn2tAGXG9AdgT"
-			]
-		},
 		"localhost/PRUF/PRUF_TRUFFLE/contracts/Imports/utils/Address.sol": {
 			"keccak256": "0x1845481964ebacf35afe1a006fa574793b52e698eba0a8db6e3d30202bc45429",
 			"license": "MIT",
@@ -605,30 +689,6 @@
 				"dweb:/ipfs/Qmf6z9KWKCJCfEVokgTBhBVq5yHtE6is31N8AV5BHdMkqQ"
 			]
 		},
-		"localhost/PRUF/PRUF_TRUFFLE/contracts/PRUF_BASIC.sol": {
-			"keccak256": "0xeec1a7027ef7922758642b30267d71b9725cef07b3fc36a11ac8faec8eb1cd36",
-			"license": "UNLICENSED",
-			"urls": [
-				"bzz-raw://0ef9bed7a4e5f70326b22d310aad5f3ac037088269096663c53d96c180d34ecf",
-				"dweb:/ipfs/QmadGhapyopASg4gdCZJjpAcr7hyzxGrnFDGJBmffjdYDQ"
-			]
-		},
-		"localhost/PRUF/PRUF_TRUFFLE/contracts/PRUF_CORE.sol": {
-			"keccak256": "0xc3466c7882566ec0940afe151539299d5a617cffc714d6f3cc5d72a89e08d9c2",
-			"license": "UNLICENSED",
-			"urls": [
-				"bzz-raw://8fd87bbd1262ac9c6eb5a4cffecdfd977c85d81b2774a5b6efcb0f871b17bdaf",
-				"dweb:/ipfs/QmRAoucnr9ekhCqzktd9s7eiFQpMRcy9i478mRPYRT6p5W"
-			]
-		},
-		"localhost/PRUF/PRUF_TRUFFLE/contracts/PRUF_ECR_CORE.sol": {
-			"keccak256": "0x3785954fd5ea50f6b69998d1cdfbea8c66a8c1cf3df276a80debc48e2ce26d55",
-			"license": "UNLICENSED",
-			"urls": [
-				"bzz-raw://1eb9f6c95234ec82cf10f854d98ddb887888ad681e4d90896d0cd8c6ba6a0221",
-				"dweb:/ipfs/QmZGRGf85G3Y7YevWddoGJpL2Uxpv692xBY4vH7gWqgtaX"
-			]
-		},
 		"localhost/PRUF/PRUF_TRUFFLE/contracts/PRUF_INTERFACES.sol": {
 			"keccak256": "0x1d0a4756c6e9d8dc68654a4feea636e23a2fb36514f28e4e1210559d4ccd23b9",
 			"license": "UNLICENSED",
@@ -637,12 +697,12 @@
 				"dweb:/ipfs/QmY7aijEn4iKsxXQyQ4HoKS5ioCX9cKbdQzogYw8kFgxdy"
 			]
 		},
-		"localhost/PRUF/PRUF_TRUFFLE/contracts/PRUF_RCLR.sol": {
-			"keccak256": "0xca81f5c7eaf944d339f4fa4451d247ca51e1076dfaa8afc3ea0c49cc1da28a8a",
+		"localhost/PRUF/PRUF_TRUFFLE/contracts/PRUF_PARTY.sol": {
+			"keccak256": "0x4331a4ff58533f4ed2d5908392da4fd309583af325a689cf6296d4f86ddd099e",
 			"license": "UNLICENSED",
 			"urls": [
-				"bzz-raw://e2ad7bb58dc192caf261dd6393428a9b23ce9ba2098894dc6ec735c8401e3fe5",
-				"dweb:/ipfs/QmZ8VhkscJUDsic6zxJrmZxfZa2jpE95z6JwrzJnrEqZwJ"
+				"bzz-raw://c5869a388a0482cd78c841412656b801cacd8503a1749034876f42e7dcb77de4",
+				"dweb:/ipfs/QmTv1pZuRg4475VewyvWb5yPv4CYbBeHwU7S4aTcCJJaFq"
 			]
 		}
 	},
