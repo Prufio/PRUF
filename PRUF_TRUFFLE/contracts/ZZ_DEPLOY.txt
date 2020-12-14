@@ -15,7 +15,8 @@ __/\\\\\\\\\\\\\ _____/\\\\\\\\\ _______/\\../\\ ___/\\\\\\\\\\\\\\\
 /*-----------------------------------------------------------------
 * ------------- SETUP PROCEDURES ---NOT DONE:|0|---DONE:|X|-------------
 * -----------------------------------------------------------------
-* ----------------- DEPLOY CONTRACTS -----------------
+*
+* ----------------- DEPLOY CONTRACTS -----------------|0|
 * 1 - STOR|0|
 *
 * 2 - APP|0|
@@ -46,7 +47,7 @@ __/\\\\\\\\\\\\\ _____/\\\\\\\\\ _______/\\../\\ ___/\\\\\\\\\\\\\\\
 *
 * 15 - PIP|0|
 * 
-* ----------------- ADD CONTRACTS TO STORAGE (STOR.OO_addContract)-----------------
+* ----------------- ADD CONTRACTS TO STORAGE (STOR.OO_addContract)-----------------|0|
 * 1 - APP ("APP", APP.address, '0', '1')|0|
 *
 * 2 - NP ("NP", NP.address, '0', '1')|0|
@@ -75,7 +76,7 @@ __/\\\\\\\\\\\\\ _____/\\\\\\\\\ _______/\\../\\ ___/\\\\\\\\\\\\\\\
 *
 * 14 - PIP ("PIP", PIP.address, '0', '1')|0|
 * 
-* ----------------- ADD STORAGE TO CONTRACTS (CONTRACT.OO_setStorageContract) -----------------
+* ----------------- ADD STORAGE TO CONTRACTS (CONTRACT.OO_setStorageContract) -----------------|0|
 * 1 - APP (STOR.address)|0|
 *
 * 2 - NP (STOR.address)|0|
@@ -98,7 +99,7 @@ __/\\\\\\\\\\\\\ _____/\\\\\\\\\ _______/\\../\\ ___/\\\\\\\\\\\\\\\
 *
 * 11 - PIP (STOR.address)|0|
 * 
-* ----------------- RESOLVE CONTRACT ADDRESSES (CONTRACT.OO_resolveContractAddresses) -----------------
+* ----------------- RESOLVE CONTRACT ADDRESSES (CONTRACT.OO_resolveContractAddresses) -----------------|0|
 * 1 - APP|0|
 *
 * 2 - NP|0|
@@ -266,7 +267,12 @@ __/\\\\\\\\\\\\\ _____/\\\\\\\\\ _______/\\../\\ ___/\\\\\\\\\\\\\\\
 *
 * 2 - USER2 (USER2.address, PRUF+(0*18))   |0|
 * 
-* ----------------- TRANSFER AC's TO USER2 (AC_TKN safeTransferFrom) -----------------|0|
+* ----------------- MINT ID'S TO USERS (ID_TKN.mintPRUF_IDToken) -----------------|0|
+* 1 - USER1 (USER1.address, "1")   |0|
+*
+* 2 - USER2 (USER2.address, "2")   |0|
+* 
+* ----------------- TRANSFER AC's TO USER2 (AC_TKN.safeTransferFrom) -----------------|0|
 * 1 - USER2 (USER1.address, USER2.address, "13")   |0|
 *           (USER1.address, USER2.address, "14")   |0|
 * 
