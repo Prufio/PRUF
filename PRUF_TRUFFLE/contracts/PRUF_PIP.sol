@@ -145,6 +145,6 @@ contract PIP is CORE {
         //^^^^^^^effects^^^^^^^^^
 
         deductPayment(pricing);
-        //^^^^^^^interactions^^^^^^^^^
+        //^^^^^^^interactions^^^^^^^
     }
 }

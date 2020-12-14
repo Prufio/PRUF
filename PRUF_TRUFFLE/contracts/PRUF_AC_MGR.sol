@@ -66,14 +66,15 @@ contract AC_MGR is BASIC {
     uint256 private priceThreshold; //threshold of price where fractional pricing is implemented
 
     /* ----prufPerShare-----
-    * divisor to divide amount of pruf (18d) sent to determine the profit share. 
-    * profit share of 1000 = 10% default u10 for .01% profit share = "1 share"
-    */
-    uint256 public prufPerShare = 10000000000000000000;    uint256 public upperLimit = 9500; // default max profit share = 95%
+     * divisor to divide amount of pruf (18d) sent to determine the profit share.
+     * profit share of 1000 = 10% default u10 for .01% profit share = "1 share"
+     */
+    uint256 public prufPerShare = 10000000000000000000;
+    uint256 public upperLimit = 9500; // default max profit share = 95%
 
     uint32 private constant startingDiscount = 5100; // Purchased nodes start with 51% profit share
 
-    constructor() public { 
+    constructor() public {
         _setupRole(NODE_MINTER_ROLE, _msgSender());
     }
 
@@ -293,10 +294,11 @@ contract AC_MGR is BASIC {
      * Requires that:
      *  caller holds ACtoken
      */
-    function updateACipfs(
-        bytes32 _IPFS,
-        uint32 _assetClass
-    ) external isACtokenHolderOfClass(_assetClass) whenNotPaused {
+    function updateACipfs(bytes32 _IPFS, uint32 _assetClass)
+        external
+        isACtokenHolderOfClass(_assetClass)
+        whenNotPaused
+    {
         //^^^^^^^checks^^^^^^^^^
         AC_data[_assetClass].IPFS = _IPFS;
         //^^^^^^^effects^^^^^^^^^
@@ -339,10 +341,7 @@ contract AC_MGR is BASIC {
      * - `recipient` cannot be the zero address.
      * - the caller must have a balance of at least `amount`.
      */
-    function increaseShare(
-        uint32 _assetClass,
-        uint256 _amount
-    )
+    function increaseShare(uint32 _assetClass, uint256 _amount)
         external
         whenNotPaused
         nonReentrant
@@ -473,9 +472,7 @@ contract AC_MGR is BASIC {
     /*
      * @dev Retrieve AC_data @ _assetClass
      */
-    function getAC_data(
-        uint32 _assetClass
-    )
+    function getAC_data(uint32 _assetClass)
         external
         view
         returns (

@@ -16,7 +16,7 @@ __/\\\\\\\\\\\\\ _____/\\\\\\\\\ _______/\\../\\ ___/\\\\\\\\\\\\\\\
  *---------------------------------------------------------------*/
 
 /*-----------------------------------------------------------------
- *  PRUF STOR is the primary data repository for the PRUF system. No direct user writes are permitted in STOR, all data must come from explicitly approved contracts.
+ *  PRUF STOR  is the primary data repository for the PRUF system. No direct user writes are permitted in STOR, all data must come from explicitly approved contracts.
  *  PRUF STOR  stores records in a map of Records, foreward and reverse name resolution for approved contracts, as well as contract authorization data.
  *---------------------------------------------------------------*/
 
@@ -34,7 +34,6 @@ __/\\\\\\\\\\\\\ _____/\\\\\\\\\ _______/\\../\\ ___/\\\\\\\\\\\\\\\
 pragma solidity ^0.6.7;
 
 import "./PRUF_INTERFACES.sol";
-// import "./Imports/access/Ownable.sol";
 import "./Imports/access/AccessControl.sol";
 import "./Imports/utils/Pausable.sol";
 import "./Imports/math/Safemath.sol";
