@@ -208,16 +208,14 @@ contract BASIC is ReentrancyGuard, AccessControl, IERC721Receiver, Pausable {
     /*
      * @dev Transfer any specified assetClassToken from contract
      */
-    function OO_transferACToken(address _to, bytes32 _idxHash)
+    function OO_transferACToken(address _to, uint256 _tokenID)
         external
         virtual
         isAdmin
         nonReentrant
     {
         //^^^^^^^checks^^^^^^^^^
-        uint256 tokenId = uint256(_idxHash);
-        //^^^^^^^effects^^^^^^^^^
-        AC_TKN.safeTransferFrom(address(this), _to, tokenId);
+        AC_TKN.safeTransferFrom(address(this), _to, _tokenID);
         //^^^^^^^interactions^^^^^^^^^
     }
 
