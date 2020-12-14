@@ -186,9 +186,9 @@
 						"type": "address"
 					},
 					{
-						"internalType": "uint256",
-						"name": "_tokenID",
-						"type": "uint256"
+						"internalType": "bytes32",
+						"name": "_idxHash",
+						"type": "bytes32"
 					}
 				],
 				"name": "OO_transferACToken",
@@ -692,11 +692,11 @@
 			]
 		},
 		"localhost/PRUF_BASIC.sol": {
-			"keccak256": "0x500147a85468134e5799bc042d47441d4d3b94251a42b8416667f3d353c7b5f0",
+			"keccak256": "0x71ce5bf57551db7fba92cc0bfa000eab0e2b9a5c51afc7662bbab1931a98e4de",
 			"license": "UNLICENSED",
 			"urls": [
-				"bzz-raw://1d80ad2a3feca2ef5369152de77ced6f46b9055dd7bc196cde2aee315a36aa49",
-				"dweb:/ipfs/QmYvDN7EvWyxmU7WMNjMw6ECiw9khBhKxwWSNiqgVVMStq"
+				"bzz-raw://25f2b97087e72fc1718e3111e917ff3d2aa5f34d682cdb876e9dd744d6355ee4",
+				"dweb:/ipfs/QmbdZX91fV2yvQd6K48LPnnHnbXmmhs8fcbpyZ1rRpEJVw"
 			]
 		},
 		"localhost/PRUF_CORE.sol": {
