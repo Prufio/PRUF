@@ -1011,8 +1011,8 @@
 			"bytecodeHash": "ipfs"
 		},
 		"optimizer": {
-			"enabled": true,
-			"runs": 1000
+			"enabled": false,
+			"runs": 200
 		},
 		"remappings": []
 	},
