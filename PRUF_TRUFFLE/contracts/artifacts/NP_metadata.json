@@ -186,9 +186,9 @@
 						"type": "address"
 					},
 					{
-						"internalType": "bytes32",
-						"name": "_idxHash",
-						"type": "bytes32"
+						"internalType": "uint256",
+						"name": "_tokenID",
+						"type": "uint256"
 					}
 				],
 				"name": "OO_transferACToken",
@@ -692,6 +692,7 @@
 			]
 		},
 <<<<<<< HEAD
+<<<<<<< HEAD
 		"localhost/PRUF_BASIC.sol": {
 			"keccak256": "0x71ce5bf57551db7fba92cc0bfa000eab0e2b9a5c51afc7662bbab1931a98e4de",
 			"license": "UNLICENSED",
@@ -711,6 +712,14 @@
 				"dweb:/ipfs/QmadGhapyopASg4gdCZJjpAcr7hyzxGrnFDGJBmffjdYDQ"
 >>>>>>> roles_implementation
 >>>>>>> Stashed changes
+=======
+		"localhost/PRUF/PRUF_TRUFFLE/contracts/PRUF_BASIC.sol": {
+			"keccak256": "0xeec1a7027ef7922758642b30267d71b9725cef07b3fc36a11ac8faec8eb1cd36",
+			"license": "UNLICENSED",
+			"urls": [
+				"bzz-raw://0ef9bed7a4e5f70326b22d310aad5f3ac037088269096663c53d96c180d34ecf",
+				"dweb:/ipfs/QmadGhapyopASg4gdCZJjpAcr7hyzxGrnFDGJBmffjdYDQ"
+>>>>>>> roles_implementation
 			]
 		},
 		"localhost/PRUF/PRUF_TRUFFLE/contracts/PRUF_CORE.sol": {
