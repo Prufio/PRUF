@@ -54,7 +54,6 @@ contract RCLR is ECR_CORE, CORE {
             escrowOwnerHash,
             escrowTime
         );
-
         _setEscrowDataLight(_idxHash, escrowDataLight);
         //^^^^^^^interactions^^^^^^^^^
     }
@@ -72,9 +71,7 @@ contract RCLR is ECR_CORE, CORE {
             _idxHash
         );
         Record memory rec = getRecord(_idxHash);
-
         require(_rgtHash != 0, "R:R:New rights holder cannot be zero");
-
         require(rec.assetStatus == 60, "R:R:Asset not discarded");
         //^^^^^^^checks^^^^^^^^^
 
