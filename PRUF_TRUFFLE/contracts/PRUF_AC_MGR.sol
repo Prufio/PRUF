@@ -119,7 +119,7 @@ contract AC_MGR is BASIC {
     }
 
     /*
-     * @dev Set pricing ----------------------DPB:TEST ---- NEW functionality
+     * @dev Set pricing
      */
     function OO_SetACpricing(
         uint256 _L1,
@@ -149,7 +149,6 @@ contract AC_MGR is BASIC {
      * @dev Authorize / Deauthorize / Authorize users for an address be permitted to make record modifications
      */
     function addUser(
-        //add the K256HASH of the address, not the address. ----------------------DPB:TEST ---- NEW REQUIREMENT
         bytes32 _addrHash,
         uint8 _userType,
         uint32 _assetClass
@@ -240,7 +239,6 @@ contract AC_MGR is BASIC {
      *  _discount 10000 = 100 percent price share , cannot exceed
      */
     function createAssetClass(
-        //-------------------------------------------------------DS:TEST -- modified with new IPFS parameter
         address _recipientAddress,
         string calldata _name,
         uint32 _assetClass,
@@ -297,7 +295,7 @@ contract AC_MGR is BASIC {
      */
     function updateACipfs(
         bytes32 _IPFS,
-        uint32 _assetClass //-------------------------------------------------------DS:TEST -- modified with new IPFS parameter
+        uint32 _assetClass
     ) external isACtokenHolderOfClass(_assetClass) whenNotPaused {
         //^^^^^^^checks^^^^^^^^^
         AC_data[_assetClass].IPFS = _IPFS;
@@ -312,7 +310,7 @@ contract AC_MGR is BASIC {
      */
     function updateACextendedData(
         uint32 _extData,
-        uint32 _assetClass //-------------------------------------------------------DS:TEST
+        uint32 _assetClass //-------------------------------------------------------TEST
     ) external isACtokenHolderOfClass(_assetClass) whenNotPaused {
         //^^^^^^^checks^^^^^^^^^
         AC_data[_assetClass].extendedData = _extData;
@@ -343,7 +341,7 @@ contract AC_MGR is BASIC {
      */
     function increaseShare(
         uint32 _assetClass,
-        uint256 _amount // in wei format (18d) DPS:TEST -- this is new. The amount is now in 18d format.
+        uint256 _amount
     )
         external
         whenNotPaused
@@ -351,12 +349,12 @@ contract AC_MGR is BASIC {
         isACtokenHolderOfClass(_assetClass)
         returns (uint32)
     {
-        require( //-------------------------------------------------------DS:TEST
+        require(
             AC_data[_assetClass].discount < upperLimit,
             "PRuf:IS:price share already maxed out"
         );
 
-        require( //-------------------------------------------------------DS:TEST
+        require(
             _amount > prufPerShare,
             "PRuf:IS:amount too low to increase price share"
         );
@@ -414,7 +412,6 @@ contract AC_MGR is BASIC {
      *
      */
     function _createAssetClass(
-        //-------------------------------------------------------DS:TEST -- modified with new IPFS parameter
         address _recipientAddress,
         string calldata _name,
         uint32 _assetClass,
@@ -430,7 +427,7 @@ contract AC_MGR is BASIC {
         require(
             _discount <= 10000,
             "ACM:CAC: discount cannot exceed 100% (10000)"
-        ); //sanity check inputs //-------------------------------------------------------DS:TEST
+        );
         require( //has valid root
             (_ac.custodyType != 0) || (_assetClassRoot == _assetClass),
             "ACM:CAC:Root asset class does not exist"
@@ -477,7 +474,7 @@ contract AC_MGR is BASIC {
      * @dev Retrieve AC_data @ _assetClass
      */
     function getAC_data(
-        uint32 _assetClass //-------------------------------------------------------DS:TEST -- modified with new IPFS parameter
+        uint32 _assetClass
     )
         external
         view

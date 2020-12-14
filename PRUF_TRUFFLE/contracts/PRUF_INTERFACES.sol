@@ -884,7 +884,7 @@ interface AC_MGR_Interface {
      */
     function increaseShare(
         uint32 _assetClass,
-        uint256 _amount // in wei format (18d) DPS:TEST -- this is new. The amount is now in 18d format.
+        uint256 _amount
     ) external;
 
     /*
