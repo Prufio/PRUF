@@ -6,23 +6,9 @@
 	"output": {
 		"abi": [
 			{
-				"anonymous": false,
-				"inputs": [
-					{
-						"indexed": true,
-						"internalType": "address",
-						"name": "previousOwner",
-						"type": "address"
-					},
-					{
-						"indexed": true,
-						"internalType": "address",
-						"name": "newOwner",
-						"type": "address"
-					}
-				],
-				"name": "OwnershipTransferred",
-				"type": "event"
+				"inputs": [],
+				"stateMutability": "nonpayable",
+				"type": "constructor"
 			},
 			{
 				"anonymous": false,
@@ -48,6 +34,81 @@
 					}
 				],
 				"name": "REPORT",
+				"type": "event"
+			},
+			{
+				"anonymous": false,
+				"inputs": [
+					{
+						"indexed": true,
+						"internalType": "bytes32",
+						"name": "role",
+						"type": "bytes32"
+					},
+					{
+						"indexed": true,
+						"internalType": "bytes32",
+						"name": "previousAdminRole",
+						"type": "bytes32"
+					},
+					{
+						"indexed": true,
+						"internalType": "bytes32",
+						"name": "newAdminRole",
+						"type": "bytes32"
+					}
+				],
+				"name": "RoleAdminChanged",
+				"type": "event"
+			},
+			{
+				"anonymous": false,
+				"inputs": [
+					{
+						"indexed": true,
+						"internalType": "bytes32",
+						"name": "role",
+						"type": "bytes32"
+					},
+					{
+						"indexed": true,
+						"internalType": "address",
+						"name": "account",
+						"type": "address"
+					},
+					{
+						"indexed": true,
+						"internalType": "address",
+						"name": "sender",
+						"type": "address"
+					}
+				],
+				"name": "RoleGranted",
+				"type": "event"
+			},
+			{
+				"anonymous": false,
+				"inputs": [
+					{
+						"indexed": true,
+						"internalType": "bytes32",
+						"name": "role",
+						"type": "bytes32"
+					},
+					{
+						"indexed": true,
+						"internalType": "address",
+						"name": "account",
+						"type": "address"
+					},
+					{
+						"indexed": true,
+						"internalType": "address",
+						"name": "sender",
+						"type": "address"
+					}
+				],
+				"name": "RoleRevoked",
 				"type": "event"
 			},
 			{
@@ -92,31 +153,114 @@
 				"type": "function"
 			},
 			{
-				"inputs": [
+				"inputs": [],
+				"name": "ASSET_TXFR_ROLE",
+				"outputs": [
 					{
-						"internalType": "address",
-						"name": "_authAddr",
-						"type": "address"
-					},
-					{
-						"internalType": "uint8",
-						"name": "_userType",
-						"type": "uint8"
-					},
-					{
-						"internalType": "uint32",
-						"name": "_assetClass",
-						"type": "uint32"
+						"internalType": "bytes32",
+						"name": "",
+						"type": "bytes32"
 					}
 				],
-				"name": "OO_addUser",
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [],
+				"name": "CONTRACT_ADMIN_ROLE",
+				"outputs": [
+					{
+						"internalType": "bytes32",
+						"name": "",
+						"type": "bytes32"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [],
+				"name": "DEFAULT_ADMIN_ROLE",
+				"outputs": [
+					{
+						"internalType": "bytes32",
+						"name": "",
+						"type": "bytes32"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [],
+				"name": "NODE_MINTER_ROLE",
+				"outputs": [
+					{
+						"internalType": "bytes32",
+						"name": "",
+						"type": "bytes32"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "uint256",
+						"name": "_L1",
+						"type": "uint256"
+					},
+					{
+						"internalType": "uint256",
+						"name": "_L2",
+						"type": "uint256"
+					},
+					{
+						"internalType": "uint256",
+						"name": "_L3",
+						"type": "uint256"
+					},
+					{
+						"internalType": "uint256",
+						"name": "_L4",
+						"type": "uint256"
+					},
+					{
+						"internalType": "uint256",
+						"name": "_L5",
+						"type": "uint256"
+					},
+					{
+						"internalType": "uint256",
+						"name": "_L6",
+						"type": "uint256"
+					},
+					{
+						"internalType": "uint256",
+						"name": "_L7",
+						"type": "uint256"
+					}
+				],
+				"name": "OO_SetACpricing",
 				"outputs": [],
 				"stateMutability": "nonpayable",
 				"type": "function"
 			},
 			{
-				"inputs": [],
-				"name": "OO_pause",
+				"inputs": [
+					{
+						"internalType": "uint256",
+						"name": "_prufPerShare",
+						"type": "uint256"
+					},
+					{
+						"internalType": "uint256",
+						"name": "_upperLimit",
+						"type": "uint256"
+					}
+				],
+				"name": "OO_SetACupgrade",
 				"outputs": [],
 				"stateMutability": "nonpayable",
 				"type": "function"
@@ -161,7 +305,127 @@
 			},
 			{
 				"inputs": [],
-				"name": "OO_unpause",
+				"name": "PAUSER_ROLE",
+				"outputs": [
+					{
+						"internalType": "bytes32",
+						"name": "",
+						"type": "bytes32"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [],
+				"name": "acPrice_L1",
+				"outputs": [
+					{
+						"internalType": "uint256",
+						"name": "",
+						"type": "uint256"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [],
+				"name": "acPrice_L2",
+				"outputs": [
+					{
+						"internalType": "uint256",
+						"name": "",
+						"type": "uint256"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [],
+				"name": "acPrice_L3",
+				"outputs": [
+					{
+						"internalType": "uint256",
+						"name": "",
+						"type": "uint256"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [],
+				"name": "acPrice_L4",
+				"outputs": [
+					{
+						"internalType": "uint256",
+						"name": "",
+						"type": "uint256"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [],
+				"name": "acPrice_L5",
+				"outputs": [
+					{
+						"internalType": "uint256",
+						"name": "",
+						"type": "uint256"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [],
+				"name": "acPrice_L6",
+				"outputs": [
+					{
+						"internalType": "uint256",
+						"name": "",
+						"type": "uint256"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [],
+				"name": "acPrice_L7",
+				"outputs": [
+					{
+						"internalType": "uint256",
+						"name": "",
+						"type": "uint256"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "bytes32",
+						"name": "_addrHash",
+						"type": "bytes32"
+					},
+					{
+						"internalType": "uint8",
+						"name": "_userType",
+						"type": "uint8"
+					},
+					{
+						"internalType": "uint32",
+						"name": "_assetClass",
+						"type": "uint32"
+					}
+				],
+				"name": "addUser",
 				"outputs": [],
 				"stateMutability": "nonpayable",
 				"type": "function"
@@ -192,6 +456,16 @@
 						"internalType": "uint8",
 						"name": "_custodyType",
 						"type": "uint8"
+					},
+					{
+						"internalType": "bytes32",
+						"name": "_IPFS",
+						"type": "bytes32"
+					},
+					{
+						"internalType": "uint32",
+						"name": "_discount",
+						"type": "uint32"
 					}
 				],
 				"name": "createAssetClass",
@@ -201,8 +475,43 @@
 			},
 			{
 				"inputs": [],
-				"name": "currentACtokenInfo",
+				"name": "currentACpricingInfo",
 				"outputs": [
+					{
+						"internalType": "uint256",
+						"name": "",
+						"type": "uint256"
+					},
+					{
+						"internalType": "uint256",
+						"name": "",
+						"type": "uint256"
+					},
+					{
+						"internalType": "uint256",
+						"name": "",
+						"type": "uint256"
+					},
+					{
+						"internalType": "uint256",
+						"name": "",
+						"type": "uint256"
+					},
+					{
+						"internalType": "uint256",
+						"name": "",
+						"type": "uint256"
+					},
+					{
+						"internalType": "uint256",
+						"name": "",
+						"type": "uint256"
+					},
+					{
+						"internalType": "uint256",
+						"name": "",
+						"type": "uint256"
+					},
 					{
 						"internalType": "uint256",
 						"name": "",
@@ -246,6 +555,11 @@
 						"internalType": "uint32",
 						"name": "",
 						"type": "uint32"
+					},
+					{
+						"internalType": "bytes32",
+						"name": "",
+						"type": "bytes32"
 					}
 				],
 				"stateMutability": "view",
@@ -284,6 +598,68 @@
 						"internalType": "string",
 						"name": "",
 						"type": "string"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "bytes32",
+						"name": "role",
+						"type": "bytes32"
+					}
+				],
+				"name": "getRoleAdmin",
+				"outputs": [
+					{
+						"internalType": "bytes32",
+						"name": "",
+						"type": "bytes32"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "bytes32",
+						"name": "role",
+						"type": "bytes32"
+					},
+					{
+						"internalType": "uint256",
+						"name": "index",
+						"type": "uint256"
+					}
+				],
+				"name": "getRoleMember",
+				"outputs": [
+					{
+						"internalType": "address",
+						"name": "",
+						"type": "address"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "bytes32",
+						"name": "role",
+						"type": "bytes32"
+					}
+				],
+				"name": "getRoleMemberCount",
+				"outputs": [
+					{
+						"internalType": "uint256",
+						"name": "",
+						"type": "uint256"
 					}
 				],
 				"stateMutability": "view",
@@ -355,6 +731,48 @@
 			{
 				"inputs": [
 					{
+						"internalType": "bytes32",
+						"name": "role",
+						"type": "bytes32"
+					},
+					{
+						"internalType": "address",
+						"name": "account",
+						"type": "address"
+					}
+				],
+				"name": "grantRole",
+				"outputs": [],
+				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "bytes32",
+						"name": "role",
+						"type": "bytes32"
+					},
+					{
+						"internalType": "address",
+						"name": "account",
+						"type": "address"
+					}
+				],
+				"name": "hasRole",
+				"outputs": [
+					{
+						"internalType": "bool",
+						"name": "",
+						"type": "bool"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
 						"internalType": "uint32",
 						"name": "_assetClass",
 						"type": "uint32"
@@ -368,9 +786,9 @@
 				"name": "increaseShare",
 				"outputs": [
 					{
-						"internalType": "bool",
+						"internalType": "uint32",
 						"name": "",
-						"type": "bool"
+						"type": "uint32"
 					}
 				],
 				"stateMutability": "nonpayable",
@@ -436,15 +854,9 @@
 			},
 			{
 				"inputs": [],
-				"name": "owner",
-				"outputs": [
-					{
-						"internalType": "address",
-						"name": "",
-						"type": "address"
-					}
-				],
-				"stateMutability": "view",
+				"name": "pause",
+				"outputs": [],
+				"stateMutability": "nonpayable",
 				"type": "function"
 			},
 			{
@@ -455,6 +867,19 @@
 						"internalType": "bool",
 						"name": "",
 						"type": "bool"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [],
+				"name": "prufPerShare",
+				"outputs": [
+					{
+						"internalType": "uint256",
+						"name": "",
+						"type": "uint256"
 					}
 				],
 				"stateMutability": "view",
@@ -476,9 +901,14 @@
 						"internalType": "uint8",
 						"name": "_custodyType",
 						"type": "uint8"
+					},
+					{
+						"internalType": "bytes32",
+						"name": "_IPFS",
+						"type": "bytes32"
 					}
 				],
-				"name": "purchaseACtoken",
+				"name": "purchaseACnode",
 				"outputs": [
 					{
 						"internalType": "uint256",
@@ -490,8 +920,19 @@
 				"type": "function"
 			},
 			{
-				"inputs": [],
-				"name": "renounceOwnership",
+				"inputs": [
+					{
+						"internalType": "bytes32",
+						"name": "role",
+						"type": "bytes32"
+					},
+					{
+						"internalType": "address",
+						"name": "account",
+						"type": "address"
+					}
+				],
+				"name": "renounceRole",
 				"outputs": [],
 				"stateMutability": "nonpayable",
 				"type": "function"
@@ -518,6 +959,24 @@
 			{
 				"inputs": [
 					{
+						"internalType": "bytes32",
+						"name": "role",
+						"type": "bytes32"
+					},
+					{
+						"internalType": "address",
+						"name": "account",
+						"type": "address"
+					}
+				],
+				"name": "revokeRole",
+				"outputs": [],
+				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
 						"internalType": "address",
 						"name": "_to",
 						"type": "address"
@@ -534,14 +993,44 @@
 				"type": "function"
 			},
 			{
+				"inputs": [],
+				"name": "unpause",
+				"outputs": [],
+				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
 				"inputs": [
 					{
-						"internalType": "address",
-						"name": "newOwner",
-						"type": "address"
+						"internalType": "uint32",
+						"name": "_extData",
+						"type": "uint32"
+					},
+					{
+						"internalType": "uint32",
+						"name": "_assetClass",
+						"type": "uint32"
 					}
 				],
-				"name": "transferOwnership",
+				"name": "updateACextendedData",
+				"outputs": [],
+				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "bytes32",
+						"name": "_IPFS",
+						"type": "bytes32"
+					},
+					{
+						"internalType": "uint32",
+						"name": "_assetClass",
+						"type": "uint32"
+					}
+				],
+				"name": "updateACipfs",
 				"outputs": [],
 				"stateMutability": "nonpayable",
 				"type": "function"
@@ -563,34 +1052,59 @@
 				"outputs": [],
 				"stateMutability": "nonpayable",
 				"type": "function"
+			},
+			{
+				"inputs": [],
+				"name": "upperLimit",
+				"outputs": [
+					{
+						"internalType": "uint256",
+						"name": "",
+						"type": "uint256"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
 			}
 		],
 		"devdoc": {
 			"kind": "dev",
 			"methods": {
-				"OO_pause()": {
-					"details": "Triggers stopped state. (pausable)"
+				"getRoleAdmin(bytes32)": {
+					"details": "Returns the admin role that controls `role`. See {grantRole} and {revokeRole}. To change a role's admin, use {_setRoleAdmin}."
 				},
-				"OO_unpause()": {
-					"details": "Returns to normal state. (pausable)"
+				"getRoleMember(bytes32,uint256)": {
+					"details": "Returns one of the accounts that have `role`. `index` must be a value between 0 and {getRoleMemberCount}, non-inclusive. Role bearers are not sorted in any particular way, and their ordering may change at any point. WARNING: When using {getRoleMember} and {getRoleMemberCount}, make sure you perform all queries on the same block. See the following https://forum.openzeppelin.com/t/iterating-over-elements-on-enumerableset-in-openzeppelin-contracts/2296[forum post] for more information."
+				},
+				"getRoleMemberCount(bytes32)": {
+					"details": "Returns the number of accounts that have `role`. Can be used together with {getRoleMember} to enumerate all bearers of a role."
+				},
+				"grantRole(bytes32,address)": {
+					"details": "Grants `role` to `account`. If `account` had not been already granted `role`, emits a {RoleGranted} event. Requirements: - the caller must have ``role``'s admin role."
+				},
+				"hasRole(bytes32,address)": {
+					"details": "Returns `true` if `account` has been granted `role`."
 				},
 				"increaseShare(uint32,uint256)": {
-					"details": "See {IERC20-transfer}. Increase payment share of an asset class Requirements: - `recipient` cannot be the zero address. - the caller must have a balance of at least `amount`."
+					"details": "Increase payment share of an asset class Requirements: - `recipient` cannot be the zero address. - the caller must have a balance of at least `amount`."
 				},
-				"owner()": {
-					"details": "Returns the address of the current owner."
+				"pause()": {
+					"details": "Triggers stopped state. (pausable)"
 				},
 				"paused()": {
 					"details": "Returns true if the contract is paused, and false otherwise."
 				},
-				"purchaseACtoken(string,uint32,uint8)": {
-					"details": "Burns (amout) tokens and mints a new asset class token to the caller address Requirements: - the caller must have a balance of at least `amount`."
+				"purchaseACnode(string,uint32,uint8,bytes32)": {
+					"details": "Burns (amount) tokens and mints a new asset class token to the caller address Requirements: - the caller must have a balance of at least `amount`."
 				},
-				"renounceOwnership()": {
-					"details": "Leaves the contract without owner. It will not be possible to call `onlyOwner` functions anymore. Can only be called by the current owner. NOTE: Renouncing ownership will leave the contract without an owner, thereby removing any functionality that is only available to the owner."
+				"renounceRole(bytes32,address)": {
+					"details": "Revokes `role` from the calling account. Roles are often managed via {grantRole} and {revokeRole}: this function's purpose is to provide a mechanism for accounts to lose their privileges if they are compromised (such as when a trusted device is misplaced). If the calling account had been granted `role`, emits a {RoleRevoked} event. Requirements: - the caller must be `account`."
 				},
-				"transferOwnership(address)": {
-					"details": "Transfers ownership of the contract to a new account (`newOwner`). Can only be called by the current owner."
+				"revokeRole(bytes32,address)": {
+					"details": "Revokes `role` from `account`. If `account` had been granted `role`, emits a {RoleRevoked} event. Requirements: - the caller must have ``role``'s admin role."
+				},
+				"unpause()": {
+					"details": "Returns to normal state. (pausable)"
 				}
 			},
 			"version": 1
@@ -611,8 +1125,8 @@
 			"bytecodeHash": "ipfs"
 		},
 		"optimizer": {
-			"enabled": false,
-			"runs": 200
+			"enabled": true,
+			"runs": 1000
 		},
 		"remappings": []
 	},
@@ -625,15 +1139,15 @@
 				"dweb:/ipfs/QmNb8Q8C6WLgtWqCE7iL5T1UN52Q6QsE7ZtVc6ppcvViXe"
 			]
 		},
-		"localhost/Imports/access/Ownable.sol": {
-			"keccak256": "0x78d7d9211513b60f81db3089fffbc1ce5c3d87d021d54c9c41a909000ba8bbc4",
+		"localhost/Imports/access/AccessControl.sol": {
+			"keccak256": "0x9aebca86ab21a332bc34865475177073cd18a432ef8e0921b21bea864d39f85f",
 			"license": "MIT",
 			"urls": [
-				"bzz-raw://6c0471235adc538bfe1054546ff5136cf463a0c139b6c38e6aafeeb4a2a00c58",
-				"dweb:/ipfs/QmdHm68MUvSaVCbJkDpxyyeMJoG6upDMjBKgt91HZHW71G"
+				"bzz-raw://c32c350e12cd1427eeda3ba0e23172cfd7b8ea772c2861c499ca4cad11b7c673",
+				"dweb:/ipfs/QmVAEythW94EjHZLaVYn7wvY5j4K8kYsPJPyVEWALtrxVv"
 			]
 		},
-		"localhost/Imports/math/safeMath.sol": {
+		"localhost/Imports/math/SafeMath.sol": {
 			"keccak256": "0x8d890f7a794b66b8b3ab54779603c254f85ee0d436dd4a17b3543c6629b726f8",
 			"license": "MIT",
 			"urls": [
@@ -642,11 +1156,27 @@
 			]
 		},
 		"localhost/Imports/token/ERC721/IERC721Receiver.sol": {
-			"keccak256": "0x90dea29aecfa0bc55f3ba86bd24d87b19726e2affa86292f4ba8052e85cc4d56",
+			"keccak256": "0xdd8cb26722cd84f2445f39a022bba492c038a8b1713e45d23f2351187889d45b",
 			"license": "MIT",
 			"urls": [
-				"bzz-raw://b3518cea454999f659b0fd63f810ab61a7d568fe8ad974d84ab15febd321a0a5",
-				"dweb:/ipfs/QmSvS87R4H68JuokmA4oZMELAB49uJfSxeLGfZuXB7dowZ"
+				"bzz-raw://38e68d9c2089601f13445f8ec24764b188c67e5620356b6784573f000064a724",
+				"dweb:/ipfs/QmNsfsMqZWGjbVSkATzifDL3hJuhw8vt7tiAMFfc3JyJ98"
+			]
+		},
+		"localhost/Imports/utils/Address.sol": {
+			"keccak256": "0x9bb2def599742676e174be012a0259ab14bf9990c7a6a41bf61edcd6864d88c2",
+			"license": "MIT",
+			"urls": [
+				"bzz-raw://116ba1b5f474cce990188a856e5953f6dd889ce895d0bf24269113ec5d797ed7",
+				"dweb:/ipfs/QmSEJaBwSqiKWaAaVvmvsyRqgppod65CZUh3D7m1MKGqDy"
+			]
+		},
+		"localhost/Imports/utils/EnumerableSet.sol": {
+			"keccak256": "0x2081e506e888d47110c5091888a82f59474e74df829a8838551c0fb7785b4078",
+			"license": "MIT",
+			"urls": [
+				"bzz-raw://fcc33941fea03a9446d1260622436c76113e24e32acddf8fa36f87a14e7af886",
+				"dweb:/ipfs/QmRRFr8ha85pQTe3ivVf6xXiKFY6tkLqHGiiZjeNDEFLwW"
 			]
 		},
 		"localhost/Imports/utils/Pausable.sol": {
@@ -666,27 +1196,27 @@
 			]
 		},
 		"localhost/PRUF_AC_MGR.sol": {
-			"keccak256": "0xeb7593a5c509a3da711f05792ca784b92b25dce3b4fd90a8fe81811cf5f55fde",
+			"keccak256": "0xfcbd365385d55a8e4c9805f0e5887750882053d4a5fc014e43fbca957cfcecb5",
 			"license": "UNLICENSED",
 			"urls": [
-				"bzz-raw://cba7becf03ff1219285707f014e4dcd32446ac7ddc06317ec232350c2e080ea2",
-				"dweb:/ipfs/QmdSAVjZTitnecwn9HimRE84VtacugJaLQuRTkHebj8FbQ"
+				"bzz-raw://43aa4d30a971456b5c50a32b6e9846886659c40cf2e6c2b5387183a033263bdf",
+				"dweb:/ipfs/QmYgngzNbbJya3somRq9tHvPSkFzYJdjpUF1ifwhLt7JgY"
 			]
 		},
 		"localhost/PRUF_BASIC.sol": {
-			"keccak256": "0xb418374aba9029270bde595d29a1ad12fe33f096b45e8aad88e74138fa92adb7",
+			"keccak256": "0x71ce5bf57551db7fba92cc0bfa000eab0e2b9a5c51afc7662bbab1931a98e4de",
 			"license": "UNLICENSED",
 			"urls": [
-				"bzz-raw://c15103d85c632dd220fd9f029f9628f10e1cce02d0d7287e3f3506b7d5c128d9",
-				"dweb:/ipfs/QmXt5KqzmSMt1Tb2xYSeBBiham2D6xnBFBrZD7nSFANbrc"
+				"bzz-raw://25f2b97087e72fc1718e3111e917ff3d2aa5f34d682cdb876e9dd744d6355ee4",
+				"dweb:/ipfs/QmbdZX91fV2yvQd6K48LPnnHnbXmmhs8fcbpyZ1rRpEJVw"
 			]
 		},
 		"localhost/PRUF_INTERFACES.sol": {
-			"keccak256": "0xd075077959e701de21a76fb37922e8a837e616dda927cdb11cb489b9879d298c",
+			"keccak256": "0x4db2f40f73cbad85016bb8ba7021238abc7a37c4e92698cb203fe37f0b22c79f",
 			"license": "UNLICENSED",
 			"urls": [
-				"bzz-raw://a6a5195c9606303bc346a6c699bf3fad150c295d7eef16e3ac4bba7007474939",
-				"dweb:/ipfs/QmeGJwLfY2CQ4jdjroM26PKztRrrkftuUjaKB6ajyfFrDM"
+				"bzz-raw://d8687cbc757c26ad28a3b814afa61b1ef59870639ae230366416f3967fecc788",
+				"dweb:/ipfs/QmYzZPCEo2zkJz9iDuquhRbCHRoH9yUMD1QtTtzyQeLBwZ"
 			]
 		}
 	},

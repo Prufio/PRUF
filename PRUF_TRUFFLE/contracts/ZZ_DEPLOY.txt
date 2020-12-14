@@ -140,20 +140,20 @@ __/\\\\\\\\\\\\\ _____/\\\\\\\\\ _______/\\../\\ ___/\\\\\\\\\\\\\\\
 *
 * 4 - APP (ASSET_TXFR_ROLEB32, NP.address)   |0|
 *
-* 1 - RCLR (DISCARD_ROLEB32, A_TKN.address)   |0|
+* 5 - RCLR (DISCARD_ROLEB32, A_TKN.address)   |0|
 * 
-* ----------------- MINT TOKENS (AC_MGR.createAssetClass)-----------------|0|
-* 1 - ROOT1 (1) (USER1.address, 'CUSTODIAL_ROOT', '1', '1', '3', 0x000...(b32))   |0|
+* ----------------- MINT AC TOKENS (AC_MGR.createAssetClass)-----------------|0|
+* 1 - ROOT1 (1) (USER1.address, 'CUSTODIAL_ROOT', '1', '1', '3', 0x000...(b32), "0")   |0|
 *
-* 2 - ROOT2 (2) (USER1.address, 'NON_CUSTODIAL_ROOT', '2', '2', '3', 0x000...(b32))   |0|
+* 2 - ROOT2 (2) (USER1.address, 'NON_CUSTODIAL_ROOT', '2', '2', '3', 0x000...(b32), "0")   |0|
 *
-* 3 - CUST1 (ROOT1) (11) (USER1.address, 'CUSTODIAL_11', '11', '1', '1', 0x000...(b32))   |0|
+* 3 - CUST1 (ROOT1) (11) (USER1.address, 'CUSTODIAL_11', '11', '1', '1', 0x000...(b32), "5100")   |0|
 *
-* 4 - NONCUST1 (ROOT1) (12) (USER1.address, 'NON_CUSTODIAL_12', '12', '1', '2', 0x000...(b32))   |0|
+* 4 - NONCUST1 (ROOT1) (12) (USER1.address, 'NON_CUSTODIAL_12', '12', '1', '2', 0x000...(b32), "5100")   |0|
 *
-* 5 - CUST2 (ROOT2) (13) (USER2.address, 'CUSTODIAL_13', '13', '2', '1', 0x000...(b32))   |0|
+* 5 - CUST2 (ROOT2) (13) (USER1.address, 'CUSTODIAL_13', '13', '2', '1', 0x000...(b32), "5100")   |0|
 *
-* 6 - NONCUST2 (ROOT2) (14) (USER2.address, 'NON_CUSTODIAL_14', '14', '2', '2', 0x000...(b32))   |0|
+* 6 - NONCUST2 (ROOT2) (14) (USER1.address, 'NON_CUSTODIAL_14', '14', '2', '2', 0x000...(b32), "5100")   |0|
 * 
 * ----------------- AUTHORIZE CONTRACTS IN AC'S (STOR.enableContractForAC)-----------------|0|
 * 1 - APP ('APP', '11', '1'),   |0|
@@ -201,12 +201,12 @@ __/\\\\\\\\\\\\\ _____/\\\\\\\\\ _______/\\../\\ ___/\\\\\\\\\\\\\\\
 *           ('RCLR', '11', '3'),   |0|
 *           ('RCLR', '13', '3')   |0|
 *
-* 12 - PIP ('PIP', '12', '3'),   |0|
-*          ('PIP', '14', '3'),   |0|
-*          ('PIP', '11', '3'),   |0|
-*          ('PIP', '13', '3'),   |0|
-*          ('PIP', '1', '3'),   |0|
-*          ('PIP', '2', '3')   |0|
+* 12 - PIP ('PIP', '12', '2'),   |0|
+*          ('PIP', '14', '2'),   |0|
+*          ('PIP', '11', '1'),   |0|
+*          ('PIP', '13', '1'),   |0|
+*          ('PIP', '1', '1'),   |0|
+*          ('PIP', '2', '1')   |0|
 *
 * ----------------- SET COSTS IN AC'S (AC_MGR.ACTH_setCosts)-----------------|0|
 * 1 - (AC1) ('1', '1', PRUF+(0*18), PAYEE.address),   |0|
@@ -265,5 +265,9 @@ __/\\\\\\\\\\\\\ _____/\\\\\\\\\ _______/\\../\\ ___/\\\\\\\\\\\\\\\
 * 1 - USER1 (USER1.address, PRUF+(0*18))   |0|
 *
 * 2 - USER2 (USER2.address, PRUF+(0*18))   |0|
+* 
+* ----------------- TRANSFER AC's TO USER2 (AC_TKN safeTransferFrom) -----------------|0|
+* 1 - USER2 (USER1.address, USER2.address, "13")   |0|
+*           (USER1.address, USER2.address, "14")   |0|
 * 
 *-----------------------------------------------------------------

@@ -64,19 +64,13 @@
 				"anonymous": false,
 				"inputs": [
 					{
-						"indexed": true,
+						"indexed": false,
 						"internalType": "address",
-						"name": "previousOwner",
-						"type": "address"
-					},
-					{
-						"indexed": true,
-						"internalType": "address",
-						"name": "newOwner",
+						"name": "account",
 						"type": "address"
 					}
 				],
-				"name": "OwnershipTransferred",
+				"name": "Paused",
 				"type": "event"
 			},
 			{
@@ -90,6 +84,81 @@
 					}
 				],
 				"name": "REPORT",
+				"type": "event"
+			},
+			{
+				"anonymous": false,
+				"inputs": [
+					{
+						"indexed": true,
+						"internalType": "bytes32",
+						"name": "role",
+						"type": "bytes32"
+					},
+					{
+						"indexed": true,
+						"internalType": "bytes32",
+						"name": "previousAdminRole",
+						"type": "bytes32"
+					},
+					{
+						"indexed": true,
+						"internalType": "bytes32",
+						"name": "newAdminRole",
+						"type": "bytes32"
+					}
+				],
+				"name": "RoleAdminChanged",
+				"type": "event"
+			},
+			{
+				"anonymous": false,
+				"inputs": [
+					{
+						"indexed": true,
+						"internalType": "bytes32",
+						"name": "role",
+						"type": "bytes32"
+					},
+					{
+						"indexed": true,
+						"internalType": "address",
+						"name": "account",
+						"type": "address"
+					},
+					{
+						"indexed": true,
+						"internalType": "address",
+						"name": "sender",
+						"type": "address"
+					}
+				],
+				"name": "RoleGranted",
+				"type": "event"
+			},
+			{
+				"anonymous": false,
+				"inputs": [
+					{
+						"indexed": true,
+						"internalType": "bytes32",
+						"name": "role",
+						"type": "bytes32"
+					},
+					{
+						"indexed": true,
+						"internalType": "address",
+						"name": "account",
+						"type": "address"
+					},
+					{
+						"indexed": true,
+						"internalType": "address",
+						"name": "sender",
+						"type": "address"
+					}
+				],
+				"name": "RoleRevoked",
 				"type": "event"
 			},
 			{
@@ -116,6 +185,71 @@
 				],
 				"name": "Transfer",
 				"type": "event"
+			},
+			{
+				"anonymous": false,
+				"inputs": [
+					{
+						"indexed": false,
+						"internalType": "address",
+						"name": "account",
+						"type": "address"
+					}
+				],
+				"name": "Unpaused",
+				"type": "event"
+			},
+			{
+				"inputs": [],
+				"name": "CONTRACT_ADMIN_ROLE",
+				"outputs": [
+					{
+						"internalType": "bytes32",
+						"name": "",
+						"type": "bytes32"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [],
+				"name": "DEFAULT_ADMIN_ROLE",
+				"outputs": [
+					{
+						"internalType": "bytes32",
+						"name": "",
+						"type": "bytes32"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [],
+				"name": "MINTER_ROLE",
+				"outputs": [
+					{
+						"internalType": "bytes32",
+						"name": "",
+						"type": "bytes32"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [],
+				"name": "PAUSER_ROLE",
+				"outputs": [
+					{
+						"internalType": "bytes32",
+						"name": "",
+						"type": "bytes32"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
 			},
 			{
 				"inputs": [
@@ -175,12 +309,129 @@
 						"type": "uint256"
 					}
 				],
+				"name": "burn",
+				"outputs": [],
+				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "uint256",
+						"name": "tokenId",
+						"type": "uint256"
+					}
+				],
 				"name": "getApproved",
 				"outputs": [
 					{
 						"internalType": "address",
 						"name": "",
 						"type": "address"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "bytes32",
+						"name": "role",
+						"type": "bytes32"
+					}
+				],
+				"name": "getRoleAdmin",
+				"outputs": [
+					{
+						"internalType": "bytes32",
+						"name": "",
+						"type": "bytes32"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "bytes32",
+						"name": "role",
+						"type": "bytes32"
+					},
+					{
+						"internalType": "uint256",
+						"name": "index",
+						"type": "uint256"
+					}
+				],
+				"name": "getRoleMember",
+				"outputs": [
+					{
+						"internalType": "address",
+						"name": "",
+						"type": "address"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "bytes32",
+						"name": "role",
+						"type": "bytes32"
+					}
+				],
+				"name": "getRoleMemberCount",
+				"outputs": [
+					{
+						"internalType": "uint256",
+						"name": "",
+						"type": "uint256"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "bytes32",
+						"name": "role",
+						"type": "bytes32"
+					},
+					{
+						"internalType": "address",
+						"name": "account",
+						"type": "address"
+					}
+				],
+				"name": "grantRole",
+				"outputs": [],
+				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "bytes32",
+						"name": "role",
+						"type": "bytes32"
+					},
+					{
+						"internalType": "address",
+						"name": "account",
+						"type": "address"
+					}
+				],
+				"name": "hasRole",
+				"outputs": [
+					{
+						"internalType": "bool",
+						"name": "",
+						"type": "bool"
 					}
 				],
 				"stateMutability": "view",
@@ -248,19 +499,6 @@
 				"type": "function"
 			},
 			{
-				"inputs": [],
-				"name": "owner",
-				"outputs": [
-					{
-						"internalType": "address",
-						"name": "",
-						"type": "address"
-					}
-				],
-				"stateMutability": "view",
-				"type": "function"
-			},
-			{
 				"inputs": [
 					{
 						"internalType": "uint256",
@@ -274,6 +512,26 @@
 						"internalType": "address",
 						"name": "",
 						"type": "address"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [],
+				"name": "pause",
+				"outputs": [],
+				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
+				"inputs": [],
+				"name": "paused",
+				"outputs": [
+					{
+						"internalType": "bool",
+						"name": "",
+						"type": "bool"
 					}
 				],
 				"stateMutability": "view",
@@ -304,8 +562,37 @@
 				"type": "function"
 			},
 			{
-				"inputs": [],
-				"name": "renounceOwnership",
+				"inputs": [
+					{
+						"internalType": "bytes32",
+						"name": "role",
+						"type": "bytes32"
+					},
+					{
+						"internalType": "address",
+						"name": "account",
+						"type": "address"
+					}
+				],
+				"name": "renounceRole",
+				"outputs": [],
+				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "bytes32",
+						"name": "role",
+						"type": "bytes32"
+					},
+					{
+						"internalType": "address",
+						"name": "account",
+						"type": "address"
+					}
+				],
+				"name": "revokeRole",
 				"outputs": [],
 				"stateMutability": "nonpayable",
 				"type": "function"
@@ -553,20 +840,15 @@
 				"type": "function"
 			},
 			{
-				"inputs": [
-					{
-						"internalType": "address",
-						"name": "newOwner",
-						"type": "address"
-					}
-				],
-				"name": "transferOwnership",
+				"inputs": [],
+				"name": "unpause",
 				"outputs": [],
 				"stateMutability": "nonpayable",
 				"type": "function"
 			}
 		],
 		"devdoc": {
+			"details": "{ERC721} token, including:  - ability for holders to burn (destroy) their tokens  - a minter role that allows for token minting (creation)  - a pauser role that allows to stop all token transfers  - token ID and URI autogeneration This contract uses {AccessControl} to lock permissioned functions using the different roles - head to its documentation for details. The account that deploys the contract will be granted the minter, pauser, and contract admin roles, as well as the default admin role, which will let it grant minter, pauser, and admin roles to other accounts.",
 			"kind": "dev",
 			"methods": {
 				"approve(address,uint256)": {
@@ -578,8 +860,26 @@
 				"baseURI()": {
 					"details": "Returns the base URI set via {_setBaseURI}. This will be automatically added as a prefix in {tokenURI} to each token's URI, or to the token ID if no specific URI is set for that token ID."
 				},
+				"burn(uint256)": {
+					"details": "Burns `tokenId`. See {ERC721-_burn}. Requirements: - The caller must own `tokenId` or be an approved operator."
+				},
 				"getApproved(uint256)": {
 					"details": "See {IERC721-getApproved}."
+				},
+				"getRoleAdmin(bytes32)": {
+					"details": "Returns the admin role that controls `role`. See {grantRole} and {revokeRole}. To change a role's admin, use {_setRoleAdmin}."
+				},
+				"getRoleMember(bytes32,uint256)": {
+					"details": "Returns one of the accounts that have `role`. `index` must be a value between 0 and {getRoleMemberCount}, non-inclusive. Role bearers are not sorted in any particular way, and their ordering may change at any point. WARNING: When using {getRoleMember} and {getRoleMemberCount}, make sure you perform all queries on the same block. See the following https://forum.openzeppelin.com/t/iterating-over-elements-on-enumerableset-in-openzeppelin-contracts/2296[forum post] for more information."
+				},
+				"getRoleMemberCount(bytes32)": {
+					"details": "Returns the number of accounts that have `role`. Can be used together with {getRoleMember} to enumerate all bearers of a role."
+				},
+				"grantRole(bytes32,address)": {
+					"details": "Grants `role` to `account`. If `account` had not been already granted `role`, emits a {RoleGranted} event. Requirements: - the caller must have ``role``'s admin role."
+				},
+				"hasRole(bytes32,address)": {
+					"details": "Returns `true` if `account` has been granted `role`."
 				},
 				"isApprovedForAll(address,address)": {
 					"details": "See {IERC721-isApprovedForAll}."
@@ -587,17 +887,23 @@
 				"name()": {
 					"details": "See {IERC721Metadata-name}."
 				},
-				"owner()": {
-					"details": "Returns the address of the current owner."
-				},
 				"ownerOf(uint256)": {
 					"details": "See {IERC721-ownerOf}."
 				},
-				"renounceOwnership()": {
-					"details": "Leaves the contract without owner. It will not be possible to call `onlyOwner` functions anymore. Can only be called by the current owner. NOTE: Renouncing ownership will leave the contract without an owner, thereby removing any functionality that is only available to the owner."
+				"pause()": {
+					"details": "Pauses all token transfers. See {ERC721Pausable} and {Pausable-_pause}. Requirements: - the caller must have the `PAUSER_ROLE`."
+				},
+				"paused()": {
+					"details": "Returns true if the contract is paused, and false otherwise."
+				},
+				"renounceRole(bytes32,address)": {
+					"details": "Revokes `role` from the calling account. Roles are often managed via {grantRole} and {revokeRole}: this function's purpose is to provide a mechanism for accounts to lose their privileges if they are compromised (such as when a trusted device is misplaced). If the calling account had been granted `role`, emits a {RoleRevoked} event. Requirements: - the caller must be `account`."
+				},
+				"revokeRole(bytes32,address)": {
+					"details": "Revokes `role` from `account`. If `account` had been granted `role`, emits a {RoleRevoked} event. Requirements: - the caller must have ``role``'s admin role."
 				},
 				"safeTransferFrom(address,address,uint256)": {
-					"details": "Safely blocks the transfer of a given token ID to another address If the target address is a contract, it must implement {IERC721Receiver-onERC721Received}, which is called upon a safe transfer, and return the magic value `bytes4(keccak256(\"onERC721Received(address,address,uint256,bytes)\"))`; otherwise, the transfer is reverted. Requires the msg.sender to be the owner, approved, or operator"
+					"details": "Safely blocks the transfer of a given token ID to another address If the target address is a contract, it must implement {IERC721Receiver-onERC721Received}, which is called upon a safe transfer, and return the magic value `bytes4(keccak256(\"onERC721Received(address,address,uint256,bytes)\"))`; otherwise, the transfer is reverted. Requires the _msgSender() to be the owner, approved, or operator"
 				},
 				"safeTransferFrom(address,address,uint256,bytes)": {
 					"details": "Safely blocks the transfer of a given token ID to another address If the target address is a contract, it must implement {IERC721Receiver-onERC721Received}, which is called upon a safe transfer, and return the magic value `bytes4(keccak256(\"onERC721Received(address,address,uint256,bytes)\"))`; otherwise, the transfer is reverted. Requires the _msgSender() to be the owner, approved, or operator",
@@ -630,10 +936,10 @@
 					"details": "See {IERC721Enumerable-totalSupply}."
 				},
 				"transferFrom(address,address,uint256)": {
-					"details": "@dev Blocks the transfer of a given token ID to another address Usage of this method is discouraged, use {safeTransferFrom} whenever possible. Requires the msg.sender to be the owner, approved, or operator."
+					"details": "Blocks the transfer of a given token ID to another address Usage of this method is discouraged, use {safeTransferFrom} whenever possible. Requires the _msgSender() to be the owner, approved, or operator."
 				},
-				"transferOwnership(address)": {
-					"details": "Transfers ownership of the contract to a new account (`newOwner`). Can only be called by the current owner."
+				"unpause()": {
+					"details": "Unpauses all token transfers. See {ERC721Pausable} and {Pausable-_unpause}. Requirements: - the caller must have the `PAUSER_ROLE`."
 				}
 			},
 			"version": 1
@@ -654,8 +960,8 @@
 			"bytecodeHash": "ipfs"
 		},
 		"optimizer": {
-			"enabled": false,
-			"runs": 200
+			"enabled": true,
+			"runs": 1000
 		},
 		"remappings": []
 	},
@@ -668,12 +974,12 @@
 				"dweb:/ipfs/QmNb8Q8C6WLgtWqCE7iL5T1UN52Q6QsE7ZtVc6ppcvViXe"
 			]
 		},
-		"localhost/Imports/access/Ownable.sol": {
-			"keccak256": "0x78d7d9211513b60f81db3089fffbc1ce5c3d87d021d54c9c41a909000ba8bbc4",
+		"localhost/Imports/access/AccessControl.sol": {
+			"keccak256": "0x9aebca86ab21a332bc34865475177073cd18a432ef8e0921b21bea864d39f85f",
 			"license": "MIT",
 			"urls": [
-				"bzz-raw://6c0471235adc538bfe1054546ff5136cf463a0c139b6c38e6aafeeb4a2a00c58",
-				"dweb:/ipfs/QmdHm68MUvSaVCbJkDpxyyeMJoG6upDMjBKgt91HZHW71G"
+				"bzz-raw://c32c350e12cd1427eeda3ba0e23172cfd7b8ea772c2861c499ca4cad11b7c673",
+				"dweb:/ipfs/QmVAEythW94EjHZLaVYn7wvY5j4K8kYsPJPyVEWALtrxVv"
 			]
 		},
 		"localhost/Imports/introspection/ERC165.sol": {
@@ -708,6 +1014,22 @@
 				"dweb:/ipfs/QmaWNTTEWHix8S1n9z5EmSVjCAhQsYuHZijJABenkgw3AA"
 			]
 		},
+		"localhost/Imports/token/ERC721/ERC721Burnable.sol": {
+			"keccak256": "0x2589d209575fc6f1c2a2e1a02d0f363349c62fd40da30bcbdc98ead981cde82d",
+			"license": "MIT",
+			"urls": [
+				"bzz-raw://7ea5a43abab0448b5f49c177d6908a70e719f5a25633fe1bf5307a05cddd71cf",
+				"dweb:/ipfs/QmNi545pyzSEHhcnSyZ4KdxAeZrdikmYJbDF3JGm4pMckg"
+			]
+		},
+		"localhost/Imports/token/ERC721/ERC721Pausable.sol": {
+			"keccak256": "0x7e98ec93350bf379c711fdc05a5d54d36e2932d662008cad1fc4c634f8e3824e",
+			"license": "MIT",
+			"urls": [
+				"bzz-raw://1f02758b978b460641607bafd09094f95c8c0e8bfd6541085ce4a78e7b78be50",
+				"dweb:/ipfs/QmQE19ieWTcFTq3XghBz83XTnYCvchivQGu5gBR6npSrT4"
+			]
+		},
 		"localhost/Imports/token/ERC721/IERC721.sol": {
 			"keccak256": "0x91db100dda33be3cb161cabdac0509454d172702299dbd1b6fa2e05ba642bdc4",
 			"license": "MIT",
@@ -733,19 +1055,27 @@
 			]
 		},
 		"localhost/Imports/token/ERC721/IERC721Receiver.sol": {
-			"keccak256": "0x90dea29aecfa0bc55f3ba86bd24d87b19726e2affa86292f4ba8052e85cc4d56",
+			"keccak256": "0xdd8cb26722cd84f2445f39a022bba492c038a8b1713e45d23f2351187889d45b",
 			"license": "MIT",
 			"urls": [
-				"bzz-raw://b3518cea454999f659b0fd63f810ab61a7d568fe8ad974d84ab15febd321a0a5",
-				"dweb:/ipfs/QmSvS87R4H68JuokmA4oZMELAB49uJfSxeLGfZuXB7dowZ"
+				"bzz-raw://38e68d9c2089601f13445f8ec24764b188c67e5620356b6784573f000064a724",
+				"dweb:/ipfs/QmNsfsMqZWGjbVSkATzifDL3hJuhw8vt7tiAMFfc3JyJ98"
 			]
 		},
 		"localhost/Imports/utils/Address.sol": {
-			"keccak256": "0xb45dc9b431fd17029e917725b523f7302f31d3501c11f9bf4f985d2b088d36d3",
+			"keccak256": "0x9bb2def599742676e174be012a0259ab14bf9990c7a6a41bf61edcd6864d88c2",
 			"license": "MIT",
 			"urls": [
-				"bzz-raw://5e276244483cce4d0765d5cd229141a3aa98761e0034736dcd7887e5235acb29",
-				"dweb:/ipfs/QmTrizLJ2MCYuaG8YPwg9umQ3XvCd3xjrwkzjcjqvSxYH4"
+				"bzz-raw://116ba1b5f474cce990188a856e5953f6dd889ce895d0bf24269113ec5d797ed7",
+				"dweb:/ipfs/QmSEJaBwSqiKWaAaVvmvsyRqgppod65CZUh3D7m1MKGqDy"
+			]
+		},
+		"localhost/Imports/utils/Counters.sol": {
+			"keccak256": "0x6fbbe955935a8833ccb2022ebae28494f149450d275a0624e51af35d4aab1890",
+			"license": "MIT",
+			"urls": [
+				"bzz-raw://62b13c3d4a46351896186219cfb5f413180a049c39ff7da9680648af006dfadc",
+				"dweb:/ipfs/QmY5vv7wUqDakKsvb7NfMVkbSWhErt86CbrZBN9y3Af7yp"
 			]
 		},
 		"localhost/Imports/utils/EnumerableMap.sol": {
@@ -757,11 +1087,19 @@
 			]
 		},
 		"localhost/Imports/utils/EnumerableSet.sol": {
-			"keccak256": "0xf128d04c8d68c52bf056feb2ddfe1fa775085573fcbcb42fd3429ab5ee5403dd",
+			"keccak256": "0x2081e506e888d47110c5091888a82f59474e74df829a8838551c0fb7785b4078",
 			"license": "MIT",
 			"urls": [
-				"bzz-raw://253a5a0c9894ad117b7cb73c571a7587e0ed271b60cb6f156be568855169b177",
-				"dweb:/ipfs/QmZZJDNoWNbUo9MF18jw2pfUy2Z64L2q4Y3jGLia14RapV"
+				"bzz-raw://fcc33941fea03a9446d1260622436c76113e24e32acddf8fa36f87a14e7af886",
+				"dweb:/ipfs/QmRRFr8ha85pQTe3ivVf6xXiKFY6tkLqHGiiZjeNDEFLwW"
+			]
+		},
+		"localhost/Imports/utils/Pausable.sol": {
+			"keccak256": "0xc3d606cfb7d9b7250ed2dd614e1ab1511ed8cdcc7a7c423c3a5b993e00ea0543",
+			"license": "MIT",
+			"urls": [
+				"bzz-raw://4230f822b6508de19e5ae0170ab9e667711da3b10317fe389b0a9f6cbaaa11b2",
+				"dweb:/ipfs/Qmapwh2SdVRpuHVftsvyvf9GQGn4sBUa8jP3hSSBpnJxNR"
 			]
 		},
 		"localhost/Imports/utils/ReentrancyGuard.sol": {
@@ -781,19 +1119,19 @@
 			]
 		},
 		"localhost/PRUF_ID_TKN.sol": {
-			"keccak256": "0x84b85a65bb6ed5093466d6e29e00c2500d424ef4b88dd3d9f1e81badfd405beb",
+			"keccak256": "0x2582de8b118fbe8c9a9a2edcc36f1835e0f50562b2a46f31f090893c69725a92",
 			"license": "UNLICENSED",
 			"urls": [
-				"bzz-raw://c2acf3ed73e9bafeeca4cb1450098a9c01b5a4225c1999b2806aaf37122b2bbc",
-				"dweb:/ipfs/QmSQzxFFidnxzExofGUMBkTQJ2fm3kxToPPbbjNDAWBuML"
+				"bzz-raw://7e8e3782ad99b19213a7396723908bb9cd1fbf4c31ec11226d69a20d446e9648",
+				"dweb:/ipfs/QmT9AXsFV7VYXRZFzFudBdz1jwai9yq9TtGpBu8ray7a1X"
 			]
 		},
 		"localhost/PRUF_INTERFACES.sol": {
-			"keccak256": "0xd075077959e701de21a76fb37922e8a837e616dda927cdb11cb489b9879d298c",
+			"keccak256": "0x4db2f40f73cbad85016bb8ba7021238abc7a37c4e92698cb203fe37f0b22c79f",
 			"license": "UNLICENSED",
 			"urls": [
-				"bzz-raw://a6a5195c9606303bc346a6c699bf3fad150c295d7eef16e3ac4bba7007474939",
-				"dweb:/ipfs/QmeGJwLfY2CQ4jdjroM26PKztRrrkftuUjaKB6ajyfFrDM"
+				"bzz-raw://d8687cbc757c26ad28a3b814afa61b1ef59870639ae230366416f3967fecc788",
+				"dweb:/ipfs/QmYzZPCEo2zkJz9iDuquhRbCHRoH9yUMD1QtTtzyQeLBwZ"
 			]
 		}
 	},
