@@ -35,15 +35,15 @@ contract AC_MGR is BASIC {
         address paymentAddress; // 2nd-party fee beneficiary address
     }
 
-    uint256 private ACtokenIndex = 1000000; //asset tokens created in sequence starting at at 1,000,000
+    uint256 private ACtokenIndex = 1000000; //Starting index for purchased ACnode tokens
 
-    uint256 private acPrice_L1 = 10000000000000000000000;
-    uint256 private acPrice_L2 = 15000000000000000000000;
-    uint256 private acPrice_L3 = 22500000000000000000000;
-    uint256 private acPrice_L4 = 33750000000000000000000;
-    uint256 private acPrice_L5 = 50625000000000000000000;
-    uint256 private acPrice_L6 = 75937000000000000000000;
-    uint256 private acPrice_L7 = 100000000000000000000000;
+    uint256 public acPrice_L1 = 10000000000000000000000;
+    uint256 public acPrice_L2 = 15000000000000000000000;
+    uint256 public acPrice_L3 = 25000000000000000000000;
+    uint256 public acPrice_L4 = 40000000000000000000000;
+    uint256 public acPrice_L5 = 60000000000000000000000;
+    uint256 public acPrice_L6 = 85000000000000000000000;
+    uint256 public acPrice_L7 = 100000000000000000000000;
 
     uint256 private currentACtokenPrice = acPrice_L1;
 
@@ -63,13 +63,17 @@ contract AC_MGR is BASIC {
 
     mapping(bytes32 => mapping(uint32 => uint8)) private registeredUsers; // Authorized recorder database by asset class, by address hash
 
-    //address AC_minterAddress;
     uint256 private priceThreshold; //threshold of price where fractional pricing is implemented
 
-    uint256 private upgradeMultiplier = 3; // multplier to determine the amount of pruf required to fully upgrade an AC node token
-    uint32 private constant startingDiscount = 5100; // Nodes start with 51% profit share
+    /* ----prufPerShare-----
+    * divisor to divide amount of pruf (18d) sent to determine the profit share. 
+    * profit share of 1000 = 10% default u10 for .01% profit share = "1 share"
+    */
+    uint256 public prufPerShare = 10000000000000000000;    uint256 public upperLimit = 9500; // default max profit share = 95%
 
-    constructor() public {
+    uint32 private constant startingDiscount = 5100; // Purchased nodes start with 51% profit share
+
+    constructor() public { 
         _setupRole(NODE_MINTER_ROLE, _msgSender());
     }
 
@@ -99,10 +103,25 @@ contract AC_MGR is BASIC {
 
     //--------------------------------------------External Functions--------------------------
     /*
-     * @dev Set upgrade price multiplier (default 3)----------------------DPB:TEST ---- NEW functionality
+     * @dev Set upgrade COST AND UPPER LIMIT----------------------DPB:TEST ---- NEW functionality
      */
-    function OO_SetPricing(
-        uint256 _newValue,
+    function OO_SetACupgrade(uint256 _prufPerShare, uint256 _upperLimit)
+        external
+        isAdmin
+    {
+        //^^^^^^^checks^^^^^^^^^
+        upperLimit = _upperLimit;
+        prufPerShare = _prufPerShare;
+        //^^^^^^^effects^^^^^^^^^
+
+        emit REPORT("ACnode Upgrade parameter(s) Changed!"); //report access to internal parameter
+        //^^^^^^^interactions^^^^^^^^^
+    }
+
+    /*
+     * @dev Set pricing
+     */
+    function OO_SetACpricing(
         uint256 _L1,
         uint256 _L2,
         uint256 _L3,
@@ -111,8 +130,6 @@ contract AC_MGR is BASIC {
         uint256 _L6,
         uint256 _L7
     ) external isAdmin {
-        //DPS:EXAMINE  -- NEW FUNCTIONALITY
-        require(_newValue < 10001, "multiplier > 10 thousand!");
         //^^^^^^^checks^^^^^^^^^
 
         acPrice_L1 = _L1;
@@ -122,10 +139,9 @@ contract AC_MGR is BASIC {
         acPrice_L5 = _L5;
         acPrice_L6 = _L6;
         acPrice_L7 = _L7;
-        upgradeMultiplier = _newValue;
         //^^^^^^^effects^^^^^^^^^
 
-        emit REPORT("Upgrade Multiplier Changed!"); //report access to internal parameter
+        emit REPORT("ACnode pricing Changed!"); //report access to internal parameter
         //^^^^^^^interactions^^^^^^^^^
     }
 
@@ -133,7 +149,6 @@ contract AC_MGR is BASIC {
      * @dev Authorize / Deauthorize / Authorize users for an address be permitted to make record modifications
      */
     function addUser(
-        //add the K256HASH of the address, not the address. ----------------------DPB:TEST ---- NEW REQUIREMENT
         bytes32 _addrHash,
         uint8 _userType,
         uint32 _assetClass
@@ -156,13 +171,13 @@ contract AC_MGR is BASIC {
     }
 
     /**
-     * @dev Burns (amout) tokens and mints a new asset class token to the caller address
+     * @dev Burns (amount) tokens and mints a new asset class token to the caller address
      *
      * Requirements:
      * - the caller must have a balance of at least `amount`.
      */
     function purchaseACnode(
-        //-------------------------------------------------------CTS:EXAMINE pruf balance check?
+        //--------------will fail in burn if insufficient tokens
         string calldata _name,
         uint32 _assetClassRoot,
         uint8 _custodyType,
@@ -224,7 +239,6 @@ contract AC_MGR is BASIC {
      *  _discount 10000 = 100 percent price share , cannot exceed
      */
     function createAssetClass(
-        //-------------------------------------------------------DS:TEST -- modified with new IPFS parameter
         address _recipientAddress,
         string calldata _name,
         uint32 _assetClass,
@@ -281,7 +295,7 @@ contract AC_MGR is BASIC {
      */
     function updateACipfs(
         bytes32 _IPFS,
-        uint32 _assetClass //-------------------------------------------------------DS:TEST -- modified with new IPFS parameter
+        uint32 _assetClass
     ) external isACtokenHolderOfClass(_assetClass) whenNotPaused {
         //^^^^^^^checks^^^^^^^^^
         AC_data[_assetClass].IPFS = _IPFS;
@@ -296,62 +310,11 @@ contract AC_MGR is BASIC {
      */
     function updateACextendedData(
         uint32 _extData,
-        uint32 _assetClass //-------------------------------------------------------DS:TEST
+        uint32 _assetClass //-------------------------------------------------------TEST
     ) external isACtokenHolderOfClass(_assetClass) whenNotPaused {
         //^^^^^^^checks^^^^^^^^^
         AC_data[_assetClass].extendedData = _extData;
         //^^^^^^^effects^^^^^^^^^
-    }
-
-    /**
-     * @dev See {IERC20-transfer}. Increase payment share of an asset class
-     *
-     * Requirements:
-     * - `recipient` cannot be the zero address.
-     * - the caller must have a balance of at least `amount`.
-     */
-    function increaseShare(
-        uint32 _assetClass,
-        uint256 _amount //in whole pruf tokens, not 18 decimals
-    )
-        external
-        whenNotPaused
-        nonReentrant
-        isACtokenHolderOfClass(_assetClass)
-        returns (bool)
-    {
-        require( //-------------------------------------------------------DS:TEST
-            _amount >= (upgradeMultiplier.mul(100)),
-            "PRuf:IS:amount too low to increase price share"
-        );
-        require( //-------------------------------------------------------DS:TEST
-            AC_data[_assetClass].discount <= 8999,
-            "PRuf:IS:price share already maxed out"
-        );
-
-        //^^^^^^^checks^^^^^^^^^
-
-        uint256 oldShare = uint256(getAC_discount(_assetClass));
-
-        uint256 maxPayment = (uint256(9000).sub(oldShare)).mul(
-            upgradeMultiplier
-        ); //max payment percentage never goes over 90%
-
-        address rootPaymentAdress = cost[AC_data[_assetClass].assetClassRoot][1]
-            .paymentAddress; //payment for upgrade goes to root AC payment adress specified for service (1)
-
-        if (_amount > maxPayment) _amount = maxPayment;
-
-        //^^^^^^^effects^^^^^^^^^
-
-        increasePriceShare(_assetClass, _amount.div(upgradeMultiplier));
-
-        UTIL_TKN.trustedAgentTransfer(
-            _msgSender(),
-            rootPaymentAdress,
-            _amount.mul(1 ether) //adds 18 zeros to work in full tokens
-        );
-        //^^^^^^^interactions^^^^^^^^^
     }
 
     /*
@@ -369,6 +332,60 @@ contract AC_MGR is BASIC {
         //^^^^^^^effects^^^^^^^^^
     }
 
+    /**
+     * @dev Increase payment share of an asset class
+     *
+     * Requirements:
+     * - `recipient` cannot be the zero address.
+     * - the caller must have a balance of at least `amount`.
+     */
+    function increaseShare(
+        uint32 _assetClass,
+        uint256 _amount
+    )
+        external
+        whenNotPaused
+        nonReentrant
+        isACtokenHolderOfClass(_assetClass)
+        returns (uint32)
+    {
+        require(
+            AC_data[_assetClass].discount < upperLimit,
+            "PRuf:IS:price share already maxed out"
+        );
+
+        require(
+            _amount > prufPerShare,
+            "PRuf:IS:amount too low to increase price share"
+        );
+
+        //^^^^^^^checks^^^^^^^^^
+        address rootPaymentAddress = cost[AC_data[_assetClass]
+            .assetClassRoot][1]
+            .paymentAddress; //payment for upgrade goes to root AC payment adress specified for service (1)
+
+        uint256 oldShare = uint256(AC_data[_assetClass].discount);
+        uint256 maxShareIncrease = (upperLimit.sub(oldShare)); //max payment percentage never goes over upperLimit%
+        uint256 sharesToBuy = _amount.div(prufPerShare);
+        if (sharesToBuy > maxShareIncrease) {
+            sharesToBuy = maxShareIncrease;
+        }
+
+        uint256 upgradeCost = sharesToBuy.mul(prufPerShare); //multiplies and adds 18d
+
+        //^^^^^^^effects^^^^^^^^^
+
+        increasePriceShare(_assetClass, sharesToBuy);
+
+        UTIL_TKN.trustedAgentTransfer(
+            _msgSender(),
+            rootPaymentAddress,
+            upgradeCost
+        );
+        return AC_data[_assetClass].discount;
+        //^^^^^^^interactions^^^^^^^^^
+    }
+
     /*
      * @dev Increases priceShare in an assetClass
      *
@@ -377,17 +394,15 @@ contract AC_MGR is BASIC {
         private
         whenNotPaused
     {
-        require( //-------------------------------------------------------CTS:EXAMINE redundant? check increaseShare
-            AC_data[_assetClass].discount <= 8999,
-            "PRuf:IPS:price share already max"
-        );
         uint256 discount = AC_data[_assetClass].discount;
+        require(discount < upperLimit, "PRuf:IPS:price share already max"); //-----------This is to throw if priceShare is already >= upperLimit, otherwise will be reverted to upperLimit
+
         //^^^^^^^checks^^^^^^^^^
 
         discount = discount.add(_increaseAmount);
-        if (discount > 9000) discount = 9000;
+        if (discount > upperLimit) discount = upperLimit;
 
-        AC_data[_assetClass].discount = uint32(discount); //type conversion safe because discount always <= 10000
+        AC_data[_assetClass].discount = uint32(discount); //type conversion safe because discount always <= upperLimit
         //^^^^^^^effects^^^^^^^^^
     }
 
@@ -397,7 +412,6 @@ contract AC_MGR is BASIC {
      *
      */
     function _createAssetClass(
-        //-------------------------------------------------------DS:TEST -- modified with new IPFS parameter
         address _recipientAddress,
         string calldata _name,
         uint32 _assetClass,
@@ -413,7 +427,7 @@ contract AC_MGR is BASIC {
         require(
             _discount <= 10000,
             "ACM:CAC: discount cannot exceed 100% (10000)"
-        ); //sanity check inputs //-------------------------------------------------------DS:TEST
+        );
         require( //has valid root
             (_ac.custodyType != 0) || (_assetClassRoot == _assetClass),
             "ACM:CAC:Root asset class does not exist"
@@ -460,7 +474,7 @@ contract AC_MGR is BASIC {
      * @dev Retrieve AC_data @ _assetClass
      */
     function getAC_data(
-        uint32 _assetClass //-------------------------------------------------------DS:TEST -- modified with new IPFS parameter
+        uint32 _assetClass
     )
         external
         view
@@ -598,7 +612,7 @@ contract AC_MGR is BASIC {
     /*
      * @dev Retrieve AC_discount @ _assetClass, in percent ACTH share, * 100 (9000 = 90%)
      */
-    function getAC_discount(uint32 _assetClass) public view returns (uint32) {
+    function getAC_discount(uint32 _assetClass) external view returns (uint32) {
         //^^^^^^^checks^^^^^^^^^
         return (AC_data[_assetClass].discount);
         //^^^^^^^interactions^^^^^^^^^

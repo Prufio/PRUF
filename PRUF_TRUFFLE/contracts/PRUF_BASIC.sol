@@ -29,8 +29,10 @@ import "./Imports/token/ERC721/IERC721Receiver.sol";
 import "./Imports/math/SafeMath.sol";
 
 contract BASIC is ReentrancyGuard, AccessControl, IERC721Receiver, Pausable {
+    bytes32 public constant CONTRACT_ADMIN_ROLE = keccak256("CONTRACT_ADMIN_ROLE");
     bytes32 public constant PAUSER_ROLE = keccak256("PAUSER_ROLE");
     bytes32 public constant ASSET_TXFR_ROLE = keccak256("ASSET_TXFR_ROLE");
+    
 
     struct Record {
         //struct for holding and manipulating record data
@@ -96,6 +98,7 @@ contract BASIC is ReentrancyGuard, AccessControl, IERC721Receiver, Pausable {
 
     constructor() public {
         _setupRole(DEFAULT_ADMIN_ROLE, _msgSender());
+        _setupRole(CONTRACT_ADMIN_ROLE, _msgSender());
         _setupRole(PAUSER_ROLE, _msgSender());
     }
 
@@ -128,8 +131,8 @@ contract BASIC is ReentrancyGuard, AccessControl, IERC721Receiver, Pausable {
      */
     modifier isAdmin() {
         require(
-            hasRole(DEFAULT_ADMIN_ROLE, _msgSender()),
-            "PAM:MOD: must have DEFAULT_ADMIN_ROLE"
+            hasRole(CONTRACT_ADMIN_ROLE, _msgSender()),
+            "PAM:MOD: must have CONTRACT_ADMIN_ROLE"
         );
         _;
     }
@@ -205,16 +208,14 @@ contract BASIC is ReentrancyGuard, AccessControl, IERC721Receiver, Pausable {
     /*
      * @dev Transfer any specified assetClassToken from contract
      */
-    function OO_transferACToken(address _to, bytes32 _idxHash)
+    function OO_transferACToken(address _to, uint256 _tokenID)
         external
         virtual
         isAdmin
         nonReentrant
     {
         //^^^^^^^checks^^^^^^^^^
-        uint256 tokenId = uint256(_idxHash);
-        //^^^^^^^effects^^^^^^^^^
-        AC_TKN.safeTransferFrom(address(this), _to, tokenId);
+        AC_TKN.safeTransferFrom(address(this), _to, _tokenID);
         //^^^^^^^interactions^^^^^^^^^
     }
 
@@ -292,7 +293,7 @@ contract BASIC is ReentrancyGuard, AccessControl, IERC721Receiver, Pausable {
      * @dev Get asset class information from AC_manager and return an AC Struct
      */
     function getACinfo(
-        uint32 _assetClass //-------------------------------------------------------DS:TEST -- modified with new IPFS parameter
+        uint32 _assetClass
     ) internal virtual view returns (AC memory) {
         //^^^^^^^checks^^^^^^^^^
 

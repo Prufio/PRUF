@@ -201,6 +201,19 @@
 			},
 			{
 				"inputs": [],
+				"name": "CONTRACT_ADMIN_ROLE",
+				"outputs": [
+					{
+						"internalType": "bytes32",
+						"name": "",
+						"type": "bytes32"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [],
 				"name": "DEFAULT_ADMIN_ROLE",
 				"outputs": [
 					{
@@ -802,7 +815,7 @@
 			}
 		],
 		"devdoc": {
-			"details": "{ERC721} token, including:  - ability for holders to burn (destroy) their tokens  - a minter role that allows for token minting (creation)  - a pauser role that allows to stop all token transfers  - token ID and URI autogeneration This contract uses {AccessControl} to lock permissioned functions using the different roles - head to its documentation for details. The account that deploys the contract will be granted the minter and pauser roles, as well as the default admin role, which will let it grant both minter and pauser roles to other accounts.",
+			"details": "{ERC721} token, including:  - ability for holders to burn (destroy) their tokens  - a minter role that allows for token minting (creation)  - a pauser role that allows to stop all token transfers  - token ID and URI autogeneration This contract uses {AccessControl} to lock permissioned functions using the different roles - head to its documentation for details. The account that deploys the contract will be granted the minter, pauser, and contract admin roles, as well as the default admin role, which will let it grant minter, pauser, and admin roles to other accounts.",
 			"kind": "dev",
 			"methods": {
 				"approve(address,uint256)": {
@@ -857,7 +870,7 @@
 					"details": "Revokes `role` from `account`. If `account` had been granted `role`, emits a {RoleRevoked} event. Requirements: - the caller must have ``role``'s admin role."
 				},
 				"safeTransferFrom(address,address,uint256)": {
-					"details": "Safely transfers the ownership of a given token ID to another address If the target address is a contract, it must implement {IERC721Receiver-onERC721Received}, which is called upon a safe transfer, and return the magic value `bytes4(keccak256(\"onERC721Received(address,address,uint256,bytes)\"))`; otherwise, the transfer is reverted. Requires the msg.sender to be the owner, approved, or operator",
+					"details": "Safely transfers the ownership of a given token ID to another address If the target address is a contract, it must implement {IERC721Receiver-onERC721Received}, which is called upon a safe transfer, and return the magic value `bytes4(keccak256(\"onERC721Received(address,address,uint256,bytes)\"))`; otherwise, the transfer is reverted. Requires the _msgSender() to be the owner, approved, or operator",
 					"params": {
 						"from": "current owner of the token",
 						"to": "address to receive the ownership of the given token ID",
@@ -895,7 +908,7 @@
 					"details": "See {IERC721Enumerable-totalSupply}."
 				},
 				"transferFrom(address,address,uint256)": {
-					"details": "Transfers the ownership of a given token ID to another address. Usage of this method is discouraged, use {safeTransferFrom} whenever possible. Requires the msg.sender to be the owner, approved, or operator.",
+					"details": "Transfers the ownership of a given token ID to another address. Usage of this method is discouraged, use {safeTransferFrom} whenever possible. Requires the _msgSender() to be the owner, approved, or operator.",
 					"params": {
 						"from": "current owner of the token",
 						"to": "address to receive the ownership of the given token ID",
@@ -924,8 +937,8 @@
 			"bytecodeHash": "ipfs"
 		},
 		"optimizer": {
-			"enabled": false,
-			"runs": 200
+			"enabled": true,
+			"runs": 1000
 		},
 		"remappings": []
 	},
@@ -1083,19 +1096,19 @@
 			]
 		},
 		"localhost/PRUF/PRUF_TRUFFLE/contracts/PRUF_AC_TKN.sol": {
-			"keccak256": "0x704601ca786e0c3c47b2341fd47017ec0c4c7d7a55226a19590d83e89032c7c1",
+			"keccak256": "0x24de031d2550e75dad238f44323c8e090609860b9d9c94d94f08d91c09ca81c3",
 			"license": "UNLICENSED",
 			"urls": [
-				"bzz-raw://19eabc9497c3280e7462447f32b855a3fc58ad0b24ae5f7e743e943c8189e73f",
-				"dweb:/ipfs/QmZrGkcooXazEAbdf6XsGQS5ARKZeFYZTEHVwV3vkkkMVj"
+				"bzz-raw://a94c40025ad284d722baaff3399344c3946d38f19dae0367de241672cade02fa",
+				"dweb:/ipfs/QmaLY6DbE8vvnx86nyoCgsGgrsNzZdUrz92kHLVmaQ6c3s"
 			]
 		},
 		"localhost/PRUF/PRUF_TRUFFLE/contracts/PRUF_INTERFACES.sol": {
-			"keccak256": "0xdf2d13b0617654b6ae4301e5e76de9c5c5966f9124a21284c29e26a80f1fbb89",
+			"keccak256": "0x1d0a4756c6e9d8dc68654a4feea636e23a2fb36514f28e4e1210559d4ccd23b9",
 			"license": "UNLICENSED",
 			"urls": [
-				"bzz-raw://e0a9f57cb692fb6a95a2a3ba1ff0182472b11bc85cbcb23558d9cc2bcf1e0ea8",
-				"dweb:/ipfs/QmbDXxLRHj1UXgdFTYyzt6c87SpiiAkSXd26kkS5GRvbmK"
+				"bzz-raw://b48f8ec61d75ac67c764b53c29b8a4dc0d5ecaf0fd9782e6d79d94dfc210f08b",
+				"dweb:/ipfs/QmY7aijEn4iKsxXQyQ4HoKS5ioCX9cKbdQzogYw8kFgxdy"
 			]
 		}
 	},

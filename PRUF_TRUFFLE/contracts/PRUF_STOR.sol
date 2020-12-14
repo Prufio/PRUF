@@ -42,6 +42,7 @@ import "./Imports/utils/ReentrancyGuard.sol";
 contract STOR is AccessControl, ReentrancyGuard, Pausable {
 
     bytes32 public constant PAUSER_ROLE = keccak256("PAUSER_ROLE");
+    bytes32 public constant CONTRACT_ADMIN_ROLE = keccak256("CONTRACT_ADMIN_ROLE");
 
     bytes32 public constant B320xF_ = 0xFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF;
 
@@ -72,6 +73,7 @@ contract STOR is AccessControl, ReentrancyGuard, Pausable {
 
     constructor() public {
         _setupRole(DEFAULT_ADMIN_ROLE, _msgSender());
+        _setupRole(CONTRACT_ADMIN_ROLE, _msgSender());
         _setupRole(PAUSER_ROLE, _msgSender());
     }
 
@@ -84,8 +86,8 @@ contract STOR is AccessControl, ReentrancyGuard, Pausable {
      */
     modifier isAdmin() {
         require(
-            hasRole(DEFAULT_ADMIN_ROLE, _msgSender()),
-            "PAM:MOD: must have DEFAULT_ADMIN_ROLE"
+            hasRole(CONTRACT_ADMIN_ROLE, _msgSender()),
+            "PAM:MOD: must have CONTRACT_ADMIN_ROLE"
         );
         _;
     }

@@ -64,7 +64,7 @@ contract CORE is BASIC {
             "C:CR:Cannot create asset in a root asset class"
         );
 
-        require( //-------------------------------------------------------DS:TEST
+        require(
             (AC_info.custodyType == 1) ||
                 (AC_info.custodyType == 2) ||
                 (AC_info.custodyType == 4),
