@@ -1510,25 +1510,25 @@ it('Should add users to AC 10-14 in AC_Manager', async () => {
 })
 
 
-it('Should mint 30000 tkns to account1', async () => {
+it('Should mint 300000 tkns to account1', async () => {
     return UTIL_TKN.mint(
     account1,
-    '30000000000000000000000',
+    '300000000000000000000000',
     {from: account1}
     )
 })
 
 
-it('Should mint 30000 tkns to account2', async () => {
+it('Should mint 300000 tkns to account2', async () => {
     return UTIL_TKN.mint(
     account2,
-    '30000000000000000000000',
+    '300000000000000000000000',
     {from: account1}
     )
 })
 
 
-it("Should retrieve balanceOf(30000) Pruf tokens @account1", async () => {
+it("Should retrieve balanceOf(300000) Pruf tokens @account1", async () => {
     var Balance = [];
 
     return await UTIL_TKN.balanceOf(account1, { from: account1 }, function (_err, _result) {
@@ -1541,7 +1541,7 @@ it("Should retrieve balanceOf(30000) Pruf tokens @account1", async () => {
 })
 
 
-it("Should retrieve balanceOf(30000) Pruf tokens @account2", async () => {
+it("Should retrieve balanceOf(300000) Pruf tokens @account2", async () => {
     var Balance = [];
 
     return await UTIL_TKN.balanceOf(account2, { from: account1 }, function (_err, _result) {
@@ -1566,13 +1566,13 @@ it('Should grant AC_MGR with trustedAgentRole', async () => {
 it('Should increaseShare to 66/36 split @AC13', async () => {
     return AC_MGR.increaseShare(
     '13',
-    '4500000000000000000000',
+    '15000000000000000000000',
     {from: account1}
     )
 })
 
 
-it("Should retrieve balanceOf(25500) Pruf tokens @account1", async () => {
+it("Should retrieve balanceOf(285000) Pruf tokens @account1", async () => {
     var Balance = [];
 
     return await UTIL_TKN.balanceOf(account1, { from: account1 }, function (_err, _result) {
@@ -1588,13 +1588,13 @@ it("Should retrieve balanceOf(25500) Pruf tokens @account1", async () => {
 it('Should increaseShare to 90/10 split @AC11', async () => {
     return AC_MGR.increaseShare(
     '11',
-    '11700000000000000000000',
+    '39000000000000000000000',
     {from: account1}
     )
 })
 
 
-it("Should retrieve balanceOf(13800) Pruf tokens @account1", async () => {
+it("Should retrieve balanceOf(246000) Pruf tokens @account1", async () => {
     var Balance = [];
 
     return await UTIL_TKN.balanceOf(account1, { from: account1 }, function (_err, _result) {
@@ -1618,7 +1618,7 @@ it('Should buy asset class 20', async () => {
 })
 
 
-it("Should retrieve balanceOf(3800) Pruf tokens @account1", async () => {
+it("Should retrieve balanceOf(236000) Pruf tokens @account1", async () => {
     var Balance = [];
 
     return await UTIL_TKN.balanceOf(account1, { from: account1 }, function (_err, _result) {
@@ -1645,7 +1645,7 @@ it('Should write asset1 in AC 10', async () => {
 })
 
 
-it("Should retrieve balanceOf(11700.051) Pruf tokens account6", async () => {
+it("Should retrieve balanceOf(0.051) Pruf tokens account6", async () => {
     var Balance = [];
 
     return await UTIL_TKN.balanceOf(account6, { from: account1 }, function (_err, _result) {
@@ -1658,7 +1658,7 @@ it("Should retrieve balanceOf(11700.051) Pruf tokens account6", async () => {
 })
 
 
-it("Should retrieve balanceOf(0.149) Pruf tokens account4", async () => {
+it("Should retrieve balanceOf(39000.149) Pruf tokens account4", async () => {
     var Balance = [];
 
     return await UTIL_TKN.balanceOf(account4, { from: account1 }, function (_err, _result) {
@@ -1695,7 +1695,7 @@ it("Should retrieve balanceOf(0.264) Pruf tokens account7", async () => {
 })
 
 
-it("Should retrieve balanceOf(4500.336) Pruf tokens account5", async () => {
+it("Should retrieve balanceOf(15000.336) Pruf tokens account5", async () => {
     var Balance = [];
 
     return await UTIL_TKN.balanceOf(account5, { from: account1 }, function (_err, _result) {
@@ -1732,7 +1732,7 @@ it("Should retrieve balanceOf(0.231) Pruf tokens account6", async () => {
 })
 
 
-it("Should retrieve balanceOf(11700.269) Pruf tokens account4", async () => {
+it("Should retrieve balanceOf(39000.269) Pruf tokens account4", async () => {
     var Balance = [];
 
     return await UTIL_TKN.balanceOf(account4, { from: account1 }, function (_err, _result) {
