@@ -1,0 +1,18 @@
+A_TKN
+UTIL_TKN
+AC_TKN
+ID_TKN
+AC_MGR
+APP
+APP_NC
+(BASIC, ECR_CORE and CORE are inhetited by lots of contracts)
+ECR_MGR
+ECR_NC
+ECR
+NP
+NP_NC
+PIP
+PRESALE
+RCLR
+STOR
+VERIFY - (THIS HAS NOT BEEN AUDITED INTERNALLY YET, so no surprises if it has issues)
