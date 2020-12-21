@@ -417,7 +417,7 @@ contract AC_MGR is BASIC {
         string calldata _name,
         uint32 _assetClass_source,
         uint32 _assetClass_dest
-    ) private isNodeMinter whenNotPaused nonReentrant {
+    ) external isAdmin whenNotPaused nonReentrant {
 
         require(AC_number[_name] == _assetClass_source, "ACM:TA: name not in source AC"); //source AC_Name must match name given
 
