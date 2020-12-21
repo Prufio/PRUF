@@ -37,13 +37,13 @@ contract AC_MGR is BASIC {
 
     uint256 private ACtokenIndex = 1000000; //Starting index for purchased ACnode tokens
 
-    uint256 public acPrice_L1 = 10000000000000000000000;
-    uint256 public acPrice_L2 = 15000000000000000000000;
-    uint256 public acPrice_L3 = 25000000000000000000000;
-    uint256 public acPrice_L4 = 40000000000000000000000;
-    uint256 public acPrice_L5 = 60000000000000000000000;
-    uint256 public acPrice_L6 = 85000000000000000000000;
-    uint256 public acPrice_L7 = 100000000000000000000000;
+    uint256 public acPrice_L1 = 20000000000000000000000;
+    uint256 public acPrice_L2 = 30000000000000000000000;
+    uint256 public acPrice_L3 = 45000000000000000000000;
+    uint256 public acPrice_L4 = 70000000000000000000000;
+    uint256 public acPrice_L5 = 100000000000000000000000;
+    uint256 public acPrice_L6 = 150000000000000000000000;
+    uint256 public acPrice_L7 = 200000000000000000000000;
 
     uint256 private currentACtokenPrice = acPrice_L1;
 
