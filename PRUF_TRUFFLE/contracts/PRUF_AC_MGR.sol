@@ -29,6 +29,8 @@ contract AC_MGR is BASIC {
     using SafeMath for uint256;
 
     bytes32 public constant NODE_MINTER_ROLE = keccak256("NODE_MINTER_ROLE");
+    bytes32
+        public constant B320xF_ = 0xFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF;
 
     struct Costs {
         uint256 serviceCost; // Cost in the given item category
@@ -76,6 +78,7 @@ contract AC_MGR is BASIC {
 
     constructor() public {
         _setupRole(NODE_MINTER_ROLE, _msgSender());
+        AC_number[""] = 1;  //points the blank string name to AC1
     }
 
     /*
@@ -402,6 +405,31 @@ contract AC_MGR is BASIC {
         if (discount > upperLimit) discount = upperLimit;
 
         AC_data[_assetClass].discount = uint32(discount); //type conversion safe because discount always <= upperLimit
+        //^^^^^^^effects^^^^^^^^^
+    }
+
+    /*
+     * @dev creates an assetClass
+     * makes ACdata record with new name, mints token
+     *
+     */
+    function transferName(
+        string calldata _name,
+        uint32 _assetClass_source,
+        uint32 _assetClass_dest
+    ) private isNodeMinter whenNotPaused nonReentrant {
+
+        require(AC_number[_name] == _assetClass_source, "ACM:TA: name not in source AC"); //source AC_Name must match name given
+
+        require(
+            (AC_data[_assetClass_dest].IPFS == B320xF_), //dest AC must have ipfs set to 0xFFFF.....
+            "ACM:TA:Destination AC not prepared for name transfer"
+        );
+        //^^^^^^^checks^^^^^^^^^
+
+        AC_number[_name] = _assetClass_dest;
+        AC_data[_assetClass_dest].name = _name;
+        AC_data[_assetClass_source].name = "";
         //^^^^^^^effects^^^^^^^^^
     }
 
