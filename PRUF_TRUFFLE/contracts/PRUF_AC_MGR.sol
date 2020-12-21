@@ -89,7 +89,7 @@ contract AC_MGR is BASIC {
 
     constructor() public {
         _setupRole(NODE_MINTER_ROLE, _msgSender());
-        AC_number[""] = 1;  //points the blank string name to AC1
+        AC_number[""] = 4294967295;  //points the blank string name to AC 4294967295
     }
 
     /*
@@ -201,6 +201,10 @@ contract AC_MGR is BASIC {
         require( //Impossible to test??
             ACtokenIndex < 4294000000,
             "PRuf:IS:Only 4294000000 AC tokens allowed"
+        );
+        require(
+            (ID_TKN.balanceOf(_msgSender()) == 1), //_msgSender() is token holder
+            "ANC:MOD-IA: Caller does not hold a valid PRuF_ID token"
         );
         //^^^^^^^checks^^^^^^^^^
 
@@ -421,12 +425,13 @@ contract AC_MGR is BASIC {
 
     /*
      * @dev Transfers a name from one asset class to another
-     * !! -------- to be used with great caution and as a result of community governance action -----------
+     * !! -------- to be used with great caution and only as a result of community governance action -----------
      * Designed to remedy brand infringement issues. This breaks decentralization and must eventually be given 
-     * over to some kind of governance. 
+     * over to some kind of governance contract. 
+     * Destination AC must have IPFS Set to 0xFFF.....
      *
      */
-    function transferName(
+    function transferName(  //---------------------------------------DPS TEST-----NEW
         string calldata _name,
         uint32 _assetClass_source,
         uint32 _assetClass_dest
