@@ -11,6 +11,17 @@ __/\\\\\\\\\\\\\ _____/\\\\\\\\\ _______/\\../\\ ___/\\\\\\\\\\\\\\\
          *-------------------------------------------------------------------*/
 
 /*-----------------------------------------------------------------
+ * STATEMENT OF TERMS OF SERVICE (TOS):
+ * User agrees not to intentionally claim any namespace that is a recognized or registered brand name, trade mark, 
+ * or other Intellectual property not belonging to the user, and agrees to voluntarily remove any name or brand found to be
+ * infringing from any record that the user controls, within 30 days of notification. If notification is not possible or 
+ * there is no response to notification, the user agrees that the name record may be changed without their permission or cooperation.
+ * Use of this software constitutes consent to the terms above.
+ *-----------------------------------------------------------------
+ */
+
+
+/*-----------------------------------------------------------------
  *  TO DO
  * REWORK TO TAKE ALL INPUTS FOR TOKEN MANIPULATION IN wei notation (18 zeros)
  * ADD ROLES! (need role for ACNODE MINTER)
@@ -409,8 +420,10 @@ contract AC_MGR is BASIC {
     }
 
     /*
-     * @dev creates an assetClass
-     * makes ACdata record with new name, mints token
+     * @dev Transfers a name from one asset class to another
+     * !! -------- to be used with great caution and as a result of community governance action -----------
+     * Designed to remedy brand infringement issues. This breaks decentralization and must eventually be given 
+     * over to some kind of governance. 
      *
      */
     function transferName(
