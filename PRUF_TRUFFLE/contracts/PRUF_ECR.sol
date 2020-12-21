@@ -19,7 +19,6 @@ __/\\\\\\\\\\\\\ _____/\\\\\\\\\ _______/\\../\\ ___/\\\\\\\\\\\\\\\
 pragma solidity ^0.6.7;
 
 import "./PRUF_ECR_CORE.sol";
-import "./Imports/math/safeMath.sol";
 
 contract ECR is ECR_CORE {
     using SafeMath for uint256;
@@ -33,7 +32,7 @@ contract ECR is ECR_CORE {
         uint256 tokenId = uint256(_idxHash);
         require(
             A_TKN.ownerOf(tokenId) == APP_Address,
-            "E:MOD-IA: Custodial contract does not hold token"
+            "E:MOD-IA: APP contract does not hold token"
         );
         _;
     }
@@ -104,8 +103,8 @@ contract ECR is ECR_CORE {
         );
         require(
             (userType < 5) ||
-                ((userType > 4) && (userType < 10) && (_escrowStatus > 49)),  //CTS: EXAMINE, weirdly worded.. 
-            "E:SE: Non supervisored agents must set escrow status within scope."
+                ((userType > 4) && (userType < 10) && (_escrowStatus > 49)),
+            "E:SE: Unsupervised agents must set escrow status within scope."
         );
         require((_escrowStatus != 60), "E:SE: Cannot set to recycled status.");
         //^^^^^^^checks^^^^^^^^^
@@ -114,7 +113,7 @@ contract ECR is ECR_CORE {
 
         escrowDataExtLight memory escrowDataLight; //demo for setting "light" struct data
         escrowDataLight.escrowData = 5;
-        escrowDataLight.addr_1 = msg.sender;
+        escrowDataLight.addr_1 = _msgSender();
 
         escrowDataExtHeavy memory escrowDataHeavy; //demo for setting "Heavy" struct data
         escrowDataHeavy.u256_1 = 9999;
@@ -157,7 +156,7 @@ contract ECR is ECR_CORE {
         );
         require(
             (escrow.timelock < block.timestamp) ||
-                (keccak256(abi.encodePacked(msg.sender)) == ownerHash),
+                (keccak256(abi.encodePacked(_msgSender())) == ownerHash),
             "E:EE: Escrow period not ended or caller is not escrow owner"
         );
         //^^^^^^^checks^^^^^^^^^

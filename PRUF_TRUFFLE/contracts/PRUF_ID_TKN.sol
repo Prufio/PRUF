@@ -12,7 +12,8 @@ __/\\\\\\\\\\\\\ _____/\\\\\\\\\ _______/\\../\\ ___/\\\\\\\\\\\\\\\
 
 /*-----------------------------------------------------------------
  *  TO DO
- *
+ *-----------------------------------------------------------------
+ * PRUF USER ID NFT CONTRACT
  *---------------------------------------------------------------*/
 
 // SPDX-License-Identifier: UNLICENSED
@@ -39,14 +40,23 @@ import "./Imports/utils/ReentrancyGuard.sol";
  * This contract uses {AccessControl} to lock permissioned functions using the
  * different roles - head to its documentation for details.
  *
- * The account that deploys the contract will be granted the minter and pauser
- * roles, as well as the default admin role, which will let it grant both minter
- * and pauser roles to other accounts.
+ * The account that deploys the contract will be granted the minter, pauser, and contract admin
+ * roles, as well as the default admin role, which will let it grant minter, pauser, and admin
+ * roles to other accounts.
  */
 
-contract ID_TKN is ReentrancyGuard, Context, AccessControl, ERC721Burnable, ERC721Pausable {
+contract ID_TKN is
+    ReentrancyGuard,
+    Context,
+    AccessControl,
+    ERC721Burnable,
+    ERC721Pausable
+{
     using Counters for Counters.Counter;
 
+    bytes32 public constant CONTRACT_ADMIN_ROLE = keccak256(
+        "CONTRACT_ADMIN_ROLE"
+    );
     bytes32 public constant MINTER_ROLE = keccak256("MINTER_ROLE");
     bytes32 public constant PAUSER_ROLE = keccak256("PAUSER_ROLE");
 
@@ -54,7 +64,8 @@ contract ID_TKN is ReentrancyGuard, Context, AccessControl, ERC721Burnable, ERC7
 
     constructor() public ERC721("PRüF ID Token", "PRID") {
         _setupRole(DEFAULT_ADMIN_ROLE, _msgSender());
-        _setupRole(MINTER_ROLE, _msgSender()); //ALL CONTRACTS THAT MINT ASSET TOKENS
+        _setupRole(CONTRACT_ADMIN_ROLE, _msgSender());
+        _setupRole(MINTER_ROLE, _msgSender());
         _setupRole(PAUSER_ROLE, _msgSender());
 
         //_setBaseURI("pruf.io");
@@ -62,21 +73,23 @@ contract ID_TKN is ReentrancyGuard, Context, AccessControl, ERC721Burnable, ERC7
 
     event REPORT(string _msg);
 
-        modifier isAdmin() {
-        require (hasRole(DEFAULT_ADMIN_ROLE, _msgSender()),
+    modifier isAdmin() {
+        require(
+            hasRole(CONTRACT_ADMIN_ROLE, _msgSender()),
             "AT:MOD-IA:Calling address does not belong to an admin"
         );
         _;
     }
 
     modifier isMinter() {
-        require (hasRole(MINTER_ROLE, _msgSender()),
+        require(
+            hasRole(MINTER_ROLE, _msgSender()),
             "AT:MOD-IA:Calling address does not belong to a minter"
         );
         _;
     }
 
-    //----------------------Internal Admin functions / isAdmin----------------------//
+    //----------------------Admin functions / isAdmin----------------------//
 
     /*
      * @dev Mint new PRUF_ID token
@@ -84,7 +97,8 @@ contract ID_TKN is ReentrancyGuard, Context, AccessControl, ERC721Burnable, ERC7
     function mintPRUF_IDToken(address _recipientAddress, uint256 tokenId)
         external
         isMinter
-        nonReentrant whenNotPaused
+        nonReentrant
+        whenNotPaused
         returns (uint256)
     {
         //^^^^^^^checks^^^^^^^^^
@@ -105,7 +119,8 @@ contract ID_TKN is ReentrancyGuard, Context, AccessControl, ERC721Burnable, ERC7
     function reMintPRUF_IDToken(address _recipientAddress, uint256 tokenId)
         external
         isMinter
-        nonReentrant whenNotPaused
+        nonReentrant
+        whenNotPaused
         returns (uint256)
     {
         require(_exists(tokenId), "PIDT:RM:Cannot Remint nonexistant token");
@@ -122,10 +137,12 @@ contract ID_TKN is ReentrancyGuard, Context, AccessControl, ERC721Burnable, ERC7
      * @dev Set new token URI String -- string should eventually be a B32 hash of ID info in a standardized format - verifyable against provided ID
      */
     function setURI(uint256 tokenId, string calldata _tokenURI)
-        external isMinter nonReentrant whenNotPaused
+        external
+        isMinter
+        nonReentrant
+        whenNotPaused
         returns (uint256)
     {
-        
         //^^^^^^^checks^^^^^^^^^
 
         _setTokenURI(tokenId, _tokenURI);
@@ -147,7 +164,7 @@ contract ID_TKN is ReentrancyGuard, Context, AccessControl, ERC721Burnable, ERC7
     /**
      * @dev Blocks the transfer of a given token ID to another address
      * Usage of this method is discouraged, use {safeTransferFrom} whenever possible.
-     * Requires the msg.sender to be the owner, approved, or operator.
+     * Requires the _msgSender() to be the owner, approved, or operator.
      */
     function transferFrom(
         address from,
@@ -174,7 +191,7 @@ contract ID_TKN is ReentrancyGuard, Context, AccessControl, ERC721Burnable, ERC7
      * which is called upon a safe transfer, and return the magic value
      * `bytes4(keccak256("onERC721Received(address,address,uint256,bytes)"))`; otherwise,
      * the transfer is reverted.
-     * Requires the msg.sender to be the owner, approved, or operator
+     * Requires the _msgSender() to be the owner, approved, or operator
      */
     function safeTransferFrom(
         address from,
@@ -218,7 +235,7 @@ contract ID_TKN is ReentrancyGuard, Context, AccessControl, ERC721Burnable, ERC7
         //^^^^^^^interactions^^^^^^^^^
     }
 
-            /**
+    /**
      * @dev Pauses all token transfers.
      *
      * See {ERC721Pausable} and {Pausable-_pause}.
@@ -228,8 +245,13 @@ contract ID_TKN is ReentrancyGuard, Context, AccessControl, ERC721Burnable, ERC7
      * - the caller must have the `PAUSER_ROLE`.
      */
     function pause() public virtual {
-        require(hasRole(PAUSER_ROLE, _msgSender()), "ERC721PresetMinterPauserAutoId: must have pauser role to pause");
+        require(
+            hasRole(PAUSER_ROLE, _msgSender()),
+            "ERC721PresetMinterPauserAutoId: must have pauser role to pause"
+        );
+        //^^^^^^^checks^^^^^^^^
         _pause();
+        //^^^^^^^interactions^^^^^^^^^
     }
 
     /**
@@ -242,11 +264,20 @@ contract ID_TKN is ReentrancyGuard, Context, AccessControl, ERC721Burnable, ERC7
      * - the caller must have the `PAUSER_ROLE`.
      */
     function unpause() public virtual {
-        require(hasRole(PAUSER_ROLE, _msgSender()), "ERC721PresetMinterPauserAutoId: must have pauser role to unpause");
+        require(
+            hasRole(PAUSER_ROLE, _msgSender()),
+            "ERC721PresetMinterPauserAutoId: must have pauser role to unpause"
+        );
+        //^^^^^^^checks^^^^^^^^
         _unpause();
+        //^^^^^^^interactions^^^^^^^^^
     }
 
-    function _beforeTokenTransfer(address from, address to, uint256 tokenId) internal virtual override(ERC721, ERC721Pausable) {
+    function _beforeTokenTransfer(
+        address from,
+        address to,
+        uint256 tokenId
+    ) internal virtual override(ERC721, ERC721Pausable) {
         super._beforeTokenTransfer(from, to, tokenId);
     }
 }

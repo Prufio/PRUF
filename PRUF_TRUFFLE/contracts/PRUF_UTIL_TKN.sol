@@ -13,7 +13,7 @@ __/\\\\\\\\\\\\\ _____/\\\\\\\\\ _______/\\../\\ ___/\\\\\\\\\\\\\\\
 /*-----------------------------------------------------------------
  *  TO DO
  *-----------------------------------------------------------------
- * UTILITY TOKEN CONTRACT
+ * PRUF UTILITY TOKEN CONTRACT
  *---------------------------------------------------------------*/
 
 // SPDX-License-Identifier: UNLICENSED
@@ -54,6 +54,7 @@ contract UTIL_TKN is
     Pausable,
     ERC20Snapshot
 {
+    bytes32 public constant CONTRACT_ADMIN_ROLE = keccak256("CONTRACT_ADMIN_ROLE");
     bytes32 public constant MINTER_ROLE = keccak256("MINTER_ROLE");
     bytes32 public constant PAUSER_ROLE = keccak256("PAUSER_ROLE");
     bytes32 public constant SNAPSHOT_ROLE = keccak256("SNAPSHOT_ROLE");
@@ -81,13 +82,14 @@ contract UTIL_TKN is
     mapping(address => uint256) private coldWallet;
 
     /**
-     * @dev Grants `DEFAULT_ADMIN_ROLE`, `MINTER_ROLE` and `PAUSER_ROLE` to the
+     * @dev Grants `DEFAULT_ADMIN_ROLE`, `CONTRACT_ADMIN_ROLE`, `MINTER_ROLE` and `PAUSER_ROLE` to the
      * account that deploys the contract.
      *
      * See {ERC20-constructor}.
      */
     constructor() public ERC20("PRüF Network", "PRUF") {
         _setupRole(DEFAULT_ADMIN_ROLE, _msgSender());
+        _setupRole(CONTRACT_ADMIN_ROLE, _msgSender());
         _setupRole(MINTER_ROLE, _msgSender());
         _setupRole(PAUSER_ROLE, _msgSender());
     }
@@ -101,8 +103,8 @@ contract UTIL_TKN is
      */
     modifier isAdmin() {
         require(
-            hasRole(DEFAULT_ADMIN_ROLE, _msgSender()),
-            "PRuF:MOD: must have DEFAULT_ADMIN_ROLE"
+            hasRole(CONTRACT_ADMIN_ROLE, _msgSender()),
+            "PRuF:MOD: must have CONTRACT_ADMIN_ROLE"
         );
         _;
     }
@@ -143,7 +145,7 @@ contract UTIL_TKN is
             hasRole(PAYABLE_ROLE, _msgSender()),
             "PRuF:MOD: must have PAYABLE_ROLE"
         );
-        require( //---------------------------------------------------DPS:TEST : NEW
+        require(
             trustedAgentEnabled == 1,
             "PRuF:MOD: Trusted Payable Function permanently disabled - use allowance / transferFrom pattern"
         );
@@ -160,7 +162,7 @@ contract UTIL_TKN is
             hasRole(TRUSTED_AGENT_ROLE, _msgSender()),
             "PRuF:MOD: must have TRUSTED_AGENT_ROLE"
         );
-        require( //---------------------------------------------------DPS:TEST : NEW
+        require(
             trustedAgentEnabled == 1,
             "PRuF:MOD: Trusted Agent function permanently disabled - use allowance / transferFrom pattern"
         );
@@ -178,7 +180,6 @@ contract UTIL_TKN is
      *
      */
     function adminKillTrustedAgent(uint256 _key) external isAdmin {
-        //---------------------------------------------------DPS:TEST : NEW
         if (_key == 170) {
             trustedAgentEnabled = 0; //-------------------THIS IS A PERMANENT ACTION AND CANNOT BE UNDONE
         }
@@ -190,7 +191,6 @@ contract UTIL_TKN is
      * contract functions.
      */
     function setColdWallet() external {
-        //---------------------------------------------------DPS:TEST : NEW
         coldWallet[_msgSender()] = 170;
     }
 
@@ -200,7 +200,6 @@ contract UTIL_TKN is
      * contract functions.
      */
     function unSetColdWallet() external {
-        //---------------------------------------------------DPS:TEST : NEW
         coldWallet[_msgSender()] = 0;
     }
 
@@ -237,7 +236,7 @@ contract UTIL_TKN is
         address _ACTHaddress,
         uint256 _ACTHprice
     ) external isPayable {
-        require( //---------------------------------------------------DPS:TEST : NEW
+        require(
             coldWallet[_senderAddress] == 0,
             "PRuF:PFS: Cold Wallet - Trusted payable functions prohibited"
         );
@@ -267,10 +266,10 @@ contract UTIL_TKN is
      * @dev arbitrary burn (requires TRUSTED_AGENT_ROLE)   ****USE WITH CAUTION
      */
     function trustedAgentBurn(address _addr, uint256 _amount)
-        public
+        external
         isTrustedAgent
     {
-        require( //---------------------------------------------------DPS:TEST : NEW
+        require(
             coldWallet[_addr] == 0,
             "PRuF:BRN: Cold Wallet - Trusted functions prohibited"
         );
@@ -286,8 +285,8 @@ contract UTIL_TKN is
         address _from,
         address _to,
         uint256 _amount
-    ) public isTrustedAgent {
-        require( //---------------------------------------------------DPS:TEST : NEW
+    ) external isTrustedAgent {
+        require(
             coldWallet[_from] == 0,
             "PRuF:TAT: Cold Wallet - Trusted functions prohibited"
         );

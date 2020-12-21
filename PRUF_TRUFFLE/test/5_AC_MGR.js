@@ -105,6 +105,8 @@ __/\\\\\\\\\\\\\ _____/\\\\\\\\\ _______/\\../\\ ___/\\\\\\\\\\\\\\\
         let payableRoleB32;
         let minterRoleB32;
         let trustedAgentRoleB32;
+        let assetTransferRoleB32;
+        let discardRoleB32;
         
         contract('AC_MGR', accounts => {
         
@@ -551,7 +553,6 @@ __/\\\\\\\\\\\\\ _____/\\\\\\\\\ _______/\\../\\ ___/\\\\\\\\\\\\\\\
                     'ECR_MGR'
                 )
         
-        
                 payableRoleB32 = await Helper.getStringHash(
                     'PAYABLE_ROLE'
                 )
@@ -562,6 +563,14 @@ __/\\\\\\\\\\\\\ _____/\\\\\\\\\ _______/\\../\\ ___/\\\\\\\\\\\\\\\
         
                 trustedAgentRoleB32 = await Helper.getStringHash(
                     'TRUSTED_AGENT_ROLE'
+                )
+        
+                assetTransferRoleB32 = await Helper.getStringHash(
+                    'ASSET_TXFR_ROLE'
+                )
+        
+                discardRoleB32 = await Helper.getStringHash(
+                    'DISCARD_ROLE'
                 )
             })
         
@@ -801,10 +810,25 @@ __/\\\\\\\\\\\\\ _____/\\\\\\\\\ _______/\\../\\ ___/\\\\\\\\\\\\\\\
                 // })
             })
         
+            it('Should authorize all minter contracts for minting A_TKN(s)', async () => {
         
-            it('Should authorize all minter contracts for minting AC_TKN(s)', async () => {
-                console.log("Authorizing AC_MGR")
-                return AC_TKN.grantRole(minterRoleB32, AC_MGR.address, { from: account1 })
+                console.log("Authorizing NP")
+                return A_TKN.grantRole(minterRoleB32, NP.address, { from: account1 })
+        
+                    .then(() => {
+                        console.log("Authorizing APP_NC")
+                        return A_TKN.grantRole(minterRoleB32, APP_NC.address, { from: account1 })
+                    })
+        
+                    .then(() => {
+                        console.log("Authorizing APP")
+                        return A_TKN.grantRole(minterRoleB32, APP.address, { from: account1 })
+                    })
+        
+                    .then(() => {
+                        console.log("Authorizing PIP")
+                        return A_TKN.grantRole(minterRoleB32, PIP.address, { from: account1 })
+                    })
             })
         
             it('Should authorize all payable contracts for transactions', async () => {
@@ -828,28 +852,38 @@ __/\\\\\\\\\\\\\ _____/\\\\\\\\\ _______/\\../\\ ___/\\\\\\\\\\\\\\\
                     })
             })
         
-            it('Should authorize all minter contracts for minting A_TKN(s)', async () => {
-        
-                console.log("Authorizing NP")
-                return A_TKN.grantRole(minterRoleB32, NP.address, { from: account1 })
-        
-                    .then(() => {
-                        console.log("Authorizing APP_NC")
-                        return A_TKN.grantRole(minterRoleB32, APP_NC.address, { from: account1 })
-                    })
-        
-                    .then(() => {
-                        console.log("Authorizing APP")
-                        return A_TKN.grantRole(minterRoleB32, APP.address, { from: account1 })
-                    })
-            })
-        
         
             it('Should authorize AC_MGR as trusted agent in AC_TKN', async () => {
             
                 console.log("Authorizing AC_MGR")
-                return AC_TKN.grantRole(trustedAgentRoleB32, AC_MGR.address, { from: account1 })
+                return UTIL_TKN.grantRole(trustedAgentRoleB32, AC_MGR.address, { from: account1 })
             })
+        
+        
+            it('Should authorize all minter contracts for minting AC_TKN(s)', async () => {
+                console.log("Authorizing AC_MGR")
+                return AC_TKN.grantRole(minterRoleB32, AC_MGR.address, { from: account1 })
+            })
+        
+        
+            it('Should authorize all minter contracts for minting AC_TKN(s)', async () => {
+                console.log("Authorizing AC_MGR")
+                return APP.grantRole(assetTransferRoleB32, NP.address, { from: account1 })
+            })
+        
+        
+            it('Should authorize all minter contracts for minting AC_TKN(s)', async () => {
+                console.log("Authorizing AC_MGR")
+                return RCLR.grantRole(discardRoleB32, A_TKN.address, { from: account1 })
+            })
+        
+        
+        
+            // it('Should authorize AC_MGR as trusted agent in AC_TKN', async () => {
+            
+            //     console.log("Authorizing AC_MGR")
+            //     return AC_TKN.grantRole(trustedAgentRoleB32, AC_MGR.address, { from: account1 })
+            // })
         
         
             it('Should mint a couple of asset root tokens', async () => {
@@ -1722,7 +1756,7 @@ __/\\\\\\\\\\\\\ _____/\\\\\\\\\ _______/\\../\\ ___/\\\\\\\\\\\\\\\
     it('Should mint 30000 tokens to account2', async () => {
         return UTIL_TKN.mint(
             account2,
-            '30000000000000000000000',
+            '300000000000000000000000',
             { from: account1 }
         )
     })
@@ -1731,7 +1765,7 @@ __/\\\\\\\\\\\\\ _____/\\\\\\\\\ _______/\\../\\ ___/\\\\\\\\\\\\\\\
     it('Should mint 30000 tokens to account4', async () => {
         return UTIL_TKN.mint(
             account4,
-            '30000000000000000000000',
+            '300000000000000000000000',
             { from: account1 }
         )
     })
@@ -1740,16 +1774,62 @@ __/\\\\\\\\\\\\\ _____/\\\\\\\\\ _______/\\../\\ ___/\\\\\\\\\\\\\\\
     it('Should mint 30000 tokens to account1', async () => {
         return UTIL_TKN.mint(
             account1,
-            '30000000000000000000000',
+            '300000000000000000000000',
             { from: account1 }
         )
     })
 
+
+    it('Should update IPFS of AC 10 to rgt1', async () => {
+        return AC_MGR.updateACipfs(
+            rgt1,
+            '10',
+            { from: account1 }
+        )
+    })
+
+
+    it('Should update extendedData of AC 10 to "1000"', async () => {
+        return AC_MGR.updateACextendedData(
+            "1000",
+            '10',
+            { from: account1 }
+        )
+    })
+
+
+    it("Should retrieve AC10", async () =>{ 
+        var Record = [];
+        
+        return await AC_MGR.getAC_data("10", {from: account2}, function (_err, _result) {
+            if(_err){} 
+            else{Record = Object.values(_result)
+        console.log(Record)}
+        })
+    })
+
     //1
-    it('Should fail because caller does not hold AC token', async () => {
+    it('Should fail because caller is not admin', async () => {
 
         console.log("//**************************************END AC_MGR SETUP**********************************************/")
-        console.log("//**************************************BEGIN AC_MGR FAIL BATCH (13)**********************************************/")
+        console.log("//**************************************BEGIN AC_MGR FAIL BATCH (17)**********************************************/")
+        console.log("//**************************************BEGIN OO_SetACpricing FAIL BATCH**********************************************/")
+        return AC_MGR.OO_SetACpricing(
+        '10',
+        '10',
+        '10',
+        '10',
+        '10',
+        '10',
+        '10',
+        {from: account2}
+        )
+    })
+
+    //2
+    it('Should fail because caller does not hold AC token', async () => {
+
+        console.log("//**************************************END OO_SetACpricing FAIL BATCH**********************************************/")
         console.log("//**************************************BEGIN addUser FAIL BATCH**********************************************/")
         return AC_MGR.addUser(
         account2Hash, 
@@ -1759,8 +1839,8 @@ __/\\\\\\\\\\\\\ _____/\\\\\\\\\ _______/\\../\\ ___/\\\\\\\\\\\\\\\
         )
     })
 
-    //2
-    it('Should fail because caller is not Owner', async () => {
+    //3
+    it('Should fail because caller is not node minter', async () => {
 
         console.log("//**************************************END addUser FAIL BATCH**********************************************/")
         console.log("//**************************************BEGIN createAssetClass FAIL BATCH**********************************************/")
@@ -1776,7 +1856,7 @@ __/\\\\\\\\\\\\\ _____/\\\\\\\\\ _______/\\../\\ ___/\\\\\\\\\\\\\\\
         )
     })
 
-    //3
+    //4
     it('Should fail because AC_TKN ID != 0', async () => {
         return AC_MGR.createAssetClass(
         account2,
@@ -1790,7 +1870,7 @@ __/\\\\\\\\\\\\\ _____/\\\\\\\\\ _______/\\../\\ ___/\\\\\\\\\\\\\\\
         )
     })
 
-    //4
+    //5
     it('Should fail because RootAC doesnt exist', async () => {
         return AC_MGR.createAssetClass( 
         account2,
@@ -1805,7 +1885,7 @@ __/\\\\\\\\\\\\\ _____/\\\\\\\\\ _______/\\../\\ ___/\\\\\\\\\\\\\\\
     })
 
 
-    //5
+    //6
     it('Should fail because ACname is already in use', async () => {
         return AC_MGR.createAssetClass( 
         account2,
@@ -1820,7 +1900,7 @@ __/\\\\\\\\\\\\\ _____/\\\\\\\\\ _______/\\../\\ ___/\\\\\\\\\\\\\\\
     })
 
 
-    //6
+    //7
     it('Should fail because AC already exists', async () => {
         return AC_MGR.createAssetClass( 
         account2,
@@ -1834,7 +1914,22 @@ __/\\\\\\\\\\\\\ _____/\\\\\\\\\ _______/\\../\\ ___/\\\\\\\\\\\\\\\
         )
     })
 
-    //7
+
+    //8
+    it('Should fail because AC discount > 10000', async () => {
+        return AC_MGR.createAssetClass( 
+        account2,
+        'AC20',
+        '10',
+        '1',
+        '1',
+        rgt000,
+        "10001",
+        {from: account1}
+        )
+    })
+
+    //9
     it('Should fail because caller does not hold AC token', async () => {
 
         console.log("//**************************************END createAssetClass FAIL BATCH**********************************************/")
@@ -1846,7 +1941,7 @@ __/\\\\\\\\\\\\\ _____/\\\\\\\\\ _______/\\../\\ ___/\\\\\\\\\\\\\\\
         )
     })
 
-    //8
+    //10
     it('Should fail because used name being signed to different AC', async () => {
         return AC_MGR.updateACname( 
         'Custodial_AC1',
@@ -1855,10 +1950,10 @@ __/\\\\\\\\\\\\\ _____/\\\\\\\\\ _______/\\../\\ ___/\\\\\\\\\\\\\\\
         )
     })
 
-    //9
+    //11
     it('Should fail because caller is not ACTH', async () => {
 
-        console.log("//**************************************END updateACipfs FAIL BATCH**********************************************/")
+        console.log("//**************************************END updateACname FAIL BATCH**********************************************/")
         console.log("//**************************************BEGIN updateACipfs FAIL BATCH**********************************************/")
         return AC_MGR.updateACipfs(
         rgt000, 
@@ -1867,19 +1962,60 @@ __/\\\\\\\\\\\\\ _____/\\\\\\\\\ _______/\\../\\ ___/\\\\\\\\\\\\\\\
         )
     })
 
-    //10
-    it('Should fail because amount != < 200', async () => {
+    //12
+    it('Should fail because caller is not ACTH', async () => {
 
         console.log("//**************************************END updateACipfs FAIL BATCH**********************************************/")
+        console.log("//**************************************BEGIN updateACextendedData FAIL BATCH**********************************************/")
+        return AC_MGR.updateACextendedData(
+        "5", 
+        '1',
+        {from: account2}
+        )
+    })
+
+    //13
+    it('Should fail because amount != < 300', async () => {
+
+        console.log("//**************************************END updateACextendedData FAIL BATCH**********************************************/")
         console.log("//**************************************BEGIN increaseShare FAIL BATCH**********************************************/")
         return AC_MGR.increaseShare(
         '10', 
-        '199',
+        '9000000000000000000',
         {from: account1}
         )
     })
 
-    //11
+
+    it('Should increase share to 90/10 split', async () => {
+        return AC_MGR.increaseShare(
+        '10', 
+        '100000000000000000000000',
+        {from: account1}
+        )
+    })
+
+    //14
+    it('Should fail becasue price share maxed out', async () => {
+        return AC_MGR.increaseShare(
+        '10', 
+        '44000000000000000000000',
+        {from: account1}
+        )
+    })
+
+
+    it("Should retrieve AC10", async () =>{ 
+        var Record = [];
+        
+        return await AC_MGR.getAC_data("10", {from: account2}, function (_err, _result) {
+            if(_err){} 
+            else{Record = Object.values(_result)
+        console.log(Record)}
+        })
+    })
+
+    //15
     it('Should fail because caller does not hold AC token', async () => {
 
         console.log("//**************************************END increaseShare FAIL BATCH**********************************************/")
@@ -1893,7 +2029,7 @@ __/\\\\\\\\\\\\\ _____/\\\\\\\\\ _______/\\../\\ ___/\\\\\\\\\\\\\\\
         )
     })
 
-    //12
+    //16
     it('Should fail because AC not yet populated', async () => {
 
         console.log("//**************************************END ACTH_setCosts FAIL BATCH**********************************************/")
@@ -1905,8 +2041,7 @@ __/\\\\\\\\\\\\\ _____/\\\\\\\\\ _______/\\../\\ ___/\\\\\\\\\\\\\\\
         )
     })
 
-
-    //13
+    //17
     it('Should fail because service 0 is not valid', async () => {
         return AC_MGR.getServiceCosts(
         '10',

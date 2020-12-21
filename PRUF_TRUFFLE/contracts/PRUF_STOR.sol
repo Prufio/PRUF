@@ -16,7 +16,7 @@ __/\\\\\\\\\\\\\ _____/\\\\\\\\\ _______/\\../\\ ___/\\\\\\\\\\\\\\\
  *---------------------------------------------------------------*/
 
 /*-----------------------------------------------------------------
- *  PRUF STOR is the primary data repository for the PRUF system. No direct user writes are permitted in STOR, all data must come from explicitly approved contracts.
+ *  PRUF STOR  is the primary data repository for the PRUF system. No direct user writes are permitted in STOR, all data must come from explicitly approved contracts.
  *  PRUF STOR  stores records in a map of Records, foreward and reverse name resolution for approved contracts, as well as contract authorization data.
  *---------------------------------------------------------------*/
 
@@ -34,12 +34,18 @@ __/\\\\\\\\\\\\\ _____/\\\\\\\\\ _______/\\../\\ ___/\\\\\\\\\\\\\\\
 pragma solidity ^0.6.7;
 
 import "./PRUF_INTERFACES.sol";
-import "./Imports/access/Ownable.sol";
+import "./Imports/access/AccessControl.sol";
 import "./Imports/utils/Pausable.sol";
 import "./Imports/math/Safemath.sol";
 import "./Imports/utils/ReentrancyGuard.sol";
 
-contract STOR is Ownable, ReentrancyGuard, Pausable {
+contract STOR is AccessControl, ReentrancyGuard, Pausable {
+
+    bytes32 public constant PAUSER_ROLE = keccak256("PAUSER_ROLE");
+    bytes32 public constant CONTRACT_ADMIN_ROLE = keccak256("CONTRACT_ADMIN_ROLE");
+
+    bytes32 public constant B320xF_ = 0xFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF;
+
     struct Record {
         // Still have room for a free bytes(16) or a uint 128 !!!
         uint8 assetStatus; // Status - Transferrable, locked, in transfer, stolen, lost, etc.
@@ -65,7 +71,39 @@ contract STOR is Ownable, ReentrancyGuard, Pausable {
     address internal AC_MGR_Address;
     AC_MGR_Interface internal AC_MGR; // Set up external contract interface for AC_MGR
 
+    constructor() public {
+        _setupRole(DEFAULT_ADMIN_ROLE, _msgSender());
+        _setupRole(CONTRACT_ADMIN_ROLE, _msgSender());
+        _setupRole(PAUSER_ROLE, _msgSender());
+    }
+
     //----------------------------------------------Modifiers----------------------------------------------//
+
+    /*
+     * @dev Verify user credentials
+     * Originating Address:
+     *      is admin
+     */
+    modifier isAdmin() {
+        require(
+            hasRole(CONTRACT_ADMIN_ROLE, _msgSender()),
+            "PAM:MOD: must have CONTRACT_ADMIN_ROLE"
+        );
+        _;
+    }
+
+    /*
+     * @dev Verify user credentials
+     * Originating Address:
+     *      is Pauser
+     */
+    modifier isPauser() {
+        require(
+            hasRole(PAUSER_ROLE, _msgSender()),
+            "PAM:MOD: must have PAUSER_ROLE"
+        );
+        _;
+    }
 
     /*
      * @dev Verify user credentials
@@ -109,7 +147,7 @@ contract STOR is Ownable, ReentrancyGuard, Pausable {
      */
     modifier isEscrowManager() {
         require(
-            msg.sender == contractNameToAddress["ECR_MGR"],
+            _msgSender() == contractNameToAddress["ECR_MGR"],
             "S:MOD-IEM:Caller not ECR_MGR"
         );
         _;
@@ -162,19 +200,19 @@ contract STOR is Ownable, ReentrancyGuard, Pausable {
 
     event REPORT(string _msg, bytes32 b32);
 
-    //--------------------------------Internal Admin functions / onlyowner or isAdmin---------------------------------//
+    //--------------------------------Internal Admin functions / isAdmin---------------------------------//
 
     /*
      * @dev Triggers stopped state. (pausable)
      */
-    function pause() external onlyOwner {
+    function pause() external isPauser {
         _pause();
     }
 
     /*
      * @dev Returns to normal state. (pausable)
      */
-    function unpause() external onlyOwner {
+    function unpause() external isPauser {
         _unpause();
     }
 
@@ -187,7 +225,7 @@ contract STOR is Ownable, ReentrancyGuard, Pausable {
         address _addr,
         uint32 _assetClass,
         uint8 _contractAuthLevel
-    ) external onlyOwner {
+    ) external isAdmin {
         require(_assetClass == 0, "S:AC: AC not 0");
         //require(_contractAuthLevel <= 10, "S:AC: Invalid auth lv");
         //^^^^^^^checks^^^^^^^^^
@@ -214,7 +252,7 @@ contract STOR is Ownable, ReentrancyGuard, Pausable {
         uint8 _contractAuthLevel
     ) external {
         require(
-            AC_TKN.ownerOf(_assetClass) == msg.sender,
+            AC_TKN.ownerOf(_assetClass) == _msgSender(),
             "S:ECFAC:Caller not ACtokenHolder"
         );
 
@@ -245,7 +283,7 @@ contract STOR is Ownable, ReentrancyGuard, Pausable {
     {
         require(
             database[_idxHash].assetStatus != 60,
-            "S:NR:Asset is rcycl. Use PRUF_APP_NC rcycl"
+            "S:NR:Asset discarded use APP_NC rcycl"
         );
         require(database[_idxHash].assetClass == 0, "S:NR:Rec already exists");
         require(_rgtHash != 0, "S:NR:RGT = 0");
@@ -254,7 +292,7 @@ contract STOR is Ownable, ReentrancyGuard, Pausable {
 
         Record memory rec;
 
-        if (contractInfo[contractAddressToName[msg.sender]][_assetClass] == 1) {
+        if (contractInfo[contractAddressToName[_msgSender()]][_assetClass] == 1) {
             rec.assetStatus = 0;
         } else {
             rec.assetStatus = 51;
@@ -410,9 +448,9 @@ contract STOR is Ownable, ReentrancyGuard, Pausable {
         //^^^^^^^checks^^^^^^^^^
 
         if (_newAssetStatus == 60) {
-            //if setting to "escrow" status, set rgt to 0xFFF... (to prevent reminting)
+            //if setting to "escrow" status, set rgt to 0xFFF_
             rec
-                .rightsHolder = 0xFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF;
+                .rightsHolder = B320xF_;
         }
 
         rec.assetStatus = _newAssetStatus;
@@ -467,7 +505,7 @@ contract STOR is Ownable, ReentrancyGuard, Pausable {
         notEscrow(_idxHash) // asset must not be held in escrow status
     {
         Record memory rec = database[_idxHash];
-        require((isTransferred(rec.assetStatus) == 0), "S:MI2: Txfrd asset"); //asset cannot be in transferred status
+        require((isTransferred(rec.assetStatus) == 0), "S:MI2: Txfrd asset"); //STAT UNREACHABLE
 
         require((rec.Ipfs1 != _Ipfs1), "S:MI1: New value = old");
         //^^^^^^^checks^^^^^^^^^
@@ -651,6 +689,4 @@ contract STOR is Ownable, ReentrancyGuard, Pausable {
         );
         //^^^^^^^interactions^^^^^^^^^
     }
-
-    //-----------------------------------------------Private functions------------------------------------------------//
 }

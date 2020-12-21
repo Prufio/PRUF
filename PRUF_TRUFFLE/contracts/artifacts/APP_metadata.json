@@ -9,25 +9,6 @@
 				"anonymous": false,
 				"inputs": [
 					{
-						"indexed": true,
-						"internalType": "address",
-						"name": "previousOwner",
-						"type": "address"
-					},
-					{
-						"indexed": true,
-						"internalType": "address",
-						"name": "newOwner",
-						"type": "address"
-					}
-				],
-				"name": "OwnershipTransferred",
-				"type": "event"
-			},
-			{
-				"anonymous": false,
-				"inputs": [
-					{
 						"indexed": false,
 						"internalType": "address",
 						"name": "account",
@@ -48,6 +29,81 @@
 					}
 				],
 				"name": "REPORT",
+				"type": "event"
+			},
+			{
+				"anonymous": false,
+				"inputs": [
+					{
+						"indexed": true,
+						"internalType": "bytes32",
+						"name": "role",
+						"type": "bytes32"
+					},
+					{
+						"indexed": true,
+						"internalType": "bytes32",
+						"name": "previousAdminRole",
+						"type": "bytes32"
+					},
+					{
+						"indexed": true,
+						"internalType": "bytes32",
+						"name": "newAdminRole",
+						"type": "bytes32"
+					}
+				],
+				"name": "RoleAdminChanged",
+				"type": "event"
+			},
+			{
+				"anonymous": false,
+				"inputs": [
+					{
+						"indexed": true,
+						"internalType": "bytes32",
+						"name": "role",
+						"type": "bytes32"
+					},
+					{
+						"indexed": true,
+						"internalType": "address",
+						"name": "account",
+						"type": "address"
+					},
+					{
+						"indexed": true,
+						"internalType": "address",
+						"name": "sender",
+						"type": "address"
+					}
+				],
+				"name": "RoleGranted",
+				"type": "event"
+			},
+			{
+				"anonymous": false,
+				"inputs": [
+					{
+						"indexed": true,
+						"internalType": "bytes32",
+						"name": "role",
+						"type": "bytes32"
+					},
+					{
+						"indexed": true,
+						"internalType": "address",
+						"name": "account",
+						"type": "address"
+					},
+					{
+						"indexed": true,
+						"internalType": "address",
+						"name": "sender",
+						"type": "address"
+					}
+				],
+				"name": "RoleRevoked",
 				"type": "event"
 			},
 			{
@@ -204,9 +260,54 @@
 			},
 			{
 				"inputs": [],
-				"name": "OO_pause",
-				"outputs": [],
-				"stateMutability": "nonpayable",
+				"name": "ASSET_TXFR_ROLE",
+				"outputs": [
+					{
+						"internalType": "bytes32",
+						"name": "",
+						"type": "bytes32"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [],
+				"name": "B320xF_",
+				"outputs": [
+					{
+						"internalType": "bytes32",
+						"name": "",
+						"type": "bytes32"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [],
+				"name": "CONTRACT_ADMIN_ROLE",
+				"outputs": [
+					{
+						"internalType": "bytes32",
+						"name": "",
+						"type": "bytes32"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [],
+				"name": "DEFAULT_ADMIN_ROLE",
+				"outputs": [
+					{
+						"internalType": "bytes32",
+						"name": "",
+						"type": "bytes32"
+					}
+				],
+				"stateMutability": "view",
 				"type": "function"
 			},
 			{
@@ -237,9 +338,9 @@
 						"type": "address"
 					},
 					{
-						"internalType": "bytes32",
-						"name": "_idxHash",
-						"type": "bytes32"
+						"internalType": "uint256",
+						"name": "_tokenID",
+						"type": "uint256"
 					}
 				],
 				"name": "OO_transferACToken",
@@ -249,9 +350,119 @@
 			},
 			{
 				"inputs": [],
-				"name": "OO_unpause",
+				"name": "PAUSER_ROLE",
+				"outputs": [
+					{
+						"internalType": "bytes32",
+						"name": "",
+						"type": "bytes32"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "bytes32",
+						"name": "role",
+						"type": "bytes32"
+					}
+				],
+				"name": "getRoleAdmin",
+				"outputs": [
+					{
+						"internalType": "bytes32",
+						"name": "",
+						"type": "bytes32"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "bytes32",
+						"name": "role",
+						"type": "bytes32"
+					},
+					{
+						"internalType": "uint256",
+						"name": "index",
+						"type": "uint256"
+					}
+				],
+				"name": "getRoleMember",
+				"outputs": [
+					{
+						"internalType": "address",
+						"name": "",
+						"type": "address"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "bytes32",
+						"name": "role",
+						"type": "bytes32"
+					}
+				],
+				"name": "getRoleMemberCount",
+				"outputs": [
+					{
+						"internalType": "uint256",
+						"name": "",
+						"type": "uint256"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "bytes32",
+						"name": "role",
+						"type": "bytes32"
+					},
+					{
+						"internalType": "address",
+						"name": "account",
+						"type": "address"
+					}
+				],
+				"name": "grantRole",
 				"outputs": [],
 				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "bytes32",
+						"name": "role",
+						"type": "bytes32"
+					},
+					{
+						"internalType": "address",
+						"name": "account",
+						"type": "address"
+					}
+				],
+				"name": "hasRole",
+				"outputs": [
+					{
+						"internalType": "bool",
+						"name": "",
+						"type": "bool"
+					}
+				],
+				"stateMutability": "view",
 				"type": "function"
 			},
 			{
@@ -290,15 +501,9 @@
 			},
 			{
 				"inputs": [],
-				"name": "owner",
-				"outputs": [
-					{
-						"internalType": "address",
-						"name": "",
-						"type": "address"
-					}
-				],
-				"stateMutability": "view",
+				"name": "pause",
+				"outputs": [],
+				"stateMutability": "nonpayable",
 				"type": "function"
 			},
 			{
@@ -315,8 +520,37 @@
 				"type": "function"
 			},
 			{
-				"inputs": [],
-				"name": "renounceOwnership",
+				"inputs": [
+					{
+						"internalType": "bytes32",
+						"name": "role",
+						"type": "bytes32"
+					},
+					{
+						"internalType": "address",
+						"name": "account",
+						"type": "address"
+					}
+				],
+				"name": "renounceRole",
+				"outputs": [],
+				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "bytes32",
+						"name": "role",
+						"type": "bytes32"
+					},
+					{
+						"internalType": "address",
+						"name": "account",
+						"type": "address"
+					}
+				],
+				"name": "revokeRole",
 				"outputs": [],
 				"stateMutability": "nonpayable",
 				"type": "function"
@@ -340,14 +574,8 @@
 				"type": "function"
 			},
 			{
-				"inputs": [
-					{
-						"internalType": "address",
-						"name": "newOwner",
-						"type": "address"
-					}
-				],
-				"name": "transferOwnership",
+				"inputs": [],
+				"name": "unpause",
 				"outputs": [],
 				"stateMutability": "nonpayable",
 				"type": "function"
@@ -356,23 +584,35 @@
 		"devdoc": {
 			"kind": "dev",
 			"methods": {
-				"OO_pause()": {
+				"getRoleAdmin(bytes32)": {
+					"details": "Returns the admin role that controls `role`. See {grantRole} and {revokeRole}. To change a role's admin, use {_setRoleAdmin}."
+				},
+				"getRoleMember(bytes32,uint256)": {
+					"details": "Returns one of the accounts that have `role`. `index` must be a value between 0 and {getRoleMemberCount}, non-inclusive. Role bearers are not sorted in any particular way, and their ordering may change at any point. WARNING: When using {getRoleMember} and {getRoleMemberCount}, make sure you perform all queries on the same block. See the following https://forum.openzeppelin.com/t/iterating-over-elements-on-enumerableset-in-openzeppelin-contracts/2296[forum post] for more information."
+				},
+				"getRoleMemberCount(bytes32)": {
+					"details": "Returns the number of accounts that have `role`. Can be used together with {getRoleMember} to enumerate all bearers of a role."
+				},
+				"grantRole(bytes32,address)": {
+					"details": "Grants `role` to `account`. If `account` had not been already granted `role`, emits a {RoleGranted} event. Requirements: - the caller must have ``role``'s admin role."
+				},
+				"hasRole(bytes32,address)": {
+					"details": "Returns `true` if `account` has been granted `role`."
+				},
+				"pause()": {
 					"details": "Triggers stopped state. (pausable)"
-				},
-				"OO_unpause()": {
-					"details": "Returns to normal state. (pausable)"
-				},
-				"owner()": {
-					"details": "Returns the address of the current owner."
 				},
 				"paused()": {
 					"details": "Returns true if the contract is paused, and false otherwise."
 				},
-				"renounceOwnership()": {
-					"details": "Leaves the contract without owner. It will not be possible to call `onlyOwner` functions anymore. Can only be called by the current owner. NOTE: Renouncing ownership will leave the contract without an owner, thereby removing any functionality that is only available to the owner."
+				"renounceRole(bytes32,address)": {
+					"details": "Revokes `role` from the calling account. Roles are often managed via {grantRole} and {revokeRole}: this function's purpose is to provide a mechanism for accounts to lose their privileges if they are compromised (such as when a trusted device is misplaced). If the calling account had been granted `role`, emits a {RoleRevoked} event. Requirements: - the caller must be `account`."
 				},
-				"transferOwnership(address)": {
-					"details": "Transfers ownership of the contract to a new account (`newOwner`). Can only be called by the current owner."
+				"revokeRole(bytes32,address)": {
+					"details": "Revokes `role` from `account`. If `account` had been granted `role`, emits a {RoleRevoked} event. Requirements: - the caller must have ``role``'s admin role."
+				},
+				"unpause()": {
+					"details": "Returns to normal state. (pausable)"
 				}
 			},
 			"version": 1
@@ -385,7 +625,7 @@
 	},
 	"settings": {
 		"compilationTarget": {
-			"localhost/PRUF_APP.sol": "APP"
+			"localhost/PRUF/PRUF_TRUFFLE/contracts/PRUF_APP.sol": "APP"
 		},
 		"evmVersion": "istanbul",
 		"libraries": {},
@@ -393,90 +633,129 @@
 			"bytecodeHash": "ipfs"
 		},
 		"optimizer": {
-			"enabled": false,
-			"runs": 200
+			"enabled": true,
+			"runs": 1000
 		},
 		"remappings": []
 	},
 	"sources": {
-		"localhost/Imports/GSN/Context.sol": {
-			"keccak256": "0xd9e1cdbea4cf7c51ac26f5782db0fb3d78c1b37e090547e83aef497a727a18f5",
+		"localhost/PRUF/PRUF_TRUFFLE/contracts/Imports/GSN/Context.sol": {
+			"keccak256": "0xdb26cbf4d028490f49831a7865c2fe1b28db44b535ca8d343785a3b768aae183",
 			"license": "MIT",
 			"urls": [
-				"bzz-raw://5017e004334d7579774232e18f739ee9eb39438d03c49a9451a35e315c28761b",
-				"dweb:/ipfs/QmNb8Q8C6WLgtWqCE7iL5T1UN52Q6QsE7ZtVc6ppcvViXe"
+				"bzz-raw://840b14ce0315c47d49ba328f1f9fa7654ded1c9e1559e6c5e777a7b2dc28bf0a",
+				"dweb:/ipfs/QmTLLabn4wcfGro9LEmUXUN2nwKqZSotXMvjDCLXEnLtZP"
 			]
 		},
-		"localhost/Imports/access/Ownable.sol": {
-			"keccak256": "0x78d7d9211513b60f81db3089fffbc1ce5c3d87d021d54c9c41a909000ba8bbc4",
+		"localhost/PRUF/PRUF_TRUFFLE/contracts/Imports/access/AccessControl.sol": {
+			"keccak256": "0x92f7900d382761c7faefeaced81c6b4f1aae909ed0551803bfe8f27101956360",
 			"license": "MIT",
 			"urls": [
-				"bzz-raw://6c0471235adc538bfe1054546ff5136cf463a0c139b6c38e6aafeeb4a2a00c58",
-				"dweb:/ipfs/QmdHm68MUvSaVCbJkDpxyyeMJoG6upDMjBKgt91HZHW71G"
+				"bzz-raw://407c0864143968542e5cf5aa7556916d2cf292b201e3dadb65662e9a3aa24187",
+				"dweb:/ipfs/QmSnXzYAUaGLGr7uofRbgQraTJvatbjQLBPhyYiMd18oUJ"
 			]
 		},
-		"localhost/Imports/math/safeMath.sol": {
-			"keccak256": "0x8d890f7a794b66b8b3ab54779603c254f85ee0d436dd4a17b3543c6629b726f8",
+		"localhost/PRUF/PRUF_TRUFFLE/contracts/Imports/math/SafeMath.sol": {
+			"keccak256": "0x9a9cf02622cd7a64261b10534fc3260449da25c98c9e96d1b4ae8110a20e5806",
 			"license": "MIT",
 			"urls": [
-				"bzz-raw://887bb68104c8f862a66939b192a85e79564bed9bbe72cda6240fd89bbea642fd",
-				"dweb:/ipfs/QmbC56SFqW7UCx26RfPFWPiEXnQTJXSBA5r4SrojRMHqeM"
+				"bzz-raw://2df142592d1dc267d9549049ee3317fa190d2f87eaa565f86ab05ec83f7ab8f5",
+				"dweb:/ipfs/QmSkJtcfWo7c42KnL5hho6GFxK6HRNV91XABx1P7xDtfLV"
 			]
 		},
-		"localhost/Imports/token/ERC721/IERC721Receiver.sol": {
-			"keccak256": "0x90dea29aecfa0bc55f3ba86bd24d87b19726e2affa86292f4ba8052e85cc4d56",
+		"localhost/PRUF/PRUF_TRUFFLE/contracts/Imports/token/ERC721/IERC721Receiver.sol": {
+			"keccak256": "0x42139300eda7e7fb232ab96972cda1abfd1dce2f013937a188f11fd813aeab27",
 			"license": "MIT",
 			"urls": [
-				"bzz-raw://b3518cea454999f659b0fd63f810ab61a7d568fe8ad974d84ab15febd321a0a5",
-				"dweb:/ipfs/QmSvS87R4H68JuokmA4oZMELAB49uJfSxeLGfZuXB7dowZ"
+				"bzz-raw://2042e1d443d327a245a101409ed079e3e207b2cf833cfda4a05483ac090ab9aa",
+				"dweb:/ipfs/QmTC5FVjhMGpzoD9uSGvy1aVmwC2r6mS8mn2tAGXG9AdgT"
 			]
 		},
-		"localhost/Imports/utils/Pausable.sol": {
-			"keccak256": "0xc3d606cfb7d9b7250ed2dd614e1ab1511ed8cdcc7a7c423c3a5b993e00ea0543",
+		"localhost/PRUF/PRUF_TRUFFLE/contracts/Imports/utils/Address.sol": {
+			"keccak256": "0x1845481964ebacf35afe1a006fa574793b52e698eba0a8db6e3d30202bc45429",
 			"license": "MIT",
 			"urls": [
-				"bzz-raw://4230f822b6508de19e5ae0170ab9e667711da3b10317fe389b0a9f6cbaaa11b2",
-				"dweb:/ipfs/Qmapwh2SdVRpuHVftsvyvf9GQGn4sBUa8jP3hSSBpnJxNR"
+				"bzz-raw://40da60a9727380e21c3527060691b2179bc7afc1e2e10ee41cd81e58a75f58e3",
+				"dweb:/ipfs/Qmc1mhjoT9LShTuUWFHaLfjj43qim2Fq7shMstU5bjkxcm"
 			]
 		},
-		"localhost/Imports/utils/ReentrancyGuard.sol": {
-			"keccak256": "0x2b2f3b136883f1de3b4de564209927bf1d3773d8fba53f4964ec30d9d035371b",
+		"localhost/PRUF/PRUF_TRUFFLE/contracts/Imports/utils/EnumerableSet.sol": {
+			"keccak256": "0x30912f281b544bc2a75f687df825521f11567048b5e704dd68414a1335635b88",
 			"license": "MIT",
 			"urls": [
-				"bzz-raw://4331f169bc7ee2afbf55e4b01445d573d0f9270d6d3d83b7074fbd13eb0e4335",
-				"dweb:/ipfs/QmcNH8K75n1zUU39DLAGgRPwVf8WbtTuys1fNhVrfmNK3L"
+				"bzz-raw://85efaa3fd24df1eb6ee01bc76b22fc26ed80c8fe163f99faa14b761b13892d06",
+				"dweb:/ipfs/QmcHiHVz3u9xCKLEAsgUbUnisDcrhT1zHDyWXtBBU7VW5t"
 			]
 		},
-		"localhost/PRUF_APP.sol": {
-			"keccak256": "0x9611cd713aad061117b9a995d80d7addece5283df2bf8cedbc34c7ecfc639ba1",
+		"localhost/PRUF/PRUF_TRUFFLE/contracts/Imports/utils/Pausable.sol": {
+			"keccak256": "0x5d1b1dcbc0396f44c1c8d554857f71e3187503bf1e54062bf9ec6782e21f3a08",
+			"license": "MIT",
+			"urls": [
+				"bzz-raw://9aa7fa580393aab7ca3d9f606f5ab7434d51e1c0f3632a593fca82c80ef8cc4c",
+				"dweb:/ipfs/QmRy84N7QfkwBM2AeR7UB5G1PPHdRLi6s1iyzAwCzevcHe"
+			]
+		},
+		"localhost/PRUF/PRUF_TRUFFLE/contracts/Imports/utils/ReentrancyGuard.sol": {
+			"keccak256": "0x7ff0067f2d7df4187eaa1cb4800949b929602c9d9cb20fcaee6922a7613ef2fb",
+			"license": "MIT",
+			"urls": [
+				"bzz-raw://78aa63fd7fbb8df2942b6c6e7bd89349507e306edbd5909ee8d9575c31be57e5",
+				"dweb:/ipfs/Qmf6z9KWKCJCfEVokgTBhBVq5yHtE6is31N8AV5BHdMkqQ"
+			]
+		},
+		"localhost/PRUF/PRUF_TRUFFLE/contracts/PRUF_APP.sol": {
+			"keccak256": "0x7057af04accd3064324310174b6457e42a8b40366fd6b3b0062fdc55fe819257",
 			"license": "UNLICENSED",
 			"urls": [
-				"bzz-raw://b50d31a96590a0f8288280f1aa8e097cce38cdeab5612cd1912af0b44a5c59fb",
-				"dweb:/ipfs/QmYAyu9k5dgeKb3U12zXKS1THXEUcqkbjhtfHMpmMtKLK8"
+				"bzz-raw://2ecba54bb439b8308f872d5b86dbd6e538c14a567039c72ec94a6f787a183118",
+				"dweb:/ipfs/QmehQvxhQUgAKjCYH3TLSm5DPSzExi3DU5zogCBKpXnTHt"
 			]
 		},
+<<<<<<< HEAD
+<<<<<<< HEAD
 		"localhost/PRUF_BASIC.sol": {
-			"keccak256": "0xb418374aba9029270bde595d29a1ad12fe33f096b45e8aad88e74138fa92adb7",
+			"keccak256": "0x71ce5bf57551db7fba92cc0bfa000eab0e2b9a5c51afc7662bbab1931a98e4de",
 			"license": "UNLICENSED",
 			"urls": [
-				"bzz-raw://c15103d85c632dd220fd9f029f9628f10e1cce02d0d7287e3f3506b7d5c128d9",
-				"dweb:/ipfs/QmXt5KqzmSMt1Tb2xYSeBBiham2D6xnBFBrZD7nSFANbrc"
+<<<<<<< Updated upstream
+				"bzz-raw://25f2b97087e72fc1718e3111e917ff3d2aa5f34d682cdb876e9dd744d6355ee4",
+				"dweb:/ipfs/QmbdZX91fV2yvQd6K48LPnnHnbXmmhs8fcbpyZ1rRpEJVw"
+=======
+				"bzz-raw://1d80ad2a3feca2ef5369152de77ced6f46b9055dd7bc196cde2aee315a36aa49",
+				"dweb:/ipfs/QmYvDN7EvWyxmU7WMNjMw6ECiw9khBhKxwWSNiqgVVMStq"
+=======
+		"localhost/PRUF/PRUF_TRUFFLE/contracts/PRUF_BASIC.sol": {
+			"keccak256": "0xeec1a7027ef7922758642b30267d71b9725cef07b3fc36a11ac8faec8eb1cd36",
+			"license": "UNLICENSED",
+			"urls": [
+				"bzz-raw://0ef9bed7a4e5f70326b22d310aad5f3ac037088269096663c53d96c180d34ecf",
+				"dweb:/ipfs/QmadGhapyopASg4gdCZJjpAcr7hyzxGrnFDGJBmffjdYDQ"
+>>>>>>> roles_implementation
+>>>>>>> Stashed changes
+=======
+		"localhost/PRUF/PRUF_TRUFFLE/contracts/PRUF_BASIC.sol": {
+			"keccak256": "0xeec1a7027ef7922758642b30267d71b9725cef07b3fc36a11ac8faec8eb1cd36",
+			"license": "UNLICENSED",
+			"urls": [
+				"bzz-raw://0ef9bed7a4e5f70326b22d310aad5f3ac037088269096663c53d96c180d34ecf",
+				"dweb:/ipfs/QmadGhapyopASg4gdCZJjpAcr7hyzxGrnFDGJBmffjdYDQ"
+>>>>>>> roles_implementation
 			]
 		},
-		"localhost/PRUF_CORE.sol": {
-			"keccak256": "0x4737e5ea5f6ce40e1287962de32a790c34755100c7ce50fd86a98f4aa1a3c4eb",
+		"localhost/PRUF/PRUF_TRUFFLE/contracts/PRUF_CORE.sol": {
+			"keccak256": "0xc3466c7882566ec0940afe151539299d5a617cffc714d6f3cc5d72a89e08d9c2",
 			"license": "UNLICENSED",
 			"urls": [
-				"bzz-raw://86007e653ecf2e9e2a81ba0d9b7f9672f4ba5482cbcc906981e1e836dd0e86f5",
-				"dweb:/ipfs/Qmcf3d9Mwu3rqY5h7Dc8KTQAMLcxx4SnZ2dT6hYNLSf2Uv"
+				"bzz-raw://8fd87bbd1262ac9c6eb5a4cffecdfd977c85d81b2774a5b6efcb0f871b17bdaf",
+				"dweb:/ipfs/QmRAoucnr9ekhCqzktd9s7eiFQpMRcy9i478mRPYRT6p5W"
 			]
 		},
-		"localhost/PRUF_INTERFACES.sol": {
-			"keccak256": "0xd075077959e701de21a76fb37922e8a837e616dda927cdb11cb489b9879d298c",
+		"localhost/PRUF/PRUF_TRUFFLE/contracts/PRUF_INTERFACES.sol": {
+			"keccak256": "0x1d0a4756c6e9d8dc68654a4feea636e23a2fb36514f28e4e1210559d4ccd23b9",
 			"license": "UNLICENSED",
 			"urls": [
-				"bzz-raw://a6a5195c9606303bc346a6c699bf3fad150c295d7eef16e3ac4bba7007474939",
-				"dweb:/ipfs/QmeGJwLfY2CQ4jdjroM26PKztRrrkftuUjaKB6ajyfFrDM"
+				"bzz-raw://b48f8ec61d75ac67c764b53c29b8a4dc0d5ecaf0fd9782e6d79d94dfc210f08b",
+				"dweb:/ipfs/QmY7aijEn4iKsxXQyQ4HoKS5ioCX9cKbdQzogYw8kFgxdy"
 			]
 		}
 	},

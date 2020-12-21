@@ -19,7 +19,6 @@ __/\\\\\\\\\\\\\ _____/\\\\\\\\\ _______/\\../\\ ___/\\\\\\\\\\\\\\\
 pragma solidity ^0.6.7;
 
 import "./PRUF_ECR_CORE.sol";
-import "./Imports/math/safeMath.sol";
 
 contract ECR2 is ECR_CORE {
     using SafeMath for uint256;
@@ -109,7 +108,7 @@ contract ECR2 is ECR_CORE {
         //^^^^^^^^interactions^^^^^^^^^
     }
 
-    /* 
+    /*
      * @dev takes asset out of excrow status if time period has resolved || is escrow issuer
      */
     function endEscrow(bytes32 _idxHash)
@@ -148,7 +147,7 @@ contract ECR2 is ECR_CORE {
         );
         require(
             (escrow.timelock < block.timestamp) ||
-                (keccak256(abi.encodePacked(msg.sender)) == ownerHash),
+                (keccak256(abi.encodePacked(_msgSender())) == ownerHash),
             "E:EE: Escrow period not ended and caller is not escrow owner"
         );
         //^^^^^^^checks^^^^^^^^^
@@ -179,7 +178,7 @@ contract ECR2 is ECR_CORE {
             _u32_1,
             _addr_1
         );
-        //^^^^^^^effects^^^^^^^^^
+        //^^^^^^^interactions^^^^^^^^^
     }
 
     function _setEscrowDataHeavy(
@@ -204,6 +203,6 @@ contract ECR2 is ECR_CORE {
             _u256_1,
             _u256_2
         );
-        //^^^^^^^effects^^^^^^^^^
+        //^^^^^^^interactions^^^^^^^^^
     }
 }

@@ -32,7 +32,7 @@ contract NP_NC is CORE {
     modifier isAuthorized(bytes32 _idxHash) override {
         uint256 tokenId = uint256(_idxHash);
         require(
-            (A_TKN.ownerOf(tokenId) == msg.sender), //msg.sender is token holder
+            (A_TKN.ownerOf(tokenId) == _msgSender()), //_msgSender() is token holder
             "NPNC:MOD-IA: Caller does not hold token"
         );
         _;

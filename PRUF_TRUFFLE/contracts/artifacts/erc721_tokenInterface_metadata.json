@@ -46,8 +46,8 @@
 			"bytecodeHash": "ipfs"
 		},
 		"optimizer": {
-			"enabled": false,
-			"runs": 200
+			"enabled": true,
+			"runs": 1000
 		},
 		"remappings": []
 	},
@@ -77,11 +77,11 @@
 			]
 		},
 		"localhost/PRUF_helper.sol": {
-			"keccak256": "0x7f85e8f302bf780557fb163969de154fc7856325c92f0c9d0491af71cfccbfcd",
+			"keccak256": "0xc50dd85e2628435a595744bc580aeac978026b8443f3aa3c9ed4c4958b86fd92",
 			"license": "UNLICENSED",
 			"urls": [
-				"bzz-raw://2fea2eadf0088fb94816f34a0132ca55000f5784107ce327bd0ccfa10a6551fe",
-				"dweb:/ipfs/QmWJRohivX9HzSQkLoJmC53oz7svo8kDoBWhbZ7QTYRdWP"
+				"bzz-raw://73bde1b7ae6b0dd25ff17264082edc9da7c44f6d86191728c6add06b5b6c0a71",
+				"dweb:/ipfs/Qmc1fAiKEjy3fD8QF6kvWXvpJAkt7uVXSkyVNyEpWtrtF2"
 			]
 		}
 	},

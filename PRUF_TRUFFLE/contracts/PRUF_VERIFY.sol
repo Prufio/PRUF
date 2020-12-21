@@ -66,7 +66,7 @@ contract VERIFY is CORE {
         uint256 tokenId = uint256(_idxHash);
 
         require(
-            (A_TKN.ownerOf(tokenId) == msg.sender), // ||
+            (A_TKN.ownerOf(tokenId) == _msgSender()), // ||
             "VFY:MOD-IA: Caller does not hold verify enabled token"
         );
         require(
@@ -91,7 +91,7 @@ contract VERIFY is CORE {
         Record memory rec = getRecord(_idxHash);
 
         require(
-            AC_TKN.ownerOf(uint256(_assetClass)) == msg.sender,
+            AC_TKN.ownerOf(uint256(_assetClass)) == _msgSender(),
             "VFY:ATFV: caller does not hold AC token"
         );
         require(ACdata.custodyType == 4, "VFY:ATFV: AC not VERIFY enabled");

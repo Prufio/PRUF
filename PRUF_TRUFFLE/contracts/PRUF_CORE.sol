@@ -21,7 +21,6 @@ __/\\\\\\\\\\\\\ _____/\\\\\\\\\ _______/\\../\\ ___/\\\\\\\\\\\\\\\
 pragma solidity ^0.6.7;
 
 import "./PRUF_INTERFACES.sol";
-//import "./Imports/math/safeMath.sol";
 import "./Imports/utils/ReentrancyGuard.sol";
 import "./PRUF_BASIC.sol";
 
@@ -65,7 +64,7 @@ contract CORE is BASIC {
             "C:CR:Cannot create asset in a root asset class"
         );
 
-        require( //-------------------------------------------------------DS:TEST
+        require(
             (AC_info.custodyType == 1) ||
                 (AC_info.custodyType == 2) ||
                 (AC_info.custodyType == 4),
@@ -77,7 +76,7 @@ contract CORE is BASIC {
         }
 
         if ((AC_info.custodyType == 2) || (AC_info.custodyType == 4)) {
-            A_TKN.mintAssetToken(msg.sender, tokenId, "pruf.io");
+            A_TKN.mintAssetToken(_msgSender(), tokenId, "pruf.io");
         }
 
         STOR.newRecord(_idxHash, _rgtHash, _assetClass, _countDownStart);
@@ -177,11 +176,10 @@ contract CORE is BASIC {
     /*
      * @dev Send payment to appropriate pullPayment adresses for payable function
      */
-    function deductRecycleCosts(uint32 _assetClass, address _oldOwner) //DBS:CHECK --------------- Payment now pays 1/2 ACTHcost + root to discarder, 1/2 to ACTH
-        internal
-        virtual
-        whenNotPaused
-    {
+    function deductRecycleCosts(
+        uint32 _assetClass,
+        address _oldOwner //DBS:CHECK --------------- Payment now pays 1/2 ACTHcost + root to discarder, 1/2 to ACTH
+    ) internal virtual whenNotPaused {
         //^^^^^^^checks^^^^^^^^^
         Invoice memory pricing;
         uint256 half;
@@ -213,7 +211,7 @@ contract CORE is BASIC {
         whenNotPaused
     {
         UTIL_TKN.payForService(
-            msg.sender,
+            _msgSender(),
             pricing.rootAddress,
             pricing.rootPrice,
             pricing.ACTHaddress,

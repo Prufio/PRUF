@@ -24,6 +24,8 @@ import "./PRUF_CORE.sol";
 contract RCLR is ECR_CORE, CORE {
     using SafeMath for uint256;
 
+    bytes32 public constant DISCARD_ROLE = keccak256("DISCARD_ROLE");
+
     //--------------------------------------------External Functions--------------------------
 
     /*
@@ -33,14 +35,14 @@ contract RCLR is ECR_CORE, CORE {
         Record memory rec = getRecord(_idxHash);
 
         require(
-            msg.sender == A_TKN_Address,
-            "R:D:Caller is not Asset Token Contract"
+            hasRole(DISCARD_ROLE, _msgSender()),
+            "R:D:Caller does not have DISCARD_ROLE"
         );
         require((rec.assetStatus == 59), "R:D:Must be in recyclable status");
         //^^^^^^^checks^^^^^^^^^
 
         uint256 escrowTime = block.timestamp + 3153600000000; //100,000 years in the FUTURE.........
-        bytes32 escrowOwnerHash = keccak256(abi.encodePacked(msg.sender));
+        bytes32 escrowOwnerHash = keccak256(abi.encodePacked(_msgSender()));
         escrowDataExtLight memory escrowDataLight;
         escrowDataLight.escrowData = 255;
         escrowDataLight.addr_1 = _sender;
@@ -52,7 +54,6 @@ contract RCLR is ECR_CORE, CORE {
             escrowOwnerHash,
             escrowTime
         );
-
         _setEscrowDataLight(_idxHash, escrowDataLight);
         //^^^^^^^interactions^^^^^^^^^
     }
@@ -70,9 +71,7 @@ contract RCLR is ECR_CORE, CORE {
             _idxHash
         );
         Record memory rec = getRecord(_idxHash);
-
         require(_rgtHash != 0, "R:R:New rights holder cannot be zero");
-
         require(rec.assetStatus == 60, "R:R:Asset not discarded");
         //^^^^^^^checks^^^^^^^^^
 
@@ -80,7 +79,7 @@ contract RCLR is ECR_CORE, CORE {
         rec.incrementNumberOfTransfers = 170;
         //^^^^^^^effects^^^^^^^^^^^^
         
-        A_TKN.mintAssetToken(msg.sender, tokenId, "pruf.io");
+        A_TKN.mintAssetToken(_msgSender(), tokenId, "pruf.io");
         ECR_MGR.endEscrow(_idxHash);
         STOR.changeAC(_idxHash, _assetClass);
         deductRecycleCosts(_assetClass, escrowDataLight.addr_1);

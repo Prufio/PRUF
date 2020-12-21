@@ -105,6 +105,8 @@ __/\\\\\\\\\\\\\ _____/\\\\\\\\\ _______/\\../\\ ___/\\\\\\\\\\\\\\\
         let payableRoleB32;
         let minterRoleB32;
         let trustedAgentRoleB32;
+        let assetTransferRoleB32;
+        let discardRoleB32;
         
         contract('PIP', accounts => {
         
@@ -551,7 +553,6 @@ __/\\\\\\\\\\\\\ _____/\\\\\\\\\ _______/\\../\\ ___/\\\\\\\\\\\\\\\
                     'ECR_MGR'
                 )
         
-        
                 payableRoleB32 = await Helper.getStringHash(
                     'PAYABLE_ROLE'
                 )
@@ -562,6 +563,14 @@ __/\\\\\\\\\\\\\ _____/\\\\\\\\\ _______/\\../\\ ___/\\\\\\\\\\\\\\\
         
                 trustedAgentRoleB32 = await Helper.getStringHash(
                     'TRUSTED_AGENT_ROLE'
+                )
+        
+                assetTransferRoleB32 = await Helper.getStringHash(
+                    'ASSET_TXFR_ROLE'
+                )
+        
+                discardRoleB32 = await Helper.getStringHash(
+                    'DISCARD_ROLE'
                 )
             })
         
@@ -801,10 +810,25 @@ __/\\\\\\\\\\\\\ _____/\\\\\\\\\ _______/\\../\\ ___/\\\\\\\\\\\\\\\
                 // })
             })
         
+            it('Should authorize all minter contracts for minting A_TKN(s)', async () => {
         
-            it('Should authorize all minter contracts for minting AC_TKN(s)', async () => {
-                console.log("Authorizing AC_MGR")
-                return AC_TKN.grantRole(minterRoleB32, AC_MGR.address, { from: account1 })
+                console.log("Authorizing NP")
+                return A_TKN.grantRole(minterRoleB32, NP.address, { from: account1 })
+        
+                    .then(() => {
+                        console.log("Authorizing APP_NC")
+                        return A_TKN.grantRole(minterRoleB32, APP_NC.address, { from: account1 })
+                    })
+        
+                    .then(() => {
+                        console.log("Authorizing APP")
+                        return A_TKN.grantRole(minterRoleB32, APP.address, { from: account1 })
+                    })
+        
+                    .then(() => {
+                        console.log("Authorizing PIP")
+                        return A_TKN.grantRole(minterRoleB32, PIP.address, { from: account1 })
+                    })
             })
         
             it('Should authorize all payable contracts for transactions', async () => {
@@ -828,32 +852,29 @@ __/\\\\\\\\\\\\\ _____/\\\\\\\\\ _______/\\../\\ ___/\\\\\\\\\\\\\\\
                     })
             })
         
-            it('Should authorize all minter contracts for minting A_TKN(s)', async () => {
-        
-                console.log("Authorizing NP")
-                return A_TKN.grantRole(minterRoleB32, NP.address, { from: account1 })
-        
-                    .then(() => {
-                        console.log("Authorizing APP_NC")
-                        return A_TKN.grantRole(minterRoleB32, APP_NC.address, { from: account1 })
-                    })
-        
-                    .then(() => {
-                        console.log("Authorizing APP")
-                        return A_TKN.grantRole(minterRoleB32, APP.address, { from: account1 })
-                    })
-        
-                    .then(() => {
-                        console.log("Authorizing PIP")
-                        return A_TKN.grantRole(minterRoleB32, PIP.address, { from: account1 })
-                    })
-            })
-        
         
             it('Should authorize AC_MGR as trusted agent in AC_TKN', async () => {
             
                 console.log("Authorizing AC_MGR")
-                return AC_TKN.grantRole(trustedAgentRoleB32, AC_MGR.address, { from: account1 })
+                return UTIL_TKN.grantRole(trustedAgentRoleB32, AC_MGR.address, { from: account1 })
+            })
+        
+        
+            it('Should authorize all minter contracts for minting AC_TKN(s)', async () => {
+                console.log("Authorizing AC_MGR")
+                return AC_TKN.grantRole(minterRoleB32, AC_MGR.address, { from: account1 })
+            })
+        
+        
+            it('Should authorize all minter contracts for minting AC_TKN(s)', async () => {
+                console.log("Authorizing AC_MGR")
+                return APP.grantRole(assetTransferRoleB32, NP.address, { from: account1 })
+            })
+        
+        
+            it('Should authorize all minter contracts for minting AC_TKN(s)', async () => {
+                console.log("Authorizing AC_MGR")
+                return RCLR.grantRole(discardRoleB32, A_TKN.address, { from: account1 })
             })
         
         
@@ -1790,10 +1811,21 @@ __/\\\\\\\\\\\\\ _____/\\\\\\\\\ _______/\\../\\ ___/\\\\\\\\\\\\\\\
     })
 
     //1
-    it('Should fail becasue caller does not hold AC token', async () => {
+    it('Should fail becasue caller is not admin', async () => {
 
         console.log("//**************************************END PIP SETUP**********************************************/")
-        console.log("//**************************************BEGIN PIP FAIL BATCH (4)**********************************************/")
+        console.log("//**************************************BEGIN PIP FAIL BATCH (5)**********************************************/")
+        console.log("//**************************************BEGIN setImportDiscount FAIL BATCH**********************************************/")
+        return PIP.setImportDiscount(
+        "100", 
+        {from: account9}
+        )
+    })
+
+    //2
+    it('Should fail becasue caller does not hold AC token', async () => {
+
+        console.log("//**************************************END setImportDiscount FAIL BATCH**********************************************/")
         console.log("//**************************************BEGIN mintPipAsset FAIL BATCH**********************************************/")
         return PIP.mintPipAsset(
         asset1, 
@@ -1808,7 +1840,7 @@ __/\\\\\\\\\\\\\ _____/\\\\\\\\\ _______/\\../\\ ___/\\\\\\\\\\\\\\\
             return AC_MGR.addUser(account10Hash, '1', '15', { from: account10 })
     })
 
-    //2
+    //3
     it('Should fail becasue caller not authrorized to mintPipAssets', async () => {
         return PIP.mintPipAsset(
         asset1, 
@@ -1833,7 +1865,7 @@ __/\\\\\\\\\\\\\ _____/\\\\\\\\\ _______/\\../\\ ___/\\\\\\\\\\\\\\\
         )
     })
 
-    //3
+    //4
     it('Should fail becasue asset2 already recorded', async () => {
         return PIP.mintPipAsset(
         asset2, 
@@ -1843,7 +1875,7 @@ __/\\\\\\\\\\\\\ _____/\\\\\\\\\ _______/\\../\\ ___/\\\\\\\\\\\\\\\
         )
     })
 
-    //4
+    //5
     it('Should fail becasue token not found in PIP', async () => {
 
         console.log("//**************************************END mintPipAsset FAIL BATCH**********************************************/")

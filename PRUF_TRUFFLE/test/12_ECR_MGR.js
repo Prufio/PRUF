@@ -105,8 +105,10 @@ __/\\\\\\\\\\\\\ _____/\\\\\\\\\ _______/\\../\\ ___/\\\\\\\\\\\\\\\
         let payableRoleB32;
         let minterRoleB32;
         let trustedAgentRoleB32;
+        let assetTransferRoleB32;
+        let discardRoleB32;
         
-        contract('ECR_MGR', accounts => {
+        contract('ID_TKN', accounts => {
         
             console.log('//**************************BEGIN BOOTSTRAP**************************//')
         
@@ -551,7 +553,6 @@ __/\\\\\\\\\\\\\ _____/\\\\\\\\\ _______/\\../\\ ___/\\\\\\\\\\\\\\\
                     'ECR_MGR'
                 )
         
-        
                 payableRoleB32 = await Helper.getStringHash(
                     'PAYABLE_ROLE'
                 )
@@ -562,6 +563,14 @@ __/\\\\\\\\\\\\\ _____/\\\\\\\\\ _______/\\../\\ ___/\\\\\\\\\\\\\\\
         
                 trustedAgentRoleB32 = await Helper.getStringHash(
                     'TRUSTED_AGENT_ROLE'
+                )
+        
+                assetTransferRoleB32 = await Helper.getStringHash(
+                    'ASSET_TXFR_ROLE'
+                )
+        
+                discardRoleB32 = await Helper.getStringHash(
+                    'DISCARD_ROLE'
                 )
             })
         
@@ -801,10 +810,25 @@ __/\\\\\\\\\\\\\ _____/\\\\\\\\\ _______/\\../\\ ___/\\\\\\\\\\\\\\\
                 // })
             })
         
+            it('Should authorize all minter contracts for minting A_TKN(s)', async () => {
         
-            it('Should authorize all minter contracts for minting AC_TKN(s)', async () => {
-                console.log("Authorizing AC_MGR")
-                return AC_TKN.grantRole(minterRoleB32, AC_MGR.address, { from: account1 })
+                console.log("Authorizing NP")
+                return A_TKN.grantRole(minterRoleB32, NP.address, { from: account1 })
+        
+                    .then(() => {
+                        console.log("Authorizing APP_NC")
+                        return A_TKN.grantRole(minterRoleB32, APP_NC.address, { from: account1 })
+                    })
+        
+                    .then(() => {
+                        console.log("Authorizing APP")
+                        return A_TKN.grantRole(minterRoleB32, APP.address, { from: account1 })
+                    })
+        
+                    .then(() => {
+                        console.log("Authorizing PIP")
+                        return A_TKN.grantRole(minterRoleB32, PIP.address, { from: account1 })
+                    })
             })
         
             it('Should authorize all payable contracts for transactions', async () => {
@@ -828,32 +852,29 @@ __/\\\\\\\\\\\\\ _____/\\\\\\\\\ _______/\\../\\ ___/\\\\\\\\\\\\\\\
                     })
             })
         
-            it('Should authorize all minter contracts for minting A_TKN(s)', async () => {
-        
-                console.log("Authorizing NP")
-                return A_TKN.grantRole(minterRoleB32, NP.address, { from: account1 })
-        
-                    .then(() => {
-                        console.log("Authorizing APP_NC")
-                        return A_TKN.grantRole(minterRoleB32, APP_NC.address, { from: account1 })
-                    })
-        
-                    .then(() => {
-                        console.log("Authorizing APP")
-                        return A_TKN.grantRole(minterRoleB32, APP.address, { from: account1 })
-                    })
-        
-                    .then(() => {
-                        console.log("Authorizing PIP")
-                        return A_TKN.grantRole(minterRoleB32, PIP.address, { from: account1 })
-                    })
-            })
-        
         
             it('Should authorize AC_MGR as trusted agent in AC_TKN', async () => {
             
                 console.log("Authorizing AC_MGR")
-                return AC_TKN.grantRole(trustedAgentRoleB32, AC_MGR.address, { from: account1 })
+                return UTIL_TKN.grantRole(trustedAgentRoleB32, AC_MGR.address, { from: account1 })
+            })
+        
+        
+            it('Should authorize all minter contracts for minting AC_TKN(s)', async () => {
+                console.log("Authorizing AC_MGR")
+                return AC_TKN.grantRole(minterRoleB32, AC_MGR.address, { from: account1 })
+            })
+        
+        
+            it('Should authorize all minter contracts for minting AC_TKN(s)', async () => {
+                console.log("Authorizing AC_MGR")
+                return APP.grantRole(assetTransferRoleB32, NP.address, { from: account1 })
+            })
+        
+        
+            it('Should authorize all minter contracts for minting AC_TKN(s)', async () => {
+                console.log("Authorizing AC_MGR")
+                return RCLR.grantRole(discardRoleB32, A_TKN.address, { from: account1 })
             })
         
         
@@ -1851,7 +1872,7 @@ __/\\\\\\\\\\\\\ _____/\\\\\\\\\ _______/\\../\\ ___/\\\\\\\\\\\\\\\
     it('Should make ECR unatuhorized', async () => {
 
         console.log("//**************************************END ECR_MGR SETUP**********************************************/")
-        console.log("//**************************************BEGIN ECR_MGR FAIL BATCH (7)**********************************************/")
+        console.log("//**************************************BEGIN ECR_MGR FAIL BATCH (8)**********************************************/")
         console.log("//**************************************BEGIN setEscrow FAIL BATCH**********************************************/")
         
             console.log("unAuthorizing ECR")
@@ -1895,11 +1916,19 @@ __/\\\\\\\\\\\\\ _____/\\\\\\\\\ _______/\\../\\ ___/\\\\\\\\\\\\\\\
                 
     })
 
-
-    it('Should put asset1 into escrow', async () => {
+    //2
+    it('Should fail because asset is not in escrow', async () => {
 
         console.log("//**************************************END setEscrow FAIL BATCH**********************************************/")
         console.log("//**************************************BEGIN endEscrow FAIL BATCH**********************************************/")
+        return ECR.endEscrow(
+        asset1, 
+        {from: account2}
+        )
+    })
+
+
+    it('Should put asset1 into escrow', async () => {
         return ECR.setEscrow(
             asset1, 
             account2Hash,
@@ -1909,7 +1938,7 @@ __/\\\\\\\\\\\\\ _____/\\\\\\\\\ _______/\\../\\ ___/\\\\\\\\\\\\\\\
             )
     })
 
-    //2
+    //3
     it('Should fail because contract is not the same as the setter contract', async () => {
         return ECR2.endEscrow(
         asset1, 
@@ -1935,7 +1964,7 @@ __/\\\\\\\\\\\\\ _____/\\\\\\\\\ _______/\\../\\ ___/\\\\\\\\\\\\\\\
         )
     })
 
-    //3
+    //4
     it('Should fail because asset is not in escrow', async () => {
 
         console.log("//**************************************END endEscrow FAIL BATCH**********************************************/")
@@ -1965,7 +1994,7 @@ __/\\\\\\\\\\\\\ _____/\\\\\\\\\ _______/\\../\\ ___/\\\\\\\\\\\\\\\
         )
     })
 
-    //4
+    //5
     it('Should fail because contract not same as setter', async () => {
         return ECR2._setEscrowDataLight(
         asset1,
@@ -1999,7 +2028,7 @@ __/\\\\\\\\\\\\\ _____/\\\\\\\\\ _______/\\../\\ ___/\\\\\\\\\\\\\\\
         )
     })
 
-    //5
+    //6
     it('Should fail because asset is not in escrow', async () => {
 
         console.log("//**************************************END setEscrowDataLight FAIL BATCH**********************************************/")
@@ -2029,7 +2058,7 @@ __/\\\\\\\\\\\\\ _____/\\\\\\\\\ _______/\\../\\ ___/\\\\\\\\\\\\\\\
         )
     })
 
-    //6
+    //7
     it('Should fail because contract not same as setter', async () => {
         return ECR2._setEscrowDataHeavy(
             asset1,
@@ -2077,7 +2106,7 @@ __/\\\\\\\\\\\\\ _____/\\\\\\\\\ _______/\\../\\ ___/\\\\\\\\\\\\\\\
         )
     })
 
-    //7
+    //8
     it('Should fail because record escrow is not expired', async () => {
         return ECR_MGR.permissiveEndEscrow(
         asset1,

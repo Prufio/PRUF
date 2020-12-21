@@ -22,13 +22,18 @@ __/\\\\\\\\\\\\\ _____/\\\\\\\\\ _______/\\../\\ ___/\\\\\\\\\\\\\\\
 pragma solidity ^0.6.7;
 
 import "./PRUF_INTERFACES.sol";
-import "./Imports/access/Ownable.sol";
+import "./Imports/access/AccessControl.sol";
 import "./Imports/utils/Pausable.sol";
 import "./Imports/utils/ReentrancyGuard.sol";
 import "./Imports/token/ERC721/IERC721Receiver.sol";
-import "./Imports/math/safeMath.sol";
+import "./Imports/math/SafeMath.sol";
 
-contract BASIC is ReentrancyGuard, Ownable, IERC721Receiver, Pausable {
+contract BASIC is ReentrancyGuard, AccessControl, IERC721Receiver, Pausable {
+    bytes32 public constant CONTRACT_ADMIN_ROLE = keccak256("CONTRACT_ADMIN_ROLE");
+    bytes32 public constant PAUSER_ROLE = keccak256("PAUSER_ROLE");
+    bytes32 public constant ASSET_TXFR_ROLE = keccak256("ASSET_TXFR_ROLE");
+    
+
     struct Record {
         //struct for holding and manipulating record data
         uint8 assetStatus; // Status - Transferrable, locked, in transfer, stolen, lost, etc.
@@ -91,6 +96,12 @@ contract BASIC is ReentrancyGuard, Ownable, IERC721Receiver, Pausable {
     address internal NAKED_Address;
     address internal NP_Address;
 
+    constructor() public {
+        _setupRole(DEFAULT_ADMIN_ROLE, _msgSender());
+        _setupRole(CONTRACT_ADMIN_ROLE, _msgSender());
+        _setupRole(PAUSER_ROLE, _msgSender());
+    }
+
     // --------------------------------------REPORTING--------------------------------------------//
 
     event REPORT(string _msg);
@@ -113,7 +124,28 @@ contract BASIC is ReentrancyGuard, Ownable, IERC721Receiver, Pausable {
         _;
     }
 
-    //----------------------External Admin functions / onlyowner or isAdmin----------------------//
+    /*
+     * @dev Verify user credentials
+     * Originating Address:
+     *      is admin
+     */
+    modifier isAdmin() {
+        require(
+            hasRole(CONTRACT_ADMIN_ROLE, _msgSender()),
+            "PAM:MOD: must have CONTRACT_ADMIN_ROLE"
+        );
+        _;
+    }
+
+    modifier isPauser() {
+        require(
+            hasRole(PAUSER_ROLE, _msgSender()),
+            "AT:MOD-IA:Calling address is not pauser"
+        );
+        _;
+    }
+
+    //----------------------External Admin functions / isAdmin----------------------//
     /*
      * @dev Resolve Contract Addresses from STOR
      */
@@ -121,7 +153,7 @@ contract BASIC is ReentrancyGuard, Ownable, IERC721Receiver, Pausable {
         external
         virtual
         nonReentrant
-        onlyOwner
+        isAdmin
     {
         //^^^^^^^checks^^^^^^^^^
         AC_TKN_Address = STOR.resolveContractAddress("AC_TKN");
@@ -164,8 +196,8 @@ contract BASIC is ReentrancyGuard, Ownable, IERC721Receiver, Pausable {
     //^^^^^^^checks^^^^^^^^^
     {
         require(
-            (msg.sender == owner()) || (msg.sender == NP_Address),
-            "B:TX:Invalid caller for transfer token"
+            hasRole(ASSET_TXFR_ROLE, _msgSender()),
+            "B:TX:Must have ASSET_TXFR_ROLE"
         );
         uint256 tokenId = uint256(_idxHash);
         //^^^^^^^effects^^^^^^^^^
@@ -176,23 +208,25 @@ contract BASIC is ReentrancyGuard, Ownable, IERC721Receiver, Pausable {
     /*
      * @dev Transfer any specified assetClassToken from contract
      */
-    function OO_transferACToken(address _to, bytes32 _idxHash)
+    function OO_transferACToken(address _to, uint256 _tokenID)
         external
         virtual
-        onlyOwner
+        isAdmin
         nonReentrant
     {
         //^^^^^^^checks^^^^^^^^^
-        uint256 tokenId = uint256(_idxHash);
-        //^^^^^^^effects^^^^^^^^^
-        AC_TKN.safeTransferFrom(address(this), _to, tokenId);
+        AC_TKN.safeTransferFrom(address(this), _to, _tokenID);
         //^^^^^^^interactions^^^^^^^^^
     }
 
     /*
      * @dev Set adress of STOR contract to interface with
      */
-    function OO_setStorageContract(address _storageAddress) external virtual onlyOwner {
+    function OO_setStorageContract(address _storageAddress)
+        external
+        virtual
+        isAdmin
+    {
         require(
             _storageAddress != address(0),
             "B:SSC: storage address cannot be zero"
@@ -222,21 +256,21 @@ contract BASIC is ReentrancyGuard, Ownable, IERC721Receiver, Pausable {
      * @dev Triggers stopped state. (pausable)
      *
      */
-    function OO_pause() external onlyOwner {
+    function pause() external isPauser {
         _pause();
     }
 
     /**
      * @dev Returns to normal state. (pausable)
      */
-    function OO_unpause() external onlyOwner {
+    function unpause() external isPauser {
         _unpause();
     }
 
     //--------------------------------------------------------------------------------------INTERNAL functions
 
     /*
-     * @dev Get a User type Record from AC_manager for msg.sender, by assetClass
+     * @dev Get a User type Record from AC_manager for _msgSender(), by assetClass
      */
     function getCallingUserType(uint32 _assetClass)
         internal
@@ -247,7 +281,7 @@ contract BASIC is ReentrancyGuard, Ownable, IERC721Receiver, Pausable {
         //^^^^^^^checks^^^^^^^^^
 
         uint8 userTypeInAssetClass = AC_MGR.getUserType(
-            keccak256(abi.encodePacked(msg.sender)),
+            keccak256(abi.encodePacked(_msgSender())),
             _assetClass
         );
 
@@ -258,12 +292,9 @@ contract BASIC is ReentrancyGuard, Ownable, IERC721Receiver, Pausable {
     /*
      * @dev Get asset class information from AC_manager and return an AC Struct
      */
-    function getACinfo(uint32 _assetClass) //-------------------------------------------------------DS:TEST -- modified with new IPFS parameter
-        internal
-        virtual
-        view
-        returns (AC memory)
-    {
+    function getACinfo(
+        uint32 _assetClass
+    ) internal virtual view returns (AC memory) {
         //^^^^^^^checks^^^^^^^^^
 
         AC memory AC_info;

@@ -21,12 +21,15 @@ pragma solidity ^0.6.7;
 import "./PRUF_CORE.sol";
 
 contract APP is CORE {
+    bytes32
+        public constant B320xF_ = 0xFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF;
+
     modifier isAuthorized(bytes32 _idxHash) override {
         //require that user is authorized and token is held by contract
         uint256 tokenId = uint256(_idxHash);
         require(
-            (A_TKN.ownerOf(tokenId) == APP_Address),
-            "A:MOD-IA: Custodial contract does not hold token"
+            (A_TKN.ownerOf(tokenId) == address(this)),
+            "A:MOD-IA: APP contract does not hold token"
         );
         _;
     }
@@ -51,7 +54,7 @@ contract APP is CORE {
         require(userType < 5, "A:NR: User not authorized to create records");
         //^^^^^^^checks^^^^^^^^^
 
-        //bytes32 userHash = keccak256(abi.encodePacked(msg.sender));
+        //bytes32 userHash = keccak256(abi.encodePacked(_msgSender()));
         //^^^^^^^effects^^^^^^^^^
 
         if (AC_info.assetClassRoot == oldAC_info.assetClassRoot) {
@@ -74,7 +77,6 @@ contract APP is CORE {
         uint32 _newAssetClass
     )
         external
-        
         nonReentrant
         whenNotPaused
         isAuthorized(_idxHash) //contract holds token (user sent to contract)
@@ -103,7 +105,6 @@ contract APP is CORE {
         writeRecord(_idxHash, rec);
         deductServiceCosts(_newAssetClass, 1);
 
-
         return rec.assetStatus;
         //^^^^^^^interactions^^^^^^^^^
     }
@@ -120,7 +121,7 @@ contract APP is CORE {
     {
         Record memory rec = getRecord(_idxHash);
         uint8 userType = getCallingUserType(rec.assetClass);
-        
+
         require(userType == 1, "A:FMR: User not auth in AC");
         require(
             isLostOrStolen(rec.assetStatus) == 0,
@@ -157,7 +158,6 @@ contract APP is CORE {
         bytes32 _newrgtHash
     )
         external
-        
         nonReentrant
         whenNotPaused
         isAuthorized(_idxHash)
@@ -186,7 +186,7 @@ contract APP is CORE {
         if (_newrgtHash == 0x0) {
             //set to transferred status
             rec.assetStatus = 5;
-            _newrgtHash = 0xFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF;
+            _newrgtHash = B320xF_;
         }
 
         rec.rightsHolder = _newrgtHash;
@@ -209,7 +209,6 @@ contract APP is CORE {
         bytes32 _IpfsHash
     )
         external
-        
         nonReentrant
         whenNotPaused
         isAuthorized(_idxHash)

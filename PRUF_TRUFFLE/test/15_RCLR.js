@@ -105,6 +105,8 @@ __/\\\\\\\\\\\\\ _____/\\\\\\\\\ _______/\\../\\ ___/\\\\\\\\\\\\\\\
         let payableRoleB32;
         let minterRoleB32;
         let trustedAgentRoleB32;
+        let assetTransferRoleB32;
+        let discardRoleB32;
         
         contract('RCLR', accounts => {
         
@@ -551,7 +553,6 @@ __/\\\\\\\\\\\\\ _____/\\\\\\\\\ _______/\\../\\ ___/\\\\\\\\\\\\\\\
                     'ECR_MGR'
                 )
         
-        
                 payableRoleB32 = await Helper.getStringHash(
                     'PAYABLE_ROLE'
                 )
@@ -562,6 +563,14 @@ __/\\\\\\\\\\\\\ _____/\\\\\\\\\ _______/\\../\\ ___/\\\\\\\\\\\\\\\
         
                 trustedAgentRoleB32 = await Helper.getStringHash(
                     'TRUSTED_AGENT_ROLE'
+                )
+        
+                assetTransferRoleB32 = await Helper.getStringHash(
+                    'ASSET_TXFR_ROLE'
+                )
+        
+                discardRoleB32 = await Helper.getStringHash(
+                    'DISCARD_ROLE'
                 )
             })
         
@@ -801,33 +810,6 @@ __/\\\\\\\\\\\\\ _____/\\\\\\\\\ _______/\\../\\ ___/\\\\\\\\\\\\\\\
                 // })
             })
         
-        
-            it('Should authorize all minter contracts for minting AC_TKN(s)', async () => {
-                console.log("Authorizing AC_MGR")
-                return AC_TKN.grantRole(minterRoleB32, AC_MGR.address, { from: account1 })
-            })
-        
-            it('Should authorize all payable contracts for transactions', async () => {
-        
-                console.log("Authorizing AC_MGR")
-                return UTIL_TKN.grantRole(payableRoleB32, AC_MGR.address, { from: account1 })
-        
-                    .then(() => {
-                        console.log("Authorizing APP_NC")
-                        return UTIL_TKN.grantRole(payableRoleB32, APP_NC.address, { from: account1 })
-                    })
-        
-                    .then(() => {
-                        console.log("Authorizing APP")
-                        return UTIL_TKN.grantRole(payableRoleB32, APP.address, { from: account1 })
-                    })
-        
-                    .then(() => {
-                        console.log("Authorizing RCLR")
-                        return UTIL_TKN.grantRole(payableRoleB32, RCLR.address, { from: account1 })
-                    })
-            })
-        
             it('Should authorize all minter contracts for minting A_TKN(s)', async () => {
         
                 console.log("Authorizing NP")
@@ -854,11 +836,55 @@ __/\\\\\\\\\\\\\ _____/\\\\\\\\\ _______/\\../\\ ___/\\\\\\\\\\\\\\\
                     })
             })
         
+            it('Should authorize all payable contracts for transactions', async () => {
+        
+                console.log("Authorizing AC_MGR")
+                return UTIL_TKN.grantRole(payableRoleB32, AC_MGR.address, { from: account1 })
+        
+                    .then(() => {
+                        console.log("Authorizing APP_NC")
+                        return UTIL_TKN.grantRole(payableRoleB32, APP_NC.address, { from: account1 })
+                    })
+        
+                    .then(() => {
+                        console.log("Authorizing APP")
+                        return UTIL_TKN.grantRole(payableRoleB32, APP.address, { from: account1 })
+                    })
+        
+                    .then(() => {
+                        console.log("Authorizing RCLR")
+                        return UTIL_TKN.grantRole(payableRoleB32, RCLR.address, { from: account1 })
+                    })
+            })
+        
         
             it('Should authorize AC_MGR as trusted agent in AC_TKN', async () => {
             
                 console.log("Authorizing AC_MGR")
-                return AC_TKN.grantRole(trustedAgentRoleB32, AC_MGR.address, { from: account1 })
+                return UTIL_TKN.grantRole(trustedAgentRoleB32, AC_MGR.address, { from: account1 })
+            })
+        
+        
+            it('Should authorize all minter contracts for minting AC_TKN(s)', async () => {
+                console.log("Authorizing AC_MGR")
+                return AC_TKN.grantRole(minterRoleB32, AC_MGR.address, { from: account1 })
+            })
+        
+        
+            it('Should authorize all minter contracts for minting AC_TKN(s)', async () => {
+                console.log("Authorizing AC_MGR")
+                return APP.grantRole(assetTransferRoleB32, NP.address, { from: account1 })
+            })
+        
+        
+            it('Should authorize all minter contracts for minting AC_TKN(s)', async () => {
+                console.log("Authorizing AC_MGR")
+                return RCLR.grantRole(discardRoleB32, A_TKN.address, { from: account1 })
+        
+                .then(() => {
+                    console.log("Authorizing MAL_APP")
+                    return UTIL_TKN.grantRole(payableRoleB32, MAL_APP.address, { from: account1 })
+                })
             })
         
         
@@ -1816,7 +1842,7 @@ __/\\\\\\\\\\\\\ _____/\\\\\\\\\ _______/\\../\\ ___/\\\\\\\\\\\\\\\
     })
 
     //2
-    it('Should fail because status must be 59', async () => { 
+    it('Should fail because status must be 59(recyclable)', async () => { 
         return A_TKN.discard(
             asset2,
             { from: account4}

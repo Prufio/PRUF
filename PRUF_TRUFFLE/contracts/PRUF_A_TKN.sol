@@ -12,9 +12,9 @@ __/\\\\\\\\\\\\\ _____/\\\\\\\\\ _______/\\../\\ ___/\\\\\\\\\\\\\\\
 
 /*-----------------------------------------------------------------
  *  TO DO
- *
+ *-----------------------------------------------------------------
+ * PRUF ASSET NFT CONTRACT
  *---------------------------------------------------------------*/
-
 
 // SPDX-License-Identifier: UNLICENSED
 pragma solidity ^0.6.7;
@@ -25,7 +25,6 @@ import "./Imports/utils/Counters.sol";
 import "./Imports/token/ERC721/ERC721.sol";
 import "./Imports/token/ERC721/ERC721Burnable.sol";
 import "./Imports/token/ERC721/ERC721Pausable.sol";
-//import "./Imports/access/Ownable.sol";
 import "./PRUF_INTERFACES.sol";
 import "./Imports/utils/ReentrancyGuard.sol";
 
@@ -40,18 +39,28 @@ import "./Imports/utils/ReentrancyGuard.sol";
  * This contract uses {AccessControl} to lock permissioned functions using the
  * different roles - head to its documentation for details.
  *
- * The account that deploys the contract will be granted the minter and pauser
- * roles, as well as the default admin role, which will let it grant both minter
- * and pauser roles to other accounts.
+ * The account that deploys the contract will be granted the minter, pauser, and contract admin
+ * roles, as well as the default admin role, which will let it grant minter, pauser, and admin
+ * roles to other accounts.
  */
 
-
-
-contract A_TKN is ReentrancyGuard, Context, AccessControl, ERC721Burnable, ERC721Pausable {
+contract A_TKN is
+    ReentrancyGuard,
+    Context,
+    AccessControl,
+    ERC721Burnable,
+    ERC721Pausable
+{
     using Counters for Counters.Counter;
 
+    bytes32 public constant CONTRACT_ADMIN_ROLE = keccak256(
+        "CONTRACT_ADMIN_ROLE"
+    );
     bytes32 public constant MINTER_ROLE = keccak256("MINTER_ROLE");
     bytes32 public constant PAUSER_ROLE = keccak256("PAUSER_ROLE");
+
+    bytes32
+        public constant B320xF_ = 0xFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF;
 
     Counters.Counter private _tokenIdTracker;
 
@@ -69,12 +78,10 @@ contract A_TKN is ReentrancyGuard, Context, AccessControl, ERC721Burnable, ERC72
 
     constructor() public ERC721("PRüF Asset Token", "PRAT") {
         _setupRole(DEFAULT_ADMIN_ROLE, _msgSender());
+        _setupRole(CONTRACT_ADMIN_ROLE, _msgSender());
         _setupRole(MINTER_ROLE, _msgSender()); //ALL CONTRACTS THAT MINT ASSET TOKENS
         _setupRole(PAUSER_ROLE, _msgSender());
-
-        //_setBaseURI("pruf.io");
     }
-
 
     address internal STOR_Address;
     address internal RCLR_Address;
@@ -83,22 +90,23 @@ contract A_TKN is ReentrancyGuard, Context, AccessControl, ERC721Burnable, ERC72
 
     event REPORT(string _msg);
 
-
     modifier isAdmin() {
-        require (hasRole(DEFAULT_ADMIN_ROLE, _msgSender()),
-            "AT:MOD-IA:Calling address does not belong to an admin"
+        require(
+            hasRole(CONTRACT_ADMIN_ROLE, _msgSender()),
+            "AT:MOD-IA:Calling address does not belong to a contract admin"
         );
         _;
     }
 
     modifier isMinter() {
-        require (hasRole(MINTER_ROLE, _msgSender()),
+        require(
+            hasRole(MINTER_ROLE, _msgSender()),
             "AT:MOD-IA:Calling address does not belong to a minter"
         );
         _;
     }
 
-    //----------------------Internal Admin functions / onlyowner or isTrusted----------------------//
+    //----------------------Admin functions / isAdmin or isTrusted----------------------//
 
     /*
      * @dev Set storage contract to interface with
@@ -218,7 +226,7 @@ contract A_TKN is ReentrancyGuard, Context, AccessControl, ERC721Burnable, ERC72
     /**
      * @dev Transfers the ownership of a given token ID to another address.
      * Usage of this method is discouraged, use {safeTransferFrom} whenever possible.
-     * Requires the msg.sender to be the owner, approved, or operator.
+     * Requires the _msgSender() to be the owner, approved, or operator.
      * @param from current owner of the token
      * @param to address to receive the ownership of the given token ID
      * @param tokenId uint256 ID of the token to be transferred
@@ -244,8 +252,7 @@ contract A_TKN is ReentrancyGuard, Context, AccessControl, ERC721Burnable, ERC72
 
         rec.incrementNumberOfTransfers = 170;
 
-        rec
-            .rightsHolder = 0xFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF;
+        rec.rightsHolder = B320xF_;
         //^^^^^^^effects^^^^^^^^^
 
         writeRecord(_idxHash, rec);
@@ -259,7 +266,7 @@ contract A_TKN is ReentrancyGuard, Context, AccessControl, ERC721Burnable, ERC72
      * which is called upon a safe transfer, and return the magic value
      * `bytes4(keccak256("onERC721Received(address,address,uint256,bytes)"))`; otherwise,
      * the transfer is reverted.
-     * Requires the msg.sender to be the owner, approved, or operator
+     * Requires the _msgSender() to be the owner, approved, or operator
      * @param from current owner of the token
      * @param to address to receive the ownership of the given token ID
      * @param tokenId uint256 ID of the token to be transferred
@@ -316,8 +323,7 @@ contract A_TKN is ReentrancyGuard, Context, AccessControl, ERC721Burnable, ERC72
         //^^^^^^^checks^^^^^^^^^
 
         rec.incrementNumberOfTransfers = 170;
-        rec
-            .rightsHolder = 0xFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF;
+        rec.rightsHolder = B320xF_;
         //^^^^^^^effects^^^^^^^^^
 
         writeRecord(_idxHash, rec);
@@ -337,9 +343,10 @@ contract A_TKN is ReentrancyGuard, Context, AccessControl, ERC721Burnable, ERC72
             "AT:D:transfer caller is not owner nor approved"
         );
 
-
         //^^^^^^^checks^^^^^^^^^
-        RCLR.discard(_idxHash, msg.sender);
+        //^^^^^^^effects^^^^^^^^^
+
+        RCLR.discard(_idxHash, _msgSender());
         _burn(tokenId);
         //^^^^^^^interactions^^^^^^^^^
     }
@@ -347,7 +354,10 @@ contract A_TKN is ReentrancyGuard, Context, AccessControl, ERC721Burnable, ERC72
     /*
      * @dev Write a Record to Storage @ idxHash
      */
-    function writeRecord(bytes32 _idxHash, Record memory _rec) private whenNotPaused {
+    function writeRecord(bytes32 _idxHash, Record memory _rec)
+        private
+        whenNotPaused
+    {
         //^^^^^^^checks^^^^^^^^^
         //^^^^^^^effects^^^^^^^^^
         STOR.modifyRecord(
@@ -367,6 +377,7 @@ contract A_TKN is ReentrancyGuard, Context, AccessControl, ERC721Burnable, ERC72
     function getRecord(bytes32 _idxHash) private view returns (Record memory) {
         Record memory rec;
         //^^^^^^^checks^^^^^^^^^
+        //^^^^^^^effects^^^^^^^^^
 
         {
             //Start of scope limit for stack depth
@@ -431,8 +442,13 @@ contract A_TKN is ReentrancyGuard, Context, AccessControl, ERC721Burnable, ERC72
      * - the caller must have the `PAUSER_ROLE`.
      */
     function pause() public virtual {
-        require(hasRole(PAUSER_ROLE, _msgSender()), "ERC721PresetMinterPauserAutoId: must have pauser role to pause");
+        require(
+            hasRole(PAUSER_ROLE, _msgSender()),
+            "ERC721PresetMinterPauserAutoId: must have pauser role to pause"
+        );
+        //^^^^^^^checks^^^^^^^^^
         _pause();
+        //^^^^^^^interactions^^^^^^^^^
     }
 
     /**
@@ -445,11 +461,20 @@ contract A_TKN is ReentrancyGuard, Context, AccessControl, ERC721Burnable, ERC72
      * - the caller must have the `PAUSER_ROLE`.
      */
     function unpause() public virtual {
-        require(hasRole(PAUSER_ROLE, _msgSender()), "ERC721PresetMinterPauserAutoId: must have pauser role to unpause");
+        require(
+            hasRole(PAUSER_ROLE, _msgSender()),
+            "ERC721PresetMinterPauserAutoId: must have pauser role to unpause"
+        );
+        //^^^^^^^checks^^^^^^^^^
         _unpause();
+        //^^^^^^^interactions^^^^^^^^^
     }
 
-    function _beforeTokenTransfer(address from, address to, uint256 tokenId) internal virtual override(ERC721, ERC721Pausable) {
+    function _beforeTokenTransfer(
+        address from,
+        address to,
+        uint256 tokenId
+    ) internal virtual override(ERC721, ERC721Pausable) {
         super._beforeTokenTransfer(from, to, tokenId);
     }
 }

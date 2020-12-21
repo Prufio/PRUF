@@ -11,7 +11,7 @@ let minterRoleB32;
 let trustedAgentRoleB32;
 let payableRoleB32;
 
-contract('UTIL_TKN', accounts => {
+contract('UTIL_TKN_FAIL', accounts => {
 
     console.log('//**************************BEGIN BOOTSTRAP**************************//')
 
@@ -87,16 +87,25 @@ contract('UTIL_TKN', accounts => {
     })
 
     //1
-    it('Should fail because caller is not trustedAgent', async () => {
+    it('Should fail because caller is not admin', async () => {
         console.log('//**************************END BOOTSTRAP**************************//')
-        console.log('//**************************BEGIN UTIL_TKN FAIL BATCH (11)**************************//')
-        console.log('//**************************BEGIN AdminSetSharesAddress FAIL BATCH**************************//')
+        console.log('//**************************BEGIN UTIL_TKN FAIL BATCH (12)**************************//')
+        console.log('//**************************BEGIN adminKillTrustedAgent FAIL BATCH**************************//')
         return UTIL_TKN.AdminSetSharesAddress(
             account9,
             { from: account2 })
     })
 
     //2
+    it('Should fail because caller is not admin', async () => {
+        console.log('//**************************END adminKillTrustedAgent FAIL BATCH**************************//')
+        console.log('//**************************BEGIN AdminSetSharesAddress FAIL BATCH**************************//')
+        return UTIL_TKN.AdminSetSharesAddress(
+            account9,
+            { from: account2 })
+    })
+
+    //3
     it('Should fail because sharesAddress cannot = 0', async () => {
         return UTIL_TKN.AdminSetSharesAddress(
             account000,
@@ -104,13 +113,13 @@ contract('UTIL_TKN', accounts => {
     })
 
 
-    it('Should seet sharesAddress to account9', async () => {
+    it('Should set sharesAddress to account9', async () => {
         return UTIL_TKN.AdminSetSharesAddress(
             account9,
             { from: account1 })
     })
 
-    //3
+    //4
     it('Should fail because caller is not payable', async () => {
         console.log('//**************************END AdminSetSharesAddress FAIL BATCH**************************//')
         console.log('//**************************BEGIN payForService FAIL BATCH**************************//')
@@ -150,7 +159,7 @@ contract('UTIL_TKN', accounts => {
         })
     })
 
-    //4
+    //5
     it('Should fail because caller is coldWallet', async () => {
         return UTIL_TKN.payForService(
             account1,
@@ -167,7 +176,7 @@ contract('UTIL_TKN', accounts => {
             { from: account1 })
     })
 
-    //5
+    //6
     it('Should fail because caller has insufficient balance', async () => {
         return UTIL_TKN.payForService(
             account1,
@@ -178,7 +187,7 @@ contract('UTIL_TKN', accounts => {
             { from: account1 })
     })
 
-    //6
+    //7
     it('Should fail because caller is not a trusted agent', async () => {
         console.log('//**************************END payForService FAIL BATCH**************************//')
         console.log('//**************************BEGIN trustedAgentBurn FAIL BATCH**************************//')
@@ -202,7 +211,7 @@ contract('UTIL_TKN', accounts => {
             { from: account1 })
     })
 
-    //7
+    //8
     it('Should fail because account is coldWallet', async () => {
         return UTIL_TKN.trustedAgentBurn(
             account1,
@@ -237,7 +246,7 @@ contract('UTIL_TKN', accounts => {
         })
     })
 
-    //8
+    //9
     it('Should fail because caller is not a trusted agent', async () => {
         console.log('//**************************END trustedAgentBurn FAIL BATCH**************************//')
         console.log('//**************************BEGIN trustedAgentTransfer FAIL BATCH**************************//')
@@ -254,7 +263,7 @@ contract('UTIL_TKN', accounts => {
             { from: account1 })
     })
 
-    //9
+    //10
     it('Should fail because account is coldWallet', async () => {
         return UTIL_TKN.trustedAgentTransfer(
             account1,
@@ -269,7 +278,7 @@ contract('UTIL_TKN', accounts => {
             { from: account1 })
     })
 
-    //10
+    //11
     it('Should fail because caller is not snapshot authorized', async () => {
         console.log('//**************************END trustedAgentTransfer FAIL BATCH**************************//')
         console.log('//**************************BEGIN takeSnapshot FAIL BATCH**************************//')
@@ -277,7 +286,7 @@ contract('UTIL_TKN', accounts => {
             { from: account1 })
     })
 
-    //11
+    //12
     it('Should fail because caller is not minter authorized', async () => {
         console.log('//**************************END takeSnapshot FAIL BATCH**************************//')
         console.log('//**************************BEGIN mint FAIL BATCH**************************//')

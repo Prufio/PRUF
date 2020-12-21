@@ -105,6 +105,8 @@ __/\\\\\\\\\\\\\ _____/\\\\\\\\\ _______/\\../\\ ___/\\\\\\\\\\\\\\\
         let payableRoleB32;
         let minterRoleB32;
         let trustedAgentRoleB32;
+        let assetTransferRoleB32;
+        let discardRoleB32;
         
         contract('BASIC', accounts => {
         
@@ -551,7 +553,6 @@ __/\\\\\\\\\\\\\ _____/\\\\\\\\\ _______/\\../\\ ___/\\\\\\\\\\\\\\\
                     'ECR_MGR'
                 )
         
-        
                 payableRoleB32 = await Helper.getStringHash(
                     'PAYABLE_ROLE'
                 )
@@ -562,6 +563,14 @@ __/\\\\\\\\\\\\\ _____/\\\\\\\\\ _______/\\../\\ ___/\\\\\\\\\\\\\\\
         
                 trustedAgentRoleB32 = await Helper.getStringHash(
                     'TRUSTED_AGENT_ROLE'
+                )
+        
+                assetTransferRoleB32 = await Helper.getStringHash(
+                    'ASSET_TXFR_ROLE'
+                )
+        
+                discardRoleB32 = await Helper.getStringHash(
+                    'DISCARD_ROLE'
                 )
             })
         
@@ -801,10 +810,25 @@ __/\\\\\\\\\\\\\ _____/\\\\\\\\\ _______/\\../\\ ___/\\\\\\\\\\\\\\\
                 // })
             })
         
+            it('Should authorize all minter contracts for minting A_TKN(s)', async () => {
         
-            it('Should authorize all minter contracts for minting AC_TKN(s)', async () => {
-                console.log("Authorizing AC_MGR")
-                return AC_TKN.grantRole(minterRoleB32, AC_MGR.address, { from: account1 })
+                console.log("Authorizing NP")
+                return A_TKN.grantRole(minterRoleB32, NP.address, { from: account1 })
+        
+                    .then(() => {
+                        console.log("Authorizing APP_NC")
+                        return A_TKN.grantRole(minterRoleB32, APP_NC.address, { from: account1 })
+                    })
+        
+                    .then(() => {
+                        console.log("Authorizing APP")
+                        return A_TKN.grantRole(minterRoleB32, APP.address, { from: account1 })
+                    })
+        
+                    .then(() => {
+                        console.log("Authorizing PIP")
+                        return A_TKN.grantRole(minterRoleB32, PIP.address, { from: account1 })
+                    })
             })
         
             it('Should authorize all payable contracts for transactions', async () => {
@@ -826,44 +850,31 @@ __/\\\\\\\\\\\\\ _____/\\\\\\\\\ _______/\\../\\ ___/\\\\\\\\\\\\\\\
                         console.log("Authorizing RCLR")
                         return UTIL_TKN.grantRole(payableRoleB32, RCLR.address, { from: account1 })
                     })
-        
-                    .then(() => {
-                        console.log("Authorizing MAL_APP")
-                        return UTIL_TKN.grantRole(payableRoleB32, MAL_APP.address, { from: account1 })
-                    })
-            })
-        
-            it('Should authorize all minter contracts for minting A_TKN(s)', async () => {
-        
-                console.log("Authorizing NP")
-                return A_TKN.grantRole(minterRoleB32, NP.address, { from: account1 })
-        
-                    .then(() => {
-                        console.log("Authorizing APP_NC")
-                        return A_TKN.grantRole(minterRoleB32, APP_NC.address, { from: account1 })
-                    })
-        
-                    .then(() => {
-                        console.log("Authorizing APP")
-                        return A_TKN.grantRole(minterRoleB32, APP.address, { from: account1 })
-                    })
-        
-                    .then(() => {
-                        console.log("Authorizing PIP")
-                        return A_TKN.grantRole(minterRoleB32, PIP.address, { from: account1 })
-                    })
-        
-                    .then(() => {
-                        console.log("Authorizing RCLR")
-                        return A_TKN.grantRole(minterRoleB32, RCLR.address, { from: account1 })
-                    })
             })
         
         
             it('Should authorize AC_MGR as trusted agent in AC_TKN', async () => {
             
                 console.log("Authorizing AC_MGR")
-                return AC_TKN.grantRole(trustedAgentRoleB32, AC_MGR.address, { from: account1 })
+                return UTIL_TKN.grantRole(trustedAgentRoleB32, AC_MGR.address, { from: account1 })
+            })
+        
+        
+            it('Should authorize all minter contracts for minting AC_TKN(s)', async () => {
+                console.log("Authorizing AC_MGR")
+                return AC_TKN.grantRole(minterRoleB32, AC_MGR.address, { from: account1 })
+            })
+        
+        
+            it('Should authorize all minter contracts for minting AC_TKN(s)', async () => {
+                console.log("Authorizing AC_MGR")
+                return APP.grantRole(assetTransferRoleB32, NP.address, { from: account1 })
+            })
+        
+        
+            it('Should authorize all minter contracts for minting AC_TKN(s)', async () => {
+                console.log("Authorizing AC_MGR")
+                return RCLR.grantRole(discardRoleB32, A_TKN.address, { from: account1 })
             })
         
         
@@ -1754,10 +1765,10 @@ __/\\\\\\\\\\\\\ _____/\\\\\\\\\ _______/\\../\\ ___/\\\\\\\\\\\\\\\
     })
 
     //1
-    it('Should fail becasue caller != owner', async () => {
+    it('Should fail becasue caller != admin', async () => {
 
         console.log("//**************************************END BASIC SETUP**********************************************/")
-        console.log("//**************************************BEGIN BASIC FAIL BATCH (5)**********************************************/")
+        console.log("//**************************************BEGIN BASIC FAIL BATCH (7)**********************************************/")
         console.log("//**************************************BEGIN OO_resolveContractAddresses FAIL BATCH**********************************************/")
         return APP.OO_resolveContractAddresses(
         {from: account2}
@@ -1765,7 +1776,7 @@ __/\\\\\\\\\\\\\ _____/\\\\\\\\\ _______/\\../\\ ___/\\\\\\\\\\\\\\\
     })
 
     //2
-    it('Should fail becasue caller != owneroftkn or NP contract', async () => {
+    it('Should fail becasue caller not ATH or NP', async () => {
 
         console.log("//**************************************END OO_resolveContractAddresses FAIL BATCH**********************************************/")
         console.log("//**************************************BEGIN transferAssetToken FAIL BATCH**********************************************/")
@@ -1777,7 +1788,7 @@ __/\\\\\\\\\\\\\ _____/\\\\\\\\\ _______/\\../\\ ___/\\\\\\\\\\\\\\\
     })
 
     //3
-    it('Should fail becasue caller != owner', async () => {
+    it('Should fail becasue caller != admin', async () => {
 
         console.log("//**************************************END transferAssetToken SETUP**********************************************/")
         console.log("//**************************************BEGIN OO_transferACToken FAIL BATCH**********************************************/")
@@ -1789,7 +1800,7 @@ __/\\\\\\\\\\\\\ _____/\\\\\\\\\ _______/\\../\\ ___/\\\\\\\\\\\\\\\
     })
 
     //4
-    it('Should fail because caller is not owner', async () => {
+    it('Should fail because caller is not admin', async () => {
 
         console.log("//**************************************END OO_transferACToken FAIL BATCH**********************************************/")
         console.log("//**************************************BEGIN OO_setStorageContract FAIL BATCH**********************************************/")
@@ -1807,10 +1818,30 @@ __/\\\\\\\\\\\\\ _____/\\\\\\\\\ _______/\\../\\ ___/\\\\\\\\\\\\\\\
         )
     })
 
+    //6
+    it('Should fail because caller is not pauser', async () => {
+
+        console.log("//**************************************END OO_setStorageContract FAIL BATCH**********************************************/")
+        console.log("//**************************************BEGIN pause FAIL BATCH**********************************************/")
+        return APP.pause(
+        {from: account2}
+        )
+    })
+
+    //7
+    it('Should fail because caller is not pauser', async () => {
+
+        console.log("//**************************************END pause FAIL BATCH**********************************************/")
+        console.log("//**************************************BEGIN unpause FAIL BATCH**********************************************/")
+        return APP.unpause(
+        {from: account2}
+        )
+    })
+
 
     it('Should write record in AC 10 @ IDX&RGT(1)', async () => {
 
-        console.log("//**************************************END OO_setStorageContract FAIL BATCH**********************************************/")
+        console.log("//**************************************END unpause FAIL BATCH**********************************************/")
         console.log("//**************************************END BASIC FAIL BATCH**********************************************/")
         console.log("//**************************************END BASIC TEST**********************************************/")
         console.log("//**************************************BEGIN THE WORKS**********************************************/")

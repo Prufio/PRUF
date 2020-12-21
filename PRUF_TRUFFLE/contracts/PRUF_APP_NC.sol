@@ -30,13 +30,12 @@ contract APP_NC is CORE {
     modifier isAuthorized(bytes32 _idxHash) override {
         uint256 tokenId = uint256(_idxHash);
         require(
-            (A_TKN.ownerOf(tokenId) == msg.sender), //msg.sender is token holder
+            (A_TKN.ownerOf(tokenId) == _msgSender()), //_msgSender() is token holder
             "ANC:MOD-IA: Caller does not hold token"
         );
         _;
     }
 
-    
     //--------------------------------------------External Functions--------------------------
     /*
      * @dev Create a  newRecord with description
@@ -49,7 +48,7 @@ contract APP_NC is CORE {
         bytes32 _IpfsHash
     ) external nonReentrant whenNotPaused {
         require(
-            (ID_TKN.balanceOf(msg.sender) == 1), //msg.sender is token holder
+            (ID_TKN.balanceOf(_msgSender()) == 1), //_msgSender() is token holder
             "ANC:MOD-IA: Caller does not hold a valid PRuF_ID token"
         );
         //^^^^^^^Checks^^^^^^^^^
@@ -61,7 +60,6 @@ contract APP_NC is CORE {
         //^^^^^^^interactions^^^^^^^^^
     }
 
-
     /*
      * @dev Create a  newRecord
      */
@@ -72,7 +70,7 @@ contract APP_NC is CORE {
         uint32 _countDownStart
     ) external nonReentrant whenNotPaused {
         require(
-            (ID_TKN.balanceOf(msg.sender) == 1), //msg.sender is token holder
+            (ID_TKN.balanceOf(_msgSender()) == 1), //_msgSender() is token holder
             "ANC:MOD-IA: Caller does not hold a valid PRuF_ID token"
         );
         //^^^^^^^Checks^^^^^^^^^
@@ -83,7 +81,6 @@ contract APP_NC is CORE {
 
         //^^^^^^^interactions^^^^^^^^^
     }
-
 
     /*
      * @dev Import a record into a new asset class
@@ -102,67 +99,15 @@ contract APP_NC is CORE {
             "ANC:IA:Cannot change AC to new root"
         );
         //^^^^^^^checks^^^^^^^^^
+
         rec.assetStatus = 52;
+        //^^^^^^^effects^^^^^^^^^
 
         STOR.changeAC(_idxHash, _newAssetClass);
         writeRecord(_idxHash, rec);
         deductServiceCosts(_newAssetClass, 1);
-
-        //^^^^^^^interactions / effects^^^^^^^^^^^^
+        //^^^^^^^interactions^^^^^^^^^^^^
     }
-
-    // /*
-    //  * @dev remint token with confirmation of posession of RAWTEXT hash inputs
-    //  * must Match rgtHash using raw data fields ---------------------------security risk--------REVIEW!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-    //  */
-    // function $reMintToken(
-    //     bytes32 _idxHash,
-    //     string calldata first,
-    //     string calldata middle,
-    //     string calldata last,
-    //     string calldata id,
-    //     string calldata secret
-    // ) external nonReentrant whenNotPaused returns (uint256) {
-    //     Record memory rec = getRecord(_idxHash);
-    //     ContractDataHash memory contractInfo = getContractInfo(
-    //         address(this),
-    //         rec.assetClass
-    //     );
-    //     uint256 tokenId = uint256(_idxHash);
-    //     bytes32 rawHash = keccak256(
-    //         abi.encodePacked(first, middle, last, id, secret)
-    //     );
-
-    //     require(
-    //         contractInfo.contractType > 0,
-    //         "ANC:RMT: contract not auth for AC"
-    //     );
-    //     require(
-    //         rec.rightsHolder !=
-    //             0xFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF,
-    //         "ANC:RMT:Record not remintable"
-    //     );
-    //     require(
-    //         isEscrow(rec.assetStatus) == 0,
-    //         "ANC:RMT:Cannot modify asset in Escrow"
-    //     );
-    //     require(                                          //STATE UNREACHABLE
-    //         needsImport(rec.assetStatus) == 0,
-    //         "ANC:RMT:Record In Transferred-unregistered or discarded status"
-    //     );
-    //     require(
-    //         rec.rightsHolder == keccak256(abi.encodePacked(_idxHash, rawHash)),
-    //         "ANC:RMT:Rightsholder does not match hash from data"
-    //     );
-    //     //^^^^^^^checks^^^^^^^^^
-
-    //     deductServiceCosts(rec.assetClass, 1);
-
-    //     tokenId = A_TKN.reMintAssetToken(msg.sender, tokenId);
-
-    //     return tokenId;
-    //     //^^^^^^^interactions^^^^^^^^^
-    // }
 
     /*
      * @dev Modify **Record**.Ipfs2 with confirmation
@@ -175,7 +120,7 @@ contract APP_NC is CORE {
         returns (bytes32)
     {
         Record memory rec = getRecord(_idxHash);
-        require(                                          //STATE UNREACHABLE
+        require(    //STATE UNREACHABLE
             needsImport(rec.assetStatus) == 0,
             "ANC:I2:Record In Transferred, exported, or discarded status"
         );
