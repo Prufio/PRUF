@@ -12,6 +12,7 @@ __/\\\\\\\\\\\\\ _____/\\\\\\\\\ _______/\\../\\ ___/\\\\\\\\\\\\\\\
 
 /*-----------------------------------------------------------------
  *  TO DO
+ * sharesShare is 0.25 share of root costs- when we transition networks this should be rewritten to become a variable share.
  *-----------------------------------------------------------------
  * PRUF UTILITY TOKEN CONTRACT
  *---------------------------------------------------------------*/
@@ -252,7 +253,7 @@ contract UTIL_TKN is
             _transfer(_senderAddress, _ACTHaddress, _ACTHprice);
         } else {
             //IF SHARES ADDRESS IS SET
-            uint256 sharesShare = _rootPrice.div(uint256(4)); // sharesShare is 0.25 share of root costs
+            uint256 sharesShare = _rootPrice.div(uint256(4)); // sharesShare is 0.25 share of root costs when we transition networks this should be a variable share.
             uint256 rootShare = _rootPrice.sub(sharesShare); // adjust root price to be root price - 0.25 share
 
             _transfer(_senderAddress, _rootAddress, rootShare);

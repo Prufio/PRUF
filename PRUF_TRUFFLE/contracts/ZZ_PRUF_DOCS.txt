@@ -50,7 +50,7 @@ pragma solidity ^0.6.7;
  *          EX PRICE_SETTER_ROLE or something similar to enable future decentralized gov.
  *      * !! FIND ALL GOD KEY Issues, give them roles or other solutions that can be hooked to governance or disabled
  *
- *      *
+ *      * !! Fix minting assets. IDtokens should not be sufficient to mint assets in ALL NC assetclasses. This should be done by AC?
  *
  *      * hand off an array to set pricing rather than one by one (gas cost) ????
  *
