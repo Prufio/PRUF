@@ -781,7 +781,7 @@ interface ID_TKN_Interface {
  * @dev Interface for AC_MGR
  * INHERIANCE:
     import "./PRUF_BASIC.sol";
-    import "./Imports/math/Safemath.sol";
+    import "./Imports/math/SafeMath.sol";
  */
 interface AC_MGR_Interface {
 
@@ -972,7 +972,7 @@ interface AC_MGR_Interface {
  * INHERIANCE:
     import "./Imports/access/Ownable.sol";
     import "./Imports/utils/Pausable.sol";
-    import "./Imports/math/Safemath.sol";
+    import "./Imports/math/SafeMath.sol";
     import "./Imports/utils/ReentrancyGuard.sol";
  */
 interface STOR_Interface {
@@ -1131,7 +1131,7 @@ interface STOR_Interface {
  * @dev Interface for ECR_MGR
  * INHERIANCE:
     import "./PRUF_BASIC.sol";
-    import "./Imports/math/Safemath.sol";
+    import "./Imports/math/SafeMath.sol";
  */
 interface ECR_MGR_Interface {
     /*
