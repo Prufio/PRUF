@@ -28,7 +28,6 @@ pragma solidity ^0.6.7;
     import "./Imports/token/ERC20/ERC20Snapshot.sol";
  */
 interface UTIL_TKN_Interface {
-
     /*
      * @dev PERMENANTLY !!!  Kill trusted agent and payable
      */
@@ -47,14 +46,12 @@ interface UTIL_TKN_Interface {
     /*
      * @dev return an adresses "cold wallet" status
      */
-    function isColdWallet (address _addr) external returns (uint256);
-   
+    function isColdWallet(address _addr) external returns (uint256);
 
     /*
      * @dev Set adress of payment contract
      */
     function AdminSetSharesAddress(address _paymentAddress) external;
-
 
     /*
      * @dev Deducts token payment from transaction
@@ -135,8 +132,6 @@ interface UTIL_TKN_Interface {
      */
     function totalSupplyAt(uint256 snapshotId) external returns (uint256);
 
-   
-
     /**
      * @dev Returns the amount of tokens in existence.
      */
@@ -212,8 +207,9 @@ interface UTIL_TKN_Interface {
      *
      * - `spender` cannot be the zero address.
      */
-    function increaseAllowance(address spender, uint256 addedValue) external returns (bool); 
-    
+    function increaseAllowance(address spender, uint256 addedValue)
+        external
+        returns (bool);
 
     /**
      * @dev Atomically decreases the allowance granted to `spender` by the caller.
@@ -229,14 +225,16 @@ interface UTIL_TKN_Interface {
      * - `spender` must have allowance for the caller of at least
      * `subtractedValue`.
      */
-    function decreaseAllowance(address spender, uint256 subtractedValue) external returns (bool);
+    function decreaseAllowance(address spender, uint256 subtractedValue)
+        external
+        returns (bool);
 
     /**
      * @dev Destroys `amount` tokens from the caller.
      *
      * See {ERC20-_burn}.
      */
-    function burn(uint256 amount) external; 
+    function burn(uint256 amount) external;
 
     /**
      * @dev Destroys `amount` tokens from `account`, deducting from the caller's
@@ -256,7 +254,7 @@ interface UTIL_TKN_Interface {
      */
     function cap() external returns (uint256);
 
-        /**
+    /**
      * @dev Returns `true` if `account` has been granted `role`.
      */
     function hasRole(bytes32 role, address account) external returns (bool);
@@ -279,7 +277,9 @@ interface UTIL_TKN_Interface {
      * https://forum.openzeppelin.com/t/iterating-over-elements-on-enumerableset-in-openzeppelin-contracts/2296[forum post]
      * for more information.
      */
-    function getRoleMember(bytes32 role, uint256 index) external returns (address);
+    function getRoleMember(bytes32 role, uint256 index)
+        external
+        returns (address);
 
     /**
      * @dev Returns the admin role that controls `role`. See {grantRole} and
@@ -327,7 +327,6 @@ interface UTIL_TKN_Interface {
      * - the caller must be `account`.
      */
     function renounceRole(bytes32 role, address account) external;
-       
 }
 
 //------------------------------------------------------------------------------------------------
@@ -784,7 +783,6 @@ interface ID_TKN_Interface {
     import "./Imports/math/SafeMath.sol";
  */
 interface AC_MGR_Interface {
-
     /*
      * @dev Set pricing (isAdmin)
      */
@@ -797,7 +795,6 @@ interface AC_MGR_Interface {
         uint256 _L6,
         uint256 _L7
     ) external;
-
 
     /*
      * @dev Authorize / Deauthorize / Authorize users for an address be permitted to make record modifications
@@ -875,17 +872,14 @@ interface AC_MGR_Interface {
         address _paymentAddress
     ) external;
 
-     /**
+    /**
      * @dev Increase payment share of an asset class
      *
      * Requirements:
      * - `recipient` cannot be the zero address.
      * - the caller must have a balance of at least `amount`.
      */
-    function increaseShare(
-        uint32 _assetClass,
-        uint256 _amount
-    ) external;
+    function increaseShare(uint32 _assetClass, uint256 _amount) external;
 
     /*
      * @dev get a User Record
@@ -947,7 +941,7 @@ interface AC_MGR_Interface {
             address,
             uint256
         );
-    
+
     /*
      * @dev return current AC token index pointer
      */
@@ -1050,6 +1044,20 @@ interface STOR_Interface {
     function endEscrow(bytes32 _idxHash) external;
 
     /*
+     * @dev Modify record sale price and currency data
+     */
+    function setPrice(
+        bytes32 _idxHash,
+        uint120 _price,
+        uint8 _currency
+    ) external;
+
+    /*
+     * @dev set record sale price and currency data to zero
+     */
+    function clearPrice(bytes32 _idxHash) external;
+
+    /*
      * @dev Modify record Ipfs1 data
      */
     function modifyIpfs1(bytes32 _idxHash, bytes32 _Ipfs1) external;
@@ -1091,6 +1099,14 @@ interface STOR_Interface {
             bytes32,
             uint16
         );
+
+    /*
+     * @dev return the pricing and currency data from a record
+     */
+    function getPriceData(bytes32 _idxHash)
+        external
+        view
+        returns (uint120, uint8);
 
     /*
      * @dev Compare record.rightsholder with supplied bytes32 rightsholder

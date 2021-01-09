@@ -40,11 +40,12 @@ import "./Imports/math/SafeMath.sol";
 import "./Imports/utils/ReentrancyGuard.sol";
 
 contract STOR is AccessControl, ReentrancyGuard, Pausable {
-
     bytes32 public constant PAUSER_ROLE = keccak256("PAUSER_ROLE");
-    bytes32 public constant CONTRACT_ADMIN_ROLE = keccak256("CONTRACT_ADMIN_ROLE");
+    bytes32 public constant CONTRACT_ADMIN_ROLE =
+        keccak256("CONTRACT_ADMIN_ROLE");
 
-    bytes32 public constant B320xF_ = 0xFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF;
+    bytes32 public constant B320xF_ =
+        0xFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF;
 
     struct Record {
         uint8 assetStatus; // Status - Transferrable, locked, in transfer, stolen, lost, etc.
@@ -54,7 +55,7 @@ contract STOR is AccessControl, ReentrancyGuard, Pausable {
         uint32 assetClass; // Type of asset
         uint32 countDown; // Variable that can only be dencreased from countDownStart
         uint32 countDownStart; // Starting point for countdown variable (set once)
-        uint120 price; //price set for items offered for sale  
+        uint120 price; //price set for items offered for sale
         bytes32 Ipfs1; // Publically viewable asset description
         bytes32 Ipfs2; // Publically viewable immutable notes
         bytes32 rightsHolder; // KEK256 Registered owner
@@ -112,8 +113,8 @@ contract STOR is AccessControl, ReentrancyGuard, Pausable {
      * Originating Address is authorized for asset class
      */
     modifier isAuthorized(uint32 _assetClass) {
-        uint8 auth = contractInfo[contractAddressToName[msg
-            .sender]][_assetClass];
+        uint8 auth =
+            contractInfo[contractAddressToName[msg.sender]][_assetClass];
         require(
             ((auth > 0) && (auth < 5)) || (auth == 10),
             "S:MOD-IA:Contract not authorized"
@@ -293,7 +294,9 @@ contract STOR is AccessControl, ReentrancyGuard, Pausable {
 
         Record memory rec;
 
-        if (contractInfo[contractAddressToName[_msgSender()]][_assetClass] == 1) {
+        if (
+            contractInfo[contractAddressToName[_msgSender()]][_assetClass] == 1
+        ) {
             rec.assetStatus = 0;
         } else {
             rec.assetStatus = 51;
@@ -450,8 +453,7 @@ contract STOR is AccessControl, ReentrancyGuard, Pausable {
 
         if (_newAssetStatus == 60) {
             //if setting to "escrow" status, set rgt to 0xFFF_
-            rec
-                .rightsHolder = B320xF_;
+            rec.rightsHolder = B320xF_;
         }
 
         rec.assetStatus = _newAssetStatus;
@@ -491,6 +493,60 @@ contract STOR is AccessControl, ReentrancyGuard, Pausable {
         database[_idxHash] = rec;
         //^^^^^^^effects^^^^^^^^^
         //emit REPORT("ECR END:", _idxHash);
+        //^^^^^^^interactions^^^^^^^^^
+    }
+
+    /*
+     * @dev Modify record sale price and currency data
+     */
+    function setPrice(
+        bytes32 _idxHash,
+        uint120 _price,
+        uint8 _currency
+    )
+        external
+        nonReentrant
+        whenNotPaused
+        exists(_idxHash) //asset must exist in 'database'
+        isAuthorized(database[_idxHash].assetClass) //calling contract must be authorized in relevant assetClass
+    //notEscrow(_idxHash) // asset must not be held in escrow status
+    {
+        Record memory rec = database[_idxHash];
+        require((isTransferred(rec.assetStatus) == 0), "S:SP: Txfrd asset");
+        //^^^^^^^checks^^^^^^^^^
+
+        rec.price = _price;
+        rec.currency = _currency;
+
+        database[_idxHash] = rec;
+        //^^^^^^^effects^^^^^^^^^
+
+        //emit REPORT("Price mod", _idxHash);
+        //^^^^^^^interactions^^^^^^^^^
+    }
+
+    /*
+     * @dev Modify record sale price and currency data
+     */
+    function clearPrice(bytes32 _idxHash)
+        external
+        nonReentrant
+        whenNotPaused
+        exists(_idxHash) //asset must exist in 'database'
+        isAuthorized(database[_idxHash].assetClass) //calling contract must be authorized in relevant assetClass
+    //notEscrow(_idxHash) // asset must not be held in escrow status
+    {
+        Record memory rec = database[_idxHash];
+        require((isTransferred(rec.assetStatus) == 0), "S:SP: Txfrd asset");
+        //^^^^^^^checks^^^^^^^^^
+
+        rec.price = 0;
+        rec.currency = 0;
+
+        database[_idxHash] = rec;
+        //^^^^^^^effects^^^^^^^^^
+
+        //emit REPORT("Price mod", _idxHash);
         //^^^^^^^interactions^^^^^^^^^
     }
 
@@ -626,6 +682,18 @@ contract STOR is AccessControl, ReentrancyGuard, Pausable {
             rec.Ipfs2,
             rec.numberOfTransfers
         );
+        //^^^^^^^interactions^^^^^^^^^
+    }
+
+    /*
+     * @dev return the pricing and currency data from a record
+     */
+    function getPriceData(bytes32 _idxHash)
+        external
+        view
+        returns (uint120, uint8)
+    {
+        return (database[_idxHash].price, database[_idxHash].currency);
         //^^^^^^^interactions^^^^^^^^^
     }
 
