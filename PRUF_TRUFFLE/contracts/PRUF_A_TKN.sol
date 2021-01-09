@@ -53,14 +53,24 @@ contract A_TKN is
 {
     using Counters for Counters.Counter;
 
-    bytes32 public constant CONTRACT_ADMIN_ROLE = keccak256(
-        "CONTRACT_ADMIN_ROLE"
-    );
+    bytes32 public constant CONTRACT_ADMIN_ROLE =
+        keccak256("CONTRACT_ADMIN_ROLE");
     bytes32 public constant MINTER_ROLE = keccak256("MINTER_ROLE");
     bytes32 public constant PAUSER_ROLE = keccak256("PAUSER_ROLE");
+    bytes32 public constant TRUSTED_AGENT_ROLE =
+        keccak256("TRUSTED_AGENT_ROLE");
 
-    bytes32
-        public constant B320xF_ = 0xFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF;
+    uint256 trustedAgentEnabled = 1;
+
+    mapping(address => uint256) private coldWallet;
+
+    address internal STOR_Address;
+    address internal RCLR_Address;
+    STOR_Interface internal STOR;
+    RCLR_Interface internal RCLR;
+
+    bytes32 public constant B320xF_ =
+        0xFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF;
 
     Counters.Counter private _tokenIdTracker;
 
@@ -83,11 +93,6 @@ contract A_TKN is
         _setupRole(PAUSER_ROLE, _msgSender());
     }
 
-    address internal STOR_Address;
-    address internal RCLR_Address;
-    STOR_Interface internal STOR;
-    RCLR_Interface internal RCLR;
-
     event REPORT(string _msg);
 
     modifier isAdmin() {
@@ -106,7 +111,36 @@ contract A_TKN is
         _;
     }
 
-    //----------------------Admin functions / isAdmin or isTrusted----------------------//
+    modifier isTrustedAgent() {
+        //-----------------------------------------------------DPS:CHECK--NEW
+        require(
+            hasRole(TRUSTED_AGENT_ROLE, _msgSender()),
+            "PRuF:MOD: must have TRUSTED_AGENT_ROLE"
+        );
+        require(
+            trustedAgentEnabled == 1,
+            "PRuF:MOD: Trusted Agent function permanently disabled - use allowance / transferFrom pattern"
+        );
+        _;
+    }
+
+    //----------------------Admin functions / isAdmin ----------------------//
+
+    /*-----------------------------------------------------DPS:CHECK--NEW
+     * @dev ----------------------------------------PERMANANTLY !!!  Kills trusted agent and payable functions
+     * this will break the functionality of current payment mechanisms.
+     *
+     * The workaround for this is to create an allowance for pruf contracts for a single or multiple payments,
+     * either ahead of time "loading up your PRUF account" or on demand with an operation. On demand will use quite a bit more gas.
+     * "preloading" should be pretty gas efficient, but will add an extra step to the workflow, requiring users to have sufficient
+     * PRuF "banked" in an allowance for use in the system.
+     *
+     */
+    function adminKillTrustedAgent(uint256 _key) external isAdmin {
+        if (_key == 170) {
+            trustedAgentEnabled = 0; //-------------------THIS IS A PERMANENT ACTION AND CANNOT BE UNDONE
+        }
+    }
 
     /*
      * @dev Set storage contract to interface with
@@ -133,6 +167,34 @@ contract A_TKN is
         //^^^^^^^effects^^^^^^^^^
     }
 
+    ////----------------------Regular operations----------------------//
+
+    /*-----------------------------------------------------DPS:CHECK--NEW
+     * @dev Set calling wallet to a "cold Wallet" that cannot be manipulated by TRUSTED_AGENT or PAYABLE permissioned functions
+     * WALLET ADDRESSES SET TO "Cold" DO NOT WORK WITH TRUSTED_AGENT FUNCTIONS and must be unset from cold before it can interact with
+     * contract functions.
+     */
+    function setColdWallet() external {
+        coldWallet[_msgSender()] = 170;
+    }
+
+    /*-----------------------------------------------------DPS:CHECK--NEW
+     * @dev un-set calling wallet to a "cold Wallet", enabling manipulation by TRUSTED_AGENT and PAYABLE permissioned functions
+     * WALLET ADDRESSES SET TO "Cold" DO NOT WORK WITH TRUSTED_AGENT FUNCTIONS and must be unset from cold before it can interact with
+     * contract functions.
+     */
+    function unSetColdWallet() external {
+        coldWallet[_msgSender()] = 0;
+    }
+
+    /*-----------------------------------------------------DPS:CHECK--NEW
+     * @dev return an adresses "cold wallet" status
+     * WALLET ADDRESSES SET TO "Cold" DO NOT WORK WITH TRUSTED_AGENT FUNCTIONS
+     */
+    function isColdWallet(address _addr) external view returns (uint256) {
+        return coldWallet[_addr];
+    }
+
     /*
      * @dev Mint new token
      */
@@ -149,28 +211,6 @@ contract A_TKN is
         return tokenId;
         //^^^^^^^interactions^^^^^^^^^
     }
-
-    // /*
-    //  * @dev remint Asset Token
-    //  * must set a new and unuiqe rgtHash
-    //  * burns old token
-    //  * Sends new token to original Caller
-    //  */
-    // function reMintAssetToken(address _recipientAddress, uint256 tokenId)
-    //     external
-    //     isMinter
-    //     nonReentrant
-    //     returns (uint256)
-    // {
-    //     require(_exists(tokenId), "AT:RM:Cannot Remint nonexistant token");
-    //     //^^^^^^^checks^^^^^^^^^
-    //     string memory tokenURI = tokenURI(tokenId);
-    //     _burn(tokenId);
-    //     _safeMint(_recipientAddress, tokenId);
-    //     _setTokenURI(tokenId, tokenURI);
-    //     return tokenId;
-    //     //^^^^^^^interactions^^^^^^^^^
-    // }
 
     /*
      * @dev Set new token URI String
@@ -199,9 +239,8 @@ contract A_TKN is
         string calldata _authCode
     ) external view {
         bytes32 _hashedAuthCode = keccak256(abi.encodePacked(_authCode));
-        bytes32 b32URI = keccak256(
-            abi.encodePacked(_hashedAuthCode, _assetClass)
-        );
+        bytes32 b32URI =
+            keccak256(abi.encodePacked(_hashedAuthCode, _assetClass));
         string memory authString = uint256toString(uint256(b32URI));
         string memory URI = tokenURI(tokenId);
 
@@ -227,12 +266,12 @@ contract A_TKN is
      * @dev Transfers the ownership of a given token ID to another address.
      * Usage of this method is discouraged, use {safeTransferFrom} whenever possible.
      * Requires the _msgSender() to be the owner, approved, or operator.
-     * @param from current owner of the token
+     * @param _from current owner of the token
      * @param to address to receive the ownership of the given token ID
      * @param tokenId uint256 ID of the token to be transferred
      */
     function transferFrom(
-        address from,
+        address _from,
         address to,
         uint256 tokenId
     ) public override nonReentrant whenNotPaused {
@@ -256,7 +295,44 @@ contract A_TKN is
         //^^^^^^^effects^^^^^^^^^
 
         writeRecord(_idxHash, rec);
-        _transfer(from, to, tokenId);
+        _transfer(_from, to, tokenId);
+        //^^^^^^^interactions^^^^^^^^^
+    }
+
+    /**
+     * @dev Transfers the ownership of a given token ID to another address by a TRUSTED_AGENT.
+     * Usage of this method is discouraged, use {safeTransferFrom} whenever possible.
+     * Requires the _msgSender() to be the owner, approved, or operator.
+     * @param _from current owner of the token
+     * @param to address to receive the ownership of the given token ID
+     * @param tokenId uint256 ID of the token to be transferred
+     */
+    function trustedAgentTransferFrom(
+        address _from,
+        address to,
+        uint256 tokenId
+    ) public nonReentrant whenNotPaused isTrustedAgent {
+        bytes32 _idxHash = bytes32(tokenId);
+        Record memory rec = getRecord(_idxHash);
+
+        require(
+            _isApprovedOrOwner(_msgSender(), tokenId),
+            "AT:TF:transfer caller is not owner nor approved"
+        );
+        require(
+            rec.assetStatus == 51,
+            "AT:TF:Asset not in transferrable status"
+        );
+
+        //^^^^^^^checks^^^^^^^^
+
+        rec.incrementNumberOfTransfers = 170;
+
+        rec.rightsHolder = B320xF_;
+        //^^^^^^^effects^^^^^^^^^
+
+        writeRecord(_idxHash, rec);
+        _transfer(_from, to, tokenId);
         //^^^^^^^interactions^^^^^^^^^
     }
 
@@ -267,17 +343,17 @@ contract A_TKN is
      * `bytes4(keccak256("onERC721Received(address,address,uint256,bytes)"))`; otherwise,
      * the transfer is reverted.
      * Requires the _msgSender() to be the owner, approved, or operator
-     * @param from current owner of the token
+     * @param _from current owner of the token
      * @param to address to receive the ownership of the given token ID
      * @param tokenId uint256 ID of the token to be transferred
      */
     function safeTransferFrom(
-        address from,
+        address _from,
         address to,
         uint256 tokenId
     ) public override {
         //writeRecord(_idxHash, rec);
-        safeTransferFrom(from, to, tokenId, "");
+        safeTransferFrom(_from, to, tokenId, "");
         //^^^^^^^interactions^^^^^^^^^
     }
 
@@ -288,13 +364,13 @@ contract A_TKN is
      * `bytes4(keccak256("onERC721Received(address,address,uint256,bytes)"))`; otherwise,
      * the transfer is reverted.
      * Requires the _msgSender() to be the owner, approved, or operator
-     * @param from current owner of the token
+     * @param _from current owner of the token
      * @param to address to receive the ownership of the given token ID
      * @param tokenId uint256 ID of the token to be transferred
      * @param _data bytes data to send along with a safe transfer check
      */
     function safeTransferFrom(
-        address from,
+        address _from,
         address to,
         uint256 tokenId,
         bytes memory _data
@@ -327,9 +403,10 @@ contract A_TKN is
         //^^^^^^^effects^^^^^^^^^
 
         writeRecord(_idxHash, rec);
-        _safeTransfer(from, to, tokenId, _data);
+        _safeTransfer(_from, to, tokenId, _data);
         //^^^^^^^interactions^^^^^^^^^
     }
+
 
     /**
      * @dev Safely burns a token and sets the corresponding RGT to zero in storage.
@@ -471,10 +548,10 @@ contract A_TKN is
     }
 
     function _beforeTokenTransfer(
-        address from,
+        address _from,
         address to,
         uint256 tokenId
     ) internal virtual override(ERC721, ERC721Pausable) {
-        super._beforeTokenTransfer(from, to, tokenId);
+        super._beforeTokenTransfer(_from, to, tokenId);
     }
 }

@@ -26,9 +26,6 @@ pragma solidity ^0.6.7;
 /*-----------------------------------------------------------------
  *TESTNET TO DO :
  *
- *      * Add trusted Agent role, "cold" functionality, and trustedAgentTransfer to A_TKN
- *
- *      * Create a sales "escrow" to allow prurchasing items with PRUF
  *
  *      *
  *
@@ -42,13 +39,13 @@ pragma solidity ^0.6.7;
  *
  *      * Payable everything!
  *
- *      * All core stateful contracts should have ROLES defined for future distributed governance contracts.
- *          EX PRICE_SETTER_ROLE or something similar to enable future decentralized gov.
  *      * !! FIND ALL GOD KEY Issues, give them roles or other solutions that can be hooked to governance or disabled
  *
  *      * !! Fix minting assets. IDtokens should not be sufficient to mint assets in ALL NC assetclasses. This should be done by AC?
  *
- *      * hand off an array to set pricing rather than one by one (gas cost) ????
+ *      * Add trusted Agent role, "cold" functionality, and trustedAgentTransfer to A_TKN
+ *
+ *      * Create a sales "escrow" to allow prurchasing items with PRUF
  *
  *      * Automate contract authorization 
  *
