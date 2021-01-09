@@ -35,16 +35,17 @@ contract BASIC is ReentrancyGuard, AccessControl, IERC721Receiver, Pausable {
     
 
     struct Record {
-        //struct for holding and manipulating record data
         uint8 assetStatus; // Status - Transferrable, locked, in transfer, stolen, lost, etc.
+        uint8 forceModCount; // Number of times asset has been forceModded.
+        uint8 currency; //currency for price information (0=not for sale, 1=ETH, 2=PRüF, 3=DAI, 4=WBTC.... )
+        uint16 numberOfTransfers; //number of transfers and forcemods
         uint32 assetClass; // Type of asset
         uint32 countDown; // Variable that can only be dencreased from countDownStart
         uint32 countDownStart; // Starting point for countdown variable (set once)
-        uint256 incrementNumberOfTransfers; //increment flag for number of transfers and forcemods
-        uint256 incrementForceModCount; // increment flag for Number of times asset has been forceModded.
-        bytes32 rightsHolder; // KEK256 Registered owner
+        uint120 price; //price set for items offered for sale  
         bytes32 Ipfs1; // Publically viewable asset description
         bytes32 Ipfs2; // Publically viewable immutable notes
+        bytes32 rightsHolder; // KEK256 Registered owner
     }
 
     struct AC {
