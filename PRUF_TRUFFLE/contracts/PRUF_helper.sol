@@ -19,7 +19,7 @@ __/\\\\\\\\\\\\\ _____/\\\\\\\\\ _______/\\../\\ ___/\\\\\\\\\\\\\\\
 pragma solidity ^0.6.7;
 
 import "./Imports/access/Ownable.sol";
-import "./Imports/math/Safemath.sol";
+import "./Imports/math/SafeMath.sol";
 
 interface erc721_tokenInterface {
     function ownerOf(uint256) external view returns (address);
