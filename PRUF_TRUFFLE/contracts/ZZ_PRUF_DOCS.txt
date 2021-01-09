@@ -26,11 +26,8 @@ pragma solidity ^0.6.7;
 /*-----------------------------------------------------------------
  *TESTNET TO DO :
  *
- *      * Faucet - 0.1 KETH per 5000 PRUF?
  *
- *      * ID token 1 per adreess
  *
- *      * Webapp - mint pruf, mint ID tokens
  *
  *      * 
  *
