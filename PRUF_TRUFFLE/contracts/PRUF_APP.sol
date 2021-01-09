@@ -95,7 +95,7 @@ contract APP is CORE {
         );
         //^^^^^^^checks^^^^^^^^^
 
-        rec.incrementForceModCount = 170;
+        rec.forceModCount = 170;
 
         rec.assetStatus = 0;
         rec.rightsHolder = _newRgtHash;
@@ -133,9 +133,9 @@ contract APP is CORE {
         );
         //^^^^^^^checks^^^^^^^^^
 
-        rec.incrementForceModCount = 170;
+        rec.forceModCount = 170;
 
-        rec.incrementNumberOfTransfers = 170;
+        rec.numberOfTransfers = 170;
 
         rec.assetStatus = 0;
         rec.rightsHolder = _rgtHash;
@@ -181,7 +181,7 @@ contract APP is CORE {
         );
         //^^^^^^^checks^^^^^^^^^
 
-        rec.incrementNumberOfTransfers = 170;
+        rec.numberOfTransfers = 170;
 
         if (_newrgtHash == 0x0) {
             //set to transferred status
