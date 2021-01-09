@@ -82,7 +82,7 @@ contract A_TKN is
         uint32 assetClass; // Type of asset
         uint32 countDown; // Variable that can only be dencreased from countDownStart
         uint32 countDownStart; // Starting point for countdown variable (set once)
-        uint120 price; //price set for items offered for sale  
+        uint120 price; //price set for items offered for sale
         bytes32 Ipfs1; // Publically viewable asset description
         bytes32 Ipfs2; // Publically viewable immutable notes
         bytes32 rightsHolder; // KEK256 Registered owner
@@ -318,12 +318,8 @@ contract A_TKN is
         Record memory rec = getRecord(_idxHash);
 
         require(
-            _isApprovedOrOwner(_msgSender(), tokenId),
-            "AT:TF:transfer caller is not owner nor approved"
-        );
-        require(
             rec.assetStatus == 51,
-            "AT:TF:Asset not in transferrable status"
+            "AT:TATF:Asset not in transferrable status"
         );
 
         //^^^^^^^checks^^^^^^^^
@@ -354,7 +350,6 @@ contract A_TKN is
         address to,
         uint256 tokenId
     ) public override {
-        //writeRecord(_idxHash, rec);
         safeTransferFrom(_from, to, tokenId, "");
         //^^^^^^^interactions^^^^^^^^^
     }
@@ -401,6 +396,8 @@ contract A_TKN is
         //^^^^^^^checks^^^^^^^^^
 
         rec.numberOfTransfers = 170;
+        rec.price = 0; //-----------------------------------------------------DPS:CHECK--NEW
+        rec.currency = 0; //-----------------------------------------------------DPS:CHECK--NEW
         rec.rightsHolder = B320xF_;
         //^^^^^^^effects^^^^^^^^^
 
@@ -408,7 +405,6 @@ contract A_TKN is
         _safeTransfer(_from, to, tokenId, _data);
         //^^^^^^^interactions^^^^^^^^^
     }
-
 
     /**
      * @dev Safely burns a token and sets the corresponding RGT to zero in storage.
@@ -447,6 +443,8 @@ contract A_TKN is
             _rec.forceModCount,
             _rec.numberOfTransfers
         ); // Send data and writehash to storage
+        //-----------------------------------------------------DPS:CHECK--NEW
+        STOR.clearPrice(_idxHash); //sets price and currency of a record to zero
         //^^^^^^^interactions^^^^^^^^^
     }
 
