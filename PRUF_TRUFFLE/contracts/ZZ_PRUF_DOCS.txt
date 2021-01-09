@@ -38,14 +38,15 @@ pragma solidity ^0.6.7;
  *TO DO :
  *
  *      * Payable everything!
+ * 
+ *      * Add "purchase" function to APP_NC to allow instant purchases
  *
  *      * !! FIND ALL GOD KEY Issues, give them roles or other solutions that can be hooked to governance or disabled
  *
- *      * !! Fix minting assets. IDtokens should not be sufficient to mint assets in ALL NC assetclasses. This should be done by AC?
+ *      * Fix minting assets. IDtokens should not be sufficient to mint assets in ALL NC assetclasses. 
+ *              This should be done by enabling an "APP_NCS(upervised)" contract that authorizes asset creation like "APP"
  *
  *      * Add trusted Agent role, "cold" functionality, and trustedAgentTransfer to A_TKN
- *
- *      * Create a sales "escrow" to allow prurchasing items with PRUF
  *
  *      * Automate contract authorization 
  *
