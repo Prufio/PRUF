@@ -496,7 +496,7 @@ contract STOR is AccessControl, ReentrancyGuard, Pausable {
         //^^^^^^^interactions^^^^^^^^^
     }
 
-    /*
+    /*-----------------------------------------------------DPS:CHECK--NEW
      * @dev Modify record sale price and currency data
      */
     function setPrice(
@@ -525,8 +525,8 @@ contract STOR is AccessControl, ReentrancyGuard, Pausable {
         //^^^^^^^interactions^^^^^^^^^
     }
 
-    /*
-     * @dev Modify record sale price and currency data
+    /*-----------------------------------------------------DPS:CHECK--NEW
+     * @dev set record sale price and currency data to zero
      */
     function clearPrice(bytes32 _idxHash)
         external
@@ -685,7 +685,7 @@ contract STOR is AccessControl, ReentrancyGuard, Pausable {
         //^^^^^^^interactions^^^^^^^^^
     }
 
-    /*
+    /*-----------------------------------------------------DPS:CHECK--NEW
      * @dev return the pricing and currency data from a record
      */
     function getPriceData(bytes32 _idxHash)

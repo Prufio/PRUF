@@ -396,8 +396,6 @@ contract A_TKN is
         //^^^^^^^checks^^^^^^^^^
 
         rec.numberOfTransfers = 170;
-        rec.price = 0; //-----------------------------------------------------DPS:CHECK--NEW
-        rec.currency = 0; //-----------------------------------------------------DPS:CHECK--NEW
         rec.rightsHolder = B320xF_;
         //^^^^^^^effects^^^^^^^^^
 
