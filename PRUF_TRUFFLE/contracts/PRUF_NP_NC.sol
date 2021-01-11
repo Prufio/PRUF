@@ -67,7 +67,7 @@ contract NP_NC is CORE {
         //^^^^^^^effects^^^^^^^^^
 
         writeRecord(_idxHash, rec);
-        deductServiceCosts(rec.assetClass, 6);
+        deductServiceCosts(rec.assetClass, 6);//------------------------------DPS:TEST--NEW
 
         return _idxHash;
         //^^^^^^^interactions^^^^^^^^^
@@ -197,7 +197,7 @@ contract NP_NC is CORE {
         //^^^^^^^effects^^^^^^^^^
 
         writeRecord(_idxHash, rec);
-        deductServiceCosts(rec.assetClass, 7);
+        deductServiceCosts(rec.assetClass, 7);//------------------------------DPS:TEST--NEW
         return (rec.countDown);
         //^^^^^^^interactions^^^^^^^^^
     }
@@ -224,7 +224,7 @@ contract NP_NC is CORE {
         //^^^^^^^effects^^^^^^^^^
 
         writeRecordIpfs1(_idxHash, rec);
-        deductServiceCosts(rec.assetClass, 8);
+        deductServiceCosts(rec.assetClass, 8);//------------------------------DPS:TEST--NEW
 
         return rec.Ipfs1;
         //^^^^^^^interactions^^^^^^^^^

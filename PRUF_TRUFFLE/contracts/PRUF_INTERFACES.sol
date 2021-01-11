@@ -548,6 +548,20 @@ interface A_TKN_Interface {
     ) external;
 
     /**
+     * @dev Transfers the ownership of a given token ID to another address by a TRUSTED_AGENT.
+     * Usage of this method is discouraged, use {safeTransferFrom} whenever possible.
+     * Requires the _msgSender() to be the owner, approved, or operator.
+     * @param _from current owner of the token
+     * @param to address to receive the ownership of the given token ID
+     * @param tokenId uint256 ID of the token to be transferred
+     */
+    function trustedAgentTransferFrom(
+        address _from,
+        address to,
+        uint256 tokenId
+    ) external;
+
+    /**
      * @dev Safely transfers the ownership of a given token ID to another address
      * If the target address is a contract, it must implement {IERC721Receiver-onERC721Received},
      * which is called upon a safe transfer, and return the magic value
