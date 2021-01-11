@@ -135,7 +135,6 @@ contract NP_NC is CORE {
         //^^^^^^^effects^^^^^^^^^
 
         writeRecord(_idxHash, rec);
-        deductServiceCosts(rec.assetClass, 5);
 
         return rec.assetStatus;
         //^^^^^^^interactions^^^^^^^^^

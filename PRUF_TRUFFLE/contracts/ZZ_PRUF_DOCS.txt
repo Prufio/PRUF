@@ -36,8 +36,6 @@ pragma solidity ^0.6.7;
 
 /*-----------------------------------------------------------------
  *TO DO :
- *
- *      * Payable everything!
  * 
  *      * Add "purchase" function to APP_NC to allow instant purchases
  *
@@ -198,6 +196,8 @@ pragma solidity ^0.6.7;
 * 4: reMintRecordCost // Extra
 * 5: changeStatusCost // Extra
 * 6: forceModifyCost // Cost to brute-force a record transfer
+* 7: decCounter Cost // Cost to decrement the counter
+* 8: modDescCost // Cost to modify the description
 - -----------------------------------------------------------------
 
 /*-----------------------------------------------------------------
