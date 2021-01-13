@@ -133,8 +133,9 @@ __/\\\\\\\\\\\\\ _____/\\\\\\\\\ _______/\\../\\ ___/\\\\\\\\\\\\\\\
 *              (PAYABLE_ROLEB32, APP_NP_NC.address),   |0|
 *              (PAYABLE_ROLEB32, RCLR.address),   |0|
 *              (PAYABLE_ROLEB32, PIP.address),   |0|
-*              (PAYABLE_ROLEB32, PRUF_PURCHASE.address),   |0|
 *              (TRUSTED_AGENT_ROLEB32, AC_MGR.address)   |0|
+*--NEW
+*              (PAYABLE_ROLEB32, PURCHASE.address),   |0|
 *              (TRUSTED_AGENT_ROLEB32, PURCHASE.address)   |0|
 *              (MINTER_ROLEB32, SPLIT.address)   |0|
 *              (PAUSER_ROLEB32, SPLIT.address)   |0|
@@ -145,6 +146,7 @@ __/\\\\\\\\\\\\\ _____/\\\\\\\\\ _______/\\../\\ ___/\\\\\\\\\\\\\\\
 *           (MINTER_ROLEB32, APP.address),   |0|
 *           (MINTER_ROLEB32, PIP.address),   |0|
 *           (MINTER_ROLEB32, RCLR.address)   |0|
+*--NEW
 *           (TRUSTED_AGENT_ROLEB32, PURCHASE.address)   |0|               
 *
 * 4 - APP (ASSET_TXFR_ROLEB32, NP.address)   |0|
