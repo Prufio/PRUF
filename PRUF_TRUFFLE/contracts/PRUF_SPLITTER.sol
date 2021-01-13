@@ -26,19 +26,22 @@ import "./Imports/utils/Pausable.sol";
 import "./Imports/utils/ReentrancyGuard.sol";
 import "./Imports/math/SafeMath.sol";
 
-contract DOUBLE is ReentrancyGuard, Pausable, AccessControl {
+contract SPLIT is ReentrancyGuard, Pausable, AccessControl {
     using SafeMath for uint256;
 
     //----------------------------ROLE DFINITIONS
     bytes32 public constant PAUSER_ROLE = keccak256("PAUSER_ROLE");
-    bytes32 public constant CONTRACT_ADMIN_ROLE = keccak256("CONTRACT_ADMIN_ROLE");
+    bytes32 public constant CONTRACT_ADMIN_ROLE =
+        keccak256("CONTRACT_ADMIN_ROLE");
 
     address internal UTIL_TKN_Address;
     UTIL_TKN_Interface internal UTIL_TKN;
 
-    mapping(address => uint256) private hasDoubled;
+    mapping(address => uint256) private hasSplit;
 
-    uint256 snapshotID;
+    uint256 public snapshotID;
+
+    //uint256 public multiplier = 1;
 
     constructor() public {
         _setupRole(DEFAULT_ADMIN_ROLE, msg.sender);
@@ -74,7 +77,6 @@ contract DOUBLE is ReentrancyGuard, Pausable, AccessControl {
         _;
     }
 
-
     //----------------------External Admin functions---------------------//
 
     /*
@@ -104,8 +106,18 @@ contract DOUBLE is ReentrancyGuard, Pausable, AccessControl {
         //^^^^^^^effects^^^^^^^^^
     }
 
+    // /*
+    //  * @dev Set pruf doulble multiplier
+    //  * TESTING: ALL REQUIRES, ACCESS ROLE
+    //  */
+    // function ADMIN_setMultiplier(uint256 _mult) external isAdmin {
+    //     //^^^^^^^checks^^^^^^^^^
+    //     multiplier = _mult;
+    //     //^^^^^^^effects^^^^^^^^^
+    // }
+
     /*
-     * @dev pause the contract, renounce pauser role, take a snapshot, 
+     * @dev pause the contract, renounce pauser role, take a snapshot,
      * TESTING: ALL REQUIRES, ACCESS ROLE
      */
     function ADMIN_takeSnapshotAndPause() external isAdmin {
@@ -116,32 +128,33 @@ contract DOUBLE is ReentrancyGuard, Pausable, AccessControl {
         //^^^^^^^effects^^^^^^^^^
     }
 
-
     /*
      * @dev doubles pruf balance at snapshot snapshotID
      * TESTING: ALL REQUIRES, ACCESS ROLE, PAUSABLE
      */
-    function doubleMyPruf() external whenNotPaused {
+    function splitMyPruf() external whenNotPaused {
         require(
-            hasDoubled[msg.sender] == 0,
-            "PD:DMP: Caller address has already been doubled"
+            hasSplit[msg.sender] == 0,
+            "PD:DMP: Caller address has already been split"
         );
-        uint256 balanceAtSnapshot = UTIL_TKN.balanceOfAt(msg.sender, snapshotID);
+        uint256 balanceAtSnapshot =
+            UTIL_TKN.balanceOfAt(msg.sender, snapshotID);
         //^^^^^^^checks^^^^^^^^^
-        hasDoubled[msg.sender] = 170;
+        hasSplit[msg.sender] = 170;
 
         UTIL_TKN.mint(msg.sender, balanceAtSnapshot);
+        //UTIL_TKN.mint(msg.sender, balanceAtSnapshot.mul(multiplier));
         //^^^^^^^Interactions^^^^^^^^^
     }
 
-        /*
-     * @dev checks address for available pruf doubling
+    /*
+     * @dev checks address for available split, returns balance of pruf to be split
      * TESTING: ALL REQUIRES, ACCESS ROLE, PAUSABLE
      */
     function checkMyAddress() external returns (uint256) {
         require(
-            hasDoubled[msg.sender] == 0,
-            "PD:CMA: Caller address has already been doubled"
+            hasSplit[msg.sender] == 0,
+            "PD:CMA: Caller address has already been split"
         );
         //^^^^^^^checks^^^^^^^^^
         return UTIL_TKN.balanceOfAt(msg.sender, snapshotID);
@@ -177,6 +190,4 @@ contract DOUBLE is ReentrancyGuard, Pausable, AccessControl {
         _unpause();
         //^^^^^^^effects^^^^^^^^
     }
-
-
 }
