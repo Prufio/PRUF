@@ -139,10 +139,12 @@ contract SPLIT is ReentrancyGuard, Pausable, AccessControl {
         );
         uint256 balanceAtSnapshot =
             UTIL_TKN.balanceOfAt(msg.sender, snapshotID);
-        //^^^^^^^checks^^^^^^^^^
-        hasSplit[msg.sender] = 170;
 
-        UTIL_TKN.mint(msg.sender, balanceAtSnapshot);
+        balanceAtSnapshot = balanceAtSnapshot + (balanceAtSnapshot.div(10)); //add 10%
+        //^^^^^^^checks^^^^^^^^^
+        hasSplit[msg.sender] = 170; //mark as done for caller address
+
+        UTIL_TKN.mint(msg.sender, balanceAtSnapshot); //mint the new tokens to caller address
         //UTIL_TKN.mint(msg.sender, balanceAtSnapshot.mul(multiplier));
         //^^^^^^^Interactions^^^^^^^^^
     }
