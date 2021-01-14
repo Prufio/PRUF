@@ -1293,7 +1293,6 @@ interface RCLR_Interface {
 interface APP_Interface {
     function transferAssetToken(address _to, bytes32 _idxHash) external;
 
-    function withdraw() external;
 }
 
 //------------------------------------------------------------------------------------------------
@@ -1305,5 +1304,4 @@ interface APP_Interface {
 interface APP_NC_Interface {
     function transferAssetToken(address _to, bytes32 _idxHash) external;
 
-    function withdraw() external;
 }
