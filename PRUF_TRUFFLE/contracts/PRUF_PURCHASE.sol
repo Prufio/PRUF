@@ -31,7 +31,7 @@ contract PURCHASE is CORE {
         uint256 tokenId = uint256(_idxHash);
         require(
             (A_TKN.ownerOf(tokenId) == _msgSender()), //_msgSender() is token holder
-            "ANC:MOD-IA: Caller does not hold token"
+            "PP:MOD-IA: Caller does not hold token"
         );
         _;
     }
@@ -45,16 +45,18 @@ contract PURCHASE is CORE {
     //isAuthorized(_idxHash) //purchaser is not holder
     {
         Record memory rec = getRecord(_idxHash);
+        (rec.price, rec.currency) = STOR.getPriceData(_idxHash);
+
         uint256 tokenId = uint256(_idxHash);
         address assetHolder = A_TKN.ownerOf(tokenId);
 
         require(
             rec.assetStatus == 51,
-            "NPNC:PURCHASE: Must be in transferrable status (51)"
+            "PP:PURCHASE: Must be in transferrable status (51)"
         );
         require(
             rec.currency == 2,
-            "NPNC:PURCHASE: Payment must be in PRüF tokens for this contract"
+            "PP:PURCHASE: Payment must be in PRUF tokens for this contract"
         );
         //^^^^^^^checks^^^^^^^^^
 
@@ -68,7 +70,6 @@ contract PURCHASE is CORE {
 
         //^^^^^^^effects^^^^^^^^^
 
-        writeRecord(_idxHash, rec);
         deductServiceCosts(rec.assetClass, 2);
         //^^^^^^^interactions^^^^^^^^^
     }

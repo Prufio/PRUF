@@ -425,7 +425,7 @@ contract A_TKN is
     }
 
     /*
-     * @dev Write a Record to Storage @ idxHash
+     * @dev Write a Record to Storage @ idxHash, clears price information
      */
     function writeRecord(bytes32 _idxHash, Record memory _rec)
         private
