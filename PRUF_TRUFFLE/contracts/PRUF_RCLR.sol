@@ -61,7 +61,7 @@ contract RCLR is ECR_CORE, CORE {
     /*
      * @dev reutilize a recycled asset
      */
-    function $recycle(
+    function recycle(
         bytes32 _idxHash,
         bytes32 _rgtHash,
         uint32 _assetClass

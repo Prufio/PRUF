@@ -39,7 +39,7 @@ contract APP is CORE {
     /*
      * @dev Wrapper for newRecord
      */
-    function $newRecord(
+    function newRecord(
         bytes32 _idxHash,
         bytes32 _rgtHash,
         uint32 _assetClass,
@@ -71,7 +71,7 @@ contract APP is CORE {
      * @dev import **Record** (no confirmation required -
      * posessor is considered to be owner. sets rec.assetStatus to 0.
      */
-    function $importAsset(
+    function importAsset(
         bytes32 _idxHash,
         bytes32 _newRgtHash,
         uint32 _newAssetClass
@@ -112,7 +112,7 @@ contract APP is CORE {
     /*
      * @dev Modify **Record**.rightsHolder without confirmation required
      */
-    function $forceModRecord(bytes32 _idxHash, bytes32 _rgtHash)
+    function forceModRecord(bytes32 _idxHash, bytes32 _rgtHash)
         external
         nonReentrant
         whenNotPaused
@@ -152,7 +152,7 @@ contract APP is CORE {
     /*
      * @dev Transfer Rights to new rightsHolder with confirmation
      */
-    function $transferAsset(
+    function transferAsset(
         bytes32 _idxHash,
         bytes32 _rgtHash,
         bytes32 _newrgtHash
@@ -203,7 +203,7 @@ contract APP is CORE {
     /*
      * @dev Modify **Record**.Ipfs2 with confirmation
      */
-    function $addIpfs2Note(
+    function addIpfs2Note(
         bytes32 _idxHash,
         bytes32 _rgtHash,
         bytes32 _IpfsHash

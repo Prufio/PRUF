@@ -37,7 +37,7 @@ contract MAL_APP is CORE_MAL {
 
     //--------------------------------------------External Functions--------------------------
 
-        function $newRecord(
+        function newRecord(
         bytes32 _idxHash,
         bytes32 _rgtHash,
         uint32 _assetClass,
@@ -468,7 +468,7 @@ contract MAL_APP is CORE_MAL {
     /*
      * @dev Modify **Record**.Ipfs2 with confirmation
      */
-    function $addIpfs2Note(
+    function addIpfs2Note(
         bytes32 _idxHash,
         // bytes32 _rgtHash,
         bytes32 _IpfsHash

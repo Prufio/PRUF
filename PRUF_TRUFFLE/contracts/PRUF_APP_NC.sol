@@ -40,7 +40,7 @@ contract APP_NC is CORE {
     /*
      * @dev Create a  newRecord with description
      */
-    function $newRecordWithDescription(
+    function newRecordWithDescription(
         bytes32 _idxHash,
         bytes32 _rgtHash,
         uint32 _assetClass,
@@ -63,7 +63,7 @@ contract APP_NC is CORE {
     /*
      * @dev Create a  newRecord
      */
-    function $newRecord(
+    function newRecord(
         bytes32 _idxHash,
         bytes32 _rgtHash,
         uint32 _assetClass,
@@ -85,7 +85,7 @@ contract APP_NC is CORE {
     /*
      * @dev Import a record into a new asset class
      */
-    function $importAsset(bytes32 _idxHash, uint32 _newAssetClass)
+    function importAsset(bytes32 _idxHash, uint32 _newAssetClass)
         external
         nonReentrant
         whenNotPaused
@@ -112,7 +112,7 @@ contract APP_NC is CORE {
     /*
      * @dev Modify **Record**.Ipfs2 with confirmation
      */
-    function $addIpfs2Note(bytes32 _idxHash, bytes32 _IpfsHash)
+    function addIpfs2Note(bytes32 _idxHash, bytes32 _IpfsHash)
         external
         nonReentrant
         whenNotPaused
