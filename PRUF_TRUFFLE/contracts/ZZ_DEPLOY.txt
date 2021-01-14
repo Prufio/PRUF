@@ -46,6 +46,8 @@ __/\\\\\\\\\\\\\ _____/\\\\\\\\\ _______/\\../\\ ___/\\\\\\\\\\\\\\\
 * 14 - UTIL_TKN|0|
 *
 * 15 - PIP|0|
+*
+* 16 - PURCHASE|0|
 * 
 * ----------------- ADD CONTRACTS TO STORAGE (STOR.OO_addContract)-----------------|0|
 * 1 - APP ("APP", APP.address, '0', '1')|0|
@@ -75,6 +77,8 @@ __/\\\\\\\\\\\\\ _____/\\\\\\\\\ _______/\\../\\ ___/\\\\\\\\\\\\\\\
 * 13 - UTIL_TKN ("UTIL_TKN", UTIL_TKN.address, '0', '1')|0|
 *
 * 14 - PIP ("PIP", PIP.address, '0', '1')|0|
+*
+* 14 - PURCHASE ("PURCHASE", PURCHASE.address, '0', '2')|0|
 * 
 * ----------------- ADD STORAGE TO CONTRACTS (CONTRACT.OO_setStorageContract) -----------------|0|
 * 1 - APP (STOR.address)|0|
@@ -98,6 +102,8 @@ __/\\\\\\\\\\\\\ _____/\\\\\\\\\ _______/\\../\\ ___/\\\\\\\\\\\\\\\
 * 10 - RCLR (STOR.address)|0|
 *
 * 11 - PIP (STOR.address)|0|
+*
+* 12 - PURCHASE (STOR.address)|0|
 * 
 * ----------------- RESOLVE CONTRACT ADDRESSES (CONTRACT.OO_resolveContractAddresses) -----------------|0|
 * 1 - APP|0|
@@ -121,6 +127,8 @@ __/\\\\\\\\\\\\\ _____/\\\\\\\\\ _______/\\../\\ ___/\\\\\\\\\\\\\\\
 * 10 - RCLR|0|
 *
 * 11 - PIP|0|
+*
+* 11 - PURCHASE|0|
 * 
 * ----------------- DIVY UP ROLES (CONTRACT.grantRole) (B32'S) -----------------|0|
 * 1 - AC_TKN (MINTER_ROLEB32, AC_MGR.address),   |0|

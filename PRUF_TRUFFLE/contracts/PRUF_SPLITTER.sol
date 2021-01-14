@@ -12,6 +12,7 @@ __/\\\\\\\\\\\\\ _____/\\\\\\\\\ _______/\\../\\ ___/\\\\\\\\\\\\\\\
 
 /*-----------------------------------------------------------------
  *  TO DO  ------------------------------------DPS:TEST--NEW
+ *  make so that you can call a split on a remote address (not onlyowner)
  *
  *-----------------------------------------------------------------
  * PRUF DOUBLER CONTRACT  -- requires MINTER_ROLE, SNAPSHOT_ROLE, PAUSER_ROLE in UTIL_TKN
