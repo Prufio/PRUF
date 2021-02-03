@@ -11,9 +11,13 @@ __/\\\\\\\\\\\\\ _____/\\\\\\\\\ _______/\\../\\ ___/\\\\\\\\\\\\\\\
          *-------------------------------------------------------------------*/
 
 /*-----------------------------------------------------------------
- *  TO DO
+ *  TO DO --- complete test! DPS TEST NEW CONTRACT
  *
  *----------------------------------------------------------------*/
+
+// Must set up a custodyType 5 asset class for decorated assets and auth this contract type 1. Root must be private to class.
+// Extended Data for ACnodes must be set to 0 <works with any ERC721>
+// or set to uint160(ERC721 contract address) <works only with tokens from specified contract address>
 
 // SPDX-License-Identifier: UNLICENSED
 pragma solidity ^0.6.7;
@@ -21,17 +25,16 @@ pragma solidity ^0.6.7;
 import "./PRUF_CORE.sol";
 import "./Imports/token/ERC721/IERC721.sol";
 
-contract EXTEND is CORE {
-
-    modifier isAuthorized(bytes32 _idxHash) override {
-        //require that user is authorized and token is held by contract
-        uint256 tokenId = uint256(_idxHash);
-        require(
-            (A_TKN.ownerOf(tokenId) == address(this)),
-            "A:MOD-IA: EXTEND contract does not hold token"
-        );
-        _;
-    }
+contract DECORATE is CORE {
+    // modifier isAuthorized(bytes32 _idxHash) override {
+    //     //require that user is authorized and token is held by contract
+    //     uint256 tokenId = uint256(_idxHash);
+    //     require(
+    //         (A_TKN.ownerOf(tokenId) == address(this)),
+    //         "A:MOD-IA: EXTEND contract does not hold token"
+    //     );
+    //     _;
+    // }
 
     modifier isTokenHolder(uint256 _tokenID, address _tokenContract) {
         //require that user holds token @ ID-Contract
@@ -66,8 +69,14 @@ contract EXTEND is CORE {
 
         require(
             AC_info.custodyType == 5,
-            "E:CRO:Asset class.custodyType must be 5 (wrapped/decorated erc721)"
+            "E:DEC:Asset class.custodyType must be 5 (wrapped/decorated erc721)"
         );
+        require(
+            (AC_info.extendedData == uint160(_tokenContract)) ||
+                (AC_info.extendedData == 0),
+            "E:DEC:Asset class extended data must be '0' or uint160(ERC721 contract address)"
+        );
+
         //^^^^^^^effects^^^^^^^^^
 
         if (AC_info.assetClassRoot == oldAC_info.assetClassRoot) {
@@ -97,7 +106,6 @@ contract EXTEND is CORE {
         nonReentrant
         whenNotPaused
         isTokenHolder(_tokenID, _tokenContract)
-        returns (uint8)
     {
         bytes32 idxHash = keccak256(abi.encodePacked(_tokenID, _tokenContract));
         Record memory rec = getRecord(idxHash);
@@ -106,6 +114,11 @@ contract EXTEND is CORE {
         require(
             AC_info.custodyType == 5,
             "E:CRO:Asset class.custodyType must be 5 (wrapped/decorated erc721)"
+        );
+        require(
+            (AC_info.extendedData == uint160(_tokenContract)) ||
+                (AC_info.extendedData == 0),
+            "E:DEC:Asset class extended data must be '0' or uint160(ERC721 contract address)"
         );
         require(
             (_newAssetStatus != 7) &&
@@ -133,6 +146,77 @@ contract EXTEND is CORE {
     }
 
     /*
+     * @dev set price and currency in rec.pricer rec.currency
+     */
+    function _setPrice(
+        uint256 _tokenID,
+        address _tokenContract,
+        uint120 _price,
+        uint8 _currency
+    )
+        external
+        nonReentrant
+        whenNotPaused
+        isTokenHolder(_tokenID, _tokenContract)
+    {
+        bytes32 idxHash = keccak256(abi.encodePacked(_tokenID, _tokenContract));
+        Record memory rec = getRecord(idxHash);
+        AC memory AC_info = getACinfo(rec.assetClass);
+
+        require(
+            AC_info.custodyType == 5,
+            "E:CRO:Asset class.custodyType must be 5 (wrapped/decorated erc721)"
+        );
+        require(
+            (AC_info.extendedData == uint160(_tokenContract)) ||
+                (AC_info.extendedData == 0),
+            "E:DEC:Asset class extended data must be '0' or uint160(ERC721 contract address)"
+        );
+
+        require(
+            needsImport(rec.assetStatus) == 0,
+            "E:DC Record in unregistered, exported, or discarded status"
+        );
+        //^^^^^^^checks^^^^^^^^^
+
+        STOR.setPrice(idxHash, _price, _currency);
+        //^^^^^^^interactions^^^^^^^^^
+    }
+
+    /*
+     * @dev set price and currency in rec.pricer rec.currency
+     */
+    function _clearPrice(uint256 _tokenID, address _tokenContract)
+        external
+        nonReentrant
+        whenNotPaused
+        isTokenHolder(_tokenID, _tokenContract)
+    {
+        bytes32 idxHash = keccak256(abi.encodePacked(_tokenID, _tokenContract));
+        Record memory rec = getRecord(idxHash);
+        AC memory AC_info = getACinfo(rec.assetClass);
+
+        require(
+            AC_info.custodyType == 5,
+            "E:CRO:Asset class.custodyType must be 5 (wrapped/decorated erc721)"
+        );
+        require(
+            (AC_info.extendedData == uint160(_tokenContract)) ||
+                (AC_info.extendedData == 0),
+            "E:DEC:Asset class extended data must be '0' or uint160(ERC721 contract address)"
+        );
+
+        require(
+            needsImport(rec.assetStatus) == 0,
+            "E:DC Record in unregistered, exported, or discarded status"
+        );
+        //^^^^^^^checks^^^^^^^^^
+
+        STOR.clearPrice(idxHash);
+        //^^^^^^^interactions^^^^^^^^^
+    }
+
+    /*
      * @dev Decrement **Record**.countdown
      */
     function _decCounter(
@@ -144,7 +228,6 @@ contract EXTEND is CORE {
         nonReentrant
         whenNotPaused
         isTokenHolder(_tokenID, _tokenContract)
-        returns (uint32)
     {
         bytes32 idxHash = keccak256(abi.encodePacked(_tokenID, _tokenContract));
         Record memory rec = getRecord(idxHash);
@@ -153,6 +236,11 @@ contract EXTEND is CORE {
         require(
             AC_info.custodyType == 5,
             "E:CRO:Asset class.custodyType must be 5 (wrapped/decorated erc721)"
+        );
+        require(
+            (AC_info.extendedData == uint160(_tokenContract)) ||
+                (AC_info.extendedData == 0),
+            "E:DEC:Asset class extended data must be '0' or uint160(ERC721 contract address)"
         );
 
         require(
@@ -169,7 +257,7 @@ contract EXTEND is CORE {
         //^^^^^^^effects^^^^^^^^^
 
         writeRecord(idxHash, rec);
-        deductServiceCosts(rec.assetClass, 7); //------------------------------DPS:TEST--NEW
+        deductServiceCosts(rec.assetClass, 7);
         //^^^^^^^interactions^^^^^^^^^
     }
 
@@ -185,7 +273,6 @@ contract EXTEND is CORE {
         nonReentrant
         whenNotPaused
         isTokenHolder(_tokenID, _tokenContract)
-        returns (bytes32)
     {
         bytes32 idxHash = keccak256(abi.encodePacked(_tokenID, _tokenContract));
         Record memory rec = getRecord(idxHash);
@@ -194,6 +281,11 @@ contract EXTEND is CORE {
         require(
             AC_info.custodyType == 5,
             "E:CRO:Asset class.custodyType must be 5 (wrapped/decorated erc721)"
+        );
+        require(
+            (AC_info.extendedData == uint160(_tokenContract)) ||
+                (AC_info.extendedData == 0),
+            "E:DEC:Asset class extended data must be '0' or uint160(ERC721 contract address)"
         );
 
         require(
@@ -207,7 +299,49 @@ contract EXTEND is CORE {
         //^^^^^^^effects^^^^^^^^^
 
         writeRecordIpfs1(idxHash, rec);
-        deductServiceCosts(rec.assetClass, 8); //------------------------------DPS:TEST--NEW
+        deductServiceCosts(rec.assetClass, 8);
+        //^^^^^^^interactions^^^^^^^^^
+    }
+
+    /*
+     * @dev Modify **Record**.Ipfs2
+     */
+    function addIpfs2Note(
+        uint256 _tokenID,
+        address _tokenContract,
+        bytes32 _IpfsHash
+    )
+        external
+        nonReentrant
+        whenNotPaused
+        isTokenHolder(_tokenID, _tokenContract)
+    {
+        bytes32 idxHash = keccak256(abi.encodePacked(_tokenID, _tokenContract));
+        Record memory rec = getRecord(idxHash);
+        AC memory AC_info = getACinfo(rec.assetClass);
+
+        require(
+            AC_info.custodyType == 5,
+            "E:CRO:Asset class.custodyType must be 5 (wrapped/decorated erc721)"
+        );
+        require(
+            (AC_info.extendedData == uint160(_tokenContract)) ||
+                (AC_info.extendedData == 0),
+            "E:DEC:Asset class extended data must be '0' or uint160(ERC721 contract address)"
+        );
+
+        require( //IMPOSSIBLE TO THROW REVERTS IN REQ1 CTS:PREFERRED
+            needsImport(rec.assetStatus) == 0,
+            "E:I2:  Record in unregistered, exported, or discarded status"
+        );
+
+        //^^^^^^^checks^^^^^^^^^
+
+        rec.Ipfs2 = _IpfsHash;
+        //^^^^^^^effects^^^^^^^^^
+
+        writeRecordIpfs2(idxHash, rec);
+        deductServiceCosts(rec.assetClass, 3);
         //^^^^^^^interactions^^^^^^^^^
     }
 
@@ -228,6 +362,12 @@ contract EXTEND is CORE {
             "E:CRO:Asset class.custodyType must be 5 (wrapped/decorated erc721)"
         );
         require(
+            (AC_info.extendedData == uint160(_tokenContract)) ||
+                (AC_info.extendedData == 0),
+            "E:DEC:Asset class extended data must be '0' or uint160(ERC721 contract address)"
+        );
+
+        require(
             rec.assetStatus == 51,
             "NPNC:EX: Must be in transferrable status (51)"
         );
@@ -245,7 +385,7 @@ contract EXTEND is CORE {
      * @dev import **Record** (no confirmation required -
      * posessor is considered to be owner. sets rec.assetStatus to 0.
      */
-    function importAsset(
+    function importWrapper(
         uint256 _tokenID,
         address _tokenContract,
         uint32 _newAssetClass
@@ -254,7 +394,6 @@ contract EXTEND is CORE {
         nonReentrant
         whenNotPaused
         isTokenHolder(_tokenID, _tokenContract)
-        returns (uint8)
     {
         bytes32 idxHash = keccak256(abi.encodePacked(_tokenID, _tokenContract));
         Record memory rec = getRecord(idxHash);
@@ -263,6 +402,11 @@ contract EXTEND is CORE {
         require(
             AC_info.custodyType == 5,
             "E:CRO:Asset class.custodyType must be 5 (wrapped/decorated erc721)"
+        );
+        require(
+            (AC_info.extendedData == uint160(_tokenContract)) ||
+                (AC_info.extendedData == 0),
+            "E:DEC:Asset class extended data must be '0' or uint160(ERC721 contract address)"
         );
 
         require(rec.assetStatus == 70, "ANC:IA: Asset not exported");
@@ -278,45 +422,6 @@ contract EXTEND is CORE {
         STOR.changeAC(idxHash, _newAssetClass);
         writeRecord(idxHash, rec);
         deductServiceCosts(_newAssetClass, 1);
-        //^^^^^^^interactions^^^^^^^^^
-    }
-
-    /*
-     * @dev Modify **Record**.Ipfs2
-     */
-    function addIpfs2Note(
-        uint256 _tokenID,
-        address _tokenContract,
-        bytes32 _IpfsHash
-    )
-        external
-        nonReentrant
-        whenNotPaused
-        isTokenHolder(_tokenID, _tokenContract)
-        returns (bytes32)
-    {
-        bytes32 idxHash = keccak256(abi.encodePacked(_tokenID, _tokenContract));
-        Record memory rec = getRecord(idxHash);
-        AC memory AC_info = getACinfo(rec.assetClass);
-
-        require(
-            AC_info.custodyType == 5,
-            "E:CRO:Asset class.custodyType must be 5 (wrapped/decorated erc721)"
-        );
-
-        require( //IMPOSSIBLE TO THROW REVERTS IN REQ1 CTS:PREFERRED
-            needsImport(rec.assetStatus) == 0,
-            "E:I2:  Record in unregistered, exported, or discarded status"
-        );
-
-        //^^^^^^^checks^^^^^^^^^
-
-        rec.Ipfs2 = _IpfsHash;
-        //^^^^^^^effects^^^^^^^^^
-
-        writeRecordIpfs2(idxHash, rec);
-
-        deductServiceCosts(rec.assetClass, 3);
         //^^^^^^^interactions^^^^^^^^^
     }
 
@@ -341,14 +446,6 @@ contract EXTEND is CORE {
             AC_info.custodyType == 5,
             "E:CRO:Asset class.custodyType must be 5 (wrapped/decorated erc721)"
         );
-
-        // if (AC_info.custodyType == 1) {
-        //     A_TKN.mintAssetToken(address(this), tokenId, "pruf.io");
-        // }
-
-        // if ((AC_info.custodyType == 2) || (AC_info.custodyType == 4)) {
-        //     A_TKN.mintAssetToken(_msgSender(), tokenId, "pruf.io");
-        // }
 
         STOR.newRecord(_idxHash, _rgtHash, _assetClass, _countDownStart);
     }
