@@ -526,7 +526,7 @@ contract AC_MGR is BASIC {
             uint32,
             uint8,
             uint32,
-            uint32,
+            uint160,
             bytes32
         )
     {
