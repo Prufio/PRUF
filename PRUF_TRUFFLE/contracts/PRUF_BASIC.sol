@@ -52,9 +52,12 @@ contract BASIC is ReentrancyGuard, AccessControl, IERC721Receiver, Pausable {
         //Struct for holding and manipulating assetClass data
         string name; // NameHash for assetClass
         uint32 assetClassRoot; // asset type root (bycyles - USA Bicycles)
-        uint8 custodyType; // custodial or noncustodial
-        uint32 discount;
-        uint32 extendedData; // Future Use
+        uint8 custodyType; // custodial or noncustodial, special asset types
+        uint32 discount; // price sharing
+        uint8 byte1; // Future Use
+        uint8 byte2; // Future Use
+        uint8 byte3; // Future Use
+        uint160 extendedData; // Future Use
         bytes32 IPFS; //IPFS data for defining idxHash creation attribute fields
     }
 
