@@ -221,7 +221,7 @@ contract APP is CORE {
 
         require( //IMPOSSIBLE TO THROW REVERTS IN REQ1 CTS:PREFERRED
             needsImport(rec.assetStatus) == 0,
-            "A:FMR: Asset needs re-imported"
+            "A:I2: Asset needs re-imported"
         );
         require(
             rec.rightsHolder == _rgtHash,
