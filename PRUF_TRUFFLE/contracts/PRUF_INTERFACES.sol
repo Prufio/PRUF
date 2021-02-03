@@ -874,7 +874,7 @@ interface AC_MGR_Interface {
      * Requires that:
      *  caller holds ACtoken
      */
-    function updateACextendedData(uint32 _extData, uint32 _assetClass) external;
+    function updateACextendedData(uint160 _extData, uint32 _assetClass) external;
 
     /*
      * @dev Set function costs and payment address per asset class, in Wei
