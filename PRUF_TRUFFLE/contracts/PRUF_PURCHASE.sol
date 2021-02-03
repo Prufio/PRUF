@@ -61,7 +61,8 @@ contract PURCHASE is CORE {
         //^^^^^^^checks^^^^^^^^^
 
         // --- transfer the PRüF tokens
-        if(rec.price > 0){ // allow for freeCycling
+        if (rec.price > 0) {
+            // allow for freeCycling
             UTIL_TKN.trustedAgentTransfer(_msgSender(), assetHolder, rec.price);
         }
 
@@ -71,6 +72,54 @@ contract PURCHASE is CORE {
         //^^^^^^^effects^^^^^^^^^
 
         deductServiceCosts(rec.assetClass, 2);
+        //^^^^^^^interactions^^^^^^^^^
+    }
+
+    /*
+     * @dev set price and currency in rec.pricer rec.currency
+     */
+    function _setPrice(
+        bytes32 _idxHash,
+        uint120 _price,
+        uint8 _currency
+    ) external nonReentrant whenNotPaused isAuthorized(_idxHash) {
+        Record memory rec = getRecord(_idxHash);
+
+        require(
+            needsImport(rec.assetStatus) == 0,
+            "E:SP Record in unregistered, exported, or discarded status"
+        );
+        require(isEscrow(rec.assetStatus) == 0, "E:SP Record is in escrow");
+
+        require(
+            _currency == 2,
+            "E:SP: Price must be in PRUF tokens for this contract"
+        );
+        //^^^^^^^checks^^^^^^^^^
+
+        STOR.setPrice(_idxHash, _price, _currency);
+        //^^^^^^^interactions^^^^^^^^^
+    }
+
+    /*
+     * @dev set price and currency in rec.pricer rec.currency
+     */
+    function _clearPrice(bytes32 _idxHash)
+        external
+        nonReentrant
+        whenNotPaused
+        isAuthorized(_idxHash)
+    {
+        Record memory rec = getRecord(_idxHash);
+
+        require(
+            needsImport(rec.assetStatus) == 0,
+            "E:DC Record in unregistered, exported, or discarded status"
+        );
+        require(isEscrow(rec.assetStatus) == 0, "E:SP Record is in escrow");
+        //^^^^^^^checks^^^^^^^^^
+
+        STOR.clearPrice(_idxHash);
         //^^^^^^^interactions^^^^^^^^^
     }
 }
