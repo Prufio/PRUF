@@ -918,6 +918,19 @@ interface AC_MGR_Interface {
         );
 
     /*
+     * @dev Retrieve AC_data @ _assetClass
+     */
+    function getExtAC_data(uint32 _assetClass)
+        external
+        view
+        returns (
+            uint8,
+            uint8,
+            uint8,
+            uint160
+        );
+
+    /*
      * @dev Retrieve AC_discount @ _assetClass, in percent ACTH share, * 100 (9000 = 90%)
      */
     function getAC_discount(uint32 _assetClass) external view returns (uint32);
