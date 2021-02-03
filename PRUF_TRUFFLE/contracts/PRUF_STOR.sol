@@ -513,6 +513,7 @@ contract STOR is AccessControl, ReentrancyGuard, Pausable {
     {
         Record memory rec = database[_idxHash];
         require((isTransferred(rec.assetStatus) == 0), "S:SP: Txfrd asset");
+        //require(isEscrow(rec.assetStatus) == 0, "S:SP: Escrowed asset");
         //^^^^^^^checks^^^^^^^^^
 
         rec.price = _price;
@@ -537,7 +538,8 @@ contract STOR is AccessControl, ReentrancyGuard, Pausable {
     //notEscrow(_idxHash) // asset must not be held in escrow status
     {
         Record memory rec = database[_idxHash];
-        require((isTransferred(rec.assetStatus) == 0), "S:SP: Txfrd asset");
+        require((isTransferred(rec.assetStatus) == 0), "S:CP: Txfrd asset");
+        //require(isEscrow(rec.assetStatus) == 0, "S:CP: Escrowed asset");
         //^^^^^^^checks^^^^^^^^^
 
         rec.price = 0;
