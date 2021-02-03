@@ -12,14 +12,13 @@ __/\\\\\\\\\\\\\ _____/\\\\\\\\\ _______/\\../\\ ___/\\\\\\\\\\\\\\\
 
 /*-----------------------------------------------------------------
  * STATEMENT OF TERMS OF SERVICE (TOS):
- * User agrees not to intentionally claim any namespace that is a recognized or registered brand name, trade mark, 
+ * User agrees not to intentionally claim any namespace that is a recognized or registered brand name, trade mark,
  * or other Intellectual property not belonging to the user, and agrees to voluntarily remove any name or brand found to be
- * infringing from any record that the user controls, within 30 days of notification. If notification is not possible or 
+ * infringing from any record that the user controls, within 30 days of notification. If notification is not possible or
  * there is no response to notification, the user agrees that the name record may be changed without their permission or cooperation.
  * Use of this software constitutes consent to the terms above.
  *-----------------------------------------------------------------
  */
-
 
 /*-----------------------------------------------------------------
  *  TO DO
@@ -40,8 +39,8 @@ contract AC_MGR is BASIC {
     using SafeMath for uint256;
 
     bytes32 public constant NODE_MINTER_ROLE = keccak256("NODE_MINTER_ROLE");
-    bytes32
-        public constant B320xF_ = 0xFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF;
+    bytes32 public constant B320xF_ =
+        0xFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF;
 
     struct Costs {
         uint256 serviceCost; // Cost in the given item category
@@ -89,7 +88,7 @@ contract AC_MGR is BASIC {
 
     constructor() public {
         _setupRole(NODE_MINTER_ROLE, _msgSender());
-        AC_number[""] = 4294967295;  //points the blank string name to AC 4294967295
+        AC_number[""] = 4294967295; //points the blank string name to AC 4294967295
     }
 
     /*
@@ -329,7 +328,7 @@ contract AC_MGR is BASIC {
      *  caller holds ACtoken
      */
     function updateACextendedData(
-        uint32 _extData,
+        uint160 _extData,
         uint32 _assetClass //-------------------------------------------------------TEST
     ) external isACtokenHolderOfClass(_assetClass) whenNotPaused {
         //^^^^^^^checks^^^^^^^^^
@@ -377,9 +376,8 @@ contract AC_MGR is BASIC {
         );
 
         //^^^^^^^checks^^^^^^^^^
-        address rootPaymentAddress = cost[AC_data[_assetClass]
-            .assetClassRoot][1]
-            .paymentAddress; //payment for upgrade goes to root AC payment adress specified for service (1)
+        address rootPaymentAddress =
+            cost[AC_data[_assetClass].assetClassRoot][1].paymentAddress; //payment for upgrade goes to root AC payment adress specified for service (1)
 
         uint256 oldShare = uint256(AC_data[_assetClass].discount);
         uint256 maxShareIncrease = (upperLimit.sub(oldShare)); //max payment percentage never goes over upperLimit%
@@ -426,18 +424,21 @@ contract AC_MGR is BASIC {
     /*
      * @dev Transfers a name from one asset class to another
      * !! -------- to be used with great caution and only as a result of community governance action -----------
-     * Designed to remedy brand infringement issues. This breaks decentralization and must eventually be given 
-     * over to some kind of governance contract. 
+     * Designed to remedy brand infringement issues. This breaks decentralization and must eventually be given
+     * over to some kind of governance contract.
      * Destination AC must have IPFS Set to 0xFFF.....
      *
      */
-    function transferName(  //---------------------------------------DPS TEST-----NEW
+    function transferName(
+        //---------------------------------------DPS TEST-----NEW
         string calldata _name,
         uint32 _assetClass_source,
         uint32 _assetClass_dest
     ) external isAdmin whenNotPaused nonReentrant {
-
-        require(AC_number[_name] == _assetClass_source, "ACM:TA: name not in source AC"); //source AC_Name must match name given
+        require(
+            AC_number[_name] == _assetClass_source,
+            "ACM:TA: name not in source AC"
+        ); //source AC_Name must match name given
 
         require(
             (AC_data[_assetClass_dest].IPFS == B320xF_), //dest AC must have ipfs set to 0xFFFF.....
