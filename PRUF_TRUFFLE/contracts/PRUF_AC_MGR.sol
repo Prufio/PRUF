@@ -542,6 +542,29 @@ contract AC_MGR is BASIC {
     }
 
     /*
+     * @dev Retrieve AC_data @ _assetClass
+     */
+    function getExtAC_data(uint32 _assetClass)
+        external
+        view
+        returns (
+            uint8,
+            uint8,
+            uint8,
+            uint160
+        )
+    {
+        //^^^^^^^checks^^^^^^^^^
+        return (
+            AC_data[_assetClass].byte1,
+            AC_data[_assetClass].byte2,
+            AC_data[_assetClass].byte3,
+            AC_data[_assetClass].extendedData
+        );
+        //^^^^^^^interactions^^^^^^^^^
+    }
+
+    /*
      * @dev compare the root of two asset classes
      */
     function isSameRootAC(uint32 _assetClass1, uint32 _assetClass2)
