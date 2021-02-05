@@ -48,6 +48,12 @@ contract WRAP is CORE {
 
     /*
      * @dev Wraps a token, takes original from caller
+     * Prerequisite: contract authorized for token txfr
+     * Takes original 721
+     * Makes a pruf record (exists?) if so does not change
+     * Mints a pruf token to caller (exists?) if so ???????
+     * Asset Class? must be type 5  / enabled for contract address
+     * 
      */
     function wrap721(
         uint256 _tokenID,
@@ -94,6 +100,9 @@ contract WRAP is CORE {
 
     /*
      * @dev Unwraps a token, returns original to caller
+     * caller holds matching token?
+     * burns pruf token
+     * Sends original 721 to caller
      */
     function unWrap721(
         uint256 _tokenID,
