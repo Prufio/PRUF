@@ -133,7 +133,7 @@ contract NP_NC is CORE {
 
         rec.assetStatus = _newAssetStatus;
         //^^^^^^^effects^^^^^^^^^
-
+        deductServiceCosts(rec.assetClass, 5);//------------------------------DPS:TEST--NEW
         writeRecord(_idxHash, rec);
 
         return rec.assetStatus;
