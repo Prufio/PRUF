@@ -81,7 +81,8 @@ contract PURCHASE is CORE {
     function _setPrice(
         bytes32 _idxHash,
         uint120 _price,
-        uint8 _currency
+        uint8 _currency,
+        uint256 _setForSale // if 170 then change to transferrable
     ) external nonReentrant whenNotPaused isAuthorized(_idxHash) {
         Record memory rec = getRecord(_idxHash);
 
@@ -89,6 +90,7 @@ contract PURCHASE is CORE {
             needsImport(rec.assetStatus) == 0,
             "E:SP Record in unregistered, exported, or discarded status"
         );
+        require((rec.assetStatus > 49) || (_setForSale != 170) , "E:SP Asset Status < 50");
         require(isEscrow(rec.assetStatus) == 0, "E:SP Record is in escrow");
 
         require(
@@ -96,6 +98,10 @@ contract PURCHASE is CORE {
             "E:SP: Price must be in PRUF tokens for this contract"
         );
         //^^^^^^^checks^^^^^^^^^
+        if (_setForSale == 170){
+            rec.assetStatus = 51;
+            writeRecord(_idxHash, rec);
+        }
 
         STOR.setPrice(_idxHash, _price, _currency);
         //^^^^^^^interactions^^^^^^^^^
