@@ -65,7 +65,6 @@ contract DECORATE is CORE {
         bytes32 idxHash = keccak256(abi.encodePacked(_tokenID, _tokenContract));
         Record memory rec = getRecord(idxHash);
         AC memory AC_info = getACinfo(_assetClass);
-        AC memory oldAC_info = getACinfo(rec.assetClass);
 
         require(
             AC_info.custodyType == 5,
@@ -76,19 +75,11 @@ contract DECORATE is CORE {
                 (AC_info.extendedData == 0),
             "E:DEC:Asset class extended data must be '0' or uint160(ERC721 contract address)"
         );
+        require(rec.assetClass == 0, "E:DEC:Wrapper or record already exists");
 
         //^^^^^^^effects^^^^^^^^^
 
-        if (AC_info.assetClassRoot == oldAC_info.assetClassRoot) {
-            createRecordOnly(
-                idxHash,
-                _rgtHash,
-                _assetClass,
-                rec.countDownStart
-            );
-        } else {
-            createRecordOnly(idxHash, _rgtHash, _assetClass, _countDownStart);
-        }
+        createRecordOnly(idxHash, _rgtHash, _assetClass, _countDownStart);
         deductServiceCosts(_assetClass, 1);
 
         //^^^^^^^interactions^^^^^^^^^
