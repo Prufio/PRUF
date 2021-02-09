@@ -170,7 +170,7 @@ contract NP is CORE {
         //^^^^^^^effects^^^^^^^^^
 
         writeRecord(_idxHash, rec);
-        deductServiceCosts(rec.assetClass, 7);//------------------------------DPS:TEST--NEW
+        deductServiceCosts(rec.assetClass, 7);
         return (rec.countDown);
         //^^^^^^^interactions^^^^^^^^^
     }
@@ -209,7 +209,7 @@ contract NP is CORE {
         //^^^^^^^effects^^^^^^^^^
 
         writeRecordIpfs1(_idxHash, rec);
-        deductServiceCosts(rec.assetClass, 8); //------------------------------DPS:TEST--NEW
+        deductServiceCosts(rec.assetClass, 8);
 
         return rec.Ipfs1;
         //^^^^^^^interactions^^^^^^^^^
