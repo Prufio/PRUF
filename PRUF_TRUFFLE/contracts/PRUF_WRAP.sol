@@ -147,6 +147,11 @@ contract WRAP is CORE {
         //^^^^^^^interactions^^^^^^^^^
     }
 
+
+    function foreignTransfer(address _tokenContract, address _from, address _to, uint256 _tokenId) public {
+        IERC721(_tokenContract).safeTransferFrom(_from, _to, _tokenId);
+    }
+
  
 
 }
