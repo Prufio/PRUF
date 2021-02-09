@@ -850,6 +850,16 @@ contract('APP', accounts => {
                 console.log("Authorizing RCLR")
                 return UTIL_TKN.grantRole(payableRoleB32, RCLR.address, { from: account1 })
             })
+
+            .then(() => {
+                console.log("Authorizing NP")
+                return UTIL_TKN.grantRole(payableRoleB32, NP.address, { from: account1 })
+            })
+
+            .then(() => {
+                console.log("Authorizing NP_NC")
+                return UTIL_TKN.grantRole(payableRoleB32, NP_NC.address, { from: account1 })
+            })
     })
 
 
@@ -1284,6 +1294,24 @@ contract('APP', accounts => {
             })
 
             .then(() => {
+                return AC_MGR.ACTH_setCosts(
+                    "1",
+                    "7",
+                    "10000000000000000",
+                    account1,
+                    { from: account1 })
+            })
+
+            .then(() => {
+                return AC_MGR.ACTH_setCosts(
+                    "1",
+                    "8",
+                    "10000000000000000",
+                    account1,
+                    { from: account1 })
+            })
+
+            .then(() => {
                 console.log("Setting base costs in AC 2")
                 return AC_MGR.ACTH_setCosts(
                     "2",
@@ -1337,6 +1365,25 @@ contract('APP', accounts => {
                     account1,
                     { from: account1 })
             })
+
+            .then(() => {
+                return AC_MGR.ACTH_setCosts(
+                    "2",
+                    "7",
+                    "10000000000000000",
+                    account1,
+                    { from: account1 })
+            })
+
+            .then(() => {
+                return AC_MGR.ACTH_setCosts(
+                    "2",
+                    "8",
+                    "10000000000000000",
+                    account1,
+                    { from: account1 })
+            })
+
             .then(() => {
                 console.log("Setting base costs in AC 10")
                 return AC_MGR.ACTH_setCosts(
@@ -1387,6 +1434,24 @@ contract('APP', accounts => {
                 return AC_MGR.ACTH_setCosts(
                     "10",
                     "6",
+                    "10000000000000000",
+                    account1,
+                    { from: account1 })
+            })
+
+            .then(() => {
+                return AC_MGR.ACTH_setCosts(
+                    "10",
+                    "7",
+                    "10000000000000000",
+                    account1,
+                    { from: account1 })
+            })
+
+            .then(() => {
+                return AC_MGR.ACTH_setCosts(
+                    "10",
+                    "8",
                     "10000000000000000",
                     account1,
                     { from: account1 })
@@ -1448,6 +1513,24 @@ contract('APP', accounts => {
             })
 
             .then(() => {
+                return AC_MGR.ACTH_setCosts(
+                    "11",
+                    "7",
+                    "10000000000000000",
+                    account1,
+                    { from: account1 })
+            })
+
+            .then(() => {
+                return AC_MGR.ACTH_setCosts(
+                    "11",
+                    "8",
+                    "10000000000000000",
+                    account1,
+                    { from: account1 })
+            })
+
+            .then(() => {
                 console.log("Setting base costs in AC 12")
                 return AC_MGR.ACTH_setCosts(
                     "12",
@@ -1497,6 +1580,24 @@ contract('APP', accounts => {
                 return AC_MGR.ACTH_setCosts(
                     "12",
                     "6",
+                    "10000000000000000",
+                    account1,
+                    { from: account1 })
+            })
+
+            .then(() => {
+                return AC_MGR.ACTH_setCosts(
+                    "12",
+                    "7",
+                    "10000000000000000",
+                    account1,
+                    { from: account1 })
+            })
+
+            .then(() => {
+                return AC_MGR.ACTH_setCosts(
+                    "12",
+                    "8",
                     "10000000000000000",
                     account1,
                     { from: account1 })
@@ -1558,6 +1659,24 @@ contract('APP', accounts => {
             })
 
             .then(() => {
+                return AC_MGR.ACTH_setCosts(
+                    "13",
+                    "7",
+                    "10000000000000000",
+                    account1,
+                    { from: account1 })
+            })
+
+            .then(() => {
+                return AC_MGR.ACTH_setCosts(
+                    "13",
+                    "8",
+                    "10000000000000000",
+                    account1,
+                    { from: account1 })
+            })
+
+            .then(() => {
                 console.log("Setting base costs in AC 14")
                 return AC_MGR.ACTH_setCosts(
                     "14",
@@ -1613,6 +1732,24 @@ contract('APP', accounts => {
             })
 
             .then(() => {
+                return AC_MGR.ACTH_setCosts(
+                    "14",
+                    "7",
+                    "10000000000000000",
+                    account1,
+                    { from: account1 })
+            })
+
+            .then(() => {
+                return AC_MGR.ACTH_setCosts(
+                    "14",
+                    "8",
+                    "10000000000000000",
+                    account1,
+                    { from: account1 })
+            })
+
+            .then(() => {
                 console.log("Setting base costs in AC 15")
                 return AC_MGR.ACTH_setCosts(
                     "15",
@@ -1662,6 +1799,24 @@ contract('APP', accounts => {
                 return AC_MGR.ACTH_setCosts(
                     "15",
                     "6",
+                    "10000000000000000",
+                    account1,
+                    { from: account10 })
+            })
+
+            .then(() => {
+                return AC_MGR.ACTH_setCosts(
+                    "15",
+                    "7",
+                    "10000000000000000",
+                    account1,
+                    { from: account10 })
+            })
+
+            .then(() => {
+                return AC_MGR.ACTH_setCosts(
+                    "15",
+                    "8",
                     "10000000000000000",
                     account1,
                     { from: account10 })
@@ -1772,7 +1927,7 @@ contract('APP', accounts => {
 
     
         it('Should mint asset1 in AC 10', async () => {
-            return APP.$newRecord(
+            return APP.newRecord(
                 asset1,
                 rgt1,
                 '10',
@@ -1783,7 +1938,7 @@ contract('APP', accounts => {
 
 
         it('Should mint asset2 in AC 10', async () => {
-            return APP.$newRecord(
+            return APP.newRecord(
                 asset2,
                 rgt2,
                 '10',
@@ -1832,7 +1987,7 @@ contract('APP', accounts => {
 
 
         it('Should mint asset3 in AC 12', async () => {
-            return APP_NC.$newRecord(
+            return APP_NC.newRecord(
                 asset3,
                 rgt3,
                 '12',
@@ -1843,7 +1998,7 @@ contract('APP', accounts => {
 
 
         it('Should mint asset4 in AC 10', async () => {
-            return APP.$newRecord(
+            return APP.newRecord(
                 asset4,
                 rgt4,
                 '10',
@@ -1864,7 +2019,7 @@ contract('APP', accounts => {
 
 
         it('Should mint asset5 in AC 10', async () => {
-            return APP.$newRecord(
+            return APP.newRecord(
                 asset5,
                 rgt5,
                 '10',
@@ -1885,7 +2040,7 @@ contract('APP', accounts => {
 
 
         it('Should mint asset6 in AC 10', async () => {
-            return APP.$newRecord(
+            return APP.newRecord(
                 asset6,
                 rgt6,
                 '10',
@@ -1899,8 +2054,8 @@ contract('APP', accounts => {
 
             console.log("//************************************************************END APP SETUP**********************************************************//")
             console.log('//**************************BEGIN APP FAIL BATCH (18)**************************//')
-            console.log('//**************************BEGIN $newRecord FAIL BATCH**************************//')
-            return APP.$newRecord(
+            console.log('//**************************BEGIN newRecord FAIL BATCH**************************//')
+            return APP.newRecord(
                 asset10,
                 rgt1,
                 '10',
@@ -1911,7 +2066,7 @@ contract('APP', accounts => {
 
         //2
         it('Should fail to create new record because userType not auth to create records', async () => {
-            return APP.$newRecord(
+            return APP.newRecord(
                 asset10,
                 rgt1,
                 '11',
@@ -1923,9 +2078,9 @@ contract('APP', accounts => {
         //3
         it('Should fail becasue contract does not hold token', async () => {
 
-            console.log("//************************************************************END $newRecord FAIL BATCH**********************************************************//")
-            console.log('//**************************BEGIN $importAsset FAIL BATCH**************************//')
-            return APP.$importAsset(
+            console.log("//************************************************************END newRecord FAIL BATCH**********************************************************//")
+            console.log('//**************************BEGIN importAsset FAIL BATCH**************************//')
+            return APP.importAsset(
                 asset3,
                 rgt3,
                 '12',
@@ -1940,7 +2095,7 @@ contract('APP', accounts => {
 
         //4
         it('Should fail becasue user not auth to import', async () => {
-            return APP.$importAsset(
+            return APP.importAsset(
                 asset2,
                 rgt2,
                 '10',
@@ -1955,7 +2110,7 @@ contract('APP', accounts => {
 
         //5
         it('Should fail becasue user not auth in AC', async () => {
-            return APP.$importAsset(
+            return APP.importAsset(
                 asset2,
                 rgt2,
                 '10',
@@ -1970,7 +2125,7 @@ contract('APP', accounts => {
 
         // //6
         // it('Should fail becasue you cannot change AC to new root', async () => {
-        //     return APP.$importAsset(
+        //     return APP.importAsset(
         //         asset2,
         //         rgt2,
         //         '14',
@@ -1985,7 +2140,7 @@ contract('APP', accounts => {
 
         //6
         it('Should fail becasue asset isnt transfered or exported', async () => {
-            return APP.$importAsset(
+            return APP.importAsset(
                 asset1,
                 rgt1,
                 '10',
@@ -1996,9 +2151,9 @@ contract('APP', accounts => {
         //7
         it('Should fail because contract does not hold token', async () => {
             
-            console.log("//************************************************************END $importAsset FAIL BATCH**********************************************************//")
-            console.log('//**************************BEGIN $forceModRecord FAIL BATCH**************************//')
-            return APP.$forceModRecord(
+            console.log("//************************************************************END importAsset FAIL BATCH**********************************************************//")
+            console.log('//**************************BEGIN forceModRecord FAIL BATCH**************************//')
+            return APP.forceModRecord(
                 asset3,
                 rgt2,
                 { from: account4 }
@@ -2007,7 +2162,7 @@ contract('APP', accounts => {
 
         //8
         it('Should fail becasue user not auth in AC', async () => {
-            return APP.$forceModRecord(
+            return APP.forceModRecord(
                 asset1,
                 rgt2,
                 {from: account5}
@@ -2016,7 +2171,7 @@ contract('APP', accounts => {
 
         //9
         it('Should fail becasue asset in stolen status', async () => {
-            return APP.$forceModRecord(
+            return APP.forceModRecord(
                 asset4,
                 rgt3,
                 {from: account2}
@@ -2025,7 +2180,7 @@ contract('APP', accounts => {
 
         //10
         it('Should fail becasue asset in lost status', async () => {
-            return APP.$forceModRecord(
+            return APP.forceModRecord(
                 asset5,
                 rgt4,
                 {from: account2}
@@ -2035,14 +2190,14 @@ contract('APP', accounts => {
 
         it('Should add account2 to AC 10 @userType(11)', async () => {
 
-            console.log("//************************************************************END $forceModRecord FAIL BATCH**********************************************************//")
-            console.log('//**************************BEGIN $transferAsset FAIL BATCH**************************//')
+            console.log("//************************************************************END forceModRecord FAIL BATCH**********************************************************//")
+            console.log('//**************************BEGIN transferAsset FAIL BATCH**************************//')
             return AC_MGR.addUser(account2Hash, '11', '10', { from: account1 })
         })
 
         //11
         it('Should fail because contract does not hold token', async () => {
-            return APP.$transferAsset(
+            return APP.transferAsset(
                 asset3,
                 rgt3,
                 rgt2,
@@ -2052,7 +2207,7 @@ contract('APP', accounts => {
 
         //12
         it('Should fail becasue user not auth for AC', async () => {
-            return APP.$transferAsset(
+            return APP.transferAsset(
                 asset1,
                 rgt1,
                 rgt2,
@@ -2072,7 +2227,7 @@ contract('APP', accounts => {
 
         //13
         it('Should fail becasue userType trying to manipulate status < 50', async () => {
-            return APP.$transferAsset(
+            return APP.transferAsset(
                 asset1,
                 rgt1,
                 rgt2,
@@ -2097,7 +2252,7 @@ contract('APP', accounts => {
 
         //14
         it('Should fail becasue status is not transferable', async () => {
-            return APP.$transferAsset(
+            return APP.transferAsset(
                 asset1,
                 rgt1,
                 rgt2,
@@ -2117,7 +2272,7 @@ contract('APP', accounts => {
 
         //15
         it('Should fail becasue rgt does not match record', async () => {
-            return APP.$transferAsset(
+            return APP.transferAsset(
                 asset1,
                 rgt2,
                 rgt1,
@@ -2128,9 +2283,9 @@ contract('APP', accounts => {
         //16
         it('Should fail because contract does not hold token', async () => {
             
-            console.log("//************************************************************END $transferAsset FAIL BATCH**********************************************************//")
-            console.log('//**************************BEGIN $addIpfsNote FAIL BATCH**************************//')
-            return APP.$addIpfs2Note(
+            console.log("//************************************************************END transferAsset FAIL BATCH**********************************************************//")
+            console.log('//**************************BEGIN addIpfsNote FAIL BATCH**************************//')
+            return APP.addIpfs2Note(
                 asset3,
                 rgt3,
                 rgt2,
@@ -2140,7 +2295,7 @@ contract('APP', accounts => {
 
         //17
         it('Should fail becasue user not auth for AC', async () => {
-            return APP.$addIpfs2Note(
+            return APP.addIpfs2Note(
                 asset1,
                 rgt1,
                 rgt5,
@@ -2150,7 +2305,7 @@ contract('APP', accounts => {
 
         //18
         it('Should fail becasue rgt does not match record data', async () => {
-            return APP.$addIpfs2Note(
+            return APP.addIpfs2Note(
                 asset6,
                 rgt5,
                 rgt5,
@@ -2161,11 +2316,11 @@ contract('APP', accounts => {
 
         it('Should write record in AC 10 @ IDX&RGT(1)', async () => {
 
-            console.log("//************************************************************END $addIpfsNote FAIL BATCH**********************************************************//")
+            console.log("//************************************************************END addIpfsNote FAIL BATCH**********************************************************//")
             console.log('//**************************END APP FAIL BATCH**************************//')
             console.log('//**************************END APP TEST**************************//')
             console.log("//**************************************BEGIN THE WORKS**********************************************/")
-            return APP.$newRecord(
+            return APP.newRecord(
             asset12, 
             rgt12,
             '10',
@@ -2186,7 +2341,7 @@ contract('APP', accounts => {
     
     
         it('Should Transfer asset12 RGT(1) to RGT(2)', async () => {
-            return APP.$transferAsset(
+            return APP.transferAsset(
             asset12, 
             rgt12,
             rgt2,
@@ -2196,7 +2351,7 @@ contract('APP', accounts => {
     
     
         it('Should force modify asset12 RGT(2) to RGT(1)', async () => {
-            return APP.$forceModRecord(
+            return APP.forceModRecord(
             asset12, 
             rgt12,
             {from: account2}
@@ -2244,7 +2399,7 @@ contract('APP', accounts => {
     
     
         it('Should import asset12 to AC(12)(NC)', async () => {
-            return APP_NC.$importAsset(
+            return APP_NC.importAsset(
             asset12,
             '12',
             {from: account2}
@@ -2253,7 +2408,7 @@ contract('APP', accounts => {
     
     
         // it('Should re-mint asset12 token to account2', async () => {
-        //     return APP_NC.$reMintToken(
+        //     return APP_NC.reMintToken(
         //     asset12,
         //     'a',
         //     'a',
@@ -2266,7 +2421,7 @@ contract('APP', accounts => {
     
     
         it('Should set Ipfs2 note to IDX(1)', async () => {
-            return APP_NC.$addIpfs2Note(
+            return APP_NC.addIpfs2Note(
             asset12,
             asset12,
             {from: account2}
@@ -2355,7 +2510,7 @@ contract('APP', accounts => {
     
     
         it('Should import asset12 to AC(11)', async () => {
-            return APP.$importAsset(
+            return APP.importAsset(
             asset12,
             rgt12,
             '11',
