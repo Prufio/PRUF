@@ -475,7 +475,7 @@ contract AC_MGR is BASIC {
             "ACM:CAC: discount cannot exceed 100% (10000)"
         );
         require( //has valid root
-            (_ac.custodyType != 0) || (_assetClassRoot == _assetClass),
+            (_ac.custodyType == 3) || (_assetClassRoot == _assetClass),
             "ACM:CAC:Root asset class does not exist"
         );
 
