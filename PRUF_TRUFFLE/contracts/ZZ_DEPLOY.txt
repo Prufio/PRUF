@@ -154,6 +154,7 @@ __/\\\\\\\\\\\\\ _____/\\\\\\\\\ _______/\\../\\ ___/\\\\\\\\\\\\\\\
 *           (MINTER_ROLEB32, APP.address),   |0|
 *           (MINTER_ROLEB32, PIP.address),   |0|
 *           (MINTER_ROLEB32, RCLR.address)   |0|
+*           (TRUSTED_AGENT_ROLEB32),WRAP.address) |0|
 *--NEW
 *           (TRUSTED_AGENT_ROLEB32, PURCHASE.address)   |0|               
 *
