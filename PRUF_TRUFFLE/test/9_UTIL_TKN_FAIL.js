@@ -297,7 +297,7 @@ contract('UTIL_TKN_FAIL', accounts => {
     })
 
 
-    it('Should mint 10000 to account1', async () => {
+    it('Should mint 5000 to account1', async () => {
         return UTIL_TKN.mint(
             account1,
             "5000000000000000000000",
@@ -305,7 +305,7 @@ contract('UTIL_TKN_FAIL', accounts => {
     })
 
 
-    it("Should retrieve balanceOf(25000) Pruf tokens @account1", async () => {
+    it("Should retrieve balanceOf(30000) Pruf tokens @account1", async () => {
         console.log('//**************************END mint FAIL BATCH**************************//')
         console.log('//**************************END UTIL_TKN FAIL BATCH**************************//')
         var Balance = [];
