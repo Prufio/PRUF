@@ -75,7 +75,7 @@ contract DECORATE is CORE {
                 (AC_info.extendedData == 0),
             "E:DEC:Asset class extended data must be '0' or uint160(ERC721 contract address)"
         );
-        require(rec.assetClass == 0, "E:DEC:Wrapper or record already exists");
+        require(rec.assetClass == 0, "E:DEC:Wrapper, decoration, or record already exists");
 
         //^^^^^^^effects^^^^^^^^^
 
@@ -374,7 +374,7 @@ contract DECORATE is CORE {
 
     /*
      * @dev import **Record** (no confirmation required -
-     * posessor is considered to be owner. sets rec.assetStatus to 0.
+     * posessor is considered to be owner. sets rec.assetStatus to 52.
      */
     function importWrapper(
         uint256 _tokenID,
