@@ -193,7 +193,7 @@ contract A_TKN is
      * @dev return an adresses "cold wallet" status
      * WALLET ADDRESSES SET TO "Cold" DO NOT WORK WITH TRUSTED_AGENT FUNCTIONS
      */
-    function isColdWallet(address _addr) external view returns (uint256) {
+    function isColdWallet(address _addr) public view returns (uint256) {
         return coldWallet[_addr];
     }
 
@@ -305,12 +305,12 @@ contract A_TKN is
      * @dev Transfers the ownership of a given token ID to another address by a TRUSTED_AGENT.
      * Usage of this method is discouraged, use {safeTransferFrom} whenever possible.
      * Requires the _msgSender() to be the owner, approved, or operator.
-     * @param _from current owner of the token
+     * @param from current owner of the token
      * @param to address to receive the ownership of the given token ID
      * @param tokenId uint256 ID of the token to be transferred
      */
     function trustedAgentTransferFrom(
-        address _from,
+        address from,
         address to,
         uint256 tokenId
     ) public nonReentrant whenNotPaused isTrustedAgent {
@@ -321,6 +321,10 @@ contract A_TKN is
             rec.assetStatus == 51,
             "AT:TATF:Asset not in transferrable status"
         );
+        require(
+            isColdWallet(ownerOf(tokenId)) != 170,
+            "AT:TATF:Holder is cold Wallet"
+        );
 
         //^^^^^^^checks^^^^^^^^
 
@@ -330,8 +334,26 @@ contract A_TKN is
         //^^^^^^^effects^^^^^^^^^
 
         writeRecord(_idxHash, rec);
-        _transfer(_from, to, tokenId);
+        _transfer(from, to, tokenId);
         //^^^^^^^interactions^^^^^^^^^
+    }
+
+    /**
+     * @dev Safely burns a token   //DPB-TEST NEW
+     */
+    function trustedAgentBurn(uint256 tokenId) 
+        external
+        nonReentrant
+        whenNotPaused
+        isTrustedAgent
+    {
+        require(
+            isColdWallet(ownerOf(tokenId)) != 170,
+            "AT:TAB:Holder is cold Wallet"
+        );
+        //^^^^^^^checks^^^^^^^^^
+        _burn(tokenId);
+        //^^^^^^^effects^^^^^^^^^
     }
 
     /**
