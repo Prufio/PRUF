@@ -562,6 +562,11 @@ interface A_TKN_Interface {
     ) external;
 
     /**
+     * @dev Burns a token
+     */
+    function trustedAgentBurn(uint256 tokenId) external;
+
+    /**
      * @dev Safely transfers the ownership of a given token ID to another address
      * If the target address is a contract, it must implement {IERC721Receiver-onERC721Received},
      * which is called upon a safe transfer, and return the magic value
@@ -874,7 +879,8 @@ interface AC_MGR_Interface {
      * Requires that:
      *  caller holds ACtoken
      */
-    function updateACextendedData(uint160 _extData, uint32 _assetClass) external;
+    function updateACextendedData(uint160 _extData, uint32 _assetClass)
+        external;
 
     /*
      * @dev Set function costs and payment address per asset class, in Wei
@@ -1305,7 +1311,6 @@ interface RCLR_Interface {
  */
 interface APP_Interface {
     function transferAssetToken(address _to, bytes32 _idxHash) external;
-
 }
 
 //------------------------------------------------------------------------------------------------
@@ -1316,5 +1321,4 @@ interface APP_Interface {
  */
 interface APP_NC_Interface {
     function transferAssetToken(address _to, bytes32 _idxHash) external;
-
 }
