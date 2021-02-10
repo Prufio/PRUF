@@ -62,6 +62,8 @@ pragma solidity ^0.6.7;
  *
  *      * make security token invisible from the main contracts 
  *
+ *      *0xFF for transferred costs more gas than 0x0....fix this?
+ *
  *
 - ----------------------------------------------------------------
 

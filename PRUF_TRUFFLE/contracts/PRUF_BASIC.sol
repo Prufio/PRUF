@@ -13,6 +13,8 @@ __/\\\\\\\\\\\\\ _____/\\\\\\\\\ _______/\\../\\ ___/\\\\\\\\\\\\\\\
 /*-----------------------------------------------------------------
  *  TO DO
  *
+ * IMPORTANT!!! NO EXTERNAL OR PUBLIC FUNCTIONS (without STRICT PERMISSIONING) ALLOWED IN THIS CONTRACT!!!!!!!!
+ *-----------------------------------------------------------------
  *-----------------------------------------------------------------
  *PRUF basic provides core data structures and functionality to PRUF contracts.
  *Features include contract name resolution, and getters for records, users, and asset class information.
@@ -157,7 +159,7 @@ contract BASIC is ReentrancyGuard, AccessControl, IERC721Receiver, Pausable {
         external
         virtual
         nonReentrant
-        isAdmin
+        isAdmin //-------------------------------------------------------STRICT PERMISSIONING
     {
         //^^^^^^^checks^^^^^^^^^
         AC_TKN_Address = STOR.resolveContractAddress("AC_TKN");
@@ -199,10 +201,11 @@ contract BASIC is ReentrancyGuard, AccessControl, IERC721Receiver, Pausable {
         nonReentrant
     //^^^^^^^checks^^^^^^^^^
     {
-        require(
+        require( //-------------------------------------------------------STRICT PERMISSIONING
             hasRole(ASSET_TXFR_ROLE, _msgSender()),
             "B:TX:Must have ASSET_TXFR_ROLE"
         );
+
         uint256 tokenId = uint256(_idxHash);
         //^^^^^^^effects^^^^^^^^^
         A_TKN.safeTransferFrom(address(this), _to, tokenId);
@@ -215,7 +218,7 @@ contract BASIC is ReentrancyGuard, AccessControl, IERC721Receiver, Pausable {
     function OO_transferACToken(address _to, uint256 _tokenID)
         external
         virtual
-        isAdmin
+        isAdmin //-------------------------------------------------------STRICT PERMISSIONING
         nonReentrant
     {
         //^^^^^^^checks^^^^^^^^^
@@ -229,7 +232,7 @@ contract BASIC is ReentrancyGuard, AccessControl, IERC721Receiver, Pausable {
     function OO_setStorageContract(address _storageAddress)
         external
         virtual
-        isAdmin
+        isAdmin //-------------------------------------------------------STRICT PERMISSIONING
     {
         require(
             _storageAddress != address(0),
@@ -250,7 +253,7 @@ contract BASIC is ReentrancyGuard, AccessControl, IERC721Receiver, Pausable {
         address,
         uint256,
         bytes calldata
-    ) external virtual override returns (bytes4) {
+    ) external virtual override returns (bytes4) { //-------------------------------------------------------STRICT PERMISSIONING EXEMPT 
         //^^^^^^^checks^^^^^^^^^
         return this.onERC721Received.selector;
         //^^^^^^^interactions^^^^^^^^^
@@ -260,14 +263,14 @@ contract BASIC is ReentrancyGuard, AccessControl, IERC721Receiver, Pausable {
      * @dev Triggers stopped state. (pausable)
      *
      */
-    function pause() external isPauser {
+    function pause() external isPauser { //-------------------------------------------------------STRICT PERMISSIONING
         _pause();
     }
 
     /**
      * @dev Returns to normal state. (pausable)
-     */
-    function unpause() external isPauser {
+     */ 
+    function unpause() external isPauser { //-------------------------------------------------------STRICT PERMISSIONING
         _unpause();
     }
 

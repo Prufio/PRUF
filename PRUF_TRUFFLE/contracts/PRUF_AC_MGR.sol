@@ -22,10 +22,6 @@ __/\\\\\\\\\\\\\ _____/\\\\\\\\\ _______/\\../\\ ___/\\\\\\\\\\\\\\\
 
 /*-----------------------------------------------------------------
  *  TO DO
- * REWORK TO TAKE ALL INPUTS FOR TOKEN MANIPULATION IN wei notation (18 zeros)
- * ADD ROLES! (need role for ACNODE MINTER)
- * all 18 dec math for price share
- * 100% price share option to hook into dNodes
  *-----------------------------------------------------------------
  */
 
