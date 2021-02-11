@@ -471,10 +471,10 @@ contract STOR is AccessControl, ReentrancyGuard, Pausable {
         nonReentrant
         whenNotPaused
         isEscrowManager //calling contract must be ECR_MGR
-        exists(_idxHash) //asset must exist in 'database'
+        exists(_idxHash) //asset must exist in 'database'  //CTS:EXAMINE REDUNDANT THROWS IN ECR_MGR WITH "Asset not in escrow status"
     {
         Record memory rec = database[_idxHash];
-        require(isEscrow(rec.assetStatus) == 170, "S:EE:! ecr stat"); //asset must be in an escrow status
+        require(isEscrow(rec.assetStatus) == 170, "S:EE:! ecr stat"); //asset must be in an escrow status  //CTS:EXAMINE REDUNDANT THROWS IN ECR_MGR WITH "Asset not in escrow status"
         //^^^^^^^checks^^^^^^^^^
 
         if (rec.assetStatus == 6) {
@@ -507,12 +507,12 @@ contract STOR is AccessControl, ReentrancyGuard, Pausable {
         external
         nonReentrant
         whenNotPaused
-        exists(_idxHash) //asset must exist in 'database'
+        exists(_idxHash) //asset must exist in 'database' // CTS:EXAMINE REDUNDANT THROWS IN PURCHASE, UNREACHABLE WITH CURRENT CONTRACTS
         isAuthorized(database[_idxHash].assetClass) //calling contract must be authorized in relevant assetClass
     //notEscrow(_idxHash) // asset must not be held in escrow status
     {
         Record memory rec = database[_idxHash];
-        require((isTransferred(rec.assetStatus) == 0), "S:SP: Txfrd asset");
+        require((isTransferred(rec.assetStatus) == 0), "S:SP: Txfrd asset"); // CTS:EXAMINE REDUNDANT THROWS IN PURCHASE, UNREACHABLE WITH CURRENT CONTRACTS
         //require(isEscrow(rec.assetStatus) == 0, "S:SP: Escrowed asset");
         //^^^^^^^checks^^^^^^^^^
 
@@ -533,12 +533,12 @@ contract STOR is AccessControl, ReentrancyGuard, Pausable {
         external
         nonReentrant
         whenNotPaused
-        exists(_idxHash) //asset must exist in 'database'
+        exists(_idxHash) //asset must exist in 'database' // CTS:EXAMINE REDUNDANT THROWS IN PURCHASE, UNREACHABLE WITH CURRENT CONTRACTS
         isAuthorized(database[_idxHash].assetClass) //calling contract must be authorized in relevant assetClass
     //notEscrow(_idxHash) // asset must not be held in escrow status
     {
         Record memory rec = database[_idxHash];
-        require((isTransferred(rec.assetStatus) == 0), "S:CP: Txfrd asset");
+        require((isTransferred(rec.assetStatus) == 0), "S:CP: Txfrd asset"); // CTS:EXAMINE REDUNDANT THROWS IN PURCHASE, UNREACHABLE WITH CURRENT CONTRACTS
         //require(isEscrow(rec.assetStatus) == 0, "S:CP: Escrowed asset");
         //^^^^^^^checks^^^^^^^^^
 
