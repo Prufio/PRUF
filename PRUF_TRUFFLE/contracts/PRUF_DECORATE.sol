@@ -13,6 +13,8 @@ __/\\\\\\\\\\\\\ _____/\\\\\\\\\ _______/\\../\\ ___/\\\\\\\\\\\\\\\
 /*-----------------------------------------------------------------
  *  TO DO --- complete test! DPS TEST NEW CONTRACT
  *
+ *-----------------------------------------------------------------
+ * Decorates ERC721 compliant tokens with a PRüF record 
  *----------------------------------------------------------------*/
 
 // Must set up a custodyType 5 asset class for decorated assets and auth this contract type 1. Root must be private to class.
