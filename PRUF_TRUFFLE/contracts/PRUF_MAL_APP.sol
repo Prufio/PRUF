@@ -45,10 +45,10 @@ contract MAL_APP is CORE_MAL {
     ) external 
     // nonReentrant whenNotPaused 
     {
-        Record memory rec = getRecord(_idxHash);
+        // Record memory rec = getRecord(_idxHash);
         // uint8 userType = getCallingUserType(_assetClass);
-        AC memory AC_info = getACinfo(_assetClass);
-        AC memory oldAC_info = getACinfo(rec.assetClass);
+        // AC memory AC_info = getACinfo(_assetClass);
+        // AC memory oldAC_info = getACinfo(rec.assetClass);
         // ContractDataHash memory contractInfo = getContractInfo(
         //     address(this),
         //     _assetClass
@@ -69,11 +69,11 @@ contract MAL_APP is CORE_MAL {
         //bytes32 userHash = keccak256(abi.encodePacked(_msgSender()));
         //^^^^^^^effects^^^^^^^^^
 
-        if (AC_info.assetClassRoot == oldAC_info.assetClassRoot) {
-            createRecord(_idxHash, _rgtHash, _assetClass, rec.countDownStart);
-        } else {
+        // if (AC_info.assetClassRoot == oldAC_info.assetClassRoot) {
+            // createRecord(_idxHash, _rgtHash, _assetClass, rec.countDownStart);
+        // } else {
             createRecord(_idxHash, _rgtHash, _assetClass, _countDownStart);
-        }
+        // }
         deductServiceCosts(_assetClass, 1);
 
         //^^^^^^^interactions^^^^^^^^^
@@ -833,6 +833,59 @@ contract MAL_APP is CORE_MAL {
 
         //^^^^^^^checks^^^^^^^^^
         RCLR.discard(_idxHash, _msgSender());
+        //^^^^^^^interactions^^^^^^^^^
+    }
+
+    function _setPrice(
+        bytes32 _idxHash,
+        uint120 _price,
+        uint8 _currency
+        // uint256 _setForSale // if 170 then change to transferrable
+    ) external nonReentrant 
+    // whenNotPaused isAuthorized(_idxHash) 
+    {
+        // Record memory rec = getRecord(_idxHash);
+
+        // require(
+        //     needsImport(rec.assetStatus) == 0,
+        //     "E:SP Record in unregistered, exported, or discarded status"
+        // );
+        // require((rec.assetStatus > 49) || (_setForSale != 170) , "E:SP Asset Status < 50");
+        // require(isEscrow(rec.assetStatus) == 0, "E:SP Record is in escrow");
+
+        // require(
+        //     _currency == 2,
+        //     "E:SP: Price must be in PRUF tokens for this contract"
+        // );
+        //^^^^^^^checks^^^^^^^^^
+        // if (_setForSale == 170){
+        //     rec.assetStatus = 51;
+        //     writeRecord(_idxHash, rec);
+        // }
+
+        STOR.setPrice(_idxHash, _price, _currency);
+        //^^^^^^^interactions^^^^^^^^^
+    }
+
+    /*
+     * @dev set price and currency in rec.pricer rec.currency
+     */
+    function _clearPrice(bytes32 _idxHash)
+        external
+        nonReentrant
+        // whenNotPaused
+        // isAuthorized(_idxHash)
+    {
+        // Record memory rec = getRecord(_idxHash);
+
+        // require(
+        //     needsImport(rec.assetStatus) == 0,
+        //     "E:DC Record in unregistered, exported, or discarded status"
+        // );
+        // require(isEscrow(rec.assetStatus) == 0, "E:SP Record is in escrow");
+        //^^^^^^^checks^^^^^^^^^
+
+        STOR.clearPrice(_idxHash);
         //^^^^^^^interactions^^^^^^^^^
     }
     

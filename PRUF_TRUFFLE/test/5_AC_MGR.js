@@ -2172,12 +2172,12 @@ contract('AC_MGR', accounts => {
         )
     })
 
-    //16
+    //16 sus
     it('Should fail because Dest AC not readt for name transfer (0xFFFFF...)', async () => {
         return AC_MGR.transferName(
             'Custodial_AC1',
-            '1',
-            '2',
+            '10',
+            '11',
             { from: account1 }
         )
     })
@@ -2231,7 +2231,7 @@ contract('AC_MGR', accounts => {
     it('Should fail because name already exists', async () => {
         return AC_MGR.createAssetClass(
             account2,
-            '20',
+            'Custodial_AC1',
             '20',
             '1',
             '1',
@@ -2261,7 +2261,7 @@ contract('AC_MGR', accounts => {
         console.log("//**************************************END transferName FAIL BATCH**********************************************/")
         console.log("//**************************************BEGIN getServiceCosts FAIL BATCH**********************************************/")
         return AC_MGR.getServiceCosts(
-            '20',
+            '100',
             '1',
             { from: account2 }
         )

@@ -20,7 +20,7 @@ pragma solidity ^0.6.7;
 
 import "./PRUF_CORE.sol";
 
-contract PURCHASE is CORE {
+contract PURCHASE is CORE {  //CTS:EXAMINE THIS CONTRACT NEEDS A CONSTRUCTOR DESPERATELY. CANT RESOLVE CONTRACT ADDRESSES ECT.
     /*
      * @dev Verify user credentials
      * Originating Address:

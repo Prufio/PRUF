@@ -28,6 +28,7 @@ __/\\\\\\\\\\\\\ _____/\\\\\\\\\ _______/\\../\\ ___/\\\\\\\\\\\\\\\
         const PRUF_HELPER = artifacts.require('Helper');
         const PRUF_MAL_APP = artifacts.require('MAL_APP');
         const PRUF_UTIL_TKN = artifacts.require('UTIL_TKN');
+        const PRUF_VERIFY = artifacts.require('VERIFY');
         
         let STOR;
         let APP;
@@ -46,6 +47,7 @@ __/\\\\\\\\\\\\\ _____/\\\\\\\\\ _______/\\../\\ ___/\\\\\\\\\\\\\\\
         let Helper;
         let MAL_APP;
         let UTIL_TKN;
+        let VERIFY;
         
         let string1Hash;
         let string2Hash;
@@ -265,6 +267,14 @@ __/\\\\\\\\\\\\\ _____/\\\\\\\\\ _______/\\../\\ ___/\\\\\\\\\\\\\\\
                 console.log(PRUF_UTIL_TKN_TEST.address);
                 assert(PRUF_UTIL_TKN_TEST.address !== '')
                 UTIL_TKN = PRUF_UTIL_TKN_TEST;
+            })
+        
+        
+            it('Should deploy VERIFY', async () => {
+                const PRUF_VERIFY_TEST = await PRUF_VERIFY.deployed({ from: account1 });
+                console.log(PRUF_VERIFY_TEST.address);
+                assert(PRUF_VERIFY_TEST.address !== '')
+                VERIFY = PRUF_VERIFY_TEST;
             })
         
         
@@ -654,6 +664,11 @@ __/\\\\\\\\\\\\\ _____/\\\\\\\\\ _______/\\../\\ ___/\\\\\\\\\\\\\\\
                         console.log("Adding UTIL_TKN to storage for use in AC 0")
                         return STOR.OO_addContract("UTIL_TKN", UTIL_TKN.address, '0', '1', { from: account1 })
                     })
+        
+                    .then(() => {
+                        console.log("Adding VERIFY to storage for use in AC 0")
+                        return STOR.OO_addContract("VERIFY", VERIFY.address, '0', '1', { from: account1 })
+                    })
             })
         
         
@@ -725,6 +740,11 @@ __/\\\\\\\\\\\\\ _____/\\\\\\\\\ _______/\\../\\ ___/\\\\\\\\\\\\\\\
                     .then(() => {
                         console.log("Adding in RCLR")
                         return RCLR.OO_setStorageContract(STOR.address, { from: account1 })
+                    })
+        
+                    .then(() => {
+                        console.log("Adding in VERIFY")
+                        return VERIFY.OO_setStorageContract(STOR.address, { from: account1 })
                     })
         
                 // .then(() => {
@@ -804,10 +824,10 @@ __/\\\\\\\\\\\\\ _____/\\\\\\\\\ _______/\\../\\ ___/\\\\\\\\\\\\\\\
                         return RCLR.OO_resolveContractAddresses({ from: account1 })
                     })
         
-                // .then(() => {
-                //     console.log("Resolving in UTIL_TKN")
-                //     return UTIL_TKN.AdminResolveContractAddresses({ from: account1 })
-                // })
+                    .then(() => {
+                        console.log("Resolving in VERIFY")
+                        return VERIFY.OO_resolveContractAddresses({ from: account1 })
+                    })
             })
         
             it('Should authorize all minter contracts for minting A_TKN(s)', async () => {
@@ -850,6 +870,16 @@ __/\\\\\\\\\\\\\ _____/\\\\\\\\\ _______/\\../\\ ___/\\\\\\\\\\\\\\\
                         console.log("Authorizing RCLR")
                         return UTIL_TKN.grantRole(payableRoleB32, RCLR.address, { from: account1 })
                     })
+
+                    .then(() => {
+                        console.log("Authorizing NP")
+                        return UTIL_TKN.grantRole(payableRoleB32, NP.address, { from: account1 })
+                    })
+        
+                    .then(() => {
+                        console.log("Authorizing NP_NC")
+                        return UTIL_TKN.grantRole(payableRoleB32, NP_NC.address, { from: account1 })
+                    })
             })
         
         
@@ -878,54 +908,50 @@ __/\\\\\\\\\\\\\ _____/\\\\\\\\\ _______/\\../\\ ___/\\\\\\\\\\\\\\\
             })
         
         
-            it('Should mint a couple of asset root tokens', async () => {
-        
-                console.log("Minting root token 1 -C")
-                return AC_MGR.createAssetClass(account1, 'CUSTODIAL_ROOT', '1', '1', '3', rgt000, "0", { from: account1 })
-        
+            it('Should mint 2 asset root tokens', async () => {
+
+                console.log("Minting root token 1")
+                return AC_MGR.createAssetClass(account1, 'ROOT1', '1', '1', '3', rgt000, "0", { from: account1 })
+            
+                .then(() => {
+                    console.log("Minting root token 2")
+                    return AC_MGR.createAssetClass(account1, "ROOT2", "2", "2", "3", rgt000, "0", { from: account1 })
+                })
+            })
+            
+            
+            it("Should Mint 2 non cust AC", async () => {
+                
+                console.log("Minting AC 10 -NC")
+                return AC_MGR.createAssetClass(account1, "NonCustodial_AC10", "10", "1", "2", rgt000, "0", { from: account1 })
+            
                     .then(() => {
-                        console.log("Minting root token 2 -NC")
-                        return AC_MGR.createAssetClass(account1, 'NON-CUSTODIAL_ROOT', '2', '2', '3', rgt000, "0", { from: account1 })
+                        console.log("Minting AC 11 -NC to Account2")
+                        return AC_MGR.createAssetClass(account2, "NonCustodial_AC11", "11", "1", "2", rgt000, "0", { from: account1 })
                     })
             })
-        
-        
-            it("Should Mint 2 cust and 2 non-cust AC tokens in AC_ROOT 1", async () => {
-        
-                console.log("Minting AC 10 -C")
-                return AC_MGR.createAssetClass(account1, "Custodial_AC1", "10", "1", "1", rgt000, "0", { from: account1 })
-        
+            
+            
+            it("Should Mint 4 verify AC tokens", async () => {
+                
+                console.log("Minting AC 12 Verify")
+                return AC_MGR.createAssetClass(account1, "Verify1", "12", "1", "4", rgt000, "0", { from: account1 })
+            
                     .then(() => {
-                        console.log("Minting AC 11 -C")
-                        return AC_MGR.createAssetClass(account1, "Custodial_AC2", "11", "1", "1", rgt000, "0", { from: account1 })
+                        console.log("Minting AC 13 Verify")
+                        return AC_MGR.createAssetClass(account1, "Verify2", "13", "1", "4", rgt000, "0", { from: account1 })
                     })
-        
+            
                     .then(() => {
-                        console.log("Minting AC 12 -NC")
-                        return AC_MGR.createAssetClass(account1, "Non-Custodial_AC1", "12", "1", "2", rgt000, "0", { from: account1 })
+                        console.log("Minting AC 14 Verify to Account2")
+                        return AC_MGR.createAssetClass(account2, "Verify3", "14", "1", "4", rgt000, "0", { from: account1 })
                     })
-        
+            
                     .then(() => {
-                        console.log("Minting AC 13 -NC")
-                        return AC_MGR.createAssetClass(account1, "Non-Custodial_AC2", "13", "1", "2", rgt000, "0", { from: account1 })
+                        console.log("Minting AC 15 Verify to Account2")
+                        return AC_MGR.createAssetClass(account2, "Verify4", "15", "2", "4", rgt000, "0", { from: account1 })
                     })
-        
-                    .then(() => {
-                        console.log("Minting AC 16 -NC")
-                        return AC_MGR.createAssetClass(account10, "Non_Custodial_AC5", "16", "1", "2", rgt000, "0", { from: account1 })
-                    })
-            })
-        
-        
-            it("Should Mint 2 non-cust AC tokens in AC_ROOT 2", async () => {
-        
-                console.log("Minting AC 14 -NC")
-                return AC_MGR.createAssetClass(account1, "Non-Custodial_AC3", "14", "2", "2", rgt000, "0", { from: account1 })
-        
-                    .then(() => {
-                        console.log("Minting AC 15 -NC")
-                        return AC_MGR.createAssetClass(account10, "Non_Custodial_AC4", "15", "2", "2", rgt000, "0", { from: account1 })
-                    })
+            
             })
         
         
@@ -934,7 +960,7 @@ __/\\\\\\\\\\\\\ _____/\\\\\\\\\ _______/\\../\\ ___/\\\\\\\\\\\\\\\
                 return STOR.enableContractForAC('APP', '10', '1', { from: account1 })
         
                     .then(() => {
-                        return STOR.enableContractForAC('APP', '11', '1', { from: account1 })
+                        return STOR.enableContractForAC('APP', '11', '1', { from: account2 })
                     })
             })
         
@@ -949,11 +975,23 @@ __/\\\\\\\\\\\\\ _____/\\\\\\\\\ _______/\\../\\ ___/\\\\\\\\\\\\\\\
                     })
         
                     .then(() => {
-                        return STOR.enableContractForAC('APP_NC', '14', '2', { from: account1 })
+                        return STOR.enableContractForAC('APP_NC', '14', '2', { from: account2 })
+                    })
+
+                    .then(() => {
+                        return STOR.enableContractForAC('APP_NC', '11', '2', { from: account2 })
                     })
         
                     .then(() => {
-                        return STOR.enableContractForAC('APP_NC', '16', '2', { from: account10 })
+                        return STOR.enableContractForAC('APP_NC', '10', '2', { from: account1 })
+                    })
+        
+                    // .then(() => {
+                    //     return STOR.enableContractForAC('APP_NC', '16', '2', { from: account10 })
+                    // })
+        
+                    .then(() => {
+                        return STOR.enableContractForAC('APP_NC', '15', '2', { from: account2 })
                     })
             })
         
@@ -964,7 +1002,7 @@ __/\\\\\\\\\\\\\ _____/\\\\\\\\\ _______/\\../\\ ___/\\\\\\\\\\\\\\\
                 return STOR.enableContractForAC('NP', '10', '1', { from: account1 })
         
                     .then(() => {
-                        return STOR.enableContractForAC('NP', '11', '1', { from: account1 })
+                        return STOR.enableContractForAC('NP', '11', '1', { from: account2 })
                     })
             })
         
@@ -975,7 +1013,7 @@ __/\\\\\\\\\\\\\ _____/\\\\\\\\\ _______/\\../\\ ___/\\\\\\\\\\\\\\\
                 return STOR.enableContractForAC('MAL_APP', '10', '1', { from: account1 })
         
                     .then(() => {
-                        return STOR.enableContractForAC('MAL_APP', '11', '1', { from: account1 })
+                        return STOR.enableContractForAC('MAL_APP', '11', '1', { from: account2 })
                     })
             })
         
@@ -990,12 +1028,12 @@ __/\\\\\\\\\\\\\ _____/\\\\\\\\\ _______/\\../\\ ___/\\\\\\\\\\\\\\\
                     })
         
                     .then(() => {
-                        return STOR.enableContractForAC('NP_NC', '14', '2', { from: account1 })
+                        return STOR.enableContractForAC('NP_NC', '14', '2', { from: account2 })
                     })
         
-                    .then(() => {
-                        return STOR.enableContractForAC('NP_NC', '16', '2', { from: account10 })
-                    })
+                    // .then(() => {
+                    //     return STOR.enableContractForAC('NP_NC', '16', '2', { from: account10 })
+                    // })
             })
         
         
@@ -1005,7 +1043,7 @@ __/\\\\\\\\\\\\\ _____/\\\\\\\\\ _______/\\../\\ ___/\\\\\\\\\\\\\\\
                 return STOR.enableContractForAC('ECR', '10', '3', { from: account1 })
         
                     .then(() => {
-                        return STOR.enableContractForAC('ECR', '11', '3', { from: account1 })
+                        return STOR.enableContractForAC('ECR', '11', '3', { from: account2 })
                     })
             })
         
@@ -1016,7 +1054,7 @@ __/\\\\\\\\\\\\\ _____/\\\\\\\\\ _______/\\../\\ ___/\\\\\\\\\\\\\\\
                 return STOR.enableContractForAC('ECR2', '10', '3', { from: account1 })
         
                     .then(() => {
-                        return STOR.enableContractForAC('ECR2', '11', '3', { from: account1 })
+                        return STOR.enableContractForAC('ECR2', '11', '3', { from: account2 })
                     })
             })
         
@@ -1031,12 +1069,12 @@ __/\\\\\\\\\\\\\ _____/\\\\\\\\\ _______/\\../\\ ___/\\\\\\\\\\\\\\\
                     })
         
                     .then(() => {
-                        return STOR.enableContractForAC('ECR_NC', '14', '3', { from: account1 })
+                        return STOR.enableContractForAC('ECR_NC', '14', '3', { from: account2 })
                     })
         
-                    .then(() => {
-                        return STOR.enableContractForAC('ECR_NC', '16', '3', { from: account10 })
-                    })
+                    // .then(() => {
+                    //     return STOR.enableContractForAC('ECR_NC', '16', '3', { from: account10 })
+                    // })
             })
         
         
@@ -1046,7 +1084,7 @@ __/\\\\\\\\\\\\\ _____/\\\\\\\\\ _______/\\../\\ ___/\\\\\\\\\\\\\\\
                 return STOR.enableContractForAC('ECR_MGR', '10', '3', { from: account1 })
         
                     .then(() => {
-                        return STOR.enableContractForAC('ECR_MGR', '11', '3', { from: account1 })
+                        return STOR.enableContractForAC('ECR_MGR', '11', '3', { from: account2 })
                     })
         
                     .then(() => {
@@ -1058,12 +1096,12 @@ __/\\\\\\\\\\\\\ _____/\\\\\\\\\ _______/\\../\\ ___/\\\\\\\\\\\\\\\
                     })
         
                     .then(() => {
-                        return STOR.enableContractForAC('ECR_MGR', '14', '3', { from: account1 })
+                        return STOR.enableContractForAC('ECR_MGR', '14', '3', { from: account2 })
                     })
         
-                    .then(() => {
-                        return STOR.enableContractForAC('ECR_MGR', '16', '3', { from: account10 })
-                    })
+                    // .then(() => {
+                    //     return STOR.enableContractForAC('ECR_MGR', '16', '3', { from: account10 })
+                    // })
             })
         
         
@@ -1073,7 +1111,7 @@ __/\\\\\\\\\\\\\ _____/\\\\\\\\\ _______/\\../\\ ___/\\\\\\\\\\\\\\\
                 return STOR.enableContractForAC('AC_TKN', '10', '1', { from: account1 })
         
                     .then(() => {
-                        return STOR.enableContractForAC('AC_TKN', '11', '1', { from: account1 })
+                        return STOR.enableContractForAC('AC_TKN', '11', '1', { from: account2 })
                     })
         
                     .then(() => {
@@ -1085,7 +1123,7 @@ __/\\\\\\\\\\\\\ _____/\\\\\\\\\ _______/\\../\\ ___/\\\\\\\\\\\\\\\
                     })
         
                     .then(() => {
-                        return STOR.enableContractForAC('AC_TKN', '14', '2', { from: account1 })
+                        return STOR.enableContractForAC('AC_TKN', '14', '2', { from: account2 })
                     })
             })
         
@@ -1096,7 +1134,7 @@ __/\\\\\\\\\\\\\ _____/\\\\\\\\\ _______/\\../\\ ___/\\\\\\\\\\\\\\\
                 return STOR.enableContractForAC('A_TKN', '10', '1', { from: account1 })
         
                     .then(() => {
-                        return STOR.enableContractForAC('A_TKN', '11', '1', { from: account1 })
+                        return STOR.enableContractForAC('A_TKN', '11', '1', { from: account2 })
                     })
         
                     .then(() => {
@@ -1108,16 +1146,16 @@ __/\\\\\\\\\\\\\ _____/\\\\\\\\\ _______/\\../\\ ___/\\\\\\\\\\\\\\\
                     })
         
                     .then(() => {
-                        return STOR.enableContractForAC('A_TKN', '14', '2', { from: account1 })
+                        return STOR.enableContractForAC('A_TKN', '14', '2', { from: account2 })
                     })
         
                     .then(() => {
-                        return STOR.enableContractForAC('A_TKN', '15', '2', { from: account10 })
+                        return STOR.enableContractForAC('A_TKN', '15', '2', { from: account2 })
                     })
         
-                    .then(() => {
-                        return STOR.enableContractForAC('A_TKN', '16', '2', { from: account10 })
-                    })
+                    // .then(() => {
+                    //     return STOR.enableContractForAC('A_TKN', '16', '2', { from: account10 })
+                    // })
         
                     .then(() => {
                         return STOR.enableContractForAC('A_TKN', '1', '1', { from: account1 })
@@ -1135,7 +1173,7 @@ __/\\\\\\\\\\\\\ _____/\\\\\\\\\ _______/\\../\\ ___/\\\\\\\\\\\\\\\
                 return STOR.enableContractForAC('PIP', '10', '1', { from: account1 })
         
                     .then(() => {
-                        return STOR.enableContractForAC('PIP', '11', '1', { from: account1 })
+                        return STOR.enableContractForAC('PIP', '11', '1', { from: account2 })
                     })
         
                     .then(() => {
@@ -1147,16 +1185,16 @@ __/\\\\\\\\\\\\\ _____/\\\\\\\\\ _______/\\../\\ ___/\\\\\\\\\\\\\\\
                     })
         
                     .then(() => {
-                        return STOR.enableContractForAC('PIP', '14', '2', { from: account1 })
+                        return STOR.enableContractForAC('PIP', '14', '2', { from: account2 })
                     })
         
                     .then(() => {
-                        return STOR.enableContractForAC('PIP', '15', '2', { from: account10 })
+                        return STOR.enableContractForAC('PIP', '15', '2', { from: account2 })
                     })
         
-                    .then(() => {
-                        return STOR.enableContractForAC('PIP', '16', '2', { from: account10 })
-                    })
+                    // .then(() => {
+                    //     return STOR.enableContractForAC('PIP', '16', '2', { from: account10 })
+                    // })
         
                     .then(() => {
                         return STOR.enableContractForAC('PIP', '1', '1', { from: account1 })
@@ -1174,7 +1212,7 @@ __/\\\\\\\\\\\\\ _____/\\\\\\\\\ _______/\\../\\ ___/\\\\\\\\\\\\\\\
                 return STOR.enableContractForAC('AC_MGR', '10', '1', { from: account1 })
         
                     .then(() => {
-                        return STOR.enableContractForAC('AC_MGR', '11', '1', { from: account1 })
+                        return STOR.enableContractForAC('AC_MGR', '11', '1', { from: account2 })
                     })
         
                     .then(() => {
@@ -1186,7 +1224,7 @@ __/\\\\\\\\\\\\\ _____/\\\\\\\\\ _______/\\../\\ ___/\\\\\\\\\\\\\\\
                     })
         
                     .then(() => {
-                        return STOR.enableContractForAC('AC_MGR', '14', '2', { from: account1 })
+                        return STOR.enableContractForAC('AC_MGR', '14', '2', { from: account2 })
                     })
             })
         
@@ -1197,7 +1235,7 @@ __/\\\\\\\\\\\\\ _____/\\\\\\\\\ _______/\\../\\ ___/\\\\\\\\\\\\\\\
                 return STOR.enableContractForAC('RCLR', '10', '3', { from: account1 })
         
                     .then(() => {
-                        return STOR.enableContractForAC('RCLR', '11', '3', { from: account1 })
+                        return STOR.enableContractForAC('RCLR', '11', '3', { from: account2 })
                     })
         
                     .then(() => {
@@ -1209,15 +1247,15 @@ __/\\\\\\\\\\\\\ _____/\\\\\\\\\ _______/\\../\\ ___/\\\\\\\\\\\\\\\
                     })
         
                     .then(() => {
-                        return STOR.enableContractForAC('RCLR', '14', '3', { from: account1 })
+                        return STOR.enableContractForAC('RCLR', '14', '3', { from: account2 })
                     })
         
-                    .then(() => {
-                        return STOR.enableContractForAC('RCLR', '16', '3', { from: account10 })
-                    })
+                    // .then(() => {
+                    //     return STOR.enableContractForAC('RCLR', '16', '3', { from: account10 })
+                    // })
             })
-        
-        
+
+
             it("Should set costs in minted AC's", async () => {
         
                 console.log("Setting costs in AC 1")
@@ -1270,6 +1308,24 @@ __/\\\\\\\\\\\\\ _____/\\\\\\\\\ _______/\\../\\ ___/\\\\\\\\\\\\\\\
                         return AC_MGR.ACTH_setCosts(
                             "1",
                             "6",
+                            "10000000000000000",
+                            account1,
+                            { from: account1 })
+                    })
+        
+                    .then(() => {
+                        return AC_MGR.ACTH_setCosts(
+                            "1",
+                            "7",
+                            "10000000000000000",
+                            account1,
+                            { from: account1 })
+                    })
+        
+                    .then(() => {
+                        return AC_MGR.ACTH_setCosts(
+                            "1",
+                            "8",
                             "10000000000000000",
                             account1,
                             { from: account1 })
@@ -1329,6 +1385,25 @@ __/\\\\\\\\\\\\\ _____/\\\\\\\\\ _______/\\../\\ ___/\\\\\\\\\\\\\\\
                             account1,
                             { from: account1 })
                     })
+        
+                    .then(() => {
+                        return AC_MGR.ACTH_setCosts(
+                            "2",
+                            "7",
+                            "10000000000000000",
+                            account1,
+                            { from: account1 })
+                    })
+        
+                    .then(() => {
+                        return AC_MGR.ACTH_setCosts(
+                            "2",
+                            "8",
+                            "10000000000000000",
+                            account1,
+                            { from: account1 })
+                    })
+        
                     .then(() => {
                         console.log("Setting base costs in AC 10")
                         return AC_MGR.ACTH_setCosts(
@@ -1385,13 +1460,31 @@ __/\\\\\\\\\\\\\ _____/\\\\\\\\\ _______/\\../\\ ___/\\\\\\\\\\\\\\\
                     })
         
                     .then(() => {
+                        return AC_MGR.ACTH_setCosts(
+                            "10",
+                            "7",
+                            "10000000000000000",
+                            account1,
+                            { from: account1 })
+                    })
+        
+                    .then(() => {
+                        return AC_MGR.ACTH_setCosts(
+                            "10",
+                            "8",
+                            "10000000000000000",
+                            account1,
+                            { from: account1 })
+                    })
+        
+                    .then(() => {
                         console.log("Setting base costs in AC 11")
                         return AC_MGR.ACTH_setCosts(
                             "11",
                             "1",
                             "10000000000000000",
                             account1,
-                            { from: account1 })
+                            { from: account2 })
                     })
         
                     .then(() => {
@@ -1400,7 +1493,7 @@ __/\\\\\\\\\\\\\ _____/\\\\\\\\\ _______/\\../\\ ___/\\\\\\\\\\\\\\\
                             "2",
                             "10000000000000000",
                             account1,
-                            { from: account1 })
+                            { from: account2 })
                     })
         
                     .then(() => {
@@ -1409,7 +1502,7 @@ __/\\\\\\\\\\\\\ _____/\\\\\\\\\ _______/\\../\\ ___/\\\\\\\\\\\\\\\
                             "3",
                             "10000000000000000",
                             account1,
-                            { from: account1 })
+                            { from: account2 })
                     })
         
                     .then(() => {
@@ -1418,7 +1511,7 @@ __/\\\\\\\\\\\\\ _____/\\\\\\\\\ _______/\\../\\ ___/\\\\\\\\\\\\\\\
                             "4",
                             "10000000000000000",
                             account1,
-                            { from: account1 })
+                            { from: account2 })
                     })
         
                     .then(() => {
@@ -1427,7 +1520,7 @@ __/\\\\\\\\\\\\\ _____/\\\\\\\\\ _______/\\../\\ ___/\\\\\\\\\\\\\\\
                             "5",
                             "10000000000000000",
                             account1,
-                            { from: account1 })
+                            { from: account2 })
                     })
         
                     .then(() => {
@@ -1436,7 +1529,25 @@ __/\\\\\\\\\\\\\ _____/\\\\\\\\\ _______/\\../\\ ___/\\\\\\\\\\\\\\\
                             "6",
                             "10000000000000000",
                             account1,
-                            { from: account1 })
+                            { from: account2 })
+                    })
+        
+                    .then(() => {
+                        return AC_MGR.ACTH_setCosts(
+                            "11",
+                            "7",
+                            "10000000000000000",
+                            account1,
+                            { from: account2 })
+                    })
+        
+                    .then(() => {
+                        return AC_MGR.ACTH_setCosts(
+                            "11",
+                            "8",
+                            "10000000000000000",
+                            account1,
+                            { from: account2 })
                     })
         
                     .then(() => {
@@ -1489,6 +1600,24 @@ __/\\\\\\\\\\\\\ _____/\\\\\\\\\ _______/\\../\\ ___/\\\\\\\\\\\\\\\
                         return AC_MGR.ACTH_setCosts(
                             "12",
                             "6",
+                            "10000000000000000",
+                            account1,
+                            { from: account1 })
+                    })
+        
+                    .then(() => {
+                        return AC_MGR.ACTH_setCosts(
+                            "12",
+                            "7",
+                            "10000000000000000",
+                            account1,
+                            { from: account1 })
+                    })
+        
+                    .then(() => {
+                        return AC_MGR.ACTH_setCosts(
+                            "12",
+                            "8",
                             "10000000000000000",
                             account1,
                             { from: account1 })
@@ -1550,13 +1679,31 @@ __/\\\\\\\\\\\\\ _____/\\\\\\\\\ _______/\\../\\ ___/\\\\\\\\\\\\\\\
                     })
         
                     .then(() => {
+                        return AC_MGR.ACTH_setCosts(
+                            "13",
+                            "7",
+                            "10000000000000000",
+                            account1,
+                            { from: account1 })
+                    })
+        
+                    .then(() => {
+                        return AC_MGR.ACTH_setCosts(
+                            "13",
+                            "8",
+                            "10000000000000000",
+                            account1,
+                            { from: account1 })
+                    })
+        
+                    .then(() => {
                         console.log("Setting base costs in AC 14")
                         return AC_MGR.ACTH_setCosts(
                             "14",
                             "1",
                             "10000000000000000",
                             account1,
-                            { from: account1 })
+                            { from: account2 })
                     })
         
                     .then(() => {
@@ -1565,7 +1712,7 @@ __/\\\\\\\\\\\\\ _____/\\\\\\\\\ _______/\\../\\ ___/\\\\\\\\\\\\\\\
                             "2",
                             "10000000000000000",
                             account1,
-                            { from: account1 })
+                            { from: account2 })
                     })
         
                     .then(() => {
@@ -1574,7 +1721,7 @@ __/\\\\\\\\\\\\\ _____/\\\\\\\\\ _______/\\../\\ ___/\\\\\\\\\\\\\\\
                             "3",
                             "10000000000000000",
                             account1,
-                            { from: account1 })
+                            { from: account2 })
                     })
         
                     .then(() => {
@@ -1583,7 +1730,7 @@ __/\\\\\\\\\\\\\ _____/\\\\\\\\\ _______/\\../\\ ___/\\\\\\\\\\\\\\\
                             "4",
                             "10000000000000000",
                             account1,
-                            { from: account1 })
+                            { from: account2 })
                     })
         
                     .then(() => {
@@ -1592,7 +1739,7 @@ __/\\\\\\\\\\\\\ _____/\\\\\\\\\ _______/\\../\\ ___/\\\\\\\\\\\\\\\
                             "5",
                             "10000000000000000",
                             account1,
-                            { from: account1 })
+                            { from: account2 })
                     })
         
                     .then(() => {
@@ -1601,7 +1748,25 @@ __/\\\\\\\\\\\\\ _____/\\\\\\\\\ _______/\\../\\ ___/\\\\\\\\\\\\\\\
                             "6",
                             "10000000000000000",
                             account1,
-                            { from: account1 })
+                            { from: account2 })
+                    })
+        
+                    .then(() => {
+                        return AC_MGR.ACTH_setCosts(
+                            "14",
+                            "7",
+                            "10000000000000000",
+                            account1,
+                            { from: account2 })
+                    })
+        
+                    .then(() => {
+                        return AC_MGR.ACTH_setCosts(
+                            "14",
+                            "8",
+                            "10000000000000000",
+                            account1,
+                            { from: account2 })
                     })
         
                     .then(() => {
@@ -1611,7 +1776,7 @@ __/\\\\\\\\\\\\\ _____/\\\\\\\\\ _______/\\../\\ ___/\\\\\\\\\\\\\\\
                             "1",
                             "10000000000000000",
                             account1,
-                            { from: account10 })
+                            { from: account2 })
                     })
         
                     .then(() => {
@@ -1620,7 +1785,7 @@ __/\\\\\\\\\\\\\ _____/\\\\\\\\\ _______/\\../\\ ___/\\\\\\\\\\\\\\\
                             "2",
                             "10000000000000000",
                             account1,
-                            { from: account10 })
+                            { from: account2 })
                     })
         
                     .then(() => {
@@ -1629,7 +1794,7 @@ __/\\\\\\\\\\\\\ _____/\\\\\\\\\ _______/\\../\\ ___/\\\\\\\\\\\\\\\
                             "3",
                             "10000000000000000",
                             account1,
-                            { from: account10 })
+                            { from: account2 })
                     })
         
                     .then(() => {
@@ -1638,7 +1803,7 @@ __/\\\\\\\\\\\\\ _____/\\\\\\\\\ _______/\\../\\ ___/\\\\\\\\\\\\\\\
                             "4",
                             "10000000000000000",
                             account1,
-                            { from: account10 })
+                            { from: account2 })
                     })
         
                     .then(() => {
@@ -1647,7 +1812,7 @@ __/\\\\\\\\\\\\\ _____/\\\\\\\\\ _______/\\../\\ ___/\\\\\\\\\\\\\\\
                             "5",
                             "10000000000000000",
                             account1,
-                            { from: account10 })
+                            { from: account2 })
                     })
         
                     .then(() => {
@@ -1656,7 +1821,25 @@ __/\\\\\\\\\\\\\ _____/\\\\\\\\\ _______/\\../\\ ___/\\\\\\\\\\\\\\\
                             "6",
                             "10000000000000000",
                             account1,
-                            { from: account10 })
+                            { from: account2 })
+                    })
+        
+                    .then(() => {
+                        return AC_MGR.ACTH_setCosts(
+                            "15",
+                            "7",
+                            "10000000000000000",
+                            account1,
+                            { from: account2 })
+                    })
+        
+                    .then(() => {
+                        return AC_MGR.ACTH_setCosts(
+                            "15",
+                            "8",
+                            "10000000000000000",
+                            account1,
+                            { from: account2 })
                     })
             })
         
@@ -1668,13 +1851,18 @@ __/\\\\\\\\\\\\\ _____/\\\\\\\\\ _______/\\../\\ ___/\\\\\\\\\\\\\\\
                 return AC_MGR.addUser(account2Hash, '1', '10', { from: account1 })
         
                     .then(() => {
+                        console.log("Account1 => AC10")
+                        return AC_MGR.addUser(account1Hash, '1', '10', { from: account1 })
+                    })
+        
+                    .then(() => {
                         console.log("Account2 => AC11")
-                        return AC_MGR.addUser(account2Hash, '1', '11', { from: account1 })
+                        return AC_MGR.addUser(account2Hash, '1', '11', { from: account2 })
                     })
         
                     .then(() => {
                         console.log("Account3 => AC11")
-                        return AC_MGR.addUser(account3Hash, '1', '11', { from: account1 })
+                        return AC_MGR.addUser(account3Hash, '1', '11', { from: account2 })
                     })
         
                     .then(() => {
@@ -1688,9 +1876,14 @@ __/\\\\\\\\\\\\\ _____/\\\\\\\\\ _______/\\../\\ ___/\\\\\\\\\\\\\\\
                     })
         
                     .then(() => {
-                        console.log("Account4 => AC12")
-                        return AC_MGR.addUser(account4Hash, '1', '16', { from: account10 })
+                        console.log("Account2 => AC12")
+                        return AC_MGR.addUser(account2Hash, '1', '12', { from: account1 })
                     })
+        
+                    // .then(() => {
+                    //     console.log("Account4 => AC16")
+                    //     return AC_MGR.addUser(account4Hash, '1', '16', { from: account10 })
+                    // })
         
                     .then(() => {
                         console.log("Account5 => AC13")
@@ -1698,13 +1891,18 @@ __/\\\\\\\\\\\\\ _____/\\\\\\\\\ _______/\\../\\ ___/\\\\\\\\\\\\\\\
                     })
         
                     .then(() => {
+                        console.log("Account2 => AC14")
+                        return AC_MGR.addUser(account2Hash, '1', '14', { from: account2 })
+                    })
+        
+                    .then(() => {
                         console.log("Account6 => AC14")
-                        return AC_MGR.addUser(account6Hash, '1', '14', { from: account1 })
+                        return AC_MGR.addUser(account6Hash, '1', '14', { from: account2 })
                     })
         
                     .then(() => {
                         console.log("Account7 => AC14 (ROBOT)")
-                        return AC_MGR.addUser(account7Hash, '9', '14', { from: account1 })
+                        return AC_MGR.addUser(account7Hash, '9', '14', { from: account2 })
                     })
         
                     .then(() => {
@@ -1714,21 +1912,26 @@ __/\\\\\\\\\\\\\ _____/\\\\\\\\\ _______/\\../\\ ___/\\\\\\\\\\\\\\\
         
                     .then(() => {
                         console.log("Account9 => AC11 (ROBOT)")
-                        return AC_MGR.addUser(account9Hash, '9', '11', { from: account1 })
+                        return AC_MGR.addUser(account9Hash, '9', '11', { from: account2 })
                     })
         
                     .then(() => {
                         console.log("Account10 => AC15 (PIPMINTER)")
-                        return AC_MGR.addUser(account10Hash, '10', '15', { from: account10 })
+                        return AC_MGR.addUser(account10Hash, '10', '15', { from: account2 })
                     })
         
                     .then(() => {
-                        console.log("Account10 => AC15 (PIPMINTER)")
-                        return AC_MGR.addUser(account10Hash, '10', '16', { from: account10 })
+                        console.log("Account2 => AC15")
+                        return AC_MGR.addUser(account2Hash, '1', '15', { from: account2 })
                     })
         
+                    // .then(() => {
+                    //     console.log("Account10 => AC16 (PIPMINTER)")
+                    //     return AC_MGR.addUser(account10Hash, '10', '16', { from: account10 })
+                    // })
+        
                     .then(() => {
-                        console.log("Account10 => AC15 (PIPMINTER)")
+                        console.log("Account10 => AC10 (PIPMINTER)")
                         return AC_MGR.addUser(account10Hash, '1', '10', { from: account1 })
                     })
             })
@@ -1783,7 +1986,7 @@ __/\\\\\\\\\\\\\ _____/\\\\\\\\\ _______/\\../\\ ___/\\\\\\\\\\\\\\\
 
 
     it('Should mint asset1', async () => {
-        return APP_NC.$newRecord(
+        return APP_NC.newRecord(
             asset1,
             rgt1,
             '12',
@@ -1804,7 +2007,7 @@ __/\\\\\\\\\\\\\ _____/\\\\\\\\\ _______/\\../\\ ___/\\\\\\\\\\\\\\\
 
 
     it('Should mint asset2', async () => {
-        return APP_NC.$newRecord(
+        return APP_NC.newRecord(
             asset2,
             rgt2,
             '14',
@@ -1825,7 +2028,7 @@ __/\\\\\\\\\\\\\ _____/\\\\\\\\\ _______/\\../\\ ___/\\\\\\\\\\\\\\\
 
 
     it('Should mint asset3', async () => {
-        return APP_NC.$newRecord(
+        return APP_NC.newRecord(
             asset3,
             rgt3,
             '10',
@@ -1836,7 +2039,7 @@ __/\\\\\\\\\\\\\ _____/\\\\\\\\\ _______/\\../\\ ___/\\\\\\\\\\\\\\\
 
 
     it('Should mint asset4', async () => {
-        return APP_NC.$newRecord(
+        return APP_NC.newRecord(
             asset4,
             rgt4,
             '12',
@@ -1856,7 +2059,7 @@ __/\\\\\\\\\\\\\ _____/\\\\\\\\\ _______/\\../\\ ___/\\\\\\\\\\\\\\\
 
 
     it('Should mint asset5', async () => {
-        return APP_NC.$newRecord(
+        return APP_NC.newRecord(
             asset5,
             rgt5,
             '11',
@@ -1867,7 +2070,7 @@ __/\\\\\\\\\\\\\ _____/\\\\\\\\\ _______/\\../\\ ___/\\\\\\\\\\\\\\\
 
 
     it('Should mint asset6', async () => {
-        return APP_NC.$newRecord(
+        return APP_NC.newRecord(
             asset6,
             rgt6,
             '15',
@@ -1888,7 +2091,7 @@ __/\\\\\\\\\\\\\ _____/\\\\\\\\\ _______/\\../\\ ___/\\\\\\\\\\\\\\\
 
 
     it('Should mint asset7', async () => {
-        return APP_NC.$newRecord(
+        return APP_NC.newRecord(
             asset7,
             rgt7,
             '14',
@@ -2108,7 +2311,7 @@ __/\\\\\\\\\\\\\ _____/\\\\\\\\\ _______/\\../\\ ___/\\\\\\\\\\\\\\\
     })
 
     //17
-    it('Should fail because wallet is not in the same AC', async () => {
+    it('Should fail because wallet is not in the same ROOT', async () => {
         return VERIFY.transfer(
             asset2,
             asset6,
