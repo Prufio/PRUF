@@ -16,6 +16,7 @@ const PRUF_NP = artifacts.require('NP');
 const PRUF_AC_MGR = artifacts.require('AC_MGR');
 const PRUF_AC_TKN = artifacts.require('AC_TKN');
 const PRUF_A_TKN = artifacts.require('A_TKN');
+const PRUF_A_TKN2 = artifacts.require('A_TKN');
 const PRUF_ID_TKN = artifacts.require('ID_TKN');
 const PRUF_ECR_MGR = artifacts.require('ECR_MGR');
 const PRUF_ECR = artifacts.require('ECR');
@@ -28,7 +29,7 @@ const PRUF_PIP = artifacts.require('PIP');
 const PRUF_HELPER = artifacts.require('Helper');
 const PRUF_MAL_APP = artifacts.require('MAL_APP');
 const PRUF_UTIL_TKN = artifacts.require('UTIL_TKN');
-const PRUF_PURCHASE = artifacts.require('PURCHASE');
+const PRUF_DECORATE = artifacts.require('DECORATE');
 
 let STOR;
 let APP;
@@ -36,6 +37,7 @@ let NP;
 let AC_MGR;
 let AC_TKN;
 let A_TKN;
+let A_TKN2;
 let ID_TKN;
 let ECR_MGR;
 let ECR;
@@ -47,7 +49,7 @@ let RCLR;
 let Helper;
 let MAL_APP;
 let UTIL_TKN;
-let PURCHASE;
+let DECORATE;
 
 let string1Hash;
 let string2Hash;
@@ -104,13 +106,17 @@ let nakedAuthCode1;
 let nakedAuthCode3;
 let nakedAuthCode7;
 
+let recordCode1;
+
+let A_TKN2Uint160;
+
 let payableRoleB32;
 let minterRoleB32;
 let trustedAgentRoleB32;
 let assetTransferRoleB32;
 let discardRoleB32;
 
-contract('STOR', accounts => {
+contract('DECORATE', accounts => {
 
     console.log('//**************************BEGIN BOOTSTRAP**************************//')
 
@@ -171,6 +177,14 @@ contract('STOR', accounts => {
         console.log(PRUF_A_TKN_TEST.address);
         assert(PRUF_A_TKN_TEST.address !== '')
         A_TKN = PRUF_A_TKN_TEST;
+    })
+
+
+    it('Should deploy PRUF_A_TKN2', async () => {
+        const PRUF_A_TKN2_TEST = await PRUF_A_TKN2.deployed({ from: account1 });
+        console.log(PRUF_A_TKN2_TEST.address);
+        assert(PRUF_A_TKN2_TEST.address !== '')
+        A_TKN2 = PRUF_A_TKN2_TEST;
     })
 
 
@@ -270,11 +284,11 @@ contract('STOR', accounts => {
     })
 
 
-    it('Should deploy PURCHASE', async () => {
-        const PRUF_PURCHASE_TEST = await PRUF_PURCHASE.deployed({ from: account1 });
-        console.log(PRUF_PURCHASE_TEST.address);
-        assert(PRUF_PURCHASE_TEST.address !== '')
-        PURCHASE = PRUF_PURCHASE_TEST;
+    it('Should deploy DECORATE', async () => {
+        const PRUF_DECORATE_TEST = await PRUF_DECORATE.deployed({ from: account1 });
+        console.log(PRUF_DECORATE_TEST.address);
+        assert(PRUF_DECORATE_TEST.address !== '')
+        DECORATE = PRUF_DECORATE_TEST;
     })
 
 
@@ -582,6 +596,20 @@ contract('STOR', accounts => {
         discardRoleB32 = await Helper.getStringHash(
             'DISCARD_ROLE'
         )
+
+
+        recordCode1 = await Helper.getStringHash(
+            ('1' + A_TKN2.address)
+        )
+
+
+        /* A_TKN2Uint160 =  */await Helper.getAddrUint160(A_TKN2.address).then((e)=>{
+            let str = "";
+            e.words.forEach(e=>{str += String(e)})
+            A_TKN2Uint160 = str;
+            console.log("A_TKN2Uint160", A_TKN2Uint160, "A_TKN2.address", A_TKN2.address)
+        })
+        
     })
 
 
@@ -666,8 +694,8 @@ contract('STOR', accounts => {
             })
 
             .then(() => {
-                console.log("Adding PURCHASE to storage for use in AC 0")
-                return STOR.OO_addContract("PURCHASE", PURCHASE.address, '0', '2', { from: account1 })
+                console.log("Adding DECORATE to storage for use in AC 0")
+                return STOR.OO_addContract("DECORATE", DECORATE.address, '0', '2', { from: account1 })
             })
     })
 
@@ -743,9 +771,14 @@ contract('STOR', accounts => {
             })
 
             .then(() => {
-                console.log("Adding in PURCHASE")
-                return PURCHASE.OO_setStorageContract(STOR.address, { from: account1 })
+                console.log("Adding in DECORATE")
+                return DECORATE.OO_setStorageContract(STOR.address, { from: account1 })
             })
+
+        // .then(() => {
+        //     console.log("Adding in UTIL_TKN")
+        //     return UTIL_TKN.AdminSetStorageContract(STOR.address, { from: account1 })
+        // })
     })
 
 
@@ -819,10 +852,15 @@ contract('STOR', accounts => {
                 return RCLR.OO_resolveContractAddresses({ from: account1 })
             })
 
-        .then(() => {
-            console.log("Resolving in PURCHASE")
-            return PURCHASE.OO_resolveContractAddresses({ from: account1 })
-        })
+            .then(() => {
+                console.log("Resolving in DECORATE")
+                return DECORATE.OO_resolveContractAddresses({ from: account1 })
+            })
+
+        // .then(() => {
+        //     console.log("Resolving in UTIL_TKN")
+        //     return UTIL_TKN.AdminResolveContractAddresses({ from: account1 })
+        // })
     })
 
     it('Should authorize all minter contracts for minting A_TKN(s)', async () => {
@@ -846,13 +884,8 @@ contract('STOR', accounts => {
             })
 
             .then(() => {
-                console.log("Authorizing MAL_APP")
-                return A_TKN.grantRole(minterRoleB32, MAL_APP.address, { from: account1 })
-            })
-
-            .then(() => {
-                console.log("Authorizing PURCHASE as trustedAgent")
-                return A_TKN.grantRole(trustedAgentRoleB32, PURCHASE.address, { from: account1 })
+                console.log("Authorizing PIP")
+                return A_TKN.grantRole(minterRoleB32, DECORATE.address, { from: account1 })
             })
     })
 
@@ -877,11 +910,6 @@ contract('STOR', accounts => {
             })
 
             .then(() => {
-                console.log("Authorizing MAL_APP")
-                return UTIL_TKN.grantRole(payableRoleB32, MAL_APP.address, { from: account1 })
-            })
-
-            .then(() => {
                 console.log("Authorizing NP")
                 return UTIL_TKN.grantRole(payableRoleB32, NP.address, { from: account1 })
             })
@@ -892,8 +920,8 @@ contract('STOR', accounts => {
             })
 
             .then(() => {
-                console.log("Authorizing PURCHASE")
-                return UTIL_TKN.grantRole(payableRoleB32, PURCHASE.address, { from: account1 })
+                console.log("Authorizing DECORATE")
+                return UTIL_TKN.grantRole(payableRoleB32, DECORATE.address, { from: account1 })
             })
     })
 
@@ -905,28 +933,30 @@ contract('STOR', accounts => {
     })
 
 
-    it('Should authorize AC_MGR for minting AC_TKN(s)', async () => {
+    it('Should authorize all minter contracts for minting AC_TKN(s)', async () => {
         console.log("Authorizing AC_MGR")
         return AC_TKN.grantRole(minterRoleB32, AC_MGR.address, { from: account1 })
     })
 
 
-    it('Should authorize NP for transfering A_TKN(s)', async () => {
-        console.log("Authorizing NP")
+    it('Should authorize all minter contracts for minting AC_TKN(s)', async () => {
+        console.log("Authorizing AC_MGR")
         return APP.grantRole(assetTransferRoleB32, NP.address, { from: account1 })
     })
 
 
-    it('Should authorize A_TKN for discarding A_TKN(s)', async () => {
-        console.log("Authorizing A_TKN")
+    it('Should authorize all minter contracts for minting AC_TKN(s)', async () => {
+        console.log("Authorizing AC_MGR")
         return RCLR.grantRole(discardRoleB32, A_TKN.address, { from: account1 })
     })
 
 
-    it('Should authorize PURCHASE as a trustedAgent in UTIL_TKN', async () => {
-        console.log("Authorizing PURCHASE")
-        return UTIL_TKN.grantRole(trustedAgentRoleB32, PURCHASE.address, { from: account1 })
-    })
+
+    // it('Should authorize AC_MGR as trusted agent in AC_TKN', async () => {
+
+    //     console.log("Authorizing AC_MGR")
+    //     return AC_TKN.grantRole(trustedAgentRoleB32, AC_MGR.address, { from: account1 })
+    // })
 
 
     it('Should mint a couple of asset root tokens', async () => {
@@ -965,10 +995,20 @@ contract('STOR', accounts => {
                 console.log("Minting AC 16 -NC")
                 return AC_MGR.createAssetClass(account10, "Non_Custodial_AC5", "16", "1", "2", rgt000, "0", { from: account1 })
             })
+
+            .then(() => {
+                console.log("Minting AC 17 -NC")
+                return AC_MGR.createAssetClass(account1, "Non_Custodial_AC6", "17", "1", "5", rgt000, "0", { from: account1 })
+            })
+
+            .then(() => {
+                console.log("Minting AC 18 -NC")
+                return AC_MGR.createAssetClass(account1, "Non_Custodial_AC7", "18", "1", "5", rgt000, "0", { from: account1 })
+            })
     })
 
 
-    it("Should Mint 2 non-cust AC tokens in AC_ROOT 2", async () => {
+    it("Should Mint 3 non-cust AC tokens in AC_ROOT 2", async () => {
 
         console.log("Minting AC 14 -NC")
         return AC_MGR.createAssetClass(account1, "Non-Custodial_AC3", "14", "2", "2", rgt000, "0", { from: account1 })
@@ -976,6 +1016,11 @@ contract('STOR', accounts => {
             .then(() => {
                 console.log("Minting AC 15 -NC")
                 return AC_MGR.createAssetClass(account10, "Non_Custodial_AC4", "15", "2", "2", rgt000, "0", { from: account1 })
+            })
+
+            .then(() => {
+                console.log("Minting AC 19 -NC")
+                return AC_MGR.createAssetClass(account1, "Non_Custodial_AC8", "19", "2", "5", rgt000, "0", { from: account1 })
             })
     })
 
@@ -1027,10 +1072,6 @@ contract('STOR', accounts => {
 
             .then(() => {
                 return STOR.enableContractForAC('MAL_APP', '11', '1', { from: account1 })
-            })
-
-            .then(() => {
-                return STOR.enableContractForAC('MAL_APP', '12', '1', { from: account1 })
             })
     })
 
@@ -1246,36 +1287,34 @@ contract('STOR', accounts => {
     })
 
 
-    it('Should authorize RCLR in all relevant asset classes', async () => {
+    it('Should authorize DECORATE in all relevant asset classes', async () => {
 
-        console.log("Authorizing RCLR")
-        return STOR.enableContractForAC('RCLR', '10', '3', { from: account1 })
+        console.log("Authorizing DECORATE")
+        return STOR.enableContractForAC('DECORATE', '12', '2', { from: account1 })
 
             .then(() => {
-                return STOR.enableContractForAC('RCLR', '11', '3', { from: account1 })
+                return STOR.enableContractForAC('DECORATE', '13', '2', { from: account1 })
             })
 
             .then(() => {
-                return STOR.enableContractForAC('RCLR', '12', '3', { from: account1 })
+                return STOR.enableContractForAC('DECORATE', '14', '2', { from: account1 })
             })
 
             .then(() => {
-                return STOR.enableContractForAC('RCLR', '13', '3', { from: account1 })
+                return STOR.enableContractForAC('DECORATE', '16', '2', { from: account10 })
             })
 
             .then(() => {
-                return STOR.enableContractForAC('RCLR', '14', '3', { from: account1 })
+                return STOR.enableContractForAC('DECORATE', '17', '2', { from: account1 })
             })
 
             .then(() => {
-                return STOR.enableContractForAC('RCLR', '16', '3', { from: account10 })
+                return STOR.enableContractForAC('DECORATE', '18', '2', { from: account1 })
             })
-    })
 
-
-    it('Should authorize PURCHASE in all relevant asset classes', async () => {
-        console.log("Authorizing PURCHASE")
-        return STOR.enableContractForAC('PURCHASE', '12', '2', { from: account1 })
+            .then(() => {
+                return STOR.enableContractForAC('DECORATE', '19', '2', { from: account1 })
+            })
     })
 
 
@@ -1864,6 +1903,298 @@ contract('STOR', accounts => {
                     account1,
                     { from: account10 })
             })
+
+            .then(() => {
+                console.log("Setting base costs in AC 16")
+                return AC_MGR.ACTH_setCosts(
+                    "16",
+                    "1",
+                    "10000000000000000",
+                    account1,
+                    { from: account10 })
+            })
+
+            .then(() => {
+                return AC_MGR.ACTH_setCosts(
+                    "16",
+                    "2",
+                    "10000000000000000",
+                    account1,
+                    { from: account10 })
+            })
+
+            .then(() => {
+                return AC_MGR.ACTH_setCosts(
+                    "16",
+                    "3",
+                    "10000000000000000",
+                    account1,
+                    { from: account10 })
+            })
+
+            .then(() => {
+                return AC_MGR.ACTH_setCosts(
+                    "16",
+                    "4",
+                    "10000000000000000",
+                    account1,
+                    { from: account10 })
+            })
+
+            .then(() => {
+                return AC_MGR.ACTH_setCosts(
+                    "16",
+                    "5",
+                    "10000000000000000",
+                    account1,
+                    { from: account10 })
+            })
+
+            .then(() => {
+                return AC_MGR.ACTH_setCosts(
+                    "16",
+                    "6",
+                    "10000000000000000",
+                    account1,
+                    { from: account10 })
+            })
+
+            .then(() => {
+                return AC_MGR.ACTH_setCosts(
+                    "16",
+                    "7",
+                    "10000000000000000",
+                    account1,
+                    { from: account10 })
+            })
+
+            .then(() => {
+                return AC_MGR.ACTH_setCosts(
+                    "16",
+                    "8",
+                    "10000000000000000",
+                    account1,
+                    { from: account10 })
+            })
+
+            .then(() => {
+                console.log("Setting base costs in AC 17")
+                return AC_MGR.ACTH_setCosts(
+                    "17",
+                    "1",
+                    "10000000000000000",
+                    account1,
+                    { from: account1 })
+            })
+
+            .then(() => {
+                return AC_MGR.ACTH_setCosts(
+                    "17",
+                    "2",
+                    "10000000000000000",
+                    account1,
+                    { from: account1 })
+            })
+
+            .then(() => {
+                return AC_MGR.ACTH_setCosts(
+                    "17",
+                    "3",
+                    "10000000000000000",
+                    account1,
+                    { from: account1 })
+            })
+
+            .then(() => {
+                return AC_MGR.ACTH_setCosts(
+                    "17",
+                    "4",
+                    "10000000000000000",
+                    account1,
+                    { from: account1 })
+            })
+
+            .then(() => {
+                return AC_MGR.ACTH_setCosts(
+                    "17",
+                    "5",
+                    "10000000000000000",
+                    account1,
+                    { from: account1 })
+            })
+
+            .then(() => {
+                return AC_MGR.ACTH_setCosts(
+                    "17",
+                    "6",
+                    "10000000000000000",
+                    account1,
+                    { from: account1 })
+            })
+
+            .then(() => {
+                return AC_MGR.ACTH_setCosts(
+                    "17",
+                    "7",
+                    "10000000000000000",
+                    account1,
+                    { from: account1 })
+            })
+
+            .then(() => {
+                return AC_MGR.ACTH_setCosts(
+                    "17",
+                    "8",
+                    "10000000000000000",
+                    account1,
+                    { from: account1 })
+            })
+
+            .then(() => {
+                console.log("Setting base costs in AC 18")
+                return AC_MGR.ACTH_setCosts(
+                    "18",
+                    "1",
+                    "10000000000000000",
+                    account1,
+                    { from: account1 })
+            })
+
+            .then(() => {
+                return AC_MGR.ACTH_setCosts(
+                    "18",
+                    "2",
+                    "10000000000000000",
+                    account1,
+                    { from: account1 })
+            })
+
+            .then(() => {
+                return AC_MGR.ACTH_setCosts(
+                    "18",
+                    "3",
+                    "10000000000000000",
+                    account1,
+                    { from: account1 })
+            })
+
+            .then(() => {
+                return AC_MGR.ACTH_setCosts(
+                    "18",
+                    "4",
+                    "10000000000000000",
+                    account1,
+                    { from: account1 })
+            })
+
+            .then(() => {
+                return AC_MGR.ACTH_setCosts(
+                    "18",
+                    "5",
+                    "10000000000000000",
+                    account1,
+                    { from: account1 })
+            })
+
+            .then(() => {
+                return AC_MGR.ACTH_setCosts(
+                    "18",
+                    "6",
+                    "10000000000000000",
+                    account1,
+                    { from: account1 })
+            })
+
+            .then(() => {
+                return AC_MGR.ACTH_setCosts(
+                    "18",
+                    "7",
+                    "10000000000000000",
+                    account1,
+                    { from: account1 })
+            })
+
+            .then(() => {
+                return AC_MGR.ACTH_setCosts(
+                    "18",
+                    "8",
+                    "10000000000000000",
+                    account1,
+                    { from: account1 })
+            })
+
+            .then(() => {
+                console.log("Setting base costs in AC 19")
+                return AC_MGR.ACTH_setCosts(
+                    "19",
+                    "1",
+                    "10000000000000000",
+                    account1,
+                    { from: account1 })
+            })
+
+            .then(() => {
+                return AC_MGR.ACTH_setCosts(
+                    "19",
+                    "2",
+                    "10000000000000000",
+                    account1,
+                    { from: account1 })
+            })
+
+            .then(() => {
+                return AC_MGR.ACTH_setCosts(
+                    "19",
+                    "3",
+                    "10000000000000000",
+                    account1,
+                    { from: account1 })
+            })
+
+            .then(() => {
+                return AC_MGR.ACTH_setCosts(
+                    "19",
+                    "4",
+                    "10000000000000000",
+                    account1,
+                    { from: account1 })
+            })
+
+            .then(() => {
+                return AC_MGR.ACTH_setCosts(
+                    "19",
+                    "5",
+                    "10000000000000000",
+                    account1,
+                    { from: account1 })
+            })
+
+            .then(() => {
+                return AC_MGR.ACTH_setCosts(
+                    "19",
+                    "6",
+                    "10000000000000000",
+                    account1,
+                    { from: account1 })
+            })
+
+            .then(() => {
+                return AC_MGR.ACTH_setCosts(
+                    "19",
+                    "7",
+                    "10000000000000000",
+                    account1,
+                    { from: account1 })
+            })
+
+            .then(() => {
+                return AC_MGR.ACTH_setCosts(
+                    "19",
+                    "8",
+                    "10000000000000000",
+                    account1,
+                    { from: account1 })
+            })
     })
 
 
@@ -1940,31 +2271,16 @@ contract('STOR', accounts => {
     })
 
 
-    it('Should set SharesAddress', async () => {
 
-        console.log("//**************************************************BEGIN PURCHASE TEST***************************************************//")
-        console.log("//**************************************************BEGIN PURCHASE SETUP***************************************************//")
-        return UTIL_TKN.AdminSetSharesAddress(
+
+    it('Should mint 30000 tokens to account1', async () => {
+
+        console.log("//**************************************BEGIN DECORATE TEST**********************************************/")
+        console.log("//**************************************BEGIN DECORATE TEST SETUP**********************************************/")
+        return UTIL_TKN.mint(
             account1,
+            '30000000000000000000000',
             { from: account1 }
-        )
-    })
-
-
-    it('Should mint ID_TKN(1) to account2', async () => {
-        return ID_TKN.mintPRUF_IDToken(
-            account2,
-            '1',
-            { from: account1}
-        )
-    })
-
-
-    it('Should mint ID_TKN(2) to account3', async () => {
-        return ID_TKN.mintPRUF_IDToken(
-            account3,
-            '2',
-            { from: account1}
         )
     })
 
@@ -1978,219 +2294,483 @@ contract('STOR', accounts => {
     })
 
 
-    it('Should mint 30000 tokens to account4', async () => {
-        return UTIL_TKN.mint(
-            account3,
-            '30000000000000000000000',
+    it('Should mint ID_TKN(1) to account1', async () => {
+        return ID_TKN.mintPRUF_IDToken(
+            account1,
+            '1',
             { from: account1 }
         )
     })
 
 
-    it('Should mint asset1 in AC 12', async () => {
-        return APP_NC.newRecord(
-            asset1,
+    it('Should mint external 721 1', async () => {
+        return A_TKN2.mintAssetToken(
+            account1,
+            "1",
+            "1",
+            { from: account1 }
+        )
+    })
+
+    it('Should mint external 721 2', async () => {
+        return A_TKN2.mintAssetToken(
+            account2,
+            "2",
+            "2",
+            { from: account1 }
+        )
+    })
+
+    it('Should mint external 721 3', async () => {
+        return A_TKN2.mintAssetToken(
+            account1,
+            "3",
+            "3",
+            { from: account1 }
+        )
+    })
+
+    it('Should decorate asset3', async () => {
+        return DECORATE.decorate721(
+            "3",
+            A_TKN2.address,
             rgt1,
-            '12',
-            '5000',
-            { from: account2 }
+            "17",
+            "5000",
+            { from: account1 }
         )
     })
-
-
-    it('Should mint asset2 in AC 12', async () => {
-        return APP_NC.newRecord(
-            asset2,
-            rgt2,
-            '12',
-            '5000',
-            { from: account2 }
-        )
-    })
-
-
-    it('Should modify asset2 to status 52 (non-transferable)', async () => {
-        return NP_NC._modStatus(
-            asset2,
-            "52",
-            { from: account2 }
-        )
-    })
-
-
-    it('Should mint asset3 in AC 12', async () => {
-        return APP_NC.newRecord(
-            asset3,
-            rgt3,
-            '12',
-            '5000',
-            { from: account2 }
-        )
-    })
-
 
     it('Should export asset3', async () => {
-        return NP_NC._exportNC(
-            asset3,
-            { from: account2 }
+        return DECORATE._export(
+            "3",
+            A_TKN2.address,
+            { from: account1 }
         )
     })
 
-
-    it('Should mint asset4 in AC 10', async () => {
-        return APP.newRecord(
-            asset4,
-            rgt4,
-            '10',
-            '5000',
-            { from: account2 }
+    it('Should update extended data of AC18 to 5', async () => {
+        return AC_MGR.updateACextendedData(
+            "5",
+            "18",
+            { from: account1 }
         )
     })
 
+    it('Should update extended data of AC17 to A_TKN2Uint160', async () => {
+        return AC_MGR.updateACextendedData(
+            A_TKN2Uint160,
+            "17",
+            { from: account1 }
+        )
+    })
 
-    it('Should mint asset5 in AC 12', async () => {
+    it("Should retrieve extended data of AC17", async () => {
+        var data = [];
+
+        return await AC_MGR.getAC_data("17", { from: account1 }, function (_err, _result) {
+            if (_err) { }
+            else {
+                data = Object.values(_result)
+                console.log(data)
+            }
+        })
+    })
+
+
+    it('Should write recordCode1 in AC12', async () => {
         return APP_NC.newRecord(
-            asset5,
-            rgt5,
+            recordCode1,
+            rgt1,
             '12',
-            '5000',
-            { from: account2 }
-        )
-    })
-
-
-    it('Should put asset5 into escrow', async () => {
-        return ECR_NC.setEscrow(
-            asset5,
-            account2Hash,
-            '5000',
-            '56',
-            { from: account2 }
-        )
-    })
-
-
-    it('Should mint asset6 in AC 12', async () => {
-        return APP_NC.newRecord(
-            asset6,
-            rgt6,
-            '12',
-            '5000',
-            { from: account3 }
-        )
-    })
-
-
-    it('Should mint asset7 in AC 12', async () => {
-        return APP_NC.newRecord(
-            asset7,
-            rgt7,
-            '12',
-            '5000',
-            { from: account2 }
-        )
-    })
-
-    it('Should set price on asset7', async () => {
-        return PURCHASE._setPrice(
-            asset7,
-            "1000",
-            "2",
-            "0",
-            { from: account2 }
+            '100',
+            { from: account1 }
         )
     })
 
     //1
-    it('Should fail because asset not in status 51 (transferable)', async () => {
+    it('Should fail because caller is not token holder', async () => {
 
-        console.log("//**************************************************END PURCHASE SETUP***************************************************//")
-        console.log("//**************************************************BEGIN PURCHASE FAIL BATCH (7)***************************************************//")
-        console.log("//**************************************************BEGIN purchaseWithPRUF FAIL BATCH***************************************************//")
-        return PURCHASE.purchaseWithPRUF(
-            asset2,
+        console.log("//**************************************END DECORATE TEST SETUP**********************************************/")
+        console.log("//**************************************BEGIN DECORATE FAIL BATCH (34)**********************************************/")
+        console.log("//**************************************BEGIN decorate721 FAIL BATCH**********************************************/")
+        return DECORATE.decorate721(
+            "1",
+            A_TKN2.address,
+            rgt1,
+            "17",
+            "5000",
             { from: account2 }
         )
     })
 
     //2
-    it('Should fail because asset is exported', async () => {
-        console.log("//**************************************************END purchaseWithPRUF FAIL BATCH***************************************************//")
-        console.log("//**************************************************BEGIN _setPrice FAIL BATCH***************************************************//")
-        return PURCHASE._setPrice(
-            asset3,
-            "1000",
-            "2",
-            "0",
-            { from: account2 }
+    it('Should fail because AC is not custodyType 5', async () => {
+        return DECORATE.decorate721(
+            "1",
+            A_TKN2.address,
+            rgt1,
+            "12",
+            "5000",
+            { from: account1 }
         )
     })
 
     //3
-    // it('Should fail because asset is in status < 50', async () => {
-    //     return PURCHASE._setPrice(
-    //         asset4,
-    //         "1000",
-    //         "2",
-    //         "0",
-    //         { from: account2 }
-    //     )
-    // })
+    it('Should fail because AC extended data is not 0 || A_TKN2.address', async () => {
+        return DECORATE.decorate721(
+            "1",
+            A_TKN2.address,
+            rgt1,
+            "18",
+            "5000",
+            { from: account1 }
+        )
+    })
 
     //4
-    it('Should fail because asset is in escrow', async () => {
-        return PURCHASE._setPrice(
-            asset5,
-            "1000",
+    it('Should fail because record already exists', async () => {
+        return DECORATE.decorate721(
+            "1",
+            A_TKN2.address,
+            rgt1,
+            "17",
+            "5000",
+            { from: account1 }
+        )
+    })
+
+
+    it('Should decorate asset2', async () => {
+        return DECORATE.decorate721(
             "2",
-            "0",
+            A_TKN2.address,
+            rgt1,
+            "17",
+            "5000",
             { from: account2 }
         )
     })
-    
+
     //5
-    it('Should fail because currency !== 2', async () => {
-        return PURCHASE._setPrice(
-            asset1,
-            "1000",
-            "1",
-            "0",
+    it('Should fail because caller is not token holder', async () => {
+
+        console.log("//**************************************END decorate721 FAIL BATCH**********************************************/")
+        console.log("//**************************************BEGIN _modStatus BATCH**********************************************/")
+        return DECORATE._modStatus(
+            A_TKN2.address,
+            rgt1,
+            "52",
             { from: account2 }
         )
     })
 
     //6
-    it('Should fail because caller does not hold token', async () => {
-        console.log("//**************************************************END _setPrice FAIL BATCH***************************************************//")
-        console.log("//**************************************************BEGIN _clearPrice FAIL BATCH***************************************************//")
-        return PURCHASE._clearPrice(
-            asset6,
-            { from: account2 }
+    it('Should fail because record AC cust type !== 5', async () => {
+        return DECORATE._modStatus(
+            "1",
+            A_TKN2.address,
+            "52",
+            { from: account1 }
         )
     })
-    
+
     //7
-    it('Should fail because asset is exported', async () => {
-        return PURCHASE._clearPrice(
-            asset3,
+    it('Should fail because newAssetStatus = 7 (stat rsvrd)', async () => {
+        return DECORATE._modStatus(
+            "2",
+            A_TKN2.address,
+            "7",
             { from: account2 }
         )
     })
-    
+
     //8
-    it('Should fail because asset is in escrow', async () => {
-        return PURCHASE._clearPrice(
-            asset5,
+    it('Should fail because newAssetStatus = 57 (stat rsvrd)', async () => {
+        return DECORATE._modStatus(
+            "2",
+            A_TKN2.address,
+            "57",
             { from: account2 }
+        )
+    })
+
+    //9
+    it('Should fail because newAssetStatus = 58 (stat rsvrd)', async () => {
+        return DECORATE._modStatus(
+            "2",
+            A_TKN2.address,
+            "58",
+            { from: account2 }
+        )
+    })
+
+    //10
+    it('Should fail because newAssetStatus => 100 (stat rsvrd)', async () => {
+        return DECORATE._modStatus(
+            "2",
+            A_TKN2.address,
+            "100",
+            { from: account2 }
+        )
+    })
+
+    //11
+    it('Should fail because newAssetStatus = exported', async () => {
+        return DECORATE._modStatus(
+            "2",
+            A_TKN2.address,
+            "70",
+            { from: account2 }
+        )
+    })
+
+    //12
+    it('Should fail because assetStatus = exported', async () => {
+        return DECORATE._modStatus(
+            "3",
+            A_TKN2.address,
+            "70",
+            { from: account1 }
+        )
+    })
+
+    //13
+    it('Should fail because caller is not token holder', async () => {
+
+        console.log("//**************************************END _modStatus FAIL BATCH**********************************************/")
+        console.log("//**************************************BEGIN _setPrice BATCH**********************************************/")
+        return DECORATE._setPrice(
+            "1",
+            A_TKN2.address,
+            "500000000000000000000",
+            "2",
+            { from: account2 }
+        )
+    })
+    //14
+    it('Should fail because record AC cust type !== 5', async () => {
+        return DECORATE._setPrice(
+            "1",
+            A_TKN2.address,
+            "500000000000000000000",
+            "2",
+            { from: account1 }
+        )
+    })
+
+    //15
+    it('Should fail because assetStatus = exported', async () => {
+        return DECORATE._setPrice(
+            "3",
+            A_TKN2.address,
+            "500000000000000000000",
+            "2",
+            { from: account1 }
+        )
+    })
+
+    //16
+    it('Should fail because caller is not token holder', async () => {
+
+        console.log("//**************************************END _setPrice FAIL BATCH**********************************************/")
+        console.log("//**************************************BEGIN _clearPrice BATCH**********************************************/")
+        return DECORATE._clearPrice(
+            "1",
+            A_TKN2.address,
+            { from: account2 }
+        )
+    })
+    //17
+    it('Should fail because record AC cust type !== 5', async () => {
+        return DECORATE._clearPrice(
+            "1",
+            A_TKN2.address,
+            { from: account1 }
+        )
+    })
+
+    //18
+    it('Should fail because assetStatus = exported', async () => {
+        return DECORATE._clearPrice(
+            "3",
+            A_TKN2.address,
+            { from: account1 }
+        )
+    })
+
+    //19
+    it('Should fail because caller is not token holder', async () => {
+
+        console.log("//**************************************END _setPrice FAIL BATCH**********************************************/")
+        console.log("//**************************************BEGIN _decCounter BATCH**********************************************/")
+        return DECORATE._decCounter(
+            "1",
+            A_TKN2.address,
+            "100",
+            { from: account2 }
+        )
+    })
+    //20
+    it('Should fail because record AC cust type !== 5', async () => {
+        return DECORATE._decCounter(
+            "1",
+            A_TKN2.address,
+            "100",
+            { from: account1 }
+        )
+    })
+
+    //21
+    it('Should fail because assetStatus = exported', async () => {
+        return DECORATE._decCounter(
+            "3",
+            A_TKN2.address,
+            "100",
+            { from: account1 }
+        )
+    })
+
+    //22
+    it('Should fail because caller is not token holder', async () => {
+
+        console.log("//**************************************END _decCounter FAIL BATCH**********************************************/")
+        console.log("//**************************************BEGIN _modIpfs1 BATCH**********************************************/")
+        return DECORATE._modIpfs1(
+            "1",
+            A_TKN2.address,
+            rgt1,
+            { from: account2 }
+        )
+    })
+    //23
+    it('Should fail because record AC cust type !== 5', async () => {
+        return DECORATE._modIpfs1(
+            "1",
+            A_TKN2.address,
+            rgt1,
+            { from: account1 }
+        )
+    })
+
+    //24
+    it('Should fail because assetStatus = exported', async () => {
+        return DECORATE._modIpfs1(
+            "3",
+            A_TKN2.address,
+            rgt1,
+            { from: account1 }
+        )
+    })
+
+    //25
+    it('Should fail because caller is not token holder', async () => {
+
+        console.log("//**************************************END _modIpfs1 FAIL BATCH**********************************************/")
+        console.log("//**************************************BEGIN addIpfs2Note BATCH**********************************************/")
+        return DECORATE.addIpfs2Note(
+            "1",
+            A_TKN2.address,
+            rgt1,
+            { from: account2 }
+        )
+    })
+    //26
+    it('Should fail because record AC cust type !== 5', async () => {
+        return DECORATE.addIpfs2Note(
+            "1",
+            A_TKN2.address,
+            rgt1,
+            { from: account1 }
+        )
+    })
+
+    //27
+    it('Should fail because assetStatus = exported', async () => {
+        return DECORATE.addIpfs2Note(
+            "3",
+            A_TKN2.address,
+            rgt1,
+            { from: account1 }
+        )
+    })
+
+    //28
+    it('Should fail because caller is not token holder', async () => {
+
+        console.log("//**************************************END addIpfs2Note FAIL BATCH**********************************************/")
+        console.log("//**************************************BEGIN _export BATCH**********************************************/")
+        return DECORATE._export(
+            "1",
+            A_TKN2.address,
+            { from: account2 }
+        )
+    })
+    //29
+    it('Should fail because record AC cust type !== 5', async () => {
+        return DECORATE._export(
+            "1",
+            A_TKN2.address,
+            { from: account1 }
+        )
+    })
+
+    //30
+    it('Should fail because assetStatus !=51', async () => {
+        return DECORATE._export(
+            "3",
+            A_TKN2.address,
+            { from: account1 }
+        )
+    })
+
+    //31
+    it('Should fail because caller is not token holder', async () => {
+
+        console.log("//**************************************END exportWrapper FAIL BATCH**********************************************/")
+        console.log("//**************************************BEGIN _import BATCH**********************************************/")
+        return DECORATE._import(
+            "3",
+            A_TKN2.address,
+            "17",
+            { from: account2 }
+        )
+    })
+    //32
+    it('Should fail because record AC cust type !== 5', async () => {
+        return DECORATE._import(
+            "3",
+            A_TKN2.address,
+            "12",
+            { from: account1 }
+        )
+    })
+
+    //33
+    it('Should fail because asset not exported', async () => {
+        return DECORATE._import(
+            "2",
+            A_TKN2.address,
+            "17",
+            { from: account2 }
+        )
+    })
+
+    //34
+    it('Should fail because asset cannot be imported into new root', async () => {
+        return DECORATE._import(
+            "3",
+            A_TKN2.address,
+            "19",
+            { from: account1 }
         )
     })
 
 
     it('Should write record in AC 10 @ IDX&RGT(1)', async () => {
-
-        console.log("//**************************************************END _clearPrice FAIL BATCH***************************************************//")
-        console.log("//**************************************************END PURCHASE FAIL BATCH***************************************************//")
-        console.log("//**************************************************END PURCHASE TEST***************************************************//")
+        console.log("//**************************************END unpause FAIL BATCH**********************************************/")
+        console.log("//**************************************END DECORATE FAIL BATCH**********************************************/")
+        console.log("//**************************************END DECORATE TEST**********************************************/")
         console.log("//**************************************BEGIN THE WORKS**********************************************/")
         return APP.newRecord(
             asset12,
@@ -2459,4 +3039,17 @@ contract('STOR', accounts => {
             { from: account2 }
         )
     })
-})
+
+    it("Should retrieve asset12", async () => {
+        var Record = [];
+
+        return await STOR.retrieveShortRecord(asset12, { from: account2 }, function (_err, _result) {
+            if (_err) { }
+            else {
+                Record = Object.values(_result)
+                console.log(Record)
+            }
+        })
+    })
+
+});

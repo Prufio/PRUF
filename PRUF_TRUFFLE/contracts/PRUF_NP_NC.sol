@@ -110,8 +110,11 @@ contract NP_NC is CORE {
     {
         Record memory rec = getRecord(_idxHash);
 
+        require( //IMPOSSIBLE WITH CURRENT CONTRACTS CTS:PREFERRED
+            (_newAssetStatus > 49) && (rec.assetStatus > 49),
+            "NPNC:SLS: Only custodial usertype can set or change status < 50"
+        );
         require(
-            (_newAssetStatus != 7) &&
             (_newAssetStatus != 57) &&
             (_newAssetStatus != 58) &&
             (_newAssetStatus < 100),
@@ -120,10 +123,6 @@ contract NP_NC is CORE {
         require( //STATE UNREACHABLE: CANNOT MEET STATUS IN NC CONTRACTS CTS:PREFERRED
             needsImport(_newAssetStatus) == 0,
             "NPNC:MS: Cannot place asset in unregistered, exported, or discarded status using modStatus"
-        );
-        require( //IMPOSSIBLE WITH CURRENT CONTRACTS CTS:PREFERRED
-            (_newAssetStatus > 49) && (rec.assetStatus > 49),
-            "NPNC:SLS: Only custodial usertype can set or change status < 50"
         );
         require(//STATE UNREACHABLE: CANNOT MEET STATUS IN NC CONTRACTS
             needsImport(rec.assetStatus) == 0,
