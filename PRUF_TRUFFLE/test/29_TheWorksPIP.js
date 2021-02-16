@@ -858,12 +858,22 @@ __/\\\\\\\\\\\\\ _____/\\\\\\\\\ _______/\\../\\ ___/\\\\\\\\\\\\\\\
         
                     .then(() => {
                         console.log("Authorizing PIP")
-                        return UTIL_TKN.grantRole(payableRoleB32, RCLR.address, { from: account1 })
+                        return UTIL_TKN.grantRole(payableRoleB32, PIP.address, { from: account1 })
                     })
         
                     .then(() => {
                         console.log("Authorizing AC_MGR")
                 return UTIL_TKN.grantRole(trustedAgentRoleB32, AC_MGR.address, { from: account1 })
+                    })
+
+                    .then(() => {
+                        console.log("Authorizing NP")
+                        return UTIL_TKN.grantRole(payableRoleB32, NP.address, { from: account1 })
+                    })
+        
+                    .then(() => {
+                        console.log("Authorizing NP_NC")
+                        return UTIL_TKN.grantRole(payableRoleB32, NP_NC.address, { from: account1 })
                     })
             })
         
@@ -1284,6 +1294,24 @@ __/\\\\\\\\\\\\\ _____/\\\\\\\\\ _______/\\../\\ ___/\\\\\\\\\\\\\\\
                     })
         
                     .then(() => {
+                        return AC_MGR.ACTH_setCosts(
+                            "1",
+                            "7",
+                            "10000000000000000",
+                            account1,
+                            { from: account1 })
+                    })
+        
+                    .then(() => {
+                        return AC_MGR.ACTH_setCosts(
+                            "1",
+                            "8",
+                            "10000000000000000",
+                            account1,
+                            { from: account1 })
+                    })
+        
+                    .then(() => {
                         console.log("Setting base costs in AC 2")
                         return AC_MGR.ACTH_setCosts(
                             "2",
@@ -1337,6 +1365,25 @@ __/\\\\\\\\\\\\\ _____/\\\\\\\\\ _______/\\../\\ ___/\\\\\\\\\\\\\\\
                             account1,
                             { from: account1 })
                     })
+        
+                    .then(() => {
+                        return AC_MGR.ACTH_setCosts(
+                            "2",
+                            "7",
+                            "10000000000000000",
+                            account1,
+                            { from: account1 })
+                    })
+        
+                    .then(() => {
+                        return AC_MGR.ACTH_setCosts(
+                            "2",
+                            "8",
+                            "10000000000000000",
+                            account1,
+                            { from: account1 })
+                    })
+        
                     .then(() => {
                         console.log("Setting base costs in AC 10")
                         return AC_MGR.ACTH_setCosts(
@@ -1387,6 +1434,24 @@ __/\\\\\\\\\\\\\ _____/\\\\\\\\\ _______/\\../\\ ___/\\\\\\\\\\\\\\\
                         return AC_MGR.ACTH_setCosts(
                             "10",
                             "6",
+                            "10000000000000000",
+                            account1,
+                            { from: account1 })
+                    })
+        
+                    .then(() => {
+                        return AC_MGR.ACTH_setCosts(
+                            "10",
+                            "7",
+                            "10000000000000000",
+                            account1,
+                            { from: account1 })
+                    })
+        
+                    .then(() => {
+                        return AC_MGR.ACTH_setCosts(
+                            "10",
+                            "8",
                             "10000000000000000",
                             account1,
                             { from: account1 })
@@ -1448,6 +1513,24 @@ __/\\\\\\\\\\\\\ _____/\\\\\\\\\ _______/\\../\\ ___/\\\\\\\\\\\\\\\
                     })
         
                     .then(() => {
+                        return AC_MGR.ACTH_setCosts(
+                            "11",
+                            "7",
+                            "10000000000000000",
+                            account1,
+                            { from: account1 })
+                    })
+        
+                    .then(() => {
+                        return AC_MGR.ACTH_setCosts(
+                            "11",
+                            "8",
+                            "10000000000000000",
+                            account1,
+                            { from: account1 })
+                    })
+        
+                    .then(() => {
                         console.log("Setting base costs in AC 12")
                         return AC_MGR.ACTH_setCosts(
                             "12",
@@ -1497,6 +1580,24 @@ __/\\\\\\\\\\\\\ _____/\\\\\\\\\ _______/\\../\\ ___/\\\\\\\\\\\\\\\
                         return AC_MGR.ACTH_setCosts(
                             "12",
                             "6",
+                            "10000000000000000",
+                            account1,
+                            { from: account1 })
+                    })
+        
+                    .then(() => {
+                        return AC_MGR.ACTH_setCosts(
+                            "12",
+                            "7",
+                            "10000000000000000",
+                            account1,
+                            { from: account1 })
+                    })
+        
+                    .then(() => {
+                        return AC_MGR.ACTH_setCosts(
+                            "12",
+                            "8",
                             "10000000000000000",
                             account1,
                             { from: account1 })
@@ -1558,6 +1659,24 @@ __/\\\\\\\\\\\\\ _____/\\\\\\\\\ _______/\\../\\ ___/\\\\\\\\\\\\\\\
                     })
         
                     .then(() => {
+                        return AC_MGR.ACTH_setCosts(
+                            "13",
+                            "7",
+                            "10000000000000000",
+                            account1,
+                            { from: account1 })
+                    })
+        
+                    .then(() => {
+                        return AC_MGR.ACTH_setCosts(
+                            "13",
+                            "8",
+                            "10000000000000000",
+                            account1,
+                            { from: account1 })
+                    })
+        
+                    .then(() => {
                         console.log("Setting base costs in AC 14")
                         return AC_MGR.ACTH_setCosts(
                             "14",
@@ -1613,6 +1732,24 @@ __/\\\\\\\\\\\\\ _____/\\\\\\\\\ _______/\\../\\ ___/\\\\\\\\\\\\\\\
                     })
         
                     .then(() => {
+                        return AC_MGR.ACTH_setCosts(
+                            "14",
+                            "7",
+                            "10000000000000000",
+                            account1,
+                            { from: account1 })
+                    })
+        
+                    .then(() => {
+                        return AC_MGR.ACTH_setCosts(
+                            "14",
+                            "8",
+                            "10000000000000000",
+                            account1,
+                            { from: account1 })
+                    })
+        
+                    .then(() => {
                         console.log("Setting base costs in AC 15")
                         return AC_MGR.ACTH_setCosts(
                             "15",
@@ -1662,6 +1799,97 @@ __/\\\\\\\\\\\\\ _____/\\\\\\\\\ _______/\\../\\ ___/\\\\\\\\\\\\\\\
                         return AC_MGR.ACTH_setCosts(
                             "15",
                             "6",
+                            "10000000000000000",
+                            account1,
+                            { from: account10 })
+                    })
+        
+                    .then(() => {
+                        return AC_MGR.ACTH_setCosts(
+                            "15",
+                            "7",
+                            "10000000000000000",
+                            account1,
+                            { from: account10 })
+                    })
+        
+                    .then(() => {
+                        return AC_MGR.ACTH_setCosts(
+                            "15",
+                            "8",
+                            "10000000000000000",
+                            account1,
+                            { from: account10 })
+                    })
+        
+                    .then(() => {
+                        console.log("Setting base costs in AC 16")
+                        return AC_MGR.ACTH_setCosts(
+                            "16",
+                            "1",
+                            "10000000000000000",
+                            account1,
+                            { from: account10 })
+                    })
+        
+                    .then(() => {
+                        return AC_MGR.ACTH_setCosts(
+                            "16",
+                            "2",
+                            "10000000000000000",
+                            account1,
+                            { from: account10 })
+                    })
+        
+                    .then(() => {
+                        return AC_MGR.ACTH_setCosts(
+                            "16",
+                            "3",
+                            "10000000000000000",
+                            account1,
+                            { from: account10 })
+                    })
+        
+                    .then(() => {
+                        return AC_MGR.ACTH_setCosts(
+                            "16",
+                            "4",
+                            "10000000000000000",
+                            account1,
+                            { from: account10 })
+                    })
+        
+                    .then(() => {
+                        return AC_MGR.ACTH_setCosts(
+                            "16",
+                            "5",
+                            "10000000000000000",
+                            account1,
+                            { from: account10 })
+                    })
+        
+                    .then(() => {
+                        return AC_MGR.ACTH_setCosts(
+                            "16",
+                            "6",
+                            "10000000000000000",
+                            account1,
+                            { from: account10 })
+                    })
+        
+                    .then(() => {
+                        return AC_MGR.ACTH_setCosts(
+                            "16",
+                            "7",
+                            "10000000000000000",
+                            account1,
+                            { from: account10 })
+                    })
+        
+                    .then(() => {
+                        return AC_MGR.ACTH_setCosts(
+                            "16",
+                            "8",
                             "10000000000000000",
                             account1,
                             { from: account10 })
@@ -1792,7 +2020,7 @@ __/\\\\\\\\\\\\\ _____/\\\\\\\\\ _______/\\../\\ ___/\\\\\\\\\\\\\\\
 
 
     it('Should claim nakedAsset14 in AC 12', async () => {
-        return PIP.$claimPipAsset(
+        return PIP.claimPipAsset(
         asset14, 
         '14',
         '16',
@@ -1855,7 +2083,7 @@ __/\\\\\\\\\\\\\ _____/\\\\\\\\\ _______/\\../\\ ___/\\\\\\\\\\\\\\\
 
 
     it('Should set Ipfs2 note to (asset14)', async () => {
-        return APP_NC.$addIpfs2Note(
+        return APP_NC.addIpfs2Note(
         asset14,
         asset14,
         {from: account4}
@@ -1895,7 +2123,7 @@ __/\\\\\\\\\\\\\ _____/\\\\\\\\\ _______/\\../\\ ___/\\\\\\\\\\\\\\\
 
 
     // it('Should re-mint asset14 token to account4', async () => {
-    //     return APP_NC.$reMintToken(
+    //     return APP_NC.reMintToken(
     //     asset14,
     //     'a',
     //     'a',
@@ -2060,7 +2288,7 @@ __/\\\\\\\\\\\\\ _____/\\\\\\\\\ _______/\\../\\ ___/\\\\\\\\\\\\\\\
 
 
     it('Should import asset14 to AC(10)', async () => {
-        return APP.$importAsset(
+        return APP.importAsset(
         asset14,
         rgt14,
         '10',
@@ -2227,7 +2455,7 @@ __/\\\\\\\\\\\\\ _____/\\\\\\\\\ _______/\\../\\ ___/\\\\\\\\\\\\\\\
 
 
     it('Should Transfer asset14 RGT(14) to RGT(2)', async () => {
-        return APP.$transferAsset(
+        return APP.transferAsset(
         asset14, 
         rgt14,
         rgt2,
@@ -2248,7 +2476,7 @@ __/\\\\\\\\\\\\\ _____/\\\\\\\\\ _______/\\../\\ ___/\\\\\\\\\\\\\\\
 
 
     it('Should force modify asset14 RGT(2) to RGT(14)', async () => {
-        return APP.$forceModRecord(
+        return APP.forceModRecord(
         asset14, 
         rgt14,
         {from: account4}
@@ -2309,7 +2537,7 @@ __/\\\\\\\\\\\\\ _____/\\\\\\\\\ _______/\\../\\ ___/\\\\\\\\\\\\\\\
 
 
     it('Should import asset14 to AC(12)', async () => {
-        return APP_NC.$importAsset(
+        return APP_NC.importAsset(
         asset14,
         '12',
         {from: account4}
@@ -2387,8 +2615,8 @@ __/\\\\\\\\\\\\\ _____/\\\\\\\\\ _______/\\../\\ ___/\\\\\\\\\\\\\\\
     })
 
 
-    it('Should $recycle asset14', async () => {
-        return RCLR.$recycle(
+    it('Should recycle asset14', async () => {
+        return RCLR.recycle(
         asset14,
         rgt14,
         '12',

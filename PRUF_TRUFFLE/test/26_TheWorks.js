@@ -9,7 +9,6 @@ __/\\\\\\\\\\\\\ _____/\\\\\\\\\ _______/\\../\\ ___/\\\\\\\\\\\\\\\
        _\/\\\ ____________\/\\\ _____\//\\\.\//\\\\\\\\\ _\/\\\ ____________
         _\/// _____________\/// _______\/// __\///////// __\/// _____________
          *-------------------------------------------------------------------*/
-
 const PRUF_STOR = artifacts.require('STOR');
 const PRUF_APP = artifacts.require('APP');
 const PRUF_NP = artifacts.require('NP');
@@ -865,6 +864,16 @@ contract('TheWorks', accounts => {
                 console.log("Authorizing AC_MGR")
                 return UTIL_TKN.grantRole(trustedAgentRoleB32, AC_MGR.address, { from: account1 })
             })
+
+            .then(() => {
+                console.log("Authorizing NP")
+                return UTIL_TKN.grantRole(payableRoleB32, NP.address, { from: account1 })
+            })
+
+            .then(() => {
+                console.log("Authorizing NP_NC")
+                return UTIL_TKN.grantRole(payableRoleB32, NP_NC.address, { from: account1 })
+            })
     })
 
 
@@ -1224,8 +1233,8 @@ contract('TheWorks', accounts => {
                 return STOR.enableContractForAC('RCLR', '16', '3', { from: account10 })
             })
     })
-
-
+        
+        
     it("Should set costs in minted AC's", async () => {
 
         console.log("Setting costs in AC 1")
@@ -1278,6 +1287,24 @@ contract('TheWorks', accounts => {
                 return AC_MGR.ACTH_setCosts(
                     "1",
                     "6",
+                    "10000000000000000",
+                    account1,
+                    { from: account1 })
+            })
+
+            .then(() => {
+                return AC_MGR.ACTH_setCosts(
+                    "1",
+                    "7",
+                    "10000000000000000",
+                    account1,
+                    { from: account1 })
+            })
+
+            .then(() => {
+                return AC_MGR.ACTH_setCosts(
+                    "1",
+                    "8",
                     "10000000000000000",
                     account1,
                     { from: account1 })
@@ -1337,6 +1364,25 @@ contract('TheWorks', accounts => {
                     account1,
                     { from: account1 })
             })
+
+            .then(() => {
+                return AC_MGR.ACTH_setCosts(
+                    "2",
+                    "7",
+                    "10000000000000000",
+                    account1,
+                    { from: account1 })
+            })
+
+            .then(() => {
+                return AC_MGR.ACTH_setCosts(
+                    "2",
+                    "8",
+                    "10000000000000000",
+                    account1,
+                    { from: account1 })
+            })
+
             .then(() => {
                 console.log("Setting base costs in AC 10")
                 return AC_MGR.ACTH_setCosts(
@@ -1387,6 +1433,24 @@ contract('TheWorks', accounts => {
                 return AC_MGR.ACTH_setCosts(
                     "10",
                     "6",
+                    "10000000000000000",
+                    account1,
+                    { from: account1 })
+            })
+
+            .then(() => {
+                return AC_MGR.ACTH_setCosts(
+                    "10",
+                    "7",
+                    "10000000000000000",
+                    account1,
+                    { from: account1 })
+            })
+
+            .then(() => {
+                return AC_MGR.ACTH_setCosts(
+                    "10",
+                    "8",
                     "10000000000000000",
                     account1,
                     { from: account1 })
@@ -1448,6 +1512,24 @@ contract('TheWorks', accounts => {
             })
 
             .then(() => {
+                return AC_MGR.ACTH_setCosts(
+                    "11",
+                    "7",
+                    "10000000000000000",
+                    account1,
+                    { from: account1 })
+            })
+
+            .then(() => {
+                return AC_MGR.ACTH_setCosts(
+                    "11",
+                    "8",
+                    "10000000000000000",
+                    account1,
+                    { from: account1 })
+            })
+
+            .then(() => {
                 console.log("Setting base costs in AC 12")
                 return AC_MGR.ACTH_setCosts(
                     "12",
@@ -1497,6 +1579,24 @@ contract('TheWorks', accounts => {
                 return AC_MGR.ACTH_setCosts(
                     "12",
                     "6",
+                    "10000000000000000",
+                    account1,
+                    { from: account1 })
+            })
+
+            .then(() => {
+                return AC_MGR.ACTH_setCosts(
+                    "12",
+                    "7",
+                    "10000000000000000",
+                    account1,
+                    { from: account1 })
+            })
+
+            .then(() => {
+                return AC_MGR.ACTH_setCosts(
+                    "12",
+                    "8",
                     "10000000000000000",
                     account1,
                     { from: account1 })
@@ -1558,6 +1658,24 @@ contract('TheWorks', accounts => {
             })
 
             .then(() => {
+                return AC_MGR.ACTH_setCosts(
+                    "13",
+                    "7",
+                    "10000000000000000",
+                    account1,
+                    { from: account1 })
+            })
+
+            .then(() => {
+                return AC_MGR.ACTH_setCosts(
+                    "13",
+                    "8",
+                    "10000000000000000",
+                    account1,
+                    { from: account1 })
+            })
+
+            .then(() => {
                 console.log("Setting base costs in AC 14")
                 return AC_MGR.ACTH_setCosts(
                     "14",
@@ -1607,6 +1725,24 @@ contract('TheWorks', accounts => {
                 return AC_MGR.ACTH_setCosts(
                     "14",
                     "6",
+                    "10000000000000000",
+                    account1,
+                    { from: account1 })
+            })
+
+            .then(() => {
+                return AC_MGR.ACTH_setCosts(
+                    "14",
+                    "7",
+                    "10000000000000000",
+                    account1,
+                    { from: account1 })
+            })
+
+            .then(() => {
+                return AC_MGR.ACTH_setCosts(
+                    "14",
+                    "8",
                     "10000000000000000",
                     account1,
                     { from: account1 })
@@ -1665,7 +1801,27 @@ contract('TheWorks', accounts => {
                     "10000000000000000",
                     account1,
                     { from: account10 })
-            }).then(() => {
+            })
+
+            .then(() => {
+                return AC_MGR.ACTH_setCosts(
+                    "15",
+                    "7",
+                    "10000000000000000",
+                    account1,
+                    { from: account10 })
+            })
+
+            .then(() => {
+                return AC_MGR.ACTH_setCosts(
+                    "15",
+                    "8",
+                    "10000000000000000",
+                    account1,
+                    { from: account10 })
+            })
+
+            .then(() => {
                 console.log("Setting base costs in AC 16")
                 return AC_MGR.ACTH_setCosts(
                     "16",
@@ -1715,6 +1871,24 @@ contract('TheWorks', accounts => {
                 return AC_MGR.ACTH_setCosts(
                     "16",
                     "6",
+                    "10000000000000000",
+                    account1,
+                    { from: account10 })
+            })
+
+            .then(() => {
+                return AC_MGR.ACTH_setCosts(
+                    "16",
+                    "7",
+                    "10000000000000000",
+                    account1,
+                    { from: account10 })
+            })
+
+            .then(() => {
+                return AC_MGR.ACTH_setCosts(
+                    "16",
+                    "8",
                     "10000000000000000",
                     account1,
                     { from: account10 })
@@ -1824,7 +1998,7 @@ contract('TheWorks', accounts => {
 
 
     it('Should write asset12 in AC 10', async () => {
-        return APP.$newRecord(
+        return APP.newRecord(
             asset12,
             rgt12,
             '10',
@@ -1871,7 +2045,7 @@ contract('TheWorks', accounts => {
 
 
     it('Should Transfer asset12 RGT(12) to RGT(2)', async () => {
-        return APP.$transferAsset(
+        return APP.transferAsset(
             asset12,
             rgt12,
             rgt2,
@@ -1894,7 +2068,7 @@ contract('TheWorks', accounts => {
 
 
     it('Should force modify asset12 RGT(2) to RGT(12)', async () => {
-        return APP.$forceModRecord(
+        return APP.forceModRecord(
             asset12,
             rgt12,
             { from: account2 }
@@ -1985,7 +2159,7 @@ contract('TheWorks', accounts => {
 
 
     it('Should set Ipfs2 note to (asset12)', async () => {
-        return APP.$addIpfs2Note(
+        return APP.addIpfs2Note(
             asset12,
             rgt12,
             asset12,
@@ -2030,7 +2204,7 @@ contract('TheWorks', accounts => {
 
 
     it('Should import asset12 to AC(12)(NC)', async () => {
-        return APP_NC.$importAsset(
+        return APP_NC.importAsset(
             asset12,
             '12',
             { from: account2 }
@@ -2052,7 +2226,7 @@ contract('TheWorks', accounts => {
 
 
     // it('Should re-mint asset12 token to account2', async () => {
-    //     return APP_NC.$reMintToken(
+    //     return APP_NC.reMintToken(
     //         asset12,
     //         'a',
     //         'a',
@@ -2299,7 +2473,7 @@ contract('TheWorks', accounts => {
 
 
     it('Should import asset12 to AC(10)', async () => {
-        return APP.$importAsset(
+        return APP.importAsset(
             asset12,
             rgt12,
             '10',
@@ -2489,8 +2663,8 @@ contract('TheWorks', accounts => {
     // })
 
 
-    // it('Should $recycle asset12', async () => {
-    //     return RCLR.$recycle(
+    // it('Should recycle asset12', async () => {
+    //     return RCLR.recycle(
     //         asset12,
     //         rgt12,
     //         '10',
@@ -2542,7 +2716,7 @@ contract('TheWorks', accounts => {
 
 
     it('Should write asset13 in AC 12', async () => {
-        return APP_NC.$newRecord(
+        return APP_NC.newRecord(
             asset13,
             rgt13,
             '12',
@@ -2610,7 +2784,7 @@ contract('TheWorks', accounts => {
 
 
     it('Should set Ipfs2 note to (asset13)', async () => {
-        return APP_NC.$addIpfs2Note(
+        return APP_NC.addIpfs2Note(
             asset13,
             asset13,
             { from: account4 }
@@ -2632,7 +2806,7 @@ contract('TheWorks', accounts => {
 
 
     // it('Should re-mint asset13 token to account4', async () => {
-    //     return APP_NC.$reMintToken(
+    //     return APP_NC.reMintToken(
     //         asset13,
     //         'a',
     //         'a',
@@ -2835,7 +3009,7 @@ contract('TheWorks', accounts => {
 
 
     it('Should import asset13 to AC(10)', async () => {
-        return APP.$importAsset(
+        return APP.importAsset(
             asset13,
             rgt13,
             '10',
@@ -3018,7 +3192,7 @@ contract('TheWorks', accounts => {
 
 
     it('Should Transfer asset13 RGT(13) to RGT(2)', async () => {
-        return APP.$transferAsset(
+        return APP.transferAsset(
             asset13,
             rgt13,
             rgt2,
@@ -3041,7 +3215,7 @@ contract('TheWorks', accounts => {
 
 
     it('Should force modify asset13 RGT(2) to RGT(13)', async () => {
-        return APP.$forceModRecord(
+        return APP.forceModRecord(
             asset13,
             rgt13,
             { from: account4 }
@@ -3108,7 +3282,7 @@ contract('TheWorks', accounts => {
 
 
     it('Should import asset13 to AC(12)', async () => {
-        return APP_NC.$importAsset(
+        return APP_NC.importAsset(
             asset13,
             '12',
             { from: account4 }
@@ -3194,8 +3368,8 @@ contract('TheWorks', accounts => {
     })
 
 
-    it('Should $recycle asset13', async () => {
-        return RCLR.$recycle(
+    it('Should recycle asset13', async () => {
+        return RCLR.recycle(
             asset13,
             rgt13,
             '12',
@@ -3243,7 +3417,7 @@ contract('TheWorks', accounts => {
 
 
     it('Should claim nakedAsset14 in AC 12', async () => {
-        return PIP.$claimPipAsset(
+        return PIP.claimPipAsset(
             asset14,
             '14',
             '16',
@@ -3312,7 +3486,7 @@ contract('TheWorks', accounts => {
 
 
     it('Should set Ipfs2 note to (asset14)', async () => {
-        return APP_NC.$addIpfs2Note(
+        return APP_NC.addIpfs2Note(
             asset14,
             asset14,
             { from: account4 }
@@ -3356,7 +3530,7 @@ contract('TheWorks', accounts => {
 
 
     // it('Should re-mint asset14 token to account4', async () => {
-    //     return APP_NC.$reMintToken(
+    //     return APP_NC.reMintToken(
     //         asset14,
     //         'a',
     //         'a',
@@ -3537,7 +3711,7 @@ contract('TheWorks', accounts => {
 
 
     it('Should import asset14 to AC(10)', async () => {
-        return APP.$importAsset(
+        return APP.importAsset(
             asset14,
             rgt14,
             '10',
@@ -3720,7 +3894,7 @@ contract('TheWorks', accounts => {
 
 
     it('Should Transfer asset14 RGT(14) to RGT(2)', async () => {
-        return APP.$transferAsset(
+        return APP.transferAsset(
             asset14,
             rgt14,
             rgt2,
@@ -3743,7 +3917,7 @@ contract('TheWorks', accounts => {
 
 
     it('Should force modify asset14 RGT(2) to RGT(14)', async () => {
-        return APP.$forceModRecord(
+        return APP.forceModRecord(
             asset14,
             rgt14,
             { from: account4 }
@@ -3810,7 +3984,7 @@ contract('TheWorks', accounts => {
 
 
     it('Should import asset14 to AC(12)', async () => {
-        return APP_NC.$importAsset(
+        return APP_NC.importAsset(
             asset14,
             '12',
             { from: account4 }
@@ -3896,8 +4070,8 @@ contract('TheWorks', accounts => {
     })
 
 
-    it('Should $recycle asset14', async () => {
-        return RCLR.$recycle(
+    it('Should recycle asset14', async () => {
+        return RCLR.recycle(
             asset14,
             rgt14,
             '12',

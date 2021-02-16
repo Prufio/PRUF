@@ -20,7 +20,7 @@ pragma solidity ^0.6.7;
 
 import "./PRUF_CORE.sol";
 
-contract PURCHASE is CORE {  //CTS:EXAMINE THIS CONTRACT NEEDS A CONSTRUCTOR DESPERATELY. CANT RESOLVE CONTRACT ADDRESSES ECT.
+contract PURCHASE is CORE {
     /*
      * @dev Verify user credentials
      * Originating Address:
@@ -90,7 +90,7 @@ contract PURCHASE is CORE {  //CTS:EXAMINE THIS CONTRACT NEEDS A CONSTRUCTOR DES
             needsImport(rec.assetStatus) == 0,
             "E:SP Record in unregistered, exported, or discarded status"
         );
-        require((rec.assetStatus > 49) || (_setForSale != 170) , "E:SP Asset Status < 50");
+        require((rec.assetStatus > 49) || (_setForSale != 170) , "E:SP Asset Status < 50"); //CTS:EXAMINE Status < 50 not reachable with current contract structure, caller must hold token.
         require(isEscrow(rec.assetStatus) == 0, "E:SP Record is in escrow");
 
         require(

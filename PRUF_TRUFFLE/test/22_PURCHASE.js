@@ -667,7 +667,7 @@ contract('STOR', accounts => {
 
             .then(() => {
                 console.log("Adding PURCHASE to storage for use in AC 0")
-                return STOR.OO_addContract("PURCHASE", PURCHASE.address, '0', '1', { from: account1 })
+                return STOR.OO_addContract("PURCHASE", PURCHASE.address, '0', '2', { from: account1 })
             })
     })
 
@@ -744,7 +744,7 @@ contract('STOR', accounts => {
 
             .then(() => {
                 console.log("Adding in PURCHASE")
-                return PURCHASE.OO_setStorageContract(PURCHASE.address, { from: account1 })
+                return PURCHASE.OO_setStorageContract(STOR.address, { from: account1 })
             })
     })
 
@@ -1275,7 +1275,7 @@ contract('STOR', accounts => {
 
     it('Should authorize PURCHASE in all relevant asset classes', async () => {
         console.log("Authorizing PURCHASE")
-        return STOR.enableContractForAC('PURCHASE', '12', '1', { from: account1 })
+        return STOR.enableContractForAC('PURCHASE', '12', '2', { from: account1 })
     })
 
 
@@ -2105,7 +2105,7 @@ contract('STOR', accounts => {
     it('Should fail because asset not in status 51 (transferable)', async () => {
 
         console.log("//**************************************************END PURCHASE SETUP***************************************************//")
-        console.log("//**************************************************BEGIN PURCHASE FAIL BATCH (8)***************************************************//")
+        console.log("//**************************************************BEGIN PURCHASE FAIL BATCH (7)***************************************************//")
         console.log("//**************************************************BEGIN purchaseWithPRUF FAIL BATCH***************************************************//")
         return PURCHASE.purchaseWithPRUF(
             asset2,
@@ -2127,15 +2127,15 @@ contract('STOR', accounts => {
     })
 
     //3
-    it('Should fail because asset is in status < 50', async () => {
-        return PURCHASE._setPrice(
-            asset4,
-            "1000",
-            "2",
-            "0",
-            { from: account2 }
-        )
-    })
+    // it('Should fail because asset is in status < 50', async () => {
+    //     return PURCHASE._setPrice(
+    //         asset4,
+    //         "1000",
+    //         "2",
+    //         "0",
+    //         { from: account2 }
+    //     )
+    // })
 
     //4
     it('Should fail because asset is in escrow', async () => {
