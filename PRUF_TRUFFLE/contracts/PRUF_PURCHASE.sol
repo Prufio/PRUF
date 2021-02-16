@@ -39,7 +39,7 @@ contract PURCHASE is CORE {  //CTS:EXAMINE THIS CONTRACT NEEDS A CONSTRUCTOR DES
     /*
      * @dev Purchse an item in transferrable status with price and currency set to pruf
      */
-    function purchaseWithPRUF(bytes32 _idxHash)
+    function purchaseWithPRUF(bytes32 _idxHash) //CTS:EXAMINE NO CHECK TO SEE IF PRICE IS SET?
         external
         whenNotPaused
     //isAuthorized(_idxHash) //purchaser is not holder
@@ -54,7 +54,7 @@ contract PURCHASE is CORE {  //CTS:EXAMINE THIS CONTRACT NEEDS A CONSTRUCTOR DES
             rec.assetStatus == 51,
             "PP:PURCHASE: Must be in transferrable status (51)"
         );
-        require(
+        require( // CTS:REDUNDANT, THROWS IN _setPrice
             rec.currency == 2,
             "PP:PURCHASE: Payment must be in PRUF tokens for this contract"
         );

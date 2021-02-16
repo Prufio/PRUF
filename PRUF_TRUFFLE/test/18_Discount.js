@@ -1060,6 +1060,16 @@ it('Should authorize all payable contracts for transactions', async () => {
             console.log("Authorizing RCLR")
             return UTIL_TKN.grantRole(payableRoleB32, RCLR.address, { from: account1 })
         })
+
+        .then(() => {
+            console.log("Authorizing NP")
+            return UTIL_TKN.grantRole(payableRoleB32, NP.address, { from: account1 })
+        })
+
+        .then(() => {
+            console.log("Authorizing NP_NC")
+            return UTIL_TKN.grantRole(payableRoleB32, NP_NC.address, { from: account1 })
+        })
 })
 
 it('Should authorize all minter contracts for minting A_TKN(s)', async () => {
@@ -1145,6 +1155,24 @@ it("Should set costs in minted Root AC1", async () => {
                 account4,
                 { from: account1 })
         })
+
+        .then(() => {
+            return AC_MGR.ACTH_setCosts(
+                "1",
+                "7",
+                "100000000000000000",
+                account4,
+                { from: account1 })
+        })
+
+        .then(() => {
+            return AC_MGR.ACTH_setCosts(
+                "1",
+                "8",
+                "100000000000000000",
+                account4,
+                { from: account1 })
+        })
     })
 
 
@@ -1198,6 +1226,24 @@ it("Should set costs in minted Root AC1", async () => {
                 return AC_MGR.ACTH_setCosts(
                     "2",
                     "6",
+                    "200000000000000000",
+                    account5,
+                    { from: account1 })
+            })
+    
+            .then(() => {
+                return AC_MGR.ACTH_setCosts(
+                    "2",
+                    "8",
+                    "200000000000000000",
+                    account5,
+                    { from: account1 })
+            })
+    
+            .then(() => {
+                return AC_MGR.ACTH_setCosts(
+                    "2",
+                    "7",
                     "200000000000000000",
                     account5,
                     { from: account1 })
@@ -1261,6 +1307,24 @@ it("Should set costs in minted AC's", async () => {
         })
 
         .then(() => {
+            return AC_MGR.ACTH_setCosts(
+                "10",
+                "7",
+                "100000000000000000",
+                account6,
+                { from: account1 })
+        })
+
+        .then(() => {
+            return AC_MGR.ACTH_setCosts(
+                "10",
+                "8",
+                "100000000000000000",
+                account6,
+                { from: account1 })
+        })
+
+        .then(() => {
             console.log("Setting base costs in AC 11")
             return AC_MGR.ACTH_setCosts(
                 "11",
@@ -1310,6 +1374,24 @@ it("Should set costs in minted AC's", async () => {
                 return AC_MGR.ACTH_setCosts(
                     "11",
                     "6",
+                    "200000000000000000",
+                    account6,
+                    { from: account1 })
+            })
+
+            .then(() => {
+                return AC_MGR.ACTH_setCosts(
+                    "11",
+                    "7",
+                    "200000000000000000",
+                    account6,
+                    { from: account1 })
+            })
+
+            .then(() => {
+                return AC_MGR.ACTH_setCosts(
+                    "11",
+                    "8",
                     "200000000000000000",
                     account6,
                     { from: account1 })
@@ -1369,6 +1451,24 @@ it("Should set costs in minted AC's", async () => {
                     account6,
                     { from: account1 })
             })
+
+            .then(() => {
+                return AC_MGR.ACTH_setCosts(
+                    "12",
+                    "7",
+                    "300000000000000000",
+                    account6,
+                    { from: account1 })
+            })
+
+            .then(() => {
+                return AC_MGR.ACTH_setCosts(
+                    "12",
+                    "8",
+                    "300000000000000000",
+                    account6,
+                    { from: account1 })
+            })
         
         .then(() => {
             console.log("Setting base costs in AC 13")
@@ -1420,6 +1520,24 @@ it("Should set costs in minted AC's", async () => {
                 return AC_MGR.ACTH_setCosts(
                     "13",
                     "6",
+                    "400000000000000000",
+                    account7,
+                    { from: account1 })
+            })
+
+            .then(() => {
+                return AC_MGR.ACTH_setCosts(
+                    "13",
+                    "7",
+                    "400000000000000000",
+                    account7,
+                    { from: account1 })
+            })
+
+            .then(() => {
+                return AC_MGR.ACTH_setCosts(
+                    "13",
+                    "8",
                     "400000000000000000",
                     account7,
                     { from: account1 })
@@ -1479,6 +1597,24 @@ it("Should set costs in minted AC's", async () => {
                     account7,
                     { from: account1 })
             })
+
+            .then(() => {
+                return AC_MGR.ACTH_setCosts(
+                    "14",
+                    "7",
+                    "500000000000000000",
+                    account7,
+                    { from: account1 })
+            })
+
+            .then(() => {
+                return AC_MGR.ACTH_setCosts(
+                    "14",
+                    "8",
+                    "500000000000000000",
+                    account7,
+                    { from: account1 })
+            })
 })
 
 
@@ -1509,11 +1645,18 @@ it('Should add users to AC 10-14 in AC_Manager', async () => {
         })
 })
 
+it('Should mint IDTKN to account1', async () => {
+    return ID_TKN.mintPRUF_IDToken(
+    account1,
+    '1',
+    {from: account1}
+    )
+})
 
 it('Should mint 300000 tkns to account1', async () => {
     return UTIL_TKN.mint(
     account1,
-    '300000000000000000000000',
+    '310000000000000000000000',
     {from: account1}
     )
 })
@@ -1528,7 +1671,7 @@ it('Should mint 300000 tkns to account2', async () => {
 })
 
 
-it("Should retrieve balanceOf(300000) Pruf tokens @account1", async () => {
+it("Should retrieve balanceOf(310000) Pruf tokens @account1", async () => {
     var Balance = [];
 
     return await UTIL_TKN.balanceOf(account1, { from: account1 }, function (_err, _result) {
@@ -1572,7 +1715,7 @@ it('Should increaseShare to 66/36 split @AC13', async () => {
 })
 
 
-it("Should retrieve balanceOf(285000) Pruf tokens @account1", async () => {
+it("Should retrieve balanceOf(295000) Pruf tokens @account1", async () => {
     var Balance = [];
 
     return await UTIL_TKN.balanceOf(account1, { from: account1 }, function (_err, _result) {
@@ -1594,7 +1737,7 @@ it('Should increaseShare to 90/10 split @AC11', async () => {
 })
 
 
-it("Should retrieve balanceOf(246000) Pruf tokens @account1", async () => {
+it("Should retrieve balanceOf(256000) Pruf tokens @account1", async () => {
     var Balance = [];
 
     return await UTIL_TKN.balanceOf(account1, { from: account1 }, function (_err, _result) {
@@ -1635,7 +1778,7 @@ it('Should write asset1 in AC 10', async () => {
 
     console.log("//**************************************END Discount SETUP**********************************************/")
     console.log("//**************************************BEGIN Discount TEST**********************************************/")
-    return APP.$newRecord(
+    return APP.newRecord(
     asset1, 
     rgt1,
     '10',
@@ -1672,7 +1815,7 @@ it("Should retrieve balanceOf(39000.149) Pruf tokens account4", async () => {
 
 
 it('Should write asset2 in AC 13', async () => {
-    return APP.$newRecord(
+    return APP.newRecord(
     asset2, 
     rgt2,
     '13',
@@ -1709,7 +1852,7 @@ it("Should retrieve balanceOf(15000.336) Pruf tokens account5", async () => {
 
 
 it('Should write asset3 in AC 11', async () => {
-    return APP.$newRecord(
+    return APP.newRecord(
     asset3, 
     rgt3,
     '11',

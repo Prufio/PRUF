@@ -61,32 +61,39 @@ contract CORE_MAL is  BASIC {
     //--------------------------------------------------------------------------------------Storage Writing internal functions
 
     /*
-     * @dev create a Record in Storage @ idxHash
+     * @dev create a Record in Storage @ idxHash (SETTER)
      */
     function createRecord(
         bytes32 _idxHash,
         bytes32 _rgtHash,
         uint32 _assetClass,
         uint32 _countDownStart
-    ) internal {
+    ) internal virtual {
         uint256 tokenId = uint256(_idxHash);
         AC memory AC_info = getACinfo(_assetClass);
 
-        // require(
-        //     A_TKN.tokenExists(tokenId) == 0,
-        //     "C:CR:Asset token already exists"
-        // );
+        require(
+            A_TKN.tokenExists(tokenId) == 0,
+            "C:CR:Asset token already exists"
+        );
 
         require(
             AC_info.custodyType != 3,
             "C:CR:Cannot create asset in a root asset class"
         );
 
+        require(
+            (AC_info.custodyType == 1) ||
+                (AC_info.custodyType == 2) ||
+                (AC_info.custodyType == 4),
+            "C:CR:Cannot create asset - contract not authorized for asset class custody type"
+        );
+
         if (AC_info.custodyType == 1) {
             A_TKN.mintAssetToken(address(this), tokenId, "pruf.io");
         }
 
-        if (AC_info.custodyType == 2) {
+        if ((AC_info.custodyType == 2) || (AC_info.custodyType == 4)) {
             A_TKN.mintAssetToken(_msgSender(), tokenId, "pruf.io");
         }
 
