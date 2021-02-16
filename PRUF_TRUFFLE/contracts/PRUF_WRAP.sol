@@ -14,6 +14,8 @@ __/\\\\\\\\\\\\\ _____/\\\\\\\\\ _______/\\../\\ ___/\\\\\\\\\\\\\\\
  *  TO DO --- complete test! DPS TEST NEW CONTRACT
  *  MUST BE TRUSTED AGENT IN A_TKN
  *
+ *-----------------------------------------------------------------
+ * Wraps and unwraps ERC721 compliant tokens in a PRüF Asset token 
  *----------------------------------------------------------------*/
 
 // SPDX-License-Identifier: UNLICENSED
