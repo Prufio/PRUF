@@ -108,7 +108,7 @@ contract A_TKN is
     modifier isMinter() {
         require(
             hasRole(MINTER_ROLE, _msgSender()),
-            "AT:MOD-IA:Calling address does not belong to a minter"
+            "AT:MOD-IM:Calling address does not belong to a minter"
         );
         _;
     }
@@ -117,11 +117,11 @@ contract A_TKN is
         //-----------------------------------------------------DPS:TEST--NEW
         require(
             hasRole(TRUSTED_AGENT_ROLE, _msgSender()),
-            "PRuF:MOD: must have TRUSTED_AGENT_ROLE"
+            "AT:MOD-ITA: must have TRUSTED_AGENT_ROLE"
         );
         require(
             trustedAgentEnabled == 1,
-            "PRuF:MOD: Trusted Agent function permanently disabled - use allowance / transferFrom pattern"
+            "AT:MOD-ITA: Trusted Agent function permanently disabled - use allowance / transferFrom pattern"
         );
         _;
     }

@@ -19,7 +19,7 @@ __/\\\\\\\\\\\\\ _____/\\\\\\\\\ _______/\\../\\ ___/\\\\\\\\\\\\\\\
 
 // Must set up a custodyType 5 asset class for decorated assets and auth this contract type 1. Root must be private to class.
 // Extended Data for ACnodes must be set to 0 <works with any ERC721>
-// or set to uint160(ERC721 contract address) <works only with tokens from specified contract address>
+// or set to ERC721 contract address <works only with tokens from specified contract address>
 
 // SPDX-License-Identifier: UNLICENSED
 pragma solidity ^0.6.7;
@@ -42,7 +42,7 @@ contract DECORATE is CORE { //CTS:EXAMINE COMMENTS NEED UPDATING
         //require that user holds token @ ID-Contract
         require(
             (IERC721(_tokenContract).ownerOf(_tokenID) == _msgSender()),
-            "A:MOD-IA: caller does not hold specified token"
+            "D:MOD-ITH: caller does not hold specified token"
         );
         _;
     }
@@ -70,14 +70,14 @@ contract DECORATE is CORE { //CTS:EXAMINE COMMENTS NEED UPDATING
 
         require(
             AC_info.custodyType == 5,
-            "E:DEC:Asset class.custodyType must be 5 (wrapped/decorated erc721)"
+            "D:DEC:Asset class.custodyType must be 5 (wrapped/decorated erc721)"
         );
         require(
-            (AC_info.extendedData == uint160(_tokenContract)) ||
-                (AC_info.extendedData == 0),
-            "E:DEC:Asset class extended data must be '0' or uint160(ERC721 contract address)"
+            (AC_info.extendedData == _tokenContract) ||
+                (AC_info.extendedData == address(0)),
+            "D:DEC:Asset class extended data must be '0' or ERC721 contract address"
         );
-        require(rec.assetClass == 0, "E:DEC:Wrapper, decoration, or record already exists");
+        require(rec.assetClass == 0, "D:DEC:Wrapper, decoration, or record already exists");
 
         //^^^^^^^effects^^^^^^^^^
 
@@ -106,27 +106,27 @@ contract DECORATE is CORE { //CTS:EXAMINE COMMENTS NEED UPDATING
 
         require(
             AC_info.custodyType == 5,
-            "E:CRO:Asset class.custodyType must be 5 (wrapped/decorated erc721) & record must exist"
+            "D:MS:Asset class.custodyType must be 5 (wrapped/decorated erc721) & record must exist"
         );
-        require( //CTS:EXAMINE, REDUNDANT:ASSET SHOULD NOT BE ABLE TO BE IN AC CUST TYPE 5 & DECORATED WITH EXT DATA !=0||CONTRACT.ADDR
-            (AC_info.extendedData == uint160(_tokenContract)) ||
-                (AC_info.extendedData == 0),
-            "E:DEC:Asset class extended data must be '0' or uint160(ERC721 contract address)"
+        require(
+            (AC_info.extendedData == _tokenContract) ||
+                (AC_info.extendedData == address(0)),
+            "D:MS:Asset class extended data must be '0' or ERC721 contract address"
         );
         require((_newAssetStatus > 49) && (rec.assetStatus > 49), "E:MS: cannot change status < 49");
         require(
                 (_newAssetStatus != 57) &&
                 (_newAssetStatus != 58) &&
                 (_newAssetStatus < 100),
-            "E:MS: Stat Rsrvd"
+            "D:MS: Stat Rsrvd"
         );
         require(
             needsImport(_newAssetStatus) == 0,
-            "E:MS: Cannot place asset in unregistered, exported, or discarded status using modStatus"
+            "D:MS: Cannot place asset in unregistered, exported, or discarded status using modStatus"
         );
-        require(
+        require( //CTS:EXAMINE, REDUNDANT, UNREACHABLE WITH CURRENT CONTRACTS. WOULD REQUIRE ROOT CLASSES TO BE CUSTODY TYPE 5
             needsImport(rec.assetStatus) == 0,
-            "E:MS: Record in unregistered, exported, or discarded status"
+            "D:MS: Record in unregistered, exported, or discarded status"
         );
         //^^^^^^^checks^^^^^^^^^
 
@@ -157,17 +157,17 @@ contract DECORATE is CORE { //CTS:EXAMINE COMMENTS NEED UPDATING
 
         require(
             AC_info.custodyType == 5,
-            "E:CRO:Asset class.custodyType must be 5 (wrapped/decorated erc721) & record must exist"
+            "D:SP:Asset class.custodyType must be 5 (wrapped/decorated erc721) & record must exist"
         );
-        require( //CTS:EXAMINE, REDUNDANT:ASSET SHOULD NOT BE ABLE TO BE IN AC CUST TYPE 5 & DECORATED WITH EXT DATA !=0||CONTRACT.ADDR
-            (AC_info.extendedData == uint160(_tokenContract)) ||
-                (AC_info.extendedData == 0),
-            "E:DEC:Asset class extended data must be '0' or uint160(ERC721 contract address)"
+        require(
+            (AC_info.extendedData == _tokenContract) ||
+                (AC_info.extendedData == address(0)),
+            "D:SP:Asset class extended data must be '0' or ERC721 contract address"
         );
 
-        require(
+        require( //CTS:EXAMINE, REDUNDANT, UNREACHABLE WITH CURRENT CONTRACTS. WOULD REQUIRE ROOT CLASSES TO BE CUSTODY TYPE 5
             needsImport(rec.assetStatus) == 0,
-            "E:DC Record in unregistered, exported, or discarded status"
+            "D:SP: Record in unregistered, exported, or discarded status"
         );
         //^^^^^^^checks^^^^^^^^^
 
@@ -190,17 +190,17 @@ contract DECORATE is CORE { //CTS:EXAMINE COMMENTS NEED UPDATING
 
         require(
             AC_info.custodyType == 5,
-            "E:CRO:Asset class.custodyType must be 5 (wrapped/decorated erc721) & record must exist"
+            "D:CP::Asset class.custodyType must be 5 (wrapped/decorated erc721) & record must exist"
         );
-        require( //CTS:EXAMINE, REDUNDANT:ASSET SHOULD NOT BE ABLE TO BE IN AC CUST TYPE 5 & DECORATED WITH EXT DATA !=0||CONTRACT.ADDR
-            (AC_info.extendedData == uint160(_tokenContract)) ||
-                (AC_info.extendedData == 0),
-            "E:DEC:Asset class extended data must be '0' or uint160(ERC721 contract address)"
+        require(
+            (AC_info.extendedData == _tokenContract) ||
+                (AC_info.extendedData == address(0)),
+            "D:CP:Asset class extended data must be '0' or ERC721 contract address"
         );
 
-        require(
+        require( //CTS:EXAMINE, REDUNDANT, UNREACHABLE WITH CURRENT CONTRACTS. WOULD REQUIRE ROOT CLASSES TO BE CUSTODY TYPE 5
             needsImport(rec.assetStatus) == 0,
-            "E:DC Record in unregistered, exported, or discarded status"
+            "D:CP: Record in unregistered, exported, or discarded status"
         );
         //^^^^^^^checks^^^^^^^^^
 
@@ -227,17 +227,17 @@ contract DECORATE is CORE { //CTS:EXAMINE COMMENTS NEED UPDATING
 
         require(
             AC_info.custodyType == 5,
-            "E:CRO:Asset class.custodyType must be 5 (wrapped/decorated erc721) & record must exist"
+            "D:DC:Asset class.custodyType must be 5 (wrapped/decorated erc721) & record must exist"
         );
-        require( //CTS:EXAMINE, REDUNDANT:ASSET SHOULD NOT BE ABLE TO BE IN AC CUST TYPE 5 & DECORATED WITH EXT DATA !=0||CONTRACT.ADDR
-            (AC_info.extendedData == uint160(_tokenContract)) ||
-                (AC_info.extendedData == 0),
-            "E:DEC:Asset class extended data must be '0' or uint160(ERC721 contract address)"
+        require(
+            (AC_info.extendedData == _tokenContract) ||
+                (AC_info.extendedData == address(0)),
+            "D:DC:Asset class extended data must be '0' or ERC721 contract address"
         );
 
-        require(
+        require( //CTS:EXAMINE, REDUNDANT, UNREACHABLE WITH CURRENT CONTRACTS. WOULD REQUIRE ROOT CLASSES TO BE CUSTODY TYPE 5
             needsImport(rec.assetStatus) == 0,
-            "E:DC Record in unregistered, exported, or discarded status"
+            "D:DC: Record in unregistered, exported, or discarded status"
         );
         //^^^^^^^checks^^^^^^^^^
 
@@ -272,17 +272,17 @@ contract DECORATE is CORE { //CTS:EXAMINE COMMENTS NEED UPDATING
 
         require(
             AC_info.custodyType == 5,
-            "E:CRO:Asset class.custodyType must be 5 (wrapped/decorated erc721) & record must exist"
+            "D:MI1:Asset class.custodyType must be 5 (wrapped/decorated erc721) & record must exist"
         );
-        require( //CTS:EXAMINE, REDUNDANT:ASSET SHOULD NOT BE ABLE TO BE IN AC CUST TYPE 5 & DECORATED WITH EXT DATA !=0||CONTRACT.ADDR
-            (AC_info.extendedData == uint160(_tokenContract)) ||
-                (AC_info.extendedData == 0),
-            "E:DEC:Asset class extended data must be '0' or uint160(ERC721 contract address)"
+        require(
+            (AC_info.extendedData == _tokenContract) ||
+                (AC_info.extendedData == address(0)),
+            "D:MI1:Asset class extended data must be '0' or ERC721 contract address"
         );
 
-        require(
+        require( //CTS:EXAMINE, REDUNDANT, UNREACHABLE WITH CURRENT CONTRACTS. WOULD REQUIRE ROOT CLASSES TO BE CUSTODY TYPE 5
             needsImport(rec.assetStatus) == 0,
-            "E:MI1: Record in unregistered, exported, or discarded status"
+            "D:MI1: Record in unregistered, exported, or discarded status"
         );
 
         //^^^^^^^checks^^^^^^^^^
@@ -314,17 +314,17 @@ contract DECORATE is CORE { //CTS:EXAMINE COMMENTS NEED UPDATING
 
         require(
             AC_info.custodyType == 5,
-            "E:CRO:Asset class.custodyType must be 5 (wrapped/decorated erc721) & record must exist"
+            "D:AI2:Asset class.custodyType must be 5 (wrapped/decorated erc721) & record must exist"
         );
-        require( //CTS:EXAMINE, REDUNDANT:ASSET SHOULD NOT BE ABLE TO BE IN AC CUST TYPE 5 & DECORATED WITH EXT DATA !=0||CONTRACT.ADDR
-            (AC_info.extendedData == uint160(_tokenContract)) ||
-                (AC_info.extendedData == 0),
-            "E:DEC:Asset class extended data must be '0' or uint160(ERC721 contract address)"
+        require(
+            (AC_info.extendedData == _tokenContract) ||
+                (AC_info.extendedData == address(0)),
+            "D:AI2:Asset class extended data must be '0' or ERC721 contract address"
         );
 
         require( //IMPOSSIBLE TO THROW REVERTS IN REQ1 CTS:PREFERRED
             needsImport(rec.assetStatus) == 0,
-            "E:I2:  Record in unregistered, exported, or discarded status"
+            "D:AI2: Record in unregistered, exported, or discarded status"
         );
 
         //^^^^^^^checks^^^^^^^^^
@@ -351,17 +351,17 @@ contract DECORATE is CORE { //CTS:EXAMINE COMMENTS NEED UPDATING
 
         require(
             AC_info.custodyType == 5,
-            "E:CRO:Asset class.custodyType must be 5 (wrapped/decorated erc721) & record must exist"
+            "D:E:Asset class.custodyType must be 5 (wrapped/decorated erc721) & record must exist"
         );
-        require( //CTS:EXAMINE, REDUNDANT:ASSET SHOULD NOT BE ABLE TO BE IN AC CUST TYPE 5 & DECORATED WITH EXT DATA !=0||CONTRACT.ADDR
-            (AC_info.extendedData == uint160(_tokenContract)) ||
-                (AC_info.extendedData == 0),
-            "E:DEC:Asset class extended data must be '0' or uint160(ERC721 contract address)"
+        require(
+            (AC_info.extendedData == _tokenContract) ||
+                (AC_info.extendedData == address(0)),
+            "D:E:Asset class extended data must be '0' or ERC721 contract address"
         );
 
         require(
             rec.assetStatus == 51,
-            "NPNC:EX: Must be in transferrable status (51)"
+            "D:E: Must be in transferrable status (51)"
         );
         //^^^^^^^checks^^^^^^^^^
 
@@ -393,18 +393,18 @@ contract DECORATE is CORE { //CTS:EXAMINE COMMENTS NEED UPDATING
         AC memory newAC_info = getACinfo(_newAssetClass);
 
         require(
-            (AC_info.custodyType == 5) && (newAC_info.custodyType == 5),
-            "E:CRO:Asset class.custodyType must be 5 (wrapped/decorated erc721) & record must exist"
+            ((AC_info.custodyType == 5) || AC_info.custodyType == 3) && (newAC_info.custodyType == 5),
+            "D:I:Asset class.custodyType must be 5 (wrapped/decorated erc721) & record must exist"
         );
-        require( //CTS:EXAMINE, REDUNDANT:ASSET SHOULD NOT BE ABLE TO BE IN AC CUST TYPE 5 & DECORATED WITH EXT DATA !=0||CONTRACT.ADDR
-            (AC_info.extendedData == uint160(_tokenContract)) ||
-                (AC_info.extendedData == 0),
-            "E:DEC:Asset class extended data must be '0' or uint160(ERC721 contract address)"
+        require(
+            (AC_info.extendedData == _tokenContract) ||
+                (AC_info.extendedData == address(0)),
+            "D:I:Asset class extended data must be '0' or ERC721 contract address"
         );
-        require(rec.assetStatus == 70, "ANC:IA: Asset not exported");
+        require(rec.assetStatus == 70, "D:I: Asset not exported");
         require(
             AC_MGR.isSameRootAC(_newAssetClass, rec.assetClass) == 170,
-            "ANC:IA:Cannot change AC to new root"
+            "D:I:Cannot change AC to new root"
         );
         //^^^^^^^checks^^^^^^^^^
 
@@ -431,12 +431,12 @@ contract DECORATE is CORE { //CTS:EXAMINE COMMENTS NEED UPDATING
 
         require( //CTS:EXAMINE REDUNDANT: THROWS IN ONLY FUNCTION THAT CALLS createRecordOnly
             A_TKN.tokenExists(tokenId) == 0,
-            "E:CRO: token is already wrapped. Must discard wrapper before decorating"
+            "D:CRO: token is already wrapped. Must discard wrapper before decorating"
         );
 
         require( //CTS:EXAMINE REDUNDANT: THROWS IN ONLY FUNCTION THAT CALLS createRecordOnly
             AC_info.custodyType == 5,
-            "E:CRO:Asset class.custodyType must be 5 (wrapped/decorated erc721)"
+            "D:CRO:Asset class.custodyType must be 5 (wrapped/decorated erc721)"
         );
 
         STOR.newRecord(_idxHash, _rgtHash, _assetClass, _countDownStart);

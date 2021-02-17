@@ -324,7 +324,7 @@ contract AC_MGR is BASIC {
      *  caller holds ACtoken
      */
     function updateACextendedData(
-        uint160 _extData,
+        address _extData,
         uint32 _assetClass //-------------------------------------------------------TEST
     ) external isACtokenHolderOfClass(_assetClass) whenNotPaused {
         //^^^^^^^checks^^^^^^^^^
@@ -522,7 +522,7 @@ contract AC_MGR is BASIC {
             uint32,
             uint8,
             uint32,
-            uint160,
+            address,
             bytes32
         )
     {
@@ -547,7 +547,7 @@ contract AC_MGR is BASIC {
             uint8,
             uint8,
             uint8,
-            uint160
+            address
         )
     {
         //^^^^^^^checks^^^^^^^^^

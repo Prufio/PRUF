@@ -31,10 +31,10 @@ import "./Imports/token/ERC721/IERC721Receiver.sol";
 import "./Imports/math/SafeMath.sol";
 
 contract BASIC is ReentrancyGuard, AccessControl, IERC721Receiver, Pausable {
-    bytes32 public constant CONTRACT_ADMIN_ROLE = keccak256("CONTRACT_ADMIN_ROLE");
+    bytes32 public constant CONTRACT_ADMIN_ROLE =
+        keccak256("CONTRACT_ADMIN_ROLE");
     bytes32 public constant PAUSER_ROLE = keccak256("PAUSER_ROLE");
     bytes32 public constant ASSET_TXFR_ROLE = keccak256("ASSET_TXFR_ROLE");
-    
 
     struct Record {
         uint8 assetStatus; // Status - Transferrable, locked, in transfer, stolen, lost, etc.
@@ -44,7 +44,7 @@ contract BASIC is ReentrancyGuard, AccessControl, IERC721Receiver, Pausable {
         uint32 assetClass; // Type of asset
         uint32 countDown; // Variable that can only be dencreased from countDownStart
         uint32 countDownStart; // Starting point for countdown variable (set once)
-        uint120 price; //price set for items offered for sale  
+        uint120 price; //price set for items offered for sale
         bytes32 Ipfs1; // Publically viewable asset description
         bytes32 Ipfs2; // Publically viewable immutable notes
         bytes32 rightsHolder; // KEK256 Registered owner
@@ -59,7 +59,7 @@ contract BASIC is ReentrancyGuard, AccessControl, IERC721Receiver, Pausable {
         uint8 byte1; // Future Use
         uint8 byte2; // Future Use
         uint8 byte3; // Future Use
-        uint160 extendedData; // Future Use
+        address extendedData; // Future Use
         bytes32 IPFS; //IPFS data for defining idxHash creation attribute fields
     }
 
@@ -253,7 +253,8 @@ contract BASIC is ReentrancyGuard, AccessControl, IERC721Receiver, Pausable {
         address,
         uint256,
         bytes calldata
-    ) external virtual override returns (bytes4) { //-------------------------------------------------------STRICT PERMISSIONING EXEMPT 
+    ) external virtual override returns (bytes4) {
+        //-------------------------------------------------------STRICT PERMISSIONING EXEMPT
         //^^^^^^^checks^^^^^^^^^
         return this.onERC721Received.selector;
         //^^^^^^^interactions^^^^^^^^^
@@ -263,14 +264,17 @@ contract BASIC is ReentrancyGuard, AccessControl, IERC721Receiver, Pausable {
      * @dev Triggers stopped state. (pausable)
      *
      */
-    function pause() external isPauser { //-------------------------------------------------------STRICT PERMISSIONING
+    function pause() external isPauser {
+        //-------------------------------------------------------STRICT PERMISSIONING
         _pause();
     }
 
     /**
      * @dev Returns to normal state. (pausable)
-     */ 
-    function unpause() external isPauser { //-------------------------------------------------------STRICT PERMISSIONING
+     */
+
+    function unpause() external isPauser {
+        //-------------------------------------------------------STRICT PERMISSIONING
         _unpause();
     }
 
@@ -281,16 +285,17 @@ contract BASIC is ReentrancyGuard, AccessControl, IERC721Receiver, Pausable {
      */
     function getCallingUserType(uint32 _assetClass)
         internal
-        virtual
         view
+        virtual
         returns (uint8)
     {
         //^^^^^^^checks^^^^^^^^^
 
-        uint8 userTypeInAssetClass = AC_MGR.getUserType(
-            keccak256(abi.encodePacked(_msgSender())),
-            _assetClass
-        );
+        uint8 userTypeInAssetClass =
+            AC_MGR.getUserType(
+                keccak256(abi.encodePacked(_msgSender())),
+                _assetClass
+            );
 
         return userTypeInAssetClass;
         //^^^^^^^interactions^^^^^^^^^
@@ -299,9 +304,12 @@ contract BASIC is ReentrancyGuard, AccessControl, IERC721Receiver, Pausable {
     /*
      * @dev Get asset class information from AC_manager and return an AC Struct
      */
-    function getACinfo(
-        uint32 _assetClass
-    ) internal virtual view returns (AC memory) {
+    function getACinfo(uint32 _assetClass)
+        internal
+        view
+        virtual
+        returns (AC memory)
+    {
         //^^^^^^^checks^^^^^^^^^
 
         AC memory AC_info;

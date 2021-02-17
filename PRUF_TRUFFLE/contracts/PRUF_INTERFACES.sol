@@ -879,7 +879,7 @@ interface AC_MGR_Interface {
      * Requires that:
      *  caller holds ACtoken
      */
-    function updateACextendedData(uint160 _extData, uint32 _assetClass)
+    function updateACextendedData(address _extData, uint32 _assetClass)
         external;
 
     /*
@@ -919,7 +919,7 @@ interface AC_MGR_Interface {
             uint32,
             uint8,
             uint32,
-            uint32,
+            address,
             bytes32
         );
 
@@ -933,7 +933,7 @@ interface AC_MGR_Interface {
             uint8,
             uint8,
             uint8,
-            uint160
+            address
         );
 
     /*

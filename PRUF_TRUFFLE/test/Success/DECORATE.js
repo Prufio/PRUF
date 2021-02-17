@@ -2265,8 +2265,7 @@ contract('DECORATE', accounts => {
 
     it('Should mint 30000 tokens to account1', async () => {
 
-        console.log("//**************************************BEGIN DECORATE TEST**********************************************/")
-        console.log("//**************************************BEGIN DECORATE TEST SETUP**********************************************/")
+        console.log("//**************************************BEGIN DECORATE SUCCESS TEST**********************************************/")
         return UTIL_TKN.mint(
             account1,
             '30000000000000000000000',
@@ -2302,80 +2301,6 @@ contract('DECORATE', accounts => {
         )
     })
 
-    it('Should mint external 721 2', async () => {
-        return Foreign721.mintAssetToken(
-            account2,
-            "2",
-            "2",
-            { from: account1 }
-        )
-    })
-
-    it('Should mint external 721 3', async () => {
-        return Foreign721.mintAssetToken(
-            account1,
-            "3",
-            "3",
-            { from: account1 }
-        )
-    })
-
-    it('Should decorate asset3', async () => {
-        return DECORATE.decorate721(
-            "3",
-            Foreign721.address,
-            rgt1,
-            "17",
-            "5000",
-            { from: account1 }
-        )
-    })
-
-    it('Should export asset3', async () => {
-        return DECORATE._export(
-            "3",
-            Foreign721.address,
-            { from: account1 }
-        )
-    })
-
-    it('Should mint external 721 4', async () => {
-        return Foreign721.mintAssetToken(
-            account1,
-            "4",
-            "4",
-            { from: account1 }
-        )
-    })
-
-    it('Should decorate asset4', async () => {
-        return DECORATE.decorate721(
-            "4",
-            Foreign721.address,
-            rgt1,
-            "17",
-            "5000",
-            { from: account1 }
-        )
-    })
-
-    it('Should modStat of asset4 to 52', async () => {
-        return DECORATE._modStatus(
-            "4",
-            Foreign721.address,
-            "52",
-            { from: account1 }
-        )
-    })
-
-    it('Should update extended data of AC18 to A_TKN.address', async () => {
-        return AC_MGR.updateACextendedData(
-            A_TKN.address,
-            "18",
-            { from: account1 }
-        )
-    })
-
     it('Should update extended data of AC17 to Foreign721.address', async () => {
         return AC_MGR.updateACextendedData(
             Foreign721.address,
@@ -2384,401 +2309,232 @@ contract('DECORATE', accounts => {
         )
     })
 
-    it("Should retrieve extended data of AC17", async () => {
-        var data = [];
+    it("Should retrieve 1 (NULL)", async () => {
+        var Record = [];
 
-        return await AC_MGR.getAC_data("17", { from: account1 }, function (_err, _result) {
+        return await STOR.retrieveShortRecord(recordCode1, { from: account1 }, function (_err, _result) {
             if (_err) { }
             else {
-                data = Object.values(_result)
-                console.log(data)
+                Record = Object.values(_result)
+                console.log(Record)
+            }
+        })
+    })
+
+    it('Should decorate asset1', async () => {
+        return DECORATE.decorate721(
+            "1",
+            Foreign721.address,
+            rgt1,
+            "17",
+            "5000",
+            { from: account1 }
+        )
+    })
+
+    it("Should retrieve recordCode1", async () => {
+        var Record = [];
+
+        return await STOR.retrieveShortRecord(recordCode1, { from: account1 }, function (_err, _result) {
+            if (_err) { }
+            else {
+                Record = Object.values(_result)
+                console.log(Record)
+            }
+        })
+    })
+
+    it('Should mod status to 52', async () => {
+        return DECORATE._modStatus(
+            "1",
+            Foreign721.address,
+            "52",
+            { from: account1 }
+        )
+    })
+
+    it("Should retrieve recordCode1 stat52", async () => {
+        var Record = [];
+
+        return await STOR.retrieveShortRecord(recordCode1, { from: account1 }, function (_err, _result) {
+            if (_err) { }
+            else {
+                Record = Object.values(_result)
+                console.log(Record)
+            }
+        })
+    })
+
+    it('Should mod status to 51', async () => {
+        return DECORATE._modStatus(
+            "1",
+            Foreign721.address,
+            "51",
+            { from: account1 }
+        )
+    })
+
+    it("Should retrieve recordCode1 stat51", async () => {
+        var Record = [];
+
+        return await STOR.retrieveShortRecord(recordCode1, { from: account1 }, function (_err, _result) {
+            if (_err) { }
+            else {
+                Record = Object.values(_result)
+                console.log(Record)
+            }
+        })
+    })
+
+    it('Should setPrice to 500', async () => {
+        return DECORATE._setPrice(
+            "1",
+            Foreign721.address,
+            "500000000000000000000",
+            "2",
+            { from: account1 }
+        )
+    })
+
+    it("Should retrieve pricedata recordCode1 price 500", async () => {
+        var Record = [];
+
+        return await STOR.getPriceData(recordCode1, { from: account1 }, function (_err, _result) {
+            if (_err) { }
+            else {
+                Record = Object.values(_result)
+                console.log(Record)
+            }
+        })
+    })
+
+    it('Should setPrice to 0', async () => {
+        return DECORATE._clearPrice(
+            "1",
+            Foreign721.address,
+            { from: account1 }
+        )
+    })
+
+    it("Should retrieve pricedata recordCode1 price 0", async () => {
+        var Record = [];
+
+        return await STOR.getPriceData(recordCode1, { from: account1 }, function (_err, _result) {
+            if (_err) { }
+            else {
+                Record = Object.values(_result)
+                console.log(Record)
+            }
+        })
+    })
+
+    it('Should dec 500', async () => {
+        return DECORATE._decCounter(
+            "1",
+            Foreign721.address,
+            "500",
+            { from: account1 }
+        )
+    })
+
+    it("Should retrieve recordCode1 dec 4500", async () => {
+        var Record = [];
+
+        return await STOR.retrieveShortRecord(recordCode1, { from: account1 }, function (_err, _result) {
+            if (_err) { }
+            else {
+                Record = Object.values(_result)
+                console.log(Record)
+            }
+        })
+    })
+
+    it('Should _modIpfs1 to rgt1', async () => {
+        return DECORATE._modIpfs1(
+            "1",
+            Foreign721.address,
+            rgt1,
+            { from: account1 }
+        )
+    })
+
+    it("Should retrieve recordCode1 ipfs1=rgt1", async () => {
+        var Record = [];
+
+        return await STOR.retrieveShortRecord(recordCode1, { from: account1 }, function (_err, _result) {
+            if (_err) { }
+            else {
+                Record = Object.values(_result)
+                console.log(Record)
+            }
+        })
+    })
+
+    it('Should addIpfs2Note to rgt1', async () => {
+        return DECORATE.addIpfs2Note(
+            "1",
+            Foreign721.address,
+            rgt1,
+            { from: account1 }
+        )
+    })
+
+    it("Should retrieve recordCode1 ipfs1=rgt1", async () => {
+        var Record = [];
+
+        return await STOR.retrieveShortRecord(recordCode1, { from: account1 }, function (_err, _result) {
+            if (_err) { }
+            else {
+                Record = Object.values(_result)
+                console.log(Record)
+            }
+        })
+    })
+
+    it('Should export recordCode1', async () => {
+        return DECORATE._export(
+            "1",
+            Foreign721.address,
+            { from: account1 }
+        )
+    })
+
+    it("Should retrieve recordCode1 ac 1 stat 70", async () => {
+        var Record = [];
+
+        return await STOR.retrieveShortRecord(recordCode1, { from: account1 }, function (_err, _result) {
+            if (_err) { }
+            else {
+                Record = Object.values(_result)
+                console.log(Record)
+            }
+        })
+    })
+
+    it('Should import recordCode1', async () => {
+        return DECORATE._import(
+            "1",
+            Foreign721.address,
+            "18",
+            { from: account1 }
+        )
+    })
+
+    it("Should retrieve recordCode1 ac 18 stat 52", async () => {
+        var Record = [];
+
+        return await STOR.retrieveShortRecord(recordCode1, { from: account1 }, function (_err, _result) {
+            if (_err) { }
+            else {
+                Record = Object.values(_result)
+                console.log(Record)
             }
         })
     })
 
 
-    it('Should write recordCode1 in AC12', async () => {
-        return APP_NC.newRecord(
-            recordCode1,
-            rgt1,
-            '12',
-            '100',
-            { from: account1 }
-        )
-    })
-
-    //1
-    it('Should fail because caller is not token holder', async () => {
-
-        console.log("//**************************************END DECORATE TEST SETUP**********************************************/")
-        console.log("//**************************************BEGIN DECORATE FAIL BATCH (26)**********************************************/")
-        console.log("//**************************************BEGIN decorate721 FAIL BATCH**********************************************/")
-        return DECORATE.decorate721(
-            "1",
-            Foreign721.address,
-            rgt1,
-            "17",
-            "5000",
-            { from: account2 }
-        )
-    })
-
-    //2
-    it('Should fail because AC is not custodyType 5', async () => {
-        return DECORATE.decorate721(
-            "1",
-            Foreign721.address,
-            rgt1,
-            "12",
-            "5000",
-            { from: account1 }
-        )
-    })
-
-    //3
-    it('Should fail because AC extended data is not 0 || Foreign721.address', async () => {
-        return DECORATE.decorate721(
-            "1",
-            Foreign721.address,
-            rgt1,
-            "18",
-            "5000",
-            { from: account1 }
-        )
-    })
-
-    //4
-    it('Should fail because record already exists', async () => {
-        return DECORATE.decorate721(
-            "1",
-            Foreign721.address,
-            rgt1,
-            "17",
-            "5000",
-            { from: account1 }
-        )
-    })
-
-
-    it('Should decorate asset2', async () => {
-        return DECORATE.decorate721(
-            "2",
-            Foreign721.address,
-            rgt1,
-            "17",
-            "5000",
-            { from: account2 }
-        )
-    })
-
-    //5
-    it('Should fail because caller is not token holder', async () => {
-
-        console.log("//**************************************END decorate721 FAIL BATCH**********************************************/")
-        console.log("//**************************************BEGIN _modStatus BATCH**********************************************/")
-        return DECORATE._modStatus(
-            "1",
-            Foreign721.address,
-            "52",
-            { from: account2 }
-        )
-    })
-
-    //6
-    it('Should fail because record AC cust type !== 5', async () => {
-        return DECORATE._modStatus(
-            "1",
-            Foreign721.address,
-            "52",
-            { from: account1 }
-        )
-    })
-
-    //7
-    it('Should fail because newAssetStatus = 57 (stat rsvrd)', async () => {
-        return DECORATE._modStatus(
-            "2",
-            Foreign721.address,
-            "57",
-            { from: account2 }
-        )
-    })
-
-    //8
-    it('Should fail because newAssetStatus = 58 (stat rsvrd)', async () => {
-        return DECORATE._modStatus(
-            "2",
-            Foreign721.address,
-            "58",
-            { from: account2 }
-        )
-    })
-
-    //9
-    it('Should fail because newAssetStatus => 100 (stat rsvrd)', async () => {
-        return DECORATE._modStatus(
-            "2",
-            Foreign721.address,
-            "100",
-            { from: account2 }
-        )
-    })
-
-    //10
-    it('Should fail because newAssetStatus = exported', async () => {
-        return DECORATE._modStatus(
-            "2",
-            Foreign721.address,
-            "70",
-            { from: account2 }
-        )
-    })
-
-    // //12
-    // it('Should fail because assetStatus = exported', async () => {
-    //     return DECORATE._modStatus(
-    //         "3",
-    //         Foreign721.address,
-    //         "70",
-    //         { from: account1 }
-    //     )
-    // })
-
-    //11
-    it('Should fail because caller is not token holder', async () => {
-
-        console.log("//**************************************END _modStatus FAIL BATCH**********************************************/")
-        console.log("//**************************************BEGIN _setPrice BATCH**********************************************/")
-        return DECORATE._setPrice(
-            "1",
-            Foreign721.address,
-            "500000000000000000000",
-            "2",
-            { from: account2 }
-        )
-    })
-    //12
-    it('Should fail because record AC cust type !== 5', async () => {
-        return DECORATE._setPrice(
-            "1",
-            Foreign721.address,
-            "500000000000000000000",
-            "2",
-            { from: account1 }
-        )
-    })
-
-    // //15
-    // it('Should fail because assetStatus = exported', async () => {
-    //     return DECORATE._setPrice(
-    //         "3",
-    //         Foreign721.address,
-    //         "500000000000000000000",
-    //         "2",
-    //         { from: account1 }
-    //     )
-    // })
-
-    //13
-    it('Should fail because caller is not token holder', async () => {
-
-        console.log("//**************************************END _setPrice FAIL BATCH**********************************************/")
-        console.log("//**************************************BEGIN _clearPrice BATCH**********************************************/")
-        return DECORATE._clearPrice(
-            "1",
-            Foreign721.address,
-            { from: account2 }
-        )
-    })
-    //14
-    it('Should fail because record AC cust type !== 5', async () => {
-        return DECORATE._clearPrice(
-            "1",
-            Foreign721.address,
-            { from: account1 }
-        )
-    })
-
-    // //18
-    // it('Should fail because assetStatus = exported', async () => {
-    //     return DECORATE._clearPrice(
-    //         "3",
-    //         Foreign721.address,
-    //         { from: account1 }
-    //     )
-    // })
-
-    //15
-    it('Should fail because caller is not token holder', async () => {
-
-        console.log("//**************************************END _setPrice FAIL BATCH**********************************************/")
-        console.log("//**************************************BEGIN _decCounter BATCH**********************************************/")
-        return DECORATE._decCounter(
-            "1",
-            Foreign721.address,
-            "100",
-            { from: account2 }
-        )
-    })
-    //16
-    it('Should fail because record AC cust type !== 5', async () => {
-        return DECORATE._decCounter(
-            "1",
-            Foreign721.address,
-            "100",
-            { from: account1 }
-        )
-    })
-
-    // //21
-    // it('Should fail because assetStatus = exported', async () => {
-    //     return DECORATE._decCounter(
-    //         "3",
-    //         Foreign721.address,
-    //         "100",
-    //         { from: account1 }
-    //     )
-    // })
-
-    //17
-    it('Should fail because caller is not token holder', async () => {
-
-        console.log("//**************************************END _decCounter FAIL BATCH**********************************************/")
-        console.log("//**************************************BEGIN _modIpfs1 BATCH**********************************************/")
-        return DECORATE._modIpfs1(
-            "1",
-            Foreign721.address,
-            rgt1,
-            { from: account2 }
-        )
-    })
-    //18
-    it('Should fail because record AC cust type !== 5', async () => {
-        return DECORATE._modIpfs1(
-            "1",
-            Foreign721.address,
-            rgt1,
-            { from: account1 }
-        )
-    })
-
-    // //24
-    // it('Should fail because assetStatus = exported', async () => {
-    //     return DECORATE._modIpfs1(
-    //         "3",
-    //         Foreign721.address,
-    //         rgt1,
-    //         { from: account1 }
-    //     )
-    // })
-
-    //19
-    it('Should fail because caller is not token holder', async () => {
-
-        console.log("//**************************************END _modIpfs1 FAIL BATCH**********************************************/")
-        console.log("//**************************************BEGIN addIpfs2Note BATCH**********************************************/")
-        return DECORATE.addIpfs2Note(
-            "1",
-            Foreign721.address,
-            rgt1,
-            { from: account2 }
-        )
-    })
-    //20
-    it('Should fail because record AC cust type !== 5', async () => {
-        return DECORATE.addIpfs2Note(
-            "1",
-            Foreign721.address,
-            rgt1,
-            { from: account1 }
-        )
-    })
-
-    // //27
-    // it('Should fail because assetStatus = exported', async () => {
-    //     return DECORATE.addIpfs2Note(
-    //         "3",
-    //         Foreign721.address,
-    //         rgt1,
-    //         { from: account1 }
-    //     )
-    // })
-
-    //21
-    it('Should fail because caller is not token holder', async () => {
-
-        console.log("//**************************************END addIpfs2Note FAIL BATCH**********************************************/")
-        console.log("//**************************************BEGIN _export BATCH**********************************************/")
-        return DECORATE._export(
-            "1",
-            Foreign721.address,
-            { from: account2 }
-        )
-    })
-    //22
-    it('Should fail because record AC cust type !== 5', async () => {
-        return DECORATE._export(
-            "1",
-            Foreign721.address,
-            { from: account1 }
-        )
-    })
-
-    //23
-    it('Should fail because assetStatus !=51', async () => {
-        return DECORATE._export(
-            "4",
-            Foreign721.address,
-            { from: account1 }
-        )
-    })
-
-    //24
-    it('Should fail because caller is not token holder', async () => {
-
-        console.log("//**************************************END exportWrapper FAIL BATCH**********************************************/")
-        console.log("//**************************************BEGIN _import BATCH**********************************************/")
-        return DECORATE._import(
-            "3",
-            Foreign721.address,
-            "17",
-            { from: account2 }
-        )
-    })
-    //25
-    it('Should fail because record AC cust type !== 5', async () => {
-        return DECORATE._import(
-            "3",
-            Foreign721.address,
-            "12",
-            { from: account1 }
-        )
-    })
-
-    // //33
-    // it('Should fail because asset not exported', async () => {
-    //     return DECORATE._import(
-    //         "2",
-    //         Foreign721.address,
-    //         "17",
-    //         { from: account2 }
-    //     )
-    // })
-
-    //26
-    it('Should fail because asset cannot be imported into new root', async () => {
-        return DECORATE._import(
-            "3",
-            Foreign721.address,
-            "19",
-            { from: account1 }
-        )
-    })
-
-
     it('Should write record in AC 10 @ IDX&RGT(1)', async () => {
-        console.log("//**************************************END unpause FAIL BATCH**********************************************/")
-        console.log("//**************************************END DECORATE FAIL BATCH**********************************************/")
+        console.log("//**************************************END DECORATE SUCCESS BATCH**********************************************/")
         console.log("//**************************************END DECORATE TEST**********************************************/")
         console.log("//**************************************BEGIN THE WORKS**********************************************/")
         return APP.newRecord(

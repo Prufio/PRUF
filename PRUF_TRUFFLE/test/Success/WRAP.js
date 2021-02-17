@@ -912,6 +912,11 @@ __/\\\\\\\\\\\\\ _____/\\\\\\\\\ _______/\\../\\ ___/\\\\\\\\\\\\\\\
                         console.log("Authorizing WRAP")
                         return A_TKN.grantRole(minterRoleB32, WRAP.address, { from: account1 })
                     })
+        
+                    .then(() => {
+                        console.log("Authorizing WRAP TAR")
+                        return A_TKN.grantRole(trustedAgentRoleB32, WRAP.address, { from: account1 })
+                    })
             })
         
             it('Should authorize all payable contracts for transactions', async () => {
@@ -2340,8 +2345,7 @@ __/\\\\\\\\\\\\\ _____/\\\\\\\\\ _______/\\../\\ ___/\\\\\\\\\\\\\\\
         
             it('Should mint 30000 tokens to account1', async () => {
         
-                console.log("//**************************************BEGIN WRAP TEST**********************************************/")
-                console.log("//**************************************BEGIN FAIL TEST SETUP**********************************************/")
+                console.log("//**************************************BEGIN WRAP Success TEST**********************************************/")
                 return UTIL_TKN.mint(
                     account1,
                     '30000000000000000000000',
@@ -2400,93 +2404,40 @@ __/\\\\\\\\\\\\\ _____/\\\\\\\\\ _______/\\../\\ ___/\\\\\\\\\\\\\\\
                 )
             })
         
+            it("Should retrieve balance of Forign721 on account1 (1)", async () => {
+                var Record = [];
         
-            it('Should mint external 721 1', async () => {
-                return Foreign721.mint(
-                    account1,
-                    { from: account1 }
-                )
+                return await Foreign721.balanceOf(account1, { from: account1 }, function (_err, _result) {
+                    if (_err) { }
+                    else {
+                        Record = Object.values(_result)
+                        console.log(Record)
+                    }
+                })
             })
         
+            it("Should retrieve balance of Forign721 on WRAP (0)", async () => {
+                var Record = [];
         
-            it('Should approve WRAP to move external 721 1', async () => {
-                return Foreign721.approve(
-                    WRAP.address,
-                    "1",
-                    { from: account1 }
-                )
+                return await Foreign721.balanceOf(WRAP.address, { from: account2 }, function (_err, _result) {
+                    if (_err) { }
+                    else {
+                        Record = Object.values(_result)
+                        console.log(Record)
+                    }
+                })
             })
         
-
-            it('Should wrap external721 1', async () => {
-                return WRAP.wrap721(
-                    "1",
-                    Foreign721.address,
-                    rgt1,
-                    "17",
-                    "5000",
-                    { from: account1 }
-                )
-            })
-
-
-            it('Should modStat of recordCode2 asset', async () => {
-                return NP_NC._modStatus(
-                    recordCode2,
-                    '52',
-                    { from: account1 }
-                )
-            })
-
-
-            it('Should write asset1 in AC12', async () => {
-                return APP_NC.newRecord(
-                    asset1,
-                    rgt1,
-                    '12',
-                    '100',
-                    { from: account1 }
-                )
-            })
+            it("Should retrieve asset recordCode1 (incomplete)", async () => {
+                var Record = [];
         
-            //1
-            it('Should fail because caller is not token holder', async () => {
-        
-                console.log("//**************************************END WRAP TEST SETUP**********************************************/")
-                console.log("//**************************************BEGIN WRAP FAIL BATCH (6)**********************************************/")
-                console.log("//**************************************BEGIN wrap721 FAIL BATCH**********************************************/")
-                return WRAP.wrap721(
-                    "0",
-                    Foreign721.address,
-                    rgt1,
-                    "17",
-                    "5000",
-                    { from: account2 }
-                )
-            })
-        
-            //2
-            it('Should fail because AC custodyType != 5', async () => {
-                return WRAP.wrap721(
-                    "0",
-                    Foreign721.address,
-                    rgt1,
-                    "12",
-                    "5000",
-                    { from: account1 }
-                )
-            })
-        
-            //3
-            it('Should fail because AC extData != 0 || Foreign721.address', async () => {
-                return WRAP.wrap721(
-                    "0",
-                    Foreign721.address,
-                    rgt1,
-                    "18",
-                    "5000",
-                    { from: account1 }
-                )
+                return await STOR.retrieveShortRecord(recordCode1, { from: account2 }, function (_err, _result) {
+                    if (_err) { }
+                    else {
+                        Record = Object.values(_result)
+                        console.log(Record)
+                    }
+                })
             })
         
 
@@ -2501,38 +2452,113 @@ __/\\\\\\\\\\\\\ _____/\\\\\\\\\ _______/\\../\\ ___/\\\\\\\\\\\\\\\
                 )
             })
         
-            //4
-            it('Should fail because caller is not token holder', async () => {
+            it("Should retrieve balance of Forign721 on account1 (0)", async () => {
+                var Record = [];
         
-                console.log("//**************************************END wrap721 FAIL BATCH**********************************************/")
-                console.log("//**************************************BEGIN unWrap721 FAIL BATCH**********************************************/")
+                return await Foreign721.balanceOf(account1, { from: account1 }, function (_err, _result) {
+                    if (_err) { }
+                    else {
+                        Record = Object.values(_result)
+                        console.log(Record)
+                    }
+                })
+            })
+        
+            it("Should retrieve balance of Forign721 on WRAP (1)", async () => {
+                var Record = [];
+        
+                return await Foreign721.balanceOf(WRAP.address, { from: account2 }, function (_err, _result) {
+                    if (_err) { }
+                    else {
+                        Record = Object.values(_result)
+                        console.log(Record)
+                    }
+                })
+            })
+        
+            it("Should retrieve balance of A_TKN on account1 (1)", async () => {
+                var Record = [];
+        
+                return await A_TKN.balanceOf(account1, { from: account1 }, function (_err, _result) {
+                    if (_err) { }
+                    else {
+                        Record = Object.values(_result)
+                        console.log(Record)
+                    }
+                })
+            })
+        
+            it("Should retrieve asset recordCode1 (complete)", async () => {
+                var Record = [];
+        
+                return await STOR.retrieveShortRecord(recordCode1, { from: account2 }, function (_err, _result) {
+                    if (_err) { }
+                    else {
+                        Record = Object.values(_result)
+                        console.log(Record)
+                    }
+                })
+            })
+        
+
+            it('Should unWrap external721 0', async () => {
                 return WRAP.unWrap721(
                     recordCode1,
-                    { from: account2 }
-                )
-            })
-        
-            //5
-            it('Should fail because AC custodyType != 5', async () => {
-                return WRAP.unWrap721(
-                    asset1,
                     { from: account1 }
                 )
             })
         
-            //6
-            it('Should fail because asset stat != 51', async () => {
-                return WRAP.unWrap721(
-                    recordCode2,
-                    { from: account1 }
-                )
+            it("Should retrieve balance of Forign721 on account1 (1)", async () => {
+                var Record = [];
+        
+                return await Foreign721.balanceOf(account1, { from: account1 }, function (_err, _result) {
+                    if (_err) { }
+                    else {
+                        Record = Object.values(_result)
+                        console.log(Record)
+                    }
+                })
+            })
+        
+            it("Should retrieve balance of Forign721 on WRAP (0)", async () => {
+                var Record = [];
+        
+                return await Foreign721.balanceOf(WRAP.address, { from: account2 }, function (_err, _result) {
+                    if (_err) { }
+                    else {
+                        Record = Object.values(_result)
+                        console.log(Record)
+                    }
+                })
+            })
+        
+            it("Should retrieve balance of A_TKN on account1 (0)", async () => {
+                var Record = [];
+        
+                return await A_TKN.balanceOf(account1, { from: account1 }, function (_err, _result) {
+                    if (_err) { }
+                    else {
+                        Record = Object.values(_result)
+                        console.log(Record)
+                    }
+                })
+            })
+        
+            it("Should retrieve asset recordCode1 (complete)", async () => {
+                var Record = [];
+        
+                return await STOR.retrieveShortRecord(recordCode1, { from: account2 }, function (_err, _result) {
+                    if (_err) { }
+                    else {
+                        Record = Object.values(_result)
+                        console.log(Record)
+                    }
+                })
             })
         
         
             it('Should write record in AC 10 @ IDX&RGT(1)', async () => {
-                console.log("//**************************************END unpause FAIL BATCH**********************************************/")
-                console.log("//**************************************END DECORATE FAIL BATCH**********************************************/")
-                console.log("//**************************************END DECORATE TEST**********************************************/")
+                console.log("//**************************************END DECORATE Success TEST**********************************************/")
                 console.log("//**************************************BEGIN THE WORKS**********************************************/")
                 return APP.newRecord(
                     asset12,

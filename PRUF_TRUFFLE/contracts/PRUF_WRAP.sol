@@ -15,7 +15,7 @@ __/\\\\\\\\\\\\\ _____/\\\\\\\\\ _______/\\../\\ ___/\\\\\\\\\\\\\\\
  *  MUST BE TRUSTED AGENT IN A_TKN
  *
  *-----------------------------------------------------------------
- * Wraps and unwraps ERC721 compliant tokens in a PRüF Asset token 
+ * Wraps and unwraps ERC721 compliant tokens in a PRüF Asset token
  *----------------------------------------------------------------*/
 
 // SPDX-License-Identifier: UNLICENSED
@@ -78,9 +78,9 @@ contract WRAP is CORE {
             "WRAP:WRP:Asset class.custodyType must be 5 (wrapped/decorated erc721)"
         );
         require(
-            (AC_info.extendedData == uint160(_foreignTokenContract)) ||
-                (AC_info.extendedData == 0),
-            "WRAP:WRP:Asset class extended data must be '0' or uint160(ERC721 contract address)"
+            (AC_info.extendedData == _foreignTokenContract) ||
+                (AC_info.extendedData == address(0)),
+            "WRAP:WRP:Asset class extended data must be '0' or ERC721 contract address"
         );
         //^^^^^^^checks^^^^^^^^^
 
@@ -127,10 +127,10 @@ contract WRAP is CORE {
             AC_info.custodyType == 5,
             "WRAP:UNWRP:Asset class.custodyType must be 5 (wrapped/decorated erc721)"
         );
-        require(
-            (AC_info.extendedData == uint160(foreignTokenContract)) ||
-                (AC_info.extendedData == 0),
-            "WRAP:UNWRP:Asset class extended data must be '0' or uint160(ERC721 contract address)"
+        require( // CTS:EXAMINE, STAT UNREACHABLE WITH CURRENT CONTRACTS
+            (AC_info.extendedData == foreignTokenContract) ||
+                (AC_info.extendedData == address(0)),
+            "WRAP:UNWRP:Asset class extended data must be '0' or ERC721 contract address"
         );
         require(
             rec.assetStatus == 51,
@@ -160,6 +160,32 @@ contract WRAP is CORE {
         address _to,
         uint256 _tokenID
     ) internal {
-        IERC721(_tokenContract).safeTransferFrom(_from, _to, _tokenID);
+        IERC721(_tokenContract).transferFrom(_from, _to, _tokenID);
+    }
+
+    /*
+     * @dev create a Record in Storage @ idxHash (SETTER)
+     */
+    function createRecord(
+        bytes32 _idxHash,
+        bytes32 _rgtHash,
+        uint32 _assetClass,
+        uint32 _countDownStart
+    ) internal override {
+        uint256 tokenId = uint256(_idxHash);
+        AC memory AC_info = getACinfo(_assetClass);
+
+        require(
+            A_TKN.tokenExists(tokenId) == 0,
+            "W:CR:Asset token already exists"
+        );
+
+        require(
+            (AC_info.custodyType == 5),
+            "W:CR:Cannot create asset - contract not authorized for asset class custody type"
+        );
+
+        A_TKN.mintAssetToken(_msgSender(), tokenId, "pruf.io");
+        STOR.newRecord(_idxHash, _rgtHash, _assetClass, _countDownStart);
     }
 }

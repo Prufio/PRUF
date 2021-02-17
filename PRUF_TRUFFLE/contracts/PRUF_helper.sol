@@ -86,6 +86,13 @@ contract Helper is Ownable {
     {
         return keccak256(abi.encodePacked(_idx));
     }
+    function getHashOfUint256AndAddress(uint256 _idx, address _address)
+        external
+        pure
+        returns (bytes32)
+    {
+        return keccak256(abi.encodePacked(_idx, _address));
+    }
 
     function getB32Hash(bytes32 _idx) external pure returns (bytes32) {
         return keccak256(abi.encodePacked(_idx));
