@@ -597,7 +597,7 @@ contract('DECORATE', accounts => {
 
 
         recordCode1 = await Helper.getHashOfUint256AndAddress(
-            '1', Foreign721.address
+            '0', Foreign721.address
         )
 
     })
@@ -2292,11 +2292,9 @@ contract('DECORATE', accounts => {
     })
 
 
-    it('Should mint external 721 1', async () => {
-        return Foreign721.mintAssetToken(
+    it('Should mint external 721 0', async () => {
+        return Foreign721.mint(
             account1,
-            "1",
-            "1",
             { from: account1 }
         )
     })
@@ -2309,7 +2307,7 @@ contract('DECORATE', accounts => {
         )
     })
 
-    it("Should retrieve 1 (NULL)", async () => {
+    it("Should retrieve 0 (NULL)", async () => {
         var Record = [];
 
         return await STOR.retrieveShortRecord(recordCode1, { from: account1 }, function (_err, _result) {
@@ -2323,7 +2321,7 @@ contract('DECORATE', accounts => {
 
     it('Should decorate asset1', async () => {
         return DECORATE.decorate721(
-            "1",
+            "0",
             Foreign721.address,
             rgt1,
             "17",
@@ -2346,7 +2344,7 @@ contract('DECORATE', accounts => {
 
     it('Should mod status to 52', async () => {
         return DECORATE._modStatus(
-            "1",
+            "0",
             Foreign721.address,
             "52",
             { from: account1 }
@@ -2367,7 +2365,7 @@ contract('DECORATE', accounts => {
 
     it('Should mod status to 51', async () => {
         return DECORATE._modStatus(
-            "1",
+            "0",
             Foreign721.address,
             "51",
             { from: account1 }
@@ -2388,7 +2386,7 @@ contract('DECORATE', accounts => {
 
     it('Should setPrice to 500', async () => {
         return DECORATE._setPrice(
-            "1",
+            "0",
             Foreign721.address,
             "500000000000000000000",
             "2",
@@ -2410,7 +2408,7 @@ contract('DECORATE', accounts => {
 
     it('Should setPrice to 0', async () => {
         return DECORATE._clearPrice(
-            "1",
+            "0",
             Foreign721.address,
             { from: account1 }
         )
@@ -2430,7 +2428,7 @@ contract('DECORATE', accounts => {
 
     it('Should dec 500', async () => {
         return DECORATE._decCounter(
-            "1",
+            "0",
             Foreign721.address,
             "500",
             { from: account1 }
@@ -2451,7 +2449,7 @@ contract('DECORATE', accounts => {
 
     it('Should _modIpfs1 to rgt1', async () => {
         return DECORATE._modIpfs1(
-            "1",
+            "0",
             Foreign721.address,
             rgt1,
             { from: account1 }
@@ -2472,7 +2470,7 @@ contract('DECORATE', accounts => {
 
     it('Should addIpfs2Note to rgt1', async () => {
         return DECORATE.addIpfs2Note(
-            "1",
+            "0",
             Foreign721.address,
             rgt1,
             { from: account1 }
@@ -2493,7 +2491,7 @@ contract('DECORATE', accounts => {
 
     it('Should export recordCode1', async () => {
         return DECORATE._export(
-            "1",
+            "0",
             Foreign721.address,
             { from: account1 }
         )
@@ -2513,7 +2511,7 @@ contract('DECORATE', accounts => {
 
     it('Should import recordCode1', async () => {
         return DECORATE._import(
-            "1",
+            "0",
             Foreign721.address,
             "18",
             { from: account1 }

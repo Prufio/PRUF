@@ -14,7 +14,7 @@ __/\\\\\\\\\\\\\ _____/\\\\\\\\\ _______/\\../\\ ___/\\\\\\\\\\\\\\\
  *  TO DO --- complete test! DPS TEST NEW CONTRACT
  *
  *-----------------------------------------------------------------
- * Decorates ERC721 compliant tokens with a PRüF record 
+ * Decorates ERC721 compliant tokens with a PRüF record
  *----------------------------------------------------------------*/
 
 // Must set up a custodyType 5 asset class for decorated assets and auth this contract type 1. Root must be private to class.
@@ -27,7 +27,9 @@ pragma solidity ^0.6.7;
 import "./PRUF_CORE.sol";
 import "./Imports/token/ERC721/IERC721.sol";
 
-contract DECORATE is CORE { //CTS:EXAMINE COMMENTS NEED UPDATING
+contract DECORATE is
+    CORE //CTS:EXAMINE COMMENTS NEED UPDATING
+{
     // modifier isAuthorized(bytes32 _idxHash) override {
     //     //require that user is authorized and token is held by contract
     //     uint256 tokenId = uint256(_idxHash);
@@ -77,7 +79,10 @@ contract DECORATE is CORE { //CTS:EXAMINE COMMENTS NEED UPDATING
                 (AC_info.extendedData == address(0)),
             "D:DEC:Asset class extended data must be '0' or ERC721 contract address"
         );
-        require(rec.assetClass == 0, "D:DEC:Wrapper, decoration, or record already exists");
+        require(
+            rec.assetClass == 0,
+            "D:DEC:Wrapper, decoration, or record already exists"
+        );
 
         //^^^^^^^effects^^^^^^^^^
 
@@ -113,9 +118,12 @@ contract DECORATE is CORE { //CTS:EXAMINE COMMENTS NEED UPDATING
                 (AC_info.extendedData == address(0)),
             "D:MS:Asset class extended data must be '0' or ERC721 contract address"
         );
-        require((_newAssetStatus > 49) && (rec.assetStatus > 49), "E:MS: cannot change status < 49");
         require(
-                (_newAssetStatus != 57) &&
+            (_newAssetStatus > 49) && (rec.assetStatus > 49),
+            "E:MS: cannot change status < 49"
+        );
+        require(
+            (_newAssetStatus != 57) &&
                 (_newAssetStatus != 58) &&
                 (_newAssetStatus < 100),
             "D:MS: Stat Rsrvd"
@@ -393,12 +401,15 @@ contract DECORATE is CORE { //CTS:EXAMINE COMMENTS NEED UPDATING
         AC memory newAC_info = getACinfo(_newAssetClass);
 
         require(
-            ((AC_info.custodyType == 5) || AC_info.custodyType == 3) && (newAC_info.custodyType == 5),
+            ((AC_info.custodyType == 5) || AC_info.custodyType == 3) &&
+                (newAC_info.custodyType == 5),
             "D:I:Asset class.custodyType must be 5 (wrapped/decorated erc721) & record must exist"
         );
         require(
-            (AC_info.extendedData == _tokenContract) ||
-                (AC_info.extendedData == address(0)),
+            ((AC_info.extendedData == _tokenContract) ||
+                (AC_info.extendedData == address(0))) &&
+                ((newAC_info.extendedData == _tokenContract) ||
+                    (newAC_info.extendedData == address(0))),
             "D:I:Asset class extended data must be '0' or ERC721 contract address"
         );
         require(rec.assetStatus == 70, "D:I: Asset not exported");
