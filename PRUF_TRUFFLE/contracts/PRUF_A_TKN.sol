@@ -17,10 +17,10 @@ __/\\\\\\\\\\\\\ _____/\\\\\\\\\ _______/\\../\\ ___/\\\\\\\\\\\\\\\
  *---------------------------------------------------------------*/
 
 // SPDX-License-Identifier: UNLICENSED
-pragma solidity ^0.6.7;
+pragma solidity ^0.8.0;
 
 import "./Imports/access/AccessControl.sol";
-import "./Imports/GSN/Context.sol";
+import "./Imports/utils/Context.sol";
 import "./Imports/utils/Counters.sol";
 import "./Imports/token/ERC721/ERC721.sol";
 import "./Imports/token/ERC721/ERC721Burnable.sol";
@@ -77,7 +77,7 @@ contract A_TKN is
     struct Record {
         uint8 assetStatus; // Status - Transferrable, locked, in transfer, stolen, lost, etc.
         uint8 forceModCount; // Number of times asset has been forceModded.
-        uint8 currency; //currency for price information (0=not for sale, 1=ETH, 2=PRüF, 3=DAI, 4=WBTC.... )
+        uint8 currency; //currency for price information (0=not for sale, 1=ETH, 2=PRUF, 3=DAI, 4=WBTC.... )
         uint16 numberOfTransfers; //number of transfers and forcemods
         uint32 assetClass; // Type of asset
         uint32 countDown; // Variable that can only be dencreased from countDownStart
@@ -88,7 +88,7 @@ contract A_TKN is
         bytes32 rightsHolder; // KEK256 Registered owner
     }
 
-    constructor() public ERC721("PRüF Asset Token", "PRAT") {
+    constructor() ERC721("PRUF Asset Token", "PRAT") {
         _setupRole(DEFAULT_ADMIN_ROLE, _msgSender());
         _setupRole(CONTRACT_ADMIN_ROLE, _msgSender());
         _setupRole(MINTER_ROLE, _msgSender()); //ALL CONTRACTS THAT MINT ASSET TOKENS

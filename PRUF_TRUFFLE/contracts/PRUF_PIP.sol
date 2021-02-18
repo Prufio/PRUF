@@ -16,11 +16,13 @@ __/\\\\\\\\\\\\\ _____/\\\\\\\\\ _______/\\../\\ ___/\\\\\\\\\\\\\\\
  *---------------------------------------------------------------*/
 
 // SPDX-License-Identifier: UNLICENSED
-pragma solidity ^0.6.7;
+pragma solidity ^0.8.0;
 
 import "./PRUF_CORE.sol";
+import "./Imports/math/SafeMath.sol";
 
 contract PIP is CORE {
+    using SafeMath for uint256;
     uint256 importDiscount = 2;
 
     /*

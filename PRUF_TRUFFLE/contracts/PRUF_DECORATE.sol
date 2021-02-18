@@ -14,7 +14,7 @@ __/\\\\\\\\\\\\\ _____/\\\\\\\\\ _______/\\../\\ ___/\\\\\\\\\\\\\\\
  *  TO DO --- complete test! DPS TEST NEW CONTRACT
  *
  *-----------------------------------------------------------------
- * Decorates ERC721 compliant tokens with a PRüF record
+ * Decorates ERC721 compliant tokens with a PRUF record
  *----------------------------------------------------------------*/
 
 // Must set up a custodyType 5 asset class for decorated assets and auth this contract type 1. Root must be private to class.
@@ -22,7 +22,7 @@ __/\\\\\\\\\\\\\ _____/\\\\\\\\\ _______/\\../\\ ___/\\\\\\\\\\\\\\\
 // or set to ERC721 contract address <works only with tokens from specified contract address>
 
 // SPDX-License-Identifier: UNLICENSED
-pragma solidity ^0.6.7;
+pragma solidity ^0.8.0;
 
 import "./PRUF_CORE.sol";
 import "./Imports/token/ERC721/IERC721.sol";

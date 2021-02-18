@@ -26,7 +26,7 @@ __/\\\\\\\\\\\\\ _____/\\\\\\\\\ _______/\\../\\ ___/\\\\\\\\\\\\\\\
  */
 
 // SPDX-License-Identifier: UNLICENSED
-pragma solidity ^0.6.7;
+pragma solidity ^0.8.0;
 
 import "./PRUF_BASIC.sol";
 import "./Imports/utils/ReentrancyGuard.sol";
@@ -82,7 +82,7 @@ contract AC_MGR is BASIC {
 
     uint32 private constant startingDiscount = 5100; // Purchased nodes start with 51% profit share
 
-    constructor() public {
+    constructor() {
         _setupRole(NODE_MINTER_ROLE, _msgSender());
         AC_number[""] = 4294967295; //points the blank string name to AC 4294967295
     }

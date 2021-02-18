@@ -15,11 +15,11 @@ __/\\\\\\\\\\\\\ _____/\\\\\\\\\ _______/\\../\\ ___/\\\\\\\\\\\\\\\
  *  MUST BE TRUSTED AGENT IN A_TKN
  *
  *-----------------------------------------------------------------
- * Wraps and unwraps ERC721 compliant tokens in a PRüF Asset token
+ * Wraps and unwraps ERC721 compliant tokens in a PRUF Asset token
  *----------------------------------------------------------------*/
 
 // SPDX-License-Identifier: UNLICENSED
-pragma solidity ^0.6.7;
+pragma solidity ^0.8.0;
 
 import "./PRUF_CORE.sol";
 import "./Imports/token/ERC721/IERC721.sol";

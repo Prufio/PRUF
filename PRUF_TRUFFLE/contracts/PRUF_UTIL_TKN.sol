@@ -19,12 +19,13 @@ __/\\\\\\\\\\\\\ _____/\\\\\\\\\ _______/\\../\\ ___/\\\\\\\\\\\\\\\
 
 // SPDX-License-Identifier: UNLICENSED
 
-pragma solidity ^0.6.7;
+pragma solidity ^0.8.0;
 
 import "./PRUF_INTERFACES.sol";
 import "./Imports/access/AccessControl.sol";
 import "./Imports/token/ERC20/ERC20Burnable.sol";
 import "./Imports/utils/Pausable.sol";
+import "./Imports/math/SafeMath.sol";
 import "./Imports/token/ERC20/ERC20Snapshot.sol";
 
 /**
@@ -88,7 +89,7 @@ contract UTIL_TKN is
      *
      * See {ERC20-constructor}.
      */
-    constructor() public ERC20("PRüF Network", "PRUF") {
+    constructor() ERC20("PRUF Network", "PRUF") {
         _setupRole(DEFAULT_ADMIN_ROLE, _msgSender());
         _setupRole(CONTRACT_ADMIN_ROLE, _msgSender());
         _setupRole(MINTER_ROLE, _msgSender());

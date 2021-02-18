@@ -16,11 +16,13 @@ __/\\\\\\\\\\\\\ _____/\\\\\\\\\ _______/\\../\\ ___/\\\\\\\\\\\\\\\
  *---------------------------------------------------------------*/
 
 // SPDX-License-Identifier: UNLICENSED
-pragma solidity ^0.6.7;
+pragma solidity ^0.8.0;
 
 import "./PRUF_CORE_MAL.sol";
+import "./Imports/math/SafeMath.sol";
 
 contract MAL_APP is CORE_MAL {
+    using SafeMath for uint256;
     
     /*
      * @dev Verify user credentials

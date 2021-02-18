@@ -16,7 +16,7 @@ __/\\\\\\\\\\\\\ _____/\\\\\\\\\ _______/\\../\\ ___/\\\\\\\\\\\\\\\
  *---------------------------------------------------------------*/
 
 // SPDX-License-Identifier: UNLICENSED
-pragma solidity ^0.6.7;
+pragma solidity ^0.8.0;
 
 import "./PRUF_CORE.sol";
 
@@ -60,7 +60,7 @@ contract PURCHASE is CORE {
         );
         //^^^^^^^checks^^^^^^^^^
 
-        // --- transfer the PRüF tokens
+        // --- transfer the PRUF tokens
         if (rec.price > 0) {
             // allow for freeCycling
             UTIL_TKN.trustedAgentTransfer(_msgSender(), assetHolder, rec.price);

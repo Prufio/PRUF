@@ -31,7 +31,7 @@ __/\\\\\\\\\\\\\ _____/\\\\\\\\\ _______/\\../\\ ___/\\\\\\\\\\\\\\\
  *-----------------------------------------------------------------*/
 
 // SPDX-License-Identifier: UNLICENSED
-pragma solidity ^0.6.7;
+pragma solidity ^0.8.0;
 
 import "./PRUF_INTERFACES.sol";
 import "./Imports/access/AccessControl.sol";
@@ -50,7 +50,7 @@ contract STOR is AccessControl, ReentrancyGuard, Pausable {
     struct Record {
         uint8 assetStatus; // Status - Transferrable, locked, in transfer, stolen, lost, etc.
         uint8 forceModCount; // Number of times asset has been forceModded.
-        uint8 currency; //currency for price information (0=not for sale, 1=ETH, 2=PRüF, 3=DAI, 4=WBTC.... )
+        uint8 currency; //currency for price information (0=not for sale, 1=ETH, 2=PRUF, 3=DAI, 4=WBTC.... )
         uint16 numberOfTransfers; //number of transfers and forcemods
         uint32 assetClass; // Type of asset
         uint32 countDown; // Variable that can only be dencreased from countDownStart

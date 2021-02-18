@@ -17,10 +17,10 @@ __/\\\\\\\\\\\\\ _____/\\\\\\\\\ _______/\\../\\ ___/\\\\\\\\\\\\\\\
  *-----------------------------------------------------------------*/
 
 // SPDX-License-Identifier: UNLICENSED
-pragma solidity ^0.6.7;
+pragma solidity ^0.8.0;
 
 import "./Imports/access/AccessControl.sol";
-import "./Imports/GSN/Context.sol";
+import "./Imports/utils/Context.sol";
 import "./Imports/utils/Counters.sol";
 import "./Imports/token/ERC721/ERC721.sol";
 import "./Imports/token/ERC721/ERC721Burnable.sol";
@@ -61,7 +61,7 @@ contract AC_TKN is
 
     Counters.Counter private _tokenIdTracker;
 
-    constructor() public ERC721("PRüF Asset Class Node Token", "PRFN") {
+    constructor() ERC721("PRUF Asset Class Node Token", "PRFN") {
         _setupRole(DEFAULT_ADMIN_ROLE, _msgSender());
         _setupRole(CONTRACT_ADMIN_ROLE, _msgSender());
         _setupRole(MINTER_ROLE, _msgSender());
