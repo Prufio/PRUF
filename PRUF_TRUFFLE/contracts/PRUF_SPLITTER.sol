@@ -100,12 +100,12 @@ contract SPLIT is ReentrancyGuard, Pausable, AccessControl {
      * @dev Set snapshot ID
      * TESTING: ALL REQUIRES, ACCESS ROLE
      */
-    function ADMIN_setSnapshotID(uint256 _snapshot) external isAdmin {
+    // function ADMIN_setSnapshotID(uint256 _snapshot) external isAdmin {
         //^^^^^^^checks^^^^^^^^^
 
-        snapshotID = _snapshot;
+        // snapshotID = _snapshot;
         //^^^^^^^effects^^^^^^^^^
-    }
+    // }
 
     // /*
     //  * @dev Set pruf doulble multiplier
@@ -121,10 +121,10 @@ contract SPLIT is ReentrancyGuard, Pausable, AccessControl {
      * @dev pause the contract, renounce pauser role, take a snapshot,
      * TESTING: ALL REQUIRES, ACCESS ROLE
      */
-    function ADMIN_takeSnapshotAndPause() external isAdmin {
+    function ADMIN_takeSnapshot() external isAdmin {
         //^^^^^^^checks^^^^^^^^^
-        UTIL_TKN.pause();
-        renounceRole(PAUSER_ROLE, address(this));
+        // UTIL_TKN.pause();
+        // renounceRole(PAUSER_ROLE, address(this));
         snapshotID = UTIL_TKN.takeSnapshot();
         //^^^^^^^effects^^^^^^^^^
     }

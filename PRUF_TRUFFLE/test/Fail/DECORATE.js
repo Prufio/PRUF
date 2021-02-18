@@ -2334,7 +2334,7 @@ contract('DECORATE', accounts => {
     })
 
     it('Should mint external 721 3', async () => {
-        return Foreign721.mintAssetToken(
+        return Foreign721.mint(
             account1,
             { from: account1 }
         )
