@@ -44,7 +44,7 @@ contract SPLIT is ReentrancyGuard, Pausable, AccessControl {
 
     //uint256 public multiplier = 1;
 
-    constructor() public {
+    constructor() {
         _setupRole(DEFAULT_ADMIN_ROLE, msg.sender);
         _setupRole(CONTRACT_ADMIN_ROLE, msg.sender);
         _setupRole(PAUSER_ROLE, msg.sender);

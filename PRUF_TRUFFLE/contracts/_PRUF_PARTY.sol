@@ -57,7 +57,7 @@ contract FAUCET is ReentrancyGuard, Pausable, AccessControl {
 
     mapping(address => whiteListedAddress) private whiteList;
 
-    constructor() public {
+    constructor() {
         _setupRole(DEFAULT_ADMIN_ROLE, _msgSender());
         _setupRole(PAUSER_ROLE, _msgSender());
         _setupRole(WHITELIST_ROLE, _msgSender());
