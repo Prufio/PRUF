@@ -114,7 +114,6 @@ contract A_TKN is
     }
 
     modifier isTrustedAgent() {
-        //-----------------------------------------------------DPS:TEST--NEW
         require(
             hasRole(TRUSTED_AGENT_ROLE, _msgSender()),
             "AT:MOD-ITA: must have TRUSTED_AGENT_ROLE"
@@ -128,7 +127,7 @@ contract A_TKN is
 
     //----------------------Admin functions / isAdmin ----------------------//
 
-    /*-----------------------------------------------------DPS:TEST--NEW
+    /*
      * @dev ----------------------------------------PERMANANTLY !!!  Kills trusted agent and payable functions
      * this will break the functionality of current payment mechanisms.
      *
@@ -171,7 +170,7 @@ contract A_TKN is
 
     ////----------------------Regular operations----------------------//
 
-    /*-----------------------------------------------------DPS:TEST--NEW
+    /*
      * @dev Set calling wallet to a "cold Wallet" that cannot be manipulated by TRUSTED_AGENT or PAYABLE permissioned functions
      * WALLET ADDRESSES SET TO "Cold" DO NOT WORK WITH TRUSTED_AGENT FUNCTIONS and must be unset from cold before it can interact with
      * contract functions.
@@ -180,7 +179,7 @@ contract A_TKN is
         coldWallet[_msgSender()] = 170;
     }
 
-    /*-----------------------------------------------------DPS:TEST--NEW
+    /*
      * @dev un-set calling wallet to a "cold Wallet", enabling manipulation by TRUSTED_AGENT and PAYABLE permissioned functions
      * WALLET ADDRESSES SET TO "Cold" DO NOT WORK WITH TRUSTED_AGENT FUNCTIONS and must be unset from cold before it can interact with
      * contract functions.
@@ -189,7 +188,7 @@ contract A_TKN is
         coldWallet[_msgSender()] = 0;
     }
 
-    /*-----------------------------------------------------DPS:TEST--NEW
+    /*
      * @dev return an adresses "cold wallet" status
      * WALLET ADDRESSES SET TO "Cold" DO NOT WORK WITH TRUSTED_AGENT FUNCTIONS
      */
@@ -463,7 +462,7 @@ contract A_TKN is
             _rec.forceModCount,
             _rec.numberOfTransfers
         ); // Send data and writehash to storage
-        //-----------------------------------------------------DPS:TEST--NEW
+        //
         STOR.clearPrice(_idxHash); //sets price and currency of a record to zero
         //^^^^^^^interactions^^^^^^^^^
     }
