@@ -61,8 +61,8 @@ contract PIP is CORE {
         bytes32 b32URI = keccak256(
             abi.encodePacked(_hashedAuthCode, _assetClass)
         );
-        // tokenURI = uint256toString(uint256(b32URI));
-        tokenURI = "pruf.io";
+        tokenURI = uint256toString(uint256(b32URI));
+        // tokenURI = "pruf.io";
         //^^^^^^^effects^^^^^^^^^^^^
 
         A_TKN.mintAssetToken(address(this), tokenId, tokenURI); //mint a PIP token
@@ -151,6 +151,7 @@ contract PIP is CORE {
             value /= 10;
         }
         return string(buffer);
+        // return "pip";
     }
 
 
