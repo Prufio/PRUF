@@ -56,15 +56,17 @@ contract PIP is CORE {
             rec.assetClass == 0, //verified as VALID
             "N:MNA: Asset already registered in system"
         );
-        //^^^^^^^checks^^^^^^^^^
+        // //^^^^^^^checks^^^^^^^^^
         string memory tokenURI;
         bytes32 b32URI = keccak256(
             abi.encodePacked(_hashedAuthCode, _assetClass)
         );
-        tokenURI = uint256toString(uint256(b32URI));
+        // tokenURI = uint256toString(uint256(b32URI));
+        tokenURI = "pruf.io";
         //^^^^^^^effects^^^^^^^^^^^^
 
         A_TKN.mintAssetToken(address(this), tokenId, tokenURI); //mint a PIP token
+        // A_TKN.mintAssetToken(address(this), 1, "pip"); //mint a PIP token
 
         //^^^^^^^interactions^^^^^^^^^^^^
     }
