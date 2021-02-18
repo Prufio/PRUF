@@ -17,7 +17,7 @@ __/\\\\\\\\\\\\\ _____/\\\\\\\\\ _______/\\../\\ ___/\\\\\\\\\\\\\\\
  *-----------------------------------------------------------------*/
 
 // SPDX-License-Identifier: UNLICENSED
-pragma solidity ^0.7.1;
+pragma solidity ^0.8.0;
 
 import "./Imports/access/AccessControl.sol";
 import "./Imports/utils/Context.sol";
