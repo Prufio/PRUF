@@ -46,6 +46,7 @@ __/\\\\\\\\\\\\\ _____/\\\\\\\\\ _______/\\../\\ ___/\\\\\\\\\\\\\\\
         let Helper;
         let MAL_APP;
         let UTIL_TKN;
+        let PIP;
         
         let string1Hash;
         let string2Hash;
