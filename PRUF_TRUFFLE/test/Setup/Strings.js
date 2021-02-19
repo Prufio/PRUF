@@ -28,23 +28,17 @@
 
 
             it("Should retrieve tempVal", async () =>{ 
+                return Strings.setTempVal()
+            })
+
+
+            it("Should retrieve tempVal", async () =>{ 
                 var Record;
                 
-                return await Strings.toString(function (_err, _result) {
+                return await Strings.getTempVal(function (_err, _result) {
                     if(_err){} 
                     else{Record = _result
                 console.log("Record:", Record)}
                 })
             })
-
-
-            // it("Should retrieve tempVal", async () =>{ 
-            //     var Record;
-                
-            //     return await Strings.getTempVal(function (_err, _result) {
-            //         if(_err){} 
-            //         else{Record = _result
-            //     console.log("Record:", Record)}
-            //     })
-            // })
         });
