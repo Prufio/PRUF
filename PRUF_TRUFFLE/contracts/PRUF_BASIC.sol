@@ -29,44 +29,16 @@ import "./Imports/utils/Pausable.sol";
 import "./Imports/utils/ReentrancyGuard.sol";
 import "./Imports/token/ERC721/IERC721Receiver.sol";
 
-abstract contract BASIC is ReentrancyGuard, AccessControl, IERC721Receiver, Pausable {
+abstract contract BASIC is
+    ReentrancyGuard,
+    AccessControl,
+    IERC721Receiver,
+    Pausable
+{
     bytes32 public constant CONTRACT_ADMIN_ROLE =
         keccak256("CONTRACT_ADMIN_ROLE");
     bytes32 public constant PAUSER_ROLE = keccak256("PAUSER_ROLE");
     bytes32 public constant ASSET_TXFR_ROLE = keccak256("ASSET_TXFR_ROLE");
-
-    // struct Record {
-    //     uint8 assetStatus; // Status - Transferrable, locked, in transfer, stolen, lost, etc.
-    //     uint8 forceModCount; // Number of times asset has been forceModded.
-    //     uint8 currency; //currency for price information (0=not for sale, 1=ETH, 2=PRUF, 3=DAI, 4=WBTC.... )
-    //     uint16 numberOfTransfers; //number of transfers and forcemods
-    //     uint32 assetClass; // Type of asset
-    //     uint32 countDown; // Variable that can only be dencreased from countDownStart
-    //     uint32 countDownStart; // Starting point for countdown variable (set once)
-    //     uint120 price; //price set for items offered for sale
-    //     bytes32 Ipfs1; // Publically viewable asset description
-    //     bytes32 Ipfs2; // Publically viewable immutable notes
-    //     bytes32 rightsHolder; // KEK256 Registered owner
-    // }
-
-    // struct AC {
-    //     //Struct for holding and manipulating assetClass data
-    //     string name; // NameHash for assetClass
-    //     uint32 assetClassRoot; // asset type root (bycyles - USA Bicycles)
-    //     uint8 custodyType; // custodial or noncustodial, special asset types
-    //     uint32 discount; // price sharing
-    //     uint8 byte1; // Future Use
-    //     uint8 byte2; // Future Use
-    //     uint8 byte3; // Future Use
-    //     address referenceAddress; // Future Use
-    //     bytes32 IPFS; //IPFS data for defining idxHash creation attribute fields
-    // }
-
-    // struct ContractDataHash {
-    //     //Struct for holding and manipulating contract authorization data
-    //     uint8 contractType; // Auth Level / type
-    //     bytes32 nameHash; // Contract Name hashed
-    // }
 
     address internal STOR_Address;
     STOR_Interface internal STOR;
@@ -341,7 +313,7 @@ abstract contract BASIC is ReentrancyGuard, AccessControl, IERC721Receiver, Paus
     /*
      * @dev Get a Record from Storage @ idxHash and return a Record Struct
      */
-     function getRecord(bytes32 _idxHash) internal returns (Record memory) {
+    function getRecord(bytes32 _idxHash) internal returns (Record memory) {
         //^^^^^^^checks^^^^^^^^^
         Record memory rec = STOR.retrieveRecord(_idxHash);
         //^^^^^^^effects^^^^^^^^^
@@ -349,33 +321,4 @@ abstract contract BASIC is ReentrancyGuard, AccessControl, IERC721Receiver, Paus
         return rec; // Returns Record struct rec
         //^^^^^^^interactions^^^^^^^^^
     }
-    // function getRecord(bytes32 _idxHash) internal view returns (Record memory) {
-    //     //^^^^^^^checks^^^^^^^^^
-    //     Record memory rec;
-    //     //^^^^^^^effects^^^^^^^^^
-
-    //     {
-    //         //Start of scope limit for stack depth
-    //         (
-    //             bytes32 _rightsHolder,
-    //             uint8 _assetStatus,
-    //             uint32 _assetClass,
-    //             uint32 _countDown,
-    //             uint32 _countDownStart,
-    //             bytes32 _Ipfs1,
-    //             bytes32 _Ipfs2
-    //         ) = STOR.retrieveRecord(_idxHash); // Get record from storage contract
-
-    //         rec.rightsHolder = _rightsHolder;
-    //         rec.assetStatus = _assetStatus;
-    //         rec.assetClass = _assetClass;
-    //         rec.countDown = _countDown;
-    //         rec.countDownStart = _countDownStart;
-    //         rec.Ipfs1 = _Ipfs1;
-    //         rec.Ipfs2 = _Ipfs2;
-    //     } //end of scope limit for stack depth
-
-    //     return (rec); // Returns Record struct rec
-    //     //^^^^^^^interactions^^^^^^^^^
-    // }
 }

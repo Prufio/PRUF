@@ -23,36 +23,6 @@ import "./PRUF_INTERFACES.sol";
 import "./Imports/utils/ReentrancyGuard.sol";
 
 contract ECR_CORE is BASIC {
-    // struct escrowData {
-    //     bytes32 controllingContractNameHash; //hash of the name of the controlling escrow contract
-    //     bytes32 escrowOwnerAddressHash; //hash of an address designated as an executor for the escrow contract
-    //     uint256 timelock;
-    // }
-
-    // struct escrowDataExtLight {
-    //     //1 slot
-    //     uint8 escrowData;
-    //     uint8 u8_1;
-    //     uint8 u8_2;
-    //     uint8 u8_3;
-    //     uint16 u16_1;
-    //     uint16 u16_2;
-    //     uint32 u32_1;
-    //     address addr_1;
-    // }
-
-    // struct escrowDataExtHeavy {
-    //     // 5 slots
-    //     uint32 u32_2;
-    //     uint32 u32_3;
-    //     uint32 u32_4;
-    //     address addr_2;
-    //     bytes32 b32_1;
-    //     bytes32 b32_2;
-    //     uint256 u256_1;
-    //     uint256 u256_2;
-    // }
-
     function _setEscrowData(
         bytes32 _idxHash,
         uint8 _newAssetStatus,
@@ -71,10 +41,7 @@ contract ECR_CORE is BASIC {
         bytes32 _idxHash,
         escrowDataExtLight memory escrowDataLight
     ) internal whenNotPaused {
-        ECR_MGR.setEscrowDataLight(
-            _idxHash,
-            escrowDataLight
-        );
+        ECR_MGR.setEscrowDataLight(_idxHash, escrowDataLight);
         //^^^^^^^interactions^^^^^^^^^
     }
 
@@ -82,10 +49,7 @@ contract ECR_CORE is BASIC {
         bytes32 _idxHash,
         escrowDataExtHeavy memory escrowDataHeavy
     ) internal whenNotPaused {
-        ECR_MGR.setEscrowDataHeavy(
-            _idxHash,
-            escrowDataHeavy
-        );
+        ECR_MGR.setEscrowDataHeavy(_idxHash, escrowDataHeavy);
         //^^^^^^^interactions^^^^^^^^^
     }
 

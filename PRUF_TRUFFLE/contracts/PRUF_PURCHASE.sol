@@ -39,10 +39,9 @@ contract PURCHASE is CORE {
     /*
      * @dev Purchse an item in transferrable status with price and currency set to pruf
      */
-    function purchaseWithPRUF(bytes32 _idxHash) //CTS:EXAMINE NO CHECK TO SEE IF PRICE IS SET?
-        external
-        whenNotPaused
-    //isAuthorized(_idxHash) //purchaser is not holder
+    function purchaseWithPRUF(
+        bytes32 _idxHash //CTS:EXAMINE NO CHECK TO SEE IF PRICE IS SET?  CTS:OK because zero cost transactions
+    ) external whenNotPaused //isAuthorized(_idxHash) //purchaser is not holder
     {
         Record memory rec = getRecord(_idxHash);
         (rec.price, rec.currency) = STOR.getPriceData(_idxHash);
@@ -90,7 +89,10 @@ contract PURCHASE is CORE {
             needsImport(rec.assetStatus) == 0,
             "E:SP Record in unregistered, exported, or discarded status"
         );
-        require((rec.assetStatus > 49) || (_setForSale != 170) , "E:SP Asset Status < 50"); //CTS:EXAMINE Status < 50 not reachable with current contract structure, caller must hold token.
+        require(
+            (rec.assetStatus > 49) || (_setForSale != 170),
+            "E:SP Asset Status < 50"
+        ); //CTS:EXAMINE Status < 50 not reachable with current contract structure, caller must hold token.
         require(isEscrow(rec.assetStatus) == 0, "E:SP Record is in escrow");
 
         require(
@@ -98,7 +100,7 @@ contract PURCHASE is CORE {
             "E:SP: Price must be in PRUF tokens for this contract"
         );
         //^^^^^^^checks^^^^^^^^^
-        if (_setForSale == 170){
+        if (_setForSale == 170) {
             rec.assetStatus = 51;
             writeRecord(_idxHash, rec);
         }
