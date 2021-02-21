@@ -658,7 +658,7 @@ contract MAL_APP is CORE_MAL {
     {
         // Record memory rec = getRecord(_idxHash);
         // uint8 userType = getCallingUserType(rec.assetClass);
-        // uint256 escrowTime = block.timestamp + (_escrowTime);
+        // uint256 escrowTime = block.timestamp + _escrowTime;
         // uint8 newEscrowStatus;
         // ContractDataHash memory contractInfo = getContractInfo(
         //     address(this),

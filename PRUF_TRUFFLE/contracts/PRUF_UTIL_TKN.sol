@@ -243,7 +243,7 @@ contract UTIL_TKN is
             "PRuF:PFS: Cold Wallet - Trusted payable functions prohibited"
         );
         require( //redundant? throws on transfer?
-            balanceOf(_senderAddress) >= _rootPrice + (_ACTHprice),
+            balanceOf(_senderAddress) >= (_rootPrice + _ACTHprice),
             "PRuF:PFS: insufficient balance"
         );
         //^^^^^^^checks^^^^^^^^^
@@ -382,7 +382,7 @@ contract UTIL_TKN is
         if (from == address(0)) {
             // When minting tokens
             require(
-                totalSupply() + (amount) <= _cap,
+                (totalSupply() + amount) <= _cap,
                 "ERC20Capped: cap exceeded"
             );
         }
