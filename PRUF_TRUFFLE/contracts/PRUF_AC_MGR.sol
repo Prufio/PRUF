@@ -623,7 +623,7 @@ contract AC_MGR is BASIC {
     {
         //^^^^^^^checks^^^^^^^^^
 
-        uint256 numberOfTokensSold = ACtokenIndex - (uint256(1000000));
+        uint256 numberOfTokensSold = ACtokenIndex - uint256(1000000);
         return (
             numberOfTokensSold,
             currentACtokenPrice,

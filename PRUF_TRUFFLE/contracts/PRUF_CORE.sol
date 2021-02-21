@@ -167,7 +167,7 @@ contract CORE is BASIC {
         uint256 prufShare = pricing.ACTHprice - _ACTHprice;
 
         pricing.ACTHprice = _ACTHprice;
-        pricing.rootPrice = pricing.rootPrice + (prufShare);
+        pricing.rootPrice = pricing.rootPrice + prufShare;
 
         deductPayment(pricing);
         //^^^^^^^interactions^^^^^^^^^
@@ -193,7 +193,7 @@ contract CORE is BASIC {
         pricing.rootAddress = _oldOwner;
 
         half = pricing.ACTHprice / 2;
-        pricing.rootPrice = pricing.rootPrice + (half);
+        pricing.rootPrice = pricing.rootPrice + half;
         pricing.ACTHprice = pricing.ACTHprice - half;
 
         deductPayment(pricing);

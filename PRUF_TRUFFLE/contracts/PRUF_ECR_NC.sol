@@ -50,7 +50,7 @@ contract ECR_NC is ECR_CORE {
         uint8 _escrowStatus
     ) external nonReentrant isAuthorized(_idxHash) {
         Record memory rec = getRecord(_idxHash);
-        uint256 escrowTime = block.timestamp + (_escrowTime);
+        uint256 escrowTime = block.timestamp + _escrowTime;
         uint8 newEscrowStatus;
         ContractDataHash memory contractInfo = getContractInfo(
             address(this),

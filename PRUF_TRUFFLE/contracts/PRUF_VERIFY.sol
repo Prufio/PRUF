@@ -111,7 +111,7 @@ contract VERIFY is CORE {
      *      item cannot already be registered as "in" the callers wallet (reverts)
      *      itemData.status must be 0 (clean) (returns status)
      *      Item collisions cannot exceed maxCollisions (returns 100)
-     *      If item is marked as held in another wallet, collisions++ (return 0)     
+     *      If item is marked as held in another wallet, collisions++ return 0     
      *      If item is not marked as held, it will be listed as held "in" the callers wallet (return 170)
      */
     function safePutIn(
@@ -152,7 +152,7 @@ contract VERIFY is CORE {
      *      item cannot already be registered as "in" the callers wallet (reverts)
      *      if status is stolen return 3
      *      if status is counterfeit return 2
-     *      If item is marked as held in another wallet, collisions++ (return 0)
+     *      If item is marked as held in another wallet, collisions++ return 0
      *      If item is not marked as held, it will be listed as held "in" the callers wallet (return 170)
      */
     function putIn(bytes32 _idxHash, bytes32 _itemHash)
