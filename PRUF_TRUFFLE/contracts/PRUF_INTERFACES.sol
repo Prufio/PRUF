@@ -41,7 +41,7 @@ struct AC {
     uint8 byte1; // Future Use
     uint8 byte2; // Future Use
     uint8 byte3; // Future Use
-    address extendedData; // Future Use
+    address referenceAddress; // Used with wrap / decorate
     bytes32 IPFS; //IPFS data for defining idxHash creation attribute fields
 }
 
@@ -135,13 +135,21 @@ interface UTIL_TKN_Interface {
      * - the caller must have PAYABLE_ROLE.
      * - the caller must have a pruf token balance of at least `_rootPrice + _ACTHprice`.
      */
+     // ---- NON-LEGACY
     function payForService(
         address _senderAddress,
-        address _rootAddress,
-        uint256 _rootPrice,
-        address _ACTHaddress,
-        uint256 _ACTHprice
+        Invoice calldata invoice
     ) external;
+
+
+    // ---- LEGACY
+    // function payForService(
+    //     address _senderAddress,
+    //     address _rootAddress,
+    //     uint256 _rootPrice,
+    //     address _ACTHaddress,
+    //     uint256 _ACTHprice
+    // ) external;
 
     /*
      * @dev arbitrary burn (requires TRUSTED_AGENT_ROLE)   ****USE WITH CAUTION
@@ -955,7 +963,7 @@ interface AC_MGR_Interface {
      * Requires that:
      *  caller holds ACtoken
      */
-    function updateACextendedData(address _extData, uint32 _assetClass)
+    function updateACreferenceAddress(address _extData, uint32 _assetClass)
         external;
 
     /*
@@ -995,8 +1003,7 @@ interface AC_MGR_Interface {
             uint32,
             uint8,
             uint32,
-            address,
-            bytes32
+            address
         );
 
     /*
@@ -1005,12 +1012,7 @@ interface AC_MGR_Interface {
     function getExtAC_data(uint32 _assetClass)
         external
         view
-        returns (
-            uint8,
-            uint8,
-            uint8,
-            address
-        );
+        returns (AC memory);
 
     /*
      * @dev Retrieve AC_discount @ _assetClass, in percent ACTH share, * 100 (9000 = 90%)
@@ -1045,10 +1047,7 @@ interface AC_MGR_Interface {
         external
         view
         returns (
-            address,
-            uint256,
-            address,
-            uint256
+            Invoice memory
         );
 
     /*

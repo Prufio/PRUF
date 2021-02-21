@@ -58,7 +58,7 @@ abstract contract BASIC is ReentrancyGuard, AccessControl, IERC721Receiver, Paus
     //     uint8 byte1; // Future Use
     //     uint8 byte2; // Future Use
     //     uint8 byte3; // Future Use
-    //     address extendedData; // Future Use
+    //     address referenceAddress; // Future Use
     //     bytes32 IPFS; //IPFS data for defining idxHash creation attribute fields
     // }
 
@@ -317,8 +317,7 @@ abstract contract BASIC is ReentrancyGuard, AccessControl, IERC721Receiver, Paus
             AC_info.assetClassRoot,
             AC_info.custodyType,
             AC_info.discount,
-            AC_info.extendedData,
-            AC_info.IPFS
+            AC_info.referenceAddress
         ) = AC_MGR.getAC_data(_assetClass);
         return AC_info;
         //^^^^^^^interactions^^^^^^^^^

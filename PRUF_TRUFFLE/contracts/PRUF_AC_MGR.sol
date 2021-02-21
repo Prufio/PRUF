@@ -317,16 +317,24 @@ contract AC_MGR is BASIC {
 
     /*
      * @dev Modifies an assetClass
-     * Sets a new AC EXT Data uint32
+     * Sets a new AC EXT Data address
      * Requires that:
      *  caller holds ACtoken
      */
-    function updateACextendedData(
+    function updateACreferenceAddress(
+        //-------------------DPS:TEST this is modified. Now takes 3 bytes + address
         address _extData,
+        uint8 _byte1,
+        uint8 _byte2,
+        uint8 _byte3,
         uint32 _assetClass //-------------------------------------------------------TEST
     ) external isACtokenHolderOfClass(_assetClass) whenNotPaused {
         //^^^^^^^checks^^^^^^^^^
-        AC_data[_assetClass].extendedData = _extData;
+
+        AC_data[_assetClass].byte1 = _byte1;
+        AC_data[_assetClass].byte2 = _byte2;
+        AC_data[_assetClass].byte3 = _byte3;
+        AC_data[_assetClass].referenceAddress = _extData;
         //^^^^^^^effects^^^^^^^^^
     }
 
@@ -520,8 +528,7 @@ contract AC_MGR is BASIC {
             uint32,
             uint8,
             uint32,
-            address,
-            bytes32
+            address
         )
     {
         //^^^^^^^checks^^^^^^^^^
@@ -529,8 +536,7 @@ contract AC_MGR is BASIC {
             AC_data[_assetClass].assetClassRoot,
             AC_data[_assetClass].custodyType,
             AC_data[_assetClass].discount,
-            AC_data[_assetClass].extendedData,
-            AC_data[_assetClass].IPFS
+            AC_data[_assetClass].referenceAddress
         );
         //^^^^^^^interactions^^^^^^^^^
     }
@@ -541,20 +547,10 @@ contract AC_MGR is BASIC {
     function getExtAC_data(uint32 _assetClass)
         external
         view
-        returns (
-            uint8,
-            uint8,
-            uint8,
-            address
-        )
+        returns (AC memory)
     {
         //^^^^^^^checks^^^^^^^^^
-        return (
-            AC_data[_assetClass].byte1,
-            AC_data[_assetClass].byte2,
-            AC_data[_assetClass].byte3,
-            AC_data[_assetClass].extendedData
-        );
+        return (AC_data[_assetClass]);
         //^^^^^^^interactions^^^^^^^^^
     }
 
@@ -645,10 +641,7 @@ contract AC_MGR is BASIC {
         external
         view
         returns (
-            address,
-            uint256,
-            address,
-            uint256
+            Invoice memory
         )
     {
         AC memory AC_info = AC_data[_assetClass];
@@ -661,12 +654,14 @@ contract AC_MGR is BASIC {
         Costs memory rootCosts = cost[rootAssetClass][_service];
 
         //^^^^^^^checks^^^^^^^^^
-        return (
-            rootCosts.paymentAddress,
-            rootCosts.serviceCost,
-            costs.paymentAddress,
-            costs.serviceCost
-        );
+        Invoice memory invoice;
+        
+            invoice.rootAddress = rootCosts.paymentAddress;
+            invoice.rootPrice =rootCosts.serviceCost;
+            invoice.ACTHaddress = costs.paymentAddress;
+            invoice.ACTHprice = costs.serviceCost;
+
+        return invoice;
         //^^^^^^^interactions^^^^^^^^^
     }
 

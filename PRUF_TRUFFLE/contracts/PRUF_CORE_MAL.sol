@@ -23,9 +23,7 @@ import "./PRUF_INTERFACES.sol";
 import "./Imports/utils/ReentrancyGuard.sol";
 import "./PRUF_BASIC.sol";
 
-contract CORE_MAL is  BASIC {
-
-    
+contract CORE_MAL is BASIC {
     //--------------------------------------------------------------------------------------Storage Reading internal functions
 
     // /*
@@ -87,7 +85,6 @@ contract CORE_MAL is  BASIC {
         STOR.newRecord(_idxHash, _rgtHash, _assetClass, _countDownStart);
     }
 
-
     /*
      * @dev Write a Record to Storage @ idxHash
      */
@@ -138,21 +135,17 @@ contract CORE_MAL is  BASIC {
     /*
      * @dev Send payment to appropriate pullPayment adresses for payable function
      */
-    function deductServiceCosts(uint32 _assetClass, uint16 _service) internal whenNotPaused {
+    function deductServiceCosts(uint32 _assetClass, uint16 _service)
+        internal
+        whenNotPaused
+    {
         //^^^^^^^checks^^^^^^^^^
         Invoice memory pricing;
         //^^^^^^^effects^^^^^^^^^
-        (
-            pricing.rootAddress,
-            pricing.rootPrice,
-            pricing.ACTHaddress,
-            pricing.ACTHprice
-        ) = AC_MGR.getServiceCosts(_assetClass, _service);
+        pricing = AC_MGR.getServiceCosts(_assetClass, _service);
         deductPayment(pricing);
         //^^^^^^^interactions^^^^^^^^^
     }
-
-    
 
     //--------------------------------------------------------------PAYMENT FUNCTIONS
 
@@ -162,14 +155,11 @@ contract CORE_MAL is  BASIC {
     function deductPayment(Invoice memory pricing) internal whenNotPaused {
         UTIL_TKN.payForService(
             _msgSender(),
-            pricing.rootAddress,
-            pricing.rootPrice,
-            pricing.ACTHaddress,
-            pricing.ACTHprice
+            pricing
         );
     }
 
-//--------------------------------------------------------------------------------------status test internal functions
+    //--------------------------------------------------------------------------------------status test internal functions
 
     function isLostOrStolen(uint8 _assetStatus) internal pure returns (uint8) {
         if (
@@ -189,9 +179,7 @@ contract CORE_MAL is  BASIC {
      */
     function isEscrow(uint8 _assetStatus) internal pure returns (uint8) {
         if (
-            (_assetStatus != 6) &&
-            (_assetStatus != 50) &&
-            (_assetStatus != 56)
+            (_assetStatus != 6) && (_assetStatus != 50) && (_assetStatus != 56)
         ) {
             return 0;
         } else {
@@ -225,7 +213,4 @@ contract CORE_MAL is  BASIC {
     //         return 170;
     //     }
     // }
-
-
-    
 }

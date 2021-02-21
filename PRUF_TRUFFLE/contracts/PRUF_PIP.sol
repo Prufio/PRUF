@@ -19,10 +19,8 @@ __/\\\\\\\\\\\\\ _____/\\\\\\\\\ _______/\\../\\ ___/\\\\\\\\\\\\\\\
 pragma solidity ^0.8.0;
 
 import "./PRUF_CORE.sol";
- 
 
 contract PIP is CORE {
-    
     uint256 importDiscount = 2;
 
     /*
@@ -137,13 +135,7 @@ contract PIP is CORE {
     {
         //^^^^^^^checks^^^^^^^^^
 
-        Invoice memory pricing;
-        (
-            pricing.rootAddress,
-            pricing.rootPrice,
-            pricing.ACTHaddress,
-            pricing.ACTHprice
-        ) = AC_MGR.getServiceCosts(_assetClass, 1);
+        Invoice memory pricing = AC_MGR.getServiceCosts(_assetClass, 1);
 
         pricing.rootPrice = pricing.rootPrice / importDiscount;
         pricing.ACTHprice = pricing.ACTHprice / importDiscount;

@@ -62,7 +62,7 @@ contract STOR is AccessControl, ReentrancyGuard, Pausable {
     //     uint8 byte1; // Future Use
     //     uint8 byte2; // Future Use
     //     uint8 byte3; // Future Use
-    //     address extendedData; // Future Use
+    //     address referenceAddress; // Future Use
     //     bytes32 IPFS; //IPFS data for defining idxHash creation attribute fields
     // }
 

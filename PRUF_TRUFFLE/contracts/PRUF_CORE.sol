@@ -27,7 +27,6 @@ import "./Imports/utils/ReentrancyGuard.sol";
 import "./PRUF_BASIC.sol";
 
 contract CORE is BASIC {
-
     //--------------------------------------------------------------------------------------Storage Writing internal functions
 
     /*
@@ -139,12 +138,7 @@ contract CORE is BASIC {
             (ACTHnetPercent >= 0) && (ACTHnetPercent <= 100),
             "PC:DSC:invalid discount value for price calculation"
         );
-        (
-            pricing.rootAddress,
-            pricing.rootPrice,
-            pricing.ACTHaddress,
-            pricing.ACTHprice
-        ) = AC_MGR.getServiceCosts(_assetClass, _service);
+        pricing = AC_MGR.getServiceCosts(_assetClass, _service);
 
         //^^^^^^^effects^^^^^^^^^
 
@@ -172,12 +166,8 @@ contract CORE is BASIC {
         Invoice memory pricing;
         uint256 half;
         //^^^^^^^effects^^^^^^^^^
-        (
-            pricing.rootAddress,
-            pricing.rootPrice,
-            pricing.ACTHaddress,
-            pricing.ACTHprice
-        ) = AC_MGR.getServiceCosts(_assetClass, 1);
+
+        pricing = AC_MGR.getServiceCosts(_assetClass, 1);
         pricing.rootAddress = _oldOwner;
 
         half = pricing.ACTHprice / 2;
@@ -191,21 +181,30 @@ contract CORE is BASIC {
     //--------------------------------------------------------------PAYMENT FUNCTIONS
 
     /*
-     * @dev Deducts payment from transaction
+     * @dev Deducts payment from transaction -- NON_LEGACY
      */
     function deductPayment(Invoice memory pricing)
         internal
         virtual
         whenNotPaused
     {
-        UTIL_TKN.payForService(
-            _msgSender(),
-            pricing.rootAddress,
-            pricing.rootPrice,
-            pricing.ACTHaddress,
-            pricing.ACTHprice
-        );
+        UTIL_TKN.payForService(_msgSender(), pricing);
     }
+
+    // Old version for legacy UTIL_TKN ----- LEGACY
+    // function deductPayment(Invoice memory pricing)
+    //     internal
+    //     virtual
+    //     whenNotPaused
+    // {
+    //     UTIL_TKN.payForService(
+    //         _msgSender(),
+    //         pricing.rootAddress,
+    //         pricing.rootPrice,
+    //         pricing.ACTHaddress,
+    //         pricing.ACTHprice
+    //     );
+    // }
 
     //----------------------------------------------------------------------STATUS CHECKS
 

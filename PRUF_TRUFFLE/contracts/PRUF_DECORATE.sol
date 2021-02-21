@@ -75,8 +75,8 @@ contract DECORATE is
             "D:DEC:Asset class.custodyType must be 5 (wrapped/decorated erc721)"
         );
         require(
-            (AC_info.extendedData == _tokenContract) ||
-                (AC_info.extendedData == address(0)),
+            (AC_info.referenceAddress == _tokenContract) ||
+                (AC_info.referenceAddress == address(0)),
             "D:DEC:Asset class extended data must be '0' or ERC721 contract address"
         );
         require(
@@ -114,8 +114,8 @@ contract DECORATE is
             "D:MS:Asset class.custodyType must be 5 (wrapped/decorated erc721) & record must exist"
         );
         require(
-            (AC_info.extendedData == _tokenContract) ||
-                (AC_info.extendedData == address(0)),
+            (AC_info.referenceAddress == _tokenContract) ||
+                (AC_info.referenceAddress == address(0)),
             "D:MS:Asset class extended data must be '0' or ERC721 contract address"
         );
         require(
@@ -168,8 +168,8 @@ contract DECORATE is
             "D:SP:Asset class.custodyType must be 5 (wrapped/decorated erc721) & record must exist"
         );
         require(
-            (AC_info.extendedData == _tokenContract) ||
-                (AC_info.extendedData == address(0)),
+            (AC_info.referenceAddress == _tokenContract) ||
+                (AC_info.referenceAddress == address(0)),
             "D:SP:Asset class extended data must be '0' or ERC721 contract address"
         );
 
@@ -201,8 +201,8 @@ contract DECORATE is
             "D:CP::Asset class.custodyType must be 5 (wrapped/decorated erc721) & record must exist"
         );
         require(
-            (AC_info.extendedData == _tokenContract) ||
-                (AC_info.extendedData == address(0)),
+            (AC_info.referenceAddress == _tokenContract) ||
+                (AC_info.referenceAddress == address(0)),
             "D:CP:Asset class extended data must be '0' or ERC721 contract address"
         );
 
@@ -238,8 +238,8 @@ contract DECORATE is
             "D:DC:Asset class.custodyType must be 5 (wrapped/decorated erc721) & record must exist"
         );
         require(
-            (AC_info.extendedData == _tokenContract) ||
-                (AC_info.extendedData == address(0)),
+            (AC_info.referenceAddress == _tokenContract) ||
+                (AC_info.referenceAddress == address(0)),
             "D:DC:Asset class extended data must be '0' or ERC721 contract address"
         );
 
@@ -283,8 +283,8 @@ contract DECORATE is
             "D:MI1:Asset class.custodyType must be 5 (wrapped/decorated erc721) & record must exist"
         );
         require(
-            (AC_info.extendedData == _tokenContract) ||
-                (AC_info.extendedData == address(0)),
+            (AC_info.referenceAddress == _tokenContract) ||
+                (AC_info.referenceAddress == address(0)),
             "D:MI1:Asset class extended data must be '0' or ERC721 contract address"
         );
 
@@ -325,8 +325,8 @@ contract DECORATE is
             "D:AI2:Asset class.custodyType must be 5 (wrapped/decorated erc721) & record must exist"
         );
         require(
-            (AC_info.extendedData == _tokenContract) ||
-                (AC_info.extendedData == address(0)),
+            (AC_info.referenceAddress == _tokenContract) ||
+                (AC_info.referenceAddress == address(0)),
             "D:AI2:Asset class extended data must be '0' or ERC721 contract address"
         );
 
@@ -362,8 +362,8 @@ contract DECORATE is
             "D:E:Asset class.custodyType must be 5 (wrapped/decorated erc721) & record must exist"
         );
         require(
-            (AC_info.extendedData == _tokenContract) ||
-                (AC_info.extendedData == address(0)),
+            (AC_info.referenceAddress == _tokenContract) ||
+                (AC_info.referenceAddress == address(0)),
             "D:E:Asset class extended data must be '0' or ERC721 contract address"
         );
 
@@ -406,10 +406,10 @@ contract DECORATE is
             "D:I:Asset class.custodyType must be 5 (wrapped/decorated erc721) & record must exist"
         );
         require(
-            ((AC_info.extendedData == _tokenContract) ||
-                (AC_info.extendedData == address(0))) &&
-                ((newAC_info.extendedData == _tokenContract) ||
-                    (newAC_info.extendedData == address(0))),
+            ((AC_info.referenceAddress == _tokenContract) ||
+                (AC_info.referenceAddress == address(0))) &&
+                ((newAC_info.referenceAddress == _tokenContract) ||
+                    (newAC_info.referenceAddress == address(0))),
             "D:I:Asset class extended data must be '0' or ERC721 contract address"
         );
         require(rec.assetStatus == 70, "D:I: Asset not exported");

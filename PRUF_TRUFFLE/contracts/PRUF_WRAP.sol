@@ -78,8 +78,8 @@ contract WRAP is CORE {
             "WRAP:WRP:Asset class.custodyType must be 5 (wrapped/decorated erc721)"
         );
         require(
-            (AC_info.extendedData == _foreignTokenContract) ||
-                (AC_info.extendedData == address(0)),
+            (AC_info.referenceAddress == _foreignTokenContract) ||
+                (AC_info.referenceAddress == address(0)),
             "WRAP:WRP:Asset class extended data must be '0' or ERC721 contract address"
         );
         //^^^^^^^checks^^^^^^^^^
@@ -128,8 +128,8 @@ contract WRAP is CORE {
             "WRAP:UNWRP:Asset class.custodyType must be 5 (wrapped/decorated erc721)"
         );
         require( // CTS:EXAMINE, STAT UNREACHABLE WITH CURRENT CONTRACTS
-            (AC_info.extendedData == foreignTokenContract) ||
-                (AC_info.extendedData == address(0)),
+            (AC_info.referenceAddress == foreignTokenContract) ||
+                (AC_info.referenceAddress == address(0)),
             "WRAP:UNWRP:Asset class extended data must be '0' or ERC721 contract address"
         );
         require(
