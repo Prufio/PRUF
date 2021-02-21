@@ -74,19 +74,19 @@ contract A_TKN is
 
     Counters.Counter private _tokenIdTracker;
 
-    struct Record {
-        uint8 assetStatus; // Status - Transferrable, locked, in transfer, stolen, lost, etc.
-        uint8 forceModCount; // Number of times asset has been forceModded.
-        uint8 currency; //currency for price information (0=not for sale, 1=ETH, 2=PRUF, 3=DAI, 4=WBTC.... )
-        uint16 numberOfTransfers; //number of transfers and forcemods
-        uint32 assetClass; // Type of asset
-        uint32 countDown; // Variable that can only be dencreased from countDownStart
-        uint32 countDownStart; // Starting point for countdown variable (set once)
-        uint120 price; //price set for items offered for sale
-        bytes32 Ipfs1; // Publically viewable asset description
-        bytes32 Ipfs2; // Publically viewable immutable notes
-        bytes32 rightsHolder; // KEK256 Registered owner
-    }
+    // struct Record {
+    //     uint8 assetStatus; // Status - Transferrable, locked, in transfer, stolen, lost, etc.
+    //     uint8 forceModCount; // Number of times asset has been forceModded.
+    //     uint8 currency; //currency for price information (0=not for sale, 1=ETH, 2=PRUF, 3=DAI, 4=WBTC.... )
+    //     uint16 numberOfTransfers; //number of transfers and forcemods
+    //     uint32 assetClass; // Type of asset
+    //     uint32 countDown; // Variable that can only be dencreased from countDownStart
+    //     uint32 countDownStart; // Starting point for countdown variable (set once)
+    //     uint120 price; //price set for items offered for sale
+    //     bytes32 Ipfs1; // Publically viewable asset description
+    //     bytes32 Ipfs2; // Publically viewable immutable notes
+    //     bytes32 rightsHolder; // KEK256 Registered owner
+    // }
 
     constructor() ERC721("PRUF Asset Token", "PRAT") {
         _setupRole(DEFAULT_ADMIN_ROLE, _msgSender());
@@ -340,7 +340,7 @@ contract A_TKN is
     /**
      * @dev Safely burns a token   //DPB-TEST NEW
      */
-    function trustedAgentBurn(uint256 tokenId) 
+    function trustedAgentBurn(uint256 tokenId)
         external
         nonReentrant
         whenNotPaused
@@ -468,45 +468,55 @@ contract A_TKN is
     }
 
     /*
-     * @dev Get a Record from Storage @ idxHash
+     * @dev Get a Record from Storage @ idxHash and return a Record Struct
      */
-    function getRecord(bytes32 _idxHash) private view returns (Record memory) {
-        Record memory rec;
+    function getRecord(bytes32 _idxHash) internal returns (Record memory) {
         //^^^^^^^checks^^^^^^^^^
+        Record memory rec = STOR.retrieveRecord(_idxHash);
         //^^^^^^^effects^^^^^^^^^
 
-        {
-            //Start of scope limit for stack depth
-            (
-                bytes32 _rightsHolder,
-                uint8 _assetStatus,
-                uint32 _assetClass,
-                uint32 _countDown,
-                uint32 _countDownStart,
-                bytes32 _Ipfs1,
-                bytes32 _Ipfs2
-            ) = STOR.retrieveRecord(_idxHash); // Get record from storage contract
-
-            rec.rightsHolder = _rightsHolder;
-            rec.assetStatus = _assetStatus;
-            rec.assetClass = _assetClass;
-            rec.countDown = _countDown;
-            rec.countDownStart = _countDownStart;
-            rec.Ipfs1 = _Ipfs1;
-            rec.Ipfs2 = _Ipfs2;
-        } //end of scope limit for stack depth
-
-        return (rec); // Returns Record struct rec
+        return rec; // Returns Record struct rec
         //^^^^^^^interactions^^^^^^^^^
     }
 
+    // function getRecord(bytes32 _idxHash) private view returns (Record memory) {
+    //     Record memory rec;
+    //     //^^^^^^^checks^^^^^^^^^
+    //     //^^^^^^^effects^^^^^^^^^
 
-    
+    //     {
+    //         //Start of scope limit for stack depth
+    //         (
+    //             bytes32 _rightsHolder,
+    //             uint8 _assetStatus,
+    //             uint32 _assetClass,
+    //             uint32 _countDown,
+    //             uint32 _countDownStart,
+    //             bytes32 _Ipfs1,
+    //             bytes32 _Ipfs2
+    //         ) = STOR.retrieveRecord(_idxHash); // Get record from storage contract
+
+    //         rec.rightsHolder = _rightsHolder;
+    //         rec.assetStatus = _assetStatus;
+    //         rec.assetClass = _assetClass;
+    //         rec.countDown = _countDown;
+    //         rec.countDownStart = _countDownStart;
+    //         rec.Ipfs1 = _Ipfs1;
+    //         rec.Ipfs2 = _Ipfs2;
+    //     } //end of scope limit for stack depth
+
+    //     return (rec); // Returns Record struct rec
+    //     //^^^^^^^interactions^^^^^^^^^
+    // }
 
     /**
      * @dev Converts a `uint256` to its ASCII `string` decimal representation.
      */
-    function uint256toString(uint256 value) internal pure returns (string memory) {
+    function uint256toString(uint256 value)
+        internal
+        pure
+        returns (string memory)
+    {
         // Inspired by OraclizeAPI's implementation - MIT licence
         // https://github.com/oraclize/ethereum-api/blob/b42146b063c7d6ee1358846c198246239e9360e8/oraclizeAPI_0.4.25.sol
         // value = uint256(0x2ce8d04a9c35987429af538825cd2438cc5c5bb5dc427955f84daaa3ea105016);

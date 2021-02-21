@@ -36,30 +36,48 @@ pragma solidity ^0.8.0;
 import "./PRUF_INTERFACES.sol";
 import "./Imports/access/AccessControl.sol";
 import "./Imports/utils/Pausable.sol";
- 
 import "./Imports/utils/ReentrancyGuard.sol";
 
 contract STOR is AccessControl, ReentrancyGuard, Pausable {
+    // struct Record {
+    //     uint8 assetStatus; // Status - Transferrable, locked, in transfer, stolen, lost, etc.
+    //     uint8 forceModCount; // Number of times asset has been forceModded.
+    //     uint8 currency; //currency for price information (0=not for sale, 1=ETH, 2=PRUF, 3=DAI, 4=WBTC.... )
+    //     uint16 numberOfTransfers; //number of transfers and forcemods
+    //     uint32 assetClass; // Type of asset
+    //     uint32 countDown; // Variable that can only be dencreased from countDownStart
+    //     uint32 countDownStart; // Starting point for countdown variable (set once)
+    //     uint120 price; //price set for items offered for sale
+    //     bytes32 Ipfs1; // Publically viewable asset description
+    //     bytes32 Ipfs2; // Publically viewable immutable notes
+    //     bytes32 rightsHolder; // KEK256 Registered owner
+    // }
+
+    // struct AC {
+    //     //Struct for holding and manipulating assetClass data
+    //     string name; // NameHash for assetClass
+    //     uint32 assetClassRoot; // asset type root (bycyles - USA Bicycles)
+    //     uint8 custodyType; // custodial or noncustodial, special asset types
+    //     uint32 discount; // price sharing
+    //     uint8 byte1; // Future Use
+    //     uint8 byte2; // Future Use
+    //     uint8 byte3; // Future Use
+    //     address extendedData; // Future Use
+    //     bytes32 IPFS; //IPFS data for defining idxHash creation attribute fields
+    // }
+
+    // struct ContractDataHash {
+    //     //Struct for holding and manipulating contract authorization data
+    //     uint8 contractType; // Auth Level / type
+    //     bytes32 nameHash; // Contract Name hashed
+    // }
+
     bytes32 public constant PAUSER_ROLE = keccak256("PAUSER_ROLE");
     bytes32 public constant CONTRACT_ADMIN_ROLE =
         keccak256("CONTRACT_ADMIN_ROLE");
 
     bytes32 public constant B320xF_ =
         0xFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF;
-
-    struct Record {
-        uint8 assetStatus; // Status - Transferrable, locked, in transfer, stolen, lost, etc.
-        uint8 forceModCount; // Number of times asset has been forceModded.
-        uint8 currency; //currency for price information (0=not for sale, 1=ETH, 2=PRUF, 3=DAI, 4=WBTC.... )
-        uint16 numberOfTransfers; //number of transfers and forcemods
-        uint32 assetClass; // Type of asset
-        uint32 countDown; // Variable that can only be dencreased from countDownStart
-        uint32 countDownStart; // Starting point for countdown variable (set once)
-        uint120 price; //price set for items offered for sale
-        bytes32 Ipfs1; // Publically viewable asset description
-        bytes32 Ipfs2; // Publically viewable immutable notes
-        bytes32 rightsHolder; // KEK256 Registered owner
-    }
 
     mapping(string => mapping(uint32 => uint8)) internal contractInfo; // name=>AC=>authorization level
     mapping(address => string) private contractAddressToName; // Authorized contract addresses, indexed by address, with auth level 0-255
@@ -607,44 +625,54 @@ contract STOR is AccessControl, ReentrancyGuard, Pausable {
 
     //--------------------------------External READ ONLY contract functions / authuser---------------------------------//
     /*
-     * @dev return a record from the database, including rgt
+     * @dev return a record from the database
      */
     function retrieveRecord(bytes32 _idxHash)
         external
         view
         isAuthorized(0) //is an authorized contract, Asset class nonspecific
-        returns (
-            bytes32,
-            uint8,
-            uint32,
-            uint32,
-            uint32,
-            bytes32,
-            bytes32
-        )
+        returns (Record memory)
     {
-        Record memory rec = database[_idxHash];
-
-        //  if (
-        //      (rec.assetStatus == 3) ||
-        //      (rec.assetStatus == 4) ||
-        //      (rec.assetStatus == 53) ||
-        //      (rec.assetStatus == 54)
-        //  ) {
-        //      emit REPORT("Lost or stolen record queried", _idxHash);
-        //  }
-
-        return (
-            rec.rightsHolder,
-            rec.assetStatus,
-            rec.assetClass,
-            rec.countDown,
-            rec.countDownStart,
-            rec.Ipfs1,
-            rec.Ipfs2
-        );
+        return database[_idxHash];
         //^^^^^^^interactions^^^^^^^^^
     }
+
+    // function retrieveRecord(bytes32 _idxHash)
+    //     external
+    //     view
+    //     isAuthorized(0) //is an authorized contract, Asset class nonspecific
+    //     returns (
+    //         bytes32,
+    //         uint8,
+    //         uint32,
+    //         uint32,
+    //         uint32,
+    //         bytes32,
+    //         bytes32
+    //     )
+    // {
+    //     Record memory rec = database[_idxHash];
+
+    //     //  if (
+    //     //      (rec.assetStatus == 3) ||
+    //     //      (rec.assetStatus == 4) ||
+    //     //      (rec.assetStatus == 53) ||
+    //     //      (rec.assetStatus == 54)
+    //     //  ) {
+    //     //      emit REPORT("Lost or stolen record queried", _idxHash);
+    //     //  }
+
+    //     return (
+    //         rec.rightsHolder,
+    //         rec.assetStatus,
+    //         rec.assetClass,
+    //         rec.countDown,
+    //         rec.countDownStart,
+    //         rec.Ipfs1,
+    //         rec.Ipfs2
+    //     );
+    //     //^^^^^^^interactions^^^^^^^^^
+    // }
 
     /*
      * @dev return a record from the database w/o rgt

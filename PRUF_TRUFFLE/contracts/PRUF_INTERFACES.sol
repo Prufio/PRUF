@@ -18,6 +18,69 @@ __/\\\\\\\\\\\\\ _____/\\\\\\\\\ _______/\\../\\ ___/\\\\\\\\\\\\\\\
 // SPDX-License-Identifier: UNLICENSED
 pragma solidity ^0.8.0;
 
+struct Record {
+    uint8 assetStatus; // Status - Transferrable, locked, in transfer, stolen, lost, etc.
+    uint8 forceModCount; // Number of times asset has been forceModded.
+    uint8 currency; //currency for price information (0=not for sale, 1=ETH, 2=PRUF, 3=DAI, 4=WBTC.... )
+    uint16 numberOfTransfers; //number of transfers and forcemods
+    uint32 assetClass; // Type of asset
+    uint32 countDown; // Variable that can only be dencreased from countDownStart
+    uint32 countDownStart; // Starting point for countdown variable (set once)
+    uint120 price; //price set for items offered for sale
+    bytes32 Ipfs1; // Publically viewable asset description
+    bytes32 Ipfs2; // Publically viewable immutable notes
+    bytes32 rightsHolder; // KEK256 Registered owner
+}
+
+struct AC {
+    //Struct for holding and manipulating assetClass data
+    string name; // NameHash for assetClass
+    uint32 assetClassRoot; // asset type root (bycyles - USA Bicycles)
+    uint8 custodyType; // custodial or noncustodial, special asset types
+    uint32 discount; // price sharing
+    uint8 byte1; // Future Use
+    uint8 byte2; // Future Use
+    uint8 byte3; // Future Use
+    address extendedData; // Future Use
+    bytes32 IPFS; //IPFS data for defining idxHash creation attribute fields
+}
+
+struct ContractDataHash {
+    //Struct for holding and manipulating contract authorization data
+    uint8 contractType; // Auth Level / type
+    bytes32 nameHash; // Contract Name hashed
+}
+
+struct escrowData {
+    bytes32 controllingContractNameHash; //hash of the name of the controlling escrow contract
+    bytes32 escrowOwnerAddressHash; //hash of an address designated as an executor for the escrow contract
+    uint256 timelock;
+}
+
+struct escrowDataExtLight {
+    //1 slot
+    uint8 escrowData;
+    uint8 u8_1;
+    uint8 u8_2;
+    uint8 u8_3;
+    uint16 u16_1;
+    uint16 u16_2;
+    uint32 u32_1;
+    address addr_1;
+}
+
+struct escrowDataExtHeavy {
+    // 5 slots
+    uint32 u32_2;
+    uint32 u32_3;
+    uint32 u32_4;
+    address addr_2;
+    bytes32 b32_1;
+    bytes32 b32_2;
+    uint256 u256_1;
+    uint256 u256_2;
+}
+
 /*
  * @dev Interface for UTIL_TKN
  * INHERIANCE:
@@ -1103,18 +1166,20 @@ interface STOR_Interface {
     /*
      * @dev return a record from the database, including rgt
      */
-    function retrieveRecord(bytes32 _idxHash)
-        external
-        view
-        returns (
-            bytes32,
-            uint8,
-            uint32,
-            uint32,
-            uint32,
-            bytes32,
-            bytes32
-        );
+    function retrieveRecord(bytes32 _idxHash) external returns (Record memory);
+
+    // function retrieveRecord(bytes32 _idxHash)
+    //     external
+    //     view
+    //     returns (
+    //         bytes32,
+    //         uint8,
+    //         uint32,
+    //         uint32,
+    //         uint32,
+    //         bytes32,
+    //         bytes32
+    //     );
 
     /*
      * @dev return a record from the database w/o rgt
