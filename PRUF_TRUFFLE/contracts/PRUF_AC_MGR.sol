@@ -32,7 +32,7 @@ import "./PRUF_BASIC.sol";
 import "./Imports/utils/ReentrancyGuard.sol";
 
 contract AC_MGR is BASIC {
-    using SafeMath for uint256;
+    
 
     bytes32 public constant NODE_MINTER_ROLE = keccak256("NODE_MINTER_ROLE");
     bytes32 public constant B320xF_ =
@@ -206,7 +206,7 @@ contract AC_MGR is BASIC {
         if (ACtokenIndex < 4294000000) ACtokenIndex++; //increment ACtokenIndex up to last one
 
         uint256 newACtokenPrice;
-        uint256 numberOfTokensSold = ACtokenIndex.sub(uint256(1000000));
+        uint256 numberOfTokensSold = ACtokenIndex - uint256(1000000);
 
         if (numberOfTokensSold >= 4000) {
             newACtokenPrice = acPrice_L7;
@@ -376,13 +376,13 @@ contract AC_MGR is BASIC {
             cost[AC_data[_assetClass].assetClassRoot][1].paymentAddress; //payment for upgrade goes to root AC payment adress specified for service (1)
 
         uint256 oldShare = uint256(AC_data[_assetClass].discount);
-        uint256 maxShareIncrease = (upperLimit.sub(oldShare)); //max payment percentage never goes over upperLimit%
-        uint256 sharesToBuy = _amount.div(prufPerShare);
+        uint256 maxShareIncrease = (upperLimit - oldShare); //max payment percentage never goes over upperLimit%
+        uint256 sharesToBuy = _amount / prufPerShare;
         if (sharesToBuy > maxShareIncrease) {
             sharesToBuy = maxShareIncrease;
         }
 
-        uint256 upgradeCost = sharesToBuy.mul(prufPerShare); //multiplies and adds 18d
+        uint256 upgradeCost = sharesToBuy * prufPerShare; //multiplies and adds 18d
 
         //^^^^^^^effects^^^^^^^^^
 
@@ -410,7 +410,7 @@ contract AC_MGR is BASIC {
 
         //^^^^^^^checks^^^^^^^^^
 
-        discount = discount.add(_increaseAmount);
+        discount = discount + _increaseAmount;
         if (discount > upperLimit) discount = upperLimit;
 
         AC_data[_assetClass].discount = uint32(discount); //type conversion safe because discount always <= upperLimit
@@ -623,7 +623,7 @@ contract AC_MGR is BASIC {
     {
         //^^^^^^^checks^^^^^^^^^
 
-        uint256 numberOfTokensSold = ACtokenIndex.sub(uint256(1000000));
+        uint256 numberOfTokensSold = ACtokenIndex - (uint256(1000000));
         return (
             numberOfTokensSold,
             currentACtokenPrice,

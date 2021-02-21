@@ -21,7 +21,7 @@ pragma solidity ^0.8.0;
 import "./PRUF_CORE.sol";
 
 contract NP_NC is CORE {
-    //using SafeMath for uint256;
+    //
 
     /*
      * @dev Verify user credentials

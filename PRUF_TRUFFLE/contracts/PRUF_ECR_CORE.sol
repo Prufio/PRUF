@@ -23,7 +23,7 @@ import "./PRUF_INTERFACES.sol";
 import "./Imports/utils/ReentrancyGuard.sol";
 
 contract ECR_CORE is BASIC {
-    //using SafeMath for uint256;
+    //
 
     struct escrowData {
         bytes32 controllingContractNameHash; //hash of the name of the controlling escrow contract

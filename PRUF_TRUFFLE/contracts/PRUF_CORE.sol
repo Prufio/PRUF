@@ -27,8 +27,6 @@ import "./Imports/utils/ReentrancyGuard.sol";
 import "./PRUF_BASIC.sol";
 
 contract CORE is BASIC {
-    using SafeMath for uint256;
-
     struct Costs {
         uint256 serviceCost; // Cost in the given item category
         address paymentAddress; // 2nd-party fee beneficiary address
@@ -147,8 +145,8 @@ contract CORE is BASIC {
     {
         //^^^^^^^checks^^^^^^^^^
         Invoice memory pricing;
-        uint256 ACTHnetPercent = uint256(AC_MGR.getAC_discount(_assetClass))
-            .div(uint256(100));
+        uint256 ACTHnetPercent =
+            uint256(AC_MGR.getAC_discount(_assetClass)) / uint256(100);
         require( //IMPOSSIBLE TO REACH unless stuff is really broken, still ensures sanity
             (ACTHnetPercent >= 0) && (ACTHnetPercent <= 100),
             "PC:DSC:invalid discount value for price calculation"
@@ -162,14 +160,14 @@ contract CORE is BASIC {
 
         //^^^^^^^effects^^^^^^^^^
 
-        uint256 percent = pricing.ACTHprice.div(uint256(100)); //calculate 1% of listed ACTH price
+        uint256 percent = pricing.ACTHprice / uint256(100); //calculate 1% of listed ACTH price
 
-        uint256 _ACTHprice = ACTHnetPercent.mul(percent); //calculate the share proprotrion% * 1%
+        uint256 _ACTHprice = ACTHnetPercent * percent; //calculate the share proprotrion% * 1%
 
-        uint256 prufShare = pricing.ACTHprice.sub(_ACTHprice);
+        uint256 prufShare = pricing.ACTHprice - _ACTHprice;
 
         pricing.ACTHprice = _ACTHprice;
-        pricing.rootPrice = pricing.rootPrice.add(prufShare);
+        pricing.rootPrice = pricing.rootPrice + (prufShare);
 
         deductPayment(pricing);
         //^^^^^^^interactions^^^^^^^^^
@@ -194,9 +192,9 @@ contract CORE is BASIC {
         ) = AC_MGR.getServiceCosts(_assetClass, 1);
         pricing.rootAddress = _oldOwner;
 
-        half = pricing.ACTHprice.div(2);
-        pricing.rootPrice = pricing.rootPrice.add(half);
-        pricing.ACTHprice = pricing.ACTHprice.sub(half);
+        half = pricing.ACTHprice / 2;
+        pricing.rootPrice = pricing.rootPrice + (half);
+        pricing.ACTHprice = pricing.ACTHprice - half;
 
         deductPayment(pricing);
         //^^^^^^^interactions^^^^^^^^^

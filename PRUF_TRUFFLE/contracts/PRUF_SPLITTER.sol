@@ -25,12 +25,9 @@ import "./PRUF_INTERFACES.sol";
 import "./Imports/access/AccessControl.sol";
 import "./Imports/utils/Pausable.sol";
 import "./Imports/utils/ReentrancyGuard.sol";
-import "./Imports/math/SafeMath.sol";
 
 contract SPLIT is ReentrancyGuard, Pausable, AccessControl {
-    using SafeMath for uint256;
-
-    //----------------------------ROLE DFINITIONS
+    //----------------------------ROLE DEFINITIONS
     bytes32 public constant PAUSER_ROLE = keccak256("PAUSER_ROLE");
     bytes32 public constant CONTRACT_ADMIN_ROLE =
         keccak256("CONTRACT_ADMIN_ROLE");
@@ -101,10 +98,10 @@ contract SPLIT is ReentrancyGuard, Pausable, AccessControl {
      * TESTING: ALL REQUIRES, ACCESS ROLE
      */
     // function ADMIN_setSnapshotID(uint256 _snapshot) external isAdmin {
-        //^^^^^^^checks^^^^^^^^^
+    //^^^^^^^checks^^^^^^^^^
 
-        // snapshotID = _snapshot;
-        //^^^^^^^effects^^^^^^^^^
+    // snapshotID = _snapshot;
+    //^^^^^^^effects^^^^^^^^^
     // }
 
     // /*
@@ -141,12 +138,11 @@ contract SPLIT is ReentrancyGuard, Pausable, AccessControl {
         uint256 balanceAtSnapshot =
             UTIL_TKN.balanceOfAt(msg.sender, snapshotID);
 
-        balanceAtSnapshot = balanceAtSnapshot + (balanceAtSnapshot.div(10)); //add 10%
+        balanceAtSnapshot = balanceAtSnapshot + (balanceAtSnapshot / 10); //add 10%
         //^^^^^^^checks^^^^^^^^^
         hasSplit[msg.sender] = 170; //mark as done for caller address
 
         UTIL_TKN.mint(msg.sender, balanceAtSnapshot); //mint the new tokens to caller address
-        //UTIL_TKN.mint(msg.sender, balanceAtSnapshot.mul(multiplier));
         //^^^^^^^Interactions^^^^^^^^^
     }
 

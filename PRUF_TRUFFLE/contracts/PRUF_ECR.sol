@@ -21,7 +21,7 @@ pragma solidity ^0.8.0;
 import "./PRUF_ECR_CORE.sol";
 
 contract ECR is ECR_CORE {
-    using SafeMath for uint256;
+    
     /*
      * @dev Verify user credentials
      * Originating Address:
@@ -48,12 +48,10 @@ contract ECR is ECR_CORE {
     ) external nonReentrant isAuthorized(_idxHash) {
         Record memory rec = getRecord(_idxHash);
         uint8 userType = getCallingUserType(rec.assetClass);
-        uint256 escrowTime = block.timestamp.add(_escrowTime);
+        uint256 escrowTime = block.timestamp + _escrowTime;
         uint8 newEscrowStatus;
-        ContractDataHash memory contractInfo = getContractInfo(
-            address(this),
-            rec.assetClass
-        );
+        ContractDataHash memory contractInfo =
+            getContractInfo(address(this), rec.assetClass);
 
         require(contractInfo.contractType > 0, "E:SE: contract not auth in AC");
         require((userType > 0) && (userType < 10), "E:SE: user not auth in AC");
@@ -88,12 +86,10 @@ contract ECR is ECR_CORE {
     ) external nonReentrant isAuthorized(_idxHash) {
         Record memory rec = getRecord(_idxHash);
         uint8 userType = getCallingUserType(rec.assetClass);
-        uint256 escrowTime = block.timestamp.add(_escrowTime);
+        uint256 escrowTime = block.timestamp + _escrowTime;
         uint8 newEscrowStatus;
-        ContractDataHash memory contractInfo = getContractInfo(
-            address(this),
-            rec.assetClass
-        );
+        ContractDataHash memory contractInfo =
+            getContractInfo(address(this), rec.assetClass);
 
         require(contractInfo.contractType > 0, "E:SE: contract not auth in AC");
         require((userType > 0) && (userType < 10), "E:SE: user not auth in AC");
@@ -137,10 +133,8 @@ contract ECR is ECR_CORE {
     {
         Record memory rec = getRecord(_idxHash);
         escrowData memory escrow = getEscrowData(_idxHash);
-        ContractDataHash memory contractInfo = getContractInfo(
-            address(this),
-            rec.assetClass
-        );
+        ContractDataHash memory contractInfo =
+            getContractInfo(address(this), rec.assetClass);
         uint8 userType = getCallingUserType(rec.assetClass);
         bytes32 ownerHash = ECR_MGR.retrieveEscrowOwner(_idxHash);
 

@@ -21,7 +21,7 @@ pragma solidity ^0.8.0;
 import "./PRUF_ECR_CORE.sol";
 
 contract ECR2 is ECR_CORE {
-    using SafeMath for uint256;
+    
     /*
      * @dev Verify user credentials
      * Originating Address:
@@ -48,7 +48,7 @@ contract ECR2 is ECR_CORE {
     ) external nonReentrant whenNotPaused isAuthorized(_idxHash) {
         Record memory rec = getRecord(_idxHash);
         uint8 userType = getCallingUserType(rec.assetClass);
-        uint256 escrowTime = block.timestamp.add(_escrowTime);
+        uint256 escrowTime = block.timestamp + _escrowTime;
         uint8 newEscrowStatus;
         ContractDataHash memory contractInfo = getContractInfo(
             address(this),

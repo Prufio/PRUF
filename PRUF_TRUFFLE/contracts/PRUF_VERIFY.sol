@@ -42,7 +42,7 @@ import "./PRUF_CORE.sol";
 import "./PRUF_INTERFACES.sol";
 
 contract VERIFY is CORE {
-    using SafeMath for uint256;
+    
 
     struct ItemData {
         uint8 status; //Item status (suspect, counterfeit, stolen, lost, etc) type 3+ user

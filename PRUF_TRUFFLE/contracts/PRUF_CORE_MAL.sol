@@ -24,7 +24,7 @@ import "./Imports/utils/ReentrancyGuard.sol";
 import "./PRUF_BASIC.sol";
 
 contract CORE_MAL is  BASIC {
-    using SafeMath for uint256;
+    
 
     struct Costs {
         uint256 serviceCost; // Cost to brute-force a record transfer

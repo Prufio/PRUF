@@ -25,7 +25,7 @@ import "./PRUF_INTERFACES.sol";
 import "./Imports/access/AccessControl.sol";
 import "./Imports/token/ERC20/ERC20Burnable.sol";
 import "./Imports/utils/Pausable.sol";
-import "./Imports/math/SafeMath.sol";
+ 
 import "./Imports/token/ERC20/ERC20Snapshot.sol";
 
 /**
@@ -65,7 +65,7 @@ contract UTIL_TKN is
         "TRUSTED_AGENT_ROLE"
     );
 
-    using SafeMath for uint256;
+    
 
     uint256 private _cap = 4000000000000000000000000000; //4billion max supply
 
@@ -243,7 +243,7 @@ contract UTIL_TKN is
             "PRuF:PFS: Cold Wallet - Trusted payable functions prohibited"
         );
         require( //redundant? throws on transfer?
-            balanceOf(_senderAddress) >= _rootPrice.add(_ACTHprice),
+            balanceOf(_senderAddress) >= _rootPrice + (_ACTHprice),
             "PRuF:PFS: insufficient balance"
         );
         //^^^^^^^checks^^^^^^^^^
@@ -254,8 +254,8 @@ contract UTIL_TKN is
             _transfer(_senderAddress, _ACTHaddress, _ACTHprice);
         } else {
             //IF SHARES ADDRESS IS SET
-            uint256 sharesShare = _rootPrice.div(uint256(4)); // sharesShare is 0.25 share of root costs when we transition networks this should be a variable share.
-            uint256 rootShare = _rootPrice.sub(sharesShare); // adjust root price to be root price - 0.25 share
+            uint256 sharesShare = _rootPrice / 4; // sharesShare is 0.25 share of root costs when we transition networks this should be a variable share.
+            uint256 rootShare = _rootPrice - sharesShare; // adjust root price to be root price - 0.25 share
 
             _transfer(_senderAddress, _rootAddress, rootShare);
             _transfer(_senderAddress, sharesAddress, sharesShare);
@@ -382,7 +382,7 @@ contract UTIL_TKN is
         if (from == address(0)) {
             // When minting tokens
             require(
-                totalSupply().add(amount) <= _cap,
+                totalSupply() + (amount) <= _cap,
                 "ERC20Capped: cap exceeded"
             );
         }

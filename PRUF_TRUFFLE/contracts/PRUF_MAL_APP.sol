@@ -19,10 +19,10 @@ __/\\\\\\\\\\\\\ _____/\\\\\\\\\ _______/\\../\\ ___/\\\\\\\\\\\\\\\
 pragma solidity ^0.8.0;
 
 import "./PRUF_CORE_MAL.sol";
-import "./Imports/math/SafeMath.sol";
+ 
 
 contract MAL_APP is CORE_MAL {
-    using SafeMath for uint256;
+    
     
     /*
      * @dev Verify user credentials
@@ -403,7 +403,7 @@ contract MAL_APP is CORE_MAL {
     //     //     rec.numberOfTransfers = 0;
     //     // }
     //     //^^^^^^^effects^^^^^^^^^
-    //     rec.numberOfTransfers = rec.numberOfTransfers.sub(_decAmount);
+    //     rec.numberOfTransfers = rec.numberOfTransfers - (_decAmount);
     //     writeRecord(_idxHash, rec);
     //     return (rec.numberOfTransfers);
     //     //^^^^^^^interactions^^^^^^^^^
@@ -590,7 +590,7 @@ contract MAL_APP is CORE_MAL {
     {
         // Record memory rec = getRecord(_idxHash);
         // uint8 userType = getCallingUserType(rec.assetClass);
-        uint256 escrowTime = block.timestamp.add(_escrowTime);
+        uint256 escrowTime = block.timestamp + _escrowTime;
         uint8 newEscrowStatus;
         // ContractDataHash memory contractInfo = getContractInfo(
         //     address(this),
@@ -658,7 +658,7 @@ contract MAL_APP is CORE_MAL {
     {
         // Record memory rec = getRecord(_idxHash);
         // uint8 userType = getCallingUserType(rec.assetClass);
-        // uint256 escrowTime = block.timestamp.add(_escrowTime);
+        // uint256 escrowTime = block.timestamp + (_escrowTime);
         // uint8 newEscrowStatus;
         // ContractDataHash memory contractInfo = getContractInfo(
         //     address(this),

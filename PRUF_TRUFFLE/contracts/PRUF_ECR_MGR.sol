@@ -23,7 +23,7 @@ pragma solidity ^0.8.0;
 import "./PRUF_BASIC.sol";
 
 contract ECR_MGR is BASIC {
-    using SafeMath for uint256;
+    
 
     struct escrowData {
         //3 slots

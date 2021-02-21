@@ -19,14 +19,14 @@ __/\\\\\\\\\\\\\ _____/\\\\\\\\\ _______/\\../\\ ___/\\\\\\\\\\\\\\\
 pragma solidity ^0.8.0;
 
 import "./Imports/access/Ownable.sol";
-import "./Imports/math/SafeMath.sol";
+ 
 
 interface erc721_tokenInterface {
     function ownerOf(uint256) external view returns (address);
 }
 
 contract Helper is Ownable {
-    using SafeMath for uint256;
+    
 
     address erc721ContractAddress;
     erc721_tokenInterface erc721_tokenContract; //erc721_token prototype initialization

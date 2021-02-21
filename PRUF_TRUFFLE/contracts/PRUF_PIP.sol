@@ -19,10 +19,10 @@ __/\\\\\\\\\\\\\ _____/\\\\\\\\\ _______/\\../\\ ___/\\\\\\\\\\\\\\\
 pragma solidity ^0.8.0;
 
 import "./PRUF_CORE.sol";
-import "./Imports/math/SafeMath.sol";
+ 
 
 contract PIP is CORE {
-    using SafeMath for uint256;
+    
     uint256 importDiscount = 2;
 
     /*
@@ -58,9 +58,8 @@ contract PIP is CORE {
         );
         // //^^^^^^^checks^^^^^^^^^
         string memory tokenURI;
-        bytes32 b32URI = keccak256(
-            abi.encodePacked(_hashedAuthCode, _assetClass)
-        );
+        bytes32 b32URI =
+            keccak256(abi.encodePacked(_hashedAuthCode, _assetClass));
         tokenURI = uint256toString(uint256(b32URI));
         // tokenURI = "pruf.io";
         //^^^^^^^effects^^^^^^^^^^^^
@@ -105,7 +104,11 @@ contract PIP is CORE {
     /**
      * @dev Converts a `uint256` to its ASCII `string` decimal representation.
      */
-    function uint256toString(uint256 value) internal pure returns (string memory) {
+    function uint256toString(uint256 value)
+        internal
+        pure
+        returns (string memory)
+    {
         // Inspired by OraclizeAPI's implementation - MIT licence
         // https://github.com/oraclize/ethereum-api/blob/b42146b063c7d6ee1358846c198246239e9360e8/oraclizeAPI_0.4.25.sol
         // value = uint256(0x2ce8d04a9c35987429af538825cd2438cc5c5bb5dc427955f84daaa3ea105016);
@@ -128,45 +131,6 @@ contract PIP is CORE {
         return string(buffer);
     }
 
-    // function uint256toString(uint256 value) internal pure returns (string memory) {
-    //     // Inspired by OraclizeAPI's implementation - MIT licence
-    //     // https://github.com/oraclize/ethereum-api/blob/b42146b063c7d6ee1358846c198246239e9360e8/oraclizeAPI_0.4.25.sol
-    //     // shamelessly jacked straight outa OpenZepplin  openzepplin.org
-
-    //     if (value == 0) {
-    //         return "0";
-    //     }
-    //     uint256 temp = value;
-    //     uint256 digits;
-    //     unchecked {
-    //         while (temp != 0) {
-    //             digits++;
-    //             temp /= 10;
-    //         }
-    //     }
-    //     bytes memory buffer = new bytes(digits);
-    //     unchecked {
-    //         while (value != 0) {
-    //             digits -= 1;
-    //             buffer[digits] = bytes1(uint8(48 + uint256(value % 10)));
-    //             value /= 10;
-    //         }
-    //     }
-    //     return string(buffer);
-    //     // return "pip";
-    // }
-
-
-
-
-
-
-
-
-
-
-
-
     function deductImportRecordCosts(uint32 _assetClass)
         internal
         whenNotPaused
@@ -181,8 +145,8 @@ contract PIP is CORE {
             pricing.ACTHprice
         ) = AC_MGR.getServiceCosts(_assetClass, 1);
 
-        pricing.rootPrice = pricing.rootPrice.div(importDiscount);
-        pricing.ACTHprice = pricing.ACTHprice.div(importDiscount);
+        pricing.rootPrice = pricing.rootPrice / importDiscount;
+        pricing.ACTHprice = pricing.ACTHprice / importDiscount;
         //^^^^^^^effects^^^^^^^^^
 
         deductPayment(pricing);

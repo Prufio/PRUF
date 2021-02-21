@@ -22,7 +22,7 @@ import "./PRUF_ECR_CORE.sol";
 import "./PRUF_CORE.sol";
 
 contract RCLR is ECR_CORE, CORE {
-    using SafeMath for uint256;
+    
 
     bytes32 public constant DISCARD_ROLE = keccak256("DISCARD_ROLE");
 
@@ -41,7 +41,7 @@ contract RCLR is ECR_CORE, CORE {
         require((rec.assetStatus == 59), "R:D:Must be in recyclable status");
         //^^^^^^^checks^^^^^^^^^
 
-        uint256 escrowTime = block.timestamp + 3153600000000; //100,000 years in the FUTURE.........
+        uint256 escrowTime = block.timestamp + 31536000000; //1,000 years in the FUTURE.........
         bytes32 escrowOwnerHash = keccak256(abi.encodePacked(_msgSender()));
         escrowDataExtLight memory escrowDataLight;
         escrowDataLight.escrowData = 255;
