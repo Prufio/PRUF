@@ -24,19 +24,6 @@ import "./Imports/utils/ReentrancyGuard.sol";
 import "./PRUF_BASIC.sol";
 
 contract CORE_MAL is  BASIC {
-    
-
-    struct Costs {
-        uint256 serviceCost; // Cost to brute-force a record transfer
-        address paymentAddress; // 2nd-party fee beneficiary address
-    }
-
-    struct Invoice {
-        address rootAddress;
-        uint256 rootPrice;
-        address ACTHaddress;
-        uint256 ACTHprice;
-    }
 
     
     //--------------------------------------------------------------------------------------Storage Reading internal functions

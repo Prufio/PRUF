@@ -71,14 +71,6 @@ contract UTIL_TKN is
 
     address private sharesAddress = address(0);
 
-    struct Invoice {
-        //invoice struct to facilitate payment messaging in-contract
-        address rootAddress;
-        uint256 rootPrice;
-        address ACTHaddress;
-        uint256 ACTHprice;
-    }
-
     uint256 trustedAgentEnabled = 1;
 
     mapping(address => uint256) private coldWallet;

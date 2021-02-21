@@ -32,16 +32,14 @@ import "./PRUF_BASIC.sol";
 import "./Imports/utils/ReentrancyGuard.sol";
 
 contract AC_MGR is BASIC {
-    
-
     bytes32 public constant NODE_MINTER_ROLE = keccak256("NODE_MINTER_ROLE");
     bytes32 public constant B320xF_ =
         0xFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF;
 
-    struct Costs {
-        uint256 serviceCost; // Cost in the given item category
-        address paymentAddress; // 2nd-party fee beneficiary address
-    }
+    // struct Costs {
+    //     uint256 serviceCost; // Cost in the given item category
+    //     address paymentAddress; // 2nd-party fee beneficiary address
+    // }
 
     uint256 private ACtokenIndex = 1000000; //Starting index for purchased ACnode tokens
 

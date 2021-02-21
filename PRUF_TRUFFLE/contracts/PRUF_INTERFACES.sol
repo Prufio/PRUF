@@ -81,6 +81,19 @@ struct escrowDataExtHeavy {
     uint256 u256_2;
 }
 
+struct Costs {
+    uint256 serviceCost; // Cost in the given item category
+    address paymentAddress; // 2nd-party fee beneficiary address
+}
+
+struct Invoice {
+    //invoice struct to facilitate payment messaging in-contract
+    address rootAddress;
+    uint256 rootPrice;
+    address ACTHaddress;
+    uint256 ACTHprice;
+}
+
 /*
  * @dev Interface for UTIL_TKN
  * INHERIANCE:
@@ -1270,14 +1283,7 @@ interface ECR_MGR_Interface {
      */
     function setEscrowDataLight(
         bytes32 _idxHash,
-        uint8 _escrowData,
-        uint8 _u8_1,
-        uint8 _u8_2,
-        uint8 _u8_3,
-        uint16 _u16_1,
-        uint16 _u16_2,
-        uint32 _u32_1,
-        address _addr_1
+        escrowDataExtLight calldata _escrowDataLight
     ) external;
 
     /*
@@ -1287,14 +1293,7 @@ interface ECR_MGR_Interface {
      */
     function setEscrowDataHeavy(
         bytes32 _idxHash,
-        uint32 _u32_2,
-        uint32 _u32_3,
-        uint32 _u32_4,
-        address _addr_2,
-        bytes32 _b32_1,
-        bytes32 _b32_2,
-        uint256 _u256_1,
-        uint256 _u256_2
+        escrowDataExtHeavy calldata escrowDataHeavy
     ) external;
 
     /*
@@ -1314,11 +1313,7 @@ interface ECR_MGR_Interface {
      */
     function retrieveEscrowData(bytes32 _idxHash)
         external
-        returns (
-            bytes32 controllingContractNameHash,
-            bytes32 escrowOwnerAddressHash,
-            uint256 timelock
-        );
+        returns (escrowData memory);
 
     /*
      * @dev return EscrowDataLight @ IDX
@@ -1326,16 +1321,7 @@ interface ECR_MGR_Interface {
     function retrieveEscrowDataLight(bytes32 _idxHash)
         external
         view
-        returns (
-            uint8 _escrowData,
-            uint8 _u8_1,
-            uint8 _u8_2,
-            uint8 _u8_3,
-            uint16 _u16_1,
-            uint16 _u16_2,
-            uint32 _u32_1,
-            address _addr_1
-        );
+        returns (escrowDataExtLight memory);
 
     /*
      * @dev return EscrowDataHeavy @ IDX
@@ -1343,16 +1329,7 @@ interface ECR_MGR_Interface {
     function retrieveEscrowDataHeavy(bytes32 _idxHash)
         external
         view
-        returns (
-            uint32 _u32_2,
-            uint32 _u32_3,
-            uint32 _u32_4,
-            address _addr_2,
-            bytes32 _b32_1,
-            bytes32 _b32_2,
-            uint256 _u256_1,
-            uint256 _u256_2
-        );
+        returns (escrowDataExtHeavy memory);
 }
 
 //------------------------------------------------------------------------------------------------

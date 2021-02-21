@@ -27,18 +27,6 @@ import "./Imports/utils/ReentrancyGuard.sol";
 import "./PRUF_BASIC.sol";
 
 contract CORE is BASIC {
-    struct Costs {
-        uint256 serviceCost; // Cost in the given item category
-        address paymentAddress; // 2nd-party fee beneficiary address
-    }
-
-    struct Invoice {
-        //invoice struct to facilitate payment messaging in-contract
-        address rootAddress;
-        uint256 rootPrice;
-        address ACTHaddress;
-        uint256 ACTHprice;
-    }
 
     //--------------------------------------------------------------------------------------Storage Writing internal functions
 

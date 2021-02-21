@@ -23,7 +23,6 @@ import "./PRUF_INTERFACES.sol";
 import "./Imports/utils/ReentrancyGuard.sol";
 
 contract ECR_CORE is BASIC {
-
     // struct escrowData {
     //     bytes32 controllingContractNameHash; //hash of the name of the controlling escrow contract
     //     bytes32 escrowOwnerAddressHash; //hash of an address designated as an executor for the escrow contract
@@ -74,14 +73,7 @@ contract ECR_CORE is BASIC {
     ) internal whenNotPaused {
         ECR_MGR.setEscrowDataLight(
             _idxHash,
-            escrowDataLight.escrowData,
-            escrowDataLight.u8_1,
-            escrowDataLight.u8_2,
-            escrowDataLight.u8_3,
-            escrowDataLight.u16_1,
-            escrowDataLight.u16_2,
-            escrowDataLight.u32_1,
-            escrowDataLight.addr_1
+            escrowDataLight
         );
         //^^^^^^^interactions^^^^^^^^^
     }
@@ -92,14 +84,7 @@ contract ECR_CORE is BASIC {
     ) internal whenNotPaused {
         ECR_MGR.setEscrowDataHeavy(
             _idxHash,
-            escrowDataHeavy.u32_2,
-            escrowDataHeavy.u32_3,
-            escrowDataHeavy.u32_4,
-            escrowDataHeavy.addr_2,
-            escrowDataHeavy.b32_1,
-            escrowDataHeavy.b32_2,
-            escrowDataHeavy.u256_1,
-            escrowDataHeavy.u256_2
+            escrowDataHeavy
         );
         //^^^^^^^interactions^^^^^^^^^
     }
@@ -113,14 +98,7 @@ contract ECR_CORE is BASIC {
     {
         //^^^^^^^checks^^^^^^^^^
 
-        escrowData memory escrow;
-        //^^^^^^^effects^^^^^^^^^
-
-        (
-            escrow.controllingContractNameHash,
-            escrow.escrowOwnerAddressHash,
-            escrow.timelock
-        ) = ECR_MGR.retrieveEscrowData(_idxHash);
+        escrowData memory escrow = ECR_MGR.retrieveEscrowData(_idxHash);
 
         return (escrow);
         //^^^^^^^interactions^^^^^^^^^
@@ -136,19 +114,8 @@ contract ECR_CORE is BASIC {
     {
         //^^^^^^^checks^^^^^^^^^
 
-        escrowDataExtLight memory escrowDataLight;
-        //^^^^^^^effects^^^^^^^^^
-
-        (
-            escrowDataLight.escrowData,
-            escrowDataLight.u8_1,
-            escrowDataLight.u8_2,
-            escrowDataLight.u8_3,
-            escrowDataLight.u16_1,
-            escrowDataLight.u16_2,
-            escrowDataLight.u32_1,
-            escrowDataLight.addr_1
-        ) = ECR_MGR.retrieveEscrowDataLight(_idxHash);
+        escrowDataExtLight memory escrowDataLight =
+            ECR_MGR.retrieveEscrowDataLight(_idxHash);
 
         return (escrowDataLight);
         //^^^^^^^interactions^^^^^^^^^
@@ -164,19 +131,8 @@ contract ECR_CORE is BASIC {
     {
         //^^^^^^^checks^^^^^^^^^
 
-        escrowDataExtHeavy memory escrowDataHeavy;
-        //^^^^^^^effects^^^^^^^^^
-
-        (
-            escrowDataHeavy.u32_2,
-            escrowDataHeavy.u32_3,
-            escrowDataHeavy.u32_4,
-            escrowDataHeavy.addr_2,
-            escrowDataHeavy.b32_1,
-            escrowDataHeavy.b32_2,
-            escrowDataHeavy.u256_1,
-            escrowDataHeavy.u256_2
-        ) = ECR_MGR.retrieveEscrowDataHeavy(_idxHash);
+        escrowDataExtHeavy memory escrowDataHeavy =
+            ECR_MGR.retrieveEscrowDataHeavy(_idxHash);
 
         return (escrowDataHeavy);
         //^^^^^^^interactions^^^^^^^^^
