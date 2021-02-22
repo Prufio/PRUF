@@ -322,12 +322,11 @@ contract AC_MGR is BASIC {
      *  caller holds ACtoken
      */
     function updateACreferenceAddress(
-        //-------------------DPS:TEST this is modified. Now takes 3 bytes + address
         address _extData,
         uint8 _byte1,
         uint8 _byte2,
         uint8 _byte3,
-        uint32 _assetClass //-------------------------------------------------------TEST
+        uint32 _assetClass
     ) external isACtokenHolderOfClass(_assetClass) whenNotPaused {
         //^^^^^^^checks^^^^^^^^^
 
