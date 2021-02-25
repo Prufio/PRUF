@@ -1945,8 +1945,11 @@ contract('AC_MGR', accounts => {
 
 
     it('Should update extendedData of AC 10 to "1000"', async () => {
-        return AC_MGR.updateACextendedData(
+        return AC_MGR.updateACreferenceAddress(
             "1000",
+            "1",
+            "2",
+            "3",
             '10',
             { from: account1 }
         )
@@ -1956,7 +1959,7 @@ contract('AC_MGR', accounts => {
     it("Should retrieve AC10", async () => {
         var Record = [];
 
-        return await AC_MGR.getAC_data("10", { from: account2 }, function (_err, _result) {
+        return await AC_MGR.getExtAC_data("10", { from: account2 }, function (_err, _result) {
             if (_err) { }
             else {
                 Record = Object.values(_result)
@@ -2076,8 +2079,11 @@ contract('AC_MGR', accounts => {
 
         console.log("//**************************************END updateACipfs FAIL BATCH**********************************************/")
         console.log("//**************************************BEGIN updateACextendedData FAIL BATCH**********************************************/")
-        return AC_MGR.updateACextendedData(
+        return AC_MGR.updateACreferenceAddress(
             "5",
+            "0",
+            "0",
+            "0",
             '1',
             { from: account2 }
         )

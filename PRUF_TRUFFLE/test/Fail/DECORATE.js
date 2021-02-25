@@ -2361,16 +2361,22 @@ contract('DECORATE', accounts => {
     })
 
     it('Should update extended data of AC18 to A_TKN.address', async () => {
-        return AC_MGR.updateACextendedData(
+        return AC_MGR.updateACreferenceAddress(
             A_TKN.address,
+            "0",
+            "0",
+            "0",
             "18",
             { from: account1 }
         )
     })
 
     it('Should update extended data of AC17 to Foreign721.address', async () => {
-        return AC_MGR.updateACextendedData(
+        return AC_MGR.updateACreferenceAddress(
             Foreign721.address,
+            "0",
+            "0",
+            "0",
             "17",
             { from: account1 }
         )
