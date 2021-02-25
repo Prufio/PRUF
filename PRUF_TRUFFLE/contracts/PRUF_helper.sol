@@ -274,15 +274,17 @@ contract Helper is Ownable, BASIC {
     function helper_getExtAC_data_nostruct(uint32 _assetClass)
         external
         view
-        returns (string memory, uint32,uint8,uint32,uint8, uint8, uint8,address,bytes32)
+        returns (uint8, uint8, uint8,address,bytes32)
     {
+        AC memory asset_data;
         //^^^^^^^checks^^^^^^^^^
-        AC memory asset_data = AC_MGR.getExtAC_data(_assetClass);
+        (asset_data.byte1,
+        asset_data.byte2,
+        asset_data.byte3,
+        asset_data.referenceAddress,
+        asset_data.IPFS)  = AC_MGR.getExtAC_data_nostruct(_assetClass);
+
         return (
-        asset_data.name,
-        asset_data.assetClassRoot,
-        asset_data.custodyType,
-        asset_data.discount,
         asset_data.byte1,
         asset_data.byte2,
         asset_data.byte3,

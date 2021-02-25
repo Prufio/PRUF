@@ -540,7 +540,7 @@ contract AC_MGR is BASIC {
         //^^^^^^^interactions^^^^^^^^^
     }
 
-    /*
+    /* CAN'T RETURN A STRUCT WITH A STRING WITHOUT WIERDNESS-0.8.1
      * @dev Retrieve AC_data @ _assetClass
      */
     function getExtAC_data(uint32 _assetClass)
@@ -550,6 +550,31 @@ contract AC_MGR is BASIC {
     {
         //^^^^^^^checks^^^^^^^^^
         return (AC_data[_assetClass]);
+        //^^^^^^^interactions^^^^^^^^^
+    }
+
+    /* CAN'T RETURN A STRUCT WITH A STRING WITHOUT WIERDNESS-0.8.1
+     * @dev Retrieve AC_data @ _assetClass
+     */
+    function getExtAC_data_nostruct(uint32 _assetClass)
+        external
+        view
+        returns (
+            uint8,
+            uint8,
+            uint8,
+            address,
+            bytes32
+        )
+    {
+        //^^^^^^^checks^^^^^^^^^
+        return (
+            AC_data[_assetClass].byte1,
+            AC_data[_assetClass].byte2,
+            AC_data[_assetClass].byte3,
+            AC_data[_assetClass].referenceAddress,
+            AC_data[_assetClass].IPFS
+        );
         //^^^^^^^interactions^^^^^^^^^
     }
 
@@ -639,9 +664,7 @@ contract AC_MGR is BASIC {
     function getServiceCosts(uint32 _assetClass, uint16 _service)
         external
         view
-        returns (
-            Invoice memory
-        )
+        returns (Invoice memory)
     {
         AC memory AC_info = AC_data[_assetClass];
         require(AC_info.assetClassRoot != 0, "ACM:GC:AC not yet populated");
@@ -654,11 +677,11 @@ contract AC_MGR is BASIC {
 
         //^^^^^^^checks^^^^^^^^^
         Invoice memory invoice;
-        
-            invoice.rootAddress = rootCosts.paymentAddress;
-            invoice.rootPrice =rootCosts.serviceCost;
-            invoice.ACTHaddress = costs.paymentAddress;
-            invoice.ACTHprice = costs.serviceCost;
+
+        invoice.rootAddress = rootCosts.paymentAddress;
+        invoice.rootPrice = rootCosts.serviceCost;
+        invoice.ACTHaddress = costs.paymentAddress;
+        invoice.ACTHprice = costs.serviceCost;
 
         return invoice;
         //^^^^^^^interactions^^^^^^^^^

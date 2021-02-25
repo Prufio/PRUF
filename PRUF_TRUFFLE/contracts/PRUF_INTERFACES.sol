@@ -135,12 +135,9 @@ interface UTIL_TKN_Interface {
      * - the caller must have PAYABLE_ROLE.
      * - the caller must have a pruf token balance of at least `_rootPrice + _ACTHprice`.
      */
-     // ---- NON-LEGACY
-    function payForService(
-        address _senderAddress,
-        Invoice calldata invoice
-    ) external;
-
+    // ---- NON-LEGACY
+    function payForService(address _senderAddress, Invoice calldata invoice)
+        external;
 
     // ---- LEGACY
     // function payForService(
@@ -1006,13 +1003,27 @@ interface AC_MGR_Interface {
             address
         );
 
-    /*
-     * @dev Retrieve AC_data @ _assetClass
+    /* CAN'T RETURN A STRUCT WITH A STRING WITHOUT WIERDNESS-0.8.1
+     * @dev Retrieve AC_data @ _assetClass in a struct
      */
     function getExtAC_data(uint32 _assetClass)
         external
         view
         returns (AC memory);
+
+    /*
+     * @dev Retrieve AC_data @ _assetClass
+     */
+    function getExtAC_data_nostruct(uint32 _assetClass)
+        external
+        view
+        returns (
+            uint8,
+            uint8,
+            uint8,
+            address,
+            bytes32
+        );
 
     /*
      * @dev Retrieve AC_discount @ _assetClass, in percent ACTH share, * 100 (9000 = 90%)
@@ -1046,9 +1057,7 @@ interface AC_MGR_Interface {
     function getServiceCosts(uint32 _assetClass, uint16 _service)
         external
         view
-        returns (
-            Invoice memory
-        );
+        returns (Invoice memory);
 
     /*
      * @dev return current AC token index pointer
