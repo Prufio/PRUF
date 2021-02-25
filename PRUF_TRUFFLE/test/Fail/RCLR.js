@@ -1984,6 +1984,17 @@ __/\\\\\\\\\\\\\ _____/\\\\\\\\\ _______/\\../\\ ___/\\\\\\\\\\\\\\\
         )
     })
 
+
+    it('Should write asset3 in AC 12', async () => {
+        return APP_NC.newRecord(
+        asset3, 
+        rgt3,
+        '12',
+        '100',
+        {from: account4}
+        )
+    })
+
     //1
     it('Should fail becasue caller does not have DISCARD_ROLE', async () => {
 
@@ -1999,7 +2010,7 @@ __/\\\\\\\\\\\\\ _____/\\\\\\\\\ _______/\\../\\ ___/\\\\\\\\\\\\\\\
     //2
     it('Should fail because status must be 59(recyclable)', async () => { 
         return A_TKN.discard(
-            asset2,
+            asset3,
             { from: account4}
             )     
     })

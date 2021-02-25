@@ -2184,7 +2184,7 @@ contract('STOR', accounts => {
     it('Should fail because caller is not pauser', async () => {
 
         console.log("//**************************************END STOR SETUP**********************************************/")
-        console.log("//**************************************BEGIN STOR FAIL BATCH (53)**********************************************/")
+        console.log("//**************************************BEGIN STOR FAIL BATCH (51)**********************************************/")
         console.log("//**************************************BEGIN pause FAIL BATCH**********************************************/")
         return STOR.pause(
             { from: account2 }
@@ -2278,28 +2278,28 @@ contract('STOR', accounts => {
 
 
     //9                                                                                  
-    it('Should fail because rec already exists', async () => {
-        return MAL_APP.newRecord(
-            asset1,
-            rgt1,
-            '12',
-            '100',
-            { from: account2 }
-        )
-    })
+    // it('Should fail because rec already exists', async () => {
+    //     return MAL_APP.newRecord(
+    //         asset8,
+    //         asset8,
+    //         '12',
+    //         '100',
+    //         { from: account2 }
+    //     )
+    // })
 
     //10  
-    it('Should fail because AC = 0', async () => {
-        return MAL_APP.newRecord(
-            asset9,
-            rgt3,
-            '0',
-            '100',
-            { from: account2 }
-        )
-    })
+    // it('Should fail because AC = 0', async () => {
+    //     return MAL_APP.newRecord(
+    //         asset9,
+    //         rgt3,
+    //         '0',
+    //         '100',
+    //         { from: account2 }
+    //     )
+    // })
 
-    //11                                                                               
+    //9                                                                               
     it('Should fail because record doesnt exist', async () => {
 
         console.log("//**************************************END NewRecord FAIL BATCH**********************************************/")
@@ -2316,7 +2316,7 @@ contract('STOR', accounts => {
         return STOR.enableContractForAC('MAL_APP', '10', '0', { from: account1 })
     })
 
-    //12
+    //10
     it('Should fail because calling contract is not auth in AC', async () => {
         return MAL_APP._decCounter(
             asset2,
@@ -2351,7 +2351,7 @@ contract('STOR', accounts => {
         )
     })
 
-    //13
+    //11
     it('Should fail because asset in escrow', async () => {
         return MAL_APP._decCounter(
             asset2,
@@ -2387,7 +2387,7 @@ contract('STOR', accounts => {
         )
     })
 
-    //14
+    //12
     it('Should fail because you cannot set assetStatus to stolen with modifyRecord', async () => {
 
         return MAL_APP._modStatus(
@@ -2397,7 +2397,7 @@ contract('STOR', accounts => {
         )
     })
 
-    //15
+    //13
     it('Should fail because you cannot set assetStatus to lost with modifyRecord', async () => {
 
         return MAL_APP._modStatus(
@@ -2408,7 +2408,7 @@ contract('STOR', accounts => {
     })
 
 
-    //16
+    //14
     it('Should fail because you cannot set assetStatus to ECR stat(6) with modifyRecord', async () => {
 
         return MAL_APP._modStatus(
@@ -2419,7 +2419,7 @@ contract('STOR', accounts => {
     })
 
 
-    //17
+    //15
     it('Should fail because you cannot set assetStatus to ECR stat(56) with modifyRecord', async () => {
 
         return MAL_APP._modStatus(
@@ -2430,7 +2430,7 @@ contract('STOR', accounts => {
     })
 
 
-    //18
+    //16
     it('Should fail because you cannot set assetStatus to ECR stat(50) with modifyRecord', async () => {
 
         return MAL_APP._modStatus(
@@ -2449,7 +2449,7 @@ contract('STOR', accounts => {
     })
 
 
-    //19
+    //17
     it('Should fail because record does not exist', async () => {
         return MAL_APP.changeAC(
             asset10,
@@ -2479,7 +2479,7 @@ contract('STOR', accounts => {
         )
     })
 
-    //20
+    //18
     it('Should fail because asset in escrow', async () => {
         return MAL_APP.changeAC(
             asset2,
@@ -2520,7 +2520,7 @@ contract('STOR', accounts => {
         return STOR.OO_addContract("MAL_APP", MAL_APP.address, '0', '0', { from: account1 })
     })
 
-    //21
+    //19
     it('Should fail because MAL_APP is not authroized in system', async () => {
         return MAL_APP.changeAC(
             asset2,
@@ -2535,7 +2535,7 @@ contract('STOR', accounts => {
     })
 
 
-    //22
+    //20
     it('Should fail because AC = 0', async () => {
         return MAL_APP.changeAC(
             asset2,
@@ -2544,7 +2544,7 @@ contract('STOR', accounts => {
         )
     })
 
-    //23
+    //21
     it('Should fail because you cannot change AC to new root', async () => {
         return MAL_APP.changeAC(
             asset2,
@@ -2554,7 +2554,7 @@ contract('STOR', accounts => {
     })
 
 
-    //24
+    //22
     it('Should fail because record is in L/S status', async () => {
         return MAL_APP.changeAC(
             asset4,
@@ -2564,7 +2564,7 @@ contract('STOR', accounts => {
     })
 
 
-    //25
+    //23
     it('Should fail because record is in TXFR stat', async () => {
         return MAL_APP.changeAC(
             asset3,
@@ -2578,7 +2578,7 @@ contract('STOR', accounts => {
         return AC_MGR.addUser(account2Hash, '0', '2', { from: account1 })
     })
 
-    //26
+    //24
     it('Should fail because record doesnt exist', async () => {
 
         console.log("//**************************************END changeAC FAIL BATCH**********************************************/")
@@ -2596,7 +2596,7 @@ contract('STOR', accounts => {
         return STOR.enableContractForAC('MAL_APP', '10', '0', { from: account1 })
     })
 
-    //27
+    //25
     it('Should fail because calling contract is not auth in AC', async () => {
         return MAL_APP._setLostOrStolen(
             asset2,
@@ -2611,7 +2611,7 @@ contract('STOR', accounts => {
         return STOR.enableContractForAC('MAL_APP', '10', '1', { from: account1 })
     })
 
-    //28
+    //26
     it('Should fail because not being set to L/S status', async () => {
         return MAL_APP._setLostOrStolen(
             asset2,
@@ -2621,7 +2621,7 @@ contract('STOR', accounts => {
         )
     })
 
-    //29
+    //27
     it('Should fail because asset in transfered status', async () => {
         return MAL_APP._setLostOrStolen(
             asset3,
@@ -2631,7 +2631,7 @@ contract('STOR', accounts => {
         )
     })
 
-    //30
+    //28
     it('Should fail because asset in locked escrow', async () => {
         return MAL_APP._setLostOrStolen(
             asset7,
@@ -2659,7 +2659,7 @@ contract('STOR', accounts => {
         return ECR_MGR.OO_resolveContractAddresses({ from: account1 })
     })
 
-    //31
+    //29
     it('Should fail because caller != ECR_MGR', async () => {
         return MAL_APP.setEscrowStor(
             asset2,
@@ -2668,7 +2668,7 @@ contract('STOR', accounts => {
         )
     })
 
-    //32
+    //30
     it('Should fail because record does not exist', async () => {
         return MAL_APP.setEscrow(
             asset10,
@@ -2679,7 +2679,7 @@ contract('STOR', accounts => {
         )
     })
 
-    //33                                                                    
+    //31                                                                   
     it('Should fail because asset already in escrow', async () => {
         return MAL_APP.setEscrow(
             asset7,
@@ -2690,7 +2690,7 @@ contract('STOR', accounts => {
         )
     })
 
-    //34                                                                        
+    //32                                                                       
     it('Should fail because must be set to escrow status', async () => {
         return MAL_APP.setEscrow(
             asset8,
@@ -2702,7 +2702,7 @@ contract('STOR', accounts => {
     })
 
 
-    //35                                                                       
+    //33                                                                      
     it('Should fail because asset in stolen stat', async () => {
         return MAL_APP.setEscrow(
             asset4,
@@ -2713,7 +2713,7 @@ contract('STOR', accounts => {
         )
     })
 
-    //36                                                                         
+    //34                                                                         
     it('Should fail because asset in lost stat', async () => {
         return MAL_APP.setEscrow(
             asset5,
@@ -2725,7 +2725,7 @@ contract('STOR', accounts => {
     })
 
 
-    //37                                                                    
+    //35                                                                    
     it('Should fail because asset in transfered stat', async () => {
         return MAL_APP.setEscrow(
             asset3,
@@ -2736,7 +2736,7 @@ contract('STOR', accounts => {
         )
     })
 
-    //38                                                                         
+    //36                                                                         
     it('Should fail because calling contract != ECR_MGR', async () => {
 
         console.log("//**************************************END setEscrow FAIL BATCH**********************************************/")
@@ -2747,7 +2747,7 @@ contract('STOR', accounts => {
         )
     })
 
-    //39
+    //37
     it('Should fail because asset doesnt exist', async () => {
 
         console.log("//**************************************END setEscrow FAIL BATCH**********************************************/")
@@ -2765,7 +2765,7 @@ contract('STOR', accounts => {
         return STOR.enableContractForAC('MAL_APP', '12', '0', { from: account1 })
     })
 
-    //40
+    //38
     it('Should fail because contract not auth in AC', async () => {
         return MAL_APP._setPrice(
             asset11,
@@ -2780,7 +2780,7 @@ contract('STOR', accounts => {
         return STOR.enableContractForAC('MAL_APP', '12', '1', { from: account1 })
     })
 
-    //41
+    //39
     it('Should fail because asset doesnt exist', async () => {
 
         console.log("//**************************************END setPrice FAIL BATCH**********************************************/")
@@ -2796,7 +2796,7 @@ contract('STOR', accounts => {
         return STOR.enableContractForAC('MAL_APP', '12', '0', { from: account1 })
     })
 
-    //42
+    //40
     it('Should fail because contract not auth in AC', async () => {
         return MAL_APP._clearPrice(
             asset11,
@@ -2822,7 +2822,7 @@ contract('STOR', accounts => {
 
     })
 
-    //43
+    //41
     it('Should fail because record does not exist', async () => {
         return MAL_APP._modIpfs1(
             asset10,
@@ -2831,7 +2831,7 @@ contract('STOR', accounts => {
         )
     })
 
-    //44
+    //42
     it('Should fail because calling contract not auth in AC', async () => {
         return MAL_APP._modIpfs1(
             asset8,
@@ -2846,7 +2846,7 @@ contract('STOR', accounts => {
         return STOR.enableContractForAC('MAL_APP', '10', '1', { from: account1 })
     })
 
-    //45
+    //43
     it('Should fail because record in escrow stat', async () => {
         return MAL_APP._modIpfs1(
             asset7,
@@ -2865,7 +2865,7 @@ contract('STOR', accounts => {
         )
     })
 
-    //46
+    //44
     it('Should fail because ips1 cannot match previous data', async () => {
         return MAL_APP._modIpfs1(
             asset8,
@@ -2875,7 +2875,7 @@ contract('STOR', accounts => {
         )
     })
 
-    //47
+    //45
     it('Should fail because record does not exist', async () => {
 
         console.log("//**************************************END modifyIpfs1 FAIL BATCH**********************************************/")
@@ -2894,7 +2894,7 @@ contract('STOR', accounts => {
     })
 
 
-    //48
+    //46
     it('Should fail becasue contract not auth in AC', async () => {
         return MAL_APP.addIpfs2Note(
             asset2,
@@ -2910,7 +2910,7 @@ contract('STOR', accounts => {
     })
 
 
-    //49
+    //47
     it('Should fail becasue asset in escrow stat', async () => {
         return MAL_APP.addIpfs2Note(
             asset7,
@@ -2921,7 +2921,7 @@ contract('STOR', accounts => {
     })
 
 
-    //50
+    //48
     it('Should fail becasue asset in L/S stat', async () => {
         return MAL_APP.addIpfs2Note(
             asset4,
@@ -2932,7 +2932,7 @@ contract('STOR', accounts => {
     })
 
 
-    //51
+    //49
     it('Should fail becasue asset in transfered stat', async () => {
         return MAL_APP.addIpfs2Note(
             asset3,
@@ -2952,7 +2952,7 @@ contract('STOR', accounts => {
         )
     })
 
-    //52
+    //50
     it('Should fail becasue attempting to modify IPFS2', async () => {
         return MAL_APP.addIpfs2Note(
             asset8,
@@ -2970,7 +2970,7 @@ contract('STOR', accounts => {
         return STOR.OO_addContract("MAL_APP", MAL_APP.address, '0', '0', { from: account1 })
     })
 
-    //53
+    //51
     it('Should fail because contract not registered in system', async () => {
         return MAL_APP.retrieveRecordStor(
             asset1,

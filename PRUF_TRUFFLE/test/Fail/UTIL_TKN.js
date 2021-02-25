@@ -11,7 +11,7 @@ let minterRoleB32;
 let trustedAgentRoleB32;
 let payableRoleB32;
 
-contract('UTIL_TKN_FAIL', accounts => {
+contract('UTIL_TKN', accounts => {
 
     console.log('//**************************BEGIN BOOTSTRAP**************************//')
 
@@ -89,7 +89,7 @@ contract('UTIL_TKN_FAIL', accounts => {
     //1
     it('Should fail because caller is not admin', async () => {
         console.log('//**************************END BOOTSTRAP**************************//')
-        console.log('//**************************BEGIN UTIL_TKN FAIL BATCH (12)**************************//')
+        console.log('//**************************BEGIN UTIL_TKN FAIL BATCH (9)**************************//')
         console.log('//**************************BEGIN adminKillTrustedAgent FAIL BATCH**************************//')
         return UTIL_TKN.AdminSetSharesAddress(
             account9,
@@ -120,76 +120,76 @@ contract('UTIL_TKN_FAIL', accounts => {
     })
 
     //4
-    it('Should fail because caller is not payable', async () => {
-        console.log('//**************************END AdminSetSharesAddress FAIL BATCH**************************//')
-        console.log('//**************************BEGIN payForService FAIL BATCH**************************//')
-        return UTIL_TKN.payForService(
-            account1,
-            account2,
-            "200000000000000000",
-            account2,
-            "200000000000000000",
-            { from: account1 })
-    })
+    // it('Should fail because caller is not payable', async () => {
+    //     console.log('//**************************END AdminSetSharesAddress FAIL BATCH**************************//')
+    //     console.log('//**************************BEGIN payForService FAIL BATCH**************************//')
+    //     return UTIL_TKN.payForService(
+    //         account1,
+    //         account2,
+    //         "200000000000000000",
+    //         account2,
+    //         "200000000000000000",
+    //         { from: account1 })
+    // })
 
 
-    it('Should give account1 PAYABLE_ROLE', async () => {
-        return UTIL_TKN.grantRole(
-            payableRoleB32,
-            account1,
-            { from: account1 })
-    })
+    // it('Should give account1 PAYABLE_ROLE', async () => {
+    //     return UTIL_TKN.grantRole(
+    //         payableRoleB32,
+    //         account1,
+    //         { from: account1 })
+    // })
 
 
-    it('Should set account1 as coldWallet', async () => {
-        return UTIL_TKN.setColdWallet(
-            { from: account1 })
-    })
+    // it('Should set account1 as coldWallet', async () => {
+    //     return UTIL_TKN.setColdWallet(
+    //         { from: account1 })
+    // })
 
 
-    it("Should account1 as coldWallet", async () => {
-        var Balance = [];
+    // it("Should account1 as coldWallet", async () => {
+    //     var Balance = [];
 
-        return await UTIL_TKN.isColdWallet(account1, { from: account1 }, function (_err, _result) {
-            if (_err) { }
-            else {
-                Balance = Object.values(_result)
-                console.log(Balance)
-            }
-        })
-    })
+    //     return await UTIL_TKN.isColdWallet(account1, { from: account1 }, function (_err, _result) {
+    //         if (_err) { }
+    //         else {
+    //             Balance = Object.values(_result)
+    //             console.log(Balance)
+    //         }
+    //     })
+    // })
 
-    //5
-    it('Should fail because caller is coldWallet', async () => {
-        return UTIL_TKN.payForService(
-            account1,
-            account2,
-            "200000000000000000",
-            account2,
-            "200000000000000000",
-            { from: account1 })
-    })
+    // //5
+    // it('Should fail because caller is coldWallet', async () => {
+    //     return UTIL_TKN.payForService(
+    //         account1,
+    //         account2,
+    //         "200000000000000000",
+    //         account2,
+    //         "200000000000000000",
+    //         { from: account1 })
+    // })
 
 
-    it('Should unset account1 as coldWallet', async () => {
-        return UTIL_TKN.unSetColdWallet(
-            { from: account1 })
-    })
+    // it('Should unset account1 as coldWallet', async () => {
+    //     return UTIL_TKN.unSetColdWallet(
+    //         { from: account1 })
+    // })
 
-    //6
-    it('Should fail because caller has insufficient balance', async () => {
-        return UTIL_TKN.payForService(
-            account1,
-            account2,
-            "50000000000000000000",
-            account2,
-            "50000000000000000000000",
-            { from: account1 })
-    })
+    // //6
+    // it('Should fail because caller has insufficient balance', async () => {
+    //     return UTIL_TKN.payForService(
+    //         account1,
+    //         account2,
+    //         "50000000000000000000",
+    //         account2,
+    //         "50000000000000000000000",
+    //         { from: account1 })
+    // })
 
-    //7
+    //4
     it('Should fail because caller is not a trusted agent', async () => {
-        console.log('//**************************END payForService FAIL BATCH**************************//')
+        console.log('//**************************END AdminSetSharesAddress FAIL BATCH**************************//')
         console.log('//**************************BEGIN trustedAgentBurn FAIL BATCH**************************//')
         return UTIL_TKN.trustedAgentBurn(
             account1,
@@ -211,7 +211,7 @@ contract('UTIL_TKN_FAIL', accounts => {
             { from: account1 })
     })
 
-    //8
+    //5
     it('Should fail because account is coldWallet', async () => {
         return UTIL_TKN.trustedAgentBurn(
             account1,
@@ -246,7 +246,7 @@ contract('UTIL_TKN_FAIL', accounts => {
         })
     })
 
-    //9
+    //6
     it('Should fail because caller is not a trusted agent', async () => {
         console.log('//**************************END trustedAgentBurn FAIL BATCH**************************//')
         console.log('//**************************BEGIN trustedAgentTransfer FAIL BATCH**************************//')
@@ -263,7 +263,7 @@ contract('UTIL_TKN_FAIL', accounts => {
             { from: account1 })
     })
 
-    //10
+    //7
     it('Should fail because account is coldWallet', async () => {
         return UTIL_TKN.trustedAgentTransfer(
             account1,
@@ -278,7 +278,7 @@ contract('UTIL_TKN_FAIL', accounts => {
             { from: account1 })
     })
 
-    //11
+    //8
     it('Should fail because caller is not snapshot authorized', async () => {
         console.log('//**************************END trustedAgentTransfer FAIL BATCH**************************//')
         console.log('//**************************BEGIN takeSnapshot FAIL BATCH**************************//')
@@ -286,7 +286,7 @@ contract('UTIL_TKN_FAIL', accounts => {
             { from: account1 })
     })
 
-    //12
+    //9
     it('Should fail because caller is not minter authorized', async () => {
         console.log('//**************************END takeSnapshot FAIL BATCH**************************//')
         console.log('//**************************BEGIN mint FAIL BATCH**************************//')
