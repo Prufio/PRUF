@@ -268,6 +268,44 @@ contract Helper is Ownable, BASIC {
         //^^^^^^^interactions^^^^^^^^^
     }
 
+    /*
+     * @dev Retrieve AC_data @ _assetClass
+     */
+    function helper_getExtAC_data_nostruct(uint32 _assetClass)
+        external
+        view
+        returns (string memory, uint32,uint8,uint32,address,bytes32)
+    {
+        //^^^^^^^checks^^^^^^^^^
+        AC memory asset_data = AC_MGR.getExtAC_data(_assetClass);
+        return (
+        asset_data.name,
+        asset_data.assetClassRoot,
+        asset_data.custodyType,
+        asset_data.discount,
+        asset_data.referenceAddress,
+        asset_data.IPFS
+        );
+        //^^^^^^^interactions^^^^^^^^^
+    }
+
+    /*
+    struct AC {
+    //Struct for holding and manipulating assetClass data
+    string name; // NameHash for assetClass
+    uint32 assetClassRoot; // asset type root (bycyles - USA Bicycles)
+    uint8 custodyType; // custodial or noncustodial, special asset types
+    uint32 discount; // price sharing
+    uint8 byte1; // Future Use
+    uint8 byte2; // Future Use
+    uint8 byte3; // Future Use
+    address referenceAddress; // Used with wrap / decorate
+    bytes32 IPFS; //IPFS data for defining idxHash creation attribute fields
+}
+    */
+    
+
+
 
 
 
