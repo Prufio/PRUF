@@ -19,13 +19,14 @@ __/\\\\\\\\\\\\\ _____/\\\\\\\\\ _______/\\../\\ ___/\\\\\\\\\\\\\\\
 pragma solidity ^0.8.0;
 
 import "./Imports/access/Ownable.sol";
+import "./PRUF_BASIC.sol";
  
 
 interface erc721_tokenInterface {
     function ownerOf(uint256) external view returns (address);
 }
 
-contract Helper is Ownable {
+contract Helper is Ownable, BASIC {
     
 
     address erc721ContractAddress;
@@ -224,34 +225,88 @@ contract Helper is Ownable {
         return b32URI;
     }
 
-    function uint256toString(uint256 number)
-        public
+    /**
+     * @dev Converts a `uint256` to its ASCII `string` decimal representation.
+     */
+    function uint256toString(uint256 value)
+        internal
         pure
         returns (string memory)
     {
         // Inspired by OraclizeAPI's implementation - MIT licence
         // https://github.com/oraclize/ethereum-api/blob/b42146b063c7d6ee1358846c198246239e9360e8/oraclizeAPI_0.4.25.sol
+        // value = uint256(0x2ce8d04a9c35987429af538825cd2438cc5c5bb5dc427955f84daaa3ea105016);
 
-        if (number == 0) {
+        if (value == 0) {
             return "0";
         }
-        uint256 temp = number;
+        uint256 temp = value;
         uint256 digits;
         while (temp != 0) {
             digits++;
             temp /= 10;
         }
         bytes memory buffer = new bytes(digits);
-        uint256 index = digits - 1;
-        temp = number;
-        while (temp != 0) {
-            buffer[index--] = bytes1(uint8(48 + (temp % 10)));
-            temp /= 10;
+        while (value != 0) {
+            digits -= 1;
+            buffer[digits] = bytes1(uint8(48 + uint256(value % 10)));
+            value /= 10;
         }
         return string(buffer);
     }
 
-    function _Getprice() public view returns (uint256, uint256) {
-        return (currentACtokenPrice, ACtokenIndex);
+    /*
+     * @dev Retrieve AC_data @ _assetClass
+     */
+    function helper_getExtAC_data(uint32 _assetClass)
+        external
+        view
+        returns (AC memory)
+    {
+        //^^^^^^^checks^^^^^^^^^
+        return AC_MGR.getExtAC_data(_assetClass);
+        //^^^^^^^interactions^^^^^^^^^
     }
+
+    /*
+     * @dev Retrieve AC_data @ _assetClass
+     */
+    function helper_getExtAC_data_nostruct(uint32 _assetClass)
+        external
+        view
+        returns (string memory, uint32,uint8,uint32,address,bytes32)
+    {
+        //^^^^^^^checks^^^^^^^^^
+        AC memory asset_data = AC_MGR.getExtAC_data(_assetClass);
+        return (
+        asset_data.name,
+        asset_data.assetClassRoot,
+        asset_data.custodyType,
+        asset_data.discount,
+        asset_data.referenceAddress,
+        asset_data.IPFS
+        );
+        //^^^^^^^interactions^^^^^^^^^
+    }
+
+    /*
+    struct AC {
+    //Struct for holding and manipulating assetClass data
+    string name; // NameHash for assetClass
+    uint32 assetClassRoot; // asset type root (bycyles - USA Bicycles)
+    uint8 custodyType; // custodial or noncustodial, special asset types
+    uint32 discount; // price sharing
+    uint8 byte1; // Future Use
+    uint8 byte2; // Future Use
+    uint8 byte3; // Future Use
+    address referenceAddress; // Used with wrap / decorate
+    bytes32 IPFS; //IPFS data for defining idxHash creation attribute fields
+}
+    */
+    
+
+
+
+
+
 }
