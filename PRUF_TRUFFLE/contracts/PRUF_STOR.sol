@@ -272,9 +272,9 @@ contract STOR is AccessControl, ReentrancyGuard, Pausable {
             database[_idxHash].assetStatus != 60,
             "S:NR:Asset discarded use APP_NC rcycl"
         );
-        require(database[_idxHash].assetClass == 0, "S:NR:Rec already exists");
+        require(database[_idxHash].assetClass == 0, "S:NR:Rec already exists"); //CTS:EXAMINE reduntant with current contracts, either throws for being discarded(1st req) or for the A_TKN already existing in CORE
         require(_rgtHash != 0, "S:NR:RGT = 0");
-        require(_assetClass != 0, "S:NR:AC = 0");
+        require(_assetClass != 0, "S:NR:AC = 0"); //CTS:EXAMINE redundant through isAuthorized mod
         //^^^^^^^checks^^^^^^^^^
 
         Record memory rec;

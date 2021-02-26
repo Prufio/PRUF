@@ -74,7 +74,7 @@ contract('PRESALE', accounts => {
     //1
     it('Should fail because caller is not admin', async () => {
         console.log('//**************************END BOOTSTRAP**************************//')
-        console.log('//**************************BEGIN PRESALE FAIL BATCH (27)**************************//')
+        console.log('//**************************BEGIN PRESALE FAIL BATCH (21)**************************//')
         console.log('//**************************BEGIN ADMIN_setTokenContract FAIL BATCH**************************//')
         return PRESALE.ADMIN_setTokenContract(
             UTIL_TKN.address,
@@ -302,7 +302,7 @@ contract('PRESALE', accounts => {
         })
     })
 
-    //13
+    //11
     it('Should fail because caller is not airdrop authorized', async () => {
         console.log('//**************************BEGIN AIRDROP_Mint5 FAIL BATCH**************************//')
         return PRESALE.AIRDROP_Mint5(
@@ -320,7 +320,7 @@ contract('PRESALE', accounts => {
             { from: account1 })
     })
 
-    //14
+    //12
     it('Should fail because PRESALE is paused', async () => {
         return PRESALE.AIRDROP_Mint5(
             account2,
@@ -363,7 +363,7 @@ contract('PRESALE', accounts => {
         })
     })
 
-    //19
+    //13
     it('Should fail because caller is not airdrop authorized', async () => {
         console.log('//**************************BEGIN AIRDROP_Mint1 FAIL BATCH**************************//')
         return PRESALE.AIRDROP_Mint1(
@@ -377,7 +377,7 @@ contract('PRESALE', accounts => {
             { from: account1 })
     })
 
-    //20
+    //14
     it('Should fail because PRESALE is paused', async () => {
         return PRESALE.AIRDROP_Mint1(
             account2,
@@ -420,7 +420,7 @@ contract('PRESALE', accounts => {
             { from: account1 })
     })
 
-    //21
+    //15
     it('Should fail because PRESALE is paused', async () => {
         return PRESALE.BUY_PRUF(
             { from: account1 })
@@ -432,25 +432,25 @@ contract('PRESALE', accounts => {
             { from: account1 })
     })
 
-    //22
+    //16
     it('Should fail because amountToMint = 0', async () => {
         return PRESALE.BUY_PRUF(
             { from: account2 })
     })
 
-    //23
+    //17
     it('Should fail because minEth req was not met', async () => {
         return PRESALE.BUY_PRUF(
             { from: account2, value: 90000000000000000 })
     })
 
-    //24
+    //18
     it('Should fail because maxEth req was not met', async () => {
         return PRESALE.BUY_PRUF(
             { from: account2, value: "1000100000000000000000" })
     })
 
-    //25
+    //19
     it('Should fail because purchase request exceeds total presale limit', async () => {
         return PRESALE.BUY_PRUF(
             { from: account4, value: "16000000000000000000001" })
@@ -477,14 +477,14 @@ contract('PRESALE', accounts => {
         })
     })
 
-    //26
+    //20
     it('Should fail because caller is not admin', async () => {
         console.log('//**************************BEGIN withdraw FAIL BATCH**************************//')
         return PRESALE.withdraw(
             { from: account2 })
     })
 
-    //27
+    //21
     it('Should fail because payment address cannot = 0', async () => {
         return PRESALE.withdraw(
             { from: account1 })

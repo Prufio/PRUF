@@ -2027,7 +2027,7 @@ contract('ID_TKN', accounts => {
     it('Should make ECR unatuhorized', async () => {
 
         console.log("//**************************************END ECR_MGR SETUP**********************************************/")
-        console.log("//**************************************BEGIN ECR_MGR FAIL BATCH (8)**********************************************/")
+        console.log("//**************************************BEGIN ECR_MGR FAIL BATCH (4)**********************************************/")
         console.log("//**************************************BEGIN setEscrow FAIL BATCH**********************************************/")
 
         console.log("unAuthorizing ECR")
@@ -2119,115 +2119,115 @@ contract('ID_TKN', accounts => {
         )
     })
 
-    //4
-    it('Should fail because asset is not in escrow', async () => {
+    // //4
+    // it('Should fail because asset is not in escrow', async () => {
 
-        console.log("//**************************************END endEscrow FAIL BATCH**********************************************/")
-        console.log("//**************************************BEGIN setEscrowDataLight FAIL BATCH**********************************************/")
-        return ECR2._setEscrowDataLight(
-            asset1,
-            '180',
-            '6',
-            '6',
-            '6',
-            '6',
-            '6',
-            '6',
-            ECR2.address,
-            { from: account2 }
-        )
-    })
-
-
-    it('Should set asset1 into escrow', async () => {
-        return ECR.setEscrow(
-            asset1,
-            account2Hash,
-            '180',
-            '6',
-            { from: account2 }
-        )
-    })
-
-    //5
-    it('Should fail because contract not same as setter', async () => {
-        return ECR2._setEscrowDataLight(
-            asset1,
-            '180',
-            '6',
-            '6',
-            '6',
-            '6',
-            '6',
-            '6',
-            account2,
-            { from: account2 }
-        )
-    })
+    //     console.log("//**************************************END endEscrow FAIL BATCH**********************************************/")
+    //     console.log("//**************************************BEGIN setEscrowDataLight FAIL BATCH**********************************************/")
+    //     return ECR2._setEscrowDataLight(
+    //         asset1,
+    //         '180',
+    //         '6',
+    //         '6',
+    //         '6',
+    //         '6',
+    //         '6',
+    //         '6',
+    //         ECR2.address,
+    //         { from: account2 }
+    //     )
+    // })
 
 
-    it('Should take asset1 out of escrow', async () => {
-        return ECR.endEscrow(
-            asset1,
-            { from: account2 }
-        )
-    })
+    // it('Should set asset1 into escrow', async () => {
+    //     return ECR.setEscrow(
+    //         asset1,
+    //         account2Hash,
+    //         '180',
+    //         '6',
+    //         { from: account2 }
+    //     )
+    // })
+
+    // //5
+    // it('Should fail because contract not same as setter', async () => {
+    //     return ECR2._setEscrowDataLight(
+    //         asset1,
+    //         '180',
+    //         '6',
+    //         '6',
+    //         '6',
+    //         '6',
+    //         '6',
+    //         '6',
+    //         account2,
+    //         { from: account2 }
+    //     )
+    // })
 
 
-    it('Should set asset1 into status 1', async () => {
-        return NP._modStatus(
-            asset1,
-            rgt1,
-            '1',
-            { from: account2 }
-        )
-    })
-
-    //6
-    it('Should fail because asset is not in escrow', async () => {
-
-        console.log("//**************************************END setEscrowDataLight FAIL BATCH**********************************************/")
-        console.log("//**************************************BEGIN setEscrowDataHeavy FAIL BATCH**********************************************/")
-        return ECR2._setEscrowDataHeavy(
-            asset1,
-            '180',
-            '6',
-            '6',
-            account2,
-            string1Hash,
-            string1Hash,
-            '6',
-            '6',
-            { from: account2 }
-        )
-    })
+    // it('Should take asset1 out of escrow', async () => {
+    //     return ECR.endEscrow(
+    //         asset1,
+    //         { from: account2 }
+    //     )
+    // })
 
 
-    it('Should set asset1 into escrow', async () => {
-        return ECR.setEscrow(
-            asset1,
-            account2Hash,
-            '180',
-            '6',
-            { from: account2 }
-        )
-    })
+    // it('Should set asset1 into status 1', async () => {
+    //     return NP._modStatus(
+    //         asset1,
+    //         rgt1,
+    //         '1',
+    //         { from: account2 }
+    //     )
+    // })
 
-    //7
-    it('Should fail because contract not same as setter', async () => {
-        return ECR2._setEscrowDataHeavy(
-            asset1,
-            '180',
-            '6',
-            '6',
-            account2,
-            string1Hash,
-            string1Hash,
-            '6',
-            '6',
-            { from: account2 },
-        )
-    })
+    // //6
+    // it('Should fail because asset is not in escrow', async () => {
+
+    //     console.log("//**************************************END setEscrowDataLight FAIL BATCH**********************************************/")
+    //     console.log("//**************************************BEGIN setEscrowDataHeavy FAIL BATCH**********************************************/")
+    //     return ECR2._setEscrowDataHeavy(
+    //         asset1,
+    //         '180',
+    //         '6',
+    //         '6',
+    //         account2,
+    //         string1Hash,
+    //         string1Hash,
+    //         '6',
+    //         '6',
+    //         { from: account2 }
+    //     )
+    // })
+
+
+    // it('Should set asset1 into escrow', async () => {
+    //     return ECR.setEscrow(
+    //         asset1,
+    //         account2Hash,
+    //         '180',
+    //         '6',
+    //         { from: account2 }
+    //     )
+    // })
+
+    // //7
+    // it('Should fail because contract not same as setter', async () => {
+    //     return ECR2._setEscrowDataHeavy(
+    //         asset1,
+    //         '180',
+    //         '6',
+    //         '6',
+    //         account2,
+    //         string1Hash,
+    //         string1Hash,
+    //         '6',
+    //         '6',
+    //         { from: account2 },
+    //     )
+    // })
 
 
     it('Should take asset1 out of escrow', async () => {
@@ -2261,7 +2261,7 @@ contract('ID_TKN', accounts => {
         )
     })
 
-    //8
+    //4
     it('Should fail because record escrow is not expired', async () => {
         return ECR_MGR.permissiveEndEscrow(
             asset1,
