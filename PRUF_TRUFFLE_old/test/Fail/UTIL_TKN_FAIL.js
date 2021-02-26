@@ -123,7 +123,7 @@ contract('UTIL_TKN_FAIL', accounts => {
     it('Should fail because caller is not payable', async () => {
         console.log('//**************************END AdminSetSharesAddress FAIL BATCH**************************//')
         console.log('//**************************BEGIN payForService FAIL BATCH**************************//')
-        return UTIL_TKN.payForService(
+        return Helper.helper_payForService(
             account1,
             account2,
             "200000000000000000",
@@ -161,7 +161,7 @@ contract('UTIL_TKN_FAIL', accounts => {
 
     //5
     it('Should fail because caller is coldWallet', async () => {
-        return UTIL_TKN.payForService(
+        return Helper.helper_payForService(
             account1,
             account2,
             "200000000000000000",
@@ -178,7 +178,7 @@ contract('UTIL_TKN_FAIL', accounts => {
 
     //6
     it('Should fail because caller has insufficient balance', async () => {
-        return UTIL_TKN.payForService(
+        return Helper.helper_payForService(
             account1,
             account2,
             "50000000000000000000",

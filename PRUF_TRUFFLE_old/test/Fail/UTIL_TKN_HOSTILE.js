@@ -352,7 +352,7 @@ contract('UTIL_TKN', accounts => {
     //9
     it('Should fail to payForService involving 50 PRuf tokens because A is not an Authorized Agent', async () => {
 
-        return UTIL_TKN.payForService(
+        return Helper.helper_payForService(
             A,
             B,
             "25000000000000000000",
@@ -471,7 +471,7 @@ contract('UTIL_TKN', accounts => {
     //15
     it('Should fail to payForService involving 50 PRuf tokens because A is not an Authorized Agent', async () => {
 
-        return UTIL_TKN.payForService(
+        return Helper.helper_payForService(
             A,
             B,
             "25000000000000000000",
@@ -571,7 +571,7 @@ contract('UTIL_TKN', accounts => {
     //22
     it('Should fail to payForService involving 50 PRuf tokens because A is not an Authorized Agent', async () => {
 
-        return UTIL_TKN.payForService(
+        return Helper.helper_payForService(
             A,
             B,
             "25000000000000000000",
@@ -762,7 +762,7 @@ contract('UTIL_TKN', accounts => {
 
     it('Should payForService involving 50 PRuf tokens', async () => {
 
-        return UTIL_TKN.payForService(
+        return Helper.helper_payForService(
             B,
             A,
             "25000000000000000000",
@@ -814,7 +814,7 @@ contract('UTIL_TKN', accounts => {
     //31
     it('Should fail payForService involving 50 PRuf tokens because insufficiant balance', async () => {
 
-        return UTIL_TKN.payForService(
+        return Helper.helper_payForService(
             A,
             B,
             "70000000000000000000",
@@ -837,7 +837,7 @@ contract('UTIL_TKN', accounts => {
     //32
     it('Should fail to payForService involving 50 PRuf tokens because A is not an Authorized Agent', async () => {
 
-        return UTIL_TKN.payForService(
+        return Helper.helper_payForService(
             A,
             B,
             "25000000000000000000",
@@ -870,7 +870,7 @@ contract('UTIL_TKN', accounts => {
     //34
     it('Should fail to payForService involving 50 PRuf tokens because A is not an Authorized Agent', async () => {
 
-        return UTIL_TKN.payForService(
+        return Helper.helper_payForService(
             A,
             B,
             "25000000000000000000",

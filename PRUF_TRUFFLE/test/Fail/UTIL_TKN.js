@@ -1,8 +1,10 @@
 const PRUF_HELPER = artifacts.require('Helper');
 const PRUF_UTIL_TKN = artifacts.require('UTIL_TKN');
+const PRUF_STOR = artifacts.require('STOR');
 
 let UTIL_TKN;
 let Helper;
+let STOR;
 
 let account000 = '0x0000000000000000000000000000000000000000'
 
@@ -42,6 +44,14 @@ contract('UTIL_TKN', accounts => {
         UTIL_TKN = PRUF_UTIL_TKN_TEST;
     })
 
+
+    it('Should deploy Storage', async () => {
+        const PRUF_STOR_TEST = await PRUF_STOR.deployed({ from: account1 });
+        console.log(PRUF_STOR_TEST.address);
+        assert(PRUF_STOR_TEST.address !== '');
+        STOR = PRUF_STOR_TEST;
+    })
+
     
     it('Should build all variables with Helper', async () => {
 
@@ -61,6 +71,26 @@ contract('UTIL_TKN', accounts => {
         'PAYABLE_ROLE'
     )
 
+    })
+
+    it('Should authorize Helper', async () => {
+        console.log("Adding in Helper")
+        return Helper.OO_setStorageContract(STOR.address, { from: account1 })
+
+            .then(() => {
+                console.log("Authorizing Helper")
+                return UTIL_TKN.grantRole(payableRoleB32, Helper.address, { from: account1 })
+            })
+
+            .then(() => {
+                console.log("Adding UTIL_TKN to storage for use in AC 0")
+                return STOR.OO_addContract("UTIL_TKN", UTIL_TKN.address, '0', '1', { from: account1 })
+            })
+
+            .then(() => {
+                console.log("Resolving in Helper")
+                return Helper.OO_resolveContractAddresses({ from: account1 })
+            })
     })
 
 
@@ -123,7 +153,7 @@ contract('UTIL_TKN', accounts => {
     // it('Should fail because caller is not payable', async () => {
     //     console.log('//**************************END AdminSetSharesAddress FAIL BATCH**************************//')
     //     console.log('//**************************BEGIN payForService FAIL BATCH**************************//')
-    //     return UTIL_TKN.payForService(
+    //     return Helper.helper_payForService(
     //         account1,
     //         account2,
     //         "200000000000000000",
@@ -161,7 +191,7 @@ contract('UTIL_TKN', accounts => {
 
     // //5
     // it('Should fail because caller is coldWallet', async () => {
-    //     return UTIL_TKN.payForService(
+    //     return Helper.helper_payForService(
     //         account1,
     //         account2,
     //         "200000000000000000",
@@ -178,7 +208,7 @@ contract('UTIL_TKN', accounts => {
 
     // //6
     // it('Should fail because caller has insufficient balance', async () => {
-    //     return UTIL_TKN.payForService(
+    //     return Helper.helper_payForService(
     //         account1,
     //         account2,
     //         "50000000000000000000",

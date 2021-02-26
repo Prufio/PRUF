@@ -1,10 +1,14 @@
 const PRUF_HELPER = artifacts.require('Helper');
 const PRUF_UTIL_TKN = artifacts.require('UTIL_TKN');
 const BUY_PRUF = artifacts.require('PRESALE');
+const PRUF_STOR = artifacts.require('STOR');
+const PRUF_HELPER2 = artifacts.require('Helper2');
 
 let PRESALE;
 let UTIL_TKN;
 let Helper;
+let Helper2;
+let STOR;
 
 let account000 = '0x0000000000000000000000000000000000000000'
 
@@ -38,6 +42,14 @@ contract('PRESALE', accounts => {
     })
 
 
+    it('Should deploy PRUF_HELPER2', async () => {
+        const PRUF_HELPER2_TEST = await PRUF_HELPER2.deployed({ from: A });
+        console.log(PRUF_HELPER2_TEST.address);
+        assert(PRUF_HELPER2_TEST.address !== '')
+        Helper2 = PRUF_HELPER2_TEST;
+    })
+
+
     it('Should deploy UTIL_TKN', async () => {
         const PRUF_UTIL_TKN_TEST = await PRUF_UTIL_TKN.deployed({ from: A });
         console.log(PRUF_UTIL_TKN_TEST.address);
@@ -51,6 +63,14 @@ contract('PRESALE', accounts => {
         console.log(BUY_PRUF_TEST.address);
         assert(BUY_PRUF_TEST.address !== '');
         PRESALE = BUY_PRUF_TEST;
+    })
+
+
+    it('Should deploy Storage', async () => {
+        const PRUF_STOR_TEST = await PRUF_STOR.deployed({ from: A });
+        console.log(PRUF_STOR_TEST.address);
+        assert(PRUF_STOR_TEST.address !== '');
+        STOR = PRUF_STOR_TEST;
     })
 
     
@@ -78,6 +98,26 @@ contract('PRESALE', accounts => {
 
     })
 
+    it('Should authorize Helper', async () => {
+        console.log("Adding in Helper")
+        return Helper.OO_setStorageContract(STOR.address, { from: A })
+
+            .then(() => {
+                console.log("Authorizing Helper")
+                return UTIL_TKN.grantRole(payableRoleB32, Helper.address, { from: A })
+            })
+
+            .then(() => {
+                console.log("Adding UTIL_TKN to storage for use in AC 0")
+                return STOR.OO_addContract("UTIL_TKN", UTIL_TKN.address, '0', '1', { from: A })
+            })
+
+            .then(() => {
+                console.log("Resolving in Helper")
+                return Helper.OO_resolveContractAddresses({ from: A })
+            })
+    })
+
 
     it('Should give PRESALE MINTER_ROLE', async () => {
         return UTIL_TKN.grantRole(
@@ -97,7 +137,7 @@ contract('PRESALE', accounts => {
     //1
     it('Should fail because caller is not admin', async () => {
         console.log('//**************************END BOOTSTRAP**************************//')
-        console.log('//**************************BEGIN PRESALE_MAL (26)**************************//')
+        console.log('//**************************BEGIN PRESALE_MAL (25)**************************//')
 
         return PRESALE.ADMIN_setTokenContract(
             UTIL_TKN.address,
@@ -872,21 +912,21 @@ contract('PRESALE', accounts => {
             { from: A })
     })
 
-    //15
-    it('Should fail because not payable agent', async () => {
-        return UTIL_TKN.payForService(
-            B,
-            A,
-            "50000000000000000",
-            C,
-            "50000000000000000",
-            { from: A }
-        )
-    })
+    // //15
+    // it('Should fail because not payable agent', async () => {
+    //     return Helper2.helper_payForService(
+    //         B,
+    //         A,
+    //         "50000000000000000",
+    //         C,
+    //         "50000000000000000",
+    //         { from: A }
+    //     )
+    // })
 
 
     it('Should pay for service and distribute', async () => {
-        return UTIL_TKN.payForService(
+        return Helper.helper_payForService(
             B,
             A,
             "50000000000000000",
@@ -910,7 +950,7 @@ contract('PRESALE', accounts => {
     })
 
 
-    it("Should retrieve balanceOf(11) Pruf tokens @B", async () => {
+    it("Should retrieve balanceOf(10.9) Pruf tokens @B", async () => {
         var Balance = [];
 
         return await UTIL_TKN.balanceOf(B, { from: A }, function (_err, _result) {
@@ -923,7 +963,7 @@ contract('PRESALE', accounts => {
     })
 
 
-    it("Should retrieve balanceOf(11.15) Pruf tokens @C", async () => {
+    it("Should retrieve balanceOf(11.55) Pruf tokens @C", async () => {
         var Balance = [];
 
         return await UTIL_TKN.balanceOf(C, { from: A }, function (_err, _result) {
@@ -935,7 +975,7 @@ contract('PRESALE', accounts => {
         })
     })
 
-    //16
+    //15
     it('Should fail because not trusted agent', async () => {
         return UTIL_TKN.trustedAgentBurn(
             C,
@@ -992,7 +1032,7 @@ contract('PRESALE', accounts => {
         })
     })
 
-    //17
+    //16
     it('Should fail because not trusted agent', async () => {
         return UTIL_TKN.trustedAgentTransfer(
             C,
@@ -1067,7 +1107,7 @@ contract('PRESALE', accounts => {
         )
     })
 
-    //18
+    //17
     it('Should fail because not trusted agent', async () => {
         return UTIL_TKN.trustedAgentTransfer(
             B,
@@ -1190,7 +1230,7 @@ contract('PRESALE', accounts => {
             { from: C })
     })
 
-    //19
+    //18
     it('Should fail because C is cold wallet', async () => {
         return UTIL_TKN.trustedAgentTransfer(
             C,
@@ -1200,7 +1240,7 @@ contract('PRESALE', accounts => {
         )
     })
 
-    //20
+    //19
     it('Should fail because C is cold wallet', async () => {
         return UTIL_TKN.trustedAgentBurn(
             C,
@@ -1217,9 +1257,9 @@ contract('PRESALE', accounts => {
             { from: A })
     })
 
-    //21
+    //20
     it('Should fail because C is cold wallet', async () => {
-        return UTIL_TKN.payForService(
+        return Helper.helper_payForService(
             C,
             A,
             "1000000000000000000",
@@ -1334,7 +1374,7 @@ contract('PRESALE', accounts => {
 
 
     it('Should payForService and distribute', async () => {
-        return UTIL_TKN.payForService(
+        return Helper.helper_payForService(
             C,
             A,
             "1000000000000000000",
@@ -1383,7 +1423,7 @@ contract('PRESALE', accounts => {
         })
     })
 
-    //22
+    //21
     it('Should fail because not default admin', async () => {
         return UTIL_TKN.adminKillTrustedAgent(
             "170",
@@ -1399,7 +1439,7 @@ contract('PRESALE', accounts => {
         )
     })
 
-    //23
+    //22
     it('Should fail because trusted agent function permanently disabled', async () => {
         return UTIL_TKN.trustedAgentTransfer(
             C,
@@ -1409,7 +1449,7 @@ contract('PRESALE', accounts => {
         )
     })
 
-    //24
+    //23
     it('Should fail because trusted agent function permanently disabled', async () => {
         return UTIL_TKN.trustedAgentBurn(
             C,
@@ -1418,9 +1458,9 @@ contract('PRESALE', accounts => {
         )
     })
 
-    //25
+    //24
     it('Should fail because trusted agent function permanently disabled', async () => {
-        return UTIL_TKN.payForService(
+        return Helper.helper_payForService(
             C,
             A,
             "1000000000000000000",
