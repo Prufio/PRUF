@@ -20,15 +20,12 @@ pragma solidity ^0.8.0;
 
 import "./Imports/access/Ownable.sol";
 import "./PRUF_BASIC.sol";
- 
 
 interface erc721_tokenInterface {
     function ownerOf(uint256) external view returns (address);
 }
 
 contract Helper is Ownable, BASIC {
-    
-
     address erc721ContractAddress;
     erc721_tokenInterface erc721_tokenContract; //erc721_token prototype initialization
 
@@ -87,6 +84,7 @@ contract Helper is Ownable, BASIC {
     {
         return keccak256(abi.encodePacked(_idx));
     }
+
     function getHashOfUint256AndAddress(uint256 _idx, address _address)
         external
         pure
@@ -205,9 +203,8 @@ contract Helper is Ownable, BASIC {
         returns (string memory)
     {
         bytes32 _hashedAuthCode = keccak256(abi.encodePacked(_authCode));
-        bytes32 b32URI = keccak256(
-            abi.encodePacked(_hashedAuthCode, _assetClass)
-        );
+        bytes32 b32URI =
+            keccak256(abi.encodePacked(_hashedAuthCode, _assetClass));
         string memory authString = uint256toString(uint256(b32URI));
 
         return authString;
@@ -218,9 +215,8 @@ contract Helper is Ownable, BASIC {
         string calldata _authCode
     ) external pure returns (bytes32) {
         bytes32 _hashedAuthCode = keccak256(abi.encodePacked(_authCode));
-        bytes32 b32URI = keccak256(
-            abi.encodePacked(_hashedAuthCode, _assetClass)
-        );
+        bytes32 b32URI =
+            keccak256(abi.encodePacked(_hashedAuthCode, _assetClass));
 
         return b32URI;
     }
@@ -274,25 +270,56 @@ contract Helper is Ownable, BASIC {
     function helper_getExtAC_data_nostruct(uint32 _assetClass)
         external
         view
-        returns (uint8, uint8, uint8,address,bytes32)
+        returns (
+            uint8,
+            uint8,
+            uint8,
+            address,
+            bytes32
+        )
     {
         AC memory asset_data;
         //^^^^^^^checks^^^^^^^^^
-        (asset_data.byte1,
-        asset_data.byte2,
-        asset_data.byte3,
-        asset_data.referenceAddress,
-        asset_data.IPFS)  = AC_MGR.getExtAC_data_nostruct(_assetClass);
+        (
+            asset_data.byte1,
+            asset_data.byte2,
+            asset_data.byte3,
+            asset_data.referenceAddress,
+            asset_data.IPFS
+        ) = AC_MGR.getExtAC_data_nostruct(_assetClass);
 
         return (
-        asset_data.byte1,
-        asset_data.byte2,
-        asset_data.byte3,
-        asset_data.referenceAddress,
-        asset_data.IPFS
+            asset_data.byte1,
+            asset_data.byte2,
+            asset_data.byte3,
+            asset_data.referenceAddress,
+            asset_data.IPFS
         );
         //^^^^^^^interactions^^^^^^^^^
     }
+
+    function helper_payForService(
+        address _senderAddress,
+        address _rootAddress,
+        uint256 _rootPrice,
+        address _ACTHaddress,
+        uint256 _ACTHprice
+    ) external onlyOwner {
+        Invoice memory invoice;
+
+        invoice.rootAddress = _rootAddress;
+        invoice.rootPrice = _rootPrice;
+        invoice.ACTHaddress = _ACTHaddress;
+        invoice.ACTHprice = _ACTHprice;
+
+        UTIL_TKN.payForService(_senderAddress, invoice);
+    }
+
+    // struct Invoice { //invoice struct to facilitate payment messaging in-contract
+    // address rootAddress;
+    // uint256 rootPrice;
+    // address ACTHaddress;
+    // uint256 ACTHprice;
 
     /*
     struct AC {
@@ -308,10 +335,4 @@ contract Helper is Ownable, BASIC {
     bytes32 IPFS; //IPFS data for defining idxHash creation attribute fields
 }
     */
-    
-
-
-
-
-
 }
