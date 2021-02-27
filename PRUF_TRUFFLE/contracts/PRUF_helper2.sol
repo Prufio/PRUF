@@ -21,13 +21,13 @@ pragma solidity ^0.8.0;
 import "./Imports/access/Ownable.sol";
 import "./PRUF_BASIC.sol";
 
-interface erc721_tokenInterface {
+interface erc721_tokenInterface2 {
     function ownerOf(uint256) external view returns (address);
 }
 
-contract Helper is Ownable, BASIC {
+contract Helper2 is Ownable, BASIC {
     address erc721ContractAddress;
-    erc721_tokenInterface erc721_tokenContract; //erc721_token prototype initialization
+    erc721_tokenInterface2 erc721_tokenContract; //erc721_token prototype initialization
 
     uint256 private ACtokenIndex = 10000;
     uint256 private currentACtokenPrice = 5000;
@@ -35,7 +35,7 @@ contract Helper is Ownable, BASIC {
     function setErc721_tokenAddress(address contractAddress) public onlyOwner {
         require(contractAddress != address(0), "Invalid contract address");
         erc721ContractAddress = contractAddress;
-        erc721_tokenContract = erc721_tokenInterface(contractAddress);
+        erc721_tokenContract = erc721_tokenInterface2(contractAddress);
     }
 
     function atWhatAddress(uint256 tokenId)

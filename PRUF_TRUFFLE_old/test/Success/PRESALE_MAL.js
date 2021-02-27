@@ -874,7 +874,7 @@ contract('PRESALE', accounts => {
 
     //15
     it('Should fail because not payable agent', async () => {
-        return UTIL_TKN.payForService(
+        return Helper.helper_payForService(
             B,
             A,
             "50000000000000000",
@@ -886,7 +886,7 @@ contract('PRESALE', accounts => {
 
 
     it('Should pay for service and distribute', async () => {
-        return UTIL_TKN.payForService(
+        return Helper.helper_payForService(
             B,
             A,
             "50000000000000000",
@@ -1219,7 +1219,7 @@ contract('PRESALE', accounts => {
 
     //21
     it('Should fail because C is cold wallet', async () => {
-        return UTIL_TKN.payForService(
+        return Helper.helper_payForService(
             C,
             A,
             "1000000000000000000",
@@ -1334,7 +1334,7 @@ contract('PRESALE', accounts => {
 
 
     it('Should payForService and distribute', async () => {
-        return UTIL_TKN.payForService(
+        return Helper.helper_payForService(
             C,
             A,
             "1000000000000000000",
@@ -1420,7 +1420,7 @@ contract('PRESALE', accounts => {
 
     //25
     it('Should fail because trusted agent function permanently disabled', async () => {
-        return UTIL_TKN.payForService(
+        return Helper.helper_payForService(
             C,
             A,
             "1000000000000000000",

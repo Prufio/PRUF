@@ -1,8 +1,10 @@
 const PRUF_UTIL_TKN = artifacts.require('UTIL_TKN');
 const PRUF_HELPER = artifacts.require('Helper');
+const PRUF_STOR = artifacts.require('STOR');
 
 let UTIL_TKN;
 let Helper;
+let STOR;
 
 contract('UTIL_TKN', accounts => {
 
@@ -36,6 +38,14 @@ contract('UTIL_TKN', accounts => {
     })
 
 
+    it('Should deploy Storage', async () => {
+        const PRUF_STOR_TEST = await PRUF_STOR.deployed({ from: MAIN });
+        console.log(PRUF_STOR_TEST.address);
+        assert(PRUF_STOR_TEST.address !== '');
+        STOR = PRUF_STOR_TEST;
+    })
+
+
     it('Should build all variables with Helper', async () => {
 
         MINTER_ROLE = await Helper.getStringHash(
@@ -53,6 +63,26 @@ contract('UTIL_TKN', accounts => {
         TRUSTED_AGENT_ROLE = await Helper.getStringHash(
             'TRUSTED_AGENT_ROLE'
         )
+    })
+
+    it('Should authorize Helper', async () => {
+        console.log("Adding in Helper")
+        return Helper.OO_setStorageContract(STOR.address, { from: MAIN })
+
+            .then(() => {
+                console.log("Authorizing Helper")
+                return UTIL_TKN.grantRole(PAYABLE_ROLE, Helper.address, { from: MAIN })
+            })
+
+            .then(() => {
+                console.log("Adding UTIL_TKN to storage for use in AC 0")
+                return STOR.OO_addContract("UTIL_TKN", UTIL_TKN.address, '0', '1', { from: MAIN })
+            })
+
+            .then(() => {
+                console.log("Resolving in Helper")
+                return Helper.OO_resolveContractAddresses({ from: MAIN })
+            })
     })
 
 
@@ -352,7 +382,7 @@ contract('UTIL_TKN', accounts => {
     //9
     it('Should fail to payForService involving 50 PRuf tokens because A is not an Authorized Agent', async () => {
 
-        return UTIL_TKN.payForService(
+        return Helper.helper_payForService(
             A,
             B,
             "25000000000000000000",
@@ -471,7 +501,7 @@ contract('UTIL_TKN', accounts => {
     //15
     it('Should fail to payForService involving 50 PRuf tokens because A is not an Authorized Agent', async () => {
 
-        return UTIL_TKN.payForService(
+        return Helper.helper_payForService(
             A,
             B,
             "25000000000000000000",
@@ -571,7 +601,7 @@ contract('UTIL_TKN', accounts => {
     //22
     it('Should fail to payForService involving 50 PRuf tokens because A is not an Authorized Agent', async () => {
 
-        return UTIL_TKN.payForService(
+        return Helper.helper_payForService(
             A,
             B,
             "25000000000000000000",
@@ -760,9 +790,9 @@ contract('UTIL_TKN', accounts => {
     })
 
 
-    it('Should payForService involving 50 PRuf tokens', async () => {
+    it('Should  involving 50 PRuf tokens', async () => {
 
-        return UTIL_TKN.payForService(
+        return Helper.helper_payForService(
             B,
             A,
             "25000000000000000000",
@@ -814,7 +844,7 @@ contract('UTIL_TKN', accounts => {
     //31
     it('Should fail payForService involving 50 PRuf tokens because insufficiant balance', async () => {
 
-        return UTIL_TKN.payForService(
+        return Helper.helper_payForService(
             A,
             B,
             "70000000000000000000",
@@ -837,7 +867,7 @@ contract('UTIL_TKN', accounts => {
     //32
     it('Should fail to payForService involving 50 PRuf tokens because A is not an Authorized Agent', async () => {
 
-        return UTIL_TKN.payForService(
+        return Helper.helper_payForService(
             A,
             B,
             "25000000000000000000",
@@ -870,7 +900,7 @@ contract('UTIL_TKN', accounts => {
     //34
     it('Should fail to payForService involving 50 PRuf tokens because A is not an Authorized Agent', async () => {
 
-        return UTIL_TKN.payForService(
+        return Helper.helper_payForService(
             A,
             B,
             "25000000000000000000",
