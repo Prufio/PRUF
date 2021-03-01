@@ -48,6 +48,10 @@ __/\\\\\\\\\\\\\ _____/\\\\\\\\\ _______/\\../\\ ___/\\\\\\\\\\\\\\\
 * 15 - PIP|0|
 *
 * 16 - PURCHASE|0|
+*
+* 17 - DECORATE|0|
+*
+* 18 - WRAP|0|
 * 
 * ----------------- ADD CONTRACTS TO STORAGE (STOR.OO_addContract)-----------------|0|
 * 1 - APP ("APP", APP.address, '0', '1')|0|
@@ -78,7 +82,11 @@ __/\\\\\\\\\\\\\ _____/\\\\\\\\\ _______/\\../\\ ___/\\\\\\\\\\\\\\\
 *
 * 14 - PIP ("PIP", PIP.address, '0', '1')|0|
 *
-* 14 - PURCHASE ("PURCHASE", PURCHASE.address, '0', '2')|0|
+* 15 - PURCHASE ("PURCHASE", PURCHASE.address, '0', '2')|0|
+*
+* 16 - DECORATE ("DECORATE", DECORATE.address, '0', '2')|0|
+*
+* 17 - WRAP ("WRAP", WRAP.address, '0', '2')|0|
 * 
 * ----------------- ADD STORAGE TO CONTRACTS (CONTRACT.OO_setStorageContract) -----------------|0|
 * 1 - APP (STOR.address)|0|
@@ -104,6 +112,10 @@ __/\\\\\\\\\\\\\ _____/\\\\\\\\\ _______/\\../\\ ___/\\\\\\\\\\\\\\\
 * 11 - PIP (STOR.address)|0|
 *
 * 12 - PURCHASE (STOR.address)|0|
+*
+* 13 - DECORATE (STOR.address)|0|
+*
+* 14 - WRAP (STOR.address)|0|
 * 
 * ----------------- RESOLVE CONTRACT ADDRESSES (CONTRACT.OO_resolveContractAddresses) -----------------|0|
 * 1 - APP|0|
@@ -128,34 +140,38 @@ __/\\\\\\\\\\\\\ _____/\\\\\\\\\ _______/\\../\\ ___/\\\\\\\\\\\\\\\
 *
 * 11 - PIP|0|
 *
-* 11 - PURCHASE|0|
+* 12 - PURCHASE|0|
+*
+* 13 - WRAP|0|
+*
+* 14 - DECORATE|0|
 * 
 * ----------------- DIVY UP ROLES (CONTRACT.grantRole) (B32'S) -----------------|0|
 * 1 - AC_TKN (MINTER_ROLEB32, AC_MGR.address),   |0|
-*            (TRUSTED_AGENT_ROLEB32, AC_MGR.address)   |0|
 *
 * 2 - UTIL_TKN (PAYABLE_ROLEB32, AC_MGR.address),   |0|
 *              (PAYABLE_ROLEB32, APP_NC.address),   |0|
 *              (PAYABLE_ROLEB32, APP.address),   |0|
-*              (PAYABLE_ROLEB32, APP_NP.address),   |0|
-*              (PAYABLE_ROLEB32, APP_NP_NC.address),   |0|
 *              (PAYABLE_ROLEB32, RCLR.address),   |0|
+*              (PAYABLE_ROLEB32, NP.address),   |0|
+*              (PAYABLE_ROLEB32, NP_NC.address),   |0|
 *              (PAYABLE_ROLEB32, PIP.address),   |0|
-*              (TRUSTED_AGENT_ROLEB32, AC_MGR.address)   |0|
-*
 *              (PAYABLE_ROLEB32, PURCHASE.address),   |0|
-*              (TRUSTED_AGENT_ROLEB32, PURCHASE.address)   |0|
-*              (MINTER_ROLEB32, SPLIT.address)   |0|
-*              (PAUSER_ROLEB32, SPLIT.address)   |0|
-*              (SNAPSHOT_ROLEB32, SPLIT.address)   |0|
+*              (PAYABLE_ROLEB32, DECORATE.address),   |0|
+*              (PAYABLE_ROLEB32, WRAP.address),   |0|
+*              (TRUSTED_AGENT_ROLEB32, AC_MGR.address)   |0|
+*              (TRUSTED_AGENT_ROLEB32, PURCHASE.address),   |0|
+# *              (MINTER_ROLEB32, SPLIT.address),   |0|
+# *              (PAUSER_ROLEB32, SPLIT.address),   |0|
+# *              (SNAPSHOT_ROLEB32, SPLIT.address),   |0|
 *
 * 3 - A_TKN (MINTER_ROLEB32, NP.address),   |0|
 *           (MINTER_ROLEB32, APP_NC.address),   |0|
 *           (MINTER_ROLEB32, APP.address),   |0|
 *           (MINTER_ROLEB32, PIP.address),   |0|
-*           (MINTER_ROLEB32, RCLR.address)   |0|
-*           (TRUSTED_AGENT_ROLEB32),WRAP.address) |0|
-*
+*           (MINTER_ROLEB32, RCLR.address),   |0|
+*           (MINTER_ROLEB32, WRAP.address),   |0|
+*           (TRUSTED_AGENT_ROLEB32), WRAP.address), |0|
 *           (TRUSTED_AGENT_ROLEB32, PURCHASE.address)   |0|               
 *
 * 4 - APP (ASSET_TXFR_ROLEB32, NP.address)   |0|
@@ -234,16 +250,17 @@ __/\\\\\\\\\\\\\ _____/\\\\\\\\\ _______/\\../\\ ___/\\\\\\\\\\\\\\\
 *          ('PIP', '12', '2'),   |0|
 *          ('PIP', '13', '1'),   |0|
 *          ('PIP', '14', '2'),   |0|
-*          ('PIP', '1', '1'),   |0|
-*          ('PIP', '2', '1'),   |0|
-*          ('PIP', '3', '1'),   |0|
-*          ('PIP', '4', '1'),   |0|
-*          ('PIP', '5', '1')   |0|
 *
 * 6 - PURCHASE ('PURCHASE', '11', '1'),   |0|
 *              ('PURCHASE', '12', '2'),   |0|
 *              ('PURCHASE', '13', '1'),   |0|
 *              ('PURCHASE', '14', '2')   |0|
+*
+* 10 - DECORATE ('DECORATE', '12', '2'),   |0|
+*           ('DECORATE', '14', '2')   |0|
+*
+* 11 - WRAP ('WRAP', '12', '2'),   |0|
+*           ('WRAP', '14', '2')   |0|
 *
 * ----------------- SET COSTS IN AC'S (AC_MGR.ACTH_setCosts)-----------------|0|
 * 1 - (AC1) ('1', '1', PRUF+(0*18), PAYEE.address),   |0|

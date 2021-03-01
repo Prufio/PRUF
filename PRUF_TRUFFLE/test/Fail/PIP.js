@@ -1168,13 +1168,13 @@ __/\\\\\\\\\\\\\ _____/\\\\\\\\\ _______/\\../\\ ___/\\\\\\\\\\\\\\\
                         return STOR.enableContractForAC('PIP', '16', '2', { from: account10 })
                     })
         
-                    .then(() => {
-                        return STOR.enableContractForAC('PIP', '1', '1', { from: account1 })
-                    })
+                    // .then(() => {
+                    //     return STOR.enableContractForAC('PIP', '1', '1', { from: account1 })
+                    // })
         
-                    .then(() => {
-                        return STOR.enableContractForAC('PIP', '2', '1', { from: account1 })
-                    })
+                    // .then(() => {
+                    //     return STOR.enableContractForAC('PIP', '2', '1', { from: account1 })
+                    // })
             })
         
         

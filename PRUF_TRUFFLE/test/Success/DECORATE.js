@@ -873,10 +873,10 @@ contract('DECORATE', accounts => {
                 return A_TKN.grantRole(minterRoleB32, PIP.address, { from: account1 })
             })
 
-            .then(() => {
-                console.log("Authorizing PIP")
-                return A_TKN.grantRole(minterRoleB32, DECORATE.address, { from: account1 })
-            })
+            // .then(() => {
+            //     console.log("Authorizing DECORATE")
+            //     return A_TKN.grantRole(minterRoleB32, DECORATE.address, { from: account1 })
+            // })
     })
 
     it('Should authorize all payable contracts for transactions', async () => {
