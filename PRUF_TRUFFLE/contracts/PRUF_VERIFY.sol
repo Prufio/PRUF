@@ -39,7 +39,7 @@ __/\\\\\\\\\\\\\ _____/\\\\\\\\\ _______/\\../\\ ___/\\\\\\\\\\\\\\\
 pragma solidity ^0.8.0;
 
 import "./PRUF_CORE.sol";
-import "./PRUF_INTERFACES.sol";
+//import "./PRUF_INTERFACES.sol";
 
 contract VERIFY is CORE {
     
