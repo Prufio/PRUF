@@ -93,7 +93,7 @@ contract AC_MGR is BASIC {
     modifier isNodeMinter() {
         require(
             hasRole(NODE_MINTER_ROLE, _msgSender()),
-            "PAM:MOD: must have NODE_MINTER_ROLE"
+            "ACM:MOD: must have NODE_MINTER_ROLE"
         );
         _;
     }
@@ -193,11 +193,11 @@ contract AC_MGR is BASIC {
     ) external whenNotPaused nonReentrant returns (uint256) {
         require( //Impossible to test??
             ACtokenIndex < 4294000000,
-            "PRuf:IS:Only 4294000000 AC tokens allowed"
+            "ACM:IS:Only 4294000000 AC tokens allowed"
         );
         require(
             (ID_TKN.balanceOf(_msgSender()) == 1), //_msgSender() is token holder
-            "ANC:MOD-IA: Caller does not hold a valid PRuF_ID token"
+            "ACM:MOD-IA: Caller does not hold a valid PRuF_ID token"
         );
         //^^^^^^^checks^^^^^^^^^
 
@@ -368,12 +368,12 @@ contract AC_MGR is BASIC {
     {
         require(
             AC_data[_assetClass].discount < upperLimit,
-            "PRuf:IS:price share already maxed out"
+            "ACM:IS:price share already maxed out"
         );
 
         require(
             _amount > prufPerShare,
-            "PRuf:IS:amount too low to increase price share"
+            "ACM:IS:amount too low to increase price share"
         );
 
         //^^^^^^^checks^^^^^^^^^
