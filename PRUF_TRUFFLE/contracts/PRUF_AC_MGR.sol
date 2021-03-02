@@ -1,4 +1,4 @@
-/*--------------------------------------------------------PRuF0.7.1
+/*--------------------------------------------------------PRüF0.8.0
 __/\\\\\\\\\\\\\ _____/\\\\\\\\\ _______/\\../\\ ___/\\\\\\\\\\\\\\\
  _\/\\\/////////\\\ _/\\\///////\\\ ____\//..\//____\/\\\///////////__
   _\/\\\.......\/\\\.\/\\\.....\/\\\ ________________\/\\\ ____________
@@ -12,41 +12,34 @@ __/\\\\\\\\\\\\\ _____/\\\\\\\\\ _______/\\../\\ ___/\\\\\\\\\\\\\\\
 
 /*-----------------------------------------------------------------
  * STATEMENT OF TERMS OF SERVICE (TOS):
- * User agrees not to intentionally claim any namespace that is a recognized or registered brand name, trade mark, 
+ * User agrees not to intentionally claim any namespace that is a recognized or registered brand name, trade mark,
  * or other Intellectual property not belonging to the user, and agrees to voluntarily remove any name or brand found to be
- * infringing from any record that the user controls, within 30 days of notification. If notification is not possible or 
+ * infringing from any record that the user controls, within 30 days of notification. If notification is not possible or
  * there is no response to notification, the user agrees that the name record may be changed without their permission or cooperation.
  * Use of this software constitutes consent to the terms above.
  *-----------------------------------------------------------------
  */
 
-
 /*-----------------------------------------------------------------
  *  TO DO
- * REWORK TO TAKE ALL INPUTS FOR TOKEN MANIPULATION IN wei notation (18 zeros)
- * ADD ROLES! (need role for ACNODE MINTER)
- * all 18 dec math for price share
- * 100% price share option to hook into dNodes
  *-----------------------------------------------------------------
  */
 
 // SPDX-License-Identifier: UNLICENSED
-pragma solidity ^0.6.7;
+pragma solidity ^0.8.0;
 
 import "./PRUF_BASIC.sol";
 import "./Imports/utils/ReentrancyGuard.sol";
 
 contract AC_MGR is BASIC {
-    using SafeMath for uint256;
-
     bytes32 public constant NODE_MINTER_ROLE = keccak256("NODE_MINTER_ROLE");
-    bytes32
-        public constant B320xF_ = 0xFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF;
+    bytes32 public constant B320xF_ =
+        0xFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF;
 
-    struct Costs {
-        uint256 serviceCost; // Cost in the given item category
-        address paymentAddress; // 2nd-party fee beneficiary address
-    }
+    // struct Costs {
+    //     uint256 serviceCost; // Cost in the given item category
+    //     address paymentAddress; // 2nd-party fee beneficiary address
+    // }
 
     uint256 private ACtokenIndex = 1000000; //Starting index for purchased ACnode tokens
 
@@ -87,9 +80,9 @@ contract AC_MGR is BASIC {
 
     uint32 private constant startingDiscount = 5100; // Purchased nodes start with 51% profit share
 
-    constructor() public {
+    constructor() {
         _setupRole(NODE_MINTER_ROLE, _msgSender());
-        AC_number[""] = 4294967295;  //points the blank string name to AC 4294967295
+        AC_number[""] = 4294967295; //points the blank string name to AC 4294967295
     }
 
     /*
@@ -100,7 +93,7 @@ contract AC_MGR is BASIC {
     modifier isNodeMinter() {
         require(
             hasRole(NODE_MINTER_ROLE, _msgSender()),
-            "PAM:MOD: must have NODE_MINTER_ROLE"
+            "ACM:MOD: must have NODE_MINTER_ROLE"
         );
         _;
     }
@@ -200,18 +193,18 @@ contract AC_MGR is BASIC {
     ) external whenNotPaused nonReentrant returns (uint256) {
         require( //Impossible to test??
             ACtokenIndex < 4294000000,
-            "PRuf:IS:Only 4294000000 AC tokens allowed"
+            "ACM:IS:Only 4294000000 AC tokens allowed"
         );
         require(
             (ID_TKN.balanceOf(_msgSender()) == 1), //_msgSender() is token holder
-            "ANC:MOD-IA: Caller does not hold a valid PRuF_ID token"
+            "ACM:MOD-IA: Caller does not hold a valid PRuF_ID token"
         );
         //^^^^^^^checks^^^^^^^^^
 
         if (ACtokenIndex < 4294000000) ACtokenIndex++; //increment ACtokenIndex up to last one
 
         uint256 newACtokenPrice;
-        uint256 numberOfTokensSold = ACtokenIndex.sub(uint256(1000000));
+        uint256 numberOfTokensSold = ACtokenIndex - uint256(1000000);
 
         if (numberOfTokensSold >= 4000) {
             newACtokenPrice = acPrice_L7;
@@ -324,16 +317,23 @@ contract AC_MGR is BASIC {
 
     /*
      * @dev Modifies an assetClass
-     * Sets a new AC EXT Data uint32
+     * Sets a new AC EXT Data address
      * Requires that:
      *  caller holds ACtoken
      */
-    function updateACextendedData(
-        uint32 _extData,
-        uint32 _assetClass //-------------------------------------------------------TEST
+    function updateACreferenceAddress(
+        address _extData,
+        uint8 _byte1,
+        uint8 _byte2,
+        uint8 _byte3,
+        uint32 _assetClass
     ) external isACtokenHolderOfClass(_assetClass) whenNotPaused {
         //^^^^^^^checks^^^^^^^^^
-        AC_data[_assetClass].extendedData = _extData;
+
+        AC_data[_assetClass].byte1 = _byte1;
+        AC_data[_assetClass].byte2 = _byte2;
+        AC_data[_assetClass].byte3 = _byte3;
+        AC_data[_assetClass].referenceAddress = _extData;
         //^^^^^^^effects^^^^^^^^^
     }
 
@@ -368,27 +368,26 @@ contract AC_MGR is BASIC {
     {
         require(
             AC_data[_assetClass].discount < upperLimit,
-            "PRuf:IS:price share already maxed out"
+            "ACM:IS:price share already maxed out"
         );
 
         require(
             _amount > prufPerShare,
-            "PRuf:IS:amount too low to increase price share"
+            "ACM:IS:amount too low to increase price share"
         );
 
         //^^^^^^^checks^^^^^^^^^
-        address rootPaymentAddress = cost[AC_data[_assetClass]
-            .assetClassRoot][1]
-            .paymentAddress; //payment for upgrade goes to root AC payment adress specified for service (1)
+        address rootPaymentAddress =
+            cost[AC_data[_assetClass].assetClassRoot][1].paymentAddress; //payment for upgrade goes to root AC payment adress specified for service (1)
 
         uint256 oldShare = uint256(AC_data[_assetClass].discount);
-        uint256 maxShareIncrease = (upperLimit.sub(oldShare)); //max payment percentage never goes over upperLimit%
-        uint256 sharesToBuy = _amount.div(prufPerShare);
+        uint256 maxShareIncrease = (upperLimit - oldShare); //max payment percentage never goes over upperLimit%
+        uint256 sharesToBuy = _amount / prufPerShare;
         if (sharesToBuy > maxShareIncrease) {
             sharesToBuy = maxShareIncrease;
         }
 
-        uint256 upgradeCost = sharesToBuy.mul(prufPerShare); //multiplies and adds 18d
+        uint256 upgradeCost = sharesToBuy * prufPerShare; //multiplies and adds 18d
 
         //^^^^^^^effects^^^^^^^^^
 
@@ -416,7 +415,7 @@ contract AC_MGR is BASIC {
 
         //^^^^^^^checks^^^^^^^^^
 
-        discount = discount.add(_increaseAmount);
+        discount = discount + _increaseAmount;
         if (discount > upperLimit) discount = upperLimit;
 
         AC_data[_assetClass].discount = uint32(discount); //type conversion safe because discount always <= upperLimit
@@ -426,18 +425,21 @@ contract AC_MGR is BASIC {
     /*
      * @dev Transfers a name from one asset class to another
      * !! -------- to be used with great caution and only as a result of community governance action -----------
-     * Designed to remedy brand infringement issues. This breaks decentralization and must eventually be given 
-     * over to some kind of governance contract. 
+     * Designed to remedy brand infringement issues. This breaks decentralization and must eventually be given
+     * over to some kind of governance contract.
      * Destination AC must have IPFS Set to 0xFFF.....
      *
      */
-    function transferName(  //---------------------------------------DPS TEST-----NEW
+    function transferName(
+        //---------------------------------------DPS TEST-----NEW
         string calldata _name,
         uint32 _assetClass_source,
         uint32 _assetClass_dest
     ) external isAdmin whenNotPaused nonReentrant {
-
-        require(AC_number[_name] == _assetClass_source, "ACM:TA: name not in source AC"); //source AC_Name must match name given
+        require(
+            AC_number[_name] == _assetClass_source,
+            "ACM:TA: name not in source AC"
+        ); //source AC_Name must match name given
 
         require(
             (AC_data[_assetClass_dest].IPFS == B320xF_), //dest AC must have ipfs set to 0xFFFF.....
@@ -474,7 +476,7 @@ contract AC_MGR is BASIC {
             "ACM:CAC: discount cannot exceed 100% (10000)"
         );
         require( //has valid root
-            (_ac.custodyType != 0) || (_assetClassRoot == _assetClass),
+            (_ac.custodyType == 3) || (_assetClassRoot == _assetClass),
             "ACM:CAC:Root asset class does not exist"
         );
 
@@ -525,8 +527,7 @@ contract AC_MGR is BASIC {
             uint32,
             uint8,
             uint32,
-            uint32,
-            bytes32
+            address
         )
     {
         //^^^^^^^checks^^^^^^^^^
@@ -534,7 +535,44 @@ contract AC_MGR is BASIC {
             AC_data[_assetClass].assetClassRoot,
             AC_data[_assetClass].custodyType,
             AC_data[_assetClass].discount,
-            AC_data[_assetClass].extendedData,
+            AC_data[_assetClass].referenceAddress
+        );
+        //^^^^^^^interactions^^^^^^^^^
+    }
+
+    /* CAN'T RETURN A STRUCT WITH A STRING WITHOUT WIERDNESS-0.8.1
+     * @dev Retrieve AC_data @ _assetClass
+     */
+    function getExtAC_data(uint32 _assetClass)
+        external
+        view
+        returns (AC memory)
+    {
+        //^^^^^^^checks^^^^^^^^^
+        return (AC_data[_assetClass]);
+        //^^^^^^^interactions^^^^^^^^^
+    }
+
+    /* CAN'T RETURN A STRUCT WITH A STRING WITHOUT WIERDNESS-0.8.1
+     * @dev Retrieve AC_data @ _assetClass
+     */
+    function getExtAC_data_nostruct(uint32 _assetClass)
+        external
+        view
+        returns (
+            uint8,
+            uint8,
+            uint8,
+            address,
+            bytes32
+        )
+    {
+        //^^^^^^^checks^^^^^^^^^
+        return (
+            AC_data[_assetClass].byte1,
+            AC_data[_assetClass].byte2,
+            AC_data[_assetClass].byte3,
+            AC_data[_assetClass].referenceAddress,
             AC_data[_assetClass].IPFS
         );
         //^^^^^^^interactions^^^^^^^^^
@@ -603,7 +641,7 @@ contract AC_MGR is BASIC {
     {
         //^^^^^^^checks^^^^^^^^^
 
-        uint256 numberOfTokensSold = ACtokenIndex.sub(uint256(1000000));
+        uint256 numberOfTokensSold = ACtokenIndex - uint256(1000000);
         return (
             numberOfTokensSold,
             currentACtokenPrice,
@@ -626,12 +664,7 @@ contract AC_MGR is BASIC {
     function getServiceCosts(uint32 _assetClass, uint16 _service)
         external
         view
-        returns (
-            address,
-            uint256,
-            address,
-            uint256
-        )
+        returns (Invoice memory)
     {
         AC memory AC_info = AC_data[_assetClass];
         require(AC_info.assetClassRoot != 0, "ACM:GC:AC not yet populated");
@@ -643,12 +676,14 @@ contract AC_MGR is BASIC {
         Costs memory rootCosts = cost[rootAssetClass][_service];
 
         //^^^^^^^checks^^^^^^^^^
-        return (
-            rootCosts.paymentAddress,
-            rootCosts.serviceCost,
-            costs.paymentAddress,
-            costs.serviceCost
-        );
+        Invoice memory invoice;
+
+        invoice.rootAddress = rootCosts.paymentAddress;
+        invoice.rootPrice = rootCosts.serviceCost;
+        invoice.ACTHaddress = costs.paymentAddress;
+        invoice.ACTHprice = costs.serviceCost;
+
+        return invoice;
         //^^^^^^^interactions^^^^^^^^^
     }
 

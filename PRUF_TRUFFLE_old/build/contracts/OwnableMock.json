@@ -1,0 +1,246 @@
+{
+  "contractName": "OwnableMock",
+  "abi": [
+    {
+      "anonymous": false,
+      "inputs": [
+        {
+          "indexed": true,
+          "internalType": "address",
+          "name": "previousOwner",
+          "type": "address"
+        },
+        {
+          "indexed": true,
+          "internalType": "address",
+          "name": "newOwner",
+          "type": "address"
+        }
+      ],
+      "name": "OwnershipTransferred",
+      "type": "event"
+    },
+    {
+      "inputs": [],
+      "name": "owner",
+      "outputs": [
+        {
+          "internalType": "address",
+          "name": "",
+          "type": "address"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [],
+      "name": "renounceOwnership",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "address",
+          "name": "newOwner",
+          "type": "address"
+        }
+      ],
+      "name": "transferOwnership",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    }
+  ],
+  "metadata": "{\"compiler\":{\"version\":\"0.6.12+commit.27d51765\"},\"language\":\"Solidity\",\"output\":{\"abi\":[{\"anonymous\":false,\"inputs\":[{\"indexed\":true,\"internalType\":\"address\",\"name\":\"previousOwner\",\"type\":\"address\"},{\"indexed\":true,\"internalType\":\"address\",\"name\":\"newOwner\",\"type\":\"address\"}],\"name\":\"OwnershipTransferred\",\"type\":\"event\"},{\"inputs\":[],\"name\":\"owner\",\"outputs\":[{\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"renounceOwnership\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"newOwner\",\"type\":\"address\"}],\"name\":\"transferOwnership\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"}],\"devdoc\":{\"kind\":\"dev\",\"methods\":{\"owner()\":{\"details\":\"Returns the address of the current owner.\"},\"renounceOwnership()\":{\"details\":\"Leaves the contract without owner. It will not be possible to call `onlyOwner` functions anymore. Can only be called by the current owner. NOTE: Renouncing ownership will leave the contract without an owner, thereby removing any functionality that is only available to the owner.\"},\"transferOwnership(address)\":{\"details\":\"Transfers ownership of the contract to a new account (`newOwner`). Can only be called by the current owner.\"}},\"version\":1},\"userdoc\":{\"kind\":\"user\",\"methods\":{},\"version\":1}},\"settings\":{\"compilationTarget\":{\"/Users/cts/dev/PRUF/PRUF_TRUFFLE/contracts/Imports/mocks/OwnableMock.sol\":\"OwnableMock\"},\"evmVersion\":\"istanbul\",\"libraries\":{},\"metadata\":{\"bytecodeHash\":\"ipfs\"},\"optimizer\":{\"enabled\":true,\"runs\":200},\"remappings\":[]},\"sources\":{\"/Users/cts/dev/PRUF/PRUF_TRUFFLE/contracts/Imports/GSN/Context.sol\":{\"keccak256\":\"0xdb26cbf4d028490f49831a7865c2fe1b28db44b535ca8d343785a3b768aae183\",\"license\":\"MIT\",\"urls\":[\"bzz-raw://840b14ce0315c47d49ba328f1f9fa7654ded1c9e1559e6c5e777a7b2dc28bf0a\",\"dweb:/ipfs/QmTLLabn4wcfGro9LEmUXUN2nwKqZSotXMvjDCLXEnLtZP\"]},\"/Users/cts/dev/PRUF/PRUF_TRUFFLE/contracts/Imports/access/Ownable.sol\":{\"keccak256\":\"0x4bd6402ca6b3419008c2b482aff54e66836e8cb4eba2680e42ac5884ae6424fc\",\"license\":\"MIT\",\"urls\":[\"bzz-raw://8f9f711fb8d0d92aeea1c327e3845d13ca1fa8f142e47f8723cd5b3106fb29a3\",\"dweb:/ipfs/QmVQUReDW9f4zGqhizwHnyU8EntMs95tbASdqkGncnikba\"]},\"/Users/cts/dev/PRUF/PRUF_TRUFFLE/contracts/Imports/mocks/OwnableMock.sol\":{\"keccak256\":\"0x855ca956773e0c781124e05c130a580ac8b99f3cfa1a1c29c0013f3a34dbd107\",\"license\":\"MIT\",\"urls\":[\"bzz-raw://d15e3407feb171d3cc8e91cecf650e89c8ee75f8055efeeadde283f3cd1cfc78\",\"dweb:/ipfs/QmWKGYwTDCQTiAExVpArHo6iQQHWAoU8x3anX5eDHxmJED\"]}},\"version\":1}",
+  "bytecode": "0x608060405234801561001057600080fd5b50600061001b61006a565b600080546001600160a01b0319166001600160a01b0383169081178255604051929350917f8be0079c531659141344cd1fd0a4f28419497f9722a3daafe3b4186f6b6457e0908290a35061006e565b3390565b6102c78061007d6000396000f3fe608060405234801561001057600080fd5b50600436106100415760003560e01c8063715018a6146100465780638da5cb5b14610050578063f2fde38b14610074575b600080fd5b61004e61009a565b005b61005861014e565b604080516001600160a01b039092168252519081900360200190f35b61004e6004803603602081101561008a57600080fd5b50356001600160a01b031661015d565b6100a2610267565b6000546001600160a01b03908116911614610104576040805162461bcd60e51b815260206004820181905260248201527f4f776e61626c653a2063616c6c6572206973206e6f7420746865206f776e6572604482015290519081900360640190fd5b600080546040516001600160a01b03909116907f8be0079c531659141344cd1fd0a4f28419497f9722a3daafe3b4186f6b6457e0908390a3600080546001600160a01b0319169055565b6000546001600160a01b031690565b610165610267565b6000546001600160a01b039081169116146101c7576040805162461bcd60e51b815260206004820181905260248201527f4f776e61626c653a2063616c6c6572206973206e6f7420746865206f776e6572604482015290519081900360640190fd5b6001600160a01b03811661020c5760405162461bcd60e51b815260040180806020018281038252602681526020018061026c6026913960400191505060405180910390fd5b600080546040516001600160a01b03808516939216917f8be0079c531659141344cd1fd0a4f28419497f9722a3daafe3b4186f6b6457e091a3600080546001600160a01b0319166001600160a01b0392909216919091179055565b339056fe4f776e61626c653a206e6577206f776e657220697320746865207a65726f2061646472657373a26469706673582212206bf49a03569e896d2db29a77525c64f68225c08d4a769d06f785d78051eedd6a64736f6c634300060c0033",
+  "deployedBytecode": "0x608060405234801561001057600080fd5b50600436106100415760003560e01c8063715018a6146100465780638da5cb5b14610050578063f2fde38b14610074575b600080fd5b61004e61009a565b005b61005861014e565b604080516001600160a01b039092168252519081900360200190f35b61004e6004803603602081101561008a57600080fd5b50356001600160a01b031661015d565b6100a2610267565b6000546001600160a01b03908116911614610104576040805162461bcd60e51b815260206004820181905260248201527f4f776e61626c653a2063616c6c6572206973206e6f7420746865206f776e6572604482015290519081900360640190fd5b600080546040516001600160a01b03909116907f8be0079c531659141344cd1fd0a4f28419497f9722a3daafe3b4186f6b6457e0908390a3600080546001600160a01b0319169055565b6000546001600160a01b031690565b610165610267565b6000546001600160a01b039081169116146101c7576040805162461bcd60e51b815260206004820181905260248201527f4f776e61626c653a2063616c6c6572206973206e6f7420746865206f776e6572604482015290519081900360640190fd5b6001600160a01b03811661020c5760405162461bcd60e51b815260040180806020018281038252602681526020018061026c6026913960400191505060405180910390fd5b600080546040516001600160a01b03808516939216917f8be0079c531659141344cd1fd0a4f28419497f9722a3daafe3b4186f6b6457e091a3600080546001600160a01b0319166001600160a01b0392909216919091179055565b339056fe4f776e61626c653a206e6577206f776e657220697320746865207a65726f2061646472657373a26469706673582212206bf49a03569e896d2db29a77525c64f68225c08d4a769d06f785d78051eedd6a64736f6c634300060c0033",
+  "immutableReferences": {},
+  "sourceMap": "91:35:67:-:0;;;;;;;;;;;;-1:-1:-1;865:17:9;885:12;:10;:12::i;:::-;907:6;:18;;-1:-1:-1;;;;;;907:18:9;-1:-1:-1;;;;;907:18:9;;;;;;;940:43;;907:18;;-1:-1:-1;907:18:9;940:43;;907:6;;940:43;831:159;91:35:67;;590:104:1;677:10;590:104;:::o;91:35:67:-;;;;;;;",
+  "deployedSourceMap": "91:35:67:-:0;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;1689:145:9;;;:::i;:::-;;1066:77;;;:::i;:::-;;;;-1:-1:-1;;;;;1066:77:9;;;;;;;;;;;;;;1983:240;;;;;;;;;;;;;;;;-1:-1:-1;1983:240:9;-1:-1:-1;;;;;1983:240:9;;:::i;1689:145::-;1280:12;:10;:12::i;:::-;1270:6;;-1:-1:-1;;;;;1270:6:9;;;:22;;;1262:67;;;;;-1:-1:-1;;;1262:67:9;;;;;;;;;;;;;;;;;;;;;;;;;;;;;1795:1:::1;1779:6:::0;;1758:40:::1;::::0;-1:-1:-1;;;;;1779:6:9;;::::1;::::0;1758:40:::1;::::0;1795:1;;1758:40:::1;1825:1;1808:19:::0;;-1:-1:-1;;;;;;1808:19:9::1;::::0;;1689:145::o;1066:77::-;1104:7;1130:6;-1:-1:-1;;;;;1130:6:9;1066:77;:::o;1983:240::-;1280:12;:10;:12::i;:::-;1270:6;;-1:-1:-1;;;;;1270:6:9;;;:22;;;1262:67;;;;;-1:-1:-1;;;1262:67:9;;;;;;;;;;;;;;;;;;;;;;;;;;;;;-1:-1:-1;;;;;2071:22:9;::::1;2063:73;;;;-1:-1:-1::0;;;2063:73:9::1;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;2172:6;::::0;;2151:38:::1;::::0;-1:-1:-1;;;;;2151:38:9;;::::1;::::0;2172:6;::::1;::::0;2151:38:::1;::::0;::::1;2199:6;:17:::0;;-1:-1:-1;;;;;;2199:17:9::1;-1:-1:-1::0;;;;;2199:17:9;;;::::1;::::0;;;::::1;::::0;;1983:240::o;590:104:1:-;677:10;590:104;:::o",
+  "source": "// SPDX-License-Identifier: MIT\n\npragma solidity ^0.6.0;\n\nimport \"../access/Ownable.sol\";\n\ncontract OwnableMock is Ownable { }\n",
+  "sourcePath": "/Users/cts/dev/PRUF/PRUF_TRUFFLE/contracts/Imports/mocks/OwnableMock.sol",
+  "ast": {
+    "absolutePath": "/Users/cts/dev/PRUF/PRUF_TRUFFLE/contracts/Imports/mocks/OwnableMock.sol",
+    "exportedSymbols": {
+      "OwnableMock": [
+        7443
+      ]
+    },
+    "id": 7444,
+    "license": "MIT",
+    "nodeType": "SourceUnit",
+    "nodes": [
+      {
+        "id": 7439,
+        "literals": [
+          "solidity",
+          "^",
+          "0.6",
+          ".0"
+        ],
+        "nodeType": "PragmaDirective",
+        "src": "33:23:67"
+      },
+      {
+        "absolutePath": "/Users/cts/dev/PRUF/PRUF_TRUFFLE/contracts/Imports/access/Ownable.sol",
+        "file": "../access/Ownable.sol",
+        "id": 7440,
+        "nodeType": "ImportDirective",
+        "scope": 7444,
+        "sourceUnit": 2151,
+        "src": "58:31:67",
+        "symbolAliases": [],
+        "unitAlias": ""
+      },
+      {
+        "abstract": false,
+        "baseContracts": [
+          {
+            "arguments": null,
+            "baseName": {
+              "contractScope": null,
+              "id": 7441,
+              "name": "Ownable",
+              "nodeType": "UserDefinedTypeName",
+              "referencedDeclaration": 2150,
+              "src": "115:7:67",
+              "typeDescriptions": {
+                "typeIdentifier": "t_contract$_Ownable_$2150",
+                "typeString": "contract Ownable"
+              }
+            },
+            "id": 7442,
+            "nodeType": "InheritanceSpecifier",
+            "src": "115:7:67"
+          }
+        ],
+        "contractDependencies": [
+          400,
+          2150
+        ],
+        "contractKind": "contract",
+        "documentation": null,
+        "fullyImplemented": true,
+        "id": 7443,
+        "linearizedBaseContracts": [
+          7443,
+          2150,
+          400
+        ],
+        "name": "OwnableMock",
+        "nodeType": "ContractDefinition",
+        "nodes": [],
+        "scope": 7444,
+        "src": "91:35:67"
+      }
+    ],
+    "src": "33:94:67"
+  },
+  "legacyAST": {
+    "absolutePath": "/Users/cts/dev/PRUF/PRUF_TRUFFLE/contracts/Imports/mocks/OwnableMock.sol",
+    "exportedSymbols": {
+      "OwnableMock": [
+        7443
+      ]
+    },
+    "id": 7444,
+    "license": "MIT",
+    "nodeType": "SourceUnit",
+    "nodes": [
+      {
+        "id": 7439,
+        "literals": [
+          "solidity",
+          "^",
+          "0.6",
+          ".0"
+        ],
+        "nodeType": "PragmaDirective",
+        "src": "33:23:67"
+      },
+      {
+        "absolutePath": "/Users/cts/dev/PRUF/PRUF_TRUFFLE/contracts/Imports/access/Ownable.sol",
+        "file": "../access/Ownable.sol",
+        "id": 7440,
+        "nodeType": "ImportDirective",
+        "scope": 7444,
+        "sourceUnit": 2151,
+        "src": "58:31:67",
+        "symbolAliases": [],
+        "unitAlias": ""
+      },
+      {
+        "abstract": false,
+        "baseContracts": [
+          {
+            "arguments": null,
+            "baseName": {
+              "contractScope": null,
+              "id": 7441,
+              "name": "Ownable",
+              "nodeType": "UserDefinedTypeName",
+              "referencedDeclaration": 2150,
+              "src": "115:7:67",
+              "typeDescriptions": {
+                "typeIdentifier": "t_contract$_Ownable_$2150",
+                "typeString": "contract Ownable"
+              }
+            },
+            "id": 7442,
+            "nodeType": "InheritanceSpecifier",
+            "src": "115:7:67"
+          }
+        ],
+        "contractDependencies": [
+          400,
+          2150
+        ],
+        "contractKind": "contract",
+        "documentation": null,
+        "fullyImplemented": true,
+        "id": 7443,
+        "linearizedBaseContracts": [
+          7443,
+          2150,
+          400
+        ],
+        "name": "OwnableMock",
+        "nodeType": "ContractDefinition",
+        "nodes": [],
+        "scope": 7444,
+        "src": "91:35:67"
+      }
+    ],
+    "src": "33:94:67"
+  },
+  "compiler": {
+    "name": "solc",
+    "version": "0.6.12+commit.27d51765.Emscripten.clang"
+  },
+  "networks": {},
+  "schemaVersion": "3.2.3",
+  "updatedAt": "2020-12-13T01:45:40.456Z",
+  "devdoc": {
+    "kind": "dev",
+    "methods": {
+      "owner()": {
+        "details": "Returns the address of the current owner."
+      },
+      "renounceOwnership()": {
+        "details": "Leaves the contract without owner. It will not be possible to call `onlyOwner` functions anymore. Can only be called by the current owner. NOTE: Renouncing ownership will leave the contract without an owner, thereby removing any functionality that is only available to the owner."
+      },
+      "transferOwnership(address)": {
+        "details": "Transfers ownership of the contract to a new account (`newOwner`). Can only be called by the current owner."
+      }
+    },
+    "version": 1
+  },
+  "userdoc": {
+    "kind": "user",
+    "methods": {},
+    "version": 1
+  }
+}

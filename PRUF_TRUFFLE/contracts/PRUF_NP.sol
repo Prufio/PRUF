@@ -1,4 +1,4 @@
-/*--------------------------------------------------------PRuF0.7.1
+/*--------------------------------------------------------PRüF0.8.0
 __/\\\\\\\\\\\\\ _____/\\\\\\\\\ _______/\\../\\ ___/\\\\\\\\\\\\\\\
  _\/\\\/////////\\\ _/\\\///////\\\ ____\//..\//____\/\\\///////////__
   _\/\\\.......\/\\\.\/\\\.....\/\\\ ________________\/\\\ ____________
@@ -16,7 +16,7 @@ __/\\\\\\\\\\\\\ _____/\\\\\\\\\ _______/\\../\\ ___/\\\\\\\\\\\\\\\
  *---------------------------------------------------------------*/
 
 // SPDX-License-Identifier: UNLICENSED
-pragma solidity ^0.6.7;
+pragma solidity ^0.8.0;
 
 import "./PRUF_CORE.sol";
 
@@ -170,6 +170,7 @@ contract NP is CORE {
         //^^^^^^^effects^^^^^^^^^
 
         writeRecord(_idxHash, rec);
+        deductServiceCosts(rec.assetClass, 7);
         return (rec.countDown);
         //^^^^^^^interactions^^^^^^^^^
     }
@@ -208,6 +209,7 @@ contract NP is CORE {
         //^^^^^^^effects^^^^^^^^^
 
         writeRecordIpfs1(_idxHash, rec);
+        deductServiceCosts(rec.assetClass, 8);
 
         return rec.Ipfs1;
         //^^^^^^^interactions^^^^^^^^^

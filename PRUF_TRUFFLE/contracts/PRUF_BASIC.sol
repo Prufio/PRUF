@@ -1,4 +1,4 @@
-/*--------------------------------------------------------PRuF0.7.1
+/*--------------------------------------------------------PRüF0.8.0
 __/\\\\\\\\\\\\\ _____/\\\\\\\\\ _______/\\../\\ ___/\\\\\\\\\\\\\\\
  _\/\\\/////////\\\ _/\\\///////\\\ ____\//..\//____\/\\\///////////__
   _\/\\\.......\/\\\.\/\\\.....\/\\\ ________________\/\\\ ____________
@@ -13,55 +13,32 @@ __/\\\\\\\\\\\\\ _____/\\\\\\\\\ _______/\\../\\ ___/\\\\\\\\\\\\\\\
 /*-----------------------------------------------------------------
  *  TO DO
  *
+ * IMPORTANT!!! NO EXTERNAL OR PUBLIC FUNCTIONS (without STRICT PERMISSIONING) ALLOWED IN THIS CONTRACT!!!!!!!!
+ *-----------------------------------------------------------------
  *-----------------------------------------------------------------
  *PRUF basic provides core data structures and functionality to PRUF contracts.
  *Features include contract name resolution, and getters for records, users, and asset class information.
  *---------------------------------------------------------------*/
 
 // SPDX-License-Identifier: UNLICENSED
-pragma solidity ^0.6.7;
+pragma solidity ^0.8.0;
 
 import "./PRUF_INTERFACES.sol";
 import "./Imports/access/AccessControl.sol";
 import "./Imports/utils/Pausable.sol";
 import "./Imports/utils/ReentrancyGuard.sol";
 import "./Imports/token/ERC721/IERC721Receiver.sol";
-import "./Imports/math/SafeMath.sol";
 
-contract BASIC is ReentrancyGuard, AccessControl, IERC721Receiver, Pausable {
-    bytes32 public constant CONTRACT_ADMIN_ROLE = keccak256("CONTRACT_ADMIN_ROLE");
+abstract contract BASIC is
+    ReentrancyGuard,
+    AccessControl,
+    IERC721Receiver,
+    Pausable
+{
+    bytes32 public constant CONTRACT_ADMIN_ROLE =
+        keccak256("CONTRACT_ADMIN_ROLE");
     bytes32 public constant PAUSER_ROLE = keccak256("PAUSER_ROLE");
     bytes32 public constant ASSET_TXFR_ROLE = keccak256("ASSET_TXFR_ROLE");
-    
-
-    struct Record {
-        //struct for holding and manipulating record data
-        uint8 assetStatus; // Status - Transferrable, locked, in transfer, stolen, lost, etc.
-        uint32 assetClass; // Type of asset
-        uint32 countDown; // Variable that can only be dencreased from countDownStart
-        uint32 countDownStart; // Starting point for countdown variable (set once)
-        uint256 incrementNumberOfTransfers; //increment flag for number of transfers and forcemods
-        uint256 incrementForceModCount; // increment flag for Number of times asset has been forceModded.
-        bytes32 rightsHolder; // KEK256 Registered owner
-        bytes32 Ipfs1; // Publically viewable asset description
-        bytes32 Ipfs2; // Publically viewable immutable notes
-    }
-
-    struct AC {
-        //Struct for holding and manipulating assetClass data
-        string name; // NameHash for assetClass
-        uint32 assetClassRoot; // asset type root (bycyles - USA Bicycles)
-        uint8 custodyType; // custodial or noncustodial
-        uint32 discount;
-        uint32 extendedData; // Future Use
-        bytes32 IPFS; //IPFS data for defining idxHash creation attribute fields
-    }
-
-    struct ContractDataHash {
-        //Struct for holding and manipulating contract authorization data
-        uint8 contractType; // Auth Level / type
-        bytes32 nameHash; // Contract Name hashed
-    }
 
     address internal STOR_Address;
     STOR_Interface internal STOR;
@@ -96,7 +73,7 @@ contract BASIC is ReentrancyGuard, AccessControl, IERC721Receiver, Pausable {
     address internal NAKED_Address;
     address internal NP_Address;
 
-    constructor() public {
+    constructor() {
         _setupRole(DEFAULT_ADMIN_ROLE, _msgSender());
         _setupRole(CONTRACT_ADMIN_ROLE, _msgSender());
         _setupRole(PAUSER_ROLE, _msgSender());
@@ -153,7 +130,7 @@ contract BASIC is ReentrancyGuard, AccessControl, IERC721Receiver, Pausable {
         external
         virtual
         nonReentrant
-        isAdmin
+        isAdmin //-------------------------------------------------------STRICT PERMISSIONING
     {
         //^^^^^^^checks^^^^^^^^^
         AC_TKN_Address = STOR.resolveContractAddress("AC_TKN");
@@ -195,10 +172,11 @@ contract BASIC is ReentrancyGuard, AccessControl, IERC721Receiver, Pausable {
         nonReentrant
     //^^^^^^^checks^^^^^^^^^
     {
-        require(
+        require( //-------------------------------------------------------STRICT PERMISSIONING
             hasRole(ASSET_TXFR_ROLE, _msgSender()),
             "B:TX:Must have ASSET_TXFR_ROLE"
         );
+
         uint256 tokenId = uint256(_idxHash);
         //^^^^^^^effects^^^^^^^^^
         A_TKN.safeTransferFrom(address(this), _to, tokenId);
@@ -211,7 +189,7 @@ contract BASIC is ReentrancyGuard, AccessControl, IERC721Receiver, Pausable {
     function OO_transferACToken(address _to, uint256 _tokenID)
         external
         virtual
-        isAdmin
+        isAdmin //-------------------------------------------------------STRICT PERMISSIONING
         nonReentrant
     {
         //^^^^^^^checks^^^^^^^^^
@@ -225,7 +203,7 @@ contract BASIC is ReentrancyGuard, AccessControl, IERC721Receiver, Pausable {
     function OO_setStorageContract(address _storageAddress)
         external
         virtual
-        isAdmin
+        isAdmin //-------------------------------------------------------STRICT PERMISSIONING
     {
         require(
             _storageAddress != address(0),
@@ -247,6 +225,7 @@ contract BASIC is ReentrancyGuard, AccessControl, IERC721Receiver, Pausable {
         uint256,
         bytes calldata
     ) external virtual override returns (bytes4) {
+        //-------------------------------------------------------STRICT PERMISSIONING EXEMPT
         //^^^^^^^checks^^^^^^^^^
         return this.onERC721Received.selector;
         //^^^^^^^interactions^^^^^^^^^
@@ -257,13 +236,16 @@ contract BASIC is ReentrancyGuard, AccessControl, IERC721Receiver, Pausable {
      *
      */
     function pause() external isPauser {
+        //-------------------------------------------------------STRICT PERMISSIONING
         _pause();
     }
 
     /**
      * @dev Returns to normal state. (pausable)
      */
+
     function unpause() external isPauser {
+        //-------------------------------------------------------STRICT PERMISSIONING
         _unpause();
     }
 
@@ -274,16 +256,17 @@ contract BASIC is ReentrancyGuard, AccessControl, IERC721Receiver, Pausable {
      */
     function getCallingUserType(uint32 _assetClass)
         internal
-        virtual
         view
+        virtual
         returns (uint8)
     {
         //^^^^^^^checks^^^^^^^^^
 
-        uint8 userTypeInAssetClass = AC_MGR.getUserType(
-            keccak256(abi.encodePacked(_msgSender())),
-            _assetClass
-        );
+        uint8 userTypeInAssetClass =
+            AC_MGR.getUserType(
+                keccak256(abi.encodePacked(_msgSender())),
+                _assetClass
+            );
 
         return userTypeInAssetClass;
         //^^^^^^^interactions^^^^^^^^^
@@ -292,9 +275,12 @@ contract BASIC is ReentrancyGuard, AccessControl, IERC721Receiver, Pausable {
     /*
      * @dev Get asset class information from AC_manager and return an AC Struct
      */
-    function getACinfo(
-        uint32 _assetClass
-    ) internal virtual view returns (AC memory) {
+    function getACinfo(uint32 _assetClass)
+        internal
+        view
+        virtual
+        returns (AC memory)
+    {
         //^^^^^^^checks^^^^^^^^^
 
         AC memory AC_info;
@@ -303,8 +289,7 @@ contract BASIC is ReentrancyGuard, AccessControl, IERC721Receiver, Pausable {
             AC_info.assetClassRoot,
             AC_info.custodyType,
             AC_info.discount,
-            AC_info.extendedData,
-            AC_info.IPFS
+            AC_info.referenceAddress
         ) = AC_MGR.getAC_data(_assetClass);
         return AC_info;
         //^^^^^^^interactions^^^^^^^^^
@@ -328,33 +313,12 @@ contract BASIC is ReentrancyGuard, AccessControl, IERC721Receiver, Pausable {
     /*
      * @dev Get a Record from Storage @ idxHash and return a Record Struct
      */
-    function getRecord(bytes32 _idxHash) internal view returns (Record memory) {
+    function getRecord(bytes32 _idxHash) internal returns (Record memory) {
         //^^^^^^^checks^^^^^^^^^
-        Record memory rec;
+        Record memory rec = STOR.retrieveRecord(_idxHash);
         //^^^^^^^effects^^^^^^^^^
 
-        {
-            //Start of scope limit for stack depth
-            (
-                bytes32 _rightsHolder,
-                uint8 _assetStatus,
-                uint32 _assetClass,
-                uint32 _countDown,
-                uint32 _countDownStart,
-                bytes32 _Ipfs1,
-                bytes32 _Ipfs2
-            ) = STOR.retrieveRecord(_idxHash); // Get record from storage contract
-
-            rec.rightsHolder = _rightsHolder;
-            rec.assetStatus = _assetStatus;
-            rec.assetClass = _assetClass;
-            rec.countDown = _countDown;
-            rec.countDownStart = _countDownStart;
-            rec.Ipfs1 = _Ipfs1;
-            rec.Ipfs2 = _Ipfs2;
-        } //end of scope limit for stack depth
-
-        return (rec); // Returns Record struct rec
+        return rec; // Returns Record struct rec
         //^^^^^^^interactions^^^^^^^^^
     }
 }

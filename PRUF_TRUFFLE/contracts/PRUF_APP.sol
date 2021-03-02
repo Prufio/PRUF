@@ -1,4 +1,4 @@
-/*--------------------------------------------------------PRuF0.7.1
+/*--------------------------------------------------------PRüF0.8.0
 __/\\\\\\\\\\\\\ _____/\\\\\\\\\ _______/\\../\\ ___/\\\\\\\\\\\\\\\
  _\/\\\/////////\\\ _/\\\///////\\\ ____\//..\//____\/\\\///////////__
   _\/\\\.......\/\\\.\/\\\.....\/\\\ ________________\/\\\ ____________
@@ -16,13 +16,13 @@ __/\\\\\\\\\\\\\ _____/\\\\\\\\\ _______/\\../\\ ___/\\\\\\\\\\\\\\\
  *----------------------------------------------------------------*/
 
 // SPDX-License-Identifier: UNLICENSED
-pragma solidity ^0.6.7;
+pragma solidity ^0.8.0;
 
 import "./PRUF_CORE.sol";
 
 contract APP is CORE {
-    bytes32
-        public constant B320xF_ = 0xFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF;
+    bytes32 public constant B320xF_ =
+        0xFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF;
 
     modifier isAuthorized(bytes32 _idxHash) override {
         //require that user is authorized and token is held by contract
@@ -39,29 +39,21 @@ contract APP is CORE {
     /*
      * @dev Wrapper for newRecord
      */
-    function $newRecord(
+    function newRecord(
         bytes32 _idxHash,
         bytes32 _rgtHash,
         uint32 _assetClass,
         uint32 _countDownStart
     ) external nonReentrant whenNotPaused {
-        Record memory rec = getRecord(_idxHash);
         uint8 userType = getCallingUserType(_assetClass);
-        AC memory AC_info = getACinfo(_assetClass);
-        AC memory oldAC_info = getACinfo(rec.assetClass);
 
         require((userType > 0) && (userType < 10), "A:NR: User not auth in AC");
         require(userType < 5, "A:NR: User not authorized to create records");
         //^^^^^^^checks^^^^^^^^^
 
-        //bytes32 userHash = keccak256(abi.encodePacked(_msgSender()));
         //^^^^^^^effects^^^^^^^^^
 
-        if (AC_info.assetClassRoot == oldAC_info.assetClassRoot) {
-            createRecord(_idxHash, _rgtHash, _assetClass, rec.countDownStart);
-        } else {
-            createRecord(_idxHash, _rgtHash, _assetClass, _countDownStart);
-        }
+        createRecord(_idxHash, _rgtHash, _assetClass, _countDownStart);
         deductServiceCosts(_assetClass, 1);
 
         //^^^^^^^interactions^^^^^^^^^
@@ -71,7 +63,7 @@ contract APP is CORE {
      * @dev import **Record** (no confirmation required -
      * posessor is considered to be owner. sets rec.assetStatus to 0.
      */
-    function $importAsset(
+    function importAsset(
         bytes32 _idxHash,
         bytes32 _newRgtHash,
         uint32 _newAssetClass
@@ -95,7 +87,7 @@ contract APP is CORE {
         );
         //^^^^^^^checks^^^^^^^^^
 
-        rec.incrementForceModCount = 170;
+        rec.forceModCount = 170;
 
         rec.assetStatus = 0;
         rec.rightsHolder = _newRgtHash;
@@ -112,7 +104,7 @@ contract APP is CORE {
     /*
      * @dev Modify **Record**.rightsHolder without confirmation required
      */
-    function $forceModRecord(bytes32 _idxHash, bytes32 _rgtHash)
+    function forceModRecord(bytes32 _idxHash, bytes32 _rgtHash)
         external
         nonReentrant
         whenNotPaused
@@ -133,9 +125,9 @@ contract APP is CORE {
         );
         //^^^^^^^checks^^^^^^^^^
 
-        rec.incrementForceModCount = 170;
+        rec.forceModCount = 170;
 
-        rec.incrementNumberOfTransfers = 170;
+        rec.numberOfTransfers = 170;
 
         rec.assetStatus = 0;
         rec.rightsHolder = _rgtHash;
@@ -152,7 +144,7 @@ contract APP is CORE {
     /*
      * @dev Transfer Rights to new rightsHolder with confirmation
      */
-    function $transferAsset(
+    function transferAsset(
         bytes32 _idxHash,
         bytes32 _rgtHash,
         bytes32 _newrgtHash
@@ -181,7 +173,7 @@ contract APP is CORE {
         );
         //^^^^^^^checks^^^^^^^^^
 
-        rec.incrementNumberOfTransfers = 170;
+        rec.numberOfTransfers = 170;
 
         if (_newrgtHash == 0x0) {
             //set to transferred status
@@ -203,7 +195,7 @@ contract APP is CORE {
     /*
      * @dev Modify **Record**.Ipfs2 with confirmation
      */
-    function $addIpfs2Note(
+    function addIpfs2Note(
         bytes32 _idxHash,
         bytes32 _rgtHash,
         bytes32 _IpfsHash
@@ -221,7 +213,7 @@ contract APP is CORE {
 
         require( //IMPOSSIBLE TO THROW REVERTS IN REQ1 CTS:PREFERRED
             needsImport(rec.assetStatus) == 0,
-            "A:FMR: Asset needs re-imported"
+            "A:I2: Asset needs re-imported"
         );
         require(
             rec.rightsHolder == _rgtHash,

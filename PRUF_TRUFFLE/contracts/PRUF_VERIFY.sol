@@ -1,4 +1,4 @@
-/*--------------------------------------------------------PRuF0.7.1
+/*--------------------------------------------------------PRüF0.8.0
 __/\\\\\\\\\\\\\ _____/\\\\\\\\\ _______/\\../\\ ___/\\\\\\\\\\\\\\\
  _\/\\\/////////\\\ _/\\\///////\\\ ____\//..\//____\/\\\///////////__
   _\/\\\.......\/\\\.\/\\\.....\/\\\ ________________\/\\\ ____________
@@ -36,13 +36,13 @@ __/\\\\\\\\\\\\\ _____/\\\\\\\\\ _______/\\../\\ ___/\\\\\\\\\\\\\\\
  *---------------------------------------------------------------*/
 
 // SPDX-License-Identifier: UNLICENSED
-pragma solidity ^0.6.7;
+pragma solidity ^0.8.0;
 
 import "./PRUF_CORE.sol";
-import "./PRUF_INTERFACES.sol";
+//import "./PRUF_INTERFACES.sol";
 
 contract VERIFY is CORE {
-    using SafeMath for uint256;
+    
 
     struct ItemData {
         uint8 status; //Item status (suspect, counterfeit, stolen, lost, etc) type 3+ user
@@ -111,7 +111,7 @@ contract VERIFY is CORE {
      *      item cannot already be registered as "in" the callers wallet (reverts)
      *      itemData.status must be 0 (clean) (returns status)
      *      Item collisions cannot exceed maxCollisions (returns 100)
-     *      If item is marked as held in another wallet, collisions++ (return 0)     
+     *      If item is marked as held in another wallet, collisions++ return 0     
      *      If item is not marked as held, it will be listed as held "in" the callers wallet (return 170)
      */
     function safePutIn(
@@ -152,7 +152,7 @@ contract VERIFY is CORE {
      *      item cannot already be registered as "in" the callers wallet (reverts)
      *      if status is stolen return 3
      *      if status is counterfeit return 2
-     *      If item is marked as held in another wallet, collisions++ (return 0)
+     *      If item is marked as held in another wallet, collisions++ return 0
      *      If item is not marked as held, it will be listed as held "in" the callers wallet (return 170)
      */
     function putIn(bytes32 _idxHash, bytes32 _itemHash)

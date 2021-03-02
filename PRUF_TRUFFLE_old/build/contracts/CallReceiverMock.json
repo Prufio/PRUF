@@ -1,0 +1,2279 @@
+{
+  "contractName": "CallReceiverMock",
+  "abi": [
+    {
+      "anonymous": false,
+      "inputs": [],
+      "name": "MockFunctionCalled",
+      "type": "event"
+    },
+    {
+      "inputs": [],
+      "name": "sharedAnswer",
+      "outputs": [
+        {
+          "internalType": "string",
+          "name": "",
+          "type": "string"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [],
+      "name": "mockFunction",
+      "outputs": [
+        {
+          "internalType": "string",
+          "name": "",
+          "type": "string"
+        }
+      ],
+      "stateMutability": "payable",
+      "type": "function"
+    },
+    {
+      "inputs": [],
+      "name": "mockFunctionNonPayable",
+      "outputs": [
+        {
+          "internalType": "string",
+          "name": "",
+          "type": "string"
+        }
+      ],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "inputs": [],
+      "name": "mockStaticFunction",
+      "outputs": [
+        {
+          "internalType": "string",
+          "name": "",
+          "type": "string"
+        }
+      ],
+      "stateMutability": "pure",
+      "type": "function"
+    },
+    {
+      "inputs": [],
+      "name": "mockFunctionRevertsNoReason",
+      "outputs": [],
+      "stateMutability": "payable",
+      "type": "function"
+    },
+    {
+      "inputs": [],
+      "name": "mockFunctionRevertsReason",
+      "outputs": [],
+      "stateMutability": "payable",
+      "type": "function"
+    },
+    {
+      "inputs": [],
+      "name": "mockFunctionThrows",
+      "outputs": [],
+      "stateMutability": "payable",
+      "type": "function"
+    },
+    {
+      "inputs": [],
+      "name": "mockFunctionOutOfGas",
+      "outputs": [],
+      "stateMutability": "payable",
+      "type": "function"
+    },
+    {
+      "inputs": [],
+      "name": "mockFunctionWritesStorage",
+      "outputs": [
+        {
+          "internalType": "string",
+          "name": "",
+          "type": "string"
+        }
+      ],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    }
+  ],
+  "metadata": "{\"compiler\":{\"version\":\"0.6.12+commit.27d51765\"},\"language\":\"Solidity\",\"output\":{\"abi\":[{\"anonymous\":false,\"inputs\":[],\"name\":\"MockFunctionCalled\",\"type\":\"event\"},{\"inputs\":[],\"name\":\"mockFunction\",\"outputs\":[{\"internalType\":\"string\",\"name\":\"\",\"type\":\"string\"}],\"stateMutability\":\"payable\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"mockFunctionNonPayable\",\"outputs\":[{\"internalType\":\"string\",\"name\":\"\",\"type\":\"string\"}],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"mockFunctionOutOfGas\",\"outputs\":[],\"stateMutability\":\"payable\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"mockFunctionRevertsNoReason\",\"outputs\":[],\"stateMutability\":\"payable\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"mockFunctionRevertsReason\",\"outputs\":[],\"stateMutability\":\"payable\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"mockFunctionThrows\",\"outputs\":[],\"stateMutability\":\"payable\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"mockFunctionWritesStorage\",\"outputs\":[{\"internalType\":\"string\",\"name\":\"\",\"type\":\"string\"}],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"mockStaticFunction\",\"outputs\":[{\"internalType\":\"string\",\"name\":\"\",\"type\":\"string\"}],\"stateMutability\":\"pure\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"sharedAnswer\",\"outputs\":[{\"internalType\":\"string\",\"name\":\"\",\"type\":\"string\"}],\"stateMutability\":\"view\",\"type\":\"function\"}],\"devdoc\":{\"kind\":\"dev\",\"methods\":{},\"version\":1},\"userdoc\":{\"kind\":\"user\",\"methods\":{},\"version\":1}},\"settings\":{\"compilationTarget\":{\"/Users/cts/dev/PRUF/PRUF_TRUFFLE/contracts/Imports/mocks/CallReceiverMock.sol\":\"CallReceiverMock\"},\"evmVersion\":\"istanbul\",\"libraries\":{},\"metadata\":{\"bytecodeHash\":\"ipfs\"},\"optimizer\":{\"enabled\":true,\"runs\":200},\"remappings\":[]},\"sources\":{\"/Users/cts/dev/PRUF/PRUF_TRUFFLE/contracts/Imports/mocks/CallReceiverMock.sol\":{\"keccak256\":\"0x1ad6601101829d38e7e855a081727f3a4a8726871fb8309fb735f71c44d968a8\",\"license\":\"MIT\",\"urls\":[\"bzz-raw://350454785b1041f8e2c62f74864958e2b2aa10235e62c16bee3673f49367f65c\",\"dweb:/ipfs/Qmbqhm7ud2L7UwfBGpQ4Dxq2VP2cmcSvwisbj5KmqBJRNu\"]}},\"version\":1}",
+  "bytecode": "0x608060405234801561001057600080fd5b5061041c806100206000396000f3fe6080604052600436106100865760003560e01c80633e6fec04116100595780633e6fec041461012f578063a793ab4714610137578063aa04f77e1461013f578063c8fc769614610154578063fc40cf731461016957610086565b80630c0349681461008b5780630f63e42c146100955780632c81d6381461011f5780633bcfaa1414610127575b600080fd5b61009361017e565b005b3480156100a157600080fd5b506100aa6101cb565b6040805160208082528351818301528351919283929083019185019080838360005b838110156100e45781810151838201526020016100cc565b50505050905090810190601f1680156101115780820380516001836020036101000a031916815260200191505b509250505060405180910390f35b610093610086565b610093610218565b6100aa6101cb565b61009361021a565b34801561014b57600080fd5b506100aa610256565b34801561016057600080fd5b506100aa6102a5565b34801561017557600080fd5b506100aa6102c5565b6040805162461bcd60e51b815260206004820152601b60248201527f43616c6c52656365697665724d6f636b3a20726576657274696e670000000000604482015290519081900360640190fd5b6040516060907f52c66ed6ec9ca819cba26fe2b2650059270d8981b295af300187a964f54a8c2390600090a1506040805180820190915260068152650c1e0c4c8ccd60d21b602082015290565bfe5b60005b60018054808201825560008290527fb10e2d527612073b26eecdfd717e6a320cf44b4afac2b0732d9fcbe2b7fa0cf6018290550161021d565b604080518082019091526002808252611a1960f11b60209092019182526060916102839160009190610353565b50506040805180820190915260068152650c1e0c4c8ccd60d21b602082015290565b6040805180820190915260068152650c1e0c4c8ccd60d21b602082015290565b6000805460408051602060026001851615610100026000190190941693909304601f8101849004840282018401909252818152929183018282801561034b5780601f106103205761010080835404028352916020019161034b565b820191906000526020600020905b81548152906001019060200180831161032e57829003601f168201915b505050505081565b828054600181600116156101000203166002900490600052602060002090601f016020900481019282601f1061039457805160ff19168380011785556103c1565b828001600101855582156103c1579182015b828111156103c15782518255916020019190600101906103a6565b506103cd9291506103d1565b5090565b5b808211156103cd57600081556001016103d256fea264697066735822122096ac1b3bc652fa514aa725ac33dda9d990de0013ef6f4a24125e56a30107a7e364736f6c634300060c0033",
+  "deployedBytecode": "0x6080604052600436106100865760003560e01c80633e6fec04116100595780633e6fec041461012f578063a793ab4714610137578063aa04f77e1461013f578063c8fc769614610154578063fc40cf731461016957610086565b80630c0349681461008b5780630f63e42c146100955780632c81d6381461011f5780633bcfaa1414610127575b600080fd5b61009361017e565b005b3480156100a157600080fd5b506100aa6101cb565b6040805160208082528351818301528351919283929083019185019080838360005b838110156100e45781810151838201526020016100cc565b50505050905090810190601f1680156101115780820380516001836020036101000a031916815260200191505b509250505060405180910390f35b610093610086565b610093610218565b6100aa6101cb565b61009361021a565b34801561014b57600080fd5b506100aa610256565b34801561016057600080fd5b506100aa6102a5565b34801561017557600080fd5b506100aa6102c5565b6040805162461bcd60e51b815260206004820152601b60248201527f43616c6c52656365697665724d6f636b3a20726576657274696e670000000000604482015290519081900360640190fd5b6040516060907f52c66ed6ec9ca819cba26fe2b2650059270d8981b295af300187a964f54a8c2390600090a1506040805180820190915260068152650c1e0c4c8ccd60d21b602082015290565bfe5b60005b60018054808201825560008290527fb10e2d527612073b26eecdfd717e6a320cf44b4afac2b0732d9fcbe2b7fa0cf6018290550161021d565b604080518082019091526002808252611a1960f11b60209092019182526060916102839160009190610353565b50506040805180820190915260068152650c1e0c4c8ccd60d21b602082015290565b6040805180820190915260068152650c1e0c4c8ccd60d21b602082015290565b6000805460408051602060026001851615610100026000190190941693909304601f8101849004840282018401909252818152929183018282801561034b5780601f106103205761010080835404028352916020019161034b565b820191906000526020600020905b81548152906001019060200180831161032e57829003601f168201915b505050505081565b828054600181600116156101000203166002900490600052602060002090601f016020900481019282601f1061039457805160ff19168380011785556103c1565b828001600101855582156103c1579182015b828111156103c15782518255916020019190600101906103a6565b506103cd9291506103d1565b5090565b5b808211156103cd57600081556001016103d256fea264697066735822122096ac1b3bc652fa514aa725ac33dda9d990de0013ef6f4a24125e56a30107a7e364736f6c634300060c0033",
+  "immutableReferences": {},
+  "sourceMap": "58:1053:27:-:0;;;;;;;;;;;;;;;;;;;",
+  "deployedSourceMap": "58:1053:27:-:0;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;652:106;;;:::i;:::-;;324:133;;;;;;;;;;;;;:::i;:::-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;567:79;;;:::i;764:75::-;;;:::i;187:131::-;;;:::i;845:129::-;;;:::i;980:::-;;;;;;;;;;;;;:::i;463:98::-;;;;;;;;;;;;;:::i;90:26::-;;;;;;;;;;;;;:::i;652:106::-;714:37;;;-1:-1:-1;;;714:37:27;;;;;;;;;;;;;;;;;;;;;;;;;;;324:133;404:20;;374:13;;404:20;;;;;-1:-1:-1;435:15:27;;;;;;;;;;;;-1:-1:-1;;;435:15:27;;;;324:133;:::o;764:75::-;819:13;845:129;907:9;902:66;943:6;:14;;;;;;;-1:-1:-1;943:14:27;;;;;;;;924:3;902:66;;980:129;1058:19;;;;;;;;;;;;;-1:-1:-1;;;1058:19:27;;;;;;;1033:13;;1058:19;;-1:-1:-1;;1058:19:27;;:::i;:::-;-1:-1:-1;;1087:15:27;;;;;;;;;;;;-1:-1:-1;;;1087:15:27;;;;980:129;:::o;463:98::-;539:15;;;;;;;;;;;;-1:-1:-1;;;539:15:27;;;;463:98;:::o;90:26::-;;;;;;;;;;;;;;;-1:-1:-1;;90:26:27;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;:::o;-1:-1:-1:-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;:::i;:::-;;;:::o;:::-;;;;;;;;;;;;;;",
+  "source": "// SPDX-License-Identifier: MIT\n\npragma solidity ^0.6.0;\n\ncontract CallReceiverMock {\n    string public sharedAnswer;\n\n    event MockFunctionCalled();\n\n    uint256[] private _array;\n\n    function mockFunction() public payable returns (string memory) {\n        emit MockFunctionCalled();\n\n        return \"0x1234\";\n    }\n\n    function mockFunctionNonPayable() public returns (string memory) {\n        emit MockFunctionCalled();\n\n        return \"0x1234\";\n    }\n\n    function mockStaticFunction() public pure returns (string memory) {\n        return \"0x1234\";\n    }\n\n    function mockFunctionRevertsNoReason() public payable {\n        revert();\n    }\n\n    function mockFunctionRevertsReason() public payable {\n        revert(\"CallReceiverMock: reverting\");\n    }\n\n    function mockFunctionThrows() public payable {\n        assert(false);\n    }\n\n    function mockFunctionOutOfGas() public payable {\n        for (uint256 i = 0; ; ++i) {\n            _array.push(i);\n        }\n    }\n\n    function mockFunctionWritesStorage() public returns (string memory) {\n        sharedAnswer = \"42\";\n        return \"0x1234\";\n    }\n}\n",
+  "sourcePath": "/Users/cts/dev/PRUF/PRUF_TRUFFLE/contracts/Imports/mocks/CallReceiverMock.sol",
+  "ast": {
+    "absolutePath": "/Users/cts/dev/PRUF/PRUF_TRUFFLE/contracts/Imports/mocks/CallReceiverMock.sol",
+    "exportedSymbols": {
+      "CallReceiverMock": [
+        4624
+      ]
+    },
+    "id": 4625,
+    "license": "MIT",
+    "nodeType": "SourceUnit",
+    "nodes": [
+      {
+        "id": 4532,
+        "literals": [
+          "solidity",
+          "^",
+          "0.6",
+          ".0"
+        ],
+        "nodeType": "PragmaDirective",
+        "src": "33:23:27"
+      },
+      {
+        "abstract": false,
+        "baseContracts": [],
+        "contractDependencies": [],
+        "contractKind": "contract",
+        "documentation": null,
+        "fullyImplemented": true,
+        "id": 4624,
+        "linearizedBaseContracts": [
+          4624
+        ],
+        "name": "CallReceiverMock",
+        "nodeType": "ContractDefinition",
+        "nodes": [
+          {
+            "constant": false,
+            "functionSelector": "fc40cf73",
+            "id": 4534,
+            "mutability": "mutable",
+            "name": "sharedAnswer",
+            "nodeType": "VariableDeclaration",
+            "overrides": null,
+            "scope": 4624,
+            "src": "90:26:27",
+            "stateVariable": true,
+            "storageLocation": "default",
+            "typeDescriptions": {
+              "typeIdentifier": "t_string_storage",
+              "typeString": "string"
+            },
+            "typeName": {
+              "id": 4533,
+              "name": "string",
+              "nodeType": "ElementaryTypeName",
+              "src": "90:6:27",
+              "typeDescriptions": {
+                "typeIdentifier": "t_string_storage_ptr",
+                "typeString": "string"
+              }
+            },
+            "value": null,
+            "visibility": "public"
+          },
+          {
+            "anonymous": false,
+            "documentation": null,
+            "id": 4536,
+            "name": "MockFunctionCalled",
+            "nodeType": "EventDefinition",
+            "parameters": {
+              "id": 4535,
+              "nodeType": "ParameterList",
+              "parameters": [],
+              "src": "147:2:27"
+            },
+            "src": "123:27:27"
+          },
+          {
+            "constant": false,
+            "id": 4539,
+            "mutability": "mutable",
+            "name": "_array",
+            "nodeType": "VariableDeclaration",
+            "overrides": null,
+            "scope": 4624,
+            "src": "156:24:27",
+            "stateVariable": true,
+            "storageLocation": "default",
+            "typeDescriptions": {
+              "typeIdentifier": "t_array$_t_uint256_$dyn_storage",
+              "typeString": "uint256[]"
+            },
+            "typeName": {
+              "baseType": {
+                "id": 4537,
+                "name": "uint256",
+                "nodeType": "ElementaryTypeName",
+                "src": "156:7:27",
+                "typeDescriptions": {
+                  "typeIdentifier": "t_uint256",
+                  "typeString": "uint256"
+                }
+              },
+              "id": 4538,
+              "length": null,
+              "nodeType": "ArrayTypeName",
+              "src": "156:9:27",
+              "typeDescriptions": {
+                "typeIdentifier": "t_array$_t_uint256_$dyn_storage_ptr",
+                "typeString": "uint256[]"
+              }
+            },
+            "value": null,
+            "visibility": "private"
+          },
+          {
+            "body": {
+              "id": 4549,
+              "nodeType": "Block",
+              "src": "250:68:27",
+              "statements": [
+                {
+                  "eventCall": {
+                    "argumentTypes": null,
+                    "arguments": [],
+                    "expression": {
+                      "argumentTypes": [],
+                      "id": 4544,
+                      "name": "MockFunctionCalled",
+                      "nodeType": "Identifier",
+                      "overloadedDeclarations": [],
+                      "referencedDeclaration": 4536,
+                      "src": "265:18:27",
+                      "typeDescriptions": {
+                        "typeIdentifier": "t_function_event_nonpayable$__$returns$__$",
+                        "typeString": "function ()"
+                      }
+                    },
+                    "id": 4545,
+                    "isConstant": false,
+                    "isLValue": false,
+                    "isPure": false,
+                    "kind": "functionCall",
+                    "lValueRequested": false,
+                    "names": [],
+                    "nodeType": "FunctionCall",
+                    "src": "265:20:27",
+                    "tryCall": false,
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_tuple$__$",
+                      "typeString": "tuple()"
+                    }
+                  },
+                  "id": 4546,
+                  "nodeType": "EmitStatement",
+                  "src": "260:25:27"
+                },
+                {
+                  "expression": {
+                    "argumentTypes": null,
+                    "hexValue": "307831323334",
+                    "id": 4547,
+                    "isConstant": false,
+                    "isLValue": false,
+                    "isPure": true,
+                    "kind": "string",
+                    "lValueRequested": false,
+                    "nodeType": "Literal",
+                    "src": "303:8:27",
+                    "subdenomination": null,
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_stringliteral_1ac7d1b81b7ba1025b36ccb86723da6ee5a87259f1c2fd5abe69d3200b512ec8",
+                      "typeString": "literal_string \"0x1234\""
+                    },
+                    "value": "0x1234"
+                  },
+                  "functionReturnParameters": 4543,
+                  "id": 4548,
+                  "nodeType": "Return",
+                  "src": "296:15:27"
+                }
+              ]
+            },
+            "documentation": null,
+            "functionSelector": "3e6fec04",
+            "id": 4550,
+            "implemented": true,
+            "kind": "function",
+            "modifiers": [],
+            "name": "mockFunction",
+            "nodeType": "FunctionDefinition",
+            "overrides": null,
+            "parameters": {
+              "id": 4540,
+              "nodeType": "ParameterList",
+              "parameters": [],
+              "src": "208:2:27"
+            },
+            "returnParameters": {
+              "id": 4543,
+              "nodeType": "ParameterList",
+              "parameters": [
+                {
+                  "constant": false,
+                  "id": 4542,
+                  "mutability": "mutable",
+                  "name": "",
+                  "nodeType": "VariableDeclaration",
+                  "overrides": null,
+                  "scope": 4550,
+                  "src": "235:13:27",
+                  "stateVariable": false,
+                  "storageLocation": "memory",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_string_memory_ptr",
+                    "typeString": "string"
+                  },
+                  "typeName": {
+                    "id": 4541,
+                    "name": "string",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "235:6:27",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_string_storage_ptr",
+                      "typeString": "string"
+                    }
+                  },
+                  "value": null,
+                  "visibility": "internal"
+                }
+              ],
+              "src": "234:15:27"
+            },
+            "scope": 4624,
+            "src": "187:131:27",
+            "stateMutability": "payable",
+            "virtual": false,
+            "visibility": "public"
+          },
+          {
+            "body": {
+              "id": 4560,
+              "nodeType": "Block",
+              "src": "389:68:27",
+              "statements": [
+                {
+                  "eventCall": {
+                    "argumentTypes": null,
+                    "arguments": [],
+                    "expression": {
+                      "argumentTypes": [],
+                      "id": 4555,
+                      "name": "MockFunctionCalled",
+                      "nodeType": "Identifier",
+                      "overloadedDeclarations": [],
+                      "referencedDeclaration": 4536,
+                      "src": "404:18:27",
+                      "typeDescriptions": {
+                        "typeIdentifier": "t_function_event_nonpayable$__$returns$__$",
+                        "typeString": "function ()"
+                      }
+                    },
+                    "id": 4556,
+                    "isConstant": false,
+                    "isLValue": false,
+                    "isPure": false,
+                    "kind": "functionCall",
+                    "lValueRequested": false,
+                    "names": [],
+                    "nodeType": "FunctionCall",
+                    "src": "404:20:27",
+                    "tryCall": false,
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_tuple$__$",
+                      "typeString": "tuple()"
+                    }
+                  },
+                  "id": 4557,
+                  "nodeType": "EmitStatement",
+                  "src": "399:25:27"
+                },
+                {
+                  "expression": {
+                    "argumentTypes": null,
+                    "hexValue": "307831323334",
+                    "id": 4558,
+                    "isConstant": false,
+                    "isLValue": false,
+                    "isPure": true,
+                    "kind": "string",
+                    "lValueRequested": false,
+                    "nodeType": "Literal",
+                    "src": "442:8:27",
+                    "subdenomination": null,
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_stringliteral_1ac7d1b81b7ba1025b36ccb86723da6ee5a87259f1c2fd5abe69d3200b512ec8",
+                      "typeString": "literal_string \"0x1234\""
+                    },
+                    "value": "0x1234"
+                  },
+                  "functionReturnParameters": 4554,
+                  "id": 4559,
+                  "nodeType": "Return",
+                  "src": "435:15:27"
+                }
+              ]
+            },
+            "documentation": null,
+            "functionSelector": "0f63e42c",
+            "id": 4561,
+            "implemented": true,
+            "kind": "function",
+            "modifiers": [],
+            "name": "mockFunctionNonPayable",
+            "nodeType": "FunctionDefinition",
+            "overrides": null,
+            "parameters": {
+              "id": 4551,
+              "nodeType": "ParameterList",
+              "parameters": [],
+              "src": "355:2:27"
+            },
+            "returnParameters": {
+              "id": 4554,
+              "nodeType": "ParameterList",
+              "parameters": [
+                {
+                  "constant": false,
+                  "id": 4553,
+                  "mutability": "mutable",
+                  "name": "",
+                  "nodeType": "VariableDeclaration",
+                  "overrides": null,
+                  "scope": 4561,
+                  "src": "374:13:27",
+                  "stateVariable": false,
+                  "storageLocation": "memory",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_string_memory_ptr",
+                    "typeString": "string"
+                  },
+                  "typeName": {
+                    "id": 4552,
+                    "name": "string",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "374:6:27",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_string_storage_ptr",
+                      "typeString": "string"
+                    }
+                  },
+                  "value": null,
+                  "visibility": "internal"
+                }
+              ],
+              "src": "373:15:27"
+            },
+            "scope": 4624,
+            "src": "324:133:27",
+            "stateMutability": "nonpayable",
+            "virtual": false,
+            "visibility": "public"
+          },
+          {
+            "body": {
+              "id": 4568,
+              "nodeType": "Block",
+              "src": "529:32:27",
+              "statements": [
+                {
+                  "expression": {
+                    "argumentTypes": null,
+                    "hexValue": "307831323334",
+                    "id": 4566,
+                    "isConstant": false,
+                    "isLValue": false,
+                    "isPure": true,
+                    "kind": "string",
+                    "lValueRequested": false,
+                    "nodeType": "Literal",
+                    "src": "546:8:27",
+                    "subdenomination": null,
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_stringliteral_1ac7d1b81b7ba1025b36ccb86723da6ee5a87259f1c2fd5abe69d3200b512ec8",
+                      "typeString": "literal_string \"0x1234\""
+                    },
+                    "value": "0x1234"
+                  },
+                  "functionReturnParameters": 4565,
+                  "id": 4567,
+                  "nodeType": "Return",
+                  "src": "539:15:27"
+                }
+              ]
+            },
+            "documentation": null,
+            "functionSelector": "c8fc7696",
+            "id": 4569,
+            "implemented": true,
+            "kind": "function",
+            "modifiers": [],
+            "name": "mockStaticFunction",
+            "nodeType": "FunctionDefinition",
+            "overrides": null,
+            "parameters": {
+              "id": 4562,
+              "nodeType": "ParameterList",
+              "parameters": [],
+              "src": "490:2:27"
+            },
+            "returnParameters": {
+              "id": 4565,
+              "nodeType": "ParameterList",
+              "parameters": [
+                {
+                  "constant": false,
+                  "id": 4564,
+                  "mutability": "mutable",
+                  "name": "",
+                  "nodeType": "VariableDeclaration",
+                  "overrides": null,
+                  "scope": 4569,
+                  "src": "514:13:27",
+                  "stateVariable": false,
+                  "storageLocation": "memory",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_string_memory_ptr",
+                    "typeString": "string"
+                  },
+                  "typeName": {
+                    "id": 4563,
+                    "name": "string",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "514:6:27",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_string_storage_ptr",
+                      "typeString": "string"
+                    }
+                  },
+                  "value": null,
+                  "visibility": "internal"
+                }
+              ],
+              "src": "513:15:27"
+            },
+            "scope": 4624,
+            "src": "463:98:27",
+            "stateMutability": "pure",
+            "virtual": false,
+            "visibility": "public"
+          },
+          {
+            "body": {
+              "id": 4575,
+              "nodeType": "Block",
+              "src": "621:25:27",
+              "statements": [
+                {
+                  "expression": {
+                    "argumentTypes": null,
+                    "arguments": [],
+                    "expression": {
+                      "argumentTypes": [],
+                      "id": 4572,
+                      "name": "revert",
+                      "nodeType": "Identifier",
+                      "overloadedDeclarations": [
+                        -19,
+                        -19
+                      ],
+                      "referencedDeclaration": -19,
+                      "src": "631:6:27",
+                      "typeDescriptions": {
+                        "typeIdentifier": "t_function_revert_pure$__$returns$__$",
+                        "typeString": "function () pure"
+                      }
+                    },
+                    "id": 4573,
+                    "isConstant": false,
+                    "isLValue": false,
+                    "isPure": false,
+                    "kind": "functionCall",
+                    "lValueRequested": false,
+                    "names": [],
+                    "nodeType": "FunctionCall",
+                    "src": "631:8:27",
+                    "tryCall": false,
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_tuple$__$",
+                      "typeString": "tuple()"
+                    }
+                  },
+                  "id": 4574,
+                  "nodeType": "ExpressionStatement",
+                  "src": "631:8:27"
+                }
+              ]
+            },
+            "documentation": null,
+            "functionSelector": "2c81d638",
+            "id": 4576,
+            "implemented": true,
+            "kind": "function",
+            "modifiers": [],
+            "name": "mockFunctionRevertsNoReason",
+            "nodeType": "FunctionDefinition",
+            "overrides": null,
+            "parameters": {
+              "id": 4570,
+              "nodeType": "ParameterList",
+              "parameters": [],
+              "src": "603:2:27"
+            },
+            "returnParameters": {
+              "id": 4571,
+              "nodeType": "ParameterList",
+              "parameters": [],
+              "src": "621:0:27"
+            },
+            "scope": 4624,
+            "src": "567:79:27",
+            "stateMutability": "payable",
+            "virtual": false,
+            "visibility": "public"
+          },
+          {
+            "body": {
+              "id": 4583,
+              "nodeType": "Block",
+              "src": "704:54:27",
+              "statements": [
+                {
+                  "expression": {
+                    "argumentTypes": null,
+                    "arguments": [
+                      {
+                        "argumentTypes": null,
+                        "hexValue": "43616c6c52656365697665724d6f636b3a20726576657274696e67",
+                        "id": 4580,
+                        "isConstant": false,
+                        "isLValue": false,
+                        "isPure": true,
+                        "kind": "string",
+                        "lValueRequested": false,
+                        "nodeType": "Literal",
+                        "src": "721:29:27",
+                        "subdenomination": null,
+                        "typeDescriptions": {
+                          "typeIdentifier": "t_stringliteral_1fa67ffa712c128062681134b4f6fcc189b02b2cec4822b38d0f01b87c9ef80f",
+                          "typeString": "literal_string \"CallReceiverMock: reverting\""
+                        },
+                        "value": "CallReceiverMock: reverting"
+                      }
+                    ],
+                    "expression": {
+                      "argumentTypes": [
+                        {
+                          "typeIdentifier": "t_stringliteral_1fa67ffa712c128062681134b4f6fcc189b02b2cec4822b38d0f01b87c9ef80f",
+                          "typeString": "literal_string \"CallReceiverMock: reverting\""
+                        }
+                      ],
+                      "id": 4579,
+                      "name": "revert",
+                      "nodeType": "Identifier",
+                      "overloadedDeclarations": [
+                        -19,
+                        -19
+                      ],
+                      "referencedDeclaration": -19,
+                      "src": "714:6:27",
+                      "typeDescriptions": {
+                        "typeIdentifier": "t_function_revert_pure$_t_string_memory_ptr_$returns$__$",
+                        "typeString": "function (string memory) pure"
+                      }
+                    },
+                    "id": 4581,
+                    "isConstant": false,
+                    "isLValue": false,
+                    "isPure": false,
+                    "kind": "functionCall",
+                    "lValueRequested": false,
+                    "names": [],
+                    "nodeType": "FunctionCall",
+                    "src": "714:37:27",
+                    "tryCall": false,
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_tuple$__$",
+                      "typeString": "tuple()"
+                    }
+                  },
+                  "id": 4582,
+                  "nodeType": "ExpressionStatement",
+                  "src": "714:37:27"
+                }
+              ]
+            },
+            "documentation": null,
+            "functionSelector": "0c034968",
+            "id": 4584,
+            "implemented": true,
+            "kind": "function",
+            "modifiers": [],
+            "name": "mockFunctionRevertsReason",
+            "nodeType": "FunctionDefinition",
+            "overrides": null,
+            "parameters": {
+              "id": 4577,
+              "nodeType": "ParameterList",
+              "parameters": [],
+              "src": "686:2:27"
+            },
+            "returnParameters": {
+              "id": 4578,
+              "nodeType": "ParameterList",
+              "parameters": [],
+              "src": "704:0:27"
+            },
+            "scope": 4624,
+            "src": "652:106:27",
+            "stateMutability": "payable",
+            "virtual": false,
+            "visibility": "public"
+          },
+          {
+            "body": {
+              "id": 4591,
+              "nodeType": "Block",
+              "src": "809:30:27",
+              "statements": [
+                {
+                  "expression": {
+                    "argumentTypes": null,
+                    "arguments": [
+                      {
+                        "argumentTypes": null,
+                        "hexValue": "66616c7365",
+                        "id": 4588,
+                        "isConstant": false,
+                        "isLValue": false,
+                        "isPure": true,
+                        "kind": "bool",
+                        "lValueRequested": false,
+                        "nodeType": "Literal",
+                        "src": "826:5:27",
+                        "subdenomination": null,
+                        "typeDescriptions": {
+                          "typeIdentifier": "t_bool",
+                          "typeString": "bool"
+                        },
+                        "value": "false"
+                      }
+                    ],
+                    "expression": {
+                      "argumentTypes": [
+                        {
+                          "typeIdentifier": "t_bool",
+                          "typeString": "bool"
+                        }
+                      ],
+                      "id": 4587,
+                      "name": "assert",
+                      "nodeType": "Identifier",
+                      "overloadedDeclarations": [],
+                      "referencedDeclaration": -3,
+                      "src": "819:6:27",
+                      "typeDescriptions": {
+                        "typeIdentifier": "t_function_assert_pure$_t_bool_$returns$__$",
+                        "typeString": "function (bool) pure"
+                      }
+                    },
+                    "id": 4589,
+                    "isConstant": false,
+                    "isLValue": false,
+                    "isPure": false,
+                    "kind": "functionCall",
+                    "lValueRequested": false,
+                    "names": [],
+                    "nodeType": "FunctionCall",
+                    "src": "819:13:27",
+                    "tryCall": false,
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_tuple$__$",
+                      "typeString": "tuple()"
+                    }
+                  },
+                  "id": 4590,
+                  "nodeType": "ExpressionStatement",
+                  "src": "819:13:27"
+                }
+              ]
+            },
+            "documentation": null,
+            "functionSelector": "3bcfaa14",
+            "id": 4592,
+            "implemented": true,
+            "kind": "function",
+            "modifiers": [],
+            "name": "mockFunctionThrows",
+            "nodeType": "FunctionDefinition",
+            "overrides": null,
+            "parameters": {
+              "id": 4585,
+              "nodeType": "ParameterList",
+              "parameters": [],
+              "src": "791:2:27"
+            },
+            "returnParameters": {
+              "id": 4586,
+              "nodeType": "ParameterList",
+              "parameters": [],
+              "src": "809:0:27"
+            },
+            "scope": 4624,
+            "src": "764:75:27",
+            "stateMutability": "payable",
+            "virtual": false,
+            "visibility": "public"
+          },
+          {
+            "body": {
+              "id": 4610,
+              "nodeType": "Block",
+              "src": "892:82:27",
+              "statements": [
+                {
+                  "body": {
+                    "id": 4608,
+                    "nodeType": "Block",
+                    "src": "929:39:27",
+                    "statements": [
+                      {
+                        "expression": {
+                          "argumentTypes": null,
+                          "arguments": [
+                            {
+                              "argumentTypes": null,
+                              "id": 4605,
+                              "name": "i",
+                              "nodeType": "Identifier",
+                              "overloadedDeclarations": [],
+                              "referencedDeclaration": 4596,
+                              "src": "955:1:27",
+                              "typeDescriptions": {
+                                "typeIdentifier": "t_uint256",
+                                "typeString": "uint256"
+                              }
+                            }
+                          ],
+                          "expression": {
+                            "argumentTypes": [
+                              {
+                                "typeIdentifier": "t_uint256",
+                                "typeString": "uint256"
+                              }
+                            ],
+                            "expression": {
+                              "argumentTypes": null,
+                              "id": 4602,
+                              "name": "_array",
+                              "nodeType": "Identifier",
+                              "overloadedDeclarations": [],
+                              "referencedDeclaration": 4539,
+                              "src": "943:6:27",
+                              "typeDescriptions": {
+                                "typeIdentifier": "t_array$_t_uint256_$dyn_storage",
+                                "typeString": "uint256[] storage ref"
+                              }
+                            },
+                            "id": 4604,
+                            "isConstant": false,
+                            "isLValue": false,
+                            "isPure": false,
+                            "lValueRequested": false,
+                            "memberName": "push",
+                            "nodeType": "MemberAccess",
+                            "referencedDeclaration": null,
+                            "src": "943:11:27",
+                            "typeDescriptions": {
+                              "typeIdentifier": "t_function_arraypush_nonpayable$_t_uint256_$returns$__$",
+                              "typeString": "function (uint256)"
+                            }
+                          },
+                          "id": 4606,
+                          "isConstant": false,
+                          "isLValue": false,
+                          "isPure": false,
+                          "kind": "functionCall",
+                          "lValueRequested": false,
+                          "names": [],
+                          "nodeType": "FunctionCall",
+                          "src": "943:14:27",
+                          "tryCall": false,
+                          "typeDescriptions": {
+                            "typeIdentifier": "t_tuple$__$",
+                            "typeString": "tuple()"
+                          }
+                        },
+                        "id": 4607,
+                        "nodeType": "ExpressionStatement",
+                        "src": "943:14:27"
+                      }
+                    ]
+                  },
+                  "condition": null,
+                  "id": 4609,
+                  "initializationExpression": {
+                    "assignments": [
+                      4596
+                    ],
+                    "declarations": [
+                      {
+                        "constant": false,
+                        "id": 4596,
+                        "mutability": "mutable",
+                        "name": "i",
+                        "nodeType": "VariableDeclaration",
+                        "overrides": null,
+                        "scope": 4609,
+                        "src": "907:9:27",
+                        "stateVariable": false,
+                        "storageLocation": "default",
+                        "typeDescriptions": {
+                          "typeIdentifier": "t_uint256",
+                          "typeString": "uint256"
+                        },
+                        "typeName": {
+                          "id": 4595,
+                          "name": "uint256",
+                          "nodeType": "ElementaryTypeName",
+                          "src": "907:7:27",
+                          "typeDescriptions": {
+                            "typeIdentifier": "t_uint256",
+                            "typeString": "uint256"
+                          }
+                        },
+                        "value": null,
+                        "visibility": "internal"
+                      }
+                    ],
+                    "id": 4598,
+                    "initialValue": {
+                      "argumentTypes": null,
+                      "hexValue": "30",
+                      "id": 4597,
+                      "isConstant": false,
+                      "isLValue": false,
+                      "isPure": true,
+                      "kind": "number",
+                      "lValueRequested": false,
+                      "nodeType": "Literal",
+                      "src": "919:1:27",
+                      "subdenomination": null,
+                      "typeDescriptions": {
+                        "typeIdentifier": "t_rational_0_by_1",
+                        "typeString": "int_const 0"
+                      },
+                      "value": "0"
+                    },
+                    "nodeType": "VariableDeclarationStatement",
+                    "src": "907:13:27"
+                  },
+                  "loopExpression": {
+                    "expression": {
+                      "argumentTypes": null,
+                      "id": 4600,
+                      "isConstant": false,
+                      "isLValue": false,
+                      "isPure": false,
+                      "lValueRequested": false,
+                      "nodeType": "UnaryOperation",
+                      "operator": "++",
+                      "prefix": true,
+                      "src": "924:3:27",
+                      "subExpression": {
+                        "argumentTypes": null,
+                        "id": 4599,
+                        "name": "i",
+                        "nodeType": "Identifier",
+                        "overloadedDeclarations": [],
+                        "referencedDeclaration": 4596,
+                        "src": "926:1:27",
+                        "typeDescriptions": {
+                          "typeIdentifier": "t_uint256",
+                          "typeString": "uint256"
+                        }
+                      },
+                      "typeDescriptions": {
+                        "typeIdentifier": "t_uint256",
+                        "typeString": "uint256"
+                      }
+                    },
+                    "id": 4601,
+                    "nodeType": "ExpressionStatement",
+                    "src": "924:3:27"
+                  },
+                  "nodeType": "ForStatement",
+                  "src": "902:66:27"
+                }
+              ]
+            },
+            "documentation": null,
+            "functionSelector": "a793ab47",
+            "id": 4611,
+            "implemented": true,
+            "kind": "function",
+            "modifiers": [],
+            "name": "mockFunctionOutOfGas",
+            "nodeType": "FunctionDefinition",
+            "overrides": null,
+            "parameters": {
+              "id": 4593,
+              "nodeType": "ParameterList",
+              "parameters": [],
+              "src": "874:2:27"
+            },
+            "returnParameters": {
+              "id": 4594,
+              "nodeType": "ParameterList",
+              "parameters": [],
+              "src": "892:0:27"
+            },
+            "scope": 4624,
+            "src": "845:129:27",
+            "stateMutability": "payable",
+            "virtual": false,
+            "visibility": "public"
+          },
+          {
+            "body": {
+              "id": 4622,
+              "nodeType": "Block",
+              "src": "1048:61:27",
+              "statements": [
+                {
+                  "expression": {
+                    "argumentTypes": null,
+                    "id": 4618,
+                    "isConstant": false,
+                    "isLValue": false,
+                    "isPure": false,
+                    "lValueRequested": false,
+                    "leftHandSide": {
+                      "argumentTypes": null,
+                      "id": 4616,
+                      "name": "sharedAnswer",
+                      "nodeType": "Identifier",
+                      "overloadedDeclarations": [],
+                      "referencedDeclaration": 4534,
+                      "src": "1058:12:27",
+                      "typeDescriptions": {
+                        "typeIdentifier": "t_string_storage",
+                        "typeString": "string storage ref"
+                      }
+                    },
+                    "nodeType": "Assignment",
+                    "operator": "=",
+                    "rightHandSide": {
+                      "argumentTypes": null,
+                      "hexValue": "3432",
+                      "id": 4617,
+                      "isConstant": false,
+                      "isLValue": false,
+                      "isPure": true,
+                      "kind": "string",
+                      "lValueRequested": false,
+                      "nodeType": "Literal",
+                      "src": "1073:4:27",
+                      "subdenomination": null,
+                      "typeDescriptions": {
+                        "typeIdentifier": "t_stringliteral_ccb1f717aa77602faf03a594761a36956b1c4cf44c6b336d1db57da799b331b8",
+                        "typeString": "literal_string \"42\""
+                      },
+                      "value": "42"
+                    },
+                    "src": "1058:19:27",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_string_storage",
+                      "typeString": "string storage ref"
+                    }
+                  },
+                  "id": 4619,
+                  "nodeType": "ExpressionStatement",
+                  "src": "1058:19:27"
+                },
+                {
+                  "expression": {
+                    "argumentTypes": null,
+                    "hexValue": "307831323334",
+                    "id": 4620,
+                    "isConstant": false,
+                    "isLValue": false,
+                    "isPure": true,
+                    "kind": "string",
+                    "lValueRequested": false,
+                    "nodeType": "Literal",
+                    "src": "1094:8:27",
+                    "subdenomination": null,
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_stringliteral_1ac7d1b81b7ba1025b36ccb86723da6ee5a87259f1c2fd5abe69d3200b512ec8",
+                      "typeString": "literal_string \"0x1234\""
+                    },
+                    "value": "0x1234"
+                  },
+                  "functionReturnParameters": 4615,
+                  "id": 4621,
+                  "nodeType": "Return",
+                  "src": "1087:15:27"
+                }
+              ]
+            },
+            "documentation": null,
+            "functionSelector": "aa04f77e",
+            "id": 4623,
+            "implemented": true,
+            "kind": "function",
+            "modifiers": [],
+            "name": "mockFunctionWritesStorage",
+            "nodeType": "FunctionDefinition",
+            "overrides": null,
+            "parameters": {
+              "id": 4612,
+              "nodeType": "ParameterList",
+              "parameters": [],
+              "src": "1014:2:27"
+            },
+            "returnParameters": {
+              "id": 4615,
+              "nodeType": "ParameterList",
+              "parameters": [
+                {
+                  "constant": false,
+                  "id": 4614,
+                  "mutability": "mutable",
+                  "name": "",
+                  "nodeType": "VariableDeclaration",
+                  "overrides": null,
+                  "scope": 4623,
+                  "src": "1033:13:27",
+                  "stateVariable": false,
+                  "storageLocation": "memory",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_string_memory_ptr",
+                    "typeString": "string"
+                  },
+                  "typeName": {
+                    "id": 4613,
+                    "name": "string",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "1033:6:27",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_string_storage_ptr",
+                      "typeString": "string"
+                    }
+                  },
+                  "value": null,
+                  "visibility": "internal"
+                }
+              ],
+              "src": "1032:15:27"
+            },
+            "scope": 4624,
+            "src": "980:129:27",
+            "stateMutability": "nonpayable",
+            "virtual": false,
+            "visibility": "public"
+          }
+        ],
+        "scope": 4625,
+        "src": "58:1053:27"
+      }
+    ],
+    "src": "33:1079:27"
+  },
+  "legacyAST": {
+    "absolutePath": "/Users/cts/dev/PRUF/PRUF_TRUFFLE/contracts/Imports/mocks/CallReceiverMock.sol",
+    "exportedSymbols": {
+      "CallReceiverMock": [
+        4624
+      ]
+    },
+    "id": 4625,
+    "license": "MIT",
+    "nodeType": "SourceUnit",
+    "nodes": [
+      {
+        "id": 4532,
+        "literals": [
+          "solidity",
+          "^",
+          "0.6",
+          ".0"
+        ],
+        "nodeType": "PragmaDirective",
+        "src": "33:23:27"
+      },
+      {
+        "abstract": false,
+        "baseContracts": [],
+        "contractDependencies": [],
+        "contractKind": "contract",
+        "documentation": null,
+        "fullyImplemented": true,
+        "id": 4624,
+        "linearizedBaseContracts": [
+          4624
+        ],
+        "name": "CallReceiverMock",
+        "nodeType": "ContractDefinition",
+        "nodes": [
+          {
+            "constant": false,
+            "functionSelector": "fc40cf73",
+            "id": 4534,
+            "mutability": "mutable",
+            "name": "sharedAnswer",
+            "nodeType": "VariableDeclaration",
+            "overrides": null,
+            "scope": 4624,
+            "src": "90:26:27",
+            "stateVariable": true,
+            "storageLocation": "default",
+            "typeDescriptions": {
+              "typeIdentifier": "t_string_storage",
+              "typeString": "string"
+            },
+            "typeName": {
+              "id": 4533,
+              "name": "string",
+              "nodeType": "ElementaryTypeName",
+              "src": "90:6:27",
+              "typeDescriptions": {
+                "typeIdentifier": "t_string_storage_ptr",
+                "typeString": "string"
+              }
+            },
+            "value": null,
+            "visibility": "public"
+          },
+          {
+            "anonymous": false,
+            "documentation": null,
+            "id": 4536,
+            "name": "MockFunctionCalled",
+            "nodeType": "EventDefinition",
+            "parameters": {
+              "id": 4535,
+              "nodeType": "ParameterList",
+              "parameters": [],
+              "src": "147:2:27"
+            },
+            "src": "123:27:27"
+          },
+          {
+            "constant": false,
+            "id": 4539,
+            "mutability": "mutable",
+            "name": "_array",
+            "nodeType": "VariableDeclaration",
+            "overrides": null,
+            "scope": 4624,
+            "src": "156:24:27",
+            "stateVariable": true,
+            "storageLocation": "default",
+            "typeDescriptions": {
+              "typeIdentifier": "t_array$_t_uint256_$dyn_storage",
+              "typeString": "uint256[]"
+            },
+            "typeName": {
+              "baseType": {
+                "id": 4537,
+                "name": "uint256",
+                "nodeType": "ElementaryTypeName",
+                "src": "156:7:27",
+                "typeDescriptions": {
+                  "typeIdentifier": "t_uint256",
+                  "typeString": "uint256"
+                }
+              },
+              "id": 4538,
+              "length": null,
+              "nodeType": "ArrayTypeName",
+              "src": "156:9:27",
+              "typeDescriptions": {
+                "typeIdentifier": "t_array$_t_uint256_$dyn_storage_ptr",
+                "typeString": "uint256[]"
+              }
+            },
+            "value": null,
+            "visibility": "private"
+          },
+          {
+            "body": {
+              "id": 4549,
+              "nodeType": "Block",
+              "src": "250:68:27",
+              "statements": [
+                {
+                  "eventCall": {
+                    "argumentTypes": null,
+                    "arguments": [],
+                    "expression": {
+                      "argumentTypes": [],
+                      "id": 4544,
+                      "name": "MockFunctionCalled",
+                      "nodeType": "Identifier",
+                      "overloadedDeclarations": [],
+                      "referencedDeclaration": 4536,
+                      "src": "265:18:27",
+                      "typeDescriptions": {
+                        "typeIdentifier": "t_function_event_nonpayable$__$returns$__$",
+                        "typeString": "function ()"
+                      }
+                    },
+                    "id": 4545,
+                    "isConstant": false,
+                    "isLValue": false,
+                    "isPure": false,
+                    "kind": "functionCall",
+                    "lValueRequested": false,
+                    "names": [],
+                    "nodeType": "FunctionCall",
+                    "src": "265:20:27",
+                    "tryCall": false,
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_tuple$__$",
+                      "typeString": "tuple()"
+                    }
+                  },
+                  "id": 4546,
+                  "nodeType": "EmitStatement",
+                  "src": "260:25:27"
+                },
+                {
+                  "expression": {
+                    "argumentTypes": null,
+                    "hexValue": "307831323334",
+                    "id": 4547,
+                    "isConstant": false,
+                    "isLValue": false,
+                    "isPure": true,
+                    "kind": "string",
+                    "lValueRequested": false,
+                    "nodeType": "Literal",
+                    "src": "303:8:27",
+                    "subdenomination": null,
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_stringliteral_1ac7d1b81b7ba1025b36ccb86723da6ee5a87259f1c2fd5abe69d3200b512ec8",
+                      "typeString": "literal_string \"0x1234\""
+                    },
+                    "value": "0x1234"
+                  },
+                  "functionReturnParameters": 4543,
+                  "id": 4548,
+                  "nodeType": "Return",
+                  "src": "296:15:27"
+                }
+              ]
+            },
+            "documentation": null,
+            "functionSelector": "3e6fec04",
+            "id": 4550,
+            "implemented": true,
+            "kind": "function",
+            "modifiers": [],
+            "name": "mockFunction",
+            "nodeType": "FunctionDefinition",
+            "overrides": null,
+            "parameters": {
+              "id": 4540,
+              "nodeType": "ParameterList",
+              "parameters": [],
+              "src": "208:2:27"
+            },
+            "returnParameters": {
+              "id": 4543,
+              "nodeType": "ParameterList",
+              "parameters": [
+                {
+                  "constant": false,
+                  "id": 4542,
+                  "mutability": "mutable",
+                  "name": "",
+                  "nodeType": "VariableDeclaration",
+                  "overrides": null,
+                  "scope": 4550,
+                  "src": "235:13:27",
+                  "stateVariable": false,
+                  "storageLocation": "memory",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_string_memory_ptr",
+                    "typeString": "string"
+                  },
+                  "typeName": {
+                    "id": 4541,
+                    "name": "string",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "235:6:27",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_string_storage_ptr",
+                      "typeString": "string"
+                    }
+                  },
+                  "value": null,
+                  "visibility": "internal"
+                }
+              ],
+              "src": "234:15:27"
+            },
+            "scope": 4624,
+            "src": "187:131:27",
+            "stateMutability": "payable",
+            "virtual": false,
+            "visibility": "public"
+          },
+          {
+            "body": {
+              "id": 4560,
+              "nodeType": "Block",
+              "src": "389:68:27",
+              "statements": [
+                {
+                  "eventCall": {
+                    "argumentTypes": null,
+                    "arguments": [],
+                    "expression": {
+                      "argumentTypes": [],
+                      "id": 4555,
+                      "name": "MockFunctionCalled",
+                      "nodeType": "Identifier",
+                      "overloadedDeclarations": [],
+                      "referencedDeclaration": 4536,
+                      "src": "404:18:27",
+                      "typeDescriptions": {
+                        "typeIdentifier": "t_function_event_nonpayable$__$returns$__$",
+                        "typeString": "function ()"
+                      }
+                    },
+                    "id": 4556,
+                    "isConstant": false,
+                    "isLValue": false,
+                    "isPure": false,
+                    "kind": "functionCall",
+                    "lValueRequested": false,
+                    "names": [],
+                    "nodeType": "FunctionCall",
+                    "src": "404:20:27",
+                    "tryCall": false,
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_tuple$__$",
+                      "typeString": "tuple()"
+                    }
+                  },
+                  "id": 4557,
+                  "nodeType": "EmitStatement",
+                  "src": "399:25:27"
+                },
+                {
+                  "expression": {
+                    "argumentTypes": null,
+                    "hexValue": "307831323334",
+                    "id": 4558,
+                    "isConstant": false,
+                    "isLValue": false,
+                    "isPure": true,
+                    "kind": "string",
+                    "lValueRequested": false,
+                    "nodeType": "Literal",
+                    "src": "442:8:27",
+                    "subdenomination": null,
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_stringliteral_1ac7d1b81b7ba1025b36ccb86723da6ee5a87259f1c2fd5abe69d3200b512ec8",
+                      "typeString": "literal_string \"0x1234\""
+                    },
+                    "value": "0x1234"
+                  },
+                  "functionReturnParameters": 4554,
+                  "id": 4559,
+                  "nodeType": "Return",
+                  "src": "435:15:27"
+                }
+              ]
+            },
+            "documentation": null,
+            "functionSelector": "0f63e42c",
+            "id": 4561,
+            "implemented": true,
+            "kind": "function",
+            "modifiers": [],
+            "name": "mockFunctionNonPayable",
+            "nodeType": "FunctionDefinition",
+            "overrides": null,
+            "parameters": {
+              "id": 4551,
+              "nodeType": "ParameterList",
+              "parameters": [],
+              "src": "355:2:27"
+            },
+            "returnParameters": {
+              "id": 4554,
+              "nodeType": "ParameterList",
+              "parameters": [
+                {
+                  "constant": false,
+                  "id": 4553,
+                  "mutability": "mutable",
+                  "name": "",
+                  "nodeType": "VariableDeclaration",
+                  "overrides": null,
+                  "scope": 4561,
+                  "src": "374:13:27",
+                  "stateVariable": false,
+                  "storageLocation": "memory",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_string_memory_ptr",
+                    "typeString": "string"
+                  },
+                  "typeName": {
+                    "id": 4552,
+                    "name": "string",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "374:6:27",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_string_storage_ptr",
+                      "typeString": "string"
+                    }
+                  },
+                  "value": null,
+                  "visibility": "internal"
+                }
+              ],
+              "src": "373:15:27"
+            },
+            "scope": 4624,
+            "src": "324:133:27",
+            "stateMutability": "nonpayable",
+            "virtual": false,
+            "visibility": "public"
+          },
+          {
+            "body": {
+              "id": 4568,
+              "nodeType": "Block",
+              "src": "529:32:27",
+              "statements": [
+                {
+                  "expression": {
+                    "argumentTypes": null,
+                    "hexValue": "307831323334",
+                    "id": 4566,
+                    "isConstant": false,
+                    "isLValue": false,
+                    "isPure": true,
+                    "kind": "string",
+                    "lValueRequested": false,
+                    "nodeType": "Literal",
+                    "src": "546:8:27",
+                    "subdenomination": null,
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_stringliteral_1ac7d1b81b7ba1025b36ccb86723da6ee5a87259f1c2fd5abe69d3200b512ec8",
+                      "typeString": "literal_string \"0x1234\""
+                    },
+                    "value": "0x1234"
+                  },
+                  "functionReturnParameters": 4565,
+                  "id": 4567,
+                  "nodeType": "Return",
+                  "src": "539:15:27"
+                }
+              ]
+            },
+            "documentation": null,
+            "functionSelector": "c8fc7696",
+            "id": 4569,
+            "implemented": true,
+            "kind": "function",
+            "modifiers": [],
+            "name": "mockStaticFunction",
+            "nodeType": "FunctionDefinition",
+            "overrides": null,
+            "parameters": {
+              "id": 4562,
+              "nodeType": "ParameterList",
+              "parameters": [],
+              "src": "490:2:27"
+            },
+            "returnParameters": {
+              "id": 4565,
+              "nodeType": "ParameterList",
+              "parameters": [
+                {
+                  "constant": false,
+                  "id": 4564,
+                  "mutability": "mutable",
+                  "name": "",
+                  "nodeType": "VariableDeclaration",
+                  "overrides": null,
+                  "scope": 4569,
+                  "src": "514:13:27",
+                  "stateVariable": false,
+                  "storageLocation": "memory",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_string_memory_ptr",
+                    "typeString": "string"
+                  },
+                  "typeName": {
+                    "id": 4563,
+                    "name": "string",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "514:6:27",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_string_storage_ptr",
+                      "typeString": "string"
+                    }
+                  },
+                  "value": null,
+                  "visibility": "internal"
+                }
+              ],
+              "src": "513:15:27"
+            },
+            "scope": 4624,
+            "src": "463:98:27",
+            "stateMutability": "pure",
+            "virtual": false,
+            "visibility": "public"
+          },
+          {
+            "body": {
+              "id": 4575,
+              "nodeType": "Block",
+              "src": "621:25:27",
+              "statements": [
+                {
+                  "expression": {
+                    "argumentTypes": null,
+                    "arguments": [],
+                    "expression": {
+                      "argumentTypes": [],
+                      "id": 4572,
+                      "name": "revert",
+                      "nodeType": "Identifier",
+                      "overloadedDeclarations": [
+                        -19,
+                        -19
+                      ],
+                      "referencedDeclaration": -19,
+                      "src": "631:6:27",
+                      "typeDescriptions": {
+                        "typeIdentifier": "t_function_revert_pure$__$returns$__$",
+                        "typeString": "function () pure"
+                      }
+                    },
+                    "id": 4573,
+                    "isConstant": false,
+                    "isLValue": false,
+                    "isPure": false,
+                    "kind": "functionCall",
+                    "lValueRequested": false,
+                    "names": [],
+                    "nodeType": "FunctionCall",
+                    "src": "631:8:27",
+                    "tryCall": false,
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_tuple$__$",
+                      "typeString": "tuple()"
+                    }
+                  },
+                  "id": 4574,
+                  "nodeType": "ExpressionStatement",
+                  "src": "631:8:27"
+                }
+              ]
+            },
+            "documentation": null,
+            "functionSelector": "2c81d638",
+            "id": 4576,
+            "implemented": true,
+            "kind": "function",
+            "modifiers": [],
+            "name": "mockFunctionRevertsNoReason",
+            "nodeType": "FunctionDefinition",
+            "overrides": null,
+            "parameters": {
+              "id": 4570,
+              "nodeType": "ParameterList",
+              "parameters": [],
+              "src": "603:2:27"
+            },
+            "returnParameters": {
+              "id": 4571,
+              "nodeType": "ParameterList",
+              "parameters": [],
+              "src": "621:0:27"
+            },
+            "scope": 4624,
+            "src": "567:79:27",
+            "stateMutability": "payable",
+            "virtual": false,
+            "visibility": "public"
+          },
+          {
+            "body": {
+              "id": 4583,
+              "nodeType": "Block",
+              "src": "704:54:27",
+              "statements": [
+                {
+                  "expression": {
+                    "argumentTypes": null,
+                    "arguments": [
+                      {
+                        "argumentTypes": null,
+                        "hexValue": "43616c6c52656365697665724d6f636b3a20726576657274696e67",
+                        "id": 4580,
+                        "isConstant": false,
+                        "isLValue": false,
+                        "isPure": true,
+                        "kind": "string",
+                        "lValueRequested": false,
+                        "nodeType": "Literal",
+                        "src": "721:29:27",
+                        "subdenomination": null,
+                        "typeDescriptions": {
+                          "typeIdentifier": "t_stringliteral_1fa67ffa712c128062681134b4f6fcc189b02b2cec4822b38d0f01b87c9ef80f",
+                          "typeString": "literal_string \"CallReceiverMock: reverting\""
+                        },
+                        "value": "CallReceiverMock: reverting"
+                      }
+                    ],
+                    "expression": {
+                      "argumentTypes": [
+                        {
+                          "typeIdentifier": "t_stringliteral_1fa67ffa712c128062681134b4f6fcc189b02b2cec4822b38d0f01b87c9ef80f",
+                          "typeString": "literal_string \"CallReceiverMock: reverting\""
+                        }
+                      ],
+                      "id": 4579,
+                      "name": "revert",
+                      "nodeType": "Identifier",
+                      "overloadedDeclarations": [
+                        -19,
+                        -19
+                      ],
+                      "referencedDeclaration": -19,
+                      "src": "714:6:27",
+                      "typeDescriptions": {
+                        "typeIdentifier": "t_function_revert_pure$_t_string_memory_ptr_$returns$__$",
+                        "typeString": "function (string memory) pure"
+                      }
+                    },
+                    "id": 4581,
+                    "isConstant": false,
+                    "isLValue": false,
+                    "isPure": false,
+                    "kind": "functionCall",
+                    "lValueRequested": false,
+                    "names": [],
+                    "nodeType": "FunctionCall",
+                    "src": "714:37:27",
+                    "tryCall": false,
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_tuple$__$",
+                      "typeString": "tuple()"
+                    }
+                  },
+                  "id": 4582,
+                  "nodeType": "ExpressionStatement",
+                  "src": "714:37:27"
+                }
+              ]
+            },
+            "documentation": null,
+            "functionSelector": "0c034968",
+            "id": 4584,
+            "implemented": true,
+            "kind": "function",
+            "modifiers": [],
+            "name": "mockFunctionRevertsReason",
+            "nodeType": "FunctionDefinition",
+            "overrides": null,
+            "parameters": {
+              "id": 4577,
+              "nodeType": "ParameterList",
+              "parameters": [],
+              "src": "686:2:27"
+            },
+            "returnParameters": {
+              "id": 4578,
+              "nodeType": "ParameterList",
+              "parameters": [],
+              "src": "704:0:27"
+            },
+            "scope": 4624,
+            "src": "652:106:27",
+            "stateMutability": "payable",
+            "virtual": false,
+            "visibility": "public"
+          },
+          {
+            "body": {
+              "id": 4591,
+              "nodeType": "Block",
+              "src": "809:30:27",
+              "statements": [
+                {
+                  "expression": {
+                    "argumentTypes": null,
+                    "arguments": [
+                      {
+                        "argumentTypes": null,
+                        "hexValue": "66616c7365",
+                        "id": 4588,
+                        "isConstant": false,
+                        "isLValue": false,
+                        "isPure": true,
+                        "kind": "bool",
+                        "lValueRequested": false,
+                        "nodeType": "Literal",
+                        "src": "826:5:27",
+                        "subdenomination": null,
+                        "typeDescriptions": {
+                          "typeIdentifier": "t_bool",
+                          "typeString": "bool"
+                        },
+                        "value": "false"
+                      }
+                    ],
+                    "expression": {
+                      "argumentTypes": [
+                        {
+                          "typeIdentifier": "t_bool",
+                          "typeString": "bool"
+                        }
+                      ],
+                      "id": 4587,
+                      "name": "assert",
+                      "nodeType": "Identifier",
+                      "overloadedDeclarations": [],
+                      "referencedDeclaration": -3,
+                      "src": "819:6:27",
+                      "typeDescriptions": {
+                        "typeIdentifier": "t_function_assert_pure$_t_bool_$returns$__$",
+                        "typeString": "function (bool) pure"
+                      }
+                    },
+                    "id": 4589,
+                    "isConstant": false,
+                    "isLValue": false,
+                    "isPure": false,
+                    "kind": "functionCall",
+                    "lValueRequested": false,
+                    "names": [],
+                    "nodeType": "FunctionCall",
+                    "src": "819:13:27",
+                    "tryCall": false,
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_tuple$__$",
+                      "typeString": "tuple()"
+                    }
+                  },
+                  "id": 4590,
+                  "nodeType": "ExpressionStatement",
+                  "src": "819:13:27"
+                }
+              ]
+            },
+            "documentation": null,
+            "functionSelector": "3bcfaa14",
+            "id": 4592,
+            "implemented": true,
+            "kind": "function",
+            "modifiers": [],
+            "name": "mockFunctionThrows",
+            "nodeType": "FunctionDefinition",
+            "overrides": null,
+            "parameters": {
+              "id": 4585,
+              "nodeType": "ParameterList",
+              "parameters": [],
+              "src": "791:2:27"
+            },
+            "returnParameters": {
+              "id": 4586,
+              "nodeType": "ParameterList",
+              "parameters": [],
+              "src": "809:0:27"
+            },
+            "scope": 4624,
+            "src": "764:75:27",
+            "stateMutability": "payable",
+            "virtual": false,
+            "visibility": "public"
+          },
+          {
+            "body": {
+              "id": 4610,
+              "nodeType": "Block",
+              "src": "892:82:27",
+              "statements": [
+                {
+                  "body": {
+                    "id": 4608,
+                    "nodeType": "Block",
+                    "src": "929:39:27",
+                    "statements": [
+                      {
+                        "expression": {
+                          "argumentTypes": null,
+                          "arguments": [
+                            {
+                              "argumentTypes": null,
+                              "id": 4605,
+                              "name": "i",
+                              "nodeType": "Identifier",
+                              "overloadedDeclarations": [],
+                              "referencedDeclaration": 4596,
+                              "src": "955:1:27",
+                              "typeDescriptions": {
+                                "typeIdentifier": "t_uint256",
+                                "typeString": "uint256"
+                              }
+                            }
+                          ],
+                          "expression": {
+                            "argumentTypes": [
+                              {
+                                "typeIdentifier": "t_uint256",
+                                "typeString": "uint256"
+                              }
+                            ],
+                            "expression": {
+                              "argumentTypes": null,
+                              "id": 4602,
+                              "name": "_array",
+                              "nodeType": "Identifier",
+                              "overloadedDeclarations": [],
+                              "referencedDeclaration": 4539,
+                              "src": "943:6:27",
+                              "typeDescriptions": {
+                                "typeIdentifier": "t_array$_t_uint256_$dyn_storage",
+                                "typeString": "uint256[] storage ref"
+                              }
+                            },
+                            "id": 4604,
+                            "isConstant": false,
+                            "isLValue": false,
+                            "isPure": false,
+                            "lValueRequested": false,
+                            "memberName": "push",
+                            "nodeType": "MemberAccess",
+                            "referencedDeclaration": null,
+                            "src": "943:11:27",
+                            "typeDescriptions": {
+                              "typeIdentifier": "t_function_arraypush_nonpayable$_t_uint256_$returns$__$",
+                              "typeString": "function (uint256)"
+                            }
+                          },
+                          "id": 4606,
+                          "isConstant": false,
+                          "isLValue": false,
+                          "isPure": false,
+                          "kind": "functionCall",
+                          "lValueRequested": false,
+                          "names": [],
+                          "nodeType": "FunctionCall",
+                          "src": "943:14:27",
+                          "tryCall": false,
+                          "typeDescriptions": {
+                            "typeIdentifier": "t_tuple$__$",
+                            "typeString": "tuple()"
+                          }
+                        },
+                        "id": 4607,
+                        "nodeType": "ExpressionStatement",
+                        "src": "943:14:27"
+                      }
+                    ]
+                  },
+                  "condition": null,
+                  "id": 4609,
+                  "initializationExpression": {
+                    "assignments": [
+                      4596
+                    ],
+                    "declarations": [
+                      {
+                        "constant": false,
+                        "id": 4596,
+                        "mutability": "mutable",
+                        "name": "i",
+                        "nodeType": "VariableDeclaration",
+                        "overrides": null,
+                        "scope": 4609,
+                        "src": "907:9:27",
+                        "stateVariable": false,
+                        "storageLocation": "default",
+                        "typeDescriptions": {
+                          "typeIdentifier": "t_uint256",
+                          "typeString": "uint256"
+                        },
+                        "typeName": {
+                          "id": 4595,
+                          "name": "uint256",
+                          "nodeType": "ElementaryTypeName",
+                          "src": "907:7:27",
+                          "typeDescriptions": {
+                            "typeIdentifier": "t_uint256",
+                            "typeString": "uint256"
+                          }
+                        },
+                        "value": null,
+                        "visibility": "internal"
+                      }
+                    ],
+                    "id": 4598,
+                    "initialValue": {
+                      "argumentTypes": null,
+                      "hexValue": "30",
+                      "id": 4597,
+                      "isConstant": false,
+                      "isLValue": false,
+                      "isPure": true,
+                      "kind": "number",
+                      "lValueRequested": false,
+                      "nodeType": "Literal",
+                      "src": "919:1:27",
+                      "subdenomination": null,
+                      "typeDescriptions": {
+                        "typeIdentifier": "t_rational_0_by_1",
+                        "typeString": "int_const 0"
+                      },
+                      "value": "0"
+                    },
+                    "nodeType": "VariableDeclarationStatement",
+                    "src": "907:13:27"
+                  },
+                  "loopExpression": {
+                    "expression": {
+                      "argumentTypes": null,
+                      "id": 4600,
+                      "isConstant": false,
+                      "isLValue": false,
+                      "isPure": false,
+                      "lValueRequested": false,
+                      "nodeType": "UnaryOperation",
+                      "operator": "++",
+                      "prefix": true,
+                      "src": "924:3:27",
+                      "subExpression": {
+                        "argumentTypes": null,
+                        "id": 4599,
+                        "name": "i",
+                        "nodeType": "Identifier",
+                        "overloadedDeclarations": [],
+                        "referencedDeclaration": 4596,
+                        "src": "926:1:27",
+                        "typeDescriptions": {
+                          "typeIdentifier": "t_uint256",
+                          "typeString": "uint256"
+                        }
+                      },
+                      "typeDescriptions": {
+                        "typeIdentifier": "t_uint256",
+                        "typeString": "uint256"
+                      }
+                    },
+                    "id": 4601,
+                    "nodeType": "ExpressionStatement",
+                    "src": "924:3:27"
+                  },
+                  "nodeType": "ForStatement",
+                  "src": "902:66:27"
+                }
+              ]
+            },
+            "documentation": null,
+            "functionSelector": "a793ab47",
+            "id": 4611,
+            "implemented": true,
+            "kind": "function",
+            "modifiers": [],
+            "name": "mockFunctionOutOfGas",
+            "nodeType": "FunctionDefinition",
+            "overrides": null,
+            "parameters": {
+              "id": 4593,
+              "nodeType": "ParameterList",
+              "parameters": [],
+              "src": "874:2:27"
+            },
+            "returnParameters": {
+              "id": 4594,
+              "nodeType": "ParameterList",
+              "parameters": [],
+              "src": "892:0:27"
+            },
+            "scope": 4624,
+            "src": "845:129:27",
+            "stateMutability": "payable",
+            "virtual": false,
+            "visibility": "public"
+          },
+          {
+            "body": {
+              "id": 4622,
+              "nodeType": "Block",
+              "src": "1048:61:27",
+              "statements": [
+                {
+                  "expression": {
+                    "argumentTypes": null,
+                    "id": 4618,
+                    "isConstant": false,
+                    "isLValue": false,
+                    "isPure": false,
+                    "lValueRequested": false,
+                    "leftHandSide": {
+                      "argumentTypes": null,
+                      "id": 4616,
+                      "name": "sharedAnswer",
+                      "nodeType": "Identifier",
+                      "overloadedDeclarations": [],
+                      "referencedDeclaration": 4534,
+                      "src": "1058:12:27",
+                      "typeDescriptions": {
+                        "typeIdentifier": "t_string_storage",
+                        "typeString": "string storage ref"
+                      }
+                    },
+                    "nodeType": "Assignment",
+                    "operator": "=",
+                    "rightHandSide": {
+                      "argumentTypes": null,
+                      "hexValue": "3432",
+                      "id": 4617,
+                      "isConstant": false,
+                      "isLValue": false,
+                      "isPure": true,
+                      "kind": "string",
+                      "lValueRequested": false,
+                      "nodeType": "Literal",
+                      "src": "1073:4:27",
+                      "subdenomination": null,
+                      "typeDescriptions": {
+                        "typeIdentifier": "t_stringliteral_ccb1f717aa77602faf03a594761a36956b1c4cf44c6b336d1db57da799b331b8",
+                        "typeString": "literal_string \"42\""
+                      },
+                      "value": "42"
+                    },
+                    "src": "1058:19:27",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_string_storage",
+                      "typeString": "string storage ref"
+                    }
+                  },
+                  "id": 4619,
+                  "nodeType": "ExpressionStatement",
+                  "src": "1058:19:27"
+                },
+                {
+                  "expression": {
+                    "argumentTypes": null,
+                    "hexValue": "307831323334",
+                    "id": 4620,
+                    "isConstant": false,
+                    "isLValue": false,
+                    "isPure": true,
+                    "kind": "string",
+                    "lValueRequested": false,
+                    "nodeType": "Literal",
+                    "src": "1094:8:27",
+                    "subdenomination": null,
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_stringliteral_1ac7d1b81b7ba1025b36ccb86723da6ee5a87259f1c2fd5abe69d3200b512ec8",
+                      "typeString": "literal_string \"0x1234\""
+                    },
+                    "value": "0x1234"
+                  },
+                  "functionReturnParameters": 4615,
+                  "id": 4621,
+                  "nodeType": "Return",
+                  "src": "1087:15:27"
+                }
+              ]
+            },
+            "documentation": null,
+            "functionSelector": "aa04f77e",
+            "id": 4623,
+            "implemented": true,
+            "kind": "function",
+            "modifiers": [],
+            "name": "mockFunctionWritesStorage",
+            "nodeType": "FunctionDefinition",
+            "overrides": null,
+            "parameters": {
+              "id": 4612,
+              "nodeType": "ParameterList",
+              "parameters": [],
+              "src": "1014:2:27"
+            },
+            "returnParameters": {
+              "id": 4615,
+              "nodeType": "ParameterList",
+              "parameters": [
+                {
+                  "constant": false,
+                  "id": 4614,
+                  "mutability": "mutable",
+                  "name": "",
+                  "nodeType": "VariableDeclaration",
+                  "overrides": null,
+                  "scope": 4623,
+                  "src": "1033:13:27",
+                  "stateVariable": false,
+                  "storageLocation": "memory",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_string_memory_ptr",
+                    "typeString": "string"
+                  },
+                  "typeName": {
+                    "id": 4613,
+                    "name": "string",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "1033:6:27",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_string_storage_ptr",
+                      "typeString": "string"
+                    }
+                  },
+                  "value": null,
+                  "visibility": "internal"
+                }
+              ],
+              "src": "1032:15:27"
+            },
+            "scope": 4624,
+            "src": "980:129:27",
+            "stateMutability": "nonpayable",
+            "virtual": false,
+            "visibility": "public"
+          }
+        ],
+        "scope": 4625,
+        "src": "58:1053:27"
+      }
+    ],
+    "src": "33:1079:27"
+  },
+  "compiler": {
+    "name": "solc",
+    "version": "0.6.12+commit.27d51765.Emscripten.clang"
+  },
+  "networks": {},
+  "schemaVersion": "3.2.3",
+  "updatedAt": "2020-12-13T01:45:39.930Z",
+  "devdoc": {
+    "kind": "dev",
+    "methods": {},
+    "version": 1
+  },
+  "userdoc": {
+    "kind": "user",
+    "methods": {},
+    "version": 1
+  }
+}

@@ -1,4 +1,4 @@
-/*--------------------------------------------------------PRuF0.7.1
+/*--------------------------------------------------------PRüF0.8.0
 __/\\\\\\\\\\\\\ _____/\\\\\\\\\ _______/\\../\\ ___/\\\\\\\\\\\\\\\
  _\/\\\/////////\\\ _/\\\///////\\\ ____\//..\//____\/\\\///////////__
   _\/\\\.......\/\\\.\/\\\.....\/\\\ ________________\/\\\ ____________
@@ -16,18 +16,16 @@ __/\\\\\\\\\\\\\ _____/\\\\\\\\\ _______/\\../\\ ___/\\\\\\\\\\\\\\\
  *---------------------------------------------------------------*/
 
 // SPDX-License-Identifier: UNLICENSED
-pragma solidity ^0.6.7;
+pragma solidity ^0.8.0;
 
 import "./Imports/access/Ownable.sol";
-import "./Imports/math/SafeMath.sol";
+import "./PRUF_BASIC.sol";
 
 interface erc721_tokenInterface {
     function ownerOf(uint256) external view returns (address);
 }
 
-contract Helper is Ownable {
-    using SafeMath for uint256;
-
+contract Helper is Ownable, BASIC {
     address erc721ContractAddress;
     erc721_tokenInterface erc721_tokenContract; //erc721_token prototype initialization
 
@@ -87,12 +85,24 @@ contract Helper is Ownable {
         return keccak256(abi.encodePacked(_idx));
     }
 
+    function getHashOfUint256AndAddress(uint256 _idx, address _address)
+        external
+        pure
+        returns (bytes32)
+    {
+        return keccak256(abi.encodePacked(_idx, _address));
+    }
+
     function getB32Hash(bytes32 _idx) external pure returns (bytes32) {
         return keccak256(abi.encodePacked(_idx));
     }
 
     function getAddrHash(address _idx) external pure returns (bytes32) {
         return keccak256(abi.encodePacked(_idx));
+    }
+
+    function getAddrUint160(address _idx) external pure returns (uint160) {
+        return uint160(_idx);
     }
 
     function getUint256Hash(uint256 _idx) external pure returns (bytes32) {
@@ -193,9 +203,8 @@ contract Helper is Ownable {
         returns (string memory)
     {
         bytes32 _hashedAuthCode = keccak256(abi.encodePacked(_authCode));
-        bytes32 b32URI = keccak256(
-            abi.encodePacked(_hashedAuthCode, _assetClass)
-        );
+        bytes32 b32URI =
+            keccak256(abi.encodePacked(_hashedAuthCode, _assetClass));
         string memory authString = uint256toString(uint256(b32URI));
 
         return authString;
@@ -206,41 +215,124 @@ contract Helper is Ownable {
         string calldata _authCode
     ) external pure returns (bytes32) {
         bytes32 _hashedAuthCode = keccak256(abi.encodePacked(_authCode));
-        bytes32 b32URI = keccak256(
-            abi.encodePacked(_hashedAuthCode, _assetClass)
-        );
+        bytes32 b32URI =
+            keccak256(abi.encodePacked(_hashedAuthCode, _assetClass));
 
         return b32URI;
     }
 
-    function uint256toString(uint256 number)
-        public
+    /**
+     * @dev Converts a `uint256` to its ASCII `string` decimal representation.
+     */
+    function uint256toString(uint256 value)
+        internal
         pure
         returns (string memory)
     {
         // Inspired by OraclizeAPI's implementation - MIT licence
         // https://github.com/oraclize/ethereum-api/blob/b42146b063c7d6ee1358846c198246239e9360e8/oraclizeAPI_0.4.25.sol
+        // value = uint256(0x2ce8d04a9c35987429af538825cd2438cc5c5bb5dc427955f84daaa3ea105016);
 
-        if (number == 0) {
+        if (value == 0) {
             return "0";
         }
-        uint256 temp = number;
+        uint256 temp = value;
         uint256 digits;
         while (temp != 0) {
             digits++;
             temp /= 10;
         }
         bytes memory buffer = new bytes(digits);
-        uint256 index = digits - 1;
-        temp = number;
-        while (temp != 0) {
-            buffer[index--] = bytes1(uint8(48 + (temp % 10)));
-            temp /= 10;
+        while (value != 0) {
+            digits -= 1;
+            buffer[digits] = bytes1(uint8(48 + uint256(value % 10)));
+            value /= 10;
         }
         return string(buffer);
     }
 
-    function _Getprice() public view returns (uint256, uint256) {
-        return (currentACtokenPrice, ACtokenIndex);
+    /*
+     * @dev Retrieve AC_data @ _assetClass
+     */
+    function helper_getExtAC_data(uint32 _assetClass)
+        external
+        view
+        returns (AC memory)
+    {
+        //^^^^^^^checks^^^^^^^^^
+        return AC_MGR.getExtAC_data(_assetClass);
+        //^^^^^^^interactions^^^^^^^^^
     }
+
+    /*
+     * @dev Retrieve AC_data @ _assetClass
+     */
+    function helper_getExtAC_data_nostruct(uint32 _assetClass)
+        external
+        view
+        returns (
+            uint8,
+            uint8,
+            uint8,
+            address,
+            bytes32
+        )
+    {
+        AC memory asset_data;
+        //^^^^^^^checks^^^^^^^^^
+        (
+            asset_data.byte1,
+            asset_data.byte2,
+            asset_data.byte3,
+            asset_data.referenceAddress,
+            asset_data.IPFS
+        ) = AC_MGR.getExtAC_data_nostruct(_assetClass);
+
+        return (
+            asset_data.byte1,
+            asset_data.byte2,
+            asset_data.byte3,
+            asset_data.referenceAddress,
+            asset_data.IPFS
+        );
+        //^^^^^^^interactions^^^^^^^^^
+    }
+
+    function helper_payForService(
+        address _senderAddress,
+        address _rootAddress,
+        uint256 _rootPrice,
+        address _ACTHaddress,
+        uint256 _ACTHprice
+    ) external {
+        Invoice memory invoice;
+
+        invoice.rootAddress = _rootAddress;
+        invoice.rootPrice = _rootPrice;
+        invoice.ACTHaddress = _ACTHaddress;
+        invoice.ACTHprice = _ACTHprice;
+
+        UTIL_TKN.payForService(_senderAddress, invoice);
+    }
+
+    // struct Invoice { //invoice struct to facilitate payment messaging in-contract
+    // address rootAddress;
+    // uint256 rootPrice;
+    // address ACTHaddress;
+    // uint256 ACTHprice;
+
+    /*
+    struct AC {
+    //Struct for holding and manipulating assetClass data
+    string name; // NameHash for assetClass
+    uint32 assetClassRoot; // asset type root (bycyles - USA Bicycles)
+    uint8 custodyType; // custodial or noncustodial, special asset types
+    uint32 discount; // price sharing
+    uint8 byte1; // Future Use
+    uint8 byte2; // Future Use
+    uint8 byte3; // Future Use
+    address referenceAddress; // Used with wrap / decorate
+    bytes32 IPFS; //IPFS data for defining idxHash creation attribute fields
+}
+    */
 }

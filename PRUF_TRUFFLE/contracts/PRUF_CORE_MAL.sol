@@ -1,4 +1,4 @@
-/*--------------------------------------------------------PRuF0.7.1
+/*--------------------------------------------------------PRüF0.8.0
 __/\\\\\\\\\\\\\ _____/\\\\\\\\\ _______/\\../\\ ___/\\\\\\\\\\\\\\\
  _\/\\\/////////\\\ _/\\\///////\\\ ____\//..\//____\/\\\///////////__
   _\/\\\.......\/\\\.\/\\\.....\/\\\ ________________\/\\\ ____________
@@ -16,29 +16,14 @@ __/\\\\\\\\\\\\\ _____/\\\\\\\\\ _______/\\../\\ ___/\\\\\\\\\\\\\\\
  *---------------------------------------------------------------*/
 
 // SPDX-License-Identifier: UNLICENSED
-pragma solidity ^0.6.7;
+pragma solidity ^0.8.0;
 
-import "./PRUF_INTERFACES.sol";
+//import "./PRUF_INTERFACES.sol";
 //import "./Imports/payment/PullPayment.sol";
 import "./Imports/utils/ReentrancyGuard.sol";
 import "./PRUF_BASIC.sol";
 
-contract CORE_MAL is  BASIC {
-    using SafeMath for uint256;
-
-    struct Costs {
-        uint256 serviceCost; // Cost to brute-force a record transfer
-        address paymentAddress; // 2nd-party fee beneficiary address
-    }
-
-    struct Invoice {
-        address rootAddress;
-        uint256 rootPrice;
-        address ACTHaddress;
-        uint256 ACTHprice;
-    }
-
-    
+contract CORE_MAL is BASIC {
     //--------------------------------------------------------------------------------------Storage Reading internal functions
 
     // /*
@@ -61,38 +46,44 @@ contract CORE_MAL is  BASIC {
     //--------------------------------------------------------------------------------------Storage Writing internal functions
 
     /*
-     * @dev create a Record in Storage @ idxHash
+     * @dev create a Record in Storage @ idxHash (SETTER)
      */
     function createRecord(
         bytes32 _idxHash,
         bytes32 _rgtHash,
         uint32 _assetClass,
         uint32 _countDownStart
-    ) internal {
+    ) internal virtual {
         uint256 tokenId = uint256(_idxHash);
         AC memory AC_info = getACinfo(_assetClass);
 
-        // require(
-        //     A_TKN.tokenExists(tokenId) == 0,
-        //     "C:CR:Asset token already exists"
-        // );
+        require(
+            A_TKN.tokenExists(tokenId) == 0,
+            "C:CR:Asset token already exists"
+        );
 
         require(
             AC_info.custodyType != 3,
             "C:CR:Cannot create asset in a root asset class"
         );
 
+        require(
+            (AC_info.custodyType == 1) ||
+                (AC_info.custodyType == 2) ||
+                (AC_info.custodyType == 4),
+            "C:CR:Cannot create asset - contract not authorized for asset class custody type"
+        );
+
         if (AC_info.custodyType == 1) {
             A_TKN.mintAssetToken(address(this), tokenId, "pruf.io");
         }
 
-        if (AC_info.custodyType == 2) {
+        if ((AC_info.custodyType == 2) || (AC_info.custodyType == 4)) {
             A_TKN.mintAssetToken(_msgSender(), tokenId, "pruf.io");
         }
 
         STOR.newRecord(_idxHash, _rgtHash, _assetClass, _countDownStart);
     }
-
 
     /*
      * @dev Write a Record to Storage @ idxHash
@@ -109,8 +100,8 @@ contract CORE_MAL is  BASIC {
             _rec.rightsHolder,
             _rec.assetStatus,
             _rec.countDown,
-            _rec.incrementForceModCount,
-            _rec.incrementNumberOfTransfers
+            _rec.forceModCount,
+            _rec.numberOfTransfers
         ); // Send data and writehash to storage
         //^^^^^^^interactions^^^^^^^^^
     }
@@ -144,21 +135,17 @@ contract CORE_MAL is  BASIC {
     /*
      * @dev Send payment to appropriate pullPayment adresses for payable function
      */
-    function deductServiceCosts(uint32 _assetClass, uint16 _service) internal whenNotPaused {
+    function deductServiceCosts(uint32 _assetClass, uint16 _service)
+        internal
+        whenNotPaused
+    {
         //^^^^^^^checks^^^^^^^^^
         Invoice memory pricing;
         //^^^^^^^effects^^^^^^^^^
-        (
-            pricing.rootAddress,
-            pricing.rootPrice,
-            pricing.ACTHaddress,
-            pricing.ACTHprice
-        ) = AC_MGR.getServiceCosts(_assetClass, _service);
+        pricing = AC_MGR.getServiceCosts(_assetClass, _service);
         deductPayment(pricing);
         //^^^^^^^interactions^^^^^^^^^
     }
-
-    
 
     //--------------------------------------------------------------PAYMENT FUNCTIONS
 
@@ -168,14 +155,11 @@ contract CORE_MAL is  BASIC {
     function deductPayment(Invoice memory pricing) internal whenNotPaused {
         UTIL_TKN.payForService(
             _msgSender(),
-            pricing.rootAddress,
-            pricing.rootPrice,
-            pricing.ACTHaddress,
-            pricing.ACTHprice
+            pricing
         );
     }
 
-//--------------------------------------------------------------------------------------status test internal functions
+    //--------------------------------------------------------------------------------------status test internal functions
 
     function isLostOrStolen(uint8 _assetStatus) internal pure returns (uint8) {
         if (
@@ -195,9 +179,7 @@ contract CORE_MAL is  BASIC {
      */
     function isEscrow(uint8 _assetStatus) internal pure returns (uint8) {
         if (
-            (_assetStatus != 6) &&
-            (_assetStatus != 50) &&
-            (_assetStatus != 56)
+            (_assetStatus != 6) && (_assetStatus != 50) && (_assetStatus != 56)
         ) {
             return 0;
         } else {
@@ -231,7 +213,4 @@ contract CORE_MAL is  BASIC {
     //         return 170;
     //     }
     // }
-
-
-    
 }

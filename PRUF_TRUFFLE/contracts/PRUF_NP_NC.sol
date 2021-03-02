@@ -1,4 +1,4 @@
-/*--------------------------------------------------------PRuF0.7.1
+/*--------------------------------------------------------PRüF0.8.0
 __/\\\\\\\\\\\\\ _____/\\\\\\\\\ _______/\\../\\ ___/\\\\\\\\\\\\\\\
  _\/\\\/////////\\\ _/\\\///////\\\ ____\//..\//____\/\\\///////////__
   _\/\\\.......\/\\\.\/\\\.....\/\\\ ________________\/\\\ ____________
@@ -16,12 +16,12 @@ __/\\\\\\\\\\\\\ _____/\\\\\\\\\ _______/\\../\\ ___/\\\\\\\\\\\\\\\
  *---------------------------------------------------------------*/
 
 // SPDX-License-Identifier: UNLICENSED
-pragma solidity ^0.6.7;
+pragma solidity ^0.8.0;
 
 import "./PRUF_CORE.sol";
 
 contract NP_NC is CORE {
-    //using SafeMath for uint256;
+    //
 
     /*
      * @dev Verify user credentials
@@ -67,6 +67,7 @@ contract NP_NC is CORE {
         //^^^^^^^effects^^^^^^^^^
 
         writeRecord(_idxHash, rec);
+        deductServiceCosts(rec.assetClass, 6);
 
         return _idxHash;
         //^^^^^^^interactions^^^^^^^^^
@@ -109,8 +110,11 @@ contract NP_NC is CORE {
     {
         Record memory rec = getRecord(_idxHash);
 
+        require( //IMPOSSIBLE WITH CURRENT CONTRACTS CTS:PREFERRED
+            (_newAssetStatus > 49) && (rec.assetStatus > 49),
+            "NPNC:SLS: Only custodial usertype can set or change status < 50"
+        );
         require(
-            (_newAssetStatus != 7) &&
             (_newAssetStatus != 57) &&
             (_newAssetStatus != 58) &&
             (_newAssetStatus < 100),
@@ -120,10 +124,6 @@ contract NP_NC is CORE {
             needsImport(_newAssetStatus) == 0,
             "NPNC:MS: Cannot place asset in unregistered, exported, or discarded status using modStatus"
         );
-        require( //IMPOSSIBLE WITH CURRENT CONTRACTS CTS:PREFERRED
-            (_newAssetStatus > 49) && (rec.assetStatus > 49),
-            "NPNC:SLS: Only custodial usertype can set or change status < 50"
-        );
         require(//STATE UNREACHABLE: CANNOT MEET STATUS IN NC CONTRACTS
             needsImport(rec.assetStatus) == 0,
             "NPNC:MS: Asset is in an unregistered, exported, or discarded status."
@@ -132,7 +132,7 @@ contract NP_NC is CORE {
 
         rec.assetStatus = _newAssetStatus;
         //^^^^^^^effects^^^^^^^^^
-
+        deductServiceCosts(rec.assetClass, 5);
         writeRecord(_idxHash, rec);
 
         return rec.assetStatus;
@@ -196,6 +196,7 @@ contract NP_NC is CORE {
         //^^^^^^^effects^^^^^^^^^
 
         writeRecord(_idxHash, rec);
+        deductServiceCosts(rec.assetClass, 7);
         return (rec.countDown);
         //^^^^^^^interactions^^^^^^^^^
     }
@@ -222,6 +223,7 @@ contract NP_NC is CORE {
         //^^^^^^^effects^^^^^^^^^
 
         writeRecordIpfs1(_idxHash, rec);
+        deductServiceCosts(rec.assetClass, 8);
 
         return rec.Ipfs1;
         //^^^^^^^interactions^^^^^^^^^

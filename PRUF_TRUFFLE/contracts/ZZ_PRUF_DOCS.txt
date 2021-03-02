@@ -13,7 +13,7 @@ __/\\\\\\\\\\\\\ _____/\\\\\\\\\ _______/\\../\\ ___/\\\\\\\\\\\\\\\
 
 // SPDX-License-Identifier: UNLICENSED
 
-/*--------------- COMMIT RULES FOR CHANGE TRACKING ----------------
+/*--------------- COMMIT RULES FOR CHANGE TRACKING ---------------
  *
  *      *Each Commit:
  *              Commit 1 functional change (or less) at a time. 
@@ -23,13 +23,9 @@ __/\\\\\\\\\\\\\ _____/\\\\\\\\\ _______/\\../\\ ___/\\\\\\\\\\\\\\\
 - ----------------------------------------------------------------
 
 pragma solidity ^0.6.7;
-/*-----------------------------------------------------------------
+/*----------------------------------------------------------------
  *TESTNET TO DO :
  *
- *
- *
- *
- *      * 
  *
  *      *
  *
@@ -38,18 +34,19 @@ pragma solidity ^0.6.7;
  *
 - ----------------------------------------------------------------
 
-/*-----------------------------------------------------------------
+/*----------------------------------------------------------------
  *TO DO :
+ * 
+ *      * make an auction escrow contract
  *
- *      * Payable everything!
+ *      * Add "purchase" function to APP_NC to allow instant purchases
  *
- *      * All core stateful contracts should have ROLES defined for future distributed governance contracts.
- *          EX PRICE_SETTER_ROLE or something similar to enable future decentralized gov.
  *      * !! FIND ALL GOD KEY Issues, give them roles or other solutions that can be hooked to governance or disabled
  *
- *      * !! Fix minting assets. IDtokens should not be sufficient to mint assets in ALL NC assetclasses. This should be done by AC?
+ *      * Fix minting assets. IDtokens should not be sufficient to mint assets in ALL NC assetclasses. 
+ *              This should be done by enabling an "APP_NCS(upervised)" contract that authorizes asset creation like "APP"
  *
- *      * hand off an array to set pricing rather than one by one (gas cost) ????
+ *      * Add trusted Agent role, "cold" functionality, and trustedAgentTransfer to A_TKN
  *
  *      * Automate contract authorization 
  *
@@ -65,10 +62,12 @@ pragma solidity ^0.6.7;
  *
  *      * make security token invisible from the main contracts 
  *
+ *      *0xFF for transferred costs more gas than 0x0....fix this?
+ *
  *
 - ----------------------------------------------------------------
 
-/*-----------------------------------------------------------------
+/*----------------------------------------------------------------
  *DOCS to write:
  *
  *      *Value proposition - general
@@ -201,6 +200,16 @@ pragma solidity ^0.6.7;
 * 4: reMintRecordCost // Extra
 * 5: changeStatusCost // Extra
 * 6: forceModifyCost // Cost to brute-force a record transfer
+* 7: decCounter Cost // Cost to decrement the counter
+* 8: modDescCost // Cost to modify the description
+- -----------------------------------------------------------------
+
+*-----------------------------------------------------------------
+* 0 = not for sale
+* 1 = ETH
+* 2 = PRüF
+* 3 = DAI
+* ...etc
 - -----------------------------------------------------------------
 
 /*-----------------------------------------------------------------
@@ -233,7 +242,7 @@ pragma solidity ^0.6.7;
  * -----------------  AC0 is a flag for a contract being a pruf authorized contract, in general
  * 0   --Not Authorized
  * 1   --Authorized Contract for CUSTODIAL assets (contract will create assets with custodial assetStatus 0)
- * 2   --Authorized Contract for NON_CUSTODIAL assets (contract will create assets with custodial assetStatus 51)
+ * 2   --Authorized Contract for NON_CUSTODIAL assets (contract will create assets with non custodial assetStatus 51)
  * 3   --Escrow contracts, Recycler (contracts authorized for ECR-MGR management)
  * 10  --Pruf contracts with no specific permissions, but still trusted
 - -----------------------------------------------------------------
@@ -245,6 +254,9 @@ pragma solidity ^0.6.7;
  * 2   --Non-Custodial
  * 3   --Root (n/a)
  * 4   --Verify-Non-Custodial
+ * 5   --Wrapped or decorated ERC721 - Asset class extended data must be set to:
+ *              '0' for universal, token-contract-independant operation
+ *              -or- uint160(ERC721 contract address) for token-contract-specific operation (like a sub-assetclass)
  * 11  -- Free Custodial (no contract yet made, must ovveride createRecord in core to allow custody type 11)
  * 12  -- Free Non-Custodial (no contract yet made, must ovveride createRecord in core to allow custody type 12)
 - -----------------------------------------------------------------
@@ -393,3 +405,7 @@ Private Provenance
  *-----------------------------------------------------------------
  * SEE ZZ_DEPLOY.txt
  /*-----------------------------------------------------------------
+
+
+ updateACextendedData -> updateACextended_Address
+ 

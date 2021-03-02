@@ -1,4 +1,4 @@
-/*--------------------------------------------------------PRuF0.7.1
+/*--------------------------------------------------------PRüF0.8.0
 __/\\\\\\\\\\\\\ _____/\\\\\\\\\ _______/\\../\\ ___/\\\\\\\\\\\\\\\
  _\/\\\/////////\\\ _/\\\///////\\\ ____\//..\//____\/\\\///////////__
   _\/\\\.......\/\\\.\/\\\.....\/\\\ ________________\/\\\ ____________
@@ -16,7 +16,7 @@ __/\\\\\\\\\\\\\ _____/\\\\\\\\\ _______/\\../\\ ___/\\\\\\\\\\\\\\\
  *---------------------------------------------------------------*/
 
 // SPDX-License-Identifier: UNLICENSED
-pragma solidity ^0.6.7;
+pragma solidity ^0.8.0;
 
 import "./PRUF_CORE.sol";
 
@@ -54,15 +54,16 @@ contract PIP is CORE {
             rec.assetClass == 0, //verified as VALID
             "N:MNA: Asset already registered in system"
         );
-        //^^^^^^^checks^^^^^^^^^
+        // //^^^^^^^checks^^^^^^^^^
         string memory tokenURI;
-        bytes32 b32URI = keccak256(
-            abi.encodePacked(_hashedAuthCode, _assetClass)
-        );
+        bytes32 b32URI =
+            keccak256(abi.encodePacked(_hashedAuthCode, _assetClass));
         tokenURI = uint256toString(uint256(b32URI));
+        // tokenURI = "pruf.io";
         //^^^^^^^effects^^^^^^^^^^^^
 
         A_TKN.mintAssetToken(address(this), tokenId, tokenURI); //mint a PIP token
+        // A_TKN.mintAssetToken(address(this), 1, "pip"); //mint a PIP token
 
         //^^^^^^^interactions^^^^^^^^^^^^
     }
@@ -70,7 +71,7 @@ contract PIP is CORE {
     /*
      * @dev Import a record into a new asset class
      */
-    function $claimPipAsset(
+    function claimPipAsset(
         bytes32 _idxHash,
         string calldata _authCode,
         uint32 _newAssetClass,
@@ -98,30 +99,32 @@ contract PIP is CORE {
         //^^^^^^^interactions^^^^^^^^
     }
 
-    function uint256toString(uint256 number)
-        public
+    /**
+     * @dev Converts a `uint256` to its ASCII `string` decimal representation.
+     */
+    function uint256toString(uint256 value)
+        internal
         pure
         returns (string memory)
     {
         // Inspired by OraclizeAPI's implementation - MIT licence
         // https://github.com/oraclize/ethereum-api/blob/b42146b063c7d6ee1358846c198246239e9360e8/oraclizeAPI_0.4.25.sol
-        // shamelessly jacked straight outa OpenZepplin  openzepplin.org
+        // value = uint256(0x2ce8d04a9c35987429af538825cd2438cc5c5bb5dc427955f84daaa3ea105016);
 
-        if (number == 0) {
+        if (value == 0) {
             return "0";
         }
-        uint256 temp = number;
+        uint256 temp = value;
         uint256 digits;
         while (temp != 0) {
             digits++;
             temp /= 10;
         }
         bytes memory buffer = new bytes(digits);
-        uint256 index = digits - 1;
-        temp = number;
-        while (temp != 0) {
-            buffer[index--] = bytes1(uint8(48 + (temp % 10)));
-            temp /= 10;
+        while (value != 0) {
+            digits -= 1;
+            buffer[digits] = bytes1(uint8(48 + uint256(value % 10)));
+            value /= 10;
         }
         return string(buffer);
     }
@@ -132,16 +135,10 @@ contract PIP is CORE {
     {
         //^^^^^^^checks^^^^^^^^^
 
-        Invoice memory pricing;
-        (
-            pricing.rootAddress,
-            pricing.rootPrice,
-            pricing.ACTHaddress,
-            pricing.ACTHprice
-        ) = AC_MGR.getServiceCosts(_assetClass, 1);
+        Invoice memory pricing = AC_MGR.getServiceCosts(_assetClass, 1);
 
-        pricing.rootPrice = pricing.rootPrice.div(importDiscount);
-        pricing.ACTHprice = pricing.ACTHprice.div(importDiscount);
+        pricing.rootPrice = pricing.rootPrice / importDiscount;
+        pricing.ACTHprice = pricing.ACTHprice / importDiscount;
         //^^^^^^^effects^^^^^^^^^
 
         deductPayment(pricing);

@@ -1,4 +1,4 @@
-/*--------------------------------------------------------PRuF0.7.1
+/*--------------------------------------------------------PRüF0.8.0
 __/\\\\\\\\\\\\\ _____/\\\\\\\\\ _______/\\../\\ ___/\\\\\\\\\\\\\\\
  _\/\\\/////////\\\ _/\\\///////\\\ ____\//..\//____\/\\\///////////__
   _\/\\\.......\/\\\.\/\\\.....\/\\\ ________________\/\\\ ____________
@@ -16,12 +16,12 @@ __/\\\\\\\\\\\\\ _____/\\\\\\\\\ _______/\\../\\ ___/\\\\\\\\\\\\\\\
  *---------------------------------------------------------------*/
 
 // SPDX-License-Identifier: UNLICENSED
-pragma solidity ^0.6.7;
+pragma solidity ^0.8.0;
 
 import "./PRUF_ECR_CORE.sol";
 
 contract ECR_NC is ECR_CORE {
-    using SafeMath for uint256;
+    
 
     /*
      * @dev Verify user credentials
@@ -50,7 +50,7 @@ contract ECR_NC is ECR_CORE {
         uint8 _escrowStatus
     ) external nonReentrant isAuthorized(_idxHash) {
         Record memory rec = getRecord(_idxHash);
-        uint256 escrowTime = block.timestamp.add(_escrowTime);
+        uint256 escrowTime = block.timestamp + _escrowTime;
         uint8 newEscrowStatus;
         ContractDataHash memory contractInfo = getContractInfo(
             address(this),

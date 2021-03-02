@@ -1,4 +1,4 @@
-/*--------------------------------------------------------PRuF0.7.1
+/*--------------------------------------------------------PRüF0.8.0
 __/\\\\\\\\\\\\\ _____/\\\\\\\\\ _______/\\../\\ ___/\\\\\\\\\\\\\\\
  _\/\\\/////////\\\ _/\\\///////\\\ ____\//..\//____\/\\\///////////__
   _\/\\\.......\/\\\.\/\\\.....\/\\\ ________________\/\\\ ____________
@@ -14,32 +14,19 @@ __/\\\\\\\\\\\\\ _____/\\\\\\\\\ _______/\\../\\ ___/\\\\\\\\\\\\\\\
  *  TO DO
  *
  *-----------------------------------------------------------------
+ * IMPORTANT!!! NO EXTERNAL OR PUBLIC FUNCTIONS ALLOWED IN THIS CONTRACT!!!!!!!!
+ *-----------------------------------------------------------------
  * PRUF core provides additional core functionality covering cost getters, payment processing, withdrawls, common test conditionals, and setters for data in storage
  *---------------------------------------------------------------*/
 
 // SPDX-License-Identifier: UNLICENSED
-pragma solidity ^0.6.7;
+pragma solidity ^0.8.0;
 
-import "./PRUF_INTERFACES.sol";
+//import "./PRUF_INTERFACES.sol";
 import "./Imports/utils/ReentrancyGuard.sol";
 import "./PRUF_BASIC.sol";
 
 contract CORE is BASIC {
-    using SafeMath for uint256;
-
-    struct Costs {
-        uint256 serviceCost; // Cost in the given item category
-        address paymentAddress; // 2nd-party fee beneficiary address
-    }
-
-    struct Invoice {
-        //invoice struct to facilitate payment messaging in-contract
-        address rootAddress;
-        uint256 rootPrice;
-        address ACTHaddress;
-        uint256 ACTHprice;
-    }
-
     //--------------------------------------------------------------------------------------Storage Writing internal functions
 
     /*
@@ -98,8 +85,8 @@ contract CORE is BASIC {
             _rec.rightsHolder,
             _rec.assetStatus,
             _rec.countDown,
-            _rec.incrementForceModCount,
-            _rec.incrementNumberOfTransfers
+            _rec.forceModCount,
+            _rec.numberOfTransfers
         ); // Send data and writehash to storage
         //^^^^^^^interactions^^^^^^^^^
     }
@@ -145,29 +132,24 @@ contract CORE is BASIC {
     {
         //^^^^^^^checks^^^^^^^^^
         Invoice memory pricing;
-        uint256 ACTHnetPercent = uint256(AC_MGR.getAC_discount(_assetClass))
-            .div(uint256(100));
+        uint256 ACTHnetPercent =
+            uint256(AC_MGR.getAC_discount(_assetClass)) / uint256(100);
         require( //IMPOSSIBLE TO REACH unless stuff is really broken, still ensures sanity
             (ACTHnetPercent >= 0) && (ACTHnetPercent <= 100),
             "PC:DSC:invalid discount value for price calculation"
         );
-        (
-            pricing.rootAddress,
-            pricing.rootPrice,
-            pricing.ACTHaddress,
-            pricing.ACTHprice
-        ) = AC_MGR.getServiceCosts(_assetClass, _service);
+        pricing = AC_MGR.getServiceCosts(_assetClass, _service);
 
         //^^^^^^^effects^^^^^^^^^
 
-        uint256 percent = pricing.ACTHprice.div(uint256(100)); //calculate 1% of listed ACTH price
+        uint256 percent = pricing.ACTHprice / uint256(100); //calculate 1% of listed ACTH price
 
-        uint256 _ACTHprice = ACTHnetPercent.mul(percent); //calculate the share proprotrion% * 1%
+        uint256 _ACTHprice = ACTHnetPercent * percent; //calculate the share proprotrion% * 1%
 
-        uint256 prufShare = pricing.ACTHprice.sub(_ACTHprice);
+        uint256 prufShare = pricing.ACTHprice - _ACTHprice;
 
         pricing.ACTHprice = _ACTHprice;
-        pricing.rootPrice = pricing.rootPrice.add(prufShare);
+        pricing.rootPrice = pricing.rootPrice + prufShare;
 
         deductPayment(pricing);
         //^^^^^^^interactions^^^^^^^^^
@@ -184,17 +166,13 @@ contract CORE is BASIC {
         Invoice memory pricing;
         uint256 half;
         //^^^^^^^effects^^^^^^^^^
-        (
-            pricing.rootAddress,
-            pricing.rootPrice,
-            pricing.ACTHaddress,
-            pricing.ACTHprice
-        ) = AC_MGR.getServiceCosts(_assetClass, 1);
+
+        pricing = AC_MGR.getServiceCosts(_assetClass, 1);
         pricing.rootAddress = _oldOwner;
 
-        half = pricing.ACTHprice.div(2);
-        pricing.rootPrice = pricing.rootPrice.add(half);
-        pricing.ACTHprice = pricing.ACTHprice.sub(half);
+        half = pricing.ACTHprice / 2;
+        pricing.rootPrice = pricing.rootPrice + half;
+        pricing.ACTHprice = pricing.ACTHprice - half;
 
         deductPayment(pricing);
         //^^^^^^^interactions^^^^^^^^^
@@ -203,21 +181,30 @@ contract CORE is BASIC {
     //--------------------------------------------------------------PAYMENT FUNCTIONS
 
     /*
-     * @dev Deducts payment from transaction
+     * @dev Deducts payment from transaction -- NON_LEGACY
      */
     function deductPayment(Invoice memory pricing)
         internal
         virtual
         whenNotPaused
     {
-        UTIL_TKN.payForService(
-            _msgSender(),
-            pricing.rootAddress,
-            pricing.rootPrice,
-            pricing.ACTHaddress,
-            pricing.ACTHprice
-        );
+        UTIL_TKN.payForService(_msgSender(), pricing);
     }
+
+    // Old version for legacy UTIL_TKN ----- LEGACY
+    // function deductPayment(Invoice memory pricing)
+    //     internal
+    //     virtual
+    //     whenNotPaused
+    // {
+    //     UTIL_TKN.payForService(
+    //         _msgSender(),
+    //         pricing.rootAddress,
+    //         pricing.rootPrice,
+    //         pricing.ACTHaddress,
+    //         pricing.ACTHprice
+    //     );
+    // }
 
     //----------------------------------------------------------------------STATUS CHECKS
 

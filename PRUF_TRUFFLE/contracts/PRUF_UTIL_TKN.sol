@@ -1,4 +1,4 @@
-/*--------------------------------------------------------PRuF0.7.1
+/*--------------------------------------------------------PRüF0.8.0
 __/\\\\\\\\\\\\\ _____/\\\\\\\\\ _______/\\../\\ ___/\\\\\\\\\\\\\\\
  _\/\\\/////////\\\ _/\\\///////\\\ ____\//..\//____\/\\\///////////__
   _\/\\\.......\/\\\.\/\\\.....\/\\\ ________________\/\\\ ____________
@@ -19,12 +19,13 @@ __/\\\\\\\\\\\\\ _____/\\\\\\\\\ _______/\\../\\ ___/\\\\\\\\\\\\\\\
 
 // SPDX-License-Identifier: UNLICENSED
 
-pragma solidity ^0.6.7;
+pragma solidity ^0.8.0;
 
 import "./PRUF_INTERFACES.sol";
 import "./Imports/access/AccessControl.sol";
 import "./Imports/token/ERC20/ERC20Burnable.sol";
 import "./Imports/utils/Pausable.sol";
+ 
 import "./Imports/token/ERC20/ERC20Snapshot.sol";
 
 /**
@@ -64,19 +65,11 @@ contract UTIL_TKN is
         "TRUSTED_AGENT_ROLE"
     );
 
-    using SafeMath for uint256;
+    
 
     uint256 private _cap = 4000000000000000000000000000; //4billion max supply
 
     address private sharesAddress = address(0);
-
-    struct Invoice {
-        //invoice struct to facilitate payment messaging in-contract
-        address rootAddress;
-        uint256 rootPrice;
-        address ACTHaddress;
-        uint256 ACTHprice;
-    }
 
     uint256 trustedAgentEnabled = 1;
 
@@ -88,7 +81,7 @@ contract UTIL_TKN is
      *
      * See {ERC20-constructor}.
      */
-    constructor() public ERC20("PRüF Network", "PRUF") {
+    constructor() ERC20("PRUF Network", "PRUF") {
         _setupRole(DEFAULT_ADMIN_ROLE, _msgSender());
         _setupRole(CONTRACT_ADMIN_ROLE, _msgSender());
         _setupRole(MINTER_ROLE, _msgSender());
@@ -229,39 +222,75 @@ contract UTIL_TKN is
 
     /*
      * @dev Deducts token payment from transaction
+     * address rootAddress;
+       uint256 rootPrice;
+       address ACTHaddress;
+       uint256 ACTHprice;
      */
+     //------------------------- NON-LEGACY
     function payForService(
         address _senderAddress,
-        address _rootAddress,
-        uint256 _rootPrice,
-        address _ACTHaddress,
-        uint256 _ACTHprice
-    ) external isPayable {
+        Invoice calldata invoice
+    ) external isPayable { //CTS:EXAMINE unreachable with current contracts
         require(
             coldWallet[_senderAddress] == 0,
             "PRuF:PFS: Cold Wallet - Trusted payable functions prohibited"
         );
         require( //redundant? throws on transfer?
-            balanceOf(_senderAddress) >= _rootPrice.add(_ACTHprice),
+            balanceOf(_senderAddress) >= (invoice.rootPrice + invoice.ACTHprice),
             "PRuF:PFS: insufficient balance"
         );
         //^^^^^^^checks^^^^^^^^^
 
         if (sharesAddress == address(0)) {
             //IF SHARES ADDRESS IS NOT SET
-            _transfer(_senderAddress, _rootAddress, _rootPrice);
-            _transfer(_senderAddress, _ACTHaddress, _ACTHprice);
+            _transfer(_senderAddress, invoice.rootAddress, invoice.rootPrice);
+            _transfer(_senderAddress, invoice.ACTHaddress, invoice.ACTHprice);
         } else {
             //IF SHARES ADDRESS IS SET
-            uint256 sharesShare = _rootPrice.div(uint256(4)); // sharesShare is 0.25 share of root costs when we transition networks this should be a variable share.
-            uint256 rootShare = _rootPrice.sub(sharesShare); // adjust root price to be root price - 0.25 share
+            uint256 sharesShare = invoice.rootPrice / 4; // sharesShare is 0.25 share of root costs when we transition networks this should be a variable share.
+            uint256 rootShare = invoice.rootPrice - sharesShare; // adjust root price to be root price - 0.25 share
 
-            _transfer(_senderAddress, _rootAddress, rootShare);
+            _transfer(_senderAddress, invoice.rootAddress, rootShare);
             _transfer(_senderAddress, sharesAddress, sharesShare);
-            _transfer(_senderAddress, _ACTHaddress, _ACTHprice);
+            _transfer(_senderAddress, invoice.ACTHaddress, invoice.ACTHprice);
         }
         //^^^^^^^effects / interactions^^^^^^^^^
     }
+
+    //------------------------------ LEGACY
+    // function payForService(
+    //     address _senderAddress,
+    //     address _rootAddress,
+    //     uint256 _rootPrice,
+    //     address _ACTHaddress,
+    //     uint256 _ACTHprice
+    // ) external isPayable {
+    //     require(
+    //         coldWallet[_senderAddress] == 0,
+    //         "PRuF:PFS: Cold Wallet - Trusted payable functions prohibited"
+    //     );
+    //     require( //redundant? throws on transfer?
+    //         balanceOf(_senderAddress) >= (_rootPrice + _ACTHprice),
+    //         "PRuF:PFS: insufficient balance"
+    //     );
+    //     //^^^^^^^checks^^^^^^^^^
+
+    //     if (sharesAddress == address(0)) {
+    //         //IF SHARES ADDRESS IS NOT SET
+    //         _transfer(_senderAddress, _rootAddress, _rootPrice);
+    //         _transfer(_senderAddress, _ACTHaddress, _ACTHprice);
+    //     } else {
+    //         //IF SHARES ADDRESS IS SET
+    //         uint256 sharesShare = _rootPrice / 4; // sharesShare is 0.25 share of root costs when we transition networks this should be a variable share.
+    //         uint256 rootShare = _rootPrice - sharesShare; // adjust root price to be root price - 0.25 share
+
+    //         _transfer(_senderAddress, _rootAddress, rootShare);
+    //         _transfer(_senderAddress, sharesAddress, sharesShare);
+    //         _transfer(_senderAddress, _ACTHaddress, _ACTHprice);
+    //     }
+    //     //^^^^^^^effects / interactions^^^^^^^^^
+    // }
 
     /*
      * @dev arbitrary burn (requires TRUSTED_AGENT_ROLE)   ****USE WITH CAUTION
@@ -381,7 +410,7 @@ contract UTIL_TKN is
         if (from == address(0)) {
             // When minting tokens
             require(
-                totalSupply().add(amount) <= _cap,
+                (totalSupply() + amount) <= _cap,
                 "ERC20Capped: cap exceeded"
             );
         }

@@ -1,4 +1,4 @@
-/*--------------------------------------------------------PRuF0.7.1
+/*--------------------------------------------------------PRüF0.8.0
 __/\\\\\\\\\\\\\ _____/\\\\\\\\\ _______/\\../\\ ___/\\\\\\\\\\\\\\\
  _\/\\\/////////\\\ _/\\\///////\\\ ____\//..\//____\/\\\///////////__
   _\/\\\.......\/\\\.\/\\\.....\/\\\ ________________\/\\\ ____________
@@ -16,7 +16,83 @@ __/\\\\\\\\\\\\\ _____/\\\\\\\\\ _______/\\../\\ ___/\\\\\\\\\\\\\\\
  *---------------------------------------------------------------*/
 
 // SPDX-License-Identifier: UNLICENSED
-pragma solidity ^0.6.7;
+pragma solidity ^0.8.0;
+
+struct Record {
+    uint8 assetStatus; // Status - Transferrable, locked, in transfer, stolen, lost, etc.
+    uint8 forceModCount; // Number of times asset has been forceModded.
+    uint8 currency; //currency for price information (0=not for sale, 1=ETH, 2=PRUF, 3=DAI, 4=WBTC.... )
+    uint16 numberOfTransfers; //number of transfers and forcemods
+    uint32 assetClass; // Type of asset
+    uint32 countDown; // Variable that can only be dencreased from countDownStart
+    uint32 countDownStart; // Starting point for countdown variable (set once)
+    uint120 price; //price set for items offered for sale
+    bytes32 Ipfs1; // Publically viewable asset description
+    bytes32 Ipfs2; // Publically viewable immutable notes
+    bytes32 rightsHolder; // KEK256 Registered owner
+}
+
+struct AC {
+    //Struct for holding and manipulating assetClass data
+    string name; // NameHash for assetClass
+    uint32 assetClassRoot; // asset type root (bycyles - USA Bicycles)
+    uint8 custodyType; // custodial or noncustodial, special asset types
+    uint32 discount; // price sharing
+    uint8 byte1; // Future Use
+    uint8 byte2; // Future Use
+    uint8 byte3; // Future Use
+    address referenceAddress; // Used with wrap / decorate
+    bytes32 IPFS; //IPFS data for defining idxHash creation attribute fields
+}
+
+struct ContractDataHash {
+    //Struct for holding and manipulating contract authorization data
+    uint8 contractType; // Auth Level / type
+    bytes32 nameHash; // Contract Name hashed
+}
+
+struct escrowData {
+    bytes32 controllingContractNameHash; //hash of the name of the controlling escrow contract
+    bytes32 escrowOwnerAddressHash; //hash of an address designated as an executor for the escrow contract
+    uint256 timelock;
+}
+
+struct escrowDataExtLight {
+    //1 slot
+    uint8 escrowData;
+    uint8 u8_1;
+    uint8 u8_2;
+    uint8 u8_3;
+    uint16 u16_1;
+    uint16 u16_2;
+    uint32 u32_1;
+    address addr_1;
+}
+
+struct escrowDataExtHeavy {
+    // 5 slots
+    uint32 u32_2;
+    uint32 u32_3;
+    uint32 u32_4;
+    address addr_2;
+    bytes32 b32_1;
+    bytes32 b32_2;
+    uint256 u256_1;
+    uint256 u256_2;
+}
+
+struct Costs {
+    uint256 serviceCost; // Cost in the given item category
+    address paymentAddress; // 2nd-party fee beneficiary address
+}
+
+struct Invoice {
+    //invoice struct to facilitate payment messaging in-contract
+    address rootAddress;
+    uint256 rootPrice;
+    address ACTHaddress;
+    uint256 ACTHprice;
+}
 
 /*
  * @dev Interface for UTIL_TKN
@@ -28,7 +104,6 @@ pragma solidity ^0.6.7;
     import "./Imports/token/ERC20/ERC20Snapshot.sol";
  */
 interface UTIL_TKN_Interface {
-
     /*
      * @dev PERMENANTLY !!!  Kill trusted agent and payable
      */
@@ -47,14 +122,12 @@ interface UTIL_TKN_Interface {
     /*
      * @dev return an adresses "cold wallet" status
      */
-    function isColdWallet (address _addr) external returns (uint256);
-   
+    function isColdWallet(address _addr) external returns (uint256);
 
     /*
      * @dev Set adress of payment contract
      */
     function AdminSetSharesAddress(address _paymentAddress) external;
-
 
     /*
      * @dev Deducts token payment from transaction
@@ -62,13 +135,18 @@ interface UTIL_TKN_Interface {
      * - the caller must have PAYABLE_ROLE.
      * - the caller must have a pruf token balance of at least `_rootPrice + _ACTHprice`.
      */
-    function payForService(
-        address _senderAddress,
-        address _rootAddress,
-        uint256 _rootPrice,
-        address _ACTHaddress,
-        uint256 _ACTHprice
-    ) external;
+    // ---- NON-LEGACY
+    function payForService(address _senderAddress, Invoice calldata invoice)
+        external;
+
+    // ---- LEGACY
+    // function payForService(
+    //     address _senderAddress,
+    //     address _rootAddress,
+    //     uint256 _rootPrice,
+    //     address _ACTHaddress,
+    //     uint256 _ACTHprice
+    // ) external;
 
     /*
      * @dev arbitrary burn (requires TRUSTED_AGENT_ROLE)   ****USE WITH CAUTION
@@ -134,8 +212,6 @@ interface UTIL_TKN_Interface {
      * @dev Retrieves the total supply at the time `snapshotId` was created.
      */
     function totalSupplyAt(uint256 snapshotId) external returns (uint256);
-
-   
 
     /**
      * @dev Returns the amount of tokens in existence.
@@ -212,8 +288,9 @@ interface UTIL_TKN_Interface {
      *
      * - `spender` cannot be the zero address.
      */
-    function increaseAllowance(address spender, uint256 addedValue) external returns (bool); 
-    
+    function increaseAllowance(address spender, uint256 addedValue)
+        external
+        returns (bool);
 
     /**
      * @dev Atomically decreases the allowance granted to `spender` by the caller.
@@ -229,14 +306,16 @@ interface UTIL_TKN_Interface {
      * - `spender` must have allowance for the caller of at least
      * `subtractedValue`.
      */
-    function decreaseAllowance(address spender, uint256 subtractedValue) external returns (bool);
+    function decreaseAllowance(address spender, uint256 subtractedValue)
+        external
+        returns (bool);
 
     /**
      * @dev Destroys `amount` tokens from the caller.
      *
      * See {ERC20-_burn}.
      */
-    function burn(uint256 amount) external; 
+    function burn(uint256 amount) external;
 
     /**
      * @dev Destroys `amount` tokens from `account`, deducting from the caller's
@@ -256,7 +335,7 @@ interface UTIL_TKN_Interface {
      */
     function cap() external returns (uint256);
 
-        /**
+    /**
      * @dev Returns `true` if `account` has been granted `role`.
      */
     function hasRole(bytes32 role, address account) external returns (bool);
@@ -279,7 +358,9 @@ interface UTIL_TKN_Interface {
      * https://forum.openzeppelin.com/t/iterating-over-elements-on-enumerableset-in-openzeppelin-contracts/2296[forum post]
      * for more information.
      */
-    function getRoleMember(bytes32 role, uint256 index) external returns (address);
+    function getRoleMember(bytes32 role, uint256 index)
+        external
+        returns (address);
 
     /**
      * @dev Returns the admin role that controls `role`. See {grantRole} and
@@ -327,7 +408,6 @@ interface UTIL_TKN_Interface {
      * - the caller must be `account`.
      */
     function renounceRole(bytes32 role, address account) external;
-       
 }
 
 //------------------------------------------------------------------------------------------------
@@ -547,6 +627,25 @@ interface A_TKN_Interface {
         address to,
         uint256 tokenId
     ) external;
+
+    /**
+     * @dev Transfers the ownership of a given token ID to another address by a TRUSTED_AGENT.
+     * Usage of this method is discouraged, use {safeTransferFrom} whenever possible.
+     * Requires the _msgSender() to be the owner, approved, or operator.
+     * @param _from current owner of the token
+     * @param to address to receive the ownership of the given token ID
+     * @param tokenId uint256 ID of the token to be transferred
+     */
+    function trustedAgentTransferFrom(
+        address _from,
+        address to,
+        uint256 tokenId
+    ) external;
+
+    /**
+     * @dev Burns a token
+     */
+    function trustedAgentBurn(uint256 tokenId) external;
 
     /**
      * @dev Safely transfers the ownership of a given token ID to another address
@@ -781,10 +880,9 @@ interface ID_TKN_Interface {
  * @dev Interface for AC_MGR
  * INHERIANCE:
     import "./PRUF_BASIC.sol";
-    import "./Imports/math/SafeMath.sol";
+     
  */
 interface AC_MGR_Interface {
-
     /*
      * @dev Set pricing (isAdmin)
      */
@@ -797,7 +895,6 @@ interface AC_MGR_Interface {
         uint256 _L6,
         uint256 _L7
     ) external;
-
 
     /*
      * @dev Authorize / Deauthorize / Authorize users for an address be permitted to make record modifications
@@ -863,7 +960,8 @@ interface AC_MGR_Interface {
      * Requires that:
      *  caller holds ACtoken
      */
-    function updateACextendedData(uint32 _extData, uint32 _assetClass) external;
+    function updateACreferenceAddress(address _extData, uint32 _assetClass)
+        external;
 
     /*
      * @dev Set function costs and payment address per asset class, in Wei
@@ -875,17 +973,14 @@ interface AC_MGR_Interface {
         address _paymentAddress
     ) external;
 
-     /**
+    /**
      * @dev Increase payment share of an asset class
      *
      * Requirements:
      * - `recipient` cannot be the zero address.
      * - the caller must have a balance of at least `amount`.
      */
-    function increaseShare(
-        uint32 _assetClass,
-        uint256 _amount
-    ) external;
+    function increaseShare(uint32 _assetClass, uint256 _amount) external;
 
     /*
      * @dev get a User Record
@@ -905,7 +1000,28 @@ interface AC_MGR_Interface {
             uint32,
             uint8,
             uint32,
-            uint32,
+            address
+        );
+
+    /* CAN'T RETURN A STRUCT WITH A STRING WITHOUT WIERDNESS-0.8.1
+     * @dev Retrieve AC_data @ _assetClass in a struct
+     */
+    function getExtAC_data(uint32 _assetClass)
+        external
+        view
+        returns (AC memory);
+
+    /*
+     * @dev Retrieve AC_data @ _assetClass
+     */
+    function getExtAC_data_nostruct(uint32 _assetClass)
+        external
+        view
+        returns (
+            uint8,
+            uint8,
+            uint8,
+            address,
             bytes32
         );
 
@@ -941,13 +1057,8 @@ interface AC_MGR_Interface {
     function getServiceCosts(uint32 _assetClass, uint16 _service)
         external
         view
-        returns (
-            address,
-            uint256,
-            address,
-            uint256
-        );
-    
+        returns (Invoice memory);
+
     /*
      * @dev return current AC token index pointer
      */
@@ -972,7 +1083,7 @@ interface AC_MGR_Interface {
  * INHERIANCE:
     import "./Imports/access/Ownable.sol";
     import "./Imports/utils/Pausable.sol";
-    import "./Imports/math/SafeMath.sol";
+     
     import "./Imports/utils/ReentrancyGuard.sol";
  */
 interface STOR_Interface {
@@ -1050,6 +1161,20 @@ interface STOR_Interface {
     function endEscrow(bytes32 _idxHash) external;
 
     /*
+     * @dev Modify record sale price and currency data
+     */
+    function setPrice(
+        bytes32 _idxHash,
+        uint120 _price,
+        uint8 _currency
+    ) external;
+
+    /*
+     * @dev set record sale price and currency data to zero
+     */
+    function clearPrice(bytes32 _idxHash) external;
+
+    /*
      * @dev Modify record Ipfs1 data
      */
     function modifyIpfs1(bytes32 _idxHash, bytes32 _Ipfs1) external;
@@ -1062,18 +1187,20 @@ interface STOR_Interface {
     /*
      * @dev return a record from the database, including rgt
      */
-    function retrieveRecord(bytes32 _idxHash)
-        external
-        view
-        returns (
-            bytes32,
-            uint8,
-            uint32,
-            uint32,
-            uint32,
-            bytes32,
-            bytes32
-        );
+    function retrieveRecord(bytes32 _idxHash) external returns (Record memory);
+
+    // function retrieveRecord(bytes32 _idxHash)
+    //     external
+    //     view
+    //     returns (
+    //         bytes32,
+    //         uint8,
+    //         uint32,
+    //         uint32,
+    //         uint32,
+    //         bytes32,
+    //         bytes32
+    //     );
 
     /*
      * @dev return a record from the database w/o rgt
@@ -1091,6 +1218,14 @@ interface STOR_Interface {
             bytes32,
             uint16
         );
+
+    /*
+     * @dev return the pricing and currency data from a record
+     */
+    function getPriceData(bytes32 _idxHash)
+        external
+        view
+        returns (uint120, uint8);
 
     /*
      * @dev Compare record.rightsholder with supplied bytes32 rightsholder
@@ -1131,7 +1266,7 @@ interface STOR_Interface {
  * @dev Interface for ECR_MGR
  * INHERIANCE:
     import "./PRUF_BASIC.sol";
-    import "./Imports/math/SafeMath.sol";
+     
  */
 interface ECR_MGR_Interface {
     /*
@@ -1156,14 +1291,7 @@ interface ECR_MGR_Interface {
      */
     function setEscrowDataLight(
         bytes32 _idxHash,
-        uint8 _escrowData,
-        uint8 _u8_1,
-        uint8 _u8_2,
-        uint8 _u8_3,
-        uint16 _u16_1,
-        uint16 _u16_2,
-        uint32 _u32_1,
-        address _addr_1
+        escrowDataExtLight calldata _escrowDataLight
     ) external;
 
     /*
@@ -1173,14 +1301,7 @@ interface ECR_MGR_Interface {
      */
     function setEscrowDataHeavy(
         bytes32 _idxHash,
-        uint32 _u32_2,
-        uint32 _u32_3,
-        uint32 _u32_4,
-        address _addr_2,
-        bytes32 _b32_1,
-        bytes32 _b32_2,
-        uint256 _u256_1,
-        uint256 _u256_2
+        escrowDataExtHeavy calldata escrowDataHeavy
     ) external;
 
     /*
@@ -1200,11 +1321,7 @@ interface ECR_MGR_Interface {
      */
     function retrieveEscrowData(bytes32 _idxHash)
         external
-        returns (
-            bytes32 controllingContractNameHash,
-            bytes32 escrowOwnerAddressHash,
-            uint256 timelock
-        );
+        returns (escrowData memory);
 
     /*
      * @dev return EscrowDataLight @ IDX
@@ -1212,16 +1329,7 @@ interface ECR_MGR_Interface {
     function retrieveEscrowDataLight(bytes32 _idxHash)
         external
         view
-        returns (
-            uint8 _escrowData,
-            uint8 _u8_1,
-            uint8 _u8_2,
-            uint8 _u8_3,
-            uint16 _u16_1,
-            uint16 _u16_2,
-            uint32 _u32_1,
-            address _addr_1
-        );
+        returns (escrowDataExtLight memory);
 
     /*
      * @dev return EscrowDataHeavy @ IDX
@@ -1229,16 +1337,7 @@ interface ECR_MGR_Interface {
     function retrieveEscrowDataHeavy(bytes32 _idxHash)
         external
         view
-        returns (
-            uint32 _u32_2,
-            uint32 _u32_3,
-            uint32 _u32_4,
-            address _addr_2,
-            bytes32 _b32_1,
-            bytes32 _b32_2,
-            uint256 _u256_1,
-            uint256 _u256_2
-        );
+        returns (escrowDataExtHeavy memory);
 }
 
 //------------------------------------------------------------------------------------------------
@@ -1262,8 +1361,6 @@ interface RCLR_Interface {
  */
 interface APP_Interface {
     function transferAssetToken(address _to, bytes32 _idxHash) external;
-
-    function $withdraw() external;
 }
 
 //------------------------------------------------------------------------------------------------
@@ -1274,6 +1371,4 @@ interface APP_Interface {
  */
 interface APP_NC_Interface {
     function transferAssetToken(address _to, bytes32 _idxHash) external;
-
-    function $withdraw() external;
 }

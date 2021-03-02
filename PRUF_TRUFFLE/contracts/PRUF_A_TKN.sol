@@ -1,4 +1,4 @@
-/*--------------------------------------------------------PRuF0.7.1
+/*--------------------------------------------------------PRüF0.8.0
 __/\\\\\\\\\\\\\ _____/\\\\\\\\\ _______/\\../\\ ___/\\\\\\\\\\\\\\\
  _\/\\\/////////\\\ _/\\\///////\\\ ____\//..\//____\/\\\///////////__
   _\/\\\.......\/\\\.\/\\\.....\/\\\ ________________\/\\\ ____________
@@ -17,10 +17,10 @@ __/\\\\\\\\\\\\\ _____/\\\\\\\\\ _______/\\../\\ ___/\\\\\\\\\\\\\\\
  *---------------------------------------------------------------*/
 
 // SPDX-License-Identifier: UNLICENSED
-pragma solidity ^0.6.7;
+pragma solidity ^0.8.0;
 
 import "./Imports/access/AccessControl.sol";
-import "./Imports/GSN/Context.sol";
+import "./Imports/utils/Context.sol";
 import "./Imports/utils/Counters.sol";
 import "./Imports/token/ERC721/ERC721.sol";
 import "./Imports/token/ERC721/ERC721Burnable.sol";
@@ -53,40 +53,33 @@ contract A_TKN is
 {
     using Counters for Counters.Counter;
 
-    bytes32 public constant CONTRACT_ADMIN_ROLE = keccak256(
-        "CONTRACT_ADMIN_ROLE"
-    );
+    bytes32 public constant CONTRACT_ADMIN_ROLE =
+        keccak256("CONTRACT_ADMIN_ROLE");
     bytes32 public constant MINTER_ROLE = keccak256("MINTER_ROLE");
     bytes32 public constant PAUSER_ROLE = keccak256("PAUSER_ROLE");
+    bytes32 public constant TRUSTED_AGENT_ROLE =
+        keccak256("TRUSTED_AGENT_ROLE");
 
-    bytes32
-        public constant B320xF_ = 0xFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF;
+    uint256 trustedAgentEnabled = 1;
 
-    Counters.Counter private _tokenIdTracker;
-
-    struct Record {
-        bytes32 rightsHolder; // KEK256 Registered owner
-        uint8 assetStatus; // Status - Transferrable, locked, in transfer, stolen, lost, etc.
-        uint256 incrementForceModCount; // increment flag for Number of times asset has been forceModded.
-        uint32 assetClass; // Type of asset
-        uint32 countDown; // Variable that can only be dencreased from countDownStart
-        uint32 countDownStart; // Starting point for countdown variable (set once)
-        bytes32 Ipfs1; // Publically viewable asset description
-        bytes32 Ipfs2; // Publically viewable immutable notes
-        uint256 incrementNumberOfTransfers; //increment flag for number of transfers and forcemods
-    }
-
-    constructor() public ERC721("PRüF Asset Token", "PRAT") {
-        _setupRole(DEFAULT_ADMIN_ROLE, _msgSender());
-        _setupRole(CONTRACT_ADMIN_ROLE, _msgSender());
-        _setupRole(MINTER_ROLE, _msgSender()); //ALL CONTRACTS THAT MINT ASSET TOKENS
-        _setupRole(PAUSER_ROLE, _msgSender());
-    }
+    mapping(address => uint256) private coldWallet;
 
     address internal STOR_Address;
     address internal RCLR_Address;
     STOR_Interface internal STOR;
     RCLR_Interface internal RCLR;
+
+    bytes32 public constant B320xF_ =
+        0xFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF;
+
+    Counters.Counter private _tokenIdTracker;
+
+    constructor() ERC721("PRUF Asset Token", "PRAT") {
+        _setupRole(DEFAULT_ADMIN_ROLE, _msgSender());
+        _setupRole(CONTRACT_ADMIN_ROLE, _msgSender());
+        _setupRole(MINTER_ROLE, _msgSender()); //ALL CONTRACTS THAT MINT ASSET TOKENS
+        _setupRole(PAUSER_ROLE, _msgSender());
+    }
 
     event REPORT(string _msg);
 
@@ -101,12 +94,40 @@ contract A_TKN is
     modifier isMinter() {
         require(
             hasRole(MINTER_ROLE, _msgSender()),
-            "AT:MOD-IA:Calling address does not belong to a minter"
+            "AT:MOD-IM:Calling address does not belong to a minter"
         );
         _;
     }
 
-    //----------------------Admin functions / isAdmin or isTrusted----------------------//
+    modifier isTrustedAgent() {
+        require(
+            hasRole(TRUSTED_AGENT_ROLE, _msgSender()),
+            "AT:MOD-ITA: must have TRUSTED_AGENT_ROLE"
+        );
+        require(
+            trustedAgentEnabled == 1,
+            "AT:MOD-ITA: Trusted Agent function permanently disabled - use allowance / transferFrom pattern"
+        );
+        _;
+    }
+
+    //----------------------Admin functions / isAdmin ----------------------//
+
+    /*
+     * @dev ----------------------------------------PERMANANTLY !!!  Kills trusted agent and payable functions
+     * this will break the functionality of current payment mechanisms.
+     *
+     * The workaround for this is to create an allowance for pruf contracts for a single or multiple payments,
+     * either ahead of time "loading up your PRUF account" or on demand with an operation. On demand will use quite a bit more gas.
+     * "preloading" should be pretty gas efficient, but will add an extra step to the workflow, requiring users to have sufficient
+     * PRuF "banked" in an allowance for use in the system.
+     *
+     */
+    function adminKillTrustedAgent(uint256 _key) external isAdmin {
+        if (_key == 170) {
+            trustedAgentEnabled = 0; //-------------------THIS IS A PERMANENT ACTION AND CANNOT BE UNDONE
+        }
+    }
 
     /*
      * @dev Set storage contract to interface with
@@ -133,6 +154,34 @@ contract A_TKN is
         //^^^^^^^effects^^^^^^^^^
     }
 
+    ////----------------------Regular operations----------------------//
+
+    /*
+     * @dev Set calling wallet to a "cold Wallet" that cannot be manipulated by TRUSTED_AGENT or PAYABLE permissioned functions
+     * WALLET ADDRESSES SET TO "Cold" DO NOT WORK WITH TRUSTED_AGENT FUNCTIONS and must be unset from cold before it can interact with
+     * contract functions.
+     */
+    function setColdWallet() external {
+        coldWallet[_msgSender()] = 170;
+    }
+
+    /*
+     * @dev un-set calling wallet to a "cold Wallet", enabling manipulation by TRUSTED_AGENT and PAYABLE permissioned functions
+     * WALLET ADDRESSES SET TO "Cold" DO NOT WORK WITH TRUSTED_AGENT FUNCTIONS and must be unset from cold before it can interact with
+     * contract functions.
+     */
+    function unSetColdWallet() external {
+        coldWallet[_msgSender()] = 0;
+    }
+
+    /*
+     * @dev return an adresses "cold wallet" status
+     * WALLET ADDRESSES SET TO "Cold" DO NOT WORK WITH TRUSTED_AGENT FUNCTIONS
+     */
+    function isColdWallet(address _addr) public view returns (uint256) {
+        return coldWallet[_addr];
+    }
+
     /*
      * @dev Mint new token
      */
@@ -149,28 +198,6 @@ contract A_TKN is
         return tokenId;
         //^^^^^^^interactions^^^^^^^^^
     }
-
-    // /*
-    //  * @dev remint Asset Token
-    //  * must set a new and unuiqe rgtHash
-    //  * burns old token
-    //  * Sends new token to original Caller
-    //  */
-    // function reMintAssetToken(address _recipientAddress, uint256 tokenId)
-    //     external
-    //     isMinter
-    //     nonReentrant
-    //     returns (uint256)
-    // {
-    //     require(_exists(tokenId), "AT:RM:Cannot Remint nonexistant token");
-    //     //^^^^^^^checks^^^^^^^^^
-    //     string memory tokenURI = tokenURI(tokenId);
-    //     _burn(tokenId);
-    //     _safeMint(_recipientAddress, tokenId);
-    //     _setTokenURI(tokenId, tokenURI);
-    //     return tokenId;
-    //     //^^^^^^^interactions^^^^^^^^^
-    // }
 
     /*
      * @dev Set new token URI String
@@ -199,9 +226,8 @@ contract A_TKN is
         string calldata _authCode
     ) external view {
         bytes32 _hashedAuthCode = keccak256(abi.encodePacked(_authCode));
-        bytes32 b32URI = keccak256(
-            abi.encodePacked(_hashedAuthCode, _assetClass)
-        );
+        bytes32 b32URI =
+            keccak256(abi.encodePacked(_hashedAuthCode, _assetClass));
         string memory authString = uint256toString(uint256(b32URI));
         string memory URI = tokenURI(tokenId);
 
@@ -227,12 +253,12 @@ contract A_TKN is
      * @dev Transfers the ownership of a given token ID to another address.
      * Usage of this method is discouraged, use {safeTransferFrom} whenever possible.
      * Requires the _msgSender() to be the owner, approved, or operator.
-     * @param from current owner of the token
+     * @param _from current owner of the token
      * @param to address to receive the ownership of the given token ID
      * @param tokenId uint256 ID of the token to be transferred
      */
     function transferFrom(
-        address from,
+        address _from,
         address to,
         uint256 tokenId
     ) public override nonReentrant whenNotPaused {
@@ -250,7 +276,44 @@ contract A_TKN is
 
         //^^^^^^^checks^^^^^^^^
 
-        rec.incrementNumberOfTransfers = 170;
+        rec.numberOfTransfers = 170;
+
+        rec.rightsHolder = B320xF_;
+        //^^^^^^^effects^^^^^^^^^
+
+        writeRecord(_idxHash, rec);
+        _transfer(_from, to, tokenId);
+        //^^^^^^^interactions^^^^^^^^^
+    }
+
+    /**
+     * @dev Transfers the ownership of a given token ID to another address by a TRUSTED_AGENT.
+     * Usage of this method is discouraged, use {safeTransferFrom} whenever possible.
+     * Requires the _msgSender() to be the owner, approved, or operator.
+     * @param from current owner of the token
+     * @param to address to receive the ownership of the given token ID
+     * @param tokenId uint256 ID of the token to be transferred
+     */
+    function trustedAgentTransferFrom(
+        address from,
+        address to,
+        uint256 tokenId
+    ) public nonReentrant whenNotPaused isTrustedAgent {
+        bytes32 _idxHash = bytes32(tokenId);
+        Record memory rec = getRecord(_idxHash);
+
+        require(
+            rec.assetStatus == 51,
+            "AT:TATF:Asset not in transferrable status"
+        );
+        require(
+            isColdWallet(ownerOf(tokenId)) != 170,
+            "AT:TATF:Holder is cold Wallet"
+        );
+
+        //^^^^^^^checks^^^^^^^^
+
+        rec.numberOfTransfers = 170;
 
         rec.rightsHolder = B320xF_;
         //^^^^^^^effects^^^^^^^^^
@@ -261,23 +324,40 @@ contract A_TKN is
     }
 
     /**
+     * @dev Safely burns a token   //DPB-TEST NEW
+     */
+    function trustedAgentBurn(uint256 tokenId)
+        external
+        nonReentrant
+        whenNotPaused
+        isTrustedAgent
+    {
+        require(
+            isColdWallet(ownerOf(tokenId)) != 170,
+            "AT:TAB:Holder is cold Wallet"
+        );
+        //^^^^^^^checks^^^^^^^^^
+        _burn(tokenId);
+        //^^^^^^^effects^^^^^^^^^
+    }
+
+    /**
      * @dev Safely transfers the ownership of a given token ID to another address
      * If the target address is a contract, it must implement {IERC721Receiver-onERC721Received},
      * which is called upon a safe transfer, and return the magic value
      * `bytes4(keccak256("onERC721Received(address,address,uint256,bytes)"))`; otherwise,
      * the transfer is reverted.
      * Requires the _msgSender() to be the owner, approved, or operator
-     * @param from current owner of the token
+     * @param _from current owner of the token
      * @param to address to receive the ownership of the given token ID
      * @param tokenId uint256 ID of the token to be transferred
      */
     function safeTransferFrom(
-        address from,
+        address _from,
         address to,
         uint256 tokenId
     ) public override {
-        //writeRecord(_idxHash, rec);
-        safeTransferFrom(from, to, tokenId, "");
+        safeTransferFrom(_from, to, tokenId, "");
         //^^^^^^^interactions^^^^^^^^^
     }
 
@@ -288,13 +368,13 @@ contract A_TKN is
      * `bytes4(keccak256("onERC721Received(address,address,uint256,bytes)"))`; otherwise,
      * the transfer is reverted.
      * Requires the _msgSender() to be the owner, approved, or operator
-     * @param from current owner of the token
+     * @param _from current owner of the token
      * @param to address to receive the ownership of the given token ID
      * @param tokenId uint256 ID of the token to be transferred
      * @param _data bytes data to send along with a safe transfer check
      */
     function safeTransferFrom(
-        address from,
+        address _from,
         address to,
         uint256 tokenId,
         bytes memory _data
@@ -322,12 +402,12 @@ contract A_TKN is
 
         //^^^^^^^checks^^^^^^^^^
 
-        rec.incrementNumberOfTransfers = 170;
+        rec.numberOfTransfers = 170;
         rec.rightsHolder = B320xF_;
         //^^^^^^^effects^^^^^^^^^
 
         writeRecord(_idxHash, rec);
-        _safeTransfer(from, to, tokenId, _data);
+        _safeTransfer(_from, to, tokenId, _data);
         //^^^^^^^interactions^^^^^^^^^
     }
 
@@ -352,7 +432,7 @@ contract A_TKN is
     }
 
     /*
-     * @dev Write a Record to Storage @ idxHash
+     * @dev Write a Record to Storage @ idxHash, clears price information
      */
     function writeRecord(bytes32 _idxHash, Record memory _rec)
         private
@@ -365,69 +445,52 @@ contract A_TKN is
             _rec.rightsHolder,
             _rec.assetStatus,
             _rec.countDown,
-            _rec.incrementForceModCount,
-            _rec.incrementNumberOfTransfers
+            _rec.forceModCount,
+            _rec.numberOfTransfers
         ); // Send data and writehash to storage
+        //
+        STOR.clearPrice(_idxHash); //sets price and currency of a record to zero
         //^^^^^^^interactions^^^^^^^^^
     }
 
     /*
-     * @dev Get a Record from Storage @ idxHash
+     * @dev Get a Record from Storage @ idxHash and return a Record Struct
      */
-    function getRecord(bytes32 _idxHash) private view returns (Record memory) {
-        Record memory rec;
+    function getRecord(bytes32 _idxHash) internal returns (Record memory) {
         //^^^^^^^checks^^^^^^^^^
+        Record memory rec = STOR.retrieveRecord(_idxHash);
         //^^^^^^^effects^^^^^^^^^
 
-        {
-            //Start of scope limit for stack depth
-            (
-                bytes32 _rightsHolder,
-                uint8 _assetStatus,
-                uint32 _assetClass,
-                uint32 _countDown,
-                uint32 _countDownStart,
-                bytes32 _Ipfs1,
-                bytes32 _Ipfs2
-            ) = STOR.retrieveRecord(_idxHash); // Get record from storage contract
-
-            rec.rightsHolder = _rightsHolder;
-            rec.assetStatus = _assetStatus;
-            rec.assetClass = _assetClass;
-            rec.countDown = _countDown;
-            rec.countDownStart = _countDownStart;
-            rec.Ipfs1 = _Ipfs1;
-            rec.Ipfs2 = _Ipfs2;
-        } //end of scope limit for stack depth
-
-        return (rec); // Returns Record struct rec
+        return rec; // Returns Record struct rec
         //^^^^^^^interactions^^^^^^^^^
     }
 
-    function uint256toString(uint256 number)
-        public
+    /**
+     * @dev Converts a `uint256` to its ASCII `string` decimal representation.
+     */
+    function uint256toString(uint256 value)
+        internal
         pure
         returns (string memory)
     {
         // Inspired by OraclizeAPI's implementation - MIT licence
         // https://github.com/oraclize/ethereum-api/blob/b42146b063c7d6ee1358846c198246239e9360e8/oraclizeAPI_0.4.25.sol
-        // shamelessly jacked straight outa OpenZepplin  openzepplin.org
+        // value = uint256(0x2ce8d04a9c35987429af538825cd2438cc5c5bb5dc427955f84daaa3ea105016);
 
-        if (number == 0) {
+        if (value == 0) {
             return "0";
         }
-        uint256 temp = number;
+        uint256 temp = value;
         uint256 digits;
         while (temp != 0) {
             digits++;
             temp /= 10;
         }
         bytes memory buffer = new bytes(digits);
-        uint256 index = digits - 1;
-        temp = number;
-        while (temp != 0) {
-            buffer[index--] = bytes1(uint8(48 + (temp % 10)));
-            temp /= 10;
+        while (value != 0) {
+            digits -= 1;
+            buffer[digits] = bytes1(uint8(48 + uint256(value % 10)));
+            value /= 10;
         }
         return string(buffer);
     }
@@ -471,10 +534,10 @@ contract A_TKN is
     }
 
     function _beforeTokenTransfer(
-        address from,
+        address _from,
         address to,
         uint256 tokenId
     ) internal virtual override(ERC721, ERC721Pausable) {
-        super._beforeTokenTransfer(from, to, tokenId);
+        super._beforeTokenTransfer(_from, to, tokenId);
     }
 }
