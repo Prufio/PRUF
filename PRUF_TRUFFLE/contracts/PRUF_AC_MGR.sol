@@ -129,8 +129,8 @@ contract AC_MGR is BASIC {
     /*
      * @dev Set pricing
      */
-    function OO_SetACpricing(
-        uint256 _L1
+    function OO_SetACpricing(uint256 _L1)
+        external
         // ,
         // uint256 _L2,
         // uint256 _L3,
@@ -138,7 +138,8 @@ contract AC_MGR is BASIC {
         // uint256 _L5,
         // uint256 _L6,
         // uint256 _L7
-    ) external isAdmin {
+        isAdmin
+    {
         //^^^^^^^checks^^^^^^^^^
 
         acPrice_L1 = _L1;
@@ -206,7 +207,9 @@ contract AC_MGR is BASIC {
 
         uint256 newACtokenPrice;
         //uint256 numberOfTokensSold = ACtokenIndex - uint256(1000000);
-        address rootPaymentAddress = cost[AC_data[uint32(ACtokenIndex)].assetClassRoot][1].paymentAddress; //payment for upgrade goes to root AC payment adress specified for service (1)
+        address rootPaymentAddress =
+            cost[AC_data[uint32(ACtokenIndex)].assetClassRoot][1]
+                .paymentAddress; //payment for upgrade goes to root AC payment adress specified for service (1)
 
         // if (numberOfTokensSold >= 4000) {
         //     newACtokenPrice = acPrice_L7;
@@ -230,11 +233,11 @@ contract AC_MGR is BASIC {
         //mint an asset class token to _msgSender(), at tokenID ACtokenIndex, with URI = root asset Class #
 
         UTIL_TKN.trustedAgentBurn(_msgSender(), currentACtokenPrice / 2);
-            UTIL_TKN.trustedAgentTransfer(
-                _msgSender(),
-                rootPaymentAddress,
-                currentACtokenPrice - (currentACtokenPrice / 2)
-            );
+        UTIL_TKN.trustedAgentTransfer(
+            _msgSender(),
+            rootPaymentAddress,
+            currentACtokenPrice - (currentACtokenPrice / 2)
+        );
 
         currentACtokenPrice = newACtokenPrice;
 
@@ -471,7 +474,6 @@ contract AC_MGR is BASIC {
         uint32 _assetClass,
         uint32 _newDiscount
     ) external isAdmin whenNotPaused nonReentrant {
-
         require(
             (AC_data[_assetClass].assetClassRoot != 0),
             "ACM:AIS: AC not in use"
@@ -513,7 +515,11 @@ contract AC_MGR is BASIC {
             (_ac.custodyType == 3) || (_assetClassRoot == _assetClass),
             "ACM:CAC:Root asset class does not exist"
         );
-
+        require( //holds root token if root is restricted
+            (AC_TKN.ownerOf(_assetClassRoot) == _msgSender()) ||
+                (AC_data[_assetClassRoot].managmentType == 0),
+            "ACM:CAC:Restricted from creating AC's in this root - does not hold root token"
+        );
         require(AC_number[_name] == 0, "ACM:CAC:AC name already in use");
         require(
             (AC_data[_assetClass].assetClassRoot == 0),
@@ -717,7 +723,6 @@ contract AC_MGR is BASIC {
         invoice.ACTHaddress = costs.paymentAddress;
         invoice.ACTHprice = costs.serviceCost;
         invoice.assetClass = _assetClass;
-
 
         return invoice;
         //^^^^^^^interactions^^^^^^^^^
