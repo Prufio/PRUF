@@ -682,6 +682,8 @@ contract AC_MGR is BASIC {
         invoice.rootPrice = rootCosts.serviceCost;
         invoice.ACTHaddress = costs.paymentAddress;
         invoice.ACTHprice = costs.serviceCost;
+        invoice.assetClass = _assetClass;
+
 
         return invoice;
         //^^^^^^^interactions^^^^^^^^^

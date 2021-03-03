@@ -226,6 +226,7 @@ contract UTIL_TKN is
        uint256 rootPrice;
        address ACTHaddress;
        uint256 ACTHprice;
+       uint32 asset class ----this will be built out to enable staking.
      */
      //------------------------- NON-LEGACY
     function payForService(

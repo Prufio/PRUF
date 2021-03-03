@@ -299,6 +299,7 @@ contract Helper is Ownable, BASIC {
     }
 
     function helper_payForService(
+        uint32 _assetClass,
         address _senderAddress,
         address _rootAddress,
         uint256 _rootPrice,
@@ -311,6 +312,7 @@ contract Helper is Ownable, BASIC {
         invoice.rootPrice = _rootPrice;
         invoice.ACTHaddress = _ACTHaddress;
         invoice.ACTHprice = _ACTHprice;
+        invoice.assetClass = _assetClass;
 
         UTIL_TKN.payForService(_senderAddress, invoice);
     }
