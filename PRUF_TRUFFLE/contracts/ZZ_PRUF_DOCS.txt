@@ -256,9 +256,9 @@ pragma solidity ^0.6.7;
 
 *-----------------------------------------------------------------
  * ASSET CLASS Managment Types: AC_data.managmentType (AC_manager)
- * 0   -- Unrestricted 
- * 1   -- Restricted (Only ACNode can create, export or import prohibited)
- * 2   -- Less Restricted (Only ACNode can create, import prohibited)
+ * 0   -- Unrestricted (if root not zero, ACNodes cannot be created in the root w/o root token)
+ * 1   -- Restricted (Only ACNode holder can create, export or import prohibited) 
+ * 2   -- Less Restricted (Only ACNode holder can create, import prohibited)
 - -----------------------------------------------------------------
 
 /*-----------------------------------------------------------------
