@@ -36,17 +36,18 @@ pragma solidity ^0.6.7;
 
 /*----------------------------------------------------------------
  *TO DO :
+ * zero root costs when ACTHcosts are zero? (NOPE)
+ * ACNode option to lock mintability, exportability, importability to ACNODE holder
+ * IDtoken links to IPFS,has trust level
+ * staking, 2% to stskers, 3% to root_address
+ * 
  * 
  *      * make an auction escrow contract
- *
- *      * Add "purchase" function to APP_NC to allow instant purchases
  *
  *      * !! FIND ALL GOD KEY Issues, give them roles or other solutions that can be hooked to governance or disabled
  *
  *      * Fix minting assets. IDtokens should not be sufficient to mint assets in ALL NC assetclasses. 
  *              This should be done by enabling an "APP_NCS(upervised)" contract that authorizes asset creation like "APP"
- *
- *      * Add trusted Agent role, "cold" functionality, and trustedAgentTransfer to A_TKN
  *
  *      * Automate contract authorization 
  *
@@ -54,13 +55,7 @@ pragma solidity ^0.6.7;
  *
  *      * what do we do (if anything) with the 128 "free" bits in the storage struct?
  *
- *      * find any recursive calls
- *
- *      * Security token
- *
  *      * Define / document protocol
- *
- *      * make security token invisible from the main contracts 
  *
  *      *0xFF for transferred costs more gas than 0x0....fix this?
  *
