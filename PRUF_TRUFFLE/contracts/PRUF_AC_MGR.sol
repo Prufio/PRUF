@@ -43,13 +43,13 @@ contract AC_MGR is BASIC {
 
     uint256 private ACtokenIndex = 1000000; //Starting index for purchased ACnode tokens
 
-    uint256 public acPrice_L1 = 20000000000000000000000;
-    uint256 public acPrice_L2 = 30000000000000000000000;
-    uint256 public acPrice_L3 = 45000000000000000000000;
-    uint256 public acPrice_L4 = 70000000000000000000000;
-    uint256 public acPrice_L5 = 100000000000000000000000;
-    uint256 public acPrice_L6 = 150000000000000000000000;
-    uint256 public acPrice_L7 = 200000000000000000000000;
+    uint256 public acPrice_L1 = 200000 ether;
+    // uint256 public acPrice_L2 = 200000 ether;
+    // uint256 public acPrice_L3 = 200000 ether;
+    // uint256 public acPrice_L4 = 200000 ether;
+    // uint256 public acPrice_L5 = 200000 ether;
+    // uint256 public acPrice_L6 = 200000 ether;
+    // uint256 public acPrice_L7 = 200000 ether;
 
     uint256 private currentACtokenPrice = acPrice_L1;
 
@@ -71,14 +71,14 @@ contract AC_MGR is BASIC {
 
     uint256 private priceThreshold; //threshold of price where fractional pricing is implemented
 
-    /* ----prufPerShare-----
-     * divisor to divide amount of pruf (18d) sent to determine the profit share.
-     * profit share of 1000 = 10% default u10 for .01% profit share = "1 share"
-     */
-    uint256 public prufPerShare = 10000000000000000000;
-    uint256 public upperLimit = 9500; // default max profit share = 95%
+    // /* ----prufPerShare-----
+    //  * divisor to divide amount of pruf (18d) sent to determine the profit share.
+    //  * profit share of 1000 = 10% default u10 for .01% profit share = "1 share"
+    //  */
+    // uint256 public prufPerShare = 10000000000000000000;
+    // uint256 public upperLimit = 9500; // default max profit share = 95%
 
-    uint32 private constant startingDiscount = 5100; // Purchased nodes start with 51% profit share
+    uint32 private constant startingDiscount = 9500; // Purchased nodes start with 95% profit share
 
     constructor() {
         _setupRole(NODE_MINTER_ROLE, _msgSender());
@@ -110,43 +110,44 @@ contract AC_MGR is BASIC {
     }
 
     //--------------------------------------------External Functions--------------------------
-    /*
-     * @dev Set upgrade COST AND UPPER LIMIT----------------------DPB:TEST ---- NEW functionality
-     */
-    function OO_SetACupgrade(uint256 _prufPerShare, uint256 _upperLimit)
-        external
-        isAdmin
-    {
-        //^^^^^^^checks^^^^^^^^^
-        upperLimit = _upperLimit;
-        prufPerShare = _prufPerShare;
-        //^^^^^^^effects^^^^^^^^^
+    // /*
+    //  * @dev Set upgrade COST AND UPPER LIMIT----------------------DPB:TEST ---- NEW functionality
+    //  */
+    // function OO_SetACupgrade(uint256 _prufPerShare, uint256 _upperLimit)
+    //     external
+    //     isAdmin
+    // {
+    //     //^^^^^^^checks^^^^^^^^^
+    //     upperLimit = _upperLimit;
+    //     prufPerShare = _prufPerShare;
+    //     //^^^^^^^effects^^^^^^^^^
 
-        emit REPORT("ACnode Upgrade parameter(s) Changed!"); //report access to internal parameter
-        //^^^^^^^interactions^^^^^^^^^
-    }
+    //     emit REPORT("ACnode Upgrade parameter(s) Changed!"); //report access to internal parameter
+    //     //^^^^^^^interactions^^^^^^^^^
+    // }
 
     /*
      * @dev Set pricing
      */
     function OO_SetACpricing(
-        uint256 _L1,
-        uint256 _L2,
-        uint256 _L3,
-        uint256 _L4,
-        uint256 _L5,
-        uint256 _L6,
-        uint256 _L7
+        uint256 _L1
+        // ,
+        // uint256 _L2,
+        // uint256 _L3,
+        // uint256 _L4,
+        // uint256 _L5,
+        // uint256 _L6,
+        // uint256 _L7
     ) external isAdmin {
         //^^^^^^^checks^^^^^^^^^
 
         acPrice_L1 = _L1;
-        acPrice_L2 = _L2;
-        acPrice_L3 = _L3;
-        acPrice_L4 = _L4;
-        acPrice_L5 = _L5;
-        acPrice_L6 = _L6;
-        acPrice_L7 = _L7;
+        // acPrice_L2 = _L2;
+        // acPrice_L3 = _L3;
+        // acPrice_L4 = _L4;
+        // acPrice_L5 = _L5;
+        // acPrice_L6 = _L6;
+        // acPrice_L7 = _L7;
         //^^^^^^^effects^^^^^^^^^
 
         emit REPORT("ACnode pricing Changed!"); //report access to internal parameter
@@ -185,7 +186,7 @@ contract AC_MGR is BASIC {
      * - the caller must have a balance of at least `amount`.
      */
     function purchaseACnode(
-        //--------------will fail in burn if insufficient tokens
+        //--------------will fail in burn / transfer if insufficient tokens
         string calldata _name,
         uint32 _assetClassRoot,
         uint8 _custodyType,
@@ -204,28 +205,37 @@ contract AC_MGR is BASIC {
         if (ACtokenIndex < 4294000000) ACtokenIndex++; //increment ACtokenIndex up to last one
 
         uint256 newACtokenPrice;
-        uint256 numberOfTokensSold = ACtokenIndex - uint256(1000000);
+        //uint256 numberOfTokensSold = ACtokenIndex - uint256(1000000);
+        address rootPaymentAddress = cost[AC_data[uint32(ACtokenIndex)].assetClassRoot][1].paymentAddress; //payment for upgrade goes to root AC payment adress specified for service (1)
 
-        if (numberOfTokensSold >= 4000) {
-            newACtokenPrice = acPrice_L7;
-        } else if (numberOfTokensSold >= 2000) {
-            newACtokenPrice = acPrice_L6;
-        } else if (numberOfTokensSold >= 1000) {
-            newACtokenPrice = acPrice_L5;
-        } else if (numberOfTokensSold >= 500) {
-            newACtokenPrice = acPrice_L4;
-        } else if (numberOfTokensSold >= 250) {
-            newACtokenPrice = acPrice_L3;
-        } else if (numberOfTokensSold >= 125) {
-            newACtokenPrice = acPrice_L2;
-        } else {
-            newACtokenPrice = acPrice_L1;
-        }
+        // if (numberOfTokensSold >= 4000) {
+        //     newACtokenPrice = acPrice_L7;
+        // } else if (numberOfTokensSold >= 2000) {
+        //     newACtokenPrice = acPrice_L6;
+        // } else if (numberOfTokensSold >= 1000) {
+        //     newACtokenPrice = acPrice_L5;
+        // } else if (numberOfTokensSold >= 500) {
+        //     newACtokenPrice = acPrice_L4;
+        // } else if (numberOfTokensSold >= 250) {
+        //     newACtokenPrice = acPrice_L3;
+        // } else if (numberOfTokensSold >= 125) {
+        //     newACtokenPrice = acPrice_L2;
+        // } else {
+        //     newACtokenPrice = acPrice_L1;
+        // }
+
+        newACtokenPrice = acPrice_L1;
         //^^^^^^^effects^^^^^^^^^
 
         //mint an asset class token to _msgSender(), at tokenID ACtokenIndex, with URI = root asset Class #
 
-        UTIL_TKN.trustedAgentBurn(_msgSender(), currentACtokenPrice);
+        UTIL_TKN.trustedAgentBurn(_msgSender(), currentACtokenPrice / 2);
+            UTIL_TKN.trustedAgentTransfer(
+                _msgSender(),
+                rootPaymentAddress,
+                currentACtokenPrice - (currentACtokenPrice / 2)
+            );
+
         currentACtokenPrice = newACtokenPrice;
 
         _createAssetClass(
@@ -352,75 +362,75 @@ contract AC_MGR is BASIC {
         //^^^^^^^effects^^^^^^^^^
     }
 
-    /**
-     * @dev Increase payment share of an asset class
-     *
-     * Requirements:
-     * - `recipient` cannot be the zero address.
-     * - the caller must have a balance of at least `amount`.
-     */
-    function increaseShare(uint32 _assetClass, uint256 _amount)
-        external
-        whenNotPaused
-        nonReentrant
-        isACtokenHolderOfClass(_assetClass)
-        returns (uint32)
-    {
-        require(
-            AC_data[_assetClass].discount < upperLimit,
-            "ACM:IS:price share already maxed out"
-        );
+    // /**
+    //  * @dev Increase payment share of an asset class
+    //  *
+    //  * Requirements:
+    //  * - `recipient` cannot be the zero address.
+    //  * - the caller must have a balance of at least `amount`.
+    //  */
+    // function increaseShare(uint32 _assetClass, uint256 _amount)
+    //     external
+    //     whenNotPaused
+    //     nonReentrant
+    //     isACtokenHolderOfClass(_assetClass)
+    //     returns (uint32)
+    // {
+    //     require(
+    //         AC_data[_assetClass].discount < upperLimit,
+    //         "ACM:IS:price share already maxed out"
+    //     );
 
-        require(
-            _amount > prufPerShare,
-            "ACM:IS:amount too low to increase price share"
-        );
+    //     require(
+    //         _amount > prufPerShare,
+    //         "ACM:IS:amount too low to increase price share"
+    //     );
 
-        //^^^^^^^checks^^^^^^^^^
-        address rootPaymentAddress =
-            cost[AC_data[_assetClass].assetClassRoot][1].paymentAddress; //payment for upgrade goes to root AC payment adress specified for service (1)
+    //     //^^^^^^^checks^^^^^^^^^
+    //     address rootPaymentAddress =
+    //         cost[AC_data[_assetClass].assetClassRoot][1].paymentAddress; //payment for upgrade goes to root AC payment adress specified for service (1)
 
-        uint256 oldShare = uint256(AC_data[_assetClass].discount);
-        uint256 maxShareIncrease = (upperLimit - oldShare); //max payment percentage never goes over upperLimit%
-        uint256 sharesToBuy = _amount / prufPerShare;
-        if (sharesToBuy > maxShareIncrease) {
-            sharesToBuy = maxShareIncrease;
-        }
+    //     uint256 oldShare = uint256(AC_data[_assetClass].discount);
+    //     uint256 maxShareIncrease = (upperLimit - oldShare); //max payment percentage never goes over upperLimit%
+    //     uint256 sharesToBuy = _amount / prufPerShare;
+    //     if (sharesToBuy > maxShareIncrease) {
+    //         sharesToBuy = maxShareIncrease;
+    //     }
 
-        uint256 upgradeCost = sharesToBuy * prufPerShare; //multiplies and adds 18d
+    //     uint256 upgradeCost = sharesToBuy * prufPerShare; //multiplies and adds 18d
 
-        //^^^^^^^effects^^^^^^^^^
+    //     //^^^^^^^effects^^^^^^^^^
 
-        increasePriceShare(_assetClass, sharesToBuy);
+    //     increasePriceShare(_assetClass, sharesToBuy);
 
-        UTIL_TKN.trustedAgentTransfer(
-            _msgSender(),
-            rootPaymentAddress,
-            upgradeCost
-        );
-        return AC_data[_assetClass].discount;
-        //^^^^^^^interactions^^^^^^^^^
-    }
+    //     UTIL_TKN.trustedAgentTransfer(
+    //         _msgSender(),
+    //         rootPaymentAddress,
+    //         upgradeCost
+    //     );
+    //     return AC_data[_assetClass].discount;
+    //     //^^^^^^^interactions^^^^^^^^^
+    // }
 
-    /*
-     * @dev Increases priceShare in an assetClass
-     *
-     */
-    function increasePriceShare(uint32 _assetClass, uint256 _increaseAmount)
-        private
-        whenNotPaused
-    {
-        uint256 discount = AC_data[_assetClass].discount;
-        require(discount < upperLimit, "PRuf:IPS:price share already max"); //-----------This is to throw if priceShare is already >= upperLimit, otherwise will be reverted to upperLimit
+    // /*
+    //  * @dev Increases priceShare in an assetClass
+    //  *
+    //  */
+    // function increasePriceShare(uint32 _assetClass, uint256 _increaseAmount)
+    //     private
+    //     whenNotPaused
+    // {
+    //     uint256 discount = AC_data[_assetClass].discount;
+    //     require(discount < upperLimit, "PRuf:IPS:price share already max"); //-----------This is to throw if priceShare is already >= upperLimit, otherwise will be reverted to upperLimit
 
-        //^^^^^^^checks^^^^^^^^^
+    //     //^^^^^^^checks^^^^^^^^^
 
-        discount = discount + _increaseAmount;
-        if (discount > upperLimit) discount = upperLimit;
+    //     discount = discount + _increaseAmount;
+    //     if (discount > upperLimit) discount = upperLimit;
 
-        AC_data[_assetClass].discount = uint32(discount); //type conversion safe because discount always <= upperLimit
-        //^^^^^^^effects^^^^^^^^^
-    }
+    //     AC_data[_assetClass].discount = uint32(discount); //type conversion safe because discount always <= upperLimit
+    //     //^^^^^^^effects^^^^^^^^^
+    // }
 
     /*
      * @dev Transfers a name from one asset class to another
@@ -628,12 +638,12 @@ contract AC_MGR is BASIC {
         external
         view
         returns (
-            uint256,
-            uint256,
-            uint256,
-            uint256,
-            uint256,
-            uint256,
+            // uint256,
+            // uint256,
+            // uint256,
+            // uint256,
+            // uint256,
+            // uint256,
             uint256,
             uint256,
             uint256
@@ -641,17 +651,17 @@ contract AC_MGR is BASIC {
     {
         //^^^^^^^checks^^^^^^^^^
 
-        uint256 numberOfTokensSold = ACtokenIndex - uint256(1000000);
+        //uint256 numberOfTokensSold = ACtokenIndex - uint256(1000000);
         return (
-            numberOfTokensSold,
+            ACtokenIndex,
             currentACtokenPrice,
-            acPrice_L1,
-            acPrice_L2,
-            acPrice_L3,
-            acPrice_L4,
-            acPrice_L5,
-            acPrice_L6,
-            acPrice_L7
+            acPrice_L1
+            // acPrice_L2,
+            // acPrice_L3,
+            // acPrice_L4,
+            // acPrice_L5,
+            // acPrice_L6,
+            // acPrice_L7
         );
         //^^^^^^^effects/interactions^^^^^^^^^
     }
