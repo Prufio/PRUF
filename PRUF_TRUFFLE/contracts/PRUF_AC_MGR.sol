@@ -186,7 +186,7 @@ contract AC_MGR is BASIC {
      * Requirements:
      * - the caller must have a balance of at least `amount`.
      */
-    function purchaseACnode(
+    function purchaseACnode( //--------DBS TEST ---- NEW feature: _magement type
         //--------------will fail in burn / transfer if insufficient tokens
         string calldata _name,
         uint32 _assetClassRoot,
@@ -263,7 +263,7 @@ contract AC_MGR is BASIC {
      *  that ACtoken does not exist
      *  _discount 10000 = 100 percent price share , cannot exceed
      */
-    function createAssetClass(
+    function createAssetClass(    //--------DBS TEST ---- NEW feature: _magement type
         address _recipientAddress,
         string calldata _name,
         uint32 _assetClass,
@@ -519,7 +519,7 @@ contract AC_MGR is BASIC {
             (_ac.custodyType == 3) || (_assetClassRoot == _assetClass),
             "ACM:CAC:Root asset class does not exist"
         );
-        require( //holds root token if root is restricted
+        require( //holds root token if root is restricted --------DBS TEST ---- NEW
             (AC_TKN.ownerOf(_assetClassRoot) == _msgSender()) ||
                 (AC_data[_assetClassRoot].managmentType == 0),
             "ACM:CAC:Restricted from creating AC's in this root - does not hold root token"
@@ -668,7 +668,7 @@ contract AC_MGR is BASIC {
     /*
      * @dev return current AC token index pointer
      */
-    function currentACpricingInfo()
+    function currentACpricingInfo() //--------DBS TEST ---- NEW
         external
         view
         returns (
