@@ -482,6 +482,10 @@ contract AC_MGR is BASIC {
             _newDiscount >= AC_data[_assetClass].discount,
             "ACM:AIS: new share less than old share"
         );
+        require(
+            _newDiscount <= 10000,
+            "ACM:AIS: discount cannot exceed 100% (10000)"
+        );
 
         //^^^^^^^checks^^^^^^^^^
 
