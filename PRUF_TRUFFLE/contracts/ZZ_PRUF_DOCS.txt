@@ -27,9 +27,6 @@ pragma solidity ^0.6.7;
  *TESTNET TO DO :
  *
  *
- *      *
- *
- *      *
  *
  *
 - ----------------------------------------------------------------
@@ -244,7 +241,7 @@ pragma solidity ^0.6.7;
 - -----------------------------------------------------------------
 
 *-----------------------------------------------------------------
- * ASSET CLASS Types: AC_data.custodyType (AC_manager)
+ * ASSET CLASS Custody Types: AC_data.custodyType (AC_manager)
  * 0   --NONE
  * 1   --Custodial
  * 2   --Non-Custodial
@@ -257,11 +254,18 @@ pragma solidity ^0.6.7;
  * 12  -- Free Non-Custodial (no contract yet made, must ovveride createRecord in core to allow custody type 12)
 - -----------------------------------------------------------------
 
+*-----------------------------------------------------------------
+ * ASSET CLASS Managment Types: AC_data.managmentType (AC_manager)
+ * 0   -- Unrestricted (IDtoken required)
+ * 1   -- Restricted (Only ACNode can create, export or import prohibited)
+ * 2   -- Less Restricted (Only ACNode can create, import prohibited)
+- -----------------------------------------------------------------
+
 /*-----------------------------------------------------------------
  * ---------------- Authorized User Types, per AC -----------------
  *-----------------------------------------------------------------
  * 
- * -----------------  AC0 stores an count on the number of AC's a gicen addressHash is registered in
+ * -----------------  AC0 stores a count on the number of AC's a given addressHash is registered in
  * 0 = NO AUTHORIZATIONS
  * 1 - 4 = Standard User types
  * 1 - all priveleges
