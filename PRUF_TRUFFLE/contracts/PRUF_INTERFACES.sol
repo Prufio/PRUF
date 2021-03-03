@@ -88,9 +88,10 @@ struct Costs {
 
 struct Invoice {
     //invoice struct to facilitate payment messaging in-contract
+    uint32 assetClass;
     address rootAddress;
-    uint256 rootPrice;
     address ACTHaddress;
+    uint256 rootPrice;
     uint256 ACTHprice;
 }
 

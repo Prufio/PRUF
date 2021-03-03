@@ -191,21 +191,6 @@ contract CORE is BASIC {
         UTIL_TKN.payForService(_msgSender(), pricing);
     }
 
-    // Old version for legacy UTIL_TKN ----- LEGACY
-    // function deductPayment(Invoice memory pricing)
-    //     internal
-    //     virtual
-    //     whenNotPaused
-    // {
-    //     UTIL_TKN.payForService(
-    //         _msgSender(),
-    //         pricing.rootAddress,
-    //         pricing.rootPrice,
-    //         pricing.ACTHaddress,
-    //         pricing.ACTHprice
-    //     );
-    // }
-
     //----------------------------------------------------------------------STATUS CHECKS
 
     /*
