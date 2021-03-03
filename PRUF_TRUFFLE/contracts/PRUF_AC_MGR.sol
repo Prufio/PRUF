@@ -82,7 +82,7 @@ contract AC_MGR is BASIC {
 
     constructor() {
         _setupRole(NODE_MINTER_ROLE, _msgSender());
-        AC_number[""] = 4294967295; //points the blank string name to AC 4294967295
+        AC_number[""] = 4294967295; //points the blank string name to AC 4294967295 to make "" owned
     }
 
     /*
@@ -460,6 +460,32 @@ contract AC_MGR is BASIC {
         AC_number[_name] = _assetClass_dest;
         AC_data[_assetClass_dest].name = _name;
         AC_data[_assetClass_source].name = "";
+        //^^^^^^^effects^^^^^^^^^
+    }
+
+    /*
+     * @dev Tincreases (but cannot decrease) price share for a given AC
+     * !! to be used with great caution
+     * This breaks decentralization and must eventually be given over to some kind of governance contract.
+     */
+    function adminIncreaseShare(
+        //---------------------------------------DPS TEST-----NEW
+        uint32 _assetClass,
+        uint32 _newDiscount
+    ) external isAdmin whenNotPaused nonReentrant {
+
+        require(
+            (AC_data[_assetClass].assetClassRoot != 0),
+            "ACM:AIS: AC not in use"
+        );
+        require(
+            _newDiscount >= AC_data[_assetClass].discount,
+            "ACM:AIS: new share less than old share"
+        );
+
+        //^^^^^^^checks^^^^^^^^^
+
+        AC_data[_assetClass].discount = _newDiscount;
         //^^^^^^^effects^^^^^^^^^
     }
 
