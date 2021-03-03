@@ -273,7 +273,6 @@ contract Helper2 is Ownable, BASIC {
         returns (
             uint8,
             uint8,
-            uint8,
             address,
             bytes32
         )
@@ -283,7 +282,6 @@ contract Helper2 is Ownable, BASIC {
         (
             asset_data.byte1,
             asset_data.byte2,
-            asset_data.byte3,
             asset_data.referenceAddress,
             asset_data.IPFS
         ) = AC_MGR.getExtAC_data_nostruct(_assetClass);
@@ -291,7 +289,6 @@ contract Helper2 is Ownable, BASIC {
         return (
             asset_data.byte1,
             asset_data.byte2,
-            asset_data.byte3,
             asset_data.referenceAddress,
             asset_data.IPFS
         );

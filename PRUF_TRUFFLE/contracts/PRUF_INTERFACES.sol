@@ -38,9 +38,9 @@ struct AC {
     uint32 assetClassRoot; // asset type root (bycyles - USA Bicycles)
     uint8 custodyType; // custodial or noncustodial, special asset types
     uint32 discount; // price sharing
+    uint8 managmentType; // type of management for asset creation, import, export
     uint8 byte1; // Future Use
     uint8 byte2; // Future Use
-    uint8 byte3; // Future Use
     address referenceAddress; // Used with wrap / decorate
     bytes32 IPFS; //IPFS data for defining idxHash creation attribute fields
 }
@@ -1001,7 +1001,8 @@ interface AC_MGR_Interface {
             uint32,
             uint8,
             uint32,
-            address
+            address,
+            uint8
         );
 
     /* CAN'T RETURN A STRUCT WITH A STRING WITHOUT WIERDNESS-0.8.1
@@ -1019,7 +1020,6 @@ interface AC_MGR_Interface {
         external
         view
         returns (
-            uint8,
             uint8,
             uint8,
             address,
@@ -1066,12 +1066,12 @@ interface AC_MGR_Interface {
     function currentACpricingInfo()
         external
         returns (
-            uint256,
-            uint256,
-            uint256,
-            uint256,
-            uint256,
-            uint256,
+            // uint256,
+            // uint256,
+            // uint256,
+            // uint256,
+            // uint256,
+            // uint256,
             uint256,
             uint256,
             uint256

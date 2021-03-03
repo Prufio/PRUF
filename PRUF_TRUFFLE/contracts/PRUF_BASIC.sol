@@ -289,7 +289,8 @@ abstract contract BASIC is
             AC_info.assetClassRoot,
             AC_info.custodyType,
             AC_info.discount,
-            AC_info.referenceAddress
+            AC_info.referenceAddress,
+            AC_info.managmentType
         ) = AC_MGR.getAC_data(_assetClass);
         return AC_info;
         //^^^^^^^interactions^^^^^^^^^

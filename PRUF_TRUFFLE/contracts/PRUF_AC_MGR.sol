@@ -190,7 +190,7 @@ contract AC_MGR is BASIC {
         string calldata _name,
         uint32 _assetClassRoot,
         uint8 _custodyType,
-        bytes32 _IPFS
+        uint8 _managmentType
     ) external whenNotPaused nonReentrant returns (uint256) {
         require( //Impossible to test??
             ACtokenIndex < 4294000000,
@@ -244,7 +244,7 @@ contract AC_MGR is BASIC {
             uint32(ACtokenIndex), //safe because ACtokenIndex <  4294000000 required
             _assetClassRoot,
             _custodyType,
-            _IPFS,
+            _managmentType,
             startingDiscount
         );
 
@@ -266,7 +266,7 @@ contract AC_MGR is BASIC {
         uint32 _assetClass,
         uint32 _assetClassRoot,
         uint8 _custodyType,
-        bytes32 _IPFS,
+        uint8 _managmentType,
         uint32 _discount
     ) external isNodeMinter whenNotPaused nonReentrant {
         //^^^^^^^checks^^^^^^^^^
@@ -276,7 +276,7 @@ contract AC_MGR is BASIC {
             _assetClass,
             _assetClassRoot,
             _custodyType,
-            _IPFS,
+            _managmentType,
             _discount
         );
         //^^^^^^^effects^^^^^^^^^
@@ -332,18 +332,16 @@ contract AC_MGR is BASIC {
      *  caller holds ACtoken
      */
     function updateACreferenceAddress(
-        address _extData,
+        address _refAddress,
         uint8 _byte1,
         uint8 _byte2,
-        uint8 _byte3,
         uint32 _assetClass
     ) external isACtokenHolderOfClass(_assetClass) whenNotPaused {
         //^^^^^^^checks^^^^^^^^^
 
         AC_data[_assetClass].byte1 = _byte1;
         AC_data[_assetClass].byte2 = _byte2;
-        AC_data[_assetClass].byte3 = _byte3;
-        AC_data[_assetClass].referenceAddress = _extData;
+        AC_data[_assetClass].referenceAddress = _refAddress;
         //^^^^^^^effects^^^^^^^^^
     }
 
@@ -500,7 +498,7 @@ contract AC_MGR is BASIC {
         uint32 _assetClass,
         uint32 _assetClassRoot,
         uint8 _custodyType,
-        bytes32 _IPFS,
+        uint8 _managmentType,
         uint32 _discount
     ) private whenNotPaused {
         AC memory _ac = AC_data[_assetClassRoot];
@@ -528,7 +526,7 @@ contract AC_MGR is BASIC {
         AC_data[_assetClass].assetClassRoot = _assetClassRoot;
         AC_data[_assetClass].discount = _discount;
         AC_data[_assetClass].custodyType = _custodyType;
-        AC_data[_assetClass].IPFS = _IPFS;
+        AC_data[_assetClass].managmentType = _managmentType;
         //^^^^^^^effects^^^^^^^^^
 
         AC_TKN.mintACToken(
@@ -563,7 +561,8 @@ contract AC_MGR is BASIC {
             uint32,
             uint8,
             uint32,
-            address
+            address,
+            uint8
         )
     {
         //^^^^^^^checks^^^^^^^^^
@@ -571,7 +570,8 @@ contract AC_MGR is BASIC {
             AC_data[_assetClass].assetClassRoot,
             AC_data[_assetClass].custodyType,
             AC_data[_assetClass].discount,
-            AC_data[_assetClass].referenceAddress
+            AC_data[_assetClass].referenceAddress,
+            AC_data[_assetClass].managmentType
         );
         //^^^^^^^interactions^^^^^^^^^
     }
@@ -598,7 +598,6 @@ contract AC_MGR is BASIC {
         returns (
             uint8,
             uint8,
-            uint8,
             address,
             bytes32
         )
@@ -607,7 +606,6 @@ contract AC_MGR is BASIC {
         return (
             AC_data[_assetClass].byte1,
             AC_data[_assetClass].byte2,
-            AC_data[_assetClass].byte3,
             AC_data[_assetClass].referenceAddress,
             AC_data[_assetClass].IPFS
         );
