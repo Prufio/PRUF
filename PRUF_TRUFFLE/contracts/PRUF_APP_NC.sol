@@ -92,11 +92,17 @@ contract APP_NC is CORE {
         isAuthorized(_idxHash)
     {
         Record memory rec = getRecord(_idxHash);
+        AC memory AC_info = getACinfo(_newAssetClass);
 
         require(rec.assetStatus == 70, "ANC:IA: Asset not exported");
         require(
             AC_MGR.isSameRootAC(_newAssetClass, rec.assetClass) == 170,
             "ANC:IA:Cannot change AC to new root"
+        );
+        require( //holds AC token if AC is restricted --------DBS TEST ---- NEW
+                (AC_TKN.ownerOf(_newAssetClass) == _msgSender()) ||
+                (AC_info.managmentType == 0),
+            "ANC:IA:Restricted from importing assets into this AC - does not hold ACtoken"
         );
         //^^^^^^^checks^^^^^^^^^
 
