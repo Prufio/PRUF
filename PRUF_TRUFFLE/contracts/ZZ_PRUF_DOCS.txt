@@ -40,6 +40,7 @@ pragma solidity ^0.6.7;
  * ACNode option to lock mintability, exportability, importability to ACNODE holder
  * IDtoken links to IPFS,has trust level
  * staking, 2% to stskers, 3% to root_address
+ * make creating ACnodes in locked mintability ACRoots admin only (no purchase)
  * 
  * 
  *      * make an auction escrow contract
