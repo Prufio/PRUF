@@ -153,10 +153,10 @@ contract CORE_MAL is BASIC {
      * @dev Deducts payment from transaction
      */
     function deductPayment(Invoice memory pricing) internal whenNotPaused {
-        UTIL_TKN.payForService(
-            _msgSender(),
-            pricing
-        );
+        if (pricing.ACTHaddress == address(0)) {
+            pricing.ACTHaddress = pricing.rootAddress;
+        }
+        UTIL_TKN.payForService(_msgSender(), pricing);
     }
 
     //--------------------------------------------------------------------------------------status test internal functions

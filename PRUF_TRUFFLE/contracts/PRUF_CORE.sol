@@ -188,6 +188,13 @@ contract CORE is BASIC {
         virtual
         whenNotPaused
     {
+        require(
+            pricing.rootAddress != address(0),
+            "PC:DP: root payment adress is zero address"
+        );
+        if (pricing.ACTHaddress == address(0)) {
+            pricing.ACTHaddress = pricing.rootAddress;
+        }
         UTIL_TKN.payForService(_msgSender(), pricing);
     }
 
