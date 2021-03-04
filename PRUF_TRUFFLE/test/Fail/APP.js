@@ -1236,592 +1236,592 @@ contract('APP', accounts => {
     })
 
 
-    // it("Should set costs in minted AC's", async () => {
-
-    //     console.log("Setting costs in AC 1")
-
-    //     return AC_MGR.ACTH_setCosts(
-    //         "1",
-    //         "1",
-    //         "10000000000000000",
-    //         account1,
-    //         { from: account1 })
-
-
-    //         .then(() => {
-    //             return AC_MGR.ACTH_setCosts(
-    //                 "1",
-    //                 "2",
-    //                 "10000000000000000",
-    //                 account1,
-    //                 { from: account1 })
-    //         })
-
-    //         .then(() => {
-    //             return AC_MGR.ACTH_setCosts(
-    //                 "1",
-    //                 "3",
-    //                 "10000000000000000",
-    //                 account1,
-    //                 { from: account1 })
-    //         })
-
-    //         .then(() => {
-    //             return AC_MGR.ACTH_setCosts(
-    //                 "1",
-    //                 "4",
-    //                 "10000000000000000",
-    //                 account1,
-    //                 { from: account1 })
-    //         })
-
-    //         .then(() => {
-    //             return AC_MGR.ACTH_setCosts(
-    //                 "1",
-    //                 "5",
-    //                 "10000000000000000",
-    //                 account1,
-    //                 { from: account1 })
-    //         })
-
-    //         .then(() => {
-    //             return AC_MGR.ACTH_setCosts(
-    //                 "1",
-    //                 "6",
-    //                 "10000000000000000",
-    //                 account1,
-    //                 { from: account1 })
-    //         })
-
-    //         .then(() => {
-    //             return AC_MGR.ACTH_setCosts(
-    //                 "1",
-    //                 "7",
-    //                 "10000000000000000",
-    //                 account1,
-    //                 { from: account1 })
-    //         })
-
-    //         .then(() => {
-    //             return AC_MGR.ACTH_setCosts(
-    //                 "1",
-    //                 "8",
-    //                 "10000000000000000",
-    //                 account1,
-    //                 { from: account1 })
-    //         })
-
-    //         .then(() => {
-    //             console.log("Setting base costs in AC 2")
-    //             return AC_MGR.ACTH_setCosts(
-    //                 "2",
-    //                 "1",
-    //                 "10000000000000000",
-    //                 account1,
-    //                 { from: account1 })
-    //         })
-
-    //         .then(() => {
-    //             return AC_MGR.ACTH_setCosts(
-    //                 "2",
-    //                 "2",
-    //                 "10000000000000000",
-    //                 account1,
-    //                 { from: account1 })
-    //         })
-
-    //         .then(() => {
-    //             return AC_MGR.ACTH_setCosts(
-    //                 "2",
-    //                 "3",
-    //                 "10000000000000000",
-    //                 account1,
-    //                 { from: account1 })
-    //         })
-
-    //         .then(() => {
-    //             return AC_MGR.ACTH_setCosts(
-    //                 "2",
-    //                 "4",
-    //                 "10000000000000000",
-    //                 account1,
-    //                 { from: account1 })
-    //         })
-
-    //         .then(() => {
-    //             return AC_MGR.ACTH_setCosts(
-    //                 "2",
-    //                 "5",
-    //                 "10000000000000000",
-    //                 account1,
-    //                 { from: account1 })
-    //         })
-
-    //         .then(() => {
-    //             return AC_MGR.ACTH_setCosts(
-    //                 "2",
-    //                 "6",
-    //                 "10000000000000000",
-    //                 account1,
-    //                 { from: account1 })
-    //         })
-
-    //         .then(() => {
-    //             return AC_MGR.ACTH_setCosts(
-    //                 "2",
-    //                 "7",
-    //                 "10000000000000000",
-    //                 account1,
-    //                 { from: account1 })
-    //         })
-
-    //         .then(() => {
-    //             return AC_MGR.ACTH_setCosts(
-    //                 "2",
-    //                 "8",
-    //                 "10000000000000000",
-    //                 account1,
-    //                 { from: account1 })
-    //         })
-
-    //         .then(() => {
-    //             console.log("Setting base costs in AC 10")
-    //             return AC_MGR.ACTH_setCosts(
-    //                 "10",
-    //                 "1",
-    //                 "10000000000000000",
-    //                 account1,
-    //                 { from: account1 })
-    //         })
-
-    //         .then(() => {
-    //             return AC_MGR.ACTH_setCosts(
-    //                 "10",
-    //                 "2",
-    //                 "10000000000000000",
-    //                 account1,
-    //                 { from: account1 })
-    //         })
-
-    //         .then(() => {
-    //             return AC_MGR.ACTH_setCosts(
-    //                 "10",
-    //                 "3",
-    //                 "10000000000000000",
-    //                 account1,
-    //                 { from: account1 })
-    //         })
-
-    //         .then(() => {
-    //             return AC_MGR.ACTH_setCosts(
-    //                 "10",
-    //                 "4",
-    //                 "10000000000000000",
-    //                 account1,
-    //                 { from: account1 })
-    //         })
-
-    //         .then(() => {
-    //             return AC_MGR.ACTH_setCosts(
-    //                 "10",
-    //                 "5",
-    //                 "10000000000000000",
-    //                 account1,
-    //                 { from: account1 })
-    //         })
-
-    //         .then(() => {
-    //             return AC_MGR.ACTH_setCosts(
-    //                 "10",
-    //                 "6",
-    //                 "10000000000000000",
-    //                 account1,
-    //                 { from: account1 })
-    //         })
-
-    //         .then(() => {
-    //             return AC_MGR.ACTH_setCosts(
-    //                 "10",
-    //                 "7",
-    //                 "10000000000000000",
-    //                 account1,
-    //                 { from: account1 })
-    //         })
-
-    //         .then(() => {
-    //             return AC_MGR.ACTH_setCosts(
-    //                 "10",
-    //                 "8",
-    //                 "10000000000000000",
-    //                 account1,
-    //                 { from: account1 })
-    //         })
-
-    //         .then(() => {
-    //             console.log("Setting base costs in AC 11")
-    //             return AC_MGR.ACTH_setCosts(
-    //                 "11",
-    //                 "1",
-    //                 "10000000000000000",
-    //                 account1,
-    //                 { from: account1 })
-    //         })
-
-    //         .then(() => {
-    //             return AC_MGR.ACTH_setCosts(
-    //                 "11",
-    //                 "2",
-    //                 "10000000000000000",
-    //                 account1,
-    //                 { from: account1 })
-    //         })
-
-    //         .then(() => {
-    //             return AC_MGR.ACTH_setCosts(
-    //                 "11",
-    //                 "3",
-    //                 "10000000000000000",
-    //                 account1,
-    //                 { from: account1 })
-    //         })
-
-    //         .then(() => {
-    //             return AC_MGR.ACTH_setCosts(
-    //                 "11",
-    //                 "4",
-    //                 "10000000000000000",
-    //                 account1,
-    //                 { from: account1 })
-    //         })
-
-    //         .then(() => {
-    //             return AC_MGR.ACTH_setCosts(
-    //                 "11",
-    //                 "5",
-    //                 "10000000000000000",
-    //                 account1,
-    //                 { from: account1 })
-    //         })
-
-    //         .then(() => {
-    //             return AC_MGR.ACTH_setCosts(
-    //                 "11",
-    //                 "6",
-    //                 "10000000000000000",
-    //                 account1,
-    //                 { from: account1 })
-    //         })
-
-    //         .then(() => {
-    //             return AC_MGR.ACTH_setCosts(
-    //                 "11",
-    //                 "7",
-    //                 "10000000000000000",
-    //                 account1,
-    //                 { from: account1 })
-    //         })
-
-    //         .then(() => {
-    //             return AC_MGR.ACTH_setCosts(
-    //                 "11",
-    //                 "8",
-    //                 "10000000000000000",
-    //                 account1,
-    //                 { from: account1 })
-    //         })
-
-    //         .then(() => {
-    //             console.log("Setting base costs in AC 12")
-    //             return AC_MGR.ACTH_setCosts(
-    //                 "12",
-    //                 "1",
-    //                 "10000000000000000",
-    //                 account1,
-    //                 { from: account1 })
-    //         })
-
-    //         .then(() => {
-    //             return AC_MGR.ACTH_setCosts(
-    //                 "12",
-    //                 "2",
-    //                 "10000000000000000",
-    //                 account1,
-    //                 { from: account1 })
-    //         })
-
-    //         .then(() => {
-    //             return AC_MGR.ACTH_setCosts(
-    //                 "12",
-    //                 "3",
-    //                 "10000000000000000",
-    //                 account1,
-    //                 { from: account1 })
-    //         })
-
-    //         .then(() => {
-    //             return AC_MGR.ACTH_setCosts(
-    //                 "12",
-    //                 "4",
-    //                 "10000000000000000",
-    //                 account1,
-    //                 { from: account1 })
-    //         })
-
-    //         .then(() => {
-    //             return AC_MGR.ACTH_setCosts(
-    //                 "12",
-    //                 "5",
-    //                 "10000000000000000",
-    //                 account1,
-    //                 { from: account1 })
-    //         })
-
-    //         .then(() => {
-    //             return AC_MGR.ACTH_setCosts(
-    //                 "12",
-    //                 "6",
-    //                 "10000000000000000",
-    //                 account1,
-    //                 { from: account1 })
-    //         })
-
-    //         .then(() => {
-    //             return AC_MGR.ACTH_setCosts(
-    //                 "12",
-    //                 "7",
-    //                 "10000000000000000",
-    //                 account1,
-    //                 { from: account1 })
-    //         })
-
-    //         .then(() => {
-    //             return AC_MGR.ACTH_setCosts(
-    //                 "12",
-    //                 "8",
-    //                 "10000000000000000",
-    //                 account1,
-    //                 { from: account1 })
-    //         })
-
-    //         .then(() => {
-    //             console.log("Setting base costs in AC 13")
-    //             return AC_MGR.ACTH_setCosts(
-    //                 "13",
-    //                 "1",
-    //                 "10000000000000000",
-    //                 account1,
-    //                 { from: account1 })
-    //         })
-
-    //         .then(() => {
-    //             return AC_MGR.ACTH_setCosts(
-    //                 "13",
-    //                 "2",
-    //                 "10000000000000000",
-    //                 account1,
-    //                 { from: account1 })
-    //         })
-
-    //         .then(() => {
-    //             return AC_MGR.ACTH_setCosts(
-    //                 "13",
-    //                 "3",
-    //                 "10000000000000000",
-    //                 account1,
-    //                 { from: account1 })
-    //         })
-
-    //         .then(() => {
-    //             return AC_MGR.ACTH_setCosts(
-    //                 "13",
-    //                 "4",
-    //                 "10000000000000000",
-    //                 account1,
-    //                 { from: account1 })
-    //         })
-
-    //         .then(() => {
-    //             return AC_MGR.ACTH_setCosts(
-    //                 "13",
-    //                 "5",
-    //                 "10000000000000000",
-    //                 account1,
-    //                 { from: account1 })
-    //         })
-
-    //         .then(() => {
-    //             return AC_MGR.ACTH_setCosts(
-    //                 "13",
-    //                 "6",
-    //                 "10000000000000000",
-    //                 account1,
-    //                 { from: account1 })
-    //         })
-
-    //         .then(() => {
-    //             return AC_MGR.ACTH_setCosts(
-    //                 "13",
-    //                 "7",
-    //                 "10000000000000000",
-    //                 account1,
-    //                 { from: account1 })
-    //         })
-
-    //         .then(() => {
-    //             return AC_MGR.ACTH_setCosts(
-    //                 "13",
-    //                 "8",
-    //                 "10000000000000000",
-    //                 account1,
-    //                 { from: account1 })
-    //         })
-
-    //         .then(() => {
-    //             console.log("Setting base costs in AC 14")
-    //             return AC_MGR.ACTH_setCosts(
-    //                 "14",
-    //                 "1",
-    //                 "10000000000000000",
-    //                 account1,
-    //                 { from: account1 })
-    //         })
-
-    //         .then(() => {
-    //             return AC_MGR.ACTH_setCosts(
-    //                 "14",
-    //                 "2",
-    //                 "10000000000000000",
-    //                 account1,
-    //                 { from: account1 })
-    //         })
-
-    //         .then(() => {
-    //             return AC_MGR.ACTH_setCosts(
-    //                 "14",
-    //                 "3",
-    //                 "10000000000000000",
-    //                 account1,
-    //                 { from: account1 })
-    //         })
-
-    //         .then(() => {
-    //             return AC_MGR.ACTH_setCosts(
-    //                 "14",
-    //                 "4",
-    //                 "10000000000000000",
-    //                 account1,
-    //                 { from: account1 })
-    //         })
-
-    //         .then(() => {
-    //             return AC_MGR.ACTH_setCosts(
-    //                 "14",
-    //                 "5",
-    //                 "10000000000000000",
-    //                 account1,
-    //                 { from: account1 })
-    //         })
-
-    //         .then(() => {
-    //             return AC_MGR.ACTH_setCosts(
-    //                 "14",
-    //                 "6",
-    //                 "10000000000000000",
-    //                 account1,
-    //                 { from: account1 })
-    //         })
-
-    //         .then(() => {
-    //             return AC_MGR.ACTH_setCosts(
-    //                 "14",
-    //                 "7",
-    //                 "10000000000000000",
-    //                 account1,
-    //                 { from: account1 })
-    //         })
-
-    //         .then(() => {
-    //             return AC_MGR.ACTH_setCosts(
-    //                 "14",
-    //                 "8",
-    //                 "10000000000000000",
-    //                 account1,
-    //                 { from: account1 })
-    //         })
-
-    //         .then(() => {
-    //             console.log("Setting base costs in AC 15")
-    //             return AC_MGR.ACTH_setCosts(
-    //                 "15",
-    //                 "1",
-    //                 "10000000000000000",
-    //                 account1,
-    //                 { from: account10 })
-    //         })
-
-    //         .then(() => {
-    //             return AC_MGR.ACTH_setCosts(
-    //                 "15",
-    //                 "2",
-    //                 "10000000000000000",
-    //                 account1,
-    //                 { from: account10 })
-    //         })
-
-    //         .then(() => {
-    //             return AC_MGR.ACTH_setCosts(
-    //                 "15",
-    //                 "3",
-    //                 "10000000000000000",
-    //                 account1,
-    //                 { from: account10 })
-    //         })
-
-    //         .then(() => {
-    //             return AC_MGR.ACTH_setCosts(
-    //                 "15",
-    //                 "4",
-    //                 "10000000000000000",
-    //                 account1,
-    //                 { from: account10 })
-    //         })
-
-    //         .then(() => {
-    //             return AC_MGR.ACTH_setCosts(
-    //                 "15",
-    //                 "5",
-    //                 "10000000000000000",
-    //                 account1,
-    //                 { from: account10 })
-    //         })
-
-    //         .then(() => {
-    //             return AC_MGR.ACTH_setCosts(
-    //                 "15",
-    //                 "6",
-    //                 "10000000000000000",
-    //                 account1,
-    //                 { from: account10 })
-    //         })
-
-    //         .then(() => {
-    //             return AC_MGR.ACTH_setCosts(
-    //                 "15",
-    //                 "7",
-    //                 "10000000000000000",
-    //                 account1,
-    //                 { from: account10 })
-    //         })
-
-    //         .then(() => {
-    //             return AC_MGR.ACTH_setCosts(
-    //                 "15",
-    //                 "8",
-    //                 "10000000000000000",
-    //                 account1,
-    //                 { from: account10 })
-    //         })
-    // })
+    it("Should set costs in minted AC's", async () => {
+
+        console.log("Setting costs in AC 1")
+
+        return AC_MGR.ACTH_setCosts(
+            "1",
+            "1",
+            "10000000000000000",
+            account1,
+            { from: account1 })
+
+
+            .then(() => {
+                return AC_MGR.ACTH_setCosts(
+                    "1",
+                    "2",
+                    "10000000000000000",
+                    account1,
+                    { from: account1 })
+            })
+
+            .then(() => {
+                return AC_MGR.ACTH_setCosts(
+                    "1",
+                    "3",
+                    "10000000000000000",
+                    account1,
+                    { from: account1 })
+            })
+
+            .then(() => {
+                return AC_MGR.ACTH_setCosts(
+                    "1",
+                    "4",
+                    "10000000000000000",
+                    account1,
+                    { from: account1 })
+            })
+
+            .then(() => {
+                return AC_MGR.ACTH_setCosts(
+                    "1",
+                    "5",
+                    "10000000000000000",
+                    account1,
+                    { from: account1 })
+            })
+
+            .then(() => {
+                return AC_MGR.ACTH_setCosts(
+                    "1",
+                    "6",
+                    "10000000000000000",
+                    account1,
+                    { from: account1 })
+            })
+
+            .then(() => {
+                return AC_MGR.ACTH_setCosts(
+                    "1",
+                    "7",
+                    "10000000000000000",
+                    account1,
+                    { from: account1 })
+            })
+
+            .then(() => {
+                return AC_MGR.ACTH_setCosts(
+                    "1",
+                    "8",
+                    "10000000000000000",
+                    account1,
+                    { from: account1 })
+            })
+
+            .then(() => {
+                console.log("Setting base costs in AC 2")
+                return AC_MGR.ACTH_setCosts(
+                    "2",
+                    "1",
+                    "10000000000000000",
+                    account1,
+                    { from: account1 })
+            })
+
+            .then(() => {
+                return AC_MGR.ACTH_setCosts(
+                    "2",
+                    "2",
+                    "10000000000000000",
+                    account1,
+                    { from: account1 })
+            })
+
+            .then(() => {
+                return AC_MGR.ACTH_setCosts(
+                    "2",
+                    "3",
+                    "10000000000000000",
+                    account1,
+                    { from: account1 })
+            })
+
+            .then(() => {
+                return AC_MGR.ACTH_setCosts(
+                    "2",
+                    "4",
+                    "10000000000000000",
+                    account1,
+                    { from: account1 })
+            })
+
+            .then(() => {
+                return AC_MGR.ACTH_setCosts(
+                    "2",
+                    "5",
+                    "10000000000000000",
+                    account1,
+                    { from: account1 })
+            })
+
+            .then(() => {
+                return AC_MGR.ACTH_setCosts(
+                    "2",
+                    "6",
+                    "10000000000000000",
+                    account1,
+                    { from: account1 })
+            })
+
+            .then(() => {
+                return AC_MGR.ACTH_setCosts(
+                    "2",
+                    "7",
+                    "10000000000000000",
+                    account1,
+                    { from: account1 })
+            })
+
+            .then(() => {
+                return AC_MGR.ACTH_setCosts(
+                    "2",
+                    "8",
+                    "10000000000000000",
+                    account1,
+                    { from: account1 })
+            })
+
+            .then(() => {
+                console.log("Setting base costs in AC 10")
+                return AC_MGR.ACTH_setCosts(
+                    "10",
+                    "1",
+                    "10000000000000000",
+                    account1,
+                    { from: account1 })
+            })
+
+            .then(() => {
+                return AC_MGR.ACTH_setCosts(
+                    "10",
+                    "2",
+                    "10000000000000000",
+                    account1,
+                    { from: account1 })
+            })
+
+            .then(() => {
+                return AC_MGR.ACTH_setCosts(
+                    "10",
+                    "3",
+                    "10000000000000000",
+                    account1,
+                    { from: account1 })
+            })
+
+            .then(() => {
+                return AC_MGR.ACTH_setCosts(
+                    "10",
+                    "4",
+                    "10000000000000000",
+                    account1,
+                    { from: account1 })
+            })
+
+            .then(() => {
+                return AC_MGR.ACTH_setCosts(
+                    "10",
+                    "5",
+                    "10000000000000000",
+                    account1,
+                    { from: account1 })
+            })
+
+            .then(() => {
+                return AC_MGR.ACTH_setCosts(
+                    "10",
+                    "6",
+                    "10000000000000000",
+                    account1,
+                    { from: account1 })
+            })
+
+            .then(() => {
+                return AC_MGR.ACTH_setCosts(
+                    "10",
+                    "7",
+                    "10000000000000000",
+                    account1,
+                    { from: account1 })
+            })
+
+            .then(() => {
+                return AC_MGR.ACTH_setCosts(
+                    "10",
+                    "8",
+                    "10000000000000000",
+                    account1,
+                    { from: account1 })
+            })
+
+            .then(() => {
+                console.log("Setting base costs in AC 11")
+                return AC_MGR.ACTH_setCosts(
+                    "11",
+                    "1",
+                    "10000000000000000",
+                    account1,
+                    { from: account1 })
+            })
+
+            .then(() => {
+                return AC_MGR.ACTH_setCosts(
+                    "11",
+                    "2",
+                    "10000000000000000",
+                    account1,
+                    { from: account1 })
+            })
+
+            .then(() => {
+                return AC_MGR.ACTH_setCosts(
+                    "11",
+                    "3",
+                    "10000000000000000",
+                    account1,
+                    { from: account1 })
+            })
+
+            .then(() => {
+                return AC_MGR.ACTH_setCosts(
+                    "11",
+                    "4",
+                    "10000000000000000",
+                    account1,
+                    { from: account1 })
+            })
+
+            .then(() => {
+                return AC_MGR.ACTH_setCosts(
+                    "11",
+                    "5",
+                    "10000000000000000",
+                    account1,
+                    { from: account1 })
+            })
+
+            .then(() => {
+                return AC_MGR.ACTH_setCosts(
+                    "11",
+                    "6",
+                    "10000000000000000",
+                    account1,
+                    { from: account1 })
+            })
+
+            .then(() => {
+                return AC_MGR.ACTH_setCosts(
+                    "11",
+                    "7",
+                    "10000000000000000",
+                    account1,
+                    { from: account1 })
+            })
+
+            .then(() => {
+                return AC_MGR.ACTH_setCosts(
+                    "11",
+                    "8",
+                    "10000000000000000",
+                    account1,
+                    { from: account1 })
+            })
+
+            .then(() => {
+                console.log("Setting base costs in AC 12")
+                return AC_MGR.ACTH_setCosts(
+                    "12",
+                    "1",
+                    "10000000000000000",
+                    account1,
+                    { from: account1 })
+            })
+
+            .then(() => {
+                return AC_MGR.ACTH_setCosts(
+                    "12",
+                    "2",
+                    "10000000000000000",
+                    account1,
+                    { from: account1 })
+            })
+
+            .then(() => {
+                return AC_MGR.ACTH_setCosts(
+                    "12",
+                    "3",
+                    "10000000000000000",
+                    account1,
+                    { from: account1 })
+            })
+
+            .then(() => {
+                return AC_MGR.ACTH_setCosts(
+                    "12",
+                    "4",
+                    "10000000000000000",
+                    account1,
+                    { from: account1 })
+            })
+
+            .then(() => {
+                return AC_MGR.ACTH_setCosts(
+                    "12",
+                    "5",
+                    "10000000000000000",
+                    account1,
+                    { from: account1 })
+            })
+
+            .then(() => {
+                return AC_MGR.ACTH_setCosts(
+                    "12",
+                    "6",
+                    "10000000000000000",
+                    account1,
+                    { from: account1 })
+            })
+
+            .then(() => {
+                return AC_MGR.ACTH_setCosts(
+                    "12",
+                    "7",
+                    "10000000000000000",
+                    account1,
+                    { from: account1 })
+            })
+
+            .then(() => {
+                return AC_MGR.ACTH_setCosts(
+                    "12",
+                    "8",
+                    "10000000000000000",
+                    account1,
+                    { from: account1 })
+            })
+
+            .then(() => {
+                console.log("Setting base costs in AC 13")
+                return AC_MGR.ACTH_setCosts(
+                    "13",
+                    "1",
+                    "10000000000000000",
+                    account1,
+                    { from: account1 })
+            })
+
+            .then(() => {
+                return AC_MGR.ACTH_setCosts(
+                    "13",
+                    "2",
+                    "10000000000000000",
+                    account1,
+                    { from: account1 })
+            })
+
+            .then(() => {
+                return AC_MGR.ACTH_setCosts(
+                    "13",
+                    "3",
+                    "10000000000000000",
+                    account1,
+                    { from: account1 })
+            })
+
+            .then(() => {
+                return AC_MGR.ACTH_setCosts(
+                    "13",
+                    "4",
+                    "10000000000000000",
+                    account1,
+                    { from: account1 })
+            })
+
+            .then(() => {
+                return AC_MGR.ACTH_setCosts(
+                    "13",
+                    "5",
+                    "10000000000000000",
+                    account1,
+                    { from: account1 })
+            })
+
+            .then(() => {
+                return AC_MGR.ACTH_setCosts(
+                    "13",
+                    "6",
+                    "10000000000000000",
+                    account1,
+                    { from: account1 })
+            })
+
+            .then(() => {
+                return AC_MGR.ACTH_setCosts(
+                    "13",
+                    "7",
+                    "10000000000000000",
+                    account1,
+                    { from: account1 })
+            })
+
+            .then(() => {
+                return AC_MGR.ACTH_setCosts(
+                    "13",
+                    "8",
+                    "10000000000000000",
+                    account1,
+                    { from: account1 })
+            })
+
+            .then(() => {
+                console.log("Setting base costs in AC 14")
+                return AC_MGR.ACTH_setCosts(
+                    "14",
+                    "1",
+                    "10000000000000000",
+                    account1,
+                    { from: account1 })
+            })
+
+            .then(() => {
+                return AC_MGR.ACTH_setCosts(
+                    "14",
+                    "2",
+                    "10000000000000000",
+                    account1,
+                    { from: account1 })
+            })
+
+            .then(() => {
+                return AC_MGR.ACTH_setCosts(
+                    "14",
+                    "3",
+                    "10000000000000000",
+                    account1,
+                    { from: account1 })
+            })
+
+            .then(() => {
+                return AC_MGR.ACTH_setCosts(
+                    "14",
+                    "4",
+                    "10000000000000000",
+                    account1,
+                    { from: account1 })
+            })
+
+            .then(() => {
+                return AC_MGR.ACTH_setCosts(
+                    "14",
+                    "5",
+                    "10000000000000000",
+                    account1,
+                    { from: account1 })
+            })
+
+            .then(() => {
+                return AC_MGR.ACTH_setCosts(
+                    "14",
+                    "6",
+                    "10000000000000000",
+                    account1,
+                    { from: account1 })
+            })
+
+            .then(() => {
+                return AC_MGR.ACTH_setCosts(
+                    "14",
+                    "7",
+                    "10000000000000000",
+                    account1,
+                    { from: account1 })
+            })
+
+            .then(() => {
+                return AC_MGR.ACTH_setCosts(
+                    "14",
+                    "8",
+                    "10000000000000000",
+                    account1,
+                    { from: account1 })
+            })
+
+            .then(() => {
+                console.log("Setting base costs in AC 15")
+                return AC_MGR.ACTH_setCosts(
+                    "15",
+                    "1",
+                    "10000000000000000",
+                    account1,
+                    { from: account10 })
+            })
+
+            .then(() => {
+                return AC_MGR.ACTH_setCosts(
+                    "15",
+                    "2",
+                    "10000000000000000",
+                    account1,
+                    { from: account10 })
+            })
+
+            .then(() => {
+                return AC_MGR.ACTH_setCosts(
+                    "15",
+                    "3",
+                    "10000000000000000",
+                    account1,
+                    { from: account10 })
+            })
+
+            .then(() => {
+                return AC_MGR.ACTH_setCosts(
+                    "15",
+                    "4",
+                    "10000000000000000",
+                    account1,
+                    { from: account10 })
+            })
+
+            .then(() => {
+                return AC_MGR.ACTH_setCosts(
+                    "15",
+                    "5",
+                    "10000000000000000",
+                    account1,
+                    { from: account10 })
+            })
+
+            .then(() => {
+                return AC_MGR.ACTH_setCosts(
+                    "15",
+                    "6",
+                    "10000000000000000",
+                    account1,
+                    { from: account10 })
+            })
+
+            .then(() => {
+                return AC_MGR.ACTH_setCosts(
+                    "15",
+                    "7",
+                    "10000000000000000",
+                    account1,
+                    { from: account10 })
+            })
+
+            .then(() => {
+                return AC_MGR.ACTH_setCosts(
+                    "15",
+                    "8",
+                    "10000000000000000",
+                    account1,
+                    { from: account10 })
+            })
+    })
 
 
     it('Should add users to AC 10-14 in AC_Manager', async () => {
