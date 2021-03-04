@@ -40,7 +40,7 @@ contract PURCHASE is CORE {
      * @dev Purchse an item in transferrable status with price and currency set to pruf
      */
     function purchaseWithPRUF(
-        bytes32 _idxHash //CTS:EXAMINE NO CHECK TO SEE IF PRICE IS SET?  CTS:OK because zero cost transactions
+        bytes32 _idxHash // CTS:OK because zero cost transactions
     ) external whenNotPaused //isAuthorized(_idxHash) //purchaser is not holder
     {
         Record memory rec = getRecord(_idxHash);
@@ -92,7 +92,7 @@ contract PURCHASE is CORE {
         require(
             (rec.assetStatus > 49) || (_setForSale != 170),
             "E:SP Asset Status < 50"
-        ); //CTS:EXAMINE Status < 50 not reachable with current contract structure, caller must hold token.
+        ); // Status < 50 not reachable with current contract structure, caller must hold token.
         require(isEscrow(rec.assetStatus) == 0, "E:SP Record is in escrow");
 
         require(
