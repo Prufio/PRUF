@@ -188,12 +188,21 @@ contract CORE is BASIC {
 
     /*
      * @dev Deducts payment from transaction -- NON_LEGACY
+     * sets ACTHaddress to rootAddress if ACTHaddress is not set
      */
     function deductPayment(Invoice memory pricing)
         internal
         virtual
         whenNotPaused
     {
+        require(
+            pricing.rootAddress != address(0),
+            "PC:DP: root payment adress is zero address"
+        );
+        if (pricing.ACTHaddress == address(0)) {
+            pricing.ACTHaddress = pricing.rootAddress;
+        }
+
         UTIL_TKN.payForService(_msgSender(), pricing);
     }
 
