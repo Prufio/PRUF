@@ -27,18 +27,9 @@ pragma solidity ^0.8.0;
 import "./PRUF_CORE.sol";
 import "./Imports/token/ERC721/IERC721.sol";
 
-contract DECORATE is
+contract DECORATE is //DPS:TEST WHAT COMMENTS?
     CORE //CTS:EXAMINE COMMENTS NEED UPDATING
 {
-    // modifier isAuthorized(bytes32 _idxHash) override {
-    //     //require that user is authorized and token is held by contract
-    //     uint256 tokenId = uint256(_idxHash);
-    //     require(
-    //         (A_TKN.ownerOf(tokenId) == address(this)),
-    //         "A:MOD-IA: EXTEND contract does not hold token"
-    //     );
-    //     _;
-    // }
 
     modifier isTokenHolder(uint256 _tokenID, address _tokenContract) {
         //require that user holds token @ ID-Contract
@@ -132,7 +123,7 @@ contract DECORATE is
             needsImport(_newAssetStatus) == 0,
             "D:MS: Cannot place asset in unregistered, exported, or discarded status using modStatus"
         );
-        require( //CTS:EXAMINE, REDUNDANT, UNREACHABLE WITH CURRENT CONTRACTS. WOULD REQUIRE ROOT CLASSES TO BE CUSTODY TYPE 5
+        require( //CTS:UNREACHABLE WITH CURRENT CONTRACTS. WOULD REQUIRE ROOT CLASSES TO BE CUSTODY TYPE 5
             needsImport(rec.assetStatus) == 0,
             "D:MS: Record in unregistered, exported, or discarded status"
         );
@@ -173,7 +164,7 @@ contract DECORATE is
             "D:SP:Asset class extended data must be '0' or ERC721 contract address"
         );
 
-        require( //CTS:EXAMINE, REDUNDANT, UNREACHABLE WITH CURRENT CONTRACTS. WOULD REQUIRE ROOT CLASSES TO BE CUSTODY TYPE 5
+        require( //UNREACHABLE WITH CURRENT CONTRACTS. WOULD REQUIRE ROOT CLASSES TO BE CUSTODY TYPE 5
             needsImport(rec.assetStatus) == 0,
             "D:SP: Record in unregistered, exported, or discarded status"
         );
@@ -206,7 +197,7 @@ contract DECORATE is
             "D:CP:Asset class extended data must be '0' or ERC721 contract address"
         );
 
-        require( //CTS:EXAMINE, REDUNDANT, UNREACHABLE WITH CURRENT CONTRACTS. WOULD REQUIRE ROOT CLASSES TO BE CUSTODY TYPE 5
+        require( //CTS:UNREACHABLE WITH CURRENT CONTRACTS. WOULD REQUIRE ROOT CLASSES TO BE CUSTODY TYPE 5
             needsImport(rec.assetStatus) == 0,
             "D:CP: Record in unregistered, exported, or discarded status"
         );
@@ -243,7 +234,7 @@ contract DECORATE is
             "D:DC:Asset class extended data must be '0' or ERC721 contract address"
         );
 
-        require( //CTS:EXAMINE, REDUNDANT, UNREACHABLE WITH CURRENT CONTRACTS. WOULD REQUIRE ROOT CLASSES TO BE CUSTODY TYPE 5
+        require( //CTS:UNREACHABLE WITH CURRENT CONTRACTS. WOULD REQUIRE ROOT CLASSES TO BE CUSTODY TYPE 5
             needsImport(rec.assetStatus) == 0,
             "D:DC: Record in unregistered, exported, or discarded status"
         );
@@ -288,7 +279,7 @@ contract DECORATE is
             "D:MI1:Asset class extended data must be '0' or ERC721 contract address"
         );
 
-        require( //CTS:EXAMINE, REDUNDANT, UNREACHABLE WITH CURRENT CONTRACTS. WOULD REQUIRE ROOT CLASSES TO BE CUSTODY TYPE 5
+        require( //CTS:UNREACHABLE WITH CURRENT CONTRACTS. WOULD REQUIRE ROOT CLASSES TO BE CUSTODY TYPE 5
             needsImport(rec.assetStatus) == 0,
             "D:MI1: Record in unregistered, exported, or discarded status"
         );
@@ -440,12 +431,12 @@ contract DECORATE is
         uint256 tokenId = uint256(_idxHash);
         AC memory AC_info = getACinfo(_assetClass);
 
-        require( //CTS:EXAMINE REDUNDANT: THROWS IN ONLY FUNCTION THAT CALLS createRecordOnly
+        require( //CTS:PREFERRED: THROWS IN ONLY FUNCTION THAT CALLS createRecordOnly
             A_TKN.tokenExists(tokenId) == 0,
             "D:CRO: token is already wrapped. Must discard wrapper before decorating"
         );
 
-        require( //CTS:EXAMINE REDUNDANT: THROWS IN ONLY FUNCTION THAT CALLS createRecordOnly
+        require( //CTS:PREFERRED: THROWS IN ONLY FUNCTION THAT CALLS createRecordOnly
             AC_info.custodyType == 5,
             "D:CRO:Asset class.custodyType must be 5 (wrapped/decorated erc721)"
         );
