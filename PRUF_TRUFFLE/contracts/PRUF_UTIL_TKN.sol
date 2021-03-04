@@ -232,7 +232,7 @@ contract UTIL_TKN is
     function payForService(
         address _senderAddress,
         Invoice calldata invoice
-    ) external isPayable { //CTS:EXAMINE unreachable with current contracts
+    ) external isPayable { //PREFERRED unreachable with current contracts
         require(
             coldWallet[_senderAddress] == 0,
             "PRuF:PFS: Cold Wallet - Trusted payable functions prohibited"
