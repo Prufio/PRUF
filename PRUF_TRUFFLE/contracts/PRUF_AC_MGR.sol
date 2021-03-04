@@ -129,26 +129,11 @@ contract AC_MGR is BASIC {
     /*
      * @dev Set pricing
      */
-    function OO_SetACpricing(uint256 _L1)
-        external
-        // ,
-        // uint256 _L2,
-        // uint256 _L3,
-        // uint256 _L4,
-        // uint256 _L5,
-        // uint256 _L6,
-        // uint256 _L7
-        isAdmin
-    {
+    function OO_SetACpricing(uint256 _L1) external isAdmin {
         //^^^^^^^checks^^^^^^^^^
 
         acPrice_L1 = _L1;
-        // acPrice_L2 = _L2;
-        // acPrice_L3 = _L3;
-        // acPrice_L4 = _L4;
-        // acPrice_L5 = _L5;
-        // acPrice_L6 = _L6;
-        // acPrice_L7 = _L7;
+
         //^^^^^^^effects^^^^^^^^^
 
         emit REPORT("ACnode pricing Changed!"); //report access to internal parameter
@@ -186,7 +171,8 @@ contract AC_MGR is BASIC {
      * Requirements:
      * - the caller must have a balance of at least `amount`.
      */
-    function purchaseACnode( //--------DBS TEST ---- NEW feature: _magement type
+    function purchaseACnode(
+        //--------DBS TEST ---- NEW feature: _magement type
         //--------------will fail in burn / transfer if insufficient tokens
         string calldata _name,
         uint32 _assetClassRoot,
@@ -210,22 +196,6 @@ contract AC_MGR is BASIC {
         address rootPaymentAddress =
             cost[AC_data[uint32(ACtokenIndex)].assetClassRoot][1]
                 .paymentAddress; //payment for upgrade goes to root AC payment adress specified for service (1)
-
-        // if (numberOfTokensSold >= 4000) {
-        //     newACtokenPrice = acPrice_L7;
-        // } else if (numberOfTokensSold >= 2000) {
-        //     newACtokenPrice = acPrice_L6;
-        // } else if (numberOfTokensSold >= 1000) {
-        //     newACtokenPrice = acPrice_L5;
-        // } else if (numberOfTokensSold >= 500) {
-        //     newACtokenPrice = acPrice_L4;
-        // } else if (numberOfTokensSold >= 250) {
-        //     newACtokenPrice = acPrice_L3;
-        // } else if (numberOfTokensSold >= 125) {
-        //     newACtokenPrice = acPrice_L2;
-        // } else {
-        //     newACtokenPrice = acPrice_L1;
-        // }
 
         newACtokenPrice = acPrice_L1;
         //^^^^^^^effects^^^^^^^^^
@@ -263,7 +233,8 @@ contract AC_MGR is BASIC {
      *  that ACtoken does not exist
      *  _discount 10000 = 100 percent price share , cannot exceed
      */
-    function createAssetClass(    //--------DBS TEST ---- NEW feature: _magement type
+    function createAssetClass(
+        //--------DBS TEST ---- NEW feature: _magement type
         address _recipientAddress,
         string calldata _name,
         uint32 _assetClass,
@@ -335,10 +306,11 @@ contract AC_MGR is BASIC {
      *  caller holds ACtoken
      */
     function updateACreferenceAddress(
+        //DPS:CHECK -order of argumants has changed
+        uint32 _assetClass,
         address _refAddress,
         uint8 _byte1,
-        uint8 _byte2,
-        uint32 _assetClass
+        uint8 _byte2
     ) external isACtokenHolderOfClass(_assetClass) whenNotPaused {
         //^^^^^^^checks^^^^^^^^^
 
@@ -362,76 +334,6 @@ contract AC_MGR is BASIC {
         cost[_assetClass][_service].paymentAddress = _paymentAddress;
         //^^^^^^^effects^^^^^^^^^
     }
-
-    // /**
-    //  * @dev Increase payment share of an asset class
-    //  *
-    //  * Requirements:
-    //  * - `recipient` cannot be the zero address.
-    //  * - the caller must have a balance of at least `amount`.
-    //  */
-    // function increaseShare(uint32 _assetClass, uint256 _amount)
-    //     external
-    //     whenNotPaused
-    //     nonReentrant
-    //     isACtokenHolderOfClass(_assetClass)
-    //     returns (uint32)
-    // {
-    //     require(
-    //         AC_data[_assetClass].discount < upperLimit,
-    //         "ACM:IS:price share already maxed out"
-    //     );
-
-    //     require(
-    //         _amount > prufPerShare,
-    //         "ACM:IS:amount too low to increase price share"
-    //     );
-
-    //     //^^^^^^^checks^^^^^^^^^
-    //     address rootPaymentAddress =
-    //         cost[AC_data[_assetClass].assetClassRoot][1].paymentAddress; //payment for upgrade goes to root AC payment adress specified for service (1)
-
-    //     uint256 oldShare = uint256(AC_data[_assetClass].discount);
-    //     uint256 maxShareIncrease = (upperLimit - oldShare); //max payment percentage never goes over upperLimit%
-    //     uint256 sharesToBuy = _amount / prufPerShare;
-    //     if (sharesToBuy > maxShareIncrease) {
-    //         sharesToBuy = maxShareIncrease;
-    //     }
-
-    //     uint256 upgradeCost = sharesToBuy * prufPerShare; //multiplies and adds 18d
-
-    //     //^^^^^^^effects^^^^^^^^^
-
-    //     increasePriceShare(_assetClass, sharesToBuy);
-
-    //     UTIL_TKN.trustedAgentTransfer(
-    //         _msgSender(),
-    //         rootPaymentAddress,
-    //         upgradeCost
-    //     );
-    //     return AC_data[_assetClass].discount;
-    //     //^^^^^^^interactions^^^^^^^^^
-    // }
-
-    // /*
-    //  * @dev Increases priceShare in an assetClass
-    //  *
-    //  */
-    // function increasePriceShare(uint32 _assetClass, uint256 _increaseAmount)
-    //     private
-    //     whenNotPaused
-    // {
-    //     uint256 discount = AC_data[_assetClass].discount;
-    //     require(discount < upperLimit, "PRuf:IPS:price share already max"); //-----------This is to throw if priceShare is already >= upperLimit, otherwise will be reverted to upperLimit
-
-    //     //^^^^^^^checks^^^^^^^^^
-
-    //     discount = discount + _increaseAmount;
-    //     if (discount > upperLimit) discount = upperLimit;
-
-    //     AC_data[_assetClass].discount = uint32(discount); //type conversion safe because discount always <= upperLimit
-    //     //^^^^^^^effects^^^^^^^^^
-    // }
 
     /*
      * @dev Transfers a name from one asset class to another
@@ -668,16 +570,11 @@ contract AC_MGR is BASIC {
     /*
      * @dev return current AC token index pointer
      */
-    function currentACpricingInfo() //--------DBS TEST ---- NEW
+    function currentACpricingInfo()
         external
         view
         returns (
-            // uint256,
-            // uint256,
-            // uint256,
-            // uint256,
-            // uint256,
-            // uint256,
+            //--------DBS TEST ---- NEW
             uint256,
             uint256,
             uint256
@@ -690,12 +587,6 @@ contract AC_MGR is BASIC {
             ACtokenIndex,
             currentACtokenPrice,
             acPrice_L1
-            // acPrice_L2,
-            // acPrice_L3,
-            // acPrice_L4,
-            // acPrice_L5,
-            // acPrice_L6,
-            // acPrice_L7
         );
         //^^^^^^^effects/interactions^^^^^^^^^
     }
