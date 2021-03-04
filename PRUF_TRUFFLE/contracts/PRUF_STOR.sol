@@ -272,9 +272,9 @@ contract STOR is AccessControl, ReentrancyGuard, Pausable {
             database[_idxHash].assetStatus != 60,
             "S:NR:Asset discarded use APP_NC rcycl"
         );
-        require(database[_idxHash].assetClass == 0, "S:NR:Rec already exists"); //CTS:EXAMINE reduntant with current contracts, either throws for being discarded(1st req) or for the A_TKN already existing in CORE
+        require(database[_idxHash].assetClass == 0, "S:NR:Rec already exists"); //reduntant with current contracts, either throws for being discarded(1st req) or for the A_TKN already existing in CORE
         require(_rgtHash != 0, "S:NR:RGT = 0");
-        require(_assetClass != 0, "S:NR:AC = 0"); //CTS:EXAMINE redundant through isAuthorized mod
+        require(_assetClass != 0, "S:NR:AC = 0"); //redundant through isAuthorized mod
         //^^^^^^^checks^^^^^^^^^
 
         Record memory rec;
@@ -456,7 +456,7 @@ contract STOR is AccessControl, ReentrancyGuard, Pausable {
         nonReentrant
         whenNotPaused
         isEscrowManager //calling contract must be ECR_MGR
-        exists(_idxHash) //asset must exist in 'database'  //CTS:EXAMINE REDUNDANT THROWS IN ECR_MGR WITH "Asset not in escrow status"
+        exists(_idxHash) //asset must exist in 'database' REDUNDANT THROWS IN ECR_MGR WITH "Asset not in escrow status"
     {
         Record memory rec = database[_idxHash];
         require(isEscrow(rec.assetStatus) == 170, "S:EE:! ecr stat"); //asset must be in an escrow status  //CTS:EXAMINE REDUNDANT THROWS IN ECR_MGR WITH "Asset not in escrow status"
