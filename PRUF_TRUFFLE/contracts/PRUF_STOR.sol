@@ -249,35 +249,80 @@ contract STOR is AccessControl, ReentrancyGuard, Pausable {
     }
 
     /*
-     * @dev retrieve a record from the default list of 11 contracts to be applied to asset classes  
+     * @dev retrieve a record from the default list of 11 contracts to be applied to asset classes
      */
-    function getDefaultContract(
-        uint256 _contractNumber   
-    ) public view isAdmin returns (DefaultContract memory){
-        return (defaultContracts[_contractNumber]); 
+    function getDefaultContract(uint256 _contractNumber)
+        public
+        view
+        isAdmin
+        returns (DefaultContract memory)
+    {
+        return (defaultContracts[_contractNumber]);
     }
 
     /*
      * @dev ASet the default 11 authorized contracts
      */
-    function enableDefaultContractsForAC(
-        uint32 _assetClass
-    ) public {
+    function enableDefaultContractsForAC(uint32 _assetClass) public {
         require(
             AC_TKN.ownerOf(_assetClass) == _msgSender(),
             "S:EDCFAC:Caller not ACtokenHolder"
         );
-        enableContractForAC(defaultContracts[0].name, _assetClass,defaultContracts[0].contractType);
-        enableContractForAC(defaultContracts[1].name, _assetClass,defaultContracts[1].contractType);
-        enableContractForAC(defaultContracts[2].name, _assetClass,defaultContracts[2].contractType);
-        enableContractForAC(defaultContracts[3].name, _assetClass,defaultContracts[3].contractType);
-        enableContractForAC(defaultContracts[4].name, _assetClass,defaultContracts[4].contractType);
-        enableContractForAC(defaultContracts[5].name, _assetClass,defaultContracts[5].contractType);
-        enableContractForAC(defaultContracts[6].name, _assetClass,defaultContracts[6].contractType);
-        enableContractForAC(defaultContracts[7].name, _assetClass,defaultContracts[7].contractType);
-        enableContractForAC(defaultContracts[8].name, _assetClass,defaultContracts[8].contractType);
-        enableContractForAC(defaultContracts[9].name, _assetClass,defaultContracts[9].contractType);
-        enableContractForAC(defaultContracts[10].name, _assetClass,defaultContracts[10].contractType);
+        enableContractForAC(
+            defaultContracts[0].name,
+            _assetClass,
+            defaultContracts[0].contractType
+        );
+        enableContractForAC(
+            defaultContracts[1].name,
+            _assetClass,
+            defaultContracts[1].contractType
+        );
+        enableContractForAC(
+            defaultContracts[2].name,
+            _assetClass,
+            defaultContracts[2].contractType
+        );
+        enableContractForAC(
+            defaultContracts[3].name,
+            _assetClass,
+            defaultContracts[3].contractType
+        );
+        enableContractForAC(
+            defaultContracts[4].name,
+            _assetClass,
+            defaultContracts[4].contractType
+        );
+        enableContractForAC(
+            defaultContracts[5].name,
+            _assetClass,
+            defaultContracts[5].contractType
+        );
+        enableContractForAC(
+            defaultContracts[6].name,
+            _assetClass,
+            defaultContracts[6].contractType
+        );
+        enableContractForAC(
+            defaultContracts[7].name,
+            _assetClass,
+            defaultContracts[7].contractType
+        );
+        enableContractForAC(
+            defaultContracts[8].name,
+            _assetClass,
+            defaultContracts[8].contractType
+        );
+        enableContractForAC(
+            defaultContracts[9].name,
+            _assetClass,
+            defaultContracts[9].contractType
+        );
+        enableContractForAC(
+            defaultContracts[10].name,
+            _assetClass,
+            defaultContracts[10].contractType
+        );
     }
 
     /*
