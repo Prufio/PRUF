@@ -51,6 +51,12 @@ struct ContractDataHash {
     bytes32 nameHash; // Contract Name hashed
 }
 
+struct DefaultContract {
+    //Struct for holding and manipulating contract authorization data
+    uint8 contractType; // Auth Level / type
+    string name; // Contract name
+}
+
 struct escrowData {
     bytes32 controllingContractNameHash; //hash of the name of the controlling escrow contract
     bytes32 escrowOwnerAddressHash; //hash of an address designated as an executor for the escrow contract

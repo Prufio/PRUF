@@ -230,6 +230,97 @@ contract STOR is AccessControl, ReentrancyGuard, Pausable {
     }
 
     /*
+     * @dev set the default list of 11 contracts (zero index) to be applied to asset classes
+     * APP_NC, NP_NC, AC_MGR, AC_TKN, A_TkN, ECR_MGR, RCLR, PIP, PURCHASE, DECORATE, WRAP
+     */
+    function addDefaultContracts(
+        uint256 _contractNumber, // 0-10
+        string calldata _name, //name
+        uint8 _contractAuthLevel //authLevel
+    ) public isAdmin {
+        require(_contractNumber <= 10, "S:ADC: contract number > 10");
+        defaultContracts[_contractNumber].name = _name;
+        defaultContracts[_contractNumber].contractType = _contractAuthLevel;
+    }
+
+    /*
+     * @dev retrieve a record from the default list of 11 contracts to be applied to asset classes
+     */
+    function getDefaultContract(uint256 _contractNumber)
+        public
+        view
+        isAdmin
+        returns (DefaultContract memory)
+    {
+        return (defaultContracts[_contractNumber]);
+    }
+
+    /*
+     * @dev ASet the default 11 authorized contracts
+     */
+    function enableDefaultContractsForAC(uint32 _assetClass) public {
+        require(
+            AC_TKN.ownerOf(_assetClass) == _msgSender(),
+            "S:EDCFAC:Caller not ACtokenHolder"
+        );
+        enableContractForAC(
+            defaultContracts[0].name,
+            _assetClass,
+            defaultContracts[0].contractType
+        );
+        enableContractForAC(
+            defaultContracts[1].name,
+            _assetClass,
+            defaultContracts[1].contractType
+        );
+        enableContractForAC(
+            defaultContracts[2].name,
+            _assetClass,
+            defaultContracts[2].contractType
+        );
+        enableContractForAC(
+            defaultContracts[3].name,
+            _assetClass,
+            defaultContracts[3].contractType
+        );
+        enableContractForAC(
+            defaultContracts[4].name,
+            _assetClass,
+            defaultContracts[4].contractType
+        );
+        enableContractForAC(
+            defaultContracts[5].name,
+            _assetClass,
+            defaultContracts[5].contractType
+        );
+        enableContractForAC(
+            defaultContracts[6].name,
+            _assetClass,
+            defaultContracts[6].contractType
+        );
+        enableContractForAC(
+            defaultContracts[7].name,
+            _assetClass,
+            defaultContracts[7].contractType
+        );
+        enableContractForAC(
+            defaultContracts[8].name,
+            _assetClass,
+            defaultContracts[8].contractType
+        );
+        enableContractForAC(
+            defaultContracts[9].name,
+            _assetClass,
+            defaultContracts[9].contractType
+        );
+        enableContractForAC(
+            defaultContracts[10].name,
+            _assetClass,
+            defaultContracts[10].contractType
+        );
+    }
+
+    /*
      * @dev Authorize / Deauthorize / Authorize contract NAMES permitted to make record modifications, per AssetClass
      * allows ACtokenHolder to auithorize or deauthorize specific contracts to work within their asset class
      */
@@ -237,7 +328,7 @@ contract STOR is AccessControl, ReentrancyGuard, Pausable {
         string calldata _name,
         uint32 _assetClass,
         uint8 _contractAuthLevel
-    ) external {
+    ) public {
         require(
             AC_TKN.ownerOf(_assetClass) == _msgSender(),
             "S:ECFAC:Caller not ACtokenHolder"
