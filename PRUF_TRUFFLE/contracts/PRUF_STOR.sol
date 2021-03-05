@@ -49,7 +49,7 @@ contract STOR is AccessControl, ReentrancyGuard, Pausable {
     mapping(string => mapping(uint32 => uint8)) internal contractInfo; // name=>AC=>authorization level
     mapping(address => string) private contractAddressToName; // Authorized contract addresses, indexed by address, with auth level 0-255
     mapping(string => address) private contractNameToAddress; // Authorized contract addresses, indexed by name
-
+    mapping(uint256 => DefaultContract) private defaultContracts; //default contracts for AC creation
     mapping(bytes32 => Record) private database; // Main Data Storage
 
     address private AC_TKN_Address;
@@ -325,7 +325,7 @@ contract STOR is AccessControl, ReentrancyGuard, Pausable {
      * allows ACtokenHolder to auithorize or deauthorize specific contracts to work within their asset class
      */
     function enableContractForAC(
-        string calldata _name,
+        string memory _name,
         uint32 _assetClass,
         uint8 _contractAuthLevel
     ) public {
