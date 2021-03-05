@@ -36,24 +36,10 @@ contract AC_MGR is BASIC {
     bytes32 public constant B320xF_ =
         0xFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF;
 
-    // struct Costs {
-    //     uint256 serviceCost; // Cost in the given item category
-    //     address paymentAddress; // 2nd-party fee beneficiary address
-    // }
-
     uint256 private ACtokenIndex = 1000000; //Starting index for purchased ACnode tokens
-
     uint256 public acPrice_L1 = 200000 ether;
-    // uint256 public acPrice_L2 = 200000 ether;
-    // uint256 public acPrice_L3 = 200000 ether;
-    // uint256 public acPrice_L4 = 200000 ether;
-    // uint256 public acPrice_L5 = 200000 ether;
-    // uint256 public acPrice_L6 = 200000 ether;
-    // uint256 public acPrice_L7 = 200000 ether;
-
     uint256 private currentACtokenPrice = acPrice_L1;
-
-    mapping(uint32 => mapping(uint16 => Costs)) private cost; // Cost per function by asset class => Cost Type
+    uint32 private constant startingDiscount = 9500; // Purchased nodes start with 95% profit share
     /*
         Cost indexes
         1 newRecordCost; // Cost to create a new record
@@ -63,22 +49,10 @@ contract AC_MGR is BASIC {
         5 changeStatusCost; // Extra
         6 forceModifyCost; // Cost to brute-force a record transfer
     */
-
+    mapping(uint32 => mapping(uint16 => Costs)) private cost; // Cost per function by asset class => Cost Type
     mapping(uint32 => AC) private AC_data; // AC info database asset class to AC struct (NAME,ACroot,CUSTODIAL/NC,uint32)
     mapping(string => uint32) private AC_number; //name to asset class resolution map
-
     mapping(bytes32 => mapping(uint32 => uint8)) private registeredUsers; // Authorized recorder database by asset class, by address hash
-
-    uint256 private priceThreshold; //threshold of price where fractional pricing is implemented
-
-    // /* ----prufPerShare-----
-    //  * divisor to divide amount of pruf (18d) sent to determine the profit share.
-    //  * profit share of 1000 = 10% default u10 for .01% profit share = "1 share"
-    //  */
-    // uint256 public prufPerShare = 10000000000000000000;
-    // uint256 public upperLimit = 9500; // default max profit share = 95%
-
-    uint32 private constant startingDiscount = 9500; // Purchased nodes start with 95% profit share
 
     constructor() {
         _setupRole(NODE_MINTER_ROLE, _msgSender());
@@ -110,21 +84,6 @@ contract AC_MGR is BASIC {
     }
 
     //--------------------------------------------External Functions--------------------------
-    // /*
-    //  * @dev Set upgrade COST AND UPPER LIMIT----------------------DPB:TEST ---- NEW functionality
-    //  */
-    // function OO_SetACupgrade(uint256 _prufPerShare, uint256 _upperLimit)
-    //     external
-    //     isAdmin
-    // {
-    //     //^^^^^^^checks^^^^^^^^^
-    //     upperLimit = _upperLimit;
-    //     prufPerShare = _prufPerShare;
-    //     //^^^^^^^effects^^^^^^^^^
-
-    //     emit REPORT("ACnode Upgrade parameter(s) Changed!"); //report access to internal parameter
-    //     //^^^^^^^interactions^^^^^^^^^
-    // }
 
     /*
      * @dev Set pricing
@@ -192,7 +151,6 @@ contract AC_MGR is BASIC {
         if (ACtokenIndex < 4294000000) ACtokenIndex++; //increment ACtokenIndex up to last one
 
         uint256 newACtokenPrice;
-        //uint256 numberOfTokensSold = ACtokenIndex - uint256(1000000);
         address rootPaymentAddress =
             cost[AC_data[uint32(ACtokenIndex)].assetClassRoot][1]
                 .paymentAddress; //payment for upgrade goes to root AC payment adress specified for service (1)
@@ -583,11 +541,7 @@ contract AC_MGR is BASIC {
         //^^^^^^^checks^^^^^^^^^
 
         //uint256 numberOfTokensSold = ACtokenIndex - uint256(1000000);
-        return (
-            ACtokenIndex,
-            currentACtokenPrice,
-            acPrice_L1
-        );
+        return (ACtokenIndex, currentACtokenPrice, acPrice_L1);
         //^^^^^^^effects/interactions^^^^^^^^^
     }
 
