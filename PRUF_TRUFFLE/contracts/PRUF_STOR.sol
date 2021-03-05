@@ -228,6 +228,12 @@ contract STOR is AccessControl, ReentrancyGuard, Pausable {
         //^^^^^^^interactions^^^^^^^^^
     }
 
+    // struct DefaultContract {
+    // //Struct for holding and manipulating contract authorization data
+    // uint8 contractType; // Auth Level / type
+    // string name; // Contract name
+    // }
+
     /*
      * @dev set the default list of 11 contracts (zero index) to be applied to asset classes
      * APP_NC, NP_NC, AC_MGR, AC_TKN, A_TkN, ECR_MGR, RCLR, PIP, PURCHASE, DECORATE, WRAP
