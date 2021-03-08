@@ -256,7 +256,7 @@ contract STOR is AccessControl, ReentrancyGuard, Pausable {
     }
 
     /*
-     * @dev ASet the default 11 authorized contracts
+     * @dev ASet the default 11 authorized contracts CTS:EXAMINE, missing one contract
      */
     function enableDefaultContractsForAC(uint32 _assetClass) public {
         require(
