@@ -237,8 +237,8 @@ contract AC_MGR is BASIC {
             _IPFS,
             startingDiscount
         );
-        
-        if (_custodyType == 2) {
+
+        if (_custodyType == 2) {  //DPS:TEST -----------NEW
             STOR.enableDefaultContractsForAC(uint32(ACtokenIndex));
         }
 
