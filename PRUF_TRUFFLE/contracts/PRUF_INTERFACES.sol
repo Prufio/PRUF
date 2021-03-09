@@ -1116,6 +1116,11 @@ interface STOR_Interface {
     ) external;
 
     /*
+     * @dev ASet the default 11 authorized contracts
+     */
+    function enableDefaultContractsForAC(uint32 _assetClass) external;
+
+    /*
      * @dev Authorize / Deauthorize / Authorize contract NAMES permitted to make record modifications, per AssetClass
      * allows ACtokenHolder to auithorize or deauthorize specific contracts to work within their asset class
      */

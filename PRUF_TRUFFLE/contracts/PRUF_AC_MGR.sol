@@ -179,6 +179,8 @@ contract AC_MGR is BASIC {
             startingDiscount
         );
 
+        STOR.enableDefaultContractsForAC(uint32(ACtokenIndex)); //Set the default 11 authorized contracts
+
         return ACtokenIndex; //returns asset class # of minted token
         //^^^^^^^effects/interactions^^^^^^^^^
     }
