@@ -54,9 +54,8 @@ contract ID_TKN is
 {
     using Counters for Counters.Counter;
 
-    bytes32 public constant CONTRACT_ADMIN_ROLE = keccak256(
-        "CONTRACT_ADMIN_ROLE"
-    );
+    bytes32 public constant CONTRACT_ADMIN_ROLE =
+        keccak256("CONTRACT_ADMIN_ROLE");
     bytes32 public constant MINTER_ROLE = keccak256("MINTER_ROLE");
     bytes32 public constant PAUSER_ROLE = keccak256("PAUSER_ROLE");
 
@@ -94,18 +93,16 @@ contract ID_TKN is
     /*
      * @dev Mint new PRUF_ID token
      */
-    function mintPRUF_IDToken(address _recipientAddress, uint256 tokenId)
-        external
-        isMinter
-        nonReentrant
-        whenNotPaused
-        returns (uint256)
-    {
+    function mintPRUF_IDToken(
+        address _recipientAddress,
+        uint256 tokenId,
+        string calldata _URI
+    ) external isMinter nonReentrant whenNotPaused returns (uint256) {
         //^^^^^^^checks^^^^^^^^^
 
         //MAKE URI ASSET SPECIFIC- has to incorporate the token ID
         _safeMint(_recipientAddress, tokenId);
-        _setTokenURI(tokenId, "https://pruf.io/ID");
+        _setTokenURI(tokenId, _URI);
         return tokenId;
         //^^^^^^^interactions^^^^^^^^^
     }
