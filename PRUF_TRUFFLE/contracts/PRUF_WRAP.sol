@@ -185,6 +185,27 @@ contract WRAP is CORE {
             "W:CR:Cannot create asset - contract not authorized for asset class custody type"
         );
 
+        if ((AC_info.managmentType == 1) || (AC_info.managmentType == 2)) {// DPS:TEST---NEW
+            require( 
+                (AC_TKN.ownerOf(_assetClass) == _msgSender()),
+                "W:CR:Cannot create asset in AC mgmt type 1||2 - caller does not hold AC token"
+            );
+        }
+
+
+        if (AC_info.managmentType == 3) {  // DPS:TEST---NEW
+            require( 
+                AC_MGR.getUserType(keccak256(abi.encodePacked(_msgSender())), _assetClass) == 1,
+                "W:CR:Cannot create asset - caller address not authorized"
+            );
+        }
+
+        //requirePublicId(
+        //caller holds a public ID if management type is 4,
+        // "W:CR:Cannot create asset - caller does not hold Public ID"
+        //);
+
+
         A_TKN.mintAssetToken(_msgSender(), tokenId, "pruf.io");
         STOR.newRecord(_idxHash, _rgtHash, _assetClass, _countDownStart);
     }

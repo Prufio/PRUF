@@ -50,12 +50,32 @@ contract CORE is BASIC {
             AC_info.custodyType != 3,
             "C:CR:Cannot create asset in a root asset class"
         );
-        require( //holds AC token if AC is restricted --------DBS TEST ---- NEW
-            (AC_info.custodyType == 1) ||
-                (AC_TKN.ownerOf(_assetClass) == _msgSender()) ||
-                (AC_info.managmentType == 0),
-            "ACM:CAC:Restricted from creating assets in this AC - does not hold ACtoken"
-        );
+
+        if (AC_info.custodyType != 1) {
+            if ((AC_info.managmentType == 1) || (AC_info.managmentType == 2)) {
+                // DPS:TEST---NEW
+                require(
+                    (AC_TKN.ownerOf(_assetClass) == _msgSender()),
+                    "C:CR:Cannot create asset in AC mgmt type 1||2 - caller does not hold AC token"
+                );
+            }
+
+            if (AC_info.managmentType == 3) {
+                // DPS:TEST---NEW
+                require(
+                    AC_MGR.getUserType(
+                        keccak256(abi.encodePacked(_msgSender())),
+                        _assetClass
+                    ) == 1,
+                    "C:CR:Cannot create asset - caller address not authorized"
+                );
+            }
+
+            //requirePublicId(
+            //caller holds a public ID if management type is 4,
+            // "C:CR:Cannot create asset - caller does not hold Public ID"
+            //);
+        }
 
         require(
             (AC_info.custodyType == 1) ||

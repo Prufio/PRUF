@@ -99,11 +99,31 @@ contract APP_NC is CORE {
             AC_MGR.isSameRootAC(_newAssetClass, rec.assetClass) == 170,
             "ANC:IA:Cannot change AC to new root"
         );
-        require( //holds AC token if AC is restricted --------DBS TEST ---- NEW
-                (AC_TKN.ownerOf(_newAssetClass) == _msgSender()) ||
-                (AC_info.managmentType == 0),
-            "ANC:IA:Restricted from importing assets into this AC - does not hold ACtoken"
-        );
+
+        if ((AC_info.managmentType == 1) || (AC_info.managmentType == 2)) {
+            // DPS:TEST---NEW
+            require(
+                (AC_TKN.ownerOf(_newAssetClass) == _msgSender()),
+                "ANC:IA:Cannot create asset in AC mgmt type 1||2 - caller does not hold AC token"
+            );
+        }
+
+        if (AC_info.managmentType == 3) {
+            // DPS:TEST---NEW
+            require(
+                AC_MGR.getUserType(
+                    keccak256(abi.encodePacked(_msgSender())),
+                    _newAssetClass
+                ) == 1,
+                "ANC:IA:Cannot create asset - caller address not authorized"
+            );
+        }
+
+        //requirePublicId(
+        //caller holds a public ID if management type is 4,
+        // "ANC:IA:Cannot create asset - caller does not hold Public ID"
+        //);
+
         //^^^^^^^checks^^^^^^^^^
 
         rec.assetStatus = 52;
@@ -126,7 +146,7 @@ contract APP_NC is CORE {
         returns (bytes32)
     {
         Record memory rec = getRecord(_idxHash);
-        require(    //STATE UNREACHABLE
+        require( //STATE UNREACHABLE
             needsImport(rec.assetStatus) == 0,
             "ANC:I2:Record In Transferred, exported, or discarded status"
         );

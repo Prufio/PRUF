@@ -27,10 +27,10 @@ pragma solidity ^0.8.0;
 import "./PRUF_CORE.sol";
 import "./Imports/token/ERC721/IERC721.sol";
 
-contract DECORATE is //DPS:TEST WHAT COMMENTS?
+//DPS:TEST WHAT COMMENTS?
+contract DECORATE is
     CORE //CTS:EXAMINE COMMENTS NEED UPDATING
 {
-
     modifier isTokenHolder(uint256 _tokenID, address _tokenContract) {
         //require that user holds token @ ID-Contract
         require(
@@ -440,6 +440,30 @@ contract DECORATE is //DPS:TEST WHAT COMMENTS?
             AC_info.custodyType == 5,
             "D:CRO:Asset class.custodyType must be 5 (wrapped/decorated erc721)"
         );
+
+        if ((AC_info.managmentType == 1) || (AC_info.managmentType == 2)) {
+            // DPS:TEST---NEW
+            require(
+                (AC_TKN.ownerOf(_assetClass) == _msgSender()),
+                "D:CRO:Cannot create asset in AC mgmt type 1||2 - caller does not hold AC token"
+            );
+        }
+
+        if (AC_info.managmentType == 3) {
+            // DPS:TEST---NEW
+            require(
+                AC_MGR.getUserType(
+                    keccak256(abi.encodePacked(_msgSender())),
+                    _assetClass
+                ) == 1,
+                "D:CRO:Cannot create asset - caller address not authorized"
+            );
+        }
+
+        //requirePublicId(
+        //caller holds a public ID if management type is 4,
+        // "W:CR:Cannot create asset - caller does not hold Public ID"
+        //);
 
         STOR.newRecord(_idxHash, _rgtHash, _assetClass, _countDownStart);
     }
