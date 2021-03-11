@@ -119,11 +119,12 @@ contract APP_NC is CORE {
             );
         }
 
-        //requirePublicId(
-        //caller holds a public ID if management type is 4,
-        // "ANC:IA:Cannot create asset - caller does not hold Public ID"
-        //);
-
+        if (AC_info.managmentType == 4) {
+            require(
+                ID_TKN.trustedLevelByAddress(_msgSender()) > 10,
+                "D:CRO:Caller does not hold sufficiently trusted ID"
+            );
+        }
         //^^^^^^^checks^^^^^^^^^
 
         rec.assetStatus = 52;

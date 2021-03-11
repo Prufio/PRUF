@@ -460,10 +460,12 @@ contract DECORATE is
             );
         }
 
-        //requirePublicId(
-        //caller holds a public ID if management type is 4,
-        // "W:CR:Cannot create asset - caller does not hold Public ID"
-        //);
+        if (AC_info.managmentType == 4) {
+            require(
+                ID_TKN.trustedLevelByAddress(_msgSender()) > 10,
+                "D:CRO:Caller does not hold sufficiently trusted ID"
+            );
+        }
 
         STOR.newRecord(_idxHash, _rgtHash, _assetClass, _countDownStart);
     }
