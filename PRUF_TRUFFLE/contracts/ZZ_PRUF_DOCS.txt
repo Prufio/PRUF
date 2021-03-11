@@ -33,12 +33,12 @@ pragma solidity ^0.6.7;
 
 /*----------------------------------------------------------------
  *TO DO :
- * zero root costs when ACTHcosts are zero? (NOPE)
- * ACNode option to lock mintability, exportability, importability to ACNODE holder
+ * zero root costs when ACTHcosts are zero? (-NOPE-)
+ *
  * IDtoken links to IPFS,has trust level
  * staking, 2% to stskers, 3% to root_address
- * make creating ACnodes in locked mintability ACRoots admin only (no purchase)
- * 
+ *
+ *      * refactor all require(local condition || external condition) => if(local condition){require (external condition)}
  * 
  *      * make an auction escrow contract
  *
@@ -249,16 +249,21 @@ pragma solidity ^0.6.7;
  * 4   --Verify-Non-Custodial
  * 5   --Wrapped or decorated ERC721 - Asset class extended data must be set to:
  *              '0' for universal, token-contract-independant operation
- *              -or- uint160(ERC721 contract address) for token-contract-specific operation (like a sub-assetclass)
+ *              -or- uint160(ERC721 contract address) for token-contract-specific operation - use to filter for foreign contract address match
  * 11  -- Free Custodial (no contract yet made, must ovveride createRecord in core to allow custody type 11)
  * 12  -- Free Non-Custodial (no contract yet made, must ovveride createRecord in core to allow custody type 12)
 - -----------------------------------------------------------------
 
 *-----------------------------------------------------------------
  * ASSET CLASS Managment Types: AC_data.managmentType (AC_manager)
- * 0   -- Unrestricted (if root not zero, ACNodes cannot be created in the root w/o root token)
- * 1   -- Restricted (Only ACNode holder can create, export or import prohibited) 
- * 2   -- Less Restricted (Only ACNode holder can create, import prohibited)
+ *              normal ROOT ACs should be set to type 0 because non type-zero root 
+ *              classes will not permit public minting of ACs inside them
+ * 0   -- Unrestricted (if root not zero, ACNodes cannot be created in the root w/o root token 
+ *              IDtoken (or foreign token if wrapping / decorating) required to mint assets)
+ * 1   -- Restricted (Only ACNode holder can create, export or import prohibited - does not require IDtoken)
+ * 2   -- Less Restricted (Only ACNode holder can create, import prohibited - does not require IDtoken)
+ * 3   -- Authorized (caller address must be user authorized type 1 in AC)
+ * 4   -- Public (Requires PUBLIC ID requires ID# filled out in IDtoken Lookup for mint or import)
 - -----------------------------------------------------------------
 
 /*-----------------------------------------------------------------
