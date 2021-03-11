@@ -25,7 +25,6 @@ import "./Imports/utils/Counters.sol";
 import "./Imports/token/ERC721/ERC721.sol";
 import "./Imports/token/ERC721/ERC721Burnable.sol";
 import "./Imports/token/ERC721/ERC721Pausable.sol";
-//import "./Imports/access/Ownable.sol";
 import "./PRUF_INTERFACES.sol";
 import "./Imports/utils/ReentrancyGuard.sol";
 
@@ -58,6 +57,9 @@ contract ID_TKN is
         keccak256("CONTRACT_ADMIN_ROLE");
     bytes32 public constant MINTER_ROLE = keccak256("MINTER_ROLE");
     bytes32 public constant PAUSER_ROLE = keccak256("PAUSER_ROLE");
+
+    mapping(uint256 => ID) private id; // storage for extended ID data
+    mapping(bytes32 => uint256) private tokenIDforName; // storage for name resolution to token ID
 
     Counters.Counter private _tokenIdTracker;
 
@@ -95,16 +97,30 @@ contract ID_TKN is
      */
     function mintPRUF_IDToken(
         address _recipientAddress,
-        uint256 tokenId,
+        uint256 _tokenId,
         string calldata _URI
     ) external isMinter nonReentrant whenNotPaused returns (uint256) {
         //^^^^^^^checks^^^^^^^^^
 
         //MAKE URI ASSET SPECIFIC- has to incorporate the token ID
-        _safeMint(_recipientAddress, tokenId);
-        _setTokenURI(tokenId, _URI);
-        return tokenId;
+        _safeMint(_recipientAddress, _tokenId);
+        _setTokenURI(_tokenId, _URI);
+        return _tokenId;
         //^^^^^^^interactions^^^^^^^^^
+    }
+
+    /*
+     * @dev Burn PRUF_ID token
+     */
+    function burnPRUF_ID(uint256 _tokenId)
+        external
+        isMinter
+        nonReentrant
+        whenNotPaused
+    {
+        _burn(_tokenId);
+        delete tokenIDforName[keccak256(abi.encodePacked(_tokenId))]; //remove record from name registry
+        delete id[_tokenId]; //remove record from ID registry
     }
 
     /*
@@ -113,27 +129,27 @@ contract ID_TKN is
      * burns old token
      * Sends new token to original Caller
      */
-    function reMintPRUF_IDToken(address _recipientAddress, uint256 tokenId)
+    function reMintPRUF_IDToken(address _recipientAddress, uint256 _tokenId)
         external
         isMinter
         nonReentrant
         whenNotPaused
         returns (uint256)
     {
-        require(_exists(tokenId), "PIDT:RM:Cannot Remint nonexistant token");
+        require(_exists(_tokenId), "PIDT:RM:Cannot Remint nonexistant token");
         //^^^^^^^checks^^^^^^^^^
-        string memory tokenURI = tokenURI(tokenId);
-        _burn(tokenId);
-        _safeMint(_recipientAddress, tokenId);
-        _setTokenURI(tokenId, tokenURI);
-        return tokenId;
+        string memory tokenURI = tokenURI(_tokenId);
+        _burn(_tokenId);
+        _safeMint(_recipientAddress, _tokenId);
+        _setTokenURI(_tokenId, tokenURI);
+        return _tokenId;
         //^^^^^^^interactions^^^^^^^^^
     }
 
     /*
      * @dev Set new token URI String -- string should eventually be a B32 hash of ID info in a standardized format - verifyable against provided ID
      */
-    function setURI(uint256 tokenId, string calldata _tokenURI)
+    function setURI(uint256 _tokenId, string calldata _tokenURI)
         external
         isMinter
         nonReentrant
@@ -142,20 +158,100 @@ contract ID_TKN is
     {
         //^^^^^^^checks^^^^^^^^^
 
-        _setTokenURI(tokenId, _tokenURI);
-        return tokenId;
+        _setTokenURI(_tokenId, _tokenURI);
+        return _tokenId;
+        //^^^^^^^interactions^^^^^^^^^
+    }
+
+    /*
+     * @dev Set new ID mapp user URI String -- string should eventually be a B32 hash of ID info in a standardized format - verifyable against provided ID
+     */
+    function setIdURI(
+        uint256 _tokenId,
+        bytes32 _URI //DPS:TEST--NEW
+    ) external nonReentrant whenNotPaused returns (uint256) {
+        require(
+            ownerOf(_tokenId) == _msgSender(),
+            "PIDT:RM: caller does not hold token"
+        );
+        //^^^^^^^checks^^^^^^^^^
+
+        id[_tokenId].URI = _URI;
+        return _tokenId;
+        //^^^^^^^interactions^^^^^^^^^
+    }
+
+    /*
+     * @dev Set new ID mapp user URI String -- string should eventually be a B32 hash of ID info in a standardized format - verifyable against provided ID
+     */
+    function setUserName(
+        uint256 _tokenId,
+        string calldata _userName //DPS:TEST--NEW
+    ) external nonReentrant whenNotPaused returns (uint256) {
+        require(
+            ((ownerOf(_tokenId) == _msgSender()) &&
+                (keccak256(abi.encodePacked(id[_tokenId].userName)) ==
+                    keccak256(abi.encodePacked("")))),
+            // || hasRole(MINTER_ROLE, _msgSender()),
+            "PIDT:SUN:caller does not hold token or userName is set" //, and is not minter"
+        );
+        bytes32 nameHash = keccak256(abi.encodePacked(_userName));
+        require(
+            tokenIDforName[nameHash] == 0,
+            "PIDT:SUN:userName is already taken"
+        );
+        //^^^^^^^checks^^^^^^^^^
+
+        tokenIDforName[nameHash] = _tokenId; //store namehash
+        id[_tokenId].userName = _userName; //store username
+        return _tokenId;
+        //^^^^^^^interactions^^^^^^^^^
+    }
+
+    /*
+     * @dev Set new ID data fields
+     */
+    function setTrustLevel(
+        uint256 _tokenId,
+        uint256 _trustLevel //DPS:TEST--NEW
+    ) external nonReentrant whenNotPaused isMinter returns (uint256) {
+        //^^^^^^^checks^^^^^^^^^
+
+        id[_tokenId].trustLevel = _trustLevel;
+        return _tokenId;
         //^^^^^^^interactions^^^^^^^^^
     }
 
     /*
      * @dev See if token exists
      */
-    function tokenExists(uint256 tokenId) external view returns (uint8) {
-        if (_exists(tokenId)) {
+    function tokenExists(uint256 _tokenId) external view returns (uint8) {
+        if (_exists(_tokenId)) {
             return 170;
         } else {
             return 0;
         }
+    }
+
+    /*
+     * @dev get ID data
+     */
+    function IdData(uint256 _tokenId) external view returns (ID memory) {
+        return id[_tokenId];
+    }
+
+    /*
+     * @dev get ID trustLevel
+     */
+    function trustedLevel(uint256 _tokenId) external view returns (uint256) {
+        return id[_tokenId].trustLevel;
+    }
+
+    /*
+     * @dev get ID trustLevel by address (token 0 at address)
+     */
+    function trustedLevelByAddress(address _addr) external view returns (uint256) {
+        return id[tokenOfOwnerByIndex(_addr, 0)].trustLevel;
     }
 
     /**
@@ -193,9 +289,9 @@ contract ID_TKN is
     function safeTransferFrom(
         address from,
         address to,
-        uint256 tokenId
+        uint256 _tokenId
     ) public override {
-        safeTransferFrom(from, to, tokenId, "");
+        safeTransferFrom(from, to, _tokenId, "");
         //^^^^^^^interactions^^^^^^^^^
     }
 
@@ -208,17 +304,17 @@ contract ID_TKN is
      * Requires the _msgSender() to be the owner, approved, or operator
      * @param from current owner of the token
      * @param to address to receive the ownership of the given token ID
-     * @param tokenId uint256 ID of the token to be transferred
+     * @param _tokenId uint256 ID of the token to be transferred
      * @param _data bytes data to send along with a safe transfer check
      */
     function safeTransferFrom(
         address from,
         address to,
-        uint256 tokenId,
+        uint256 _tokenId,
         bytes memory _data
     ) public virtual override nonReentrant whenNotPaused {
         require(
-            _isApprovedOrOwner(_msgSender(), tokenId),
+            _isApprovedOrOwner(_msgSender(), _tokenId),
             "PIDT:STF: transfer caller is not owner nor approved"
         );
         require(
@@ -228,7 +324,7 @@ contract ID_TKN is
 
         //^^^^^^^checks^^^^^^^^^
 
-        _safeTransfer(from, from, tokenId, _data);
+        _safeTransfer(from, from, _tokenId, _data);
         //^^^^^^^interactions^^^^^^^^^
     }
 
@@ -273,8 +369,8 @@ contract ID_TKN is
     function _beforeTokenTransfer(
         address from,
         address to,
-        uint256 tokenId
+        uint256 _tokenId
     ) internal virtual override(ERC721, ERC721Pausable) {
-        super._beforeTokenTransfer(from, to, tokenId);
+        super._beforeTokenTransfer(from, to, _tokenId);
     }
 }
