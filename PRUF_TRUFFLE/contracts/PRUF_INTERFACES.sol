@@ -101,6 +101,14 @@ struct Invoice {
     uint256 ACTHprice;
 }
 
+struct ID {
+    //ID struct for ID info
+    uint256 trustLevel;//admin only
+    bytes32 URI;//caller address match
+    string userName;//admin only///caller address match can set
+}
+
+
 /*
  * @dev Interface for UTIL_TKN
  * INHERIANCE:
@@ -825,6 +833,21 @@ interface ID_TKN_Interface {
         uint256 tokenId,
         bytes calldata _data
     ) external;
+
+    /*
+     * @dev get ID data
+     */
+    function IdData(uint256 _tokenId) external view returns (ID memory);
+
+    /*
+     * @dev get ID trustLevel
+     */
+    function trustedLevel(uint256 _tokenId) external view returns (uint256);
+
+    /*
+     * @dev get ID trustLevel by address (token 0 at address)
+     */
+    function trustedLevelByAddress(address _addr) external view returns (uint256);
 
     /**
      * @dev Returns the owner of the `tokenId` token.
