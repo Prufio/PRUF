@@ -88,11 +88,12 @@ contract NP_NC is CORE {
             rec.assetStatus == 51,
             "NPNC:EX: Must be in transferrable status (51)"
         );
-        require( //holds AC token if AC is restricted --------DBS TEST ---- NEW
-                (AC_TKN.ownerOf(rec.assetClass) == _msgSender()) ||
-                (AC_info.managmentType != 1),
-            "NPNC:EX: Restricted from exporting assets from this AC - does not hold ACtoken"
-        );
+        if (AC_info.managmentType == 1) {
+            require( //holds AC token if AC is restricted --------DBS TEST ---- NEW
+                (AC_TKN.ownerOf(rec.assetClass) == _msgSender()),
+                "NPNC:EX: Restricted from exporting assets from this AC - does not hold ACtoken"
+            );
+        }
         //^^^^^^^checks^^^^^^^^^
 
         rec.assetStatus = 70; // Set status to 70 (exported)
@@ -121,15 +122,15 @@ contract NP_NC is CORE {
         );
         require(
             (_newAssetStatus != 57) &&
-            (_newAssetStatus != 58) &&
-            (_newAssetStatus < 100),
+                (_newAssetStatus != 58) &&
+                (_newAssetStatus < 100),
             "NPNC:MS: Stat Rsrvd"
         );
         require( //STATE UNREACHABLE: CANNOT MEET STATUS IN NC CONTRACTS CTS:PREFERRED
             needsImport(_newAssetStatus) == 0,
             "NPNC:MS: Cannot place asset in unregistered, exported, or discarded status using modStatus"
         );
-        require(//STATE UNREACHABLE: CANNOT MEET STATUS IN NC CONTRACTS
+        require( //STATE UNREACHABLE: CANNOT MEET STATUS IN NC CONTRACTS
             needsImport(rec.assetStatus) == 0,
             "NPNC:MS: Asset is in an unregistered, exported, or discarded status."
         );
