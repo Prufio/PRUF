@@ -1700,6 +1700,52 @@ __/\\\\\\\\\\\\\ _____/\\\\\\\\\ _______/\\../\\ ___/\\\\\\\\\\\\\\\
     })
 
 
+    it('Should add all default contracts', async () => {
+
+        return STOR.addDefaultContracts('0', 'NP_NC', '2', { from: account1 })
+
+            .then(() => {
+                return STOR.addDefaultContracts('1', 'APP_NC', '2', { from: account1 })
+            })
+
+            .then(() => {
+                return STOR.addDefaultContracts('2', 'AC_MGR', '1', { from: account1 })
+            })
+
+            .then(() => {
+                return STOR.addDefaultContracts('3', 'AC_TKN', '1', { from: account1 })
+            })
+
+            .then(() => {
+                return STOR.addDefaultContracts('4', 'A_TKN', '1', { from: account1 })
+            })
+
+            .then(() => {
+                return STOR.addDefaultContracts('5', 'ECR_MGR', '3', { from: account1 })
+            })
+
+            .then(() => {
+                return STOR.addDefaultContracts('6', 'RCLR', '3', { from: account1 })
+            })
+
+            .then(() => {
+                return STOR.addDefaultContracts('7', 'PIP', '1', { from: account1 })
+            })
+
+            .then(() => {
+                return STOR.addDefaultContracts('8', 'PURCHASE', '2', { from: account1 })
+            })
+
+            .then(() => {
+                return STOR.addDefaultContracts('9', 'DECORATE', '2', { from: account1 })
+            })
+
+            .then(() => {
+                return STOR.addDefaultContracts('10', 'WRAP', '2', { from: account1 })
+            })
+    })
+
+
     it('Should mint ID token to account2', async () => {
         return ID_TKN.mintPRUF_IDToken(
         account2, 
