@@ -51,8 +51,14 @@ contract CORE is BASIC {
             "C:CR:Cannot create asset in a root asset class"
         );
 
+        require(
+                (AC_info.managementType < 5),
+                "C:CR:Contract does not support management types > 4 or AC is locked"
+        );
+
+
         if (AC_info.custodyType != 1) {
-            if ((AC_info.managmentType == 1) || (AC_info.managmentType == 2)) {
+            if ((AC_info.managementType == 1) || (AC_info.managementType == 2)) {
                 // DPS:TEST---NEW
                 require(
                     (AC_TKN.ownerOf(_assetClass) == _msgSender()),
@@ -60,7 +66,7 @@ contract CORE is BASIC {
                 );
             }
 
-            if (AC_info.managmentType == 3) {
+            if (AC_info.managementType == 3) {
                 // DPS:TEST---NEW
                 require(
                     AC_MGR.getUserType(
@@ -71,7 +77,7 @@ contract CORE is BASIC {
                 );
             }
 
-            if (AC_info.managmentType == 4) {
+            if (AC_info.managementType == 4) {
                 require(
                     ID_TKN.trustedLevelByAddress(_msgSender()) > 10,
                     "D:CRO:Caller does not hold sufficiently trusted ID"

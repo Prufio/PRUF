@@ -280,14 +280,14 @@ contract Helper2 is Ownable, BASIC {
         AC memory asset_data;
         //^^^^^^^checks^^^^^^^^^
         (
-            asset_data.byte1,
+            asset_data.storageProvider,
             asset_data.byte2,
             asset_data.referenceAddress,
             asset_data.IPFS
         ) = AC_MGR.getExtAC_data_nostruct(_assetClass);
 
         return (
-            asset_data.byte1,
+            asset_data.storageProvider,
             asset_data.byte2,
             asset_data.referenceAddress,
             asset_data.IPFS
@@ -327,7 +327,7 @@ contract Helper2 is Ownable, BASIC {
     uint32 assetClassRoot; // asset type root (bycyles - USA Bicycles)
     uint8 custodyType; // custodial or noncustodial, special asset types
     uint32 discount; // price sharing
-    uint8 byte1; // Future Use
+    uint8 storageProvider; // Future Use
     uint8 byte2; // Future Use
     uint8 byte3; // Future Use
     address referenceAddress; // Used with wrap / decorate

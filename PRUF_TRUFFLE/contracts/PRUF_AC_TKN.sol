@@ -53,9 +53,8 @@ contract AC_TKN is
 {
     using Counters for Counters.Counter;
 
-    bytes32 public constant CONTRACT_ADMIN_ROLE = keccak256(
-        "CONTRACT_ADMIN_ROLE"
-    );
+    bytes32 public constant CONTRACT_ADMIN_ROLE =
+        keccak256("CONTRACT_ADMIN_ROLE");
     bytes32 public constant MINTER_ROLE = keccak256("MINTER_ROLE");
     bytes32 public constant PAUSER_ROLE = keccak256("PAUSER_ROLE");
 
@@ -202,6 +201,14 @@ contract AC_TKN is
 
         _safeTransfer(from, to, tokenId, _data);
         //^^^^^^^interactions^^^^^^^^^
+    }
+
+    function tokenExists(uint256 tokenId) external view returns (uint256) {
+        if (_exists(tokenId)) {
+            return 170;
+        } else {
+            return 0;
+        }
     }
 
     /**

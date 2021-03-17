@@ -397,6 +397,10 @@ contract DECORATE is
             "D:I:Asset class.custodyType must be 5 (wrapped/decorated erc721) & record must exist"
         );
         require(
+                (AC_info.managementType < 5),
+                "D:I:Contract does not support management types > 4 or AC is locked"
+        );
+        require(
             ((AC_info.referenceAddress == _tokenContract) ||
                 (AC_info.referenceAddress == address(0))) &&
                 ((newAC_info.referenceAddress == _tokenContract) ||
@@ -441,7 +445,12 @@ contract DECORATE is
             "D:CRO:Asset class.custodyType must be 5 (wrapped/decorated erc721)"
         );
 
-        if ((AC_info.managmentType == 1) || (AC_info.managmentType == 2)) {
+        require(
+                (AC_info.managementType < 5),
+                "D:CRO:Contract does not support management types > 4 or AC is locked"
+        );
+
+        if ((AC_info.managementType == 1) || (AC_info.managementType == 2)) {
             // DPS:TEST---NEW
             require(
                 (AC_TKN.ownerOf(_assetClass) == _msgSender()),
@@ -449,7 +458,7 @@ contract DECORATE is
             );
         }
 
-        if (AC_info.managmentType == 3) {
+        if (AC_info.managementType == 3) {
             // DPS:TEST---NEW
             require(
                 AC_MGR.getUserType(
@@ -460,7 +469,7 @@ contract DECORATE is
             );
         }
 
-        if (AC_info.managmentType == 4) {
+        if (AC_info.managementType == 4) {
             require(
                 ID_TKN.trustedLevelByAddress(_msgSender()) > 10,
                 "D:CRO:Caller does not hold sufficiently trusted ID"

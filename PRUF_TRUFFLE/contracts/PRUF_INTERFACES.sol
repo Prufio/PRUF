@@ -35,13 +35,13 @@ struct Record {
 struct AC {
     //Struct for holding and manipulating assetClass data
     string name; // NameHash for assetClass
-    uint32 assetClassRoot; // asset type root (bycyles - USA Bicycles)
-    uint8 custodyType; // custodial or noncustodial, special asset types
-    uint32 discount; // price sharing
-    uint8 managmentType; // type of management for asset creation, import, export
-    uint8 byte1; // Future Use
+    uint32 assetClassRoot; // asset type root (bicyles - USA Bicycles)             //immutable
+    uint8 custodyType; // custodial or noncustodial, special asset types       //immutable
+    uint32 discount; // price sharing //internal admin
+    uint8 managementType; // type of management for asset creation, import, export //immutable
+    uint8 storageProvider; // Storage Provider                                      //immutable
     uint8 byte2; // Future Use
-    address referenceAddress; // Used with wrap / decorate
+    address referenceAddress; // Used with wrap / decorate                           //immutable
     bytes32 IPFS; //IPFS data for defining idxHash creation attribute fields
 }
 
@@ -88,6 +88,7 @@ struct escrowDataExtHeavy {
 }
 
 struct Costs {
+    //make these require full epoch to change???
     uint256 serviceCost; // Cost in the given item category
     address paymentAddress; // 2nd-party fee beneficiary address
 }
@@ -103,11 +104,10 @@ struct Invoice {
 
 struct ID {
     //ID struct for ID info
-    uint256 trustLevel;//admin only
-    bytes32 URI;//caller address match
-    string userName;//admin only///caller address match can set
+    uint256 trustLevel; //admin only
+    bytes32 URI; //caller address match
+    string userName; //admin only///caller address match can set
 }
-
 
 /*
  * @dev Interface for UTIL_TKN
@@ -527,6 +527,12 @@ interface AC_TKN_Interface {
         returns (address tokenHolderAdress);
 
     /**
+     * @dev Returns 170 if the specified token exists, otherwise zero
+     *
+     */
+    function tokenExists(uint256 tokenId) external view returns (uint256);
+
+    /**
      * @dev Returns the amount of tokens owned by `account`.
      */
     function balanceOf(address account) external returns (uint256);
@@ -847,7 +853,10 @@ interface ID_TKN_Interface {
     /*
      * @dev get ID trustLevel by address (token 0 at address)
      */
-    function trustedLevelByAddress(address _addr) external view returns (uint256);
+    function trustedLevelByAddress(address _addr)
+        external
+        view
+        returns (uint256);
 
     /**
      * @dev Returns the owner of the `tokenId` token.
@@ -913,41 +922,7 @@ interface ID_TKN_Interface {
      
  */
 interface AC_MGR_Interface {
-    /*
-     * @dev Set pricing (isAdmin)
-     */
-    function OO_SetACpricing(
-        uint256 _L1,
-        uint256 _L2,
-        uint256 _L3,
-        uint256 _L4,
-        uint256 _L5,
-        uint256 _L6,
-        uint256 _L7
-    ) external;
-
-    /*
-     * @dev Authorize / Deauthorize / Authorize users for an address be permitted to make record modifications
-     */
-    function addUser(
-        bytes32 _addrHash,
-        uint8 _userType,
-        uint32 _assetClass
-    ) external;
-
-    /**
-     * @dev Burns (amount) tokens and mints a new asset class token to the caller address
-     *
-     * Requirements:
-     * - the caller must have a balance of at least `amount`.
-     */
-    function purchaseACnode(
-        //--------------will fail in burn if insufficient tokens
-        string calldata _name,
-        uint32 _assetClassRoot,
-        uint8 _custodyType,
-        bytes32 _IPFS
-    ) external;
+    //--------------------------------------------NODEMINTER only Functions--------------------------
 
     /*
      * @dev Mints asset class token and creates an assetClass. Mints to @address
@@ -963,8 +938,29 @@ interface AC_MGR_Interface {
         uint32 _assetClass,
         uint32 _assetClassRoot,
         uint8 _custodyType,
-        bytes32 _IPFS,
+        uint8 _managementType,
         uint32 _discount
+    ) external;
+
+    /**
+     * @dev Burns (amount) tokens and mints a new asset class token to the caller address
+     *
+     * Requirements:
+     * - the caller must have a balance of at least `amount`.
+     */
+    function purchaseACnode(
+        string calldata _name,
+        uint32 _assetClassRoot,
+        uint8 _custodyType
+    ) external;
+
+    /*
+     * @dev Authorize / Deauthorize / Authorize users for an address be permitted to make record modifications
+     */
+    function addUser(
+        bytes32 _addrHash,
+        uint8 _userType,
+        uint32 _assetClass
     ) external;
 
     /*
@@ -982,16 +978,11 @@ interface AC_MGR_Interface {
      * Requires that:
      *  caller holds ACtoken
      */
-    function updateACipfs(bytes32 _IPFS, uint32 _assetClass) external;
-
-    /*
-     * @dev Modifies an assetClass
-     * Sets a new AC EXT Data uint32
-     * Requires that:
-     *  caller holds ACtoken
-     */
-    function updateACreferenceAddress(address _extData, uint32 _assetClass)
-        external;
+    function updateACipfs(
+        bytes32 _IPFS,
+        uint8 _byte,
+        uint32 _assetClass
+    ) external;
 
     /*
      * @dev Set function costs and payment address per asset class, in Wei
@@ -1003,15 +994,21 @@ interface AC_MGR_Interface {
         address _paymentAddress
     ) external;
 
-    /**
-     * @dev Increase payment share of an asset class
-     *
-     * Requirements:
-     * - `recipient` cannot be the zero address.
-     * - the caller must have a balance of at least `amount`.
+    /*
+     * @dev Modifies an assetClass
+     * Sets the immutable data on an ACNode
+     * Requires that:
+     *  caller holds ACtoken ; ACnode has managementType 255 (unconfigured)set
      */
-    function increaseShare(uint32 _assetClass, uint256 _amount) external;
+    function updateACImmutable(
+        //DPS:CHECK NEW ARGUMENTS, name has changed
+        uint32 _assetClass,
+        uint8 _managementType,
+        uint8 _storageProvider,
+        address _refAddress
+    ) external;
 
+    //-------------------------------------------Read-only functions ----------------------------------------------
     /*
      * @dev get a User Record
      */
@@ -1035,14 +1032,14 @@ interface AC_MGR_Interface {
         );
 
     /* CAN'T RETURN A STRUCT WITH A STRING WITHOUT WIERDNESS-0.8.1
-     * @dev Retrieve AC_data @ _assetClass in a struct
+     * @dev Retrieve AC_data @ _assetClass
      */
     function getExtAC_data(uint32 _assetClass)
         external
         view
         returns (AC memory);
 
-    /*
+    /* CAN'T RETURN A STRUCT WITH A STRING WITHOUT WIERDNESS-0.8.1
      * @dev Retrieve AC_data @ _assetClass
      */
     function getExtAC_data_nostruct(uint32 _assetClass)
@@ -1054,11 +1051,6 @@ interface AC_MGR_Interface {
             address,
             bytes32
         );
-
-    /*
-     * @dev Retrieve AC_discount @ _assetClass, in percent ACTH share, * 100 (9000 = 90%)
-     */
-    function getAC_discount(uint32 _assetClass) external view returns (uint32);
 
     /*
      * @dev compare the root of two asset classes
@@ -1082,6 +1074,19 @@ interface AC_MGR_Interface {
         returns (uint32);
 
     /*
+     * @dev return current AC token index pointer
+     */
+    function currentACpricingInfo()
+        external
+        view
+        returns (
+            //--------DBS TEST ---- NEW
+            uint256,
+            uint256,
+            uint256
+        );
+
+    /*
      * @dev Retrieve function costs per asset class, per service type, in Wei
      */
     function getServiceCosts(uint32 _assetClass, uint16 _service)
@@ -1090,21 +1095,9 @@ interface AC_MGR_Interface {
         returns (Invoice memory);
 
     /*
-     * @dev return current AC token index pointer
+     * @dev Retrieve AC_discount @ _assetClass, in percent ACTH share, * 100 (9000 = 90%)
      */
-    function currentACpricingInfo()
-        external
-        returns (
-            // uint256,
-            // uint256,
-            // uint256,
-            // uint256,
-            // uint256,
-            // uint256,
-            uint256,
-            uint256,
-            uint256
-        );
+    function getAC_discount(uint32 _assetClass) external view returns (uint32);
 }
 
 //------------------------------------------------------------------------------------------------

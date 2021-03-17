@@ -35,19 +35,14 @@ pragma solidity ^0.6.7;
  *TO DO :
  * zero root costs when ACTHcosts are zero? (-NOPE-)
  *
- * IDtoken links to IPFS,has trust level
  * staking, 2% to stskers, 3% to root_address
+ * 
  *
  *      * refactor all require(local condition || external condition) => if(local condition){require (external condition)}
  * 
  *      * make an auction escrow contract
  *
  *      * !! FIND ALL GOD KEY Issues, give them roles or other solutions that can be hooked to governance or disabled
- *
- *      * Fix minting assets. IDtokens should not be sufficient to mint assets in ALL NC assetclasses. 
- *              This should be done by enabling an "APP_NCS(upervised)" contract that authorizes asset creation like "APP"
- *
- *      * Automate contract authorization 
  *
  *      * Eventually flatten contracts and factor interface file
  *
@@ -259,11 +254,12 @@ pragma solidity ^0.6.7;
  *              normal ROOT ACs should be set to type 0 because non type-zero root 
  *              classes will not permit public minting of ACs inside them
  * 0   -- Unrestricted (if root not zero, ACNodes cannot be created in the root w/o root token 
- *              IDtoken (or foreign token if wrapping / decorating) required to mint assets)
+ *              IDtoken is required to mint assets (or foreign token if wrapping / decorating) )
  * 1   -- Restricted (Only ACNode holder can create, export or import prohibited - does not require IDtoken)
  * 2   -- Less Restricted (Only ACNode holder can create, import prohibited - does not require IDtoken)
  * 3   -- Authorized (caller address must be user authorized type 1 in AC)
  * 4   -- Trusted (Requires trust level > 10)
+ * 255 -- unconfigured - No minting permitted, not yet activated (set by default on node purchase, cannot be reverted)
 - -----------------------------------------------------------------
 
 /*-----------------------------------------------------------------

@@ -83,7 +83,7 @@ contract AC_MGR is BASIC {
         _;
     }
 
-    //--------------------------------------------External Functions--------------------------
+    //--------------------------------------------ADMIN only Functions--------------------------
 
     /*
      * @dev Set pricing
@@ -92,7 +92,6 @@ contract AC_MGR is BASIC {
         //^^^^^^^checks^^^^^^^^^
 
         acPrice_L1 = _L1;
-
         //^^^^^^^effects^^^^^^^^^
 
         emit REPORT("ACnode pricing Changed!"); //report access to internal parameter
@@ -100,29 +99,141 @@ contract AC_MGR is BASIC {
     }
 
     /*
-     * @dev Authorize / Deauthorize / Authorize users for an address be permitted to make record modifications
+     * @dev Tincreases (but cannot decrease) price share for a given AC
+     * !! to be used with great caution
+     * This breaks decentralization and must eventually be given over to some kind of governance contract.
      */
-    function addUser(
-        bytes32 _addrHash,
-        uint8 _userType,
-        uint32 _assetClass
-    ) external whenNotPaused isACtokenHolderOfClass(_assetClass) {
+    function adminIncreaseShare(
+        //---------------------------------------DPS TEST-----NEW
+        uint32 _assetClass,
+        uint32 _newDiscount
+    ) external isAdmin {
+        require(
+            (AC_data[_assetClass].assetClassRoot != 0),
+            "ACM:AIS: AC not in use"
+        );
+        require(
+            _newDiscount >= AC_data[_assetClass].discount,
+            "ACM:AIS: new share less than old share"
+        );
+        require(
+            _newDiscount <= 10000,
+            "ACM:AIS: discount cannot exceed 100% (10000)"
+        );
+
         //^^^^^^^checks^^^^^^^^^
 
-        registeredUsers[_addrHash][_assetClass] = _userType;
-
-        if ((_userType != 0) && (registeredUsers[_addrHash][0] < 255)) {
-            registeredUsers[_addrHash][0]++;
-        }
-
-        if ((_userType == 0) && (registeredUsers[_addrHash][0] > 0)) {
-            registeredUsers[_addrHash][0]--;
-        }
-
+        AC_data[_assetClass].discount = _newDiscount;
         //^^^^^^^effects^^^^^^^^^
-        emit REPORT("Internal user database access!"); //report access to the internal user database
+    }
+
+    /*
+     * @dev Transfers a name from one asset class to another
+     * !! -------- to be used with great caution and only as a result of community governance action -----------
+     * Designed to remedy brand infringement issues. This breaks decentralization and must eventually be given
+     * over to some kind of governance contract.
+     * Destination AC must have IPFS Set to 0xFFF.....
+     *
+     */
+    function transferName(
+        //---------------------------------------DPS TEST-----NEW
+        string calldata _name,
+        uint32 _assetClass_source,
+        uint32 _assetClass_dest
+    ) external isAdmin {
+        require(
+            AC_number[_name] == _assetClass_source,
+            "ACM:TA: name not in source AC"
+        ); //source AC_Name must match name given
+
+        require(
+            (AC_data[_assetClass_dest].IPFS == B320xF_), //dest AC must have ipfs set to 0xFFFF.....
+            "ACM:TA:Destination AC not prepared for name transfer"
+        );
+        //^^^^^^^checks^^^^^^^^^
+
+        AC_number[_name] = _assetClass_dest;
+        AC_data[_assetClass_dest].name = _name;
+        AC_data[_assetClass_source].name = "";
+        //^^^^^^^effects^^^^^^^^^
+    }
+
+    /*
+     * @dev creates an assetClass
+     * makes ACdata record with new name, mints token
+     *
+     */
+    function AdminModAssetClass(
+        uint32 _assetClass,
+        uint32 _assetClassRoot,
+        uint8 _custodyType,
+        uint8 _managementType,
+        uint8 _storageProvider,
+        address _refAddress,
+        uint32 _discount
+    ) private isAdmin nonReentrant {
+        AC memory _ac = AC_data[_assetClassRoot];
+        uint256 tokenId = uint256(_assetClass);
+
+        require((tokenId != 0), "ACM:CAC: AC cannot be 0"); //sanity check inputs
+        require(
+            _discount <= 10000,
+            "ACM:CAC: discount cannot exceed 100% (10000)"
+        );
+        require( //has valid root
+            (_ac.custodyType == 3) || (_assetClassRoot == _assetClass),
+            "ACM:CAC:Root asset class does not exist"
+        );
+        require(
+            AC_TKN.tokenExists(tokenId) == 170,
+            "ACM:CAC: ACtoken does not exist"
+        );
+        //^^^^^^^checks^^^^^^^^^
+
+        AC_data[_assetClass].assetClassRoot = _assetClassRoot;
+        AC_data[_assetClass].discount = _discount;
+        AC_data[_assetClass].custodyType = _custodyType;
+        AC_data[_assetClass].managementType = _managementType;
+        AC_data[_assetClass].storageProvider = _storageProvider;
+        AC_data[_assetClass].referenceAddress = _refAddress;
+        //^^^^^^^effects^^^^^^^^^
         //^^^^^^^interactions^^^^^^^^^
     }
+
+    //--------------------------------------------NODEMINTER only Functions--------------------------
+
+    /*
+     * @dev Mints asset class token and creates an assetClass. Mints to @address
+     * Requires that:
+     *  name is unuiqe
+     *  AC is not provisioned with a root (proxy for not yet registered)
+     *  that ACtoken does not exist
+     *  _discount 10000 = 100 percent price share , cannot exceed
+     */
+    function createAssetClass(
+        //--------DBS TEST ---- NEW feature: _magement type
+        address _recipientAddress,
+        string calldata _name,
+        uint32 _assetClass,
+        uint32 _assetClassRoot,
+        uint8 _custodyType,
+        uint8 _managementType,
+        uint32 _discount
+    ) external isNodeMinter nonReentrant {
+        //^^^^^^^checks^^^^^^^^^
+        _createAssetClass(
+            _recipientAddress,
+            _name,
+            _assetClass,
+            _assetClassRoot,
+            _custodyType,
+            _managementType,
+            _discount
+        );
+        //^^^^^^^effects^^^^^^^^^
+    }
+
+    //--------------------------------------------External Functions--------------------------
 
     /**
      * @dev Burns (amount) tokens and mints a new asset class token to the caller address
@@ -135,9 +246,14 @@ contract AC_MGR is BASIC {
         //--------------will fail in burn / transfer if insufficient tokens
         string calldata _name,
         uint32 _assetClassRoot,
-        uint8 _custodyType,
-        uint8 _managmentType
-    ) external whenNotPaused nonReentrant returns (uint256) {
+        uint8 _custodyType
+    )
+        external
+        //uint8 _managementType
+        whenNotPaused
+        nonReentrant
+        returns (uint256)
+    {
         require( //Impossible to test??
             ACtokenIndex < 4294000000,
             "ACM:IS:Only 4294000000 AC tokens allowed"
@@ -175,7 +291,7 @@ contract AC_MGR is BASIC {
             uint32(ACtokenIndex), //safe because ACtokenIndex <  4294000000 required
             _assetClassRoot,
             _custodyType,
-            _managmentType,
+            255, //creates ACNODES at managementType 255 = not yet usable
             startingDiscount
         );
 
@@ -190,34 +306,28 @@ contract AC_MGR is BASIC {
     }
 
     /*
-     * @dev Mints asset class token and creates an assetClass. Mints to @address
-     * Requires that:
-     *  name is unuiqe
-     *  AC is not provisioned with a root (proxy for not yet registered)
-     *  that ACtoken does not exist
-     *  _discount 10000 = 100 percent price share , cannot exceed
+     * @dev Authorize / Deauthorize / Authorize users for an address be permitted to make record modifications
      */
-    function createAssetClass(
-        //--------DBS TEST ---- NEW feature: _magement type
-        address _recipientAddress,
-        string calldata _name,
-        uint32 _assetClass,
-        uint32 _assetClassRoot,
-        uint8 _custodyType,
-        uint8 _managmentType,
-        uint32 _discount
-    ) external isNodeMinter whenNotPaused nonReentrant {
+    function addUser(
+        bytes32 _addrHash,
+        uint8 _userType,
+        uint32 _assetClass
+    ) external whenNotPaused isACtokenHolderOfClass(_assetClass) {
         //^^^^^^^checks^^^^^^^^^
-        _createAssetClass(
-            _recipientAddress,
-            _name,
-            _assetClass,
-            _assetClassRoot,
-            _custodyType,
-            _managmentType,
-            _discount
-        );
+
+        registeredUsers[_addrHash][_assetClass] = _userType;
+
+        if ((_userType != 0) && (registeredUsers[_addrHash][0] < 255)) {
+            registeredUsers[_addrHash][0]++;
+        }
+
+        if ((_userType == 0) && (registeredUsers[_addrHash][0] > 0)) {
+            registeredUsers[_addrHash][0]--;
+        }
+
         //^^^^^^^effects^^^^^^^^^
+        emit REPORT("Internal user database access!"); //report access to the internal user database
+        //^^^^^^^interactions^^^^^^^^^
     }
 
     /*
@@ -245,7 +355,7 @@ contract AC_MGR is BASIC {
         AC_number[_name] = _assetClass;
         AC_data[_assetClass].name = _name;
         //^^^^^^^effects^^^^^^^^^
-    }
+    } //-------------DPS TEST: NEW ARGS (now includes byte)
 
     /*
      * @dev Modifies an assetClass
@@ -253,34 +363,14 @@ contract AC_MGR is BASIC {
      * Requires that:
      *  caller holds ACtoken
      */
-    function updateACipfs(bytes32 _IPFS, uint32 _assetClass)
-        external
-        isACtokenHolderOfClass(_assetClass)
-        whenNotPaused
-    {
-        //^^^^^^^checks^^^^^^^^^
-        AC_data[_assetClass].IPFS = _IPFS;
-        //^^^^^^^effects^^^^^^^^^
-    }
-
-    /*
-     * @dev Modifies an assetClass
-     * Sets a new AC EXT Data address
-     * Requires that:
-     *  caller holds ACtoken
-     */
-    function updateACreferenceAddress(
-        //DPS:CHECK -order of argumants has changed
-        uint32 _assetClass,
-        address _refAddress,
-        uint8 _byte1,
-        uint8 _byte2
+    function updateACipfs(
+        bytes32 _IPFS,
+        uint8 _byte,
+        uint32 _assetClass
     ) external isACtokenHolderOfClass(_assetClass) whenNotPaused {
         //^^^^^^^checks^^^^^^^^^
-
-        AC_data[_assetClass].byte1 = _byte1;
-        AC_data[_assetClass].byte2 = _byte2;
-        AC_data[_assetClass].referenceAddress = _refAddress;
+        AC_data[_assetClass].IPFS = _IPFS;
+        AC_data[_assetClass].byte2 = _byte;
         //^^^^^^^effects^^^^^^^^^
     }
 
@@ -299,121 +389,38 @@ contract AC_MGR is BASIC {
         //^^^^^^^effects^^^^^^^^^
     }
 
-    /*
-     * @dev Transfers a name from one asset class to another
-     * !! -------- to be used with great caution and only as a result of community governance action -----------
-     * Designed to remedy brand infringement issues. This breaks decentralization and must eventually be given
-     * over to some kind of governance contract.
-     * Destination AC must have IPFS Set to 0xFFF.....
-     *
-     */
-    function transferName(
-        //---------------------------------------DPS TEST-----NEW
-        string calldata _name,
-        uint32 _assetClass_source,
-        uint32 _assetClass_dest
-    ) external isAdmin whenNotPaused nonReentrant {
-        require(
-            AC_number[_name] == _assetClass_source,
-            "ACM:TA: name not in source AC"
-        ); //source AC_Name must match name given
-
-        require(
-            (AC_data[_assetClass_dest].IPFS == B320xF_), //dest AC must have ipfs set to 0xFFFF.....
-            "ACM:TA:Destination AC not prepared for name transfer"
-        );
-        //^^^^^^^checks^^^^^^^^^
-
-        AC_number[_name] = _assetClass_dest;
-        AC_data[_assetClass_dest].name = _name;
-        AC_data[_assetClass_source].name = "";
-        //^^^^^^^effects^^^^^^^^^
-    }
+    //-------------------------------------------Functions dealing with immutable data ----------------------------------------------
 
     /*
-     * @dev Tincreases (but cannot decrease) price share for a given AC
-     * !! to be used with great caution
-     * This breaks decentralization and must eventually be given over to some kind of governance contract.
+     * @dev Modifies an assetClass
+     * Sets the immutable data on an ACNode
+     * Requires that:
+     * caller holds ACtoken 
+     * ACnode is managementType 255 (unconfigured)
      */
-    function adminIncreaseShare(
-        //---------------------------------------DPS TEST-----NEW
+    function updateACImmutable(
+        //DPS:CHECK NEW ARGUMENTS, name has changed 
         uint32 _assetClass,
-        uint32 _newDiscount
-    ) external isAdmin whenNotPaused nonReentrant {
+        uint8 _managementType,
+        uint8 _storageProvider,
+        address _refAddress
+    ) external isACtokenHolderOfClass(_assetClass) whenNotPaused {
         require(
-            (AC_data[_assetClass].assetClassRoot != 0),
-            "ACM:AIS: AC not in use"
+            AC_data[_assetClass].managementType == 255,
+            "ACM:UAI: immutable AC data has aleady been set"
         );
         require(
-            _newDiscount >= AC_data[_assetClass].discount,
-            "ACM:AIS: new share less than old share"
+            _managementType != 255,
+            "ACM:UAI: Cannot set management type to unconfigured"
         );
-        require(
-            _newDiscount <= 10000,
-            "ACM:AIS: discount cannot exceed 100% (10000)"
-        );
-
         //^^^^^^^checks^^^^^^^^^
-
-        AC_data[_assetClass].discount = _newDiscount;
+        AC_data[_assetClass].managementType = _managementType;
+        AC_data[_assetClass].storageProvider = _storageProvider;
+        AC_data[_assetClass].referenceAddress = _refAddress;
         //^^^^^^^effects^^^^^^^^^
     }
 
-    /*
-     * @dev creates an assetClass
-     * makes ACdata record with new name, mints token
-     *
-     */
-    function _createAssetClass(
-        address _recipientAddress,
-        string calldata _name,
-        uint32 _assetClass,
-        uint32 _assetClassRoot,
-        uint8 _custodyType,
-        uint8 _managmentType,
-        uint32 _discount
-    ) private whenNotPaused {
-        AC memory _ac = AC_data[_assetClassRoot];
-        uint256 tokenId = uint256(_assetClass);
-
-        require((tokenId != 0), "ACM:CAC: AC cannot be 0"); //sanity check inputs
-        require(
-            _discount <= 10000,
-            "ACM:CAC: discount cannot exceed 100% (10000)"
-        );
-        require( //has valid root
-            (_ac.custodyType == 3) || (_assetClassRoot == _assetClass),
-            "ACM:CAC:Root asset class does not exist"
-        );
-        require( //holds root token if root is restricted --------DBS TEST ---- NEW
-            (AC_TKN.ownerOf(_assetClassRoot) == _msgSender()) ||
-                (AC_data[_assetClassRoot].managmentType == 0),
-            "ACM:CAC:Restricted from creating AC's in this root - does not hold root token"
-        );
-        require(AC_number[_name] == 0, "ACM:CAC:AC name already in use");
-        require(
-            (AC_data[_assetClass].assetClassRoot == 0),
-            "ACM:CAC:AC already in use"
-        );
-        //^^^^^^^checks^^^^^^^^^
-
-        AC_number[_name] = _assetClass;
-        AC_data[_assetClass].name = _name;
-        AC_data[_assetClass].assetClassRoot = _assetClassRoot;
-        AC_data[_assetClass].discount = _discount;
-        AC_data[_assetClass].custodyType = _custodyType;
-        AC_data[_assetClass].managmentType = _managmentType;
-        //^^^^^^^effects^^^^^^^^^
-
-        AC_TKN.mintACToken(
-            _recipientAddress,
-            tokenId,
-            "pruf.io/assetClassToken"
-        );
-        //^^^^^^^interactions^^^^^^^^^
-    }
-
-    //-------------------------------------------functions for information retrieval----------------------------------------------
+    //-------------------------------------------Read-only functions ----------------------------------------------
     /*
      * @dev get a User Record
      */
@@ -447,23 +454,23 @@ contract AC_MGR is BASIC {
             AC_data[_assetClass].custodyType,
             AC_data[_assetClass].discount,
             AC_data[_assetClass].referenceAddress,
-            AC_data[_assetClass].managmentType
+            AC_data[_assetClass].managementType
         );
         //^^^^^^^interactions^^^^^^^^^
     }
 
-    /* CAN'T RETURN A STRUCT WITH A STRING WITHOUT WIERDNESS-0.8.1
-     * @dev Retrieve AC_data @ _assetClass
-     */
-    function getExtAC_data(uint32 _assetClass)
-        external
-        view
-        returns (AC memory)
-    {
-        //^^^^^^^checks^^^^^^^^^
-        return (AC_data[_assetClass]);
-        //^^^^^^^interactions^^^^^^^^^
-    }
+    // /* CAN'T RETURN A STRUCT WITH A STRING WITHOUT WIERDNESS-0.8.1
+    //  * @dev Retrieve AC_data @ _assetClass
+    //  */
+    // function getExtAC_data(uint32 _assetClass)
+    //     external
+    //     view
+    //     returns (AC memory)
+    // {
+    //     //^^^^^^^checks^^^^^^^^^
+    //     return (AC_data[_assetClass]);
+    //     //^^^^^^^interactions^^^^^^^^^
+    // }
 
     /* CAN'T RETURN A STRUCT WITH A STRING WITHOUT WIERDNESS-0.8.1
      * @dev Retrieve AC_data @ _assetClass
@@ -480,7 +487,7 @@ contract AC_MGR is BASIC {
     {
         //^^^^^^^checks^^^^^^^^^
         return (
-            AC_data[_assetClass].byte1,
+            AC_data[_assetClass].storageProvider,
             AC_data[_assetClass].byte2,
             AC_data[_assetClass].referenceAddress,
             AC_data[_assetClass].IPFS
@@ -589,6 +596,62 @@ contract AC_MGR is BASIC {
     function getAC_discount(uint32 _assetClass) external view returns (uint32) {
         //^^^^^^^checks^^^^^^^^^
         return (AC_data[_assetClass].discount);
+        //^^^^^^^interactions^^^^^^^^^
+    }
+
+    //-------------------------------------------INTERNAL / PRIVATE functions ----------------------------------------------
+
+    /*
+     * @dev creates an assetClass
+     * makes ACdata record with new name, mints token
+     *
+     */
+    function _createAssetClass(
+        address _recipientAddress,
+        string calldata _name,
+        uint32 _assetClass,
+        uint32 _assetClassRoot,
+        uint8 _custodyType,
+        uint8 _managementType,
+        uint32 _discount
+    ) private whenNotPaused {
+        AC memory _ac = AC_data[_assetClassRoot];
+        uint256 tokenId = uint256(_assetClass);
+
+        require((tokenId != 0), "ACM:CAC: AC cannot be 0"); //sanity check inputs
+        require(
+            _discount <= 10000,
+            "ACM:CAC: discount cannot exceed 100% (10000)"
+        );
+        require( //has valid root
+            (_ac.custodyType == 3) || (_assetClassRoot == _assetClass),
+            "ACM:CAC:Root asset class does not exist"
+        );
+        require( //holds root token if root is restricted --------DBS TEST ---- NEW
+            (AC_TKN.ownerOf(_assetClassRoot) == _msgSender()) ||
+                (AC_data[_assetClassRoot].managementType == 0),
+            "ACM:CAC:Restricted from creating AC's in this root - does not hold root token"
+        );
+        require(AC_number[_name] == 0, "ACM:CAC:AC name already in use");
+        require(
+            (AC_data[_assetClass].assetClassRoot == 0),
+            "ACM:CAC:AC already in use"
+        );
+        //^^^^^^^checks^^^^^^^^^
+
+        AC_number[_name] = _assetClass;
+        AC_data[_assetClass].name = _name;
+        AC_data[_assetClass].assetClassRoot = _assetClassRoot;
+        AC_data[_assetClass].discount = _discount;
+        AC_data[_assetClass].custodyType = _custodyType;
+        AC_data[_assetClass].managementType = _managementType;
+        //^^^^^^^effects^^^^^^^^^
+
+        AC_TKN.mintACToken(
+            _recipientAddress,
+            tokenId,
+            "pruf.io/assetClassToken"
+        );
         //^^^^^^^interactions^^^^^^^^^
     }
 }

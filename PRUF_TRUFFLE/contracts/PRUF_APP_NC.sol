@@ -100,7 +100,12 @@ contract APP_NC is CORE {
             "ANC:IA:Cannot change AC to new root"
         );
 
-        if ((AC_info.managmentType == 1) || (AC_info.managmentType == 2)) {
+        require(
+                (AC_info.managementType < 5),
+                "ANC:IA:Contract does not support management types > 4 or AC is locked"
+        );
+
+        if ((AC_info.managementType == 1) || (AC_info.managementType == 2)) {
             // DPS:TEST---NEW
             require(
                 (AC_TKN.ownerOf(_newAssetClass) == _msgSender()),
@@ -108,7 +113,7 @@ contract APP_NC is CORE {
             );
         }
 
-        if (AC_info.managmentType == 3) {
+        if (AC_info.managementType == 3) {
             // DPS:TEST---NEW
             require(
                 AC_MGR.getUserType(
@@ -119,7 +124,7 @@ contract APP_NC is CORE {
             );
         }
 
-        if (AC_info.managmentType == 4) {
+        if (AC_info.managementType == 4) {
             require(
                 ID_TKN.trustedLevelByAddress(_msgSender()) > 10,
                 "D:CRO:Caller does not hold sufficiently trusted ID"
