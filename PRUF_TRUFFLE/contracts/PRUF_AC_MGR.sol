@@ -491,33 +491,33 @@ contract AC_MGR is BASIC {
      * @dev Retrieve AC_data @ _assetClass
      *--------DPS TEST ---- NEW args, order
      */
-    function helper_getExtAC_data_nostruct(uint32 _assetClass)
-        external
-        view
-        returns (
-            uint8,
-            uint8,
-            address,
-            bytes32
-        )
-    {
-        AC memory asset_data;
-        //^^^^^^^checks^^^^^^^^^
-        (
-            asset_data.storageProvider,
-            asset_data.referenceAddress,
-            asset_data.additional,
-            asset_data.IPFS
-        ) = AC_MGR.getExtAC_data_nostruct(_assetClass);
+    // function helper_getExtAC_data_nostruct(uint32 _assetClass)
+    //     external
+    //     view
+    //     returns (
+    //         uint8,
+    //         uint8,
+    //         address,
+    //         bytes32
+    //     )
+    // {
+    //     AC memory asset_data;
+    //     //^^^^^^^checks^^^^^^^^^
+    //     (
+    //         asset_data.storageProvider,
+    //         asset_data.referenceAddress,
+    //         asset_data.additional,
+    //         asset_data.IPFS
+    //     ) = AC_MGR.getExtAC_data_nostruct(_assetClass);
 
-        return (
-            asset_data.storageProvider,
-            asset_data.additional,
-            asset_data.referenceAddress,
-            asset_data.IPFS
-        );
-        //^^^^^^^interactions^^^^^^^^^
-    }
+    //     return (
+    //         asset_data.storageProvider,
+    //         asset_data.additional,
+    //         asset_data.referenceAddress,
+    //         asset_data.IPFS
+    //     );
+    //     //^^^^^^^interactions^^^^^^^^^
+    // }
 
     /*
      * @dev compare the root of two asset classes
