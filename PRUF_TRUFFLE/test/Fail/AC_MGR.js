@@ -1967,22 +1967,11 @@ contract('AC_MGR', accounts => {
         })
     })
 
-    //1
+    //2
     it('Should fail because caller is not admin', async () => {
 
         console.log("//**************************************END AC_MGR SETUP**********************************************/")
-        console.log("//**************************************BEGIN AC_MGR FAIL BATCH (23)**********************************************/")
-        console.log("//**************************************BEGIN OO_SetACupgrade FAIL BATCH**********************************************/")
-        return AC_MGR.OO_SetACupgrade(
-            '9800',
-            '10000000000000000000',
-            { from: account2 }
-        )
-    })
-
-    //2
-    it('Should fail because caller is not admin', async () => {
-        console.log("//**************************************END OO_SetACupgrade FAIL BATCH**********************************************/")
+        console.log("//**************************************BEGIN AC_MGR FAIL BATCH ()**********************************************/")
         console.log("//**************************************BEGIN OO_SetACpricing FAIL BATCH**********************************************/")
         return AC_MGR.OO_SetACpricing(
             '10',
@@ -1992,6 +1981,16 @@ contract('AC_MGR', accounts => {
             '10',
             '10',
             '10',
+            { from: account2 }
+        )
+    })
+
+    //1
+    it('Should fail because caller is not admin', async () => {
+        console.log("//**************************************BEGIN OO_SetACupgrade FAIL BATCH**********************************************/")
+        return AC_MGR.OO_SetACupgrade(
+            '9800',
+            '10000000000000000000',
             { from: account2 }
         )
     })

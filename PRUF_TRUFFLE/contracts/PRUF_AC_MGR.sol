@@ -651,11 +651,12 @@ contract AC_MGR is BASIC {
             (_ac.custodyType == 3) || (_assetClassRoot == _assetClass),
             "ACM:CAC:Root asset class does not exist"
         );
+        if(AC_data[_assetClassRoot].managementType != 0) {
         require( //holds root token if root is restricted --------DBS TEST ---- NEW
-            (AC_TKN.ownerOf(_assetClassRoot) == _msgSender()) ||
-                (AC_data[_assetClassRoot].managementType == 0),
+            (AC_TKN.ownerOf(_assetClassRoot) == _msgSender()),
             "ACM:CAC:Restricted from creating AC's in this root - does not hold root token"
         );
+        }
         require(AC_number[_name] == 0, "ACM:CAC:AC name already in use");
         require(
             (AC_data[_assetClass].assetClassRoot == 0),
