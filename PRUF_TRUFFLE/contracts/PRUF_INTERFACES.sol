@@ -37,11 +37,11 @@ struct AC {
     string name; // NameHash for assetClass
     uint32 assetClassRoot; // asset type root (bicyles - USA Bicycles)             //immutable
     uint8 custodyType; // custodial or noncustodial, special asset types       //immutable
-    uint32 discount; // price sharing //internal admin
     uint8 managementType; // type of management for asset creation, import, export //immutable
-    uint8 storageProvider; // Storage Provider                                      //immutable
-    uint8 byte2; // Future Use
-    address referenceAddress; // Used with wrap / decorate                           //immutable
+    uint8 storageProvider; // Storage Provider
+    uint32 discount; // price sharing //internal admin                                      //immutable
+    address referenceAddress; // Used with wrap / decorate
+    uint8 additional; // Future Use                           //immutable
     bytes32 IPFS; //IPFS data for defining idxHash creation attribute fields
 }
 
@@ -922,7 +922,48 @@ interface ID_TKN_Interface {
      
  */
 interface AC_MGR_Interface {
-    //--------------------------------------------NODEMINTER only Functions--------------------------
+    /*
+     * @dev Set pricing
+     */
+    function OO_SetACpricing(uint256 _L1) external;
+
+    /*
+     * @dev Tincreases (but cannot decrease) price share for a given AC
+     * !! to be used with great caution
+     * This breaks decentralization and must eventually be given over to some kind of governance contract.
+     */
+    function adminIncreaseShare(uint32 _assetClass, uint32 _newDiscount)
+        external;
+
+    /*
+     * @dev Transfers a name from one asset class to another
+     * !! -------- to be used with great caution and only as a result of community governance action -----------
+     * Designed to remedy brand infringement issues. This breaks decentralization and must eventually be given
+     * over to some kind of governance contract.
+     * Destination AC must have IPFS Set to 0xFFF.....
+     *
+     */
+    function transferName(
+        uint32 _assetClass_source,
+        uint32 _assetClass_dest,
+        string calldata _name
+    ) external;
+
+    /*
+     * @dev Modifies an asset class with minimal controls
+     *--------DBS TEST ---- NEW args, order
+     */
+    function AdminModAssetClass(
+        uint32 _assetClass,
+        uint32 _assetClassRoot,
+        uint8 _custodyType,
+        uint8 _managementType,
+        uint8 _storageProvider,
+        uint32 _discount,
+        address _refAddress,
+        uint8 _additional,
+        bytes32 _IPFS
+    ) external;
 
     /*
      * @dev Mints asset class token and creates an assetClass. Mints to @address
@@ -933,13 +974,14 @@ interface AC_MGR_Interface {
      *  _discount 10000 = 100 percent price share , cannot exceed
      */
     function createAssetClass(
-        address _recipientAddress,
-        string calldata _name,
         uint32 _assetClass,
+        string calldata _name,
         uint32 _assetClassRoot,
         uint8 _custodyType,
         uint8 _managementType,
-        uint32 _discount
+        uint32 _discount,
+        bytes32 _IPFS,
+        address _recipientAddress
     ) external;
 
     /**
@@ -951,16 +993,17 @@ interface AC_MGR_Interface {
     function purchaseACnode(
         string calldata _name,
         uint32 _assetClassRoot,
-        uint8 _custodyType
-    ) external;
+        uint8 _custodyType,
+        bytes32 _IPFS
+    ) external returns (uint256);
 
     /*
      * @dev Authorize / Deauthorize / Authorize users for an address be permitted to make record modifications
      */
     function addUser(
+        uint32 _assetClass,
         bytes32 _addrHash,
-        uint8 _userType,
-        uint32 _assetClass
+        uint8 _userType
     ) external;
 
     /*
@@ -970,7 +1013,7 @@ interface AC_MGR_Interface {
      *  caller holds ACtoken
      *  name is unuiqe or same as old name
      */
-    function updateACname(string calldata _name, uint32 _assetClass) external;
+    function updateACname(uint32 _assetClass, string calldata _name) external;
 
     /*
      * @dev Modifies an assetClass
@@ -978,11 +1021,7 @@ interface AC_MGR_Interface {
      * Requires that:
      *  caller holds ACtoken
      */
-    function updateACipfs(
-        bytes32 _IPFS,
-        uint8 _byte,
-        uint32 _assetClass
-    ) external;
+    function updateACipfs(uint32 _assetClass, bytes32 _IPFS) external;
 
     /*
      * @dev Set function costs and payment address per asset class, in Wei
@@ -998,10 +1037,10 @@ interface AC_MGR_Interface {
      * @dev Modifies an assetClass
      * Sets the immutable data on an ACNode
      * Requires that:
-     *  caller holds ACtoken ; ACnode has managementType 255 (unconfigured)set
+     * caller holds ACtoken
+     * ACnode is managementType 255 (unconfigured)
      */
     function updateACImmutable(
-        //DPS:CHECK NEW ARGUMENTS, name has changed
         uint32 _assetClass,
         uint8 _managementType,
         uint8 _storageProvider,

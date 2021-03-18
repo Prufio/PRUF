@@ -25,6 +25,16 @@ __/\\\\\\\\\\\\\ _____/\\\\\\\\\ _______/\\../\\ ___/\\\\\\\\\\\\\\\
  *-----------------------------------------------------------------
  */
 
+// string name;
+// uint32 assetClassRoot;
+// uint8 custodyType;
+// uint8 managementType;
+// uint8 storageProvider;
+// uint32 discount;
+// address referenceAddress;
+// uint8 additional;
+// bytes32 IPFS;
+
 // SPDX-License-Identifier: UNLICENSED
 pragma solidity ^0.8.0;
 
@@ -103,8 +113,9 @@ contract AC_MGR is BASIC {
      * !! to be used with great caution
      * This breaks decentralization and must eventually be given over to some kind of governance contract.
      */
+
     function adminIncreaseShare(
-        //---------------------------------------DPS TEST-----NEW
+        //---------------------------------------DPS TEST-----NEW,order
         uint32 _assetClass,
         uint32 _newDiscount
     ) external isAdmin {
@@ -136,10 +147,11 @@ contract AC_MGR is BASIC {
      *
      */
     function transferName(
-        //---------------------------------------DPS TEST-----NEW
-        string calldata _name,
+        //---------------------------------------DPS TEST-----NEW, order
+
         uint32 _assetClass_source,
-        uint32 _assetClass_dest
+        uint32 _assetClass_dest,
+        string calldata _name
     ) external isAdmin {
         require(
             AC_number[_name] == _assetClass_source,
@@ -159,9 +171,8 @@ contract AC_MGR is BASIC {
     }
 
     /*
-     * @dev creates an assetClass
-     * makes ACdata record with new name, mints token
-     *
+     * @dev Modifies an asset class with minimal controls
+     *--------DBS TEST ---- NEW args, order
      */
     function AdminModAssetClass(
         uint32 _assetClass,
@@ -169,9 +180,11 @@ contract AC_MGR is BASIC {
         uint8 _custodyType,
         uint8 _managementType,
         uint8 _storageProvider,
+        uint32 _discount,
         address _refAddress,
-        uint32 _discount
-    ) private isAdmin nonReentrant {
+        uint8 _additional,
+        bytes32 _IPFS
+    ) external isAdmin nonReentrant {
         AC memory _ac = AC_data[_assetClassRoot];
         uint256 tokenId = uint256(_assetClass);
 
@@ -195,7 +208,9 @@ contract AC_MGR is BASIC {
         AC_data[_assetClass].custodyType = _custodyType;
         AC_data[_assetClass].managementType = _managementType;
         AC_data[_assetClass].storageProvider = _storageProvider;
+        AC_data[_assetClass].additional = _additional;
         AC_data[_assetClass].referenceAddress = _refAddress;
+        AC_data[_assetClass].IPFS = _IPFS;
         //^^^^^^^effects^^^^^^^^^
         //^^^^^^^interactions^^^^^^^^^
     }
@@ -211,24 +226,26 @@ contract AC_MGR is BASIC {
      *  _discount 10000 = 100 percent price share , cannot exceed
      */
     function createAssetClass(
-        //--------DBS TEST ---- NEW feature: _magement type
-        address _recipientAddress,
-        string calldata _name,
+        //*--------DBS TEST ---- NEW args, order
         uint32 _assetClass,
+        string calldata _name,
         uint32 _assetClassRoot,
         uint8 _custodyType,
         uint8 _managementType,
-        uint32 _discount
+        uint32 _discount,
+        bytes32 _IPFS,
+        address _recipientAddress
     ) external isNodeMinter nonReentrant {
         //^^^^^^^checks^^^^^^^^^
         _createAssetClass(
+            _assetClass,
             _recipientAddress,
             _name,
-            _assetClass,
             _assetClassRoot,
             _custodyType,
             _managementType,
-            _discount
+            _discount,
+            _IPFS
         );
         //^^^^^^^effects^^^^^^^^^
     }
@@ -246,14 +263,9 @@ contract AC_MGR is BASIC {
         //--------------will fail in burn / transfer if insufficient tokens
         string calldata _name,
         uint32 _assetClassRoot,
-        uint8 _custodyType
-    )
-        external
-        //uint8 _managementType
-        whenNotPaused
-        nonReentrant
-        returns (uint256)
-    {
+        uint8 _custodyType,
+        bytes32 _IPFS
+    ) external whenNotPaused nonReentrant returns (uint256) {
         require( //Impossible to test??
             ACtokenIndex < 4294000000,
             "ACM:IS:Only 4294000000 AC tokens allowed"
@@ -286,13 +298,14 @@ contract AC_MGR is BASIC {
         currentACtokenPrice = newACtokenPrice;
 
         _createAssetClass(
+            uint32(ACtokenIndex), //safe because ACtokenIndex <  4294000000 required
             _msgSender(),
             _name,
-            uint32(ACtokenIndex), //safe because ACtokenIndex <  4294000000 required
             _assetClassRoot,
             _custodyType,
             255, //creates ACNODES at managementType 255 = not yet usable
-            startingDiscount
+            startingDiscount,
+            _IPFS
         );
 
         //Set the default 11 authorized contracts
@@ -309,9 +322,9 @@ contract AC_MGR is BASIC {
      * @dev Authorize / Deauthorize / Authorize users for an address be permitted to make record modifications
      */
     function addUser(
+        uint32 _assetClass,
         bytes32 _addrHash,
-        uint8 _userType,
-        uint32 _assetClass
+        uint8 _userType
     ) external whenNotPaused isACtokenHolderOfClass(_assetClass) {
         //^^^^^^^checks^^^^^^^^^
 
@@ -337,7 +350,8 @@ contract AC_MGR is BASIC {
      *  caller holds ACtoken
      *  name is unuiqe or same as old name
      */
-    function updateACname(string calldata _name, uint32 _assetClass)
+
+    function updateACname(uint32 _assetClass, string calldata _name)
         external
         whenNotPaused
         isACtokenHolderOfClass(_assetClass)
@@ -364,13 +378,12 @@ contract AC_MGR is BASIC {
      *  caller holds ACtoken
      */
     function updateACipfs(
-        bytes32 _IPFS,
-        uint8 _byte,
-        uint32 _assetClass
+        uint32 _assetClass,
+        bytes32 _IPFS
     ) external isACtokenHolderOfClass(_assetClass) whenNotPaused {
         //^^^^^^^checks^^^^^^^^^
+
         AC_data[_assetClass].IPFS = _IPFS;
-        AC_data[_assetClass].byte2 = _byte;
         //^^^^^^^effects^^^^^^^^^
     }
 
@@ -395,11 +408,11 @@ contract AC_MGR is BASIC {
      * @dev Modifies an assetClass
      * Sets the immutable data on an ACNode
      * Requires that:
-     * caller holds ACtoken 
+     * caller holds ACtoken
      * ACnode is managementType 255 (unconfigured)
      */
     function updateACImmutable(
-        //DPS:CHECK NEW ARGUMENTS, name has changed 
+        //DPS:CHECK NEW ARGUMENTS, name has changed
         uint32 _assetClass,
         uint8 _managementType,
         uint8 _storageProvider,
@@ -414,6 +427,7 @@ contract AC_MGR is BASIC {
             "ACM:UAI: Cannot set management type to unconfigured"
         );
         //^^^^^^^checks^^^^^^^^^
+
         AC_data[_assetClass].managementType = _managementType;
         AC_data[_assetClass].storageProvider = _storageProvider;
         AC_data[_assetClass].referenceAddress = _refAddress;
@@ -459,18 +473,18 @@ contract AC_MGR is BASIC {
         //^^^^^^^interactions^^^^^^^^^
     }
 
-    // /* CAN'T RETURN A STRUCT WITH A STRING WITHOUT WIERDNESS-0.8.1
-    //  * @dev Retrieve AC_data @ _assetClass
-    //  */
-    // function getExtAC_data(uint32 _assetClass)
-    //     external
-    //     view
-    //     returns (AC memory)
-    // {
-    //     //^^^^^^^checks^^^^^^^^^
-    //     return (AC_data[_assetClass]);
-    //     //^^^^^^^interactions^^^^^^^^^
-    // }
+    /* CAN'T RETURN A STRUCT WITH A STRING WITHOUT WIERDNESS-0.8.1
+     * @dev Retrieve AC_data @ _assetClass
+     */
+    function getExtAC_data(uint32 _assetClass)
+        external
+        view
+        returns (AC memory)
+    {
+        //^^^^^^^checks^^^^^^^^^
+        return (AC_data[_assetClass]);
+        //^^^^^^^interactions^^^^^^^^^
+    }
 
     /* CAN'T RETURN A STRUCT WITH A STRING WITHOUT WIERDNESS-0.8.1
      * @dev Retrieve AC_data @ _assetClass
@@ -488,7 +502,7 @@ contract AC_MGR is BASIC {
         //^^^^^^^checks^^^^^^^^^
         return (
             AC_data[_assetClass].storageProvider,
-            AC_data[_assetClass].byte2,
+            AC_data[_assetClass].additional,
             AC_data[_assetClass].referenceAddress,
             AC_data[_assetClass].IPFS
         );
@@ -606,14 +620,16 @@ contract AC_MGR is BASIC {
      * makes ACdata record with new name, mints token
      *
      */
+
     function _createAssetClass(
+        uint32 _assetClass,
         address _recipientAddress,
         string calldata _name,
-        uint32 _assetClass,
         uint32 _assetClassRoot,
         uint8 _custodyType,
         uint8 _managementType,
-        uint32 _discount
+        uint32 _discount,
+        bytes32 _IPFS
     ) private whenNotPaused {
         AC memory _ac = AC_data[_assetClassRoot];
         uint256 tokenId = uint256(_assetClass);
@@ -645,6 +661,8 @@ contract AC_MGR is BASIC {
         AC_data[_assetClass].discount = _discount;
         AC_data[_assetClass].custodyType = _custodyType;
         AC_data[_assetClass].managementType = _managementType;
+        AC_data[_assetClass].IPFS = _IPFS;
+
         //^^^^^^^effects^^^^^^^^^
 
         AC_TKN.mintACToken(

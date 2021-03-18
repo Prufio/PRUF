@@ -281,14 +281,14 @@ contract Helper2 is Ownable, BASIC {
         //^^^^^^^checks^^^^^^^^^
         (
             asset_data.storageProvider,
-            asset_data.byte2,
+            asset_data.additional,
             asset_data.referenceAddress,
             asset_data.IPFS
         ) = AC_MGR.getExtAC_data_nostruct(_assetClass);
 
         return (
             asset_data.storageProvider,
-            asset_data.byte2,
+            asset_data.additional,
             asset_data.referenceAddress,
             asset_data.IPFS
         );
@@ -328,7 +328,7 @@ contract Helper2 is Ownable, BASIC {
     uint8 custodyType; // custodial or noncustodial, special asset types
     uint32 discount; // price sharing
     uint8 storageProvider; // Future Use
-    uint8 byte2; // Future Use
+    uint8 additional; // Future Use
     uint8 byte3; // Future Use
     address referenceAddress; // Used with wrap / decorate
     bytes32 IPFS; //IPFS data for defining idxHash creation attribute fields
