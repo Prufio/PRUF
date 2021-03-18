@@ -457,18 +457,18 @@ contract AC_MGR is BASIC {
         returns (
             uint32,
             uint8,
+            uint8,
             uint32,
-            address,
-            uint8
+            address
         )
     {
         //^^^^^^^checks^^^^^^^^^
         return (
             AC_data[_assetClass].assetClassRoot,
             AC_data[_assetClass].custodyType,
+            AC_data[_assetClass].managementType,
             AC_data[_assetClass].discount,
-            AC_data[_assetClass].referenceAddress,
-            AC_data[_assetClass].managementType
+            AC_data[_assetClass].referenceAddress
         );
         //^^^^^^^interactions^^^^^^^^^
     }
@@ -489,7 +489,7 @@ contract AC_MGR is BASIC {
     /* CAN'T RETURN A STRUCT WITH A STRING WITHOUT WIERDNESS-0.8.1
      * @dev Retrieve AC_data @ _assetClass
      */
-    function getExtAC_data_nostruct(uint32 _assetClass)
+    function helper_getExtAC_data_nostruct(uint32 _assetClass)
         external
         view
         returns (
@@ -499,12 +499,20 @@ contract AC_MGR is BASIC {
             bytes32
         )
     {
+        AC memory asset_data;
         //^^^^^^^checks^^^^^^^^^
+        (
+            asset_data.storageProvider,
+            asset_data.referenceAddress,
+            asset_data.additional,
+            asset_data.IPFS
+        ) = AC_MGR.getExtAC_data_nostruct(_assetClass);
+
         return (
-            AC_data[_assetClass].storageProvider,
-            AC_data[_assetClass].additional,
-            AC_data[_assetClass].referenceAddress,
-            AC_data[_assetClass].IPFS
+            asset_data.storageProvider,
+            asset_data.additional,
+            asset_data.referenceAddress,
+            asset_data.IPFS
         );
         //^^^^^^^interactions^^^^^^^^^
     }

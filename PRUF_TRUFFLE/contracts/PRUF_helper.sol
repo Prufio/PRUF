@@ -281,8 +281,8 @@ contract Helper is Ownable, BASIC {
         //^^^^^^^checks^^^^^^^^^
         (
             asset_data.storageProvider,
-            asset_data.additional,
             asset_data.referenceAddress,
+            asset_data.additional,
             asset_data.IPFS
         ) = AC_MGR.getExtAC_data_nostruct(_assetClass);
 

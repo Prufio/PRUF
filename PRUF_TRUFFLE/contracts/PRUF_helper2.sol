@@ -272,8 +272,8 @@ contract Helper2 is Ownable, BASIC {
         view
         returns (
             uint8,
-            uint8,
             address,
+            uint8,
             bytes32
         )
     {
@@ -281,15 +281,15 @@ contract Helper2 is Ownable, BASIC {
         //^^^^^^^checks^^^^^^^^^
         (
             asset_data.storageProvider,
-            asset_data.additional,
             asset_data.referenceAddress,
+            asset_data.additional,
             asset_data.IPFS
         ) = AC_MGR.getExtAC_data_nostruct(_assetClass);
 
         return (
             asset_data.storageProvider,
-            asset_data.additional,
             asset_data.referenceAddress,
+            asset_data.additional,
             asset_data.IPFS
         );
         //^^^^^^^interactions^^^^^^^^^

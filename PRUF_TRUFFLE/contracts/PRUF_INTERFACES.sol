@@ -1061,13 +1061,12 @@ interface AC_MGR_Interface {
      */
     function getAC_data(uint32 _assetClass)
         external
-        view
         returns (
             uint32,
             uint8,
+            uint8,
             uint32,
-            address,
-            uint8
+            address
         );
 
     /* CAN'T RETURN A STRUCT WITH A STRING WITHOUT WIERDNESS-0.8.1
@@ -1086,8 +1085,8 @@ interface AC_MGR_Interface {
         view
         returns (
             uint8,
-            uint8,
             address,
+            uint8,
             bytes32
         );
 

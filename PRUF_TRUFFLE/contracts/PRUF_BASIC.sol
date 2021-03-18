@@ -256,7 +256,6 @@ abstract contract BASIC is
      */
     function getCallingUserType(uint32 _assetClass)
         internal
-        view
         virtual
         returns (uint8)
     {
@@ -277,7 +276,6 @@ abstract contract BASIC is
      */
     function getACinfo(uint32 _assetClass)
         internal
-        view
         virtual
         returns (AC memory)
     {
@@ -285,12 +283,13 @@ abstract contract BASIC is
 
         AC memory AC_info;
         //^^^^^^^effects^^^^^^^^^
+
         (
             AC_info.assetClassRoot,
             AC_info.custodyType,
+            AC_info.managementType,
             AC_info.discount,
-            AC_info.referenceAddress,
-            AC_info.managementType
+            AC_info.referenceAddress
         ) = AC_MGR.getAC_data(_assetClass);
         return AC_info;
         //^^^^^^^interactions^^^^^^^^^
