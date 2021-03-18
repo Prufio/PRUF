@@ -194,7 +194,7 @@ contract CORE is BASIC {
      */
     function deductRecycleCosts(
         uint32 _assetClass,
-        address _oldOwner //DBS:CHECK --------------- Payment now pays 1/2 ACTHcost + root to discarder, 1/2 to ACTH
+        address _oldOwner //DPS:CHECK --------------- Payment now pays 1/2 ACTHcost + root to discarder, 1/2 to ACTH
     ) internal virtual whenNotPaused {
         //^^^^^^^checks^^^^^^^^^
         Invoice memory pricing;

@@ -89,7 +89,7 @@ contract NP_NC is CORE {
             "NPNC:EX: Must be in transferrable status (51)"
         );
         if (AC_info.managementType == 1) {
-            require( //holds AC token if AC is restricted --------DBS TEST ---- NEW
+            require( //holds AC token if AC is restricted --------DPS TEST ---- NEW
                 (AC_TKN.ownerOf(rec.assetClass) == _msgSender()),
                 "NPNC:EX: Restricted from exporting assets from this AC - does not hold ACtoken"
             );
