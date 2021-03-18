@@ -172,7 +172,7 @@ contract AC_MGR is BASIC {
 
     /*
      * @dev Modifies an asset class with minimal controls
-     *--------DBS TEST ---- NEW args, order
+     *--------DPS TEST ---- NEW args, order
      */
     function AdminModAssetClass(
         uint32 _assetClass,
@@ -226,7 +226,7 @@ contract AC_MGR is BASIC {
      *  _discount 10000 = 100 percent price share , cannot exceed
      */
     function createAssetClass(
-        //*--------DBS TEST ---- NEW args, order
+        //*--------DPS TEST ---- NEW args, order
         uint32 _assetClass,
         string calldata _name,
         uint32 _assetClassRoot,
@@ -259,7 +259,7 @@ contract AC_MGR is BASIC {
      * - the caller must have a balance of at least `amount`.
      */
     function purchaseACnode(
-        //--------DBS TEST ---- NEW feature: _magement type
+        //--------DPS TEST ---- NEW feature: _magement type
         //--------------will fail in burn / transfer if insufficient tokens
         string calldata _name,
         uint32 _assetClassRoot,
@@ -450,6 +450,7 @@ contract AC_MGR is BASIC {
 
     /*
      * @dev Retrieve AC_data @ _assetClass
+     *--------DPS TEST ---- NEW args, order
      */
     function getAC_data(uint32 _assetClass)
         external
@@ -488,6 +489,7 @@ contract AC_MGR is BASIC {
 
     /* CAN'T RETURN A STRUCT WITH A STRING WITHOUT WIERDNESS-0.8.1
      * @dev Retrieve AC_data @ _assetClass
+     *--------DPS TEST ---- NEW args, order
      */
     function helper_getExtAC_data_nostruct(uint32 _assetClass)
         external
@@ -567,7 +569,7 @@ contract AC_MGR is BASIC {
         external
         view
         returns (
-            //--------DBS TEST ---- NEW
+            //--------DPS TEST ---- NEW
             uint256,
             uint256,
             uint256
@@ -651,7 +653,7 @@ contract AC_MGR is BASIC {
             (_ac.custodyType == 3) || (_assetClassRoot == _assetClass),
             "ACM:CAC:Root asset class does not exist"
         );
-        require( //holds root token if root is restricted --------DBS TEST ---- NEW
+        require( //holds root token if root is restricted --------DPS TEST ---- NEW
             (AC_TKN.ownerOf(_assetClassRoot) == _msgSender()) ||
                 (AC_data[_assetClassRoot].managementType == 0),
             "ACM:CAC:Restricted from creating AC's in this root - does not hold root token"

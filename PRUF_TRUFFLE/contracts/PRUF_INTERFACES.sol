@@ -951,7 +951,7 @@ interface AC_MGR_Interface {
 
     /*
      * @dev Modifies an asset class with minimal controls
-     *--------DBS TEST ---- NEW args, order
+     *--------DPS TEST ---- NEW args, order
      */
     function AdminModAssetClass(
         uint32 _assetClass,
@@ -1118,7 +1118,7 @@ interface AC_MGR_Interface {
         external
         view
         returns (
-            //--------DBS TEST ---- NEW
+            //--------DPS TEST ---- NEW
             uint256,
             uint256,
             uint256
