@@ -316,16 +316,6 @@ contract AC_MGR is BASIC {
         //^^^^^^^effects/interactions^^^^^^^^^
     }
 
-    function fakePurchaseACnode(uint32 _assetClassRoot)
-        external
-        view
-        returns (address)
-    {
-        address rootPaymentAddress = cost[_assetClassRoot][1].paymentAddress; //payment for upgrade goes to root AC payment adress specified for service (1)
-
-        return rootPaymentAddress; //returns asset class # of minted token
-        //^^^^^^^effects/interactions^^^^^^^^^
-    }
 
     /*
      * @dev Authorize / Deauthorize / Authorize users for an address be permitted to make record modifications
