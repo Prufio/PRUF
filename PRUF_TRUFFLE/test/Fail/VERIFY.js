@@ -911,11 +911,11 @@ __/\\\\\\\\\\\\\ _____/\\\\\\\\\ _______/\\../\\ ___/\\\\\\\\\\\\\\\
             it('Should mint 2 asset root tokens', async () => {
 
                 console.log("Minting root token 1")
-                return AC_MGR.createAssetClass(account1, 'ROOT1', '1', '1', '3', rgt000, "0", { from: account1 })
+                return AC_MGR.createAssetClass('1', 'ROOT1', '1', '3', "0", "0", rgt000, account1, { from: account1 })
             
                 .then(() => {
                     console.log("Minting root token 2")
-                    return AC_MGR.createAssetClass(account1, "ROOT2", "2", "2", "3", rgt000, "0", { from: account1 })
+                    return AC_MGR.createAssetClass('2', 'ROOT2', '2', '3', "0", "0", rgt000, account1, { from: account1 })
                 })
             })
             
@@ -923,11 +923,11 @@ __/\\\\\\\\\\\\\ _____/\\\\\\\\\ _______/\\../\\ ___/\\\\\\\\\\\\\\\
             it("Should Mint 2 non cust AC", async () => {
                 
                 console.log("Minting AC 10 -NC")
-                return AC_MGR.createAssetClass(account1, "NonCustodial_AC10", "10", "1", "2", rgt000, "0", { from: account1 })
+                return AC_MGR.createAssetClass('10', 'NonCustodial_AC10', '1', '2', "0", "0", rgt000, account1, { from: account1 })
             
                     .then(() => {
                         console.log("Minting AC 11 -NC to Account2")
-                        return AC_MGR.createAssetClass(account2, "NonCustodial_AC11", "11", "1", "2", rgt000, "0", { from: account1 })
+                        return AC_MGR.createAssetClass('11', 'NonCustodial_AC11', '1', '2', "0", "0", rgt000, account2, { from: account1 })
                     })
             })
             
@@ -935,21 +935,21 @@ __/\\\\\\\\\\\\\ _____/\\\\\\\\\ _______/\\../\\ ___/\\\\\\\\\\\\\\\
             it("Should Mint 4 verify AC tokens", async () => {
                 
                 console.log("Minting AC 12 Verify")
-                return AC_MGR.createAssetClass(account1, "Verify1", "12", "1", "4", rgt000, "0", { from: account1 })
+                return AC_MGR.createAssetClass('12', 'Verify1', '1', '4', "0", "0", rgt000, account1, { from: account1 })
             
                     .then(() => {
                         console.log("Minting AC 13 Verify")
-                        return AC_MGR.createAssetClass(account1, "Verify2", "13", "1", "4", rgt000, "0", { from: account1 })
+                        return AC_MGR.createAssetClass('13', 'Verify2', '1', '4', "0", "0", rgt000, account1, { from: account1 })
                     })
             
                     .then(() => {
                         console.log("Minting AC 14 Verify to Account2")
-                        return AC_MGR.createAssetClass(account2, "Verify3", "14", "1", "4", rgt000, "0", { from: account1 })
+                        return AC_MGR.createAssetClass('14', 'Verify3', '1', '4', "0", "0", rgt000, account2, { from: account1 })
                     })
             
                     .then(() => {
                         console.log("Minting AC 15 Verify to Account2")
-                        return AC_MGR.createAssetClass(account2, "Verify4", "15", "2", "4", rgt000, "0", { from: account1 })
+                        return AC_MGR.createAssetClass('15', 'Verify4', '2', '4', "0", "0", rgt000, account2, { from: account1 })
                     })
             
             })
@@ -1848,36 +1848,36 @@ __/\\\\\\\\\\\\\ _____/\\\\\\\\\ _______/\\../\\ ___/\\\\\\\\\\\\\\\
         
                 console.log("//**************************************END BOOTSTRAP**********************************************/")
                 console.log("Account2 => AC10")
-                return AC_MGR.addUser(account2Hash, '1', '10', { from: account1 })
+                return AC_MGR.addUser('10', account2Hash, '1', { from: account1 })
         
                     .then(() => {
                         console.log("Account1 => AC10")
-                        return AC_MGR.addUser(account1Hash, '1', '10', { from: account1 })
+                        return AC_MGR.addUser('10', account1Hash, '1', { from: account1 })
                     })
         
                     .then(() => {
                         console.log("Account2 => AC11")
-                        return AC_MGR.addUser(account2Hash, '1', '11', { from: account2 })
+                        return AC_MGR.addUser('11', account2Hash, '1', { from: account2 })
                     })
         
                     .then(() => {
                         console.log("Account3 => AC11")
-                        return AC_MGR.addUser(account3Hash, '1', '11', { from: account2 })
+                        return AC_MGR.addUser('11', account3Hash, '1', { from: account2 })
                     })
         
                     .then(() => {
                         console.log("Account4 => AC10")
-                        return AC_MGR.addUser(account4Hash, '1', '10', { from: account1 })
+                        return AC_MGR.addUser('10', account4Hash, '1', { from: account1 })
                     })
         
                     .then(() => {
                         console.log("Account4 => AC12")
-                        return AC_MGR.addUser(account4Hash, '1', '12', { from: account1 })
+                        return AC_MGR.addUser('12', account4Hash, '1', { from: account1 })
                     })
         
                     .then(() => {
                         console.log("Account2 => AC12")
-                        return AC_MGR.addUser(account2Hash, '1', '12', { from: account1 })
+                        return AC_MGR.addUser('12', account2Hash, '1', { from: account1 })
                     })
         
                     // .then(() => {
@@ -1887,42 +1887,42 @@ __/\\\\\\\\\\\\\ _____/\\\\\\\\\ _______/\\../\\ ___/\\\\\\\\\\\\\\\
         
                     .then(() => {
                         console.log("Account5 => AC13")
-                        return AC_MGR.addUser(account5Hash, '1', '13', { from: account1 })
+                        return AC_MGR.addUser('13', account5Hash, '1', { from: account1 })
                     })
         
                     .then(() => {
                         console.log("Account2 => AC14")
-                        return AC_MGR.addUser(account2Hash, '1', '14', { from: account2 })
+                        return AC_MGR.addUser('14', account2Hash, '1', { from: account2 })
                     })
         
                     .then(() => {
                         console.log("Account6 => AC14")
-                        return AC_MGR.addUser(account6Hash, '1', '14', { from: account2 })
+                        return AC_MGR.addUser('14', account6Hash, '1', { from: account2 })
                     })
         
                     .then(() => {
                         console.log("Account7 => AC14 (ROBOT)")
-                        return AC_MGR.addUser(account7Hash, '9', '14', { from: account2 })
+                        return AC_MGR.addUser('14', account7Hash, '9', { from: account2 })
                     })
         
                     .then(() => {
                         console.log("Account8 => AC10 (ROBOT)")
-                        return AC_MGR.addUser(account8Hash, '9', '10', { from: account1 })
+                        return AC_MGR.addUser('10', account8Hash, '9', { from: account1 })
                     })
         
                     .then(() => {
                         console.log("Account9 => AC11 (ROBOT)")
-                        return AC_MGR.addUser(account9Hash, '9', '11', { from: account2 })
+                        return AC_MGR.addUser('11', account9Hash, '9', { from: account2 })
                     })
         
                     .then(() => {
                         console.log("Account10 => AC15 (PIPMINTER)")
-                        return AC_MGR.addUser(account10Hash, '10', '15', { from: account2 })
+                        return AC_MGR.addUser('15', account10Hash, '10', { from: account2 })
                     })
         
                     .then(() => {
                         console.log("Account2 => AC15")
-                        return AC_MGR.addUser(account2Hash, '1', '15', { from: account2 })
+                        return AC_MGR.addUser('15', account2Hash, '1', { from: account2 })
                     })
         
                     // .then(() => {
@@ -1932,7 +1932,7 @@ __/\\\\\\\\\\\\\ _____/\\\\\\\\\ _______/\\../\\ ___/\\\\\\\\\\\\\\\
         
                     .then(() => {
                         console.log("Account10 => AC10 (PIPMINTER)")
-                        return AC_MGR.addUser(account10Hash, '1', '10', { from: account1 })
+                        return AC_MGR.addUser('10', account10Hash, '1', { from: account1 })
                     })
             })
 

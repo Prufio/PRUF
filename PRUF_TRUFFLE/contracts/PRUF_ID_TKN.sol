@@ -77,7 +77,7 @@ contract ID_TKN is
     modifier isAdmin() {
         require(
             hasRole(CONTRACT_ADMIN_ROLE, _msgSender()),
-            "AT:MOD-IA:Calling address does not belong to an admin"
+            "PIDT:MOD-IA:Calling address does not belong to an admin"
         );
         _;
     }
@@ -85,7 +85,7 @@ contract ID_TKN is
     modifier isMinter() {
         require(
             hasRole(MINTER_ROLE, _msgSender()),
-            "AT:MOD-IA:Calling address does not belong to a minter"
+            "PIDT:MOD-IA:Calling address does not belong to a minter"
         );
         _;
     }

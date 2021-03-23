@@ -368,9 +368,9 @@ contract STOR is AccessControl, ReentrancyGuard, Pausable {
             database[_idxHash].assetStatus != 60,
             "S:NR:Asset discarded use APP_NC rcycl"
         );
-        require(database[_idxHash].assetClass == 0, "S:NR:Rec already exists"); //reduntant with current contracts, either throws for being discarded(1st req) or for the A_TKN already existing in CORE
+        require(database[_idxHash].assetClass == 0, "S:NR:Rec already exists"); // CTS:EXAMINE reduntant with current contracts, either throws for being discarded(1st req) or for the A_TKN already existing in CORE
         require(_rgtHash != 0, "S:NR:RGT = 0");
-        require(_assetClass != 0, "S:NR:AC = 0"); //redundant through isAuthorized mod
+        require(_assetClass != 0, "S:NR:AC = 0"); //CTS:EXAMINE redundant through isAuthorized mod
         //^^^^^^^checks^^^^^^^^^
 
         Record memory rec;
@@ -416,7 +416,7 @@ contract STOR is AccessControl, ReentrancyGuard, Pausable {
         Record memory rec = database[_idxHash];
         bytes32 idxHash = _idxHash; //stack saving
 
-        require(_countDown <= rec.countDown, "S:MR:countDown +!"); //prohibit increasing the countdown value  //REDUNDANT, THROWS IN SAFEMATH
+        require(_countDown <= rec.countDown, "S:MR:countDown +!"); //prohibit increasing the countdown value  //CTS:EXAMINE REDUNDANT, THROWS IN SAFEMATH
         require(isLostOrStolen(_newAssetStatus) == 0, "S:MR:Must use L/S");
         require(isEscrow(_newAssetStatus) == 0, "S:MR:Must use ECR");
         // require(
@@ -555,7 +555,7 @@ contract STOR is AccessControl, ReentrancyGuard, Pausable {
         exists(_idxHash) //asset must exist in 'database' REDUNDANT THROWS IN ECR_MGR WITH "Asset not in escrow status"
     {
         Record memory rec = database[_idxHash];
-        require(isEscrow(rec.assetStatus) == 170, "S:EE:! ecr stat"); //asset must be in an escrow status REDUNDANT THROWS IN ECR_MGR WITH "Asset not in escrow status"
+        require(isEscrow(rec.assetStatus) == 170, "S:EE:! ecr stat"); //asset must be in an escrow status CTS:EXAMINE REDUNDANT THROWS IN ECR_MGR WITH "Asset not in escrow status"
         //^^^^^^^checks^^^^^^^^^
 
         if (rec.assetStatus == 6) {
@@ -588,12 +588,12 @@ contract STOR is AccessControl, ReentrancyGuard, Pausable {
         external
         nonReentrant
         whenNotPaused
-        exists(_idxHash) //asset must exist in 'database'  REDUNDANT THROWS IN PURCHASE, UNREACHABLE WITH CURRENT CONTRACTS
+        exists(_idxHash) //asset must exist in 'database' CTS:EXAMINE  REDUNDANT THROWS IN PURCHASE, UNREACHABLE WITH CURRENT CONTRACTS
         isAuthorized(database[_idxHash].assetClass) //calling contract must be authorized in relevant assetClass
     //notEscrow(_idxHash) // asset must not be held in escrow status
     {
         Record memory rec = database[_idxHash];
-        require((isTransferred(rec.assetStatus) == 0), "S:SP: Txfrd asset"); //REDUNDANT THROWS IN PURCHASE, UNREACHABLE WITH CURRENT CONTRACTS
+        require((isTransferred(rec.assetStatus) == 0), "S:SP: Txfrd asset"); //CTS:EXAMINE REDUNDANT THROWS IN PURCHASE, UNREACHABLE WITH CURRENT CONTRACTS
         //require(isEscrow(rec.assetStatus) == 0, "S:SP: Escrowed asset");
         //^^^^^^^checks^^^^^^^^^
 

@@ -947,16 +947,21 @@ contract('DECORATE', accounts => {
     //     console.log("Authorizing AC_MGR")
     //     return AC_TKN.grantRole(trustedAgentRoleB32, AC_MGR.address, { from: account1 })
     // })
-
-
+        
+        
     it('Should mint a couple of asset root tokens', async () => {
-
+                
         console.log("Minting root token 1 -C")
-        return AC_MGR.createAssetClass(account1, 'CUSTODIAL_ROOT', '1', '1', '3', rgt000, "0", { from: account1 })
+        return AC_MGR.createAssetClass("1", 'CUSTODIAL_ROOT1', '1', '3', '0', "0", rgt000, account1, { from: account1 })
 
             .then(() => {
                 console.log("Minting root token 2 -NC")
-                return AC_MGR.createAssetClass(account1, 'NON-CUSTODIAL_ROOT', '2', '2', '3', rgt000, "0", { from: account1 })
+                return AC_MGR.createAssetClass("2", 'CUSTODIAL_ROOT2', '2', '3', '0', "0", rgt000, account1, { from: account1 })
+            })
+
+            .then(() => {
+                console.log("Minting root token 3 -RESTRICTED")
+                return AC_MGR.createAssetClass("3", 'CUSTODIAL_ROOT3', '3', '3', '1', "0", rgt000, account2, { from: account1 })
             })
     })
 
@@ -964,53 +969,73 @@ contract('DECORATE', accounts => {
     it("Should Mint 2 cust and 2 non-cust AC tokens in AC_ROOT 1", async () => {
 
         console.log("Minting AC 10 -C")
-        return AC_MGR.createAssetClass(account1, "Custodial_AC1", "10", "1", "1", rgt000, "0", { from: account1 })
+        return AC_MGR.createAssetClass("10", 'CUSTODIAL_AC10', '1', '1', '0', "0", rgt000, account1, { from: account1 })
 
             .then(() => {
                 console.log("Minting AC 11 -C")
-                return AC_MGR.createAssetClass(account1, "Custodial_AC2", "11", "1", "1", rgt000, "0", { from: account1 })
+                return AC_MGR.createAssetClass("11", 'CUSTODIAL_AC11', '1', '1', '0', "0", rgt000, account1, { from: account1 })
             })
 
             .then(() => {
                 console.log("Minting AC 12 -NC")
-                return AC_MGR.createAssetClass(account1, "Non-Custodial_AC1", "12", "1", "2", rgt000, "0", { from: account1 })
+                return AC_MGR.createAssetClass("12", 'CUSTODIAL_AC12', '1', '2', '0', "0", rgt000, account1, { from: account1 })
             })
 
             .then(() => {
                 console.log("Minting AC 13 -NC")
-                return AC_MGR.createAssetClass(account1, "Non-Custodial_AC2", "13", "1", "2", rgt000, "0", { from: account1 })
+                return AC_MGR.createAssetClass("13", 'CUSTODIAL_AC13', '1', '2', '0', "0", rgt000, account1, { from: account1 })
             })
 
             .then(() => {
                 console.log("Minting AC 16 -NC")
-                return AC_MGR.createAssetClass(account10, "Non_Custodial_AC5", "16", "1", "2", rgt000, "0", { from: account1 })
+                return AC_MGR.createAssetClass("16", 'CUSTODIAL_AC16', '1', '5', '0', "0", rgt000, account10, { from: account1 })
             })
 
             .then(() => {
                 console.log("Minting AC 17 -NC")
-                return AC_MGR.createAssetClass(account1, "Non_Custodial_AC6", "17", "1", "5", rgt000, "0", { from: account1 })
+                return AC_MGR.createAssetClass("17", 'CUSTODIAL_AC17', '1', '5', '0', "0", rgt000, account1, { from: account1 })
             })
 
             .then(() => {
                 console.log("Minting AC 18 -NC")
-                return AC_MGR.createAssetClass(account1, "Non_Custodial_AC7", "18", "1", "5", rgt000, "0", { from: account1 })
-            })
-    })
-
-
-    it("Should Mint 3 non-cust AC tokens in AC_ROOT 2", async () => {
-
-        console.log("Minting AC 14 -NC")
-        return AC_MGR.createAssetClass(account1, "Non-Custodial_AC3", "14", "2", "2", rgt000, "0", { from: account1 })
-
-            .then(() => {
-                console.log("Minting AC 15 -NC")
-                return AC_MGR.createAssetClass(account10, "Non_Custodial_AC4", "15", "2", "2", rgt000, "0", { from: account1 })
+                return AC_MGR.createAssetClass("18", 'CUSTODIAL_AC18', '1', '2', '0', "0", rgt000, account1, { from: account1 })
             })
 
             .then(() => {
                 console.log("Minting AC 19 -NC")
-                return AC_MGR.createAssetClass(account1, "Non_Custodial_AC8", "19", "2", "5", rgt000, "0", { from: account1 })
+                return AC_MGR.createAssetClass("19", 'CUSTODIAL_AC19', '2', '5', '0', "0", rgt000, account1, { from: account1 })
+            })
+
+            .then(() => {
+                console.log("Minting AC 20 -NC")
+                return AC_MGR.createAssetClass("20", 'CUSTODIAL_AC20', '2', '5', '1', "0", rgt000, account1, { from: account1 })
+            })
+
+            .then(() => {
+                console.log("Minting AC 21 -NC")
+                return AC_MGR.createAssetClass("21", 'CUSTODIAL_AC21', '2', '5', '3', "0", rgt000, account1, { from: account1 })
+            })
+
+            .then(() => {
+                console.log("Minting AC 22 -NC")
+                return AC_MGR.createAssetClass("22", 'CUSTODIAL_AC22', '2', '5', '4', "0", rgt000, account1, { from: account1 })
+            })
+
+            .then(() => {
+                console.log("Minting AC 23 -NC")
+                return AC_MGR.createAssetClass("23", 'CUSTODIAL_AC23', '2', '5', '5', "0", rgt000, account1, { from: account1 })
+            })
+    })
+
+
+    it("Should Mint 2 non-cust AC tokens in AC_ROOT 2", async () => {
+
+        console.log("Minting AC 14 -NC")
+        return AC_MGR.createAssetClass("14", 'CUSTODIAL_AC14', '2', '2', '0', "0", rgt000, account1, { from: account1 })
+
+            .then(() => {
+                console.log("Minting AC 15 -NC")
+                return AC_MGR.createAssetClass("15", 'CUSTODIAL_AC15', '2', '2', '0', "0", rgt000, account10, { from: account1 })
             })
     })
 
@@ -2192,75 +2217,103 @@ contract('DECORATE', accounts => {
 
         console.log("//**************************************END BOOTSTRAP**********************************************/")
         console.log("Account2 => AC10")
-        return AC_MGR.addUser(account2Hash, '1', '10', { from: account1 })
+        return AC_MGR.addUser('10', account2Hash, '1', { from: account1 })
 
             .then(() => {
                 console.log("Account2 => AC11")
-                return AC_MGR.addUser(account2Hash, '1', '11', { from: account1 })
+                return AC_MGR.addUser('11', account2Hash, '1', { from: account1 })
             })
 
             .then(() => {
                 console.log("Account3 => AC11")
-                return AC_MGR.addUser(account3Hash, '1', '11', { from: account1 })
+                return AC_MGR.addUser('11', account3Hash, '1', { from: account1 })
             })
 
             .then(() => {
                 console.log("Account4 => AC10")
-                return AC_MGR.addUser(account4Hash, '1', '10', { from: account1 })
+                return AC_MGR.addUser('10', account4Hash, '1', { from: account1 })
             })
 
             .then(() => {
                 console.log("Account4 => AC12")
-                return AC_MGR.addUser(account4Hash, '1', '12', { from: account1 })
+                return AC_MGR.addUser('12', account4Hash, '1', { from: account1 })
             })
 
             .then(() => {
                 console.log("Account4 => AC12")
-                return AC_MGR.addUser(account4Hash, '1', '16', { from: account10 })
+                return AC_MGR.addUser('16', account4Hash, '1', { from: account10 })
             })
 
             .then(() => {
                 console.log("Account5 => AC13")
-                return AC_MGR.addUser(account5Hash, '1', '13', { from: account1 })
+                return AC_MGR.addUser('13', account5Hash, '1', { from: account1 })
             })
 
             .then(() => {
                 console.log("Account6 => AC14")
-                return AC_MGR.addUser(account6Hash, '1', '14', { from: account1 })
+                return AC_MGR.addUser('14', account6Hash, '1', { from: account1 })
             })
 
             .then(() => {
                 console.log("Account7 => AC14 (ROBOT)")
-                return AC_MGR.addUser(account7Hash, '9', '14', { from: account1 })
+                return AC_MGR.addUser('14', account7Hash, '9', { from: account1 })
             })
 
             .then(() => {
                 console.log("Account8 => AC10 (ROBOT)")
-                return AC_MGR.addUser(account8Hash, '9', '10', { from: account1 })
+                return AC_MGR.addUser('10', account8Hash, '9', { from: account1 })
             })
 
             .then(() => {
                 console.log("Account9 => AC11 (ROBOT)")
-                return AC_MGR.addUser(account9Hash, '9', '11', { from: account1 })
+                return AC_MGR.addUser('11', account9Hash, '9', { from: account1 })
             })
 
             .then(() => {
                 console.log("Account10 => AC15 (PIPMINTER)")
-                return AC_MGR.addUser(account10Hash, '10', '15', { from: account10 })
+                return AC_MGR.addUser('15', account10Hash, '10', { from: account10 })
             })
 
             .then(() => {
                 console.log("Account10 => AC15 (PIPMINTER)")
-                return AC_MGR.addUser(account10Hash, '10', '16', { from: account10 })
+                return AC_MGR.addUser('16', account10Hash, '10', { from: account10 })
             })
 
             .then(() => {
                 console.log("Account10 => AC15 (PIPMINTER)")
-                return AC_MGR.addUser(account10Hash, '1', '10', { from: account1 })
+                return AC_MGR.addUser('10', account10Hash, '1', { from: account1 })
+            })
+
+            .then(() => {
+                console.log("Account10 => AC1")
+                return AC_MGR.addUser('1', account10Hash, '1', { from: account1 })
+            })
+
+            .then(() => {
+                console.log("Account2 => AC1")
+                return AC_MGR.addUser('1', account2Hash, '1', { from: account1 })
+            })
+
+            .then(() => {
+                console.log("Account2 => AC16")
+                return AC_MGR.addUser('16', account2Hash, '1', { from: account10 })
+            })
+
+            .then(() => {
+                console.log("Account2 => AC17")
+                return AC_MGR.addUser('17', account2Hash, '0', { from: account1 })
+            })
+
+            .then(() => {
+                console.log("Account2 => AC18")
+                return AC_MGR.addUser('18', account2Hash, '1', { from: account1 })
+            })
+
+            .then(() => {
+                console.log("Account2 => AC19")
+                return AC_MGR.addUser('19', account2Hash, '1', { from: account1 })
             })
     })
-
-
 
 
     it('Should mint 30000 tokens to account1', async () => {
@@ -2360,27 +2413,27 @@ contract('DECORATE', accounts => {
         )
     })
 
-    it('Should update extended data of AC18 to A_TKN.address', async () => {
-        return AC_MGR.updateACreferenceAddress(
-            A_TKN.address,
-            "0",
-            "0",
-            "0",
-            "18",
-            { from: account1 }
-        )
-    })
+    // it('Should update extended data of AC18 to A_TKN.address', async () => {
+    //     return AC_MGR.updateACreferenceAddress(
+    //         A_TKN.address,
+    //         "0",
+    //         "0",
+    //         "0",
+    //         "18",
+    //         { from: account1 }
+    //     )
+    // })
 
-    it('Should update extended data of AC17 to Foreign721.address', async () => {
-        return AC_MGR.updateACreferenceAddress(
-            Foreign721.address,
-            "0",
-            "0",
-            "0",
-            "17",
-            { from: account1 }
-        )
-    })
+    // it('Should update extended data of AC17 to Foreign721.address', async () => {
+    //     return AC_MGR.updateACreferenceAddress(
+    //         Foreign721.address,
+    //         "0",
+    //         "0",
+    //         "0",
+    //         "17",
+    //         { from: account1 }
+    //     )
+    // })
 
     it("Should retrieve extended data of AC17", async () => {
         var data = [];
@@ -2402,6 +2455,22 @@ contract('DECORATE', accounts => {
             '12',
             '100',
             { from: account1 }
+        )
+    })
+
+    it('Should mint external 721 4', async () => {
+        return Foreign721.mint(
+            account2,
+            { from: account1 }
+        )
+    })
+
+
+    it('Should mint ID_TKN(4) to account2', async () => {
+        return ID_TKN.mintPRUF_IDToken(
+            account2,
+            '4',
+            { from: account1}
         )
     })
 
@@ -2434,16 +2503,16 @@ contract('DECORATE', accounts => {
     })
 
     //3
-    it('Should fail because AC extended data is not 0 || Foreign721.address', async () => {
-        return DECORATE.decorate721(
-            "0",
-            Foreign721.address,
-            rgt1,
-            "18",
-            "5000",
-            { from: account1 }
-        )
-    })
+    // it('Should fail because AC extended data is not 0 || Foreign721.address', async () => {
+    //     return DECORATE.decorate721(
+    //         "0",
+    //         Foreign721.address,
+    //         rgt1,
+    //         "18",
+    //         "5000",
+    //         { from: account1 }
+    //     )
+    // })
 
     //4
     it('Should fail because record already exists', async () => {
@@ -2743,12 +2812,23 @@ contract('DECORATE', accounts => {
             { from: account2 }
         )
     })
+
     //25
     it('Should fail because record AC cust type !== 5', async () => {
         return DECORATE._import(
             "2",
             Foreign721.address,
             "12",
+            { from: account1 }
+        )
+    })
+    
+    //26
+    it('Should fail because record AC cust type !== 5', async () => {
+        return DECORATE._import(
+            "2",
+            Foreign721.address,
+            "18",
             { from: account1 }
         )
     })
@@ -2763,13 +2843,88 @@ contract('DECORATE', accounts => {
     //     )
     // })
 
-    //26
+    //27
     it('Should fail because asset cannot be imported into new root', async () => {
         return DECORATE._import(
             "2",
             Foreign721.address,
             "19",
             { from: account1 }
+        )
+    })
+
+    //28
+    it('Should fail because token is already wrapped', async () => {
+
+        console.log("//**************************************END _import FAIL BATCH**********************************************/")
+        console.log("//**************************************BEGIN createRecordOnly (Internal) BATCH**********************************************/")
+        return DECORATE.decorate721(
+            "2",
+            Foreign721.address,
+            rgt1,
+            "17",
+            "5000",
+            { from: account1 }
+        )
+    })
+
+    //29
+    it('Should fail because AC custodyType !5', async () => {
+        return DECORATE.decorate721(
+            "4",
+            Foreign721.address,
+            rgt1,
+            "12",
+            "5000",
+            { from: account2 }
+        )
+    })
+
+    //30
+    it('Should fail because AC managementType > 4', async () => {
+        return DECORATE.decorate721(
+            "4",
+            Foreign721.address,
+            rgt1,
+            "23",
+            "5000",
+            { from: account2 }
+        )
+    })
+
+    //31
+    it('Should fail because caller !ACTH', async () => {
+        return DECORATE.decorate721(
+            "4",
+            Foreign721.address,
+            rgt1,
+            "20",
+            "5000",
+            { from: account2 }
+        )
+    })
+
+    //32
+    it('Should fail because caller !Authorized', async () => {
+        return DECORATE.decorate721(
+            "4",
+            Foreign721.address,
+            rgt1,
+            "21",
+            "5000",
+            { from: account2 }
+        )
+    })
+
+    //33
+    it('Should fail because caller !trusted', async () => {
+        return DECORATE.decorate721(
+            "4",
+            Foreign721.address,
+            rgt1,
+            "22",
+            "5000",
+            { from: account2 }
         )
     })
 

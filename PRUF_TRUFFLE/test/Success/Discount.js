@@ -792,43 +792,75 @@ it('Should authorize all minter contracts for minting AC_TKN(s)', async () => {
     console.log("Authorizing AC_MGR")
     return AC_TKN.grantRole(minterRoleB32, AC_MGR.address, { from: account1 })
 })
-
-
+        
+        
 it('Should mint a couple of asset root tokens', async () => {
-
+            
     console.log("Minting root token 1 -C")
-    return AC_MGR.createAssetClass(account1, 'ROOT1', '1', '1', '3', rgt000, "5100", { from: account1 })
+    return AC_MGR.createAssetClass("1", 'CUSTODIAL_ROOT1', '1', '3', '0', "5100", rgt000, account1, { from: account1 })
 
         .then(() => {
             console.log("Minting root token 2 -NC")
-            return AC_MGR.createAssetClass(account1, 'ROOT2', '2', '2', '3', rgt000, "5100", { from: account1 })
+            return AC_MGR.createAssetClass("2", 'CUSTODIAL_ROOT2', '2', '3', '0', "5100", rgt000, account1, { from: account1 })
+        })
+
+        .then(() => {
+            console.log("Minting root token 3 -RESTRICTED")
+            return AC_MGR.createAssetClass("3", 'CUSTODIAL_ROOT3', '3', '3', '1', "5100", rgt000, account2, { from: account1 })
         })
 })
 
 
-it("Should Mint 3 cust AC tokens in AC_ROOT1, and 2 in AC_ROOT2", async () => {
-    
-    console.log("Minting AC 10")
-    return AC_MGR.createAssetClass(account1, "Custodial_AC10", "10", "1", "1", rgt000, "5100", { from: account1 })
+it("Should Mint 2 cust and 2 non-cust AC tokens in AC_ROOT 1", async () => {
+
+    console.log("Minting AC 10 -C")
+    return AC_MGR.createAssetClass("10", 'CUSTODIAL_AC10', '1', '1', '0', "5100", rgt000, account1, { from: account1 })
 
         .then(() => {
-            console.log("Minting AC 11")
-            return AC_MGR.createAssetClass(account1, "Custodial_AC11", "11", "1", "1", rgt000, "5100", { from: account1 })
-        })
-        
-        .then(() => {
-            console.log("Minting AC 12")
-            return AC_MGR.createAssetClass(account1, "Custodial_AC12", "12", "1", "1",  rgt000, "5100", { from: account1 })
-        })
-        
-        .then(() => {
-            console.log("Minting AC 13")
-            return AC_MGR.createAssetClass(account1, "Custodial_AC13", "13", "2", "1",  rgt000, "5100", { from: account1 })
+            console.log("Minting AC 11 -C")
+            return AC_MGR.createAssetClass("11", 'CUSTODIAL_AC11', '1', '1', '0', "5100", rgt000, account1, { from: account1 })
         })
 
         .then(() => {
-            console.log("Minting AC 14")
-            return AC_MGR.createAssetClass(account1, "Custodial_AC14", "14", "2", "1", rgt000, "5100", { from: account1 })
+            console.log("Minting AC 12 -NC")
+            return AC_MGR.createAssetClass("12", 'CUSTODIAL_AC12', '1', '2', '0', "5100", rgt000, account1, { from: account1 })
+        })
+
+        .then(() => {
+            console.log("Minting AC 13 -NC")
+            return AC_MGR.createAssetClass("13", 'CUSTODIAL_AC13', '1', '2', '0', "5100", rgt000, account1, { from: account1 })
+        })
+
+        .then(() => {
+            console.log("Minting AC 16 -NC")
+            return AC_MGR.createAssetClass("16", 'CUSTODIAL_AC16', '2', '2', '1', "5100", rgt000, account10, { from: account1 })
+        })
+
+        .then(() => {
+            console.log("Minting AC 17 -NC")
+            return AC_MGR.createAssetClass("17", 'CUSTODIAL_AC17', '2', '2', '3', "5100", rgt000, account1, { from: account1 })
+        })
+
+        .then(() => {
+            console.log("Minting AC 18 -NC")
+            return AC_MGR.createAssetClass("18", 'CUSTODIAL_AC18', '2', '2', '4', "5100", rgt000, account1, { from: account1 })
+        })
+
+        .then(() => {
+            console.log("Minting AC 19 -NC")
+            return AC_MGR.createAssetClass("19", 'CUSTODIAL_AC19', '2', '2', '5', "5100", rgt000, account1, { from: account1 })
+        })
+})
+
+
+it("Should Mint 2 non-cust AC tokens in AC_ROOT 2", async () => {
+
+    console.log("Minting AC 14 -NC")
+    return AC_MGR.createAssetClass("14", 'CUSTODIAL_AC14', '2', '2', '0', "5100", rgt000, account1, { from: account1 })
+
+        .then(() => {
+            console.log("Minting AC 15 -NC")
+            return AC_MGR.createAssetClass("15", 'CUSTODIAL_AC15', '2', '2', '0', "5100", rgt000, account10, { from: account1 })
         })
 })
 
@@ -1622,27 +1654,35 @@ it('Should add users to AC 10-14 in AC_Manager', async () => {
 
     console.log("//**************************************END BOOTSTRAP**********************************************/")
     console.log("Account2 => AC10")
-    return AC_MGR.addUser(account2Hash, '1', '10', { from: account1 })
+    return AC_MGR.addUser('10', account2Hash, '1', { from: account1 })
         
         .then(() => {
             console.log("Account2 => AC11")
-            return AC_MGR.addUser(account2Hash, '1', '11', { from: account1 })
+            return AC_MGR.addUser('11', account2Hash, '1', { from: account1 })
         })
         
         .then(() => {
             console.log("Account2 => AC12")
-            return AC_MGR.addUser(account2Hash, '1', '12', { from: account1 })
+            return AC_MGR.addUser('12', account2Hash, '1', { from: account1 })
         })
 
         .then(() => {
             console.log("Account2 => AC13")
-            return AC_MGR.addUser(account2Hash, '1', '13', { from: account1 })
+            return AC_MGR.addUser('13', account2Hash, '1', { from: account1 })
         })
 
         .then(() => {
             console.log("Account2 => AC14")
-            return AC_MGR.addUser(account2Hash, '1', '14', { from: account1 })
+            return AC_MGR.addUser('14', account2Hash, '1', { from: account1 })
         })
+})
+
+
+it('Should set SharesAddress', async () => {
+    return UTIL_TKN.AdminSetSharesAddress(
+        account1,
+        { from: account1 }
+    )
 })
 
 it('Should mint IDTKN to account1', async () => {
@@ -1707,9 +1747,9 @@ it('Should grant AC_MGR with trustedAgentRole', async () => {
 
 
 it('Should increaseShare to 66/36 split @AC13', async () => {
-    return AC_MGR.increaseShare(
+    return AC_MGR.adminIncreaseShare(
     '13',
-    '15000000000000000000000',
+    '6600',
     {from: account1}
     )
 })
@@ -1729,9 +1769,9 @@ it("Should retrieve balanceOf(295000) Pruf tokens @account1", async () => {
 
 
 it('Should increaseShare to 90/10 split @AC11', async () => {
-    return AC_MGR.increaseShare(
+    return AC_MGR.adminIncreaseShare(
     '11',
-    '39000000000000000000000',
+    '9000',
     {from: account1}
     )
 })
@@ -1745,6 +1785,18 @@ it("Should retrieve balanceOf(256000) Pruf tokens @account1", async () => {
         else {
             Balance = Object.values(_result)
             console.log(Balance)
+        }
+    })
+})
+
+it("Should retrieve asset12", async () => {
+    var Record = "";
+
+    return await AC_MGR.getServiceCosts("1", "1", { from: account2 }, function (_err, _result) {
+        if (_err) { }
+        else {
+            Record = _result
+            console.log(Record)
         }
     })
 })

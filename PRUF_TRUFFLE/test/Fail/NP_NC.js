@@ -894,16 +894,21 @@ contract('NP_NC', accounts => {
     //     console.log("Authorizing AC_MGR")
     //     return AC_TKN.grantRole(trustedAgentRoleB32, AC_MGR.address, { from: account1 })
     // })
-
-
+        
+        
     it('Should mint a couple of asset root tokens', async () => {
-
+                
         console.log("Minting root token 1 -C")
-        return AC_MGR.createAssetClass(account1, 'CUSTODIAL_ROOT', '1', '1', '3', rgt000, "0", { from: account1 })
+        return AC_MGR.createAssetClass("1", 'CUSTODIAL_ROOT1', '1', '3', '0', "0", rgt000, account1, { from: account1 })
 
             .then(() => {
                 console.log("Minting root token 2 -NC")
-                return AC_MGR.createAssetClass(account1, 'NON-CUSTODIAL_ROOT', '2', '2', '3', rgt000, "0", { from: account1 })
+                return AC_MGR.createAssetClass("2", 'CUSTODIAL_ROOT2', '2', '3', '0', "0", rgt000, account1, { from: account1 })
+            })
+
+            .then(() => {
+                console.log("Minting root token 3 -RESTRICTED")
+                return AC_MGR.createAssetClass("3", 'CUSTODIAL_ROOT3', '3', '3', '1', "0", rgt000, account2, { from: account1 })
             })
     })
 
@@ -911,26 +916,41 @@ contract('NP_NC', accounts => {
     it("Should Mint 2 cust and 2 non-cust AC tokens in AC_ROOT 1", async () => {
 
         console.log("Minting AC 10 -C")
-        return AC_MGR.createAssetClass(account1, "Custodial_AC1", "10", "1", "1", rgt000, "0", { from: account1 })
+        return AC_MGR.createAssetClass("10", 'CUSTODIAL_AC10', '1', '1', '0', "0", rgt000, account1, { from: account1 })
 
             .then(() => {
                 console.log("Minting AC 11 -C")
-                return AC_MGR.createAssetClass(account1, "Custodial_AC2", "11", "1", "1", rgt000, "0", { from: account1 })
+                return AC_MGR.createAssetClass("11", 'CUSTODIAL_AC11', '1', '1', '0', "0", rgt000, account1, { from: account1 })
             })
 
             .then(() => {
                 console.log("Minting AC 12 -NC")
-                return AC_MGR.createAssetClass(account1, "Non-Custodial_AC1", "12", "1", "2", rgt000, "0", { from: account1 })
+                return AC_MGR.createAssetClass("12", 'CUSTODIAL_AC12', '1', '2', '0', "0", rgt000, account1, { from: account1 })
             })
 
             .then(() => {
                 console.log("Minting AC 13 -NC")
-                return AC_MGR.createAssetClass(account1, "Non-Custodial_AC2", "13", "1", "2", rgt000, "0", { from: account1 })
+                return AC_MGR.createAssetClass("13", 'CUSTODIAL_AC13', '1', '2', '0', "0", rgt000, account1, { from: account1 })
             })
 
             .then(() => {
                 console.log("Minting AC 16 -NC")
-                return AC_MGR.createAssetClass(account10, "Non_Custodial_AC5", "16", "1", "2", rgt000, "0", { from: account1 })
+                return AC_MGR.createAssetClass("16", 'CUSTODIAL_AC16', '2', '2', '1', "0", rgt000, account10, { from: account1 })
+            })
+
+            .then(() => {
+                console.log("Minting AC 17 -NC")
+                return AC_MGR.createAssetClass("17", 'CUSTODIAL_AC17', '2', '2', '3', "0", rgt000, account1, { from: account1 })
+            })
+
+            .then(() => {
+                console.log("Minting AC 18 -NC")
+                return AC_MGR.createAssetClass("18", 'CUSTODIAL_AC18', '2', '2', '4', "0", rgt000, account1, { from: account1 })
+            })
+
+            .then(() => {
+                console.log("Minting AC 19 -NC")
+                return AC_MGR.createAssetClass("19", 'CUSTODIAL_AC19', '2', '2', '5', "0", rgt000, account1, { from: account1 })
             })
     })
 
@@ -938,11 +958,11 @@ contract('NP_NC', accounts => {
     it("Should Mint 2 non-cust AC tokens in AC_ROOT 2", async () => {
 
         console.log("Minting AC 14 -NC")
-        return AC_MGR.createAssetClass(account1, "Non-Custodial_AC3", "14", "2", "2", rgt000, "0", { from: account1 })
+        return AC_MGR.createAssetClass("14", 'CUSTODIAL_AC14', '2', '2', '0', "0", rgt000, account1, { from: account1 })
 
             .then(() => {
                 console.log("Minting AC 15 -NC")
-                return AC_MGR.createAssetClass(account10, "Non_Custodial_AC4", "15", "2", "2", rgt000, "0", { from: account1 })
+                return AC_MGR.createAssetClass("15", 'CUSTODIAL_AC15', '2', '2', '0', "0", rgt000, account10, { from: account1 })
             })
     })
 
@@ -1828,71 +1848,71 @@ contract('NP_NC', accounts => {
 
         console.log("//**************************************END BOOTSTRAP**********************************************/")
         console.log("Account2 => AC10")
-        return AC_MGR.addUser(account2Hash, '1', '10', { from: account1 })
+        return AC_MGR.addUser('10', account2Hash, '1', { from: account1 })
 
             .then(() => {
                 console.log("Account2 => AC11")
-                return AC_MGR.addUser(account2Hash, '1', '11', { from: account1 })
+                return AC_MGR.addUser('11', account2Hash, '1', { from: account1 })
             })
 
             .then(() => {
                 console.log("Account3 => AC11")
-                return AC_MGR.addUser(account3Hash, '1', '11', { from: account1 })
+                return AC_MGR.addUser('11', account3Hash, '1', { from: account1 })
             })
 
             .then(() => {
                 console.log("Account4 => AC10")
-                return AC_MGR.addUser(account4Hash, '1', '10', { from: account1 })
+                return AC_MGR.addUser('10', account4Hash, '1', { from: account1 })
             })
 
             .then(() => {
                 console.log("Account4 => AC12")
-                return AC_MGR.addUser(account4Hash, '1', '12', { from: account1 })
+                return AC_MGR.addUser('12', account4Hash, '1', { from: account1 })
             })
 
             .then(() => {
                 console.log("Account4 => AC12")
-                return AC_MGR.addUser(account4Hash, '1', '16', { from: account10 })
+                return AC_MGR.addUser('16', account4Hash, '1', { from: account10 })
             })
 
             .then(() => {
                 console.log("Account5 => AC13")
-                return AC_MGR.addUser(account5Hash, '1', '13', { from: account1 })
+                return AC_MGR.addUser('13', account5Hash, '1', { from: account1 })
             })
 
             .then(() => {
                 console.log("Account6 => AC14")
-                return AC_MGR.addUser(account6Hash, '1', '14', { from: account1 })
+                return AC_MGR.addUser('14', account6Hash, '1', { from: account1 })
             })
 
             .then(() => {
                 console.log("Account7 => AC14 (ROBOT)")
-                return AC_MGR.addUser(account7Hash, '9', '14', { from: account1 })
+                return AC_MGR.addUser('14', account7Hash, '9', { from: account1 })
             })
 
             .then(() => {
                 console.log("Account8 => AC10 (ROBOT)")
-                return AC_MGR.addUser(account8Hash, '9', '10', { from: account1 })
+                return AC_MGR.addUser('10', account8Hash, '9', { from: account1 })
             })
 
             .then(() => {
                 console.log("Account9 => AC11 (ROBOT)")
-                return AC_MGR.addUser(account9Hash, '9', '11', { from: account1 })
+                return AC_MGR.addUser('11', account9Hash, '9', { from: account1 })
             })
 
             .then(() => {
                 console.log("Account10 => AC15 (PIPMINTER)")
-                return AC_MGR.addUser(account10Hash, '10', '15', { from: account10 })
+                return AC_MGR.addUser('15', account10Hash, '10', { from: account10 })
             })
 
             .then(() => {
                 console.log("Account10 => AC15 (PIPMINTER)")
-                return AC_MGR.addUser(account10Hash, '10', '16', { from: account10 })
+                return AC_MGR.addUser('16', account10Hash, '10', { from: account10 })
             })
 
             .then(() => {
                 console.log("Account10 => AC15 (PIPMINTER)")
-                return AC_MGR.addUser(account10Hash, '1', '10', { from: account1 })
+                return AC_MGR.addUser('10', account10Hash, '1', { from: account1 })
             })
     })
 
@@ -1935,6 +1955,15 @@ contract('NP_NC', accounts => {
     })
 
 
+    it('Should mint 30000 tokens to account5', async () => {
+        return UTIL_TKN.mint(
+            account10,
+            '30000000000000000000000',
+            { from: account1 }
+        )
+    })
+
+
     it('Should mint ID_TKN(1) to account4', async () => {
         return ID_TKN.mintPRUF_IDToken(
             account4,
@@ -1948,6 +1977,15 @@ contract('NP_NC', accounts => {
         return ID_TKN.mintPRUF_IDToken(
             account5,
             '2',
+            { from: account1 }
+        )
+    })
+
+
+    it('Should mint ID_TKN(2) to account5', async () => {
+        return ID_TKN.mintPRUF_IDToken(
+            account10,
+            '7',
             { from: account1 }
         )
     })
@@ -2101,11 +2139,50 @@ contract('NP_NC', accounts => {
     })
 
 
+    it('Should mint asset8 in AC16', async () => {
+        return APP_NC.newRecord(
+            asset8,
+            rgt8,
+            '16',
+            '100',
+            { from: account10 }
+        )
+    })
+
+
+    it('Should put asset4 in to transferable status', async () => {
+        return NP_NC._modStatus(
+            asset8,
+            '51',
+            { from: account10 }
+        )
+    })
+
+
+    it('Should transfer asset12 token to PRUF_APP contract', async () => {
+        return A_TKN.safeTransferFrom(
+            account10,
+            account4,
+            asset8,
+            { from: account10 }
+        )
+    })
+
+
+    it('Should put asset4 in to transferable status', async () => {
+        return NP_NC._modStatus(
+            asset8,
+            '51',
+            { from: account4 }
+        )
+    })
+
+
     //1
     it('Should Fail because caller does not hold token', async () => {
 
         console.log("//**************************************END NP_NC SETUP**********************************************/")
-        console.log("//**************************************BEGIN NP_NC FAIL BATCH (16)**********************************************/")
+        console.log("//**************************************BEGIN NP_NC FAIL BATCH (17)**********************************************/")
         console.log("//**************************************BEGIN _changeRGT FAIL BATCH**********************************************/")
         return NP_NC._changeRgt(
             asset1,
@@ -2152,7 +2229,6 @@ contract('NP_NC', accounts => {
         )
     })
 
-
     //5
     it('Should fail because record != status51', async () => {
         return NP_NC._exportNC(
@@ -2162,6 +2238,14 @@ contract('NP_NC', accounts => {
     })
 
     //6
+    it('Should fail because caller !ACTH', async () => {
+        return NP_NC._exportNC(
+            asset8,
+            { from: account4 }
+        )
+    })
+
+    //7
     it('Should Fail because caller does not hold token', async () => {
 
         console.log("//**************************************END _exportNC FAIL BATCH**********************************************/")
@@ -2173,7 +2257,7 @@ contract('NP_NC', accounts => {
         )
     })
 
-    //7
+    //8
     it('Should Fail because being placed in status > 100', async () => {
         return NP_NC._modStatus(
             asset1,
@@ -2182,7 +2266,7 @@ contract('NP_NC', accounts => {
         )
     })
 
-    //8
+    //9
     it('Should Fail because being placed in status 7', async () => {
         return NP_NC._modStatus(
             asset1,
@@ -2191,7 +2275,7 @@ contract('NP_NC', accounts => {
         )
     })
 
-    //9
+    //10
     it('Should Fail because being placed in reserved status 57', async () => {
         return NP_NC._modStatus(
             asset1,
@@ -2200,7 +2284,7 @@ contract('NP_NC', accounts => {
         )
     })
 
-    //10
+    //11
     it('Should Fail because being placed in reserved status 58', async () => {
         return NP_NC._modStatus(
             asset1,
@@ -2209,7 +2293,7 @@ contract('NP_NC', accounts => {
         )
     })
 
-    //11
+    //12
     it('Should Fail because being placed in exported status', async () => {
         return NP_NC._modStatus(
             asset1,
@@ -2218,7 +2302,7 @@ contract('NP_NC', accounts => {
         )
     })
 
-    //12
+    //13
     it('Should Fail because being placed in status <50', async () => {
         return NP_NC._modStatus(
             asset1,
@@ -2227,7 +2311,7 @@ contract('NP_NC', accounts => {
         )
     })
 
-    //13
+    //14
     it('Should fail because caller does not hold token', async () => {
 
         console.log("//**************************************END _modStatus FAIL BATCH**********************************************/")
@@ -2239,7 +2323,7 @@ contract('NP_NC', accounts => {
         )
     })
 
-    //14
+    //15
     it('Should fail because assetStatus is < 50', async () => {
         return NP_NC._setLostOrStolen(
             asset1,
@@ -2248,7 +2332,7 @@ contract('NP_NC', accounts => {
         )
     })
 
-    //15
+    //16
     it('Should fail becasue caller does not hold token', async () => {
 
         console.log("//**************************************END _setLostOrStolen FAIL BATCH**********************************************/")
@@ -2260,7 +2344,7 @@ contract('NP_NC', accounts => {
         )
     })
 
-    //16
+    //17
     it('Should fail because caller does not hold token', async () => {
 
         console.log("//**************************************END _decCounter FAIL BATCH**********************************************/")

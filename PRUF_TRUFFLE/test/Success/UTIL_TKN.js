@@ -1653,29 +1653,29 @@ __/\\\\\\\\\\\\\ _____/\\\\\\\\\ _______/\\../\\ ___/\\\\\\\\\\\\\\\
 
 
     it('Should add users to AC 10-14 in AC_Manager', async () => {
-
+    
         console.log("//**************************************END BOOTSTRAP**********************************************/")
         console.log("Account2 => AC10")
-        return AC_MGR.addUser(account2Hash, '1', '10', { from: account1 })
-
+        return AC_MGR.addUser('10', account2Hash, '1', { from: account1 })
+            
             .then(() => {
                 console.log("Account2 => AC11")
-                return AC_MGR.addUser(account2Hash, '1', '11', { from: account1 })
+                return AC_MGR.addUser('11', account2Hash, '1', { from: account1 })
             })
-
+            
             .then(() => {
                 console.log("Account2 => AC12")
-                return AC_MGR.addUser(account2Hash, '1', '12', { from: account1 })
+                return AC_MGR.addUser('12', account2Hash, '1', { from: account1 })
             })
-
+    
             .then(() => {
                 console.log("Account2 => AC13")
-                return AC_MGR.addUser(account2Hash, '1', '13', { from: account1 })
+                return AC_MGR.addUser('13', account2Hash, '1', { from: account1 })
             })
-
+    
             .then(() => {
                 console.log("Account2 => AC14")
-                return AC_MGR.addUser(account2Hash, '1', '14', { from: account1 })
+                return AC_MGR.addUser('14', account2Hash, '1', { from: account1 })
             })
     })
 

@@ -104,7 +104,7 @@ contract DECORATE is
             AC_info.custodyType == 5,
             "D:MS:Asset class.custodyType must be 5 (wrapped/decorated erc721) & record must exist"
         );
-        require(
+        require(  //CTS:EXAMINE how do i set?
             (AC_info.referenceAddress == _tokenContract) ||
                 (AC_info.referenceAddress == address(0)),
             "D:MS:Asset class extended data must be '0' or ERC721 contract address"
