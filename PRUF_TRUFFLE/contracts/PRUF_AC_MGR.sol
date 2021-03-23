@@ -265,7 +265,11 @@ contract AC_MGR is BASIC {
         uint32 _assetClassRoot,
         uint8 _custodyType,
         bytes32 _IPFS
-    ) external whenNotPaused nonReentrant returns (uint256) {
+    ) external whenNotPaused nonReentrant 
+    //returns (uint256)
+    returns (address)  //DPS REVERT TO ABOVE LINE; TESTING ONLY
+    
+    {
         require( //Impossible to test??
             ACtokenIndex < 4294000000,
             "ACM:IS:Only 4294000000 AC tokens allowed"
@@ -314,7 +318,8 @@ contract AC_MGR is BASIC {
             STOR.enableDefaultContractsForAC(uint32(ACtokenIndex));
         }
 
-        return ACtokenIndex; //returns asset class # of minted token
+        //return ACtokenIndex; //returns asset class # of minted token
+        return rootPaymentAddress; //testing only DPS REVERT TO ABOVE LINE INSTEAD
         //^^^^^^^effects/interactions^^^^^^^^^
     }
 
