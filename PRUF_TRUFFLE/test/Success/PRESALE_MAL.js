@@ -927,6 +927,7 @@ contract('PRESALE', accounts => {
 
     it('Should pay for service and distribute', async () => {
         return Helper.helper_payForService(
+            "1",
             B,
             A,
             "50000000000000000",
@@ -1260,6 +1261,7 @@ contract('PRESALE', accounts => {
     //20
     it('Should fail because C is cold wallet', async () => {
         return Helper.helper_payForService(
+            "1",
             C,
             A,
             "1000000000000000000",
@@ -1375,6 +1377,7 @@ contract('PRESALE', accounts => {
 
     it('Should payForService and distribute', async () => {
         return Helper.helper_payForService(
+            "1",
             C,
             A,
             "1000000000000000000",
@@ -1461,6 +1464,7 @@ contract('PRESALE', accounts => {
     //24
     it('Should fail because trusted agent function permanently disabled', async () => {
         return Helper.helper_payForService(
+            "1",
             C,
             A,
             "1000000000000000000",

@@ -1693,7 +1693,7 @@ it('Should mint IDTKN to account1', async () => {
     )
 })
 
-it('Should mint 300000 tkns to account1', async () => {
+it('Should mint 310000 tkns to account1', async () => {
     return UTIL_TKN.mint(
     account1,
     '310000000000000000000000',
@@ -1813,7 +1813,7 @@ it('Should buy asset class 20', async () => {
 })
 
 
-it("Should retrieve balanceOf(236000) Pruf tokens @account1", async () => {
+it("Should retrieve balanceOf(110000) Pruf tokens @account1", async () => {
     var Balance = [];
 
     return await UTIL_TKN.balanceOf(account1, { from: account1 }, function (_err, _result) {

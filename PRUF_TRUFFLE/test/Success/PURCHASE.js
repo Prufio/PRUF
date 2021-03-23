@@ -930,7 +930,7 @@ contract('PURCHASE', accounts => {
         
         
     it('Should mint a couple of asset root tokens', async () => {
-                
+        
         console.log("Minting root token 1 -C")
         return AC_MGR.createAssetClass("1", 'CUSTODIAL_ROOT1', '1', '3', '0', "0", rgt000, account1, { from: account1 })
 
@@ -968,22 +968,7 @@ contract('PURCHASE', accounts => {
 
             .then(() => {
                 console.log("Minting AC 16 -NC")
-                return AC_MGR.createAssetClass("16", 'CUSTODIAL_AC16', '2', '2', '1', "0", rgt000, account10, { from: account1 })
-            })
-
-            .then(() => {
-                console.log("Minting AC 17 -NC")
-                return AC_MGR.createAssetClass("17", 'CUSTODIAL_AC17', '2', '2', '3', "0", rgt000, account1, { from: account1 })
-            })
-
-            .then(() => {
-                console.log("Minting AC 18 -NC")
-                return AC_MGR.createAssetClass("18", 'CUSTODIAL_AC18', '2', '2', '4', "0", rgt000, account1, { from: account1 })
-            })
-
-            .then(() => {
-                console.log("Minting AC 19 -NC")
-                return AC_MGR.createAssetClass("19", 'CUSTODIAL_AC19', '2', '2', '5', "0", rgt000, account1, { from: account1 })
+                return AC_MGR.createAssetClass("16", 'CUSTODIAL_AC16', '1', '2', '0', "0", rgt000, account10, { from: account1 })
             })
     })
 
