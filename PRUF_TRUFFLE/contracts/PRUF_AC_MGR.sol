@@ -265,11 +265,7 @@ contract AC_MGR is BASIC {
         uint32 _assetClassRoot,
         uint8 _custodyType,
         bytes32 _IPFS
-    ) external whenNotPaused nonReentrant 
-    //returns (uint256)
-    returns (address)  //DPS REVERT TO ABOVE LINE; TESTING ONLY
-    
-    {
+    ) external whenNotPaused nonReentrant returns (uint256) {
         require( //Impossible to test??
             ACtokenIndex < 4294000000,
             "ACM:IS:Only 4294000000 AC tokens allowed"
@@ -283,9 +279,7 @@ contract AC_MGR is BASIC {
         if (ACtokenIndex < 4294000000) ACtokenIndex++; //increment ACtokenIndex up to last one
 
         uint256 newACtokenPrice;
-        address rootPaymentAddress =
-            cost[AC_data[uint32(ACtokenIndex)].assetClassRoot][1]
-                .paymentAddress; //payment for upgrade goes to root AC payment adress specified for service (1)
+        address rootPaymentAddress = cost[_assetClassRoot][1].paymentAddress; //payment for upgrade goes to root AC payment adress specified for service (1)
 
         newACtokenPrice = acPrice_L1;
         //^^^^^^^effects^^^^^^^^^
@@ -318,8 +312,18 @@ contract AC_MGR is BASIC {
             STOR.enableDefaultContractsForAC(uint32(ACtokenIndex));
         }
 
-        //return ACtokenIndex; //returns asset class # of minted token
-        return rootPaymentAddress; //testing only DPS REVERT TO ABOVE LINE INSTEAD
+        return ACtokenIndex; //returns asset class # of minted token
+        //^^^^^^^effects/interactions^^^^^^^^^
+    }
+
+    function fakePurchaseACnode(uint32 _assetClassRoot)
+        external
+        view
+        returns (address)
+    {
+        address rootPaymentAddress = cost[_assetClassRoot][1].paymentAddress; //payment for upgrade goes to root AC payment adress specified for service (1)
+
+        return rootPaymentAddress; //returns asset class # of minted token
         //^^^^^^^effects/interactions^^^^^^^^^
     }
 
@@ -382,10 +386,11 @@ contract AC_MGR is BASIC {
      * Requires that:
      *  caller holds ACtoken
      */
-    function updateACipfs(
-        uint32 _assetClass,
-        bytes32 _IPFS
-    ) external isACtokenHolderOfClass(_assetClass) whenNotPaused {
+    function updateACipfs(uint32 _assetClass, bytes32 _IPFS)
+        external
+        isACtokenHolderOfClass(_assetClass)
+        whenNotPaused
+    {
         //^^^^^^^checks^^^^^^^^^
 
         AC_data[_assetClass].IPFS = _IPFS;
@@ -658,11 +663,11 @@ contract AC_MGR is BASIC {
             (_ac.custodyType == 3) || (_assetClassRoot == _assetClass),
             "ACM:CAC:Root asset class does not exist"
         );
-        if(AC_data[_assetClassRoot].managementType != 0) {
-        require( //holds root token if root is restricted --------DBS TEST ---- NEW
-            (AC_TKN.ownerOf(_assetClassRoot) == _msgSender()),
-            "ACM:CAC:Restricted from creating AC's in this root - does not hold root token"
-        );
+        if (AC_data[_assetClassRoot].managementType != 0) {
+            require( //holds root token if root is restricted --------DBS TEST ---- NEW
+                (AC_TKN.ownerOf(_assetClassRoot) == _msgSender()),
+                "ACM:CAC:Restricted from creating AC's in this root - does not hold root token"
+            );
         }
         require(AC_number[_name] == 0, "ACM:CAC:AC name already in use");
         require(
