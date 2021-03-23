@@ -943,11 +943,11 @@ contract('AC_MGR', accounts => {
     it("Should Mint 2 non-cust AC tokens in AC_ROOT 2", async () => {
 
         console.log("Minting AC 14 -NC")
-        return AC_MGR.createAssetClass("14", 'CUSTODIAL_AC14', '1', '2', '0', "0", rgt000, account1, { from: account1 })
+        return AC_MGR.createAssetClass("14", 'CUSTODIAL_AC14', '2', '2', '0', "0", rgt000, account1, { from: account1 })
 
             .then(() => {
                 console.log("Minting AC 15 -NC")
-                return AC_MGR.createAssetClass("15", 'CUSTODIAL_AC15', '1', '2', '0', "0", rgt000, account10, { from: account1 })
+                return AC_MGR.createAssetClass("15", 'CUSTODIAL_AC15', '2', '2', '0', "0", rgt000, account10, { from: account1 })
             })
     })
 

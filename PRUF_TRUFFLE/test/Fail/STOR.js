@@ -927,16 +927,21 @@ contract('STOR', accounts => {
         console.log("Authorizing PURCHASE")
         return UTIL_TKN.grantRole(trustedAgentRoleB32, PURCHASE.address, { from: account1 })
     })
-
-
+        
+        
     it('Should mint a couple of asset root tokens', async () => {
-
+                
         console.log("Minting root token 1 -C")
-        return AC_MGR.createAssetClass(account1, 'CUSTODIAL_ROOT', '1', '1', '3', rgt000, "0", { from: account1 })
+        return AC_MGR.createAssetClass("1", 'CUSTODIAL_ROOT1', '1', '3', '0', "0", rgt000, account1, { from: account1 })
 
             .then(() => {
                 console.log("Minting root token 2 -NC")
-                return AC_MGR.createAssetClass(account1, 'NON-CUSTODIAL_ROOT', '2', '2', '3', rgt000, "0", { from: account1 })
+                return AC_MGR.createAssetClass("2", 'CUSTODIAL_ROOT2', '2', '3', '0', "0", rgt000, account1, { from: account1 })
+            })
+
+            .then(() => {
+                console.log("Minting root token 3 -RESTRICTED")
+                return AC_MGR.createAssetClass("3", 'CUSTODIAL_ROOT3', '3', '3', '1', "0", rgt000, account2, { from: account1 })
             })
     })
 
@@ -944,26 +949,41 @@ contract('STOR', accounts => {
     it("Should Mint 2 cust and 2 non-cust AC tokens in AC_ROOT 1", async () => {
 
         console.log("Minting AC 10 -C")
-        return AC_MGR.createAssetClass(account1, "Custodial_AC1", "10", "1", "1", rgt000, "0", { from: account1 })
+        return AC_MGR.createAssetClass("10", 'CUSTODIAL_AC10', '1', '1', '0', "0", rgt000, account1, { from: account1 })
 
             .then(() => {
                 console.log("Minting AC 11 -C")
-                return AC_MGR.createAssetClass(account1, "Custodial_AC2", "11", "1", "1", rgt000, "0", { from: account1 })
+                return AC_MGR.createAssetClass("11", 'CUSTODIAL_AC11', '1', '1', '0', "0", rgt000, account1, { from: account1 })
             })
 
             .then(() => {
                 console.log("Minting AC 12 -NC")
-                return AC_MGR.createAssetClass(account1, "Non-Custodial_AC1", "12", "1", "2", rgt000, "0", { from: account1 })
+                return AC_MGR.createAssetClass("12", 'CUSTODIAL_AC12', '1', '2', '0', "0", rgt000, account1, { from: account1 })
             })
 
             .then(() => {
                 console.log("Minting AC 13 -NC")
-                return AC_MGR.createAssetClass(account1, "Non-Custodial_AC2", "13", "1", "2", rgt000, "0", { from: account1 })
+                return AC_MGR.createAssetClass("13", 'CUSTODIAL_AC13', '1', '2', '0', "0", rgt000, account1, { from: account1 })
             })
 
             .then(() => {
                 console.log("Minting AC 16 -NC")
-                return AC_MGR.createAssetClass(account10, "Non_Custodial_AC5", "16", "1", "2", rgt000, "0", { from: account1 })
+                return AC_MGR.createAssetClass("16", 'CUSTODIAL_AC16', '2', '2', '1', "0", rgt000, account10, { from: account1 })
+            })
+
+            .then(() => {
+                console.log("Minting AC 17 -NC")
+                return AC_MGR.createAssetClass("17", 'CUSTODIAL_AC17', '2', '2', '3', "0", rgt000, account1, { from: account1 })
+            })
+
+            .then(() => {
+                console.log("Minting AC 18 -NC")
+                return AC_MGR.createAssetClass("18", 'CUSTODIAL_AC18', '2', '2', '4', "0", rgt000, account1, { from: account1 })
+            })
+
+            .then(() => {
+                console.log("Minting AC 19 -NC")
+                return AC_MGR.createAssetClass("19", 'CUSTODIAL_AC19', '2', '2', '5', "0", rgt000, account1, { from: account1 })
             })
     })
 
@@ -971,11 +991,11 @@ contract('STOR', accounts => {
     it("Should Mint 2 non-cust AC tokens in AC_ROOT 2", async () => {
 
         console.log("Minting AC 14 -NC")
-        return AC_MGR.createAssetClass(account1, "Non-Custodial_AC3", "14", "2", "2", rgt000, "0", { from: account1 })
+        return AC_MGR.createAssetClass("14", 'CUSTODIAL_AC14', '2', '2', '0', "0", rgt000, account1, { from: account1 })
 
             .then(() => {
                 console.log("Minting AC 15 -NC")
-                return AC_MGR.createAssetClass(account10, "Non_Custodial_AC4", "15", "2", "2", rgt000, "0", { from: account1 })
+                return AC_MGR.createAssetClass("15", 'CUSTODIAL_AC15', '2', '2', '0', "0", rgt000, account10, { from: account1 })
             })
     })
 
@@ -1871,74 +1891,73 @@ contract('STOR', accounts => {
 
         console.log("//**************************************END BOOTSTRAP**********************************************/")
         console.log("Account2 => AC10")
-        return AC_MGR.addUser(account2Hash, '1', '10', { from: account1 })
+        return AC_MGR.addUser('10', account2Hash, '1', { from: account1 })
 
             .then(() => {
                 console.log("Account2 => AC11")
-                return AC_MGR.addUser(account2Hash, '1', '11', { from: account1 })
+                return AC_MGR.addUser('11', account2Hash, '1', { from: account1 })
             })
 
             .then(() => {
                 console.log("Account3 => AC11")
-                return AC_MGR.addUser(account3Hash, '1', '11', { from: account1 })
+                return AC_MGR.addUser('11', account3Hash, '1', { from: account1 })
             })
 
             .then(() => {
                 console.log("Account4 => AC10")
-                return AC_MGR.addUser(account4Hash, '1', '10', { from: account1 })
+                return AC_MGR.addUser('10', account4Hash, '1', { from: account1 })
             })
 
             .then(() => {
                 console.log("Account4 => AC12")
-                return AC_MGR.addUser(account4Hash, '1', '12', { from: account1 })
+                return AC_MGR.addUser('12', account4Hash, '1', { from: account1 })
             })
 
             .then(() => {
                 console.log("Account4 => AC12")
-                return AC_MGR.addUser(account4Hash, '1', '16', { from: account10 })
+                return AC_MGR.addUser('16', account4Hash, '1', { from: account10 })
             })
 
             .then(() => {
                 console.log("Account5 => AC13")
-                return AC_MGR.addUser(account5Hash, '1', '13', { from: account1 })
+                return AC_MGR.addUser('13', account5Hash, '1', { from: account1 })
             })
 
             .then(() => {
                 console.log("Account6 => AC14")
-                return AC_MGR.addUser(account6Hash, '1', '14', { from: account1 })
+                return AC_MGR.addUser('14', account6Hash, '1', { from: account1 })
             })
 
             .then(() => {
                 console.log("Account7 => AC14 (ROBOT)")
-                return AC_MGR.addUser(account7Hash, '9', '14', { from: account1 })
+                return AC_MGR.addUser('14', account7Hash, '9', { from: account1 })
             })
 
             .then(() => {
                 console.log("Account8 => AC10 (ROBOT)")
-                return AC_MGR.addUser(account8Hash, '9', '10', { from: account1 })
+                return AC_MGR.addUser('10', account8Hash, '9', { from: account1 })
             })
 
             .then(() => {
                 console.log("Account9 => AC11 (ROBOT)")
-                return AC_MGR.addUser(account9Hash, '9', '11', { from: account1 })
+                return AC_MGR.addUser('11', account9Hash, '9', { from: account1 })
             })
 
             .then(() => {
                 console.log("Account10 => AC15 (PIPMINTER)")
-                return AC_MGR.addUser(account10Hash, '10', '15', { from: account10 })
+                return AC_MGR.addUser('15', account10Hash, '10', { from: account10 })
             })
 
             .then(() => {
                 console.log("Account10 => AC15 (PIPMINTER)")
-                return AC_MGR.addUser(account10Hash, '10', '16', { from: account10 })
+                return AC_MGR.addUser('16', account10Hash, '10', { from: account10 })
             })
 
             .then(() => {
                 console.log("Account10 => AC15 (PIPMINTER)")
-                return AC_MGR.addUser(account10Hash, '1', '10', { from: account1 })
+                return AC_MGR.addUser('10', account10Hash, '1', { from: account1 })
             })
     })
-
 
     it('Should set SharesAddress', async () => {
 
@@ -2184,7 +2203,7 @@ contract('STOR', accounts => {
     it('Should fail because caller is not pauser', async () => {
 
         console.log("//**************************************END STOR SETUP**********************************************/")
-        console.log("//**************************************BEGIN STOR FAIL BATCH (51)**********************************************/")
+        console.log("//**************************************BEGIN STOR FAIL BATCH (55)**********************************************/")
         console.log("//**************************************BEGIN pause FAIL BATCH**********************************************/")
         return STOR.pause(
             { from: account2 }
@@ -2227,9 +2246,54 @@ contract('STOR', accounts => {
     })
 
     //5
-    it('Should fail because caller does not hold AC token', async () => {
+    it('Should fail because caller !admin', async () => {
 
         console.log("//**************************************END OO_addContract FAIL BATCH**********************************************/")
+        console.log("//**************************************BEGIN addDefaultContracts FAIL BATCH**********************************************/")
+        return STOR.addDefaultContracts(
+            '10',
+            "ECR",
+            '3',
+            { from: account2 }
+        )
+    })
+
+    //6
+    it('Should fail because contract #>10', async () => {
+        return STOR.addDefaultContracts(
+            '11',
+            "ECR",
+            '3',
+            { from: account1 }
+        )
+    })
+
+    //7
+    it('Should fail because caller !admin', async () => {
+
+        console.log("//**************************************END addDefaultContracts FAIL BATCH**********************************************/")
+        console.log("//**************************************BEGIN getDefaultContract FAIL BATCH**********************************************/")
+        return STOR.getDefaultContract(
+            '10',
+            { from: account2 }
+        )
+    })
+
+    //8
+    it('Should fail because caller !ACTH', async () => {
+
+        console.log("//**************************************END getDefaultContract FAIL BATCH**********************************************/")
+        console.log("//**************************************BEGIN enableDefaultContractsForAC FAIL BATCH**********************************************/")
+        return STOR.enableDefaultContractsForAC(
+            '10',
+            { from: account2 }
+        )
+    })
+
+    //9
+    it('Should fail because caller does not hold AC token', async () => {
+
+        console.log("//**************************************END enableDefaultContractsForAC FAIL BATCH**********************************************/")
         console.log("//**************************************BEGIN enableContractForAC FAIL BATCH**********************************************/")
         return STOR.enableContractForAC(
             'ECR2',
@@ -2239,7 +2303,7 @@ contract('STOR', accounts => {
         )
     })
 
-    //6
+    //10
     it('Should fail because calling contract not auth in AC', async () => {
 
         console.log("//**************************************END enableContractForAC FAIL BATCH**********************************************/")
@@ -2253,7 +2317,7 @@ contract('STOR', accounts => {
         )
     })
 
-    //7
+    //11
     it('Should fail because asset in discarded status use rcycl', async () => {
         return APP_NC.newRecord(
             asset1,
@@ -2265,7 +2329,7 @@ contract('STOR', accounts => {
     })
 
 
-    //8                                                                                    
+    //12                                                                                    
     it('Should fail because rgt = 0', async () => {
         return APP_NC.newRecord(
             asset10,
@@ -2276,30 +2340,7 @@ contract('STOR', accounts => {
         )
     })
 
-
-    //9                                                                                  
-    // it('Should fail because rec already exists', async () => {
-    //     return MAL_APP.newRecord(
-    //         asset8,
-    //         asset8,
-    //         '12',
-    //         '100',
-    //         { from: account2 }
-    //     )
-    // })
-
-    //10  
-    // it('Should fail because AC = 0', async () => {
-    //     return MAL_APP.newRecord(
-    //         asset9,
-    //         rgt3,
-    //         '0',
-    //         '100',
-    //         { from: account2 }
-    //     )
-    // })
-
-    //9                                                                               
+    //13                                                                               
     it('Should fail because record doesnt exist', async () => {
 
         console.log("//**************************************END NewRecord FAIL BATCH**********************************************/")
@@ -2316,7 +2357,7 @@ contract('STOR', accounts => {
         return STOR.enableContractForAC('MAL_APP', '10', '0', { from: account1 })
     })
 
-    //10
+    //14
     it('Should fail because calling contract is not auth in AC', async () => {
         return MAL_APP._decCounter(
             asset2,
@@ -2351,7 +2392,7 @@ contract('STOR', accounts => {
         )
     })
 
-    //11
+    //15
     it('Should fail because asset in escrow', async () => {
         return MAL_APP._decCounter(
             asset2,
@@ -2387,7 +2428,7 @@ contract('STOR', accounts => {
         )
     })
 
-    //12
+    //16
     it('Should fail because you cannot set assetStatus to stolen with modifyRecord', async () => {
 
         return MAL_APP._modStatus(
@@ -2397,7 +2438,7 @@ contract('STOR', accounts => {
         )
     })
 
-    //13
+    //17
     it('Should fail because you cannot set assetStatus to lost with modifyRecord', async () => {
 
         return MAL_APP._modStatus(
@@ -2408,7 +2449,7 @@ contract('STOR', accounts => {
     })
 
 
-    //14
+    //18
     it('Should fail because you cannot set assetStatus to ECR stat(6) with modifyRecord', async () => {
 
         return MAL_APP._modStatus(
@@ -2419,7 +2460,7 @@ contract('STOR', accounts => {
     })
 
 
-    //15
+    //19
     it('Should fail because you cannot set assetStatus to ECR stat(56) with modifyRecord', async () => {
 
         return MAL_APP._modStatus(
@@ -2430,7 +2471,7 @@ contract('STOR', accounts => {
     })
 
 
-    //16
+    //20
     it('Should fail because you cannot set assetStatus to ECR stat(50) with modifyRecord', async () => {
 
         return MAL_APP._modStatus(
@@ -2445,11 +2486,11 @@ contract('STOR', accounts => {
 
         console.log("//**************************************END modifyRecord FAIL BATCH**********************************************/")
         console.log("//**************************************BEGIN changeAC FAIL BATCH**********************************************/")
-        return AC_MGR.addUser(account2Hash, '1', '2', { from: account1 })
+        return AC_MGR.addUser('2', account2Hash, '1', { from: account1 })
     })
 
 
-    //17
+    //21
     it('Should fail because record does not exist', async () => {
         return MAL_APP.changeAC(
             asset10,
@@ -2479,7 +2520,7 @@ contract('STOR', accounts => {
         )
     })
 
-    //18
+    //22
     it('Should fail because asset in escrow', async () => {
         return MAL_APP.changeAC(
             asset2,
@@ -2520,7 +2561,7 @@ contract('STOR', accounts => {
         return STOR.OO_addContract("MAL_APP", MAL_APP.address, '0', '0', { from: account1 })
     })
 
-    //19
+    //23
     it('Should fail because MAL_APP is not authroized in system', async () => {
         return MAL_APP.changeAC(
             asset2,
@@ -2535,7 +2576,7 @@ contract('STOR', accounts => {
     })
 
 
-    //20
+    //24
     it('Should fail because AC = 0', async () => {
         return MAL_APP.changeAC(
             asset2,
@@ -2544,7 +2585,7 @@ contract('STOR', accounts => {
         )
     })
 
-    //21
+    //25
     it('Should fail because you cannot change AC to new root', async () => {
         return MAL_APP.changeAC(
             asset2,
@@ -2554,7 +2595,7 @@ contract('STOR', accounts => {
     })
 
 
-    //22
+    //26
     it('Should fail because record is in L/S status', async () => {
         return MAL_APP.changeAC(
             asset4,
@@ -2564,7 +2605,7 @@ contract('STOR', accounts => {
     })
 
 
-    //23
+    //27
     it('Should fail because record is in TXFR stat', async () => {
         return MAL_APP.changeAC(
             asset3,
@@ -2575,10 +2616,10 @@ contract('STOR', accounts => {
 
 
     it('Should unauthorize account2 in AC 2', async () => {
-        return AC_MGR.addUser(account2Hash, '0', '2', { from: account1 })
+        return AC_MGR.addUser('2', account2Hash, '0', { from: account1 })
     })
 
-    //24
+    //28
     it('Should fail because record doesnt exist', async () => {
 
         console.log("//**************************************END changeAC FAIL BATCH**********************************************/")
@@ -2596,7 +2637,7 @@ contract('STOR', accounts => {
         return STOR.enableContractForAC('MAL_APP', '10', '0', { from: account1 })
     })
 
-    //25
+    //29
     it('Should fail because calling contract is not auth in AC', async () => {
         return MAL_APP._setLostOrStolen(
             asset2,
@@ -2611,7 +2652,7 @@ contract('STOR', accounts => {
         return STOR.enableContractForAC('MAL_APP', '10', '1', { from: account1 })
     })
 
-    //26
+    //30
     it('Should fail because not being set to L/S status', async () => {
         return MAL_APP._setLostOrStolen(
             asset2,
@@ -2621,7 +2662,7 @@ contract('STOR', accounts => {
         )
     })
 
-    //27
+    //31
     it('Should fail because asset in transfered status', async () => {
         return MAL_APP._setLostOrStolen(
             asset3,
@@ -2631,7 +2672,7 @@ contract('STOR', accounts => {
         )
     })
 
-    //28
+    //32
     it('Should fail because asset in locked escrow', async () => {
         return MAL_APP._setLostOrStolen(
             asset7,
@@ -2659,7 +2700,7 @@ contract('STOR', accounts => {
         return ECR_MGR.OO_resolveContractAddresses({ from: account1 })
     })
 
-    //29
+    //33
     it('Should fail because caller != ECR_MGR', async () => {
         return MAL_APP.setEscrowStor(
             asset2,
@@ -2668,7 +2709,7 @@ contract('STOR', accounts => {
         )
     })
 
-    //30
+    //34
     it('Should fail because record does not exist', async () => {
         return MAL_APP.setEscrow(
             asset10,
@@ -2679,7 +2720,7 @@ contract('STOR', accounts => {
         )
     })
 
-    //31                                                                   
+    //35                                                                   
     it('Should fail because asset already in escrow', async () => {
         return MAL_APP.setEscrow(
             asset7,
@@ -2690,7 +2731,7 @@ contract('STOR', accounts => {
         )
     })
 
-    //32                                                                       
+    //36                                                                       
     it('Should fail because must be set to escrow status', async () => {
         return MAL_APP.setEscrow(
             asset8,
@@ -2702,7 +2743,7 @@ contract('STOR', accounts => {
     })
 
 
-    //33                                                                      
+    //37                                                                      
     it('Should fail because asset in stolen stat', async () => {
         return MAL_APP.setEscrow(
             asset4,
@@ -2713,7 +2754,7 @@ contract('STOR', accounts => {
         )
     })
 
-    //34                                                                         
+    //38                                                                         
     it('Should fail because asset in lost stat', async () => {
         return MAL_APP.setEscrow(
             asset5,
@@ -2725,7 +2766,7 @@ contract('STOR', accounts => {
     })
 
 
-    //35                                                                    
+    //39                                                                    
     it('Should fail because asset in transfered stat', async () => {
         return MAL_APP.setEscrow(
             asset3,
@@ -2736,7 +2777,7 @@ contract('STOR', accounts => {
         )
     })
 
-    //36                                                                         
+    //40                                                                         
     it('Should fail because calling contract != ECR_MGR', async () => {
 
         console.log("//**************************************END setEscrow FAIL BATCH**********************************************/")
@@ -2747,7 +2788,7 @@ contract('STOR', accounts => {
         )
     })
 
-    //37
+    //41
     it('Should fail because asset doesnt exist', async () => {
 
         console.log("//**************************************END setEscrow FAIL BATCH**********************************************/")
@@ -2765,7 +2806,7 @@ contract('STOR', accounts => {
         return STOR.enableContractForAC('MAL_APP', '12', '0', { from: account1 })
     })
 
-    //38
+    //42
     it('Should fail because contract not auth in AC', async () => {
         return MAL_APP._setPrice(
             asset11,
@@ -2780,7 +2821,7 @@ contract('STOR', accounts => {
         return STOR.enableContractForAC('MAL_APP', '12', '1', { from: account1 })
     })
 
-    //39
+    //43
     it('Should fail because asset doesnt exist', async () => {
 
         console.log("//**************************************END setPrice FAIL BATCH**********************************************/")
@@ -2796,7 +2837,7 @@ contract('STOR', accounts => {
         return STOR.enableContractForAC('MAL_APP', '12', '0', { from: account1 })
     })
 
-    //40
+    //44
     it('Should fail because contract not auth in AC', async () => {
         return MAL_APP._clearPrice(
             asset11,
@@ -2822,7 +2863,7 @@ contract('STOR', accounts => {
 
     })
 
-    //41
+    //45
     it('Should fail because record does not exist', async () => {
         return MAL_APP._modIpfs1(
             asset10,
@@ -2831,7 +2872,7 @@ contract('STOR', accounts => {
         )
     })
 
-    //42
+    //46
     it('Should fail because calling contract not auth in AC', async () => {
         return MAL_APP._modIpfs1(
             asset8,
@@ -2846,7 +2887,7 @@ contract('STOR', accounts => {
         return STOR.enableContractForAC('MAL_APP', '10', '1', { from: account1 })
     })
 
-    //43
+    //47
     it('Should fail because record in escrow stat', async () => {
         return MAL_APP._modIpfs1(
             asset7,
@@ -2865,7 +2906,7 @@ contract('STOR', accounts => {
         )
     })
 
-    //44
+    //48
     it('Should fail because ips1 cannot match previous data', async () => {
         return MAL_APP._modIpfs1(
             asset8,
@@ -2875,7 +2916,7 @@ contract('STOR', accounts => {
         )
     })
 
-    //45
+    //49
     it('Should fail because record does not exist', async () => {
 
         console.log("//**************************************END modifyIpfs1 FAIL BATCH**********************************************/")
@@ -2894,7 +2935,7 @@ contract('STOR', accounts => {
     })
 
 
-    //46
+    //50
     it('Should fail becasue contract not auth in AC', async () => {
         return MAL_APP.addIpfs2Note(
             asset2,
@@ -2910,7 +2951,7 @@ contract('STOR', accounts => {
     })
 
 
-    //47
+    //51
     it('Should fail becasue asset in escrow stat', async () => {
         return MAL_APP.addIpfs2Note(
             asset7,
@@ -2921,7 +2962,7 @@ contract('STOR', accounts => {
     })
 
 
-    //48
+    //52
     it('Should fail becasue asset in L/S stat', async () => {
         return MAL_APP.addIpfs2Note(
             asset4,
@@ -2932,7 +2973,7 @@ contract('STOR', accounts => {
     })
 
 
-    //49
+    //53
     it('Should fail becasue asset in transfered stat', async () => {
         return MAL_APP.addIpfs2Note(
             asset3,
@@ -2952,7 +2993,7 @@ contract('STOR', accounts => {
         )
     })
 
-    //50
+    //54
     it('Should fail becasue attempting to modify IPFS2', async () => {
         return MAL_APP.addIpfs2Note(
             asset8,
@@ -2970,7 +3011,7 @@ contract('STOR', accounts => {
         return STOR.OO_addContract("MAL_APP", MAL_APP.address, '0', '0', { from: account1 })
     })
 
-    //51
+    //55
     it('Should fail because contract not registered in system', async () => {
         return MAL_APP.retrieveRecordStor(
             asset1,

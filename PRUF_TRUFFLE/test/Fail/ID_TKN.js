@@ -889,13 +889,18 @@ __/\\\\\\\\\\\\\ _____/\\\\\\\\\ _______/\\../\\ ___/\\\\\\\\\\\\\\\
         
         
             it('Should mint a couple of asset root tokens', async () => {
-        
+                
                 console.log("Minting root token 1 -C")
-                return AC_MGR.createAssetClass(account1, 'CUSTODIAL_ROOT', '1', '1', '3', rgt000, "0", { from: account1 })
+                return AC_MGR.createAssetClass("1", 'CUSTODIAL_ROOT1', '1', '3', '0', "0", rgt000, account1, { from: account1 })
         
                     .then(() => {
                         console.log("Minting root token 2 -NC")
-                        return AC_MGR.createAssetClass(account1, 'NON-CUSTODIAL_ROOT', '2', '2', '3', rgt000, "0", { from: account1 })
+                        return AC_MGR.createAssetClass("2", 'CUSTODIAL_ROOT2', '2', '3', '0', "0", rgt000, account1, { from: account1 })
+                    })
+        
+                    .then(() => {
+                        console.log("Minting root token 3 -RESTRICTED")
+                        return AC_MGR.createAssetClass("3", 'CUSTODIAL_ROOT3', '3', '3', '1', "0", rgt000, account2, { from: account1 })
                     })
             })
         
@@ -903,26 +908,41 @@ __/\\\\\\\\\\\\\ _____/\\\\\\\\\ _______/\\../\\ ___/\\\\\\\\\\\\\\\
             it("Should Mint 2 cust and 2 non-cust AC tokens in AC_ROOT 1", async () => {
         
                 console.log("Minting AC 10 -C")
-                return AC_MGR.createAssetClass(account1, "Custodial_AC1", "10", "1", "1", rgt000, "0", { from: account1 })
+                return AC_MGR.createAssetClass("10", 'CUSTODIAL_AC10', '1', '1', '0', "0", rgt000, account1, { from: account1 })
         
                     .then(() => {
                         console.log("Minting AC 11 -C")
-                        return AC_MGR.createAssetClass(account1, "Custodial_AC2", "11", "1", "1", rgt000, "0", { from: account1 })
+                        return AC_MGR.createAssetClass("11", 'CUSTODIAL_AC11', '1', '1', '0', "0", rgt000, account1, { from: account1 })
                     })
         
                     .then(() => {
                         console.log("Minting AC 12 -NC")
-                        return AC_MGR.createAssetClass(account1, "Non-Custodial_AC1", "12", "1", "2", rgt000, "0", { from: account1 })
+                        return AC_MGR.createAssetClass("12", 'CUSTODIAL_AC12', '1', '2', '0', "0", rgt000, account1, { from: account1 })
                     })
         
                     .then(() => {
                         console.log("Minting AC 13 -NC")
-                        return AC_MGR.createAssetClass(account1, "Non-Custodial_AC2", "13", "1", "2", rgt000, "0", { from: account1 })
+                        return AC_MGR.createAssetClass("13", 'CUSTODIAL_AC13', '1', '2', '0', "0", rgt000, account1, { from: account1 })
                     })
         
                     .then(() => {
                         console.log("Minting AC 16 -NC")
-                        return AC_MGR.createAssetClass(account10, "Non_Custodial_AC5", "16", "1", "2", rgt000, "0", { from: account1 })
+                        return AC_MGR.createAssetClass("16", 'CUSTODIAL_AC16', '2', '2', '1', "0", rgt000, account10, { from: account1 })
+                    })
+        
+                    .then(() => {
+                        console.log("Minting AC 17 -NC")
+                        return AC_MGR.createAssetClass("17", 'CUSTODIAL_AC17', '2', '2', '3', "0", rgt000, account1, { from: account1 })
+                    })
+        
+                    .then(() => {
+                        console.log("Minting AC 18 -NC")
+                        return AC_MGR.createAssetClass("18", 'CUSTODIAL_AC18', '2', '2', '4', "0", rgt000, account1, { from: account1 })
+                    })
+        
+                    .then(() => {
+                        console.log("Minting AC 19 -NC")
+                        return AC_MGR.createAssetClass("19", 'CUSTODIAL_AC19', '2', '2', '5', "0", rgt000, account1, { from: account1 })
                     })
             })
         
@@ -930,11 +950,11 @@ __/\\\\\\\\\\\\\ _____/\\\\\\\\\ _______/\\../\\ ___/\\\\\\\\\\\\\\\
             it("Should Mint 2 non-cust AC tokens in AC_ROOT 2", async () => {
         
                 console.log("Minting AC 14 -NC")
-                return AC_MGR.createAssetClass(account1, "Non-Custodial_AC3", "14", "2", "2", rgt000, "0", { from: account1 })
+                return AC_MGR.createAssetClass("14", 'CUSTODIAL_AC14', '2', '2', '0', "0", rgt000, account1, { from: account1 })
         
                     .then(() => {
                         console.log("Minting AC 15 -NC")
-                        return AC_MGR.createAssetClass(account10, "Non_Custodial_AC4", "15", "2", "2", rgt000, "0", { from: account1 })
+                        return AC_MGR.createAssetClass("15", 'CUSTODIAL_AC15', '2', '2', '0', "0", rgt000, account10, { from: account1 })
                     })
             })
         
@@ -1814,77 +1834,77 @@ __/\\\\\\\\\\\\\ _____/\\\\\\\\\ _______/\\../\\ ___/\\\\\\\\\\\\\\\
                             { from: account10 })
                     })
             })
-        
-        
+
+
             it('Should add users to AC 10-14 in AC_Manager', async () => {
         
                 console.log("//**************************************END BOOTSTRAP**********************************************/")
                 console.log("Account2 => AC10")
-                return AC_MGR.addUser(account2Hash, '1', '10', { from: account1 })
+                return AC_MGR.addUser('10', account2Hash, '1', { from: account1 })
         
                     .then(() => {
                         console.log("Account2 => AC11")
-                        return AC_MGR.addUser(account2Hash, '1', '11', { from: account1 })
+                        return AC_MGR.addUser('11', account2Hash, '1', { from: account1 })
                     })
         
                     .then(() => {
                         console.log("Account3 => AC11")
-                        return AC_MGR.addUser(account3Hash, '1', '11', { from: account1 })
+                        return AC_MGR.addUser('11', account3Hash, '1', { from: account1 })
                     })
         
                     .then(() => {
                         console.log("Account4 => AC10")
-                        return AC_MGR.addUser(account4Hash, '1', '10', { from: account1 })
+                        return AC_MGR.addUser('10', account4Hash, '1', { from: account1 })
                     })
         
                     .then(() => {
                         console.log("Account4 => AC12")
-                        return AC_MGR.addUser(account4Hash, '1', '12', { from: account1 })
+                        return AC_MGR.addUser('12', account4Hash, '1', { from: account1 })
                     })
         
                     .then(() => {
                         console.log("Account4 => AC12")
-                        return AC_MGR.addUser(account4Hash, '1', '16', { from: account10 })
+                        return AC_MGR.addUser('16', account4Hash, '1', { from: account10 })
                     })
         
                     .then(() => {
                         console.log("Account5 => AC13")
-                        return AC_MGR.addUser(account5Hash, '1', '13', { from: account1 })
+                        return AC_MGR.addUser('13', account5Hash, '1', { from: account1 })
                     })
         
                     .then(() => {
                         console.log("Account6 => AC14")
-                        return AC_MGR.addUser(account6Hash, '1', '14', { from: account1 })
+                        return AC_MGR.addUser('14', account6Hash, '1', { from: account1 })
                     })
         
                     .then(() => {
                         console.log("Account7 => AC14 (ROBOT)")
-                        return AC_MGR.addUser(account7Hash, '9', '14', { from: account1 })
+                        return AC_MGR.addUser('14', account7Hash, '9', { from: account1 })
                     })
         
                     .then(() => {
                         console.log("Account8 => AC10 (ROBOT)")
-                        return AC_MGR.addUser(account8Hash, '9', '10', { from: account1 })
+                        return AC_MGR.addUser('10', account8Hash, '9', { from: account1 })
                     })
         
                     .then(() => {
                         console.log("Account9 => AC11 (ROBOT)")
-                        return AC_MGR.addUser(account9Hash, '9', '11', { from: account1 })
+                        return AC_MGR.addUser('11', account9Hash, '9', { from: account1 })
                     })
         
                     .then(() => {
                         console.log("Account10 => AC15 (PIPMINTER)")
-                        return AC_MGR.addUser(account10Hash, '10', '15', { from: account10 })
+                        return AC_MGR.addUser('15', account10Hash, '10', { from: account10 })
                     })
         
                     .then(() => {
                         console.log("Account10 => AC15 (PIPMINTER)")
-                        return AC_MGR.addUser(account10Hash, '10', '16', { from: account10 })
+                        return AC_MGR.addUser('16', account10Hash, '10', { from: account10 })
                     })
         
                     .then(() => {
                         console.log("Account10 => AC15 (PIPMINTER)")
-                        return AC_MGR.addUser(account10Hash, '1', '10', { from: account1 })
+                        return AC_MGR.addUser('10', account10Hash, '1', { from: account1 })
                     })
             })
 
@@ -1908,23 +1928,65 @@ __/\\\\\\\\\\\\\ _____/\\\\\\\\\ _______/\\../\\ ___/\\\\\\\\\\\\\\\
         )
     })
 
+
+    it('Should mint ID(1) to account2', async () => {
+        return ID_TKN.mintPRUF_IDToken(
+        account2, 
+        "1",
+        {from: account1}
+        )
+    })
+
+    it("Should retrieve hasMinterRole true", async () =>{ 
+        var Record = "";
+        
+        return await ID_TKN.hasRole(minterRoleB32, account2, {from: account2}, function (_err, _result) {
+            if(_err){} 
+            else{Record = _result
+        console.log(Record)}
+        })
+    })
+
+
     //1
     it('Should Fail because caller is not Minter', async () => {
 
         console.log("//**************************************END ID_TKN SETUP**********************************************/")
-        console.log("//**************************************BEGIN ID_TKN FAIL BATCH (8)**********************************************/")
+        console.log("//**************************************BEGIN ID_TKN FAIL BATCH (14)**********************************************/")
         console.log("//**************************************BEGIN mintPRUF_IDToken FAIL BATCH**********************************************/")
         return ID_TKN.mintPRUF_IDToken(
-        account2, 
+        account2,
         asset1,
+        "1234",
         {from: account2}
         )
+    })
+
+    it("Should retrieve balanceOf 1 ID_TKN", async () =>{ 
+        var Record = "";
+        
+        return await ID_TKN.balanceOf(account2, {from: account2}, function (_err, _result) {
+            if(_err){} 
+            else{Record = _result
+        console.log(Record)}
+        })
     })
 
     //2
     it('Should Fail because caller is not Minter', async () => {
 
         console.log("//**************************************END mintPRUF_IDToken FAIL BATCH**********************************************/")
+        console.log("//**************************************BEGIN burnPRUF_ID FAIL BATCH**********************************************/")
+        return ID_TKN.burnPRUF_ID(
+        asset1,
+        {from: account2}
+        )
+    })
+
+    //3
+    it('Should Fail because caller is not Minter', async () => {
+
+        console.log("//**************************************END burnPRUF_ID FAIL BATCH**********************************************/")
         console.log("//**************************************BEGIN reMintPRUF_IDToken FAIL BATCH**********************************************/")
         return ID_TKN.reMintPRUF_IDToken(
         account2, 
@@ -1933,8 +1995,7 @@ __/\\\\\\\\\\\\\ _____/\\\\\\\\\ _______/\\../\\ ___/\\\\\\\\\\\\\\\
         )
     })
 
-
-    //3
+    //4
     it('Should Fail because you cannot reMint nonExistant token', async () => {
         return ID_TKN.reMintPRUF_IDToken(
         account2, 
@@ -1944,7 +2005,6 @@ __/\\\\\\\\\\\\\ _____/\\\\\\\\\ _______/\\../\\ ___/\\\\\\\\\\\\\\\
     })
 
 
-    
     it('Should mint ID_TKN to account2', async () => {
 
         console.log("//**************************************END reMintPRUF_IDToken FAIL BATCH**********************************************/")
@@ -1956,8 +2016,7 @@ __/\\\\\\\\\\\\\ _____/\\\\\\\\\ _______/\\../\\ ___/\\\\\\\\\\\\\\\
         )
     })
 
-
-    //4
+    //5
     it('Should Fail because caller is not Minter', async () => {
         return ID_TKN.setURI(
         asset1, 
@@ -1966,10 +2025,73 @@ __/\\\\\\\\\\\\\ _____/\\\\\\\\\ _______/\\../\\ ___/\\\\\\\\\\\\\\\
         )
     })
 
-    //5
+    //6
+    it('Should fail becasue caller !token holder', async () => {
+
+        console.log("//**************************************END reMintPRUF_IDToken FAIL BATCH**********************************************/")
+        console.log("//**************************************BEGIN setIdURI FAIL BATCH**********************************************/")
+        return ID_TKN.setIdURI(
+        "1",
+        rgt1,
+        {from: account1}
+        )
+    })
+
+    //7
+    it('Should fail becasue caller !token holder', async () => {
+
+        console.log("//**************************************END setIdURI FAIL BATCH**********************************************/")
+        console.log("//**************************************BEGIN setUserName FAIL BATCH**********************************************/")
+        return ID_TKN.setUserName(
+        "1",
+        "user",
+        {from: account1}
+        )
+    })
+
+
+    it('Should set username(user) to ID(1)', async () => {
+        return ID_TKN.setUserName(
+        "1",
+        "user",
+        {from: account2}
+        )
+    })
+
+    //8
+    it('Should fail because userName is already set', async () => {
+        return ID_TKN.setUserName(
+        "1",
+        "user1",
+        {from: account2}
+        )
+    })
+
+    //9
+    it('Should fail because userName is already taken', async () => {
+        return ID_TKN.setUserName(
+        asset1,
+        "user",
+        {from: account2}
+        )
+    })
+
+    //10
+    it('Should Fail because caller is not Minter', async () => {
+
+        console.log("//**************************************END setUserName FAIL BATCH**********************************************/")
+        console.log("//**************************************BEGIN setTrustLevel FAIL BATCH**********************************************/")
+        return ID_TKN.setTrustLevel(
+        asset1,
+        "1",
+        {from: account2}
+        )
+    })
+
+    //11
     it('Should fail because caller is not ownerOrApproved', async () => {
 
-        console.log("//**************************************END setURI FAIL BATCH**********************************************/")
+        console.log("//**************************************END setTrustLevel FAIL BATCH**********************************************/")
         console.log("//**************************************BEGIN transferFrom FAIL BATCH**********************************************/")
         return ID_TKN.transferFrom(
         account2,
@@ -1979,7 +2101,7 @@ __/\\\\\\\\\\\\\ _____/\\\\\\\\\ _______/\\../\\ ___/\\\\\\\\\\\\\\\
         )
     })
 
-    //6
+    //12
     it('Should fail because transfer is not to owner (CANNOT TRANSFER ACCORDING TO NORMAL ERC721 PROTOCALL)', async () => {
         return ID_TKN.transferFrom(
         account2,
@@ -1989,7 +2111,7 @@ __/\\\\\\\\\\\\\ _____/\\\\\\\\\ _______/\\../\\ ___/\\\\\\\\\\\\\\\
         )
     })
 
-    //7
+    //13
     it('Should fail because caller is not ownerOrApproved', async () => {
 
         console.log("//**************************************END transferFrom FAIL BATCH**********************************************/")
@@ -2002,7 +2124,7 @@ __/\\\\\\\\\\\\\ _____/\\\\\\\\\ _______/\\../\\ ___/\\\\\\\\\\\\\\\
         )
     })
 
-    //8
+    //14
     it('Should fail because transfer is not to owner (CANNOT TRANSFER ACCORDING TO NORMAL ERC721 PROTOCALL)', async () => {
         return ID_TKN.safeTransferFrom(
         account2,

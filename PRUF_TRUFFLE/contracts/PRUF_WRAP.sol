@@ -180,7 +180,7 @@ contract WRAP is CORE {
             "W:CR:Asset token already exists"
         );
 
-        require(
+        require( //CTS:EXAMINE redundant/unreachable with current contract structure, throws in wrap.
             (AC_info.custodyType == 5),
             "W:CR:Cannot create asset - contract not authorized for asset class custody type"
         );
@@ -208,7 +208,7 @@ contract WRAP is CORE {
         if (AC_info.managementType == 4) {
             require(
                 ID_TKN.trustedLevelByAddress(_msgSender()) > 10,
-                "D:CRO:Caller does not hold sufficiently trusted ID"
+                "W:CR:Caller does not hold sufficiently trusted ID"
             );
         }
 
