@@ -29,7 +29,7 @@ contract APP is CORE {
         uint256 tokenId = uint256(_idxHash);
         require(
             (A_TKN.ownerOf(tokenId) == address(this)),
-            "A:MOD-IA: APP contract does not hold token"
+            "A:MOD-IA: APP contract !token holder"
         );
         _;
     }
@@ -83,12 +83,11 @@ contract APP is CORE {
             (rec.assetStatus == 5) ||
                 (rec.assetStatus == 55) ||
                 (rec.assetStatus == 70),
-            "A:IA: Only Transferred or exported assets can be reimported"
+            "A:IA: Only Transferred or exported assets can be imported"
         );
         //^^^^^^^checks^^^^^^^^^
 
         rec.forceModCount = 170;
-
         rec.assetStatus = 0;
         rec.rightsHolder = _newRgtHash;
         //^^^^^^^effects^^^^^^^^^
@@ -126,15 +125,12 @@ contract APP is CORE {
         //^^^^^^^checks^^^^^^^^^
 
         rec.forceModCount = 170;
-
         rec.numberOfTransfers = 170;
-
         rec.assetStatus = 0;
         rec.rightsHolder = _rgtHash;
         //^^^^^^^effects^^^^^^^^^
 
         writeRecord(_idxHash, rec);
-
         deductServiceCosts(rec.assetClass, 6);
 
         return 170;
@@ -225,7 +221,6 @@ contract APP is CORE {
         //^^^^^^^effects^^^^^^^^^
 
         writeRecordIpfs2(_idxHash, rec);
-
         deductServiceCosts(rec.assetClass, 3);
 
         return rec.Ipfs2;

@@ -12,7 +12,6 @@ __/\\\\\\\\\\\\\ _____/\\\\\\\\\ _______/\\../\\ ___/\\\\\\\\\\\\\\\
 
 /*-----------------------------------------------------------------
  *  TO DO
- *
  *---------------------------------------------------------------*/
 
 // SPDX-License-Identifier: UNLICENSED
@@ -49,11 +48,14 @@ contract APP_NC is CORE {
     ) external nonReentrant whenNotPaused {
         require(
             (ID_TKN.balanceOf(_msgSender()) == 1), //_msgSender() is token holder
-            "ANC:MOD-IA: Caller does not hold a valid PRuF_ID token"
+            "ANC:NRWD: Caller !PRuF_ID holder"
         );
         //^^^^^^^Checks^^^^^^^^^
+
         Record memory rec;
         rec.Ipfs1 = _IpfsHash;
+        //^^^^^^^effects^^^^^^^^^
+
         createRecord(_idxHash, _rgtHash, _assetClass, _countDownStart);
         writeRecordIpfs1(_idxHash, rec);
         deductServiceCosts(_assetClass, 1);
@@ -61,7 +63,7 @@ contract APP_NC is CORE {
     }
 
     /*
-     * @dev Create a  newRecord
+     * @dev Create a new record
      */
     function newRecord(
         bytes32 _idxHash,
@@ -71,14 +73,12 @@ contract APP_NC is CORE {
     ) external nonReentrant whenNotPaused {
         require(
             (ID_TKN.balanceOf(_msgSender()) == 1), //_msgSender() is token holder
-            "ANC:MOD-IA: Caller does not hold a valid PRuF_ID token"
+            "ANC:NR: Caller !PRuF_ID holder"
         );
         //^^^^^^^Checks^^^^^^^^^
 
         createRecord(_idxHash, _rgtHash, _assetClass, _countDownStart);
-
         deductServiceCosts(_assetClass, 1);
-
         //^^^^^^^interactions^^^^^^^^^
     }
 
@@ -94,40 +94,34 @@ contract APP_NC is CORE {
         Record memory rec = getRecord(_idxHash);
         AC memory AC_info = getACinfo(_newAssetClass);
 
-        require(rec.assetStatus == 70, "ANC:IA: Asset not exported");
+        require(rec.assetStatus == 70, "ANC:IA: Asset !exported");
         require(
             AC_MGR.isSameRootAC(_newAssetClass, rec.assetClass) == 170,
-            "ANC:IA:Cannot change AC to new root"
+            "ANC:IA: !Change AC to new root"
         );
-
         require(
                 (AC_info.managementType < 5),
-                "ANC:IA:Contract does not support management types > 4 or AC is locked"
+                "ANC:IA: Contract does not support management types > 4 or AC is locked"
         );
-
         if ((AC_info.managementType == 1) || (AC_info.managementType == 2)) {
-            // DPS:TEST---NEW
             require(
                 (AC_TKN.ownerOf(_newAssetClass) == _msgSender()),
-                "ANC:IA:Cannot create asset in AC mgmt type 1||2 - caller does not hold AC token"
+                "ANC:IA: Cannot create asset in AC mgmt type 1||2 - caller does not hold AC token"
             );
         }
-
         if (AC_info.managementType == 3) {
-            // DPS:TEST---NEW
             require(
                 AC_MGR.getUserType(
                     keccak256(abi.encodePacked(_msgSender())),
                     _newAssetClass
                 ) == 1,
-                "ANC:IA:Cannot create asset - caller address not authorized"
+                "ANC:IA: Cannot create asset - caller address !authorized"
             );
         }
-
         if (AC_info.managementType == 4) {
             require(
                 ID_TKN.trustedLevelByAddress(_msgSender()) > 10,
-                "D:CRO:Caller does not hold sufficiently trusted ID"
+                "ANC:IA: Caller !trusted ID holder"
             );
         }
         //^^^^^^^checks^^^^^^^^^
@@ -142,7 +136,7 @@ contract APP_NC is CORE {
     }
 
     /*
-     * @dev Modify **Record**.Ipfs2 with confirmation
+     * @dev Modify record.Ipfs2 with confirmation CTS:EXAMINE comment
      */
     function addIpfs2Note(bytes32 _idxHash, bytes32 _IpfsHash)
         external
@@ -154,7 +148,7 @@ contract APP_NC is CORE {
         Record memory rec = getRecord(_idxHash);
         require( //STATE UNREACHABLE
             needsImport(rec.assetStatus) == 0,
-            "ANC:I2:Record In Transferred, exported, or discarded status"
+            "ANC:I2: Record In Transferred, exported, or discarded status"
         );
         //^^^^^^^checks^^^^^^^^^
 
@@ -162,7 +156,6 @@ contract APP_NC is CORE {
         //^^^^^^^effects^^^^^^^^^
 
         writeRecordIpfs2(_idxHash, rec);
-
         deductServiceCosts(rec.assetClass, 3);
 
         return rec.Ipfs2;

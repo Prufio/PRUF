@@ -77,7 +77,7 @@ contract AC_MGR is BASIC {
     modifier isNodeMinter() {
         require(
             hasRole(NODE_MINTER_ROLE, _msgSender()),
-            "ACM:MOD: must have NODE_MINTER_ROLE"
+            "ACM:MOD-INM: Must have NODE_MINTER_ROLE"
         );
         _;
     }
@@ -88,7 +88,7 @@ contract AC_MGR is BASIC {
     modifier isACtokenHolderOfClass(uint32 _assetClass) {
         require(
             (AC_TKN.ownerOf(_assetClass) == _msgSender()),
-            "ACM:MOD-IACTHoC:_msgSender() not authorized in asset class"
+            "ACM:MOD-IACTHoC: _msgSender() not authorized in asset class"
         );
         _;
     }
@@ -115,7 +115,6 @@ contract AC_MGR is BASIC {
      */
 
     function adminIncreaseShare(
-        //---------------------------------------DPS TEST-----NEW,order
         uint32 _assetClass,
         uint32 _newDiscount
     ) external isAdmin {
@@ -125,13 +124,12 @@ contract AC_MGR is BASIC {
         );
         require(
             _newDiscount >= AC_data[_assetClass].discount,
-            "ACM:AIS: new share less than old share"
+            "ACM:AIS: New share < old share"
         );
         require(
             _newDiscount <= 10000,
-            "ACM:AIS: discount cannot exceed 100% (10000)"
+            "ACM:AIS: Discount > 100% (10000)"
         );
-
         //^^^^^^^checks^^^^^^^^^
 
         AC_data[_assetClass].discount = _newDiscount;
@@ -147,7 +145,6 @@ contract AC_MGR is BASIC {
      *
      */
     function transferName(
-        //---------------------------------------DPS TEST-----NEW, order
 
         uint32 _assetClass_source,
         uint32 _assetClass_dest,
@@ -155,12 +152,12 @@ contract AC_MGR is BASIC {
     ) external isAdmin {
         require(
             AC_number[_name] == _assetClass_source,
-            "ACM:TA: name not in source AC"
+            "ACM:TN: Name not in source AC"
         ); //source AC_Name must match name given
 
         require(
             (AC_data[_assetClass_dest].IPFS == B320xF_), //dest AC must have ipfs set to 0xFFFF.....
-            "ACM:TA:Destination AC not prepared for name transfer"
+            "ACM:TN: Destination AC not prepared for name transfer"
         );
         //^^^^^^^checks^^^^^^^^^
 
@@ -172,7 +169,6 @@ contract AC_MGR is BASIC {
 
     /*
      * @dev Modifies an asset class with minimal controls
-     *--------DPS TEST ---- NEW args, order
      */
     function AdminModAssetClass(
         uint32 _assetClass,
@@ -188,18 +184,18 @@ contract AC_MGR is BASIC {
         AC memory _ac = AC_data[_assetClassRoot];
         uint256 tokenId = uint256(_assetClass);
 
-        require((tokenId != 0), "ACM:CAC: AC cannot be 0"); //sanity check inputs
+        require((tokenId != 0), "ACM:AMAC: AC = 0"); //sanity check inputs
         require(
             _discount <= 10000,
-            "ACM:CAC: discount cannot exceed 100% (10000)"
+            "ACM:AMAC: Discount > 10000 (100%)"
         );
         require( //has valid root
             (_ac.custodyType == 3) || (_assetClassRoot == _assetClass),
-            "ACM:CAC:Root asset class does not exist"
+            "ACM:AMAC: Root !exist"
         );
         require(
             AC_TKN.tokenExists(tokenId) == 170,
-            "ACM:CAC: ACtoken does not exist"
+            "ACM:AMAC: ACtoken !exist"
         );
         //^^^^^^^checks^^^^^^^^^
 
@@ -226,7 +222,6 @@ contract AC_MGR is BASIC {
      *  _discount 10000 = 100 percent price share , cannot exceed
      */
     function createAssetClass(
-        //*--------DPS TEST ---- NEW args, order
         uint32 _assetClass,
         string calldata _name,
         uint32 _assetClassRoot,
@@ -259,7 +254,6 @@ contract AC_MGR is BASIC {
      * - the caller must have a balance of at least `amount`.
      */
     function purchaseACnode(
-        //--------DPS TEST ---- NEW feature: _magement type
         //--------------will fail in burn / transfer if insufficient tokens
         string calldata _name,
         uint32 _assetClassRoot,
@@ -268,7 +262,7 @@ contract AC_MGR is BASIC {
     ) external whenNotPaused nonReentrant returns (uint256) {
         require( //Impossible to test??
             ACtokenIndex < 4294000000,
-            "ACM:IS:Only 4294000000 AC tokens allowed"
+            "ACM:IS: Only 4294000000 AC tokens allowed"
         );
         require(
             (ID_TKN.balanceOf(_msgSender()) == 1), //_msgSender() is token holder
@@ -282,7 +276,6 @@ contract AC_MGR is BASIC {
         address rootPaymentAddress = cost[_assetClassRoot][1].paymentAddress; //payment for upgrade goes to root AC payment adress specified for service (1)
 
         newACtokenPrice = acPrice_L1;
-        //^^^^^^^effects^^^^^^^^^
 
         //mint an asset class token to _msgSender(), at tokenID ACtokenIndex, with URI = root asset Class #
 
@@ -308,7 +301,6 @@ contract AC_MGR is BASIC {
 
         //Set the default 11 authorized contracts
         if (_custodyType == 2) {
-            //DPS:TEST -----------NEW
             STOR.enableDefaultContractsForAC(uint32(ACtokenIndex));
         }
 
@@ -349,7 +341,6 @@ contract AC_MGR is BASIC {
      *  caller holds ACtoken
      *  name is unuiqe or same as old name
      */
-
     function updateACname(uint32 _assetClass, string calldata _name)
         external
         whenNotPaused
@@ -359,7 +350,7 @@ contract AC_MGR is BASIC {
             (AC_number[_name] == 0) || //name is unassigned
                 (keccak256(abi.encodePacked(_name)) == //name is same as old name
                     (keccak256(abi.encodePacked(AC_data[_assetClass].name)))),
-            "ACM:UAC:AC name already in use in other AC"
+            "ACM:UACN: Name already in use"
         );
         //^^^^^^^checks^^^^^^^^^
 
@@ -368,7 +359,7 @@ contract AC_MGR is BASIC {
         AC_number[_name] = _assetClass;
         AC_data[_assetClass].name = _name;
         //^^^^^^^effects^^^^^^^^^
-    } //-------------DPS TEST: NEW ARGS (now includes byte)
+    }
 
     /*
      * @dev Modifies an assetClass
@@ -412,7 +403,6 @@ contract AC_MGR is BASIC {
      * ACnode is managementType 255 (unconfigured)
      */
     function updateACImmutable(
-        //DPS:CHECK NEW ARGUMENTS, name has changed
         uint32 _assetClass,
         uint8 _managementType,
         uint8 _storageProvider,
@@ -420,11 +410,11 @@ contract AC_MGR is BASIC {
     ) external isACtokenHolderOfClass(_assetClass) whenNotPaused {
         require(
             AC_data[_assetClass].managementType == 255,
-            "ACM:UAI: immutable AC data has aleady been set"
+            "ACM:UACI: Immutable AC data aleady set"
         );
         require(
             _managementType != 255,
-            "ACM:UAI: Cannot set management type to unconfigured"
+            "ACM:UACI: managementType = 255(Unconfigured)"
         );
         //^^^^^^^checks^^^^^^^^^
 
@@ -450,7 +440,6 @@ contract AC_MGR is BASIC {
 
     /*
      * @dev Retrieve AC_data @ _assetClass
-     *--------DPS TEST ---- NEW args, order
      */
     function getAC_data(uint32 _assetClass)
         external
@@ -474,7 +463,7 @@ contract AC_MGR is BASIC {
         //^^^^^^^interactions^^^^^^^^^
     }
 
-    /* CAN'T RETURN A STRUCT WITH A STRING WITHOUT WIERDNESS-0.8.1
+    /* CTS:EXAMINE CAN'T RETURN A STRUCT WITH A STRING WITHOUT WIERDNESS-0.8.1
      * @dev Retrieve AC_data @ _assetClass
      */
     function getExtAC_data(uint32 _assetClass)
@@ -544,6 +533,7 @@ contract AC_MGR is BASIC {
      */
     function getAC_name(uint32 _tokenId) external view returns (string memory) {
         //^^^^^^^checks^^^^^^^^^
+
         uint32 assetClass = _tokenId; //check for overflow andf throw
         return (AC_data[assetClass].name);
         //^^^^^^^interactions^^^^^^^^^
@@ -569,7 +559,6 @@ contract AC_MGR is BASIC {
         external
         view
         returns (
-            //--------DPS TEST ---- NEW
             uint256,
             uint256,
             uint256
@@ -593,15 +582,15 @@ contract AC_MGR is BASIC {
         returns (Invoice memory)
     {
         AC memory AC_info = AC_data[_assetClass];
-        require(AC_info.assetClassRoot != 0, "ACM:GC:AC not yet populated");
+        require(AC_info.assetClassRoot != 0, "ACM:GSC: AC !exist");
 
-        require(_service != 0, "ACM:GC:Service type zero is invalid");
+        require(_service != 0, "ACM:GSC: Service type = 0");
+        //^^^^^^^checks^^^^^^^^^
 
         Costs memory costs = cost[_assetClass][_service];
         uint32 rootAssetClass = AC_info.assetClassRoot;
         Costs memory rootCosts = cost[rootAssetClass][_service];
 
-        //^^^^^^^checks^^^^^^^^^
         Invoice memory invoice;
 
         invoice.rootAddress = rootCosts.paymentAddress;
@@ -609,6 +598,7 @@ contract AC_MGR is BASIC {
         invoice.ACTHaddress = costs.paymentAddress;
         invoice.ACTHprice = costs.serviceCost;
         invoice.assetClass = _assetClass;
+        //^^^^^^^effects^^^^^^^^^
 
         return invoice;
         //^^^^^^^interactions^^^^^^^^^
@@ -644,25 +634,25 @@ contract AC_MGR is BASIC {
         AC memory _ac = AC_data[_assetClassRoot];
         uint256 tokenId = uint256(_assetClass);
 
-        require((tokenId != 0), "ACM:CAC: AC cannot be 0"); //sanity check inputs
+        require((tokenId != 0), "ACM:CAC: AC = 0"); //sanity check inputs
         require(
             _discount <= 10000,
-            "ACM:CAC: discount cannot exceed 100% (10000)"
+            "ACM:CAC: Discount > 10000 (100%)"
         );
         require( //has valid root
             (_ac.custodyType == 3) || (_assetClassRoot == _assetClass),
-            "ACM:CAC:Root asset class does not exist"
+            "ACM:CAC: Root !exist"
         );
         if (AC_data[_assetClassRoot].managementType != 0) {
-            require( //holds root token if root is restricted --------DBS TEST ---- NEW
+            require( //holds root token if root is restricted
                 (AC_TKN.ownerOf(_assetClassRoot) == _msgSender()),
-                "ACM:CAC:Restricted from creating AC's in this root - does not hold root token"
+                "ACM:CAC: Restricted from creating AC's in this root - does not hold root token"
             );
         }
-        require(AC_number[_name] == 0, "ACM:CAC:AC name already in use");
+        require(AC_number[_name] == 0, "ACM:CAC: AC name exists");
         require(
             (AC_data[_assetClass].assetClassRoot == 0),
-            "ACM:CAC:AC already in use"
+            "ACM:CAC: AC exists"
         );
         //^^^^^^^checks^^^^^^^^^
 
@@ -673,7 +663,6 @@ contract AC_MGR is BASIC {
         AC_data[_assetClass].custodyType = _custodyType;
         AC_data[_assetClass].managementType = _managementType;
         AC_data[_assetClass].IPFS = _IPFS;
-
         //^^^^^^^effects^^^^^^^^^
 
         AC_TKN.mintACToken(

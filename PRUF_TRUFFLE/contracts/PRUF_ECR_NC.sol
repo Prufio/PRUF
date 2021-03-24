@@ -59,13 +59,13 @@ contract ECR_NC is ECR_CORE {
 
         require(
             contractInfo.contractType > 0,
-            "ENC:SE: This contract not authorized for specified AC"
+            "ENC:SE: ENC not auth for AC"
         );
         require(
             (rec.assetStatus > 49),
             "ENC:SE: Only ACadmin authorized user can change status < 50"
         );
-        require( //REDUNDANT, THROWS IN SAFEMATH  CTS:PREFERRED
+        require( //REDUNDANT, THROWS IN SAFEMATH  CTS:EXAMINE
             (escrowTime >= block.timestamp),
             "ENC:SE:Escrow must be set to a time in the future"
         );
@@ -97,11 +97,11 @@ contract ECR_NC is ECR_CORE {
 
         require(
             contractInfo.contractType > 0,
-            "ENC:EE: This contract not authorized for specified AC"
+            "ENC:EE: ENC not auth for AC"
         );
         require( //LIMITING, CHANGE TO >49 NOT 50 OR 56?  CTS:50||56 preferrable.
             (rec.assetStatus == 50) || (rec.assetStatus == 56),
-            "ENC:EE:record must be in escrow status > 49"
+            "ENC:EE: Record must be in escrow status > 49"
         );
         require(
             (escrow.timelock < block.timestamp) ||

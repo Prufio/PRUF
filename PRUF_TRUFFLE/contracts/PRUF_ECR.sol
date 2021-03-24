@@ -38,7 +38,7 @@ contract ECR is ECR_CORE {
     }
 
     /*
-     * @dev puts asset into an escrow status for a certain time period
+     * @dev Puts asset into an escrow status for a certain time period
      */
     function setEscrow(
         bytes32 _idxHash,
@@ -53,16 +53,16 @@ contract ECR is ECR_CORE {
         ContractDataHash memory contractInfo =
             getContractInfo(address(this), rec.assetClass);
 
-        require(contractInfo.contractType > 0, "E:SE: contract not auth in AC");
-        require((userType > 0) && (userType < 10), "E:SE: user not auth in AC");
-        require( //REDUNDANT, THROWS IN SAFEMATH CTS:PREFERRED
+        require(contractInfo.contractType > 0, "E:SE: Contract not auth in AC");
+        require((userType > 0) && (userType < 10), "E:SE: User not auth in AC");
+        require( //REDUNDANT, THROWS IN SAFEMATH CTS:EXAMINE
             (escrowTime >= block.timestamp),
             "E:SE: Escrow must be set to a time in the future"
         );
         require(
             (userType < 5) ||
                 ((userType > 4) && (userType < 10) && (_escrowStatus > 49)),
-            "E:SE: Non supervisored agents must set escrow status within scope."
+            "E:SE: Non supervisored agents must set escrow status within scope > 49."
         );
         require((_escrowStatus != 60), "E:SE: Cannot set to recycled status.");
         //^^^^^^^checks^^^^^^^^^
@@ -75,7 +75,7 @@ contract ECR is ECR_CORE {
     }
 
     /*
-     * @dev puts asset into an escrow status for a certain time period
+     * @dev Puts asset into an escrow status for a certain time period
      * Includes sample code for setting extended data
      */
     function setEscrowExtendedData(
@@ -91,18 +91,18 @@ contract ECR is ECR_CORE {
         ContractDataHash memory contractInfo =
             getContractInfo(address(this), rec.assetClass);
 
-        require(contractInfo.contractType > 0, "E:SE: contract not auth in AC");
-        require((userType > 0) && (userType < 10), "E:SE: user not auth in AC");
+        require(contractInfo.contractType > 0, "E:SEED: Contract not auth in AC");
+        require((userType > 0) && (userType < 10), "E:SEED: User not auth in AC");
         require( //REDUNDANT, THROWS IN SAFEMATH CTS:PREFERRED
             (escrowTime >= block.timestamp),
-            "E:SE: Escrow must be set to a time in the future"
+            "E:SEED: Escrow must be set to a time in the future"
         );
         require(
             (userType < 5) ||
                 ((userType > 4) && (userType < 10) && (_escrowStatus > 49)),
-            "E:SE: Unsupervised agents must set escrow status within scope."
+            "E:SEED: Unsupervised agents must set escrow status within scope > 49."
         );
-        require((_escrowStatus != 60), "E:SE: Cannot set to recycled status.");
+        require((_escrowStatus != 60), "E:SEED: Cannot set to stat 60 (recycled).");
         //^^^^^^^checks^^^^^^^^^
 
         newEscrowStatus = _escrowStatus;
@@ -116,15 +116,13 @@ contract ECR is ECR_CORE {
         //^^^^^^^effects^^^^^^^^^
 
         _setEscrowData(_idxHash, newEscrowStatus, _escrowOwnerHash, escrowTime);
-
         _setEscrowDataLight(_idxHash, escrowDataLight); //Sets "light" EXT data
-
         _setEscrowDataHeavy(_idxHash, escrowDataHeavy); //Sets "Heavy" EXT data
         //^^^^^^^interactions^^^^^^^^^
     }
 
     /*
-     * @dev takes asset out of excrow status if time period has resolved || is escrow issuer
+     * @dev Takes asset out of excrow status if time period has resolved || is escrow issuer
      */
     function endEscrow(bytes32 _idxHash)
         external
@@ -138,11 +136,11 @@ contract ECR is ECR_CORE {
         uint8 userType = getCallingUserType(rec.assetClass);
         bytes32 ownerHash = ECR_MGR.retrieveEscrowOwner(_idxHash);
 
-        require(contractInfo.contractType > 0, "E:EE: contract not auth in AC");
-        require((userType > 0) && (userType < 10), "E:EE: user not auth in AC");
+        require(contractInfo.contractType > 0, "E:EE: Contract not auth in AC");
+        require((userType > 0) && (userType < 10), "E:EE: User not auth in AC");
         require( //STATE UNREACHABLE CTS:PREFERRED
             (rec.assetStatus != 60),
-            "E:EE- Asset is discarded, use Recycle"
+            "E:EE: Asset is discarded, use Recycle"
         );
         require(
             ((rec.assetStatus > 49) || (userType < 5)),

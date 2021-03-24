@@ -77,7 +77,7 @@ contract ID_TKN is
     modifier isAdmin() {
         require(
             hasRole(CONTRACT_ADMIN_ROLE, _msgSender()),
-            "PIDT:MOD-IA:Calling address does not belong to an admin"
+            "PIDT:MOD-IA: Calling address does not belong to an admin"
         );
         _;
     }
@@ -85,7 +85,7 @@ contract ID_TKN is
     modifier isMinter() {
         require(
             hasRole(MINTER_ROLE, _msgSender()),
-            "PIDT:MOD-IA:Calling address does not belong to a minter"
+            "PIDT:MOD-IM: Calling address does not belong to a minter"
         );
         _;
     }
@@ -118,9 +118,11 @@ contract ID_TKN is
         nonReentrant
         whenNotPaused
     {
+        //^^^^^^^checks^^^^^^^^^
         _burn(_tokenId);
         delete tokenIDforName[keccak256(abi.encodePacked(_tokenId))]; //remove record from name registry
         delete id[_tokenId]; //remove record from ID registry
+        //^^^^^^^interactions^^^^^^^^^
     }
 
     /*
@@ -136,7 +138,7 @@ contract ID_TKN is
         whenNotPaused
         returns (uint256)
     {
-        require(_exists(_tokenId), "PIDT:RM:Cannot Remint nonexistant token");
+        require(_exists(_tokenId), "PIDT:RM: Cannot Remint nonexistant token");
         //^^^^^^^checks^^^^^^^^^
         string memory tokenURI = tokenURI(_tokenId);
         _burn(_tokenId);
@@ -168,11 +170,11 @@ contract ID_TKN is
      */
     function setIdURI(
         uint256 _tokenId,
-        bytes32 _URI //DPS:TEST--NEW
+        bytes32 _URI 
     ) external nonReentrant whenNotPaused returns (uint256) {
         require(
             ownerOf(_tokenId) == _msgSender(),
-            "PIDT:RM: caller does not hold token"
+            "PIDT:RM: Caller does not hold token"
         );
         //^^^^^^^checks^^^^^^^^^
 
@@ -186,26 +188,26 @@ contract ID_TKN is
      */
     function setUserName(
         uint256 _tokenId,
-        string calldata _userName //DPS:TEST--NEW
+        string calldata _userName 
     ) external nonReentrant whenNotPaused returns (uint256) {
         require(
             ((ownerOf(_tokenId) == _msgSender()) &&
                 (keccak256(abi.encodePacked(id[_tokenId].userName)) ==
                     keccak256(abi.encodePacked("")))),
             // || hasRole(MINTER_ROLE, _msgSender()),
-            "PIDT:SUN:caller does not hold token or userName is set" //, and is not minter"
+            "PIDT:SUN: Caller !hold token or userName is set" //, and is not minter"
         );
         bytes32 nameHash = keccak256(abi.encodePacked(_userName));
         require(
             tokenIDforName[nameHash] == 0,
-            "PIDT:SUN:userName is already taken"
+            "PIDT:SUN: userName is already taken"
         );
         //^^^^^^^checks^^^^^^^^^
 
         tokenIDforName[nameHash] = _tokenId; //store namehash
         id[_tokenId].userName = _userName; //store username
         return _tokenId;
-        //^^^^^^^interactions^^^^^^^^^
+        //^^^^^^^effects^^^^^^^^^
     }
 
     /*
@@ -213,7 +215,7 @@ contract ID_TKN is
      */
     function setTrustLevel(
         uint256 _tokenId,
-        uint256 _trustLevel //DPS:TEST--NEW
+        uint256 _trustLevel
     ) external nonReentrant whenNotPaused isMinter returns (uint256) {
         //^^^^^^^checks^^^^^^^^^
 
@@ -266,11 +268,11 @@ contract ID_TKN is
     ) public override nonReentrant whenNotPaused {
         require(
             _isApprovedOrOwner(_msgSender(), tokenId),
-            "PIDT:TF:transfer caller is not owner nor approved"
+            "PIDT:TF: transfer caller is not owner nor approved"
         );
         require(
             to == from,
-            "PIDT:TF:Token not transferrable with standard ERC721 protocol. Must be reminted by admin to new address"
+            "PIDT:TF: Token not transferrable with standard ERC721 protocol. Must be reminted by admin to new address"
         );
         //^^^^^^^checks^^^^^^^^
 
@@ -315,11 +317,11 @@ contract ID_TKN is
     ) public virtual override nonReentrant whenNotPaused {
         require(
             _isApprovedOrOwner(_msgSender(), _tokenId),
-            "PIDT:STF: transfer caller is not owner nor approved"
+            "PIDT:STF: Transfer caller is not owner nor approved"
         );
         require(
             to == from,
-            "PIDT:STF:Token not transferrable with standard ERC721 protocol. Must be reminted by admin to new address"
+            "PIDT:STF: Token not transferrable with standard ERC721 protocol. Must be reminted by admin to new address"
         );
 
         //^^^^^^^checks^^^^^^^^^
@@ -340,7 +342,7 @@ contract ID_TKN is
     function pause() public virtual {
         require(
             hasRole(PAUSER_ROLE, _msgSender()),
-            "ERC721PresetMinterPauserAutoId: must have pauser role to pause"
+            "PIDT:P: ERC721PresetMinterPauserAutoId: must have pauser role to pause"
         );
         //^^^^^^^checks^^^^^^^^
         _pause();
@@ -359,7 +361,7 @@ contract ID_TKN is
     function unpause() public virtual {
         require(
             hasRole(PAUSER_ROLE, _msgSender()),
-            "ERC721PresetMinterPauserAutoId: must have pauser role to unpause"
+            "PIDT:UP: ERC721PresetMinterPauserAutoId: must have pauser role to unpause"
         );
         //^^^^^^^checks^^^^^^^^
         _unpause();

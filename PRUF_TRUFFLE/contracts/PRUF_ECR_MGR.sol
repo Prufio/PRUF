@@ -94,12 +94,12 @@ contract ECR_MGR is BASIC {
 
         require(
             isEscrow(rec.assetStatus) == 170,
-            "EM:EE:Asset not in escrow status"
+            "EM:EE: Asset not in escrow status"
         );
         require(
             (contractInfo.nameHash ==
                 escrows[_idxHash].controllingContractNameHash),
-            "EM:EE:Only contract with same name as setter can end escrow"
+            "EM:EE: Only contract with same name as setter can end escrow"
         );
 
         //^^^^^^^checks^^^^^^^^^
@@ -126,12 +126,12 @@ contract ECR_MGR is BASIC {
 
         require(
             isEscrow(rec.assetStatus) == 170,
-            "EM:SEDL:Asset not in escrow status"
+            "EM:SEDL: Asset not in escrow status"
         );
         require(
             (contractInfo.nameHash ==
                 escrows[_idxHash].controllingContractNameHash),
-            "EM:SEDL:Only contract with same name as setter can modify escrow data"
+            "EM:SEDL: Only contract with same name as setter can modify escrow data"
         );
         //^^^^^^^checks^^^^^^^^^
 
@@ -154,12 +154,12 @@ contract ECR_MGR is BASIC {
 
         require(
             isEscrow(rec.assetStatus) == 170,
-            "EM:SEDL:Asset not in escrow status"
+            "EM:SEDL: Asset not in escrow status"
         );
         require(
             (contractInfo.nameHash ==
                 escrows[_idxHash].controllingContractNameHash),
-            "EM:SEDL:Only contract with same name as setter can modify escrow data"
+            "EM:SEDL: Only contract with same name as setter can modify escrow data"
         );
         //^^^^^^^checks^^^^^^^^^
 
@@ -177,11 +177,11 @@ contract ECR_MGR is BASIC {
     {
         require(
             escrows[_idxHash].timelock < block.timestamp,
-            "EM:PEE:Escrow not expired"
+            "EM:PEE: Escrow not expired"
         );
         require( // do not allow escrows with escrow.data > 199 to be ended by this function     //STATE UNREACHABLE CTS:PREFERRED
             EscrowDataLight[_idxHash].escrowData < 200,
-            "EM:PEE:Escrow not endable with permissiveEndEscrow"
+            "EM:PEE: Escrow not endable with permissiveEndEscrow"
         );
         //^^^^^^^checks^^^^^^^^^
 

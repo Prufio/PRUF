@@ -47,14 +47,15 @@ contract PIP is CORE {
 
         require(
             (AC_TKN.ownerOf(_assetClass) == _msgSender()), //_msgSender() is AC token holder
-            "N:MNA:Caller does not hold AC token"
+            "P:MPA: Caller does not hold AC token"
         );
-        require(userType == 10, "N:MNA:user not authorized to mint PIP assets");
+        require(userType == 10, "P:MPA: User not authorized to mint PIP assets");
         require(
             rec.assetClass == 0, //verified as VALID
-            "N:MNA: Asset already registered in system"
+            "P:MPA: Asset already registered in system"
         );
         // //^^^^^^^checks^^^^^^^^^
+
         string memory tokenURI;
         bytes32 b32URI =
             keccak256(abi.encodePacked(_hashedAuthCode, _assetClass));
@@ -79,18 +80,14 @@ contract PIP is CORE {
 
         require(
             A_TKN.ownerOf(tokenId) == address(this),
-            "N:CNA: Token not found in PRUF_PIP"
+            "P:CPA: Token not found in PRUF_PIP"
         );
         //^^^^^^^checks^^^^^^^^^
 
         A_TKN.validatePipToken(tokenId, _newAssetClass, _authCode); //check supplied data matches tokenURI
-
         STOR.newRecord(_idxHash, _rgtHash, _newAssetClass, _countDownStart); // Make a new record at the tokenId b32
-
         A_TKN.setURI(tokenId, "pruf.io"); // set URI
-
         A_TKN.safeTransferFrom(address(this), _msgSender(), tokenId); // sends token from this holding contract to caller wallet
-
         deductImportRecordCosts(_newAssetClass);
 
         //^^^^^^^interactions^^^^^^^^

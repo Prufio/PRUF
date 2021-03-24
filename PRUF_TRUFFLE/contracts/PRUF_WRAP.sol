@@ -36,7 +36,7 @@ contract WRAP is CORE {
         //require that user holds token @ ID-Contract
         require(
             (IERC721(_tokenContract).ownerOf(_tokenID) == _msgSender()),
-            "WRAP:MOD-IA: caller does not hold specified token"
+            "W:MOD-ITH: Caller does not hold specified token"
         );
         _;
     }
@@ -75,12 +75,12 @@ contract WRAP is CORE {
 
         require(
             AC_info.custodyType == 5,
-            "WRAP:WRP:Asset class.custodyType must be 5 (wrapped/decorated erc721)"
+            "W:W: Asset class.custodyType must be 5 (wrapped/decorated erc721)"
         );
         require(
             (AC_info.referenceAddress == _foreignTokenContract) ||
                 (AC_info.referenceAddress == address(0)),
-            "WRAP:WRP:Asset class extended data must be '0' or ERC721 contract address"
+            "W:W: Asset class extended data must be '0' or ERC721 contract address"
         );
         //^^^^^^^checks^^^^^^^^^
 
@@ -125,16 +125,16 @@ contract WRAP is CORE {
 
         require(
             AC_info.custodyType == 5,
-            "WRAP:UNWRP:Asset class.custodyType must be 5 (wrapped/decorated erc721)"
+            "W:UW: Asset class.custodyType != 5"
         );
         require( // CTS:EXAMINE, STAT UNREACHABLE WITH CURRENT CONTRACTS
             (AC_info.referenceAddress == foreignTokenContract) ||
                 (AC_info.referenceAddress == address(0)),
-            "WRAP:UNWRP:Asset class extended data must be '0' or ERC721 contract address"
+            "W:UW: Asset class extended data must be '0' or ERC721 contract address"
         );
         require(
             rec.assetStatus == 51,
-            "WRAP:UNWRP:Asset not in transferrable status"
+            "W:UW: Asset not in transferrable status"
         );
         //^^^^^^^checks^^^^^^^^^
 
@@ -177,43 +177,38 @@ contract WRAP is CORE {
 
         require(
             A_TKN.tokenExists(tokenId) == 0,
-            "W:CR:Asset token already exists"
+            "W:CR: Asset token already exists"
         );
-
         require( //CTS:EXAMINE redundant/unreachable with current contract structure, throws in wrap.
             (AC_info.custodyType == 5),
-            "W:CR:Cannot create asset - contract not authorized for asset class custody type"
+            "W:CR: Cannot create asset - contract not authorized for asset class custody type"
         );
-
         require(
                 (AC_info.managementType < 5),
-                "W:CR:Contract does not support management types > 4 or AC is locked"
+                "W:CR: Contract does not support management types > 4 or AC is locked"
         );
-
-        if ((AC_info.managementType == 1) || (AC_info.managementType == 2)) {// DPS:TEST---NEW
+        if ((AC_info.managementType == 1) || (AC_info.managementType == 2)) {
             require( 
                 (AC_TKN.ownerOf(_assetClass) == _msgSender()),
-                "W:CR:Cannot create asset in AC mgmt type 1||2 - caller does not hold AC token"
+                "W:CR: Cannot create asset in AC mgmt type 1||2 - caller does not hold AC token"
             );
         }
-
-
-        if (AC_info.managementType == 3) {  // DPS:TEST---NEW
+        if (AC_info.managementType == 3) {
             require( 
                 AC_MGR.getUserType(keccak256(abi.encodePacked(_msgSender())), _assetClass) == 1,
                 "W:CR:Cannot create asset - caller address not authorized"
             );
         }
-
         if (AC_info.managementType == 4) {
             require(
                 ID_TKN.trustedLevelByAddress(_msgSender()) > 10,
                 "W:CR:Caller does not hold sufficiently trusted ID"
             );
         }
-
+        //^^^^^^^checks^^^^^^^^^
 
         A_TKN.mintAssetToken(_msgSender(), tokenId, "pruf.io");
         STOR.newRecord(_idxHash, _rgtHash, _assetClass, _countDownStart);
+        //^^^^^^^interactions^^^^^^^^^
     }
 }

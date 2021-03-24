@@ -45,29 +45,24 @@ contract CORE is BASIC {
             A_TKN.tokenExists(tokenId) == 0,
             "C:CR:Asset token already exists"
         );
-
         require(
             AC_info.custodyType != 3,
             "C:CR:Cannot create asset in a root asset class"
         );
-
         require(
-                (AC_info.managementType < 5),
-                "C:CR:Contract does not support management types > 4 or AC is locked"
+            (AC_info.managementType < 5),
+            "C:CR:Contract does not support management types > 4 or AC is locked"
         );
-
-
         if (AC_info.custodyType != 1) {
-            if ((AC_info.managementType == 1) || (AC_info.managementType == 2)) {
-                // DPS:TEST---NEW
+            if (
+                (AC_info.managementType == 1) || (AC_info.managementType == 2)
+            ) {
                 require(
                     (AC_TKN.ownerOf(_assetClass) == _msgSender()),
                     "C:CR:Cannot create asset in AC mgmt type 1||2 - caller does not hold AC token"
                 );
             }
-
             if (AC_info.managementType == 3) {
-                // DPS:TEST---NEW
                 require(
                     AC_MGR.getUserType(
                         keccak256(abi.encodePacked(_msgSender())),
@@ -76,22 +71,19 @@ contract CORE is BASIC {
                     "C:CR:Cannot create asset - caller address not authorized"
                 );
             }
-
             if (AC_info.managementType == 4) {
                 require(
                     ID_TKN.trustedLevelByAddress(_msgSender()) > 10,
-                    "D:CRO:Caller does not hold sufficiently trusted ID"
+                    "C:CR:Caller does not hold sufficiently trusted ID"
                 );
             }
         }
-
         require(
             (AC_info.custodyType == 1) ||
                 (AC_info.custodyType == 2) ||
                 (AC_info.custodyType == 4),
             "C:CR:Cannot create asset - contract not authorized for asset class custody type"
         );
-
         if (AC_info.custodyType == 1) {
             A_TKN.mintAssetToken(address(this), tokenId, "pruf.io");
         }
@@ -99,8 +91,10 @@ contract CORE is BASIC {
         if ((AC_info.custodyType == 2) || (AC_info.custodyType == 4)) {
             A_TKN.mintAssetToken(_msgSender(), tokenId, "pruf.io");
         }
+        //^^^^^^^Checks^^^^^^^^
 
         STOR.newRecord(_idxHash, _rgtHash, _assetClass, _countDownStart);
+        //^^^^^^^interactions^^^^^^^^^
     }
 
     /*
@@ -170,31 +164,27 @@ contract CORE is BASIC {
             uint256(AC_MGR.getAC_discount(_assetClass)) / uint256(100);
         require( //IMPOSSIBLE TO REACH unless stuff is really broken, still ensures sanity
             (ACTHnetPercent >= 0) && (ACTHnetPercent <= 100),
-            "PC:DSC:invalid discount value for price calculation"
+            "C:DSC:invalid discount value for price calculation"
         );
         pricing = AC_MGR.getServiceCosts(_assetClass, _service);
 
-        //^^^^^^^effects^^^^^^^^^
-
         uint256 percent = pricing.ACTHprice / uint256(100); //calculate 1% of listed ACTH price
-
         uint256 _ACTHprice = ACTHnetPercent * percent; //calculate the share proprotrion% * 1%
-
         uint256 prufShare = pricing.ACTHprice - _ACTHprice;
 
         pricing.ACTHprice = _ACTHprice;
         pricing.rootPrice = pricing.rootPrice + prufShare;
 
         deductPayment(pricing);
-        //^^^^^^^interactions^^^^^^^^^
+        //^^^^^^^interactions/effects^^^^^^^^^
     }
 
     /*
-     * @dev Send payment to appropriate pullPayment adresses for payable function
+     * @dev Send payment to appropriate pullPayment adresses for payable function CTS:EXAMINE comment
      */
     function deductRecycleCosts(
         uint32 _assetClass,
-        address _oldOwner //DPS:CHECK --------------- Payment now pays 1/2 ACTHcost + root to discarder, 1/2 to ACTH
+        address _oldOwner 
     ) internal virtual whenNotPaused {
         //^^^^^^^checks^^^^^^^^^
         Invoice memory pricing;
@@ -225,13 +215,15 @@ contract CORE is BASIC {
     {
         require(
             pricing.rootAddress != address(0),
-            "PC:DP: root payment adress is zero address"
+            "C:DP: root payment adress is zero address"
         );
         if (pricing.ACTHaddress == address(0)) {
             pricing.ACTHaddress = pricing.rootAddress;
         }
+        //^^^^^^^checks^^^^^^^^^
 
         UTIL_TKN.payForService(_msgSender(), pricing);
+        //^^^^^^^interactions^^^^^^^^^
     }
 
     //----------------------------------------------------------------------STATUS CHECKS

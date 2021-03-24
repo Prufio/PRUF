@@ -121,7 +121,7 @@ contract VERIFY is CORE {
     ) external isAuthorized(_idxHash) returns (uint256) {
         require( //check to see if held by _idxHash
             items[_itemHash] != _idxHash,
-            "VFY:PI:item already held by caller"
+            "VFY:SPI: Item already held by caller"
         );
         //^^^^^^^checks^^^^^^^^^
 
@@ -162,7 +162,7 @@ contract VERIFY is CORE {
     {
         require( //check to see if held by _idxHash
             items[_itemHash] != _idxHash,
-            "VFY:PI:item already held by caller"
+            "VFY:PI: Item already held by caller"
         );
         //^^^^^^^checks^^^^^^^^^
 
@@ -198,11 +198,11 @@ contract VERIFY is CORE {
         isAuthorized(_idxHash)
         returns (uint256)
     {
-        require(items[_itemHash] == _idxHash, "VFY:TO:item not held by caller"); //check to see if held by _idxHash
+        require(items[_itemHash] == _idxHash, "VFY:TO: Item not held by caller"); //check to see if held by _idxHash
         require(
             (itemData[_itemHash].status != 3) &&
                 (itemData[_itemHash].status != 4),
-            "VFY:T:Item SN is marked as lost or stolen"
+            "VFY:TO: Item SN is marked as lost or stolen"
         );
         //^^^^^^^checks^^^^^^^^^
 
@@ -229,19 +229,19 @@ contract VERIFY is CORE {
         Record memory rec = getRecord(_idxHash);
         Record memory newRec = getRecord(_newIdxHash);
 
-        require(items[_itemHash] == _idxHash, "VFY:TO:item not held by caller"); //check to see if held by _idxHash
+        require(items[_itemHash] == _idxHash, "VFY:T: Item not held by caller"); //check to see if held by _idxHash
         require( //must move to same asset class root
             AC_MGR.isSameRootAC(rec.assetClass, newRec.assetClass) == 170,
-            "VFY:TO:Wallet is not in the same asset class root"
+            "VFY:T: Wallet is not in the same asset class root"
         );
         require(
             itemData[_itemHash].status != 2,
-            "VFY:PI:item marked counterfeit"
+            "VFY:T: Item marked counterfeit"
         ); //check to see if item status is clean
         require(
             (itemData[_itemHash].status != 3) &&
                 (itemData[_itemHash].status != 4),
-            "VFY:T:Item SN is marked as lost or stolen"
+            "VFY:T: Item SN is marked as lost or stolen"
         );
         //^^^^^^^checks^^^^^^^^^
 
@@ -262,7 +262,7 @@ contract VERIFY is CORE {
     ) external isAuthorized(_idxHash) returns (uint256) {
         require(
             idxAuthInVerify[_idxHash] == 3, //token is auth amdmin
-            "VFY:MI: Caller not authorized as a admin user (type3) in the asset class"
+            "VFY:AMC: Caller not authorized as a admin user (type3) in asset class"
         );
         //^^^^^^^checks^^^^^^^^^
 
@@ -290,7 +290,7 @@ contract VERIFY is CORE {
             "VFY:MI: Caller not authorized as a verified user (>= 3)"
         );
 
-        require(items[_itemHash] == _idxHash, "VFY:MI:item not held by caller"); //check to see if held by _idxHash
+        require(items[_itemHash] == _idxHash, "VFY:MI: Item not held by caller"); //check to see if held by _idxHash
         //^^^^^^^checks^^^^^^^^^
 
         itemData[_itemHash].status = _status;

@@ -38,9 +38,9 @@ contract RCLR is ECR_CORE, CORE {
 
         require(
             hasRole(DISCARD_ROLE, _msgSender()),
-            "R:D:Caller does not have DISCARD_ROLE"
+            "R:D: Caller does not have DISCARD_ROLE"
         );
-        require((rec.assetStatus == 59), "R:D:Must be in recyclable status");
+        require((rec.assetStatus == 59), "R:D: Must be in recyclable status");
         //^^^^^^^checks^^^^^^^^^
 
         uint256 escrowTime = block.timestamp + 31536000000; //1,000 years in the FUTURE.........
@@ -72,8 +72,8 @@ contract RCLR is ECR_CORE, CORE {
         escrowDataExtLight memory escrowDataLight =
             getEscrowDataLight(_idxHash);
         Record memory rec = getRecord(_idxHash);
-        require(_rgtHash != 0, "R:R:New rights holder cannot be zero");
-        require(rec.assetStatus == 60, "R:R:Asset not discarded");
+        require(_rgtHash != 0, "R:R: New rights holder cannot be zero");
+        require(rec.assetStatus == 60, "R:R: Asset not discarded");
         //^^^^^^^checks^^^^^^^^^
 
         rec.rightsHolder = _rgtHash;

@@ -96,7 +96,7 @@ abstract contract BASIC is
     modifier isAuthorized(bytes32 _idxHash) virtual {
         require(
             _idxHash == 0, //function should always be overridden!!! will throw if not
-            "B:MOD-IA: Modifier MUST BE OVERRIDDEN"
+            "B:MOD-IAUTH: Modifier must be overridden"
         );
         _;
     }
@@ -109,7 +109,7 @@ abstract contract BASIC is
     modifier isAdmin() {
         require(
             hasRole(CONTRACT_ADMIN_ROLE, _msgSender()),
-            "PAM:MOD: must have CONTRACT_ADMIN_ROLE"
+            "B:MOD:-IADM caller !CONTRACT_ADMIN_ROLE"
         );
         _;
     }
@@ -117,7 +117,7 @@ abstract contract BASIC is
     modifier isPauser() {
         require(
             hasRole(PAUSER_ROLE, _msgSender()),
-            "AT:MOD-IA:Calling address is not pauser"
+            "B:MOD-IP:Calling address is not pauser"
         );
         _;
     }
@@ -170,15 +170,15 @@ abstract contract BASIC is
         external
         virtual
         nonReentrant
-    //^^^^^^^checks^^^^^^^^^
     {
         require( //-------------------------------------------------------STRICT PERMISSIONING
             hasRole(ASSET_TXFR_ROLE, _msgSender()),
             "B:TX:Must have ASSET_TXFR_ROLE"
         );
+    //^^^^^^^checks^^^^^^^^^
 
         uint256 tokenId = uint256(_idxHash);
-        //^^^^^^^effects^^^^^^^^^
+
         A_TKN.safeTransferFrom(address(this), _to, tokenId);
         //^^^^^^^interactions^^^^^^^^^
     }
@@ -207,7 +207,7 @@ abstract contract BASIC is
     {
         require(
             _storageAddress != address(0),
-            "B:SSC: storage address cannot be zero"
+            "B:SSC: Address = 0"
         );
         //^^^^^^^checks^^^^^^^^^
 
@@ -303,11 +303,13 @@ abstract contract BASIC is
         view
         returns (ContractDataHash memory)
     {
+        //^^^^^^^checks^^^^^^^^^
+
         ContractDataHash memory contractInfo;
         (contractInfo.contractType, contractInfo.nameHash) = STOR
             .ContractInfoHash(_addr, _assetClass);
         return contractInfo;
-        //^^^^^^^checks/interactions^^^^^^^^^
+        //^^^^^^^interactions^^^^^^^^^
     }
 
     /*
@@ -315,10 +317,10 @@ abstract contract BASIC is
      */
     function getRecord(bytes32 _idxHash) internal returns (Record memory) {
         //^^^^^^^checks^^^^^^^^^
+        
         Record memory rec = STOR.retrieveRecord(_idxHash);
-        //^^^^^^^effects^^^^^^^^^
 
         return rec; // Returns Record struct rec
-        //^^^^^^^interactions^^^^^^^^^
+        //^^^^^^^effects/interactions^^^^^^^^^
     }
 }

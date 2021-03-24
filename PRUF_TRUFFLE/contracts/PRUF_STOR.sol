@@ -74,7 +74,7 @@ contract STOR is AccessControl, ReentrancyGuard, Pausable {
     modifier isAdmin() {
         require(
             hasRole(CONTRACT_ADMIN_ROLE, _msgSender()),
-            "PAM:MOD: must have CONTRACT_ADMIN_ROLE"
+            "S:MOD-IADM: Must have CONTRACT_ADMIN_ROLE"
         );
         _;
     }
@@ -87,7 +87,7 @@ contract STOR is AccessControl, ReentrancyGuard, Pausable {
     modifier isPauser() {
         require(
             hasRole(PAUSER_ROLE, _msgSender()),
-            "PAM:MOD: must have PAUSER_ROLE"
+            "S:MOD-IP: Must have PAUSER_ROLE"
         );
         _;
     }
@@ -102,7 +102,7 @@ contract STOR is AccessControl, ReentrancyGuard, Pausable {
             contractInfo[contractAddressToName[msg.sender]][_assetClass];
         require(
             ((auth > 0) && (auth < 5)) || (auth == 10),
-            "S:MOD-IA:Contract not authorized"
+            "S:MOD-IAUT: Contract not authorized"
         );
         _;
     }
@@ -113,7 +113,7 @@ contract STOR is AccessControl, ReentrancyGuard, Pausable {
     modifier notEscrow(bytes32 _idxHash) {
         require(
             isEscrow(database[_idxHash].assetStatus) == 0,
-            "S:MOD-NE:rec locked in ecr"
+            "S:MOD-NE: Rec locked in ecr"
         );
         _;
     }
@@ -124,7 +124,7 @@ contract STOR is AccessControl, ReentrancyGuard, Pausable {
     modifier exists(bytes32 _idxHash) {
         require(
             database[_idxHash].assetClass != 0,
-            "S:MOD-E:rec does not exist"
+            "S:MOD-E: Rec !exist"
         );
         _;
     }
@@ -135,7 +135,7 @@ contract STOR is AccessControl, ReentrancyGuard, Pausable {
     modifier isEscrowManager() {
         require(
             _msgSender() == contractNameToAddress["ECR_MGR"],
-            "S:MOD-IEM:Caller not ECR_MGR"
+            "S:MOD-IEM: Caller not ECR_MGR"
         );
         _;
     }
@@ -213,7 +213,7 @@ contract STOR is AccessControl, ReentrancyGuard, Pausable {
         uint32 _assetClass,
         uint8 _contractAuthLevel
     ) external isAdmin {
-        require(_assetClass == 0, "S:AC: AC not 0");
+        require(_assetClass == 0, "S:AC: AC !0");
         //^^^^^^^checks^^^^^^^^^
 
         contractInfo[_name][_assetClass] = _contractAuthLevel; //does not pose an partial record overwrite risk
@@ -243,7 +243,7 @@ contract STOR is AccessControl, ReentrancyGuard, Pausable {
         string calldata _name, //name
         uint8 _contractAuthLevel //authLevel
     ) public isAdmin {
-        require(_contractNumber <= 10, "S:ADC: contract number > 10");
+        require(_contractNumber <= 10, "S:ADC: Contract number > 10");
         defaultContracts[_contractNumber].name = _name;
         defaultContracts[_contractNumber].contractType = _contractAuthLevel;
     }
@@ -266,7 +266,7 @@ contract STOR is AccessControl, ReentrancyGuard, Pausable {
     function enableDefaultContractsForAC(uint32 _assetClass) public {
         require(
             AC_TKN.ownerOf(_assetClass) == _msgSender(),
-            "S:EDCFAC:Caller not ACtokenHolder"
+            "S:EDCFAC: Caller not ACtokenHolder"
         );
         enableContractForAC(
             defaultContracts[0].name,
@@ -336,7 +336,7 @@ contract STOR is AccessControl, ReentrancyGuard, Pausable {
     ) public {
         require(
             AC_TKN.ownerOf(_assetClass) == _msgSender(),
-            "S:ECFAC:Caller not ACtokenHolder"
+            "S:ECFAC: Caller not ACtokenHolder"
         );
 
         //^^^^^^^checks^^^^^^^^^
@@ -366,11 +366,11 @@ contract STOR is AccessControl, ReentrancyGuard, Pausable {
     {
         require(
             database[_idxHash].assetStatus != 60,
-            "S:NR:Asset discarded use APP_NC rcycl"
+            "S:NR: Asset discarded use APP_NC rcycl"
         );
-        require(database[_idxHash].assetClass == 0, "S:NR:Rec already exists"); // CTS:EXAMINE reduntant with current contracts, either throws for being discarded(1st req) or for the A_TKN already existing in CORE
-        require(_rgtHash != 0, "S:NR:RGT = 0");
-        require(_assetClass != 0, "S:NR:AC = 0"); //CTS:EXAMINE redundant through isAuthorized mod
+        require(database[_idxHash].assetClass == 0, "S:NR: Rec already exists"); // CTS:EXAMINE reduntant with current contracts, either throws for being discarded(1st req) or for the A_TKN already existing in CORE
+        require(_rgtHash != 0, "S:NR: RGT = 0");
+        require(_assetClass != 0, "S:NR: AC = 0"); //CTS:EXAMINE redundant through isAuthorized mod
         //^^^^^^^checks^^^^^^^^^
 
         Record memory rec;
@@ -416,9 +416,9 @@ contract STOR is AccessControl, ReentrancyGuard, Pausable {
         Record memory rec = database[_idxHash];
         bytes32 idxHash = _idxHash; //stack saving
 
-        require(_countDown <= rec.countDown, "S:MR:countDown +!"); //prohibit increasing the countdown value  //CTS:EXAMINE REDUNDANT, THROWS IN SAFEMATH
-        require(isLostOrStolen(_newAssetStatus) == 0, "S:MR:Must use L/S");
-        require(isEscrow(_newAssetStatus) == 0, "S:MR:Must use ECR");
+        require(_countDown <= rec.countDown, "S:MR: CountDown +!"); //prohibit increasing the countdown value  //CTS:EXAMINE REDUNDANT, THROWS IN SAFEMATH
+        require(isLostOrStolen(_newAssetStatus) == 0, "S:MR: Must use L/S");
+        require(isEscrow(_newAssetStatus) == 0, "S:MR: Must use ECR");
         // require(
         //     (_newAssetStatus != 7) &&
         //         (_newAssetStatus != 57) &&
@@ -462,13 +462,13 @@ contract STOR is AccessControl, ReentrancyGuard, Pausable {
     {
         Record memory rec = database[_idxHash];
 
-        require(_newAssetClass != 0, "S:CAC:Cannot set AC-0");
+        require(_newAssetClass != 0, "S:CAC: Cannot set AC-0");
         require( //require new assetClass is in the same root as old assetClass
             AC_MGR.isSameRootAC(_newAssetClass, rec.assetClass) == 170,
-            "S:CAC:Cannot mod AC to new root"
+            "S:CAC: Cannot mod AC to new root"
         );
-        require((isLostOrStolen(rec.assetStatus) == 0), "S:CAC:L/S asset"); //asset cannot be in lost or stolen status
-        require((isTransferred(rec.assetStatus) == 0), "S:CAC:Txfrd asset"); //asset cannot be in transferred status
+        require((isLostOrStolen(rec.assetStatus) == 0), "S:CAC: L/S asset"); //asset cannot be in lost or stolen status
+        require((isTransferred(rec.assetStatus) == 0), "S:CAC: Txfrd asset"); //asset cannot be in transferred status
         //^^^^^^^checks^^^^^^^^^
 
         rec.assetClass = _newAssetClass;
@@ -493,13 +493,13 @@ contract STOR is AccessControl, ReentrancyGuard, Pausable {
 
         require(
             isLostOrStolen(_newAssetStatus) == 170, //proposed new status must be L/S status
-            "S:SSL:Must set to L/S"
+            "S:SSL: Must set to L/S"
         );
         require( //asset cannot be set l/s if in transferred or locked escrow status
             (rec.assetStatus != 5) &&
                 (rec.assetStatus != 50) &&
                 (rec.assetStatus != 55), //STATE UNREACHABLE TO SET TO STAT 55 IN CURRENT CONTRACTS
-            "S:SSL:Txfr or ecr-locked asset != L/S."
+            "S:SSL: Txfr or ecr-locked asset != L/S."
         );
         //^^^^^^^checks^^^^^^^^^
 
@@ -527,9 +527,9 @@ contract STOR is AccessControl, ReentrancyGuard, Pausable {
         notEscrow(_idxHash) // asset must not be held in escrow status
     {
         Record memory rec = database[_idxHash];
-        require(isEscrow(_newAssetStatus) == 170, "S:SE: stat must = ecr"); //proposed new status must be an escrow status
-        require((isLostOrStolen(rec.assetStatus) == 0), "S:MI2:L/S asset"); //asset cannot be in lost or stolen status
-        require((isTransferred(rec.assetStatus) == 0), "S:MI2: Txfrd asset"); //asset cannot be in transferred status
+        require(isEscrow(_newAssetStatus) == 170, "S:SE: Stat must = ecr"); //proposed new status must be an escrow status
+        require((isLostOrStolen(rec.assetStatus) == 0), "S:SE: L/S asset"); //asset cannot be in lost or stolen status
+        require((isTransferred(rec.assetStatus) == 0), "S:SE: Txfrd asset"); //asset cannot be in transferred status
         //^^^^^^^checks^^^^^^^^^
 
         if (_newAssetStatus == 60) {
@@ -555,7 +555,7 @@ contract STOR is AccessControl, ReentrancyGuard, Pausable {
         exists(_idxHash) //asset must exist in 'database' REDUNDANT THROWS IN ECR_MGR WITH "Asset not in escrow status"
     {
         Record memory rec = database[_idxHash];
-        require(isEscrow(rec.assetStatus) == 170, "S:EE:! ecr stat"); //asset must be in an escrow status CTS:EXAMINE REDUNDANT THROWS IN ECR_MGR WITH "Asset not in escrow status"
+        require(isEscrow(rec.assetStatus) == 170, "S:EE: !Ecr stat"); //asset must be in an escrow status CTS:EXAMINE REDUNDANT THROWS IN ECR_MGR WITH "Asset not in escrow status"
         //^^^^^^^checks^^^^^^^^^
 
         if (rec.assetStatus == 6) {
@@ -645,7 +645,7 @@ contract STOR is AccessControl, ReentrancyGuard, Pausable {
         notEscrow(_idxHash) // asset must not be held in escrow status
     {
         Record memory rec = database[_idxHash];
-        require((isTransferred(rec.assetStatus) == 0), "S:MI2: Txfrd asset"); //STAT UNREACHABLE
+        require((isTransferred(rec.assetStatus) == 0), "S:MI1: Txfrd asset"); //STAT UNREACHABLE
 
         require((rec.Ipfs1 != _Ipfs1), "S:MI1: New value = old");
         //^^^^^^^checks^^^^^^^^^
@@ -671,10 +671,10 @@ contract STOR is AccessControl, ReentrancyGuard, Pausable {
         notEscrow(_idxHash) // asset must not be held in escrow status
     {
         Record memory rec = database[_idxHash];
-        require((isLostOrStolen(rec.assetStatus) == 0), "S:MI2:L/S asset"); //asset cannot be in lost or stolen status
+        require((isLostOrStolen(rec.assetStatus) == 0), "S:MI2: L/S asset"); //asset cannot be in lost or stolen status
         require((isTransferred(rec.assetStatus) == 0), "S:MI2: Txfrd. asset"); //asset cannot be in transferred status
 
-        require((rec.Ipfs2 == 0), "S:MI2: ! overwrite I2"); //IPFS2 record is immutable after first write
+        require((rec.Ipfs2 == 0), "S:MI2: Cannot overwrite I2"); //IPFS2 record is immutable after first write
         //^^^^^^^checks^^^^^^^^^
 
         rec.Ipfs2 = _Ipfs2;

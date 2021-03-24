@@ -51,11 +51,11 @@ contract PURCHASE is CORE {
 
         require(
             rec.assetStatus == 51,
-            "PP:PURCHASE: Must be in transferrable status (51)"
+            "PP:P: Must be in transferrable status (51)"
         );
         require( // CTS:EXAMINE, THROWS IN _setPrice
             rec.currency == 2,
-            "PP:PURCHASE: Payment must be in PRUF tokens for this contract"
+            "PP:P: Payment must be in PRUF tokens for this contract"
         );
         //^^^^^^^checks^^^^^^^^^
 
@@ -64,12 +64,8 @@ contract PURCHASE is CORE {
             // allow for freeCycling
             UTIL_TKN.trustedAgentTransfer(_msgSender(), assetHolder, rec.price);
         }
-
         // --- transfer the asset token
         A_TKN.trustedAgentTransferFrom(assetHolder, _msgSender(), tokenId);
-
-        //^^^^^^^effects^^^^^^^^^
-
         deductServiceCosts(rec.assetClass, 2);
         //^^^^^^^interactions^^^^^^^^^
     }
@@ -87,19 +83,19 @@ contract PURCHASE is CORE {
 
         require(
             needsImport(rec.assetStatus) == 0,
-            "E:SP Record in unregistered, exported, or discarded status"
+            "PP:SP Record in unregistered, exported, or discarded status"
         );
         require(
             (rec.assetStatus > 49) || (_setForSale != 170),
-            "E:SP Asset Status < 50"
+            "PP:SP Asset Status < 50"
         ); // Status < 50 not reachable with current contract structure, caller must hold token.
         require(isEscrow(rec.assetStatus) == 0, "E:SP Record is in escrow");
-
         require(
             _currency == 2,
-            "E:SP: Price must be in PRUF tokens for this contract"
+            "PP:SP: Price must be in PRUF tokens for this contract"
         );
         //^^^^^^^checks^^^^^^^^^
+
         if (_setForSale == 170) {
             rec.assetStatus = 51;
             writeRecord(_idxHash, rec);
@@ -122,9 +118,9 @@ contract PURCHASE is CORE {
 
         require(
             needsImport(rec.assetStatus) == 0,
-            "E:DC Record in unregistered, exported, or discarded status"
+            "PP:CP Record in unregistered, exported, or discarded status"
         );
-        require(isEscrow(rec.assetStatus) == 0, "E:SP Record is in escrow");
+        require(isEscrow(rec.assetStatus) == 0, "PP:CP Record is in escrow");
         //^^^^^^^checks^^^^^^^^^
 
         STOR.clearPrice(_idxHash);

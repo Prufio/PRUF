@@ -74,7 +74,7 @@ contract AC_TKN is
     modifier isAdmin() {
         require(
             hasRole(CONTRACT_ADMIN_ROLE, _msgSender()),
-            "AT:MOD-IA:Calling address does not belong to a contract admin"
+            "AT:MOD-IA: Calling address does not belong to a contract admin"
         );
         _;
     }
@@ -82,7 +82,7 @@ contract AC_TKN is
     modifier isMinter() {
         require(
             hasRole(MINTER_ROLE, _msgSender()),
-            "AT:MOD-IA:Calling address does not belong to a minter"
+            "AT:MOD-IM: Calling address does not belong to a minter"
         );
         _;
     }
@@ -115,11 +115,11 @@ contract AC_TKN is
         uint256 tokenId,
         string calldata _tokenURI
     ) external isMinter nonReentrant returns (uint256) {
-        require(_exists(tokenId), "ACT:RM:Cannot Remint nonexistant token");
+        require(_exists(tokenId), "ACT:RM: AC !exist");
         require(
             keccak256(abi.encodePacked(_tokenURI)) ==
                 keccak256(abi.encodePacked(tokenURI(tokenId))),
-            "ACT:RM:OLD URI MUST MATCH PROVIDED URI"
+            "ACT:RM: _tokenURI != URI"
         );
         //^^^^^^^checks^^^^^^^^^
 
@@ -145,7 +145,7 @@ contract AC_TKN is
     ) public override nonReentrant whenNotPaused {
         require(
             _isApprovedOrOwner(_msgSender(), tokenId),
-            "ACT:TF: transfer caller is not owner nor approved"
+            "ACT:TF: Caller !ApprovedOrOwner"
         );
         //^^^^^^^checks^^^^^^^^^
 
@@ -195,7 +195,7 @@ contract AC_TKN is
     ) public virtual override nonReentrant whenNotPaused {
         require(
             _isApprovedOrOwner(_msgSender(), tokenId),
-            "ACT:STF: transfer caller is not owner nor approved"
+            "ACT:STF: Caller !ApprovedOrOwner"
         );
         //^^^^^^^checks^^^^^^^^^
 
@@ -223,7 +223,7 @@ contract AC_TKN is
     function pause() public virtual {
         require(
             hasRole(PAUSER_ROLE, _msgSender()),
-            "ERC721PresetMinterPauserAutoId: must have pauser role to pause"
+            "ACT:P: Caller !have pauser role"
         );
         //^^^^^^^checks^^^^^^^^^
         _pause();
@@ -242,7 +242,7 @@ contract AC_TKN is
     function unpause() public virtual {
         require(
             hasRole(PAUSER_ROLE, _msgSender()),
-            "ERC721PresetMinterPauserAutoId: must have pauser role to unpause"
+            "ACT:UP: Caller !have pauser role"
         );
         //^^^^^^^checks^^^^^^^^^
         _unpause();

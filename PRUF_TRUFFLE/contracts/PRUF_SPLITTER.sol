@@ -57,7 +57,7 @@ contract SPLIT is ReentrancyGuard, Pausable, AccessControl {
     modifier isAdmin() {
         require(
             hasRole(CONTRACT_ADMIN_ROLE, msg.sender),
-            "PD:MOD: must have CONTRACT_ADMIN_ROLE"
+            "SPLIT:MOD-IA: must have CONTRACT_ADMIN_ROLE"
         );
         _;
     }
@@ -70,7 +70,7 @@ contract SPLIT is ReentrancyGuard, Pausable, AccessControl {
     modifier isPauser() {
         require(
             hasRole(PAUSER_ROLE, msg.sender),
-            "PD:MOD: must have PAUSER_ROLE"
+            "SPLIT:MOD-IP: must have PAUSER_ROLE"
         );
         _;
     }
@@ -84,7 +84,7 @@ contract SPLIT is ReentrancyGuard, Pausable, AccessControl {
     function ADMIN_setTokenContract(address _address) external isAdmin {
         require(
             _address != address(0),
-            "PD:STC: token contract address cannot be zero"
+            "SPLIT:ASTC: Token contract address = zero"
         );
         //^^^^^^^checks^^^^^^^^^
 
@@ -133,7 +133,7 @@ contract SPLIT is ReentrancyGuard, Pausable, AccessControl {
     function splitMyPruf() external whenNotPaused {
         require(
             hasSplit[msg.sender] == 0,
-            "PD:DMP: Caller address has already been split"
+            "SPLIT:SMP: Caller address has already been split"
         );
         uint256 balanceAtSnapshot =
             UTIL_TKN.balanceOfAt(msg.sender, snapshotID);
@@ -141,6 +141,7 @@ contract SPLIT is ReentrancyGuard, Pausable, AccessControl {
         balanceAtSnapshot = balanceAtSnapshot + (balanceAtSnapshot / 10); //add 10%
         //^^^^^^^checks^^^^^^^^^
         hasSplit[msg.sender] = 170; //mark as done for caller address
+        //^^^^^^^effects^^^^^^^^^
 
         UTIL_TKN.mint(msg.sender, balanceAtSnapshot); //mint the new tokens to caller address
         //^^^^^^^Interactions^^^^^^^^^
@@ -153,7 +154,7 @@ contract SPLIT is ReentrancyGuard, Pausable, AccessControl {
     function checkMyAddress() external returns (uint256) {
         require(
             hasSplit[msg.sender] == 0,
-            "PD:CMA: Caller address has already been split"
+            "SPLIT:CMA: Caller address has already been split"
         );
         //^^^^^^^checks^^^^^^^^^
         return UTIL_TKN.balanceOfAt(msg.sender, snapshotID);

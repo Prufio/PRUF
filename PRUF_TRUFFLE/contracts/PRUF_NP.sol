@@ -109,7 +109,7 @@ contract NP is CORE {
         uint8 userType = getCallingUserType(rec.assetClass);
         require(
             (userType > 0) && (userType < 10),
-            "NP:SLS: user not auth in AC"
+            "NP:SLS: User not auth in AC"
         );
         require(
             (rec.assetStatus > 49) ||
@@ -150,7 +150,7 @@ contract NP is CORE {
 
         require(
             (userType > 0) && (userType < 10),
-            "NP:DC: user not auth in AC"
+            "NP:DC: User not auth in AC"
         );
         require(
             needsImport(rec.assetStatus) == 0,

@@ -11,7 +11,7 @@ __/\\\\\\\\\\\\\ _____/\\\\\\\\\ _______/\\../\\ ___/\\\\\\\\\\\\\\\
          *-------------------------------------------------------------------*/
 
 /*-----------------------------------------------------------------
- *  TO DO --- complete test! DPS TEST NEW CONTRACT
+ *  TO DO --- 
  *
  *-----------------------------------------------------------------
  * Decorates ERC721 compliant tokens with a PRUF record
@@ -63,16 +63,16 @@ contract DECORATE is
 
         require(
             AC_info.custodyType == 5,
-            "D:DEC:Asset class.custodyType must be 5 (wrapped/decorated erc721)"
+            "D:D:Asset class.custodyType != 5"
         );
         require(
             (AC_info.referenceAddress == _tokenContract) ||
                 (AC_info.referenceAddress == address(0)),
-            "D:DEC:Asset class extended data must be '0' or ERC721 contract address"
+            "D:D:Asset class extended data must be '0' or ERC721 contract address"
         );
         require(
             rec.assetClass == 0,
-            "D:DEC:Wrapper, decoration, or record already exists"
+            "D:D:Wrapper, decoration, or record already exists"
         );
 
         //^^^^^^^effects^^^^^^^^^
@@ -102,16 +102,16 @@ contract DECORATE is
 
         require(
             AC_info.custodyType == 5,
-            "D:MS:Asset class.custodyType must be 5 (wrapped/decorated erc721) & record must exist"
+            "D:MS:Asset class.custodyType != 5 & record must exist"
         );
-        require(  //CTS:EXAMINE how do i set?
+        require(
             (AC_info.referenceAddress == _tokenContract) ||
                 (AC_info.referenceAddress == address(0)),
             "D:MS:Asset class extended data must be '0' or ERC721 contract address"
         );
         require(
             (_newAssetStatus > 49) && (rec.assetStatus > 49),
-            "E:MS: cannot change status < 49"
+            "D:MS: cannot change status < 49"
         );
         require(
             (_newAssetStatus != 57) &&
@@ -156,14 +156,13 @@ contract DECORATE is
 
         require(
             AC_info.custodyType == 5,
-            "D:SP:Asset class.custodyType must be 5 (wrapped/decorated erc721) & record must exist"
+            "D:SP:Asset class.custodyType != 5 & record must exist"
         );
         require(
             (AC_info.referenceAddress == _tokenContract) ||
                 (AC_info.referenceAddress == address(0)),
             "D:SP:Asset class extended data must be '0' or ERC721 contract address"
         );
-
         require( //UNREACHABLE WITH CURRENT CONTRACTS. WOULD REQUIRE ROOT CLASSES TO BE CUSTODY TYPE 5
             needsImport(rec.assetStatus) == 0,
             "D:SP: Record in unregistered, exported, or discarded status"
@@ -189,7 +188,7 @@ contract DECORATE is
 
         require(
             AC_info.custodyType == 5,
-            "D:CP::Asset class.custodyType must be 5 (wrapped/decorated erc721) & record must exist"
+            "D:CP:Asset class.custodyType != 5 & record must exist"
         );
         require(
             (AC_info.referenceAddress == _tokenContract) ||
@@ -226,7 +225,7 @@ contract DECORATE is
 
         require(
             AC_info.custodyType == 5,
-            "D:DC:Asset class.custodyType must be 5 (wrapped/decorated erc721) & record must exist"
+            "D:DC:Asset class.custodyType != 5 & record must exist"
         );
         require(
             (AC_info.referenceAddress == _tokenContract) ||
@@ -271,7 +270,7 @@ contract DECORATE is
 
         require(
             AC_info.custodyType == 5,
-            "D:MI1:Asset class.custodyType must be 5 (wrapped/decorated erc721) & record must exist"
+            "D:MI1:Asset class.custodyType != 5 & record must exist"
         );
         require(
             (AC_info.referenceAddress == _tokenContract) ||
@@ -313,7 +312,7 @@ contract DECORATE is
 
         require(
             AC_info.custodyType == 5,
-            "D:AI2:Asset class.custodyType must be 5 (wrapped/decorated erc721) & record must exist"
+            "D:AI2:Asset class.custodyType != 5 & record must exist"
         );
         require(
             (AC_info.referenceAddress == _tokenContract) ||
@@ -325,7 +324,6 @@ contract DECORATE is
             needsImport(rec.assetStatus) == 0,
             "D:AI2: Record in unregistered, exported, or discarded status"
         );
-
         //^^^^^^^checks^^^^^^^^^
 
         rec.Ipfs2 = _IpfsHash;
@@ -337,7 +335,7 @@ contract DECORATE is
     }
 
     /*
-     *     @dev Export - sets asset to status 70 (importable)
+     * @dev Export - sets asset to status 70 (importable)
      */
     function _export(uint256 _tokenID, address _tokenContract)
         external
@@ -350,7 +348,7 @@ contract DECORATE is
 
         require(
             AC_info.custodyType == 5,
-            "D:E:Asset class.custodyType must be 5 (wrapped/decorated erc721) & record must exist"
+            "D:E:Asset class.custodyType != 5 & record must exist"
         );
         require(
             (AC_info.referenceAddress == _tokenContract) ||
@@ -394,7 +392,7 @@ contract DECORATE is
         require(
             ((AC_info.custodyType == 5) || AC_info.custodyType == 3) &&
                 (newAC_info.custodyType == 5),
-            "D:I:Asset class.custodyType must be 5 (wrapped/decorated erc721) & record must exist"
+            "D:I:Asset class.custodyType != 5 & record must exist"
         );
         require(
                 (AC_info.managementType < 5),
@@ -439,27 +437,21 @@ contract DECORATE is
             A_TKN.tokenExists(tokenId) == 0,
             "D:CRO: token is already wrapped. Must discard wrapper before decorating"
         );
-
         require( //CTS:PREFERRED: THROWS IN ONLY FUNCTION THAT CALLS createRecordOnly
             AC_info.custodyType == 5,
             "D:CRO:Asset class.custodyType must be 5 (wrapped/decorated erc721)"
         );
-
         require(
                 (AC_info.managementType < 5),
                 "D:CRO:Contract does not support management types > 4 or AC is locked"
         );
-
         if ((AC_info.managementType == 1) || (AC_info.managementType == 2)) {
-            // DPS:TEST---NEW
             require(
                 (AC_TKN.ownerOf(_assetClass) == _msgSender()),
                 "D:CRO:Cannot create asset in AC mgmt type 1||2 - caller does not hold AC token"
             );
         }
-
         if (AC_info.managementType == 3) {
-            // DPS:TEST---NEW
             require(
                 AC_MGR.getUserType(
                     keccak256(abi.encodePacked(_msgSender())),
@@ -468,14 +460,15 @@ contract DECORATE is
                 "D:CRO:Cannot create asset - caller address not authorized"
             );
         }
-
         if (AC_info.managementType == 4) {
             require(
                 ID_TKN.trustedLevelByAddress(_msgSender()) > 10,
                 "D:CRO:Caller does not hold sufficiently trusted ID"
             );
         }
+        //^^^^^^^checks^^^^^^^^^
 
         STOR.newRecord(_idxHash, _rgtHash, _assetClass, _countDownStart);
+        //^^^^^^^interactions^^^^^^^^^
     }
 }

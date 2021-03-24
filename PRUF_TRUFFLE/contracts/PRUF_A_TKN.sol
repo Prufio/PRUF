@@ -234,8 +234,9 @@ contract A_TKN is
         require(
             keccak256(abi.encodePacked(URI)) ==
                 keccak256(abi.encodePacked(authString)),
-            "AT:VNT:Supplied authCode and assetclass do not match token URI"
+            "AT:VPT:AuthCode and assetClass != URI"
         );
+
     }
 
     /*
@@ -273,7 +274,6 @@ contract A_TKN is
             rec.assetStatus == 51,
             "AT:TF:Asset not in transferrable status"
         );
-
         //^^^^^^^checks^^^^^^^^
 
         rec.numberOfTransfers = 170;
@@ -324,7 +324,7 @@ contract A_TKN is
     }
 
     /**
-     * @dev Safely burns a token   //DPB-TEST NEW
+     * @dev Safely burns a token
      */
     function trustedAgentBurn(uint256 tokenId)
         external
@@ -399,7 +399,6 @@ contract A_TKN is
             to != address(0),
             "AT:STF:Cannot transfer asset to zero address. Use discard."
         );
-
         //^^^^^^^checks^^^^^^^^^
 
         rec.numberOfTransfers = 170;
@@ -422,9 +421,7 @@ contract A_TKN is
             _isApprovedOrOwner(_msgSender(), tokenId),
             "AT:D:transfer caller is not owner nor approved"
         );
-
         //^^^^^^^checks^^^^^^^^^
-        //^^^^^^^effects^^^^^^^^^
 
         RCLR.discard(_idxHash, _msgSender());
         _burn(tokenId);
@@ -439,7 +436,7 @@ contract A_TKN is
         whenNotPaused
     {
         //^^^^^^^checks^^^^^^^^^
-        //^^^^^^^effects^^^^^^^^^
+        
         STOR.modifyRecord(
             _idxHash,
             _rec.rightsHolder,
@@ -448,7 +445,7 @@ contract A_TKN is
             _rec.forceModCount,
             _rec.numberOfTransfers
         ); // Send data and writehash to storage
-        //
+
         STOR.clearPrice(_idxHash); //sets price and currency of a record to zero
         //^^^^^^^interactions^^^^^^^^^
     }
@@ -458,6 +455,7 @@ contract A_TKN is
      */
     function getRecord(bytes32 _idxHash) internal returns (Record memory) {
         //^^^^^^^checks^^^^^^^^^
+
         Record memory rec = STOR.retrieveRecord(_idxHash);
         //^^^^^^^effects^^^^^^^^^
 
@@ -507,9 +505,10 @@ contract A_TKN is
     function pause() public virtual {
         require(
             hasRole(PAUSER_ROLE, _msgSender()),
-            "ERC721PresetMinterPauserAutoId: must have pauser role to pause"
+            "A:P: Caller !have pauser role"
         );
         //^^^^^^^checks^^^^^^^^^
+
         _pause();
         //^^^^^^^interactions^^^^^^^^^
     }
@@ -526,9 +525,10 @@ contract A_TKN is
     function unpause() public virtual {
         require(
             hasRole(PAUSER_ROLE, _msgSender()),
-            "ERC721PresetMinterPauserAutoId: must have pauser role to unpause"
+            "A:UP: Caller !have pauser role"
         );
         //^^^^^^^checks^^^^^^^^^
+
         _unpause();
         //^^^^^^^interactions^^^^^^^^^
     }

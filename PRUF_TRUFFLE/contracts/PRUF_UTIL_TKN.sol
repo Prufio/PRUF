@@ -98,7 +98,7 @@ contract UTIL_TKN is
     modifier isAdmin() {
         require(
             hasRole(CONTRACT_ADMIN_ROLE, _msgSender()),
-            "PRuF:MOD: must have CONTRACT_ADMIN_ROLE"
+            "PRuF:MOD-IADM: Must have CONTRACT_ADMIN_ROLE"
         );
         _;
     }
@@ -111,7 +111,7 @@ contract UTIL_TKN is
     modifier isPauser() {
         require(
             hasRole(PAUSER_ROLE, _msgSender()),
-            "PRuF:MOD: must have PAUSER_ROLE"
+            "PRuF:MOD-IP: Must have PAUSER_ROLE"
         );
         _;
     }
@@ -124,7 +124,7 @@ contract UTIL_TKN is
     modifier isMinter() {
         require(
             hasRole(MINTER_ROLE, _msgSender()),
-            "PRuF:MOD: must have MINTER_ROLE"
+            "PRuF:MOD-IM: Must have MINTER_ROLE"
         );
         _;
     }
@@ -137,11 +137,11 @@ contract UTIL_TKN is
     modifier isPayable() {
         require(
             hasRole(PAYABLE_ROLE, _msgSender()),
-            "PRuF:MOD: must have PAYABLE_ROLE"
+            "PRuF:MOD-IPAY: Must have PAYABLE_ROLE"
         );
         require(
             trustedAgentEnabled == 1,
-            "PRuF:MOD: Trusted Payable Function permanently disabled - use allowance / transferFrom pattern"
+            "PRuF:MOD-IPAY: Trusted Payable Function permanently disabled - use allowance / transferFrom pattern"
         );
         _;
     }
@@ -154,11 +154,11 @@ contract UTIL_TKN is
     modifier isTrustedAgent() {
         require(
             hasRole(TRUSTED_AGENT_ROLE, _msgSender()),
-            "PRuF:MOD: must have TRUSTED_AGENT_ROLE"
+            "PRuF:MOD-ITA: Must have TRUSTED_AGENT_ROLE"
         );
         require(
             trustedAgentEnabled == 1,
-            "PRuF:MOD: Trusted Agent function permanently disabled - use allowance / transferFrom pattern"
+            "PRuF:MOD-ITA: Trusted Agent function permanently disabled - use allowance / transferFrom pattern"
         );
         _;
     }
@@ -211,7 +211,7 @@ contract UTIL_TKN is
     function AdminSetSharesAddress(address _paymentAddress) external isAdmin {
         require(
             _paymentAddress != address(0),
-            "PRuF:SSA: payment address cannot be zero"
+            "PRuF:ASSA: Payment address cannot be zero"
         );
 
         //^^^^^^^checks^^^^^^^^^
@@ -239,7 +239,7 @@ contract UTIL_TKN is
         );
         require( //redundant? throws on transfer?
             balanceOf(_senderAddress) >= (invoice.rootPrice + invoice.ACTHprice),
-            "PRuF:PFS: insufficient balance"
+            "PRuF:PFS: Insufficient balance"
         );
         //^^^^^^^checks^^^^^^^^^
 
@@ -302,7 +302,7 @@ contract UTIL_TKN is
     {
         require(
             coldWallet[_addr] == 0,
-            "PRuF:BRN: Cold Wallet - Trusted functions prohibited"
+            "PRuF:TAB: Cold Wallet - Trusted functions prohibited"
         );
         //^^^^^^^checks^^^^^^^^^
         _burn(_addr, _amount);
@@ -332,7 +332,7 @@ contract UTIL_TKN is
     function takeSnapshot() external returns (uint256) {
         require(
             hasRole(SNAPSHOT_ROLE, _msgSender()),
-            "ERC20PresetMinterPauser: must have snapshot role to take a snapshot"
+            "PRuF:TS: ERC20PresetMinterPauser: must have snapshot role to take a snapshot"
         );
         return _snapshot();
     }
@@ -349,7 +349,7 @@ contract UTIL_TKN is
     function mint(address to, uint256 _amount) public virtual {
         require(
             hasRole(MINTER_ROLE, _msgSender()),
-            "PRuF:MOD: must have MINTER_ROLE"
+            "PRuF:M: Must have MINTER_ROLE"
         );
         //^^^^^^^checks^^^^^^^^^
 
@@ -406,13 +406,13 @@ contract UTIL_TKN is
 
         require(
             (!paused()) || hasRole(PAUSER_ROLE, _msgSender()),
-            "ERC20Pausable: function unavailble while contract is paused"
+            "PRuF:BTT: Function unavailble while contract is paused"
         );
         if (from == address(0)) {
             // When minting tokens
             require(
                 (totalSupply() + amount) <= _cap,
-                "ERC20Capped: cap exceeded"
+                "PRuF:BTT: Cap exceeded"
             );
         }
     }
