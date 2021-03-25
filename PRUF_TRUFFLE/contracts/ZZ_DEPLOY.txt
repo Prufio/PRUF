@@ -192,11 +192,11 @@ __/\\\\\\\\\\\\\ _____/\\\\\\\\\ _______/\\../\\ ___/\\\\\\\\\\\\\\\
 * 2 - USER2 (USER2.address, PRUF+(0*18))   |0|
 * 
 * ----------------- AUTHORIZE CONTRACTS IN AC'S (STOR.enableContractForAC)-----------------|0|
-* 1 - A_TKN ('A_TKN', '1', '1'),   |0|
-*           ('A_TKN', '2', '1'),   |0|
-*           ('A_TKN', '3', '1'),   |0|
-*           ('A_TKN', '4', '1'),   |0|
-*           ('A_TKN', '5', '1')   |0|
+* 1 - A_TKN ('1', 'A_TKN', '1'),   |0|
+*           ('1', 'A_TKN', '2'),   |0|
+*           ('1', 'A_TKN', '3'),   |0|
+*           ('1', 'A_TKN', '4'),   |0|
+*           ('1', 'A_TKN', '5')   |0|
 * 
 * ----------------- SET SHARES ADDRESS (UTIL_TKN.AdminSetSharesAddress) -----------------|0|
 * 1 - OWNER (OWNER.address)   |0|
