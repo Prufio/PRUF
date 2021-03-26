@@ -226,42 +226,6 @@
 				"type": "function"
 			},
 			{
-				"inputs": [
-					{
-						"internalType": "uint256",
-						"name": "_tokenId",
-						"type": "uint256"
-					}
-				],
-				"name": "IdData",
-				"outputs": [
-					{
-						"components": [
-							{
-								"internalType": "uint256",
-								"name": "trustLevel",
-								"type": "uint256"
-							},
-							{
-								"internalType": "bytes32",
-								"name": "URI",
-								"type": "bytes32"
-							},
-							{
-								"internalType": "string",
-								"name": "userName",
-								"type": "string"
-							}
-						],
-						"internalType": "struct ID",
-						"name": "",
-						"type": "tuple"
-					}
-				],
-				"stateMutability": "view",
-				"type": "function"
-			},
-			{
 				"inputs": [],
 				"name": "MINTER_ROLE",
 				"outputs": [
@@ -346,19 +310,6 @@
 					}
 				],
 				"name": "burn",
-				"outputs": [],
-				"stateMutability": "nonpayable",
-				"type": "function"
-			},
-			{
-				"inputs": [
-					{
-						"internalType": "uint256",
-						"name": "_tokenId",
-						"type": "uint256"
-					}
-				],
-				"name": "burnPRUF_ID",
 				"outputs": [],
 				"stateMutability": "nonpayable",
 				"type": "function"
@@ -519,16 +470,16 @@
 					},
 					{
 						"internalType": "uint256",
-						"name": "_tokenId",
+						"name": "tokenId",
 						"type": "uint256"
 					},
 					{
 						"internalType": "string",
-						"name": "_URI",
+						"name": "_tokenURI",
 						"type": "string"
 					}
 				],
-				"name": "mintPRUF_IDToken",
+				"name": "mintACToken",
 				"outputs": [
 					{
 						"internalType": "uint256",
@@ -600,11 +551,16 @@
 					},
 					{
 						"internalType": "uint256",
-						"name": "_tokenId",
+						"name": "tokenId",
 						"type": "uint256"
+					},
+					{
+						"internalType": "string",
+						"name": "_tokenURI",
+						"type": "string"
 					}
 				],
-				"name": "reMintPRUF_IDToken",
+				"name": "reMintACToken",
 				"outputs": [
 					{
 						"internalType": "uint256",
@@ -665,7 +621,7 @@
 					},
 					{
 						"internalType": "uint256",
-						"name": "_tokenId",
+						"name": "tokenId",
 						"type": "uint256"
 					}
 				],
@@ -688,7 +644,7 @@
 					},
 					{
 						"internalType": "uint256",
-						"name": "_tokenId",
+						"name": "tokenId",
 						"type": "uint256"
 					},
 					{
@@ -717,102 +673,6 @@
 				],
 				"name": "setApprovalForAll",
 				"outputs": [],
-				"stateMutability": "nonpayable",
-				"type": "function"
-			},
-			{
-				"inputs": [
-					{
-						"internalType": "uint256",
-						"name": "_tokenId",
-						"type": "uint256"
-					},
-					{
-						"internalType": "bytes32",
-						"name": "_URI",
-						"type": "bytes32"
-					}
-				],
-				"name": "setIdURI",
-				"outputs": [
-					{
-						"internalType": "uint256",
-						"name": "",
-						"type": "uint256"
-					}
-				],
-				"stateMutability": "nonpayable",
-				"type": "function"
-			},
-			{
-				"inputs": [
-					{
-						"internalType": "uint256",
-						"name": "_tokenId",
-						"type": "uint256"
-					},
-					{
-						"internalType": "uint256",
-						"name": "_trustLevel",
-						"type": "uint256"
-					}
-				],
-				"name": "setTrustLevel",
-				"outputs": [
-					{
-						"internalType": "uint256",
-						"name": "",
-						"type": "uint256"
-					}
-				],
-				"stateMutability": "nonpayable",
-				"type": "function"
-			},
-			{
-				"inputs": [
-					{
-						"internalType": "uint256",
-						"name": "_tokenId",
-						"type": "uint256"
-					},
-					{
-						"internalType": "string",
-						"name": "_tokenURI",
-						"type": "string"
-					}
-				],
-				"name": "setURI",
-				"outputs": [
-					{
-						"internalType": "uint256",
-						"name": "",
-						"type": "uint256"
-					}
-				],
-				"stateMutability": "nonpayable",
-				"type": "function"
-			},
-			{
-				"inputs": [
-					{
-						"internalType": "uint256",
-						"name": "_tokenId",
-						"type": "uint256"
-					},
-					{
-						"internalType": "string",
-						"name": "_userName",
-						"type": "string"
-					}
-				],
-				"name": "setUserName",
-				"outputs": [
-					{
-						"internalType": "uint256",
-						"name": "",
-						"type": "uint256"
-					}
-				],
 				"stateMutability": "nonpayable",
 				"type": "function"
 			},
@@ -871,16 +731,16 @@
 				"inputs": [
 					{
 						"internalType": "uint256",
-						"name": "_tokenId",
+						"name": "tokenId",
 						"type": "uint256"
 					}
 				],
 				"name": "tokenExists",
 				"outputs": [
 					{
-						"internalType": "uint8",
+						"internalType": "uint256",
 						"name": "",
-						"type": "uint8"
+						"type": "uint256"
 					}
 				],
 				"stateMutability": "view",
@@ -966,44 +826,6 @@
 				"type": "function"
 			},
 			{
-				"inputs": [
-					{
-						"internalType": "uint256",
-						"name": "_tokenId",
-						"type": "uint256"
-					}
-				],
-				"name": "trustedLevel",
-				"outputs": [
-					{
-						"internalType": "uint256",
-						"name": "",
-						"type": "uint256"
-					}
-				],
-				"stateMutability": "view",
-				"type": "function"
-			},
-			{
-				"inputs": [
-					{
-						"internalType": "address",
-						"name": "_addr",
-						"type": "address"
-					}
-				],
-				"name": "trustedLevelByAddress",
-				"outputs": [
-					{
-						"internalType": "uint256",
-						"name": "",
-						"type": "uint256"
-					}
-				],
-				"stateMutability": "view",
-				"type": "function"
-			},
-			{
 				"inputs": [],
 				"name": "unpause",
 				"outputs": [],
@@ -1067,15 +889,20 @@
 					"details": "Revokes `role` from `account`. If `account` had been granted `role`, emits a {RoleRevoked} event. Requirements: - the caller must have ``role``'s admin role."
 				},
 				"safeTransferFrom(address,address,uint256)": {
-					"details": "Safely blocks the transfer of a given token ID to another address If the target address is a contract, it must implement {IERC721Receiver-onERC721Received}, which is called upon a safe transfer, and return the magic value `bytes4(keccak256(\"onERC721Received(address,address,uint256,bytes)\"))`; otherwise, the transfer is reverted. Requires the _msgSender() to be the owner, approved, or operator"
+					"details": "Safely transfers the ownership of a given token ID to another address If the target address is a contract, it must implement {IERC721Receiver-onERC721Received}, which is called upon a safe transfer, and return the magic value `bytes4(keccak256(\"onERC721Received(address,address,uint256,bytes)\"))`; otherwise, the transfer is reverted. Requires the _msgSender() to be the owner, approved, or operator",
+					"params": {
+						"from": "current owner of the token",
+						"to": "address to receive the ownership of the given token ID",
+						"tokenId": "uint256 ID of the token to be transferred"
+					}
 				},
 				"safeTransferFrom(address,address,uint256,bytes)": {
-					"details": "Safely blocks the transfer of a given token ID to another address If the target address is a contract, it must implement {IERC721Receiver-onERC721Received}, which is called upon a safe transfer, and return the magic value `bytes4(keccak256(\"onERC721Received(address,address,uint256,bytes)\"))`; otherwise, the transfer is reverted. Requires the _msgSender() to be the owner, approved, or operator",
+					"details": "Safely transfers the ownership of a given token ID to another address If the target address is a contract, it must implement {IERC721Receiver-onERC721Received}, which is called upon a safe transfer, and return the magic value `bytes4(keccak256(\"onERC721Received(address,address,uint256,bytes)\"))`; otherwise, the transfer is reverted. Requires the _msgSender() to be the owner, approved, or operator",
 					"params": {
 						"_data": "bytes data to send along with a safe transfer check",
-						"_tokenId": "uint256 ID of the token to be transferred",
 						"from": "current owner of the token",
-						"to": "address to receive the ownership of the given token ID"
+						"to": "address to receive the ownership of the given token ID",
+						"tokenId": "uint256 ID of the token to be transferred"
 					}
 				},
 				"setApprovalForAll(address,bool)": {
@@ -1100,7 +927,12 @@
 					"details": "See {IERC721Enumerable-totalSupply}."
 				},
 				"transferFrom(address,address,uint256)": {
-					"details": "Blocks the transfer of a given token ID to another address Usage of this method is discouraged, use {safeTransferFrom} whenever possible. Requires the _msgSender() to be the owner, approved, or operator."
+					"details": "Transfers the ownership of a given token ID to another address. Usage of this method is discouraged, use {safeTransferFrom} whenever possible. Requires the _msgSender() to be the owner, approved, or operator.",
+					"params": {
+						"from": "current owner of the token",
+						"to": "address to receive the ownership of the given token ID",
+						"tokenId": "uint256 ID of the token to be transferred"
+					}
 				},
 				"unpause()": {
 					"details": "Unpauses all token transfers. See {ERC721Pausable} and {Pausable-_unpause}. Requirements: - the caller must have the `PAUSER_ROLE`."
@@ -1116,7 +948,7 @@
 	},
 	"settings": {
 		"compilationTarget": {
-			"PRUF_ID_TKN.sol": "ID_TKN"
+			"PRUF_AC_TKN.sol": "AC_TKN"
 		},
 		"evmVersion": "istanbul",
 		"libraries": {},
@@ -1274,12 +1106,12 @@
 				"dweb:/ipfs/QmUpgMg8EFDnv87ePKUjXxXpJT3qwHRj9VDNSnRxu7T9sy"
 			]
 		},
-		"PRUF_ID_TKN.sol": {
-			"keccak256": "0xf77ea570e3114d28eba065f2f54a5a9fb537d8c09030ed990a5b2c1281408eab",
+		"PRUF_AC_TKN.sol": {
+			"keccak256": "0x58d37068740a60ecba2cd8b2573eb692ce9868015fbe2e26e3d9e1b0b6ea76f8",
 			"license": "UNLICENSED",
 			"urls": [
-				"bzz-raw://ecd784c38e102b6d47e7403af751393f3a1da2d2b204e275bb92af3f5b6f7120",
-				"dweb:/ipfs/QmRFrQGPVrEfTVhMuugcKixL7VD7t53N2GRPSfRUg74dFY"
+				"bzz-raw://1b42a8f4ccd9140e16bc1e5b7fb0e1516d8c3b921dbade6dab7e1a3c17711ccc",
+				"dweb:/ipfs/QmPLy8d5f3X8ZA3wjTxVucvhBXWNDzz26ZwmniBfamFJ78"
 			]
 		},
 		"PRUF_INTERFACES.sol": {
