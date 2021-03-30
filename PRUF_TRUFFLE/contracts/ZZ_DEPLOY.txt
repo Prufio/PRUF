@@ -173,7 +173,7 @@ __/\\\\\\\\\\\\\ _____/\\\\\\\\\ _______/\\../\\ ___/\\\\\\\\\\\\\\\
 *
 * 4 - APP (ASSET_TXFR_ROLEB32, NP.address)   |0|
 *
-* 5 - RCLR (DISCARD_ROLEB32, A_TKN.address)   |0|
+* 5 - RCLR (DISCARD_ROLEB32, A_TKN.address)   |0| 
 * 
 * ----------------- MINT ROOT TOKENS (AC_MGR.createAssetClass)-----------------|0|
 * 1 - ROOT1 (1) ('1', 'name', '1', '3', '0', "9500" 0x000...(b32), USER1.address,)   |0|

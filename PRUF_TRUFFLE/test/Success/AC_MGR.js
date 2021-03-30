@@ -894,10 +894,10 @@ contract('AC_MGR', accounts => {
     //     console.log("Authorizing AC_MGR")
     //     return AC_TKN.grantRole(trustedAgentRoleB32, AC_MGR.address, { from: account1 })
     // })
-        
-        
+
+
     it('Should mint a couple of asset root tokens', async () => {
-        
+
         console.log("Minting root token 1 -C")
         return AC_MGR.createAssetClass("1", 'CUSTODIAL_ROOT1', '1', '3', '0', "0", rgt000, account1, { from: account1 })
 
@@ -916,7 +916,7 @@ contract('AC_MGR', accounts => {
     it("Should Mint 2 cust and 2 non-cust AC tokens in AC_ROOT 1", async () => {
 
         console.log("Minting AC 10 -C")
-        return AC_MGR.createAssetClass("10", 'CUSTODIAL_AC10', '1', '1', '255', "0", rgt000, account1, { from: account1 })
+        return AC_MGR.createAssetClass("10", 'CUSTODIAL_AC10', '1', '1', '0', "0", rgt000, account1, { from: account1 })
 
             .then(() => {
                 console.log("Minting AC 11 -C")
@@ -1905,7 +1905,6 @@ contract('AC_MGR', accounts => {
     it('Should set SharesAddress', async () => {
 
         console.log("//**************************************BEGIN AC_MGR TEST**********************************************/")
-        console.log("//**************************************BEGIN AC_MGR SETUP**********************************************/")
         return UTIL_TKN.AdminSetSharesAddress(
             account1,
             { from: account1 }
@@ -1913,46 +1912,92 @@ contract('AC_MGR', accounts => {
     })
 
 
-    it('Should mint 30000 tokens to account2', async () => {
-        return UTIL_TKN.mint(
-            account2,
-            '300000000000000000000000',
-            { from: account1 }
-        )
-    })
-
-
-    it('Should mint 30000 tokens to account4', async () => {
-        return UTIL_TKN.mint(
-            account4,
-            '300000000000000000000000',
-            { from: account1 }
-        )
-    })
-
-
-    it('Should mint 30000 tokens to account1', async () => {
+    it('Should mint 400000 tokens to account1', async () => {
         return UTIL_TKN.mint(
             account1,
-            '300000000000000000000000',
+            '4000000000000000000000000',
             { from: account1 }
         )
     })
 
 
-    it('Should update IPFS of AC 10 to rgt1', async () => {
-        return AC_MGR.updateACipfs(
-            '10',
-            rgt1,
+    it('Should mint 400000 tokens to account2', async () => {
+        return UTIL_TKN.mint(
+            account2,
+            '4000000000000000000000000',
             { from: account1 }
         )
     })
 
 
-    it("Should getExtAC_data for ac10", async () => {
+    it('Should mint 400000 tokens to account3', async () => {
+        return UTIL_TKN.mint(
+            account3,
+            '4000000000000000000000000',
+            { from: account1 }
+        )
+    })
+
+
+    it('Should mint ID_TKN(1) to account1', async () => {
+        return ID_TKN.mintPRUF_IDToken(
+            account1,
+            '1',
+            { from: account1 }
+        )
+    })
+
+
+    it('Should mint ID_TKN(2) to account2', async () => {
+        return ID_TKN.mintPRUF_IDToken(
+            account2,
+            '2',
+            { from: account1 }
+        )
+    })
+
+
+    it('Should mint ID_TKN(3) to account3', async () => {
+        return ID_TKN.mintPRUF_IDToken(
+            account3,
+            '3',
+            { from: account1 }
+        )
+    })
+
+
+    it('Should createAssetClass root (8)', async () => {
+        return AC_MGR.createAssetClass(
+            "8",
+            'ROOT8',
+            '8',
+            '3',
+            '0',
+            "0",
+            rgt000,
+            account1,
+            { from: account1 }
+        )
+    })
+
+
+    it("Should set costs in AC8", async () => {
+
+        console.log("Setting costs in AC 8")
+
+        return AC_MGR.ACTH_setCosts(
+            "8",
+            "1",
+            "0",
+            account1,
+            { from: account1 })
+    })
+
+
+    it("Should retrieve AC1", async () => {
         var Record = [];
 
-        return await AC_MGR.getExtAC_data("10", { from: account2 }, function (_err, _result) {
+        return await AC_MGR.getExtAC_data("1", { from: account1 }, function (_err, _result) {
             if (_err) { }
             else {
                 Record = Object.values(_result)
@@ -1961,466 +2006,388 @@ contract('AC_MGR', accounts => {
         })
     })
 
-    //1
-    it('Should fail because caller is not admin', async () => {
 
-        console.log("//**************************************END AC_MGR SETUP**********************************************/")
-        console.log("//**************************************BEGIN AC_MGR FAIL BATCH (31)**********************************************/")
-        console.log("//**************************************BEGIN OO_SetACpricing FAIL BATCH**********************************************/")
-        return AC_MGR.OO_SetACpricing(
-            '10',
-            { from: account2 }
-        )
-    })
-
-    //2
-    it('Should fail because caller is not admin', async () => {
-        console.log("//**************************************BEGIN OO_SetACpricing FAIL BATCH**********************************************/")
-        console.log("//**************************************BEGIN adminIncreaseShare FAIL BATCH**********************************************/")
-        return AC_MGR.adminIncreaseShare(
-            '10',
-            '5100',
-            { from: account2 }
-        )
-    })
-
-    //3
-    it('Should fail because AC !exist', async () => {
-        return AC_MGR.adminIncreaseShare(
-            '50',
-            '5100',
-            { from: account1 }
-        )
-    })
-
-
-    it('Should increase share of AC 10', async () => {
-        return AC_MGR.adminIncreaseShare(
-            '10',
-            '5100',
-            { from: account1 }
-        )
-    })
-
-    //4
-    it('Should fail because cannot decrease share', async () => {
-        return AC_MGR.adminIncreaseShare(
-            '10',
-            '5000',
-            { from: account1 }
-        )
-    })
-
-    //5
-    it('Should fail because increase share of AC 10 > 10000', async () => {
-        return AC_MGR.adminIncreaseShare(
-            '10',
-            '10001',
-            { from: account1 }
-        )
-    })
-
-    //6
-    it('Should fail because caller !admin', async () => {
-
-        console.log("//**************************************END adminIncreaseShare FAIL BATCH**********************************************/")
-        console.log("//**************************************BEGIN transferName FAIL BATCH**********************************************/")
-        return AC_MGR.transferName(
-            '1',
-            '2',
-            'CUSTODIAL_AC10',
-            { from: account2 }
-        )
-    })
-
-    //7
-    it('Should fail because name not in source AC', async () => {
-        return AC_MGR.transferName(
-            '2',
-            '1',
-            'CUSTODIAL_AC10',
-            { from: account1 }
-        )
-    })
-
-    // it("Should retrieve AC10 Name", async () => {
-    //     var Record = [];
-
-    //     return await AC_MGR.getAC_name("10", { from: account2 }, function (_err, _result) {
-    //         if (_err) { }
-    //         else {
-    //             Record = Object.values(_result)
-    //             console.log(Record)
-    //         }
-    //     })
-    // })
-
-    // it("Should retrieve AC10", async () => {
-    //     var Record = [];
-
-    //     return await AC_MGR.resolveAssetClass("CUSTODIAL_AC10", { from: account2 }, function (_err, _result) {
-    //         if (_err) { }
-    //         else {
-    //             Record = Object.values(_result)
-    //             console.log(Record)
-    //         }
-    //     })
-    // })
-
-    //8
-    it('Should fail because Dest AC not readt for name transfer (0xFFFFF...)', async () => {
-        return AC_MGR.transferName(
-            '10',
-            '11',
-            'CUSTODIAL_AC10',
-            { from: account1 }
-        )
-    })
-
-    //9
-    it('Should fail because caller !admin', async () => {
-
-        console.log("//**************************************END transferName FAIL BATCH**********************************************/")
-        console.log("//**************************************BEGIN AdminModAssetClass FAIL BATCH**********************************************/")
-        return AC_MGR.AdminModAssetClass(
-            '10',
-            '1',
-            '2',
-            '1',
-            '1',
-            '5100',
-            account2,
-            "0",
-            rgt000,
-            { from: account2 }
-        )
-    })
-
-    //10
-    it('Should fail because AC = 0', async () => {
-        return AC_MGR.AdminModAssetClass(
-            '0',
-            '1',
-            '2',
-            '1',
-            '1',
-            '5100',
-            account2,
-            "0",
-            rgt000,
-            { from: account1 }
-        )
-    })
-
-    //11
-    it('Should fail because discount > 10000', async () => {
-        return AC_MGR.AdminModAssetClass(
-            '10',
-            '1',
-            '2',
-            '1',
-            '1',
-            '10001',
-            account2,
-            "0",
-            rgt000,
-            { from: account1 }
-        )
-    })
-
-    //12
-    it('Should fail because root assetClass !exist', async () => {
-        return AC_MGR.AdminModAssetClass(
-            '10',
-            '15',
-            '2',
-            '1',
-            '1',
-            '5100',
-            account2,
-            "0",
-            rgt000,
-            { from: account1 }
-        )
-    })
-
-    //13
-    it('Should fail because AC !exist', async () => {
-        return AC_MGR.AdminModAssetClass(
-            '20',
-            '1',
-            '2',
-            '1',
-            '1',
-            '5100',
-            account2,
-            "0",
-            rgt000,
-            { from: account1 }
-        )
-    })
-
-    //14
-    it('Should fail because caller is not node minter', async () => {
-
-        console.log("//**************************************END AdminModAssetClass FAIL BATCH**********************************************/")
-        console.log("//**************************************BEGIN createAssetClass FAIL BATCH**********************************************/")
+    it('Should createAssetClass (9)', async () => {
         return AC_MGR.createAssetClass(
-            '20',
-            '20',
-            '1',
-            '0',
-            "0",
-            "5100",
-            rgt000,
-            account2,
-            { from: account2 }
-        )
-    })
-
-    //15
-    it('Should fail because caller is not holder of an ID Token', async () => {
-
-        console.log("//**************************************END addUser FAIL BATCH**********************************************/")
-        console.log("//**************************************BEGIN purchaseACnode FAIL BATCH**********************************************/")
-        return AC_MGR.purchaseACnode(
-            '20',
-            '1',
-            '1',
-            rgt000,
-            { from: account2 }
-        )
-    })
-
-    //16
-    it('Should fail because caller does not hold AC token', async () => {
-
-        console.log("//**************************************END purchaseACnode FAIL BATCH**********************************************/")
-        console.log("//**************************************BEGIN addUser FAIL BATCH**********************************************/")
-        return AC_MGR.addUser(
-            '10',
-            account2Hash,
-            '10',
-            { from: account2 }
-        )
-    })
-
-    //17
-    it('Should fail because caller does not hold AC token', async () => {
-
-        console.log("//**************************************END addUser FAIL BATCH**********************************************/")
-        console.log("//**************************************BEGIN updateACname FAIL BATCH**********************************************/")
-        return AC_MGR.updateACname(
-            '1',
-            'CUSTODIAL_AC10+',
-            { from: account2 }
-        )
-    })
-
-    //18
-    it('Should fail because used name being signed to different AC', async () => {
-        return AC_MGR.updateACname(
-            '2',
-            'CUSTODIAL_AC10',
-            { from: account1 }
-        )
-    })
-
-    //19
-    it('Should fail because caller is not ACTH', async () => {
-
-        console.log("//**************************************END updateACname FAIL BATCH**********************************************/")
-        console.log("//**************************************BEGIN updateACipfs FAIL BATCH**********************************************/")
-        return AC_MGR.updateACipfs(
-            '1',
-            rgt000,
-            { from: account2 }
-        )
-    })
-
-    //20
-    it('Should fail because caller is not ACTH', async () => {
-
-        console.log("//**************************************END updateACipfs FAIL BATCH**********************************************/")
-        console.log("//**************************************BEGIN ACTH_setCosts FAIL BATCH**********************************************/")
-        return AC_MGR.ACTH_setCosts(
-            '10',
-            '1',
-            '20000000000000000',
-            account2,
-            { from: account2 }
-        )
-    })
-
-    //21
-    it('Should fail because caller is not ACTH', async () => {
-
-        console.log("//**************************************END ACTH_setCosts FAIL BATCH**********************************************/")
-        console.log("//**************************************BEGIN updateACImmutable FAIL BATCH**********************************************/")
-        return AC_MGR.updateACImmutable(
-            '10',
-            '1',
-            '0',
-            account2,
-            { from: account2 }
-        )
-    })
-
-    //22
-    it('Should fail because immutable data = 255', async () => {
-
-        console.log("//**************************************END ACTH_setCosts FAIL BATCH**********************************************/")
-        console.log("//**************************************BEGIN updateACImmutable FAIL BATCH**********************************************/")
-        return AC_MGR.updateACImmutable(
-            '10',
+            "9",
+            '9',
+            '8',
+            '3',
             '255',
-            '0',
-            account2,
+            "0",
+            rgt000,
+            account1,
             { from: account1 }
         )
     })
 
 
-    it('Should change Immutable data', async () => {
-        return AC_MGR.updateACImmutable(
+    it("Should retrieve AC9", async () => {
+        var Record = [];
+
+        return await AC_MGR.getAC_data("9", { from: account1 }, function (_err, _result) {
+            if (_err) { }
+            else {
+                Record = Object.values(_result)
+                console.log(Record)
+            }
+        })
+    })
+
+
+    it('Should purchase AC 100001', async () => {
+        return AC_MGR.purchaseACnode(
+            'test',
+            '8',
             '10',
-            '1',
-            '1',
-            account2,
-            { from: account1 }
-        )
-    })
-
-    //23
-    it('Should fail because immutable data has already been set', async () => {
-        return AC_MGR.updateACImmutable(
-            '10',
-            '1',
-            '0',
-            account2,
-            { from: account1 }
-        )
-    })
-
-    //24
-    it('Should fail because AC not yet populated', async () => {
-
-        console.log("//**************************************END updateACImmutable FAIL BATCH**********************************************/")
-        console.log("//**************************************BEGIN getServiceCosts FAIL BATCH**********************************************/")
-        return AC_MGR.getServiceCosts(
-            '100',
-            '1',
+            rgt000,
             { from: account2 }
         )
     })
 
-    //25
-    it('Should fail because service 0 is not valid', async () => {
-        return AC_MGR.getServiceCosts(
+
+    it("Should retrieve AC100001", async () => {
+        var Record = [];
+
+        return await AC_MGR.getExtAC_data("100001", { from: account1 }, function (_err, _result) {
+            if (_err) { }
+            else {
+                Record = Object.values(_result)
+                console.log(Record)
+            }
+        })
+    })
+
+
+    it('Should OO_SetACpricing to 50000', async () => {
+        return AC_MGR.OO_SetACpricing(
+            '50000000000000000000000',
+            { from: account1 }
+        )
+    })
+
+
+    it("Should retrieve currentACpricingInfo", async () => {
+        var Record = [];
+
+        return await AC_MGR.currentACpricingInfo({ from: account1 }, function (_err, _result) {
+            if (_err) { }
+            else {
+                Record = Object.values(_result)
+                console.log(Record)
+            }
+        })
+    })
+
+
+    it('Should purchase AC 1000002', async () => {
+        return AC_MGR.purchaseACnode(
+            'test2',
+            '8',
             '10',
-            '0',
+            rgt000,
             { from: account2 }
         )
     })
 
-    //26
-    it('Should fail because AC = 0', async () => {
 
-        console.log("//**************************************END getServiceCosts FAIL BATCH**********************************************/")
-        console.log("//**************************************BEGIN _createAssetClass(Private) FAIL BATCH**********************************************/")
-        return AC_MGR.createAssetClass(
-            '0',
-            '20',
-            '1',
-            '1',
-            "0",
-            "0",
-            rgt000,
-            account2,
-            { from: account1 }
-        )
+    it("Should retrieve AC1000002", async () => {
+        var Record = [];
+
+        return await AC_MGR.getExtAC_data("1000002", { from: account1 }, function (_err, _result) {
+            if (_err) { }
+            else {
+                Record = Object.values(_result)
+                console.log(Record)
+            }
+        })
     })
 
-    //27
-    it('Should fail because discount > 10000', async () => {
-        return AC_MGR.createAssetClass(
-            '20',
-            '20',
-            '1',
-            '1',
-            "0",
-            "10001",
-            rgt000,
-            account2,
-            { from: account1 }
-        )
+
+    it("Should retrieve 170", async () => {
+        var Record = "";
+
+        return await AC_MGR.isSameRootAC("1000001", "1000002", { from: account1 }, function (_err, _result) {
+            if (_err) { }
+            else {
+                Record = _result
+                console.log(Record)
+            }
+        })
     })
 
-    //28
-    it('Should fail because root !exist', async () => {
-        return AC_MGR.createAssetClass(
-            '20',
-            '10',
-            '10',
-            '1',
-            "0",
-            "5100",
-            rgt000,
-            account2,
-            { from: account1 }
-        )
-    })
 
-    //29
-    it('Should fail because root is disabled && !ACTH', async () => {
-        return AC_MGR.createAssetClass(
-            '20',
-            '3',
-            '3',
-            '1',
-            "0",
-            "5100",
-            rgt000,
-            account2,
-            { from: account1 }
-        )
-    })
-
-    //30
-    it('Should fail because name already exists', async () => {
-        return AC_MGR.createAssetClass(
-            '20',
-            'CUSTODIAL_AC10',
+    it('Should modify AC 9', async () => {
+        return AC_MGR.AdminModAssetClass(
+            "9",
+            '8',
             '2',
-            '1',
+            "255",
             "0",
-            "5100",
-            rgt000,
-            account2,
+            "9600",
+            account3,
+            "1",
+            rgt1,
             { from: account1 }
         )
     })
 
-    //31
-    it('Should fail because AC already exists', async () => {
-        return AC_MGR.createAssetClass(
-            '1',
-            '1',
-            '1',
-            '1',
-            "0",
-            "5100",
-            rgt000,
-            account2,
+
+    it("Should retrieve AC9", async () => {
+        var Record = [];
+
+        return await AC_MGR.getExtAC_data("9", { from: account1 }, function (_err, _result) {
+            if (_err) { }
+            else {
+                Record = Object.values(_result)
+                console.log(Record)
+            }
+        })
+    })
+
+
+    it('Should increaseShare of AC9 to 9700', async () => {
+        return AC_MGR.adminIncreaseShare(
+            '9',
+            '9700',
             { from: account1 }
         )
     })
 
+
+    it("Should retrieve AC9", async () => {
+        var Record = [];
+
+        return await AC_MGR.getExtAC_data("9", { from: account1 }, function (_err, _result) {
+            if (_err) { }
+            else {
+                Record = Object.values(_result)
+                console.log(Record)
+            }
+        })
+    })
+
+
+    it("Should retrieve discount 9700 from AC9", async () => {
+        var Record = [];
+
+        return await AC_MGR.getAC_name("9", { from: account1 }, function (_err, _result) {
+            if (_err) { }
+            else {
+                Record = Object.values(_result)
+                console.log(Record)
+            }
+        })
+    })
+
+
+    it('Should updateACname of AC9 to nine', async () => {
+        return AC_MGR.updateACname(
+            '9',
+            'nine',
+            { from: account1 }
+        )
+    })
+
+
+    it("Should retrieve AC9", async () => {
+        var Record = [];
+
+        return await AC_MGR.getExtAC_data("9", { from: account1 }, function (_err, _result) {
+            if (_err) { }
+            else {
+                Record = Object.values(_result)
+                console.log(Record)
+            }
+        })
+    })
+
+
+    it('Should updateACipfs of AC9 to 0xFFF...', async () => {
+        return AC_MGR.updateACipfs(
+            '9',
+            rgtFFF,
+            { from: account1 }
+        )
+    })
+
+
+    it("Should retrieve AC9", async () => {
+        var Record = [];
+
+        return await AC_MGR.getExtAC_data("9", { from: account1 }, function (_err, _result) {
+            if (_err) { }
+            else {
+                Record = Object.values(_result)
+                console.log(Record)
+            }
+        })
+    })
+
+
+    it('Should updateACipfs of AC1000001 to 0xFFF...', async () => {
+        return AC_MGR.updateACipfs(
+            '1000001',
+            rgtFFF,
+            { from: account2 }
+        )
+    })
+
+
+    it("Should retrieve AC1000001", async () => {
+        var Record = [];
+
+        return await AC_MGR.getExtAC_data("1000001", { from: account1 }, function (_err, _result) {
+            if (_err) { }
+            else {
+                Record = Object.values(_result)
+                console.log(Record)
+            }
+        })
+    })
+
+
+    it('Should transferName of AC9 to AC1000001', async () => {
+        return AC_MGR.transferName(
+            '9',
+            '1000001',
+            'nine',
+            { from: account1 }
+        )
+    })
+
+
+    it("Should retrieve AC9", async () => {
+        var Record = [];
+
+        return await AC_MGR.getExtAC_data("9", { from: account1 }, function (_err, _result) {
+            if (_err) { }
+            else {
+                Record = Object.values(_result)
+                console.log(Record)
+            }
+        })
+    })
+
+
+    it("Should retrieve AC1000001", async () => {
+        var Record = [];
+
+        return await AC_MGR.getExtAC_data("1000001", { from: account1 }, function (_err, _result) {
+            if (_err) { }
+            else {
+                Record = Object.values(_result)
+                console.log(Record)
+            }
+        })
+    })
+
+
+    it("Should retrieve AC9", async () => {
+        var Record = [];
+
+        return await AC_MGR.getExtAC_data("9", { from: account1 }, function (_err, _result) {
+            if (_err) { }
+            else {
+                Record = Object.values(_result)
+                console.log(Record)
+            }
+        })
+    })
+
+
+    it('Should updateACImmutable of AC9', async () => {
+        return AC_MGR.updateACImmutable(
+            '9',
+            "2",
+            "1",
+            account1,
+            { from: account1 }
+        )
+    })
+
+
+    it("Should getExtAC_data AC9", async () => {
+        var Record = [];
+
+        return await AC_MGR.getExtAC_data("9", { from: account1 }, function (_err, _result) {
+            if (_err) { }
+            else {
+                Record = Object.values(_result)
+                console.log(Record)
+            }
+        })
+    })
+
+
+    it('Should set service costs 1 in AC1000002', async () => {
+        return AC_MGR.ACTH_setCosts(
+            '1000002',
+            "1",
+            "10000000000000000000",
+            account2,
+            { from: account2 }
+        )
+    })
+
+
+    it("Should retrieve costs for AC1000002(1)", async () => {
+        var Record = "";
+
+        return await AC_MGR.getServiceCosts("1000002", "1", { from: account1 }, function (_err, _result) {
+            if (_err) { }
+            else {
+                Record = _result
+                console.log(Record)
+            }
+        })
+    })
+
+
+    it('Should add account2 to AC1000002', async () => {
+        return AC_MGR.addUser('1000002', account2Hash, '1', { from: account2 })
+    })
+
+
+    it("Should retrieve AC1000002 name (test2)", async () => {
+        var Record = [];
+
+        return await AC_MGR.getAC_name("1000002", { from: account1 }, function (_err, _result) {
+            if (_err) { }
+            else {
+                Record = Object.values(_result)
+                console.log(Record)
+            }
+        })
+    })
+
+
+    it("Should retrieve AC1000002 name (test2)", async () => {
+        var Record = [];
+
+        return await AC_MGR.getAC_name("1000002", { from: account1 }, function (_err, _result) {
+            if (_err) { }
+            else {
+                Record = Object.values(_result)
+                console.log(Record)
+            }
+        })
+    })
+
+
+    it("Should resolve AC1000002 from name (test2)", async () => {
+        var Record = [];
+
+        return await AC_MGR.resolveAssetClass("test2", { from: account1 }, function (_err, _result) {
+            if (_err) { }
+            else {
+                Record = Object.values(_result)
+                console.log(Record)
+            }
+        })
+    })
 
     it('Should write record in AC 10 @ IDX&RGT(1)', async () => {
-
-        console.log("//**************************************END getServiceCosts FAIL BATCH**********************************************/")
-        console.log("//**************************************END AC_MGR FAIL BATCH**********************************************/")
         console.log("//**************************************END AC_MGR TEST**********************************************/")
         console.log("//**************************************BEGIN THE WORKS**********************************************/")
         return APP.newRecord(
