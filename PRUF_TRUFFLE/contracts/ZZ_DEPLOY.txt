@@ -142,9 +142,9 @@ __/\\\\\\\\\\\\\ _____/\\\\\\\\\ _______/\\../\\ ___/\\\\\\\\\\\\\\\
 *
 * 12 - PURCHASE|0|
 *
-* 13 - WRAP|0|
+* 13 - DECORATE|0|
 *
-* 14 - DECORATE|0|
+* 14 - WRAP|0|
 * 
 * ----------------- DIVY UP ROLES (CONTRACT.grantRole) (B32'S) -----------------|0|
 * 1 - AC_TKN (MINTER_ROLEB32, AC_MGR.address),   |0|
@@ -161,9 +161,6 @@ __/\\\\\\\\\\\\\ _____/\\\\\\\\\ _______/\\../\\ ___/\\\\\\\\\\\\\\\
 *              (PAYABLE_ROLEB32, WRAP.address),   |0|
 *              (TRUSTED_AGENT_ROLEB32, AC_MGR.address)   |0|
 *              (TRUSTED_AGENT_ROLEB32, PURCHASE.address),   |0|
-# *              (MINTER_ROLEB32, SPLIT.address),   |0|
-# *              (PAUSER_ROLEB32, SPLIT.address),   |0|
-# *              (SNAPSHOT_ROLEB32, SPLIT.address),   |0|
 *
 * 3 - A_TKN (MINTER_ROLEB32, NP.address),   |0|
 *           (MINTER_ROLEB32, APP_NC.address),   |0|
@@ -176,196 +173,32 @@ __/\\\\\\\\\\\\\ _____/\\\\\\\\\ _______/\\../\\ ___/\\\\\\\\\\\\\\\
 *
 * 4 - APP (ASSET_TXFR_ROLEB32, NP.address)   |0|
 *
-* 5 - RCLR (DISCARD_ROLEB32, A_TKN.address)   |0|
+* 5 - RCLR (DISCARD_ROLEB32, A_TKN.address)   |0| 
 * 
-* ----------------- MINT AC TOKENS (AC_MGR.createAssetClass)-----------------|0|
-* 1 - ROOT1 (1) (USER1.address, 'ROOT1', '1', '1', '3', 0x000...(b32), "0")   |0|
+* ----------------- MINT ROOT TOKENS (AC_MGR.createAssetClass)-----------------|0|
+* 1 - ROOT1 (1) ('1', 'name', '1', '3', '0', "9500" 0x000...(b32), USER1.address,)   |0|
 *
-* 2 - ROOT2 (2) (USER1.address, 'ROOT2', '2', '2', '3', 0x000...(b32), "0")   |0|
+* 2 - ROOT2 (2) ('2', 'name', '2', '3', '0', "9500" 0x000...(b32), USER1.address,)   |0|
 *
-* 3 - ROOT3 (3) (USER1.address, 'ROOT3', '3', '3', '3', 0x000...(b32), "0")   |0|
+* 3 - ROOT3 (3) ('3', 'name', '3', '3', '0', "9500" 0x000...(b32), USER1.address,)   |0|
 *
-* 4 - ROOT4 (4) (USER1.address, 'ROOT4', '4', '4', '3', 0x000...(b32), "0")   |0|
+* 4 - ROOT4 (4) ('4', 'name', '4', '3', '0', "9500" 0x000...(b32), USER1.address,)   |0|
 *
-* 5 - ROOT5 (5) (USER1.address, 'ROOT5', '5', '5', '3', 0x000...(b32), "0")   |0|
+* 5 - ROOT5 (5) ('5', 'name', '5', '3', '0', "9500" 0x000...(b32), USER1.address,)   |0|
 *
-* 6 - CUST1 (ROOT1) (11) (USER1.address, 'CUSTODIAL_11', '11', '1', '1', 0x000...(b32), "5100")   |0|
-*
-* 7 - NONCUST1 (ROOT1) (12) (USER1.address, 'NON_CUSTODIAL_12', '12', '1', '2', 0x000...(b32), "5100")   |0|
-*
-* 8 - CUST2 (ROOT2) (13) (USER1.address, 'CUSTODIAL_13', '13', '2', '1', 0x000...(b32), "5100")   |0|
-*
-* 9 - NONCUST2 (ROOT2) (14) (USER1.address, 'NON_CUSTODIAL_14', '14', '2', '2', 0x000...(b32), "5100")   |0|
-* 
-* ----------------- AUTHORIZE CONTRACTS IN AC'S (STOR.enableContractForAC)-----------------|0|
-* 1 - APP ('APP', '11', '1'),   |0|
-*         ('APP', '13', '1')   |0|
-*
-* 2 - NP ('NP', '11', '1'),   |0|
-*        ('NP', '13', '1')   |0|
-*
-* 3 - AC_MGR ('AC_MGR', '11', '1'),   |0|
-*            ('AC_MGR', '12', '2'),   |0|
-*            ('AC_MGR', '13', '1'),   |0|
-*            ('AC_MGR', '14', '2')   |0|
-*
-* 4 - AC_TKN ('AC_TKN', '11', '1'),   |0|
-*            ('AC_TKN', '12', '2'),   |0|
-*            ('AC_TKN', '13', '1'),   |0|
-*            ('AC_TKN', '14', '2')   |0|
-*
-* 5 - A_TKN ('A_TKN', '11', '1'),   |0|
-*           ('A_TKN', '12', '2'),   |0|
-*           ('A_TKN', '13', '1'),   |0|
-*           ('A_TKN', '14', '2'),   |0|
-*           ('A_TKN', '1', '1'),   |0|
-*           ('A_TKN', '2', '1'),   |0|
-*           ('A_TKN', '3', '1'),   |0|
-*           ('A_TKN', '4', '1'),   |0|
-*           ('A_TKN', '5', '1')   |0|
-*
-* 6 - ECR_MGR ('ECR_MGR', '11', '3'),   |0|
-*             ('ECR_MGR', '12', '3'),   |0|
-*             ('ECR_MGR', '13', '3'),   |0|
-*             ('ECR_MGR', '14', '3')   |0|
-*
-* 7 - ECR ('ECR', '11', '3'),   |0|
-*         ('ECR', '13', '3')   |0|
-*
-* 8 - APP_NC ('APP_NC', '12', '2'),   |0|
-*            ('APP_NC', '14', '2')   |0|
-*
-* 9 - NP_NC ('NP_NC', '12', '2'),   |0|
-*           ('NP_NC', '14', '2')   |0|
-*
-* 10 - ECR_NC ('ECR_NC', '12', '3'),   |0|
-*             ('ECR_NC', '14', '3')   |0|
-*
-* 11 - RCLR ('RCLR', '11', '3'),   |0|
-*           ('RCLR', '12', '3'),   |0|
-*           ('RCLR', '13', '3'),   |0|
-*           ('RCLR', '14', '3')   |0|
-*
-* 12 - PIP ('PIP', '11', '1'),   |0|
-*          ('PIP', '12', '2'),   |0|
-*          ('PIP', '13', '1'),   |0|
-*          ('PIP', '14', '2'),   |0|
-*
-* 6 - PURCHASE ('PURCHASE', '11', '1'),   |0|
-*              ('PURCHASE', '12', '2'),   |0|
-*              ('PURCHASE', '13', '1'),   |0|
-*              ('PURCHASE', '14', '2')   |0|
-*
-* 10 - DECORATE ('DECORATE', '12', '2'),   |0|
-*           ('DECORATE', '14', '2')   |0|
-*
-* 11 - WRAP ('WRAP', '12', '2'),   |0|
-*           ('WRAP', '14', '2')   |0|
-*
-* ----------------- SET COSTS IN AC'S (AC_MGR.ACTH_setCosts)-----------------|0|
-* 1 - (AC1) ('1', '1', PRUF+(0*18), PAYEE.address),   |0|
-*           ('1', '2', PRUF+(0*18), PAYEE.address),   |0|
-*           ('1', '3', PRUF+(0*18), PAYEE.address),   |0|
-*           ('1', '4', PRUF+(0*18), PAYEE.address),   |0|
-*           ('1', '5', PRUF+(0*18), PAYEE.address),   |0|
-*           ('1', '6', PRUF+(0*18), PAYEE.address),   |0|
-*           ('1', '7', PRUF+(0*18), PAYEE.address),   |0|
-*           ('1', '8', PRUF+(0*18), PAYEE.address)   |0|
-*
-* 2 - (AC2) ('2', '1', PRUF+(0*18), PAYEE.address),   |0|
-*           ('2', '2', PRUF+(0*18), PAYEE.address),   |0|
-*           ('2', '3', PRUF+(0*18), PAYEE.address),   |0|
-*           ('2', '4', PRUF+(0*18), PAYEE.address),   |0|
-*           ('2', '5', PRUF+(0*18), PAYEE.address),   |0|
-*           ('2', '6', PRUF+(0*18), PAYEE.address),   |0|
-*           ('2', '7', PRUF+(0*18), PAYEE.address),   |0|
-*           ('2', '8', PRUF+(0*18), PAYEE.address)   |0|
-*
-* 3 - (AC3) ('3', '1', PRUF+(0*18), PAYEE.address),   |0|
-*           ('3', '2', PRUF+(0*18), PAYEE.address),   |0|
-*           ('3', '3', PRUF+(0*18), PAYEE.address),   |0|
-*           ('3', '4', PRUF+(0*18), PAYEE.address),   |0|
-*           ('3', '5', PRUF+(0*18), PAYEE.address),   |0|
-*           ('3', '6', PRUF+(0*18), PAYEE.address),   |0|
-*           ('3', '7', PRUF+(0*18), PAYEE.address),   |0|
-*           ('3', '8', PRUF+(0*18), PAYEE.address)   |0|
-*
-* 4 - (AC4) ('4', '1', PRUF+(0*18), PAYEE.address),   |0|
-*           ('4', '2', PRUF+(0*18), PAYEE.address),   |0|
-*           ('4', '3', PRUF+(0*18), PAYEE.address),   |0|
-*           ('4', '4', PRUF+(0*18), PAYEE.address),   |0|
-*           ('4', '5', PRUF+(0*18), PAYEE.address),   |0|
-*           ('4', '6', PRUF+(0*18), PAYEE.address),   |0|
-*           ('4', '7', PRUF+(0*18), PAYEE.address),   |0|
-*           ('4', '8', PRUF+(0*18), PAYEE.address)   |0|
-*
-* 5 - (AC5) ('5', '1', PRUF+(0*18), PAYEE.address),   |0|
-*           ('5', '2', PRUF+(0*18), PAYEE.address),   |0|
-*           ('5', '3', PRUF+(0*18), PAYEE.address),   |0|
-*           ('5', '4', PRUF+(0*18), PAYEE.address),   |0|
-*           ('5', '5', PRUF+(0*18), PAYEE.address),   |0|
-*           ('5', '6', PRUF+(0*18), PAYEE.address),   |0|
-*           ('5', '7', PRUF+(0*18), PAYEE.address),   |0|
-*           ('5', '8', PRUF+(0*18), PAYEE.address)   |0|
-*
-* 6 - (AC11) ('11', '1', PRUF+(0*18), PAYEE.address),   |0|
-*            ('11', '2', PRUF+(0*18), PAYEE.address),   |0|
-*            ('11', '3', PRUF+(0*18), PAYEE.address),   |0|
-*            ('11', '4', PRUF+(0*18), PAYEE.address),   |0|
-*            ('11', '5', PRUF+(0*18), PAYEE.address),   |0|
-*            ('11', '6', PRUF+(0*18), PAYEE.address),   |0|
-*            ('11', '7', PRUF+(0*18), PAYEE.address),   |0|
-*            ('11', '8', PRUF+(0*18), PAYEE.address)   |0|
-*
-* 7 - (AC12) ('12', '1', PRUF+(0*18), PAYEE.address),   |0|
-*            ('12', '2', PRUF+(0*18), PAYEE.address),   |0|
-*            ('12', '3', PRUF+(0*18), PAYEE.address),   |0|
-*            ('12', '4', PRUF+(0*18), PAYEE.address),   |0|
-*            ('12', '5', PRUF+(0*18), PAYEE.address),   |0|
-*            ('12', '6', PRUF+(0*18), PAYEE.address),   |0|
-*            ('12', '7', PRUF+(0*18), PAYEE.address),   |0|
-*            ('12', '8', PRUF+(0*18), PAYEE.address)   |0|
-*
-* 8 - (AC13) ('13', '1', PRUF+(0*18), PAYEE.address),   |0|
-*            ('13', '2', PRUF+(0*18), PAYEE.address),   |0|
-*            ('13', '3', PRUF+(0*18), PAYEE.address),   |0|
-*            ('13', '4', PRUF+(0*18), PAYEE.address),   |0|
-*            ('13', '5', PRUF+(0*18), PAYEE.address),   |0|
-*            ('13', '6', PRUF+(0*18), PAYEE.address),   |0|
-*            ('13', '7', PRUF+(0*18), PAYEE.address),   |0|
-*            ('13', '8', PRUF+(0*18), PAYEE.address)   |0|
-*
-* 9 - (AC14) ('14', '1', PRUF+(0*18), PAYEE.address),   |0|
-*            ('14', '2', PRUF+(0*18), PAYEE.address),   |0|
-*            ('14', '3', PRUF+(0*18), PAYEE.address),   |0|
-*            ('14', '4', PRUF+(0*18), PAYEE.address),   |0|
-*            ('14', '5', PRUF+(0*18), PAYEE.address),   |0|
-*            ('14', '6', PRUF+(0*18), PAYEE.address),   |0|
-*            ('14', '7', PRUF+(0*18), PAYEE.address),   |0|
-*            ('14', '8', PRUF+(0*18), PAYEE.address)   |0|
-*
-* ----------------- AUTHORIZE USERS FOR AC'S (AC_MGR.OO_addUser) -----------------|0|
-* 1 - USER1 (USER1.addressB32, 1, 11),   |0|
-*           (USER1.addressB32, 1, 12)   |0|
-*
-* 2 - USER2 (USER2.addressB32, 1, 13),   |0|
-*           (USER2.addressB32, 1, 14)   |0|
-* 
-* ----------------- SET SHARES ADDRESS (UTIL_TKN.AdminSetSharesAddress) -----------------|0|
-* 1 - OWNER (OWNER.address)   |0|
-*  
 * ----------------- MINT PRUF TO USERS (UTIL_TKN.mint) -----------------|0|
 * 1 - USER1 (USER1.address, PRUF+(0*18))   |0|
 *
 * 2 - USER2 (USER2.address, PRUF+(0*18))   |0|
 * 
-* ----------------- MINT ID'S TO USERS (ID_TKN.mintPRUF_IDToken) -----------------|0|
-* 1 - USER1 (USER1.address, "1")   |0|
-*
-* 2 - USER2 (USER2.address, "2")   |0|
+* ----------------- AUTHORIZE CONTRACTS IN AC'S (STOR.enableContractForAC)-----------------|0|
+* 1 - A_TKN ('A_TKN', '1', '1'),   |0|
+*           ('A_TKN', '1', '2'),   |0|
+*           ('A_TKN', '1', '3'),   |0|
+*           ('A_TKN', '1', '4'),   |0|
+*           ('A_TKN', '1', '5')   |0|
 * 
-* ----------------- TRANSFER AC's TO USER2 (AC_TKN.safeTransferFrom) -----------------|0|
-* 1 - USER2 (USER1.address, USER2.address, "13")   |0|
-*           (USER1.address, USER2.address, "14")   |0|
+* ----------------- SET SHARES ADDRESS (UTIL_TKN.AdminSetSharesAddress) -----------------|0|
+* 1 - OWNER (OWNER.address)   |0|
 * 
 *-----------------------------------------------------------------

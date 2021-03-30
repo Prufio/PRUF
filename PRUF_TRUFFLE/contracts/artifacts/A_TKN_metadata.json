@@ -201,6 +201,19 @@
 			},
 			{
 				"inputs": [],
+				"name": "B320xF_",
+				"outputs": [
+					{
+						"internalType": "bytes32",
+						"name": "",
+						"type": "bytes32"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [],
 				"name": "CONTRACT_ADMIN_ROLE",
 				"outputs": [
 					{
@@ -226,42 +239,6 @@
 				"type": "function"
 			},
 			{
-				"inputs": [
-					{
-						"internalType": "uint256",
-						"name": "_tokenId",
-						"type": "uint256"
-					}
-				],
-				"name": "IdData",
-				"outputs": [
-					{
-						"components": [
-							{
-								"internalType": "uint256",
-								"name": "trustLevel",
-								"type": "uint256"
-							},
-							{
-								"internalType": "bytes32",
-								"name": "URI",
-								"type": "bytes32"
-							},
-							{
-								"internalType": "string",
-								"name": "userName",
-								"type": "string"
-							}
-						],
-						"internalType": "struct ID",
-						"name": "",
-						"type": "tuple"
-					}
-				],
-				"stateMutability": "view",
-				"type": "function"
-			},
-			{
 				"inputs": [],
 				"name": "MINTER_ROLE",
 				"outputs": [
@@ -276,6 +253,26 @@
 			},
 			{
 				"inputs": [],
+				"name": "OO_resolveContractAddresses",
+				"outputs": [],
+				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "address",
+						"name": "_storageAddress",
+						"type": "address"
+					}
+				],
+				"name": "OO_setStorageContract",
+				"outputs": [],
+				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
+				"inputs": [],
 				"name": "PAUSER_ROLE",
 				"outputs": [
 					{
@@ -285,6 +282,32 @@
 					}
 				],
 				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [],
+				"name": "TRUSTED_AGENT_ROLE",
+				"outputs": [
+					{
+						"internalType": "bytes32",
+						"name": "",
+						"type": "bytes32"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "uint256",
+						"name": "_key",
+						"type": "uint256"
+					}
+				],
+				"name": "adminKillTrustedAgent",
+				"outputs": [],
+				"stateMutability": "nonpayable",
 				"type": "function"
 			},
 			{
@@ -354,11 +377,11 @@
 				"inputs": [
 					{
 						"internalType": "uint256",
-						"name": "_tokenId",
+						"name": "tokenId",
 						"type": "uint256"
 					}
 				],
-				"name": "burnPRUF_ID",
+				"name": "discard",
 				"outputs": [],
 				"stateMutability": "nonpayable",
 				"type": "function"
@@ -514,21 +537,40 @@
 				"inputs": [
 					{
 						"internalType": "address",
+						"name": "_addr",
+						"type": "address"
+					}
+				],
+				"name": "isColdWallet",
+				"outputs": [
+					{
+						"internalType": "uint256",
+						"name": "",
+						"type": "uint256"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "address",
 						"name": "_recipientAddress",
 						"type": "address"
 					},
 					{
 						"internalType": "uint256",
-						"name": "_tokenId",
+						"name": "tokenId",
 						"type": "uint256"
 					},
 					{
 						"internalType": "string",
-						"name": "_URI",
+						"name": "_tokenURI",
 						"type": "string"
 					}
 				],
-				"name": "mintPRUF_IDToken",
+				"name": "mintAssetToken",
 				"outputs": [
 					{
 						"internalType": "uint256",
@@ -594,30 +636,6 @@
 			{
 				"inputs": [
 					{
-						"internalType": "address",
-						"name": "_recipientAddress",
-						"type": "address"
-					},
-					{
-						"internalType": "uint256",
-						"name": "_tokenId",
-						"type": "uint256"
-					}
-				],
-				"name": "reMintPRUF_IDToken",
-				"outputs": [
-					{
-						"internalType": "uint256",
-						"name": "",
-						"type": "uint256"
-					}
-				],
-				"stateMutability": "nonpayable",
-				"type": "function"
-			},
-			{
-				"inputs": [
-					{
 						"internalType": "bytes32",
 						"name": "role",
 						"type": "bytes32"
@@ -655,7 +673,7 @@
 				"inputs": [
 					{
 						"internalType": "address",
-						"name": "from",
+						"name": "_from",
 						"type": "address"
 					},
 					{
@@ -665,7 +683,7 @@
 					},
 					{
 						"internalType": "uint256",
-						"name": "_tokenId",
+						"name": "tokenId",
 						"type": "uint256"
 					}
 				],
@@ -678,7 +696,7 @@
 				"inputs": [
 					{
 						"internalType": "address",
-						"name": "from",
+						"name": "_from",
 						"type": "address"
 					},
 					{
@@ -688,7 +706,7 @@
 					},
 					{
 						"internalType": "uint256",
-						"name": "_tokenId",
+						"name": "tokenId",
 						"type": "uint256"
 					},
 					{
@@ -721,26 +739,9 @@
 				"type": "function"
 			},
 			{
-				"inputs": [
-					{
-						"internalType": "uint256",
-						"name": "_tokenId",
-						"type": "uint256"
-					},
-					{
-						"internalType": "bytes32",
-						"name": "_URI",
-						"type": "bytes32"
-					}
-				],
-				"name": "setIdURI",
-				"outputs": [
-					{
-						"internalType": "uint256",
-						"name": "",
-						"type": "uint256"
-					}
-				],
+				"inputs": [],
+				"name": "setColdWallet",
+				"outputs": [],
 				"stateMutability": "nonpayable",
 				"type": "function"
 			},
@@ -748,31 +749,7 @@
 				"inputs": [
 					{
 						"internalType": "uint256",
-						"name": "_tokenId",
-						"type": "uint256"
-					},
-					{
-						"internalType": "uint256",
-						"name": "_trustLevel",
-						"type": "uint256"
-					}
-				],
-				"name": "setTrustLevel",
-				"outputs": [
-					{
-						"internalType": "uint256",
-						"name": "",
-						"type": "uint256"
-					}
-				],
-				"stateMutability": "nonpayable",
-				"type": "function"
-			},
-			{
-				"inputs": [
-					{
-						"internalType": "uint256",
-						"name": "_tokenId",
+						"name": "tokenId",
 						"type": "uint256"
 					},
 					{
@@ -782,30 +759,6 @@
 					}
 				],
 				"name": "setURI",
-				"outputs": [
-					{
-						"internalType": "uint256",
-						"name": "",
-						"type": "uint256"
-					}
-				],
-				"stateMutability": "nonpayable",
-				"type": "function"
-			},
-			{
-				"inputs": [
-					{
-						"internalType": "uint256",
-						"name": "_tokenId",
-						"type": "uint256"
-					},
-					{
-						"internalType": "string",
-						"name": "_userName",
-						"type": "string"
-					}
-				],
-				"name": "setUserName",
 				"outputs": [
 					{
 						"internalType": "uint256",
@@ -871,7 +824,7 @@
 				"inputs": [
 					{
 						"internalType": "uint256",
-						"name": "_tokenId",
+						"name": "tokenId",
 						"type": "uint256"
 					}
 				],
@@ -946,7 +899,7 @@
 				"inputs": [
 					{
 						"internalType": "address",
-						"name": "from",
+						"name": "_from",
 						"type": "address"
 					},
 					{
@@ -969,38 +922,43 @@
 				"inputs": [
 					{
 						"internalType": "uint256",
-						"name": "_tokenId",
+						"name": "tokenId",
 						"type": "uint256"
 					}
 				],
-				"name": "trustedLevel",
-				"outputs": [
-					{
-						"internalType": "uint256",
-						"name": "",
-						"type": "uint256"
-					}
-				],
-				"stateMutability": "view",
+				"name": "trustedAgentBurn",
+				"outputs": [],
+				"stateMutability": "nonpayable",
 				"type": "function"
 			},
 			{
 				"inputs": [
 					{
 						"internalType": "address",
-						"name": "_addr",
+						"name": "from",
 						"type": "address"
-					}
-				],
-				"name": "trustedLevelByAddress",
-				"outputs": [
+					},
+					{
+						"internalType": "address",
+						"name": "to",
+						"type": "address"
+					},
 					{
 						"internalType": "uint256",
-						"name": "",
+						"name": "tokenId",
 						"type": "uint256"
 					}
 				],
-				"stateMutability": "view",
+				"name": "trustedAgentTransferFrom",
+				"outputs": [],
+				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
+				"inputs": [],
+				"name": "unSetColdWallet",
+				"outputs": [],
+				"stateMutability": "nonpayable",
 				"type": "function"
 			},
 			{
@@ -1008,6 +966,29 @@
 				"name": "unpause",
 				"outputs": [],
 				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "uint256",
+						"name": "tokenId",
+						"type": "uint256"
+					},
+					{
+						"internalType": "uint32",
+						"name": "_assetClass",
+						"type": "uint32"
+					},
+					{
+						"internalType": "string",
+						"name": "_authCode",
+						"type": "string"
+					}
+				],
+				"name": "validatePipToken",
+				"outputs": [],
+				"stateMutability": "view",
 				"type": "function"
 			}
 		],
@@ -1026,6 +1007,9 @@
 				},
 				"burn(uint256)": {
 					"details": "Burns `tokenId`. See {ERC721-_burn}. Requirements: - The caller must own `tokenId` or be an approved operator."
+				},
+				"discard(uint256)": {
+					"details": "Safely burns a token and sets the corresponding RGT to zero in storage."
 				},
 				"getApproved(uint256)": {
 					"details": "See {IERC721-getApproved}."
@@ -1067,15 +1051,20 @@
 					"details": "Revokes `role` from `account`. If `account` had been granted `role`, emits a {RoleRevoked} event. Requirements: - the caller must have ``role``'s admin role."
 				},
 				"safeTransferFrom(address,address,uint256)": {
-					"details": "Safely blocks the transfer of a given token ID to another address If the target address is a contract, it must implement {IERC721Receiver-onERC721Received}, which is called upon a safe transfer, and return the magic value `bytes4(keccak256(\"onERC721Received(address,address,uint256,bytes)\"))`; otherwise, the transfer is reverted. Requires the _msgSender() to be the owner, approved, or operator"
+					"details": "Safely transfers the ownership of a given token ID to another address If the target address is a contract, it must implement {IERC721Receiver-onERC721Received}, which is called upon a safe transfer, and return the magic value `bytes4(keccak256(\"onERC721Received(address,address,uint256,bytes)\"))`; otherwise, the transfer is reverted. Requires the _msgSender() to be the owner, approved, or operator",
+					"params": {
+						"_from": "current owner of the token",
+						"to": "address to receive the ownership of the given token ID",
+						"tokenId": "uint256 ID of the token to be transferred"
+					}
 				},
 				"safeTransferFrom(address,address,uint256,bytes)": {
-					"details": "Safely blocks the transfer of a given token ID to another address If the target address is a contract, it must implement {IERC721Receiver-onERC721Received}, which is called upon a safe transfer, and return the magic value `bytes4(keccak256(\"onERC721Received(address,address,uint256,bytes)\"))`; otherwise, the transfer is reverted. Requires the _msgSender() to be the owner, approved, or operator",
+					"details": "Safely transfers the ownership of a given token ID to another address If the target address is a contract, it must implement {IERC721Receiver-onERC721Received}, which is called upon a safe transfer, and return the magic value `bytes4(keccak256(\"onERC721Received(address,address,uint256,bytes)\"))`; otherwise, the transfer is reverted. Requires the _msgSender() to be the owner, approved, or operator",
 					"params": {
 						"_data": "bytes data to send along with a safe transfer check",
-						"_tokenId": "uint256 ID of the token to be transferred",
-						"from": "current owner of the token",
-						"to": "address to receive the ownership of the given token ID"
+						"_from": "current owner of the token",
+						"to": "address to receive the ownership of the given token ID",
+						"tokenId": "uint256 ID of the token to be transferred"
 					}
 				},
 				"setApprovalForAll(address,bool)": {
@@ -1100,7 +1089,23 @@
 					"details": "See {IERC721Enumerable-totalSupply}."
 				},
 				"transferFrom(address,address,uint256)": {
-					"details": "Blocks the transfer of a given token ID to another address Usage of this method is discouraged, use {safeTransferFrom} whenever possible. Requires the _msgSender() to be the owner, approved, or operator."
+					"details": "Transfers the ownership of a given token ID to another address. Usage of this method is discouraged, use {safeTransferFrom} whenever possible. Requires the _msgSender() to be the owner, approved, or operator.",
+					"params": {
+						"_from": "current owner of the token",
+						"to": "address to receive the ownership of the given token ID",
+						"tokenId": "uint256 ID of the token to be transferred"
+					}
+				},
+				"trustedAgentBurn(uint256)": {
+					"details": "Safely burns a token"
+				},
+				"trustedAgentTransferFrom(address,address,uint256)": {
+					"details": "Transfers the ownership of a given token ID to another address by a TRUSTED_AGENT. Usage of this method is discouraged, use {safeTransferFrom} whenever possible. Requires the _msgSender() to be the owner, approved, or operator.",
+					"params": {
+						"from": "current owner of the token",
+						"to": "address to receive the ownership of the given token ID",
+						"tokenId": "uint256 ID of the token to be transferred"
+					}
 				},
 				"unpause()": {
 					"details": "Unpauses all token transfers. See {ERC721Pausable} and {Pausable-_unpause}. Requirements: - the caller must have the `PAUSER_ROLE`."
@@ -1116,7 +1121,7 @@
 	},
 	"settings": {
 		"compilationTarget": {
-			"PRUF_ID_TKN.sol": "ID_TKN"
+			"PRUF_A_TKN.sol": "A_TKN"
 		},
 		"evmVersion": "istanbul",
 		"libraries": {},
@@ -1274,12 +1279,12 @@
 				"dweb:/ipfs/QmUpgMg8EFDnv87ePKUjXxXpJT3qwHRj9VDNSnRxu7T9sy"
 			]
 		},
-		"PRUF_ID_TKN.sol": {
-			"keccak256": "0xf77ea570e3114d28eba065f2f54a5a9fb537d8c09030ed990a5b2c1281408eab",
+		"PRUF_A_TKN.sol": {
+			"keccak256": "0x55cc462e78a16634ce2bd8f9a85ac7d35f524dd0ed2df7b9ddfcb7b69f4327bb",
 			"license": "UNLICENSED",
 			"urls": [
-				"bzz-raw://ecd784c38e102b6d47e7403af751393f3a1da2d2b204e275bb92af3f5b6f7120",
-				"dweb:/ipfs/QmRFrQGPVrEfTVhMuugcKixL7VD7t53N2GRPSfRUg74dFY"
+				"bzz-raw://37d6aafc458c7530e26bc84fbd2806da3579f18f5c5ab12c369e475d14b06b13",
+				"dweb:/ipfs/QmWdYdr628eNJCWVp1yjGPuPHnsB99v9RJsYsVUohWQYDN"
 			]
 		},
 		"PRUF_INTERFACES.sol": {

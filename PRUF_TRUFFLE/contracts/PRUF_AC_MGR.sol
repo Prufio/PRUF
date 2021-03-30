@@ -111,7 +111,7 @@ contract AC_MGR is BASIC {
     /*
      * @dev Tincreases (but cannot decrease) price share for a given AC
      * !! to be used with great caution
-     * This breaks decentralization and must eventually be given over to some kind of governance contract.
+     * This breaks decentralization and must eventually be given over to some kind of governance contract. //CTS:EXAMINE
      */
 
     function adminIncreaseShare(
