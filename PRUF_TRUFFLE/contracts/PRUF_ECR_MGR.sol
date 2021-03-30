@@ -105,6 +105,8 @@ contract ECR_MGR is BASIC {
         //^^^^^^^checks^^^^^^^^^
 
         delete escrows[_idxHash];
+        delete EscrowDataLight[_idxHash];
+        delete EscrowDataHeavy[_idxHash];
         //^^^^^^^effects^^^^^^^^^
 
         STOR.endEscrow(_idxHash);
