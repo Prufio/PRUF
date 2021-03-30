@@ -53,7 +53,7 @@ contract APP_NC is CORE {
         //^^^^^^^Checks^^^^^^^^^
 
         Record memory rec;
-        rec.Ipfs1 = _IpfsHash;
+        rec.Ipfs1a = _IpfsHash;
         //^^^^^^^effects^^^^^^^^^
 
         createRecord(_idxHash, _rgtHash, _assetClass, _countDownStart);
@@ -136,7 +136,7 @@ contract APP_NC is CORE {
     }
 
     /*
-     * @dev Modify record.Ipfs2 with confirmation CTS:EXAMINE comment
+     * @dev Modify record.Ipfs2a with confirmation CTS:EXAMINE comment
      */
     function addIpfs2Note(bytes32 _idxHash, bytes32 _IpfsHash)
         external
@@ -152,13 +152,13 @@ contract APP_NC is CORE {
         );
         //^^^^^^^checks^^^^^^^^^
 
-        rec.Ipfs2 = _IpfsHash;
+        rec.Ipfs2a = _IpfsHash;
         //^^^^^^^effects^^^^^^^^^
 
         writeRecordIpfs2(_idxHash, rec);
         deductServiceCosts(rec.assetClass, 3);
 
-        return rec.Ipfs2;
+        return rec.Ipfs2a;
         //^^^^^^^interactions^^^^^^^^^
     }
 }

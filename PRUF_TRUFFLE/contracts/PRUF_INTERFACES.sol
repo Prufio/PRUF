@@ -27,8 +27,9 @@ struct Record {
     uint32 countDown; // Variable that can only be dencreased from countDownStart
     uint32 countDownStart; // Starting point for countdown variable (set once)
     uint120 price; //price set for items offered for sale
-    bytes32 Ipfs1; // Publically viewable asset description
-    bytes32 Ipfs2; // Publically viewable immutable notes
+    bytes32 Ipfs1a; // Publically viewable asset description
+    //bytes32 Ipfs1a; // Publically viewable asset description
+    bytes32 Ipfs2a; // Publically viewable immutable notes
     bytes32 rightsHolder; // KEK256 Registered owner
 }
 
@@ -1241,12 +1242,12 @@ interface STOR_Interface {
     function clearPrice(bytes32 _idxHash) external;
 
     /*
-     * @dev Modify record Ipfs1 data
+     * @dev Modify record Ipfs1a data
      */
     function modifyIpfs1(bytes32 _idxHash, bytes32 _Ipfs1) external;
 
     /*
-     * @dev Write record Ipfs2 data
+     * @dev Write record Ipfs2a data
      */
     function modifyIpfs2(bytes32 _idxHash, bytes32 _Ipfs2) external;
 

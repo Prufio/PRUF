@@ -634,7 +634,7 @@ contract STOR is AccessControl, ReentrancyGuard, Pausable {
     }
 
     /*
-     * @dev Modify record Ipfs1 data
+     * @dev Modify record Ipfs1a data
      */
     function modifyIpfs1(bytes32 _idxHash, bytes32 _Ipfs1)
         external
@@ -647,10 +647,10 @@ contract STOR is AccessControl, ReentrancyGuard, Pausable {
         Record memory rec = database[_idxHash];
         require((isTransferred(rec.assetStatus) == 0), "S:MI1: Txfrd asset"); //STAT UNREACHABLE
 
-        require((rec.Ipfs1 != _Ipfs1), "S:MI1: New value = old");
+        require((rec.Ipfs1a != _Ipfs1), "S:MI1: New value = old");
         //^^^^^^^checks^^^^^^^^^
 
-        rec.Ipfs1 = _Ipfs1;
+        rec.Ipfs1a = _Ipfs1;
 
         database[_idxHash] = rec;
         //^^^^^^^effects^^^^^^^^^
@@ -674,10 +674,10 @@ contract STOR is AccessControl, ReentrancyGuard, Pausable {
         require((isLostOrStolen(rec.assetStatus) == 0), "S:MI2: L/S asset"); //asset cannot be in lost or stolen status
         require((isTransferred(rec.assetStatus) == 0), "S:MI2: Txfrd. asset"); //asset cannot be in transferred status
 
-        require((rec.Ipfs2 == 0), "S:MI2: Cannot overwrite I2"); //IPFS2 record is immutable after first write
+        require((rec.Ipfs2a == 0), "S:MI2: Cannot overwrite I2"); //IPFS2 record is immutable after first write
         //^^^^^^^checks^^^^^^^^^
 
-        rec.Ipfs2 = _Ipfs2;
+        rec.Ipfs2a = _Ipfs2;
 
         database[_idxHash] = rec;
         //^^^^^^^effects^^^^^^^^^
@@ -734,8 +734,8 @@ contract STOR is AccessControl, ReentrancyGuard, Pausable {
             rec.assetClass,
             rec.countDown,
             rec.countDownStart,
-            rec.Ipfs1,
-            rec.Ipfs2,
+            rec.Ipfs1a,
+            rec.Ipfs2a,
             rec.numberOfTransfers
         );
         //^^^^^^^interactions^^^^^^^^^

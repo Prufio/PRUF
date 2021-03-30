@@ -410,7 +410,7 @@ contract MAL_APP is CORE_MAL {
     // }
 
     /*
-     * @dev Modify **Record**.Ipfs1 with confirmation
+     * @dev Modify **Record**.Ipfs1a with confirmation
      */
     function _modIpfs1(
         bytes32 _idxHash,
@@ -442,7 +442,7 @@ contract MAL_APP is CORE_MAL {
         //     (userType > 0) && (userType < 10),
         //     "NP:MI1: User not authorized to modify records in specified asset class"
         // );
-        // require(rec.Ipfs1 != _IpfsHash, "NP:MI1: New data same as old");
+        // require(rec.Ipfs1a != _IpfsHash, "NP:MI1: New data same as old");
 
         // require(
         //     isEscrow(rec.assetStatus) == 0,
@@ -458,17 +458,17 @@ contract MAL_APP is CORE_MAL {
         // );
         //^^^^^^^checks^^^^^^^^^
 
-        rec.Ipfs1 = _IpfsHash;
+        rec.Ipfs1a = _IpfsHash;
         //^^^^^^^effects^^^^^^^^^
 
         writeRecordIpfs1(_idxHash, rec);
 
-        return rec.Ipfs1;
+        return rec.Ipfs1a;
         //^^^^^^^interactions^^^^^^^^^
     }
 
     /*
-     * @dev Modify **Record**.Ipfs2 with confirmation
+     * @dev Modify **Record**.Ipfs2a with confirmation
      */
     function addIpfs2Note(
         bytes32 _idxHash,
@@ -514,8 +514,8 @@ contract MAL_APP is CORE_MAL {
         //     "A:FMR: Asset needs re-imported"
         // );
         // require(
-        //     rec.Ipfs2 == 0,
-        //     "A:I2: Ipfs2 has data already. Overwrite not permitted"
+        //     rec.Ipfs2a == 0,
+        //     "A:I2: Ipfs2a has data already. Overwrite not permitted"
         // );
         // require(
         //     rec.rightsHolder == _rgtHash,
@@ -523,14 +523,14 @@ contract MAL_APP is CORE_MAL {
         // );
         //^^^^^^^checks^^^^^^^^^
 
-        rec.Ipfs2 = _IpfsHash;
+        rec.Ipfs2a = _IpfsHash;
         //^^^^^^^effects^^^^^^^^^
 
         writeRecordIpfs2(_idxHash, rec);
 
         deductServiceCosts(rec.assetClass, 3);
 
-        return rec.Ipfs2;
+        return rec.Ipfs2a;
         //^^^^^^^interactions^^^^^^^^^
     }
 

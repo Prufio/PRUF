@@ -252,7 +252,7 @@ contract DECORATE is
     }
 
     /*
-     * @dev Modify **Record**.Ipfs1
+     * @dev Modify **Record**.Ipfs1a
      */
     function _modIpfs1(
         uint256 _tokenID,
@@ -285,7 +285,7 @@ contract DECORATE is
 
         //^^^^^^^checks^^^^^^^^^
 
-        rec.Ipfs1 = _IpfsHash;
+        rec.Ipfs1a = _IpfsHash;
         //^^^^^^^effects^^^^^^^^^
 
         writeRecordIpfs1(idxHash, rec);
@@ -294,7 +294,7 @@ contract DECORATE is
     }
 
     /*
-     * @dev Modify **Record**.Ipfs2
+     * @dev Modify **Record**.Ipfs2a
      */
     function addIpfs2Note(
         uint256 _tokenID,
@@ -326,7 +326,7 @@ contract DECORATE is
         );
         //^^^^^^^checks^^^^^^^^^
 
-        rec.Ipfs2 = _IpfsHash;
+        rec.Ipfs2a = _IpfsHash;
         //^^^^^^^effects^^^^^^^^^
 
         writeRecordIpfs2(idxHash, rec);

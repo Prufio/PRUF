@@ -208,7 +208,7 @@ contract NP_NC is CORE {
     }
 
     /*
-     * @dev Modify **Record**.Ipfs1 with confirmation
+     * @dev Modify **Record**.Ipfs1a with confirmation
      */
     function _modIpfs1(bytes32 _idxHash, bytes32 _IpfsHash)
         external
@@ -225,13 +225,13 @@ contract NP_NC is CORE {
         );
         //^^^^^^^checks^^^^^^^^^
 
-        rec.Ipfs1 = _IpfsHash;
+        rec.Ipfs1a = _IpfsHash;
         //^^^^^^^effects^^^^^^^^^
 
         writeRecordIpfs1(_idxHash, rec);
         deductServiceCosts(rec.assetClass, 8);
 
-        return rec.Ipfs1;
+        return rec.Ipfs1a;
         //^^^^^^^interactions^^^^^^^^^
     }
 }

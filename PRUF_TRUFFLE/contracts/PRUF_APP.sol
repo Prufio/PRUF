@@ -189,7 +189,7 @@ contract APP is CORE {
     }
 
     /*
-     * @dev Modify **Record**.Ipfs2 with confirmation
+     * @dev Modify **Record**.Ipfs2a with confirmation
      */
     function addIpfs2Note(
         bytes32 _idxHash,
@@ -217,13 +217,13 @@ contract APP is CORE {
         );
         //^^^^^^^checks^^^^^^^^^
 
-        rec.Ipfs2 = _IpfsHash;
+        rec.Ipfs2a = _IpfsHash;
         //^^^^^^^effects^^^^^^^^^
 
         writeRecordIpfs2(_idxHash, rec);
         deductServiceCosts(rec.assetClass, 3);
 
-        return rec.Ipfs2;
+        return rec.Ipfs2a;
         //^^^^^^^interactions^^^^^^^^^
     }
 }
