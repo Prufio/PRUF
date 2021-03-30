@@ -44,7 +44,8 @@ contract APP_NC is CORE {
         bytes32 _rgtHash,
         uint32 _assetClass,
         uint32 _countDownStart,
-        bytes32 _IpfsHash
+        bytes32 _Ipfs1a,
+        bytes32 _Ipfs1b
     ) external nonReentrant whenNotPaused {
         require(
             (ID_TKN.balanceOf(_msgSender()) == 1), //_msgSender() is token holder
@@ -53,7 +54,8 @@ contract APP_NC is CORE {
         //^^^^^^^Checks^^^^^^^^^
 
         Record memory rec;
-        rec.Ipfs1a = _IpfsHash;
+        rec.Ipfs1a = _Ipfs1a;
+        rec.Ipfs1b = _Ipfs1b;
         //^^^^^^^effects^^^^^^^^^
 
         createRecord(_idxHash, _rgtHash, _assetClass, _countDownStart);
@@ -136,14 +138,13 @@ contract APP_NC is CORE {
     }
 
     /*
-     * @dev Modify record.Ipfs2a with confirmation CTS:EXAMINE comment
+     * @dev Modify record.Ipfs2 with confirmation CTS:EXAMINE comment
      */
-    function addIpfs2Note(bytes32 _idxHash, bytes32 _IpfsHash)
+    function addIpfs2Note(bytes32 _idxHash, bytes32 _Ipfs2a, bytes32 _Ipfs2b)
         external
         nonReentrant
         whenNotPaused
         isAuthorized(_idxHash)
-        returns (bytes32)
     {
         Record memory rec = getRecord(_idxHash);
         require( //STATE UNREACHABLE
@@ -152,13 +153,13 @@ contract APP_NC is CORE {
         );
         //^^^^^^^checks^^^^^^^^^
 
-        rec.Ipfs2a = _IpfsHash;
+        rec.Ipfs2a = _Ipfs2a;
+        rec.Ipfs2b = _Ipfs2b;
         //^^^^^^^effects^^^^^^^^^
 
         writeRecordIpfs2(_idxHash, rec);
         deductServiceCosts(rec.assetClass, 3);
 
-        return rec.Ipfs2a;
         //^^^^^^^interactions^^^^^^^^^
     }
 }

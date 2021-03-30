@@ -210,7 +210,7 @@ contract NP_NC is CORE {
     /*
      * @dev Modify **Record**.Ipfs1a with confirmation
      */
-    function _modIpfs1(bytes32 _idxHash, bytes32 _IpfsHash)
+    function _modIpfs1(bytes32 _idxHash, bytes32 _Ipfs1a, bytes32 _Ipfs1b)
         external
         nonReentrant
         whenNotPaused
@@ -225,7 +225,8 @@ contract NP_NC is CORE {
         );
         //^^^^^^^checks^^^^^^^^^
 
-        rec.Ipfs1a = _IpfsHash;
+        rec.Ipfs1a = _Ipfs1a;
+        rec.Ipfs1b = _Ipfs1b;
         //^^^^^^^effects^^^^^^^^^
 
         writeRecordIpfs1(_idxHash, rec);

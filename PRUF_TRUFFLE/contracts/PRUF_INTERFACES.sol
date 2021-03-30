@@ -28,8 +28,10 @@ struct Record {
     uint32 countDownStart; // Starting point for countdown variable (set once)
     uint120 price; //price set for items offered for sale
     bytes32 Ipfs1a; // Publically viewable asset description
-    //bytes32 Ipfs1a; // Publically viewable asset description
     bytes32 Ipfs2a; // Publically viewable immutable notes
+    bytes32 Ipfs1b; // Publically viewable asset description
+    bytes32 Ipfs2b; // Publically viewable immutable notes
+    
     bytes32 rightsHolder; // KEK256 Registered owner
 }
 
@@ -1244,12 +1246,12 @@ interface STOR_Interface {
     /*
      * @dev Modify record Ipfs1a data
      */
-    function modifyIpfs1(bytes32 _idxHash, bytes32 _Ipfs1) external;
+    function modifyIpfs1(bytes32 _idxHash, bytes32 _Ipfs1a, bytes32 _Ipfs1b) external;
 
     /*
-     * @dev Write record Ipfs2a data
+     * @dev Write record Ipfs2 data
      */
-    function modifyIpfs2(bytes32 _idxHash, bytes32 _Ipfs2) external;
+    function modifyIpfs2(bytes32 _idxHash, bytes32 _Ipfs2a, bytes32 _Ipfs2b) external;
 
     /*
      * @dev return a record from the database, including rgt

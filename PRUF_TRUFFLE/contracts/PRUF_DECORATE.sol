@@ -257,7 +257,8 @@ contract DECORATE is
     function _modIpfs1(
         uint256 _tokenID,
         address _tokenContract,
-        bytes32 _IpfsHash
+        bytes32 _Ipfs1a,
+        bytes32 _Ipfs1b
     )
         external
         nonReentrant
@@ -285,7 +286,8 @@ contract DECORATE is
 
         //^^^^^^^checks^^^^^^^^^
 
-        rec.Ipfs1a = _IpfsHash;
+        rec.Ipfs1a = _Ipfs1a;
+        rec.Ipfs1b = _Ipfs1b;
         //^^^^^^^effects^^^^^^^^^
 
         writeRecordIpfs1(idxHash, rec);
@@ -294,12 +296,15 @@ contract DECORATE is
     }
 
     /*
-     * @dev Modify **Record**.Ipfs2a
+     * @dev Modify **Record**.Ipfs2
      */
     function addIpfs2Note(
         uint256 _tokenID,
         address _tokenContract,
-        bytes32 _IpfsHash
+        bytes32 _Ipfs2a,
+        bytes32 _Ipfs2b
+        
+
     )
         external
         nonReentrant
@@ -326,7 +331,8 @@ contract DECORATE is
         );
         //^^^^^^^checks^^^^^^^^^
 
-        rec.Ipfs2a = _IpfsHash;
+        rec.Ipfs2a = _Ipfs2a;
+        rec.Ipfs2b = _Ipfs2b;
         //^^^^^^^effects^^^^^^^^^
 
         writeRecordIpfs2(idxHash, rec);

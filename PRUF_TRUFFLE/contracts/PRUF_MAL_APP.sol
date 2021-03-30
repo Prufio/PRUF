@@ -414,8 +414,8 @@ contract MAL_APP is CORE_MAL {
      */
     function _modIpfs1(
         bytes32 _idxHash,
-        // bytes32 _rgtHash,
-        bytes32 _IpfsHash
+        bytes32 _Ipfs1a,
+        bytes32 _Ipfs1b
     )
         external
         // nonReentrant
@@ -458,7 +458,8 @@ contract MAL_APP is CORE_MAL {
         // );
         //^^^^^^^checks^^^^^^^^^
 
-        rec.Ipfs1a = _IpfsHash;
+        rec.Ipfs1a = _Ipfs1a;
+        rec.Ipfs1b = _Ipfs1b;
         //^^^^^^^effects^^^^^^^^^
 
         writeRecordIpfs1(_idxHash, rec);
@@ -468,12 +469,12 @@ contract MAL_APP is CORE_MAL {
     }
 
     /*
-     * @dev Modify **Record**.Ipfs2a with confirmation
+     * @dev Modify **Record**.Ipfs2 with confirmation
      */
     function addIpfs2Note(
         bytes32 _idxHash,
-        // bytes32 _rgtHash,
-        bytes32 _IpfsHash
+        bytes32 _Ipfs2a,
+        bytes32 _Ipfs2b
     )
         external
         
@@ -523,14 +524,15 @@ contract MAL_APP is CORE_MAL {
         // );
         //^^^^^^^checks^^^^^^^^^
 
-        rec.Ipfs2a = _IpfsHash;
+        rec.Ipfs2a = _Ipfs2a;
+        rec.Ipfs2b = _Ipfs2b;
         //^^^^^^^effects^^^^^^^^^
 
         writeRecordIpfs2(_idxHash, rec);
 
         deductServiceCosts(rec.assetClass, 3);
 
-        return rec.Ipfs2a;
+        //return rec.Ipfs2a;
         //^^^^^^^interactions^^^^^^^^^
     }
 

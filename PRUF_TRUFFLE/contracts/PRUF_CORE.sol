@@ -129,7 +129,7 @@ contract CORE is BASIC {
     {
         //^^^^^^^Checks^^^^^^^^^
 
-        STOR.modifyIpfs1(_idxHash, _rec.Ipfs1a); // Send data to storage
+        STOR.modifyIpfs1(_idxHash, _rec.Ipfs1a, _rec.Ipfs1b); // Send data to storage
         //^^^^^^^interactions^^^^^^^^^
     }
 
@@ -144,7 +144,7 @@ contract CORE is BASIC {
     {
         //^^^^^^^checks^^^^^^^^^
 
-        STOR.modifyIpfs2(_idxHash, _rec.Ipfs2a); // Send data to storage
+        STOR.modifyIpfs2(_idxHash, _rec.Ipfs2a, _rec.Ipfs2b); // Send data to storage
         //^^^^^^^interactions^^^^^^^^^
     }
 

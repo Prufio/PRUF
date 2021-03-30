@@ -634,9 +634,9 @@ contract STOR is AccessControl, ReentrancyGuard, Pausable {
     }
 
     /*
-     * @dev Modify record Ipfs1a data
+     * @dev Modify record Ipfs1 data
      */
-    function modifyIpfs1(bytes32 _idxHash, bytes32 _Ipfs1)
+    function modifyIpfs1(bytes32 _idxHash, bytes32 _Ipfs1a, bytes32 _Ipfs1b)
         external
         nonReentrant
         whenNotPaused
@@ -647,10 +647,11 @@ contract STOR is AccessControl, ReentrancyGuard, Pausable {
         Record memory rec = database[_idxHash];
         require((isTransferred(rec.assetStatus) == 0), "S:MI1: Txfrd asset"); //STAT UNREACHABLE
 
-        require((rec.Ipfs1a != _Ipfs1), "S:MI1: New value = old");
+        require((rec.Ipfs1a != _Ipfs1a) || (rec.Ipfs1b != _Ipfs1b), "S:MI1: New value = old");
         //^^^^^^^checks^^^^^^^^^
 
-        rec.Ipfs1a = _Ipfs1;
+        rec.Ipfs1a = _Ipfs1a;
+        rec.Ipfs1b = _Ipfs1b;
 
         database[_idxHash] = rec;
         //^^^^^^^effects^^^^^^^^^
@@ -661,7 +662,8 @@ contract STOR is AccessControl, ReentrancyGuard, Pausable {
     function modifyIpfs2(
         //bytes32 _userHash,
         bytes32 _idxHash,
-        bytes32 _Ipfs2
+        bytes32 _Ipfs2a,
+        bytes32 _Ipfs2b
     )
         external
         nonReentrant
@@ -674,10 +676,11 @@ contract STOR is AccessControl, ReentrancyGuard, Pausable {
         require((isLostOrStolen(rec.assetStatus) == 0), "S:MI2: L/S asset"); //asset cannot be in lost or stolen status
         require((isTransferred(rec.assetStatus) == 0), "S:MI2: Txfrd. asset"); //asset cannot be in transferred status
 
-        require((rec.Ipfs2a == 0), "S:MI2: Cannot overwrite I2"); //IPFS2 record is immutable after first write
+        require((rec.Ipfs2a == 0) && (rec.Ipfs2b == 0), "S:MI2: Cannot overwrite I2"); //IPFS2 record is immutable after first write
         //^^^^^^^checks^^^^^^^^^
 
-        rec.Ipfs2a = _Ipfs2;
+        rec.Ipfs2a = _Ipfs2a;
+        rec.Ipfs2b = _Ipfs2b;
 
         database[_idxHash] = rec;
         //^^^^^^^effects^^^^^^^^^
@@ -714,6 +717,8 @@ contract STOR is AccessControl, ReentrancyGuard, Pausable {
             uint32,
             bytes32,
             bytes32,
+            bytes32,
+            bytes32,
             uint16
         )
     {
@@ -735,7 +740,9 @@ contract STOR is AccessControl, ReentrancyGuard, Pausable {
             rec.countDown,
             rec.countDownStart,
             rec.Ipfs1a,
+            rec.Ipfs1b,
             rec.Ipfs2a,
+            rec.Ipfs2b,
             rec.numberOfTransfers
         );
         //^^^^^^^interactions^^^^^^^^^

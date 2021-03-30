@@ -189,18 +189,18 @@ contract APP is CORE {
     }
 
     /*
-     * @dev Modify **Record**.Ipfs2a with confirmation
+     * @dev Modify **Record**.Ipfs2 with confirmation
      */
     function addIpfs2Note(
         bytes32 _idxHash,
         bytes32 _rgtHash,
-        bytes32 _IpfsHash
+        bytes32 _Ipfs2a,
+        bytes32 _Ipfs2b
     )
         external
         nonReentrant
         whenNotPaused
         isAuthorized(_idxHash)
-        returns (bytes32)
     {
         Record memory rec = getRecord(_idxHash);
         uint8 userType = getCallingUserType(rec.assetClass);
@@ -217,13 +217,13 @@ contract APP is CORE {
         );
         //^^^^^^^checks^^^^^^^^^
 
-        rec.Ipfs2a = _IpfsHash;
+        rec.Ipfs2a = _Ipfs2a;
+        rec.Ipfs2b = _Ipfs2b;
         //^^^^^^^effects^^^^^^^^^
 
         writeRecordIpfs2(_idxHash, rec);
         deductServiceCosts(rec.assetClass, 3);
 
-        return rec.Ipfs2a;
         //^^^^^^^interactions^^^^^^^^^
     }
 }
