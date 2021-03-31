@@ -2137,6 +2137,7 @@ contract('TheWorks', accounts => {
             asset12,
             rgt12,
             asset12,
+            rgt000,
             { from: account2 }
         )
     })
@@ -2183,6 +2184,7 @@ contract('TheWorks', accounts => {
             asset12,
             rgt12,
             asset12,
+            rgt000,
             { from: account2 }
         )
     })
@@ -2386,6 +2388,7 @@ contract('TheWorks', accounts => {
         return NP_NC._modIpfs1(
             asset12,
             rgt12,
+            rgt000,
             { from: account2 }
         )
     })
@@ -2785,6 +2788,7 @@ contract('TheWorks', accounts => {
         return NP_NC._modIpfs1(
             asset13,
             asset13,
+            rgt000,
             { from: account4 }
         )
     })
@@ -2807,6 +2811,7 @@ contract('TheWorks', accounts => {
         return APP_NC.addIpfs2Note(
             asset13,
             asset13,
+            rgt000,
             { from: account4 }
         )
     })
@@ -3147,6 +3152,7 @@ contract('TheWorks', accounts => {
             asset13,
             rgt13,
             rgt13,
+            rgt000,
             { from: account4 }
         )
     })
@@ -3487,6 +3493,7 @@ contract('TheWorks', accounts => {
         return NP_NC._modIpfs1(
             asset14,
             asset14,
+            rgt000,
             { from: account4 }
         )
     })
@@ -3509,6 +3516,7 @@ contract('TheWorks', accounts => {
         return APP_NC.addIpfs2Note(
             asset14,
             asset14,
+            rgt000,
             { from: account4 }
         )
     })
@@ -3849,6 +3857,7 @@ contract('TheWorks', accounts => {
             asset14,
             rgt14,
             rgt14,
+            rgt000,
             { from: account4 }
         )
     })

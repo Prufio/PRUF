@@ -2495,6 +2495,7 @@ it('Should authorize all minter contracts for minting A_TKN(s)', async () => {
             asset12,
             rgt12,
             asset12,
+            rgt000,
             { from: account2 }
         )
     })
@@ -2545,6 +2546,7 @@ it('Should authorize all minter contracts for minting A_TKN(s)', async () => {
         return APP_NC.addIpfs2Note(
             asset12,
             asset12,
+            rgt000,
             { from: account2 }
         )
     })
@@ -2600,6 +2602,7 @@ it('Should authorize all minter contracts for minting A_TKN(s)', async () => {
         return NP_NC._modIpfs1(
             asset12,
             rgt12,
+            rgt000,
             { from: account2 }
         )
     })
