@@ -215,7 +215,6 @@ contract NP_NC is CORE {
         nonReentrant
         whenNotPaused
         isAuthorized(_idxHash)
-        returns (bytes32)
     {
         Record memory rec = getRecord(_idxHash);
 
@@ -231,8 +230,6 @@ contract NP_NC is CORE {
 
         writeRecordIpfs1(_idxHash, rec);
         deductServiceCosts(rec.assetClass, 8);
-
-        return rec.Ipfs1a;
         //^^^^^^^interactions^^^^^^^^^
     }
 }

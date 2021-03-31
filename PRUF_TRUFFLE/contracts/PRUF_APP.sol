@@ -223,7 +223,6 @@ contract APP is CORE {
 
         writeRecordIpfs2(_idxHash, rec);
         deductServiceCosts(rec.assetClass, 3);
-
         //^^^^^^^interactions^^^^^^^^^
     }
 }

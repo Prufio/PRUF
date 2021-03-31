@@ -176,7 +176,7 @@ contract NP is CORE {
     }
 
     /*
-     * @dev Modify **Record**.Ipfs1a with confirmation
+     * @dev Modify **Record**.Ipfs1
      */
     function _modIpfs1(
         bytes32 _idxHash,
@@ -188,7 +188,6 @@ contract NP is CORE {
         nonReentrant
         whenNotPaused
         isAuthorized(_idxHash)
-        returns (bytes32)
     {
         Record memory rec = getRecord(_idxHash);
         uint8 userType = getCallingUserType(rec.assetClass);
@@ -212,8 +211,6 @@ contract NP is CORE {
 
         writeRecordIpfs1(_idxHash, rec);
         deductServiceCosts(rec.assetClass, 8);
-
-        return rec.Ipfs1a;
         //^^^^^^^interactions^^^^^^^^^
     }
 

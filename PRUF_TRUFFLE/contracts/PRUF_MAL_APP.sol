@@ -421,7 +421,6 @@ contract MAL_APP is CORE_MAL {
         // nonReentrant
         // whenNotPaused
         // isAuthorized(_idxHash)
-        returns (bytes32)
     {
         Record memory rec = getRecord(_idxHash);
         // uint8 userType = getCallingUserType(rec.assetClass);
@@ -463,8 +462,6 @@ contract MAL_APP is CORE_MAL {
         //^^^^^^^effects^^^^^^^^^
 
         writeRecordIpfs1(_idxHash, rec);
-
-        return rec.Ipfs1a;
         //^^^^^^^interactions^^^^^^^^^
     }
 
@@ -481,7 +478,6 @@ contract MAL_APP is CORE_MAL {
         // nonReentrant
         // whenNotPaused
         // isAuthorized(_idxHash)
-        returns (bytes32)
     {
         Record memory rec = getRecord(_idxHash);
         // uint8 userType = getCallingUserType(rec.assetClass);
@@ -531,8 +527,6 @@ contract MAL_APP is CORE_MAL {
         writeRecordIpfs2(_idxHash, rec);
 
         deductServiceCosts(rec.assetClass, 3);
-
-        //return rec.Ipfs2a;
         //^^^^^^^interactions^^^^^^^^^
     }
 
