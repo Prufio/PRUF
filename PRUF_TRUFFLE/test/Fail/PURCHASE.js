@@ -2266,6 +2266,7 @@ contract('PURCHASE', accounts => {
             asset12,
             rgt12,
             asset12,
+            rgt000,
             { from: account2 }
         )
     })
@@ -2316,6 +2317,7 @@ contract('PURCHASE', accounts => {
         return APP_NC.addIpfs2Note(
             asset12,
             asset12,
+            rgt000,
             { from: account2 }
         )
     })
@@ -2371,6 +2373,7 @@ contract('PURCHASE', accounts => {
         return NP_NC._modIpfs1(
             asset12,
             rgt12,
+            rgt000,
             { from: account2 }
         )
     })

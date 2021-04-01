@@ -416,9 +416,9 @@ contract STOR is AccessControl, ReentrancyGuard, Pausable {
         Record memory rec = database[_idxHash];
         bytes32 idxHash = _idxHash; //stack saving
 
-        require(_countDown <= rec.countDown, "S:MR: CountDown +!"); //prohibit increasing the countdown value  CTS:PREFERRED
-        require(isLostOrStolen(_newAssetStatus) == 0, "S:MR: Must use L/S");
-        require(isEscrow(_newAssetStatus) == 0, "S:MR: Must use ECR");
+        require(_countDown <= rec.countDown, "S:MR: CountDown +!"); //prohibit increasing the countdown value  //CTS:EXAMINE REDUNDANT, THROWS IN SAFEMATH
+        require((isLostOrStolen(_newAssetStatus) == 0) || (_newAssetStatus == rec.assetStatus), "S:MR: Must use L/S");
+        require((isEscrow(_newAssetStatus) == 0) || (_newAssetStatus == rec.assetStatus), "S:MR: Must use ECR");
         // require(
         //     (_newAssetStatus != 7) &&
         //         (_newAssetStatus != 57) &&

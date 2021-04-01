@@ -108,7 +108,7 @@ __/\\\\\\\\\\\\\ _____/\\\\\\\\\ _______/\\../\\ ___/\\\\\\\\\\\\\\\
         let assetTransferRoleB32;
         let discardRoleB32;
         
-        contract('CORE', accounts => {
+        contract('NP', accounts => {
         
             console.log('//**************************BEGIN BOOTSTRAP**************************//')
         
@@ -829,11 +829,6 @@ __/\\\\\\\\\\\\\ _____/\\\\\\\\\ _______/\\../\\ ___/\\\\\\\\\\\\\\\
                         console.log("Authorizing PIP")
                         return A_TKN.grantRole(minterRoleB32, PIP.address, { from: account1 })
                     })
-        
-                    .then(() => {
-                        console.log("Authorizing PIP")
-                        return A_TKN.grantRole(minterRoleB32, MAL_APP.address, { from: account1 })
-                    })
             })
         
             it('Should authorize all payable contracts for transactions', async () => {
@@ -893,75 +888,84 @@ __/\\\\\\\\\\\\\ _____/\\\\\\\\\ _______/\\../\\ ___/\\\\\\\\\\\\\\\
             })
         
         
-            it('Should mint a couple of asset root tokens', async () => {
+        
+            // it('Should authorize AC_MGR as trusted agent in AC_TKN', async () => {
+            
+            //     console.log("Authorizing AC_MGR")
+            //     return AC_TKN.grantRole(trustedAgentRoleB32, AC_MGR.address, { from: account1 })
+            // })
+        
+        
+    it('Should mint a couple of asset root tokens', async () => {
                 
-                console.log("Minting root token 1 -C")
-                return AC_MGR.createAssetClass("1", 'CUSTODIAL_ROOT1', '1', '3', '0', "0", rgt000, account1, { from: account1 })
-        
-                    .then(() => {
-                        console.log("Minting root token 2 -NC")
-                        return AC_MGR.createAssetClass("2", 'CUSTODIAL_ROOT2', '2', '3', '0', "0", rgt000, account1, { from: account1 })
-                    })
-        
-                    .then(() => {
-                        console.log("Minting root token 3 -RESTRICTED")
-                        return AC_MGR.createAssetClass("3", 'CUSTODIAL_ROOT3', '3', '3', '1', "0", rgt000, account2, { from: account1 })
-                    })
+        console.log("Minting root token 1 -C")
+        return AC_MGR.createAssetClass("1", 'CUSTODIAL_ROOT1', '1', '3', '0', "0", rgt000, account1, { from: account1 })
+
+            .then(() => {
+                console.log("Minting root token 2 -NC")
+                return AC_MGR.createAssetClass("2", 'CUSTODIAL_ROOT2', '2', '3', '0', "0", rgt000, account1, { from: account1 })
             })
-        
-        
-            it("Should Mint 2 cust and 2 non-cust AC tokens in AC_ROOT 1", async () => {
-        
-                console.log("Minting AC 10 -C")
-                return AC_MGR.createAssetClass("10", 'CUSTODIAL_AC10', '1', '1', '0', "0", rgt000, account1, { from: account1 })
-        
-                    .then(() => {
-                        console.log("Minting AC 11 -C")
-                        return AC_MGR.createAssetClass("11", 'CUSTODIAL_AC11', '1', '1', '0', "0", rgt000, account1, { from: account1 })
-                    })
-        
-                    .then(() => {
-                        console.log("Minting AC 12 -NC")
-                        return AC_MGR.createAssetClass("12", 'CUSTODIAL_AC12', '1', '2', '0', "0", rgt000, account1, { from: account1 })
-                    })
-        
-                    .then(() => {
-                        console.log("Minting AC 13 -NC")
-                        return AC_MGR.createAssetClass("13", 'CUSTODIAL_AC13', '1', '2', '0', "0", rgt000, account1, { from: account1 })
-                    })
-        
-                    .then(() => {
-                        console.log("Minting AC 16 -NC")
-                        return AC_MGR.createAssetClass("16", 'CUSTODIAL_AC16', '2', '2', '1', "0", rgt000, account10, { from: account1 })
-                    })
-        
-                    .then(() => {
-                        console.log("Minting AC 17 -NC")
-                        return AC_MGR.createAssetClass("17", 'CUSTODIAL_AC17', '2', '2', '3', "0", rgt000, account1, { from: account1 })
-                    })
-        
-                    .then(() => {
-                        console.log("Minting AC 18 -NC")
-                        return AC_MGR.createAssetClass("18", 'CUSTODIAL_AC18', '2', '2', '4', "0", rgt000, account1, { from: account1 })
-                    })
-        
-                    .then(() => {
-                        console.log("Minting AC 19 -NC")
-                        return AC_MGR.createAssetClass("19", 'CUSTODIAL_AC19', '2', '2', '5', "0", rgt000, account1, { from: account1 })
-                    })
+
+            .then(() => {
+                console.log("Minting root token 3 -RESTRICTED")
+                return AC_MGR.createAssetClass("3", 'CUSTODIAL_ROOT3', '3', '3', '1', "0", rgt000, account2, { from: account1 })
             })
-        
-        
-            it("Should Mint 2 non-cust AC tokens in AC_ROOT 2", async () => {
-        
-                console.log("Minting AC 14 -NC")
-                return AC_MGR.createAssetClass("14", 'CUSTODIAL_AC14', '2', '2', '0', "0", rgt000, account1, { from: account1 })
-        
-                    .then(() => {
-                        console.log("Minting AC 15 -NC")
-                        return AC_MGR.createAssetClass("15", 'CUSTODIAL_AC15', '2', '2', '0', "0", rgt000, account10, { from: account1 })
-                    })
+    })
+
+
+    it("Should Mint 2 cust and 2 non-cust AC tokens in AC_ROOT 1", async () => {
+
+        console.log("Minting AC 10 -C")
+        return AC_MGR.createAssetClass("10", 'CUSTODIAL_AC10', '1', '1', '0', "0", rgt000, account1, { from: account1 })
+
+            .then(() => {
+                console.log("Minting AC 11 -C")
+                return AC_MGR.createAssetClass("11", 'CUSTODIAL_AC11', '1', '1', '0', "0", rgt000, account1, { from: account1 })
             })
+
+            .then(() => {
+                console.log("Minting AC 12 -NC")
+                return AC_MGR.createAssetClass("12", 'CUSTODIAL_AC12', '1', '2', '0', "0", rgt000, account1, { from: account1 })
+            })
+
+            .then(() => {
+                console.log("Minting AC 13 -NC")
+                return AC_MGR.createAssetClass("13", 'CUSTODIAL_AC13', '1', '2', '0', "0", rgt000, account1, { from: account1 })
+            })
+
+            .then(() => {
+                console.log("Minting AC 16 -NC")
+                return AC_MGR.createAssetClass("16", 'CUSTODIAL_AC16', '2', '2', '1', "0", rgt000, account10, { from: account1 })
+            })
+
+            .then(() => {
+                console.log("Minting AC 17 -NC")
+                return AC_MGR.createAssetClass("17", 'CUSTODIAL_AC17', '2', '2', '3', "0", rgt000, account1, { from: account1 })
+            })
+
+            .then(() => {
+                console.log("Minting AC 18 -NC")
+                return AC_MGR.createAssetClass("18", 'CUSTODIAL_AC18', '2', '2', '4', "0", rgt000, account1, { from: account1 })
+            })
+
+            .then(() => {
+                console.log("Minting AC 19 -NC")
+                return AC_MGR.createAssetClass("19", 'CUSTODIAL_AC19', '2', '2', '5', "0", rgt000, account1, { from: account1 })
+            })
+    })
+
+
+    it("Should Mint 2 non-cust AC tokens in AC_ROOT 2", async () => {
+
+        console.log("Minting AC 14 -NC")
+        return AC_MGR.createAssetClass("14", 'CUSTODIAL_AC14', '2', '2', '0', "0", rgt000, account1, { from: account1 })
+
+            .then(() => {
+                console.log("Minting AC 15 -NC")
+                return AC_MGR.createAssetClass("15", 'CUSTODIAL_AC15', '2', '2', '0', "0", rgt000, account10, { from: account1 })
+            })
+    })
+
         
         
             it('Should authorize APP in all relevant asset classes', async () => {
@@ -1251,8 +1255,8 @@ __/\\\\\\\\\\\\\ _____/\\\\\\\\\ _______/\\../\\ ___/\\\\\\\\\\\\\\\
                         return STOR.enableContractForAC('RCLR', '16', '3', { from: account10 })
                     })
             })
-
-
+        
+        
             it("Should set costs in minted AC's", async () => {
         
                 console.log("Setting costs in AC 1")
@@ -1400,7 +1404,7 @@ __/\\\\\\\\\\\\\ _____/\\\\\\\\\ _______/\\../\\ ___/\\\\\\\\\\\\\\\
                             account1,
                             { from: account1 })
                     })
-        
+
                     .then(() => {
                         console.log("Setting base costs in AC 10")
                         return AC_MGR.ACTH_setCosts(
@@ -1911,43 +1915,13 @@ __/\\\\\\\\\\\\\ _____/\\\\\\\\\ _______/\\../\\ ___/\\\\\\\\\\\\\\\
                         console.log("Account10 => AC15 (PIPMINTER)")
                         return AC_MGR.addUser('10', account10Hash, '1', { from: account1 })
                     })
-        
-                    .then(() => {
-                        console.log("Account10 => AC1")
-                        return AC_MGR.addUser('1', account10Hash, '1', { from: account1 })
-                    })
-        
-                    .then(() => {
-                        console.log("Account2 => AC1")
-                        return AC_MGR.addUser('1', account2Hash, '1', { from: account1 })
-                    })
-        
-                    .then(() => {
-                        console.log("Account2 => AC16")
-                        return AC_MGR.addUser('16', account2Hash, '1', { from: account10 })
-                    })
-        
-                    .then(() => {
-                        console.log("Account2 => AC17")
-                        return AC_MGR.addUser('17', account2Hash, '0', { from: account1 })
-                    })
-        
-                    .then(() => {
-                        console.log("Account2 => AC18")
-                        return AC_MGR.addUser('18', account2Hash, '1', { from: account1 })
-                    })
-        
-                    .then(() => {
-                        console.log("Account2 => AC19")
-                        return AC_MGR.addUser('19', account2Hash, '1', { from: account1 })
-                    })
             })
 
 
     it('Should set SharesAddress', async () => {
 
-        console.log("//**************************************BEGIN CORE TEST**********************************************/")
-        console.log("//**************************************BEGIN CORE SETUP**********************************************/")
+        console.log("//**************************************BEGIN NP TESTS**********************************************/")
+        console.log("//**************************************BEGIN NP SETUP**********************************************/")
         return UTIL_TKN.AdminSetSharesAddress(
             account1,
             { from: account1 }
@@ -1964,418 +1938,478 @@ __/\\\\\\\\\\\\\ _____/\\\\\\\\\ _______/\\../\\ ___/\\\\\\\\\\\\\\\
     })
 
 
-    it('Should write nakedAsset1 in AC 10', async () => {
-        return PIP.mintPipAsset(
-            asset1,
-            string1Hash,
-            '15',
-            { from: account10 }
-        )
-    })
-
-
-    it('Should mint ID_TKN(1) to account4', async () => {
-        return ID_TKN.mintPRUF_IDToken(
-            account2,
-            '1',
-            { from: account1}
-        )
-    })
-
-    //1
-    it('Should fail because assetToken already exists', async () => {
-
-        console.log("//**************************************END CORE SETUP**********************************************/")
-        console.log("//**************************************BEGIN CORE FAIL BATCH (7)**********************************************/")
-        console.log("//**************************************BEGIN createRecord FAIL BATCH**********************************************/")
-            return APP_NC.newRecord(
-                asset1,
-                rgt13,
-                '10',
-                '100',
-                { from: account2 }
-            )
-    })
-
-    it('should authorize account2 in root AC 1', async () => {
-        console.log("Account2 => AC1")
-        return AC_MGR.addUser('1', account2Hash, '1', { from: account1 })
-    })
-
-
-    it('should authorize APP for AC1', async () => {
-        return STOR.enableContractForAC('APP', '1', '1', { from: account1 })
-    })
-
-    //2
-    it('Should fail because you cannot create asset in root asset class', async () => {
+    it('Should mint asset1 in AC10 to APP', async () => {
         return APP.newRecord(
-            asset2,
-            rgt2,
-            '1',
-            '100',
-            { from: account2 }
+        asset1, 
+        rgt1,
+        '10',
+        '100',
+        {from: account2}
         )
     })
 
-    //3
-    it('Should fail because you cannot create asset in AC managementType > 4', async () => {
+
+    it("Should retrieve asset1", async () =>{ 
+        var Record = [];
+        
+        return await STOR.retrieveShortRecord(asset1, {from: account2}, function (_err, _result) {
+            if(_err){} 
+            else{Record = Object.values(_result)
+        console.log(Record)}
+        })
+    })
+
+
+    it('Should mint asset2 in AC11 to APP', async () => {
         return APP.newRecord(
-            asset2,
-            rgt2,
-            '19',
-            '100',
-            { from: account2 }
-        )
-    })
-
-    //4
-    it('Should fail because user !ACTH', async () => {
-        return APP.newRecord(
-            asset2,
-            rgt2,
-            '16',
-            '100',
-            { from: account2 }
-        )
-    })
-
-    //5
-    it('Should fail because caller not authorzed', async () => {
-        return APP.newRecord(
-            asset2,
-            rgt2,
-            '17',
-            '100',
-            { from: account2 }
-        )
-    })
-
-    //6
-    it('Should fail because user not trusted', async () => {
-        return APP.newRecord(
-            asset2,
-            rgt2,
-            '18',
-            '100',
-            { from: account2 }
+        asset2, 
+        rgt2,
+        '11',
+        '100',
+        {from: account2}
         )
     })
 
 
-    // it('should unauthorize account2 in root AC 1', async () => {
-    //     console.log("Account2 => AC1")
-    //     return AC_MGR.addUser(account2Hash, '0', '1', { from: account1 })
-    // })
-
-
-    it('should unauthorize MAL_APP for AC1', async () => {
-        return STOR.enableContractForAC('MAL_APP', '13', '0', { from: account1 })
+    it("Should retrieve asset2", async () =>{ 
+        var Record = [];
+        
+        return await STOR.retrieveShortRecord(asset2, {from: account2}, function (_err, _result) {
+            if(_err){} 
+            else{Record = Object.values(_result)
+        console.log(Record)}
+        })
     })
 
 
-    it('should authorize APP to be payable in UTIL_TKN', async () => {
-        return UTIL_TKN.grantRole(payableRoleB32, MAL_APP.address, { from: account1 })
-    })
-
-    //7
-    it('Should fail because contract is not correct custody type', async () => {
-        return MAL_APP.newRecord(
-            asset2,
-            rgt2,
-            '13',
-            '100',
-            { from: account2 }
+    it('Should mod status of asset 1 to 1', async () => {
+        return NP._modStatus(
+        asset1,
+        rgt1,
+        '1',
+        {from: account2}
         )
+    })
+
+
+    it("Should retrieve asset1", async () =>{ 
+        var Record = [];
+        
+        return await STOR.retrieveShortRecord(asset1, {from: account2}, function (_err, _result) {
+            if(_err){} 
+            else{Record = Object.values(_result)
+        console.log(Record)}
+        })
+    })
+
+    
+    it('Should set asset1 to stolen', async () => {
+        return NP._setLostOrStolen(
+        asset1,
+        rgt1,
+        '3',
+        {from: account2}
+        )
+    })
+
+
+    it("Should retrieve asset1", async () =>{ 
+        var Record = [];
+        
+        return await STOR.retrieveShortRecord(asset1, {from: account2}, function (_err, _result) {
+            if(_err){} 
+            else{Record = Object.values(_result)
+        console.log(Record)}
+        })
+    })
+
+
+    it('Should mod status of asset 1 to 1', async () => {
+        return NP._modStatus(
+        asset1,
+        rgt1,
+        '1',
+        {from: account2}
+        )
+    })
+
+
+    it("Should retrieve asset1", async () =>{ 
+        var Record = [];
+        
+        return await STOR.retrieveShortRecord(asset1, {from: account2}, function (_err, _result) {
+            if(_err){} 
+            else{Record = Object.values(_result)
+        console.log(Record)}
+        })
+    })
+
+    
+    it('Should decrement asset1 by 15', async () => {
+        return NP._decCounter(
+        asset1,
+        rgt1,
+        '15',
+        {from: account2}
+        )
+    })
+
+
+    it("Should retrieve asset1", async () =>{ 
+        var Record = [];
+        
+        return await STOR.retrieveShortRecord(asset1, {from: account2}, function (_err, _result) {
+            if(_err){} 
+            else{Record = Object.values(_result)
+        console.log(Record)}
+        })
+    })
+
+    
+    it('Should mod ipfs1 to rgt1 and rgt2', async () => {
+        return NP._modIpfs1(
+        asset1,
+        rgt1,
+        rgt1,
+        rgt2,
+        {from: account2}
+        )
+    })
+
+
+    it("Should retrieve asset1", async () =>{ 
+        var Record = [];
+        
+        return await STOR.retrieveShortRecord(asset1, {from: account2}, function (_err, _result) {
+            if(_err){} 
+            else{Record = Object.values(_result)
+        console.log(Record)}
+        })
+    })
+
+
+    it('Should set asset2 to newAssetStatus(51)', async () => {
+        return NP._modStatus(
+        asset2,
+        rgt2,
+        '51',
+        {from: account2}
+        )
+    })
+
+
+    it("Should retrieve asset1", async () =>{ 
+        var Record = [];
+        
+        return await STOR.retrieveShortRecord(asset1, {from: account2}, function (_err, _result) {
+            if(_err){} 
+            else{Record = Object.values(_result)
+        console.log(Record)}
+        })
+    })
+
+    
+    it('Should export asset2', async () => {
+        return NP.exportAsset(
+        asset2,
+        account2,
+        {from: account2}
+        )
+    })
+
+
+    it("Should retrieve asset2", async () =>{ 
+        var Record = [];
+        
+        return await STOR.retrieveShortRecord(asset2, {from: account2}, function (_err, _result) {
+            if(_err){} 
+            else{Record = Object.values(_result)
+        console.log(Record)}
+        })
     })
 
 
     it('Should write record in AC 10 @ IDX&RGT(1)', async () => {
-
-        console.log("//**************************************END deductPayment FAIL BATCH**********************************************/")
-        console.log("//**************************************END CORE FAIL BATCH**********************************************/")
-        console.log("//**************************************END CORE TEST**********************************************/")
+        console.log("//**************************************END NP TEST**********************************************/")
         console.log("//**************************************BEGIN THE WORKS**********************************************/")
         return APP.newRecord(
-            asset12,
-            rgt12,
-            '10',
-            '100',
-            { from: account2 }
+        asset12, 
+        rgt12,
+        '10',
+        '100',
+        {from: account2}
         )
     })
 
 
     it('Should change status of new asset12 to status(1)', async () => {
         return NP._modStatus(
-            asset12,
-            rgt12,
-            '1',
-            { from: account2 }
+        asset12, 
+        rgt12,
+        '1',
+        {from: account2}
         )
     })
 
 
     it('Should Transfer asset12 RGT(1) to RGT(2)', async () => {
         return APP.transferAsset(
-            asset12,
-            rgt12,
-            rgt2,
-            { from: account2 }
+        asset12, 
+        rgt12,
+        rgt2,
+        {from: account2}
         )
     })
 
 
     it('Should force modify asset12 RGT(2) to RGT(1)', async () => {
         return APP.forceModRecord(
-            asset12,
-            rgt12,
-            { from: account2 }
+        asset12, 
+        rgt12,
+        {from: account2}
         )
     })
 
 
     it('Should change decrement amount @asset12 from (100) to (85)', async () => {
         return NP._decCounter(
-            asset12,
-            rgt12,
-            '15',
-            { from: account2 }
+        asset12, 
+        rgt12,
+        '15',
+        {from: account2}
         )
     })
 
 
     it('Should modify Ipfs1 note @asset12 to IDX(1)', async () => {
         return NP._modIpfs1(
-            asset12,
-            rgt12,
-            asset12,
-            rgt000,
-            { from: account2 }
+        asset12, 
+        rgt12,
+        asset12,
+        rgt000,
+        {from: account2}
         )
     })
 
 
     it('Should change status of new asset12 to status(51)', async () => {
         return NP._modStatus(
-            asset12,
-            rgt12,
-            '51',
-            { from: account2 }
+        asset12, 
+        rgt12,
+        '51',
+        {from: account2}
         )
     })
 
 
     it('Should export asset12 to account2', async () => {
         return NP.exportAsset(
-            asset12,
-            account2,
-            { from: account2 }
+        asset12, 
+        account2,
+        {from: account2}
         )
     })
 
 
     it('Should import asset12 to AC(12)(NC)', async () => {
         return APP_NC.importAsset(
-            asset12,
-            '12',
-            { from: account2 }
+        asset12,
+        '12',
+        {from: account2}
         )
     })
 
 
     // it('Should re-mint asset12 token to account2', async () => {
     //     return APP_NC.reMintToken(
-    //         asset12,
-    //         'a',
-    //         'a',
-    //         'a',
-    //         'a',
-    //         'a',
-    //         { from: account2 }
+    //     asset12,
+    //     'a',
+    //     'a',
+    //     'a',
+    //     'a',
+    //     'a',
+    //     {from: account2}
     //     )
     // })
 
 
     it('Should set Ipfs2 note to IDX(1)', async () => {
         return APP_NC.addIpfs2Note(
-            asset12,
-            asset12,
-            rgt000,
-            { from: account2 }
+        asset12,
+        asset12,
+        rgt000,
+        {from: account2}
         )
     })
 
 
     it('Should change status of asset12 to status(51)', async () => {
         return NP_NC._modStatus(
-            asset12,
-            '51',
-            { from: account2 }
+        asset12, 
+        '51',
+        {from: account2}
         )
     })
 
 
     it('Should set asset12 into escrow for 3 minutes', async () => {
         return ECR_NC.setEscrow(
-            asset12,
-            account2Hash,
-            '180',
-            '56',
-            { from: account2 }
+        asset12, 
+        account2Hash,
+        '180',
+        '56',
+        {from: account2}
         )
     })
 
 
     it('Should take asset12 out of escrow', async () => {
         return ECR_NC.endEscrow(
-            asset12,
-            { from: account2 }
+        asset12, 
+        {from: account2}
         )
     })
 
 
     it('Should change decrement amount @asset12 from (85) to (70)', async () => {
         return NP_NC._decCounter(
-            asset12,
-            '15',
-            { from: account2 }
+        asset12, 
+        '15',
+        {from: account2}
         )
     })
 
 
     it('Should force modify asset12 RGT(1) to RGT(2)', async () => {
         return NP_NC._changeRgt(
-            asset12,
-            rgt2,
-            { from: account2 }
+        asset12, 
+        rgt2,
+        {from: account2}
         )
     })
 
 
     it('Should modify Ipfs1 note @asset12 to RGT(1)', async () => {
         return NP_NC._modIpfs1(
-            asset12,
-            rgt12,
-            rgt000,
-            { from: account2 }
+        asset12, 
+        rgt12,
+        rgt000,
+        {from: account2}
         )
     })
 
     it('Should change status of asset12 to status(51)', async () => {
         return NP_NC._modStatus(
-            asset12,
-            '51',
-            { from: account2 }
+        asset12, 
+        '51',
+        {from: account2}
         )
     })
 
     it('Should export asset12(status70)', async () => {
         return NP_NC._exportNC(
-            asset12,
-            { from: account2 }
+        asset12, 
+        {from: account2}
         )
     })
 
 
     it('Should transfer asset12 token to PRUF_APP contract', async () => {
         return A_TKN.safeTransferFrom(
-            account2,
-            APP.address,
-            asset12,
-            { from: account2 }
+        account2,
+        APP.address,
+        asset12,
+        {from: account2}
         )
     })
 
 
     it('Should import asset12 to AC(11)', async () => {
         return APP.importAsset(
-            asset12,
-            rgt12,
-            '11',
-            { from: account2 }
+        asset12,
+        rgt12,
+        '11',
+        {from: account2}
         )
     })
 
 
     it('Should change status of asset12 to status(1)', async () => {
         return NP._modStatus(
-            asset12,
-            rgt12,
-            '1',
-            { from: account2 }
+        asset12, 
+        rgt12,
+        '1',
+        {from: account2}
         )
     })
 
 
     it('Should set asset12 into locked escrow for 3 minutes', async () => {
         return ECR.setEscrow(
-            asset12,
-            account2Hash,
-            '180',
-            '50',
-            { from: account2 }
+        asset12, 
+        account2Hash,
+        '180',
+        '50',
+        {from: account2}
         )
     })
 
 
     it('Should take asset12 out of escrow', async () => {
         return ECR.endEscrow(
-            asset12,
-            { from: account2 }
+        asset12, 
+        {from: account2}
         )
     })
 
 
     it('Should change status of asset12 to status(1)', async () => {
         return NP._modStatus(
-            asset12,
-            rgt12,
-            '1',
-            { from: account2 }
+        asset12, 
+        rgt12,
+        '1',
+        {from: account2}
         )
     })
 
 
     it('Should set asset12 into escrow for 3 minutes', async () => {
         return ECR.setEscrow(
-            asset12,
-            account2Hash,
-            '180',
-            '6',
-            { from: account2 }
+        asset12, 
+        account2Hash,
+        '180',
+        '6',
+        {from: account2}
         )
     })
 
 
     it('Should set asset12 to stolen(3) status', async () => {
         return NP._setLostOrStolen(
-            asset12,
-            rgt12,
-            '3',
-            { from: account2 }
+        asset12,
+        rgt12,
+        '3',
+        {from: account2}
         )
     })
 
 
     it('Should change status of asset12 to status(1)', async () => {
         return NP._modStatus(
-            asset12,
-            rgt12,
-            '1',
-            { from: account2 }
+        asset12, 
+        rgt12,
+        '1',
+        {from: account2}
         )
     })
 
-    it("Should retrieve asset12", async () => {
+    it("Should retrieve asset12", async () =>{ 
         var Record = [];
-
-        return await STOR.retrieveShortRecord(asset12, { from: account2 }, function (_err, _result) {
-            if (_err) { }
-            else {
-                Record = Object.values(_result)
-                console.log(Record)
-            }
+        
+        return await STOR.retrieveShortRecord(asset12, {from: account2}, function (_err, _result) {
+            if(_err){} 
+            else{Record = Object.values(_result)
+        console.log(Record)}
         })
     })
 

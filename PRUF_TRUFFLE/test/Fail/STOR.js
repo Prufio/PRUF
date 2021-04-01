@@ -2868,6 +2868,7 @@ contract('STOR', accounts => {
         return MAL_APP._modIpfs1(
             asset10,
             rgt1,
+            rgt000,
             { from: account2 }
         )
     })
@@ -2878,6 +2879,7 @@ contract('STOR', accounts => {
             asset8,
             // rgt8,
             asset8,
+            rgt000,
             { from: account2 }
         )
     })
@@ -2892,6 +2894,7 @@ contract('STOR', accounts => {
         return MAL_APP._modIpfs1(
             asset7,
             asset7,
+            rgt000,
             { from: account2 }
         )
     })
@@ -2902,6 +2905,7 @@ contract('STOR', accounts => {
             asset8,
             // rgt8,
             asset8,
+            rgt000,
             { from: account2 }
         )
     })
@@ -2912,6 +2916,7 @@ contract('STOR', accounts => {
             asset8,
             // rgt8,
             asset8,
+            rgt000,
             { from: account2 }
         )
     })
@@ -2925,6 +2930,7 @@ contract('STOR', accounts => {
             asset10,
             // rgt6,
             rgt6,
+            rgt000,
             { from: account2 }
         )
     })
@@ -2941,6 +2947,7 @@ contract('STOR', accounts => {
             asset2,
             // rgt2,
             rgt2,
+            rgt000,
             { from: account2 }
         )
     })
@@ -2957,6 +2964,7 @@ contract('STOR', accounts => {
             asset7,
             // rgt7,
             rgt7,
+            rgt000,
             { from: account2 }
         )
     })
@@ -2968,6 +2976,7 @@ contract('STOR', accounts => {
             asset4,
             // rgt7,
             rgt4,
+            rgt000,
             { from: account2 }
         )
     })
@@ -2979,6 +2988,7 @@ contract('STOR', accounts => {
             asset3,
             // rgt7,
             rgt3,
+            rgt000,
             { from: account2 }
         )
     })
@@ -2989,6 +2999,7 @@ contract('STOR', accounts => {
             asset8,
             // rgt8,
             asset8,
+            rgt000,
             { from: account2 }
         )
     })
@@ -2999,6 +3010,7 @@ contract('STOR', accounts => {
             asset8,
             // rgt8,
             rgt8,
+            rgt000,
             { from: account2 }
         )
     })
@@ -3086,6 +3098,7 @@ contract('STOR', accounts => {
             asset12,
             rgt12,
             asset12,
+            rgt000,
             { from: account2 }
         )
     })
@@ -3136,6 +3149,7 @@ contract('STOR', accounts => {
         return APP_NC.addIpfs2Note(
             asset12,
             asset12,
+            rgt000,
             { from: account2 }
         )
     })
@@ -3191,6 +3205,7 @@ contract('STOR', accounts => {
         return NP_NC._modIpfs1(
             asset12,
             rgt12,
+            rgt000,
             { from: account2 }
         )
     })

@@ -28,6 +28,7 @@ const PRUF_PIP = artifacts.require('PIP');
 const PRUF_HELPER = artifacts.require('Helper');
 const PRUF_MAL_APP = artifacts.require('MAL_APP');
 const PRUF_UTIL_TKN = artifacts.require('UTIL_TKN');
+const PRUF_PURCHASE = artifacts.require('PURCHASE');
 
 let STOR;
 let APP;
@@ -46,6 +47,7 @@ let RCLR;
 let Helper;
 let MAL_APP;
 let UTIL_TKN;
+let PURCHASE;
 
 let string1Hash;
 let string2Hash;
@@ -108,7 +110,7 @@ let trustedAgentRoleB32;
 let assetTransferRoleB32;
 let discardRoleB32;
 
-contract('ID_TKN', accounts => {
+contract('STOR', accounts => {
 
     console.log('//**************************BEGIN BOOTSTRAP**************************//')
 
@@ -265,6 +267,14 @@ contract('ID_TKN', accounts => {
         console.log(PRUF_UTIL_TKN_TEST.address);
         assert(PRUF_UTIL_TKN_TEST.address !== '')
         UTIL_TKN = PRUF_UTIL_TKN_TEST;
+    })
+
+
+    it('Should deploy PURCHASE', async () => {
+        const PRUF_PURCHASE_TEST = await PRUF_PURCHASE.deployed({ from: account1 });
+        console.log(PRUF_PURCHASE_TEST.address);
+        assert(PRUF_PURCHASE_TEST.address !== '')
+        PURCHASE = PRUF_PURCHASE_TEST;
     })
 
 
@@ -654,6 +664,11 @@ contract('ID_TKN', accounts => {
                 console.log("Adding UTIL_TKN to storage for use in AC 0")
                 return STOR.OO_addContract("UTIL_TKN", UTIL_TKN.address, '0', '1', { from: account1 })
             })
+
+            .then(() => {
+                console.log("Adding PURCHASE to storage for use in AC 0")
+                return STOR.OO_addContract("PURCHASE", PURCHASE.address, '0', '2', { from: account1 })
+            })
     })
 
 
@@ -727,10 +742,10 @@ contract('ID_TKN', accounts => {
                 return RCLR.OO_setStorageContract(STOR.address, { from: account1 })
             })
 
-        // .then(() => {
-        //     console.log("Adding in UTIL_TKN")
-        //     return UTIL_TKN.AdminSetStorageContract(STOR.address, { from: account1 })
-        // })
+            .then(() => {
+                console.log("Adding in PURCHASE")
+                return PURCHASE.OO_setStorageContract(STOR.address, { from: account1 })
+            })
     })
 
 
@@ -804,11 +819,12 @@ contract('ID_TKN', accounts => {
                 return RCLR.OO_resolveContractAddresses({ from: account1 })
             })
 
-        // .then(() => {
-        //     console.log("Resolving in UTIL_TKN")
-        //     return UTIL_TKN.AdminResolveContractAddresses({ from: account1 })
-        // })
+            .then(() => {
+                console.log("Resolving in PURCHASE")
+                return PURCHASE.OO_resolveContractAddresses({ from: account1 })
+            })
     })
+
 
     it('Should authorize all minter contracts for minting A_TKN(s)', async () => {
 
@@ -828,6 +844,16 @@ contract('ID_TKN', accounts => {
             .then(() => {
                 console.log("Authorizing PIP")
                 return A_TKN.grantRole(minterRoleB32, PIP.address, { from: account1 })
+            })
+
+            .then(() => {
+                console.log("Authorizing MAL_APP")
+                return A_TKN.grantRole(minterRoleB32, MAL_APP.address, { from: account1 })
+            })
+
+            .then(() => {
+                console.log("Authorizing PURCHASE as trustedAgent")
+                return A_TKN.grantRole(trustedAgentRoleB32, PURCHASE.address, { from: account1 })
             })
     })
 
@@ -852,6 +878,11 @@ contract('ID_TKN', accounts => {
             })
 
             .then(() => {
+                console.log("Authorizing MAL_APP")
+                return UTIL_TKN.grantRole(payableRoleB32, MAL_APP.address, { from: account1 })
+            })
+
+            .then(() => {
                 console.log("Authorizing NP")
                 return UTIL_TKN.grantRole(payableRoleB32, NP.address, { from: account1 })
             })
@@ -859,6 +890,11 @@ contract('ID_TKN', accounts => {
             .then(() => {
                 console.log("Authorizing NP_NC")
                 return UTIL_TKN.grantRole(payableRoleB32, NP_NC.address, { from: account1 })
+            })
+
+            .then(() => {
+                console.log("Authorizing PURCHASE")
+                return UTIL_TKN.grantRole(payableRoleB32, PURCHASE.address, { from: account1 })
             })
     })
 
@@ -870,26 +906,32 @@ contract('ID_TKN', accounts => {
     })
 
 
-    it('Should authorize all minter contracts for minting AC_TKN(s)', async () => {
+    it('Should authorize AC_MGR for minting AC_TKN(s)', async () => {
         console.log("Authorizing AC_MGR")
         return AC_TKN.grantRole(minterRoleB32, AC_MGR.address, { from: account1 })
     })
 
 
-    it('Should authorize all minter contracts for minting AC_TKN(s)', async () => {
-        console.log("Authorizing AC_MGR")
+    it('Should authorize NP for transfering A_TKN(s)', async () => {
+        console.log("Authorizing NP")
         return APP.grantRole(assetTransferRoleB32, NP.address, { from: account1 })
     })
 
 
-    it('Should authorize all minter contracts for minting AC_TKN(s)', async () => {
-        console.log("Authorizing AC_MGR")
+    it('Should authorize A_TKN for discarding A_TKN(s)', async () => {
+        console.log("Authorizing A_TKN")
         return RCLR.grantRole(discardRoleB32, A_TKN.address, { from: account1 })
+    })
+
+
+    it('Should authorize PURCHASE as a trustedAgent in UTIL_TKN', async () => {
+        console.log("Authorizing PURCHASE")
+        return UTIL_TKN.grantRole(trustedAgentRoleB32, PURCHASE.address, { from: account1 })
     })
         
         
     it('Should mint a couple of asset root tokens', async () => {
-        
+                
         console.log("Minting root token 1 -C")
         return AC_MGR.createAssetClass("1", 'CUSTODIAL_ROOT1', '1', '3', '0', "0", rgt000, account1, { from: account1 })
 
@@ -1006,6 +1048,10 @@ contract('ID_TKN', accounts => {
 
             .then(() => {
                 return STOR.enableContractForAC('MAL_APP', '11', '1', { from: account1 })
+            })
+
+            .then(() => {
+                return STOR.enableContractForAC('MAL_APP', '12', '1', { from: account1 })
             })
     })
 
@@ -1245,6 +1291,16 @@ contract('ID_TKN', accounts => {
             .then(() => {
                 return STOR.enableContractForAC('RCLR', '16', '3', { from: account10 })
             })
+    })
+
+
+    it('Should authorize PURCHASE in all relevant asset classes', async () => {
+        console.log("Authorizing PURCHASE")
+        return STOR.enableContractForAC('PURCHASE', '12', '2', { from: account1 })
+
+        .then(() => {
+            return STOR.enableContractForAC('PURCHASE', '13', '2', { from: account1 })
+        })
     })
 
 
@@ -1908,11 +1964,10 @@ contract('ID_TKN', accounts => {
             })
     })
 
-
     it('Should set SharesAddress', async () => {
 
-        console.log("//**************************************BEGIN ECR_MGR TEST**********************************************/")
-        console.log("//**************************************BEGIN ECR_MGR SETUP**********************************************/")
+        console.log("//**************************************BEGIN STOR TEST**********************************************/")
+        console.log("//**************************************BEGIN STOR SETUP**********************************************/")
         return UTIL_TKN.AdminSetSharesAddress(
             account1,
             { from: account1 }
@@ -1938,381 +1993,327 @@ contract('ID_TKN', accounts => {
     })
 
 
-    it('Should write asset1 in AC 10', async () => {
-        return APP.newRecord(
+    it('Should mint ID_TKN(1) to account4', async () => {
+        return ID_TKN.mintPRUF_IDToken(
+            account4,
+            '1',
+            { from: account1 }
+        )
+    })
+
+
+    it('Should write ID_TKN(2) to address2', async () => {
+        return ID_TKN.mintPRUF_IDToken(
+            account2,
+            '2',
+            { from: account1 }
+        )
+    })
+
+
+    it('Should write asset1 in AC12', async () => {
+        return APP_NC.newRecord(
             asset1,
             rgt1,
-            '10',
+            '12',
             '100',
-            { from: account2 }
+            { from: account4 }
         )
     })
 
 
-    it('Should write asset2 in AC 10', async () => {
-        return APP.newRecord(
-            asset2,
-            rgt2,
-            '10',
-            '100',
-            { from: account2 }
-        )
-    })
-
-
-    it('Should set asset2 into status 1', async () => {
-        return NP._modStatus(
-            asset2,
-            rgt2,
-            '1',
-            { from: account2 }
-        )
-    })
-
-    it('Should transfer asset2 to 0x0', async () => {
-        return APP.transferAsset(
-            asset2,
-            rgt2,
-            rgt000,
-            { from: account2 }
-        )
-    })
-
-
-    it('Should write asset3 in AC 10', async () => {
-        return APP.newRecord(
-            asset3,
-            rgt3,
-            '10',
-            '100',
-            { from: account2 }
-        )
-    })
-
-
-    it('Should set asset3 into status 1', async () => {
-        return NP._modStatus(
-            asset3,
-            rgt3,
-            '1',
-            { from: account2 }
-        )
-    })
-
-
-    it('Should set asset3 into status 3(stolen)', async () => {
-        return NP._setLostOrStolen(
-            asset3,
-            rgt3,
+    it('Should add ECR2', async () => {
+        return STOR.OO_addContract(
+            'ECR2',
+            ECR2.address,
+            '0',
             '3',
-            { from: account2 }
+            { from: account1 }
         )
     })
 
 
-    it('Should write asset4 in AC 10', async () => {
-        return APP.newRecord(
-            asset4,
-            rgt4,
+    it('Should add ECR as default contract', async () => {
+        return STOR.addDefaultContracts(
             '10',
+            "ECR",
+            '3',
+            { from: account1 }
+        )
+    })
+
+
+    it("Should retrieve default contract 10", async () => {
+        var Record = "";
+
+        return await STOR.getDefaultContract("10", { from: account1 }, function (_err, _result) {
+            if (_err) { }
+            else {
+                Record = _result
+                console.log(Record)
+            }
+        })
+    })
+
+  
+    it('Should enable AC10 for default contracts', async () => {
+        return STOR.enableDefaultContractsForAC(
+            '10',
+            { from: account1 }
+        )
+    })
+
+ 
+    it('Should enable ECR2 for AC10', async () => {
+        return STOR.enableContractForAC(
+            'ECR2',
+            '10',
+            '5',
+            { from: account1 }
+        )
+    })
+
+ 
+    it('Should create newRecord for asset2', async () => {
+        return APP_NC.newRecord(
+            asset2,
+            rgt2,
+            '12',
             '100',
-            { from: account2 }
+            { from: account4 }
         )
     })
+                                                                              
 
+    it("Should retrieve asset1", async () => {
+        var Record = [];
 
-    it('Should set asset4 into status 1', async () => {
-        return NP._modStatus(
-            asset4,
-            rgt4,
-            '1',
-            { from: account2 }
-        )
+        return await STOR.retrieveShortRecord(asset1, { from: account2 }, function (_err, _result) {
+            if (_err) { }
+            else {
+                Record = Object.values(_result)
+                console.log(Record)
+            }
+        })
     })
 
-
-    it('Should set asset4 into status 4(lost)', async () => {
-        return NP._setLostOrStolen(
-            asset4,
-            rgt4,
-            '4',
-            { from: account2 }
-        )
-    })
-
-
-
-
-
-    it('Should make ECR unatuhorized', async () => {
-
-        console.log("//**************************************END ECR_MGR SETUP**********************************************/")
-        console.log("//**************************************BEGIN ECR_MGR FAIL BATCH (4)**********************************************/")
-        console.log("//**************************************BEGIN setEscrow FAIL BATCH**********************************************/")
-
-        console.log("unAuthorizing ECR")
-        return STOR.enableContractForAC('ECR', '10', '1', { from: account1 })
-
-            .then(() => {
-                return STOR.enableContractForAC('ECR', '11', '1', { from: account1 })
-            })
-
-    })
-
-
-    it('Should set asset1 into status 1', async () => {
-        return NP._modStatus(
+                                                                              
+    it('Should decrement asset1 by 15', async () => {
+        return NP_NC._decCounter(
             asset1,
-            rgt1,
-            '1',
-            { from: account2 }
+            '15',
+            { from: account4 }
         )
     })
+                                                                              
 
-    //1
-    it('Should fail because ECR is not an authorized escrow contract', async () => {
-        return ECR.setEscrow(
+    it("Should retrieve asset1", async () => {
+        var Record = [];
+
+        return await STOR.retrieveShortRecord(asset1, { from: account2 }, function (_err, _result) {
+            if (_err) { }
+            else {
+                Record = Object.values(_result)
+                console.log(Record)
+            }
+        })
+    })
+
+
+    it('Should change asset1 AC from 12 to 13', async () => {
+        return MAL_APP.changeAC(
             asset1,
-            account2Hash,
-            '180',
-            '6',
-            { from: account2 }
+            '13',
+            { from: account1 }
         )
     })
+                                                                              
 
+    it("Should retrieve asset1", async () => {
+        var Record = [];
 
-    it('Should authorize ECR', async () => {
-        console.log("Authorizing ECR")
-        return STOR.enableContractForAC('ECR', '10', '3', { from: account1 })
-
-            .then(() => {
-                return STOR.enableContractForAC('ECR', '11', '3', { from: account1 })
-            })
-
+        return await STOR.retrieveShortRecord(asset1, { from: account2 }, function (_err, _result) {
+            if (_err) { }
+            else {
+                Record = Object.values(_result)
+                console.log(Record)
+            }
+        })
     })
 
-    //2
-    it('Should fail because asset is not in escrow', async () => {
-
-        console.log("//**************************************END setEscrow FAIL BATCH**********************************************/")
-        console.log("//**************************************BEGIN endEscrow FAIL BATCH**********************************************/")
-        return ECR.endEscrow(
+ 
+    it('Should set asset1 to stolen', async () => {
+        return NP_NC._setLostOrStolen(
             asset1,
-            { from: account2 }
+            '53',
+            { from: account4 }
         )
     })
+                                                                              
 
+    it("Should retrieve asset1", async () => {
+        var Record = [];
 
-    it('Should put asset1 into escrow', async () => {
-        return ECR.setEscrow(
-            asset1,
-            account2Hash,
-            '180',
-            '6',
-            { from: account2 }
-        )
+        return await STOR.retrieveShortRecord(asset1, { from: account2 }, function (_err, _result) {
+            if (_err) { }
+            else {
+                Record = Object.values(_result)
+                console.log(Record)
+            }
+        })
     })
 
-    //3
-    it('Should fail because contract is not the same as the setter contract', async () => {
-        return ECR2.endEscrow(
-            asset1,
-            { from: account2 }
+    it('Should change status of asset1 to status(51)', async () => {
+        return NP_NC._modStatus(
+        asset1, 
+        '51',
+        {from: account4}
         )
     })
+                                                                              
 
+    it("Should retrieve asset1", async () => {
+        var Record = [];
 
-    it('Should take asset1 out of escrow', async () => {
-        return ECR.endEscrow(
-            asset1,
-            { from: account2 }
-        )
+        return await STOR.retrieveShortRecord(asset1, { from: account2 }, function (_err, _result) {
+            if (_err) { }
+            else {
+                Record = Object.values(_result)
+                console.log(Record)
+            }
+        })
     })
 
-
-    it('Should set asset1 into status 1', async () => {
-        return NP._modStatus(
-            asset1,
-            rgt1,
-            '1',
-            { from: account2 }
-        )
-    })
-
-    // //4
-    // it('Should fail because asset is not in escrow', async () => {
-
-    //     console.log("//**************************************END endEscrow FAIL BATCH**********************************************/")
-    //     console.log("//**************************************BEGIN setEscrowDataLight FAIL BATCH**********************************************/")
-    //     return ECR2._setEscrowDataLight(
-    //         asset1,
-    //         '180',
-    //         '6',
-    //         '6',
-    //         '6',
-    //         '6',
-    //         '6',
-    //         '6',
-    //         ECR2.address,
-    //         { from: account2 }
-    //     )
-    // })
-
-
-    // it('Should set asset1 into escrow', async () => {
-    //     return ECR.setEscrow(
-    //         asset1,
-    //         account2Hash,
-    //         '180',
-    //         '6',
-    //         { from: account2 }
-    //     )
-    // })
-
-    // //5
-    // it('Should fail because contract not same as setter', async () => {
-    //     return ECR2._setEscrowDataLight(
-    //         asset1,
-    //         '180',
-    //         '6',
-    //         '6',
-    //         '6',
-    //         '6',
-    //         '6',
-    //         '6',
-    //         account2,
-    //         { from: account2 }
-    //     )
-    // })
-
-
-    // it('Should take asset1 out of escrow', async () => {
-    //     return ECR.endEscrow(
-    //         asset1,
-    //         { from: account2 }
-    //     )
-    // })
-
-
-    // it('Should set asset1 into status 1', async () => {
-    //     return NP._modStatus(
-    //         asset1,
-    //         rgt1,
-    //         '1',
-    //         { from: account2 }
-    //     )
-    // })
-
-    // //6
-    // it('Should fail because asset is not in escrow', async () => {
-
-    //     console.log("//**************************************END setEscrowDataLight FAIL BATCH**********************************************/")
-    //     console.log("//**************************************BEGIN setEscrowDataHeavy FAIL BATCH**********************************************/")
-    //     return ECR2._setEscrowDataHeavy(
-    //         asset1,
-    //         '180',
-    //         '6',
-    //         '6',
-    //         account2,
-    //         string1Hash,
-    //         string1Hash,
-    //         '6',
-    //         '6',
-    //         { from: account2 }
-    //     )
-    // })
-
-
-    // it('Should set asset1 into escrow', async () => {
-    //     return ECR.setEscrow(
-    //         asset1,
-    //         account2Hash,
-    //         '180',
-    //         '6',
-    //         { from: account2 }
-    //     )
-    // })
-
-    // //7
-    // it('Should fail because contract not same as setter', async () => {
-    //     return ECR2._setEscrowDataHeavy(
-    //         asset1,
-    //         '180',
-    //         '6',
-    //         '6',
-    //         account2,
-    //         string1Hash,
-    //         string1Hash,
-    //         '6',
-    //         '6',
-    //         { from: account2 },
-    //     )
-    // })
-
-
-    // it('Should take asset1 out of escrow', async () => {
-    //     return ECR.endEscrow(
-    //         asset1,
-    //         { from: account2 }
-    //     )
-    // })
-
-
-    it('Should set asset1 into status 1', async () => {
-        return NP._modStatus(
-            asset1,
-            rgt1,
-            '1',
-            { from: account2 }
-        )
-    })
-
-
+                                                                   
     it('Should set asset1 into escrow', async () => {
-
-        console.log("//**************************************END setEscrowDataHeavy FAIL BATCH**********************************************/")
-        console.log("//**************************************BEGIN permissiveEndEscrow FAIL BATCH**********************************************/")
-        return ECR2.setEscrow(
+        return ECR_NC.setEscrow(
             asset1,
-            account2Hash,
+            account4Hash,
             '180',
-            '6',
-            { from: account2 }
+            '56',
+            { from: account4 }
         )
     })
+                                                                              
 
-    //4
-    it('Should fail because record escrow is not expired', async () => {
-        return ECR_MGR.permissiveEndEscrow(
-            asset1,
-            { from: account2 }
-        )
+    it("Should retrieve asset1", async () => {
+        var Record = [];
+
+        return await STOR.retrieveShortRecord(asset1, { from: account2 }, function (_err, _result) {
+            if (_err) { }
+            else {
+                Record = Object.values(_result)
+                console.log(Record)
+            }
+        })
     })
 
 
     it('Should take asset1 out of escrow', async () => {
-        return ECR2.endEscrow(
+        return ECR_NC.endEscrow(
             asset1,
-            { from: account2 }
+            { from: account4 }
         )
+    })
+                                                                              
+
+    it("Should retrieve asset1", async () => {
+        var Record = [];
+
+        return await STOR.retrieveShortRecord(asset1, { from: account2 }, function (_err, _result) {
+            if (_err) { }
+            else {
+                Record = Object.values(_result)
+                console.log(Record)
+            }
+        })
+    })
+
+    
+    it('Should setPrice of asset2 to 10', async () => {
+        return PURCHASE._setPrice(
+            asset2,
+            "1000000000000000000000",
+            "2",
+            "0",
+            { from: account4 }
+        )
+    })
+                                                                              
+
+    it("Should retrieve asset1", async () => {
+        var Record = [];
+
+        return await STOR.retrieveShortRecord(asset1, { from: account2 }, function (_err, _result) {
+            if (_err) { }
+            else {
+                Record = Object.values(_result)
+                console.log(Record)
+            }
+        })
     })
 
 
-    it('Should set asset1 into status 1', async () => {
-        return NP._modStatus(
+    it('Should _clearPrice on asset1', async () => {
+        return PURCHASE._clearPrice(
+            asset1,
+            { from: account4 }
+        )
+    })
+                                                                              
+                                                                              
+    it("Should retrieve asset1", async () => {
+        var Record = [];
+
+        return await STOR.retrieveShortRecord(asset1, { from: account2 }, function (_err, _result) {
+            if (_err) { }
+            else {
+                Record = Object.values(_result)
+                console.log(Record)
+            }
+        })
+    })
+
+
+    it('Should set ipfs1 on asset1 to rgt1 and rgt2', async () => {
+        return NP_NC._modIpfs1(
             asset1,
             rgt1,
-            '1',
-            { from: account2 }
+            rgt2,
+            { from: account4 }
+        )
+    })
+                                                                              
+
+    it("Should retrieve asset1", async () => {
+        var Record = [];
+
+        return await STOR.retrieveShortRecord(asset1, { from: account2 }, function (_err, _result) {
+            if (_err) { }
+            else {
+                Record = Object.values(_result)
+                console.log(Record)
+            }
+        })
+    })
+
+
+    it('Should set ipfs2 on asset1 to rgt1 and rgt2', async () => {
+        return APP_NC.addIpfs2Note(
+            asset1,
+            rgt1,
+            rgt2,
+            { from: account4 }
         )
     })
 
 
-    it('Should write record12 in AC 10', async () => {
+    it('Should write record in AC 10 @ IDX&RGT(1)', async () => {
 
-        console.log("//**************************************END permissiveEndEscrow FAIL BATCH**********************************************/")
-        console.log("//**************************************END ECR_MGR FAIL BATCH**********************************************/")
-        console.log("//**************************************END ECR_MGR TEST**********************************************/")
+
+        console.log("//**************************************END retrieveRecord FAIL BATCH**********************************************/")
+        console.log("//**************************************END STOR FAIL BATCH**********************************************/")
+        console.log("//**************************************END STOR TEST**********************************************/")
         console.log("//**************************************BEGIN THE WORKS**********************************************/")
         return APP.newRecord(
             asset12,
@@ -2324,7 +2325,7 @@ contract('ID_TKN', accounts => {
     })
 
 
-    it('Should change status of asset12 to status(1)', async () => {
+    it('Should change status of new asset12 to status(1)', async () => {
         return NP._modStatus(
             asset12,
             rgt12,
@@ -2334,7 +2335,7 @@ contract('ID_TKN', accounts => {
     })
 
 
-    it('Should Transfer asset12 RGT(12) to RGT(2)', async () => {
+    it('Should Transfer asset12 RGT(1) to RGT(2)', async () => {
         return APP.transferAsset(
             asset12,
             rgt12,
@@ -2344,7 +2345,7 @@ contract('ID_TKN', accounts => {
     })
 
 
-    it('Should force modify asset12 RGT(2) to RGT(12)', async () => {
+    it('Should force modify asset12 RGT(2) to RGT(1)', async () => {
         return APP.forceModRecord(
             asset12,
             rgt12,
